@@ -36,6 +36,7 @@ final class MawRules {
                 body.spacing(),
                 SimSpecs.hitbox(body.hitbox()),
                 body.path().stream().map(MawRules::point).toList(),
+                body.bend(),
                 inner.left(),
                 inner.right(),
                 PlayField.HEIGHT - inner.bottom(),
@@ -71,6 +72,7 @@ final class MawRules {
         return new CoilSpec(
                 spec,
                 coil.intro(),
+                coil.wind(),
                 coil.sacs().parts().stream().map(part -> part(enemy, part)).toList(),
                 coil.sacs().swell(),
                 new CoilSpec.Jaw(coil.jaw().glow(), coil.jaw().open()),

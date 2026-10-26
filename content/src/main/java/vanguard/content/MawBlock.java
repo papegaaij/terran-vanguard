@@ -20,12 +20,14 @@ public sealed interface MawBlock permits EnemyData {
 
     /**
      * A coiled boss's script ({@code boss.coil}): from the arrival (the bar) {@code intro} s until the coil and the head
-     * are up (invulnerable, nothing fires); its {@code body}, its gill {@code sacs}, the throat's {@code jaw}, the fan
+     * are up (invulnerable, nothing fires), the last {@code wind} s of it the head swimming in from off the screen and the
+     * body winding in behind it (the dive's way back the same); its {@code body}, its gill {@code sacs}, the throat's {@code jaw}, the fan
      * {@code wall}s, the coil's {@code sweeps}, the {@code dive} and lunge, the {@code implants} and the {@code shed}
      * Eel Swarms (each but the body, sacs, jaw and sweeps optional).
      */
     record CoilData(
             double intro,
+            double wind,
             CoilBody body,
             Sacs sacs,
             JawData jaw,
@@ -36,17 +38,21 @@ public sealed interface MawBlock permits EnemyData {
             Optional<ShedData> shed) {
         public CoilData {
             Check.notNegative("intro", intro);
+            Check.positive("wind", wind);
+            Check.that(wind <= intro, "wind: within the intro, was " + wind);
         }
     }
 
     /**
      * The coil's body: {@code segments} boxes of {@code hitbox}, {@code spacing} px apart along {@code path} (its
-     * centre line from the head's end, {@code [x, y]} screen px; beyond its last point it runs on straight), each turned
-     * along it; the wall it makes: the ship and the escort keep {@code clearance} px inside its {@code inner} flanks.
+     * centre line from the head's end, {@code [x, y]} screen px; beyond its last point it runs on straight; its corners
+     * turned on arcs of {@code bend} px), each turned along it; the wall it makes: the ship and the escort keep {@code clearance} px inside its {@code inner} flanks.
      */
-    record CoilBody(int segments, double spacing, Size hitbox, List<Point> path, Inner inner, double clearance) {
+    record CoilBody(
+            int segments, double spacing, Size hitbox, List<Point> path, double bend, Inner inner, double clearance) {
         public CoilBody {
             path = List.copyOf(path);
+            Check.notNegative("bend", bend);
             Check.positive("segments", segments);
             Check.positive("spacing", spacing);
             Check.that(path.size() >= 2, "path: two points or more");

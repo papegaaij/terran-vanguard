@@ -299,17 +299,17 @@ val copyPlaceholderSounds = tasks.register<JavaExec>("copyPlaceholderSounds") {
         "wreck-hatch-r53-b.ogg",
         // M8 part E: round 54's proposals for Level 25 (CC0/CC-BY Freesound HQ previews, CREDITS rows from step AUD-E),
         // their a variants until the user's pick, which may swap the file: the Siren's ring, slow and death, the Spiral
-        // Nautilus's spin, uncoil and death, the trench's bed.
+        // Nautilus's spin, uncoil and death (the trench's bed left the game: the user, 2026-10-26, one bed per setting).
         "siren-ring-r54-a.ogg",
         "siren-slow-r54-b.ogg",
         "siren-death-r54-a.ogg",
         "nautilus-spin-r54-a.ogg",
         "nautilus-uncoil-r54-a.ogg",
         "nautilus-death-r54-b.ogg",
-        "europa-trench-r54-a.ogg",
         // M8 part F: round 55's picks for Level 26 (user 2026-10-24; CC0/CC-BY Freesound HQ previews, CREDITS rows from
         // step AUD-F): the Glow Angler's lure hum a and lunge a, the Nautilus's crown hum in the dark a, Rook's loss (the
-        // trails a, the hits a, the spin b), the headlight click b, the Choir's static lead b, the black water's bed a.
+        // trails a, the hits a, the spin b), the headlight click b, the Choir's static lead b (the black water's bed a
+        // left the game: Act 4 has one bed under water, europa-under; the user, 2026-10-26).
         "lure-hum-r55-a.ogg",
         "angler-lunge-r55-a.ogg",
         "crown-hum-r55-a.ogg",
@@ -318,12 +318,10 @@ val copyPlaceholderSounds = tasks.register<JavaExec>("copyPlaceholderSounds") {
         "rook-spin-r55-b.ogg",
         "headlight-click-r55-b.ogg",
         "choir-static-r55-b.ogg",
-        "europa-black-r55-a.ogg",
         // M8 part G: round 57's picks for Level 27 (user 2026-10-25; CC0/CC-BY Freesound HQ previews, CREDITS rows from
-        // step AUD-G; the scan ping synthesized): the vent field's bed a, the plume's tell b and eruption a, the bend's
-        // swish a, the Depth Hunter's torpedo launch a, run b and impact b and its hull break a, the relay beacons' hum a
-        // and break b, the Marlin's resin crack a, Varga's scan ping b.
-        "europa-vents-r57-a.ogg",
+        // step AUD-G; the scan ping synthesized; the vent field's bed a left the game, 2026-10-26): the plume's tell b
+        // and eruption a, the bend's swish a, the Depth Hunter's torpedo launch a, run b and impact b and its hull break
+        // a, the relay beacons' hum a and break b, the Marlin's resin crack a, Varga's scan ping b.
         "plume-tell-r57-b.ogg",
         "plume-eruption-r57-a.ogg",
         "bend-swish-r57-a.ogg",
@@ -335,13 +333,11 @@ val copyPlaceholderSounds = tasks.register<JavaExec>("copyPlaceholderSounds") {
         "beacon-break-r57-b.ogg",
         "marlin-crack-r57-a.ogg",
         "scan-ping-r57-b.ogg",
-        // M8 part H: round 58's proposals for Level 28 (CC0/CC-BY Freesound HQ previews, CREDITS rows from step AUD-H),
-        // their a variants as stand-ins until the user's pick, which may swap the file: the hatchery's bed and the
-        // caldera's rumble, the shaft's climb, the Abyssal Maw's arrival, gill breath, throat charge, sweep groan and
-        // swing, shed, dive, lunge, implant spark and zap and its death, the breakout, the cruisers' rise, broadside,
-        // flak and point defence.
-        "europa-hatchery-r58-a.ogg",
-        "caldera-rumble-r58-a.ogg",
+        // M8 part H: round 58's picks for Level 28 (user 2026-10-26; CC0/CC-BY Freesound HQ previews, CREDITS rows from
+        // step AUD-H), a but the implant's zap, the Maw's death and the cruisers' rise b (the hatchery's bed and the
+        // caldera's rumble left the game: one bed per setting, the user 2026-10-26): the shaft's climb, the Abyssal
+        // Maw's arrival, gill breath, throat charge, sweep groan and swing, shed, dive, lunge, implant spark and zap and
+        // its death, the breakout, the cruisers' rise, broadside, flak and point defence.
         "shaft-climb-r58-a.ogg",
         "maw-arrival-r58-a.ogg",
         "maw-gill-r58-a.ogg",
@@ -352,10 +348,10 @@ val copyPlaceholderSounds = tasks.register<JavaExec>("copyPlaceholderSounds") {
         "maw-dive-r58-a.ogg",
         "maw-lunge-r58-a.ogg",
         "implant-spark-r58-a.ogg",
-        "implant-zap-r58-a.ogg",
-        "maw-death-r58-a.ogg",
+        "implant-zap-r58-b.ogg",
+        "maw-death-r58-b.ogg",
         "breakout-r58-a.ogg",
-        "cruiser-rise-r58-a.ogg",
+        "cruiser-rise-r58-b.ogg",
         "cruiser-broadside-r58-a.ogg",
         "cruiser-flak-r58-a.ogg",
         "cruiser-pd-r58-a.ogg",

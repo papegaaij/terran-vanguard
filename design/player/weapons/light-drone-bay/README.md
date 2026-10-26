@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [.., ../../wingmen, ../../generator, ../../../systems/economy]
-updated: 2026-10-13
+updated: 2026-10-26
 ---
 
 # Light Drone Bay
@@ -26,7 +26,7 @@ numbers.
 |---|---|
 | Slot | Wing mount (per bay); the drone flies, the bay stays on the wing |
 | Traits | `forward` (drone) |
-| Layers hit | `air`, `low-air` and `ground` (hardened ground targets glance off); not `high-air`; the `sub` layer only in under-water mode, at 50 % ([layer rules](../../../enemies/README.md#layer-rules)) |
+| Layers hit | `air`, `low-air` and `ground` (hardened ground targets glance off); not `high-air`; under water the play plane at the water's damage factor and the deep `sub` layer only in the Sonar Pulse's window ([layer rules](../../../enemies/README.md#layer-rules), [Europa rules](../../../world/europa/README.md#under-water-rules)) |
 | Price | 2 000 cr |
 | Upgrade cost L2 / L3 / L4 / L5 | 1 000 / 2 000 / 4 000 / 8 000 cr (the common factors on the price; sell-back per [economy](../../../systems/economy/README.md)) |
 | Unlock | L15 (in the shop from the hangar visit before it) |

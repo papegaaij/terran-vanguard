@@ -67,7 +67,9 @@ final class MawPlay {
         CoilSpec spec = piece.boss().orElseThrow().coil().orElseThrow();
         double shipX = sortie.ship().x();
         double shipY = sortie.ship().y();
-        double targetX = coil.headX();
+        // Round 58 F.2: while the head swims round the arena (winding in) the ship waits in the middle.
+        boolean winding = !coil.up() || coil.diveState() == CoilArena.DiveState.RETURN;
+        double targetX = winding ? PlayField.WIDTH / 2.0 : coil.headX();
         double targetY = STAND_Y;
         double alongX = ALONG_X;
         int implant = openImplant(coil);

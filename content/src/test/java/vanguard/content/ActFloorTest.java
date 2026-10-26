@@ -39,7 +39,6 @@ class ActFloorTest {
         return IntStream.rangeClosed(FIRST_LEVEL, 50)
                 .mapToObj(CONTENT::levelKey)
                 .flatMap(java.util.Optional::stream)
-                .filter(Unmapped::mapped) // M7 part C: levels not mapped yet (Unmapped)
                 .filter(key -> !PENDING.contains(key));
     }
 

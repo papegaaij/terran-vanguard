@@ -392,6 +392,14 @@ public final class FlightSounds {
         foundry.plumes(plumes);
     }
 
+    /**
+     * Step I2: a level that leaves the water (Level 28) sounds its breakout as the ship breaches the shaft mouth's lip,
+     * with the burst ({@link vanguard.game.render.BreachLine}); without one the breakout sounds as the medium turns.
+     */
+    public void breach(java.util.Optional<vanguard.game.render.BreachLine> lip) {
+        maw.breach(lip);
+    }
+
     /** M8 part G: Level 27's hull-code scan: its ping before the wreck passes mid-screen ({@link VentFieldCues}). */
     public void scan(vanguard.content.LevelData level) {
         ventField.noteLevel(level);

@@ -103,6 +103,16 @@
   ],
   "note": "the model's centre is the frame's centre; the sacs and the neck implant are separate sprites at the data's offsets from the head (the concept's: sacs (-62, -15), (62, -15), (-50, 33), (50, 33) px, y down)"
  },
+ "head_swim": {
+  "frame": [
+   196,
+   196
+  ],
+  "headings": 16,
+  "index": "heading k faces k x 22.5 deg clockwise from straight down (0: the rest facing)",
+  "from_sim_facing": "k = round((-pi/2 - headFacing) * 16 / (2 pi)) mod 16",
+  "neck_cut_px": 75.0
+ },
  "segment": {
   "frame": [
    78,

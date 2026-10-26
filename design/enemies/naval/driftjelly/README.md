@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy]
-updated: 2026-10-22
+updated: 2026-10-26
 ---
 
 # Driftjelly
@@ -101,8 +101,10 @@ The production files (M5 part E, straight to production per E9 = a; approved as 
       water (M5 part E, steps E1b and E3c: `NavalLooks`, `PulseClock`, `Level11LooksTest`)
 - [x] Death effect, bounty and score per this spec; production sprites and intel portrait (M5
       part E, steps E1b and E3e; approved as final in round 33)
-- [ ] Under water (M8 part C): the `underwater` block loaded and checked (step C2), applied to a field entering under
-      water (step C3), drawn under the grade without its foam collar (step C4)
+- [x] Under water (M8 part C): the `underwater` block loaded and checked (step C2), applied to a field entering under
+      water (step C3), drawn under the grade without its foam collar (step C4) (`DeepWaterKeysTest.theReturningUnitsChangeUnderWater`,
+      `theNewKeysAreCheckedWhereTheyBelong`, `Level23Test.theReturningUnitsChangeUnderWater`, the `driftjelly-deep`
+      frames in `Level23LooksTest`)
 
 ## Decisions
 

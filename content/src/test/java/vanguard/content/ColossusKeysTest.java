@@ -19,7 +19,7 @@ import vanguard.sim.Section;
  * and its boss (design/campaign Level 21; design/enemies/bosses/dust-colossus): the breach cycle, the suction, the
  * vents, the eruption and the debris in the stat block, the crawling arena (a moving arena of a breaching boss) with
  * its ease, the level's waves re-planned to the Act 2+ rules (round 43, H.1), the Act 3 outro and {@code next_act}.
- * The fight itself is flown from step H4 (Unmapped).
+ * The fight itself is flown from step H4.
  */
 class ColossusKeysTest {
     private static final Content CONTENT = ContentLoader.fromClasspath();

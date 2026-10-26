@@ -17,10 +17,11 @@ import vanguard.sim.Sortie;
 
 /**
  * M8 part H, step H5: a level leaving the water through the ice (design/campaign Level 28, The Breakout and Orbit;
- * tools/art/l28_props.py's {@code ice-shatter} and {@code ice-slab}, briefs/m8arth2-rows.md): as the level clock reaches
- * the first section in the air after the water (Level 28's t=115) the ice ceiling bursts round the ship ({@code
- * ice-shatter}, additive, {@value #SHATTER_TICKS} steps a frame, centred on the ship's x at the breakout line, scrolling
- * down with the ground) and four slabs tumble out of the field ({@code ice-slab_<slab × 8 + tumble>}, ~10 fps, growing
+ * tools/art/l28_props.py's {@code ice-shatter} and {@code ice-slab}, briefs/m8arth2-rows.md): as the ship breaches the
+ * ice, the step the lip of the shaft's mouth reaches its nose ({@link BreachLine}; step I2, round 58 F.4: wherever the
+ * ship is and however it moves, near Level 28's t=115), the ice bursts at the breach ({@code ice-shatter}, additive,
+ * {@value #SHATTER_TICKS} steps a frame, centred on the lip at the ship's x and anchored there on the ice, scrolling
+ * down with the ground while the ship flies on) and four slabs tumble out of the field from it ({@code ice-slab_<slab × 8 + tumble>}, ~10 fps, growing
  * toward the camera as they fly and fading); in its last section (the orbit) the field fades to white. Over the front
  * layer, under the bullets. Presentation only; nothing is allocated per frame.
  */
@@ -46,12 +47,14 @@ final class BreakoutLooks {
     private final Array<AtlasRegion> shatter;
     private final Array<AtlasRegion> slab;
     private final TextureRegion pixel;
-    /** The breakout's level time; the orbit's start and end. */
+    /** The breakout's level time; the shaft mouth's lip; the orbit's start and end. */
     private final double breakAt;
+
+    private final BreachLine lip;
 
     private final double orbitFrom;
     private final double orbitTo;
-    /** The burst's step, the ship's place and the ground scroll then. */
+    /** The burst's step, the breach (the ship's x, the lip's screen y there) and the ground scroll then. */
     private long burstTick = NEVER;
 
     private double burstX;
@@ -63,6 +66,7 @@ final class BreakoutLooks {
         slab = optional(sprites, "ice-slab");
         pixel = sprites == null ? null : sprites.pixel;
         breakAt = breakAt(level);
+        lip = BreachLine.of(level).orElseThrow();
         int last = level.sections().size() - 1;
         orbitFrom = level.sectionStart(last);
         orbitTo = level.sections().get(last).end();
@@ -114,17 +118,40 @@ final class BreakoutLooks {
         burstTick = NEVER;
     }
 
-    /** After each step: the burst as the level clock reaches the breakout (forgotten if a retry goes back before it). */
+    /**
+     * After each step: the burst on the step the ship breaches the lip, at the lip where the ship's x crosses it
+     * (forgotten if a retry goes back to before the lip is on the screen). A wrecked ship breaches nothing.
+     */
     void stepped(Sortie sortie) {
-        double seconds = sortie.levelSeconds();
-        if (seconds < breakAt) {
+        double scroll = sortie.groundScroll();
+        if (lip.ahead(scroll)) {
             burstTick = NEVER;
-        } else if (burstTick == NEVER) {
+        } else if (burstTick == NEVER
+                && sortie.flying()
+                && lip.breached(sortie.ship().x(), sortie.ship().y(), scroll)) {
             burstTick = sortie.tick();
             burstX = sortie.ship().x();
-            burstY = sortie.ship().y();
-            burstScroll = sortie.groundScroll();
+            burstY = lip.edgeRow(burstX) - scroll;
+            burstScroll = scroll;
         }
+    }
+
+    /** The burst's step, {@code Long.MIN_VALUE / 2} before it. */
+    long burstTick() {
+        return burstTick;
+    }
+
+    /** The burst's place on the screen at ground scroll {@code scroll}: x, then y (anchored on the ice). */
+    double burstX() {
+        return burstX;
+    }
+
+    double burstY(double scroll) {
+        return burstY - (scroll - burstScroll);
+    }
+
+    BreachLine lip() {
+        return lip;
     }
 
     /** The burst's age, s, between the last step and the next; -1 before it. */
@@ -147,7 +174,7 @@ final class BreakoutLooks {
     void draw(SpriteBatch batch, Sortie sortie, float alpha, double scroll, double seconds) {
         double age = age(sortie.tick(), alpha);
         if (age >= 0 && age < SLAB_SECONDS) {
-            double y = burstY - (scroll - burstScroll);
+            double y = burstY(scroll);
             if (slab.size >= SLABS * TUMBLE) {
                 double t = age / SLAB_SECONDS;
                 batch.setColor(1, 1, 1, (float) (1 - t * t));

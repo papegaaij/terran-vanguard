@@ -452,8 +452,8 @@ music:
   start_section: 2    # the A theme's sonar and pad over the mouth are the bed alone here; the B base stem from the walls
   full_section: 5     # the full mix in the Song
   stems: {6: base}    # the base stem over the floor, then out into silence
-  ambience_from: 168  # the theme fades out over the floor: the trench bed alone as the lights go out
-  ambience: europa-trench   # a low rumble of a deep cut, distant whale calls, no bubbles (step AUD-E proposes it, round 54)
+  ambience_from: 168  # the theme fades out over the floor: the bed alone as the lights go out
+  ambience: europa-under   # the bed under the ice, as every level under water (the user, 2026-10-26: one bed per setting)
   end_jingle: mission-complete
 
 difficulty: {}  # the formation lever sizes the waves; the stat blocks' hooks apply (the Siren's easy 1.5 s slow and a ring every 6 s, hard every 3.6 s and 2 s of immunity; the Nautilus's easy 2 arms and 1.8 s window, hard 4 arms and 1.4 s; the Barbfin's easy 3 s needle, hard 2-needle burst every 2.6 s)

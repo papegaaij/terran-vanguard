@@ -341,9 +341,7 @@ music:
     - {t: 150, db: -6, fade: 2}          # the pad thins under Rook's last lines
     - {t: 164, stems: none, fade: 2}     # out at t=166: the silence of the loss
     - {t: 174, stems: warm, fade: 10}    # the vent field's warm pad creeping in (round 55's pick b, thera-deep-warm)
-  ambience: europa-black   # a heavy pressure drone, distant whale calls, no bubbles (step AUD-F)
-  ambience_layers:
-    - {ambience: europa-trench, from: 56, to: 104, fade_in: 4, fade_out: 4}   # the scarp's rumble
+  ambience: europa-under   # the bed under the ice, as every level under water (the user, 2026-10-26: one bed per setting)
   end_jingle: mission-complete
 
 difficulty: {}  # the formation lever sizes the waves; the stat blocks' hooks apply (the Angler's easy 100 px trigger and ring of 6, hard 160 px and 10; the Nautilus's easy 2 arms and 1.8 s window, hard 4 arms and 1.4 s; the Siren's easy 1.5 s slow and a ring every 6 s, hard every 3.6 s and 2 s of immunity)

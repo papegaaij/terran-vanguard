@@ -19,4 +19,4 @@ levels:
   - {pattern: [[-6, 180], [6, 180]], rate: 4, damage: 7.5, pierce: 5}
 overdrive: {pattern: [[-10, 180], [0, 180], [10, 180]], rate: 4, damage: 7, pierce: 6}
 notes:
-  layers_hit: '`air`, `low-air` and `ground` (hardened ground targets glance off); not `high-air`; the `sub` layer only in under-water mode, at 50 % ([layer rules](../../../enemies/README.md#layer-rules))'
+  layers_hit: '`air`, `low-air` and `ground` (hardened ground targets glance off); not `high-air`; under water the play plane at the water''s damage factor and the deep `sub` layer only in the Sonar Pulse''s window ([layer rules](../../../enemies/README.md#layer-rules), [Europa rules](../../../world/europa/README.md#under-water-rules))'

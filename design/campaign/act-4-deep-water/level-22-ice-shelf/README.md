@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../../../enemies/ground/drill-rig, ../../../enemies/naval/skimmer, ../../../enemies/air/mantis, ../../../player/specials, ../../../player/wingmen, ../../../world/europa]
-updated: 2026-10-22
+updated: 2026-10-26
 ---
 
 # Level 22 – Ice Shelf
@@ -393,7 +393,7 @@ and the under-water look are in [europa](../../../world/europa/README.md#concept
       (`Level22Test.theLevelHoldsTheReadmesCount`, `Level22LooksTest.theIceCrawlerCarriesThePatchUpTheRoadAndBack`; the drop
       moved to t=110.5 on the road in step B5)
 - [x] Wave script: ≥ 48 enemies a minute at medium (`DensityTest`), no empty screen over 2 s (`PacingTest`), the Act 2+ floor (`ActFloorTest`), the rig's quiet window, edge warnings for the Mantis pincers
-- [ ] Radio voiced, every timed line at most 1 s late (`RadioTimelineLevel22Test`, with Rook and without), Dr. Brandt cast; Rook's lines `requires: escort`
+- [x] Radio voiced, every timed line at most 1 s late (`RadioTimelineLevel22Test`, with Rook and without), Dr. Brandt cast; Rook's lines `requires: escort`
       (built and tested: `RadioTimelineLevel22Test`, `VoiceFilesTest`, `Level22Test.theRadioEventsFireInTheRun`; Dr. Brandt cast with
       candidate a in round 51, V.1)
 - [x] Threat profile, Varga's four intel lines and Rook's teaser fitting the intel panel (`IntelPanelLayoutTest`, its

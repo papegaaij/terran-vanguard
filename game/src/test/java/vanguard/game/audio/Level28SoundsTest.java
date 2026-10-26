@@ -14,25 +14,22 @@ import java.util.Optional;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
 import vanguard.content.Content;
-import vanguard.content.Difficulty;
 import vanguard.content.LevelData;
-import vanguard.content.SimSpecs;
+import vanguard.game.render.BreachLine;
 import vanguard.game.render.IceShelfFixture;
 import vanguard.game.render.MawFixture;
 import vanguard.game.render.SiegeUnitsFixture;
 import vanguard.game.screen.LevelScreen;
 import vanguard.game.settings.AudioSettings;
-import vanguard.sim.LevelScript;
-import vanguard.sim.Section;
 import vanguard.sim.SimEvents;
 import vanguard.sim.SimStep;
 import vanguard.sim.Sortie;
 
 /**
  * M8 part H's Level 28 sounds and music (design/audio/sfx and design/audio/music, Level 28's rows; design/campaign
- * Level 28, Music &amp; ambience; round 58's a variants as stand-ins until the user's pick): the hatchery's bed, the
- * caldera's rumble over it from the antechamber, held under the fight and cut at the kill, Europa's night ice from the
- * breakout; the Maw's arrival, gill breath, throat charge, sweep groan and swing, shed, dive, lunge, implant spark and
+ * Level 28, Music &amp; ambience; round 58's picks, the implant's zap, the Maw's death and the cruisers' rise b, the
+ * rest a): the bed under the ice to the breakout, Europa's night ice from it (one bed per setting, the user
+ * 2026-10-26); the Maw's arrival, gill breath, throat charge, sweep groan and swing, shed, dive, lunge, implant spark and
  * zap and death; the shaft's climb, the breakout, the cruisers' rise, broadside, flak and point defence; track 11 silent
  * before t=16 (the motif-alone section 1 plays the motif from its cue), the base stem from section 2, the full mix from
  * section 3, out at 80; track 18 dropping away under the dive and back after the lunge; the reveal sting (track 30) at
@@ -48,8 +45,6 @@ class Level28SoundsTest {
             new SfxBank(new MockAudio(), new Lwjgl3Files(), new Mixer(AudioSettings.defaults()), () -> now[0]);
 
     private static final List<Sfx> SOUNDS = List.of(
-            Sfx.AMBIENCE_EUROPA_HATCHERY,
-            Sfx.AMBIENCE_CALDERA_RUMBLE,
             Sfx.SHAFT_CLIMB,
             Sfx.MAW_ARRIVAL,
             Sfx.MAW_GILL,
@@ -69,53 +64,29 @@ class Level28SoundsTest {
             Sfx.CRUISER_PD);
 
     @Test
-    void everySoundHasItsFileRoundFiftyEightsAAsAStandIn() {
-        assertEquals(19, SOUNDS.size(), "AUD-H's 19 subjects");
+    void everySoundHasItsFileRoundFiftyEightsPick() {
+        assertEquals(17, SOUNDS.size(), "AUD-H's 19 subjects but the two beds");
+        Set<Sfx> picksB = Set.of(Sfx.IMPLANT_ZAP, Sfx.MAW_DEATH, Sfx.CRUISER_RISE);
         for (Sfx sfx : SOUNDS) {
             assertTrue(Files.isRegularFile(ASSETS.resolve(sfx.path())), sfx.path());
-            assertTrue(sfx.path().endsWith("-r58-a.ogg"), "round 58's a until the pick: " + sfx.path());
+            String pick = picksB.contains(sfx) ? "-r58-b.ogg" : "-r58-a.ogg";
+            assertTrue(sfx.path().endsWith(pick), "round 58's pick: " + sfx.path());
         }
-        assertEquals(Sfx.Priority.AMBIENCE, Sfx.AMBIENCE_EUROPA_HATCHERY.priority());
-        assertEquals(Sfx.Priority.AMBIENCE, Sfx.AMBIENCE_CALDERA_RUMBLE.priority());
         assertTrue(Files.isRegularFile(ASSETS.resolve(Sfx.REVEAL_STING.path())), "track 30");
         assertEquals(Bus.MUSIC, Sfx.REVEAL_STING.bus());
         assertTrue(Files.isRegularFile(ASSETS.resolve(Tracks.motifPath("pressure-line"))), "track 11's motif stem");
     }
 
-    /** The beds: the hatchery's to the breakout, the caldera's rumble over it from t=80, the night ice from section 7. */
+    /** The beds: the one under the ice to the breakout, no layer over it, Europa's night ice from section 7. */
     @Test
-    void theHatcheryBedTheCalderasRumbleAndTheNightIce() {
+    void theBedUnderTheIceAndTheNightIce() {
         LevelData.Music music = LEVEL.music();
-        assertEquals(Sfx.AMBIENCE_EUROPA_HATCHERY, Sfx.ambience(music.ambience()));
-        LevelData.Music.AmbienceLayer rumble =
-                music.ambienceLayers().orElseThrow().getFirst();
-        assertEquals(Sfx.AMBIENCE_CALDERA_RUMBLE, Sfx.ambience(rumble.ambience()));
-        assertEquals(0, rumble.level(79), 1e-9);
-        assertEquals(1, rumble.level(95), 1e-9, "swelled in through the antechamber");
-        assertEquals(1, rumble.level(104.5), 1e-9);
-        assertEquals(0, rumble.level(105), 1e-9, "out once the clock resumes after the kill");
+        assertEquals(Sfx.AMBIENCE_EUROPA_UNDER, Sfx.ambience(music.ambience()), "one bed under water (2026-10-26)");
+        assertTrue(music.ambienceLayers().isEmpty(), "no caldera layer");
         assertEquals(7, music.ambienceChangeList().getFirst().section());
         assertEquals(
                 Sfx.AMBIENCE_EUROPA_ICE,
                 Sfx.ambience(music.ambienceChangeList().getFirst().ambience()));
-
-        MockAudio audio = new MockAudio();
-        Lwjgl3Files files = new Lwjgl3Files();
-        Mixer mixer = new Mixer(AudioSettings.defaults());
-        SfxBank sfx = new SfxBank(audio, files, mixer);
-        LevelMusic level = withBoss(audio, files, mixer, sfx)
-                .ambienceLayers(List.of(new LevelMusic.AmbienceLayer(Sfx.AMBIENCE_CALDERA_RUMBLE, rumble::level)));
-        level.update(4, 100, 0.1f, false);
-        assertTrue(sfx.looping(Sfx.AMBIENCE_CALDERA_RUMBLE), "the rumble in the antechamber");
-        assertTrue(level.bossArrived());
-        level.update(5, 104.98, 0.1f, false);
-        assertTrue(level.layerLevel(0) > 0.99f, "held under the fight at the clock's halt");
-        level.bossDown();
-        level.update(5, 104.98, 0.1f, false);
-        assertEquals(0, level.layerLevel(0), "cut at the kill");
-        assertFalse(sfx.looping(Sfx.AMBIENCE_CALDERA_RUMBLE));
-        level.dispose();
-        sfx.dispose();
     }
 
     /**
@@ -316,35 +287,19 @@ class Level28SoundsTest {
 
     /**
      * The finale flown on Level 28's own clock with the approach and the Maw left out (its arena a plain section): the
-     * breakout as the medium turns to air at t=115, the cruisers' rise at 118, their broadsides, a point-defence burst
+     * breakout on the step the ship breaches the shaft mouth's lip (step I2: the burst's step, near t=115), the cruisers' rise at 118, their broadsides, a point-defence burst
      * once a burst (not once a shot) and the flak's airbursts instead of a mortar's splat; the shaft's climb follows
      * the kill's hold only (none without a kill).
      */
     @Test
     void theFinalesBreakoutCruisersAndTheirFire() {
-        LevelScript real = SimSpecs.level(CONTENT, MawFixture.LEVEL, Difficulty.MEDIUM);
-        List<Section> sections = real.sections().stream()
-                .map(section -> section.arena()
-                        ? new Section(section.end(), 100)
-                        : new Section(
-                                section.end(), section.speed(), false, section.rampSeconds(), section.easeSeconds()))
-                .toList();
-        LevelScript finale = real.toBuilder()
-                .sections(sections)
-                .waves(List.of())
-                .groundUnits(List.of())
-                .setPieces(List.of())
-                .radio(List.of())
-                .armourFloor(0)
-                .build();
-        Sortie sortie = new Sortie(
-                1,
-                SimSpecs.starterLoadout(CONTENT, Difficulty.MEDIUM),
-                finale,
-                SimSpecs.rules(CONTENT, MawFixture.LEVEL, Difficulty.MEDIUM).withInvulnerableShip(),
-                60);
+        Sortie sortie = MawFixture.finale();
         FlightSounds sounds = new FlightSounds(
                 bank, SiegeUnitsFixture.quietLooks(sortie), sortie.armament(), List.of(), Optional.empty());
+        BreachLine lip = BreachLine.of(LEVEL).orElseThrow();
+        sounds.breach(Optional.of(lip));
+        long breachTick = -1;
+        long breakoutTick = -2;
         int breakouts = 0;
         int rises = 0;
         int broadsides = 0;
@@ -361,9 +316,13 @@ class Level28SoundsTest {
             int beforeFlak = bank.playing(Sfx.CRUISER_FLAK);
             int beforeSplat = bank.playing(Sfx.MORTAR_IMPACT);
             step(sortie, sounds, IceShelfFixture.toward(sortie, 240, 120));
+            if (breachTick < 0 && lip.breached(sortie.ship().x(), sortie.ship().y(), sortie.groundScroll())) {
+                breachTick = sortie.tick();
+            }
             if (bank.playing(Sfx.BREAKOUT) > before) {
                 breakouts++;
                 breakoutAt = sortie.levelSeconds();
+                breakoutTick = sortie.tick();
             }
             rises += Math.max(0, bank.playing(Sfx.CRUISER_RISE) - beforeRise);
             broadsides += Math.max(0, bank.playing(Sfx.CRUISER_BROADSIDE) - beforeBroadside);
@@ -379,7 +338,9 @@ class Level28SoundsTest {
             assertFalse(bank.playing(Sfx.SHAFT_CLIMB) > 0, "no climb without the kill");
         }
         assertEquals(1, breakouts, "one breakout");
-        assertEquals(115, breakoutAt, 0.1, "at the first section in the air");
+        assertEquals(breachTick, breakoutTick, "on the step the ship breaches the ice, with the burst");
+        assertEquals(
+                115, breakoutAt, 2, "near the first section in the air (no halt at the arena here: ≈ 1.6 s early)");
         assertEquals(1, rises, "the cruisers rise once");
         assertTrue(broadsides > 5, "broadsides: " + broadsides);
         assertTrue(defenceBursts > 5 && defenceShots >= 3 * defenceBursts - 2, defenceBursts + " of " + defenceShots);
@@ -418,10 +379,6 @@ class Level28SoundsTest {
                 Optional.of(files.internal(Tracks.path(Tracks.BOSS_WARNING))),
                 Optional.of(files.internal(Tracks.path(Tracks.BOSS_VRELL))),
                 Tracks.BOSS_WARNING_BARS_SECONDS);
-    }
-
-    private static LevelMusic withBoss(MockAudio audio, Lwjgl3Files files, Mixer mixer, SfxBank sfx) {
-        return theme(audio, files, mixer, sfx, Optional.of(boss(files)));
     }
 
     private record Constant(short value, int sampleRate) implements PcmStream {

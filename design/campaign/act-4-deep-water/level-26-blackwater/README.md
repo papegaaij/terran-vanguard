@@ -408,8 +408,9 @@ The Act 4 **darkness variant** of the A theme ([track 10](../../../audio/music/R
 "Thera Deep"): in section 1 the full A theme with the lamps, then it **strips back** as the lights go
 out (t=8–18) to sonar pings in silence and a deep drone; the scarp adds the Sirens' harmonic layer; the Choir's
 fragment ducks it; the pad thins from t=150; **out at t=166** (silence for the aftermath, Rook's loss);
-the vent field's warm pad creeps in from t=174. No bubble layer (round 48 Q12 a). Ambience: the `europa-black`
-bed (a heavy pressure drone, distant whale calls, no bubbles), the `europa-trench` rumble at the scarp.
+the vent field's warm pad creeps in from t=174. No bubble layer (round 48 Q12 a). Ambience: Europa's bed under the
+ice, `europa-under` (one bed per setting, the user 2026-10-26; the `europa-black` bed and the scarp's `europa-trench`
+layer left the game).
 New sounds this level needs: the Angler's lure hum and lunge, its ring, the Driftjelly's soft pulse, the
 Nautilus crown's violet hum, the torpedo trails (a long, distant rising hiss), Rook's lamp flicker and spin-down,
 the Choir's layered whisper, the headlight click on at the level start; listed in
@@ -417,8 +418,8 @@ the Choir's layered whisper, the headlight click on at the level start; listed i
 
 The data (step F2; played by step F5): track 10 from section 1 with every stem, then the music's `stem_times`: the dark
 stem (`thera-deep-dark`) alone from t=8 over 10 s, −6 dB from t=150, out (`none`) at t=164–166, the warm pad stem
-(`thera-deep-warm`, round 55's pick b "a synth pad") from t=174 over 10 s; the ambience `europa-black`, with an `ambience_layers`
-`europa-trench` over the scarp (t=56–104).
+(`thera-deep-warm`, round 55's pick b "a synth pad") from t=174 over 10 s; the ambience `europa-under` (until step I2
+`europa-black`, with an `ambience_layers` `europa-trench` over the scarp, t=56–104).
 
 ## Credit budget
 
@@ -509,7 +510,7 @@ Production art of M8 part F (round 55, step ART-F) and game captures; the genera
 - [x] Threat profile, Varga's four intel lines and Rook's teaser fitting the intel panel (`IntelPanelLayoutTest`)
 - [x] Briefing: both pages, each one screen, with their images (`BriefingLayoutTest`; ART-F's images)
 - [x] Typical haul within ±5 % of budget(26) = 3,799 with the level's `bounty_scale` (`TypicalHaulTest`: +1.3 %)
-- [x] Music: the darkness variant by section; the `europa-black` ambience (no bubbles) (`Level26SoundsTest.
+- [x] Music: the darkness variant by section; the `europa-under` ambience (no bubbles; `europa-black` until step I2) (`Level26SoundsTest.
       theStemsStripBackThinGoSilentAndTheWarmPadComesIn`, `theExtraStemsAreOnTheThemesGrid`,
       `theBedIsTheBlackWaterAndTheTrenchOverTheScarp`; the warm pad a/b in round 55)
 - [x] Easy/hard variations; the autopilot flies the level on every difficulty (with and without Rook; `Level26Test`,
@@ -600,5 +601,5 @@ Production art of M8 part F (round 55, step ART-F) and game captures; the genera
   voiced) ended 3.2 s after the level (t=188). It is the level-end line now (`event: level-end`, as Levels 22, 23 and
   27 close): it opens as the level ends and the outro waits for it. Fitting it inside the flight would have cut the
   silence after the loss by 3 s (each line holds the radio over 6 s by its text). Every run is now flown to the end
-  (`RadioTimelineLevel26Test.theClosingLineOpensAsTheLevelEnds`), every timed line at most a second late. Pending the
-  user's review in round 58.
+  (`RadioTimelineLevel26Test.theClosingLineOpensAsTheLevelEnds`), every timed line at most a second late. Accepted in
+  round 58 (C.7, 2026-10-26).

@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [.., ../torpedo-pod, ../../generator, ../../../world/europa, ../../../systems/economy]
-updated: 2026-10-24
+updated: 2026-10-26
 ---
 
 # Depth Charges
@@ -102,7 +102,7 @@ Prompts: [concept/prompts.md](concept/prompts.md).
 - [x] Idle with `NO WATER` in a dry level; the above-water drop on the `sub` layer — M8 part A (`DepthChargeTest.dryItReadsNoWaterAndTossesNothing`, `DepthChargeTest.aboveWaterItBurstsOnItsFuseOnlyOnTheSubLayerAndTheNavalGround`)
 - [x] Power draw per level, upgrade prices, shop entry from the L22 visit; the balance plan's purchases — M8 part A (`ActFourDataTest.theDepthChargesBurstOnAFusePerLevel`, `BalanceTest`, `ActFourHangarTest.theActFourItemsAreInTheLiveShopWithTheirNames`; the hangar's test range: `ActFourHangarTest.theDepthChargesTestRangeIsWaterWithSubmergedDummiesThatOneBurstDestroys`)
 - [x] M8 AW (the user, 2026-10-23): tossed forward about 200 px, a burst on the fuse or on touching a swimmer (a latched Lamprey included), never the ship; the new numbers — step AW1 (`DepthChargeTest.underWaterItIsTossedForwardHoversAboutTwoHundredPxAheadSinksAndBurstsOnItsFuse`, `underWaterItBurstsOnTouchingASwimmerAndItsBurstHitsEveryLayerInTheWaterButTheIceCeiling`, `aChargeTossedWithALampreyOnTheHullBurstsOnItAtOnceAndNeverHitsTheShip`, `ActFourDataTest.theDepthChargesBurstOnAFusePerLevel`, `Act4ArsenalFlightTest.theDepthChargesAreABarrelTossedForwardOnAFuse`)
-- [ ] M8 AW: the toss's look from the stern rack over the hull and its toss thump (step AW3, round 56)
+- [x] M8 AW: the toss's look from the stern rack over the hull and its toss thump (step AW3, round 56) (`DeepWaterLooksTest.theTossSwellsOverTheHullAndDropsIn`; no thump of its own: the roll-out's sound stands in, accepted in round 56, A.1)
 - [x] Sprites, burst VFX and sounds (round 48) — M8 part A (step A6: `DeepWaterLooksTest.theDrumSinksInThreeStagesAndSpins`, `theFuseLampBlinksFasterTowardsTheBurst`, `theBurstMatchesTheLevelsRadius`, `ActFourSoundsTest.aDepthChargeRollsOutAndBurstsOnItsFuse`; the finals accepted and the sounds picked in [round 50](../../../concept-rounds/round-50/README.md))
 
 ## Open questions

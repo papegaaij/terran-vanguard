@@ -119,8 +119,8 @@ Proposed by the Act 4 design phase (2026-10-21) and **decided in round 48** (202
 | **F** Level 26 — **built** (2026-10-23, steps F1–F6, LX, ART-F, AUD-F, VOX-F); [round 55](../../concept-rounds/round-55/README.md) closed (2026-10-24): Level 25's redo and F.1–F.4, F.6–F.8 accepted, the sounds picked (spin, click, static and the warm pad b), C.2/C.4 changed after the playtest and built in step FX (the hits cut Rook's line, his spin on the screen), F.5 shown again in round 57 | Darkness for every unit, Glow Angler, the Choir's words, Rook's shoot-down | C, A (heavy drone) | 55 |
 | **AW** Under-water weapons rework — **decided by the user (2026-10-23, playtest of Levels 22–25), built before part G**; built (2026-10-24), [round 56](../../concept-rounds/round-56/README.md) closed (2026-10-24): all accepted, C.3 keep, Q.1 yes (the strip names the energy weapons, step FX) | Energy weapons (Ion Beam, Lance Laser, Rear Lance) nearly useless under water (proposed ×0.2 damage, ×0.4 reach); the Harpoon Torpedoes tuned for swarms (faster rate, about 2 → 3 a second, about +50 % travel speed, blast 20 → 40 px, less damage a torpedo, homing only in a narrow ±15° cone ahead); the Depth Charges thrown forward, sinking ahead and bursting on their fuse or on touching a swimmer (hitting swimmers, ground and `sub`); the Act 4 intro briefing (and the hangar notice before Level 23) warning to keep credits for under-water weapons; the balance plan without selling (the beam kept for later levels; the Harpoon L1 bought at Level 22, the Harpoon L1 and the Depth Charges fitted at Level 23, upgraded at Level 24). No extra prevention tests (the user: "You just have to play it to see"); the Nautilus and the micro-missiles' angle unchanged until replayed | F | — |
 | **G** Level 27 — **built** (2026-10-25, steps M8-PG, G1–G5, ART-G, AUD-G); [round 57](../../concept-rounds/round-57/README.md) closed (2026-10-25): all accepted (Level 26's Rook loss and the waterline strip, the art final, C.1–C.7), sounds bed a, tell b, eruption a, bend a, launch a, run b, impact b, hum a, break b, crack a, hull break a, scan b (the b picks in the game since step H5) | Depth Hunter (hint 3), homing torpedoes and flares, heat plumes, Rook's absence, Vorne's motif | F, AW | 57 |
-| **H** Level 28 + act end — **built** (2026-10-26, steps M8-PH, H1–H7, ART-H1, ART-H2, AUD-H); [round 58](../../concept-rounds/round-58/README.md) open | Abyssal Maw, the breakout, the reveal set piece (cruisers), the Act 4 outro, the release end moves to Act V | G | 58 |
-| **I** Close-out | Playthrough and balance tests through Act 4 (the temporary budget(n) income of part A removed), variety as built, `later` tags → Act 5, the voice listen-through | all | 59 |
+| **H** Level 28 + act end — **built** (2026-10-26, steps M8-PH, H1–H7, ART-H1, ART-H2, AUD-H); [round 58](../../concept-rounds/round-58/README.md) closed 2026-10-26 (the Maw's and the cruisers' art redone in round 59, the timing of the breakout's burst and three b sounds to build) | Abyssal Maw, the breakout, the reveal set piece (cruisers), the Act 4 outro, the release end moves to Act V | G | 58 |
+| **I** Close-out — **built** (2026-10-26, step I3: `ActPlaythroughTest`/`BalanceTest` through Level 28 on the levels' own income, part A's temporary `budget(n)` removed; Act 4's variety as built; the `later` tags to Act 5; the playthrough save at the Level 28 hangar; the listen-through's rows; step I4: the full `check`, the captures of the round 58 fixes); [round 59](../../concept-rounds/round-59/README.md) open (2026-10-26) | Playthrough and balance tests through Act 4 (the temporary budget(n) income of part A removed), variety as built, `later` tags → Act 5, the voice listen-through | all | 59 |
 
 ## Implementation
 
@@ -158,7 +158,7 @@ Proposed by the Act 4 design phase (2026-10-21) and **decided in round 48** (202
       2026-10-18 (step R39C), done except R.1's redo of the canyon walls' look (step CW, in progress, to round
       40), pending the user's playthrough; part D, Level 17, built on 2026-10-18/19 (steps D1–D5, G1, G2, ART-D,
       AUD-D, VOX-D), concept round 40 closed 2026-10-19; parts E (Level 18), F (Level 19), G (Level 20) and H (Level 21 and the act end) built and their rounds 41-44 closed by 2026-10-20 (round 44's K.b and K.c changes and the Q rows' reworks are planned: steps SIM-K, ART-K, GK, L21R); part I, the close-out, done: the user's playthrough of Act 3 on 2026-10-21 and the `v0.1` release = Acts 1-3 on 2026-10-22; open: Levels 18 and 19's "Easy/hard variations" items and the act's "All 7 levels" item)
-- [ ] M8 Act 4 (design decided in round 48; parts A–I under *M8 parts*; the design phase of 2026-10-21 wrote the act, its seven levels, the units, the boss and the systems as drafts)
+- [ ] M8 Act 4 (design decided in round 48; parts A–I under *M8 parts*; the design phase of 2026-10-21 wrote the act, its seven levels, the units, the boss and the systems as drafts; parts A–H built and their rounds 50–58 closed, part I built on 2026-10-26; open: round 59 (the Maw's and the cruisers' art redo, the Act 4 listen-through, hard's Act 4 economy) and the user's playthrough of Act 4)
 
 ## Open questions
 
@@ -268,6 +268,24 @@ Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-a
   breakout into the air, the Ascendancy cruisers' rise and run (broadsides, flak, point defence; the armour floor at 1
   from the kill), the orbit; the debrief with `ACT IV COMPLETE`, the Act 4 outro and the release end with Act V's name.
   Production art, 19 sound pairs and track 30 (the a variants as stand-ins), the voice; Level 26's last line made its
-  level-end line (step H7); Level 28's atlases 7 pages, one over the budget (pending round 58); full `check` green.
+  level-end line (step H7); Level 28's atlases 7 pages, one over the budget (accepted in round 58 (2026-10-26)); full `check` green.
   Concept [round 58](../../concept-rounds/round-58/README.md) opened (the art finals with captures, the sounds, Q.1 the
-  Maw's music, the calls).
+  Maw's music, the calls) and closed 2026-10-26: F.1, F.4-F.8 accepted (F.4 with a timing fix for the next code step: the
+  burst at the moment the ship breaches the surface, wherever it is), F.2 (the Maw) and F.3 (the cruisers) redo in round
+  59, Q.1 a, C.1-C.8 accepted, sounds a except S.13, S.14 and S.16 b (to put into the game in a later step), track 30
+  accepted.
+- 2026-10-26 (step I3): part I built. Part A's temporary income is gone (`Unmapped` and `BalanceTest`'s and
+  `tools/balance.py`'s `budget(n)` fallback for an Act 4 level without data: every planned level earns its typical
+  haul); the returning units' time-to-kill check and `tools/balance.py`'s act HP and beam-era tables run through
+  Level 28. No tuning pass was needed: the campaign playthrough ends Act 4 at -2.3 % of the expert's bound on medium
+  and +8.8 % on easy; hard ends 49.4 % under (13,164 against 25,991), still the pending round-59 finding (Act 3's
+  deficit carried in, the autopilot's lower grades; a level's `bounty_scale`, the plan's purchases and the prices
+  move the bound and the playthrough together). Level 28's beam-era time stays 1.52× (allowed 1.6×). Act 4 passes
+  the variety checklist as built; the `later: Act 4` tags are resolved or moved to Act 5;
+  `./gradlew :content:playthroughSave -Plevel=28` writes the save at the Level 28 hangar; `tools/art/voice.py`'s inner
+  Gradle run isolated; the 119 voiced Act 4 lines checked against a Whisper transcript for round 59's listen-through.
+- 2026-10-26 (step I4): the full `check` green, `tools/balance.py` and `levelReport -Plevel=28` clean; game captures of
+  the round 58 fixes (the Maw's arrival, sweep, dive and corners; the cruisers' rise; the breakout's burst for a ship at
+  the left, the middle, the right and moving) and the ambience beds' A/B renders; concept
+  [round 59](../../concept-rounds/round-59/README.md) opened (R.1–R.3 the redone art, V.1 the Act 4 listen-through, Q.1
+  the beds' volume, C.1–C.7), M8's last round.

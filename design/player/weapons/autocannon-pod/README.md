@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [.., ../../generator, ../../../systems/economy]
-updated: 2026-10-02
+updated: 2026-10-26
 ---
 
 # Autocannon Pod
@@ -20,7 +20,7 @@ Cheap wing pod with a light forward cannon. Adds steady forward damage; most pla
 |---|---|
 | Slot | Wing mount (per pod) |
 | Traits | `forward` |
-| Layers hit | `air`, `low-air` and `ground` (hardened ground targets glance off); not `high-air`; the `sub` layer only in under-water mode, at 50 % ([layer rules](../../../enemies/README.md#layer-rules)) |
+| Layers hit | `air`, `low-air` and `ground` (hardened ground targets glance off); not `high-air`; under water the play plane at the water's damage factor and the deep `sub` layer only in the Sonar Pulse's window ([layer rules](../../../enemies/README.md#layer-rules), [Europa rules](../../../world/europa/README.md#under-water-rules)) |
 | Price | 500 cr |
 | Upgrade cost L2 / L3 / L4 / L5 | 250 / 500 / 1 000 / 2 000 cr (sell-back per [economy](../../../systems/economy/README.md)) |
 | Unlock | L02 (in the shop from the hangar visit before it) |

@@ -65,12 +65,6 @@ class BalanceTest {
      */
     private static final Catalogue CATALOGUE = Catalogue.complete(CONTENT);
 
-    /**
-     * M8 part A (temporary, removed in M8 part I): from this level a planned level without its data yet earns
-     * budget(n) (design/systems/economy, the absolute typical haul) instead of its typical haul.
-     */
-    static final int FALLBACK_FROM = 22;
-
     private static final CampaignRules RULES = CampaignRules.of(CONTENT);
 
     /** The plan's fit against the reference DPS: inside this band. */
@@ -241,17 +235,13 @@ class BalanceTest {
             boolean wet = plan.underwater().contains(level);
             double[] dps = dps(campaign.gear().loadout(), wet);
             // M7 part I: every planned level has its data (Level 21 since part H), so the income is always the
-            // level's typical haul; M8 part A (temporary, until part I): an Act 4 level without its data earns
-            // budget(n).
-            Optional<String> key = CONTENT.levelKey(level).filter(Unmapped::mapped);
-            if (key.isEmpty() && level < FALLBACK_FROM) {
-                throw new AssertionError("Level " + level + " has no (mapped) level data");
-            }
+            // level's typical haul; M8 part I: Act 4's too (part A's temporary budget(n) for a level without its
+            // data is gone).
+            String key = CONTENT.levelKey(level)
+                    .orElseThrow(() -> new AssertionError("Level " + level + " has no level data"));
             double budget = CONTENT.economy().budget().of(level);
-            int haul = (int) Math.rint(incomeFactor
-                    * key.map(found ->
-                                    TypicalHaul.of(CONTENT, found, difficulty).typical())
-                            .orElse(budget));
+            int haul = (int) Math.rint(
+                    incomeFactor * TypicalHaul.of(CONTENT, key, difficulty).typical());
             // Round 34, P3 = A: the typical player's grade bonus (a B) on top of the haul.
             int income = haul + (int) Math.rint(plan.gradeBonus() * haul);
             rows.add(new Row(
@@ -562,7 +552,7 @@ class BalanceTest {
         List<String> slow = new ArrayList<>();
         int holds = 0;
         for (Row row : sheet()) {
-            Optional<String> key = CONTENT.levelKey(row.level()).filter(Unmapped::mapped); // M7 part C: Unmapped
+            Optional<String> key = CONTENT.levelKey(row.level());
             if (key.isEmpty()) {
                 continue;
             }
@@ -607,7 +597,7 @@ class BalanceTest {
         Set<String> pending = new TreeSet<>();
         int checked = 0;
         for (Row row : sheet()) {
-            Optional<String> key = CONTENT.levelKey(row.level()).filter(Unmapped::mapped); // M7 part C: Unmapped
+            Optional<String> key = CONTENT.levelKey(row.level());
             if (key.isEmpty()) {
                 continue;
             }
@@ -652,7 +642,7 @@ class BalanceTest {
         List<String> slow = new ArrayList<>();
         int checked = 0;
         for (Row row : sheet()) {
-            Optional<String> key = CONTENT.levelKey(row.level()).filter(Unmapped::mapped); // M7 part C: Unmapped
+            Optional<String> key = CONTENT.levelKey(row.level());
             if (key.isEmpty()) {
                 continue;
             }
@@ -863,7 +853,7 @@ class BalanceTest {
      * The act HP factor (design/enemies Balancing basis, D5 = c of M5 part A): a returning unit of
      * tier {@code medium} or larger (and the basis's {@code small_act_hp} units, the factor capped at ×3: the user's Act
      * 2 playtest, 2026-10-18), built by {@link SimSpecs#enemy} for each Act 2 and (M7 part A) Act 3
-     * level after its first (Levels 08–21, as far as the reference DPS curve goes), keeps its time to kill inside its
+     * level after its first (Levels 08–21, M8 part I: and Act 4's to Level 28, as far as the reference DPS curve goes), keeps its time to kill inside its
      * size class's target at that level's reference DPS (M7 part E: times the beam era's factor for its tier from
      * Level 18 on, {@code beam_era_hp}) (its parts' and segments' HP summed; 1 HP of
      * rounding allowed). Units already off target at their first level are left to {@link
@@ -879,8 +869,7 @@ class BalanceTest {
                     || (enemy.tier().compareTo(Tier.MEDIUM) < 0
                             && !CONTENT.enemyBasis().smallActHp().units().contains(entry.getKey()))
                     || enemy.tier() == Tier.HUGE
-                    || timeToKill(enemy).isPresent()
-                    || !Unmapped.mappedEnemy(entry.getKey())) { // M7 part C: Unmapped
+                    || timeToKill(enemy).isPresent()) {
                 continue;
             }
             double[] target =
@@ -889,7 +878,7 @@ class BalanceTest {
                         case MEDIUM -> new double[] {0.4, 1.5};
                         default -> new double[] {1, 3};
                     };
-            for (int level = Math.max(ACT_2_FIRST, enemy.firstLevel() + 1); level <= ACT_3_LAST; level++) {
+            for (int level = Math.max(ACT_2_FIRST, enemy.firstLevel() + 1); level <= ACT_4_LAST; level++) {
                 Double reference = CONTENT.enemyBasis().referenceDps().get(level);
                 if (reference == null) {
                     continue;
@@ -898,7 +887,7 @@ class BalanceTest {
                         && !CONTENT.enemyBasis().smallActHp().applies(entry.getKey(), level)) {
                     continue; // only in small_act_hp's levels (Levels 08-09)
                 }
-                int act = level >= ACT_3_FIRST ? 3 : 2;
+                int act = level >= ACT_4_FIRST ? 4 : level >= ACT_3_FIRST ? 3 : 2;
                 EnemySpec spec =
                         SimSpecs.enemy(CONTENT, entry.getKey(), Difficulty.MEDIUM, Optional.empty(), act, level);
                 double hp = spec.hp()
@@ -933,6 +922,11 @@ class BalanceTest {
     static final int ACT_3_FIRST = 15;
 
     static final int ACT_3_LAST = 21;
+
+    /** M8 part I: Act 4's levels (design/campaign/act-4-deep-water), as far as the reference DPS goes. */
+    static final int ACT_4_FIRST = 22;
+
+    static final int ACT_4_LAST = 28;
 
     /**
      * Time to kill at the unit's first level (design/enemies Balancing basis): {@code tiny} one hit

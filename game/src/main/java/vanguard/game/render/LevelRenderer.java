@@ -900,6 +900,10 @@ public final class LevelRenderer {
             // M8 part C: under the grade the glows wait for it (after the ship).
             ground.drawGroundGlows(batch, sortie, alpha);
         }
+        if (cruisers != null) {
+            // Step I2: the cruisers' holes in the night ice where they broke through, on the ground under the flyers.
+            cruisers.drawHoles(batch, sortie, scroll);
+        }
         // M8 part D: the Abyss Rays deep under the play plane (the shadow, the rise's first half, the sink's second).
         units.drawRisers(batch, sortie, alpha);
         player.drawBomberShadows(batch, sortie, alpha);

@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: n/a
 depends-on: [../../player, ../difficulty]
-updated: 2026-10-22
+updated: 2026-10-26
 ---
 
 # Economy
@@ -172,7 +172,9 @@ harpoon bought at L22 (the beam flies the dry ice), the Depth Charges, the harpo
 L23, the pressure hull at L24, the second pod at L25, the harpoon at L4 at L26, the Mk IV at L27, the Shield Mk III at
 L28; forward DPS 100 · 76 · 79.5 · 83 · 101 · 101 · 101 against the reference 96 → 120 (0.76–1.04), at most 16 of 16
 MW until the Mk IV; the tightest visit L23 (about 1 940 left), about 3 500 left after the L28 visit. Rook's repairs
-stop while he is missing (L27–L28: the loaner Bulwark is repaired free).
+stop while he is missing (L27–L28: the loaner Bulwark is repaired free). **Removed in M8 part I** (2026-10-26): every Act 4 level has its
+data, so each earns its own typical haul like Acts 1–3's; the `FALLBACK_FROM` constants are gone (the numbers above
+are part A's planning sheet; `tools/balance.py` prints the live one).
 
 **Hard is tighter on purpose.** The plan is a medium player's; on hard (income ×0.9 of the hard
 levels' larger hauls, repairs 10 cr/point) the static sheet may not pay both the plan and the repairs;

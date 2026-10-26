@@ -22,6 +22,7 @@ import vanguard.sim.CoilArena.DiveState;
 import vanguard.sim.CoilArena.ImplantState;
 import vanguard.sim.CruiserRunSpec;
 import vanguard.sim.LevelScript;
+import vanguard.sim.PlayField;
 import vanguard.sim.SetPiece;
 import vanguard.sim.SimStep;
 import vanguard.sim.Sortie;
@@ -70,6 +71,7 @@ class Level28LooksTest {
         assertEquals(MawLooks.HEAD_FRAMES, frames(MAW + "-head"));
         assertEquals(MawLooks.HEAD_FRAMES, frames(MAW + "-head-glow"));
         assertTrue(single(MAW + "-head-rim"), "the wall's tell");
+        assertEquals(MawLooks.SWIM_HEADINGS, frames(MAW + "-head-swim"), "round 58 F.2: the head swimming");
         assertEquals(MawLooks.SAC_TORN + 1, frames(MAW + "-sac"));
         assertEquals(MawLooks.SAC_FULL + 1, frames(MAW + "-sac-glow"), "the torn sac has none");
         assertEquals(MawLooks.IMPLANT_BLOWN + 1, frames(MAW + "-implant"));
@@ -115,12 +117,19 @@ class Level28LooksTest {
         assertEquals(8, MawLooks.heading(0), "the tail to the right: facing left");
         assertEquals(24, MawLooks.heading(Math.PI), "the tail to the left: facing right");
         assertEquals(1, MawLooks.heading(Math.PI / 2 - 2 * Math.PI / 32));
-        assertEquals(16 * 4 + 3, MawLooks.segmentFrame(MawLooks.UP, 3));
+        assertEquals(16 * 4 + 3, MawLooks.segmentFrame(16, 3));
         JsonValue head = pivots(MAW).get("head");
         assertEquals(MawLooks.HEAD_FRAMES, head.get("frames").size);
         assertEquals("lunge", head.get("frames").getString(MawLooks.LUNGE));
         assertEquals("rear", head.get("frames").getString(MawLooks.REAR));
         assertEquals("death", head.get("frames").getString(MawLooks.DEAD));
+        // Round 58 F.2: the swimming head faces k × 22.5° clockwise from straight down.
+        assertEquals(MawLooks.SWIM_HEADINGS, pivots(MAW).get("head_swim").getInt("headings"));
+        assertEquals(0, MawLooks.swimHeading(-Math.PI / 2), "facing down: the rest frame's facing");
+        assertEquals(4, MawLooks.swimHeading(Math.PI), "facing left");
+        assertEquals(8, MawLooks.swimHeading(Math.PI / 2), "facing up");
+        assertEquals(12, MawLooks.swimHeading(0), "facing right");
+        assertEquals(1, MawLooks.swimHeading(-Math.PI / 2 - 2 * Math.PI / 16));
     }
 
     @Test
@@ -159,8 +168,43 @@ class Level28LooksTest {
         assertTrue(MawLooks.subScale(1) < 0.9f && MawLooks.subShade(1) < 0.4f && MawLooks.subAlpha(1) < 0.6f);
         assertTrue(MawLooks.glowAlpha(1) > MawLooks.subAlpha(1), "the frame in the dark");
         assertTrue(MawLooks.glowAlpha(1) >= 0.6f);
-        assertEquals(8, MawLooks.columnSegments(445, 56, 31), "the lunge's body reaches past the bottom edge");
-        assertEquals(31, MawLooks.columnSegments(5000, 56, 31), "at most the body");
+    }
+
+    /**
+     * Round 58 F.2, flown: the head swims in from off the screen turning through the coil's bends a heading at a time
+     * (every heading on the way round), the segments' frames turn with the line, and once up it is at rest facing down.
+     */
+    @Test
+    void theHeadSwimsInTurningThroughTheBends() {
+        Sortie sortie = MawFixture.sortie();
+        Set<Integer> headings = new HashSet<>();
+        int last = -1;
+        boolean wound = false;
+        while (!MawFixture.maw(sortie).present() || !MawFixture.coil(sortie).up()) {
+            sortie.step(0);
+            if (!MawFixture.maw(sortie).present()) {
+                continue;
+            }
+            CoilArena coil = MawFixture.coil(sortie);
+            if (!coil.up()) {
+                assertTrue(MawLooks.winding(coil), "winding in over the intro");
+                wound = true;
+                int k = MawLooks.swimHeading(coil.headFacing());
+                if (last >= 0) {
+                    int step = Math.floorMod(k - last, MawLooks.SWIM_HEADINGS);
+                    assertTrue(
+                            step <= 1 || step == MawLooks.SWIM_HEADINGS - 1, "a heading at a time: " + last + " " + k);
+                }
+                last = k;
+                headings.add(k);
+            }
+        }
+        assertTrue(wound);
+        assertEquals(MawLooks.SWIM_HEADINGS, headings.size(), "round the arena: every heading " + headings);
+        CoilArena coil = MawFixture.coil(sortie);
+        assertFalse(MawLooks.winding(coil));
+        assertEquals(0, MawLooks.swimHeading(coil.headFacing()), "at rest, facing down");
+        assertEquals(0, MawLooks.darkness(coil), "no darkness on the arrival");
     }
 
     /** The death: the implants blow first, the segments sink from the tail to the head, the head last. */
@@ -203,13 +247,119 @@ class Level28LooksTest {
         assertEquals(116, pivots.getInt("half_width"), "the art's half width to the inner edge");
         assertEquals(14, pivots.get("ports").get("right").size, "the left hull's inner ports");
         assertEquals(14, pivots.get("ports").get("left").size);
-        CruiserLooks looks = CruiserLooks.following(run, pivots);
+        CruiserLooks looks = CruiserLooks.following(script, pivots);
         looks.reset();
         assertTrue(script.hazards().cruisers().isPresent());
         assertTrue(SimSpecs.level(CONTENT, CONTENT.levelKey(27).orElseThrow(), Difficulty.MEDIUM)
                 .hazards()
                 .cruisers()
                 .isEmpty());
+    }
+
+    /**
+     * Step I2 (round 58 F.3): the cruisers break through intact night ice where they are. Their crust is the night ice
+     * (at the rise's scale its colours are the ground's); flown, each hull starts on its hole in the ice and moves with
+     * the ground there (the hole under it, on the ground's scroll), then slows to the wing's pace and is in its running
+     * place by the run, the hole left behind below it; nothing of the hole before the rise; the backdrop has no open
+     * water there (no ice-split pieces).
+     */
+    @Test
+    void theCruisersBreakThroughTheIceWhereTheyAre() throws IOException {
+        java.awt.image.BufferedImage crust = javax.imageio.ImageIO.read(
+                SPRITES.resolve(CruiserLooks.SLUG + "-ice_0.png").toFile());
+        java.awt.image.BufferedImage ice = javax.imageio.ImageIO.read(
+                ASSETS.resolve("backdrop/level-28/night-ice.png").toFile());
+        double[] crustMean = mean(crust);
+        double[] iceMean = mean(ice);
+        for (int c = 0; c < 3; c++) {
+            assertEquals(iceMean[c], crustMean[c], 24, "the crust in the night ice's colours, channel " + c);
+        }
+        java.awt.image.BufferedImage hole = javax.imageio.ImageIO.read(
+                SPRITES.resolve(CruiserLooks.SLUG + "-hole.png").toFile());
+        java.awt.image.BufferedImage hull = javax.imageio.ImageIO.read(
+                SPRITES.resolve(CruiserLooks.SLUG + ".png").toFile());
+        int covered = 0;
+        int footprint = 0;
+        for (int y = 0; y < hull.getHeight(); y += 4) {
+            for (int x = 0; x < hull.getWidth(); x += 4) {
+                if ((hull.getRGB(x, y) >>> 24) > 200) {
+                    footprint++;
+                    int hx = (int)
+                            Math.round(hole.getWidth() / 2.0 + (x - hull.getWidth() / 2.0) * CruiserLooks.RISE_SCALE);
+                    int hy = (int)
+                            Math.round(hole.getHeight() / 2.0 + (y - hull.getHeight() / 2.0) * CruiserLooks.RISE_SCALE);
+                    covered += (hole.getRGB(hx, hy) >>> 24) > 200 ? 1 : 0;
+                }
+            }
+        }
+        assertTrue(
+                covered > 0.97 * footprint,
+                "the hole under the hull's footprint at the rise: " + covered + " of " + footprint);
+        assertTrue(
+                level(28).backdrop().pieces().keySet().stream().noneMatch(name -> name.startsWith("ice-split")),
+                "no open leads drawn in the ice before the rise");
+
+        LevelScript script = SimSpecs.level(CONTENT, MawFixture.LEVEL, Difficulty.MEDIUM);
+        CruiserRunSpec spec = script.hazards().cruisers().orElseThrow();
+        assertEquals(
+                150 * CruiserLooks.CATCH * (spec.runAt() - spec.riseAt()) / 2,
+                CruiserLooks.riseDrop(script, spec),
+                1e-9);
+        assertEquals(420, CruiserLooks.riseY(270, 150, 0), 1e-9);
+        assertEquals(270, CruiserLooks.riseY(270, 150, CruiserLooks.CATCH), 1e-9, "caught up half way");
+        assertEquals(270, CruiserLooks.riseY(270, 150, 1), 1e-9);
+        Sortie sortie = MawFixture.finale();
+        CruiserLooks looks = CruiserLooks.following(sortie.script(), pivots(CruiserLooks.SLUG));
+        vanguard.sim.CruiserRun run = sortie.cruisers().orElseThrow();
+        int riseTick = SimStep.ticks(spec.riseAt());
+        double drop = looks.riseDrop();
+        int follow = 0;
+        double lastHull = Double.NaN;
+        while (sortie.levelSeconds() < spec.runAt() + 0.5) {
+            sortie.step(IceShelfFixture.toward(sortie, 240, 120));
+            looks.stepped(sortie);
+            int at = CruiserLooks.levelTick(sortie);
+            if (at < riseTick) {
+                assertTrue(Double.isNaN(looks.riseScroll()), "no hole before the rise");
+                continue;
+            }
+            double hullY = CruiserLooks.riseY(run.hullY(at), drop, run.riseShare(at));
+            double holeY = looks.holeY(run, sortie.groundScroll());
+            if (at == riseTick) {
+                assertEquals(holeY, hullY, 1, "the hull starts on its hole");
+            }
+            if (at - riseTick < SimStep.ticks(0.25)) {
+                assertEquals(holeY, hullY, 3, "moving with the ground at first");
+                follow++;
+            }
+            assertTrue(Double.isNaN(lastHull) || hullY <= lastHull + 1e-9, "it never climbs back");
+            lastHull = hullY;
+        }
+        assertTrue(follow >= SimStep.ticks(0.25) - 1, "followed the hole");
+        int runTick = SimStep.ticks(spec.runAt());
+        assertEquals(
+                PlayField.HEIGHT / 2.0,
+                CruiserLooks.riseY(run.hullY(runTick), drop, run.riseShare(runTick)),
+                1e-9,
+                "in its running place by the run (the lanes as before)");
+        assertTrue(looks.holeY(run, sortie.groundScroll()) < PlayField.HEIGHT / 2.0 - 400, "the hole left behind");
+    }
+
+    private static double[] mean(java.awt.image.BufferedImage image) {
+        double[] sum = new double[3];
+        int n = 0;
+        for (int y = 0; y < image.getHeight(); y++) {
+            for (int x = 0; x < image.getWidth(); x++) {
+                int rgb = image.getRGB(x, y);
+                if ((rgb >>> 24) > 200) {
+                    sum[0] += (rgb >> 16) & 255;
+                    sum[1] += (rgb >> 8) & 255;
+                    sum[2] += rgb & 255;
+                    n++;
+                }
+            }
+        }
+        return new double[] {sum[0] / n, sum[1] / n, sum[2] / n};
     }
 
     /** The breakout at the first section in the air after the water (Level 28's t=115), the orbit's white to the end. */
@@ -237,6 +387,91 @@ class Level28LooksTest {
             }
         }
         assertEquals(BreakoutLooks.SLABS * BreakoutLooks.TUMBLE, slabs.size(), "every tumble frame");
+    }
+
+    /**
+     * Step I2 (round 58 F.4): the lip that times the burst follows the art (the shaft mouth's water begins under it,
+     * within its foam and ragged edge, across the bore), and flown at the left, in the middle, at the right and moving
+     * the burst starts within one step of the ship's nose crossing the lip, at the lip where the ship crossed, and stays
+     * anchored there on the ice (scrolling with the ground) while the ship flies on; high or at a flank the ship
+     * breaches earlier than low in the middle.
+     */
+    @Test
+    void theBurstStartsAsTheShipBreachesTheIce() throws IOException {
+        LevelData l28 = level(28);
+        BreachLine lip = BreachLine.of(l28).orElseThrow();
+        assertEquals(l28.scrollAt(115) + 96, lip.apexRow(), 1e-9, "the breakout line");
+        assertTrue(BreachLine.of(level(27)).isEmpty());
+        java.awt.image.BufferedImage mouth = javax.imageio.ImageIO.read(
+                ASSETS.resolve("backdrop/level-28/shaft-mouth.png").toFile());
+        var placed = l28.backdrop().placed().stream()
+                .filter(piece -> piece.piece().equals("shaft-mouth"))
+                .findFirst()
+                .orElseThrow();
+        double top = l28.pieceCentre(placed) + mouth.getHeight() / 2.0;
+        for (int x = 100; x <= 380; x += 40) {
+            int water = -1;
+            for (int y = 0; y < mouth.getHeight() - 24 && water < 0; y++) {
+                boolean run = true;
+                for (int k = 0; k < 24 && run; k++) {
+                    run = dark(mouth, x, y + k);
+                }
+                water = run ? y : -1;
+            }
+            assertTrue(water > 0, "water under the lip at x " + x);
+            assertEquals(lip.edgeRow(x) - 16, top - water, 16, "the lip at x " + x + " (the water under its foam)");
+        }
+        long[] ticks = new long[4];
+        double[][] at = {{110, 96}, {240, 96}, {370, 96}, {0, 0}};
+        for (int path = 0; path < at.length; path++) {
+            Sortie sortie = MawFixture.finale();
+            BreakoutLooks looks = BreakoutLooks.following(l28);
+            long crossing = -1;
+            double shipX = 0;
+            double edgeY = 0;
+            while (sortie.levelSeconds() < 119 && looks.burstTick() < 0) {
+                double t = sortie.levelSeconds();
+                int commands = path < 3
+                        ? IceShelfFixture.toward(sortie, at[path][0], at[path][1])
+                        : IceShelfFixture.toward(sortie, t % 2 < 1 ? 120 : 360, t % 1.4 < 0.7 ? 60 : 300);
+                sortie.step(commands);
+                looks.stepped(sortie);
+                double x = sortie.ship().x();
+                double gap =
+                        lip.edgeRow(x) - sortie.groundScroll() - (sortie.ship().y() + BreachLine.NOSE);
+                if (crossing < 0 && gap <= 0) {
+                    crossing = sortie.tick();
+                    shipX = x;
+                    edgeY = lip.edgeRow(x) - sortie.groundScroll();
+                }
+            }
+            assertTrue(crossing > 0, "path " + path + " crosses the lip");
+            assertEquals(crossing, looks.burstTick(), 1, "path " + path + ": the burst within a step of the crossing");
+            assertEquals(shipX, looks.burstX(), 3, "at the ship's x");
+            assertEquals(edgeY, looks.burstY(sortie.groundScroll()), 3, "on the lip");
+            if (path == 3) {
+                assertTrue(Math.abs(sortie.ship().x() - sortie.ship().renderX(0)) > 0.5, "moving as it breaches");
+            }
+            ticks[path] = looks.burstTick();
+            double scroll = sortie.groundScroll();
+            for (int i = 0; i < 30; i++) {
+                sortie.step(IceShelfFixture.toward(sortie, 400, 400));
+                looks.stepped(sortie);
+            }
+            assertEquals(
+                    looks.burstY(scroll) - (sortie.groundScroll() - scroll),
+                    looks.burstY(sortie.groundScroll()),
+                    1e-6,
+                    "anchored on the ice");
+            assertEquals(ticks[path], looks.burstTick(), "one burst");
+        }
+        assertTrue(ticks[0] < ticks[1] && ticks[2] < ticks[1], "the flanks breach before the middle");
+    }
+
+    private static boolean dark(java.awt.image.BufferedImage image, int x, int y) {
+        int rgb = image.getRGB(x, y);
+        int lum = (((rgb >> 16) & 255) + ((rgb >> 8) & 255) + (rgb & 255)) / 3;
+        return lum < 45 && (rgb >>> 24) > 200;
     }
 
     /**

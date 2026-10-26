@@ -3,7 +3,7 @@ title: Data file schemas — Act 4
 design: approved
 implementation: in-progress
 art: n/a
-updated: 2026-10-25
+updated: 2026-10-26
 ---
 
 # Data file schemas — Act 4
@@ -173,12 +173,15 @@ M8's additions: Europa's underwater rules and the level and unit keys of Act 4's
 - **Level and unit, M8 part H** ([Level 28](../../../campaign/act-4-deep-water/level-28-abyssal-maw/README.md), the
   [Abyssal Maw](../../../enemies/bosses/abyssal-maw/README.md) and the [Act 4](../../../campaign/act-4-deep-water/README.md)
   end; flown by sim steps H1 (`CoilArena`) and H2 (`CruiserRun`, the floor, `MawHazards`), loaded, checked (`MawChecks`)
-  and mapped (`MawRules`, `MawBlock`) in step H3; pending the user's review in round 58). A boss script's **`coil`** (an
+  and mapped (`MawRules`, `MawBlock`) in step H3; accepted in round 58 (2026-10-26)). A boss script's **`coil`** (an
   `anchored` boss without lanes, a stride or a breach, every part starting `sub`, its head the first vital part with a
   `while: open` spot, the throat; screen px, y below the top edge, turned once into the simulation's frame):
-  **`intro`** (s from the arrival until the coil and the head are up: invulnerable, nothing fires); **`body`**
-  (`segments`, `spacing` px, `hitbox`, `path` `[[x, y], …]` the centre line from the head's end, run on straight past
-  its last point; `inner` `{left, right, bottom, top?}` the inner flanks; `clearance` px the ship and the escort keep
+  **`intro`** (s from the arrival until the coil and the head are up: invulnerable, nothing fires); **`wind`** (s,
+  at most `intro`: its last part, the head swimming in from off the screen past the path's last point and the body
+  winding in behind it along the path; the dive's way back winds in the same way over `return`; round 58 F.2);
+  **`body`** (`segments`, `spacing` px, `hitbox`, `path` `[[x, y], …]` the centre line from the head's end, run on
+  straight past its last point; `bend` px the radius its corners turn on (the neck rises from the head and bends into
+  the first leg at its first point at the latest), every segment facing along the line as it lies; `inner` `{left, right, bottom, top?}` the inner flanks; `clearance` px the ship and the escort keep
   inside them: the wall, no damage); **`sacs`** (`parts`, destroyable, outside the bar; `swell` s before each ring: the
   phase's `ring` attack breathes from them in turn); **`jaw`** (`glow`, `open` s: a phase's `fan` other than the wall's
   fires from the throat, the throat ×2 while open); **`wall`** (`attack`, one of its `fan` attacks fired straight down
@@ -186,7 +189,8 @@ M8's additions: Europa's underwater rules and the level and unit keys of Act 4's
   the last wall's gap); **`sweeps`** (`segments` of the bight, `tell`, `swing`, `hold`, `back` s, `reach` and
   `bottom_reach` px, `bullet` once a sweep with the push, `along` the side sweeps' range of the ship's y, `across` the
   bottom one's of its x, `phases` `[{phase, every, sides: [left|right|bottom, …]}]`); **`dive`** (once in `phase` when
-  the head falls below `below`: `slide`, `quiet`, `shadow`, `lunge`, `body`, `return` s, the column `width` px at the
+  the head falls below `below`: `slide`, `quiet`, `shadow`, `lunge`, `body` (the body streaming up the column and out
+  of the top), `return` (winding back in) s, the column `width` px at the
   ship's x within `column`, `bullet` once to what the lunge passes; `sub` in the dark); **`implants`** (`parts` that are
   not the head, from `phase` in turn: `tell`, `open` s, a hit counting on the head's HP at the part's multiplier,
   armoured while shut; its `aimed` `attack` after each `arc`); **`shed`** (`enemy` a segment chain built with
@@ -213,5 +217,6 @@ M8's additions: Europa's underwater rules and the level and unit keys of Act 4's
   run); the `stems` value `motif` now plays the motif as the music's `motif` cue says (silent before its `from`, the
   stems silent from the theme's first sample). The threat profile's **`strip`** (`[choir-song]`: the L3 strip marks
   each timed Choir song, `Intel.Mark.Kind.CHOIR`; only where a level asks). A section's `hold_after_boss` counts after
-  the boss's `death_seconds` (Level 28's 1 s: K+5). The ambiences `europa-hatchery` and `caldera-rumble` (a layer).
+  the boss's `death_seconds` (Level 28's 1 s: K+5). The ambiences `europa-hatchery` and `caldera-rumble` (a layer; both left the game in step I2: one bed per setting).
   The game queues `boss-arrival` and `boss-dive` lines as `PHASE` lines.
+- 2026-10-26 (user, round 58 closed): the boss script's `coil` block and `MawRules` as built in step H3 accepted with the rest of that step's rules.

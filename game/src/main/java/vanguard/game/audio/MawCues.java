@@ -1,7 +1,9 @@
 package vanguard.game.audio;
 
 import java.util.EnumSet;
+import java.util.Optional;
 import java.util.Set;
+import vanguard.game.render.BreachLine;
 import vanguard.sim.CoilSpec;
 import vanguard.sim.CruiserRun;
 import vanguard.sim.SetPiece;
@@ -34,6 +36,13 @@ final class MawCues extends SoundFamily {
     private boolean wasHolding;
 
     private boolean wasUnderwater;
+    /**
+     * Step I2: the lip of the shaft's mouth (the level's breakout; empty: the breakout sounds as the medium turns) and
+     * whether the ship has breached it in this attempt.
+     */
+    private Optional<BreachLine> lip = Optional.empty();
+
+    private boolean breached;
     private boolean cruisersPresent;
     private boolean watched;
     /** This step, and per cruiser the step of its last point-defence shot. */
@@ -43,6 +52,12 @@ final class MawCues extends SoundFamily {
 
     MawCues(SoundMix mix) {
         super(mix);
+    }
+
+    /** Step I2: the breakout sounds as the ship breaches this lip, with the burst ({@link BreachLine}). */
+    void breach(Optional<BreachLine> line) {
+        lip = line;
+        breached = false;
     }
 
     @Override
@@ -137,7 +152,8 @@ final class MawCues extends SoundFamily {
 
     /**
      * Once a step: in the finale's level the climb up the shaft as the clock resumes after the kill's hold (once, the
-     * step its hold ends) and the breakout as the medium turns from water to air; whether the cruisers are on the screen
+     * step its hold ends) and the breakout as the ship breaches the lip of the shaft's mouth (step I2: the burst's step;
+     * without a lip as the medium turns from water to air); whether the cruisers are on the screen
      * (for {@link #flakImpact}).
      */
     void watch(Sortie sortie) {
@@ -154,7 +170,19 @@ final class MawCues extends SoundFamily {
         if (finale && flying && wasHolding && !holding && coilDown(sortie)) {
             bank.play(Sfx.SHAFT_CLIMB, CUE_LEVEL, 1, 0);
         }
-        if (finale && flying && wasUnderwater && !underwater) {
+        if (lip.isPresent()) {
+            BreachLine line = lip.get();
+            double scroll = sortie.groundScroll();
+            if (line.ahead(scroll)) {
+                breached = false;
+            } else if (finale
+                    && flying
+                    && !breached
+                    && line.breached(sortie.ship().x(), sortie.ship().y(), scroll)) {
+                breached = true;
+                bank.play(Sfx.BREAKOUT, CUE_LEVEL, 1, 0);
+            }
+        } else if (finale && flying && wasUnderwater && !underwater) {
             bank.play(Sfx.BREAKOUT, CUE_LEVEL, 1, 0);
         }
         wasHolding = holding;

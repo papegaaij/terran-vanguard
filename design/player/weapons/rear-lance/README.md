@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: none
 depends-on: [.., ../lance-laser, ../../generator, ../../../systems/economy]
-updated: 2026-10-24
+updated: 2026-10-26
 ---
 
 # Rear Lance
@@ -24,7 +24,7 @@ The numbers the game reads are in [data.yaml](data.yaml) (M7 part A); the marked
 |---|---|
 | Slot | Rear gun |
 | Traits | `rear`, `piercing` |
-| Layers hit | `air`, `low-air` and `ground` (hardened ground targets glance off); not `high-air`; the `sub` layer only in under-water mode, at 50 % ([layer rules](../../../enemies/README.md#layer-rules)) |
+| Layers hit | `air`, `low-air` and `ground` (hardened ground targets glance off); not `high-air`; under water the play plane at the water's damage factor and the deep `sub` layer only in the Sonar Pulse's window ([layer rules](../../../enemies/README.md#layer-rules), [Europa rules](../../../world/europa/README.md#under-water-rules)) |
 | Price | 2 800 cr |
 | Upgrade cost L2 / L3 / L4 / L5 | 1 400 / 2 800 / 5 600 / 11 200 cr (sell-back per [economy](../../../systems/economy/README.md)) |
 | Unlock | L17 (in the shop from the hangar visit before it) |

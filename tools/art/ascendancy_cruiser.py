@@ -21,7 +21,13 @@ step H5 adds the claim with the level's ``cruisers:`` block):
   ascendancy-cruiser-shadow         240x660, normal, stepped translucency: the hull's shadow on the ice (drawn under it
                                     offset (+12, +16) once risen; low-air)
   ascendancy-cruiser-ice_0..5       240x660, normal, stepped translucency: the ice crust sheeting off the hull as it
-                                    rises (0 crusted and steaming, 5 the last flakes; over the rise's 4 s, ~1.5 fps)
+                                    rises (0 crusted and steaming, 5 the last flakes; over the rise's 4 s, ~1.5 fps);
+                                    step I2 (round 58 F.3): the crust is Level 28's night ice, magnified by 1/0.6 so
+                                    that at the rise's scale it is the ground's own ice lifting
+  ascendancy-cruiser-hole           224x476, normal, stepped translucency: step I2: the hole the hull breaks in the
+                                    night ice (its footprint at the rise's 0.6, black water, the crust's plates afloat,
+                                    a white rim, cracks running out); the game draws it on the ground's scroll where
+                                    the hull broke through, the hull moving off it to the wing's pace
   ascendancy-cruiser-muzzle_0..3    48x32, additive: a gun port's blast as a broadside's shells leave (symmetric
                                     across x, so it serves both flanks), 20 fps
   ascendancy-cruiser-pd_0..2        16x16, additive: a point-defence turret's flash, 20 fps
@@ -44,6 +50,7 @@ the night ice)
 """
 import sys
 from concurrent.futures import ProcessPoolExecutor
+from functools import lru_cache
 
 import numpy as np
 from PIL import Image, ImageDraw, ImageFilter
@@ -138,9 +145,26 @@ def shadow(hull):
     return Image.fromarray(out, "RGBA")
 
 
+RISE_SCALE = 0.6                          # the game's CruiserLooks.RISE_SCALE: the hull's size as it breaks the ice
+
+
+@lru_cache(maxsize=1)
+def night_crust():
+    """Level 28's night ice (assets/backdrop/level-28/night-ice.png, backdrop_l28.py's ``night-ice``) at the frame's
+    size, magnified by 1 / RISE_SCALE so that the crust, drawn at the rise's scale, shows the ice at the ground's own
+    pixel size: the crust is the ice the hull lifts (step I2, round 58 F.3)."""
+    tile = np.array(Image.open(kit.BACKDROP / "night-ice.png").convert("RGB")).astype(np.float64)
+    w, h = SIZE
+    cw, ch = int(round(w * RISE_SCALE)), int(round(h * RISE_SCALE))
+    x0 = (tile.shape[1] - cw) // 2                                    # the tile's middle: Jupiter's shine half way
+    crop = Image.fromarray(tile[:ch, x0:x0 + cw].astype(np.uint8))
+    return np.array(crop.resize((w, h), Image.Resampling.NEAREST)).astype(np.float64)
+
+
 def ice_frame(hull, i, n=6):
-    """The ice crust over the hull: pale blue-white plates with dark cracks, breaking up into floes that slide off
-    outward and fall away (frame 0 whole and steaming, frame n-1 a few flakes at the edges)."""
+    """The ice crust over the hull: the night ice it lifts (``night_crust``) split by dark cracks into plates, breaking
+    up into floes that slide off outward and fall away (frame 0 whole and steaming: at the rise's scale the ice of the
+    ground round it; frame n-1 a few flakes at the edges)."""
     w, h = SIZE
     u = i / (n - 1)
     hm = np.array(hull)[..., 3] > 0
@@ -158,9 +182,9 @@ def ice_frame(hull, i, n=6):
              + 0.4 * seeds[:, 1] / h + rng.uniform(-0.12, 0.12, len(seeds)))
     gone = leave[idx] < u * 1.25
     out = np.zeros((h, w, 4), np.float64)
-    ice = np.array((196, 214, 228.0)) * (0.82 + 0.3 * noise[..., None]) + 18 * (cells[..., None] - 0.5)
+    ice = night_crust() * (0.94 + 0.12 * noise[..., None]) * (1 + 0.06 * (cells[..., None] - 0.5))
     crack = edge | (np.abs(cells - 0.5) < 0.012)
-    col = np.where(crack[..., None], np.array((70, 96, 120.0)), ice)
+    col = np.where(crack[..., None], ice * 0.42 + np.array((4, 8, 14.0)), ice)
     keep = hm & ~gone
     # sliding floes: the ones that are leaving now drift outward (drawn shifted, thinning)
     out[keep, :3] = col[keep]
@@ -183,6 +207,44 @@ def ice_frame(hull, i, n=6):
         out[m, 3] = mist[m] * 255 * 0.8
     alpha = artkit.ordered_dither(out[..., 3] / 255, 4)
     res = np.dstack([np.clip(out[..., :3], 0, 255), alpha * 255]).astype(np.uint8)
+    res[alpha == 0] = 0
+    return Image.fromarray(res, "RGBA")
+
+
+HOLE_MARGIN = 40
+
+
+def hole(hull):
+    """The hole the hull breaks in the night ice as it rises (step I2, round 58 F.3): its footprint at the rise's
+    scale, ragged and a few px wider, black water with the crust's plates afloat in it, a broken white rim, cracks
+    running out into the ice round it (dark, translucent over the ground). Drawn by the game on the ground's scroll at
+    the place the hull broke through, from the rise's start (hidden under the crusted hull until it moves on)."""
+    hw, hh = int(round(SIZE[0] * RISE_SCALE)), int(round(SIZE[1] * RISE_SCALE))
+    foot = np.array(hull.resize((hw, hh), Image.Resampling.BILINEAR))[..., 3] > 96
+    w, h = hw + 2 * HOLE_MARGIN, hh + 2 * HOLE_MARGIN
+    mask = np.zeros((h, w), np.uint8)
+    mask[HOLE_MARGIN:HOLE_MARGIN + hh, HOLE_MARGIN:HOLE_MARGIN + hw] = foot * 255
+    dist = np.array(Image.fromarray(mask).filter(ImageFilter.GaussianBlur(5)), float) / 255
+    n = raster.fbm(w, h, 9, 6161, octaves=4, period=False)
+    m = raster.fbm(w, h, 30, 6163, octaves=3, period=False)
+    water = dist + 0.35 * (n - 0.5) + 0.2 * (m - 0.5) > 0.32
+    rim = water & ~(np.array(Image.fromarray((water * 255).astype(np.uint8)).filter(ImageFilter.MinFilter(5))) > 0)
+    yy, xx = _yx(w, h)
+    cy, cx = h / 2, w / 2
+    th = np.arctan2((yy - cy) / (hh / 2 + 10), (xx - cx) / (hw / 2 + 10))
+    r = np.hypot((yy - cy) / (hh / 2 + 10), (xx - cx) / (hw / 2 + 10))
+    cracks = ~water & (np.abs(np.sin(th * 11 + 3 * n)) < 0.05) & (r < 1.0 + 0.35 * m) & (dist > 0.0)
+    cracks |= ~water & (np.abs(np.sin(th * 5 + 5 * m)) < 0.03) & (r < 1.15 + 0.3 * n)
+    plates = water & ~rim & (raster.fbm(w, h, 16, 6165, octaves=2, period=False) > 0.62)
+    crust = np.array(Image.fromarray(night_crust().astype(np.uint8)).resize((w, h), Image.Resampling.NEAREST), float)
+    rgb = np.zeros((h, w, 3))
+    rgb[water] = (6, 10, 18)
+    rgb[plates] = crust[plates] * 0.8
+    rgb[rim] = np.array((214, 226, 238.0)) * np.array((0.38, 0.44, 0.62)) * 1.3
+    rgb[cracks] = (8, 12, 22)
+    alpha = np.where(water, 1.0, np.where(cracks, 0.6, 0.0))
+    alpha = artkit.ordered_dither(alpha, 4)
+    res = np.dstack([np.clip(rgb, 0, 255), alpha * 255]).astype(np.uint8)
     res[alpha == 0] = 0
     return Image.fromarray(res, "RGBA")
 
@@ -317,7 +379,8 @@ def build(groups=GROUPS):
     if "fx" in groups:
         hull = kit.load(ROOT_NAME)[0]
         kit.write(f"{ROOT_NAME}-shadow", [shadow(hull)], SOURCE, single=True)
-        kit.write(f"{ROOT_NAME}-ice", artkit.quantize_set([ice_frame(hull, i) for i in range(6)], 16), SOURCE)
+        kit.write(f"{ROOT_NAME}-ice", artkit.quantize_set([ice_frame(hull, i) for i in range(6)], 24), SOURCE)
+        kit.write(f"{ROOT_NAME}-hole", artkit.quantize_set([hole(hull)], 16), SOURCE, single=True)
         kit.write(f"{ROOT_NAME}-muzzle", [muzzle_frame(i) for i in range(4)], SOURCE)
         kit.write(f"{ROOT_NAME}-pd", [pd_frame(i) for i in range(3)], SOURCE)
         kit.write(f"{ROOT_NAME}-tracer", [tracer()], SOURCE, single=True)
@@ -339,6 +402,15 @@ FLAK = [124.4, 128.4, 131.6]
 PD = [(123.6, "L"), (124.9, "R"), (126.1, "L"), (127.4, "R"), (128.6, "L"), (129.9, "R"), (131.1, "L")]
 
 
+CATCH = 0.5                                # the game's CruiserLooks.CATCH: the share of the rise to the wing's pace
+
+
+def rise_drop():
+    """How far above its running place a hull breaks the ice (the game's CruiserLooks.riseDrop): the ground's speed at
+    the rise times half the catch-up, so that it starts at the ice's own speed and slows to the wing's pace by then."""
+    return (kit.scroll(RISE[0] + 0.5) - kit.scroll(RISE[0] - 0.5)) * CATCH * (RISE[1] - RISE[0]) / 2
+
+
 def ship_xy(t):
     return 240 + 70 * np.sin((t - T0) * 0.55), 444 - 40 * np.sin((t - T0) * 0.31) ** 2
 
@@ -349,12 +421,13 @@ def review():
     glow = kit.load(f"{ROOT_NAME}-glow")
     shd = kit.load(f"{ROOT_NAME}-shadow")[0]
     ice = kit.load(f"{ROOT_NAME}-ice")
+    hole_img = kit.load(f"{ROOT_NAME}-hole")[0]
     muz, pd, trc = kit.load(f"{ROOT_NAME}-muzzle"), kit.load(f"{ROOT_NAME}-pd"), kit.load(f"{ROOT_NAME}-tracer")[0]
     mk, flak, spk = kit.load(f"{ROOT_NAME}-flak-marker"), kit.load(f"{ROOT_NAME}-flak"), kit.load(f"{ROOT_NAME}-spark")
     piv = pivots()
     rows = [
         ("HULL (1X), THE RUNNING GLOW, THE BROADSIDE'S TELL, THE SHADOW", [hull, glow[0], glow[1], shd], 1, False),
-        ("THE ICE CRUST SHEETING OFF AS IT RISES", ice, 1, False),
+        ("THE ICE CRUST SHEETING OFF AS IT RISES; THE HOLE IT BREAKS IN THE ICE", ice + [hole_img], 1, False),
         ("PORT BLAST, POINT DEFENCE, TRACER DASH, SPARKS (ADDITIVE, 3X)", muz + pd + [trc] + spk, 3, True),
         ("FLAK MARKER (ADDITIVE) AND AIRBURST", mk + flak, 2, False),
     ]
@@ -392,11 +465,15 @@ def review():
         t = T0 + fi / FPS
         img, glows, over = b28.ground_view(t, gp, hp)
         solids, adds, top = [], [], []
-        rise = b48.win(t, *RISE)
+        rise = float(np.clip((t - RISE[0]) / (RISE[1] - RISE[0]), 0, 1))     # linear, as the game's riseShare
+        cy = CY - rise_drop() * max(0.0, 1 - rise / CATCH) ** 2              # anchored on the ice at the rise's start
+        hole_y = CY - rise_drop() + (kit.scroll(t) - kit.scroll(RISE[0]))   # the hole on the ground's scroll
         for side in "LR":
             cx = CX[side]
             if t < RISE[0]:
                 continue
+            if hole_y - hole_img.height / 2 < kit.SCREEN:
+                solids.append((hole_img, cx, hole_y))
             k = 0.6 + 0.4 * rise
             dim = 0.35 + 0.65 * rise
             h = hull.resize((int(hull.width * k), int(hull.height * k)), Image.Resampling.NEAREST)
@@ -405,11 +482,11 @@ def review():
             h = Image.fromarray(np.clip(a, 0, 255).astype(np.uint8), "RGBA")
             if rise > 0.3:
                 s = shd.resize(h.size, Image.Resampling.NEAREST)
-                solids.append((s, cx + 12 * rise, CY + 16 * rise))
-            solids.append((h, cx, CY))
-            if rise < 1 or t < RISE[1] + 1.2:
-                f = min(5, int(b48.win(t, RISE[0] + 0.4, RISE[1] + 1.0) * 6))
-                solids.append((ice[f].resize(h.size, Image.Resampling.NEAREST), cx, CY))
+                solids.append((s, cx + 12 * rise, cy + 16 * rise))
+            solids.append((h, cx, cy))
+            if rise < 1:
+                f = min(5, int(rise * 6))
+                solids.append((ice[f].resize(h.size, Image.Resampling.NEAREST), cx, cy))
             g = glow[0]
             hot = 0.0
             for tb, s2, by in tells:
@@ -420,7 +497,7 @@ def review():
                 if hot > 0:
                     adds.append((glow[1], cx, CY, hot))
             else:
-                adds.append((g.resize(h.size, Image.Resampling.NEAREST), cx, CY, rise))
+                adds.append((g.resize(h.size, Image.Resampling.NEAREST), cx, cy, rise))
             for tb, s2, by in tells:
                 if s2 == side and tb + 1.2 <= t < tb + 1.45:
                     f = min(3, int((t - tb - 1.2) * 16))
@@ -473,8 +550,8 @@ def review():
                        fps=FPS / 2)
 
 
-SETS = ("", "-glow", "-shadow", "-ice", "-muzzle", "-pd", "-tracer", "-flak-marker", "-flak", "-spark")
-SINGLE = ("", "-shadow", "-tracer")
+SETS = ("", "-glow", "-shadow", "-ice", "-hole", "-muzzle", "-pd", "-tracer", "-flak-marker", "-flak", "-spark")
+SINGLE = ("", "-shadow", "-tracer", "-hole")
 
 
 def relocate():

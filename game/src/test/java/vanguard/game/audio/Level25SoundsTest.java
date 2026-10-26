@@ -23,7 +23,8 @@ import vanguard.sim.Sortie;
  * M8 part E's Level 25 sounds (design/audio/sfx, Level 25's rows; round 54's a variants until the user's pick): a
  * Siren's song from its sac's tell, the falling tone as a ring slows the ship, a Siren's and a Spiral Nautilus's death
  * over their bursts, a Nautilus's shell scraping open at each uncoil and the shells' spin loop while one is on the
- * screen; the survey sub lets go with the Meridian's hatch; track 11 "Pressure Line" over the trench's own bed.
+ * screen; the survey sub lets go with the Meridian's hatch; track 11 "Pressure Line" over the bed under the ice (one
+ * bed for every level under water, the user 2026-10-26).
  */
 class Level25SoundsTest {
     private static final Path ASSETS = Path.of(System.getProperty("vanguard.assetsDir", "../assets"));
@@ -38,8 +39,7 @@ class Level25SoundsTest {
             Sfx.SIREN_DEATH,
             Sfx.NAUTILUS_SPIN,
             Sfx.NAUTILUS_UNCOIL,
-            Sfx.NAUTILUS_DEATH,
-            Sfx.AMBIENCE_EUROPA_TRENCH);
+            Sfx.NAUTILUS_DEATH);
 
     @Test
     void everySoundHasItsFileRoundFiftyFoursPick() {
@@ -48,18 +48,17 @@ class Level25SoundsTest {
             boolean b = sfx == Sfx.SIREN_SLOW || sfx == Sfx.NAUTILUS_DEATH;
             assertTrue(sfx.path().endsWith(b ? "-r54-b.ogg" : "-r54-a.ogg"), "round 54's pick: " + sfx.path());
         }
-        assertEquals(Sfx.Priority.AMBIENCE, Sfx.AMBIENCE_EUROPA_TRENCH.priority());
         assertTrue(Sfx.NAUTILUS_SPIN.priority() != Sfx.Priority.AMBIENCE, "a unit's loop is stolen like its peers");
     }
 
     @Test
-    void theMusicIsPressureLineOverTheTrenchsBed() {
+    void theMusicIsPressureLineOverTheBedUnderTheIce() {
         LevelData.Music music = SirenTrenchFixture.level().music();
         assertEquals(11, music.track());
         assertEquals(2, music.startSection(), "the bed alone over the trench's mouth");
         assertFalse(music.full(4));
         assertTrue(music.full(5), "the full mix in the Song");
-        assertEquals(Sfx.AMBIENCE_EUROPA_TRENCH, Sfx.ambience(music.ambience()));
+        assertEquals(Sfx.AMBIENCE_EUROPA_UNDER, Sfx.ambience(music.ambience()));
         assertTrue(music.ambienceFrom().isPresent(), "the theme fades out over the floor");
     }
 

@@ -16,12 +16,12 @@
 # right coil's middle (y 270) and the bottom's (x 240).
 name: Abyssal Maw
 faction: Vrell
-layer: air          # the play plane under water (the level's medium: underwater); each part's own layer starts `sub` (rising from the dark)
+layer: air          # the play plane under water (the level's medium: underwater); each part's own layer starts `sub` (winding in from off the screen just under the play plane)
 tier: huge
 size: [150, 130]    # sprite px: the head (the coil's segments 64 px, drawn along the chain)
 hitbox: [110, 100]  # the head's box
 parts: multi
-part_list:  # offset [dx, dy] px from the head's centre (240, 95 on the screen), dy up; every part starts `sub` (the intro: the coil rises)
+part_list:  # offset [dx, dy] px from the head's centre (240, 95 on the screen), dy up; every part starts `sub` (the intro: the coil winds in)
   - name: head
     offset: [0, 0]
     hitbox: [110, 100]
@@ -108,15 +108,17 @@ difficulty:
 boss:
   kind: boss        # the act boss: the long bar
   bar_name: ABYSSAL MAW
-  par: 127          # s from the bar to the kill: the Boss rush bonus; step H4: the measured mean (126.5 s over five seeds at medium, the plan's fit with the Bulwark; the spec's draft 130)
+  par: 138          # s from the bar to the kill: the Boss rush bonus; the measured mean (five seeds at medium, the plan's fit with the Bulwark): step H4 126.5 s (par 127), step m8i1 (round 58 F.2, the coil's motion redo) 138.4 s (the spec's draft 130)
   death_seconds: 4  # the implants blow out (0.4 s apart), the coil unwinds into the dark, the vent flares
   coil:
     intro: 6        # s from the arrival (the bar) until the coil and the head are up: invulnerable, nothing fires (the Choir has sung)
+    wind: 5         # s, the intro's end: the head swims in off the screen at the top right and the body winds in behind it round the arena (round 58 F.2)
     body:
       segments: 31
       spacing: 56   # px between two segments' centres along the path
       hitbox: [64, 64]
       path: [[185, 18], [18, 18], [18, 537], [462, 537], [462, 0]]   # the centre line from beside the head along the top, down the left edge, along the bottom, up the right edge (screen px)
+      bend: 90      # px: the corners turn on arcs of this radius (the neck into the top run on a tighter one: 55); the walls' bottom corners round with them (round 58 F.2)
       inner: {left: 50, right: 430, bottom: 505}   # the inner flanks: the ship flies in x 62-418, y ≤ 493 (12 px inside); no top flank
       clearance: 12
     sacs: {parts: [sac 1, sac 2, sac 3, sac 4], swell: 0.6}   # the swell (the lime glow brightening) before each ring: the tell
@@ -143,8 +145,8 @@ boss:
       quiet: 4      # s: the arena open and quiet
       shadow: 2.0   # s: the shadow runs up a column at the ship's x (the tell)
       lunge: 0.8    # s: the head races up the column, jaws open
-      body: 3       # s: its body a wall in the column (the throat ×2 as it passes)
-      return: 2     # s: the coil slides back round the edges from the top
+      body: 3       # s: its body streams up the column behind the head and out of the top (a wall where it is; the throat ×2 as it passes)
+      return: 3     # s: the head swims back in at the top right and the body winds in round the edges behind it, as it arrived (round 58 F.2: 2 s slid it back in place)
       width: 90     # px
       column: [95, 385]   # the column's centre: the ship's x, clamped
       bullet: heavy # once, to what the lunge passes in the column
@@ -170,7 +172,7 @@ boss:
       attacks: [implant-burst]
       drop: armour patch   # as the phase begins
 notes:
-  layer: ' (the play plane under water, the level''s medium: all weapons hit it, those without `anti-sub` at the water''s factor ×0.7); its parts rise from `sub` in the intro, and during the dive the head and the coil are `sub` again: only `anti-sub` weapons and the Smart Bomb reach them'
+  layer: ' (the play plane under water, the level''s medium: all weapons hit it, those without `anti-sub` at the water''s factor ×0.7); its parts wind in `sub` in the intro, and during the dive the head and the coil are `sub` again (the head sunk where it rests, then winding back in): only `anti-sub` weapons and the Smart Bomb reach them'
   size: '(the head; the body a chain of {boss.coil.body.segments} segments, {boss.coil.body.hitbox.0} px wide, {boss.coil.body.spacing} px apart (≈ 1,750 px with the head), half of each beyond the field''s edge while coiled; gill sacs 36×36; implants 40×40)'
   parts: 'the **head** (`vital`; the bar): the skull ×0.5, the lime **throat** a weak spot ×2 while the jaw is open; four **gill sacs** (`destroyable`, outside the bar, phases 1–2); the **coil** (the body chain: armoured, shots glance with a spark and the Ion Beam stops on it, no HP; a wall for the ship); three **Helix implants** (phase 3: ×2 on the head''s HP while sparked open, armoured while shut)'
   orientation: '(the head facing down, with jaw, rear-up, dive and lunge frames; the coil''s segments in `32 angles` along the chain)'

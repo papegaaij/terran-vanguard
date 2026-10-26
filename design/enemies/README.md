@@ -3,7 +3,7 @@ title: Enemies
 design: approved
 implementation: in-progress
 art: final
-updated: 2026-10-22
+updated: 2026-10-26
 ---
 
 # Enemies
@@ -288,7 +288,7 @@ Current coverage (✓ = passes):
 | 1 First Contact | tiny, small, medium, large, huge | Coilwyrm (L06), Leviathan (L03), Gorgon Frigate (L05), Brood Carrier (L07) | Scuttler (L04) | Whirl Seed (L03) | Mantis sides (L06, L07), Coilwyrm rear loops (L06), Brood Pod Skitter bursts | 3 of 14 (Skitter, Stinger, Mantis); the 14 used in L01–L07: Skitter, Needler, Stinger, Spine Turret, Spore Bomber, Whirl Seed, Leviathan, Brood Pod, Scuttler, Polyp Mortar, Gorgon Frigate, Coilwyrm, Mantis, Brood Carrier | ✓ |
 | 2 Homefront | tiny, small, medium, huge (as built: no `large` unit) | Harbour Kraken (L11), Siege Spire (L14) | Creeper (L08), Ravager packs (L09, L14), Scuttler returns (L13) | Whirl Seed returns (L12) | Wraith and Mote Swarm rear (L10), Mantis sides (L12, L13), Skimmers from all edges (L13), maw Wraiths (L14) | 5 of 20 (Skitter, Stinger, Creeper, Wraith, Mantis); the 20 used in L08–L14: Needler, Skitter, Stinger, Spine Turret, Polyp Mortar, Creeper, Hive Node, Ravager, Mote Swarm, Wraith, Driftjelly, Reef Spitter, Harbour Kraken, Lamprey, Mantis, Spore Bomber, Whirl Seed, Scuttler, Skimmer, Siege Spire | ✓ |
 | 3 Red Dust | tiny (the new Dust Kite and Mote Swarm, plus returning Skitters), small, medium, large, huge | Threadcrawler, Revenant Walker, Dust Colossus | Burrower, Threadcrawler, Shellback (L17), Warden Tank | Dust Devil (L18) | L19 rear, L20 reverse scroll, L21 breaches | 8 of 22 (Skitter, Stinger, Mantis, Creeper, Wraith, Burrower, Choir Herald, Threadcrawler); the 22 used in L15–L21: Dust Kite, Skitter, Mote Swarm, Needler, Stinger, Polyp Mortar, Spine Turret, Tendril Anchor, Ghost Drone, Burrower, Creeper, Ravager, Spore Bomber, Mantis, Choir Herald, Dust Devil, Wraith, Warden Tank, Threadcrawler, Shellback, Revenant Walker, Dust Colossus | ✓ |
-| 4 Deep Water | small, medium, large, huge | Eel Swarm, Abyssal Maw | Scuttler on the sea floor (L24) | Spiral Nautilus (L25) | Siren side caves, L27 rear | 0 of 10 | ✓ |
+| 4 Deep Water (as built) | tiny (Glassfin, returning Skitters and the Mote Swarm), small, medium, large, huge | Eel Swarm, Drill Rig (core and pumps), Abyssal Maw | Scuttler on the sea floor (L24) | Spiral Nautilus (L25–L28) | Mantis pincers (L22), Siren side caves (L25), the Abyss Ray rising from below (L24), Depth Hunter columns from the rear (L27, L28) | 3 of 25 (Skitter, Stinger, Mantis); the 25 used in L22–L28: Skitter, Mote Swarm, Glassfin, Needler, Stinger, Spine Turret, Polyp Mortar, Skimmer, Lamprey, Driftjelly, Reef Spitter, Barbfin, Glow Angler, Mantis, Scuttler, Siphon Pump, Siren, Spiral Nautilus, Depth Hunter, Relay Beacon, Drill Rig, Eel Swarm, Abyss Ray, Spawning Reef, Abyssal Maw | ✓ |
 | 5 The Belt | tiny, small, medium, large, huge | Rail Serpent, Shard Drone links, Iron Sovereign | Strider (L32), Crawler Tank (L34) | Buzzsaw Drone (L31), Sovereign rings | Minelayer and Rail Serpent rear (L30), Void Leech rear | 1 of 15 (Asteroid Mite) | ✓ |
 | 6 Jovian Storm | small, medium, large, huge | Halo Platform, Ascendant | Warden Tank and Strider return (L39, L41) | Halo Platform (L41), Buzzsaw Drone returns (L38) | Honour Guard rear (L40), Harrow all edges | 0 of 12 | ✓ |
 | 7 Beyond the Gate | tiny, small, medium, large, huge | Leviathan and Coilwyrm return, Choir Heart | Threadcrawler returns (L45) | Whirl Seed returns (L45) | all-direction levels (L44, L46–50) | 3 of 10 (Rift Skater, Choir Seraph, Threadcrawler) | ✓ |
@@ -297,7 +297,8 @@ When a level's waves are written, keep the act passing; the check is repeated wh
 promoted to draft. Acts 1 and 2 were rechecked against their level documents on 2026-10-01; Act 2
 was checked as built against Levels 08–14's data on 2026-10-12 (M5 part I): the 20 units of the
 row, all three-plus tiers, both multi-part bosses, three walkers, the Whirl Seed, rear, side and
-all-edge entries, 5 of 20 insectoid.
+all-edge entries, 5 of 20 insectoid. Act 4 was checked as built against Levels 22–28's data on 2026-10-26 (M8
+part I): the row above.
 
 ### Layer rules
 
@@ -590,7 +591,7 @@ Production art for concept round 26 (the M4 part H batch), review files built fr
       chase and latch, the Skimmer's lanes, the Spire's lift (`CreeperTest`, `RavagerPounceTest`,
       `WraithTest`, `FlockTest`, `DriftjellyTest`, `ReefSpitterTest`, `SlamArenaTest`,
       `LampreyTest`, `SkimmerTest`, `SpireLiftTest`).
-- [ ] The other movement patterns with the first unit that flies each — **later: Act 4** to Act 7
+- [ ] The other movement patterns with the first unit that flies each — **later: Act 5** to Act 7
       (e.g. `burrow`, `teleport`, `mirror`).
 - [x] Attack patterns from the vocabulary implemented as reusable emitters: those the Act 1 units
       and bosses use (`aimed`, `burst`, `fan`, `ring`, `spiral`, `laser-sweep`, `mine`, `mortar`,
@@ -600,7 +601,7 @@ Production art for concept round 26 (the M4 part H batch), review files built fr
       Lamprey's `drain`, the Siege Spire's `lob`, `sweep` and maw launches (`HiveNodeTest`,
       `DriftjellyTest`, `SlamArenaTest`, `LampreyTest`, `BossLobTest`, `BossSweepTest`,
       `MawLaunchTest`).
-- [ ] The other attack patterns with the first unit that uses each — **later: Act 4** to Act 7
+- [ ] The other attack patterns with the first unit that uses each — **later: Act 5** to Act 7
       (e.g. `laser-line`, `link`, `aura`, `reflect`).
 - [x] Formation spawner that places enemies by formation name and entry edge (`Formations`): the
       Act 1 formations (single, V-wing, line abreast, column, snake, stream, pincer, circle,
@@ -608,8 +609,9 @@ Production art for concept round 26 (the M4 part H batch), review files built fr
 - [x] The Act 2 formations with the first level that uses each (M5 parts C–G): `pack` (L09),
       `swarm` and `rear ambush` (L10), `field` (L11), `cross` (L13) (`PackFormationTest`,
       `PartDFormationsTest`, `DriftjellyTest`, `CrossTest`).
-- [ ] The other formations with the first level that uses each — **later: Act 4** to Act 7
-      (`submerged ambush` — **later: Act 4**).
+- [ ] The other formations with the first level that uses each — **later: Act 5** to Act 7
+      (`submerged ambush` — **later: Act 5**: no Act 4 level uses it as built; the Abyss Ray rises from `sub` with its
+      own escorts).
 - [x] M5 part E (Level 11): the `sub` layer and its hit rules (E2 = a: only `anti-sub` and the
       Smart Bomb; no contact; homing shots, turrets, landing blasts, mines, the Airstrike and Rook
       skipping it) — step E2a (`SubLayerTest`).
@@ -668,7 +670,9 @@ Production art for concept round 26 (the M4 part H batch), review files built fr
       data: the table's row above; tiny, small, medium and huge, no `large` unit).
 - [x] Act 3 passes the variety checklist as built (M7 part I, 2026-10-20, from Levels 15–21's data: the table's row above;
       8 of 22 units insectoid).
-- [ ] Acts 4–7 pass it as built — **later: Act 4** to Act 7.
+- [x] Act 4 passes the variety checklist as built (M8 part I, 2026-10-26, from Levels 22–28's data: the table's row above;
+      3 of 25 units insectoid).
+- [ ] Acts 5–7 pass it as built — **later: Act 5** to Act 7.
 
 ## Open questions
 

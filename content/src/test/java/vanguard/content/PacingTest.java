@@ -58,7 +58,6 @@ class PacingTest {
         return IntStream.rangeClosed(FIRST_LEVEL, 50)
                 .mapToObj(CONTENT::levelKey)
                 .flatMap(java.util.Optional::stream)
-                .filter(Unmapped::mapped) // M7 part C: levels not mapped yet (Unmapped)
                 .flatMap(key -> Stream.of(Difficulty.values()).map(difficulty -> Arguments.of(key, difficulty)));
     }
 

@@ -27,7 +27,7 @@ import vanguard.sim.Sortie;
 /**
  * M8 part F's Level 26 sounds (design/audio/sfx and design/audio/music, Level 26's rows; round 55's picks, closed
  * 2026-10-24: the spin, the click and the static b, the rest a; the warm pad b): the Glow Angler's lure hum and lunge, the Nautilus's crown hum in the dark, Rook's loss (the trails, the
- * hits, the spin), the headlights' clicks, the Choir's static; the black water's bed; track 10 with its timed stems
+ * hits, the spin), the headlights' clicks, the Choir's static; the bed under the ice; track 10 with its timed stems
  * (the dark stem alone from t=8, −6 dB from 150, out at 166, the warm pad from 174) and the Choir's 6 dB duck.
  */
 class Level26SoundsTest {
@@ -45,8 +45,7 @@ class Level26SoundsTest {
             Sfx.ROOK_HIT,
             Sfx.ROOK_SPIN,
             Sfx.HEADLIGHT_CLICK,
-            Sfx.CHOIR_STATIC,
-            Sfx.AMBIENCE_EUROPA_BLACK);
+            Sfx.CHOIR_STATIC);
 
     @Test
     void everySoundHasItsFileRoundFiftyFivesPick() {
@@ -57,22 +56,16 @@ class Level26SoundsTest {
                     sfx.path().endsWith(b.contains(sfx) ? "-r55-b.ogg" : "-r55-a.ogg"),
                     "round 55's pick: " + sfx.path());
         }
-        assertEquals(Sfx.Priority.AMBIENCE, Sfx.AMBIENCE_EUROPA_BLACK.priority());
         assertTrue(Sfx.LURE_HUM.priority() != Sfx.Priority.AMBIENCE, "a unit's loop is stolen like its peers");
         assertTrue(Sfx.CROWN_HUM.priority() != Sfx.Priority.AMBIENCE);
     }
 
     @Test
-    void theBedIsTheBlackWaterAndTheTrenchOverTheScarp() {
+    void theBedIsTheOneUnderTheIceWithNoLayer() {
         LevelData.Music music = BlackwaterFixture.level().music();
         assertEquals(10, music.track(), "track 10 only (gap check F12)");
-        assertEquals(Sfx.AMBIENCE_EUROPA_BLACK, Sfx.ambience(music.ambience()));
-        assertEquals(
-                List.of(Sfx.AMBIENCE_EUROPA_TRENCH),
-                music.ambienceLayers().orElseThrow().stream()
-                        .map(layer -> Sfx.ambience(layer.ambience()))
-                        .toList(),
-                "the trench's rumble over the scarp");
+        assertEquals(Sfx.AMBIENCE_EUROPA_UNDER, Sfx.ambience(music.ambience()), "one bed under water (2026-10-26)");
+        assertTrue(music.ambienceLayers().isEmpty(), "no scarp layer");
     }
 
     /** The dark stem and the warm pad are on track 10's grid: the stems' length and loop points. */
@@ -108,7 +101,7 @@ class Level26SoundsTest {
                         files.internal(Tracks.basePath("thera-deep")),
                         files.internal(Tracks.path("thera-deep")),
                         sfx,
-                        Sfx.AMBIENCE_EUROPA_BLACK,
+                        Sfx.AMBIENCE_EUROPA_UNDER,
                         1,
                         0,
                         section -> true,

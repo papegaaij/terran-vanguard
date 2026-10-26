@@ -52,7 +52,8 @@ Pieces (ground unless named; exact rows):
   ceiling-cracks             high-air 480x600: the ceiling's fractures closing on the ship's row at t=115
   drill-hole-1..2            200x200: other Vrell drill holes in the night ice (bone collars, teal strips, steam)
   vrell-carrier              high-air 168x380: a Vrell carrier risen from a drill hole (the brood carrier's hull)
-  ice-split-left/-right      200x960: the open leads where the cruisers rose through the ice (t~120)
+  (no ice-split pieces since step I2, round 58 F.3: the open leads showed water where the cruisers then rose; the night
+  ice stays intact there and the game draws each hull's hole as it breaks through, CruiserLooks)
 Review: design/campaign/act-4-deep-water/level-28-abyssal-maw/concept/backdrop-final-r58-a.png/.gif (the hatchery
 light's stand-in, tools/art/l28kit.py; the shaft's walls approximated as flat bands; stand-ins for the units: the
 turrets, mortars, Sirens, *Pelagic-3* (l28_props.py when written), the ship); `--proposal` writes the `backdrop:` block,
@@ -943,35 +944,6 @@ def vrell_carrier():
     return posterize(np.clip(rgb, 0, 255), 40, out[..., 3])
 
 
-SPLIT_H = 960
-SPLIT_T = 120.0
-
-
-def ice_split(side):
-    """The open lead where a cruiser rose through the ice along a flank: black water, ice plates afloat, ragged edges
-    toward the field (the cruiser's hull, 220 px, covers x < 110 / > 370 in low-air above it)."""
-    w, h = 200, SPLIT_H
-    bottom = int(round(scroll(SPLIT_T) + SCREEN / 2 - h / 2))
-    x0 = 0 if side == "left" else W - w
-    yy, xx = grid(h, w)
-    u = xx if side == "left" else w - 1 - xx                       # 0 at the field's edge
-    n = raster.fbm(w, h, 10, 2941 if side == "left" else 2942, octaves=4, period=False)
-    m = raster.fbm(w, h, 40, 2943 if side == "left" else 2944, octaves=3, period=False)
-    edge = 124 + 20 * (m - 0.5) * 2 + 8 * (n - 0.5)
-    taper = np.clip(np.minimum(yy, h - 1 - yy) / 160, 0, 1)
-    edge = edge * taper
-    water = u < edge
-    pl = raster.fbm(w, h, 36, 2945 if side == 'left' else 2946, octaves=2, period=False)
-    plates = water & (pl > 0.66) & (u < edge - 10)
-    ice = floor_crop(bottom, x0, w, h)
-    rgb = np.where(water[..., None], np.array((6, 10, 18.0)) + JOVE * 0.06 * (pl[..., None] > 0.5), ice)
-    rgb = np.where(plates[..., None], ice * 0.85, rgb)
-    rim = (np.abs(u - edge) < 3) & (edge > 4)
-    rgb = np.where(rim[..., None], np.array((210, 224, 236.0)) * NIGHT * 1.3, rgb)
-    a = (water | rim).astype(float)
-    return posterize(np.clip(rgb, 0, 255), 24, dither_alpha(_edges(a, x0, w), 2)), bottom, x0
-
-
 # =========================================================================== seams
 
 def seam_piece(index, seed, h=320, glow=False):
@@ -1125,7 +1097,7 @@ def build():
                                    z=11)
     put("far-ridge", img, f"the Polyp Mortars' far ridge (t={mor[0][0]:g}: x {', '.join(f'{x:g}' for _, x in mor)}); "
         "exact rows", exact_t(bottom, img.height), x0 + img.width // 2)
-    sst = sorted(x for t, x in kit.targets_of("siren", 70, 80)) or [250, 330, 410]
+    sst = sorted({x for t, x in kit.targets_of("siren", 70, 80)}) or [250, 330, 410]   # a seat once (two difficulties' entries may share it)
     st_t = (kit.targets_of("siren", 70, 80) or [(76.0, 0)])[0][0]
     img, bottom, x0 = stack_piece(st_t, 344, 264, 160, sst, 2991)
     put("siren-stack", img, f"the cavern's last stack (t={st_t:g}: the Sirens at x {', '.join(f'{x:g}' for x in sst)}, "
@@ -1159,10 +1131,6 @@ def build():
     for t, x in CARRIERS:
         put("vrell-carrier", vc, f"high-air: a Vrell carrier risen beside the wing (t~{t:g}, x {x:g})", t, x,
             layer="high-air")
-    for side in ("left", "right"):
-        img, bottom, x0 = ice_split(side)
-        put(f"ice-split-{side}", img, f"the open lead where the {side} cruiser rose (centre mid-screen at "
-            f"t={SPLIT_T:g}); exact rows", exact_t(bottom, img.height), x0 + img.width // 2)
     global META
     META = {"pieces": pieces, "placed": [list(p) for p in placed]}
     print(f"wrote {len(TILES)} tile sets, {len(WALLS)} wall textures and {len(pieces)} pieces to "
@@ -1249,8 +1217,8 @@ def rows_block():
              f"#   the breakout line: ground row {BREAK_ROW} = scroll({BREAK_T:g}) + {SHIP_Y} (the shaft-mouth piece's lip "
              "apex; the grade lifts above it,",
              "#     as Level 23's waterline), the ceiling-cracks high-air piece centred on the ship's row at the same t;",
-             f"#   the rise: the ice-split pieces centred mid-screen at t={SPLIT_T:g} under the cruisers' flanks (hull inner "
-             "edges x 110 / 370);",
+             "#   the rise: the night ice intact where the cruisers break through (the game draws their holes, crust",
+             "#     and the hull's move to the wing's pace: CruiserLooks; step I2, round 58 F.3);",
              f"#   the Vrell carriers (high-air) at t~{CARRIERS[0][0]:g} x {CARRIERS[0][1]:g} and t~{CARRIERS[1][0]:g} x "
              f"{CARRIERS[1][1]:g}, before the run (nothing over the play in the run)."]
     return "\n".join(lines) + "\n"

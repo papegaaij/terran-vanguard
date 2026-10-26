@@ -3,7 +3,7 @@ title: Naval enemies
 design: approved
 implementation: in-progress
 art: final
-updated: 2026-10-25
+updated: 2026-10-26
 ---
 
 # Naval enemies
@@ -152,7 +152,7 @@ under-water grade of the unit's first level (Q2 a, pending the user's review); g
 - [x] Surfacing/submerging transition visuals (top-down, the generic `sub` pass and per-unit
       surfacing steps, user decision E4 = c) — M5 part E (the Driftjelly and the Harbour Kraken,
       Level 11)
-- [ ] The Act 4 swimmers (Glassfin, Eel Swarm, Barbfin, Abyss Ray, Siren, Spiral Nautilus, Glow Angler, Depth Hunter) built from their drafts, each ticking its own README's checklist (M8)
+- [x] The Act 4 swimmers (Glassfin, Eel Swarm, Barbfin, Abyss Ray, Siren, Spiral Nautilus, Glow Angler, Depth Hunter) built from their drafts, each ticking its own README's checklist (M8 parts C–G; every item ticked, checked in M8 part I)
 
 ## Open questions
 

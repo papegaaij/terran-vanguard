@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [.., ../../wingmen, ../light-drone-bay, ../../generator, ../../../systems/economy, ../../../campaign/act-3-red-dust/level-20-retreat-from-hellas]
-updated: 2026-10-20
+updated: 2026-10-26
 ---
 
 # Rear-guard Drone Bay
@@ -28,7 +28,7 @@ review (round 43).
 |---|---|
 | Slot | Wing mount (per bay); the drone flies, the bay stays on the wing |
 | Traits | `rear` (drone) |
-| Layers hit | `air`, `low-air` and `ground` (hardened ground targets glance off); not `high-air`; the `sub` layer only in under-water mode, at 50 % ([layer rules](../../../enemies/README.md#layer-rules)) |
+| Layers hit | `air`, `low-air` and `ground` (hardened ground targets glance off); not `high-air`; under water the play plane at the water's damage factor and the deep `sub` layer only in the Sonar Pulse's window ([layer rules](../../../enemies/README.md#layer-rules), [Europa rules](../../../world/europa/README.md#under-water-rules)) |
 | Price | 2 400 cr |
 | Upgrade cost L2 / L3 / L4 / L5 | 1 200 / 2 400 / 4 800 / 9 600 cr (the common factors on the price; sell-back per [economy](../../../systems/economy/README.md)) |
 | Unlock | L20 (in the shop from the hangar visit before it) |

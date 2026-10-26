@@ -7,7 +7,7 @@ difficulty levers, the enemies and the levels); the expected purchases per hanga
 design/player/balance-plan.yaml. The weapon tables are rendered by tools/sync_tables.py.
 
 The checks themselves are content tests (design/tech/architecture, balance checks as JUnit tests):
-BalanceTest (this sheet's plan, DPS and enemy checks) and ActPlaythroughTest (Acts 1-3 flown with the
+BalanceTest (this sheet's plan, DPS and enemy checks) and ActPlaythroughTest (Acts 1-4 flown with the
 plan on every difficulty). This script prints the same sheet for reading:
 
 Usage:
@@ -16,8 +16,7 @@ Usage:
 
 Per visit: the income of the level before it (the level's typical haul from its credit-budget
 table, design/systems/economy, Per-level budget: every planned level has its data since M7 part H, so
-the fallback to budget(n) is gone, M7 part I; M8 part A: TEMPORARILY budget(n) again for an Act 4 level that has
-no data yet, until M8 part I; plus the typical player's grade bonus, a B: round 34
+the fallback to budget(n) is gone, M7 part I, and M8 part A's temporary one for Act 4 since M8 part I; plus the typical player's grade bonus, a B: round 34
 P3 = A), the plan's purchases (with the free charges a special gives at its unlock), the repair
 estimate (the ship's, and Rook's after a level flown with him), the power load and the plan's forward
 single-target DPS against the reference DPS the enemy stat blocks assume (design/enemies/data.yaml),
@@ -65,10 +64,6 @@ REAR_PENDING = {(12, "wraith"): "the act HP factor on the Wraith, the rear still
 LATCHED_SHARE = 0.25             # a latched Lamprey dies in at most this share of its shake-off time (BalanceTest)
 
 
-# M8 part A: the first level whose missing data falls back to budget(n) (temporary: M8 part I removes it).
-FALLBACK_FROM = 22
-
-
 def load_all():
     """Everything the report needs, gathered from the data files."""
     plan = load("player/balance-plan.yaml")
@@ -111,12 +106,10 @@ def typical_haul(d):
 
 def income(data, n):
     """The credits the level earns: its typical haul. M7 part I: every planned level has its data (Level 21
-    since part H), so a level without a data file is an error, no longer budget(n). M8 part A (temporary, until M8
-    part I): an Act 4 level without its data yet earns budget(n), rounded half to even."""
+    since part H), so a level without a data file is an error, no longer budget(n); M8 part I: Act 4's too (part A's
+    temporary budget(n) for an Act 4 level without its data is gone)."""
     d = level_dir(n)
     if not d:
-        if n >= FALLBACK_FROM:
-            return round(budget(data, n))
         sys.exit(f"Level {n:02d} is in the balance plan but has no data.yaml")
     return typical_haul(d)
 
@@ -491,6 +484,7 @@ def bounty_problem(data, e):
 
 ACT_2 = range(8, 15)  # Levels 08-14
 ACT_3 = range(15, 22)  # Levels 15-21 (M7 part A: the reference DPS before the levels' data)
+ACT_4 = range(22, 29)  # Levels 22-28 (M8 part I: the act HP factor and the beam era through Act 4)
 
 
 def act_hp_report(ref, levels=ACT_2, act=2):
@@ -518,7 +512,7 @@ def beam_era_report(ref):
     """M7 part E, step E5: every unit of the beam era's tiers at the level before it and in the beam era's levels
     (HP at medium with every factor; BeamEraHpTest measures their time on the screen against Level 10's)."""
     era = load("enemies/data.yaml")["beam_era_hp"]
-    levels = [n for n in range(era["from_level"] - 1, ACT_3.stop) if n in ref]
+    levels = [n for n in range(era["from_level"] - 1, ACT_4.stop) if n in ref]
     print(f"\nBeam era (from L{era['from_level']:02d}, the plan's Ion Beam): × {era['factor']:g} on "
           f"{', '.join(era['tiers'])} units, HP at medium / time to kill at the reference DPS × the factor:")
     print("Enemy            | Tier     | First | " + " | ".join(f"L{n:02d} HP / TTK" for n in levels))
@@ -612,7 +606,7 @@ def report(data):
             problems += [f"L{n:02d}: {m}" for m in slow]
             accepted += [f"L{n:02d}: {m}" for m in pending]
     print("\nBefore visit: the credits after the level before it, which earns its typical haul (its "
-          f"credit-budget table; M8 part A, temporary: budget(n) for a level from L{FALLBACK_FROM} without data), "
+          "credit-budget table), "
           "plus the typical player's grade bonus "
           f"(+{data['plan']['typical_grade_bonus']:.0%}, a B). Spent here includes the repair estimate "
           "(the ship's, and Rook's from the L09 visit). Rook DPS: his gun's single-target DPS "
@@ -628,6 +622,7 @@ def report(data):
     enemy_report(data, ref)
     act_hp_report(ref)
     act_hp_report(ref, ACT_3, 3)
+    act_hp_report(ref, ACT_4, 4)
     beam_era_report(ref)
     problems += beam_era_problems(data)
     print("\nAccepted: " + ("none" if not accepted else "\n  " + "\n  ".join(accepted)))

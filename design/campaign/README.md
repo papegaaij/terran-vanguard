@@ -3,7 +3,7 @@ title: Campaign
 design: approved
 implementation: in-progress
 art: none
-updated: 2026-10-20
+updated: 2026-10-26
 ---
 
 # Campaign
@@ -23,7 +23,7 @@ consecutive levels.
 | [act-1-first-contact](act-1-first-contact/README.md) | Levels 01–07 · Earth orbit & Luna · the Vrell strike · boss Brood Carrier | approved | done | final |
 | [act-2-homefront](act-2-homefront/README.md) | Levels 08–14 · Earth surface: megacities, oceans, arctic · boss Siege Spire | approved | done | final |
 | [act-3-red-dust](act-3-red-dust/README.md) | Levels 15–21 · Mars · first hints of human involvement · boss Dust Colossus | approved | in-progress | final |
-| [act-4-deep-water](act-4-deep-water/README.md) | Levels 22–28 · Europa ice & under-ice ocean · underwater play · boss Abyssal Maw | approved | in-progress | proposed |
+| [act-4-deep-water](act-4-deep-water/README.md) | Levels 22–28 · Europa ice & under-ice ocean · underwater play · boss Abyssal Maw | approved | in-progress | final |
 | [act-5-the-belt](act-5-the-belt/README.md) | Levels 29–35 · asteroid belt & stations · the betrayal · boss Iron Sovereign | draft | not-started | none |
 | [act-6-jovian-storm](act-6-jovian-storm/README.md) | Levels 36–42 · Jupiter cloud cities & Callisto · hunting Vorne · boss Ascendant | draft | not-started | none |
 | [act-7-beyond-the-gate](act-7-beyond-the-gate/README.md) | Levels 43–50 · Tether Gate & Vrell space · final boss Choir Heart | draft | not-started | none |
@@ -217,7 +217,9 @@ criteria), Open questions, Decisions. The worked example is
       `ActPlaythroughTest` flies Levels 01–14 as one campaign on every difficulty, M5 part I)
 - [x] Campaign sequence 15→21 in order, Act 3's outro after Level 21 (M7 parts B–H; `ActPlaythroughTest` flies
       Levels 01–21 as one campaign on every difficulty, M7 part I)
-- [ ] Campaign sequence 22→50 in order — **later: Act 4** to Act 7 (Levels 22–50), each level with
+- [x] Campaign sequence 22→28 in order, Act 4's outro after Level 28 ending the release (M8 parts B–H;
+      `ActPlaythroughTest` flies Levels 01–28 as one campaign on every difficulty, M8 part I)
+- [ ] Campaign sequence 29→50 in order — **later: Act 5** to Act 7 (Levels 29–50), each level with
       its act
 - [x] Act transitions show an act title card and the act's opening briefing.
 - [x] Each level's threat profile is available as data for the hangar intel panel: Levels 01–07
@@ -226,7 +228,9 @@ criteria), Open questions, Decisions. The worked example is
       parts B–H; `Intel`, `IntelPanelLayoutTest`, each level's `LevelNNTest`)
 - [x] The threat profiles of Levels 15–21 in their data files, with Dr. Varga's intel lines (M7 parts B–H;
       `Intel`, `IntelPanelLayoutTest` over every level)
-- [ ] The threat profiles of Levels 22–50 — **later: Act 4** to Act 7, in each level's data file as
+- [x] The threat profiles of Levels 22–28 in their data files, with Dr. Varga's intel lines (M8 parts B–H;
+      `Intel`, `IntelPanelLayoutTest` over every level)
+- [ ] The threat profiles of Levels 29–50 — **later: Act 5** to Act 7, in each level's data file as
       it is written
 - [x] Shop unlocks follow the *Loadout pressure* table (data-driven, per level): each item's
       `unlock` or `available` in its data (`Hangar.available`, `Catalogue`); the Act 1 rows

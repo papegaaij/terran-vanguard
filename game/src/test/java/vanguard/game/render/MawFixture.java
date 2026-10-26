@@ -47,6 +47,36 @@ public final class MawFixture {
                 60);
     }
 
+    /**
+     * Level 28's finale on its own clock with the approach and the Maw left out (its arena a plain 1 s section at 100
+     * px/s; no waves, ground units, set pieces, radio or armour floor), flown with the starter loadout, the ship
+     * invulnerable: the shaft, the breakout, the cruisers' rise and run (step I2's breach and rise tests; the finale's
+     * sounds).
+     */
+    public static Sortie finale() {
+        LevelScript real = SimSpecs.level(CONTENT, LEVEL, Difficulty.MEDIUM);
+        List<Section> sections = real.sections().stream()
+                .map(section -> section.arena()
+                        ? new Section(section.end(), 100)
+                        : new Section(
+                                section.end(), section.speed(), false, section.rampSeconds(), section.easeSeconds()))
+                .toList();
+        LevelScript finale = real.toBuilder()
+                .sections(sections)
+                .waves(List.of())
+                .groundUnits(List.of())
+                .setPieces(List.of())
+                .radio(List.of())
+                .armourFloor(0)
+                .build();
+        return new Sortie(
+                1,
+                SimSpecs.starterLoadout(CONTENT, Difficulty.MEDIUM),
+                finale,
+                SimSpecs.rules(CONTENT, LEVEL, Difficulty.MEDIUM).withInvulnerableShip(),
+                60);
+    }
+
     /** The Maw of a sortie of {@link #level()}. */
     public static SetPiece maw(Sortie sortie) {
         return sortie.setPiece(0);

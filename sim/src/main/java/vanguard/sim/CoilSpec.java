@@ -15,6 +15,8 @@ import java.util.Optional;
  *
  * @param body the segments, their path and the wall they make
  * @param introSeconds from the arrival (the bar) until the coil and the head are up: invulnerable, nothing fires
+ * @param windSeconds the intro's last this many seconds: the head swims in from off the screen and the body winds in
+ *     behind it along its path round the arena (round 58 F.2; the dive's way back winds in the same way)
  * @param sacs the gill sacs (out of the bar; their {@code RING} attack breathes from them in turn)
  * @param swellSeconds a sac swells this long before its ring (the tell, {@link SimEvents.Type#SAC_SWELL})
  * @param jaw the throat's fan cycle (a phase's {@code FAN} attack other than the wall's)
@@ -27,6 +29,7 @@ import java.util.Optional;
 public record CoilSpec(
         Body body,
         double introSeconds,
+        double windSeconds,
         List<Integer> sacs,
         double swellSeconds,
         Jaw jaw,
@@ -40,6 +43,9 @@ public record CoilSpec(
         if (!(introSeconds >= 0) || !(swellSeconds >= 0)) {
             throw new IllegalArgumentException("a coil has an intro and a swell, 0 or more");
         }
+        if (!(windSeconds > 0) || windSeconds > introSeconds) {
+            throw new IllegalArgumentException("a coil winds in over its intro's end");
+        }
     }
 
     /** A side of the arena the coil lines (a sweep's, a shed point's). */
@@ -51,15 +57,17 @@ public record CoilSpec(
 
     /**
      * The coil's body: {@code segments} boxes of {@code box}, {@code spacing} px apart along {@code path} (its centre
-     * line, the head's end first; beyond its last point it runs on straight), each turned along it. The wall: the ship
-     * and the escort keep {@code clearance} px inside the coil's inner flanks ({@code left}, {@code right}, {@code
-     * bottom}, and {@code top} ({@link PlayField#HEIGHT} plus the clearance for none)).
+     * line, the head's end first; beyond its last point it runs on straight), each turned along it; its corners turn
+     * on arcs of {@code bend} px ({@link CoilPath}). The wall: the ship and the escort keep {@code clearance} px inside
+     * the coil's inner flanks ({@code left}, {@code right}, {@code bottom}, and {@code top} ({@link PlayField#HEIGHT}
+     * plus the clearance for none)), rounded where two walled runs meet.
      */
     public record Body(
             int segments,
             double spacing,
             Hitbox box,
             List<BossSpec.Point> path,
+            double bend,
             double left,
             double right,
             double bottom,
@@ -70,6 +78,7 @@ public record CoilSpec(
             if (segments < 1
                     || !(spacing > 0)
                     || path.size() < 2
+                    || !(bend >= 0)
                     || !(left + clearance < right - clearance)
                     || !(bottom + clearance < top - clearance)
                     || !(clearance >= 0)) {
@@ -166,8 +175,9 @@ public record CoilSpec(
      * The dive and the lunge, once, in phase {@code phase} once the head holds less than {@code below} of its HP: the
      * slide into the dark ({@code sub} from its middle, the walls gone), the quiet, the shadow up a {@code width} px
      * column at the ship's x ({@code column}), the head's lunge up it ({@code air}; {@code damage} once to what it
-     * passes in the column), its body a wall in the column for {@code bodySeconds}, the slide back (the walls return at
-     * its end). Its phase does not end before the dive is over.
+     * passes in the column), its body streaming up the column behind it and out of the top over {@code bodySeconds} (a
+     * wall where it is), then the way back: it winds in round the edges as it arrived over {@code returnSeconds} (the
+     * walls return at its end). Its phase does not end before the dive is over.
      */
     public record Dive(
             int phase,

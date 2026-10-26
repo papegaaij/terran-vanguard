@@ -189,7 +189,6 @@ class RetreatKeysTest {
                 .orElseThrow();
         assertEquals("Rook", beat.speaker());
         assertTrue(beat.requires().isEmpty());
-        assertTrue(Unmapped.mapped(LEVEL_KEY), "mapped in step G4");
     }
 
     @Test

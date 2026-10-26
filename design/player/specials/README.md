@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../../campaign, ../../world]
-updated: 2026-10-24
+updated: 2026-10-26
 ---
 
 # Special abilities
@@ -341,7 +341,7 @@ Sonar Pulse under water in Level 26's black, a/b; generator `tools/concept/gear_
 - [x] HUD: cooldown ring (M7 part A step A6: `ShipPanel`; the row goes compact, the icon in its
   ring where the word `SPECIAL` stands, and reads `OVERCHARGE 27s` / `READY`; the white flash and the
   chime as it is ready; the overcharge's white arc draining anticlockwise)
-- [ ] HUD: the unavailable-in-this-setting state (greyed icon, the reason word) — **later: Act 4** (with the setting restrictions)
+- [x] HUD: the unavailable-in-this-setting state (greyed icon, the reason word) — **later: Act 4** (with the setting restrictions) (M8 part A, step A6: the greyed row with its word and the limit chime, `DeepWaterLooksTest.theReasonWordFitsTheSpecialRowWithTheNameCut`)
 - [x] Sonar Pulse as under *Sonar Pulse (L22)*: the pulse, the lighting, the full-damage window, the 1 free charge — **later: Act 4** (M8 part A; step A2: its row (250 a charge, at most 4, L22, the free charge given at the L22 visit into an empty slot only) and the `sonar` block; the shop row waits for its icon in `Catalogue.AWAITING_ICONS`; the icon from ART-A, the row live in step A5; the simulation in step A3, `Act4SpecialsTest.thePulseOpensSixSecondsOfFullDamageUnderWaterAndACallRestartsThem`, `abovetheWaterThePulseOpensTheSubLayerToEveryWeaponAndItsRingFindsTheContacts`; `ActFourEscortTest.theSonarPulsesFreeChargeComesAtLevel22AndIsFittedOnlyIntoAnEmptySlot`; the ring, the brackets and the ping in step A6, `DeepWaterLooksTest.aContactBracketSnapsInOverAThirdOfASecond`, `ActFourSoundsTest.theSonarPulsePings`)
 
 ## Decisions

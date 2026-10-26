@@ -39,6 +39,7 @@ import vanguard.game.level.StaticLeads;
 import vanguard.game.render.AirborneWalkers;
 import vanguard.game.render.AtmosphereRamp;
 import vanguard.game.render.BossBanner;
+import vanguard.game.render.BreachLine;
 import vanguard.game.render.CreditNumbers;
 import vanguard.game.render.DroneLooks;
 import vanguard.game.render.EdgeWarnings;
@@ -301,6 +302,8 @@ public final class LevelScreen implements GameScreen {
                 .map(vents -> vents.lookOrDefault().equals(HazardsBlock.Vents.HEAT_PLUME))
                 .orElse(false));
         sounds.scan(level);
+        // Step I2: Level 28's breakout sounds as the ship breaches the ice, with the burst.
+        sounds.breach(BreachLine.of(level));
         // M7 part D: Level 17's domes: glass hits and breaks, the bombers' drops.
         sounds.ground(sortie.groundAllies());
         // M5 part H: Level 14's canopy withers at the Siege Spire's death.

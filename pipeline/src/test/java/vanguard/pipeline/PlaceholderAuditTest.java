@@ -90,9 +90,9 @@ class PlaceholderAuditTest {
                     + " Freesound HQ previews of CC0/CC-BY sounds, CREDITS rows from step AUD-G; the scan ping"
                     + " synthesized; by tools/concept/audio/sfx_r57g.py)";
     private static final String ROUND_58 =
-            "M8 part H: round 58's proposals for Level 28, their a variants as stand-ins until the user's pick (the"
-                    + " Freesound HQ previews of CC0/CC-BY sounds, CREDITS rows from step AUD-H; by"
-                    + " tools/concept/audio/sfx_r58h.py)";
+            "M8 part H: round 58's picks for Level 28 (the user, 2026-10-26: a but the implant's zap, the Maw's death and"
+                    + " the cruisers' rise b), from the Freesound HQ previews of CC0/CC-BY sounds until the originals"
+                    + " (CREDITS rows from step AUD-H; by tools/concept/audio/sfx_r58h.py)";
     private static final String ROUND_58_MUSIC =
             "M8 part H: track 30, the reveal sting (round 58 a, the production of round 48's pick, synthesized by"
                     + " tools/concept/audio/music_r58h.py), a stand-in until the user's pick";
@@ -305,7 +305,6 @@ class PlaceholderAuditTest {
             Map.entry("sfx/nautilus-spin-r54-a.ogg", ROUND_54),
             Map.entry("sfx/nautilus-uncoil-r54-a.ogg", ROUND_54),
             Map.entry("sfx/nautilus-death-r54-b.ogg", ROUND_54),
-            Map.entry("sfx/europa-trench-r54-a.ogg", ROUND_54),
             Map.entry("sfx/lure-hum-r55-a.ogg", ROUND_55),
             Map.entry("sfx/angler-lunge-r55-a.ogg", ROUND_55),
             Map.entry("sfx/crown-hum-r55-a.ogg", ROUND_55),
@@ -314,8 +313,6 @@ class PlaceholderAuditTest {
             Map.entry("sfx/rook-spin-r55-b.ogg", ROUND_55),
             Map.entry("sfx/headlight-click-r55-b.ogg", ROUND_55),
             Map.entry("sfx/choir-static-r55-b.ogg", ROUND_55),
-            Map.entry("sfx/europa-black-r55-a.ogg", ROUND_55),
-            Map.entry("sfx/europa-vents-r57-a.ogg", ROUND_57),
             Map.entry("sfx/plume-tell-r57-b.ogg", ROUND_57),
             Map.entry("sfx/plume-eruption-r57-a.ogg", ROUND_57),
             Map.entry("sfx/bend-swish-r57-a.ogg", ROUND_57),
@@ -327,8 +324,6 @@ class PlaceholderAuditTest {
             Map.entry("sfx/beacon-break-r57-b.ogg", ROUND_57),
             Map.entry("sfx/marlin-crack-r57-a.ogg", ROUND_57),
             Map.entry("sfx/scan-ping-r57-b.ogg", ROUND_57),
-            Map.entry("sfx/europa-hatchery-r58-a.ogg", ROUND_58),
-            Map.entry("sfx/caldera-rumble-r58-a.ogg", ROUND_58),
             Map.entry("sfx/shaft-climb-r58-a.ogg", ROUND_58),
             Map.entry("sfx/maw-arrival-r58-a.ogg", ROUND_58),
             Map.entry("sfx/maw-gill-r58-a.ogg", ROUND_58),
@@ -339,10 +334,10 @@ class PlaceholderAuditTest {
             Map.entry("sfx/maw-dive-r58-a.ogg", ROUND_58),
             Map.entry("sfx/maw-lunge-r58-a.ogg", ROUND_58),
             Map.entry("sfx/implant-spark-r58-a.ogg", ROUND_58),
-            Map.entry("sfx/implant-zap-r58-a.ogg", ROUND_58),
-            Map.entry("sfx/maw-death-r58-a.ogg", ROUND_58),
+            Map.entry("sfx/implant-zap-r58-b.ogg", ROUND_58),
+            Map.entry("sfx/maw-death-r58-b.ogg", ROUND_58),
             Map.entry("sfx/breakout-r58-a.ogg", ROUND_58),
-            Map.entry("sfx/cruiser-rise-r58-a.ogg", ROUND_58),
+            Map.entry("sfx/cruiser-rise-r58-b.ogg", ROUND_58),
             Map.entry("sfx/cruiser-broadside-r58-a.ogg", ROUND_58),
             Map.entry("sfx/cruiser-flak-r58-a.ogg", ROUND_58),
             Map.entry("sfx/cruiser-pd-r58-a.ogg", ROUND_58),

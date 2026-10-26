@@ -4,7 +4,7 @@ design: draft
 implementation: in-progress
 art: chosen
 depends-on: [.., ../../story/characters, ../../ui/hud, ../../ui/options, ../../tech/architecture]
-updated: 2026-10-24
+updated: 2026-10-26
 ---
 
 # Voice
@@ -46,7 +46,9 @@ header of `tools/concept/audio/tts_r18.py`; the production renderer reuses it.
    `wingmen barks <trigger>`), and every
    page of the levels' and acts' briefings (not the hangar teaser); `./gradlew
    :pipeline:voiceLines` writes it with the keys and settings to
-   `pipeline/build/voice/lines.json` for the renderer. A line with `{ally}` expands to one line
+   `voice/lines.json` in the pipeline's build dir for the renderer (`tools/art/voice.py` runs it isolated since M8 part
+   I: its own project cache dir and an init script that puts the build under `~/.cache/tv-tts/gradle/`, or
+   `$TV_VOICE_BUILD`). A line with `{ally}` expands to one line
    per convoy unit (One–Five in Level 04); a line with `{side}` (M5 part B) expands to two, `left`
    and `right`, and the game shows and plays the one of Rook's side
    ([wingmen](../../player/wingmen/README.md#scripted-lines-about-him-user-decision-d4-of-m5-part-b)). The text as spoken drops the `*` of italics and reads
@@ -614,7 +616,10 @@ level).
 - [ ] Act 4 (draft, round 48, M8): Dr. Ilse Brandt and Thera Deep Control cast a/b (their clips in `refs/`, the
       speakers in the table without `uncast`); the Choir's two spoken lines (Level 26's whisper, Level 28's death
       line); Rook's cut-off at t=161.2; the Act 4 names tried in the read-back; each Act 4 level's lines and the act
-      intro and outro pages rendered and reviewed in its part's round
+      intro and outro pages rendered and reviewed in its part's round (built: Dr. Brandt cast a in round 51, Thera Deep Control b in
+      round 52, Levels 22–26 above, Levels 27 and 28 and the outro in parts G and H, reviewed in rounds 57 and 58; M8 part
+      I: the 119 voiced Act 4 lines checked against a Whisper transcript, no file missing, none clipped; the whole Act 4
+      listen-through waits for round 59)
 
 ## Concept art
 

@@ -97,9 +97,6 @@ class TypicalHaulTest {
     private Map<Integer, TypicalHaul> hauls() {
         Map<Integer, TypicalHaul> hauls = new TreeMap<>();
         for (String key : content.levels().keySet()) {
-            if (!Unmapped.mapped(key)) {
-                continue; // M7 part C: a level not mapped yet (Unmapped)
-            }
             hauls.put(Content.levelNumber(key), TypicalHaul.of(content, key));
         }
         return hauls;

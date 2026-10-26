@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../../../enemies/naval/siren, ../../../enemies/naval/spiral-nautilus, ../../../enemies/naval/barbfin, ../../../enemies/naval/glassfin, ../../../enemies/naval/reef-spitter, ../../../world/europa, ../../../player/wingmen, ../../../player/systems, ../../../story/twist]
-updated: 2026-10-24
+updated: 2026-10-26
 ---
 
 # Level 25 – Siren Trench
@@ -370,8 +370,8 @@ channel refrain of Level 17/19 in a lighter form ("Log it, Doctor. Later.").
 track list without a chosen file): the A theme's sonar-and-pad intro in section 1, the **B base from
 section 2**, the Sirens' song as a long harmonic drone layer that swells with each ring, the **full mix
 in section 5** (the Song), out over the floor into silence (the lights go out). No bubble layer
-(round 48 Q12 a). Ambience: the `europa-trench` bed (a low rumble of a deep cut, distant whale calls,
-no bubbles) throughout. New sounds this level needs: the Siren's sac tell and its ring (a soft heavy
+(round 48 Q12 a). Ambience: Europa's bed under the ice, `europa-under`, throughout (one bed per setting, the
+user 2026-10-26; the level's own `europa-trench` bed left the game). New sounds this level needs: the Siren's sac tell and its ring (a soft heavy
 low sweep, no bubbles), the slow's falling tone and the hull shimmer, the Nautilus's shell spin, its
 uncoil and its spiral shots, the Barbfin's needle, the Glassfin shatter, the wall scrape; listed in
 [sfx](../../../audio/sfx/README.md) by the act's audio step (Freesound for real-world sounds only).
@@ -460,7 +460,7 @@ row's text.
 - [x] Briefing: both pages, each one screen, with their images (`BriefingsTest`, `BriefingLayoutTest`)
 - [x] Typical haul within ±5 % of budget(25) = 3,551 with the level's `bounty_scale` (`TypicalHaulTest`; the
       sources by hand in `Level25Test`)
-- [x] Music: the B theme's stems by section; the `europa-trench` ambience (no bubbles)
+- [x] Music: the B theme's stems by section; the `europa-under` ambience (no bubbles; `europa-trench` until step I2)
       (`Level25SoundsTest.theMusicIsPressureLineOverTheTrenchsBed`; the bed: round 54's a)
 - [x] Easy/hard variations; the autopilot flies the level on every difficulty (with and without Rook; `Level25Test`,
       `SirenPlay`, step E4)

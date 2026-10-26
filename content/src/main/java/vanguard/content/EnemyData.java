@@ -340,6 +340,7 @@ public record EnemyData(
         return boss.flatMap(BossData::coil)
                 .map(coil -> new CoilData(
                         coil.intro(),
+                        coil.wind(),
                         coil.body(),
                         coil.sacs(),
                         coil.jaw(),

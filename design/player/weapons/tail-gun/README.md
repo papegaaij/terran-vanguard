@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [.., ../../generator, ../../../systems/economy]
-updated: 2026-10-06
+updated: 2026-10-26
 ---
 
 # Tail Gun
@@ -20,7 +20,7 @@ The basic rear gun: straight bolts backwards for enemies that come from behind.
 |---|---|
 | Slot | Rear gun |
 | Traits | `rear` |
-| Layers hit | `air`, `low-air` and `ground` (hardened ground targets glance off); not `high-air`; the `sub` layer only in under-water mode, at 50 % ([layer rules](../../../enemies/README.md#layer-rules)) |
+| Layers hit | `air`, `low-air` and `ground` (hardened ground targets glance off); not `high-air`; under water the play plane at the water's damage factor and the deep `sub` layer only in the Sonar Pulse's window ([layer rules](../../../enemies/README.md#layer-rules), [Europa rules](../../../world/europa/README.md#under-water-rules)) |
 | Price | 600 cr |
 | Upgrade cost L2 / L3 / L4 / L5 | 300 / 600 / 1 200 / 2 400 cr (sell-back per [economy](../../../systems/economy/README.md)) |
 | Unlock | L08 (in the shop from the hangar visit before it) |

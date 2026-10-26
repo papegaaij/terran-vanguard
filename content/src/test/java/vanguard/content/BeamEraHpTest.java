@@ -49,7 +49,6 @@ class BeamEraHpTest {
         return IntStream.rangeClosed(CONTENT.enemyBasis().beamEraHp().fromLevel(), 50)
                 .mapToObj(CONTENT::levelKey)
                 .flatMap(java.util.Optional::stream)
-                .filter(Unmapped::mapped)
                 .filter(key -> !PacingTest.PENDING_ACT_TWO_RULE.contains(key));
     }
 

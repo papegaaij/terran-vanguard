@@ -32,8 +32,9 @@ at screen (240, 330), a ~140 px funnel round a lime-white core (its light the `c
 darkens into the shaft's floor. Then the bore's broken lip on the breakout line (`shaft-mouth`: the shaft's dark water,
 a ring of shattered ice blocks, foam, radial cracks in the night ice), the ceiling's fractures closing on the ship's row
 at t=115 (high-air `ceiling-cracks`), two other Vrell drill holes (bone collars, teal strips, steam), a Vrell carrier
-risen beside the wing (high-air, the brood carrier's hull under the night's light), and the two open leads where the
-cruisers rise (`ice-split-left/-right`, t≈120, under the hulls' inner edges at x 110 / 370). The review approximates the
+risen beside the wing (high-air, the brood carrier's hull under the night's light); the night ice stays intact where
+the cruisers rise (step I2, round 58 F.3: the two open leads `ice-split-left/-right` showed water before the hulls came
+up and are gone; the game draws each hull's hole, `ascendancy-cruiser-hole`, as it breaks through). The review approximates the
 shaft's walls as flat bands (the game projects them). `backdrop-proposal.yaml` holds the generator's `backdrop:` block
 and, for step H3, the ten sections with their speeds, eases and tiles, the per-section `underwater_look`, the shaft's
 `terrain` (Level 23's 320 px, flattening to the bore's lip on the breakout line, pushing without damage), the fixed rows

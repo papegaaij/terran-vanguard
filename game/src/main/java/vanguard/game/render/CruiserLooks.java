@@ -23,8 +23,12 @@ import vanguard.sim.Sortie;
  * Presentation; design/campaign Level 28, sections 8–10; tools/art/ascendancy_cruiser.py's sprites and
  * assets/pivots/ascendancy-cruiser.json), following the simulation's {@link CruiserRun} on the level clock, on {@code
  * low-air} over the low flyers ({@link #draw}): one hull for both flanks, bow up, its inner edge on the run's {@code
- * inner}; rising through the split ice it grows from {@value #RISE_SCALE} of its size and from dim to full over the
- * rise, its ice crust sheeting off ({@code -ice}, over the rise), its shadow on the ice once risen; its running glow
+ * inner}; rising through the ice it grows from {@value #RISE_SCALE} of its size and from dim to full over the
+ * rise, its ice crust sheeting off ({@code -ice}, the night ice it lifts, at full light over the rise), its shadow on the
+ * ice once risen. Step I2 (round 58 F.3, the user: "The appearance must align with the backdrop"): it breaks through
+ * the intact night ice where it is, its hull at first moving with the ground ({@link #riseDrop} above its running place,
+ * slowing to the wing's pace by the run: {@link #riseY}), and leaves its hole in the ice ({@code -hole}, on the ground's
+ * scroll where it broke through, {@link #drawHoles}, under the low flyers); its running glow
  * always (additive), cross-fading to the broadside's tell (every port hot amber) over a told band's first {@value
  * #TELL_FADE} s on its flank; the tell's amber tracer dashes in rows across the band; the port blasts along the inner
  * flank's ports in the band as the shells leave; a point-defence flash at a turret's burst; each flak marker over its fuse,
@@ -38,6 +42,11 @@ final class CruiserLooks {
     static final float RISE_SCALE = 0.6f;
 
     static final float RISE_SHADE = 0.3f;
+    /**
+     * Step I2: the share of the rise over which a hull, breaking the ice with the ground's speed, slows to the wing's
+     * pace (then it rises in its running place while its crust sheets off).
+     */
+    static final double CATCH = 0.5;
     /** The shadow's offset under the hull once risen (x right, y up), px. */
     static final int SHADOW_DX = 12;
 
@@ -64,6 +73,7 @@ final class CruiserLooks {
     private final AtlasRegion tracer;
     private final Array<AtlasRegion> glow;
     private final Array<AtlasRegion> ice;
+    private final AtlasRegion hole;
     private final Array<AtlasRegion> muzzle;
     private final Array<AtlasRegion> pd;
     private final Array<AtlasRegion> marker;
@@ -98,9 +108,18 @@ final class CruiserLooks {
     private int nextSpark;
     /** The last step it followed. */
     private long now = NEVER;
+    /** The rise's start (a level clock step); how far above its running place a hull breaks the ice, px. */
+    private final int riseTick;
 
-    private CruiserLooks(Sprites sprites, CruiserRunSpec spec, JsonValue pivots) {
+    private final double riseDrop;
+    /** The ground's scroll at the rise's start (the holes' place on the ground); NaN before the rise. */
+    private double riseScroll = Double.NaN;
+
+    private CruiserLooks(Sprites sprites, CruiserRunSpec spec, JsonValue pivots, double riseDrop) {
         this.spec = spec;
+        this.riseDrop = riseDrop;
+        riseTick = SimStep.ticks(spec.riseAt());
+        hole = single(sprites, SLUG + "-hole");
         hull = sprites == null ? null : sprites.frames(SLUG).first();
         shadow = single(sprites, SLUG + "-shadow");
         tracer = single(sprites, SLUG + "-tracer");
@@ -135,12 +154,54 @@ final class CruiserLooks {
         if (script.hazards().cruisers().isEmpty() || !sprites.has(SLUG)) {
             return null;
         }
-        return new CruiserLooks(sprites, script.hazards().cruisers().get(), pivots);
+        CruiserRunSpec run = script.hazards().cruisers().get();
+        return new CruiserLooks(sprites, run, pivots, riseDrop(script, run));
     }
 
-    /** For the tests: the looks of a run without its sprites (they draw nothing). */
-    static CruiserLooks following(CruiserRunSpec spec, JsonValue pivots) {
-        return new CruiserLooks(null, spec, pivots);
+    /** For the tests: the looks of a level's run without its sprites (they draw nothing). */
+    static CruiserLooks following(LevelScript script, JsonValue pivots) {
+        CruiserRunSpec run = script.hazards().cruisers().orElseThrow();
+        return new CruiserLooks(null, run, pivots, riseDrop(script, run));
+    }
+
+    /**
+     * How far above its running place a hull breaks the ice: the ground's speed at the rise times half the catch-up
+     * ({@value #CATCH} of the rise), so that, slowing evenly from the ground's speed to the wing's pace ({@link
+     * #riseY}), it reaches its place then.
+     */
+    static double riseDrop(LevelScript script, CruiserRunSpec run) {
+        double speed = 0;
+        for (var section : script.sections()) {
+            speed = section.speed();
+            if (run.riseAt() < section.end()) {
+                break;
+            }
+        }
+        return speed * CATCH * (run.runAt() - run.riseAt()) / 2;
+    }
+
+    /**
+     * A hull's centre height at rise share {@code rise}: {@code drop} above its running place {@code y} at the rise's
+     * start, moving down with the ground there and slowing evenly to the wing's pace by {@value #CATCH} of the rise
+     * ({@code y} from then).
+     */
+    static double riseY(double y, double drop, double rise) {
+        double left = Math.max(0, 1 - Math.clamp(rise, 0, 1) / CATCH);
+        return y + drop * left * left;
+    }
+
+    double riseDrop() {
+        return riseDrop;
+    }
+
+    /** The ground's scroll at the rise's start, NaN before it. */
+    double riseScroll() {
+        return riseScroll;
+    }
+
+    /** The holes' centre height on the screen at ground scroll {@code scroll}: where the hulls broke through. */
+    double holeY(CruiserRun run, double scroll) {
+        return run.hullY(riseTick) + riseDrop - (scroll - riseScroll);
     }
 
     private static Array<AtlasRegion> optional(Sprites sprites, String name) {
@@ -151,8 +212,9 @@ final class CruiserLooks {
         return sprites != null && sprites.has(name) ? sprites.frames(name).first() : null;
     }
 
-    /** The level restarts: no flash remembered. */
+    /** The level restarts: no flash remembered, no rise yet. */
     void reset() {
+        riseScroll = Double.NaN;
         Arrays.fill(blastTick, NEVER);
         Arrays.fill(pdTick, NEVER);
         Arrays.fill(flakTick, NEVER);
@@ -210,6 +272,13 @@ final class CruiserLooks {
         long tick = sortie.tick();
         now = tick;
         int at = levelTick(sortie);
+        if (at < riseTick) {
+            riseScroll = Double.NaN;
+        } else if (Double.isNaN(riseScroll)) {
+            // The rise's start (or, joined later, where the ground stood then at the rise's speed).
+            double speed = 2 * riseDrop / Math.max(SimStep.SECONDS, CATCH * (spec.runAt() - spec.riseAt()));
+            riseScroll = sortie.groundScroll() - speed * (at - riseTick) * SimStep.SECONDS;
+        }
         SimEvents events = sortie.events();
         for (int e = 0; e < events.size(); e++) {
             switch (events.type(e)) {
@@ -255,6 +324,22 @@ final class CruiserLooks {
 
     // --- drawing -----------------------------------------------------------------------------------
 
+    /** On the ground, under the low flyers: each hull's hole in the ice where it broke through, from the rise on. */
+    void drawHoles(SpriteBatch batch, Sortie sortie, double scroll) {
+        CruiserRun run = sortie.cruisers().orElse(null);
+        if (run == null || hole == null || Double.isNaN(riseScroll)) {
+            return;
+        }
+        double y = holeY(run, scroll);
+        if (y - hole.getRegionHeight() / 2.0 > PlayField.HEIGHT || y + hole.getRegionHeight() / 2.0 < 0) {
+            return;
+        }
+        batch.setColor(Color.WHITE);
+        for (int side = 0; side < 2; side++) {
+            drawScaled(batch, hole, run.hullX(side), y, 1);
+        }
+    }
+
     /**
      * On {@code low-air}: the shadows, the hulls in their rise with the ice crust, their glow and tells, the tracer
      * dashes, the port blasts, the point defence, the flak markers and airbursts, the sparks.
@@ -268,7 +353,7 @@ final class CruiserLooks {
         }
         long tick = sortie.tick();
         double rise = run.riseShare(at);
-        double y = run.hullY(at);
+        double y = riseY(run.hullY(at), riseDrop, rise);
         float scale = scale(rise);
         if (shadow != null && rise > 0) {
             batch.setColor(1, 1, 1, (float) (rise * rise));
@@ -281,11 +366,14 @@ final class CruiserLooks {
         int iceFrame = iceFrame(rise, ice.size);
         for (int side = 0; side < 2; side++) {
             drawScaled(batch, hull, run.hullX(side), y, scale);
+        }
+        // The crust is the night ice the hull lifts: lit as the ground, not dimmed with the hull under it.
+        batch.setColor(Color.WHITE);
+        for (int side = 0; side < 2; side++) {
             if (iceFrame >= 0) {
                 drawScaled(batch, ice.get(iceFrame), run.hullX(side), y, scale);
             }
         }
-        batch.setColor(Color.WHITE);
         batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
         double tellSeconds = spec.broadside().tellSeconds();
         for (int side = 0; side < 2; side++) {

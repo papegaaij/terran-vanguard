@@ -38,9 +38,10 @@ class AbyssalMawTest {
 
     /**
      * The par: the autopilot's measured mean at medium (step H4: 126.5 s at the spec's HP, the head 6,700 and the sacs
-     * 4 × 150, every seed 108-145 s, inside the act boss's window; the spec's draft par was 130).
+     * 4 × 150, every seed 108-145 s, inside the act boss's window; the spec's draft par was 130; step m8i1, round 58
+     * F.2's motion (the wind-in, the way out of the column and back): 138.4 s, every seed 120-163 s).
      */
-    static final double PAR = 127;
+    static final double PAR = 138;
 
     /** What one fight saw, on the attempt that completes the level. */
     record Fight(

@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../../../enemies/naval/depth-hunter, ../../../enemies/naval/glassfin, ../../../enemies/naval/barbfin, ../../../enemies/naval/eel-swarm, ../../../enemies/naval/abyss-ray, ../../../enemies/naval/siren, ../../../enemies/naval/spiral-nautilus, ../../../enemies/naval/glow-angler, ../../../enemies/ground/spine-turret, ../../../enemies/ground/polyp-mortar, ../../../enemies/ground/relay-beacon, ../../../world/europa, ../../../player/wingmen, ../../../player/specials, ../../../story/twist]
-updated: 2026-10-25
+updated: 2026-10-26
 ---
 
 # Level 27 – Hydrothermal Vents
@@ -347,8 +347,8 @@ section 2** (the first plumes), the **full mix from section 3**. **Vorne's motif
 arpeggio, a faint layer in Acts 3–4) comes in with the Hunters' first sight (t=56), plays **alone over the
 ambience while Varga reads the hull code (t=68–82)** as Level 19's wreck beat did, and then stays as the faint
 layer to the end; the base stem from section 5 (the gate), out over the last 6 s. No bubble layer (round 48
-Q12 a). No boss, no sting. Ambience: a new `europa-vents` bed (a deep rumble of hot water, a distant
-black-smoker roar, a slow groan of chimneys, no bubbles) throughout. New sounds this level needs: the plume's
+Q12 a). No boss, no sting. Ambience: Europa's bed under the ice, `europa-under`, throughout (one bed per
+setting, the user 2026-10-26; the level's own `europa-vents` bed left the game). New sounds this level needs: the plume's
 tell (a low rising rumble) and eruption (a heavy roar, no pop), the bullet bend (a short swish of
 water), the Hunter's torpedo launch and thruster, the torpedo's impact, the beacons' pulse (a low hum), the
 hull-code scan's single ping, the *Marlin*'s resin crack, the Glassfin shatter; listed in
@@ -450,7 +450,7 @@ the longest frame (51 ms) is the level's first, no other frame of 50 ms or more.
       beacons' red marks)
 - [x] Briefing: both pages, each one screen (`BriefingLayoutTest`), with their images
 - [x] Typical haul within ±5 % of budget(27) with the level's `bounty_scale` (`TypicalHaulTest`)
-- [x] Music: track 11's stems by section, the motif layer and its solo over the wreck, the `europa-vents` bed (no bubbles)
+- [x] Music: track 11's stems by section, the motif layer and its solo over the wreck, the `europa-under` bed (no bubbles; `europa-vents` until step I2)
       (`Level27SoundsTest`; round 57's picks: the a variants play, the b picks (S.2, S.6, S.7, S.9, S.12) follow in step H5)
 - [x] Easy/hard variations as in *Difficulty notes*; the autopilot flies the level with the Bulwark on every difficulty
 - [x] Production art and the round's captures (steps ART-G and G5; [round 57](../../../concept-rounds/round-57/README.md))

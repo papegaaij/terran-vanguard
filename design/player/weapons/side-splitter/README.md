@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [.., ../../generator, ../../../systems/economy]
-updated: 2026-10-02
+updated: 2026-10-26
 ---
 
 # Side Splitter
@@ -20,7 +20,7 @@ Rear-slot gun that fires sideways, left and right at once. Covers enemies that h
 |---|---|
 | Slot | Rear gun |
 | Traits | `side` |
-| Layers hit | `air`, `low-air` and `ground` (hardened ground targets glance off); not `high-air`; the `sub` layer only in under-water mode, at 50 % ([layer rules](../../../enemies/README.md#layer-rules)) |
+| Layers hit | `air`, `low-air` and `ground` (hardened ground targets glance off); not `high-air`; under water the play plane at the water's damage factor and the deep `sub` layer only in the Sonar Pulse's window ([layer rules](../../../enemies/README.md#layer-rules), [Europa rules](../../../world/europa/README.md#under-water-rules)) |
 | Price | 1 400 cr |
 | Upgrade cost L2 / L3 / L4 / L5 | 700 / 1 400 / 2 800 / 5 600 cr (sell-back per [economy](../../../systems/economy/README.md)) |
 | Unlock | L05 (in the shop from the hangar visit before it) |

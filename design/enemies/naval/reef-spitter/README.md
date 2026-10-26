@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy]
-updated: 2026-10-22
+updated: 2026-10-26
 ---
 
 # Reef Spitter
@@ -84,8 +84,10 @@ The production files (M5 part E, straight to production per E9 = a; approved as 
       the small water burst and ripple train, the raft's ten sinking steps over its plain body)
 - [x] Death effect, bounty and score per this spec; production sprites and intel portrait (M5
       part E, steps E1b and E3e; approved as final in round 33)
-- [ ] Under water (M8 part C): the `underwater` block loaded and checked (step C2), applied to a nest entering under
-      water (step C3), its `floor` base drawn (step C4)
+- [x] Under water (M8 part C): the `underwater` block loaded and checked (step C2), applied to a nest entering under
+      water (step C3), its `floor` base drawn (step C4) (`DeepWaterKeysTest.theReturningUnitsChangeUnderWater`,
+      `theNewKeysAreCheckedWhereTheyBelong`, `Level23Test.theReturningUnitsChangeUnderWater`, the `reef-spitter-floor`
+      sprite in `Level23LooksTest`)
 
 ## Decisions
 

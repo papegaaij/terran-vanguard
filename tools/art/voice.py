@@ -6,8 +6,10 @@ Outputs (assets/voice/):
                       COMMENT tag naming this tool, the voice, the key and the take's seed(s).
   The key (12 hex digits of a SHA-256 over the voice's settings, the text as spoken, the
   expression, the shout flag and the filter) comes from vanguard.content.voice.VoiceLines, which
-  the game uses too: `./gradlew :pipeline:voiceLines` writes the list this script reads
-  (pipeline/build/voice/lines.json). A line whose file exists is not rendered again; a file no
+  the game uses too: `./gradlew :pipeline:voiceLines` writes the list this script reads. The Gradle run is
+  isolated as the agents' steps run theirs (M8 part I): its own project cache dir (build/voice-cache), an init script
+  that moves every project's build dir under $TV_VOICE_BUILD (default ~/.cache/tv-tts/gradle/build; the list in
+  _pipeline/voice/lines.json there) and the daemon's 10-minute idle timeout. A line whose file exists is not rendered again; a file no
   line uses any more is deleted (--keep lists them instead); files not named by a key, such as
   a speaker's stage sound (the Choir sings, copied by :pipeline:copyPlaceholderStageSounds), are
   left alone.
@@ -55,8 +57,11 @@ HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
 ASSETS = ROOT / "assets" / "voice"
 REFDIR = ROOT / "design" / "audio" / "voice" / "refs"
-LINES = ROOT / "pipeline" / "build" / "voice" / "lines.json"
 BASE = Path.home() / ".cache" / "tv-tts"
+# M8 part I: the inner Gradle run's own build dir (an init script moves every project's there) and project cache dir.
+GRADLE = Path(os.environ.get("TV_VOICE_BUILD", BASE / "gradle"))
+INIT = GRADLE / "init.gradle"
+LINES = GRADLE / "build" / "_pipeline" / "voice" / "lines.json"
 RAW = BASE / "raw" / "voice"
 LOG = RAW / "render-log.json"
 
@@ -296,8 +301,13 @@ def main(args):
     if args[:1] == ["--whisper"]:
         whisper(args[1])
         return
-    # The daemon's idle timeout (10 min) so a daemon started here ends on its own (never killed or stopped).
-    subprocess.run([str(ROOT / "gradlew"), "-q", "-Dorg.gradle.daemon.idletimeout=600000", ":pipeline:voiceLines"],
+    # Isolated as the steps' Gradle runs (M8 part I): its own project cache dir and build dir (the init script), and
+    # the daemon's idle timeout (10 min) so a daemon started here ends on its own (never killed or stopped).
+    GRADLE.mkdir(parents=True, exist_ok=True)
+    INIT.write_text("allprojects {\n    layout.buildDirectory = file(\"" + (GRADLE / "build").as_posix()
+                    + "/${project.path.replace(':', '_')}\")\n}\n")
+    subprocess.run([str(ROOT / "gradlew"), "-q", "-Dorg.gradle.daemon.idletimeout=600000",
+                    "--project-cache-dir", "build/voice-cache", "--init-script", str(INIT), ":pipeline:voiceLines"],
                    cwd=ROOT, check=True)
     lines = {line["path"]: line for line in json.loads(LINES.read_text())}
     todo = [line for path, line in lines.items() if not (ROOT / "assets" / path).exists()]

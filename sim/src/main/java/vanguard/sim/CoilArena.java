@@ -7,21 +7,26 @@ import java.util.List;
  * SetPiece} on the simulation's real steps (the level clock is halted in its arena), in the style of the {@link
  * BreachArena}. Its centre is its head's.
  *
- * <p><b>The body.</b> Its segments lie along the coil's path round the arena's edges ({@link #segmentX(int)}); each
- * belongs to the left, bottom or right run (or the top: no sweep) by its inward normal. They are armoured ({@link
+ * <p><b>The body.</b> Its segments lie along the coil's path round the arena's edges ({@link #segmentX(int)}; its
+ * corners rounded, {@link CoilPath}); each belongs to the left, bottom or right run (or the top: no sweep) by its inward
+ * normal, and each faces along the line as it is now (a bight's bend included: {@link #segmentAngle(int)}). They are armoured ({@link
  * #touches}: shots glance, {@link #column}: the beam stops; a segment carrying an open implant lets shots through to
  * it) and a wall ({@link #push}): the ship and the escort keep the body's clearance inside its inner flanks, a sweep's
  * bight pushing them along; enemy bullets pass.
  *
- * <p><b>The script.</b> It arrives (the bar) under the water ({@code sub}) and rises over its intro; then it is up (the
- * head, the sacs and the implants on the play plane) and engages. Each boss phase runs its clocks from its start: the
+ * <p><b>The script.</b> It arrives (the bar) under the water ({@code sub}); over its intro's last {@code wind} seconds
+ * the head swims in from off the screen at the tail's end and the body winds in behind it along the path, segment by
+ * segment, until the coil lies round the arena (round 58 F.2); then it is up (the head, the sacs and the implants on the
+ * play plane) and engages. Each boss phase runs its clocks from its start: the
  * sacs' breaths (its {@code RING} attack, one sac at a time after a swell; a dead sac's turn passes silently), the
  * throat's fan (its {@code FAN} attack after the jaw's glow, the jaw open its open time), the fan walls (the wall's
  * attack after its glow, the jaw open through it; the gaps placed beside the ship, chaining), the sweeps (the phase's
  * sides in turn), the implants (from their phase on, in turn: tell, open, bursts after each arc) and the shed Eel
  * Swarms (at most the phase's alive). Once, in the dive's phase, as the head falls below its share it dives: every
- * clock waits, the walls go, the head and sacs go {@code sub}; the shadow at the ship's x, the lunge up the column (on
- * the play plane again; the jaw open), its body a wall in the column, the slide back; then the clocks start over.
+ * clock waits, the walls go, the coil slides off the edges and the head and sacs sink where they rest ({@code sub});
+ * the shadow at the ship's x, the lunge up the column (on the play plane again; the jaw open), its body streaming up the column behind it
+ * and out of the top (a wall where it is), then it winds back in round the edges as it arrived; then the clocks start
+ * over.
  *
  * <p>Its events are raised in {@link #act} through the {@link SetPiece.BossActions}. Everything is allocated here;
  * stepping does not allocate. Its state is hashed with its boss.
@@ -79,6 +84,27 @@ public final class CoilArena implements Hashed {
     static final double LUNGE_FROM = 0;
     /** A fan wall's gap is placed at the ship's height, but never less than this below the throat, px. */
     static final double LEAST_DROP = 40;
+    /** A segment's heading: the line's direction over this many px either side of it (its local tangent). */
+    static final double TANGENT = 4;
+    /** Winding in, the head starts this far past the path's last point (off the screen), px. */
+    static final double ENTRY = 120;
+    /** The share of a wind-in at full speed; then it slows to a stop at rest. */
+    static final double CRUISE = 0.6;
+    /**
+     * The dive's slide: the segments move this far out over the edges, px (the head sinks where it rests: under the
+     * water it is in reach of the anti-sub weapons until the lunge).
+     */
+    static final double SLIDE_OUT = 170;
+    /** Out of the column, the tail tip ends this far past the top edge, px. */
+    static final double EXIT_CLEAR = 80;
+    /** Winding in, the coil swims this deep (0–1) under the play plane, rising as it settles. */
+    static final double WIND_DEPTH = 0.25;
+
+    // The body's places: at rest (with a sweep's bight), winding in, sliding out over the edges, up the column.
+    private static final int REST = 0;
+    private static final int WIND = 1;
+    private static final int SLIDE = 2;
+    private static final int COLUMN = 3;
 
     private static final int EVENTS = 16;
     private static final CoilSpec.Side[] SIDES = CoilSpec.Side.values();
@@ -112,12 +138,27 @@ public final class CoilArena implements Hashed {
     private final double restX;
 
     private final double restY;
-    // The segments at rest: place, inward normal, side run, heading; and now.
+    /** The centre line from the head (its rounded corners) and the body's places along it. */
+    private final CoilPath path;
+    /** Per segment, its chain distance from the head, px; the tail tip's. */
+    private final double[] chain;
+
+    private final double tailChain;
+    /** Winding in, the head's chain distance at the start (off the screen past the path's end). */
+    private final double windFrom;
+    // The walled corners (two walled runs meeting): the turn's centre, the free radius inside it, its legs.
+    private final double[] cornerX;
+    private final double[] cornerY;
+    private final double[] cornerFree;
+    private final double[] cornerInX;
+    private final double[] cornerInY;
+    private final double[] cornerOutX;
+    private final double[] cornerOutY;
+    // The segments at rest: place, side run, heading; and now.
     private final double[] segRestX;
     private final double[] segRestY;
-    private final double[] normalX;
-    private final double[] normalY;
     private final int[] side;
+    private final double[] restAngle;
     private final double[] angle;
     private final double[] segX;
     private final double[] segY;
@@ -138,6 +179,7 @@ public final class CoilArena implements Hashed {
     private final boolean[] burstOn;
 
     private final int introTicks;
+    private final int windTicks;
     private final int swellTicks;
     private final int jawGlowTicks;
     private final int jawOpenTicks;
@@ -171,6 +213,19 @@ public final class CoilArena implements Hashed {
 
     private double headX;
     private double headY;
+    /** The head's facing now, radians (rest: straight down), and its turn from rest. */
+    private double headFacing;
+
+    private double turnCos = 1;
+    private double turnSin;
+    // The body's place now (set by place, read by placeAt): its kind, the wind's shift, the slide's share, the
+    // column's head height; placeAt's result.
+    private int mode;
+    private double shift;
+    private double slide;
+    private double columnHead;
+    private double atX;
+    private double atY;
     // The jaw: steps to the throat's next glow, steps since it opened (-1 shut), whether it opened for a wall.
     private int jawTimer;
     private int jawTicks;
@@ -270,15 +325,47 @@ public final class CoilArena implements Hashed {
         restX = boss.x();
         restY = boss.hoverY();
         int n = body.segments();
+        path = new CoilPath(restX, restY, body.path(), body.bend());
+        chain = new double[n];
+        for (int i = 0; i < n; i++) {
+            chain[i] = path.neck() + i * body.spacing();
+        }
+        tailChain = chain[n - 1];
+        windFrom = path.length() + ENTRY;
         segRestX = new double[n];
         segRestY = new double[n];
-        normalX = new double[n];
-        normalY = new double[n];
         side = new int[n];
+        restAngle = new double[n];
         angle = new double[n];
         segX = new double[n];
         segY = new double[n];
         layOut();
+        int corners = 0;
+        double[][] walledCorners = new double[path.turnCount()][];
+        for (int k = path.neckTurn() ? 1 : 0; k < path.turnCount(); k++) {
+            double free = path.turnRadius(k) - body.box().width() / 2.0 - body.clearance();
+            if (free > 0 && walledTurn(k)) {
+                walledCorners[corners++] = new double[] {
+                    path.turnX(k), path.turnY(k), free, path.inX(k), path.inY(k), path.outX(k), path.outY(k)
+                };
+            }
+        }
+        cornerX = new double[corners];
+        cornerY = new double[corners];
+        cornerFree = new double[corners];
+        cornerInX = new double[corners];
+        cornerInY = new double[corners];
+        cornerOutX = new double[corners];
+        cornerOutY = new double[corners];
+        for (int k = 0; k < corners; k++) {
+            cornerX[k] = walledCorners[k][0];
+            cornerY[k] = walledCorners[k][1];
+            cornerFree[k] = walledCorners[k][2];
+            cornerInX[k] = walledCorners[k][3];
+            cornerInY[k] = walledCorners[k][4];
+            cornerOutX[k] = walledCorners[k][5];
+            cornerOutY[k] = walledCorners[k][6];
+        }
         runs = new int[SIDES.length][];
         for (int s = 0; s < SIDES.length; s++) {
             int count = 0;
@@ -332,6 +419,7 @@ public final class CoilArena implements Hashed {
             }
         }
         introTicks = Math.max(1, SimStep.ticks(spec.introSeconds()));
+        windTicks = Math.clamp(SimStep.ticks(spec.windSeconds()), 1, introTicks);
         swellTicks = SimStep.ticks(spec.swellSeconds());
         jawGlowTicks = SimStep.ticks(spec.jaw().glowSeconds());
         jawOpenTicks = Math.max(1, SimStep.ticks(spec.jaw().openSeconds()));
@@ -382,51 +470,43 @@ public final class CoilArena implements Hashed {
     }
 
     /**
-     * The segments along the path from its first point, {@code spacing} apart (on straight past its last point): each
-     * turned along it, its normal toward the field's centre, its run by that normal.
+     * The segments at rest along the path ({@link CoilPath}: the neck, then {@code spacing} apart from its first point,
+     * straight on past its last): each its run by its normal toward the field's centre, and its heading at rest.
      */
     private void layOut() {
-        List<BossSpec.Point> path = body.path();
-        double centreX = PlayField.WIDTH / 2.0;
-        double centreY = PlayField.HEIGHT / 2.0;
-        int leg = 0;
-        double legStart = 0;
+        sweepState = SweepState.IDLE;
         for (int i = 0; i < segRestX.length; i++) {
-            double d = i * body.spacing();
-            while (leg < path.size() - 2 && d > legStart + legLength(path, leg)) {
-                legStart += legLength(path, leg);
-                leg++;
-            }
-            BossSpec.Point from = path.get(leg);
-            BossSpec.Point to = path.get(leg + 1);
-            double length = legLength(path, leg);
-            double ux = length > 0 ? (to.x() - from.x()) / length : 1;
-            double uy = length > 0 ? (to.y() - from.y()) / length : 0;
-            double x = from.x() + ux * (d - legStart);
-            double y = from.y() + uy * (d - legStart);
-            segRestX[i] = x;
-            segRestY[i] = y;
-            angle[i] = StrictMath.atan2(uy, ux);
-            double nx = -uy;
-            double ny = ux;
-            if (nx * (centreX - x) + ny * (centreY - y) < 0) {
-                nx = -nx;
-                ny = -ny;
-            }
-            normalX[i] = nx;
-            normalY[i] = ny;
-            if (Math.abs(nx) >= Math.abs(ny)) {
-                side[i] = nx > 0 ? CoilSpec.Side.LEFT.ordinal() : CoilSpec.Side.RIGHT.ordinal();
-            } else {
-                side[i] = ny > 0 ? CoilSpec.Side.BOTTOM.ordinal() : TOP;
-            }
+            path.at(chain[i]);
+            segRestX[i] = path.x;
+            segRestY[i] = path.y;
+            side[i] = sideOf(path.x, path.y, path.ux, path.uy);
+        }
+        mode = REST;
+        for (int i = 0; i < segRestX.length; i++) {
+            restAngle[i] = heading(chain[i]);
         }
     }
 
-    private static double legLength(List<BossSpec.Point> path, int leg) {
-        BossSpec.Point from = path.get(leg);
-        BossSpec.Point to = path.get(leg + 1);
-        return Math.hypot(to.x() - from.x(), to.y() - from.y());
+    /** The run of a place on the line heading (ux, uy): by its normal toward the field's centre. */
+    private static int sideOf(double x, double y, double ux, double uy) {
+        double nx = -uy;
+        double ny = ux;
+        if (nx * (PlayField.WIDTH / 2.0 - x) + ny * (PlayField.HEIGHT / 2.0 - y) < 0) {
+            nx = -nx;
+            ny = -ny;
+        }
+        if (Math.abs(nx) >= Math.abs(ny)) {
+            return nx > 0 ? CoilSpec.Side.LEFT.ordinal() : CoilSpec.Side.RIGHT.ordinal();
+        }
+        return ny > 0 ? CoilSpec.Side.BOTTOM.ordinal() : TOP;
+    }
+
+    /**
+     * Whether turn {@code k} joins two walled runs: a side and the bottom (in the field's lower half), or any turn when
+     * the coil walls the top too.
+     */
+    private boolean walledTurn(int k) {
+        return path.turnY(k) < PlayField.HEIGHT / 2.0 || body.top() <= PlayField.HEIGHT;
     }
 
     /** Back to the level start: not arrived, under the water, every clock at rest. */
@@ -527,6 +607,8 @@ public final class CoilArena implements Hashed {
         ticks++;
         if (!up) {
             if (ticks < introTicks) {
+                // Winding in round the arena.
+                place();
                 return;
             }
             up = true;
@@ -876,13 +958,17 @@ public final class CoilArena implements Hashed {
             }
             case BODY -> {
                 if (diveTicks >= bodyTicks) {
+                    // Out of the top: the head swims round under the play plane and winds back in.
                     enterDive(DiveState.RETURN);
-                    event(SimEvents.Type.COIL_RETURN, headX, headY, 0);
+                    layers(Layer.SUB, false);
+                    path.at(path.length());
+                    event(SimEvents.Type.COIL_RETURN, path.x, path.y, 0);
                 }
             }
             case RETURN -> {
                 if (diveTicks >= returnTicks) {
                     enterDive(DiveState.DONE);
+                    layers(Layer.AIR, false);
                     clocks(lastPhase);
                 }
             }
@@ -919,32 +1005,140 @@ public final class CoilArena implements Hashed {
         }
     }
 
-    /** The head's and the segments' places now. */
+    /**
+     * The head's and the segments' places now, each segment facing along the line as it is now: at rest (a sweep's
+     * bight bending it in), winding in (the intro's end, the dive's way back: the head from off the screen along the
+     * path, the body behind it), sliding out over the edges (the dive's slide, then off the screen), up the column (the
+     * lunge, then out of the top).
+     */
     private void place() {
-        switch (diveState) {
-            case LUNGE -> {
-                headX = columnX;
-                headY = LUNGE_FROM + (restY - LUNGE_FROM) * Math.min(1, (double) diveTicks / lungeTicks);
+        mode = REST;
+        if (!up) {
+            mode = WIND;
+            shift = windFrom * (1 - ease(arrived ? (double) (ticks - (introTicks - windTicks)) / windTicks : 0));
+        } else {
+            switch (diveState) {
+                case SLIDE, QUIET, SHADOW -> {
+                    mode = SLIDE;
+                    slide = diveState == DiveState.SLIDE ? Math.min(1, (double) diveTicks / slideTicks) : 1;
+                }
+                case LUNGE -> {
+                    mode = COLUMN;
+                    columnHead = LUNGE_FROM + (restY - LUNGE_FROM) * Math.min(1, (double) diveTicks / lungeTicks);
+                }
+                case BODY -> {
+                    mode = COLUMN;
+                    double share = bodyTicks > 0 ? Math.min(1, (double) diveTicks / bodyTicks) : 1;
+                    columnHead = restY + (exitHead() - restY) * share;
+                }
+                case RETURN -> {
+                    mode = WIND;
+                    shift = windFrom * (1 - ease(Math.min(1, (double) diveTicks / returnTicks)));
+                }
+                case READY, DONE -> {}
             }
-            case BODY -> {
-                headX = columnX;
-                headY = restY;
+        }
+        placeAt(0);
+        headX = atX;
+        headY = atY;
+        placeAt(TANGENT);
+        headFacing = StrictMath.atan2(headY - atY, headX - atX);
+        double turn = headFacing + StrictMath.PI / 2;
+        turnCos = mode == REST || mode == SLIDE ? 1 : Trig.cos(turn);
+        turnSin = mode == REST || mode == SLIDE ? 0 : Trig.sin(turn);
+        for (int i = 0; i < segX.length; i++) {
+            placeAt(chain[i]);
+            segX[i] = atX;
+            segY[i] = atY;
+            angle[i] = heading(chain[i]);
+        }
+    }
+
+    /** The line's heading at chain distance {@code c} as the body lies now (toward the tail), radians. */
+    private double heading(double c) {
+        // From the first segment on (the neck before it may lie apart from the body: the dive's slide).
+        placeAt(c >= path.neck() ? Math.max(path.neck(), c - TANGENT) : c - TANGENT);
+        double fromX = atX;
+        double fromY = atY;
+        placeAt(c + TANGENT);
+        return StrictMath.atan2(atY - fromY, atX - fromX);
+    }
+
+    /** Where the body is at chain distance {@code c} from the head now: into {@link #atX}, {@link #atY}. */
+    private void placeAt(double c) {
+        switch (mode) {
+            case WIND -> {
+                path.at(c + shift);
+                atX = path.x;
+                atY = path.y;
             }
-            case RETURN -> {
-                double share = Math.min(1, (double) diveTicks / returnTicks);
-                headX = columnX + (restX - columnX) * share;
-                headY = restY;
+            case SLIDE -> {
+                path.at(c);
+                double nx = -path.uy;
+                double ny = path.ux;
+                if (nx * (PlayField.WIDTH / 2.0 - path.x) + ny * (PlayField.HEIGHT / 2.0 - path.y) < 0) {
+                    nx = -nx;
+                    ny = -ny;
+                }
+                if (c < path.neck()) {
+                    // The head and its neck sink where they rest.
+                    atX = path.x;
+                    atY = path.y;
+                } else {
+                    atX = path.x - nx * SLIDE_OUT * slide;
+                    atY = path.y - ny * SLIDE_OUT * slide;
+                }
+            }
+            case COLUMN -> {
+                atX = columnX;
+                atY = columnHead - c;
             }
             default -> {
-                headX = restX;
-                headY = restY;
+                path.at(c);
+                atX = path.x;
+                atY = path.y;
+                if (c >= path.neck() && sweepState != SweepState.IDLE && sweepState != SweepState.TELL) {
+                    bend(c);
+                }
             }
         }
-        for (int i = 0; i < segX.length; i++) {
-            double offset = side[i] == TOP ? 0 : offset(side[i], along(i, side[i] == CoilSpec.Side.BOTTOM.ordinal()));
-            segX[i] = segRestX[i] + normalX[i] * offset;
-            segY[i] = segRestY[i] + normalY[i] * offset;
+    }
+
+    /**
+     * A sweep's bight bends the body at chain distance {@code c} ({@link CoilPath}'s place) in along its normal: the
+     * bight's profile over the chain distance from its centre segment, so it follows the body round a corner.
+     */
+    private void bend(double c) {
+        double t = (c - chain[sweepCentre]) / bightHalf;
+        if (Math.abs(t) >= 1) {
+            return;
         }
+        double nx = -path.uy;
+        double ny = path.ux;
+        if (nx * (PlayField.WIDTH / 2.0 - path.x) + ny * (PlayField.HEIGHT / 2.0 - path.y) < 0) {
+            nx = -nx;
+            ny = -ny;
+        }
+        double reach = sweepSide == CoilSpec.Side.BOTTOM.ordinal() ? sweeps.bottomReach() : sweeps.reach();
+        double in = reach * sweepShare() * (0.5 + 0.5 * Trig.cos(StrictMath.PI * t));
+        atX += nx * in;
+        atY += ny * in;
+    }
+
+    /** A wind-in's distance covered at share {@code t} of its time, 0–1: at full speed, then slowing to a stop. */
+    static double ease(double t) {
+        double share = Math.clamp(t, 0, 1);
+        double speed = 2 / (1 + CRUISE);
+        if (share <= CRUISE) {
+            return speed * share;
+        }
+        double late = share - CRUISE;
+        return speed * (share - late * late / (2 * (1 - CRUISE)));
+    }
+
+    /** The head's height as the tail tip leaves the top of the column, px. */
+    private double exitHead() {
+        return PlayField.HEIGHT + tailChain + EXIT_CLEAR;
     }
 
     /** How far the bight on {@code sideIndex}'s run reaches in at {@code u} along it now, px (0 off the bight). */
@@ -1205,9 +1399,12 @@ public final class CoilArena implements Hashed {
         return up && !diving() && !piece.destroyed();
     }
 
-    /** Whether its body is a wall in the column now (below the lunging head, then the whole column). */
+    /** Whether its body is a wall in the column at height {@code y} now: between the head and the tail tip in it. */
     private boolean columnWalled(double y) {
-        return !piece.destroyed() && (diveState == DiveState.BODY || (diveState == DiveState.LUNGE && y <= headY));
+        return !piece.destroyed()
+                && (diveState == DiveState.LUNGE || diveState == DiveState.BODY)
+                && y <= headY
+                && y >= headY - tailChain;
     }
 
     /**
@@ -1232,6 +1429,18 @@ public final class CoilArena implements Hashed {
                 dy = minY - y;
             } else if (y > maxY) {
                 dy = maxY - y;
+            }
+            // Round the walled corners: inside the turn's arc.
+            for (int k = 0; k < cornerX.length; k++) {
+                double rx = x + dx - cornerX[k];
+                double ry = y + dy - cornerY[k];
+                if (rx * cornerInX[k] + ry * cornerInY[k] >= 0 && -(rx * cornerOutX[k] + ry * cornerOutY[k]) >= 0) {
+                    double r = Math.sqrt(rx * rx + ry * ry);
+                    if (r > cornerFree[k]) {
+                        dx -= rx * (1 - cornerFree[k] / r);
+                        dy -= ry * (1 - cornerFree[k] / r);
+                    }
+                }
             }
         }
         if (dive != null && columnWalled(y)) {
@@ -1283,7 +1492,7 @@ public final class CoilArena implements Hashed {
                     && (diveState == DiveState.BODY || diveState == DiveState.LUNGE)
                     && Math.abs(cx - columnX) < dive.width() / 2 + halfWidth
                     && fromY < headY) {
-                return fromY;
+                return Math.max(fromY, headY - tailChain - body.box().height() / 2.0);
             }
             return Double.POSITIVE_INFINITY;
         }
@@ -1487,7 +1696,7 @@ public final class CoilArena implements Hashed {
         return segY[i];
     }
 
-    /** Segment {@code i}'s heading along the coil, radians (0 to the right, y up; toward the tail). */
+    /** Segment {@code i}'s heading along the coil as it lies now, radians (0 to the right, y up; toward the tail). */
     public double segmentAngle(int i) {
         return angle[i];
     }
@@ -1499,9 +1708,7 @@ public final class CoilArena implements Hashed {
 
     /** Whether segment {@code i} is in the bight of the sweep under way (its silt and glow line). */
     public boolean inBight(int i) {
-        return sweepState != SweepState.IDLE
-                && side[i] == sweepSide
-                && Math.abs(along(i, side[i] == CoilSpec.Side.BOTTOM.ordinal()) - sweepU) < bightHalf;
+        return sweepState != SweepState.IDLE && sweepCentre >= 0 && Math.abs(chain[i] - chain[sweepCentre]) < bightHalf;
     }
 
     public SweepState sweepState() {
@@ -1545,14 +1752,50 @@ public final class CoilArena implements Hashed {
         return diving() ? Math.min(1, (double) diveTicks / length) : 0;
     }
 
-    /** How far the coil is down in the dark, 0 (on the play plane) – 1 (the dive's quiet to its way back). */
+    /**
+     * How far the coil is down under the play plane, 0–1: sinking over the dive's slide and deep (off the screen) until
+     * the lunge; on the plane up the column; winding in (the intro's end, the dive's way back) just under it, rising as
+     * it settles.
+     */
     public double depth() {
+        if (!up) {
+            return WIND_DEPTH * shift / windFrom;
+        }
+        return switch (diveState) {
+            case SLIDE -> diveProgress();
+            case QUIET, SHADOW -> 1;
+            case LUNGE, BODY, READY, DONE -> 0;
+            case RETURN -> WIND_DEPTH * shift / windFrom;
+        };
+    }
+
+    /** How dark the dive keeps the arena, 0–1: falling over the slide, dark until the way back, lifting over it. */
+    public double dark() {
         return switch (diveState) {
             case SLIDE -> diveProgress();
             case QUIET, SHADOW, LUNGE, BODY -> 1;
             case RETURN -> 1 - diveProgress();
-            case READY, DONE -> up ? 0 : 1 - introShare();
+            case READY, DONE -> 0;
         };
+    }
+
+    /** The head's facing now, radians (0 to the right, y up; at rest straight down, -π/2). */
+    public double headFacing() {
+        return headFacing;
+    }
+
+    /** A part's rest offset (dx, dy) from the head turned with the head's facing now (a sac's), px. */
+    double turnX(double dx, double dy) {
+        return dx * turnCos - dy * turnSin;
+    }
+
+    double turnY(double dx, double dy) {
+        return dx * turnSin + dy * turnCos;
+    }
+
+    /** Whether the body is on the move: winding in (the intro's end, the dive's way back) or up the column. */
+    public boolean swimming() {
+        return mode == WIND || mode == COLUMN;
     }
 
     /** The lunge's column's centre, px (fixed as its shadow starts). */
@@ -1590,13 +1833,17 @@ public final class CoilArena implements Hashed {
         return implantOpen(i) && arcTicks >= 0;
     }
 
-    /** Implant {@code i}'s centre now (on its segment), px. */
+    /** Implant {@code i}'s centre now (on its segment, turned with it), px. */
     public double implantX(int i) {
-        return segX[implantSeg[i]] + implantDx[i];
+        int s = implantSeg[i];
+        double turn = angle[s] - restAngle[s];
+        return segX[s] + implantDx[i] * Trig.cos(turn) - implantDy[i] * Trig.sin(turn);
     }
 
     public double implantY(int i) {
-        return segY[implantSeg[i]] + implantDy[i];
+        int s = implantSeg[i];
+        double turn = angle[s] - restAngle[s];
+        return segY[s] + implantDx[i] * Trig.sin(turn) + implantDy[i] * Trig.cos(turn);
     }
 
     /** Whether a coil plate flares now (a shed's tell). */

@@ -2,7 +2,7 @@
 title: Level 28 – Abyssal Maw
 design: approved
 implementation: in-progress
-art: proposed
+art: final
 depends-on: [../../../enemies/bosses/abyssal-maw, ../../../enemies/naval/depth-hunter, ../../../enemies/naval/glassfin, ../../../enemies/naval/barbfin, ../../../enemies/naval/eel-swarm, ../../../enemies/naval/abyss-ray, ../../../enemies/naval/siren, ../../../enemies/naval/spiral-nautilus, ../../../enemies/ground/spine-turret, ../../../enemies/ground/polyp-mortar, ../../../world/europa, ../../../player/wingmen, ../../../story/twist, ../../../story/characters/the-choir, ../../../systems/economy]
 updated: 2026-10-26
 ---
@@ -29,7 +29,7 @@ document owns the approach, the timeline, the radio and the act end. **In data s
 the level's numbers live in [data.yaml](data.yaml) and the briefing, teaser, threat profile, sections, waves, ground
 targets, radio and credit budget tables below are rendered from it (`tools/sync_tables.py`), with the act's outro and
 `next_act` in the [act's data](../data.yaml); step H3's placements and the gap check's defaults (`m8h-gaps.md` §5) are
-pending the user's review in round 58.
+accepted in round 58 (2026-10-26).
 
 ## Briefing
 
@@ -133,10 +133,10 @@ lines** (dropped).
 | 2. Brood Galleries | 22–50 | 2,640–5,730 | 110 | clear | `ground`: long galleries of egg racks (scenery, rows of pale pods), Spine Turret nests on the racks' ends (t≈30), the Sirens grown on the gallery walls (t≈36). `air`: the racks' glow. | Teal and violet racks. Nautilus pairs round the racks; the Sirens on the gallery wall; the Ray; a rear Hunter column. |
 | 3. Spawning Cavern | 50–80 | 5,730–9,030 | 110 | clear | `ground`: a cavern floor of hatching pools and resin ridges, the **UTC recon sub *Pelagic-3*** wedged under a collapsed rack at the cavern's mouth (t≈58, the secret), a Spine Turret nest on a resin ridge (t≈66), Polyp Mortars on the far ridge (t≈74), Sirens on the cavern's last stack (t≈76). `sub`: the vent's red glow rising from the floor. | Warm amber from below. The Eel Swarms, the second Ray, the last rear ambush; the floor warms up. |
 | 4. Antechamber | 80–104 | 9,030–11,440 | 100 | clear | `ground`: the vent's caldera rim, steaming fissures, a last pair of Polyp Mortars (t≈92). No wave after t=93.5: the screen clears while the Choir sings (t=97.5). | Red-amber, the vent's glow. The last Hunter column (t=86), the pre-boss pause (the level's third gap over 2 s); the Choir; the warning at t=104. |
-| 5. The Vent | 104–105 | 11,440–11,440 | 0 | clear | `ground`: the hatchery caldera filling the field, the vent's throat at (240, 330) ([the boss's arena](../../../enemies/bosses/abyssal-maw/README.md#arena)). `sub`: the coil rising from the dark. | The vent's lime-white, the bioluminescent frame. The boss fight (≈ 130 s at medium); the scroll halted and the level clock stopped while the Maw lives. |
+| 5. The Vent | 104–105 | 11,440–11,440 | 0 | clear | `ground`: the hatchery caldera filling the field, the vent's throat at (240, 330) ([the boss's arena](../../../enemies/bosses/abyssal-maw/README.md#arena)). `sub`: the coil winding in round the arena from off the screen. | The vent's lime-white, the bioluminescent frame. The boss fight (≈ 130 s at medium); the scroll halted and the level clock stopped while the Maw lives. |
 | 6. The Shaft | 105–115 | 11,440–12,790 | 150 | clear | `ground`: the Vrell drill shaft's walls (Level 23's, run in reverse: they push without damage) closing on both sides, the caldera falling away below. `high-air`: the ice ceiling cracking ahead. | Light growing from above. The climb after the kill (K+5 to K+15); no enemies; the radio's first beat of the finale. |
-| 7. The Breakout | 115–118 | 12,790–13,240 | 150 | clear | `ground`: the ice ceiling shatters at t=115 (K+15): slabs tumble out of the field, the under-water grade lifts over 1 s; Europa's night ice under Jupiter. `high-air`: the Vrell fleet's carriers rising from other drill holes. | A white burst, then Jupiter-lit ice. Europa's signature set piece; **the medium switches to air**. |
-| 8. The Rise | 118–122 | 13,240–13,840 | 150 | clear | `ground`: Europa's night ice (Level 22's backdrop); the ice on both flanks splits. `low-air`: two **Ascendancy cruisers rise** beside the Vrell carriers, growing from dim to full scale (4 s); not hittable, no contact. | Night ice under Jupiter, amber gun ports. The reveal (K+18); the reveal sting; Varga's and Okafor's lines. |
+| 7. The Breakout | 115–118 | 12,790–13,240 | 150 | clear | `ground`: the ice ceiling shatters round the ship as it breaches the shaft mouth's lip (near t=115, K+15; wherever the ship is: high or at a flank earlier, low later), the burst anchored on the ice where it broke through: slabs tumble out of the field, the under-water grade lifts over 1 s; Europa's night ice under Jupiter. `high-air`: the Vrell fleet's carriers rising from other drill holes. | A white burst, then Jupiter-lit ice. Europa's signature set piece; **the medium switches to air**. |
+| 8. The Rise | 118–122 | 13,240–13,840 | 150 | clear | `ground`: Europa's night ice (Level 22's backdrop), intact where the cruisers break through: on both flanks the crust lifts in a hull's shape and splits, each hull moving with the ice at first and slowing to the wing's pace in 2 s, its hole left behind in the ice. `low-air`: two **Ascendancy cruisers rise** beside the Vrell carriers, growing from dim to full scale (4 s); not hittable, no contact. | Night ice under Jupiter, amber gun ports. The reveal (K+18); the reveal sting; Varga's and Okafor's lines. |
 | 9. The Run | 122–157 | 13,840–20,790 | 200 | clear | `low-air`: the cruisers keep pace on both flanks and fire: broadsides, flak, point defence. The Vrell and the cruisers never fire at each other. | Night ice; amber broadsides. The ≈ 35 s survive section (K+22 to K+57); no fighters. |
 | 10. Orbit | 157–162 | 20,790–22,490 | 400 | clear | `low-air`: the cruisers fall off the bottom edge. | Fading to white as the wing makes orbit. The level ends at K+62; the debrief follows. |
 <!-- /data -->
@@ -222,7 +222,7 @@ carry the same factor. Measured with `levelReport` in step H3 (89 a minute at me
 | 88.5 | 4 | swarm | [Glassfin](../../../enemies/naval/glassfin/README.md) | 8 | sides | Popcorn from the left side; edge warning |
 | 91 | 4 | snake | [Eel Swarm](../../../enemies/naval/eel-swarm/README.md) | 1 | front | The last Eel Swarm, down the left |
 | 93.5 | 4 | line abreast | [Barbfin](../../../enemies/naval/barbfin/README.md) | 2 | front | The last wave: no wave after it, so the screen clears while the Choir sings (t=97.5) |
-| 104 | 5 | boss | [Abyssal Maw](../../../enemies/bosses/abyssal-maw/README.md) | 1 | the arena's edges (the coil rising from the dark) | At the arena's start: the warning, the bar and the checkpoint; the coil, the sacs, the walls, the sweeps, the dive and the implants as in its spec; its shed Eel Swarms; no other waves in the arena |
+| 104 | 5 | boss | [Abyssal Maw](../../../enemies/bosses/abyssal-maw/README.md) | 1 | the arena's edges (the coil winding in from off the screen at the top right) | At the arena's start: the warning, the bar and the checkpoint; the coil, the sacs, the walls, the sweeps, the dive and the implants as in its spec; its shed Eel Swarms; no other waves in the arena |
 
 Totals: Glassfin 74 · Barbfin 40 · Depth Hunter 10 · Eel Swarm 3 · Spiral Nautilus 4 · Siren 4 · Abyss Ray 2 · Abyssal Maw 1.
 <!-- /data -->
@@ -289,7 +289,7 @@ waits behind the one before it.
 | t=76 | Okafor | "Antechamber, then the vent. Shields up, Lancer. Everything you have." |
 | t=88 | Varga | "My biosign is off the scale. It knows we're here." |
 | t=97.5 | The Choir (distorted) | "[the Choir sings]" |
-| Boss arrival (`boss-arrival`, the coil rising) | Varga | "Gill sacs first, Lancer. Then the lime in its throat when the jaw opens." |
+| Boss arrival (`boss-arrival`, the coil winding in) | Varga | "Gill sacs first, Lancer. Then the lime in its throat when the jaw opens." |
 | Phase 2 (`boss-phase` Tightening) | Okafor | "Walls of light. Find the gap and keep moving." |
 | The dive (the head below 50 %, `boss-dive`, queued as `PHASE`) | Varga | "It's gone under! Watch the dark. It comes back fast!" |
 | Phase 3 (`boss-phase` Implants, at the first spark) | Varga | "Commander, that's not Vrell. That's machinery in its spine. Relay housings… Helix pattern." |
@@ -325,7 +325,8 @@ parts, phases, HP, attacks, the dive, the implants, the escort rules and the **f
 cruisers** live in the spec. Arena notes for this level:
 
 - The arena starts at t=104 with the boss warning, the bar and the checkpoint; the Choir has sung at t=97.5, so
-  the arrival (≈ 6 s: the coil rising, the head lifting, the bar filling, invulnerable until the head is up)
+  the arrival (≈ 6 s: the coil winding in round the arena from off the screen, the head settling, the bar filling,
+  invulnerable until the head is up; round 58 F.2)
   follows the spec's intro. The scroll is halted; nothing slides under the coil.
 - **Traits** (the question D-boss left open): the fight asks for `anti-sub` and homing/side fire more than
   piercing: phase 1 is the head and the sacs in the front guns' reach, phase 2 the walls and the **dive**
@@ -360,9 +361,9 @@ cold low brass with Vorne's motif hidden in it) at the cruisers' rise (t=118); *
 begins), out over the orbit. The debrief plays the `mission-complete` jingle as every level does, and the
 act-complete fanfare (track 24) plays under the first outro page.
 
-Ambience: a new `europa-hatchery` bed (a slow warm throb, a distant Choir hum, creaking egg racks, no bubbles)
-through the approach, the vent's rumble swelling through the antechamber and cutting at the kill; the breakout's
-ice tear and water roar; Europa's night-ice wind above (Level 22's bed) from the breakout. New sounds this
+Ambience: Europa's bed under the ice, `europa-under`, to the breakout (one bed per setting, the user 2026-10-26: the
+`europa-hatchery` bed and the vent's `caldera-rumble` layer left the game); the breakout's ice tear and water roar;
+Europa's night-ice wind above (`europa-ice`, Level 22's bed) from the breakout. New sounds this
 level needs (the act's audio step lists them; the boss's are in its
 [sounds brief](../../../enemies/bosses/abyssal-maw/README.md#sounds-brief)): the egg racks' creak, the
 hatchery's throb, the antechamber's rumble, the shaft's climb, the cruisers' engine thrum and the ice they
@@ -443,18 +444,20 @@ the cruisers in the [bosses'](../../../enemies/bosses/README.md#concept-art) (st
 
 | File | What | Status |
 |---|---|---|
-| [concept/backdrop-final-r58-a.png](concept/backdrop-final-r58-a.png) | Production backdrop (`tools/art/backdrop_l28.py`, from the act's production backdrops): the gate's ring of arches from inside, the flesh lamps, the gallery's mouth and the egg racks (teal and violet pods; three racks' ends carrying the t≈30 nests), the gallery walls' Siren bulges, the fallen rack over *Pelagic-3*'s scour, the resin ridge, the far ridge and the cavern's last stack, the steaming fissures, the caldera filling the halted arena (the throat's lime-white core at (240, 330)), the shaft (Level 23's walls and floor in reverse), the bore's broken lip on the breakout line, the ceiling's fractures, the night ice under Jupiter with other drill holes, a Vrell carrier and the cruisers' leads; sixteen screens under the hatchery light's stand-in (sheet) | proposed (round 58) |
-| [concept/backdrop-final-r58-a.gif](concept/backdrop-final-r58-a.gif) | t 106–124 at half size: the climb out of the caldera, the shaft, the breakout, the rise | proposed (round 58) |
-| [concept/backdrop-proposal.yaml](concept/backdrop-proposal.yaml) | The generator's `backdrop:` block, the sections, the shaft's terrain, the fixed rows, the ground places, the per-section `underwater_look` and the static `lights:` the art is drawn for (adopted into [data.yaml](data.yaml) in step H3) | proposed (round 58) |
-| [concept/l28-props-final-r58-a.png](concept/l28-props-final-r58-a.png) | *Pelagic-3* (`tools/art/l28_props.py`: the UTC recon sub under the fallen rack's bones, her hatch sealed in Vrell resin; sealed, hit, opened; her beacon and the resin's teal), the service buoy (Level 25's model in Thera Deep's orange), the breakout's ice slabs (four, 8 tumble frames each) and the ceiling's burst (sheet) | proposed (round 58) |
-| [concept/l28-props-final-r58-a.gif](concept/l28-props-final-r58-a.gif) | *Pelagic-3* shot open and her crate rising, the buoy releasing its patch, the breakout's burst and the slabs flying out over the night ice | proposed (round 58) |
-| [concept/approach-capture-r58-a.png](concept/approach-capture-r58-a.png) | Game capture (step H7; Xvfb, `--bench`, medium, `--invulnerable`, auto-fire, the ship unsteered, the balance plan's Level 28 fit, the Bulwark): the approach at t≈15 (the BOTTOM warning), 19 (the guard column of Depth Hunters rising beside the gate), 37 and 39 (the Sirens' ring off the gallery walls among the egg racks), the play field at 1:1 | proposed (round 58) |
-| [concept/choir-capture-r58-a.png](concept/choir-capture-r58-a.png) | The Choir's song at t≈100 (the screen cleared, "[the Choir sings]" on the radio panel, the HUD at 960×540) and the hangar intel's threat strip with the Choir's lime mark (a playthrough save at Level 28) | proposed (round 58) |
-| [concept/breakout-capture-r58-a.png](concept/breakout-capture-r58-a.png) | The breakout at t≈111.7 (the ceiling coming in over the shaft), 114.2, 114.9 (the burst round the ship), 115.7 and 117.2 (the slabs over the night ice), 1:1 | proposed (round 58) |
-| [concept/breakout-capture-r58-a.mp4](concept/breakout-capture-r58-a.mp4) | The same run t≈107–140 with the game's sound: the shaft's climb, the breakout, the cruisers' rise with the reveal sting, Varga's and Okafor's lines, the run's first broadsides (the a stand-ins) | proposed (round 58) |
-| [concept/orbit-capture-r58-a.png](concept/orbit-capture-r58-a.png) | The run's end and the orbit at t≈155.7, 157.7, 159.7 and 161.7: the cruisers falling off the bottom edge, the fade to white, 1:1 | proposed (round 58) |
-| [concept/no-escort-capture-r58-a.png](concept/no-escort-capture-r58-a.png) | A run with `--escort none`: the fight without the Bulwark at its 14.7 and 24.7 s (phase 1's rings and fans), 1:1 | proposed (round 58) |
-| [concept/pelagic-capture-r58-a.png](concept/pelagic-capture-r58-a.png) | A run steered under *Pelagic-3* (x 90): the sub hit under the fallen rack as she enters at the top edge (t≈58.2), opened (58.8), her crate rising (60.1), 1:1 | proposed (round 58) |
+| [concept/backdrop-final-r58-a.png](concept/backdrop-final-r58-a.png) | Production backdrop (`tools/art/backdrop_l28.py`, from the act's production backdrops): the gate's ring of arches from inside, the flesh lamps, the gallery's mouth and the egg racks (teal and violet pods; three racks' ends carrying the t≈30 nests), the gallery walls' Siren bulges, the fallen rack over *Pelagic-3*'s scour, the resin ridge, the far ridge and the cavern's last stack, the steaming fissures, the caldera filling the halted arena (the throat's lime-white core at (240, 330)), the shaft (Level 23's walls and floor in reverse), the bore's broken lip on the breakout line, the ceiling's fractures, the night ice under Jupiter with other drill holes, a Vrell carrier and the cruisers' leads; sixteen screens under the hatchery light's stand-in (sheet) | chosen (round 58: accepted as final) |
+| [concept/backdrop-final-r58-a.gif](concept/backdrop-final-r58-a.gif) | t 106–124 at half size: the climb out of the caldera, the shaft, the breakout, the rise | chosen (round 58: accepted as final) |
+| [concept/backdrop-proposal.yaml](concept/backdrop-proposal.yaml) | The generator's `backdrop:` block, the sections, the shaft's terrain, the fixed rows, the ground places, the per-section `underwater_look` and the static `lights:` the art is drawn for (adopted into [data.yaml](data.yaml) in step H3) | chosen (round 58: accepted as final) |
+| [concept/l28-props-final-r58-a.png](concept/l28-props-final-r58-a.png) | *Pelagic-3* (`tools/art/l28_props.py`: the UTC recon sub under the fallen rack's bones, her hatch sealed in Vrell resin; sealed, hit, opened; her beacon and the resin's teal), the service buoy (Level 25's model in Thera Deep's orange), the breakout's ice slabs (four, 8 tumble frames each) and the ceiling's burst (sheet) | chosen (round 58: accepted as final) |
+| [concept/l28-props-final-r58-a.gif](concept/l28-props-final-r58-a.gif) | *Pelagic-3* shot open and her crate rising, the buoy releasing its patch, the breakout's burst and the slabs flying out over the night ice | chosen (round 58: accepted as final) |
+| [concept/approach-capture-r58-a.png](concept/approach-capture-r58-a.png) | Game capture (step H7; Xvfb, `--bench`, medium, `--invulnerable`, auto-fire, the ship unsteered, the balance plan's Level 28 fit, the Bulwark): the approach at t≈15 (the BOTTOM warning), 19 (the guard column of Depth Hunters rising beside the gate), 37 and 39 (the Sirens' ring off the gallery walls among the egg racks), the play field at 1:1 | chosen (round 58: accepted as final) |
+| [concept/choir-capture-r58-a.png](concept/choir-capture-r58-a.png) | The Choir's song at t≈100 (the screen cleared, "[the Choir sings]" on the radio panel, the HUD at 960×540) and the hangar intel's threat strip with the Choir's lime mark (a playthrough save at Level 28) | chosen (round 58: accepted as final) |
+| [concept/breakout-capture-r58-a.png](concept/breakout-capture-r58-a.png) | The breakout at t≈111.7 (the ceiling coming in over the shaft), 114.2, 114.9 (the burst round the ship), 115.7 and 117.2 (the slabs over the night ice), 1:1 | chosen (round 58: accepted as final) |
+| [concept/breakout-capture-r58-a.mp4](concept/breakout-capture-r58-a.mp4) | The same run t≈107–140 with the game's sound: the shaft's climb, the breakout, the cruisers' rise with the reveal sting, Varga's and Okafor's lines, the run's first broadsides (the a stand-ins) | chosen (round 58: accepted as final) |
+| [concept/orbit-capture-r58-a.png](concept/orbit-capture-r58-a.png) | The run's end and the orbit at t≈155.7, 157.7, 159.7 and 161.7: the cruisers falling off the bottom edge, the fade to white, 1:1 | chosen (round 58: accepted as final) |
+| [concept/no-escort-capture-r58-a.png](concept/no-escort-capture-r58-a.png) | A run with `--escort none`: the fight without the Bulwark at its 14.7 and 24.7 s (phase 1's rings and fans), 1:1 | chosen (round 58: accepted as final) |
+| [concept/pelagic-capture-r58-a.png](concept/pelagic-capture-r58-a.png) | A run steered under *Pelagic-3* (x 90): the sub hit under the fallen rack as she enters at the top edge (t≈58.2), opened (58.8), her crate rising (60.1), 1:1 | chosen (round 58: accepted as final) |
+| [concept/breakout-burst-capture-r59-a.png](concept/breakout-burst-capture-r59-a.png) | Game capture for round 59 R.3 (step I4; Xvfb, `--bench`, medium, `--invulnerable`, auto-fire, the balance plan's Level 28 fit, the Bulwark; four runs, the ship steered by held keys after the kill): the breakout's burst at the ship's breach for a ship at the left, in the middle, at the right and one weaving left-right and up-down, each just before the breach and 0.1, 0.3 and 0.7 s after; the lower field (y 120–540) at 1:1 | proposed (round 59) |
+| [concept/breakout-burst-capture-r59-a.mp4](concept/breakout-burst-capture-r59-a.mp4) | The weaving run from the shaft's climb to 8 s after the breach with the game's sound: the burst where the moving ship crossed the lip, anchored on the ice as the ship flies on, the ice slabs, the medium switching to air | proposed (round 59) |
 
 The Maw's and the cruisers' production art (step ART-H1) and their captures are in the
 [bosses'](../../../enemies/bosses/README.md#concept-art) table, the Maw's intel silhouette and the intel capture in the
@@ -545,7 +548,7 @@ All decided in round 48 (2026-10-22):
   The gap check's defaults (`m8h-gaps.md` §5 H2–H13) applied: the t=16 guard column from the rear (BOTTOM warning at
   t=13), hard's third Siren with the t=76 pair, no Hunters in the finale, the shed Eel Swarms out of the kill ratio,
   the arrival line on `boss-arrival`, the shaft's walls pushing without damage, the armour floor at 1 from the kill on
-  every difficulty (`armour_floor`), the closing lines' delays from the kill. Step H3's own choices (pending round 58):
+  every difficulty (`armour_floor`), the closing lines' delays from the kill. Step H3's own choices (accepted in round 58 (2026-10-26)):
   the Nautilus pairs `circle` from the front (Level 27's reading of the draft's pincer); the Sirens of t=36 on the
   gallery walls on every difficulty; the music's section 1 the motif layer alone (`stems: {1: motif}`, from t=16: the
   motif needs the theme playing); the cruisers' point-defence turrets at 100, 270 and 440 px below the top edge, their
@@ -560,10 +563,10 @@ All decided in round 48 (2026-10-22):
   bands and the flak). With the plan's fit (Level 27's and the Shield Mk III) it wins on every difficulty and seed with
   and without the Bulwark, no retry; the Maw 126.5 s at medium (par 127, the HP kept), the run's losses ≈ 8 at medium.
   The finale after the kill is left out of the pacing measure (from the armour floor on), as *Implementation* asks.
-  Pending round 58: the beam era's small-unit time 1.52× Level 10's (the rule's 1.5; `BeamEraHpTest` allows 1.6 here:
+  Accepted in round 58 (C.1, C.8): the beam era's small-unit time 1.52× Level 10's (the rule's 1.5; `BeamEraHpTest` allows 1.6 here:
   the Barbfins holding above the Hunter columns and the Rays, served first); Act 4 on hard ends 49 % under the
   expert's bound (Act 3's carried deficit; `ActPlaythroughTest`); the Maw's phase 1 for a random dodger (its spec).
-- 2026-10-26 (step H6, pending round 58): `hold_after_boss` 5 → 1: the clock adds the hold to the Maw's 4 s death
+- 2026-10-26 (step H6, accepted in round 58 (2026-10-26)): `hold_after_boss` 5 → 1: the clock adds the hold to the Maw's 4 s death
   chain (Level 19's rule), so 5 held it to K+9 and the cruisers rose at K+22, after Varga's K+18 line; now K+5 =
   t=105 as this document times it. The sounds: round 58's a variants as stand-ins (the beds `europa-hatchery` and
   `caldera-rumble`, the latter an ambience layer from t=80 swelling over 10 s, held under the fight, cut at the kill),
@@ -578,7 +581,7 @@ All decided in round 48 (2026-10-22):
   `levelReport -Plevel=28` on every difficulty: medium 147 enemies, 89.1 a minute, no gap over 2 s, the haul +0.0 %,
   the Maw 107 s for the autopilot; the captures in *Concept art* and the bosses', hangar's, briefing's and act's
   tables). Level 28's atlases pack into 7 pages, one over the budget: `AtlasBudget` allows it (round 58 C.6). The
-  part's small rules, **pending the user's review in round 58** (the round asks only C.1–C.8 and Q.1 of them): the gap
+  part's small rules, **accepted in round 58 (2026-10-26)** (the round asks only C.1–C.8 and Q.1 of them): the gap
   check's defaults (`m8h-gaps.md` §5 H1–H13: the plan's Shield Mk III with the Depth Charges kept, the Barbfin's 52 HP,
   the guard column from the rear, hard's third Siren at t=76, no Hunters in the finale, the Sonar Pulse opening the
   diving coil, the shed swarms out of the kill ratio, the `boss-arrival` event, the shaft's walls without damage, the
@@ -593,3 +596,44 @@ All decided in round 48 (2026-10-22):
   H4's (the Maw's phase 1, the beam era's 1.52×, Act 4 on hard: C.1 and C.8); H5's (no armour-floor tell on the HUD:
   C.2; the looks' numbers, the orbit's white at 0.85, the sacs hidden in the lunge, the cruisers' shadow offset); H6's
   (`hold_after_boss` 1, the sounds' wiring, the strip's Choir mark).
+- 2026-10-26 (user, [round 58](../../../concept-rounds/round-58/README.md) closed): F.1 (the backdrop), F.4 (the breakout) and F.5
+  (*Pelagic-3* and the buoy) accepted as final, F.6-F.8 accepted too (intel, briefing images, the act's end; their parts'
+  logs); F.2 (the Maw) and F.3 (the cruisers) **redo** in round 59 (the bosses' log). Sounds: the a picks play already;
+  the b picks (`implant-zap`, `maw-death`, `cruiser-rise`) go into the game in a later step ([sfx](../../../audio/sfx/README.md#decisions)).
+  Q.1 a: the Maw keeps "The Choir Descends" as built. C.1-C.8 accepted (C.1 keep phase 1, C.2 no floor tell, C.3 the
+  broadside's whole band, C.4 the hull code as it is, C.5 Act V's name on the end card, C.6 seven atlas pages, C.7 Level
+  26's last line, C.8 the balance exceptions), and the step logs' small rules (decided in round 58) with them.
+  **Fix for the next code step (F.4, the user's note, verbatim):** "The effect is good, but the timing is off. It needs to be timed exactly when this ship breaches the surface. This is not fixed timing, because the ship can be anywhere on the screen and even move at that moment."
+  The ceiling's burst must be placed and started at the moment the ship's position crosses the surface, wherever the ship
+  is on the screen and even while it moves, not at a fixed time and place.
+- 2026-10-26 (step I2; pending the user's review in round 59): **F.4 fixed:** the burst (`BreakoutLooks`) and the
+  breakout's sound (`MawCues`) start on the step the shaft mouth's lip reaches the ship's nose at its x (`BreachLine`:
+  the bore's circle of the backdrop's `shaft_mouth`, r 160 round x 240, its apex on the breakout line), at the lip where
+  the ship crossed, and the burst stays anchored there on the ice, scrolling with the ground, while the ship flies on;
+  a ship high on the screen or at a flank breaches earlier than one low in the middle (up to ≈ 3 s before t=115). The
+  medium still switches at t=115 for the whole field. Tested left, middle, right and moving
+  (`Level28LooksTest.theBurstStartsAsTheShipBreachesTheIce`, `Level28SoundsTest`). **F.3 redone:** the cruisers rise
+  through the intact night ice where they are: the backdrop's two open leads (`ice-split-left/-right`, open water before
+  the hulls came up) are gone; each hull starts on the ice with its crust (the night ice itself, magnified so that at the
+  rise's 0.6 it is the ground's own ice) and moves with the ground, slowing evenly to the wing's pace by half the rise
+  (2 s), while the crust splits and sheets off; its hole (`ascendancy-cruiser-hole`: the footprint at 0.6, black water,
+  plates, a white rim, cracks running out) stays on the ice where it broke through. The run's lanes are unchanged (the
+  hulls in their running place from t=120; the rise is presentation only, `CruiserLooks`;
+  `Level28LooksTest.theCruisersBreakThroughTheIceWhereTheyAre`). **Ambience:** one bed per setting (the user,
+  2026-10-26): `europa-under` to the breakout, `europa-ice` above (the hatchery bed and the caldera's layer left the
+  game).
+- 2026-10-26 (step I4; [round 59](../../../concept-rounds/round-59/README.md) opened): the round 58 fixes captured
+  (R.1 the Maw's motion, R.2 the cruisers' rise, R.3 the burst for a ship at the left, the middle, the right and
+  moving) and asked with V.1 (the Act 4 listen-through), Q.1 (the beds' volume) and seven calls: the Maw's par 138
+  (C.1), easy's shorter fight (C.2), the head under the play plane on its way back (C.3), the hull riding the ice 2 s
+  (C.4), the breach at the ship's nose with the medium switching at t=115 for the whole field (C.5), hard's credits
+  in Acts 3 and 4 (C.6), the homing diamond to Act 5 (C.7). The steps' small rules, pending the user's review in round
+  59: step I1's (the coil's 90 px arcs and the 55 px neck, the 5 s wind-in, the head's swim set at 16 headings, the
+  dive's 3 s way back; the bight's tight bend kept, its segments up to ≈ 40° from their neighbours for the 0.8 s
+  hold: a smaller swing or a longer bight would change the approved sweep; the tail's last three segments kept off the
+  top edge at the top-right corner, where the coil reads as running off the screen in the captures); step I2's (the
+  breach line the bore's circle r 160 round x 240, the burst anchored on the ice, the hole sprite at the rise's 0.6
+  footprint, the leads removed from the backdrop; the Europa beds one per setting); step I3's (the weapons' stale "`sub` at 50 %" notes
+  in their `layers_hit` text corrected to the under-water rules: the play plane at the water's factor, the deep `sub`
+  layer only in the Sonar Pulse's window; Level 28's beam-era time 1.52×, C.8 of round 58,
+  unchanged with the real income).

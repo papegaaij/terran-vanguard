@@ -126,7 +126,7 @@ design tree; this list is only a reminder.
   new machine ([agent tooling](design/tech/agent-tooling/README.md)); `--check` only reports.
 - `python3 tools/doc_section.py FILE ["Heading" [--grep TEXT]]` – reads a Markdown file by section: the outline with
   line ranges and sizes, one section, or the lines of a section that contain a text. Agents read big READMEs this way.
-- `python3 tools/balance.py` – balancing report for levels 01–21 from the data files and the
+- `python3 tools/balance.py` – balancing report for levels 01–28 from the data files and the
   expected purchases in `design/player/balance-plan.yaml` (`--weapons` prints every weapon's
   per-level numbers); the same checks run as JUnit tests (`BalanceTest`, `ActPlaythroughTest`).
   It exits 0; the L01–L03 DPS gap, the Coilwyrm's bounty and the Level 12 Wraith rear check

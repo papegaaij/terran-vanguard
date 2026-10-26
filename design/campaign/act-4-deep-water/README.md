@@ -2,7 +2,7 @@
 title: Act 4 – Deep Water
 design: approved
 implementation: in-progress
-art: proposed
+art: final
 depends-on: [../act-3-red-dust, ../../world/europa, ../../story/twist, ../../enemies/naval, ../../enemies/bosses/abyssal-maw, ../../player/systems]
 updated: 2026-10-26
 ---
@@ -39,7 +39,7 @@ yet: the loader would fly it, so every number here is a hand table marked draft,
 | [level-25-siren-trench](level-25-siren-trench/README.md) | A narrow trench with side caves: Sirens whose rings slow the ship, the Spiral Nautilus, wall collision; the act's hardest stretch before the Maw | approved | in-progress | final |
 | [level-26-blackwater](level-26-blackwater/README.md) | Darkness: headlight and glow only, the Glow Angler's lure, the Choir's first hint of the door; Rook is shot down | approved | in-progress | final |
 | [level-27-hydrothermal-vents](level-27-hydrothermal-vents/README.md) | The vent field: heat plumes that burn and bend shots, grey Depth Hunters from below (hint 3: a Helix hull code), a Bulwark in Rook's slot | approved | in-progress | final |
-| [level-28-abyssal-maw](level-28-abyssal-maw/README.md) | The hatchery and the act boss, the Abyssal Maw; then the climb, the ice breakout and the reveal: two Ascendancy cruisers; the act end | approved | in-progress | proposed |
+| [level-28-abyssal-maw](level-28-abyssal-maw/README.md) | The hatchery and the act boss, the Abyssal Maw; then the climb, the ice breakout and the reveal: two Ascendancy cruisers; the act end | approved | in-progress | final |
 
 ## Design
 
@@ -320,8 +320,8 @@ under the run, as Act 5's opening begins. L28 uses the boss warning (track 22) a
 Descends" (track 18), dropping away under the dive's darkness; **a new reveal sting** (cold low brass with the motif
 hidden in it; not in the track list yet) marks the cruisers' rise at K+18; the act-complete fanfare (track 24) plays
 under the first outro page. **No bubble layer** in any theme or ambience (round 48 Q12 a; the user's "no
-bubbly/popping sounds"). The cues per section are in each level's *Music & ambience*; the ambiences (the ice surface,
-the shaft, `europa-trench`, `europa-black`, `europa-vents`, `europa-hatchery`) and the act's new sounds (underwater
+bubbly/popping sounds"). The cues per section are in each level's *Music & ambience*; the ambiences (the ice surface and
+under water: `europa-ice` and `europa-under`, one bed per setting as in the earlier acts, the user 2026-10-26) and the act's new sounds (underwater
 explosions, ice cracking, drill rigs, the Maw's roar, the breakout, the cruisers' broadsides) are listed by the
 [sfx](../../audio/sfx/README.md) README; real-thing sounds come from Freesound only (CC0/CC-BY, heavy and big).
 
@@ -372,9 +372,9 @@ proposals in [naval](../../enemies/naval/README.md#concept-art) and the boss's i
 | [concept/act-4-still-r52-a.png](concept/act-4-still-r52-a.png) | Round 52 (F.6 redo), variant a: the 960×540 title-card still with one huge water-vapour plume rising from behind the horizon left of Jupiter (~240 px tall: a thin base, a column of fanning jets, a rounded crown, a faint veil falling back; sunlit from the upper left, glittering ice grains); the rest as r51 (ice shelf, Conamara Chaos, Jupiter, the rig's steam thread) | chosen (round 52, T.1 = a) |
 | [concept/rejected/act-4-still-r52-b.png](concept/rejected/act-4-still-r52-b.png) | Round 52 (F.6 redo), variant b: a nearer plume (~380 px tall) from a fissure on the ice below the lettering's left end, with a curtain of three smaller plumes along the fissure receding to the horizon on the left; the rest as r51 | rejected (round 52, T.1: a picked) |
 | [concept/act-4-still-r52-sheet.png](concept/act-4-still-r52-sheet.png) | Round 52 review sheet: both stills at 1× and the title card over each (darkened to 55 %, letterbox, the chrome lettering) | chosen (round 52, T.1 = a; the sheet shows both) |
-| [concept/act-4-debrief-capture-r58-a.png](concept/act-4-debrief-capture-r58-a.png) | Game capture, M8 part H (step H7): a save before Level 28 (`:content:playthroughSave -Plevel=28`) continued and flown with `--invulnerable` to the end: the debrief (`MISSION 28 COMPLETE`, the boss time against its par) and the act summary (`ACT IV COMPLETE · DEEP WATER`, Levels 22–28, the act's totals) | proposed (round 58) |
-| [concept/act-4-outro-capture-r58-a.png](concept/act-4-outro-capture-r58-a.png) | The same run: the four outro pages with their images and voices (the orbit, the hull code, the ready room, Aegis without Rook) | proposed (round 58) |
-| [concept/release-end-capture-r58-a.png](concept/release-end-capture-r58-a.png) | The same run: the release's end card (`ACTS I-IV COMPLETE`, the campaign's totals, `TO BE CONTINUED`, `ACT V - THE BELT. CERES. COMING SOON.`) and the name entry for the high score | proposed (round 58) |
+| [concept/act-4-debrief-capture-r58-a.png](concept/act-4-debrief-capture-r58-a.png) | Game capture, M8 part H (step H7): a save before Level 28 (`:content:playthroughSave -Plevel=28`) continued and flown with `--invulnerable` to the end: the debrief (`MISSION 28 COMPLETE`, the boss time against its par) and the act summary (`ACT IV COMPLETE · DEEP WATER`, Levels 22–28, the act's totals) | chosen (round 58: accepted as final) |
+| [concept/act-4-outro-capture-r58-a.png](concept/act-4-outro-capture-r58-a.png) | The same run: the four outro pages with their images and voices (the orbit, the hull code, the ready room, Aegis without Rook) | chosen (round 58: accepted as final) |
+| [concept/release-end-capture-r58-a.png](concept/release-end-capture-r58-a.png) | The same run: the release's end card (`ACTS I-IV COMPLETE`, the campaign's totals, `TO BE CONTINUED`, `ACT V - THE BELT. CERES. COMING SOON.`) and the name entry for the high score | chosen (round 58: accepted as final) |
 
 ## Implementation
 
@@ -400,7 +400,7 @@ proposals in [naval](../../enemies/naval/README.md#concept-art) and the boss's i
       `tools/balance.py`; `ActHpFactorTest`'s Act 4 cases in step A4; `ActFourDataTest.theReferenceDpsRunsToLevel28`, `BalanceTest`, `tools/balance.py` exit 0).
 - [x] Every level within the act's density band (`DensityTest`, `PacingTest`, `ActFloorTest`), the beam era's HP
       re-measured under water (`BeamEraHpTest`) and its typical haul within ±5 % of its budget (`TypicalHaulTest`)
-      (Level 28's small-unit time 1.52× Level 10's, allowed 1.6×: pending round 58).
+      (Level 28's small-unit time 1.52× Level 10's, allowed 1.6×: accepted in round 58 (2026-10-26)).
 - [x] The act-end order after L28 (Level 21's) and the release's end moved from L21 to L28; the hangar before L29
       reads `ACT V - THE BELT: COMING SOON`.
 - [x] A save at the L22 hangar from the `v0.1` release plays the Act 4 intro **once** on Continue (the `act-intro:N`
@@ -408,7 +408,10 @@ proposals in [naval](../../enemies/naval/README.md#concept-art) and the boss's i
 - [x] The act's voices (Dr. Brandt, Thera Deep Control, the Choir's speech) cast and rendered; the act's sounds
       (Freesound only) and the Act 4 B theme and the reveal sting made (Level 28's in part H: steps H3, AUD-H; the
       picks in round 58).
-- [ ] `ActPlaythroughTest` and `BalanceTest` through Act 4 with Rook (L22–L26) and the Bulwark (L27–L28; `--escort none` works).
+- [x] `ActPlaythroughTest` and `BalanceTest` through Act 4 with Rook (L22–L26) and the Bulwark (L27–L28; `--escort none` works) (M8 part I: on
+      the levels' own typical hauls, part A's temporary `budget(n)` removed; the act's end at -2.3 % of the expert's
+      bound on medium and +8.8 % on easy, hard 49.4 % under it, pending in round 59; `BalanceTest`'s returning units
+      through Level 28; `./gradlew :content:playthroughSave -Plevel=28` writes the save at the Level 28 hangar).
 - [ ] The user's playthrough of Act 4.
 
 ## Open questions
@@ -471,4 +474,9 @@ proposals in [naval](../../enemies/naval/README.md#concept-art) and the boss's i
   (Level 26; Rook's loss retimed after the playtest: [Level 26](level-26-blackwater/README.md#decisions)).
 - 2026-10-25 (M8 part H, step H3): the act-end outro's four approved pages in the act's data (rendered into *Act intro
   and outro*, voiced) and `next_act` `{act: ACT V, name: THE BELT, setting: CERES}` for the release's end (the setting
-  CERES, Level 29's Ceres Hub, a default of the step pending round 58); Level 28 in data.
+  CERES, Level 29's Ceres Hub, a default of the step accepted in round 58 (2026-10-26)); Level 28 in data.
+- 2026-10-26 (user, [round 58](../../concept-rounds/round-58/README.md) closed): the act's end (F.8: the debrief, the act summary, the four outro pages, the release's end card) accepted as final; C.5 (Act V's name on the end card, `ACT V - THE BELT. CERES. COMING SOON.`) accepted, C.8 (the balance exceptions, rechecked in part I) accepted. The Abyssal Maw (F.2) and the cruisers (F.3) are redone for round 59 ([Level 28](level-28-abyssal-maw/README.md#decisions)).
+- 2026-10-26 (M8 part I, step I3): the playthrough and balance tests through Level 28 on the real income (part A's
+  `budget(n)` fallback removed; no tuning pass: medium ends Act 4 at -2.3 % of the expert's bound, easy +8.8 %, hard
+  -49.4 %, 13,164 against 25,991, still pending the user's review in round 59); the act passes the
+  [variety checklist](../../enemies/README.md#variety-checklist-per-act) as built (25 units, 3 insectoid).

@@ -24,11 +24,12 @@ import vanguard.sim.Sortie;
  * Tells; tools/art/abyssal_maw.py's sprites, briefs/m8arth1-rows.md's names), following the simulation's {@link
  * CoilArena}. In the play field's stack over the ground units ({@link #draw}), back to front: the dive's darkness over
  * the caldera (the vent guttering: {@link DarkLight#ventDim}), the lunge's shadow running up its column with the silt
- * lifting in it, the coil's segments from the tail to the head (32 headings, the tail's taper; while the coil is under
- * the water, rising or diving, smaller, darker and fading), a sweep's silt streaming off its bight in the tell, the
- * lunge's body up the column, the gill sacs (idle, swelling, full, torn), the Helix implants (shut, sparking, open,
- * blown) and the head in its seven poses (rest, the throat's glow, open, reared in phase 3, the dive, the lunge, dead; a
- * hit flashing it at most once each 0.25 s, {@link HitFlash}); after the kill its death: the implants blowing out 0.4 s
+ * lifting in it, the coil's segments from the tail to the head where the simulation places them (round 58 F.2: winding
+ * in round the arena, at rest, bent by a sweep's bight, sliding off the edges, up the column), each in the heading of
+ * the line where it lies (32 headings, the tail's taper; under the water smaller, darker and fading), a sweep's silt
+ * streaming off its bight in the tell, the gill sacs (idle, swelling, full, torn), the Helix implants (shut, sparking,
+ * open, blown) and the head in its seven poses (rest, the throat's glow, open, reared in phase 3, the dive, the lunge,
+ * dead), swimming in 16 headings while it winds in (a hit flashing it at most once each 0.25 s, {@link HitFlash}); after the kill its death: the implants blowing out 0.4 s
  * apart, the segments sinking tail to head each in a burst of ichor, the head sinking last. After the grade, ungraded and
  * additive ({@link #drawGlows}): the coil's teal lines (lime over a sweep's bight in its tell, swing and hold and over a
  * shed point's flaring plate, with its flare), the sacs' and the implants' glow, the implants' arc, the head's eyes,
@@ -52,6 +53,8 @@ final class MawLooks {
     static final int LUNGE = 5;
     static final int DEAD = 6;
     static final int HEAD_FRAMES = 7;
+    /** The swimming head's headings ({@code -head-swim_<k>}: k x 22.5° clockwise from facing straight down). */
+    static final int SWIM_HEADINGS = 16;
     /** The sacs' frames: idle, swelling, full, torn (the torn sac has no glow). */
     static final int SAC_IDLE = 0;
 
@@ -90,8 +93,6 @@ final class MawLooks {
     static final float VENT_DIM = 0.85f;
 
     private static final Color DARK = new Color(0.02f, 0.03f, 0.05f, 1);
-    /** The lunge's body up the column: the segment's heading facing up the screen (toward the head). */
-    static final int UP = HEADINGS / 2;
     /** The death: the blow-outs' gap, each segment's and the head's sink, s; the vent's flare (4 fps, x1.6). */
     static final double BLOWOUT_GAP = 0.4;
 
@@ -121,6 +122,7 @@ final class MawLooks {
     private final Array<AtlasRegion> head;
     private final Array<AtlasRegion> headGlow;
     private final Array<AtlasRegion> headRim;
+    private final Array<AtlasRegion> headSwim;
     private final Array<AtlasRegion> sac;
     private final Array<AtlasRegion> sacGlow;
     private final Array<AtlasRegion> implant;
@@ -137,7 +139,6 @@ final class MawLooks {
     private final HitFlash hits = new HitFlash();
 
     private final int segments;
-    private final double spacing;
     private final int[] sacs;
     private final int implantPhase;
     private final double deathSeconds;
@@ -180,6 +181,7 @@ final class MawLooks {
         head = optional(sprites, slug + "-head");
         headGlow = optional(sprites, slug + "-head-glow");
         headRim = optional(sprites, slug + "-head-rim");
+        headSwim = optional(sprites, slug + "-head-swim");
         sac = optional(sprites, slug + "-sac");
         sacGlow = optional(sprites, slug + "-sac-glow");
         implant = optional(sprites, slug + "-implant");
@@ -196,7 +198,6 @@ final class MawLooks {
         BossSpec spec = boss.boss().orElseThrow();
         CoilSpec coil = spec.coil().orElseThrow();
         segments = coil.body().segments();
-        spacing = coil.body().spacing();
         sacs = coil.sacs().stream().mapToInt(Integer::intValue).toArray();
         implantPhase = coil.implants().map(CoilSpec.Implants::phase).orElse(Integer.MAX_VALUE);
         int implants = coil.implants().map(i -> i.parts().size()).orElse(0);
@@ -256,6 +257,19 @@ final class MawLooks {
      */
     static int heading(double angle) {
         return Math.floorMod((int) Math.round((Math.PI / 2 - angle) * HEADINGS / (2 * Math.PI)), HEADINGS);
+    }
+
+    /**
+     * The swimming head's heading for the simulation's {@code facing} (radians, 0 to the right, y up): k × 22.5°
+     * clockwise from facing straight down (tools/art/abyssal_maw.py).
+     */
+    static int swimHeading(double facing) {
+        return Math.floorMod((int) Math.round((-Math.PI / 2 - facing) * SWIM_HEADINGS / (2 * Math.PI)), SWIM_HEADINGS);
+    }
+
+    /** Whether the coil winds in round the arena now (its arrival's end, the dive's way back): the head swims. */
+    static boolean winding(CoilArena coil) {
+        return !coil.up() || coil.diveState() == CoilArena.DiveState.RETURN;
     }
 
     /** Segment {@code i}'s taper of {@code count} (the head's end first): the tail's last three 3, then 2, then 1. */
@@ -322,14 +336,14 @@ final class MawLooks {
         return (float) (1 - GLOW_FAINTER * depth);
     }
 
-    /** The dive's darkness over the caldera (0–{@value #DIVE_DARK}): its depth while it dives, none otherwise. */
-    static float darkness(CoilArena coil) {
-        return coil.diving() ? (float) (DIVE_DARK * coil.depth()) : 0;
+    /** The sunk head's (and sacs') share of its look as the lunge's shadow rises: from 1 down to 0 over the shadow. */
+    static float deepFade(CoilArena coil) {
+        return coil.diveState() == CoilArena.DiveState.SHADOW ? (float) (1 - coil.diveProgress()) : 1;
     }
 
-    /** The lunge's body under a head at height {@code headY}: segments {@code spacing} apart down past the bottom edge. */
-    static int columnSegments(double headY, double spacing, int count) {
-        return (int) Math.min(count, Math.max(0, Math.floor(headY / spacing) + 1));
+    /** The dive's darkness over the caldera (0–{@value #DIVE_DARK}): falling with the slide, lifting on the way back. */
+    static float darkness(CoilArena coil) {
+        return (float) (DIVE_DARK * coil.dark());
     }
 
     /** When segment {@code i} (of {@code count}, head first) starts to sink after the kill, s: tail to head. */
@@ -508,10 +522,11 @@ final class MawLooks {
         double depth = coil.depth();
         drawCoil(batch, coil, depth);
         drawSilt(batch, coil, tick, depth);
-        drawColumn(batch, coil);
         float scale = subScale(depth);
         float shade = subShade(depth);
         float fade = subAlpha(depth);
+        // Under the water the head (and its sacs) goes deep as the lunge's shadow rises: it fades out.
+        float deep = deepFade(coil);
         double x = piece.renderX(alpha);
         double y = piece.renderY(alpha);
         boolean lunging = coil.diveState() == CoilArena.DiveState.LUNGE || coil.diveState() == CoilArena.DiveState.BODY;
@@ -531,7 +546,7 @@ final class MawLooks {
                     y + piece.partOffsetY(sacPart),
                     scale,
                     shade,
-                    fade,
+                    fade * deep,
                     tick,
                     whiteFlash);
         }
@@ -554,17 +569,18 @@ final class MawLooks {
         }
         int pose = headFrame(coil.diveState(), coil.throatGlowing(), coil.jawOpen(), piece.phase() >= implantPhase);
         boolean onPlane = pose == LUNGE;
+        boolean swim = winding(coil) && !headSwim.isEmpty();
         drawPart(
                 batch,
                 piece,
                 0,
-                head,
-                pose,
+                swim ? headSwim : head,
+                swim ? swimHeading(coil.headFacing()) : pose,
                 x,
                 y,
                 onPlane ? 1 : scale,
                 onPlane ? 1 : shade,
-                onPlane ? 1 : fade,
+                onPlane ? 1 : fade * deep,
                 tick,
                 whiteFlash);
         batch.setColor(Color.WHITE);
@@ -667,29 +683,6 @@ final class MawLooks {
                     drawScaled(batch, silt.get(frame), x + (k % 2 == 0 ? -14 : 14), y, 1);
                 }
             }
-        }
-        batch.setColor(Color.WHITE);
-    }
-
-    /** The lunge's body up the column under the head (facing up), fading on the way back. */
-    private void drawColumn(SpriteBatch batch, CoilArena coil) {
-        CoilArena.DiveState state = coil.diveState();
-        if (segment.isEmpty()
-                || (state != CoilArena.DiveState.LUNGE
-                        && state != CoilArena.DiveState.BODY
-                        && state != CoilArena.DiveState.RETURN)) {
-            return;
-        }
-        float opacity = state == CoilArena.DiveState.RETURN ? (float) (1 - coil.diveProgress()) : 1;
-        double x = state == CoilArena.DiveState.RETURN ? coil.columnX() : coil.headX();
-        batch.setColor(1, 1, 1, opacity);
-        int n = segments;
-        int k = columnSegments(coil.headY(), spacing, n);
-        // The column's segments toward the bottom edge first, so the plates shingle up toward the head.
-        for (int j = k - 1; j >= 0; j--) {
-            double y = coil.headY() - spacing * (j + 1);
-            int frame = segmentFrame(UP, taper(j, n));
-            drawScaled(batch, segment.get(Math.min(segment.size - 1, frame)), x, y, 1);
         }
         batch.setColor(Color.WHITE);
     }
@@ -809,7 +802,7 @@ final class MawLooks {
         }
         double x = piece.renderX(alpha);
         double y = piece.renderY(alpha);
-        batch.setColor(1, 1, 1, glow);
+        batch.setColor(1, 1, 1, glow * deepFade(coil));
         boolean lunging = coil.diveState() == CoilArena.DiveState.LUNGE || coil.diveState() == CoilArena.DiveState.BODY;
         for (int sacPart : sacs) {
             int frame = sacFrame(piece.partWrecked(sacPart), sacPart == swelling, swellShare(sacPart, tick));
@@ -835,8 +828,12 @@ final class MawLooks {
         }
         int pose = headFrame(coil.diveState(), coil.throatGlowing(), coil.jawOpen(), piece.phase() >= implantPhase);
         float headScale = pose == LUNGE ? 1 : scale;
+        if (winding(coil) && !headSwim.isEmpty()) {
+            // The swimming head's lines are in its frames.
+            return;
+        }
         if (pose < headGlow.size) {
-            batch.setColor(1, 1, 1, pose == LUNGE ? 1 : glow);
+            batch.setColor(1, 1, 1, pose == LUNGE ? 1 : glow * deepFade(coil));
             drawScaled(batch, headGlow.get(pose), x, y, headScale);
         }
         if (coil.wallGlowing() && !headRim.isEmpty()) {
@@ -875,13 +872,12 @@ final class MawLooks {
         }
     }
 
-    /** How far the vent's light gutters now (0–{@value #VENT_DIM}): with the dive's depth. */
+    /** How far the vent's light gutters now (0–{@value #VENT_DIM}): with the dive's darkness. */
     float ventDim(Sortie sortie) {
         SetPiece piece = maw(sortie);
         if (piece == null || !piece.present()) {
             return 0;
         }
-        CoilArena coil = piece.coil().orElseThrow();
-        return coil.diving() ? (float) (VENT_DIM * coil.depth()) : 0;
+        return (float) (VENT_DIM * piece.coil().orElseThrow().dark());
     }
 }

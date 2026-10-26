@@ -88,6 +88,7 @@ class PassOrderTest {
             farside.darken(batch, sortie, alpha, scroll, seconds)
             farside.drawGlows(batch, sortie, looks, alpha, seconds)
             ground.drawGroundGlows(batch, sortie, alpha)
+            cruisers.drawHoles(batch, sortie, scroll)
             units.drawRisers(batch, sortie, alpha)
             player.drawBomberShadows(batch, sortie, alpha)
             drawShadows(batch, sortie, alpha)

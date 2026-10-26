@@ -761,15 +761,16 @@ public enum Sfx {
      */
     IMPLANT_SPARK("sfx/implant-spark-r58-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
     /**
-     * M8 part H: an open implant's discharge (round 58 a, proposed until the user's pick: a Tesla coil's spark gap building, then its crack, 0.8 s), as
-     * its arc crawls before its burst.
+     * M8 part H: an open implant's discharge (round 58 b, the user's pick (S.13): a Jacob's ladder's arc climbing, then a
+     * high-voltage taser's discharge, 0.8 s), as its arc crawls before its burst.
      */
-    IMPLANT_ZAP("sfx/implant-zap-r58-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
+    IMPLANT_ZAP("sfx/implant-zap-r58-b.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
     /**
-     * M8 part H: the Maw's death (round 58 a, proposed until the user's pick: three Tesla-coil cracks, a whale's falling moan and a depth bomb's boom, a
-     * 3 s reverb, 8.2 s), its own instead of the huge rung's blast, over the 4 s chain.
+     * M8 part H: the Maw's death (round 58 b, the user's pick (S.14): three taser discharges slowed, a blue whale's B call
+     * sinking and a quarry blast slowed and muffled, a 3 s reverb, 8.2 s), its own instead of the huge rung's blast, over
+     * the 4 s chain.
      */
-    MAW_DEATH("sfx/maw-death-r58-a.ogg", 1, Bus.EFFECTS, BOSS),
+    MAW_DEATH("sfx/maw-death-r58-b.ogg", 1, Bus.EFFECTS, BOSS),
     /**
      * M8 part H: the climb up the drill shaft (round 58 a, proposed until the user's pick: a waterfall's roar gliding up and swelling, a frozen lake's
      * fracture booms from 4.5 s, 10.0 s), once as the clock resumes after the kill (Level 28, K+5 to K+15).
@@ -781,10 +782,10 @@ public enum Sfx {
      */
     BREAKOUT("sfx/breakout-r58-a.ogg", 1, Bus.EFFECTS, BOSS),
     /**
-     * M8 part H: the Ascendancy cruisers' rise (round 58 a, proposed until the user's pick: a ferry's engine room slowed and swelling under a boat
-     * breaking harbour ice, 5.0 s), under the reveal sting (Level 28, K+18).
+     * M8 part H: the Ascendancy cruisers' rise (round 58 b, the user's pick (S.16): a fishing boat's throaty engine slowed
+     * and swelling, a glacier's ice grinding and a sheet of ice cracking, 5.0 s), under the reveal sting (Level 28, K+18).
      */
-    CRUISER_RISE("sfx/cruiser-rise-r58-a.ogg", 1, Bus.EFFECTS, BOSS),
+    CRUISER_RISE("sfx/cruiser-rise-r58-b.ogg", 1, Bus.EFFECTS, BOSS),
     /**
      * M8 part H: a cruiser's broadside (round 58 a, proposed until the user's pick: a howitzer's shot seven times down the hull, 1.65 s), as its volley
      * crosses the band.
@@ -1008,7 +1009,8 @@ public enum Sfx {
     AMBIENCE_BASIN_RUMBLE("sfx/basin-rumble-r43-a.ogg", 1, Bus.EFFECTS, AMBIENCE),
     /**
      * M8 part B: Europa's ice (round 51 a, chosen (S.6): a glacial wind over lake-ice fractures an octave down, the deep
-     * booms and groans rolling under it, a seamless 16 s loop): Level 22 to its run-in.
+     * booms and groans rolling under it, a seamless 16 s loop): Level 22 to its run-in, Level 23's shaft mouth
+     * and Level 28 from the breakout: the one bed on Europa's surface (the user, 2026-10-26).
      */
     AMBIENCE_EUROPA_ICE("sfx/europa-ice-r51-a.ogg", 1, Bus.EFFECTS, AMBIENCE),
     /**
@@ -1018,36 +1020,10 @@ public enum Sfx {
     AMBIENCE_CONAMARA("sfx/conamara-station-r51-a.ogg", 1, Bus.EFFECTS, AMBIENCE),
     /**
      * M8 part C: the bed under Europa's ice (round 52 a, proposed: a deep-sea rumble, a sinking submarine's steel creaks
-     * slowed, humpback whales calling far off, a seamless 16 s loop): Level 23 from the waterline on, and Level 24.
+     * slowed, humpback whales calling far off, a seamless 16 s loop): Level 23 from the waterline on and Levels 24-28 to
+     * Level 28's breakout, one bed for every level under water (the user, 2026-10-26).
      */
     AMBIENCE_EUROPA_UNDER("sfx/europa-under-r52-a.ogg", 1, Bus.EFFECTS, AMBIENCE),
-    /**
-     * M8 part E: the Siren Trench's bed (round 54 a, proposed: {@code europa-under}'s rumble slowed, rock scraping far
-     * off, humpback whales calling far off, a seamless 16 s loop): Level 25, in place of {@code europa-under}.
-     */
-    AMBIENCE_EUROPA_TRENCH("sfx/europa-trench-r54-a.ogg", 1, Bus.EFFECTS, AMBIENCE),
-    /**
-     * M8 part F: the black water's bed (round 55 a, the user's pick: a submarine's air conditioner slowed and muffled, a deep
-     * rumble swelling once a loop, a seamless 24 s loop): Level 26, in place of {@code europa-under}.
-     */
-    AMBIENCE_EUROPA_BLACK("sfx/europa-black-r55-a.ogg", 1, Bus.EFFECTS, AMBIENCE),
-    /**
-     * M8 part G: the vent field's bed (round 57 a, the user's pick: a waterfall's massive roar slowed to a
-     * deep rumble; once a loop a boiler blowdown far off swelling and a bunker door's low metal groan, a seamless 24 s
-     * loop): Level 27, in place of {@code europa-under}.
-     */
-    AMBIENCE_EUROPA_VENTS("sfx/europa-vents-r57-a.ogg", 1, Bus.EFFECTS, AMBIENCE),
-    /**
-     * M8 part H: the hatchery's bed (round 58 a, proposed until the user's pick: a heartbeat slowed and muffled over a deep under-water drone; once a loop
-     * throat singing far off and a hull's creaks, a seamless 24 s loop): Level 28 to the breakout.
-     */
-    AMBIENCE_EUROPA_HATCHERY("sfx/europa-hatchery-r58-a.ogg", 1, Bus.EFFECTS, AMBIENCE),
-    /**
-     * M8 part H: the caldera's rumble (round 58 a, proposed until the user's pick: a foundry furnace's roar over a waterfall's, slowed and muffled, a
-     * seamless 16 s loop): an ambience layer over the hatchery bed through Level 28's antechamber and the fight, cut at
-     * the kill.
-     */
-    AMBIENCE_CALDERA_RUMBLE("sfx/caldera-rumble-r58-a.ogg", 1, Bus.EFFECTS, AMBIENCE),
     /** The mission complete jingle (design/audio/music, track 23), played as a one-shot. */
     MISSION_COMPLETE("music/mission-complete.ogg", 1, Bus.MUSIC, WARNING),
     /**
@@ -1150,17 +1126,9 @@ public enum Sfx {
             // M8 part B: Europa's ice shelf and the station's bed (Level 22).
             case "europa-ice" -> AMBIENCE_EUROPA_ICE;
             case "conamara-station" -> AMBIENCE_CONAMARA;
-            // M8 part C: the bed under the ice (Level 23 from the waterline).
+            // M8 part C: the bed under the ice (Level 23 from the waterline, Levels 24-28 to the breakout: one bed for
+            // every level under water, the user 2026-10-26).
             case "europa-under" -> AMBIENCE_EUROPA_UNDER;
-            // M8 part E: the Siren Trench's bed (Level 25).
-            case "europa-trench" -> AMBIENCE_EUROPA_TRENCH;
-            // M8 part F: Level 26's black-water bed (round 55's a until the user's pick).
-            case "europa-black" -> AMBIENCE_EUROPA_BLACK;
-            // M8 part G: Level 27's vent-field bed (round 57 a, the user's pick).
-            case "europa-vents" -> AMBIENCE_EUROPA_VENTS;
-            // M8 part H: Level 28's hatchery bed and the caldera's rumble layer (round 58's a until the user's pick).
-            case "europa-hatchery" -> AMBIENCE_EUROPA_HATCHERY;
-            case "caldera-rumble" -> AMBIENCE_CALDERA_RUMBLE;
             default -> throw new IllegalArgumentException("no ambience for " + setting + " yet");
         };
     }

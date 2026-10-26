@@ -28,6 +28,12 @@ Outputs (assets/sprites/, or build/art-held/sprites/ while no data claims the ro
                                     (the snout pitched down into the dark), 5 the lunge (facing up the screen, jaws
                                     open), 6 dead (the jaw gaping, locked; the glows guttering)
   abyssal-maw-head-glow_0..6        200x212, additive, the same order: eyes, flank lines and the throat alone
+  abyssal-maw-head-swim_0..15       196x196, normal (round 58 F.2, step m8i1): the head swimming along the coil's path
+                                    (the arrival's wind-in, the dive's way back), jaw shut, in 16 headings: heading k
+                                    faces k x 22.5 degrees clockwise from straight down (k 0 = the rest frame's facing),
+                                    the neck cut 75 px behind the head's centre where the first segment takes over; from
+                                    the simulation's ``headFacing`` f (radians, y up): k = round((-pi/2 - f) * 16 /
+                                    (2 pi)) mod 16. No glow twin: its teal lines are in the frame
   abyssal-maw-head-rim              200x212, additive, one frame: the teal orbs lighting along the jaw's rim (a fan
                                     wall's tell, over head frame 1 or 2)
   abyssal-maw-sac_0..3              44x44, normal: idle, swelling, full (the 0.6 s tell's peak), torn (destroyed)
@@ -60,9 +66,10 @@ Outputs (assets/sprites/, or build/art-held/sprites/ while no data claims the ro
                                     caldera under the hatchery light's stand-in: the rise, phase 1, phase 2 with a
                                     sweep and a shed, the dive and the lunge, phase 3's implants, the death)
 
-Run: python3 tools/art/abyssal_maw.py [head|segment|parts|fx ...] [--review | --relocate]   (~7 min on 8 cores, the segments most of
-it; groups rebuild only their sets; --review only rebuilds the review files; --relocate moves the held sets into
-assets/ once the data claims them, without rendering; backdrop_l28.py first for the caldera)
+Run: python3 tools/art/abyssal_maw.py [head|swim|segment|parts|fx ...] [--review | --relocate | --no-review]   (~7 min on 8 cores, the segments most of
+it; groups rebuild only their sets; --review only rebuilds the review files, --no-review leaves them (round 58's) as
+they are; --relocate moves the held sets into assets/ once the data claims them, without rendering; backdrop_l28.py
+first for the caldera)
 """
 import sys
 from concurrent.futures import ProcessPoolExecutor
@@ -92,6 +99,7 @@ HEADINGS = 32
 SEG, SEG_PX = 78, 32.0                       # canvas; px per model unit
 TAPERS = (1.0, 0.82, 0.66, 0.5)
 HEAD, HEAD_PX = (200, 212), 60.0
+SWIM, SWIM_HEADINGS, NECK_CUT = 196, 16, 1.25   # the swimming head's canvas, headings, neck cut (units behind)
 SAC, SAC_EXT = 44, 2.0
 IMP, IMP_EXT = 48, 2.4
 LIME = np.array((168, 255, 42), float)
@@ -154,6 +162,17 @@ def _render(job):
         if black:
             mats = blackened(mats)
         return artkit.native(*artkit.render_hi(scene2, mats, (SEG, SEG), SEG / SEG_PX), crisp=0 if black else 70)
+    if kind == "swim":
+        k = a
+        base, mats = head_model("rest")
+
+        def cut(p, base=base):             # the neck ends where the first segment takes over
+            d, m = base(p)
+            return np.maximum(d, p[:, 1] - NECK_CUT), m
+        rot = -TAU * k / SWIM_HEADINGS     # heading k: k steps clockwise from facing straight down
+        scene = (lambda p, s=cut, r=rot: s(rotate_z(p, r)))
+        mats = model_space_materials(mats, rot)
+        return artkit.native(*artkit.render_hi(scene, mats, (SWIM, SWIM), SWIM / HEAD_PX), crisp=70)
     if kind == "head":
         scene, mats = head_model(a)
         if black:
@@ -428,7 +447,7 @@ def rim_frame():
 
 # --------------------------------------------------------------------------- build
 
-GROUPS = ("head", "segment", "parts", "fx")
+GROUPS = ("head", "swim", "segment", "parts", "fx")
 
 
 def _map(jobs):
@@ -453,6 +472,9 @@ def build(groups=GROUPS):
         kit.write(f"{ROOT_NAME}-head-glow", artkit.quantize_set([glow_frame(g) for g in heads[nn:]], 24), SOURCE)
         kit.write(f"{ROOT_NAME}-head-rim", [rim_frame()], SOURCE, single=True)
         kit.write(f"{ROOT_NAME}-shadow-head", [shadow_head(heads[HEAD_NAMES.index("lunge")])], SOURCE, single=True)
+    if "swim" in groups:
+        swims = _map([("swim", k, None, False) for k in range(SWIM_HEADINGS)])
+        kit.write(f"{ROOT_NAME}-head-swim", artkit.quantize_set(swims, 48), SOURCE)
     if "parts" in groups:
         sac_kw = [dict(swell=0.0), dict(swell=0.5), dict(swell=1.0), dict(swell=0.0, torn=1.0)]
         imp_st = [("shut", None), ("spark", None), ("spark", 0.75), ("open", None), ("blown", None)]
@@ -491,6 +513,10 @@ def write_pivots():
                  "note": "the model's centre is the frame's centre; the sacs and the neck implant are separate "
                          "sprites at the data's offsets from the head (the concept's: sacs (-62, -15), (62, -15), "
                          "(-50, 33), (50, 33) px, y down)"},
+        "head_swim": {"frame": [SWIM, SWIM], "headings": SWIM_HEADINGS,
+                      "index": "heading k faces k x 22.5 deg clockwise from straight down (0: the rest facing)",
+                      "from_sim_facing": "k = round((-pi/2 - headFacing) * 16 / (2 pi)) mod 16",
+                      "neck_cut_px": NECK_CUT * HEAD_PX},
         "segment": {"frame": [SEG, SEG], "headings": HEADINGS, "tapers": list(TAPERS),
                     "index": "heading * 4 + taper; heading k = the way toward the head, k x 11.25 deg clockwise "
                              "from straight down",
@@ -814,7 +840,8 @@ def review():
                        fps=FPS)
 
 
-SETS = ("segment", "segment-glow", "segment-tell", "head", "head-glow", "head-rim", "shadow-head", "sac", "sac-glow",
+SETS = ("segment", "segment-glow", "segment-tell", "head", "head-glow", "head-rim", "head-swim", "shadow-head", "sac",
+        "sac-glow",
         "implant", "implant-glow", "arc", "shed", "silt", "shadow-column", "blowout", "blowout-glow", "ichor", "flare")
 SINGLE = ("head-rim", "shadow-head", "shadow-column")
 
@@ -837,7 +864,8 @@ def main(argv):
         sys.exit(f"unknown groups: {', '.join(sorted(unknown))} (of {', '.join(GROUPS)})")
     if "--review" not in argv:
         build(groups or GROUPS)
-    review()
+    if "--no-review" not in argv:
+        review()
 
 
 if __name__ == "__main__":

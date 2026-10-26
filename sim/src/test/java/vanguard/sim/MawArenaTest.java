@@ -76,24 +76,31 @@ class MawArenaTest {
         assertFalse(boss.partShielded(MawSpecs.HEAD));
         assertEquals(MawSpecs.REST_X, boss.x(), 1e-9);
         assertEquals(MawSpecs.REST_Y, boss.y(), 1e-9);
-        // The coil: 3 along the top, 10 down the left, 8 along the bottom, 10 up the right.
+        // The coil (round 58 F.2: its corners turn on 90 px arcs): 3 along the top, 9 down the left, 7 along the
+        // bottom, 12 up the right (the tail tip off the top edge), each on the straight runs or on a corner's arc.
         assertEquals(31, coil.segmentCount());
         int[] runs = new int[4];
+        double[][] corners = {{108, 432}, {108, 93}, {372, 93}};
         for (int i = 0; i < coil.segmentCount(); i++) {
-            int side = coil.segmentSide(i);
-            runs[side + 1]++;
-            switch (side) {
-                case CoilArena.TOP -> assertEquals(522, coil.segmentY(i), 1e-9);
-                case 0 -> assertEquals(18, coil.segmentX(i), 1e-9);
-                case 1 -> assertEquals(3, coil.segmentY(i), 1e-9);
-                default -> assertEquals(462, coil.segmentX(i), 1e-9);
+            runs[coil.segmentSide(i) + 1]++;
+            double x = coil.segmentX(i);
+            double y = coil.segmentY(i);
+            boolean straight = (y == 522 && x >= 108)
+                    || (x == 18 && y >= 93 && y <= 432)
+                    || (y == 3 && x >= 108 && x <= 372)
+                    || (x == 462 && y >= 93);
+            boolean arc = false;
+            for (double[] c : corners) {
+                arc |= Math.abs(Math.hypot(x - c[0], y - c[1]) - 90) < 1e-4;
             }
+            assertTrue(straight || arc, "on the rounded path: " + i + " at " + x + ", " + y);
         }
         assertEquals(3, runs[0], "top");
-        assertEquals(10, runs[1 + CoilSpec.Side.LEFT.ordinal()], "left");
-        assertEquals(8, runs[1 + CoilSpec.Side.BOTTOM.ordinal()], "bottom");
-        assertEquals(10, runs[1 + CoilSpec.Side.RIGHT.ordinal()], "right");
+        assertEquals(9, runs[1 + CoilSpec.Side.LEFT.ordinal()], "left");
+        assertEquals(7, runs[1 + CoilSpec.Side.BOTTOM.ordinal()], "bottom");
+        assertEquals(12, runs[1 + CoilSpec.Side.RIGHT.ordinal()], "right");
         assertEquals(185, coil.segmentX(0), 1e-9);
+        assertEquals(522, coil.segmentY(0), 1e-9);
         // The implants ride their segments where the design places them; the bar is the head's alone.
         assertEquals(110, boss.partX(MawSpecs.NECK), 1e-9);
         assertEquals(480, boss.partY(MawSpecs.NECK), 1e-9);
@@ -117,7 +124,14 @@ class MawArenaTest {
         assertEquals(sortie.ship().spec().edgeLimit(), ship.x(), 1e-9, "no wall before it is up");
         MawSpecs.untilUp(sortie);
         MawSpecs.steps(sortie, 1, downLeft);
+        // The bottom-left corner turns on a 90 px arc: the ship keeps 32 + 12 px inside it (46 px from its centre).
+        assertEquals(46, Math.hypot(ship.x() - 108, ship.y() - 93), 1e-6, "inside the rounded corner");
+        assertTrue(ship.x() > 62 && ship.y() > 47, "the corner rounder than the flanks' square");
+        MawSpecs.steps(sortie, 0.5, Command.UP.bit());
+        MawSpecs.steps(sortie, 0.5, Command.LEFT.bit());
         assertEquals(62, ship.x(), 1e-9, "12 px inside the left flank (x 50)");
+        MawSpecs.steps(sortie, 0.5, Command.RIGHT.bit());
+        MawSpecs.steps(sortie, 1, Command.DOWN.bit());
         assertEquals(47, ship.y(), 1e-9, "12 px inside the bottom flank (y 35)");
         MawSpecs.steps(sortie, 3, Command.RIGHT.bit() | Command.UP.bit());
         assertEquals(418, ship.x(), 1e-9, "12 px inside the right flank (x 430)");
@@ -233,7 +247,7 @@ class MawArenaTest {
                         + SimStep.ticks(2)
                         + SimStep.ticks(0.8)
                         + SimStep.ticks(3)
-                        + SimStep.ticks(2),
+                        + SimStep.ticks(3),
                 steps,
                 "the dive's length");
         assertEquals(List.of(2), MawSpecs.values(other, SimEvents.Type.BOSS_PHASE), "the phase ends as it is over");
@@ -285,15 +299,15 @@ class MawArenaTest {
         MawSpecs.steerTo(sortie, 62, 250);
         assertEquals(
                 List.of(CoilSpec.Side.LEFT.ordinal()), MawSpecs.until(sortie, SimEvents.Type.COIL_SWEEP_TELL, 8, 0));
-        int centre = -1;
+        int nearest = -1;
         for (int i = 0; i < coil.segmentCount(); i++) {
             if (coil.segmentSide(i) == CoilSpec.Side.LEFT.ordinal()
-                    && Math.abs(coil.segmentY(i) - 241) < 1e-9
-                    && coil.inBight(i)) {
-                centre = i;
+                    && (nearest < 0 || Math.abs(coil.segmentY(i) - 250) < Math.abs(coil.segmentY(nearest) - 250))) {
+                nearest = i;
             }
         }
-        assertTrue(centre >= 0, "the bight on the left segment nearest the ship's y (241 for 250)");
+        assertTrue(coil.inBight(nearest), "the bight on the left segment nearest the ship's y");
+        assertTrue(Math.abs(coil.segmentY(nearest) - 250) < 28, "the ship's y: " + coil.segmentY(nearest));
         int tell = 0;
         while (MawSpecs.values(sortie, SimEvents.Type.COIL_SWEEP).isEmpty()) {
             sortie.step(0);
@@ -370,7 +384,7 @@ class MawArenaTest {
         MawSpecs.steps(sortie, 0.5, 0);
         assertTrue(Math.abs(sortie.ship().x() - coil.columnX()) >= 45 + 12 - 1e-9, "pushed out of the body's column");
         MawSpecs.until(sortie, SimEvents.Type.COIL_RETURN, 3, 0);
-        untilDive(sortie, CoilArena.DiveState.DONE, 2.1, 0);
+        untilDive(sortie, CoilArena.DiveState.DONE, 3.1, 0);
         assertTrue(coil.walled(), "the walls back");
         assertEquals(MawSpecs.REST_X, boss.x(), 1e-9);
         // Once in the fight.
@@ -614,6 +628,7 @@ class MawArenaTest {
         CoilSpec wrongWall = new CoilSpec(
                 coil.body(),
                 coil.introSeconds(),
+                coil.windSeconds(),
                 coil.sacs(),
                 coil.swellSeconds(),
                 coil.jaw(),

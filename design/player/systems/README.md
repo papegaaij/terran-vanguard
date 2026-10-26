@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../generator, ../../ui/hangar]
-updated: 2026-10-22
+updated: 2026-10-26
 ---
 
 # Ship systems
@@ -258,9 +258,8 @@ Prompts and capture notes: [concept/prompts.md](concept/prompts.md).
   double-tap detection and invulnerability in the simulation; step A6: the Dash button sends
   `Command.DASH`, the HUD's dash pip right of the shield's label plate, three fading afterimages,
   the thruster burst and its sound, the hull see-through every other two steps while invulnerable)
-- [ ] The other modules' effects —
-  **later: Act 4** (Auto-repair nanites, Pressure hull) and **later: Act 6** (Ascendancy IFF
-  spoofer)
+- [x] Act 4's modules' effects: the Auto-repair nanites and the Pressure hull (M8 part A, the items below)
+- [ ] The other modules' effects — **later: Act 6** (Ascendancy IFF spoofer)
 - [x] Sensor level controls the intel panel detail
 - [x] Underwater penalties and the pressure hull — **later: Act 4** (the pressure hull is an L22
   module; the penalties are Europa's under-water rules; the draft is *Pressure hull (L22)* above) (M8 part A, step

@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [.., ../../generator, ../../../systems/economy]
-updated: 2026-10-02
+updated: 2026-10-26
 ---
 
 # Pulse Cannon
@@ -20,7 +20,7 @@ The starter front gun: fast straight energy bolts. Always owned, never the wrong
 |---|---|
 | Slot | Front gun |
 | Traits | `forward` |
-| Layers hit | `air`, `low-air` and `ground` (hardened ground targets glance off); not `high-air`; the `sub` layer only in under-water mode, at 50 % ([layer rules](../../../enemies/README.md#layer-rules)) |
+| Layers hit | `air`, `low-air` and `ground` (hardened ground targets glance off); not `high-air`; under water the play plane at the water's damage factor and the deep `sub` layer only in the Sonar Pulse's window ([layer rules](../../../enemies/README.md#layer-rules), [Europa rules](../../../world/europa/README.md#under-water-rules)) |
 | Price | starter (always owned) |
 | Upgrade cost L2 / L3 / L4 / L5 | 300 / 600 / 1 200 / 2 400 cr (sell-back per [economy](../../../systems/economy/README.md)) |
 | Unlock | start |
@@ -48,7 +48,7 @@ Generated from [data.yaml](data.yaml) by `tools/sync_tables.py`; do not edit by 
 
 - Bolts leave the front muzzle (24, 3) straight up and fly until they leave the screen.
 - Upgrades add parallel bolts; the outermost bolts at L5 still stay within a 36 px target at any range, so the full DPS counts against single targets.
-- Under water: projectile speed × 0.7 and 50 % damage ([Europa rules](../../../world/europa/README.md#under-water-rules)).
+- Under water: projectile speed × 0.7 and × 0.7 damage ([Europa rules](../../../world/europa/README.md#under-water-rules), the single owner of the numbers).
 
 ## Concept art
 
@@ -64,7 +64,7 @@ Production art for concept round 12 (the Level 01 batch; part P2 opens the round
 - [x] Weapon data loaded from the shared item data (numbers as in the table above)
 - [x] Projectile pattern per level 1–5 and the overdrive pattern
 - [x] Layer hit rules for its traits on `air`, `low-air` and `ground` (hardened ground targets glance off)
-- [ ] The `sub` layer in under-water mode — **later: Act 4** (the first level under water)
+- [x] The `sub` layer in under-water mode — **later: Act 4** (the first level under water) (M8 part A, steps A1/A3: the bolt at × 0.7 speed and damage on the play plane, passing over the deep `sub` layer, `UnderwaterTest.underWaterAShotFliesAtSevenTenthsAndDoesSevenTenthsOfItsDamage`, `antiGroundsDoubleAndTheWatersShareLandOnceAndAnAntiSubWeaponDoesFullDamage`; the Sonar Pulse's window, `Act4SpecialsTest.thePulseOpensSixSecondsOfFullDamageUnderWaterAndACallRestartsThem`)
 - [x] Muzzle flash, projectile and impact sprites of its VFX family; sound of its family
 - [x] Behaviour as described above, above water
 - [x] Power draw per level counted in the loadout; upgrades priced as listed
@@ -82,3 +82,4 @@ Production art for concept round 12 (the Level 01 batch; part P2 opens the round
 - 2026-10-02: Production art (Level 01 batch, `tools/art/pulse_cannon.py`): bolt, muzzle flash and impact are the round-08 light fields written premultiplied on black (exactly what the additive blend adds; the placeholders were cut from the sheet with its checkerboard subtracted), same sizes and frame counts. Review files proposed for round 12.
 - 2026-10-02: Concept round 12 closed (user decision): bolt, muzzle flash and impact approved as **final**, `art: final`.
 - 2026-10-02: M4 part A: the simulation flies it as one `vanguard.sim.WeaponSpec` like every weapon, with its overdrive (the L2 pattern above L1, the overdrive pattern at L5); under-water mode waits for Act 4.
+- 2026-10-26 (M8 part I): the under-water lines follow the approved Europa rules (round 48: × 0.7 damage on the play plane, the deep `sub` layer reached only by `anti-sub`, the Smart Bomb and the Sonar Pulse's window); the draft's "`sub` at 50 %" is withdrawn there.

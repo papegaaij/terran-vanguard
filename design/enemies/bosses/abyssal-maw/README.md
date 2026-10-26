@@ -2,7 +2,7 @@
 title: Abyssal Maw
 design: approved
 implementation: in-progress
-art: chosen
+art: proposed
 depends-on: [../../../world/europa, ../../../campaign/act-4-deep-water, ../../naval/eel-swarm, ../../../player/wingmen, ../../../story/twist, ../../../story/characters/the-choir, ../../../systems/economy]
 updated: 2026-10-26
 ---
@@ -52,7 +52,7 @@ is applied on top of the base.
 | Field | Value |
 |---|---|
 | Faction | Vrell |
-| Layer | `air` (the play plane under water, the level's medium: all weapons hit it, those without `anti-sub` at the water's factor ×0.7); its parts rise from `sub` in the intro, and during the dive the head and the coil are `sub` again: only `anti-sub` weapons and the Smart Bomb reach them |
+| Layer | `air` (the play plane under water, the level's medium: all weapons hit it, those without `anti-sub` at the water's factor ×0.7); its parts wind in `sub` in the intro, and during the dive the head and the coil are `sub` again (the head sunk where it rests, then winding back in): only `anti-sub` weapons and the Smart Bomb reach them |
 | Size tier | `huge` |
 | Size | 150×130 px, hitbox 110×100 (the head; the body a chain of 31 segments, 64 px wide, 56 px apart (≈ 1,750 px with the head), half of each beyond the field's edge while coiled; gill sacs 36×36; implants 40×40) |
 | Parts | the **head** (`vital`; the bar): the skull ×0.5, the lime **throat** a weak spot ×2 while the jaw is open; four **gill sacs** (`destroyable`, outside the bar, phases 1–2); the **coil** (the body chain: armoured, shots glance with a spark and the Ion Beam stops on it, no HP; a wall for the ship); three **Helix implants** (phase 3: ×2 on the head's HP while sparked open, armoured while shut) |
@@ -83,7 +83,7 @@ the floor, so nothing slides under it; the Dust Colossus's lesson, its K.c). Scr
 | The vent | a caldera filling the arena floor, its glowing throat at (240, 330), ≈ 140 px across | `ground` scenery, no hit; lights the arena from below (Q2 a: L28 is lit by the vent and the hatchery's bioluminescence) |
 | The head | centre (240, 95), the throat at (240, 135) | clear of the boss bar's plate (35 px); 320 px above the ship band; out of the Ion Beam's under-water reach (energy ×0.4 since the underwater weapons rework, 216 px: the draft's ×0.75 = 405 px is stale) |
 | Gill sacs | (178, 80), (302, 80), (190, 128), (290, 128) | two each side of the head |
-| The coil | from the head along the top to the top-left corner, down the left edge (inner flank x 50), along the bottom (inner flank y 505), up the right edge (inner flank x 430); the tail tip at the top-right corner | the ship flies in x ≈ 62–418, y ≤ 493 |
+| The coil | from the head along the top to the top-left corner, down the left edge (inner flank x 50), along the bottom (inner flank y 505), up the right edge (inner flank x 430); the tail tip off the top edge at the top-right corner; every corner a **rounded turn** (a 90 px radius, the neck into the top run 55 px), each segment facing along the line where it lies | the ship flies in x ≈ 62–418, y ≤ 493, the bottom corners rounded with the coil (46 px from the turn's centre) |
 | Implants (phase 3) | the neck at (110, 60); the left coil at (40, 300); the right coil at (440, 300) | the neck one in the front guns' reach, the side ones for wing mounts, angled and homing shots |
 
 The coil is a **wall**: it stops the ship and the escort without damage (the trench walls' rule of
@@ -92,11 +92,14 @@ appears with the boss warning, the boss checkpoint (none on hard) and the Vrell 
 clock halts while it lives.
 
 **Intro** (≈ 6 s): the Choir sings first ("[the Choir sings]", the static in the HUD portrait frame:
-Choir transmissions precede a Vrell boss). In the vent's glow a ring of faint lights circles under the
-field: the coil, below the play plane. It rises along the edges over 3 s (the segments brighten and grow
-as they come up, silt pouring off their plates), the head lifts at the top last, jaw open in a silent
-roar, and the bar fills. Invulnerable until the head is up. Nothing pops in: every part is seen rising
-from the dark (the water rules' lesson from the Kraken).
+Choir transmissions precede a Vrell boss). A second after the warning the head swims in from off the screen
+at the top-right corner, where the tail will lie, just under the play plane, and the body follows it along
+the coil's path, segment by segment: down the right edge, round the corner along the bottom, up the left
+edge, along the top, and the head bends down into its place at the top, slowing as it settles (5 s; the
+head turning through every bend, its gill sacs turning with it), so the snake winds round the ship. As
+it settles it rises onto the play plane and the bar fills. Invulnerable until the head is up. Nothing
+pops in: the head is seen entering from off the screen and every segment follows it in (round 58 F.2;
+the draft's ring rising in place read as appearing).
 
 ### Phases
 
@@ -117,20 +120,26 @@ and within **140 px** of the previous wall's gap, so two walls on the screen at 
 does not follow. **Tell 1.2 s**: silt streams off the bight's plates, its glow line brightens lime, a low
 groan. Then it **swings in** 110 px (the bottom one 90 px) in 0.5 s, **holds** 0.8 s and swings back in
 0.8 s. A ship or escort the bight reaches during the swing takes `heavy` = 10, once a sweep, and is
-pushed out of it (the Kraken slam's impact rule). Bullets are not stopped by it.
+pushed out of it (the Kraken slam's impact rule). Bullets are not stopped by it. The bight bends the body
+along its length (round a corner too, when it reaches one): every segment in it turns with the bend as it
+swings in and back (round 58 F.2).
 
-**The dive and the lunge** (once, as the head falls below 50 %; ≈ 12 s): the Maw roars and the whole
+**The dive and the lunge** (once, as the head falls below 50 %; ≈ 15 s): the Maw roars and the whole
 coil **slides off the edges into the dark** below (2 s; the layer `sub`: only `anti-sub` and the Smart
-Bomb reach it, its bar stays), and the vent's glow gutters: for the next ≈ 8 s the arena is near the
+Bomb reach it, its bar stays; the head and its sacs sink where they rest, in the anti-sub weapons' reach,
+and go deep, fading out, as the shadow rises), and the vent's glow gutters: for the next ≈ 8 s the arena is near the
 [darkness](../../../world/europa/README.md) of Level 26 (the ship's light cone and the glows; a
 reminder of Blackwater, not a new rule). The arena is open and quiet: no walls, no sweeps. **4 s** after
 the dive a **shadow** runs up a **column** 90 px wide at the ship's x (clamped 95–385, fixed when it
 starts) from the bottom edge: **2.0 s** (the tell: the silt in the column lifts, the shadow darkens
 upward). Then the head bursts up through the play plane at the bottom edge and races up the column to
 the top in **0.8 s**, jaws open: a ship or escort in the column as it passes takes `heavy` = 10, once.
-Its body streams up the column behind it and **stays there for 3 s** (a wall splitting the arena; its
-throat lime as it passes, ×2: a brief window), then the coil slides back round the edges from the top
-(2 s) and the light returns. One dive in the fight, never a cycle (Q9 b).
+Its body streams up the column behind it, the head racing on out of the top edge, and **for 3 s** the
+body is a wall splitting the arena wherever it is in the column (its throat lime as it passes, ×2: a brief
+window) until the tail tip has left the screen at the top. Then it **winds back in** as it arrived (3 s):
+the head swims in again at the top-right corner just under the play plane and the body follows it round
+the edges into place, and the light returns (round 58 F.2: no part moves except along the body's path; the
+draft's 2 s slide back round the edges read as a teleport). One dive in the fight, never a cycle (Q9 b).
 
 **Phase 3, the implants**: three grey housings bolted through its plates (the neck, the left coil, the
 right coil; see *Arena*) **spark open in turn**, neck → left → right → neck…: a **1.0 s** tell (sparks,
@@ -182,22 +191,22 @@ does the same, so the balance and playthrough tests can finish the fight.
 ### Duration and HP
 
 Target: the act-boss window **90–180 s** at medium, aimed at ≈ **130 s**; the **par** is the measured
-mean: **127 s** (step H4, 2026-10-25; draft 130 s).
+mean: **138 s** (step m8i1, 2026-10-26, round 58 F.2's motion; step H4's 127 s, the draft's 130 s).
 
 Paper estimate (the window-aware method of the Kraken's `BalanceTest` check): the effective boss DPS is
 0.6 × 120 = **72**. Phase 1: the jaw open 3 s of 5 (×1.25, the throat-and-skull mean) and shut 2 s (×0.5):
 ×0.95 on the bar, with a quarter of the fire spent on the sacs. Phase 2: ×0.85 (the jaw open for each
-wall, the skull between), plus the dive's ≈ 12 s with next to no damage. Phase 3: the implants ×2 while
+wall, the skull between), plus the dive's ≈ 15 s with next to no damage. Phase 3: the implants ×2 while
 open, one at a time, the side ones reached only by part of the loadout, the skull ×0.5 for the rest:
 ≈ ×0.9.
 
 | Phase | HP | Time |
 |---|---|---|
-| Intro, the Choir, the coil rising | — | ≈ 6 s |
+| Intro, the Choir, the coil winding in | — | ≈ 6 s |
 | 1 — Coiled (100 → 70 %, + the sacs) | 2,010 + 600 | ≈ 38 s |
-| 2 — Tightening (70 → 30 %, the dive at 50 %) | 2,680 | ≈ 44 + 12 s |
+| 2 — Tightening (70 → 30 %, the dive at 50 %) | 2,680 | ≈ 44 + 15 s |
 | 3 — Implants (30 → 0 %) | 2,010 | ≈ 31 s |
-| Total | 6,700 + 600 | **≈ 131 s** |
+| Total | 6,700 + 600 | **≈ 134 s** |
 
 **Measured (M8 part H, step H4, 2026-10-25; `AbyssalMawTest`)**: the autopilot with the plan's Level 28 fit and the
 loaner Bulwark, the whole level flown, at the spec's HP: **126.5 s** at medium over five seeds (108–145 s, every seed
@@ -207,8 +216,17 @@ the escort-less fight already run long); the par is **127**. It is never struck 
 estimate is `BalanceTest.coilSeconds` (tools/balance.py the same): 133 s. **Phase 1 against the Kraken's** (the
 harness's random dodger, kept below the head's band, since the free dodger rams the head): **2.6×** (29.5 lost per
 10 s against 11.4), outside H.4's band; the throat's aimed fan alone costs 1.1×, so the named levers (the rings'
-count, the sac interval) cannot reach the band; the attacks are left as approved, pending round 58 (see *Open
+count, the sac interval) cannot reach the band; the attacks are left as approved, accepted in round 58 (2026-10-26) (see *Open
 questions*).
+
+**Re-measured after the motion redo (round 58 F.2, step m8i1, 2026-10-26)**: the dive's way back is now 3 s (the wind-in
+round the edges; the draft's slide 2 s), the head leaves the screen up the column instead of waiting at the top for the
+body's 3 s and winds back in under the play plane: ≈ 5 s less of the head in the guns' reach. `AbyssalMawTest` at the
+spec's HP: **138.4 s** at medium over its five seeds (120–163 s, every seed in the window; phases ≈ 34 / 69 / 30 s),
+easy ≈ 99 s, hard ≈ 161 s; over sixteen whole-level seeds (`levelReport -Pseeds=16`) the mean moved from 118.6 to
+125.1 s (+6.5 s; the five seeds' +12 s is mostly the dodges' divergence). The HP stays (the mean is within 7 % of the
+aim) and the **par follows the measured mean: 138** (pending the user's review). Phase 1 against the Kraken's: 2.51×
+(the 3.0× allowance kept). The paper estimate: 134 s.
 
 Lessons from Acts 2–3 the build must apply (M8 part H):
 - **Measure, then tune the HP, not the attacks** (Kraken E6, Spire H10, Colossus H4, walker F4): the
@@ -255,7 +273,7 @@ spec. Times from the kill (the chain's start); draft.
 | 0–5 s | The death chain, the flash, the credit shower (collectable: the scroll stays halted). |
 | ≈ 8.6 s | **Okafor** (after the Choir's fragment, K+3 to ≈ K+8.6): "Maw's down. Aegis Wing, up the shaft. Now." The scroll climbs: the wing rises out of the caldera into the Vrell drill shaft (Level 23's shaft walls, `Terrain`, run in reverse), the light from above growing, the ice ceiling (`high-air`) cracking ahead. No enemies; a few Glassfin and eels flee upward past the ship, firing nothing. ≈ 10 s. |
 | ≈ 15 s | **The breakout** (Europa's signature set piece): the ceiling shatters in a white burst (local, not the act boss's flash), ice slabs tumble out of the field, the under-water grade lifts over 1 s, the sound of ice tearing and a column of water. The level's medium switches back to **air** at the break line: the bullet factor, the drag and the weapon factor end. Above: Europa's night ice under Jupiter (Level 22's backdrop), the Vrell fleet's carriers rising from other drill holes in the `deep` and `high-air` layers. |
-| ≈ 18 s | **The reveal**: the ice on both flanks splits and two **Ascendancy cruisers** rise through it beside the Vrell carriers (4 s, growing from dim and small to full scale, ice sliding off their hulls), black and gold; the reveal sting (Vorne's motif hidden in it). **Dr. Varga**: "Those aren't Vrell hulls—" **Okafor**: "Those are not Vrell ships. God help us. Those are ours." Gun ports open in amber along their sides. |
+| ≈ 18 s | **The reveal**: the ice on both flanks splits and two **Ascendancy cruisers** rise through it beside the Vrell carriers (4 s, growing from dim and small to full scale, ice sliding off their hulls; step I2, round 58 F.3: through the intact night ice where they are, the crust lifting in a hull's shape, each hull moving with the ice at first and slowing to the wing's pace in 2 s, its hole left behind in the ice), black and gold; the reveal sting (Vorne's motif hidden in it). **Dr. Varga**: "Those aren't Vrell hulls—" **Okafor**: "Those are not Vrell ships. God help us. Those are ours." Gun ports open in amber along their sides. |
 | ≈ 22–57 s | **The run** (≈ 35 s, 30–40): the cruisers fire on the wing (see *The cruisers*); no fighters (Q10 a; c would bring Act 5's units forward). The Vrell and the cruisers never fire at each other: the alliance shown, not told. **Okafor**: "All Aegis units, break for orbit. Don't look back." |
 | ≈ 57–62 s | The scroll accelerates, the cruisers fall behind off the bottom edge and the wing makes orbit: a short **orbit section** (Europa's night side below, Jupiter ahead, no enemies) while the last line closes. The level ends at **K+62**: the debrief with the act summary, the [Act 4](../../../campaign/act-4-deep-water/README.md) outro (4 pages), then the release end `ACT V - THE BELT: COMING SOON` until M9. Vorne's broadcast opens Act 5 (the Level 29 briefing). |
 
@@ -327,7 +345,7 @@ that pops**; no low-pass bus. Each row for the round's a/b by how it sounds.
 
 | Sound | Where / when | Brief |
 |---|---|---|
-| Arrival roar | the coil rising, the head lifting | a vast, slow, subsonic groan (whale or ship-hull stress recordings, pitched down), long reverb tail |
+| Arrival roar | the coil winding in, the head settling into place | a vast, slow, subsonic groan (whale or ship-hull stress recordings, pitched down), long reverb tail |
 | Gill breath | each sac's ring | a deep pressure thump with a soft exhale, like a heartbeat under water; never a bubble |
 | Throat charge | the throat's glow before a fan or a wall | a rising low drone with a growl |
 | Coil sweep | a sweep's tell, then the swing | a grinding groan of plates (ice or hull creak, slowed), then a heavy swish of displaced water |
@@ -342,7 +360,7 @@ that pops**; no low-pass bus. Each row for the round's a/b by how it sounds.
 
 ## Concept art
 
-Concept round 48 proposals (decided in round 48 (2026-10-22)), listed in the [bosses](../README.md#concept-art) Concept art table (generator `tools/concept/bosses_r48.py`): the Maw as a "Rising maw" (a) or the "Coiled guardian" (b, recommended), and the Ascendancy cruiser as a "Regent wedge" (a) or a "Forked monitor" (b). The production art (round 58) uses Level 27's `HDX-417`; the round-48 mockups show the placeholder `HX-427`. The round-58 production files (`tools/art/abyssal_maw.py`, `tools/art/ascendancy_cruiser.py`, step ART-H1) are listed in the bosses' table too, proposed in round 58, with the game captures of step H7 (the arrival, the phases, the dive, the implants, the death, 1:1 crops; the cruisers' rise and run and the bow's code).
+Concept round 48 proposals (decided in round 48 (2026-10-22)), listed in the [bosses](../README.md#concept-art) Concept art table (generator `tools/concept/bosses_r48.py`): the Maw as a "Rising maw" (a) or the "Coiled guardian" (b, recommended), and the Ascendancy cruiser as a "Regent wedge" (a) or a "Forked monitor" (b). The production art (round 58) uses Level 27's `HDX-417`; the round-48 mockups show the placeholder `HX-427`. The round-58 production files (`tools/art/abyssal_maw.py`, `tools/art/ascendancy_cruiser.py`, step ART-H1) are listed in the bosses' table too, proposed in round 58 (the Maw's and the cruisers' art are redone for round 59, see *Open questions*), with the game captures of step H7 (the arrival, the phases, the dive, the implants, the death, 1:1 crops; the cruisers' rise and run and the bow's code).
 
 ## Implementation
 
@@ -364,9 +382,9 @@ looks (H5), the sounds and the music (H6); captured for round 58 in step H7.
 - [x] Eel Swarms shed from coil segments (the boss's count, counted into the enemies, not the density)
 - [x] The Bulwark and the autopilot: out of a sweep's bight and the lunge's column, through the walls'
       gaps, against the coil
-- [ ] The fight measured over five seeds (the window 90–180 s, the HP tuned, the par set), phase 1
+- [x] The fight measured over five seeds (the window 90–180 s, the HP tuned, the par set), phase 1
       checked with the calibration harness against the Kraken's, the bounty at ≈ 24 % with Level 28's
-      measured scale (step H4: all done but phase 1, measured 2.6×, outside the band: pending round 58)
+      measured scale (step H4: all done but phase 1, measured 2.6×, outside the band: accepted in round 58 (2026-10-26))
 - [x] Intro (the Choir sings, the coil rising), death (the implants, the unwinding, flash, credit
       shower), the Choir's fragment (`MawArenaTest.itRisesOverItsIntroThenEngagesWithItsCoilRoundTheEdges`,
       `Level28LooksTest.theDeathSinksTheCoilTailToHeadAndTheHeadLast`,
@@ -380,16 +398,27 @@ looks (H5), the sounds and the music (H6); captured for round 58 in step H7.
       `DebriefActEndTest`, `OutroOnwardTest`; round 58's captures)
 - [x] Production art (≤ one atlas page for the Maw; the cruisers their own): the head's frames, the coil
       segments in 32 angles, the sacs, the implants shut / sparking / open / blown, the death, the intel
-      silhouette; the cruisers rising and their gun ports
+      silhouette; the cruisers rising and their gun ports; the head swimming in 16 headings (round 58 F.2,
+      `abyssal-maw-head-swim`; the Maw ≈ 1.01 of a page with it, Level 28 within its 7 pages)
+- [x] Round 58 F.2's motion redo (step m8i1, pending the user's review in round 59): the arrival winds in from off the
+      screen, the head first and the body following along the path (`MawMotionTest.itWindsInFromOffTheScreenHeadFirstAndTheBodyFollowsAlongThePath`,
+      `Level28LooksTest.theHeadSwimsInTurningThroughTheBends`); rounded corners, every segment facing along the line
+      as it lies, a sweep's bight turning its segments
+      (`MawMotionTest.itsCornersAreRoundAndItsSegmentsFaceAlongTheLineABightTurnsThem`, `MawArenaTest`'s geometry and
+      wall); after the lunge the body leaves the screen up the column, then winds back in, nothing jumping on the screen
+      (`MawMotionTest.afterTheLungeTheBodyLeavesTheScreenThenWindsBackInWithoutAJump`); the fight re-measured, the par
+      138
 
 ## Open questions
 
-- Round 58 (step H4): phase 1 costs the calibration harness's random dodger **2.6×** the Kraken's phase 1 (29.5
-  per 10 s against 11.4; H.4's band 0.8–1.2×). The throat's aimed fan alone costs 1.1×, the rings about as much
-  again, so the spec's levers (the rings' count, the sac interval) cannot reach the band without the fan. Keep the
-  attacks as approved (the autopilot loses 0–16 in phase 1; the band is a random dodger's), or thin the rings and the
-  fan until the band is met (to be measured)? Recommendation: keep, and accept a wider band for an act
-  boss under water (the slower bullets linger).
+- **Redo in round 59 (round 58 F.2, the Maw's production art and motion; the user's note, verbatim):** "The creature just appears, a snake should wrap around you. The corners are just sharp 90 degree angles. The bump does not rotate the segments. After the creature runs through the middle, it teleports around you. Make it exit the screen entirely and then fold around you like at the (improved start)."
+  The art stays `proposed` until the redo is accepted: the coil's arrival and its sweeps must fold round the ship as a
+  snake would (a path that exits the screen entirely and folds back in, rounded corners, segments turning along the path
+  and over the bump), not appear or teleport. **Built in step m8i1 (2026-10-26), for round 59**: see *Arena* (the
+  intro), *Phases* (the sweeps, the dive) and the Decisions; pending the user's review there with the par (138), the
+  dive's 3 s way back and the bight's tight bend (its segments turn up to ≈ 40° from their neighbours at its fullest).
+- Round 58 (step H4), **decided (2026-10-26)**: phase 1 costs the calibration harness's random dodger 2.6× the Kraken's
+  phase 1 (band 0.8-1.2×); **keep** the attacks as approved (C.1 accepted; the test's 3.0× allowance stays).
 
 All decided in round 48 (2026-10-22):
 - Q9: the coiled guardian (b, recommended) or the roster's rising maw (a); a/b concept art in round 48.
@@ -417,7 +446,7 @@ All decided in round 48 (2026-10-22):
 - 2026-10-25 (M8 part H, step H3): the stat block and the boss script in [data.yaml](data.yaml) from the draft's
   numbers (`boss.coil`, read by the simulation's `CoilArena`; the schema in
   [schemas-act-4](../../../tech/architecture/schemas-act-4/README.md)); the stat block rendered from it. Defaults of the
-  step, pending round 58: the throat's box 40×30 px; the implants 1 HP each (their hits count on the head's); the coil's
+  step, accepted in round 58 (2026-10-26): the throat's box 40×30 px; the implants 1 HP each (their hits count on the head's); the coil's
   path along the edges' centre lines (x 18 / 462, y 18 / 537), the ship 12 px inside its inner flanks; the shed points
   at the side coils' middle (y 270) and the bottom's (x 240); the difficulty hooks as `coil_arena`. Fixed the stale
   Ion Beam reach in *Arena* (energy ×0.4 since the underwater weapons rework: the head is out of the beam's 216 px).
@@ -425,3 +454,17 @@ All decided in round 48 (2026-10-22):
   spec's HP, so the HP stays and the **par is 127** (draft 130); the paper method `coilSeconds` (133 s) in
   `BalanceTest` and tools/balance.py. The bounty stays 345 (Level 28's `bounty_scale` measured 0.74 = the hand
   estimate). Phase 1's calibration (2.6× the Kraken's for a random dodger kept below the head) left for round 58.
+- 2026-10-26 (user, [round 58](../../../concept-rounds/round-58/README.md) closed): the Maw's production art (F.2) is **redone**
+  (the note in *Open questions*, verbatim); the cruisers' (F.3) too, see the [bosses'](../README.md#decisions) log. C.1
+  (phase 1 at 2.6×) **keep**, the test's 3.0× allowance stays; the step's small rules (decided in round 58) accepted.
+- 2026-10-26 (round 58 F.2, step m8i1; pending the user's review in round 59): the coil's motion redone. The path's
+  corners turn on 90 px arcs (`coil.body.bend`; the neck into the top run on 55 px) and every segment faces along the
+  line as it lies now, so a sweep's bight turns its segments (the bight bends the body along its length, round a
+  corner too); the walls' bottom corners round with the coil. The arrival winds in over the intro's last 5 s
+  (`coil.wind`): the head swims in at the top-right corner just under the play plane (a new head set, 16 headings,
+  the gill sacs turning with it) and the body follows it along the path into place. The dive: the body slides off the
+  edges while the head sinks where it rests (in the anti-sub weapons' reach, as the draft's) and fades out as the
+  shadow rises; after the lunge the head races on out of the top and the body streams up the column after it (a wall
+  where it is) until the tail tip has left the screen, then it winds back in as it arrived: `dive.return` 2 → 3 s
+  (the wind-in; 2 s would be ≈ 1,100 px/s), under the play plane (only `anti-sub` and the Smart Bomb reach the head
+  then). The fight re-measured: 138.4 s at medium, the HP kept, the par 127 → **138**.

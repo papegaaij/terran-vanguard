@@ -2232,6 +2232,10 @@ public final class SetPiece implements Hashed {
             // M8 part H: an implant rides its coil segment.
             return coil.implantX(coil.implant(p)) - x;
         }
+        if (coil != null) {
+            // Round 58 F.2: the head's parts (the gill sacs) turn with the head as it swims along the coil's path.
+            return coil.turnX(poseDx[pose][p], poseDy[pose][p]) * scale();
+        }
         if (boss != null) {
             return poseDx[pose][p] * scale();
         }
@@ -2255,6 +2259,9 @@ public final class SetPiece implements Hashed {
         }
         if (coil != null && coil.implant(p) >= 0) {
             return coil.implantY(coil.implant(p)) - y;
+        }
+        if (coil != null) {
+            return coil.turnY(poseDx[pose][p], poseDy[pose][p]) * scale();
         }
         if (boss != null) {
             return poseDy[pose][p] * scale();

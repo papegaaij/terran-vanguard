@@ -26,7 +26,7 @@ import vanguard.sim.Sortie;
 
 /**
  * M8 part G's Level 27 sounds (design/audio/sfx and design/audio/music, Level 27's rows; round 57's picks, S.2, S.6,
- * S.7, S.9 and S.12 b, the rest a): the vent field's bed, the plumes' tell and eruption, the bend's swish, the Depth
+ * S.7, S.9 and S.12 b, the rest a): the bed under the ice, the plumes' tell and eruption, the bend's swish, the Depth
  * Hunter's torpedo launch, run, impact and hull break, the relay beacons' hum and break, the Marlin's crack, Varga's scan
  * ping; track 11 with the motif from t=56, alone over the bed 68–82, the full mix back, the base stem at the gate, out
  * over the last 6 s.
@@ -39,7 +39,6 @@ class Level27SoundsTest {
             new SfxBank(new MockAudio(), new Lwjgl3Files(), new Mixer(AudioSettings.defaults()), () -> now[0]);
 
     private static final List<Sfx> SOUNDS = List.of(
-            Sfx.AMBIENCE_EUROPA_VENTS,
             Sfx.PLUME_TELL,
             Sfx.PLUME_ERUPTION,
             Sfx.BEND_SWISH,
@@ -61,16 +60,15 @@ class Level27SoundsTest {
             String pick = picksB.contains(sfx) ? "-r57-b.ogg" : "-r57-a.ogg";
             assertTrue(sfx.path().endsWith(pick), "round 57's pick: " + sfx.path());
         }
-        assertEquals(Sfx.Priority.AMBIENCE, Sfx.AMBIENCE_EUROPA_VENTS.priority());
         assertTrue(Sfx.TORPEDO_RUN.priority() != Sfx.Priority.AMBIENCE, "a unit's loop is stolen like its peers");
         assertTrue(Sfx.BEACON_HUM.priority() != Sfx.Priority.AMBIENCE);
     }
 
     @Test
-    void theBedIsTheVentFieldOnTrackEleven() {
+    void theBedIsTheOneUnderTheIceOnTrackEleven() {
         LevelData.Music music = VentFieldFixture.level().music();
         assertEquals(11, music.track(), "Act 4 B, Pressure Line");
-        assertEquals(Sfx.AMBIENCE_EUROPA_VENTS, Sfx.ambience(music.ambience()));
+        assertEquals(Sfx.AMBIENCE_EUROPA_UNDER, Sfx.ambience(music.ambience()), "one bed under water (2026-10-26)");
         assertEquals(2, music.startSection(), "section 1 the bed alone");
         assertFalse(music.full(2));
         assertTrue(music.full(3), "the full mix from the chimney garden");
@@ -101,7 +99,7 @@ class Level27SoundsTest {
                         files.internal(Tracks.basePath("pressure-line")),
                         files.internal(Tracks.path("pressure-line")),
                         sfx,
-                        Sfx.AMBIENCE_EUROPA_VENTS,
+                        Sfx.AMBIENCE_EUROPA_UNDER,
                         data.startSection(),
                         0,
                         data::full,

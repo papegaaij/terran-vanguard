@@ -171,8 +171,8 @@ final class SpriteUse {
 
     /**
      * M8 part H: a level with a {@code cruisers} run (Level 28's finale) draws the Ascendancy cruisers, their glow, shadow,
-     * ice crust, port blasts, point defence, tracer, flak markers and airbursts and sparks, {@code ascendancy-cruiser*}
-     * (tools/art/ascendancy_cruiser.py; the game's CruiserLooks).
+     * ice crust, its hole in the ice (step I2), port blasts, point defence, tracer, flak markers and airbursts and sparks,
+     * {@code ascendancy-cruiser*} (tools/art/ascendancy_cruiser.py; the game's CruiserLooks).
      */
     static final String CRUISER_ROOT = "ascendancy-cruiser";
 

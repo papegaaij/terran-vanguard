@@ -409,7 +409,7 @@ music:
     - {t: 82, stems: full, fade: 2}
     - {t: 124, stems: base, fade: 2}   # the timed `full` holds past the sections, so the gate's base stem is timed too (as `stems: {5: base}`)
     - {t: 144, stems: none, db: -40, fade: 6}   # out over the last 6 s, the motif with it
-  ambience: europa-vents   # a deep rumble of hot water, a distant black-smoker roar, a slow groan of chimneys, no bubbles (step AUD-G)
+  ambience: europa-under   # the bed under the ice, as every level under water (the user, 2026-10-26: one bed per setting)
   end_jingle: mission-complete
 
 difficulty: {}  # the plumes' easy and hard tell and period are in `vents`; the Hunter columns' easy and hard counts and the easy pincers' skip are in their waves; the formation lever sizes the rest; the stat blocks' hooks apply (the Hunter's easy torpedo every 4.5 s at 55°/s, hard 2.8 s at 85°/s; the Barbfin's easy 3 s needle, hard 2-needle burst; the Siren's and Nautilus's hooks); the Marlin's hard 28 HP is its entry
