@@ -100,6 +100,7 @@ class Level27LooksTest {
         LevelData vents = VentFieldFixture.level();
         assertTrue(DarkLight.dark(vents), "its light pools are drawn");
         assertFalse(DarkLight.blackWater(vents));
+        assertTrue(DarkLight.glowPools(vents), "its units keep their glow pools (step m8k1: Level 26's are gone)");
         assertFalse(LevelRenderer.darkLevel(vents));
         assertTrue(DarkLight.blackWater(level(26)));
         assertTrue(LevelRenderer.darkLevel(level(26)));

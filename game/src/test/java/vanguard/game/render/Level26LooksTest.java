@@ -34,7 +34,7 @@ import vanguard.sim.Sortie;
 /**
  * M8 part F's Level 26 looks (design/campaign Level 26, Darkness; tools/art/glow_angler.py, l26_glows.py): the art's
  * frames as the looks count them; the dark's ambient ramp (20 → 6 % over t=8–18) and the Dark levels assist's 20 %;
- * the hard headlight cone; the static lights on their rows; the units' rim and sonar pools and the kinds' glow pools; the
+ * the hard headlight cone; the static lights on their rows; the units' rim and sonar pools (a body outside the light at the rim only); the
  * Glow Angler's heading, jaw, stalk and death steps; an Angler flown into its lunge and ring.
  */
 class Level26LooksTest {
@@ -166,7 +166,7 @@ class Level26LooksTest {
     }
 
     @Test
-    void theUnitsRimGlowAndSonarPools() {
+    void theUnitsRimAndSonarPools() {
         assertEquals(36.25, DarkLight.rimRadius(new Hitbox(30, 24)), 1e-4, "the Angler: its body and a faint halo");
         assertEquals(1, DarkLight.plateauAlpha(0), 1e-6);
         assertEquals(1, DarkLight.plateauAlpha(DarkLight.PLATEAU), 1e-6, "flat over the body");
@@ -180,14 +180,45 @@ class Level26LooksTest {
             float halo = DarkLight.haloAlpha(t, 3);
             assertTrue(halo >= low - 1e-6 && halo <= DarkLight.HALO_ALPHA + DarkLight.HALO_SWING + 1e-6);
         }
-        // Every kind Level 26 flies has its glow pool.
+    }
+
+    /**
+     * Step m8k1 (the user's playtest, 2026-10-26: "they almost seem completely illuminated"): outside the cone and the
+     * lamps a unit's body reads at the faint rim (about 15 %, the ambient included) and no more, every kind Level 26
+     * flies, the whole level through; its rim pool lies flat over its whole body (so no part of it is brighter); the
+     * Sonar Pulse lights it whole. Part F's kinds' glow pools lit the bodies to 40-65 % (measured on the light map).
+     */
+    @Test
+    void aUnitOutsideTheLightDrawsOnlyItsRim() {
+        LevelData level = level();
+        assertFalse(DarkLight.glowPools(level), "black water: no kind's glow pool lights its body");
+        List<Optional<UnderwaterLook>> looks = new ArrayList<>();
+        double[] starts = new double[level.sections().size()];
+        for (int i = 0; i < starts.length; i++) {
+            looks.add(level.underwaterLookOf(i));
+            starts[i] = level.sectionStart(i);
+        }
+        float[] look = new float[UnderwaterGrade.LOOK_SIZE];
+        for (double t = 0; t <= 200; t += 0.5) {
+            UnderwaterGrade.lookAt(looks, starts, t, look);
+            float ambient = look[UnderwaterGrade.AMBIENT] * Math.max(look[1], Math.max(look[2], look[3]));
+            float body = DarkLight.bodyLight(look, 0);
+            assertTrue(
+                    body <= Math.max(look[UnderwaterGrade.RIM], ambient) + 1e-4,
+                    "t=" + t + ": the body at " + body + ", the rim " + look[UnderwaterGrade.RIM]);
+            if (t >= 18) {
+                assertEquals(0.15, body, 0.005, "t=" + t + ": the faint rim, about 15 %");
+            }
+            assertEquals(1, DarkLight.bodyLight(look, 1), 1e-5, "the Sonar Pulse: whole");
+            UnderwaterGrade.lookAt(looks, starts, t, DarkLight.ASSIST_AMBIENT, look);
+            assertTrue(DarkLight.bodyLight(look, 0) <= 0.2 + 1e-4, "the assist: its ambient, no rim over it");
+        }
         Sortie sortie = sortie(Difficulty.MEDIUM);
-        List<EnemySpec> kinds = sortie.enemyKinds();
-        int[] glows = DarkLight.glowsOf(kinds);
-        for (int k = 0; k < kinds.size(); k++) {
-            assertTrue(glows[k] >= 0, kinds.get(k).slug() + " has a glow pool");
-            float radius = DarkLight.GLOWS.get(glows[k]).radius();
-            assertTrue(radius >= 24 && radius <= 40, kinds.get(k).slug() + ": r 24-40");
+        for (EnemySpec kind : sortie.enemyKinds()) {
+            Hitbox box = kind.hitbox();
+            assertTrue(
+                    DarkLight.rimRadius(box) * DarkLight.PLATEAU >= Math.hypot(box.width(), box.height()) / 2,
+                    kind.slug() + ": the rim flat over the whole body");
         }
     }
 

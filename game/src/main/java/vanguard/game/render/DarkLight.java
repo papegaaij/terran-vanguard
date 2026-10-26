@@ -1,7 +1,9 @@
 package vanguard.game.render;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -32,10 +34,15 @@ import vanguard.sim.Wingman;
  * <ul>
  *   <li>the static {@code lights} (the lamp posts, the beacons, the farm barge's lamp, the survey buoy), each a pool of
  *       its colour and radius on its terrain row, scrolling with the ground;
- *   <li>every unit's <b>rim</b>: a soft flat pool over its body and a faint halo at the look's {@code rim} (0.15), so a
- *       unit outside the light reads faintly beside its glow;
- *   <li>a kind's <b>glow pool</b> ({@link #GLOWS}): the light its glowing parts throw on its body (the Driftjelly's
- *       veins, the Siren's sac, the Glow Angler's lure and eyes, the Spiral Nautilus's crown, the Eel Swarm's stripe);
+ *   <li>every unit's <b>rim</b>: a soft flat pool over its body and a faint halo, so a unit outside the light reads at
+ *       the look's {@code rim} (0.15) in all, the ambient included ({@link #unitRim}), beside its glow frames (drawn
+ *       over the grade). The pools are drawn by their brightest ({@code GL_MAX}), so overlapping units (an Eel Swarm's
+ *       segments) never add up past it. In black water ({@link #blackWater}, Level 26) no other light falls on a
+ *       body: the kinds' glow pools (below) lit the whole body to 40-65 % there (step m8k1, the user's playtest of
+ *       2026-10-26: "they almost seem completely illuminated");
+ *   <li>outside black water only (Levels 27 and 28's lit water, unchanged), a kind's <b>glow pool</b> ({@link
+ *       #GLOWS}): the light its glowing parts throw on its body (the Driftjelly's veins, the Siren's sac, the Glow
+ *       Angler's lure and eyes, the Spiral Nautilus's crown, the Eel Swarm's stripe);
  *   <li>the <b>Sonar Pulse</b>: every unit whole (the rim pool at full) for its window, fading over its last {@value
  *       #SONAR_FADE} s; the backdrop stays dark;
  *   <li>the escort's <b>lamp</b> ({@code escort_lamp}, px): a warm pool round Rook (not ejected) or the Bulwark, so the
@@ -55,7 +62,7 @@ final class DarkLight implements Disposable {
     static final double RIM_REACH = 1.45;
     /** A static light's strength (of the light missing to full there). */
     static final float LIGHT = 0.9f;
-    /** A kind's glow pool's strength. */
+    /** A kind's glow pool's strength (outside black water). */
     static final float GLOW_LIGHT = 0.5f;
     /** The escort's lamp's strength and colour (a warm white). */
     static final float LAMP_LIGHT = 0.85f;
@@ -81,7 +88,7 @@ final class DarkLight implements Disposable {
     static final int CENTRE = 0;
     static final int SAC = 1;
     static final int LURE = 2;
-    /** The glow pools (radius 24-40 px; their colours the art's glow frames'). */
+    /** The glow pools (radius 24-40 px; their colours the art's glow frames'), outside black water only. */
     static final List<Glow> GLOWS = List.of(
             new Glow("driftjelly", false, 28, 0.6f, 1f, 0.2f, CENTRE),
             new Glow(SirenLooks.SLUG, false, 32, 0.1f, 1f, 0.65f, SAC),
@@ -96,6 +103,10 @@ final class DarkLight implements Disposable {
 
     private final KindLooks kinds;
     private final SoftGlow softGlow;
+    /** Step m8k1: whether the kinds' glow pools light the bodies ({@link #glowPools}). */
+    private final boolean glowPools;
+    /** Per enemy kind its glow pool's index in {@link #GLOWS} (-1 none), built at the first draw. */
+    private int[] glowOf;
     /** The static lights: terrain row, x, radius, colour. */
     private final double[] lightRow;
 
@@ -111,14 +122,13 @@ final class DarkLight implements Disposable {
     private final boolean plumes;
     /** Rook's loss's looks: his lamp's flicker and place as he spins down; null before {@link #rookLoss}. */
     private RookLossLooks rookLoss;
-    /** Per enemy kind its glow pool's index in {@link #GLOWS} (-1 none), built at the first draw. */
-    private int[] glowOf;
     /** M8 part H: how far the static lights gutter this frame (0–1): the Abyssal Maw's dive darkening its vent. */
     private float dim;
 
     private DarkLight(LevelData level, KindLooks kinds, SoftGlow softGlow) {
         this.kinds = kinds;
         this.softGlow = softGlow;
+        glowPools = glowPools(level);
         UnderwaterLook look = darkLook(level).orElseThrow();
         List<Light> lights = look.lightList();
         lightRow = new double[lights.size()];
@@ -230,6 +240,14 @@ final class DarkLight implements Disposable {
         return (float) (HALO_ALPHA + HALO_SWING * Math.sin(2 * Math.PI * HALO_HZ * real + phase * 1.7));
     }
 
+    /**
+     * Step m8k1: whether the kinds' glow pools ({@link #GLOWS}) light the units' bodies: outside black water only (Levels
+     * 27 and 28); in black water (Level 26) a body outside the light reads at its rim only.
+     */
+    static boolean glowPools(LevelData level) {
+        return !blackWater(level);
+    }
+
     /** Per enemy kind its glow pool's index in {@link #GLOWS}, -1 for none. */
     static int[] glowsOf(List<EnemySpec> kinds) {
         int[] out = new int[kinds.size()];
@@ -248,13 +266,31 @@ final class DarkLight implements Disposable {
     }
 
     /**
-     * Into the light map (additive, its projection: the play field from 0): the static lights, the units' rim, glow
-     * and sonar pools, the escort's lamp.
+     * A unit's rim pool's strength (of the light missing to full) in the look {@code look} ({@link
+     * UnderwaterGrade#lookAt}): so much that its body reads at the look's {@code rim} in all, the ambient included
+     * ({@code (rim - a) / (1 - a)}, {@code a} the ambient in its brightest channel; nothing when the ambient alone
+     * reaches it, the Dark levels assist's 20 %), or the Sonar Pulse's light {@code sonar} when that is more.
+     */
+    static float unitRim(float[] look, float sonar) {
+        float a = look[UnderwaterGrade.AMBIENT] * Math.max(look[1], Math.max(look[2], look[3]));
+        float rim = a >= 1 ? 0 : Math.max(0, (look[UnderwaterGrade.RIM] - a) / (1 - a));
+        return Math.max(rim, sonar);
+    }
+
+    /**
+     * The light on a unit's body outside the cones and the static lights, in its brightest channel, 0 to 1: the ambient
+     * and its rim pool ({@link #unitRim}), as the light map holds it under full water.
+     */
+    static float bodyLight(float[] look, float sonar) {
+        float a = look[UnderwaterGrade.AMBIENT] * Math.max(look[1], Math.max(look[2], look[3]));
+        return a + unitRim(look, sonar) * (1 - a);
+    }
+
+    /**
+     * Into the light map (additive, its projection: the play field from 0): the static lights, the units' rim and sonar
+     * pools (by their brightest), their glow pools outside black water, the escort's lamp.
      */
     void drawLight(SpriteBatch batch, UnderwaterGrade grade, Sortie sortie, float alpha, double scroll) {
-        if (glowOf == null) {
-            glowOf = glowsOf(sortie.enemyKinds());
-        }
         for (int i = 0; i < lightRow.length; i++) {
             double y = lightY(lightRow[i], scroll);
             float radius = lightRadius[i];
@@ -264,26 +300,9 @@ final class DarkLight implements Disposable {
             tint(batch, grade, y, lightColour[i][0], lightColour[i][1], lightColour[i][2], LIGHT * (1 - dim));
             grade.pool(batch, lightX[i], y, radius);
         }
-        SpecialSlot special = sortie.special();
-        float sonar = sonarLight(special.sonarActive(), special.sonarSeconds());
-        for (int i = 0; i < sortie.enemyCount(); i++) {
-            Enemy enemy = sortie.enemy(i);
-            double x = enemy.renderX(alpha);
-            double y = enemy.renderY(alpha);
-            float radius = rimRadius(enemy.hitbox());
-            if (y < -radius - 40 || y > PlayField.HEIGHT + radius + 40) {
-                continue;
-            }
-            float[] look = grade.lookAt(y);
-            float rim = Math.max(look[UnderwaterGrade.RIM], sonar);
-            if (rim > 0) {
-                tint(batch, grade, y, 1, 1, 1, rim);
-                flat(batch, x, y, radius);
-            }
-            int g = enemy.kind() < glowOf.length ? glowOf[enemy.kind()] : -1;
-            if (g >= 0) {
-                glowPool(batch, grade, sortie, enemy, GLOWS.get(g), x, y);
-            }
+        drawRims(batch, grade, sortie, alpha);
+        if (glowPools) {
+            drawGlows(batch, grade, sortie, alpha);
         }
         drawLamp(batch, grade, sortie, alpha);
         if (plumes) {
@@ -314,6 +333,53 @@ final class DarkLight implements Disposable {
         }
     }
 
+    /**
+     * Every unit's rim (or sonar) pool, by its brightest: each pool's colour is the whole light its body gets (the base
+     * there and its rim on it), drawn with {@code GL_MAX}, so overlapping pools (an Eel Swarm's segments, a crowded
+     * field) never add up past one unit's rim, and a cone or a lamp already brighter there keeps its light.
+     */
+    private void drawRims(SpriteBatch batch, UnderwaterGrade grade, Sortie sortie, float alpha) {
+        SpecialSlot special = sortie.special();
+        float sonar = sonarLight(special.sonarActive(), special.sonarSeconds());
+        batch.flush();
+        Gdx.gl.glBlendEquation(GL30.GL_MAX);
+        for (int i = 0; i < sortie.enemyCount(); i++) {
+            Enemy enemy = sortie.enemy(i);
+            double x = enemy.renderX(alpha);
+            double y = enemy.renderY(alpha);
+            float radius = rimRadius(enemy.hitbox());
+            if (y < -radius - 40 || y > PlayField.HEIGHT + radius + 40) {
+                continue;
+            }
+            float[] look = grade.lookAt(y);
+            float rim = unitRim(look, sonar);
+            if (rim > 0) {
+                float strength = grade.strengthAt(y);
+                batch.setColor(
+                        lit(look, 1, strength, rim), lit(look, 2, strength, rim), lit(look, 3, strength, rim), 1);
+                flat(batch, x, y, radius);
+            }
+        }
+        batch.flush();
+        Gdx.gl.glBlendEquation(GL20.GL_FUNC_ADD);
+    }
+
+    /** Outside black water: each unit's glow pool, its kind's ({@link #GLOWS}). */
+    private void drawGlows(SpriteBatch batch, UnderwaterGrade grade, Sortie sortie, float alpha) {
+        if (glowOf == null) {
+            glowOf = glowsOf(sortie.enemyKinds());
+        }
+        for (int i = 0; i < sortie.enemyCount(); i++) {
+            Enemy enemy = sortie.enemy(i);
+            int g = enemy.kind() < glowOf.length ? glowOf[enemy.kind()] : -1;
+            double y = enemy.renderY(alpha);
+            if (g < 0 || y < -80 || y > PlayField.HEIGHT + 80) {
+                continue;
+            }
+            glowPool(batch, grade, sortie, enemy, GLOWS.get(g), enemy.renderX(alpha), y);
+        }
+    }
+
     private void glowPool(
             SpriteBatch batch, UnderwaterGrade grade, Sortie sortie, Enemy enemy, Glow glow, double x, double y) {
         double gx = x;
@@ -331,6 +397,15 @@ final class DarkLight implements Disposable {
         }
         tint(batch, grade, gy, glow.r(), glow.g(), glow.b(), GLOW_LIGHT);
         grade.pool(batch, gx, gy, glow.radius());
+    }
+
+    /**
+     * Channel {@code c} (1-3) of a unit's whole light: the base there (white toward ambient × tint by the grade's
+     * {@code strength}, as {@link UnderwaterGrade}'s base) and its rim {@code rim} of the light missing to full.
+     */
+    private static float lit(float[] look, int c, float strength, float rim) {
+        float base = 1 + (look[UnderwaterGrade.AMBIENT] * look[c] - 1) * strength;
+        return Math.min(1, base + rim * (1 - look[UnderwaterGrade.AMBIENT] * look[c]) * strength);
     }
 
     /**
@@ -368,7 +443,10 @@ final class DarkLight implements Disposable {
                 a);
     }
 
-    /** The flat pool (full over its middle {@value #PLATEAU}, a soft edge) of {@code radius} at (x, y). */
+    /**
+     * The flat pool (full over its middle {@value #PLATEAU}, a soft edge) of {@code radius} at (x, y); its texture's
+     * colour carries the edge, for {@code GL_MAX}.
+     */
     private void flat(SpriteBatch batch, double x, double y, float radius) {
         batch.draw(plateau, (float) (x - radius), (float) (y - radius), 2 * radius, 2 * radius);
     }
@@ -403,7 +481,8 @@ final class DarkLight implements Disposable {
         for (int y = 0; y < size; y++) {
             for (int x = 0; x < size; x++) {
                 double d = Math.hypot(x + 0.5 - half, y + 0.5 - half) / half;
-                pixmap.drawPixel(x, y, Color.rgba8888(1, 1, 1, plateauAlpha(d)));
+                float a = plateauAlpha(d);
+                pixmap.drawPixel(x, y, Color.rgba8888(a, a, a, a));
             }
         }
         Texture texture = new Texture(pixmap);

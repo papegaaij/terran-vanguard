@@ -421,6 +421,7 @@ game may play only `proposed` sounds of an open concept round, provisionally unt
 | [ambience-storm-r08-a.ogg](concept/ambience-storm-r08-a.ogg) | Ocean storm setting: its baked-in thunder cannot follow Level 12's flashes, so the game plays round 34's rain-only bed from the same source (F6 = a); kept for the round's review |
 | [enemy-laser-warning-r08-a.ogg](concept/enemy-laser-warning-r08-a.ogg) | Act 1's only laser, the Mantis, has its own telegraph (round 23) |
 | [enemy-coilwyrm-death-final-r24-a.ogg](concept/enemy-coilwyrm-death-final-r24-a.ogg) | A review preview of the Coilwyrm's chained death; the game plays its two bursts |
+| [beds-mix-l24-r59-b.ogg](concept/beds-mix-l24-r59-b.ogg) | Listening aid for round 59's Q.1 = a: a render of Level 24's mix with the bed 6 dB louder; the game plays the beds themselves at `AMBIENCE_VOLUME` 0.70 |
 
 ### Mixing rules
 

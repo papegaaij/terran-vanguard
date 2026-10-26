@@ -132,7 +132,8 @@ does not know the dark. This level's values (draft):
 - **The Sonar Pulse** lights and outlines every unit and lure for 6 s and gives every weapon full damage for
   those 6 s; Varga says so at t=46.
 - **Light pools**: Driftjelly veins, the nests' sacs, the Anglers' lures and eyes, the Nautilus crown's
-  violet, the farm barge's lamp, the beacons; the ship's cone 260 px; Rook's lamp 56 px.
+  violet, the farm barge's lamp, the beacons; the ship's cone 260 px; Rook's lamp 56 px. A unit's own glow is
+  drawn as glow only: it lights no body, its own included (the playtest of 2026-10-26, see *Decisions*).
 - **Code fit** (gap check F1, corrected in step F2): the dark is the under-water light map of step LX with this level's
   values, the data's `underwater_look`: the twin headlights' hard cone `{strength: 1.0, reach: 260, angle: 70}`, the
   ambient 6 % (from 20 % with section 1's `ramp`), a 15 % `rim` on the scarp's rock, the escort's 56 px lamp
@@ -488,13 +489,14 @@ Production art of M8 part F (round 55, step ART-F) and game captures; the genera
 - [x] Darkness look (Q4 a): the glow-only pass for units outside the light, the cone, light pools, the ambient
       ramp, bullets, pickups, Rook's lamp always visible; nothing in the simulation changes (steps F4, F5: `DarkLight` on
       LX's light map; `Level26LooksTest.theDarkRampsDownAndTheAssistHoldsItsFloor`, `theConeLightsOnlyAheadOfTheLamps`,
-      `theStaticLightsLieOnTheirRows`, `theUnitsRimGlowAndSonarPools`, `PassOrderTest`; `Level26Test.theDarkIsTheLooksKeysOnly`;
-      F5's faint beam haze and the snow lit in the cones; the Dark levels assist holds the ambient at 20 %)
+      `theStaticLightsLieOnTheirRows`, `theUnitsRimAndSonarPools`, `PassOrderTest`; `Level26Test.theDarkIsTheLooksKeysOnly`;
+      F5's faint beam haze and the snow lit in the cones; the Dark levels assist holds the ambient at 20 %; step m8k1
+      after the playtest: a body outside the light at the 15 % rim only, `aUnitOutsideTheLightDrawsOnlyItsRim`)
 - [x] The Glow Angler's lure and lunge (130 px or touch), the Driftjelly and Eel Swarm in the dark (`GlowAnglerTest`,
       `Level26Test.theGlowAnglerLungesFromItsLure`, `Level26LooksTest.theAnglersStepsAndStalk`, `anAnglerLungesAndRings`,
       `theArtIsWhatTheLooksDraw`: the jelly's veins and the eels' glow-only frames)
 - [x] The fault scarp (one wall, three notches, the Sirens' glow tell) (`Level26Test.theScarpItsNotchesAndItsNests`;
-      the Sirens' glow frames from part E over the grade, `Level26LooksTest.theUnitsRimGlowAndSonarPools`)
+      the Sirens' glow frames from part E over the grade, `Level26LooksTest.aUnitOutsideTheLightDrawsOnlyItsRim`)
 - [x] The Choir's fragment with the HUD static 2 s before, the music ducking (Q8 a) (`StaticLeadsTest`,
       `Level26SoundsTest.theChoirsLineDucksTheMusicSixDecibels`, `Level26Test.theChoirsLineAndItsKeys`)
 - [x] **Rook's loss**: the scripted trails (visual only), the lamp spin-down, the cut line, `rook_missing`
@@ -603,3 +605,14 @@ Production art of M8 part F (round 55, step ART-F) and game captures; the genera
   silence after the loss by 3 s (each line holds the radio over 6 s by its text). Every run is now flown to the end
   (`RadioTimelineLevel26Test.theClosingLineOpensAsTheLevelEnds`), every timed line at most a second late. Accepted in
   round 58 (C.7, 2026-10-26).
+- 2026-10-26 (user playtest, step m8k1): "the enemies are too easy to spot. They almost seem completely illuminated"
+  (Dark levels assist off). Measured on the light map (medium, `--invulnerable`, with Rook and without, t=20–100): a
+  body outside the cone and the lamps read at 42–66 % of full (Driftjelly 48, Siren 42, Spiral Nautilus 48, the Eel
+  Swarm's segments 66, Glow Angler 26; in the cone 80–100 %): part F's kinds' glow pools (24–40 px at half strength on
+  the unit itself, the Angler's at its eyes and lure) lit the whole body, the rim came on top of the ambient (20 %) and
+  an Eel Swarm's overlapping rims added up. The cones are not the cause: they light 10 % of the field (16.5 % with
+  Rook's). Fixed to the spec: in black water a body outside the light reads at the rim, 15 % in all, the ambient
+  included, for every kind (measured 0.15); the rims are drawn by their brightest, so overlaps never add; no glow pool
+  falls on a body (the glow frames stay: veins, lures, eyes, sacs, crowns, stripes). Levels 27 and 28 (lit water) keep
+  their glow pools unchanged. Pending the user's review: Rook's own headlight cones (the spec gives him only the 56 px
+  lamp; they light 6 % more of the field) and the Driftjelly's veins, which read as the whole jelly.
