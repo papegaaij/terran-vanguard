@@ -72,6 +72,8 @@ final class BossCues extends SoundFamily {
     private final Sfx[] deaths;
     /** Each set piece's own sounds, by index in the script; null for the generic ones. */
     private final BossSounds[] bossSounds;
+    /** M8 part H: each set piece's own arrival roar without its other sounds, by index in the script; null for none. */
+    private final Sfx[] arrivals;
     /** Whether a boss of the level brings its own phase sounds (its turn and its iris, not the generic phase blast). */
     private final boolean ownPhaseSounds;
     /** Whether each set piece's death is huge: an act boss, or a set piece that is no boss. */
@@ -103,6 +105,7 @@ final class BossCues extends SoundFamily {
         cries = setPieces.stream().map(BossCues::cry).toArray(Sfx[]::new);
         deaths = setPieces.stream().map(BossCues::death).toArray(Sfx[]::new);
         bossSounds = setPieces.stream().map(BossCues::bossSounds).toArray(BossSounds[]::new);
+        arrivals = setPieces.stream().map(BossCues::arrival).toArray(Sfx[]::new);
         ownPhaseSounds = Arrays.stream(bossSounds).anyMatch(Objects::nonNull);
     }
 
@@ -129,6 +132,19 @@ final class BossCues extends SoundFamily {
         return switch (slug) {
             case "revenant-walker" -> Sfx.WALKER_DEATH;
             case "dust-colossus" -> Sfx.COLOSSUS_DEATH;
+            // M8 part H: the Abyssal Maw's (round 58 a until the user's pick), over its 4 s chain.
+            case "abyssal-maw" -> Sfx.MAW_DEATH;
+            default -> null;
+        };
+    }
+
+    /**
+     * M8 part H: a boss's own arrival roar without the rest of {@link BossSounds}, or null: the Abyssal Maw's (round 58
+     * a until the user's pick), after the klaxon's first blast as its coil rises.
+     */
+    private static Sfx arrival(String slug) {
+        return switch (slug) {
+            case "abyssal-maw" -> Sfx.MAW_ARRIVAL;
             default -> null;
         };
     }
@@ -272,6 +288,10 @@ final class BossCues extends SoundFamily {
                 BossSounds own = events.value(i) < bossSounds.length ? bossSounds[events.value(i)] : null;
                 if (own != null) {
                     later(own.roar(), EXPLOSIONS, 1, pan, ARRIVAL_ROAR_STEPS);
+                }
+                Sfx roar = events.value(i) < arrivals.length ? arrivals[events.value(i)] : null;
+                if (roar != null) {
+                    later(roar, 1, 1, pan, ARRIVAL_ROAR_STEPS);
                 }
             }
             case BOSS_PHASE -> {

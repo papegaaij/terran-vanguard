@@ -1,10 +1,10 @@
 ---
 title: Abyssal Maw
 design: approved
-implementation: not-started
+implementation: in-progress
 art: chosen
 depends-on: [../../../world/europa, ../../../campaign/act-4-deep-water, ../../naval/eel-swarm, ../../../player/wingmen, ../../../story/twist, ../../../story/characters/the-choir, ../../../systems/economy]
-updated: 2026-10-22
+updated: 2026-10-26
 ---
 
 # Abyssal Maw
@@ -22,8 +22,10 @@ gauntlet of Ascendancy cruisers in black and gold (*The reveal*, below).
 **Status: approved in round 48 (2026-10-22)** (Act 4 design phase, step D-boss, 2026-10-21; pending the user's review in concept
 round 48). It follows the gap analysis's recommended answers, both pending in round 48: **Q9 b**, the
 coiled guardian (the drafted fight, Q9 a, is under *Variant a*), and **Q10 a**, the breakout and run.
-Every number is a hand-written **draft** at medium; there is no `data.yaml` until M8 part H builds the
-boss (a `data.yaml` here would be loaded and flown by `check`).
+Every number is a hand-written **draft** at medium. **In data since M8 part H (step H3, 2026-10-25)**: the stat block
+and the boss script (its `coil`: the body, the sacs, the jaw, the fan walls, the sweeps, the dive, the implants and the
+shed Eel Swarms) live in [data.yaml](data.yaml), the stat block below is rendered from it; step H4 measures the fight
+and tunes the HP and the par.
 
 ## Design
 
@@ -46,26 +48,28 @@ the extended balance plan). Bullet speeds are written **base → in water**: the
 (bullets ×0.7 on both sides, the [under water rules](../../../world/europa/README.md#under-water-rules))
 is applied on top of the base.
 
-| Field | Value (draft) |
+<!-- data: stat-block -->
+| Field | Value |
 |---|---|
-| Faction | Vrell, with Helix implants (grey, unmarked human machinery; see *Phase 3*) |
-| Layer | the play plane under water (in code `air` with the level's `medium: underwater`): all weapons hit it, those without `anti-sub` at the water's factor (×0.7 under Q1 b; ×0.5 as drafted, Q1 a). During the dive (phase 2) the head and the coil are in the deep water **below** the play plane (`sub`): only `anti-sub` weapons and the Smart Bomb reach them |
+| Faction | Vrell |
+| Layer | `air` (the play plane under water, the level's medium: all weapons hit it, those without `anti-sub` at the water's factor ×0.7); its parts rise from `sub` in the intro, and during the dive the head and the coil are `sub` again: only `anti-sub` weapons and the Smart Bomb reach them |
 | Size tier | `huge` |
-| Size | head ≈ 150×130 px (hitbox 110×100); the body a chain of ≈ 31 segments, 64 px wide, ≈ 56 px apart (≈ 1,750 px with the head), half of each segment beyond the field's edge while coiled; gill sacs 36×36; implants 40×40 |
-| Parts | the **head** (`vital`; the bar): the skull ×0.5, the lime **throat** a weak spot ×2 while the jaw is open; four **gill sacs** (`destroyable`, outside the bar, phases 1–2); the **coil** (the body chain: armoured, shots glance with a spark and the Ion Beam stops on it, no HP; a wall for the ship); three **Helix implants** (phase 3: weak spots ×2 of the head's HP while sparked open, armoured while shut) |
-| Orientation | the head `fixed` (facing down, with jaw, rear-up, dive and lunge frames); the coil's segments `32 angles` along the chain |
-| HP | head 6,700; gill sacs 150 each (600); total **7,300** (easy 5,475 / hard 9,490, from the global multipliers ×0.75 / ×1.3) |
+| Size | 150×130 px, hitbox 110×100 (the head; the body a chain of 31 segments, 64 px wide, 56 px apart (≈ 1,750 px with the head), half of each beyond the field's edge while coiled; gill sacs 36×36; implants 40×40) |
+| Parts | the **head** (`vital`; the bar): the skull ×0.5, the lime **throat** a weak spot ×2 while the jaw is open; four **gill sacs** (`destroyable`, outside the bar, phases 1–2); the **coil** (the body chain: armoured, shots glance with a spark and the Ion Beam stops on it, no HP; a wall for the ship); three **Helix implants** (phase 3: ×2 on the head's HP while sparked open, armoured while shut) |
+| Orientation | `fixed` (the head facing down, with jaw, rear-up, dive and lunge frames; the coil's segments in `32 angles` along the chain) |
+| HP | head 6,700; gill sacs 150 each (600); the implants 1 each (their hits count on the head's); total 7303 (easy 5477 / hard 9494, from the global multipliers) |
 | Armour / shield | the coil always (a wall, no damage); the skull ×0.5; the throat ×2 while the jaw is open; an implant ×2 while sparked open, armoured while shut; in the dive only `anti-sub` and the Smart Bomb |
-| Speed | the head 0 px/s at rest; a coil sweep swings in at ≈ 220 px/s; the lunge crosses the field in 0.8 s (≈ 680 px/s) |
-| Movement | anchored round the vent (see *Arena*); the coil sweeps, the dive and the lunge (see *Phases*) |
-| Attack | phase 1: the gill sacs' `ring`s of 10 (`small`, 100 → 70 px/s), one sac every 1.6 s in turn, each after a 0.6 s swell; the throat's aimed `fan` of 5 over 40° (`medium`, 130 → 91 px/s) every 5 s, after a 0.6 s glow, the jaw open 3 s; phase 2: the **fan walls** (a `fan` of 17 over 150°, `small`, 110 → 77 px/s, with one gap) every 4 s, the **coil sweeps** every 7 s, the **dive and lunge** once; phase 3: the open implant's aimed `burst` of 3 (`small`, 140 → 98 px/s) every 1.5 s, sweeps every 6 s from three sides; Eel Swarms shed from the body in every phase |
-| Formations | solo set piece (Eel Swarms shed into the arena) |
-| Weak points | the lime throat (while the jaw is open) (×2); the hot-amber Helix implant cores (phase 3, while open) (×2) |
-| Effective traits | `anti-sub`, `homing`, `side`; `piercing` only helps against the shed Eel Swarms (Level 28 recommends `anti-sub`, `homing` and names `side` in Varga's L3 line, dropping the roster's `piercing`) |
-| Credits | **345** (score 3,450 × chain) in Act 1 terms (head 297, gill sacs 12 each); × 4.096 (Act 4's factor 1.6³) × Level 28's `bounty_scale` of about 0.74 it pays **1,046 = 24.0 % of budget(28) = 4,350** (see *Bounty*; recomputed from the draft's 510 at an assumed 0.50 once [Level 28](../../../campaign/act-4-deep-water/level-28-abyssal-maw/README.md#credit-budget) set the scale) |
-| Death | `huge` underwater variant (see *Death*): the implants blow out one after another, the coil convulses and unwinds into the dark, the vent flares; chained bursts of silt and lime ichor over 4 s; screen flash at the chain's end (an act boss); credit shower |
+| Speed | 0 px/s (the head at rest; a coil sweep swings in 110 px in 0.5 s; the lunge crosses the field in 0.8 s) |
+| Movement | anchored round the vent, the head at y 95 (see *Arena*); the coil sweeps, the dive and the lunge (see *Phases*) |
+| Attack | the **coil sweeps** (phases 2–3: a 5-segment bight at the ship, a 1.2 s tell, then `heavy` = 10 once and the push); the **dive and lunge** (once, the head below 50 %: a 2 s shadow up a 90 px column, then `heavy` = 10); Eel Swarms of 8 shed from the coil in every phase; phase 1: the gill sacs breathe in turn, a `ring` of 10 (`small` = 4, 100 → 70 px/s) one sac every 1.6 s, each after a 0.6 s swell; and the throat's aimed `fan` of 5 over 40° (`medium` = 6, 130 → 91 px/s) every 5 s after a 0.6 s glow, the jaw open 3 s; phase 2: the living sacs one every 2.4 s; the **fan walls** (phase 2), a `fan` of 17 over 150° (`small`, 110 → 77 px/s) straight down every 4 s after a 0.8 s glow, one orb missing (the gap, 40–90 px beside the ship's x, within 140 px of the last); phase 3: the open implant's aimed 3-bolt `burst` (`small`, 140 → 98 px/s) every 1.5 s, each after a 0.4 s arc |
+| Formations | solo set piece |
+| Weak points | lime throat (while the jaw is open) (×2), Helix implant cores (phase 3, while open) (×2) |
+| Effective traits | `anti-sub`, `homing`, `side` |
+| Credits | 345 (score 3450 × chain) in Act 1 terms (head 297, gill sacs 12 each); × 4.096 (Act 4's factor 1.6³) × Level 28's `bounty_scale` it pays **24 % of budget(28) = 4,350** (see *Bounty*) |
+| Death | `huge` underwater variant: the implants blow out one after another, the coil convulses and unwinds into the dark, the vent flares; chained bursts of silt and lime ichor over 4 s; screen flash at the chain's end (an act boss); credit shower |
 | First level / used in | L28; L28 only (the L49 boss rush re-uses the Brood Carrier, Dust Colossus and Iron Sovereign, not the Maw) |
 | Difficulty hooks | hard: gill rings of 12, fan walls of 21, the sweep's tell 0.9 s, the lunge's shadow 1.6 s, implants open 3 s, Eel Swarms of 10 segments; easy: rings of 8, fan walls of 13 with two gaps, the sweep's tell 1.5 s, the lunge's shadow 2.4 s, implants open 5 s, no implant `burst` (single `aimed` shots) |
+<!-- /data -->
 
 ### Arena
 
@@ -77,7 +81,7 @@ the floor, so nothing slides under it; the Dust Colossus's lesson, its K.c). Scr
 | Element | Where | Notes |
 |---|---|---|
 | The vent | a caldera filling the arena floor, its glowing throat at (240, 330), ≈ 140 px across | `ground` scenery, no hit; lights the arena from below (Q2 a: L28 is lit by the vent and the hatchery's bioluminescence) |
-| The head | centre (240, 95), the throat at (240, 135) | clear of the boss bar's plate (35 px); 320 px above the ship band, inside the Ion Beam's under-water reach (×0.75 of 540 = 405 px) |
+| The head | centre (240, 95), the throat at (240, 135) | clear of the boss bar's plate (35 px); 320 px above the ship band; out of the Ion Beam's under-water reach (energy ×0.4 since the underwater weapons rework, 216 px: the draft's ×0.75 = 405 px is stale) |
 | Gill sacs | (178, 80), (302, 80), (190, 128), (290, 128) | two each side of the head |
 | The coil | from the head along the top to the top-left corner, down the left edge (inner flank x 50), along the bottom (inner flank y 505), up the right edge (inner flank x 430); the tail tip at the top-right corner | the ship flies in x ≈ 62–418, y ≤ 493 |
 | Implants (phase 3) | the neck at (110, 60); the left coil at (40, 300); the right coil at (440, 300) | the neck one in the front guns' reach, the side ones for wing mounts, angled and homing shots |
@@ -178,7 +182,7 @@ does the same, so the balance and playthrough tests can finish the fight.
 ### Duration and HP
 
 Target: the act-boss window **90–180 s** at medium, aimed at ≈ **130 s**; the **par** is the measured
-mean (draft **130 s**).
+mean: **127 s** (step H4, 2026-10-25; draft 130 s).
 
 Paper estimate (the window-aware method of the Kraken's `BalanceTest` check): the effective boss DPS is
 0.6 × 120 = **72**. Phase 1: the jaw open 3 s of 5 (×1.25, the throat-and-skull mean) and shut 2 s (×0.5):
@@ -194,6 +198,17 @@ open, one at a time, the side ones reached only by part of the loadout, the skul
 | 2 — Tightening (70 → 30 %, the dive at 50 %) | 2,680 | ≈ 44 + 12 s |
 | 3 — Implants (30 → 0 %) | 2,010 | ≈ 31 s |
 | Total | 6,700 + 600 | **≈ 131 s** |
+
+**Measured (M8 part H, step H4, 2026-10-25; `AbyssalMawTest`)**: the autopilot with the plan's Level 28 fit and the
+loaner Bulwark, the whole level flown, at the spec's HP: **126.5 s** at medium over five seeds (108–145 s, every seed
+in the window; phases ≈ 32 / 59 / 30 s against the paper's 38 / 56 / 31), easy ≈ 93 s, hard ≈ 172 s (141–200);
+without the escort medium ≈ 136 s. The HP stays at 6,700 + 4 × 150 (the mean is within 3 % of the aim; hard and
+the escort-less fight already run long); the par is **127**. It is never struck by a sweep or the lunge. The paper
+estimate is `BalanceTest.coilSeconds` (tools/balance.py the same): 133 s. **Phase 1 against the Kraken's** (the
+harness's random dodger, kept below the head's band, since the free dodger rams the head): **2.6×** (29.5 lost per
+10 s against 11.4), outside H.4's band; the throat's aimed fan alone costs 1.1×, so the named levers (the rings'
+count, the sac interval) cannot reach the band; the attacks are left as approved, pending round 58 (see *Open
+questions*).
 
 Lessons from Acts 2–3 the build must apply (M8 part H):
 - **Measure, then tune the HP, not the attacks** (Kraken E6, Spire H10, Colossus H4, walker F4): the
@@ -327,37 +342,54 @@ that pops**; no low-pass bus. Each row for the round's a/b by how it sounds.
 
 ## Concept art
 
-Concept round 48 proposals (decided in round 48 (2026-10-22)), listed in the [bosses](../README.md#concept-art) Concept art table (generator `tools/concept/bosses_r48.py`): the Maw as a "Rising maw" (a) or the "Coiled guardian" (b, recommended), and the Ascendancy cruiser as a "Regent wedge" (a) or a "Forked monitor" (b). The cruiser mockups show the placeholder hull code `HX-427`; Level 27 sets `HLX-DS-0417`, which the production art uses.
+Concept round 48 proposals (decided in round 48 (2026-10-22)), listed in the [bosses](../README.md#concept-art) Concept art table (generator `tools/concept/bosses_r48.py`): the Maw as a "Rising maw" (a) or the "Coiled guardian" (b, recommended), and the Ascendancy cruiser as a "Regent wedge" (a) or a "Forked monitor" (b). The production art (round 58) uses Level 27's `HDX-417`; the round-48 mockups show the placeholder `HX-427`. The round-58 production files (`tools/art/abyssal_maw.py`, `tools/art/ascendancy_cruiser.py`, step ART-H1) are listed in the bosses' table too, proposed in round 58, with the game captures of step H7 (the arrival, the phases, the dive, the implants, the death, 1:1 crops; the cruisers' rise and run and the bow's code).
 
 ## Implementation
 
-Built in M8 part H with Level 28 (the roadmap's proposed parts); nothing here is built yet.
+Built in M8 part H with Level 28: the simulation's `CoilArena` (step H1), the cruisers' run, the armour floor and
+the escort's `MawHazards` (step H2), the data and its loading (step H3), the autopilot and the measurement (H4), the
+looks (H5), the sounds and the music (H6); captured for round 58 in step H7.
 
-- [ ] Stat block and boss script in a `data.yaml` (the coil chain round the arena, the sacs, the implants
+- [x] Stat block and boss script in a `data.yaml` (the coil chain round the arena, the sacs, the implants
       as weak spots of the head's HP, the phases, the dive and lunge, the sweeps, the shed points, par),
       loaded; global difficulty multipliers applied
-- [ ] The coil as a wall round the arena (the ship and the escort stopped, no damage; Level 25's trench
+- [x] The coil as a wall round the arena (the ship and the escort stopped, no damage; Level 25's trench
       walls' collision), and its sweeps (the bight, the tell, the swing, the push)
-- [ ] The fan walls with a placed gap that chains with the previous wall's
-- [ ] The dive (the layer `sub` below the play plane, the darkness's light drop) and the lunge column
-- [ ] Phase 3's implants: weak spots on chain segments that count on another part's HP (new: the
+- [x] The fan walls with a placed gap that chains with the previous wall's
+- [x] The dive (the layer `sub` below the play plane, the darkness's light drop) and the lunge column
+      (`MawArenaTest.theDiveGoesUnderTheLungeRisesUpTheColumnAndTheCoilComesBack`,
+      `Level28LooksTest.theSubLookDimsTheCoilAndKeepsItsGlow`; round 58's dive capture)
+- [x] Phase 3's implants: weak spots on chain segments that count on another part's HP (new: the
       Colossus's gullet is a weak spot on its own part), their open cycle and bursts
-- [ ] Eel Swarms shed from coil segments (the boss's count, counted into the enemies, not the density)
-- [ ] The Bulwark and the autopilot: out of a sweep's bight and the lunge's column, through the walls'
+- [x] Eel Swarms shed from coil segments (the boss's count, counted into the enemies, not the density)
+- [x] The Bulwark and the autopilot: out of a sweep's bight and the lunge's column, through the walls'
       gaps, against the coil
 - [ ] The fight measured over five seeds (the window 90–180 s, the HP tuned, the par set), phase 1
       checked with the calibration harness against the Kraken's, the bounty at ≈ 24 % with Level 28's
-      measured scale
-- [ ] Intro (the Choir sings, the coil rising), death (the implants, the unwinding, flash, credit
-      shower), the Choir's fragment
-- [ ] The breakout (the shaft climb, the medium switch to air, the ice ceiling) and the run (the
+      measured scale (step H4: all done but phase 1, measured 2.6×, outside the band: pending round 58)
+- [x] Intro (the Choir sings, the coil rising), death (the implants, the unwinding, flash, credit
+      shower), the Choir's fragment (`MawArenaTest.itRisesOverItsIntroThenEngagesWithItsCoilRoundTheEdges`,
+      `Level28LooksTest.theDeathSinksTheCoilTailToHeadAndTheHeadLast`,
+      `RadioTimelineLevel28Test.theFinalesClosingLinesComeInOrderFromTheKill`; round 58's arrival and death captures:
+      the coil's glow lines show at full strength with the warning, only the plates and the head brighten over the
+      intro)
+- [x] The breakout (the shaft climb, the medium switch to air, the ice ceiling) and the run (the
       cruisers as invulnerable `low-air` set pieces, broadsides, flak, point defence, the armour floor),
-      then the act end and the release end
-- [ ] Production art (≤ one atlas page for the Maw; the cruisers their own): the head's frames, the coil
+      then the act end and the release end (`CruiserRunTest`, `ArmourFloorTest`,
+      `Level28LooksTest.theCruisersRiseAndTellTheirBroadsides`, `Level28LooksTest.theBreakoutAndTheOrbit`,
+      `DebriefActEndTest`, `OutroOnwardTest`; round 58's captures)
+- [x] Production art (≤ one atlas page for the Maw; the cruisers their own): the head's frames, the coil
       segments in 32 angles, the sacs, the implants shut / sparking / open / blown, the death, the intel
       silhouette; the cruisers rising and their gun ports
 
 ## Open questions
+
+- Round 58 (step H4): phase 1 costs the calibration harness's random dodger **2.6×** the Kraken's phase 1 (29.5
+  per 10 s against 11.4; H.4's band 0.8–1.2×). The throat's aimed fan alone costs 1.1×, the rings about as much
+  again, so the spec's levers (the rings' count, the sac interval) cannot reach the band without the fan. Keep the
+  attacks as approved (the autopilot loses 0–16 in phase 1; the band is a random dodger's), or thin the rings and the
+  fan until the band is met (to be measured)? Recommendation: keep, and accept a wider band for an act
+  boss under water (the slower bullets linger).
 
 All decided in round 48 (2026-10-22):
 - Q9: the coiled guardian (b, recommended) or the roster's rising maw (a); a/b concept art in round 48.
@@ -382,3 +414,14 @@ All decided in round 48 (2026-10-22):
   the scroll halts (no crawl); the shed Eel Swarms and the boss's attacks give no edge warnings.
 - 2026-10-21 (step m8-dact, **decided in round 48 (2026-10-22)**): reconciled with [Level 28](../../../campaign/act-4-deep-water/level-28-abyssal-maw/README.md): the bounty is **345** in Act 1 terms (head 297, sacs 12 each; 24 % at the level's hand `bounty_scale` ≈ 0.74), not 510 at an assumed 0.50; the Choir's fragment waits 3 s (K+3 to ≈ K+8.6); the level ends at K+62 with an orbit section; a new radio event `boss-dive`; the level's traits are `anti-sub`, `homing` (`side` named in Varga's L3 line).
 - 2026-10-22 (user, round 48 D1–D13: "approve"; confirmed: "Yes, set them approved"): design approved.
+- 2026-10-25 (M8 part H, step H3): the stat block and the boss script in [data.yaml](data.yaml) from the draft's
+  numbers (`boss.coil`, read by the simulation's `CoilArena`; the schema in
+  [schemas-act-4](../../../tech/architecture/schemas-act-4/README.md)); the stat block rendered from it. Defaults of the
+  step, pending round 58: the throat's box 40×30 px; the implants 1 HP each (their hits count on the head's); the coil's
+  path along the edges' centre lines (x 18 / 462, y 18 / 537), the ship 12 px inside its inner flanks; the shed points
+  at the side coils' middle (y 270) and the bottom's (x 240); the difficulty hooks as `coil_arena`. Fixed the stale
+  Ion Beam reach in *Arena* (energy ×0.4 since the underwater weapons rework: the head is out of the beam's 216 px).
+- 2026-10-25 (M8 part H, step H4): measured with the autopilot (`MawPlay`) over five seeds: 126.5 s at medium at the
+  spec's HP, so the HP stays and the **par is 127** (draft 130); the paper method `coilSeconds` (133 s) in
+  `BalanceTest` and tools/balance.py. The bounty stays 345 (Level 28's `bounty_scale` measured 0.74 = the hand
+  estimate). Phase 1's calibration (2.6× the Kraken's for a random dodger kept below the head) left for round 58.

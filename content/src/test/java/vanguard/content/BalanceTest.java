@@ -1015,6 +1015,9 @@ class BalanceTest {
 
     static double arenaSeconds(EnemyData enemy, double dps) {
         EnemyData.BossData boss = enemy.boss().orElseThrow();
+        if (boss.coil().isPresent()) {
+            return coilSeconds(enemy, dps);
+        }
         if (boss.slam().isEmpty()) {
             return lanelessSeconds(enemy, dps);
         }
@@ -1091,6 +1094,56 @@ class BalanceTest {
         }
         return seconds;
     }
+
+    /**
+     * M8 part H (design/enemies/bosses/abyssal-maw, Duration and HP; tools/balance.py prints the same): a coiled boss's
+     * paper fight at the effective {@code dps}: the ease into the halt and its intro (the coil rising), then each phase
+     * the parts it ends on besides its head (the gill sacs) at their own multipliers, and its share of the head's HP at
+     * the phase's {@link #COIL_FACTORS} (the jaw's windows, the skull, the implants), and in the dive's phase the dive
+     * (the slide, the quiet, the shadow, the lunge, the body and the way back) with next to no damage. The spec's paper
+     * estimate ≈ 131 s; step H4 measured 126.5 s (the par).
+     */
+    static double coilSeconds(EnemyData enemy, double dps) {
+        EnemyData.BossData boss = enemy.boss().orElseThrow();
+        var coil = boss.coil().orElseThrow();
+        List<EnemyData.PartData> parts = enemy.partList().orElseThrow();
+        int head = 0;
+        while (!parts.get(head).kind().equals("vital")) {
+            head++;
+        }
+        String headName = parts.get(head).name();
+        double headHp = parts.get(head).hp();
+        double seconds = vanguard.sim.Sortie.ARENA_RAMP_SECONDS + coil.intro();
+        double share = 1;
+        List<EnemyData.PhaseData> phases = boss.phases();
+        for (int i = 0; i < phases.size(); i++) {
+            EnemyData.PhaseData phase = phases.get(i);
+            EnemyData.Until until = phase.until();
+            for (String name : until.parts().orElse(List.of())) {
+                if (!name.equals(headName)) {
+                    EnemyData.PartData part = parts.get(enemy.partIndex(name));
+                    seconds += part.hp() / (dps * part.multiplier().orElse(1.0));
+                }
+            }
+            double below =
+                    until.share().map(EnemyData.Share::below).or(until::below).orElse(0.0);
+            seconds += (share - below) * headHp / (dps * COIL_FACTORS[Math.min(i, COIL_FACTORS.length - 1)]);
+            share = below;
+            if (coil.dive().filter(d -> d.phase().equals(phase.name())).isPresent()) {
+                var dive = coil.dive().orElseThrow();
+                seconds += dive.slide() + dive.quiet() + dive.shadow() + dive.lunge() + dive.body() + dive.back();
+            }
+        }
+        return seconds;
+    }
+
+    /**
+     * M8 part H: the share of the effective DPS a coiled boss's head takes in each phase (the Maw's spec, Duration and
+     * HP): phase 1 ×0.95 (the jaw open 3 s of 5 at the throat-and-skull mean ×1.25, shut 2 s at the skull's ×0.5),
+     * phase 2 ×0.85 (the jaw open for each wall, the skull between), phase 3 ×0.9 (the implants ×2 while open, one at a
+     * time, the skull for the rest).
+     */
+    static final double[] COIL_FACTORS = {0.95, 0.85, 0.9};
 
     /**
      * M5 part H (design/enemies/bosses/siege-spire, decision H10 = a): an arena boss without lanes at the

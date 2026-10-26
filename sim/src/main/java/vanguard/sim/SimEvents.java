@@ -718,7 +718,65 @@ public final class SimEvents {
          * M8 part G: a heat plume burned a swimmer over its burning disc, once per burst (at the unit; the kill, if it
          * was one, follows as the player's {@link #ENEMY_DESTROYED}); value: the unit's kind.
          */
-        PLUME_BURN;
+        PLUME_BURN,
+        /**
+         * M8 part H (design/enemies/bosses/abyssal-maw; {@link CoilArena}): a gill sac starts to swell before its ring
+         * (at the sac); value: the sac's part.
+         */
+        SAC_SWELL,
+        /**
+         * M8 part H: the throat starts to glow and the jaw opens (at the throat): value 0 before the throat's fan, 1
+         * before a fan wall.
+         */
+        THROAT_GLOW,
+        /** M8 part H: a fan wall fires (at the throat); value: its first gap's orb. */
+        FAN_WALL,
+        /**
+         * M8 part H: a coil sweep's tell starts (at the bight's centre segment at rest): silt off the plates, the glow
+         * line, the groan; value: its {@link CoilSpec.Side} ordinal.
+         */
+        COIL_SWEEP_TELL,
+        /** M8 part H: the bight swings in (at its centre segment at rest); value: its {@link CoilSpec.Side} ordinal. */
+        COIL_SWEEP,
+        /** M8 part H: a swinging bight caught the ship or the escort (at the bight); value: 1 the ship, 2 the escort, 3 both. */
+        COIL_STRIKE,
+        /** M8 part H: the coil slides into the dark (at the head): the dive's roar, the vent gutters. */
+        MAW_DIVE,
+        /** M8 part H: the lunge's shadow starts up its column (at the column's foot); value: the column's x, px. */
+        LUNGE_TELL,
+        /** M8 part H: the head bursts up the column (at its foot). */
+        LUNGE,
+        /** M8 part H: the lunge caught the ship or the escort (at the column); value as {@link #COIL_STRIKE}'s. */
+        LUNGE_HIT,
+        /** M8 part H: the coil slides back round the edges (at the head). */
+        COIL_RETURN,
+        /** M8 part H: an implant starts to spark (its tell; at it); value: its index among the implants. */
+        IMPLANT_SPARK,
+        /** M8 part H: an implant's plate blows aside, its core open (at it); value: its index. */
+        IMPLANT_OPEN,
+        /** M8 part H: an open implant's arc before its burst (at it); value: its index. */
+        IMPLANT_ARC,
+        /** M8 part H: an implant shuts (at it); value: its index. */
+        IMPLANT_SHUT,
+        /** M8 part H: a coil plate flares before an Eel Swarm slips out (at the shed point); value: the point's index. */
+        SHED_TELL,
+        /**
+         * M8 part H, step H2 (design/enemies/bosses/abyssal-maw, The cruisers; {@link CruiserRun}): the cruisers start
+         * to rise through the ice (at the field's bottom centre): the engine thrum, the ice grinding.
+         */
+        CRUISER_RISE,
+        /**
+         * M8 part H: a broadside's tell starts: the gun ports glow, the tracer lines cross the band (at the field's edge
+         * on the cruiser's side, the band's centre height); value: the cruiser ({@link CruiserRun#LEFT}, {@link
+         * CruiserRun#RIGHT}).
+         */
+        BROADSIDE_TELL,
+        /** M8 part H: a broadside's volley crosses its band (at its first shell's start); value: the cruiser. */
+        BROADSIDE,
+        /** M8 part H: a flak marker is set (at it; its burst is the lob's {@link #MORTAR_IMPACT}); value: its index. */
+        FLAK,
+        /** M8 part H: a cruiser's point defence fires a shot of its burst (at the turret); value: the cruiser. */
+        POINT_DEFENCE;
 
         private static final Type[] VALUES = values();
     }

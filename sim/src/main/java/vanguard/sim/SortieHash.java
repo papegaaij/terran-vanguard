@@ -66,6 +66,10 @@ final class SortieHash {
             // M8 part G: only in a level with heat plumes.
             s.plumes.addTo(hash);
         }
+        if (s.cruisers != null) {
+            // M8 part H: only in a level with the cruisers' run.
+            s.cruisers.addTo(hash);
+        }
         if (s.force.chains().size() > 0) {
             Pools.addAll(hash, s.force.chains());
         }

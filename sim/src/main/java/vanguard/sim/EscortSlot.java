@@ -138,16 +138,33 @@ final class EscortSlot {
         double goalX = bulwark.slotX(ship.x());
         double goalY = bulwark.slotY(ship.y());
         Missiles missiles = s.force.missiles();
-        if (s.plumes != null || missiles.size() > 0) {
+        CoilArena coil = coil();
+        if (s.plumes != null || missiles.size() > 0 || coil != null || s.cruisers != null) {
             // M8 part G: its goal out of a hot plume's disc and off a torpedo's line (as Rook keeps out of the vents).
+            // M8 part H: inside the Maw's coil, out of its bights and the lunge's column, out of a told broadside band.
             BulwarkHazards hazards = bulwark.hazards();
-            if (hazards.clear(goalX, goalY, s.plumes != null ? s.vents : null, missiles.size() > 0 ? missiles : null)) {
+            if (hazards.clear(
+                    goalX,
+                    goalY,
+                    s.plumes != null ? s.vents : null,
+                    missiles.size() > 0 ? missiles : null,
+                    coil,
+                    s.cruisers)) {
                 goalX = hazards.x();
                 goalY = hazards.y();
             }
         }
         bulwark.flyTo(goalX, goalY);
         if (bulwark.fires(s.flying() && !s.complete && Command.FIRE.in(commands))) {
+            MawHazards maw = bulwark.hazards().maw();
+            if (coil != null && maw.aim(s.coilBoss, coil, bulwark.x(), bulwark.y())) {
+                // M8 part H, step H2 (design/enemies/bosses/abyssal-maw, The escort): a gill sac while it is coiled, an
+                // open implant, else the head.
+                double aim = StrictMath.atan2(maw.aimX() - bulwark.x(), maw.aimY() - bulwark.y());
+                s.fire.wingmanVolley(
+                        wingmanMount, bulwark.gun(), bulwark.x(), bulwark.y(), -1, s.force.enemies(), s.ground, aim);
+                return;
+            }
             int hunter = nearestTorpedoLauncher(bulwark.x(), bulwark.y());
             if (hunter < 0) {
                 s.fire.wingmanVolley(
@@ -160,6 +177,14 @@ final class EscortSlot {
                         wingmanMount, bulwark.gun(), bulwark.x(), bulwark.y(), -1, s.force.enemies(), s.ground, aim);
             }
         }
+    }
+
+    /** M8 part H: the coiled boss's arena while it is in the fight (present, not destroyed); null otherwise. */
+    private CoilArena coil() {
+        SetPiece piece = s.coilBoss;
+        return piece == null || !piece.present() || piece.destroyed()
+                ? null
+                : piece.coil().orElseThrow();
     }
 
     /**

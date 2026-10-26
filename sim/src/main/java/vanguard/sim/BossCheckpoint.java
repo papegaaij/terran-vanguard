@@ -183,6 +183,10 @@ final class BossCheckpoint {
             s.plumes.reset();
         }
         s.bossPasses.clearLaunches();
+        if (s.cruisers != null) {
+            // M8 part H: the cruisers' run comes after the boss: afresh.
+            s.cruisers.reset();
+        }
         s.complete = false;
         s.wrecked = false;
         s.failed = false;

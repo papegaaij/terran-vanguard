@@ -457,7 +457,9 @@ final class BossRules {
                         .withSuction(ColossusRules.suction(enemy, difficulty))
                         .withVents(ColossusRules.vents(enemy))
                         .withEruption(ColossusRules.eruption(content, enemy, difficulty))
-                        .withDebris(ColossusRules.debris(content, enemy))));
+                        .withDebris(ColossusRules.debris(content, enemy))
+                        // M8 part H: a coiled boss's body and script (MawRules).
+                        .withCoil(MawRules.coil(content, enemy, difficulty, inLevel))));
     }
 
     /**

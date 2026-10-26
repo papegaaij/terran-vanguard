@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../../campaign]
-updated: 2026-10-24
+updated: 2026-10-26
 ---
 
 # Music
@@ -38,7 +38,7 @@ everywhere.
 | 14 | Act 6 A: Jupiter | Levels 36–42 | Vast and stormy: storm strings, thunder, choir; Vorne's motif against the main motif | 3:00 | P3 | [jovian-theme-r03-a](concept/jovian-theme-r03-a.ogg) "Eye of the Storm" (chosen) |
 | 15 | Act 6 B: Jupiter | Levels 36–42 | Heavy, stormy, choir + distorted bass | 3:00 | P3 | — |
 | 16–17 | Act 7 A/B: Beyond the gate | Levels 43–50 | Alien, Choir motif fused with the main motif | 3:00 | P3 | — |
-| 18 | Boss: Vrell | Vrell act bosses | Choir, pounding drums | 2:00 loop | P1 | [boss-theme-r02-a](concept/boss-theme-r02-a.ogg) "The Choir Descends" (chosen); full length: [choir-descends-full-r08-a](concept/choir-descends-full-r08-a.ogg) (chosen) |
+| 18 | Boss: Vrell | Vrell act bosses | Choir, pounding drums | 2:00 loop | P1 | [boss-theme-r02-a](concept/boss-theme-r02-a.ogg) "The Choir Descends" (chosen); full length: [choir-descends-full-r08-a](concept/choir-descends-full-r08-a.ogg) (chosen); Level 28's deep copy (round 58, Q.1 b): [choir-descends-deep-r58-b](concept/choir-descends-deep-r58-b.ogg) (proposed) |
 | 19 | Boss: Ascendancy | Ascendancy bosses (Iron Sovereign, Ascendant) | Martial and cold: snare rudiments, timpani, machine riff, Vorne's motif | 2:00 loop | P3 | [ascendancy-boss-r03-a](concept/ascendancy-boss-r03-a.ogg) "Iron Sovereign" (chosen) |
 | 20 | Final boss | Level 50 (Choir Heart) | All motifs, full orchestra + beat; the Choir motif against the main motif | 3:00 loop | P3 | [final-boss-r03-a](concept/final-boss-r03-a.ogg) "Choir Heart" (chosen) |
 | 21 | Mini-boss sting | Mini-boss entrance | 4 s stinger, then back to the level track | 0:04 | P2 | [miniboss-sting-r08-a](concept/miniboss-sting-r08-a.ogg) "Contact Heavy" (chosen) |
@@ -50,7 +50,7 @@ everywhere.
 | 27 | Ending | Campaign ending | Main motif, orchestral | 3:00 | P3 | — |
 | 28 | Credits | Credits roll | Upbeat remix of the title theme | 3:30 | P3 | — |
 | 29 | Debrief | Under the debrief, after the mission complete jingle (23) | Quiet, calm, a little proud; D major (the jingle's last chord), −18…−20 LUFS under the debrief's sounds and voice; not the hangar theme | 1:00–1:30 loop | P2 | [debrief-theme-r40-b](concept/debrief-theme-r40-b.ogg) "Stand Down" (chosen, round 40) |
-| 30 | Reveal sting | Level 28, the Ascendancy cruisers rising (see *Act 4 music*) | Dread rising for 4 s, a hit as the gun ports open, Vorne's motif hidden in it; B minor; ends unresolved | 0:09 | P2 | [reveal-sting-r48-a](concept/reveal-sting-r48-a.ogg) "Black and Gold" and [reveal-sting-r48-b](concept/rejected/reveal-sting-r48-b.ogg) "Ours" (chosen, round 48: a) |
+| 30 | Reveal sting | Level 28, the Ascendancy cruisers rising (see *Act 4 music*) | Dread rising for 4 s, a hit as the gun ports open, Vorne's motif hidden in it; B minor; ends unresolved | 0:09 | P2 | [reveal-sting-r48-a](concept/reveal-sting-r48-a.ogg) "Black and Gold" and [reveal-sting-r48-b](concept/rejected/reveal-sting-r48-b.ogg) "Ours" (chosen, round 48: a); production: [reveal-sting-r58-a](concept/reveal-sting-r58-a.ogg) (proposed, round 58; in the game as a stand-in since step H6, `music/reveal-sting.ogg`, a one-shot at the cruisers' rise) |
 
 The concept pieces are 40–65 s sketches of each track's style and material. Production
 versions are extended to the listed length.
@@ -309,7 +309,9 @@ theme and a new sting:
 - **The Abyssal Maw** (Level 28): the Vrell boss theme (track 18) after the boss warning, as the boss document asks
   "in its Act 4 setting (muffled, reverberant)". Proposal: no runtime filter (none exists for music); either the
   built theme as it is, or a pre-rendered deep copy of track 18 from its generator through the A theme's water
-  low-pass and a longer reverb (a new file, no new hook). Open below.
+  low-pass and a longer reverb (a new file, no new hook). Round 58 (Q.1, M8 part H): a, the built theme, or b,
+  [the deep copy](#concept-art) (the water at 1.3 kHz, a 5.5 s reverb, the game's loop points); the game plays a until
+  the pick.
 - **The reveal sting** (new track 30): Level 28, at the cruisers' rise (≈ 18 s after the kill): dread rising for
   4 s as they come up through the ice, a hit as their gun ports open, Vorne's motif **hidden** in it (Act 5 states
   it in the open), in **B minor**, the motif's home key and Act 5's ("Hollow Rock"), ending unresolved on the motif's
@@ -327,7 +329,7 @@ theme and a new sting:
 | [25](../../campaign/act-4-deep-water/level-25-siren-trench/README.md#music--ambience) | 11 | s1 the A theme's sonar-and-pad intro; B base from s2; full in s5 (the Song); out into silence as the lights go out | — | muted | `europa-trench` |
 | [26](../../campaign/act-4-deep-water/level-26-blackwater/README.md#music--ambience) | 10 (dark) | s1 the full mix with the lamps; the dark stem `alone` from t=8–18; the Choir's line ducks it (−6 dB); thinning from t=150; out at t=166 (Rook's loss); a warm pad from t=174 | — | — | `europa-black`; `europa-trench` at the scarp |
 | 27 | 11 | the level document (in progress) | — | on (hint 3) | `europa-vents` |
-| 28 | 11, then 18 | the level document (in progress): the B theme to the caldera, the boss warning and the boss theme, silence under the dive's darkness | boss warning, boss theme, the reveal sting (30) at the cruisers' rise | on, and under the run | the caldera bed, `europa-ice` after the breakout |
+| [28](../../campaign/act-4-deep-water/level-28-abyssal-maw/README.md#music--ambience) | 11, then 18 | s1 the bed alone, the motif from t=16 (s1's `stems: motif` from its cue); base from s2; full from s3; out at t=80; the boss warning and track 18 (Q.1 a until round 58's pick), dropping away under the dive (out over 2 s, back over 2 s after the lunge); the run on the motif stem alone (`motif_after_boss`, t=126–162) | boss warning, boss theme, the reveal sting (30) once at the cruisers' rise | on, and alone under the run | `europa-hatchery`, `caldera-rumble` over it from t=80 to the kill, `europa-ice` after the breakout |
 
 Every level plays the `mission-complete` jingle (23); Level 28's debrief is followed by the act outro with the
 act-complete fanfare (24), as Level 21's.
@@ -593,6 +595,25 @@ only, not listened to. Concept files, no `SOURCE` comment and not in `assets/` y
 | [concept/pressure-line-motif-mix-r51-a.ogg](concept/pressure-line-motif-mix-r51-a.ogg) | Listening aid: the full mix with the motif stem on top as Levels 27–28 play them, loop bars 25–48 (the breakdown C, D, the half-time E; 32.9 s) | chosen (round 51) |
 | [concept/pressure-line-sheet-r51-a.png](concept/pressure-line-sheet-r51-a.png) | Review sheet: the three files' waveforms, loop points, loudness, true peak, seam and size, and the loudness of each loop section (full, base, the motif against the full mix) | chosen (round 51) |
 
+Concept round 58 (M8 part H, step AUD-H, 2026-10-25; pending round 58) — Level 28's music by the new generator
+`tools/concept/audio/music_r58h.py` (deterministic; measured only, not listened to). **Track 30 in production**: the
+round-48 pick a "Black and Gold" from `music_r48.py`'s own sketch function, unchanged in its notes, with a voice pocket
+under its tail (from 4.6 s the 0.9–4 kHz band eased down over 0.6 s, a zero-phase cut, about 3 dB on the band as
+measured, so Varga's and Okafor's lines at the rise sit over it), at the sketch's loudness. **Track 18 for the Maw
+(Q.1)**: a, the theme as built (the game's file, [choir-descends-final-r25-a](concept/choir-descends-final-r25-a.ogg)),
+or b, a deep copy rendered by `music_r08.py`'s own `choir_full()` with its whole mix through the A theme's water low-pass
+at its deepest (1.3 kHz, q 1.1: "Thera Deep"'s drift section) and a 5.5 s dark reverb before the assembly, so the
+reverb's tail wraps round the loop; the same intro, loop and tail as the game's file (`LOOPSTART` 299880, `LOOPLENGTH`
+5080320), so the game swaps the file with no new hook. Prompts:
+[concept/prompts.md](concept/prompts.md#round-58--level-28-track-30-in-production-and-track-18s-deep-copy).
+
+| File | What | Status |
+|---|---|---|
+| [concept/reveal-sting-r58-a.ogg](concept/reveal-sting-r58-a.ogg) | #30 "Black and Gold" in production — B minor, 9.0 s: the round-48 sketch a (the tremolo strings, organ pedal and timpani roll swelling from muffled to open over the cruisers' 4 s rise, the motif stacked into a chord at 4.0 s as the gun ports open, the A♯ left hanging) with the voice pocket under its tail; −14.9 LUFS, −3.0 dBTP (the sketch's −15.0 / −3.1) | proposed (round 58) |
+| [concept/choir-descends-deep-r58-b.ogg](concept/choir-descends-deep-r58-b.ogg) | #18 "The Choir Descends", the deep copy (Q.1 b): 125.2 s, loop 299880 + 5080320 samples as the game's file, the drums and choir under water and far off: spectral centroid 790 Hz (the built theme's 4,480), the band above 2 kHz 5.7 dB lower against the mix; −14.0 LUFS, −1.9 dBTP, seam 0.94 | proposed (round 58) |
+| [concept/choir-descends-deep-seam-r58-b.ogg](concept/choir-descends-deep-seam-r58-b.ogg) | Listening aid: b across its loop seam, 8 s each side | proposed (round 58) |
+| [concept/boss-handoff-deep-r58-b.ogg](concept/boss-handoff-deep-r58-b.ogg) | Listening aid: the boss cue as the game mixes it, track 22 "Red Alert" and b from 4.8 s (8 bars; no clamped sample); compare round 25's [boss-handoff-final-r25-a](concept/boss-handoff-final-r25-a.ogg) | proposed (round 58) |
+
 ## Implementation
 
 - [x] Music player with intro + loop points
@@ -642,15 +663,19 @@ only, not listened to. Concept files, no `SOURCE` comment and not in `assets/` y
       and motif stems (part E, Level 18); the `motif` list and the third, lockstep motif stream
       (`on`, `off`, `alone`; part E, used again in part F); each Act 3 level's music block as in
       *Act 3 music* (parts B–H)
-- [ ] Act 4 (draft, round 48, M8): track 10 "Thera Deep" at full length without the bubble layer, with its
+- [x] Act 4 (draft, round 48, M8): track 10 "Thera Deep" at full length without the bubble layer, with its
       base stem and the darkness stem (Level 26, the third stream with `alone`); track 11, the B theme, with its
       base, full and motif stems; the reveal sting (track 30) as a one-shot from Level 28's music block; each Act
       4 level's music block as in *Act 4 music* (part B: track 10 at full length with its base stem and track 11 with its
       base, full and motif stems made and copied into `assets/` by `themes.py`, Level 22's music block flown,
-      `Level22SoundsTest.theMusicIsTheraDeepOverTheIceBedThenTheStationsBed`; both tracks in round 51)
+      `Level22SoundsTest.theMusicIsTheraDeepOverTheIceBedThenTheStationsBed`; both tracks in round 51; part H: Level
+      28's music block, the reveal sting once at the cruisers' rise and the run under track 11's motif stem alone,
+      `motif_after_boss`, `Level28SoundsTest.theBossThemeDropsUnderTheDiveAndTheRunPlaysTheMotifAlone`)
 
 ## Open questions
 
+- Round 58 (Q.1, pending): the Abyssal Maw's music, track 18 as built (a) or the deep copy (b,
+  `choir-descends-deep-r58-b`); and track 30's production (`reveal-sting-r58-a`).
 - 28 tracks is a lot of production. If needed, drop the B variants of acts (−7 tracks) or reuse
   the Vrell boss theme for all bosses.
 - Round 48 (Act 4, pending): the B theme sketch (a "Pressure Line" or b "Black Current"); the reveal sting (a
@@ -684,3 +709,8 @@ Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-a
   progression, darker and softer than a) is track 10's fourth stem (`thera-deep-warm`, in `assets/music/` by
   `importPlaceholders`); a and its listening aid moved to `concept/rejected/`. Rook's loss moved 6 s later in the same
   step (Level 26: the music out at t=164–166, the warm pad from t=174).
+- 2026-10-25 (step AUD-H, M8 part H; pending round 58): track 30 "Black and Gold" in production and track 18's deep
+  copy for the Maw (Q.1 b) with two listening aids, by `tools/concept/audio/music_r58h.py`. Decided here: the sting
+  keeps the sketch's notes, timing and loudness (the pick), adding only a voice pocket under its tail; the deep copy
+  takes the A theme's water at its deepest (1.3 kHz: at 1.8 kHz, its A sections' setting, the theme lost only 3.7 dB
+  above 2 kHz, too little to read as under water) and a 5.5 s reverb, on the game's loop points.

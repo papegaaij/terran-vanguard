@@ -99,7 +99,9 @@ public final class RadioSchedule {
             // Step FXL11: the arena's teaching line on a ship's lane (Level 11) comes in the same step as the
             // first telegraph's line when that telegraph falls on a ship's lane, so it waits out that voiced line;
             // as an event line it went stale before it closed and was never heard.
-            case BOSS_PHASE, FIRST_SHIP_TELEGRAPH -> RadioQueue.Priority.PHASE;
+            // M8 part H (design/campaign Level 28, Radio chatter): on the halted arena's clock the boss's arrival and a
+            // coiled boss's dive queue as phase lines too: they wait for a gap, go stale after 20 s, drop at the kill.
+            case BOSS_PHASE, FIRST_SHIP_TELEGRAPH, BOSS_ARRIVAL, BOSS_DIVE -> RadioQueue.Priority.PHASE;
             default -> RadioQueue.Priority.EVENT;
         };
     }

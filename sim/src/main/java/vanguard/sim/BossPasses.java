@@ -44,6 +44,14 @@ final class BossPasses implements SetPiece.BossActions {
     private int ambushOpenings;
     /** The phase a boss entered in this step, for its event; -1 for none. */
     int bossPhase = -1;
+    /** M8 part H: the coiled boss; null without one. */
+    private final SetPiece coilBoss;
+    /** M8 part H: its shed Eel Swarms planned once, one per shed point (none without), and the edge each enters by. */
+    private final Spawn[] sheds;
+
+    private final WaveSpec.Entry[] shedEntries;
+    /** M8 part H: a wall's push ({@link CoilArena#push}). */
+    private final double[] push = new double[3];
 
     BossPasses(
             Sortie s,
@@ -90,7 +98,47 @@ final class BossPasses implements SetPiece.BossActions {
             streamFromRight[i] = Formations.streamUnit(streams[i].enemy(), kind, false);
         }
         launches = arenaBoss == null ? null : Launches.plan(arenaBoss, force.kinds(), seed);
+        SetPiece coiled = null;
+        for (SetPiece piece : setPieces) {
+            if (coiled == null && piece.coil().isPresent()) {
+                coiled = piece;
+            }
+        }
+        coilBoss = coiled;
+        CoilSpec.Shed shed = coiled == null
+                ? null
+                : coiled.boss().orElseThrow().coil().orElseThrow().shed().orElse(null);
+        int points = shed == null ? 0 : shed.points().size();
+        sheds = new Spawn[points];
+        shedEntries = new WaveSpec.Entry[points];
+        for (int k = 0; k < points; k++) {
+            CoilArena coil = coiled.coil().orElseThrow();
+            CoilSpec.Side side = shed.points().get(k).side();
+            double x = coil.shedX(k);
+            double y = coil.shedY(k);
+            // Straight across to beyond the far side.
+            double toX = side == CoilSpec.Side.LEFT
+                    ? PlayField.WIDTH + SHED_BEYOND
+                    : side == CoilSpec.Side.RIGHT ? -SHED_BEYOND : x;
+            double toY = side == CoilSpec.Side.BOTTOM ? PlayField.HEIGHT + SHED_BEYOND : y;
+            EnemySpec enemy = shed.enemy();
+            sheds[k] = new Spawn(
+                    0,
+                    force.kinds().indexOf(enemy),
+                    enemy,
+                    FlightPath.through(x, y, toX, toY),
+                    enemy.speed(),
+                    0,
+                    java.util.Optional.empty(),
+                    Spawn.Exit.DOWN,
+                    false,
+                    java.util.Optional.empty());
+            shedEntries[k] = side == CoilSpec.Side.BOTTOM ? WaveSpec.Entry.REAR : WaveSpec.Entry.SIDES;
+        }
     }
+
+    /** M8 part H: a shed Eel Swarm swims on this far past the far edge before it is gone, px. */
+    private static final double SHED_BEYOND = 300;
 
     /** M5 part H: only in a level with ambush launches, so the other levels hash as before. */
     void addTo(StateHash hash) {
@@ -260,6 +308,10 @@ final class BossPasses implements SetPiece.BossActions {
                     // M7 part H: its next point may follow the ship.
                     piece.breachTargets(ship.x(), ship.y());
                 }
+                if (piece.coil().isPresent()) {
+                    // M8 part H: a bight, a wall's gap, the lunge's column and a shed point follow the ship.
+                    piece.coilTargets(ship.x(), ship.y());
+                }
                 if (piece.stride().isPresent()) {
                     // M7 part F: its passes' lanes and its cone read where the ship and Rook are.
                     boolean rook = wingman != null && !wingman.out();
@@ -276,6 +328,8 @@ final class BossPasses implements SetPiece.BossActions {
                 }
                 if (piece.bossTicks() == 0) {
                     events.add(SimEvents.Type.BOSS_ARRIVED, piece.x(), piece.y(), k);
+                    // M8 part H (gap check §5 H8): its arrival line (the arena's clock is halted).
+                    radio.cue(CueTrigger.BOSS_ARRIVAL, "");
                 } else if (piece.swayTicks() == 0) {
                     events.add(SimEvents.Type.BOSS_SETTLED, piece.x(), piece.y(), k);
                 }
@@ -605,5 +659,98 @@ final class BossPasses implements SetPiece.BossActions {
     @Override
     public void aimTell(int part, double x, double y) {
         events.add(SimEvents.Type.AIM_TELL, x, y, part);
+    }
+
+    @Override
+    public void coil(SimEvents.Type type, double x, double y, int value) {
+        events.add(type, x, y, value);
+    }
+
+    @Override
+    public void dive() {
+        radio.cue(CueTrigger.BOSS_DIVE, "");
+    }
+
+    /**
+     * M8 part H: a coiled boss's swinging bight or lunge: the ship (unless it cannot be hurt) and the escort (Rook or
+     * the Bulwark) it reaches take {@code damage}, once each (the Kraken slam's impact rule; the wall pushes them out).
+     */
+    @Override
+    public int coilStrike(CoilArena coil, int what, double damage, int spared) {
+        int hit = 0;
+        if (s.flying() && !s.complete && !s.failed && !rules.invulnerableShip()) {
+            if ((spared & CoilArena.STRUCK_SHIP) == 0 && !ship.evading() && coil.reaches(what, ship.x(), ship.y())) {
+                hit |= CoilArena.STRUCK_SHIP;
+                double lost = ship.defences().armourLost();
+                hitPasses.damaged(lost, ship.defences().takeShot(damage, events, ship.x(), ship.y()));
+            }
+            if ((spared & CoilArena.STRUCK_ESCORT) == 0
+                    && wingman != null
+                    && !wingman.out()
+                    && coil.reaches(what, wingman.x(), wingman.y())) {
+                hit |= CoilArena.STRUCK_ESCORT;
+                wingman.hit(damage, ship.x(), ship.y(), events);
+            }
+            Bulwark bulwark = s.bulwark;
+            if ((spared & CoilArena.STRUCK_ESCORT) == 0
+                    && bulwark != null
+                    && !bulwark.destroyed()
+                    && coil.reaches(what, bulwark.x(), bulwark.y())) {
+                hit |= CoilArena.STRUCK_ESCORT;
+                bulwark.hit(damage, events);
+            }
+        }
+        return hit;
+    }
+
+    /**
+     * M8 part H: a coiled boss's Eel Swarm slips out at shed point {@code point}: it counts among the level's enemies
+     * as a stream's unit does (step H2: unless the kill ratio leaves the bosses out, §5 H7: then neither its kill nor
+     * it counts; it still pays); no edge warning.
+     */
+    @Override
+    public int shed(int point) {
+        int serial = force.releaseChain(sheds[point], shedEntries[point]);
+        if (serial >= 0) {
+            if (script.objectives().secondary().countsBosses()) {
+                // M8 part H, step H2 (§5 H7): a kill ratio that leaves the bosses out leaves their shed units out.
+                s.streamReleased++;
+            }
+            events.add(
+                    SimEvents.Type.BOSS_LAUNCHED,
+                    sheds[point].path().x(0, 0),
+                    sheds[point].path().y(0, 0),
+                    sheds[point].kind());
+        }
+        return serial;
+    }
+
+    @Override
+    public boolean shedAlive(int serial) {
+        return force.chainAlive(serial);
+    }
+
+    /**
+     * M8 part H: the coiled boss's wall (and the lunge's column) pushes the flying ship and the escort back inside it
+     * ({@link CoilArena#push}); nothing before it arrives or once it is destroyed.
+     */
+    void keepInCoil() {
+        if (!coilBoss.present() || coilBoss.destroyed()) {
+            return;
+        }
+        CoilArena coil = coilBoss.coil().orElseThrow();
+        if (s.flying() && !s.launching() && coil.push(ship.x(), ship.y(), push)) {
+            ship.pushOut(push[0], push[1], push[2]);
+        }
+        if (s.launching()) {
+            return;
+        }
+        if (wingman != null && !wingman.out() && coil.push(wingman.x(), wingman.y(), push)) {
+            wingman.pushOut(push[0], push[1], push[2]);
+        }
+        Bulwark bulwark = s.bulwark;
+        if (bulwark != null && !bulwark.destroyed() && coil.push(bulwark.x(), bulwark.y(), push)) {
+            bulwark.pushOut(push[0], push[1], push[2]);
+        }
     }
 }

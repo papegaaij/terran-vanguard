@@ -15,7 +15,7 @@ import vanguard.content.Content;
 import vanguard.content.Difficulty;
 
 /**
- * Acts 1 to 3 flown as one campaign on each difficulty (M4 part H, the chained act playthrough; carried on through
+ * Acts 1 to 4 flown as one campaign on each difficulty (M4 part H, the chained act playthrough; carried on through
  * Act 2 in M5 part I and through Act 3 in M7 part I, the user's I.1 of round 44: Act 3's rules as Acts 1–2's): from
  * the new game's intro briefing, the {@link Playthrough} buys the balance plan's purchases at every hangar visit
  * through the shop (each one in the shop and affordable; a charge the plan buys while the special already carries its
@@ -25,9 +25,9 @@ import vanguard.content.Difficulty;
  * follows; Level 14's win ends Act 2 and Act 3's intro follows; Level 21's win ends Act 3 with its outro, and Act 4's
  * intro follows (M8 part B: Level 22 is built, {@link CampaignRoute#releaseEnd} is false). M8 part F (step F3): Act 4 is
  * flown to Level 26, whose win records Rook missing; the Level 27 visit has the loaner Bulwark in his slot. M8 part G
- * (step G3): Act 4 is flown to Level 27 (the plan refits the Tail Gun on the rear there, the user's Q.1 = a of round
- * 57); the Level 28 visit (the interim release's end: the hangar with no level to launch) still has the loaner. The credits and the fit per visit are printed per act (the
- * playthrough sheet in the test report; Act 4's so far at the end). Round 34, P3 = A: the credits at each act's end lie
+ * (step G3): the plan refits the Tail Gun on the rear at Level 27 (the user's Q.1 = a of round 57). M8 part H (step H4):
+ * Act 4 is flown to its end at Level 28 (the loaner still in Rook's slot), whose outro ends the release (Level 29 is not
+ * built). The credits and the fit per visit are printed per act (the playthrough sheet in the test report). Round 34, P3 = A: the credits at each act's end lie
  * within the balance plan's tolerance of the expert's bound, the starting credits plus each level's perfect run × the
  * difficulty's income × the expert's collection, with the expert's grade bonus, less the purchases and repairs paid
  * ({@link Playthrough#bound}); on hard up to the plan's {@code hard_under} below it. Rook's ejections and the refused
@@ -36,11 +36,11 @@ import vanguard.content.Difficulty;
 class ActPlaythroughTest {
     private static final Content CONTENT = Playthrough.CONTENT;
 
-    /** The acts' last levels: Act 1 ends at Level 07, Act 2 at Level 14, Act 3 at Level 21. */
-    private static final List<Integer> ACT_ENDS = List.of(7, 14, 21);
+    /** The acts' last levels: Act 1 ends at Level 07, Act 2 at Level 14, Act 3 at Level 21, Act 4 at Level 28. */
+    private static final List<Integer> ACT_ENDS = List.of(7, 14, 21, 28);
 
-    /** M8 part G: the last level built (the interim release ends before Level 28). */
-    private static final int LAST = 27;
+    /** M8 part H: the last level built (the release ends with Act 4's outro after Level 28). */
+    private static final int LAST = 28;
 
     /**
      * An act's end outside the expert's bound reported for the user's decision: the test prints it instead of failing,
@@ -52,9 +52,13 @@ class ActPlaythroughTest {
      * order (I.1 of round 44) does not reach it: the plan's later items cannot move earlier (the medium sheet
      * cannot afford Composite III before Level 21, the beam leaves no power for a shield or a module), and a level's
      * {@code bounty_scale} scales the bound and the earnings together. Step PD-C (the user's power room of 2026-10-21,
-     * the Mk III at 16 MW): the plan's Pickup magnet from Level 20 leaves it about 54 % under.
+     * the Mk III at 16 MW): the plan's Pickup magnet from Level 20 leaves it about 54 % under. M8 part H (step H4, pending
+     * the user's review in round 58): Act 4 on hard ends about 49 % under its bound (13,159 against 25,991): Act 3's
+     * deficit carried in (Act 4 starts with 4,288), and the autopilot earns about 17 % less than the expert over Act 4
+     * on hard (B grades at Levels 22, 25 and 28, Level 22's retry); medium ends -3.9 %, easy +8.3 %.
      */
-    private static final Map<Difficulty, Integer> PENDING_BOUND = Map.of(Difficulty.HARD, 3);
+    private static final Map<Difficulty, java.util.Set<Integer>> PENDING_BOUND =
+            Map.of(Difficulty.HARD, java.util.Set.of(3, 4));
 
     @ParameterizedTest
     @EnumSource(Difficulty.class)
@@ -90,40 +94,40 @@ class ActPlaythroughTest {
                 boolean inside = off >= -plan.expertUnderTolerance(difficulty) && off <= plan.expertTolerance();
                 String message = difficulty + ": Act " + act + " ends with " + campaign.credits()
                         + " credits, the expert's bound is " + bound;
-                if (PENDING_BOUND.getOrDefault(difficulty, 0) == act) {
+                if (PENDING_BOUND.getOrDefault(difficulty, java.util.Set.of()).contains(act)) {
                     assertFalse(inside, message + ": inside the bound again, remove it from PENDING_BOUND");
                     System.out.println(message + ": outside the bound, a round-45 finding (pending the user's review)");
                 } else {
                     assertTrue(inside, message);
                 }
                 visits.clear();
-                // After the outro: the next act's intro briefing before its first level (M8 part B: Act 3's too, Act
-                // 4's
-                // intro before Level 22; the release's end moves to Level 28 in part H).
-                assertFalse(CampaignRoute.releaseEnd(CONTENT, campaign), "Act " + act + "'s outro ends nothing");
-                assertInstanceOf(
-                        CampaignRoute.Step.Briefing.class,
-                        CampaignRoute.beforeNextLevel(CONTENT, campaign),
-                        "the next act opens with its briefing");
+                if (level == LAST) {
+                    // M8 part H: Act 4's outro ends the release (Level 29 is not built): no level to launch.
+                    assertTrue(CampaignRoute.releaseEnd(CONTENT, campaign), "Act 4's outro ends the release");
+                    assertTrue(CampaignRoute.launch(CONTENT, campaign).isEmpty(), "Level 29 is not built");
+                } else {
+                    // After the outro: the next act's intro briefing before its first level (M8 part B: Act 3's too,
+                    // Act 4's intro before Level 22).
+                    assertFalse(CampaignRoute.releaseEnd(CONTENT, campaign), "Act " + act + "'s outro ends nothing");
+                    assertInstanceOf(
+                            CampaignRoute.Step.Briefing.class,
+                            CampaignRoute.beforeNextLevel(CONTENT, campaign),
+                            "the next act opens with its briefing");
+                }
             }
             // The autosave after the debrief.
             playthrough.autosave();
         }
         assertEquals(LAST + 1, playthrough.campaign().nextLevel());
         Campaign campaign = playthrough.campaign();
-        report(difficulty, 4, visits, campaign);
         // M8 part F: Level 26's win records Rook missing (design/player/wingmen, Rook's loss); from the Level 27 visit
-        // the loaner Bulwark takes his slot (the hangar's ROOK MIA and LOANER callouts); M8 part G: at the Level 28
-        // visit
-        // still, and, the interim release's end, the hangar has no level to launch.
+        // the loaner Bulwark takes his slot (the hangar's ROOK MIA and LOANER callouts), at the Level 28 visit still.
         assertTrue(campaign.storyFlags().contains(Campaign.ROOK_MISSING), difficulty + ": Rook missing after Level 26");
         assertTrue(campaign.rookMissing());
         assertFalse(campaign.rookFlies(), "his requires: escort lines are dropped");
-        Campaign.EscortFlight loaner = campaign.escortFlight(LAST + 1).orElseThrow();
+        Campaign.EscortFlight loaner = campaign.escortFlight(LAST).orElseThrow();
         assertEquals(Escort.Escorter.BULWARK, loaner.escorter());
         assertTrue(loaner.loaner(), "the loaner Bulwark in his slot");
-        assertInstanceOf(CampaignRoute.Step.Hangar.class, CampaignRoute.afterLevel(CONTENT, campaign));
-        assertTrue(CampaignRoute.launch(CONTENT, campaign).isEmpty(), "Level 28 is not built");
         assertTrue(
                 playthrough.problems().isEmpty(),
                 difficulty + ": the balance plan at the visits: " + playthrough.problems());

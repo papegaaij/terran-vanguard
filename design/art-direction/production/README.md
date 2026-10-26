@@ -4,7 +4,7 @@ design: draft
 implementation: in-progress
 art: n/a
 depends-on: [.., ../../tech/roadmap, ../../tech/architecture, ../../audio/music, ../../audio/sfx]
-updated: 2026-10-12
+updated: 2026-10-26
 ---
 
 # Production art plan
@@ -122,6 +122,7 @@ Measured in M2: Level 01 packs into a 2048² and a 2048×1024 backdrop page (24 
 | Limit | Value |
 |---|---|
 | Atlas pages per level (backdrop + the level's unit atlas, boss included) | ≤ 6 pages of 2048² (96 MiB at RGBA8) |
+| Level 28, the Act 4 finale (step H7, pending round 58) | ≤ 7 pages (112 MiB): its unit atlas 4 pages, its backdrop 2 pages and one of 2048×1024 |
 | One unit or boss | ≤ 1 page (16 MiB); dense angle sets only with a symmetric design |
 | Shared pages (ship, weapons, pickups, effects, HUD, fonts, the hangar's pictures; no level's units), always loaded | ≤ 2 pages (32 MiB) |
 | Music on disk | ~3–4 MB per 2.5-minute stem at q6 |
@@ -371,3 +372,8 @@ Game captures of the production batches that span several parts; prompts:
 - 2026-10-12 (user, round 35): the placeholder audit accepted (D.1), and the 27 synthesized concept
   sounds without a `SOURCE` comment count as final (D.3 d); the list of 19 Level 12–14 sounds shrinks
   after round 34's picks (R.2).
+- 2026-10-26 (M8 part H, step H7; pending the user's review in round 58): Level 28 packs into 7 pages, 104 MiB (its unit
+  atlas 4 pages of 2048²: the Maw, the cruisers, the breakout's ice and the approach's two Abyss Rays, 56 MiB of frames;
+  its backdrop two 2048² pages and a 2048×1024 one, 34 MiB), one page over the budget: `packAtlases` failed, so no
+  build since the part's art could run. `AtlasBudget` allows Level 28 seven pages (`LEVEL_PAGES_EXCEPTIONS`); the
+  alternative is trimming its art to 6 pages (about 2 MiB of backdrop, e.g. the caldera's glow at half size).

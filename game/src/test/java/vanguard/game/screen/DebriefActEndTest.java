@@ -117,6 +117,31 @@ class DebriefActEndTest {
         assertEquals("ACT TOTAL", labels.get(8));
     }
 
+    /**
+     * M8 part H (design/campaign Level 28, Act end): Level 28 ends Act 4: the summary page {@code ACT IV COMPLETE} /
+     * {@code DEEP WATER} lists Levels 22–28, seven rows as the acts before it.
+     */
+    @Test
+    void theAct4SummaryListsLevels22To28() {
+        Content content = ContentLoader.fromClasspath();
+        String directory = "act-4-deep-water";
+        Campaign campaign = Campaign.start(CampaignRules.of(content), Difficulty.MEDIUM);
+        ActSummary summary = ActSummary.of(
+                content,
+                campaign,
+                new CampaignRoute.ActEnd(directory, content.acts().get(directory), 28));
+
+        assertEquals("ACT IV", summary.act(), "the page's title: ACT IV COMPLETE");
+        assertEquals("DEEP WATER", summary.name());
+        List<String> labels = DebriefScreen.summaryRows(summary).stream()
+                .map(DebriefScreen.Row::label)
+                .toList();
+        assertEquals("MISSIONS", labels.getFirst());
+        assertEquals("22 ICE SHELF", labels.get(1));
+        assertEquals("28 ABYSSAL MAW", labels.get(7));
+        assertEquals("ACT TOTAL", labels.get(8));
+    }
+
     @Test
     void anActWithoutDataCoresSaysSo() {
         ActSummary summary = new ActSummary("ACT I", "FIRST CONTACT", List.of(), 0, 0, List.of());

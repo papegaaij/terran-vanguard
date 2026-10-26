@@ -160,6 +160,35 @@ public final class SetPiece implements Hashed {
          * mouthY) ({@link PulledDebris#tear}).
          */
         default void tearLoose(PulledDebris rocks, double mouthX, double mouthY) {}
+
+        /** M8 part H: a coiled boss's event {@code type} at (x, y) with its {@code value} ({@link CoilArena}). */
+        default void coil(SimEvents.Type type, double x, double y, int value) {}
+
+        /** M8 part H: a coiled boss dives (the radio's {@code boss-dive}). */
+        default void dive() {}
+
+        /**
+         * M8 part H: a coiled boss's swinging bight or lunge ({@code what}: {@link CoilArena#SWEEP}, {@link
+         * CoilArena#LUNGE}) reaches the ship and the escort where {@link CoilArena#reaches} says, except those in
+         * {@code spared} ({@link CoilArena#STRUCK_SHIP}, {@link CoilArena#STRUCK_ESCORT} bits, hit before): they take
+         * {@code damage}; returns whom it caught now.
+         */
+        default int coilStrike(CoilArena coil, int what, double damage, int spared) {
+            return 0;
+        }
+
+        /**
+         * M8 part H: a coiled boss sheds its Eel Swarm at shed point {@code point} ({@link CoilSpec.Shed}); returns the
+         * chain's serial (-1 when none could be let in).
+         */
+        default int shed(int point) {
+            return -1;
+        }
+
+        /** M8 part H: whether the shed chain with serial {@code serial} still swims. */
+        default boolean shedAlive(int serial) {
+            return false;
+        }
     }
 
     /** How a boss moves now (design/enemies/bosses, the poses of part G). */
@@ -316,6 +345,10 @@ public final class SetPiece implements Hashed {
     private final java.util.Optional<BreachArena> breachView;
     /** M7 part F: a walking boss's hatches (its homing salvos' tell; round 44: its pods' armour). */
     private final BossHatches hatches;
+    /** M8 part H: a coiled boss's body, wall and script; null for any other. */
+    private final CoilArena coil;
+    /** {@link #coil} for the presentation, made once. */
+    private final java.util.Optional<CoilArena> coilView;
 
     /** M5 part H: a sweep's beam hit the ship ({@link #sweepHit}). */
     static final int SWEPT_SHIP = 1;
@@ -339,6 +372,20 @@ public final class SetPiece implements Hashed {
             }
         }
         outOfBar = armoured.clone();
+        if (boss != null && boss.coil().isPresent()) {
+            // M8 part H: a coiled boss's gill sacs and implants are out of the bar (the implants count on the head's).
+            CoilSpec coiled = boss.coil().get();
+            for (int p : coiled.sacs()) {
+                if (p < parts) {
+                    outOfBar[p] = true;
+                }
+            }
+            for (int p : coiled.implants().map(CoilSpec.Implants::parts).orElse(List.of())) {
+                if (p < parts) {
+                    outOfBar[p] = true;
+                }
+            }
+        }
         if (boss != null && boss.vents().isPresent()) {
             // M7 part H, step H3: the spine vents are out of the bar.
             for (int p : boss.vents().get().parts()) {
@@ -408,6 +455,8 @@ public final class SetPiece implements Hashed {
         strideView = java.util.Optional.ofNullable(stride);
         breach = boss != null && boss.breach().isPresent() ? new BreachArena(this, boss, spec) : null;
         breachView = java.util.Optional.ofNullable(breach);
+        coil = boss != null && boss.coil().isPresent() ? new CoilArena(this, boss, spec) : null;
+        coilView = java.util.Optional.ofNullable(coil);
         hatches = new BossHatches(
                 this, boss, parts, stride != null && boss.stride().get().hatchArmour());
         boolean moves = false;
@@ -498,6 +547,12 @@ public final class SetPiece implements Hashed {
                 breach.reset();
                 x = prevX = breach.mouthX();
                 y = prevY = breach.mouthY();
+            }
+            if (coil != null) {
+                // M8 part H: under the water at its rest until it arrives.
+                coil.reset();
+                x = prevX = coil.headX();
+                y = prevY = coil.headY();
             }
             chains.place();
         }
@@ -691,6 +746,10 @@ public final class SetPiece implements Hashed {
             moveBreach(levelTick);
             return;
         }
+        if (coil != null) {
+            moveCoil(levelTick);
+            return;
+        }
         if (stride != null) {
             moveStride(levelTick);
             return;
@@ -842,6 +901,43 @@ public final class SetPiece implements Hashed {
         }
     }
 
+    /**
+     * M8 part H: a coiled boss arrives on its time (the bar) under the water and rises over its intro; its script runs
+     * on the real steps ({@link CoilArena}) and it engages once it is up; its centre is its head's, on the play plane
+     * (its body colliding) while the head is.
+     */
+    private void moveCoil(int levelTick) {
+        if (bossTicks < 0) {
+            if (levelTick < SimStep.ticks(boss.arriveSeconds())) {
+                return;
+            }
+            present = true;
+            layer = boss.layer();
+            altitude = prevAltitude = 0;
+            coil.arrive();
+        } else {
+            coil.step(phase);
+        }
+        x = coil.headX();
+        y = coil.headY();
+        onPlane = coil.headOnPlane() && layer.collidesWithPlayer();
+        bossTicks++;
+        if (swayTicks >= 0) {
+            swayTicks++;
+        } else if (coil.engages()) {
+            swayTicks = 0;
+            engaged = true;
+            startPhase();
+        }
+    }
+
+    /** M8 part H: the coiled boss reads where the ship is before it moves (a bight, a gap, the column follow it). */
+    void coilTargets(double shipX, double shipY) {
+        if (coil != null) {
+            coil.targets(shipX, shipY);
+        }
+    }
+
     /** M7 part H: the breaching boss reads where the ship is before it moves (its next point may follow it). */
     void breachTargets(double shipX, double shipY) {
         if (breach != null) {
@@ -982,6 +1078,11 @@ public final class SetPiece implements Hashed {
             }
         }
         BossSpec.Phase current = boss.phases().get(phase);
+        if (coil != null) {
+            // M8 part H: the coil's events, strikes, fire and sheds on its own clocks.
+            coil.act(actions, firing);
+            return;
+        }
         if (breach != null) {
             // M7 part H: the breach's events and bite, then the phase's attacks from the open mouth.
             breach.act(actions, firing);
@@ -1067,6 +1168,10 @@ public final class SetPiece implements Hashed {
 
     /** Whether the phase is over: its parts are down, its timer ran out, or (M5 part E) its slams or its HP share. */
     private boolean phaseOver(BossSpec.Phase current) {
+        if (coil != null && coil.holdsPhase(phase)) {
+            // M8 part H: the dive's phase does not end before its dive is over.
+            return false;
+        }
         return partsDown(current)
                 || arenaOver(current)
                 || (current.timed() && phaseTicks >= SimStep.ticks(current.seconds()));
@@ -1106,6 +1211,9 @@ public final class SetPiece implements Hashed {
         if (keys.drop().isPresent() && breach != null) {
             // M7 part H, step H3: in the open field, not at the (maybe buried, edge) mouth.
             actions.drop(keys.drop().get(), breach.dropX(), breach.dropY());
+        } else if (keys.drop().isPresent() && coil != null) {
+            // M8 part H: in the open field inside the coil, not at the head by the top edge.
+            actions.drop(keys.drop().get(), coil.dropX(), coil.dropY());
         } else if (keys.drop().isPresent()) {
             int p = keys.surface().isPresent() ? keys.surface().get().part() : -1;
             actions.drop(keys.drop().get(), p < 0 ? x : partX(p), p < 0 ? y : partY(p));
@@ -1491,6 +1599,10 @@ public final class SetPiece implements Hashed {
             // M7 part H: a breaching boss's buried mouth: nothing touches it (the Lance and the Smart Bomb included).
             return true;
         }
+        if (coil != null && coil.implant(p) >= 0 && !coil.implantOpen(coil.implant(p))) {
+            // M8 part H: a shut implant is armoured.
+            return true;
+        }
         if (hatches.armoured(p) && !hatches.open(p) && !stride.overheating()) {
             // Round 44: a walking boss's pod is armoured while its hatch is shut (until it overheats).
             return true;
@@ -1610,14 +1722,18 @@ public final class SetPiece implements Hashed {
         return stride != null ? stride.partBox(p) : spec.parts().get(p).box();
     }
 
-    /** M7 part F: whether a shot of {@code size} at (sx, sy) meets a walking boss's front plate (it glances). */
+    /**
+     * M7 part F: whether a shot of {@code size} at (sx, sy) meets a walking boss's front plate (it glances); M8 part H:
+     * or a coiled boss's armoured coil.
+     */
     boolean plateTouches(Hitbox size, double sx, double sy) {
-        return stride != null && stride.plateTouches(size, sx, sy);
+        return (stride != null && stride.plateTouches(size, sx, sy)) || (coil != null && coil.touches(size, sx, sy));
     }
 
-    /** M7 part F: where a beam's column first touches a walking boss's front plate; +∞ for none. */
+    /** M7 part F: where a beam's column first touches a walking boss's front plate (M8 part H: a coil); +∞ for none. */
     double plateColumn(double cx, double halfWidth, double fromY) {
-        return stride == null ? Double.POSITIVE_INFINITY : stride.plateColumn(cx, halfWidth, fromY);
+        double plate = stride == null ? Double.POSITIVE_INFINITY : stride.plateColumn(cx, halfWidth, fromY);
+        return coil == null ? plate : Math.min(plate, coil.column(cx, halfWidth, fromY));
     }
 
     /**
@@ -1638,6 +1754,15 @@ public final class SetPiece implements Hashed {
             return damagePart(p, amount);
         }
         partTicksSinceHit[p] = 0;
+        if (coil != null) {
+            // M8 part H: the throat while the jaw is open; an implant's hits count on the head.
+            int q = coil.hpPart(p);
+            partTicksSinceHit[q] = 0;
+            boolean alive = partHp[q] > 0;
+            partHp[q] -= amount
+                    * coil.multiplier(p, hx, hy, dirX, dirY, spec.parts().get(p).multiplier());
+            return alive && partHp[q] <= 0;
+        }
         boolean alive = partHp[p] > 0;
         if (breach != null) {
             // M7 part H: the gullet's weak spots while the mouth is open.
@@ -1666,12 +1791,25 @@ public final class SetPiece implements Hashed {
         return alive && partHp[p] <= 0;
     }
 
-    /** Part {@code p} takes damage, times its multiplier; returns whether that destroyed it. */
+    /**
+     * Part {@code p} takes damage, times its multiplier; returns whether that destroyed it (M8 part H: the part whose
+     * HP it took, {@link #hpPart}).
+     */
     boolean damagePart(int p, double amount) {
         partTicksSinceHit[p] = 0;
-        boolean alive = partHp[p] > 0;
-        partHp[p] -= amount * spec.parts().get(p).multiplier();
-        return alive && partHp[p] <= 0;
+        int q = hpPart(p);
+        partTicksSinceHit[q] = 0;
+        boolean alive = partHp[q] > 0;
+        partHp[q] -= amount * spec.parts().get(p).multiplier();
+        return alive && partHp[q] <= 0;
+    }
+
+    /**
+     * M8 part H: the part whose HP a hit on part {@code p} takes: a coiled boss's implant's is the head's; any other
+     * part's its own. A hit that destroys reports this part.
+     */
+    int hpPart(int p) {
+        return coil == null ? p : coil.hpPart(p);
     }
 
     /**
@@ -1680,9 +1818,11 @@ public final class SetPiece implements Hashed {
      */
     boolean damagePartFlat(int p, double amount) {
         partTicksSinceHit[p] = 0;
-        boolean alive = partHp[p] > 0;
-        partHp[p] -= amount;
-        return alive && partHp[p] <= 0;
+        int q = hpPart(p);
+        partTicksSinceHit[q] = 0;
+        boolean alive = partHp[q] > 0;
+        partHp[q] -= amount;
+        return alive && partHp[q] <= 0;
     }
 
     /** Destroys part {@code p} outright (the vital part took the rest with it); returns whether it still lived (and pays). */
@@ -1708,6 +1848,10 @@ public final class SetPiece implements Hashed {
         if (breach != null) {
             // M7 part H: no suction, no bite.
             breach.died();
+        }
+        if (coil != null) {
+            // M8 part H: nothing fires, no sweep, no wall.
+            coil.died();
         }
     }
 
@@ -1794,6 +1938,10 @@ public final class SetPiece implements Hashed {
                 // M7 part H: only a breaching boss (Level 21) hashes these.
                 breach.addTo(hash);
             }
+            if (coil != null) {
+                // M8 part H: only a coiled boss (Level 28) hashes these.
+                coil.addTo(hash);
+            }
             if (stride != null) {
                 // M7 part F: only a walking boss (Level 19) hashes these.
                 stride.addTo(hash);
@@ -1853,6 +2001,11 @@ public final class SetPiece implements Hashed {
     /** M7 part H: a breaching boss's breach cycle, ridge and suction; empty for any other. */
     public java.util.Optional<BreachArena> breach() {
         return breachView;
+    }
+
+    /** M8 part H: a coiled boss's body, wall and script; empty for any other. */
+    public java.util.Optional<CoilArena> coil() {
+        return coilView;
     }
 
     /**
@@ -2075,6 +2228,10 @@ public final class SetPiece implements Hashed {
             // M7 part H, step H3: a spine vent where it rose along the ridge.
             return breach.ventX(breach.ventOf(p)) - x;
         }
+        if (coil != null && coil.implant(p) >= 0) {
+            // M8 part H: an implant rides its coil segment.
+            return coil.implantX(coil.implant(p)) - x;
+        }
         if (boss != null) {
             return poseDx[pose][p] * scale();
         }
@@ -2095,6 +2252,9 @@ public final class SetPiece implements Hashed {
         }
         if (breach != null && breach.ventOf(p) >= 0) {
             return breach.ventY(breach.ventOf(p)) - y;
+        }
+        if (coil != null && coil.implant(p) >= 0) {
+            return coil.implantY(coil.implant(p)) - y;
         }
         if (boss != null) {
             return poseDy[pose][p] * scale();

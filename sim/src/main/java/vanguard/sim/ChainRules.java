@@ -70,21 +70,46 @@ final class ChainRules {
      * pool has no room for are left out.
      */
     void spawnChain(Spawn spawn) {
+        startChain(spawn, waves.lastEntry(), waves.lastHeadFirst(), false);
+    }
+
+    /**
+     * M8 part H: one chain planned outside the waves (a coiled boss's shed Eel Swarm), entering by {@code entry}, now;
+     * returns its serial (-1 when the pool is full).
+     */
+    int releaseChain(Spawn spawn, WaveSpec.Entry entry) {
+        return startChain(spawn, entry, false, true);
+    }
+
+    /** M8 part H: whether the chain with serial {@code serial} is in the pool and alive. */
+    boolean chainAlive(int serial) {
+        for (int c = 0; c < chains.size(); c++) {
+            if (chains.get(c).serial() == serial) {
+                return chains.get(c).alive();
+            }
+        }
+        return false;
+    }
+
+    /** @param shed M8 part H, step H2: whether it is a boss's shed unit ({@link Chain#bossShed()}) */
+    private int startChain(Spawn spawn, WaveSpec.Entry entry, boolean headFirst, boolean shed) {
         Chain chain = chains.obtain();
         if (chain == null) {
             force.nextSerial();
-            return;
+            return -1;
         }
+        int serial = chainsSpawned;
         EnemySpec head = spawn.enemy();
         EnemySpec.ChainSpec spec = head.chain().orElseThrow();
         if (head.crawl().isPresent()) {
             // M7 part C: a ground chain crawls its path in ground space (the Threadcrawler).
-            chain.startGround(spec, chainsSpawned++, head.crawl().get(), force.groundScroll(), waves.lastEntry());
+            chain.startGround(spec, chainsSpawned++, head.crawl().get(), force.groundScroll(), entry);
         } else {
-            chain.start(spec, chainsSpawned++, spawn, regrownKinds[spawn.kind()], waves.lastEntry());
+            chain.start(spec, chainsSpawned++, spawn, regrownKinds[spawn.kind()], entry);
         }
         // M8 part C: its wave's pickup may drop only with a head-first kill.
-        chain.headFirstDrop(waves.lastHeadFirst());
+        chain.headFirstDrop(headFirst);
+        chain.bossShed(shed);
         int members = spec.members();
         for (int i = 0; i < members; i++) {
             Enemy member = enemies.obtain();
@@ -102,6 +127,7 @@ final class ChainRules {
             chain.member(i, member);
         }
         chain.settle();
+        return serial;
     }
 
     /**

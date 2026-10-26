@@ -106,7 +106,7 @@ The production frames (round 48's a, the bone lionfish; `tools/art/barbfin.py`, 
   and scarp) a Barbfin's hold and its leaving after the hold stay inside the flyable span (`Canyon.inSpan`): it slides
   down along a wall and leaves inside the trench instead of crossing the rock sideways.
 - 2026-10-24 (user, round 56 closed, C.4): the tougher Barbfin and the retuned waves of Levels 23–26 accepted.
-- 2026-10-24 (M8 part G, step m8g1; pending round 57, gap check `m8g-gaps.md` §5 G9): formations `line abreast`,
+- 2026-10-24 (M8 part G, step m8g1; accepted in round 57 (2026-10-25), gap check `m8g-gaps.md` §5 G9): formations `line abreast`,
   `pincer` and `rear ambush` (Level 27). In a rear ambush it has no ambush path: the pair rises from the bottom edge on
   the ambush lanes (x = (i + 1) × 480 ÷ (n + 1)), stops on the way up at its own height above the ship and holds as
   usual; the wave is warned at the bottom edge (`Formations.rearSwoops`).

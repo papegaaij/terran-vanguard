@@ -1,0 +1,591 @@
+# Level 28 – Abyssal Maw: the level script, rendered into README.md (briefing, threat profile, layout, waves, ground
+# targets, radio, credit budget). Times are seconds from the level start. M8 part H, step H3, from the README's approved
+# hand tables (round 48) and ART-H2's backdrop proposal (concept/backdrop-proposal.yaml, adopted: its sections, places,
+# lights and the shaft's terrain).
+# Schema: ../../../tech/architecture/schemas-levels/README.md (the cruisers and the armour floor: schemas-act-4)
+# Keys new in M8 part H (loaded and checked in step H3, flown by steps H1-H2, drawn and played by steps H5-H6): the boss's
+# `coil` (its stat block), the radio events `boss-arrival` and `boss-dive`, the finale's `cruisers` and the
+# `armour_floor` from the kill, the first water -> air crossing (`medium: air` from The Breakout), the shaft's walls
+# pushing without damage (`contact.damage` 0).
+# Decisions of the gap check (m8h-gaps.md §5, pending round 58): the t=16 guard column enters from the rear like every
+# Hunter column (H3: BOTTOM warning at t=13); hard's third Siren joins the t=76 pair (H4); no Hunters in the finale
+# (H5); the kill ratio leaves the shed Eel Swarms out (H7); the arrival line on `boss-arrival` (H8); the shaft's walls
+# push without damage (H9); the floor on every difficulty from the kill (H12); the CLOSING delays count from the kill
+# (H13).
+# Step H3's own placements (pending review): ART-H2's sections, target places, lights and terrain adopted unchanged;
+# the README's Nautilus `pincer` is the unit's `circle` from the front (its only formation, as Level 27); the Glassfin
+# columns alternate the left and right sides (x 144 / 336), the side schools enter on one side's S-route each,
+# alternating; the Hunter columns rise at x 144, 336 and 240 (left, right, the middle; Level 27's), easy's first two
+# columns 3 and the last one by the formation lever; the Sirens of t=36 on the gallery walls on every difficulty; the
+# cruisers' point-defence turrets at 100, 270 and 440 px below the top edge on each hull's inner edge, their flak 80 px
+# of scatter, its direct hit `medium`; the hull code `HDX-417` (round 57).
+scroll_speed: 120     # the gate; the galleries and the cavern 110, the antechamber 100, the climb 150, the run 200
+launch_seconds: 5
+bounty_scale: 0.74    # every bounty × 0.74: the README's hand estimate, checked in step H3 (levelReport: typical haul on budget(28) 4,350)
+control_prompts: []
+medium: underwater    # the hatchery, the arena and the shaft; air from the breakout (section 7: the first water -> air crossing)
+armour_floor: 1       # J2 (round 48, gap check §5 H12): from the Maw's kill to the level's end the armour stops at 1 on every difficulty (the run cannot be lost)
+threat_profile:  # the hangar intel panel (design/ui/hangar) and the README's Threat profile table
+  setting: Europa, the hatchery
+  layers: [air, ground, sub]
+  density: 4
+  traits: [anti-sub, homing]   # `side` is in Varga's L3 line (three traits do not fit the intel panel, as Levels 13 and 14)
+  hazards: [coiled guardian, water]
+  boss: Abyssal Maw
+  objective: DESTROY THE ABYSSAL MAW   # the OBJECTIVE field from sensor L1
+  strip: [choir-song]   # the L3 timeline strip marks the Choir's song (97.5 s; step H6: Intel.Mark CHOIR); nothing after the boss's arrival
+  varga:
+    none: The hatchery, Lancer. Everything on Europa was grown here.
+    l1: From every side. Something huge coiled round the vent.
+    l2: "Rays, hulls, singers. And one huge contact: the guardian."
+    l3: Anti-sub for its dive. Homing and side guns for the machinery in its spine.
+  notes:
+    Dominant layers: '`air` (the play plane under water: Glassfin schools, Barbfin groups, Depth Hunters, Eel Swarms, Nautilus pairs, Sirens, Abyss Rays, the Maw), `sub` (the Rays'' shadows, the Hunters'' rise, the Maw''s dive), `ground` (egg racks, Spine Turret nests, Polyp Mortars, the vent), `low-air` (the cruisers of the reveal, scenery)'
+    Attack directions: '{directions} (the approach by its waves; in the fight the coil frames all four edges, the lunge and the shed Eel Swarms come from the whole arena and are not in the numbers)'
+    Density: '{density}'
+    Recommended traits: '{traits} (`side` guns help too: three traits do not fit the intel panel, as Levels 13 and 14)'
+    Hazards: 'The Maw''s coil sweeps, fan walls and lunge (the arena); the cruisers'' broadsides and flak (the run); the water''s rules ([europa](../../../world/europa/README.md#under-water-rules)) until the breakout'
+    Boss / mid-boss: 'Act boss [Abyssal Maw](../../../enemies/bosses/abyssal-maw/README.md)'
+    Sensor-suite detail: '**none**: Europa, the hatchery, `air` + `ground`, all directions. **L1**: + the directions, density {density}, hazard "coiled guardian", the objective `{objective}`. **L2**: + Depth Hunter, Eel Swarm, Abyss Ray, Siren, Spiral Nautilus, Barbfin, Glassfin portraits; the boss''s name and silhouette (`abyssal-maw`). **L3**: + `anti-sub` and `homing` highlighted; the timeline strip marks the Choir''s song (97.5 s) and the boss (104 s); 1 secret. The finale after the boss is **not** on the strip (the reveal is a surprise).'
+
+sections:  # back to back from t = 0; each speed change eased over 2 s (ramp; the orbit's 3 s); ART-H2's (tools/art/backdrop_l28.py)
+  - name: Hatchery Gate
+    end: 22
+    atmosphere: clear
+    tiles: [gate-hall]
+    underwater_look: {ambient: 0.55, tint: 80e6d6, caustics: 0.0, snow: 60, headlights: {strength: 0.0}}   # teal bioluminescence
+    notes:
+      layers:
+        ground: 'the ring of chitin arches (the end of Level 27''s view), then a gallery mouth lined with egg racks, glowing lamps of grown flesh.'
+        low-air: drifting spores and silt.
+        sub: the dark below.
+      purpose: 'Teal bioluminescence. The launch; the Hunters guarding the gate (t=16): the grey hulls beside the Vrell.'
+  - name: Brood Galleries
+    end: 50
+    speed: 110
+    ramp: 2   # eased from 120 over its first 2 s
+    atmosphere: clear
+    tiles: [brood-gallery]
+    underwater_look: {ambient: 0.52, tint: a8c8e0, caustics: 0.0, snow: 50, headlights: {strength: 0.0}}   # teal and violet racks
+    notes:
+      layers:
+        ground: 'long galleries of egg racks (scenery, rows of pale pods), Spine Turret nests on the racks'' ends (t≈30), the Sirens grown on the gallery walls (t≈36).'
+        air: the racks' glow.
+      purpose: 'Teal and violet racks. Nautilus pairs round the racks; the Sirens on the gallery wall; the Ray; a rear Hunter column.'
+  - name: Spawning Cavern
+    end: 80
+    speed: 110
+    atmosphere: clear
+    tiles: [spawning-floor]
+    underwater_look: {ambient: 0.58, tint: e8c09a, caustics: 0.0, snow: 60, headlights: {strength: 0.0}}   # warm amber from below
+    notes:
+      layers:
+        ground: 'a cavern floor of hatching pools and resin ridges, the **UTC recon sub *Pelagic-3*** wedged under a collapsed rack at the cavern''s mouth (t≈58, the secret), a Spine Turret nest on a resin ridge (t≈66), Polyp Mortars on the far ridge (t≈74), Sirens on the cavern''s last stack (t≈76).'
+        sub: the vent's red glow rising from the floor.
+      purpose: 'Warm amber from below. The Eel Swarms, the second Ray, the last rear ambush; the floor warms up.'
+  - name: Antechamber
+    end: 104
+    speed: 100
+    ramp: 2   # eased from 110
+    atmosphere: clear
+    tiles: [antechamber-floor]
+    underwater_look: {ambient: 0.56, tint: f0a888, caustics: 0.0, snow: 70, headlights: {strength: 0.0}}   # red-amber, the vent's glow
+    notes:
+      layers:
+        ground: 'the vent''s caldera rim, steaming fissures, a last pair of Polyp Mortars (t≈92). No wave after t=93.5: the screen clears while the Choir sings (t=97.5).'
+      purpose: 'Red-amber, the vent''s glow. The last Hunter column (t=86), the pre-boss pause (the level''s third gap over 2 s); the Choir; the warning at t=104.'
+  - name: The Vent
+    end: 105   # the level clock halts here while the Maw lives; the kill resumes it after hold_after_boss
+    speed: 0
+    arena: true
+    hold_after_boss: 1   # s the clock stays halted after the Maw's 4 s death chain (its `death_seconds`; the flash and the credit shower over the vent, collectable), one second more: the clock reads 100 + K from then (K+5 = t=105). Step H6: was 5, which the clock adds to the chain (K+9)
+    atmosphere: clear
+    tiles: [antechamber-floor]   # the arena's rows are the caldera piece
+    underwater_look: {ambient: 0.62, tint: d8f0c0, caustics: 0.0, snow: 40, headlights: {strength: 0.0}}   # the vent's lime-white
+    notes:
+      layers:
+        ground: 'the hatchery caldera filling the field, the vent''s throat at (240, 330) ([the boss''s arena](../../../enemies/bosses/abyssal-maw/README.md#arena)).'
+        sub: the coil rising from the dark.
+      purpose: 'The vent''s lime-white, the bioluminescent frame. The boss fight (≈ 130 s at medium); the scroll halted and the level clock stopped while the Maw lives.'
+  - name: The Shaft
+    end: 115
+    speed: 150
+    ramp: 2   # eased up from the halt over 2 s
+    atmosphere: clear
+    tiles: [shaft-climb, ice-ceiling]
+    underwater_look: {ambient: 0.58, tint: a8d8f0, caustics: 0.25, snow: 50, headlights: {strength: 0.0}}   # light growing from above
+    notes:
+      layers:
+        ground: 'the Vrell drill shaft''s walls (Level 23''s, run in reverse: they push without damage) closing on both sides, the caldera falling away below.'
+        high-air: the ice ceiling cracking ahead.
+      purpose: 'Light growing from above. The climb after the kill (K+5 to K+15); no enemies; the radio''s first beat of the finale.'
+  - name: The Breakout
+    end: 118
+    speed: 150
+    medium: air   # the first water -> air crossing: the factors ease out over 1 s, the grade lifts, the special limits end (the Sonar Pulse reads NO WATER)
+    atmosphere: clear
+    tiles: [night-ice]
+    notes:
+      layers:
+        ground: 'the ice ceiling shatters at t=115 (K+15): slabs tumble out of the field, the under-water grade lifts over 1 s; Europa''s night ice under Jupiter.'
+        high-air: the Vrell fleet's carriers rising from other drill holes.
+      purpose: 'A white burst, then Jupiter-lit ice. Europa''s signature set piece; **the medium switches to air**.'
+  - name: The Rise
+    end: 122
+    speed: 150
+    medium: air
+    atmosphere: clear
+    tiles: [night-ice, ice-crystals]
+    notes:
+      layers:
+        ground: 'Europa''s night ice (Level 22''s backdrop); the ice on both flanks splits.'
+        low-air: 'two **Ascendancy cruisers rise** beside the Vrell carriers, growing from dim to full scale (4 s); not hittable, no contact.'
+      purpose: 'Night ice under Jupiter, amber gun ports. The reveal (K+18); the reveal sting; Varga''s and Okafor''s lines.'
+  - name: The Run
+    end: 157
+    speed: 200
+    ramp: 2   # eased from 150
+    medium: air
+    atmosphere: clear
+    tiles: [night-ice, ice-crystals]
+    notes:
+      layers:
+        low-air: 'the cruisers keep pace on both flanks and fire: broadsides, flak, point defence. The Vrell and the cruisers never fire at each other.'
+      purpose: 'Night ice; amber broadsides. The ≈ 35 s survive section (K+22 to K+57); no fighters.'
+  - name: Orbit
+    end: 162
+    speed: 400
+    ramp: 3   # the scroll accelerates from 200 to 400 px/s over 3 s
+    medium: air
+    atmosphere: clear
+    tiles: [night-ice, ice-crystals]
+    notes:
+      layers:
+        low-air: the cruisers fall off the bottom edge.
+      purpose: 'Fading to white as the wing makes orbit. The level ends at K+62; the debrief follows.'
+
+# The game's under-water grade and its light map (presentation only; ART-H2's proposal for round 58): the hatchery is
+# lit by its own bioluminescence (no headlights): teal at the gate, teal and violet in the galleries, warm amber in the
+# cavern, red-amber in the antechamber, lime-white in the arena, the light from above in the shaft (each section's own
+# look above; this level-wide block is section 1's). From the breakout the level is in the air (no grade).
+underwater_look:
+  ambient: 0.55
+  tint: 80e6d6
+  caustics: 0.0
+  snow: 60
+  headlights: {strength: 0.0}
+  lights:   # scroll: the terrain's row of the pool's centre, x, radius px, colour (ART-H2's)
+    - {scroll: 450, x: 40, radius: 70, colour: 40ffc8}     # the flesh lamp at t~6
+    - {scroll: 990, x: 440, radius: 70, colour: 40ffc8}    # the flesh lamp at t~10.5
+    - {scroll: 1530, x: 60, radius: 70, colour: 40ffc8}    # the flesh lamp at t~15
+    - {scroll: 2010, x: 420, radius: 70, colour: 40ffc8}   # the flesh lamp at t~19
+    - {scroll: 2820, x: 36, radius: 70, colour: 40ffc8}    # the flesh lamp at t~26
+    - {scroll: 3645, x: 444, radius: 70, colour: 40ffc8}   # the flesh lamp at t~33.5
+    - {scroll: 4800, x: 240, radius: 70, colour: 40ffc8}   # the flesh lamp at t~44
+    - {scroll: 6170, x: 306, radius: 140, colour: ffa040}  # the cavern's warmth at t~54
+    - {scroll: 6830, x: 269, radius: 140, colour: ffa040}  # the cavern's warmth at t~60
+    - {scroll: 7490, x: 209, radius: 140, colour: ffa040}  # the cavern's warmth at t~66
+    - {scroll: 8150, x: 84, radius: 140, colour: ffa040}   # the cavern's warmth at t~72
+    - {scroll: 8810, x: 372, radius: 140, colour: ffa040}  # the cavern's warmth at t~78
+    - {scroll: 9190, x: 70, radius: 110, colour: ff5a24}   # fissure-1's red-amber
+    - {scroll: 9490, x: 330, radius: 110, colour: ff5a24}  # fissure-2's red-amber
+    - {scroll: 9790, x: 190, radius: 110, colour: ff5a24}  # fissure-3's red-amber
+    - {scroll: 10040, x: 420, radius: 110, colour: ff5a24} # fissure-4's red-amber
+    - {scroll: 11109, x: 240, radius: 260, colour: d8ffa0} # the vent's throat (screen 240, 330 on the halted arena)
+    - {scroll: 12146, x: 240, radius: 300, colour: c8e8ff} # the light from above in the shaft's last stretch
+
+# The shaft (Level 23's drill shaft run in reverse; gap check §1.3, §5 H9: the walls push, no damage). Terrain row r is on
+# the top edge when the scroll is r. The walls rise at the field's edges just above the halted arena (never seen during
+# the fight: the arena's top edge is terrain row 11440), close to Level 23's 320 px and flatten to the bore's lip on the
+# breakout line (terrain 12346: the ship's row at t=115). ART-H2's rows.
+terrain:
+  left:
+    - [11480, 0, 0]      # just above the halted arena: the walls begin at the field's edges, flat
+    - [11880, 80]        # the shaft 320 px wide
+    - [12086, 80]
+    - [12346, 0, 0]      # the bore's lip on the breakout line: the walls leave the field
+  right:
+    - [11480, 480, 0]
+    - [11880, 400]
+    - [12086, 400]
+    - [12346, 480, 0]
+  contact: {damage: {easy: 0, medium: 0, hard: 0}, push: 30, push_seconds: 0.12, cooldown: 1.0}   # §5 H9: the walls push without damage
+  notes:   # the README's climb, by row
+    before: The hatchery and the arena, no walls
+    rows:
+      11480: 'Just above the halted arena: the walls begin at the field''s edges'
+      11880: The shaft at 320 px (Level 23's)
+      12086: The shaft opens toward the bore's lip
+      12346: 'The breakout line: the walls leave the field'
+
+boss:  # the act boss: the arena's start is its arrival (the warning, the bar, the boss checkpoint on easy and medium); the coil rises over its 6 s intro
+  enemy: abyssal-maw
+  t: 104
+  x: 240
+  section: 5
+  notes:
+    from: the arena's edges (the coil rising from the dark)
+    waves: 'At the arena''s start: the warning, the bar and the checkpoint; the coil, the sacs, the walls, the sweeps, the dive and the implants as in its spec; its shed Eel Swarms; no other waves in the arena'
+
+# The finale's two Ascendancy cruisers (design/enemies/bosses/abyssal-maw, The cruisers (draft); gap check §1.3): they
+# rise through the ice at t=118 (K+18) and grow to full scale by t=122, run beside the wing and fire until t=157 (K+57),
+# then fall off the bottom edge over the orbit. Invulnerable `low-air` set pieces: shots spark off the hulls, the beam
+# stops; no bounty, no bar; above water (no factor). Easy: the tell 1.5 s, one flak marker, no double bands; hard: the
+# tell 0.9 s, flak every 3 s, bursts of 4.
+cruisers:
+  rise: 118
+  run: 122
+  end: 157
+  fall: 5
+  hull: [220, 640]
+  inner: [110, 370]   # the left hull's inner (right) edge, the right hull's inner (left) edge
+  broadside: {band: 70, tell: 1.2, shells: 7, speed: 260, bullet: medium, every: 3, double_after: 20, free: 100}
+  flak: {markers: 2, every: 4, fuse: 1.0, radius: 45, scatter: 80, bullet: medium, ring: 8, speed: 120, ring_bullet: small}
+  point_defence: {burst: 3, speed: 170, bullet: small, every: 2.5, turrets: [440, 270, 100]}
+  easy: {tell: 1.5, double_bands: false, markers: 1}
+  hard: {tell: 0.9, flak_every: 3, burst: 4}
+
+# The README's waves at their times: a wave every 2.5 s from t=6 to t=93.5, 137 enemies at medium (≈ 91 a minute).
+# Schools (`swarm`) fly an S-route over the field from the front, or in from one side (`from: sides`, edge warnings),
+# alternating; Glassfin columns run straight down the left or right side (x 144 / 336); Barbfin pairs (`line abreast`),
+# columns and pincers stop and hold above the ship (9 s); the rear ambush rises up the ambush lanes from the bottom edge
+# (BOTTOM warning 3 s ahead); the three Hunter columns (`column` `from: rear`) rise from the bottom edge under a BOTTOM
+# warning 3 s ahead, hold in the lower band 10 s and leave downward: one on the screen at a time, and none in a Siren's
+# stretch (Q5). After t=93.5 no wave enters: the screen clears while the Choir sings (t=97.5). Easy: no Nautilus pair at
+# t=61.
+waves:
+  - t: 6
+    formation: swarm
+    enemy: glassfin
+    count: 8
+    from: front
+    paths: [[[240, -60], [160, 140], [320, 300], [170, 460], [240, 640]]]
+    notes: Popcorn through the hatchery gate
+  - t: 8.5
+    formation: swarm
+    enemy: glassfin
+    count: 8
+    from: front
+    paths: [[[240, -60], [320, 140], [160, 300], [310, 460], [240, 640]]]
+  - {t: 11, formation: line abreast, enemy: barbfin, count: 2, from: front, notes: "A firing pair at the gate's lamps"}
+  - {t: 13.5, formation: line abreast, enemy: barbfin, count: 2, from: front}
+  - {t: 16, formation: column, enemy: depth-hunter, count: 3, from: rear, edge: left, easy: {count: 3}, hard: {count: 3}, notes: "The Hunters **guard the hatchery** (BOTTOM warning at t=13): the grey hulls of Level 27 beside the Vrell; no hull-code line (hint 3 is paid)"}
+  - {t: 18.5, formation: column, enemy: glassfin, count: 6, from: front, edge: left}
+  - {t: 21, formation: column, enemy: barbfin, count: 3, from: front}
+  - {t: 23.5, formation: pincer, enemy: barbfin, count: 2, from: sides, hold: 9, notes: 1 per side; edge warnings}
+  - t: 26
+    formation: snake
+    enemy: eel-swarm
+    count: 1
+    from: front
+    paths: [[[130, -60], [250, 140], [110, 300], [270, 460], [180, 640]]]
+    notes: Down the left; act HP factor
+  - t: 28.5
+    formation: swarm
+    enemy: glassfin
+    count: 8
+    from: sides
+    paths: [[[-60, 100], [140, 180], [330, 300], [170, 460], [240, 640]]]
+    notes: Popcorn from the left side; edge warning
+  - {t: 31, formation: circle, enemy: spiral-nautilus, count: 2, from: front, hold: 15, notes: "Spirals round the gallery's egg racks (the README's pincer: the pair orbits the ship); act HP factor"}
+  - {t: 33.5, formation: line abreast, enemy: barbfin, count: 2, from: front}
+  - {t: 36, formation: turret nest, enemy: siren, count: 2, from: front, on_ground: [60, 420], easy: {count: 2}, notes: "Sirens grown on the gallery walls; act HP factor"}
+  - t: 38.5
+    formation: swarm
+    enemy: glassfin
+    count: 8
+    from: front
+    paths: [[[240, -60], [160, 140], [320, 300], [170, 460], [240, 640]]]
+  - t: 41
+    groups:
+      - {formation: carrier + escorts, enemy: abyss-ray, count: 1}
+      - {formation: carrier + escorts, enemy: barbfin, count: 4}
+    from: front
+    notes: "The act's last Ray (rises from below): its shadow lit by the egg racks' glow; four Barbfin in `circle` peel off as it rises; act HP factor; it drops an overdrive"
+  - {t: 43.5, formation: line abreast, enemy: barbfin, count: 2, from: front}
+  - {t: 46, formation: column, enemy: depth-hunter, count: 3, from: rear, edge: right, easy: {count: 3}, hard: {count: 3}, notes: "A rear column through the gallery (BOTTOM warning at t=43); Flares or the rear guns"}
+  - {t: 48.5, formation: column, enemy: glassfin, count: 6, from: front, edge: right}
+  - {t: 51, formation: column, enemy: barbfin, count: 3, from: front}
+  - {t: 53.5, formation: pincer, enemy: barbfin, count: 2, from: sides, hold: 9, notes: 1 per side; edge warnings}
+  - t: 56
+    formation: snake
+    enemy: eel-swarm
+    count: 1
+    from: front
+    paths: [[[350, -60], [230, 140], [370, 300], [210, 460], [300, 640]]]
+    notes: Down the right
+  - t: 58.5
+    formation: swarm
+    enemy: glassfin
+    count: 8
+    from: sides
+    paths: [[[540, 100], [340, 180], [150, 300], [310, 460], [240, 640]]]
+    notes: Popcorn from the right side; edge warning
+  - {t: 61, formation: circle, enemy: spiral-nautilus, count: 2, from: front, hold: 15, skip: [easy], notes: "In the spawning cavern; not on easy"}
+  - {t: 63.5, formation: line abreast, enemy: barbfin, count: 2, from: front}
+  - {t: 66, formation: rear ambush, enemy: barbfin, count: 3, from: rear, notes: "Rear ambush, BOTTOM warning at t=63"}
+  - t: 68.5
+    formation: swarm
+    enemy: glassfin
+    count: 8
+    from: front
+    paths: [[[240, -60], [320, 140], [160, 300], [310, 460], [240, 640]]]
+  - t: 71
+    groups:
+      - {formation: carrier + escorts, enemy: abyss-ray, count: 1}
+      - {formation: carrier + escorts, enemy: barbfin, count: 4}
+    from: front
+    notes: "A second Ray in the cavern (rises from below; the roster's large set-piece unit, twice here); it drops a shield cell"
+  - {t: 73.5, formation: line abreast, enemy: barbfin, count: 2, from: front}
+  - {t: 76, formation: turret nest, enemy: siren, count: 2, from: front, on_ground: [330, 410, 250], hard: {count: 3}, notes: "On the cavern's last stack; hard's third on its left (gap check §5 H4)"}
+  - {t: 78.5, formation: column, enemy: glassfin, count: 6, from: front, edge: left}
+  - {t: 81, formation: column, enemy: barbfin, count: 3, from: front}
+  - {t: 83.5, formation: pincer, enemy: barbfin, count: 2, from: sides, hold: 9, notes: 1 per side; edge warnings}
+  - {t: 86, formation: column, enemy: depth-hunter, count: 4, from: rear, hard: {count: 4}, notes: "The last grey column before the vent (BOTTOM warning at t=83)"}
+  - t: 88.5
+    formation: swarm
+    enemy: glassfin
+    count: 8
+    from: sides
+    paths: [[[-60, 100], [140, 180], [330, 300], [170, 460], [240, 640]]]
+    notes: Popcorn from the left side; edge warning
+  - t: 91
+    formation: snake
+    enemy: eel-swarm
+    count: 1
+    from: front
+    paths: [[[130, -60], [250, 140], [110, 300], [270, 460], [180, 640]]]
+    notes: The last Eel Swarm, down the left
+  - {t: 93.5, formation: line abreast, enemy: barbfin, count: 2, from: front, notes: "The last wave: no wave after it, so the screen clears while the Choir sings (t=97.5)"}
+
+ground_targets:  # at: [t, x], when it enters at the top edge and its x (ART-H2's places on its racks, ridges and rim)
+  - target: rack nests
+    section: 2
+    enemy: spine-turret
+    count: 3
+    at: [[30, 96], [30, 240], [30, 384]]   # on the egg-rack-nest ends
+    notes:
+      target: '[Spine Turret](../../../enemies/ground/spine-turret/README.md) nest ×{count} on the racks'' ends (t≈30)'
+      effect: Bounty {bounty} each
+  - target: Pelagic-3
+    section: 3
+    layer: ground
+    size: [64, 64]
+    sprite: recon-sub   # tools/art/l28_props.py (step ART-H2): the UTC recon sub under the fallen rack, her hatch sealed in Vrell resin; sealed, hit, opened
+    hp: 20
+    hard: {hp: 28}
+    reveals: Pelagic-3
+    at: [[58, 90]]   # under the collapsed-rack piece
+    notes:
+      target: 'The UTC recon sub *Pelagic-3* under a collapsed rack (`ground` trigger, {hp} HP, hard 28, t≈58, x 90)'
+      effect: 'The secret: frees a crate worth 100 (410)'
+  - target: ridge nests
+    section: 3
+    enemy: spine-turret
+    count: 3
+    at: [[66, 300], [66, 344], [66, 388]]   # the resin ridge's middle seats
+    hard: {at: [[66, 256], [66, 300], [66, 344], [66, 388], [66, 432]]}
+    notes:
+      target: '[Spine Turret](../../../enemies/ground/spine-turret/README.md) nest ×{count} on a resin ridge (t≈66)'
+      effect: Bounty {bounty} each
+  - target: far ridge mortars
+    section: 3
+    enemy: polyp-mortar
+    count: 2
+    at: [[74, 84], [74, 150]]   # on the far-ridge piece
+    notes:
+      target: '[Polyp Mortar](../../../enemies/ground/polyp-mortar/README.md) ×{count} on the far ridge (t≈74)'
+      effect: Bounty {bounty} each
+  - target: rim mortars
+    section: 4
+    enemy: polyp-mortar
+    count: 2
+    at: [[92, 110], [92, 370]]   # on the caldera's outer rim
+    notes:
+      target: '[Polyp Mortar](../../../enemies/ground/polyp-mortar/README.md) ×{count} on the caldera rim (t≈92)'
+      effect: Bounty {bounty} each
+
+secrets:
+  - name: Pelagic-3
+    crate: 100   # Act 1 terms: pays 410 with the act factor
+    radio: {speaker: Okafor, line: "Pelagic-3. Our recon sub, eleven crew, lost in week one. Log it, Doctor. Take what's aboard, Lancer."}
+
+pickups:
+  - {pickup: overdrive, dropped_by: {wave: 41, enemy: abyss-ray, unit: first}}     # the act's last Ray, when it dies
+  - {pickup: shield cell, dropped_by: {wave: 71, enemy: abyss-ray, unit: first}}   # the second Ray, when it dies
+
+drops:  # a Thera Deep service buoy in the antechamber releases an armour patch (a Level 25-style buoy); the boss's phase 3 drops the second
+  - {t: 88, x: 240, y: 380, pickup: armour patch, sprite: service-buoy}
+
+radio:  # trigger: t or event. Speakers Okafor, Varga and the Choir; no Rook lines (he is missing: dropped, not `requires: escort`); the Bulwark has no radio. The arena's clock halts, so the boss lines are events (PHASE lines: they wait for a gap, stale after 20 s, dropped at the kill); the finale's lines are CLOSING lines in order (`boss-destroyed`; their `delay` counts from the kill, a line waits behind the one before it; the debrief waits for the last)
+  - {t: 1, speaker: Okafor, line: "Everything the Vrell sent at Europa was grown in this hatchery. End it, Lancer, and we go home."}
+  - {t: 13, speaker: Varga, line: "Grey hulls again, guarding the gate. Helix hulls, Commander. Why is Helix guarding a Vrell nursery?"}
+  - {t: 26, speaker: Okafor, line: "I don't know, Doctor. When this is over I will ask, and I will not accept stand by."}
+  - {t: 38, speaker: Varga, line: "Eggs on every rack. Thousands. This is where the Vrell on Europa came from."}
+  - {t: 63, speaker: Varga, line: "The floor is warm. The vent is under us, and something large is coiled round it."}
+  - {t: 76, speaker: Okafor, line: "Antechamber, then the vent. Shields up, Lancer. Everything you have."}
+  - {t: 88, speaker: Varga, line: "My biosign is off the scale. It knows we're here."}
+  - {t: 97.5, speaker: The Choir, distorted: true, line: "[the Choir sings]"}
+  - {event: boss-arrival, speaker: Varga, line: "Gill sacs first, Lancer. Then the lime in its throat when the jaw opens.", notes: {trigger: "Boss arrival (`boss-arrival`, the coil rising)"}}
+  - {event: boss-phase, phase: Tightening, speaker: Okafor, line: "Walls of light. Find the gap and keep moving.", notes: {trigger: "Phase 2 (`boss-phase` Tightening)"}}
+  - {event: boss-dive, speaker: Varga, shout: true, line: "It's gone under! Watch the dark. It comes back fast!", notes: {trigger: "The dive (the head below 50 %, `boss-dive`, queued as `PHASE`)"}}
+  - {event: boss-phase, phase: Implants, speaker: Varga, line: "Commander, that's not Vrell. That's machinery in its spine. Relay housings… Helix pattern.", notes: {trigger: "Phase 3 (`boss-phase` Implants, at the first spark)"}}
+  - {event: boss-phase, phase: Implants, speaker: Okafor, line: "Then hit the machinery, Lancer.", notes: {trigger: "Phase 3, queued after Varga's line"}}
+  - {event: boss-destroyed, delay: 3, speaker: The Choir, distorted: true, line: "…many… we were many here…", notes: {trigger: "Maw destroyed (`boss-destroyed`, the chain's start), held 3 s (`delay`): the Choir speaks, with its layering on speech"}}
+  - {event: boss-destroyed, speaker: Okafor, line: "Maw's down. Aegis Wing, up the shaft. Now.", notes: {trigger: "After the Choir (`CLOSING`)"}}
+  - {event: boss-destroyed, delay: 18, speaker: Varga, line: "Those aren't Vrell hulls—", notes: {trigger: "K+18, the cruisers' rise (`CLOSING`, `delay: 18`)"}}
+  - {event: boss-destroyed, speaker: Okafor, line: "Those are not Vrell ships. God help us. Those are ours.", notes: {trigger: "Then (`CLOSING`)"}}
+  - {event: boss-destroyed, delay: 34, speaker: Okafor, line: "All Aegis units, break for orbit. Don't look back.", notes: {trigger: "K+34, the run (`CLOSING`, `delay: 34`)"}}
+  - {event: boss-destroyed, delay: 42, speaker: Varga, line: "That's the code from the wreck, painted on their bows. They aren't hiding it any more.", notes: {trigger: "K+42, the run (`CLOSING`, `delay: 42`)"}}
+
+objectives:
+  primary: reach-end   # the arena makes the kill a condition of the level's end; the line reads the boss's name (threat_profile.objective)
+  secondary: {kill_ratio: 0.65, boss_counted: false, credits: 100, name: Clear the hatchery}   # at least 65 % of the level's approach enemies (90 of 137 at medium; the Maw and its shed Eel Swarms not counted), judged at the end; no radio line (100 in Act 1 terms: pays 410)
+
+music:
+  track: 11           # Act 4 B "Pressure Line" (audio/music track list)
+  start_section: 1    # the theme's file from the launch, its stems silent in section 1 (`stems: {1: motif}`): the hatchery's ambience alone, Vorne's motif over it from t=16 (the motif needs the theme playing: StormChecks)
+  full_section: 3     # the full mix from the spawning cavern
+  stems: {1: motif, 2: base}   # section 1 the motif layer alone (from t=16), the base stem from the galleries
+  motif: {from: 16, sections: {}}   # Vorne's motif as a faint layer from the Hunters' first guard (t=16)
+  stem_times:         # out in section 4 into the antechamber's near-silence (the vent's rumble, the Choir's song), the motif with it
+    - {t: 80, stems: none, db: -40, fade: 6}
+  ambience: europa-hatchery   # the hatchery's bed (a slow warm throb, a distant Choir hum, creaking egg racks, no bubbles; round 58's a as a stand-in until the user's pick)
+  ambience_layers:   # the caldera's rumble swelling over the hatchery bed through the antechamber, held under the fight (an act boss's layers swell and hold), cut at the kill (the clock reads 105 from K+5; the layer is out by then)
+    - {ambience: caldera-rumble, from: 80, to: 104.9, fade_in: 10, fade_out: 0}
+  ambience_changes:
+    - {section: 7, ambience: europa-ice, crossfade: 1}   # Europa's night-ice wind above from the breakout (Level 22's bed)
+  end_jingle: mission-complete
+  boss_warning: boss-warning      # track 22 with the klaxon and the banner at the arena's start (t=104)
+  boss_track: choir-descends      # track 18 after the warning (Q.1 a, as built, until round 58's pick), dropping away under the dive's darkness and back after the lunge (the game's hook, LevelMusic.bossDrop), fading at the kill
+  motif_after_boss: {from: 126, to: 162, fade_in: 3, fade_out: 5}   # the run under Vorne's motif (track 11's motif stem alone, in the open): in under the reveal sting's tail (track 30 at the cruisers' rise, t=118, 9 s), out over the orbit (157-162); the climb and the rise under the ambience alone
+
+difficulty: {}  # the Hunter columns' easy and hard counts, hard's third Siren, easy's missing Nautilus pair and the ridge nests' hard five are in their entries; the formation lever sizes the rest; the stat blocks' hooks apply (the Hunter's, the Barbfin's, the Maw's easy and hard hooks); the cruisers' easy and hard changes are in `cruisers`; Pelagic-3's hard 28 HP is its entry
+
+briefing:
+  pages:
+    - {speaker: Okafor, image: level-28-hatchery, line: "Everything the Vrell sent at Europa was grown in one place: a hatchery round the deepest vent. End it, Lancer, and the ice is ours again. Rook is still out there. We'll find him."}
+    - {speaker: Varga, image: level-28-hull-code, line: "A guardian lies coiled round the vent. Shoot its gill sacs, then the lime in its throat when the jaw opens. The grey hulls at the gate carry the code from the wreck. Helix, Lancer."}
+  teaser: {speaker: Okafor, line: "The hatchery is next, Lancer. Something large guards it. Bring everything you have."}
+
+backdrop:
+  # Presentation only: Level 28's hatchery, the caldera, the shaft and the night ice (tools/art/backdrop_l28.py, step
+  # ART-H2; its `--proposal`, concept/backdrop-proposal.yaml, adopted in step H3). Re-run the generator after the data
+  # moves a section or a target. Up to the breakout the grade's per-section underwater_look lights it, plus the static
+  # lights; every piece's -glow is added over the grade (drawPieceGlows): the gate's teal, the flesh lamps, the racks'
+  # pods, the fissures, the vent's throat. The shaft's walls are the terrain's (WallProjection's ice shaft): ice-wall,
+  # -wet, -glow, -foot, -foot-wet (Level 23's, rows reversed). From the breakout the level is in air: the night ice is
+  # lit in its own pixels.
+  scroll_factors: {far: 0.5, ground: 1, low-air: 1.35, high-air: 2.2}   # far unused (opaque ground)
+  ramp: 2
+  haze_colour: 0e1a1c  # the hatchery's water
+  atmosphere:
+    clear: {haze: 0.0}
+  tile_sets:
+    gate-hall: {layer: ground, height: 960}   # section 1: the hatchery's resin floor past the gate, chitin root veins
+    brood-gallery: {layer: ground, height: 960}   # section 2: the gallery floor, resin grooved along the galleries
+    spawning-floor: {layer: ground, height: 960}   # section 3: resin ridges round hatching pools (pale eggs in amber fluid)
+    antechamber-floor: {layer: ground, height: 960}   # sections 4-5: dark basalt under resin, red fissures (the arena is the caldera piece)
+    shaft-climb: {layer: ground, height: 960}   # section 6: Level 23's wet shaft floor in reverse, the vent's glow far below
+    night-ice: {layer: ground, height: 960}   # sections 7-10: Level 22's ice shelf at night under Jupiter
+    ice-ceiling: {layer: high-air, height: 960}   # section 6: the ice ceiling's cracks of light (additive at 40 % as Level 23's)
+    ice-crystals: {layer: high-air, height: 960}   # sections 8-10: Level 22's crystals, dimmed for the night (additive at 40 %)
+  pieces:
+    gate-ring: {layer: ground, size: [480, 720]}
+    gate-ring-glow: {layer: ground, size: [480, 720]}
+    flesh-lamp: {layer: ground, size: [64, 64]}
+    flesh-lamp-glow: {layer: ground, size: [64, 64]}
+    seam-brood-gallery: {layer: ground, size: [480, 320]}
+    seam-brood-gallery-glow: {layer: ground, size: [480, 320]}
+    egg-rack-a: {layer: ground, size: [112, 480]}
+    egg-rack-a-glow: {layer: ground, size: [112, 480]}
+    egg-rack-b: {layer: ground, size: [112, 480]}
+    egg-rack-b-glow: {layer: ground, size: [112, 480]}
+    egg-rack-nest: {layer: ground, size: [112, 480]}
+    egg-rack-nest-glow: {layer: ground, size: [112, 480]}
+    gallery-wall-left: {layer: ground, size: [128, 200]}
+    gallery-wall-right: {layer: ground, size: [128, 200]}
+    seam-spawning-floor: {layer: ground, size: [480, 320]}
+    collapsed-rack: {layer: ground, size: [208, 192]}
+    collapsed-rack-glow: {layer: ground, size: [208, 192]}
+    resin-ridge: {layer: ground, size: [272, 128]}
+    far-ridge: {layer: ground, size: [208, 112]}
+    siren-stack: {layer: ground, size: [264, 160]}
+    seam-antechamber-floor: {layer: ground, size: [480, 320]}
+    fissure-1: {layer: ground, size: [176, 96]}
+    fissure-1-glow: {layer: ground, size: [176, 96]}
+    fissure-2: {layer: ground, size: [176, 96]}
+    fissure-2-glow: {layer: ground, size: [176, 96]}
+    fissure-3: {layer: ground, size: [176, 96]}
+    fissure-3-glow: {layer: ground, size: [176, 96]}
+    fissure-4: {layer: ground, size: [176, 96]}
+    fissure-4-glow: {layer: ground, size: [176, 96]}
+    caldera: {layer: ground, size: [480, 1508]}
+    caldera-glow: {layer: ground, size: [480, 1508]}
+    shaft-mouth: {layer: ground, size: [480, 720]}
+    ceiling-cracks: {layer: high-air, size: [480, 600]}
+    drill-hole-1: {layer: ground, size: [200, 200]}
+    drill-hole-2: {layer: ground, size: [200, 200]}
+    vrell-carrier: {layer: high-air, size: [168, 380]}
+    ice-split-left: {layer: ground, size: [200, 960]}
+    ice-split-right: {layer: ground, size: [200, 960]}
+  placed:
+    # Level 27's ring of arches seen from inside, its centre on the start's bottom edge; exact rows
+    - {piece: gate-ring, t: -2.25, x: 240}
+    # the lamps of grown flesh
+    - {piece: flesh-lamp, t: 6.0, x: 40}
+    - {piece: flesh-lamp, t: 10.5, x: 440}
+    - {piece: flesh-lamp, t: 15.0, x: 60}
+    - {piece: flesh-lamp, t: 19.0, x: 420}
+    - {piece: flesh-lamp, t: 26.0, x: 36}
+    - {piece: flesh-lamp, t: 33.5, x: 444}
+    - {piece: flesh-lamp, t: 44.0, x: 240}
+    # section 2's seam (ground 3180): the gallery's mouth, its lintel and lamps; exact rows
+    - {piece: seam-brood-gallery, t: 24.364, x: 240}
+    # the racks under the Spine Turrets at t=30 x 96, 240, 384 (their seats 30 px above the rack's foot); exact rows
+    - {piece: egg-rack-nest, t: 34.545, x: 96}
+    - {piece: egg-rack-nest, t: 34.545, x: 240}
+    - {piece: egg-rack-nest, t: 34.545, x: 384}
+    # the gallery racks
+    - {piece: egg-rack-b, t: 40.0, x: 56}
+    - {piece: egg-rack-a, t: 41.5, x: 424}
+    - {piece: egg-rack-a, t: 46.5, x: 150}
+    - {piece: egg-rack-b, t: 48.0, x: 330}
+    - {piece: egg-rack-a, t: 52.0, x: 64}
+    - {piece: egg-rack-b, t: 53.0, x: 418}
+    # the gallery walls where the Sirens at t=36 x 60 and x 420 are grown; exact rows
+    - {piece: gallery-wall-left, t: 38.709, x: 64}
+    - {piece: gallery-wall-right, t: 38.709, x: 416}
+    # section 3's seam (ground 6270): the galleries open into the cavern; exact rows
+    - {piece: seam-spawning-floor, t: 52.455, x: 240}
+    # the fallen rack and Pelagic-3's scour (the trigger at t=58, x 90); exact rows
+    - {piece: collapsed-rack, t: 60.455, x: 104}
+    # the Spine Turrets' resin ridge (t=66: x 256, 300, 344, 388, 432, medium's three in the middle); exact rows
+    - {piece: resin-ridge, t: 68.455, x: 344}
+    # the Polyp Mortars' far ridge (t=74: x 84, 150); exact rows
+    - {piece: far-ridge, t: 76.455, x: 117}
+    # the cavern's last stack (t=76: the Sirens at x 250, 330, 410, hard's third included); exact rows
+    - {piece: siren-stack, t: 78.455, x: 344}
+    # section 4's seam (ground 9570): the cavern into the antechamber; exact rows
+    - {piece: seam-antechamber-floor, t: 82.6, x: 240}
+    # the steaming fissures; exact rows
+    - {piece: fissure-1, t: 84.2, x: 88}
+    - {piece: fissure-2, t: 87.2, x: 330}
+    - {piece: fissure-3, t: 90.2, x: 190}
+    - {piece: fissure-4, t: 92.7, x: 392}
+    # the caldera: the outer rim (the mortars' seats, t~92) to the shaft's foot; the halted arena's screen (ground
+    # 11440..11979), the throat on ground row 11649 x 240 (screen 240, 330); exact rows
+    - {piece: caldera, t: 101.16, x: 240}
+    # the bore's broken lip, its apex on the breakout line (ground 12886 = scroll(115) + 96); exact rows
+    - {piece: shaft-mouth, t: 114.773, x: 240}
+    # high-air (x2.2): the ceiling's fractures, their centre crossing the ship's row at t=115; exact rows
+    - {piece: ceiling-cracks, t: 114.473, x: 240}
+    # other Vrell drill holes in the night ice; exact rows
+    - {piece: drill-hole-1, t: 117.5, x: 140}
+    - {piece: drill-hole-2, t: 120.5, x: 330}
+    # high-air: Vrell carriers risen beside the wing
+    - {piece: vrell-carrier, t: 116.8, x: 52.0}
+    - {piece: vrell-carrier, t: 119.8, x: 430.0}
+    # the open leads where the cruisers rose (centred mid-screen at t=120); exact rows
+    - {piece: ice-split-left, t: 120.0, x: 100}
+    - {piece: ice-split-right, t: 120.0, x: 380}

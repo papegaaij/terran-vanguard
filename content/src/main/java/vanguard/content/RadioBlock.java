@@ -280,7 +280,20 @@ public sealed interface RadioBlock permits LevelData {
          * its time for the radio timeline is the first rising wave's ({@code AbyssChecks.firstRise}).
          */
         @JsonProperty("first-ray")
-        FIRST_RAY
+        FIRST_RAY,
+        /**
+         * M8 part H (design/campaign Level 28; gap check m8h-gaps.md §5 H8): the level's boss arrives (its bar; the
+         * arena's clock is halted there, so a timed line cannot follow it); once; only in a level with a boss. The
+         * simulation's {@code CueTrigger.BOSS_ARRIVAL}.
+         */
+        @JsonProperty("boss-arrival")
+        BOSS_ARRIVAL,
+        /**
+         * M8 part H (design/enemies/bosses/abyssal-maw, the dive): the level's coiled boss dives; once; only in a level
+         * with a boss. The simulation's {@code CueTrigger.BOSS_DIVE}; the presentation queues it as a phase line.
+         */
+        @JsonProperty("boss-dive")
+        BOSS_DIVE
     }
 
     /**

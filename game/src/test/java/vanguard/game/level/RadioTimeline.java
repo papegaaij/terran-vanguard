@@ -86,6 +86,7 @@ abstract class RadioTimeline {
     static final String LEVEL_25 = "act-4-deep-water/level-25-siren-trench";
     static final String LEVEL_26 = "act-4-deep-water/level-26-blackwater";
     static final String LEVEL_27 = "act-4-deep-water/level-27-hydrothermal-vents";
+    static final String LEVEL_28 = "act-4-deep-water/level-28-abyssal-maw";
 
     /** Rook's sides: a {@code {side}} line is played with each one's text. */
     static final List<String> SIDES = VoiceLines.SIDES;
@@ -165,7 +166,23 @@ abstract class RadioTimeline {
         static Event inHold(int hold, double into, CueTrigger trigger, String subject) {
             return new Event(Double.NaN, trigger, subject, hold, into);
         }
+
+        /**
+         * M8 part H (step H6): an event {@code into} real seconds after the level clock halted at the arena's end
+         * (Level 28's Maw: its phases, its dive, its kill); a run with one flies the halt ({@link #ARENA}).
+         */
+        static Event inArena(double into, CueTrigger trigger, String subject) {
+            return new Event(Double.NaN, trigger, subject, ARENA, into);
+        }
     }
+
+    /**
+     * M8 part H (step H6): the hold index of an event in the halted arena ({@link Event#inArena}). A run with one flies
+     * the halt as the simulation does: the level clock stops a step short of the arena section's end while the boss
+     * lives, its kill ({@code BOSS_DESTROYED} in the arena) holds it for the boss's death chain and the section's {@code
+     * hold_after_boss}, then it runs on; the kill withdraws the phase lines still waiting, as the game does.
+     */
+    static final int ARENA = -2;
 
     /**
      * A cue and when its message opened, if it did (real seconds), and when it was due (real seconds:
@@ -502,7 +519,52 @@ abstract class RadioTimeline {
                         List.of(
                                 new Event(45.5, CueTrigger.SECRET, "Marlin"),
                                 new Event(106, CueTrigger.FIRST_RAY, ""))));
+        // M8 part H: Level 28's approach (step H3's runs from the data's rows): Pelagic-3 (t≈58, x 90, under the fallen
+        // rack) shot as she enters (t≈59.5) or as she passes the ship (t≈62), or not at all. Step H6: the arena flown
+        // on
+        // its halted clock (Event.inArena, real seconds after the halt at the arena's end): the arrival line at t=104,
+        // then the phases, the dive and the kill at the autopilot's fight lengths (step H4: ≈ 93 s easy, 126.5 s
+        // medium, 172 s hard), a fight with the dive right on phase 2's line and the implants on the dive's (the kill
+        // 31 s after phase 3's spark, its two lines spoken), and one killed before the dive; the finale's closing lines
+        // count from the kill (K+3 to ≈ K+53, the
+        // level's end at K+62).
+        runs.put(LEVEL_28, level28Runs());
         return runs;
+    }
+
+    /** M8 part H (step H6): Level 28's runs ({@link #runs()}'s note). */
+    static List<List<Event>> level28Runs() {
+        String maw = "abyssal-maw";
+        Event arrival = new Event(104, CueTrigger.BOSS_ARRIVAL, "");
+        return List.of(
+                List.of(),
+                List.of(new Event(59.5, CueTrigger.SECRET, "Pelagic-3")),
+                List.of(new Event(62, CueTrigger.SECRET, "Pelagic-3")),
+                maw(arrival, 25, 45, 60, 93, maw),
+                List.of(
+                        new Event(59.5, CueTrigger.SECRET, "Pelagic-3"),
+                        arrival,
+                        Event.inArena(35, CueTrigger.BOSS_PHASE, "Tightening"),
+                        Event.inArena(62, CueTrigger.BOSS_DIVE, ""),
+                        Event.inArena(80, CueTrigger.BOSS_PHASE, "Implants"),
+                        Event.inArena(126.5, CueTrigger.BOSS_DESTROYED, maw)),
+                maw(arrival, 50, 85, 110, 172, maw),
+                maw(arrival, 3, 4, 9, 40, maw),
+                List.of(
+                        arrival,
+                        Event.inArena(30, CueTrigger.BOSS_PHASE, "Tightening"),
+                        Event.inArena(45, CueTrigger.BOSS_DESTROYED, maw)));
+    }
+
+    /** A Level 28 run: the arrival, then phase 2, the dive, phase 3 and the kill this many seconds into the halt. */
+    private static List<Event> maw(
+            Event arrival, double tightening, double dive, double implants, double kill, String maw) {
+        return List.of(
+                arrival,
+                Event.inArena(tightening, CueTrigger.BOSS_PHASE, "Tightening"),
+                Event.inArena(dive, CueTrigger.BOSS_DIVE, ""),
+                Event.inArena(implants, CueTrigger.BOSS_PHASE, "Implants"),
+                Event.inArena(kill, CueTrigger.BOSS_DESTROYED, maw));
     }
 
     static List<List<Event>> level17Runs() {
@@ -896,6 +958,12 @@ abstract class RadioTimeline {
                     .mapToInt(RadioCue::alliesMin)
                     .distinct()
                     .toArray();
+            if (homes.length == 0
+                    && script.radio().stream().anyMatch(cue -> cue.trigger() == CueTrigger.BOSS_DESTROYED)) {
+                // M8 part H (step H6): a boss level without level-end lines (Levels 07 and 28) is flown to its end too,
+                // once: its boss's closing lines and the outro's wait for them are checked as everywhere.
+                homes = new int[] {-1};
+            }
             for (List<Event> events : runs) {
                 if (events.stream().anyMatch(event -> event.t() > script.seconds())) {
                     continue;
@@ -1193,9 +1261,40 @@ abstract class RadioTimeline {
 
     /** Whether {@code event} has happened by {@code scriptTick} (the level clock), in a hold by {@code realTick}. */
     static boolean happened(Event event, int scriptTick, int realTick, int[] holdStarts) {
-        return event.hold() < 0
+        // M8 part H: the arena's halt is the last slot of holdStarts.
+        int hold = event.hold() == ARENA ? holdStarts.length - 1 : event.hold();
+        return hold < 0
                 ? SimStep.ticks(event.t()) <= scriptTick
-                : holdStarts[event.hold()] >= 0 && realTick - holdStarts[event.hold()] >= SimStep.ticks(event.into());
+                : holdStarts[hold] >= 0 && realTick - holdStarts[hold] >= SimStep.ticks(event.into());
+    }
+
+    /**
+     * M8 part H: the level clock's step a halted arena holds it at (a step short of the arena section's end, as the
+     * simulation's), -1 for a level without one.
+     */
+    static int arenaHaltTick(LevelScript script) {
+        for (Section section : script.sections()) {
+            if (section.arena() && section.speed() == 0 && !section.crawls()) {
+                return SimStep.ticks(section.end()) - 1;
+            }
+        }
+        return -1;
+    }
+
+    /** M8 part H: the seconds the clock stays halted after the arena boss's kill: its death chain and the hold after. */
+    static double holdAfterKill(LevelScript script) {
+        double hold = 0;
+        for (Section section : script.sections()) {
+            if (section.arena()) {
+                hold = section.holdAfterBossSeconds();
+            }
+        }
+        double death = script.setPieces().stream()
+                .flatMap(piece -> piece.boss().stream())
+                .mapToDouble(vanguard.sim.BossSpec::deathSeconds)
+                .findFirst()
+                .orElse(0);
+        return hold > 0 ? death + hold : 0;
     }
 
     /** A cue queued in {@link #play}: its index, its text, when it was due and when its message opened. */
@@ -1390,8 +1489,20 @@ abstract class RadioTimeline {
                 .map(loss -> SimStep.ticks(loss.t()))
                 .orElse(Integer.MAX_VALUE);
         List<HoldRun> holds = holdRuns(script, holdSeconds);
-        int[] holdStarts = new int[holds.size()];
+        // M8 part H: the last slot is the halted arena's start (real tick), for a run with events in it.
+        int[] holdStarts = new int[holds.size() + 1];
         java.util.Arrays.fill(holdStarts, -1);
+        int arena = holds.size();
+        int haltTick = events.stream().anyMatch(event -> event.hold() == ARENA) ? arenaHaltTick(script) : -1;
+        double killInto = events.stream()
+                .filter(event -> event.hold() == ARENA && event.trigger() == CueTrigger.BOSS_DESTROYED)
+                .mapToDouble(Event::into)
+                .findFirst()
+                .orElse(Double.POSITIVE_INFINITY);
+        int haltTicks = Double.isInfinite(killInto)
+                ? Integer.MAX_VALUE / 2
+                : SimStep.ticks(killInto) + SimStep.ticks(holdAfterKill(script));
+        boolean killed = false;
         // The level clock in fixed point, as the simulation's (1/65 536 of a step).
         long scriptFixed = 0;
         int scriptTick = 0;
@@ -1417,8 +1528,27 @@ abstract class RadioTimeline {
                     collapsing |= hold.collapse() && in >= holdSeconds;
                 }
             }
-            scriptFixed += Math.max(1, Math.round(rate * 65536));
+            // M8 part H: the halted arena: the clock waits a step short of the arena's end until the kill's hold ends.
+            if (haltTick >= 0 && holdStarts[arena] < 0 && scriptTick >= haltTick) {
+                holdStarts[arena] = tick;
+            }
+            boolean halted = holdStarts[arena] >= 0 && tick - holdStarts[arena] < haltTicks;
+            if (halted) {
+                rate = 0;
+            } else {
+                scriptFixed += Math.max(1, Math.round(rate * 65536));
+            }
             scriptTick = (int) (scriptFixed >> 16);
+            // M8 part H: the kill withdraws the phase lines still waiting (RadioEvents), its closing lines then queue.
+            if (!killed) {
+                for (Event event : events) {
+                    if (event.trigger() == CueTrigger.BOSS_DESTROYED && happened(event, scriptTick, tick, holdStarts)) {
+                        killed = true;
+                        radio.withdrawAll(RadioQueue.Priority.PHASE);
+                        break;
+                    }
+                }
+            }
             if (scriptTick >= end && afterEnd < 0) {
                 afterEnd = tick + SimStep.ticks(60);
                 endedAt[0] = seconds;
@@ -1454,7 +1584,7 @@ abstract class RadioTimeline {
                             case LEVEL_END ->
                                 scriptTick >= end
                                         && (allies < 0 || (allies >= cue.alliesMin() && allies <= cue.alliesMax()));
-                            case HOLD_START -> holdStarts.length > 0 && holdStarts[0] >= 0;
+                            case HOLD_START -> !holds.isEmpty() && holdStarts[0] >= 0;
                             case COLLAPSE -> collapsing;
                             // M5 part D: the lance comes at its time in every run (Level 10)
                             case SCRIPTED_LOSS -> scriptTick >= lanceTick;
@@ -1462,7 +1592,8 @@ abstract class RadioTimeline {
                         };
                 if (due) {
                     fired[i] = true;
-                    double dueAt = cue.trigger() == CueTrigger.TIME && holds.isEmpty() ? cue.t() : seconds;
+                    double dueAt =
+                            cue.trigger() == CueTrigger.TIME && holds.isEmpty() && haltTick < 0 ? cue.t() : seconds;
                     queued.add(queue(radio, schedule, cue, i, text(cue, side), dueAt, voiced, delays[i]));
                 }
             }

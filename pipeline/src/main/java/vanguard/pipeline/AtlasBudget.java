@@ -25,6 +25,12 @@ public final class AtlasBudget {
     static final long PAGE_BYTES = 2048L * 2048 * 4;
     static final int SHARED_PAGES = 2;
     static final int LEVEL_PAGES = 6;
+    /**
+     * Levels allowed more than {@link #LEVEL_PAGES}: Level 28, the Act 4 finale (step H7, pending the user's review in
+     * round 58): its unit atlas (the Maw, the cruisers, the breakout's ice and the approach's two Abyss Rays) packs into
+     * 4 pages and its backdrop (the hatchery, the caldera, the shaft, the night ice) into 2 pages and a 2048x1024 one.
+     */
+    static final Map<String, Integer> LEVEL_PAGES_EXCEPTIONS = Map.of("level-28", 7);
     /** A level's unit atlas: {@code level-NN.atlas}. */
     private static final Pattern UNITS = Pattern.compile("(level-\\d{2})\\.atlas");
 
@@ -67,7 +73,8 @@ public final class AtlasBudget {
                         + mib(PAGE_BYTES) + " MiB)");
             }
         });
-        levels(atlasDir, units).forEach((level, pages) -> check(violations, "level " + level, pages, LEVEL_PAGES));
+        levels(atlasDir, units)
+                .forEach((level, pages) -> check(violations, "level " + level, pages, levelPages(level)));
         return violations;
     }
 
@@ -81,9 +88,14 @@ public final class AtlasBudget {
         atlases.put("backdrop", read(atlasDir.resolve("backdrop.atlas")));
         atlases.forEach((name, pages) -> lines.add(name + ": " + describe(pages)));
         levels(atlasDir, units)
-                .forEach((level, pages) -> lines.add(
-                        "level " + level + " (units + backdrop): " + pages.size() + "/" + LEVEL_PAGES + " pages"));
+                .forEach((level, pages) -> lines.add("level " + level + " (units + backdrop): " + pages.size() + "/"
+                        + levelPages(level) + " pages"));
         return lines;
+    }
+
+    /** The pages {@code level} may use: {@link #LEVEL_PAGES}, or its {@link #LEVEL_PAGES_EXCEPTIONS} entry. */
+    static int levelPages(String level) {
+        return LEVEL_PAGES_EXCEPTIONS.getOrDefault(level, LEVEL_PAGES);
     }
 
     private static String describe(List<Page> pages) {

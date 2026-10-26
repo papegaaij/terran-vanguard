@@ -51,6 +51,11 @@ public final class Defences {
     private int repairPause;
     /** The points the nanites repaired since the last restore. */
     private int repaired;
+    /**
+     * M8 part H, step H2: the armour never drops below this (from a level's boss's kill to its end, {@link
+     * LevelScript#armourFloor()}); 0 (none) until {@link #floor} sets it, every restore clears it.
+     */
+    private double floor;
 
     Defences(ShieldModel model, Plating plating, double mercySeconds) {
         this.model = model;
@@ -93,6 +98,7 @@ public final class Defences {
         repairProgress = 0;
         repairPause = 0;
         repaired = 0;
+        floor = 0;
     }
 
     /** Back to a boss checkpoint's shield and armour, with the armour lost in the level until then. */
@@ -220,8 +226,15 @@ public final class Defences {
         }
         double toArmour = armourDamage + shieldDamage - absorbed;
         if (toArmour > 0) {
-            armourLost += Math.min(armour, toArmour);
-            armour = Math.max(0, armour - toArmour);
+            // M8 part H: an armour floor holds it there (an armour already below it stays as it is).
+            if (floor > 0) {
+                double after = Math.max(Math.min(armour, floor), armour - toArmour);
+                armourLost += armour - after;
+                armour = after;
+            } else {
+                armourLost += Math.min(armour, toArmour);
+                armour = Math.max(0, armour - toArmour);
+            }
             mercy = mercyTicks;
             events.add(SimEvents.Type.ARMOUR_HIT, x, y);
             if (!critical && armour > 0 && critical(armour, plating.maxArmour())) {
@@ -261,6 +274,23 @@ public final class Defences {
         shield = Math.max(shield, Math.min(capacity(), shield + points));
     }
 
+    /**
+     * M8 part H, step H2 (design/campaign Level 28, The run cannot be lost): from now until the next restore the armour
+     * stops at {@code points} (hits still cost the shield and the armour above it; a hit that reaches it takes no
+     * more).
+     */
+    void floor(double points) {
+        if (!(points >= 0)) {
+            throw new IllegalArgumentException("an armour floor is 0 or more points: " + points);
+        }
+        floor = points;
+    }
+
+    /** M8 part H: the armour floor now; 0 for none. */
+    public double floor() {
+        return floor;
+    }
+
     /** An armour patch: adds {@code points} up to the plating's maximum. */
     void repair(double points) {
         armour = Math.min(plating.maxArmour(), armour + points);
@@ -271,6 +301,10 @@ public final class Defences {
         if (critical) {
             // Only once set, so the hash of a run whose armour never gets this low stays as it was.
             hash.add(1);
+        }
+        if (floor > 0) {
+            // M8 part H: only once a floor holds, so other runs hash as before.
+            hash.add(floor);
         }
         if (repairTicks > 0) {
             // M8 part A: only with the nanites fitted, so other runs hash as before.

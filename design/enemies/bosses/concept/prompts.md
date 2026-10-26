@@ -305,3 +305,41 @@ an ivory accent, the gold emblem and the hull code on the bow.
 - **Negative prompt:** photograph, painterly brush strokes, perspective camera, side view, text other than the hull code, watermark, organic shapes, glowing veins, camouflage, grey unmarked hull, cute, cartoon, purple hull.
 - **Animation brief:** as A; the broadside's ports are the sponsons' rows between the casemates.
 - **Mockup generator:** `python3 tools/concept/bosses_r48.py cruiser-b`
+
+# Round 58 — production art (M8 part H)
+
+## abyssal-maw-final-r58-a
+
+**Production art for round 58's review (step ART-H1), [tools/art/abyssal_maw.py](../../../../tools/art/abyssal_maw.py).**
+Not a mockup: the chosen round-48 look b "Coiled guardian" straight to production, its models
+(`tools/concept/bosses_r48.py` `coil_seg`, `maw_head`, `gill_sac`, `implant`) imported unchanged and every frame its own
+render under the fixed key light. **The coil**: one shingled segment (dark chitin plate over violet hide, a bone keel,
+the teal flank lines) at 32 headings and four widths (the tail's last nine taper in three steps), its glow-only twin
+(the teal lines, for the dark) and its tell (the lines lime: a sweep's bight, a shed point). **The head** in seven
+frames: rest, the throat's glow (the jaw ajar on a lime sliver), open (the lime throat), reared (phase 3: the jaw
+clamped and dark, the skull lifted toward the camera), the dive (the snout pitched down into the dark), the lunge
+(facing up, jaws wide) and dead (the jaw gaping and locked, the glows guttering), each with its glow, plus the teal orbs
+lighting along the jaw's rim (the wall's tell). **The gill sacs** idle, swelling, full and torn; **the Helix implants**
+shut (a grey scab), sparking (the cover split, two flicker frames), open (the hot-amber core, the cover blown aside) and
+blown, with an amber arc crawling over an open housing. **The effects**: a shed plate's lime flare, silt streaming off
+the plates, the lunge's shadow (the head's outline and a tiled column), an implant's blow-out (grey casing out of a
+dark burst, its amber flash and lashing arcs), a sinking segment's ichor (silt and lime), the vent's white-lime flare.
+The whole Maw is 0.86 of one 2048 atlas page. The GIF replays round 48's compressed fight (its timeline and shots) with
+these frames on Level 28's caldera under the hatchery light's stand-in, then the death: the implants blow 0.4 s apart,
+the coil shudders and sinks tail to head in silt and ichor, the head sinks and the vent flares. Pending the user's
+review.
+
+## ascendancy-cruiser-final-r58-a
+
+**Production art for round 58's review (step ART-H1),
+[tools/art/ascendancy_cruiser.py](../../../../tools/art/ascendancy_cruiser.py).** Not a mockup: the chosen round-48
+look b "Forked monitor" (`tools/concept/bosses_r48.py` `cruiser_b`, imported unchanged) rendered at 4x: the forked ram
+bow, the sponsons' twin casemates and gun-port rows, the gold crown fins, the tiered bridge, the ivory accent, the gold
+emblem, the gold and red rim light, and the Helix hull code **`HDX-417`** (Level 27's wreck, accepted in round 57) in
+gold down both sides of the bow. One hull serves both flanks (it is symmetric and flies bow up). With it: the running
+glow and the broadside's tell (every port hot amber), its shadow on the ice, the ice crust sheeting off in floes as it
+rises (six frames), a port's blast, the point defence's flash, the tracer dash, the flak marker and airburst, and
+sparks off the armour. The GIF: Level 28's breakout over the night ice, the cruisers rising dim and small through the
+split ice and shedding it, Okafor's line, then the run (broadside tells and volleys, two bands at once, flak, point
+defence). Pending the user's review.
+

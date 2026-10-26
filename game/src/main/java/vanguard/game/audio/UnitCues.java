@@ -116,6 +116,8 @@ final class UnitCues extends SoundFamily {
     private final TrenchCues trench;
     /** M8 part G: Level 27's Depth Hunters and relay beacons. */
     private final VentFieldCues ventField;
+    /** M8 part H: a lob's burst in Level 28's run is a cruiser's flak airburst. */
+    private final MawCues maw;
 
     UnitCues(
             SoundMix mix,
@@ -127,10 +129,12 @@ final class UnitCues extends SoundFamily {
             UnderIceCues underIce,
             AbyssCues abyss,
             TrenchCues trench,
-            VentFieldCues ventField) {
+            VentFieldCues ventField,
+            MawCues maw) {
         super(mix);
         this.trench = trench;
         this.ventField = ventField;
+        this.maw = maw;
         this.deepWater = deepWater;
         this.underIce = underIce;
         this.abyss = abyss;
@@ -248,7 +252,12 @@ final class UnitCues extends SoundFamily {
             }
             case UNIT_PART_DESTROYED ->
                 bank.play(alternate(Sfx.EXPLOSION_SMALL_A, Sfx.EXPLOSION_SMALL_B), EXPLOSIONS, pitch(0.04), pan);
-            case MORTAR_IMPACT -> bank.play(Sfx.MORTAR_IMPACT, 0.7f * EXPLOSIONS, pitch(0.05), pan);
+            case MORTAR_IMPACT -> {
+                // M8 part H: in the run a lob's burst is a cruiser's flak shell's airburst.
+                if (!maw.flakImpact(pan)) {
+                    bank.play(Sfx.MORTAR_IMPACT, 0.7f * EXPLOSIONS, pitch(0.05), pan);
+                }
+            }
             // A Brood Pod's fleshy burst, shot or on its own (round 08 b), as its Skitters fly out.
             case BROOD_HATCHED -> bank.play(Sfx.BROOD_BURST, EXPLOSIONS, pitch(0.04), pan);
             // Level 06: a cut chain's wet tear (round 27 a, provisional), its regrowth, the

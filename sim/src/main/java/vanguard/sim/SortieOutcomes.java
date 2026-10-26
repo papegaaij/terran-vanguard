@@ -36,7 +36,9 @@ final class SortieOutcomes implements PlayerFire.Hits, EnemyForce.Escapes, Links
     }
 
     @Override
-    public void partDestroyed(int piece, int part, int mount) {
+    public void partDestroyed(int piece, int hit, int mount) {
+        // M8 part H: a hit on a coiled boss's implant destroys the head whose HP it took.
+        int part = s.setPieces[piece].hpPart(hit);
         if (s.setPieces[piece].spec().parts().get(part).vital()) {
             s.objectivePasses.escortKill(mount);
         }

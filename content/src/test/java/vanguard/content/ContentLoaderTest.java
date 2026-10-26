@@ -24,6 +24,7 @@ class ContentLoaderTest {
         assertEquals(
                 List.of(
                         "abyss-ray",
+                        "abyssal-maw",
                         "barbfin",
                         "brood-carrier",
                         "brood-pod",
@@ -176,7 +177,7 @@ class ContentLoaderTest {
                 LEVEL_01,
                 text -> text.replaceFirst("enemy: needler", "enemy: neddler"),
                 "design/" + LEVEL_01
-                        + ": waves[2].enemy: unknown enemy 'neddler' (known: abyss-ray, barbfin, brood-carrier, brood-pod, burrower, choir-herald, coilwyrm, creeper, depth-hunter, driftjelly, drill-rig, dust-colossus, dust-devil, dust-kite, eel-swarm, ghost-drone, glassfin, glow-angler, gorgon-frigate, harbour-kraken, hive-node, lamprey, leviathan, mantis, mote-swarm, needler, polyp-mortar, ravager, reef-spitter, relay-beacon, revenant-walker, scuttler, shellback, siege-spire, siphon-pump, siren, skimmer, skitter, spawning-reef, spine-turret, spiral-nautilus, spore-bomber, stinger, tendril-anchor, threadcrawler, warden-tank, whirl-seed, wraith)");
+                        + ": waves[2].enemy: unknown enemy 'neddler' (known: abyss-ray, abyssal-maw, barbfin, brood-carrier, brood-pod, burrower, choir-herald, coilwyrm, creeper, depth-hunter, driftjelly, drill-rig, dust-colossus, dust-devil, dust-kite, eel-swarm, ghost-drone, glassfin, glow-angler, gorgon-frigate, harbour-kraken, hive-node, lamprey, leviathan, mantis, mote-swarm, needler, polyp-mortar, ravager, reef-spitter, relay-beacon, revenant-walker, scuttler, shellback, siege-spire, siphon-pump, siren, skimmer, skitter, spawning-reef, spine-turret, spiral-nautilus, spore-bomber, stinger, tendril-anchor, threadcrawler, warden-tank, whirl-seed, wraith)");
     }
 
     @Test

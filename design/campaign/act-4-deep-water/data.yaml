@@ -1,6 +1,8 @@
 # Act 4 – Deep Water: its levels and the act intro (title card and the four intro pages), rendered into README.md (Act
-# intro and outro). M8 part B, step B2, from the approved texts (round 48). The act-end outro after Level 28 and the
-# `next_act` for the release's end (ACT V · THE BELT) come with part H, with their images and voices.
+# intro and outro). M8 part B, step B2, from the approved texts (round 48). M8 part H, step H3: the act-end outro after
+# Level 28 (the four approved pages, the text unchanged, one paragraph each, each with its image: tools/art/briefing_images.py,
+# step ART-H2) and the `next_act` for the release's end, which moves here from Level 21 (ACT V · THE BELT; its setting
+# CERES, Level 29's Ceres Hub, a default of this step pending the user's review in round 58).
 # Schema: ../../tech/architecture/schemas-levels/README.md
 levels: [22, 28]
 
@@ -14,3 +16,13 @@ briefing:  # three pages by Commander Okafor, one by Dr. Varga (approved in roun
   - {speaker: Varga, image: act-4-europa-cutaway, line: "Europa is a shell of ice kilometres thick over an ocean. Forty thousand people live under it, in Thera Deep, and eat from its kelp farms. The Vrell are drilling for that ocean. They are not here for the ice."}
   - {speaker: Okafor, image: act-4-hydro-kit, line: "The Stormhawks are refitted for the water: sealed intakes, a torpedo rack, a pressure-proof hull. Everything slows down there, theirs and yours. Guns lose a third of their bite, beams and lasers nearly all. Save your credits for torpedoes and charges."}
   - {speaker: Okafor, expression: fierce, image: act-4-drop, line: "We hit the rigs on the surface first, then we follow the hole down. Drop in ninety minutes. Mission briefing follows. Aegis Actual out."}
+
+outro:  # after the Level 28 debrief with the act summary (Level 21's order), each page voiced and with its image (tools/art/briefing_images.py, step ART-H2)
+  music: act-complete  # track 24 under the first page, played once
+  pages:
+    - {speaker: Okafor, expression: grim, image: act-4-outro-orbit, line: "The Maw is dead and Europa's ocean is clear of the Vrell, for what that is worth. We are in orbit. The cruisers did not follow. We lost Aegis Two in the dark, and we do not know where he is.", notes: {image: "Europa from orbit, the ice shelf broken open where the shafts came up, two black-and-gold cruisers small against the limb, the Vrell carriers rising round them"}}
+    - {speaker: Varga, expression: grim, image: act-4-outro-hullcode, line: "I matched the code. It is the one from the Depth Hunter's wreck, and it is painted on their bows, in the open now. The beacons, the grey hulls, the drones on Mars: they all say the same name. The Vrell did not find us alone.", notes: {image: "Varga's screen: the hull code from the Depth Hunter's wreck beside the same code painted on a cruiser's bow, the relay beacons' frequencies in a strip below"}}
+    - {speaker: Okafor, image: act-4-outro-ready-room, line: "On Mars I told Dr. Varga to keep her eyes on the canyon. I silenced her, and I was wrong. That does not happen again. What she sees, she says, on every channel.", notes: {image: "Okafor alone in the transport's ready room under the lamps, Act 3's walker plate on a screen, her hands on the table"}}
+    - {speaker: Okafor, expression: fierce, image: act-4-outro-aegis, line: "Whatever comes over the radio next, we hear it together. Rook is out there. We ship out, and we find him. Aegis Actual out.", notes: {image: "Aegis Wing's Stormhawks on the transport's flight deck, one rail left empty with Rook's name stencilled on it"}}
+
+next_act: {act: ACT V, name: THE BELT, setting: CERES}   # the release ends after this act: "ACT V - THE BELT. CERES. COMING SOON." on the release's end, "ACT V - THE BELT: COMING SOON" in the hangar before L29

@@ -164,6 +164,22 @@ public final class Bulwark {
         y = Math.clamp(y + vy * SimStep.SECONDS, limit, PlayField.HEIGHT - limit);
     }
 
+    /**
+     * M8 part H: moved {@code distance} px along the unit vector (nx, ny) (out of a coiled boss's wall), its velocity
+     * into the wall dropped; the play field's edges clamp it as ever.
+     */
+    void pushOut(double nx, double ny, double distance) {
+        x += nx * distance;
+        y += ny * distance;
+        double into = vx * nx + vy * ny;
+        if (into < 0) {
+            vx -= into * nx;
+            vy -= into * ny;
+        }
+        x = Math.clamp(x, limit, PlayField.WIDTH - limit);
+        y = Math.clamp(y, limit, PlayField.HEIGHT - limit);
+    }
+
     /** Whether its cannon fires now: ready, not destroyed and the player fires. Starts the interval when it does. */
     boolean fires(boolean playerFiring) {
         if (destroyed || cooldown > 0 || !playerFiring) {

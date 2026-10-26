@@ -86,7 +86,11 @@ class TypicalHaulTest {
                         // M8 part F (step F3): the README's scale 0.43 (typical +1.3 %; the README's credit table)
                         Map.entry(26, 6_769),
                         // M8 part G (step G2): the scale fitted to 0.79 (levelReport: typical -1.5 % at 0.78)
-                        Map.entry(27, 6_804)),
+                        Map.entry(27, 6_804),
+                        // M8 part H (step H3): the README's scale 0.74 (levelReport: typical +0.0 %; the README's
+                        // credit
+                        // table)
+                        Map.entry(28, 6_665)),
                 perfect);
     }
 

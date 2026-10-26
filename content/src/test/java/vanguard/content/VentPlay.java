@@ -59,6 +59,8 @@ final class VentPlay {
     static final double ALONG_Y = 0.1;
     /** The cost of each px off a beacon's line: it pushes harder for the secondary's targets. */
     static final double BEACON_X = 1.5;
+    /** M8 part H: the gap it keeps beside a unit rising at it, px. */
+    static final double BESIDE = 10;
     /** It keeps off the side edges, px. */
     static final double EDGE = 40;
     /** A torpedo this close launches the Decoy Flares (if fitted and ready), px. */
@@ -69,6 +71,21 @@ final class VentPlay {
         FurnaceVents vents = sortie.vents();
         for (int g = 0; g < vents.grates(); g++) {
             if (vents.disc(g)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * M8 part H: whether the level has Depth Hunters without heat plumes (Level 28's approach): its waves hold a unit
+     * whose gun launches homing torpedoes. The approach is flown as the vent field is, without the discs.
+     */
+    static boolean hunted(Sortie sortie) {
+        var waves = sortie.script().waves();
+        for (int i = 0; i < waves.size(); i++) {
+            var gun = waves.get(i).enemy().gun();
+            if (gun.isPresent() && gun.get().homing().isPresent()) {
                 return true;
             }
         }
@@ -114,6 +131,7 @@ final class VentPlay {
         }
         double targetY = hunters ? UNDER_HUNTERS_Y : CRUISE_Y;
         Pickup pickup = sortie.pickupCount() > 0 ? sortie.pickup(0) : null;
+        boolean plumes = plumes(sortie);
         if (beacon != null) {
             targetX = beacon.renderX(1);
         } else if (pickup != null && (above == null || pickup.renderY(1) < 300)) {
@@ -123,6 +141,15 @@ final class VentPlay {
             targetX = above.renderX(1);
         } else if (below != null) {
             targetX = below.renderX(1);
+            if (!plumes && below.renderY(1) > below.renderY(0)) {
+                // M8 part H: without plumes (Level 28's approach) beside a unit rising at it (a rear ambush), not on
+                // its
+                // lane: lined up on it, the planner outran it upward to the top edge, the ambush stopped 90-200 px
+                // above
+                // it there (out of the pods' reach) and lived 9-14 s (BeamEraHpTest).
+                double beside = DarkPlay.HULL_X + below.hitbox().width() / 2 + BESIDE;
+                targetX += shipX >= targetX ? beside : -beside;
+            }
         } else {
             GroundObject ground = TargetPlay.lowestGround(sortie, shipY);
             if (ground != null) {

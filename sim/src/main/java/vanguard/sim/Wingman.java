@@ -210,6 +210,8 @@ public final class Wingman {
     private Links links;
     /** M7 part F: the level's furnace vents; null without. */
     private FurnaceVents vents;
+    /** M8 part H, step H2: the finale's cruisers, whose told bands he keeps out of; null without. */
+    private CruiserRun cruisers;
     /** M7 part F: where his goal moves clear of the walker's flame cone and the furnace vents (made once). */
     private final RookHazards hazards;
 
@@ -342,9 +344,9 @@ public final class Wingman {
         evading |= clearOfLanes(setPieces);
         // M7 part G: out of a pursuit's lunge lane during its tell and its dive.
         evading |= clearOfLunge();
-        if (setPieces.length > 0 || vents != null) {
+        if (setPieces.length > 0 || vents != null || cruisers != null) {
             // M7 part F: out of the walker's cone while it tells or burns, and off the glowing or burning vents.
-            if (hazards.clear(goalX, goalY, setPieces, vents)) {
+            if (hazards.clear(goalX, goalY, setPieces, vents, cruisers)) {
                 goalX = hazards.x();
                 goalY = hazards.y();
                 evading = true;
@@ -401,6 +403,14 @@ public final class Wingman {
      */
     void vents(FurnaceVents furnaceVents) {
         vents = furnaceVents;
+    }
+
+    /**
+     * M8 part H, step H2 (design/campaign Level 28, Rook and the escort): the finale's cruisers; he keeps his goal out of
+     * a broadside's band while it is told ({@link MawHazards}).
+     */
+    void cruisers(CruiserRun run) {
+        cruisers = run;
     }
 
     /** M7 part C: he keeps this far below a standing tendril's line (his hull's edge to the line), px. */

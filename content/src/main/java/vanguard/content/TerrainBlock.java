@@ -366,13 +366,15 @@ public record TerrainBlock(
 
     /**
      * What a touch of rock costs (design/campaign Level 16, Wall contact, M1 = a): {@code damage} per touch on each
-     * difficulty (shield first, overflow to armour), a push of {@code push} px along the wall's normal over {@code
+     * difficulty (shield first, overflow to armour; 0: a push without damage, Level 28's shaft), a push of {@code push} px along the wall's normal over {@code
      * push_seconds}, then {@code cooldown} s in which a further touch only clamps.
      */
     public record Contact(PerDifficulty<Double> damage, double push, double pushSeconds, double cooldown) {
         public Contact {
             for (Difficulty difficulty : Difficulty.values()) {
-                Check.positive("damage." + difficulty.name().toLowerCase(java.util.Locale.ROOT), damage.of(difficulty));
+                // M8 part H (Level 28's shaft, gap check §5 H9): 0 pushes without damage.
+                Check.notNegative(
+                        "damage." + difficulty.name().toLowerCase(java.util.Locale.ROOT), damage.of(difficulty));
             }
             Check.positive("push", push);
             Check.positive("push_seconds", pushSeconds);

@@ -10,7 +10,7 @@ updated: 2026-10-25
 
 ## Summary
 
-M8's additions: Europa's underwater rules and the level and unit keys of Act 4's parts A to G. Moved unchanged from the [architecture](../README.md#data-file-schemas)'s Data file schemas, which keep the shared conventions (keys, units, sizes) and the index of every schema.
+M8's additions: Europa's underwater rules and the level and unit keys of Act 4's parts A to H. Moved unchanged from the [architecture](../README.md#data-file-schemas)'s Data file schemas, which keep the shared conventions (keys, units, sizes) and the index of every schema.
 
 ## Design
 
@@ -149,7 +149,7 @@ M8's additions: Europa's underwater rules and the level and unit keys of Act 4's
   before it, inside the level).
 - **Level and unit, M8 part G** ([Level 27](../../../campaign/act-4-deep-water/level-27-hydrothermal-vents/README.md)
   and the [Depth Hunter](../../../enemies/naval/depth-hunter/README.md); loaded, checked (`VentChecks`, `FoundryChecks`)
-  and mapped (`FoundryRules`, `AbyssRules`, `TrenchRules`) and flown in step G1; defaults pending round 57): the
+  and mapped (`FoundryRules`, `AbyssRules`, `TrenchRules`) and flown in step G1; defaults accepted in round 57 (2026-10-25)): the
   `vents`' **`look: heat-plume`** with **`shape: disc`** (`square` the default: each grate's flame a disc `width` px
   across; `look: heat-plume` and `shape: disc` go together), **`enemy_damage`** (each `air` or `low-air` unit over a
   burning disc takes it once per burst; the kill is the player's) and **`bend`** (° below 90: a player's shot, an enemy
@@ -170,3 +170,48 @@ M8's additions: Europa's underwater rules and the level and unit keys of Act 4's
   sounds (`VentFieldCues`: in a level with Depth Hunters the homing missiles are their torpedoes); `stem_times`'
   `stems: none` with the music's `motif` leaves the motif layer alone over the bed (Level 27's wreck beat); the
   intel's strip marks a `column` `from: rear` (`Intel.Mark.Kind.COLUMN`).
+- **Level and unit, M8 part H** ([Level 28](../../../campaign/act-4-deep-water/level-28-abyssal-maw/README.md), the
+  [Abyssal Maw](../../../enemies/bosses/abyssal-maw/README.md) and the [Act 4](../../../campaign/act-4-deep-water/README.md)
+  end; flown by sim steps H1 (`CoilArena`) and H2 (`CruiserRun`, the floor, `MawHazards`), loaded, checked (`MawChecks`)
+  and mapped (`MawRules`, `MawBlock`) in step H3; pending the user's review in round 58). A boss script's **`coil`** (an
+  `anchored` boss without lanes, a stride or a breach, every part starting `sub`, its head the first vital part with a
+  `while: open` spot, the throat; screen px, y below the top edge, turned once into the simulation's frame):
+  **`intro`** (s from the arrival until the coil and the head are up: invulnerable, nothing fires); **`body`**
+  (`segments`, `spacing` px, `hitbox`, `path` `[[x, y], …]` the centre line from the head's end, run on straight past
+  its last point; `inner` `{left, right, bottom, top?}` the inner flanks; `clearance` px the ship and the escort keep
+  inside them: the wall, no damage); **`sacs`** (`parts`, destroyable, outside the bar; `swell` s before each ring: the
+  phase's `ring` attack breathes from them in turn); **`jaw`** (`glow`, `open` s: a phase's `fan` other than the wall's
+  fires from the throat, the throat ×2 while open); **`wall`** (`attack`, one of its `fan` attacks fired straight down
+  after a `glow`; `gaps` 1 or 2 orbs left out `near`–`far` px beside the ship's x at its height and within `chain` px of
+  the last wall's gap); **`sweeps`** (`segments` of the bight, `tell`, `swing`, `hold`, `back` s, `reach` and
+  `bottom_reach` px, `bullet` once a sweep with the push, `along` the side sweeps' range of the ship's y, `across` the
+  bottom one's of its x, `phases` `[{phase, every, sides: [left|right|bottom, …]}]`); **`dive`** (once in `phase` when
+  the head falls below `below`: `slide`, `quiet`, `shadow`, `lunge`, `body`, `return` s, the column `width` px at the
+  ship's x within `column`, `bullet` once to what the lunge passes; `sub` in the dark); **`implants`** (`parts` that are
+  not the head, from `phase` in turn: `tell`, `open` s, a hit counting on the head's HP at the part's multiplier,
+  armoured while shut; its `aimed` `attack` after each `arc`); **`shed`** (`enemy` a segment chain built with
+  `segments` (`LevelData.EnemyChange.segments`, which a level's `difficulty.<easy|hard>.enemies` may give too), `tell` s
+  of plate flare, `points` `[{side, at}]` (`at` px below the top edge on a side, from the left on the bottom), `phases`
+  `[{phase, every, most}]`; no edge warning; out of a kill ratio with `boss_counted: false`, still paying). The
+  difficulty hook **`coil_arena`** (`sweep_tell`, `shadow`, `implant_open`, `shed_segments`, `wall_gaps`; the attacks'
+  counts and bursts by the usual `attacks` hook). A level's **`cruisers`** (the finale's run, on the level clock: `rise`,
+  `run`, `end`, `fall` s, `hull` `[w, h]`, `inner` `[left, right]` the hulls' inner edges; `broadside` `{band, tell,
+  shells, speed, bullet, every, double_after?, free}` (no `double_after`: never two bands), `flak` `{markers, every,
+  fuse, radius, scatter, bullet, ring, speed, ring_bullet}`, `point_defence` `{burst, speed, bullet, every, turrets}`
+  (turret heights px below the top edge on the hull's inner edge); `easy` / `hard` `{tell, double_bands, markers,
+  flak_every, burst}`; invulnerable `low-air` set pieces, no bounty, above water: no difficulty lever on their numbers;
+  only after a boss's arrival, ending with its fall by the level's end; `CruiserRunSpec`) and **`armour_floor`** (points
+  the armour stops at from the boss's kill to the level's end, every difficulty, cleared on a retry; only with a boss;
+  `LevelScript.armourFloor`). A section's `medium: air` after a water section is the first water → air crossing (Level
+  28's breakout). A terrain's **`contact.damage`** may be 0 on a difficulty (a push without damage: Level 28's shaft).
+  The radio events **`boss-arrival`** (the boss's bar; the line plays though the arena's clock is halted) and
+  **`boss-dive`** (a coiled boss's dive, queued as a `PHASE` line); both only in a level with a boss. An act's
+  **`next_act`** moves to Act 4 (`{act: ACT V, name: THE BELT, setting: CERES}`: the release ends after Level 28).
+  Step H6: the music's **`motif_after_boss`** (`{from, to, fade_in, fade_out}` s of level time: after an act boss's
+  kill the theme, out since its boss music, comes back as its motif stem alone, the timed stems and section levels no
+  longer applied, faded in and out at its ends; only with a `boss_track`; `LevelData.Music.MotifAfterBoss`, Level 28's
+  run); the `stems` value `motif` now plays the motif as the music's `motif` cue says (silent before its `from`, the
+  stems silent from the theme's first sample). The threat profile's **`strip`** (`[choir-song]`: the L3 strip marks
+  each timed Choir song, `Intel.Mark.Kind.CHOIR`; only where a level asks). A section's `hold_after_boss` counts after
+  the boss's `death_seconds` (Level 28's 1 s: K+5). The ambiences `europa-hatchery` and `caldera-rumble` (a layer).
+  The game queues `boss-arrival` and `boss-dive` lines as `PHASE` lines.

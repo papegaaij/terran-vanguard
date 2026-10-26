@@ -60,7 +60,9 @@ Outputs (assets/sprites/intel/, packed onto the shared sprite pages as ``intel/<
                      huge, ground" contact, the production walker's sprites at heading 0 placed by
                      its pivots, broken by the unclassified pictures' sensor noise); dust-colossus (L21's act
                      boss, M7 part H batch: the open mouth of tools/art/dust_colossus.py as phase 3 shows it,
-                     straight up, the outline only)
+                     straight up, the outline only); abyssal-maw (L28's act boss, M8 part H batch: the coil of
+                     tools/art/abyssal_maw.py round the arena's edges with the head and its sacs at the top, as
+                     phase 1 shows it, the outline only)
   design/ui/hangar/concept/intel-final-r13-a.png   review sheet of the UI batch's pictures
   design/ui/hangar/concept/intel-final-r16-a.png   review sheet of the M4 part C batch's
   design/ui/hangar/concept/intel-final-r17-a.png   review sheet of the M4 part D batch's
@@ -117,6 +119,7 @@ import coilwyrm  # noqa: E402  (the Coilwyrm's production models)
 import dust_kite  # noqa: E402  (the Dust Kite's production model)
 import drill_rig  # noqa: E402  (the Drill Rig's production models)
 import abyss_ray  # noqa: E402  (the Abyss Ray's production model)
+import abyssal_maw  # noqa: E402  (the Abyssal Maw's production sprites)
 import barbfin  # noqa: E402  (the Barbfin's production model)
 import siren  # noqa: E402  (the Siren's production model)
 import glow_angler  # noqa: E402  (the Glow Angler's production model)
@@ -176,7 +179,8 @@ BATCHES = {"spore-bomber": "M4 part C batch", "whirl-seed": "M4 part C batch",
            "drill-rig": "M8 part B batch", "glassfin": "M8 part C batch", "eel-swarm": "M8 part C batch",
            "abyss-ray": "M8 part D batch", "barbfin": "M8 part D batch",
            "siren": "M8 part E batch", "spiral-nautilus": "M8 part E batch", "glow-angler": "M8 part F batch",
-           "depth-hunter": "M8 part G batch", "relay-beacon": "M8 part G batch"}
+           "depth-hunter": "M8 part G batch", "relay-beacon": "M8 part G batch",
+           "boss-abyssal-maw": "M8 part H batch"}
 # the concept round that reviews a batch
 ROUNDS = {UI_BATCH: "r13", "M4 part C batch": "r16", "M4 part D batch": "r17", "M4 part F batch": "r23",
           "M5 part B batch": "r30", "M5 part C batch": "r31", "M5 part D batch": "r32", "M5 part E batch": "r33",
@@ -184,7 +188,8 @@ ROUNDS = {UI_BATCH: "r13", "M4 part C batch": "r16", "M4 part D batch": "r17", "
           "M7 part B batch": "r38", "M7 part C batch": "r39", "M7 part D batch": "r40",
           "M7 part E batch": "r41", "M7 part F batch": "r42", "M7 part H batch": "r44", "M8 part B batch": "r51",
           "M8 part C batch": "r52", "M8 part D batch": "r53", "M8 part E batch": "r54",
-          "M8 part F batch": "r55", "M8 part G batch": "r57"}
+          "M8 part F batch": "r55", "M8 part G batch": "r57",
+          "M8 part H batch": "r58"}
 OUT = SPRITES / "intel"
 CONCEPT = DESIGN / "ui" / "hangar" / "concept"
 PORTRAIT = 30
@@ -232,7 +237,7 @@ ENEMIES = {
 # units the intel shows unnamed before their first level is flown: name -> the model whose outline it shows
 UNCLASSIFIED = {"ghost-drone": storm_units.ghost_intel_model}
 BOSSES = ("gorgon-frigate", "brood-carrier", "leviathan", "harbour-kraken", "siege-spire", "revenant-walker",
-          "dust-colossus")
+          "dust-colossus", "abyssal-maw")
 # silhouettes of contacts the intel cannot classify: drawn with the unclassified pictures' sensor noise
 NOISY = {"revenant-walker"}
 # portraits that are not one model: name -> the 8x render (an RGBA array), as sdf.render gives it
@@ -419,7 +424,8 @@ def spire_mask():
 def silhouette(slug):
     mask = {"gorgon-frigate": gorgon_mask, "brood-carrier": carrier_mask, "leviathan": leviathan_mask,
             "harbour-kraken": kraken_mask, "siege-spire": spire_mask, "revenant-walker": walker_mask,
-            "dust-colossus": dust_colossus.intel_mask}[slug]()
+            "dust-colossus": dust_colossus.intel_mask,
+            "abyssal-maw": abyssal_maw.intel_mask}[slug]()
     ys, xs = np.nonzero(mask)
     mask = mask[ys.min():ys.max() + 1, xs.min():xs.max() + 1]
     inner = SILHOUETTE - 6

@@ -87,7 +87,9 @@ class DestructibleGlowTest {
         // survey sub (its dead lamp's pinger until its first hit, sparks at the dent after it), M8 part F: Level 26's
         // farm barge (its sodium lamp until its first hit, the lamp stuttering and sparks at the dent after it), M8
         // part
-        // G: Level 27's Marlin (her stern lamp until the first hit, the resin's teal glints and sparks after it).
+        // G: Level 27's Marlin (her stern lamp until the first hit, the resin's teal glints and sparks after it), M8
+        // part
+        // H: Level 28's Pelagic-3 (her beacon's red blink until the first hit, the resin's teal and sparks after it).
         assertEquals(
                 Set.of(
                         "crevasse-lip",
@@ -97,6 +99,7 @@ class DestructibleGlowTest {
                         "marlin-hauler",
                         "meridian-wreck",
                         "payroll-safe",
+                        "recon-sub",
                         "survey-probe",
                         "survey-sub"),
                 glowing);

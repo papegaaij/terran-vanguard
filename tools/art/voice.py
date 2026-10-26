@@ -296,7 +296,9 @@ def main(args):
     if args[:1] == ["--whisper"]:
         whisper(args[1])
         return
-    subprocess.run([str(ROOT / "gradlew"), "-q", ":pipeline:voiceLines"], cwd=ROOT, check=True)
+    # The daemon's idle timeout (10 min) so a daemon started here ends on its own (never killed or stopped).
+    subprocess.run([str(ROOT / "gradlew"), "-q", "-Dorg.gradle.daemon.idletimeout=600000", ":pipeline:voiceLines"],
+                   cwd=ROOT, check=True)
     lines = {line["path"]: line for line in json.loads(LINES.read_text())}
     todo = [line for path, line in lines.items() if not (ROOT / "assets" / path).exists()]
     # Only files named by a key are this renderer's: a speaker's stage sound (the Choir sings,

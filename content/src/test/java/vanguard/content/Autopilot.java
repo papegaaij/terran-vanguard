@@ -50,8 +50,9 @@ import vanguard.sim.Sortie;
  * the drag, the siphon pumps and the Glassfin's rams, Level 23), {@link AbyssPlay} (M8 part D: the Abyss Ray's shadow,
  * the Barbfins, Level 24), {@link SirenPlay} (M8 part E: the nests' bodies, the trench's rock and the slow, Level 25), {@link DarkPlay} (M8 part
  * F: every move planned among the Glow Anglers' lunges and the jellies' rings, Level 26), {@link VentPlay} (M8 part G: every
- * move planned among the heat plumes, the Depth Hunters' torpedoes and the bullets, the relay beacons first, Level 27) and the
- * moves' {@link MovePlanner}. It reads the sortie's state only, so it is deterministic; the recorded replay stores its commands. Public for the campaign tests (the
+ * move planned among the heat plumes, the Depth Hunters' torpedoes and the bullets, the relay beacons first, Level 27; M8
+ * part H: Level 28's approach too), {@link MawPlay} and {@link RunPlay} (M8 part H: the Abyssal Maw's arena and the
+ * cruisers' run, Level 28) and the moves' {@link MovePlanner}. It reads the sortie's state only, so it is deterministic; the recorded replay stores its commands. Public for the campaign tests (the
  * Act 1 playthrough, {@code ActPlaythroughTest}).
  */
 public final class Autopilot {
@@ -167,9 +168,20 @@ public final class Autopilot {
             boolean left = ((long) Math.floor(sortie.realSeconds() / SHAKE_SECONDS)) % 2 == 0;
             return commands | (left ? Command.LEFT.bit() : Command.RIGHT.bit());
         }
-        if (VentPlay.plumes(sortie)) {
+        SetPiece coiled = MawPlay.coiledBoss(sortie);
+        if (coiled != null) {
+            // M8 part H: the Abyssal Maw's arena (Level 28, MawPlay): every move planned among the coil, its sweeps,
+            // the
+            // lunge's column, the fan walls' gaps and the bullets.
+            return commands | MawPlay.move(sortie, coiled);
+        }
+        if (RunPlay.running(sortie)) {
+            // M8 part H: the cruisers' run (Level 28's finale, RunPlay): the free band, off the flak.
+            return commands | RunPlay.move(sortie);
+        }
+        if (VentPlay.plumes(sortie) || VentPlay.hunted(sortie)) {
             // M8 part G: a level with heat plumes (Level 27): every move planned among the discs, the torpedoes and the
-            // bullets, the beacons first (VentPlay).
+            // bullets, the beacons first (VentPlay); M8 part H: Level 28's approach (its Hunters, no plumes) too.
             return commands | VentPlay.move(sortie);
         }
         if (DarkPlay.dark(sortie)) {

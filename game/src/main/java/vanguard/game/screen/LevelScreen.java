@@ -446,6 +446,27 @@ public final class LevelScreen implements GameScreen {
         music.ambienceLayers(ambienceLayers(level.music()));
         // M8 part F: the timed stem changes (Level 26's dark stem, the silence, the warm pad).
         music.stemTimes(level.music().stemTimeList(), stem -> services.files.internal(Tracks.stemPath(theme, stem)));
+        // M8 part H: the run under the theme's motif alone after the act boss's kill (Level 28).
+        music.motifAfterBoss(level.music().motifAfterBoss().orElse(null));
+    }
+
+    /**
+     * M8 part H (design/enemies/bosses/abyssal-maw, Music): whether a coiled boss is in its dive's darkness now, from
+     * its slide into the dark through the lunge (the boss music drops away under it and comes back after).
+     */
+    public static boolean coilDiving(Sortie sortie) {
+        for (int k = 0; k < sortie.setPieceCount(); k++) {
+            var coil = sortie.setPiece(k).coil();
+            if (coil.isPresent()) {
+                switch (coil.get().diveState()) {
+                    case SLIDE, QUIET, SHADOW, LUNGE -> {
+                        return true;
+                    }
+                    default -> {}
+                }
+            }
+        }
+        return false;
     }
 
     /** M7 part H: the end of the level's crawling arena (a breaching boss's, Level 21's), s; NaN without one. */
@@ -712,6 +733,7 @@ public final class LevelScreen implements GameScreen {
         // M8 part F: a line with its own duck (Level 26's Choir); the portrait's static ahead of its line, its sound.
         music.radioDuck(radioEvents.radioDuckDb());
         staticLead();
+        music.bossDrop(coilDiving(sortie));
         music.update(
                 sortie.section(),
                 sortie.levelSeconds(),
@@ -847,6 +869,8 @@ public final class LevelScreen implements GameScreen {
             eventEffects.react(events, i);
             switch (events.type(i)) {
                 case BOSS_DESTROYED -> music.bossDown();
+                // M8 part H: the reveal sting (track 30) at the cruisers' rise (Level 28).
+                case CRUISER_RISE -> music.reveal();
                 case BOSS_INCOMING -> {
                     // Round 41 (the 2026-10-19 playtest, Level 14): a boss with a lead time is announced that
                     // long before it arrives, so its warning box shows before the boss is reached.

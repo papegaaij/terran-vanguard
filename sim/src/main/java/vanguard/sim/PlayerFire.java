@@ -147,6 +147,8 @@ final class PlayerFire {
     private Missiles missiles;
     /** M7 part C: the level's tendril gates, which a beam burns on its way past; null without. */
     private Links links;
+    /** M8 part H: the finale's cruisers, whose hulls stop the beam; null without. */
+    private CruiserRun cruisers;
     /** M8 part A: the medium the ship flies in (the air unless the sortie sets the level's). */
     private Medium medium = Medium.air();
     /** The enemy (a serial) the player's shots damaged last, for the wingman's first target; -1 for none. */
@@ -220,6 +222,16 @@ final class PlayerFire {
     /** The level's rock; null without terrain. */
     Canyon canyon() {
         return canyon;
+    }
+
+    /** M8 part H, step H2: the finale's cruisers (Level 28), whose hulls stop the beam; null without. */
+    void cruisers(CruiserRun run) {
+        cruisers = run;
+    }
+
+    /** The finale's cruisers; null without. */
+    CruiserRun cruisers() {
+        return cruisers;
     }
 
     /** The level's tendril gates; null without. */

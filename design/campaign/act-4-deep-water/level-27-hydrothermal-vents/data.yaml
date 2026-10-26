@@ -6,7 +6,7 @@
 # heat-plume` with `shape: disc`, `enemy_damage` and `bend`; the Depth Hunter's hover `y` band with a `drift` and its
 # torpedo's `aim: facing` (its stat block); a `column` `from: rear` of hovering units; a `rear ambush` of units that hold
 # `above_ship` (the Barbfin); a `turret nest` wave's `on_ground` (the Sirens grown on a chimney stack).
-# Defaults of the gap check (m8g-gaps.md §5, pending the user's review in round 57): the plume kills the player's (G5),
+# Defaults of the gap check (m8g-gaps.md §5, accepted in round 57): the plume kills the player's (G5),
 # the bend's kinds (G6), the Bulwark's aimed shell and its hazards (G7), the Sirens' ground nest (G8), the rear Barbfin
 # pairs (G9), the light (G10), the music (G11), the beacons scenery in Levels 24–26 (G13); the user's Q.1 = a (the plan
 # refits the Tail Gun on the rear at this visit: step G3's balance plan).

@@ -4,7 +4,7 @@ design: review
 implementation: done
 art: n/a
 depends-on: [../architecture]
-updated: 2026-10-25
+updated: 2026-10-26
 ---
 
 # Agent tooling
@@ -53,6 +53,15 @@ earlier steps.
 - **`pyrightconfig.json`** (tracked): only `tools/`, type checking off (the scripts are untyped numpy/PIL code: only
   syntax errors and unresolved imports are reported), the tool folders as import roots (the scripts import each other by
   folder), the voice venv links.
+- **The watch proxy** (`tools/dev/lsp_watch_proxy.py`, installed to `~/.local/share/lsp-watch-proxy/`): Claude Code's LSP
+  client never tells a server about files changed on disk ([claude-code#85225](https://github.com/anthropics/claude-code/issues/85225),
+  open), so files created, changed or deleted by the shell, git or a generator stayed stale in the index and the servers
+  pushed false errors ("cannot be resolved" for classes that compile). Both launchers run the server behind this stdio proxy:
+  it passes every message through, advertises `workspace.didChangeWatchedFiles` on the client's behalf and answers the
+  server's registration of it (Pyright drops file events without it), and polls the watched files once a second (about
+  15 ms for the 1,100 Java files, 30 ms for the Python), sending the server what appeared, changed or disappeared. Tested
+  outside Claude Code: a class created through the shell is found by jdtls within 4 s and gone after its deletion; Pyright
+  clears and restores an import error the same way.
 - **One server per Claude Code session**, shared by its sub-agents: about 1.7 GB for jdtls and 0.9 GB for Pyright.
 
 ### Rules for agents
@@ -62,8 +71,11 @@ In `briefs/common.md` (the steps' shared brief): find Java and Python code with 
 they work with by line range, never a window around a hit; read big READMEs with `tools/doc_section.py`; edit Java and
 Python with Claude Code's Edit/Write tools. Known limits:
 
-- The servers only see changes made with Edit/Write: files changed by the shell, git or a generator stay stale in the
-  index (a deleted class still shows up) until the server restarts.
+- jdtls works from disk only (`--disk-only`): files edited with Claude Code's Edit/Write tools fell out of its index
+  through the client's document sync ([claude-code#76870](https://github.com/anthropics/claude-code/issues/76870)), so the
+  proxy drops that sync and the watcher reports every change within about 2 s, whatever made it (verified in Claude Code
+  2026-10-26: a class written with the Write tool is found by `workspaceSymbol`, and gone after its deletion). Pyright keeps the
+  document sync (it reports diagnostics only for open files).
 - jdtls reports Eclipse-compiler warnings `./gradlew` does not (resource leak, missing switch case, unused); Pyright adds
   "is not accessed" hints. Both are ignored; the Gradle build is the judge.
 - Pyright's `documentSymbol` lists local variables too; the module's API is its unindented names.
@@ -71,9 +83,14 @@ Python with Claude Code's Edit/Write tools. Known limits:
 ## Implementation
 
 - [x] `tools/dev/setup_lsp.sh` installs the pinned servers, the launcher and the plugins, and links the voice venvs.
+- [x] Both servers run behind `tools/dev/lsp_watch_proxy.py`, so files changed outside Claude Code's edit tools reach them.
 - [x] `pyrightconfig.json` and the `.gitignore` lines for jdtls's output are tracked.
 - [x] `tools/doc_section.py` reads Markdown by section (CLAUDE.md, *Tools*).
-- [ ] Token use of part H's steps compared with parts F and G; keep or drop the servers on the result.
+- [ ] Token use of part H's steps compared with parts F and G; keep or drop the servers on the result. Measured
+  2026-10-26: the servers were hardly used (16 LSP calls in part H's seven code steps, all `documentSymbol`; median
+  0.08 s, none empty), while shell reads of Java stayed at about 470 calls. The code steps used 49.5M tokens each
+  against 34–36M in parts E–G, but part H's work was larger, so the cost difference says nothing about the servers.
+  Memory: jdtls 1.5–2.0 GB, Pyright 0.2–1.0 GB. Not yet decided.
 
 ## Decisions
 

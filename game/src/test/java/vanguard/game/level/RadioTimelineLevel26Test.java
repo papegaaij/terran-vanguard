@@ -43,4 +43,25 @@ class RadioTimelineLevel26Test extends RadioTimeline {
             }
         }
     }
+
+    /**
+     * Step H7: Okafor's "Finish the dive" is the level-end line (timed at t=187 it ended 3.2 s after the level), so every
+     * run is flown to the end ({@link #endRuns()}, the line-end and outro checks): in each it opens within a second of
+     * the level's end (a run with a bark of Rook's modelled just before the end aside: his barks end at the loss).
+     */
+    @Test
+    void theClosingLineOpensAsTheLevelEnds() {
+        List<EndRun> runs = endRuns();
+        assertTrue(!runs.isEmpty(), "Level 26 is flown to its end");
+        for (EndRun run : runs) {
+            Played last = run.played().stream()
+                    .filter(line -> line.cue().line().startsWith("Finish the dive"))
+                    .findFirst()
+                    .orElseThrow();
+            double opened = last.opened().orElseThrow();
+            if (Double.isNaN(run.bark())) {
+                assertTrue(opened >= run.ended() && opened <= run.ended() + 1, run + ": opened at " + opened);
+            }
+        }
+    }
 }

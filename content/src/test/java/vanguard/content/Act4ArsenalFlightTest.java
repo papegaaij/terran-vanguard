@@ -152,7 +152,12 @@ class Act4ArsenalFlightTest {
                 // M8 part C: Level 23 dives at its waterline (25.5 s); step C3's Level23Test flies the rest. M8 part D:
                 // Level 24 is under water from its start (the level's medium), no waterline; M8 part E: Level 25 too;
                 // M8
-                // part F: Level 26 too; M8 part G: Level 27 too.
+                // part F: Level 26 too; M8 part G: Level 27 too. M8 part H: Level 28 from its start, back in the air at
+                // its breakout (115 s, the first water -> air crossing).
+                if (key.equals("act-4-deep-water/level-28-abyssal-maw")) {
+                    assertEquals(List.of(115.0), level.waterlines(), key);
+                    continue;
+                }
                 assertEquals(
                         key.equals("act-4-deep-water/level-24-abyssal-plain")
                                         || key.equals("act-4-deep-water/level-25-siren-trench")

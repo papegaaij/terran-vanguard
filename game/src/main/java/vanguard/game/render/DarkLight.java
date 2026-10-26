@@ -113,6 +113,8 @@ final class DarkLight implements Disposable {
     private RookLossLooks rookLoss;
     /** Per enemy kind its glow pool's index in {@link #GLOWS} (-1 none), built at the first draw. */
     private int[] glowOf;
+    /** M8 part H: how far the static lights gutter this frame (0–1): the Abyssal Maw's dive darkening its vent. */
+    private float dim;
 
     private DarkLight(LevelData level, KindLooks kinds, SoftGlow softGlow) {
         this.kinds = kinds;
@@ -190,6 +192,14 @@ final class DarkLight implements Disposable {
         return Optional.empty();
     }
 
+    /**
+     * M8 part H (design/enemies/bosses/abyssal-maw, Tells: the dive, "the vent gutters"): the static lights at {@code 1 -
+     * share} of their strength this frame ({@link MawLooks#ventDim}); 0 leaves them whole.
+     */
+    void ventDim(float share) {
+        dim = Math.clamp(share, 0, 1);
+    }
+
     /** Rook's loss's looks, for his lamp as he spins down (Level 26). */
     void rookLoss(RookLossLooks looks) {
         rookLoss = looks;
@@ -251,7 +261,7 @@ final class DarkLight implements Disposable {
             if (y < -radius || y > PlayField.HEIGHT + radius) {
                 continue;
             }
-            tint(batch, grade, y, lightColour[i][0], lightColour[i][1], lightColour[i][2], LIGHT);
+            tint(batch, grade, y, lightColour[i][0], lightColour[i][1], lightColour[i][2], LIGHT * (1 - dim));
             grade.pool(batch, lightX[i], y, radius);
         }
         SpecialSlot special = sortie.special();

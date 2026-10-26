@@ -32,7 +32,10 @@ final class ChainRules {
         // M7 part C: a chain whose cut rear part dies (the Threadcrawler's cut) has no regrow.
         Optional<EnemyData.Regrow> regrow = chain.regrow();
         Optional<EnemyData.Hook> hook = UnitRules.hook(enemy, difficulty);
-        int segments = hook.flatMap(EnemyData.Hook::segments).orElse(chain.segments());
+        // M8 part H: a coiled boss's shed chain carries the boss's segment count (MawRules).
+        int segments = change.flatMap(LevelData.EnemyChange::segments)
+                .or(() -> hook.flatMap(EnemyData.Hook::segments))
+                .orElse(chain.segments());
         EnemyData.PartData tail = enemy.partList().orElseThrow().stream()
                 .filter(part -> !part.kind().equals("vital"))
                 .findFirst()

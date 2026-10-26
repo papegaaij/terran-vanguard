@@ -58,6 +58,9 @@ final class LunaLooks {
     private final AtlasRegion streak;
     private final AtlasRegion lamp;
     private final TextureRegion pixel;
+    /** M8 part H: the lobs another look draws (the cruisers' flak, {@link CruiserLooks#flakLob}); null for none. */
+    private java.util.function.Predicate<Lob> skipped;
+
     private final FlashShader flash;
 
     /**
@@ -127,11 +130,23 @@ final class LunaLooks {
         batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
     }
 
+    /** M8 part H: the lobs another look draws instead (the cruisers' flak shells with their own markers). */
+    void skipLobs(java.util.function.Predicate<Lob> lobs) {
+        skipped = lobs;
+    }
+
+    private boolean skipped(Lob lob) {
+        return skipped != null && skipped.test(lob);
+    }
+
     /** The lobs' markers on the ground: a lime ring as big as the impact circle, pulsing faster as it lands. */
     void drawMarkers(SpriteBatch batch, Sortie sortie, float alpha) {
         batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
         for (int i = 0; i < sortie.lobCount(); i++) {
             Lob lob = sortie.lob(i);
+            if (skipped(lob)) {
+                continue;
+            }
             double progress = lob.progress(alpha);
             float scale = (float) (lob.impactRadius() / MARKER_RADIUS);
             float pulse = (float) (0.55 + 0.45 * Math.abs(Math.sin(Math.PI * progress * (2 + 4 * progress))));
@@ -158,6 +173,9 @@ final class LunaLooks {
     void drawBlobs(SpriteBatch batch, Sortie sortie, float alpha) {
         for (int i = 0; i < sortie.lobCount(); i++) {
             Lob lob = sortie.lob(i);
+            if (skipped(lob)) {
+                continue;
+            }
             double progress = lob.progress(alpha);
             double x = lob.renderX(alpha);
             double y = lob.renderY(alpha);

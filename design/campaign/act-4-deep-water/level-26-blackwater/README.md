@@ -2,9 +2,9 @@
 title: Level 26 – Blackwater
 design: approved
 implementation: in-progress
-art: proposed
+art: final
 depends-on: [../../../enemies/naval/glow-angler, ../../../enemies/naval/depth-hunter, ../../../enemies/naval/siren, ../../../enemies/naval/spiral-nautilus, ../../../enemies/naval/eel-swarm, ../../../enemies/naval/driftjelly, ../../../story/characters/the-choir, ../../../story/characters/rook, ../../../world/europa, ../../../player/wingmen, ../../../player/specials]
-updated: 2026-10-25
+updated: 2026-10-26
 ---
 
 # Level 26 – Blackwater
@@ -295,7 +295,7 @@ end of the level. Rook's escort flight plays it; without him it is radio only.
 | 166–172 | Silence; the music out; the ship alone in the black with the jellies' glow. |
 | 173.5 | Okafor: "Aegis Two, report. Rook? Rook, answer!" (no answer). |
 | 180.5 | Varga: "His lamp went down, Commander." |
-| 187 | Okafor: "Finish the dive, Lancer. We will find him." (the level-end line). |
+| 188 | Okafor: "Finish the dive, Lancer. We will find him." (the level-end line: it opens as the level ends, the outro waits for it). |
 
 - **The state**: it is not a normal "Downed" (the eject and the repair of the next visit): the save records
   `rook_missing: true` **from the win** of this level ([wingmen](../../../player/wingmen/README.md#rooks-loss-and-absence-l26l29)).
@@ -381,7 +381,7 @@ light, Lancer: that one is ours."
 | t=161.2 | Rook | "Lancer, something's below u—" |
 | t=173.5 | Okafor | "Aegis Two, report. Rook? Rook, answer!" |
 | t=180.5 | Varga | "His lamp went down, Commander." |
-| t=187 (Level end (t=187)) | Okafor | "Finish the dive, Lancer. We will find him." |
+| Level end (t=188, the closing line) | Okafor | "Finish the dive, Lancer. We will find him." |
 | Secondary met (at the end) | Okafor | "Clean crossing. Now find him, Lancer." |
 <!-- /data -->
 
@@ -396,7 +396,9 @@ Retimed again after round 55 (the user's playtest of 2026-10-24: "The line comes
 down"; "Rook can't talk after being shot down"): the cut line comes **before** the hits and the hits cut it. It is due
 at t=161.2, as soon as Varga's shout has closed (≈ 161.1 at the default text speed), the trails rise from t=162.5 under
 "something's below" and the hits land at t=163.5, 2.3 s into the line, in its last word (the take's "u"); everything
-after the loss moved 6 s later (Okafor 173.5, Varga 180.5, Okafor's level-end line 187, the level's end 188).
+after the loss moved 6 s later (Okafor 173.5, Varga 180.5, Okafor's level-end line 187, the level's end 188). Step H7
+made Okafor's last line the level-end line (it ended 3.2 s after the level when timed at 187): it opens at t=188 and the
+outro waits for it (`RadioTimelineLevel26Test` flies every run to the end).
 `RadioTimelineLevel26Test` checks on every difficulty and fit that the line opens before the trails and that the hits
 land at least 2 s in and while its voice still speaks.
 
@@ -461,8 +463,8 @@ Production art of M8 part F (round 55, step ART-F) and game captures; the genera
 | [concept/backdrop-proposal.yaml](concept/backdrop-proposal.yaml) | The generator's `backdrop:` block, the `terrain:` block (the scarp, three notches) the art is drawn for and the static lights it assumes | chosen (round 55, F.1: accepted as final) |
 | [concept/l26-props-final-r55-a.png](concept/l26-props-final-r55-a.png) | The secret (`tools/art/l26_props.py`): the drowned farm barge with its one working sodium lamp (lying, hit, opened) and its glow (the lamp, then the stutter and sparks) (sheet) | chosen (round 55, F.6: accepted as final) |
 | [concept/l26-props-final-r55-a.gif](concept/l26-props-final-r55-a.gif) | The barge's warm lamp among the anglers' teal lures, found by the cone, shot open, its crate rising | chosen (round 55, F.6: accepted as final) |
-| [concept/rook-loss-final-r55-a.png](concept/rook-loss-final-r55-a.png) | Rook's loss (`tools/art/rook_loss.py`): the hydro craft's tumble and its failing lamp, the torpedo trail strip and motor, the hit's flash under water (sheet) | proposed (round 55, F.5: the spin redone on the screen after the user's playtest, 2026-10-24; shown again in round 57) |
-| [concept/rook-loss-final-r55-a.gif](concept/rook-loss-final-r55-a.gif) | The trails rising in their lanes, the three flashes, the spin-down off the bottom edge, the dark | proposed (round 55, F.5: the spin redone on the screen after the user's playtest, 2026-10-24; shown again in round 57) |
+| [concept/rook-loss-final-r55-a.png](concept/rook-loss-final-r55-a.png) | Rook's loss (`tools/art/rook_loss.py`): the hydro craft's tumble and its failing lamp, the torpedo trail strip and motor, the hit's flash under water (sheet) | chosen (round 55, F.5 redone after the user's playtest of 2026-10-24: accepted as final in round 57, L.1) |
+| [concept/rook-loss-final-r55-a.gif](concept/rook-loss-final-r55-a.gif) | The trails rising in their lanes, the three flashes, the spin-down off the bottom edge, the dark | chosen (round 55, F.5 redone after the user's playtest of 2026-10-24: accepted as final in round 57, L.1) |
 | [concept/lamps-capture-r55-a.png](concept/lamps-capture-r55-a.png) | Game capture, M8 part F (step F6; Level 26 on medium, `--invulnerable`, auto-fire, the balance plan's Level 26 fit: Harpoon Torpedoes L4, Depth Charges L3, two Micro-Missile Pods L3, the Pressure hull, the Sonar Pulse pressed at t≈64 and t≈110, Rook along; t = the level time): the lamp stretch into the dark (t=1, 5, 9, 13, 17): the lamp posts' sodium pools and the beacons scrolling with the ground, the ambient ramping 20 → 6 % over t=8–18, the twin headlight cones with their faint haze lighting the floor and the marine snow | chosen (round 55, F.2: accepted) |
 | [concept/open-water-capture-r55-a.png](concept/open-water-capture-r55-a.png) | Game capture (step F6, the same run, 1:1): the cones in open water (t=26, 28, 30): the faint beam haze (step F5) and the snow lit only inside the cones, Rook's lamp beside the ship | chosen (round 55, F.2: accepted) |
 | [concept/angler-capture-r55-a.png](concept/angler-capture-r55-a.png) | Game capture (step F6, a run with the guns held, 1:1 round the ship, t≈34–36): Glow Anglers in the dark as a teal bead and red eyes on the faint rim, one lunging at the ship and ringing its 8 shots | chosen (round 55, F.3: accepted) |
@@ -471,11 +473,11 @@ Production art of M8 part F (round 55, step ART-F) and game captures; the genera
 | [concept/sonar-capture-r55-a.png](concept/sonar-capture-r55-a.png) | Game capture (step F6, the main run): the constellation (t=109.5, 111, 113, 116, 118): the Anglers as beads in the black, the second Sonar Pulse (t≈110) lighting them whole for its 6 s, the dark again after it | chosen (round 55, F.2: accepted) |
 | [concept/choir-capture-r55-a.png](concept/choir-capture-r55-a.png) | Game capture (step F6, the main run, whole screen): the Choir's line (t=97, 98.5, 99.5, 101): the static in the HUD's portrait frame for the 2 s before it, then the Choir's portrait and its subtitled whisper | chosen (round 55, C.5: accepted) |
 | [concept/choir-capture-r55-a.mp4](concept/choir-capture-r55-a.mp4) | The same as a video with the game's sound (t≈94.5–106.5): the static's sound (choir-static a), the whisper, the music ducked 6 dB under it | chosen (round 55, C.5: accepted) |
-| [concept/rook-loss-capture-r55-a.png](concept/rook-loss-capture-r55-a.png) | Game capture (step F6, the main run): Rook's loss (t=156.9, 157.2, 157.5, 157.8, 158.2, 159, 162): the three trails rising to his lamp, the flashes, the spin-down off the bottom edge, the dark without his lamp | proposed (round 55, F.5: the spin redone on the screen after the user's playtest, 2026-10-24; shown again in round 57) |
-| [concept/rook-loss-capture-r55-a.mp4](concept/rook-loss-capture-r55-a.mp4) | The same as a video with the game's sound (t≈153.5–177.5): his last lines, the trails and the hits, the spin, the silence from t=160 and the vents' warm pad (a) creeping in from t=168 | proposed (round 55, F.5: the spin redone on the screen after the user's playtest, 2026-10-24; shown again in round 57) |
+| [concept/rook-loss-capture-r55-a.png](concept/rook-loss-capture-r55-a.png) | Game capture (step F6, the main run): Rook's loss (t=156.9, 157.2, 157.5, 157.8, 158.2, 159, 162): the three trails rising to his lamp, the flashes, the spin-down off the bottom edge, the dark without his lamp | chosen (round 55, F.5 redone after the user's playtest of 2026-10-24: accepted as final in round 57, L.1) |
+| [concept/rook-loss-capture-r55-a.mp4](concept/rook-loss-capture-r55-a.mp4) | The same as a video with the game's sound (t≈153.5–177.5): his last lines, the trails and the hits, the spin, the silence from t=160 and the vents' warm pad (a) creeping in from t=168 | chosen (round 55, F.5 redone after the user's playtest of 2026-10-24: accepted as final in round 57, L.1) |
 | [concept/debrief-capture-r55-a.png](concept/debrief-capture-r55-a.png) | Game capture (step F6, the main run): the debrief with the red `ROOK  MIA` row under the tally | chosen (round 55: accepted) |
-| [concept/rook-loss-capture-r57-a.png](concept/rook-loss-capture-r57-a.png) | Rook's loss after step FX (round 55 F.5's redo; step G5, Xvfb, `--bench`, medium, the plan's fit, `--invulnerable`, the guns held until t=158 so the silence is heard): his lamp beside the ship at t≈162.4, the three trails at 163.2, the hits at 163.6–163.9, his ember sinking at 164.8–165.1 (1:1), the screen at t≈169 (`ROOK  MIA` in the escort row) | proposed (round 57) |
-| [concept/rook-loss-capture-r57-a.mp4](concept/rook-loss-capture-r57-a.mp4) | The same run t≈150–180 with the game's sound: his cut line, the trails, the hits cutting it, the spin, the silence, the warm pad b and the last lines | proposed (round 57) |
+| [concept/rook-loss-capture-r57-a.png](concept/rook-loss-capture-r57-a.png) | Rook's loss after step FX (round 55 F.5's redo; step G5, Xvfb, `--bench`, medium, the plan's fit, `--invulnerable`, the guns held until t=158 so the silence is heard): his lamp beside the ship at t≈162.4, the three trails at 163.2, the hits at 163.6–163.9, his ember sinking at 164.8–165.1 (1:1), the screen at t≈169 (`ROOK  MIA` in the escort row) | chosen (round 57, L.1: accepted as final) |
+| [concept/rook-loss-capture-r57-a.mp4](concept/rook-loss-capture-r57-a.mp4) | The same run t≈150–180 with the game's sound: his cut line, the trails, the hits cutting it, the spin, the silence, the warm pad b and the last lines | chosen (round 57, L.1: accepted as final) |
 | [concept/dark-assist-capture-r55-a.png](concept/dark-assist-capture-r55-a.png) | Game capture (step F6): the Dark levels assist (Options) at t=28: off (left, the main run) and on (right, a second run: the ambient held at 20 %) | chosen (round 55, C.6: accepted) |
 
 ## Implementation
@@ -517,7 +519,7 @@ Production art of M8 part F (round 55, step ART-F) and game captures; the genera
       it (`RadioTimelineLevel26Test.theHitsCutRooksLastLine`), the loss and the aftermath 6 s later (`Level26Test`,
       `Level26SoundsTest`), his spin on the screen (`RookLossTest`, `Level26Test.rooksLossAndItsReplayOnARetry`); the
       round's sound picks in the game (`Level26SoundsTest.everySoundHasItsFileRoundFiftyFivesPick`); the spin's look
-      shown again in round 57 (F.5)
+      shown again in round 57 (F.5), accepted as final there
 
 ## Decisions
 
@@ -592,3 +594,11 @@ Production art of M8 part F (round 55, step ART-F) and game captures; the genera
 - 2026-10-25 (step G5): Rook's loss after step FX captured again for [round 57](../../../concept-rounds/round-57/README.md)
   L.1 (`rook-loss-capture-r57-a`, the guns held from t=158 so the silence is heard); after the hits his lamp is out, so
   his spin shows only as a faint ember for about 1.5 s.
+- 2026-10-25 (user, [round 57](../../../concept-rounds/round-57/README.md) closed): L.1 Rook's loss (round 55's F.5 redone after the playtest: his cut line before the
+  hits, his spin on the screen) accepted as final; the loss's frames and captures are `chosen`, the part is `art: final`.
+- 2026-10-26 (step H7): flown to its end on easy without the escort, Okafor's "Finish the dive" (timed at t=187, 4.2 s
+  voiced) ended 3.2 s after the level (t=188). It is the level-end line now (`event: level-end`, as Levels 22, 23 and
+  27 close): it opens as the level ends and the outro waits for it. Fitting it inside the flight would have cut the
+  silence after the loss by 3 s (each line holds the radio over 6 s by its text). Every run is now flown to the end
+  (`RadioTimelineLevel26Test.theClosingLineOpensAsTheLevelEnds`), every timed line at most a second late. Pending the
+  user's review in round 58.

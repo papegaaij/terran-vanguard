@@ -13,6 +13,7 @@ import vanguard.content.AlliesData;
 import vanguard.content.Content;
 import vanguard.content.EnemyData;
 import vanguard.content.LevelData;
+import vanguard.content.SectionsBlock;
 
 /**
  * Which atlases a sprite goes in (design/art-direction/production, Budgets): the game-wide sprites
@@ -168,6 +169,20 @@ final class SpriteUse {
      */
     static final String RIDGE_ROOT = "colossus-ridge";
 
+    /**
+     * M8 part H: a level with a {@code cruisers} run (Level 28's finale) draws the Ascendancy cruisers, their glow, shadow,
+     * ice crust, port blasts, point defence, tracer, flak markers and airbursts and sparks, {@code ascendancy-cruiser*}
+     * (tools/art/ascendancy_cruiser.py; the game's CruiserLooks).
+     */
+    static final String CRUISER_ROOT = "ascendancy-cruiser";
+
+    /**
+     * M8 part H: a level that leaves the water (a section in the air after an under-water one: Level 28's breakout)
+     * draws the ice ceiling's burst and the tumbling slabs, {@code ice-shatter_*} and {@code ice-slab_*}
+     * (tools/art/l28_props.py; the game's BreakoutLooks).
+     */
+    static final List<String> BREAKOUT_ROOTS = List.of("ice-slab", "ice-shatter");
+
     /** The look of a destructible ground target that names none (Level 01's cargo container). */
     private static final String DEFAULT_LOOK = "cargo-container";
 
@@ -313,11 +328,28 @@ final class SpriteUse {
         level.belts().ifPresent(belts -> roots.addAll(FOUNDRY_ROOTS));
         // M7 part G: the travelling ridge (its ridge key).
         level.ridge().ifPresent(ridge -> roots.add(RIDGE_ROOT));
+        // M8 part H: the finale's cruisers (Level 28) and the breakout's shattering ice ceiling (a water -> air
+        // crossing).
+        level.cruisers().ifPresent(cruisers -> roots.add(CRUISER_ROOT));
+        if (breaksOut(level)) {
+            roots.addAll(BREAKOUT_ROOTS);
+        }
         // M5 part H: a level with root bursts draws their cracks, dust and roots.
         if (!level.bursts().isEmpty()) {
             roots.add(ROOT_BURST_ROOT);
         }
         return roots;
+    }
+
+    /** M8 part H: whether the level leaves the water: a section in the air after an under-water one (Level 28's breakout). */
+    static boolean breaksOut(LevelData level) {
+        for (int i = 1; i < level.sections().size(); i++) {
+            if (level.mediumOf(i - 1) == SectionsBlock.Medium.UNDERWATER
+                    && level.mediumOf(i) != SectionsBlock.Medium.UNDERWATER) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /** The sprite root of a vents look: the ice geyser, the heat plume, else the furnace vent. */

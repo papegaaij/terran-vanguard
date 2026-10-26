@@ -57,6 +57,8 @@ import java.util.Optional;
  * @param eruption M7 part H, step H3: a breaching boss's eruption at its under points (the marker); empty: an under
  *     point runs the normal cycle
  * @param debris M7 part H, step H3: the rocks a breaching boss tears loose toward its open mouth; empty for none
+ * @param coil M8 part H (design/enemies/bosses/abyssal-maw): a coiled arena boss's body and script ({@link CoilArena});
+ *     empty for every other boss. It needs an {@code arena} without lanes (its part layers, the throat's weak spot)
  */
 public record BossSpec(
         double arriveSeconds,
@@ -85,7 +87,8 @@ public record BossSpec(
         Optional<Suction> suction,
         Optional<Vents> vents,
         Optional<Eruption> eruption,
-        Optional<DebrisFlow> debris) {
+        Optional<DebrisFlow> debris,
+        Optional<CoilSpec> coil) {
     /** The beat a later phase holds its fire by default in the data (the frigate's crown opening), s. */
     public static final double PHASE_DELAY_SECONDS = 1;
     /** How much larger a unit is drawn on {@code high-air} than on the play plane; a boss's part offsets grow with it. */
@@ -153,6 +156,115 @@ public record BossSpec(
                 }
             }
         }
+        if (coil.isPresent()) {
+            if (arena.isEmpty()
+                    || arena.get().lanes().count() > 0
+                    || stride.isPresent()
+                    || breach.isPresent()
+                    || phases.stream().anyMatch(phase -> phase.move().isPresent())) {
+                throw new IllegalArgumentException(barName
+                        + ": a coiled boss has an arena without lanes, no stride, no breach and no phase moves");
+            }
+            coil.get().check(barName, phases, attacks);
+        }
+    }
+
+    /** Without M8 part H's coil (every boss before the Abyssal Maw). */
+    public BossSpec(
+            double arriveSeconds,
+            double x,
+            double hoverY,
+            double descentSpeed,
+            double sineAmplitude,
+            double sinePeriod,
+            Layer layer,
+            boolean midBoss,
+            String barName,
+            double parSeconds,
+            List<Chain> chains,
+            List<Attack> attacks,
+            List<Phase> phases,
+            boolean engagesOnArrival,
+            List<Integer> armoured,
+            List<Pose> poses,
+            double deathSeconds,
+            Optional<Arena> arena,
+            double incomingSeconds,
+            Optional<Stride> stride,
+            Optional<Plate> plate,
+            Optional<Cone> cone,
+            Optional<Breach> breach,
+            Optional<Suction> suction,
+            Optional<Vents> vents,
+            Optional<Eruption> eruption,
+            Optional<DebrisFlow> debris) {
+        this(
+                arriveSeconds,
+                x,
+                hoverY,
+                descentSpeed,
+                sineAmplitude,
+                sinePeriod,
+                layer,
+                midBoss,
+                barName,
+                parSeconds,
+                chains,
+                attacks,
+                phases,
+                engagesOnArrival,
+                armoured,
+                poses,
+                deathSeconds,
+                arena,
+                incomingSeconds,
+                stride,
+                plate,
+                cone,
+                breach,
+                suction,
+                vents,
+                eruption,
+                debris,
+                Optional.empty());
+    }
+
+    /** M8 part H: this boss coiled round its arena ({@link CoilArena}, an arena boss without lanes); empty: none. */
+    public BossSpec withCoil(Optional<CoilSpec> withCoil) {
+        return new BossSpec(
+                arriveSeconds,
+                x,
+                hoverY,
+                descentSpeed,
+                sineAmplitude,
+                sinePeriod,
+                layer,
+                midBoss,
+                barName,
+                parSeconds,
+                chains,
+                attacks,
+                phases,
+                engagesOnArrival,
+                armoured,
+                poses,
+                deathSeconds,
+                arena,
+                incomingSeconds,
+                stride,
+                plate,
+                cone,
+                breach,
+                suction,
+                vents,
+                eruption,
+                debris,
+                withCoil);
+    }
+
+    /** M8 part H: whether it is coiled round its arena ({@link CoilArena}): the Abyssal Maw. */
+    public boolean coils() {
+        return coil.isPresent();
     }
 
     /** Without step H3's spine vents, eruption and debris (M7 part H, step H1). */
@@ -379,7 +491,8 @@ public record BossSpec(
                 suction,
                 vents,
                 eruption,
-                debris);
+                debris,
+                coil);
     }
 
     /** M7 part F: this boss walking {@code withStride}'s passes (an arena boss without lanes); empty: none. */
@@ -411,7 +524,8 @@ public record BossSpec(
                 suction,
                 vents,
                 eruption,
-                debris);
+                debris,
+                coil);
     }
 
     /** M7 part F: this walking boss with {@code withPlate} as its front plate; empty: none. */
@@ -443,7 +557,8 @@ public record BossSpec(
                 suction,
                 vents,
                 eruption,
-                debris);
+                debris,
+                coil);
     }
 
     /** M7 part F: this walking boss with {@code withCone} as its rear flame cone; empty: none. */
@@ -475,7 +590,8 @@ public record BossSpec(
                 suction,
                 vents,
                 eruption,
-                debris);
+                debris,
+                coil);
     }
 
     /** M7 part H: this boss breaching by {@code withBreach}'s cycle (an arena boss without lanes); empty: none. */
@@ -507,7 +623,8 @@ public record BossSpec(
                 suction,
                 vents,
                 eruption,
-                debris);
+                debris,
+                coil);
     }
 
     /** M7 part H: this breaching boss with {@code withSuction} toward its open mouth; empty: none. */
@@ -539,7 +656,8 @@ public record BossSpec(
                 withSuction,
                 vents,
                 eruption,
-                debris);
+                debris,
+                coil);
     }
 
     /** M7 part H, step H3: this breaching boss raising {@code withVents} with its breaches; empty: none. */
@@ -571,7 +689,8 @@ public record BossSpec(
                 suction,
                 withVents,
                 eruption,
-                debris);
+                debris,
+                coil);
     }
 
     /** M7 part H, step H3: this breaching boss erupting under the ship at its under points; empty: none. */
@@ -603,7 +722,8 @@ public record BossSpec(
                 suction,
                 vents,
                 withEruption,
-                debris);
+                debris,
+                coil);
     }
 
     /** M7 part H, step H3: this breaching boss tearing debris loose toward its open mouth; empty: none. */
@@ -635,7 +755,8 @@ public record BossSpec(
                 suction,
                 vents,
                 eruption,
-                withDebris);
+                withDebris,
+                coil);
     }
 
     /** M7 part H: whether it breaches ({@link BreachArena}): the Dust Colossus. */
@@ -738,6 +859,11 @@ public record BossSpec(
                     .filter(enemy -> !kinds.contains(enemy))
                     .ifPresent(kinds::add);
         }
+        // M8 part H: a coiled boss's shed Eel Swarms.
+        coil.flatMap(CoilSpec::shed)
+                .map(CoilSpec.Shed::enemy)
+                .filter(enemy -> !kinds.contains(enemy))
+                .ifPresent(kinds::add);
         return List.copyOf(kinds);
     }
 

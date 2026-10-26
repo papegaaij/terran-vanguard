@@ -72,7 +72,12 @@ final class ScriptRules {
                 .setPieces(java.util.stream.Stream.concat(
                                 level.setPieces().orElse(List.of()).stream()
                                         .map(piece -> BossRules.setPiece(content, piece, difficulty, inLevel)),
-                                level.boss().map(boss -> BossRules.boss(content, boss, difficulty, inLevel)).stream())
+                                // M8 part H: a boss under water flies its shed units' underwater changes.
+                                level
+                                        .boss()
+                                        .map(boss ->
+                                                BossRules.boss(content, boss, difficulty, inLevel.at(level, boss.t())))
+                                        .stream())
                         .toList())
                 .objectives(new ObjectiveSpec(
                         secondary
@@ -100,7 +105,9 @@ final class ScriptRules {
                                 .map(ScriptRules::rocks))
                         .withDarkness(level.darkness().map(darkness -> darkness(darkness, difficulty)))
                         .withWeather(level.weather().flatMap(weather -> PartFRules.weather(level, weather, difficulty)))
-                        .withSondes(level.sondes().map(PartFRules::sondes)))
+                        .withSondes(level.sondes().map(PartFRules::sondes))
+                        // M8 part H: the finale's cruiser run (Level 28).
+                        .withCruisers(MawRules.cruisers(content, level, difficulty)))
                 .drops(DropSpec.NONE
                         .withGroupDrops(groupDrops(level, carried))
                         .withPartDrops(LevelRules.partDrops(content, level, carried, SimSpecs::pickup))
@@ -115,6 +122,8 @@ final class ScriptRules {
                 .specialLimits(WaterRules.specialLimits(content, level))
                 // M8 part F: Rook's scripted loss (Level 26).
                 .rookLoss(DarkRules.rookLoss(level))
+                // M8 part H: the armour floor from the boss's kill (Level 28's run cannot be lost).
+                .armourFloor(level.armourFloor().orElse(0.0))
                 .build();
         // M7 part B: the no-surface zones and the drop launch (Level 15); M7 part C: the canyon and its gates (Level
         // 16); M7 part D: the ground allies (Level 17's domes).
@@ -347,6 +356,9 @@ final class ScriptRules {
                         // M8 part D (gap check §5 D2): the first Ray's shadow (the simulation's sighting); its time
                         // below is its wave's, for the radio timeline (Level 24's 58 s).
                         case FIRST_RAY -> CueTrigger.FIRST_RAY;
+                        // M8 part H (gap check §5 H8): the boss's arrival and a coiled boss's dive (Level 28).
+                        case BOSS_ARRIVAL -> CueTrigger.BOSS_ARRIVAL;
+                        case BOSS_DIVE -> CueTrigger.BOSS_DIVE;
                     })
                     .orElse(CueTrigger.TIME);
             // Part G (LevelRules): a boss-destroyed cue's subject is the boss, a timeout cue its own

@@ -3,7 +3,8 @@ package vanguard.sim;
 /**
  * M7 part F (design/player/wingmen, Rook; design/campaign Level 19): where Rook's goal moves to keep clear of the
  * walking boss's flame cone while it tells or burns, and of the furnace vents that glow or burn; M7 part H: of a
- * breaching boss's bite circle and its eruption's marker. Each Wingman holds
+ * breaching boss's bite circle and its eruption's marker; M8 part H, step H2: of a coiled boss's coil, bights and lunge
+ * column and of the cruisers' told bands ({@link MawHazards}). Each Wingman holds
  * one, made once; it allocates nothing per step. After {@link #clear} the goal is ({@link #x()}, {@link #y()}).
  */
 final class RookHazards {
@@ -16,6 +17,9 @@ final class RookHazards {
     private final double halfW;
     private final double halfH;
     private final double limit;
+    /** M8 part H: the coiled boss's and the cruisers' hazards. */
+    private final MawHazards maw;
+
     private double gx;
     private double gy;
 
@@ -27,6 +31,7 @@ final class RookHazards {
         halfW = hitbox.width() / 2;
         halfH = hitbox.height() / 2;
         limit = fieldLimit;
+        maw = new MawHazards(Math.max(halfW, halfH), fieldLimit);
     }
 
     double x() {
@@ -39,9 +44,15 @@ final class RookHazards {
 
     /**
      * Moves the goal (goalX, goalY) out of a telling or burning flame cone of a walking boss among {@code setPieces}
-     * and out of a glowing or burning furnace vent ({@code vents}, null for none); returns whether it moved.
+     * and out of a glowing or burning furnace vent ({@code vents}, null for none); M8 part H: then clear of a coiled
+     * boss among {@code setPieces} and the told bands of {@code cruisers} (null for none); returns whether it moved.
      */
     boolean clear(double goalX, double goalY, SetPiece[] setPieces, FurnaceVents vents) {
+        return clear(goalX, goalY, setPieces, vents, null);
+    }
+
+    /** As {@link #clear(double, double, SetPiece[], FurnaceVents)}, then clear of the told bands of {@code cruisers}. */
+    boolean clear(double goalX, double goalY, SetPiece[] setPieces, FurnaceVents vents, CruiserRun cruisers) {
         gx = goalX;
         gy = goalY;
         boolean moved = false;
@@ -65,6 +76,18 @@ final class RookHazards {
                     break;
                 }
             }
+        }
+        CoilArena coil = null;
+        for (SetPiece piece : setPieces) {
+            if (coil == null && piece.coil().isPresent() && piece.present() && !piece.destroyed()) {
+                coil = piece.coil().get();
+            }
+        }
+        if ((coil != null || cruisers != null) && maw.clear(gx, gy, coil, cruisers)) {
+            // M8 part H, step H2: in the coil, out of its bights and the lunge's column, out of a told band.
+            gx = maw.x();
+            gy = maw.y();
+            moved = true;
         }
         return moved;
     }

@@ -3,7 +3,7 @@ title: Bosses
 design: approved
 implementation: done
 art: final
-updated: 2026-10-21
+updated: 2026-10-26
 ---
 
 # Bosses
@@ -26,7 +26,7 @@ Promoted to their own documents for the Acts 1–2 wrap-up, plus the Act 3 draft
 | [siege-spire](siege-spire/README.md) | Act 2 boss: rooted citadel that tears free and rises (L14) | approved | in-progress | final |
 | [revenant-walker](revenant-walker/README.md) | Act 3 mid-boss: unmarked grey war walker striding through the casting yard, homing pods, rear flamer; its wreck is hint 2 (L19) | approved | in-progress | final |
 | [dust-colossus](dust-colossus/README.md) | Act 3 boss: buried colony organism breaching at the edges and under the ship, mouths with rings, suction and bite (L21) | approved | in-progress | final |
-| [abyssal-maw](abyssal-maw/README.md) | Act 4 boss: serpent leviathan coiled round the hatchery vent, gill rings, fan walls, coil sweeps, one dive and lunge, Helix implants; then the breakout and the run under Ascendancy cruisers (L28) | approved | not-started | chosen |
+| [abyssal-maw](abyssal-maw/README.md) | Act 4 boss: serpent leviathan coiled round the hatchery vent, gill rings, fan walls, coil sweeps, one dive and lunge, Helix implants; then the breakout and the run under Ascendancy cruisers (L28) | approved | in-progress | chosen |
 
 ## Roster
 
@@ -133,6 +133,21 @@ implants are grey with a hot-amber core and nothing on it is gold (Q11 a).
 | [concept/rejected/ascendancy-cruiser-r48-a.gif](concept/rejected/ascendancy-cruiser-r48-a.gif) | Ascendancy cruiser A — two cruisers break up through the Europa ice beside the wing (cracks, slabs sheeting off, mist, an open-water channel), Okafor's "Those are ours", then the run: broadside bands, flak markers, point-defence bursts, two bands at once (motion) | rejected — round 48: b picked |
 | [concept/ascendancy-cruiser-r48-b.png](concept/ascendancy-cruiser-r48-b.png) | Ascendancy cruiser B "Forked monitor" — a forked ram bow, sponsons with three twin casemate guns a side and gun ports between them, gold crown fins across the spine, tiered bridge, ivory accent, the emblem and the hull code (sheet) | chosen — round 48 |
 | [concept/ascendancy-cruiser-r48-b.gif](concept/ascendancy-cruiser-r48-b.gif) | Ascendancy cruiser B — the same breakout and run as A (motion) | chosen — round 48 |
+| [concept/abyssal-maw-final-r58-a.png](concept/abyssal-maw-final-r58-a.png) | Abyssal Maw production art (`tools/art/abyssal_maw.py`, round 48 b): the coil segment at 32 headings and 4 tapers with its teal glow and lime tell, the head's 7 frames (rest, throat glow, open, reared, dive, lunge, dead) with glows and the jaw rim's orbs, the gill sacs, the Helix implants (shut, sparking, open, blown) and their arc, the shed flare, silt, the lunge's shadow, the blow-out, the ichor and the vent's flare; 0.86 of one atlas page (sheet) | proposed (round 58) |
+| [concept/abyssal-maw-final-r58-a.gif](concept/abyssal-maw-final-r58-a.gif) | The round-48 compressed fight redrawn with the production frames on Level 28's caldera: the rise, phase 1, phase 2 with a sweep and a shed, the dive, the shadow and the lunge, phase 3's implants, the death (the implants blow, the coil sinks tail to head, the vent flares) | proposed (round 58) |
+| [concept/ascendancy-cruiser-final-r58-a.png](concept/ascendancy-cruiser-final-r58-a.png) | Ascendancy cruiser production art (`tools/art/ascendancy_cruiser.py`, round 48 b "Forked monitor"): the 240x660 hull with `HDX-417` in gold on the bow, its running glow and the broadside's tell, its shadow, the ice crust sheeting off (6 frames), the port blast, point defence, tracer dash, flak marker and airburst, sparks (sheet) | proposed (round 58) |
+| [concept/ascendancy-cruiser-final-r58-a.gif](concept/ascendancy-cruiser-final-r58-a.gif) | Level 28's breakout on the night ice: the cruisers rising through the split ice and shedding it, Okafor's line, then the run (broadside tells and volleys, two bands, flak, point defence) | proposed (round 58) |
+| [concept/maw-arrival-capture-r58-a.png](concept/maw-arrival-capture-r58-a.png) | Game capture (step H7; Level 28, Xvfb, `--bench`, medium, `--invulnerable`, auto-fire, the ship unsteered, the balance plan's Level 28 fit, the Bulwark; the fight lasts 1:50, its seconds from the warning): the Maw's arrival: the caldera before the warning, the warning's first frame (the coil and the bar there at once), 5.3 s (the head brightened) and 7.7 s (the first sac swelling), the play field at 1:1 | proposed (round 58) |
+| [concept/maw-arrival-capture-r58-a.mp4](concept/maw-arrival-capture-r58-a.mp4) | The same run from the Choir's song (t≈97.7) to the fight's 13.7 s with the game's sound: the caldera's rumble, the warning, track 18 as built, the arrival roar, the first rings and fans (the a stand-ins) | proposed (round 58) |
+| [concept/maw-phases-capture-r58-a.png](concept/maw-phases-capture-r58-a.png) | The phases at 1:1: phase 1 at 23.7 s (a gill sac's ring of 10) and 31.7 s (the throat open, its fan of 5); phase 2 at 55.2 s (a fan wall lighting along the jaw's rim, a sweep's bight told on the right) and 56.7 s (the wall in flight with its gap, the bight swung in); phase 3 at 103.7 s (the bottom sweep) | proposed (round 58) |
+| [concept/maw-dive-capture-r58-a.png](concept/maw-dive-capture-r58-a.png) | The dive and the lunge at 62.7 s (the coil sliding off the edges, the last wall), 64.7 s and 69.2 s (the dark, the vent guttering), 70.7 s (the head racing up its column) and 72.2 s (the body as a wall up the column), 1:1 | proposed (round 58) |
+| [concept/maw-dive-capture-r58-a.mp4](concept/maw-dive-capture-r58-a.mp4) | The same run 57.7–81.7 s with the game's sound: a sweep's groan and swing, the dive's roar, the music dropping away, the lunge, the coil's return | proposed (round 58) |
+| [concept/maw-implants-capture-r58-a.png](concept/maw-implants-capture-r58-a.png) | Phase 3's implants at 87.7 s (the left coil's implant open, its hot-amber core) and 103.2 s (discharging under its arc), the upper play field at 1:1 | proposed (round 58) |
+| [concept/maw-death-capture-r58-a.png](concept/maw-death-capture-r58-a.png) | The death at the kill (111.2 s: the implants blowing out), K+1, K+2 (the coil convulsing and sinking), K+3.5 (the vent's flare) and K+4.5 (the credit shower), 1:1 | proposed (round 58) |
+| [concept/maw-death-capture-r58-a.mp4](concept/maw-death-capture-r58-a.mp4) | The same run from 105.7 s to K+12.7 with the game's sound: the implants' cracks, the death, the Choir's fragment, Okafor's "up the shaft", the shaft's climb (the a stand-ins) | proposed (round 58) |
+| [concept/maw-crops-capture-r58-a.png](concept/maw-crops-capture-r58-a.png) | 1:1 crops: the head in phase 1 (31.7 s, the jaw open, a sac's ring), in phase 2 (39.7 s, closed, a sac swelling), an implant open (87.7 s) and discharging (103.2 s) | proposed (round 58) |
+| [concept/cruisers-capture-r58-a.png](concept/cruisers-capture-r58-a.png) | Game capture (step H7; Level 28, Xvfb, `--bench`, medium, `--invulnerable`, auto-fire, the ship unsteered, the balance plan's Level 28 fit, the Bulwark; the level clock): the cruisers rising through the split ice at t≈117.9, 119.5 and 120.9, then the run at 123.9 (flak markers by the ship), 131.7 (a broadside's tracer band, the gun ports lit) and 143.7 (a volley crossing, point defence), the play field at 1:1 | proposed (round 58) |
+| [concept/cruiser-bow-capture-r58-a.png](concept/cruiser-bow-capture-r58-a.png) | 1:1 crops of the right cruiser's bow with `HDX-417` along the hull at t≈131.7 and rising at 120.9 | proposed (round 58) |
 
 ## Implementation
 

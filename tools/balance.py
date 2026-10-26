@@ -341,6 +341,8 @@ def arena_seconds(e, dps):
     of the part's own and its spots' multiplier while open (round 40, rooted arms: its spots'), its own over half the rise and the dive; the
     last phase takes the rest with the part kept up."""
     boss = e["boss"]
+    if "coil" in boss:
+        return coil_seconds(e, dps)
     if "slam" not in boss:
         return laneless_seconds(e, dps)
     slam = boss["slam"]
@@ -386,6 +388,33 @@ def arena_seconds(e, dps):
             seconds += need / (dps * opened)
             for n in names:
                 left[n] = 0
+    return seconds
+
+
+COIL_FACTORS = [0.95, 0.85, 0.9]  # M8 part H: a coiled boss's head share of the effective DPS per phase (the Maw's spec)
+
+
+def coil_seconds(e, dps):
+    """M8 part H (the Abyssal Maw's Duration and HP; BalanceTest.coilSeconds): the ease into the halt and the
+    intro, then each phase the parts it ends on besides the head (the gill sacs) at their own multipliers, its
+    share of the head's HP at COIL_FACTORS, and in the dive's phase the dive's seconds."""
+    boss = e["boss"]
+    coil = boss["coil"]
+    parts = {p["name"]: p for p in e["part_list"]}
+    head = next(p for p in e["part_list"] if p.get("kind") == "vital")
+    seconds = ARENA_EASE + coil.get("intro", 0)
+    share = 1.0
+    for i, phase in enumerate(boss["phases"]):
+        until = phase["until"]
+        for name in until.get("parts", []):
+            if name != head["name"]:
+                seconds += parts[name]["hp"] / (dps * parts[name].get("multiplier", 1))
+        below = until.get("share", {}).get("below", until.get("below", 0.0))
+        seconds += (share - below) * head["hp"] / (dps * COIL_FACTORS[min(i, len(COIL_FACTORS) - 1)])
+        share = below
+        dive = coil.get("dive")
+        if dive and dive.get("phase") == phase["name"]:
+            seconds += sum(dive[k] for k in ("slide", "quiet", "shadow", "lunge", "body", "return"))
     return seconds
 
 

@@ -158,6 +158,10 @@ final class ObjectivePasses {
         int headBonus = 0;
         // M8 part C: a chain head's head-first pickup drops only with a head-first kill.
         boolean dropsCarried = true;
+        // M8 part H, step H2 (§5 H7): a boss's shed unit is no kill where the kill ratio leaves the bosses out.
+        boolean counted = enemy.chain() == null
+                || !enemy.chain().bossShed()
+                || script.objectives().secondary().countsBosses();
         if (enemy.grounded() && (enemy.driftX() != 0 || enemy.driftY() != 0)) {
             // M5 part G: its remains drift on with its floe (Level 13's mortars).
             events.add(
@@ -187,7 +191,12 @@ final class ObjectivePasses {
             // each standing part's bonus (the Drill Rig's 40 + 4 a pump).
             headBonus += enemy.partAlive(p) ? spec.parts().get(p).firstBonus() : 0;
         }
-        tally.kill(spec.bounty() + headBonus, enemy.grounded() ? CreditSource.GROUND_TARGETS : CreditSource.KILLS);
+        if (counted) {
+            tally.kill(spec.bounty() + headBonus, enemy.grounded() ? CreditSource.GROUND_TARGETS : CreditSource.KILLS);
+        } else {
+            // It still pays and extends the chain.
+            tally.partKill(spec.bounty() + headBonus);
+        }
         int kills = objectives.kill(enemy.kind());
         int group = enemy.group();
         String tag = enemy.tag();
@@ -318,6 +327,11 @@ final class ObjectivePasses {
                         piece.stride().get().heading());
             }
             radio.cue(CueTrigger.BOSS_DESTROYED, spec.slug());
+            if (script.armourFloor() > 0) {
+                // M8 part H, step H2 (design/campaign Level 28): from the kill to the level's end the run cannot be
+                // lost.
+                ship.defences().floor(script.armourFloor());
+            }
             if (s.arenaEndTicks >= 0 && s.levelTick >= s.arenaStartTicks && s.levelTick < s.arenaEndTicks - 1) {
                 s.arenaJump = true;
             }

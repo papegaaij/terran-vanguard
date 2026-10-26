@@ -149,6 +149,11 @@ public final class Chain implements Hashed {
     private final HeadAttacks headAttacks = new HeadAttacks();
     /** M8 part C: whether its wave's pickup drops only when its head is destroyed first (not hashed: from the plan). */
     private boolean headFirstDrop;
+    /**
+     * M8 part H, step H2: whether a boss shed it (the Abyssal Maw's Eel Swarms): a kill ratio that leaves the bosses out
+     * leaves it out too (not hashed: from the release).
+     */
+    private boolean bossShed;
 
     /**
      * A wave's chain entering from {@code from}: the head point starts at its path's start, the
@@ -212,6 +217,7 @@ public final class Chain implements Hashed {
         swim.clear();
         headAttacks.clear();
         headFirstDrop = false;
+        bossShed = false;
     }
 
     /**
@@ -912,6 +918,16 @@ public final class Chain implements Hashed {
     /** M8 part C: whether its wave's pickup drops only when its head is destroyed before any other part. */
     boolean headFirstDrop() {
         return headFirstDrop;
+    }
+
+    /** M8 part H, step H2: it is a boss's shed unit (released by the boss, not a wave). */
+    void bossShed(boolean shed) {
+        bossShed = shed;
+    }
+
+    /** M8 part H, step H2: whether a boss shed it (a kill ratio that leaves the bosses out leaves it out too). */
+    boolean bossShed() {
+        return bossShed;
     }
 
     /** The edge it entered from last: its wave's, or the rear after its loop-back. */

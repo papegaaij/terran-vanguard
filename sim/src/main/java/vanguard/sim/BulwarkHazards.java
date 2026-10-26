@@ -6,7 +6,9 @@ package vanguard.sim;
  * him out of the vents: out of a plume's disc while it tells or burns (radially, to its rim plus its half size and a
  * gap), and off a homing missile's line (its path over the next {@link #LOOK_SECONDS}, {@link #LINE} px either side
  * plus its half size; across it, to the side the goal is on, the other side when the play field's margins leave no
- * room). Made once; allocates nothing per step. After {@link #clear} the goal is ({@link #x()}, {@link #y()}).
+ * room). M8 part H, step H2: then clear of the Maw's coil, bights and lunge column and of the cruisers' told bands
+ * ({@link MawHazards}). Made once; allocates nothing per step. After {@link #clear} the goal is ({@link #x()}, {@link
+ * #y()}).
  */
 final class BulwarkHazards {
     /** It keeps this far outside a plume's rim (its hull's edge to it), px. */
@@ -20,6 +22,9 @@ final class BulwarkHazards {
 
     private final double half;
     private final double limit;
+    /** M8 part H: the coiled boss's and the cruisers' hazards. */
+    private final MawHazards maw;
+
     private double gx;
     private double gy;
 
@@ -30,6 +35,7 @@ final class BulwarkHazards {
     BulwarkHazards(Hitbox hitbox, double fieldLimit) {
         half = Math.max(hitbox.width(), hitbox.height()) / 2;
         limit = fieldLimit;
+        maw = new MawHazards(half, fieldLimit);
     }
 
     double x() {
@@ -40,11 +46,23 @@ final class BulwarkHazards {
         return gy;
     }
 
+    /** M8 part H: the Maw's and the cruisers' hazards (and its target in the Maw's fight, {@link MawHazards#aim}). */
+    MawHazards maw() {
+        return maw;
+    }
+
     /**
      * Moves the goal (goalX, goalY) out of every telling or burning plume disc of {@code vents} (null: none) and off
-     * every line of {@code missiles} (null: none); returns whether it moved.
+     * every line of {@code missiles} (null: none); M8 part H: then clear of the coiled boss {@code coil} and the told
+     * bands of {@code cruisers} (null: none; {@link MawHazards}). Returns whether it moved.
      */
     boolean clear(double goalX, double goalY, FurnaceVents vents, Missiles missiles) {
+        return clear(goalX, goalY, vents, missiles, null, null);
+    }
+
+    /** As {@link #clear(double, double, FurnaceVents, Missiles)}, then clear of {@code coil} and {@code cruisers}. */
+    boolean clear(
+            double goalX, double goalY, FurnaceVents vents, Missiles missiles, CoilArena coil, CruiserRun cruisers) {
         gx = goalX;
         gy = goalY;
         boolean moved = false;
@@ -60,6 +78,11 @@ final class BulwarkHazards {
             if (!shifted) {
                 break;
             }
+        }
+        if ((coil != null || cruisers != null) && maw.clear(gx, gy, coil, cruisers)) {
+            gx = maw.x();
+            gy = maw.y();
+            moved = true;
         }
         return moved;
     }

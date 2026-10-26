@@ -49,6 +49,40 @@ class IntelTest {
         assertEquals(List.of(), nests(6), "Farside's dark has no wall nests");
     }
 
+    /**
+     * M8 part H (design/campaign Level 28, Threat profile at L3: "the timeline strip marks the Choir's song (97.5 s)"):
+     * the level's {@code strip: [choir-song]} marks its timed Choir song; the levels whose Choir sings without asking
+     * for it (Levels 01 and 21) mark none; an unknown strip mark is refused.
+     */
+    @Test
+    void theStripMarksTheChoirsSongOfLevel28() {
+        assertEquals(List.of(new Intel.Mark(97.5, 97.5, Intel.Mark.Kind.CHOIR)), choir(28));
+        assertEquals(List.of(), choir(1), "Level 01's song is not on its strip");
+        assertEquals(List.of(), choir(21), "nor Level 21's");
+        var profile = CONTENT.level(CONTENT.levelKey(28).orElseThrow()).threatProfile();
+        assertTrue(profile.stripMarks(vanguard.content.LevelData.ThreatProfile.CHOIR_SONG));
+        org.junit.jupiter.api.Assertions.assertThrows(
+                IllegalArgumentException.class,
+                () -> new vanguard.content.LevelData.ThreatProfile(
+                        profile.setting(),
+                        profile.layers(),
+                        profile.density(),
+                        profile.traits(),
+                        profile.hazards(),
+                        profile.boss(),
+                        profile.specials(),
+                        profile.objective(),
+                        profile.varga(),
+                        profile.required(),
+                        java.util.Optional.of(List.of("finale"))));
+    }
+
+    private static List<Intel.Mark> choir(int number) {
+        return Intel.of(CONTENT, CONTENT.levelKey(number).orElseThrow(), 3).marks().stream()
+                .filter(mark -> mark.kind() == Intel.Mark.Kind.CHOIR)
+                .toList();
+    }
+
     private static List<Intel.Mark> nests(int number) {
         return Intel.of(CONTENT, CONTENT.levelKey(number).orElseThrow(), 3).marks().stream()
                 .filter(mark -> mark.kind() == Intel.Mark.Kind.NEST)

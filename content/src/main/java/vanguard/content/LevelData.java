@@ -86,6 +86,10 @@ import vanguard.sim.PlayField;
  *     level that is under water somewhere; none if not given
  * @param rookLoss M8 part F (design/campaign Level 26, Rook's loss; design/player/wingmen): Rook's scripted loss; none
  *     if not given
+ * @param cruisers M8 part H (design/campaign Level 28, the run; design/enemies/bosses/abyssal-maw, The cruisers): the
+ *     finale's cruiser run on the level clock; none if not given
+ * @param armourFloor M8 part H (Level 28, The run cannot be lost; J2): from the boss's kill to the level's end the
+ *     armour stops at this many points (only in a level with a boss); none (0) if not given
  */
 public record LevelData(
         double scrollSpeed,
@@ -137,7 +141,9 @@ public record LevelData(
         Optional<Medium> medium,
         Optional<List<String>> specialLimits,
         Optional<UnderwaterLook> underwaterLook,
-        Optional<RookLoss> rookLoss)
+        Optional<RookLoss> rookLoss,
+        Optional<Cruisers> cruisers,
+        Optional<Double> armourFloor)
         implements SectionsBlock,
                 WavesBlock,
                 SetPiecesBlock,
@@ -165,6 +171,7 @@ public record LevelData(
                 Check.that(list.get(i).t() >= list.get(i - 1).t(), "drops[" + i + "]: listed in time order");
             }
         });
+        armourFloor.ifPresent(floor -> Check.positive("armour_floor", floor));
         Check.positive("scroll_speed", scrollSpeed);
         Check.notNegative("launch_seconds", launchSeconds);
         bountyScale.ifPresent(scale -> Check.positive("bounty_scale", scale));
@@ -616,7 +623,82 @@ public record LevelData(
             Optional<Jingle> jingle,
             Optional<Motif> motif,
             Optional<List<AmbienceLayer>> ambienceLayers,
-            Optional<List<StemTime>> stemTimes) {
+            Optional<List<StemTime>> stemTimes,
+            Optional<MotifAfterBoss> motifAfterBoss) {
+
+        /** Without M8 part H's motif after the boss. */
+        public Music(
+                int track,
+                int startSection,
+                Optional<Double> startDb,
+                int fullSection,
+                Optional<Map<Integer, Stems>> stems,
+                String ambience,
+                String endJingle,
+                Optional<String> bossSting,
+                Optional<Double> ambienceFrom,
+                Optional<VoiceLoop> voiceLoop,
+                Optional<String> bossWarning,
+                Optional<String> bossTrack,
+                Optional<List<FullOn>> fullOn,
+                Optional<Duck> duck,
+                Optional<List<AmbienceChange>> ambienceChanges,
+                Optional<Map<Integer, Double>> sectionDb,
+                Optional<Jingle> jingle,
+                Optional<Motif> motif,
+                Optional<List<AmbienceLayer>> ambienceLayers,
+                Optional<List<StemTime>> stemTimes) {
+            this(
+                    track,
+                    startSection,
+                    startDb,
+                    fullSection,
+                    stems,
+                    ambience,
+                    endJingle,
+                    bossSting,
+                    ambienceFrom,
+                    voiceLoop,
+                    bossWarning,
+                    bossTrack,
+                    fullOn,
+                    duck,
+                    ambienceChanges,
+                    sectionDb,
+                    jingle,
+                    motif,
+                    ambienceLayers,
+                    stemTimes,
+                    Optional.empty());
+        }
+
+        /**
+         * M8 part H (design/campaign Level 28, Music &amp; ambience: "the run under Vorne's motif ... out over the
+         * orbit"; m8h-gaps.md §1.6, the post-boss key): after an act boss's kill the theme, which stays out after its
+         * boss music, comes back as its motif stem alone (the stems silent, the timed stem changes and the section
+         * levels no longer applied) from level time {@code from} to {@code to}, fading in over its first {@code
+         * fade_in} s and out over its last {@code fade_out} s; silent outside it. The level clock resumes after the
+         * arena's hold, so {@code from} lies after the arena.
+         */
+        public record MotifAfterBoss(double from, double to, double fadeIn, double fadeOut) {
+            public MotifAfterBoss {
+                Check.notNegative("from", from);
+                Check.that(to > from, "motif_after_boss.to: after from");
+                Check.notNegative("fade_in", fadeIn);
+                Check.notNegative("fade_out", fadeOut);
+                Check.that(fadeIn + fadeOut <= to - from, "motif_after_boss: fade_in + fade_out within from-to");
+            }
+
+            /** Its level at level time {@code t}, 0–1. */
+            public double level(double t) {
+                if (t < from || t >= to) {
+                    return 0;
+                }
+                double in = fadeIn > 0 ? Math.min(1, (t - from) / fadeIn) : 1;
+                double out = fadeOut > 0 ? Math.min(1, (to - t) / fadeOut) : 1;
+                return Math.min(in, out);
+            }
+        }
 
         /** Without M8 part F's timed stems. */
         public Music(
@@ -659,6 +741,7 @@ public record LevelData(
                     jingle,
                     motif,
                     ambienceLayers,
+                    Optional.empty(),
                     Optional.empty());
         }
 
@@ -1066,6 +1149,9 @@ public record LevelData(
             startDb.ifPresent(db -> Check.that(db <= 0, "start_db: must not be above full level"));
             ambienceFrom.ifPresent(t -> Check.positive("ambience_from", t));
             Check.that(bossTrack.isEmpty() || bossWarning.isPresent(), "a boss_track comes in after its boss_warning");
+            Check.that(
+                    motifAfterBoss.isEmpty() || bossTrack.isPresent(),
+                    "motif_after_boss: the theme comes back after an act boss's music (a boss_track)");
             fullOn.ifPresent(events -> {
                 Check.notEmpty("full_on", events);
                 Check.that(events.size() == new java.util.HashSet<>(events).size(), "full_on: each event once");
@@ -1096,11 +1182,21 @@ public record LevelData(
     /** Changes to enemies (by slug) and extra placed pickups. */
     public record Variant(Optional<Map<String, EnemyChange>> enemies, Optional<List<PlacedPickup>> extraPickups) {}
 
-    /** Aimed shots fired in bursts of {@code burst}; walking at {@code speedFactor} times its speed. */
-    public record EnemyChange(Optional<Integer> burst, Optional<Double> speedFactor) {
+    /**
+     * Aimed shots fired in bursts of {@code burst}; walking at {@code speedFactor} times its speed; M8 part H: a segment
+     * chain of {@code segments} segments instead of its stat block's (a coiled boss's shed Eel Swarms; {@link
+     * MawRules}).
+     */
+    public record EnemyChange(Optional<Integer> burst, Optional<Double> speedFactor, Optional<Integer> segments) {
         public EnemyChange {
             burst.ifPresent(b -> Check.positive("burst", b));
             speedFactor.ifPresent(f -> Check.positive("speed_factor", f));
+            segments.ifPresent(n -> Check.positive("segments", n));
+        }
+
+        /** A burst and a speed change. */
+        public EnemyChange(Optional<Integer> burst, Optional<Double> speedFactor) {
+            this(burst, speedFactor, Optional.empty());
         }
 
         /** Only a burst change. */

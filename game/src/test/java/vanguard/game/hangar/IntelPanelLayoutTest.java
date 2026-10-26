@@ -373,7 +373,7 @@ class IntelPanelLayoutTest {
         assertTrue(band.getFirst().x() > tick.getFirst().x() - 2, "the band starts at the line");
         assertTrue(band.getFirst().x() + band.getFirst().width() <= strip.right(), "inside the strip");
         for (String other : CONTENT.levels().keySet()) {
-            if (!other.equals(level)) {
+            if (!other.equals(level) && !other.equals(LEVEL_28)) {
                 assertTrue(
                         Intel.of(CONTENT, other, 3).marks().stream()
                                 .noneMatch(mark -> mark.kind() == Intel.Mark.Kind.WATERLINE),
@@ -431,7 +431,7 @@ class IntelPanelLayoutTest {
                         .map(Intel.Mark::from)
                         .toList());
         for (String other : CONTENT.levels().keySet()) {
-            if (!other.equals(level) && !other.equals(level27)) {
+            if (!other.equals(level) && !other.equals(level27) && !other.equals(LEVEL_28)) {
                 assertTrue(
                         Intel.of(CONTENT, other, 3).marks().stream()
                                 .noneMatch(mark -> mark.kind() == Intel.Mark.Kind.RAY),
@@ -569,7 +569,11 @@ class IntelPanelLayoutTest {
                 continue;
             }
             Intel otherIntel = Intel.of(CONTENT, other, 3);
-            assertTrue(otherIntel.marks().stream().noneMatch(mark -> mark.kind() == Intel.Mark.Kind.COLUMN), other);
+            // M8 part H: Level 28's Hunter columns are marked too (level28sStripStopsAtTheMawsArrival).
+            assertEquals(
+                    other.equals(LEVEL_28),
+                    otherIntel.marks().stream().anyMatch(mark -> mark.kind() == Intel.Mark.Kind.COLUMN),
+                    other);
             Measure measure = new Measure();
             IntelPanel.layout(
                     measure, otherIntel, CONTENT.level(other).briefing().teaser(), other);
@@ -581,6 +585,92 @@ class IntelPanelLayoutTest {
                     measure.parts.stream().anyMatch(part -> part.what().contains(IntelPanel.UNMARKED_GREY)),
                     other);
         }
+    }
+
+    /** M8 part H: Level 28's key. */
+    private static final String LEVEL_28 = "act-4-deep-water/level-28-abyssal-maw";
+
+    /**
+     * M8 part H (design/campaign Level 28, Threat profile): at sensor L3 the strip marks the Maw's silhouette at its
+     * arrival (104 s), the approach's Hunter columns and Abyss Rays; the finale after the boss is not on the strip (the
+     * reveal is a surprise): the breakout's waterline (115 s) is in the intel but not drawn, no water band. Every sensor
+     * level fits, Varga's lines included, and no other level marks anything after its boss.
+     */
+    @Test
+    void level28sStripStopsAtTheMawsArrival() {
+        assertStripSilhouette(28, "abyssal-maw", 104);
+        Intel intel = Intel.of(CONTENT, LEVEL_28, 3);
+        assertEquals(104, IntelPanel.finale(intel), "the strip ends its marks at the Maw's arrival");
+        assertEquals(
+                List.of(115.0),
+                intel.marks().stream()
+                        .filter(mark -> mark.kind() == Intel.Mark.Kind.WATERLINE)
+                        .map(Intel.Mark::from)
+                        .toList(),
+                "the breakout's waterline, in the finale");
+        for (int sensor = 0; sensor <= 3; sensor++) {
+            Measure measure = assertFits(
+                    Intel.of(CONTENT, LEVEL_28, sensor),
+                    CONTENT.level(LEVEL_28).briefing().teaser(),
+                    LEVEL_28,
+                    "L" + sensor);
+            assertTrue(
+                    measure.fills.stream()
+                            .noneMatch(fill -> fill.colour().equals(IntelPanel.WATERLINE)
+                                    || fill.colour().equals(IntelPanel.WATER_BAND)),
+                    "no finale on the strip at L" + sensor);
+            long columns = measure.fills.stream()
+                    .filter(fill -> fill.colour().equals(IntelPanel.HULL_GREY))
+                    .count();
+            long expected = intel.marks().stream()
+                    .filter(mark -> mark.kind() == Intel.Mark.Kind.COLUMN)
+                    .count();
+            assertEquals(sensor >= 3 ? expected : 0, columns, "the Hunter columns at L" + sensor);
+            assertEquals(
+                    sensor >= 3 ? 2 : 0,
+                    measure.fills.stream()
+                            .filter(fill -> fill.colour().equals(IntelPanel.CHOIR_LIME))
+                            .count(),
+                    "the Choir's song (its tick and its dot) at L" + sensor);
+            assertEquals(
+                    sensor >= 3
+                            ? intel.marks().stream()
+                                    .filter(mark -> mark.kind() == Intel.Mark.Kind.RAY)
+                                    .count()
+                            : 0,
+                    measure.fills.stream()
+                            .filter(fill -> fill.colour().equals(IntelPanel.RAY_VIOLET))
+                            .count(),
+                    "the Rays at L" + sensor);
+        }
+        assertTrue(expectedColumnsBeforeTheBoss(intel), "the columns guard the approach");
+        // Step H6: the Choir's song at 97.5 s, before the boss, drawn at L3 only; no other level's strip marks it.
+        assertEquals(
+                List.of(97.5),
+                intel.marks().stream()
+                        .filter(mark -> mark.kind() == Intel.Mark.Kind.CHOIR)
+                        .map(Intel.Mark::from)
+                        .toList(),
+                "the Choir's song");
+        for (String level : CONTENT.levels().keySet()) {
+            Intel other = Intel.of(CONTENT, level, 3);
+            double finale = IntelPanel.finale(other);
+            if (!level.equals(LEVEL_28)) {
+                assertTrue(
+                        other.marks().stream().allMatch(mark -> mark.from() <= finale),
+                        level + ": nothing after the boss " + other.marks());
+            }
+            assertEquals(
+                    level.equals(LEVEL_28),
+                    other.marks().stream().anyMatch(mark -> mark.kind() == Intel.Mark.Kind.CHOIR),
+                    level + ": the Choir's song on the strip");
+        }
+    }
+
+    private static boolean expectedColumnsBeforeTheBoss(Intel intel) {
+        return intel.marks().stream()
+                .filter(mark -> mark.kind() == Intel.Mark.Kind.COLUMN || mark.kind() == Intel.Mark.Kind.RAY)
+                .allMatch(mark -> mark.from() < 104);
     }
 
     /** M7 part H (H.7e): Level 21's strip at sensor L3 marks the Dust Colossus's silhouette at 105 s. */

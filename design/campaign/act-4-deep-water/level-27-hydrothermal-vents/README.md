@@ -2,7 +2,7 @@
 title: Level 27 – Hydrothermal Vents
 design: approved
 implementation: in-progress
-art: proposed
+art: final
 depends-on: [../../../enemies/naval/depth-hunter, ../../../enemies/naval/glassfin, ../../../enemies/naval/barbfin, ../../../enemies/naval/eel-swarm, ../../../enemies/naval/abyss-ray, ../../../enemies/naval/siren, ../../../enemies/naval/spiral-nautilus, ../../../enemies/naval/glow-angler, ../../../enemies/ground/spine-turret, ../../../enemies/ground/polyp-mortar, ../../../enemies/ground/relay-beacon, ../../../world/europa, ../../../player/wingmen, ../../../player/specials, ../../../story/twist]
 updated: 2026-10-25
 ---
@@ -30,7 +30,7 @@ Written from the act roster, the gap analysis's recommended answers (Q1 b, Q5 a,
 documents. **In data since M8 part G (step G2, 2026-10-24)**: the level's numbers live in [data.yaml](data.yaml) and
 the briefing, teaser, threat profile, sections, waves, ground targets, radio and credit budget tables below are
 rendered from it (`tools/sync_tables.py`); step G2's placements and the gap check's defaults (`m8g-gaps.md` §5) are
-pending the user's review in round 57.
+accepted in round 57 (2026-10-25).
 
 ## Briefing
 
@@ -121,7 +121,7 @@ without it; Rook's lines are **dropped**, not just silenced (the debrief and bri
 `--level 27` debug start treats him as MIA unless `--escort rook:` is given
 ([wingmen](../../../player/wingmen/README.md#rooks-loss-and-absence-l26l29)).
 
-**Light** per section (the data's `underwater_look`; gap check §5 G10, ART-G's proposal, pending round 57): 1 dim blue
+**Light** per section (the data's `underwater_look`; gap check §5 G10, ART-G's proposal, accepted in round 57 (2026-10-25)): 1 dim blue
 (ambient 0.45, L25's headlights 70° × 260 px at 0.8), the vent glow ahead; 2 vent-lit warm grey (0.60, no headlights),
 amber pools round the smokers; 3 the same, brightest (0.62); 4 dim blue again (as 1), the beacons' red-gold pulses; 5 the
 hatchery's teal (0.60). The amber is in the light pools (one 100 px pool per smoker, the data's `lights`) and the
@@ -165,7 +165,7 @@ shots a minute with the plan's fit (the floor 2.5 and 10), no stretch over 2 s o
 - **Directions** ("front, rear", the roster): pincers and school entries from the sides with edge warnings
   3 s ahead (LEFT/RIGHT), four rear Barbfin ambushes and three Hunter columns with BOTTOM warnings for their
   first entries; front 68 %.
-- **Step G2's data** (pending round 57): the Nautilus pair is the unit's `circle` (its only formation: the pair
+- **Step G2's data** (accepted in round 57 (2026-10-25)): the Nautilus pair is the unit's `circle` (its only formation: the pair
   orbits the ship for 15 s), not the draft's `pincer`; the rear Barbfin pairs are `rear ambush` waves (up the ambush
   lanes from the bottom edge, holding above the ship); easy skips the Barbfin pincers of sections 2–3 (`skip`); the Hunter
   columns 3 / 3 / 3 on easy and 3 / 4 / 4 on hard (`easy` / `hard` counts against the formation lever).
@@ -240,7 +240,7 @@ Totals: Glassfin 132 · Barbfin 67 · Eel Swarm 2 · Abyss Ray 1 · Siren 2 · S
 ## Ground targets
 
 The four relay beacons are a part of their own ([relay-beacon](../../../enemies/ground/relay-beacon/README.md), step
-G2: the secondary's `escapes` counts a unit by its slug). ART-G's places (pending round 57): the first nest on the
+G2: the secondary's `escapes` counts a unit by its slug). ART-G's places (accepted in round 57 (2026-10-25)): the first nest on the
 nest stack (x 340/384/428), the mortars on their mound (x 70/128), the beacons each on a ridge crest, the shoulder nests
 at x 130/172 and 310 (hard + 88 and 352).
 
@@ -391,35 +391,35 @@ rear at this visit, beside the Mk IV (step G3), the charges back when part H dec
 - **Hard**: the plumes' tell 1.0 s, a 4 s cycle; the Hunters' torpedo every 2.8 s at 85°/s; Barbfin 2-needle
   bursts every 2.6 s (M8 AW's stat block); the schools larger (the formation lever); the second and third columns 4
   hunters; the *Marlin*'s trigger 28 HP; the beacons' HP 78 (the global multiplier: the draft's 90 has no stat-block
-  key, pending round 57); five Spine Turrets on the shoulders.
+  key, accepted in round 57 (2026-10-25)); five Spine Turrets on the shoulders.
 
 ## Concept art
 
-ART-G's production art for round 57 (prompts and briefs: [concept/prompts.md](concept/prompts.md)); the light on the
+ART-G's production art for round 57, accepted as final (prompts and briefs: [concept/prompts.md](concept/prompts.md)); the light on the
 sheets is the review's stand-in, not the game's grade (step G5's captures replace it).
 
 | File | What | Status |
 |---|---|---|
-| [concept/backdrop-final-r57-a.png](concept/backdrop-final-r57-a.png) | Production backdrop (`tools/art/backdrop_l27.py`, from europa-vents-r48-a): the plain's last ridge with Levels 24-26's beacons, the black smokers (18 chimney clusters with hot mouths, amber mats, tube worms), the nest and Siren stacks, the *Marlin*'s smoker, the hull-code wreck (`HDX-417` under blistered paint), the beacon ridge's knolls and shoulders, the bowl's rim and the hatchery gate's ring of chitin arches; twelve screens under the vent light's stand-in (sheet) | proposed (round 57) |
-| [concept/backdrop-final-r57-a.gif](concept/backdrop-final-r57-a.gif) | t 25-35 at half size: the first plume rows' tells and eruptions among the smokers | proposed (round 57) |
-| [concept/backdrop-proposal.yaml](concept/backdrop-proposal.yaml) | The generator's `backdrop:` block, the plume rows, the ground places, the per-section `underwater_look` and the static `lights:` the art is drawn for (adopted in the data by step G2) | proposed (round 57) |
-| [concept/l27-props-final-r57-a.png](concept/l27-props-final-r57-a.png) | The *Marlin* (`tools/art/l27_props.py`: sealed under Vrell resin, hit, opened, her lamp and the resin's teal) and the heat plume (mouth and tell steps, the tell's light and lifting silt, the eruption from above with its heat, settling, the bend's ripple) (sheet) | proposed (round 57) |
-| [concept/l27-props-final-r57-a.gif](concept/l27-props-final-r57-a.gif) | The first plume row's tell and eruption, shots bent 25 degrees off a burning disc; the *Marlin* by her stack shot open, her crate rising | proposed (round 57) |
-| [concept/plumes-capture-r57-a.png](concept/plumes-capture-r57-a.png) | Game capture (step G5; Xvfb, `--bench`, medium, the plan's fit, the Bulwark, `--invulnerable`, auto-fire, the ship unsteered): the first plume row (x 120 and 360) at t≈26.8 (the mouths glowing, the silt lifting), 27.5 (the tell's end) and 28.2 (the eruption), the play field at 1:1 | proposed (round 57) |
-| [concept/plumes-capture-r57-a.mp4](concept/plumes-capture-r57-a.mp4) | The same run t≈22–34 with the game's sound: the tells, the eruptions, the bend's swish and the `europa-vents` bed (the a stand-ins) | proposed (round 57) |
-| [concept/hunter-capture-r57-a.png](concept/hunter-capture-r57-a.png) | The first Depth Hunter column (x 144) rising at t≈56.6–61.2 and holding beside the ship, its torpedoes leaving the tubes, the Decoy Flares fired at t≈59 (a run with `--special decoy-flares:6`), 1:1 | proposed (round 57) |
-| [concept/hunter-capture-r57-a.mp4](concept/hunter-capture-r57-a.mp4) | The same run t≈53–68 with sound: the BOTTOM warning, the rise, the launches, the torpedoes' run, the flares, torpedoes shot down | proposed (round 57) |
-| [concept/bend-capture-r57-a.png](concept/bend-capture-r57-a.png) | A burning disc bending shots: the harpoons' trails kinking 25° in the plume at t≈103.0–103.5 (1:1) and the level's last plume row at t≈128 over the ship; no Hunter torpedo was caught crossing a disc in the unsteered runs | proposed (round 57) |
-| [concept/wreck-capture-r57-a.png](concept/wreck-capture-r57-a.png) | The hull-code beat, the whole screen at t≈70 (the wreck mid-screen under the side warning) and t≈72.5 (Varga's line on the radio panel) | proposed (round 57) |
-| [concept/wreck-capture-r57-a.mp4](concept/wreck-capture-r57-a.mp4) | t≈64–84 with sound: the scan ping, Varga's and Okafor's lines, Vorne's motif alone over the bed from t=68 to 82 | proposed (round 57) |
-| [concept/marlin-capture-r57-a.png](concept/marlin-capture-r57-a.png) | The *Marlin* by her smoker at t≈41.0–43.4, shot open (a run steered under her at t≈35), her crate rising, 1:1 | proposed (round 57) |
-| [concept/marlin-capture-r57-a.mp4](concept/marlin-capture-r57-a.mp4) | The same run t≈38–46 with sound: the resin's crack | proposed (round 57) |
-| [concept/beacons-capture-r57-a.png](concept/beacons-capture-r57-a.png) | The relay beacons: a mast's red lamp and its gold pulse (t≈102.3, 104.0, main run), a beacon shot down (t≈94.7–95.6: the lamp, the break, the dark mast; a run steered under each beacon) and the screen at t≈110 with `BEACONS DONE` | proposed (round 57) |
-| [concept/beacons-capture-r57-a.mp4](concept/beacons-capture-r57-a.mp4) | The steered run t≈92–112 with sound: the beacons' hum and breaks, the second Hunter column | proposed (round 57) |
-| [concept/gate-capture-r57-a.png](concept/gate-capture-r57-a.png) | The hatchery gate's arches passing over the ship at t≈147, 149 and 150.5 | proposed (round 57) |
-| [concept/gate-capture-r57-a.mp4](concept/gate-capture-r57-a.mp4) | t≈138–152 with sound: the last stretch, the gate, Okafor's last lines, the theme going out | proposed (round 57) |
-| [concept/no-escort-capture-r57-a.png](concept/no-escort-capture-r57-a.png) | `--escort none`: the whole screen at t≈60.5, the first Hunter column with no escort (the ESCORT row empty) | proposed (round 57) |
-| [concept/crops-capture-r57-a.png](concept/crops-capture-r57-a.png) | 1:1 crops from the game: the Hunter column (t≈58.4, the Bulwark beside it), the wreck's `HDX-417`, a plume's tell (t≈27) and an eruption (t≈103.2) | proposed (round 57) |
+| [concept/backdrop-final-r57-a.png](concept/backdrop-final-r57-a.png) | Production backdrop (`tools/art/backdrop_l27.py`, from europa-vents-r48-a): the plain's last ridge with Levels 24-26's beacons, the black smokers (18 chimney clusters with hot mouths, amber mats, tube worms), the nest and Siren stacks, the *Marlin*'s smoker, the hull-code wreck (`HDX-417` under blistered paint), the beacon ridge's knolls and shoulders, the bowl's rim and the hatchery gate's ring of chitin arches; twelve screens under the vent light's stand-in (sheet) | chosen (round 57: accepted as final) |
+| [concept/backdrop-final-r57-a.gif](concept/backdrop-final-r57-a.gif) | t 25-35 at half size: the first plume rows' tells and eruptions among the smokers | chosen (round 57: accepted as final) |
+| [concept/backdrop-proposal.yaml](concept/backdrop-proposal.yaml) | The generator's `backdrop:` block, the plume rows, the ground places, the per-section `underwater_look` and the static `lights:` the art is drawn for (adopted in the data by step G2) | chosen (round 57: accepted as final) |
+| [concept/l27-props-final-r57-a.png](concept/l27-props-final-r57-a.png) | The *Marlin* (`tools/art/l27_props.py`: sealed under Vrell resin, hit, opened, her lamp and the resin's teal) and the heat plume (mouth and tell steps, the tell's light and lifting silt, the eruption from above with its heat, settling, the bend's ripple) (sheet) | chosen (round 57: accepted as final) |
+| [concept/l27-props-final-r57-a.gif](concept/l27-props-final-r57-a.gif) | The first plume row's tell and eruption, shots bent 25 degrees off a burning disc; the *Marlin* by her stack shot open, her crate rising | chosen (round 57: accepted as final) |
+| [concept/plumes-capture-r57-a.png](concept/plumes-capture-r57-a.png) | Game capture (step G5; Xvfb, `--bench`, medium, the plan's fit, the Bulwark, `--invulnerable`, auto-fire, the ship unsteered): the first plume row (x 120 and 360) at t≈26.8 (the mouths glowing, the silt lifting), 27.5 (the tell's end) and 28.2 (the eruption), the play field at 1:1 | chosen (round 57: accepted as final) |
+| [concept/plumes-capture-r57-a.mp4](concept/plumes-capture-r57-a.mp4) | The same run t≈22–34 with the game's sound: the tells, the eruptions, the bend's swish and the `europa-vents` bed (the a stand-ins) | chosen (round 57: accepted as final) |
+| [concept/hunter-capture-r57-a.png](concept/hunter-capture-r57-a.png) | The first Depth Hunter column (x 144) rising at t≈56.6–61.2 and holding beside the ship, its torpedoes leaving the tubes, the Decoy Flares fired at t≈59 (a run with `--special decoy-flares:6`), 1:1 | chosen (round 57: accepted as final) |
+| [concept/hunter-capture-r57-a.mp4](concept/hunter-capture-r57-a.mp4) | The same run t≈53–68 with sound: the BOTTOM warning, the rise, the launches, the torpedoes' run, the flares, torpedoes shot down | chosen (round 57: accepted as final) |
+| [concept/bend-capture-r57-a.png](concept/bend-capture-r57-a.png) | A burning disc bending shots: the harpoons' trails kinking 25° in the plume at t≈103.0–103.5 (1:1) and the level's last plume row at t≈128 over the ship; no Hunter torpedo was caught crossing a disc in the unsteered runs | chosen (round 57: accepted as final) |
+| [concept/wreck-capture-r57-a.png](concept/wreck-capture-r57-a.png) | The hull-code beat, the whole screen at t≈70 (the wreck mid-screen under the side warning) and t≈72.5 (Varga's line on the radio panel) | chosen (round 57: accepted as final) |
+| [concept/wreck-capture-r57-a.mp4](concept/wreck-capture-r57-a.mp4) | t≈64–84 with sound: the scan ping, Varga's and Okafor's lines, Vorne's motif alone over the bed from t=68 to 82 | chosen (round 57: accepted as final) |
+| [concept/marlin-capture-r57-a.png](concept/marlin-capture-r57-a.png) | The *Marlin* by her smoker at t≈41.0–43.4, shot open (a run steered under her at t≈35), her crate rising, 1:1 | chosen (round 57: accepted as final) |
+| [concept/marlin-capture-r57-a.mp4](concept/marlin-capture-r57-a.mp4) | The same run t≈38–46 with sound: the resin's crack | chosen (round 57: accepted as final) |
+| [concept/beacons-capture-r57-a.png](concept/beacons-capture-r57-a.png) | The relay beacons: a mast's red lamp and its gold pulse (t≈102.3, 104.0, main run), a beacon shot down (t≈94.7–95.6: the lamp, the break, the dark mast; a run steered under each beacon) and the screen at t≈110 with `BEACONS DONE` | chosen (round 57: accepted as final) |
+| [concept/beacons-capture-r57-a.mp4](concept/beacons-capture-r57-a.mp4) | The steered run t≈92–112 with sound: the beacons' hum and breaks, the second Hunter column | chosen (round 57: accepted as final) |
+| [concept/gate-capture-r57-a.png](concept/gate-capture-r57-a.png) | The hatchery gate's arches passing over the ship at t≈147, 149 and 150.5 | chosen (round 57: accepted as final) |
+| [concept/gate-capture-r57-a.mp4](concept/gate-capture-r57-a.mp4) | t≈138–152 with sound: the last stretch, the gate, Okafor's last lines, the theme going out | chosen (round 57: accepted as final) |
+| [concept/no-escort-capture-r57-a.png](concept/no-escort-capture-r57-a.png) | `--escort none`: the whole screen at t≈60.5, the first Hunter column with no escort (the ESCORT row empty) | chosen (round 57: accepted as final) |
+| [concept/crops-capture-r57-a.png](concept/crops-capture-r57-a.png) | 1:1 crops from the game: the Hunter column (t≈58.4, the Bulwark beside it), the wreck's `HDX-417`, a plume's tell (t≈27) and an eruption (t≈103.2) | chosen (round 57: accepted as final) |
 
 The captures' frame rate: a full medium run on the software renderer (Xvfb, llvmpipe, no recording) averaged **459 fps**;
 the longest frame (51 ms) is the level's first, no other frame of 50 ms or more.
@@ -451,7 +451,7 @@ the longest frame (51 ms) is the level's first, no other frame of 50 ms or more.
 - [x] Briefing: both pages, each one screen (`BriefingLayoutTest`), with their images
 - [x] Typical haul within ±5 % of budget(27) with the level's `bounty_scale` (`TypicalHaulTest`)
 - [x] Music: track 11's stems by section, the motif layer and its solo over the wreck, the `europa-vents` bed (no bubbles)
-      (`Level27SoundsTest`; the bed and the level's sounds are round 57's a variants until the user's pick)
+      (`Level27SoundsTest`; round 57's picks: the a variants play, the b picks (S.2, S.6, S.7, S.9, S.12) follow in step H5)
 - [x] Easy/hard variations as in *Difficulty notes*; the autopilot flies the level with the Bulwark on every difficulty
 - [x] Production art and the round's captures (steps ART-G and G5; [round 57](../../../concept-rounds/round-57/README.md))
 
@@ -483,20 +483,20 @@ All decided in round 48 (2026-10-22):
 - 2026-10-21: no Rook lines (dropped), the Bulwark loaner in his slot, Okafor's hangar teaser instead of
   Rook's.
 - 2026-10-22 (user, round 48 D1–D13: "approve"; confirmed: "Yes, set them approved"): design approved.
-- 2026-10-24 (M8 part G, step G2; pending the user's review in round 57): the level in `data.yaml` from the approved
+- 2026-10-24 (M8 part G, step G2; accepted in round 57 (2026-10-25)): the level in `data.yaml` from the approved
   tables and ART-G's proposal (plume xs, target places, per-section light, static pools, backdrop adopted unchanged);
   the relay beacons a part of their own (`relay-beacon`, the secondary's `escapes`); the Nautilus pair a `circle`; the
   Hunter columns at x 144 / 336 / 240, 3 / 3 / 3 on easy and 3 / 4 / 4 on hard; the beacons' hard HP 78 (no key for the
   draft's 90); `bounty_scale` 0.79 (`levelReport`: -1.5 % at 0.78); the stale lines since M8 AW fixed (the water's
   energy-weapon factors, Barbfin 52 HP, the hard Barbfin burst every 2.6 s, the rear answer the Tail Gun per Q.1 = a).
-- 2026-10-24 (M8 part G, step G3; pending the user's review in round 57): the balance plan refits the Tail Gun L3 on the
+- 2026-10-24 (M8 part G, step G3; accepted in round 57 (2026-10-25)): the balance plan refits the Tail Gun L3 on the
   rear at this visit (Q.1 = a; 15.5 of the Mk IV's 20 MW); the test autopilot plans every move here (`VentPlay`: the hot
   discs, the torpedoes flown on, the bullets and bodies; the beacons first, under them with the harpoon or over them with
   the rear gun; under the Hunter column's band while one is on the screen; Decoy Flares if fitted). Measured
   (`levelReport`, 5 seeds): won every run on every difficulty with no retry, 3 of 4 beacons on every run, a small unit
   1.38× Level 10's time on the screen; without an escort every difficulty won with the beacons. No wave retuned: the
   level was not at fault (the 0/3 and 7.1× came from flying the starter fit and the old plays).
-- 2026-10-25 (M8 part G, step G4; pending the user's review in round 57): the level drawn and played. The motif's solo
+- 2026-10-25 (M8 part G, step G4; accepted in round 57 (2026-10-25)): the level drawn and played. The motif's solo
   over the wreck is the stems out with the motif layer on (`stem_times` t=68 `stems: none`; `stems: motif` there would
   have loaded the motif file a second time as an extra stem), and the theme with the motif goes out over the last 6 s
   (t=144 `db: -40`). The vent field has static lights but is lit (45–62 %), so it is not *black water*: its units keep
@@ -506,7 +506,7 @@ All decided in round 48 (2026-10-22):
   wake and a launch puff at the tubes, and burst on the under-water ladder. "The plumes' rings on the map" (sensor L2)
   are the briefing's sonar chart (`level-27-vent-field`, every plume vent ringed amber): the hangar has no per-level
   map. Thera Deep Control's lines carry his `thera-deep` portrait (as at Level 23).
-- 2026-10-25 (M8 part G, step G5; pending the user's review in round 57): part G built and flown; the captures above.
+- 2026-10-25 (M8 part G, step G5; accepted in round 57 (2026-10-25)): part G built and flown; the captures above.
   The small rules the steps decided (log `m8-gaps.md` 2026-10-24/25, gap check `m8g-gaps.md` §5), not asked in the
   round unless named there: a column's Hunters hold evenly spread over their band (G1); a shot hitting a disc's centre
   line is bent clockwise (G1); at most 16 units burnt a burst (G1); a plume kill is the player's kill (bounty × scale,
@@ -525,3 +525,11 @@ All decided in round 48 (2026-10-22):
   sound list; AUD-G). Captured: the first Hunter column holds beside the unsteered ship (x 144) and the third rises
   under it (x 240, the ship's own column), so in the captures the hulls overlap the ship; no torpedo was caught being
   bent; the beacons are dark masts in the dim blue, readable by their lamps.
+- 2026-10-25 (user, [round 57](../../../concept-rounds/round-57/README.md) closed): F.1–F.8 accepted as final (the backdrop, the *Marlin* and the plume, the Depth
+  Hunter, the relay beacon, the briefing images, the intel portraits, the captures); the part is `art: final`. Sounds: the
+  vent field's bed **a**, the plume's tell **b**, its eruption **a**, the bend's swish **a**, the torpedo launch **a**,
+  the torpedo's run **b**, its impact **b**, the beacon's hum **a**, its break **b**, the *Marlin*'s crack **a**, the
+  Hunter's hull break **a**, the hull-code scan **b** (the b picks go into the game in step H5; the rejected files
+  are in the sound effects' `concept/rejected/`). C.1–C.7 accepted (the Bulwark's dodging, the Sirens on the chimneys, the
+  beacons' 60 HP and bounty 15, the Hunter columns, the vent field's light, the Nautilus pair's circle, no sound for the
+  Hunter's rise), and every small rule logged above as pending the round is accepted.

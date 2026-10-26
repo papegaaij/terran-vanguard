@@ -67,6 +67,7 @@ speakers:
       68b1de64c583: 109780469   # Level 25 t=1 "The Siren Trench, Lancer…": the key's seed read "Relness sing" / "Roll nests" for "Vrell nests" (four pause retries); the pin reads "Vrell nests" with the name prompt at 152 Hz
       f6aaa2b9a46a: 258648631   # Level 25 t=158 "The trench opens ahead…": the key's seed jumped an octave on 23 % of the line (p90 about 400 Hz); the pin stays at 156 Hz (p90 210) and reads "Aegis" both ways
       553b9b37180b: 89375107    # Level 26 t=167.5 "Aegis Two, report. Rook? Rook, answer!": the key's seed jumped an octave on 31 % of the line (p90 about 400 Hz); the pin reads it word for word with the name prompt at 142 Hz (p90 190)
+      4b4bcd5a2392: 152259044   # Act 4 outro page 1 "The Maw is dead…": every take of the key's seed and of four more pins (48 in all) held a 1.3-2.5 s pause in its first chunk (step H3, pending the user's review in round 58: the closest take kept)
   varga:
     names: [Varga]
     ref: ref-varga

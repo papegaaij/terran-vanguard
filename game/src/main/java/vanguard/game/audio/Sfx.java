@@ -661,61 +661,145 @@ public enum Sfx {
      */
     CHOIR_STATIC("sfx/choir-static-r55-b.ogg", 1, Bus.EFFECTS, WARNING),
     /**
-     * M8 part G: a heat plume's tell (round 57 a, proposed until the user's pick: a deep-sea earthquake's rumble gliding
-     * up over a waterfall's roar, 1.4 s), as each plume's mouth starts to glow (Level 27's vents, {@code look:
-     * heat-plume}).
+     * M8 part G: a heat plume's tell (round 57 b, the user's pick: a boiler blowdown's roar slowed and gliding up over
+     * rapids, 1.4 s), as each plume's mouth starts to glow (Level 27's vents, {@code look: heat-plume}).
      */
-    PLUME_TELL("sfx/plume-tell-r57-a.ogg", 3, Bus.EFFECTS, ENEMY_FIRE),
+    PLUME_TELL("sfx/plume-tell-r57-b.ogg", 3, Bus.EFFECTS, ENEMY_FIRE),
     /**
-     * M8 part G: a heat plume's eruption (round 57 a, proposed: Iceland's Geysir erupting slowed, the waterfall's roar and
+     * M8 part G: a heat plume's eruption (round 57 a, the user's pick: Iceland's Geysir erupting slowed, the waterfall's roar and
      * a depth bomb's boom, 2.0 s), as its column stands up.
      */
     PLUME_ERUPTION("sfx/plume-eruption-r57-a.ogg", 3, Bus.EFFECTS, ENEMY_FIRE),
     /**
-     * M8 part G: a plume bending a shot (round 57 a, proposed: water whooshing by, slowed and muffled, 0.4 s), at most one
+     * M8 part G: a plume bending a shot (round 57 a, the user's pick: water whooshing by, slowed and muffled, 0.4 s), at most one
      * every {@code VentFieldCues.BEND_GAP_STEPS} steps.
      */
     BEND_SWISH("sfx/bend-swish-r57-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
     /**
-     * M8 part G: a Depth Hunter's torpedo launch (round 57 a, proposed: an air cannon's blast slowed, a motor spinning up,
+     * M8 part G: a Depth Hunter's torpedo launch (round 57 a, the user's pick: an air cannon's blast slowed, a motor spinning up,
      * 0.9 s), instead of the shot's report.
      */
     TORPEDO_LAUNCH("sfx/torpedo-launch-r57-a.ogg", 3, Bus.EFFECTS, ENEMY_FIRE),
     /**
-     * M8 part G: the torpedoes' run (round 57 a, proposed: a boat propeller under water, sped up, a seamless 4 s loop):
-     * one quiet loop while a torpedo runs, the nearest, louder as it closes on the ship.
+     * M8 part G: the torpedoes' run (round 57 b, the user's pick: a Zodiac's outboards heard under water, slowed, a
+     * seamless 4 s loop): one quiet loop while a torpedo runs, the nearest, louder as it closes on the ship.
      */
-    TORPEDO_RUN("sfx/torpedo-run-r57-a.ogg", 1, Bus.EFFECTS, ENEMY_FIRE),
+    TORPEDO_RUN("sfx/torpedo-run-r57-b.ogg", 1, Bus.EFFECTS, ENEMY_FIRE),
     /**
-     * M8 part G: a torpedo bursting on a hull (round 57 a, proposed: an under-water impact with a file cabinet's metal
-     * clang, 1.5 s): the ship's, the Bulwark's or Rook's; one shot down bursts on the under-water {@code tiny} rung.
+     * M8 part G: a torpedo bursting on a hull (round 57 b, the user's pick: a depth bomb with a steel door's slam, 1.6
+     * s): the ship's, the Bulwark's or Rook's; one shot down bursts on the under-water {@code tiny} rung.
      */
-    TORPEDO_IMPACT("sfx/torpedo-impact-r57-a.ogg", 2, Bus.EFFECTS, EXPLOSION),
+    TORPEDO_IMPACT("sfx/torpedo-impact-r57-b.ogg", 2, Bus.EFFECTS, EXPLOSION),
     /**
-     * M8 part G: a Depth Hunter's hull breaking up (round 57 a, proposed: scrap metal crashing slowed, a motor running
+     * M8 part G: a Depth Hunter's hull breaking up (round 57 a, the user's pick: scrap metal crashing slowed, a motor running
      * down, 1.8 s), over its under-water {@code medium} burst.
      */
     HUNTER_BREAK("sfx/hunter-break-r57-a.ogg", 2, Bus.EFFECTS, EXPLOSION),
     /**
-     * M8 part G: the relay beacons' hum (round 57 a, proposed: power lines buzzing in rain, the crackle smoothed out,
+     * M8 part G: the relay beacons' hum (round 57 a, the user's pick: power lines buzzing in rain, the crackle smoothed out,
      * swelling with the 4 s lamp, a seamless 4 s loop): one quiet loop while a beacon lives on the screen, the nearest.
      */
     BEACON_HUM("sfx/beacon-hum-r57-a.ogg", 1, Bus.EFFECTS, ENEMY_FIRE),
     /**
-     * M8 part G: a relay beacon destroyed (round 57 a, proposed: the hum dying under a felled trunk's crack, 2.2 s), with
-     * its under-water {@code small} burst.
+     * M8 part G: a relay beacon destroyed (round 57 b, the user's pick: the hum dying under a metal snap and a steel
+     * door's clang, 2.0 s), with its under-water {@code small} burst.
      */
-    BEACON_BREAK("sfx/beacon-break-r57-a.ogg", 2, Bus.EFFECTS, EXPLOSION),
+    BEACON_BREAK("sfx/beacon-break-r57-b.ogg", 2, Bus.EFFECTS, EXPLOSION),
     /**
-     * M8 part G: the Marlin's resin cracking open (round 57 a, proposed: a tree trunk's crack slowed on a deep thump,
+     * M8 part G: the Marlin's resin cracking open (round 57 a, the user's pick: a tree trunk's crack slowed on a deep thump,
      * 1.6 s), as the hauler is shot open (Level 27's secret).
      */
     MARLIN_CRACK("sfx/marlin-crack-r57-a.ogg", 1, Bus.EFFECTS, EXPLOSION),
     /**
-     * M8 part G: Varga's hull-code scan (round 57 a, proposed, synthesized: one clean 1.5 kHz ping in a water reverb,
-     * 2.2 s), once a run as the wreck scrolls in, 2 s before her line.
+     * M8 part G: Varga's hull-code scan (round 57 b, the user's pick, synthesized: a soft rising sweep landing on a
+     * glassy two-tone ping in a water reverb, 2.2 s), once a run as the wreck scrolls in, 2 s before her line.
      */
-    SCAN_PING("sfx/scan-ping-r57-a.ogg", 1, Bus.EFFECTS, WARNING),
+    SCAN_PING("sfx/scan-ping-r57-b.ogg", 1, Bus.EFFECTS, WARNING),
+    /**
+     * M8 part H: the Abyssal Maw's arrival roar (round 58 a, proposed until the user's pick: a blue whale's B call slowed and sinking over a deep-sea
+     * earthquake's rumble, a 3 s reverb, 7.8 s), after the klaxon's first blast, as the coil rises (Level 28, t=104).
+     */
+    MAW_ARRIVAL("sfx/maw-arrival-r58-a.ogg", 1, Bus.EFFECTS, BOSS),
+    /**
+     * M8 part H: a gill sac's breath (round 58 a, proposed until the user's pick: a heartbeat's double thump slowed, then a muffled snort, 0.9 s), as
+     * each sac starts its swell before its ring (phases 1-2).
+     */
+    MAW_GILL("sfx/maw-gill-r58-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
+    /**
+     * M8 part H: the throat's charge (round 58 a, proposed until the user's pick: a tiger's growl gliding up over a steel mill's rising drone, 0.9 s), as
+     * the throat glows before the fan and the fan wall.
+     */
+    MAW_THROAT("sfx/maw-throat-r58-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
+    /**
+     * M8 part H: a coil sweep's tell (round 58 a, proposed until the user's pick: a glacier's ice grinding with a hull's creak, slowed, 1.2 s), as the
+     * bight's plates shed silt before it swings.
+     */
+    MAW_SWEEP_GROAN("sfx/maw-sweep-groan-r58-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
+    /**
+     * M8 part H: a coil sweep's swing (round 58 a, proposed until the user's pick: an under-water pass-by slowed on a depth bomb's low boom, 1.15 s), as
+     * the bight swings in.
+     */
+    MAW_SWEEP_SWING("sfx/maw-sweep-swing-r58-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
+    /**
+     * M8 part H: an Eel Swarm shed (round 58 a, proposed until the user's pick: birch bark torn and slowed over a hydrophone's slosh, 0.7 s), as a coil
+     * plate's flare ends and the eel slips out.
+     */
+    MAW_SHED("sfx/maw-shed-r58-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
+    /**
+     * M8 part H: the dive (round 58 a, proposed until the user's pick: a waterfall's roar falling, a whale's D call sweeping down and a depth bomb's
+     * boom, a 2.5 s reverb, 5.0 s), as the coil slides into the dark (the music drops away with it).
+     */
+    MAW_DIVE("sfx/maw-dive-r58-a.ogg", 1, Bus.EFFECTS, BOSS),
+    /**
+     * M8 part H: the lunge (round 58 a, proposed until the user's pick: an under-water pass-by surging up, then a jaw snap slowed on a depth bomb's boom,
+     * 2.0 s), as the head bursts up its column.
+     */
+    MAW_LUNGE("sfx/maw-lunge-r58-a.ogg", 1, Bus.EFFECTS, BOSS),
+    /**
+     * M8 part H: a Helix implant's spark (round 58 a, proposed until the user's pick: an arc welder's sparks, then a heavy steel door's slam, 1.4 s): its
+     * 1.0 s tell and the plate's clunk as it blows aside.
+     */
+    IMPLANT_SPARK("sfx/implant-spark-r58-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
+    /**
+     * M8 part H: an open implant's discharge (round 58 a, proposed until the user's pick: a Tesla coil's spark gap building, then its crack, 0.8 s), as
+     * its arc crawls before its burst.
+     */
+    IMPLANT_ZAP("sfx/implant-zap-r58-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
+    /**
+     * M8 part H: the Maw's death (round 58 a, proposed until the user's pick: three Tesla-coil cracks, a whale's falling moan and a depth bomb's boom, a
+     * 3 s reverb, 8.2 s), its own instead of the huge rung's blast, over the 4 s chain.
+     */
+    MAW_DEATH("sfx/maw-death-r58-a.ogg", 1, Bus.EFFECTS, BOSS),
+    /**
+     * M8 part H: the climb up the drill shaft (round 58 a, proposed until the user's pick: a waterfall's roar gliding up and swelling, a frozen lake's
+     * fracture booms from 4.5 s, 10.0 s), once as the clock resumes after the kill (Level 28, K+5 to K+15).
+     */
+    SHAFT_CLIMB("sfx/shaft-climb-r58-a.ogg", 1, Bus.EFFECTS, BOSS),
+    /**
+     * M8 part H: the breakout through the ice ceiling (round 58 a, proposed until the user's pick: a glacier calving, a large ice sheet cracking and waves
+     * crashing on rocks, 4.5 s), as the medium turns to air (Level 28, K+15).
+     */
+    BREAKOUT("sfx/breakout-r58-a.ogg", 1, Bus.EFFECTS, BOSS),
+    /**
+     * M8 part H: the Ascendancy cruisers' rise (round 58 a, proposed until the user's pick: a ferry's engine room slowed and swelling under a boat
+     * breaking harbour ice, 5.0 s), under the reveal sting (Level 28, K+18).
+     */
+    CRUISER_RISE("sfx/cruiser-rise-r58-a.ogg", 1, Bus.EFFECTS, BOSS),
+    /**
+     * M8 part H: a cruiser's broadside (round 58 a, proposed until the user's pick: a howitzer's shot seven times down the hull, 1.65 s), as its volley
+     * crosses the band.
+     */
+    CRUISER_BROADSIDE("sfx/cruiser-broadside-r58-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
+    /**
+     * M8 part H: a flak burst (round 58 a, proposed until the user's pick: a firework shell's burst recorded 1.2 km away, 1.15 s), as a flak marker's
+     * airburst goes off (the lob's impact in the run).
+     */
+    CRUISER_FLAK("sfx/cruiser-flak-r58-a.ogg", 3, Bus.EFFECTS, ENEMY_FIRE),
+    /**
+     * M8 part H: a point-defence burst (round 58 a, proposed until the user's pick: a 25 mm autocannon's three-shot burst, 0.8 s), at the first shot of a
+     * cruiser's burst.
+     */
+    CRUISER_PD("sfx/cruiser-pd-r58-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
     /**
      * M7 part G: the pursuit swarm's band hum (round 43 a, proposed: a designed swarm drone slowed to 0.85 over a bee
      * box's hive hum, a seamless 6 s loop, -32 dB): one loop while a pursuit holds the top band, panned to its leader
@@ -948,13 +1032,29 @@ public enum Sfx {
      */
     AMBIENCE_EUROPA_BLACK("sfx/europa-black-r55-a.ogg", 1, Bus.EFFECTS, AMBIENCE),
     /**
-     * M8 part G: the vent field's bed (round 57 a, proposed until the user's pick: a waterfall's massive roar slowed to a
+     * M8 part G: the vent field's bed (round 57 a, the user's pick: a waterfall's massive roar slowed to a
      * deep rumble; once a loop a boiler blowdown far off swelling and a bunker door's low metal groan, a seamless 24 s
      * loop): Level 27, in place of {@code europa-under}.
      */
     AMBIENCE_EUROPA_VENTS("sfx/europa-vents-r57-a.ogg", 1, Bus.EFFECTS, AMBIENCE),
+    /**
+     * M8 part H: the hatchery's bed (round 58 a, proposed until the user's pick: a heartbeat slowed and muffled over a deep under-water drone; once a loop
+     * throat singing far off and a hull's creaks, a seamless 24 s loop): Level 28 to the breakout.
+     */
+    AMBIENCE_EUROPA_HATCHERY("sfx/europa-hatchery-r58-a.ogg", 1, Bus.EFFECTS, AMBIENCE),
+    /**
+     * M8 part H: the caldera's rumble (round 58 a, proposed until the user's pick: a foundry furnace's roar over a waterfall's, slowed and muffled, a
+     * seamless 16 s loop): an ambience layer over the hatchery bed through Level 28's antechamber and the fight, cut at
+     * the kill.
+     */
+    AMBIENCE_CALDERA_RUMBLE("sfx/caldera-rumble-r58-a.ogg", 1, Bus.EFFECTS, AMBIENCE),
     /** The mission complete jingle (design/audio/music, track 23), played as a one-shot. */
     MISSION_COMPLETE("music/mission-complete.ogg", 1, Bus.MUSIC, WARNING),
+    /**
+     * M8 part H: track 30, the reveal sting "Black and Gold" (round 58 a, the production of round 48's pick, 9.0 s),
+     * played once as a one-shot over the ambience at the cruisers' rise (Level 28, K+18).
+     */
+    REVEAL_STING("music/reveal-sting.ogg", 1, Bus.MUSIC, WARNING),
     /** The music's failure sting (design/audio/music, track 25), played over the cut music. */
     MISSION_FAILED("music/mission-failed.ogg", 1, Bus.MUSIC, WARNING),
     /** Track 21, the mini-boss sting (round 08 a "Contact Heavy"). */
@@ -1056,8 +1156,11 @@ public enum Sfx {
             case "europa-trench" -> AMBIENCE_EUROPA_TRENCH;
             // M8 part F: Level 26's black-water bed (round 55's a until the user's pick).
             case "europa-black" -> AMBIENCE_EUROPA_BLACK;
-            // M8 part G: Level 27's vent-field bed (round 57's a until the user's pick).
+            // M8 part G: Level 27's vent-field bed (round 57 a, the user's pick).
             case "europa-vents" -> AMBIENCE_EUROPA_VENTS;
+            // M8 part H: Level 28's hatchery bed and the caldera's rumble layer (round 58's a until the user's pick).
+            case "europa-hatchery" -> AMBIENCE_EUROPA_HATCHERY;
+            case "caldera-rumble" -> AMBIENCE_CALDERA_RUMBLE;
             default -> throw new IllegalArgumentException("no ambience for " + setting + " yet");
         };
     }

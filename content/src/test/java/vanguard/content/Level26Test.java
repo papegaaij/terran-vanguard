@@ -509,7 +509,7 @@ class Level26Test {
     /**
      * The secondary: at least 65 % of the level's enemies destroyed, judged at the end, 100 credits (Act 1 terms); its
      * line Okafor's at the end. The radio: Varga's lure warning at the Anglers' first sight (t=24.5), her shout before
-     * the trails (t=155), Okafor's last line at the level's end (t=187).
+     * the trails (t=155), Okafor's last line the level-end line (step H7).
      */
     @Test
     void theKillRatioSecondaryAndTheRadio() {
@@ -528,7 +528,8 @@ class Level26Test {
         assertEquals(24.5, line(radio, "That glow is not a pickup.").t());
         assertEquals("Varga", line(radio, "That glow is not a pickup.").speaker());
         assertEquals(155, line(radio, "Contacts below!").t());
-        assertEquals(187, line(radio, "Finish the dive, Lancer.").t());
+        assertEquals(
+                CueTrigger.LEVEL_END, line(radio, "Finish the dive, Lancer.").trigger());
         assertEquals(161.2, line(radio, "Lancer, something's below").t(), "Rook's cut line before the hits");
         assertEquals(
                 "Lancer, something's below u—",

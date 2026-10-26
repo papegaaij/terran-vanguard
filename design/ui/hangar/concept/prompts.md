@@ -319,3 +319,10 @@ Round 57, production art (M8 part G batch, step ART-G). Not a mockup: the review
 `relay-beacon` sensor L2 portraits (30x30) written by [tools/art/intel.py](../../../../tools/art/intel.py) from
 tools/art/depth_hunter.py's production model (the grey glider nose down, its sensor slit and nozzles lit; the game adds
 the "UNMARKED GREY" tag) and tools/art/relay_beacon.py's (the lit mast).
+
+## intel-final-r58-a
+
+Round 58, production art (M8 part H batch, step ART-H1). Not a mockup: the review sheet of the `boss-abyssal-maw` sensor
+silhouette (40x40) written by [tools/art/intel.py](../../../../tools/art/intel.py) from tools/art/abyssal_maw.py's
+production sprites: the coil round the arena's four edges with the head and its gill sacs at the top, as phase 1 shows
+it, the outline only.

@@ -81,6 +81,9 @@ final class Attempts {
         }
         s.wind.reset();
         s.sondes.reset();
+        if (s.cruisers != null) {
+            s.cruisers.reset();
+        }
         s.latches.reset();
         s.allies.reset();
         s.levelTick = 0;

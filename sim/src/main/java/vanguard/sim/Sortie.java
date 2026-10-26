@@ -127,6 +127,8 @@ public final class Sortie {
     final boolean walks;
     /** M7 part H: the breaching boss (Level 21's Dust Colossus); null without one. */
     final SetPiece breachBoss;
+    /** M8 part H: the coiled boss (Level 28's Abyssal Maw); null without one. */
+    final SetPiece coilBoss;
     /** The level clock and the scroll in play: the arena's halt, the ramps and eases, the crawl, the travel. */
     final LevelClock clock;
     /** Step SIM-K: the sets pieces the level's enemy total counts (its bosses left out when the secondary says so). */
@@ -241,6 +243,10 @@ public final class Sortie {
     final Medium medium;
     /** M5 part F: the weather sondes (none in most levels). */
     final Sondes sondes;
+    /** M8 part H, step H2: the finale's cruisers (Level 28's run); null without (then nothing of them is hashed). */
+    final CruiserRun cruisers;
+    /** {@link #cruisers} for the presentation, made once. */
+    private final java.util.Optional<CruiserRun> cruisersView;
     /** M5 part G: the step the defend primary's synchronisation completes at; -1 without one. */
     final int defendEndTicks;
     /** M5 part H: per root burst (in the level's order), its first growth's slot in the force's burst arrays. */
@@ -284,6 +290,13 @@ public final class Sortie {
         countedPieces = counted;
         SetPiece anchored = clock.arenaBoss;
         breachBoss = clock.breachBoss;
+        SetPiece coiled = null;
+        for (SetPiece piece : setPieces) {
+            if (coiled == null && piece.coil().isPresent()) {
+                coiled = piece;
+            }
+        }
+        coilBoss = coiled;
         Hitbox laneBox = anchored == null || anchored.arena().orElseThrow().laneCount() == 0
                 ? null
                 : new Hitbox(
@@ -396,6 +409,16 @@ public final class Sortie {
         radio.escort(wingman);
         wind = new Wind(script.hazards().weather());
         sondes = new Sondes(script.hazards().sondes());
+        cruisers = script.hazards()
+                .cruisers()
+                .map(spec -> new CruiserRun(spec, seed))
+                .orElse(null);
+        cruisersView = java.util.Optional.ofNullable(cruisers);
+        fire.cruisers(cruisers);
+        if (wingman != null && cruisers != null) {
+            // M8 part H: Rook keeps out of the told broadside bands.
+            wingman.cruisers(cruisers);
+        }
         if (links != null && checkpointBoss >= 0) {
             throw new IllegalArgumentException("tendril gates in a level with a boss checkpoint are not supported");
         }
@@ -562,6 +585,10 @@ public final class Sortie {
             force.noPull();
         }
         escorts.fly(commands, push, scrollStep);
+        if (coilBoss != null) {
+            // M8 part H: the coiled boss's wall keeps the ship and the escort inside it.
+            bossPasses.keepInCoil();
+        }
         force.wind(push);
         // M8 part A: the special's setting limit now (the medium at the level clock, the level's lists).
         special.setting(levelTick, ship.x(), ship.y());
@@ -620,6 +647,10 @@ public final class Sortie {
             links.step(scrollStep);
         }
         bossPasses.fireSetPieces(firing);
+        if (cruisers != null) {
+            // M8 part H: the cruisers' broadsides, flak and point defence on the level clock.
+            cruisers.step(levelTick, firing, ship, force, rules.bulletBudget(), events);
+        }
         force.moveBullets();
         force.moveMines(ship);
         if (force.missiles().size() > 0) {
@@ -636,6 +667,10 @@ public final class Sortie {
                 flying() && !complete && !failed && fire.deflectors().any() ? fire.deflectors() : null);
         groundPasses.moveDebris();
         contacts.blockShots();
+        if (cruisers != null) {
+            // M8 part H: shots spark off the cruisers' hulls.
+            cruisers.blockShots(fire.shots(), medium, events);
+        }
         groundPasses.scrollGround(scrollStep);
         pickupPasses.driftPickups();
         fire.hitEnemies(force.enemies());
@@ -922,6 +957,11 @@ public final class Sortie {
         }
     }
 
+    /** M8 part H, step H2: the finale's cruisers (Level 28's run); empty without. */
+    public java.util.Optional<CruiserRun> cruisers() {
+        return cruisersView;
+    }
+
     /**
      * M7 part C: the level's tendril gates and their tendrils (design/enemies/ground/tendril-anchor); null in a
      * level without gates.
@@ -1128,7 +1168,8 @@ public final class Sortie {
     /** Destroys part {@code part} of set piece {@code piece} as a hit would, paying it (for tests). */
     void destroyPart(int piece, int part) {
         if (setPieces[piece].damagePart(part, Double.MAX_VALUE)) {
-            objectivePasses.wreck(piece, part);
+            // M8 part H: an implant's hit destroys the head whose HP it took.
+            objectivePasses.wreck(piece, setPieces[piece].hpPart(part));
         }
     }
 

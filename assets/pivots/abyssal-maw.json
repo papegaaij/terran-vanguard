@@ -1,0 +1,167 @@
+{
+ "source": "tools/art/abyssal_maw.py (production art, M8 part H batch)",
+ "head": {
+  "frame": [
+   200,
+   212
+  ],
+  "frames": [
+   "rest",
+   "glow",
+   "open",
+   "rear",
+   "dive",
+   "lunge",
+   "death"
+  ],
+  "scale_px_per_unit": 60.0,
+  "throat": [
+   [
+    100.0,
+    146.2
+   ],
+   [
+    100.0,
+    146.2
+   ],
+   [
+    100.0,
+    146.2
+   ],
+   [
+    100.0,
+    146.2
+   ],
+   [
+    100.0,
+    136.0
+   ],
+   [
+    100.0,
+    65.8
+   ],
+   [
+    100.0,
+    146.2
+   ]
+  ],
+  "eyes": [
+   [
+    60.4,
+    121.0
+   ],
+   [
+    139.6,
+    121.0
+   ]
+  ],
+  "rim_orbs": [
+   [
+    58.7,
+    142.2
+   ],
+   [
+    62.5,
+    157.6
+   ],
+   [
+    69.0,
+    170.9
+   ],
+   [
+    77.9,
+    181.2
+   ],
+   [
+    88.5,
+    187.8
+   ],
+   [
+    100.0,
+    190.0
+   ],
+   [
+    111.5,
+    187.8
+   ],
+   [
+    122.1,
+    181.2
+   ],
+   [
+    131.0,
+    170.9
+   ],
+   [
+    137.5,
+    157.6
+   ],
+   [
+    141.3,
+    142.2
+   ]
+  ],
+  "note": "the model's centre is the frame's centre; the sacs and the neck implant are separate sprites at the data's offsets from the head (the concept's: sacs (-62, -15), (62, -15), (-50, 33), (50, 33) px, y down)"
+ },
+ "segment": {
+  "frame": [
+   78,
+   78
+  ],
+  "headings": 32,
+  "tapers": [
+   1.0,
+   0.82,
+   0.66,
+   0.5
+  ],
+  "index": "heading * 4 + taper; heading k = the way toward the head, k x 11.25 deg clockwise from straight down",
+  "from_sim_angle": "k = round((pi/2 - segmentAngle) * 32 / (2 pi)) mod 32",
+  "taper_rule": "the last nine segments from the tail in three steps of three: tail tip taper 3",
+  "taper_of_31": [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   1,
+   1,
+   1,
+   2,
+   2,
+   2,
+   3,
+   3,
+   3
+  ]
+ },
+ "sac": {
+  "frame": [
+   44,
+   44
+  ]
+ },
+ "implant": {
+  "frame": [
+   48,
+   48
+  ]
+ }
+}

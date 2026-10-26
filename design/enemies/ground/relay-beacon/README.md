@@ -2,7 +2,7 @@
 title: Relay Beacon
 design: review
 implementation: in-progress
-art: proposed
+art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../campaign/act-4-deep-water/level-27-hydrothermal-vents]
 updated: 2026-10-25
 ---
@@ -46,7 +46,7 @@ rendered from it); 60 HP is 0.5 s at the Level 27 reference DPS of 116.
 | Credits | 15 (score 150 × chain) |
 | Death | `small` burst: the lamp breaks and the mast goes dark (a dark frame that stays) |
 | First level / used in | L27; Level 27 (the secondary `BEACONS`); scenery in Levels 24–26 |
-| Difficulty hooks | none (the README's hard 90 HP has no key: the global multiplier gives 78, pending round 57) |
+| Difficulty hooks | none (the README's hard 90 HP has no key: the global multiplier gives 78, accepted in round 57 (2026-10-25)) |
 <!-- /data -->
 
 ### Behaviour
@@ -63,13 +63,13 @@ rendered from it); 60 HP is 0.5 s at the Level 27 reference DPS of 116.
 ### Difficulty and level use
 
 - No difficulty hook: the global HP multipliers apply (easy 45, hard 78). The Level 27 draft's hard 90 HP has no
-  stat-block key (pending the user's review in round 57).
+  stat-block key (accepted in round 57 (2026-10-25)).
 - Level 27 only; in Levels 24–26 the beacons are scenery pieces (`relay-beacon` in their backdrops).
 
 ## Concept art
 
 ART-G's production frames (`tools/art/relay_beacon.py`, Levels 24–26's mast as Level 27's target) are listed in the
-[ground](../README.md#concept-art) Concept art table (`relay-beacon-final-r57-a`), pending the user's review in round 57.
+[ground](../README.md#concept-art) Concept art table (`relay-beacon-final-r57-a`), accepted in round 57 (2026-10-25).
 
 ## Implementation
 
@@ -81,11 +81,13 @@ ART-G's production frames (`tools/art/relay_beacon.py`, Levels 24–26's mast as
 
 ## Decisions
 
-- 2026-10-24 (M8 part G, step G2; gap check `m8g-gaps.md` §1.4, pending round 57): promoted from Level 27's ground
+- 2026-10-24 (M8 part G, step G2; gap check `m8g-gaps.md` §1.4, accepted in round 57 (2026-10-25)): promoted from Level 27's ground
   targets to its own part (the loader and the secondary need a unit), its text Level 27's approved one; ART-G's 72 × 104
   sprite with a 36 × 80 hit box, the fixed orientation and the formation `turret nest` (one on each ridge crest); tier
   `medium` as the siphon pump; effective traits `anti-sub` and `anti-ground` as the siphon pump; hard's HP from the
   global multiplier (78) instead of the draft's 90 (no stat-block key for it).
-- 2026-10-25 (M8 part G, step G5; pending the user's review in round 57): captured shot down on Level 27's ridge (the
+- 2026-10-25 (M8 part G, step G5; accepted in round 57 (2026-10-25)): captured shot down on Level 27's ridge (the
   red lamp, the gold pulse, the break, the dark mast; `BEACONS DONE` at t≈110 in a steered run); the round asks the art
   (F.3) and its bounty 15 and hard HP 78 (C.3).
+- 2026-10-25 (user, [round 57](../../../concept-rounds/round-57/README.md) closed): the final frames accepted as final; the part is `art: final`; its 60 HP (78 on hard) and
+  bounty 15 accepted (C.3); sounds: the hum **a**, the break **b** (the b pick goes into the game in step H5).

@@ -1259,6 +1259,19 @@ final class EnemyForce {
         }
     }
 
+    /**
+     * M8 part H: lets in one chain planned outside the waves (a coiled boss's shed Eel Swarm) by {@code entry}, now;
+     * returns its serial (-1 when none could be let in).
+     */
+    int releaseChain(Spawn plan, WaveSpec.Entry entry) {
+        return chainRules.releaseChain(plan, entry);
+    }
+
+    /** M8 part H: whether the chain with serial {@code serial} still swims. */
+    boolean chainAlive(int serial) {
+        return chainRules.chainAlive(serial);
+    }
+
     /** Lets in one unit planned outside the waves (a boss's stream), now. */
     void release(Spawn plan) {
         Enemy enemy = enemies.obtain();

@@ -25,8 +25,8 @@ import vanguard.sim.SimStep;
 import vanguard.sim.Sortie;
 
 /**
- * M8 part G's Level 27 sounds (design/audio/sfx and design/audio/music, Level 27's rows; round 57's a variants as
- * stand-ins until the user's pick): the vent field's bed, the plumes' tell and eruption, the bend's swish, the Depth
+ * M8 part G's Level 27 sounds (design/audio/sfx and design/audio/music, Level 27's rows; round 57's picks, S.2, S.6,
+ * S.7, S.9 and S.12 b, the rest a): the vent field's bed, the plumes' tell and eruption, the bend's swish, the Depth
  * Hunter's torpedo launch, run, impact and hull break, the relay beacons' hum and break, the Marlin's crack, Varga's scan
  * ping; track 11 with the motif from t=56, alone over the bed 68–82, the full mix back, the base stem at the gate, out
  * over the last 6 s.
@@ -53,10 +53,13 @@ class Level27SoundsTest {
             Sfx.SCAN_PING);
 
     @Test
-    void everySoundHasItsFileRoundFiftySevensStandIn() {
+    void everySoundHasItsFileRoundFiftySevensPick() {
+        java.util.Set<Sfx> picksB =
+                java.util.Set.of(Sfx.PLUME_TELL, Sfx.TORPEDO_RUN, Sfx.TORPEDO_IMPACT, Sfx.BEACON_BREAK, Sfx.SCAN_PING);
         for (Sfx sfx : SOUNDS) {
             assertTrue(Files.isRegularFile(ASSETS.resolve(sfx.path())), sfx.path());
-            assertTrue(sfx.path().endsWith("-r57-a.ogg"), "round 57's a until the pick: " + sfx.path());
+            String pick = picksB.contains(sfx) ? "-r57-b.ogg" : "-r57-a.ogg";
+            assertTrue(sfx.path().endsWith(pick), "round 57's pick: " + sfx.path());
         }
         assertEquals(Sfx.Priority.AMBIENCE, Sfx.AMBIENCE_EUROPA_VENTS.priority());
         assertTrue(Sfx.TORPEDO_RUN.priority() != Sfx.Priority.AMBIENCE, "a unit's loop is stolen like its peers");

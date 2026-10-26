@@ -1,0 +1,185 @@
+# Abyssal Maw stat block and boss script at medium: the stat block is rendered into README.md.
+# Schema: ../../../tech/architecture/schemas-units/README.md (the coil: ../../../tech/architecture/schemas-act-4/README.md)
+# M8 part H, step H3 (Level 28's act boss; approved in round 48, Q9 b: the coiled guardian): an anchored arena boss
+# coiled round the hatchery's vent (`boss.coil`, flown by the simulation's CoilArena, step H1). Its head rests at the top
+# (240, 95) with the throat 40 px below it; four gill sacs breathe rings in turn (phases 1-2); the coil (31 armoured
+# segments round the arena's edges) is a wall for the ship and the escort, sweeps a bight at the ship from phase 2 and
+# slides into the dark once for the dive and the lunge; three Helix implants spark open in turn in phase 3 (×2 on the
+# head's HP); Eel Swarms of 8 segments are shed from the coil. Places are screen px (from the left, below the top edge,
+# the level data's convention); content's MawRules turns them into the simulation's frame (y up) once.
+# The numbers are the spec's draft at medium (the README's hand tables, round 48); step H4 measures the fight with the
+# autopilot over five seeds and tunes the HP (not the attacks) and the par.
+# Defaults of this step, pending the user's review in round 58: the throat's box 40×30 px; the implants carry 1 HP each
+# (they count on the head's: the hp below is the head's and the sacs' plus 3); the implant bursts' bolts 0.15 s apart
+# (the burst gap of every burst); the coil's path along the edges' centre lines (x 18 / 462, y 18 / 537, the segments
+# half beyond the field), the ship 12 px inside its inner flanks (x 62-418, y ≤ 493); the shed points at the left and
+# right coil's middle (y 270) and the bottom's (x 240).
+name: Abyssal Maw
+faction: Vrell
+layer: air          # the play plane under water (the level's medium: underwater); each part's own layer starts `sub` (rising from the dark)
+tier: huge
+size: [150, 130]    # sprite px: the head (the coil's segments 64 px, drawn along the chain)
+hitbox: [110, 100]  # the head's box
+parts: multi
+part_list:  # offset [dx, dy] px from the head's centre (240, 95 on the screen), dy up; every part starts `sub` (the intro: the coil rises)
+  - name: head
+    offset: [0, 0]
+    hitbox: [110, 100]
+    hp: 6700
+    kind: vital
+    bounty: 297         # 24 % of budget(28) at Level 28's bounty scale (see *Bounty*: 0.24 × 4,350 ÷ (4.096 × scale), the head the rest after the sacs' 4 × 12)
+    multiplier: 0.5     # the skull
+    layer: sub
+    spots:
+      - {name: throat, offset: [0, -40], hitbox: [40, 30], multiplier: 2, while: open}   # the lime throat while the jaw is open
+  - {name: sac 1, offset: [-62, 15], hitbox: [36, 36], hp: 150, kind: destroyable, bounty: 12, layer: sub}    # (178, 80)
+  - {name: sac 2, offset: [62, 15], hitbox: [36, 36], hp: 150, kind: destroyable, bounty: 12, layer: sub}     # (302, 80)
+  - {name: sac 3, offset: [-50, -33], hitbox: [36, 36], hp: 150, kind: destroyable, bounty: 12, layer: sub}   # (190, 128)
+  - {name: sac 4, offset: [50, -33], hitbox: [36, 36], hp: 150, kind: destroyable, bounty: 12, layer: sub}    # (290, 128)
+  - {name: implant neck, offset: [-130, 35], hitbox: [40, 40], hp: 1, kind: destroyable, bounty: 0, multiplier: 2, layer: sub}     # (110, 60): ×2 on the head's HP while open
+  - {name: implant left, offset: [-200, -205], hitbox: [40, 40], hp: 1, kind: destroyable, bounty: 0, multiplier: 2, layer: sub}   # (40, 300) on the left coil
+  - {name: implant right, offset: [200, -205], hitbox: [40, 40], hp: 1, kind: destroyable, bounty: 0, multiplier: 2, layer: sub}   # (440, 300) on the right coil
+orientation: fixed   # the head facing down (rest, jaw, rear-up, dive and lunge frames); the coil's segments in 32 angles along the chain
+hp: 7303            # the parts' sum: head 6,700, gill sacs 150 each, the implants 1 each (they count on the head's)
+armour: 'the coil always'
+speed: 0            # anchored round the vent; the coil sweeps, dives and lunges
+movement:
+  anchored: {y: 95}   # the head's centre, px below the top edge on the halted arena
+attacks:
+  - pattern: ring
+    name: gill-ring
+    parts: [sac 1, sac 2, sac 3, sac 4]   # one sac in turn (a destroyed sac's turn skipped)
+    bullet: small
+    count: 10
+    interval: 1.6       # s between two sacs' rings: each sac every 6.4 s
+    speed: 100
+    notes:
+      text: 'phase 1: the gill sacs breathe in turn, a `{pattern}` of {count} (`{bullet}` = {damage}, {speed} → 70 px/s) one sac every {interval} s, each after a 0.6 s swell'
+  - pattern: fan
+    name: throat-fan
+    parts: [head]
+    bullet: medium
+    count: 5
+    spread: 40
+    interval: 5         # s: the jaw opens every 5 s (0.6 s glow, open 3 s)
+    speed: 130
+    notes:
+      text: 'and the throat''s aimed `{pattern}` of {count} over {spread}° (`{bullet}` = {damage}, {speed} → 91 px/s) every {interval} s after a 0.6 s glow, the jaw open 3 s'
+  - pattern: ring
+    name: gill-ring-2
+    parts: [sac 1, sac 2, sac 3, sac 4]
+    bullet: small
+    count: 10
+    interval: 2.4
+    speed: 100
+    notes:
+      text: 'phase 2: the living sacs one every {interval} s'
+  - pattern: fan
+    name: fan-wall
+    parts: [head]
+    bullet: small
+    count: 17
+    spread: 150
+    interval: 4
+    speed: 110
+    notes:
+      text: 'the **fan walls** (phase 2), a `{pattern}` of {count} over {spread}° (`{bullet}`, {speed} → 77 px/s) straight down every {interval} s after a 0.8 s glow, one orb missing (the gap, 40–90 px beside the ship''s x, within 140 px of the last)'
+  - pattern: aimed
+    name: implant-burst
+    parts: [implant neck, implant left, implant right]
+    bullet: small
+    burst: 3
+    interval: 1.5
+    speed: 140
+    notes:
+      text: 'phase 3: the open implant''s aimed {burst}-bolt `burst` (`{bullet}`, {speed} → 98 px/s) every {interval} s, each after a 0.4 s arc'
+formations:
+  - {name: solo set piece}
+weak_points:
+  - {name: lime throat (while the jaw is open), multiplier: 2}
+  - {name: 'Helix implant cores (phase 3, while open)', multiplier: 2}
+drops: []           # phase 3's armour patch is its drop
+traits: [anti-sub, homing, side]
+bounty: 345         # the parts' sum: head 297, gill sacs 12 each (24 % of budget(28) at Level 28's bounty scale)
+first_level: 28
+difficulty:
+  easy: {attacks: {gill-ring: {count: 8}, gill-ring-2: {count: 8}, fan-wall: {count: 13}, implant-burst: {burst: 1}}, coil_arena: {sweep_tell: 1.5, shadow: 2.4, implant_open: 5, wall_gaps: 2}}
+  hard: {attacks: {gill-ring: {count: 12}, gill-ring-2: {count: 12}, fan-wall: {count: 21}}, coil_arena: {sweep_tell: 0.9, shadow: 1.6, implant_open: 3, shed_segments: 10}}
+boss:
+  kind: boss        # the act boss: the long bar
+  bar_name: ABYSSAL MAW
+  par: 127          # s from the bar to the kill: the Boss rush bonus; step H4: the measured mean (126.5 s over five seeds at medium, the plan's fit with the Bulwark; the spec's draft 130)
+  death_seconds: 4  # the implants blow out (0.4 s apart), the coil unwinds into the dark, the vent flares
+  coil:
+    intro: 6        # s from the arrival (the bar) until the coil and the head are up: invulnerable, nothing fires (the Choir has sung)
+    body:
+      segments: 31
+      spacing: 56   # px between two segments' centres along the path
+      hitbox: [64, 64]
+      path: [[185, 18], [18, 18], [18, 537], [462, 537], [462, 0]]   # the centre line from beside the head along the top, down the left edge, along the bottom, up the right edge (screen px)
+      inner: {left: 50, right: 430, bottom: 505}   # the inner flanks: the ship flies in x 62-418, y ≤ 493 (12 px inside); no top flank
+      clearance: 12
+    sacs: {parts: [sac 1, sac 2, sac 3, sac 4], swell: 0.6}   # the swell (the lime glow brightening) before each ring: the tell
+    jaw: {glow: 0.6, open: 3}   # phase 1: the throat glows, then the fan; the jaw open 3 s (the throat ×2)
+    wall: {attack: fan-wall, glow: 0.8, gaps: 1, near: 40, far: 90, chain: 140}   # the gap 40-90 px beside the ship's x at its band, within 140 px of the last wall's
+    sweeps:         # a bight of 5 segments (≈ 280 px) at the ship as the tell starts, not following
+      segments: 5
+      tell: 1.2     # s: silt streams off the bight, its glow line brightens lime, a groan
+      swing: 0.5    # s: in by `reach`
+      hold: 0.8
+      back: 0.8
+      reach: 110    # px
+      bottom_reach: 90
+      bullet: heavy # once a sweep, and pushed out of the bight
+      along: [160, 420]    # the side sweeps' range of the ship's y (below the top edge)
+      across: [140, 340]   # the bottom sweep's range of the ship's x
+      phases:
+        - {phase: Tightening, every: 7, sides: [left, right]}
+        - {phase: Implants, every: 6, sides: [left, right, bottom]}
+    dive:           # once, as the head falls below 50 % in phase 2 (≈ 12 s): `sub`, only anti-sub and the Smart Bomb reach it
+      phase: Tightening
+      below: 0.5
+      slide: 2      # s: the coil slides off the edges into the dark (the walls gone)
+      quiet: 4      # s: the arena open and quiet
+      shadow: 2.0   # s: the shadow runs up a column at the ship's x (the tell)
+      lunge: 0.8    # s: the head races up the column, jaws open
+      body: 3       # s: its body a wall in the column (the throat ×2 as it passes)
+      return: 2     # s: the coil slides back round the edges from the top
+      width: 90     # px
+      column: [95, 385]   # the column's centre: the ship's x, clamped
+      bullet: heavy # once, to what the lunge passes in the column
+    implants: {parts: [implant neck, implant left, implant right], phase: Implants, attack: implant-burst, tell: 1.0, open: 4, arc: 0.4}   # in turn: sparks 1 s, the core open 4 s (×2 on the head's HP), a burst after each 0.4 s arc
+    shed:           # an Eel Swarm out of the coil after a 1 s plate flare; no edge warning; the boss's shed units (not counted by the kill ratio, they pay)
+      enemy: eel-swarm
+      segments: 8
+      tell: 1.0
+      points: [{side: left, at: 270}, {side: bottom, at: 240}, {side: right, at: 270}]   # in turn, the one nearest the ship skipped
+      phases:
+        - {phase: Coiled, every: 10, most: 1}
+        - {phase: Tightening, every: 12, most: 1}
+        - {phase: Implants, every: 8, most: 2}
+  phases:
+    - name: Coiled
+      until: {parts: [sac 1, sac 2, sac 3, sac 4], share: {parts: [head], below: 0.7}}   # all four sacs, or the head below 70 %
+      attacks: [gill-ring, throat-fan]
+    - name: Tightening
+      until: {parts: [head], below: 0.3}
+      attacks: [gill-ring-2, fan-wall]
+    - name: Implants
+      until: {parts: [head]}
+      attacks: [implant-burst]
+      drop: armour patch   # as the phase begins
+notes:
+  layer: ' (the play plane under water, the level''s medium: all weapons hit it, those without `anti-sub` at the water''s factor ×0.7); its parts rise from `sub` in the intro, and during the dive the head and the coil are `sub` again: only `anti-sub` weapons and the Smart Bomb reach them'
+  size: '(the head; the body a chain of {boss.coil.body.segments} segments, {boss.coil.body.hitbox.0} px wide, {boss.coil.body.spacing} px apart (≈ 1,750 px with the head), half of each beyond the field''s edge while coiled; gill sacs 36×36; implants 40×40)'
+  parts: 'the **head** (`vital`; the bar): the skull ×0.5, the lime **throat** a weak spot ×2 while the jaw is open; four **gill sacs** (`destroyable`, outside the bar, phases 1–2); the **coil** (the body chain: armoured, shots glance with a spark and the Ion Beam stops on it, no HP; a wall for the ship); three **Helix implants** (phase 3: ×2 on the head''s HP while sparked open, armoured while shut)'
+  orientation: '(the head facing down, with jaw, rear-up, dive and lunge frames; the coil''s segments in `32 angles` along the chain)'
+  hp: 'head 6,700; gill sacs 150 each (600); the implants 1 each (their hits count on the head''s); total'
+  armour: 'the coil always (a wall, no damage); the skull ×0.5; the throat ×2 while the jaw is open; an implant ×2 while sparked open, armoured while shut; in the dive only `anti-sub` and the Smart Bomb'
+  speed: '(the head at rest; a coil sweep swings in {boss.coil.sweeps.reach} px in {boss.coil.sweeps.swing} s; the lunge crosses the field in {boss.coil.dive.lunge} s)'
+  movement: 'anchored round the vent, the head at y {movement.anchored.y} (see *Arena*); the coil sweeps, the dive and the lunge (see *Phases*)'
+  attack_prefix: 'the **coil sweeps** (phases 2–3: a {boss.coil.sweeps.segments}-segment bight at the ship, a {boss.coil.sweeps.tell} s tell, then `heavy` = 10 once and the push); the **dive and lunge** (once, the head below 50 %: a {boss.coil.dive.shadow} s shadow up a {boss.coil.dive.width} px column, then `heavy` = 10); Eel Swarms of {boss.coil.shed.segments} shed from the coil in every phase; '
+  bounty: ' in Act 1 terms (head 297, gill sacs 12 each); × 4.096 (Act 4''s factor 1.6³) × Level 28''s `bounty_scale` it pays **24 % of budget(28) = 4,350** (see *Bounty*)'
+  death: '`huge` underwater variant: the implants blow out one after another, the coil convulses and unwinds into the dark, the vent flares; chained bursts of silt and lime ichor over {boss.death_seconds} s; screen flash at the chain''s end (an act boss); credit shower'
+  used_in: L28 only (the L49 boss rush re-uses the Brood Carrier, Dust Colossus and Iron Sovereign, not the Maw)
+  difficulty: 'hard: gill rings of 12, fan walls of 21, the sweep''s tell 0.9 s, the lunge''s shadow 1.6 s, implants open 3 s, Eel Swarms of 10 segments; easy: rings of 8, fan walls of 13 with two gaps, the sweep''s tell 1.5 s, the lunge''s shadow 2.4 s, implants open 5 s, no implant `burst` (single `aimed` shots)'

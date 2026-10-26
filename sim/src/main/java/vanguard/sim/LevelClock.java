@@ -121,10 +121,13 @@ final class LevelClock {
             }
         }
         breachBoss = breaching;
-        if (anchored != null && anchored.breach().isPresent()) {
-            // M7 part H: a breaching boss needs an arena (it may crawl); it is not anchored to the ground.
+        if (anchored != null
+                && (anchored.breach().isPresent() || anchored.coil().isPresent())) {
+            // M7 part H: a breaching boss needs an arena (it may crawl); it is not anchored to the ground. M8 part H:
+            // nor
+            // a coiled one (its coil lies round the screen's edges).
             if (arenaStartTicks < 0) {
-                throw new IllegalArgumentException("a breaching boss needs an arena");
+                throw new IllegalArgumentException("a breaching or coiled boss needs an arena");
             }
         } else if (anchored != null) {
             if (arenaStartTicks < 0 || arenaSpeed != 0) {

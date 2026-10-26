@@ -75,7 +75,7 @@ public record EnemyData(
         Optional<Pursuit> pursuit,
         Optional<Boolean> seekersIgnore,
         Optional<Underwater> underwater)
-        implements ColossusBlock {
+        implements ColossusBlock, MawBlock {
     public EnemyData {
         Layers.of(layer);
         Check.positive("hp", hp);
@@ -328,6 +328,31 @@ public record EnemyData(
     /** M7 part H: its suction on {@code difficulty}: the boss script's with the difficulty's speed. */
     public Optional<Suction> suction(Difficulty difficulty) {
         return boss.flatMap(BossData::suction).map(s -> s.with(hook(difficulty).flatMap(Hook::suction)));
+    }
+
+    /**
+     * M8 part H: its coil on {@code difficulty} (a coiled boss: the Abyssal Maw): the boss script's with the difficulty's
+     * {@code coil_arena} changes (the sweeps' tell, the lunge's shadow, the implants' open time, the shed units'
+     * segments, the fan walls' gaps).
+     */
+    public Optional<CoilData> coilArena(Difficulty difficulty) {
+        Optional<CoilArenaChange> change = hook(difficulty).flatMap(Hook::coilArena);
+        return boss.flatMap(BossData::coil)
+                .map(coil -> new CoilData(
+                        coil.intro(),
+                        coil.body(),
+                        coil.sacs(),
+                        coil.jaw(),
+                        coil.wall().map(w -> w.with(change.flatMap(CoilArenaChange::wallGaps))),
+                        coil.sweeps().with(change.flatMap(CoilArenaChange::sweepTell)),
+                        coil.dive().map(d -> d.with(change.flatMap(CoilArenaChange::shadow))),
+                        coil.implants().map(i -> i.with(change.flatMap(CoilArenaChange::implantOpen))),
+                        coil.shed().map(shed -> shed.with(change.flatMap(CoilArenaChange::shedSegments)))));
+    }
+
+    /** M8 part H: whether it is a coiled boss ({@code boss.coil}: the Abyssal Maw). */
+    public boolean coils() {
+        return boss.flatMap(BossData::coil).isPresent();
     }
 
     /** M7 part H: its eruption on {@code difficulty}: the boss script's with the difficulty's marker time. */
@@ -2180,6 +2205,7 @@ public record EnemyData(
      * @param vents M7 part H: a breaching boss's spine vents
      * @param eruption M7 part H: a breaching boss's eruption under the ship
      * @param debris M7 part H: a breaching boss's debris rocks
+     * @param coil M8 part H: a coiled arena boss's body and script (the Abyssal Maw; {@link MawBlock})
      */
     public record BossData(
             String kind,
@@ -2199,7 +2225,8 @@ public record EnemyData(
             Optional<Suction> suction,
             Optional<Vents> vents,
             Optional<Eruption> eruption,
-            Optional<DebrisData> debris) {
+            Optional<DebrisData> debris,
+            Optional<CoilData> coil) {
         public BossData {
             Check.that(
                     kind.equals("boss") || kind.equals("mid-boss"),
@@ -2641,6 +2668,8 @@ public record EnemyData(
      * @param coil M8 part E: a coiling orbit's open window instead (the Spiral Nautilus's easy 1.8, hard 1.4 s)
      * @param slow M8 part E: a slowing ring's factor, time or immunity instead (the Siren's easy 1.5 s, hard 2 s)
      * @param lunge M8 part F: a lunge's trigger distance instead (the Glow Angler's easy 100, hard 160 px)
+     * @param coilArena M8 part H: a coiled boss's changes instead (the Abyssal Maw's sweep tell, shadow, implants' open
+     *     time, shed segments and wall gaps; {@link MawBlock.CoilArenaChange})
      */
     public record Hook(
             Optional<List<String>> leadsTargetIn,
@@ -2682,7 +2711,8 @@ public record EnemyData(
             Optional<RamChange> ram,
             Optional<CoilChange> coil,
             Optional<SlowChange> slow,
-            Optional<LungeChange> lunge) {
+            Optional<LungeChange> lunge,
+            Optional<CoilArenaChange> coilArena) {
         public Hook {
             swoopSpeed.ifPresent(s -> Check.positive("swoop_speed", s));
             drain.ifPresent(d -> Check.positive("drain", d));

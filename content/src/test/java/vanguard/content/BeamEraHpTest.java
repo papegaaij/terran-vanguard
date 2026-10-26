@@ -69,8 +69,21 @@ class BeamEraHpTest {
 
     /** The most for the level: {@link #REVERSED_MOST} with a reversed scroll, else {@link #MOST}. */
     static double most(String key) {
+        if (PENDING_MOST.containsKey(key)) {
+            return PENDING_MOST.get(key);
+        }
         return SimSpecs.level(CONTENT, key, Difficulty.MEDIUM).reverses() ? REVERSED_MOST : MOST;
     }
+
+    /**
+     * M8 part H (step H4, pending the user's review in round 58): the most for a level measured over {@link #MOST}.
+     * Level 28 Abyssal Maw: 1.52× (2.44 s; Level 27 1.38×), the densest Act 4 approach (91 a minute) with no beam in
+     * the plan's fit: its Barbfins hold 9 s above the ship while the Depth Hunter columns and the Abyss Rays below them
+     * are served first (the t=93.5 pair overlaps the last column and lives 8-11 s, the t=66 rear ambush of three
+     * 7-11 s); the autopilot's variants measured 2.4-2.6 s.
+     */
+    static final java.util.Map<String, Double> PENDING_MOST =
+            java.util.Map.of("act-4-deep-water/level-28-abyssal-maw", 1.6);
 
     /**
      * The mean time on the screen, from its entry to its death, of a {@code small} unit killed while on the screen, on

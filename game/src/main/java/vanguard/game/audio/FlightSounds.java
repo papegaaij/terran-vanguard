@@ -83,6 +83,8 @@ public final class FlightSounds {
     private final BlackwaterCues blackwater;
     /** M8 part G: Level 27's plumes' bends, torpedoes, Hunters, beacons, the Marlin and the scan. */
     private final VentFieldCues ventField;
+    /** M8 part H: Level 28's coiled boss, the shaft's climb, the breakout and the cruisers. */
+    private final MawCues maw;
     /** Per event type the family that plays it (by ordinal); null for an event without a sound. */
     private final SoundFamily[] families = new SoundFamily[SimEvents.Type.values().length];
     /** Every family, in the order they hear a step's start and end. */
@@ -197,6 +199,7 @@ public final class FlightSounds {
         player = new PlayerCues(mix, armament, wingman, bosses, deepWater);
         storm = new StormCues(mix);
         ventField = new VentFieldCues(mix);
+        maw = new MawCues(mix);
         walker = new WalkerCues(mix, ventField);
         foundry = new FoundryCues(mix);
         pursuit = new PursuitCues(mix);
@@ -205,7 +208,7 @@ public final class FlightSounds {
         abyss = new AbyssCues(mix);
         trench = new TrenchCues(mix);
         blackwater = new BlackwaterCues(mix);
-        units = new UnitCues(mix, looks, storm, foundry, walker, deepWater, underIce, abyss, trench, ventField);
+        units = new UnitCues(mix, looks, storm, foundry, walker, deepWater, underIce, abyss, trench, ventField, maw);
         allies = new AllyCues(mix);
         arsenal = new ArsenalCues(mix);
         levels = new LevelCues(mix, underIce);
@@ -226,7 +229,8 @@ public final class FlightSounds {
             abyss,
             trench,
             blackwater,
-            ventField
+            ventField,
+            maw
         };
         for (SoundFamily family : all) {
             for (SimEvents.Type type : family.types()) {
@@ -618,6 +622,7 @@ public final class FlightSounds {
         trench.watch(sortie);
         blackwater.watch(sortie);
         ventField.watch(sortie);
+        maw.watch(sortie);
         units.watchCanyon(sortie);
         units.watchSiege(sortie);
         storm.watch(sortie);

@@ -306,6 +306,9 @@ radio:  # trigger: t or event; requires: escort = only while Rook flies (hired, 
   # Round 55's retime (the user's playtest of 2026-10-24: the cut line came seconds after his loss): Rook's cut line
   # opens as soon as Varga's shout has closed (t≈161.1 at the default text speed) and the hits cut it, 2.3 s in, in
   # its last word; the loss and everything after it 6 s later than before: Okafor 173.5, Varga 180.5, Okafor 187.
+  # Step H7: Okafor's last line (timed at t=187, 4.2 s voiced) ended 3.2 s after the level (t=188); it is the level-end
+  # line now (like Levels 22, 23 and 27's closing lines): it opens as the level ends and the outro waits for it. Moving
+  # it inside the flight would have cut the silence after the loss (each line holds the radio over 6 s by its text).
   - {t: 1, speaker: Okafor, line: "Blackwater, Lancer. No lamps, no charts. Your headlight and whatever glows, nothing else."}
   - {t: 13, speaker: Rook, line: "Dark and wet. At least nobody sees me being scared."}
   - {t: 24.5, speaker: Varga, line: "That glow is not a pickup. Teal is Vrell. Touch it and it lunges."}
@@ -320,7 +323,7 @@ radio:  # trigger: t or event; requires: escort = only while Rook flies (hired, 
   - {t: 161.2, speaker: Rook, line: "Lancer, something's below u—"}   # cut mid-word (Level 10's cut dash) by the hits at t=163.5, his voice in the "u" (the take's 2.3-2.45 s); the trails rise from t=162.5 under "something's below"
   - {t: 173.5, speaker: Okafor, line: "Aegis Two, report. Rook? Rook, answer!"}   # the README's t=165, 10 s after the hits
   - {t: 180.5, speaker: Varga, line: "His lamp went down, Commander."}   # the README's t=171
-  - {t: 187, speaker: Okafor, line: "Finish the dive, Lancer. We will find him.", notes: {trigger: "Level end (t=187)"}}   # the README's t=176
+  - {event: level-end, speaker: Okafor, line: "Finish the dive, Lancer. We will find him.", notes: {trigger: "Level end (t=188, the closing line)"}}   # the README's t=176; timed at t=187 until step H7
   - {event: secondary-objective, speaker: Okafor, line: "Clean crossing. Now find him, Lancer.", notes: {trigger: Secondary met (at the end)}}
 
 rook_loss: {t: 163.5, trails: 162.5, spin: 2.5}   # the trails from 162.5 (his barks end; his cut line from 161.2), the hits at 163.5 cutting it, 2.5 s spinning down on the screen, off the bottom edge at 166

@@ -41,6 +41,9 @@ import vanguard.sim.ObjectiveSpec.Naval;
  *     of forbidden specials; {@link SpecialLimits#NONE} (the default): the specials' own settings decide
  * @param rookLoss M8 part F (design/player/wingmen, Rook's loss; Level 26): the scripted loss of Rook; empty (the
  *     default) for none
+ * @param armourFloor M8 part H, step H2 (design/campaign Level 28, The run cannot be lost; J2): from the level's boss's
+ *     kill to the level's end the ship's armour stops at this many points (the run cannot be lost; {@link
+ *     Defences#floor}); 0 (the default) for none
  */
 public record LevelScript(
         int number,
@@ -60,7 +63,8 @@ public record LevelScript(
         DropSpec drops,
         MediumSpec medium,
         SpecialLimits specialLimits,
-        Optional<RookLossSpec> rookLoss) {
+        Optional<RookLossSpec> rookLoss,
+        double armourFloor) {
     public LevelScript {
         checkGroundAllies(
                 sections,
@@ -118,6 +122,56 @@ public record LevelScript(
             throw new IllegalArgumentException(
                     "Rook's loss falls after the launch and before the level's end: " + rookLoss.get());
         }
+        if (!(armourFloor >= 0) || (armourFloor > 0 && setPieces.stream().noneMatch(SetPieceSpec::isBoss))) {
+            throw new IllegalArgumentException(
+                    "an armour floor is 0 or more points and holds from a boss's kill: " + armourFloor);
+        }
+        if (hazards.cruisers().isPresent()
+                && !(hazards.cruisers().get().endAt() < sections.getLast().end())) {
+            throw new IllegalArgumentException("the cruisers' run ends before the level's end: " + hazards.cruisers());
+        }
+    }
+
+    /** A level without M8 part H's armour floor. */
+    public LevelScript(
+            int number,
+            int act,
+            double launchSeconds,
+            boolean launchDrop,
+            List<Section> sections,
+            List<WaveSpec> waves,
+            List<GroundObjectSpec> groundObjects,
+            List<GroundUnit> groundUnits,
+            List<SetPieceSpec> setPieces,
+            int secrets,
+            List<RadioCue> radio,
+            ObjectiveSpec objectives,
+            GroundSpec ground,
+            HazardSpec hazards,
+            DropSpec drops,
+            MediumSpec medium,
+            SpecialLimits specialLimits,
+            Optional<RookLossSpec> rookLoss) {
+        this(
+                number,
+                act,
+                launchSeconds,
+                launchDrop,
+                sections,
+                waves,
+                groundObjects,
+                groundUnits,
+                setPieces,
+                secrets,
+                radio,
+                objectives,
+                ground,
+                hazards,
+                drops,
+                medium,
+                specialLimits,
+                rookLoss,
+                0);
     }
 
     /** A level without M8 part F's scripted loss of Rook. */
@@ -262,7 +316,8 @@ public record LevelScript(
                 .drops(drops)
                 .medium(medium)
                 .specialLimits(specialLimits)
-                .rookLoss(rookLoss);
+                .rookLoss(rookLoss)
+                .armourFloor(armourFloor);
     }
 
     /**
@@ -289,6 +344,7 @@ public record LevelScript(
         private MediumSpec medium = MediumSpec.AIR;
         private SpecialLimits specialLimits = SpecialLimits.NONE;
         private Optional<RookLossSpec> rookLoss = Optional.empty();
+        private double armourFloor = 0;
 
         private Builder(int number, int act) {
             this.number = number;
@@ -391,6 +447,15 @@ public record LevelScript(
             return this;
         }
 
+        /**
+         * M8 part H: the ship's armour floor from the boss's kill to the level's end (design/campaign Level 28); 0 (none)
+         * by default.
+         */
+        public Builder armourFloor(double armourFloor) {
+            this.armourFloor = armourFloor;
+            return this;
+        }
+
         /** The level: the sub-records validated their own parts, the level checks them against each other. */
         public LevelScript build() {
             return new LevelScript(
@@ -411,7 +476,8 @@ public record LevelScript(
                     drops,
                     medium,
                     specialLimits,
-                    rookLoss);
+                    rookLoss,
+                    armourFloor);
         }
     }
 

@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: proposed
 depends-on: [../act-3-red-dust, ../../world/europa, ../../story/twist, ../../enemies/naval, ../../enemies/bosses/abyssal-maw, ../../player/systems]
-updated: 2026-10-24
+updated: 2026-10-26
 ---
 
 # Act 4 – Deep Water
@@ -37,9 +37,9 @@ yet: the loader would fly it, so every number here is a hand table marked draft,
 | [level-23-through-the-ice](level-23-through-the-ice/README.md) | The descent: a drill shaft, the waterline where the hydro-kit switches the ship to the water rules, Thera Deep's kelp farms; Glassfin schools and the Eel Swarm | approved | in-progress | final |
 | [level-24-abyssal-plain](level-24-abyssal-plain/README.md) | The ocean floor: Vrell spawning reefs, the Barbfin, three Abyss Rays rising from below, the first red-gold relay beacons | approved | in-progress | final |
 | [level-25-siren-trench](level-25-siren-trench/README.md) | A narrow trench with side caves: Sirens whose rings slow the ship, the Spiral Nautilus, wall collision; the act's hardest stretch before the Maw | approved | in-progress | final |
-| [level-26-blackwater](level-26-blackwater/README.md) | Darkness: headlight and glow only, the Glow Angler's lure, the Choir's first hint of the door; Rook is shot down | approved | in-progress | proposed |
-| [level-27-hydrothermal-vents](level-27-hydrothermal-vents/README.md) | The vent field: heat plumes that burn and bend shots, grey Depth Hunters from below (hint 3: a Helix hull code), a Bulwark in Rook's slot | approved | in-progress | proposed |
-| [level-28-abyssal-maw](level-28-abyssal-maw/README.md) | The hatchery and the act boss, the Abyssal Maw; then the climb, the ice breakout and the reveal: two Ascendancy cruisers; the act end | approved | not-started | none |
+| [level-26-blackwater](level-26-blackwater/README.md) | Darkness: headlight and glow only, the Glow Angler's lure, the Choir's first hint of the door; Rook is shot down | approved | in-progress | final |
+| [level-27-hydrothermal-vents](level-27-hydrothermal-vents/README.md) | The vent field: heat plumes that burn and bend shots, grey Depth Hunters from below (hint 3: a Helix hull code), a Bulwark in Rook's slot | approved | in-progress | final |
+| [level-28-abyssal-maw](level-28-abyssal-maw/README.md) | The hatchery and the act boss, the Abyssal Maw; then the climb, the ice breakout and the reveal: two Ascendancy cruisers; the act end | approved | in-progress | proposed |
 
 ## Design
 
@@ -86,8 +86,8 @@ black and gold rise through it beside the Vrell fleet and open fire on the Coali
 Format: the [briefing screen](../../ui/briefing/README.md), as Acts 1–3. Order: the L21 debrief with the
 act summary → Act 3's outro (which ends on "*Aegis Wing leaves Mars in four days*") → this act's title card →
 the act intro below → the L22 mission briefing → the hangar visit before L22 (autosave) → L22. (Since M8 part B
-Act 3 names no next act and its outro leads here; until part H moves the release's end to Level 28, the hangar
-before L23 cannot launch and reads `MORE: COMING SOON`.) The intro continues from Act 3's outro,
+Act 3 names no next act and its outro leads here; since M8 part H (step H3) this act's `next_act` names Act 5, so the
+release ends after Level 28.) The intro continues from Act 3's outro,
 which already told the Colossus's death, the Vrell leaving Mars and Varga's plot to Europa, so it opens on the
 arrival at Jupiter and does not repeat them. After the Maw falls the act ends in Level 21's order: the
 finale (the climb, the breakout, the reveal, the run, the orbit), the debrief with the act summary
@@ -143,28 +143,35 @@ Images are production art straight away (the build's art step makes them with `t
 **Act outro** (four pages after the L28 debrief, each voiced and with its own image; track 24 under
 page 1). It carries the beat the finale hands over: the wing escapes into orbit, and the Ascendancy has
 declared itself. The finale's closing radio already has the reveal's two lines, so the outro does not repeat
-them; Vorne's broadcast is **not** here (it opens Act 5). Texts (draft; decided in round 48 (2026-10-22)):
+them; Vorne's broadcast is **not** here (it opens Act 5). Texts (approved in round 48 (2026-10-22)); the pages live in
+the act's [data.yaml](data.yaml) (`outro`, M8 part H, step H3) and are rendered here, with the `next_act` that names Act 5
+on the release's end (`ACT V - THE BELT. CERES. COMING SOON.`; the setting CERES a default of step H3, pending the
+user's review in round 58):
 
+<!-- data: act-outro-pages -->
 | Page | Speaker | Image |
 |---|---|---|
 | 1 | Commander Okafor (grim) | `act-4-outro-orbit`: Europa from orbit, the ice shelf broken open where the shafts came up, two black-and-gold cruisers small against the limb, the Vrell carriers rising round them |
 | 2 | Dr. Varga (grim) | `act-4-outro-hullcode`: Varga's screen: the hull code from the Depth Hunter's wreck beside the same code painted on a cruiser's bow, the relay beacons' frequencies in a strip below |
 | 3 | Commander Okafor | `act-4-outro-ready-room`: Okafor alone in the transport's ready room under the lamps, Act 3's walker plate on a screen, her hands on the table |
 | 4 | Commander Okafor (fierce) | `act-4-outro-aegis`: Aegis Wing's Stormhawks on the transport's flight deck, one rail left empty with Rook's name stencilled on it |
+<!-- /data -->
 
-> **Commander Okafor:** "The Maw is dead and Europa's ocean is clear of the Vrell, for what that is
-> worth. We are in orbit. The cruisers did not follow. We lost Aegis Two in the dark, and we do not
-> know where he is."
+<!-- data: act-outro -->
+> **Commander Okafor:** "The Maw is dead and Europa's ocean is clear of the Vrell, for what that
+> is worth. We are in orbit. The cruisers did not follow. We lost Aegis Two in the dark, and we
+> do not know where he is."
 >
-> **Dr. Varga:** "I matched the code. It is the one from the Depth Hunter's wreck, and it is painted
-> on their bows, in the open now. The beacons, the grey hulls, the drones on Mars: they all say the
-> same name. The Vrell did not find us alone."
+> **Dr. Varga:** "I matched the code. It is the one from the Depth Hunter's wreck, and it is
+> painted on their bows, in the open now. The beacons, the grey hulls, the drones on Mars: they
+> all say the same name. The Vrell did not find us alone."
 >
-> **Commander Okafor:** "On Mars I told Dr. Varga to keep her eyes on the canyon. I silenced her, and
-> I was wrong. That does not happen again. What she sees, she says, on every channel."
+> **Commander Okafor:** "On Mars I told Dr. Varga to keep her eyes on the canyon. I silenced
+> her, and I was wrong. That does not happen again. What she sees, she says, on every channel."
 >
-> **Commander Okafor:** "Whatever comes over the radio next, we hear it together. Rook is out there. We
-> ship out, and we find him. Aegis Actual out."
+> **Commander Okafor:** "Whatever comes over the radio next, we hear it together. Rook is out
+> there. We ship out, and we find him. Aegis Actual out."
+<!-- /data -->
 
 The outro sets up [Act 5](../act-5-the-belt/README.md) (Vorne's broadcast, Rook at Ceres Hub) without
 pre-empting its intro. It pays Okafor's Act 3 silencing ("*Not on this channel, Doctor.*") as her character
@@ -365,34 +372,42 @@ proposals in [naval](../../enemies/naval/README.md#concept-art) and the boss's i
 | [concept/act-4-still-r52-a.png](concept/act-4-still-r52-a.png) | Round 52 (F.6 redo), variant a: the 960×540 title-card still with one huge water-vapour plume rising from behind the horizon left of Jupiter (~240 px tall: a thin base, a column of fanning jets, a rounded crown, a faint veil falling back; sunlit from the upper left, glittering ice grains); the rest as r51 (ice shelf, Conamara Chaos, Jupiter, the rig's steam thread) | chosen (round 52, T.1 = a) |
 | [concept/rejected/act-4-still-r52-b.png](concept/rejected/act-4-still-r52-b.png) | Round 52 (F.6 redo), variant b: a nearer plume (~380 px tall) from a fissure on the ice below the lettering's left end, with a curtain of three smaller plumes along the fissure receding to the horizon on the left; the rest as r51 | rejected (round 52, T.1: a picked) |
 | [concept/act-4-still-r52-sheet.png](concept/act-4-still-r52-sheet.png) | Round 52 review sheet: both stills at 1× and the title card over each (darkened to 55 %, letterbox, the chrome lettering) | chosen (round 52, T.1 = a; the sheet shows both) |
+| [concept/act-4-debrief-capture-r58-a.png](concept/act-4-debrief-capture-r58-a.png) | Game capture, M8 part H (step H7): a save before Level 28 (`:content:playthroughSave -Plevel=28`) continued and flown with `--invulnerable` to the end: the debrief (`MISSION 28 COMPLETE`, the boss time against its par) and the act summary (`ACT IV COMPLETE · DEEP WATER`, Levels 22–28, the act's totals) | proposed (round 58) |
+| [concept/act-4-outro-capture-r58-a.png](concept/act-4-outro-capture-r58-a.png) | The same run: the four outro pages with their images and voices (the orbit, the hull code, the ready room, Aegis without Rook) | proposed (round 58) |
+| [concept/release-end-capture-r58-a.png](concept/release-end-capture-r58-a.png) | The same run: the release's end card (`ACTS I-IV COMPLETE`, the campaign's totals, `TO BE CONTINUED`, `ACT V - THE BELT. CERES. COMING SOON.`) and the name entry for the high score | proposed (round 58) |
 
 ## Implementation
 
-- [ ] All 7 levels promoted to level documents (drafts written 2026-10-21, pending round 48) and implemented
-      (M8 parts B–H).
-- [ ] Act data file: `levels: [22, 28]`, the title card, the four intro pages and the four outro pages with their
+- [x] All 7 levels promoted to level documents (drafts written 2026-10-21, pending round 48) and implemented
+      (M8 parts B–H; Level 28 in part H, round 58).
+- [x] Act data file: `levels: [22, 28]`, the title card, the four intro pages and the four outro pages with their
       images and expressions, rendered into *Act intro and outro* as marked tables (part B for the intro, part H for
       the outro with `next_act` for the release's end, ACT V · THE BELT). The intro is built (part B: `ActFourDataTest`,
-      `BriefingsTest`, `OutroOnwardTest.afterAct3sOutroComeAct4sTitleCardAndTheBriefingOfLevel22`); the outro waits for part H.
-- [ ] The title card's still (`tools/art/act_stills.py act-4` from Level 22's backdrop) and lettering; the eight
+      `BriefingsTest`, `OutroOnwardTest.afterAct3sOutroComeAct4sTitleCardAndTheBriefingOfLevel22`); the outro and
+      `next_act` in data since part H (step H3, voiced; the game's act end and release end: step H6).
+- [x] The title card's still (`tools/art/act_stills.py act-4` from Level 22's backdrop) and lettering; the eight
       intro and outro briefing images plus the fourteen level briefing images (`tools/art/briefing_images.py`). Built in
-      part B: the still and lettering, the four intro images and Level 22's two (`BriefingLayoutTest`; round 51).
-- [ ] The act's systems (M8 part A and the levels' parts): the under-water mode (medium field, trait factor,
+      part B: the still and lettering, the four intro images and Level 22's two (`BriefingLayoutTest`; round 51); the
+      levels' in their parts; part H (step ART-H2): Level 28's two and the four outro images (round 58).
+- [x] The act's systems (M8 part A and the levels' parts): the under-water mode (medium field, trait factor,
       bullet speed, drag, beam reach, special setting restrictions), the descent shaft and trench on `Terrain`,
       the Siren's slow, darkness, heat plumes, homing torpedoes and Decoy Flares, the breakout and the reveal run,
-      the `boss-dive` radio event.
+      the `boss-dive` radio event (part H: `ArmourFloorTest.theWaterTurnsToAirAtItsLineOnTheResumedClock`,
+      `CruiserRunTest`, `RadioTimelineLevel28Test`).
 - [x] `reference_dps` 22–28 and the Act 4 balance plan (`balance-plan.yaml` visits 22–28) before any Act 4 level
       data (M8 part A): `enemies/data.yaml`, `ActHpFactorTest`, `BalanceTest` (step A2: the reference DPS 96 → 120,
       the plan's visits with a temporary budget(n) income and the water's ×0.7 in `BalanceTest` and
       `tools/balance.py`; `ActHpFactorTest`'s Act 4 cases in step A4; `ActFourDataTest.theReferenceDpsRunsToLevel28`, `BalanceTest`, `tools/balance.py` exit 0).
-- [ ] Every level within the act's density band (`DensityTest`, `PacingTest`, `ActFloorTest`), the beam era's HP
-      re-measured under water (`BeamEraHpTest`) and its typical haul within ±5 % of its budget (`TypicalHaulTest`).
-- [ ] The act-end order after L28 (Level 21's) and the release's end moved from L21 to L28; the hangar before L29
+- [x] Every level within the act's density band (`DensityTest`, `PacingTest`, `ActFloorTest`), the beam era's HP
+      re-measured under water (`BeamEraHpTest`) and its typical haul within ±5 % of its budget (`TypicalHaulTest`)
+      (Level 28's small-unit time 1.52× Level 10's, allowed 1.6×: pending round 58).
+- [x] The act-end order after L28 (Level 21's) and the release's end moved from L21 to L28; the hangar before L29
       reads `ACT V - THE BELT: COMING SOON`.
 - [x] A save at the L22 hangar from the `v0.1` release plays the Act 4 intro **once** on Continue (the `act-intro:N`
       flag, as Act 3's), not repeating the title card of an act already seen (step B2: `CampaignRouteTest`).
-- [ ] The act's voices (Dr. Brandt, Thera Deep Control, the Choir's speech) cast and rendered; the act's sounds
-      (Freesound only) and the Act 4 B theme and the reveal sting made.
+- [x] The act's voices (Dr. Brandt, Thera Deep Control, the Choir's speech) cast and rendered; the act's sounds
+      (Freesound only) and the Act 4 B theme and the reveal sting made (Level 28's in part H: steps H3, AUD-H; the
+      picks in round 58).
 - [ ] `ActPlaythroughTest` and `BalanceTest` through Act 4 with Rook (L22–L26) and the Bulwark (L27–L28; `--escort none` works).
 - [ ] The user's playthrough of Act 4.
 
@@ -454,3 +469,6 @@ proposals in [naval](../../enemies/naval/README.md#concept-art) and the boss's i
   shortened to the page's four lines: `BriefingLayoutTest`); its voice take is re-rendered by step VOX-AW.
 - 2026-10-24 (user, round 56 closed, C.7): the four warning texts accepted as built. Round 55 closed the same day
   (Level 26; Rook's loss retimed after the playtest: [Level 26](level-26-blackwater/README.md#decisions)).
+- 2026-10-25 (M8 part H, step H3): the act-end outro's four approved pages in the act's data (rendered into *Act intro
+  and outro*, voiced) and `next_act` `{act: ACT V, name: THE BELT, setting: CERES}` for the release's end (the setting
+  CERES, Level 29's Ceres Hub, a default of the step pending round 58); Level 28 in data.

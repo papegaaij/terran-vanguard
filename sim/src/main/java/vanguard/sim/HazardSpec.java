@@ -15,6 +15,8 @@ import java.util.Optional;
  * @param darkness Level 06's darkness
  * @param weather M5 part F: the level's wind and lightning (Level 12's storm)
  * @param sondes M5 part F: the weather sondes to fly through (Level 12)
+ * @param cruisers M8 part H, step H2: the finale's two Ascendancy cruisers (Level 28's run, {@link CruiserRun}); empty
+ *     for none
  */
 public record HazardSpec(
         List<CraneSpec> cranes,
@@ -24,8 +26,9 @@ public record HazardSpec(
         List<VentRow> vents,
         Optional<Darkness> darkness,
         Optional<Weather> weather,
-        Optional<Sondes> sondes) {
-    /** No hazards: no cranes, debris, sleds, rocks, vents, darkness, weather or sondes. */
+        Optional<Sondes> sondes,
+        Optional<CruiserRunSpec> cruisers) {
+    /** No hazards: no cranes, debris, sleds, rocks, vents, darkness, weather, sondes or cruisers. */
     public static final HazardSpec NONE = new HazardSpec(
             List.of(),
             List.of(),
@@ -34,7 +37,21 @@ public record HazardSpec(
             List.of(),
             Optional.empty(),
             Optional.empty(),
+            Optional.empty(),
             Optional.empty());
+
+    /** The hazards before M8 part H's cruisers (none). */
+    public HazardSpec(
+            List<CraneSpec> cranes,
+            List<DebrisSpec> debris,
+            Optional<SledSpec> sled,
+            Optional<RockSpec> rocks,
+            List<VentRow> vents,
+            Optional<Darkness> darkness,
+            Optional<Weather> weather,
+            Optional<Sondes> sondes) {
+        this(cranes, debris, sled, rocks, vents, darkness, weather, sondes, Optional.empty());
+    }
 
     public HazardSpec {
         cranes = List.copyOf(cranes);
@@ -42,46 +59,52 @@ public record HazardSpec(
         vents = vents.stream()
                 .sorted(java.util.Comparator.comparingDouble(VentRow::t))
                 .toList();
+        java.util.Objects.requireNonNull(cruisers);
     }
 
     /** These hazards with another {@code cranes}. */
     public HazardSpec withCranes(List<CraneSpec> cranes) {
-        return new HazardSpec(cranes, debris, sled, rocks, vents, darkness, weather, sondes);
+        return new HazardSpec(cranes, debris, sled, rocks, vents, darkness, weather, sondes, cruisers);
     }
 
     /** These hazards with another {@code debris}. */
     public HazardSpec withDebris(List<DebrisSpec> debris) {
-        return new HazardSpec(cranes, debris, sled, rocks, vents, darkness, weather, sondes);
+        return new HazardSpec(cranes, debris, sled, rocks, vents, darkness, weather, sondes, cruisers);
     }
 
     /** These hazards with another {@code sled}. */
     public HazardSpec withSled(Optional<SledSpec> sled) {
-        return new HazardSpec(cranes, debris, sled, rocks, vents, darkness, weather, sondes);
+        return new HazardSpec(cranes, debris, sled, rocks, vents, darkness, weather, sondes, cruisers);
     }
 
     /** These hazards with another {@code rocks}. */
     public HazardSpec withRocks(Optional<RockSpec> rocks) {
-        return new HazardSpec(cranes, debris, sled, rocks, vents, darkness, weather, sondes);
+        return new HazardSpec(cranes, debris, sled, rocks, vents, darkness, weather, sondes, cruisers);
     }
 
     /** These hazards with another {@code vents}. */
     public HazardSpec withVents(List<VentRow> vents) {
-        return new HazardSpec(cranes, debris, sled, rocks, vents, darkness, weather, sondes);
+        return new HazardSpec(cranes, debris, sled, rocks, vents, darkness, weather, sondes, cruisers);
     }
 
     /** These hazards with another {@code darkness}. */
     public HazardSpec withDarkness(Optional<Darkness> darkness) {
-        return new HazardSpec(cranes, debris, sled, rocks, vents, darkness, weather, sondes);
+        return new HazardSpec(cranes, debris, sled, rocks, vents, darkness, weather, sondes, cruisers);
     }
 
     /** These hazards with another {@code weather}. */
     public HazardSpec withWeather(Optional<Weather> weather) {
-        return new HazardSpec(cranes, debris, sled, rocks, vents, darkness, weather, sondes);
+        return new HazardSpec(cranes, debris, sled, rocks, vents, darkness, weather, sondes, cruisers);
     }
 
     /** These hazards with another {@code sondes}. */
     public HazardSpec withSondes(Optional<Sondes> sondes) {
-        return new HazardSpec(cranes, debris, sled, rocks, vents, darkness, weather, sondes);
+        return new HazardSpec(cranes, debris, sled, rocks, vents, darkness, weather, sondes, cruisers);
+    }
+
+    /** M8 part H: these hazards with another {@code cruisers}. */
+    public HazardSpec withCruisers(Optional<CruiserRunSpec> cruisers) {
+        return new HazardSpec(cranes, debris, sled, rocks, vents, darkness, weather, sondes, cruisers);
     }
 
     /**

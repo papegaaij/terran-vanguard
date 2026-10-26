@@ -168,6 +168,7 @@ One part per family; this table names the part that holds each data file's schem
 | Level and unit, M8 part E | [schemas-act-4](schemas-act-4/README.md) |
 | Level and unit, M8 part F | [schemas-act-4](schemas-act-4/README.md) |
 | Level and unit, M8 part G | [schemas-act-4](schemas-act-4/README.md) |
+| Level and unit, M8 part H | [schemas-act-4](schemas-act-4/README.md) |
 | Level backdrop (`backdrop`) | [schemas-backdrops](schemas-backdrops/README.md) |
 | Ship and core parts | [schemas-player](schemas-player/README.md) |
 | Player (`player/data.yaml`) | [schemas-player](schemas-player/README.md) |

@@ -2,7 +2,7 @@
 title: Depth Hunter
 design: approved
 implementation: in-progress
-art: chosen
+art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy]
 updated: 2026-10-25
 ---
@@ -59,7 +59,7 @@ Approved in round 48 (2026-10-22). Numbers at **medium** (see the [balancing bas
 
 Concept round 48 proposals (a/b, decided in round 48 (2026-10-22)): a grey hull with a thruster glow. Files `depth-hunter-r48-a/b` in [naval/concept](../concept/), listed in the [naval](../README.md#concept-art) Concept art table. ART-G's production frames (`tools/art/depth_hunter.py`, round 48 b: 16 headings, nozzle flicker, its own torpedo with
 its wake and launch, the hull break and oil bloom; no longer the walker missile) are listed there as
-`depth-hunter-final-r57-a`, pending the user's review in round 57 (the game claims them in step G4).
+`depth-hunter-final-r57-a`, accepted in round 57 (2026-10-25) (the game claims them in step G4).
 
 ## Implementation
 
@@ -84,7 +84,7 @@ its wake and launch, the hull break and oil bloom; no longer the walker missile)
 - - 2026-10-21 (step m8-denemies): drafted for the Act 4 design phase from the roster row and the gap analysis; every number is a first draft decided in round 48 (2026-10-22).
 - - 2026-10-21 (recommended option, decided in round 48 (2026-10-22), Q11 a): grey until L28; the black and gold look is kept for the cruisers; rejected: b (black-and-gold trim spoils the reveal).
 - 2026-10-22 (user, round 48 D1–D13: "approve"; confirmed: "Yes, set them approved"): design approved.
-- 2026-10-24 (M8 part G, step m8g1; defaults pending round 57, gap check `m8g-gaps.md` §1.1, §5 G3, G4): flown in the
+- 2026-10-24 (M8 part G, step m8g1; defaults accepted in round 57 (2026-10-25), gap check `m8g-gaps.md` §1.1, §5 G3, G4): flown in the
   simulation: a `column` `from: rear` rises from below the bottom edge in the column's x (warned there), unit i of n
   holding at 380 + i ÷ (n − 1) × 80 px below the top edge (evenly over the band, 16 px between hit boxes on the way
   up), drifting 12 px/s (even places left, odd right) with its facing turned up; its torpedo (`homing` on an `aimed`
@@ -93,7 +93,10 @@ its wake and launch, the hull break and oil bloom; no longer the walker missile)
   prop). Its `data.yaml` is step G2's.
 - 2026-10-24 (M8 part G, step G2): the stat block as `data.yaml` (the approved numbers; the hover's band, drift and
   the torpedo's `aim: facing` and `homing` as step G1 flies them); `first_level: 27` (L26 shows trails only).
-- 2026-10-25 (M8 part G, step G5; pending the user's review in round 57): built and flown in Level 27 (the game captures
+- 2026-10-25 (M8 part G, step G5; accepted in round 57 (2026-10-25)): built and flown in Level 27 (the game captures
   in [Level 27](../../../campaign/act-4-deep-water/level-27-hydrothermal-vents/README.md#concept-art)); the round asks the
   finals (F.2) and the columns' x and counts (C.4). A column's Hunters hold evenly over their band and drift apart
   (G1); no sound for the rise (not in the gap check's list).
+- 2026-10-25 (user, [round 57](../../../concept-rounds/round-57/README.md) closed): the final frames (F.2) accepted as final; the part is `art: final`. Its sounds: the
+  torpedo launch **a**, the run **b**, the impact **b** and the hull break **a** (the b picks go into the game in step H5);
+  C.4 (the columns' places and counts) accepted, and so is the Hunter's rise without a sound of its own (C.7).

@@ -314,6 +314,7 @@ final class ContentValidator {
         StormChecks.enemy(content, enemy, (field, message) -> problem(enemy, field, message));
         FoundryChecks.enemy(content, enemy, (field, message) -> problem(enemy, field, message));
         ColossusChecks.enemy(content, enemy, (field, message) -> problem(enemy, field, message));
+        MawChecks.enemy(content, enemy, (field, message) -> problem(enemy, field, message));
         RetreatChecks.enemy(enemy, (field, message) -> problem(enemy, field, message));
         enemy.difficulty()
                 .flatMap(EnemyData.Hooks::hard)
@@ -672,6 +673,7 @@ final class ContentValidator {
         StormChecks.level(content, level, (field, message) -> problem(level, field, message));
         FoundryChecks.level(content, level, (field, message) -> problem(level, field, message));
         ColossusChecks.level(content, level, (field, message) -> problem(level, field, message));
+        MawChecks.level(content, level, (field, message) -> problem(level, field, message));
         RetreatChecks.level(content, level, (field, message) -> problem(level, field, message));
         checkArenaLevel(level);
         new BackdropCheck(level, (field, message) -> problem(level, field, message)).run();
@@ -1692,6 +1694,9 @@ final class ContentValidator {
             } else if (event == LevelData.CueEvent.FIRST_RAY
                     && AbyssChecks.firstRise(content, level).isEmpty()) {
                 problem(level, field, "first-ray in a level without a rising unit (movement.rise)");
+            } else if ((event == LevelData.CueEvent.BOSS_ARRIVAL || event == LevelData.CueEvent.BOSS_DIVE)
+                    && level.boss().isEmpty()) {
+                problem(level, field, "boss-arrival or boss-dive in a level without a boss");
             }
         }
         if (!level.noSurfaceZones().isEmpty() && !burrows) {

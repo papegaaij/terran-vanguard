@@ -118,7 +118,17 @@ public enum CueTrigger {
      * M8 part D (design/campaign Level 24, the Abyss Ray): the attempt's first rising unit's shadow ({@link
      * SimEvents.Type#RISE_SHADOW}, its wave's entry); once. No subject (the radio event {@code first-ray}).
      */
-    FIRST_RAY;
+    FIRST_RAY,
+    /**
+     * M8 part H (design/campaign Level 28; gap check §5 H8): a boss arrived (its bar; the arena's clock is halted, so a
+     * timed line cannot follow it); once. No subject (the radio event {@code boss-arrival}).
+     */
+    BOSS_ARRIVAL,
+    /**
+     * M8 part H (design/enemies/bosses/abyssal-maw, the dive): a coiled boss dives ({@link SimEvents.Type#MAW_DIVE});
+     * once. No subject (the radio event {@code boss-dive}; the presentation queues it as a phase line).
+     */
+    BOSS_DIVE;
 
     /** Between the part names of a {@link #BOSS_PART_DESTROYED} cue's subject. */
     public static final String PART_SEPARATOR = "|";

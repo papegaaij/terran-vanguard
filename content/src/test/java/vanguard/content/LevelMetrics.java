@@ -104,7 +104,7 @@ final class LevelMetrics {
      * What the player saw on the attempt that completes the level, from the end of its launch: the empty stretches
      * as [from, to] in real seconds since the attempt's start, the mean number of enemies on the screen, and the
      * enemy shots a minute (one per {@code ENEMY_FIRED} event: a fan or a burst counts once), both outside a boss
-     * fight (step WB).
+     * fight (step WB); M8 part H: nothing from the kill of a level with an armour floor on (Level 28's finale).
      */
     record Flight(List<double[]> empty, double meanOnScreen, double shotsPerMinute) {
         /** The empty stretches longer than {@code seconds}. */
@@ -137,10 +137,13 @@ final class LevelMetrics {
 
         @Override
         public void stepped(Sortie sortie, int step) {
-            realSeconds = sortie.realSeconds();
-            if (sortie.launching()) {
+            if (sortie.launching() || sortie.ship().defences().floor() > 0) {
+                // M8 part H: from a boss's kill on a level with an armour floor (Level 28's climb, breakout and run,
+                // which
+                // cannot be lost) the finale is outside the pacing checks (the level's README, Implementation).
                 return;
             }
+            realSeconds = sortie.realSeconds();
             // A boss fight has its own tests of what it fires (KrakenTest, SiegeSpireTest): the floor's means are the
             // level's around it (step WB, pending the user's review).
             if (sortie.flying() && !bossFight(sortie)) {

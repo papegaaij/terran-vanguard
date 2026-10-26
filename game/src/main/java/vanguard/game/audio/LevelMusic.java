@@ -63,6 +63,13 @@ import java.util.function.IntToDoubleFunction;
  * after the warning's bars ({@link BossCue}); at the kill it fades out in a second, leaving the
  * ambience, and the theme does not come back. A Retry from boss holds the theme until the boss
  * arrives again. A level without boss music keeps the mid-boss sting ({@link #sting}).
+ *
+ * <p>M8 part H (Level 28, Music &amp; ambience): a motif-alone section plays the motif as its cue says (the stems silent
+ * from the theme's first sample: the hatchery's bed alone before t=16); the boss music drops away while a coiled boss
+ * dives ({@link #bossDrop}: out over {@value #BOSS_DROP_OUT_SECONDS} s with the coil's slide, back over {@value
+ * #BOSS_DROP_IN_SECONDS} s after the lunge); after the kill the theme comes back as its motif stem alone for the run
+ * ({@link #motifAfterBoss}, the level's {@code music.motif_after_boss}); the reveal sting (track 30) plays once over the
+ * ambience at the cruisers' rise ({@link #reveal}).
  */
 public final class LevelMusic implements Disposable {
     private static final float MUSIC_VOLUME = 0.6f;
@@ -199,6 +206,23 @@ public final class LevelMusic implements Disposable {
     /** The running fade's length, s: {@link #FADE_SECONDS}, or the jingle's fade. */
     private float fadeLength = FADE_SECONDS;
 
+    /** M8 part H: the boss music drops away over this long as a coiled boss dives (its 2 s slide into the dark)... */
+    static final double BOSS_DROP_OUT_SECONDS = 2;
+    /** ... and comes back over this long after the lunge. */
+    static final double BOSS_DROP_IN_SECONDS = 2;
+    /** M8 part H: whether the boss music is asked to drop away now, and its level under the drop (linear, 1 none). */
+    private boolean bossDropped;
+
+    private float bossDropGain = 1;
+    /** M8 part H: the theme's motif stem alone after the act boss's kill (the level's {@code music.motif_after_boss}). */
+    private vanguard.content.LevelData.Music.MotifAfterBoss afterBoss;
+    /** M8 part H: whether the theme plays as the motif after the boss now, and its level by the level time. */
+    private boolean afterMode;
+
+    private float afterLevel;
+    /** M8 part H: whether the reveal sting has played in this attempt. */
+    private boolean revealed;
+
     private Sound loopSound;
     private long loopId = -1;
 
@@ -325,6 +349,56 @@ public final class LevelMusic implements Disposable {
     public LevelMusic motifAlone(IntPredicate alone) {
         motifAlone = alone;
         return this;
+    }
+
+    /**
+     * M8 part H: after the act boss's kill the theme comes back as its motif stem alone at {@code motif}'s level by the
+     * level time (null for none: the theme stays out after its boss).
+     */
+    public LevelMusic motifAfterBoss(vanguard.content.LevelData.Music.MotifAfterBoss motif) {
+        afterBoss = motif;
+        return this;
+    }
+
+    /**
+     * M8 part H (design/enemies/bosses/abyssal-maw, Music: "silence under the dive's darkness except the ambience
+     * bed"): while {@code dropped} the boss music falls away over {@value #BOSS_DROP_OUT_SECONDS} s, after it comes back
+     * over {@value #BOSS_DROP_IN_SECONDS} s.
+     */
+    public void bossDrop(boolean dropped) {
+        bossDropped = dropped;
+    }
+
+    /** M8 part H: the boss music's level under the dive's drop now, linear (1 none), for the tests. */
+    float bossDropGain() {
+        return bossDropGain;
+    }
+
+    /** M8 part H: whether the theme plays as the motif after the boss now, for the tests. */
+    boolean afterMode() {
+        return afterMode;
+    }
+
+    /** M8 part H: the motif's level after the boss now, linear, for the tests. */
+    float afterLevel() {
+        return afterLevel;
+    }
+
+    /**
+     * M8 part H (design/campaign Level 28: the reveal sting, track 30, at the cruisers' rise): the sting plays once over
+     * the ambience (an attempt's first rise; the music cut after a lost ship plays none).
+     */
+    public void reveal() {
+        if (revealed || cut) {
+            return;
+        }
+        revealed = true;
+        sfx.play(Sfx.REVEAL_STING, JINGLE_VOLUME, 1, 0);
+    }
+
+    /** M8 part H: whether the reveal sting has played in this attempt, for the tests. */
+    boolean revealed() {
+        return revealed;
     }
 
     /** M7 part F: whether the stems were asked to play at the last update (not the motif alone), for the tests. */
@@ -695,10 +769,19 @@ public final class LevelMusic implements Disposable {
     public void update(int section, double levelSeconds, float seconds, boolean radio, boolean runTimeFull) {
         boolean wasIntense = intense;
         intense = runTimeFull;
-        stemTimes(levelSeconds, seconds);
+        // M8 part H: after the act boss's kill the theme is its motif stem alone, the timed changes no longer applied.
+        afterMode = afterBoss != null && bossState == BossState.DOWN;
+        afterLevel = afterMode ? (float) Math.clamp(afterBoss.level(levelSeconds), 0, 1) : 0;
+        if (!afterMode) {
+            stemTimes(levelSeconds, seconds);
+        }
         boolean wanted = timedShare >= 0 ? timedShare > 0 : fullMix.test(section) || runTimeFull;
-        stemsOn = !motifAlone.test(section) && timedStemsOn;
-        motifOn = motifCue.on(section, levelSeconds) || motifAlone.test(section);
+        // M8 part H: a motif-alone section plays the motif as its cue says (Level 28's section 1 silent before t=16).
+        stemsOn = !afterMode && !motifAlone.test(section) && timedStemsOn;
+        motifOn = afterMode || motifCue.on(section, levelSeconds);
+        if (afterMode && afterLevel <= 0 && levelSeconds >= afterBoss.to() && music.isPresent()) {
+            stopTheme();
+        }
         if (levelSeconds >= ambienceFrom && fade < 0 && music.isPresent()) {
             fadeOut();
         }
@@ -709,7 +792,7 @@ public final class LevelMusic implements Disposable {
         if (music.isEmpty()
                 && !cut
                 && fade < 0
-                && bossState == BossState.WAITING
+                && (bossState == BossState.WAITING || (afterMode && afterLevel > 0))
                 && levelSeconds < ambienceFrom
                 && !(levelSeconds >= jingleAt)
                 && section >= startSection
@@ -724,10 +807,15 @@ public final class LevelMusic implements Disposable {
                     motifOn);
             stemTarget = wanted ? 1 : 0;
             stems = Optional.of(mix);
-            // M8 part F: the timed changes due now apply to the new stream at once.
-            stemTime = -2;
-            stemTimes(levelSeconds, 0);
-            music = Optional.of(MusicStreamer.play(audio, mix, MUSIC_VOLUME * rise, mixer));
+            // M8 part H: the stems start where they are asked to be (silent under a motif-alone section's start).
+            mix.stems(stemsOn, 0);
+            if (!afterMode) {
+                // M8 part F: the timed changes due now apply to the new stream at once.
+                stemTime = -2;
+                stemTimes(levelSeconds, 0);
+            }
+            float startLevel = afterMode ? MUSIC_VOLUME * afterLevel : MUSIC_VOLUME * rise;
+            music = Optional.of(MusicStreamer.play(audio, mix, startLevel, mixer));
         }
         if (stems.isPresent()) {
             stems.get().motif(motifOn);
@@ -748,13 +836,19 @@ public final class LevelMusic implements Disposable {
         eventDuckLeft = Math.max(0, eventDuckLeft - seconds);
         duck += (target - duck) * Math.min(1, DUCK_RATE * seconds);
         float faded = fade >= 0 ? fade / fadeLength : 1;
-        float level =
-                rise * sectionGain * timedGain * faded * stingDip() * (themeOut >= 0 ? themeOut / BOSS_CROSSFADE : 1);
+        float level = afterMode
+                ? afterLevel * faded
+                : rise * sectionGain * timedGain * faded * stingDip() * (themeOut >= 0 ? themeOut / BOSS_CROSSFADE : 1);
         if (sting >= 0) {
             sting -= seconds;
         }
         music.ifPresent(streamer -> streamer.setVolume(MUSIC_VOLUME * duck * level));
-        float bossLevel = faded * (bossOut >= 0 ? bossOut / FADE_SECONDS : 1);
+        float dropTarget = bossDropped && bossState == BossState.FIGHT ? 0 : 1;
+        double dropSeconds = dropTarget < bossDropGain ? BOSS_DROP_OUT_SECONDS : BOSS_DROP_IN_SECONDS;
+        bossDropGain = dropTarget < bossDropGain
+                ? (float) Math.max(dropTarget, bossDropGain - seconds / dropSeconds)
+                : (float) Math.min(dropTarget, bossDropGain + seconds / dropSeconds);
+        float bossLevel = faded * bossDropGain * (bossOut >= 0 ? bossOut / FADE_SECONDS : 1);
         bossMusic.ifPresent(streamer -> streamer.setVolume(MUSIC_VOLUME * duck * bossLevel));
         if (themeOut >= 0) {
             themeOut = Math.max(0, themeOut - seconds);
@@ -833,6 +927,8 @@ public final class LevelMusic implements Disposable {
             return true;
         }
         bossState = BossState.FIGHT;
+        bossDropped = false;
+        bossDropGain = 1;
         if (music.isPresent()) {
             themeOut = BOSS_CROSSFADE;
         }
@@ -885,6 +981,8 @@ public final class LevelMusic implements Disposable {
     public void bossRetry() {
         if (boss.isPresent()) {
             bossState = BossState.HELD;
+            bossDropped = false;
+            bossDropGain = 1;
             stopTheme();
         }
     }
@@ -946,6 +1044,9 @@ public final class LevelMusic implements Disposable {
         stopTheme();
         stopBoss();
         stopLoop();
+        if (revealed) {
+            sfx.stop(Sfx.REVEAL_STING);
+        }
     }
 
     /** The level restarts: the theme waits for its section again, at its start level. */
@@ -966,6 +1067,14 @@ public final class LevelMusic implements Disposable {
         themeOut = -1;
         bossOut = -1;
         bossState = BossState.WAITING;
+        bossDropped = false;
+        bossDropGain = 1;
+        afterMode = false;
+        afterLevel = 0;
+        if (revealed) {
+            sfx.stop(Sfx.REVEAL_STING);
+            revealed = false;
+        }
         stopTheme();
         stopBoss();
         stopLoop();
@@ -1015,6 +1124,9 @@ public final class LevelMusic implements Disposable {
         if (jinglePlayed) {
             // M5 part G: leaving the level mid-jingle (the pause menu's quit) must not leave it playing.
             sfx.stop(Sfx.MISSION_COMPLETE);
+        }
+        if (revealed) {
+            sfx.stop(Sfx.REVEAL_STING);
         }
         sfx.stop(currentAmbience);
         if (fadingAmbience != null) {

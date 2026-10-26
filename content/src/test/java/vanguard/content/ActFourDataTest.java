@@ -152,9 +152,11 @@ class ActFourDataTest {
                     || key.equals("act-4-deep-water/level-25-siren-trench")
                     || key.equals("act-4-deep-water/level-26-blackwater")
                     || key.equals("act-4-deep-water/level-27-hydrothermal-vents");
-            assertEquals(descent || plain, level.underwater(), key);
+            // M8 part H: Level 28 under water from its start until its breakout (115 s), then in the air again.
+            boolean breakout = key.equals("act-4-deep-water/level-28-abyssal-maw");
+            assertEquals(descent || plain || breakout, level.underwater(), key);
             for (int i = 0; i < level.sections().size(); i++) {
-                if ((descent && level.sectionStart(i) >= 25.5) || plain) {
+                if ((descent && level.sectionStart(i) >= 25.5) || plain || (breakout && level.sectionStart(i) < 115)) {
                     assertEquals(LevelData.Medium.UNDERWATER, level.mediumOf(i), key);
                     List<String> forbidden = level.forbiddenSpecials(i, CONTENT.specials());
                     assertTrue(forbidden.containsAll(List.of("Airstrike", "Orbital Lance")), key + ": " + forbidden);

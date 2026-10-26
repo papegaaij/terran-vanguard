@@ -3,8 +3,8 @@
 # because the secondary's `escapes` counts a unit by its slug and the loader finds units only here (as the siphon pump,
 # design: review). The approved text of Level 27 (round 48: `ground`, not hardened, draft 60 HP, a red-gold pulse every
 # 4 s, bounty 15, a destroyed beacon goes dark); the 72 × 104 sprite and its 36 × 80 hit box are ART-G's (the mast's foot
-# 22 px below the unit's centre on its ridge-crest pad), pending the user's review in round 57. The README's hard 90 HP
-# has no stat-block key: hard takes the global multiplier (78), pending round 57. Damage under water as every ground
+# 22 px below the unit's centre on its ridge-crest pad), accepted in round 57. The README's hard 90 HP
+# has no stat-block key: hard takes the global multiplier (78), accepted in round 57. Damage under water as every ground
 # target's: the torpedo weapons at full damage, the others × 0.7 after `anti-ground`'s × 2 (Europa's rules).
 name: Relay Beacon
 faction: Unmarked
@@ -37,4 +37,4 @@ notes:
   weak_points: (dies in 0.5 s at the Level 27 reference)
   death: '`small` burst: the lamp breaks and the mast goes dark (a dark frame that stays)'
   used_in: 'Level 27 (the secondary `BEACONS`); scenery in Levels 24–26'
-  difficulty: 'none (the README''s hard 90 HP has no key: the global multiplier gives 78, pending round 57)'
+  difficulty: 'none (the README''s hard 90 HP has no key: the global multiplier gives 78, accepted in round 57 (2026-10-25))'

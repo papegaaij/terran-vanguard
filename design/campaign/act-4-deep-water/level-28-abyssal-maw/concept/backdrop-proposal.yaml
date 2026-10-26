@@ -1,0 +1,224 @@
+backdrop:
+  # Presentation only: Level 28's hatchery, the caldera, the shaft and the night ice (tools/art/backdrop_l28.py,
+  # step ART-H2, from the README and ART-H2's layout (no data.yaml yet: re-run after H3)). Up to the breakout the grade's per-section underwater_look lights it (the
+  # sections block below), plus the static lights; every piece's -glow is added over the grade
+  # (drawPieceGlows): the gate's teal, the flesh lamps, the racks' pods, the fissures, the vent's throat. The
+  # shaft's walls are the terrain's (WallProjection's ice shaft): ice-wall, -wet, -glow, -foot, -foot-wet
+  # (Level 23's, rows reversed). From the breakout the level is in air: the night ice is lit in its own pixels.
+  scroll_factors: {far: 0.5, ground: 1, low-air: 1.35, high-air: 2.2}   # far unused (opaque ground)
+  ramp: 2
+  haze_colour: 0e1a1c  # the hatchery's water
+  atmosphere:
+    clear: {haze: 0.0}
+  tile_sets:
+    gate-hall: {layer: ground, height: 960}   # section 1: the hatchery's resin floor past the gate, chitin root veins
+    brood-gallery: {layer: ground, height: 960}   # section 2: the gallery floor, resin grooved along the galleries
+    spawning-floor: {layer: ground, height: 960}   # section 3: resin ridges round hatching pools (pale eggs in amber fluid)
+    antechamber-floor: {layer: ground, height: 960}   # sections 4-5: dark basalt under resin, red fissures (the arena is the caldera piece)
+    shaft-climb: {layer: ground, height: 960}   # section 6: Level 23's wet shaft floor in reverse, the vent's glow far below
+    night-ice: {layer: ground, height: 960}   # sections 7-10: Level 22's ice shelf at night under Jupiter
+    ice-ceiling: {layer: high-air, height: 960}   # section 6: the ice ceiling's cracks of light (additive at 40 % as Level 23's)
+    ice-crystals: {layer: high-air, height: 960}   # sections 8-10: Level 22's crystals, dimmed for the night (additive at 40 %)
+  pieces:
+    gate-ring: {layer: ground, size: [480, 720]}
+    gate-ring-glow: {layer: ground, size: [480, 720]}
+    flesh-lamp: {layer: ground, size: [64, 64]}
+    flesh-lamp-glow: {layer: ground, size: [64, 64]}
+    seam-brood-gallery: {layer: ground, size: [480, 320]}
+    seam-brood-gallery-glow: {layer: ground, size: [480, 320]}
+    egg-rack-a: {layer: ground, size: [112, 480]}
+    egg-rack-a-glow: {layer: ground, size: [112, 480]}
+    egg-rack-b: {layer: ground, size: [112, 480]}
+    egg-rack-b-glow: {layer: ground, size: [112, 480]}
+    egg-rack-nest: {layer: ground, size: [112, 480]}
+    egg-rack-nest-glow: {layer: ground, size: [112, 480]}
+    gallery-wall-left: {layer: ground, size: [128, 200]}
+    gallery-wall-right: {layer: ground, size: [128, 200]}
+    seam-spawning-floor: {layer: ground, size: [480, 320]}
+    collapsed-rack: {layer: ground, size: [208, 192]}
+    collapsed-rack-glow: {layer: ground, size: [208, 192]}
+    resin-ridge: {layer: ground, size: [272, 128]}
+    far-ridge: {layer: ground, size: [208, 112]}
+    siren-stack: {layer: ground, size: [264, 160]}
+    seam-antechamber-floor: {layer: ground, size: [480, 320]}
+    fissure-1: {layer: ground, size: [176, 96]}
+    fissure-1-glow: {layer: ground, size: [176, 96]}
+    fissure-2: {layer: ground, size: [176, 96]}
+    fissure-2-glow: {layer: ground, size: [176, 96]}
+    fissure-3: {layer: ground, size: [176, 96]}
+    fissure-3-glow: {layer: ground, size: [176, 96]}
+    fissure-4: {layer: ground, size: [176, 96]}
+    fissure-4-glow: {layer: ground, size: [176, 96]}
+    caldera: {layer: ground, size: [480, 1508]}
+    caldera-glow: {layer: ground, size: [480, 1508]}
+    shaft-mouth: {layer: ground, size: [480, 720]}
+    ceiling-cracks: {layer: high-air, size: [480, 600]}
+    drill-hole-1: {layer: ground, size: [200, 200]}
+    drill-hole-2: {layer: ground, size: [200, 200]}
+    vrell-carrier: {layer: high-air, size: [168, 380]}
+    ice-split-left: {layer: ground, size: [200, 960]}
+    ice-split-right: {layer: ground, size: [200, 960]}
+  placed:
+    # Level 27's ring of arches seen from inside, its centre on the start's bottom edge; exact rows
+    - {piece: gate-ring, t: -2.25, x: 240}
+    # a lamp of grown flesh at t~6
+    - {piece: flesh-lamp, t: 6.0, x: 40}
+    # a lamp of grown flesh at t~10.5
+    - {piece: flesh-lamp, t: 10.5, x: 440}
+    # a lamp of grown flesh at t~15
+    - {piece: flesh-lamp, t: 15.0, x: 60}
+    # a lamp of grown flesh at t~19
+    - {piece: flesh-lamp, t: 19.0, x: 420}
+    # a lamp of grown flesh at t~26
+    - {piece: flesh-lamp, t: 26.0, x: 36}
+    # a lamp of grown flesh at t~33.5
+    - {piece: flesh-lamp, t: 33.5, x: 444}
+    # a lamp of grown flesh at t~44
+    - {piece: flesh-lamp, t: 44.0, x: 240}
+    # section 2's seam (ground 3180): the gallery's mouth, its lintel and lamps; exact rows
+    - {piece: seam-brood-gallery, t: 24.364, x: 240}
+    # the rack under the Spine Turret at t=30 x 96 (its seat 30 px above the rack's foot); exact rows
+    - {piece: egg-rack-nest, t: 34.545, x: 96}
+    # the rack under the Spine Turret at t=30 x 240 (its seat 30 px above the rack's foot); exact rows
+    - {piece: egg-rack-nest, t: 34.545, x: 240}
+    # the rack under the Spine Turret at t=30 x 384 (its seat 30 px above the rack's foot); exact rows
+    - {piece: egg-rack-nest, t: 34.545, x: 384}
+    # a gallery rack (b) at t~40
+    - {piece: egg-rack-b, t: 40.0, x: 56}
+    # a gallery rack (a) at t~41.5
+    - {piece: egg-rack-a, t: 41.5, x: 424}
+    # a gallery rack (a) at t~46.5
+    - {piece: egg-rack-a, t: 46.5, x: 150}
+    # a gallery rack (b) at t~48
+    - {piece: egg-rack-b, t: 48.0, x: 330}
+    # a gallery rack (a) at t~52
+    - {piece: egg-rack-a, t: 52.0, x: 64}
+    # a gallery rack (b) at t~53
+    - {piece: egg-rack-b, t: 53.0, x: 418}
+    # the gallery wall where the Siren at t=36 x 60 is grown; exact rows
+    - {piece: gallery-wall-left, t: 38.709, x: 64}
+    # the gallery wall where the Siren at t=36 x 420 is grown; exact rows
+    - {piece: gallery-wall-right, t: 38.709, x: 416}
+    # section 3's seam (ground 6270): the galleries open into the cavern; exact rows
+    - {piece: seam-spawning-floor, t: 52.455, x: 240}
+    # the fallen rack and Pelagic-3's scour (the trigger at t=58, x 90); exact rows
+    - {piece: collapsed-rack, t: 60.455, x: 104}
+    # the Spine Turrets' resin ridge (t=66: x 256, 300, 344, 388, 432, medium's three in the middle); exact rows
+    - {piece: resin-ridge, t: 68.455, x: 344}
+    # the Polyp Mortars' far ridge (t=74: x 84, 150); exact rows
+    - {piece: far-ridge, t: 76.455, x: 117}
+    # the cavern's last stack (t=76: the Sirens at x 250, 330, 410, hard's third included); exact rows
+    - {piece: siren-stack, t: 78.455, x: 344}
+    # section 4's seam (ground 9570): the cavern into the antechamber; exact rows
+    - {piece: seam-antechamber-floor, t: 82.6, x: 240}
+    # a steaming fissure at t~81.5, x 70; exact rows
+    - {piece: fissure-1, t: 84.2, x: 88}
+    # a steaming fissure at t~84.5, x 330; exact rows
+    - {piece: fissure-2, t: 87.2, x: 330}
+    # a steaming fissure at t~87.5, x 190; exact rows
+    - {piece: fissure-3, t: 90.2, x: 190}
+    # a steaming fissure at t~90, x 420; exact rows
+    - {piece: fissure-4, t: 92.7, x: 392}
+    # the caldera: the outer rim (the mortars' seats, t~92) to the shaft's foot; the halted arena's screen (ground 11440..11979), the throat on ground row 11649 x 240 (screen 240, 330); exact rows
+    - {piece: caldera, t: 101.16, x: 240}
+    # the bore's broken lip, its apex on the breakout line (ground 12886 = scroll(115) + 96); exact rows
+    - {piece: shaft-mouth, t: 114.773, x: 240}
+    # high-air (x2.2): the ceiling's fractures, their centre crossing the ship's row at t=115; exact rows
+    - {piece: ceiling-cracks, t: 114.473, x: 240}
+    # another Vrell drill hole in the night ice (t~117.5, x 140); exact rows
+    - {piece: drill-hole-1, t: 117.5, x: 140}
+    # another Vrell drill hole in the night ice (t~120.5, x 330); exact rows
+    - {piece: drill-hole-2, t: 120.5, x: 330}
+    # high-air: a Vrell carrier risen beside the wing (t~116.8, x 52)
+    - {piece: vrell-carrier, t: 116.8, x: 52.0}
+    # high-air: a Vrell carrier risen beside the wing (t~119.8, x 430)
+    - {piece: vrell-carrier, t: 119.8, x: 430.0}
+    # the open lead where the left cruiser rose (centre mid-screen at t=120); exact rows
+    - {piece: ice-split-left, t: 120.0, x: 100}
+    # the open lead where the right cruiser rose (centre mid-screen at t=120); exact rows
+    - {piece: ice-split-right, t: 120.0, x: 380}
+
+# ART-H2's sections for H3 (README Layout): the art is drawn for these times, speeds and eases (a halted
+# arena stops at once; the shaft eases up from 0 over its ramp). Level-wide `medium: underwater`; the
+# breakout's section switches to air (the first water->air crossing).
+scroll_speed: 120
+medium: underwater
+sections:
+  - {name: Hatchery Gate, end: 22, atmosphere: clear, tiles: [gate-hall]}
+    # underwater_look: {ambient: 0.55, tint: 80e6d6, caustics: 0.00, snow: 60, headlights: {strength: 0.0}}
+  - {name: Brood Galleries, end: 50, speed: 110, ramp: 2, atmosphere: clear, tiles: [brood-gallery]}
+    # underwater_look: {ambient: 0.52, tint: a8c8e0, caustics: 0.00, snow: 50, headlights: {strength: 0.0}}
+  - {name: Spawning Cavern, end: 80, speed: 110, atmosphere: clear, tiles: [spawning-floor]}
+    # underwater_look: {ambient: 0.58, tint: e8c09a, caustics: 0.00, snow: 60, headlights: {strength: 0.0}}
+  - {name: Antechamber, end: 104, speed: 100, ramp: 2, atmosphere: clear, tiles: [antechamber-floor]}
+    # underwater_look: {ambient: 0.56, tint: f0a888, caustics: 0.00, snow: 70, headlights: {strength: 0.0}}
+  - {name: The Vent, end: 105, speed: 0, arena: true, atmosphere: clear, tiles: [antechamber-floor]}
+    # underwater_look: {ambient: 0.62, tint: d8f0c0, caustics: 0.00, snow: 40, headlights: {strength: 0.0}}
+  - {name: The Shaft, end: 115, speed: 150, ramp: 2, atmosphere: clear, tiles: [shaft-climb, ice-ceiling]}
+    # underwater_look: {ambient: 0.58, tint: a8d8f0, caustics: 0.25, snow: 50, headlights: {strength: 0.0}}
+  - {name: The Breakout, end: 118, speed: 150, medium: air, atmosphere: clear, tiles: [night-ice]}
+  - {name: The Rise, end: 122, speed: 150, medium: air, atmosphere: clear, tiles: [night-ice, ice-crystals]}
+  - {name: The Run, end: 157, speed: 200, ramp: 2, medium: air, atmosphere: clear, tiles: [night-ice, ice-crystals]}
+  - {name: Orbit, end: 162, speed: 400, ramp: 3, medium: air, atmosphere: clear, tiles: [night-ice, ice-crystals]}
+
+# the shaft (Level 23's drill shaft run in reverse; gap §1.3, §5 H9: the walls push, no damage). Terrain row r
+# is on the top edge when the scroll is r. The walls rise at the field's edges just above the halted arena
+# (never seen during the fight: the arena's top edge is terrain row 11440), close to Level 23's
+# 320 px and flatten to the bore's lip on the breakout line (terrain 12346: the ship's row at t=115).
+terrain:
+  left:
+    - [11480, 0, 0]
+    - [11880, 80]
+    - [12086, 80]
+    - [12346, 0, 0]
+  right:
+    - [11480, 480, 0]
+    - [11880, 400]
+    - [12086, 400]
+    - [12346, 480, 0]
+  contact: {damage: {easy: 0, medium: 0, hard: 0}, push: 30, push_seconds: 0.12, cooldown: 1.0}   # §5 H9
+
+# fixed rows the art is drawn for (H1/H3/H5):
+#   the arena: the scroll halts at 11440 (t=104); the screen shows ground rows 11440..11979;
+#     the vent's throat at screen (240, 330) = ground row 11649, x 240, ~140 px across (the caldera piece);
+#     the boss's geometry (gap §1.1, the boss spec's Arena): head (240, 95), throat (240, 135), sacs (178, 80),
+#     (302, 80), (190, 128), (290, 128); the coil's inner flanks x 50 / 430 / y 505; the wall clamp x 62-418,
+#     y <= 493; implants (110, 60), (40, 300), (440, 300): all screen space, drawn by MawLooks over the
+#     caldera (the backdrop has no coil);
+#   the breakout line: ground row 12886 = scroll(115) + 96 (the shaft-mouth piece's lip apex; the grade lifts above it,
+#     as Level 23's waterline), the ceiling-cracks high-air piece centred on the ship's row at the same t;
+#   the rise: the ice-split pieces centred mid-screen at t=120 under the cruisers' flanks (hull inner edges x 110 / 370);
+#   the Vrell carriers (high-air) at t~116.8 x 52 and t~119.8 x 430, before the run (nothing over the play in the run).
+
+# ground places this art is drawn for (H3's `ground_targets:` and the Sirens' `on_ground` xs; t = the top
+# edge, x the unit's centre):
+#   Spine Turret x3 on the racks' ends (egg-rack-nest): t 30, x 96, 240, 384
+#   Sirens x2 grown on the gallery walls (`on_ground`, every difficulty): t 36, x 60, 420
+#   Pelagic-3 (`trigger`, `sprite: recon-sub`, size [64, 64], hitbox proposed [44, 36], 20 / hard 28 HP): t 58, x 90
+#   Spine Turret x3 on the resin ridge: t 66, x 256, 300, 344, 388, 432 (hard x5: the ridge's five seats; medium's three = the middle ones)
+#   Polyp Mortar x2 on the far ridge: t 74, x 84, 150
+#   Sirens on the cavern's last stack: t 76, x 250, 330, 410 (hard's third = the leftmost; §5 H4)
+#   Polyp Mortar x2 on the caldera's rim: t 92, x 110, 370
+#   the buoy (`drops:`): {t: 88, x: 240, y: 380, pickup: armour patch, sprite: service-buoy}  (tools/art/l28_props.py: Level 25's buoy in Thera Deep's orange)
+
+# static lights this art assumes (H3's underwater_look `lights:`; the pools are the game's light map, not
+# baked):
+#   lights:
+#     - {scroll: 450, x: 40, radius: 70, colour: 40ffc8}   # the flesh lamp at t~6
+#     - {scroll: 990, x: 440, radius: 70, colour: 40ffc8}   # the flesh lamp at t~10.5
+#     - {scroll: 1530, x: 60, radius: 70, colour: 40ffc8}   # the flesh lamp at t~15
+#     - {scroll: 2010, x: 420, radius: 70, colour: 40ffc8}   # the flesh lamp at t~19
+#     - {scroll: 2820, x: 36, radius: 70, colour: 40ffc8}   # the flesh lamp at t~26
+#     - {scroll: 3645, x: 444, radius: 70, colour: 40ffc8}   # the flesh lamp at t~33.5
+#     - {scroll: 4800, x: 240, radius: 70, colour: 40ffc8}   # the flesh lamp at t~44
+#     - {scroll: 6170, x: 306, radius: 140, colour: ffa040}   # the cavern's warmth at t~54
+#     - {scroll: 6830, x: 269, radius: 140, colour: ffa040}   # the cavern's warmth at t~60
+#     - {scroll: 7490, x: 209, radius: 140, colour: ffa040}   # the cavern's warmth at t~66
+#     - {scroll: 8150, x: 84, radius: 140, colour: ffa040}   # the cavern's warmth at t~72
+#     - {scroll: 8810, x: 372, radius: 140, colour: ffa040}   # the cavern's warmth at t~78
+#     - {scroll: 9190, x: 70, radius: 110, colour: ff5a24}   # fissure-1's red-amber
+#     - {scroll: 9490, x: 330, radius: 110, colour: ff5a24}   # fissure-2's red-amber
+#     - {scroll: 9790, x: 190, radius: 110, colour: ff5a24}   # fissure-3's red-amber
+#     - {scroll: 10040, x: 420, radius: 110, colour: ff5a24}   # fissure-4's red-amber
+#     - {scroll: 11109, x: 240, radius: 260, colour: d8ffa0}   # the vent's throat (screen 240, 330 on the halted arena)
+#     - {scroll: 12146, x: 240, radius: 300, colour: c8e8ff}   # the light from above in the shaft's last stretch

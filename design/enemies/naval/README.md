@@ -3,7 +3,7 @@ title: Naval enemies
 design: approved
 implementation: in-progress
 art: final
-updated: 2026-10-24
+updated: 2026-10-25
 ---
 
 # Naval enemies
@@ -30,7 +30,7 @@ Promoted to their own documents for the Acts 1–2 wrap-up, plus the Act 4 draft
 | [siren](siren/README.md) | Wall nest whose sonar ring slows the ship (L25) | approved | in-progress | final |
 | [spiral-nautilus](spiral-nautilus/README.md) | Armoured shell orbiting the ship, uncoils to fire a spiral (L25) | approved | in-progress | final |
 | [glow-angler](glow-angler/README.md) | Dark-water ambusher with a pickup-like lure that lunges and rings (L26) | approved | in-progress | final |
-| [depth-hunter](depth-hunter/README.md) | Unmarked grey human sub drone, shootable homing torpedoes from below, hint 3 (L27) | approved | in-progress | chosen |
+| [depth-hunter](depth-hunter/README.md) | Unmarked grey human sub drone, shootable homing torpedoes from below, hint 3 (L27) | approved | in-progress | final |
 
 ## Design
 
@@ -143,8 +143,8 @@ under-water grade of the unit's first level (Q2 a, pending the user's review); g
 | [concept/glow-angler-final-r55-a.gif](concept/glow-angler-final-r55-a.gif) | Anglers in the black as a bead and two eyes, the stalk fading in, a lunge and its ring, one shot, a gold pickup beside them, the Sonar Pulse | chosen (round 55, F.3: accepted as final) |
 | [concept/dark-units-final-r55-a.png](concept/dark-units-final-r55-a.png) | Level 26's glow-only frames (`tools/art/l26_glows.py`): the Driftjelly's veined look, the Eel Swarm at rest by heading and part; every unit of the level in the cone, in the dark and as glow only (sheet) | chosen (round 55, F.4: accepted as final) |
 | [concept/dark-units-final-r55-a.gif](concept/dark-units-final-r55-a.gif) | The scarp in the dark: jellies, a snake, a Nautilus pair (one uncoiling), two Sirens at a cave singing, the Sonar Pulse | chosen (round 55, F.4: accepted as final) |
-| [concept/depth-hunter-final-r57-a.png](concept/depth-hunter-final-r57-a.png) | Depth Hunter final frames (`tools/art/depth_hunter.py`, round 48 b, the flat glider): 16 headings x 2 nozzle frames, the glow-only slit and nozzles, its own torpedo (16 headings, motor glow), wake, launch, hull break and oil bloom (sheet) | proposed (round 57) |
-| [concept/depth-hunter-final-r57-a.gif](concept/depth-hunter-final-r57-a.gif) | A column of three rising out of the deep in the chimney garden, holding low facing up, torpedoes homing, one shot down, one Hunter breaking | proposed (round 57) |
+| [concept/depth-hunter-final-r57-a.png](concept/depth-hunter-final-r57-a.png) | Depth Hunter final frames (`tools/art/depth_hunter.py`, round 48 b, the flat glider): 16 headings x 2 nozzle frames, the glow-only slit and nozzles, its own torpedo (16 headings, motor glow), wake, launch, hull break and oil bloom (sheet) | chosen (round 57: accepted as final) |
+| [concept/depth-hunter-final-r57-a.gif](concept/depth-hunter-final-r57-a.gif) | A column of three rising out of the deep in the chimney garden, holding low facing up, torpedoes homing, one shot down, one Hunter breaking | chosen (round 57: accepted as final) |
 
 ## Implementation
 
@@ -179,3 +179,4 @@ under-water grade of the unit's first level (Q2 a, pending the user's review); g
 - 2026-10-21 (Act 4 design phase, step m8-denemies): the six roster units plus two new popcorn swimmers (Glassfin `tiny`, Barbfin `small`, round 48 Q3 a, pending the user's review) promoted to draft specs; the roster is empty. The Glow Angler's lure follows round 48 Q6 a (a near-miss lure, which answers the open question above). Returning units' under-water notes added.
 - 2026-10-22 (user, round 52, closed): the Eel Swarm's (F.2) and the Glassfin's (F.3) final frames accepted; both parts `art: final`.
 - 2026-10-23 (user, round 53, closed): the Abyss Ray's (F.2) and the Barbfin's (F.3) final frames accepted; both parts `art: final`.
+- 2026-10-25 (user, [round 57](../../concept-rounds/round-57/README.md) closed): the Depth Hunter's final frames accepted as final (F.2); the part stays `art: final`.

@@ -4160,7 +4160,7 @@ Edit: 24.00 s, band RMS −45.7 dB, peak −16.1 dBFS, −30.0 LUFS.
 ## Concept round 57, step AUD-G (Level 27: the vent field's bed, the heat plumes, the bend, the Depth Hunter's torpedoes and hull break, the relay beacons, the *Marlin*, the hull-code scan)
 
 The generator is `tools/concept/audio/sfx_r57g.py` (Freesound HQ previews: the sfx are cut, slowed, glided, layered,
-smoothed, pulsed, faded, filtered and looped; only the scan ping is synthesized). Pending the user's picks in round 57.
+smoothed, pulsed, faded, filtered and looped; only the scan ping is synthesized). Round 57 closed (2026-10-25): the picks are bed a, tell b, eruption a, bend a, launch a, run b, impact b, hum a, break b, crack a, hull break a, scan b; the rejected files are in `rejected/`.
 Passed over (read in their descriptions): "Simulated jet engine burner" (a processed gasoline burner), a "Rocket launch"
 mixed from jets, fireworks and dynamite, synthesized power-line hums (ZynAddSubFX), "Underwater Rumble" and
 "Underwater_rumble_CsG" (designed), Akkaittou's "UnderWater_Explosion" set (synthetic), the circuit-breaker "sparks"
@@ -4381,3 +4381,359 @@ Use: Level 27 at t≈68, once a run: Varga's hull-code scan of the wreck as it s
 Brief: a single scanner ping: clean, clear and short with a soft water tail, an instrument, not the Sonar Pulse's sonar ping; well under the voice and the motif (synthesized: a UI-like sound).
 This one: synthesized: a soft rising sweep (600 to 1800 Hz in 0.28 s) landing on a glassy two-tone ping (1800 and 2700 Hz), through the same reverb: a 'whee-ping', more of a scan locking on, 2.2 s.
 Edit: 2.20 s, the loudest 100 ms band −24.0 dB, peak −16.4 dBFS, −25.0 LUFS.
+
+## Concept round 58, step AUD-H (Level 28: the hatchery and caldera beds, the Abyssal Maw, the shaft, the breakout, the Ascendancy cruisers)
+
+The generator is `tools/concept/audio/sfx_r58h.py` (Freesound HQ previews: the sfx are cut, slowed, glided, layered,
+swelled, faded, filtered, looped and levelled, three of them through a reverb for the brief's long tails; the
+hydrophone pass-by and the horse's snort are smoothed before cutting, their short pops and flutter out; nothing is
+synthesized). Under water (the beds and the Maw) every layer is muffled by its own low-pass; above the ice (the
+breakout and the cruisers) the layers stay open. Passed over (read in their descriptions): a "Lion" growl of unclear
+origin, "fake" and synthesized whales (a creaking door, Ableton, a virtual analog), flak and cannon booms made of
+firecrackers or in Audacity, a "Distant Cannon Fire (simulated)", bear growls emulated with a voice transformer, the
+"Closing large metal door" (a Kontakt sound-design impact), "Big Swoosh" (heavy processing), an M777 recording with
+abusive tags, the "Designed Ice" library, a lamb-meat tear recorded too quietly. Reused, no entry: the under-water
+explosion family (round 52 a), the *Marlin*'s crack for *Pelagic-3* (round 57 a), `europa-ice` above the ice (round
+51), the Depth Hunters' sounds (round 57).
+
+### europa-hatchery-r58-a — "26.07.21- Real Human Heartbeat - Contact Mic Recording 4" by Valerie-Vivegnis + "Deep Sea Ambience" by jhumbucker + "Throat Singing in a Cave" by ItsThatRoboGuy + "wood creaks deep long door or ship hull1.flac" by kyles
+
+Proposed (round 58), cut from the HQ previews by `tools/concept/audio/sfx_r58h.py`.
+Sources: <https://freesound.org/people/Valerie-Vivegnis/sounds/863689/> (26.07.21- Real Human Heartbeat - Contact Mic Recording 4 by Valerie-Vivegnis, CC-BY 4.0), <https://freesound.org/people/jhumbucker/sounds/193822/> (Deep Sea Ambience by jhumbucker, CC0 1.0), <https://freesound.org/people/ItsThatRoboGuy/sounds/816640/> (Throat Singing in a Cave by ItsThatRoboGuy, CC0 1.0), <https://freesound.org/people/kyles/sounds/452107/> (wood creaks deep long door or ship hull1.flac by kyles, CC0 1.0).
+Use: Level 28 from the launch through the Brood Galleries and the Spawning Cavern (sections 1-3, t=0-80): the hatchery's ambience bed under the music (alone in section 1), in place of `europa-vents`; the caldera rumble takes over in the antechamber.
+Brief: a slow warm throb (the hatchery alive), a distant Choir hum now and then, the egg racks creaking; deep, organic and close, quieter than the vent field; no bubbles, nothing that pops, a seamless loop; a real recording, heavy, nothing bubbly or popping.
+This one: a real heartbeat (a contact microphone on the chest) slowed to half speed and muffled at 300 Hz, a slow double throb, over a deep under-water drone slowed to 0.7; once a loop throat singing recorded in a cave, slowed to half and far off (muffled at 700 Hz), swelling in and out over 9 s (the Choir), and two deep wooden creaks of a ship's hull slowed to 0.5 (the egg racks): 24.0 s loop.
+Edit: 24.00 s, band RMS −44.6 dB, peak −8.8 dBFS, −29.0 LUFS.
+
+### europa-hatchery-r58-b — "Massive Structure Bend" by Kostas17 + "26.07.21- Real Human Heartbeat - Contact Mic Recording 4" by Valerie-Vivegnis + "choir vocalising 01.wav" by klankbeeld + "Mooring Rope.wav" by Rmutt
+
+Proposed (round 58), cut from the HQ previews by `tools/concept/audio/sfx_r58h.py`.
+Sources: <https://freesound.org/people/Kostas17/sounds/529620/> (Massive Structure Bend by Kostas17, CC-BY 3.0), <https://freesound.org/people/Valerie-Vivegnis/sounds/863689/> (26.07.21- Real Human Heartbeat - Contact Mic Recording 4 by Valerie-Vivegnis, CC-BY 4.0), <https://freesound.org/people/klankbeeld/sounds/169946/> (choir vocalising 01.wav by klankbeeld, CC-BY 4.0), <https://freesound.org/people/Rmutt/sounds/145721/> (Mooring Rope.wav by Rmutt, CC0 1.0).
+Use: Level 28 from the launch through the Brood Galleries and the Spawning Cavern (sections 1-3, t=0-80): the hatchery's ambience bed under the music (alone in section 1), in place of `europa-vents`; the caldera rumble takes over in the antechamber.
+Brief: a slow warm throb (the hatchery alive), a distant Choir hum now and then, the egg racks creaking; deep, organic and close, quieter than the vent field; no bubbles, nothing that pops, a seamless loop; a real recording, heavy, nothing bubbly or popping.
+This one: a cello's low bowed rumble slowed to 0.6 (a massive structure bending) muffled at 300 Hz, the heartbeat slower under it (0.42): darker and more of a drone than a, the throb further down; once a loop a church choir vocalising, slowed to half and far off (the Choir), and a ferry's mooring rope creaking on its cleat, slowed (the racks): 24.0 s loop.
+Edit: 24.00 s, band RMS −42.1 dB, peak −13.8 dBFS, −29.0 LUFS.
+
+### caldera-rumble-r58-a — "Foundry Furnace.wav" by Walter_Odington + "High Force Waterfall, Bottom of Gorge, Massive Roar, Teesdale UK - Stereo" by Hear_it_use_it
+
+Proposed (round 58), cut from the HQ previews by `tools/concept/audio/sfx_r58h.py`.
+Sources: <https://freesound.org/people/Walter_Odington/sounds/31566/> (Foundry Furnace.wav by Walter_Odington, CC0 1.0), <https://freesound.org/people/Hear_it_use_it/sounds/849934/> (High Force Waterfall, Bottom of Gorge, Massive Roar, Teesdale UK - Stereo by Hear_it_use_it, CC-BY 4.0).
+Use: Level 28 from the antechamber (section 4, t=80) through the arena: the vent's rumble swelling over the hatchery bed (the near-silence before the Choir at t=97.5), under the fight, cut at the kill.
+Brief: the vent under the caldera: a deep, hot, steady roar of water, closer and heavier than the hatchery, swelling now and then; no bubbles, no hiss-pops, a seamless loop; a real recording, heavy, nothing bubbly or popping.
+This one: a foundry furnace's roar slowed to half and muffled at 700 Hz over the bottom-of-the-gorge waterfall (the vent field's bed) slowed further to 0.35: a hot, close furnace roar, 16.0 s loop.
+Edit: 16.00 s, band RMS −40.5 dB, peak −15.1 dBFS, −27.0 LUFS.
+
+### caldera-rumble-r58-b — "NIAGARA WATERS ROARING.mp3" by KevinT1001 + "Earthquake  **audible only with appropriate speakers**" by MBARI_MARS
+
+Proposed (round 58), cut from the HQ previews by `tools/concept/audio/sfx_r58h.py`.
+Sources: <https://freesound.org/people/KevinT1001/sounds/379905/> (NIAGARA WATERS ROARING.mp3 by KevinT1001, CC0 1.0), <https://freesound.org/people/MBARI_MARS/sounds/369485/> (Earthquake  **audible only with appropriate speakers** by MBARI_MARS, CC0 1.0).
+Use: Level 28 from the antechamber (section 4, t=80) through the arena: the vent's rumble swelling over the hatchery bed (the near-silence before the Choir at t=97.5), under the fight, cut at the kill.
+Brief: the vent under the caldera: a deep, hot, steady roar of water, closer and heavier than the hatchery, swelling now and then; no bubbles, no hiss-pops, a seamless loop; a real recording, heavy, nothing bubbly or popping.
+This one: Niagara's roar slowed to 0.3 and muffled at 380 Hz, and once a loop a deep-sea earthquake (a hydrophone at 900 m) slowed to 0.6 swelling under it: lower and more of a water rumble than a, with a heave, 16.0 s loop.
+Edit: 16.00 s, band RMS −39.1 dB, peak −12.7 dBFS, −27.0 LUFS.
+
+### shaft-climb-r58-a — "High Force Waterfall, Bottom of Gorge, Massive Roar, Teesdale UK - Stereo" by Hear_it_use_it + "Ice - Lake fractures" by Vrymaa
+
+Proposed (round 58), cut from the HQ previews by `tools/concept/audio/sfx_r58h.py`.
+Sources: <https://freesound.org/people/Hear_it_use_it/sounds/849934/> (High Force Waterfall, Bottom of Gorge, Massive Roar, Teesdale UK - Stereo by Hear_it_use_it, CC-BY 4.0), <https://freesound.org/people/Vrymaa/sounds/737896/> (Ice - Lake fractures by Vrymaa, CC0 1.0).
+Use: Level 28 after the kill, once a run (t=105-115, K+5 to K+15): the climb up the Vrell drill shaft under the ambience alone (the music silent), Okafor's "up the shaft" at ≈ K+8.6; the breakout follows at its end.
+Brief: a long rush rising with the climb: the water roaring past, its pitch and brightness climbing as the pressure eases and the light grows, the ice ceiling groaning and cracking ahead in its second half; no bubbles; a real recording, heavy, nothing bubbly or popping.
+This one: the waterfall's roar gliding up from 0.3 to 0.75 and swelling, muffled at 1.4 kHz, and from 4.5 s a frozen lake's deep fracture booms (a real lake, 15 cm of ice) slowed to 0.6: a climbing rush with the ice booming ahead, 10.0 s.
+Edit: 10.00 s, the loudest 100 ms band −24.1 dB, peak −10.8 dBFS, −24.8 LUFS.
+
+### shaft-climb-r58-b — "NIAGARA WATERS ROARING.mp3" by KevinT1001 + "glacierCalving.mp3" by CCCanary
+
+Proposed (round 58), cut from the HQ previews by `tools/concept/audio/sfx_r58h.py`.
+Sources: <https://freesound.org/people/KevinT1001/sounds/379905/> (NIAGARA WATERS ROARING.mp3 by KevinT1001, CC0 1.0), <https://freesound.org/people/CCCanary/sounds/271008/> (glacierCalving.mp3 by CCCanary, CC0 1.0).
+Use: Level 28 after the kill, once a run (t=105-115, K+5 to K+15): the climb up the Vrell drill shaft under the ambience alone (the music silent), Okafor's "up the shaft" at ≈ K+8.6; the breakout follows at its end.
+Brief: a long rush rising with the climb: the water roaring past, its pitch and brightness climbing as the pressure eases and the light grows, the ice ceiling groaning and cracking ahead in its second half; no bubbles; a real recording, heavy, nothing bubbly or popping.
+This one: Niagara's roar gliding up from 0.3 to 0.7 and swelling, and from 3.5 s a glacier's ice grinding against itself (Glacier Bay, Alaska) slowed to half: rounder than a, the ice groaning rather than booming, 10.0 s.
+Edit: 10.00 s, the loudest 100 ms band −24.6 dB, peak −7.6 dBFS, −20.0 LUFS.
+
+### maw-arrival-r58-a — "Blue Whale B call @ 5X" by MBARI_MARS + "Earthquake  **audible only with appropriate speakers**" by MBARI_MARS
+
+Proposed (round 58), cut from the HQ previews by `tools/concept/audio/sfx_r58h.py`.
+Sources: <https://freesound.org/people/MBARI_MARS/sounds/343682/> (Blue Whale B call @ 5X by MBARI_MARS, CC-BY 4.0), <https://freesound.org/people/MBARI_MARS/sounds/369485/> (Earthquake  **audible only with appropriate speakers** by MBARI_MARS, CC0 1.0).
+Use: Level 28's arena (t=104 on, the clock halted while the Maw lives; ≈ 130 s at medium): once, the Maw's arrival after the boss warning, the coil rising round the edges over 3 s and the head lifting last, jaw open (≈ 6 s).
+Brief: a vast, slow, subsonic groan, a whale or a ship's hull under stress pitched down, with a long reverb tail; huge and far below; no bubbles; a real recording, heavy, nothing bubbly or popping.
+This one: a blue whale's B call (a hydrophone at 900 m, recorded at 5×) slowed and sinking (0.95 to 0.7) over a deep-sea earthquake's rumble slowed to half, through a 3 s reverb: a long, moaning, rising-and-falling groan over a heave of the sea floor.
+Edit: 7.80 s, the loudest 100 ms band −16.9 dB, peak −5.2 dBFS, −16.8 LUFS.
+
+### maw-arrival-r58-b — "blue whale D calls **audible only with appropriate speakers**" by MBARI_MARS + "Massive Structure Bend" by Kostas17 + "wood creaks deep long door or ship hull1.flac" by kyles
+
+Proposed (round 58), cut from the HQ previews by `tools/concept/audio/sfx_r58h.py`.
+Sources: <https://freesound.org/people/MBARI_MARS/sounds/681896/> (blue whale D calls **audible only with appropriate speakers** by MBARI_MARS, CC-BY 4.0), <https://freesound.org/people/Kostas17/sounds/529620/> (Massive Structure Bend by Kostas17, CC-BY 3.0), <https://freesound.org/people/kyles/sounds/452107/> (wood creaks deep long door or ship hull1.flac by kyles, CC0 1.0).
+Use: Level 28's arena (t=104 on, the clock halted while the Maw lives; ≈ 130 s at medium): once, the Maw's arrival after the boss warning, the coil rising round the edges over 3 s and the head lifting last, jaw open (≈ 6 s).
+Brief: a vast, slow, subsonic groan, a whale or a ship's hull under stress pitched down, with a long reverb tail; huge and far below; no bubbles; a real recording, heavy, nothing bubbly or popping.
+This one: a blue whale's D calls (real speed sub-bass, sped to 3 to be heard) sweeping down, a bowed cello's low structure groan and a ship's hull creak slowed to 0.35, through the same reverb: two falling groans, more of a hull straining than a.
+Edit: 7.80 s, the loudest 100 ms band −17.0 dB, peak −6.1 dBFS, −17.2 LUFS.
+
+### maw-gill-r58-a — "26.07.21- Real Human Heartbeat - Contact Mic Recording 4" by Valerie-Vivegnis + "20170507_horse.snort.wav" by dobroide
+
+Proposed (round 58), cut from the HQ previews by `tools/concept/audio/sfx_r58h.py`.
+Sources: <https://freesound.org/people/Valerie-Vivegnis/sounds/863689/> (26.07.21- Real Human Heartbeat - Contact Mic Recording 4 by Valerie-Vivegnis, CC-BY 4.0), <https://freesound.org/people/dobroide/sounds/392307/> (20170507_horse.snort.wav by dobroide, CC-BY 4.0).
+Use: Level 28's arena (t=104 on, the clock halted while the Maw lives; ≈ 130 s at medium), phases 1-2: each gill sac's 0.6 s swell before its ring of 10 (phase 1 a sac every 1.6 s, phase 2 every 2.4 s; a destroyed sac's turn is skipped), so often, under the fire.
+Brief: a deep pressure thump with a soft exhale: like a heartbeat under water, a breath going out; never a bubble, nothing that pops; a real recording, heavy, nothing bubbly or popping.
+This one: the real heartbeat's double thump slowed to 0.55, then a horse's snort slowed and muffled at 1 kHz: a 'dum-dum, hhhff', 0.9 s.
+Edit: 0.94 s, the loudest 100 ms band −25.3 dB, peak −6.1 dBFS, −20.3 LUFS.
+
+### maw-gill-r58-b — "Deep Thumps.wav" by eardeer + "Sea blowhole, breathe. Bufador de mar, respira." by SonoRec
+
+Proposed (round 58), cut from the HQ previews by `tools/concept/audio/sfx_r58h.py`.
+Sources: <https://freesound.org/people/eardeer/sounds/400997/> (Deep Thumps.wav by eardeer, CC0 1.0), <https://freesound.org/people/SonoRec/sounds/824087/> (Sea blowhole, breathe. Bufador de mar, respira. by SonoRec, CC0 1.0).
+Use: Level 28's arena (t=104 on, the clock halted while the Maw lives; ≈ 130 s at medium), phases 1-2: each gill sac's 0.6 s swell before its ring of 10 (phase 1 a sac every 1.6 s, phase 2 every 2.4 s; a destroyed sac's turn is skipped), so often, under the fire.
+Brief: a deep pressure thump with a soft exhale: like a heartbeat under water, a breath going out; never a bubble, nothing that pops; a real recording, heavy, nothing bubbly or popping.
+This one: a deep thump, then a sea blowhole breathing out through the rock, slowed to 0.6 and muffled: one heavier 'thoom' and a longer, airier exhale than a, 1.0 s.
+Edit: 1.00 s, the loudest 100 ms band −27.5 dB, peak −6.7 dBFS, −19.4 LUFS.
+
+### maw-throat-r58-a — "Angry tiger.wav" by schots + "Steel mill low frequency drone" by sarana
+
+Proposed (round 58), cut from the HQ previews by `tools/concept/audio/sfx_r58h.py`.
+Sources: <https://freesound.org/people/schots/sounds/439280/> (Angry tiger.wav by schots, CC0 1.0), <https://freesound.org/people/sarana/sounds/567148/> (Steel mill low frequency drone by sarana, CC0 1.0).
+Use: Level 28's arena (t=104 on, the clock halted while the Maw lives; ≈ 130 s at medium): the throat's glow before each attack from the jaw: the phase-1 fan (0.6 s, the jaw open every 5 s) and the phase-2 fan wall (0.8 s, every 4 s).
+Brief: a rising low drone with a growl in it: the throat charging, building into the shot; animal, deep, short; a real recording, heavy, nothing bubbly or popping.
+This one: a caged tiger's growl slowed and gliding up (0.45 to 0.7), swelling, over a steel mill's low drone rising with it: a growl climbing into the shot, 0.9 s.
+Edit: 0.90 s, the loudest 100 ms band −22.0 dB, peak −8.9 dBFS, −22.6 LUFS.
+
+### maw-throat-r58-b — "Throat Singing in a Cave" by ItsThatRoboGuy + "Bear Angry Growl" by celldroid
+
+Proposed (round 58), cut from the HQ previews by `tools/concept/audio/sfx_r58h.py`.
+Sources: <https://freesound.org/people/ItsThatRoboGuy/sounds/816640/> (Throat Singing in a Cave by ItsThatRoboGuy, CC0 1.0), <https://freesound.org/people/celldroid/sounds/763026/> (Bear Angry Growl by celldroid, CC0 1.0).
+Use: Level 28's arena (t=104 on, the clock halted while the Maw lives; ≈ 130 s at medium): the throat's glow before each attack from the jaw: the phase-1 fan (0.6 s, the jaw open every 5 s) and the phase-2 fan wall (0.8 s, every 4 s).
+Brief: a rising low drone with a growl in it: the throat charging, building into the shot; animal, deep, short; a real recording, heavy, nothing bubbly or popping.
+This one: the cave's throat singing slowed and gliding up (0.4 to 0.62) with a black bear's angry growl (recorded in the wild) slowed in it: more of a sung drone than a, the growl under it, 0.9 s.
+Edit: 0.90 s, the loudest 100 ms band −22.1 dB, peak −5.6 dBFS, −21.3 LUFS.
+
+### maw-sweep-groan-r58-a — "glacierCalving.mp3" by CCCanary + "wood creaks deep long door or ship hull1.flac" by kyles
+
+Proposed (round 58), cut from the HQ previews by `tools/concept/audio/sfx_r58h.py`.
+Sources: <https://freesound.org/people/CCCanary/sounds/271008/> (glacierCalving.mp3 by CCCanary, CC0 1.0), <https://freesound.org/people/kyles/sounds/452107/> (wood creaks deep long door or ship hull1.flac by kyles, CC0 1.0).
+Use: Level 28's arena (t=104 on, the clock halted while the Maw lives; ≈ 130 s at medium), phases 2-3: each coil sweep's tell (1.2 s; easy 1.5, hard 0.9), silt streaming off the bight's plates and its glow line brightening (a sweep every 7 s, phase 3 every 6 s); the swing follows (maw-sweep-swing).
+Brief: a grinding groan of plates: the coil's armour straining before it swings, ice or a hull creaking, slowed and heavy; a real recording, heavy, nothing bubbly or popping.
+This one: the glacier's ice grinding against itself, slowed and rising (0.45 to 0.6), with a ship's hull creak slowed to 0.4: an icy grinding groan, 1.2 s.
+Edit: 1.20 s, the loudest 100 ms band −21.0 dB, peak −8.2 dBFS, −18.7 LUFS.
+
+### maw-sweep-groan-r58-b — "Massive Structure Bend" by Kostas17 + "wood creaks deep long door or ship hull1.flac" by kyles
+
+Proposed (round 58), cut from the HQ previews by `tools/concept/audio/sfx_r58h.py`.
+Sources: <https://freesound.org/people/Kostas17/sounds/529620/> (Massive Structure Bend by Kostas17, CC-BY 3.0), <https://freesound.org/people/kyles/sounds/452107/> (wood creaks deep long door or ship hull1.flac by kyles, CC0 1.0).
+Use: Level 28's arena (t=104 on, the clock halted while the Maw lives; ≈ 130 s at medium), phases 2-3: each coil sweep's tell (1.2 s; easy 1.5, hard 0.9), silt streaming off the bight's plates and its glow line brightening (a sweep every 7 s, phase 3 every 6 s); the swing follows (maw-sweep-swing).
+Brief: a grinding groan of plates: the coil's armour straining before it swings, ice or a hull creaking, slowed and heavy; a real recording, heavy, nothing bubbly or popping.
+This one: the cello's low structure groan slowed to 0.55 with another of the hull's deep creaks slowed to 0.35: deeper and woodier than a, no ice in it, 1.2 s.
+Edit: 1.20 s, the loudest 100 ms band −24.7 dB, peak −5.3 dBFS, −17.0 LUFS.
+
+### maw-sweep-swing-r58-a — "WATRMvmt underwater passby slosh medium light whoosh" by jerry.berumen + "DepthBomb_01.aif" by ZeSoundResearchInc.
+
+Proposed (round 58), cut from the HQ previews by `tools/concept/audio/sfx_r58h.py`.
+Sources: <https://freesound.org/people/jerry.berumen/sounds/772895/> (WATRMvmt underwater passby slosh medium light whoosh by jerry.berumen, CC-BY 4.0), <https://freesound.org/people/ZeSoundResearchInc./sounds/147876/> (DepthBomb_01.aif by ZeSoundResearchInc., CC0 1.0).
+Use: Level 28's arena (t=104 on, the clock halted while the Maw lives; ≈ 130 s at medium), phases 2-3: each coil sweep's swing right after its groan (in 0.5 s, held 0.8 s; it hurts: `heavy` 10 and a push).
+Brief: a heavy swish of displaced water: a huge body moving fast, a deep 'whoom' with weight; no splash, no bubbles; a real recording, heavy, nothing bubbly or popping.
+This one: a hydrophone's under-water pass-by slowed to 0.6 and muffled, a depth bomb's low boom under it: a deep 'whoomm', 1.15 s.
+Edit: 1.15 s, the loudest 100 ms band −19.0 dB, peak −4.8 dBFS, −18.3 LUFS.
+
+### maw-sweep-swing-r58-b — "R24-18-Tent or Tarp Whoosh.wav" by craigsmith + "Deep Thumps.wav" by eardeer
+
+Proposed (round 58), cut from the HQ previews by `tools/concept/audio/sfx_r58h.py`.
+Sources: <https://freesound.org/people/craigsmith/sounds/481896/> (R24-18-Tent or Tarp Whoosh.wav by craigsmith, CC0 1.0), <https://freesound.org/people/eardeer/sounds/400997/> (Deep Thumps.wav by eardeer, CC0 1.0).
+Use: Level 28's arena (t=104 on, the clock halted while the Maw lives; ≈ 130 s at medium), phases 2-3: each coil sweep's swing right after its groan (in 0.5 s, held 0.8 s; it hurts: `heavy` 10 and a push).
+Brief: a heavy swish of displaced water: a huge body moving fast, a deep 'whoom' with weight; no splash, no bubbles; a real recording, heavy, nothing bubbly or popping.
+This one: a tarp whooshed (the Abyss Ray's glide's source) slowed to half and muffled, a deep thump in it: drier and more of a sweep than a, 1.0 s.
+Edit: 1.00 s, the loudest 100 ms band −19.3 dB, peak −3.1 dBFS, −15.4 LUFS.
+
+### maw-shed-r58-a — "Birch bark tearing, patting, rubbing (denoised)" by DeqstersLab + "WATRMvmt underwater passby slosh medium light whoosh" by jerry.berumen
+
+Proposed (round 58), cut from the HQ previews by `tools/concept/audio/sfx_r58h.py`.
+Sources: <https://freesound.org/people/DeqstersLab/sounds/847210/> (Birch bark tearing, patting, rubbing (denoised) by DeqstersLab, CC-BY 4.0), <https://freesound.org/people/jerry.berumen/sounds/772895/> (WATRMvmt underwater passby slosh medium light whoosh by jerry.berumen, CC-BY 4.0).
+Use: Level 28's arena (t=104 on, the clock halted while the Maw lives; ≈ 130 s at medium): each Eel Swarm shed, as the coil plate's 1.0 s lime flare ends and the eel slips out (phase 1 every 10 s, phase 2 every 12, phase 3 every 8).
+Brief: a wet tearing slide, short: a plate peeling open and something long slipping out; no squelch, no pop; a real recording, heavy, nothing bubbly or popping.
+This one: birch bark torn from a branch, slowed to half and muffled at 2.5 kHz, a hydrophone's slosh past the microphone under it: a fibrous 'krrrsh' sliding off, 0.7 s.
+Edit: 0.70 s, the loudest 100 ms band −23.5 dB, peak −5.3 dBFS, −23.2 LUFS.
+
+### maw-shed-r58-b — "Peeling corn on the cob" by AlexLane + "Tearing.wav" by juskiddink
+
+Proposed (round 58), cut from the HQ previews by `tools/concept/audio/sfx_r58h.py`.
+Sources: <https://freesound.org/people/AlexLane/sounds/484178/> (Peeling corn on the cob by AlexLane, CC0 1.0), <https://freesound.org/people/juskiddink/sounds/59966/> (Tearing.wav by juskiddink, CC-BY 4.0).
+Use: Level 28's arena (t=104 on, the clock halted while the Maw lives; ≈ 130 s at medium): each Eel Swarm shed, as the coil plate's 1.0 s lime flare ends and the eel slips out (phase 1 every 10 s, phase 2 every 12, phase 3 every 8).
+Brief: a wet tearing slide, short: a plate peeling open and something long slipping out; no squelch, no pop; a real recording, heavy, nothing bubbly or popping.
+This one: a husk peeled off a corn cob (close, a Schoeps microphone) slowed to 0.6, with sole leather tearing on a cobbler's wheel slowed in it: wetter and more of a peel than a, 0.7 s.
+Edit: 0.70 s, the loudest 100 ms band −23.1 dB, peak −5.1 dBFS, −22.6 LUFS.
+
+### maw-dive-r58-a — "High Force Waterfall, Bottom of Gorge, Massive Roar, Teesdale UK - Stereo" by Hear_it_use_it + "blue whale D calls **audible only with appropriate speakers**" by MBARI_MARS + "DepthBomb_05.aif" by ZeSoundResearchInc.
+
+Proposed (round 58), cut from the HQ previews by `tools/concept/audio/sfx_r58h.py`.
+Sources: <https://freesound.org/people/Hear_it_use_it/sounds/849934/> (High Force Waterfall, Bottom of Gorge, Massive Roar, Teesdale UK - Stereo by Hear_it_use_it, CC-BY 4.0), <https://freesound.org/people/MBARI_MARS/sounds/681896/> (blue whale D calls **audible only with appropriate speakers** by MBARI_MARS, CC-BY 4.0), <https://freesound.org/people/ZeSoundResearchInc./sounds/147880/> (DepthBomb_05.aif by ZeSoundResearchInc., CC0 1.0).
+Use: Level 28's arena (t=104 on, the clock halted while the Maw lives; ≈ 130 s at medium), phase 2: once, as the head falls below 50 %: the roar and the coil sliding off the edges into the dark (2 s) while the music drops away; the 8 s of darkness follow.
+Brief: a long falling roar and a pressure swell: the whole coil sinking, the sound dropping with it into the deep; no bubbles; a real recording, heavy, nothing bubbly or popping.
+This one: the waterfall's roar falling (0.6 to 0.25), a blue whale's D call sweeping down under it and a depth bomb's pressure boom, through a 2.5 s reverb: a roar sinking away, 5.0 s with its tail.
+Edit: 5.00 s, the loudest 100 ms band −19.7 dB, peak −3.1 dBFS, −14.2 LUFS.
+
+### maw-dive-r58-b — "glacierCalving.mp3" by CCCanary + "Earthquake  **audible only with appropriate speakers**" by MBARI_MARS
+
+Proposed (round 58), cut from the HQ previews by `tools/concept/audio/sfx_r58h.py`.
+Sources: <https://freesound.org/people/CCCanary/sounds/271008/> (glacierCalving.mp3 by CCCanary, CC0 1.0), <https://freesound.org/people/MBARI_MARS/sounds/369485/> (Earthquake  **audible only with appropriate speakers** by MBARI_MARS, CC0 1.0).
+Use: Level 28's arena (t=104 on, the clock halted while the Maw lives; ≈ 130 s at medium), phase 2: once, as the head falls below 50 %: the roar and the coil sliding off the edges into the dark (2 s) while the music drops away; the 8 s of darkness follow.
+Brief: a long falling roar and a pressure swell: the whole coil sinking, the sound dropping with it into the deep; no bubbles; a real recording, heavy, nothing bubbly or popping.
+This one: the glacier's calving roar (the ice splitting apart) falling from 0.6 to 0.3 over the deep-sea earthquake falling with it, the same reverb: rougher and more of a collapse than a.
+Edit: 5.00 s, the loudest 100 ms band −18.5 dB, peak −3.0 dBFS, −22.5 LUFS.
+
+### maw-lunge-r58-a — "WATRMvmt underwater passby slosh medium light whoosh" by jerry.berumen + "Loud Chomping or Biting Sound with Chewing (Animal)" by OBXJohn + "DepthBomb_01.aif" by ZeSoundResearchInc.
+
+Proposed (round 58), cut from the HQ previews by `tools/concept/audio/sfx_r58h.py`.
+Sources: <https://freesound.org/people/jerry.berumen/sounds/772895/> (WATRMvmt underwater passby slosh medium light whoosh by jerry.berumen, CC-BY 4.0), <https://freesound.org/people/OBXJohn/sounds/535616/> (Loud Chomping or Biting Sound with Chewing (Animal) by OBXJohn, CC-BY 4.0), <https://freesound.org/people/ZeSoundResearchInc./sounds/147876/> (DepthBomb_01.aif by ZeSoundResearchInc., CC0 1.0).
+Use: Level 28's arena (t=104 on, the clock halted while the Maw lives; ≈ 130 s at medium), phase 2: once, after the dive: the head bursting up through the play plane and racing up the column in 0.8 s, jaws open (after the 2 s shadow tell; it hurts: `heavy` 10).
+Brief: a rushing surge and a jaw snap: water tearing past, then a heavy bite; big, no click; a real recording, heavy, nothing bubbly or popping.
+This one: the hydrophone's pass-by surging up (0.5 to 1.0), then a dog's jaws snapping shut on a treat slowed to 0.45 on a depth bomb's boom: a 'whoooOSH-CHOMP', 2.0 s (the Glow Angler's lunge made huge).
+Edit: 1.98 s, the loudest 100 ms band −17.0 dB, peak −2.8 dBFS, −20.6 LUFS.
+
+### maw-lunge-r58-b — "NIAGARA WATERS ROARING.mp3" by KevinT1001 + "Deep Thumps.wav" by eardeer + "DepthBomb_04.aif" by ZeSoundResearchInc.
+
+Proposed (round 58), cut from the HQ previews by `tools/concept/audio/sfx_r58h.py`.
+Sources: <https://freesound.org/people/KevinT1001/sounds/379905/> (NIAGARA WATERS ROARING.mp3 by KevinT1001, CC0 1.0), <https://freesound.org/people/eardeer/sounds/400997/> (Deep Thumps.wav by eardeer, CC0 1.0), <https://freesound.org/people/ZeSoundResearchInc./sounds/147873/> (DepthBomb_04.aif by ZeSoundResearchInc., CC0 1.0).
+Use: Level 28's arena (t=104 on, the clock halted while the Maw lives; ≈ 130 s at medium), phase 2: once, after the dive: the head bursting up through the play plane and racing up the column in 0.8 s, jaws open (after the 2 s shadow tell; it hurts: `heavy` 10).
+Brief: a rushing surge and a jaw snap: water tearing past, then a heavy bite; big, no click; a real recording, heavy, nothing bubbly or popping.
+This one: Niagara's roar surging up (0.35 to 0.9), then a huge gate's deep closing thump slowed to 0.7 on a depth bomb: a broader rush and a duller, heavier bite than a, 2.0 s.
+Edit: 1.98 s, the loudest 100 ms band −17.3 dB, peak −2.1 dBFS, −16.4 LUFS.
+
+### implant-spark-r58-a — "Welding_Electric Sparks.wav" by weaveofkev + "door metal heavy close both sides same time impact rattle1 on offmic +bg voices.wav" by kyles
+
+Proposed (round 58), cut from the HQ previews by `tools/concept/audio/sfx_r58h.py`.
+Sources: <https://freesound.org/people/weaveofkev/sounds/396240/> (Welding_Electric Sparks.wav by weaveofkev, CC0 1.0), <https://freesound.org/people/kyles/sounds/407301/> (door metal heavy close both sides same time impact rattle1 on offmic +bg voices.wav by kyles, CC0 1.0).
+Use: Level 28's arena (t=104 on, the clock halted while the Maw lives; ≈ 130 s at medium), phase 3: each Helix implant's 1.0 s tell (neck, left, right in turn), sparks and an amber flicker under the cracked casing, then its plate blowing aside and the core open.
+Brief: electrical crackle and an arcing buzz, a machine's sound, not a creature's (the clue), ending in a hard metal clunk as the plate lets go; no bubbles; a real recording, heavy, nothing bubbly or popping.
+This one: an arc welder's sparks (a real welding machine), three bursts run together and muffled at 4 kHz, then a heavy steel door's slam slowed: crackling sparks and a 'CLANK', 1.4 s.
+Edit: 1.38 s, the loudest 100 ms band −22.2 dB, peak −5.4 dBFS, −21.4 LUFS.
+
+### implant-spark-r58-b — "S16-18 Tesla coil sparking and humming.wav" by craigsmith + "heavy_mechanical_impacts_different_pitches_from_4_drawer_metal_file_cabinet_03232024" by Artninja
+
+Proposed (round 58), cut from the HQ previews by `tools/concept/audio/sfx_r58h.py`.
+Sources: <https://freesound.org/people/craigsmith/sounds/675760/> (S16-18 Tesla coil sparking and humming.wav by craigsmith, CC0 1.0), <https://freesound.org/people/Artninja/sounds/751170/> (heavy_mechanical_impacts_different_pitches_from_4_drawer_metal_file_cabinet_03232024 by Artninja, CC-BY 4.0).
+Use: Level 28's arena (t=104 on, the clock halted while the Maw lives; ≈ 130 s at medium), phase 3: each Helix implant's 1.0 s tell (neck, left, right in turn), sparks and an amber flicker under the cracked casing, then its plate blowing aside and the core open.
+Brief: electrical crackle and an arcing buzz, a machine's sound, not a creature's (the clue), ending in a hard metal clunk as the plate lets go; no bubbles; a real recording, heavy, nothing bubbly or popping.
+This one: a Tesla coil sparking and humming (a vintage film library recording) muffled at 4 kHz, then a heavy file cabinet's metal impact slowed: more hum and buzz than a's crackle, 1.4 s.
+Edit: 1.38 s, the loudest 100 ms band −22.3 dB, peak −10.5 dBFS, −18.7 LUFS.
+
+### implant-zap-r58-a — "high-voltage-discharge-2.wav" by follytowers
+
+Proposed (round 58), cut from the HQ previews by `tools/concept/audio/sfx_r58h.py`.
+Source: <https://freesound.org/people/follytowers/sounds/415962/> (high-voltage-discharge-2.wav by follytowers, CC0 1.0).
+Use: Level 28's arena (t=104 on, the clock halted while the Maw lives; ≈ 130 s at medium), phase 3: each discharge of an open implant (every 1.5 s while one is open): the 0.4 s amber arc crawling over the housing, then its burst of 3 electric bolts.
+Brief: a short arcing build and a hard electric zap: high voltage, dry and mechanical, not a laser and not a creature; a real recording, heavy, nothing bubbly or popping.
+This one: a Tesla coil's rotary spark-gap discharge building for 0.45 s, then one of its loudest cracks: a 'zzzzt-KRAK', 0.8 s.
+Edit: 0.80 s, the loudest 100 ms band −22.1 dB, peak −9.1 dBFS, −20.0 LUFS.
+
+### implant-zap-r58-b — "JacobsLadderSingle1.flac" by Halleck + "Taser/High Voltage discharge" by The_Chemical_Workshop
+
+Proposed (round 58), cut from the HQ previews by `tools/concept/audio/sfx_r58h.py`.
+Sources: <https://freesound.org/people/Halleck/sounds/19486/> (JacobsLadderSingle1.flac by Halleck, CC-BY 4.0), <https://freesound.org/people/The_Chemical_Workshop/sounds/403252/> (Taser/High Voltage discharge by The_Chemical_Workshop, CC0 1.0).
+Use: Level 28's arena (t=104 on, the clock halted while the Maw lives; ≈ 130 s at medium), phase 3: each discharge of an open implant (every 1.5 s while one is open): the 0.4 s amber arc crawling over the housing, then its burst of 3 electric bolts.
+Brief: a short arcing build and a hard electric zap: high voltage, dry and mechanical, not a laser and not a creature; a real recording, heavy, nothing bubbly or popping.
+This one: a Jacob's ladder's arc climbing (slowed to 0.8), then a high-voltage taser's discharge: thinner and snappier than a, 0.8 s.
+Edit: 0.80 s, the loudest 100 ms band −22.3 dB, peak −8.6 dBFS, −19.8 LUFS.
+
+### maw-death-r58-a — "high-voltage-discharge-2.wav" by follytowers + "blue whale D calls **audible only with appropriate speakers**" by MBARI_MARS + "DepthBomb_01.aif" by ZeSoundResearchInc.
+
+Proposed (round 58), cut from the HQ previews by `tools/concept/audio/sfx_r58h.py`.
+Sources: <https://freesound.org/people/follytowers/sounds/415962/> (high-voltage-discharge-2.wav by follytowers, CC0 1.0), <https://freesound.org/people/MBARI_MARS/sounds/681896/> (blue whale D calls **audible only with appropriate speakers** by MBARI_MARS, CC-BY 4.0), <https://freesound.org/people/ZeSoundResearchInc./sounds/147876/> (DepthBomb_01.aif by ZeSoundResearchInc., CC0 1.0).
+Use: Level 28's arena (t=104 on, the clock halted while the Maw lives; ≈ 130 s at medium): once, the kill: the three implants blowing out 0.4 s apart, the coil convulsing and sinking segment by segment, the head last into the vent, whose glow flares (the 4 s chain; the screen flash and the credit shower follow; the Choir's fragment at K+3).
+Brief: three heavy electrical cracks, a long dying groan, a deep detonation-like pressure boom as the vent flares; the biggest sound of the act; no bubbles; a real recording, heavy, nothing bubbly or popping.
+This one: three Tesla-coil cracks slowed to 0.7, a blue whale's D call sweeping down (sped to 2.5) and a depth bomb's boom at 3.4 s, through a 3 s reverb: crack-crack-crack, a falling moan, a deep boom, 8.2 s with its tail.
+Edit: 8.20 s, the loudest 100 ms band −15.2 dB, peak −1.6 dBFS, −12.6 LUFS.
+
+### maw-death-r58-b — "Taser/High Voltage discharge" by The_Chemical_Workshop + "Blue Whale B call @ 5X" by MBARI_MARS + "Quarry blasting.wav" by juskiddink
+
+Proposed (round 58), cut from the HQ previews by `tools/concept/audio/sfx_r58h.py`.
+Sources: <https://freesound.org/people/The_Chemical_Workshop/sounds/403252/> (Taser/High Voltage discharge by The_Chemical_Workshop, CC0 1.0), <https://freesound.org/people/MBARI_MARS/sounds/343682/> (Blue Whale B call @ 5X by MBARI_MARS, CC-BY 4.0), <https://freesound.org/people/juskiddink/sounds/82682/> (Quarry blasting.wav by juskiddink, CC-BY 4.0).
+Use: Level 28's arena (t=104 on, the clock halted while the Maw lives; ≈ 130 s at medium): once, the kill: the three implants blowing out 0.4 s apart, the coil convulsing and sinking segment by segment, the head last into the vent, whose glow flares (the 4 s chain; the screen flash and the credit shower follow; the Choir's fragment at K+3).
+Brief: three heavy electrical cracks, a long dying groan, a deep detonation-like pressure boom as the vent flares; the biggest sound of the act; no bubbles; a real recording, heavy, nothing bubbly or popping.
+This one: three taser discharges slowed to 0.7, a blue whale's B call sinking (1.0 to 0.6) and a granite quarry blast slowed to 0.8 and muffled, the same reverb: a longer, more voiced groan than a and a rolling blast instead of a boom, 8.2 s with its tail.
+Edit: 8.20 s, the loudest 100 ms band −15.0 dB, peak −7.0 dBFS, −16.6 LUFS.
+
+### breakout-r58-a — "glacierCalving.mp3" by CCCanary + "Breaking_large_ice.wav" by CGEffex + "Crashing Waves into Rocks 1" by amholma
+
+Proposed (round 58), cut from the HQ previews by `tools/concept/audio/sfx_r58h.py`.
+Sources: <https://freesound.org/people/CCCanary/sounds/271008/> (glacierCalving.mp3 by CCCanary, CC0 1.0), <https://freesound.org/people/CGEffex/sounds/113679/> (Breaking_large_ice.wav by CGEffex, CC-BY 4.0), <https://freesound.org/people/amholma/sounds/376799/> (Crashing Waves into Rocks 1 by amholma, CC0 1.0).
+Use: Level 28 at t=115 (K+15), once a run: the ice ceiling shattering in a white burst, slabs tumbling out of the field, the medium switching to air; Europa's night-ice wind (`europa-ice`) from here.
+Brief: ice cracking and tearing (calving), a huge crash, a roar of water and air bursting into the open: the biggest open sound after an act of muffled water; a real recording, heavy, nothing bubbly or popping.
+This one: a glacier splitting apart with a roar (Glacier Bay, Alaska) slowed to 0.75, a large ice sheet's crack stomped open slowed to 0.6 on top, and big waves crashing into rocks behind it: a calving roar with a wash of water, 4.5 s.
+Edit: 4.50 s, the loudest 100 ms band −16.1 dB, peak −5.3 dBFS, −22.5 LUFS.
+
+### breakout-r58-b — "Ice - Lake fractures" by Vrymaa + "BreakingIce.wav" by iainmccurdy + "High Force Waterfall, Bottom of Gorge, Massive Roar, Teesdale UK - Stereo" by Hear_it_use_it
+
+Proposed (round 58), cut from the HQ previews by `tools/concept/audio/sfx_r58h.py`.
+Sources: <https://freesound.org/people/Vrymaa/sounds/737896/> (Ice - Lake fractures by Vrymaa, CC0 1.0), <https://freesound.org/people/iainmccurdy/sounds/440858/> (BreakingIce.wav by iainmccurdy, CC-BY 4.0), <https://freesound.org/people/Hear_it_use_it/sounds/849934/> (High Force Waterfall, Bottom of Gorge, Massive Roar, Teesdale UK - Stereo by Hear_it_use_it, CC-BY 4.0).
+Use: Level 28 at t=115 (K+15), once a run: the ice ceiling shattering in a white burst, slabs tumbling out of the field, the medium switching to air; Europa's night-ice wind (`europa-ice`) from here.
+Brief: ice cracking and tearing (calving), a huge crash, a roar of water and air bursting into the open: the biggest open sound after an act of muffled water; a real recording, heavy, nothing bubbly or popping.
+This one: the frozen lake's biggest fracture boom slowed to 0.6, a sheet of ice breaking underfoot slowed with it, and the waterfall's roar unmuffled behind: a sharper boom-and-shatter than a, the water roaring in the open, 4.4 s.
+Edit: 4.40 s, the loudest 100 ms band −17.0 dB, peak −2.1 dBFS, −12.7 LUFS.
+
+### cruiser-rise-r58-a — "ferry engine room1.wav" by mrmayo + "Oskar Eisbrecher.mp3" by Master Block
+
+Proposed (round 58), cut from the HQ previews by `tools/concept/audio/sfx_r58h.py`.
+Sources: <https://freesound.org/people/mrmayo/sounds/74914/> (ferry engine room1.wav by mrmayo, CC0 1.0), <https://freesound.org/people/Master Block/sounds/94167/> (Oskar Eisbrecher.mp3 by Master Block, CC0 1.0).
+Use: Level 28 at t=118 (K+18), once a run: the two Ascendancy cruisers rising through the ice on both flanks (4 s), ice sheeting off their hulls, under the reveal sting (track 30).
+Brief: a deep engine thrum swelling and ice grinding and sheeting off a hull: two huge machines coming up; in the air now, heavy but not muffled; a real recording, heavy, nothing bubbly or popping.
+This one: a ferry's engine room slowed (0.35 to 0.5) and swelling, under a boat breaking through harbour ice slowed to 0.6: a thrumming engine and crunching, grinding ice, 5.0 s.
+Edit: 5.00 s, the loudest 100 ms band −19.1 dB, peak −3.1 dBFS, −17.5 LUFS.
+
+### cruiser-rise-r58-b — "fishing boat loud throaty engine onboard various speeds wandering perspective metal plastic hull creaks India.flac" by kyles + "glacierCalving.mp3" by CCCanary + "Breaking_Ice_01.wav" by dheming
+
+Proposed (round 58), cut from the HQ previews by `tools/concept/audio/sfx_r58h.py`.
+Sources: <https://freesound.org/people/kyles/sounds/451398/> (fishing boat loud throaty engine onboard various speeds wandering perspective metal plastic hull creaks India.flac by kyles, CC0 1.0), <https://freesound.org/people/CCCanary/sounds/271008/> (glacierCalving.mp3 by CCCanary, CC0 1.0), <https://freesound.org/people/dheming/sounds/268023/> (Breaking_Ice_01.wav by dheming, CC-BY 4.0).
+Use: Level 28 at t=118 (K+18), once a run: the two Ascendancy cruisers rising through the ice on both flanks (4 s), ice sheeting off their hulls, under the reveal sting (track 30).
+Brief: a deep engine thrum swelling and ice grinding and sheeting off a hull: two huge machines coming up; in the air now, heavy but not muffled; a real recording, heavy, nothing bubbly or popping.
+This one: a fishing boat's throaty engine slowed (0.3 to 0.45) and swelling, the glacier's ice grinding against itself and a sheet of ice cracking: a rougher engine and a slower grind than a, 5.0 s.
+Edit: 5.00 s, the loudest 100 ms band −19.2 dB, peak −3.0 dBFS, −15.9 LUFS.
+
+### cruiser-broadside-r58-a — "Howitzer Artillery Gun Shot Sound Effect 03" by qubodup
+
+Proposed (round 58), cut from the HQ previews by `tools/concept/audio/sfx_r58h.py`.
+Source: <https://freesound.org/people/qubodup/sounds/161341/> (Howitzer Artillery Gun Shot Sound Effect 03 by qubodup, CC0 1.0).
+Use: Level 28's run (t=122-157, above the ice: the medium is air again), the two Ascendancy cruisers keeping pace on both flanks: each broadside, a cruiser's 7 shells crossing a 70 px band after the 1.2 s tell (one every 3.0 s, the flanks in turn; from 20 s two bands at once).
+Brief: a big naval gun volley: a ripple of heavy guns firing down the hull, deep booms with a long rolling tail; a real recording, heavy, nothing bubbly or popping.
+This one: a howitzer's shot (US Army footage) seven times down the hull, 0.07-0.08 s apart, each slowed a little differently (0.85 to 1.0): a rippling 'BA-BA-BA-BA-BOOM', 1.65 s.
+Edit: 1.65 s, the loudest 100 ms band −18.0 dB, peak −3.5 dBFS, −15.0 LUFS.
+
+### cruiser-broadside-r58-b — "Navy Battleship Soundscape: Turret Gunshots, Mechanical Engine Humm, Radio Chatter, Officer Command Voices.flac" by qubodup + "Howitzer Gun Shots" by qubodup
+
+Proposed (round 58), cut from the HQ previews by `tools/concept/audio/sfx_r58h.py`.
+Sources: <https://freesound.org/people/qubodup/sounds/162365/> (Navy Battleship Soundscape: Turret Gunshots, Mechanical Engine Humm, Radio Chatter, Officer Command Voices.flac by qubodup, CC0 1.0), <https://freesound.org/people/qubodup/sounds/67516/> (Howitzer Gun Shots by qubodup, CC0 1.0).
+Use: Level 28's run (t=122-157, above the ice: the medium is air again), the two Ascendancy cruisers keeping pace on both flanks: each broadside, a cruiser's 7 shells crossing a 70 px band after the 1.2 s tell (one every 3.0 s, the flanks in turn; from 20 s two bands at once).
+Brief: a big naval gun volley: a ripple of heavy guns firing down the hull, deep booms with a long rolling tail; a real recording, heavy, nothing bubbly or popping.
+This one: a battleship's turret firing (US Navy footage: one deep main-gun boom) with three howitzer shots rippling over it: one huge low blast and a crackle of guns, more weight and less ripple than a, 2.2 s.
+Edit: 2.20 s, the loudest 100 ms band −18.1 dB, peak −5.6 dBFS, −18.6 LUFS.
+
+### cruiser-flak-r58-a — "Fireworks 1.wav" by KandiKlover
+
+Proposed (round 58), cut from the HQ previews by `tools/concept/audio/sfx_r58h.py`.
+Source: <https://freesound.org/people/KandiKlover/sounds/640817/> (Fireworks 1.wav by KandiKlover, CC-BY 4.0).
+Use: Level 28's run (t=122-157, above the ice: the medium is air again), the two Ascendancy cruisers keeping pace on both flanks: each flak burst, at a marker near the ship after its 1.0 s, a ring of 8 (two markers every 4 s; hard every 3 s, easy one marker).
+Brief: an airburst: a sharp, hollow high explosion with a short rolling echo, lighter than the broadside; a real recording, heavy, nothing bubbly or popping.
+This one: a firework shell's full burst recorded 1.2 km away (unprocessed): a deep, hollow 'BOOMF' with its echo, 1.15 s.
+Edit: 1.15 s, the loudest 100 ms band −21.6 dB, peak −4.0 dBFS, −24.4 LUFS.
+
+### cruiser-flak-r58-b — "Howitzer Gun Shots" by qubodup + "Fireworks 1.wav" by KandiKlover
+
+Proposed (round 58), cut from the HQ previews by `tools/concept/audio/sfx_r58h.py`.
+Sources: <https://freesound.org/people/qubodup/sounds/67516/> (Howitzer Gun Shots by qubodup, CC0 1.0), <https://freesound.org/people/KandiKlover/sounds/640817/> (Fireworks 1.wav by KandiKlover, CC-BY 4.0).
+Use: Level 28's run (t=122-157, above the ice: the medium is air again), the two Ascendancy cruisers keeping pace on both flanks: each flak burst, at a marker near the ship after its 1.0 s, a ring of 8 (two markers every 4 s; hard every 3 s, easy one marker).
+Brief: an airburst: a sharp, hollow high explosion with a short rolling echo, lighter than the broadside; a real recording, heavy, nothing bubbly or popping.
+This one: a howitzer shot's crack sped to 1.1 and thinned, on the firework's other burst slowed to 0.75: a sharper crack and a lower boom than a, 0.9 s.
+Edit: 0.88 s, the loudest 100 ms band −21.2 dB, peak −6.4 dBFS, −22.2 LUFS.
+
+### cruiser-pd-r58-a — "Autocannon Three Shot Burst" by qubodup
+
+Proposed (round 58), cut from the HQ previews by `tools/concept/audio/sfx_r58h.py`.
+Source: <https://freesound.org/people/qubodup/sounds/854186/> (Autocannon Three Shot Burst by qubodup, CC0 1.0).
+Use: Level 28's run (t=122-157, above the ice: the medium is air again), the two Ascendancy cruisers keeping pace on both flanks: each point-defence burst of 3 from a cruiser's turret line (each cruiser every 2.5 s; hard bursts of 4).
+Brief: rapid autocannon: three quick heavy shots, lighter than the flak; a real recording, heavy, nothing bubbly or popping.
+This one: a 25 mm Bushmaster autocannon's three-shot burst (US Marines footage) as recorded: a 'dak-dak-dak', 0.8 s.
+Edit: 0.80 s, the loudest 100 ms band −23.0 dB, peak −7.7 dBFS, −23.0 LUFS.
+
+### cruiser-pd-r58-b — "Navy MK 15 Phalanx CIWS Anti-Air Fast Burst" by qubodup
+
+Proposed (round 58), cut from the HQ previews by `tools/concept/audio/sfx_r58h.py`.
+Source: <https://freesound.org/people/qubodup/sounds/163119/> (Navy MK 15 Phalanx CIWS Anti-Air Fast Burst by qubodup, CC0 1.0).
+Use: Level 28's run (t=122-157, above the ice: the medium is air again), the two Ascendancy cruisers keeping pace on both flanks: each point-defence burst of 3 from a cruiser's turret line (each cruiser every 2.5 s; hard bursts of 4).
+Brief: rapid autocannon: three quick heavy shots, lighter than the flak; a real recording, heavy, nothing bubbly or popping.
+This one: a Navy Phalanx CIWS's fast burst slowed to 0.9: a ripping buzz of rounds rather than three shots, 0.8 s.
+Edit: 0.80 s, the loudest 100 ms band −23.4 dB, peak −13.1 dBFS, −18.8 LUFS.

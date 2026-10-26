@@ -123,15 +123,61 @@ class OutroOnwardTest {
 
         assertEquals("ACT IV: DEEP WATER, THEN THE BRIEFING FOR MISSION 22: ICE SHELF", onward.next());
         assertEquals("ENTER TO ACT IV", onward.hint());
-        // The interim release's end (after Level 25 until part H): Act 4 is the last act, no act after it named.
-        assertTrue(content.levelKey(25).isPresent(), "Level 25 is built (M8 part E)");
+        // M8 part H (step H3): the release ends after Level 28, Act 4 naming Act 5 (its `next_act`).
+        assertTrue(content.levelKey(28).isPresent(), "Level 28 is built (M8 part H)");
         assertEquals("ACTS I-IV COMPLETE", ReleaseTexts.title(content));
-        assertEquals("MORE COMING SOON.", ReleaseTexts.comingSoon(content));
+        assertEquals("ACT V - THE BELT. CERES. COMING SOON.", ReleaseTexts.comingSoon(content));
         assertEquals(
                 "CONTINUE IN THE MAIN MENU RETURNS TO THE HANGAR AT THE END OF ACT IV.",
                 ReleaseTexts.continueLine(content));
-        assertEquals("MORE: COMING SOON", ReleaseTexts.hangarLine(content), "the hangar before Level 26");
-        assertEquals("THE END OF THIS RELEASE AND THE CREDITS. MORE IS COMING SOON.", ReleaseTexts.outroNext(content));
+        assertEquals("ACT V - THE BELT: COMING SOON", ReleaseTexts.hangarLine(content), "the hangar before Level 29");
+        assertEquals(
+                "THE END OF THIS RELEASE AND THE CREDITS. ACT V - THE BELT IS COMING SOON.",
+                ReleaseTexts.outroNext(content));
+    }
+
+    /**
+     * M8 part H (design/campaign Level 28, Act end): Level 28 ends Act 4 in Level 21's order: its outro's four voiced
+     * pages with their images, the act-complete fanfare under page 1, then the release's end (Level 29 is not built):
+     * the NEXT panel names Act V, the end card reads "ACTS I-IV COMPLETE" and "ACT V - THE BELT. CERES. COMING SOON.",
+     * the hangar before Level 29 "ACT V - THE BELT: COMING SOON" (Level 21's "ACT IV - DEEP WATER" line is gone).
+     */
+    @Test
+    void afterAct4sOutroTheReleaseEndsWithActVComingSoon() {
+        String directory = "act-4-deep-water";
+        ActData act = content.acts().get(directory);
+        assertEquals(28, act.levels().last(), "Act 4 ends with Level 28");
+        assertTrue(content.levelKey(29).isEmpty(), "Level 29 is not built");
+        assertTrue(act.nextAct().isPresent(), "Act 4 names the act after it");
+        OutroScript outro = Briefings.outro(new CampaignRoute.ActEnd(directory, act, 28), 29)
+                .orElseThrow();
+        assertEquals("ACT IV - DEEP WATER", outro.act());
+        assertEquals(22, outro.first());
+        assertEquals(28, outro.last());
+        assertEquals(Optional.of("act-complete"), outro.music(), "track 24 under page 1");
+        assertEquals(
+                List.of("Okafor", "Varga", "Okafor", "Okafor"),
+                outro.pages().stream().map(BriefingPage::speaker).toList());
+        assertEquals(
+                List.of("act-4-outro-orbit", "act-4-outro-hullcode", "act-4-outro-ready-room", "act-4-outro-aegis"),
+                outro.pages().stream().map(page -> page.image().orElseThrow()).toList());
+        for (BriefingPage page : outro.pages()) {
+            assertTrue(
+                    Files.isRegularFile(
+                            ASSETS.resolve("ui/briefing/" + page.image().orElseThrow() + ".png")),
+                    page.image().orElseThrow());
+        }
+        BriefingScreen.Onward onward = BriefingScreen.onward(content, outro);
+        assertEquals(ReleaseTexts.outroNext(content), onward.next());
+        assertEquals("THE END OF THIS RELEASE AND THE CREDITS. ACT V - THE BELT IS COMING SOON.", onward.next());
+        assertEquals("ENTER TO THE END", onward.hint());
+        assertEquals("ACTS I-IV COMPLETE", ReleaseTexts.title(content));
+        assertEquals("ACT V - THE BELT. CERES. COMING SOON.", ReleaseTexts.comingSoon(content));
+        assertEquals("ACT V - THE BELT: COMING SOON", ReleaseTexts.hangarLine(content));
+        assertTrue(
+                content.acts().values().stream().filter(other -> other != act).allMatch(other -> other.nextAct()
+                        .isEmpty()),
+                "only Act 4 names a next act");
     }
 
     /** M6 part B: the end card, then the name entry only for a top-10 score, then the credits. */

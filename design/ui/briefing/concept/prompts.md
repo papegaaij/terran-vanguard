@@ -254,3 +254,25 @@ every plume vent ringed amber, the beacon ridge's four red-gold relays, the hatc
 and Aegis Two's last position as an empty circle) and `level-27-plume-cycle` (Varga's diagram: tools/art/l27_props.py's
 plume frames in the cycle's three states, glowing 1.4 s, erupting 1.6 s, cold 1.5 s, every 4.5 s; a shot bent 25
 degrees off the burning disc; in the corner a grey Depth Hunter below the ship's lane with a torpedo rising).
+
+## briefing-images-final-r58-a
+
+Round 58, production art (M8 part H batch, step ART-H2). Not a mockup: the review sheet of Level 28's two and the Act 4
+outro's four 672x240 images written by [tools/art/briefing_images.py](../../../../tools/art/briefing_images.py):
+`level-28-hatchery` (Okafor's sonar chart, north up: the gate's ring of chitin arches with three grey, unmarked contacts
+guarding it, the brood galleries' rows of egg racks, the spawning cavern's warm pools, the antechamber's red fissures,
+the caldera round the vent with a ring of faint returns circling under it and no name, Level 23's drill shaft beside it
+marked as the way out, teal Vrell vectors and the route), `level-28-hull-code` (Varga's scan: the Level 27 wreck's grey
+plates with the paint burnt and blistered off and the code `HDX-417` stencilled on the bare primer (Level 27's wreck's
+code, accepted in round 57; step ART-H1 replaced the draft `HLX-DS-0417`), the Helix Dynamics emblem (a ring round a
+double helix) on a corporate-registry card with the prefix `HDX`, the code's pulse train matching an
+intercepted beacon carrier; in a corner the guardian's sonar silhouette coiled round a vent), `act-4-outro-orbit`
+(Europa's limb from orbit under Jupiter, the ice broken open at Conamara with steam over the holes, two black-and-gold
+Ascendancy cruisers small against the limb, the Vrell carriers rising on their trails round them), `act-4-outro-hullcode`
+(Varga's screen: the wreck's code beside the same code stencilled in gold on a cruiser's bow, a 2x crop of ART-H1's
+production hull from tools/art/ascendancy_cruiser.py, the four relay beacons' frequencies below, one pulse train), `act-4-outro-ready-room` (Okafor alone at the far side of the ready room's table
+under its lamp, her hands flat on it, the walker's filed plate from Mars on the wall screen) and `act-4-outro-aegis` (the
+transport's flight deck: Lancer, Aegis 3 and Aegis 4 on their launch rails toward the bay door, one rail left empty with
+AEGIS TWO / ROOK stencilled at its foot). The orbit's cruisers are drawn by the script (an angular black hull, gold trim
+lines, a gold-and-red rim light, hot-amber gun-port rows, a gold emblem of a banded disc under a three-pointed crown),
+not ART-H1's production sprite (too small there to tell).

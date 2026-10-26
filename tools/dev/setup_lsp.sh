@@ -41,6 +41,20 @@ find_jdk21() {
 
 sha256() { if have sha256sum; then sha256sum "$1" | cut -d' ' -f1; else shasum -a 256 "$1" | cut -d' ' -f1; fi; }
 
+# Claude Code never tells a language server about files changed on disk (anthropics/claude-code#85225): both servers run
+# behind tools/dev/lsp_watch_proxy.py, which polls the files and sends the server workspace/didChangeWatchedFiles.
+PROXY="$SHARE/lsp-watch-proxy/lsp_watch_proxy.py"
+install_proxy() {
+    if $CHECK; then
+        if cmp -s "$ROOT/tools/dev/lsp_watch_proxy.py" "$PROXY"; then say "watch proxy: installed ($PROXY)"
+        else say "watch proxy: MISSING or outdated"; fi
+        return
+    fi
+    mkdir -p "$(dirname "$PROXY")"
+    cp "$ROOT/tools/dev/lsp_watch_proxy.py" "$PROXY"
+    say "watch proxy: $PROXY"
+}
+
 install_jdtls() {
     local dir="$SHARE/jdtls/$JDTLS_VERSION"
     if [[ -x "$dir/bin/jdtls" ]]; then say "jdtls $JDTLS_VERSION: installed ($dir)"; else
@@ -73,14 +87,15 @@ base="\$HOME/.cache/jdtls-data"
 mkdir -p "\$base"
 args=(--jvm-arg=-Xmx2G --jvm-arg=-Djava.import.generatesMetadataFilesAtProjectRoot=false
       --jvm-arg=-Dorg.gradle.daemon.idletimeout=600000)
+watch=(python3 "$PROXY" --disk-only --watch '*.java' --watch '*.gradle.kts' --watch '*.gradle' --watch 'gradle.properties' --)
 exec 9>"\$base/\$key.lock"
 if flock -n 9 2>/dev/null; then
-    exec python3 "\$JDTLS_HOME/bin/jdtls" "\${args[@]}" -data "\$base/\$key" "\$@"
+    exec "\${watch[@]}" python3 "\$JDTLS_HOME/bin/jdtls" "\${args[@]}" -data "\$base/\$key" "\$@"
 fi
 exec 9>&-
 tmp=\$(mktemp -d "\$base/\$key-pid\$\$.XXXX")
 trap 'rm -rf "\$tmp"' EXIT
-python3 "\$JDTLS_HOME/bin/jdtls" "\${args[@]}" -data "\$tmp" "\$@"
+"\${watch[@]}" python3 "\$JDTLS_HOME/bin/jdtls" "\${args[@]}" -data "\$tmp" "\$@"
 EOF
     chmod +x "$BIN/jdtls"
     have flock || say "note: no flock (macOS): every jdtls instance shares one index; avoid two sessions on the repo"
@@ -97,7 +112,12 @@ install_pyright() {
     fi
     $CHECK && return
     mkdir -p "$BIN"
-    ln -sf "$dir/node_modules/.bin/pyright-langserver" "$BIN/pyright-langserver"
+    rm -f "$BIN/pyright-langserver"
+    printf '%s\n' '#!/usr/bin/env bash' \
+        '# Written by tools/dev/setup_lsp.sh (terran-vanguard): Pyright for the pyright-lsp plugin, behind the watch proxy.' \
+        "exec python3 \"$PROXY\" --watch '*.py' --watch 'pyrightconfig.json' -- \"$dir/node_modules/.bin/pyright-langserver\" \"\$@\"" \
+        > "$BIN/pyright-langserver"
+    chmod +x "$BIN/pyright-langserver"
     ln -sf "$dir/node_modules/.bin/pyright" "$BIN/pyright"
 }
 
@@ -126,6 +146,7 @@ install_plugins() {
     done
 }
 
+install_proxy
 install_jdtls
 install_pyright
 link_voice_venvs

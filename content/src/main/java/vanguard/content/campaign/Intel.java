@@ -156,7 +156,13 @@ public record Intel(
              * M8 part G (design/campaign Level 27, Threat profile at L3: "the timeline strip marks the three Hunter
              * columns"): a {@code column} from the rear entering (up from the bottom edge), a moment at its time.
              */
-            COLUMN
+            COLUMN,
+            /**
+             * M8 part H (design/campaign Level 28, Threat profile at L3: "the timeline strip marks the Choir's song
+             * (97.5 s)"): a timed song of the Choir (a {@code [the Choir sings]} line), a moment at its time, in a level
+             * whose threat profile's {@code strip} names {@code choir-song}.
+             */
+            CHOIR
         }
     }
 
@@ -332,6 +338,16 @@ public record Intel(
                 marks.add(new Mark(wave.t(), wave.t(), Mark.Kind.COLUMN));
             }
         }
+        // M8 part H: each timed song of the Choir, where the threat profile's strip asks for it (Level 28's at 97.5 s).
+        if (level.threatProfile().stripMarks(LevelData.ThreatProfile.CHOIR_SONG)) {
+            for (LevelData.RadioCue cue : level.radio()) {
+                if (cue.t().isPresent()
+                        && cue.speaker().equals(CHOIR)
+                        && cue.line().equals(CHOIR_SINGS)) {
+                    marks.add(new Mark(cue.t().get(), cue.t().get(), Mark.Kind.CHOIR));
+                }
+            }
+        }
         // M8 part B: each ground target of the escapes secondary's enemy at its time (Level 22's four rig sites).
         java.util.Optional<String> escapes = level.objectives().secondary().flatMap(LevelData.Secondary::escapes);
         for (LevelData.GroundTarget target : level.groundTargets()) {
@@ -343,6 +359,11 @@ public record Intel(
         }
         return marks;
     }
+
+    /** M8 part H: the Choir's speaker name and its song's stage line, which a level's strip may mark. */
+    static final String CHOIR = "The Choir";
+
+    static final String CHOIR_SINGS = "[the Choir sings]";
 
     /** M8 part G: the formation of a column, which the strip marks when it comes from the rear. */
     static final String COLUMN = "column";

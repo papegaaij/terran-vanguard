@@ -99,6 +99,11 @@ final class IntelPanel {
      * column from the rear as a hull-grey tick the strip's full depth and a pixel below it (it rises from below).
      */
     static final Color HULL_GREY = new Color(150 / 255f, 158 / 255f, 166 / 255f, 1);
+    /**
+     * M8 part H (design/campaign Level 28, Threat profile at L3): the Choir's song on the strip, a pale lime tick (the
+     * Vrell's lime) over the strip's upper half, two pixels above it and a pixel's gap, then a dot (a sung note).
+     */
+    static final Color CHOIR_LIME = new Color(214 / 255f, 236 / 255f, 120 / 255f, 1);
 
     private static final int PICTURE_GAP = 6;
     /** The characters of a contact's label beside its silhouette. */
@@ -637,9 +642,15 @@ final class IntelPanel {
         canvas.text("WAVES", Glass.LABEL, INNER, y, false);
         int width = RIGHT - VALUE_X;
         canvas.inset(VALUE_X - 2, y - 2, width + 4, 12);
+        // M8 part H (design/campaign Level 28, Threat profile): nothing after the boss's arrival is on the strip (the
+        // finale after the Maw, its breakout's waterline included, is a surprise).
+        double finale = finale(intel);
         // M5 part G: a defend level's phases as dim bands under the waves (a pixel apart, so the three read
         // as three), a hazard span (the whiteout, the root field) as a pale band over them.
         for (Intel.Mark mark : intel.marks()) {
+            if (mark.from() > finale) {
+                continue;
+            }
             float left = (float) (VALUE_X + width * mark.from() / intel.seconds());
             float right = (float) (VALUE_X + width * mark.to() / intel.seconds());
             switch (mark.kind()) {
@@ -650,14 +661,14 @@ final class IntelPanel {
                 // Round 44 Q.8 d (step GI1): the Dust Colossus's ridge pass (Levels 20 and 21) as a muted sand band
                 // under the waves, from its surfacing to its head off the far edge.
                 case RIDGE -> canvas.fill(RIDGE_SAND, left + 1, y - 1, right - left - 2, 10);
-                case BOSS, BURROW_FIELD, GATE, CRAWLER, TURN, TARGET, WATERLINE, RAY, CAVE, NEST, COLUMN -> {
+                case BOSS, BURROW_FIELD, GATE, CRAWLER, TURN, TARGET, WATERLINE, RAY, CAVE, NEST, COLUMN, CHOIR -> {
                     // drawn over the waves, below
                 }
             }
         }
         // M8 part C: the water from each entering waterline (every other one, from the first) to the next or the end.
         List<Intel.Mark> waterlines = intel.marks().stream()
-                .filter(mark -> mark.kind() == Intel.Mark.Kind.WATERLINE)
+                .filter(mark -> mark.kind() == Intel.Mark.Kind.WATERLINE && mark.from() <= finale)
                 .toList();
         for (int w = 0; w < waterlines.size(); w += 2) {
             double to = w + 1 < waterlines.size() ? waterlines.get(w + 1).from() : intel.seconds();
@@ -673,6 +684,9 @@ final class IntelPanel {
         String boss = intel.profile().boss();
         boolean silhouette = !boss.equals("none") && !unclassified.containsKey(boss);
         for (Intel.Mark mark : intel.marks()) {
+            if (mark.from() > finale) {
+                continue;
+            }
             if (mark.kind() == Intel.Mark.Kind.BOSS && silhouette) {
                 float at = (float) (VALUE_X + width * mark.from() / intel.seconds());
                 canvas.mark(
@@ -713,6 +727,12 @@ final class IntelPanel {
                 // M8 part E: a cave wave's entry (Level 25's side caves) as a slate tick over the strip's upper half
                 // and a pixel above it.
                 canvas.fill(CAVE_SLATE, (float) (VALUE_X + width * mark.from() / intel.seconds()), y - 2, 2, 7);
+            } else if (mark.kind() == Intel.Mark.Kind.CHOIR) {
+                // M8 part H: the Choir's song (Level 28's at 97.5 s) as a pale lime tick over the strip's upper half
+                // and two pixels above it, a dot over it.
+                float at = (float) (VALUE_X + width * mark.from() / intel.seconds());
+                canvas.fill(CHOIR_LIME, at, y - 2, 2, 6);
+                canvas.fill(CHOIR_LIME, at, y - 5, 2, 2);
             } else if (mark.kind() == Intel.Mark.Kind.TARGET) {
                 // M8 part B: a site of the secondary's targets (Level 22's four rigs) as a red "T" over the strip's
                 // lower half: its tick and a crossbar on it (the boss's tick is plain and full depth).
@@ -722,6 +742,20 @@ final class IntelPanel {
             }
         }
         return y + step;
+    }
+
+    /**
+     * M8 part H: the time after which the strip marks nothing: the boss's arrival (what follows it, Level 28's finale, is
+     * a surprise); infinite without a boss.
+     */
+    static double finale(Intel intel) {
+        double finale = Double.POSITIVE_INFINITY;
+        for (Intel.Mark mark : intel.marks()) {
+            if (mark.kind() == Intel.Mark.Kind.BOSS) {
+                finale = Math.min(finale, mark.from());
+            }
+        }
+        return finale;
     }
 
     private static String direction(Entry entry) {

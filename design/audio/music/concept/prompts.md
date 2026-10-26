@@ -1293,3 +1293,42 @@ stem: it sits under the aftermath's radio lines (t=165, 171, 176).
 silence: soft detuned analog pad swelling in over ten seconds, D-flat major colours, a low sine sub, long reverb, no
 drums, no melody, gentle and consoling but still deep and muffled, seamless loop, about three minutes."*
 
+
+# Round 58 — Level 28: track 30 in production and track 18's deep copy
+
+Generator: `tools/concept/audio/music_r58h.py` (M8 part H, step AUD-H, 2026-10-25; deterministic, measured only).
+
+## reveal-sting-r58-a — "Black and Gold" in production (#30 Reveal sting, 9.0 s)
+
+**Proposed** (round 58). Use: Level 28 at t=118 (K+18), once a run, as the two Ascendancy cruisers rise through the ice
+on both flanks (4 s) and their gun ports open; Varga's and Okafor's lines speak over its tail; the run under Vorne's
+motif follows.
+
+**Brief**: the round-48 pick a (above) as composed: `music_r48.py`'s `sting_black_and_gold()` called unchanged (the
+rise muffled under the ice and opening as the hulls break through, the motif stacked into a chord at 4.0 s, the A♯
+hanging). Production adds a voice pocket: from 4.6 s the 0.9–4 kHz band of the whole mix eased down over 0.6 s (a
+zero-phase FFT band cut, 5 dB at the band's centre, about 3 dB on the band as measured), so the two radio lines sit
+over the tail. Mastered as the round-48 stings (−14 LUFS target under a −2 dBFS ceiling, a 1.2 s fade). **Measured**:
+9.0 s, −14.9 LUFS, true peak −3.0 dBTP (the sketch: −15.0, −3.1).
+
+**AI prompt**: as round 48's a, plus *"leave room in the upper mids after the hit for two lines of radio dialogue."*
+
+## choir-descends-deep-r58-b — "The Choir Descends", the deep copy (#18 Boss: Vrell, Level 28)
+
+**Proposed** (round 58, Q.1 b; a is the built theme, `assets/music/choir-descends.ogg` =
+[choir-descends-final-r25-a](choir-descends-final-r25-a.ogg)). Use: Level 28's arena from the boss warning (t=104)
+through the fight, dropping away under the dive's darkness and back after the lunge, fading at the kill.
+
+**Brief**: the boss document asks for the Vrell boss theme "in its Act 4 setting (muffled, reverberant)". No runtime
+filter exists for music, so the copy is pre-rendered: `music_r08.py`'s `choir_full()` (the generator of the game's
+file) rendered again, its whole mix through the A theme's water low-pass at its deepest (one state-variable low-pass
+at 1.3 kHz, q 1.1, "Thera Deep"'s drift section) and a 5.5 s dark reverb (mix 0.35, damping 0.7) before the assembly
+(intro + crossfade + second loop pass, so the reverb's tail wraps round the seam), then `render_loop`'s own steps: the
+same 2-bar tail, −14 LUFS under a −2 dBFS ceiling, `LOOPSTART` 299880 and `LOOPLENGTH` 5080320 as the game's file.
+**Measured**: 125.2 s, −14.0 LUFS, −1.9 dBTP, seam 0.94; spectral centroid 790 Hz (the built theme's 4,480 Hz); the
+first bar after the warning −14.1 LUFS. Listening aids: `choir-descends-deep-seam-r58-b.ogg` (the seam, 8 s each side),
+`boss-handoff-deep-r58-b.ogg` (track 22 then b from 4.8 s, as the game mixes the boss cue).
+
+**AI prompt** (if replaced by a musician): *"The same pounding choir-and-drums boss theme heard from deep under water:
+the drums and choir muffled and far, a long dark reverb, the kick still heavy, seamless loop on the original's loop
+points."*

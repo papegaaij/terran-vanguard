@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../../player, ../../systems/economy, ../../campaign]
-updated: 2026-10-25
+updated: 2026-10-26
 ---
 
 # Hangar
@@ -215,9 +215,11 @@ Production art, UI batch part U2 (for concept round 13, opened by part U3): the 
 | [concept/intel-final-r54-a.png](concept/intel-final-r54-a.png) | The `siren` and `spiral-nautilus` sensor L2 portraits (30×30; `tools/art/intel.py`, M8 part E batch) | chosen (round 54, F.7: accepted as final) |
 | [concept/level-25-intel-capture-r54-a.png](concept/level-25-intel-capture-r54-a.png) | Game capture, M8 part E (step E6, a playthrough save at Level 25 on medium, the sensor suite L2): the hangar with Level 25's intel (Varga's L2 line, the threat strip, the four portraits incl. the Siren and the Spiral Nautilus), the panel at 1:1 | chosen (round 54, F.7: accepted as final) |
 | [concept/intel-final-r55-a.png](concept/intel-final-r55-a.png) | The `glow-angler` sensor L2 portrait (30x30; `tools/art/intel.py`, M8 part F batch) | chosen (round 55, F.8: accepted as final) |
-| [concept/intel-final-r57-a.png](concept/intel-final-r57-a.png) | The `depth-hunter` and `relay-beacon` sensor L2 portraits (30x30; `tools/art/intel.py`, M8 part G batch) | proposed (round 57) |
+| [concept/intel-final-r57-a.png](concept/intel-final-r57-a.png) | The `depth-hunter` and `relay-beacon` sensor L2 portraits (30x30; `tools/art/intel.py`, M8 part G batch) | chosen (round 57: accepted as final) |
+| [concept/intel-final-r58-a.png](concept/intel-final-r58-a.png) | The `boss-abyssal-maw` sensor silhouette (40x40; `tools/art/intel.py` from `tools/art/abyssal_maw.py`'s sprites, M8 part H batch): the coil round the arena's edges with the head at the top | proposed (round 58) |
+| [concept/level-28-intel-capture-r58-a.png](concept/level-28-intel-capture-r58-a.png) | Game capture, M8 part H (step H7): the Level 28 hangar from a playthrough save (a sensor suite L3 fitted for the capture): Okafor's teaser, the threat strip with the Choir's lime mark at the pre-boss pause, the portraits, the Bulwark loaner with `ROOK MIA` | proposed (round 58) |
 | [concept/level-26-intel-capture-r55-a.png](concept/level-26-intel-capture-r55-a.png) | Game capture, M8 part F (step F6, a playthrough save at Level 26 on medium, a sensor suite L2 fitted for the capture): the hangar with Level 26's intel (Rook's teaser, the threat strip, the five portraits incl. the Glow Angler, the lure note), the panel at 1:1 | chosen (round 55, F.8: accepted as final) |
-| [concept/level-27-intel-capture-r57-a.png](concept/level-27-intel-capture-r57-a.png) | Game capture, M8 part G (step G5, a playthrough save at Level 27 with a sensor suite L3 fitted for the capture): the hangar before Level 27, Okafor's teaser, the threat strip, the five portraits with the Depth Hunter's `UNMARKED GREY`, the Bulwark loaner in the escort slot (`ROOK MIA`) | proposed (round 57) |
+| [concept/level-27-intel-capture-r57-a.png](concept/level-27-intel-capture-r57-a.png) | Game capture, M8 part G (step G5, a playthrough save at Level 27 with a sensor suite L3 fitted for the capture): the hangar before Level 27, Okafor's teaser, the threat strip, the five portraits with the Depth Hunter's `UNMARKED GREY`, the Bulwark loaner in the escort slot (`ROOK MIA`) | chosen (round 57: accepted as final) |
 
 M4 part H, test fire ([round 26](../../concept-rounds/README.md)): a game capture, see
 [concept/prompts.md](concept/prompts.md#test-fire-capture-r26-a).
@@ -372,3 +374,4 @@ Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-a
   `Level23LooksTest.theRulesStripReadsTheWatersFactors`) its `DRAG` gave way: the drag is felt at once, the weapons'
   factors are what the strip must name (pending the user's review). The replay hangar now shows the replayed mission's
   escort ([mission select](../mission-select/README.md#decisions)).
+- 2026-10-25 (user, [round 57](../../concept-rounds/round-57/README.md) closed): the `depth-hunter` and `relay-beacon` intel portraits and Level 27's intel accepted as final (F.8).

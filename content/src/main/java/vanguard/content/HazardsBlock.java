@@ -465,4 +465,160 @@ public sealed interface HazardsBlock permits LevelData {
             };
         }
     }
+
+    /**
+     * M8 part H (design/enemies/bosses/abyssal-maw, The cruisers; design/campaign Level 28, sections 8–10): the finale's
+     * two Ascendancy cruisers, invulnerable {@code low-air} set pieces on the level clock: they {@code rise} (the
+     * presentation's growth) until {@code run}, fire until {@code end} and fall off the bottom edge over {@code fall}
+     * s; each hull {@code hull} px, the inner edges at {@code inner} ([left, right] px from the left edge); the {@code
+     * broadside}, {@code flak} and {@code point_defence} at medium, {@code easy} and {@code hard} changing them. No
+     * bounty, no bar; the bullets above water.
+     */
+    record Cruisers(
+            double rise,
+            double run,
+            double end,
+            double fall,
+            Size hull,
+            Span inner,
+            Broadside broadside,
+            FlakData flak,
+            PointDefenceData pointDefence,
+            Optional<CruiserChange> easy,
+            Optional<CruiserChange> hard) {
+        public Cruisers {
+            Check.notNegative("rise", rise);
+            Check.that(run >= rise, "run: at or after the rise, was " + run);
+            Check.that(end > run, "end: after the run's start, was " + end);
+            Check.notNegative("fall", fall);
+            Check.that(
+                    inner.min() >= 0 && inner.max() <= PlayField.WIDTH && inner.min() < inner.max(),
+                    "inner: the hulls' inner edges on the field, left before right");
+        }
+
+        /** This run on {@code difficulty}: medium's with the difficulty's changes. */
+        public Cruisers on(Difficulty difficulty) {
+            Optional<CruiserChange> change =
+                    switch (difficulty) {
+                        case EASY -> easy;
+                        case MEDIUM -> Optional.empty();
+                        case HARD -> hard;
+                    };
+            if (change.isEmpty()) {
+                return this;
+            }
+            CruiserChange c = change.get();
+            Broadside b = new Broadside(
+                    broadside.band(),
+                    c.tell().orElse(broadside.tell()),
+                    broadside.shells(),
+                    broadside.speed(),
+                    broadside.bullet(),
+                    broadside.every(),
+                    c.doubleBands().orElse(true) ? broadside.doubleAfter() : Optional.empty(),
+                    broadside.free());
+            FlakData f = new FlakData(
+                    c.markers().orElse(flak.markers()),
+                    c.flakEvery().orElse(flak.every()),
+                    flak.fuse(),
+                    flak.radius(),
+                    flak.scatter(),
+                    flak.bullet(),
+                    flak.ring(),
+                    flak.speed(),
+                    flak.ringBullet());
+            PointDefenceData pd = new PointDefenceData(
+                    c.burst().orElse(pointDefence.burst()),
+                    pointDefence.speed(),
+                    pointDefence.bullet(),
+                    pointDefence.every(),
+                    pointDefence.turrets());
+            return new Cruisers(rise, run, end, fall, hull, inner, b, f, pd, Optional.empty(), Optional.empty());
+        }
+    }
+
+    /**
+     * A broadside: a {@code band} px tall told {@code tell} s, then {@code shells} shells of the {@code bullet} class
+     * cross it at {@code speed} px/s from the cruiser's side; one every {@code every} s, the flanks in turn; from {@code
+     * double_after} s into the run two bands at once with at least {@code free} px free between them (none if not
+     * given: never).
+     */
+    record Broadside(
+            double band,
+            double tell,
+            int shells,
+            double speed,
+            String bullet,
+            double every,
+            Optional<Double> doubleAfter,
+            double free) {
+        public Broadside {
+            Check.positive("band", band);
+            Check.notNegative("tell", tell);
+            Check.positive("shells", shells);
+            Check.positive("speed", speed);
+            Check.positive("every", every);
+            doubleAfter.ifPresent(d -> Check.notNegative("double_after", d));
+            Check.notNegative("free", free);
+        }
+    }
+
+    /**
+     * Flak: {@code markers} markers of {@code radius} px (the first on the ship, the others within {@code scatter} px)
+     * every {@code every} s; after the {@code fuse} the burst: the {@code bullet} class's damage inside a marker and a
+     * ring of {@code ring} {@code ring_bullet} bullets at {@code speed} px/s.
+     */
+    record FlakData(
+            int markers,
+            double every,
+            double fuse,
+            double radius,
+            double scatter,
+            String bullet,
+            int ring,
+            double speed,
+            String ringBullet) {
+        public FlakData {
+            Check.notNegative("markers", markers);
+            Check.positive("every", every);
+            Check.positive("fuse", fuse);
+            Check.notNegative("radius", radius);
+            Check.notNegative("scatter", scatter);
+            Check.notNegative("ring", ring);
+            Check.positive("speed", speed);
+        }
+    }
+
+    /**
+     * Point defence: each cruiser's turret line fires an aimed burst of {@code burst} {@code bullet} bullets at {@code
+     * speed} px/s every {@code every} s, from its {@code turrets} in turn (heights on the hull's inner edge, px below the
+     * top edge while it runs).
+     */
+    record PointDefenceData(int burst, double speed, String bullet, double every, List<Double> turrets) {
+        public PointDefenceData {
+            turrets = List.copyOf(turrets);
+            Check.positive("burst", burst);
+            Check.positive("speed", speed);
+            Check.positive("every", every);
+            Check.notEmpty("turrets", turrets);
+        }
+    }
+
+    /**
+     * A difficulty's changes to the cruisers: the broadside's {@code tell}, {@code double_bands: false} (never two bands,
+     * easy's), flak's {@code markers} and {@code flak_every}, point defence's {@code burst}.
+     */
+    record CruiserChange(
+            Optional<Double> tell,
+            Optional<Boolean> doubleBands,
+            Optional<Integer> markers,
+            Optional<Double> flakEvery,
+            Optional<Integer> burst) {
+        public CruiserChange {
+            tell.ifPresent(t -> Check.notNegative("tell", t));
+            markers.ifPresent(m -> Check.notNegative("markers", m));
+            flakEvery.ifPresent(e -> Check.positive("flak_every", e));
+            burst.ifPresent(b -> Check.positive("burst", b));
+        }
+    }
 }

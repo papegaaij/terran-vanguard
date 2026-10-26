@@ -319,22 +319,46 @@ val copyPlaceholderSounds = tasks.register<JavaExec>("copyPlaceholderSounds") {
         "headlight-click-r55-b.ogg",
         "choir-static-r55-b.ogg",
         "europa-black-r55-a.ogg",
-        // M8 part G: round 57's proposals for Level 27 (CC0/CC-BY Freesound HQ previews, CREDITS rows from step AUD-G; the
-        // scan ping synthesized), their a variants as stand-ins until the user's pick, which may swap the file: the vent
-        // field's bed, the plume's tell and eruption, the bend's swish, the Depth Hunter's torpedo launch, run and impact
-        // and its hull break, the relay beacons' hum and break, the Marlin's resin crack, Varga's scan ping.
+        // M8 part G: round 57's picks for Level 27 (user 2026-10-25; CC0/CC-BY Freesound HQ previews, CREDITS rows from
+        // step AUD-G; the scan ping synthesized): the vent field's bed a, the plume's tell b and eruption a, the bend's
+        // swish a, the Depth Hunter's torpedo launch a, run b and impact b and its hull break a, the relay beacons' hum a
+        // and break b, the Marlin's resin crack a, Varga's scan ping b.
         "europa-vents-r57-a.ogg",
-        "plume-tell-r57-a.ogg",
+        "plume-tell-r57-b.ogg",
         "plume-eruption-r57-a.ogg",
         "bend-swish-r57-a.ogg",
         "torpedo-launch-r57-a.ogg",
-        "torpedo-run-r57-a.ogg",
-        "torpedo-impact-r57-a.ogg",
+        "torpedo-run-r57-b.ogg",
+        "torpedo-impact-r57-b.ogg",
         "hunter-break-r57-a.ogg",
         "beacon-hum-r57-a.ogg",
-        "beacon-break-r57-a.ogg",
+        "beacon-break-r57-b.ogg",
         "marlin-crack-r57-a.ogg",
-        "scan-ping-r57-a.ogg",
+        "scan-ping-r57-b.ogg",
+        // M8 part H: round 58's proposals for Level 28 (CC0/CC-BY Freesound HQ previews, CREDITS rows from step AUD-H),
+        // their a variants as stand-ins until the user's pick, which may swap the file: the hatchery's bed and the
+        // caldera's rumble, the shaft's climb, the Abyssal Maw's arrival, gill breath, throat charge, sweep groan and
+        // swing, shed, dive, lunge, implant spark and zap and its death, the breakout, the cruisers' rise, broadside,
+        // flak and point defence.
+        "europa-hatchery-r58-a.ogg",
+        "caldera-rumble-r58-a.ogg",
+        "shaft-climb-r58-a.ogg",
+        "maw-arrival-r58-a.ogg",
+        "maw-gill-r58-a.ogg",
+        "maw-throat-r58-a.ogg",
+        "maw-sweep-groan-r58-a.ogg",
+        "maw-sweep-swing-r58-a.ogg",
+        "maw-shed-r58-a.ogg",
+        "maw-dive-r58-a.ogg",
+        "maw-lunge-r58-a.ogg",
+        "implant-spark-r58-a.ogg",
+        "implant-zap-r58-a.ogg",
+        "maw-death-r58-a.ogg",
+        "breakout-r58-a.ogg",
+        "cruiser-rise-r58-a.ogg",
+        "cruiser-broadside-r58-a.ogg",
+        "cruiser-flak-r58-a.ogg",
+        "cruiser-pd-r58-a.ogg",
     )
 }
 
@@ -392,6 +416,9 @@ val copyPlaceholderMusic = tasks.register<JavaExec>("copyPlaceholderMusic") {
         // from, same grid) and its warm pad (round 55 b, the user's pick), Level 26's `stem_times`.
         "thera-deep-dark-r51-a.ogg=thera-deep-dark.ogg",
         "thera-deep-warm-r55-b.ogg=thera-deep-warm.ogg",
+        // M8 part H: track 30, the reveal sting (round 58 a, the production of round 48's pick "Black and Gold",
+        // tools/concept/audio/music_r58h.py), a one-shot at Level 28's cruisers' rise.
+        "reveal-sting-r58-a.ogg=reveal-sting.ogg",
     )
 }
 

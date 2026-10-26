@@ -236,12 +236,12 @@ class CampaignRouteTest {
     }
 
     /**
-     * M8 part G: Level 27 is built: after Level 26 its own briefing (two pages, no act intro) and its launch; the interim
-     * release now ends before Level 28: after Level 27 (inside Act 4, no act end) the hangar, with no level to launch
-     * (the hangar's release line, {@code ReleaseTexts}).
+     * M8 part G: Level 27 is built: after Level 26 its own briefing (two pages, no act intro) and its launch. M8 part H
+     * (step H3): Level 28 is built and ends Act 4: after Level 27 its briefing and launch, after Level 28 Act 4's outro
+     * (four pages), which ends the release (Act 4's {@code next_act}; Level 29 is not built).
      */
     @Test
-    void afterLevel26ComesLevel27AndTheReleaseEndsBeforeLevel28() {
+    void afterLevel26ComeLevels27And28AndTheReleaseEndsAfterAct4sOutro() {
         Campaign campaign = Campaign.start(CampaignTest.RULES, Difficulty.MEDIUM);
         for (int i = 0; i < 26; i++) {
             campaign.complete(CampaignTest.won("A", 80, 1000), 60);
@@ -257,8 +257,21 @@ class CampaignRouteTest {
         campaign.complete(CampaignTest.won("A", 80, 1000), 60);
 
         assertTrue(CampaignRoute.actEnd(content, campaign).isEmpty(), "Level 27 ends no act");
-        assertInstanceOf(CampaignRoute.Step.Hangar.class, CampaignRoute.afterLevel(content, campaign));
-        assertEquals(Optional.empty(), CampaignRoute.launch(content, campaign), "Level 28 is not built");
+        var next = assertInstanceOf(CampaignRoute.Step.Briefing.class, CampaignRoute.afterLevel(content, campaign));
+        assertEquals(28, next.script().mission());
+        assertEquals(2, next.script().pages().size());
+        assertEquals(Optional.of("act-4-deep-water/level-28-abyssal-maw"), CampaignRoute.launch(content, campaign));
+
+        campaign.complete(CampaignTest.won("A", 80, 1000), 60);
+
+        assertTrue(CampaignRoute.actEnd(content, campaign).isPresent(), "Level 28 ends Act 4");
+        var outro = assertInstanceOf(CampaignRoute.Step.Outro.class, CampaignRoute.afterLevel(content, campaign));
+        assertEquals("act-4-deep-water", outro.script().actDirectory());
+        assertEquals(28, outro.script().last());
+        assertEquals(4, outro.script().pages().size());
+        assertTrue(
+                CampaignRoute.releaseEnd(content, campaign), "Level 29 is not built: Act 4's outro ends the release");
+        assertEquals(Optional.empty(), CampaignRoute.launch(content, campaign), "Level 29 is not built");
     }
 
     /**

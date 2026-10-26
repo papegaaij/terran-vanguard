@@ -111,6 +111,23 @@ class SpriteUseTest {
         assertEquals(Set.of("level-07"), atlases.get("brood-carrier-hull"));
     }
 
+    /**
+     * M8 part H: Level 28's cruisers claim their sprites by its {@code cruisers} run, its breakout (the first water to air
+     * crossing) the ice ceiling's burst and slabs; Level 23 (air to water) does not.
+     */
+    @Test
+    void level28sCruisersAndBreakoutClaimTheirSprites() {
+        Map<String, Set<String>> atlases = SpriteUse.atlases(
+                content, List.of("ascendancy-cruiser", "ascendancy-cruiser-flak-marker", "ice-shatter", "ice-slab"));
+
+        assertEquals(Set.of("level-28"), atlases.get("ascendancy-cruiser"));
+        assertEquals(Set.of("level-28"), atlases.get("ascendancy-cruiser-flak-marker"));
+        assertEquals(Set.of("level-28"), atlases.get("ice-shatter"), "the breakout");
+        assertEquals(Set.of("level-28"), atlases.get("ice-slab"));
+        assertTrue(SpriteUse.breaksOut(content.level(content.levelKey(28).orElseThrow())));
+        assertFalse(SpriteUse.breaksOut(content.level(content.levelKey(23).orElseThrow())), "it dives in");
+    }
+
     @Test
     void aLevelsCollapseClaimsItsDustPuffs() {
         Map<String, Set<String>> atlases = SpriteUse.atlases(content, List.of("collapse-puff"));

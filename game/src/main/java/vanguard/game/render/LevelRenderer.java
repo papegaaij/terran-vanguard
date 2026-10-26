@@ -214,6 +214,12 @@ public final class LevelRenderer {
     private final RidgeLooks ridge;
     /** M7 part H: the breaching boss (the Dust Colossus), its ridge, craters, vents and rocks; null without it. */
     private final ColossusLooks colossus;
+    /** M8 part H: the coiled boss (the Abyssal Maw), its coil, head, sacs, implants, dive, lunge and death; null without it. */
+    private final MawLooks maw;
+    /** M8 part H: the finale's cruisers (Level 28's run); null without them. */
+    private final CruiserLooks cruisers;
+    /** M8 part H: the breakout through the ice ceiling and the orbit's white (Level 28); null in another level. */
+    private final BreakoutLooks breakout;
     /** M7 part H: the script time a crawling arena ends at (Level 21's t=245), NaN without one ({@link #stepped}). */
     private final double crawlEnd;
     /** M5 part G: the arctic setting's snow on high-air; null in another setting. */
@@ -295,6 +301,7 @@ public final class LevelRenderer {
                         : new Array<>(0));
         walker = WalkerLooks.of(sprites, flash, boss, bossPivots);
         colossus = ColossusLooks.of(sprites, flash, boss, bossPivots, folder);
+        maw = MawLooks.of(sprites, flash, boss);
         foundry = FoundryLooks.of(sprites, level, script);
         plumes = PlumeLooks.of(sprites, level);
         rootBursts = RootBurstLooks.of(sprites, script);
@@ -375,6 +382,12 @@ public final class LevelRenderer {
         tenderDrops = IceCrawlerLooks.of(sprites, level, pivots(files, "thera-tender"), true);
         // M8 part E: the survey buoy at the narrows' end; the Nautili leaving through the trench's rock.
         buoys = BuoyLooks.of(sprites, level);
+        // M8 part H: the finale's cruisers (their flak drawn by their own markers) and the breakout.
+        cruisers = CruiserLooks.of(sprites, script, pivots(files, CruiserLooks.SLUG));
+        if (cruisers != null) {
+            luna.skipLobs(cruisers::flakLob);
+        }
+        breakout = BreakoutLooks.of(sprites, level);
         backdrop.underWalls(this::drawUnderWalls);
         canyonLooks.ice(sprites.hasBackdrop(folder + Backdrop.ICE_WALL));
         if (!waterlines.isEmpty()) {
@@ -480,6 +493,15 @@ public final class LevelRenderer {
         if (colossus != null) {
             colossus.reset();
         }
+        if (maw != null) {
+            maw.reset();
+        }
+        if (cruisers != null) {
+            cruisers.reset();
+        }
+        if (breakout != null) {
+            breakout.reset();
+        }
         backdrop.crawlPending();
         if (plumes != null) {
             plumes.restart();
@@ -534,6 +556,15 @@ public final class LevelRenderer {
         }
         if (colossus != null) {
             colossus.stepped(sortie);
+        }
+        if (maw != null) {
+            maw.stepped(sortie);
+        }
+        if (cruisers != null) {
+            cruisers.stepped(sortie);
+        }
+        if (breakout != null) {
+            breakout.stepped(sortie);
         }
         if (!Double.isNaN(crawlEnd)) {
             // M7 part H: the section after the crawling arena starts once the clock passes its end (the kill's jump or
@@ -710,6 +741,10 @@ public final class LevelRenderer {
         }
         kinds.buildLampreys(sortie);
         graded = false;
+        if (dark != null && maw != null) {
+            // M8 part H: the vent's light gutters under the Maw's dive.
+            dark.ventDim(maw.ventDim(sortie));
+        }
         if (grade != null) {
             // M8 part C: this frame's look and waterline wipe.
             grade.prepare(sortie, scroll, seconds);
@@ -852,6 +887,10 @@ public final class LevelRenderer {
             // M8 part G: the plumes' silt, glow, eruption and heat over the ground units, the bends' ripples.
             plumes.drawOver(batch, sortie, scroll);
         }
+        if (maw != null) {
+            // M8 part H: the dive's darkness, the lunge's shadow, the coil, the sacs, implants and head, its death.
+            maw.draw(batch, sortie, alpha, play.whiteFlash);
+        }
         ground.drawGlints(batch, sortie, alpha);
         // M5 part E: the telegraphed lanes' marks and the slams' splashes over the convoy and the rafts.
         setPieces.drawKraken(batch, sortie, wrecks, alpha, scroll, false);
@@ -875,6 +914,10 @@ public final class LevelRenderer {
         }
         units.drawEnemies(batch, sortie, alpha, Depth.LEAP, Launched.ANY);
         units.drawEnemies(batch, sortie, alpha, Depth.LOW_AIR, Launched.ANY);
+        if (cruisers != null) {
+            // M8 part H: the cruisers on low-air: their rise, glow, tells, broadsides, point defence, flak and sparks.
+            cruisers.draw(batch, sortie);
+        }
         blasts.draw(batch, scroll);
         lowAir.draw(batch, scroll);
         flakFlashes.draw(batch, softGlow, sortie.tick(), alpha);
@@ -1036,6 +1079,10 @@ public final class LevelRenderer {
             // M8 part C: the marine snow on the real clock, where the field is graded.
             grade.drawSnow(batch, scroll, clock.real());
         }
+        if (breakout != null) {
+            // M8 part H: the ice ceiling's burst and slabs at the breakout, the orbit's white.
+            breakout.draw(batch, sortie, alpha, scroll, seconds);
+        }
         if (spire != null) {
             // M5 part H: the canopy tearing and the low sun's beams after the Spire's death.
             spire.drawDaylight(batch, canopyDeath, backdrop.highAirScroll(scroll));
@@ -1094,6 +1141,10 @@ public final class LevelRenderer {
         // M8 part E: the Sirens' glow, their rings and the slowed hulls' shimmer; the Nautili's lip, crown and flecks.
         kinds.sirens(sortie).drawGlows(batch, sortie, alpha, clock.real());
         kinds.nautili(sortie).drawGlows(batch, sortie, alpha);
+        if (maw != null) {
+            // M8 part H: the Maw's teal lines, tells, sacs', implants' and head's glows, its death's flashes.
+            maw.drawGlows(batch, sortie, alpha);
+        }
         if (tenderDrops != null) {
             tenderDrops.drawLights(batch, seconds);
         }

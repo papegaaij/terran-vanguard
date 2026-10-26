@@ -354,6 +354,11 @@ final class Beams {
             }
             consider(CAST_ARMOUR, piece.neckColumn(x, half, fromY), piece.layer(), k, -1);
         }
+        CruiserRun cruisers = fire.cruisers();
+        if (cruisers != null && medium.reaches(weapon, Layer.LOW_AIR)) {
+            // M8 part H, step H2: a cruiser's hull stops it without damage.
+            consider(CAST_ARMOUR, cruisers.column(x, half, fromY), Layer.LOW_AIR, -1, -1);
+        }
         if (medium.reaches(weapon, Layer.AIR)) {
             for (int j = 0; j < spores.size(); j++) {
                 Mine spore = spores.get(j);

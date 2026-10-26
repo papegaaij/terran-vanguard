@@ -219,6 +219,23 @@ Outputs (assets/ui/briefing/<name>.png, 672x240, textures of their own like the 
   level-27-plume-cycle    L27 p2: Varga's diagram of a heat plume's cycle (tools/art/l27_props.py's frames: the
                           glowing mouth 1.4 s, the eruption 1.6 s, the cold mouth 1.5 s), a shot bent 25 degrees off
                           the burning disc; a grey Depth Hunter below the ship's lane with a torpedo rising
+  level-28-hatchery       L28 p1 (M8 part H batch): Okafor's sonar chart of the hatchery, north up: the gate's ring of
+                          arches with grey unmarked contacts guarding it, the galleries of egg racks, the spawning
+                          cavern's pools, the antechamber's fissures, the caldera round the vent with a ring of faint
+                          returns under it (no name), Level 23's shaft beside it as the way out; teal Vrell vectors
+  level-28-hull-code      L28 p2: Varga's scan of the Level 27 wreck's hull: the code HDX-417 under the burnt paint,
+                          the Helix Dynamics emblem from the corporate registry, the code's pulse train matching an
+                          intercepted beacon carrier; the guardian's sonar silhouette coiled round a vent
+  act-4-outro-orbit       Act 4 outro p1: Europa's limb from orbit under Jupiter, the ice broken open at Conamara, two
+                          black-and-gold cruisers small against the limb (drawn here, not ART-H1's sprite), the Vrell
+                          carriers (the Brood Carrier as a violet hologram) rising round them
+  act-4-outro-hullcode    Act 4 outro p2: Varga's screen: the wreck's code beside the same code in gold on a cruiser's
+                          bow (ART-H1's production hull, tools/art/ascendancy_cruiser.py, at 2x), the four relay
+                          beacons' (L24-L27) frequencies below, one pulse train
+  act-4-outro-ready-room  Act 4 outro p3: Okafor alone at the ready room's table under its lamp, her hands flat on it,
+                          the walker's filed plate from Mars (Level 20's image) on the wall screen
+  act-4-outro-aegis       Act 4 outro p4: the transport's flight deck, Lancer, Aegis 3 and 4 on their launch rails, one
+                          rail empty with AEGIS TWO / ROOK stencilled at its foot
   level-21-colossus-scan  L21 p2 (M7 part H batch): Varga's seismic cut through the basin floor (the body under
                           the sand, colony-sized, the ridge its back raises, a mouth breaching at the cut's edge with
                           the lime gullet) beside a breach seen from above at the field's left edge: the Dust
@@ -246,6 +263,8 @@ Outputs (assets/ui/briefing/<name>.png, 672x240, textures of their own like the 
   design/ui/briefing/concept/briefing-images-final-r53-a.png   review sheet, L24 (M8 part D)
   design/ui/briefing/concept/briefing-images-final-r54-a.png   review sheet, L25 (M8 part E)
   design/ui/briefing/concept/briefing-images-final-r55-a.png   review sheet, L26 (M8 part F)
+  design/ui/briefing/concept/briefing-images-final-r57-a.png   review sheet, L27 (M8 part G)
+  design/ui/briefing/concept/briefing-images-final-r58-a.png   review sheet, L28 + the Act 4 outro (M8 part H)
  Every image is composed
 in layers like the hangar map (tools/art/ui_scenes.py): the display and planets posterized to 24
 colours with ordered dither, the lines, markers and labels to 16 of their own, then the sprites
@@ -256,7 +275,7 @@ additive light (the Mantis's beam parts from assets/, its wedge from mantis_beam
 code; the carrier's core glow, also on its open sacs) added as the game blends it, its pixels to 32 colours of their own.
 The labels use the concept pixel font (render/raster.py), as the chosen mockup does.
 
-Run: python3 tools/art/briefing_images.py [name ...] [r13|r20|r21|r23|r25|r30|r31|r32|r33|r34|r35|r36|r38|r39|r40|r41|r42|r43|r44|r51|r52|r53|r54|r55] [--review]   (~15 s; after
+Run: python3 tools/art/briefing_images.py [name ...] [r13|r20|r21|r23|r25|r30|r31|r32|r33|r34|r35|r36|r38|r39|r40|r41|r42|r43|r44|r51|r52|r53|r54|r55|r57|r58] [--review]   (~15 s; after
 stormhawk.py, vrell_air.py, intel.py, vrell_l03.py, leviathan.py, vrell_l04.py, civilian_crawler.py
 airstrike_bomber.py, l05_hazards.py, mantis.py, mantis_beam.py, coilwyrm.py, l06_darkness.py,
 backdrop_l06.py, brood_carrier.py, brood_carrier_death.py, backdrop_l07.py, portraits.py, rook.py,
@@ -296,7 +315,7 @@ SOURCE_M5G = artkit.source_note(SCRIPT, "M5 part G batch")
 SOURCE_M5H = artkit.source_note(SCRIPT, "M5 part H batch")
 SOURCE_M7B = artkit.source_note(SCRIPT, "M7 part B batch")
 SOURCE_M7C = artkit.source_note(SCRIPT, "M7 part C batch")
-ROUND = "r57"  # the open round; the sheet of an earlier batch: name its round (r13, r20, r21, r23, r25, r30, ..., r36)
+ROUND = "r58"  # the open round; the sheet of an earlier batch: name its round (r13, r20, r21, r23, r25, r30, ..., r36)
 OUT = ROOT / "assets" / "ui" / "briefing"
 CONCEPT = DESIGN / "ui" / "briefing" / "concept"
 W, H = 672, 240
@@ -5879,6 +5898,580 @@ def plume_cycle():
     return b
 
 
+# --------------------------------------------------------------------------- Level 28 and the Act 4 outro (M8 part H)
+
+SOURCE_M8H = artkit.source_note(SCRIPT, "M8 part H batch")
+HULL_CODE_H = "HDX-417"                             # Level 27's wreck (backdrop_l27.py), accepted in round 57
+GOLD_A = (236, 186, 72)                             # the Ascendancy's gold trim
+RIM_RED = (200, 50, 40)
+PORT = (255, 150, 50)                               # hot-amber gun ports
+LIME_W = (220, 255, 170)                            # the vent's lime-white throat
+
+
+def l28_map_xy(t, x):
+    """Level 28's (t s, play-field x px) on Okafor's chart: north (the gate) up."""
+    return 24 + x * 400 / 480, 30 + t / 120 * 180
+
+
+def helix_emblem(size=40, colour=(200, 206, 214)):
+    """The Helix Dynamics emblem as Varga's registry shows it: a ring round two strands of a double helix crossing
+    with their rungs; an RGBA image on clear, drawn at 4x and reduced."""
+    k = 4
+    s = size * k
+    img = Image.new("RGBA", (s, s), (0, 0, 0, 0))
+    d = ImageDraw.Draw(img)
+    c = colour + (255,)
+    d.ellipse([k, k, s - k, s - k], outline=c, width=2 * k)
+    d.ellipse([5 * k, 5 * k, s - 5 * k, s - 5 * k], outline=c, width=k)
+    top, bot = 9 * k, s - 9 * k
+    amp = s * 0.2
+    for phase in (0.0, np.pi):
+        pts = [(s / 2 + amp * np.sin(phase + (y - top) / (bot - top) * 2 * np.pi), y) for y in np.linspace(top, bot, 40)]
+        d.line(pts, fill=c, width=int(2.4 * k))
+    for j in range(1, 8):
+        y = top + (bot - top) * j / 8
+        a = (y - top) / (bot - top) * 2 * np.pi
+        dx = amp * np.sin(a)
+        if abs(dx) > amp * 0.3:
+            d.line([(s / 2 - dx, y), (s / 2 + dx, y)], fill=c, width=k)
+    return held_frame_img(img.resize((size, size), Image.LANCZOS), 8)
+
+
+def ascendancy_emblem(size=24):
+    """The Ascendancy's gold emblem on a cruiser: a banded disc (Jupiter) under a three-pointed crown, in a ring."""
+    k = 4
+    s = size * k
+    img = Image.new("RGBA", (s, s), (0, 0, 0, 0))
+    d = ImageDraw.Draw(img)
+    g = GOLD_A + (255,)
+    d.ellipse([k, k, s - k, s - k], outline=g, width=2 * k)
+    r = s * 0.2
+    cx, cy = s / 2, s * 0.58
+    d.ellipse([cx - r, cy - r, cx + r, cy + r], fill=g)
+    for dy in (-0.35, 0.2):
+        d.line([(cx - r * 0.95, cy + dy * r), (cx + r * 0.95, cy + dy * r)], fill=(20, 18, 22, 255), width=k)
+    base = cy - r - 2 * k
+    d.polygon([(cx - r * 1.3, base), (cx - r * 1.3, base - r * 0.9), (cx - r * 0.6, base - r * 0.45),
+               (cx, base - r * 1.2), (cx + r * 0.6, base - r * 0.45), (cx + r * 1.3, base - r * 0.9),
+               (cx + r * 1.3, base)], fill=g)
+    return held_frame_img(img.resize((size, size), Image.LANCZOS), 8)
+
+
+CRUISER_HULL = [(0.0, 0.0), (0.32, 0.1), (0.5, 0.26), (1.0, 0.36), (1.0, 0.6), (0.82, 0.68), (0.82, 0.88),
+                (0.6, 0.98), (-0.6, 0.98), (-0.82, 0.88), (-0.82, 0.68), (-1.0, 0.6), (-1.0, 0.36), (-0.5, 0.26),
+                (-0.32, 0.1)]
+
+
+def cruiser_art(length, code=False):
+    """An Ascendancy cruiser seen from above, bow up, ``length`` px long (drawn at 4x and reduced; not the
+    production sprite: tools/art/ascendancy_cruiser.py is ART-H1's): an angular black hull in stepped plates, the
+    spine and bridge, gold trim lines inset along the edges and down the spine, rows of hot-amber gun ports on both
+    flanks and the after shoulders, a 1 px rim light (gold toward the upper left, red away), the gold emblem aft and,
+    with ``code``, the Helix hull code in gold down the bow. Returns the RGBA image."""
+    k = 4
+    L = length * k
+    w = L * 0.34
+    pad = 2 * k
+    img = Image.new("RGBA", (int(w + 2 * pad), int(L + 2 * pad)), (0, 0, 0, 0))
+    d = ImageDraw.Draw(img)
+    cx = img.width / 2
+
+    def P(u, v, inset=0.0):
+        return (cx + u * (w / 2 - inset), pad + v * L + (inset if v < 0.5 else -inset) * 0.4)
+
+    hull = [P(u, v) for u, v in CRUISER_HULL]
+    d.polygon(hull, fill=(16, 16, 22, 255))
+    d.polygon([P(u, v) for u, v in CRUISER_HULL if u <= 0] + [P(0, 0.98)], fill=(30, 30, 38, 255))   # the lit half
+    for v0, v1, u in ((0.3, 0.62, 0.75), (0.7, 0.86, 0.6)):                                         # stepped plates
+        for s in (-1, 1):
+            d.polygon([P(s * u, v0), P(s * (u - 0.22), v0 + 0.02), P(s * (u - 0.22), v1 - 0.02), P(s * u, v1)],
+                      fill=(24, 24, 30, 255) if s > 0 else (40, 40, 50, 255))
+    d.polygon([P(-0.14, 0.16), P(0.14, 0.16), P(0.18, 0.9), P(-0.18, 0.9)], fill=(36, 36, 44, 255))   # the spine
+    d.polygon([P(-0.26, 0.56), P(0.26, 0.56), P(0.3, 0.7), P(-0.3, 0.7)], fill=(50, 48, 56, 255))      # the bridge
+    gold = GOLD_A + (255,)
+    trim = [P(u, v, 3 * k) for u, v in CRUISER_HULL]
+    d.line(trim + [trim[0]], fill=gold, width=k)
+    d.line([P(0, 0.12), P(0, 0.54)], fill=gold, width=k)
+    d.line([P(0, 0.72), P(0, 0.95)], fill=gold, width=k)
+    for s in (-1, 1):                                                                               # gun ports
+        for v in np.linspace(0.39, 0.58, 7):
+            x, y = P(s * 0.88, v)
+            d.rectangle([x - 1.5 * k, y - 1.2 * k, x + 1.5 * k, y + 1.2 * k], fill=PORT + (255,))
+        for v in np.linspace(0.72, 0.86, 4):
+            x, y = P(s * 0.7, v)
+            d.rectangle([x - 1.5 * k, y - 1.2 * k, x + 1.5 * k, y + 1.2 * k], fill=PORT + (255,))
+    for a, b in zip(hull, hull[1:] + hull[:1]):                                                      # rim light
+        nx, ny = b[1] - a[1], -(b[0] - a[0])
+        lit = (-0.7 * nx - 0.7 * ny) > 0
+        d.line([a, b], fill=(GOLD_A if lit else RIM_RED) + (255,), width=k)
+    if code:
+        txt = Image.new("RGBA", (raster.text_width(HULL_CODE_H) + 2, 8), (0, 0, 0, 0))
+        raster.draw_text(txt, 1, 0, HULL_CODE_H, GOLD_A)
+        f = 0.3 * L / txt.width
+        txt = txt.rotate(90, expand=True).resize((int(txt.height * f), int(txt.width * f)), Image.NEAREST)
+        img.alpha_composite(txt, (int(cx + w * 0.16), int(pad + L * 0.12)))
+    em = ascendancy_emblem(max(8, int(length * 0.12)))
+    em = em.resize((em.width * k, em.height * k), Image.NEAREST)
+    img.alpha_composite(em, (int(cx - em.width / 2), int(pad + L * 0.76 - em.height / 2)))
+    return img.resize((max(1, img.width // k), max(1, img.height // k)), Image.LANCZOS)
+
+
+def cruiser(length, angle=0.0, colours=40):
+    """The cruiser at ``length`` px turned ``angle`` degrees clockwise, 1-bit alpha, palettised."""
+    img = cruiser_art(length)
+    if angle:
+        img = img.rotate(-angle, expand=True, resample=Image.BICUBIC)
+    return held_frame_img(img, colours)
+
+
+def stencil(text, scale, colour, squash=1.0):
+    """Stencilled text as a sprite (the font at ``scale``, gaps cut through each glyph's middle row like a stencil),
+    its height squashed by ``squash`` (a deck seen at an angle)."""
+    img = Image.new("RGBA", (raster.text_width(text, scale) + 2, 7 * scale + 2), (0, 0, 0, 0))
+    raster.draw_text(img, 1, 1, text, colour, scale=scale)
+    a = np.array(img)
+    a[1 + 3 * scale:1 + 3 * scale + max(1, scale // 2), :, 3] = 0
+    img = Image.fromarray(a, "RGBA")
+    if squash != 1.0:
+        img = img.resize((img.width, max(1, round(img.height * squash))), Image.BOX)
+    return held_frame_img(img, 8)
+
+
+def hull_plate(w, h, code_colour=(206, 204, 192), seed=2801):
+    """The Level 27 wreck's hull as Varga's scan shows it: grey plates with their seams and rivets, the paint burnt
+    and blistered off in a broad patch by the plume, the code stencilled on the bare primer under it (the paint left
+    in flakes over the letters' edges), the scorch's brown-black rim round the patch."""
+    yy, xx = np.mgrid[0:h, 0:w].astype(np.float64)
+    n = raster.fbm(w, h, 18, seed, octaves=5, period=False)
+    n2 = raster.fbm(w, h, 5, seed + 1, octaves=3, period=False)
+    paint = np.array((70, 74, 80.0))
+    primer = np.array((150, 146, 136.0))
+    burn = np.clip(1.2 - np.hypot((xx - w * 0.5) / (w * 0.42), (yy - h * 0.52) / (h * 0.42)) - 0.5 * (n - 0.5), 0, 1)
+    off = (burn + 0.25 * (n2 - 0.5)) > 0.38
+    rim = ((burn + 0.25 * (n2 - 0.5)) > 0.22) & ~off
+    rgb = np.where(off[..., None], primer * (0.8 + 0.3 * n[..., None]), paint * (0.85 + 0.25 * n[..., None]))
+    rgb = np.where(rim[..., None], np.array((44, 30, 22.0)) * (0.8 + 0.4 * n2[..., None]), rgb)
+    seams = (np.abs((xx % 96) - 48) > 47) | (np.abs((yy % 54) - 27) > 26)
+    rgb = np.where(seams[..., None], rgb * 0.5, rgb)
+    rivets = ((xx % 96 < 3) | (xx % 96 > 93)) & ((yy % 9) < 2)
+    rgb = np.where(rivets[..., None], rgb * 1.35, rgb)
+    img = raster.to_rgba_image(np.clip(rgb, 0, 255))
+    sc = 3
+    txt = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+    tw = raster.text_width(HULL_CODE_H, sc)
+    raster.draw_text(txt, int(w / 2 - tw / 2), int(h / 2 - 3.5 * sc), HULL_CODE_H, code_colour, scale=sc)
+    t = np.array(txt).astype(np.float64)
+    flakes = (n2 > 0.62) & ~off                                        # paint still over the letters in flakes
+    t[..., 3] = np.where(flakes, 0, t[..., 3])
+    t[int(h / 2 - 3.5 * sc) + 3 * sc:int(h / 2 - 3.5 * sc) + 3 * sc + 1, :, 3] = 0   # the stencil's bridge
+    img.alpha_composite(Image.fromarray(t.astype(np.uint8), "RGBA"))
+    return img
+
+
+def code_bits(text):
+    """The pulse train a code makes as a beacon carrier: each character's 6 low bits, a sync pulse between."""
+    bits = []
+    for ch in text:
+        bits += [1, 1, 0] + [(ord(ch) >> i) & 1 for i in range(6)]
+    return bits
+
+
+def pulse_trace(b, x0, x1, y, h, bits, colour, offset=0.0, alpha=230):
+    """A square-wave trace of ``bits`` from x0 to x1 on baseline y (high = y - h)."""
+    n = len(bits)
+    pts = []
+    for i, bit in enumerate(bits):
+        xa = x0 + (x1 - x0) * i / n + offset
+        xb = x0 + (x1 - x0) * (i + 1) / n + offset
+        yy = y - h * bit
+        if pts:
+            pts.append((xa, yy))
+        else:
+            pts.append((xa, y - h * bit))
+        pts.append((xb, yy))
+    b.line(pts, colour, 1, alpha)
+
+
+def coil_silhouette(b, cx, cy, rx, ry, colour, n=26, head=True, alpha=200):
+    """The guardian as a sonar silhouette: a ring of segment returns round a vent at (cx, cy), the head lifted at
+    the top, the tail tip overlapping the neck."""
+    for j in range(n):
+        a = -np.pi / 2 + 0.35 + j / n * (2 * np.pi - 0.2)
+        x, y = cx + rx * np.cos(a), cy + ry * np.sin(a)
+        r = 2.6 - 1.2 * j / n
+        b.draw.ellipse([x - r, y - r, x + r, y + r], outline=colour + (alpha,))
+    if head:
+        hx, hy = cx + rx * np.cos(-np.pi / 2 + 0.2), cy - ry - 2
+        b.draw.polygon([(hx - 6, hy + 2), (hx + 2, hy - 5), (hx + 9, hy - 2), (hx + 4, hy + 4)], outline=colour + (alpha,))
+
+
+def level_28_hatchery():
+    """L28 p1: Okafor's sonar chart of the hatchery, north up: the gate's ring of arches at the top with grey, unmarked
+    contacts guarding it beside the Vrell; the galleries of egg racks; the spawning cavern's pools; the antechamber's
+    fissures warming to red; the caldera round the vent at the bottom, a ring of faint returns circling under it;
+    Level 23's drill shaft beside the caldera marked as the way out, teal Vrell vectors, the route."""
+    b = Board()
+    b.base = b.base * 0.55
+    mx0, mx1, my0, my1 = 24, 424, 26, H - 6
+    inside = (b.xx > mx0) & (b.xx < mx1) & (b.yy > my0) & (b.yy < my1)
+    n = raster.fbm(W, H, 32, 2881, octaves=4, period=False)
+    b.base = np.where(inside[..., None], np.array((6, 9, 16.0)) + 8 * (n[..., None] - 0.5), b.base)
+    # the gate: a ring of chitin arches across the top, the teal under them
+    gx, gy = l28_map_xy(1, 240)
+    b.glow(gx, gy, 22, (0, 90, 70), 1.0)
+    for j in range(10):
+        x = mx0 + 40 + j * 36
+        b.arc(x, gy, 14, 6, 180, 360, TEAL_G, 200)
+    tag(b, mx0 + 6, gy + 8, "THE GATE", TEAL_G)
+    # grey, unmarked contacts at the gate beside the Vrell
+    for x, t in ((110, 12), (180, 14), (320, 13)):
+        mx, my = l28_map_xy(t, x)
+        b.marker(mx, my, "square", GREY, 3)
+    tag(b, l28_map_xy(0, 340)[0], l28_map_xy(13, 0)[1] - 4, "GREY HULLS - NO IFF", GREY)
+    # the galleries: rows of egg racks (pale pods in lines), the turret nests on their ends
+    for t in np.arange(25, 49, 4.0):
+        for xa, xb in ((40, 200), (280, 440)):
+            b.line([l28_map_xy(t, xa), l28_map_xy(t, xb)], (120, 90, 190), 1, 170)
+            for x in np.arange(xa + 4, xb, 10):
+                mx, my = l28_map_xy(t, x)
+                b.glow(mx, my - 1, 1.4, (70, 60, 110), 0.9)
+            mx, my = l28_map_xy(t, xb if xa < 240 else xa)
+            b.marker(mx, my, "dot", VIOLET, 1)
+    tag(b, l28_map_xy(0, 250)[0] - 26, l28_map_xy(36, 0)[1] - 4, "BROOD GALLERIES", VIOLET)
+    # the spawning cavern: hatching pools as warm rings
+    rng = np.random.default_rng(2882)
+    for _ in range(14):
+        t, x = rng.uniform(53, 78), rng.uniform(60, 420)
+        mx, my = l28_map_xy(t, x)
+        b.glow(mx, my, 4, (90, 50, 14), 0.8)
+        b.ring(mx, my, rng.uniform(2.5, 5), colour=(200, 130, 60), alpha=170)
+    tag(b, l28_map_xy(0, 300)[0], l28_map_xy(64, 0)[1] - 4, "SPAWNING CAVERN", AMBER)
+    # the antechamber: fissures in red, the vent's glow rising
+    for j in range(7):
+        t0, x0 = 82 + j * 2.8, 70 + (j * 61) % 340
+        pts = [l28_map_xy(t0 + u * 6, x0 + 18 * np.sin(u * 3 + j)) for u in np.linspace(0, 1, 6)]
+        b.line(pts, (200, 70, 30), 1, 200)
+    tag(b, l28_map_xy(0, 40)[0], l28_map_xy(88, 0)[1] - 4, "ANTECHAMBER", (255, 120, 60))
+    # the caldera round the vent, a ring of faint returns under it
+    cx, cy = l28_map_xy(112, 240)
+    b.glow(cx, cy, 26, (120, 90, 30), 1.0)
+    b.glow(cx, cy, 7, (160, 190, 110), 1.2)
+    b.ring(cx, cy, 70, 22, colour=(200, 90, 40), alpha=200)
+    coil_silhouette(b, cx, cy, 56, 16, (90, 150, 140), n=30, head=False, alpha=150)
+    tag(b, cx - 74, cy - 4, "THE VENT", LIME_W, right=True)
+    tag(b, cx + 74, cy + 4, "LARGE CONTACT", RED)
+    tag(b, cx + 74, cy + 14, "UNDER IT", RED)
+    # Level 23's shaft: the way out
+    sx, sy = l28_map_xy(102, 400)
+    b.ring(sx, sy, 9, colour=GREEN, alpha=230)
+    b.ring(sx, sy, 5, colour=GREEN, alpha=170)
+    b.arrow(sx, sy - 10, sx, sy - 34, GREEN, 4, dashed=False)
+    tag(b, sx + 14, sy - 30, "SHAFT", GREEN)
+    tag(b, sx + 14, sy - 20, "OUT", GREEN)
+    # teal Vrell vectors through the galleries, toward the gate
+    for t, x in ((44, 210), (70, 140), (60, 360), (92, 250)):
+        mx, my = l28_map_xy(t, x)
+        b.arrow(mx, my, mx + 6, my - 16, TEAL_G, 3, dashed=False)
+    # the route
+    rpts = [l28_map_xy(t, 240 + 70 * np.sin(t / 17)) for t in np.linspace(0, 104, 30)] + [(cx, cy - 10)]
+    b.dashed(rpts, CYAN, 1, dash=3, gap=5)
+    b.dashed([(cx + 10, cy - 8), (sx - 8, sy + 4)], GREEN, 1, dash=3, gap=4)
+    sx0, sy0 = l28_map_xy(0, 240)
+    b.marker(sx0, sy0 + 4, "square", CYAN, 3)
+    tag(b, sx0 - 10, sy0 + 1, "LANCER", CYAN, right=True)
+    b.title("CDF SONAR CHART - THE HATCHERY, NORTH UP")
+    b.label(W - 10, 9, "CMDR. OKAFOR", CYAN_DIM, right=True)
+    b.label(mx1 + 8, 30, "N", WHITE)
+    b.arrow(mx1 + 11, 58, mx1 + 11, 42, WHITE, 4, dashed=False)
+    px = 470
+    b.label(px, 30, "THE HATCHERY", WHITE)
+    b.line([(px, 42), (W - 12, 42)], CYAN_DIM, 1, 120)
+    b.label(px, 52, "EVERYTHING THEY", TEAL_G)
+    b.label(px, 62, "SENT WAS GROWN", TEAL_G)
+    b.label(px, 72, "HERE", TEAL_G)
+    b.label(px, 90, "GREY HULLS", GREY)
+    b.label(px, 100, "GUARD THE GATE", GREY)
+    b.label(px, 118, "SOMETHING LARGE", RED)
+    b.label(px, 128, "AT THE VENT", RED)
+    b.label(px, 146, "END IT", AMBER)
+    b.label(px, 164, "OUT: THE SHAFT", GREEN)
+    b.label(px, 182, "ROOK IS STILL", CYAN)
+    b.label(px, 192, "OUT THERE", CYAN)
+    return b
+
+
+def level_28_hull_code():
+    """L28 p2: Varga's scan of the Level 27 wreck's hull: the code under the burnt paint, the Helix Dynamics emblem
+    from the corporate registry beside it, an intercepted beacon carrier trace matching the code's pulse train; in a
+    corner the guardian's sonar silhouette coiled round a vent."""
+    b = Board()
+    b.base = b.base * 0.45
+    b.title("CDF SCAN - THE WRECK'S HULL, LEVEL 27")
+    b.label(W - 10, 9, "DR. VARGA", CYAN_DIM, right=True)
+    px0, py0, pw, ph = 20, 26, 268, 118
+    plate = hull_plate(pw, ph)
+    b.sprites.append((held_frame_img(plate, 48), px0, py0))
+    b.draw.rectangle([px0 - 1, py0 - 1, px0 + pw, py0 + ph], outline=CYAN_DIM + (220,))
+    b.bracket(px0 + 40, py0 + ph / 2 - 18, px0 + pw - 40, py0 + ph / 2 + 18, AMBER, 8)
+    tag(b, px0 + 4, py0 + ph + 6, "UNDER THE BURNT PAINT", WHITE)
+    # the registry card: the emblem and its name
+    ex0, ey0 = 304, 26
+    fill(b, [(ex0, ey0), (ex0 + 150, ey0), (ex0 + 150, ey0 + 118), (ex0, ey0 + 118)], (8, 14, 28), 1.0)
+    b.draw.rectangle([ex0, ey0, ex0 + 150, ey0 + 118], outline=CYAN_DIM + (220,))
+    b.label(ex0 + 6, ey0 + 5, "CORPORATE REGISTRY", CYAN_DIM)
+    b.sprite(helix_emblem(48), ex0 + 75, ey0 + 52)
+    b.label(ex0 + 75 - raster.text_width("HELIX DYNAMICS") / 2, ey0 + 84, "HELIX DYNAMICS", WHITE)
+    b.label(ex0 + 75 - raster.text_width("PREFIX HDX") / 2, ey0 + 96, "PREFIX HDX", AMBER)
+    b.line([(px0 + pw - 40, py0 + ph / 2), (ex0, ey0 + 96 + 4)], AMBER, 1, 200)
+    # the traces: the code as a pulse train and the beacon carrier it matches
+    tx0, tx1 = 20, 456
+    fill(b, [(tx0 - 4, 166), (tx1 + 4, 166), (tx1 + 4, 232), (tx0 - 4, 232)], (6, 10, 22), 1.0)
+    bits = code_bits(HULL_CODE_H)
+    pulse_trace(b, tx0 + 96, tx1, 190, 10, bits, CYAN)
+    pulse_trace(b, tx0 + 96, tx1, 222, 10, bits, BEACON_RG, offset=0.5)
+    b.label(tx0, 182, "HULL CODE", CYAN)
+    b.label(tx0, 214, "BEACON", BEACON_RG)
+    b.label(tx0, 224, "CARRIER", BEACON_RG)
+    b.dashed([(tx0 + 96, 200), (tx1, 200)], CYAN_DIM, 1, 2, 4)
+    tag(b, tx1 - 92, 168, "MATCH: 100 %", GREEN)
+    # the corner: the guardian coiled round a vent
+    cx0, cy0, cx1, cy1 = 472, 120, 662, 232
+    fill(b, [(cx0, cy0), (cx1, cy0), (cx1, cy1), (cx0, cy1)], (6, 10, 20), 1.0)
+    vx, vy = (cx0 + cx1) / 2, (cy0 + cy1) / 2 + 6
+    b.glow(vx, vy, 16, (110, 90, 30), 1.0)
+    b.glow(vx, vy, 5, (150, 190, 110), 1.0)
+    coil_silhouette(b, vx, vy, 66, 36, (110, 170, 160), n=30)
+    b.draw.rectangle([cx0, cy0, cx1, cy1], outline=CYAN_DIM + (220,))
+    tag(b, cx0 + 4, cy0 + 4, "SONAR: AT THE VENT", (110, 170, 160))
+    px = 472
+    b.label(px, 30, "THE GREY HULLS", WHITE)
+    b.line([(px, 42), (W - 12, 42)], CYAN_DIM, 1, 120)
+    b.label(px, 52, "CARRY THE CODE", AMBER)
+    b.label(px, 62, "FROM THE WRECK", AMBER)
+    b.label(px, 80, "THE BEACONS", BEACON_RG)
+    b.label(px, 90, "SEND IT", BEACON_RG)
+    b.label(px, 108, "HELIX, LANCER", WHITE)
+    return b
+
+
+def outro_orbit():
+    """Act 4 outro p1: Europa from orbit, its limb across the frame under Jupiter; the ice broken open at Conamara
+    where the shafts came up (dark holes, steam); two black-and-gold cruisers small against the limb, the Vrell
+    carriers rising round them on their trails."""
+    b = Board()
+    b.base = b.base * 0.3
+    rng = np.random.default_rng(2891)
+    for _ in range(110):
+        x, y = int(rng.integers(0, W)), int(rng.integers(0, H))
+        b.base[y, x] += rng.uniform(30, 120)
+    jupiter_disc(b, 600, 70, 130, strength=0.85)
+    g = Globe(250, 470, 380, -88, -42)
+    europa_globe(b, g, seed=2892)
+    d = np.hypot(b.xx - 250, b.yy - 470)
+    b.base += (np.exp(-((d - 380) / 4) ** 2))[..., None] * np.array((60, 110, 150.0))     # the limb's thin glow
+    # the ice broken open where the shafts came up
+    cx, cy, _ = g.project(*CONAMARA)
+    holes = [(-30, 6), (-6, -4), (22, 8), (46, -2), (8, 22)]
+    for dx, dy in holes:
+        hx, hy = cx + dx, cy + dy
+        m = np.hypot((b.xx - hx) / 6, (b.yy - hy) / 3) < 1
+        b.base = np.where(m[..., None], np.array((8, 26, 36.0)), b.base)
+        b.glow(hx, hy - 4, 10, (60, 70, 80), 0.7)                                       # steam
+        b.ring(hx, hy, 7, 3.5, colour=WHITE, alpha=150)
+    tag(b, cx - 40, cy + 30, "CONAMARA: THE ICE BROKEN OPEN", WHITE, right=False)
+    # the Vrell carriers rising on their trails, the cruisers among them against the limb
+    for dx, dy, top in ((-44, 0, 70), (-10, -6, 44), (30, 4, 58), (56, -2, 34), (90, 6, 80)):
+        x0, y0 = cx + dx, cy + dy
+        x1, y1 = x0 + 0.3 * (top - 40), y0 - top
+        b.dashed([(x0, y0 - 4), (x1, y1 + 8)], (150, 90, 220), 1, 2, 3)
+        spr, _ = carrier(0, 0.07)
+        b.sprite(holo(turned(spr, 180), VIOLET, 8), x1, y1)
+        b.glow(x1, y1, 6, (40, 70, 30), 0.6)
+    for x, y, a in ((cx - 96, cy - 60, 20), (cx + 132, cy - 50, -15)):
+        b.sprite(cruiser(60, a), x, y)
+    tag(b, cx - 150, cy - 108, "ASCENDANCY CRUISERS", GOLD_A)
+    b.line([(cx - 118, cy - 98), (cx - 98, cy - 80)], GOLD_A, 1, 200)
+    tag(b, cx + 84, cy - 118, "VRELL CARRIERS", VIOLET)
+    b.title("CDF TRANSPORT - EUROPA, FROM ORBIT")
+    tag(b, W - 10, 9, "CMDR. OKAFOR", CYAN, right=True)
+    px = 520
+    fill(b, [(px - 10, 120), (W - 6, 120), (W - 6, H - 8), (px - 10, H - 8)], (6, 10, 22), 0.85)
+    b.label(px, 128, "IN ORBIT", WHITE)
+    b.label(px, 146, "THE CRUISERS", GOLD_A)
+    b.label(px, 156, "DID NOT FOLLOW", GOLD_A)
+    b.label(px, 174, "THE OCEAN: CLEAR", TEAL_G)
+    b.label(px, 192, "AEGIS TWO", RED)
+    b.label(px, 202, "LOST IN THE DARK", RED)
+    return b
+
+
+def outro_hullcode():
+    """Act 4 outro p2: Varga's screen: the code under the Depth Hunter wreck's burnt paint beside the same code
+    stencilled in gold on a cruiser's bow (her capture of the rise), the relay beacons' four frequencies in a strip
+    below, one pulse train."""
+    b = Board()
+    b.base = b.base * 0.45
+    b.title("CDF SCIENCE - THE CODE, MATCHED")
+    b.label(W - 10, 9, "DR. VARGA", CYAN_DIM, right=True)
+    lx, ly, lw, lh = 20, 28, 250, 110
+    b.sprites.append((held_frame_img(hull_plate(lw, lh, seed=2893), 48), lx, ly))
+    b.draw.rectangle([lx - 1, ly - 1, lx + lw, ly + lh], outline=CYAN_DIM + (220,))
+    tag(b, lx + 4, ly + lh + 5, "LEVEL 27: THE GREY WRECK", GREY)
+    # the bow capture: the production cruiser (tools/art/ascendancy_cruiser.py) at 2x, bow to the right, cropped to
+    # its bow's port side and the gold code (model (-1.55, 3.0): 62 px left of the keel, 120 px up from the middle; that
+    # side's code reads bow-ward, so it stands upright once the bow points right)
+    rx, ry, rw, rh = 330, 28, 300, 110
+    src = held_asset("ascendancy-cruiser")
+    hull = src.resize((src.width * 2, src.height * 2), Image.NEAREST).rotate(-90, expand=True)
+    cx, cy = (src.height - 1 - (src.height // 2 - 120)) * 2, (src.width // 2 - 62) * 2
+    crop = hull.crop((cx - rw // 2 + 40, cy - rh // 2, cx + rw // 2 + 40, cy + rh // 2))
+    panel = Image.new("RGBA", (rw, rh), (8, 10, 18, 255))
+    panel.alpha_composite(crop)
+    b.sprites.append((held_frame_img(panel, 48), rx, ry))
+    b.draw.rectangle([rx - 1, ry - 1, rx + rw, ry + rh], outline=CYAN_DIM + (220,))
+    tag(b, rx + 4, ry + rh + 5, "TODAY: A CRUISER'S BOW, IN GOLD", GOLD_A)
+    b.arrow(lx + lw + 8, ly + lh / 2, rx - 8, ry + lh / 2, GREEN, 4, dashed=True)
+    tag(b, lx + lw + 10, ly + lh / 2 + 12, "SAME", GREEN)
+    big(b, 336 - raster.text_width(HULL_CODE_H, 2) / 2, 156, HULL_CODE_H, AMBER)
+    # the beacons' frequencies
+    sx0, sx1 = 20, 652
+    fill(b, [(sx0 - 4, 178), (sx1 + 4, 178), (sx1 + 4, 234), (sx0 - 4, 234)], (6, 10, 22), 1.0)
+    bits = code_bits(HULL_CODE_H)
+    for j, lv in enumerate((24, 25, 26, 27)):
+        y = 192 + j * 12
+        b.label(sx0, y - 7, f"BEACON L{lv}", BEACON_RG)
+        pulse_trace(b, sx0 + 80, sx1, y, 6, bits, BEACON_RG, alpha=200 - 20 * j)
+    return b
+
+
+def outro_ready_room():
+    """Act 4 outro p3: the transport's ready room at night: Okafor alone at the far side of the briefing table under
+    its lamp, her hands flat on the table; on the wall screen beside her the walker's filed plate from Mars (a crop
+    of Level 20's briefing image)."""
+    b = Board()
+    t = np.clip(b.yy / H, 0, 1)
+    b.base = raster.ramp([(0.0, (8, 10, 18)), (0.6, (16, 18, 28)), (1.0, (10, 10, 16))], t)
+    wall = b.yy < 132
+    ribs = (np.abs((b.xx % 56) - 28) > 26) & wall
+    b.base = np.where(ribs[..., None], b.base * 1.8, b.base)
+    # the wall screen with the plate, to her right
+    sx0, sy0, sw, sh = 36, 26, 196, 92
+    src = Image.open(OUT / "level-20-filed-plate.png").convert("RGB")
+    crop = src.crop((80, 40, 352, 165)).resize((sw - 4, sh - 14), Image.BOX)
+    scr = Image.new("RGBA", (sw, sh), (8, 12, 26, 255))
+    scr.paste(crop, (2, 12))
+    raster.draw_text(scr, 4, 3, "WRECK 19-A.IMG - MARS", (150, 170, 190, 255))
+    b.sprites.append((held_frame_img(scr, 40), sx0, sy0))
+    b.draw.rectangle([sx0 - 2, sy0 - 2, sx0 + sw + 1, sy0 + sh + 1], outline=(70, 80, 96, 255), width=2)
+    b.glow(sx0 + sw / 2, sy0 + sh / 2, 110, (14, 26, 40), 0.8)
+    # the lamp over her, its cone and its pool on the table
+    ox = 380
+    lx = ox
+    b.line([(lx, 0), (lx, 14)], GREY, 1, 160)
+    cone = (b.yy > 22) & (np.abs(b.xx - lx) < 12 + (b.yy - 22) * 0.75) & (b.yy < 150)
+    b.base = np.where(cone[..., None], b.base + np.array((12, 10, 7.0)), b.base)
+    # the table in perspective (its far edge at y 132), the lamp's pool on it
+    top, front = 132.0, 236.0
+    fill(b, [(80, top), (600, top), (672, front), (8, front)], (34, 28, 26))
+    fill(b, [(8, front), (672, front), (672, H), (8, H)], (14, 12, 14))
+    b.glow(ox, 166, 56, (110, 84, 46), 0.6)
+    for x in (150, 250, 510, 600):                                                 # the empty chairs' backs
+        fill(b, [(x - 18, front), (x + 18, front), (x + 15, front - 30), (x - 15, front - 30)], (12, 12, 16))
+    # Okafor at the table's far side, her hands flat on it, her head a little bowed
+    oy = 134                                                                       # the table's far edge at her
+    uni, skin, hair = np.array((30, 40, 70.0)), np.array((104, 70, 52.0)), (14, 12, 16)
+    fill(b, [(ox - 46, oy + 2), (ox + 46, oy + 2), (ox + 42, oy - 34), (ox + 26, oy - 50), (ox - 26, oy - 50),
+             (ox - 42, oy - 34)], tuple(uni))
+    fill(b, [(ox - 26, oy - 50), (ox + 26, oy - 50), (ox + 30, oy - 44), (ox - 30, oy - 44)], tuple(uni * 1.5))  # lit
+    for s in (-1, 1):
+        fill(b, [(ox + s * 24, oy - 50), (ox + s * 40, oy - 40), (ox + s * 36, oy - 37), (ox + s * 22, oy - 46)],
+             (190, 150, 70))                                                       # the shoulder boards
+    fill(b, [(ox - 8, oy - 52), (ox + 8, oy - 52), (ox, oy - 42)], (20, 24, 40))  # the collar's V
+    hy = oy - 68
+    fill(b, [(ox - 6, hy + 10), (ox + 6, hy + 10), (ox + 7, oy - 50), (ox - 7, oy - 50)], tuple(skin * 0.55))  # neck
+    m = np.hypot((b.xx - ox) / 14.5, (b.yy - hy) / 17.5) < 1
+    b.base = np.where(m[..., None], np.array((6, 6, 10.0)), b.base)              # the head's dark outline
+    m = np.hypot((b.xx - ox) / 13, (b.yy - hy) / 16) < 1
+    shade = 0.7 + 0.8 * np.clip((hy + 16 - b.yy) / 32, 0, 1)                    # lit from the lamp above
+    b.base = np.where(m[..., None], skin * shade[..., None], b.base)
+    for ex in (-5, 5):                                                             # her eyes, cast down
+        b.base[hy + 1:hy + 3, ox + ex - 2:ox + ex + 2] = np.array((40, 26, 22.0))
+    b.base[hy + 9:hy + 10, ox - 4:ox + 4] = np.array((60, 36, 30.0))
+    m = (np.hypot((b.xx - ox) / 13.8, (b.yy - (hy - 3)) / 13) < 1) & (b.yy < hy - 5)   # her cropped hair
+    b.base = np.where(m[..., None], np.array(hair, float), b.base)
+    for s in (-1, 1):                                                              # her arms on the table
+        fill(b, [(ox + s * 42, oy - 34), (ox + s * 52, oy + 10), (ox + s * 40, oy + 22), (ox + s * 30, oy - 6)],
+             tuple(uni * 0.9))
+        fill(b, [(ox + s * 22, oy + 16), (ox + s * 46, oy + 14), (ox + s * 48, oy + 26), (ox + s * 22, oy + 26)],
+             tuple(skin * 1.1))
+        for f in range(4):
+            fx = ox + s * (26 + 6 * f)
+            b.line([(fx, oy + 22), (fx + s, oy + 27)], (50, 34, 26), 1, 200)
+    b.glow(lx, 14, 6, (255, 210, 140), 1.0)
+    b.draw.polygon([(lx - 12, 22), (lx + 12, 22), (lx + 6, 13), (lx - 6, 13)], fill=(70, 64, 56, 255))
+    b.title("CDF TRANSPORT - READY ROOM, 02:10")
+    b.label(W - 10, 9, "CMDR. OKAFOR", CYAN_DIM, right=True)
+    tag(b, sx0, sy0 + sh + 8, "MARS: FILED, NOT HEARD", GREY)
+    px = 548
+    b.label(px, 40, "I WAS WRONG", AMBER)
+    b.label(px, 58, "WHAT SHE SEES,", WHITE)
+    b.label(px, 68, "SHE SAYS", WHITE)
+    b.label(px, 86, "ON EVERY", CYAN)
+    b.label(px, 96, "CHANNEL", CYAN)
+    return b
+
+
+def outro_aegis():
+    """Act 4 outro p4: the transport's flight deck: Aegis Wing's Stormhawks on their launch rails under the deck's
+    lights, the rails converging toward the bay door; one rail left empty, AEGIS TWO - ROOK stencilled at its foot."""
+    b = Board()
+    hz = 70
+    vx = 336
+    ground = b.yy >= hz
+    dz = np.maximum(b.yy - hz, 1e-3)
+    gz = 800.0 / dz
+    gxw = (b.xx - vx) * gz / 40.0
+    joints = (np.abs(((gxw + 1000) % 24) - 12) > 11.4) | (np.abs((gz % 20) - 10) > 9.2 + np.clip(gz / 400, 0, 0.7))
+    deck = np.array([40, 42, 50.0]) * (0.6 + 0.4 * np.clip(dz / 170, 0, 1))[..., None]
+    deck = np.where(joints[..., None], deck * 0.7, deck)
+    ceil = np.array([14, 16, 24.0]) * (0.6 + 0.4 * np.clip((hz - b.yy) / hz, 0, 1))[..., None]
+    b.base = np.where(ground[..., None], deck, ceil)
+    # the bay door far off, Jupiter-lit through it; the ceiling's light strips converging
+    fill(b, [(vx - 46, hz - 30), (vx + 46, hz - 30), (vx + 46, hz), (vx - 46, hz)], (40, 34, 30))
+    b.glow(vx + 10, hz - 14, 26, (90, 60, 40), 0.7)
+    for x in (-300, -150, 150, 300):
+        b.line([(vx + x * 0.16, hz - 30), (vx + x, 0)], (120, 140, 170), 1, 150)
+    # the rails: from the near edge toward the door
+    rails = [-250, -84, 84, 250]
+    ships = {0: "LANCER", 2: "AEGIS 3", 3: "AEGIS 4"}
+    for i, xn in enumerate(rails):
+        for s in (-8, 8):
+            b.line([(vx + (xn + s) * 0.14, hz + 2), (vx + xn + s, H)], (110, 120, 136), 1, 200)
+        for f in np.linspace(0.08, 1.0, 12):                                             # the rail's guide lights
+            y = hz + (H - hz) * f
+            x = vx + xn * (y - hz) / (H - hz) * 0.86 + xn * 0.14
+            b.glow(x, y, 1.2, (255, 170, 80) if i == 1 else (90, 160, 220), 0.9)
+        yk = 172
+        k = 0.45 + 0.75 * (yk - hz) / (H - hz)
+        xk = vx + xn * ((yk - hz) / (H - hz) * 0.86 + 0.14)
+        if i in ships:
+            import outro_l21_images as o21                       # noqa: E402  (the tower's foreshortening, unchanged)
+            spr = o21.foreshortened(asset("ship_2"), k * 1.3, squash=0.62)
+            shadow(b, spr, xk, yk, 3, 4, 0.5)
+            b.sprite(spr, xk, yk)
+            b.glow(xk, yk + 20, 26, (70, 80, 100), 0.5)
+            tag(b, xk - raster.text_width(ships[i]) / 2, yk + 30, ships[i], CYAN if i == 0 else GREY)
+        else:
+            st = stencil("AEGIS TWO", 2, (230, 180, 80), squash=0.6)
+            b.sprite(st, xk, yk + 16)
+            st2 = stencil("ROOK", 3, (240, 200, 110), squash=0.6)
+            b.sprite(st2, xk, yk + 34)
+    b.title("CDF TRANSPORT - FLIGHT DECK")
+    b.label(W - 10, 9, "WE SHIP OUT", AMBER, right=True)
+    b.label(W - 10, H - 16, "AEGIS ACTUAL OUT", CYAN_DIM, right=True)
+    return b
+
+
 IMAGES = {
     "act-1-tether-gate": tether_gate,
     "act-1-outer-stations": outer_stations,
@@ -5955,6 +6548,12 @@ IMAGES = {
     "level-26-lure": lure_scan,
     "level-27-vent-field": vent_field,
     "level-27-plume-cycle": plume_cycle,
+    "level-28-hatchery": level_28_hatchery,
+    "level-28-hull-code": level_28_hull_code,
+    "act-4-outro-orbit": outro_orbit,
+    "act-4-outro-hullcode": outro_hullcode,
+    "act-4-outro-ready-room": outro_ready_room,
+    "act-4-outro-aegis": outro_aegis,
 }
 
 # Review sheets per batch: round, the images on it, the batch name.
@@ -5984,6 +6583,7 @@ BATCHES = {
     "r54": (list(IMAGES)[69:71], "M8 PART E"),
     "r55": (list(IMAGES)[71:73], "M8 PART F"),
     "r57": (list(IMAGES)[73:75], "M8 PART G"),
+    "r58": (list(IMAGES)[75:81], "M8 PART H"),
 }
 
 
@@ -6009,6 +6609,7 @@ def build(names):
                   else SOURCE_M8E if name in BATCHES["r54"][0]
                   else SOURCE_M8F if name in BATCHES["r55"][0]
                   else SOURCE_M8G if name in BATCHES["r57"][0]
+                  else SOURCE_M8H if name in BATCHES["r58"][0]
                   else SOURCE_M4)
         artkit.save_png(IMAGES[name]().image(), OUT / f"{name}.png", source)
     print(f"{len(names)} briefing images in {OUT.relative_to(ROOT)}")
