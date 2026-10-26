@@ -73,7 +73,9 @@ import java.util.function.IntToDoubleFunction;
  */
 public final class LevelMusic implements Disposable {
     private static final float MUSIC_VOLUME = 0.6f;
-    private static final float AMBIENCE_VOLUME = 0.35f;
+    /** The ambience beds' level: round 59 Q.1 a, +6 dB over the old 0.35 (design/audio/sfx). */
+    static final float AMBIENCE_VOLUME = 0.70f;
+
     private static final float FADE_SECONDS = 1;
     /** The intensity layer fades in over a second (design/audio/music, Intensity layers). */
     private static final double CROSSFADE_SECONDS = 1;
@@ -85,6 +87,14 @@ public final class LevelMusic implements Disposable {
     public static final float DUCKED = (float) Math.pow(10, -4 / 20.0);
     /** The duck moves this much of the way per second, so it does not click. */
     public static final float DUCK_RATE = 4;
+
+    /**
+     * A bed's loop volume at {@code scale} of the ambience's own level, clamped at 1: since the +6 dB of round 59 a
+     * layer at full under an act boss's swell (+4 dB, Level 21's basin rumble) would otherwise ask for more than full.
+     */
+    static float bed(float scale) {
+        return Math.min(1, AMBIENCE_VOLUME * scale);
+    }
 
     private final Audio audio;
     private final Mixer mixer;
@@ -306,7 +316,7 @@ public final class LevelMusic implements Disposable {
         this.ambienceFrom = ambienceFrom;
         this.voiceLoop = voiceLoop;
         currentAmbience = ambience;
-        sfx.loop(ambience, AMBIENCE_VOLUME);
+        sfx.loop(ambience, bed(1));
     }
 
     /** M5 part D: the level's ambience changes by section, in section order (Level 10's ocean). */
@@ -634,9 +644,9 @@ public final class LevelMusic implements Disposable {
                     sfx.stop(layer.sound());
                 }
             } else if (!sfx.looping(layer.sound())) {
-                sfx.loop(layer.sound(), AMBIENCE_VOLUME * level * layerSwell);
+                sfx.loop(layer.sound(), bed(level * layerSwell));
             } else {
-                sfx.loopVolume(layer.sound(), AMBIENCE_VOLUME * level * layerSwell);
+                sfx.loopVolume(layer.sound(), bed(level * layerSwell));
             }
         }
     }
@@ -717,8 +727,8 @@ public final class LevelMusic implements Disposable {
         float out = Double.isNaN(fadeOutSeconds)
                 ? 1 - in
                 : (float) Math.max(0, 1 - (crossfade - crossfadeLeft) / fadeOutSeconds);
-        sfx.loopVolume(currentAmbience, AMBIENCE_VOLUME * ambienceGain * in);
-        sfx.loopVolume(fadingAmbience, AMBIENCE_VOLUME * ambienceGain * out);
+        sfx.loopVolume(currentAmbience, bed(ambienceGain * in));
+        sfx.loopVolume(fadingAmbience, bed(ambienceGain * out));
         if (crossfadeLeft == 0) {
             sfx.stop(fadingAmbience);
             fadingAmbience = null;
@@ -899,7 +909,7 @@ public final class LevelMusic implements Disposable {
         }
         ambienceGain = gain;
         if (fadingAmbience == null) {
-            sfx.loopVolume(currentAmbience, AMBIENCE_VOLUME * gain);
+            sfx.loopVolume(currentAmbience, bed(gain));
         }
     }
 
@@ -1091,9 +1101,9 @@ public final class LevelMusic implements Disposable {
         if (currentAmbience != ambience) {
             sfx.stop(currentAmbience);
             currentAmbience = ambience;
-            sfx.loop(ambience, AMBIENCE_VOLUME);
+            sfx.loop(ambience, bed(1));
         } else if (ambienceGain != 1) {
-            sfx.loopVolume(ambience, AMBIENCE_VOLUME);
+            sfx.loopVolume(ambience, bed(1));
         }
         ambienceGain = 1;
     }

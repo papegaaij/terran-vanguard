@@ -159,6 +159,9 @@ class Level21SoundsTest {
             music.update(5, 105 + i * 0.1, 0.1f, false);
         }
         assertEquals(LevelMusic.BOSS_LAYER_SWELL_DB, 20 * Math.log10(music.layerSwell()), 1e-3, "swelled at the arena");
+        assertEquals(1, sfx.loopVolume(Sfx.AMBIENCE_BASIN_RUMBLE), 1e-6, "the swell clamped at full (round 59: +6 dB)");
+        assertEquals(
+                LevelMusic.AMBIENCE_VOLUME, sfx.loopVolume(Sfx.AMBIENCE_MARS_DUST), 1e-6, "the wind at its bed level");
         music.update(5, 245 - 1.0 / SimStep.PER_SECOND, 0.1f, false);
         assertEquals(1, music.layerLevel(0), 1e-6, "held while the clock waits at the arena's end");
         assertTrue(sfx.looping(Sfx.AMBIENCE_BASIN_RUMBLE));

@@ -11,9 +11,10 @@ updated: 2026-10-26
 
 ## Summary
 
-The tools Claude Code's agents use to read this repo cheaply: language servers for Java (Eclipse JDT LS) and Python
-(Pyright) behind Claude Code's LSP tool, and `tools/doc_section.py` for reading big READMEs by section. Set up on a new
-machine with `tools/dev/setup_lsp.sh`. None of it is needed to build or play the game.
+The tools Claude Code's agents use to read this repo cheaply: jCodeMunch's symbol index for Java and Python (a trial,
+scoped to this project; set up with `tools/dev/setup_jcodemunch.sh`), and `tools/doc_section.py` for reading big
+READMEs by section. The language servers (Eclipse JDT LS, Pyright, `tools/dev/setup_lsp.sh`) were tried first and are no
+longer in the agents' brief. None of it is needed to build or play the game.
 
 ## Design
 
@@ -80,19 +81,47 @@ Python with Claude Code's Edit/Write tools. Known limits:
   "is not accessed" hints. Both are ignored; the Gradle build is the judge.
 - Pyright's `documentSymbol` lists local variables too; the module's API is its unindented names.
 
+### jCodeMunch (trial since 2026-10-26)
+
+[jCodeMunch-MCP](https://github.com/jgravelle/jcodemunch-mcp) (J. Gravelle) parses the repo with tree-sitter into a symbol
+index and serves it as MCP tools: `search_symbols`, `get_file_outline`, `get_symbol_source` (one member's exact source),
+`find_references`, `search_text`. It replaces the language servers in the agents' brief: the agents never took to the
+LSP's two-step lookup (find a range, then read it), and fetching one member in one call competes with `sed -n`.
+
+- **Licence:** free for non-commercial use only (its LICENSE, v1.2 of 2026-10-21; commercial use needs a paid licence);
+  not open source. It is never vendored: the setup script installs it from PyPI, pinned.
+- **Scoped to this project** (the machine is also used for commercial work): no `jcodemunch-mcp init`, nothing in
+  `~/.claude/CLAUDE.md` or the user settings; its own venv in `~/.local/share/jcodemunch/<version>`; the index and its
+  `config.jsonc` in `build/code-index/` (`CODE_INDEX_PATH`, about 55 MB, 15 s to build); the MCP server in Claude Code's
+  local scope (`claude mcp add --scope local`), so sessions in other directories never see it.
+- **Settings:** the anonymous savings counter off (`share_savings`, `JCODEMUNCH_SHARE_SAVINGS=0`), AI summaries off,
+  direct tools (`tool_surface: full`, `tool_profile: core`, 20 tools) instead of the default three-verb front door,
+  code only (`extra_ignore_patterns`: the design tree, assets, data and Markdown are read with `doc_section.py`/grep).
+- **Freshness:** the server runs its file watcher (`serve --watcher`, the `[watch]` extra), so edits by any tool reach
+  the index within seconds.
+- Setup: `tools/dev/setup_jcodemunch.sh` (`--check` only reports), then `/mcp` (or restart Claude Code).
+
 ## Implementation
 
 - [x] `tools/dev/setup_lsp.sh` installs the pinned servers, the launcher and the plugins, and links the voice venvs.
 - [x] Both servers run behind `tools/dev/lsp_watch_proxy.py`, so files changed outside Claude Code's edit tools reach them.
 - [x] `pyrightconfig.json` and the `.gitignore` lines for jdtls's output are tracked.
 - [x] `tools/doc_section.py` reads Markdown by section (CLAUDE.md, *Tools*).
-- [ ] Token use of part H's steps compared with parts F and G; keep or drop the servers on the result. Measured
+- [x] Token use of part H's steps compared with parts F and G; keep or drop the servers on the result. Measured
   2026-10-26: the servers were hardly used (16 LSP calls in part H's seven code steps, all `documentSymbol`; median
   0.08 s, none empty), while shell reads of Java stayed at about 470 calls. The code steps used 49.5M tokens each
   against 34–36M in parts E–G, but part H's work was larger, so the cost difference says nothing about the servers.
-  Memory: jdtls 1.5–2.0 GB, Pyright 0.2–1.0 GB. Not yet decided.
+  Memory: jdtls 1.5–2.0 GB, Pyright 0.2–1.0 GB. Round 59's five steps made 4 LSP calls. Dropped from the agents'
+  briefs (user, 2026-10-26: not effective; see *Decisions*).
+- [x] `tools/dev/setup_jcodemunch.sh` installs jCodeMunch pinned, scoped to this project (see *jCodeMunch*).
+- [ ] Token use of the next part's steps with jCodeMunch compared with parts E–I (`briefs/tokmeter.py`); keep or drop.
 
 ## Decisions
+
+- 2026-10-26: the language servers were measured over parts H and I: they answered fast and correctly but the agents
+  hardly called them (16 and 4 calls) and kept reading Java with `sed -n`. The user does not want agents forced onto a
+  tool, so they leave the briefs; jCodeMunch is tried instead (jDocMunch rejected: the agents already read docs by
+  section, and the documentation cost comes from repeated reads and long runs, not from whole-file reads).
 
 - 2026-10-25: the user asked for stable, free tooling with research behind it that fits work on one laptop with
   concurrent sub-agents. Chosen: language servers through Claude Code's LSP tool, jdtls first, then Pyright; rejected:
