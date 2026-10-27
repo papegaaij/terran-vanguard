@@ -1,10 +1,10 @@
 ---
 title: Level 25 – Siren Trench
 design: approved
-implementation: in-progress
+implementation: done
 art: final
 depends-on: [../../../enemies/naval/siren, ../../../enemies/naval/spiral-nautilus, ../../../enemies/naval/barbfin, ../../../enemies/naval/glassfin, ../../../enemies/naval/reef-spitter, ../../../world/europa, ../../../player/wingmen, ../../../player/systems, ../../../story/twist]
-updated: 2026-10-26
+updated: 2026-10-27
 ---
 
 # Level 25 – Siren Trench

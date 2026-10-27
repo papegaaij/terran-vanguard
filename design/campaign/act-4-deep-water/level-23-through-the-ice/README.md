@@ -1,10 +1,10 @@
 ---
 title: Level 23 – Through the Ice
 design: approved
-implementation: in-progress
+implementation: done
 art: final
 depends-on: [../../../enemies/naval/eel-swarm, ../../../enemies/naval/glassfin, ../../../enemies/naval/driftjelly, ../../../enemies/naval/reef-spitter, ../../../enemies/air/lamprey, ../../../player/weapons/harpoon-torpedoes, ../../../player/weapons/depth-charges, ../../../player/systems, ../../../world/europa]
-updated: 2026-10-25
+updated: 2026-10-27
 ---
 
 # Level 23 – Through the Ice

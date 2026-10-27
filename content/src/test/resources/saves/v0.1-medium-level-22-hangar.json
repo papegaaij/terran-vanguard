@@ -1,0 +1,211 @@
+{
+  "version" : 5,
+  "created" : "2026-10-27T06:16:07.864970088Z",
+  "playtime" : 0.0,
+  "difficulty" : "MEDIUM",
+  "nextLevel" : 22,
+  "credits" : 22320,
+  "score" : 3619785,
+  "loadout" : {
+    "FRONT" : {
+      "item" : "ion-beam",
+      "level" : 3
+    },
+    "REAR" : {
+      "item" : "tail-gun",
+      "level" : 3
+    },
+    "LEFT_WING" : {
+      "item" : "micro-missile-pod",
+      "level" : 2
+    },
+    "RIGHT_WING" : {
+      "item" : "micro-missile-pod",
+      "level" : 2
+    },
+    "GENERATOR" : {
+      "item" : "Mk III \"Fusion\"",
+      "level" : 1
+    },
+    "SHIELD" : {
+      "item" : "Mk II",
+      "level" : 1
+    },
+    "ARMOUR" : {
+      "item" : "Composite III",
+      "level" : 1
+    },
+    "ENGINE" : {
+      "item" : "Mk I",
+      "level" : 1
+    },
+    "SPECIAL" : {
+      "item" : "Airstrike",
+      "level" : 1
+    },
+    "UTILITY_1" : {
+      "item" : "Pickup magnet",
+      "level" : 1
+    }
+  },
+  "inventory" : {
+    "GENERATOR" : [ {
+      "item" : "Mk I \"Spark\"",
+      "level" : 1
+    }, {
+      "item" : "Mk II \"Arc\"",
+      "level" : 1
+    } ],
+    "SHIELD" : [ {
+      "item" : "Mk I",
+      "level" : 1
+    } ],
+    "PLATING" : [ {
+      "item" : "Standard",
+      "level" : 1
+    }, {
+      "item" : "Composite I",
+      "level" : 1
+    }, {
+      "item" : "Composite II",
+      "level" : 1
+    } ]
+  },
+  "unlocks" : [ "Targeting computer" ],
+  "specials" : {
+    "EMP Burst" : 2,
+    "Airstrike" : 4,
+    "Smart Bomb" : 1
+  },
+  "armour" : 120.0,
+  "escort" : {
+    "hired" : true,
+    "side" : "left",
+    "fitted" : "autocannon",
+    "guns" : [ {
+      "item" : "autocannon",
+      "level" : 1
+    }, {
+      "item" : "mortar",
+      "level" : 1
+    } ],
+    "armour" : 0.0
+  },
+  "bays" : 0,
+  "retriesLeft" : null,
+  "grades" : {
+    "21" : "A",
+    "20" : "A",
+    "19" : "A",
+    "18" : "A+",
+    "17" : "A+",
+    "16" : "A+",
+    "15" : "A",
+    "14" : "A+",
+    "13" : "A+",
+    "12" : "A+",
+    "11" : "A",
+    "10" : "A",
+    "9" : "B",
+    "8" : "A+",
+    "7" : "A+",
+    "6" : "A",
+    "5" : "A+",
+    "4" : "A",
+    "3" : "A",
+    "2" : "A+",
+    "1" : "A+"
+  },
+  "dataCores" : [ "settlement log" ],
+  "storyFlags" : [ "act-intro:1", "free-charges:Airstrike", "free-charges:Smart Bomb", "free-charges:EMP Burst", "act-intro:2", "act-intro:3" ],
+  "stats" : {
+    "kills" : 4960,
+    "deaths" : 0,
+    "levels" : {
+      "21" : {
+        "credits" : 4292,
+        "kills" : 161
+      },
+      "20" : {
+        "credits" : 3082,
+        "kills" : 169
+      },
+      "19" : {
+        "credits" : 3859,
+        "kills" : 288
+      },
+      "18" : {
+        "credits" : 4195,
+        "kills" : 279
+      },
+      "17" : {
+        "credits" : 4099,
+        "kills" : 213
+      },
+      "16" : {
+        "credits" : 3836,
+        "kills" : 355
+      },
+      "15" : {
+        "credits" : 2998,
+        "kills" : 302
+      },
+      "14" : {
+        "credits" : 2999,
+        "kills" : 186
+      },
+      "13" : {
+        "credits" : 3089,
+        "kills" : 423
+      },
+      "12" : {
+        "credits" : 2998,
+        "kills" : 457
+      },
+      "11" : {
+        "credits" : 2108,
+        "kills" : 307
+      },
+      "10" : {
+        "credits" : 2207,
+        "kills" : 247
+      },
+      "9" : {
+        "credits" : 1703,
+        "kills" : 304
+      },
+      "8" : {
+        "credits" : 2123,
+        "kills" : 337
+      },
+      "7" : {
+        "credits" : 1962,
+        "kills" : 170
+      },
+      "6" : {
+        "credits" : 1632,
+        "kills" : 182
+      },
+      "5" : {
+        "credits" : 1574,
+        "kills" : 157
+      },
+      "4" : {
+        "credits" : 1187,
+        "kills" : 134
+      },
+      "3" : {
+        "credits" : 1345,
+        "kills" : 98
+      },
+      "2" : {
+        "credits" : 1520,
+        "kills" : 99
+      },
+      "1" : {
+        "credits" : 1442,
+        "kills" : 92
+      }
+    }
+  }
+}

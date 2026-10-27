@@ -4,7 +4,7 @@ design: review
 implementation: done
 art: n/a
 depends-on: [../main-menu, ../debrief, ../../systems/scoring, ../../systems/saves, ../../systems/economy]
-updated: 2026-10-26
+updated: 2026-10-27
 ---
 
 # Mission select
@@ -170,6 +170,9 @@ campaign's progress where it is. This is the "level-select of a replay mode" tha
   is the Bulwark, so every replay from Level 22 to 26 flew it. (2) The Rook warnings ignored his joining level, so an
   Act 1 replay warned about his armour (33/80 after Level 26). Rules now (see *The replay's escort*): Levels 08–26 fly
   Rook unless the Bulwark is fitted in that replay's hangar, a choice for that replay only; Levels 01–07 have no
-  escort and no Rook warning. Main-agent rule, **pending the user's review**: a replay while Rook is lost flies him at
+  escort and no Rook warning. Main-agent rule (accepted by the user on 2026-10-27): a replay while Rook is lost flies him at
   full armour with no repair warning (neither the replay nor the campaign can repair him then); before his loss his
   campaign armour and its warning stay as approved.
+- 2026-10-27 (user, the Act 4 playthrough done): step K2's rules (`8de88791`) accepted: a replay flies the replayed
+  mission's escort (*The replay's escort*), and a replay while Rook is lost flies him at full armour with no repair
+  warning (decided; no longer pending).

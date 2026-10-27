@@ -1,10 +1,10 @@
 ---
 title: Level 28 – Abyssal Maw
 design: approved
-implementation: in-progress
+implementation: done
 art: final
 depends-on: [../../../enemies/bosses/abyssal-maw, ../../../enemies/naval/depth-hunter, ../../../enemies/naval/glassfin, ../../../enemies/naval/barbfin, ../../../enemies/naval/eel-swarm, ../../../enemies/naval/abyss-ray, ../../../enemies/naval/siren, ../../../enemies/naval/spiral-nautilus, ../../../enemies/ground/spine-turret, ../../../enemies/ground/polyp-mortar, ../../../world/europa, ../../../player/wingmen, ../../../story/twist, ../../../story/characters/the-choir, ../../../systems/economy]
-updated: 2026-10-26
+updated: 2026-10-27
 ---
 
 # Level 28 – Abyssal Maw

@@ -1,12 +1,19 @@
-# Terran Vanguard @tag@ — Acts 1 to 3
+# Terran Vanguard @tag@ — Acts 1 to 4
 
-A late-90s style vertical shoot'em up set in 2185. This release holds the first three of the
-campaign's seven acts: twenty-one levels on easy, medium or hard, from Earth orbit and Luna
-(Act 1, *First Contact*) over Earth's cities, oceans and arctic (Act 2, *Homefront*) to the Mars
-colonies (Act 3, *Red Dust*). Each act has its briefings, radio chatter and outro, the shop and
-the hangar between the levels, and a boss at its end: the Brood Carrier, the Siege Spire and the
-Dust Colossus. From Act 2 on Rook flies with you as your wingman. After Level 21 the campaign
-stops at Act 4, *Deep Water*, which follows in a later release.
+A late-90s style vertical shoot'em up set in 2185. This release holds the first four of the
+campaign's seven acts: twenty-eight levels on easy, medium or hard, from Earth orbit and Luna
+(Act 1, *First Contact*) over Earth's cities, oceans and arctic (Act 2, *Homefront*) and the Mars
+colonies (Act 3, *Red Dust*) to Jupiter's moon Europa (Act 4, *Deep Water*). Each act has its
+briefings, radio chatter and outro, the shop and the hangar between the levels, and a boss at its
+end: the Brood Carrier, the Siege Spire, the Dust Colossus and the Abyssal Maw. From Act 2 on Rook
+flies with you as your wingman.
+
+New in this release, Act 4: seven levels across Europa's ice shelf and down a drill shaft into the
+ocean beneath, where the water slows every bullet and every ship and only torpedoes keep their full
+bite; the Harpoon Torpedoes and the Depth Charges special in the shop; black water lit only by your
+headlight; the Bulwark heavy drone for the escort slot; and the Abyssal Maw. After Level 28 the campaign stops at
+Act 5, *The Belt*, which follows in a later release. A save from `v0.1` carries on: Continue opens
+Act 4's briefing.
 
 ## Download
 

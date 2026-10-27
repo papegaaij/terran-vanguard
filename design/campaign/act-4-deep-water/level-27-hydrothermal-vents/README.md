@@ -1,10 +1,10 @@
 ---
 title: Level 27 – Hydrothermal Vents
 design: approved
-implementation: in-progress
+implementation: done
 art: final
 depends-on: [../../../enemies/naval/depth-hunter, ../../../enemies/naval/glassfin, ../../../enemies/naval/barbfin, ../../../enemies/naval/eel-swarm, ../../../enemies/naval/abyss-ray, ../../../enemies/naval/siren, ../../../enemies/naval/spiral-nautilus, ../../../enemies/naval/glow-angler, ../../../enemies/ground/spine-turret, ../../../enemies/ground/polyp-mortar, ../../../enemies/ground/relay-beacon, ../../../world/europa, ../../../player/wingmen, ../../../player/specials, ../../../story/twist]
-updated: 2026-10-26
+updated: 2026-10-27
 ---
 
 # Level 27 – Hydrothermal Vents

@@ -1,10 +1,10 @@
 ---
 title: Level 22 – Ice Shelf
 design: approved
-implementation: in-progress
+implementation: done
 art: final
 depends-on: [../../../enemies/ground/drill-rig, ../../../enemies/naval/skimmer, ../../../enemies/air/mantis, ../../../player/specials, ../../../player/wingmen, ../../../world/europa]
-updated: 2026-10-26
+updated: 2026-10-27
 ---
 
 # Level 22 – Ice Shelf

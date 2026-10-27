@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: n/a
 depends-on: [../../ui/main-menu, ../../ui/hangar]
-updated: 2026-10-22
+updated: 2026-10-27
 ---
 
 # Saves
@@ -104,6 +104,9 @@ adds the escort's `flies` (`rook` or `bulwark`) and `bulwark` (`{"owned": false,
 (the v0.1 release, Acts 1–3) is migrated with `rook` and no Bulwark at its full 120 armour (frozen in
 `SaveFormat`); a version 5 save that already has them, a version 6 save without them or an unknown `flies` is
 unreadable.
+A v0.1 save at the Level 22 hangar (its `act-intro:1` to `act-intro:3` seen) loads in `v0.2` with Rook in the
+escort slot and no Bulwark, and its Continue plays Act 4's title card and intro once, then Level 22's briefing and
+the hangar.
 
 ### Slot display
 
@@ -132,6 +135,12 @@ the act.
 - [x] `escort.flies` and `escort.bulwark` (format version 6, migrated from version 5) — M8 part A step A2
   (`SaveFormat.VERSION` 6, `migrateFrom5`; `Escort.flies`/`bulwark`; tests in `SaveFormatTest`: the round trip with
   an owned Bulwark, the migration from version 5, a version 6 save without them)
+- [x] A real v0.1 save carries on in `v0.2` (step REL2, 2026-10-27): the v0.1 release's own
+  `:content:playthroughSave` at the Level 22 hangar (medium; its level check widened by one, as v0.1 had no Level 22; with the `act-intro:1..3` flags the v0.1 game's Continue
+  adds), kept as `content/src/test/resources/saves/v0.1-medium-level-22-hangar.json`, migrates (Rook flies, no
+  Bulwark) and plays the Act 4 intro once on Continue
+  (`CampaignRouteTest.aRealV01SaveAtTheLevel22HangarMigratesAndPlaysTheActFourIntroOnce`); the same save in the
+  v0.2 Linux bundle's Continue opened Act 4's intro (page 1 of 6)
 - [x] Act intro once on Continue (L.6): the `act-intro:N` story flags, the version 3 migration's flags and
   `CampaignRoute.onContinue` — content built in M7 part B step B2 (tests in `CampaignRouteTest`,
   `SaveFormatTest`); the game's Continue (`HangarScreen.onContinue`, from the slots and the main menu) in
@@ -202,3 +211,6 @@ the act.
 - 2026-10-22 (M8 part A, step A2; accepted in round 50 (2026-10-22)): save format version 6 for the Bulwark
   heavy drone: the escort slot's `flies` and `bulwark`, migrated from the v0.1 release's version 5; Rook's absence is
   the story flag `rook-missing` (the wingmen README's `rook_missing`), the hydro-kit's notice the flag `hydro-kit`.
+- 2026-10-27 (step REL2): a real save of the v0.1 release at the Level 22 hangar is a test fixture now, written by
+  that release's own playthrough tool, rather than only a version 5 save made from today's format: the v0.2 release
+  must carry the v0.1 players' campaigns on (Rook in the escort slot, the Act 4 intro once on Continue).

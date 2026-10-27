@@ -1,9 +1,11 @@
 TERRAN VANGUARD @version@
 =====================
 
-A vertical shoot'em up set in 2185. This release holds Acts 1 to 3 of the
-campaign's seven acts: twenty-one levels on easy, medium or hard. The later
-acts follow in later releases.
+A vertical shoot'em up set in 2185. This release holds Acts 1 to 4 of the
+campaign's seven acts: twenty-eight levels on easy, medium or hard, from
+Earth orbit to the ocean under Europa's ice. The campaign stops before
+Act 5, The Belt; the later acts follow in later releases. A save from the
+previous release (Acts 1 to 3) carries on where it stopped.
 
 Everything the game needs is in this folder: it brings its own Java runtime,
 nothing has to be installed.

@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../act-3-red-dust, ../../world/europa, ../../story/twist, ../../enemies/naval, ../../enemies/bosses/abyssal-maw, ../../player/systems]
-updated: 2026-10-26
+updated: 2026-10-27
 ---
 
 # Act 4 – Deep Water
@@ -20,8 +20,7 @@ human-built relay beacons, a grey submarine drone with a Helix hull code, Rook s
 The act ends against the Abyssal Maw and with the reveal: Ascendancy cruisers in black and gold rise
 through the ice beside the Vrell fleet and open fire.
 
-**Status: approved in round 48 (2026-10-22); drafted (Act 4 design phase, 2026-10-21); everything below is pending the user's review in
-concept round 48.** The seven level documents, the units, the boss and the systems were drafted in the
+**Status: approved in round 48 (2026-10-22); drafted (Act 4 design phase, 2026-10-21) and reviewed in concept round 48.** The seven level documents, the units, the boss and the systems were drafted in the
 design phase's first two waves from the gap analysis's recommended answers (Q1–Q12; a local working note,
 `m8-gaps.md`); this README pulls them together (the act intro and outro, the units and their HP factors,
 the density and haul table, the threat profile, the music and the voice) as
@@ -33,13 +32,13 @@ yet: the loader would fly it, so every number here is a hand table marked draft,
 
 | Part | Summary | Design | Impl | Art |
 |---|---|---|---|---|
-| [level-22-ice-shelf](level-22-ice-shelf/README.md) | Act 4's opener and breather: four Vrell drill rigs on Conamara's ice shelf, ice geysers, the run-in to the station | approved | in-progress | final |
-| [level-23-through-the-ice](level-23-through-the-ice/README.md) | The descent: a drill shaft, the waterline where the hydro-kit switches the ship to the water rules, Thera Deep's kelp farms; Glassfin schools and the Eel Swarm | approved | in-progress | final |
-| [level-24-abyssal-plain](level-24-abyssal-plain/README.md) | The ocean floor: Vrell spawning reefs, the Barbfin, three Abyss Rays rising from below, the first red-gold relay beacons | approved | in-progress | final |
-| [level-25-siren-trench](level-25-siren-trench/README.md) | A narrow trench with side caves: Sirens whose rings slow the ship, the Spiral Nautilus, wall collision; the act's hardest stretch before the Maw | approved | in-progress | final |
-| [level-26-blackwater](level-26-blackwater/README.md) | Darkness: headlight and glow only, the Glow Angler's lure, the Choir's first hint of the door; Rook is shot down | approved | in-progress | final |
-| [level-27-hydrothermal-vents](level-27-hydrothermal-vents/README.md) | The vent field: heat plumes that burn and bend shots, grey Depth Hunters from below (hint 3: a Helix hull code), a Bulwark in Rook's slot | approved | in-progress | final |
-| [level-28-abyssal-maw](level-28-abyssal-maw/README.md) | The hatchery and the act boss, the Abyssal Maw; then the climb, the ice breakout and the reveal: two Ascendancy cruisers; the act end | approved | in-progress | final |
+| [level-22-ice-shelf](level-22-ice-shelf/README.md) | Act 4's opener and breather: four Vrell drill rigs on Conamara's ice shelf, ice geysers, the run-in to the station | approved | done | final |
+| [level-23-through-the-ice](level-23-through-the-ice/README.md) | The descent: a drill shaft, the waterline where the hydro-kit switches the ship to the water rules, Thera Deep's kelp farms; Glassfin schools and the Eel Swarm | approved | done | final |
+| [level-24-abyssal-plain](level-24-abyssal-plain/README.md) | The ocean floor: Vrell spawning reefs, the Barbfin, three Abyss Rays rising from below, the first red-gold relay beacons | approved | done | final |
+| [level-25-siren-trench](level-25-siren-trench/README.md) | A narrow trench with side caves: Sirens whose rings slow the ship, the Spiral Nautilus, wall collision; the act's hardest stretch before the Maw | approved | done | final |
+| [level-26-blackwater](level-26-blackwater/README.md) | Darkness: headlight and glow only, the Glow Angler's lure, the Choir's first hint of the door; Rook is shot down | approved | done | final |
+| [level-27-hydrothermal-vents](level-27-hydrothermal-vents/README.md) | The vent field: heat plumes that burn and bend shots, grey Depth Hunters from below (hint 3: a Helix hull code), a Bulwark in Rook's slot | approved | done | final |
+| [level-28-abyssal-maw](level-28-abyssal-maw/README.md) | The hatchery and the act boss, the Abyssal Maw; then the climb, the ice breakout and the reveal: two Ascendancy cruisers; the act end | approved | done | final |
 
 ## Design
 
@@ -412,15 +411,16 @@ proposals in [naval](../../enemies/naval/README.md#concept-art) and the boss's i
       the levels' own typical hauls, part A's temporary `budget(n)` removed; the act's end at -2.3 % of the expert's
       bound on medium and +8.8 % on easy, hard 49.4 % under it, accepted for now in round 59 (C.6); `BalanceTest`'s returning units
       through Level 28; `./gradlew :content:playthroughSave -Plevel=28` writes the save at the Level 28 hangar).
-- [ ] The user's playthrough of Act 4.
+- [x] The user's playthrough of Act 4 (done 2026-10-26/27: every level plays well, the Maw a good fight, the
+      cruisers hard but doable; its fixes in commits `54302d34` (Level 26's darkness, step K1) and `8de88791` (a replay
+      flies the replayed mission's escort, step K2)), then the `v0.2` release (Acts 1–4).
+- [ ] Hard's credits in Acts 3 and 4 (49.4 % under the expert's bound at the act's end, accepted for now in round 59,
+      C.6) revisited after the user's playthrough of hard.
 
 ## Open questions
 
-- All of round 48's questions (the draft answers are in each document's *Decisions*): the softened water
-  rules (Q1 b), the light of Europa (Q2 a), the act's own swimmers (Q3 a), darkness as a look (Q4 a), the Siren's
-  slow (Q5 a), the Bulwark (Q6), Rook's on-screen shoot-down (Q7 a), the Choir's words (Q8 a), the Maw as a coiled
-  guardian (Q9 b), the reveal as a breakout and run (Q10 a), the hint-3 hull code (Q11 a), no bubbles (Q12 a).
-- The Act 4 timeline (July 2185, Jupiter twelve days from Mars), the Mk IV's 20 MW and the intro and outro texts.
+- None: round 48 answered the design's questions (2026-10-22); the open item is hard's Act 3/4 credits
+  (*Implementation*).
 
 ## Decisions
 
@@ -485,3 +485,9 @@ proposals in [naval](../../enemies/naval/README.md#concept-art) and the boss's i
   the ambience beds 6 dB louder (Q.1 a, built), C.1 keep (the Maw's par 138), C.2-C.5 accepted, **C.6 accept for now**
   (hard's credits in Acts 3 and 4 stay 49.4 % under the expert's bound at the act's end; revisited after the user's
   playthrough of hard), C.7 accepted (the homing diamond to Act 5). Act 4 is built; the user's playthrough is open.
+- 2026-10-27 (user): the playthrough of Act 4 is done (2026-10-26/27): all levels play well, the Maw is a good fight,
+  the cruisers are hard but doable. Its fixes: `54302d34` (Level 26's darkness: enemies outside the light read as faint
+  rims, step K1; the look accepted, Rook's cones and the Driftjelly veins included) and `8de88791` (a mission-select
+  replay flies the replayed mission's escort, step K2; accepted). Act 4 ships in `v0.2` (Acts 1–4,
+  [release](../../tech/release/README.md)); the act stays `in-progress` only for hard's Act 3/4 credits (round 59, C.6),
+  revisited after the user's playthrough of hard.

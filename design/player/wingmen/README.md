@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../weapons, ../../story, ../../systems/saves, ../../ui/hangar, ../../ui/hud]
-updated: 2026-10-26
+updated: 2026-10-27
 ---
 
 # Wingmen and drones
@@ -55,7 +55,8 @@ the Bulwark (L22).
 - He flies in **every campaign level from 08 on** while he is hired and not grounded (below). He
   does **not** fly in Act 1 levels replayed from mission select, nor in a `--level` run below 8
   (without `--escort`); his armour and guns are then left as they are. Which escort a replay of a later level flies is
-  set in [mission select](../../ui/mission-select/README.md) (*The replay's escort*).
+  set in [mission select](../../ui/mission-select/README.md) (*The replay's escort*): a replay while Rook is lost flies
+  him at full armour with no repair warning (the user's decision of 2026-10-27).
 - The L08 HUD hint "Rook's side can be set in the hangar" points at his side setting.
 
 ### Rook's AI (first-draft parameters)
@@ -565,3 +566,6 @@ Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-a
   in Level 27 the Bulwark keeps out of a plume's disc while it glows or burns and off every homing torpedo's line over
   the next second (`BulwarkHazards`, `BulwarkHazardsTest`), aims its shell at the nearest Depth Hunter while one is on
   the screen, is burnt by a plume like the ship and hit by the torpedoes, and never draws them (aimed bullets only).
+- 2026-10-27 (user, the Act 4 playthrough done): a mission-select replay flies the replayed mission's escort, and a
+  replay while Rook is lost (after Level 26) flies him at full armour with no repair warning (step K2, `8de88791`;
+  [mission select](../../ui/mission-select/README.md#decisions)): decided, no longer pending.

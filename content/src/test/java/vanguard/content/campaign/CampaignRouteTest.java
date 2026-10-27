@@ -342,6 +342,40 @@ class CampaignRouteTest {
                         .size());
     }
 
+    /**
+     * The v0.2 release (design/tech/release): a real save of the v0.1 release at the Level 22 hangar, written by that
+     * release's {@code :content:playthroughSave} (medium, the balance plan through Level 21; its check of the level
+     * widened to the one after the last built level, which v0.1 could not name) with the {@code
+     * act-intro:1..3} flags the v0.1 game's Continue adds (the tool flies without the route), migrates from format
+     * version 5 (Rook chosen for the escort slot, no Bulwark) and plays Act 4's intro once on Continue.
+     */
+    @Test
+    void aRealV01SaveAtTheLevel22HangarMigratesAndPlaysTheActFourIntroOnce() throws Exception {
+        String json;
+        try (var in = getClass().getResourceAsStream("/saves/v0.1-medium-level-22-hangar.json")) {
+            json = new String(in.readAllBytes(), java.nio.charset.StandardCharsets.UTF_8);
+        }
+        assertTrue(json.contains("\"version\" : 5") && !json.contains("bulwark"));
+
+        SaveGame save = SaveFormat.read(json);
+        assertEquals(SaveFormat.VERSION, save.version());
+        assertEquals(22, save.nextLevel());
+        Campaign campaign = Campaign.load(CampaignTest.RULES, save);
+        Escort escort = campaign.gear().escort();
+        assertTrue(escort.hired());
+        assertEquals(Escort.Escorter.ROOK, escort.flies());
+        assertFalse(escort.bulwark().owned());
+        assertTrue(campaign.actIntroShown(3) && !campaign.actIntroShown(4));
+
+        var briefing = assertInstanceOf(CampaignRoute.Step.Briefing.class, CampaignRoute.onContinue(content, campaign));
+        assertEquals("act-4-deep-water", briefing.script().actDirectory());
+        assertEquals(22, briefing.script().mission());
+        assertTrue(campaign.actIntroShown(4));
+        Campaign reloaded =
+                Campaign.load(CampaignTest.RULES, SaveFormat.read(SaveFormat.write(campaign.save(Instant.EPOCH))));
+        assertMissionBriefing(22, CampaignRoute.onContinue(content, reloaded));
+    }
+
     /** M8 part B: a save at the Level 22 hangar that has seen Act 4's intro opens Level 22's own briefing. */
     @Test
     void aSaveAtTheLevel22HangarWithTheActFourIntroSeenOpensTheMissionBriefing() throws SaveException {

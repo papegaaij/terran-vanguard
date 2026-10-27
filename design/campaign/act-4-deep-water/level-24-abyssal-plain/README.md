@@ -1,10 +1,10 @@
 ---
 title: Level 24 – Abyssal Plain
 design: approved
-implementation: in-progress
+implementation: done
 art: final
 depends-on: [../../../enemies/naval/abyss-ray, ../../../enemies/naval/barbfin, ../../../enemies/ground/spawning-reef, ../../../enemies/naval/glassfin, ../../../enemies/naval/eel-swarm, ../../../enemies/ground/scuttler, ../../../player/weapons/harpoon-torpedoes, ../../../world/europa]
-updated: 2026-10-24
+updated: 2026-10-27
 ---
 
 # Level 24 – Abyssal Plain

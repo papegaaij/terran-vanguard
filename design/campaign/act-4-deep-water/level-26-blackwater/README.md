@@ -1,10 +1,10 @@
 ---
 title: Level 26 – Blackwater
 design: approved
-implementation: in-progress
+implementation: done
 art: final
 depends-on: [../../../enemies/naval/glow-angler, ../../../enemies/naval/depth-hunter, ../../../enemies/naval/siren, ../../../enemies/naval/spiral-nautilus, ../../../enemies/naval/eel-swarm, ../../../enemies/naval/driftjelly, ../../../story/characters/the-choir, ../../../story/characters/rook, ../../../world/europa, ../../../player/wingmen, ../../../player/specials]
-updated: 2026-10-26
+updated: 2026-10-27
 ---
 
 # Level 26 – Blackwater
@@ -616,3 +616,5 @@ Production art of M8 part F (round 55, step ART-F) and game captures; the genera
   falls on a body (the glow frames stay: veins, lures, eyes, sacs, crowns, stripes). Levels 27 and 28 (lit water) keep
   their glow pools unchanged. Pending the user's review: Rook's own headlight cones (the spec gives him only the 56 px
   lamp; they light 6 % more of the field) and the Driftjelly's veins, which read as the whole jelly.
+- 2026-10-27 (user, the Act 4 playthrough done): the look after step m8k1 (`54302d34`) **accepted**, Rook's own headlight
+  cones and the Driftjelly's veins included (no longer pending). The level is done; it ships in `v0.2` (Acts 1–4).

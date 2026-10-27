@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: n/a
 depends-on: [../architecture, ../../campaign]
-updated: 2026-10-26
+updated: 2026-10-27
 ---
 
 # Implementation roadmap
@@ -30,7 +30,7 @@ milestone lists which documents it covers, it does not copy their items.
 | M5 | **Act 2** | Levels 08–14 and their new units and equipment | [act 2](../../campaign/act-2-homefront/README.md) levels and their enemies and equipment, the [wingmen](../../player/wingmen/README.md) escort slot (Rook from L08), the [saves](../../systems/saves/README.md) `escort` field, the Targeting computer in the shop with its effects and the Salvage scanner's ([ship systems](../../player/systems/README.md), part A), the perspective towers and roofs of L08 (art direction); built in parts A–I (below) |
 | M6 | **Acts 1–2 release** (its `v0.1` tag moved to the end of M7: the first release is Acts 1–3, round 44 I.2) | Credits screen with the CC-BY attributions, polish pass, release bundles for all OSes on a `v0.1` tag | [credits](../../ui/credits/README.md), mouse support in the out-of-game screens ([ui](../../ui/README.md)), the [scoring](../../systems/scoring/README.md) high-score table per difficulty with its name entry at game over and at the campaign's end, remaining checklist items of Acts 1–2 |
 | M7 | **Act 3** | Levels 15–21 and their new units and equipment | [act 3](../../campaign/act-3-red-dust/README.md) levels and their enemies, bosses and equipment (Ion Beam and `beam`, drones, EMP Burst, Orbital Lance, Shield Overcharge and cooldowns, Evasive thrusters, the third utility bay), terrain collision and canyon walls, reverse scroll, the dust-storm visibility, the Mars backdrops; built in parts A–I (below; the design approved in concept round 36) |
-| M8 | **Act 4** (design decided in round 48, 2026-10-22; part A in progress) | Levels 22–28 and their new units and equipment | [act 4](../../campaign/act-4-deep-water/README.md) levels and their enemies, boss and equipment: under-water mode, darkness for every unit, the trench and shaft on `Terrain`, the Siren's slow, heat plumes, anti-sub gear (Harpoon Torpedoes, Depth Charges, Sonar Pulse, Decoy Flares, pressure hull, Mk IV), the Bulwark heavy drone and Rook's absence, the Abyssal Maw and the reveal; built in parts A–I (below) |
+| M8 | **Act 4** (design decided in round 48, 2026-10-22; built, the user's playthrough done 2026-10-27; the `v0.2` release = Acts 1–4) | Levels 22–28 and their new units and equipment | [act 4](../../campaign/act-4-deep-water/README.md) levels and their enemies, boss and equipment: under-water mode, darkness for every unit, the trench and shaft on `Terrain`, the Siren's slow, heat plumes, anti-sub gear (Harpoon Torpedoes, Depth Charges, Sonar Pulse, Decoy Flares, pressure hull, Mk IV), the Bulwark heavy drone and Rook's absence, the Abyssal Maw and the reveal; built in parts A–I (below) |
 
 ### Rules
 
@@ -158,7 +158,7 @@ Proposed by the Act 4 design phase (2026-10-21) and **decided in round 48** (202
       2026-10-18 (step R39C), done except R.1's redo of the canyon walls' look (step CW, in progress, to round
       40), pending the user's playthrough; part D, Level 17, built on 2026-10-18/19 (steps D1–D5, G1, G2, ART-D,
       AUD-D, VOX-D), concept round 40 closed 2026-10-19; parts E (Level 18), F (Level 19), G (Level 20) and H (Level 21 and the act end) built and their rounds 41-44 closed by 2026-10-20 (round 44's K.b and K.c changes and the Q rows' reworks are planned: steps SIM-K, ART-K, GK, L21R); part I, the close-out, done: the user's playthrough of Act 3 on 2026-10-21 and the `v0.1` release = Acts 1-3 on 2026-10-22; open: Levels 18 and 19's "Easy/hard variations" items and the act's "All 7 levels" item)
-- [ ] M8 Act 4 (design decided in round 48; parts A–I under *M8 parts*; the design phase of 2026-10-21 wrote the act, its seven levels, the units, the boss and the systems as drafts; Act 4 built (parts A–I), rounds 50–59 closed (the last, round 59, on 2026-10-26); open: the user's playthrough of Act 4, and hard's Act 3/4 credits revisited after the user's playthrough of hard)
+- [ ] M8 Act 4 (design decided in round 48; parts A–I under *M8 parts*; the design phase of 2026-10-21 wrote the act, its seven levels, the units, the boss and the systems as drafts; Act 4 built (parts A–I), rounds 50–59 closed (the last, round 59, on 2026-10-26); the user's playthrough of Act 4 done on 2026-10-26/27 (its fixes `54302d34` and `8de88791`), then the `v0.2` release = Acts 1–4; open: hard's Act 3/4 credits, revisited after the user's playthrough of hard (round 59, C.6))
 
 ## Open questions
 
@@ -294,3 +294,9 @@ Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-a
   accepted; Q.1 **a** (the ambience beds 6 dB louder, built in `4de9c627`); C.1 keep (the Maw's par 138), C.2-C.5 accepted,
   **C.6 accept for now** (hard's Act 3/4 credits, revisited after the user's playthrough of hard), C.7 accepted (the
   homing diamond to Act 5). Part I is done and Act 4 is built; M8 waits for the user's playthrough of Act 4.
+- 2026-10-27 (user): the playthrough of Act 4 is done (2026-10-26/27: every level plays well, the Maw a good fight, the
+  cruisers hard but doable); its fixes are in (`54302d34` Level 26's darkness, step K1, the look accepted; `8de88791` a
+  replay flies the replayed mission's escort, step K2, accepted). The next release is **`v0.2` = Acts 1–4**, with the same
+  tag steps as `v0.1` ([release](../release/README.md#tag-steps); no Mac check, so the "untested on Apple silicon" mark
+  stays); step REL2 prepared it (version 0.2.0, the notes, the bundles' dry run). M8 stays open for one item only: hard's
+  Act 3/4 credits, revisited after the user's playthrough of hard (round 59, C.6).
