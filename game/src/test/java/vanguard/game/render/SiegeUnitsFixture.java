@@ -54,29 +54,11 @@ public final class SiegeUnitsFixture {
             Optional.empty(),
             Optional.empty());
 
-    public static final EnemySpec HERALD = new EnemySpec(
-                    "choir-herald",
-                    60,
-                    new Hitbox(52, 48),
-                    Layer.AIR,
-                    10,
-                    false,
-                    30,
-                    100,
-                    Optional.empty(),
-                    Optional.empty(),
-                    Optional.of(new EnemySpec.Hover(new Range(12, 12), new Range(175, 175))),
-                    Optional.empty(),
-                    Optional.of(SONG),
-                    Optional.empty(),
-                    Optional.empty(),
-                    false,
-                    Optional.empty(),
-                    Optional.empty(),
-                    Optional.empty(),
-                    Optional.of(new EnemySpec.Sine(32, 10)),
-                    Optional.empty(),
-                    Optional.empty())
+    public static final EnemySpec HERALD = EnemySpec.of(
+                    "choir-herald", 60, new Hitbox(52, 48), Layer.AIR, 10, false, 30, 100)
+            .withHover(Optional.of(new EnemySpec.Hover(new Range(12, 12), new Range(175, 175))))
+            .withGun(Optional.of(SONG))
+            .withSine(Optional.of(new EnemySpec.Sine(32, 10)))
             .withAura(Optional.of(AURA));
 
     static final EnemyGun VENT_MORTAR = new EnemyGun(
@@ -95,57 +77,17 @@ public final class SiegeUnitsFixture {
 
     public static final EnemySpec.Roll ROLL = new EnemySpec.Roll(0.4, 0.6, 2.5, 140, 0.6, 1.5, 1.5, new Hitbox(72, 72));
 
-    public static final EnemySpec SHELLBACK = new EnemySpec(
-                    "shellback",
-                    120,
-                    new Hitbox(84, 84),
-                    Layer.GROUND,
-                    15,
-                    false,
-                    40,
-                    24,
-                    Optional.empty(),
-                    Optional.empty(),
-                    Optional.empty(),
-                    Optional.empty(),
-                    Optional.of(VENT_MORTAR),
-                    Optional.empty(),
-                    Optional.empty(),
-                    false,
-                    Optional.empty(),
-                    Optional.empty(),
-                    Optional.empty(),
-                    Optional.empty(),
-                    Optional.empty(),
-                    Optional.of(
-                            new EnemySpec.Walker(24, Math.toRadians(45), 32, 0, Optional.empty(), Math.toRadians(90))))
+    public static final EnemySpec SHELLBACK = EnemySpec.of(
+                    "shellback", 120, new Hitbox(84, 84), Layer.GROUND, 15, false, 40, 24)
+            .withGun(Optional.of(VENT_MORTAR))
+            .withWalker(Optional.of(
+                    new EnemySpec.Walker(24, Math.toRadians(45), 32, 0, Optional.empty(), Math.toRadians(90))))
             .withPart(Optional.of(new EnemySpec.UnitPart("vent", 24, new Hitbox(28, 28), 0, 30, 12, true, 8)))
             .withRoll(Optional.of(ROLL));
 
     /** A ground target fixed to the ground that carries a ring: 1000 HP, a 24 px box, no gun. */
-    public static final EnemySpec TARGET = new EnemySpec(
-            "target",
-            1000,
-            new Hitbox(24, 24),
-            Layer.GROUND,
-            0,
-            false,
-            0,
-            0,
-            Optional.empty(),
-            Optional.empty(),
-            Optional.empty(),
-            Optional.empty(),
-            Optional.empty(),
-            Optional.empty(),
-            Optional.empty(),
-            false,
-            Optional.empty(),
-            Optional.empty(),
-            Optional.empty(),
-            Optional.empty(),
-            Optional.empty(),
-            Optional.empty());
+    public static final EnemySpec TARGET =
+            EnemySpec.of("target", 1000, new Hitbox(24, 24), Layer.GROUND, 0, false, 0, 0);
 
     /** The target's x: 60 px right of the Herald's hover, out of the ship's column (its shots hit only the Herald). */
     public static final double TARGET_X = PlayField.WIDTH / 2.0 + 60;

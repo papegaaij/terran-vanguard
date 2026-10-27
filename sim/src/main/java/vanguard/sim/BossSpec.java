@@ -180,60 +180,6 @@ public record BossSpec(
     }
 
     /**
-     * Without round 41's incoming warning and the mechanics after it. Kept for {@code game/}'s callers until step RF6
-     * has moved them to {@link #builder}; remove it then.
-     */
-    public BossSpec(
-            double arriveSeconds,
-            double x,
-            double hoverY,
-            double descentSpeed,
-            double sineAmplitude,
-            double sinePeriod,
-            Layer layer,
-            boolean midBoss,
-            String barName,
-            double parSeconds,
-            List<Chain> chains,
-            List<Attack> attacks,
-            List<Phase> phases,
-            boolean engagesOnArrival,
-            List<Integer> armoured,
-            List<Pose> poses,
-            double deathSeconds,
-            Optional<Arena> arena) {
-        this(
-                arriveSeconds,
-                x,
-                hoverY,
-                descentSpeed,
-                sineAmplitude,
-                sinePeriod,
-                layer,
-                midBoss,
-                barName,
-                parSeconds,
-                chains,
-                attacks,
-                phases,
-                engagesOnArrival,
-                armoured,
-                poses,
-                deathSeconds,
-                arena,
-                0,
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty());
-    }
-
-    /**
      * A boss's base script: it engages when it settles, all parts damageable, one pose, no arena and none of the later
      * mechanics. {@link #builder} sets the rest before the checks run; the {@code withX} builders change a built one.
      */

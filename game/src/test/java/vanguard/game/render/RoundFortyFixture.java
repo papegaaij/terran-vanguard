@@ -148,25 +148,22 @@ public final class RoundFortyFixture {
                 parts,
                 List.of(),
                 Optional.empty(),
-                Optional.of(new BossSpec(
-                        ARRIVE,
-                        PlayField.WIDTH / 2.0,
-                        CENTRE_Y,
-                        0,
-                        0,
-                        1,
-                        Layer.GROUND,
-                        true,
-                        "HARBOUR KRAKEN",
-                        60,
-                        chains,
-                        List.of(attack),
-                        List.of(armsPhase, headUp),
-                        false,
-                        List.of(),
-                        List.of(),
-                        0,
-                        Optional.of(arena))));
+                Optional.of(BossSpec.builder(
+                                ARRIVE,
+                                PlayField.WIDTH / 2.0,
+                                CENTRE_Y,
+                                0,
+                                0,
+                                1,
+                                Layer.GROUND,
+                                true,
+                                "HARBOUR KRAKEN",
+                                60,
+                                chains,
+                                List.of(attack),
+                                List.of(armsPhase, headUp))
+                        .arena(Optional.of(arena))
+                        .build()));
     }
 
     /** The rooted Kraken's arena over water with the convoy, flown with the starter loadout, the ship invulnerable. */
@@ -211,25 +208,27 @@ public final class RoundFortyFixture {
                         o.sweep(),
                         o.parts(),
                         Optional.of(new BossSpec.AimTurns(AIM_EVERY, AIM_GLOW))));
-        BossSpec boss = new BossSpec(
-                b.arriveSeconds(),
-                b.x(),
-                b.hoverY(),
-                b.descentSpeed(),
-                b.sineAmplitude(),
-                b.sinePeriod(),
-                b.layer(),
-                b.midBoss(),
-                b.barName(),
-                b.parSeconds(),
-                b.chains(),
-                attacks,
-                b.phases(),
-                b.engagesOnArrival(),
-                b.armoured(),
-                b.poses(),
-                b.deathSeconds(),
-                b.arena());
+        // The data's script with these aim turns, without round 41's incoming warning and the mechanics after it.
+        BossSpec boss = BossSpec.builder(
+                        b.arriveSeconds(),
+                        b.x(),
+                        b.hoverY(),
+                        b.descentSpeed(),
+                        b.sineAmplitude(),
+                        b.sinePeriod(),
+                        b.layer(),
+                        b.midBoss(),
+                        b.barName(),
+                        b.parSeconds(),
+                        b.chains(),
+                        attacks,
+                        b.phases())
+                .engagesOnArrival(b.engagesOnArrival())
+                .armoured(b.armoured())
+                .poses(b.poses())
+                .deathSeconds(b.deathSeconds())
+                .arena(b.arena())
+                .build();
         return new SetPieceSpec(
                 base.slug(),
                 base.size(),

@@ -232,25 +232,19 @@ public final class TestFire {
                         Optional.empty(),
                         EnemyGun.BURST_GAP_SECONDS))
                 : Optional.empty();
-        EnemySpec dummy = new EnemySpec(
-                DUMMY,
-                hp,
-                new Hitbox(TARGET_SIZE, TARGET_SIZE),
-                // Mines burst only for flyers: the dummies fly low, on the scroll like the others;
-                // torpedoes strike them under the water.
-                mines ? Layer.LOW_AIR : torpedoes ? Layer.SUB : Layer.GROUND,
-                0,
-                false,
-                0,
-                0,
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                gun,
-                Optional.empty(),
-                Optional.empty(),
-                true);
+        EnemySpec dummy = EnemySpec.of(
+                        DUMMY,
+                        hp,
+                        new Hitbox(TARGET_SIZE, TARGET_SIZE),
+                        // Mines burst only for flyers: the dummies fly low, on the scroll like the others;
+                        // torpedoes strike them under the water.
+                        mines ? Layer.LOW_AIR : torpedoes ? Layer.SUB : Layer.GROUND,
+                        0,
+                        false,
+                        0,
+                        0)
+                .withGun(gun)
+                .withTerrain(true);
         double climb = CLIMB_TICKS * SimStep.SECONDS;
         List<GroundUnit> dummies = new ArrayList<>();
         for (int i = 0; i < LANES.length; i++) {

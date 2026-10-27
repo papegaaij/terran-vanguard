@@ -38,6 +38,12 @@ if ! $CHECK; then
     "$BIN" config set surface_offer_seen true >/dev/null
     "$BIN" config set tool_surface full >/dev/null
     "$BIN" config set tool_profile core >/dev/null
+    # The turn budget is a process-wide advisory counter; with parallel sub-agents on one server it never resets
+    # and every answer says "Turn budget exhausted ... stop exploring". Off.
+    "$BIN" config set turn_budget_tokens 0 >/dev/null
+    # session_stats.json goes to ~/.code-index whatever CODE_INDEX_PATH says (as does _savings.json, which has no
+    # switch): keep the home-directory writes to that one small file.
+    "$BIN" config set stats_file_interval 0 >/dev/null
     "$BIN" config set extra_ignore_patterns \
         '["assets/","design/","briefs/","build/","**/bin/","*.md","*.yaml","*.yml","*.json","*.jsonc","*.txt"]' >/dev/null
     (cd "$ROOT" && "$BIN" index "$ROOT" --no-ai-summaries >/dev/null)
