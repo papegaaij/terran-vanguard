@@ -73,6 +73,7 @@ public final class DesktopLauncher {
                 options.actEnd(),
                 options.underwaterFrom(),
                 options.benchSeconds(),
+                options.shots(),
                 saves,
                 scoreFile(options, settingsFile.path()),
                 screenshots,

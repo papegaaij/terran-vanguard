@@ -32,23 +32,7 @@ class EelSwarmTest {
     static final EnemySpec.Sine SWAY = new EnemySpec.Sine(36, 1 / 0.8);
 
     private static EnemySpec part(String slug, double hp, Hitbox box, int bounty) {
-        return new EnemySpec(
-                slug,
-                hp,
-                box,
-                Layer.AIR,
-                6,
-                false,
-                bounty,
-                0,
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                false);
+        return EnemySpec.of(slug, hp, box, Layer.AIR, 6, false, bounty, 0);
     }
 
     /** The member offsets: head 40, segments 24, tail 24 px long, 0.8 × the mean apart. */
@@ -88,32 +72,9 @@ class EelSwarmTest {
                         18)
                 .withScatter(Optional.of(SCATTER))
                 .withHeadAttacks(attacks);
-        return new EnemySpec(
-                "eel-swarm",
-                100,
-                new Hitbox(36, 28),
-                Layer.AIR,
-                6,
-                false,
-                30,
-                110,
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                false,
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                sway,
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.of(chain));
+        return EnemySpec.of("eel-swarm", 100, new Hitbox(36, 28), Layer.AIR, 6, false, 30, 110)
+                .withSine(sway)
+                .withChain(Optional.of(chain));
     }
 
     /** The x of the eel's route, clear of the ship's lane (its shots are not held back by the ship's nearness). */

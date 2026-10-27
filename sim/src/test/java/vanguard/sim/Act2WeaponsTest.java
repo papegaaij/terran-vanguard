@@ -12,7 +12,6 @@ import static vanguard.sim.WaveSpec.Entry.FRONT;
 import static vanguard.sim.WaveSpec.Formation.LINE_ABREAST;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Supplier;
 import org.junit.jupiter.api.Test;
 
@@ -111,23 +110,8 @@ class Act2WeaponsTest {
     }
 
     private static EnemySpec dummy(Layer layer, double hp) {
-        return new EnemySpec(
-                "dummy",
-                hp,
-                new Hitbox(20, 20),
-                layer,
-                0,
-                false,
-                0,
-                0,
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                true);
+        return EnemySpec.of("dummy", hp, new Hitbox(20, 20), layer, 0, false, 0, 0)
+                .withTerrain(true);
     }
 
     private static int count(Sortie sortie, int steps, int commands, SimEvents.Type type) {

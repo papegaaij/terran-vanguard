@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Optional;
 import vanguard.content.Difficulty;
 import vanguard.content.campaign.Campaign;
@@ -21,6 +22,7 @@ import vanguard.game.screen.MainMenuScreen;
 import vanguard.game.screen.ScreenFlow;
 import vanguard.game.settings.Settings;
 import vanguard.game.settings.SettingsStore;
+import vanguard.sim.SimStep;
 
 /**
  * The game: runs the screen flow in the 960x540 pixel screen, samples the input actions once per
@@ -46,6 +48,7 @@ public final class TerranVanguard extends ApplicationAdapter {
     private final boolean actEnd;
     private final java.util.OptionalDouble underwaterFrom;
     private final Optional<BenchRun> bench;
+    private final Optional<ShotRun> shots;
     private final SaveSlots saves;
     private final ScoreFile scores;
     private final String version;
@@ -69,6 +72,8 @@ public final class TerranVanguard extends ApplicationAdapter {
      * @param actEnd a debug option: winning the level start's level ends its act (act summary, outro)
      * @param underwaterFrom M8 part A, a debug option: the level start flies under water from this level second on
      * @param benchSeconds exit after this many seconds and log the frame count; 0 runs until quit
+     * @param shots RF6, a debug option: the level ticks to write a shot of, one simulation step a frame, then exit;
+     *     empty for none
      * @param saves the save slots: read-only in a debug run, which writes no save
      * @param scores the high-score file: read-only in a debug run
      * @param screenshots the directory the screenshot key writes into
@@ -87,6 +92,7 @@ public final class TerranVanguard extends ApplicationAdapter {
             boolean actEnd,
             java.util.OptionalDouble underwaterFrom,
             double benchSeconds,
+            List<Long> shots,
             SaveSlots saves,
             ScoreFile scores,
             Path screenshots,
@@ -103,6 +109,7 @@ public final class TerranVanguard extends ApplicationAdapter {
         this.actEnd = actEnd;
         this.underwaterFrom = underwaterFrom;
         this.bench = benchSeconds > 0 ? Optional.of(new BenchRun(benchSeconds)) : Optional.empty();
+        this.shots = shots.isEmpty() ? Optional.empty() : Optional.of(new ShotRun(level, shots));
         this.saves = saves;
         this.scores = scores;
         this.version = version;
@@ -149,24 +156,32 @@ public final class TerranVanguard extends ApplicationAdapter {
         float frameSeconds = Gdx.graphics.getDeltaTime();
         displayModes.poll();
         services.input.update(services.devices);
-        float seconds = Math.min(frameSeconds, MAX_FRAME_SECONDS);
+        // RF6: a shot run steps the simulation once a frame, whatever the frame's real time.
+        float seconds = shots.isPresent() ? (float) SimStep.SECONDS : Math.min(frameSeconds, MAX_FRAME_SECONDS);
         services.menu.update(seconds);
         boolean flying = screens.pointerHidden();
         cursor.update(flying);
         services.mouse.scaling(services.settings().video().scaling());
         services.pointer.enabled(!flying);
         services.pointer.update(services.mouse, services.devices.focused(), seconds);
-        screens.update(seconds * timeScale);
+        screens.update(shots.isPresent() ? seconds : seconds * timeScale);
         screenshots.update(seconds);
         pixelScreen.begin(batch);
         screens.draw(batch);
-        if (screenshots.requested()) {
+        String shot = shots.isPresent() ? shots.get().due(screens.levelTick()) : null;
+        if (shot != null) {
+            screenshots.captureNow(pixelScreen, batch, shot);
+        } else if (screenshots.requested()) {
             screenshots.capture(pixelScreen, batch);
         }
         screenshots.draw(batch, services.glass, services.fonts);
         pixelScreen.end(batch, services.settings().video());
         if (bench.isPresent() && bench.get().frame(frameSeconds)) {
             Gdx.app.log("bench", bench.get().report());
+            Gdx.app.exit();
+        }
+        if (shot != null && shots.get().done()) {
+            Gdx.app.log("shots", "the last shot is written");
             Gdx.app.exit();
         }
     }

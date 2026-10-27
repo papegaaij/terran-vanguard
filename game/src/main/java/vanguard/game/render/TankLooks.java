@@ -231,7 +231,7 @@ final class TankLooks {
         long tick = sortie.tick();
         for (int i = 0; i < sortie.enemyCount(); i++) {
             Enemy enemy = sortie.enemy(i);
-            if (!has(enemy.kind()) || LevelRenderer.Depth.of(enemy) != LevelRenderer.Depth.GROUND) {
+            if (!has(enemy.kind()) || DrawPasses.Depth.of(enemy) != DrawPasses.Depth.GROUND) {
                 continue;
             }
             Frames own = frames[enemy.kind()];
@@ -249,9 +249,7 @@ final class TankLooks {
         batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
         for (int i = 0; i < sortie.enemyCount(); i++) {
             Enemy enemy = sortie.enemy(i);
-            if (!has(enemy.kind())
-                    || !enemy.partAlive()
-                    || LevelRenderer.Depth.of(enemy) != LevelRenderer.Depth.GROUND) {
+            if (!has(enemy.kind()) || !enemy.partAlive() || DrawPasses.Depth.of(enemy) != DrawPasses.Depth.GROUND) {
                 continue;
             }
             Frames own = frames[enemy.kind()];

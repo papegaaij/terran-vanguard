@@ -208,7 +208,7 @@ final class MawSpecs {
                 null,
                 layers,
                 List.of(new BossSpec.Spot("throat", HEAD, 0, THROAT_DY, new Hitbox(40, 30), 2, true)));
-        BossSpec boss = new BossSpec(
+        BossSpec boss = BossSpec.builder(
                         ARRIVE,
                         REST_X,
                         REST_Y,
@@ -239,12 +239,10 @@ final class MawSpecs {
                                         List.of(),
                                         fit.attacks() ? List.of(BURST) : List.of(),
                                         Double.NaN,
-                                        Optional.of(PickupType.ARMOUR_PATCH))),
-                        false,
-                        List.of(),
-                        List.of(),
-                        4,
-                        Optional.of(arena))
+                                        Optional.of(PickupType.ARMOUR_PATCH))))
+                .deathSeconds(4)
+                .arena(Optional.of(arena))
+                .build()
                 .withCoil(Optional.of(coil(fit)));
         return new SetPieceSpec(
                 "test-maw",

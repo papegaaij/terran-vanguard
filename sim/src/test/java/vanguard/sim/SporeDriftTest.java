@@ -35,49 +35,16 @@ class SporeDriftTest {
     }
 
     private static EnemySpec bomber(EnemyGun gun) {
-        return new EnemySpec(
-                "spore-bomber",
-                24,
-                new Hitbox(52, 56),
-                Layer.LOW_AIR,
-                10,
-                false,
-                25,
-                45,
-                Optional.empty(),
-                Optional.of(45.0),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.of(gun),
-                Optional.empty(),
-                Optional.empty(),
-                false,
-                Optional.empty(),
-                Optional.of(new Range(100, 300)),
-                Optional.empty());
+        return EnemySpec.of("spore-bomber", 24, new Hitbox(52, 56), Layer.LOW_AIR, 10, false, 25, 45)
+                .withStreamSpeed(Optional.of(45.0))
+                .withGun(Optional.of(gun))
+                .withStrafe(Optional.of(new Range(100, 300)));
     }
 
     private static EnemySpec seed(Optional<EnemySpec.DeathBurst> burst) {
-        return new EnemySpec(
-                "whirl-seed",
-                1,
-                new Hitbox(16, 16),
-                Layer.AIR,
-                6,
-                true,
-                3,
-                160,
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                false,
-                Optional.of(new EnemySpec.Spiral(1.5, 1, 90, 60, 3)),
-                Optional.empty(),
-                burst);
+        return EnemySpec.of("whirl-seed", 1, new Hitbox(16, 16), Layer.AIR, 6, true, 3, 160)
+                .withSpiral(Optional.of(new EnemySpec.Spiral(1.5, 1, 90, 60, 3)))
+                .withDeathBurst(burst);
     }
 
     private static LevelScript level(

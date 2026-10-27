@@ -85,7 +85,7 @@ class NavalConvoyTest {
                 List.of(core),
                 List.of(),
                 Optional.empty(),
-                Optional.of(new BossSpec(
+                Optional.of(BossSpec.of(
                         ARRIVE,
                         Ship.START_X,
                         PlayField.HEIGHT - 110,

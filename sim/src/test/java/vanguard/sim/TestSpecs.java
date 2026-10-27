@@ -33,23 +33,9 @@ final class TestSpecs {
     static final Plating PLATING = new Plating(60);
     static final Loadout LOADOUT = loadout(new Armament.Mount(Armament.Slot.FRONT, PULSE, PULSE_L2));
     static final double FULL_ARMOUR = 60;
-    static final EnemySpec SKITTER = new EnemySpec(
-            "skitter",
-            1,
-            new Hitbox(16, 16),
-            Layer.AIR,
-            6,
-            true,
-            5,
-            190,
-            Optional.of(new EnemySpec.Snake(0.25)),
-            Optional.of(160.0),
-            Optional.empty(),
-            Optional.empty(),
-            Optional.empty(),
-            Optional.empty(),
-            Optional.empty(),
-            false);
+    static final EnemySpec SKITTER = EnemySpec.of("skitter", 1, new Hitbox(16, 16), Layer.AIR, 6, true, 5, 190)
+            .withSnake(Optional.of(new EnemySpec.Snake(0.25)))
+            .withStreamSpeed(Optional.of(160.0));
     static final EnemyGun NEEDLER_GUN = EnemyGun.aimed(2.5, 0.8, 1, 150, 4, false);
     static final EnemySpec NEEDLER = needler(NEEDLER_GUN);
     static final ScoringRules SCORING = new ScoringRules(
@@ -114,23 +100,11 @@ final class TestSpecs {
     }
 
     static EnemySpec needler(EnemyGun gun) {
-        return new EnemySpec(
-                "needler",
-                4,
-                new Hitbox(26, 24),
-                Layer.AIR,
-                10,
-                true,
-                12,
-                120,
-                Optional.empty(),
-                Optional.empty(),
-                Optional.of(new EnemySpec.Hover(new Range(2, 4), new Range(80, 220))),
-                Optional.of(new EnemySpec.Orbit(90, 60)),
-                Optional.of(gun),
-                Optional.of(new EnemySpec.Drop(PickupType.SHIELD_CELL, 4)),
-                Optional.empty(),
-                false);
+        return EnemySpec.of("needler", 4, new Hitbox(26, 24), Layer.AIR, 10, true, 12, 120)
+                .withHover(Optional.of(new EnemySpec.Hover(new Range(2, 4), new Range(80, 220))))
+                .withOrbit(Optional.of(new EnemySpec.Orbit(90, 60)))
+                .withGun(Optional.of(gun))
+                .withDrop(Optional.of(new EnemySpec.Drop(PickupType.SHIELD_CELL, 4)));
     }
 
     /** A wave without hold, warning, speed or interval, breaking off one by one, carrying nothing. */
@@ -368,24 +342,25 @@ final class TestSpecs {
                 parts,
                 List.of(),
                 Optional.empty(),
-                Optional.of(new BossSpec(
-                        CARRIER_ARRIVES,
-                        240,
-                        270,
-                        40,
-                        0,
-                        1,
-                        Layer.HIGH_AIR,
-                        false,
-                        "TEST CARRIER",
-                        150,
-                        List.of(),
-                        List.of(fan, spiral, ring),
-                        phases,
-                        true,
-                        List.of(CARRIER_TURRET),
-                        List.of(noseDown, broadside),
-                        3)));
+                Optional.of(BossSpec.builder(
+                                CARRIER_ARRIVES,
+                                240,
+                                270,
+                                40,
+                                0,
+                                1,
+                                Layer.HIGH_AIR,
+                                false,
+                                "TEST CARRIER",
+                                150,
+                                List.of(),
+                                List.of(fan, spiral, ring),
+                                phases)
+                        .engagesOnArrival(true)
+                        .armoured(List.of(CARRIER_TURRET))
+                        .poses(List.of(noseDown, broadside))
+                        .deathSeconds(3)
+                        .build()));
     }
 
     /** A level of a short approach, the carrier's 200 s arena and 10 s after it, without radio. */

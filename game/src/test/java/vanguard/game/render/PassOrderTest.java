@@ -14,13 +14,16 @@ import org.junit.jupiter.api.Test;
 
 /**
  * The play field's pass order: the sequence of draw calls (every call handed the batch, and the
- * blend switches) in {@link LevelRenderer}'s {@code draw}, read from its source. The tests have no GL
- * context to record a real batch, so this pins the order the frame is drawn in: a change to the
- * stack (a pass moved, added or dropped) has to be made here as well, on purpose.
+ * blend switches) in {@link DrawPasses}' {@code draw}, its named passes expanded in the order it calls them, read
+ * from its source. The tests have no GL context to record a real batch, so this pins the order the frame is drawn
+ * in: a change to the stack (a pass moved, added or dropped) has to be made here as well, on purpose.
  */
 class PassOrderTest {
-    private static final Path SOURCE = Path.of("src/main/java/vanguard/game/render/LevelRenderer.java");
+    private static final Path SOURCE = Path.of("src/main/java/vanguard/game/render/DrawPasses.java");
     private static final Pattern CALL = Pattern.compile("([A-Za-z_]\\w*(?:\\(sortie\\))?(?:\\.\\w+)*)\\(\\s*batch\\b");
+    /** RF6: a named pass's call in {@code draw}, {@code groundPass(batch, f);}. */
+    private static final Pattern PASS = Pattern.compile("(\\w+Pass)\\(batch, f\\);");
+
     private static final Pattern BLEND = Pattern.compile("batch\\.setBlendFunction\\(([^)]*)\\)");
 
     private static final String ORDER = """
@@ -200,9 +203,53 @@ class PassOrderTest {
                 String.join("\n", passes(drawBody(Files.readString(SOURCE).replace("\r\n", "\n")))));
     }
 
-    /** The body of {@code draw(...)}, without its line comments. */
+    /** RF6: {@code draw} calls its named passes, each once and nothing else handed the batch. */
+    @Test
+    void drawIsItsNamedPassesInOrder() throws IOException {
+        String source = Files.readString(SOURCE).replace("\r\n", "\n");
+        String draw = body(source, "    void draw(\n");
+        List<String> named = new ArrayList<>();
+        Matcher pass = PASS.matcher(draw);
+        while (pass.find()) {
+            named.add(pass.group(1));
+        }
+        assertEquals(
+                List.of(
+                        "behindPass",
+                        "groundPass",
+                        "groundUnitsPass",
+                        "shadowPass",
+                        "lowAirPass",
+                        "planeUnitsPass",
+                        "setPiecePass",
+                        "shotPass",
+                        "highAirPass",
+                        "weatherPass",
+                        "overlayPass"),
+                named);
+        assertEquals(named.size(), CALL.matcher(draw).results().count(), "draw hands the batch to its passes only");
+    }
+
+    /** The body of {@code draw(...)} with its named passes' bodies in their calls' place, without line comments. */
     private static String drawBody(String source) {
-        int start = source.indexOf(") {", source.indexOf("    public void draw(\n")) + 2;
+        Matcher pass = PASS.matcher(body(source, "    void draw(\n"));
+        StringBuilder expanded = new StringBuilder();
+        while (pass.find()) {
+            pass.appendReplacement(
+                    expanded,
+                    Matcher.quoteReplacement(
+                            body(source, "    private void " + pass.group(1) + "(SpriteBatch batch, Frame f) {")));
+        }
+        return pass.appendTail(expanded).toString();
+    }
+
+    /** The body of the method whose declaration starts with {@code declaration}, without its line comments. */
+    private static String body(String source, String declaration) {
+        int at = source.indexOf(declaration);
+        if (at < 0) {
+            throw new IllegalStateException("no " + declaration.strip() + " in " + SOURCE);
+        }
+        int start = source.indexOf(") {", at) + 2;
         int depth = 0;
         int end = start;
         for (; ; end++) {

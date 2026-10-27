@@ -97,7 +97,7 @@ class BossTest {
                 List.of(left, right, core),
                 List.of(),
                 Optional.empty(),
-                Optional.of(new BossSpec(
+                Optional.of(BossSpec.of(
                         ARRIVE,
                         240,
                         PlayField.HEIGHT - 110,
@@ -374,7 +374,7 @@ class BossTest {
         LevelScript level = level();
         SetPieceSpec boss = boss();
         BossSpec late = boss.boss().orElseThrow();
-        late = new BossSpec(
+        late = BossSpec.of(
                 ARRIVE + 4,
                 late.x(),
                 late.hoverY(),

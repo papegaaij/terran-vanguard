@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.OptionalDouble;
@@ -28,7 +29,8 @@ class LaunchOptionsTest {
                         Optional.empty(),
                         1,
                         false,
-                        OptionalDouble.empty()),
+                        OptionalDouble.empty(),
+                        List.of()),
                 LaunchOptions.parse());
     }
 
@@ -45,7 +47,8 @@ class LaunchOptionsTest {
                         Optional.empty(),
                         1,
                         false,
-                        OptionalDouble.empty()),
+                        OptionalDouble.empty(),
+                        List.of()),
                 LaunchOptions.parse("--bench", "3", "--settings", "smoke.properties"));
     }
 
@@ -62,10 +65,22 @@ class LaunchOptionsTest {
                         Optional.empty(),
                         1,
                         false,
-                        OptionalDouble.empty()),
+                        OptionalDouble.empty(),
+                        List.of()),
                 LaunchOptions.parse("--difficulty", "hard", "--debug-speed", "4", "--invulnerable"));
         assertThrows(IllegalArgumentException.class, () -> LaunchOptions.parse("--difficulty", "nightmare"));
         assertThrows(IllegalArgumentException.class, () -> LaunchOptions.parse("--debug-speed", "0"));
+    }
+
+    @Test
+    void parsesTheShotTicksInOrder() {
+        LaunchOptions options = LaunchOptions.parse("--shots", "900,300, 600,300", "--level", "5");
+        assertEquals(List.of(300L, 600L, 900L), options.shots());
+        assertEquals(true, options.startLevel());
+        assertEquals(true, options.debugRun());
+        assertThrows(IllegalArgumentException.class, () -> LaunchOptions.parse("--shots", "0,10"));
+        assertThrows(IllegalArgumentException.class, () -> LaunchOptions.parse("--shots", "ten"));
+        assertThrows(IllegalArgumentException.class, () -> LaunchOptions.parse("--shots", "10", "--start", "title"));
     }
 
     @Test

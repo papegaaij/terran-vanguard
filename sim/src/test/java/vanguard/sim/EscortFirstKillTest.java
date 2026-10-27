@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -20,23 +19,7 @@ class EscortFirstKillTest {
     private static final RadioCue PLAYER_FIRST =
             new RadioCue(CueTrigger.FIRST_KILL, 0, "husk", "Okafor", "Good kill.", false, "neutral", "Okafor");
 
-    private static final EnemySpec HUSK = new EnemySpec(
-            "husk",
-            4,
-            new Hitbox(16, 16),
-            Layer.GROUND,
-            6,
-            false,
-            10,
-            0,
-            Optional.empty(),
-            Optional.empty(),
-            Optional.empty(),
-            Optional.empty(),
-            Optional.empty(),
-            Optional.empty(),
-            Optional.empty(),
-            false);
+    private static final EnemySpec HUSK = EnemySpec.of("husk", 4, new Hitbox(16, 16), Layer.GROUND, 6, false, 10, 0);
 
     /** Ground units in a column at {@code x}, from {@code t} every half second. */
     private static List<GroundUnit> column(double x, double t, int count) {

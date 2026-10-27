@@ -420,7 +420,7 @@ final class BossRules {
                 parts,
                 List.of(),
                 UnitRules.drop(enemy).map(EnemySpec.Drop::pickup),
-                Optional.of(new BossSpec(
+                Optional.of(BossSpec.builder(
                                 placement.t(),
                                 placement.x(),
                                 PlayField.HEIGHT - hoverY,
@@ -437,29 +437,31 @@ final class BossRules {
                                 script.par(),
                                 chains,
                                 attacks,
-                                phases,
-                                script.engagesOnArrival().orElse(false),
-                                armoured,
-                                poses,
-                                script.deathSeconds().orElse(0.0),
+                                phases)
+                        .engagesOnArrival(script.engagesOnArrival().orElse(false))
+                        .armoured(armoured)
+                        .poses(poses)
+                        .deathSeconds(script.deathSeconds().orElse(0.0))
+                        .arena(
                                 enemy.arenaBoss()
                                         ? Optional.of(
                                                 arena(content, enemy, script, movement.anchored(), hook, difficulty))
                                         : Optional.empty())
-                        .withIncomingSeconds(placement.incoming().orElse(0.0))
+                        .incomingSeconds(placement.incoming().orElse(0.0))
                         // M7 part F: a walking boss's passes, front plate and flame cone (FoundryRules).
-                        .withStride(movement.stride()
+                        .stride(movement.stride()
                                 .map(stride -> FoundryRules.stride(content, enemy, script, stride, hook)))
-                        .withPlate(script.plate().map(plate -> FoundryRules.plate(enemy, plate)))
-                        .withCone(script.cone().map(cone -> FoundryRules.cone(content, cone, hook)))
+                        .plate(script.plate().map(plate -> FoundryRules.plate(enemy, plate)))
+                        .cone(script.cone().map(cone -> FoundryRules.cone(content, cone, hook)))
                         // M7 part H: a breaching boss's cycle and suction (ColossusRules).
-                        .withBreach(ColossusRules.breach(content, enemy, difficulty))
-                        .withSuction(ColossusRules.suction(enemy, difficulty))
-                        .withVents(ColossusRules.vents(enemy))
-                        .withEruption(ColossusRules.eruption(content, enemy, difficulty))
-                        .withDebris(ColossusRules.debris(content, enemy))
+                        .breach(ColossusRules.breach(content, enemy, difficulty))
+                        .suction(ColossusRules.suction(enemy, difficulty))
+                        .vents(ColossusRules.vents(enemy))
+                        .eruption(ColossusRules.eruption(content, enemy, difficulty))
+                        .debris(ColossusRules.debris(content, enemy))
                         // M8 part H: a coiled boss's body and script (MawRules).
-                        .withCoil(MawRules.coil(content, enemy, difficulty, inLevel))));
+                        .coil(MawRules.coil(content, enemy, difficulty, inLevel))
+                        .build()));
     }
 
     /**

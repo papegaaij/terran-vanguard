@@ -49,6 +49,11 @@ public final class ScreenFlow implements Disposable {
         screens.peek().draw(batch);
     }
 
+    /** RF6 ({@code --shots}): the level tick of the level on top, -1 when the top screen is not a level. */
+    public long levelTick() {
+        return screens.peek() instanceof LevelScreen level ? level.tick() : -1;
+    }
+
     /** The screen on top, for tests. */
     GameScreen top() {
         return screens.peek();

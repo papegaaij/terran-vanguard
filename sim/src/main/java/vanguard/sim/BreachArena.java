@@ -12,7 +12,7 @@ import java.util.List;
  * {@link BossSpec.Order} in turn: the {@link Phase#TELL tell} (the bulge at the point), the {@link Phase#RISE rise}
  * (the mouth's layer {@code buried} → {@code ground} at its middle), {@link Phase#OPEN open} (the gullet's {@code
  * while: open} weak spots, the suction, the phase's attacks), the {@link Phase#BITE bite} (its tell, then the snap:
- * {@link SetPiece.BossActions#bite}), the {@link Phase#DIVE dive} (back to {@code buried} at its middle), then {@link
+ * {@link BossActions#bite}), the {@link Phase#DIVE dive} (back to {@code buried} at its middle), then {@link
  * Phase#BURIED buried} until the next tell. The cycle's times are the breach's; the next rise comes the breach's
  * {@code buriedSeconds} (at least its tell) after the dive's end.
  *
@@ -100,7 +100,7 @@ public final class BreachArena implements Hashed {
     /** Step SIM-K: a spine vent's centre stays this far inside the play field's edges, px (half a vent). */
     private static final double VENT_MARGIN = 20;
 
-    /** What a bite or an eruption caught ({@link SetPiece.BossActions#bite}): the ship. */
+    /** What a bite or an eruption caught ({@link BossActions#bite}): the ship. */
     public static final int BITE_SHIP = 1;
     /** The bite caught Rook. */
     public static final int BITE_WINGMAN = 2;
@@ -707,7 +707,7 @@ public final class BreachArena implements Hashed {
      * One step of its actions after the cycle (engaged): the event of the phase it entered, the bite's snap on the
      * ship and Rook.
      */
-    void act(SetPiece.BossActions actions, boolean firing) {
+    void act(BossActions actions, boolean firing) {
         if (snap) {
             int hit = actions.bite(mouthX, mouthY, spec.biteRadius(), spec.biteDamage());
             actions.breach(SimEvents.Type.BITE_SNAP, mouthX, mouthY, hit);

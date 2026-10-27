@@ -27,20 +27,10 @@ final class SiegeSpecs {
     static final AllySpec EDEN = dome(144, 3);
 
     /** The Spore Bomber at medium: HP 24, 45 px/s, a spore every 1.6 s. */
-    static final EnemySpec BOMBER = new EnemySpec(
-            "spore-bomber",
-            24,
-            new Hitbox(52, 56),
-            Layer.LOW_AIR,
-            10,
-            false,
-            25,
-            45,
-            Optional.empty(),
-            Optional.of(45.0),
-            Optional.empty(),
-            Optional.empty(),
-            Optional.of(new EnemyGun(
+    static final EnemySpec BOMBER = EnemySpec.of(
+                    "spore-bomber", 24, new Hitbox(52, 56), Layer.LOW_AIR, 10, false, 25, 45)
+            .withStreamSpeed(Optional.of(45.0))
+            .withGun(Optional.of(new EnemyGun(
                     1.6,
                     0,
                     1,
@@ -51,38 +41,14 @@ final class SiegeSpecs {
                     0,
                     TestSpecs.INFINITE,
                     TestSpecs.INFINITE,
-                    Optional.of(new EnemyGun.MineSpec(1, 8, 20, 1, 6, 4, true, 1)))),
-            Optional.empty(),
-            Optional.empty(),
-            false,
-            Optional.empty(),
-            Optional.of(new Range(100, 300)),
-            Optional.empty());
+                    Optional.of(new EnemyGun.MineSpec(1, 8, 20, 1, 6, 4, true, 1)))))
+            .withStrafe(Optional.of(new Range(100, 300)));
 
     /** A walker with a mortar (a Shellback's vent, without its curl): 40 px/s, the Polyp Mortar's lob. */
-    static final EnemySpec MORTAR_WALKER = new EnemySpec(
-            "shellback",
-            60,
-            new Hitbox(60, 60),
-            Layer.GROUND,
-            15,
-            false,
-            40,
-            40,
-            Optional.empty(),
-            Optional.empty(),
-            Optional.empty(),
-            Optional.empty(),
-            Optional.of(CraterNestTest.MORTAR_GUN),
-            Optional.empty(),
-            Optional.empty(),
-            false,
-            Optional.empty(),
-            Optional.empty(),
-            Optional.empty(),
-            Optional.empty(),
-            Optional.empty(),
-            Optional.of(new EnemySpec.Walker(
+    static final EnemySpec MORTAR_WALKER = EnemySpec.of(
+                    "shellback", 60, new Hitbox(60, 60), Layer.GROUND, 15, false, 40, 40)
+            .withGun(Optional.of(CraterNestTest.MORTAR_GUN))
+            .withWalker(Optional.of(new EnemySpec.Walker(
                     40, Math.toRadians(90), 24, Math.toRadians(45), Optional.empty(), Math.toRadians(90))));
 
     /** M7 part D, step D3: the Choir Herald's aura at medium (design/enemies/air/choir-herald/data.yaml). */
@@ -107,29 +73,10 @@ final class SiegeSpecs {
      * The Choir Herald at medium: HP 60, in at 100 px/s, hovering 12 s 175 px below the top edge with its 32 px
      * drift over 10 s, then up and out; its song and its aura.
      */
-    static final EnemySpec HERALD = new EnemySpec(
-                    "choir-herald",
-                    60,
-                    new Hitbox(52, 48),
-                    Layer.AIR,
-                    10,
-                    false,
-                    30,
-                    100,
-                    Optional.empty(),
-                    Optional.empty(),
-                    Optional.of(new EnemySpec.Hover(new Range(12, 12), new Range(175, 175))),
-                    Optional.empty(),
-                    Optional.of(SONG),
-                    Optional.empty(),
-                    Optional.empty(),
-                    false,
-                    Optional.empty(),
-                    Optional.empty(),
-                    Optional.empty(),
-                    Optional.of(new EnemySpec.Sine(32, 10)),
-                    Optional.empty(),
-                    Optional.empty())
+    static final EnemySpec HERALD = EnemySpec.of("choir-herald", 60, new Hitbox(52, 48), Layer.AIR, 10, false, 30, 100)
+            .withHover(Optional.of(new EnemySpec.Hover(new Range(12, 12), new Range(175, 175))))
+            .withGun(Optional.of(SONG))
+            .withSine(Optional.of(new EnemySpec.Sine(32, 10)))
             .withAura(Optional.of(AURA));
 
     /** The Shellback's vent mortar at medium: every 4.0 s, marker 1.2 s, heavy 10, a ring of 8 small 4. */
@@ -154,30 +101,11 @@ final class SiegeSpecs {
     static final EnemySpec.Roll ROLL = new EnemySpec.Roll(0.4, 0.6, 2.5, 140, 0.6, 1.5, 1.5, new Hitbox(72, 72));
 
     /** The Shellback at medium (design/enemies/ground/shellback/data.yaml): body 120 HP, 40 credits, 24 px/s. */
-    static final EnemySpec SHELLBACK = new EnemySpec(
-                    "shellback",
-                    120,
-                    new Hitbox(84, 84),
-                    Layer.GROUND,
-                    15,
-                    false,
-                    40,
-                    24,
-                    Optional.empty(),
-                    Optional.empty(),
-                    Optional.empty(),
-                    Optional.empty(),
-                    Optional.of(VENT_MORTAR),
-                    Optional.empty(),
-                    Optional.empty(),
-                    false,
-                    Optional.empty(),
-                    Optional.empty(),
-                    Optional.empty(),
-                    Optional.empty(),
-                    Optional.empty(),
-                    Optional.of(
-                            new EnemySpec.Walker(24, Math.toRadians(45), 32, 0, Optional.empty(), Math.toRadians(90))))
+    static final EnemySpec SHELLBACK = EnemySpec.of(
+                    "shellback", 120, new Hitbox(84, 84), Layer.GROUND, 15, false, 40, 24)
+            .withGun(Optional.of(VENT_MORTAR))
+            .withWalker(Optional.of(
+                    new EnemySpec.Walker(24, Math.toRadians(45), 32, 0, Optional.empty(), Math.toRadians(90))))
             .withPart(Optional.of(VENT))
             .withRoll(Optional.of(ROLL));
 

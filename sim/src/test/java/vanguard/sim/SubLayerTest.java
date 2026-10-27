@@ -73,23 +73,8 @@ class SubLayerTest {
 
     /** A 1000 HP unit as wide as the Airstrike's two carpets (its test's targets). */
     private static EnemySpec wide(Layer layer) {
-        return new EnemySpec(
-                "wide-" + layer,
-                1000,
-                new Hitbox(120, 60),
-                layer,
-                0,
-                false,
-                0,
-                0,
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                true);
+        return EnemySpec.of("wide-" + layer, 1000, new Hitbox(120, 60), layer, 0, false, 0, 0)
+                .withTerrain(true);
     }
 
     private static Enemy find(Sortie sortie, Layer layer) {

@@ -546,6 +546,11 @@ public final class LevelScreen implements GameScreen {
         return campaign;
     }
 
+    /** RF6 ({@code --shots}): the simulation's tick in this attempt. */
+    long tick() {
+        return sortie.tick();
+    }
+
     /** The time flown in this attempt. */
     double seconds() {
         return sortie.levelSeconds();

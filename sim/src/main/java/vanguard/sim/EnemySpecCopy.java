@@ -6,7 +6,7 @@ import java.util.Optional;
 /**
  * A mutable copy of an {@link EnemySpec}'s components, for its {@code withX} builders: each sets the
  * components it changes and {@link #build()}s the new stat block through the canonical constructor (so
- * its checks run). Used while the specs are built, never in a step.
+ * its checks run), and {@link EnemySpec#of}'s base stats. Used while the specs are built, never in a step.
  */
 final class EnemySpecCopy {
     String slug;
@@ -63,6 +63,72 @@ final class EnemySpecCopy {
     Optional<EnemySpec.SlowRing> slowRing;
     Optional<EnemySpec.Coil> coil;
     Optional<EnemySpec.Lunge> lunge;
+
+    /** The base stats with every other component left out ({@link EnemySpec#of}). */
+    EnemySpecCopy(
+            String slug,
+            double hp,
+            Hitbox hitbox,
+            Layer layer,
+            double contactDamage,
+            boolean destroyedByRamming,
+            int bounty,
+            double speed) {
+        this.slug = slug;
+        this.hp = hp;
+        this.hitbox = hitbox;
+        this.layer = layer;
+        this.contactDamage = contactDamage;
+        this.destroyedByRamming = destroyedByRamming;
+        this.bounty = bounty;
+        this.speed = speed;
+        snake = Optional.empty();
+        streamSpeed = Optional.empty();
+        hover = Optional.empty();
+        orbit = Optional.empty();
+        gun = Optional.empty();
+        drop = Optional.empty();
+        dive = Optional.empty();
+        terrain = false;
+        spiral = Optional.empty();
+        strafe = Optional.empty();
+        deathBurst = Optional.empty();
+        sine = Optional.empty();
+        brood = Optional.empty();
+        walker = Optional.empty();
+        sideHover = Optional.empty();
+        sweep = Optional.empty();
+        chain = Optional.empty();
+        hardened = false;
+        spawner = Optional.empty();
+        pounce = Optional.empty();
+        cloak = Optional.empty();
+        ambush = Optional.empty();
+        flock = Optional.empty();
+        submerge = Optional.empty();
+        ring = Optional.empty();
+        drift = 0;
+        chase = Optional.empty();
+        latch = Optional.empty();
+        machine = false;
+        burrow = Optional.empty();
+        swoop = Optional.empty();
+        link = Optional.empty();
+        crawl = Optional.empty();
+        aura = Optional.empty();
+        parts = List.of();
+        roll = Optional.empty();
+        vortex = Optional.empty();
+        pull = Optional.empty();
+        laneStrafe = Optional.empty();
+        turret = Optional.empty();
+        rearPlate = Optional.empty();
+        seekersIgnore = false;
+        rise = Optional.empty();
+        slowRing = Optional.empty();
+        coil = Optional.empty();
+        lunge = Optional.empty();
+    }
 
     EnemySpecCopy(EnemySpec spec) {
         slug = spec.slug();

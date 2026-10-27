@@ -138,7 +138,7 @@ final class DrillRigLooks {
     }
 
     private boolean rig(Enemy enemy) {
-        return kind >= 0 && enemy.kind() == kind && LevelRenderer.Depth.of(enemy) == LevelRenderer.Depth.GROUND;
+        return kind >= 0 && enemy.kind() == kind && DrawPasses.Depth.of(enemy) == DrawPasses.Depth.GROUND;
     }
 
     // --- the frames --------------------------------------------------------------------------------

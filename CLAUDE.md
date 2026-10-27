@@ -185,7 +185,9 @@ versions in `gradle/libs.versions.toml`.
   `--medium underwater[@<s>]` flies the level under water from that level second on (the specials' limits follow);
   `--level <n>` starts at level n instead of Level 01; `--act-end` makes winning that level end
   its act (the act summary in the debrief, then the act outro, then the hangar), to see the act end
-  before an act's last level exists; all eight are for testing only.
+  before an act's last level exists; `--shots <tick>,<tick>,…` flies the level start one simulation step a frame, writes
+  `screenshots/shot-<level>-<tick>.png` (next to the settings file) at those level ticks and exits after the last (the
+  renderer's pixel pin, e.g. `--level 12 --invulnerable --shots 3300,6300`); all nine are for testing only.
 - `./gradlew :desktop:installDist` – the start script in `desktop/build/install/terran-vanguard/`.
 - `./gradlew :desktop:packageLinuxX64` (also `packageWinX64`, `packageMacX64`, `packageMacM1`) –
   Construo bundles with a trimmed JRE in `desktop/build/construo/dist/`. Run Gradle on JDK 21 for

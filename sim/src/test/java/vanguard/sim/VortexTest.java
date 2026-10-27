@@ -33,23 +33,8 @@ class VortexTest {
 
     /** A Dust Devil at medium: 52 HP, a 26×26 core, its vortex, the 2-arm spiral and the pull. */
     static EnemySpec devil(EnemySpec.Vortex vortex, Optional<EnemyGun> gun) {
-        return new EnemySpec(
-                        "dust-devil",
-                        52,
-                        new Hitbox(26, 26),
-                        Layer.GROUND,
-                        0,
-                        false,
-                        26,
-                        50,
-                        Optional.empty(),
-                        Optional.empty(),
-                        Optional.empty(),
-                        Optional.empty(),
-                        gun,
-                        Optional.empty(),
-                        Optional.empty(),
-                        false)
+        return EnemySpec.of("dust-devil", 52, new Hitbox(26, 26), Layer.GROUND, 0, false, 26, 50)
+                .withGun(gun)
                 .withVortex(Optional.of(vortex))
                 .withPull(Optional.of(PullTest.PULL));
     }

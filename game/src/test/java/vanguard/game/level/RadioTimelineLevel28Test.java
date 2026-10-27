@@ -2,12 +2,15 @@ package vanguard.game.level;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static vanguard.game.level.RadioPlayer.arenaHaltTick;
+import static vanguard.game.level.RadioPlayer.holdAfterKill;
 
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import vanguard.content.Difficulty;
 import vanguard.content.LevelData;
 import vanguard.content.SimSpecs;
+import vanguard.game.level.RadioPlayer.EndRun;
 import vanguard.sim.CueTrigger;
 import vanguard.sim.LevelScript;
 import vanguard.sim.SimStep;

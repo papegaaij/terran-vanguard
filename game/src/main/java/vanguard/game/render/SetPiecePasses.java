@@ -11,7 +11,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
-import vanguard.game.render.LevelRenderer.SpirePass;
+import vanguard.game.render.DrawPasses.SpirePass;
 import vanguard.sim.SetPiece;
 import vanguard.sim.Ship;
 import vanguard.sim.SimStep;

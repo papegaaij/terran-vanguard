@@ -30,23 +30,8 @@ class GhostDroneTest {
 
     /** A Ghost Drone: 14 HP, a 28×24 hit box, a machine, its lane strafe and its gun. */
     static EnemySpec drone(EnemySpec.LaneStrafe strafe, Optional<EnemyGun> gun) {
-        return new EnemySpec(
-                        "ghost-drone",
-                        14,
-                        new Hitbox(28, 24),
-                        Layer.AIR,
-                        0,
-                        false,
-                        14,
-                        180,
-                        Optional.empty(),
-                        Optional.empty(),
-                        Optional.empty(),
-                        Optional.empty(),
-                        gun,
-                        Optional.empty(),
-                        Optional.empty(),
-                        false)
+        return EnemySpec.of("ghost-drone", 14, new Hitbox(28, 24), Layer.AIR, 0, false, 14, 180)
+                .withGun(gun)
                 .withMachine(true)
                 .withLaneStrafe(Optional.of(strafe));
     }

@@ -23,23 +23,8 @@ class AirstrikeTest {
 
     /** A target fixed to the ground on {@code layer}, wide enough for both bombers' carpets. */
     private static EnemySpec target(Layer layer, double hp, int bounty) {
-        return new EnemySpec(
-                "target-" + layer,
-                hp,
-                new Hitbox(120, 60),
-                layer,
-                0,
-                false,
-                bounty,
-                0,
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                true);
+        return EnemySpec.of("target-" + layer, hp, new Hitbox(120, 60), layer, 0, false, bounty, 0)
+                .withTerrain(true);
     }
 
     private static LevelScript level(List<GroundUnit> units, List<GroundObjectSpec> ground) {

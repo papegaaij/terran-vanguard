@@ -28,23 +28,9 @@ class LinkTest {
 
     /** A Tendril Anchor: 12 HP, 30 × 30, on the ground, bounty 12, fixed to the ground; {@code gun} its hard orb. */
     static EnemySpec anchor(Optional<EnemyGun> gun) {
-        return new EnemySpec(
-                        "tendril-anchor",
-                        12,
-                        new Hitbox(30, 30),
-                        Layer.GROUND,
-                        0,
-                        false,
-                        12,
-                        0,
-                        Optional.empty(),
-                        Optional.empty(),
-                        Optional.empty(),
-                        Optional.empty(),
-                        gun,
-                        Optional.empty(),
-                        Optional.empty(),
-                        true)
+        return EnemySpec.of("tendril-anchor", 12, new Hitbox(30, 30), Layer.GROUND, 0, false, 12, 0)
+                .withGun(gun)
+                .withTerrain(true)
                 .withLink(Optional.of(LINK));
     }
 

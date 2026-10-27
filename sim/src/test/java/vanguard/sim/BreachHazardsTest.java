@@ -100,7 +100,7 @@ class BreachHazardsTest {
                 null,
                 List.of(Layer.BURIED, Layer.BURIED, Layer.BURIED, Layer.BURIED),
                 List.of(new BossSpec.Spot("gullet", MOUTH, 0, 0, new Hitbox(60, 60), 2, true)));
-        BossSpec boss = new BossSpec(
+        BossSpec boss = BossSpec.builder(
                         ARRIVE,
                         PlayField.WIDTH / 2.0,
                         PlayField.HEIGHT / 2.0,
@@ -116,12 +116,10 @@ class BreachHazardsTest {
                         List.of(
                                 phase("Circling", one, 0.6, false),
                                 phase("Hunting", two, 0.25, false),
-                                phase("Breaching anywhere", three, Double.NaN, true)),
-                        false,
-                        List.of(),
-                        List.of(),
-                        3,
-                        Optional.of(arena))
+                                phase("Breaching anywhere", three, Double.NaN, true)))
+                .deathSeconds(3)
+                .arena(Optional.of(arena))
+                .build()
                 .withBreach(Optional.of(BREACH))
                 .withSuction(Optional.of(SUCTION))
                 .withVents(Optional.of(new BossSpec.Vents(vents, List.of(120.0, 200.0, 280.0), BURST)))

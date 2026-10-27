@@ -27,23 +27,7 @@ class LampreyTest {
     static final EnemySpec LAMPREY = lamprey(LATCH);
 
     static EnemySpec lamprey(EnemySpec.Latch latch) {
-        return new EnemySpec(
-                        "lamprey",
-                        3,
-                        new Hitbox(20, 28),
-                        Layer.AIR,
-                        6,
-                        true,
-                        12,
-                        220,
-                        Optional.empty(),
-                        Optional.empty(),
-                        Optional.empty(),
-                        Optional.empty(),
-                        Optional.empty(),
-                        Optional.empty(),
-                        Optional.empty(),
-                        false)
+        return EnemySpec.of("lamprey", 3, new Hitbox(20, 28), Layer.AIR, 6, true, 12, 220)
                 .withChase(new EnemySpec.Chase(220, Math.toRadians(180), 4), Optional.of(latch));
     }
 

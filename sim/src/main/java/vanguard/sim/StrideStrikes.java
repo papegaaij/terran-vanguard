@@ -131,7 +131,7 @@ public final class StrideStrikes implements Hashed {
      * One step in {@code phase} after the cone: {@code ready}, it walks on the screen with its hull on it and the
      * level's fire runs (a charge or a tell left unready stops).
      */
-    void act(int phase, SetPiece.BossActions actions, boolean ready) {
+    void act(int phase, BossActions actions, boolean ready) {
         if (lance != null) {
             stepLance(phase, actions, ready);
         }
@@ -160,7 +160,7 @@ public final class StrideStrikes implements Hashed {
         return true;
     }
 
-    private void stepLance(int phase, SetPiece.BossActions actions, boolean ready) {
+    private void stepLance(int phase, BossActions actions, boolean ready) {
         if (!lanceAwake(phase)) {
             awake = false;
             lancePhase = LancePhase.IDLE;
@@ -206,7 +206,7 @@ public final class StrideStrikes implements Hashed {
         }
     }
 
-    private void stepStomp(SetPiece.BossActions actions, boolean ready) {
+    private void stepStomp(BossActions actions, boolean ready) {
         if (stompSince < Integer.MAX_VALUE / 2) {
             stompSince++;
         }

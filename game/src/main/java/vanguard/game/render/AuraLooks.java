@@ -203,7 +203,7 @@ final class AuraLooks {
             Enemy enemy = sortie.enemy(i);
             if (!ringed(enemy)
                     || enemy.cloaked()
-                    || (LevelRenderer.Depth.of(enemy) == LevelRenderer.Depth.GROUND) != ground) {
+                    || (DrawPasses.Depth.of(enemy) == DrawPasses.Depth.GROUND) != ground) {
                 continue;
             }
             double collapse = enemy.ringCollapse();

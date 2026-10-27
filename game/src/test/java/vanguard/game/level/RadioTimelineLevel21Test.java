@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import vanguard.content.Expression;
 import vanguard.content.LevelData;
 import vanguard.content.RadioBlock;
+import vanguard.game.level.RadioPlayer.EndRun;
 import vanguard.sim.CueTrigger;
 import vanguard.sim.SimStep;
 

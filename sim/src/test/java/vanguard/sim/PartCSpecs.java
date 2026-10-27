@@ -131,35 +131,12 @@ final class PartCSpecs {
             Optional<EnemySpec.Spawner> spawner,
             Optional<EnemySpec.Pounce> pounce,
             int bounty) {
-        return new EnemySpec(
-                slug,
-                hp,
-                box,
-                Layer.GROUND,
-                15,
-                false,
-                bounty,
-                speed,
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                terrain,
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                walker,
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                hardened,
-                spawner,
-                pounce);
+        return EnemySpec.of(slug, hp, box, Layer.GROUND, 15, false, bounty, speed)
+                .withTerrain(terrain)
+                .withWalker(walker)
+                .withHardened(hardened)
+                .withSpawner(spawner)
+                .withPounce(pounce);
     }
 
     /** A Bomb Rack-like dropped bomb, anti-ground or not: 12 damage in a 30 px blast, 0.5 s to fall. */

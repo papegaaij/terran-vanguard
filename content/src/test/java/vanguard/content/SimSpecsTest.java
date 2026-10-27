@@ -245,23 +245,9 @@ class SimSpecsTest {
     @Test
     void theSkitterComesFromItsStatBlockAndTheBalancingBasis() {
         assertEquals(
-                new EnemySpec(
-                        "skitter",
-                        1,
-                        new Hitbox(16, 16),
-                        Layer.AIR,
-                        6,
-                        true,
-                        5,
-                        190,
-                        Optional.of(new EnemySpec.Snake(0.25)),
-                        Optional.of(160.0),
-                        Optional.empty(),
-                        Optional.empty(),
-                        Optional.empty(),
-                        Optional.empty(),
-                        Optional.empty(),
-                        false),
+                EnemySpec.of("skitter", 1, new Hitbox(16, 16), Layer.AIR, 6, true, 5, 190)
+                        .withSnake(Optional.of(new EnemySpec.Snake(0.25)))
+                        .withStreamSpeed(Optional.of(160.0)),
                 SimSpecs.enemy(content, "skitter", Difficulty.MEDIUM, Optional.empty()));
     }
 

@@ -40,38 +40,12 @@ final class PartDSpecs {
 
     /** The Wraith with a hold of {@code hold} s and {@code shots}-shot bursts (hard: 3.0 s, 7). */
     static EnemySpec wraith(double hold, int shots) {
-        return new EnemySpec(
-                "wraith",
-                16,
-                new Hitbox(50, 40),
-                Layer.HIGH_AIR,
-                15,
-                false,
-                30,
-                200,
-                Optional.empty(),
-                Optional.of(120.0),
-                Optional.of(new EnemySpec.Hover(new Range(hold, hold), new Range(470, 520))),
-                Optional.empty(),
-                Optional.of(burst(shots)),
-                Optional.empty(),
-                Optional.empty(),
-                false,
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                false,
-                Optional.empty(),
-                Optional.empty(),
-                Optional.of(new EnemySpec.Cloak(Layer.AIR, 0.4)),
-                Optional.of(new EnemySpec.Ambush(1.5, 40, 120)),
-                Optional.empty());
+        return EnemySpec.of("wraith", 16, new Hitbox(50, 40), Layer.HIGH_AIR, 15, false, 30, 200)
+                .withStreamSpeed(Optional.of(120.0))
+                .withHover(Optional.of(new EnemySpec.Hover(new Range(hold, hold), new Range(470, 520))))
+                .withGun(Optional.of(burst(shots)))
+                .withCloak(Optional.of(new EnemySpec.Cloak(Layer.AIR, 0.4)))
+                .withAmbush(Optional.of(new EnemySpec.Ambush(1.5, 40, 120)));
     }
 
     /** The flock of the Mote Swarm's data. */
@@ -79,38 +53,8 @@ final class PartDSpecs {
             new EnemySpec.FlockSpec(18, 48, 0.5, 0.3, 0.6, 200, 260, Math.toRadians(360), 24);
 
     /** One mote: 1 HP, `tiny` contact 6 and destroyed by it, 2 credits, its leader point at 200 px/s. */
-    static final EnemySpec MOTE = new EnemySpec(
-            "mote-swarm",
-            1,
-            new Hitbox(10, 10),
-            Layer.AIR,
-            6,
-            true,
-            2,
-            200,
-            Optional.empty(),
-            Optional.empty(),
-            Optional.empty(),
-            Optional.empty(),
-            Optional.empty(),
-            Optional.empty(),
-            Optional.empty(),
-            false,
-            Optional.empty(),
-            Optional.empty(),
-            Optional.empty(),
-            Optional.empty(),
-            Optional.empty(),
-            Optional.empty(),
-            Optional.empty(),
-            Optional.empty(),
-            Optional.empty(),
-            false,
-            Optional.empty(),
-            Optional.empty(),
-            Optional.empty(),
-            Optional.empty(),
-            Optional.of(FLOCK));
+    static final EnemySpec MOTE = EnemySpec.of("mote-swarm", 1, new Hitbox(10, 10), Layer.AIR, 6, true, 2, 200)
+            .withFlock(Optional.of(FLOCK));
 
     /** A rear ambush of {@code count} {@code wraith}s at {@code t}. */
     static WaveSpec ambush(double t, EnemySpec wraith, int count) {

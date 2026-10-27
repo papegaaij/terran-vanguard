@@ -76,23 +76,9 @@ class ActThreeArsenalFlightTest {
 
     /** A dummy on the scrolling ground: {@code hp}, {@code size} square, firing {@code gun} if any. */
     static EnemySpec dummy(double hp, double size, Optional<EnemyGun> gun) {
-        return new EnemySpec(
-                "dummy",
-                hp,
-                new Hitbox(size, size),
-                Layer.GROUND,
-                0,
-                false,
-                0,
-                0,
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                gun,
-                Optional.empty(),
-                Optional.empty(),
-                true);
+        return EnemySpec.of("dummy", hp, new Hitbox(size, size), Layer.GROUND, 0, false, 0, 0)
+                .withGun(gun)
+                .withTerrain(true);
     }
 
     static GroundUnit at(double x, EnemySpec spec) {

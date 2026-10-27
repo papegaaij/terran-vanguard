@@ -9,7 +9,7 @@ import java.util.List;
  *
  * <p><b>Slams.</b> Each slam arm ({@link BossSpec.Arm}) owns a half of the lanes. A slam cycle:
  * the lane is telegraphed for the telegraph time, the arm rises base-to-tip (from then on its layer is
- * {@code ground}, laid along the lane), strikes (the impact, through {@link SetPiece.BossActions#slam}),
+ * {@code ground}, laid along the lane), strikes (the impact, through {@link BossActions#slam}),
  * lies awash, then sinks back under the water ({@code sub}, at rest by its root). A phase slams one
  * lane at a time ({@link BossSpec.Slamming#CHAIN}: the next telegraph when the arm has sunk), once
  * after each dive of its surfacing part ({@link BossSpec.Slamming#AFTER_DIVE}) or in volleys
@@ -214,7 +214,7 @@ public final class SlamArena implements Hashed {
      * and the slams the phase starts; returns whether the phase's attacks fire now (its surfacing
      * part's window is open and the tell has run).
      */
-    boolean step(BossSpec.Phase phase, double shipX, SetPiece.BossActions actions, boolean firing) {
+    boolean step(BossSpec.Phase phase, double shipX, BossActions actions, boolean firing) {
         stepArms(actions, firing);
         BossSpec.PhaseArena keys = phase.arena();
         boolean fire = stepSurface(phase, keys, actions, firing, shipX);
@@ -238,7 +238,7 @@ public final class SlamArena implements Hashed {
     }
 
     /** The arms' cycles advance: telegraph, rise, the impacts, awash, sink; a severed arm stops at once. */
-    private void stepArms(SetPiece.BossActions actions, boolean firing) {
+    private void stepArms(BossActions actions, boolean firing) {
         for (int a = 0; a < arms; a++) {
             if (cycle[a] < 0) {
                 continue;
@@ -282,7 +282,7 @@ public final class SlamArena implements Hashed {
         return telegraphTicks + riseTicks + (lane2[a] > 0 ? secondTicks : 0) + awashTicks;
     }
 
-    private void impact(int a, int lane, SetPiece.BossActions actions, boolean firing) {
+    private void impact(int a, int lane, BossActions actions, boolean firing) {
         slams++;
         actions.slam(lane);
         if (!firing || slam.splashCount() == 0) {
@@ -318,11 +318,7 @@ public final class SlamArena implements Hashed {
      * phase before); returns whether the phase's attacks fire now.
      */
     private boolean stepSurface(
-            BossSpec.Phase phase,
-            BossSpec.PhaseArena keys,
-            SetPiece.BossActions actions,
-            boolean firing,
-            double shipX) {
+            BossSpec.Phase phase, BossSpec.PhaseArena keys, BossActions actions, boolean firing, double shipX) {
         if (surfacePart < 0) {
             return false;
         }
@@ -396,7 +392,7 @@ public final class SlamArena implements Hashed {
     }
 
     /** A single slam by the alternate rule; returns the arm that slams, -1 for none (both severed). */
-    private int single(double shipX, SetPiece.BossActions actions) {
+    private int single(double shipX, BossActions actions) {
         if (rooted) {
             return singleRooted(shipX, actions);
         }
@@ -428,7 +424,7 @@ public final class SlamArena implements Hashed {
      * whose root lives in turn; a choice whose root is cut goes to the other, else to the living root
      * nearest the ship. Returns the arm that slams, -1 for none (every root cut).
      */
-    private int singleRooted(double shipX, SetPiece.BossActions actions) {
+    private int singleRooted(double shipX, BossActions actions) {
         int living = livingLanes();
         if (living == 0) {
             return -1;
@@ -464,7 +460,7 @@ public final class SlamArena implements Hashed {
      * ships' lanes nearest the ship, then the living lanes nearest it, up to {@link
      * BossSpec.Slam#volleyLanes()} lanes; a busy arm keeps its place in the volley and sits it out.
      */
-    private void volleyRooted(double shipX, SetPiece.BossActions actions) {
+    private void volleyRooted(double shipX, BossActions actions) {
         int living = livingLanes();
         int chosen = 0;
         int count = 0;
@@ -499,7 +495,7 @@ public final class SlamArena implements Hashed {
      * two targets slams its second one {@link BossSpec.Slam#secondSeconds()} later when the volley has
      * three lanes. A busy arm sits the volley out.
      */
-    private void volley(double shipX, SetPiece.BossActions actions) {
+    private void volley(double shipX, BossActions actions) {
         if (rooted) {
             volleyRooted(shipX, actions);
             return;
@@ -555,7 +551,7 @@ public final class SlamArena implements Hashed {
     }
 
     /** Arm {@code a} starts its cycle on {@code first} (and {@code second}, 0 for none): their telegraphs. */
-    private void start(int a, int first, int second, SetPiece.BossActions actions) {
+    private void start(int a, int first, int second, BossActions actions) {
         cycle[a] = 0;
         lane1[a] = first;
         lane2[a] = second;

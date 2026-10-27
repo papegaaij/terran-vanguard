@@ -114,7 +114,7 @@ class BreachArenaTest {
                 null,
                 List.of(Layer.BURIED),
                 List.of(new BossSpec.Spot("gullet", MOUTH, 0, 0, new Hitbox(60, 60), 2, true)));
-        BossSpec boss = new BossSpec(
+        BossSpec boss = BossSpec.builder(
                         ARRIVE,
                         PlayField.WIDTH / 2.0,
                         PlayField.HEIGHT / 2.0,
@@ -130,12 +130,10 @@ class BreachArenaTest {
                         List.of(
                                 phase("Circling", attacks ? List.of(0) : List.of(), 0.6),
                                 phase("Hunting", attacks ? List.of(1, 2) : List.of(), 0.25),
-                                phase("Breaching anywhere", attacks ? List.of(1) : List.of(), Double.NaN)),
-                        false,
-                        List.of(),
-                        List.of(),
-                        3,
-                        Optional.of(arena))
+                                phase("Breaching anywhere", attacks ? List.of(1) : List.of(), Double.NaN)))
+                .deathSeconds(3)
+                .arena(Optional.of(arena))
+                .build()
                 .withBreach(Optional.of(BREACH))
                 .withSuction(Optional.of(SUCTION));
         return new SetPieceSpec(

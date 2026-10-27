@@ -34,38 +34,8 @@ class GlassfinTest {
 
     /** One fry: 1 HP, 10×10, `tiny` contact 6 and destroyed by it, 2 credits, 170 px/s. */
     static EnemySpec glassfin(EnemySpec.FlockSpec flock) {
-        return new EnemySpec(
-                        "glassfin",
-                        1,
-                        new Hitbox(10, 10),
-                        Layer.AIR,
-                        6,
-                        true,
-                        2,
-                        170,
-                        Optional.empty(),
-                        Optional.empty(),
-                        Optional.empty(),
-                        Optional.empty(),
-                        Optional.empty(),
-                        Optional.empty(),
-                        Optional.empty(),
-                        false,
-                        Optional.empty(),
-                        Optional.empty(),
-                        Optional.empty(),
-                        Optional.empty(),
-                        Optional.empty(),
-                        Optional.empty(),
-                        Optional.empty(),
-                        Optional.empty(),
-                        Optional.empty(),
-                        false,
-                        Optional.empty(),
-                        Optional.empty(),
-                        Optional.empty(),
-                        Optional.empty(),
-                        Optional.of(flock))
+        return EnemySpec.of("glassfin", 1, new Hitbox(10, 10), Layer.AIR, 6, true, 2, 170)
+                .withFlock(Optional.of(flock))
                 .withSeekersIgnore(true);
     }
 

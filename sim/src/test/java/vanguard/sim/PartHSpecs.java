@@ -226,27 +226,27 @@ final class PartHSpecs {
                 parts,
                 List.of(),
                 Optional.empty(),
-                Optional.of(new BossSpec(
-                        ARRIVE,
-                        PlayField.WIDTH / 2.0,
-                        HOVER_Y,
-                        0,
-                        SWAY,
-                        SWAY_PERIOD,
-                        Layer.GROUND,
-                        false,
-                        "TEST SPIRE",
-                        135,
-                        List.of(),
-                        attacks,
-                        List.of(roots, maw, free),
-                        false,
-                        List.of(TRUNK),
-                        List.of(
+                Optional.of(BossSpec.builder(
+                                ARRIVE,
+                                PlayField.WIDTH / 2.0,
+                                HOVER_Y,
+                                0,
+                                SWAY,
+                                SWAY_PERIOD,
+                                Layer.GROUND,
+                                false,
+                                "TEST SPIRE",
+                                135,
+                                List.of(),
+                                attacks,
+                                List.of(roots, maw, free))
+                        .armoured(List.of(TRUNK))
+                        .poses(List.of(
                                 new BossSpec.Pose("rooted", new Hitbox(440, 440), rooted),
-                                new BossSpec.Pose("free", new Hitbox(100, 140), freed)),
-                        3,
-                        Optional.of(arena))));
+                                new BossSpec.Pose("free", new Hitbox(100, 140), freed)))
+                        .deathSeconds(3)
+                        .arena(Optional.of(arena))
+                        .build()));
     }
 
     /** The arena level: {@link #ARRIVE} s at {@link #SPEED}, the arena of 200 s at speed 0, 10 s after it. */

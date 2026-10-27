@@ -126,25 +126,22 @@ class KrakenRootsTest {
                 parts,
                 List.of(),
                 Optional.empty(),
-                Optional.of(new BossSpec(
-                        ARRIVE,
-                        PlayField.WIDTH / 2.0,
-                        CENTRE_Y,
-                        0,
-                        0,
-                        1,
-                        Layer.GROUND,
-                        true,
-                        "TEST KRAKEN",
-                        60,
-                        chains,
-                        List.of(fan),
-                        List.of(armsPhase, headUp, livingRoots),
-                        false,
-                        List.of(),
-                        List.of(),
-                        0,
-                        Optional.of(arena))));
+                Optional.of(BossSpec.builder(
+                                ARRIVE,
+                                PlayField.WIDTH / 2.0,
+                                CENTRE_Y,
+                                0,
+                                0,
+                                1,
+                                Layer.GROUND,
+                                true,
+                                "TEST KRAKEN",
+                                60,
+                                chains,
+                                List.of(fan),
+                                List.of(armsPhase, headUp, livingRoots))
+                        .arena(Optional.of(arena))
+                        .build()));
     }
 
     /** The arena level with the naval convoy (cargo ships in lanes 1, 2 and 4) and the root hint on the radio. */

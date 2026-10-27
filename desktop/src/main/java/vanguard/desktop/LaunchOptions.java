@@ -1,6 +1,8 @@
 package vanguard.desktop;
 
 import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.OptionalDouble;
 import vanguard.content.Difficulty;
@@ -27,6 +29,9 @@ import vanguard.content.campaign.DebugFit;
  * @param underwaterFrom M8 part A, a debug option ({@code --medium underwater[@<s>]}): the level start flies under
  *     water from that level second on (0 without {@code @}), the specials' setting limits following; empty for the
  *     level's own medium
+ * @param shots RF6, a debug option ({@code --shots <tick>,<tick>,...}): the level start runs the simulation one step a
+ *     frame, writes {@code screenshots/shot-<level>-<tick>.png} at those level ticks and exits after the last; empty
+ *     for none
  */
 record LaunchOptions(
         double benchSeconds,
@@ -38,12 +43,13 @@ record LaunchOptions(
         Optional<DebugFit> debugFit,
         int level,
         boolean actEnd,
-        OptionalDouble underwaterFrom) {
+        OptionalDouble underwaterFrom,
+        List<Long> shots) {
     /**
      * Parses {@code [--bench <seconds>] [--settings <file>] [--difficulty easy|medium|hard] [--debug-speed <factor>]
      * [--invulnerable] [--start title|level] [--loadout <slot>=<item>[:<level>],...] [--special <special>[:<charges>]]
      * [--escort rook:<gun>[:<level>][,side=left|right]|bulwark|none] [--level <n>] [--act-end]
-     * [--medium underwater[@<seconds>]]}.
+     * [--medium underwater[@<seconds>]] [--shots <tick>,<tick>,...]}.
      *
      * <p>{@code --loadout}'s slots ({@link DebugFit}): the weapon slots {@code front}, {@code rear}, {@code
      * left}, {@code right}, the utility bays {@code utility}, {@code utility2} and the core parts {@code
@@ -63,6 +69,7 @@ record LaunchOptions(
         int level = 1;
         boolean actEnd = false;
         OptionalDouble underwaterFrom = OptionalDouble.empty();
+        List<Long> shots = List.of();
         for (int i = 0; i < args.length; i++) {
             switch (args[i]) {
                 case "--bench" -> benchSeconds = Double.parseDouble(value(args, ++i));
@@ -76,6 +83,7 @@ record LaunchOptions(
                 case "--level" -> level = Integer.parseInt(value(args, ++i));
                 case "--act-end" -> actEnd = true;
                 case "--medium" -> underwaterFrom = medium(value(args, ++i));
+                case "--shots" -> shots = shots(value(args, ++i));
                 case "--start" ->
                     start = switch (value(args, ++i)) {
                         case "title" -> false;
@@ -95,7 +103,10 @@ record LaunchOptions(
             throw new IllegalArgumentException("--debug-speed must be > 0");
         }
         boolean levelOption = debugFit != null || level != 1 || actEnd || underwaterFrom.isPresent();
-        boolean startLevel = start != null ? start : benchSeconds > 0 || levelOption;
+        boolean startLevel = start != null ? start : benchSeconds > 0 || !shots.isEmpty() || levelOption;
+        if (!shots.isEmpty() && !startLevel) {
+            throw new IllegalArgumentException("--shots flies the level start, it needs --start level");
+        }
         if (levelOption && !startLevel) {
             throw new IllegalArgumentException("--loadout, --special, --escort, --level, --act-end and --medium set the"
                     + " level start, they need --start level");
@@ -113,7 +124,22 @@ record LaunchOptions(
                 Optional.ofNullable(debugFit),
                 level,
                 actEnd,
-                underwaterFrom);
+                underwaterFrom,
+                shots);
+    }
+
+    /** RF6: {@code --shots}' value, level ticks separated by commas: in ascending order, without repeats. */
+    static List<Long> shots(String value) {
+        List<Long> ticks = Arrays.stream(value.split(",", -1))
+                .map(String::strip)
+                .map(Long::parseLong)
+                .sorted()
+                .distinct()
+                .toList();
+        if (ticks.getFirst() < 1) {
+            throw new IllegalArgumentException("--shots' ticks must be 1 or more: " + value);
+        }
+        return ticks;
     }
 
     /**
@@ -135,11 +161,11 @@ record LaunchOptions(
     /**
      * Whether this is a debug run, which writes no save at all (design/systems/saves): a level start
      * (any of {@code --start level}, {@code --level}, {@code --loadout}, {@code --special}, {@code
-     * --escort}, {@code --act-end}), a bench run, {@code --invulnerable} or {@code --debug-speed}.
+     * --escort}, {@code --act-end}), a bench run, {@code --shots}, {@code --invulnerable} or {@code --debug-speed}.
      * {@code --settings} and {@code --difficulty} alone are not.
      */
     boolean debugRun() {
-        return startLevel || benchSeconds > 0 || invulnerable || debugSpeed != 1;
+        return startLevel || benchSeconds > 0 || !shots.isEmpty() || invulnerable || debugSpeed != 1;
     }
 
     private static String value(String[] args, int index) {

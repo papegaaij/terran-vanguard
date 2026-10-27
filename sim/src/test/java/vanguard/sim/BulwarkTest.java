@@ -72,23 +72,8 @@ class BulwarkTest {
     }
 
     private static EnemySpec target(double hp) {
-        return new EnemySpec(
-                "target",
-                hp,
-                new Hitbox(20, 20),
-                Layer.AIR,
-                0,
-                false,
-                12,
-                100,
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                true);
+        return EnemySpec.of("target", hp, new Hitbox(20, 20), Layer.AIR, 0, false, 12, 100)
+                .withTerrain(true);
     }
 
     @Test

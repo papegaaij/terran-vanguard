@@ -48,29 +48,9 @@ class WardenTankTest {
     static final EnemySpec.RearPlate REAR = new EnemySpec.RearPlate(Math.toRadians(50), 1.5);
 
     /** The Warden Tank at medium: hull 64 HP (46×56), 20 credits, 40 px/s turning at 60°/s. */
-    static final EnemySpec TANK = new EnemySpec(
-                    "warden-tank",
-                    64,
-                    new Hitbox(46, 56),
-                    Layer.GROUND,
-                    15,
-                    false,
-                    20,
-                    40,
-                    Optional.empty(),
-                    Optional.empty(),
-                    Optional.empty(),
-                    Optional.empty(),
-                    Optional.of(TANK_GUN),
-                    Optional.empty(),
-                    Optional.empty(),
-                    false,
-                    Optional.empty(),
-                    Optional.empty(),
-                    Optional.empty(),
-                    Optional.empty(),
-                    Optional.empty(),
-                    Optional.of(new EnemySpec.Walker(40, Math.toRadians(60), 32, 0, Optional.empty(), Math.PI)))
+    static final EnemySpec TANK = EnemySpec.of("warden-tank", 64, new Hitbox(46, 56), Layer.GROUND, 15, false, 20, 40)
+            .withGun(Optional.of(TANK_GUN))
+            .withWalker(Optional.of(new EnemySpec.Walker(40, Math.toRadians(60), 32, 0, Optional.empty(), Math.PI)))
             .withPart(Optional.of(TURRET_PART))
             .withTurret(Optional.of(TURRET))
             .withRearPlate(Optional.of(REAR))
@@ -372,23 +352,9 @@ class WardenTankTest {
     // ---- arc: up ----
 
     static EnemySpec groundTurret(EnemyGun gun) {
-        return new EnemySpec(
-                "spine-turret",
-                30,
-                new Hitbox(24, 24),
-                Layer.GROUND,
-                0,
-                false,
-                10,
-                0,
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.of(gun),
-                Optional.empty(),
-                Optional.empty(),
-                true);
+        return EnemySpec.of("spine-turret", 30, new Hitbox(24, 24), Layer.GROUND, 0, false, 10, 0)
+                .withGun(Optional.of(gun))
+                .withTerrain(true);
     }
 
     /** A turret's gun: aimed every second, turning 180°/s within ±60° of its arc's facing. */

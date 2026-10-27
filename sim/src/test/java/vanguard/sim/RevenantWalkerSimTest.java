@@ -161,7 +161,7 @@ class RevenantWalkerSimTest {
                 null,
                 List.of(Layer.GROUND, Layer.GROUND, Layer.GROUND),
                 List.of(new BossSpec.Spot("vents", HULL, 0, 45, new Hitbox(50, 24), 2, true)));
-        BossSpec boss = new BossSpec(
+        BossSpec boss = BossSpec.builder(
                         ARRIVE,
                         PlayField.WIDTH / 2.0,
                         300,
@@ -174,12 +174,10 @@ class RevenantWalkerSimTest {
                         60,
                         List.of(),
                         List.of(oneAtATime, staggered, along, aimed, fan),
-                        List.of(stride, hunt, overheat),
-                        false,
-                        List.of(),
-                        List.of(),
-                        2,
-                        Optional.of(arena))
+                        List.of(stride, hunt, overheat))
+                .deathSeconds(2)
+                .arena(Optional.of(arena))
+                .build()
                 .withStride(Optional.of(new BossSpec.Stride(
                         new double[] {120, 240, 360},
                         new double[] {200, 330},

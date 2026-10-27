@@ -51,35 +51,10 @@ class DrillRigTest {
     static final EnemySpec RIG = rig(RING);
 
     static EnemySpec rig(EnemyGun ring) {
-        return new EnemySpec(
-                        "drill-rig",
-                        240,
-                        new Hitbox(96, 96),
-                        Layer.GROUND,
-                        15,
-                        false,
-                        40,
-                        0,
-                        Optional.empty(),
-                        Optional.empty(),
-                        Optional.empty(),
-                        Optional.empty(),
-                        Optional.of(ring),
-                        Optional.empty(),
-                        Optional.empty(),
-                        true,
-                        Optional.empty(),
-                        Optional.empty(),
-                        Optional.empty(),
-                        Optional.empty(),
-                        Optional.empty(),
-                        Optional.empty(),
-                        Optional.empty(),
-                        Optional.empty(),
-                        Optional.empty(),
-                        true,
-                        Optional.empty(),
-                        Optional.empty())
+        return EnemySpec.of("drill-rig", 240, new Hitbox(96, 96), Layer.GROUND, 15, false, 40, 0)
+                .withGun(Optional.of(ring))
+                .withTerrain(true)
+                .withHardened(true)
                 .withParts(PUMPS);
     }
 

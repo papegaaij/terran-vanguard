@@ -59,18 +59,13 @@ final class BossHatches {
      * a part off the field does not.
      */
     void tell(
-            BossSpec.Attack attack,
-            BossSpec.Phase current,
-            int ticks,
-            int next,
-            SetPiece.BossActions actions,
-            boolean firing) {
+            BossSpec.Attack attack, BossSpec.Phase current, int ticks, int next, BossActions actions, boolean firing) {
         int hatch = SimStep.ticks(attack.gun().homing().orElseThrow().hatchSeconds());
         if (hatch <= 0 || ticks != hatch || !firing) {
             return;
         }
         int open = hatch + (attack.gun().burst() - 1) * Math.max(1, SimStep.ticks(attack.burstGapSeconds())) + 1;
-        List<Integer> parts = SetPiece.firingParts(attack, current);
+        List<Integer> parts = SetPieceGuns.firingParts(attack, current);
         if (attack.stagger()) {
             openHatch(parts.get(next % parts.size()), open, actions);
             return;
@@ -86,7 +81,7 @@ final class BossHatches {
         }
     }
 
-    private void openHatch(int p, int open, SetPiece.BossActions actions) {
+    private void openHatch(int p, int open, BossActions actions) {
         if (piece.partHp(p) > 0 && piece.partOnField(p)) {
             hatchTicks[p] = open;
             actions.hatch(p, piece.partX(p), piece.partY(p));

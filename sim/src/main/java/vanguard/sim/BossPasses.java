@@ -4,11 +4,11 @@ import java.util.List;
 
 /**
  * The set pieces' passes in a {@link Sortie}'s step and what the bosses do to the level (it is their
- * {@link SetPiece.BossActions}): their flight, arrival and escape, their guns, phases, streams, windows'
+ * {@link BossActions}): their flight, arrival and escape, their guns, phases, streams, windows'
  * launches and ambushes, the arena boss's telegraphs, slams, roots and release. A boss feeds no edge warning
  * (2026-10-21, user: the surprise of a boss fight): its own tells and the boss warning banner stay.
  */
-final class BossPasses implements SetPiece.BossActions {
+final class BossPasses implements BossActions {
     private final Sortie s;
     private final LevelScript script;
     private final Ship ship;

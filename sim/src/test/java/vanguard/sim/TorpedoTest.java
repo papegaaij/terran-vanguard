@@ -7,7 +7,6 @@ import static vanguard.sim.TestSpecs.loadout;
 import static vanguard.sim.TestSpecs.muzzle;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Supplier;
 import org.junit.jupiter.api.Test;
 
@@ -72,23 +71,8 @@ class TorpedoTest {
     }
 
     static EnemySpec dummy(Layer layer, double hp) {
-        return new EnemySpec(
-                "dummy-" + layer,
-                hp,
-                new Hitbox(20, 20),
-                layer,
-                0,
-                false,
-                0,
-                0,
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                true);
+        return EnemySpec.of("dummy-" + layer, hp, new Hitbox(20, 20), layer, 0, false, 0, 0)
+                .withTerrain(true);
     }
 
     static int count(Sortie sortie, int steps, int commands, SimEvents.Type type) {

@@ -1,11 +1,13 @@
 package vanguard.game.level;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static vanguard.game.level.RadioPlayer.play;
 
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import vanguard.content.Difficulty;
 import vanguard.content.SimSpecs;
+import vanguard.game.level.RadioPlayer.EndRun;
 import vanguard.sim.LevelScript;
 import vanguard.sim.RookLossSpec;
 

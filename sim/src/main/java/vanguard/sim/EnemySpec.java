@@ -285,227 +285,6 @@ public record EnemySpec(
         }
     }
 
-    /** The constructor without M8 part F's {@code lunge}. */
-    public EnemySpec(
-            String slug,
-            double hp,
-            Hitbox hitbox,
-            Layer layer,
-            double contactDamage,
-            boolean destroyedByRamming,
-            int bounty,
-            double speed,
-            Optional<Snake> snake,
-            Optional<Double> streamSpeed,
-            Optional<Hover> hover,
-            Optional<Orbit> orbit,
-            Optional<EnemyGun> gun,
-            Optional<Drop> drop,
-            Optional<Dive> dive,
-            boolean terrain,
-            Optional<Spiral> spiral,
-            Optional<Range> strafe,
-            Optional<DeathBurst> deathBurst,
-            Optional<Sine> sine,
-            Optional<Brood> brood,
-            Optional<Walker> walker,
-            Optional<SideHover> sideHover,
-            Optional<Sweep> sweep,
-            Optional<ChainSpec> chain,
-            boolean hardened,
-            Optional<Spawner> spawner,
-            Optional<Pounce> pounce,
-            Optional<Cloak> cloak,
-            Optional<Ambush> ambush,
-            Optional<FlockSpec> flock,
-            Optional<Submerge> submerge,
-            Optional<ProximityRing> ring,
-            double drift,
-            Optional<Chase> chase,
-            Optional<Latch> latch,
-            boolean machine,
-            Optional<Burrow> burrow,
-            Optional<Swoop> swoop,
-            Optional<Link> link,
-            Optional<Crawl> crawl,
-            Optional<Aura> aura,
-            List<UnitPart> parts,
-            Optional<Roll> roll,
-            Optional<Vortex> vortex,
-            Optional<Pull> pull,
-            Optional<LaneStrafe> laneStrafe,
-            Optional<Turret> turret,
-            Optional<RearPlate> rearPlate,
-            boolean seekersIgnore,
-            Optional<Rise> rise,
-            Optional<SlowRing> slowRing,
-            Optional<Coil> coil) {
-        this(
-                slug,
-                hp,
-                hitbox,
-                layer,
-                contactDamage,
-                destroyedByRamming,
-                bounty,
-                speed,
-                snake,
-                streamSpeed,
-                hover,
-                orbit,
-                gun,
-                drop,
-                dive,
-                terrain,
-                spiral,
-                strafe,
-                deathBurst,
-                sine,
-                brood,
-                walker,
-                sideHover,
-                sweep,
-                chain,
-                hardened,
-                spawner,
-                pounce,
-                cloak,
-                ambush,
-                flock,
-                submerge,
-                ring,
-                drift,
-                chase,
-                latch,
-                machine,
-                burrow,
-                swoop,
-                link,
-                crawl,
-                aura,
-                parts,
-                roll,
-                vortex,
-                pull,
-                laneStrafe,
-                turret,
-                rearPlate,
-                seekersIgnore,
-                rise,
-                slowRing,
-                coil,
-                Optional.empty());
-    }
-
-    /** The constructor without M8 part E's {@code slowRing}. */
-    public EnemySpec(
-            String slug,
-            double hp,
-            Hitbox hitbox,
-            Layer layer,
-            double contactDamage,
-            boolean destroyedByRamming,
-            int bounty,
-            double speed,
-            Optional<Snake> snake,
-            Optional<Double> streamSpeed,
-            Optional<Hover> hover,
-            Optional<Orbit> orbit,
-            Optional<EnemyGun> gun,
-            Optional<Drop> drop,
-            Optional<Dive> dive,
-            boolean terrain,
-            Optional<Spiral> spiral,
-            Optional<Range> strafe,
-            Optional<DeathBurst> deathBurst,
-            Optional<Sine> sine,
-            Optional<Brood> brood,
-            Optional<Walker> walker,
-            Optional<SideHover> sideHover,
-            Optional<Sweep> sweep,
-            Optional<ChainSpec> chain,
-            boolean hardened,
-            Optional<Spawner> spawner,
-            Optional<Pounce> pounce,
-            Optional<Cloak> cloak,
-            Optional<Ambush> ambush,
-            Optional<FlockSpec> flock,
-            Optional<Submerge> submerge,
-            Optional<ProximityRing> ring,
-            double drift,
-            Optional<Chase> chase,
-            Optional<Latch> latch,
-            boolean machine,
-            Optional<Burrow> burrow,
-            Optional<Swoop> swoop,
-            Optional<Link> link,
-            Optional<Crawl> crawl,
-            Optional<Aura> aura,
-            List<UnitPart> parts,
-            Optional<Roll> roll,
-            Optional<Vortex> vortex,
-            Optional<Pull> pull,
-            Optional<LaneStrafe> laneStrafe,
-            Optional<Turret> turret,
-            Optional<RearPlate> rearPlate,
-            boolean seekersIgnore,
-            Optional<Rise> rise) {
-        this(
-                slug,
-                hp,
-                hitbox,
-                layer,
-                contactDamage,
-                destroyedByRamming,
-                bounty,
-                speed,
-                snake,
-                streamSpeed,
-                hover,
-                orbit,
-                gun,
-                drop,
-                dive,
-                terrain,
-                spiral,
-                strafe,
-                deathBurst,
-                sine,
-                brood,
-                walker,
-                sideHover,
-                sweep,
-                chain,
-                hardened,
-                spawner,
-                pounce,
-                cloak,
-                ambush,
-                flock,
-                submerge,
-                ring,
-                drift,
-                chase,
-                latch,
-                machine,
-                burrow,
-                swoop,
-                link,
-                crawl,
-                aura,
-                parts,
-                roll,
-                vortex,
-                pull,
-                laneStrafe,
-                turret,
-                rearPlate,
-                seekersIgnore,
-                rise,
-                Optional.empty(),
-                Optional.empty());
-    }
-
     /**
      * M8 part E: this air unit with its coiling orbit round the ship (design/enemies/naval/spiral-nautilus); empty for
      * none.
@@ -534,112 +313,6 @@ public record EnemySpec(
         return copy.build();
     }
 
-    /** The constructor without M8 part D's {@code rise}. */
-    public EnemySpec(
-            String slug,
-            double hp,
-            Hitbox hitbox,
-            Layer layer,
-            double contactDamage,
-            boolean destroyedByRamming,
-            int bounty,
-            double speed,
-            Optional<Snake> snake,
-            Optional<Double> streamSpeed,
-            Optional<Hover> hover,
-            Optional<Orbit> orbit,
-            Optional<EnemyGun> gun,
-            Optional<Drop> drop,
-            Optional<Dive> dive,
-            boolean terrain,
-            Optional<Spiral> spiral,
-            Optional<Range> strafe,
-            Optional<DeathBurst> deathBurst,
-            Optional<Sine> sine,
-            Optional<Brood> brood,
-            Optional<Walker> walker,
-            Optional<SideHover> sideHover,
-            Optional<Sweep> sweep,
-            Optional<ChainSpec> chain,
-            boolean hardened,
-            Optional<Spawner> spawner,
-            Optional<Pounce> pounce,
-            Optional<Cloak> cloak,
-            Optional<Ambush> ambush,
-            Optional<FlockSpec> flock,
-            Optional<Submerge> submerge,
-            Optional<ProximityRing> ring,
-            double drift,
-            Optional<Chase> chase,
-            Optional<Latch> latch,
-            boolean machine,
-            Optional<Burrow> burrow,
-            Optional<Swoop> swoop,
-            Optional<Link> link,
-            Optional<Crawl> crawl,
-            Optional<Aura> aura,
-            List<UnitPart> parts,
-            Optional<Roll> roll,
-            Optional<Vortex> vortex,
-            Optional<Pull> pull,
-            Optional<LaneStrafe> laneStrafe,
-            Optional<Turret> turret,
-            Optional<RearPlate> rearPlate,
-            boolean seekersIgnore) {
-        this(
-                slug,
-                hp,
-                hitbox,
-                layer,
-                contactDamage,
-                destroyedByRamming,
-                bounty,
-                speed,
-                snake,
-                streamSpeed,
-                hover,
-                orbit,
-                gun,
-                drop,
-                dive,
-                terrain,
-                spiral,
-                strafe,
-                deathBurst,
-                sine,
-                brood,
-                walker,
-                sideHover,
-                sweep,
-                chain,
-                hardened,
-                spawner,
-                pounce,
-                cloak,
-                ambush,
-                flock,
-                submerge,
-                ring,
-                drift,
-                chase,
-                latch,
-                machine,
-                burrow,
-                swoop,
-                link,
-                crawl,
-                aura,
-                parts,
-                roll,
-                vortex,
-                pull,
-                laneStrafe,
-                turret,
-                rearPlate,
-                seekersIgnore,
-                Optional.empty());
-    }
-
     /**
      * M8 part D: this unit with its rise (design/enemies/naval/abyss-ray): a shadow on {@code sub}, the rise, the glide
      * and the sink; empty for none.
@@ -648,211 +321,6 @@ public record EnemySpec(
         EnemySpecCopy copy = new EnemySpecCopy(this);
         copy.rise = withRise;
         return copy.build();
-    }
-
-    /** The constructor without M7 part G's {@code seekersIgnore}: every seeker may pick it. */
-    public EnemySpec(
-            String slug,
-            double hp,
-            Hitbox hitbox,
-            Layer layer,
-            double contactDamage,
-            boolean destroyedByRamming,
-            int bounty,
-            double speed,
-            Optional<Snake> snake,
-            Optional<Double> streamSpeed,
-            Optional<Hover> hover,
-            Optional<Orbit> orbit,
-            Optional<EnemyGun> gun,
-            Optional<Drop> drop,
-            Optional<Dive> dive,
-            boolean terrain,
-            Optional<Spiral> spiral,
-            Optional<Range> strafe,
-            Optional<DeathBurst> deathBurst,
-            Optional<Sine> sine,
-            Optional<Brood> brood,
-            Optional<Walker> walker,
-            Optional<SideHover> sideHover,
-            Optional<Sweep> sweep,
-            Optional<ChainSpec> chain,
-            boolean hardened,
-            Optional<Spawner> spawner,
-            Optional<Pounce> pounce,
-            Optional<Cloak> cloak,
-            Optional<Ambush> ambush,
-            Optional<FlockSpec> flock,
-            Optional<Submerge> submerge,
-            Optional<ProximityRing> ring,
-            double drift,
-            Optional<Chase> chase,
-            Optional<Latch> latch,
-            boolean machine,
-            Optional<Burrow> burrow,
-            Optional<Swoop> swoop,
-            Optional<Link> link,
-            Optional<Crawl> crawl,
-            Optional<Aura> aura,
-            Optional<UnitPart> part,
-            Optional<Roll> roll,
-            Optional<Vortex> vortex,
-            Optional<Pull> pull,
-            Optional<LaneStrafe> laneStrafe,
-            Optional<Turret> turret,
-            Optional<RearPlate> rearPlate) {
-        this(
-                slug,
-                hp,
-                hitbox,
-                layer,
-                contactDamage,
-                destroyedByRamming,
-                bounty,
-                speed,
-                snake,
-                streamSpeed,
-                hover,
-                orbit,
-                gun,
-                drop,
-                dive,
-                terrain,
-                spiral,
-                strafe,
-                deathBurst,
-                sine,
-                brood,
-                walker,
-                sideHover,
-                sweep,
-                chain,
-                hardened,
-                spawner,
-                pounce,
-                cloak,
-                ambush,
-                flock,
-                submerge,
-                ring,
-                drift,
-                chase,
-                latch,
-                machine,
-                burrow,
-                swoop,
-                link,
-                crawl,
-                aura,
-                part.stream().toList(),
-                roll,
-                vortex,
-                pull,
-                laneStrafe,
-                turret,
-                rearPlate,
-                false);
-    }
-
-    /** The constructor of M7 part E's Ghost Drone (step E2): without M7 part F's turret and rear plate. */
-    public EnemySpec(
-            String slug,
-            double hp,
-            Hitbox hitbox,
-            Layer layer,
-            double contactDamage,
-            boolean destroyedByRamming,
-            int bounty,
-            double speed,
-            Optional<Snake> snake,
-            Optional<Double> streamSpeed,
-            Optional<Hover> hover,
-            Optional<Orbit> orbit,
-            Optional<EnemyGun> gun,
-            Optional<Drop> drop,
-            Optional<Dive> dive,
-            boolean terrain,
-            Optional<Spiral> spiral,
-            Optional<Range> strafe,
-            Optional<DeathBurst> deathBurst,
-            Optional<Sine> sine,
-            Optional<Brood> brood,
-            Optional<Walker> walker,
-            Optional<SideHover> sideHover,
-            Optional<Sweep> sweep,
-            Optional<ChainSpec> chain,
-            boolean hardened,
-            Optional<Spawner> spawner,
-            Optional<Pounce> pounce,
-            Optional<Cloak> cloak,
-            Optional<Ambush> ambush,
-            Optional<FlockSpec> flock,
-            Optional<Submerge> submerge,
-            Optional<ProximityRing> ring,
-            double drift,
-            Optional<Chase> chase,
-            Optional<Latch> latch,
-            boolean machine,
-            Optional<Burrow> burrow,
-            Optional<Swoop> swoop,
-            Optional<Link> link,
-            Optional<Crawl> crawl,
-            Optional<Aura> aura,
-            Optional<UnitPart> part,
-            Optional<Roll> roll,
-            Optional<Vortex> vortex,
-            Optional<Pull> pull,
-            Optional<LaneStrafe> laneStrafe) {
-        this(
-                slug,
-                hp,
-                hitbox,
-                layer,
-                contactDamage,
-                destroyedByRamming,
-                bounty,
-                speed,
-                snake,
-                streamSpeed,
-                hover,
-                orbit,
-                gun,
-                drop,
-                dive,
-                terrain,
-                spiral,
-                strafe,
-                deathBurst,
-                sine,
-                brood,
-                walker,
-                sideHover,
-                sweep,
-                chain,
-                hardened,
-                spawner,
-                pounce,
-                cloak,
-                ambush,
-                flock,
-                submerge,
-                ring,
-                drift,
-                chase,
-                latch,
-                machine,
-                burrow,
-                swoop,
-                link,
-                crawl,
-                aura,
-                part,
-                roll,
-                vortex,
-                pull,
-                laneStrafe,
-                Optional.empty(),
-                Optional.empty());
     }
 
     /** M7 part F: this walker with its turret (design/enemies/ground/warden-tank); empty for none. */
@@ -867,374 +335,6 @@ public record EnemySpec(
         EnemySpecCopy copy = new EnemySpecCopy(this);
         copy.rearPlate = withPlate;
         return copy.build();
-    }
-
-    /** The constructor of M7 part E's Dust Devil (step E1): without the Ghost Drone's lane strafe. */
-    public EnemySpec(
-            String slug,
-            double hp,
-            Hitbox hitbox,
-            Layer layer,
-            double contactDamage,
-            boolean destroyedByRamming,
-            int bounty,
-            double speed,
-            Optional<Snake> snake,
-            Optional<Double> streamSpeed,
-            Optional<Hover> hover,
-            Optional<Orbit> orbit,
-            Optional<EnemyGun> gun,
-            Optional<Drop> drop,
-            Optional<Dive> dive,
-            boolean terrain,
-            Optional<Spiral> spiral,
-            Optional<Range> strafe,
-            Optional<DeathBurst> deathBurst,
-            Optional<Sine> sine,
-            Optional<Brood> brood,
-            Optional<Walker> walker,
-            Optional<SideHover> sideHover,
-            Optional<Sweep> sweep,
-            Optional<ChainSpec> chain,
-            boolean hardened,
-            Optional<Spawner> spawner,
-            Optional<Pounce> pounce,
-            Optional<Cloak> cloak,
-            Optional<Ambush> ambush,
-            Optional<FlockSpec> flock,
-            Optional<Submerge> submerge,
-            Optional<ProximityRing> ring,
-            double drift,
-            Optional<Chase> chase,
-            Optional<Latch> latch,
-            boolean machine,
-            Optional<Burrow> burrow,
-            Optional<Swoop> swoop,
-            Optional<Link> link,
-            Optional<Crawl> crawl,
-            Optional<Aura> aura,
-            Optional<UnitPart> part,
-            Optional<Roll> roll,
-            Optional<Vortex> vortex,
-            Optional<Pull> pull) {
-        this(
-                slug,
-                hp,
-                hitbox,
-                layer,
-                contactDamage,
-                destroyedByRamming,
-                bounty,
-                speed,
-                snake,
-                streamSpeed,
-                hover,
-                orbit,
-                gun,
-                drop,
-                dive,
-                terrain,
-                spiral,
-                strafe,
-                deathBurst,
-                sine,
-                brood,
-                walker,
-                sideHover,
-                sweep,
-                chain,
-                hardened,
-                spawner,
-                pounce,
-                cloak,
-                ambush,
-                flock,
-                submerge,
-                ring,
-                drift,
-                chase,
-                latch,
-                machine,
-                burrow,
-                swoop,
-                link,
-                crawl,
-                aura,
-                part,
-                roll,
-                vortex,
-                pull,
-                Optional.empty());
-    }
-
-    /** The constructor of M7 part D: without M7 part E's vortex and pull. */
-    public EnemySpec(
-            String slug,
-            double hp,
-            Hitbox hitbox,
-            Layer layer,
-            double contactDamage,
-            boolean destroyedByRamming,
-            int bounty,
-            double speed,
-            Optional<Snake> snake,
-            Optional<Double> streamSpeed,
-            Optional<Hover> hover,
-            Optional<Orbit> orbit,
-            Optional<EnemyGun> gun,
-            Optional<Drop> drop,
-            Optional<Dive> dive,
-            boolean terrain,
-            Optional<Spiral> spiral,
-            Optional<Range> strafe,
-            Optional<DeathBurst> deathBurst,
-            Optional<Sine> sine,
-            Optional<Brood> brood,
-            Optional<Walker> walker,
-            Optional<SideHover> sideHover,
-            Optional<Sweep> sweep,
-            Optional<ChainSpec> chain,
-            boolean hardened,
-            Optional<Spawner> spawner,
-            Optional<Pounce> pounce,
-            Optional<Cloak> cloak,
-            Optional<Ambush> ambush,
-            Optional<FlockSpec> flock,
-            Optional<Submerge> submerge,
-            Optional<ProximityRing> ring,
-            double drift,
-            Optional<Chase> chase,
-            Optional<Latch> latch,
-            boolean machine,
-            Optional<Burrow> burrow,
-            Optional<Swoop> swoop,
-            Optional<Link> link,
-            Optional<Crawl> crawl,
-            Optional<Aura> aura,
-            Optional<UnitPart> part,
-            Optional<Roll> roll) {
-        this(
-                slug,
-                hp,
-                hitbox,
-                layer,
-                contactDamage,
-                destroyedByRamming,
-                bounty,
-                speed,
-                snake,
-                streamSpeed,
-                hover,
-                orbit,
-                gun,
-                drop,
-                dive,
-                terrain,
-                spiral,
-                strafe,
-                deathBurst,
-                sine,
-                brood,
-                walker,
-                sideHover,
-                sweep,
-                chain,
-                hardened,
-                spawner,
-                pounce,
-                cloak,
-                ambush,
-                flock,
-                submerge,
-                ring,
-                drift,
-                chase,
-                latch,
-                machine,
-                burrow,
-                swoop,
-                link,
-                crawl,
-                aura,
-                part,
-                roll,
-                Optional.empty(),
-                Optional.empty());
-    }
-
-    /** The constructor of M7 part C: without M7 part D's aura, unit part and curl-roll. */
-    public EnemySpec(
-            String slug,
-            double hp,
-            Hitbox hitbox,
-            Layer layer,
-            double contactDamage,
-            boolean destroyedByRamming,
-            int bounty,
-            double speed,
-            Optional<Snake> snake,
-            Optional<Double> streamSpeed,
-            Optional<Hover> hover,
-            Optional<Orbit> orbit,
-            Optional<EnemyGun> gun,
-            Optional<Drop> drop,
-            Optional<Dive> dive,
-            boolean terrain,
-            Optional<Spiral> spiral,
-            Optional<Range> strafe,
-            Optional<DeathBurst> deathBurst,
-            Optional<Sine> sine,
-            Optional<Brood> brood,
-            Optional<Walker> walker,
-            Optional<SideHover> sideHover,
-            Optional<Sweep> sweep,
-            Optional<ChainSpec> chain,
-            boolean hardened,
-            Optional<Spawner> spawner,
-            Optional<Pounce> pounce,
-            Optional<Cloak> cloak,
-            Optional<Ambush> ambush,
-            Optional<FlockSpec> flock,
-            Optional<Submerge> submerge,
-            Optional<ProximityRing> ring,
-            double drift,
-            Optional<Chase> chase,
-            Optional<Latch> latch,
-            boolean machine,
-            Optional<Burrow> burrow,
-            Optional<Swoop> swoop,
-            Optional<Link> link,
-            Optional<Crawl> crawl) {
-        this(
-                slug,
-                hp,
-                hitbox,
-                layer,
-                contactDamage,
-                destroyedByRamming,
-                bounty,
-                speed,
-                snake,
-                streamSpeed,
-                hover,
-                orbit,
-                gun,
-                drop,
-                dive,
-                terrain,
-                spiral,
-                strafe,
-                deathBurst,
-                sine,
-                brood,
-                walker,
-                sideHover,
-                sweep,
-                chain,
-                hardened,
-                spawner,
-                pounce,
-                cloak,
-                ambush,
-                flock,
-                submerge,
-                ring,
-                drift,
-                chase,
-                latch,
-                machine,
-                burrow,
-                swoop,
-                link,
-                crawl,
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty());
-    }
-
-    /** The constructor of M7 part B: without M7 part C's link and crawl. */
-    public EnemySpec(
-            String slug,
-            double hp,
-            Hitbox hitbox,
-            Layer layer,
-            double contactDamage,
-            boolean destroyedByRamming,
-            int bounty,
-            double speed,
-            Optional<Snake> snake,
-            Optional<Double> streamSpeed,
-            Optional<Hover> hover,
-            Optional<Orbit> orbit,
-            Optional<EnemyGun> gun,
-            Optional<Drop> drop,
-            Optional<Dive> dive,
-            boolean terrain,
-            Optional<Spiral> spiral,
-            Optional<Range> strafe,
-            Optional<DeathBurst> deathBurst,
-            Optional<Sine> sine,
-            Optional<Brood> brood,
-            Optional<Walker> walker,
-            Optional<SideHover> sideHover,
-            Optional<Sweep> sweep,
-            Optional<ChainSpec> chain,
-            boolean hardened,
-            Optional<Spawner> spawner,
-            Optional<Pounce> pounce,
-            Optional<Cloak> cloak,
-            Optional<Ambush> ambush,
-            Optional<FlockSpec> flock,
-            Optional<Submerge> submerge,
-            Optional<ProximityRing> ring,
-            double drift,
-            Optional<Chase> chase,
-            Optional<Latch> latch,
-            boolean machine,
-            Optional<Burrow> burrow,
-            Optional<Swoop> swoop) {
-        this(
-                slug,
-                hp,
-                hitbox,
-                layer,
-                contactDamage,
-                destroyedByRamming,
-                bounty,
-                speed,
-                snake,
-                streamSpeed,
-                hover,
-                orbit,
-                gun,
-                drop,
-                dive,
-                terrain,
-                spiral,
-                strafe,
-                deathBurst,
-                sine,
-                brood,
-                walker,
-                sideHover,
-                sweep,
-                chain,
-                hardened,
-                spawner,
-                pounce,
-                cloak,
-                ambush,
-                flock,
-                submerge,
-                ring,
-                drift,
-                chase,
-                latch,
-                machine,
-                burrow,
-                swoop,
-                Optional.empty(),
-                Optional.empty());
     }
 
     /** M7 part C: this unit with its {@code link}, the tendril of a gate's anchor (design/enemies/ground/tendril-anchor); empty for none. */
@@ -1315,240 +415,6 @@ public record EnemySpec(
         return copy.build();
     }
 
-    /** The constructor of M7 part A: without the burrows and swoops of Level 15 (M7 part B). */
-    public EnemySpec(
-            String slug,
-            double hp,
-            Hitbox hitbox,
-            Layer layer,
-            double contactDamage,
-            boolean destroyedByRamming,
-            int bounty,
-            double speed,
-            Optional<Snake> snake,
-            Optional<Double> streamSpeed,
-            Optional<Hover> hover,
-            Optional<Orbit> orbit,
-            Optional<EnemyGun> gun,
-            Optional<Drop> drop,
-            Optional<Dive> dive,
-            boolean terrain,
-            Optional<Spiral> spiral,
-            Optional<Range> strafe,
-            Optional<DeathBurst> deathBurst,
-            Optional<Sine> sine,
-            Optional<Brood> brood,
-            Optional<Walker> walker,
-            Optional<SideHover> sideHover,
-            Optional<Sweep> sweep,
-            Optional<ChainSpec> chain,
-            boolean hardened,
-            Optional<Spawner> spawner,
-            Optional<Pounce> pounce,
-            Optional<Cloak> cloak,
-            Optional<Ambush> ambush,
-            Optional<FlockSpec> flock,
-            Optional<Submerge> submerge,
-            Optional<ProximityRing> ring,
-            double drift,
-            Optional<Chase> chase,
-            Optional<Latch> latch,
-            boolean machine) {
-        this(
-                slug,
-                hp,
-                hitbox,
-                layer,
-                contactDamage,
-                destroyedByRamming,
-                bounty,
-                speed,
-                snake,
-                streamSpeed,
-                hover,
-                orbit,
-                gun,
-                drop,
-                dive,
-                terrain,
-                spiral,
-                strafe,
-                deathBurst,
-                sine,
-                brood,
-                walker,
-                sideHover,
-                sweep,
-                chain,
-                hardened,
-                spawner,
-                pounce,
-                cloak,
-                ambush,
-                flock,
-                submerge,
-                ring,
-                drift,
-                chase,
-                latch,
-                machine,
-                Optional.empty(),
-                Optional.empty());
-    }
-
-    /** The constructor of Act 2: every unit biomechanical (Vrell), none a machine (M7 part A). */
-    public EnemySpec(
-            String slug,
-            double hp,
-            Hitbox hitbox,
-            Layer layer,
-            double contactDamage,
-            boolean destroyedByRamming,
-            int bounty,
-            double speed,
-            Optional<Snake> snake,
-            Optional<Double> streamSpeed,
-            Optional<Hover> hover,
-            Optional<Orbit> orbit,
-            Optional<EnemyGun> gun,
-            Optional<Drop> drop,
-            Optional<Dive> dive,
-            boolean terrain,
-            Optional<Spiral> spiral,
-            Optional<Range> strafe,
-            Optional<DeathBurst> deathBurst,
-            Optional<Sine> sine,
-            Optional<Brood> brood,
-            Optional<Walker> walker,
-            Optional<SideHover> sideHover,
-            Optional<Sweep> sweep,
-            Optional<ChainSpec> chain,
-            boolean hardened,
-            Optional<Spawner> spawner,
-            Optional<Pounce> pounce,
-            Optional<Cloak> cloak,
-            Optional<Ambush> ambush,
-            Optional<FlockSpec> flock,
-            Optional<Submerge> submerge,
-            Optional<ProximityRing> ring,
-            double drift,
-            Optional<Chase> chase,
-            Optional<Latch> latch) {
-        this(
-                slug,
-                hp,
-                hitbox,
-                layer,
-                contactDamage,
-                destroyedByRamming,
-                bounty,
-                speed,
-                snake,
-                streamSpeed,
-                hover,
-                orbit,
-                gun,
-                drop,
-                dive,
-                terrain,
-                spiral,
-                strafe,
-                deathBurst,
-                sine,
-                brood,
-                walker,
-                sideHover,
-                sweep,
-                chain,
-                hardened,
-                spawner,
-                pounce,
-                cloak,
-                ambush,
-                flock,
-                submerge,
-                ring,
-                drift,
-                chase,
-                latch,
-                false);
-    }
-
-    /** The constructor of Level 11: without the chasers and latches of Level 12 (M5 part F). */
-    public EnemySpec(
-            String slug,
-            double hp,
-            Hitbox hitbox,
-            Layer layer,
-            double contactDamage,
-            boolean destroyedByRamming,
-            int bounty,
-            double speed,
-            Optional<Snake> snake,
-            Optional<Double> streamSpeed,
-            Optional<Hover> hover,
-            Optional<Orbit> orbit,
-            Optional<EnemyGun> gun,
-            Optional<Drop> drop,
-            Optional<Dive> dive,
-            boolean terrain,
-            Optional<Spiral> spiral,
-            Optional<Range> strafe,
-            Optional<DeathBurst> deathBurst,
-            Optional<Sine> sine,
-            Optional<Brood> brood,
-            Optional<Walker> walker,
-            Optional<SideHover> sideHover,
-            Optional<Sweep> sweep,
-            Optional<ChainSpec> chain,
-            boolean hardened,
-            Optional<Spawner> spawner,
-            Optional<Pounce> pounce,
-            Optional<Cloak> cloak,
-            Optional<Ambush> ambush,
-            Optional<FlockSpec> flock,
-            Optional<Submerge> submerge,
-            Optional<ProximityRing> ring,
-            double drift) {
-        this(
-                slug,
-                hp,
-                hitbox,
-                layer,
-                contactDamage,
-                destroyedByRamming,
-                bounty,
-                speed,
-                snake,
-                streamSpeed,
-                hover,
-                orbit,
-                gun,
-                drop,
-                dive,
-                terrain,
-                spiral,
-                strafe,
-                deathBurst,
-                sine,
-                brood,
-                walker,
-                sideHover,
-                sweep,
-                chain,
-                hardened,
-                spawner,
-                pounce,
-                cloak,
-                ambush,
-                flock,
-                submerge,
-                ring,
-                drift,
-                Optional.empty(),
-                Optional.empty());
-    }
-
     /** This unit with M5 part F's {@code chase} and {@code latch} (a test's own Lamprey). */
     public EnemySpec withChase(Chase withChase, Optional<Latch> withLatch) {
         EnemySpecCopy copy = new EnemySpecCopy(this);
@@ -1591,8 +457,12 @@ public record EnemySpec(
         return copy.build();
     }
 
-    /** The constructor of Level 10: without the submerging, proximity rings and drifting rafts of Level 11 (M5 part E). */
-    public EnemySpec(
+    /**
+     * A unit with only its base stats: every movement, attack and mechanic left out. The {@code withX} builders add the
+     * rest; add them in the components' order (a component's checks see the ones before it, e.g. a turret needs its
+     * walker and gun).
+     */
+    public static EnemySpec of(
             String slug,
             double hp,
             Hitbox hitbox,
@@ -1600,190 +470,196 @@ public record EnemySpec(
             double contactDamage,
             boolean destroyedByRamming,
             int bounty,
-            double speed,
-            Optional<Snake> snake,
-            Optional<Double> streamSpeed,
-            Optional<Hover> hover,
-            Optional<Orbit> orbit,
-            Optional<EnemyGun> gun,
-            Optional<Drop> drop,
-            Optional<Dive> dive,
-            boolean terrain,
-            Optional<Spiral> spiral,
-            Optional<Range> strafe,
-            Optional<DeathBurst> deathBurst,
-            Optional<Sine> sine,
-            Optional<Brood> brood,
-            Optional<Walker> walker,
-            Optional<SideHover> sideHover,
-            Optional<Sweep> sweep,
-            Optional<ChainSpec> chain,
-            boolean hardened,
-            Optional<Spawner> spawner,
-            Optional<Pounce> pounce,
-            Optional<Cloak> cloak,
-            Optional<Ambush> ambush,
-            Optional<FlockSpec> flock) {
-        this(
-                slug,
-                hp,
-                hitbox,
-                layer,
-                contactDamage,
-                destroyedByRamming,
-                bounty,
-                speed,
-                snake,
-                streamSpeed,
-                hover,
-                orbit,
-                gun,
-                drop,
-                dive,
-                terrain,
-                spiral,
-                strafe,
-                deathBurst,
-                sine,
-                brood,
-                walker,
-                sideHover,
-                sweep,
-                chain,
-                hardened,
-                spawner,
-                pounce,
-                cloak,
-                ambush,
-                flock,
-                Optional.empty(),
-                Optional.empty(),
-                0);
+            double speed) {
+        return new EnemySpecCopy(slug, hp, hitbox, layer, contactDamage, destroyedByRamming, bounty, speed).build();
     }
 
-    /** The constructor of Level 09: without the cloaks, ambushes and flocks of Level 10 (M5 part D). */
-    public EnemySpec(
-            String slug,
-            double hp,
-            Hitbox hitbox,
-            Layer layer,
-            double contactDamage,
-            boolean destroyedByRamming,
-            int bounty,
-            double speed,
-            Optional<Snake> snake,
-            Optional<Double> streamSpeed,
-            Optional<Hover> hover,
-            Optional<Orbit> orbit,
-            Optional<EnemyGun> gun,
-            Optional<Drop> drop,
-            Optional<Dive> dive,
-            boolean terrain,
-            Optional<Spiral> spiral,
-            Optional<Range> strafe,
-            Optional<DeathBurst> deathBurst,
-            Optional<Sine> sine,
-            Optional<Brood> brood,
-            Optional<Walker> walker,
-            Optional<SideHover> sideHover,
-            Optional<Sweep> sweep,
-            Optional<ChainSpec> chain,
-            boolean hardened,
-            Optional<Spawner> spawner,
-            Optional<Pounce> pounce) {
-        this(
-                slug,
-                hp,
-                hitbox,
-                layer,
-                contactDamage,
-                destroyedByRamming,
-                bounty,
-                speed,
-                snake,
-                streamSpeed,
-                hover,
-                orbit,
-                gun,
-                drop,
-                dive,
-                terrain,
-                spiral,
-                strafe,
-                deathBurst,
-                sine,
-                brood,
-                walker,
-                sideHover,
-                sweep,
-                chain,
-                hardened,
-                spawner,
-                pounce,
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty());
+    /** This unit with the gap between two units of its snake ({@link #snake()}); empty for none. */
+    public EnemySpec withSnake(Optional<Snake> withSnake) {
+        EnemySpecCopy copy = new EnemySpecCopy(this);
+        copy.snake = withSnake;
+        return copy.build();
     }
 
-    /** The constructor of Level 08: without the hardened units, spawners and pounces of Level 09 (M5 part C). */
-    public EnemySpec(
-            String slug,
-            double hp,
-            Hitbox hitbox,
-            Layer layer,
-            double contactDamage,
-            boolean destroyedByRamming,
-            int bounty,
-            double speed,
-            Optional<Snake> snake,
-            Optional<Double> streamSpeed,
-            Optional<Hover> hover,
-            Optional<Orbit> orbit,
-            Optional<EnemyGun> gun,
-            Optional<Drop> drop,
-            Optional<Dive> dive,
-            boolean terrain,
-            Optional<Spiral> spiral,
-            Optional<Range> strafe,
-            Optional<DeathBurst> deathBurst,
-            Optional<Sine> sine,
-            Optional<Brood> brood,
-            Optional<Walker> walker,
-            Optional<SideHover> sideHover,
-            Optional<Sweep> sweep,
-            Optional<ChainSpec> chain) {
-        this(
-                slug,
-                hp,
-                hitbox,
-                layer,
-                contactDamage,
-                destroyedByRamming,
-                bounty,
-                speed,
-                snake,
-                streamSpeed,
-                hover,
-                orbit,
-                gun,
-                drop,
-                dive,
-                terrain,
-                spiral,
-                strafe,
-                deathBurst,
-                sine,
-                brood,
-                walker,
-                sideHover,
-                sweep,
-                chain,
-                false,
-                Optional.empty(),
-                Optional.empty());
+    /** This unit with its speed in streams ({@link #streamSpeed()}); empty for none. */
+    public EnemySpec withStreamSpeed(Optional<Double> withStreamSpeed) {
+        EnemySpecCopy copy = new EnemySpecCopy(this);
+        copy.streamSpeed = withStreamSpeed;
+        return copy.build();
     }
 
-    /** The constructor of Level 05: without the side hover, sweep and chain of Level 06. */
+    /** This unit with its hover below the top edge ({@link #hover()}); empty for none. */
+    public EnemySpec withHover(Optional<Hover> withHover) {
+        EnemySpecCopy copy = new EnemySpecCopy(this);
+        copy.hover = withHover;
+        return copy.build();
+    }
+
+    /** This unit with its orbit in circle formations ({@link #orbit()}); empty for none. */
+    public EnemySpec withOrbit(Optional<Orbit> withOrbit) {
+        EnemySpecCopy copy = new EnemySpecCopy(this);
+        copy.orbit = withOrbit;
+        return copy.build();
+    }
+
+    /** This unit with its attack ({@link #gun()}); empty for none. */
+    public EnemySpec withGun(Optional<EnemyGun> withGun) {
+        EnemySpecCopy copy = new EnemySpecCopy(this);
+        copy.gun = withGun;
+        return copy.build();
+    }
+
+    /** This unit with the pickup every n-th kill drops ({@link #drop()}); empty for none. */
+    public EnemySpec withDrop(Optional<Drop> withDrop) {
+        EnemySpecCopy copy = new EnemySpecCopy(this);
+        copy.drop = withDrop;
+        return copy.build();
+    }
+
+    /** This unit with its dive ({@link #dive()}); empty for none. */
+    public EnemySpec withDive(Optional<Dive> withDive) {
+        EnemySpecCopy copy = new EnemySpecCopy(this);
+        copy.dive = withDive;
+        return copy.build();
+    }
+
+    /** This unit with its spiral out of a whirl cluster ({@link #spiral()}); empty for none. */
+    public EnemySpec withSpiral(Optional<Spiral> withSpiral) {
+        EnemySpecCopy copy = new EnemySpecCopy(this);
+        copy.spiral = withSpiral;
+        return copy.build();
+    }
+
+    /** This unit with its convoy turn below the top edge ({@link #strafe()}); empty for none. */
+    public EnemySpec withStrafe(Optional<Range> withStrafe) {
+        EnemySpecCopy copy = new EnemySpecCopy(this);
+        copy.strafe = withStrafe;
+        return copy.build();
+    }
+
+    /** This unit with the puff of bullets it pops into when destroyed ({@link #deathBurst()}); empty for none. */
+    public EnemySpec withDeathBurst(Optional<DeathBurst> withDeathBurst) {
+        EnemySpecCopy copy = new EnemySpecCopy(this);
+        copy.deathBurst = withDeathBurst;
+        return copy.build();
+    }
+
+    /** This unit with its side-to-side offset on its path ({@link #sine()}); empty for none. */
+    public EnemySpec withSine(Optional<Sine> withSine) {
+        EnemySpecCopy copy = new EnemySpecCopy(this);
+        copy.sine = withSine;
+        return copy.build();
+    }
+
+    /** This unit with the units it releases (a spawner) ({@link #brood()}); empty for none. */
+    public EnemySpec withBrood(Optional<Brood> withBrood) {
+        EnemySpecCopy copy = new EnemySpecCopy(this);
+        copy.brood = withBrood;
+        return copy.build();
+    }
+
+    /** This unit with its walk along its authored ground path ({@link #walker()}); empty for none. */
+    public EnemySpec withWalker(Optional<Walker> withWalker) {
+        EnemySpecCopy copy = new EnemySpecCopy(this);
+        copy.walker = withWalker;
+        return copy.build();
+    }
+
+    /** This unit with its side-edge hover ({@link #sideHover()}); empty for none. */
+    public EnemySpec withSideHover(Optional<SideHover> withSideHover) {
+        EnemySpecCopy copy = new EnemySpecCopy(this);
+        copy.sideHover = withSideHover;
+        return copy.build();
+    }
+
+    /** This unit with its laser sweep ({@link #sweep()}); empty for none. */
+    public EnemySpec withSweep(Optional<Sweep> withSweep) {
+        EnemySpecCopy copy = new EnemySpecCopy(this);
+        copy.sweep = withSweep;
+        return copy.build();
+    }
+
+    /** This unit with the segment chain behind its head ({@link #chain()}); empty for none. */
+    public EnemySpec withChain(Optional<ChainSpec> withChain) {
+        EnemySpecCopy copy = new EnemySpecCopy(this);
+        copy.chain = withChain;
+        return copy.build();
+    }
+
+    /** This unit with its periodic spawner cycle ({@link #spawner()}); empty for none. */
+    public EnemySpec withSpawner(Optional<Spawner> withSpawner) {
+        EnemySpecCopy copy = new EnemySpecCopy(this);
+        copy.spawner = withSpawner;
+        return copy.build();
+    }
+
+    /** This unit with its leap at the ship ({@link #pounce()}); empty for none. */
+    public EnemySpec withPounce(Optional<Pounce> withPounce) {
+        EnemySpecCopy copy = new EnemySpecCopy(this);
+        copy.pounce = withPounce;
+        return copy.build();
+    }
+
+    /** This unit with its cloak ({@link #cloak()}); empty for none. */
+    public EnemySpec withCloak(Optional<Cloak> withCloak) {
+        EnemySpecCopy copy = new EnemySpecCopy(this);
+        copy.cloak = withCloak;
+        return copy.build();
+    }
+
+    /** This unit with its rear ambush path ({@link #ambush()}); empty for none. */
+    public EnemySpec withAmbush(Optional<Ambush> withAmbush) {
+        EnemySpecCopy copy = new EnemySpecCopy(this);
+        copy.ambush = withAmbush;
+        return copy.build();
+    }
+
+    /** This unit with its flock steering round its leader point ({@link #flock()}); empty for none. */
+    public EnemySpec withFlock(Optional<FlockSpec> withFlock) {
+        EnemySpecCopy copy = new EnemySpecCopy(this);
+        copy.flock = withFlock;
+        return copy.build();
+    }
+
+    /** This unit with its surfacing and submerging ({@link #submerge()}); empty for none. */
+    public EnemySpec withSubmerge(Optional<Submerge> withSubmerge) {
+        EnemySpecCopy copy = new EnemySpecCopy(this);
+        copy.submerge = withSubmerge;
+        return copy.build();
+    }
+
+    /** This unit with its proximity ring ({@link #ring()}); empty for none. */
+    public EnemySpec withRing(Optional<ProximityRing> withRing) {
+        EnemySpecCopy copy = new EnemySpecCopy(this);
+        copy.ring = withRing;
+        return copy.build();
+    }
+
+    /** This unit fixed to the ground layer or not ({@link #terrain()}). */
+    public EnemySpec withTerrain(boolean isTerrain) {
+        EnemySpecCopy copy = new EnemySpecCopy(this);
+        copy.terrain = isTerrain;
+        return copy.build();
+    }
+
+    /** This unit hardened or not ({@link #hardened()}): only anti-ground deliveries and the bombs damage it. */
+    public EnemySpec withHardened(boolean isHardened) {
+        EnemySpecCopy copy = new EnemySpecCopy(this);
+        copy.hardened = isHardened;
+        return copy.build();
+    }
+
+    /** This ground unit with its drift along its nest's current ({@link #drift()}), px/s; 0 for none. */
+    public EnemySpec withDrift(double withDrift) {
+        EnemySpecCopy copy = new EnemySpecCopy(this);
+        copy.drift = withDrift;
+        return copy.build();
+    }
+
+    /**
+     * The constructor of Level 05: without the side hover, sweep and chain of Level 06. Kept for {@code game/}'s callers until step RF6 has moved them to {@link #of} and the
+     * {@code withX} builders; remove it then.
+     */
     public EnemySpec(
             String slug,
             double hp,
@@ -1832,56 +708,42 @@ public record EnemySpec(
                 walker,
                 Optional.empty(),
                 Optional.empty(),
-                Optional.empty());
-    }
-
-    /** The constructor of Level 03: without the spawners and walkers of Level 04. */
-    public EnemySpec(
-            String slug,
-            double hp,
-            Hitbox hitbox,
-            Layer layer,
-            double contactDamage,
-            boolean destroyedByRamming,
-            int bounty,
-            double speed,
-            Optional<Snake> snake,
-            Optional<Double> streamSpeed,
-            Optional<Hover> hover,
-            Optional<Orbit> orbit,
-            Optional<EnemyGun> gun,
-            Optional<Drop> drop,
-            Optional<Dive> dive,
-            boolean terrain,
-            Optional<Spiral> spiral,
-            Optional<Range> strafe,
-            Optional<DeathBurst> deathBurst) {
-        this(
-                slug,
-                hp,
-                hitbox,
-                layer,
-                contactDamage,
-                destroyedByRamming,
-                bounty,
-                speed,
-                snake,
-                streamSpeed,
-                hover,
-                orbit,
-                gun,
-                drop,
-                dive,
-                terrain,
-                spiral,
-                strafe,
-                deathBurst,
+                Optional.empty(),
+                false,
+                Optional.empty(),
+                Optional.empty(),
+                Optional.empty(),
+                Optional.empty(),
+                Optional.empty(),
+                Optional.empty(),
+                Optional.empty(),
+                0,
+                Optional.empty(),
+                Optional.empty(),
+                false,
+                Optional.empty(),
+                Optional.empty(),
+                Optional.empty(),
+                Optional.empty(),
+                Optional.empty(),
+                List.of(),
+                Optional.empty(),
+                Optional.empty(),
+                Optional.empty(),
+                Optional.empty(),
+                Optional.empty(),
+                Optional.empty(),
+                false,
+                Optional.empty(),
                 Optional.empty(),
                 Optional.empty(),
                 Optional.empty());
     }
 
-    /** The current constructor with the movements and bursts of Level 03 left out. */
+    /**
+     * The constructor of Level 03: without the spiral, the convoy turn and everything after it. Kept for {@code game/}'s callers until step RF6 has moved them to {@link #of} and the
+     * {@code withX} builders; remove it then.
+     */
     public EnemySpec(
             String slug,
             double hp,
@@ -1916,6 +778,9 @@ public record EnemySpec(
                 drop,
                 dive,
                 terrain,
+                Optional.empty(),
+                Optional.empty(),
+                Optional.empty(),
                 Optional.empty(),
                 Optional.empty(),
                 Optional.empty());

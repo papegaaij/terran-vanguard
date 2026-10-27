@@ -56,76 +56,21 @@ final class PartGSpecs {
 
     /** The Skimmer: HP 5, hit box 22×32, `ground`, 180 px/s, its weave 40 px every 1.2 s, its gun. */
     static EnemySpec skimmer(EnemyGun gun) {
-        return new EnemySpec(
-                "skimmer",
-                5,
-                new Hitbox(22, 32),
-                Layer.GROUND,
-                10,
-                false,
-                14,
-                180,
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.of(gun),
-                Optional.empty(),
-                Optional.empty(),
-                false,
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.of(new EnemySpec.Sine(40, 1.2)),
-                Optional.empty(),
-                Optional.empty());
+        return EnemySpec.of("skimmer", 5, new Hitbox(22, 32), Layer.GROUND, 10, false, 14, 180)
+                .withGun(Optional.of(gun))
+                .withSine(Optional.of(new EnemySpec.Sine(40, 1.2)));
     }
 
     /** A Skimmer without its weave, to follow its lane exactly. */
     static EnemySpec straightSkimmer() {
-        return new EnemySpec(
-                "skimmer",
-                5,
-                new Hitbox(22, 32),
-                Layer.GROUND,
-                10,
-                false,
-                14,
-                180,
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.of(SKIMMER_GUN),
-                Optional.empty(),
-                Optional.empty(),
-                false);
+        return EnemySpec.of("skimmer", 5, new Hitbox(22, 32), Layer.GROUND, 10, false, 14, 180)
+                .withGun(Optional.of(SKIMMER_GUN));
     }
 
     private static EnemySpec scuttler() {
-        return new EnemySpec(
-                "scuttler",
-                28,
-                new Hitbox(46, 40),
-                Layer.GROUND,
-                15,
-                false,
-                25,
-                40,
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.of(SCUTTLER_FAN),
-                Optional.empty(),
-                Optional.empty(),
-                false,
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.of(new EnemySpec.Walker(
+        return EnemySpec.of("scuttler", 28, new Hitbox(46, 40), Layer.GROUND, 15, false, 25, 40)
+                .withGun(Optional.of(SCUTTLER_FAN))
+                .withWalker(Optional.of(new EnemySpec.Walker(
                         40,
                         Math.toRadians(90),
                         24,

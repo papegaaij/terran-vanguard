@@ -21,35 +21,9 @@ class ReefFryTest {
             Optional.of(GlassfinTest.RIBBON), Optional.of(new EnemySpec.Ram(0.5, 1, 0.3, 0.5, 230))));
 
     /** The reef: 200 HP, a soft ground unit releasing 4 fry every 3.5 s over 120° at 160 px/s, shut within 96 px. */
-    static final EnemySpec REEF = new EnemySpec(
-            "spawning-reef",
-            200,
-            new Hitbox(80, 80),
-            Layer.GROUND,
-            15,
-            false,
-            40,
-            0,
-            Optional.empty(),
-            Optional.empty(),
-            Optional.empty(),
-            Optional.empty(),
-            Optional.empty(),
-            Optional.empty(),
-            Optional.empty(),
-            true,
-            Optional.empty(),
-            Optional.empty(),
-            Optional.empty(),
-            Optional.empty(),
-            Optional.empty(),
-            Optional.empty(),
-            Optional.empty(),
-            Optional.empty(),
-            Optional.empty(),
-            false,
-            Optional.of(new EnemySpec.Spawner(FRY, 4, 3.5, 0.5, Math.toRadians(120), 160, 96)),
-            Optional.empty());
+    static final EnemySpec REEF = EnemySpec.of("spawning-reef", 200, new Hitbox(80, 80), Layer.GROUND, 15, false, 40, 0)
+            .withTerrain(true)
+            .withSpawner(Optional.of(new EnemySpec.Spawner(FRY, 4, 3.5, 0.5, Math.toRadians(120), 160, 96)));
 
     private static LevelScript level() {
         return PartCSpecs.level(30, 30, List.of(), List.of(new GroundUnit(0, Ship.START_X, REEF, -1)));

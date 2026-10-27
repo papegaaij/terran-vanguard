@@ -121,9 +121,9 @@ class VortexLooksTest {
             }
             Enemy.VortexPhase phase = devil.vortexPhase();
             phases.add(phase);
-            LevelRenderer.Depth expected =
-                    phase == Enemy.VortexPhase.OPEN ? LevelRenderer.Depth.LOW_AIR : LevelRenderer.Depth.GROUND;
-            assertEquals(expected, LevelRenderer.Depth.of(devil), phase + " at step " + i);
+            DrawPasses.Depth expected =
+                    phase == Enemy.VortexPhase.OPEN ? DrawPasses.Depth.LOW_AIR : DrawPasses.Depth.GROUND;
+            assertEquals(expected, DrawPasses.Depth.of(devil), phase + " at step " + i);
         }
         assertEquals(EnumSet.allOf(Enemy.VortexPhase.class), phases, "it ran its whole cycle on the screen");
     }

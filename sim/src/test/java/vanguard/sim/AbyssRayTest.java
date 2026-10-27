@@ -47,23 +47,8 @@ class AbyssRayTest {
 
     /** The Ray: 210 HP, 130×90, entering on {@code sub}, {@code large} contact 20, 60 credits. */
     static EnemySpec ray(EnemySpec.Rise rise, Optional<EnemyGun> gun) {
-        return new EnemySpec(
-                        "abyss-ray",
-                        210,
-                        new Hitbox(130, 90),
-                        Layer.SUB,
-                        20,
-                        false,
-                        60,
-                        70,
-                        Optional.empty(),
-                        Optional.empty(),
-                        Optional.empty(),
-                        Optional.empty(),
-                        gun,
-                        Optional.empty(),
-                        Optional.empty(),
-                        false)
+        return EnemySpec.of("abyss-ray", 210, new Hitbox(130, 90), Layer.SUB, 20, false, 60, 70)
+                .withGun(gun)
                 .withRise(Optional.of(rise));
     }
 

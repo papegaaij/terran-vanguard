@@ -139,35 +139,7 @@ final class ChainRules {
                         .map(cut -> new EnemySpec.Scatter(
                                 cut.scatter().orElseThrow(), cut.seconds().orElseThrow())))
                 .withHeadAttacks(headAttacks(content, enemy, difficulty, change));
-        return new EnemySpec(
-                head.slug(),
-                head.hp(),
-                head.hitbox(),
-                head.layer(),
-                head.contactDamage(),
-                head.destroyedByRamming(),
-                head.bounty(),
-                head.speed(),
-                head.snake(),
-                head.streamSpeed(),
-                head.hover(),
-                head.orbit(),
-                head.gun(),
-                head.drop(),
-                head.dive(),
-                head.terrain(),
-                head.spiral(),
-                head.strafe(),
-                head.deathBurst(),
-                head.sine(),
-                head.brood(),
-                head.walker(),
-                head.sideHover(),
-                head.sweep(),
-                Optional.of(spec),
-                head.hardened(),
-                head.spawner(),
-                head.pounce());
+        return head.withChain(Optional.of(spec));
     }
 
     /**
@@ -219,22 +191,15 @@ final class ChainRules {
             Optional<EnemyGun> gun,
             double speed,
             Difficulty difficulty) {
-        return new EnemySpec(
-                slug,
-                content.difficulty().enemyHp(hp, difficulty),
-                box,
-                head.layer(),
-                contactDamage,
-                rammed,
-                bounty,
-                speed,
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                gun,
-                Optional.empty(),
-                Optional.empty(),
-                false);
+        return EnemySpec.of(
+                        slug,
+                        content.difficulty().enemyHp(hp, difficulty),
+                        box,
+                        head.layer(),
+                        contactDamage,
+                        rammed,
+                        bounty,
+                        speed)
+                .withGun(gun);
     }
 }

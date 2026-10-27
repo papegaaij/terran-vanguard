@@ -30,41 +30,13 @@ class GroundAndDiveTest {
             Math.toRadians(30),
             Double.POSITIVE_INFINITY,
             Double.POSITIVE_INFINITY);
-    static final EnemySpec STINGER = new EnemySpec(
-            "stinger",
-            6,
-            new Hitbox(24, 30),
-            Layer.AIR,
-            10,
-            true,
-            15,
-            100,
-            Optional.empty(),
-            Optional.empty(),
-            Optional.empty(),
-            Optional.empty(),
-            Optional.of(FAN),
-            Optional.empty(),
-            Optional.of(new EnemySpec.Dive(new Range(90, 160), 0.5, 420, 0.6)),
-            false);
+    static final EnemySpec STINGER = EnemySpec.of("stinger", 6, new Hitbox(24, 30), Layer.AIR, 10, true, 15, 100)
+            .withGun(Optional.of(FAN))
+            .withDive(Optional.of(new EnemySpec.Dive(new Range(90, 160), 0.5, 420, 0.6)));
     static final EnemyGun BARREL = new EnemyGun(2, 1, 1, 160, 4, false, 1, 0, Math.toRadians(90), Math.toRadians(100));
-    static final EnemySpec TURRET = new EnemySpec(
-            "spine-turret",
-            8,
-            new Hitbox(30, 30),
-            Layer.GROUND,
-            10,
-            true,
-            12,
-            0,
-            Optional.empty(),
-            Optional.empty(),
-            Optional.empty(),
-            Optional.empty(),
-            Optional.of(BARREL),
-            Optional.empty(),
-            Optional.empty(),
-            true);
+    static final EnemySpec TURRET = EnemySpec.of("spine-turret", 8, new Hitbox(30, 30), Layer.GROUND, 10, true, 12, 0)
+            .withGun(Optional.of(BARREL))
+            .withTerrain(true);
 
     private static LevelScript level(
             List<WaveSpec> waves, List<GroundUnit> units, Secondary secondary, List<HazardSpec.CraneSpec> cranes) {

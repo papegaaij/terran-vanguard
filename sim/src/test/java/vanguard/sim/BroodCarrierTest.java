@@ -32,7 +32,7 @@ class BroodCarrierTest {
     private static final double SHIP_Y = 60;
 
     /** What the boss sends to the level, recorded. */
-    private static final class Recorder implements SetPiece.BossActions {
+    private static final class Recorder implements BossActions {
         final List<String> launches = new ArrayList<>();
         final List<Integer> phases = new ArrayList<>();
         final List<Integer> timeouts = new ArrayList<>();

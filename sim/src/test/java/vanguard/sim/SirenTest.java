@@ -30,23 +30,7 @@ class SirenTest {
 
     /** 64×56 / 48×40, {@code hp}, fixed on its wall, bounty 28. */
     static EnemySpec siren(double hp, EnemySpec.SlowRing ring) {
-        return new EnemySpec(
-                        "siren",
-                        hp,
-                        new Hitbox(48, 40),
-                        Layer.AIR,
-                        10,
-                        true,
-                        28,
-                        0,
-                        Optional.empty(),
-                        Optional.empty(),
-                        Optional.empty(),
-                        Optional.empty(),
-                        Optional.empty(),
-                        Optional.empty(),
-                        Optional.empty(),
-                        false)
+        return EnemySpec.of("siren", hp, new Hitbox(48, 40), Layer.AIR, 10, true, 28, 0)
                 .withSlowRing(Optional.of(ring));
     }
 

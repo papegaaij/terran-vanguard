@@ -13,35 +13,7 @@ final class LevelClockSpecs {
 
     /** A plain ground unit on {@code layer} (a turret-like target fixed to the ground), no gun. */
     static EnemySpec groundUnit(String slug, Layer layer, double hp, Hitbox box, int bounty) {
-        return new EnemySpec(
-                slug,
-                hp,
-                box,
-                layer,
-                15,
-                false,
-                bounty,
-                0,
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                true,
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                false,
-                Optional.empty(),
-                Optional.empty());
+        return EnemySpec.of(slug, hp, box, layer, 15, false, bounty, 0).withTerrain(true);
     }
 
     /** A 56×56 ground target of 64 HP paying 45: Level 09's node without its spawner. */

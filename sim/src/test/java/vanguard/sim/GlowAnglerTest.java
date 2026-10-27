@@ -31,23 +31,7 @@ class GlowAnglerTest {
 
     /** 40×32 / 30×24, 28 HP (L26's beam era), contact 10 (destroyed by ramming), bounty 14, drift 20 px/s. */
     static EnemySpec angler(EnemySpec.Lunge lunge) {
-        return new EnemySpec(
-                        "glow-angler",
-                        28,
-                        new Hitbox(30, 24),
-                        Layer.AIR,
-                        10,
-                        true,
-                        14,
-                        20,
-                        Optional.empty(),
-                        Optional.empty(),
-                        Optional.empty(),
-                        Optional.empty(),
-                        Optional.empty(),
-                        Optional.empty(),
-                        Optional.empty(),
-                        false)
+        return EnemySpec.of("glow-angler", 28, new Hitbox(30, 24), Layer.AIR, 10, true, 14, 20)
                 .withLunge(Optional.of(lunge));
     }
 

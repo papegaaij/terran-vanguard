@@ -3,7 +3,6 @@ package vanguard.sim;
 import static vanguard.sim.TestSpecs.muzzle;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * M7 part A's test weapons with the approved numbers (round 36): the Ion Beam
@@ -102,23 +101,7 @@ final class PartASpecs {
 
     /** A target that neither moves on its own nor fires, with {@code box} on {@code layer}. */
     static EnemySpec dummy(Layer layer, double hp, Hitbox box, boolean rammedAway) {
-        return new EnemySpec(
-                "dummy",
-                hp,
-                box,
-                layer,
-                0,
-                rammedAway,
-                0,
-                0,
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                true);
+        return EnemySpec.of("dummy", hp, box, layer, 0, rammedAway, 0, 0).withTerrain(true);
     }
 
     static EnemySpec dummy(Layer layer, double hp) {

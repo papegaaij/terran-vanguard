@@ -175,23 +175,9 @@ class RockStopsTest {
 
     @Test
     void aPickupOnRockSlidesOffWithinAThirdOfASecond() {
-        EnemySpec dropper = new EnemySpec(
-                "dropper",
-                1,
-                new Hitbox(20, 20),
-                Layer.GROUND,
-                0,
-                false,
-                0,
-                0,
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.of(new EnemySpec.Drop(PickupType.SHIELD_CELL, 1)),
-                Optional.empty(),
-                true);
+        EnemySpec dropper = EnemySpec.of("dropper", 1, new Hitbox(20, 20), Layer.GROUND, 0, false, 0, 0)
+                .withDrop(Optional.of(new EnemySpec.Drop(PickupType.SHIELD_CELL, 1)))
+                .withTerrain(true);
         Terrain wall = new Terrain(
                 Optional.of(new Terrain.Wall(new double[] {-1_000, 100_000}, new double[] {150, 150})),
                 Optional.empty(),

@@ -20,32 +20,8 @@ class KiteSwoopTest {
 
     /** A Dust Kite at medium: 1 HP, 16×14, contact 6 and rammed away, gliding at 130 px/s. */
     static EnemySpec kite(EnemySpec.Swoop swoop) {
-        EnemySpec glider = new EnemySpec(
-                "dust-kite",
-                1,
-                new Hitbox(16, 14),
-                Layer.AIR,
-                6,
-                true,
-                4,
-                130,
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                false,
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.of(new EnemySpec.Sine(50, 1.6)),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty());
+        EnemySpec glider = EnemySpec.of("dust-kite", 1, new Hitbox(16, 14), Layer.AIR, 6, true, 4, 130)
+                .withSine(Optional.of(new EnemySpec.Sine(50, 1.6)));
         return glider.withSwoop(Optional.of(swoop));
     }
 

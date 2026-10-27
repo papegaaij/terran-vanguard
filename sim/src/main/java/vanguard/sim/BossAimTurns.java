@@ -55,12 +55,12 @@ final class BossAimTurns {
     }
 
     /** One step of attack {@code a}'s aim turns. */
-    void turn(int a, BossSpec.Attack attack, BossSpec.Phase current, SetPiece.BossActions actions, boolean firing) {
+    void turn(int a, BossSpec.Attack attack, BossSpec.Phase current, BossActions actions, boolean firing) {
         BossSpec.AimTurns turns = attack.aimTurns().orElseThrow();
         int glow = SimStep.ticks(turns.glowSeconds());
         aimTicks[a]--;
         if (aimPart[a] < 0 && aimTicks[a] <= glow) {
-            List<Integer> parts = SetPiece.firingParts(attack, current);
+            List<Integer> parts = SetPieceGuns.firingParts(attack, current);
             for (int i = 0; i < parts.size(); i++) {
                 int candidate = (aimNext[a] + i) % parts.size();
                 int p = parts.get(candidate);

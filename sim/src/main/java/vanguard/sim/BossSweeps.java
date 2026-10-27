@@ -75,7 +75,7 @@ final class BossSweeps {
      * Attack {@code a}'s sweep starts from part {@code p} (unless one runs): its centre on the ship's bearing from the
      * beam's origin now, its direction the other way from its last one's; its telegraph shows first.
      */
-    void start(int a, int p, BossSpec.Attack attack, SetPiece.BossActions actions) {
+    void start(int a, int p, BossSpec.Attack attack, BossActions actions) {
         if (sweepTicks[a] >= 0) {
             return;
         }
@@ -96,7 +96,7 @@ final class BossSweeps {
     }
 
     /** The running sweeps advance: the beam starts after the telegraph, the sweep ends after its time or with its part. */
-    void step(SetPiece.BossActions actions) {
+    void step(BossActions actions) {
         for (int a = 0; a < sweepTicks.length; a++) {
             if (sweepTicks[a] < 0) {
                 continue;

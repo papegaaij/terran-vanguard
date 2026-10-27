@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.UncheckedIOException;
 import java.nio.ByteBuffer;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
@@ -64,19 +65,43 @@ public final class Screenshots {
         Thread.ofPlatform().name("screenshot").daemon().start(() -> write(frame, time));
     }
 
+    /**
+     * RF6, the {@code --shots} debug option: writes the internal screen as it is now into {@code fileName} in the
+     * screenshots directory, overwriting it, before returning (the game exits after the last shot). Call while it is
+     * drawing, like {@link #capture(PixelScreen, SpriteBatch)}.
+     */
+    public void captureNow(PixelScreen screen, SpriteBatch batch, String fileName) {
+        Pixmap frame = screen.read(batch);
+        try {
+            opaque(frame.getPixels());
+            Files.createDirectories(directory);
+            Path file = directory.resolve(fileName);
+            try (OutputStream out = Files.newOutputStream(file)) {
+                encode(out, frame);
+            }
+            LOG.info("shot " + file);
+        } catch (IOException e) {
+            throw new UncheckedIOException("could not write the shot " + fileName, e);
+        } finally {
+            frame.dispose();
+        }
+    }
+
+    private static void encode(OutputStream out, Pixmap frame) throws IOException {
+        var png = new PixmapIO.PNG(PixelScreen.WIDTH * PixelScreen.HEIGHT * 4);
+        try {
+            // Frame buffers are stored bottom-up.
+            png.setFlipY(true);
+            png.write(out, frame);
+        } finally {
+            png.dispose();
+        }
+    }
+
     private void write(Pixmap frame, LocalDateTime time) {
         try {
             opaque(frame.getPixels());
-            Path file = writeNew(directory, time, out -> {
-                var png = new PixmapIO.PNG(PixelScreen.WIDTH * PixelScreen.HEIGHT * 4);
-                try {
-                    // Frame buffers are stored bottom-up.
-                    png.setFlipY(true);
-                    png.write(out, frame);
-                } finally {
-                    png.dispose();
-                }
-            });
+            Path file = writeNew(directory, time, out -> encode(out, frame));
             LOG.info("screenshot " + file);
             noteOutcome(SAVED);
         } catch (IOException | RuntimeException e) {

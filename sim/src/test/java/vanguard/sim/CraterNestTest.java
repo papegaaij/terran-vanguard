@@ -29,23 +29,9 @@ class CraterNestTest {
             Double.POSITIVE_INFINITY,
             Optional.empty(),
             Optional.of(new EnemyGun.MortarSpec(1.0, 16, 8, 4)));
-    static final EnemySpec MORTAR = new EnemySpec(
-            "polyp-mortar",
-            10,
-            new Hitbox(32, 32),
-            Layer.GROUND,
-            10,
-            true,
-            15,
-            0,
-            Optional.empty(),
-            Optional.empty(),
-            Optional.empty(),
-            Optional.empty(),
-            Optional.of(MORTAR_GUN),
-            Optional.empty(),
-            Optional.empty(),
-            true);
+    static final EnemySpec MORTAR = EnemySpec.of("polyp-mortar", 10, new Hitbox(32, 32), Layer.GROUND, 10, true, 15, 0)
+            .withGun(Optional.of(MORTAR_GUN))
+            .withTerrain(true);
 
     private static final HazardSpec.SledSpec SLED =
             new HazardSpec.SledSpec(432, 24, 2, 5, 30, 1.5, 0.4, 15, "stuck sled");

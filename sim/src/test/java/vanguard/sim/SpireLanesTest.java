@@ -93,25 +93,26 @@ class SpireLanesTest {
                                         spawn.glideSeconds(),
                                         most)))),
                         maw.arena()));
-        BossSpec boss = new BossSpec(
-                b.arriveSeconds(),
-                b.x(),
-                b.hoverY(),
-                b.descentSpeed(),
-                b.sineAmplitude(),
-                b.sinePeriod(),
-                b.layer(),
-                b.midBoss(),
-                b.barName(),
-                b.parSeconds(),
-                b.chains(),
-                attacks,
-                phases,
-                b.engagesOnArrival(),
-                b.armoured(),
-                b.poses(),
-                b.deathSeconds(),
-                b.arena());
+        BossSpec boss = BossSpec.builder(
+                        b.arriveSeconds(),
+                        b.x(),
+                        b.hoverY(),
+                        b.descentSpeed(),
+                        b.sineAmplitude(),
+                        b.sinePeriod(),
+                        b.layer(),
+                        b.midBoss(),
+                        b.barName(),
+                        b.parSeconds(),
+                        b.chains(),
+                        attacks,
+                        phases)
+                .engagesOnArrival(b.engagesOnArrival())
+                .armoured(b.armoured())
+                .poses(b.poses())
+                .deathSeconds(b.deathSeconds())
+                .arena(b.arena())
+                .build();
         return new SetPieceSpec(
                 base.slug(),
                 base.size(),

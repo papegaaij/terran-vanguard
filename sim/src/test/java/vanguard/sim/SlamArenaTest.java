@@ -118,29 +118,42 @@ class SlamArenaTest {
                 List.of(head, left, right),
                 List.of(),
                 Optional.empty(),
-                Optional.of(new BossSpec(
-                        ARRIVE,
-                        PlayField.WIDTH / 2.0,
-                        PlayField.HEIGHT - 110,
-                        0,
-                        0,
-                        1,
-                        Layer.GROUND,
-                        true,
-                        "TEST KRAKEN",
-                        60,
-                        List.of(
-                                new BossSpec.Chain(
-                                        "left slam arm", -12.4, -269, LEFT_ARM, 13, new Hitbox(30, 30), 0.1, 0, true),
-                                new BossSpec.Chain(
-                                        "right slam arm", 12.4, -269, RIGHT_ARM, 13, new Hitbox(30, 30), 0.1, 0, true)),
-                        List.of(fan),
-                        List.of(slams, headUp, twoLanes),
-                        false,
-                        List.of(),
-                        List.of(),
-                        0,
-                        Optional.of(arena))));
+                Optional.of(BossSpec.builder(
+                                ARRIVE,
+                                PlayField.WIDTH / 2.0,
+                                PlayField.HEIGHT - 110,
+                                0,
+                                0,
+                                1,
+                                Layer.GROUND,
+                                true,
+                                "TEST KRAKEN",
+                                60,
+                                List.of(
+                                        new BossSpec.Chain(
+                                                "left slam arm",
+                                                -12.4,
+                                                -269,
+                                                LEFT_ARM,
+                                                13,
+                                                new Hitbox(30, 30),
+                                                0.1,
+                                                0,
+                                                true),
+                                        new BossSpec.Chain(
+                                                "right slam arm",
+                                                12.4,
+                                                -269,
+                                                RIGHT_ARM,
+                                                13,
+                                                new Hitbox(30, 30),
+                                                0.1,
+                                                0,
+                                                true)),
+                                List.of(fan),
+                                List.of(slams, headUp, twoLanes))
+                        .arena(Optional.of(arena))
+                        .build()));
     }
 
     /** The arena level: 3 s at 140 px/s, the arena of 1 s at speed 0, 10 s after it; with a naval convoy when asked. */

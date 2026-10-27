@@ -28,23 +28,9 @@ class HookModesTest {
 
     /** A unit with {@code gun} that hovers 30 s {@code depth} px below the top edge, hooked as a "skimmer". */
     private static EnemySpec hoverer(EnemyGun gun, double depth) {
-        return new EnemySpec(
-                "skimmer",
-                50,
-                new Hitbox(22, 32),
-                Layer.AIR,
-                10,
-                false,
-                14,
-                200,
-                Optional.empty(),
-                Optional.empty(),
-                Optional.of(new EnemySpec.Hover(new Range(30, 30), new Range(depth, depth))),
-                Optional.empty(),
-                Optional.of(gun),
-                Optional.empty(),
-                Optional.empty(),
-                false);
+        return EnemySpec.of("skimmer", 50, new Hitbox(22, 32), Layer.AIR, 10, false, 14, 200)
+                .withHover(Optional.of(new EnemySpec.Hover(new Range(30, 30), new Range(depth, depth))))
+                .withGun(Optional.of(gun));
     }
 
     private static WaveSpec single(double t, EnemySpec enemy, WaveSpec.Edge edge) {

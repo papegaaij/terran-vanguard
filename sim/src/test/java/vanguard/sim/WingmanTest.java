@@ -510,23 +510,7 @@ class WingmanTest {
 
     /** Ground units in a column straight ahead of him, out of the player's line of fire. */
     private static LevelScript groundAheadOfRook() {
-        EnemySpec husk = new EnemySpec(
-                "husk",
-                4,
-                new Hitbox(16, 16),
-                Layer.GROUND,
-                6,
-                false,
-                10,
-                0,
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                false);
+        EnemySpec husk = EnemySpec.of("husk", 4, new Hitbox(16, 16), Layer.GROUND, 6, false, 10, 0);
         double x = Ship.START_X - 64;
         return LevelScript.builder(1, 1)
                 .sections(List.of(new Section(30, 130)))

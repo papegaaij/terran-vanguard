@@ -1,6 +1,7 @@
 package vanguard.game.level;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static vanguard.game.level.RadioPlayer.play;
 
 import java.util.List;
 import org.junit.jupiter.api.Test;

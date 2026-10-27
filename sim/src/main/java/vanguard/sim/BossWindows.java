@@ -67,7 +67,7 @@ final class BossWindows {
     }
 
     /** One step of the phase's {@code windows}, the ship at (shipX, shipY). */
-    void step(BossSpec.Windows windows, double shipX, double shipY, SetPiece.BossActions actions, boolean firing) {
+    void step(BossSpec.Windows windows, double shipX, double shipY, BossActions actions, boolean firing) {
         if (--windowTicks > 0) {
             return;
         }
@@ -124,7 +124,7 @@ final class BossWindows {
             int ready,
             double shipX,
             double shipY,
-            SetPiece.BossActions actions) {
+            BossActions actions) {
         int units = (spawn.count() * alive + group.size() - 1) / group.size();
         if (spawn.ambush()) {
             // M5 part H: ambush launches fly their planned rear paths; the arc is not read.

@@ -3,7 +3,7 @@ package vanguard.sim;
 /**
  * M7 part H, step H3 (design/enemies/bosses/dust-colossus, Suction and debris): the rocks a breaching boss tears loose
  * toward its open mouth ({@link BossSpec.DebrisFlow}). Its {@link BreachArena} times them; the level tears each one
- * loose ({@link SetPiece.BossActions#tearLoose}) from its {@link Debris} pool with the simulation's random numbers.
+ * loose ({@link BossActions#tearLoose}) from its {@link Debris} pool with the simulation's random numbers.
  * Its rock sizes are made once; tearing a rock loose allocates nothing.
  */
 public final class PulledDebris {

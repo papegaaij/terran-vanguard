@@ -21,41 +21,10 @@ class ReefSpitterTest {
 
     /** The Reef Spitter at medium (its data's numbers), drifting {@code drift} px/s. */
     static EnemySpec spitter(double drift) {
-        return new EnemySpec(
-                "reef-spitter",
-                7,
-                new Hitbox(26, 26),
-                Layer.GROUND,
-                10,
-                true,
-                14,
-                10,
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.of(FAN),
-                Optional.empty(),
-                Optional.empty(),
-                true,
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                false,
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                drift);
+        return EnemySpec.of("reef-spitter", 7, new Hitbox(26, 26), Layer.GROUND, 10, true, 14, 10)
+                .withGun(Optional.of(FAN))
+                .withTerrain(true)
+                .withDrift(drift);
     }
 
     private static LevelScript level(GroundUnit... units) {

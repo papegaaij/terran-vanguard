@@ -219,26 +219,27 @@ class SpirePlaytestTest {
                             Optional.of(leading),
                             sweep.down(),
                             sweep.aimTurns()));
-            return new BossSpec(
-                    boss.arriveSeconds(),
-                    boss.x(),
-                    boss.hoverY(),
-                    boss.descentSpeed(),
-                    boss.sineAmplitude(),
-                    boss.sinePeriod(),
-                    boss.layer(),
-                    boss.midBoss(),
-                    boss.barName(),
-                    boss.parSeconds(),
-                    boss.chains(),
-                    attacks,
-                    boss.phases(),
-                    boss.engagesOnArrival(),
-                    boss.armoured(),
-                    boss.poses(),
-                    boss.deathSeconds(),
-                    boss.arena(),
-                    boss.incomingSeconds());
+            return BossSpec.builder(
+                            boss.arriveSeconds(),
+                            boss.x(),
+                            boss.hoverY(),
+                            boss.descentSpeed(),
+                            boss.sineAmplitude(),
+                            boss.sinePeriod(),
+                            boss.layer(),
+                            boss.midBoss(),
+                            boss.barName(),
+                            boss.parSeconds(),
+                            boss.chains(),
+                            attacks,
+                            boss.phases())
+                    .engagesOnArrival(boss.engagesOnArrival())
+                    .armoured(boss.armoured())
+                    .poses(boss.poses())
+                    .deathSeconds(boss.deathSeconds())
+                    .arena(boss.arena())
+                    .incomingSeconds(boss.incomingSeconds())
+                    .build();
         });
     }
 
@@ -365,25 +366,26 @@ class SpirePlaytestTest {
                         first.move(),
                         first.windows(),
                         first.arena()));
-        return new BossSpec(
-                boss.arriveSeconds(),
-                boss.x(),
-                boss.hoverY(),
-                boss.descentSpeed(),
-                boss.sineAmplitude(),
-                boss.sinePeriod(),
-                boss.layer(),
-                boss.midBoss(),
-                boss.barName(),
-                boss.parSeconds(),
-                boss.chains(),
-                boss.attacks(),
-                phases,
-                boss.engagesOnArrival(),
-                boss.armoured(),
-                boss.poses(),
-                boss.deathSeconds(),
-                boss.arena(),
-                boss.incomingSeconds());
+        return BossSpec.builder(
+                        boss.arriveSeconds(),
+                        boss.x(),
+                        boss.hoverY(),
+                        boss.descentSpeed(),
+                        boss.sineAmplitude(),
+                        boss.sinePeriod(),
+                        boss.layer(),
+                        boss.midBoss(),
+                        boss.barName(),
+                        boss.parSeconds(),
+                        boss.chains(),
+                        boss.attacks(),
+                        phases)
+                .engagesOnArrival(boss.engagesOnArrival())
+                .armoured(boss.armoured())
+                .poses(boss.poses())
+                .deathSeconds(boss.deathSeconds())
+                .arena(boss.arena())
+                .incomingSeconds(boss.incomingSeconds())
+                .build();
     }
 }

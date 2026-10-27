@@ -22,23 +22,11 @@ import org.junit.jupiter.api.Test;
 class BarbfinTest {
     /** 36×28 / 26×20, 24 HP (L24's beam era), 120 px/s, hover 9 s 90–200 px above the ship drifting 6 px/s. */
     static EnemySpec barbfin(EnemyGun gun) {
-        return new EnemySpec(
-                "barbfin",
-                24,
-                new Hitbox(26, 20),
-                Layer.AIR,
-                10,
-                true,
-                12,
-                120,
-                Optional.empty(),
-                Optional.empty(),
-                Optional.of(new EnemySpec.Hover(new Range(9, 9), new Range(60, 460)).aboveShip(new Range(90, 200), 6)),
-                Optional.of(new EnemySpec.Orbit(60, 90)),
-                Optional.of(gun),
-                Optional.empty(),
-                Optional.empty(),
-                false);
+        return EnemySpec.of("barbfin", 24, new Hitbox(26, 20), Layer.AIR, 10, true, 12, 120)
+                .withHover(Optional.of(
+                        new EnemySpec.Hover(new Range(9, 9), new Range(60, 460)).aboveShip(new Range(90, 200), 6)))
+                .withOrbit(Optional.of(new EnemySpec.Orbit(60, 90)))
+                .withGun(Optional.of(gun));
     }
 
     static final EnemyGun NEEDLE = EnemyGun.aimed(2.4, 0.9, 1, 150, 4, false);
@@ -109,23 +97,10 @@ class BarbfinTest {
         assertEquals(PlayField.HEIGHT - 60, unit.y(), 120 * SimStep.SECONDS + 1e-9, "at the depth's min");
 
         // A plain hover stops at its path's end as before (no height above the ship).
-        EnemySpec plain = new EnemySpec(
-                "barbfin",
-                24,
-                new Hitbox(26, 20),
-                Layer.AIR,
-                10,
-                true,
-                12,
-                120,
-                Optional.empty(),
-                Optional.empty(),
-                Optional.of(new EnemySpec.Hover(new Range(9, 9), new Range(60, 460))),
-                Optional.of(new EnemySpec.Orbit(60, 90)),
-                Optional.of(NEEDLE),
-                Optional.empty(),
-                Optional.empty(),
-                false);
+        EnemySpec plain = EnemySpec.of("barbfin", 24, new Hitbox(26, 20), Layer.AIR, 10, true, 12, 120)
+                .withHover(Optional.of(new EnemySpec.Hover(new Range(9, 9), new Range(60, 460))))
+                .withOrbit(Optional.of(new EnemySpec.Orbit(60, 90)))
+                .withGun(Optional.of(NEEDLE));
         Sortie path = sortie(List.of(column(1, plain, 1)));
         Stops end = fly(path, SimStep.ticks(9), Command.NONE);
         assertEquals(1, end.above().size());

@@ -266,23 +266,8 @@ class ShuttleEscortTest {
     }
 
     /** A medium air body that is not destroyed by ramming: contact 15, flying straight down. */
-    private static final EnemySpec BRUTE = new EnemySpec(
-            "brute",
-            1000,
-            new Hitbox(40, 40),
-            Layer.AIR,
-            15,
-            false,
-            10,
-            100,
-            Optional.empty(),
-            Optional.empty(),
-            Optional.empty(),
-            Optional.empty(),
-            Optional.empty(),
-            Optional.empty(),
-            Optional.empty(),
-            false);
+    private static final EnemySpec BRUTE =
+            EnemySpec.of("brute", 1000, new Hitbox(40, 40), Layer.AIR, 15, false, 10, 100);
 
     @Test
     void aSmallRammerDiesOnAShuttleAndPaysItsBounty() {

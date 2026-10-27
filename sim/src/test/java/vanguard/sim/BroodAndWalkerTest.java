@@ -32,55 +32,15 @@ class BroodAndWalkerTest {
     private static final EnemySpec SCUTTLER = scuttler();
 
     private static EnemySpec pod() {
-        return new EnemySpec(
-                "brood-pod",
-                30,
-                new Hitbox(50, 50),
-                Layer.AIR,
-                15,
-                false,
-                20,
-                40,
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                false,
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.of(new EnemySpec.Sine(20, 4)),
-                Optional.of(new EnemySpec.Brood(SKITTER, 6, 8, 3, Math.toRadians(120), 160, 8)),
-                Optional.empty());
+        return EnemySpec.of("brood-pod", 30, new Hitbox(50, 50), Layer.AIR, 15, false, 20, 40)
+                .withSine(Optional.of(new EnemySpec.Sine(20, 4)))
+                .withBrood(Optional.of(new EnemySpec.Brood(SKITTER, 6, 8, 3, Math.toRadians(120), 160, 8)));
     }
 
     private static EnemySpec scuttler() {
-        return new EnemySpec(
-                "scuttler",
-                28,
-                new Hitbox(46, 40),
-                Layer.GROUND,
-                15,
-                false,
-                25,
-                40,
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.of(FAN),
-                Optional.empty(),
-                Optional.empty(),
-                false,
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.of(new EnemySpec.Walker(
+        return EnemySpec.of("scuttler", 28, new Hitbox(46, 40), Layer.GROUND, 15, false, 25, 40)
+                .withGun(Optional.of(FAN))
+                .withWalker(Optional.of(new EnemySpec.Walker(
                         40, Math.toRadians(90), 24, Math.toRadians(45), Optional.of(SPIT), Math.toRadians(90))));
     }
 

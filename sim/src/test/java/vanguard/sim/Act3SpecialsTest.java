@@ -312,61 +312,12 @@ class Act3SpecialsTest {
 
     /** A target fixed to the ground on {@code layer} at x, with plenty of hit points. */
     private static EnemySpec target(String slug, Layer layer, boolean hardened) {
-        EnemySpec plain = new EnemySpec(
-                slug,
-                10000,
-                new Hitbox(20, 20),
-                layer,
-                0,
-                false,
-                10,
-                0,
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                true);
+        EnemySpec plain = EnemySpec.of(slug, 10000, new Hitbox(20, 20), layer, 0, false, 10, 0)
+                .withTerrain(true);
         if (!hardened) {
             return plain;
         }
-        return new EnemySpec(
-                plain.slug(),
-                plain.hp(),
-                plain.hitbox(),
-                plain.layer(),
-                plain.contactDamage(),
-                plain.destroyedByRamming(),
-                plain.bounty(),
-                plain.speed(),
-                plain.snake(),
-                plain.streamSpeed(),
-                plain.hover(),
-                plain.orbit(),
-                plain.gun(),
-                plain.drop(),
-                plain.dive(),
-                plain.terrain(),
-                plain.spiral(),
-                plain.strafe(),
-                plain.deathBurst(),
-                plain.sine(),
-                plain.brood(),
-                plain.walker(),
-                plain.sideHover(),
-                plain.sweep(),
-                plain.chain(),
-                true,
-                plain.spawner(),
-                plain.pounce(),
-                plain.cloak(),
-                plain.ambush(),
-                plain.flock(),
-                plain.submerge(),
-                plain.ring(),
-                plain.drift());
+        return plain.withHardened(true);
     }
 
     private static LevelScript targets(List<SetPieceSpec> pieces) {

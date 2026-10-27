@@ -30,23 +30,8 @@ class ConvoyTest {
     /** Straight up the middle of the screen, for the claws. */
     private static final Road STRAIGHT = new Road(56, new double[] {-1000, 9000}, new double[] {240, 240});
 
-    private static final EnemySpec WALKER = new EnemySpec(
-            "scuttler",
-            28,
-            new Hitbox(46, 40),
-            Layer.GROUND,
-            10,
-            false,
-            25,
-            120,
-            Optional.empty(),
-            Optional.empty(),
-            Optional.empty(),
-            Optional.empty(),
-            Optional.empty(),
-            Optional.empty(),
-            Optional.empty(),
-            false);
+    private static final EnemySpec WALKER =
+            EnemySpec.of("scuttler", 28, new Hitbox(46, 40), Layer.GROUND, 10, false, 25, 120);
 
     private static AllySpec crawler(double hp) {
         return new AllySpec("civilian-crawler", new Hitbox(40, 72), new Hitbox(32, 64), hp, true, 10, 0.5, 30);
@@ -261,23 +246,7 @@ class ConvoyTest {
     void someUnitsHomeTakeTheOtherLine() {
         // A slow walker down the middle meets the trailing units where the road has come back to x = 240,
         // the leading ones where it still runs at x = 340.
-        EnemySpec slow = new EnemySpec(
-                "scuttler",
-                28,
-                new Hitbox(46, 40),
-                Layer.GROUND,
-                10,
-                false,
-                25,
-                60,
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                false);
+        EnemySpec slow = EnemySpec.of("scuttler", 28, new Hitbox(46, 40), Layer.GROUND, 10, false, 25, 60);
         var walker = TestSpecs.wave(12, WaveSpec.Formation.SINGLE, slow, 1, WaveSpec.Entry.FRONT, WaveSpec.Edge.NONE);
         Road split = new Road(56, new double[] {-1000, 2000, 2150, 9000}, new double[] {340, 340, 240, 240});
         List<RadioCue> radio = List.of(end(5, 5, "All five."), end(1, 4, "Most."));

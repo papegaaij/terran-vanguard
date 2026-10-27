@@ -29,23 +29,10 @@ class DepthHunterTest {
 
     /** 72×40 / 56×28, 120 HP, 80 px/s, hover 10 s at 380–460 px below the top edge drifting 12 px/s. */
     static EnemySpec hunter(EnemyGun gun) {
-        return new EnemySpec(
-                "depth-hunter",
-                120,
-                new Hitbox(56, 28),
-                Layer.AIR,
-                10,
-                false,
-                30,
-                80,
-                Optional.empty(),
-                Optional.empty(),
-                Optional.of(new EnemySpec.Hover(new Range(10, 10), new Range(380, 460), Optional.empty(), 12)),
-                Optional.empty(),
-                Optional.of(gun),
-                Optional.empty(),
-                Optional.empty(),
-                false);
+        return EnemySpec.of("depth-hunter", 120, new Hitbox(56, 28), Layer.AIR, 10, false, 30, 80)
+                .withHover(
+                        Optional.of(new EnemySpec.Hover(new Range(10, 10), new Range(380, 460), Optional.empty(), 12)))
+                .withGun(Optional.of(gun));
     }
 
     static final EnemySpec HUNTER = hunter(TORPEDO);

@@ -393,23 +393,20 @@ class WeaponsTest {
     }
 
     private static EnemySpec highAir(EnemySpec spec) {
-        return new EnemySpec(
-                spec.slug(),
-                spec.hp(),
-                spec.hitbox(),
-                Layer.HIGH_AIR,
-                spec.contactDamage(),
-                spec.destroyedByRamming(),
-                spec.bounty(),
-                spec.speed(),
-                spec.snake(),
-                spec.streamSpeed(),
-                spec.hover(),
-                spec.orbit(),
-                Optional.empty(),
-                spec.drop(),
-                Optional.empty(),
-                false);
+        return EnemySpec.of(
+                        spec.slug(),
+                        spec.hp(),
+                        spec.hitbox(),
+                        Layer.HIGH_AIR,
+                        spec.contactDamage(),
+                        spec.destroyedByRamming(),
+                        spec.bounty(),
+                        spec.speed())
+                .withSnake(spec.snake())
+                .withStreamSpeed(spec.streamSpeed())
+                .withHover(spec.hover())
+                .withOrbit(spec.orbit())
+                .withDrop(spec.drop());
     }
 
     private static void run(Sortie sortie, int steps, int commands) {

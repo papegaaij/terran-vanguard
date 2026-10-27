@@ -1,63 +1,31 @@
 package vanguard.game.render;
 
-import static vanguard.game.render.PlayFrame.X0;
-
 import com.badlogic.gdx.Files;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 import java.util.List;
 import vanguard.content.AlliesData;
 import vanguard.content.Difficulty;
 import vanguard.content.LevelData;
-import vanguard.sim.BossSpec;
-import vanguard.sim.Enemy;
-import vanguard.sim.EnemySpec;
-import vanguard.sim.Layer;
 import vanguard.sim.LevelScript;
 import vanguard.sim.SetPiece;
-import vanguard.sim.SetPieceSpec;
-import vanguard.sim.Ship;
-import vanguard.sim.ShipSpec;
 import vanguard.sim.SimStep;
 import vanguard.sim.Sortie;
-import vanguard.sim.Terrain;
-import vanguard.sim.Wingman;
 
 /**
- * Draws a level back to front, interpolating every position between the last two simulation
- * steps: the backdrop down to the ground layer, the ground objects and the convoy, the overhead
- * ground pieces (a bridge's arches, a gate's roof: the convoy passes under them), the debris and
- * the ground units (a turret stands on an arch) with their glints, the flyers' drop shadows on the
- * ground layer (its tiles, road and pieces mark where they may fall, see {@link Shadows}),
- * the low-air flyers, the low-air layer's banks (so a low flyer can sit inside them), a hull
- * boss's shadow while it flies above the play plane, a lifeboat tow (friendly, under the flyers), the flyers
- * and a set piece on the play plane, a set piece breaking up at its death, the solid death pieces of air units (tatters, husks), the debris chunks, the cranes, the pickups, the solid rounds
- * (missiles, bombs, shells), Rook's craft beside it (or his drifting eject pod, {@link WingmanLooks}), the ship with its engine flames, damage smoke and sparks, wing pods and
- * shield ring ({@link ShipLooks}), the glowing shots, muzzle flashes and
- * effects, a set piece on high-air (above the ship, at the high-air scale), the units a boss off the
- * play plane has launched (they leave its sacs downward, so they show over its hull), the high-air layer,
- * then the spore mines and the enemy bullets (small or large orbs, {@link BulletLooks}) above every layer (design/enemies, bullet readability
- * rules), an act boss's death flash, the edge warnings and the credit numbers.
+ * Draws a level's play field, interpolating every position between the last two simulation steps, and tells its
+ * looks what happens in the level (hits, volleys, flak, a boss's launches) for the screens ({@code LevelScreen},
+ * {@code EventEffects}, {@code BossCues}).
  *
- * <p>M5 part E, a level over water: between the deep layer and the ground's tiles the {@code sub}
- * layer through its {@link WaterLooks} pass (the Kraken's parts under the water or its foreshadowing,
- * the sunken triggers, the naval units' plain bodies, the torpedoes and the under-water effects);
- * over the ground's pieces the arena boss ({@link KrakenLooks}: its lanes' churn, its grip, head and
- * arms); the naval units' surface layers ({@link NavalLooks}) with the ground units; the surface's
- * water effects (bursts, splashes, ripple trains) with the debris; the lanes' marks and splashes over
- * the convoy; the frigate's flak puffs on low-air.
- *
- * <p>This class keeps the pass order ({@code draw}, pinned by {@code PassOrderTest}); the parts' own
- * passes live in their looks: the ground objects' in {@link GroundPasses}, the enemy units' in {@link
- * UnitPasses} (with the looks that follow the sortie's enemy kinds in {@link KindLooks}), the set pieces'
- * in {@link SetPiecePasses}, the ship's, its shots' and the Airstrike's in {@link PlayerPasses}, the
- * props' in {@link PropPasses}; they share the drawn frame's state through {@link PlayFrame}.
+ * <p>RF6: the looks live in {@link LevelLooks} (built, freed, restarted and stepped there), the pass order in {@link
+ * DrawPasses}: the frame back to front in named passes, pinned by {@code PassOrderTest}. The parts' own passes live in
+ * their looks: the ground objects' in {@link GroundPasses}, the enemy units' in {@link UnitPasses} (with the looks
+ * that follow the sortie's enemy kinds in {@link KindLooks}), the set pieces' in {@link SetPiecePasses}, the ship's,
+ * its shots' and the Airstrike's in {@link PlayerPasses}, the props' in {@link PropPasses}; they share the drawn
+ * frame's state through {@link PlayFrame}.
  */
 public final class LevelRenderer {
 
@@ -75,118 +43,6 @@ public final class LevelRenderer {
 
     /** M5 part E: the strength a torpedo's lit back is added over the chop with ({@link PlayerPasses#drawTorpedoBacks}). */
     static final float TORPEDO_BACK = 0.9f;
-    /** The white flashes' strength with the Gameplay tab's flash reduction on. */
-    private static final float REDUCED_FLASH = 0.35f;
-
-    private final Sprites sprites;
-
-    private final EnemyLooks[] looks;
-    private final WeaponLooks weapons;
-    /** What the passes share in the drawn frame: the white flashes' strength and what the beam burns. */
-    private final PlayFrame play = new PlayFrame();
-    /** The ground objects' passes. */
-    private final GroundPasses ground;
-    /** The enemy units' passes. */
-    private final UnitPasses units;
-    /** The looks that follow the sortie's enemy kinds, built once. */
-    private final KindLooks kinds;
-    /** The set pieces' passes (the bosses, the Kraken's and the Siege Spire's among them). */
-    private final SetPiecePasses setPieces;
-    /** The ship's, its shots' and the Airstrike's passes. */
-    private final PlayerPasses player;
-    /** The props' passes: debris, cranes, pickups, sondes, spore mines and bullets. */
-    private final PropPasses props;
-
-    private final BossLooks bossLooks;
-
-    /** Level 05's sleds, lobs and battery outlines. */
-    private final LunaLooks luna;
-
-    private final Backdrop backdrop;
-    /** M5 part C: the backdrop's level and real clocks at the render time. */
-    private final BackdropClock clock = new BackdropClock();
-    /** M5 part C: Level 09's collapse (the lean, the drop, its shadow, dust, dust peak and heap); null without one. */
-    private final CollapseLooks collapse;
-    /** The level's road and convoy, if it has them. */
-    private final ConvoyLooks convoy;
-    /** M5 part D: an air escort's units (Level 10's shuttles), if the level has one. */
-    private final ShuttleLooks shuttles;
-    /** M5 part D: a scripted loss's glow and lance (Level 10), if the level has one. */
-    private final LossLooks loss;
-    /** M8 part F: Rook's loss's trails, flashes and spin-down (Level 26), if the level has one. */
-    private final RookLossLooks rookLoss;
-
-    private final FlashShader flash;
-    /** M7 part A: the Act 3 arsenal in flight: beams, drones, fields, EMP, lance, overcharge, dash. */
-    private final ArsenalLooks arsenal;
-    /** Level 06's darkness, glows, sweeps and the Smart Bomb's flash and ring. */
-    private final FarsideLooks farside;
-
-    /** Level 07's lifeboat tow. */
-    private final TowLooks tows;
-    /** The ship's engine flames, damage smoke and sparks and its shield ring. */
-    private final ShipLooks shipLooks;
-    /** Rook's craft, its flames, smoke, muzzle flash and eject pod (M5 part A). */
-    private final WingmanLooks wingmanLooks;
-    /** M8 part A: the Act 4 systems: harpoons, depth charges, the sonar, the flares, the Bulwark. */
-    private final DeepWaterLooks deepWater;
-    /** M8 part D: the silt the walkers kick up on the sea floor (Level 24). */
-    private final PlainLooks plain;
-    /** The flyers' drop shadows on the ground layer. */
-    private final Shadows shadows;
-
-    private final BitmapFont font;
-    /** The Targeting computer's HP bars and weak-point brackets; null without one fitted. */
-    private TargetingOverlay targeting;
-    /** The Salvage scanner's glint on the secrets' objects; null without one fitted. */
-    private SecretGlints secretGlints;
-    /** M5 part E: the {@code sub} pass of a level over water; null over land. */
-    private final WaterLooks water;
-    /** M5 part E: the arena boss (the Harbour Kraken); null without one. */
-    private final KrakenLooks kraken;
-    /** M5 part H: the anchored boss without lanes (the Siege Spire) and its canopy's death; null without it. */
-    private final SpireLooks spire;
-    /** M7 part F: the walking boss (the Revenant Walker), its cone, missiles and wreck; null without it. */
-    private final WalkerLooks walker;
-    /**
-     * M7 part F: Level 19's foundry looks (the vents' grates and fire, the gantries and the nests' cradles, the shift
-     * office, the ingots and pallets, the crews' rovers); null without them.
-     */
-    private final FoundryLooks foundry;
-    /** M8 part G: Level 27's heat plumes (their mouths, tells, eruptions and bends); null without them. */
-    private final PlumeLooks plumes;
-    /** M5 part H: the level's root bursts (Level 14); null without them. */
-    private final RootBurstLooks rootBursts;
-    /**
-     * M5 part E: water effects on the surface (bursts of kills and blasts on the water, splashes,
-     * ripple trains), alpha-blended, scrolling with the sea, under the ground units.
-     */
-    private final Effects surfaceWater = Effects.solid();
-    /** M5 part E: effects under the water, drawn in the {@code sub} pass: under-water bursts. */
-    private final Effects underWater = Effects.solid();
-    /** M5 part E: the torpedoes' bubble trails, over the chop and under the convoy (bubbles rise to the surface). */
-    private final Effects bubbles = Effects.solid();
-    /** M5 part E: solid effects on low-air (the frigate's flak puffs over the convoy). */
-    private final Effects lowAir = Effects.solid();
-    /** Step GFX2: the generated soft disc and ring (strobe halos, flak flashes, the pursuit swarm's glows). */
-    private final SoftGlow softGlow = new SoftGlow();
-    /** Step GFX2: the militia flak's flash cores over their puffs. */
-    private final FlakFlashes flakFlashes = new FlakFlashes();
-
-    /** M5 part F: the level's weather looks (Level 12's rain, lightning, gusts, hidden glows and eye). */
-    private final WeatherLooks weather;
-    /** M7 part E: the level's dust storm (Level 18's visibility mask, veil and silhouettes); null without one. */
-    private final StormLooks storm;
-
-    /** M7 part C: the wall touch's sparks and the ship's flash, the stopped shots' sparks at rock. */
-    private final CanyonLooks canyonLooks;
-    /**
-     * M7 part C: the canyon's presentation beyond its collision lines (the walls' heights, the islands'
-     * looks, the face patches) from the level data ({@link WallProjection.Looks#of}; {@link #canyon}).
-     */
-    private WallProjection.Looks canyon;
-    /** M7 part C: the terrain the backdrop draws ({@link Backdrop#canyon}), to notice a new one. */
-    private Terrain canyonTerrain;
 
     /**
      * M7 part D: a trigger look over contents with sprites of their own, whose {@code -glow} is the trigger's glow
@@ -202,60 +58,13 @@ public final class LevelRenderer {
      */
     static final java.util.Map<String, String> TRIGGER_PADS = java.util.Map.of("greenhouse-frame", "greenhouse-pad");
 
-    /** M5 part G: a defend primary's ally (Level 13's Nansen Relay); null without one. */
-    private final RelayLooks relay;
-    /** M7 part D: the level's ground allies (Level 17's domes); null without them ({@link #groundAllies}). */
-    private DomeLooks domes;
-    /** M5 part G: the supply drones carrying the drops; null without them. */
-    private final DroneLooks drones;
-    /** M8 part B: the ground vehicles carrying drops (Level 22's ice-crawler); null without them. */
-    private final IceCrawlerLooks crawlerDrops;
-    /** M7 part G: Level 20's travelling ridge on the ground (null for another level). */
-    private final RidgeLooks ridge;
-    /** M7 part H: the breaching boss (the Dust Colossus), its ridge, craters, vents and rocks; null without it. */
-    private final ColossusLooks colossus;
-    /** M8 part H: the coiled boss (the Abyssal Maw), its coil, head, sacs, implants, dive, lunge and death; null without it. */
-    private final MawLooks maw;
-    /** M8 part H: the finale's cruisers (Level 28's run); null without them. */
-    private final CruiserLooks cruisers;
-    /** M8 part H: the breakout through the ice ceiling and the orbit's white (Level 28); null in another level. */
-    private final BreakoutLooks breakout;
-    /** M7 part H: the script time a crawling arena ends at (Level 21's t=245), NaN without one ({@link #stepped}). */
-    private final double crawlEnd;
-    /** M5 part G: the arctic setting's snow on high-air; null in another setting. */
-    private SnowLooks snow;
-
-    private final LevelData level;
-
-    /**
-     * M8 part C: the under-water grade with its wipe, caustics, headlights and marine snow (Level 23 on); null in a
-     * level without an under-water look ({@link UnderwaterGrade}).
-     */
-    private final UnderwaterGrade grade;
-    /** M8 part C: whether the grade covers some of the field this frame: the glows are drawn after it. */
-    private boolean graded;
-    /**
-     * M8 part F: a dark level's lights and pools in the grade's light map and its pickups' gold halos (Level 26); null
-     * in another level ({@link DarkLight}).
-     */
-    private final DarkLight dark;
+    /** The level's looks and the passes that draw them. */
+    private final DrawPasses passes;
 
     /** M8 part F: whether the level is a dark level (Level 26: {@link DarkLight}'s lights and lamps). */
     public static boolean darkLevel(LevelData level) {
         return UnderwaterGrade.hasLook(level) && DarkLight.blackWater(level);
     }
-    /** M8 part C: the Stormhawk's hydro-kit wakes and refit flash (Rook's: {@link WingmanLooks#hydro}). */
-    private final HydroLooks shipHydro;
-    /** M8 part C: the kills below the waterline (the under-water bursts, shards, husks, the pumps' breaks). */
-    private final DeepDeaths deepDeaths;
-    /** M8 part C: the swimming vehicles carrying drops (Level 23's Thera Deep tender); null without them. */
-    private final IceCrawlerLooks tenderDrops;
-    /** M8 part E: the moored buoys releasing drops (Level 25's survey buoy); null without them. */
-    private final BuoyLooks buoys;
-    /** M8 part E: the sortie and interpolation being drawn, for what is drawn under the walls ({@link #drawUnderWalls}). */
-    private Sortie drawing;
-
-    private float drawingAlpha;
 
     /**
      * @param files the assets, for the pivot files of the cranes and set pieces
@@ -272,128 +81,7 @@ public final class LevelRenderer {
             LevelData level,
             LevelScript script,
             String levelKey) {
-        this.sprites = sprites;
-        this.looks = looks;
-        this.weapons = weapons;
-        CraneLooks craneLooks =
-                new CraneLooks(sprites, level.cranes().isPresent() ? pivots(files, "crane-four") : null);
-        SetPieceLooks[] setPieceLooks = script.setPieces().stream()
-                .map(spec -> spec.isBoss() ? null : new SetPieceLooks(sprites, spec, pivots(files, spec.slug())))
-                .toArray(SetPieceLooks[]::new);
-        SetPieceSpec boss = script.setPieces().stream()
-                .filter(SetPieceSpec::isBoss)
-                .findFirst()
-                .orElse(null);
-        JsonValue bossPivots = boss == null ? null : pivots(files, boss.slug());
-        bossLooks = new BossLooks(sprites, flash, boss, bossPivots);
-        kraken = KrakenLooks.of(sprites, flash, boss, bossPivots);
-        String folder = Backdrop.folder(levelKey, level);
-        spire = SpireLooks.of(
-                sprites,
-                flash,
-                boss,
-                bossPivots,
-                sprites.hasBackdrop(folder + "canopy-tear")
-                        ? sprites.backdrop(folder + "canopy-tear", SpireLooks.TEAR_TIMES.length)
-                        : new Array<>(0),
-                sprites.hasBackdrop(folder + "daylight-beams")
-                        ? sprites.backdrop(folder + "daylight-beams", 2)
-                        : new Array<>(0));
-        walker = WalkerLooks.of(sprites, flash, boss, bossPivots);
-        colossus = ColossusLooks.of(sprites, flash, boss, bossPivots, folder);
-        maw = MawLooks.of(sprites, flash, boss);
-        foundry = FoundryLooks.of(sprites, level, script);
-        plumes = PlumeLooks.of(sprites, level);
-        rootBursts = RootBurstLooks.of(sprites, script);
-        List<EnemySpec> launches =
-                boss == null ? List.of() : boss.boss().map(BossSpec::spawnKinds).orElse(List.of());
-        String sledRun = Backdrop.folder(levelKey, level) + "sled-run";
-        luna = new LunaLooks(
-                sprites,
-                script.hazards().sled().isPresent() && sprites.hasBackdrop(sledRun)
-                        ? sprites.backdrop(sledRun, 30)
-                        : null,
-                flash);
-        this.backdrop = new Backdrop(sprites, level, levelKey);
-        // M7 part H: a crawling arena (Level 21's) lays the next section's backdrop from the ground at its start.
-        int crawling = crawlingArena(script);
-        backdrop.crawls(crawling);
-        crawlEnd = crawling < 0 ? Double.NaN : script.sections().get(crawling).end();
-        canyon = WallProjection.Looks.of(level);
-        this.collapse = level.collapse()
-                .map(spec -> new CollapseLooks(sprites, spec, backdrop, Backdrop.folder(levelKey, level)))
-                .orElse(null);
-        this.convoy = new ConvoyLooks(sprites, flash, level, script, levelKey, name -> pivots(files, name));
-        this.shuttles = new ShuttleLooks(
-                sprites,
-                flash,
-                script,
-                script.objectives()
-                        .escort()
-                        .map(escort -> pivots(files, escort.ally().slug()))
-                        .orElse(null));
-        this.loss = new LossLooks(sprites, script);
-        this.rookLoss = new RookLossLooks(sprites, files, script.rookLoss());
-        this.flash = flash;
-        this.farside = new FarsideLooks(sprites, script);
-        this.tows = new TowLooks(sprites);
-        this.shipLooks = new ShipLooks(sprites, files);
-        this.wingmanLooks = new WingmanLooks(sprites, files, flash);
-        this.shadows = new Shadows();
-        this.font = font;
-        this.water = script.ground().water() ? new WaterLooks() : null;
-        this.weather = new WeatherLooks(sprites, level, levelKey);
-        this.storm = StormLooks.of(sprites, level, levelKey);
-        this.level = level;
-        this.relay = RelayLooks.of(sprites, flash, script, name -> pivots(files, name));
-        this.drones = DroneLooks.of(sprites, level);
-        this.crawlerDrops = IceCrawlerLooks.of(sprites, level, pivots(files, "ice-crawler"));
-        this.ridge = RidgeLooks.of(sprites, level);
-        this.snow = SnowLooks.of(level, false, sprites.pixel);
-        this.arsenal = new ArsenalLooks(sprites, flash);
-        this.canyonLooks = new CanyonLooks(sprites);
-        ground = new GroundPasses(sprites, flash, play, weather, script, levelKey, softGlow);
-        kinds = new KindLooks(sprites, files);
-        units = new UnitPasses(
-                looks, flash, play, kinds, farside, luna, weather, shipLooks, surfaceWater, launches, softGlow);
-        setPieces = new SetPiecePasses(flash, play, font, setPieceLooks, bossLooks, kraken, spire);
-        player = new PlayerPasses(sprites, weapons, flash, play, shipLooks, arsenal, canyonLooks, water != null);
-        props = new PropPasses(sprites, flash, play, clock, craneLooks, script);
-        deepWater = new DeepWaterLooks(sprites, looks, weapons, water != null);
-        plain = new PlainLooks(sprites);
-        // M8 part C: the under-water grade, the hydro-kit's effects, the tender, the ice shaft's walls.
-        grade = UnderwaterGrade.of(level, sprites.pixel);
-        // M8 part F: a dark level's light pools in the grade, the units' glow-only frames.
-        dark = grade == null ? null : DarkLight.of(level, kinds, softGlow);
-        if (dark != null) {
-            grade.dark(dark);
-            // M8 part G: Level 27's lit vent field keeps the units' plain looks (only black water draws the glow-only).
-            kinds.dark(DarkLight.blackWater(level));
-            dark.rookLoss(rookLoss);
-        }
-        if (grade != null) {
-            grade.rookLoss(rookLoss);
-        }
-        deepDeaths = new DeepDeaths(sprites, kinds);
-        List<Double> waterlines = level.waterlines();
-        shipHydro = new HydroLooks(sprites, "ship", waterlines);
-        shipLooks.hydro(shipHydro);
-        wingmanLooks.hydro(new HydroLooks(sprites, "rook", waterlines));
-        tenderDrops = IceCrawlerLooks.of(sprites, level, pivots(files, "thera-tender"), true);
-        // M8 part E: the survey buoy at the narrows' end; the Nautili leaving through the trench's rock.
-        buoys = BuoyLooks.of(sprites, level);
-        // M8 part H: the finale's cruisers (their flak drawn by their own markers) and the breakout.
-        cruisers = CruiserLooks.of(sprites, script, pivots(files, CruiserLooks.SLUG));
-        if (cruisers != null) {
-            luna.skipLobs(cruisers::flakLob);
-        }
-        breakout = BreakoutLooks.of(sprites, level);
-        backdrop.underWalls(this::drawUnderWalls);
-        canyonLooks.ice(sprites.hasBackdrop(folder + Backdrop.ICE_WALL));
-        if (!waterlines.isEmpty()) {
-            backdrop.wetFrom(
-                    UnderwaterGrade.waterlineRow(level, waterlines.getFirst()) - vanguard.sim.PlayField.HEIGHT);
-        }
+        passes = new DrawPasses(sprites, looks, weapons, files, flash, font, level, script, levelKey);
     }
 
     /**
@@ -401,7 +89,7 @@ public final class LevelRenderer {
      * under-water burst): under the grade (above the waterline's row while it is on the screen); false without one.
      */
     public boolean underwaterAt(double y) {
-        return grade != null && grade.underwaterAt(y);
+        return passes.grade != null && passes.grade.underwaterAt(y);
     }
 
     /**
@@ -409,14 +97,14 @@ public final class LevelRenderer {
      * held at least at {@value DarkLight#ASSIST_AMBIENT}; no change elsewhere.
      */
     public void darkAssist(boolean on) {
-        if (dark != null) {
-            grade.ambientFloor(on ? DarkLight.ASSIST_AMBIENT : 0);
+        if (passes.dark != null) {
+            passes.grade.ambientFloor(on ? DarkLight.ASSIST_AMBIENT : 0);
         }
     }
 
     /** M8 part C: the kills below the waterline ({@link DeepDeaths}). */
     public DeepDeaths deepDeaths() {
-        return deepDeaths;
+        return passes.deepDeaths;
     }
 
     /**
@@ -424,12 +112,7 @@ public final class LevelRenderer {
      * whiteout, 6 s) in the backdrop and the snow; M7 part E: the dust storm's radii (Level 18).
      */
     public void difficulty(Difficulty difficulty) {
-        boolean easy = difficulty == Difficulty.EASY;
-        backdrop.easy(easy);
-        snow = SnowLooks.of(level, easy, sprites.pixel);
-        if (storm != null) {
-            storm.difficulty(difficulty);
-        }
+        passes.difficulty(difficulty);
     }
 
     /**
@@ -437,7 +120,7 @@ public final class LevelRenderer {
      * in the level's {@code allies} block, else its ally's ({@code allies}); none without them.
      */
     public void groundAllies(LevelScript script, AlliesData allies) {
-        domes = DomeLooks.of(sprites, script, DomeLooks.names(level, allies));
+        passes.groundAllies(script, allies);
     }
 
     /**
@@ -446,91 +129,22 @@ public final class LevelRenderer {
      * dark as well); null for a module that is not fitted.
      */
     public void modules(TargetingOverlay targetingOverlay, SecretGlints glints) {
-        targeting = targetingOverlay;
-        secretGlints = glints;
+        passes.modules(targetingOverlay, glints);
     }
 
     /** Frees the light map and the generated textures. */
     public void dispose() {
-        softGlow.dispose();
-        farside.dispose();
-        if (grade != null) {
-            grade.dispose();
-        }
-        if (dark != null) {
-            dark.dispose();
-        }
-        if (storm != null) {
-            storm.dispose();
-        }
-        shadows.dispose();
-        if (water != null) {
-            water.dispose();
-        }
-        if (bossLooks.hull != null) {
-            bossLooks.hull.dispose();
-        }
+        passes.dispose();
     }
 
     /** The level restarts: the boss's parts forget their opening animations. */
     public void restart() {
-        clock.reset();
-        shipLooks.reset();
-        shuttles.reset();
-        wingmanLooks.reset();
-        if (bossLooks.hull != null) {
-            bossLooks.hull.reset();
-        }
-        if (kraken != null) {
-            kraken.reset();
-        }
-        if (spire != null) {
-            spire.reset();
-        }
-        if (walker != null) {
-            walker.reset();
-        }
-        if (colossus != null) {
-            colossus.reset();
-        }
-        if (maw != null) {
-            maw.reset();
-        }
-        if (cruisers != null) {
-            cruisers.reset();
-        }
-        if (breakout != null) {
-            breakout.reset();
-        }
-        backdrop.crawlPending();
-        if (plumes != null) {
-            plumes.restart();
-        }
-        if (foundry != null) {
-            foundry.restart();
-        }
-        units.restart();
-        convoy.reset();
-        if (relay != null) {
-            relay.reset();
-        }
-        surfaceWater.clear();
-        underWater.clear();
-        bubbles.clear();
-        lowAir.clear();
-        flakFlashes.clear();
-        arsenal.restart();
-        canyonLooks.restart();
-        kinds.restart();
-        deepWater.restart();
-        plain.clear();
-        props.restartBullets();
+        passes.restart();
     }
 
     /** M7 part C: the canyon's presentation beyond its collision lines (the level data's by default). */
     void canyon(WallProjection.Looks looks) {
-        canyon = looks;
-        canyonTerrain = null;
+        passes.canyon(looks);
     }
 
     /**
@@ -538,102 +152,37 @@ public final class LevelRenderer {
      * drone breaks, dashes, scorch marks; {@link ArsenalLooks}).
      */
     public void stepped(Sortie sortie) {
-        arsenal.stepped(sortie);
-        deepWater.stepped(sortie);
-        kinds.burrowers(sortie).stepped(sortie);
-        units.stepped(sortie);
-        canyonLooks.stepped(sortie);
-        kinds.crawlers(sortie).stepped(sortie);
-        AuraLooks auras = kinds.aura(sortie);
-        if (auras != null) {
-            auras.stepped(sortie);
-        }
-        kinds.shellbacks(sortie).stepped(sortie);
-        kinds.vortices(sortie).stepped(sortie);
-        kinds.ghostDrones(sortie).stepped(sortie);
-        if (walker != null) {
-            walker.stepped(sortie);
-        }
-        if (colossus != null) {
-            colossus.stepped(sortie);
-        }
-        if (maw != null) {
-            maw.stepped(sortie);
-        }
-        if (cruisers != null) {
-            cruisers.stepped(sortie);
-        }
-        if (breakout != null) {
-            breakout.stepped(sortie);
-        }
-        if (!Double.isNaN(crawlEnd)) {
-            // M7 part H: the section after the crawling arena starts once the clock passes its end (the kill's jump or
-            // the hold's end): its tiles from the next seam above the top edge, its pieces shifted by the crawl.
-            boolean started = sortie.levelSeconds() >= crawlEnd;
-            if (started && !backdrop.crawlEnded()) {
-                backdrop.crawlEnded(sortie.groundScroll());
-            } else if (!started && backdrop.crawlEnded()) {
-                backdrop.crawlPending();
-            }
-        }
-        if (plumes != null) {
-            plumes.stepped(sortie);
-        }
-        if (foundry != null) {
-            foundry.stepped(sortie);
-        }
-        kinds.tanks(sortie).stepped(sortie);
-        kinds.rigs(sortie).stepped(sortie);
-        // M8 part C: the eels' tells and volleys, the Glassfins' glints.
-        kinds.eels(sortie).stepped(sortie);
-        kinds.glassfins(sortie).stepped(sortie);
-        // M8 part D: the Rays' fans, the Barbfins' needles (their tells), the bullets' shooters, the walkers' silt.
-        kinds.rays(sortie).stepped(sortie);
-        kinds.barbfins(sortie).stepped(sortie);
-        // M8 part E: the rings' rock, the Nautili's roll and glances.
-        kinds.sirens(sortie).stepped(sortie);
-        kinds.nautili(sortie).stepped(sortie);
-        // M8 part F: the Anglers' triggers, rings and deaths.
-        kinds.anglers(sortie).stepped(sortie);
-        // M8 part G: the Hunters' rises and launches, the torpedoes' wakes.
-        kinds.hunters(sortie).stepped(sortie);
-        props.steppedBullets(sortie);
-        plain.stepped(sortie, looks);
+        passes.stepped(sortie);
     }
 
     /** M5 part E: the renderer's own effects advance one simulation step (with the screen's). */
     public void stepEffects() {
-        surfaceWater.step();
-        underWater.step();
-        bubbles.step();
-        lowAir.step();
-        deepWater.stepEffects();
-        plain.step();
+        passes.stepEffects();
     }
 
     /** M5 part E: whether the level is over water: its kills and blasts burst on the water ({@link #surfaceWater()}). */
     public boolean overWater() {
-        return water != null;
+        return passes.water != null;
     }
 
     /** M5 part E: the surface's water effects (bursts, splashes, ripple trains), started on the ground. */
     public Effects surfaceWater() {
-        return surfaceWater;
+        return passes.surfaceWater;
     }
 
     /** M5 part E: the effects under the water (under-water bursts), through the {@code sub} pass. */
     public Effects underWater() {
-        return underWater;
+        return passes.underWater;
     }
 
     /** M5 part E: the torpedoes' bubble trails, on the surface over the chop (not through the {@code sub} pass). */
     public Effects bubbles() {
-        return bubbles;
+        return passes.bubbles;
     }
 
     /** M5 part E: solid effects on low-air (the frigate's flak puffs). */
     public Effects lowAir() {
-        return lowAir;
+        return passes.lowAir;
     }
 
     /**
@@ -641,12 +190,12 @@ public final class LevelRenderer {
      * flash core over the puff ({@link FlakFlashes}).
      */
     public void militiaFlak(double x, double y, long tick) {
-        flakFlashes.start(x, y, tick);
+        passes.flakFlashes.start(x, y, tick);
     }
 
     /** M5 part E: the escort frigate (convoy unit {@code k}) fired a flak burst at step {@code tick}: its bow gun flashes. */
     public void flak(int k, long tick) {
-        convoy.flak(k, tick);
+        passes.convoy.flak(k, tick);
     }
 
     /**
@@ -659,32 +208,32 @@ public final class LevelRenderer {
 
     /** M5 part E: the Kraken's head's offset from its centre, px (y up); 0 without the Kraken's looks. */
     public double krakenHeadDy() {
-        return kraken == null ? 0 : kraken.headDy();
+        return passes.kraken == null ? 0 : passes.kraken.headDy();
     }
 
     /** M5 part E: an enemy fired a volley from (x, y) at step {@code tick} (a gun's recoil frame). */
     public void enemyFired(double x, double y, long tick) {
-        units.enemyFired(x, y, tick);
+        passes.units.enemyFired(x, y, tick);
     }
 
     /** M5 part H: a mortar lobbed from (x, y) at step {@code tick}: the Siege Spire's mortar pod opens. */
     public void lobbed(Sortie sortie, double x, double y, long tick) {
-        setPieces.lobbed(sortie, x, y, tick);
+        passes.setPieces.lobbed(sortie, x, y, tick);
     }
 
     /** M5 part H: a boss's window launched a unit at step {@code tick}: the Siege Spire's maw flares. */
     public void bossLaunched(long tick) {
-        setPieces.bossLaunched(tick);
+        passes.setPieces.bossLaunched(tick);
     }
 
     /** Set piece {@code k}'s break-up at its death, or null for none. */
     public SetPieceDeath death(int k) {
-        return setPieces.death(k);
+        return passes.setPieces.death(k);
     }
 
     /** Rook was hit at step {@code tick}: his hull flashes white. */
     public void wingmanHit(long tick) {
-        wingmanLooks.hit(tick);
+        passes.wingmanLooks.hit(tick);
     }
 
     /** A unit's pivot file in assets/pivots/, or null when it has none. */
@@ -719,510 +268,20 @@ public final class LevelRenderer {
             float shieldShimmer,
             boolean flashReduction,
             ScreenFlash screenFlash) {
-        play.whiteFlash = flashReduction ? REDUCED_FLASH : 1;
-        drawing = sortie;
-        drawingAlpha = alpha;
-        // M8 part A: Rook's craft wears the hydro-kit under water (the ship's: PlayerPasses.hull).
-        wingmanLooks.underwater(sortie.underwater());
-        shipLooks.underwater(sortie.underwater());
-        play.heatTarget = ArsenalLooks.heatTarget(sortie);
-        int piece = ArsenalLooks.heatPiece(play.heatTarget);
-        play.heatPiece = piece >= 0 && piece < sortie.setPieceCount() ? sortie.setPiece(piece) : null;
-        play.heatPart = ArsenalLooks.heatPart(play.heatTarget);
-        play.groundHeatX = ArsenalLooks.groundHeatX(sortie);
-        double lag = SimStep.SECONDS * (1 - alpha);
-        double scroll = drawnScroll(sortie, alpha);
-        // M5 part C: between two steps script time moves at the level clock's rate (a fifth in a hold).
-        double seconds = sortie.levelSeconds() - lag * sortie.scriptRate();
-        clock.record(sortie.levelSeconds(), sortie.realSeconds());
-        clock.at(seconds, Math.max(0, sortie.realSeconds() - lag));
-        if (collapse != null) {
-            collapse.update(sortie, scroll, lag);
-        }
-        kinds.buildLampreys(sortie);
-        graded = false;
-        if (dark != null && maw != null) {
-            // M8 part H: the vent's light gutters under the Maw's dive.
-            dark.ventDim(maw.ventDim(sortie));
-        }
-        if (grade != null) {
-            // M8 part C: this frame's look and waterline wipe.
-            grade.prepare(sortie, scroll, seconds);
-            graded = grade.active();
-        }
-        weather.at(seconds);
-        if (sortie.terrain() != canyonTerrain) {
-            // M7 part C: the canyon's walls are the simulation's terrain, never a placed art piece.
-            canyonTerrain = sortie.terrain();
-            backdrop.canyon(canyonTerrain, canyon);
-        }
-        backdrop.drawBehind(batch, scroll, clock);
-        if (water != null) {
-            // M5 part E: the sub layer between the deep swell and the surface's chop (E4 = c).
-            water.begin(batch);
-            drawSub(batch, sortie, alpha, seconds, wrecks, scroll);
-            water.end(batch, sortie.realSeconds() - lag);
-        }
-        // The ground layer marks where the flyers' shadows may fall (not on open space or the far layer).
-        shadows.clear(batch);
-        shadows.beginGround(batch);
-        backdrop.drawGroundTiles(batch, scroll, clock);
-        convoy.drawRoad(batch, Math.round(scroll));
-        // With Level 09's collapse's shadow, heap and base dust under the towers (CollapseLooks).
-        backdrop.drawGroundPieces(batch, scroll, clock);
-        if (ridge != null) {
-            // M7 part G: the travelling ridge (the Dust Colossus's body under the sand) on the ground, both ways.
-            ridge.draw(batch, seconds, scroll);
-        }
-        if (foundry != null) {
-            // M7 part F: the vents' grates, the office, the ingots, the gantries and cradles, the rovers on the ground.
-            foundry.drawGround(batch, sortie, scroll, seconds, clock.real());
-        }
-        if (plumes != null) {
-            // M8 part G: the heat plumes' mouths on the sea floor.
-            plumes.drawGround(batch, sortie, scroll);
-        }
-        shadows.endGround(batch);
-        // M5 part F: the eye's light shaft on the calm sea, under the ground objects.
-        weather.drawShaft(batch, seconds);
-        // M5 part E: over the chop and under the convoy: the Kraken's foreshadowing shadow (before it
-        // scrolls in) and the torpedoes' lit backs and bubbles just under the surface.
-        if (kraken != null && !SetPiecePasses.krakenShown(sortie, wrecks)) {
-            kraken.drawForeshadow(batch, seconds, sortie.tick());
-        }
-        player.drawTorpedoBacks(batch, sortie, alpha);
-        bubbles.draw(batch, scroll);
-        // M5 part E: the Kraken's churn on the lanes, then its grip, head and arms on the platform's sea.
-        setPieces.drawKraken(batch, sortie, wrecks, alpha, scroll, true);
-        // M5 part H: the root bursts' cracks and roots, then the Siege Spire's rooted body (or its stump).
-        if (rootBursts != null) {
-            rootBursts.drawGround(batch, sortie, seconds, scroll);
-        }
-        setPieces.drawSpire(batch, sortie, wrecks, alpha, scroll, SpirePass.GROUND);
-        if (walker != null) {
-            // M7 part F: the walking boss on the ground (its legs, hull, vents, flamer and pods), or its topple and
-            // wreck.
-            walker.drawGround(batch, sortie, alpha, scroll, play);
-        }
-        if (colossus != null) {
-            // M7 part H: the breaching boss's craters, funnel, body, tell, mouth, glow and vents; its furrow and
-            // crater.
-            colossus.drawGround(batch, sortie, alpha, scroll, clock.real());
-        }
-        luna.drawSled(batch, sortie, scroll, alpha);
-        if (storm == null) {
-            luna.drawMarkers(batch, sortie, alpha);
-        }
-        if (crawlerDrops != null) {
-            // M8 part B: Conamara's ice-crawler driving up the road with the armour patch, and back.
-            crawlerDrops.draw(batch, seconds);
-        }
-        ground.drawGround(batch, sortie, alpha);
-        convoy.drawConvoy(batch, sortie, alpha, play.whiteFlash);
-        if (relay != null) {
-            // M5 part G: the defended relay on its floe, its damage and, once online, its lights.
-            relay.draw(batch, sortie, alpha, play.whiteFlash, seconds, clock.real());
-        }
-        if (domes != null) {
-            // M7 part D: the domes on the ground, their hits, cracks, flicker and cave-in with its dust.
-            domes.draw(batch, sortie, alpha, play.whiteFlash, clock.real());
-        }
-        // M5 part D: shuttles on their pads and low in their liftoff, lost ones gliding into far.
-        shuttles.drawLow(batch, sortie, alpha, play.whiteFlash);
-        shadows.beginGround(batch);
-        backdrop.drawOverhead(batch, scroll, clock);
-        shadows.endGround(batch);
-        units.drawCreep(batch, sortie, alpha);
-        // M7 part A: the beam's scorch marks and the Orbital Lance's scorch line on the ground.
-        arsenal.drawGround(batch, scroll);
-        arsenal.drawGroundGlow(batch, scroll, sortie.tick());
-        debris.draw(batch, scroll);
-        // M7 part F: the Warden Tanks' wrecks, scrolling with the ground and riding their belts.
-        kinds.tanks(sortie).drawWrecks(batch, scroll);
-        // M8 part B: the Drill Rigs' cracked ice and stumps, their hoses' decals and pumps under the cores.
-        kinds.rigs(sortie).drawGround(batch, sortie, alpha, scroll);
-        // M7 part B: the Burrowers' craters and filling holes on the ground, under the ground units.
-        kinds.burrowers(sortie).drawGround(batch, sortie.tick(), alpha, scroll);
-        surfaceWater.draw(batch, scroll);
-        boolean overHull = units.bossOffPlane(sortie);
-        // M7 part C: a killed Threadcrawler's husk under the ground units, the crawler and its pores with them.
-        kinds.crawlers(sortie).drawHusks(batch, scroll);
-        // M7 part E: the Dust Devils' grit swirls on the ground under the ground units (and under an open one).
-        kinds.vortices(sortie).drawSwirls(batch, sortie, alpha);
-        // M8 part C: the live siphon pumps' roots in their racks, under the ground units.
-        kinds.pumps(sortie).drawGround(batch, sortie, alpha);
-        // M8 part D: the silt puffs at the walkers' feet on the sea floor, under them.
-        plain.draw(batch, scroll);
-        units.drawEnemies(batch, sortie, alpha, Depth.GROUND, Launched.ANY);
-        kinds.crawlers(sortie).drawChains(batch, sortie, alpha, looks, units.unitFlash);
-        kinds.crawlers(sortie).drawPores(batch, sortie, alpha, scroll);
-        // M7 part D: a Shellback's dead vent, vent swell and belly glow; the ground units' aura rings.
-        kinds.shellbacks(sortie).drawOver(batch, sortie, alpha);
-        // M7 part F: the Warden Tanks' turrets (or torn rings) on their hulls, their muzzle flashes.
-        kinds.tanks(sortie).drawOver(batch, sortie, alpha);
-        // M8 part B: the dead rigs' steam plumes, the live ones' bore glow and muzzle tell.
-        kinds.rigs(sortie).drawOver(batch, sortie, looks, alpha, scroll);
-        AuraLooks auras = kinds.aura(sortie);
-        if (auras != null) {
-            auras.drawRings(batch, sortie, alpha, true);
-        }
-        // M5 part H: the root bursts' dust and the tear-free shockwave over the ground units.
-        if (rootBursts != null) {
-            rootBursts.drawDust(batch, sortie, seconds, scroll);
-        }
-        setPieces.drawSpire(batch, sortie, wrecks, alpha, scroll, SpirePass.SHOCKWAVE);
-        if (walker != null) {
-            // M7 part F: the walker's flame cone (its tell's outline, its burn) and pilot light over the ground units.
-            walker.drawCone(batch, sortie, alpha, clock.real());
-        }
-        if (colossus != null) {
-            // M7 part H: the suction's sand streaks into an open mouth, over the ground units.
-            colossus.drawStreaks(batch, sortie, alpha, scroll, clock.real());
-        }
-        if (foundry != null) {
-            // M7 part F: the vents' heat glow over the tell, the flame column over the burn, the smoke after it.
-            foundry.drawFire(batch, sortie, scroll);
-        }
-        if (plumes != null) {
-            // M8 part G: the plumes' silt, glow, eruption and heat over the ground units, the bends' ripples.
-            plumes.drawOver(batch, sortie, scroll);
-        }
-        if (maw != null) {
-            // M8 part H: the dive's darkness, the lunge's shadow, the coil, the sacs, implants and head, its death.
-            maw.draw(batch, sortie, alpha, play.whiteFlash);
-        }
-        ground.drawGlints(batch, sortie, alpha);
-        // M5 part E: the telegraphed lanes' marks and the slams' splashes over the convoy and the rafts.
-        setPieces.drawKraken(batch, sortie, wrecks, alpha, scroll, false);
-        farside.darken(batch, sortie, alpha, scroll, seconds);
-        farside.drawGlows(batch, sortie, looks, alpha, seconds);
-        if (!graded) {
-            // M8 part C: under the grade the glows wait for it (after the ship).
-            ground.drawGroundGlows(batch, sortie, alpha);
-        }
-        if (cruisers != null) {
-            // Step I2: the cruisers' holes in the night ice where they broke through, on the ground under the flyers.
-            cruisers.drawHoles(batch, sortie, scroll);
-        }
-        // M8 part D: the Abyss Rays deep under the play plane (the shadow, the rise's first half, the sink's second).
-        units.drawRisers(batch, sortie, alpha);
-        player.drawBomberShadows(batch, sortie, alpha);
-        drawShadows(batch, sortie, alpha);
-        if (relay != null) {
-            // M5 part G: a destroyed relay's smoke column over the ground units.
-            relay.drawColumn(batch, sortie, alpha, clock.real());
-        }
-        if (drones != null) {
-            // M5 part G: the supply drones low over the relay, under the air units.
-            drones.draw(batch, sortie, relay, alpha, seconds);
-        }
-        units.drawEnemies(batch, sortie, alpha, Depth.LEAP, Launched.ANY);
-        units.drawEnemies(batch, sortie, alpha, Depth.LOW_AIR, Launched.ANY);
-        if (cruisers != null) {
-            // M8 part H: the cruisers on low-air: their rise, glow, tells, broadsides, point defence, flak and sparks.
-            cruisers.draw(batch, sortie);
-        }
-        blasts.draw(batch, scroll);
-        lowAir.draw(batch, scroll);
-        flakFlashes.draw(batch, softGlow, sortie.tick(), alpha);
-        if (collapse != null) {
-            collapse.drawOver(batch);
-        }
-        drawLowAir(batch, scroll);
-        // M5 part F: the eye's turning wall, a flash's bolt and lit cloud, the bodies a flash reveals
-        // under the banks, the hidden bodies' glows.
-        weather.drawOverBanks(batch, seconds, play.whiteFlash);
-        drawRevealed(batch, sortie, alpha);
-        drawHiddenGlows(batch, sortie, alpha);
-        if (storm != null) {
-            // M7 part E: the dust storm's veil over the ground and low-air outside the radius round the ship, an
-            // open Dust Devil's core glowing through it, the mortars' markers over it (always drawn).
-            storm.drawVeil(batch, sortie, alpha, seconds, clock.real());
-            storm.drawHiddenGlows(batch, sortie, alpha, clock.real());
-            luna.drawMarkers(batch, sortie, alpha);
-        }
-        setPieces.drawBossShadows(batch, sortie, alpha);
-        if (!graded) {
-            units.drawUnitGlows(batch, sortie, alpha);
-        }
-        // M5 part D: the scripted loss's glow under the air layer, then the shuttles under the flyers.
-        loss.drawGlow(batch, sortie, alpha, seconds);
-        tows.draw(batch, sortie, alpha, seconds);
-        shuttles.drawAir(batch, sortie, alpha, play.whiteFlash);
-        // M7 part C: the gates' tendrils on the player's plane, under the air units.
-        kinds.tendrils(sortie).draw(batch, sortie, alpha);
-        if (auras != null) {
-            // M7 part D: the Heralds' radius circles and threads under the flyers.
-            auras.drawAuras(batch, sortie, alpha, clock.real());
-        }
-        units.drawEnemies(batch, sortie, alpha, Depth.AIR, overHull ? Launched.NOT : Launched.ANY);
-        if (auras != null) {
-            // M7 part D: the Heralds' crests over their bodies, the flyers' rings.
-            auras.drawCrests(batch, sortie, alpha);
-            auras.drawRings(batch, sortie, alpha, false);
-        }
-        units.drawChains(batch, sortie, alpha);
-        if (tenderDrops != null) {
-            // M8 part C: the Thera Deep tender swimming up with the armour patch, and back.
-            tenderDrops.drawBodies(batch, seconds);
-        }
-        if (buoys != null) {
-            // M8 part E: the survey buoy moored on the play plane, releasing the armour patch.
-            buoys.drawBodies(batch, seconds, scroll);
-        }
-        if (storm != null) {
-            // M7 part E: the air units outside the radius as silhouettes in the dust keeping their lights, then glows.
-            storm.drawSilhouettes(batch, sortie, alpha, units);
-        } else if (!graded) {
-            // M7 part E: the air units' lights (the Ghost Drone's eye and running lights, its glint) in every level.
-            units.drawAirGlows(batch, sortie, alpha);
-        }
-        farside.drawSweeps(batch, sortie, alpha);
-        luna.drawBlobs(batch, sortie, alpha);
-        player.drawAirstrike(batch, sortie, alpha);
-        setPieces.drawSetPieces(batch, sortie, alpha, seconds, false);
-        // M5 part H: the free spire tearing loose, airborne or dying.
-        setPieces.drawSpire(batch, sortie, wrecks, alpha, scroll, SpirePass.AIR);
-        setPieces.drawWrecks(batch, sortie, wrecks, alpha, seconds);
-        pieces.draw(batch, scroll);
-        props.drawDebris(batch, sortie, alpha);
-        if (colossus != null) {
-            // M7 part H: the rocks the breaching boss tears loose toward its mouth; its throe's plume and rock rain.
-            colossus.drawRocks(batch, sortie, alpha, scroll);
-        }
-        props.drawCranes(batch, sortie, alpha);
-        if (secretGlints != null) {
-            secretGlints.draw(batch, sortie, alpha);
-        }
-        props.drawSondes(batch, sortie, alpha);
-        props.drawPickups(batch, sortie, alpha);
-        if (storm != null) {
-            // M7 part E: a faint glint on the pickups the dust would hide.
-            storm.drawPickupGlints(batch, sortie, alpha);
-        }
-        // M8 part A: the harpoons' cables and motor lights under them.
-        deepWater.drawUnderShots(batch, sortie, alpha);
-        player.drawShots(batch, sortie, alpha, false);
-        Wingman rook = sortie.wingman().orElse(null);
-        // M8 part A: the Bulwark flies in his slot.
-        deepWater.drawBulwark(batch, sortie, alpha);
-        if (rook != null) {
-            wingmanLooks.draw(batch, rook, sortie.tick(), alpha, play.whiteFlash);
-            // M8 part F: his spin-down after his loss (Level 26), in his craft's place.
-            rookLoss.drawSpin(batch, rook, alpha);
-            if (storm != null) {
-                // M7 part E: Rook outside the radius, a silhouette with his running lights.
-                storm.drawWingman(batch, rook, alpha, wingmanLooks);
-            }
-        }
-        if (sortie.flying()) {
-            player.drawShip(batch, sortie, alpha, shieldShimmer);
-            units.drawLatched(batch, sortie, alpha);
-        }
-        // M8 AW: the depth charges tossed from the stern rack over the hull.
-        deepWater.drawTossed(batch, sortie, alpha);
-        drawUnderGrade(batch, sortie, alpha, scroll, seconds, rook);
-        // M8 part F: over the grade the Anglers' glow, stalk, lure, ring flash and death; the pickups' gold halos.
-        kinds.anglers(sortie).drawGlows(batch, sortie, alpha);
-        if (dark != null) {
-            dark.drawHalos(batch, sortie, alpha, clock.real());
-        }
-        batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
-        player.drawShots(batch, sortie, alpha, true);
-        // M8 part A: the depth charges' fuse lamps and the Decoy Flares.
-        deepWater.drawOverShots(batch, sortie, alpha);
-        if (sortie.flying()) {
-            player.drawMuzzles(batch, sortie, alpha, true);
-            // M7 part A: the fields, the drones' lights, the beams, the overcharge's shell.
-            arsenal.drawOverShip(batch, sortie, alpha);
-        }
-        // M7 part A: the EMP Burst's crackle on the stunned units.
-        arsenal.drawStunned(batch, sortie, alpha);
-        if (rook != null) {
-            wingmanLooks.drawMuzzle(batch, rook, weapons, sortie.wingmanMount(), alpha, true);
-        }
-        batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-        if (sortie.flying()) {
-            player.drawMuzzles(batch, sortie, alpha, false);
-        }
-        if (rook != null) {
-            wingmanLooks.drawMuzzle(batch, rook, weapons, sortie.wingmanMount(), alpha, false);
-        }
-        effects.draw(batch, scroll);
-        // M8 part A: the harpoons' impacts, the depth charges' bursts, the Bulwark's sparks and loss.
-        deepWater.drawEffects(batch, scroll);
-        canyonLooks.draw(batch, scroll);
-        // M5 part D: the lance above the air layer.
-        loss.drawLance(batch, sortie, alpha);
-        // M8 part F: Rook's loss: the torpedo trails, the hits' flashes, his failing lamp (over the grade).
-        rookLoss.drawOver(batch, sortie, alpha);
-        if (rook != null) {
-            // His eject pod over the explosion once it has popped out of it.
-            wingmanLooks.drawOver(batch, rook, sortie.tick(), alpha);
-        }
-        farside.drawSmartBomb(batch, sortie, alpha, play.whiteFlash);
-        // M7 part A: the EMP Burst's ring, the Orbital Lance's targeting line and column.
-        batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
-        arsenal.drawSpecials(batch, sortie, alpha);
-        // M8 part A: the Sonar Pulse's ring and contact brackets.
-        deepWater.drawSonar(batch, sortie, alpha);
-        batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-        setPieces.drawSetPieces(batch, sortie, alpha, seconds, true);
-        if (overHull) {
-            units.drawEnemies(batch, sortie, alpha, Depth.AIR, Launched.ONLY);
-        }
-        // M5 part D: the cloaked units' shimmer on high-air, above the ship.
-        units.drawEnemies(batch, sortie, alpha, Depth.HIGH_AIR, Launched.ANY);
-        double canopyDeath = setPieces.spireDeathSeconds(sortie, wrecks, alpha);
-        if (spire != null) {
-            // M5 part H: the canopy's veins die with the Siege Spire.
-            backdrop.frontFade(SpireLooks.veins(canopyDeath));
-        }
-        backdrop.drawFront(batch, scroll, clock);
-        if (grade != null) {
-            // M8 part C: the marine snow on the real clock, where the field is graded.
-            grade.drawSnow(batch, scroll, clock.real());
-        }
-        if (breakout != null) {
-            // M8 part H: the ice ceiling's burst and slabs at the breakout, the orbit's white.
-            breakout.draw(batch, sortie, alpha, scroll, seconds);
-        }
-        if (spire != null) {
-            // M5 part H: the canopy tearing and the low sun's beams after the Spire's death.
-            spire.drawDaylight(batch, canopyDeath, backdrop.highAirScroll(scroll));
-        }
-        if (snow != null) {
-            // M5 part G: the arctic snow on high-air, falling on the real clock in the halt.
-            snow.draw(batch, seconds, clock.real());
-        }
-        // M5 part F: the rain, the breakout's light, the gust telegraph and the sky flash, under the bullets.
-        weather.drawFront(
-                batch, seconds, clock.real(), sortie.wind(), SimStep.ticks(sortie.levelSeconds()), play.whiteFlash);
-        if (targeting != null) {
-            targeting.draw(batch, sortie, alpha);
-        }
-        props.drawMines(batch, sortie, alpha);
-        // M5 part H: the Spire's sweep, its telegraph line and beam, with the bullets.
-        setPieces.drawSpire(batch, sortie, wrecks, alpha, scroll, SpirePass.SWEEP);
-        if (walker != null) {
-            // M7 part F: the homing missiles over their smoke trails, with the bullets.
-            walker.drawMissiles(batch, sortie, alpha);
-        } else {
-            // M8 part G: the Depth Hunters' torpedoes over their wakes, with the bullets.
-            kinds.hunters(sortie).drawTorpedoes(batch, sortie, alpha);
-        }
-        props.drawBullets(batch, sortie, alpha);
-        screenFlash.draw(batch, sprites.pixel, alpha, play.whiteFlash);
-        warnings.draw(batch, sortie.tick(), alpha);
-        credits.draw(batch, font);
-        setPieces.drawBossBar(batch, sortie);
-    }
-
-    /**
-     * M8 part C: after the ship, Rook and the flyers: the under-water grade over the field ({@link UnderwaterGrade}),
-     * then the light it must not dim: the ground's and the units' glows (held back while graded), the ice shaft's collar
-     * glow, the deep units' lights (the eels' stripe and jaws, the Glassfins' glint, the pumps' sumps, the jellies'
-     * pulse), the tender's lights and the hydro-kit's refit flashes at a waterline.
-     */
-    private void drawUnderGrade(
-            SpriteBatch batch, Sortie sortie, float alpha, double scroll, double seconds, Wingman rook) {
-        if (grade != null) {
-            grade.draw(batch, sortie, alpha, scroll, clock.real());
-            // M8 part F: the headlights' faint volume, so the cones read in empty black water.
-            grade.drawHaze(batch);
-        }
-        // M8 part D: the ground pieces' lights over the grade (Level 24's relay beacons' pulse).
-        backdrop.drawPieceGlows(batch, scroll, clock);
-        if (graded) {
-            ground.drawGroundGlows(batch, sortie, alpha);
-            units.drawUnitGlows(batch, sortie, alpha);
-            if (storm == null) {
-                units.drawAirGlows(batch, sortie, alpha);
-            }
-        }
-        backdrop.drawCanyonGlow(batch);
-        units.drawDeepGlows(batch, sortie, alpha);
-        // M8 part E: the Sirens' glow, their rings and the slowed hulls' shimmer; the Nautili's lip, crown and flecks.
-        kinds.sirens(sortie).drawGlows(batch, sortie, alpha, clock.real());
-        kinds.nautili(sortie).drawGlows(batch, sortie, alpha);
-        if (maw != null) {
-            // M8 part H: the Maw's teal lines, tells, sacs', implants' and head's glows, its death's flashes.
-            maw.drawGlows(batch, sortie, alpha);
-        }
-        if (tenderDrops != null) {
-            tenderDrops.drawLights(batch, seconds);
-        }
-        if (buoys != null) {
-            buoys.drawLights(batch, seconds, clock.real(), scroll);
-        }
-        if (sortie.flying()) {
-            shipHydro.drawRefit(
-                    batch,
-                    seconds,
-                    Math.round(X0 + sortie.ship().renderX(alpha)),
-                    Math.round(sortie.ship().renderY(alpha)));
-        }
-        if (rook != null) {
-            wingmanLooks.drawRefit(batch, rook, seconds, alpha);
-        }
-    }
-
-    /** M8 part E: under the canyon's walls, over its floor: the Spiral Nautili leaving through the rock. */
-    private void drawUnderWalls(SpriteBatch batch) {
-        if (drawing != null) {
-            units.drawUnderWalls(batch, drawing, drawingAlpha);
-        }
-    }
-
-    /**
-     * M5 part F: the low-air layer (its tiles, banks and pieces); in a level with weather, during a
-     * lightning flash's reveal, lit from inside toward a pale blue and seen through, so the bodies
-     * under the banks show (F1 = a). The tint follows the flash reduction; the see-through does not.
-     */
-    private void drawLowAir(SpriteBatch batch, double scroll) {
-        float tint = weather.bankTint(play.whiteFlash);
-        float opacity = weather.bankOpacity();
-        if (tint <= 0 && opacity >= 1) {
-            backdrop.drawLowAir(batch, scroll, clock);
-            return;
-        }
-        flash.begin(batch, WeatherLooks.LIT, tint);
-        batch.setColor(1, 1, 1, opacity);
-        backdrop.drawLowAir(batch, scroll, clock);
-        batch.setColor(Color.WHITE);
-        flash.end(batch);
-    }
-
-    /**
-     * M5 part F, a lightning flash's reveal (F1 = a): the {@code low-air} units and low-air triggers
-     * under the banks drawn again over them at {@link WeatherLooks#revealed}, so wherever they are on
-     * the screen they show through every bank layer over them as the banks are seen through.
-     */
-    private void drawRevealed(SpriteBatch batch, Sortie sortie, float alpha) {
-        float opacity = weather.revealed();
-        if (opacity <= 0) {
-            return;
-        }
-        batch.setColor(1, 1, 1, opacity);
-        units.drawRevealed(batch, sortie, alpha);
-        ground.drawRevealed(batch, sortie, alpha);
-        batch.setColor(Color.WHITE);
-    }
-
-    /**
-     * M5 part F, over the banks that hide them (F1 = a): each {@code low-air} unit's faint glow and a
-     * low-air trigger's own glow (the canister's amber beacon, its "faint glint").
-     */
-    private void drawHiddenGlows(SpriteBatch batch, Sortie sortie, float alpha) {
-        if (!weather.occludes()) {
-            return;
-        }
-        batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
-        if (weather.glows()) {
-            units.drawHiddenGlows(batch, sortie, alpha, clock.real());
-        }
-        ground.drawHiddenGlows(batch, sortie, alpha);
-        batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        passes.draw(
+                batch,
+                sortie,
+                effects,
+                debris,
+                pieces,
+                blasts,
+                wrecks,
+                credits,
+                warnings,
+                alpha,
+                shieldShimmer,
+                flashReduction,
+                screenFlash);
     }
 
     /**
@@ -1267,115 +326,6 @@ public final class LevelRenderer {
         return new double[] {DeathChain.headX(angle, length), DeathChain.headY(angle, length)};
     }
 
-    /** Where an enemy is drawn in the stack. */
-    enum Depth {
-        /** The ground units, with the ground objects. */
-        GROUND,
-        /**
-         * M5 part C: a pouncer leaping off the ground (the Ravager), over its pack and the flyers'
-         * shadows, under the low flyers; in its air window it is on {@link #AIR}.
-         */
-        LEAP,
-        /** The low flyers, below the low-air banks. */
-        LOW_AIR,
-        /** The flyers on the play plane. */
-        AIR,
-        /**
-         * M5 part D: a cloaked unit on high-air (the Wraith before its decloak), drawn as its shimmer
-         * above the ship and the effects, under the high-air layer and the bullets.
-         */
-        HIGH_AIR;
-
-        /** Its depth by the layer it is on now ({@link Enemy#layer()}: a pounce's air window is air). */
-        static Depth of(Enemy enemy) {
-            if (enemy.cloaked()) {
-                return HIGH_AIR;
-            }
-            Layer layer = enemy.layer();
-            if (enemy.leaping()) {
-                return layer == Layer.AIR ? AIR : LEAP;
-            }
-            // M7 part B: a Burrower is on the ground layer in every phase (its ripple, bulge and body), no shadow.
-            if (enemy.burrowing()) {
-                return GROUND;
-            }
-            // M5 part G: a lane walker (the Skimmer) is a boat on the water: its sub body, wake and
-            // surface frames are drawn with the ground units, under the low-air banks, without a drop shadow.
-            if (enemy.grounded() || enemy.walking() || enemy.laneWalking()) {
-                return GROUND;
-            }
-            // M7 part E: a vortex (the Dust Devil) closed, rising or sinking is on the ground layer, drawn with the
-            // ground units under the dust storm's veil like its open self on low-air (round 41 K.a: drawn with the
-            // flyers it showed over the veil as a dark silhouette and vanished into the dust as it opened).
-            if (layer == Layer.GROUND && enemy.spec().vortex().isPresent()) {
-                return GROUND;
-            }
-            return layer == Layer.LOW_AIR ? LOW_AIR : AIR;
-        }
-    }
-
-    /** Which of a depth's enemies a pass draws: all, all but a boss's launched units, or only those. */
-    enum Launched {
-        ANY,
-        NOT,
-        ONLY
-    }
-
-    /**
-     * M5 part E: the {@code sub} layer, in the {@link WaterLooks} pass: the Kraken's parts under the
-     * water (or, before it scrolls in, its foreshadowing shadow), the sunken triggers and the freed
-     * pod's rise, the naval units' plain bodies, the torpedoes and the under-water effects.
-     */
-    private void drawSub(
-            SpriteBatch batch, Sortie sortie, float alpha, double seconds, SetPieceWrecks wrecks, double scroll) {
-        setPieces.drawKrakenSub(batch, sortie, alpha, wrecks, scroll);
-        ground.drawSunken(batch, sortie, alpha);
-        units.drawNavalSub(batch, sortie, alpha);
-        player.drawUnderWater(batch, sortie, alpha);
-        underWater.draw(batch, scroll);
-        // M8 part A: over water, the harpoons' cables, the depth charges' lamps and bursts under the surface.
-        deepWater.drawSub(batch, sortie, alpha, scroll);
-    }
-
-    /**
-     * The flyers' drop shadows on the ground layer, from their frames' alpha (design/art-direction,
-     * Shadows): the low flyers' at the low-air offset, the play plane's flyers' (the units, the
-     * chains' segments and the ship) at the air offset, a leaping pouncer's sliding out with its lift;
-     * under the low flyers and the low-air layer.
-     */
-    private void drawShadows(SpriteBatch batch, Sortie sortie, float alpha) {
-        shadows.begin(batch);
-        units.drawShadows(batch, sortie, alpha);
-        if (sortie.flying()) {
-            Ship craft = sortie.ship();
-            Shadows.draw(
-                    batch,
-                    player.hull(sortie).get(craft.bank() + ShipSpec.HARD_BANK),
-                    Math.round(X0 + craft.renderX(alpha)),
-                    Math.round(craft.renderY(alpha)),
-                    Shadows.AIR_DX,
-                    Shadows.AIR_DY,
-                    1);
-        }
-        Wingman rook = sortie.wingman().orElse(null);
-        if (rook != null) {
-            wingmanLooks.drawShadow(batch, rook, alpha);
-        }
-        deepWater.drawBulwarkShadow(batch, sortie, alpha);
-        shuttles.drawShadows(batch, sortie, alpha);
-        setPieces.drawSpireShadows(batch, sortie, alpha);
-        shadows.end(batch);
-    }
-
-    /** M5 part H: the Siege Spire's passes ({@link SpireLooks}). */
-    enum SpirePass {
-        GROUND,
-        SHOCKWAVE,
-        AIR,
-        SWEEP
-    }
-
-    /** M5 part H: whether a set piece is the Siege Spire, drawn by its own looks (its death too). */
     /** M7 part H: the 0-based index of the script's crawling arena ({@code Section.crawls}), -1 without one. */
     static int crawlingArena(LevelScript script) {
         for (int i = 0; i < script.sections().size(); i++) {
@@ -1392,9 +342,10 @@ public final class LevelRenderer {
      * the stronger of the two), none without either.
      */
     public float shakeX(Sortie sortie, double realSeconds) {
-        float ridgeShake = ridge == null ? 0 : ScreenShake.ridge(ridge.shake(sortie.levelSeconds()), realSeconds);
+        float ridgeShake =
+                passes.ridge == null ? 0 : ScreenShake.ridge(passes.ridge.shake(sortie.levelSeconds()), realSeconds);
         // Step GK: the Dust Colossus's death throe shakes the field hard.
-        float throe = colossus == null ? 0 : colossus.shakeX(sortie, realSeconds);
+        float throe = passes.colossus == null ? 0 : passes.colossus.shakeX(sortie, realSeconds);
         return Math.abs(throe) > Math.abs(ridgeShake) ? throe : ridgeShake;
     }
 
@@ -1419,6 +370,7 @@ public final class LevelRenderer {
         return SimStep.ticks(ColossusThroe.SHOWER_SECONDS);
     }
 
+    /** M5 part H: whether a set piece is the Siege Spire, drawn by its own looks (its death too). */
     public static boolean spire(SetPiece piece) {
         return SpireLooks.drawn(piece);
     }

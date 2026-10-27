@@ -252,7 +252,7 @@ class Level11LooksTest {
             }
             for (int i = 0; i < sortie.enemyCount(); i++) {
                 Enemy enemy = sortie.enemy(i);
-                assertEquals(LevelRenderer.Depth.GROUND, LevelRenderer.Depth.of(enemy), "on the sea, either way");
+                assertEquals(DrawPasses.Depth.GROUND, DrawPasses.Depth.of(enemy), "on the sea, either way");
                 if (enemy.submerged()) {
                     submerged = true;
                     assertEquals(Layer.SUB, enemy.layer());

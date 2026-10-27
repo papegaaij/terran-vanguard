@@ -114,26 +114,8 @@ class WindTest {
 
     @Test
     void aWhirlClustersCentreDriftsOnTheWind() {
-        EnemySpec seed = new EnemySpec(
-                "whirl-seed",
-                1,
-                new Hitbox(14, 14),
-                Layer.AIR,
-                4,
-                true,
-                3,
-                150,
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                false,
-                Optional.of(new EnemySpec.Spiral(3, 0.5, 40, 60, 0)),
-                Optional.empty(),
-                Optional.empty());
+        EnemySpec seed = EnemySpec.of("whirl-seed", 1, new Hitbox(14, 14), Layer.AIR, 4, true, 3, 150)
+                .withSpiral(Optional.of(new EnemySpec.Spiral(3, 0.5, 40, 60, 0)));
         WaveSpec cluster = new WaveSpec(
                 0,
                 WaveSpec.Formation.WHIRL_CLUSTER,

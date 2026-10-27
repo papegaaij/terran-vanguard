@@ -421,7 +421,7 @@ public final class StrideArena implements Hashed {
      * fire runs): the overheating turn's tell and burn, else a tell when the ship or Rook is behind it, the burn,
      * the vents after it.
      */
-    void act(int phase, SetPiece.BossActions actions, boolean firing) {
+    void act(int phase, BossActions actions, boolean firing) {
         if (ventTicks > 0) {
             ventTicks--;
         }
@@ -488,7 +488,7 @@ public final class StrideArena implements Hashed {
         }
     }
 
-    private void startTell(double base, SetPiece.BossActions actions) {
+    private void startTell(double base, BossActions actions) {
         conePhase = ConePhase.TELL;
         coneTicks = 0;
         coneSince = 0;
@@ -496,7 +496,7 @@ public final class StrideArena implements Hashed {
         actions.coneTell(coneX(), coneY());
     }
 
-    private void startBurn(SetPiece.BossActions actions) {
+    private void startBurn(BossActions actions) {
         conePhase = ConePhase.BURN;
         coneTicks = 0;
         coneHits = 0;

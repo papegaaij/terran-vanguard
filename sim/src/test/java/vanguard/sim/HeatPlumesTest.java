@@ -145,23 +145,8 @@ class HeatPlumesTest {
 
     /** A swimmer that holds still over x 240 (a plain hover), 100 HP, bounty 7. */
     private static EnemySpec swimmer(Layer layer, double hp) {
-        return new EnemySpec(
-                "swimmer",
-                hp,
-                new Hitbox(20, 20),
-                layer,
-                0,
-                false,
-                7,
-                400,
-                Optional.empty(),
-                Optional.empty(),
-                Optional.of(new EnemySpec.Hover(new Range(30, 30), new Range(300, 300))),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                false);
+        return EnemySpec.of("swimmer", hp, new Hitbox(20, 20), layer, 0, false, 7, 400)
+                .withHover(Optional.of(new EnemySpec.Hover(new Range(30, 30), new Range(300, 300))));
     }
 
     private static WaveSpec single(EnemySpec enemy) {

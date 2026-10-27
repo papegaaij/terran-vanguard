@@ -108,6 +108,7 @@ class DebugRunTest {
                 "--start level",
                 "--bench 3",
                 "--bench 3 --start title",
+                "--shots 60,120",
                 "--invulnerable",
                 "--debug-speed 4",
                 "--difficulty hard --invulnerable"

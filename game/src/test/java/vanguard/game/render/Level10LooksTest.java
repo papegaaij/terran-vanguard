@@ -50,14 +50,14 @@ class Level10LooksTest {
                     continue;
                 }
                 seen.add(phase);
-                LevelRenderer.Depth depth = LevelRenderer.Depth.of(enemy);
+                DrawPasses.Depth depth = DrawPasses.Depth.of(enemy);
                 switch (phase) {
                     case SWOOP, GAP, RISE -> {
-                        assertEquals(LevelRenderer.Depth.HIGH_AIR, depth, phase + " at step " + t);
+                        assertEquals(DrawPasses.Depth.HIGH_AIR, depth, phase + " at step " + t);
                         assertEquals(0, enemy.decloak(1), 1e-9);
                     }
                     case DECLOAK -> {
-                        assertEquals(LevelRenderer.Depth.AIR, depth, "on air from the flash's start");
+                        assertEquals(DrawPasses.Depth.AIR, depth, "on air from the flash's start");
                         double progress = enemy.decloak(0);
                         assertTrue(progress >= 0 && progress < 1, "the flash plays: " + progress);
                         faded |= EnemyLooks.bodyOpacity(progress) > 0.4
@@ -65,7 +65,7 @@ class Level10LooksTest {
                                 && EnemyLooks.shimmerOpacity(progress) == 0;
                     }
                     default -> {
-                        assertEquals(LevelRenderer.Depth.AIR, depth, phase.name());
+                        assertEquals(DrawPasses.Depth.AIR, depth, phase.name());
                         assertEquals(1, enemy.decloak(1), 1e-9);
                     }
                 }

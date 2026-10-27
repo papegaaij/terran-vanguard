@@ -21,31 +21,8 @@ class MantisBeamTest {
     private static EnemySpec mantis(double depth, double in, double down) {
         EnemySpec m = FarsideTest.MANTIS;
         EnemySpec.Sweep s = m.sweep().orElseThrow();
-        return new EnemySpec(
-                m.slug(),
-                m.hp(),
-                m.hitbox(),
-                m.layer(),
-                m.contactDamage(),
-                m.destroyedByRamming(),
-                m.bounty(),
-                m.speed(),
-                m.snake(),
-                m.streamSpeed(),
-                Optional.of(new EnemySpec.Hover(new Range(6, 6), new Range(depth, depth))),
-                m.orbit(),
-                m.gun(),
-                m.drop(),
-                m.dive(),
-                m.terrain(),
-                m.spiral(),
-                m.strafe(),
-                m.deathBurst(),
-                m.sine(),
-                m.brood(),
-                m.walker(),
-                m.sideHover(),
-                Optional.of(new EnemySpec.Sweep(
+        return m.withHover(Optional.of(new EnemySpec.Hover(new Range(6, 6), new Range(depth, depth))))
+                .withSweep(Optional.of(new EnemySpec.Sweep(
                         s.arcRadians(),
                         s.sweepSeconds(),
                         s.telegraphSeconds(),
@@ -55,8 +32,7 @@ class MantisBeamTest {
                         s.firstDelaySeconds(),
                         s.damage(),
                         in,
-                        down)),
-                m.chain());
+                        down)));
     }
 
     private static Sortie sortie(EnemySpec mantis, WaveSpec.Formation formation, WaveSpec.Edge edge, int count) {

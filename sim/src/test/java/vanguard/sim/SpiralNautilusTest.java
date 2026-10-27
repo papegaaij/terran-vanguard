@@ -35,23 +35,8 @@ class SpiralNautilusTest {
 
     /** 56×56 / 40×40, 100 HP, contact 15, bounty 30, 150 px/s on its spiral, the spiral gun of {@code arms} arms. */
     static EnemySpec nautilus(EnemySpec.Coil coil, int arms) {
-        return new EnemySpec(
-                        "spiral-nautilus",
-                        100,
-                        new Hitbox(40, 40),
-                        Layer.AIR,
-                        15,
-                        false,
-                        30,
-                        150,
-                        Optional.empty(),
-                        Optional.empty(),
-                        Optional.empty(),
-                        Optional.empty(),
-                        Optional.of(spiralGun(arms)),
-                        Optional.empty(),
-                        Optional.empty(),
-                        false)
+        return EnemySpec.of("spiral-nautilus", 100, new Hitbox(40, 40), Layer.AIR, 15, false, 30, 150)
+                .withGun(Optional.of(spiralGun(arms)))
                 .withCoil(Optional.of(coil));
     }
 
@@ -124,23 +109,7 @@ class SpiralNautilusTest {
         assertThrows(IllegalArgumentException.class, () -> new EnemySpec.Coil(80, 90, 3, 0.6, 0.4, 1.6, 60, 2));
         assertThrows(IllegalArgumentException.class, () -> new EnemySpec.Coil(220, 90, 3, 0.6, 0.8, 1.6, 60, 2));
         assertThrows(IllegalArgumentException.class, () -> new EnemySpec.Coil(220, 90, 3, 0.6, 0.4, 0, 60, 2));
-        EnemySpec ground = new EnemySpec(
-                "ground",
-                10,
-                new Hitbox(20, 20),
-                Layer.GROUND,
-                0,
-                false,
-                1,
-                0,
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                false);
+        EnemySpec ground = EnemySpec.of("ground", 10, new Hitbox(20, 20), Layer.GROUND, 0, false, 1, 0);
         assertThrows(IllegalArgumentException.class, () -> ground.withCoil(Optional.of(COIL)));
         assertThrows(
                 IllegalArgumentException.class,

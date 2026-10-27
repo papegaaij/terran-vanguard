@@ -39,23 +39,9 @@ class LanceWallTest {
     private static final int STEPS = 180;
 
     /** A ground target that neither moves on its own nor fires, too tough to die. */
-    private static final EnemySpec DUMMY = new EnemySpec(
-            "dummy",
-            1e6,
-            new Hitbox(40, UNIT_HEIGHT),
-            Layer.GROUND,
-            0,
-            false,
-            0,
-            0,
-            Optional.empty(),
-            Optional.empty(),
-            Optional.empty(),
-            Optional.empty(),
-            Optional.empty(),
-            Optional.empty(),
-            Optional.empty(),
-            true);
+    private static final EnemySpec DUMMY = EnemySpec.of(
+                    "dummy", 1e6, new Hitbox(40, UNIT_HEIGHT), Layer.GROUND, 0, false, 0, 0)
+            .withTerrain(true);
 
     private static LevelScript level(Optional<Terrain> rock) {
         GroundSpec ground = GroundSpec.NONE.withTerrain(

@@ -1,11 +1,14 @@
 package vanguard.game.level;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static vanguard.game.level.RadioPlayer.play;
+import static vanguard.game.level.RadioRuns.holdRuns;
 
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import vanguard.content.Difficulty;
 import vanguard.content.SimSpecs;
+import vanguard.game.level.RadioRuns.HoldRun;
 import vanguard.sim.CueTrigger;
 import vanguard.sim.LevelScript;
 

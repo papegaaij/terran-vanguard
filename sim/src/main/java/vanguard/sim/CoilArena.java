@@ -28,7 +28,7 @@ import java.util.List;
  * and out of the top (a wall where it is), then it winds back in round the edges as it arrived; then the clocks start
  * over.
  *
- * <p>Its events are raised in {@link #act} through the {@link SetPiece.BossActions}. Everything is allocated here;
+ * <p>Its events are raised in {@link #act} through the {@link BossActions}. Everything is allocated here;
  * stepping does not allocate. Its state is hashed with its boss.
  */
 public final class CoilArena implements Hashed {
@@ -76,7 +76,7 @@ public final class CoilArena implements Hashed {
     public static final int STRUCK_SHIP = 1;
     /** ... the escort (Rook or the Bulwark). */
     public static final int STRUCK_ESCORT = 2;
-    /** {@link SetPiece.BossActions#coilStrike}'s kinds: a swinging bight. */
+    /** {@link BossActions#coilStrike}'s kinds: a swinging bight. */
     static final int SWEEP = 0;
     /** ... the lunge. */
     static final int LUNGE = 1;
@@ -1168,7 +1168,7 @@ public final class CoilArena implements Hashed {
      * One step of its actions after its step (engaged): the step's events, the dive's line, the strikes of a swinging
      * bight and of the lunge, the step's fire (while {@code firing}), the shed's tell and release.
      */
-    void act(SetPiece.BossActions actions, boolean firing) {
+    void act(BossActions actions, boolean firing) {
         for (int e = 0; e < eventCount; e++) {
             actions.coil(eventTypes[e], eventX[e], eventY[e], eventValues[e]);
         }
@@ -1198,7 +1198,7 @@ public final class CoilArena implements Hashed {
         }
     }
 
-    private void fire(SetPiece.BossActions actions) {
+    private void fire(BossActions actions) {
         if (ringPart >= 0 && lastPhase >= 0 && ringAttack[lastPhase] >= 0) {
             BossSpec.Attack ring = boss.attacks().get(ringAttack[lastPhase]);
             actions.ring(
@@ -1229,7 +1229,7 @@ public final class CoilArena implements Hashed {
      * A fan wall: its orbs straight down from the throat over its spread, its gaps left out (the first beside the ship
      * at its height, chaining with the last wall's; a second on the ship's other side).
      */
-    private void fireWall(SetPiece.BossActions actions) {
+    private void fireWall(BossActions actions) {
         EnemyGun gun = boss.attacks().get(wall.attack()).gun();
         int count = Math.max(1, gun.fan());
         double tx = throatX();
@@ -1312,7 +1312,7 @@ public final class CoilArena implements Hashed {
     }
 
     /** The shed's tell when its clock has come round and fewer than the phase's most live; the release after it. */
-    private void sheds(SetPiece.BossActions actions, boolean firing) {
+    private void sheds(BossActions actions, boolean firing) {
         if (shedRelease >= 0) {
             if (firing) {
                 int serial = actions.shed(shedRelease);

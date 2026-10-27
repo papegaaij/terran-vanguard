@@ -85,23 +85,8 @@ class Act4ArsenalFlightTest {
 
     /** A dummy on {@code layer}: plenty of HP, {@code size} square. */
     private static EnemySpec dummy(Layer layer, double size) {
-        return new EnemySpec(
-                "dummy",
-                1e6,
-                new Hitbox(size, size),
-                layer,
-                0,
-                false,
-                0,
-                0,
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                true);
+        return EnemySpec.of("dummy", 1e6, new Hitbox(size, size), layer, 0, false, 0, 0)
+                .withTerrain(true);
     }
 
     /** The HP {@code target} has lost after {@code seconds} of {@code commands} (0 when it never came on). */

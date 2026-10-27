@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
-import java.util.Optional;
 import org.junit.jupiter.api.Test;
 
 /** The chain window pauses while no enemy is on screen (design/systems/scoring, Chain multiplier). */
@@ -12,23 +11,8 @@ class ChainPauseTest {
     private static final int FIRE = Command.of(Command.FIRE);
 
     private static EnemySpec turret(String slug, double hp) {
-        return new EnemySpec(
-                slug,
-                hp,
-                new Hitbox(60, 30),
-                Layer.GROUND,
-                0,
-                false,
-                5,
-                0,
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                true);
+        return EnemySpec.of(slug, hp, new Hitbox(60, 30), Layer.GROUND, 0, false, 5, 0)
+                .withTerrain(true);
     }
 
     /** A turret in the ship's line of fire at 0 s, and a tough one far to the left at 10 s. */

@@ -169,97 +169,9 @@ public record BossSpec(
         }
     }
 
-    /** Without M8 part H's coil (every boss before the Abyssal Maw). */
-    public BossSpec(
-            double arriveSeconds,
-            double x,
-            double hoverY,
-            double descentSpeed,
-            double sineAmplitude,
-            double sinePeriod,
-            Layer layer,
-            boolean midBoss,
-            String barName,
-            double parSeconds,
-            List<Chain> chains,
-            List<Attack> attacks,
-            List<Phase> phases,
-            boolean engagesOnArrival,
-            List<Integer> armoured,
-            List<Pose> poses,
-            double deathSeconds,
-            Optional<Arena> arena,
-            double incomingSeconds,
-            Optional<Stride> stride,
-            Optional<Plate> plate,
-            Optional<Cone> cone,
-            Optional<Breach> breach,
-            Optional<Suction> suction,
-            Optional<Vents> vents,
-            Optional<Eruption> eruption,
-            Optional<DebrisFlow> debris) {
-        this(
-                arriveSeconds,
-                x,
-                hoverY,
-                descentSpeed,
-                sineAmplitude,
-                sinePeriod,
-                layer,
-                midBoss,
-                barName,
-                parSeconds,
-                chains,
-                attacks,
-                phases,
-                engagesOnArrival,
-                armoured,
-                poses,
-                deathSeconds,
-                arena,
-                incomingSeconds,
-                stride,
-                plate,
-                cone,
-                breach,
-                suction,
-                vents,
-                eruption,
-                debris,
-                Optional.empty());
-    }
-
     /** M8 part H: this boss coiled round its arena ({@link CoilArena}, an arena boss without lanes); empty: none. */
     public BossSpec withCoil(Optional<CoilSpec> withCoil) {
-        return new BossSpec(
-                arriveSeconds,
-                x,
-                hoverY,
-                descentSpeed,
-                sineAmplitude,
-                sinePeriod,
-                layer,
-                midBoss,
-                barName,
-                parSeconds,
-                chains,
-                attacks,
-                phases,
-                engagesOnArrival,
-                armoured,
-                poses,
-                deathSeconds,
-                arena,
-                incomingSeconds,
-                stride,
-                plate,
-                cone,
-                breach,
-                suction,
-                vents,
-                eruption,
-                debris,
-                withCoil);
+        return new BossSpecBuilder(this).coil(withCoil).build();
     }
 
     /** M8 part H: whether it is coiled round its arena ({@link CoilArena}): the Abyssal Maw. */
@@ -267,160 +179,10 @@ public record BossSpec(
         return coil.isPresent();
     }
 
-    /** Without step H3's spine vents, eruption and debris (M7 part H, step H1). */
-    public BossSpec(
-            double arriveSeconds,
-            double x,
-            double hoverY,
-            double descentSpeed,
-            double sineAmplitude,
-            double sinePeriod,
-            Layer layer,
-            boolean midBoss,
-            String barName,
-            double parSeconds,
-            List<Chain> chains,
-            List<Attack> attacks,
-            List<Phase> phases,
-            boolean engagesOnArrival,
-            List<Integer> armoured,
-            List<Pose> poses,
-            double deathSeconds,
-            Optional<Arena> arena,
-            double incomingSeconds,
-            Optional<Stride> stride,
-            Optional<Plate> plate,
-            Optional<Cone> cone,
-            Optional<Breach> breach,
-            Optional<Suction> suction) {
-        this(
-                arriveSeconds,
-                x,
-                hoverY,
-                descentSpeed,
-                sineAmplitude,
-                sinePeriod,
-                layer,
-                midBoss,
-                barName,
-                parSeconds,
-                chains,
-                attacks,
-                phases,
-                engagesOnArrival,
-                armoured,
-                poses,
-                deathSeconds,
-                arena,
-                incomingSeconds,
-                stride,
-                plate,
-                cone,
-                breach,
-                suction,
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty());
-    }
-
-    /** Without M7 part H's breach and suction (every boss before the Dust Colossus). */
-    public BossSpec(
-            double arriveSeconds,
-            double x,
-            double hoverY,
-            double descentSpeed,
-            double sineAmplitude,
-            double sinePeriod,
-            Layer layer,
-            boolean midBoss,
-            String barName,
-            double parSeconds,
-            List<Chain> chains,
-            List<Attack> attacks,
-            List<Phase> phases,
-            boolean engagesOnArrival,
-            List<Integer> armoured,
-            List<Pose> poses,
-            double deathSeconds,
-            Optional<Arena> arena,
-            double incomingSeconds,
-            Optional<Stride> stride,
-            Optional<Plate> plate,
-            Optional<Cone> cone) {
-        this(
-                arriveSeconds,
-                x,
-                hoverY,
-                descentSpeed,
-                sineAmplitude,
-                sinePeriod,
-                layer,
-                midBoss,
-                barName,
-                parSeconds,
-                chains,
-                attacks,
-                phases,
-                engagesOnArrival,
-                armoured,
-                poses,
-                deathSeconds,
-                arena,
-                incomingSeconds,
-                stride,
-                plate,
-                cone,
-                Optional.empty(),
-                Optional.empty());
-    }
-
-    /** Without M7 part F's stride, plate and cone (every boss before the Revenant Walker). */
-    public BossSpec(
-            double arriveSeconds,
-            double x,
-            double hoverY,
-            double descentSpeed,
-            double sineAmplitude,
-            double sinePeriod,
-            Layer layer,
-            boolean midBoss,
-            String barName,
-            double parSeconds,
-            List<Chain> chains,
-            List<Attack> attacks,
-            List<Phase> phases,
-            boolean engagesOnArrival,
-            List<Integer> armoured,
-            List<Pose> poses,
-            double deathSeconds,
-            Optional<Arena> arena,
-            double incomingSeconds) {
-        this(
-                arriveSeconds,
-                x,
-                hoverY,
-                descentSpeed,
-                sineAmplitude,
-                sinePeriod,
-                layer,
-                midBoss,
-                barName,
-                parSeconds,
-                chains,
-                attacks,
-                phases,
-                engagesOnArrival,
-                armoured,
-                poses,
-                deathSeconds,
-                arena,
-                incomingSeconds,
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty());
-    }
-
-    /** Without round 41's incoming warning. */
+    /**
+     * Without round 41's incoming warning and the mechanics after it. Kept for {@code game/}'s callers until step RF6
+     * has moved them to {@link #builder}; remove it then.
+     */
     public BossSpec(
             double arriveSeconds,
             double x,
@@ -459,358 +221,23 @@ public record BossSpec(
                 poses,
                 deathSeconds,
                 arena,
-                0);
-    }
-
-    /** Round 41: this boss with its {@link SimEvents.Type#BOSS_INCOMING} {@code seconds} before its arrival (0: none). */
-    public BossSpec withIncomingSeconds(double seconds) {
-        return new BossSpec(
-                arriveSeconds,
-                x,
-                hoverY,
-                descentSpeed,
-                sineAmplitude,
-                sinePeriod,
-                layer,
-                midBoss,
-                barName,
-                parSeconds,
-                chains,
-                attacks,
-                phases,
-                engagesOnArrival,
-                armoured,
-                poses,
-                deathSeconds,
-                arena,
-                seconds,
-                stride,
-                plate,
-                cone,
-                breach,
-                suction,
-                vents,
-                eruption,
-                debris,
-                coil);
-    }
-
-    /** M7 part F: this boss walking {@code withStride}'s passes (an arena boss without lanes); empty: none. */
-    public BossSpec withStride(Optional<Stride> withStride) {
-        return new BossSpec(
-                arriveSeconds,
-                x,
-                hoverY,
-                descentSpeed,
-                sineAmplitude,
-                sinePeriod,
-                layer,
-                midBoss,
-                barName,
-                parSeconds,
-                chains,
-                attacks,
-                phases,
-                engagesOnArrival,
-                armoured,
-                poses,
-                deathSeconds,
-                arena,
-                incomingSeconds,
-                withStride,
-                plate,
-                cone,
-                breach,
-                suction,
-                vents,
-                eruption,
-                debris,
-                coil);
-    }
-
-    /** M7 part F: this walking boss with {@code withPlate} as its front plate; empty: none. */
-    public BossSpec withPlate(Optional<Plate> withPlate) {
-        return new BossSpec(
-                arriveSeconds,
-                x,
-                hoverY,
-                descentSpeed,
-                sineAmplitude,
-                sinePeriod,
-                layer,
-                midBoss,
-                barName,
-                parSeconds,
-                chains,
-                attacks,
-                phases,
-                engagesOnArrival,
-                armoured,
-                poses,
-                deathSeconds,
-                arena,
-                incomingSeconds,
-                stride,
-                withPlate,
-                cone,
-                breach,
-                suction,
-                vents,
-                eruption,
-                debris,
-                coil);
-    }
-
-    /** M7 part F: this walking boss with {@code withCone} as its rear flame cone; empty: none. */
-    public BossSpec withCone(Optional<Cone> withCone) {
-        return new BossSpec(
-                arriveSeconds,
-                x,
-                hoverY,
-                descentSpeed,
-                sineAmplitude,
-                sinePeriod,
-                layer,
-                midBoss,
-                barName,
-                parSeconds,
-                chains,
-                attacks,
-                phases,
-                engagesOnArrival,
-                armoured,
-                poses,
-                deathSeconds,
-                arena,
-                incomingSeconds,
-                stride,
-                plate,
-                withCone,
-                breach,
-                suction,
-                vents,
-                eruption,
-                debris,
-                coil);
-    }
-
-    /** M7 part H: this boss breaching by {@code withBreach}'s cycle (an arena boss without lanes); empty: none. */
-    public BossSpec withBreach(Optional<Breach> withBreach) {
-        return new BossSpec(
-                arriveSeconds,
-                x,
-                hoverY,
-                descentSpeed,
-                sineAmplitude,
-                sinePeriod,
-                layer,
-                midBoss,
-                barName,
-                parSeconds,
-                chains,
-                attacks,
-                phases,
-                engagesOnArrival,
-                armoured,
-                poses,
-                deathSeconds,
-                arena,
-                incomingSeconds,
-                stride,
-                plate,
-                cone,
-                withBreach,
-                suction,
-                vents,
-                eruption,
-                debris,
-                coil);
-    }
-
-    /** M7 part H: this breaching boss with {@code withSuction} toward its open mouth; empty: none. */
-    public BossSpec withSuction(Optional<Suction> withSuction) {
-        return new BossSpec(
-                arriveSeconds,
-                x,
-                hoverY,
-                descentSpeed,
-                sineAmplitude,
-                sinePeriod,
-                layer,
-                midBoss,
-                barName,
-                parSeconds,
-                chains,
-                attacks,
-                phases,
-                engagesOnArrival,
-                armoured,
-                poses,
-                deathSeconds,
-                arena,
-                incomingSeconds,
-                stride,
-                plate,
-                cone,
-                breach,
-                withSuction,
-                vents,
-                eruption,
-                debris,
-                coil);
-    }
-
-    /** M7 part H, step H3: this breaching boss raising {@code withVents} with its breaches; empty: none. */
-    public BossSpec withVents(Optional<Vents> withVents) {
-        return new BossSpec(
-                arriveSeconds,
-                x,
-                hoverY,
-                descentSpeed,
-                sineAmplitude,
-                sinePeriod,
-                layer,
-                midBoss,
-                barName,
-                parSeconds,
-                chains,
-                attacks,
-                phases,
-                engagesOnArrival,
-                armoured,
-                poses,
-                deathSeconds,
-                arena,
-                incomingSeconds,
-                stride,
-                plate,
-                cone,
-                breach,
-                suction,
-                withVents,
-                eruption,
-                debris,
-                coil);
-    }
-
-    /** M7 part H, step H3: this breaching boss erupting under the ship at its under points; empty: none. */
-    public BossSpec withEruption(Optional<Eruption> withEruption) {
-        return new BossSpec(
-                arriveSeconds,
-                x,
-                hoverY,
-                descentSpeed,
-                sineAmplitude,
-                sinePeriod,
-                layer,
-                midBoss,
-                barName,
-                parSeconds,
-                chains,
-                attacks,
-                phases,
-                engagesOnArrival,
-                armoured,
-                poses,
-                deathSeconds,
-                arena,
-                incomingSeconds,
-                stride,
-                plate,
-                cone,
-                breach,
-                suction,
-                vents,
-                withEruption,
-                debris,
-                coil);
-    }
-
-    /** M7 part H, step H3: this breaching boss tearing debris loose toward its open mouth; empty: none. */
-    public BossSpec withDebris(Optional<DebrisFlow> withDebris) {
-        return new BossSpec(
-                arriveSeconds,
-                x,
-                hoverY,
-                descentSpeed,
-                sineAmplitude,
-                sinePeriod,
-                layer,
-                midBoss,
-                barName,
-                parSeconds,
-                chains,
-                attacks,
-                phases,
-                engagesOnArrival,
-                armoured,
-                poses,
-                deathSeconds,
-                arena,
-                incomingSeconds,
-                stride,
-                plate,
-                cone,
-                breach,
-                suction,
-                vents,
-                eruption,
-                withDebris,
-                coil);
-    }
-
-    /** M7 part H: whether it breaches ({@link BreachArena}): the Dust Colossus. */
-    public boolean breaches() {
-        return breach.isPresent();
-    }
-
-    /** M7 part F: whether it walks passes ({@link StrideArena}): the Revenant Walker. */
-    public boolean walks() {
-        return stride.isPresent();
-    }
-
-    /** A boss that descends (Levels 05–07): no arena. */
-    public BossSpec(
-            double arriveSeconds,
-            double x,
-            double hoverY,
-            double descentSpeed,
-            double sineAmplitude,
-            double sinePeriod,
-            Layer layer,
-            boolean midBoss,
-            String barName,
-            double parSeconds,
-            List<Chain> chains,
-            List<Attack> attacks,
-            List<Phase> phases,
-            boolean engagesOnArrival,
-            List<Integer> armoured,
-            List<Pose> poses,
-            double deathSeconds) {
-        this(
-                arriveSeconds,
-                x,
-                hoverY,
-                descentSpeed,
-                sineAmplitude,
-                sinePeriod,
-                layer,
-                midBoss,
-                barName,
-                parSeconds,
-                chains,
-                attacks,
-                phases,
-                engagesOnArrival,
-                armoured,
-                poses,
-                deathSeconds,
+                0,
+                Optional.empty(),
+                Optional.empty(),
+                Optional.empty(),
+                Optional.empty(),
+                Optional.empty(),
+                Optional.empty(),
+                Optional.empty(),
+                Optional.empty(),
                 Optional.empty());
     }
 
-    /** A boss of Level 05's kind: it engages when it settles, all parts damageable, one pose. */
-    public BossSpec(
+    /**
+     * A boss's base script: it engages when it settles, all parts damageable, one pose, no arena and none of the later
+     * mechanics. {@link #builder} sets the rest before the checks run; the {@code withX} builders change a built one.
+     */
+    public static BossSpec of(
             double arriveSeconds,
             double x,
             double hoverY,
@@ -824,7 +251,39 @@ public record BossSpec(
             List<Chain> chains,
             List<Attack> attacks,
             List<Phase> phases) {
-        this(
+        return builder(
+                        arriveSeconds,
+                        x,
+                        hoverY,
+                        descentSpeed,
+                        sineAmplitude,
+                        sinePeriod,
+                        layer,
+                        midBoss,
+                        barName,
+                        parSeconds,
+                        chains,
+                        attacks,
+                        phases)
+                .build();
+    }
+
+    /** A builder for a boss with this base script and every other component at {@link #of}'s defaults. */
+    public static BossSpecBuilder builder(
+            double arriveSeconds,
+            double x,
+            double hoverY,
+            double descentSpeed,
+            double sineAmplitude,
+            double sinePeriod,
+            Layer layer,
+            boolean midBoss,
+            String barName,
+            double parSeconds,
+            List<Chain> chains,
+            List<Attack> attacks,
+            List<Phase> phases) {
+        return new BossSpecBuilder(
                 arriveSeconds,
                 x,
                 hoverY,
@@ -837,11 +296,62 @@ public record BossSpec(
                 parSeconds,
                 chains,
                 attacks,
-                phases,
-                false,
-                List.of(),
-                List.of(),
-                0);
+                phases);
+    }
+
+    /** Round 41: this boss with its {@link SimEvents.Type#BOSS_INCOMING} {@code seconds} before its arrival (0: none). */
+    public BossSpec withIncomingSeconds(double seconds) {
+        return new BossSpecBuilder(this).incomingSeconds(seconds).build();
+    }
+
+    /** M7 part F: this boss walking {@code withStride}'s passes (an arena boss without lanes); empty: none. */
+    public BossSpec withStride(Optional<Stride> withStride) {
+        return new BossSpecBuilder(this).stride(withStride).build();
+    }
+
+    /** M7 part F: this walking boss with {@code withPlate} as its front plate; empty: none. */
+    public BossSpec withPlate(Optional<Plate> withPlate) {
+        return new BossSpecBuilder(this).plate(withPlate).build();
+    }
+
+    /** M7 part F: this walking boss with {@code withCone} as its rear flame cone; empty: none. */
+    public BossSpec withCone(Optional<Cone> withCone) {
+        return new BossSpecBuilder(this).cone(withCone).build();
+    }
+
+    /** M7 part H: this boss breaching by {@code withBreach}'s cycle (an arena boss without lanes); empty: none. */
+    public BossSpec withBreach(Optional<Breach> withBreach) {
+        return new BossSpecBuilder(this).breach(withBreach).build();
+    }
+
+    /** M7 part H: this breaching boss with {@code withSuction} toward its open mouth; empty: none. */
+    public BossSpec withSuction(Optional<Suction> withSuction) {
+        return new BossSpecBuilder(this).suction(withSuction).build();
+    }
+
+    /** M7 part H, step H3: this breaching boss raising {@code withVents} with its breaches; empty: none. */
+    public BossSpec withVents(Optional<Vents> withVents) {
+        return new BossSpecBuilder(this).vents(withVents).build();
+    }
+
+    /** M7 part H, step H3: this breaching boss erupting under the ship at its under points; empty: none. */
+    public BossSpec withEruption(Optional<Eruption> withEruption) {
+        return new BossSpecBuilder(this).eruption(withEruption).build();
+    }
+
+    /** M7 part H, step H3: this breaching boss tearing debris loose toward its open mouth; empty: none. */
+    public BossSpec withDebris(Optional<DebrisFlow> withDebris) {
+        return new BossSpecBuilder(this).debris(withDebris).build();
+    }
+
+    /** M7 part H: whether it breaches ({@link BreachArena}): the Dust Colossus. */
+    public boolean breaches() {
+        return breach.isPresent();
+    }
+
+    /** M7 part F: whether it walks passes ({@link StrideArena}): the Revenant Walker. */
+    public boolean walks() {
+        return stride.isPresent();
     }
 
     /** The distinct units its windows and (M5 part E) its releases let in, for the level's enemy kinds. */

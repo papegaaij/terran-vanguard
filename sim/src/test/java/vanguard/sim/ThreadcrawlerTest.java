@@ -23,23 +23,7 @@ class ThreadcrawlerTest {
     static final EnemySpec.PoreWave PORES = new EnemySpec.PoreWave(0.25, 2.0, 0.3, 110, 4, false);
 
     private static EnemySpec part(String slug, double hp, Hitbox box, int bounty) {
-        return new EnemySpec(
-                slug,
-                hp,
-                box,
-                Layer.GROUND,
-                6,
-                false,
-                bounty,
-                0,
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                false);
+        return EnemySpec.of(slug, hp, box, Layer.GROUND, 6, false, bounty, 0);
     }
 
     /** The member offsets along the path: head 56, segments 32, tail 40 px long, 0.8 × the mean apart. */
@@ -75,7 +59,7 @@ class ThreadcrawlerTest {
                 1,
                 18);
         EnemySpec head = part("threadcrawler", 80, new Hitbox(40, 40), 30);
-        return new EnemySpec(
+        return EnemySpec.of(
                         head.slug(),
                         head.hp(),
                         head.hitbox(),
@@ -83,24 +67,8 @@ class ThreadcrawlerTest {
                         head.contactDamage(),
                         head.destroyedByRamming(),
                         head.bounty(),
-                        head.speed(),
-                        Optional.empty(),
-                        Optional.empty(),
-                        Optional.empty(),
-                        Optional.empty(),
-                        Optional.empty(),
-                        Optional.empty(),
-                        Optional.empty(),
-                        false,
-                        Optional.empty(),
-                        Optional.empty(),
-                        Optional.empty(),
-                        Optional.empty(),
-                        Optional.empty(),
-                        Optional.empty(),
-                        Optional.empty(),
-                        Optional.empty(),
-                        Optional.of(chain))
+                        head.speed())
+                .withChain(Optional.of(chain))
                 .withCrawl(Optional.of(new EnemySpec.Crawl(70, rows, xs, pores)));
     }
 

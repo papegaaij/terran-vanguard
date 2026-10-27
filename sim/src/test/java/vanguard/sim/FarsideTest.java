@@ -35,23 +35,8 @@ class FarsideTest {
             int bounty,
             Optional<EnemyGun> gun,
             double speed) {
-        return new EnemySpec(
-                slug,
-                hp,
-                box,
-                Layer.AIR,
-                contact,
-                rammed,
-                bounty,
-                speed,
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                gun,
-                Optional.empty(),
-                Optional.empty(),
-                false);
+        return EnemySpec.of(slug, hp, box, Layer.AIR, contact, rammed, bounty, speed)
+                .withGun(gun);
     }
 
     private static EnemySpec coilwyrm() {
@@ -90,61 +75,24 @@ class FarsideTest {
     }
 
     private static EnemySpec withChain(EnemySpec head, EnemySpec.ChainSpec chain) {
-        return new EnemySpec(
-                head.slug(),
-                head.hp(),
-                head.hitbox(),
-                head.layer(),
-                head.contactDamage(),
-                head.destroyedByRamming(),
-                head.bounty(),
-                head.speed(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                head.gun(),
-                Optional.empty(),
-                Optional.empty(),
-                false,
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.of(chain));
+        return EnemySpec.of(
+                        head.slug(),
+                        head.hp(),
+                        head.hitbox(),
+                        head.layer(),
+                        head.contactDamage(),
+                        head.destroyedByRamming(),
+                        head.bounty(),
+                        head.speed())
+                .withGun(head.gun())
+                .withChain(Optional.of(chain));
     }
 
     private static EnemySpec mantis() {
-        return new EnemySpec(
-                "mantis",
-                26,
-                new Hitbox(40, 56),
-                Layer.AIR,
-                10,
-                false,
-                30,
-                150,
-                Optional.empty(),
-                Optional.empty(),
-                Optional.of(new EnemySpec.Hover(new Range(6, 6), new Range(300, 300))),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                false,
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.of(new EnemySpec.SideHover(40, true)),
-                Optional.of(new EnemySpec.Sweep(Math.toRadians(70), 1.2, 0.6, 300, 6, 3.0, 0.6, 8)),
-                Optional.empty());
+        return EnemySpec.of("mantis", 26, new Hitbox(40, 56), Layer.AIR, 10, false, 30, 150)
+                .withHover(Optional.of(new EnemySpec.Hover(new Range(6, 6), new Range(300, 300))))
+                .withSideHover(Optional.of(new EnemySpec.SideHover(40, true)))
+                .withSweep(Optional.of(new EnemySpec.Sweep(Math.toRadians(70), 1.2, 0.6, 300, 6, 3.0, 0.6, 8)));
     }
 
     /** A chain wave at t=1 on a path straight down the centre, with an optional loop-back. */

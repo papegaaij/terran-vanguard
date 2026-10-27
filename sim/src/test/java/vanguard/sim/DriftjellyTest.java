@@ -25,41 +25,9 @@ class DriftjellyTest {
 
     /** A Driftjelly at medium (its data's numbers) with {@code submerge} and {@code ring}. */
     static EnemySpec jelly(Optional<EnemySpec.Submerge> submerge, Optional<EnemySpec.ProximityRing> ring) {
-        return new EnemySpec(
-                "driftjelly",
-                4,
-                new Hitbox(28, 28),
-                Layer.GROUND,
-                10,
-                true,
-                10,
-                15,
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                false,
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                false,
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                submerge,
-                ring,
-                0);
+        return EnemySpec.of("driftjelly", 4, new Hitbox(28, 28), Layer.GROUND, 10, true, 10, 15)
+                .withSubmerge(submerge)
+                .withRing(ring);
     }
 
     static EnemySpec jelly() {

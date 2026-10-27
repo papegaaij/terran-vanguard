@@ -228,46 +228,48 @@ final class UnitRules {
                         .findFirst()))
                 // M7 part D: a unit with a unit part (the Shellback's vent) is its body (SiegeRules.body).
                 .or(() -> SiegeRules.body(enemy));
-        EnemySpec spec = new EnemySpec(
-                slug,
-                content.difficulty().enemyHp(head.map(EnemyData.PartData::hp).orElse(enemy.hp()) * actHp, difficulty),
-                SimSpecs.hitbox(enemy.hitbox()),
-                Layers.of(enemy.layer()),
-                content.enemyBasis().contactDamage().get(enemy.tier()),
-                enemy.tier().compareTo(Tier.SMALL) <= 0,
-                head.map(EnemyData.PartData::bounty).orElse(enemy.bounty()),
-                movement.drift()
-                                .map(EnemyData.Drift::speed)
-                                .or(() -> movement.path().map(EnemyData.PathMove::speed))
-                                .orElse(enemy.speed())
-                        * speedFactor,
-                movement.snake().map(snake -> new EnemySpec.Snake(snake.spacing())),
-                movement.straight().map(EnemyData.Straight::speed),
-                movement.hover()
+        EnemySpec spec = EnemySpec.of(
+                        slug,
+                        content.difficulty()
+                                .enemyHp(head.map(EnemyData.PartData::hp).orElse(enemy.hp()) * actHp, difficulty),
+                        SimSpecs.hitbox(enemy.hitbox()),
+                        Layers.of(enemy.layer()),
+                        content.enemyBasis().contactDamage().get(enemy.tier()),
+                        enemy.tier().compareTo(Tier.SMALL) <= 0,
+                        head.map(EnemyData.PartData::bounty).orElse(enemy.bounty()),
+                        movement.drift()
+                                        .map(EnemyData.Drift::speed)
+                                        .or(() -> movement.path().map(EnemyData.PathMove::speed))
+                                        .orElse(enemy.speed())
+                                * speedFactor)
+                .withSnake(movement.snake().map(snake -> new EnemySpec.Snake(snake.spacing())))
+                .withStreamSpeed(movement.straight().map(EnemyData.Straight::speed))
+                .withHover(movement.hover()
                         .map(hover -> AbyssRules.hover(
                                 hover,
                                 // M5 part D: the hook's hover time (the Wraith's hard hold) instead.
                                 hook.flatMap(EnemyData.Hook::hoverSeconds)
                                         .map(seconds -> new Range(seconds, seconds))
                                         .or(() -> hover.seconds().map(UnitRules::range))
-                                        .orElse(new Range(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY)))),
-                movement.orbit().map(orbit -> new EnemySpec.Orbit(orbit.radius(), orbit.turnRate())),
-                gun(content, enemy, difficulty, change).map(gun -> arcFacing != 0 ? gun.withArcFacing(arcFacing) : gun),
-                drop(enemy),
-                movement.dive()
+                                        .orElse(new Range(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY)))))
+                .withOrbit(movement.orbit().map(orbit -> new EnemySpec.Orbit(orbit.radius(), orbit.turnRate())))
+                .withGun(gun(content, enemy, difficulty, change)
+                        .map(gun -> arcFacing != 0 ? gun.withArcFacing(arcFacing) : gun))
+                .withDrop(drop(enemy))
+                .withDive(movement.dive()
                         .map(dive -> new EnemySpec.Dive(
                                 range(dive.y()),
                                 hook(enemy, difficulty)
                                         .flatMap(EnemyData.Hook::divePause)
                                         .orElse(dive.pause()),
                                 dive.speed(),
-                                dive.fireAfter())),
-                movement.terrain().isPresent(),
-                movement.spiralOut()
+                                dive.fireAfter())))
+                .withTerrain(movement.terrain().isPresent())
+                .withSpiral(movement.spiralOut()
                         .map(spiral -> new EnemySpec.Spiral(
-                                spiral.seconds(), spiral.turns(), spiral.growth(), spiral.drift(), spiral.ricochets())),
-                movement.strafe().map(strafe -> range(strafe.y())),
-                hook(enemy, difficulty)
+                                spiral.seconds(), spiral.turns(), spiral.growth(), spiral.drift(), spiral.ricochets())))
+                .withStrafe(movement.strafe().map(strafe -> range(strafe.y())))
+                .withDeathBurst(hook(enemy, difficulty)
                         .flatMap(EnemyData.Hook::deathBurst)
                         .map(puff -> new EnemySpec.DeathBurst(
                                 puff.count(),
@@ -275,35 +277,34 @@ final class UnitRules {
                                         * content.difficulty()
                                                 .enemyBulletSpeed()
                                                 .of(difficulty),
-                                bulletDamage(content, puff.bullet()))),
-                movement.sine()
+                                bulletDamage(content, puff.bullet()))))
+                .withSine(movement.sine()
                         .map(sine -> new EnemySpec.Sine(sine.amplitude(), sine.period()))
                         // M8 part C (design/enemies/naval/eel-swarm, snake): a chain head's sway about its path.
                         .or(() -> movement.path()
                                 .flatMap(EnemyData.PathMove::sway)
-                                .map(sway -> new EnemySpec.Sine(sway.amplitude(), 1 / sway.frequency()))),
-                brood,
-                walker,
-                movement.hover()
+                                .map(sway -> new EnemySpec.Sine(sway.amplitude(), 1 / sway.frequency()))))
+                .withBrood(brood)
+                .withWalker(walker)
+                .withSideHover(movement.hover()
                         .flatMap(EnemyData.Hover::edgeX)
                         .map(edgeX -> new EnemySpec.SideHover(
                                 edgeX,
-                                movement.hover().flatMap(EnemyData.Hover::exit).isPresent())),
-                sweep(content, enemy, difficulty),
-                Optional.empty(),
-                enemy.armour().hardened(),
-                spawner,
-                pounce,
-                enemy.cloak().map(cloak -> new EnemySpec.Cloak(Layers.of(cloak.layer()), cloak.flash())),
-                movement.ambush()
+                                movement.hover().flatMap(EnemyData.Hover::exit).isPresent())))
+                .withSweep(sweep(content, enemy, difficulty))
+                .withHardened(enemy.armour().hardened())
+                .withSpawner(spawner)
+                .withPounce(pounce)
+                .withCloak(enemy.cloak().map(cloak -> new EnemySpec.Cloak(Layers.of(cloak.layer()), cloak.flash())))
+                .withAmbush(movement.ambush()
                         .map(ambush -> new EnemySpec.Ambush(
                                 ambush.gap(),
                                 ambush.lane(),
                                 movement.straight()
                                         .map(EnemyData.Straight::speed)
                                         .orElseThrow(() -> new IllegalArgumentException(
-                                                enemy.name() + ": an ambush leaves at its straight speed")))),
-                movement.flock().map(flock -> new EnemySpec.FlockSpec(
+                                                enemy.name() + ": an ambush leaves at its straight speed")))))
+                .withFlock(movement.flock().map(flock -> new EnemySpec.FlockSpec(
                                 flock.separation(),
                                 flock.radius(),
                                 flock.alignment(),
@@ -325,13 +326,13 @@ final class UnitRules {
                                                         .orElse(ram.share()),
                                                 ram.tell(),
                                                 ram.delay(),
-                                                ram.speed())))),
+                                                ram.speed())))))
                 // M5 part E: surfacing and submerging, a proximity ring and a raft's drift.
-                enemy.submerge()
+                .withSubmerge(enemy.submerge()
                         .map(submerge -> new EnemySpec.Submerge(
-                                submerge.every().min(), submerge.every().max(), submerge.swap(), submerge.start())),
-                proximityRing(content, enemy, difficulty),
-                movement.terrain().flatMap(EnemyData.Terrain::drift).orElse(0.0));
+                                submerge.every().min(), submerge.every().max(), submerge.swap(), submerge.start())))
+                .withRing(proximityRing(content, enemy, difficulty))
+                .withDrift(movement.terrain().flatMap(EnemyData.Terrain::drift).orElse(0.0));
         // M5 part F: a chaser's chase and its latch with the drain (the Lamprey).
         // M7 part A: a machine (its stat block's machine: true) is stunned longest by the EMP Burst.
         EnemySpec machine = PartFRules.chaser(

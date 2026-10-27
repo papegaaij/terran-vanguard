@@ -24,29 +24,10 @@ class CreeperTest {
     private static final EnemySpec CREEPER = creeper(0.5);
 
     private static EnemySpec creeper(double stagger) {
-        return new EnemySpec(
-                "creeper",
-                30,
-                new Hitbox(40, 44),
-                Layer.GROUND,
-                15,
-                false,
-                22,
-                35,
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.of(FAN),
-                Optional.empty(),
-                Optional.empty(),
-                false,
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.of(new EnemySpec.Walker(35, Math.toRadians(90), 22, 0, Optional.empty(), 0, true, stagger)));
+        return EnemySpec.of("creeper", 30, new Hitbox(40, 44), Layer.GROUND, 15, false, 22, 35)
+                .withGun(Optional.of(FAN))
+                .withWalker(Optional.of(
+                        new EnemySpec.Walker(35, Math.toRadians(90), 22, 0, Optional.empty(), 0, true, stagger)));
     }
 
     /** A convoy of {@code count} walking from the left edge across the upper screen (screen points, y down). */
