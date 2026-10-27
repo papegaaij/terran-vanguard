@@ -190,12 +190,12 @@ public final class HangarScreen implements GameScreen {
 
     /**
      * The flight of a replay hangar's launch: a replay of the campaign as the hangar left it ({@link
-     * Campaign#replay}), whose better grade goes into {@code slot}.
+     * Campaign#replay}), with the replay hangar's escort choice, whose better grade goes into {@code slot}.
      *
      * @param slot the autosave when the launch wrote the campaign there, otherwise the slot it was loaded from
      */
     static Campaign replayFlight(CampaignRules rules, Campaign campaign, SaveSlots.Slot slot, int level) {
-        return Campaign.replay(rules, slot, campaign.save(Instant.now()), level);
+        return Campaign.replay(rules, slot, campaign.save(Instant.now()), level, campaign.replayEscort());
     }
 
     private static GameScreen screen(GameServices services, Campaign campaign, CampaignRoute.Step step) {

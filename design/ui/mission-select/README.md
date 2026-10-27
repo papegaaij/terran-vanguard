@@ -4,7 +4,7 @@ design: review
 implementation: done
 art: n/a
 depends-on: [../main-menu, ../debrief, ../../systems/scoring, ../../systems/saves, ../../systems/economy]
-updated: 2026-10-24
+updated: 2026-10-26
 ---
 
 # Mission select
@@ -67,6 +67,14 @@ campaign's progress where it is. This is the "level-select of a replay mode" tha
   without an autosave (a save was just loaded, as after Continue); its **launch** writes the
   campaign as the hangar left it to the autosave, and the flight is a replay of that autosave; its
   quit and its SAVE command work as in the campaign's hangar.
+- **The replay's escort** (the user's playtests of 2026-10-24 and 2026-10-26): the replay hangar's escort slot,
+  callout, escort rows and launch warnings show the escort the replayed mission's flight takes. No escort, no escort
+  slot and no Rook warning before Level 08; **Rook** with his gun in Levels 08–26, whatever the campaign chose for its
+  own next level; the Bulwark only when the player fits an owned one in that replay hangar's refit (from its unlock,
+  Level 22), a choice for that replay only (not kept in the campaign); the owned Bulwark or the loaner in Levels
+  27–29. Rook flies at his campaign armour, with the launch warning below half, until his loss; a replay while he is
+  lost (Levels 27–29 next) flies him **whole** with no warning, as neither the replay nor the campaign can repair him
+  then.
 - **A replay flight** (main-agent choice, confirmed by the user 2026-10-04; the design had no
   replay mode before, [campaign](../../campaign/README.md) left it for later):
   - it flies at the campaign's difficulty with the loadout and special charges the replay hangar
@@ -111,6 +119,13 @@ campaign's progress where it is. This is the "level-select of a replay mode" tha
       and leaves the credits alone, a refit in it is kept, the campaign's hangar still buys, the
       replay still earns nothing and keeps the progress), `CampaignRouteTest` (the replay's briefing without the act
       intro)
+- [x] The replay's escort as in *The replay's escort*: `Campaign.escortChoice(level)` (the replay hangar's own choice,
+      `Campaign.replayEscort`, Rook as it opens, never saved; `Hangar.chooseEscort` sets it there, part of the undo),
+      `Campaign.rookArmour(level)` (whole in a replay while he is lost), no Rook warning before Level 08, the flight
+      `Campaign.replay(…, escort)` — 2026-10-26; test `ActFourHangarTest.theReplayHangarShowsTheEscortOfTheMissionItReplays`
+      (every level 01–28, a campaign before and after Rook's loss, the campaign's choice Rook or the Bulwark: the
+      hangar's escort equals the flight's, the warnings, the Bulwark fitted for one replay and undone); checked on a
+      copy of the user's Act 4 save (L01, L20, L26, L27)
 
 ## Open questions
 
@@ -149,3 +164,12 @@ campaign's progress where it is. This is the "level-select of a replay mode" tha
   escort of the campaign's **next** level (with Rook missing at Level 27, the Bulwark for every replay). Fixed by a
   hangar for a level (`Hangar(catalogue, campaign, level)`, `HangarState.of`); `ActFourHangarTest.
   theReplayHangarShowsTheEscortOfTheMissionItReplays` checks the hangar's escort against the replay flight's.
+- 2026-10-26 (the user's playtest: "If I play mission 26 as replay, I get the bulwark, both in the hangar and in game
+  … If I try mission 1, I get a warning that rook needs repair when launching, but I can't even repair rook."): two
+  causes. (1) "The Bulwark where the player chose it" read the campaign's **current** choice, which after Rook's loss
+  is the Bulwark, so every replay from Level 22 to 26 flew it. (2) The Rook warnings ignored his joining level, so an
+  Act 1 replay warned about his armour (33/80 after Level 26). Rules now (see *The replay's escort*): Levels 08–26 fly
+  Rook unless the Bulwark is fitted in that replay's hangar, a choice for that replay only; Levels 01–07 have no
+  escort and no Rook warning. Main-agent rule, **pending the user's review**: a replay while Rook is lost flies him at
+  full armour with no repair warning (neither the replay nor the campaign can repair him then); before his loss his
+  campaign armour and its warning stay as approved.

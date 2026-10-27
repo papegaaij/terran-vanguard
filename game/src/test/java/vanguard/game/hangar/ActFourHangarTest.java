@@ -46,6 +46,17 @@ class ActFourHangarTest {
 
     /** A campaign before {@code level} with Rook hired and, if {@code bulwark}, a Bulwark owned at that armour. */
     private static Campaign campaign(int level, int credits, Optional<Double> bulwark, boolean bulwarkFlies) {
+        return campaign(level, credits, bulwark, bulwarkFlies, RULES.escort().maxArmour(), List.of());
+    }
+
+    /** A campaign as above, with Rook at {@code rookArmour} and those story flags. */
+    private static Campaign campaign(
+            int level,
+            int credits,
+            Optional<Double> bulwark,
+            boolean bulwarkFlies,
+            double rookArmour,
+            List<String> storyFlags) {
         return Campaign.load(
                 RULES,
                 new SaveGame(
@@ -66,14 +77,14 @@ class ActFourHangarTest {
                                 "left",
                                 Optional.of(GUN),
                                 List.of(new Fitted(GUN, 1)),
-                                RULES.escort().maxArmour(),
+                                rookArmour,
                                 bulwarkFlies ? "bulwark" : "rook",
                                 bulwark.map(armour -> new SaveGame.BulwarkSlot(true, armour))
                                         .orElse(SaveGame.BulwarkSlot.NOT_OWNED)),
                         Optional.empty(),
                         Map.of(),
                         List.of(),
-                        List.of(),
+                        storyFlags,
                         new SaveGame.Stats(0, 0)));
     }
 
@@ -176,46 +187,107 @@ class ActFourHangarTest {
     }
 
     /**
-     * The replay hangar shows the escort of the mission it replays, the one its flight takes (the user's playtest of
-     * 2026-10-24: "the shop shows the Bulwark even when selecting older missions"): with Rook missing at Level 27 and a
-     * Bulwark owned, a replay of Level 20 shows Rook with his gun (no Bulwark row: it cannot fly before its unlock), a
-     * replay of Level 24 Rook or the Bulwark as chosen, a replay of Level 05 no escort slot at all; the campaign's own
-     * hangar still shows the Bulwark flying for him.
+     * The replay hangar shows the escort of the mission it replays, the one its flight takes (the user's playtests of
+     * 2026-10-24 and 2026-10-26): for every level 01–28 and a campaign before Rook's loss (Level 26 next) and after it
+     * (Level 29 next, the Bulwark owned), with the campaign's own choice Rook or the Bulwark: no escort, no escort slot
+     * and no Rook warning before Level 08; Rook with his gun in Levels 08–26 whatever the campaign chose, at his campaign
+     * armour with its warning before his loss and whole without a warning after it (neither a replay nor the campaign
+     * can repair him); the Bulwark in Levels 27–28. Fitting the Bulwark in the replay hangar (from its unlock) flies it in
+     * that replay only: the campaign's own choice stays, and the undo brings Rook back.
      */
     @Test
     void theReplayHangarShowsTheEscortOfTheMissionItReplays() {
-        for (boolean bulwarkChosen : new boolean[] {false, true}) {
-            Campaign campaign = campaign(27, 10_000, Optional.of(RULES.bulwark().maxArmour()), bulwarkChosen);
-            HangarState next = HangarState.of(CATALOGUE, campaign, Optional.empty(), true);
-            assertTrue(next.hangar().rookMissing());
-            assertTrue(next.bulwarkFliesNext(), "Level 27: the Bulwark flies for Rook");
-
-            for (int level : new int[] {5, 20, 24, 26}) {
-                HangarState replay = HangarState.of(
-                        CATALOGUE, campaign, Optional.of(new Campaign.Replay(SaveSlots.Slot.AUTOSAVE, level)), true);
-                Campaign flight = Campaign.replay(RULES, SaveSlots.Slot.AUTOSAVE, campaign.save(Instant.EPOCH), level);
-                String where = "a replay of Level " + level + (bulwarkChosen ? ", the Bulwark chosen" : "");
-                assertEquals(flight.escortFlight(), replay.hangar().escortFlight(), where + ": the flight's escort");
-                assertFalse(replay.hangar().rookMissing(), where);
-                if (level < RULES.escort().joins()) {
-                    assertTrue(flight.escortFlight().isEmpty(), where);
-                    assertFalse(replay.slots().contains(LoadoutSlot.ESCORT), where + ": no escort slot");
-                    continue;
+        double rookArmour = 30;
+        double max = RULES.escort().maxArmour();
+        for (boolean lost : new boolean[] {false, true}) {
+            for (boolean bulwarkChosen : new boolean[] {false, true}) {
+                int next = lost ? 29 : 26;
+                Campaign campaign = campaign(
+                        next,
+                        10_000,
+                        lost || bulwarkChosen ? Optional.of(RULES.bulwark().maxArmour()) : Optional.empty(),
+                        bulwarkChosen,
+                        rookArmour,
+                        lost ? List.of(Campaign.ROOK_MISSING) : List.of());
+                Escort own = campaign.gear().escort();
+                for (int level = 1; level < next; level++) {
+                    HangarState replay = HangarState.of(
+                            CATALOGUE,
+                            campaign,
+                            Optional.of(new Campaign.Replay(SaveSlots.Slot.AUTOSAVE, level)),
+                            true);
+                    Hangar hangar = replay.hangar();
+                    Campaign flight = Campaign.replay(
+                            RULES,
+                            SaveSlots.Slot.AUTOSAVE,
+                            campaign.save(Instant.EPOCH),
+                            level,
+                            campaign.replayEscort());
+                    String where = "a replay of Level " + level + (lost ? " after Rook's loss" : " before Rook's loss")
+                            + (bulwarkChosen ? ", the Bulwark chosen" : "");
+                    assertEquals(flight.escortFlight(), hangar.escortFlight(), where + ": the flight's escort");
+                    List<String> warnings = replay.launchWarnings(Optional.empty());
+                    boolean rookWarned = warnings.stream().anyMatch(warning -> warning.startsWith("ROOK"));
+                    if (level < RULES.escort().joins()) {
+                        assertTrue(flight.escortFlight().isEmpty(), where);
+                        assertFalse(replay.slots().contains(LoadoutSlot.ESCORT), where + ": no escort slot");
+                        assertFalse(rookWarned, where + ": no Rook warning " + warnings);
+                        continue;
+                    }
+                    Campaign.EscortFlight escort = flight.escortFlight().orElseThrow();
+                    if (RULES.escort().missing(level)) {
+                        assertTrue(hangar.rookMissing(), where);
+                        assertEquals(Escort.Escorter.BULWARK, escort.escorter(), where);
+                        assertFalse(escort.loaner(), where + ": the owned Bulwark");
+                        assertFalse(rookWarned, where + ": no Rook warning " + warnings);
+                        continue;
+                    }
+                    assertFalse(hangar.rookMissing(), where);
+                    assertEquals(Escort.Escorter.ROOK, escort.escorter(), where + ": Rook flies");
+                    assertFalse(replay.bulwarkFliesNext(), where);
+                    assertEquals(lost ? max : rookArmour, escort.armour(), where + ": Rook's armour");
+                    assertEquals(
+                            lost ? List.of() : List.of(HangarState.rookArmour(rookArmour, max)),
+                            warnings,
+                            where + ": the launch warnings");
+                    assertEquals(
+                            flight.escortArmourLow(level), campaign.escortArmourLow(level), where + ": the warning");
+                    while (replay.slot() != LoadoutSlot.ESCORT) {
+                        assertEquals(Outcome.MOVED, replay.nextSlot());
+                    }
+                    assertFalse(replay.rows().isEmpty(), where + ": Rook's guns listed");
+                    boolean unlocked = level >= RULES.bulwark().unlock();
+                    boolean owned = own.bulwark().owned();
+                    assertEquals(unlocked && owned, replay.bulwarkRow().isPresent(), where + ": the Bulwark row");
+                    if (!unlocked || !owned) {
+                        continue;
+                    }
+                    assertEquals(List.of(Action.FIT), actions(replay), where + ": a refit, no sale");
+                    assertTrue(hangar.chooseEscort(Escort.Escorter.BULWARK), where + ": the Bulwark fitted");
+                    assertTrue(replay.bulwarkFliesNext(), where);
+                    Campaign fitted = Campaign.replay(
+                            RULES,
+                            SaveSlots.Slot.AUTOSAVE,
+                            campaign.save(Instant.EPOCH),
+                            level,
+                            campaign.replayEscort());
+                    assertEquals(fitted.escortFlight(), hangar.escortFlight(), where + ": the fitted Bulwark flies");
+                    assertEquals(
+                            Escort.Escorter.BULWARK,
+                            fitted.escortFlight().orElseThrow().escorter(),
+                            where);
+                    assertEquals(own, campaign.gear().escort(), where + ": the campaign's own choice stays");
+                    assertTrue(hangar.undo(), where);
+                    assertEquals(
+                            Escort.Escorter.ROOK,
+                            hangar.escortFlight().orElseThrow().escorter(),
+                            where + ": undo");
                 }
-                boolean bulwark = bulwarkChosen && level >= RULES.bulwark().unlock();
-                assertEquals(bulwark, replay.bulwarkFliesNext(), where);
+                HangarState mine = HangarState.of(CATALOGUE, campaign, Optional.empty(), true);
                 assertEquals(
-                        bulwark ? Escort.Escorter.BULWARK : Escort.Escorter.ROOK,
-                        flight.escortFlight().orElseThrow().escorter(),
-                        where);
-                while (replay.slot() != LoadoutSlot.ESCORT) {
-                    assertEquals(Outcome.MOVED, replay.nextSlot());
-                }
-                assertFalse(replay.rows().isEmpty(), where + ": Rook's guns listed");
-                assertEquals(
-                        level >= RULES.bulwark().unlock(),
-                        replay.bulwarkRow().isPresent(),
-                        where + ": the Bulwark row");
+                        lost || bulwarkChosen,
+                        mine.bulwarkFliesNext(),
+                        "the campaign's own hangar keeps its choice" + (lost ? " (the Bulwark flies for Rook)" : ""));
             }
         }
     }

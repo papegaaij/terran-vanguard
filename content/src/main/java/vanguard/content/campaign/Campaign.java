@@ -128,6 +128,13 @@ public final class Campaign {
     private Optional<Replay> replay = Optional.empty();
 
     /**
+     * The escort choice of a replay (the user's playtest of 2026-10-26, design/ui/mission-select): a replay of a level
+     * Rook flew flies him unless the Bulwark is fitted in that replay's hangar, whatever the campaign's own choice
+     * ({@link Escort#flies()}) is now. Never saved; the replay hangar opens with Rook ({@link #replayEscort(Escort.Escorter)}).
+     */
+    private Escort.Escorter replayEscort = Escort.Escorter.ROOK;
+
+    /**
      * A replay of a level the campaign has flown (design/ui/mission-select): it flies with the save's
      * loadout and special charges at full armour, its retries are unlimited, and nothing of it is
      * kept but a better grade, which the mission select writes into {@code slot}.
@@ -286,6 +293,15 @@ public final class Campaign {
      * confirm: design/ui/mission-select).
      */
     public static Campaign replay(CampaignRules rules, SaveSlots.Slot slot, SaveGame save, int level) {
+        return replay(rules, slot, save, level, Escort.Escorter.ROOK);
+    }
+
+    /**
+     * A replay as {@link #replay(CampaignRules, SaveSlots.Slot, SaveGame, int)}, with the escort its replay hangar chose
+     * ({@link #replayEscort()}): Rook, or an owned Bulwark fitted there (from its unlock).
+     */
+    public static Campaign replay(
+            CampaignRules rules, SaveSlots.Slot slot, SaveGame save, int level, Escort.Escorter escort) {
         if (!Missions.played(save, level)) {
             throw new IllegalArgumentException("level " + level + " has not been flown yet");
         }
@@ -295,6 +311,7 @@ public final class Campaign {
         campaign.retriesLeft = Optional.empty();
         campaign.gear = campaign.gear.withArmour(campaign.maxArmour());
         campaign.launched = campaign.gear;
+        campaign.replayEscort = escort;
         return campaign;
     }
 
@@ -620,7 +637,7 @@ public final class Campaign {
 
     /** Whether Rook is grounded for Level {@code level} (the replay hangar's mission), as {@link #escortGrounded()}. */
     public boolean escortGrounded(int level) {
-        return rookChosen(level) && gear.escort().armour() <= 0;
+        return rookChosen(level) && rookArmour(level) <= 0;
     }
 
     /**
@@ -633,23 +650,60 @@ public final class Campaign {
 
     /** Whether Rook's armour is low for Level {@code level} (the replay hangar's mission), as {@link #escortArmourLow()}. */
     public boolean escortArmourLow(int level) {
-        return rookChosen(level) && gear.escort().armour() < rules.escort().launchWarning() * escortMaxArmour();
+        return rookChosen(level) && rookArmour(level) < rules.escort().launchWarning() * escortMaxArmour();
     }
 
     /**
-     * M8 part A: whether the slot is Rook's at Level {@code level}: he is hired, not missing, and the player has not
-     * chosen an owned Bulwark instead.
+     * Rook's armour as a flight of Level {@code level} takes it: his campaign armour; a replay while he is lost (the
+     * story flag {@value #ROOK_MISSING}, Levels 27–29) flies him whole, as neither the replay nor the campaign can
+     * repair him then (the user's playtest of 2026-10-26).
+     */
+    public double rookArmour(int level) {
+        return replays(level) && storyFlags.contains(ROOK_MISSING)
+                ? escortMaxArmour()
+                : gear.escort().armour();
+    }
+
+    /**
+     * M8 part A: whether the slot is Rook's at Level {@code level}: he is hired, the level is from his joining level on
+     * (an Act 1 replay has no escort, so no warning: the user's playtest of 2026-10-26), he is not missing, and no owned
+     * Bulwark is chosen instead.
      */
     private boolean rookChosen(int level) {
-        return gear.escort().hired() && !rookMissing(level) && !bulwarkChosen(level);
+        return gear.escort().hired() && escortJoined(level) && !rookMissing(level) && !bulwarkChosen(level);
     }
 
     /** M8 part A: whether an owned Bulwark is the slot's choice at {@code level} (it is for sale by then). */
     private boolean bulwarkChosen(int level) {
-        Escort escort = gear.escort();
-        return escort.flies() == Escort.Escorter.BULWARK
-                && escort.bulwark().owned()
+        return escortChoice(level) == Escort.Escorter.BULWARK
+                && gear.escort().bulwark().owned()
                 && level >= rules.bulwark().unlock();
+    }
+
+    /**
+     * Who the player chose for the escort slot of Level {@code level}: the campaign's own choice for its next level,
+     * the replay's ({@link #replayEscort()}) for a replayed one.
+     */
+    public Escort.Escorter escortChoice(int level) {
+        return replays(level) ? replayEscort : gear.escort().flies();
+    }
+
+    /**
+     * Whether Level {@code level} is a replay's: this campaign is a replay, or the level is an earlier one than the
+     * next (the replay hangar's mission: only a level already flown can be replayed).
+     */
+    public boolean replays(int level) {
+        return replay.isPresent() || level < nextLevel;
+    }
+
+    /** The escort choice of the replay hangar and its flight (Rook unless the Bulwark is fitted there); not saved. */
+    public Escort.Escorter replayEscort() {
+        return replayEscort;
+    }
+
+    /** Sets the replay hangar's escort choice (Rook as it opens; the Bulwark when fitted there). */
+    public void replayEscort(Escort.Escorter escort) {
+        replayEscort = escort;
     }
 
     /** Whether Level {@code level} is from Rook's joining level on: an escort can fly it once he is hired. */
@@ -716,7 +770,9 @@ public final class Campaign {
      * armour for {@code --escort bulwark}).
      *
      * <p>M8 part A: from the Bulwark's unlock an owned Bulwark flies when the player chose it; while Rook is missing
-     * (Levels 27–29) the slot holds the owned Bulwark, or a free loaner at full armour when none is owned.
+     * (Levels 27–29) the slot holds the owned Bulwark, or a free loaner at full armour when none is owned. A replay
+     * (the user's playtest of 2026-10-26) takes the replay hangar's choice ({@link #escortChoice(int)}), Rook unless the
+     * Bulwark is fitted there, and flies Rook whole while he is lost ({@link #rookArmour(int)}).
      */
     public Optional<EscortFlight> escortFlight(int level) {
         Escort escort = gear.escort();
@@ -743,10 +799,11 @@ public final class Campaign {
             return Optional.of(EscortFlight.bulwark(escort.side(), bulwarkArmour, false));
         }
         Fitted gun = gear.loadout().get(LoadoutSlot.ESCORT);
-        if (!(escort.armour() > 0) || gun == null) {
+        double armour = rookArmour(level);
+        if (!(armour > 0) || gun == null) {
             return Optional.empty();
         }
-        return Optional.of(EscortFlight.rook(gun, escort.side(), Math.min(escort.armour(), escortMaxArmour())));
+        return Optional.of(EscortFlight.rook(gun, escort.side(), Math.min(armour, escortMaxArmour())));
     }
 
     /**

@@ -279,7 +279,7 @@ final class LoadoutPanel {
         glass.shadowed(
                 batch,
                 glass.fonts.label,
-                grounded ? GROUNDED : armour(campaign),
+                grounded ? GROUNDED : armour(campaign, hangar.level()),
                 grounded ? Glass.ALERT : campaign.escortArmourLow(hangar.level()) ? Glass.AMBER : Glass.CYAN,
                 x + ESCORT_INSET,
                 y + ESCORT_ARMOUR_ROW);
@@ -323,9 +323,9 @@ final class LoadoutPanel {
         return campaign.gear().escort().side().name().substring(0, 1);
     }
 
-    /** Rook's armour on the callout: {@code 34/80}. */
-    static String armour(Campaign campaign) {
-        return (int) Math.ceil(campaign.gear().escort().armour()) + "/" + (int) campaign.escortMaxArmour();
+    /** Rook's armour on the callout for the hangar's level (a replay while he is lost: whole): {@code 34/80}. */
+    static String armour(Campaign campaign, int level) {
+        return (int) Math.ceil(campaign.rookArmour(level)) + "/" + (int) campaign.escortMaxArmour();
     }
 
     /**

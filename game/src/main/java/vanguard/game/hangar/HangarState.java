@@ -318,7 +318,7 @@ public final class HangarState {
      */
     public boolean bulwarkFlies() {
         Escort escort = hangar.campaign().gear().escort();
-        return escort.bulwark().owned() && (escort.flies() == Escort.Escorter.BULWARK || hangar.rookMissing());
+        return escort.bulwark().owned() && (hangar.escortChoice() == Escort.Escorter.BULWARK || hangar.rookMissing());
     }
 
     /** The choices of the selected row: the shop row's, or the Bulwark row's. */
@@ -1233,7 +1233,7 @@ public final class HangarState {
         if (campaign.escortGrounded(hangar.level())) {
             warnings.add(ROOK_GROUNDED);
         } else if (campaign.escortArmourLow(hangar.level())) {
-            warnings.add(rookArmour(campaign.gear().escort().armour(), campaign.escortMaxArmour()));
+            warnings.add(rookArmour(campaign.rookArmour(hangar.level()), campaign.escortMaxArmour()));
         }
         return warnings;
     }

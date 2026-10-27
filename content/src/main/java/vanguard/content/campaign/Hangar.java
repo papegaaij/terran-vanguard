@@ -218,6 +218,11 @@ public final class Hangar {
         this.catalogue = catalogue;
         this.campaign = campaign;
         this.level = level;
+        if (campaign.replays(level)) {
+            // The replay hangar opens with Rook in the escort slot, whatever the campaign chose for its next level (the
+            // user's playtest of 2026-10-26); fitting the Bulwark here is the replay's choice only.
+            campaign.replayEscort(Escort.Escorter.ROOK);
+        }
     }
 
     public Campaign campaign() {
@@ -227,6 +232,14 @@ public final class Hangar {
     /** The level the hangar fits the ship for: the next level, or the replayed mission. */
     public int level() {
         return level;
+    }
+
+    /**
+     * Who the player chose for the escort slot of {@link #level}: the campaign's choice, or the replay hangar's (Rook
+     * until the Bulwark is fitted there; {@link Campaign#escortChoice(int)}).
+     */
+    public Escort.Escorter escortChoice() {
+        return campaign.escortChoice(level);
     }
 
     /** The escort as the flight of {@link #level} takes it ({@link Campaign#escortFlight(int)}). */
@@ -699,16 +712,22 @@ public final class Hangar {
     }
 
     private Step step() {
-        return new Step(campaign.gear(), bought);
+        return new Step(campaign.gear(), bought, campaign.replayEscort());
     }
 
-    /** Back to {@code step}'s gear, Rook keeping the side he has now: his side is not undone. */
+    /**
+     * Back to {@code step}'s gear, Rook keeping the side he has now: his side is not undone; and to its replay escort
+     * choice when it has one.
+     */
     private void restore(Step step) {
         Gear restored = step.gear();
         Escort escort = restored.escort();
         campaign.gear(
                 restored.withEscort(escort.withSide(campaign.gear().escort().side())));
         bought = step.bought();
+        if (step.replayEscort() != null) {
+            campaign.replayEscort(step.replayEscort());
+        }
     }
 
     /** The whole armour points missing. */
@@ -833,7 +852,8 @@ public final class Hangar {
 
     /**
      * M8 part A: chooses who flies in the escort slot, for free and as part of the visit's undo: Rook while he is
-     * hired, or the owned Bulwark. While Rook is missing the slot holds the Bulwark whatever the choice.
+     * hired, or the owned Bulwark. While Rook is missing the slot holds the Bulwark whatever the choice. In the replay
+     * hangar the choice is the replay's ({@link Campaign#replayEscort()}), not the campaign's.
      *
      * @return whether the choice changed
      */
@@ -843,11 +863,16 @@ public final class Hangar {
         boolean allowed = escorter == Escort.Escorter.ROOK
                 ? escort.hired()
                 : escort.bulwark().owned();
-        if (!allowed || escort.flies() == escorter) {
+        if (!allowed || campaign.escortChoice(level) == escorter) {
             return false;
         }
         undo.push(step());
-        restore(new Step(gear.withEscort(escort.withFlies(escorter)), bought));
+        if (campaign.replays(level)) {
+            // The replay hangar's choice is the replay's, not the campaign's (the user's playtest of 2026-10-26).
+            restore(new Step(gear, bought, escorter));
+        } else {
+            restore(new Step(gear.withEscort(escort.withFlies(escorter)), bought));
+        }
         return true;
     }
 
@@ -939,7 +964,15 @@ public final class Hangar {
     }
 
     /** The state a transaction changes: the gear and which of its items were bought during the visit. */
-    private record Step(Gear gear, Bought bought) {}
+    /**
+     * @param replayEscort the replay hangar's escort choice ({@link Campaign#replayEscort()}); null when a transaction
+     *     leaves it as it is
+     */
+    private record Step(Gear gear, Bought bought, Escort.Escorter replayEscort) {
+        Step(Gear gear, Bought bought) {
+            this(gear, bought, null);
+        }
+    }
 
     /**
      * The items bought during the visit, wherever they are now.

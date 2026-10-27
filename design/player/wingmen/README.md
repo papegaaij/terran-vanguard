@@ -54,7 +54,8 @@ the Bulwark (L22).
   ([saves](../../systems/saves/README.md)).
 - He flies in **every campaign level from 08 on** while he is hired and not grounded (below). He
   does **not** fly in Act 1 levels replayed from mission select, nor in a `--level` run below 8
-  (without `--escort`); his armour and guns are then left as they are.
+  (without `--escort`); his armour and guns are then left as they are. Which escort a replay of a later level flies is
+  set in [mission select](../../ui/mission-select/README.md) (*The replay's escort*).
 - The L08 HUD hint "Rook's side can be set in the hangar" points at his side setting.
 
 ### Rook's AI (first-draft parameters)

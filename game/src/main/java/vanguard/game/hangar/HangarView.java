@@ -64,7 +64,7 @@ public final class HangarView implements Disposable {
         int nextLevel = state.hangar().campaign().nextLevel();
         intel.draw(
                 batch,
-                nextLevel,
+                state.hangar().level(),
                 next,
                 teaser,
                 levelKey.orElse(""),
