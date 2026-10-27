@@ -3,7 +3,7 @@ title: Ground enemies
 design: approved
 implementation: in-progress
 art: final
-updated: 2026-10-25
+updated: 2026-10-27
 ---
 
 # Ground enemies
@@ -16,7 +16,8 @@ terrain, never collide with the player, and are what `anti-ground` and `area` we
 
 ## Contents
 
-Promoted to their own documents for the Acts 1–2 wrap-up, plus the Act 3 drafts of the overnight design phase (2026-10-12); the remaining units stay in the roster below.
+Promoted to their own documents for the Acts 1–2 wrap-up, plus the Act 3 drafts of the overnight design phase (2026-10-12) and the Act 5 drafts of its design phase (2026-10-27,
+pending the user's review in round 60); the remaining units stay in the roster below.
 
 | Part | Summary | Design | Impl | Art |
 |---|---|---|---|---|
@@ -35,19 +36,18 @@ Promoted to their own documents for the Acts 1–2 wrap-up, plus the Act 3 draft
 | [siphon-pump](siphon-pump/README.md) | Vrell pump on Thera Deep's farm racks, no attack; Level 23's secondary (L23) | review | done | final |
 | [spawning-reef](spawning-reef/README.md) | Soft Vrell coral spawner releasing Glassfin fry; Level 24's secondary (L24) | review | in-progress | final |
 | [relay-beacon](relay-beacon/README.md) | Human-built relay mast with the Helix handshake, no attack; Level 27's secondary (L27) | review | in-progress | final |
-| [warden-tank](warden-tank/README.md) | Unmarked grey tank, hull and turret, bursts from behind (L19) | approved | in-progress | final |
+| [warden-tank](warden-tank/README.md) | Unmarked grey tank, hull and turret, bursts from behind (L19); Ascendancy livery at L34 | review | in-progress | final |
+| [sam-nest](sam-nest/README.md) | Ascendancy launcher, salvos of shootable homing diamonds; dormant until a station turns (L29) | draft | not-started | proposed |
+| [sentinel-tower](sentinel-tower/README.md) | Tower with a laser sweep in any direction, a full turn every third sweep, hardened collar (L32) | draft | not-started | proposed |
+| [strider](strider/README.md) | Biped mech with fans and a homing pod; a lost leg topples it, crushing ground units (L32) | draft | not-started | chosen |
+| [rail-bunker](rail-bunker/README.md) | Hardened bunker, a locked 1 s telegraph line then a `heavy` rail shot (L33) | draft | not-started | chosen |
 
 ## Roster
 
 | Name | Faction | Layer | Tier | Role/ability | Formations | First level | Design |
 |---|---|---|---|---|---|---|---|
-| SAM Nest | Ascendancy | ground | small | Launches 2 shootable `homing` missiles at the player. | turret nest | 29 | idea |
-| Sentinel Tower | Ascendancy | ground | medium | Tall tower with a 360° `laser-sweep`; the sweep arc is shown first. Hardened base. | turret nest | 32 | idea |
-| Rail Bunker | Ascendancy | ground | medium | **Hardened**. Charges a screen-long `laser-line` rail shot along the player's column (0.8 s telegraph). | turret nest | 33 | idea |
-| Crawler Tank | Ascendancy | ground | medium | Tracked tank that `crawl`s along hulls and roads; has a front turret **and a rear turret**, so it shoots back after you pass. | convoy | 34 | idea |
 | Graft Turret | Hybrid | ground | small | An Ascendancy turret overgrown with Vrell tissue. **Regrows** 5 s after destruction unless its tissue root (weak point) is destroyed too. | turret nest | 37 | idea |
 | Shield Pylon | Ascendancy | ground | medium | Hardened pylon projecting a dome that makes every enemy inside it invulnerable. Destroy pylons to open fortress sections. | turret nest | 41 | idea |
-| Strider | Ascendancy | ground | large | Two-legged walker mech (8-frame walk cycle, 16 angles) that stalks across hulls and tunnel floors, arms with twin cannons (`fan`) and a shoulder `homing` pod. Legs are `destroyable`: destroying one topples it (a telegraphed fall across the ground layer). | solo, pairs | 32 | idea |
 | Halo Platform | Ascendancy | ground (fortress mount) | large | A ring of 6 turret segments rotating around a shielded core (`radial` ring + 32-angle turrets). Each turret is `destroyable` and fires as it swings round (`aimed`, `laser-line`); the core's shield drops when half the ring is gone. The ring's rotation speeds up as turrets die. | turret nest (solo centrepiece) | 41 | idea |
 
 ## Design
@@ -59,7 +59,7 @@ Promoted to their own documents for the Acts 1–2 wrap-up, plus the Act 3 draft
 - Ground targets pay more credits than air enemies of similar toughness, so an `anti-ground`
   loadout is rewarded on surface levels.
 - Not everything on the ground stands still: walkers (Scuttler, Creeper, Strider), tanks
-  (Crawler Tank, Warden Tank) and crawlers (Threadcrawler) move on their own heading with 16/32
+  (Warden Tank) and crawlers (Threadcrawler) move on their own heading with 16/32
   angle sprites and walk cycles; they still never collide with the player.
 
 ## Concept art
@@ -212,3 +212,8 @@ ice shelf; generator `tools/concept/enemies_r48.py`. Prompts:
 - 2026-10-22 (user, round 52, closed): the siphon pump's final frames accepted (F.4; the part is `art: final`).
 - 2026-10-23 (user, round 53, closed): the spawning reef is look **b** "bone chimneys" (F.4; a moved to `concept/rejected/`); the part is `art: final`.
 - 2026-10-25 (user, [round 57](../../concept-rounds/round-57/README.md) closed): the relay beacon's final frames accepted as final (F.3); the part stays `art: final`.
+- 2026-10-27 (Act 5 design phase, step D-enemies-B; pending the user's review in round 60): the SAM Nest, the
+  Sentinel Tower, the Rail Bunker and the Strider promoted from the roster to draft specs (the Rail Bunker and the
+  Strider keep their chosen r04 and r05 concepts); the Warden Tank's Act 5 return drafted (`review`). **J1**: the
+  roster's Crawler Tank (L34) dropped: the Warden Tank already fires back up the screen after passing and was
+  scheduled in Ascendancy livery from Act 5, so L34 flies it instead (one unit, its art and sounds saved).

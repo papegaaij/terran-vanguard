@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../../campaign, ../../world]
-updated: 2026-10-26
+updated: 2026-10-27
 ---
 
 # Special abilities
@@ -27,7 +27,7 @@ no airstrikes under the Europa ice. This gives the hangar intel another thing to
 | Sonar Pulse | max 4 charges | Pings the water: reveals the `sub` layer and makes it hittable by all weapons for 6 s; under water it also lights every unit and gives every weapon full damage for 6 s (see *Act 4 specials in detail*) | 250 / charge | L22 | Water only (under the Europa ice, from L23); idle with `NO WATER` elsewhere | draft |
 | Orbital Lance | max 2 charges | 3 s vertical beam, 40 px wide, that follows the ship's X, 400 DPS on all layers except `sub` (boss parts at most 400 per lance); a `beam` for tendrils | 600 / charge | L17 | Needs satellite cover: not under ice, not beyond the gate | draft |
 | Shield Overcharge | cooldown 45 s | Fills the shield to twice its capacity and keeps the capacity doubled for 8 s | 5 000 once | L19 | none | draft |
-| Time Dilation | cooldown 60 s | Everything except the player runs at 50 % speed for 5 s | 8 000 once | L31 | none | idea |
+| Time Dilation | cooldown 60 s | Everything except the player runs at 50 % speed for 5 s | 8 000 once | Act 6 (was L31; Q12 = c of round 60, pending) | none | idea |
 | Vrell Swarm Call | cooldown 75 s | Captured Choir tech: summons 6 friendly Vrell drones for 10 s | 10 000 once | L45 | none | idea |
 
 Rules:
@@ -238,6 +238,30 @@ Unchanged (see above): under water the flares drift and burn for 4 s as they do 
 launch fan stays 120° backwards, the flare's speed × 0.7 like every projectile. Unlocked at the
 visit before L27 with the Depth Hunter's torpedoes ([naval](../../enemies/naval/README.md)).
 
+### Act 5 specials (draft)
+
+*Draft, step `m9-d-systems` (2026-10-27), **pending the user's review in round 60** (Q12 = c). Act 5
+brings no new special; the belt only changes where the old ones work.*
+
+| Setting | Forbidden | HUD reason word |
+|---|---|---|
+| Inside the hollowed asteroid (L32 *Deep Core*, its tunnels and the refinery: rock overhead, as under the ice) | Airstrike, Orbital Lance | `IN ROCK` |
+| The rest of the belt (L29–L31, L33–L35: open space, Ceres Hub's dock canyon, the station hulls) | none (the Airstrike's CDF bombers and the Lance's satellites still cover the belt; at Ceres they are the loyalists') | — |
+| Every Act 5 level (vacuum, no water) | Sonar Pulse | `NO WATER` (the existing dry rule) |
+
+- The L32 limit is a new setting list (`underground`, part A, in [data.yaml](data.yaml)'s `limits`) with
+  its own reason word, shown in advance in the hangar intel and the briefing's threat line as the
+  Act 4 limits are; `IN ROCK` (7 characters) fits the compact row where `UNDER ICE` does.
+- **EMP Burst** in Act 5: the Ascendancy's units are machines (stunned 3 s) and wear hex shields,
+  which the burst strips (the [enemy shield rule](../../enemies/README.md#enemy-shields)); the hand
+  plan fits it from L29 ([generator](../generator/README.md#act-5-hand-plan-draft)). Its numbers are
+  unchanged.
+- **Decoy Flares** in Act 5: the Ascendancy's homing missiles (the red-gold **homing diamonds** of the
+  SAM Nest, the Hornet, the Strider and the Sovereign's batteries) are enemy `Missile`s, so the flares
+  decoy them as they decoy the Depth Hunter's torpedoes; unchanged rules.
+- **Time Dilation** moves to Act 6 (Q12 = c): a global time scale is a large engine change for one
+  shop item in an act whose income (≈ 41 000) does not stretch to it. Under Q12 = b it would stay at L31.
+
 ### One special at a time
 
 The special slot holds **one** special; there is no swap button. Specials are changed in the
@@ -335,6 +359,8 @@ Sonar Pulse under water in Level 26's black, a/b; generator `tools/concept/gear_
   special slot, with the hangar notice (`free_charges: 1` in data.yaml)
 - [x] Decoy Flares — **later: Act 4** (unlock at L27 with the first homing projectiles; user decision D4 of M4 part G) (M8 part A, step A2: the `flares` block in [data.yaml](data.yaml), `SpecialsData.Flares`; the simulation in step A3: `Act4SpecialsTest.theFlaresFanOutBackwardsSlowToAStopAndBurnFourSeconds`, `aHomingMissileGoesForTheNearestBurningFlareAndBurstsOnIt`; flown in step A4, `Act4ArsenalFlightTest.theSonarPulseAndTheDecoyFlaresFlyWithTheirSettings`; the look and the chosen r08-a sound in step A6)
 - [x] One free Airstrike charge granted once, at the unlock before L04
+- [ ] Act 5's limit inside the hollowed asteroid (L32): Airstrike and Orbital Lance forbidden, `IN ROCK`; the
+  Sonar Pulse `NO WATER` all act — **later: Act 5** (draft: *Act 5 specials*) — M9 part A
 - [x] Setting restrictions read from the level data — **later: Act 4** (draft: *Act 4 specials in detail*) (the first restricted setting is under the Europa ice from L22; no Acts 1–3 level restricts a special) (M8 part A, step A2: the `limits` and the level's and section's `medium` and `special_limits`, `SpecialsData.forbidden`/`reason`, `LevelData.forbiddenSpecials`, checked by `ActFourChecks`; `ActFourDataTest`; the simulation's forbidden state in step A3, `Act4SpecialsTest.theAirstrikeReadsUnderIceUnderWaterAndWorksAboveIt`, `aWaterlineChangesTheStateOnceWithItsEvent`; mapped in step A4, `Act4ArsenalFlightTest.aForbiddenSpecialIsRefusedWithItsReasonAndNoChargeSpent`; the greyed row with its word and the limit chime in step A6, `DeepWaterLooksTest.theReasonWordFitsTheSpecialRowWithTheNameCut`)
 - [x] HUD special row: icon, name, charges; greyed while the strike flies or with no charge; flashes
   when denied
@@ -460,3 +486,7 @@ Sonar Pulse under water in Level 26's black, a/b; generator `tools/concept/gear_
   the Sonar Pulse works wherever there is water (`medium: underwater` or a `water: true` level, D4 of the gap check).
 - 2026-10-22 (M8 part A, steps A3–A6; accepted in round 50 (2026-10-22)): the Decoy Flares decoy enemy `Missile`s only (D5; a seeker flag comes with the first unit that needs one, part G); the flares start 20 px behind the ship and a missile bursts on a flare inside a 10 px box; a level's or section's list may allow the Airstrike under water (it replaces the medium's rule; the Sonar needs water always); the Sonar Pulse and the Flares get no radio call; ART-A's flare glow is dithered and leaves no smoke under water.
 - 2026-10-22 (user, [round 50](../../concept-rounds/round-50/README.md) closed): F.3 (the Sonar Pulse) and F.4 (the Decoy Flares): the final art and the game captures accepted, the concept rows `chosen`. B.2 accepted: the Sonar Pulse works in any water (under water and on the `water: true` Levels 11–13), `NO WATER` on dry levels and L22's ice. The Sonar Pulse keeps its chosen ping r04-a (S.7 a).
+- 2026-10-27 (Act 5 design phase, step m9-d-systems; **pending the user's review in round 60**): Act 5's limits:
+  the Airstrike and the Orbital Lance forbidden only inside the hollowed asteroid of L32 (`IN ROCK`), allowed
+  elsewhere in the belt; the Sonar Pulse reads `NO WATER` all act; no new special in Act 5, Time Dilation to Act 6
+  (Q12 = c; alternatives: (b) at L31 as first drafted).

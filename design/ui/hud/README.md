@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../../player, ../../systems/scoring, ../../art-direction]
-updated: 2026-10-22
+updated: 2026-10-27
 ---
 
 # HUD
@@ -94,7 +94,7 @@ control prompts 384–430 (a two-line well, 42 px), objective tracker 436–482 
 |---|---|
 | Armour | Bar + number; flashes red at 30 % and 15 % |
 | Shield | Bar + number; flickers while down after a break. Planned (M5 part F, Level 12): while a [Lamprey](../../enemies/air/lamprey/README.md) drains it, the label reads `SHIELD DRAIN` in the warning colour and the bar flickers the same way (if the label does not fit the row, `DRAIN` replaces `SHIELD`; a layout test) |
-| Power | Spare power as pips and the resulting regen bonus; glows during overdrive. Output drained by enemies (Void Leech) shows in a warning colour and the gauge flashes when load exceeds output (see [generator](../../player/generator/README.md#enemy-drain-effects)) |
+| Power | Spare power as pips and the resulting regen bonus; glows during overdrive. Output drained by enemies (Void Leech) shows in a warning colour and the gauge flashes when load exceeds output (see [generator](../../player/generator/README.md#enemy-drain-effects); the draft of the row's look under *Act 5 additions*) |
 | Weapons | Front, rear, left, right with level pips (5); overdrive timer bar. A weapon that cannot fire in the level reads so in its row instead of its pips: a Torpedo Pod in a level without water reads `NO WATER` (M5 part E; it still draws its power), as the Bomb Rack's `NO GROUND` will in a level without ground |
 | Special | Icon, charges or cooldown ring; greyed out if unavailable in this setting |
 | Escort | Rook's (or the heavy drone's) armour; "EJECTED" when down. A box under the special row in the weapons' style: the `ESCORT` plate, Rook's 16 px hangar icon and `ROOK`, his armour as a bar with the number (flashing red at 30 %, as the player's); after the eject the bar is empty and the well reads `EJECTED` in red. Drawn only while an escort flies in the level (from Level 08, or with `--escort`); otherwise its region stays empty, so nothing else moves |
@@ -133,6 +133,44 @@ control prompts 384–430 (a two-line well, 42 px), objective tracker 436–482 
   enemies, homing missiles) between waves.
 - Small floating numbers for credits picked up. Can be disabled in options (Gameplay tab,
   `CREDIT NUMBERS`).
+
+### Act 5 additions (draft)
+
+*Draft, step `m9-d-systems` (2026-10-27), **pending the user's review in round 60** (Q2 = a, Q9 = a).*
+
+**The power row under a drain** (from L33; the rules are the
+[generator's](../../player/generator/README.md#enemy-drain-effects)):
+
+- While at least one drainer is latched the row's label reads **`POWER DRAIN`** in amber (as the
+  shield row's `SHIELD DRAIN`; `DRAIN` alone if the layout test finds it too long), and the drained MW are
+  drawn as **dark red hatched cells** at the top end of the gauge, so the gauge shows load, the
+  effective output and the lost part at once; the readout beside it gives the effective output
+  (`14/20`).
+- While the load exceeds the effective output the gauge **flashes** (the low-armour flash's rhythm,
+  1.2 s) and the regen bonus reads **`REGEN OFF`**; when the weapons are slowed too it reads the factor
+  instead (`FIRE 88%`). Both clear the moment the load fits again.
+- In the play field (the ship's looks, not the HUD): the muzzle flashes flicker while the fire rate is
+  cut, and the shield's hex ring is drawn dimmed while its regeneration is stopped. The [Void
+  Leech](../../enemies/space/void-leech/README.md)'s latch and shake-off are the Lamprey's, so the
+  event prompt (`SHAKE OFF` · `LEFT-RIGHT`) is reused with its rules for a latched leech.
+
+**The enemy channel on the radio** (from the Act 5 intro on): a line from **Vorne** or another
+Ascendancy speaker (the mutineers' lead; Ceres Hub Control stays a loyalist on the friendly channel) is an *intercepted*
+transmission. Its radio box keeps the layout of the left panel's radio row and changes its dress:
+
+- The portrait sits under a **steady interference** for the whole line (the briefing's
+  [intercepted page](../briefing/README.md#intercepted-transmissions-draft) at radio size: rolling
+  bands, a faint tear every few seconds), not only the static on open and close; Vorne's portrait is
+  the amber enemy-channel style of his concept (round 04, production portraits proposed in round 60).
+- The name plate and the subtitle are **amber** instead of the friendly channel's colour, and the plate
+  reads the speaker's name with a small `INTERCEPT` tag where the space allows (the layout test decides).
+- The queue's rules are unchanged (timed, event and urgent lines as above); an intercepted line is never
+  urgent. The Choir keeps its own glyph treatment.
+
+**Level 31's tug** (the escort level): its three hull sections (bow, cargo, engines) on the objective
+line as three bars in the style of Level 10's shuttle bars (the hit flash, amber below 50 %, the red flash
+and dark when lost); the sections and their HP are the tug's and the level's documents', the line must
+fit the 208 px well (`MissionLayoutTest`).
 
 ## Concept art
 
@@ -280,8 +318,18 @@ Production art for concept round 26 (M4 part H batch): the boss bar's plate, ren
       characters (`ORBITAL LANCE`), `OVERCHARGE` for the Shield Overcharge; the dash pip a 16×6 cell
       right of the shield's label plate; with it the overcharge's white cores in the shield bar and
       a drone bay's hits strip under its weapons row
+- [ ] The power row under a drain (`POWER DRAIN`, the hatched drained cells, the flash over load, `REGEN OFF` /
+      `FIRE nn%`) — **later: Act 5** (draft: *Act 5 additions*) — M9 part A
+- [ ] The enemy channel on the radio (the steady interference over the portrait, the amber plate and subtitle,
+      `INTERCEPT`), Vorne's production portrait — **later: Act 5** — M9 (the act intro's part)
+- [ ] Level 31's tug tracker (three section bars) — **later: Act 5** — M9 (L31's part)
 
 ## Open questions
+
+- Q2 and Q9 of [round 60](../../concept-rounds/README.md) (the drain, the broadcast): the power row's
+  and the enemy channel's drafts above follow the recommended answers; under Q2 = b (a flat −20 % fire
+  rate a leech) the gauge would show only a leech count, under Q2 = c the slowed weapon's row would
+  read `DRAINED` instead.
 
 - Should the side panels show a subtle live element, such as a mini-radar or the pilot's
   heartbeat? Nice 90s flavour, but it competes for attention.
@@ -299,3 +347,7 @@ Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-a
   Rook's rear bark went with the re-entry warnings; Rook's Trail on those units stays.
 - 2026-10-22 (M8 part A, step A6; accepted in round 50 (2026-10-22)): a forbidden special greys and switches to the compact row with its reason word (`UNDER ICE` / `NO WATER`) in amber, `ORBITAL LANCE` cut to `ORBITAL` to fit; the row flashes once on the state change at a waterline and plays the limit chime (a press on a greyed special keeps the denied buzz r08-a); the Harpoon Torpedoes read `HARPOONS` so `NO WATER` fits beside the name; the escort box reads `BULWARK` (`LOST` when destroyed); the nanites' `+` pip.
 - 2026-10-22 (user, [round 50](../../concept-rounds/round-50/README.md) closed): K.1: the special row's limits (`UNDER ICE` / `NO WATER`, the compact greyed row, `ORBITAL LANCE` cut to `ORBITAL`) accepted, the capture `chosen`; the limit chime is S.8 **b** (the soft glass fifth).
+- 2026-10-27 (Act 5 design phase, step m9-d-systems; **pending the user's review in round 60**): the power row
+  under a drain (`POWER DRAIN`, the drained MW as hatched cells, the flash and `REGEN OFF` / `FIRE nn%` over
+  load; Q2 = a), the enemy channel on the radio (a steady interference over the portrait, an amber plate and
+  subtitle, the `INTERCEPT` tag; Q9 = a) and Level 31's three tug section bars (Q4 = a).

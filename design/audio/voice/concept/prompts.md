@@ -487,3 +487,42 @@ Round 52 picked b: `ref` became `ref-thera-control-r52-b` and these four files m
 Closed in round 52 (user, 2026-10-22, V.1 = b): **Chosen: b** (John Van Stan, `refs/ref-thera-control-r52-b.wav`).
 **Rejected: a** (Bruce Pirie: `concept/rejected/voice-thera-control-r52-a.ogg`, its four line files in
 `concept/rejected/voice-thera-control-r52-a/` and the clip `concept/rejected/ref-thera-control-r52-a.wav/.txt`).
+
+## voice-vorne
+
+Round 60 (the Vorne audition, M9 design phase, step AUD-P; pending the user's review), generated with
+`tools/concept/audio/tts_r60.py` as round 52, each line through the new enemy-channel filter on its own, 1 s apart
+(−16.1 / −15.9 / −16.2 LUFS, OGG Vorbis q4, 44.1 kHz mono). Chairman Silas Vorne (the main villain; Act 5 intro pages
+2–3, Level 35, Acts 6–7; speaker `vorne`, `uncast: true` until the pick) at the README's proposed settings (a theatrical
+base: exaggeration 0.6, cfg_weight 0.4, temperature 0.7), two lines: the broadcast's opening ("Citizens of the solar
+system. My name is Silas Vorne. From this hour the Jovian Ascendancy governs itself, and it does not stand alone.") and
+the recruitment ("Lancer. You are wasted on Okafor. Come to Callisto. Name your price."). Seeds 100–102 per candidate
+and line (a's and b's first line also 103–105); the pin is the take Whisper (base.en, the names prompt) read back right
+with its median pitch nearest the clip's, no octave jump and no pause over 0.8 s: a 103 / 102, b 104 / 100, c 102 /
+102. a's first line paused about a second between sentences or jumped an octave in all six takes (his clip rests 1.28
+s between sentences too); 103 is pinned with a 1.06 s rest after "Silas Vorne." (judgement call: an orator's rest, not
+a stumble). Every name read back as written (no respelling). Through the filter all three read back word for word.
+Measured only, not listened to.
+
+**The enemy filter** (`filter: enemy`, the voice README's *Act 5 voices*): radio filter b's band (300 Hz–3.4 kHz),
+saturation and its steady hiss with the slow flutter, **no crackle and no clicks**; a steady static bed under the
+whole line (band noise 400 Hz–4 kHz, 26 dB under the voice's RMS, swelling ±3 dB at 0.25 Hz); the line opens and closes
+with the intercept's static sweep (here round 60's proposals `intercept-open-r60-a` / `intercept-close-r60-a`, the
+sfx concept files) instead of the squelch.
+
+The voice README asks for an older man's polished low voice, a chairman, not a soldier: below every cast man (Ares
+Control 112 Hz, Thera Deep Control 119, Nansen 124, the Kilo Lead 129: a clip under about 105 Hz), slow, with an
+orator's controlled range, not a monotone; never a main-cast reader nor a voice already cast or auditioned. Also
+measured and passed over: Paul Adams (The Prince), 110 Hz; Peter Dann (Heart of Darkness), 99 Hz but 2.7 words/s and no
+licence on the archive.org item; Beyond Good and Evil's reader, 87 Hz but nearly monotone (IQR 13 Hz); The Use and
+Abuse of History's, 105 Hz and monotone; the Philippics', 108 Hz and 2.9 words/s; David Clarke, 111 Hz, 3.1 words/s;
+Peter Yearsley, 120 Hz; Martin Geeson, 173 Hz. Chatterbox lifts every voice: a's takes sit at 129–131 Hz (by the Kilo
+Lead), b's at 115–123 Hz (around Thera Deep Control and Nansen), c's at 93 Hz, the only one under the cast men; a and
+b differ from them by timbre and pace more than by pitch.
+
+| Variant | Reader | Source | Licence | Clip pitch |
+|---|---|---|---|---|
+| a | Jeffrey Church | [The Genealogy of Morals, ch. 1 (Nietzsche)](https://archive.org/details/genealogy_of_morals_1507_librivox), cut at 90 s | public domain (Public Domain Mark 1.0) | 103 Hz on the clip (100 Hz over 30 s, a wide range: IQR 54 Hz), 2.0 words/s (takes 131 / 129 Hz); a slow, deliberate argument with a rhetorical rise and fall |
+| b | Clive Catterall | [The Prince (version 4), ch. 1 (Machiavelli)](https://archive.org/details/theprincever4_1501_librivox), cut at 40 s | public domain (Public Domain Mark 1.0) | 92 Hz (96 Hz over 30 s, IQR 44 Hz), 2.5 words/s (takes 115 / 123 Hz); an older English voice, measured and dry |
+| c | Gregg Margarite | [Rastignac the Devil, ch. 2 (Farmer)](https://archive.org/details/rastignac_devil_1003_librivox), cut at 120 s | public domain | 89 Hz (84 Hz over 30 s, IQR 39 Hz), 2.6 words/s (takes 93 / 93 Hz); a deep American bass, warm and theatrical |
+

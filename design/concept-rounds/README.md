@@ -3,7 +3,7 @@ title: Concept rounds
 design: review
 implementation: n/a
 art: chosen
-updated: 2026-10-26
+updated: 2026-10-27
 ---
 
 # Concept rounds
@@ -78,6 +78,7 @@ they belong to; a round only collects them.
 | [round-57](round-57/README.md) | M8 part G, Level 27 Hydrothermal Vents: Level 26's Rook loss again (round 55 F.5's redo) and the waterline strip with `BEAMS ×0.2`, the final art of Level 27's backdrop, the Depth Hunter and its torpedo, the relay beacon, the heat plumes, the *Marlin* and the hull-code wreck, the hatchery gate, intel and briefing with game captures, twelve sound pairs and seven calls the build made (closed 2026-10-25: all accepted; sounds bed a, tell b, eruption a, bend a, launch a, run b, impact b, hum a, break b, crack a, hull break a, scan b) | review | n/a | proposed |
 | [round-58](round-58/README.md) | M8 part H, Level 28 Abyssal Maw and the end of Act 4: the final art of Level 28's backdrop, the Abyssal Maw, the Ascendancy cruisers, the breakout, *Pelagic-3* and the buoy, intel, briefing and the act's end with game captures, nineteen sound pairs and track 30, Q.1 the Maw's music and eight calls the build made (closed 2026-10-26: F.1, F.4-F.8 accepted, F.2 the Maw and F.3 the cruisers redo for round 59, Q.1 a, C.1-C.8 accepted; sounds a except S.13, S.14, S.16 b; track 30 accepted) | review | n/a | proposed |
 | [round-59](round-59/README.md) | M8 part I, the round 58 fixes and the close-out of Act 4 (complete and playable): the Abyssal Maw's motion, the cruisers' rise and the breakout's burst redone with game captures, the listen-through of the 119 voiced Act 4 lines, Q.1 the ambience beds' volume and seven calls the build made (closed 2026-10-26: R.1-R.3 accepted, V.1 accepted, Q.1 a, C.1 keep, C.2-C.5 and C.7 accepted, C.6 accept for now) | review | n/a | proposed |
+| [round-60](round-60/README.md) | Act 5 "The Belt", the design phase: twelve design questions, twelve judgement calls, the units, the Iron Sovereign, the mining tug and the belt in a/b mockups, music, nineteen sounds and Vorne's voice, and the nineteen drafts to approve | review | n/a | proposed |
 
 ## Design
 
@@ -154,3 +155,4 @@ How a round works:
 | 57 | 2026-10-25 | closed | M8 part G, Level 27 Hydrothermal Vents (Level 26's Rook loss again and the waterline strip, final art with game captures, twelve sound pairs, seven calls the build made); closed 2026-10-25: L.1, L.2, F.1–F.8 and C.1–C.7 accepted, sounds bed a, tell b, eruption a, bend a, launch a, run b, impact b, hum a, break b, crack a, hull break a, scan b |
 | 58 | 2026-10-26 | closed | M8 part H, Level 28 Abyssal Maw and the end of Act 4 (final art with game captures, nineteen sound pairs and track 30, Q.1 the Maw's music, eight calls the build made); closed 2026-10-26: F.1, F.4-F.8 accepted (F.4's burst to be timed at the ship's breach), F.2 the Maw and F.3 the cruisers redo for round 59, Q.1 a, C.1-C.8 accepted, sounds a except S.13, S.14, S.16 b, track 30 accepted |
 | 59 | 2026-10-26 | closed | M8 part I, the round 58 fixes and the close-out of Act 4 (the Maw's motion, the cruisers' rise and the breakout's burst redone with game captures, the Act 4 listen-through, Q.1 the ambience beds' volume, seven calls the build made); closed 2026-10-26: R.1-R.3 accepted (the Maw's and the cruisers' art final), V.1 accepted, Q.1 a, C.1 keep, C.2-C.5 and C.7 accepted, C.6 accept for now |
+| 60 | 2026-10-27 | open | Act 5 "The Belt" design phase (nothing built yet): Q.1-Q.12 the twelve design questions, J.1-J.12 judgement calls, A.1-A.23 art (fifteen units, the homing diamond, the Iron Sovereign and its atlas, the belt's mood, the tug, Vorne's portraits, the speakers, the wavering Stormhawks), M.1-M.2 music, S.1-S.19 sounds, V.1 Vorne's voice, D.1-D.19 the documents to approve |

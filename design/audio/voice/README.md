@@ -4,7 +4,7 @@ design: draft
 implementation: in-progress
 art: chosen
 depends-on: [.., ../../story/characters, ../../ui/hud, ../../ui/options, ../../tech/architecture]
-updated: 2026-10-26
+updated: 2026-10-27
 ---
 
 # Voice
@@ -403,6 +403,91 @@ Rook's scripted Level 26 and his silence in Levels 27–28 are in the
 | Marlin (L27's hauler) | MAR-lin | as written |
 | Pelagic-3 (L28's recon sub) | puh-LAJ-ik three | "Pelajic Three" if the read-back fails |
 
+### Act 5 voices (draft, round 60)
+
+**Status: draft, pending the user's review in round 60** (M9 design phase, step `m9-d-audio`, 2026-10-27). Act 5 is
+voiced as Acts 1–4: every radio line and briefing page, the act intro's four pages (pages 2–3 are Vorne's broadcast,
+Q9 a) and the outro's four; the hangar teaser and the intel lines stay text. The speakers, their channels and their
+portraits are in [characters](../../story/characters/README.md#act-5-speakers-draft); the lines are the level
+documents' and the [act's](../../campaign/act-5-the-belt/README.md); this section holds how they are cast and
+rendered.
+
+**The enemy channel** (Q9 a; its look is the [HUD's](../../ui/hud/README.md#act-5-additions-draft) and the
+[briefing's](../../ui/briefing/README.md#intercepted-transmissions-draft)). A speaker on the enemy channel (Vorne,
+Harker) gets **`filter: enemy`** in the speaker table, as the beacon has `filter: pa`:
+
+- Radio filter b's band and saturation as every radio voice, plus a **steady static bed** under the whole line: band
+  noise (400 Hz–4 kHz) about 26 dB under the voice, swelling slowly (±3 dB at about 0.25 Hz: the rolling bands'
+  sound). **No crackle and no dropouts on the words** (the `distorted` expression's dropouts are the Choir's and a
+  damaged friendly channel's); the transmission is clean and expensive, the interference is the intercept.
+- The line opens and closes with the intercept's static sweep ([sfx](../sfx/README.md#act-5-sounds-draft-round-60))
+  instead of the squelch.
+- **Briefing pages** are voiced without the radio filter (*Briefings* below), except a page with `channel: enemy`: an
+  intercepted page is heard through the feed, so it takes the enemy filter too (Vorne's two broadcast pages).
+- Never urgent and never shouted in Act 5: Vorne's character rule ("never shouts until the very end of Act 6").
+
+**New speakers** (cast as Ares Control, Lance Control and the Act 4 colony voices were: real lines, new candidate
+readers from LibriVox's public-domain and CC0 recordings, never a main-cast reader nor a voice already cast, through
+the speaker's filter at the neutral settings, `uncast: true` until the round picks). **Vorne is auditioned in round
+60** (the act's tone hangs on his voice; step AUD-P, `tts_r60.py`, if the GPU is free); the three generic speakers in
+their parts' rounds (Ceres Hub Control and Harker in part B's, the Bellwether in part D's).
+
+- **Vorne** (the main villain; Act 5 intro pages 2–3, Level 35; Acts 6–7 later). An older man's **polished low
+  voice**: long sentences, rhetorical flourishes, patient, amused, warm on the surface and cold under it; a
+  chairman, not a soldier ([Vorne](../../story/characters/vorne/README.md)). The reader must sit **below every cast
+  man** (Ares Control 112 Hz, Thera Deep Control 119, Nansen 124, the Kilo Lead 129: a clip under about 105 Hz), slow
+  (about 2 words a second or less) and with an orator's controlled range, not a monotone: a dramatic reading (a play,
+  a speech or an essay read aloud) rather than a flat narration. **Three candidates (a/b/c)** for the main villain.
+  Audition lines: the broadcast's first sentence (intro page 2) and the recruitment ("*Lancer. You are wasted on
+  Okafor. Come to Callisto. Name your price.*"). Settings (proposal): a theatrical base, exaggeration about 0.6,
+  cfg_weight 0.4 (slower), temperature 0.7; his **rage** (Level 35's core opening, the bared-teeth portrait) is read
+  at the **grim** row, short and cold, never the shout row, and a build check rejects `shout: true` on his cues
+  before Act 6's end. His long broadcast pages are chunked as Okafor's intro pages, every take checked for a pause
+  over 0.8 s (the retry rule) and pinned.
+- **Ceres Hub Control** (Levels 29 and 35; friendly channel, teal): the loyalist dock controller who keeps Ceres Hub's
+  dock channel open while the hub turns. A **man, tired and steady** (Level 29's draft), dock procedure with a
+  belt worker's plainness, not a CDF officer's crispness; his t=60 "*Block C just declared!*" is urgent but not
+  shouted. Apart from the cast men by timbre or accent more than pitch (a mid register, 130–150 Hz, sits between the
+  Kilo Lead and Rook). Audition lines: Level 29's t=1 call and the t=101 Dock 9 line.
+- **Harker**, the mutineers' flight lead (Level 29; enemy channel, amber): a Ceres garrison pilot Rook flew convoys
+  with, a man of Rook's age, quick and hard, bitter rather than cruel ("*Pity. I'd have bought you a drink.*"). He
+  must not be mistaken for Rook (146–188 Hz) when the two trade lines: lower and harder (115–135 Hz) or a clearly
+  different accent. Audition lines: Level 29's t=68 declaration and the t=133 line to Rook. About five takes (two
+  timed, three events).
+- **The Bellwether**, the tug's captain (Level 31; friendly channel): a **belt miner in her fifties, dry and tired**
+  (Level 31's draft), who tells how Helix bought Ceres with medicine. She must not sound like Dr. Brandt (Act 4: dry,
+  tired, precise, 168 Hz): rougher and warmer, a working voice, ideally a regional accent; lower than Okafor
+  (145–152 Hz) or clearly apart by timbre. Audition lines: Level 31's t=1 call and the t=86/t=93 medicine story. Her
+  `{section}` lines expand to the tug's three sections as `{ally}` does (`bow`, `cargo`, `engines`: the hit and the
+  lost line, six takes), about 12 takes in all.
+
+**The cast speakers in Act 5.** Okafor reads the act intro's pages 1 and 4 around the broadcast and the "*Bulwark,
+RTB*" order at the rescue. Rook is silent until the rescue in Level 29 (his barks stay dropped, as in Levels 27–28);
+his first line back, "*Miss me? Don't answer that. Just shoot.*", is read at his lively base and pinned; his t=141
+line about Harker's wing is read at the neutral row, slower, with no joke (Level 20's quiet beat). Varga's outro beat
+(Vorne "looks forty; he was sixty when I left Helix") is read low and level, not as a revelation.
+
+**The Choir speaks once** (Level 33, before the leech swarm: "*…the one who opened… calls to us… we do not
+answer…*", [the Choir](../../story/characters/the-choir/README.md)): Level 26's treatment as built (one take in the
+Choir's fixed settings, the round-18 layering, the `distorted` filter), with indifference rather than threat; the
+level's music ducks under it. It is silent at Level 35 (the boss is Vorne's).
+
+**Pronunciation** (to try at the render steps, as Acts 3–4's: Whisper's read-back with the Act 5 name prompt, three
+seeds, the plain spelling against a respelling; kept only where it reads better):
+
+| Name | Say | Respelling |
+|---|---|---|
+| Ceres (Hub) | SEER-eez | as written; "Seerees" if the read-back fails |
+| Vesta (the relay) | VES-tuh | as written |
+| Callisto | kuh-LIS-toh | as written |
+| Helix | HEE-lix | as written (Act 3, step VOX-C) |
+| Vorne (Silas) | VORN, SY-lus | as written |
+| Ascendancy, Jovian | uh-SEN-dun-see, JOH-vee-un | as written |
+| Sovereign (the Iron Sovereign) | SOV-rin | as written |
+| Harker, Bellwether | HAR-ker, BEL-weh-ther | as written |
+| Dacosta (L31's claim marker) | duh-KOS-tuh | "Da Costa" if the read-back fails |
+| RTB (Okafor's order at the rescue) | R-T-B, the letters | "R.T.B." if the letters run together |
+
 ### Briefings
 
 The briefing pages (a level's and an act's) are **voiced** (user decision) by the same pipeline
@@ -700,6 +785,9 @@ row; b's clip is renamed `refs/ref-ares-control.wav` at the render step (part B)
 | [concept/voice-lance-control-r37-b.ogg](concept/voice-lance-control-r37-b.ogg) | Lance Control (round 37 audition), reader Celine Major (clip 159 Hz, take 162 Hz; seed 101, 2.62 s; `tools/concept/audio/tts_r37.py`) | chosen (round 37, S.16: Celine Major; her clip is `refs/ref-lance-control.wav`, the call rendered from it in step Q2) |
 | [concept/voice-conamara-r51-a.ogg](concept/voice-conamara-r51-a.ogg) | Dr. Brandt, `conamara` (round 51 audition), reader Margaret Espaillat (clip 168 Hz, a very narrow range, takes 165 / 162 Hz; Level 22's t=1 and t=100 lines, seeds 100 / 100, 17.1 s; `tools/concept/audio/tts_r51b.py`) | chosen (round 51: Dr. Brandt is Margaret Espaillat) |
 | [concept/voice-thera-control-r52-b.ogg](concept/voice-thera-control-r52-b.ogg) | Thera Deep Control, `thera-control` (round 52 audition), reader John Van Stan (clip 119 Hz, a narrow range, 1.7 words a second, takes 133 / 126 Hz; the same two lines, seeds 101 / 105, 14.3 s; `tools/concept/audio/tts_r52c.py`) | chosen (round 52, V.1 = b: Thera Deep Control is John Van Stan) |
+| [concept/voice-vorne-r60-a.ogg](concept/voice-vorne-r60-a.ogg) | Vorne, `vorne` (round 60 audition, step AUD-P), reader Jeffrey Church (The Genealogy of Morals; clip 103 Hz, a wide range, 2.0 words a second: a slow, deliberate argument read aloud; takes 131 / 129 Hz), the broadcast's opening and the recruitment through the new enemy filter (`filter: enemy`: filter b's band and saturation, no crackle, a steady static bed 26 dB under the voice swelling ±3 dB at 0.25 Hz, the intercept's sweep in and out), seeds 103 / 102, 19.7 s; `tools/concept/audio/tts_r60.py` | proposed (round 60) |
+| [concept/voice-vorne-r60-b.ogg](concept/voice-vorne-r60-b.ogg) | Vorne, candidate b, reader Clive Catterall (The Prince (version 4); clip 92 Hz, 2.5 words a second: an older English voice, measured and dry; takes 115 / 123 Hz), the same two lines, seeds 104 / 100, 16.7 s | proposed (round 60) |
+| [concept/voice-vorne-r60-c.ogg](concept/voice-vorne-r60-c.ogg) | Vorne, candidate c, reader Gregg Margarite (Rastignac the Devil; clip 89 Hz, 2.6 words a second: a deep American bass, warm and theatrical; takes 93 / 93 Hz, the only one under the cast men), the same two lines, seeds 102 / 102, 17.1 s | proposed (round 60) |
 
 Concept [round 33](../../concept-rounds/round-33/README.md) (M5 part E, user decision E10 = a) — casting Level 11's Atlas Control, the CDF
 officer of convoy Atlas-Seven: three of its lines (the t=1 call, the `ally-hit` line with `{ally}` =
@@ -728,6 +816,10 @@ Ted Lienhart's audition, clip and transcript moved to `concept/rejected/`, the c
 ## Open questions
 
 - **Act 3**: the Choir's speech layering (a/b in part H's round).
+- **Act 5 (round 60)**: Vorne's voice (three readers, a/b/c); the enemy channel's filter as drafted (a steady static
+  bed, no crackle or dropouts on the words) or the friendly radio filter with only the intercept's open and close
+  (cheaper, but the amber dress would be the only cue); Vorne auditioned now and the generic speakers in their parts'
+  rounds (drafted), or all four in round 60.
 
 ## Decisions
 
@@ -856,3 +948,9 @@ Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-a
   Measured only, not listened to.
 - 2026-10-26 (user, [round 59](../../concept-rounds/round-59/README.md) closed, V.1): the listen-through of the 119
   voiced Act 4 lines (14 minutes) **accepted**; the 8 flagged lines stay as they are. The Act 4 voice item is ticked.
+- 2026-10-27 (step `m9-d-audio`, M9 design phase; **pending the user's review in round 60**): *Act 5 voices* drafted:
+  the enemy channel's filter (`filter: enemy`: a steady static bed, no crackle or dropouts, the intercept's open and
+  close; also on `channel: enemy` briefing pages), Vorne's casting brief (below every cast man, three candidates,
+  auditioned in round 60; his rage at the grim row, never shouted), the generic speakers Ceres Hub Control, Harker and
+  the Bellwether (names and genders from the Level 29 and 31 drafts; cast in parts B and D), the Choir's Level 33
+  line on Level 26's treatment, the Act 5 names to try.

@@ -3,7 +3,7 @@ title: Story
 design: approved
 implementation: n/a
 art: chosen
-updated: 2026-10-02
+updated: 2026-10-27
 ---
 
 # Story
@@ -71,7 +71,7 @@ Acts, levels and bosses are defined in [campaign](../campaign/README.md); settin
 | 2 Homefront | Vrell landers break through to Earth's surface. Fighting over megacities, oceans and the arctic. The Siege Spire, a living fortress rooted in a city, is torn out. Earth holds. |
 | 3 Red Dust | Mars is under siege. The Vrell act strangely here: they avoid Helix facilities. Varga notices; Okafor tells her to keep it quiet. Then come unmarked human-built drones (L18) and a walker made of Helix alloy (L19). Boss: the Dust Colossus. |
 | 4 Deep Water | Under Europa's ice the Vrell are farming something. Aegis Wing finds human-built relay beacons pulsing red-gold along the Vrell routes (L24–L27), and Varga confirms a Helix hull code (L27). Rook is shot down and goes missing (L26). After the Abyssal Maw falls, Ascendancy cruisers in black and gold open fire on Aegis Wing (L28). |
-| 5 The Belt | The reveal: the Jovian Ascendancy opened the gate. Vorne's broadcast to the system opens the act (L29). Ascendancy and Vrell fight side by side; the belt stations choose sides, and Rook is freed at Ceres Hub. Boss: the Iron Sovereign battle station. |
+| 5 The Belt | The reveal: the Jovian Ascendancy opened the gate. Vorne's system-wide broadcast **is** the act intro (Ceres, August 2185). Ascendancy and Vrell fight side by side; the belt stations choose sides. Ceres Hub declares for the Ascendancy and half its garrison mutinies (L29); in the fight the wing frees Rook from a Helix prison tender in Dock 9, and he flies again from L30. Refugees tell how Helix bought the belt's loyalty with Vrell cures (L31). In the leech field the Vrell feed on Ascendancy ships too, and the Choir speaks of "the one who opened" with indifference (L33). Boss: the Iron Sovereign battle station (L35); its data points to Callisto, Vorne offers Lancer a price, and Varga sees the cures on his face. *Draft beyond the 2026-09-30 beats, pending the user's review in round 60.* |
 | 6 Jovian Storm | The hunt for Vorne through Jupiter's storms and cloud cities to the Ascendancy HQ on Callisto. The Vrell turn on the Ascendancy mid-act (L37, Aurelia) — they were never partners, only a door. In Helix HQ (L41) Varga finds Vorne's deal: the Vrell wanted passage because they are fleeing something the files call "the Silence" — its first mention. Boss: Vorne's flagship Ascendant; Vorne escapes toward the gate (L42). |
 | 7 Beyond the Gate | Through the Tether Gate after Vorne and into Vrell space to silence the Choir. On the far side: dead Vrell worlds and more hints of the Silence. Vorne, absorbed by the Choir, dies at L48. Final boss: the Choir Heart. Epilogue: the gate goes dark — but it was built to keep something out. |
 
@@ -108,7 +108,10 @@ Don't:
   [HUD](../ui/hud/README.md) radio), about 130 characters.
 - **Hangar intel**: Varga's comments on the next level, next to the intel panel.
 - **Enemy transmissions**: Vorne and the Choir break into the radio with their own portrait
-  frames (static-distorted), usually at boss fights. In Acts 1–2 the Choir only sings
+  frames (static-distorted), usually at boss fights. From Act 5 on Vorne and the other Ascendancy
+  voices are *intercepted*: amber, under a steady interference, on the radio
+  ([HUD](../ui/hud/README.md)) and on the briefing pages of his broadcast, the Act 5 intro
+  ([briefing](../ui/briefing/README.md#intercepted-transmissions-draft); draft, pending round 60). In Acts 1–2 the Choir only sings
   ("[the Choir sings]") and Varga interprets it; its first words come in Act 3 (see
   [the Choir](characters/the-choir/README.md)).
 
@@ -146,6 +149,16 @@ this sample only sets the voice.
   flagship (the earlier draft)? Act 7 gives the fleet a reason to cross the gate and the act a
   villain finale.
 - Is there an ending variation (e.g. based on difficulty or secrets found), or one ending?
+- Act 5, [round 60](../concept-rounds/README.md) Q9 (Vorne's broadcast): recommended (a), the act intro
+  **is** the broadcast: Okafor's page 1, Vorne's pages 2–3 on the enemy channel, Okafor's answer and the
+  order to Ceres on page 4. Alternatives: (b) all four pages Vorne, Okafor only in the L29 briefing (loses
+  Act 4's "we hear it together"); (c) Okafor's usual intro with Vorne as radio lines at L29's start (the
+  broadcast shrinks to subtitles).
+- Act 5, round 60 Q10 (the mutineer pilots): recommended (b), a small mercy: in L29 some Ceres pilots in
+  repainted CDF craft waver and peel off, and a "Hold fire" secondary pays if none is shot; the
+  campaign's story stays linear. Alternatives: (a) all mutineers fly Talons and fight, the cost told in
+  the radio; (c) a real story choice remembered later (branching, against the linear campaign).
+- Act 5, round 60 Q8 (Rook's rescue): see [Rook](characters/rook/README.md#open-questions).
 
 ## Decisions
 
@@ -163,3 +176,8 @@ this sample only sets the voice.
   in the [HUD](../ui/hud/README.md), which pages longer lines).
 - 2026-10-02 (user decision): radio priorities: timed lines first, event reactions wait for a gap
   and are dropped after 6 s of waiting (rule in the [HUD](../ui/hud/README.md#decisions) radio).
+- 2026-10-27 (Act 5 design phase, step m9-d-story; **pending the user's review in round 60**): the Act 5 row
+  filled in from the act's beats (the broadcast as the intro, Q9 a; the mutiny and its wavering pilots,
+  Q10 b; Rook's rescue on the screen, Q8 a; the Helix cures, L31; the Choir's indifference, L33; the
+  Sovereign, Callisto, the recruitment and Varga's look at Vorne, L35 and the outro). The beats stay in
+  the story docs, the lines in the level documents and the act's intro and outro.

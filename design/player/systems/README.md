@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../generator, ../../ui/hangar]
-updated: 2026-10-26
+updated: 2026-10-27
 ---
 
 # Ship systems
@@ -208,6 +208,26 @@ and opens the loadout's third utility slot; it is sold from the hangar visit bef
 | 3 | 5 000 | act 3 |
 <!-- /data -->
 
+### Act 5: vacuum and the core tiers (draft)
+
+*Draft, step `m9-d-systems` (2026-10-27), **pending the user's review in round 60** (Q12 = c). Act 5
+brings no new utility module; the belt's vacuum is defined in [the belt](../../world/belt/README.md#vacuum-rules).*
+
+- **Engine Mk IV** (345 px/s, 2 MW, 8 000) is in the shop from the L29 visit as listed. The typical
+  plan leaves it out (no power room on the Mk IV generator, see the
+  [Act 5 hand plan](../generator/README.md#act-5-hand-plan-draft)); it is the speed answer to the
+  Minefield's lines and the Rail Serpents for a player who keeps power spare.
+- **In vacuum** the hydro-kit is stowed (the ordinary Stormhawk is drawn) and the **pressure hull does
+  nothing** (no drag to remove); fitted, it still draws its 1 MW, so the hand plan puts it back in the
+  inventory at the L29 visit.
+- **Under a generator drain** (the Void Leech, L33) the engine and every utility module keep working:
+  only the shield's regeneration and the weapons' fire rate are shed
+  ([generator](../generator/README.md#enemy-drain-effects)).
+- The **Salvage scanner** has its level in L34 *Salvage Run* (many caches and secrets on the
+  derelict hulls); nothing in its numbers changes.
+- The **Ascendancy IFF spoofer** stays an Act 6 story item (its roster row): Act 5 is where the
+  Ascendancy's turrets are met openly, not yet where their codes are captured.
+
 ## Concept art
 
 Prompts and capture notes: [concept/prompts.md](concept/prompts.md).
@@ -274,6 +294,8 @@ Prompts and capture notes: [concept/prompts.md](concept/prompts.md).
   top-speed and shield-regen penalties, so the pressure hull "removes the drag"; (a) is the
   first draft ([europa](../../world/europa/README.md#under-water-rules); round 48, Q1).
 - Keep the hydro-kit automatic and free (recommended) or make it a module?
+- Q12 of round 60 (Act 5's arsenal): recommended (c) adds no module in Act 5 (the Engine Mk IV is a
+  core tier); under (b) the Hunter drone (an escort, [wingmen](../wingmen/README.md)) would be Act 5's.
 
 ## Decisions
 
@@ -398,3 +420,6 @@ Prompts and capture notes: [concept/prompts.md](concept/prompts.md).
   drag"); their table rows set from `idea` to `draft` (written and decided in round 48; raising a row to `approved` is
   the user's).
 - 2026-10-22 (M8 part A, steps A3/A6; accepted in round 50 (2026-10-22)): the Auto-repair nanites are built in part A (D6, the Mk IV's reason); a hit pauses them for 1 s; the pip `+` beside the armour gauge while they repair.
+- 2026-10-27 (Act 5 design phase, step m9-d-systems; **pending the user's review in round 60**): Act 5 adds no
+  utility module (Q12 = c); the Engine Mk IV stays in Act 5; in vacuum the pressure hull does nothing and the plan
+  stows it; the engine and the modules are never shed by a drain.

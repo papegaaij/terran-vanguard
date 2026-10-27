@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../../campaign]
-updated: 2026-10-26
+updated: 2026-10-27
 ---
 
 # Music
@@ -33,13 +33,13 @@ everywhere.
 | 9 | Act 3 B: Mars | Levels 18, 19 and the Level 21 approach (see *Act 3 music*) | "Grey Signal": dusty dub techno, 125 BPM, D minor, Vorne's motif as an intercepted radio whistle (a third stem) | 3:00 | P2 | sketch [act3-b-theme-r36-b](concept/act3-b-theme-r36-b.ogg) "Grey Signal" (chosen); full length with base, full and motif stems: [grey-signal-r41-a](concept/grey-signal-r41-a.ogg) (proposed, round 41) |
 | 10 | Act 4 A: Europa | Levels 22–28 | Muffled ambient trance, sonar pings, deep echoes | 3:00 | P2 | [europa-theme-r02-a](concept/europa-theme-r02-a.ogg) "Thera Deep" (chosen); full length with base, full and dark stems: [thera-deep-r51-a](concept/thera-deep-r51-a.ogg) (chosen, round 51) |
 | 11 | Act 4 B: Europa | Level 25, Levels 27–28 (see *Act 4 music*) | Muffled ambient drum & bass, Vorne's motif as a faint layer (L27–28) | 3:00 | P2 | sketches [act4-b-theme-r48-a](concept/act4-b-theme-r48-a.ogg) "Pressure Line" and [act4-b-theme-r48-b](concept/rejected/act4-b-theme-r48-b.ogg) "Black Current" (chosen, round 48: a); full length with base, full and motif stems: [pressure-line-r51-a](concept/pressure-line-r51-a.ogg) (chosen, round 51) |
-| 12 | Act 5 A: Asteroid belt | Levels 29–35 | Driving industrial, metallic percussion, Vorne's motif in the open | 3:00 | P3 | [belt-theme-r03-a](concept/belt-theme-r03-a.ogg) "Hollow Rock" (chosen) |
-| 13 | Act 5 B: Asteroid belt | Levels 29–35 | Driving industrial, Vorne's motif in the open | 3:00 | P3 | — |
+| 12 | Act 5 A: Asteroid belt | Levels 29, 30, 32, 34 (the base stem only) (see *Act 5 music*) | Driving industrial, metallic percussion, Vorne's motif in the open; full length with base, full and motif stems (draft, round 60) | 3:00 | P2 | [belt-theme-r03-a](concept/belt-theme-r03-a.ogg) "Hollow Rock" (chosen) |
+| 13 | Act 5 B: Asteroid belt | Levels 31, 33 and the Level 35 approach (see *Act 5 music*) | Colder and more industrial than the A theme (the enemy is human now); two sketches in round 60, one with Vorne's motif in the open; base, full and motif stems | 3:00 | P2 | sketches [act5-b-theme-r60-a](concept/act5-b-theme-r60-a.ogg) "Gilded Cage" and [act5-b-theme-r60-b](concept/act5-b-theme-r60-b.ogg) "Iron Vein" (proposed, round 60) |
 | 14 | Act 6 A: Jupiter | Levels 36–42 | Vast and stormy: storm strings, thunder, choir; Vorne's motif against the main motif | 3:00 | P3 | [jovian-theme-r03-a](concept/jovian-theme-r03-a.ogg) "Eye of the Storm" (chosen) |
 | 15 | Act 6 B: Jupiter | Levels 36–42 | Heavy, stormy, choir + distorted bass | 3:00 | P3 | — |
 | 16–17 | Act 7 A/B: Beyond the gate | Levels 43–50 | Alien, Choir motif fused with the main motif | 3:00 | P3 | — |
 | 18 | Boss: Vrell | Vrell act bosses | Choir, pounding drums | 2:00 loop | P1 | [boss-theme-r02-a](concept/boss-theme-r02-a.ogg) "The Choir Descends" (chosen); full length: [choir-descends-full-r08-a](concept/choir-descends-full-r08-a.ogg) (chosen); Level 28's deep copy (round 58, Q.1 b): [choir-descends-deep-r58-b](concept/rejected/choir-descends-deep-r58-b.ogg) (rejected, round 58: the built theme stays) |
-| 19 | Boss: Ascendancy | Ascendancy bosses (Iron Sovereign, Ascendant) | Martial and cold: snare rudiments, timpani, machine riff, Vorne's motif | 2:00 loop | P3 | [ascendancy-boss-r03-a](concept/ascendancy-boss-r03-a.ogg) "Iron Sovereign" (chosen) |
+| 19 | Boss: Ascendancy | Ascendancy bosses (Iron Sovereign, Level 35; Ascendant, Act 6) | Martial and cold: snare rudiments, timpani, machine riff, Vorne's motif; full length, one full mix (draft, round 60) | 2:00 loop | P2 | [ascendancy-boss-r03-a](concept/ascendancy-boss-r03-a.ogg) "Iron Sovereign" (chosen) |
 | 20 | Final boss | Level 50 (Choir Heart) | All motifs, full orchestra + beat; the Choir motif against the main motif | 3:00 loop | P3 | [final-boss-r03-a](concept/final-boss-r03-a.ogg) "Choir Heart" (chosen) |
 | 21 | Mini-boss sting | Mini-boss entrance | 4 s stinger, then back to the level track | 0:04 | P2 | [miniboss-sting-r08-a](concept/miniboss-sting-r08-a.ogg) "Contact Heavy" (chosen) |
 | 22 | Boss warning | Before the boss | Alarm + riser, 5 s, bridges to the boss track | 0:05 | P1 | [boss-warning-r08-a](concept/boss-warning-r08-a.ogg) "Red Alert" (chosen) |
@@ -51,6 +51,7 @@ everywhere.
 | 28 | Credits | Credits roll | Upbeat remix of the title theme | 3:30 | P3 | — |
 | 29 | Debrief | Under the debrief, after the mission complete jingle (23) | Quiet, calm, a little proud; D major (the jingle's last chord), −18…−20 LUFS under the debrief's sounds and voice; not the hangar theme | 1:00–1:30 loop | P2 | [debrief-theme-r40-b](concept/debrief-theme-r40-b.ogg) "Stand Down" (chosen, round 40) |
 | 30 | Reveal sting | Level 28, the Ascendancy cruisers rising (see *Act 4 music*) | Dread rising for 4 s, a hit as the gun ports open, Vorne's motif hidden in it; B minor; ends unresolved | 0:09 | P2 | [reveal-sting-r48-a](concept/reveal-sting-r48-a.ogg) "Black and Gold" and [reveal-sting-r48-b](concept/rejected/reveal-sting-r48-b.ogg) "Ours" (chosen, round 48: a); production: [reveal-sting-r58-a](concept/reveal-sting-r58-a.ogg) (chosen, round 58, S.20; in the game since step H6, `music/reveal-sting.ogg`, a one-shot at the cruisers' rise) |
+| 31 | Rook's return sting | Level 29, Rook's Ember launching from the prison tender (see *Act 5 music*) | The main motif's horn call answering Vorne's motif: a short brass lift over the ducked theme, B minor turning to D major; a one-shot | 0:05 | P2 | [rook-return-r60-a](concept/rook-return-r60-a.ogg) "Horn Call" and [rook-return-r60-b](concept/rook-return-r60-b.ogg) "Answer" (proposed, round 60) |
 
 The concept pieces are 40–65 s sketches of each track's style and material. Production
 versions are extended to the listed length.
@@ -334,6 +335,83 @@ theme and a new sting:
 Every level plays the `mission-complete` jingle (23); Level 28's debrief is followed by the act outro with the
 act-complete fanfare (24), as Level 21's.
 
+### Act 5 music (draft, round 60)
+
+**Status: draft, pending the user's review in round 60** (M9 design phase, step `m9-d-audio`, 2026-10-27), for the
+[Act 5 README](../../campaign/act-5-the-belt/README.md)'s plan; the level documents carry the cues in their *Music &
+ambience* and place the switches. Act 5 is where **Vorne's motif comes into the open**: his broadcast opens the act
+([Vorne](../../story/characters/vorne/README.md)), the Ascendancy fights beside the Vrell, and the motif stops being a
+hint 18–20 dB under the mix. The belt's mood is the [world's](../../world/belt/README.md#music-mood): industrial and
+aggressive, metallic percussion, distorted bass. Two themes, the Ascendancy boss theme, one new sting; the beds are
+in [sfx](../sfx/README.md#ambience-per-setting). No mid-boss in Act 5, so no mini-boss sting.
+
+- **Track 12 "Hollow Rock"** (the A theme, chosen in round 03: 135 BPM, B minor, the motif's home key): Levels 29,
+  30, 32 and 34 (stripped). Its full length (≈ 3:00) and stems come with M9 part B (Level 29) by the method of
+  tracks 9–11 (the round-03 generator extended, one render, linked mastering, the loop comments): **base** (kick,
+  distorted bass, the anvils' low hits, the pad, the conveyor, the intro's static as band noise, no crackle),
+  **full** (the base plus the hats, the anvils' top, the **machine arpeggio** that plays the motif at speed, and the
+  breakdown's lone human horn) and **motif** (Vorne's motif in cold low brass and organ, the B minor ↔ G minor
+  statement). "In the open": the motif stem plays **at its level in the chosen sketch** (about 6 dB under the full mix,
+  its brass statement at full), not Acts 3–4's 18–20 dB. The machine arpeggio stays in the full stem because it is
+  the groove; muting a motif stem leaves the machines and drops the brass.
+- **Track 13, the Act 5 B theme**: Levels 31, 33 and the Level 35 approach (the A/B split below). Brief: "colder, more industrial: the enemy
+  is human now" (the [act](../../campaign/act-5-the-belt/README.md)); no bubbly or popping sounds, no resonant
+  plucks, static only as band noise. Round 60 offers **two sketches** (55–65 s, step AUD-P, `music_r60.py`):
+  - **a "Gilded Cage"**: 126 BPM (the draft's 128: the nearest tempo with a whole-sample 16th step, which the
+    sample-exact loop needs; step AUD-P), E minor (the motif on E · G · B · D♯), EBM and industrial techno: a gated, distorted
+    16th bass sequence, struck sheet metal, chains and a press hammer as percussion, a cold string pad; **the motif in
+    the open**, stated by low brass and organ every 8 bars over the groove with the machines answering it.
+  - **b "Iron Vein"**: 140 BPM half-time, G minor (the motif on G · B♭ · D · F♯, Hollow Rock's shift key), darker and
+    roomier: a heavy half-time beat, a sub bass, a grinding drill-like texture, a cold pad; the motif **only in the
+    machines** (a sequencer arpeggio inside the groove, no brass).
+  The production delivers three stems as track 12's (base, full, motif; for b the motif stem is its arpeggio lifted
+  out of the full mix). Made in the part that first plays it (M9 part D, Level 31).
+- **Track 19 "Iron Sovereign"** (the Ascendancy boss theme, chosen in round 03: 147 BPM, F♯ minor): Level 35's boss
+  after the boss warning, [the Iron Sovereign](../../enemies/bosses/iron-sovereign/README.md#presentation); later
+  the Ascendant (Act 6). Full length (≈ 2:00 loop) from the round-03 generator as track 18's full length was made in
+  round 08: **one full mix, no stems** (a boss fight switches nothing), the motif in it as sketched. No change at the
+  core's opening: the klaxon and Vorne's line carry it, under the radio's duck.
+- **Vorne's broadcast** (the Act 5 intro, pages 2–3, Q9 a, intercepted:
+  [briefing](../../ui/briefing/README.md#intercepted-transmissions-draft)): the briefing theme (track 3) fades out over
+  1 s as page 2 opens and **track 12's motif stem plays alone** under his two pages (in over 1 s, at the briefing's
+  level, under the voice's duck); page 4 (Okafor's answer) brings track 3 back over 1 s. No new file; a page names
+  its music (`music: motif`, beside the page's `channel: enemy`): a small new hook for the briefing (M9 part B).
+- **Rook's return sting** (new track 31, Level 29): as the prison tender opens and the Ember launches, the theme ducks
+  −6 dB for 5 s (the scripted duck of Level 10, on the level's event) and a one-shot plays over it: the **main
+  motif's horn call** (1 – 5 – 8 – 9 – ♮10, in D major, the relative major of the theme's B minor) **answering
+  Vorne's motif**, a short brass lift on a timpani roll, about 5 s, ending on the theme's tonic so the full mix
+  carries on. A one-shot from the level's music block as the reveal sting (track 30). Level 29's document asked for
+  "a short brass lift on the motif's answer"; a sting is the reading here (a stem switch could not hold a phrase).
+- **Level 34, the breather** ("the A theme stripped"): **track 12's base stem only**, 3 dB down (`section_db`),
+  never the full mix; the motif stem comes in **once**, as the wreck with the Helix crate (the Mk V "Helix",
+  captured Helix tech) scrolls in, and out after it. No new render: a fourth "salvage" stem (pad, conveyor and
+  static, no drums), as Level 26's dark stem, is the alternative if the base stem reads too busy for a breather.
+- **After the Sovereign** (Level 35): the boss theme ends with the kill as every boss's; under the recruitment (Vorne's
+  offer, the answer, Varga's data line) **track 13's motif stem plays alone** (`motif_after_boss`, built for Level
+  28's run), out with the level's end; then the debrief, the act summary and the outro with the act-complete fanfare
+  (24), as Level 28's.
+
+#### Cues per level (Act 5)
+
+Proposals; the level documents own the sections and the times (Levels 33–35 are drafted beside this step). **The A/B
+split**: the drafts of Levels 29, 30 and 32 take track 12 and Level 31's track 13; kept as drafted, and the levels
+without a draft spread the rest so the B theme gets three levels: **A in 29, 30, 32 and 34** (stripped), **B in 31,
+33 and the Level 35 approach**. Level 33 on the B theme with its motif muted keeps the Vrell's level apart from the
+Ascendancy's levels on both counts; the act ends on the B theme as Act 4 did.
+
+| Level | Theme | Music by section | Sting / boss | Vorne's motif | Ambience |
+|---|---|---|---|---|---|
+| 29 Betrayal at Ceres | 12 | the intro (static and the motif's first statement) under the approach; base from section 2 (the canyon); full from the station's turn (t≈60, the lights going red), held through the Dock 9 halt | Rook's return sting (31) at the Ember's launch | on (the broadcast has just aired) | `belt-station` |
+| 30 Minefield | 12 | base in section 1; full from section 2 (the first column); the conveyor breakdown (the lone human horn) under the convoy if the stems allow | — | on | `belt-open` |
+| 31 Mining Rig Escort | 13 | the intro in section 1; base from section 2; full in section 5 (the ambush); out into the level's end | — | on | `belt-open`, the tug's engine bed over it while its engines live |
+| 32 Deep Core | 12 | the intro (static, the motif in cold brass) over the shaft mouth; base through the galleries; the conveyor breakdown with the lone horn at the forks (sections 3 and 5); full in the refinery (section 6); out at the chute | — | on | `belt-tunnel`; the refinery's furnace roar under section 6 (Level 19's vent and furnace sounds) |
+| 33 Leech Field | 13 | base at the start; full from the leech swarm; the Choir's line ducks the theme (−6 dB, Level 26's duck) | — | **muted** (the Vrell's field; the Choir speaks) | `belt-open` |
+| 34 Salvage Run | 12 (base only) | the base stem at −3 dB throughout, never the full mix | — | only at the Helix crate's wreck | `belt-open` |
+| 35 Iron Sovereign | 13, then 19 | base on the approach; full from the escort screen; out at the halt over the station; the boss warning and track 19; after the kill the motif stem alone under the recruitment | boss warning, boss theme | on; alone after the kill | `belt-station` |
+
+Every level plays the `mission-complete` jingle (23); Level 35's debrief is followed by the act outro with the
+act-complete fanfare (24), as Levels 21 and 28's.
+
 ## Concept art
 
 Rejected proposals (7 rows) are listed in [concept/rejected/README.md](concept/rejected/README.md).
@@ -611,6 +689,19 @@ reverb's tail wraps round the loop; the same intro, loop and tail as the game's 
 |---|---|---|
 | [concept/reveal-sting-r58-a.ogg](concept/reveal-sting-r58-a.ogg) | #30 "Black and Gold" in production — B minor, 9.0 s: the round-48 sketch a (the tremolo strings, organ pedal and timpani roll swelling from muffled to open over the cruisers' 4 s rise, the motif stacked into a chord at 4.0 s as the gun ports open, the A♯ left hanging) with the voice pocket under its tail; −14.9 LUFS, −3.0 dBTP (the sketch's −15.0 / −3.1) | chosen (round 58, S.20: accepted) |
 
+Concept round 60 (M9 "Act 5 – The Belt" design phase, step AUD-P, 2026-10-27; pending the user's review in round 60) —
+two sketches for track 13, the Act 5 B theme, and two proposals for Rook's return sting (track 31), synthesized by
+`tools/concept/audio/music_r60.py` (deterministic; the round-02 loop format for the themes, the round-08 sting format;
+Vorne's motif in its own group in the themes, the production's third stem). Measured only, not listened to. Prompts:
+[concept/prompts.md](concept/prompts.md#round-60--the-act-5-b-theme-track-13-and-rooks-return-sting-track-31).
+
+| File | What | Status |
+|---|---|---|
+| [concept/act5-b-theme-r60-a.ogg](concept/act5-b-theme-r60-a.ogg) | #13 "Gilded Cage" — EBM and industrial techno, 126 BPM, E minor, 57.6 s (loop 357000 + 2016000 samples: 8.10 s + 45.71 s, 24 bars): a four-on-the-floor kick, a gated distorted 16th bass sequence, struck sheet metal on the backbeat, chains on the off-16ths and a press hammer every other bar, a cold string pad over Em – C – Am – B; **Vorne's motif in the open**: low brass and organ state it every 8 bars (and once in the intro), 4.6 dB under the full mix, and the struck metal answers it at speed in the next two bars; −14.3 LUFS, −1.2 dBTP, seam 0.23 | proposed (round 60) |
+| [concept/act5-b-theme-r60-b.ogg](concept/act5-b-theme-r60-b.ogg) | #13 "Iron Vein" — half-time industrial, 140 BPM, G minor, 58.7 s (loop 321300 + 2116800 samples: 7.29 s + 48.00 s, 28 bars): a heavy half-time beat with one big dark snare a bar, a sub bass, a grinding drill texture (band noise chopped at 16ths over a growling saw), a cold pad over Gm – E♭ – Cm – D, a drumless C section; **Vorne's motif only in the machines**: a sequencer arpeggio (G B♭ D F♯ in 16ths, soft low-pass, no resonant plucks) from the B section on, 9–11 dB under the mix, no brass; −14.3 LUFS, −1.7 dBTP, seam 0.40 | proposed (round 60) |
+| [concept/rook-return-r60-a.ogg](concept/rook-return-r60-a.ogg) | #31 "Horn Call" — 5.6 s: a timpani roll and low strings on B for one beat, then humanity's motif's horn call (D A D E F♯, in D major) in horns over D – A – G strings, its last note held over a B minor chord (organ, strings, timpani, sub): the theme's tonic, so Level 29's full mix carries on under it; −14.0 LUFS, −1.9 dBTP | proposed (round 60) |
+| [concept/rook-return-r60-b.ogg](concept/rook-return-r60-b.ogg) | #31 "Answer" — 6.2 s: Vorne's motif first, low and quiet (organ and cellos, B D F♯ A♯ in eighths), a snare roll and a swell, then the horn call answers it brighter (trumpets an octave up), landing on the same B minor chord with a timpani hit; −14.0 LUFS, −2.2 dBTP | proposed (round 60) |
+
 ## Implementation
 
 - [x] Music player with intro + loop points
@@ -668,11 +759,21 @@ reverb's tail wraps round the loop; the same intro, loop and tail as the game's 
       `Level22SoundsTest.theMusicIsTheraDeepOverTheIceBedThenTheStationsBed`; both tracks in round 51; part H: Level
       28's music block, the reveal sting once at the cruisers' rise and the run under track 11's motif stem alone,
       `motif_after_boss`, `Level28SoundsTest.theBossThemeDropsUnderTheDiveAndTheRunPlaysTheMotifAlone`)
+- [ ] Act 5 (draft, pending round 60, M9): track 12 "Hollow Rock" at full length with base, full and motif stems
+      (part B); track 13, the B theme, from round 60's pick with its three stems (part D); track 19 "Iron Sovereign" at
+      full length (part H); Rook's return sting (track 31) as a one-shot with the scripted duck (part B); the briefing's
+      per-page music (`music: motif` under Vorne's intercepted pages, part B); Level 34's base stem at −3 dB with the
+      motif once (part G); each Act 5 level's music block as in *Act 5 music* (parts B–H)
 
 ## Open questions
 
 - 28 tracks is a lot of production. If needed, drop the B variants of acts (−7 tracks) or reuse
   the Vrell boss theme for all bosses.
+- **Act 5 (round 60)**: the B theme (track 13) sketch, a "Gilded Cage" (the motif in the open) or b "Iron Vein"
+  (the motif only in the machines); Rook's return sting (track 31) as drafted, or none (the full mix carries his
+  launch); Vorne's broadcast under track 12's motif stem alone (drafted), or a cue of its own (a cold organ-and-brass
+  loop, one more render), or the briefing theme unchanged; Level 34 on track 12's base stem (drafted) or a fourth
+  "salvage" stem; the motif stem's level "in the open" (about 6 dB under the full mix, drafted).
 - Round 48 (Act 4, pending): the B theme sketch (a "Pressure Line" or b "Black Current"); the reveal sting (a
   "Black and Gold" or b "Ours"); the Maw's music: the Vrell boss theme as it is, or a pre-rendered deep copy
   (muffled, longer reverb), as the boss document asks; Level 26's darkness as a third stem of track 10 (proposed).
@@ -712,3 +813,10 @@ Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-a
 - 2026-10-26 (user, round 58 closed): Q.1 **a**: the Abyssal Maw keeps "The Choir Descends" as built (track 18, the
   game's file); the deep copy b (`choir-descends-deep-r58-b`, not the recommendation) and its two listening aids moved to
   `concept/rejected/`. S.20: track 30 "Black and Gold" in production (`reveal-sting-r58-a`) accepted, `chosen`.
+- 2026-10-27 (step `m9-d-audio`, M9 design phase; **pending the user's review in round 60**): *Act 5 music* drafted:
+  track 12 for Levels 29, 30, 32 and 34 (base stem only), track 13 for Levels 31, 33 and the Level 35 approach (the
+  drafts of Levels 29–32 kept as they name their themes; the undrafted levels spread so B gets three levels), the motif in the open (about 6 dB under the full
+  mix), muted in Level 33 (the Choir's level), alone under the broadcast and after the Sovereign; track 13's two
+  sketch briefs; track 19 at full length without stems; a new track 31, Rook's return sting (Level 29's draft asked
+  for a brass lift at the Ember's launch). Decided here (trivia): no new render for Level 34 (the base stem), no music
+  change at the Sovereign's core opening, the motif stem as the broadcast's music (no new cue).

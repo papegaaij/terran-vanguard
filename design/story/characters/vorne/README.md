@@ -3,7 +3,7 @@ title: Chairman Silas Vorne
 design: approved
 implementation: n/a
 art: chosen
-updated: 2026-10-01
+updated: 2026-10-27
 ---
 
 # Chairman Silas Vorne
@@ -16,8 +16,8 @@ mediocrity.
 
 ## Design
 
-- **Role**: the human villain. Silent until the Act 4 reveal, then interrupts the radio with
-  transmissions, especially at boss fights in Acts 5–7. Escapes the wreck of his flagship
+- **Role**: the human villain. Silent through Act 4's reveal; from his broadcast that opens Act 5 on
+  he interrupts the radio with transmissions, especially at boss fights in Acts 5–7. Escapes the wreck of his flagship
   Ascendant at the end of Act 6 (L42) and dies in Act 7 (L48), absorbed by the Choir.
 - **Personality**: charming, grandiose, patient, utterly convinced. Treats the war as a
   business transaction. Genuinely admires skill — and wants to own it.
@@ -25,23 +25,56 @@ mediocrity.
   shouts — until the very end of Act 6. The designated pulp villain: allowed to be
   over-the-top.
 - **Background**: 60s but looks 40 (Vrell biotech treatments — a detail Varga notices in
-  Act 5). Built Helix on Jovian helium-3. Funded the 2179 gate survey and made first contact in
+  Act 5: he was sixty when she left Helix in 2179). Built Helix on Jovian helium-3. Funded the 2179 gate survey and made first contact in
   secret.
 - **Arc**:
   - Act 1–3: a name in political news snippets during briefings.
-  - Act 4 end: reveal. System-wide broadcast declaring the Ascendancy's "partnership".
-  - Act 5: tries to recruit Lancer after the Iron Sovereign falls.
+  - Act 4 end: the reveal is the cruisers' (L28); Vorne says nothing yet.
+  - Act 5: opens with his system-wide broadcast declaring the Ascendancy's "partnership" (the act
+    intro); taunts at the Iron Sovereign and tries to recruit Lancer after it falls (see *Act 5* below).
   - Act 6: the Vrell betray him; he fights on, desperate, from the Ascendant. When it breaks
     apart he flees toward the gate in a Vrell lifeboat, still believing the Choir will honour
     the deal (L42).
   - Act 7: the Choir has fused him with the lifeboat: [Vorne's Chimera](../../../enemies/bosses/README.md),
     the L48 mid-boss. Death: his last transmission breaks off mid-sentence.
 
+### Act 5 (draft)
+
+*Draft, step `m9-d-story` (2026-10-27), **pending the user's review in round 60**. The beats are kept
+here; the texts belong to the [act's](../../../campaign/act-5-the-belt/README.md) intro and outro and to the
+level documents' radio.*
+
+- **The broadcast** (the Act 5 intro, Q9 a): pages 2–3 of the act intro are Vorne on every channel,
+  *intercepted* (amber, the steady interference: [briefing](../../../ui/briefing/README.md#intercepted-transmissions-draft));
+  page 1 is Okafor's "all channels — he is on every one", page 4 her answer and the order to Ceres.
+  Images: Vorne at a gilded lectern under the Ascendancy crest; Ceres Hub's lights turning red. What he
+  says: he names himself and the Ascendancy, declares its independence and its partnership with the
+  Vrell in the open ("I merely opened the door"), and invites the belt's stations to choose the side
+  that will still exist. Courteous, patient, never a raised voice; he never mentions the cruisers or
+  the hull code (Act 4 told them), and he never says why the Vrell wanted the door (Act 6, L41).
+- **L29**: Ceres Hub chooses him. He is not on the radio in the level; the Ascendancy's voice there is
+  the mutineers' flight lead ([characters](../README.md#act-5-speakers-draft)).
+- **L35, the Iron Sovereign**: his station, so his fight. He announces it on the enemy channel as the
+  Choir announces a Vrell boss, taunts two or three times, admiring and amused, and when the core opens
+  his portrait turns to **rage** while the line stays short and cold: he still never shouts (that is
+  Act 6's end). After the Sovereign falls he calls Lancer by name and names a price (the recruitment
+  line below), the act's last enemy transmission; the captured data Varga reads next points to Callisto
+  too. The order and the draft lines are the [boss's](../../../enemies/bosses/iron-sovereign/README.md#vorne).
+- **The act outro**: Varga sees his face on the recruitment feed: "he looks forty; he was sixty when I
+  left Helix" ([Varga](../varga/README.md)). The cures the L31 refugees describe are on him.
+- **Presentation** (Act 5 on): the enemy channel on the radio ([HUD](../../../ui/hud/README.md)); his
+  production portraits (radio 72 px and briefing 144 px in neutral, smug and rage, from the chosen
+  r04 style) are proposed in round 60, not Act 6 as planned in 2026-10-02; his voice is cast from a
+  CC0/public-domain reading, an older man's polished low voice that is no main-cast reader's
+  ([voice](../../../audio/voice/README.md)); his motif plays under the broadcast
+  ([music](../../../audio/music/README.md)).
+
 ### Sample lines
 
 | Situation | Line |
 |---|---|
 | Reveal broadcast | "Citizens of the solar system. The old order is ending. I merely opened the door." |
+| Act 5 broadcast | "No Ascendancy city has been touched. Ask yourselves why — then ask who you would rather stand beside." |
 | Boss fight | "Such dedication. Such waste. You could have been on the winning side, pilot." |
 | Recruitment | "Lancer. You are wasted on Okafor. Come to Callisto. Name your price." |
 | Betrayed (Act 6–7) | "They were supposed to… no. No! We had an *agreement*!" |
@@ -58,6 +91,10 @@ late-90s pre-rendered CGI style.
 
 ## Concept art
 
+Round 60 (Act 5 design phase, step ART-P-world; pending the user's review): his production portraits in the chosen
+r04 style, rendered by `tools/concept/belt_r60.py` through `tools/art/portraits.py`'s style-B pipeline (imported
+unchanged; nothing written to `assets/` until chosen), a/b by the background behind him.
+
 Concept round 03 portrait styles. Prompts for polished portraits:
 [concept/prompts.md](concept/prompts.md). Generated by `tools/concept/portraits_r03.py`; the
 procedural faces only show the style (framing, lighting, colour treatment, frame and overlay).
@@ -67,6 +104,15 @@ procedural faces only show the style (framing, lighting, colour treatment, frame
 | [concept/rejected/portrait-r03-a.png](concept/rejected/portrait-r03-a.png) | Style A "pre-rendered 3D bust": Vorne at 144×144 (briefing), 72×72 in the HUD A radio frame, 3× enlargement | rejected — style B preferred |
 | [concept/portrait-r03-b.png](concept/portrait-r03-b.png) | Style B "comm-screen pixel portrait": Vorne as a 72 px dithered amber enemy-channel portrait, 2× for the briefing, HUD radio frame | superseded by r04 |
 | [concept/portrait-r04-a.png](concept/portrait-r04-a.png) | Round 04: style B with retained colour — Vorne's own colours under the amber enemy-channel tint, 36 colours, soft dither; briefing 144×144, HUD 72×72, 3× (`tools/concept/portraits_r04.py`) | chosen |
+| [concept/vorne-portraits-r60-a.png](concept/vorne-portraits-r60-a.png) | Round 60, production portraits A — the enemy screen: radio 72 px and briefing 144 px in neutral, smug (head back, one brow up) and rage (cold: brows down, teeth bared and clenched, the screen tearing with static), one palette, on the plain amber screen | proposed |
+| [concept/vorne-portraits-r60-b.png](concept/vorne-portraits-r60-b.png) | Round 60, production portraits B — the Chairman's office: the same three with the gilded Ascendancy crest (sun rays over a ringed planet) behind his head and gold pilasters | proposed |
+
+## Open questions
+
+- Round 60 Q9 (how the broadcast is shown): recommended (a), the act intro is the broadcast (above);
+  the alternatives are in the [story](../../README.md#open-questions).
+- Round 60 Q7 (the Iron Sovereign's fight) decides the phases his L35 lines follow; the
+  [boss](../../../enemies/bosses/iron-sovereign/README.md) owns it.
 
 ## Decisions
 
@@ -76,3 +122,8 @@ procedural faces only show the style (framing, lighting, colour treatment, frame
 - 2026-09-30: Concept round 03: portrait style **B** (comm-screen pixel portrait) chosen, with a bit more colour retained so it looks less flat.
 - 2026-09-30: Concept round 04: style-B portrait with retained colour chosen.
 - 2026-10-01: Approved by the user in the [Acts 1–2 design review](../../../reviews/acts-1-2/README.md).
+- 2026-10-27 (Act 5 design phase, step m9-d-story; **pending the user's review in round 60**): his Act 5
+  beats (the broadcast as the act intro, Q9 a; silent in L29; the Sovereign's taunts with a cold rage in
+  the core phase; the recruitment; Varga's look at his face in the outro); the Arc's "Act 4 end:
+  broadcast" corrected to the 2026-09-30 story decision (the broadcast opens Act 5); his production
+  portraits and voice come with Act 5 instead of Act 6.

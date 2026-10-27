@@ -3,7 +3,7 @@ title: Lt. Kenji "Rook" Tanaka
 design: approved
 implementation: n/a
 art: chosen
-updated: 2026-10-07
+updated: 2026-10-27
 ---
 
 # Lt. Kenji "Rook" Tanaka
@@ -17,7 +17,8 @@ one-liner. When the player equips an AI wingman, it is Rook flying it (see
 ## Design
 
 - **Role**: in-level radio — wave warnings ("contacts on six"), pickups, near-misses, jokes.
-  Flies the optional wingman ship. Speaks in every level except while missing (L27–L28), even
+  Flies the optional wingman ship. Speaks in every level except while missing (L27–L28, and L29
+  until his rescue), even
   when the escort slot is empty (then he flies elsewhere in the formation, off-screen).
 - **Personality**: cocky, warm, talks too much when nervous. Covers fear with jokes. Loyal.
   Hates flying over water.
@@ -29,9 +30,33 @@ one-liner. When the player equips an AI wingman, it is Rook flying it (see
   is heard on the radio). Shot down in the dark at the end of L26; missing and radio silent for
   L27–L28, and captured by Helix subs. The wing frees him at Ceres Hub during the L29 mutiny, and
   he flies as wingman again from L30. During L27–L29 the escort slot can hold only a heavy drone
-  (see [wingmen](../../../player/wingmen/README.md)). In Act 7 he refuses to stay behind.
+  (see [wingmen](../../../player/wingmen/README.md)). In Act 7 he refuses to stay behind. Act 5's
+  captivity and return: *Act 5* below.
 - **Gameplay tie-in**: his radio warnings are useful — "on your six" always means a rear
   attack is coming within a few seconds.
+
+### Act 5: captivity and return (draft)
+
+*Draft, step `m9-d-story` (2026-10-27), **pending the user's review in round 60** (Q8 a: the rescue on
+the screen). The rules of the swap (when, what he flies with, the loaner's release, retries) are the
+[wingmen](../../../player/wingmen/README.md#rooks-rescue-and-return-l29l30) document's; the set piece's
+place and lines are Level 29's ([Act 5](../../../campaign/act-5-the-belt/README.md)).*
+
+- **How he was taken** (the end of L26): his Ember went down in the dark under Europa's ice, whole
+  enough to float. The Helix subs that shot him took pilot and craft as a prize: a CDF pilot to
+  question and a CDF fighter to study. Both went out on a Helix freighter to Ceres Hub, the
+  belt's biggest dock and Helix's yard there, and were held in a prison tender clamped in **Dock 9**,
+  the Ember in its hold. That is how his Ember launches with him in L29: it was never scrapped.
+- **How the wing finds him**: it does not know he is there. Act 4's "*we ship out, and we find him*"
+  is a promise, not a lead. In L29's fight Ceres Hub Control, a loyalist who keeps the dock's channel
+  open while the hub turns ([characters](../README.md#act-5-speakers-draft)), tells the wing that
+  Helix brought a CDF pilot in at Dock 9; the wing breaks the tender's clamp guns and he launches.
+- **The mutineers**: before Aegis Wing his first posting was belt convoy escort out of Ceres, so he
+  knows some of the garrison pilots who turn. In the last section he names the mutineers' flight
+  lead on the radio (the level's line).
+- **After**: he is back in the slot from L30 with his guns and upgrades. He does not talk about the
+  captivity beyond a joke; the tone guide's rule holds (a pause, a line, back to work). His first
+  line is the sample below; the act outro gives him one more.
 
 ### Sample lines
 
@@ -43,7 +68,8 @@ one-liner. When the player equips an AI wingman, it is Rook flying it (see
 | Wingman low armour | "I'm hit — I'm okay — I'm mostly okay!" |
 | Boss appears | "Okay. Okay. That's big. We can do big." |
 | Water level | "Water. Why is it always water?" |
-| Act 5 return | "Miss me? Don't answer that. Just shoot." |
+| Act 5 return (L29, his first line) | "Miss me? Don't answer that. Just shoot." |
+| Act 5, the mutineers | "I know that wing. I flew convoys with half of them. Doesn't matter now." |
 
 His in-level **barks** (the eight wingman triggers, 3–4 variants each) are written in
 [wingmen](../../../player/wingmen/README.md#radio-barks), next to their triggers and queue rules.
@@ -68,6 +94,13 @@ procedural faces only show the style (framing, lighting, colour treatment, frame
 | [concept/portrait-r04-a.png](concept/portrait-r04-a.png) | Round 04: style B with retained colour — Rook's own colours under the teal CDF tint, 36 colours, soft dither; briefing 144×144, HUD 72×72, 3× (`tools/concept/portraits_r04.py`) | chosen |
 | [concept/rook-briefing-portrait-final-r30-a.png](concept/rook-briefing-portrait-final-r30-a.png) | Round 30, production art: his 144×144 briefing portraits in neutral, grim and fierce (his round-13 radio portraits at 2× with CRT scanlines), next to the radio portraits and Okafor's and Varga's briefing portraits (`tools/art/portraits.py`) | chosen |
 
+## Open questions
+
+- Round 60 Q8 (Rook's rescue): recommended (a), on the screen in L29 (above). Alternatives: (b) radio
+  only, loyalists free him off-screen and his line comes at L29's end, he flies from L30 (Act 4's
+  on-screen loss gets an off-screen return); (c) told in the L29 debrief or the L30 briefing only (the
+  flattest). The rules under each are listed in [wingmen](../../../player/wingmen/README.md#open-questions).
+
 ## Decisions
 
 - 2026-09-30: Rook voices the AI wingman; missing for part of Act 4.
@@ -88,3 +121,7 @@ procedural faces only show the style (framing, lighting, colour treatment, frame
   the name plate **LT. K. TANAKA** and the role line **AEGIS TWO**, which the hangar intel also
   shows under his name for his teaser ([hangar](../../../ui/hangar/README.md#decisions)). `art`
   stays `chosen`, like Okafor's and Varga's.
+- 2026-10-27 (Act 5 design phase, step m9-d-story; **pending the user's review in round 60**): his
+  captivity and return (Q8 a): Helix took him and his Ember as a prize to a prison tender in Ceres Hub's
+  Dock 9; Ceres Hub Control points the wing there in L29; his first posting was Ceres convoy escort, so
+  he knows the mutineers; no lines before the rescue, back in the slot from L30.

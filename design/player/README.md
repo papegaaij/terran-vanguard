@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../systems, ../ui/hangar]
-updated: 2026-10-22
+updated: 2026-10-27
 ---
 
 # Player
@@ -69,7 +69,9 @@ generator limits what can be fitted at the same time.
   them with `python3 tools/balance.py` (see [weapons](weapons/README.md#data-and-balancing)). The
   [balance plan](balance-plan.yaml) runs to Level 28 (the Ion Beam's hand plan to Level 21, M8 part A: the
   generator's Act 4 hand plan; a level's income is its typical haul, budget(n) until its data exists: the user's
-  decision of 2026-10-14, round 37 R.1 reverted; for Act 4 again until M8 part I).
+  decision of 2026-10-14, round 37 R.1 reverted; for Act 4 again until M8 part I). Act 5's visits 29–35 are a
+  hand plan in the [generator](generator/README.md#act-5-hand-plan-draft) until M9 part A writes them (draft,
+  pending the user's review in round 60).
 
 ### Power budget
 
@@ -96,6 +98,19 @@ guns have no dial.
 gives **16 MW** (was 14), so Act 3's own items (Shield Mk III, Engine Mk III, the utility modules and
 the Evasive thrusters in the third bay) fit next to the Ion Beam. The balance plan uses 15 of 16 MW from
 Level 20 (a Pickup magnet; see [generator](generator/README.md)).
+
+**Act 5: the power under attack** (draft, pending the user's review in round 60, Q2 = a): the
+load is still checked in the hangar only, but from L33 the [Void Leech](../enemies/space/void-leech/README.md)
+lowers the generator's output **in flight**. When the drained output no longer covers the load, the
+shield's regeneration stops first and then every weapon fires slower; armour, the engine, the modules,
+specials and the escort are never touched. The rules are the [generator's](generator/README.md#enemy-drain-effects);
+spare MW and the power dial are the player's answers.
+
+**Act 5's arsenal** (draft, pending round 60, Q12 = c): two new weapons, the
+[Tesla Coil Pod](weapons/tesla-coil-pod/README.md) (wing, `shield-breaker`, L29) and the
+[Swarm Tail](weapons/swarm-tail/README.md) (rear, homing, L30), and the core tiers: Generator Mk V
+"Helix" (salvaged in L34, sold from the L35 visit), Shield Mk V, Composite IV, Engine Mk IV. The Plasma
+Arc, Time Dilation, the Hunter drone and the Bastion Shield move to Act 6. No new special or module.
 
 Worked example (first-draft numbers), start of act 2:
 
@@ -242,3 +257,7 @@ Production art for concept round 16 (M4 part C, the Level 03 batch), by `tools/a
   balance is the same within 0.3 %, so 16 is taken, the room that fits Act 3's own items, e.g. the
   Evasive thrusters (2 MW), next to the Ion Beam L3; pending the user's review). The plan buys a Pickup
   magnet L1 at the L20 visit (15 of 16 MW).
+- 2026-10-27 (Act 5 design phase, step m9-d-systems; **pending the user's review in round 60**): Act 5's arsenal is
+  the middle option (Q12 = c: the Tesla Coil Pod, the Swarm Tail, the core tiers with the Mk V salvaged in L34; four
+  roster items to Act 6) and the generator drain is an in-flight power model (Q2 = a); the hand plan for visits
+  29–35 is in the generator.

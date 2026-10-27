@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: n/a
 depends-on: [../weapons, ../shields]
-updated: 2026-10-24
+updated: 2026-10-27
 ---
 
 # Generator
@@ -36,19 +36,29 @@ in [player](../README.md#power-budget).
 
 ### Enemy drain effects
 
-Some enemies attack the power budget instead of the hull, first the
-[Void Leech](../../enemies/space/README.md) (introduced in L33). Rules (first draft):
+*Final draft of the 2026-09-30 rules, step `m9-d-systems` (2026-10-27), **pending the user's review in
+round 60** (Q2 = a, recommended). The single definition of a drain; the drainer itself, its latch and
+how it is shaken off are the [Void Leech](../../enemies/space/void-leech/README.md)'s (introduced in L33, see the
+[act](../../campaign/act-5-the-belt/README.md)); the HUD's side is in [HUD](../../ui/hud/README.md#right-panel-ship).*
 
-- An attached drainer lowers the **effective output** by 2 MW (Void Leech); drains stack up to
-  −6 MW. Shaking it off (moving fast) or shooting it restores the output at once.
-- While the load is at or below the effective output, nothing changes except a smaller
-  spare-power bonus.
-- When the load exceeds the effective output: **shield regeneration stops first**; if the
-  shortfall is larger than the shield's draw, **weapon fire rate** drops in proportion to
-  output ÷ remaining load. Armour, specials and the escort are never affected.
-- The HUD power gauge shows the drained part in a warning colour and flashes when the load
-  exceeds the output. A heavy loadout on a small generator is the most vulnerable, which is the
-  point of L33 (see its threat profile in [act 5](../../campaign/act-5-the-belt/README.md)).
+Some enemies attack the power budget instead of the hull. The rules:
+
+| Rule | Value (draft) |
+|---|---|
+| Drain | Each latched drainer lowers the **effective output** E by **2 MW**; drains stack to **−6 MW** (a fourth leech latches but drains nothing more). Shaking it off or killing it restores its 2 MW at once. |
+| Load at or below E | Nothing changes but the spare-power bonus, which is counted from E (the spare MW are E − load). |
+| Load over E: first | The **shield's regeneration stops** (its draw is the first thing shed). The shield keeps what it holds and still takes hits; its regen delay keeps running, so it regrows as soon as the load fits again. |
+| Load over E: then | If the shortfall (load − E) is larger than the shield's draw, **every fitted weapon's rate of fire** is multiplied by **f = E ÷ (load − shield draw)**, never below **0.5**. A beam's damage per second, a drone's gun and a Deflector Pod's charge return scale the same way. |
+| Never affected | Armour, the engine's speed and the utility modules (they keep working), specials, the escort (its own power), and an overdrive's extra draw (it ignores the cap, below). |
+| Feedback | The HUD's power gauge (the drained MW in the warning colour, `POWER DRAIN`, a flash while the load is over E); in the play field the ship's muzzle flashes flicker while f < 1 and the shield's hex ring is drawn dimmed while its regeneration is stopped; a low brown-out hum while the load is over E (a sound for round 60). |
+| Warning | The hangar intel of a level with drainers names them; Varga's intel line tells the player to bring spare power (L33's level document has the line). The power dial ([player](../README.md#power-budget)) is the free answer: a weapon turned down in the hangar makes room. |
+
+Why this order: a heavy loadout on a small generator is the most vulnerable, which is Act 5's
+"energy" identity and the point of L33; the shield goes first because its loss is felt (the ring
+dims, nothing regrows) but survivable, and the weapons' cut is proportional, so a loadout with 1 MW to
+spare hardly notices one leech and a loadout at its cap feels every one. What the numbers mean for the
+typical plan is in the [Act 5 hand plan](#act-5-hand-plan-draft) below: two leeches stop its shield's
+regeneration, three cut its fire rate to about 0.88.
 
 ### Overdrive and the power cap
 
@@ -131,15 +141,114 @@ the first draft. The change is one number in [data.yaml](data.yaml) and is measu
 extended plan (as the Mk III's 14 → 16 was, with `BalanceTest`), not tonight. Alternative: keep 18 and
 leave the nanites a luxury; rejected because a 3 MW module that no generator carries has no use.
 
+### Act 5 hand plan (draft)
+
+*Draft, step `m9-d-systems` (2026-10-27), **pending the user's review in round 60** (J2, Q12 = c). A
+hand calculation for the design phase, no data file and not read by any test; part A of M9 replaces it
+by the measured balance plan (`balance-plan.yaml` visits 29–35, `reference_dps` 29–35 in
+`enemies/data.yaml`, `BalanceTest`, `ActPlaythroughTest`, `:content:levelReport`). Draws and DPS are
+those of the weapon documents: the [Ion Beam](../weapons/ion-beam/README.md), the Micro-missile Pod,
+the Tail Gun, the [Swarm Tail](../weapons/swarm-tail/README.md), the [Tesla Coil
+Pod](../weapons/tesla-coil-pod/README.md); the [shield](../shields/README.md) Mk III (4 MW), the
+Pickup magnet (1 MW).*
+
+**The loadout entering Act 5** (the balance plan after the L28 visit, `tools/balance.py`): Harpoon
+Torpedoes L4, Tail Gun L3, Micro-missile Pods L3 ×2, Pickup magnet, pressure hull, Shield Mk III,
+Composite III, Mk IV 20 MW: 16.5 of 20 MW, 3 168 cr left; the Ion Beam L3, the Depth Charges L3 and
+the Sonar Pulse wait in the inventory (nothing is sold since M8 AW). In vacuum the Harpoon is idle
+(`NO WATER`) and the pressure hull does nothing, so the L29 visit swaps them out: the dry loadout of
+the beam L3 would be 80 + 30 = **110** forward DPS (the tool's measure: the front and the wings) against
+a reference of 120 (0.92), too thin for the act's first level, hence the **Ion Beam L4** (5 000) at once.
+
+**The plan, medium** (visit income = the previous level's haul × 1.1 grade bonus, less 75 cr of the
+ship's repairs and, from L30, Rook's 50; haul = 700 × 1.07^(n−1): L28 4 351 (its data) · L29 4 654 ·
+L30 4 980 · L31 5 329 · L32 5 702 · L33 6 101 · L34 6 528 · L35 6 985; the act factor 6.5536 = 1.6⁴; the
+act's income ≈ 41 000 over the seven visits). The first column is the level that follows the visit.
+
+| Visit | Cash | Buys and fits | Spent | Left | Load / output |
+|---|---|---|---|---|---|
+| L29 | 7 954 | the Ion Beam (owned L3) fitted and raised to **L4** 5 000; the Harpoon and the pressure hull to the inventory; the EMP Burst fitted (its charges since L15: Act 5's units are machines with shields); the loaner Bulwark flies (Rook missing) | 5 075 | 2 879 | 18 / 20 |
+| L30 | 7 998 | **Swarm Tail** 3 500 and L2 1 750 on the rear (the Tail Gun L3 to the inventory); Rook back with his guns | 5 375 | 2 623 | 19.5 / 20 |
+| L31 | 8 101 | **Composite IV** 6 000 (140 armour, the escort level's hits) | 6 125 | 1 976 | 19.5 / 20 |
+| L32 | 7 838 | Swarm Tail **L3** 3 500 (the Airstrike is forbidden inside the asteroid; the EMP stays) | 3 625 | 4 213 | 20 / 20 |
+| L33 | 10 485 | nothing: no power room (20 of 20) and the Mk V not yet salvaged; saving | 125 | 10 360 | 20 / 20 |
+| L34 | 17 071 | nothing: saving for the Mk V (the breather) | 125 | 16 946 | 20 / 20 |
+| L35 | 24 127 | **Generator Mk V "Helix"** 18 000 (salvaged in L34, in the shop from this visit); both Micro-missile Pods **L4** 3 200 | 21 325 | 2 802 | 21 / 22 |
+
+The core tiers the plan leaves out: the Shield Mk V (14 000, 6 MW) and the Engine Mk IV (8 000, 2 MW)
+need power the Mk IV does not have, and the Tesla Coil Pod is the player's choice for the shielded
+units (light in Act 5, see Q1); all three are there for a richer or a hard run, and the Mk V's 22 MW
+makes room for one of them in Act 6.
+
+**Reference DPS 29–35** (single-target, medium; J2 of round 60: 120 at L29, then +4 a level). The
+forward DPS is the tool's (the front and the wings, as `BalanceTest` measures it); the rear is the
+rear gun's.
+
+| Level | Loadout (single-target DPS) | Forward DPS | Rear DPS | Proposed `reference_dps` | Forward / reference |
+|---|---|---|---|---|---|
+| 28 | Harpoon L4 99 + pods 2 × 15 × 0.7 (under water) | 120 | 20 | 120 (as is) | 1.00 |
+| 29 | Ion Beam L4 105 + pods L3 2 × 15 | 135 | 20 (Tail Gun L3) | **120** | 1.13 |
+| 30 | the same | 135 | 21 (Swarm Tail L2, homing) | **124** | 1.09 |
+| 31 | the same | 135 | 21 | **128** | 1.05 |
+| 32 | the same | 135 | 30 (Swarm Tail L3) | **132** | 1.02 |
+| 33 | the same (three latched leeches: × 0.875) | 135 (118) | 30 (26) | **136** | 0.99 (0.87) |
+| 34 | the same | 135 | 30 | **140** | 0.96 |
+| 35 | Ion Beam L4 105 + pods L4 2 × 21 | 147 | 30 | **144** | 1.02 |
+
+Act 4 ran 0.79–1.07 on this measure (the tool's L22–L28, 1.00–1.07 from L24); Act 5 opens higher (1.13: the beam's jump
+from the water's × 0.2 back to full, and the act's new shields and machines) and falls to 0.96 at the
+breather, where the plan saves for the Mk V; part A measures it with `levelReport` before the numbers go
+into the data. The act HP factor of a returning `medium`+ unit needs these seven entries
+(`UnitRules.actHpFactor` throws without them). Budgets 29–35: **4 654 · 4 980 · 5 329 · 5 702 · 6 101 ·
+6 528 · 6 985**.
+
+**Power check by level** (Mk IV 20 MW, the Mk V 22 from L35; E = the effective output under the
+[drain](#enemy-drain-effects), shield Mk III 4 MW):
+
+| Level | Fitted | Load | Two leeches (E = output − 4) | Three leeches (E = output − 6) |
+|---|---|---|---|---|
+| 29 | beam L4 7 + pods L3 4 + Tail Gun L3 2 + magnet 1 + shield 4 | **18** | E 16: shortfall 2, shield regen stops | E 14: shortfall 4, shield regen stops; weapons full |
+| 30–31 | Swarm Tail L2 3.5 for the Tail Gun | **19.5** | E 16: 3.5, shield regen stops | E 14: 5.5 > 4: f = 14 ÷ 15.5 = **0.90** |
+| 32–34 | Swarm Tail L3 4 | **20** | E 16: 4, shield regen stops | E 14: 6 > 4: f = 14 ÷ 16 = **0.875** |
+| 35 | Mk V 22; pods L4 5 | **21** | E 18: 3, shield regen stops | E 16: 5 > 4: f = 16 ÷ 17 = **0.94** |
+| a small generator | Mk III 16: beam L3 6 + pods L2 3 + Tail Gun L3 2 + magnet 1 + Shield Mk II 3 | **15** | E 12: 3, shield regen stops | E 10: 5 > 3: f = 10 ÷ 12 = **0.83** |
+| a full build | beam L5 8 + pods L4 5 + Swarm Tail L3 4 + magnet 1 + Shield Mk V 6 + Engine Mk IV 2 | **26** | refused on the Mk V 22: the Act 6 question | — |
+
+So the typical plan at L33 (20 of 20) loses its shield's regeneration to two leeches and an eighth of
+its fire to three; a player who turned one weapon down a level, or kept 2 MW spare, loses only the
+regrowth. The drain's 2 MW a leech is the lever if part A finds the bite too soft (3 MW a leech: the
+typical plan's f 0.75 at three).
+
+**The Mk V "Helix" note.** Q12 = c of round 60 (recommended, pending the user): the Mk V is **captured
+Helix tech salvaged in L34** (a set-piece crate of the [Salvage Run](../../campaign/act-5-the-belt/README.md))
+and is in the shop from the **L35 visit**, not from the act's first visit as the data's `act 5` reads;
+part A sets that availability in [data.yaml](data.yaml) (a level unlock) once approved. Its **22 MW**
+stays: +2 over the Mk IV, as the Mk III to IV step was first drafted, carries the typical plan at L35
+(21 of 22) and one more MW; the full build above (26) is Act 6's question, where the Composite V and the
+Reflex Shield arrive. Alternative: raise it to 24 now; rejected for the draft because Act 6 is not
+designed and the step can be measured then.
+
 ## Implementation
 
 - [x] Generator models and output values in the item data
 - [x] Load vs output check in the hangar with a projected-load bar
 - [x] Spare-power shield regen bonus
+- [ ] In-level output and the drain as under *Enemy drain effects*: the effective output, the shield's regeneration
+  stopped first, the weapons' fire-rate factor (at least 0.5), the spare-power bonus from the effective output;
+  deterministic (hashed only in a level with a drainer) — M9 part A (with the Void Leech)
+- [ ] The drain's feedback: the HUD gauge (see [HUD](../../ui/hud/README.md)), the muzzle flicker, the dimmed shield
+  ring, the brown-out hum — M9 part A
+- [ ] The Mk V "Helix" in the shop from the L35 visit (salvaged in L34), the balance plan's visits 29–35 — M9 part A
 
 ## Open questions
 
-- None open.
+- Q2 of [round 60](../../concept-rounds/README.md) (the drain, L33): recommended (a), the rules above.
+  Alternatives: (b) flat, each leech −20 % fire rate whatever the loadout (cheap and readable, but the
+  generator choice stops mattering); (c) each leech blacks out the fitted weapon with the highest draw
+  until it is shaken off (very readable, punishes every loadout alike).
+- J2 of round 60: `reference_dps` 120 → 144 with the Ion Beam L4 at the L29 visit (above).
+- Q12 of round 60: the Mk V salvaged in L34 and sold from the L35 visit (recommended c); under (a) or
+  (b) it is in the shop from the L29 visit as the data reads.
 
 ## Decisions
 
@@ -176,3 +285,9 @@ leave the nanites a luxury; rejected because a 3 MW module that no generator car
   ([balance-plan.yaml](../balance-plan.yaml)). `balance.py` (medium): left after the visit L22 1 980, L23 3 698, L24
   1 597, L25 4 436, L26 6 142, L27 1 770, L28 3 166; the forward DPS against the reference 1.04, 0.79, 1.00, 1.00, 1.07,
   1.03, 1.00 (energy weapons × 0.2 under water, `water(data, n, slug)`).
+- 2026-10-27 (Act 5 design phase, step m9-d-systems; **pending the user's review in round 60**): the drain rules
+  written as a final draft (Q2 = a: −2 MW a latched leech to −6, the shield's regeneration shed first, then the
+  weapons' fire rate × E ÷ (load − shield draw), at least 0.5; the feedback and the intel warning); the Act 5 hand
+  plan (the Ion Beam L4 at L29, the Swarm Tail at L30 and L32, Composite IV at L31, the Mk V and the pods L4 at
+  L35), the proposed `reference_dps` 120 → 144 (J2) and the power check under two and three leeches; the Mk V
+  "Helix" salvaged in L34 and sold from the L35 visit at 22 MW (Q12 = c).

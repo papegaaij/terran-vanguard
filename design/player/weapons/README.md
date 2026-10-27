@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../generator, ../../systems/economy]
-updated: 2026-10-22
+updated: 2026-10-27
 ---
 
 # Weapons
@@ -21,7 +21,9 @@ threat profiles recommend traits, and the hangar marks the weapons that have the
 The weapons available by L14 (Acts 1–2) have full designs, plus the Act 3 weapons (Ion Beam, Rear
 Lance, Deflector Pod, Light Drone Bay; designed 2026-10-12, approved in concept round 36 on 2026-10-13)
 and the Rear-guard Drone Bay (M7 part G, 2026-10-20: its numbers approved with the drones in round 36,
-the document in review); later weapons are still roster rows below.
+the document in review), the Act 4 pair (Harpoon Torpedoes, Depth Charges) and the Act 5 pair (Tesla Coil
+Pod, Swarm Tail; drafts of 2026-10-27, pending the user's review in round 60); later weapons are still
+roster rows below.
 
 | Part | Summary | Design | Impl | Art |
 |---|---|---|---|---|
@@ -46,6 +48,8 @@ the document in review); later weapons are still roster rows below.
 | [deflector-pod](deflector-pod/README.md) | Deflector Pod — Wing (per pod), defensive; absorbs 3 → 5 bullets per 2 s; 1 600; L18 | approved | in-progress | final |
 | [light-drone-bay](light-drone-bay/README.md) | Light Drone Bay — Wing (per bay), forward (drone); DPS 10 → 30; 2 000; L15 | approved | in-progress | final |
 | [rear-guard-drone-bay](rear-guard-drone-bay/README.md) | Rear-guard Drone Bay — Wing (per bay), rear (drone); DPS 9 → 26; 2 400; L20 | approved | in-progress | final |
+| [tesla-coil-pod](tesla-coil-pod/README.md) | Tesla Coil Pod — Wing (per pod), area, shield-breaker; DPS 12 → 40 (an arc of 140 → 180 px); 3 000; L29 | draft | not-started | none |
+| [swarm-tail](swarm-tail/README.md) | Swarm Tail — Rear, rear, homing; DPS 15 → 55; 3 500; L30 | draft | not-started | none |
 
 ## Design
 
@@ -91,14 +95,13 @@ shots all count (they aim at the convergence point), a deflector deals none.
 
 ### Roster — later weapons
 
-Still at `idea`; they get a directory when they are designed (Act 3 onwards).
+Still at `idea`; they get a directory when they are designed. The Plasma Arc moved to Act 6 with
+Act 5's arsenal (Q12 = c of round 60, pending the user's review): its unlock is set with Act 6's design.
 
 | Name | Slot | Traits | DPS L1/L5 | Draw L1→L5 | Base price | Unlock | Design |
 |---|---|---|---|---|---|---|---|
-| Plasma Arc | front | area, spread | 30 / 120 (short range, chains to 3–6 targets) | 5 → 8 | 6 000 | L31 | idea |
+| Plasma Arc | front | area, spread | 30 / 120 (short range, chains to 3–6 targets) | 5 → 8 | 6 000 | Act 6 (was L31) | idea |
 | Choir Resonator | front | spread, piercing | 45 / 160 | 7 → 11 | 12 000 | L44 (captured Vrell tech) | idea |
-| Swarm Tail | rear | rear, homing | 15 / 55 (micro-missiles that curve back up) | 3 → 5 | 3 500 | L30 | idea |
-| Tesla Coil Pod | wing | area, shield-breaker | 12 / 40 (short-range zap) | 2 → 4 | 3 000 | L29 | idea |
 
 ### Coverage check
 
@@ -112,12 +115,12 @@ trait (the campaign table is the reference for the levels):
 | anti-ground | L03 | Bomb Rack L03; Airstrike special L04; Hammer Mortar L07 |
 | piercing | L05 | Lance Laser L05 |
 | side | L05 | Side Splitter L05; Swivel Gun L09 |
-| homing | L06 | Micro-missile Pod L06; Swivel Gun L09; Hornet Launcher L10 |
-| area | L07 | Hammer Mortar L07; Proximity Mines L12 |
-| rear | L08 | Tail Gun L08; Fan Blaster L10 |
+| homing | L06 | Micro-missile Pod L06; Swivel Gun L09; Hornet Launcher L10; Swarm Tail L30 (the first homing rear gun) |
+| area | L07 | Hammer Mortar L07; Proximity Mines L12; Tesla Coil Pod L29 (its sparks) |
+| rear | L08 | Tail Gun L08; Fan Blaster L10; Swarm Tail L30 |
 | anti-sub | L11 | Torpedo Pod L11; Harpoon Torpedoes, Depth Charges and the Sonar Pulse special L22 |
 | beam | L15 | Ion Beam L15 |
-| shield-breaker | L29 | Tesla Coil Pod L29 (the EMP Burst special strips shields from L15) |
+| shield-breaker | L29 | [Tesla Coil Pod](tesla-coil-pod/README.md) L29 (the EMP Burst special strips shields from L15); what a shield is: the enemies' [enemy shield rule](../../enemies/README.md#enemy-shields) (draft, round 60 Q1) |
 
 ## Concept art
 
@@ -203,7 +206,12 @@ targets; generator `tools/concept/gear_r48.py`; prompts in [concept/prompts.md](
 ## Open questions
 
 - Should the Ion Beam keep `shield-breaker` after all? That would make shield-breaking available
-  from L15 instead of L29 and weaken the Act 5 shop moment.
+  from L15 instead of L29 and weaken the Act 5 shop moment. Under Q1 = a of round 60 (recommended,
+  pending the user) the beam wears a shield down like every other weapon and has no rule of its own;
+  under Q1 = b a beam would pass shields (the beam family's trait without the name).
+- Act 5's arsenal (Q12 of round 60): recommended (c), the Tesla Coil Pod (L29) and the Swarm Tail
+  (L30) with the core tiers, the Plasma Arc to Act 6; alternatives (a) the pod only, (b) the full roster
+  (the Plasma Arc at L31 as first drafted).
 - The roster is large (24 entries). For the first playable build (Acts 1–2) the 14 designed
   weapons are needed; the earlier suggestion to start with Pulse Cannon, Scatter Vulcan, Tail
   Gun, Micro-missile Pod and Bomb Rack still holds as the order of implementation.
@@ -280,3 +288,7 @@ targets; generator `tools/concept/gear_r48.py`; prompts in [concept/prompts.md](
 - 2026-10-21 (the user, Act 3 playthrough: "My big weapons take too much power and I can't lower them"):
   the [power dial](../README.md#power-budget): every fitted weapon flies and draws at a power setting
   from L1 to its bought level, turned down and up in the hangar for free.
+- 2026-10-27 (Act 5 design phase, step m9-d-systems; **pending the user's review in round 60**): the Tesla
+  Coil Pod (L29, `shield-breaker`, an instant arc with sparks) and the Swarm Tail (L30, a homing rear gun
+  that seeks behind first) promoted from the roster to draft documents with hand-written numbers (Q12 = c);
+  the Plasma Arc moves to Act 6 (its L31 unlock dropped). The coverage table names them.

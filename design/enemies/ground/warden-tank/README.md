@@ -1,10 +1,10 @@
 ---
 title: Warden Tank
-design: approved
+design: review
 implementation: in-progress
 art: final
-depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../player/specials, ../../../campaign/act-3-red-dust]
-updated: 2026-10-20
+depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../player/specials, ../../../campaign/act-3-red-dust, ../../../campaign/act-5-the-belt]
+updated: 2026-10-27
 ---
 
 # Warden Tank
@@ -14,7 +14,8 @@ updated: 2026-10-20
 A human-built tracked tank: the hull drives its own heading along roads and the Tharsis foundry's
 conveyors while a separate turret tracks the ship and fires bursts, even back up the screen after
 it has passed. In Act 3 it is **unmarked grey with no trim** (a hint of human involvement, Level
-19); from Act 5 it appears in Ascendancy black and gold.
+19); from Act 5 it appears in Ascendancy black and gold, first on Level 34's derelict hulls (draft, pending
+the user's review in round 60).
 
 ## Design
 
@@ -70,6 +71,28 @@ gets the act HP factor of a `medium` unit (every part).
 - **Code fit.** Hull `walk` and the `EnemyGun` turret turn rate exist separately; the two-sprite
   unit with independent headings is new (§2.8 of the gap analysis).
 
+### Act 5: the return in livery (draft)
+
+**Draft** (Act 5 design phase, step D-enemies-B; pending the user's review in round 60). The stat block above
+(the approved Act 3 unit, rendered from its data) is unchanged; this section adds its Act 5 use. The build
+updates the data's *First level / used in* row (L34 added before Act 6's L39 and L41).
+
+- **J1: the Crawler Tank dropped.** The roster's Act 5 Crawler Tank (L34, a tank with a front and a rear
+  turret) is what this tank already does: its turret fires bursts back up the screen after it has passed, and
+  this doc scheduled "Ascendancy black and gold from Act 5". L34 *Salvage Run* flies the Warden Tank in livery
+  instead (judgement call J1, shown in round 60): one unit, its art and sounds saved; the ground variety keeps
+  two Ascendancy movers (the [Strider](../strider/README.md) and this tank).
+- **Where.** L34 (the breather, threat rating 2): convoys of 2–3 on roads along the derelict CDF and Helix
+  hulls of the ship graveyard, turning at the hull plates' seams; the level doc places them.
+- **HP.** The act HP factor of a returning `medium` unit (its first level L19, reference 92; L34's proposed
+  reference 140, J2): ×140/92 = ×1.52, the **hull 97 · turret 30** (127 whole), its time to kill unchanged.
+  Bounty unchanged (26 whole, 28 in parts, Act 1 terms; the act factor 1.6⁴ scales it).
+- **Attack, movement, rear plate, EMP**: as the stat block and *Behaviour* above; no new hook.
+- **Livery.** The chosen r05-a concept is the Act 5 look (gloss black, gold trim, white accent, rim light; red
+  running lights per Q11 a, pending round 60); its wreck is black and gold too. The intel names it Ascendancy
+  from Act 5 (Act 3's "unidentified" stays for Levels 19–21). The production frames reuse
+  `tools/art/warden_tank.py` with the livery changed (no new model).
+
 ### Difficulty and level use
 
 - Burst and interval per the stat block; the global multipliers apply.
@@ -97,6 +120,15 @@ docstring and `briefs/m7f-names.md`); approved as final by the user in round 42 
 [../concept/prompts.md](../concept/prompts.md#warden-tank-final-r42-a). The Ascendancy livery (Act 5+) is not
 produced yet.
 
+Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's review board follows) — a/b proposals in the belt look of [Q11](../../README.md#open-questions) a (pending the user's review), each a PNG sheet (the source render, the sprites and states, the readability check over the darkest ground of Level 34 with the measured gold share, key frames) and a GIF in the 480×540 play field; generator `tools/concept/enemies_r60.py`. Prompts: [concept/prompts.md](concept/prompts.md).
+
+| File | What | Status |
+|---|---|---|
+| [concept/warden-tank-r60-a.png](concept/warden-tank-r60-a.png) | Warden Tank A, r05 livery with red running lights — gloss black, the r05 gold side stripes, turret ring and muzzle, gold track edges, the white accent, red running lights; strong rim (sheet) | proposed |
+| [concept/warden-tank-r60-a.gif](concept/warden-tank-r60-a.gif) | Warden Tank A, r05 livery with red running lights — gloss black, the r05 gold side stripes, turret ring and muzzle, gold track edges, the white accent, red running lights; strong rim (motion) | proposed |
+| [concept/warden-tank-r60-b.png](concept/warden-tank-r60-b.png) | Warden Tank B, heavier gold — gold track guards, a gold engine deck and a gold turret roof on the same model (sheet) | proposed |
+| [concept/warden-tank-r60-b.gif](concept/warden-tank-r60-b.gif) | Warden Tank B, heavier gold — gold track guards, a gold engine deck and a gold turret roof on the same model (motion) | proposed |
+
 ## Implementation
 
 - [x] Two-part unit: hull (`16 angles`) and turret (`32 angles`) with independent headings and turn rates (step F3: `EnemySpec.Turret`, `WardenTankTest`)
@@ -105,13 +137,17 @@ produced yet.
 - [x] Rear plate ×1.5 within ±50° of the rear; the turret's loss silences it (step F3: `EnemySpec.RearPlate`, `WardenTankTest`)
 - [ ] EMP stun 3 s (machine)
 - [ ] Unmarked grey livery and wreck for Act 3; Ascendancy livery from Act 5
+- [ ] Act 5 (when the draft is approved): L34 in the data's *used in* row, the act HP factor at L34 (hull 97, turret 30), the intel label "Ascendancy" from Act 5, the livery's production frames and wreck (`tools/art/warden_tank.py`)
 - [x] Data file with the stat block (when Level 19 is built): step F2, the `turret` and `rear_plate`
       keys loaded, checked and mapped (`FoundryRules`)
 - [x] Production art (round of part F; approved as final in round 42, F.b)
 
 ## Open questions
 
-- None open: round 36 answered it (see *Decisions*).
+- J1 (shown in round 60): the Crawler Tank dropped for this tank in livery at L34; the alternative is the
+  roster's Crawler Tank as its own unit (a front and a rear turret), one more unit's art and sounds.
+- Q11 (pending round 60): the Ascendancy look on the belt, **a** recommended (the r05-a livery plus red running
+  lights); alternatives **b** gunmetal with gold, **c** black silhouettes with gold accents only.
 
 ## Decisions
 
@@ -129,3 +165,6 @@ produced yet.
   drives up the belt, so its rear plate faces the ship while it approaches (as Level 19's briefing image
   and text have it).
 - 2026-10-20: round 42 closed: the Act 3 grey production art (F.b) approved as final by the user; the build choices (B.c) and the rear-plate fix taken as built.
+- 2026-10-27 (Act 5 design phase, step D-enemies-B; pending the user's review in round 60): the Act 5 return
+  drafted (*Act 5: the return in livery*): L34 in Ascendancy livery replaces the roster's Crawler Tank (J1), hull 97
+  and turret 30 by the act HP factor, intel "Ascendancy" from Act 5. The design is `review` until the round.

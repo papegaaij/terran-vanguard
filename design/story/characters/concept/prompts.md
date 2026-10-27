@@ -143,3 +143,25 @@ cool teal rim; behind him the control room's round viewport (dark water, a lamp-
 Shown at 1x, 2x and 4x and next to the other minor speakers.
 
 **Accepted as final** in round 52 (F.8, 2026-10-22).
+
+## act5-speakers-r60-a
+
+Round 60 (Act 5 "The Belt", step ART-P-world; pending the user's review): the act's three new radio speakers
+([Act 5 speakers](../README.md#act-5-speakers-draft)), mockups by `python3 tools/concept/belt_r60.py speakers`: SDF
+busts in the radio speakers' style B through [tools/art/portraits.py](../../../../tools/art/portraits.py)'s pipeline
+(imported unchanged; nothing written to `assets/`), neutral only, as the minor speakers.
+
+**Prompt (Ceres Hub Control, friendly teal channel):** as the style-B radio prompt of portraits-final-r51-a: a lean
+dock controller in his forties, dark brown skin, the head shaved close, a short greying beard, the hub's pale grey dock
+coverall with a high collar and Ceres's ochre patch, a headset with a boom mic.
+
+**Prompt (the Bellwether's captain, friendly teal channel):** a weathered belt miner in her fifties, grey hair cropped
+short and pushed back, crow's feet, work goggles pushed up on the forehead, a scuffed hazard-yellow work jacket over a
+dark undershirt, a headset.
+
+**Prompt (Harker, amber enemy channel):** a Ceres garrison pilot in his thirties, dark hair cut short, stubble, a hard
+set mouth, a CDF flight suit with its padded collar ring and, over the CDF patch on his chest, the Ascendancy crest
+freshly stitched (a gold sun and ring on black).
+
+**Negative prompt:** as portraits-final-r51-a's: smooth gradients, photorealism, 3D render, anti-aliased vector art,
+HD detail, fully monochrome image, heavy noisy dithering, anime, chibi, text, watermark, logo, hands, full body.

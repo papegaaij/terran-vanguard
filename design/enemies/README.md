@@ -3,14 +3,14 @@ title: Enemies
 design: approved
 implementation: in-progress
 art: final
-updated: 2026-10-26
+updated: 2026-10-27
 ---
 
 # Enemies
 
 ## Summary
 
-All hostile units in the game: 59 regular enemies across the Vrell, the Jovian Ascendancy and
+All hostile units in the game: 66 regular enemies across the Vrell, the Jovian Ascendancy and
 Ascendancy/Vrell hybrids, plus 7 act bosses and 5 mid-bosses. They range from tiny swarmers to
 huge multi-part creatures, and include serpents, walkers, spinners and machines as well as
 flyers. This document defines the shared vocabulary for enemy specifications: the stat block,
@@ -22,9 +22,9 @@ directories hold the rosters.
 
 | Part | Summary | Design | Impl | Art |
 |---|---|---|---|---|
-| [air](air/README.md) | Flying enemies on the `air`, `low-air` and `high-air` layers, incl. serpents, spinners and drone trains (22) | approved | in-progress | final |
-| [ground](ground/README.md) | Turrets, walkers, tanks, crawlers, bunkers and spawners on the `ground` layer (18) | approved | in-progress | final |
-| [naval](naval/README.md) | Surface vessels and submerged enemies (`ground` on water, `sub`) (9) | approved | in-progress | final |
+| [air](air/README.md) | Flying enemies on the `air`, `low-air` and `high-air` layers, incl. serpents, spinners and drone trains (24) | approved | in-progress | final |
+| [ground](ground/README.md) | Turrets, walkers, tanks, crawlers, bunkers and spawners on the `ground` layer (23) | approved | in-progress | final |
+| [naval](naval/README.md) | Surface vessels and submerged enemies (`ground` on water, `sub`) (11) | approved | in-progress | final |
 | [space](space/README.md) | Vacuum-only enemies for space levels, incl. the Leviathan (8) | approved | in-progress | chosen |
 | [bosses](bosses/README.md) | 7 act bosses and 5 mid-bosses | approved | done | final |
 
@@ -40,6 +40,12 @@ directories hold the rosters.
 
 Unmarked Ascendancy machines in Acts 3–4 (Ghost Drone, Revenant Walker, Depth Hunter) are grey
 with no trim. They are recognisably human-made, but belong to no known faction.
+
+**The Ascendancy in the open** (Act 5 on; draft, Q11 a, pending the user's review in round 60): gloss
+black hulls with gold trim, a strong top-left rim light and red running lights, gold on at least 20 %
+of the silhouette, so black-and-gold units read over the belt's dark rock and space; the belt
+backdrops stay a step lighter than Act 4's (a sunlit dust band, warm rock). Crewed craft carry a
+light hex [shield](#enemy-shields); expendable drones do not.
 
 #### Role colours
 
@@ -135,8 +141,9 @@ most one on screen, announced by radio, with a bounty close to a mid-boss.
   `vital` (the weak point; destroying it kills the whole enemy).
 - **Chains:** the head is vital. Destroying a body segment splits the chain: on the Coilwyrm
   the rear half grows a new head and becomes its own, faster chain — **once per chain**: a regrown
-  chain that is cut again simply dies from the cut backwards; on machines (Rail Serpent)
-  the rear half stops, turns into drifting wreckage and explodes after 1 s. The tail pays a
+  chain that is cut again simply dies from the cut backwards; on machines (the [Rail Serpent](air/rail-serpent/README.md); Act 5 draft, pending round 60)
+  the rear half loses power, drifts with sparks for 1.5 s and explodes car by car from the cut
+  backwards, harmless to the ship and paying its cars; the front half runs on with the engine. The tail pays a
   bonus when destroyed first.
 - **Scoring:** part bounties add up to at least the whole-enemy bounty, so dismantling a big
   enemy part by part pays as well as killing its weak point; killing the vital part first
@@ -208,7 +215,8 @@ that move in any direction must read from any angle:
 | `flock` | Boids-like group movement (separation, alignment, cohesion) steered by a leader or target; produces swirling clouds. Planned (M5 part D) for the [Mote Swarm](air/mote-swarm/README.md): a leader point flies the wave's authored route, the members steer round it; deterministic (fixed order, `StrictMath`) and allocation-free, at most 24 members. |
 | `walk` | A walker moving along the terrain on its own heading (not just scrolling), turning to face where it goes; the gait follows the walk cycle. |
 | `surface` | Emerges from the ground or water at a telegraphed spot (ripple, dust), acts, and dives again; like `burrow` but it travels while submerged. |
-| `ricochet` | Bounces off the play field edges (and off terrain walls) at equal angles. |
+| `ricochet` | Bounces off the play field edges (and off terrain walls) at equal angles; in the belt also off the big, indestructible drifting rocks of the `Debris` hazard (their outline taken as a circle), while a dash smashes small breakable rocks (the [Buzzsaw Drone](air/buzzsaw-drone/README.md), Act 5 draft). |
+| `ride` | Rides a small drifting rock until the ship comes near, then leaps off at it (a `dive`); see [rock riding](#rock-riding) (the Asteroid Mite, Act 5 draft). |
 | `spin` | Rotates about its own axis while moving (a modifier on any other pattern); spin speed may change with the attack phase. |
 | `chain` | Follows a leader's path history at a fixed distance (used by every segment of a chain). |
 
@@ -224,12 +232,12 @@ that move in any direction must read from any angle:
 | `spiral` | A rotating stream of bullets. |
 | `laser-sweep` | A continuous beam rotating through an arc; the arc is shown for 0.6 s first. |
 | `laser-line` | A charged straight beam; a thin line telegraphs it for ≥ 0.8 s. |
-| `homing` | Slow projectiles that track the player; shootable (1–3 HP). |
-| `mine` | Drops stationary or drifting mines; shootable. |
+| `homing` | Slow projectiles that track the player; shootable (1–3 HP). The Ascendancy's missiles of Act 5 on are drawn as the red-gold **homing diamond** (the bullet rules' diamond; draft, pending round 60). |
+| `mine` | Drops stationary or drifting mines; shootable. From Act 5 also laid in **lines** with one gap, with a proximity burst and a chain blast: see [mine lines](#mine-lines) (the Minelayer, draft). |
 | `mortar` | An arcing lob to a target point marked on the ground layer; bursts into a `ring` on impact. |
 | `kamikaze` | Rams the player at speed; may combine with `death-burst`. |
 | `spawn` | Releases other enemies (a carrier or node). |
-| `link` | A damaging energy beam between two or more units; acts as a barrier. |
+| `link` | A damaging energy beam between two or more units; acts as a barrier. Between ground anchors (the [Tendril Anchor](ground/tendril-anchor/README.md), a tendril a beam burns) or, from Act 5, between moving air units (the Shard Drone's energy links, see [air links](#air-links); draft). |
 | `aura` | Buffs nearby enemies (shield, speed or regeneration); shown as a visible ring. |
 | `drain` | Drains the player's shield or generator energy while in range or latched. |
 | `reflect` | A frontal shield bounces non-`beam` player shots back as enemy bullets. |
@@ -268,6 +276,16 @@ that move in any direction must read from any angle:
 pincer's groups enter 60 px from their edge; a circle's centre is 180 px below the top of the
 play field and its units break off in groups 0.5 s apart, a Needler at its 120 px/s entry speed.
 
+**Act 5 additions** (draft, pending the user's review in round 60; they join the rendered table
+above when M9 part A writes them into [data.yaml](data.yaml)):
+
+- `linked group`: 3–4 units flying together, joined by energy links in a line or a closed ring
+  (the [Shard Drone](space/shard-drone/README.md); see [air links](#air-links)).
+- **Squad leader** on a `V-wing` of Talons: the tip is a gold-striped leader; killing it scatters
+  the wing (the [Talon](air/talon/README.md)). Other units' V-wings have no leader.
+- A **mine line** is not a formation (mines are not units): it is the Minelayer's `mine` attack,
+  see [mine lines](#mine-lines).
+
 ### Variety checklist per act
 
 Every act must pass this checklist (counting the units that appear in the act, new or
@@ -289,7 +307,7 @@ Current coverage (✓ = passes):
 | 2 Homefront | tiny, small, medium, huge (as built: no `large` unit) | Harbour Kraken (L11), Siege Spire (L14) | Creeper (L08), Ravager packs (L09, L14), Scuttler returns (L13) | Whirl Seed returns (L12) | Wraith and Mote Swarm rear (L10), Mantis sides (L12, L13), Skimmers from all edges (L13), maw Wraiths (L14) | 5 of 20 (Skitter, Stinger, Creeper, Wraith, Mantis); the 20 used in L08–L14: Needler, Skitter, Stinger, Spine Turret, Polyp Mortar, Creeper, Hive Node, Ravager, Mote Swarm, Wraith, Driftjelly, Reef Spitter, Harbour Kraken, Lamprey, Mantis, Spore Bomber, Whirl Seed, Scuttler, Skimmer, Siege Spire | ✓ |
 | 3 Red Dust | tiny (the new Dust Kite and Mote Swarm, plus returning Skitters), small, medium, large, huge | Threadcrawler, Revenant Walker, Dust Colossus | Burrower, Threadcrawler, Shellback (L17), Warden Tank | Dust Devil (L18) | L19 rear, L20 reverse scroll, L21 breaches | 8 of 22 (Skitter, Stinger, Mantis, Creeper, Wraith, Burrower, Choir Herald, Threadcrawler); the 22 used in L15–L21: Dust Kite, Skitter, Mote Swarm, Needler, Stinger, Polyp Mortar, Spine Turret, Tendril Anchor, Ghost Drone, Burrower, Creeper, Ravager, Spore Bomber, Mantis, Choir Herald, Dust Devil, Wraith, Warden Tank, Threadcrawler, Shellback, Revenant Walker, Dust Colossus | ✓ |
 | 4 Deep Water (as built) | tiny (Glassfin, returning Skitters and the Mote Swarm), small, medium, large, huge | Eel Swarm, Drill Rig (core and pumps), Abyssal Maw | Scuttler on the sea floor (L24) | Spiral Nautilus (L25–L28) | Mantis pincers (L22), Siren side caves (L25), the Abyss Ray rising from below (L24), Depth Hunter columns from the rear (L27, L28) | 3 of 25 (Skitter, Stinger, Mantis); the 25 used in L22–L28: Skitter, Mote Swarm, Glassfin, Needler, Stinger, Spine Turret, Polyp Mortar, Skimmer, Lamprey, Driftjelly, Reef Spitter, Barbfin, Glow Angler, Mantis, Scuttler, Siphon Pump, Siren, Spiral Nautilus, Depth Hunter, Relay Beacon, Drill Rig, Eel Swarm, Abyss Ray, Spawning Reef, Abyssal Maw | ✓ |
-| 5 The Belt | tiny, small, medium, large, huge | Rail Serpent, Shard Drone links, Iron Sovereign | Strider (L32), Crawler Tank (L34) | Buzzsaw Drone (L31), Sovereign rings | Minelayer and Rail Serpent rear (L30), Void Leech rear | 1 of 15 (Asteroid Mite) | ✓ |
+| 5 The Belt (draft, pending round 60) | tiny (Asteroid Mite, Dart Drone), small, medium, large (Rail Serpent, Strider), huge (Iron Sovereign) | Rail Serpent, Shard Drone links, Strider legs, Iron Sovereign | Strider (L32), Warden Tank in Ascendancy livery (L34; the Crawler Tank dropped, J1) | Buzzsaw Drone (L31), Sovereign rings | Minelayer and Rail Serpent rear and sides (L30), Void Leech rear and sides (L33) | 1 of 15 new units (Asteroid Mite); the 15: Talon, SAM Nest, Asteroid Mite, Minelayer, Gilded Gunship, Rail Serpent, Dart Drone, Shard Drone, Hornet, Buzzsaw Drone, Sentinel Tower, Strider, Void Leech, Rail Bunker, Iron Sovereign; the returning units are counted from the level drafts | ✓ (on paper) |
 | 6 Jovian Storm | small, medium, large, huge | Halo Platform, Ascendant | Warden Tank and Strider return (L39, L41) | Halo Platform (L41), Buzzsaw Drone returns (L38) | Honour Guard rear (L40), Harrow all edges | 0 of 12 | ✓ |
 | 7 Beyond the Gate | tiny, small, medium, large, huge | Leviathan and Coilwyrm return, Choir Heart | Threadcrawler returns (L45) | Whirl Seed returns (L45) | all-direction levels (L44, L46–50) | 3 of 10 (Rift Skater, Choir Seraph, Threadcrawler) | ✓ |
 
@@ -378,6 +396,16 @@ Levels 15–21 (Act 3, M18 = a of concept round 36) rise from 76 to 100 by 4 a l
 plan reaches with the Ion Beam (bought at L2 at the L18 visit and raised to L3 at L19, 77 · 77 · 77 · 80 ·
 100 · 100 · 100 in the [balance plan](../player/balance-plan.yaml) on budget(n) income, the user's decision of
 2026-10-14); the act HP factor of returning units uses them like Act 2's.
+
+Levels 29–35 (Act 5; draft, judgement call **J2** of the gap analysis, pending the user's review in round
+60) are proposed at **120 · 124 · 128 · 132 · 136 · 140 · 144**: Level 29 holds Level 28's 120, because in
+vacuum the Harpoon Torpedoes idle and the Depth Charges go back in the inventory, leaving the plan's dry
+loadout at ≈ 110 forward DPS (0.92 of the reference, too tight); the plan buys the **Ion Beam L4** at the L29 visit,
+≈ 135 (the [generator hand plan](../player/generator/README.md): 1.13 of 120, then 1.09 to 0.96 as the reference climbs), and the curve then climbs by 4 a level to 144 at the Iron Sovereign.
+The Act 5 unit drafts set their HP from these; M9 part A writes them into [data.yaml](data.yaml) with the
+Act 5 balance plan and measures each level with `levelReport`. The beam-era ×2 keeps applying to `small`
+units, the act HP factor to returning `medium` and larger ones (the Warden Tank 64 → ≈ 97 at L34, ×140/92),
+and a hex [shield](#enemy-shields) comes on top of the HP.
 
 **Early levels are deliberately easy** (user decision 2026-10-01): in L01–L03 a typical
 loadout is about 1.5× stronger than the reference DPS above (`tools/balance.py`). This is
@@ -513,6 +541,9 @@ which mode. Units without it ignore the objective.
   how much it hurts the objective is in the ally's spec. Shots aimed at the player never hurt an
   objective that only takes objective-aimed damage.
 - Telegraphs still apply (mortar impact markers on the objective, edge warnings).
+- **Homing missiles** (Act 5 draft, the Hornet in Level 31, pending round 60): under `always` a
+  missile homes on the objective picked at its launch (the nearest living objective unit); under the
+  other modes it homes on the ship. The Decoy Flares still retarget it.
 - Difficulty: a level may drop the hook on easy (e.g. divers go back to the player) or add
   units to it on hard.
 - **Exact rules of the three modes (M5 part G, decision G1 = a, accepted in round 34 (2026-10-12); the
@@ -529,6 +560,80 @@ which mode. Units without it ignore the objective.
 - **Who is hooked.** The level's `targeted_by` names kinds, never waves of popcorn: the small
   popcorn kinds (Skitter, Needler) and the Mantis are never hooked. In Level 13 the Stingers are
   hooked on medium and hard only (**easy: unhooked**, they go back to the ship).
+
+### Enemy shields
+
+**Draft** (Act 5 design phase; the gap analysis's **Q1 a**, pending the user's review in round 60). The
+Ascendancy's doctrine puts light shields on its crewed craft. A shield is a **hex HP pool over the
+hull**:
+
+| Rule | Value |
+|---|---|
+| Hit | Every weapon hits it (no trait needed); a shot spends the shield first at its full damage and the **overflow** goes on to the hull (and the hull's own armour arcs), as the Choir Herald's aura ring does |
+| Look | a thin gold hex outline round the hull at 40 % while it holds; a hit flashes the hexes where it lands; emptied, the hexes shatter in a 0.2 s ring of fragments; refilling, they shimmer in from the edge |
+| Refill | after **2.0 s** without a hit it refills at **50 %** of its maximum per second |
+| `shield-breaker` | a hit by a `shield-breaker` weapon (the Tesla Coil Pod, see the [weapons](../player/weapons/README.md)) **empties it at once** (the hit's whole damage goes to the hull) and stops the refill for **3 s** |
+| EMP Burst | the [EMP Burst](../player/specials/README.md#emp-burst-l15) empties every shield on the screen and stops the refill for the stun (a machine's 3 s), as it strips the aura rings |
+| Scaling | the shield's HP takes the difficulty's HP lever and, on a returning `medium` or larger unit, the act HP factor; never the beam-era factor |
+| Who has one | Act 5 (light): the [Talon](air/talon/README.md) 2 (its leader 4), the [Hornet](air/hornet/README.md) 8, the [Gilded Gunship](air/gilded-gunship/README.md) 12, the Iron Sovereign's core (its own document); no other Act 5 unit. Heavier from Act 6, where `shield-breaker` is strongly rewarded (L37) |
+
+Bosses follow the same rule unless their document says otherwise (a boss is never stunned, but its
+shields are emptied by the EMP). Different from **hardened** ground units (only `anti-ground` and the
+landing blasts hurt them) and from the Act 6 **`reflect`** shield (a frontal arc that bounces shots).
+
+### Air links
+
+**Draft** (Act 5 design phase, decided in the gap analysis, pending the user's review in round 60). The
+`link` attack between **moving air units**, generalised from the Tendril Anchor's ground pairs; the
+first unit is the [Shard Drone](space/shard-drone/README.md) (Level 31), whose document holds the
+numbers (band, damage, tell, length):
+
+- A `linked group` of 3–4 units is joined by **energy links** between neighbours: a line or a closed
+  ring. A link is harmless during its flicker tell after the group enters, then hurts the ship on
+  touch (with a cooldown, the ship not pushed).
+- Links are **energy**: they have no HP and every shot passes through them, a `beam` included (unlike
+  the tendril, which a beam burns). **Killing a unit breaks its links**; the **EMP Burst** drops every
+  link for its stun, and they relight with the tell.
+- Enemy bullets pass through links; links never hurt Rook or enemies, and no ally except an escort objective that the links are sent against (the L31 mining tug, Q4 a; see the [Shard Drone](space/shard-drone/README.md)), pending the user's review in round 60.
+
+### Mine lines
+
+**Draft** (Act 5 design phase; the gap analysis's **Q3 a**, pending the user's review in round 60). The
+`mine` attack laid as a barrier; the [Minelayer](space/minelayer/README.md) (Level 30) holds the numbers
+(spacing, gap, arming, proximity, ring, limits):
+
+- A layer passes from behind (`rear-entry`, edge-warned) to a lane near the top and lays a **line**
+  across the play field with **one gap** wide enough that flying its middle stays outside every mine's
+  proximity. The line holds its place in the field and scrolls down onto the ship.
+- A mine **arms** a moment after it is laid; an armed mine near the ship **blinks**, then bursts into a
+  slow `ring`; touching one bursts it at once.
+- A **shot** mine (1 HP) bursts at once and **sets off the mines within 40 px** (hop by hop, no
+  further rings; mine lines come in clusters of 4, so a shot clears its cluster: C1 a, pending round 60): one shot opens a hole a ship can use, so spread and piercing weapons cut lanes from
+  far away. Homing shots and Rook never pick a mine.
+
+### Topple
+
+**Draft** (Act 5 design phase, decided in the gap analysis, pending the user's review in round 60). A
+walker with **destroyable legs** falls when it loses one; the [Strider](ground/strider/README.md)
+(Level 32) holds the numbers (tell, fall, line size):
+
+- A **stagger** tell marks the **fall line** on the ground (a dark strip on the lost leg's side), then the
+  walker **falls** along it, is destroyed (its whole bounty paid) and leaves a wreck.
+- **Crush**: every **ground** unit under the fall line is destroyed (hardened ones included), its bounty
+  paid to the player. It **never hurts the ship** or Rook (ground never collides) nor any `air` unit.
+
+### Rock riding
+
+**Draft** (Act 5 design phase, decided in the gap analysis, pending the user's review in round 60). Units
+that ride the belt's drifting rocks (`ride` in the movement vocabulary); the
+[Asteroid Mite](space/asteroid-mite/README.md) (Level 29) holds the numbers:
+
+- A small, breakable `Debris` rock carries **2–5** riders; they move and turn with it and are hittable
+  like the rock, which blocks shots as the debris field does.
+- When the ship comes within **160 px** the riders **leap off** one after another, each after a
+  **0.4 s** tell (a `dive` at the ship).
+- **Shooting the rock** frees its riders early: they tumble off and leap after the same tell. Riders
+  carried off the screen on an untouched rock pay nothing.
 
 ## Concept art
 
@@ -578,6 +683,15 @@ Production art for concept round 26 (the M4 part H batch), review files built fr
 |---|---|---|
 | [concept/enemy-bullet-medium-final-r26-a.png](concept/enemy-bullet-medium-final-r26-a.png) | Final Vrell `medium` bullet: the large pulsing orb (`orb-medium_0..5`, 23×23, 13 px body, 6-frame pulse; round 09's large orb in the small orb's colours) next to the small orb | chosen |
 | [concept/enemy-bullet-medium-final-r26-a.gif](concept/enemy-bullet-medium-final-r26-a.gif) | Large and small orbs drifting over a dark blue field, the large ones slower | chosen |
+
+Concept round 60 (Act 5 design phase, step ART-P-units) — the [art direction](../art-direction/README.md)'s **homing diamond**, a/b, the look of every Ascendancy homing missile of Act 5 (pending the user's review); generator `tools/concept/enemies_r60.py`. Prompts: [concept/prompts.md](concept/prompts.md#round-60--the-homing-diamond-act-5). The units' own round-60 proposals are listed in their documents.
+
+| File | What | Status |
+|---|---|---|
+| [concept/homing-diamond-r60-a.png](concept/homing-diamond-r60-a.png) | Homing diamond A, red diamond, gold heart — a broad crimson-red diamond with a dark rim, a gold inner diamond, a white-hot core and a short thin pale-gold exhaust (sheet) | proposed |
+| [concept/homing-diamond-r60-a.gif](concept/homing-diamond-r60-a.gif) | Homing diamond A, red diamond, gold heart — a broad crimson-red diamond with a dark rim, a gold inner diamond, a white-hot core and a short thin pale-gold exhaust (motion) | proposed |
+| [concept/homing-diamond-r60-b.png](concept/homing-diamond-r60-b.png) | Homing diamond B, gold kite, red core — a slimmer gold kite with a long nose, a red core, a white tip and a dotted exhaust (sheet) | proposed |
+| [concept/homing-diamond-r60-b.gif](concept/homing-diamond-r60-b.gif) | Homing diamond B, gold kite, red core — a slimmer gold kite with a long nose, a red core, a white tip and a dotted exhaust (motion) | proposed |
 
 ## Implementation
 
@@ -637,7 +751,9 @@ Production art for concept round 26 (the M4 part H batch), review files built fr
 - [x] Layer rules for hit detection and collision on `ground`, `low-air`, `air` and `high-air`: what each weapon delivery reaches, hardened ground targets, contact on the player's layer.
 - [x] The `sub` layer — M5 part E (Level 11, step E2a; appended to the layers so the existing
       ordinals and replay hashes stay; its hit rules in `SubLayerTest`).
-- [ ] The `space` and `deep` layers — **later: Act 5** (`space`, the belt's open-space levels from L31; Level 07 flies on `air` like L01–L03).
+- [x] The `space` and `deep` layers: `space` is a document alias of `air` (a level's vacuum presentation, no clouds or
+      weather; no new layer value, so the ordinals and replay hashes stay) and `deep` is the background, built (the gap
+      analysis's trivia, 2026-10-27, shown in round 60).
 - [x] Bullet rendering order, telegraphs, edge warnings and the bullet budget (bullets above every
       layer, the `laser-sweep` wedge and the `mortar` marker, `EdgeWarnings`, `Rules.bulletBudget`).
 - [x] Global difficulty multipliers with per-enemy overrides (the stat blocks' `difficulty:` hooks,
@@ -661,8 +777,13 @@ Production art for concept round 26 (the M4 part H batch), review files built fr
 - [x] Multi-part enemies: segment chains following the head's path history, articulated parts,
       per-part HP and destroyable/armoured/vital parts, chain splitting (the Coilwyrm's `Chain`, the
       Gorgon Frigate's necks, the Leviathan's and the Brood Carrier's parts).
-- [ ] A machine chain's split (the rear half stops, drifts and explodes) — **later: Act 5** (the
-      Rail Serpent).
+- [ ] A machine chain's split (the rear half stops, drifts 1.5 s harmless and explodes paying its cars) — **later: Act 5**
+      (the [Rail Serpent](air/rail-serpent/README.md), M9 part C).
+- [ ] Enemy shields (the hex HP pool, overflow, refill, `shield-breaker`, the EMP) — **later: Act 5** (M9 part A, flown by
+      the Talon in part B).
+- [ ] Air links between moving units, mine lines (proximity, chain blasts), topple and crush, rock riding, ricochet off
+      rocks — **later: Act 5**, each with the first unit that flies it (the Shard Drone, the Minelayer, the Strider, the
+      Asteroid Mite, the Buzzsaw Drone; M9 parts B–E).
 - [x] Angle-set sprites (16/32 angles, nearest frame) and radial spinners (16 for the Skitter and
       the needle, 32 for turrets, 48 for the Coilwyrm; the Whirl Seed spinning; `EnemyLooks`).
 - [x] Act 1 passes the variety checklist (as built: [act 1](../campaign/act-1-first-contact/README.md#enemy-use-per-level)).
@@ -676,7 +797,22 @@ Production art for concept round 26 (the M4 part H batch), review files built fr
 
 ## Open questions
 
-- None open.
+Act 5's design questions for round 60 that touch the shared rules (the drafts follow the recommended
+option; pending the user's review):
+
+- **Q1 enemy shields**: **a** (drafted) a light hex HP pool every weapon hits, `shield-breaker` empties
+  it; **b** shields block everything but `shield-breaker`, beams and the EMP (forces the Tesla Coil Pod
+  in Act 5, against the L37 pacing); **c** no shield mechanic in Act 5 (sparks only), shields from Act 6.
+- **Q3 minefields**: **a** (drafted) lines with one gap, proximity ring and chain blasts; **b** static
+  contact mines as walls, no burst; **c** seeker mines that drift toward the ship.
+- **Q4 the mining tug escort** (Level 31; the hook's `always` on homing missiles above): **a** (drafted
+  by the level step) a huge tug with three sections that units target; **b** three ore haulers as a
+  convoy; **c** a tug on the play plane that blocks fire.
+- **Q6 popcorn in a human war**: **b** (drafted) the new [Dart Drone](air/dart-drone/README.md) launched
+  in streams; **a** the Vrell alone carry the count; **c** Talons in great numbers.
+- **Q11 the Ascendancy look on the belt**: **a** (drafted under *Factions*) gloss black, gold trim, rim
+  light, red lights, ≥ 20 % gold, lighter belt backdrops; **b** gunmetal/charcoal hulls (reads better,
+  diverges from the final L28 cruisers); **c** black silhouettes with gold accents only.
 
 ## Decisions
 
@@ -694,3 +830,9 @@ Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-a
   in [data.yaml](data.yaml), so the act HP factor reaches Act 4; parts B–H re-measure each level with `levelReport`.
 - 2026-10-22 (M8 part B, step B3): `small_act_hp.levels` extended to Level 22, as its approved README has it (the
   Needler and the Stinger take the factor capped at ×3, 12 and 18 HP, doubled by the beam era to 24 and 36).
+- 2026-10-27 (step m9-d-enemies-a, Act 5 design phase; pending the user's review in round 60): the shared Act 5 rules
+  drafted from the gap analysis's recommended answers: [enemy shields](#enemy-shields) (Q1 a), [air links](#air-links),
+  [mine lines](#mine-lines) (Q3 a), [topple](#topple), [rock riding](#rock-riding), the machine split's 1.5 s drift, the
+  `ride` movement and the homing diamond; the Act 5 variety row with the Crawler Tank dropped for the Warden Tank in
+  livery (judgement call **J1**) and the Dart Drone added (Q6 b); the balancing-basis note for `reference_dps` 29–35
+  (judgement call **J2**: 120 → 144, the Ion Beam L4 at the L29 visit); `space` closed as a document alias of `air`.

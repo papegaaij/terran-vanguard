@@ -3,7 +3,7 @@ title: Space enemies
 design: approved
 implementation: in-progress
 art: chosen
-updated: 2026-10-12
+updated: 2026-10-27
 ---
 
 # Space enemies
@@ -16,26 +16,30 @@ use the space environment: clinging to asteroids, laying mines, draining energy 
 
 ## Contents
 
-Promoted to their own documents for the Acts 1–2 wrap-up; the remaining units stay in the roster below.
+Promoted to their own documents for the Acts 1–2 wrap-up, plus the Act 5 drafts of its design phase (2026-10-27,
+pending the user's review in round 60); the remaining units stay in the roster below.
 
 | Part | Summary | Design | Impl | Art |
 |---|---|---|---|---|
 | [leviathan](leviathan/README.md) | Huge whale set piece: high-air pass, then shootable parts (L03) | approved | done | final |
+| [asteroid-mite](asteroid-mite/README.md) | Tiny Vrell crawler riding drifting rocks, leaps at the ship within 160 px (L29) | draft | not-started | proposed |
+| [minelayer](minelayer/README.md) | Ascendancy mine ship from behind, lays proximity-mine lines with one gap (L30) | draft | not-started | proposed |
+| [shard-drone](shard-drone/README.md) | Spinning drones in groups of 3–4 joined by energy links, a moving barrier (L31) | draft | not-started | proposed |
+| [void-leech](void-leech/README.md) | Vrell leech that latches and drains 2 MW of generator output (L33) | draft | not-started | proposed |
 
 ## Roster
 
 | Name | Faction | Layer | Tier | Role/ability | Formations | First level | Design |
 |---|---|---|---|---|---|---|---|
-| Asteroid Mite | Vrell | space | tiny | Clings to drifting asteroids and leaps off at the player (`dive`) from the sides as they pass. | swarm (on asteroids) | 29 | idea |
-| Minelayer | Ascendancy | space | medium | Passes from the rear upward and leaves lines of proximity `mine`s ahead of the player. | column | 30 | idea |
-| Shard Drone | Ascendancy | space | small | Groups of 3–4 connected by damaging `link` beams, forming moving barriers; killing one breaks its links. | line abreast, circle | 31 | idea |
-| Void Leech | Vrell | space | small | `drift`s in from behind, `latch`es, and `drain`s **generator energy**, so heavy weapons stall. Punishes loadouts with little spare power. | stream, rear ambush | 33 | idea |
 | Gate Warden | Vrell | space | medium | Shielded sentinel. Its shield opens only while it fires a `laser-line`; `shield-breaker` strips it at any time. | line abreast | 43 | idea |
 | Rift Skater | Vrell | space | small | Phase-jumps (`teleport`) short distances along the distorted scroll; fires a `burst` after each jump. | stream | 44 | idea |
 | Husk | Vrell (Silence-touched) | space | medium | A drifting derelict hollowed from inside. When damaged it cracks and sprays crystalline shards (`death-burst` + `fan`). | swarm (scattered) | 46 | idea |
 
 ## Design
 
+- **`space` is a doc alias of the `air` layer** (Act 5 design phase, 2026-10-27): the game has no separate
+  space layer; a space level is the vacuum presentation of `air` (no clouds or weather). Rosters and stat
+  blocks keep writing `space`.
 - Space levels have no `ground` layer in the planetary sense. Station hulls, asteroid surfaces
   and reefs act as the `ground` layer (see [layer rules](../README.md)).
 - The Void Leech ties enemies to the player's generator budget; the drain rules are in
@@ -73,3 +77,5 @@ Concept [round 08](../../concept-rounds/round-08/README.md) — model-space re-r
 - 2026-10-01: Acts 1–2 units promoted to full specs: Leviathan.
 - 2026-10-01: Concept round 08: model-space re-renders accepted; they supersede the r05 sheets.
 - 2026-10-01: Approved by the user in the [Acts 1–2 design review](../../reviews/acts-1-2/README.md).
+- 2026-10-27 (Act 5 design phase, step D-enemies-B; pending the user's review in round 60): the Asteroid Mite, the
+  Minelayer, the Shard Drone and the Void Leech promoted from the roster to draft specs.

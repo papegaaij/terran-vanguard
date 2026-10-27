@@ -29,8 +29,8 @@ Why a separate slot: if Rook took a wing mount, players would compare a whole pi
 missile pod, and he would rarely be worth it. A separate slot keeps both choices interesting and
 makes his availability a story lever: Rook is shot down at the end of L26 and is missing for
 L27–L29 (see [Rook](../../story/characters/rook/README.md)). During those levels the escort slot
-can only hold a heavy drone; Rook is freed at Ceres Hub in L29 and is back from L30. His
-upgrades are kept.
+can only hold a heavy drone; Rook is freed at Ceres Hub in the middle of L29, flies its last section and
+is back in the slot from L30 (draft, *Rook's rescue and return* below). His upgrades are kept.
 
 In Act 2 the slot always holds Rook: there is no empty escort slot and no choice of escort until
 the Bulwark (L22).
@@ -387,6 +387,41 @@ beat is in [Rook](../../story/characters/rook/README.md) and the L26 level draft
 - The new rules need `Campaign.escortFlight()` to take the level number (an availability per
   level) and the hangar's escort UI a "missing" card ([hangar](../../ui/hangar/README.md)).
 
+### Rook's rescue and return (L29–L30)
+
+*Act 5 draft, step `m9-d-systems` (2026-10-27), **pending the user's review in round 60** (Q8 = a: the
+rescue on the screen). The story beat is in [Rook](../../story/characters/rook/README.md); the set
+piece's place, timing and lines belong to L29's level document in [Act 5](../../campaign/act-5-the-belt/README.md).*
+
+- **Before the rescue** L29 starts as L27 and L28 did: Rook is MIA, the slot holds the loaner Bulwark
+  (or an owned Bulwark), and Rook has **no lines** (his `requires: escort` barks stay dropped).
+- **The rescue** (≈ t=120): the scroll halts over Dock 9, where a prison tender sits in four clamps;
+  each clamp has a gun. The halt lasts until the four clamp guns are destroyed (there is nothing to fail
+  and no timer; the level's waves keep the field busy). As the last clamp falls the tender opens and
+  **Rook's Ember** launches from it (recovered with him; the how is [Rook](../../story/characters/rook/README.md)'s story), and the drone in
+  the slot peels away to the edge it flies on and leaves ("Bulwark, RTB", a line of the level's). Rook
+  flies into the slot over 1 s and fights the level's last section; his first line is
+  *"Miss me? Don't answer that. Just shoot."*, then his barks are back.
+- **What he flies with:** the gun fitted when he was lost, at its level, and **full armour** (the
+  hangar's last repair state before L26 is not used: a rescued craft is a fresh start). His kills
+  pay as always from the moment he joins.
+- **The drone that leaves:** the loaner flies away whole and goes back to the CDF: from the L30 visit
+  there is **no loaner** any more. An owned Bulwark peels away the same and returns to the hangar with
+  its armour as it left; it is still owned and can be chosen for the slot in a later visit. A drone
+  destroyed before the rescue changes nothing: Rook launches all the same.
+- **Retry:** a retry restarts L29 as it started (Rook MIA, the drone in the slot), and the rescue plays
+  again; there is no checkpoint in L29. The save clears `rook_missing` at L29's win (as built: the
+  story flag runs from Level 26's win to Level 29's).
+- **From L30** the escort slot defaults to Rook with all his guns and upgrades (his inventory was
+  kept), the hangar's MIA card is gone and his repair line is back; an owned Bulwark stays a choice.
+- **Debug starts:** `--level 29` treats him as MIA and plays the rescue with the loaner; with
+  `--escort rook:<gun>` he flies from the start and the tender opens empty (no swap); with `--escort
+  none` the set piece plays and the Ember launches and leaves upward (nobody joins). A
+  [mission-select](../../ui/mission-select/README.md) replay of L29 flies it as the campaign does
+  (the loaner, then the rescue).
+- The new rules need a **mid-level escort swap** (the slot's flyer replaced during a level, scripted
+  by the level: `RookLoss` in reverse) and the tender's clamp guns as ground targets of the level.
+
 ### Drones
 
 | Name | Slot | Summary | Draw | Price | Unlock | Design |
@@ -394,7 +429,7 @@ beat is in [Rook](../../story/characters/rook/README.md) and the L26 level draft
 | Light drone | wing mount | Orbits the ship at 36 px, fires a small gun at the point ahead of the nose, blocks bullets (breaks after 8 hits, rebuilds in 6 s at L1). Sold as the [Light Drone Bay](../weapons/light-drone-bay/README.md); see *Light drone* below | 2 → 3 | 2 000 | L15 | draft |
 | Rear-guard drone | wing mount | Trails 40 px behind the ship, fires backwards (`rear`), blocks bullets from behind. Sold as the [Rear-guard Drone Bay](../weapons/rear-guard-drone-bay/README.md); see *Rear-guard drone* below | 2 → 3 | 2 400 | L20 | draft |
 | Heavy drone "Bulwark" | escort | Tough (armour 120), slow-firing cannon (`anti-sub` under water), draws enemy fire; a free loaner while Rook is missing | 0 | 6 000 | L22 | draft |
-| Hunter drone | escort | Leaves formation to chase homing targets, fragile | 0 | 7 500 | L29 | idea |
+| Hunter drone | escort | Leaves formation to chase homing targets, fragile | 0 | 7 500 | Act 6 (was L29; Q12 = c of round 60, pending: covering Rook's absence is the Bulwark's job) | idea |
 
 Unlock `Lnn` = in the shop from the hangar visit before level *nn*. The Bulwark arrives before
 Rook's absence (L27–L29) so the escort slot never has to stay empty.
@@ -502,7 +537,7 @@ built were accepted in concept round 28.
 - [x] HUD escort box (see [HUD](../../ui/hud/README.md))
 - [x] His craft in the level: banking frames, engine flames, runtime shadow, muzzle flash, hit flash, smoke when low, the eject (see *In the game*); the placeholder Ember frames, glow and drawn pod remain as fallbacks
 - [x] Debug option `--escort rook:<gun>:<level>[,side=left|right]` and `--escort none` (`DebugFit.withEscort`, never saved; `LaunchOptionsTest.aDebugEscortFliesRookWithHisGun`, `EscortTest.theEscortDebugOptionFliesHimOnAnyLevelOrKeepsHimHome`, `theEscortDebugOptionIsNeverSavedNorKept`)
-- [x] His data in [data.yaml](data.yaml) with its loader and validator (`WingmenData`, `ContentValidator.checkWingmen`; `WingmenDataTest`)
+- [x] His data in [data.yaml](data.yaml) with its loader and validator (`WingmenData`, `CampaignChecks.checkWingmen`; `WingmenDataTest`)
 - [x] The guns and barks tables above rendered from [data.yaml](data.yaml) by `tools/sync_tables.py` (`rook-guns`, `rook-barks`; M6 part D: the Available cell now reads the data's `act 2` where the hand-written table said L08)
 - [x] `BalanceTest` prints his DPS (the sheet's `Rook` column, his gun's single-target DPS, not in the forward DPS; `tools/balance.py` prints the same `Rook DPS`); the balance plan buys his guns from L08 and `ActPlaythroughTest` pays his repairs at every visit from L08 after the ship's; the autopilot and `ActPlaythroughTest` fly with him (Acts 1–2 as one campaign on every difficulty, his armour kept between levels, his retries with the armour floor) — M5 part I
 - [x] Production sprites of Rook's craft (5 banking frames, Ember, 42×42), his engine flame, the eject pod and the engine mounts (`tools/art/rook.py`, approved as final in concept round 28)
@@ -523,7 +558,10 @@ built were accepted in concept round 28.
   orbit, block, break and rebuild built in M7 part A (`vanguard.sim.Drones`, `DronesTest`), the
   rear-guard drone's trail waits for part G (its bay's data and the `station: trail` keys written in
   step G2; flown from step G3, mapped in step G4)
-- [ ] The hunter drone's behaviours (L29) — **later: Act 5**
+- [ ] The hunter drone's behaviours — **later: Act 6** (was L29; moved with Act 5's arsenal, Q12 = c of round 60, pending)
+- [ ] Rook's rescue in L29 as in *Rook's rescue and return* (draft): the mid-level swap (the drone peels away, Rook
+  joins with his gun at full armour, his first line, his barks back), the loaner returned after L29, the debug
+  starts — M9 (L29's part)
 - [ ] Rook missing for L27–L29 (only a heavy drone in the slot), back from L30 — Act 4's part built (L26's loss, L27–L28 with the loaner; M8 part I: `ActPlaythroughTest` flies them to the release's end), **later: Act 5** for L29 and his return at L30 (draft: *Rook's loss and absence*; the scripted loss at L26's end, the MIA card, the loaner, per-level availability in `Campaign.escortFlight()`) (M8 part A, step A2: `Campaign.escortFlight(level)` and `rookMissing(level)` from `rook.missing`, the story flag `rook-missing` from Level 26's win to Level 29's, the hangar's MIA rules (`Hangar.rookMissing`: no gun rows, no repair line), `Campaign.rookFlies` for his `requires: escort` lines; a `--level 27` start treats him as missing; the scripted loss is part F, the MIA card part A5) (M8 part F: the scripted loss at Level 26's end, `RookLossTest`, `RookLossLooksTest`, `Level26Test.rooksLossAndItsReplayOnARetry`; the debrief's `ROOK  MIA` row; the campaign playthrough's Level 26 win records him missing and the Level 27 visit has the loaner, `ActPlaythroughTest`; his absence through L29 and his return at L30 wait for Act 5's first levels)
 - [x] Rook under water: the hydro-kit's drag, his guns × 0.7, his formation in the trench walls and the dark (his lamp) — **later: Act 4** (M8 parts A–F: `UnderwaterTest.rooksGunsDoSevenTenthsAndHisCraftTakesTheDrag`; the walls' 24 px clearance of the canyon play, `RookCanyonTest`, in Level 25's trench; the Siren's slow on him, `Level25Test.theRingsSlowTheShipAndRook`; his lamp in Level 26's dark, `Level26LooksTest.onlyLevel26IsDark`)
 
@@ -543,6 +581,11 @@ built were accepted in concept round 28.
   L27–L29 only); see [Rook](../../story/characters/rook/README.md).
 - While Rook is missing, the draft allows a heavy drone in the escort slot. The alternative is
   to lock the slot completely for those levels, which makes his absence hit harder.
+- Q8 of [round 60](../../concept-rounds/README.md) (Rook's rescue): recommended (a), on the screen in
+  L29 (above). Alternatives: (b) radio only: loyalists free him off-screen, his line at L29's end, he
+  flies from L30 (cheap, but the on-screen loss gets an off-screen return); (c) told in the L29 debrief
+  or the L30 briefing only (the flattest).
+- Q12 of round 60: the Hunter drone to Act 6 (recommended c); under (b) it stays at L29.
 
 ## Decisions
 
@@ -569,3 +612,8 @@ Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-a
 - 2026-10-27 (user, the Act 4 playthrough done): a mission-select replay flies the replayed mission's escort, and a
   replay while Rook is lost (after Level 26) flies him at full armour with no repair warning (step K2, `8de88791`;
   [mission select](../../ui/mission-select/README.md#decisions)): decided, no longer pending.
+- 2026-10-27 (Act 5 design phase, step m9-d-systems; **pending the user's review in round 60**): Rook's rescue in
+  L29 on the screen (Q8 = a): the clamp guns of Dock 9's prison tender, his Ember launching at full armour with the
+  gun he had, the drone in the slot peeling away, his first line and barks back; no lines before it; the loaner goes
+  back to the CDF after L29 (an owned Bulwark stays); Rook in the slot by default from L30. The Hunter drone moves
+  to Act 6 (Q12 = c).

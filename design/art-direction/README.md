@@ -3,7 +3,7 @@ title: Art direction
 design: approved
 implementation: n/a
 art: chosen
-updated: 2026-10-26
+updated: 2026-10-27
 ---
 
 # Art direction
@@ -519,7 +519,11 @@ the Level 11 props approved as final; the lane telegraph and slam **a** "edge da
       shots; the Spore Bomber's `medium` is its spore, drawn as the mine.
 - [ ] The homing diamond — **later: Act 5** (Act 4's homing projectile, the Depth Hunter's torpedo at L27, is drawn as
       its own torpedo sprite with its wake, round 48 b, accepted in round 57; the diamond waits for the first homing
-      enemy *bullet*).
+      enemy *bullet*). Draft (gap analysis 2026-10-27, pending the user's review in round 60): the Ascendancy's shootable
+      homing missiles of Act 5 (the [Hornet](../enemies/air/hornet/README.md)'s salvos, the SAM Nest's, the Strider's pod,
+      the Iron Sovereign's SAM batteries) are drawn as the bullet rules' **diamond** in red-gold with a short thin exhaust,
+      its hit box the diamond's core; proposed in round 60, built in M9 part A. The Revenant Walker's missiles and the
+      Depth Hunter's torpedo keep their own final sprites.
 - [x] Hit flash and explosion sequences as described under Animation rules (`FlashShader`'s white
       flash; `explosion-tiny` to `-large`, the debris chunks and each unit's own death).
 - [x] Loot targets follow readability rule 7 (Level 01's cargo containers and beacon, placeholder
@@ -543,3 +547,6 @@ Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-a
 - 2026-10-22 (user, round 52, closed; F.7 = a): the under-water kill bursts are **a**, the "pressure flash" (a white-teal flash, the pressure ring, the dark cavity; already in the game); b, the "quenched fire", rejected (its sheet and GIF moved to `concept/rejected/`). The `--deep b` frames are not in `assets/`.
 - 2026-10-26 (user, [round 59](../concept-rounds/round-59/README.md) closed, C.7): the homing diamond moves to Act 5, to be
   drawn with the first homing enemy bullet; Act 4's only homing projectile keeps its own torpedo sprite.
+- 2026-10-27 (step m9-d-enemies-a, Act 5 design phase; pending the user's review in round 60): the homing diamond is the
+  look of every Ascendancy homing missile from Act 5 (red-gold, a short thin exhaust); its proposal goes to round 60's
+  unit sheets and its build to M9 part A, which ticks the item.

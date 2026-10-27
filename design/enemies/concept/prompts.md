@@ -77,3 +77,25 @@ lavender DEBEFF ring over a violet A85CFF band and a white core, the yellow need
 the yellow needle and the orb, and drifting over Level 24's graded plain with orbs (the Abyss Ray's fan). Check that it
 reads on the dark water as clearly as the orb. Not an image-generator prompt: the look is the chosen round-09 concept's
 in the Barbfin's colour (its README: "a violet-hued shot").
+
+# Round 60 — the homing diamond (Act 5)
+
+The art direction's homing diamond (round 59 C.7, moved to Act 5): every Ascendancy homing missile of Act 5 (the Hornet, the SAM Nest, the Strider's pod, the Iron Sovereign's batteries). Mockups by `tools/concept/enemies_r60.py`; each unit sheet of round 60 draws the a diamond with its a variant and b with b.
+
+## homing-diamond-r60-a
+
+**Homing diamond A, red diamond, gold heart**: a broad crimson-red diamond with a dark rim, a gold inner diamond, a white-hot core and a short thin pale-gold exhaust; 32 headings. Files: `homing-diamond-r60-a.png` (sheet: 32 headings, next to the small and medium orbs and the needle, over the darkest ground of five belt levels, the pop) and `homing-diamond-r60-a.gif` (diamonds homing on the ship; two shot down, the rest fizzle after 4 s).
+
+- **Prompt:** late-1990s pre-rendered CGI game sprite, straight top-down orthographic, crisp, isolated on a flat dark background. A tiny enemy homing-missile sprite seen from above, about 14×10 px: a broad diamond of crimson-red (#e22824) with a dark outline, a gold (#ffc440) inner diamond, a small white-hot core near the nose and a short thin pale-gold exhaust line behind it; no smoke.
+- **Negative prompt:** magenta, needle yellow, blue or cyan, smoke trail, photo, perspective.
+- **Animation brief:** 32 headings; 110 px/s, turn 80°/s, life 4 s, 2 HP; shot down it pops in a short pale-gold spark, at the end of its life it fizzles in a faint grey ring.
+- **Mockup generator:** `python3 tools/concept/enemies_r60.py homing-diamond a`
+
+## homing-diamond-r60-b
+
+**Homing diamond B, gold kite, red core**: a slimmer gold kite with a long nose, a red core, a white tip and a dotted exhaust; 32 headings. Files: `homing-diamond-r60-b.png` (sheet: 32 headings, next to the small and medium orbs and the needle, over the darkest ground of five belt levels, the pop) and `homing-diamond-r60-b.gif` (diamonds homing on the ship; two shot down, the rest fizzle after 4 s).
+
+- **Prompt:** late-1990s pre-rendered CGI game sprite, straight top-down orthographic, crisp, isolated on a flat dark background. As A, but a slimmer gold kite with a long nose, a red core diamond inside, a white tip light and a dotted pale-gold exhaust of three fading dots.
+- **Negative prompt:** magenta, needle yellow, blue or cyan, smoke trail, photo, perspective.
+- **Animation brief:** as A.
+- **Mockup generator:** `python3 tools/concept/enemies_r60.py homing-diamond b`

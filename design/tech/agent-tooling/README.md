@@ -4,7 +4,7 @@ design: review
 implementation: done
 art: n/a
 depends-on: [../architecture]
-updated: 2026-10-26
+updated: 2026-10-27
 ---
 
 # Agent tooling
@@ -97,6 +97,11 @@ LSP's two-step lookup (find a range, then read it), and fetching one member in o
 - **Settings:** the anonymous savings counter off (`share_savings`, `JCODEMUNCH_SHARE_SAVINGS=0`), AI summaries off,
   direct tools (`tool_surface: full`, `tool_profile: core`, 20 tools) instead of the default three-verb front door,
   code only (`extra_ignore_patterns`: the design tree, assets, data and Markdown are read with `doc_section.py`/grep).
+  The **turn budget is off** (`turn_budget_tokens: 0`): it is an advisory per-turn counter (20 000 tokens, a new
+  turn after 30 s of silence) kept once per server process, so parallel sub-agents on one session's server never let it
+  reset and every answer carried "Turn budget exhausted … consider stopping exploration". `stats_file_interval: 0`
+  stops `session_stats.json`; jCodeMunch writes it and `_savings.json` (local token counts, never sent with
+  `share_savings` off) to `~/.code-index/` whatever `CODE_INDEX_PATH` says, and `_savings.json` has no switch.
 - **Freshness:** the server runs its file watcher (`serve --watcher`, the `[watch]` extra), so edits by any tool reach
   the index within seconds.
 - Setup: `tools/dev/setup_jcodemunch.sh` (`--check` only reports), then `/mcp` (or restart Claude Code).
@@ -118,6 +123,10 @@ LSP's two-step lookup (find a range, then read it), and fetching one member in o
 
 ## Decisions
 
+- 2026-10-27: the refactor steps (RF0–RF6) were the jCodeMunch trial: `get_symbol_source` and regex `search_text` (the
+  enclosing method per hit) helped; `find_references` follows imports only (same-package users missed), big outlines
+  overflow to a file, grep stayed cheaper for counts and sweeps. The warning on every answer was the turn budget
+  (above), shared by all agents: turned off (the user asked to check it).
 - 2026-10-26: the language servers were measured over parts H and I: they answered fast and correctly but the agents
   hardly called them (16 and 4 calls) and kept reading Java with `sed -n`. The user does not want agents forced onto a
   tool, so they leave the briefs; jCodeMunch is tried instead (jDocMunch rejected: the agents already read docs by

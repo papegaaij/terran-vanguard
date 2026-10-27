@@ -4737,3 +4737,353 @@ Use: Level 28's run (t=122-157, above the ice: the medium is air again), the two
 Brief: rapid autocannon: three quick heavy shots, lighter than the flak; a real recording, heavy, nothing bubbly or popping.
 This one: a Navy Phalanx CIWS's fast burst slowed to 0.9: a ripping buzz of rounds rather than three shots, 0.8 s.
 Edit: 0.80 s, the loudest 100 ms band −23.4 dB, peak −13.1 dBFS, −18.8 LUFS.
+
+## Concept round 60, step AUD-P (Act 5's shared sounds: the Ascendancy sets, the brown-out, the intercept, the mines, the Sovereign's ring, the belt beds)
+
+The generator is `tools/concept/audio/sfx_r60.py` (Freesound HQ previews, found with an API-key search: the sfx are
+cut, slowed, glided, layered, swelled, faded, filtered, looped and levelled; nothing in them is synthesized except the
+mine's proximity blink, a signal the README allows to be synthesized). The rest of the units' sounds come in their
+parts' rounds. Passed over (read in their descriptions or measured): a model-rocket "scream" (a whistle), mine-tunnel
+ambiences full of drips, an office relay recording mostly hiss, shortwave recordings with faint voices, and the steel
+mill drone (all its energy under 200 Hz: the user's note on Act 4's beds). The beds keep the drones' high-pass at
+60–150 Hz so they are not the deep drones Act 4's were. Measured only, not listened to.
+
+### enemy-shield-hit-r60-a — "knife-tapping-wine-glass" by BogumilaMerc
+
+Proposed (round 60), cut from the HQ previews by `tools/concept/audio/sfx_r60.py`.
+Source: <https://freesound.org/people/BogumilaMerc/sounds/835810/> (knife-tapping-wine-glass by BogumilaMerc, CC0 1.0).
+Use: every hit on a hex shield of the Talon, the Hornet, the Gilded Gunship and the Iron Sovereign's core (the shared hex shield), throttled to once per 0.15 s per unit: often, under the fire.
+Brief: a small glassy tick: a glass tapped with metal, dry and short; no ring-out, no pop; a real recording, heavy, nothing bubbly or popping.
+This one: a knife tapping a wine glass: a bright dry 'tink', 0.18 s.
+Edit: 0.18 s, the loudest 100 ms band −28.3 dB, peak −6.0 dBFS, −inf LUFS.
+
+### enemy-shield-hit-r60-b — "large wine glass.wav" by Tairblenn + "anvil strike 8.wav" by l0calh05t
+
+Proposed (round 60), cut from the HQ previews by `tools/concept/audio/sfx_r60.py`.
+Sources: <https://freesound.org/people/Tairblenn/sounds/549895/> (large wine glass.wav by Tairblenn, CC0 1.0), <https://freesound.org/people/l0calh05t/sounds/19020/> (anvil strike 8.wav by l0calh05t, CC-BY 4.0).
+Use: every hit on a hex shield of the Talon, the Hornet, the Gilded Gunship and the Iron Sovereign's core (the shared hex shield), throttled to once per 0.15 s per unit: often, under the fire.
+Brief: a small glassy tick: a glass tapped with metal, dry and short; no ring-out, no pop; a real recording, heavy, nothing bubbly or popping.
+This one: a large wine glass tapped, slowed to 0.85 (a little lower and fuller than a), with the tip of an anvil strike sped up under it for the metal: a 'tick' with more body, 0.16 s.
+Edit: 0.18 s, the loudest 100 ms band −27.0 dB, peak −13.4 dBFS, −inf LUFS.
+
+### enemy-shield-break-r60-a — "Windshield_Hit_02.wav" by thefsoundman
+
+Proposed (round 60), cut from the HQ previews by `tools/concept/audio/sfx_r60.py`.
+Source: <https://freesound.org/people/thefsoundman/sounds/118515/> (Windshield_Hit_02.wav by thefsoundman, CC0 1.0).
+Use: a hex shield of the Talon, the Hornet, the Gilded Gunship and the Iron Sovereign's core (the shared hex shield) emptied (by damage, a `shield-breaker` hit or the EMP): now and then, a clear reward.
+Brief: a brittle shatter: tempered glass bursting, about 0.3 s, small enough for a Talon; a real recording, heavy, nothing bubbly or popping.
+This one: a hit on a car's windshield: a hard crack and the safety glass crazing, 0.38 s.
+Edit: 0.38 s, the loudest 100 ms band −27.8 dB, peak −5.1 dBFS, −inf LUFS.
+
+### enemy-shield-break-r60-b — "Glass Break" by unfa + "large wine glass.wav" by Tairblenn
+
+Proposed (round 60), cut from the HQ previews by `tools/concept/audio/sfx_r60.py`.
+Sources: <https://freesound.org/people/unfa/sounds/221528/> (Glass Break by unfa, CC0 1.0), <https://freesound.org/people/Tairblenn/sounds/549895/> (large wine glass.wav by Tairblenn, CC0 1.0).
+Use: a hex shield of the Talon, the Hornet, the Gilded Gunship and the Iron Sovereign's core (the shared hex shield) emptied (by damage, a `shield-breaker` hit or the EMP): now and then, a clear reward.
+Brief: a brittle shatter: tempered glass bursting, about 0.3 s, small enough for a Talon; a real recording, heavy, nothing bubbly or popping.
+This one: a glass breaking, cut to the burst and its first shards, over the wine glass's tap sped up (the shield's own 'tick' in the burst): brighter and more splintery than a, 0.36 s.
+Edit: 0.36 s, the loudest 100 ms band −22.6 dB, peak −5.0 dBFS, −inf LUFS.
+
+### enemy-shield-refill-r60-a — "Rising electric hum.aif" by jukkako + "large wine glass.wav" by Tairblenn
+
+Proposed (round 60), cut from the HQ previews by `tools/concept/audio/sfx_r60.py`.
+Sources: <https://freesound.org/people/jukkako/sounds/616084/> (Rising electric hum.aif by jukkako, CC0 1.0), <https://freesound.org/people/Tairblenn/sounds/549895/> (large wine glass.wav by Tairblenn, CC0 1.0).
+Use: a hex shield of the Talon, the Hornet, the Gilded Gunship and the Iron Sovereign's core (the shared hex shield) starting to refill after its delay: now and then.
+Brief: a soft rising electrical shimmer, quiet: a feedback cue that the shield is back; a real recording, heavy, nothing bubbly or popping.
+This one: a rising electric hum, its pitch gliding up an octave over the cue and swelling in, the wine glass's ring slowed to 0.7 faint under its end: 0.7 s.
+Edit: 0.70 s, the loudest 100 ms band −31.9 dB, peak −17.7 dBFS, −28.2 LUFS.
+
+### enemy-shield-refill-r60-b — "S16-18 Tesla coil sparking and humming.wav" by craigsmith
+
+Proposed (round 60), cut from the HQ previews by `tools/concept/audio/sfx_r60.py`.
+Source: <https://freesound.org/people/craigsmith/sounds/675760/> (S16-18 Tesla coil sparking and humming.wav by craigsmith, CC0 1.0).
+Use: a hex shield of the Talon, the Hornet, the Gilded Gunship and the Iron Sovereign's core (the shared hex shield) starting to refill after its delay: now and then.
+Brief: a soft rising electrical shimmer, quiet: a feedback cue that the shield is back; a real recording, heavy, nothing bubbly or popping.
+This one: a Tesla coil humming and sparking, high-passed to its fizz and gliding up: a crackling shimmer, more electric than a, 0.7 s.
+Edit: 0.70 s, the loudest 100 ms band −38.4 dB, peak −23.1 dBFS, −28.4 LUFS.
+
+### homing-launch-r60-a — "Rocket Launch" by qubodup
+
+Proposed (round 60), cut from the HQ previews by `tools/concept/audio/sfx_r60.py`.
+Source: <https://freesound.org/people/qubodup/sounds/840511/> (Rocket Launch by qubodup, CC0 1.0).
+Use: each homing-missile launch of the Hornet's pods, the SAM Nest, the Strider's pod and the Iron Sovereign's SAM batteries (the shared homing diamond; Levels 29-35); pitched per launcher in the game (the Hornet's pods higher, the SAM racks lower); a salvo plays it 2-4 times in a row.
+Brief: a short hissing rocket launch (a model rocket or a firework's launch, cut short); the round compares it with reusing the chosen enemy missile launch (concept/enemy-missile-r08-a.ogg); a real recording, heavy, nothing bubbly or popping.
+This one: a rocket's launch: an ignition and a hard rushing hiss, cut short, 0.6 s.
+Edit: 0.60 s, the loudest 100 ms band −26.8 dB, peak −11.8 dBFS, −22.2 LUFS.
+
+### homing-launch-r60-b — "bottleRocket4.wav" by nicStage + "hobby rocket blastoff" by reg7783
+
+Proposed (round 60), cut from the HQ previews by `tools/concept/audio/sfx_r60.py`.
+Sources: <https://freesound.org/people/nicStage/sounds/60904/> (bottleRocket4.wav by nicStage, CC-BY 4.0), <https://freesound.org/people/reg7783/sounds/730041/> (hobby rocket blastoff by reg7783, CC0 1.0).
+Use: each homing-missile launch of the Hornet's pods, the SAM Nest, the Strider's pod and the Iron Sovereign's SAM batteries (the shared homing diamond; Levels 29-35); pitched per launcher in the game (the Hornet's pods higher, the SAM racks lower); a salvo plays it 2-4 times in a row.
+Brief: a short hissing rocket launch (a model rocket or a firework's launch, cut short); the round compares it with reusing the chosen enemy missile launch (concept/enemy-missile-r08-a.ogg); a real recording, heavy, nothing bubbly or popping.
+This one: a bottle rocket going off (a sharp ignition and a thin whooshing hiss) over a hobby rocket's burn: thinner and higher than a, 0.55 s.
+Edit: 0.55 s, the loudest 100 ms band −27.0 dB, peak −7.1 dBFS, −22.2 LUFS.
+
+### homing-run-r60-a — "hobby rocket blastoff" by reg7783
+
+Proposed (round 60), cut from the HQ previews by `tools/concept/audio/sfx_r60.py`.
+Source: <https://freesound.org/people/reg7783/sounds/730041/> (hobby rocket blastoff by reg7783, CC0 1.0).
+Use: one quiet loop while any homing missile flies (Level 31's 'missile run'), for the nearest.
+Brief: a thin rocket-motor hiss, quiet, steady, under the fire; no whistle; a real recording, heavy, nothing bubbly or popping.
+This one: a hobby rocket's burn at its steadiest, thinned (high-passed at 400 Hz): a fizzing hiss, 1.0 s loop.
+Edit: 1.00 s, band RMS −37.1 dB, peak −22.9 dBFS, −30.3 LUFS.
+
+### homing-run-r60-b — "Rocket Launch" by qubodup
+
+Proposed (round 60), cut from the HQ previews by `tools/concept/audio/sfx_r60.py`.
+Source: <https://freesound.org/people/qubodup/sounds/840511/> (Rocket Launch by qubodup, CC0 1.0).
+Use: one quiet loop while any homing missile flies (Level 31's 'missile run'), for the nearest.
+Brief: a thin rocket-motor hiss, quiet, steady, under the fire; no whistle; a real recording, heavy, nothing bubbly or popping.
+This one: the rocket launch's sustained rush sped to 1.1: rougher and more of a roar than a, 1.0 s loop.
+Edit: 1.00 s, band RMS −36.4 dB, peak −21.2 dBFS, −30.3 LUFS.
+
+### homing-down-r60-a — "Whip Crack 01.wav" by CGEffex + "anvil strike 4.wav" by l0calh05t
+
+Proposed (round 60), cut from the HQ previews by `tools/concept/audio/sfx_r60.py`.
+Sources: <https://freesound.org/people/CGEffex/sounds/93100/> (Whip Crack 01.wav by CGEffex, CC-BY 4.0), <https://freesound.org/people/l0calh05t/sounds/19016/> (anvil strike 4.wav by l0calh05t, CC-BY 4.0).
+Use: a homing missile shot down (by the player's fire or a shield-breaker): often in a salvo.
+Brief: a small dry crack with a metal ring; no pop, smaller than an enemy's death; a real recording, heavy, nothing bubbly or popping.
+This one: a whip crack's dry snap with an anvil strike sped to 1.2 ringing under it: 'crack-ting', 0.45 s.
+Edit: 0.45 s, the loudest 100 ms band −24.3 dB, peak −6.1 dBFS, −23.6 LUFS.
+
+### homing-down-r60-b — "Distant Explosion of Propelled Grenade" by qubodup + "Iron Hits.wav" by Mrthenoronha
+
+Proposed (round 60), cut from the HQ previews by `tools/concept/audio/sfx_r60.py`.
+Sources: <https://freesound.org/people/qubodup/sounds/162363/> (Distant Explosion of Propelled Grenade by qubodup, CC0 1.0), <https://freesound.org/people/Mrthenoronha/sounds/371353/> (Iron Hits.wav by Mrthenoronha, CC0 1.0).
+Use: a homing missile shot down (by the player's fire or a shield-breaker): often in a salvo.
+Brief: a small dry crack with a metal ring; no pop, smaller than an enemy's death; a real recording, heavy, nothing bubbly or popping.
+This one: a distant propelled grenade's burst (a dry thud-crack) with a struck iron bar's ring: darker and more of a blast than a, 0.42 s.
+Edit: 0.42 s, the loudest 100 ms band −24.0 dB, peak −5.6 dBFS, −24.9 LUFS.
+
+### rail-charge-r60-a — "Camera Flash Charging.aif" by ftpalad + "50Hz  electrical mains hum" by chungus43A
+
+Proposed (round 60), cut from the HQ previews by `tools/concept/audio/sfx_r60.py`.
+Sources: <https://freesound.org/people/ftpalad/sounds/119902/> (Camera Flash Charging.aif by ftpalad, CC0 1.0), <https://freesound.org/people/chungus43A/sounds/733736/> (50Hz  electrical mains hum by chungus43A, CC0 1.0).
+Use: the rail line's 1.0 s telegraph: the Rail Bunker's rail, the Iron Sovereign's rail batteries and (its long version) Level 35's mass relay; the shot follows at its end.
+Brief: a rising capacitor whine (a camera flash charging, pitched down) over a low hum, exactly as long as the telegraph (1.0 s), building to the shot; a real recording, heavy, nothing bubbly or popping.
+This one: a camera flash's charging whine pitched down and gliding up an octave, swelling, over a 50 Hz mains hum: 'wheeeee' rising to the shot, 1.0 s.
+Edit: 1.00 s, the loudest 100 ms band −28.0 dB, peak −17.4 dBFS, −24.2 LUFS.
+
+### rail-charge-r60-b — "Rising electric hum.aif" by jukkako + "hum electric transformer in large room1.flac" by kyles
+
+Proposed (round 60), cut from the HQ previews by `tools/concept/audio/sfx_r60.py`.
+Sources: <https://freesound.org/people/jukkako/sounds/616084/> (Rising electric hum.aif by jukkako, CC0 1.0), <https://freesound.org/people/kyles/sounds/453444/> (hum electric transformer in large room1.flac by kyles, CC0 1.0).
+Use: the rail line's 1.0 s telegraph: the Rail Bunker's rail, the Iron Sovereign's rail batteries and (its long version) Level 35's mass relay; the shot follows at its end.
+Brief: a rising capacitor whine (a camera flash charging, pitched down) over a low hum, exactly as long as the telegraph (1.0 s), building to the shot; a real recording, heavy, nothing bubbly or popping.
+This one: a rising electric hum gliding up, swelling hard at its end, over a transformer's hum slowed to 0.8: lower and more of a building drone than a, 1.0 s.
+Edit: 1.00 s, the loudest 100 ms band −25.0 dB, peak −12.6 dBFS, −24.5 LUFS.
+
+### rail-shot-r60-a — "Taser/High Voltage discharge" by The_Chemical_Workshop + "50 Cal Sniper Shot 1" by qubodup + "anvil strike 8.wav" by l0calh05t
+
+Proposed (round 60), cut from the HQ previews by `tools/concept/audio/sfx_r60.py`.
+Sources: <https://freesound.org/people/The_Chemical_Workshop/sounds/403252/> (Taser/High Voltage discharge by The_Chemical_Workshop, CC0 1.0), <https://freesound.org/people/qubodup/sounds/854699/> (50 Cal Sniper Shot 1 by qubodup, CC0 1.0), <https://freesound.org/people/l0calh05t/sounds/19020/> (anvil strike 8.wav by l0calh05t, CC-BY 4.0).
+Use: each rail shot: the Rail Bunker's rail, the Iron Sovereign's rail batteries and (its long version) Level 35's mass relay (the mass relay plays it with a long thunder tail, made at the part).
+Brief: a violent electric crack with a short metallic ring (a large spark gap or a whip crack layered on a heavy gunshot); a real recording, heavy, nothing bubbly or popping.
+This one: a high-voltage discharge's crack on a .50 calibre sniper shot, an anvil strike slowed to 0.8 ringing under them: a hard electric 'KRACK' with a metal ring and the rifle's boom, 0.9 s.
+Edit: 0.90 s, the loudest 100 ms band −22.0 dB, peak −4.1 dBFS, −17.8 LUFS.
+
+### rail-shot-r60-b — "Whip Crack 01.wav" by CGEffex + "Howitzer Gun Shots" by qubodup + "metal glass makes long 'PING!' sound.aif" by Tomlija
+
+Proposed (round 60), cut from the HQ previews by `tools/concept/audio/sfx_r60.py`.
+Sources: <https://freesound.org/people/CGEffex/sounds/93100/> (Whip Crack 01.wav by CGEffex, CC-BY 4.0), <https://freesound.org/people/qubodup/sounds/67516/> (Howitzer Gun Shots by qubodup, CC0 1.0), <https://freesound.org/people/Tomlija/sounds/101246/> (metal glass makes long 'PING!' sound.aif by Tomlija, CC-BY 3.0).
+Use: each rail shot: the Rail Bunker's rail, the Iron Sovereign's rail batteries and (its long version) Level 35's mass relay (the mass relay plays it with a long thunder tail, made at the part).
+Brief: a violent electric crack with a short metallic ring (a large spark gap or a whip crack layered on a heavy gunshot); a real recording, heavy, nothing bubbly or popping.
+This one: a whip crack on a howitzer's shot, a long metal 'PING' under them: heavier and more of a cannon than a, the ring brighter, 0.9 s.
+Edit: 0.91 s, the loudest 100 ms band −20.1 dB, peak −6.7 dBFS, −18.2 LUFS.
+
+### ascendancy-turbine-r60-a — "Idle F-22 Jet Plane.flac" by qubodup
+
+Proposed (round 60), cut from the HQ previews by `tools/concept/audio/sfx_r60.py`.
+Source: <https://freesound.org/people/qubodup/sounds/187734/> (Idle F-22 Jet Plane.flac by qubodup, CC0 1.0).
+Use: the engine loops of the Gilded Gunship, the Hornet and the Minelayer, once per kind, for the nearest; pitched per hull in the game (the Gunship this pitch, the Hornet higher, the Minelayer lower).
+Brief: a real jet or turbine idle: a deep turbine drone, quiet, under the enemy fire; a real recording, heavy, nothing bubbly or popping.
+This one: an F-22's idle slowed to 0.6: a deep steady turbine drone with its high whine kept faint, 6.0 s loop.
+Edit: 6.00 s, band RMS −35.2 dB, peak −21.9 dBFS, −30.4 LUFS.
+
+### ascendancy-turbine-r60-b — "G08-27-Jet Idle or Taxi.wav" by craigsmith
+
+Proposed (round 60), cut from the HQ previews by `tools/concept/audio/sfx_r60.py`.
+Source: <https://freesound.org/people/craigsmith/sounds/437890/> (G08-27-Jet Idle or Taxi.wav by craigsmith, CC0 1.0).
+Use: the engine loops of the Gilded Gunship, the Hornet and the Minelayer, once per kind, for the nearest; pitched per hull in the game (the Gunship this pitch, the Hornet higher, the Minelayer lower).
+Brief: a real jet or turbine idle: a deep turbine drone, quiet, under the enemy fire; a real recording, heavy, nothing bubbly or popping.
+This one: a jet idling or taxiing slowed to 0.65: rougher, with a throbbing low end and a thinner whine than a, 6.0 s loop.
+Edit: 6.00 s, band RMS −35.7 dB, peak −21.7 dBFS, −30.2 LUFS.
+
+### brownout-hum-r60-a — "hum electric transformer in large room1.flac" by kyles + "A relay switch being activated." by bassmosphere
+
+Proposed (round 60), cut from the HQ previews by `tools/concept/audio/sfx_r60.py`.
+Sources: <https://freesound.org/people/kyles/sounds/453444/> (hum electric transformer in large room1.flac by kyles, CC0 1.0), <https://freesound.org/people/bassmosphere/sounds/384698/> (A relay switch being activated. by bassmosphere, CC0 1.0).
+Use: a loop while the generator's drained output is below the load (the Void Leech's drain, the Shard Drone's links): the player's ship browning out.
+Brief: a low sagging hum (a transformer under load, its pitch drooping) with a faint relay chatter; uneasy, not an alarm; a real recording, heavy, nothing bubbly or popping.
+This one: a transformer's hum in a large room slowed to 0.85, sagging 5 dB every 2 s, a relay clicking twice and once more now and then: 8.0 s loop.
+Edit: 8.00 s, band RMS −34.6 dB, peak −16.8 dBFS, −28.0 LUFS.
+
+### brownout-hum-r60-b — "power transformer in basement.wav" by itinerantmonk108 + "Contactor/motor overload relay noises" by tt_runscript
+
+Proposed (round 60), cut from the HQ previews by `tools/concept/audio/sfx_r60.py`.
+Sources: <https://freesound.org/people/itinerantmonk108/sounds/648726/> (power transformer in basement.wav by itinerantmonk108, CC0 1.0), <https://freesound.org/people/tt_runscript/sounds/807384/> (Contactor/motor overload relay noises by tt_runscript, CC0 1.0).
+Use: a loop while the generator's drained output is below the load (the Void Leech's drain, the Shard Drone's links): the player's ship browning out.
+Brief: a low sagging hum (a transformer under load, its pitch drooping) with a faint relay chatter; uneasy, not an alarm; a real recording, heavy, nothing bubbly or popping.
+This one: a power transformer in a basement slowed to 0.8, sagging 6 dB every 4 s, a contactor and motor relays chattering once a loop: buzzier than a, 8.0 s loop.
+Edit: 8.00 s, band RMS −34.0 dB, peak −17.7 dBFS, −28.7 LUFS.
+
+### intercept-open-r60-a — "Radio tuning-static-interference" by quantumriver + "Short Wave Radio Noise 1" by zmobie
+
+Proposed (round 60), cut from the HQ previews by `tools/concept/audio/sfx_r60.py`.
+Sources: <https://freesound.org/people/quantumriver/sounds/552160/> (Radio tuning-static-interference by quantumriver, CC0 1.0), <https://freesound.org/people/zmobie/sounds/257880/> (Short Wave Radio Noise 1 by zmobie, CC0 1.0).
+Use: an enemy-channel line (the HUD) or an intercepted briefing page opening, instead of the squelch: Vorne and Harker.
+Brief: a short static sweep: a shortwave receiver tuned across a band onto a strong carrier, 0.3 s, no crackle; a real recording, heavy, nothing bubbly or popping.
+This one: a radio tuned through static, played gliding down from 1.8 to 0.9, landing on a steady shortwave noise: 'shhwip-hhh', 0.35 s.
+Edit: 0.35 s, the loudest 100 ms band −24.2 dB, peak −12.0 dBFS, −inf LUFS.
+
+### intercept-open-r60-b — "radio02.wav" by theplax
+
+Proposed (round 60), cut from the HQ previews by `tools/concept/audio/sfx_r60.py`.
+Source: <https://freesound.org/people/theplax/sounds/615171/> (radio02.wav by theplax, CC-BY 4.0).
+Use: an enemy-channel line (the HUD) or an intercepted briefing page opening, instead of the squelch: Vorne and Harker.
+Brief: a short static sweep: a shortwave receiver tuned across a band onto a strong carrier, 0.3 s, no crackle; a real recording, heavy, nothing bubbly or popping.
+This one: an AM radio tuned across the band, gliding up and swelling in: a rising sweep, 0.3 s.
+Edit: 0.30 s, the loudest 100 ms band −24.3 dB, peak −13.8 dBFS, −inf LUFS.
+
+### intercept-close-r60-a — "Radio tuning-static-interference" by quantumriver
+
+Proposed (round 60), cut from the HQ previews by `tools/concept/audio/sfx_r60.py`.
+Source: <https://freesound.org/people/quantumriver/sounds/552160/> (Radio tuning-static-interference by quantumriver, CC0 1.0).
+Use: an enemy-channel line or intercepted page closing.
+Brief: the open's sweep falling away, 0.3 s, no crackle; a real recording, heavy, nothing bubbly or popping.
+This one: the radio's static gliding down from 1.0 to 0.5 and fading: a falling 'hhwoo', 0.3 s.
+Edit: 0.32 s, the loudest 100 ms band −26.1 dB, peak −13.7 dBFS, −inf LUFS.
+
+### intercept-close-r60-b — "radio02.wav" by theplax
+
+Proposed (round 60), cut from the HQ previews by `tools/concept/audio/sfx_r60.py`.
+Source: <https://freesound.org/people/theplax/sounds/615171/> (radio02.wav by theplax, CC-BY 4.0).
+Use: an enemy-channel line or intercepted page closing.
+Brief: the open's sweep falling away, 0.3 s, no crackle; a real recording, heavy, nothing bubbly or popping.
+This one: the AM radio's sweep gliding down and fading, 0.3 s.
+Edit: 0.30 s, the loudest 100 ms band −26.1 dB, peak −14.1 dBFS, −inf LUFS.
+
+### intercept-carrier-r60-a — "Short Wave Radio Noise 2" by zmobie
+
+Proposed (round 60), cut from the HQ previews by `tools/concept/audio/sfx_r60.py`.
+Source: <https://freesound.org/people/zmobie/sounds/257879/> (Short Wave Radio Noise 2 by zmobie, CC0 1.0).
+Use: an intercepted briefing page while its text types, in place of the typing blip (Vorne's broadcast pages, the act's intro).
+Brief: a faint steady carrier hiss with a slow swell; distinct from the Choir's static lead (concept/choir-static-r55-b.ogg) so the two enemy voices never sound alike; a real recording, heavy, nothing bubbly or popping.
+This one: a shortwave radio's noise band-passed to 400 Hz-4 kHz, swelling 3 dB every 4 s: a soft even 'hhhh', 8.0 s loop.
+Edit: 8.00 s, band RMS −38.2 dB, peak −23.3 dBFS, −33.7 LUFS.
+
+### intercept-carrier-r60-b — "pulsating vibrating Shortwave radio noise" by Mick_
+
+Proposed (round 60), cut from the HQ previews by `tools/concept/audio/sfx_r60.py`.
+Source: <https://freesound.org/people/Mick_/sounds/709192/> (pulsating vibrating Shortwave radio noise by Mick_, CC0 1.0).
+Use: an intercepted briefing page while its text types, in place of the typing blip (Vorne's broadcast pages, the act's intro).
+Brief: a faint steady carrier hiss with a slow swell; distinct from the Choir's static lead (concept/choir-static-r55-b.ogg) so the two enemy voices never sound alike; a real recording, heavy, nothing bubbly or popping.
+This one: a pulsating shortwave noise band-passed the same: the interference's own slow throb in it, 8.0 s loop.
+Edit: 8.00 s, band RMS −38.1 dB, peak −19.4 dBFS, −33.6 LUFS.
+
+### mine-blink-r60-a — synthesized
+
+Proposed (round 60), synthesized by `tools/concept/audio/sfx_r60.py` (no third-party source).
+Use: an armed mine's 0.6 s proximity blink as the ship comes near (the Minelayer's mine lines, Level 30's minefield), before its burst.
+Brief: a faster tick, rising, over the 0.6 s blink (synthesized allowed: a signal, not a machine); dry, no beep melody.
+This one: 13 dry ticks, the gap shrinking from 110 to 25 ms and the pitch rising from 2.0 to 3.2 kHz: 'tik . tik . tik tik-tiktiktik', 0.6 s.
+Edit: 0.63 s, the loudest 100 ms band −27.9 dB, peak −9.4 dBFS, −24.0 LUFS.
+
+### mine-blink-r60-b — synthesized
+
+Proposed (round 60), synthesized by `tools/concept/audio/sfx_r60.py` (no third-party source).
+Use: an armed mine's 0.6 s proximity blink as the ship comes near (the Minelayer's mine lines, Level 30's minefield), before its burst.
+Brief: a faster tick, rising, over the 0.6 s blink (synthesized allowed: a signal, not a machine); dry, no beep melody.
+This one: 7 short square-ish beeps, the gap shrinking from 120 to 45 ms and the pitch rising an octave from 1.2 kHz, the last held: 'bip . bip . bip-bip-bipbeeep', 0.6 s.
+Edit: 0.62 s, the loudest 100 ms band −25.7 dB, peak −20.6 dBFS, −24.0 LUFS.
+
+### mine-burst-r60-a — "Bang/Explosion Metallic" by Werra
+
+Proposed (round 60), cut from the HQ previews by `tools/concept/audio/sfx_r60.py`.
+Source: <https://freesound.org/people/Werra/sounds/244394/> (Bang/Explosion Metallic by Werra, CC0 1.0).
+Use: a mine bursting (proximity, shot or in a chain); the chain's ripple is cut from the pick at the part.
+Brief: a sharp metallic blast, the `small` rung's weight but harder (a mine must be heard); a real recording, heavy, nothing bubbly or popping.
+This one: a metallic bang: a hard crack with a steel body ringing into the boom, 1.0 s.
+Edit: 1.00 s, the loudest 100 ms band −23.0 dB, peak −4.1 dBFS, −19.1 LUFS.
+
+### mine-burst-r60-b — "Explosion in a can" by SamsterBirdies + "Metal Boom" by Johnnyfarmer
+
+Proposed (round 60), cut from the HQ previews by `tools/concept/audio/sfx_r60.py`.
+Sources: <https://freesound.org/people/SamsterBirdies/sounds/587887/> (Explosion in a can by SamsterBirdies, CC0 1.0), <https://freesound.org/people/Johnnyfarmer/sounds/209772/> (Metal Boom by Johnnyfarmer, CC0 1.0).
+Use: a mine bursting (proximity, shot or in a chain); the chain's ripple is cut from the pick at the part.
+Brief: a sharp metallic blast, the `small` rung's weight but harder (a mine must be heard); a real recording, heavy, nothing bubbly or popping.
+This one: an explosion in a metal can over a deep metal boom: tighter and tinnier at the top than a, heavier underneath, 1.0 s.
+Edit: 1.00 s, the loudest 100 ms band −19.1 dB, peak −5.4 dBFS, −20.2 LUFS.
+
+### sovereign-ring-turn-r60-a — "Rail Grinding Machine with Rythmic Clang Berlin Night" by giuliorasi
+
+Proposed (round 60), cut from the HQ previews by `tools/concept/audio/sfx_r60.py`.
+Source: <https://freesound.org/people/giuliorasi/sounds/812360/> (Rail Grinding Machine with Rythmic Clang Berlin Night by giuliorasi, CC0 1.0).
+Use: Level 35's boss fight: a low bed while the Iron Sovereign's rings turn (the spin-up, the ring step and the lock are separate one-shots, made at the boss's part).
+Brief: a deep grind with slow gear-tooth ticks: a huge bearing turning, heavy and mechanical; a real recording, heavy, nothing bubbly or popping.
+This one: a rail-grinding machine at night with its rhythmic clang, slowed to half: a deep grinding drone, the clangs slowed into heavy ticks, 8.0 s loop.
+Edit: 8.00 s, band RMS −33.8 dB, peak −9.6 dBFS, −27.1 LUFS.
+
+### sovereign-ring-turn-r60-b — "Inside a traditional Dutch windmill, 2" by pcwvdmark + "hum electric transformer in large room1.flac" by kyles
+
+Proposed (round 60), cut from the HQ previews by `tools/concept/audio/sfx_r60.py`.
+Sources: <https://freesound.org/people/pcwvdmark/sounds/345846/> (Inside a traditional Dutch windmill, 2 by pcwvdmark, CC0 1.0), <https://freesound.org/people/kyles/sounds/453444/> (hum electric transformer in large room1.flac by kyles, CC0 1.0).
+Use: Level 35's boss fight: a low bed while the Iron Sovereign's rings turn (the spin-up, the ring step and the lock are separate one-shots, made at the boss's part).
+Brief: a deep grind with slow gear-tooth ticks: a huge bearing turning, heavy and mechanical; a real recording, heavy, nothing bubbly or popping.
+This one: inside a working windmill, its great gears and millstone turning, slowed to 0.55, over a transformer's hum slowed to 0.6: slower, creakier ticks than a over a heavier bed, 8.0 s loop.
+Edit: 8.00 s, band RMS −34.2 dB, peak −13.3 dBFS, −27.0 LUFS.
+
+### belt-station-r60-a — "room tone large industrial heavy ventilation fan like inflated building3 distant softer.flac" by kyles + "hum electric transformer in large room1.flac" by kyles + "Metal Boom" by Johnnyfarmer + "liner gangplank groaning.WAV" by phonoflora
+
+Proposed (round 60), cut from the HQ previews by `tools/concept/audio/sfx_r60.py`.
+Sources: <https://freesound.org/people/kyles/sounds/453541/> (room tone large industrial heavy ventilation fan like inflated building3 distant softer.flac by kyles, CC0 1.0), <https://freesound.org/people/kyles/sounds/453444/> (hum electric transformer in large room1.flac by kyles, CC0 1.0), <https://freesound.org/people/Johnnyfarmer/sounds/209772/> (Metal Boom by Johnnyfarmer, CC0 1.0), <https://freesound.org/people/phonoflora/sounds/500008/> (liner gangplank groaning.WAV by phonoflora, CC0 1.0).
+Use: Level 29 (Ceres Hub's dock canyon) and Level 35 (the Helix yards in Ceres orbit): the act's ambience bed on the effects bus at the beds' 0.70, under the music; heard in the quiet stretches, a level's start and the pause before a boss; Level 29 adds the hub's alarm as a layer from the turn.
+Brief: a big station heard through the hull: a deep ventilation roar, a low transformer hum, distant dock machinery (a crane's slew, a heavy hatch now and then), hull creaks; no voices, no PA; a seamless 16 s loop; a real recording, heavy, nothing bubbly or popping.
+This one: a large industrial ventilation fan's room tone muffled at 1.5 kHz over a transformer's hum; once a loop a far heavy metal boom (a hatch) and a liner's gangplank groaning, slowed (the dock): 16.0 s loop.
+Edit: 16.00 s, band RMS −42.1 dB, peak −25.1 dBFS, −35.8 LUFS.
+
+### belt-station-r60-b — "ferry engine room2.wav" by mrmayo + "room tone large industrial ventilation fan like inflated building.flac" by kyles + "Rail Grinding Machine with Rythmic Clang Berlin Night" by giuliorasi + "Creaking Metal - Slow" by EagleStealthTeam
+
+Proposed (round 60), cut from the HQ previews by `tools/concept/audio/sfx_r60.py`.
+Sources: <https://freesound.org/people/mrmayo/sounds/74915/> (ferry engine room2.wav by mrmayo, CC0 1.0), <https://freesound.org/people/kyles/sounds/453546/> (room tone large industrial ventilation fan like inflated building.flac by kyles, CC0 1.0), <https://freesound.org/people/giuliorasi/sounds/812360/> (Rail Grinding Machine with Rythmic Clang Berlin Night by giuliorasi, CC0 1.0), <https://freesound.org/people/EagleStealthTeam/sounds/172411/> (Creaking Metal - Slow by EagleStealthTeam, CC0 1.0).
+Use: Level 29 (Ceres Hub's dock canyon) and Level 35 (the Helix yards in Ceres orbit): the act's ambience bed on the effects bus at the beds' 0.70, under the music; heard in the quiet stretches, a level's start and the pause before a boss; Level 29 adds the hub's alarm as a layer from the turn.
+Brief: a big station heard through the hull: a deep ventilation roar, a low transformer hum, distant dock machinery (a crane's slew, a heavy hatch now and then), hull creaks; no voices, no PA; a seamless 16 s loop; a real recording, heavy, nothing bubbly or popping.
+This one: a ferry's engine room slowed to 0.7 and muffled (heard through a bulkhead) under a ventilation fan; once a loop a far rail-grinding machine's clanking (the dock machinery) and a slow metal creak: more of a working machine than a, 16.0 s loop.
+Edit: 16.00 s, band RMS −42.0 dB, peak −25.3 dBFS, −37.5 LUFS.
+
+### belt-open-r60-a — "G08-27-Jet Idle or Taxi.wav" by craigsmith + "pulsating vibrating Shortwave radio noise" by Mick_ + "Creaking Metal - Slow" by EagleStealthTeam + "distant explosions" by Kostrava
+
+Proposed (round 60), cut from the HQ previews by `tools/concept/audio/sfx_r60.py`.
+Sources: <https://freesound.org/people/craigsmith/sounds/437890/> (G08-27-Jet Idle or Taxi.wav by craigsmith, CC0 1.0), <https://freesound.org/people/Mick_/sounds/709192/> (pulsating vibrating Shortwave radio noise by Mick_, CC0 1.0), <https://freesound.org/people/EagleStealthTeam/sounds/172411/> (Creaking Metal - Slow by EagleStealthTeam, CC0 1.0), <https://freesound.org/people/Kostrava/sounds/320788/> (distant explosions by Kostrava, CC0 1.0).
+Use: Levels 30, 31, 33 and 34 (the shipping lane, the rock fields, the leech field, the graveyard): the act's ambience bed on the effects bus at the beds' 0.70, under the music; heard in the quiet stretches, a level's start and the pause before a boss.
+Brief: open space heard through the hull (no silent vacuum): the cockpit's low hum, hull creaks and ticks of metal in the cold, distant dull impacts (rocks on rock, far off), a faint radio hiss; no wind; a seamless 16 s loop; a real recording, heavy, nothing bubbly or popping.
+This one: a jet's idle slowed to half and muffled at 600 Hz (the cockpit's hum), a pulsating shortwave hiss far under it; twice a loop a slow metal creak, once a distant explosion's dull thud muffled to a far impact: 16.0 s loop.
+Edit: 16.00 s, band RMS −42.0 dB, peak −21.1 dBFS, −35.7 LUFS.
+
+### belt-open-r60-b — "ferry engine room1.wav" by mrmayo + "pulsating vibrating Shortwave radio noise" by Mick_ + "liner gangplank groaning.WAV" by phonoflora + "Deep Thumps.wav" by eardeer
+
+Proposed (round 60), cut from the HQ previews by `tools/concept/audio/sfx_r60.py`.
+Sources: <https://freesound.org/people/mrmayo/sounds/74914/> (ferry engine room1.wav by mrmayo, CC0 1.0), <https://freesound.org/people/Mick_/sounds/709192/> (pulsating vibrating Shortwave radio noise by Mick_, CC0 1.0), <https://freesound.org/people/phonoflora/sounds/500008/> (liner gangplank groaning.WAV by phonoflora, CC0 1.0), <https://freesound.org/people/eardeer/sounds/400997/> (Deep Thumps.wav by eardeer, CC0 1.0).
+Use: Levels 30, 31, 33 and 34 (the shipping lane, the rock fields, the leech field, the graveyard): the act's ambience bed on the effects bus at the beds' 0.70, under the music; heard in the quiet stretches, a level's start and the pause before a boss.
+Brief: open space heard through the hull (no silent vacuum): the cockpit's low hum, hull creaks and ticks of metal in the cold, distant dull impacts (rocks on rock, far off), a faint radio hiss; no wind; a seamless 16 s loop; a real recording, heavy, nothing bubbly or popping.
+This one: a ferry's engine room slowed to half and muffled at 600 Hz, a pulsating shortwave hiss far under it; once a loop a liner's gangplank groaning, slowed (the hull), and a deep far thump: darker and more of a hull than a, 16.0 s loop.
+Edit: 16.00 s, band RMS −42.0 dB, peak −24.4 dBFS, −35.9 LUFS.
+
+### belt-tunnel-r60-a — "room tone large industrial ventilation fan like inflated building.flac" by kyles + "Jackhammer, pneumatic drill in underground mine, very loud motor" by felix.blume + "Massive Structure Bend" by Kostas17 + "Deep Thumps.wav" by eardeer
+
+Proposed (round 60), cut from the HQ previews by `tools/concept/audio/sfx_r60.py`.
+Sources: <https://freesound.org/people/kyles/sounds/453546/> (room tone large industrial ventilation fan like inflated building.flac by kyles, CC0 1.0), <https://freesound.org/people/felix.blume/sounds/639019/> (Jackhammer, pneumatic drill in underground mine, very loud motor by felix.blume, CC0 1.0), <https://freesound.org/people/Kostas17/sounds/529620/> (Massive Structure Bend by Kostas17, CC-BY 3.0), <https://freesound.org/people/eardeer/sounds/400997/> (Deep Thumps.wav by eardeer, CC0 1.0).
+Use: Level 32 (the hollowed asteroid; the refinery's furnace roar under its section 6 is Level 19's vent and furnace sounds): the act's ambience bed on the effects bus at the beds' 0.70, under the music; heard in the quiet stretches, a level's start and the pause before a boss.
+Brief: an asteroid's interior: rock creaking and groaning, pumps and ventilation fans through the walls, a distant drill biting rock now and then, a machine thump; no drips; a seamless 16 s loop; a real recording, heavy, nothing bubbly or popping.
+This one: a ventilation fan's room tone slowed to 0.8 and muffled; once a loop a jackhammer in an underground mine far off through the rock, a massive structure's slow bend (the rock groaning) and a deep machine thump: 16.0 s loop.
+Edit: 16.00 s, band RMS −42.1 dB, peak −23.5 dBFS, −35.5 LUFS.
+
+### belt-tunnel-r60-b — "room tone large industrial heavy ventilation fan like inflated building3 distant softer.flac" by kyles + "machine metal vibrating grinding drilling hole maybe.flac" by kyles + "Earthquake  **audible only with appropriate speakers**" by MBARI_MARS + "drilling a rock in a career" by charleswassner
+
+Proposed (round 60), cut from the HQ previews by `tools/concept/audio/sfx_r60.py`.
+Sources: <https://freesound.org/people/kyles/sounds/453541/> (room tone large industrial heavy ventilation fan like inflated building3 distant softer.flac by kyles, CC0 1.0), <https://freesound.org/people/kyles/sounds/453328/> (machine metal vibrating grinding drilling hole maybe.flac by kyles, CC0 1.0), <https://freesound.org/people/MBARI_MARS/sounds/369485/> (Earthquake  **audible only with appropriate speakers** by MBARI_MARS, CC0 1.0), <https://freesound.org/people/charleswassner/sounds/609930/> (drilling a rock in a career by charleswassner, CC-BY 3.0).
+Use: Level 32 (the hollowed asteroid; the refinery's furnace roar under its section 6 is Level 19's vent and furnace sounds): the act's ambience bed on the effects bus at the beds' 0.70, under the music; heard in the quiet stretches, a level's start and the pause before a boss.
+Brief: an asteroid's interior: rock creaking and groaning, pumps and ventilation fans through the walls, a distant drill biting rock now and then, a machine thump; no drips; a seamless 16 s loop; a real recording, heavy, nothing bubbly or popping.
+This one: a large industrial ventilation fan's room tone slowed to 0.6 (the pumps and fans) over a machine grinding and drilling, slowed and muffled to a drone in the walls; once a loop a deep earthquake rumble (the rock heaving) and a quarry drill biting rock far off: lower and rockier than a, 16.0 s loop.
+Edit: 16.00 s, band RMS −42.1 dB, peak −24.0 dBFS, −35.5 LUFS.

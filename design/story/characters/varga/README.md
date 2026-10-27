@@ -3,7 +3,7 @@ title: Dr. Elena Varga
 design: approved
 implementation: n/a
 art: chosen
-updated: 2026-10-01
+updated: 2026-10-27
 ---
 
 # Dr. Elena Varga
@@ -25,11 +25,28 @@ Ascendancy.
 - **Background**: 40s, Hungarian, worked on Helix-funded gate research until 2179 — she left
   after the "missing" survey mission and never believed the accident story.
 - **Arc**: notices in Act 3 that the Vrell avoid Helix sites; Okafor tells her to keep quiet.
-  In Act 4 she decodes the Helix frequencies on the beacons. In Act 7 she is the one who
-  understands the Choir's fear and hints at the Silence.
+  In Act 4 she decodes the Helix frequencies on the beacons. In Act 5 she says what she sees, on every
+  channel (Okafor's Act 4 promise), and sees the bargain on Vorne's face (*Act 5* below). In Act 7 she
+  is the one who understands the Choir's fear and hints at the Silence.
 - **Gameplay tie-in**: each level's intel line from Varga names one practical tip (weak point,
   recommended weapon trait, dominant attack direction), consistent with the level's threat
   profile.
+
+### Act 5 (draft)
+
+*Draft, step `m9-d-story` (2026-10-27), **pending the user's review in round 60**. The texts are the
+[act's](../../../campaign/act-5-the-belt/README.md) outro and the level documents'.*
+
+- **What she knew**: at Helix she saw Vorne at the gate-research reviews he funded; he was sixty when
+  she left in 2179.
+- **L31**: the refugees' story of Helix's cures (Vrell biotech that healed the belt's miners and
+  bought their stations) is the first time she hears the bargain described from the inside; as the
+  xenobiologist she knows what such a cure is grown from.
+- **L33**: her hangar intel warns to bring spare power against the leeches (the
+  [generator](../../../player/generator/README.md#enemy-drain-effects)'s drain).
+- **The act outro, her Act 5 beat**: after the recruitment she has seen Vorne's face on the feed:
+  he looks forty, and he was sixty when she left Helix. The cures are on him. It is the one place the
+  act ties the bargain to the man.
 
 ### Sample lines
 
@@ -40,6 +57,7 @@ Ascendancy.
 | Boss | "The core is shielded until it opens to fire. Wait for it." |
 | Act 3 | "Commander, they have not touched a single Helix facility. Not one." |
 | Act 4 | "Those beacons are human-made. Those are Helix frequencies." |
+| Act 5 (outro) | "He looks forty. He was sixty when I left Helix. Commander, he took the cure himself." |
 | Act 7 | "They are not singing to us. They are singing *away* from something." |
 
 ### Portrait brief
@@ -67,3 +85,6 @@ procedural faces only show the style (framing, lighting, colour treatment, frame
 - 2026-09-30: Concept round 03: portrait style **B** (comm-screen pixel portrait) chosen, with a bit more colour retained so it looks less flat.
 - 2026-09-30: Concept round 04: style-B portrait with retained colour chosen.
 - 2026-10-01: Approved by the user in the [Acts 1–2 design review](../../../reviews/acts-1-2/README.md).
+- 2026-10-27 (Act 5 design phase, step m9-d-story; **pending the user's review in round 60**): her Act 5
+  beats: the L31 cures heard from the inside, the L33 power warning, and in the act outro Vorne's face
+  ("he looks forty; he was sixty when I left Helix").

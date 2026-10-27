@@ -3,7 +3,7 @@ title: Air enemies
 design: approved
 implementation: in-progress
 art: final
-updated: 2026-10-20
+updated: 2026-10-27
 ---
 
 # Air enemies
@@ -17,7 +17,7 @@ levels.
 
 ## Contents
 
-Promoted to their own documents for the Acts 1–2 wrap-up, plus the Act 3 drafts of the overnight design phase (2026-10-12); the remaining units stay in the roster below.
+Promoted to their own documents for the Acts 1–2 wrap-up, plus the Act 3 drafts of the overnight design phase (2026-10-12) and the Act 5 drafts of the design phase (2026-10-27, pending round 60); the remaining units stay in the roster below.
 
 | Part | Summary | Design | Impl | Art |
 |---|---|---|---|---|
@@ -35,25 +35,27 @@ Promoted to their own documents for the Acts 1–2 wrap-up, plus the Act 3 draft
 | [choir-herald](choir-herald/README.md) | Support flyer whose aura rings shield nearby enemies (L17) | approved | done | final |
 | [ghost-drone](ghost-drone/README.md) | Grey human-built strafing drone, hint 1 (L18) | approved | in-progress | final |
 | [dust-kite](dust-kite/README.md) | Tiny Martian popcorn glider that rams (L15, M10 = b) | approved | in-progress | final |
+| [talon](talon/README.md) | Ascendancy interceptor: swoops, aimed pairs, a 2 HP hex shield, squad leaders (L29) | draft | not-started | proposed |
+| [dart-drone](dart-drone/README.md) | Tiny Ascendancy ram drone launched in streams by Gunships, stations and the Sovereign (L30) | draft | not-started | proposed |
+| [gilded-gunship](gilded-gunship/README.md) | Slow gunship: gilded front ×0.5, engines ×2, ring bursts, Dart streams (L30) | draft | not-started | proposed |
+| [rail-serpent](rail-serpent/README.md) | Drone train of 8–14 cars from the sides and rear; a cut's rear half drifts and blows (L30) | draft | not-started | proposed |
+| [hornet](hornet/README.md) | Hovering missile boat, salvos of 4 shootable homing diamonds (L31) | draft | not-started | proposed |
+| [buzzsaw-drone](buzzsaw-drone/README.md) | Radial blade drone: chase, 0.6 s spin-up, a dash that ricochets off edges and rocks (L31) | draft | not-started | proposed |
 
 ## Roster
 
 | Name | Faction | Layer | Tier | Role/ability | Formations | First level | Design |
 |---|---|---|---|---|---|---|---|
-| Talon | Ascendancy | air | small | Fast interceptor. `swoop` with paired `aimed` shots; small hex shield (2 HP). | V-wing, line abreast | 29 | idea |
-| Gilded Gunship | Ascendancy | air | medium | Heavy and slow. Armoured front (50% damage reduction) with a `ring` burst every 3 s; exposed engines at the rear take ×2. | column, carrier + escorts | 30 | idea |
-| Hornet | Ascendancy | air | medium | Missile boat. `hover` at the top and launch 4 shootable `homing` missiles. | line abreast | 31 | idea |
 | Chimera | Hybrid | air | small | Talon airframe with Vrell tissue: **regenerates** 20% HP/s after 1 s without taking damage. Rewards burst damage. | V-wing, swarm | 36 | idea |
 | Mirror Interceptor | Ascendancy | air | medium | Frontal `reflect` shield bounces non-`beam` shots back. Vulnerable from the sides and rear, or to `beam`/`shield-breaker`. | pincer, rear ambush | 37 | idea |
 | Harrow | Hybrid | air | small | `kamikaze` with a Vrell biomass payload; `death-burst` of 8 bullets whether shot or impacting. Kill it at range. | stream, cross | 38 | idea |
 | Choir Seraph | Vrell (elite) | air | medium | Elite. `teleport` next to the player's flank and `mirror` its movement while firing a `spiral`. 40 HP. | circle (pairs) | 47 | idea |
-| Buzzsaw Drone | Ascendancy | air / space | small | Radially symmetric spinning blade drone (4 blades, `radial`). `chase`s the player, then `ricochet`s off edges and asteroids at speed; contact damage only, but lethal in groups. Blades spin faster just before a dash (telegraph). | stream, circle | 31 | idea |
-| Rail Serpent | Ascendancy | air / space | large | Armoured drone train of 8–14 cars (`chain`) that snakes across the screen (`swirl`, `cross`) and **enters from the sides or the rear**. Every third car carries a turret firing `aimed` shots; the engine car is `vital`. Destroying a car splits the train: the rear half stops and explodes. Orientation 32 angles per car. | snake, pincer (two trains) | 30 | idea |
 
 ## Design
 
 - Air enemies make up most of every wave table. Every level mixes at least one fodder type
-  (Skitter / Talon / Chimera) with one "problem" enemy that needs attention.
+  (Skitter / Talon / Chimera; in Act 5 the [Dart Drone](dart-drone/README.md)) with one "problem"
+  enemy that needs attention.
 - `low-air` and `high-air` members follow the [layer rules](../README.md): they don't collide
   with the player, `high-air` is only hit by `homing` and `beam`, and their bullets always
   travel on the player plane.
@@ -182,3 +184,8 @@ follows) — each a PNG sheet plus a GIF in the 480×540 play field over Mars; g
   the Choir Herald, Ghost Drone and Dust Kite a/b, accepted in round 36 (2026-10-13).
 - 2026-10-13 (user, round 36): the Act 3 air units approved (D.15–D.17), the Dust Kite's name included. Picks: Choir Herald **b** (seraph), Ghost Drone **a** (facet dart, with the eye and running lights fix U.5 for the art step), Dust Kite **b** (crescent sail). The rejected variants moved to `concept/rejected/`.
 - 2026-10-20 (user, round 44, A.b (a): production assets (a `Source` chunk in `assets/`, every Concept art row decided)): **`art: final`** for this part. A later addition (a new sprite, a new concept round) is its own row and does not reopen the rest.
+- 2026-10-27 (step m9-d-enemies-a, Act 5 design phase, pending the user's review in round 60): the
+  Act 5 air units promoted to draft specs: Talon, Gilded Gunship, Hornet, Buzzsaw Drone and Rail
+  Serpent from the roster, plus the new Dart Drone (the gap analysis's Q6 b, the Ascendancy's
+  popcorn). Their Ascendancy hex shields follow the shared [enemy shields](../README.md#enemy-shields)
+  rule (Q1 a); the Rail Serpent's machine split is the multi-part rule's.

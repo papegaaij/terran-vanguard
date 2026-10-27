@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../story, ../../campaign]
-updated: 2026-10-26
+updated: 2026-10-27
 ---
 
 # Briefing screen
@@ -61,6 +61,32 @@ the real briefing text is written in each level document.
   Interference/static effect for intercepted transmissions.
 - Act start/end briefings may be longer; normal levels are 2–4 pages.
 - Briefing text lives with each level in the [campaign](../../campaign/README.md).
+
+### Intercepted transmissions (draft)
+
+*Draft, step `m9-d-systems` (2026-10-27), **pending the user's review in round 60** (Q9 = a). The
+steady interference "comes with the first intercepted briefing" (Decisions, 2026-10-02): that is the
+Act 5 intro, whose pages 2–3 are Vorne's system-wide broadcast; the texts and the page order are the
+[act's](../../campaign/act-5-the-belt/README.md).*
+
+A page whose speaker is on the **enemy channel** (Vorne, later other Ascendancy voices; the Choir keeps
+its own glyph) is an *intercepted* page. It keeps the layout above and changes its dress:
+
+- **Steady interference** over the portrait and the page's image for the whole page, not only the
+  static on open and close: the transmission-static noise at about a third of its open/close strength,
+  three slow rolling bands, and a short horizontal tear (a 2–4 px line shifted sideways for 0.1 s) every
+  2.5–4 s. The text itself stays clean and readable.
+- The **header** reads `INTERCEPTED · ALL CHANNELS` in place of the act and mission line for those
+  pages; the speaker plate reads `VORNE` over `JOVIAN ASCENDANCY`, in **amber** (the enemy channel's
+  colour, as on the radio: [HUD](../hud/README.md#act-5-additions-draft)).
+- The text types out in amber at the normal speed; the typing blip is replaced by a faint carrier hiss
+  that runs while the text types.
+- Vorne's portrait is the chosen amber enemy-channel style (round 04, concept r04-a: his own colours
+  under the amber tint, the three expressions); production portraits are proposed in round 60.
+- In the data a page names its channel (`channel: enemy`), the friendly channel by default; the same
+  flag gives a radio line its enemy dress.
+- A page's image (the gilded lectern, Ceres Hub's lights turning red) is drawn under the interference
+  too, as if received on the same feed.
 
 ## Concept art
 
@@ -130,8 +156,18 @@ Production art, UI batch part U3: the briefing images, rendered by [tools/art/br
       image at the screen's size
 - [x] The Act 2 intro's four images and Level 08's two (one per page, D3 of M5 part B), named in
       the act's and the level's data; `BriefingLayoutTest` passes with them
+- [ ] Intercepted pages as under *Intercepted transmissions* (draft): the steady interference over the portrait and
+      image, the `INTERCEPTED · ALL CHANNELS` header, the amber plate and text, the carrier hiss, `channel: enemy` in
+      the data — **later: Act 5** (the act intro) — M9
 - [ ] The act-title lettering (`assets/ui/act-N-*-title.png`, Acts 1-3) from a `tools/art` generator with the pixels unchanged
       and a `Source` chunk, instead of `tools/concept/ui_assets.py` (round 44, X.l: planned, step ART-K)
+
+## Open questions
+
+- Q9 of [round 60](../../concept-rounds/README.md) (Vorne's broadcast as the Act 5 intro): recommended
+  (a), Okafor, two intercepted Vorne pages, Okafor's answer. Alternatives: (b) all four pages Vorne
+  (loses Act 4's "we hear it together"); (c) Okafor's usual intro with Vorne heard as radio lines at L29's
+  start (cheapest; the broadcast shrinks to the radio box).
 
 ## Decisions
 
@@ -317,3 +353,8 @@ Production art, UI batch part U3: the briefing images, rendered by [tools/art/br
 - 2026-10-22 (user, round 52, closed): Level 23's two briefing images accepted as final (F.9).
 - 2026-10-25 (user, [round 57](../../concept-rounds/round-57/README.md) closed): Level 27's two briefing images accepted as final (F.7).
 - 2026-10-26 (user, [round 58](../../concept-rounds/round-58/README.md) closed): Level 28's two briefing images and the Act 4 outro's four accepted as final (F.7, F.8; the Helix Dynamics emblem as drawn).
+- 2026-10-27 (Act 5 design phase, step m9-d-systems; **pending the user's review in round 60**): the intercepted
+  page drafted for the Act 5 intro's broadcast (Q9 = a): a steady interference over portrait and image, the
+  `INTERCEPTED · ALL CHANNELS` header, the amber speaker plate and text, a carrier hiss instead of the typing blip,
+  `channel: enemy` in the data. Alternatives of Q9 (all four pages Vorne; or no intercepted page, Vorne as radio
+  lines at L29's start) change only how many pages use it.

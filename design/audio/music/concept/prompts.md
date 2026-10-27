@@ -1332,3 +1332,73 @@ first bar after the warning −14.1 LUFS. Listening aids: `choir-descends-deep-s
 **AI prompt** (if replaced by a musician): *"The same pounding choir-and-drums boss theme heard from deep under water:
 the drums and choir muffled and far, a long dark reverb, the kick still heavy, seamless loop on the original's loop
 points."*
+
+# Round 60 — the Act 5 B theme (track 13) and Rook's return sting (track 31)
+
+Step AUD-P (M9 design phase, 2026-10-27), synthesized by `tools/concept/audio/music_r60.py` (deterministic: fixed
+seeds; the round-02 loop format for the themes, the round-08 sting format). Measured only, not listened to by Claude.
+The brief is the music README's *Act 5 music*: "colder, more industrial: the enemy is human now"; no bubbly or popping
+sounds, no resonant plucks, static only as band noise.
+
+## act5-b-theme-r60-a — "Gilded Cage" (#13 Act 5 B, 57.6 s)
+
+**Proposed** (round 60).
+
+**Brief**: EBM and industrial techno with Vorne's motif in the open. A four-on-the-floor kick, a gated, distorted 16th
+bass sequence (the root with octave and fifth jumps, gaps in the gate), struck sheet metal on the backbeat with a
+tight snare under it, chains rattling on the off-16ths, a press hammer every other bar (every bar in C), hats and a
+high metal hit from B; a cold string pad. The motif (E G B D♯) stated by low brass and organ every 8 bars over the
+groove (loop bars 0, 8, 16, and once in the intro), 4.6 dB under the full mix (the README's "about 6 dB, its brass
+statement at full"), and the machines answer it: the struck metal plays it back in eighths in the next two bars.
+
+**Tempo / key**: 126 BPM (the draft's 128 needs a fractional-sample 16th; 126 is the nearest tempo that loops
+sample-exactly), E minor. **Loop**: `LOOPSTART` 357000 (8.095 s), `LOOPLENGTH` 2016000 (45.714 s = 24 bars).
+**Chords**: `Em Em C C Am Am B B` three times (A, B, C). **Measured**: −14.3 LUFS, −1.2 dBTP, seam 0.23.
+
+**AI prompt** (if replaced by a musician): *"Cold EBM / industrial techno at 128 BPM in E minor: four-on-the-floor
+kick, a gated distorted 16th-note bass sequence, struck sheet metal, chains and a hydraulic press as percussion, a
+cold string pad; a villain's four-note motif (E G B D♯) stated by low brass and organ every eight bars, answered by
+the metal percussion. Seamless loop."*
+
+## act5-b-theme-r60-b — "Iron Vein" (#13 Act 5 B, 58.7 s)
+
+**Proposed** (round 60).
+
+**Brief**: darker and roomier, the motif only in the machines. A heavy half-time beat (the kick on 1, the "and" of 3
+and a pick-up, one big snare a bar on 3 with a long dark reverb and a low metal hit), a sub bass on the roots, a
+grinding drill texture (band noise sweeping 700 Hz → 1.5 kHz chopped at 16ths over a growling detuned saw two
+octaves up the root, saturated), a cold pad; a drumless C section (the drill, the pad and the sequencer alone) with a
+kick pick-up into D. The motif (G B♭ D F♯) only as a sequencer arpeggio inside the groove: two detuned saws through a
+soft low-pass (q 0.8), 16ths from the B section on, an octave up on alternate bars in D; 9.4–10.9 dB under the mix.
+
+**Tempo / key**: 140 BPM half-time, G minor (Hollow Rock's shift key). **Loop**: `LOOPSTART` 321300 (7.286 s),
+`LOOPLENGTH` 2116800 (48.000 s = 28 bars). **Chords**: A, B and D `Gm Gm E♭ E♭ Cm Cm D D`; C `Gm E♭ Cm D`.
+**Measured**: −14.3 LUFS, −1.7 dBTP, seam 0.40.
+
+**AI prompt**: *"Dark half-time industrial at 140 BPM in G minor: a heavy kick and one huge reverberant snare a bar,
+a sub bass, a grinding drill-like texture, a cold pad; a sequencer arpeggio of G, B-flat, D, F-sharp running inside
+the groove (no brass, no lead). Seamless loop."*
+
+## rook-return-r60-a — "Horn Call" (#31 Rook's return sting, 5.6 s)
+
+**Proposed** (round 60).
+
+**Brief**: as the prison tender opens and the Ember launches (Level 29), over the theme ducked −6 dB for 5 s: the
+main motif's horn call answering Vorne's motif, a short brass lift on a timpani roll, ending on the theme's tonic.
+This one: a timpani roll and low strings on B for one beat, then the horn call (1 – 5 – 8 – 9 – 10 in D major: D A D E
+F♯) on horns doubled an octave down, over D – A – G strings; its last note held over a B minor chord (organ, strings,
+a timpani hit, a sub). 135 BPM (the A theme's tempo). **Measured**: −14.0 LUFS, −1.9 dBTP.
+
+**AI prompt**: *"A five-second heroic sting: a short timpani roll, then a French-horn call D–A–D–E–F♯ over strings,
+landing on a B minor chord with the horn's F♯ held on top."*
+
+## rook-return-r60-b — "Answer" (#31 Rook's return sting, 6.2 s)
+
+**Proposed** (round 60).
+
+**Brief**: as a, but the answer is heard: Vorne's motif first, low and quiet (organ and cellos, B D F♯ A♯ in eighths,
+one bar), a snare roll and a swell, then the horn call answers it brighter (trumpets an octave up over the horns),
+landing on the same B minor chord with a timpani hit and a cymbal. **Measured**: −14.0 LUFS, −2.2 dBTP.
+
+**AI prompt**: *"A six-second sting: a sinister four-note organ figure, low and quiet, answered by a bright heroic
+horn-and-trumpet call over a snare roll, landing on a B minor chord."*

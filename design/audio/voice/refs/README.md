@@ -4,7 +4,7 @@ design: draft
 implementation: in-progress
 art: chosen
 depends-on: [..]
-updated: 2026-10-22
+updated: 2026-10-27
 ---
 
 # Reference voices
@@ -45,6 +45,9 @@ How the clips are chosen and used: [voice](../README.md#reference-voices).
 | `ref-lance-control.wav` | Lance Control (the Orbital Lance's call) | Celine Major | [Campaigns of the Civil War, ch. 1 (Geer)](https://archive.org/details/campaignsofthecivilwar_2603_librivox) | public domain (Public Domain Mark 1.0) | chosen (round 37, S.16 = b) |
 | `ref-conamara-r51-a.wav` | Dr. Brandt (`conamara`), candidate a | Margaret Espaillat | [Eminent Victorians, ch. 1 (Strachey)](https://archive.org/details/eminent_victorians_1204_librivox) | public domain (Public Domain Mark 1.0) | chosen (round 51, V.1 = a) |
 | `ref-thera-control-r52-b.wav` | Thera Deep Control (`thera-control`), candidate b | John Van Stan | [Early Greek Philosophy & Other Essays, ch. 1 (Nietzsche)](https://archive.org/details/earlygreekphilosophy_2103_librivox) | public domain (Public Domain Mark 1.0) | chosen (round 52, V.1 = b) |
+| `ref-vorne-r60-a.wav` | Vorne (`vorne`), candidate a | Jeffrey Church | [The Genealogy of Morals, ch. 1 (Nietzsche)](https://archive.org/details/genealogy_of_morals_1507_librivox) | public domain (Public Domain Mark 1.0) | proposed (round 60) |
+| `ref-vorne-r60-b.wav` | Vorne (`vorne`), candidate b | Clive Catterall | [The Prince (version 4), ch. 1 (Machiavelli)](https://archive.org/details/theprincever4_1501_librivox) | public domain (Public Domain Mark 1.0) | proposed (round 60) |
+| `ref-vorne-r60-c.wav` | Vorne (`vorne`), candidate c | Gregg Margarite | [Rastignac the Devil, ch. 2 (Farmer)](https://archive.org/details/rastignac_devil_1003_librivox) | public domain | proposed (round 60) |
 
 Round 19's chosen candidates were renamed to `ref-<speaker>.wav`; the rejected candidates and
 round 18's Tranquility Control clip (David Leeson), which no speaker uses any more, were deleted

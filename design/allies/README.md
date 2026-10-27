@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../enemies, ../art-direction, ../ui/hud]
-updated: 2026-10-18
+updated: 2026-10-27
 ---
 
 # Allies
@@ -22,6 +22,7 @@ equipment, see [wingmen](../player/wingmen/README.md).
 | Part | Summary | Design | Impl | Art |
 |---|---|---|---|---|
 | [ares-landing-dome](ares-landing-dome/README.md) | Level 17's greenhouse domes: `ground`, scrolling with the ground, broken by hits (3; easy 4, hard 2) from hooked bomb runs, hooked lobs and rolls; never fails the mission | review | done | final |
+| [mining-tug](mining-tug/README.md) | Level 31's refugee tug *Bellwether*: a `huge` `ground` hull of three sections (bow, cargo, engines) holding a station in the lower field; hurt only by hooked missiles, dives and Shard links; all three lost fails the escort | draft | not-started | proposed |
 
 ## Design
 
@@ -362,3 +363,6 @@ Prompts and briefs: [concept/prompts.md](concept/prompts.md). Generator:
   under its slug (`hits: 3` instead of an `hp`, `damaged_by` `bombs: 1`, `lobs: true`, `rolls: 1`, `sprite:
   ares-dome`); the roster row became the Contents row. New keys: an ally's `hits` (it counts hits; its hp is
   that count) and `sprite`, `damaged_by.bombs` and `damaged_by.rolls`.
+- 2026-10-27 (Act 5 design phase, step `m9-d-levels-2`; pending the user's review in round 60): the
+  [mining tug](mining-tug/README.md) added as its own draft document for Level 31 (Q4 a; the L31 build gap
+  check's Q-D1 a and Q-D2 a): a `huge` hull of three sections, hurt only by hooked attacks.

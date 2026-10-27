@@ -3,7 +3,7 @@ title: Campaign
 design: approved
 implementation: in-progress
 art: none
-updated: 2026-10-26
+updated: 2026-10-27
 ---
 
 # Campaign
@@ -24,7 +24,7 @@ consecutive levels.
 | [act-2-homefront](act-2-homefront/README.md) | Levels 08–14 · Earth surface: megacities, oceans, arctic · boss Siege Spire | approved | done | final |
 | [act-3-red-dust](act-3-red-dust/README.md) | Levels 15–21 · Mars · first hints of human involvement · boss Dust Colossus | approved | in-progress | final |
 | [act-4-deep-water](act-4-deep-water/README.md) | Levels 22–28 · Europa ice & under-ice ocean · underwater play · boss Abyssal Maw | approved | in-progress | final |
-| [act-5-the-belt](act-5-the-belt/README.md) | Levels 29–35 · asteroid belt & stations · the betrayal · boss Iron Sovereign | draft | not-started | none |
+| [act-5-the-belt](act-5-the-belt/README.md) | Levels 29–35 · asteroid belt & stations · the betrayal in the open: Vorne's broadcast, Ceres Hub turns, Rook freed · boss Iron Sovereign | draft | not-started | proposed |
 | [act-6-jovian-storm](act-6-jovian-storm/README.md) | Levels 36–42 · Jupiter cloud cities & Callisto · hunting Vorne · boss Ascendant | draft | not-started | none |
 | [act-7-beyond-the-gate](act-7-beyond-the-gate/README.md) | Levels 43–50 · Tether Gate & Vrell space · final boss Choir Heart | draft | not-started | none |
 
@@ -157,7 +157,8 @@ drives the hangar's "new in shop" markers and the intel panel's "recommended tra
 
 Other unlock anchors (items and prices in [player](../player/README.md)): first special,
 the Airstrike, from L04; escort slot and Rook as wingman from L08; the Bulwark heavy drone from
-L22 (it covers Rook's absence in L27–L29); the Hunter drone from L29.
+L22 (it covers Rook's absence in L27–L29, until his rescue in L29); the Hunter drone moves to Act 6 (round 60
+Q12 c, draft: the Bulwark already covers Rook's absence). Act 5's `shield-breaker` item is the Tesla Coil Pod (L29).
 
 ### Credit budget
 
@@ -219,8 +220,8 @@ criteria), Open questions, Decisions. The worked example is
       Levels 01–21 as one campaign on every difficulty, M7 part I)
 - [x] Campaign sequence 22→28 in order, Act 4's outro after Level 28 ending the release (M8 parts B–H;
       `ActPlaythroughTest` flies Levels 01–28 as one campaign on every difficulty, M8 part I)
-- [ ] Campaign sequence 29→50 in order — **later: Act 5** to Act 7 (Levels 29–50), each level with
-      its act
+- [ ] Campaign sequence 29→50 in order — **later: Act 5** (M9 parts B–I, Levels 29–35, the release's end moved
+      to Level 35) to Act 7 (Levels 36–50), each level with its act
 - [x] Act transitions show an act title card and the act's opening briefing.
 - [x] Each level's threat profile is available as data for the hangar intel panel: Levels 01–07
       (`threat_profile` in each level's data.yaml, read by `LevelData` and `Intel`)
@@ -230,7 +231,8 @@ criteria), Open questions, Decisions. The worked example is
       `Intel`, `IntelPanelLayoutTest` over every level)
 - [x] The threat profiles of Levels 22–28 in their data files, with Dr. Varga's intel lines (M8 parts B–H;
       `Intel`, `IntelPanelLayoutTest` over every level)
-- [ ] The threat profiles of Levels 29–50 — **later: Act 5** to Act 7, in each level's data file as
+- [ ] The threat profiles of Levels 29–50 — **later: Act 5** (M9 parts B–H; the drafts' hand tables are in the
+      [Act 5 README](act-5-the-belt/README.md#density-and-threat-profile)) to Act 7, in each level's data file as
       it is written
 - [x] Shop unlocks follow the *Loadout pressure* table (data-driven, per level): each item's
       `unlock` or `available` in its data (`Hangar.available`, `Catalogue`); the Act 1 rows
@@ -240,7 +242,8 @@ criteria), Open questions, Decisions. The worked example is
 - [x] The `anti-sub` row (L11) checked with its weapon in play: the Torpedo Pod (M5 part E;
       `TorpedoTest`, `SubLayerTest`)
 - [x] The `beam` row (L15) checked with its weapon in play (M7 part A: the Ion Beam)
-- [ ] The `shield-breaker` row (L29) checked with its weapon in play — **later: Act 5**
+- [ ] The `shield-breaker` row (L29) checked with its weapon in play — **later: Act 5** (M9 part A, the Tesla
+      Coil Pod)
 - [x] Campaign progress (current level, unlocks) is stored in the save game
       ([systems](../systems/README.md)).
 
@@ -307,3 +310,7 @@ criteria), Open questions, Decisions. The worked example is
   the user's) and a floor of what the player sees (2.5 enemies on the screen, 10 enemy shots a minute;
   `ActFloorTest`), since units per minute alone let waves of one-shot popcorn that die before they
   fire pass. Levels 08 and 09 rewritten to meet it; Levels 11–17 measured below it are left pending.
+- 2026-10-27 (Act 5 design phase, step m9-d-act; pending the user's review in round 60): Act 5's notes: the
+  act's Contents summary names the betrayal in the open; the Hunter drone moves from L29 to Act 6 (Q12 c); the
+  Act 5 items name their M9 parts. The act's density band from the drafts is 86–114 a minute at medium (the
+  minimum 70 holds); L34 stays the breather (density 2, ≈ 86 a minute); no mid-boss in Act 5.

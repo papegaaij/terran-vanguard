@@ -1,0 +1,90 @@
+---
+title: Swarm Tail
+design: draft
+implementation: not-started
+art: none
+depends-on: [.., ../micro-missile-pod, ../tail-gun, ../../generator, ../../../systems/economy]
+updated: 2026-10-27
+---
+
+# Swarm Tail
+
+## Summary
+
+Act 5's rear gun: micro-missiles fired backwards out of the tail that curve round onto the nearest
+enemy **behind or beside** the ship first. It is the homing rear answer to the belt's attacks from
+behind (the Minelayers laying their lines, the Rail Serpents' trains entering from the sides and the
+rear) and the first rear weapon that reaches `high-air`. Draft for [round 60](../../../concept-rounds/README.md),
+pending the user's review (Q12 = c); numbers are hand-written, nothing is in `data.yaml` yet (M9 part A).
+
+## Design
+
+| Property | Value (draft) |
+|---|---|
+| Slot | Rear gun |
+| Traits | `rear`, `homing` |
+| Layers hit | `air`, `low-air`, `ground` (hardened targets glance off) and **`high-air`** (homing), as the [Micro-missile Pod](../micro-missile-pod/README.md) ([layer rules](../../../enemies/README.md#layer-rules)); not the `sub` layer |
+| Price | 3 500 cr |
+| Upgrade cost L2 / L3 / L4 / L5 | 1 750 / 3 500 / 7 000 / 14 000 cr (the common factors on the price); sell-back per [economy](../../../systems/economy/README.md) |
+| Unlock | L30 (in the shop from the hangar visit before it) |
+| Projectile | 4×10 px micro-missile, launched backwards at 260 px/s and accelerating to 480 px/s over 0.3 s, turn 240°/s, lifetime 1.6 s, seeking within 320 px |
+| Sound family | `micromissile` ([weapon sound families](../../../audio/sfx/README.md#weapon-sound-families)), a little lower than the pod's |
+| Projectile family (VFX) | `micromissile` (the projectile sheet of concept round 08), the exhaust tinted warmer so a player can tell his rear swarm from the wing pods' |
+
+### Per level (draft, hand-written)
+
+| Level | Missiles | Pattern | Rate /s | Damage | Volley DPS | Single-target DPS | Extra | Draw MW | Upgrade cost |
+|---|---|---|---|---|---|---|---|---|---|
+| 1 | 1 | single, backwards | 3 | 5 | 15.0 | 15.0 | turn 240°/s | 3 | — |
+| 2 | 1 | single, backwards | 3.5 | 6 | 21.0 | 21.0 | turn 240°/s | 3.5 | 1 750 |
+| 3 | 2 | pair, backwards ±25° | 2.5 | 6 | 30.0 | 30.0 | turn 240°/s | 4 | 3 500 |
+| 4 | 2 | pair, backwards ±25° | 3 | 7 | 42.0 | 42.0 | turn 260°/s | 4.5 | 7 000 |
+| 5 | 3 | fan, backwards ±30° | 2.5 | 7.33 | 55.0 | 55.0 | turn 260°/s | 5 | 14 000 |
+| OD | 3 | fan, backwards ±30° | 3 | 7.5 | 67.5 | 67.5 | turn 280°/s | — (ignores cap) | — |
+
+DPS L1 and L5 are the roster's (15 / 55); L2–L4 ours. Seeking weapon: single-target DPS counts
+every missile.
+
+### Behaviour
+
+- **Rear first:** at launch each missile picks the nearest enemy **behind the ship's nose line**
+  (below the row of its centre, in the normal scroll) within its seek radius; only with none there
+  does it take the nearest enemy anywhere in reach, curving back up past the ship (the roster's
+  "curve back up"). With no target it flies straight back and burns out at the end of its lifetime.
+  It picks again when its target dies, with the same rule.
+- In a reversed section (Level 20's way, where "behind" is the top of the screen) the rule follows
+  the scroll, as the other `rear` weapons do.
+- It strikes the first hit box it touches and is spent; it never hits the ship, Rook or an ally.
+- The Targeting computer's +20 % turn reaches it, as it reaches every homing missile of the ship
+  ([ship systems](../../systems/README.md#targeting-computer-user-decision-d6-of-m5-part-a)).
+- Mines: a missile never picks a [Minelayer](../../../enemies/space/minelayer/README.md)'s mine as
+  its target (homing shots skip mines, the Minelayer's rule: the player chooses where to open a line),
+  but one that flies into a mine on its way sets it off like any shot.
+- **Power:** 3 → 5 MW for 15 → 55 DPS: less DPS a MW than the Tail Gun (5 → 11 against its
+  10 → 12), and only from L2 more DPS than a Tail Gun L3; what it buys is the homing reach behind and
+  to the sides, where every missile counts. The typical plan
+  buys it at the L30 visit at L2 and raises it to L3 at the L32 visit
+  ([Act 5 hand plan](../../generator/README.md#act-5-hand-plan-draft)).
+
+## Implementation
+
+- [ ] Weapon data in `data.yaml` (not yet written) (numbers as above; the homing delivery fired backwards with the
+  rear-first pick and its `accelerate`) — M9 part A
+- [ ] The rear-first target pick and the re-pick on a kill; the reversed-scroll rule; the Targeting computer's turn — M9 part A
+- [ ] Shop entry from the L30 visit; the balance plan's purchases (see the hand plan) — M9 part A
+- [ ] The warmer exhaust tint and the lower `micromissile` pitch — M9 part A (round 60 proposals)
+
+## Open questions
+
+- Q12 of [round 60](../../../concept-rounds/README.md) (Act 5's arsenal): recommended (c), the
+  Tesla Coil Pod and this weapon with the core tiers. Alternatives: (a) lean, without this weapon (the
+  Tail Gun and the Fan Blaster stay the rear answers, the rear Minelayers fall to Rook and the beam's
+  sweep); (b) the full roster (Plasma Arc, Time Dilation, the Hunter drone and the Bastion Shield in
+  Act 5 too).
+
+## Decisions
+
+- 2026-10-27 (Act 5 design phase, step m9-d-systems; **pending the user's review in round 60**):
+  promoted from the weapons roster with hand-written numbers (15 / 55 DPS, 3 → 5 MW and 3 500 cr
+  kept, L2–L4 ours, the L3 pair and the L5 fan of three), the rear-first pick, the `micromissile`
+  families with a warmer tint.

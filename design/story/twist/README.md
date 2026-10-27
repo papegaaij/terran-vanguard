@@ -3,7 +3,7 @@ title: The mid-campaign twist
 design: approved
 implementation: n/a
 art: n/a
-updated: 2026-10-01
+updated: 2026-10-27
 ---
 
 # The mid-campaign twist
@@ -28,7 +28,7 @@ plans to rule what is left of humanity. The Vrell use him and discard him.
 | 1–2 | Pure alien invasion. Ascendancy only in news snippets. |
 | 3 | Vrell avoid Helix sites on Mars; Varga notices, Okafor silences her. Unmarked human-built drones and a walker with Helix alloy (L18–19). |
 | 4 | Human relay beacons under Europa's ice guide Vrell ships; a Helix hull code (L27). Act ends with Ascendancy ships attacking Aegis Wing. |
-| 5 | Vorne's broadcast. Ascendancy and Vrell fight together in the belt. Boss: Iron Sovereign. |
+| 5 | Vorne's broadcast opens the act. Ascendancy and Vrell fight together in the belt: Ceres Hub turns and half its garrison mutinies, Rook is freed there (L29); Helix bought the belt with Vrell cures (L31); the alliance is uneasy, the leeches feed on Ascendancy ships too (L33). Boss: Iron Sovereign; its data points to Callisto, Vorne tries to buy Lancer (L35). *(Act 5 draft, pending round 60.)* |
 | 6 | Hunt for Vorne at Jupiter. The Vrell turn on the Ascendancy. Boss: Ascendant; Vorne escapes to the gate. |
 | 7 | Through the gate; Vorne's end (L48); hint of the Silence. |
 
@@ -97,9 +97,12 @@ Act 7 hint of the Silence, which leaves room for a sequel.
 
 ## Open questions
 
-- None open.
+- None open for the twist itself. Act 5's story questions of round 60 (the broadcast, the mutineers,
+  Rook's rescue) are listed in the [story](../README.md#open-questions).
 
 ## Decisions
 
 - 2026-09-30: Three variants written up; A used as working assumption until the user chooses.
 - 2026-09-30: Concept round 01: the user chose **variant A** — the Ascendancy opened the gate. B and C are no longer pursued; C's refugee idea survives only as the late-game Silence hint.
+- 2026-10-27 (Act 5 design phase, step m9-d-story; pending the user's review in round 60): variant A's Act 5
+  row follows the act's draft beats (see the [story](../README.md#the-war-act-by-act)).

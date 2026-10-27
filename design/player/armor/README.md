@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: n/a
 depends-on: [../shields, ../../systems/retry, ../../systems/difficulty]
-updated: 2026-10-20
+updated: 2026-10-27
 ---
 
 # Armour
@@ -29,6 +29,11 @@ auto-repair or armour patches). When it reaches zero the ship is destroyed and t
 <!-- /data -->
 
 - Plating draws no power and has no speed penalty. Its price is the only cost.
+- **Act 5** (draft, pending the user's review in round 60): Composite IV (140) is in the shop from the
+  L29 visit; the typical plan buys it at the L31 visit, before the escort level's hits and once the
+  Swarm Tail is paid (see the [Act 5 hand plan](../generator/README.md#act-5-hand-plan-draft)). Plating is
+  the one upgrade a generator drain cannot touch, which makes it the Act 5 buy for a power-starved
+  loadout.
 - **Repairs** happen between levels in the hangar. Cost per point depends on difficulty (easy:
   free, medium: 5 cr, hard: 10 cr). See [difficulty](../../systems/difficulty/README.md).
   Repairing is optional: flying a level damaged is a legitimate way to save credits.
@@ -91,3 +96,5 @@ auto-repair or armour patches). When it reaches zero the ship is destroyed and t
   in round 26.
 - 2026-10-05: Concept round 26 closed (user: the round accepted as proposed): Okafor's low-armour line accepted as rendered (`assets/voice/okafor/14b14dfe36a3.ogg`, "hull" as heard), with its **urgent** queueing as built: it interrupts the line on the radio, the cut line replays after it, and the timed lines behind it start late (typically 2–13 s, at worst 18 s in Level 03 from t=36.5). Rejected: dropping the cut line instead of replaying it (not chosen).
 - 2026-10-20 (user, round 44, X.k): **`art: n/a`**: the part has only the shop's icons, made with the shop (`tools/art/icons.py`), and no assets of its own.
+- 2026-10-27 (Act 5 design phase, step m9-d-systems; **pending the user's review in round 60**): Composite IV stays
+  in Act 5 (Q12 = c, the core tiers); the hand plan buys it at the L31 visit.
