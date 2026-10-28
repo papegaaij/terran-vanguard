@@ -406,6 +406,27 @@ public final class LevelMusic implements Disposable {
         sfx.play(Sfx.REVEAL_STING, JINGLE_VOLUME, 1, 0);
     }
 
+    /** M9 part B: the theme's duck under Rook's return sting (design/audio/music, track 31), dB. */
+    static final double ROOK_RETURN_DUCK_DB = -6;
+    /** M9 part B: whether Rook's return sting has played in this attempt (stopped with the music). */
+    private boolean rookReturned;
+
+    /** M9 part B: the sting's length (music/rook-return.ogg, 5.6 s): the duck lasts as long. */
+    static final double ROOK_RETURN_SECONDS = 5.6;
+
+    /**
+     * M9 part B (design/campaign Level 29, the rescue: track 31): Rook's return sting plays once as the Ember launches
+     * from the tender's hold, the theme ducked {@value #ROOK_RETURN_DUCK_DB} dB under it (not after the music's cut).
+     */
+    public void rookReturn() {
+        if (cut) {
+            return;
+        }
+        sfx.play(Sfx.ROOK_RETURN_STING, JINGLE_VOLUME, 1, 0);
+        rookReturned = true;
+        duck(ROOK_RETURN_DUCK_DB, ROOK_RETURN_SECONDS);
+    }
+
     /** M8 part H: whether the reveal sting has played in this attempt, for the tests. */
     boolean revealed() {
         return revealed;
@@ -1057,6 +1078,15 @@ public final class LevelMusic implements Disposable {
         if (revealed) {
             sfx.stop(Sfx.REVEAL_STING);
         }
+        stopRookReturn();
+    }
+
+    /** M9 part B: Rook's return sting stops with the music (the ship lost, a restart, the level left). */
+    private void stopRookReturn() {
+        if (rookReturned) {
+            sfx.stop(Sfx.ROOK_RETURN_STING);
+            rookReturned = false;
+        }
     }
 
     /** The level restarts: the theme waits for its section again, at its start level. */
@@ -1085,6 +1115,7 @@ public final class LevelMusic implements Disposable {
             sfx.stop(Sfx.REVEAL_STING);
             revealed = false;
         }
+        stopRookReturn();
         stopTheme();
         stopBoss();
         stopLoop();
@@ -1138,6 +1169,7 @@ public final class LevelMusic implements Disposable {
         if (revealed) {
             sfx.stop(Sfx.REVEAL_STING);
         }
+        stopRookReturn();
         sfx.stop(currentAmbience);
         if (fadingAmbience != null) {
             sfx.stop(fadingAmbience);

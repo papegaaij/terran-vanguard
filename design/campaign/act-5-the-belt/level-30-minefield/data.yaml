@@ -1,0 +1,829 @@
+# Level 30 – Minefield: the level script, rendered into README.md (briefing, threat profile, layout, waves, radio,
+# credit budget). Times are seconds from the level start. M9 part C, step C2, from the README's approved hand tables
+# (round 60) and ART-C's backdrop proposal (concept/backdrop-proposal.yaml: its backdrop block adopted as it is).
+# Schema: ../../../tech/architecture/schemas-levels/README.md (the Act 5 keys: schemas-act-4)
+# Keys new in M9 part C (flown from step C1; loaded and checked from step C1, mapped in step C2; drawn and played by
+# step C4): `ground: none` (no ground layer: the bomb deliveries read NO GROUND and stay idle, nothing on the ground)
+# and a mine layers' wave's `mine_lines` (unit i lays its line at rows[i % n] px below the top edge with its gap at the
+# cluster boundary nearest gaps[i % m] px from the left edge; the column's units 2.5 s apart, the staggered entry).
+# Step C2's own placements (pending the user's review in round 63): the dead beacon buoy (the secret) flies as a tow
+# (Level 07's lifeboat rule: its 24 px housing takes 4 hits and frees the crate), not as ART-C's debris chunk: a debris
+# chunk carries no secret; the large rocks at x 60 or 420 only (ART-C's x 240 sat in both gap points); every rock
+# drifts at the scroll plus its own drift (the belt's "30–60 px/s plus the scroll", the large ones 20); the convoy
+# Gunships fly a `column` beside their escorts' `carrier + escorts` wave (a launcher is a carrier, its escorts orbit it).
+scroll_speed: 120     # the lane's first section; the minefield 80, the lane's end 100
+launch_seconds: 5
+bounty_scale: 0.43    # every bounty × 0.43: the README's estimate 0.45, fitted in step C2 with the launched Darts (two streams a Gunship) and the offbeat waves (levelReport: typical haul on budget(30) 4,980)
+control_prompts: []
+medium: vacuum        # the belt: short flashes, debris rings, drifting wrecks (design/world/belt)
+ground: none          # space only: no ground layer (J3); the Airstrike and the EMP Burst work
+threat_profile:  # the hangar intel panel (design/ui/hangar) and the README's Threat profile table
+  setting: The belt, shipping lane
+  layers: [air]
+  density: 3
+  traits: [rear, piercing]
+  hazards: [mine lines, drifting rocks]
+  boss: none
+  objective: CLEAR THE LANE   # the OBJECTIVE field from sensor L1
+  varga:
+    none: The lane out of Ceres, Lancer. Open space, and mined.
+    l1: "Layers come from behind. No ground: the bombs stay idle."
+    l2: "New: Minelayers, plated Gunships, drone trains, darts."
+    l3: A rear gun for the layers, piercing to cut the lines.
+  notes:
+    Dominant layers: '`space` (= `air`: Minelayers, Gilded Gunships and their Darts, Rail Serpents, Talon wings, Skitter and Mote streams, Asteroid Mites on rocks); **no ground**'
+    Attack directions: '{directions}'
+    Density: '{density}'
+    Recommended traits: '{traits}'
+    Hazards: 'Mine lines (proximity, chained clusters); drifting rocks (small break, large are walls)'
+    Boss / mid-boss: none
+    Sensor-suite detail: '**none**: the belt, shipping lane, `space`, front and rear · **L1**: + directions (rear, sides), density {density}, hazards "mine lines" and "drifting rocks", the objective `{objective}`, the secondary `CONVOY 0/3` and the row `NO GROUND` · **L2**: + Minelayer, Gilded Gunship, Rail Serpent, Dart Drone (new), Talon, Asteroid Mite, Skitter and Mote portraits · **L3**: + `rear` and `piercing` highlighted, the wave strip marking the rear entries and the convoy'
+
+sections:  # back to back from t = 0; each speed change eased over 2 s (ramp)
+  - name: Lane Marker
+    end: 30
+    atmosphere: clear
+    tiles: [lane-space, lane-dust]
+    notes:
+      layers:
+        low-air: the first beacon buoys.
+        air: a few small rocks with riders.
+        deep: Ceres falling behind, the dust band.
+      purpose: 'Popcorn and Talons; **the first Minelayer alone** (t=20) and its single line: learn the gap.'
+  - name: The Seeded Lane
+    end: 88
+    speed: 80
+    ramp: 2   # eased from 120 over its first 2 s
+    atmosphere: clear
+    tiles: [lane-space, lane-dust]
+    notes:
+      layers:
+        air: 'the rock field: small breakable rocks and **one large** at a time.'
+        low-air: buoys, some dark (shot out).
+      purpose: 'Lines in pairs from behind; the Gunship alone (t=40, quiet window t=38–42); the first Rail Serpent from the right (t=62).'
+  - name: Convoy Crossing
+    end: 134
+    speed: 80
+    atmosphere: clear
+    tiles: [lane-space, lane-dust]
+    notes:
+      layers:
+        air: rocks (up to two large); the dead beacon buoy drifting at t≈118 (the secret).
+        deep: the convoy's running lights far ahead before it arrives.
+      purpose: 'The **convoy secondary** (t=96–110) between lines laid ahead of it; a train from behind (t=122).'
+  - name: Lane End
+    end: 178
+    speed: 100
+    ramp: 2   # eased from 80
+    atmosphere: clear
+    tiles: [lane-space, lane-dust]
+    notes:
+      layers:
+        air: thinning rocks.
+        low-air: the lane's last beacon, a tall mast with a green strobe.
+        deep: the open belt ahead.
+      purpose: 'Lines, a Serpent pincer (t=145), a Gunship pair, the run to the open belt. Level end at t=178 as the last beacon passes the bottom edge.'
+
+tows:  # the dead beacon buoy (the secret): drifting down the left edge on the play plane; its housing (the tow's cable box) takes 4 hits and frees the crate (Level 07's tow rule: shots pass the rest)
+  - {t: 118, x: 60, drift: [4, -92], boat: [28, 28], pod: [20, 20], tether: [0, 0], cable: [24, 24], hits: 4, reveals: dead beacon buoy}
+
+debris:  # the belt's rocks (design/world/belt, hazards; Level 03's rules): small ones break and pay nothing, large ones are walls (contact `large` 20 once a second); bullets of both sides stop on both; sprites assets/sprites/debris-<chunk>_N (16 spin frames)
+  chunks:
+    belt-large-a: {size: [88, 80], damage: 20}
+    belt-large-b: {size: [66, 60], damage: 20}
+    belt-a: {size: [40, 36], hp: 6}
+    belt-b: {size: [36, 32], hp: 6}
+    belt-c: {size: [32, 28], hp: 6}
+  clearance: 120        # px: a chunk never enters closer to the ship than this (it moves sideways)
+  max_large: 2          # large rocks on the screen at once (section 2 places one at a time)
+  easy: {leave_out_large: 3}
+  placed:               # t it enters at the top edge, its x, the chunk, its drift [x, y] px/s (y up: the scroll plus 30–60, the large ones plus 20); large rocks at x 60 or 420, out of the gap points (160, 320)
+    - {t: 8, x: 100, chunk: belt-a, drift: [8, -150]}
+    - {t: 11.4, x: 380, chunk: belt-b, drift: [-12, -160]}
+    - {t: 14.8, x: 200, chunk: belt-c, drift: [16, -170]}
+    - {t: 18.2, x: 300, chunk: belt-a, drift: [-8, -180]}
+    - {t: 21.6, x: 140, chunk: belt-b, drift: [12, -150]}
+    - {t: 25, x: 340, chunk: belt-c, drift: [-16, -160]}
+    - {t: 28.4, x: 60, chunk: belt-a, drift: [8, -170]}
+    - {t: 31.8, x: 420, chunk: belt-b, drift: [-12, -140]}
+    - {t: 34.4, x: 100, chunk: belt-c, drift: [16, -110]}
+    - {t: 36, x: 60, chunk: belt-large-a, drift: [5, -100]}
+    - {t: 37, x: 380, chunk: belt-a, drift: [-8, -120]}
+    - {t: 42.2, x: 300, chunk: belt-c, drift: [-16, -140]}
+    - {t: 44.8, x: 140, chunk: belt-a, drift: [8, -110]}
+    - {t: 47.4, x: 340, chunk: belt-b, drift: [-12, -120]}
+    - {t: 50, x: 420, chunk: belt-large-b, drift: [-5, -100]}
+    - {t: 50, x: 60, chunk: belt-c, drift: [16, -130]}
+    - {t: 52.6, x: 420, chunk: belt-a, drift: [-8, -140]}
+    - {t: 55.2, x: 100, chunk: belt-b, drift: [12, -110]}
+    - {t: 57.8, x: 380, chunk: belt-c, drift: [-16, -120]}
+    - {t: 60.4, x: 200, chunk: belt-a, drift: [8, -130]}
+    - {t: 63, x: 300, chunk: belt-b, drift: [-12, -140]}
+    - {t: 65.6, x: 140, chunk: belt-c, drift: [16, -110]}
+    - {t: 66, x: 420, chunk: belt-large-a, drift: [-5, -100]}
+    - {t: 68.2, x: 340, chunk: belt-a, drift: [-8, -120]}
+    - {t: 70.8, x: 60, chunk: belt-b, drift: [12, -130]}
+    - {t: 73.4, x: 420, chunk: belt-c, drift: [-16, -140]}
+    - {t: 76, x: 100, chunk: belt-a, drift: [8, -110]}
+    - {t: 78.6, x: 380, chunk: belt-b, drift: [-12, -120]}
+    - {t: 80, x: 60, chunk: belt-large-b, drift: [5, -100]}
+    - {t: 81.2, x: 200, chunk: belt-c, drift: [16, -130]}
+    - {t: 83.8, x: 300, chunk: belt-a, drift: [-8, -140]}
+    - {t: 86.4, x: 140, chunk: belt-b, drift: [12, -110]}
+    - {t: 89, x: 340, chunk: belt-c, drift: [-16, -120]}
+    - {t: 91.6, x: 60, chunk: belt-a, drift: [8, -130]}
+    - {t: 92, x: 420, chunk: belt-large-a, drift: [-5, -100]}
+    - {t: 94.2, x: 420, chunk: belt-b, drift: [-12, -140]}
+    - {t: 96.8, x: 100, chunk: belt-c, drift: [16, -110]}
+    - {t: 99.4, x: 380, chunk: belt-a, drift: [-8, -120]}
+    - {t: 100, x: 60, chunk: belt-large-b, drift: [5, -100]}
+    - {t: 102, x: 200, chunk: belt-b, drift: [12, -130]}
+    - {t: 104.6, x: 300, chunk: belt-c, drift: [-16, -140]}
+    - {t: 107.2, x: 140, chunk: belt-a, drift: [8, -110]}
+    - {t: 109.8, x: 340, chunk: belt-b, drift: [-12, -120]}
+    - {t: 112, x: 60, chunk: belt-large-a, drift: [5, -100]}
+    - {t: 112.4, x: 60, chunk: belt-c, drift: [16, -130]}
+    - {t: 115, x: 420, chunk: belt-a, drift: [-8, -140]}
+    - {t: 117.6, x: 100, chunk: belt-b, drift: [12, -110]}
+    - {t: 120, x: 420, chunk: belt-large-b, drift: [-5, -100]}
+    - {t: 120.2, x: 380, chunk: belt-c, drift: [-16, -120]}
+    - {t: 122.8, x: 200, chunk: belt-a, drift: [8, -130]}
+    - {t: 125.4, x: 300, chunk: belt-b, drift: [-12, -140]}
+    - {t: 128, x: 60, chunk: belt-large-a, drift: [5, -100]}
+    - {t: 128, x: 140, chunk: belt-c, drift: [16, -110]}
+    - {t: 130.6, x: 340, chunk: belt-a, drift: [-8, -120]}
+    - {t: 133.2, x: 60, chunk: belt-b, drift: [12, -130]}
+    - {t: 135.8, x: 420, chunk: belt-c, drift: [-16, -160]}
+    - {t: 138.4, x: 100, chunk: belt-a, drift: [8, -130]}
+    - {t: 140, x: 420, chunk: belt-large-b, drift: [-5, -120]}
+    - {t: 141, x: 380, chunk: belt-b, drift: [-12, -140]}
+    - {t: 143.6, x: 200, chunk: belt-c, drift: [16, -150]}
+    - {t: 146.2, x: 300, chunk: belt-a, drift: [-8, -160]}
+    - {t: 148.8, x: 140, chunk: belt-b, drift: [12, -130]}
+    - {t: 150, x: 420, chunk: belt-large-a, drift: [-5, -120]}
+    - {t: 151.4, x: 340, chunk: belt-c, drift: [-16, -140]}
+    - {t: 154, x: 60, chunk: belt-a, drift: [8, -150]}
+    - {t: 156.6, x: 420, chunk: belt-b, drift: [-12, -160]}
+    - {t: 159.2, x: 100, chunk: belt-c, drift: [16, -130]}
+    - {t: 160, x: 60, chunk: belt-large-b, drift: [5, -120]}
+    - {t: 161.8, x: 380, chunk: belt-a, drift: [-8, -140]}
+    - {t: 164.4, x: 200, chunk: belt-b, drift: [12, -150]}
+    - {t: 167, x: 300, chunk: belt-c, drift: [-16, -160]}
+    - {t: 168, x: 420, chunk: belt-large-a, drift: [-5, -120]}
+    - {t: 169.6, x: 140, chunk: belt-a, drift: [8, -130]}
+
+waves:
+  - {t: 4, formation: snake, enemy: skitter, count: 6, from: front, edge: left}
+  - t: 7
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    speed: 200
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+  - {t: 8.5, formation: line abreast, enemy: talon, count: 2, from: front, speed: 130, notes: "Step C2: a firing Talon pair on the offbeat (the beam erases the fodder within a second)"}
+  - {t: 10, formation: line abreast, enemy: talon, count: 4, from: front, speed: 130}
+  - t: 13
+    formation: swarm
+    enemy: asteroid-mite
+    count: 4
+    from: front
+    on_rocks:
+      chunk: belt-a
+      riders: 2
+      rocks:
+        - {at: [120, -30], drift: [10, -160]}
+        - {at: [330, -60], drift: [-10, -160]}
+    notes: "4 rocks drifting in together among the lane's first rocks (2 with 2 riders, 2 with 1); round 62: Mites in numbers, arriving together"
+  - t: 13
+    formation: swarm
+    enemy: asteroid-mite
+    count: 2
+    from: front
+    on_rocks:
+      chunk: belt-c
+      riders: 1
+      rocks:
+        - {at: [220, -95], drift: [5, -160]}
+        - {at: [420, -40], drift: [-15, -160]}
+  - {t: 16, formation: snake, enemy: skitter, count: 6, from: front, edge: right}
+  - t: 18
+    formation: swarm
+    enemy: asteroid-mite
+    count: 4
+    from: front
+    on_rocks:
+      chunk: belt-b
+      riders: 2
+      rocks:
+        - {at: [80, -40], drift: [10, -160]}
+        - {at: [300, -70], drift: [-5, -160]}
+    notes: "Step C2: a rock group on the offbeat (the beam erases the fodder within a second)"
+  - t: 18
+    formation: swarm
+    enemy: asteroid-mite
+    count: 2
+    from: front
+    on_rocks:
+      chunk: belt-c
+      riders: 1
+      rocks:
+        - {at: [190, -100], drift: [5, -160]}
+        - {at: [400, -30], drift: [-10, -160]}
+  - t: 20
+    formation: column
+    enemy: minelayer
+    count: 1
+    from: rear
+    edge: left
+    warning: 3
+    hard: {count: 2}
+    mine_lines: {rows: [100, 180], gaps: [160, 320]}
+    notes: "The first Minelayer, alone; warned 3 s ahead at the bottom-left edge; its line (gap at the centre-left) is laid at ≈ t=24"
+  - t: 23
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    speed: 200
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+  - {t: 26, formation: V-wing, enemy: talon, count: 5, from: front, leader: tip, speed: 130, notes: "Leader at the tip"}
+  - {t: 29, formation: snake, enemy: skitter, count: 6, from: front, edge: left}
+  - t: 32
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    speed: 200
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+    notes: The lane narrows into the rock field
+  - {t: 33.5, formation: line abreast, enemy: talon, count: 2, from: front, speed: 130, notes: "Step C2: a firing Talon pair on the offbeat (the beam erases the fodder within a second)"}
+  - t: 35
+    formation: column
+    enemy: minelayer
+    count: 2
+    from: rear
+    edge: right
+    warning: 3
+    interval: 2.5
+    easy: {count: 2}
+    hard: {count: 3}
+    mine_lines: {rows: [100, 180, 260], gaps: [320, 160]}
+    notes: "Two lines (gaps right, then left); warned 3 s ahead"
+  - {t: 40, formation: column, enemy: gilded-gunship, count: 1, from: front, notes: "The Gunship's first appearance, alone (quiet window t=38-42); about 6 Darts launched"}
+  - {t: 43, formation: snake, enemy: skitter, count: 6, from: front, edge: right}
+  - {t: 44.5, formation: line abreast, enemy: talon, count: 2, from: front, speed: 130, notes: "Step C2: a firing Talon pair on the offbeat (the beam erases the fodder within a second)"}
+  - t: 46
+    formation: swarm
+    enemy: asteroid-mite
+    count: 4
+    from: front
+    on_rocks:
+      chunk: belt-a
+      riders: 2
+      rocks:
+        - {at: [110, -40], drift: [8, -120]}
+        - {at: [360, -30], drift: [-8, -120]}
+    notes: "4 rocks together (2 with 2 riders, 2 with 1)"
+  - t: 46
+    formation: swarm
+    enemy: asteroid-mite
+    count: 2
+    from: front
+    on_rocks:
+      chunk: belt-c
+      riders: 1
+      rocks:
+        - {at: [240, -100], drift: [0, -120]}
+        - {at: [430, -70], drift: [-10, -120]}
+  - {t: 49, formation: line abreast, enemy: talon, count: 4, from: front, speed: 130}
+  - t: 52
+    formation: column
+    enemy: minelayer
+    count: 2
+    from: rear
+    edge: left
+    warning: 3
+    interval: 2.5
+    easy: {count: 2}
+    hard: {count: 3}
+    mine_lines: {rows: [100, 180, 260], gaps: [160, 320]}
+    notes: Warned 3 s ahead
+  - t: 55
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    speed: 200
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+  - t: 57
+    formation: swarm
+    enemy: asteroid-mite
+    count: 4
+    from: front
+    on_rocks:
+      chunk: belt-a
+      riders: 2
+      rocks:
+        - {at: [130, -30], drift: [8, -120]}
+        - {at: [350, -60], drift: [-8, -120]}
+    notes: "Step C2: a rock group on the offbeat"
+  - t: 57
+    formation: swarm
+    enemy: asteroid-mite
+    count: 2
+    from: front
+    on_rocks:
+      chunk: belt-c
+      riders: 1
+      rocks:
+        - {at: [250, -100], drift: [0, -120]}
+        - {at: [420, -110], drift: [-10, -120]}
+  - {t: 58, formation: line abreast, enemy: talon, count: 4, from: front, speed: 130}
+  - t: 62
+    formation: snake
+    enemy: rail-serpent
+    count: 1
+    from: sides
+    edge: right
+    warning: 3
+    paths: [[[540, 120], [380, 150], [240, 240], [150, 380], [180, 500], [360, 560], [560, 600]]]
+    notes: "10 cars; the train's first entry, warned 3 s ahead at the right edge"
+  - t: 65
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    speed: 200
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+  - {t: 68, formation: V-wing, enemy: talon, count: 5, from: front, leader: tip, speed: 130, notes: "Leader at the tip"}
+  - t: 71
+    formation: column
+    enemy: minelayer
+    count: 2
+    from: rear
+    edge: right
+    warning: 3
+    interval: 2.5
+    easy: {count: 2}
+    hard: {count: 3}
+    mine_lines: {rows: [100, 180, 260], gaps: [320, 160]}
+    notes: Warned 3 s ahead
+  - t: 74
+    formation: swarm
+    enemy: asteroid-mite
+    count: 4
+    from: sides
+    edge: left
+    warning: 3
+    on_rocks:
+      chunk: belt-a
+      riders: 2
+      rocks:
+        - {at: [-30, 80], drift: [90, -110]}
+        - {at: [-30, 170], drift: [80, -110]}
+    notes: "4 rocks drifting in together from the left edge (2 with 2 riders, 2 with 1); warned 3 s ahead"
+  - t: 74
+    formation: swarm
+    enemy: asteroid-mite
+    count: 2
+    from: sides
+    edge: left
+    warning: 3
+    on_rocks:
+      chunk: belt-c
+      riders: 1
+      rocks:
+        - {at: [-30, 30], drift: [100, -110]}
+        - {at: [-30, 240], drift: [85, -110]}
+  - {t: 77, formation: column, enemy: gilded-gunship, count: 2, from: front, interval: 2, notes: "2 s apart; about 12 Darts launched"}
+  - {t: 80, formation: snake, enemy: skitter, count: 6, from: front, edge: right}
+  - t: 81.5
+    formation: swarm
+    enemy: asteroid-mite
+    count: 4
+    from: front
+    on_rocks:
+      chunk: belt-b
+      riders: 2
+      rocks:
+        - {at: [150, -30], drift: [8, -120]}
+        - {at: [380, -60], drift: [-8, -120]}
+    notes: "Step C2: a rock group on the offbeat"
+  - t: 81.5
+    formation: swarm
+    enemy: asteroid-mite
+    count: 2
+    from: front
+    on_rocks:
+      chunk: belt-c
+      riders: 1
+      rocks:
+        - {at: [60, -90], drift: [10, -120]}
+        - {at: [270, -110], drift: [0, -120]}
+  - t: 83
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    speed: 200
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+  - {t: 84.5, formation: line abreast, enemy: talon, count: 2, from: front, speed: 130, notes: "Step C2: a firing Talon pair on the offbeat (the beam erases the fodder within a second)"}
+  - {t: 86, formation: line abreast, enemy: talon, count: 4, from: front, speed: 130}
+  - t: 89
+    formation: column
+    enemy: minelayer
+    count: 2
+    from: rear
+    edge: left
+    warning: 3
+    interval: 2.5
+    easy: {count: 2}
+    hard: {count: 3}
+    mine_lines: {rows: [100, 180, 260], gaps: [160, 320]}
+    notes: Warned 3 s ahead; lines ahead of the convoy
+  - {t: 92, formation: snake, enemy: skitter, count: 6, from: front, edge: left}
+  - {t: 94, formation: line abreast, enemy: talon, count: 2, from: front, speed: 130, notes: "Step C2: a firing Talon pair on the offbeat (the beam erases the fodder within a second)"}
+  - {t: 96, formation: column, enemy: gilded-gunship, count: 1, from: front, tag: convoy, notes: "**Convoy 1/3** (the secondary); about 6 Darts"}
+  - {t: 96, formation: carrier + escorts, enemy: talon, count: 2, from: front, hard: {count: 3}, notes: "Convoy 1's escorts, in `orbit` at 90 px"}
+  - t: 99
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    speed: 200
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+  - {t: 101, formation: snake, enemy: skitter, count: 4, from: front, edge: right, notes: "Step C2: on the offbeat"}
+  - {t: 103, formation: column, enemy: gilded-gunship, count: 1, from: front, tag: convoy, notes: "**Convoy 2/3**; about 6 Darts"}
+  - {t: 103, formation: carrier + escorts, enemy: talon, count: 2, from: front, hard: {count: 3}, notes: "Convoy 2's escorts"}
+  - {t: 106, formation: snake, enemy: skitter, count: 6, from: front, edge: right}
+  - {t: 108, formation: line abreast, enemy: talon, count: 2, from: front, speed: 130, notes: "Step C2: a firing Talon pair on the offbeat (the beam erases the fodder within a second)"}
+  - {t: 110, formation: column, enemy: gilded-gunship, count: 1, from: front, tag: convoy, notes: "**Convoy 3/3**; about 6 Darts; it carries the shield cell"}
+  - {t: 110, formation: carrier + escorts, enemy: talon, count: 2, from: front, hard: {count: 3}, notes: "Convoy 3's escorts"}
+  - t: 113
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    speed: 200
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+  - {t: 114.5, formation: snake, enemy: skitter, count: 4, from: front, edge: left, notes: "Step C2: on the offbeat"}
+  - t: 116
+    formation: column
+    enemy: minelayer
+    count: 2
+    from: rear
+    edge: right
+    warning: 3
+    interval: 2.5
+    easy: {count: 2}
+    hard: {count: 3}
+    mine_lines: {rows: [100, 180, 260], gaps: [320, 160]}
+    notes: Warned 3 s ahead
+  - t: 119
+    formation: swarm
+    enemy: asteroid-mite
+    count: 6
+    from: front
+    on_rocks:
+      chunk: belt-a
+      riders: 3
+      rocks:
+        - {at: [150, -30], drift: [8, -120]}
+        - {at: [320, -50], drift: [-8, -120]}
+    notes: "4 rocks together (2 with 3 riders, 2 with 1)"
+  - t: 119
+    formation: swarm
+    enemy: asteroid-mite
+    count: 2
+    from: front
+    on_rocks:
+      chunk: belt-c
+      riders: 1
+      rocks:
+        - {at: [240, -110], drift: [0, -120]}
+        - {at: [420, -80], drift: [-10, -120]}
+  - t: 122
+    formation: snake
+    enemy: rail-serpent
+    count: 1
+    from: rear
+    warning: 3
+    paths: [[[360, 720], [340, 520], [220, 360], [110, 220], [140, 80], [-100, -40]]]
+    notes: "10 cars up from the bottom edge; warned 3 s ahead; Rook's six bark (t=123.5)"
+  - {t: 125, formation: line abreast, enemy: talon, count: 5, from: front, speed: 130}
+  - t: 128
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    speed: 200
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+  - {t: 130, formation: line abreast, enemy: talon, count: 2, from: front, speed: 130, notes: "Step C2: a firing Talon pair on the offbeat (the beam erases the fodder within a second)"}
+  - {t: 131, formation: snake, enemy: skitter, count: 6, from: front, edge: left}
+  - t: 135
+    formation: column
+    enemy: minelayer
+    count: 2
+    from: rear
+    edge: left
+    warning: 3
+    interval: 2.5
+    easy: {count: 2}
+    hard: {count: 3}
+    mine_lines: {rows: [100, 180, 260], gaps: [160, 320]}
+    notes: Warned 3 s ahead
+  - t: 137
+    formation: swarm
+    enemy: asteroid-mite
+    count: 4
+    from: front
+    on_rocks:
+      chunk: belt-b
+      riders: 2
+      rocks:
+        - {at: [110, -40], drift: [8, -140]}
+        - {at: [330, -30], drift: [-8, -140]}
+    notes: "Step C2: a rock group on the offbeat"
+  - t: 137
+    formation: swarm
+    enemy: asteroid-mite
+    count: 2
+    from: front
+    on_rocks:
+      chunk: belt-c
+      riders: 1
+      rocks:
+        - {at: [220, -100], drift: [0, -140]}
+        - {at: [420, -80], drift: [-10, -140]}
+  - {t: 138, formation: V-wing, enemy: talon, count: 6, from: front, leader: tip, speed: 130, notes: "Leader at the tip"}
+  - t: 141
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    speed: 200
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+  - {t: 143, formation: line abreast, enemy: talon, count: 2, from: front, speed: 130, notes: "Step C2: a firing Talon pair on the offbeat (the beam erases the fodder within a second)"}
+  - t: 145
+    formation: snake
+    enemy: rail-serpent
+    count: 1
+    from: sides
+    edge: left
+    warning: 3
+    paths: [[[-60, 110], [100, 140], [210, 250], [260, 400], [180, 520], [-80, 580]]]
+    notes: "The pincer's left train (10 cars), warned 3 s ahead at the left edge"
+  - t: 145
+    formation: snake
+    enemy: rail-serpent
+    count: 1
+    from: sides
+    edge: right
+    warning: 3
+    skip: [easy]
+    paths: [[[540, 170], [380, 200], [270, 310], [220, 460], [300, 560], [560, 620]]]
+    notes: "The pincer's right train (10 cars), warned 3 s ahead at the right edge; easy: one train"
+  - {t: 149, formation: snake, enemy: skitter, count: 6, from: front, edge: right}
+  - t: 152
+    formation: column
+    enemy: minelayer
+    count: 2
+    from: rear
+    edge: right
+    warning: 3
+    interval: 2.5
+    easy: {count: 2}
+    hard: {count: 3}
+    mine_lines: {rows: [100, 180, 260], gaps: [320, 160]}
+    notes: Warned 3 s ahead
+  - t: 155
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    speed: 200
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+  - {t: 158, formation: column, enemy: gilded-gunship, count: 2, from: front, interval: 2, notes: "2 s apart; about 12 Darts"}
+  - {t: 161, formation: snake, enemy: skitter, count: 6, from: front, edge: left}
+  - {t: 164, formation: line abreast, enemy: talon, count: 6, from: front, speed: 130}
+  - t: 167
+    formation: swarm
+    enemy: asteroid-mite
+    count: 4
+    from: front
+    on_rocks:
+      chunk: belt-b
+      riders: 2
+      rocks:
+        - {at: [120, -40], drift: [8, -140]}
+        - {at: [350, -30], drift: [-8, -140]}
+    notes: "4 rocks together (2 with 2 riders, 2 with 1)"
+  - t: 167
+    formation: swarm
+    enemy: asteroid-mite
+    count: 2
+    from: front
+    on_rocks:
+      chunk: belt-c
+      riders: 1
+      rocks:
+        - {at: [230, -100], drift: [0, -140]}
+        - {at: [60, -80], drift: [10, -140]}
+  - t: 170
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    speed: 200
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+    notes: The last wave
+  - {t: 172, formation: snake, enemy: skitter, count: 6, from: front, edge: left, notes: "Step C2: on the offbeat"}
+  - {t: 174.5, formation: line abreast, enemy: talon, count: 4, from: front, speed: 130, notes: "Step C2: the last Talons over the lane's end"}
+
+ground_targets: []   # none: the level has no ground layer (ground: none)
+
+secrets:
+  - name: dead beacon buoy
+    crate: 100   # Act 1 terms: pays 655 with the act factor (the lane authority's emergency stores)
+    radio: {speaker: Rook, line: "Free stores from the lane authority. They won't miss them."}
+
+pickups:
+  - {pickup: overdrive, dropped_by: {wave: 26, enemy: talon, unit: first}}            # the t=26 squad leader (the V-wing's tip)
+  - {pickup: shield cell, dropped_by: {wave: 110, enemy: gilded-gunship, unit: first}}   # the third convoy Gunship
+
+drops:  # a CDF lane-service drone on the low-air layer releases an armour patch
+  - {t: 100, x: 240, y: 380, pickup: armour patch}
+
+radio:  # trigger: t or event; step C2 trimmed the timed lines to one radio page each (three 22-character lines: the README's two-page drafts ran up to 8 s late). Rook is back in the slot: his scripted lines (t=9, 47, 160) have no requires, his bark (t=123.5, step C3: after the convoy's line) needs him flying (requires: escort; the secret's line has no requires key). No enemy-channel line here.
+  - {t: 1, speaker: Okafor, line: "Aegis, the Ceres loyalists need this lane open."}
+  - {t: 9, speaker: Rook, line: "No water, no tunnels, no crate. I could kiss this lane."}
+  - {t: 17.5, speaker: Varga, line: "A Minelayer, rising behind you. It lays a line. Find the gap."}
+  - {t: 27, speaker: Varga, line: "Shoot a mine, its cluster goes. Fast blink? It bursts."}
+  - {t: 37, speaker: Okafor, line: "Gunship ahead. Gold nose plate: hit its sides or engines."}
+  - {t: 47, speaker: Rook, line: "Little darts coming out of that thing. Of course there are."}
+  - {t: 59, speaker: Varga, line: "A drone train, right. Cut it near the engine: the rest dies."}
+  - {t: 88, speaker: Okafor, line: "Convoy inbound: three Gunships with mines. None gets through."}
+  - {event: secondary-objective, speaker: Okafor, line: "Convoy down. That's a lot fewer mines in the lane, Aegis.", notes: {trigger: "Secondary met (the third convoy Gunship down)"}}
+  - {event: enemy-escaped, enemy: gilded-gunship, speaker: Varga, line: "One got through. Its mines will be in the lane by morning.", notes: {trigger: "Secondary failed (the first Gunship leaves the screen alive: an escape cue is per enemy, not per tag)"}}
+  - {t: 123.5, speaker: Rook, requires: escort, line: "Six o'clock! A train's coming up behind us."}
+  - {t: 131, speaker: Okafor, line: "The loyalists board a mining tug. This lane is their way out."}
+  - {t: 142, speaker: Varga, line: "Two trains, both sides. Pick one."}
+  - {t: 160, speaker: Rook, line: "Hey, Lancer. Thanks. For Dock 9. I'm not saying it twice."}
+  - {event: level-end, speaker: Okafor, line: "The lane is open. Well flown, both of you.", notes: {trigger: Level end (the closing line)}}
+
+objectives:
+  primary: reach-end
+  secondary: {escapes: gilded-gunship, tag: convoy, easy: {allowed: 1}, label: CONVOY, credits: 100, name: Stop the Gunship convoy}   # all three convoy Gunships (the waves tagged convoy) destroyed before they leave the bottom edge (easy: 2 of 3), failed by one away; 100 in Act 1 terms: pays 655
+
+music:
+  track: 12           # Act 5 A "Hollow Rock" (audio/music track list)
+  start_section: 1    # the base stem in the lane's first section
+  full_section: 2     # the full mix from the seeded lane (the first column)
+  ambience: belt-open   # the belt's open-space bed (hull creaks, distant impacts, radio hiss through the hull)
+  end_jingle: mission-complete
+
+difficulty: {}  # the stat blocks' hooks apply (the Minelayer's easy 144 px gap and rings of 6, hard rings of 10 and 0.8 s arming; the Gunship's easy ring of 10 / 3.6 s and streams of 2, hard 14 / 2.6 s and streams of 4; the Serpent's easy 8 cars and 3.0 s turrets, hard 14 cars and bursts of 2; the Dart's hard 80°/s; the Talon's, the Mite's); the waves' easy/hard counts (columns of 3 on hard, escorts 3), the pincer one train on easy; the formation lever sizes the rest
+
+briefing:
+  pages:
+    - {speaker: Okafor, image: level-30-shipping-lane, line: "Ceres is lost, but not everyone in it chose Vorne. The loyalists are leaving on a mining tug, and the only lane out is mined. Clear it before the tug sets out, and stop the Gunship convoy bringing more mines. Rook flies with you again. Welcome back, Aegis Two."}
+    - {speaker: Varga, image: level-30-minelayer, line: "Minelayers come up from behind and lay a line across your path with one gap. Find the gap, or shoot a mine: its cluster goes with it. The Gunships are plated in front; their engines are not. And there is no ground out there, Lancer: the bombs stay idle."}
+  teaser: {speaker: Rook, line: "Mines from behind? Then I want eyes in the back of the ship. That Swarm Tail, Lancer."}
+
+
+backdrop:
+  # Presentation only: Level 30's shipping lane (tools/art/backdrop_l30.py, step ART-C, from the README's Layout table (no data.yaml yet: re-run after C2)).
+  # Space only (ground: none): the deep layer is the base (space, the lane's dust band); low-air holds the
+  # beacon buoys (animated: one strobe flash in 2 s), the last beacon and the dimmed rocks; high-air the
+  # close grit. At most two animated pieces on the screen at once: lane-buoy with tumbling-rock or
+  # lane-beacon (never a tumbling rock near the end).
+  scroll_factors: {deep: 0.12, far: 0.5, ground: 1, low-air: 1.35, high-air: 2.2}   # far, ground unused
+  ramp: 2
+  haze_colour: 09090e
+  atmosphere:
+    clear: {haze: 0.0}
+  tile_sets:
+    lane-space: {layer: deep, height: 1024}   # space, the lane's sunlit dust band, stars
+    lane-dust: {layer: high-air, height: 960}   # close grit and dust motes (transparent)
+  pieces:
+    ceres-behind: {layer: deep, size: [400, 400]}
+    far-rock-a: {layer: deep, size: [120, 100]}
+    far-rock-b: {layer: deep, size: [84, 72]}
+    far-rock-c: {layer: deep, size: [56, 48]}
+    convoy-lights: {layer: deep, size: [64, 120]}
+    open-belt: {layer: deep, size: [480, 420]}
+    lane-buoy: {layer: low-air, size: [40, 64], frames: 8, fps: 4}
+    lane-buoy-dark: {layer: low-air, size: [40, 64]}
+    lane-beacon: {layer: low-air, size: [64, 160], frames: 8, fps: 4}
+    tumbling-rock: {layer: low-air, size: [104, 104], frames: 16, fps: 2}
+    drift-rock-a: {layer: low-air, size: [88, 80]}
+    drift-rock-b: {layer: low-air, size: [64, 56]}
+  placed:
+    - {piece: lane-buoy, t: -1.79, x: 44}
+    - {piece: lane-buoy, t: 0.062, x: 436}
+    - {piece: lane-buoy, t: 1.914, x: 44}
+    - {piece: lane-buoy, t: 3.765, x: 436}
+    - {piece: lane-buoy, t: 5.617, x: 44}
+    - {piece: lane-buoy, t: 7.469, x: 436}
+    - {piece: lane-buoy, t: 9.321, x: 44}
+    - {piece: lane-buoy, t: 11.173, x: 436}
+    - {piece: lane-buoy, t: 13.025, x: 44}
+    - {piece: lane-buoy, t: 14.877, x: 436}
+    - {piece: lane-buoy, t: 16.728, x: 44}
+    - {piece: lane-buoy, t: 18.58, x: 436}
+    - {piece: lane-buoy, t: 20.432, x: 44}
+    - {piece: lane-buoy, t: 22.284, x: 436}
+    - {piece: lane-buoy, t: 24.136, x: 44}
+    - {piece: lane-buoy, t: 25.988, x: 436}
+    - {piece: lane-buoy, t: 27.84, x: 44}
+    - {piece: lane-buoy, t: 29.691, x: 436}
+    - {piece: lane-buoy, t: 31.816, x: 44}
+    # a shot-out buoy (section 2)
+    - {piece: lane-buoy-dark, t: 34.593, x: 436}
+    # a shot-out buoy (section 2)
+    - {piece: lane-buoy-dark, t: 37.37, x: 44}
+    - {piece: lane-buoy, t: 40.148, x: 436}
+    - {piece: lane-buoy, t: 42.926, x: 44}
+    - {piece: lane-buoy, t: 45.704, x: 436}
+    - {piece: lane-buoy, t: 48.481, x: 44}
+    # a shot-out buoy (section 2)
+    - {piece: lane-buoy-dark, t: 51.259, x: 436}
+    # a shot-out buoy (section 2)
+    - {piece: lane-buoy-dark, t: 54.037, x: 44}
+    - {piece: lane-buoy, t: 56.815, x: 436}
+    - {piece: lane-buoy, t: 59.593, x: 44}
+    - {piece: lane-buoy, t: 62.37, x: 436}
+    - {piece: lane-buoy, t: 65.148, x: 44}
+    # a shot-out buoy (section 2)
+    - {piece: lane-buoy-dark, t: 67.926, x: 436}
+    # a shot-out buoy (section 2)
+    - {piece: lane-buoy-dark, t: 70.704, x: 44}
+    - {piece: lane-buoy, t: 73.481, x: 436}
+    - {piece: lane-buoy, t: 76.259, x: 44}
+    - {piece: lane-buoy, t: 79.037, x: 436}
+    - {piece: lane-buoy, t: 81.815, x: 44}
+    # a shot-out buoy (section 2)
+    - {piece: lane-buoy-dark, t: 84.593, x: 436}
+    # a shot-out buoy (section 2)
+    - {piece: lane-buoy-dark, t: 87.37, x: 44}
+    - {piece: lane-buoy, t: 90.148, x: 436}
+    - {piece: lane-buoy, t: 92.926, x: 44}
+    - {piece: lane-buoy, t: 95.704, x: 436}
+    - {piece: lane-buoy, t: 98.481, x: 44}
+    - {piece: lane-buoy, t: 101.259, x: 436}
+    - {piece: lane-buoy, t: 104.037, x: 44}
+    - {piece: lane-buoy, t: 106.815, x: 436}
+    - {piece: lane-buoy, t: 109.593, x: 44}
+    - {piece: lane-buoy, t: 112.37, x: 436}
+    - {piece: lane-buoy, t: 115.148, x: 44}
+    - {piece: lane-buoy, t: 117.926, x: 436}
+    - {piece: lane-buoy, t: 120.704, x: 44}
+    - {piece: lane-buoy, t: 123.481, x: 436}
+    - {piece: lane-buoy, t: 126.259, x: 44}
+    - {piece: lane-buoy, t: 129.037, x: 436}
+    - {piece: lane-buoy, t: 131.815, x: 44}
+    - {piece: lane-buoy, t: 134.582, x: 436}
+    - {piece: lane-buoy, t: 136.896, x: 44}
+    - {piece: lane-buoy, t: 139.119, x: 436}
+    - {piece: lane-buoy, t: 141.341, x: 44}
+    - {piece: lane-buoy, t: 143.563, x: 436}
+    - {piece: lane-buoy, t: 145.785, x: 44}
+    - {piece: lane-buoy, t: 148.007, x: 436}
+    - {piece: lane-buoy, t: 150.23, x: 44}
+    - {piece: lane-buoy, t: 152.452, x: 436}
+    - {piece: lane-buoy, t: 154.674, x: 44}
+    - {piece: lane-buoy, t: 156.896, x: 436}
+    - {piece: lane-buoy, t: 159.119, x: 44}
+    - {piece: lane-buoy, t: 161.341, x: 436}
+    - {piece: lane-buoy, t: 163.563, x: 44}
+    - {piece: lane-buoy, t: 165.785, x: 436}
+    - {piece: lane-buoy, t: 168.007, x: 44}
+    - {piece: lane-buoy, t: 170.23, x: 436}
+    - {piece: lane-buoy, t: 172.452, x: 44}
+    # the lane's last beacon, its top row leaving the bottom edge at the end (t=178)
+    - {piece: lane-beacon, t: 175.407, x: 404}
+    # Ceres falling behind
+    - {piece: ceres-behind, t: -20.833, x: 330}
+    # a far rock
+    - {piece: far-rock-a, t: 12.0, x: 90}
+    # a far rock
+    - {piece: far-rock-c, t: 46.0, x: 400}
+    # a far rock
+    - {piece: far-rock-b, t: 70.0, x: 140}
+    # the convoy far ahead before it arrives (t=96-110)
+    - {piece: convoy-lights, t: 108.833, x: 300}
+    # a far rock
+    - {piece: far-rock-c, t: 120.0, x: 80}
+    # a far rock
+    - {piece: far-rock-a, t: 140.0, x: 380}
+    # the open belt ahead at the lane's end
+    - {piece: open-belt, t: 186.333, x: 240}
+    # a big rock tumbling past below the play plane
+    - {piece: tumbling-rock, t: 9.0, x: 400}
+    - {piece: drift-rock-a, t: 26.0, x: 70}
+    - {piece: drift-rock-b, t: 52.0, x: 410}
+    - {piece: tumbling-rock, t: 76.0, x: 70}
+    - {piece: drift-rock-a, t: 104.0, x: 420}
+    - {piece: drift-rock-b, t: 126.0, x: 60}
+    - {piece: tumbling-rock, t: 146.0, x: 420}

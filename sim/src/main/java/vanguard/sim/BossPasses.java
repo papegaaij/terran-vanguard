@@ -694,7 +694,7 @@ final class BossPasses implements BossActions {
             Bulwark bulwark = s.bulwark;
             if ((spared & CoilArena.STRUCK_ESCORT) == 0
                     && bulwark != null
-                    && !bulwark.destroyed()
+                    && !bulwark.out()
                     && coil.reaches(what, bulwark.x(), bulwark.y())) {
                 hit |= CoilArena.STRUCK_ESCORT;
                 bulwark.hit(damage, events);
@@ -749,7 +749,7 @@ final class BossPasses implements BossActions {
             wingman.pushOut(push[0], push[1], push[2]);
         }
         Bulwark bulwark = s.bulwark;
-        if (bulwark != null && !bulwark.destroyed() && coil.push(bulwark.x(), bulwark.y(), push)) {
+        if (bulwark != null && !bulwark.out() && coil.push(bulwark.x(), bulwark.y(), push)) {
             bulwark.pushOut(push[0], push[1], push[2]);
         }
     }

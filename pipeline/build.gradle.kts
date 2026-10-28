@@ -355,6 +355,42 @@ val copyPlaceholderSounds = tasks.register<JavaExec>("copyPlaceholderSounds") {
         "cruiser-broadside-r58-a.ogg",
         "cruiser-flak-r58-a.ogg",
         "cruiser-pd-r58-a.ogg",
+        // M9 part A: round 60's picks for the Act 5 systems (the user, 2026-10-27; CC0/CC-BY Freesound HQ previews cut
+        // by tools/concept/audio/sfx_r60.py, their CREDITS.md rows; the originals wait for the download limit): the
+        // enemy hex shield's hit a, break b and refill a, the homing missile's launch b, run loop a and shot-down b, the
+        // generator's brown-out loop a, the intercept's open a, close a and carrier loop a. The Tesla Coil Pod plays the
+        // `tesla` family's final r03 a and the Swarm Tail the `micromissile` family (rear: lower), both already here.
+        "enemy-shield-hit-r60-a.ogg",
+        "enemy-shield-break-r60-b.ogg",
+        "enemy-shield-refill-r60-a.ogg",
+        "homing-launch-r60-b.ogg",
+        "homing-run-r60-a.ogg",
+        "homing-down-r60-b.ogg",
+        "brownout-hum-r60-a.ogg",
+        "intercept-open-r60-a.ogg",
+        "intercept-close-r60-a.ogg",
+        "intercept-carrier-r60-a.ogg",
+        // M9 part B: round 60's pick for the belt station's ambience bed (S.17 b, the user, 2026-10-27; CC0 Freesound HQ
+        // previews cut by tools/concept/audio/sfx_r60.py, its CREDITS.md rows): Levels 29 and 35.
+        "belt-station-r60-b.ogg",
+        // M9 part B, step B4: Level 29's sounds (step AUD-B's round 62 proposals, CC0/CC-BY Freesound HQ previews cut by
+        // tools/concept/audio/sfx_r62.py, their CREDITS.md rows; the lock beep synthesized), as the user picked them in
+        // round 62 (2026-10-28): b for the nest's hatch and lock, the clamp gun's shot, the clamp's release, the Talon's
+        // shot and the leader's squelch; the wake is `ab` (a's servo with b's lock beep), the rest a.
+        "station-klaxon-r62-a.ogg",
+        "station-relays-r62-a.ogg",
+        "nest-hatch-r62-b.ogg",
+        "nest-lock-r62-b.ogg",
+        "nest-wake-r62-ab.ogg",
+        "clamp-gun-shot-r62-b.ogg",
+        "clamp-release-r62-b.ogg",
+        "ember-launch-r62-a.ogg",
+        "bulwark-depart-r62-a.ogg",
+        "talon-whine-r62-a.ogg",
+        "talon-shot-r62-b.ogg",
+        "leader-squelch-r62-b.ogg",
+        "mite-tell-r62-a.ogg",
+        "mite-leap-r62-a.ogg",
     )
 }
 
@@ -415,6 +451,9 @@ val copyPlaceholderMusic = tasks.register<JavaExec>("copyPlaceholderMusic") {
         // M8 part H: track 30, the reveal sting (round 58 a, the production of round 48's pick "Black and Gold",
         // tools/concept/audio/music_r58h.py), a one-shot at Level 28's cruisers' rise.
         "reveal-sting-r58-a.ogg=reveal-sting.ogg",
+        // M9 part B: track 31, Rook's return sting (round 60 M.2 a "Horn Call", the user's pick, synthesized by
+        // tools/concept/audio/music_r60.py), a one-shot at Level 29's Ember launch over the theme's -6 dB duck.
+        "rook-return-r60-a.ogg=rook-return.ogg",
     )
 }
 

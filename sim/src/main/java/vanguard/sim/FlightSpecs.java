@@ -17,23 +17,39 @@ public interface FlightSpecs {
      * the ship's centre (but never higher than the depth's min below the top edge); a path from the top edge then ends
      * at the depth's max (its formation's stop, which stops it at the latest; a side entry keeps its height). While it holds it drifts sideways at {@code drift} px/s (to a side drawn by
      * its seed, turning back at the side edges) and turns its facing toward the ship. Empty and 0 for the plain hover.
+     *
+     * <p>M9 part B (design/campaign Level 29, the wavering Stormhawks): with a {@code peelSpeed} above 0 its hover ends
+     * in a peel-off: straight sideways toward the nearer side edge (a centre on the middle line goes right) at that
+     * speed, gone past the edge, instead of its exit; 0 for none.
      */
-    public record Hover(Range seconds, Range depth, java.util.Optional<Range> aboveShip, double drift) {
+    public record Hover(
+            Range seconds, Range depth, java.util.Optional<Range> aboveShip, double drift, double peelSpeed) {
         public Hover {
             java.util.Objects.requireNonNull(aboveShip);
-            if (!(drift >= 0) || (aboveShip.isPresent() && !(aboveShip.get().min() >= 0))) {
-                throw new IllegalArgumentException("a hover drifts 0 px/s or more, above the ship by 0 px or more");
+            if (!(drift >= 0) || (aboveShip.isPresent() && !(aboveShip.get().min() >= 0)) || !(peelSpeed >= 0)) {
+                throw new IllegalArgumentException(
+                        "a hover drifts 0 px/s or more, above the ship by 0 px or more, peels off at 0 px/s or more");
             }
         }
 
         /** The plain hover, without M8 part D's height above the ship and drift. */
         public Hover(Range seconds, Range depth) {
-            this(seconds, depth, java.util.Optional.empty(), 0);
+            this(seconds, depth, java.util.Optional.empty(), 0, 0);
+        }
+
+        /** M8 part D: a hover with a height above the ship and a drift, without a peel-off. */
+        public Hover(Range seconds, Range depth, java.util.Optional<Range> aboveShip, double drift) {
+            this(seconds, depth, aboveShip, drift, 0);
         }
 
         /** M8 part D: this hover held {@code above} px above the ship, drifting {@code driftSpeed} px/s. */
         public Hover aboveShip(Range above, double driftSpeed) {
-            return new Hover(seconds, depth, java.util.Optional.of(above), driftSpeed);
+            return new Hover(seconds, depth, java.util.Optional.of(above), driftSpeed, peelSpeed);
+        }
+
+        /** M9 part B: this hover ending in a peel-off to the nearer side edge at {@code speed} px/s (0: none). */
+        public Hover withPeel(double speed) {
+            return new Hover(seconds, depth, aboveShip, drift, speed);
         }
     }
 
@@ -219,6 +235,110 @@ public interface FlightSpecs {
                         + " px short, a ring of "
                         + ring + " at " + ringSpeed + " px/s, retreat " + retreatSpeed + " px/s for " + retreatSeconds
                         + " s, re-arm " + rearmSeconds + " s");
+            }
+        }
+    }
+
+    /**
+     * M9 part B (design/enemies/air/talon, Squad leader; Level 29): how a wing's member breaks off when its wave's leader
+     * is killed: sideways, away from the wing's centre (the nearer side edge for one on the centre), at {@code speed}
+     * px/s, faster when it needs to be to leave by that edge within {@code seconds}; it holds its fire, and with {@code
+     * partingPair} (hard) it fires one volley of its gun as it breaks off.
+     */
+    public record SquadScatter(double speed, double seconds, boolean partingPair) {
+        public SquadScatter {
+            if (!(speed > 0) || !(seconds > 0)) {
+                throw new IllegalArgumentException(
+                        "a scatter breaks off at a speed for a time: " + speed + " px/s, " + seconds + " s");
+            }
+        }
+    }
+
+    /**
+     * M9 part B (design/enemies/air/talon, Movement; the enemies' {@code swoop} vocabulary, not the Dust Kite's triggered
+     * {@link Swoop}): its wave ({@code V-wing}, {@code line abreast}, {@code column} or {@code pincer}; any other
+     * formation flies as before) flies one smooth curve across the upper half instead of its formation's path, the
+     * lowest point {@code lowest} px below the top edge drawn once per wave. From the front each unit's curve enters at
+     * the top edge heading down {@code across} / 2 px before its formation place, bottoms out at its place and leaves
+     * heading up through the top edge (or out through a side edge) {@code across} / 2 px beyond it; a wave in the left
+     * edge's column sweeps right, in the right edge's left, a centred one toward a side drawn per wave. A {@code
+     * pincer}'s wings enter at their side edges 60 px below the top edge, bottom out at that depth and leave up through
+     * the top edge {@code across} px in from their own edge. The units keep their formation's shape round the curve:
+     * each flies it shifted to its place, the ranks behind one after another. It fires while on the play field within
+     * {@code fireBand} px of the top edge, its first shot after its gun's first-shot delay counted in that band.
+     */
+    public record SwoopPath(Range lowest, double across, double fireBand) {
+        public SwoopPath {
+            if (!(lowest.min() > 0) || !(across >= 0) || !(fireBand > 0)) {
+                throw new IllegalArgumentException("a swoop path bottoms out below the top edge and fires in a band: "
+                        + lowest + ", " + across + " px across, band " + fireBand + " px");
+            }
+        }
+    }
+
+    /**
+     * M9 part B (design/enemies, Rock riding; design/enemies/space/asteroid-mite): a unit riding a small drifting rock
+     * of its wave ({@link WaveSpec#onRocks()}). It clings to the rock's rim, crawling round it at {@code
+     * crawlDegreesPerSecond}; when the ship's centre comes within {@code within} px of the rock's, the rock's riders leap
+     * one after another, {@code gapSeconds} apart in a seeded order, each after a {@code tellSeconds} tell: a dive
+     * straight at the ship's position at the tell's end at {@code diveSpeed} px/s, no steering. A broken rock frees its
+     * riders: each tumbles off for {@code tumbleSeconds}, then leaps after its tell in the same order. Riders carried
+     * off the screen on their rock leave with it (no credits).
+     */
+    public record Ride(
+            double within,
+            double tellSeconds,
+            double gapSeconds,
+            double diveSpeed,
+            double tumbleSeconds,
+            double crawlDegreesPerSecond) {
+        public Ride {
+            if (!(within > 0)
+                    || !(tellSeconds > 0)
+                    || !(gapSeconds >= 0)
+                    || !(diveSpeed > 0)
+                    || !(tumbleSeconds >= 0)
+                    || !Double.isFinite(crawlDegreesPerSecond)) {
+                throw new IllegalArgumentException("a ride leaps within a distance after a tell: " + within + " px, "
+                        + tellSeconds + " s, " + gapSeconds + " s apart, " + diveSpeed + " px/s, tumble "
+                        + tumbleSeconds + " s, crawl " + crawlDegreesPerSecond + " deg/s");
+            }
+        }
+    }
+    /**
+     * M9 part D, the dash cycle (design/enemies/air/buzzsaw-drone; {@link Dashing}): from its entry (its centre inside the
+     * play field) it chases the ship at its speed, turning at most {@code turnRate} radians a second, for {@code
+     * chaseSeconds}; then its spin-up tell of {@code tellSeconds} (never under {@link #LEAST_TELL_SECONDS}) at {@code
+     * tellSpeed} px/s along its heading; then a straight dash at {@code dashSpeed} px/s along the bearing to the ship at
+     * the tell's start (locked), bouncing off the play field's edges and the large debris chunks (equal angles; a small
+     * chunk it touches breaks and does not deflect it) until it has bounced {@code bounces} times; then it slows to its
+     * speed over {@code slowSeconds} and chases again. After its {@code dashes}-th dash it leaves through the nearest
+     * edge at its speed.
+     */
+    public record Dash(
+            double turnRate,
+            double chaseSeconds,
+            double tellSeconds,
+            double tellSpeed,
+            double dashSpeed,
+            int bounces,
+            double slowSeconds,
+            int dashes) {
+        /** The tell is the rule: never shorter than this at any difficulty (design: ≥ 0.5 s). */
+        public static final double LEAST_TELL_SECONDS = 0.5;
+
+        public Dash {
+            if (!(turnRate > 0)
+                    || !(chaseSeconds > 0)
+                    || !(tellSeconds >= LEAST_TELL_SECONDS)
+                    || !(tellSpeed >= 0)
+                    || !(dashSpeed > 0)
+                    || bounces < 1
+                    || !(slowSeconds > 0)
+                    || dashes < 1) {
+                throw new IllegalArgumentException("a dash chases, tells at least " + LEAST_TELL_SECONDS
+                        + " s, dashes, bounces and slows: " + turnRate + ", " + chaseSeconds + ", " + tellSeconds
+                        + ", " + tellSpeed + ", " + dashSpeed + ", " + bounces + ", " + slowSeconds + ", " + dashes);
             }
         }
     }

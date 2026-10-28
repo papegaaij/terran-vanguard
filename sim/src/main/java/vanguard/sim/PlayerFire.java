@@ -94,6 +94,12 @@ final class PlayerFire {
     static final int TRIGGER_SERIAL = 1 << 25;
 
     /**
+     * M9 part A (QA-1): a homing lock's serial for a seekable enemy missile ({@link EnemyGun.HomingSpec#seekable()}):
+     * this plus the missile's {@link Missile#serial()}.
+     */
+    static final int MISSILE_SERIAL = 1 << 26;
+
+    /**
      * How many times faster than its rate a missile turns while it climbs to a high-air boss's part:
      * an open sac beside the ship (the Brood Carrier's first pair over a ship under it) lies inside
      * the turning circle of the weapon's own rate.
@@ -122,6 +128,8 @@ final class PlayerFire {
     private final SetPiece[] setPieces;
     /** M5 part E: whether the level is over water, where torpedoes run. */
     private final boolean water;
+    /** M9 part C: whether the level has no ground layer (the bomb deliveries are idle). */
+    private boolean noGround;
 
     private final Pool<Shot> shots = new Pool<>(SHOT_CAPACITY, Shot::new, Shot[]::new);
     private final int[] cooldowns;
@@ -140,6 +148,11 @@ final class PlayerFire {
     private final Drones drones;
 
     private final Deflectors deflectors;
+    /** M9 part A: the Tesla Coil Pods' arcs (design/player/weapons/tesla-coil-pod). */
+    private final ArcFire arcs;
+    /** M9 part A: the power budget in flight under a drain ({@link PowerState}); null without one. */
+    private PowerState power;
+
     private int overdriveTicks;
     /** M7 part C: the level's rock and the scroll now; null in a level without terrain. */
     private Canyon canyon;
@@ -151,6 +164,8 @@ final class PlayerFire {
     private CruiserRun cruisers;
     /** M8 part A: the medium the ship flies in (the air unless the sortie sets the level's). */
     private Medium medium = Medium.air();
+    /** M9 part A: the direction of travel (1, or -1 while the scroll runs reversed); not hashed (the clock's). */
+    private int travel = 1;
     /** The enemy (a serial) the player's shots damaged last, for the wingman's first target; -1 for none. */
     private int lastHit;
     /** Steps since {@link #lastHit} was damaged. */
@@ -178,6 +193,7 @@ final class PlayerFire {
         groundFire = new GroundFire(this, shots, events, hits, setPieces);
         drones = new Drones(ship, armament);
         deflectors = new Deflectors(ship, armament);
+        arcs = new ArcFire(this, ship, setPieces, events, hits, armament.size());
         reset();
     }
 
@@ -202,6 +218,60 @@ final class PlayerFire {
     /** M7 part F: the enemies' homing missiles; null before the sortie sets them. */
     Missiles missiles() {
         return missiles;
+    }
+
+    /**
+     * M9 part A: the direction of travel now ({@link Sortie#travel()}: 1, or -1 while the scroll runs reversed), for a
+     * rear-first missile's "behind" (design/player/weapons/swarm-tail).
+     */
+    void travel(int sign) {
+        travel = sign;
+    }
+
+    /**
+     * M9 part A (design/player/generator, Enemy drain effects): the power budget in flight; a drainer's latch then
+     * sheds it ({@link #drain}). Without one nothing is ever shed.
+     */
+    void power(Loadout.Power budget) {
+        power = new PowerState(budget, armament.size());
+        deflectors.power(power);
+    }
+
+    /**
+     * M9 part A: a drainer latched ({@code delta} +1) or let go (−1); returns the drainers latched now (0 without a
+     * power budget, which nothing drains). A {@link SimEvents.Type#POWER_DRAIN} at the ship.
+     */
+    int drain(int delta) {
+        if (power == null) {
+            return 0;
+        }
+        int now = power.drain(delta);
+        events.add(SimEvents.Type.POWER_DRAIN, ship.x(), ship.y(), now);
+        return now;
+    }
+
+    /** M9 part A: the power budget in flight (the HUD's drain row); null without one. */
+    PowerState power() {
+        return power;
+    }
+
+    /** M9 part A: a beam's damage factor now: the drain's rate factor ({@link PowerState#factor()}); 1 without. */
+    double powerFactor() {
+        return power == null ? 1 : power.factor();
+    }
+
+    /** M9 part A: the point mount {@code m}'s last arc struck, on the screen (the arc's look runs from the pod to it). */
+    public double arcX(int m) {
+        return arcs.arcX(m);
+    }
+
+    public double arcY(int m) {
+        return arcs.arcY(m);
+    }
+
+    /** M9 part A: the direction of travel now (1, or -1 while the scroll runs reversed). */
+    int travel() {
+        return travel;
     }
 
     /** M8 part A: the level's medium (design/world/europa, Under water rules). */
@@ -259,6 +329,10 @@ final class PlayerFire {
         beams.reset();
         drones.reset();
         deflectors.reset();
+        arcs.reset();
+        if (power != null) {
+            power.reset();
+        }
         overdriveTicks = 0;
         lastHit = -1;
         sinceHit = Integer.MAX_VALUE;
@@ -283,7 +357,8 @@ final class PlayerFire {
             if (sinceShot[m] < Integer.MAX_VALUE) {
                 sinceShot[m]++;
             }
-            if (cooldowns[m] > 0) {
+            if (cooldowns[m] > 0 && (power == null || power.runs(m))) {
+                // M9 part A: under a drain a mount's cooldown runs only on its power's steps (f × its rate).
                 cooldowns[m]--;
             }
             Armament.Mount mount = armament.mount(m);
@@ -311,6 +386,20 @@ final class PlayerFire {
                             && liveMines(m) >= weapon.mines().maxLive())) {
                 // A turret without a target holds fire; at its mine cap a mount waits for one to go;
                 // a torpedo pod over land fires nothing (M5 part E).
+                continue;
+            }
+            if (weapon.delivery() == WeaponSpec.Delivery.ARC) {
+                // M9 part A: an arc fires only with a target in reach (no arc into empty space).
+                if (!arcs.strike(m, weapon, enemies)) {
+                    continue;
+                }
+                cooldowns[m] = weapon.intervalTicks();
+                sinceShot[m] = 0;
+                events.add(
+                        SimEvents.Type.SHOT_FIRED,
+                        ship.x() + weapon.muzzles().getFirst().dx(),
+                        ship.y() + weapon.muzzles().getFirst().dy(),
+                        m);
                 continue;
             }
             cooldowns[m] = weapon.intervalTicks();
@@ -347,6 +436,10 @@ final class PlayerFire {
      * charges), with the overdrive's numbers while one runs; nothing without them.
      */
     void tend() {
+        if (power != null) {
+            // M9 part A: the mounts' clocks under a drain, once a step before the guns and the pods.
+            power.step();
+        }
         drones.update(overdriveTicks > 0, events);
         deflectors.update(overdriveTicks > 0, events);
     }
@@ -357,7 +450,30 @@ final class PlayerFire {
      * too) or a depth charge where there is no water: not over water and not under it now.
      */
     boolean idle(WeaponSpec weapon) {
-        return weapon != null && weapon.delivery().needsWater() && !water && !medium.underwater();
+        return idleReason(weapon) != IdleReason.NONE;
+    }
+
+    /**
+     * Why {@code weapon} fires nothing in this level ({@link #idle}): M9 part C: a bomb delivery where the level has no
+     * ground layer reads {@link IdleReason#NO_GROUND} (its rack still draws its power); {@link IdleReason#NONE} for a
+     * weapon that fires.
+     */
+    IdleReason idleReason(WeaponSpec weapon) {
+        if (weapon == null) {
+            return IdleReason.NONE;
+        }
+        if (weapon.delivery().needsWater() && !water && !medium.underwater()) {
+            return IdleReason.NO_WATER;
+        }
+        if (noGround && weapon.delivery().needsGround()) {
+            return IdleReason.NO_GROUND;
+        }
+        return IdleReason.NONE;
+    }
+
+    /** M9 part C: the level has no ground layer (Level 30): the bomb deliveries are idle. */
+    void noGround(boolean none) {
+        noGround = none;
     }
 
     /**
@@ -404,7 +520,7 @@ final class PlayerFire {
                 }
                 case DROPPED -> shot.lob(weapon, mount, x, y, x, y);
                 case LOBBED -> lob(shot, weapon, mount, x, y, enemies, ground);
-                case BEAM -> throw new IllegalStateException("a beam fires no shots");
+                case BEAM, ARC -> throw new IllegalStateException("a beam or an arc fires no shots");
             }
             soak(shot);
             if (weapon.delivery() == WeaponSpec.Delivery.TORPEDO) {
@@ -569,7 +685,8 @@ final class PlayerFire {
                 Layer layer = enemy.layer();
                 if (!medium.reaches(weapon, layer)
                         || !onField(enemy)
-                        || (enemy.latched() && !hitsLatched(shot.mount()))) {
+                        || (enemy.latched() && !hitsLatched(shot.mount()))
+                        || passesThrough(enemy, shot.mount())) {
                     continue;
                 }
                 // M7 part D: a unit part is tested before the body (the Shellback's vent); round 40 R.a: a shot over
@@ -601,12 +718,13 @@ final class PlayerFire {
                     if (enemy.damagePart(part, shot.damage() * groundFactor(weapon, layer), false)) {
                         hits.unitPartDestroyed(j, part, shot.mount());
                     }
-                } else if (enemy.damage(
+                } else if (enemy.damageFacing(
                         shot.damage() * groundFactor(weapon, layer) * enemy.rearFactor(shot.vx(), shot.vy()),
-                        false,
-                        false,
-                        weapon.antiSub())) {
-                    // M7 part F: a direct shot into a rear plate does its multiplier (the Warden Tank's).
+                        weapon.antiSub(),
+                        shot.vx(),
+                        shot.vy())) {
+                    // M7 part F: a direct shot into a rear plate does its multiplier (the Warden Tank's); M9 part C:
+                    // facing armour's factor by the shot's direction, after the shield (the Gilded Gunship's).
                     hits.enemyDestroyed(j, shot.mount());
                 }
                 if (spent) {
@@ -915,6 +1033,7 @@ final class PlayerFire {
             if (enemy.serial() == struck
                     || !medium.reaches(weapon, layer)
                     || !onField(enemy)
+                    || passesThrough(enemy, shot.mount())
                     || enemy.latched()
                     || (enemy.spec().hardened() && !weapon.antiGround())
                     || enemy.growing()
@@ -925,6 +1044,14 @@ final class PlayerFire {
                 hits.enemyDestroyed(j, shot.mount());
             }
         }
+    }
+
+    /**
+     * M9 part B (design/campaign Level 29, the wavering Stormhawks): whether a shot of {@code mount} passes through
+     * {@code enemy}: the escort's (Rook's or the Bulwark's, one past the armament's mounts) pass a neutral craft.
+     */
+    boolean passesThrough(Enemy enemy, int mount) {
+        return mount >= armament.size() && enemy.spec().neutral();
     }
 
     /** A hit on a ground object: a trigger counts it, a destructible takes the damage. */
@@ -963,7 +1090,10 @@ final class PlayerFire {
     static boolean chainTargets(Pool<Enemy> enemies, SetPiece[] setPieces) {
         for (int i = 0; i < enemies.size(); i++) {
             Enemy enemy = enemies.get(i);
-            if (enemy.layer().hitByStandardShots() && onField(enemy)) {
+            // M9 part B: a neutral craft is no target of the chain.
+            if (enemy.layer().hitByStandardShots()
+                    && onField(enemy)
+                    && enemy.spec().countsAsEnemy()) {
                 return true;
             }
         }
@@ -1009,6 +1139,10 @@ final class PlayerFire {
         beams.addTo(hash);
         drones.addTo(hash);
         deflectors.addTo(hash);
+        if (power != null) {
+            // M9 part A: only once a drainer latched in the attempt, so the other sorties hash as before.
+            power.addTo(hash);
+        }
     }
 
     /** M7 part A: mount {@code m}'s beam, null unless it is a {@link WeaponSpec.Delivery#BEAM} mount. */

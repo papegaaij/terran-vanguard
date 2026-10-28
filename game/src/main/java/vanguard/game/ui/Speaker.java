@@ -21,13 +21,16 @@ public record Speaker(String name, String role, TextureRegion portrait) {
 
     /**
      * The role line under a briefing speaker's name plate by its short name, as in the briefing and
-     * the hangar's intel panel: {@code Rook} is {@code AEGIS TWO}.
+     * the hangar's intel panel: {@code Rook} is {@code AEGIS TWO}; the enemy channel's Vorne is {@code
+     * JOVIAN ASCENDANCY} (design/ui/briefing, Act 5 additions), Harker (Level 29) {@code CERES WING}.
      */
     public static String role(String speaker) {
         return switch (speaker) {
             case "Okafor" -> "CDF COMMAND";
             case "Rook" -> "AEGIS TWO";
             case "Varga" -> "CDF INTELLIGENCE";
+            case "Vorne" -> "JOVIAN ASCENDANCY";
+            case "Harker" -> "CERES WING";
             default -> throw new IllegalArgumentException("no briefing name plate for " + speaker);
         };
     }
@@ -38,6 +41,8 @@ public record Speaker(String name, String role, TextureRegion portrait) {
             case "Okafor" -> "CMDR A. OKAFOR";
             case "Rook" -> "LT. K. TANAKA";
             case "Varga" -> "DR. E. VARGA";
+            case "Vorne" -> "VORNE";
+            case "Harker" -> "HARKER";
             default -> throw new IllegalArgumentException("no briefing name plate for " + speaker);
         };
     }

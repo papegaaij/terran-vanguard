@@ -63,6 +63,17 @@ final class EnemySpecCopy {
     Optional<EnemySpec.SlowRing> slowRing;
     Optional<EnemySpec.Coil> coil;
     Optional<EnemySpec.Lunge> lunge;
+    Optional<EnemySpec.Shield> shield;
+    Optional<EnemySpec.LaserLine> laserLine;
+    Optional<EnemySpec.SquadScatter> scatter;
+    Optional<EnemySpec.Ride> ride;
+    boolean neutral;
+    Optional<EnemySpec.SwoopPath> swoopPath;
+    Optional<EnemySpec.MineLayer> mineLayer;
+    Optional<EnemySpec.FacingArmour> facingArmour;
+    Optional<EnemySpec.Launcher> launcher;
+    Optional<EnemySpec.Dash> dash;
+    Optional<EnemySpec.AirLink> airLink;
 
     /** The base stats with every other component left out ({@link EnemySpec#of}). */
     EnemySpecCopy(
@@ -128,6 +139,17 @@ final class EnemySpecCopy {
         slowRing = Optional.empty();
         coil = Optional.empty();
         lunge = Optional.empty();
+        shield = Optional.empty();
+        laserLine = Optional.empty();
+        scatter = Optional.empty();
+        ride = Optional.empty();
+        neutral = false;
+        swoopPath = Optional.empty();
+        mineLayer = Optional.empty();
+        facingArmour = Optional.empty();
+        launcher = Optional.empty();
+        dash = Optional.empty();
+        airLink = Optional.empty();
     }
 
     EnemySpecCopy(EnemySpec spec) {
@@ -185,6 +207,17 @@ final class EnemySpecCopy {
         slowRing = spec.slowRing();
         coil = spec.coil();
         lunge = spec.lunge();
+        shield = spec.shield();
+        laserLine = spec.laserLine();
+        scatter = spec.scatter();
+        ride = spec.ride();
+        neutral = spec.neutral();
+        swoopPath = spec.swoopPath();
+        mineLayer = spec.mineLayer();
+        facingArmour = spec.facingArmour();
+        launcher = spec.launcher();
+        dash = spec.dash();
+        airLink = spec.airLink();
     }
 
     EnemySpec build() {
@@ -242,6 +275,17 @@ final class EnemySpecCopy {
                 rise,
                 slowRing,
                 coil,
-                lunge);
+                lunge,
+                shield,
+                laserLine,
+                scatter,
+                ride,
+                neutral,
+                swoopPath,
+                mineLayer,
+                facingArmour,
+                launcher,
+                dash,
+                airLink);
     }
 }

@@ -138,7 +138,7 @@ design tree; this list is only a reminder.
   typical haul vs the budget with the `bounty_scale` that would hit it, the autopilot's wins, retries, secondary and
   boss fights vs par and window, and the beam era's small-unit time on the screen vs Level 10. Options:
   `-Pdifficulty=easy,medium,hard`, `-Pseeds=3`, `-Pfit=test|plan|user` (default: each measure with its test's fit),
-  `-Pparts=pacing,floor,haul,boss,secondary,hp,pursuit,colossus` (`pursuit`: motes on the screen and lunges, levels with a pursuit only; `colossus`: the breach fight's phases, damage, shots, breaches, bites, eruptions), `-Pjson`; `-Plevel=10,15` takes several. It reads the data at run
+  `-Pparts=pacing,floor,haul,boss,secondary,hp,pursuit,colossus,hull` (`pursuit`: motes on the screen and lunges, levels with a pursuit only; `colossus`: the breach fight's phases, damage, shots, breaches, bites, eruptions; `hull`: a hull escort's sections, hits by kind, rear-Dart timing, Hornet life), `-Pjson`; `-Plevel=10,15` takes several. It reads the data at run
   time (no recompile after a data.yaml edit) and runs the flights in parallel: a few seconds a level.
 - `./gradlew :content:playthroughSave -Plevel=15 [-Pdifficulty=medium] -Pout=<dir>` – a real save for a playthrough (a debug start writes none): flies `ActPlaythroughTest`'s campaign on the balance plan to that level and writes it into `<dir>/saves/` (the autosave and slot 1); play it with `--settings <dir>/settings.properties`, Continue opens the level's briefing (an act's intro first).
 - `tools/concept/` – reproducible generators for concept mockups (Python 3 + PIL + numpy,

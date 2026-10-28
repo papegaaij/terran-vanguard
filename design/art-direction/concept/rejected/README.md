@@ -18,3 +18,5 @@ The rows of [../../README.md](../../README.md#concept-art)'s Concept art tables 
 | [concept/rejected/underwater-burst-final-r52-b.gif](underwater-burst-final-r52-b.gif) | b's four rungs side by side, 3x | rejected (round 52, F.7: a picked) |
 | [concept/rejected/slam-r33-b.png](slam-r33-b.png) | Kraken lane telegraph and slam b, "lane boil, chevrons and rollers": the whole lane boiling over the arm's shadow, red chevrons down its centre, a crown and two rollers breaking at the lane edges (sheet; review files only) | rejected |
 | [concept/rejected/slam-r33-b.gif](slam-r33-b.gif) | The same in the arena (motion) | rejected |
+| [concept/rejected/vacuum-burst-final-r61-b.png](vacuum-burst-final-r61-b.png) | Vacuum kill bursts, proposal **b** "flash and fireball": the same with a brief orange fireball core burning out by a third of the burst (sheet) | rejected (round 61, F.3: a picked) |
+| [concept/rejected/vacuum-burst-final-r61-b.gif](vacuum-burst-final-r61-b.gif) | b's four rungs side by side over belt space, 3x | rejected (round 61, F.3: a picked) |

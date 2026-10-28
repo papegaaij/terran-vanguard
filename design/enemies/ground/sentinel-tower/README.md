@@ -1,8 +1,8 @@
 ---
 title: Sentinel Tower
-design: draft
+design: approved
 implementation: not-started
-art: proposed
+art: chosen
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../player/specials]
 updated: 2026-10-27
 ---
@@ -19,7 +19,7 @@ reach. A hardened collar shields the base; the emitter on top takes every weapon
 
 ### Stat block
 
-**Draft** (Act 5 design phase, step D-enemies-B; pending the user's review in round 60). A hand-written
+**Draft** (Act 5 design phase, step D-enemies-B; approved in round 60). A hand-written
 table: there is no `data.yaml` yet, the build turns it into one. Numbers at **medium** (see the
 [balancing basis](../../README.md#balancing-basis)); HP is in damage units (a Pulse Cannon L1 shot does 2),
 set at its first level from the proposed Act 5 reference DPS (judgement call J2: L32 132): the emitter's
@@ -78,18 +78,18 @@ with the head falling.
 
 ## Concept art
 
-None yet: proposals (a/b) in round 60 (step ART-P-units, `tools/concept/enemies_r60.py`): a gloss-black
+Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
+
+Round 60 proposals (a/b), made in the gloss-black look of Q11 a and chosen below (production re-renders the chosen one in gunmetal/charcoal, Q11 b) (step ART-P-units, `tools/concept/enemies_r60.py`): a gloss-black
 tower with gold collar plates seen from above, a crimson emitter eye and red running lights (Q11 a); the
 sweep telegraph in the crimson of lasers and sweeps.
 
-Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's review board follows) — a/b proposals in the belt look of [Q11](../../README.md#open-questions) a (pending the user's review), each a PNG sheet (the source render, the sprites and states, the readability check over the darkest ground of Level 32 with the measured gold share, key frames) and a GIF in the 480×540 play field; generator `tools/concept/enemies_r60.py`. Prompts: [concept/prompts.md](concept/prompts.md).
+Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's review board follows) — a/b proposals in the belt look of [Q11](../../README.md#open-questions) a (gloss black; the user chose look b, gunmetal/charcoal with gold, in round 60, so the chosen variant is re-rendered in gunmetal in production), each a PNG sheet (the source render, the sprites and states, the readability check over the darkest ground of Level 32 with the measured gold share, key frames) and a GIF in the 480×540 play field; generator `tools/concept/enemies_r60.py`. Prompts: [concept/prompts.md](concept/prompts.md).
 
 | File | What | Status |
 |---|---|---|
-| [concept/sentinel-tower-r60-a.png](concept/sentinel-tower-r60-a.png) | Sentinel Tower A, lighthouse — a gold-banded octagonal hardened collar, a round shaft, a black sphere head with a gold equator ring and a lens snout; strong rim (sheet) | proposed |
-| [concept/sentinel-tower-r60-a.gif](concept/sentinel-tower-r60-a.gif) | Sentinel Tower A, lighthouse — a gold-banded octagonal hardened collar, a round shaft, a black sphere head with a gold equator ring and a lens snout; strong rim (motion) | proposed |
-| [concept/sentinel-tower-r60-b.png](concept/sentinel-tower-r60-b.png) | Sentinel Tower B, pylon — a square collar with four gold-edged buttress fins, a flat disc head with a gold rim and a long crimson slit lens (sheet) | proposed |
-| [concept/sentinel-tower-r60-b.gif](concept/sentinel-tower-r60-b.gif) | Sentinel Tower B, pylon — a square collar with four gold-edged buttress fins, a flat disc head with a gold rim and a long crimson slit lens (motion) | proposed |
+| [concept/sentinel-tower-r60-a.png](concept/sentinel-tower-r60-a.png) | Sentinel Tower A, lighthouse — a gold-banded octagonal hardened collar, a round shaft, a black sphere head with a gold equator ring and a lens snout; strong rim (sheet) | chosen (round 60) |
+| [concept/sentinel-tower-r60-a.gif](concept/sentinel-tower-r60-a.gif) | Sentinel Tower A, lighthouse — a gold-banded octagonal hardened collar, a round shaft, a black sphere head with a gold equator ring and a lens snout; strong rim (motion) | chosen (round 60) |
 
 ## Implementation
 
@@ -101,15 +101,17 @@ Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's r
 
 ## Open questions
 
-- Q5 (pending round 60): L32's branching tunnels, **a** recommended (two real forks, one safer, one richer);
+- Q5 (decided in round 60): L32's branching tunnels, **a** recommended (two real forks, one safer, one richer);
   alternatives **b** (cosmetic forks) and **c** (the same waves in both). The towers' placement follows it.
-- Q11 (pending round 60): the Ascendancy look on the belt, **a** recommended; alternatives **b** gunmetal
-  with gold, **c** black silhouettes with gold accents only.
+- Q11 (decided in round 60, **b**, not the recommendation): the Ascendancy look on the belt is gunmetal/charcoal hulls
+  with gold (≥ 20 % gold, rim light, red running lights); a (gloss black) and c (black silhouettes) rejected
+  ([enemies](../../README.md#factions-and-visual-language)).
 
 ## Decisions
 
 - 2026-10-27 (step D-enemies-B): drafted for the Act 5 design phase from the roster row and the gap
-  analysis; every number is a first draft, pending the user's review in round 60.
+  analysis; every number is a first draft, approved in round 60.
 - 2026-10-27 (decided by me, trivia): the "hardened base" is a collar around a hittable emitter (so a front
   gun can still kill it with aim, `anti-ground` with ease); the "360°" is the full turn every third sweep, with
   a reach ring telegraph of 1.0 s; the beam is 220 px so a tunnel always leaves a way out.
+- 2026-10-27 (user, [round 60](../../../concept-rounds/round-60/README.md) closed): the design approved as drafted (`design: approved`); art A.12 **a**, "Sentinel Tower A, lighthouse", chosen (`art: chosen`), the other variant in `concept/rejected/`. Q11 **b** (gunmetal/charcoal with gold, not gloss black): the chosen variant is re-rendered in gunmetal/charcoal in this part's production art, keeping the ≥ 20 % gold and the readability check.

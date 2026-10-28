@@ -22,8 +22,11 @@ final class VentChecks {
 
     /** A unit's M8 part G keys. */
     static void enemy(EnemyData enemy, BiConsumer<String, String> problem) {
+        // M9 part B: a ground turret's turning rack (the SAM Nest's) aims its missiles itself.
         boolean torpedoes = enemy.boss().isEmpty()
-                && enemy.attacks().stream().anyMatch(attack -> attack.homing().isPresent());
+                && enemy.attacks().stream()
+                        .anyMatch(attack -> attack.homing().isPresent()
+                                && attack.aim().filter("facing"::equals).isPresent());
         if (torpedoes && enemy.movement().hover().isEmpty()) {
             problem.accept("movement.hover", "a unit's torpedoes leave along its facing while it holds (a hover)");
         }
@@ -62,7 +65,10 @@ final class VentChecks {
                 if (enemy == null) {
                     continue;
                 }
-                if (group.formation().equals("column") && wave.from() == LevelData.Entry.REAR) {
+                // M9 part C: a mine layer's column rises up its lane to lay (MinefieldChecks).
+                if (group.formation().equals("column")
+                        && wave.from() == LevelData.Entry.REAR
+                        && enemy.movement().lay().isEmpty()) {
                     boolean holds = enemy.movement()
                                     .hover()
                                     .filter(hover -> hover.y().isPresent())

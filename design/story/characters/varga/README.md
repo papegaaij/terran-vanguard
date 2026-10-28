@@ -34,7 +34,7 @@ Ascendancy.
 
 ### Act 5 (draft)
 
-*Draft, step `m9-d-story` (2026-10-27), **pending the user's review in round 60**. The texts are the
+*Draft, step `m9-d-story` (2026-10-27), **approved in round 60**. The texts are the
 [act's](../../../campaign/act-5-the-belt/README.md) outro and the level documents'.*
 
 - **What she knew**: at Helix she saw Vorne at the gate-research reviews he funded; he was sixty when
@@ -85,6 +85,6 @@ procedural faces only show the style (framing, lighting, colour treatment, frame
 - 2026-09-30: Concept round 03: portrait style **B** (comm-screen pixel portrait) chosen, with a bit more colour retained so it looks less flat.
 - 2026-09-30: Concept round 04: style-B portrait with retained colour chosen.
 - 2026-10-01: Approved by the user in the [Acts 1–2 design review](../../../reviews/acts-1-2/README.md).
-- 2026-10-27 (Act 5 design phase, step m9-d-story; **pending the user's review in round 60**): her Act 5
+- 2026-10-27 (Act 5 design phase, step m9-d-story; **approved in round 60**): her Act 5
   beats: the L31 cures heard from the inside, the L33 power warning, and in the act outro Vorne's face
   ("he looks forty; he was sixty when I left Helix").

@@ -1,8 +1,8 @@
 ---
 title: Iron Sovereign
-design: draft
+design: approved
 implementation: not-started
-art: proposed
+art: chosen
 depends-on: [../../../world/belt, ../../../campaign/act-5-the-belt, ../../ground/sam-nest, ../../ground/rail-bunker, ../../ground/sentinel-tower, ../../air/dart-drone, ../../../player/wingmen, ../../../story/characters/vorne, ../../../systems/economy]
 updated: 2026-10-27
 ---
@@ -18,10 +18,9 @@ them into the arc facing the ship. Killing all of a ring's batteries **locks** t
 locked the core opens and fights on with spirals, Dart Drone streams and Vorne's composure cracking.
 After its death Vorne offers Lancer a job.
 
-**Status: draft** (Act 5 design phase, step D-boss, 2026-10-27), **pending the user's review in concept
-round 60**. It follows the gap analysis's recommended answers, all pending in round 60: **Q7 a** (the
+**Status: approved** by the user in concept round 60 (2026-10-27; drafted in the Act 5 design phase, step D-boss). It follows the gap analysis's recommended answers, all decided in round 60: **Q7 a** (the
 top-down rings; the alternatives under *Variants b and c*), **Q1 a** (the core's hex shield), **Q6 b**
-(the core's Dart streams), **Q11 a** (the belt look) and judgement call **J2** (Level 35's reference DPS
+(the core's Dart streams), **Q11 b** (the belt look: gunmetal/charcoal with gold) and judgement call **J2** (Level 35's reference DPS
 144). Every number is a hand-written **draft** at medium; there is no `data.yaml` yet (M9 part H writes
 it once the design is approved).
 
@@ -41,7 +40,7 @@ the station lies on the `ground` layer, so `anti-ground` weapons do double damag
 
 Numbers at **medium**; HP in damage units (a Pulse Cannon L1 shot does 2); bullet classes (`small` = 4,
 `heavy` = 10, `laser` = 8) and contact damage from the [balancing basis](../../README.md#balancing-basis).
-The reference DPS is the **proposed** Level 35 value of **144** (judgement call J2, pending round 60).
+The reference DPS is the **proposed** Level 35 value of **144** (judgement call J2, decided in round 60).
 The batteries reuse their ground units' attacks: their numbers live in those units' documents and are
 not repeated here; the boss sets only where and how often they fire.
 
@@ -123,7 +122,7 @@ locked ring blocks nothing (its hull is no hit area).
 
 ### Dart Drones
 
-Q6 b, pending round 60: the [Dart Drone](../../air/dart-drone/README.md), launched only in phase 4. A rim
+Q6 b, decided in round 60: the [Dart Drone](../../air/dart-drone/README.md), launched only in phase 4. A rim
 bay's doors open with a gold light for **0.5 s** (the tell), then the stream rises out of the bay onto
 the play plane on the Dart's own launch and chase; the Dart doc holds its numbers and its screen cap
 (16). As the Maw's shed Eel Swarms, they count into the level's enemies (not its density), pay their own
@@ -215,7 +214,7 @@ then the screen flash (an act boss) and the credit shower over the core.
 [Vorne](../../../story/characters/vorne/README.md) is on the enemy channel for the fight (the HUD's
 [enemy channel](../../../ui/hud/README.md): amber plate, the steady interference over his portrait; never
 urgent). Two or three taunts, then the recruitment; **this document owns their wording**, Level 35 places
-and times them (its radio's order and delays). Drafts, pending round 60:
+and times them (its radio's order and delays). Drafts, decided in round 60:
 
 | When | Line (draft) |
 |---|---|
@@ -225,7 +224,7 @@ and times them (its radio's order and delays). Drafts, pending round 60:
 
 **His composure cracks, he does not shout**: the gap analysis's "Vorne's rage" for phase 4 meets his
 character rule (he never shouts until Act 6's end), so the third line is short, cold and clipped, under
-the bared-teeth portrait with heavier static, not raised. (Judgement call of this step, pending round 60.)
+the bared-teeth portrait with heavier static, not raised. (Judgement call of this step, decided in round 60.)
 
 **The recruitment** (Vorne's Act 5 beat): after the death chain and Okafor's kill line, Vorne's last
 transmission of the act on the enemy channel, steady and warm again: "Lancer. You are wasted on Okafor.
@@ -260,7 +259,8 @@ the level's end and the act end in Level 28's order.
 
 ### Presentation
 
-- **Look brief (a)** (Q11 a, the belt look): a vast disc of **gloss black** hull with **gold trim on at
+- **Look brief** (Q11 b, the belt look, decided in round 60: gunmetal/charcoal, not the gloss black first drafted; the
+  chosen variant b, armoured links, is re-rendered in it in production): a vast disc of **gunmetal/charcoal** hull with **gold trim on at
   least 20 %** of its silhouette (the rings' rims and teeth, the battery collars, the core's petals), a
   strong **top-left rim light** (the belt's sun) and **red running lights** round each ring; the
   Ascendancy crest (a rising sun over a ringed planet) in gold on the core's petals. The rings are
@@ -277,6 +277,9 @@ the level's end and the act end in Level 28's order.
   segment's sprite rendered at a dense heading set (its outer edge moving ≤ 2 px a step), the batteries'
   mounts on segments and their turrets at 64 headings. The art step proves the seams and the page count;
   Level 35's whole atlas is measured as Level 28's was (≤ 6 pages, L28 had 7 accepted).
+  **Decided in round 60 (A.23, top-lit):** the segments are rendered **once with the light fixed from the top** (45° segments),
+  rotated in 90° turns and mirrored, plus a static rim-light overlay: about **0.6 atlas pages** (the full-sun render, 3.1–3.6
+  pages, is rejected); the sun gradient no longer travels round the wheel. The chosen look is **b, armoured links** (A.17 b).
 - **Readability** (one check per sheet): every battery and the arc's red band over the darkest part of
   the station and over Ceres's backdrop; the station's black must stay distinct from space behind the
   outer ring (the belt's backdrops a step lighter than Act 4's).
@@ -303,8 +306,10 @@ play in vacuum as everywhere (the game's convention). The batteries keep their u
 
 ## Concept art
 
-Concept round 60 (Act 5 "The Belt" design phase, step ART-P-world; pending the user's review) — two looks of the
-top-down rings (Q7 a) in the belt look of [Q11](../../../world/belt/README.md#open-questions) a, each a PNG sheet
+Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
+
+Concept round 60 (Act 5 "The Belt" design phase, step ART-P-world; chosen in round 60) — two looks of the
+top-down rings (Q7 a) in the belt look of [Q11](../../../world/belt/README.md#open-questions) a (gloss black; production re-renders in gunmetal, Q11 b), each a PNG sheet
 (the station at rest, the segments and a seam, the batteries out of and in the arc and wrecked, the core shut,
 opening, open under its hex shield, readability crops, key frames, the measured atlas estimate) and a 26 s GIF in
 the 480×540 play field (intro, phase 1, a cut to the outer ring's lock, a cut to the core, the death chain); the
@@ -314,14 +319,12 @@ under *Variants b and c* only (no art). Generator `tools/concept/belt_r60.py`; p
 
 | File | What | Status |
 |---|---|---|
-| [concept/iron-sovereign-r60-a.png](concept/iron-sovereign-r60-a.png) | Iron Sovereign A, continuous wheel — the segments butt into smooth rings, gold lips and teeth on every rim, red lights on the ribs (sheet) | proposed |
-| [concept/iron-sovereign-r60-a.gif](concept/iron-sovereign-r60-a.gif) | Iron Sovereign A, continuous wheel — the fight and the death in the play field (motion) | proposed |
-| [concept/iron-sovereign-r60-b.png](concept/iron-sovereign-r60-b.png) | Iron Sovereign B, armoured links — every segment a separate block with a dark gap and a gold-edged cap plate, the gaps reading the turning (sheet) | proposed |
-| [concept/iron-sovereign-r60-b.gif](concept/iron-sovereign-r60-b.gif) | Iron Sovereign B, armoured links — the fight and the death in the play field (motion) | proposed |
+| [concept/iron-sovereign-r60-b.png](concept/iron-sovereign-r60-b.png) | Iron Sovereign B, armoured links — every segment a separate block with a dark gap and a gold-edged cap plate, the gaps reading the turning (sheet) | chosen (round 60) |
+| [concept/iron-sovereign-r60-b.gif](concept/iron-sovereign-r60-b.gif) | Iron Sovereign B, armoured links — the fight and the death in the play field (motion) | chosen (round 60) |
 
 ## Implementation
 
-To be built in M9 part H with Level 35, once round 60 approves the design.
+To be built in M9 part H with Level 35; round 60 approved the design (2026-10-27).
 
 - [ ] Stat block and boss script in a `data.yaml` (the rings, their radii, speeds, directions and steps,
       the batteries and their units' attacks, the fire arc, the core's phases, the Darts, par), loaded;
@@ -342,14 +345,14 @@ To be built in M9 part H with Level 35, once round 60 approves the design.
       35's scale
 - [ ] Intro (the halt, the spin-up, Vorne's line), death (the cook-offs, the implosion, the segments
       drifting, flash, credit shower), Vorne's taunts and the recruitment in Level 35's radio timeline
-- [ ] Production art (≤ one atlas page): the ring segments at their heading sets, the batteries' mounts
+- [ ] Production art (≤ one atlas page, about 0.6 with the top-lit segments of A.23; the chosen look b in gunmetal/charcoal, Q11 b): the ring segments at their heading sets, the batteries' mounts
       and turrets, the core shut / opening / open, the locked look, the death, the intel silhouette;
       readability checks over Level 35's backdrop
 - [ ] Sounds (Freesound, CC0/CC-BY) per the brief; the music #19 from the warning
 
 ## Open questions
 
-All pending the user's review in concept round 60:
+All approved by the user in concept round 60:
 
 - **Q7** (the fight): **a** top-down rings (recommended, this document); **b** a scrolling fortress
   crossing the three rings as hull sections, then the core (cheaper, loses the rotation identity);
@@ -361,8 +364,8 @@ All pending the user's review in concept round 60:
   just opens, armoured until then).
 - **Q6** (popcorn): **b** the core's Dart streams (this document); **a** no Dart Drone (phase 4 is the core
   alone); **c** Talons launched instead (shielded popcorn, against the doctrine).
-- **Q11** (the look): **a** gloss black with gold trim and red lights, the backdrops a step lighter (this
-  document); **b** gunmetal hulls with gold (reads better, diverges from the final L28 cruisers);
+- **Q11** (the look): decided in round 60, **b** gunmetal/charcoal hulls with gold, red lights, the backdrops a step
+  lighter (not the recommendation; it diverges on purpose from the final L28 cruisers); rejected: **a** gloss black,
   **c** black silhouettes with gold accents (cheapest, poor at speed).
 - **J2**: Level 35's reference DPS 144 (the HP above follow it).
 - Vorne in phase 4: cold and clipped, never a shout (this document), or the gap analysis's "rage" as a
@@ -375,13 +378,13 @@ All pending the user's review in concept round 60:
 - 2026-09-30: Drafted in the bosses roster as the Act 5 boss (L35): a battle station with three
   concentric rotating rings whose batteries (rail, SAM, laser) rotate into view; destroy a ring's
   batteries to stop it, stop all rings to expose the core.
-- 2026-10-27 (Act 5 design phase, step m9-d-boss; **pending the user's review in round 60**): promoted from
+- 2026-10-27 (Act 5 design phase, step m9-d-boss; **approved in round 60**): promoted from
   the roster to a draft spec on the gap analysis's recommendations: Q7 a (the top-down rings over Ceres
   orbit, the scroll halted; phases Three rings, Two rings, One ring, the Core), Q1 a (the core's hex shield
-  80), Q6 b (Dart streams in phase 4), Q11 a (the look). HP 8,960 (13 batteries 3,960, core 5,000) from the
+  80), Q6 b (Dart streams in phase 4), Q11 b (the look). HP 8,960 (13 batteries 3,960, core 5,000) from the
   proposed L35 reference DPS 144 (J2); paper ≈ 145 s, par 150 until measured; bounty 341 in Act 1 terms
   (24 % of budget(35) ≈ 1,676 paid at a hand `bounty_scale` of 0.75, recomputed with the level's).
-- 2026-10-27, design phase: reconciled with Level 35 (step m9-d-act; pending the user's review in round 60): the
+- 2026-10-27, design phase: reconciled with Level 35 (step m9-d-act; approved in round 60): the
   bounty is **457** in Act 1 terms (core 379, 13 batteries × 6) at Level 35's hand scale **0.56**, paid 1,677 (24 %
   of budget(35)), not 341 at the assumed 0.75; **this document owns Vorne's Level 35 wording**, the level places
   and times the lines (the sentence that gave the wording to the level corrected).
@@ -391,3 +394,4 @@ All pending the user's review in concept round 60:
   Nest's, the Rail Bunker's and the Sentinel Tower's attacks; the station is `ground` but not hardened;
   Vorne announces the boss and cracks without shouting; the rings drawn from segment sprites for the
   one-page budget; the L49 echo proposed as the outer ring round the open core.
+- 2026-10-27 (user, [round 60](../../../concept-rounds/round-60/README.md) closed): the design approved as drafted (`design: approved`, D.9): Q7 **a** (the three top-down rings), J.8 (Vorne cold and clipped, never shouting), J.2 (reference DPS 144), Q6 **b**. Art: **A.17 b**, armoured links (every segment a separate block with a dark gap and a gold-edged cap plate; the continuous wheel, a, rejected); **A.23 top-lit** (segments rendered once with the light fixed from the top, 90° turns, mirrored, a static rim overlay: about 0.6 pages, not the 3.1–3.6 of full sun). Q11 **b**: the production art is re-rendered in gunmetal/charcoal with gold. The rings' bed is S.16 a.

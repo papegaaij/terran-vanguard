@@ -245,6 +245,10 @@ final class ContactPasses {
                 shots.free(i);
                 if (broken) {
                     events.add(SimEvents.Type.DEBRIS_DESTROYED, chunk.x(), chunk.y());
+                    if (s.rides != null) {
+                        // M9 part B: a wave's rock broke: its riders tumble off.
+                        s.rides.broken(chunk);
+                    }
                     debris.free(d);
                     break;
                 }

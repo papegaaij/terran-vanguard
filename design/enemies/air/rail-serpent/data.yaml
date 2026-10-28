@@ -1,0 +1,79 @@
+# Rail Serpent stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/schemas-units/README.md
+# M9 part C, step C2 (Level 30): the approved stat block (round 60) as data. A segment chain (the Coilwyrm's and the Eel
+# Swarm's rig) with two things new in it (flown from step C1): the turret cars (`segment_chain.cars`: every third car
+# behind the engine flies the turret's HP and bounty and fires the attack it names on its own clock, staggered) and the
+# machine split (`cut: {scatter, seconds, wreck: true}`: the rear part behind a cut loses power, slows from 40 % of the
+# train's speed to a stop over 1.5 s, harmless and dark, then blows car by car from the cut back, each paying its
+# bounty). The engine is the vital head and fires nothing. A 10-car train = the engine, 9 cars (3 of them turret cars)
+# and the tail: `segments` counts the cars between the engine and the tail. Counts as one enemy (density, kill ratio).
+# The sprites: the engine `rail-serpent`, the cars `rail-serpent-segment`, the turret cars `rail-serpent-turret`, the
+# tail `rail-serpent-tail` (step ART-C's names).
+name: Rail Serpent
+faction: Jovian Ascendancy
+layer: air
+tier: large       # a 10-car train ≈ 420 px long
+size: [64, 64]    # the engine car's sprite px
+hitbox: [45, 45]  # 70 % of the sprite
+parts: multi
+part_list:  # offset 0: engine and tail are placed on the path history, not at a fixed offset
+  - {name: engine, offset: [0, 0], hitbox: [45, 45], hp: 150, kind: vital, bounty: 40}
+  - {name: tail, offset: [0, 0], hitbox: [34, 34], hp: 20, kind: destroyable, bounty: 0, first_bonus: 10}   # first_bonus: +10 when destroyed first
+segment_chain:              # the cars between the engine and the tail
+  segments: 9               # a 10-car train (easy 8 cars, hard 14: the hooks)
+  size: [48, 48]            # px, a car's sprite (no taper)
+  hitbox_share: 0.7         # hit box 34 × 34
+  spacing: 0.85             # × the car length, along the engine's path history
+  hp: 16
+  bounty: 3
+  contact: small            # the cars and the tail (the engine: its tier, `large` = 20)
+  cut: {scatter: 68, seconds: 1.5, wreck: true}   # the machine split: the rear part slows from 68 px/s (40 % of 170) to a stop over 1.5 s, harmless, then blows car by car from the cut back, paying its cars
+  pop_interval: 0.1         # s between two cars blowing (the engine's death from the front, a wreck from the cut back)
+  cars: {every: 3, stagger: 0.6, hp: 24, bounty: 5, attack: car-gun}   # every third car a turret car: 24 HP, 5 credits, its aimed shot staggered 0.6 s a car
+orientation: 32 angles
+hp: 338             # the parts' sum at 10 cars: engine 150, 6 cars × 16, 3 turret cars × 24, tail 20
+armour: none
+speed: 170          # px/s, the engine along its path (plus scroll)
+machine: true       # the EMP Burst stuns it 3 s: the train halts in place, its turrets dark
+movement:
+  path:
+    speed: 170              # the engine flies the wave's authored path (side and rear entries)
+attacks:
+  - pattern: aimed
+    name: car-gun           # fired by the turret cars (segment_chain.cars), not the engine
+    bullet: small
+    interval: 2.4
+    speed: 160
+    first_shot_delay: 0.5   # s after the car is on the screen (then 0.6 s more per turret car before it)
+    tell: 0.2               # s: the red lamp on the turret before each shot
+    burst_gap: 0.15         # s between the shots of hard's burst of 2
+    notes:
+      text: 'each turret car: `{pattern}` single shot every {interval} s, the turret cars staggered {segment_chain.cars.stagger} s apart (standard {speed} px/s, `{bullet}` = {damage}), a {tell} s red lamp on the turret as the tell; contact `{tier}` = {contact_damage} (engine) / `small` = 10 (cars)'
+formations:
+  - {name: snake}    # one train
+  - {name: pincer}   # two trains from both sides, edge-warned
+weak_points:
+  - {name: the engine's reactor glow}
+drops: []
+traits: [homing, piercing, beam, rear]
+bounty: 73          # the parts' sum at 10 cars: engine 40, 6 cars × 3, 3 turret cars × 5 (83 with the tail first)
+first_level: 30
+difficulty:
+  easy: {segments: 7, attacks: {car-gun: {interval: 3.0}}}
+  hard: {segments: 13, burst: 2}
+notes:
+  faction: 'Jovian Ascendancy; a **machine** (stunned 3 s by the [EMP Burst](../../../player/specials/README.md#emp-burst-l15): the train halts in place and its turrets go dark, then runs on along its path)'
+  tier: ' (a 10-car train ≈ 420 px long)'
+  size: '(the engine car); cars {segment_chain.size.0}×{segment_chain.size.1} px, a 10-car train ≈ 420 px long; hitboxes 70 % of the sprite'
+  parts: 'engine car (`vital`), 8–14 cars (`destroyable`): every third car (3rd, 6th, 9th, 12th) a **turret car**, the last car the **tail** (`destroyable`, a bonus when destroyed first)'
+  orientation: per car (each car faces along the path)
+  hp: 'engine 150 (1.2 s at the L30 reference of 124), car {segment_chain.hp}, turret car {segment_chain.cars.hp}, tail 20; a 10-car train 150 + 6 × 16 + 3 × 24 + 20 ='
+  armour: 'none: the "armour" is its HP per car; no hex shield (an unmanned train)'
+  speed: (the cars `chain` on the engine's path history at {segment_chain.spacing} × the car length)
+  movement: 'the engine flies an authored `swirl` or `cross` path from the wave, **entering from a side or the bottom edge** (`from: sides` / `rear`; a wave''s first entry edge-warned 3 s ahead), crossing the screen once with at most one `loop`, and leaves through another edge'
+  formations: (one train, or two from both sides, edge-warned)
+  weak_points: (the vital part)
+  traits: (rear and side entries)
+  bounty: ': a 10-car train dismantled (engine 40, car {segment_chain.bounty}, turret car {segment_chain.cars.bounty}), 83 with the tail first (+{part_list.1.first_bonus}); an engine-first kill pays the engine''s 40 and the chained explosion''s time bonus (the [multi-part](../../README.md#multi-part-enemies) scoring rule)'
+  death: 'engine killed: the whole train blows car by car from the front ({segment_chain.pop_interval} s apart), each a `medium` explosion with gold debris; a split''s rear half: see below'
+  used_in: behind the ship, beside the Minelayers; its later Act 5 levels per the level drafts
+  difficulty: 'easy: 8 cars, turrets every 3.0 s; hard: 14 cars, each turret a `burst` of 2 (0.15 s apart)'

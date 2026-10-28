@@ -1,0 +1,65 @@
+# Minelayer stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/schemas-units/README.md
+# M9 part C, step C2 (Level 30): the approved stat block (round 60) as data. New in it (flown from step C1): the `lay`
+# movement (up a side lane from behind, its wave's `mine_lines` giving the lay row and the gap, then across the field
+# laying) and the line mine (`mine` with `proximity`, `blink`, `blast`, `chain`, `hop` and its `line`), the hook `mine`
+# (easy's wider gap and short middle cluster, hard's quicker arming).
+# The mine's touch deals the attack's bullet class (`medium` = 6); the ship touching the layer itself takes the tier's
+# contact (`medium` = 15). Its 150 px/s strafe at Level 30's 80 px/s scroll lays the line sloped (about 28°).
+name: Minelayer
+faction: Jovian Ascendancy
+layer: air        # `space` (the air layer in vacuum)
+tier: medium
+size: [88, 64]    # sprite px
+hitbox: [64, 44]
+parts: single
+orientation: 16 angles
+hp: 110           # 0.9 s at the L30 reference of 124
+armour: none
+speed: 120        # px/s rising
+machine: true     # the EMP Burst stuns it 3 s (it stops laying; the line keeps the hole)
+movement:
+  lay: {rise: 120, strafe: 150, lane: 70}   # px/s up its lane, px/s across while laying, px in from its side edge (40–100)
+attacks:
+  - pattern: mine
+    name: line
+    bullet: medium      # an armed mine touched: its burst's contact
+    interval: 1         # unused: a layer lays its line by x as it strafes
+    speed: 100          # px/s, the ring's slow bullets
+    mine:
+      arm: 1.0          # s with a dim light: unarmed, touching it does nothing
+      life: 30          # s: longer than a line stays on the screen (a line mine never bursts on its own)
+      drift: 0          # holds its place in the field (comes down with the scroll)
+      hp: 1
+      ring: 8
+      ring_bullet: small
+      credits: 0        # mines pay nothing (a line is not a credit farm)
+      proximity: 48     # px from the ship's (or Rook's) centre: an armed mine blinks, then bursts
+      blink: 0.6        # s of the fast blink before the burst
+      blast: {radius: 40, bullet: heavy}   # C2 a: the proximity burst's blast, once, on hulls touching the disc
+      chain: 44         # px: a shot mine sets off the mines within it, hop by hop (its cluster of 4; step C3: 44, not 40, so a line laid at Level 30's 120 px/s, its neighbours 41 px apart on the slope, still chains)
+      hop: 0.08         # s a hop
+      line: {clusters: 3, per_cluster: 4, spacing: 32, cluster_gap: 56, gap: 112, most: 40}
+    notes:
+      text: '`{pattern}`: while it strafes it lays a line of **{mine.line.clusters} clusters of {mine.line.per_cluster} mines** ({mine.line.spacing} px apart in a cluster, {mine.line.cluster_gap} px between clusters) with **one gap of {mine.line.gap} px** at the wave''s gap position (one of the two cluster boundaries); a mine ({mine.hp} HP) arms after **{mine.arm} s**, then an armed mine within **{mine.proximity} px** of the ship''s centre blinks **{mine.blink} s** and bursts into a `ring` of **{mine.ring}** (slow {speed} px/s, `{mine.ring_bullet}` 4) with a **{mine.blast.radius} px** `{mine.blast.bullet}` blast; touched while armed it bursts at once (contact `{bullet}` 6, plus its ring); shot, it sets off the mines within {mine.chain} px ({mine.hop} s a hop: its cluster); mines stay where they are laid (they move with the scroll), so the line **slopes** (below)'
+formations:
+  - {name: column, size: [2, 3]}   # from the rear, each laying its own line, 2.5 s apart
+weak_points: []   # the gold mine hopper at its tail is drawn only
+drops: []
+traits: [rear, homing, spread, piercing]
+bounty: 26
+first_level: 30
+difficulty:
+  easy: {ring: 6, mine: {gap: 144, middle_short: 1}}
+  hard: {ring: 10, mine: {arm: 0.8}}
+notes:
+  layer: ' (`space` in vacuum: the same layer)'
+  armour: none (not on the [enemy shields](../../README.md#enemy-shields)' Act 5 list)
+  speed: rising, {movement.lay.strafe} px/s across while laying
+  movement: '`rear-entry` (edge-warned 3 s) in a side lane ({movement.lay.lane} px from a side edge, beside the ship, not through it), rising to its **lay row** (set per unit in the wave; default 100 px and 180 px from the top), then `strafe`s across the field to the far edge and leaves; a column''s layers enter **2.5 s apart** (see *Difficulty and level use*)'
+  formations: from the rear, each laying its own line
+  weak_points: (the gold mine hopper at its tail is drawn only)
+  traits: (the mines)
+  bounty: '; mines {attacks.0.mine.credits}'
+  death: '`medium` mechanical explosion with sparks; its unlaid mines are lost with it (a line it has not finished keeps its gap and has a second one where it stopped)'
+  used_in: the minefield; later Act 5 levels may use it (their docs decide)
+  difficulty: 'easy: a wider gap (144 px, the cluster beside it 3 mines), rings of 6; hard: a column of 3 (three lines), rings of 10, arming 0.8 s (the gap stays 112 px: a narrower one would sit inside the 48 px proximity of both edge mines)'

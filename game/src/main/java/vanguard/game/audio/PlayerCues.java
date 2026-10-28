@@ -123,7 +123,7 @@ final class PlayerCues extends SoundFamily {
     }
 
     /** The sound of a weapon sound family; the families of later weapons play the pulse until they have theirs. */
-    private static Sfx shot(String family) {
+    static Sfx shot(String family) {
         return switch (family) {
             case "vulcan" -> Sfx.VULCAN_SHOT;
             case "ballistic" -> Sfx.BALLISTIC_SHOT;
@@ -136,6 +136,8 @@ final class PlayerCues extends SoundFamily {
             case "torpedo" -> Sfx.SHOT_TORPEDO;
             // M8 part A: the Act 4 arsenal (round 50's picks) and the Bulwark's cannon.
             case "harpoon" -> Sfx.SHOT_HARPOON;
+            // M9 part A: the Tesla Coil Pod's zap, one an arc (its SHOT_FIRED comes only with a target).
+            case "tesla" -> Sfx.TESLA_SHOT;
             case DEPTH_CHARGE -> Sfx.SHOT_DEPTH_CHARGE;
             case BULWARK_CANNON -> Sfx.BALLISTIC_SHOT;
             default -> Sfx.PULSE_SHOT;

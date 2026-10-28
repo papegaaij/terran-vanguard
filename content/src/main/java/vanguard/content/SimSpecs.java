@@ -122,6 +122,16 @@ public final class SimSpecs {
         return LoadoutRules.loadout(content, engine, weapons, shield, plating, sparePower, difficulty, turnBonus);
     }
 
+    /**
+     * M9 part A (design/player/generator, Enemy drain effects): the power budget in flight of a fit ({@link
+     * Loadout#withPower}): the generator's {@code output}, the fitted {@code load} (MW, the shield's draw in it), the
+     * fitted {@code shield} by its name; the drain's numbers from the generator data.
+     */
+    public static Loadout.Power power(
+            Content content, double output, double load, String shield, Difficulty difficulty) {
+        return LoadoutRules.power(content, output, load, shield, difficulty);
+    }
+
     /** The shield regen bonus of {@code sparePower} spare MW (design/player/generator): +10 % per MW, at most +50 %. */
     public static double regenBonus(Content content, double sparePower) {
         return LoadoutRules.regenBonus(content, sparePower);

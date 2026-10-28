@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../../player, ../../systems/scoring, ../../art-direction]
-updated: 2026-10-27
+updated: 2026-10-28
 ---
 
 # HUD
@@ -136,7 +136,7 @@ control prompts 384–430 (a two-line well, 42 px), objective tracker 436–482 
 
 ### Act 5 additions (draft)
 
-*Draft, step `m9-d-systems` (2026-10-27), **pending the user's review in round 60** (Q2 = a, Q9 = a).*
+*Draft, step `m9-d-systems` (2026-10-27), **approved in round 60** (Q2 = a, Q9 = a).*
 
 **The power row under a drain** (from L33; the rules are the
 [generator's](../../player/generator/README.md#enemy-drain-effects)):
@@ -170,7 +170,9 @@ transmission. Its radio box keeps the layout of the left panel's radio row and c
 **Level 31's tug** (the escort level): its three hull sections (bow, cargo, engines) on the objective
 line as three bars in the style of Level 10's shuttle bars (the hit flash, amber below 50 %, the red flash
 and dark when lost); the sections and their HP are the tug's and the level's documents', the line must
-fit the 208 px well (`MissionLayoutTest`).
+fit the 208 px well (`MissionLayoutTest`). The level's `CLEAN HULL` secondary shows as a tag in the small font between `TUG` and the
+count: `CLEAN HULL` while every section holds half its hull (a tick at the share on each bar), `HULL FAILED` in
+red with the integrity line's flash the moment one drops below, `HULL DONE` in green at the level end (step D4b).
 
 ## Concept art
 
@@ -241,6 +243,8 @@ Production art for concept round 26 (M4 part H batch): the boss bar's plate, ren
 |---|---|---|
 | [concept/boss-bar-plate-final-r26-a.png](concept/boss-bar-plate-final-r26-a.png) | `hud/boss-bar-plate.9.png`: a 64×20 nine-patch steel strip with riveted end caps and a recessed trough (splits L14 R14 T7 B7, content box L11 R11 T7 B7 = the 6 px fill), at 8× with its splits, and round the 400 px and 240 px bars as drawn | chosen |
 | [concept/special-limits-capture-r50-a.png](concept/special-limits-capture-r50-a.png) | Game captures of the special row's limits (M8 part A, 2× crops of the right panel): `NO WATER` on the Sonar Pulse (and the Harpoons and Depth Charges) on Level 18 before the water, `UNDER ICE` on the Airstrike on Level 20 under water | chosen (round 50, K.1: accepted) |
+| [concept/power-row-capture-r61-a.png](concept/power-row-capture-r61-a.png) | Game captures of the power row under a drain on the [capture rig](../../enemies/concept/prompts.md#belt-rig-capture-r61-a) (step A4; drainers latched by the rig): `POWER +40%` before it, `POWER DRAIN 6/8` (one), `4/8` (two), `REGEN OFF` (three, the load over the output), `FIRE 50%` (the Tesla fit, over its output from the first) | chosen (round 61, K.1: accepted) |
+| [concept/intercept-radio-capture-r61-a.png](concept/intercept-radio-capture-r61-a.png) | Game captures of the enemy channel on the radio (the rig's Vorne line): the amber plate, the `INTERCEPT` tag, the portrait under the steady interference, the amber subtitle at three moments; right: `AIRSTRIKE  IN ROCK` in the compact special row beside the drain row | chosen (round 61, C.6: accepted) |
 
 ## Implementation
 
@@ -318,11 +322,16 @@ Production art for concept round 26 (M4 part H batch): the boss bar's plate, ren
       characters (`ORBITAL LANCE`), `OVERCHARGE` for the Shield Overcharge; the dash pip a 16×6 cell
       right of the shield's label plate; with it the overcharge's white cores in the shield bar and
       a drone bay's hits strip under its weapons row
-- [ ] The power row under a drain (`POWER DRAIN`, the hatched drained cells, the flash over load, `REGEN OFF` /
-      `FIRE nn%`) — **later: Act 5** (draft: *Act 5 additions*) — M9 part A
+- [x] The power row under a drain (`POWER DRAIN`, the hatched drained cells, the flash over load, `REGEN OFF` /
+      `FIRE nn%`) — **later: Act 5** (draft: *Act 5 additions*) — M9 part A (step A3: `PowerRow` in place of the
+      spare-power row while a drainer is latched: the gauge on the output's scale, the load lit, the drained MW hatched
+      dark red at its top end, the readout `14/20`, `REGEN OFF` or `FIRE 88%`, the 1.2 s flash; the muzzle flicker and
+      the dimmed shield ring in the play field; `ActFiveLooksTest`)
 - [ ] The enemy channel on the radio (the steady interference over the portrait, the amber plate and subtitle,
-      `INTERCEPT`), Vorne's production portrait — **later: Act 5** — M9 (the act intro's part)
-- [ ] Level 31's tug tracker (three section bars) — **later: Act 5** — M9 (L31's part)
+      `INTERCEPT`), Vorne's production portrait — **later: Act 5** — M9 (the act intro's part; step A3: the dress, a
+      line's channel from its own key or its speaker's, never urgent, `MissionPanel`, `TransmissionStatic.drawSteady`,
+      the intercept's open and close in place of the squelch; Vorne's portrait remains)
+- [x] Level 31's tug tracker (three section bars) — M9 part D (step D4: `TUG n / 3` over three bars, each after its section's initial `B`, `C`, `E`: the full names leave no room for a bar in a third of the well, `MissionLayoutTest`; step D4b: the `CLEAN HULL` tag on line one and the share's tick on the bars)
 
 ## Open questions
 
@@ -347,7 +356,9 @@ Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-a
   Rook's rear bark went with the re-entry warnings; Rook's Trail on those units stays.
 - 2026-10-22 (M8 part A, step A6; accepted in round 50 (2026-10-22)): a forbidden special greys and switches to the compact row with its reason word (`UNDER ICE` / `NO WATER`) in amber, `ORBITAL LANCE` cut to `ORBITAL` to fit; the row flashes once on the state change at a waterline and plays the limit chime (a press on a greyed special keeps the denied buzz r08-a); the Harpoon Torpedoes read `HARPOONS` so `NO WATER` fits beside the name; the escort box reads `BULWARK` (`LOST` when destroyed); the nanites' `+` pip.
 - 2026-10-22 (user, [round 50](../../concept-rounds/round-50/README.md) closed): K.1: the special row's limits (`UNDER ICE` / `NO WATER`, the compact greyed row, `ORBITAL LANCE` cut to `ORBITAL`) accepted, the capture `chosen`; the limit chime is S.8 **b** (the soft glass fifth).
-- 2026-10-27 (Act 5 design phase, step m9-d-systems; **pending the user's review in round 60**): the power row
+- 2026-10-27 (Act 5 design phase, step m9-d-systems; **approved in round 60**): the power row
   under a drain (`POWER DRAIN`, the drained MW as hatched cells, the flash and `REGEN OFF` / `FIRE nn%` over
   load; Q2 = a), the enemy channel on the radio (a steady interference over the portrait, an amber plate and
   subtitle, the `INTERCEPT` tag; Q9 = a) and Level 31's three tug section bars (Q4 = a).
+- 2026-10-27 (user, [round 60](../../concept-rounds/round-60/README.md) closed): the Act 5 additions approved as drafted (D.17): the enemy-channel lines, the power gauge, Level 31's three tug section bars (the tug is 200×300 px by J.6 b; the bars do not depend on its size), the intercepted briefing pages; the intercept sounds are S.11 a, S.12 a and S.13 a.
+- 2026-10-28 (user, [round 61](../../concept-rounds/round-61/README.md), closed): the power row under a drain accepted (**K.1**); the enemy channel's amber `FFA035` plate, the `INTERCEPT` tag and the steady interference accepted (**C.6**).

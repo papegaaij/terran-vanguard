@@ -9,6 +9,7 @@ import vanguard.content.campaign.Flight;
 import vanguard.game.level.LowArmour;
 import vanguard.sim.Defences;
 import vanguard.sim.Drones;
+import vanguard.sim.IdleReason;
 import vanguard.sim.Sortie;
 import vanguard.sim.SpecialSlot;
 import vanguard.sim.Wingman;
@@ -143,7 +144,15 @@ final class ShipPanel {
      */
     static final String NO_WATER = "NO WATER";
     /** M8 part A: the room for a weapon's name before {@code NO WATER} in its row, px (14 of the font's 8 px glyphs). */
-    static final int NO_WATER_NAME_WIDTH = HudKit.INNER_WIDTH - 6 - 20 - (NO_WATER.length() + 1) * GLYPH_WIDTH;
+    static final int NO_WATER_NAME_WIDTH = nameWidth(NO_WATER);
+
+    /**
+     * The room for a weapon's name before an idle reason's {@code word} in its row, px (M9 part C: {@code NO GROUND},
+     * one glyph longer than {@code NO WATER}).
+     */
+    static int nameWidth(String word) {
+        return HudKit.INNER_WIDTH - 6 - 20 - (word.length() + 1) * GLYPH_WIDTH;
+    }
     /**
      * M5 part F: the shield gauge's label while a Lamprey drains the shield (design/ui/hud, Level 12), in
      * the warning colour; it fits the label plate ({@code PartFHudTest}).
@@ -155,6 +164,8 @@ final class ShipPanel {
     private static final String[] SLOT_LETTERS = {"F", "R", "L", "R"};
 
     private final HudKit kit;
+    /** M9 part A: the power row under an enemy drain. */
+    private final PowerRow powerRow;
     /** How long an overdrive lasts (design/player, in-level pickups), the timer's full length. */
     private final double overdriveLength;
 
@@ -194,6 +205,7 @@ final class ShipPanel {
             TextureRegion escortIcon,
             TextureRegion bulwarkIcon) {
         this.kit = kit;
+        powerRow = new PowerRow(kit);
         this.overdriveLength = overdriveLength;
         this.specialIcon = specialIcon;
         this.escortIcon = escortIcon;
@@ -240,7 +252,7 @@ final class ShipPanel {
             SpriteBatch batch,
             Sortie sortie,
             Flight.Weapon[] weapons,
-            boolean[] idle,
+            IdleReason[] idle,
             double sparePower,
             double regenBonus,
             List<String> notFlown) {
@@ -296,7 +308,16 @@ final class ShipPanel {
         if (sortie.ship().thrustersFitted()) {
             dashPip(batch, sortie.ship().dashReadiness(), sortie.ship().dashReady(), sortie.tick(), x, y - 52);
         }
-        power(batch, sparePower, regenBonus, sortie.overdriveSeconds() > 0, x, y - 104);
+        // M9 part A: while a drainer is latched the power row shows the drain (PowerRow).
+        vanguard.sim.PowerState drain = sortie.power().orElse(null);
+        if (PowerRow.draining(drain)) {
+            powerRow.draw(batch, drain, sortie.tick(), x, y - 104, HudKit.INNER_WIDTH, BAR_HEIGHT);
+            if (sortie.overdriveSeconds() > 0) {
+                kit.glow(batch, HudKit.AMBER, x, y - 104 - 34, HudKit.INNER_WIDTH, BAR_HEIGHT);
+            }
+        } else {
+            power(batch, sparePower, regenBonus, sortie.overdriveSeconds() > 0, x, y - 104);
+        }
         weapons(batch, sortie, weapons, idle, sortie.overdriveSeconds(), x, y - 148);
         special(batch, sortie.special(), defences, flashing(sortie.tick(), readyFlashTick), x, y - SPECIAL_TOP);
         if (denied > 0) {
@@ -313,11 +334,14 @@ final class ShipPanel {
             kit.text(batch, kit.small, REPAIR_PIP, POWER, x + DASH_PIP_X + 4, y - REPAIR_PIP_DROP);
         }
         Wingman rook = sortie.wingman().orElse(null);
-        if (rook != null) {
+        // M9 part B: the rescued Rook's box from his launch on; until then the loaned Bulwark's, gone with it.
+        boolean rookShown = rook != null && !rook.waiting();
+        if (rookShown) {
             escort(batch, rook, sortie.tick(), x, y);
         }
         // M8 part A: the Bulwark in the escort slot, the same box.
         sortie.bulwark()
+                .filter(bulwark -> !rookShown && !sortie.escortSwap().bulwarkDeparted())
                 .ifPresent(bulwark -> escortBox(
                         batch,
                         bulwarkIcon,
@@ -597,7 +621,7 @@ final class ShipPanel {
             SpriteBatch batch,
             Sortie sortie,
             Flight.Weapon[] weapons,
-            boolean[] idle,
+            IdleReason[] idle,
             double overdriveSeconds,
             int x,
             int y) {
@@ -614,10 +638,12 @@ final class ShipPanel {
             Color colour = weapon == null ? HudKit.LABEL : HudKit.READOUT;
             kit.text(batch, kit.small, SLOT_LETTERS[slot], HudKit.LABEL, x + 6, rowTop);
             String name = weapon == null ? "-" : hudName(weapon.name());
-            if (weapon != null && idle[slot]) {
-                // M5 part E: it cannot fire here: the reason instead of its pips (M8 part A: the name cut before it).
-                kit.text(batch, kit.small, name, colour, x + 20, rowTop, NO_WATER_NAME_WIDTH);
-                kit.textRight(batch, kit.small, NO_WATER, HudKit.LABEL, x, rowTop, HudKit.INNER_WIDTH - 6);
+            if (weapon != null && idle[slot] != IdleReason.NONE) {
+                // M5 part E: it cannot fire here: the reason instead of its pips (M8 part A: the name cut before it;
+                // M9 part C: NO WATER or NO GROUND).
+                String word = idle[slot].word();
+                kit.text(batch, kit.small, name, colour, x + 20, rowTop, nameWidth(word));
+                kit.textRight(batch, kit.small, word, HudKit.LABEL, x, rowTop, HudKit.INNER_WIDTH - 6);
                 continue;
             }
             kit.text(batch, kit.small, name, colour, x + 20, rowTop, pipsX - x - 24);

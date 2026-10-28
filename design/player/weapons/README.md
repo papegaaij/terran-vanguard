@@ -22,7 +22,7 @@ The weapons available by L14 (Acts 1–2) have full designs, plus the Act 3 weap
 Lance, Deflector Pod, Light Drone Bay; designed 2026-10-12, approved in concept round 36 on 2026-10-13)
 and the Rear-guard Drone Bay (M7 part G, 2026-10-20: its numbers approved with the drones in round 36,
 the document in review), the Act 4 pair (Harpoon Torpedoes, Depth Charges) and the Act 5 pair (Tesla Coil
-Pod, Swarm Tail; drafts of 2026-10-27, pending the user's review in round 60); later weapons are still
+Pod, Swarm Tail; drafts of 2026-10-27, approved in round 60); later weapons are still
 roster rows below.
 
 | Part | Summary | Design | Impl | Art |
@@ -48,8 +48,8 @@ roster rows below.
 | [deflector-pod](deflector-pod/README.md) | Deflector Pod — Wing (per pod), defensive; absorbs 3 → 5 bullets per 2 s; 1 600; L18 | approved | in-progress | final |
 | [light-drone-bay](light-drone-bay/README.md) | Light Drone Bay — Wing (per bay), forward (drone); DPS 10 → 30; 2 000; L15 | approved | in-progress | final |
 | [rear-guard-drone-bay](rear-guard-drone-bay/README.md) | Rear-guard Drone Bay — Wing (per bay), rear (drone); DPS 9 → 26; 2 400; L20 | approved | in-progress | final |
-| [tesla-coil-pod](tesla-coil-pod/README.md) | Tesla Coil Pod — Wing (per pod), area, shield-breaker; DPS 12 → 40 (an arc of 140 → 180 px); 3 000; L29 | draft | not-started | none |
-| [swarm-tail](swarm-tail/README.md) | Swarm Tail — Rear, rear, homing; DPS 15 → 55; 3 500; L30 | draft | not-started | none |
+| [tesla-coil-pod](tesla-coil-pod/README.md) | Tesla Coil Pod — Wing (per pod), area, shield-breaker; DPS 12 → 40 (an arc of 140 → 180 px); 3 000; L29 | approved | done | final |
+| [swarm-tail](swarm-tail/README.md) | Swarm Tail — Rear, rear, homing; DPS 15 → 55; 3 500; L30 | approved | done | final |
 
 ## Design
 
@@ -96,7 +96,7 @@ shots all count (they aim at the convergence point), a deflector deals none.
 ### Roster — later weapons
 
 Still at `idea`; they get a directory when they are designed. The Plasma Arc moved to Act 6 with
-Act 5's arsenal (Q12 = c of round 60, pending the user's review): its unlock is set with Act 6's design.
+Act 5's arsenal (Q12 = c of round 60, decided the user's review): its unlock is set with Act 6's design.
 
 | Name | Slot | Traits | DPS L1/L5 | Draw L1→L5 | Base price | Unlock | Design |
 |---|---|---|---|---|---|---|---|
@@ -288,7 +288,7 @@ targets; generator `tools/concept/gear_r48.py`; prompts in [concept/prompts.md](
 - 2026-10-21 (the user, Act 3 playthrough: "My big weapons take too much power and I can't lower them"):
   the [power dial](../README.md#power-budget): every fitted weapon flies and draws at a power setting
   from L1 to its bought level, turned down and up in the hangar for free.
-- 2026-10-27 (Act 5 design phase, step m9-d-systems; **pending the user's review in round 60**): the Tesla
+- 2026-10-27 (Act 5 design phase, step m9-d-systems; **approved in round 60**): the Tesla
   Coil Pod (L29, `shield-breaker`, an instant arc with sparks) and the Swarm Tail (L30, a homing rear gun
   that seeks behind first) promoted from the roster to draft documents with hand-written numbers (Q12 = c);
   the Plasma Arc moves to Act 6 (its L31 unlock dropped). The coverage table names them.

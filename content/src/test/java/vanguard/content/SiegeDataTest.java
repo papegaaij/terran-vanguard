@@ -238,8 +238,8 @@ class SiegeDataTest {
                 PATH,
                 "secondary: {standing: true,",
                 "secondary: {standing: true, untouched: true,",
-                "give kill_ratio, groups, escapes, kill_all, parts, afloat, collect, integrity, links, untouched or"
-                        + " standing");
+                "give kill_ratio, groups, escapes, kill_all, parts, afloat, collect, integrity, links, spared,"
+                        + " untouched or standing");
         assertProblem(
                 PATH,
                 "{piece: helix-compound, t: 81.5, x: 380}",

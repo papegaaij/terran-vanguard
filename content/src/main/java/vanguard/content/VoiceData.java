@@ -95,10 +95,26 @@ public record VoiceData(
             ref.ifPresent(clip ->
                     Check.that(clip.matches("ref-[a-z0-9-]+"), "ref: a clip name ref-<speaker>, was '" + clip + "'"));
             Check.that(layering.map("choir"::equals).orElse(true), "layering: only 'choir' is known");
-            Check.that(filter.map("pa"::equals).orElse(true), "filter: only 'pa' is known");
+            Check.that(
+                    filter.map(name -> PA.equals(name) || ENEMY.equals(name)).orElse(true),
+                    "filter: only 'pa' or 'enemy' is known");
             stage.ifPresent(file -> Check.that(
                     file.matches("[a-z0-9]+(-[a-z0-9]+)*\\.ogg"), "stage: an .ogg file name, was '" + file + "'"));
             Check.that(stage.isEmpty() || ref.isPresent(), "stage: only a cast speaker has a stage sound");
+        }
+
+        /** The public-address filter (an automated loudspeaker: Level 06's beacon). */
+        public static final String PA = "pa";
+
+        /**
+         * M9 part A (design/audio/voice, Act 5 voices): the enemy channel's filter (Vorne, Harker): the radio filter
+         * with a steady static bed; the speaker's lines and pages come over the enemy channel ({@link Channel#ENEMY}).
+         */
+        public static final String ENEMY = "enemy";
+
+        /** M9 part A: the channel this speaker's lines come over: enemy with {@code filter: enemy}, else friendly. */
+        public Channel channel() {
+            return filter.filter(ENEMY::equals).isPresent() ? Channel.ENEMY : Channel.FRIENDLY;
         }
     }
 
@@ -131,6 +147,18 @@ public record VoiceData(
         }
         matcher.appendTail(out);
         return out.toString();
+    }
+
+    /**
+     * M9 part A: the channel the speaker of this name speaks on ({@link Speaker#channel()}); friendly for a name in no
+     * speaker's list.
+     */
+    public Channel channelOf(String name) {
+        return speakers.values().stream()
+                .filter(speaker -> speaker.names().contains(name))
+                .findFirst()
+                .map(Speaker::channel)
+                .orElse(Channel.FRIENDLY);
     }
 
     /** The slug of the voice that speaks as {@code name}, if any; none for an uncast speaker. */

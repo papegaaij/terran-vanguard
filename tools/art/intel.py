@@ -44,7 +44,16 @@ Outputs (assets/sprites/intel/, packed onto the shared sprite pages as ``intel/<
                      frill bell facing down with its sac mid-tell, and tools/art/spiral_nautilus.py, uncoiled nose
                      down, the shell behind the open crown with its lime-white eyes, scaled to fit); glow-angler
                      (Level 26, M8 part F batch: the production model of tools/art/glow_angler.py, the rust angler
-                     nose down with its gape half open and the teal lure lit on its stalk)
+                     nose down with its gape half open and the teal lure lit on its stalk); talon,
+                     sam-nest, asteroid-mite, clamp-gun, wavering-stormhawk (Level 29, M9 part B batch, step B4: the
+                     production models of tools/art/belt_units.py in Q.11 b's gunmetal, nose down: the Talon, the SAM
+                     Nest's rack over its base, the Mite in its crawl, the clamp gun, the Stormhawk with its IFF lit);
+                     minelayer, gilded-gunship, dart-drone, rail-serpent (Level 30, M9 part C batch, step C4: the
+                     production models of tools/art/belt_units_c.py, nose down: the Minelayer's barge with its drum
+                     dark, the Gilded Gunship with its doors shut and lamps dark, the Dart, the Rail Serpent's engine
+                     car); hornet, shard-drone, buzzsaw-drone (Level 31, M9 part D batch, step ART-D: the
+                     production models of tools/art/belt_units_d.py: the Hornet facing down with its hatches dark,
+                     the Shard Drone's tri-prism, the Buzzsaw's gold-edged blades)
   unclassified-<enemy>.png  30x30 the sensor-L2 picture of a unit the intel does not name yet
                      (`unclassified_until_flown`, M7 part E batch): unclassified-ghost-drone, the Ghost
                      Drone's outline only, filled flat in dark teal with the plate's grid and a cyan rim
@@ -79,6 +88,9 @@ Outputs (assets/sprites/intel/, packed onto the shared sprite pages as ``intel/<
   design/ui/hangar/concept/intel-final-r40-a.png   review sheet of the M7 part D batch's
   design/ui/hangar/concept/intel-final-r41-a.png   review sheet of the M7 part E batch's
   design/ui/hangar/concept/intel-final-r42-a.png   review sheet of the M7 part F batch's
+  design/ui/hangar/concept/intel-final-r62-a.png   review sheet of the M9 part B batch's
+  design/ui/hangar/concept/intel-final-r63-a.png   review sheet of the M9 part C batch's
+  design/ui/hangar/concept/intel-final-r64-a.png   review sheet of the M9 part D batch's
 
 The names are the enemy's or boss's name as a slug (vanguard.game.render.Portraits.slug). A
 portrait is the unit's chosen round-04 model (tools/concept/enemies_r04.py, imported unchanged) in
@@ -120,6 +132,9 @@ import dust_kite  # noqa: E402  (the Dust Kite's production model)
 import drill_rig  # noqa: E402  (the Drill Rig's production models)
 import abyss_ray  # noqa: E402  (the Abyss Ray's production model)
 import abyssal_maw  # noqa: E402  (the Abyssal Maw's production sprites)
+import belt_units  # noqa: E402  (M9 part B: Level 29's production models)
+import belt_units_c  # noqa: E402  (M9 part C: Level 30's production models)
+import belt_units_d  # noqa: E402  (M9 part D: Level 31's production models)
 import barbfin  # noqa: E402  (the Barbfin's production model)
 import siren  # noqa: E402  (the Siren's production model)
 import glow_angler  # noqa: E402  (the Glow Angler's production model)
@@ -180,7 +195,12 @@ BATCHES = {"spore-bomber": "M4 part C batch", "whirl-seed": "M4 part C batch",
            "abyss-ray": "M8 part D batch", "barbfin": "M8 part D batch",
            "siren": "M8 part E batch", "spiral-nautilus": "M8 part E batch", "glow-angler": "M8 part F batch",
            "depth-hunter": "M8 part G batch", "relay-beacon": "M8 part G batch",
-           "boss-abyssal-maw": "M8 part H batch"}
+           "boss-abyssal-maw": "M8 part H batch",
+           "talon": "M9 part B batch", "sam-nest": "M9 part B batch", "asteroid-mite": "M9 part B batch",
+           "clamp-gun": "M9 part B batch", "wavering-stormhawk": "M9 part B batch",
+           "minelayer": "M9 part C batch", "gilded-gunship": "M9 part C batch", "dart-drone": "M9 part C batch",
+           "rail-serpent": "M9 part C batch",
+           "hornet": "M9 part D batch", "shard-drone": "M9 part D batch", "buzzsaw-drone": "M9 part D batch"}
 # the concept round that reviews a batch
 ROUNDS = {UI_BATCH: "r13", "M4 part C batch": "r16", "M4 part D batch": "r17", "M4 part F batch": "r23",
           "M5 part B batch": "r30", "M5 part C batch": "r31", "M5 part D batch": "r32", "M5 part E batch": "r33",
@@ -189,7 +209,8 @@ ROUNDS = {UI_BATCH: "r13", "M4 part C batch": "r16", "M4 part D batch": "r17", "
           "M7 part E batch": "r41", "M7 part F batch": "r42", "M7 part H batch": "r44", "M8 part B batch": "r51",
           "M8 part C batch": "r52", "M8 part D batch": "r53", "M8 part E batch": "r54",
           "M8 part F batch": "r55", "M8 part G batch": "r57",
-          "M8 part H batch": "r58"}
+          "M8 part H batch": "r58", "M9 part B batch": "r62", "M9 part C batch": "r63",
+          "M9 part D batch": "r64"}
 OUT = SPRITES / "intel"
 CONCEPT = DESIGN / "ui" / "hangar" / "concept"
 PORTRAIT = 30
@@ -354,7 +375,92 @@ def depth_hunter_hi():
     return sdf.render(scene, mats, (PORTRAIT * 8, PORTRAIT * 8), 2.7)
 
 
-HI = {"reef-spitter": reef_spitter_hi, "relay-beacon": relay_beacon.intel_hi, "depth-hunter": depth_hunter_hi}
+def belt_hi(scene, mats, extent, camera=None):
+    """M9 part B: a Level 29 unit's 8x render at its sprite's extent (tools/art/belt_units.py's models, Q.11 b's
+    gunmetal), nose down; ``camera`` for the Stormhawk's perspective camera."""
+    if camera:
+        scene = artkit.perspective(scene, camera)
+    return sdf.render(scene, mats, (PORTRAIT * 8, PORTRAIT * 8), extent)
+
+
+def talon_hi():
+    """The Talon nose down (heading 0), gold panels on the gunmetal hull, as belt_units.py's frames."""
+    scene, mats = belt_units.e60.talon_model("b", False)
+    return belt_hi(*belt_units.turned(scene, belt_units.gunmetal(mats), 0, 16), belt_units.TAL_EXT)
+
+
+def sam_nest_hi():
+    """The SAM Nest awake: the rack aiming down, hatch shut, over its round base with the red lights (reef_spitter_hi's
+    composite of two models)."""
+    size, extent = (PORTRAIT * 8, PORTRAIT * 8), belt_units.SAM_EXT
+    base_scene, base_mats = belt_units.e60.sam_base("a", "red", 1.0)
+    base = sdf.render(base_scene, belt_units.gunmetal(base_mats), size, extent)
+    rack_scene, rack_mats = belt_units.e60.sam_rack("a", 0.0, 0.0, "red")
+    rack = sdf.render(*belt_units.turned(rack_scene, belt_units.gunmetal(rack_mats), 0, 16), size, extent)
+    ga, ba = rack[..., 3:4], base[..., 3:4]
+    alpha = ga + ba * (1 - ga)
+    rgb = (rack[..., :3] * ga + base[..., :3] * ba * (1 - ga)) / np.maximum(alpha, 1e-6)
+    return np.concatenate([rgb, alpha], axis=-1)
+
+
+def mite_hi():
+    """The Asteroid Mite nose down in its crawl, the back glow teal."""
+    scene, mats = belt_units.e60.mite_model("a", phase=0.0, pose="cling")
+    return belt_hi(*belt_units.turned(scene, mats, 0, 16), belt_units.MITE_EXT)
+
+
+def clamp_gun_hi():
+    """The clamp gun aiming down: the gunmetal turret, gold collar, its barrel and red lamp."""
+    return belt_hi(*belt_units.turned(*belt_units.clamp_gun_model(), 0, 16), belt_units.CLAMP_EXT)
+
+
+def hawk_hi():
+    """The wavering Ceres Wing Stormhawk nose down, wings level, its IFF light lit white (the holding-fire blink)."""
+    scene, mats = belt_units.b60.stormhawk_model("a", np.pi / 2, 0, "white")
+    return belt_hi(scene, mats, belt_units.HAWK_EXT, belt_units.HAWK_CAM)
+
+
+def minelayer_hi():
+    """The Minelayer nose down, its drum dark (belt_units_c.py's frames)."""
+    return belt_hi(*belt_units_c.turned(*belt_units_c.layer_model(0.0), 0, 16), belt_units_c.ML_EXT)
+
+
+def gunship_hi():
+    """The Gilded Gunship facing down, doors shut and ring lamps dark (its idle frame)."""
+    return belt_hi(*belt_units_c.turned(*belt_units_c.gunship_model(), 0, 16), belt_units_c.GS_EXT)
+
+
+def dart_hi():
+    """The Dart Drone nose down, its engine lit."""
+    return belt_hi(*belt_units_c.turned(*belt_units_c.dart_model(), 0, 16), belt_units_c.DART_EXT)
+
+
+def rail_serpent_hi():
+    """The Rail Serpent's engine car nose down, its white-gold reactor lit (the vital part)."""
+    scene, mats = belt_units_c.turned(*belt_units_c.rail_model("engine"), 0, 32)
+    return belt_hi(scene, mats, belt_units_c.RS_EXT * belt_units_c.RS_SIZE["engine"] / 48)
+
+
+def hornet_hi():
+    """The Hornet facing down, its hatches dark (belt_units_d.py's idle frame)."""
+    return belt_hi(*belt_units_d.turned(*belt_units_d.hornet_model(), 0, 16), belt_units_d.HOR_EXT)
+
+
+def shard_drone_hi():
+    """The Shard Drone's tri-prism (its first spin frame)."""
+    return belt_hi(*belt_units_d.turned(*belt_units_d.shard_model(), 0, 48), belt_units_d.SH_EXT)
+
+
+def buzzsaw_drone_hi():
+    """The Buzzsaw Drone's six gold-edged blades round the gunmetal hub."""
+    return belt_hi(*belt_units_d.turned(*belt_units_d.saw_model(), 0, 48), belt_units_d.SAW_EXT)
+
+
+HI = {"reef-spitter": reef_spitter_hi, "relay-beacon": relay_beacon.intel_hi, "depth-hunter": depth_hunter_hi,
+      "talon": talon_hi, "sam-nest": sam_nest_hi, "asteroid-mite": mite_hi, "clamp-gun": clamp_gun_hi,
+      "wavering-stormhawk": hawk_hi, "minelayer": minelayer_hi, "gilded-gunship": gunship_hi, "dart-drone": dart_hi,
+      "rail-serpent": rail_serpent_hi, "hornet": hornet_hi, "shard-drone": shard_drone_hi,
+      "buzzsaw-drone": buzzsaw_drone_hi}
 
 
 def portrait(slug):

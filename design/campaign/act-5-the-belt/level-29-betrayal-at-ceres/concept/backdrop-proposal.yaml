@@ -1,0 +1,155 @@
+backdrop:
+  # Presentation only: Level 29's Ceres Hub (tools/art/backdrop_l29.py, step ART-B, from the level's data.yaml).
+  # The deep layer is space (the dust band, Ceres's limb, the transport); the canyon tile is opaque, the
+  # outer docks' tile transparent over space. Glows (-glow) are added by the game at their pieces: Block C's
+  # -glow until the turn (t=60), then -glow-red crossfaded over 1 s; coalition-block-3/-4 turn with it (B4).
+  # prison-tender-hold (6 frames) is not placed: the game draws it over prison-tender when the last clamp
+  # gun falls (4 steps a frame, the last held), then rook-launch (sprites) rises out of it.
+  scroll_factors: {deep: 0.12, far: 0.5, ground: 1, low-air: 1.35, high-air: 2.2}   # far, high-air unused
+  ramp: 2
+  haze_colour: 06060a
+  atmosphere:
+    clear: {haze: 0.0}
+  tile_sets:
+    belt-space: {layer: deep, height: 1024}   # space, the sunlit dust band, stars, far rocks
+    dock-canyon: {layer: ground, height: 960}   # the dock canyon in Ceres's crust (sections 2-6)
+    outer-docks: {layer: ground, height: 960}   # the outer docks' girders over space (section 7)
+  pieces:
+    ceres-limb: {layer: deep, size: [480, 760]}
+    cdf-transport: {layer: deep, size: [112, 176]}
+    crust-edge: {layer: ground, size: [480, 1100]}
+    docking-arm-1: {layer: ground, size: [112, 420]}
+    docking-arm-2: {layer: ground, size: [112, 360]}
+    dock-1: {layer: ground, size: [96, 128]}
+    dock-2: {layer: ground, size: [96, 128]}
+    dock-3: {layer: ground, size: [96, 128]}
+    dock-4: {layer: ground, size: [96, 128]}
+    dock-5: {layer: ground, size: [96, 128]}
+    dock-7: {layer: ground, size: [96, 128]}
+    dock-8: {layer: ground, size: [96, 128]}
+    helix-block: {layer: ground, size: [208, 176]}
+    helix-pad: {layer: ground, size: [96, 96]}
+    coalition-block-1: {layer: ground, size: [128, 144]}
+    coalition-block-2: {layer: ground, size: [128, 144]}
+    coalition-block-3: {layer: ground, size: [128, 144]}
+    coalition-block-4: {layer: ground, size: [128, 144]}
+    block-c: {layer: ground, size: [480, 224]}
+    red-block-d: {layer: ground, size: [208, 176]}
+    red-pad: {layer: ground, size: [96, 96]}
+    red-block-e: {layer: ground, size: [480, 200]}
+    dock-6: {layer: ground, size: [160, 208]}
+    dock-9: {layer: ground, size: [480, 540]}
+    prison-tender: {layer: ground, size: [128, 288]}
+    prison-tender-hold: {layer: ground, size: [128, 288], frames: 6, fps: 15}
+    canyon-mouth: {layer: ground, size: [480, 1280]}
+    outer-dock-1: {layer: ground, size: [144, 112]}
+    outer-dock-2: {layer: ground, size: [144, 112]}
+    outer-dock-3: {layer: ground, size: [144, 112]}
+    outer-ring: {layer: ground, size: [480, 240]}
+    ore-hauler: {layer: low-air, size: [64, 64], headings: 16}
+    cdf-patrol: {layer: low-air, size: [56, 56], headings: 16}
+    talon-pair: {layer: low-air, size: [48, 48], headings: 16}
+  placed:
+    # Ceres's sunlit limb on the right
+    - {piece: ceres-limb, t: 4.0, x: 240}
+    # the CDF transport at the rendezvous
+    - {piece: cdf-transport, t: 168.0, x: 330}
+    # the crust's edge, its top 120 rows over the canyon tile's seam (ground 3900)
+    - {piece: crust-edge, t: 26.667, x: 240}
+    # a docking arm off the crust
+    - {piece: docking-arm-1, t: 21.333, x: 64}
+    # a docking arm off the crust
+    - {piece: docking-arm-2, t: 21.583, x: 420}
+    # dock 1, on the left rim
+    - {piece: dock-1, t: 30, x: 52}
+    # dock 2, on the right rim
+    - {piece: dock-2, t: 36, x: 428}
+    # dock 3, on the left rim
+    - {piece: dock-3, t: 42, x: 52}
+    # dock 4, on the right rim
+    - {piece: dock-4, t: 48, x: 428}
+    # dock 5, on the left rim
+    - {piece: dock-5, t: 53, x: 52}
+    # dock 7, on the left rim
+    - {piece: dock-7, t: 94, x: 52}
+    # dock 8, on the right rim
+    - {piece: dock-8, t: 102, x: 428}
+    # Helix's dock block (nests x 90, 140 at t~34)
+    - {piece: helix-block, t: 36.92, x: 110}
+    # a Helix turret pad (the nest x 400 at t~34)
+    - {piece: helix-pad, t: 36.92, x: 400}
+    # a Coalition block on the rim
+    - {piece: coalition-block-1, t: 40, x: 440}
+    # a Coalition block on the rim
+    - {piece: coalition-block-2, t: 47, x: 40}
+    # a Coalition block on the rim (turns red with Block C)
+    - {piece: coalition-block-3, t: 66, x: 44}
+    # a Coalition block on the rim (turns red with Block C)
+    - {piece: coalition-block-4, t: 70, x: 436}
+    # Block C across the canyon: its nests (x 120, 240, 360) 160 px below the top edge at t=60
+    - {piece: block-c, t: 61.817, x: 240}
+    # a turned block (nests x 70, 120 at t~84)
+    - {piece: red-block-d, t: 86.92, x: 100}
+    # a turned turret pad (the nest x 410 at t~84)
+    - {piece: red-pad, t: 86.92, x: 410}
+    # a turned bridging block (nests x 130, 240, 350 at t~100)
+    - {piece: red-block-e, t: 102.92, x: 240}
+    # Dock 6: the crane gantry over the loyalists' locker (the secret, x 430 at t~108)
+    - {piece: dock-6, t: 110.82, x: 420}
+    # Dock 9 on the halted screen (ground rows 11680..+539): the clamp seats
+    - {piece: dock-9, t: 120.0, x: 240}
+    # the prison tender in the berth (screen 240, 250 on the halted screen)
+    - {piece: prison-tender, t: 120.939, x: 240}
+    # the canyon's mouth from the outer docks' seam (ground 12220) on
+    - {piece: canyon-mouth, t: 128.583, x: 240}
+    # an outer berth platform (the nest x 90 at t~131)
+    - {piece: outer-dock-1, t: 133.433, x: 90}
+    # an outer berth platform (the nest x 240 at t~131)
+    - {piece: outer-dock-2, t: 133.433, x: 240}
+    # an outer berth platform (the nest x 390 at t~131)
+    - {piece: outer-dock-3, t: 133.433, x: 390}
+    # the outer ring: its lower edge on the bottom edge at the level's end
+    - {piece: outer-ring, t: 170.75, x: 240}
+    # a loyalist hauler under Talon fire
+    - {piece: ore-hauler, t: 13.0, x: 420, path: [[11.0, 0, 0], [19.0, -340, 80]]}
+    # the Talons chasing it
+    - {piece: talon-pair, t: 13.4, x: 470, path: [[11.4, 0, 0], [19.4, -340, 80]]}
+    # a CDF patrol crossing the canyon
+    - {piece: cdf-patrol, t: 42.0, x: 40, path: [[39.0, 0, 0], [47.0, 400, -60]]}
+    # a hauler fleeing the red canyon
+    - {piece: ore-hauler, t: 96.0, x: 60, path: [[93.0, 0, 0], [101.0, 360, 40]]}
+    # CDF patrol and mutineers dogfighting
+    - {piece: cdf-patrol, t: 140.0, x: 440, path: [[137.0, 0, 0], [145.0, -400, 60]]}
+    # the Talons on its tail
+    - {piece: talon-pair, t: 140.5, x: 480, path: [[137.5, 0, 0], [145.5, -400, 60]]}
+    # the hauler that releases the armour patch (B2: a drop at (240, 380) at t=150)
+    - {piece: ore-hauler, t: 150.0, x: 30, path: [[146.0, 0, 0], [154.0, 420, 0]]}
+# sections (ART-B's reading of the README's Layout; the rescue halt as Level 28's arena section):
+#   - name: Ceres Approach, end: 28, atmosphere: clear, tiles: ['belt-space'], notes: {'layers': {'deep': "Ceres's curve, the dust band.", 'low-air': 'a loyalist ore hauler under Talon fire (t≈13).', 'air': "small drifting rocks (the Mites' rocks; no large rock).", 'ground': "the hub's outer crust, docking arms."}, 'purpose': 'Popcorn, the first Talons and their shield flash, the first riders.'}
+#   - name: The Dock Canyon, end: 56, speed: 100, ramp: 2, atmosphere: clear, tiles: ['belt-space', 'dock-canyon'], notes: {'layers': {'ground': 'the canyon cut into the crust, docks 1–5 along its walls (scenery, no collision); the **Helix dock block** (black and gold) with 3 SAM Nests (t≈34); Coalition blocks lit white.'}, 'purpose': "The SAM Nest's homing diamonds; the canyon's rhythm."}
+#   - name: Block C, end: 76, speed: 60, ramp: 2, atmosphere: clear, tiles: ['belt-space', 'dock-canyon'], notes: {'layers': {'ground': '**Block C**, a Coalition station block lit white, with 3 **dormant** SAM Nests on its roof. At **t=60** its lights switch white → red over 1 s, a klaxon, and the nests wake (1 s tell); the lights then go red block by block up the canyon ahead.'}, 'purpose': 'The signature: the station turns sides. Quiet window t=56–62 (no wave enters).'}
+#   - name: The Red Canyon, end: 115, speed: 100, ramp: 2, atmosphere: clear, tiles: ['belt-space', 'dock-canyon'], notes: {'layers': {'ground': "red-lit blocks, docks 6–8, 3 SAM Nests at t≈84 and 3 at t≈100; the loyalists' supply cache in Dock 6 (t≈108, the secret); mutineer Talons out of the side docks."}, 'purpose': "The mutineers; the wavering pairs (t=77, 98); Hub Control's lead to Dock 9."}
+#   - name: Dock 9, end: 118, speed: 100, atmosphere: clear, tiles: ['belt-space', 'dock-canyon'], notes: {'layers': {'ground': '**Dock 9**, the Helix prison tender in four docking clamps, a clamp gun on each.'}, 'purpose': "The approach to the halt (from t=115, a second before the README's 116: the clamp guns' entries at 115.52 lie in it; the same scroll)."}
+#   - name: The Rescue, end: 120, speed: 0, arena: True, holds: clamps, atmosphere: clear, tiles: ['belt-space', 'dock-canyon'], notes: {'layers': {'ground': 'the halted screen shows Dock 9 and the tender in the middle third; the four clamp guns at (150, 170), (330, 170), (150, 330), (330, 330).'}, 'purpose': 'The rescue halt (the scroll eased down from 100 px/s over 2 s from t=118, the clock stopped while a clamp gun stands, ≈ 14 s typical); Rook launches, the loaner leaves.'}
+#   - name: Breakout, end: 172, speed: 120, ramp: 2, atmosphere: clear, tiles: ['belt-space', 'outer-docks'], notes: {'layers': {'ground': 'the canyon mouth, the outer docks with 3 SAM Nests (t≈131), the outer ring.', 'air': 'small rocks with riders.', 'deep': 'the CDF transport at the rendezvous.'}, 'purpose': 'Rook back in the slot; the third wavering pair and Harker; the run out. Level end at t=172 as the outer ring reaches the bottom edge.'}
+# rows: canyon seam 3900, the halted screen 11680..12219, breakout seam 12220, the end's bottom edge 17800
+# ground targets drawn for (kind, t at the top edge, x; ART-B's x where the README leaves it):
+#   sam-nest: t 34, x 90
+#   sam-nest: t 34, x 140
+#   sam-nest: t 34, x 400
+#   sam-nest (dormant until 60): t Block C (at t=60, 160 px below the top edge), x 120
+#   sam-nest (dormant until 60): t Block C (at t=60, 160 px below the top edge), x 240
+#   sam-nest (dormant until 60): t Block C (at t=60, 160 px below the top edge), x 360
+#   sam-nest: t 84, x 70
+#   sam-nest: t 84, x 120
+#   sam-nest: t 84, x 410
+#   sam-nest: t 100, x 130
+#   sam-nest: t 100, x 240
+#   sam-nest: t 100, x 350
+#   supply-cache (trigger, 20 HP): t 108, x 430
+#   sam-nest: t 131, x 90
+#   sam-nest: t 131, x 240
+#   sam-nest: t 131, x 390
+#   clamp-gun x4 on the halted screen: (150, 170), (330, 170), (150, 330), (330, 330) (screen px, y down); their clamps' sprites face the tender (left / right)
+# debris (the Mites' rocks, tools/art/belt_units.py; Level 03's small-chunk rules, 16 spin frames each):
+#   chunks: {belt-a: {hp: 6, size: [40, 36]}, belt-b: {hp: 6, size: [36, 32]}, belt-c: {hp: 6, size: [32, 28]}}

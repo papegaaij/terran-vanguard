@@ -13,7 +13,7 @@ import vanguard.sim.PlayField;
  * descent; a boss's {@code plate} and {@code cone} only with a stride, the plate on a part of it, the cone's bullet a
  * known class; an attack's {@code parts} only a boss's, naming its parts; {@code homing} only a boss's (the walker's
  * pods) and not on a fan (M8 part G: or a unit's one {@code aimed} attack with {@code aim: facing}, the Depth Hunter's
- * torpedoes); a fan's {@code burst} only a boss's (round 43); {@code aim: facing} on a boss attack only
+ * torpedoes; M9 part D: or with {@code homing.aimed}, the Hornet's salvos); a fan's {@code burst} only a boss's (round 43); {@code aim: facing} on a boss attack only
  * for a walking boss; a phase's {@code until.share} naming its parts; the hooks {@code turret}, {@code homing} and
  * {@code cone} only with what they change.
  *
@@ -42,8 +42,11 @@ final class FoundryChecks {
                 problem.accept("turret", "a turret fires its unit's one aimed attack along its aim");
             }
         }
-        if (enemy.rearPlate().isPresent() && !walker) {
-            problem.accept("rear_plate", "a rear plate is a walker's (movement walk): its rear is its facing's back");
+        if (enemy.rearPlate().isPresent() && !walker && !enemy.armour().facing()) {
+            // M9 part C: or the engines of a flyer's facing armour (the Gilded Gunship's).
+            problem.accept(
+                    "rear_plate",
+                    "a rear plate is a walker's (movement walk) or goes with facing armour (armour.factor)");
         }
         if (enemy.walks()) {
             EnemyData.Movement movement = enemy.movement();
@@ -97,15 +100,29 @@ final class FoundryChecks {
             }
             // M8 part G (design/enemies/naval/depth-hunter): a unit's aimed attack launched along its facing fires
             // them.
+            // M9 part B (design/enemies/ground/sam-nest): or a ground turret's rack turning toward the ship (a
+            // turn_rate).
+            // M9 part D (design/enemies/air/hornet): or a unit's one aimed attack launched at its target
+            // (homing.aimed).
+            boolean aimedHoming =
+                    attack.homing().flatMap(EnemyData.Homing::aimed).orElse(false);
             if (attack.homing().isPresent()
                     && !boss
                     && (!attack.pattern().equals("aimed")
-                            || attack.aim().filter("facing"::equals).isEmpty()
+                            || (attack.aim().filter("facing"::equals).isEmpty()
+                                    && !aimedHoming
+                                    && (attack.turnRate().isEmpty()
+                                            || enemy.movement().terrain().isEmpty()))
                             || enemy.attacks().size() != 1)) {
                 problem.accept(
                         field + ".homing",
-                        "only a boss's parts or a unit's one aimed attack along its facing (aim: facing) fire homing"
-                                + " missiles");
+                        "only a boss's parts, a unit's one aimed attack along its facing (aim: facing), at its target"
+                                + " (homing.aimed) or a ground turret's turning rack (turn_rate) fire homing missiles");
+            }
+            if (aimedHoming && (boss || attack.aim().isPresent())) {
+                problem.accept(
+                        field + ".homing.aimed",
+                        "an aimed launcher is a unit's, launching at its target (no aim: facing or up, not a boss's)");
             }
             // M8 part D: a rising unit's fan comes in a burst too (the Abyss Ray's three fans 1.2 s apart).
             if (!boss

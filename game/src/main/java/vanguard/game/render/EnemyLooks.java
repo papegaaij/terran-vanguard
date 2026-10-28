@@ -149,6 +149,8 @@ public record EnemyLooks(
      * its cracked ice and steam until it leaves the screen), not the 10 s remains.
      */
     private static final java.util.Set<String> OWN_REMAINS = java.util.Set.of(DrillRigLooks.SLUG);
+    /** M9 part B: units whose {@code -wreck} is their remains (the SAM Nest; other wrecks are their looks' own). */
+    private static final java.util.Set<String> WRECK_REMAINS = java.util.Set.of(CeresLooks.NEST);
     /**
      * M7 part E: a unit whose death sounds other than its rung's two files (design/audio/sfx): the Ghost Drone's
      * mechanical break-up is the {@code small} rung's Ghost Drone entry (round 41 a, proposed): it must sound built,
@@ -240,7 +242,12 @@ public record EnemyLooks(
                 sprites.has(art) ? sprites.frames(art) : Placeholders.frames(slug, orientation.headings());
         // M8 part C: the Eel Swarm's parts have their orientation's 16 headings (EelLooks), not the Coilwyrm's 48.
         boolean eel = slug.equals(EelLooks.SLUG) || slug.startsWith(EelLooks.SLUG + "-");
-        int headings = data.segmentChain().isPresent() && sprites.has(art) && !crawler && !eel
+        // M9 part C: the Rail Serpent's cars have their orientation's 32 headings (a set not of the Coilwyrm's 48).
+        int headings = data.segmentChain().isPresent()
+                        && sprites.has(art)
+                        && !crawler
+                        && !eel
+                        && frames.size % CHAIN_HEADINGS == 0
                 ? CHAIN_HEADINGS
                 : orientation.headings();
         Tier tier = tinyPart ? Tier.TINY : DEATH_TIERS.getOrDefault(slug, data.tier());
@@ -429,6 +436,10 @@ public record EnemyLooks(
         }
         if (sprites.has(slug + "-stump")) {
             return sprites.frames(slug + "-stump");
+        }
+        if (WRECK_REMAINS.contains(slug) && sprites.has(slug + "-wreck")) {
+            // M9 part B: the SAM Nest's scorched base with the rack's stump (tools/art/belt_units.py).
+            return sprites.frames(slug + "-wreck");
         }
         if (!sprites.has(slug + "-splash")) {
             return none;

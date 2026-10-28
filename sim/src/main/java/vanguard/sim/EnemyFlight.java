@@ -35,12 +35,21 @@ final class EnemyFlight {
         if (u.absorbQuiet > 0) {
             u.absorbQuiet--;
         }
+        if (u.hexShield.fitted()) {
+            // M9 part A: a hex shield's hold and refill run on the real steps (the EMP's hold covers its stun).
+            u.hexShield.step(u.spec.shield().orElseThrow(), u.events, u.x, u.y(), u.kind);
+        }
         if (u.empStun > 0) {
             // M7 part A: its own clock stops (its timers included) while the EMP Burst's stun lasts.
             u.empStun--;
             return u.phase == Enemy.Phase.CHAIN
                     || u.phase == Enemy.Phase.FLOCK
                     || stunnedStep(shipX, shipY, groundScroll);
+        }
+        if (u.wakeTicks > 0 && --u.wakeTicks == 0 && u.spec.gun().isPresent()) {
+            // M9 part B: awake, its gun waits its first-shot delay from here.
+            u.volleyTicks = SimStep.ticks(u.spec.gun().get().firstShotDelay()) + 1;
+            u.burstLeft = 0;
         }
         // M5 part E: the swap timer and the ring's cooldown run on the real steps (a halted arena too).
         if (u.spec.submerge().isPresent()) {
@@ -59,6 +68,10 @@ final class EnemyFlight {
         u.prevX = u.x;
         u.prevY = u.y;
         switch (u.phase) {
+            case RIDE -> {
+                // M9 part B: its rock's pass places it after the rocks moved; gone when its rock carried it off.
+                return !u.riding.carriedOff;
+            }
             case MOUNT -> {
                 // M8 part E: a wall's nest scrolls with the ground; gone below the bottom edge.
                 u.y -= groundScroll;
@@ -104,6 +117,16 @@ final class EnemyFlight {
                 u.entered |= on;
                 return on || !u.entered;
             }
+            case LAY -> {
+                // M9 part C: up its lane, then across its lay row; gone once off the play field.
+                u.mineLaying.step();
+                u.x = u.mineLaying.x();
+                u.y = u.mineLaying.y();
+                turn();
+                boolean on = PlayField.overlaps(u.x, u.y, u.box);
+                u.entered |= on;
+                return on || !u.entered;
+            }
             case SWOOP -> {
                 u.swooping.step(u.spec.swoop().orElseThrow());
                 u.x = u.swooping.x();
@@ -127,8 +150,15 @@ final class EnemyFlight {
                 return true;
             }
             case CHASE -> {
-                u.chasing.chase(shipX, shipY);
+                // M9 part D (design/allies/mining-tug): under the always hook it steers at the objective's nearest
+                // section instead of the ship; crossing it deals the dive once ({@link AllyPasses}).
+                u.divedAtObjective |= objective;
+                u.chasing.chase(objective ? diveX : shipX, objective ? diveY : shipY);
                 return true;
+            }
+            case DASH -> {
+                // M9 part D: its dash cycle; gone once out through an edge after its last dash.
+                return u.dashing.step(shipX, shipY);
             }
             case LATCHED -> {
                 u.chasing.hold(shipX, shipY);
@@ -172,7 +202,10 @@ final class EnemyFlight {
                         return false;
                     }
                 }
-                track(aimX, aimY);
+                if (u.dormantTick < 0) {
+                    // M9 part B: a dormant unit's rack stays still until it wakes.
+                    track(aimX, aimY);
+                }
                 return u.y + u.box.height() / 2 > 0 && !carriedOffTop(groundScroll);
             }
             case WALK -> {
@@ -225,6 +258,13 @@ final class EnemyFlight {
                 if (u.chasing.phase() == Enemy.LatchPhase.ENTER) {
                     u.chasing.await();
                 }
+                if (u.dashing.entering()) {
+                    // M9 part D: on the play field its dash cycle starts.
+                    u.dashing.await();
+                    if (u.phase == Enemy.Phase.DASH) {
+                        return true;
+                    }
+                }
                 if (u.spec.brood().isPresent() && (u.broodTicks >= 0 || u.y <= PlayField.HEIGHT)) {
                     u.broodTicks++;
                 }
@@ -236,7 +276,16 @@ final class EnemyFlight {
                 }
             }
             case HOLD -> {
-                if (u.orbit.isPresent()) {
+                if (u.orbit.isPresent()
+                        && u.spec.airLink().isPresent()
+                        && drifts(u.spec.airLink().get())) {
+                    // M9 part D (design/enemies/space/shard-drone): a linked ring turns round a centre that descends
+                    // and
+                    // drifts toward the ship's x; it never breaks off, gone once past the bottom edge.
+                    driftRing(u.orbit.get(), u.spec.airLink().get(), shipX);
+                    circle(u.orbit.get());
+                    return u.orbit.get().centreY() + u.offY + u.orbit.get().radius() + u.box.height() / 2 > 0;
+                } else if (u.orbit.isPresent()) {
                     circle(u.orbit.get());
                 } else if (u.spec.aura().isPresent() && u.spec.sine().isPresent()) {
                     hoverDrift(u.spec.sine().get());
@@ -259,6 +308,13 @@ final class EnemyFlight {
                         // M5 part G: a diver dives at the point it is given (the objective under the always hook).
                         u.divedAtObjective = objective;
                         leave(diveX, diveY);
+                    } else if (u.spec.hover().isPresent()
+                            && u.spec.hover().get().peelSpeed() > 0) {
+                        peel(u.spec.hover().get().peelSpeed());
+                    } else if (u.spec.dash().isPresent()) {
+                        // M9 part D: a dashing unit breaks off its circle into its chase.
+                        u.dashing.begin(Enemy.heading(shipX - u.x, shipY - u.y));
+                        return true;
                     } else {
                         leave(shipX, shipY);
                     }
@@ -273,6 +329,20 @@ final class EnemyFlight {
             case LEAVE -> {
                 u.x += u.vx * SimStep.SECONDS;
                 u.y += u.vy * SimStep.SECONDS;
+                if (u.chasing.launched() && u.chasing.phase() == Enemy.LatchPhase.ENTER) {
+                    // M9 part C (design/enemies/air/dart-drone): out of its carrier's bay, its chase starts on time.
+                    u.chasing.await();
+                    if (u.phase == Enemy.Phase.CHASE) {
+                        turn();
+                        return true;
+                    }
+                }
+                if (u.scattering.active() || u.riding.rider()) {
+                    // M9 part B: a scattering wing member breaks off sideways, a rider's leap is a straight dive: no
+                    // swoop, dive or ram of their stat blocks' on the way out.
+                    turn();
+                    return PlayField.overlaps(u.x, u.y, u.box);
+                }
                 // M8 AW: a hover's way out keeps off the level's rock (none: as before).
                 u.hoverHold.leaving(u);
                 u.spiralling.ricochet();
@@ -317,6 +387,10 @@ final class EnemyFlight {
         u.prevX = u.x;
         u.prevY = u.y;
         switch (u.phase) {
+            case RIDE -> {
+                // M9 part B: its rock's pass places it.
+                return !u.riding.carriedOff;
+            }
             case LATCHED -> {
                 u.chasing.hold(shipX, shipY);
                 return true;
@@ -379,6 +453,13 @@ final class EnemyFlight {
                     case STRAFE -> {
                         // M7 part E: it drifts on its line; its flight resumes from there.
                         u.laneStrafing.drift(u.stunDx, u.stunDy);
+                        boolean on = PlayField.overlaps(u.x, u.y, u.box);
+                        u.entered |= on;
+                        return on || !u.entered;
+                    }
+                    case LAY -> {
+                        // M9 part C: it drifts on; its lay path resumes from there (laying nothing meanwhile).
+                        u.mineLaying.drift(u.stunDx, u.stunDy);
                         boolean on = PlayField.overlaps(u.x, u.y, u.box);
                         u.entered |= on;
                         return on || !u.entered;
@@ -505,6 +586,22 @@ final class EnemyFlight {
         }
     }
 
+    /** M9 part D: whether a linked ring's centre moves (a {@code circle} wave of air-linked units). */
+    private static boolean drifts(EnemySpec.AirLink link) {
+        return link.descend() > 0 || link.follow() > 0;
+    }
+
+    /**
+     * M9 part D: a linked ring's centre descends at its link's {@code descend} and drifts toward the ship's x at its
+     * {@code follow} (kept in the unit's offset, the same for every unit of the ring).
+     */
+    private void driftRing(Spawn.Orbit circle, EnemySpec.AirLink link, double shipX) {
+        u.offY -= link.descend() * SimStep.SECONDS;
+        double toShip = shipX - (circle.centreX() + u.offX);
+        double most = link.follow() * SimStep.SECONDS;
+        u.offX += Math.clamp(toShip, -most, most);
+    }
+
     private void circle(Spawn.Orbit circle) {
         u.angle += circle.radiansPerSecond() * SimStep.SECONDS;
         u.x = circle.centreX() + circle.radius() * Trig.cos(u.angle);
@@ -531,6 +628,19 @@ final class EnemyFlight {
         }
         u.vx = dx * u.speed;
         u.vy = dy * u.speed;
+    }
+
+    /**
+     * M9 part B (design/campaign Level 29, the wavering Stormhawks; {@link EnemySpec.Hover#peelSpeed()}): its hover is
+     * over: it peels off straight sideways toward the nearer side edge (right from the middle line) at {@code speed},
+     * gone past that edge ({@link SimEvents.Type#PEEL_OFF}).
+     */
+    private void peel(double speed) {
+        u.phase = Enemy.Phase.LEAVE;
+        u.burstLeft = 0;
+        u.vx = u.x < PlayField.WIDTH / 2.0 ? -speed : speed;
+        u.vy = 0;
+        u.events.add(SimEvents.Type.PEEL_OFF, u.x, u.y(), u.kind);
     }
 
     /**

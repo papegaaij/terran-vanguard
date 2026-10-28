@@ -88,6 +88,13 @@ final class LevelRules {
         if (allies.isPresent()) {
             return allies.get();
         }
+        if (secondary.spared().isPresent()) {
+            // M9 part B (design/campaign Level 29, Hold fire): none of the neutral craft destroyed.
+            return Secondary.spared(
+                    secondary.spared().get(),
+                    secondary.credits(),
+                    secondary.label().orElseThrow());
+        }
         if (secondary.afloat().orElse(false)) {
             // M5 part E (user decision E8 = a): the naval convoy afloat at the boss's death.
             return Secondary.afloat(secondary.credits(), secondary.label().orElseThrow());
@@ -153,14 +160,15 @@ final class LevelRules {
     }
 
     /**
-     * A radio cue's subject: the enemy, group or phase it names; for a {@code boss-destroyed} cue the
+     * A radio cue's subject: the enemy, group, phase or escort swap outcome it names; for a {@code boss-destroyed} cue the
      * level boss's slug, which the simulation cues it with.
      */
     static String subject(LevelData level, LevelData.RadioCue cue) {
         if (cue.event().orElse(null) == LevelData.CueEvent.BOSS_DESTROYED) {
             return boss(level, "a boss-destroyed cue");
         }
-        return cue.enemy().or(cue::group).or(cue::phase).orElse("");
+        // Step B4b: a holders-down cue's escort swap outcome (the simulation cues it with the swap's).
+        return cue.enemy().or(cue::group).or(cue::phase).or(cue::swap).orElse("");
     }
 
     /** A cue's trigger: a boss-phase cue that waits for a timeout has its own. */

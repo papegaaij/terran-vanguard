@@ -34,6 +34,9 @@ import java.util.List;
  * edge entering the top edge at its time, and scrolls through with the ground; a broken unit lies there as a
  * wreck. The hook aims at them per unit ({@link #nextDome}, {@link #nearestCloser}, {@link #objective(double,
  * double)}); they never fail the mission.
+ *
+ * <p>M9 part D, a hull escort (design/allies/mining-tug; Level 31; {@link ObjectiveSpec.Hull}): its units are the
+ * hull's sections, placed by its {@link HullEscort}, which holds the hull's own rules; this class only delegates to it.
  */
 final class Convoy {
     private final ObjectiveSpec.Escort escort;
@@ -46,6 +49,8 @@ final class Convoy {
     private int firstLost = -1;
     /** M5 part D: the air escort; null for a ground convoy. */
     private final ObjectiveSpec.Air air;
+    /** M9 part D: the hull escort placing the units (its sections); null for another convoy. */
+    private final HullEscort hull;
     /** M5 part D: the scripted loss's unit; -1 for none. */
     private final int scripted;
     /** M5 part D: the units the player can save (every unit but the scripted loss's). */
@@ -133,6 +138,7 @@ final class Convoy {
         enterTicks = new int[1];
         startY = 0;
         air = null;
+        hull = null;
         scripted = -1;
         saveable = 1;
         liftTick = 0;
@@ -178,6 +184,7 @@ final class Convoy {
         enterTicks = new int[units];
         startY = 0;
         air = null;
+        hull = null;
         scripted = -1;
         saveable = units;
         liftTick = 0;
@@ -220,6 +227,7 @@ final class Convoy {
         enterTicks = new int[units];
         startY = 0;
         air = null;
+        hull = null;
         scripted = -1;
         saveable = naval.damageable();
         liftTick = 0;
@@ -260,6 +268,9 @@ final class Convoy {
             allies[k] = new Ally();
             enterTicks[k] = SimStep.ticks(escort.enterSeconds() + k * escort.enterInterval());
         }
+        hull = escort.hull()
+                .map(spec -> new HullEscort(spec, allies, escort.ally()))
+                .orElse(null);
         startY = -escort.ally().size().height() / 2;
         air = escort.air().orElse(null);
         scripted = escort.scriptedUnit();
@@ -308,6 +319,16 @@ final class Convoy {
 
     /** Back to the level start: every unit waiting below the screen (an air unit on its pad or at its station) with full HP. */
     void reset() {
+        if (hull != null) {
+            hull.reset();
+            lost = 0;
+            firstHit = -1;
+            firstLost = -1;
+            lostSaveable = 0;
+            lastLost = -1;
+            lastHit = -1;
+            return;
+        }
         if (naval != null) {
             resetNaval();
             return;
@@ -373,6 +394,11 @@ final class Convoy {
 
     /** One step: the units due roll in, the others roll on or hold their stations, the wrecks scroll. */
     void update(int levelTick, double groundScroll, double scrollStep) {
+        if (hull != null) {
+            // M9 part D: the hull holds its station in screen space; the ground scrolls beneath it.
+            hull.update(levelTick);
+            return;
+        }
         if (ground != null) {
             // M7 part D: each lies on the ground, standing or a wreck, and scrolls with it.
             for (int k = 0; k < allies.length; k++) {
@@ -589,6 +615,10 @@ final class Convoy {
 
     /** Unit {@code k}'s spec: the escort's ally, or (M5 part E) the naval unit's own. */
     AllySpec spec(int k) {
+        if (hull != null) {
+            // M9 part D: the section's own box and HP.
+            return hull.sectionSpec(k);
+        }
         if (ground != null) {
             return ground.units().get(k).ally();
         }
@@ -630,6 +660,10 @@ final class Convoy {
      * for none (and for another convoy).
      */
     int objective(double x, double y) {
+        if (hull != null) {
+            // M9 part D: the hull's nearest living section that can be hit.
+            return hull.nearest(x, y);
+        }
         if (ground == null) {
             return objective();
         }
@@ -891,6 +925,11 @@ final class Convoy {
         return air != null;
     }
 
+    /** M9 part D: the hull escort whose sections the units are; null for another convoy. */
+    HullEscort hull() {
+        return hull;
+    }
+
     /** M5 part D: whether air unit {@code k} can be hit now and its hit box overlaps {@code box} around (x, y). */
     boolean touchesInAir(int k, double x, double y, Hitbox box) {
         Ally ally = allies[k];
@@ -1052,6 +1091,11 @@ final class Convoy {
         if (ground != null) {
             // M7 part D: only ground allies', so the other convoys hash as before.
             hash.add(lostSaveable).add(lastLost).add(lastHit);
+        }
+        if (hull != null) {
+            // M9 part D: only a hull escort's, so the other convoys hash as before.
+            hash.add(lostSaveable).add(lastLost).add(lastHit);
+            hull.addTo(hash);
         }
         if (air != null) {
             // M5 part D: only an air escort's, so Level 04's convoy hashes as before.

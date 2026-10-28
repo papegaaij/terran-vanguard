@@ -38,6 +38,13 @@ final class LevelScroll {
         double start = sectionStart(sections, i);
         double end = section.end();
         double px = (to - from) * speed;
+        if (speed == 0 && section.held() && i > 0) {
+            // M9 part B (Level 29, the rescue halt): into a held arena the scroll eases down over the whole section
+            // from the speed before (smoothstep), as the simulation's LevelClock: before × (1 - S(u)).
+            double before = speedOf(sections.get(i - 1), scrollSpeed);
+            double span = end - start;
+            return before * span * (easeOut(clampedU(to, start, span)) - easeOut(clampedU(from, start, span)));
+        }
         if (speed == 0) {
             return px;
         }

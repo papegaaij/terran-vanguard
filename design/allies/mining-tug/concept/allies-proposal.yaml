@@ -1,0 +1,14 @@
+# Proposal (step ART-D, tools/art/belt_units_d.py): the mining tug's entry for design/allies/data.yaml,
+# measured from the production sprites (the sections' opaque boxes from their alpha; the hit boxes 90 %
+# of them, m9d-gaps.md §6's convention). Offsets and boxes in px from the tug's centre, y DOWN; the
+# smoke points are the vents'. D2 merges it with the README's numbers (damaged_by, hp) into the data.
+mining-tug:
+  size: [200, 300]
+  follows: hull
+  layer: ground
+  sections:
+    - {name: bow, offset: [0, -104], box: [133, 77], smoke: [[-45, -80], [35, -105]]}   # opaque 148x86
+    - {name: cargo, offset: [0, 0], box: [173, 115], smoke: [[-80, -27], [80, 16], [19, -9]]}   # opaque 192x128
+    - {name: engines, offset: [0, 106], box: [130, 81], smoke: [[-45, 82], [52, 96]]}   # opaque 144x90
+# bells (the drive glow's points, the look's): [0, 132] x1.0, [-38, 124.8] x0.6, [38, 124.8] x0.6
+# §6's concept-measured reference: bow 130x76 at (0, -108), cargo 180x110 at (0, -4), engines 134x84 at (0, +103)

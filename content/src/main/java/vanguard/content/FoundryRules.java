@@ -41,7 +41,8 @@ final class FoundryRules {
                     new EnemySpec.Turret(Math.toRadians(t.turnRate()), t.lock(), Math.toRadians(t.within()))));
         }
         Optional<EnemyData.RearPlate> plate = enemy.rearPlate();
-        if (plate.isPresent()) {
+        // M9 part C: a flying unit's rear plate goes with its facing armour (EnemySpec.FacingArmour, MinefieldRules).
+        if (plate.isPresent() && !enemy.armour().facing()) {
             out = out.withRearPlate(Optional.of(new EnemySpec.RearPlate(
                     Math.toRadians(plate.get().arc()), plate.get().multiplier())));
         }
@@ -233,7 +234,16 @@ final class FoundryRules {
         double turn = hook.flatMap(EnemyData.Hook::homing)
                 .flatMap(EnemyData.HomingChange::turnRate)
                 .orElse(homing.turnRate());
-        return gun.withHoming(Optional.of(new EnemyGun.HomingSpec(
-                Math.toRadians(turn), homing.life(), homing.hp(), homing.most(), homing.hatch())));
+        // M9 part A (QA-1): a seekable missile (the homing diamond) may be picked by the player's homing shots, Rook
+        // and
+        // the Tesla arc when no unit is in their reach.
+        return gun.withHoming(Optional.of(
+                new EnemyGun.HomingSpec(Math.toRadians(turn), homing.life(), homing.hp(), homing.most(), homing.hatch())
+                        .withSeekable(homing.seekable().orElse(false))
+                        // M9 part B (design/enemies/ground/sam-nest): no missile spawned on the ship, its own cap.
+                        .withHoldWithin(homing.holdWithin().orElse(0.0))
+                        .withPerShooter(homing.perShooter().orElse(false))
+                        // M9 part D (design/enemies/air/hornet): launched at its target, not along its facing.
+                        .withAimed(homing.aimed().orElse(false))));
     }
 }

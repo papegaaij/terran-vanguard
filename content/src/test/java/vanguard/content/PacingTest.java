@@ -58,6 +58,7 @@ class PacingTest {
         return IntStream.rangeClosed(FIRST_LEVEL, 50)
                 .mapToObj(CONTENT::levelKey)
                 .flatMap(java.util.Optional::stream)
+                .filter(key -> !PENDING_AUTOPILOT.contains(key))
                 .flatMap(key -> Stream.of(Difficulty.values()).map(difficulty -> Arguments.of(key, difficulty)));
     }
 
@@ -107,9 +108,23 @@ class PacingTest {
      * step L21R, 2026-10-20: 168 units at medium, 2.55 on the screen, the pre-boss pause and the settling dust the only
      * stretches over 2 s). M8 part B: Level 22's approved draft waves (48 small waves, 214 units at medium, mostly tiny
      * fodder: 2.17 on the screen, 8 stretches over 2 s, step B3) pass with their rework (step B3b, 2026-10-22: 67 waves,
-     * 273 units at medium, 2.54 on the screen, no stretch over 2 s).
+     * 273 units at medium, 2.54 on the screen, no stretch over 2 s). M9 part B: Level 29's approved waves (a wave every
+     * 3 s, 350 units at medium, mostly tiny fodder; 1.42 on the screen, 21 stretches over 2 s, step B3) pass with their
+     * rework (step B3b, 2026-10-28, pending the user's review in round 62: 81 waves, 369 units at medium, firing Talon
+     * pairs and lines on the offbeats at 130 px/s, the Mote Swarms on long loops, the clamp guns asleep until the halt:
+     * 2.67 on the screen, no stretch over 2 s at medium and hard, easy 2 over 3 s).
      */
     static final Set<String> PENDING_WAVES = Set.of();
+
+    /**
+     * M9 part B (step B2): the levels whose flights wait for the autopilot's next step: the pacing, the Act 2+ floor and
+     * the beam era's small-unit life are not flown here (the level report prints them). Remove a level once the
+     * autopilot completes it on every difficulty. Level 29 flies with the plan's fit (step B3). M9 part C (step C2):
+     * Level 30 until step C3's mine-line autopilot (the plain one wins 1 of 3 at medium; measured invulnerable in step
+     * C2: 2.75 on the screen, 40 shots a minute, no stretch over 2 s at medium). None left: step C3's {@link MinePlay}
+     * completes Level 30 on every difficulty (2026-10-28).
+     */
+    static final Set<String> PENDING_AUTOPILOT = Set.of();
 
     /**
      * The user's Act 2 fit (playtest 2026-10-18): the Pulse Cannon at L4, a Micro-missile Pod at L2 on the right
@@ -194,7 +209,11 @@ class PacingTest {
             Map.entry(Level25Test.LEVEL, Level25Test::planLoadout),
             Map.entry(Level26Test.LEVEL, Level26Test::planLoadout),
             Map.entry(Level27Test.LEVEL, Level27Test::planLoadout),
-            Map.entry(Level28Test.LEVEL, Level28Test::planLoadout));
+            Map.entry(Level28Test.LEVEL, Level28Test::planLoadout),
+            Map.entry(Level29Test.LEVEL, Level29Test::planLoadout),
+            Map.entry(Level30Test.LEVEL, Level30Test::planLoadout),
+            // M9 part D: Level 31's plan fit (step D2's stand-in moved into Level31Test in step D3).
+            Map.entry(Level31Test.LEVEL, Level31Test::planLoadout));
 
     /** Flies the level with the autopilot on {@link LevelMetrics#SEED} and measures it ({@link LevelMetrics.Pacing}). */
     static LevelMetrics.Flight fly(String key, Difficulty difficulty, Loadout loadout) {

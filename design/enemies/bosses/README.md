@@ -16,7 +16,7 @@ shortened re-creations of earlier bosses.
 
 ## Contents
 
-Promoted to their own documents for the Acts 1–2 wrap-up, plus the Act 3 drafts of the overnight design phase (2026-10-12) the Act 4 boss of its design phase (2026-10-21, draft) and the Act 5 boss of its design phase (2026-10-27, draft, pending round 60); the remaining units stay in the roster below.
+Promoted to their own documents for the Acts 1–2 wrap-up, plus the Act 3 drafts of the overnight design phase (2026-10-12) the Act 4 boss of its design phase (2026-10-21, draft) and the Act 5 boss of its design phase (2026-10-27, draft, decided in round 60); the remaining units stay in the roster below.
 
 | Part | Summary | Design | Impl | Art |
 |---|---|---|---|---|
@@ -27,7 +27,7 @@ Promoted to their own documents for the Acts 1–2 wrap-up, plus the Act 3 draft
 | [revenant-walker](revenant-walker/README.md) | Act 3 mid-boss: unmarked grey war walker striding through the casting yard, homing pods, rear flamer; its wreck is hint 2 (L19) | approved | in-progress | final |
 | [dust-colossus](dust-colossus/README.md) | Act 3 boss: buried colony organism breaching at the edges and under the ship, mouths with rings, suction and bite (L21) | approved | in-progress | final |
 | [abyssal-maw](abyssal-maw/README.md) | Act 4 boss: serpent leviathan coiled round the hatchery vent, gill rings, fan walls, coil sweeps, one dive and lunge, Helix implants; then the breakout and the run under Ascendancy cruisers (L28) | approved | in-progress | final |
-| [iron-sovereign](iron-sovereign/README.md) | Act 5 boss: battle station in Ceres orbit, three counter-turning rings whose batteries fire in the arc facing the ship, ring locks, the core with Dart streams; Vorne's offer (L35) | draft | not-started | proposed |
+| [iron-sovereign](iron-sovereign/README.md) | Act 5 boss: battle station in Ceres orbit, three counter-turning rings whose batteries fire in the arc facing the ship, ring locks, the core with Dart streams; Vorne's offer (L35) | approved | not-started | chosen |
 
 ## Roster
 
@@ -168,7 +168,7 @@ implants are grey with a hot-amber core and nothing on it is gold (Q11 a).
 - [x] The same for the Act 4 boss (the Abyssal Maw, L28): promoted to its spec in the Act 4 design phase (2026-10-21)
       and built with Act 4 (M8 part H).
 - [ ] The same for the Act 5 boss (the Iron Sovereign, L35): promoted to its draft spec in the Act 5 design phase
-      (2026-10-27, pending round 60), to be built with Act 5 (M9 part H).
+      (2026-10-27, decided in round 60), to be built with Act 5 (M9 part H).
 - [ ] The same for the roster's bosses of Acts 6–7 — **later: Act 6** to Act 7.
 - [x] Shared boss framework: multi-part hitboxes, neck chains, phase transitions, HUD boss bar,
       the intro descent, the chained death and the credit shower (M4 part E, with the Gorgon
@@ -211,4 +211,4 @@ implants are grey with a hot-amber core and nothing on it is gold (Q11 a).
   Maw's and the cruisers' production art and the round 58 and 59 captures are `chosen` (accepted as final) and the Maw
   is `art: final`; C.1 keep (the Maw's par 138), C.2-C.5 accepted (C.4: the hulls ride the ice for 2 s while they
   rise).
-- 2026-10-27 (Act 5 design phase, step m9-d-boss; **pending the user's review in round 60**): the [Iron Sovereign](iron-sovereign/README.md) promoted from the roster to a draft spec (Q7 a, the top-down rings over Ceres orbit; Q1 a, the core's hex shield; Q6 b, the core's Dart streams); its roster row removed.
+- 2026-10-27 (Act 5 design phase, step m9-d-boss; **approved in round 60**): the [Iron Sovereign](iron-sovereign/README.md) promoted from the roster to a draft spec (Q7 a, the top-down rings over Ceres orbit; Q1 a, the core's hex shield; Q6 b, the core's Dart streams); its roster row removed.

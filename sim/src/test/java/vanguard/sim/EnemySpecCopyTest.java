@@ -55,6 +55,17 @@ class EnemySpecCopyTest {
                 GhostDroneTest.drone(),
                 SirenTest.SIREN,
                 DrillRigTest.RIG,
+                Act5Specs.TALON,
+                Act5BSpecs.WING_TALON,
+                Act5BSpecs.MITE,
+                Act5BSpecs.STORMHAWK,
+                Act5BSpecs.SWOOP_TALON,
+                Act5Specs.RAIL_BUNKER,
+                Act5CSpecs.MINELAYER,
+                Act5CSpecs.GUNSHIP,
+                Act5CSpecs.SERPENT,
+                Act5DSpecs.BUZZSAW,
+                Act5DSpecs.SHARD,
                 ThreadcrawlerTest.crawler(4, ThreadcrawlerTest.PORES, new double[] {0, 5_000}, new double[] {100, 100}),
                 EnemySpec.of("whirl-seed", 1, new Hitbox(14, 14), Layer.AIR, 4, true, 3, 150)
                         .withSpiral(Optional.of(new EnemySpec.Spiral(3, 0.5, 40, 60, 0)))

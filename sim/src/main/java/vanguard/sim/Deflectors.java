@@ -24,6 +24,14 @@ public final class Deflectors {
     private final int[] charges;
 
     private final int[] recharge;
+    /** M9 part A: the power budget under a drain; null without one. */
+    private PowerState power;
+
+    /** M9 part A: the power budget whose drain slows the charges' return. */
+    void power(PowerState budget) {
+        power = budget;
+    }
+
     private boolean overdrive;
 
     Deflectors(Ship ship, Armament armament) {
@@ -66,7 +74,8 @@ public final class Deflectors {
             if (charges[m] >= spec.charges()) {
                 charges[m] = spec.charges();
                 recharge[m] = 0;
-            } else if (++recharge[m] >= spec.rechargeTicks()) {
+            } else if ((power == null || power.runs(m)) && ++recharge[m] >= spec.rechargeTicks()) {
+                // M9 part A: under a drain the charges return on the mount's power steps (× f).
                 recharge[m] = 0;
                 charges[m]++;
                 events.add(SimEvents.Type.DEFLECTOR_CHARGED, ship.x() + side(m) * spec.radius() / 2, ship.y(), m);

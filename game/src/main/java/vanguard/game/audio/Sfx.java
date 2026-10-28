@@ -1024,6 +1024,137 @@ public enum Sfx {
      * Level 28's breakout, one bed for every level under water (the user, 2026-10-26).
      */
     AMBIENCE_EUROPA_UNDER("sfx/europa-under-r52-a.ogg", 1, Bus.EFFECTS, AMBIENCE),
+    /**
+     * M9 part A (design/audio/sfx, Act 5 sounds; round 60's picks, the preview cuts of step AUD-A, levelled in their
+     * files): the Tesla Coil Pod's arc, the {@code tesla} family's zap (round 03 a), one a pod's arc.
+     */
+    TESLA_SHOT("sfx/shot-tesla-r03-a.ogg", 3, Bus.EFFECTS, PLAYER_FIRE),
+    /** M9 part A: a hit on an enemy's hex shield that held (S.1 a: a knife tapping a wine glass). */
+    ENEMY_SHIELD_HIT("sfx/enemy-shield-hit-r60-a.ogg", 3, Bus.EFFECTS, PLAYER_FIRE),
+    /** M9 part A: an enemy's hex shield emptied by a hit, a {@code shield-breaker} arc or the EMP (S.2 b). */
+    ENEMY_SHIELD_BREAK("sfx/enemy-shield-break-r60-b.ogg", 2, Bus.EFFECTS, EXPLOSION),
+    /** M9 part A: an enemy's hex shield back (S.3 a: a rising electric hum, 0.7 s). */
+    ENEMY_SHIELD_REFILL("sfx/enemy-shield-refill-r60-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
+    /** M9 part A: an Ascendancy homing diamond's launch (S.4 b: a bottle rocket's ignition over a hobby rocket's burn). */
+    HOMING_LAUNCH("sfx/homing-launch-r60-b.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
+    /** M9 part A: one quiet loop while a homing diamond flies (S.5 a: a fizzing hiss, 1.0 s loop), for the nearest. */
+    HOMING_RUN("sfx/homing-run-r60-a.ogg", 1, Bus.EFFECTS, ENEMY_FIRE),
+    /** M9 part A: a homing diamond shot down (S.6 b: a dry thud-crack with a struck iron bar). */
+    HOMING_DOWN("sfx/homing-down-r60-b.ogg", 2, Bus.EFFECTS, EXPLOSION),
+    /** M9 part A: the ship browning out, a loop while the load is over the drained output (S.10 a, an 8 s loop). */
+    BROWNOUT_HUM("sfx/brownout-hum-r60-a.ogg", 1, Bus.EFFECTS, WARNING),
+    /** M9 part A: an enemy-channel line or an intercepted briefing page opening, in place of the squelch (S.11 a). */
+    INTERCEPT_OPEN("sfx/intercept-open-r60-a.ogg", 1, Bus.RADIO, WARNING),
+    /** M9 part A: an enemy-channel line or an intercepted page closing (S.12 a). */
+    INTERCEPT_CLOSE("sfx/intercept-close-r60-a.ogg", 1, Bus.RADIO, WARNING),
+    /** M9 part A: an intercepted briefing page's carrier hiss while its text types, in place of the blip (S.13 a). */
+    INTERCEPT_CARRIER("sfx/intercept-carrier-r60-a.ogg", 1, Bus.RADIO, WARNING),
+    /**
+     * M9 part B (design/audio/sfx, Act 5 sounds; step AUD-B's round 62 proposals, their a variants until round 62
+     * picks, levelled in their files): the station's two-tone klaxon, three blasts, as Level 29's Block C declares
+     * (t=60).
+     */
+    STATION_KLAXON("sfx/station-klaxon-r62-a.ogg", 1, Bus.EFFECTS, WARNING),
+    /** M9 part B: the bank of heavy relays slamming one after another as Block C's lights switch white to red. */
+    STATION_RELAYS("sfx/station-relays-r62-a.ogg", 1, Bus.EFFECTS, ENEMY_FIRE),
+    /** M9 part B: a SAM Nest's hatch opening for its salvo (a short hydraulic clunk). */
+    NEST_HATCH("sfx/nest-hatch-r62-b.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
+    /** M9 part B: a SAM Nest's two-tone lock beep under its hatch's 0.4 s tell (synthesized). */
+    NEST_LOCK("sfx/nest-lock-r62-b.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
+    /** M9 part B: a dormant SAM Nest waking (a servo spin-up). */
+    NEST_WAKE("sfx/nest-wake-r62-ab.ogg", 3, Bus.EFFECTS, ENEMY_FIRE),
+    /** M9 part B: a clamp gun's shot (Level 29's Dock 9). */
+    CLAMP_GUN_SHOT("sfx/clamp-gun-shot-r62-b.ogg", 3, Bus.EFFECTS, ENEMY_FIRE),
+    /** M9 part B: a docking clamp springing open as its gun dies (a hydraulic release, a gas burst, a clang). */
+    CLAMP_RELEASE("sfx/clamp-release-r62-b.ogg", 2, Bus.EFFECTS, EXPLOSION),
+    /** M9 part B: Rook's Ember launching from the prison tender's hold (a jet spooling up into a whoosh). */
+    EMBER_LAUNCH("sfx/ember-launch-r62-a.ogg", 1, Bus.EFFECTS, WARNING),
+    /** M9 part B: the loaned Bulwark peeling away at the escort swap (a thruster burn going away). */
+    BULWARK_DEPART("sfx/bulwark-depart-r62-a.ogg", 1, Bus.EFFECTS, ENEMY_FIRE),
+    /** M9 part B: a Talon's short jet whine as it swoops in. */
+    TALON_WHINE("sfx/talon-whine-r62-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
+    /** M9 part B: a Talon's twin shot (a doubled dry crack). */
+    TALON_SHOT("sfx/talon-shot-r62-b.ogg", 3, Bus.EFFECTS, ENEMY_FIRE),
+    /** M9 part B: the radio squelch over a squad leader's death (its wing breaks off). */
+    LEADER_SQUELCH("sfx/leader-squelch-r62-b.ogg", 1, Bus.EFFECTS, EXPLOSION),
+    /** M9 part B: an Asteroid Mite's 0.4 s tell before its leap (a gritty rock scrape). */
+    MITE_TELL("sfx/mite-tell-r62-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
+    /** M9 part B: an Asteroid Mite leaping off its rock. */
+    MITE_LEAP("sfx/mite-leap-r62-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
+    /**
+     * M9 part B: the belt station's bed (round 60 S.17 b, the user's pick: an engine room's thrum, a ventilation hum,
+     * a far clang and a slow creak, a seamless 16 s loop), looped: Level 29.
+     */
+    AMBIENCE_BELT_STATION("sfx/belt-station-r60-b.ogg", 1, Bus.EFFECTS, AMBIENCE),
+    /**
+     * M9 part C (design/audio/sfx, Act 5 sounds; round 60's picks, played as they are until part D's production mix):
+     * the belt's open-space bed heard through the hull (S.18 a: a muffled jet idle, a shortwave hiss, a slow creak and a
+     * far impact, a seamless 16 s loop), looped: Level 30.
+     */
+    AMBIENCE_BELT_OPEN("sfx/belt-open-r60-a.ogg", 1, Bus.EFFECTS, AMBIENCE),
+    /** M9 part C: an armed line mine's 0.6 s proximity blink (S.14 a: rising dry ticks). */
+    MINE_BLINK("sfx/mine-blink-r60-a.ogg", 3, Bus.EFFECTS, WARNING),
+    /** M9 part C: a line mine bursting, by proximity, shot or touched (S.15 a: a metallic bang). */
+    MINE_BURST("sfx/mine-burst-r60-a.ogg", 3, Bus.EFFECTS, EXPLOSION),
+    /**
+     * M9 part C: the Gilded Gunship's engine (S.9 a, the Ascendancy turbine at its own pitch), one loop for the nearest
+     * on the screen.
+     */
+    GUNSHIP_ENGINE("sfx/ascendancy-turbine-r60-a.ogg", 1, Bus.EFFECTS, ENEMY_FIRE),
+    /** M9 part C: the Minelayer's drone (the same turbine, lower), one loop for the nearest on the screen. */
+    MINELAYER_DRONE("sfx/ascendancy-turbine-r60-a.ogg", 1, Bus.EFFECTS, ENEMY_FIRE),
+    /**
+     * M9 part C (step AUD-C's round 63 proposals, their a variants until round 63 picks, levelled in their files): a laid
+     * line mine arming (a dry double tick).
+     */
+    LINE_MINE_ARM("sfx/mine-arm-r63-b.ogg", 3, Bus.EFFECTS, ENEMY_FIRE),
+    /** M9 part C: the Minelayer dropping a mine (a dull metal thud). */
+    LINE_MINE_DROP("sfx/mine-drop-r63-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
+    /** M9 part C: a shot mine's chain, 0.08 s after its burst (the burst's bang rippling off three times). */
+    MINE_CHAIN("sfx/mine-chain-r63-a.ogg", 2, Bus.EFFECTS, EXPLOSION),
+    /** M9 part C: a Rail Serpent turret car's single shot (a sharp crack). */
+    SERPENT_SHOT("sfx/serpent-shot-r63-a.ogg", 3, Bus.EFFECTS, ENEMY_FIRE),
+    /** M9 part C: a Rail Serpent's rumble (a freight train's clickety-clack), one loop for the nearest on the screen. */
+    SERPENT_RUMBLE("sfx/serpent-rumble-r63-a.ogg", 1, Bus.EFFECTS, ENEMY_FIRE),
+    /** M9 part C: a Rail Serpent cut: the coupler's snap, the power-down whine over sparks. */
+    SERPENT_SPLIT("sfx/serpent-split-r63-b.ogg", 2, Bus.EFFECTS, EXPLOSION),
+    /** M9 part C: a Gilded Gunship's ring of slow bullets (a hollow mortar thump). */
+    GUNSHIP_RING("sfx/gunship-ring-r63-b.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
+    /** M9 part C: a Gunship's belly doors before a Dart stream (a heavy door's clunk). */
+    GUNSHIP_DOORS("sfx/gunship-doors-r63-b.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
+    /** M9 part C: a Dart launched from a Gunship's bay (a pneumatic thump). */
+    DART_LAUNCH("sfx/dart-launch-r63-a.ogg", 3, Bus.EFFECTS, ENEMY_FIRE),
+    /** M9 part C: a lane beacon buoy's strobe as it passes (a faint tick). */
+    BUOY_TICK("sfx/buoy-tick-r63-a.ogg", 2, Bus.EFFECTS, AMBIENCE),
+    /**
+     * M9 part D (design/audio/sfx, Act 5 sounds; step AUD-D's round 64 proposals, their a variants until the round's
+     * picks, levelled in their files): one loop while any Shard Drone's air link is lit, panned to the nearest group
+     * (a mains transformer's hum with a crackle).
+     */
+    LINK_HUM("sfx/link-hum-r64-a.ogg", 1, Bus.EFFECTS, ENEMY_FIRE),
+    /** M9 part D: a Shard group's 0.8 s flicker tell before its links light (and their relight after the EMP). */
+    LINK_FLICKER("sfx/link-flicker-r64-a.ogg", 2, Bus.EFFECTS, WARNING),
+    /** M9 part D: an air link broken by a drone's death (one per dying drone). */
+    LINK_SNAP("sfx/link-snap-r64-a.ogg", 2, Bus.EFFECTS, EXPLOSION),
+    /** M9 part D: the nearest Buzzsaw's spin, one loop pitched with the spin (2 turns/s chasing, 6 spun up). */
+    SAW_WHINE("sfx/saw-whine-r64-a.ogg", 1, Bus.EFFECTS, ENEMY_FIRE),
+    /** M9 part D: a Buzzsaw's spin-up tell before its dash (played at speed 0.6 s / its tell). */
+    SAW_SPINUP("sfx/saw-spinup-r64-a.ogg", 2, Bus.EFFECTS, WARNING),
+    /** M9 part D: a Buzzsaw's dash bouncing off a big rock or the edge (a scrape-clang). */
+    SAW_RICOCHET("sfx/saw-ricochet-r64-a.ogg", 3, Bus.EFFECTS, ENEMY_FIRE),
+    /** M9 part D: a hit on one of the mining tug's sections (a heavy hull impact), at most once per 0.2 s. */
+    TUG_HIT("sfx/tug-hit-r64-a.ogg", 2, Bus.EFFECTS, EXPLOSION),
+    /** M9 part D: the tug's klaxon burst: a section below 50 %, and again when it is lost. */
+    TUG_ALARM("sfx/tug-alarm-r64-a.ogg", 1, Bus.EFFECTS, WARNING),
+    /** M9 part D: a tug section lost (over the alarm). */
+    TUG_LOST("sfx/tug-lost-r64-a.ogg", 1, Bus.EFFECTS, EXPLOSION),
+    /** M9 part D: the tug's engine bed over the belt's open-space bed while its engines section lives (a loop). */
+    TUG_ENGINE("sfx/tug-engine-r64-a.ogg", 1, Bus.EFFECTS, AMBIENCE),
+    /**
+     * M9 part D: the Hornet's hover hum (round 60's pick, the Ascendancy turbine pitched up), one loop for the nearest
+     * on the screen.
+     */
+    HORNET_HUM("sfx/ascendancy-turbine-r60-a.ogg", 1, Bus.EFFECTS, ENEMY_FIRE),
     /** The mission complete jingle (design/audio/music, track 23), played as a one-shot. */
     MISSION_COMPLETE("music/mission-complete.ogg", 1, Bus.MUSIC, WARNING),
     /**
@@ -1031,6 +1162,11 @@ public enum Sfx {
      * played once as a one-shot over the ambience at the cruisers' rise (Level 28, K+18).
      */
     REVEAL_STING("music/reveal-sting.ogg", 1, Bus.MUSIC, WARNING),
+    /**
+     * M9 part B (design/audio/music, track 31 "Horn Call", round 60 M.2 a): Rook's return sting, a one-shot at Level
+     * 29's Ember launch over the theme ducked by 6 dB ({@link LevelMusic#rookReturn}).
+     */
+    ROOK_RETURN_STING("music/rook-return.ogg", 1, Bus.MUSIC, WARNING),
     /** The music's failure sting (design/audio/music, track 25), played over the cut music. */
     MISSION_FAILED("music/mission-failed.ogg", 1, Bus.MUSIC, WARNING),
     /** Track 21, the mini-boss sting (round 08 a "Contact Heavy"). */
@@ -1129,6 +1265,10 @@ public enum Sfx {
             // M8 part C: the bed under the ice (Level 23 from the waterline, Levels 24-28 to the breakout: one bed for
             // every level under water, the user 2026-10-26).
             case "europa-under" -> AMBIENCE_EUROPA_UNDER;
+            // M9 part B: the belt's station bed (Level 29).
+            case "belt-station" -> AMBIENCE_BELT_STATION;
+            // M9 part C: the belt's open space (Level 30).
+            case "belt-open" -> AMBIENCE_BELT_OPEN;
             default -> throw new IllegalArgumentException("no ambience for " + setting + " yet");
         };
     }

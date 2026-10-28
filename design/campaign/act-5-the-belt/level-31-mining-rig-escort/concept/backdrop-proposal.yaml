@@ -1,0 +1,173 @@
+backdrop:
+  # Presentation only: Level 31's open belt (tools/art/backdrop_l31.py, step ART-D, from the README's Layout table (no data.yaml yet: re-run after D2)).
+  # A ground layer without a tile set: open space is the deep layer (the base); the ground holds the
+  # Bright Seam dock and the two outcrops (the nests' pads) and, drawn by the game, the tug. Low-air
+  # holds the refugee haulers (paths) and the dimmed rocks; high-air the close grit. At most two animated
+  # pieces on the screen at once (the relay's strobe, a tumbling rock).
+  scroll_factors: {deep: 0.12, far: 0.5, ground: 1, low-air: 1.35, high-air: 2.2}   # far unused
+  ramp: 2
+  haze_colour: 09090e
+  atmosphere:
+    clear: {haze: 0.0}
+  tile_sets:
+    open-space: {layer: deep, height: 1024}   # space, the sunlit dust band, stars
+    open-dust: {layer: high-air, height: 960}   # close grit and dust motes (transparent)
+  pieces:
+    ceres-crescent: {layer: deep, size: [360, 360]}
+    far-rock-a: {layer: deep, size: [120, 100]}
+    far-rock-b: {layer: deep, size: [84, 72]}
+    far-rock-c: {layer: deep, size: [56, 48]}
+    carrier-lights: {layer: deep, size: [140, 72]}
+    vesta-relay: {layer: deep, size: [140, 300], frames: 8, fps: 4}
+    cdf-frigate: {layer: deep, size: [64, 112]}
+    bright-seam-dock: {layer: ground, size: [480, 560]}
+    outcrop-1: {layer: ground, size: [480, 440]}
+    outcrop-2: {layer: ground, size: [480, 400]}
+    ore-hauler: {layer: low-air, size: [64, 64], headings: 16}
+    tumbling-rock: {layer: low-air, size: [104, 104], frames: 16, fps: 2}
+    drift-rock-a: {layer: low-air, size: [88, 80]}
+    drift-rock-b: {layer: low-air, size: [64, 56]}
+  placed:
+    # Bright Seam's dock scrolling away as the tug rises out of its cradle (t 0-6)
+    - {piece: bright-seam-dock, t: -2.0, x: 240}
+    # outcrop-1: its pads carry the nests at x 424 (t 60), x 96 (t 60.75), x 56 (t 61.28)
+    - {piece: outcrop-1, t: 62.983, x: 240}
+    # outcrop-2: its pads carry the nests at x 44 (t 119), x 440 (t 119.5), x 404 (t 120)
+    - {piece: outcrop-2, t: 121.85, x: 240}
+    # Ceres a fading crescent behind (sections 1-2)
+    - {piece: ceres-crescent, t: -13.889, x: 360}
+    # a far rock
+    - {piece: far-rock-a, t: 16.0, x: 80}
+    - {piece: far-rock-c, t: 44.0, x: 410}
+    - {piece: far-rock-b, t: 78.0, x: 130}
+    - {piece: far-rock-a, t: 104.0, x: 400}
+    - {piece: far-rock-c, t: 122.0, x: 60}
+    # the ambushers' carrier in the dust band (section 5)
+    - {piece: carrier-lights, t: 148.333, x: 330}
+    # the Vesta relay's beacon tower, centred 200 px down at the end (t=184)
+    - {piece: vesta-relay, t: 188.861, x: 330}
+    # a CDF frigate waiting at the relay
+    - {piece: cdf-frigate, t: 184.694, x: 200}
+    # a refugee hauler falling in behind the tug (left)
+    - {piece: ore-hauler, t: -3.16, x: 64, path: [[-1.0, 0, 0.0], [6.0, 3, 1284.0], [14.0, 6, 2570.0], [20.0, 6, 3402.0]]}
+    # the second hauler (right)
+    - {piece: ore-hauler, t: -1.784, x: 416, path: [[0.5, 0, 0.0], [7.5, -3, 1288.0], [15.5, -6, 2574.0], [22.0, -6, 3503.0]]}
+    # rocks drifting below the play plane, dimmed
+    - {piece: drift-rock-a, t: 34.0, x: 420}
+    - {piece: tumbling-rock, t: 50.0, x: 60}
+    - {piece: drift-rock-b, t: 84.0, x: 420}
+    - {piece: tumbling-rock, t: 100.0, x: 430}
+    - {piece: drift-rock-a, t: 114.0, x: 50}
+    - {piece: drift-rock-b, t: 146.0, x: 60}
+sections:   # ART-D's reading of the README's Layout (120 px/s throughout); D2 writes the real ones
+  - {name: Bright Seam Dock, end: 24, atmosphere: clear, tiles: ['open-space', 'open-dust']}
+  - {name: The Open Belt, end: 58, atmosphere: clear, tiles: ['open-space', 'open-dust']}
+  - {name: The Linked Line, end: 92, atmosphere: clear, tiles: ['open-space', 'open-dust']}
+  - {name: The Drift, end: 128, atmosphere: clear, tiles: ['open-space', 'open-dust']}
+  - {name: The Ambush, end: 164, atmosphere: clear, tiles: ['open-space', 'open-dust']}
+  - {name: The Vesta Relay, end: 184, atmosphere: clear, tiles: ['open-space', 'open-dust']}
+# rows: the end's bottom edge 22080 (ground px); low-air 29808
+# The tug's station band (m9d-gaps.md §6, r60 J.6 b; the escort's hull block is D2's): centre (240, 380)
+# y down, footprint x 140-340, y 230-530; with the sway (20 px across, 5 px up and down, 14 s) x 130-350,
+# y 227.5-532.5. No ground target under it: the nests stand on the outcrops' pads at x <= 100 or >= 380.
+ground_targets:  # at: [t, x], when the nest enters at the top edge and its x (on the outcrops' pads)
+  - target: SAM Nest trio on outcrop 1
+    section: 3
+    enemy: sam-nest
+    count: 3
+    at: [[60, 424], [60.75, 96], [61.28, 56]]
+  - target: SAM Nest trio on outcrop 2
+    section: 4
+    enemy: sam-nest
+    count: 3
+    at: [[119, 44], [119.5, 440], [120, 404]]
+debris:
+  # Proposal (ART-D): the belt's rocks; small ones break (6 HP, part B's), large ones are walls (contact
+  # `large` 20 per the belt's hazards). Dacosta's claim (the secret, 12 HP, its crate on break) as a
+  # chunk of its own (sprites debris-claim-rock: tools/art/belt_units_d.py). D2 checks the README's rules
+  # against the waves: no rock line within 40 px of a spawn point, no big rock in the ship's lowest
+  # 120 px while a rear wave enters, Mites' rides on small ones.
+  chunks:
+    belt-large-a: {size: [88, 80], damage: 20}
+    belt-large-b: {size: [66, 60], damage: 20}
+    belt-a: {size: [40, 36], hp: 6}
+    belt-b: {size: [36, 32], hp: 6}
+    belt-c: {size: [32, 28], hp: 6}
+    claim-rock: {size: [34, 30], hp: 12}
+  clearance: 120
+  max_large: 3
+  easy: {leave_out_large: 4}
+  placed:
+    - {t: 26, x: 100, chunk: belt-a, drift: [20, -150]}
+    - {t: 29, x: 380, chunk: belt-b, drift: [-30, -160]}
+    - {t: 30, x: 60, chunk: belt-large-a, drift: [10, -140]}
+    - {t: 32, x: 200, chunk: belt-c, drift: [40, -170]}
+    - {t: 35, x: 300, chunk: belt-a, drift: [-50, -180]}
+    - {t: 38, x: 140, chunk: belt-b, drift: [60, -150]}
+    - {t: 41, x: 340, chunk: belt-c, drift: [-20, -160]}
+    - {t: 44, x: 60, chunk: belt-a, drift: [30, -170]}
+    - {t: 44, x: 420, chunk: belt-large-b, drift: [-10, -140]}
+    - {t: 47, x: 420, chunk: belt-b, drift: [-40, -180]}
+    - {t: 50, x: 240, chunk: belt-c, drift: [50, -150]}
+    - {t: 52, x: 60, chunk: belt-large-a, drift: [10, -140]}
+    - {t: 53, x: 100, chunk: belt-a, drift: [-60, -160]}
+    - {t: 56, x: 380, chunk: belt-b, drift: [20, -170]}
+    - {t: 59, x: 200, chunk: belt-c, drift: [-30, -180]}
+    - {t: 63.6, x: 300, chunk: belt-a, drift: [40, -150]}
+    - {t: 68.2, x: 140, chunk: belt-b, drift: [-50, -160]}
+    - {t: 70, x: 420, chunk: belt-large-b, drift: [-10, -140]}
+    - {t: 72.8, x: 340, chunk: belt-c, drift: [60, -170]}
+    - {t: 77.4, x: 60, chunk: belt-a, drift: [-20, -180]}
+    - {t: 82, x: 420, chunk: belt-b, drift: [30, -150]}
+    - {t: 84, x: 60, chunk: belt-large-a, drift: [10, -140]}
+    - {t: 86.6, x: 240, chunk: belt-c, drift: [-40, -160]}
+    - {t: 91.2, x: 100, chunk: belt-a, drift: [50, -170]}
+    - {t: 94, x: 420, chunk: belt-large-b, drift: [-10, -140]}
+    - {t: 95.8, x: 380, chunk: belt-b, drift: [-60, -180]}
+    - {t: 97, x: 60, chunk: belt-large-a, drift: [10, -140]}
+    - {t: 97, x: 200, chunk: belt-c, drift: [20, -150]}
+    - {t: 98.2, x: 300, chunk: belt-a, drift: [-30, -160]}
+    - {t: 99.4, x: 140, chunk: belt-b, drift: [40, -170]}
+    - {t: 100, x: 300, chunk: claim-rock, drift: [-18, -146]}  # Dacosta's claim (secret)
+    - {t: 100.6, x: 340, chunk: belt-c, drift: [-50, -180]}
+    - {t: 101, x: 420, chunk: belt-large-b, drift: [-10, -140]}
+    - {t: 101.8, x: 60, chunk: belt-a, drift: [60, -150]}
+    - {t: 103, x: 420, chunk: belt-b, drift: [-20, -160]}
+    - {t: 104.2, x: 240, chunk: belt-c, drift: [30, -170]}
+    - {t: 105, x: 240, chunk: belt-large-a, drift: [-10, -140]}
+    - {t: 105.4, x: 100, chunk: belt-a, drift: [-40, -180]}
+    - {t: 106.6, x: 380, chunk: belt-b, drift: [50, -150]}
+    - {t: 107.8, x: 200, chunk: belt-c, drift: [-60, -160]}
+    - {t: 109, x: 60, chunk: belt-large-b, drift: [10, -140]}
+    - {t: 109, x: 300, chunk: belt-a, drift: [20, -170]}
+    - {t: 110.2, x: 140, chunk: belt-b, drift: [-30, -180]}
+    - {t: 111.4, x: 340, chunk: belt-c, drift: [40, -150]}
+    - {t: 112.6, x: 60, chunk: belt-a, drift: [-50, -160]}
+    - {t: 113, x: 420, chunk: belt-large-a, drift: [-10, -140]}
+    - {t: 113.8, x: 420, chunk: belt-b, drift: [60, -170]}
+    - {t: 115, x: 240, chunk: belt-c, drift: [-20, -180]}
+    - {t: 116.2, x: 100, chunk: belt-a, drift: [30, -150]}
+    - {t: 117, x: 60, chunk: belt-large-b, drift: [10, -140]}
+    - {t: 117.4, x: 380, chunk: belt-b, drift: [-40, -160]}
+    - {t: 118.6, x: 200, chunk: belt-c, drift: [50, -170]}
+    - {t: 119.8, x: 300, chunk: belt-a, drift: [-60, -180]}
+    - {t: 121, x: 140, chunk: belt-b, drift: [20, -150]}
+    - {t: 121, x: 420, chunk: belt-large-a, drift: [-10, -140]}
+    - {t: 122.2, x: 340, chunk: belt-c, drift: [-30, -160]}
+    - {t: 123.4, x: 60, chunk: belt-a, drift: [40, -170]}
+    - {t: 124.6, x: 420, chunk: belt-b, drift: [-50, -180]}
+    - {t: 125, x: 60, chunk: belt-large-b, drift: [10, -140]}
+    - {t: 125.8, x: 240, chunk: belt-c, drift: [60, -150]}
+    - {t: 127, x: 100, chunk: belt-a, drift: [-20, -160]}
+    - {t: 128.2, x: 380, chunk: belt-b, drift: [30, -170]}
+    - {t: 131.6, x: 200, chunk: belt-c, drift: [-40, -180]}
+    - {t: 135, x: 300, chunk: belt-a, drift: [50, -150]}
+    - {t: 138, x: 420, chunk: belt-large-a, drift: [-10, -140]}
+    - {t: 138.4, x: 140, chunk: belt-b, drift: [-60, -160]}
+    - {t: 141.8, x: 340, chunk: belt-c, drift: [20, -170]}
+    - {t: 145.2, x: 60, chunk: belt-a, drift: [-30, -180]}
+    - {t: 148.6, x: 420, chunk: belt-b, drift: [40, -150]}
+    - {t: 152, x: 60, chunk: belt-large-b, drift: [10, -140]}
+    - {t: 152, x: 240, chunk: belt-c, drift: [-50, -160]}
+    - {t: 155.4, x: 100, chunk: belt-a, drift: [60, -170]}
+    - {t: 158.8, x: 380, chunk: belt-b, drift: [-20, -180]}

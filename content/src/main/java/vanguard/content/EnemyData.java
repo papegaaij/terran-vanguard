@@ -37,6 +37,10 @@ import java.util.Optional;
  * @param underwater M8 part C (design/enemies/naval, Returning units under water): how the unit differs in a wave or a
  *     nest that enters under water (a section with {@code medium: underwater}); none if it is the same ({@link
  *     #inWater})
+ * @param shield M9 part A (design/enemies, Enemy shields): its hex shield's HP at medium (the difficulty's HP lever and
+ *     a returning unit's act factor on it, never the beam era's); none without one
+ * @param neutral M9 part B (design/campaign Level 29, Hold fire): a neutral craft ({@link #isNeutral})
+ * @param leader M9 part B (design/enemies/air/talon): the airframe its wave's leader flies ({@link Leader})
  */
 public record EnemyData(
         String name,
@@ -75,7 +79,10 @@ public record EnemyData(
         Optional<RearPlate> rearPlate,
         Optional<Pursuit> pursuit,
         Optional<Boolean> seekersIgnore,
-        Optional<Underwater> underwater)
+        Optional<Underwater> underwater,
+        Optional<Double> shield,
+        Optional<Boolean> neutral,
+        Optional<Leader> leader)
         implements EnemyMovementData, EnemyAttackData, EnemyBossData, EnemyHookData, ColossusBlock, MawBlock {
     public EnemyData {
         Layers.of(layer);
@@ -83,6 +90,76 @@ public record EnemyData(
         Check.notNegative("speed", speed);
         Check.notNegative("bounty", bounty);
         Check.positive("first_level", firstLevel);
+        shield.ifPresent(points -> Check.positive("shield", points));
+    }
+
+    /**
+     * M9 part B (design/enemies/air/talon, Squad leader): the airframe a wave's leader flies ({@code leader: tip} on a
+     * V-wing): its HP, hex shield and bounty at medium, the unit's own otherwise.
+     */
+    public record Leader(double hp, Optional<Double> shield, int bounty) {
+        public Leader {
+            Check.positive("leader.hp", hp);
+            shield.ifPresent(points -> Check.positive("leader.shield", points));
+            Check.notNegative("leader.bounty", bounty);
+        }
+    }
+
+    /**
+     * M9 part B (design/enemies/air/talon, Squad leader): the stat block of its wave's leader: its {@link Leader}'s HP,
+     * shield and bounty, everything else its own.
+     */
+    public EnemyData asLeader() {
+        Leader lead = leader.orElseThrow(() -> new IllegalStateException(name + " has no leader"));
+        return new EnemyData(
+                name,
+                faction,
+                layer,
+                tier,
+                size,
+                hitbox,
+                parts,
+                partList,
+                orientation,
+                lead.hp(),
+                armour,
+                speed,
+                movement,
+                attacks,
+                formations,
+                weakPoints,
+                drops,
+                traits,
+                lead.bounty(),
+                firstLevel,
+                difficulty,
+                chains,
+                boss,
+                segmentChain,
+                cloak,
+                submerge,
+                latch,
+                machine,
+                roll,
+                vortex,
+                pull,
+                intel,
+                turret,
+                rearPlate,
+                pursuit,
+                seekersIgnore,
+                underwater,
+                lead.shield().or(() -> shield),
+                neutral,
+                leader);
+    }
+
+    /**
+     * M9 part B (design/campaign Level 29, Hold fire): whether it is a neutral craft ({@code neutral: true}): it never
+     * fires or rams, never counts as an enemy and the seekers never pick it; false when not given.
+     */
+    public boolean isNeutral() {
+        return neutral.orElse(false);
     }
 
     /**
@@ -236,7 +313,12 @@ public record EnemyData(
                         movement.breach(),
                         movement.rise(),
                         movement.coil(),
-                        movement.lunge()))
+                        movement.lunge(),
+                        movement.swoopPath(),
+                        movement.ride(),
+                        movement.scatter(),
+                        movement.lay(),
+                        movement.dash()))
                 .orElse(movement);
         return new EnemyData(
                 name,
@@ -275,7 +357,10 @@ public record EnemyData(
                 rearPlate,
                 pursuit,
                 seekersIgnore,
-                Optional.empty());
+                Optional.empty(),
+                shield,
+                neutral,
+                leader);
     }
 
     /** M8 part F: its lunge on {@code difficulty}: the stat block's with the difficulty's trigger distance. */

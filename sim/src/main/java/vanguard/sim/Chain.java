@@ -154,6 +154,16 @@ public final class Chain implements Hashed {
      * leaves it out too (not hashed: from the release).
      */
     private boolean bossShed;
+    /**
+     * M9 part C (design/enemies/air/rail-serpent): a machine split's rear part: powerless, slowing to a stop, its cars
+     * blowing one by one and paying ({@link EnemySpec.Scatter#wreck()}).
+     */
+    private boolean wreck;
+    /** M9 part C: a wreck's speed at the cut, and its steps left and in all of slowing to a stop. */
+    private double wreckSpeed;
+
+    private int wreckTicks;
+    private int wreckTotal;
 
     /**
      * A wave's chain entering from {@code from}: the head point starts at its path's start, the
@@ -218,6 +228,10 @@ public final class Chain implements Hashed {
         headAttacks.clear();
         headFirstDrop = false;
         bossShed = false;
+        wreck = false;
+        wreckSpeed = 0;
+        wreckTicks = 0;
+        wreckTotal = 0;
     }
 
     /**
@@ -330,6 +344,20 @@ public final class Chain implements Hashed {
             place();
             return true;
         }
+        if (wreck) {
+            // M9 part C: a wreck slows evenly to a stop on its heading, then waits for its cars to blow.
+            if (wreckTicks <= 0) {
+                return place() || alive();
+            }
+            wreckTicks--;
+            double share = (double) wreckTicks / wreckTotal;
+            double was = speed;
+            speed = wreckSpeed * share;
+            if (was > 0) {
+                vx *= speed / was;
+                vy *= speed / was;
+            }
+        }
         if (mode == Mode.SCATTER && swim.scatterDue()) {
             // M8 part C: its swim is over: it dies from the cut backwards, drifting to a halt.
             dyingFrom = Math.min(dyingFrom, 1);
@@ -399,6 +427,10 @@ public final class Chain implements Hashed {
             return onField || (!entered && Terrain.y(scroll, headY) > 0);
         }
         if (onField || mode == Mode.PATH || mode == Mode.REGROW || loop != null) {
+            return true;
+        }
+        if (wreck && alive()) {
+            // M9 part C: a wreck lives until its last car blew, on the field or off it.
             return true;
         }
         if (mode == Mode.SCATTER && swim.scatterLeft() > 0) {
@@ -684,6 +716,17 @@ public final class Chain implements Hashed {
         rear.speed = cutSpec.speed();
         rear.vx = length > 0 ? dx / length * cutSpec.speed() : 0;
         rear.vy = length > 0 ? dy / length * cutSpec.speed() : -cutSpec.speed();
+        if (cutSpec.wreck()) {
+            // M9 part C: the machine split: powerless at once, its cars doomed until they blow from the cut backwards.
+            rear.wreck = true;
+            rear.wreckSpeed = cutSpec.speed();
+            rear.wreckTotal = Math.max(1, SimStep.ticks(cutSpec.seconds()));
+            rear.wreckTicks = rear.wreckTotal;
+            rear.loop = null;
+            rear.dyingFrom = 1;
+            rear.popTicks = rear.wreckTotal;
+            return;
+        }
         rear.swim.scatter(cutSpec.seconds());
     }
 
@@ -895,6 +938,11 @@ public final class Chain implements Hashed {
         return glow == 0 ? 1 : (double) t / glow;
     }
 
+    /** M9 part C: whether it is a machine split's wreck (its cars blow one by one, each paying its bounty). */
+    public boolean wreck() {
+        return wreck;
+    }
+
     /** M8 part C: whether it is a water chain's cut-off rear part, swimming on before it dies. */
     public boolean scattering() {
         return mode == Mode.SCATTER;
@@ -1001,6 +1049,10 @@ public final class Chain implements Hashed {
             }
         } else if (spec.headFirstBonus() > 0) {
             hash.add(intact ? 1 : 0);
+        }
+        if (wreck) {
+            // M9 part C: only a wreck's.
+            hash.add(wreckSpeed).add(wreckTicks).add(wreckTotal);
         }
         // M8 part C: only a water chain's, so the Coilwyrm and the Threadcrawler hash as before.
         swim.addTo(hash);

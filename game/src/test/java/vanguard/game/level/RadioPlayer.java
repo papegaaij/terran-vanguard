@@ -351,7 +351,10 @@ final class RadioPlayer {
         int arena = holds.size();
         int haltTick = events.stream().anyMatch(event -> event.hold() == ARENA) ? arenaHaltTick(script) : -1;
         double killInto = events.stream()
-                .filter(event -> event.hold() == ARENA && event.trigger() == CueTrigger.BOSS_DESTROYED)
+                .filter(event -> event.hold() == ARENA
+                        && (event.trigger() == CueTrigger.BOSS_DESTROYED
+                                // M9 part B: a held arena's halt ends as its last holder falls (Level 29's clamps).
+                                || event.trigger() == CueTrigger.HOLDERS_DOWN))
                 .mapToDouble(Event::into)
                 .findFirst()
                 .orElse(Double.POSITIVE_INFINITY);

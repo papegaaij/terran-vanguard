@@ -3,7 +3,7 @@ title: Art direction
 design: approved
 implementation: n/a
 art: chosen
-updated: 2026-10-27
+updated: 2026-10-28
 ---
 
 # Art direction
@@ -475,6 +475,9 @@ the Level 11 props approved as final; the lane telegraph and slam **a** "edge da
 | [concept/slam-r33-a.gif](concept/slam-r33-a.gif) | The same in two arena lanes with a cargo ship and a stand-in arm: telegraph, rise, impact, awash, sink (motion) | chosen |
 | [concept/l11-props-final-r33-a.png](concept/l11-props-final-r33-a.png) | Level 11's props, final frames: floating container with collar and its sinking, the sunken supply pod on its reef root (snagged, hit, freed) and its rise, and the backdrop pieces for step E3b: the burning freighter, three reef growths and a reef root (sheet) | final (round 44, X.i) |
 | [concept/l11-props-final-r33-a.gif](concept/l11-props-final-r33-a.gif) | The same on the ocean stand-in: the reef line, the pod freed by torpedoes and rising to the crate, containers drifting and one sinking, the freighter passing (motion) | final (round 44, X.i) |
+| [concept/vacuum-burst-final-r61-a.png](concept/vacuum-burst-final-r61-a.png) | Vacuum kill bursts (the belt's vacuum rule), proposal **a** "flash and ring" (`tools/art/explosions.py --vacuum a`, M9 part A; written to `assets/` until the pick): the four rungs' light (a white flash gone within 0.1 s, a thin white-blue ring, sparks streaking out) and the debris ring of gunmetal fragments with hot edges cooling, no smoke (sheet) | chosen (round 61, F.3 a picked: flash and ring, in the game) |
+| [concept/vacuum-burst-final-r61-a.gif](concept/vacuum-burst-final-r61-a.gif) | a's four rungs side by side over belt space, 3x | chosen (round 61, F.3 a picked: flash and ring, in the game) |
+| [concept/vacuum-capture-r61-a.png](concept/vacuum-capture-r61-a.png) | Game capture on the capture rig (Level 08 in vacuum, [the rig](../enemies/concept/prompts.md#belt-rig-capture-r61-a), step A4): four frames 1/7 s apart, 2× crops: a Spore Bomber's wreck tumbling and drifting after its burst (only medium and large units leave one), a Stinger's flash and debris ring, the Tesla arc and a shield ring | chosen (round 61, F.3 a picked: accepted) |
 
 ## Implementation
 
@@ -517,15 +520,23 @@ the Level 11 props approved as final; the lane telegraph and slam **a** "edge da
 - [x] The large pulsing orb for `medium` bullets (`BulletLooks`, frames by
       `tools/art/bullet_medium.py`, approved as final in round 26): the Leviathan's and the Scuttler's aimed
       shots; the Spore Bomber's `medium` is its spore, drawn as the mine.
-- [ ] The homing diamond — **later: Act 5** (Act 4's homing projectile, the Depth Hunter's torpedo at L27, is drawn as
+- [ ] The homing diamond — **later: Act 5** (M9 part A, step A3: `DiamondLooks`, the diamond at 16 headings over its
+  exhaust, its pop and fizzle, in a level whose kinds' `homing` has `look: diamond`; the art in the Act 5 levels' unit
+  atlases, `SpriteUse`; flown with the SAM Nest in part B) (Act 4's homing projectile, the Depth Hunter's torpedo at L27, is drawn as
       its own torpedo sprite with its wake, round 48 b, accepted in round 57; the diamond waits for the first homing
-      enemy *bullet*). Draft (gap analysis 2026-10-27, pending the user's review in round 60): the Ascendancy's shootable
+      enemy *bullet*). Draft (gap analysis 2026-10-27, approved in round 60): the Ascendancy's shootable
       homing missiles of Act 5 (the [Hornet](../enemies/air/hornet/README.md)'s salvos, the SAM Nest's, the Strider's pod,
       the Iron Sovereign's SAM batteries) are drawn as the bullet rules' **diamond** in red-gold with a short thin exhaust,
       its hit box the diamond's core; proposed in round 60, built in M9 part A. The Revenant Walker's missiles and the
-      Depth Hunter's torpedo keep their own final sprites.
+      Depth Hunter's torpedo keep their own final sprites. Round 60 chose **variant a** (A.16 a). **Targeting** (QA-1, decided
+      2026-10-27, confirmed in round 61, 2026-10-28): the player's homing shots, Rook and the Tesla arc may lock onto a homing diamond
+      **only when no enemy unit is in reach**.
 - [x] Hit flash and explosion sequences as described under Animation rules (`FlashShader`'s white
       flash; `explosion-tiny` to `-large`, the debris chunks and each unit's own death).
+- [x] The vacuum bursts (the belt's [vacuum rules](../world/belt/README.md#vacuum-rules)): a kill in a `medium: vacuum`
+      section flashes its rung's vacuum burst over its debris ring, no smoke, and a medium or large unit's wreck drifts
+      off with the scroll, slowly turning and fading — M9 part A (step A3: `VacuumDeaths`, `ActFiveLooksTest`; the
+      burst's a/b is round 61's; first flown in Level 29)
 - [x] Loot targets follow readability rule 7 (Level 01's cargo containers and beacon, placeholder
       sprites from `tools/concept/ground_targets.py`).
 - [x] Production sprite pipeline (render → downsample → 1-bit alpha → sharpen → palette) is
@@ -547,6 +558,8 @@ Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-a
 - 2026-10-22 (user, round 52, closed; F.7 = a): the under-water kill bursts are **a**, the "pressure flash" (a white-teal flash, the pressure ring, the dark cavity; already in the game); b, the "quenched fire", rejected (its sheet and GIF moved to `concept/rejected/`). The `--deep b` frames are not in `assets/`.
 - 2026-10-26 (user, [round 59](../concept-rounds/round-59/README.md) closed, C.7): the homing diamond moves to Act 5, to be
   drawn with the first homing enemy bullet; Act 4's only homing projectile keeps its own torpedo sprite.
-- 2026-10-27 (step m9-d-enemies-a, Act 5 design phase; pending the user's review in round 60): the homing diamond is the
+- 2026-10-27 (step m9-d-enemies-a, Act 5 design phase; approved in round 60): the homing diamond is the
   look of every Ascendancy homing missile from Act 5 (red-gold, a short thin exhaust); its proposal goes to round 60's
   unit sheets and its build to M9 part A, which ticks the item.
+- 2026-10-27 (user, [round 60](../concept-rounds/round-60/README.md) closed): the homing diamond is **variant a** (A.16 a; b rejected); the Ascendancy's Act 5 look is gunmetal/charcoal with gold (Q11 **b**, see the [enemies](../enemies/README.md#factions-and-visual-language) rule); the belt's backdrops are the lighter grade (A.18 a); the Iron Sovereign's atlas is top-lit (A.23).
+- 2026-10-28 (user, [round 61](../concept-rounds/round-61/README.md), closed): **F.3 a**, the vacuum burst "flash and ring" (b, the fireball, rejected); **C.7** accepted (only medium and large units leave a wreck in vacuum).

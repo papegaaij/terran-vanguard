@@ -183,8 +183,14 @@ def weapon_levels(d):
     rows = level_rows(w)
     per = " Values are per pod." if w.get("pod") else (" Values are per side." if w.get("mirrored") else "")
     target = weapon_rules()["single_target"]
-    head = ["Level", "Shots", "Pattern", "Rate /s", "Damage", "Volley DPS", "Single-target DPS", "Extra",
-            "Draw MW", "Upgrade cost"]
+    head = ["Level", "Arcs" if w["hits"] == "arc" else "Shots", "Pattern", "Rate /s", "Damage", "Volley DPS",
+            "Single-target DPS", "Extra", "Draw MW", "Upgrade cost"]
+    if w["hits"] == "arc":  # M9 part A: the Tesla Coil Pod
+        return table(head, rows) + "\n\n" + (
+            f"{generated}{per} Single-target DPS counts every arc (an arc always strikes a target inside its reach). "
+            f"The sparks are the `area`: {num(w['splash'])} of the arc's damage on every other unit within the sparks' "
+            f"radius of the struck one (not on the struck target), counted in neither DPS column. "
+            f"OD = the overdrive pattern ({pickups()['overdrive']['seconds']} s pickup).")
     note = (f"Generated from [data.yaml](data.yaml) by `tools/sync_tables.py`; do not edit by hand; the exact "
             f"offset and angle of every shot are in that file.{per} Single-target DPS counts the shots that hit a "
             f"{target['width']} px target {target['distance']} px from the muzzle"
@@ -194,6 +200,8 @@ def weapon_levels(d):
 
 
 def pattern_text(w, lv):
+    if w["hits"] == "arc":  # M9 part A: the Tesla Coil Pod's instant arc
+        return "arc to the nearest"
     pat = lv["pattern"]
     if len(pat) == 1:
         return "single"
@@ -208,6 +216,8 @@ def pattern_text(w, lv):
 
 
 def extra_text(lv):
+    if "reach" in lv:  # M9 part A: an arc's reach and its sparks' radius (the blast)
+        return f"reach {lv['reach']:g} px, sparks {lv['blast']:g} px"
     parts = [f"{label} {lv[key]:g}{unit}" for key, label, unit in (
         ("pierce", "pierce", ""), ("blast", "blast", " px"), ("turn", "turn", "°/s"), ("max_live", "max live", ""))
         if key in lv]
@@ -225,7 +235,11 @@ def weapon_properties(d):
     else:
         speed_text = f"{num(speed)} px/s"
     rng = w.get("range")
-    if w["hits"] == "depth-charge":  # M8 part A: tossed, a fuse per level instead of a range
+    if w["hits"] == "arc":  # M9 part A: no projectile, an instant arc
+        reach = [lv["reach"] for lv in w["levels"]]
+        range_text = (f"None: an instant arc from the pod to its target (it hits on the frame it fires) within "
+                      f"{num(reach[0])} → {num(reach[-1])} px in a {num(w['cone'])}° arc that opens forward")
+    elif w["hits"] == "depth-charge":  # M8 part A: tossed, a fuse per level instead of a range
         fuses = [lv["fuse"] for lv in w["levels"]]
         blasts = [lv["blast"] for lv in w["levels"]]
         # M8 AW (the user, 2026-10-23): tossed forward (angle 0) instead of rolled out backwards (180).
@@ -253,7 +267,7 @@ def weapon_properties(d):
         ["Price", "starter (always owned)" if w["price"] == 0 else f"{grouped(w['price'])} cr"],
         ["Upgrade cost L2 / L3 / L4 / L5", f"{costs} cr (sell-back per [economy](../../../systems/economy/README.md))"],
         ["Unlock", "start" if w["unlock"] == 1 else f"L{w['unlock']:02d} (in the shop from the hangar visit before it)"],
-        ["Projectile", f"{speed_text}, {w['size'][0]}×{w['size'][1]} px, "
+        ["Projectile", range_text if w["hits"] == "arc" else f"{speed_text}, {w['size'][0]}×{w['size'][1]} px, "
                        + (range_text if w["hits"] == "depth-charge" else f"range {range_text}")],
         ["Sound family", f"`{w['sfx']}` ([weapon sound families](../../../audio/sfx/README.md#weapon-sound-families))"],
         ["Projectile family (VFX)",
@@ -395,7 +409,8 @@ EVENTS = {"level-end": "Level end", "secondary-objective": "Secondary objective 
 PORTRAITS = {"generic-cdf": "Generic CDF", "generic-civilian": "Generic civilian",
              "generic-colonial": "Generic colonial",
              "conamara": "Conamara Station",
-             "thera-deep": "Thera Deep"}  # the generic portraits of unnamed speakers; M8 part B: Dr. Brandt's own; M8 part C: Thera Deep Control's
+             "thera-deep": "Thera Deep",
+             "ceres-control": "Ceres Hub", "bellwether": "The Bellwether's captain"}  # the generic portraits of unnamed speakers; M8 part B: Dr. Brandt's own; M8 part C: Thera Deep Control's
 
 
 def timed_halt(section):
@@ -422,6 +437,12 @@ def travelled(level, i, a, b):
     def ease_out(x):  # ∫ (1 - S), lost while easing up
         return x - x ** 3 + x ** 4 / 2
 
+    if not speed and s.get("arena") and s.get("holds") and i > 0:
+        # M9 part B (Level 29, the rescue halt): a held arena eases down across the whole section from the speed
+        # before (smoothstep: before x (1 - S(u)))
+        before = secs[i - 1].get("speed", level["scroll_speed"])
+        span = s["end"] - start
+        return before * span * (ease_out(u(b, start, span)) - ease_out(u(a, start, span)))
     if speed and i + 1 < len(secs) and timed_halt(secs[i + 1]):
         ramp = min(secs[i + 1].get("ramp", 2), s["end"] - start)
         px -= speed * ramp * (ease_in(u(b, s["end"] - ramp, ramp)) - ease_in(u(a, s["end"] - ramp, ramp)))
@@ -496,9 +517,19 @@ def group_count(wave, g):
     return g["count"] + n * each
 
 
+def halt_waves(level):
+    """M9 part B (Level 29, the rescue halt): one cycle of the held arena's halt waves at medium (a typical halt)."""
+    return [w for w in level.get("halt_waves", {}).get("waves", []) if "medium" not in w.get("skip", [])]
+
+
+def neutral(slug):
+    """M9 part B (Level 29, Hold fire): whether a unit is a neutral craft, never counted as an enemy."""
+    return bool(load(f"{enemy_dir(slug)}/data.yaml").get("neutral"))
+
+
 def enemy_totals(level):
     totals = {}
-    for wave in medium_waves(level):
+    for wave in medium_waves(level) + halt_waves(level):
         for g in groups(wave):
             totals[g["enemy"]] = totals.get(g["enemy"], 0) + group_count(wave, g)
     return totals
@@ -583,8 +614,9 @@ def entry(wave, level=None):
 def directions(level):
     """The share of the level's enemies (medium) per entry direction, front · sides · rear."""
     counts = {"front": 0, "sides": 0, "rear": 0}
-    for wave in medium_waves(level):
-        n = sum(group_count(wave, g) for g in groups(wave))
+    for wave in medium_waves(level) + halt_waves(level):
+        # M9 part B: a neutral craft is not an enemy (Level 29's wavering Stormhawks)
+        n = sum(group_count(wave, g) for g in groups(wave) if not neutral(g["enemy"]))
         if wave["from"] == "all":  # M5 part G: a cross from all four edges, split evenly (two are the sides)
             counts["front"] += n / 4
             counts["sides"] += n / 2
@@ -797,8 +829,25 @@ def waves(d):
         rows.append((boss["t"], [num(boss["t"]), str(boss["section"]), boss_kind(boss["enemy"]),
                                  enemy_link(d, boss["enemy"]), "1", enter, notes]))
     rows = [cells for _, cells in sorted(rows, key=lambda r: r[0])]
-    totals = " · ".join(f"{enemy_name(slug)} {n}"
-                        for slug, n in (enemy_totals(level) | set_piece_totals(level) | boss_totals(level)).items())
+    # M9 part B (Level 29): the halt cycle's waves where the halt begins, as H+t (one cycle; it repeats)
+    if "halt_waves" in level:
+        arena = next(i for i, sec in enumerate(level["sections"]) if sec.get("arena"))
+        end = level["sections"][arena]["end"]
+        at = next((k for k, cells in enumerate(rows) if float(cells[0]) >= end), len(rows))
+        halt = []
+        for w in level["halt_waves"]["waves"]:
+            gs = groups(w)
+            halt.append([f"H+{num(w['t'])}", str(arena + 1), " + ".join(dict.fromkeys(g["formation"] for g in gs)),
+                         " + ".join(enemy_link(d, g["enemy"]) for g in gs), " + ".join(str(g["count"]) for g in gs),
+                         entry(w, level), fill(w["notes"], w) if "notes" in w else ""])
+        rows[at:at] = halt
+    all_totals = enemy_totals(level) | set_piece_totals(level) | boss_totals(level)
+    totals = " · ".join(f"{enemy_name(slug)} {n}" for slug, n in all_totals.items() if not neutral(slug))
+    if "halt_waves" in level:
+        totals += " (with one cycle of the halt waves: a typical halt)"
+    spared = [f"the {enemy_name(slug)}s ({n})" for slug, n in all_totals.items() if neutral(slug)]
+    if spared:
+        totals += "; " + ", ".join(spared) + " are not enemies"
     head = ["t (s)", "Section", "Formation", "Enemies (link)", "Count", "Enter from", "Notes"]
     return table(head, rows) + f"\n\nTotals: {totals}."
 
@@ -1002,6 +1051,10 @@ def whole_part(e):
     return next((p for p in e.get("part_list", []) if p.get("kind") == "vital" and "first_bonus" in p), None)
 
 
+# M9 part C (design/campaign Level 30): the streams a launcher (the Gilded Gunship) sends before a typical kill.
+TYPICAL_STREAMS = 2
+
+
 def credit_budget(d):
     """The level's credits at medium: a perfect run, and the typical haul (each source weighted by
     the economy's typical player) that should land on budget(n). Bounties (kills, parts, ground
@@ -1031,11 +1084,14 @@ def credit_budget(d):
         rows.append([source, sum(i[0] * i[1] for i in items if len(i) < 4 or i[3]),
                      sum(i[0] * i[1] * i[2] for i in items)])
 
-    kills = [(enemy_name(slug), n, slug) for slug, n in enemy_totals(level).items()]
+    kills = [(enemy_name(slug), n, slug) for slug, n in enemy_totals(level).items() if not neutral(slug)]
     # the units a spawner releases (Level 04's Brood Pods: their Skitters), killed too
     for slug, n in enemy_totals(level).items():
         for spawn in spawns(slug):
-            kills.append((f"released {enemy_name(spawn['enemy'])}", n * spawn["count"], spawn["enemy"]))
+            # M9 part C (Level 30's Gilded Gunships): a launcher's streams, two before a typical kill (TypicalHaul)
+            streams = TYPICAL_STREAMS if "stream" in spawn else 1
+            kills.append((f"{'launched' if 'stream' in spawn else 'released'} {enemy_name(spawn['enemy'])}",
+                          n * streams * spawn["count"], spawn["enemy"]))
     # a periodic spawner among the ground targets (Level 09's Hive Nodes, M5 part C): one release each
     released = {}
     for g in level["ground_targets"]:
@@ -1065,8 +1121,11 @@ def credit_budget(d):
                     (n * chain["segments"], bounty(chain["bounty"]), 0),
                     (n, bounty(tail["bounty"]), 0),
                     (n, bounty(tail.get("first_bonus", 0)), 0)]
+        cars = chain.get("cars")  # M9 part C: a train's turret cars (every every-th car) pay their own bounty
+        turrets = chain["segments"] // cars["every"] if cars else 0
         return [(n, bounty(head["bounty"]), layer_rate(slug)),
-                (n * chain["segments"], bounty(chain["bounty"]), layer_rate(slug)),
+                (n * (chain["segments"] - turrets), bounty(chain["bounty"]), layer_rate(slug)),
+                (n * turrets, bounty(cars["bounty"] if cars else 0), layer_rate(slug)),
                 (n, bounty(tail["bounty"]), layer_rate(slug))]
 
     def kill_name(name, n, slug):
@@ -1083,6 +1142,16 @@ def credit_budget(d):
 
     add("Kills: " + " + ".join(kill_name(name, n, slug) for name, n, slug in kills),
         [item for _, n, slug in kills for item in kill_items(n, slug)])
+    # M9 part B (Level 29): a V-wing's leader pays its airframe's bounty: the typical haul counts it at the wing's, a
+    # perfect run takes the extra
+    leaders = {}
+    for wave in medium_waves(level):
+        if wave.get("leader"):
+            leaders[wave["enemy"]] = leaders.get(wave["enemy"], 0) + 1
+    for slug, n in leaders.items():
+        e = load(f"{enemy_dir(slug)}/data.yaml")
+        add(f"Squad leaders: {n} × {e['leader']['bounty'] - e['bounty']} extra (perfect run only)",
+            [(n, bounty(e["leader"]["bounty"]) - bounty(e["bounty"]), 0)])
     # ground enemies by their stat block's bounty, then the destructibles that pay or drop credits
     enemies = {}
     for g in level["ground_targets"]:
@@ -1154,8 +1223,10 @@ def credit_budget(d):
     if escort:
         # a convoy on the road gives its y, an air escort its stations (M5 part D); the scripted
         # loss's unit (Level 10's Lifeline Three) is not one of the units the escort pays for
-        units = len(escort["y"] if "y" in escort else escort["stations"])
-        noun = escort["ally"].split("-")[-1]
+        # M9 part D (Level 31's mining tug): a hull escort pays each section home
+        units = len(escort["hull"]["hp"] if "hull" in escort
+                    else escort["y"] if "y" in escort else escort["stations"])
+        noun = "tug section" if "hull" in escort else escort["ally"].split("-")[-1]
         saveable = units - (1 if "scripted_loss" in escort else 0)
         unpaid = f" (of {units}: the scripted loss's {noun} is not paid)" if saveable < units else ""
         add(f"Primary objective: {saveable} {noun}s home × {escort['credits']}{unpaid}",

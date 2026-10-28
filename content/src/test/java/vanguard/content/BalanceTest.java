@@ -122,10 +122,18 @@ class BalanceTest {
      * reason; the test fails when one disappears (remove it here).
      */
     static final Map<String, String> ACCEPTED = Map.of(
+            "clamp-gun bounty",
+            "the bounty 10 is below the medium class's 18-30: Level 29's approved credit budget gives it"
+                    + " (round 60): the four hold the rescue halt; at 18 the typical"
+                    + " haul would be 1.7 % higher, inside its 5 % (M9 part B, step B3)",
             "coilwyrm bounty",
             "the parts' sum 86 (head 40, 12 segments × 3, tail 10) is above the large class's 40-60:"
                     + " a multi-part enemy, cutting it up is extra work; a head-first kill pays 40"
                     + " (user decision 2026-10-05)",
+            "rail-serpent bounty",
+            "the parts' sum 73 (engine 40, 6 cars × 3, 3 turret cars × 5) is above the large class's 40-60: a"
+                    + " multi-part train, the Coilwyrm's rule; an engine-first kill pays 40 (round 60's approved stat"
+                    + " block, M9 part C, step C2)",
             "ravager ttk",
             "16 HP at L09's reference DPS 63 is 0.25 s, below the medium class's 0.4-1.5 s: a fast,"
                     + " fragile pack hunter (user decision 2026-10-07, M5 part C)",
@@ -148,6 +156,10 @@ class BalanceTest {
      * (remove it here) or a new one appears.
      */
     static final Map<String, String> PENDING = Map.of(
+            "clamp-gun ttk",
+            "250 HP at L29's reference DPS 120 is 2.1 s, above the medium class's 0.4-1.5 s: the four hold the"
+                    + " rescue halt, 1,000 HP together for the README's typical halt of about 14 s at the boss rule's"
+                    + " 0.6 x the reference; at 80 they fell in about 3 s (M9 part B, step B3b, pending round 62)",
             "relay-beacon bounty",
             "Level 27's approved bounty 15 (round 48) is below the medium class's 18-30 at 60 HP (0.5 s at L27's"
                     + " reference DPS 116, the medium class's time): kept as drafted, for the user's review in round 57"
@@ -237,11 +249,17 @@ class BalanceTest {
             // M7 part I: every planned level has its data (Level 21 since part H), so the income is always the
             // level's typical haul; M8 part I: Act 4's too (part A's temporary budget(n) for a level without its
             // data is gone).
-            String key = CONTENT.levelKey(level)
-                    .orElseThrow(() -> new AssertionError("Level " + level + " has no level data"));
             double budget = CONTENT.economy().budget().of(level);
-            int haul = (int) Math.rint(
-                    incomeFactor * TypicalHaul.of(CONTENT, key, difficulty).typical());
+            Optional<String> key = CONTENT.levelKey(level);
+            if (key.isEmpty() && !ACT_5_PLANNED.contains(level)) {
+                throw new AssertionError("Level " + level + " has no level data");
+            }
+            // M9 part A (temporary, as M8 part A's for Act 4): an Act 5 level planned before its data earns budget(n),
+            // the generator's hand plan's haul; each level's part replaces it with its typical haul.
+            int haul = (int) Math.rint(incomeFactor
+                    * key.map(built ->
+                                    TypicalHaul.of(CONTENT, built, difficulty).typical())
+                            .orElse(budget));
             // Round 34, P3 = A: the typical player's grade bonus (a B) on top of the haul.
             int income = haul + (int) Math.rint(plan.gradeBonus() * haul);
             rows.add(new Row(
@@ -929,6 +947,13 @@ class BalanceTest {
     static final int ACT_4_LAST = 28;
 
     /**
+     * M9 part A (temporary): Act 5's visits are planned (design/player/balance-plan.yaml) before its levels are built;
+     * such a level's income is budget(n) on the sheet, and its level checks wait for its data.
+     */
+    static final java.util.Set<Integer> ACT_5_PLANNED =
+            java.util.stream.IntStream.rangeClosed(29, 35).boxed().collect(java.util.stream.Collectors.toSet());
+
+    /**
      * Time to kill at the unit's first level (design/enemies Balancing basis): {@code tiny} one hit
      * of the starting gun, {@code small} ≤ 0.3 s, {@code medium} 0.4–1.5 s, {@code large} 1–3 s,
      * {@code huge} set pieces 20–40 s, mid-bosses 45–75 s, act bosses 90–180 s; bosses and set
@@ -1166,6 +1191,10 @@ class BalanceTest {
      * level's bounty scale).
      */
     static Optional<String> bounty(EnemyData enemy) {
+        // M9 part B: a neutral craft pays nothing by its rule (Level 29's wavering Stormhawks).
+        if (enemy.isNeutral()) {
+            return Optional.empty();
+        }
         boolean hardened = enemy.armour().text().filter("hardened"::equals).isPresent();
         if (enemy.boss().isPresent() || enemy.tier() == Tier.HUGE) {
             double share = enemy.boss()

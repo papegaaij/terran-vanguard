@@ -345,10 +345,19 @@ public record ObjectiveSpec(
             double enterSpeed,
             int credits,
             List<String> targetedBy,
-            Optional<Air> air) {
+            Optional<Air> air,
+            Optional<Hull> hull) {
         public Escort {
             stations = List.copyOf(stations);
             targetedBy = List.copyOf(targetedBy);
+            java.util.Objects.requireNonNull(hull);
+            if (hull.isPresent()
+                    && (air.isPresent()
+                            || !targetedBy.isEmpty()
+                            || stations.size() != hull.get().sections().size())) {
+                throw new IllegalArgumentException(
+                        "a hull escort has one station per section and its own hook (M9 part D, the mining tug)");
+            }
             if (stations.isEmpty() || !(enterSpeed > 0) || enterInterval < 0 || credits < 0) {
                 throw new IllegalArgumentException("a convoy has units that roll in at a speed");
             }
@@ -370,6 +379,38 @@ public record ObjectiveSpec(
                 int credits,
                 List<String> targetedBy) {
             this(ally, stations, enterSeconds, enterInterval, enterSpeed, credits, targetedBy, Optional.empty());
+        }
+
+        /** Without M9 part D's hull: a ground convoy or (M5 part D) an air escort. */
+        public Escort(
+                AllySpec ally,
+                List<Double> stations,
+                double enterSeconds,
+                double enterInterval,
+                double enterSpeed,
+                int credits,
+                List<String> targetedBy,
+                Optional<Air> air) {
+            this(ally, stations, enterSeconds, enterInterval, enterSpeed, credits, targetedBy, air, Optional.empty());
+        }
+
+        /**
+         * M9 part D (design/allies/mining-tug; Level 31): a hull escort, {@code ally} (the whole hull's spec: its slug,
+         * its footprint) flying {@code hull}, each section home paying its own credits.
+         */
+        public static Escort hull(AllySpec ally, Hull hull) {
+            return new Escort(
+                    ally,
+                    hull.sections().stream()
+                            .map(section -> hull.station().y() + section.dy())
+                            .toList(),
+                    0,
+                    0,
+                    1,
+                    0,
+                    List.of(),
+                    Optional.empty(),
+                    Optional.of(hull));
         }
 
         /** M5 part D: an air escort of {@code ally} units flying {@code air}, each saveable unit home paying {@code credits}. */
@@ -401,6 +442,139 @@ public record ObjectiveSpec(
          */
         public int saveable() {
             return units() - (scriptedUnit() >= 0 ? 1 : 0);
+        }
+    }
+
+    /**
+     * M9 part D, a hull escort (design/allies/mining-tug; design/campaign Level 31, The tug in this level; {@link
+     * HullEscort}): one huge ally on the ground layer made of {@code sections}, holding one screen {@code station} with
+     * its sway on the level clock while the level scrolls beneath it. It rises from {@code size}'s half below the bottom
+     * edge into its station over {@code enterSeconds} from the level's start and climbs off the top edge from {@code
+     * climb}'s time, untouchable both times; a section alive at the climb-out's start is home. Only the hooked attacks
+     * of the kinds {@code targetedBy} names hurt it (Q-D2 = a; mode {@code always} only), each on one section: a hooked
+     * homing missile bursting in a section's box {@code missile}, a hooked diver or chaser crossing a section {@code
+     * dive} once, an air link of a hooked kind lit across a section {@code link} per touch with a {@code
+     * linkCooldownSeconds} cooldown per link and section. A lost section keeps its place (presentation only); all lost
+     * fails the escort. The units of the {@code unhookedWaves} (indexes in the level's waves; Level 31's easy Hornet
+     * waves, its Shard groups not sent across the hull) are not hooked whatever their kind; launched units always are
+     * when their kind is.
+     *
+     * @param size the hull's footprint, px
+     * @param station its centre's station, y up, with the sway
+     * @param sections in hull order (the bow first), their offsets from the centre
+     */
+    public record Hull(
+            Hitbox size,
+            Station station,
+            List<HullSection> sections,
+            double enterSeconds,
+            Climb climb,
+            double missile,
+            double dive,
+            double link,
+            double linkCooldownSeconds,
+            java.util.Map<String, HookMode> targetedBy,
+            List<Integer> unhookedWaves) {
+        /** The most sections a hull has (a link's cooldowns are kept per section). */
+        public static final int MOST_SECTIONS = 4;
+
+        /** Every wave of a hooked kind hooked. */
+        public Hull(
+                Hitbox size,
+                Station station,
+                List<HullSection> sections,
+                double enterSeconds,
+                Climb climb,
+                double missile,
+                double dive,
+                double link,
+                double linkCooldownSeconds,
+                java.util.Map<String, HookMode> targetedBy) {
+            this(
+                    size,
+                    station,
+                    sections,
+                    enterSeconds,
+                    climb,
+                    missile,
+                    dive,
+                    link,
+                    linkCooldownSeconds,
+                    targetedBy,
+                    List.of());
+        }
+
+        public Hull {
+            sections = List.copyOf(sections);
+            targetedBy = java.util.Map.copyOf(targetedBy);
+            unhookedWaves = List.copyOf(unhookedWaves);
+            for (int wave : unhookedWaves) {
+                if (wave < 0) {
+                    throw new IllegalArgumentException("an unhooked wave is a wave of the level: " + wave);
+                }
+            }
+            java.util.Objects.requireNonNull(station);
+            java.util.Objects.requireNonNull(climb);
+            if (sections.isEmpty() || sections.size() > MOST_SECTIONS) {
+                throw new IllegalArgumentException(
+                        "a hull has 1 to " + MOST_SECTIONS + " sections: " + sections.size());
+            }
+            if (!(enterSeconds > 0)
+                    || !(missile >= 0)
+                    || !(dive >= 0)
+                    || !(link >= 0)
+                    || !(linkCooldownSeconds > 0)
+                    || !(climb.t() > enterSeconds)) {
+                throw new IllegalArgumentException(
+                        "a hull enters, climbs out after it entered, and its hooked hits deal 0 or more");
+            }
+            for (HookMode mode : targetedBy.values()) {
+                if (mode != HookMode.ALWAYS && mode != HookMode.NONE) {
+                    throw new IllegalArgumentException("a hull's hook is always or none: " + mode);
+                }
+            }
+            for (HullSection section : sections) {
+                if (Math.abs(section.dx()) + section.box().width() / 2 > size.width() / 2 + 1e-9
+                        || Math.abs(section.dy()) + section.box().height() / 2 > size.height() / 2 + 1e-9) {
+                    throw new IllegalArgumentException("a hull's section lies inside its footprint: " + section.name());
+                }
+            }
+        }
+
+        /** The hook mode of the enemy {@code slug}: {@link HookMode#NONE} when not listed. */
+        public HookMode mode(String slug) {
+            return targetedBy.getOrDefault(slug, HookMode.NONE);
+        }
+
+        /** This hull with the waves {@code waves} (indexes in the level's list) unhooked whatever their kind. */
+        public Hull withUnhookedWaves(List<Integer> waves) {
+            return new Hull(
+                    size,
+                    station,
+                    sections,
+                    enterSeconds,
+                    climb,
+                    missile,
+                    dive,
+                    link,
+                    linkCooldownSeconds,
+                    targetedBy,
+                    waves);
+        }
+    }
+
+    /**
+     * M9 part D: a hull's section (design/allies/mining-tug: bow, cargo, engines): its {@code name} (what {@code
+     * {section}} becomes), its hit box's centre offset ({@code dx}, {@code dy}: px from the hull's centre, y up), its
+     * hit {@code box}, its {@code hp} at the level's difficulty and the {@code credits} it pays when home (before the
+     * credit factor).
+     */
+    public record HullSection(String name, double dx, double dy, Hitbox box, double hp, int credits) {
+        public HullSection {
+            java.util.Objects.requireNonNull(name);
+            if (!(hp > 0) || credits < 0) {
+                throw new IllegalArgumentException("a hull's section has HP and pays 0 or more: " + name);
+            }
         }
     }
 

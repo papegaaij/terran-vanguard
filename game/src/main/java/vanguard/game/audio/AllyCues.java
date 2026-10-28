@@ -50,11 +50,26 @@ final class AllyCues extends SoundFamily {
     private double lastSeconds = Double.NaN;
     /** The scripted loss's hit on the level clock, from the first {@link #watchLance}; infinite without one, NaN before. */
     private double lanceHit = Double.NaN;
+    /** M9 part D4b: the sound a tow's housing makes as it breaks ({@link #towBreak}). */
+    private Sfx towBreak = Sfx.CABLE_SNAP;
     /** What the last watch saw: the tows holding. */
     private boolean[] wasHolding;
 
+    /** M9 part D: Level 31's cues, for a hull escort's hits and losses; null before {@link #rig}. */
+    private MiningRigCues rig;
+
     AllyCues(SoundMix mix) {
         super(mix);
+    }
+
+    /** M9 part D: the cues a hull escort's (the mining tug's) hits and losses play. */
+    void rig(MiningRigCues rig) {
+        this.rig = rig;
+    }
+
+    /** M9 part D: whether the watched level's escort is a hull escort (the mining tug). */
+    private boolean hull() {
+        return rig != null && mix.watched != null && mix.watched.hullEscort();
     }
 
     @Override
@@ -95,7 +110,10 @@ final class AllyCues extends SoundFamily {
             // M5 part E: a naval convoy's ship hit by a slam, and a ship sinking from its loss (round 33 a).
             // M5 part G: the defended relay struck (round 35 a), and destroyed: its power-down.
             case ALLY_HIT -> {
-                if (ground) {
+                if (hull()) {
+                    // M9 part D: a tug section's heavy hull impact (MiningRigCues).
+                    rig.tugHit(pan);
+                } else if (ground) {
                     bank.play(Sfx.DOME_HIT, DOME_HIT_LEVEL, pitch(0.04), pan);
                 } else if (defend) {
                     bank.play(Sfx.RELAY_HIT, RELAY_HIT_LEVEL, pitch(0.04), pan);
@@ -108,7 +126,10 @@ final class AllyCues extends SoundFamily {
                 }
             }
             case ALLY_LOST -> {
-                if (ground) {
+                if (hull()) {
+                    // M9 part D: a tug section lost: its loss over the klaxon (MiningRigCues).
+                    rig.tugLost(pan);
+                } else if (ground) {
                     bank.play(Sfx.DOME_BREAK, DOME_BREAK_LEVEL, 1, pan);
                 } else if (defend) {
                     bank.play(Sfx.RELAY_DESTROYED, RELAY_DESTROYED_LEVEL, 1, pan);
@@ -184,13 +205,32 @@ final class AllyCues extends SoundFamily {
         wasHolding = new boolean[sortie.towCount()];
     }
 
-    /** A tow's cable snapping as its pod falls free. */
+    /**
+     * M9 part D4b: the tows' look ({@code LevelRenderer.towLook}): a rock tow's housing breaks with a rock's crumble,
+     * not the lifeboat's cable snap.
+     */
+    void towLook(String look) {
+        towBreak = towBreak(look);
+    }
+
+    /**
+     * M9 part D4b: the sound a tow's housing makes as it frees its crate, by the tows' look: Level 31's claim rock the
+     * chosen small rubble burst (round 08 b, a small ground target's crumble), any other the cable snap (round 25 a).
+     */
+    static Sfx towBreak(String look) {
+        return ROCK_TOWS.contains(look) ? Sfx.CRUMBLE_SMALL : Sfx.CABLE_SNAP;
+    }
+
+    /** M9 part D4b: the tow looks that are rocks. */
+    static final Set<String> ROCK_TOWS = Set.of("debris-claim-rock");
+
+    /** A tow's cable snapping as its pod falls free (a rock tow's housing crumbling, {@link #towBreak}). */
     void watchTows(Sortie sortie) {
         for (int i = 0; i < wasHolding.length; i++) {
             Tow tow = sortie.tow(i);
             boolean holding = tow.holding();
             if (!mix.resync && wasHolding[i] && !holding) {
-                bank.play(Sfx.CABLE_SNAP, EXPLOSIONS, pitch(0.03), pan(tow.podX()));
+                bank.play(towBreak, EXPLOSIONS, pitch(0.03), pan(tow.podX()));
             }
             wasHolding[i] = holding;
         }

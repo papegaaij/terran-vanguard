@@ -121,6 +121,8 @@ public final class TestFireView implements Disposable {
     private final Matrix4 transform = new Matrix4();
     private final int[] flash = new int[MAX_DUMMIES];
     private WeaponLooks weapons;
+    /** M9 part A: the Tesla Coil Pod's arcs; null without one shown. */
+    private ArcLooks arcs;
     /** The craft's banking frames: the Stormhawk's, or Rook's for his guns. */
     private Array<AtlasRegion> hull;
 
@@ -163,6 +165,7 @@ public final class TestFireView implements Disposable {
         boolean field = sortie.armament().mount(0).deflects();
         fieldLeft = field ? sprites.region("deflector-pod-field-" + level + "-left") : null;
         fieldRight = field ? sprites.region("deflector-pod-field-" + level + "-right") : null;
+        arcs = ArcLooks.of(sprites, sortie.armament());
         restart();
     }
 
@@ -173,11 +176,18 @@ public final class TestFireView implements Disposable {
         water.clear();
         Arrays.fill(flash, 0);
         Arrays.fill(charged, 0);
+        if (arcs != null) {
+            arcs.restart();
+        }
     }
 
     /** After each simulation step: the effects advance, the step's hits and explosions start theirs. */
     public void stepped(Sortie sortie) {
         effects.step();
+        if (arcs != null) {
+            // M9 part A: the step's arcs, as in the level.
+            arcs.stepped(sortie);
+        }
         trails.step();
         water.step();
         if (sortie.tick() % TRAIL_TICKS == 0) {
@@ -312,6 +322,10 @@ public final class TestFireView implements Disposable {
         drawBeam(batch, sortie);
         drawShots(batch, sortie, alpha, true);
         drawMuzzles(batch, sortie, alpha, true);
+        if (arcs != null) {
+            // M9 part A: the Tesla Coil Pod's arcs and its terminal's light, additive.
+            arcs.draw(batch, sortie, alpha);
+        }
         batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         drawMuzzles(batch, sortie, alpha, false);
         drawBullets(batch, sortie, alpha);
@@ -541,6 +555,8 @@ public final class TestFireView implements Disposable {
                 case LOBBED ->
                     drawScaled(batch, sprite, x, y, 1 + 0.4f * (float) Math.sin(Math.PI * shot.airProgress(alpha)));
                 case MINE -> drawScaled(batch, sprite, x, y, 1);
+                // M9 part A: an arc fires no shot (ArcLooks), nor does a beam (drawBeam).
+                case BEAM, ARC -> {}
                 case BOLT, HOMING, TURRET, TORPEDO -> {
                     // Bolts with a range fade out over its last part, as in the level.
                     double left = shot.rangeLeft();

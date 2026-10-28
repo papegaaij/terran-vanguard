@@ -326,3 +326,16 @@ Round 58, production art (M8 part H batch, step ART-H1). Not a mockup: the revie
 silhouette (40x40) written by [tools/art/intel.py](../../../../tools/art/intel.py) from tools/art/abyssal_maw.py's
 production sprites: the coil round the arena's four edges with the head and its gill sacs at the top, as phase 1 shows
 it, the outline only.
+
+## act5-icons-final-r61
+
+`tools/art/icons.py --act5` (M9 part A, round 61): the hangar badges of the two Act 5 weapons in the icon set's style:
+the Tesla Coil Pod (its pod model with a jagged arc in the player shots' cyan leaping from the terminal) and the Swarm
+Tail (three white micro-missiles fanned out backwards, nose down, short ivory trails).
+
+## act5-hangar-capture-r61-a
+
+Concept round 61, a game capture (the [capture rig](../../../enemies/concept/prompts.md#belt-rig-capture-r61-a)'s build):
+`--level 8 --invulnerable --loadout utility=sensor-suite:3 --special airstrike:2`, Esc, Abort to hangar, then the L WING
+shop (E, Down ×3) and the REAR shop; the game's own screenshot key (F12, the 960×540 screen), the rear shop's left
+third beside it.

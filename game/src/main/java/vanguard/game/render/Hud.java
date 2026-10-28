@@ -9,6 +9,7 @@ import vanguard.game.level.PromptTexts;
 import vanguard.game.level.RadioQueue;
 import vanguard.game.ui.Fonts;
 import vanguard.sim.Armament;
+import vanguard.sim.IdleReason;
 import vanguard.sim.Sortie;
 
 /** The level HUD in the two side panels (design/ui/hud): mission on the left, ship on the right. */
@@ -19,8 +20,11 @@ public final class Hud {
     private final double regenBonus;
     /** The flown weapons by {@link Armament.Slot}. */
     private final Flight.Weapon[] weapons = new Flight.Weapon[Armament.Slot.values().length];
-    /** M5 part E: per {@link Armament.Slot}, whether its weapon fires nothing in this level (the HUD's NO WATER). */
-    private final boolean[] idle = new boolean[Armament.Slot.values().length];
+    /**
+     * M5 part E: per {@link Armament.Slot}, why its weapon fires nothing in this level (the HUD's NO WATER; M9 part C:
+     * NO GROUND), {@link IdleReason#NONE} when it fires.
+     */
+    private final IdleReason[] idle = new IdleReason[Armament.Slot.values().length];
 
     /**
      * @param number the level number
@@ -59,13 +63,17 @@ public final class Hud {
         }
     }
 
-    /** M5 part E: per slot, whether the weapon there fires nothing in the sortie's level (a torpedo pod over land). */
-    static void idle(Sortie sortie, boolean[] bySlot) {
-        java.util.Arrays.fill(bySlot, false);
+    /**
+     * M5 part E: per slot, why the weapon there fires nothing in the sortie's level (a torpedo pod over land; M9 part
+     * C: a bomb rack with no ground, {@link Sortie#mountIdleReason}), {@link IdleReason#NONE} where it fires.
+     */
+    static void idle(Sortie sortie, IdleReason[] bySlot) {
+        java.util.Arrays.fill(bySlot, IdleReason.NONE);
         Armament armament = sortie.armament();
         for (int m = 0; m < armament.size(); m++) {
-            if (sortie.mountIdle(m)) {
-                bySlot[armament.mount(m).slot().ordinal()] = true;
+            IdleReason reason = sortie.mountIdleReason(m);
+            if (reason != IdleReason.NONE) {
+                bySlot[armament.mount(m).slot().ordinal()] = reason;
             }
         }
     }

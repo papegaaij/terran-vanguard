@@ -17,9 +17,16 @@ final class EnemyGunnery {
      * it fires a shot this step. A diver fires once, in its dive.
      */
     boolean trigger() {
+        if (u.dormantTick >= 0 || u.wakeTicks > 0 || u.scattering.active()) {
+            // M9 part B: a dormant unit and its wake tell fire nothing; nor does a wing member scattering.
+            return false;
+        }
         if (u.growTicks > 0) {
             // M5 part H: a root burst's growth fires nothing while it grows.
             return false;
+        }
+        if (u.phase == Enemy.Phase.CHAIN && u.chain.spec().cars().isPresent()) {
+            return carTrigger();
         }
         if (u.phase == Enemy.Phase.CHAIN) {
             // A chain's head fires its fan while it is on the screen.
@@ -70,7 +77,11 @@ final class EnemyGunnery {
                 || ambushPhase == Enemy.AmbushPhase.DECLOAK
                 || ambushPhase == Enemy.AmbushPhase.HOLD
                 // M8 part D: a rising unit fires while it glides on the play field.
-                || (u.phase == Enemy.Phase.RISE && u.rising.firing(u));
+                || (u.phase == Enemy.Phase.RISE && u.rising.firing(u))
+                // M9 part B: a swoop path's unit fires on the play field in its band below the top edge.
+                || (u.phase == Enemy.Phase.ENTER && inSwoopBand())
+                // M9 part C: a launcher (the Gilded Gunship) fires its ring all the way through the play field.
+                || (u.spec.launcher().isPresent() && PlayField.overlaps(u.x, u.y, u.box));
         if (!ready || u.spec.gun().isEmpty() || (u.phase == Enemy.Phase.GROUND && u.partHp.silenced(u.spec.parts()))) {
             // M8 part B: a ground unit whose gun is bound to its parts falls silent with the last of them.
             return false;
@@ -105,6 +116,48 @@ final class EnemyGunnery {
         u.burstLeft = gun.burst() - 1;
         u.burstTicks = SimStep.ticks(gun.burstGapSeconds());
         return true;
+    }
+
+    /**
+     * M9 part C (design/enemies/air/rail-serpent): a train's member with a gun (a turret car) while it is on the
+     * screen: its lamp lights its gun's tell before a volley ({@link SimEvents.Type#CAR_TELL}), a burst's shots go its
+     * burst gap apart; a car doomed in a split or the engine's death is dark.
+     */
+    private boolean carTrigger() {
+        if (u.spec.gun().isEmpty() || Chain.doomed(u) || !PlayField.overlaps(u.x, u.y, u.box)) {
+            return false;
+        }
+        EnemyGun gun = u.spec.gun().get();
+        if (u.burstLeft > 0) {
+            if (--u.burstTicks > 0) {
+                return false;
+            }
+            u.burstLeft--;
+            u.burstTicks = SimStep.ticks(gun.burstGapSeconds());
+            return true;
+        }
+        if (--u.volleyTicks > 0) {
+            int tell = SimStep.ticks(gun.tellSeconds());
+            if (tell > 0 && u.volleyTicks == tell) {
+                u.events.add(SimEvents.Type.CAR_TELL, u.x, u.y(), u.kind);
+            }
+            return false;
+        }
+        u.volleyTicks = SimStep.ticks(gun.intervalSeconds());
+        u.burstLeft = gun.burst() - 1;
+        u.burstTicks = SimStep.ticks(gun.burstGapSeconds());
+        return true;
+    }
+
+    /**
+     * M9 part B (design/enemies/air/talon; {@link EnemySpec.SwoopPath#fireBand()}): whether it flies a swoop path on
+     * the play field within its fire band of the top edge.
+     */
+    private boolean inSwoopBand() {
+        if (u.spec.swoopPath().isEmpty() || !PlayField.overlaps(u.x, u.y, u.box)) {
+            return false;
+        }
+        return u.y >= PlayField.HEIGHT - u.spec.swoopPath().get().fireBand();
     }
 
     /**

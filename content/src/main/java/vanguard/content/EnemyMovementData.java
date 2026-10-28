@@ -262,7 +262,133 @@ public sealed interface EnemyMovementData permits EnemyData {
             Optional<Breach> breach,
             Optional<Rise> rise,
             Optional<Coil> coil,
-            Optional<Lunge> lunge) {}
+            Optional<Lunge> lunge,
+            Optional<SwoopPath> swoopPath,
+            Optional<Ride> ride,
+            Optional<Scatter> scatter,
+            Optional<Lay> lay,
+            Optional<Dash> dash) {}
+
+    /**
+     * M9 part D (design/enemies/air/buzzsaw-drone, Movement): the dash cycle. From its entry (or its circle's break) it
+     * chases the ship at the unit's {@code speed} stat, turning at most {@code turn_rate} °/s, for {@code chase} s; then
+     * its spin-up tell of {@code tell} s (never under 0.5 s, the rule) at {@code tell_speed} px/s; then a dash at {@code
+     * speed} px/s along its bearing to the ship at the tell's start (locked), ricocheting off the play field's edges and
+     * the large drifting rocks (a small rock breaks) until it bounced {@code bounces} times; it slows to its chase speed
+     * over {@code slow} s and chases again; after {@code dashes} dashes it leaves through the nearest edge.
+     */
+    record Dash(
+            double turnRate,
+            double chase,
+            double tell,
+            double tellSpeed,
+            double speed,
+            int bounces,
+            double slow,
+            int dashes) {
+        /** The tell is the rule: never shorter (design/enemies/air/buzzsaw-drone, ≥ 0.5 s at every difficulty). */
+        public static final double LEAST_TELL = 0.5;
+
+        public Dash {
+            Check.positive("turn_rate", turnRate);
+            Check.positive("chase", chase);
+            Check.that(tell >= LEAST_TELL, "tell: at least " + LEAST_TELL + " s (the tell is the rule), was " + tell);
+            Check.notNegative("tell_speed", tellSpeed);
+            Check.positive("speed", speed);
+            Check.positive("bounces", bounces);
+            Check.positive("slow", slow);
+            Check.positive("dashes", dashes);
+        }
+    }
+
+    /**
+     * M9 part D (design/enemies, Air links; design/enemies/space/shard-drone): the {@code air-link} attack's links. A
+     * wave of the unit is one linked group, each unit linked to the next ({@code circle}: a closed ring): a link {@code
+     * band} px thick touches the ship (the attack's {@code bullet} class, the ship not pushed) at most once every {@code
+     * cooldown} s, lit {@code tell} s after the group's last unit entered (and after an EMP stun), drawn {@code width} px
+     * wide; every shot passes through it, killing either end breaks it. A {@code line abreast} wave flies {@code
+     * spacing} px apart; with {@code ring} a {@code circle} wave's centre descends and drifts toward the ship.
+     */
+    record AirLink(double band, double width, double cooldown, double tell, double spacing, Optional<AirRing> ring) {
+        public AirLink {
+            Check.positive("band", band);
+            Check.positive("width", width);
+            Check.positive("cooldown", cooldown);
+            Check.notNegative("tell", tell);
+            Check.positive("spacing", spacing);
+        }
+    }
+
+    /**
+     * M9 part D: a linked ring's centre descends {@code descend} px/s and drifts toward the ship's x at {@code follow}
+     * px/s; the ring never breaks off (gone once past the bottom edge).
+     */
+    record AirRing(double descend, double follow) {
+        public AirRing {
+            Check.notNegative("descend", descend);
+            Check.notNegative("follow", follow);
+            Check.that(descend > 0 || follow > 0, "ring: it descends or follows the ship (else give no ring)");
+        }
+    }
+
+    /**
+     * M9 part C (design/enemies/space/minelayer, Movement): a mine layer's lay path: it rises from behind at {@code rise}
+     * px/s up its side lane {@code lane} px in from its wave's side edge to its lay row (its wave's {@code mine_lines}),
+     * then strafes across at {@code strafe} px/s laying its line (its mine attack's {@code line}) and leaves by the far
+     * edge.
+     */
+    record Lay(double rise, double strafe, double lane) {
+        public Lay {
+            Check.positive("rise", rise);
+            Check.positive("strafe", strafe);
+            Check.that(lane > 0 && lane < 240, "lane: px in from the side edge, inside the field's half, was " + lane);
+        }
+    }
+
+    /**
+     * M9 part B, the Talon's swoop (design/enemies/air/talon; step B1b's {@code SwoopPath}): a front formation's unit
+     * enters at the top {@code across}/2 px before its place, bottoms out {@code lowest} px below the top edge (drawn once
+     * per wave) at its place and leaves up through the top {@code across}/2 px beyond it; a pincer's wings enter at their
+     * side edges and leave up through the top {@code across} px in from their edge. It fires while within {@code
+     * fire_band} px of the top edge.
+     */
+    record SwoopPath(Span lowest, double across, double fireBand) {
+        public SwoopPath {
+            Check.positive("lowest", lowest.min());
+            Check.that(lowest.max() >= lowest.min(), "lowest: [min, max]");
+            Check.notNegative("across", across);
+            Check.positive("fire_band", fireBand);
+        }
+    }
+
+    /**
+     * M9 part B, rock riding (design/enemies, Rock riding; design/enemies/space/asteroid-mite): it rides a rock of its
+     * wave ({@code on_rocks}); when the ship's centre comes within {@code within} px of the rock's, each rider in turn
+     * ({@code gap} s apart, a seeded order) shows its tell for {@code tell} s and dives straight at the ship at {@code
+     * dive_speed} px/s; a broken rock's riders tumble {@code tumble} s first; riders crawl round the rim at {@code crawl}
+     * °/s.
+     */
+    record Ride(double within, double tell, double gap, double diveSpeed, double tumble, double crawl) {
+        public Ride {
+            Check.positive("within", within);
+            Check.positive("tell", tell);
+            Check.notNegative("gap", gap);
+            Check.positive("dive_speed", diveSpeed);
+            Check.notNegative("tumble", tumble);
+        }
+    }
+
+    /**
+     * M9 part B, a squad's scatter (design/enemies/air/talon, Squad leader): when its wave's leader is killed it breaks
+     * off sideways away from the wing's centre at {@code speed} px/s, holding fire, and leaves through the nearer side
+     * edge within {@code seconds} s (the hook {@code parting_pair}: one parting shot as it breaks off).
+     */
+    record Scatter(double speed, double seconds) {
+        public Scatter {
+            Check.positive("speed", speed);
+            Check.positive("seconds", seconds);
+        }
+    }
 
     /**
      * M8 part F, the lunge from a lure (design/enemies/naval/glow-angler; m8f-gaps.md §1.1, §5 F2): it hangs drifting
@@ -525,15 +651,39 @@ public sealed interface EnemyMovementData permits EnemyData {
      * M7 part F, homing missiles (design/enemies/bosses/revenant-walker, Attacks): an aimed attack's shots fly at its
      * speed turning toward the ship at up to {@code turn_rate} °/s, fizzle after {@code life} s, have {@code hp} (every
      * shot reaching the air hits them), at most {@code most} alive at once; the firing part's hatch opens {@code
-     * hatch} s before each salvo (the tell).
+     * hatch} s before each salvo (the tell). M9 part A: {@code look: diamond} draws it as the homing diamond, and
+     * {@code seekable: true} lets the player's homing shots, Rook and the Tesla arc pick it, only when no enemy unit is in
+     * their reach (QA-1). M9 part B (design/enemies/ground/sam-nest): {@code hold_within} px: the unit holds fire while
+     * the ship's centre is that close; {@code per_shooter: true}: {@code most} counts only this unit's missiles in flight.
+     * M9 part D (design/enemies/air/hornet): {@code aimed: true}: a unit's missiles are launched at its target (the ship,
+     * or under the target-the-objective hook's {@code always} the escorted hull's nearest section) and home on it,
+     * instead of along its facing.
      */
-    record Homing(double turnRate, double life, double hp, int most, double hatch) {
+    record Homing(
+            double turnRate,
+            double life,
+            double hp,
+            int most,
+            double hatch,
+            Optional<String> look,
+            Optional<Boolean> seekable,
+            Optional<Double> holdWithin,
+            Optional<Boolean> perShooter,
+            Optional<Boolean> aimed) {
+        /**
+         * M9 part A: the look of the Ascendancy's missiles from Act 5 on (design/art-direction, the homing diamond); the
+         * game draws the earlier missiles' own look without it.
+         */
+        public static final String DIAMOND = "diamond";
+
         public Homing {
+            look.ifPresent(name -> Check.that(DIAMOND.equals(name), "homing.look: only 'diamond', was '" + name + "'"));
             Check.notNegative("turn_rate", turnRate);
             Check.positive("life", life);
             Check.positive("hp", hp);
             Check.positive("most", most);
             Check.notNegative("hatch", hatch);
+            holdWithin.ifPresent(px -> Check.positive("hold_within", px));
         }
     }
 
@@ -793,8 +943,12 @@ public sealed interface EnemyMovementData permits EnemyData {
             Tier contact,
             Optional<Regrow> regrow,
             Optional<Cut> cut,
-            double popInterval) {
+            double popInterval,
+            Optional<Cars> cars) {
         public SegmentChain {
+            Check.that(
+                    cars.isEmpty() || (cut.isPresent() && cars.get().every() <= segments),
+                    "a train's turret cars come within its segments, its cut parts dying (cut)");
             Check.that(
                     regrow.isPresent() != cut.isPresent(), "a chain's rear part regrows a head (regrow) or dies (cut)");
             width.ifPresent(w -> Check.positive("width", w));
@@ -814,13 +968,15 @@ public sealed interface EnemyMovementData permits EnemyData {
      * or it scatters: it keeps its heading at {@code scatter} px/s for {@code seconds} s, firing nothing, then dies from
      * the cut backwards (no regrowth); a cut gives {@code delay} or {@code scatter} with {@code seconds}.
      */
-    record Cut(Optional<Double> delay, Optional<Double> scatter, Optional<Double> seconds) {
+    record Cut(Optional<Double> delay, Optional<Double> scatter, Optional<Double> seconds, Optional<Boolean> wreck) {
         /** M7 part C's cut: the rear part dies {@code delay} s after it. */
         public Cut(double delay) {
-            this(Optional.of(delay), Optional.empty(), Optional.empty());
+            this(Optional.of(delay), Optional.empty(), Optional.empty(), Optional.empty());
         }
 
         public Cut {
+            // M9 part C (design/enemies/air/rail-serpent, the machine split): a wreck stops instead of swimming on.
+            Check.that(wreck.isEmpty() || (wreck.get() && scatter.isPresent()), "wreck: true, with its scatter");
             Check.that(
                     delay.isPresent() != (scatter.isPresent() || seconds.isPresent()),
                     "a cut's rear part dies after a delay, or scatters (scatter and seconds)");
@@ -833,6 +989,28 @@ public sealed interface EnemyMovementData permits EnemyData {
         /** M8 part C: whether the cut's rear part scatters (the Eel Swarm's) instead of dying after a delay. */
         public boolean scatters() {
             return scatter.isPresent();
+        }
+
+        /**
+         * M9 part C: whether the cut's rear part is a machine wreck: from {@code scatter} px/s it slows to a stop over
+         * {@code seconds}, harmless and dark, then blows from the cut backwards, each car paying its bounty.
+         */
+        public boolean wrecks() {
+            return wreck.orElse(false);
+        }
+    }
+
+    /**
+     * M9 part C (design/enemies/air/rail-serpent): a train's turret cars: every {@code every}-th car behind the engine
+     * (never the tail) has {@code hp}, pays {@code bounty} and fires its unit's attack named {@code attack} on its own
+     * clock, the k-th turret car's first shot {@code stagger} × k s later.
+     */
+    record Cars(int every, double stagger, double hp, int bounty, String attack) {
+        public Cars {
+            Check.positive("every", every);
+            Check.notNegative("stagger", stagger);
+            Check.positive("hp", hp);
+            Check.notNegative("bounty", bounty);
         }
     }
 
@@ -1048,9 +1226,12 @@ public sealed interface EnemyMovementData permits EnemyData {
             Optional<Double> edgeX,
             Optional<String> exit,
             Optional<Span> aboveShip,
-            Optional<Double> drift) {
+            Optional<Double> drift,
+            Optional<Double> peel) {
         public Hover {
             drift.ifPresent(speed -> Check.notNegative("drift", speed));
+            // M9 part B (design/campaign Level 29, the wavering Stormhawks): the peel-off to the nearer side edge.
+            peel.ifPresent(speed -> Check.positive("peel", speed));
             // M8 part G: a hover at its y drifts too (the Depth Hunter's, in its lower band).
             Check.that(
                     drift.isEmpty() || aboveShip.isPresent() || y.isPresent(),
@@ -1075,7 +1256,8 @@ public sealed interface EnemyMovementData permits EnemyData {
                 @com.fasterxml.jackson.annotation.JsonProperty("exit") Optional<String> exit,
                 @com.fasterxml.jackson.annotation.JsonProperty("above_ship")
                         Optional<tools.jackson.databind.JsonNode> aboveShip,
-                @com.fasterxml.jackson.annotation.JsonProperty("drift") Optional<Double> drift) {
+                @com.fasterxml.jackson.annotation.JsonProperty("drift") Optional<Double> drift,
+                @com.fasterxml.jackson.annotation.JsonProperty("peel") Optional<Double> peel) {
             Optional<tools.jackson.databind.JsonNode> height = given(y == null ? Optional.empty() : y);
             Optional<tools.jackson.databind.JsonNode> above = given(aboveShip == null ? Optional.empty() : aboveShip);
             Check.that(height.isEmpty() || span(height.get()) != null, "y is a height or [min, max]");
@@ -1088,7 +1270,8 @@ public sealed interface EnemyMovementData permits EnemyData {
                     edgeX == null ? Optional.empty() : edgeX,
                     exit == null ? Optional.empty() : exit,
                     above.map(Hover::span),
-                    drift == null ? Optional.empty() : drift);
+                    drift == null ? Optional.empty() : drift,
+                    peel == null ? Optional.empty() : peel);
         }
 
         /** The hold's height from the top of the play field; a hover above the ship has none (M8 part D). */

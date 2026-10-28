@@ -84,6 +84,32 @@ final class ContentValidator {
         content.levels()
                 .forEach((key, level) -> ActFourChecks.level(
                         content, Content.levelNumber(key), level, (field, message) -> problem(level, field, message)));
+        // M9 part A: a level's vacuum and underground keys, a unit's shield, laser-line and homing diamond.
+        content.levels()
+                .forEach((key, level) -> BeltChecks.level(
+                        content, Content.levelNumber(key), level, (field, message) -> problem(level, field, message)));
+        // M9 part B (Level 29): the held arena, the halt cycle, the escort swap, leaders, rocks, spared, dormant nests.
+        content.levels()
+                .forEach((key, level) -> BeltChecks.partB(
+                        content, Content.levelNumber(key), level, (field, message) -> problem(level, field, message)));
+        content.enemies()
+                .values()
+                .forEach(enemy -> BeltChecks.enemy(content, enemy, (field, message) -> problem(enemy, field, message)));
+        // M9 part C (Level 30): ground: none, mine lines and layers, facing armour, Dart streams, turret cars.
+        content.levels()
+                .forEach((key, level) -> MinefieldChecks.level(
+                        content, Content.levelNumber(key), level, (field, message) -> problem(level, field, message)));
+        content.enemies()
+                .values()
+                .forEach(enemy ->
+                        MinefieldChecks.enemy(content, enemy, (field, message) -> problem(enemy, field, message)));
+        // M9 part D (Level 31): the hull escort, its hook and the ground under it, linked waves, dashes, air links.
+        content.levels()
+                .forEach((key, level) ->
+                        TugChecks.level(content, level, (field, message) -> problem(level, field, message)));
+        content.enemies()
+                .values()
+                .forEach(enemy -> TugChecks.enemy(enemy, content, (field, message) -> problem(enemy, field, message)));
         return sink.list();
     }
 

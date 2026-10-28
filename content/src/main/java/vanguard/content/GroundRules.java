@@ -25,6 +25,10 @@ final class GroundRules {
     /** The ground enemies of the level's ground targets at {@code difficulty}, each in its group of the secondary objective. */
     static List<GroundUnit> groundUnits(Content content, LevelData level, Difficulty difficulty, InLevel inLevel) {
         List<String> groups = level.objectives().groups();
+        // M9 part B: the groups that hold a held arena (its section's `holds`).
+        List<String> holders = level.sections().stream()
+                .flatMap(section -> section.holds().stream())
+                .toList();
         List<GroundUnit> units = new ArrayList<>();
         for (LevelData.GroundTarget target : level.groundTargets()) {
             // M7 part C: a linked nest's anchors are the gates' (TerrainRules.gates, LevelScript.withGates).
@@ -63,10 +67,18 @@ final class GroundRules {
                                 FoundryRules.arcFacing(target))
                         : dry;
                 // M5 part G: a nest entering from a side edge, drifting across (Level 13's mortar floe).
-                units.add(
-                        target.side().isPresent()
-                                ? PartGRules.fromSide(placement, target.side().get(), enemy, group)
-                                : new GroundUnit(placement.t(), placement.x(), enemy, group, current));
+                GroundUnit unit = target.side().isPresent()
+                        ? PartGRules.fromSide(placement, target.side().get(), enemy, group)
+                        : new GroundUnit(placement.t(), placement.x(), enemy, group, current);
+                // M9 part B (design/campaign Level 29): Block C's nests sleep until the turn; the clamp guns hold the
+                // rescue halt (the held arena's `holds` group).
+                if (target.dormantUntil().isPresent()) {
+                    unit = unit.dormantUntil(target.dormantUntil().get());
+                }
+                if (target.group().filter(holders::contains).isPresent()) {
+                    unit = unit.asHolder();
+                }
+                units.add(unit);
             }
         }
         // M5 part H: the root bursts' growths, placed at their bursts' points (Level 14).

@@ -21,6 +21,8 @@ final class Chasing {
     private int spot = -1;
     /** Steps into its stun. */
     private int stunTicks;
+    /** M9 part C: a launched unit (a Dart Drone): its chase starts along its launch heading, not its path's. */
+    private boolean launched;
 
     Chasing(Enemy unit) {
         this.unit = unit;
@@ -34,6 +36,17 @@ final class Chasing {
         heading = 0;
         spot = -1;
         stunTicks = 0;
+        launched = false;
+    }
+
+    /**
+     * M9 part C (design/enemies/air/dart-drone): a launched chaser flies straight out of its carrier's bay; its chase
+     * starts {@code waitTicks} steps later along the heading it flies.
+     */
+    void launch(int waitTicks) {
+        latchPhase = Enemy.LatchPhase.ENTER;
+        chaseWait = waitTicks;
+        launched = true;
     }
 
     /** A chaser flies in along its path; its chase starts {@code waitTicks} steps after its entry. */
@@ -55,7 +68,7 @@ final class Chasing {
         u.phase = Enemy.Phase.CHASE;
         latchPhase = Enemy.LatchPhase.CHASE;
         chaseTicks = 0;
-        heading = Enemy.heading(u.path.dx(u.segment), u.path.dy(u.segment));
+        heading = launched ? Enemy.heading(u.vx, u.vy) : Enemy.heading(u.path.dx(u.segment), u.path.dy(u.segment));
     }
 
     /**
@@ -75,6 +88,17 @@ final class Chasing {
         u.facing = heading;
         if (++chaseTicks >= SimStep.ticks(chase.seconds())) {
             u.phase = Enemy.Phase.LEAVE;
+            latchPhase = Enemy.LatchPhase.ON;
+        }
+    }
+
+    /**
+     * M9 part D (design/allies/mining-tug): its chase is over at once (a hooked Dart crossed its section): it flies
+     * straight on along its heading and leaves the screen.
+     */
+    void release() {
+        if (latchPhase == Enemy.LatchPhase.CHASE) {
+            unit.phase = Enemy.Phase.LEAVE;
             latchPhase = Enemy.LatchPhase.ON;
         }
     }
@@ -174,6 +198,11 @@ final class Chasing {
     }
 
     /** Its state, in the order the unit's hash has always added it. */
+    /** M9 part C: whether it was launched by a carrier (its chase waits in its straight flight out). */
+    boolean launched() {
+        return launched;
+    }
+
     void addTo(StateHash hash) {
         hash.add(latchPhase.ordinal())
                 .add(chaseWait)

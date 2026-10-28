@@ -50,6 +50,59 @@ public sealed interface EnemyHookData permits EnemyData {
     }
 
     /** M7 part F: a difficulty's change to homing missiles: their turn rate instead, °/s (the walker's hard 120). */
+    /**
+     * M9 part B (design/enemies/space/asteroid-mite): a difficulty's rock riding: the leap's reach, its tell and the
+     * dive's speed.
+     */
+    record RideChange(Optional<Double> within, Optional<Double> tell, Optional<Double> diveSpeed) {
+        public RideChange {
+            within.ifPresent(px -> Check.positive("ride.within", px));
+            tell.ifPresent(s -> Check.positive("ride.tell", s));
+            diveSpeed.ifPresent(v -> Check.positive("ride.dive_speed", v));
+        }
+    }
+
+    /**
+     * M9 part C (design/enemies/space/minelayer): a difficulty's line mines: the gap instead, px, the middle clusters'
+     * fewer mines (easy's 144 px gap beside a cluster of 3) and the arming time instead, s (hard's 0.8).
+     */
+    record MineChange(Optional<Double> gap, Optional<Integer> middleShort, Optional<Double> arm) {
+        public MineChange {
+            gap.ifPresent(px -> Check.positive("mine.gap", px));
+            middleShort.ifPresent(n -> Check.notNegative("mine.middle_short", n));
+            arm.ifPresent(s -> Check.notNegative("mine.arm", s));
+        }
+    }
+
+    /**
+     * M9 part D (design/enemies/air/buzzsaw-drone): a difficulty's dash: its tell (never under 0.5 s), its speed, its
+     * bounces or its dashes instead (easy: tell 0.8, 300 px/s, 2 bounces; hard: tell 0.5, 400 px/s, 3 dashes).
+     */
+    record DashChange(
+            Optional<Double> tell, Optional<Double> speed, Optional<Integer> bounces, Optional<Integer> dashes) {
+        public DashChange {
+            tell.ifPresent(s -> Check.that(
+                    s >= EnemyMovementData.Dash.LEAST_TELL, "dash.tell: at least 0.5 s (the tell is the rule)"));
+            speed.ifPresent(v -> Check.positive("dash.speed", v));
+            bounces.ifPresent(n -> Check.positive("dash.bounces", n));
+            dashes.ifPresent(n -> Check.positive("dash.dashes", n));
+        }
+    }
+
+    /** M9 part D (design/enemies/space/shard-drone): a difficulty's air link tell instead, s (hard's 0.5). */
+    record AirLinkChange(Optional<Double> tell) {
+        public AirLinkChange {
+            tell.ifPresent(s -> Check.notNegative("air_link.tell", s));
+        }
+    }
+
+    /** M9 part C (design/enemies/air/dart-drone): a difficulty's chase turn rate instead, °/s (the Dart's hard 80). */
+    record ChaseChange(Optional<Double> turnRate) {
+        public ChaseChange {
+            turnRate.ifPresent(r -> Check.positive("chase.turn_rate", r));
+        }
+    }
+
     record HomingChange(Optional<Double> turnRate) {
         public HomingChange {
             turnRate.ifPresent(r -> Check.positive("turn_rate", r));
@@ -221,6 +274,13 @@ public sealed interface EnemyHookData permits EnemyData {
      * @param lunge M8 part F: a lunge's trigger distance instead (the Glow Angler's easy 100, hard 160 px)
      * @param coilArena M8 part H: a coiled boss's changes instead (the Abyssal Maw's sweep tell, shadow, implants' open
      *     time, shed segments and wall gaps; {@link MawBlock.CoilArenaChange})
+     * @param partingPair M9 part B: a scattering unit fires one parting shot as it breaks off (the Talon's hard)
+     * @param ride M9 part B: the rock riding's leap reach, tell and dive speed instead (the Asteroid Mite's)
+     * @param hoverY M9 part B: the hover's height below the top edge instead, px (the wavering Stormhawks' hard 190)
+     * @param mine M9 part C: a line mine's gap, middle clusters and arming instead (the Minelayer's easy and hard)
+     * @param chase M9 part C: a chase's turn rate instead (the Dart Drone's hard 80°/s)
+     * @param dash M9 part D: a dash's tell, speed, bounces or dashes instead (the Buzzsaw Drone's easy and hard)
+     * @param airLink M9 part D: an air link's tell instead (the Shard Drone's hard 0.5 s)
      */
     record Hook(
             Optional<List<String>> leadsTargetIn,
@@ -263,8 +323,16 @@ public sealed interface EnemyHookData permits EnemyData {
             Optional<CoilChange> coil,
             Optional<SlowChange> slow,
             Optional<LungeChange> lunge,
-            Optional<CoilArenaChange> coilArena) {
+            Optional<CoilArenaChange> coilArena,
+            Optional<Boolean> partingPair,
+            Optional<RideChange> ride,
+            Optional<Double> hoverY,
+            Optional<MineChange> mine,
+            Optional<ChaseChange> chase,
+            Optional<DashChange> dash,
+            Optional<AirLinkChange> airLink) {
         public Hook {
+            hoverY.ifPresent(y -> Check.positive("hover_y", y));
             swoopSpeed.ifPresent(s -> Check.positive("swoop_speed", s));
             drain.ifPresent(d -> Check.positive("drain", d));
             latchSlots.ifPresent(n -> Check.positive("latch_slots", n));

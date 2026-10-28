@@ -1,0 +1,756 @@
+# Level 29 – Betrayal at Ceres: the level script, rendered into README.md (briefing, threat profile, layout, waves,
+# ground targets, radio, credit budget). Times are seconds from the level start (clock time: the clock stands in the
+# rescue halt). M9 part B, step B2, from the README's approved hand tables (round 60) and ART-B's backdrop proposal
+# (concept/backdrop-proposal.yaml, re-run on these sections and adopted).
+# Schema: ../../../tech/architecture/schemas-levels/README.md (the Act 5 keys: schemas-act-4)
+# Keys new in M9 part B (flown from steps B1, B1b; loaded and checked in step B2; drawn and played by step B4): the held
+# arena (`holds: clamps` on the rescue's arena section: the clock stands while a clamp gun stands, the scroll eases down
+# across the section from 100 px/s, the next section's ramp eases it up), `halt_waves` (the halt cycle on the halt's own
+# clock), `escort_swap` (Rook's rescue: the hold's launch point on the halted screen and the 1 s join), a ground
+# target's `dormant_until` (Block C's nests), a V-wing's `leader: tip`, a wave's `on_rocks` (the Asteroid Mites' rocks,
+# the level's debris chunks), the secondary's `spared` (Hold fire) and the radio events first-homing, neutral-left,
+# neutral-down, holders-down and escort-joined.
+# Step B2's own placements (pending review): the Mote Swarm routes alternate two S-routes; the rocks drift at the scroll
+# plus 30 px/s (the Mite's "30–60 px/s plus the scroll"), the side rocks 90 px/s across; Block C's nests enter at
+# t=57.148 so they stand 160 px below the top edge at the turn (ART-B's pads); the clamp guns enter at t=115.52 and
+# 117.12 so they stand at y 330 and 170 on the halted screen; hard's halt-cycle Talons at H+11 fly a line abreast from
+# the front, not the README's pincer (a halt cycle's waves are plain front waves: step B1's HaltCycle).
+scroll_speed: 120     # the approach and the breakout; the canyon 100, Block C 60, the rescue 0
+launch_seconds: 5
+bounty_scale: 0.35    # every bounty × 0.35: the README's hand estimate 0.44, fitted in step B2 at 0.48, re-fitted in step B3b after the waves' rework (levelReport: typical haul on budget(29) 4,654)
+control_prompts: []
+medium: vacuum        # the belt: short flashes, debris rings, drifting wrecks (design/world/belt)
+threat_profile:  # the hangar intel panel (design/ui/hangar) and the README's Threat profile table
+  setting: The belt, Ceres Hub
+  layers: [air, ground]
+  density: 4
+  traits: [spread, homing]
+  hazards: [the station turns, rocks with riders]
+  boss: none
+  objective: REACH THE OUTER RING   # the OBJECTIVE field from sensor L1
+  varga:
+    none: Ceres Hub, Lancer. The belt's biggest dock, still deciding.
+    l1: "Mostly ahead. Some station guns are asleep: watch the lights."
+    l2: "New: shielded Talons, SAM nests and mites on the rocks."
+    l3: Spread for the mites, homing for the Talons and missiles.
+  notes:
+    Dominant layers: '`air` (Talon wings, Skitter and Mote streams, Asteroid Mites on rocks), `ground` (SAM Nests on the station hulls, the tender''s clamp guns)'
+    Attack directions: '{directions}'
+    Density: '{density}'
+    Recommended traits: '{traits}'
+    Hazards: 'The turning station (sleeping guns wake at t≈60); drifting rocks with riders'
+    Boss / mid-boss: none
+    Sensor-suite detail: '**none**: the belt, Ceres Hub, `air` + `ground`, front · **L1**: + directions (sides), density {density}, hazard "the station turns", the objective `{objective}` and the secondary `HOLD FIRE` · **L2**: + Talon (new, shielded), SAM Nest (new), Asteroid Mite (new), Skitter and Mote portraits · **L3**: + `spread` and `homing` highlighted, the wave strip marking Block C and Dock 9'
+
+sections:  # back to back from t = 0; each speed change eased over 2 s (ramp); the rescue halt a held arena
+  - name: Ceres Approach
+    end: 28
+    atmosphere: clear
+    tiles: [belt-space]
+    notes:
+      layers:
+        deep: Ceres's curve, the dust band.
+        low-air: a loyalist ore hauler under Talon fire (t≈13).
+        air: small drifting rocks (the Mites' rocks; no large rock).
+        ground: the hub's outer crust, docking arms.
+      purpose: Popcorn, the first Talons and their shield flash, the first riders.
+  - name: The Dock Canyon
+    end: 56
+    speed: 100
+    ramp: 2   # eased from 120 over its first 2 s
+    atmosphere: clear
+    tiles: [belt-space, dock-canyon]
+    notes:
+      layers:
+        ground: 'the canyon cut into the crust, docks 1–5 along its walls (scenery, no collision); the **Helix dock block** (black and gold) with 3 SAM Nests (t≈34); Coalition blocks lit white.'
+      purpose: The SAM Nest's homing diamonds; the canyon's rhythm.
+  - name: Block C
+    end: 76
+    speed: 60
+    ramp: 2   # eased from 100
+    atmosphere: clear
+    tiles: [belt-space, dock-canyon]
+    notes:
+      layers:
+        ground: '**Block C**, a Coalition station block lit white, with 3 **dormant** SAM Nests on its roof. At **t=60** its lights switch white → red over 1 s, a klaxon, and the nests wake (1 s tell); the lights then go red block by block up the canyon ahead.'
+      purpose: 'The signature: the station turns sides. Quiet window t=56–62 (no wave enters).'
+  - name: The Red Canyon
+    end: 115
+    speed: 100
+    ramp: 2   # eased from 60
+    atmosphere: clear
+    tiles: [belt-space, dock-canyon]
+    notes:
+      layers:
+        ground: 'red-lit blocks, docks 6–8, 3 SAM Nests at t≈84 and 3 at t≈100; the loyalists'' supply cache in Dock 6 (t≈108, the secret); mutineer Talons out of the side docks.'
+      purpose: 'The mutineers; the wavering pairs (t=77, 98); Hub Control''s lead to Dock 9.'
+  - name: Dock 9
+    end: 118
+    speed: 100
+    atmosphere: clear
+    tiles: [belt-space, dock-canyon]
+    notes:
+      layers:
+        ground: '**Dock 9**, the Helix prison tender in four docking clamps, a clamp gun on each.'
+      purpose: 'The approach to the halt (from t=115, a second before the README''s 116: the clamp guns'' entries at 115.52 lie in it; the same scroll).'
+  - name: The Rescue
+    end: 120   # the level clock stands here while a clamp gun stands; the last one's fall resumes it
+    speed: 0
+    arena: true
+    holds: clamps   # the held arena: its holders are the clamp guns (group clamps), not a boss; no boss bar
+    atmosphere: clear
+    tiles: [belt-space, dock-canyon]
+    notes:
+      layers:
+        ground: 'the halted screen shows Dock 9 and the tender in the middle third; the four clamp guns at (150, 170), (330, 170), (150, 330), (330, 330).'
+      purpose: 'The rescue halt (the scroll eased down from 100 px/s over 2 s from t=118, the clock stopped while a clamp gun stands, ≈ 14 s typical); Rook launches, the loaner leaves.'
+  - name: Breakout
+    end: 172
+    speed: 120
+    ramp: 2   # eased up from the halt over 2 s
+    atmosphere: clear
+    tiles: [belt-space, outer-docks]
+    notes:
+      layers:
+        ground: 'the canyon mouth, the outer docks with 3 SAM Nests (t≈131), the outer ring.'
+        air: small rocks with riders.
+        deep: the CDF transport at the rendezvous.
+      purpose: 'Rook back in the slot; the third wavering pair and Harker; the run out. Level end at t=172 as the outer ring reaches the bottom edge.'
+
+debris:  # the Asteroid Mites' rocks (design/world/belt, hazards): small breakable chunks only (Level 03's small-chunk rules: they block shots of both sides); sprites assets/sprites/debris-<chunk>_N (16 spin frames)
+  chunks:
+    belt-a: {size: [40, 36], hp: 6}
+    belt-b: {size: [36, 32], hp: 6}
+    belt-c: {size: [32, 28], hp: 6}
+  clearance: 0
+  placed: []   # no free rocks: every rock carries riders (the waves' on_rocks)
+
+waves:
+  - {t: 4, formation: snake, enemy: skitter, count: 4, from: front, edge: left}
+  - t: 5.5
+    formation: swarm
+    enemy: mote-swarm
+    count: 6
+    from: front
+    speed: 200
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+    notes: "Step B3b: a second stream before the first Talons"
+  - t: 7
+    formation: swarm
+    enemy: mote-swarm
+    count: 6
+    from: front
+    speed: 200
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+  - t: 10
+    formation: swarm
+    enemy: asteroid-mite
+    count: 4
+    from: front
+    on_rocks:
+      chunk: belt-a
+      riders: 2
+      rocks:
+        - {at: [120, -30], drift: [10, -150]}
+        - {at: [330, -60], drift: [-10, -150]}
+    notes: "Round 62: the first rock group, 4 rocks drifting in together in the approach debris (2 with 2 riders, 2 with 1); the Mite's first level"
+  - t: 10
+    formation: swarm
+    enemy: asteroid-mite
+    count: 2
+    from: front
+    on_rocks:
+      chunk: belt-c
+      riders: 1
+      rocks:
+        - {at: [220, -95], drift: [5, -150]}
+        - {at: [420, -40], drift: [-15, -150]}
+    notes: "Round 62: the first group's 2 one-rider rocks"
+  - {t: 13, formation: line abreast, enemy: talon, count: 4, from: front, speed: 130, notes: "The first Talons, strafing a loyalist hauler on the `low-air` layer; the hex shield's first flash"}
+  - {t: 16, formation: snake, enemy: skitter, count: 4, from: front, edge: right}
+  - {t: 17.5, formation: line abreast, enemy: talon, count: 2, from: front, speed: 130, notes: "Step B3b: a firing Talon pair on the offbeat (the beam erases the fodder within a second)"}
+  - t: 19
+    formation: swarm
+    enemy: mote-swarm
+    count: 6
+    from: front
+    speed: 200
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+  - t: 20.5
+    formation: swarm
+    enemy: mote-swarm
+    count: 6
+    from: front
+    speed: 200
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+    notes: "Step B3b: a looping swarm on the offbeat"
+  - {t: 22, formation: V-wing, enemy: talon, count: 5, from: front, leader: tip, speed: 130, notes: "The first squad leader (gold stripe): kill it and the wing scatters"}
+  - t: 25
+    formation: swarm
+    enemy: asteroid-mite
+    count: 6
+    from: sides
+    edge: left
+    on_rocks:
+      chunk: belt-b
+      riders: 2
+      rocks:
+        - {at: [-30, 60], drift: [90, -150]}
+        - {at: [-30, 140], drift: [80, -150]}
+        - {at: [-30, 220], drift: [100, -150]}
+    notes: "Round 62: 3 rocks × 2 riders drifting in together from the left edge; warned 3 s ahead"
+  - {t: 26.5, formation: line abreast, enemy: talon, count: 4, from: front, speed: 130, notes: "Step B3b: a firing Talon line on the offbeat (the beam erases the fodder within a second)"}
+  - {t: 28, formation: snake, enemy: skitter, count: 4, from: front, edge: left}
+  - {t: 31, formation: line abreast, enemy: talon, count: 4, from: front, speed: 130, notes: "Into the dock canyon"}
+  - t: 34
+    formation: swarm
+    enemy: mote-swarm
+    count: 6
+    from: front
+    speed: 200
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+    notes: "Over the Helix dock block and its three SAM Nests"
+  - {t: 35.5, formation: line abreast, enemy: talon, count: 4, from: front, speed: 130, notes: "Step B3b: a firing Talon line on the offbeat (the beam erases the fodder within a second)"}
+  - t: 38.5
+    formation: swarm
+    enemy: mote-swarm
+    count: 6
+    from: front
+    speed: 200
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+    notes: "Step B3b: a looping swarm on the offbeat"
+  - {t: 40, formation: V-wing, enemy: talon, count: 5, from: front, leader: tip, speed: 130, notes: "Leader at the tip"}
+  - t: 43
+    formation: swarm
+    enemy: asteroid-mite
+    count: 4
+    from: front
+    on_rocks:
+      chunk: belt-c
+      riders: 2
+      rocks:
+        - {at: [100, -30], drift: [10, -135]}
+        - {at: [300, -70], drift: [-5, -135]}
+    notes: "Round 62: a rock group in the canyon instead of a Mote Swarm, 4 rocks (2 with 2 riders, 2 with 1)"
+  - t: 43
+    formation: swarm
+    enemy: asteroid-mite
+    count: 2
+    from: front
+    on_rocks:
+      chunk: belt-a
+      riders: 1
+      rocks:
+        - {at: [200, -105], drift: [5, -135]}
+        - {at: [400, -40], drift: [-10, -135]}
+    notes: "Round 62: the canyon group's 2 one-rider rocks"
+  - {t: 44.5, formation: line abreast, enemy: talon, count: 2, from: front, speed: 130, notes: "Step B3b: a firing Talon pair on the offbeat (the beam erases the fodder within a second)"}
+  - {t: 46, formation: snake, enemy: skitter, count: 4, from: front, edge: left}
+  - {t: 49, formation: line abreast, enemy: talon, count: 4, from: front, speed: 130}
+  - t: 52
+    formation: swarm
+    enemy: mote-swarm
+    count: 6
+    from: front
+    speed: 200
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+    notes: "The last fodder before the turn's quiet window"
+  - {t: 53.5, formation: line abreast, enemy: talon, count: 2, from: front, speed: 130, notes: "Step B3b: a firing Talon pair on the offbeat (the beam erases the fodder within a second)"}
+  - {t: 55.5, formation: line abreast, enemy: talon, count: 2, from: front, speed: 130, notes: "Step B3b: the last firing pair before the turn's quiet window (t=56-62: Block C's dark nests on the screen from 57)"}
+  - {t: 62, formation: pincer, enemy: talon, count: 4, from: sides, speed: 130, warning: 4, notes: "Two pairs out of Block C's launch bays, the first mutineers; warned 4 s ahead (round 62: its 2.5 s banner over Block C closes at t=60.5 as the lights turn; the turn's quiet window t=56-62 is over)"}
+  - t: 64.5
+    formation: swarm
+    enemy: mote-swarm
+    count: 6
+    from: front
+    speed: 200
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+    notes: "Step B3b: a looping swarm on the offbeat"
+  - {t: 66, formation: snake, enemy: skitter, count: 4, from: front, edge: right}
+  - {t: 67.5, formation: line abreast, enemy: talon, count: 4, from: front, speed: 130, notes: "Step B3b: a firing Talon line on the offbeat (the beam erases the fodder within a second)"}
+  - t: 69
+    formation: swarm
+    enemy: asteroid-mite
+    count: 4
+    from: front
+    on_rocks:
+      chunk: belt-b
+      riders: 2
+      rocks:
+        - {at: [140, -30], drift: [10, -100]}
+        - {at: [360, -60], drift: [-10, -100]}
+    notes: "Round 62: hull fragments off the turned blocks instead of a Mote Swarm, 4 rocks (2 with 2 riders, 2 with 1)"
+  - t: 69
+    formation: swarm
+    enemy: asteroid-mite
+    count: 2
+    from: front
+    on_rocks:
+      chunk: belt-c
+      riders: 1
+      rocks:
+        - {at: [250, -95], drift: [0, -100]}
+        - {at: [60, -70], drift: [15, -100]}
+    notes: "Round 62: the turned blocks' 2 one-rider rocks"
+  - t: 70.5
+    formation: swarm
+    enemy: mote-swarm
+    count: 6
+    from: front
+    speed: 200
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+    notes: "Step B3b: a looping swarm on the offbeat"
+  - {t: 72, formation: V-wing, enemy: talon, count: 5, from: front, leader: tip, speed: 130, notes: "Mutineers; leader at the tip"}
+  - {t: 76, formation: snake, enemy: skitter, count: 4, from: front, edge: left, notes: "Step B3b: a second later, up to the wavering pair"}
+  - {t: 77, formation: line abreast, enemy: wavering-stormhawk, count: 2, from: front, easy: {count: 2}, hard: {count: 2}, notes: "The first wavering pair (Hold fire): white IFF lights, holding fire; not enemies"}
+  - {t: 77, formation: pincer, enemy: talon, count: 4, from: sides, speed: 130, notes: "Step B3b: mutineer pairs out of the side docks under the wavering pair, its lane kept clear; warned 3 s ahead"}
+  - {t: 81, formation: line abreast, enemy: talon, count: 2, from: front, skip: [easy], speed: 130, notes: "Step B3b: a firing Talon pair on the offbeat (the beam erases the fodder within a second); not on easy (the wavering pair holds 8 s there)"}
+  - {t: 84, formation: line abreast, enemy: talon, count: 5, from: front, speed: 130}
+  - t: 87
+    formation: swarm
+    enemy: asteroid-mite
+    count: 6
+    from: front
+    on_rocks:
+      chunk: belt-c
+      riders: 2
+      rocks:
+        - {at: [90, -30], drift: [10, -130]}
+        - {at: [240, -80], drift: [0, -130]}
+        - {at: [390, -30], drift: [-10, -130]}
+    notes: "Round 62: hull fragments torn off the red blocks, 5 rocks (3 with 2 riders, 2 with 1)"
+  - t: 87
+    formation: swarm
+    enemy: asteroid-mite
+    count: 2
+    from: front
+    on_rocks:
+      chunk: belt-a
+      riders: 1
+      rocks:
+        - {at: [165, -120], drift: [5, -130]}
+        - {at: [315, -120], drift: [-5, -130]}
+    notes: "Round 62: the red blocks' 2 one-rider rocks"
+  - t: 88.5
+    formation: swarm
+    enemy: mote-swarm
+    count: 6
+    from: front
+    speed: 200
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+    notes: "Step B3b: a looping swarm on the offbeat"
+  - {t: 91.5, formation: line abreast, enemy: talon, count: 4, from: front, speed: 130, notes: "Step B3b: a firing Talon line on the offbeat (the beam erases the fodder within a second)"}
+  - {t: 93, formation: V-wing, enemy: talon, count: 5, from: front, leader: tip, speed: 130, notes: "Leader at the tip"}
+  - {t: 97, formation: pincer, enemy: talon, count: 4, from: sides, speed: 130, notes: "Step B3b: mutineer pairs out of the side docks beside the second wavering pair, its lane kept clear; warned 3 s ahead"}
+  - {t: 98, formation: line abreast, enemy: wavering-stormhawk, count: 2, from: front, easy: {count: 2}, hard: {count: 2}, notes: "The second wavering pair"}
+  - {t: 102, formation: snake, enemy: skitter, count: 4, from: front, edge: left, notes: "After the second wavering pair (t=98)"}
+  - {t: 103.5, formation: snake, enemy: skitter, count: 4, from: front, edge: right, notes: "Step B3b: a second stream past the wavering pair, its lane kept clear"}
+  - {t: 105, formation: pincer, enemy: talon, count: 4, from: sides, speed: 130, notes: "Two pairs; warned 3 s ahead"}
+  - t: 108
+    formation: swarm
+    enemy: mote-swarm
+    count: 6
+    from: front
+    paths: [[[240, -60], [160, 160], [320, 340], [240, 620]]]
+  - t: 109.5
+    formation: swarm
+    enemy: mote-swarm
+    count: 6
+    from: front
+    speed: 200
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+    notes: "Step B3b: a looping swarm on the offbeat"
+  - {t: 111, formation: line abreast, enemy: talon, count: 5, from: front, speed: 130}
+  - {t: 114, formation: snake, enemy: skitter, count: 4, from: front, edge: right, notes: "Over Dock 9's approach"}
+  - t: 117
+    formation: swarm
+    enemy: mote-swarm
+    count: 6
+    from: front
+    speed: 200
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+    notes: "The halt begins at t=120 (the halt cycle: `halt_waves`)"
+  - {t: 121, formation: line abreast, enemy: talon, count: 2, from: front, speed: 130, notes: "Step B3b: Helix's pursuit out of Dock 9 as the scroll resumes"}
+  - {t: 123, formation: V-wing, enemy: talon, count: 5, from: front, leader: tip, speed: 130, notes: "Rook's first fight: leader at the tip"}
+  - {t: 124.5, formation: line abreast, enemy: talon, count: 2, from: front, speed: 130, notes: "Step B3b: a firing Talon pair on the offbeat (the beam erases the fodder within a second)"}
+  - t: 126
+    formation: swarm
+    enemy: mote-swarm
+    count: 6
+    from: front
+    speed: 200
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+  - {t: 127.5, formation: line abreast, enemy: talon, count: 4, from: front, speed: 130, notes: "Step B3b: a firing Talon line on the offbeat (the beam erases the fodder within a second)"}
+  - {t: 130.5, formation: line abreast, enemy: talon, count: 2, from: front, speed: 130, notes: "Step B3b: a firing Talon pair on the offbeat (the beam erases the fodder within a second)"}
+  - t: 132
+    formation: swarm
+    enemy: asteroid-mite
+    count: 8
+    from: sides
+    edge: right
+    on_rocks:
+      chunk: belt-a
+      riders: 2
+      rocks:
+        - {at: [510, 30], drift: [-90, -150]}
+        - {at: [510, 100], drift: [-100, -150]}
+        - {at: [510, 170], drift: [-110, -150]}
+        - {at: [510, 240], drift: [-120, -150]}
+    notes: "Round 62: 4 rocks × 2 riders drifting in together from the right edge; warned 3 s ahead"
+  - {t: 133.5, formation: line abreast, enemy: talon, count: 2, from: front, speed: 130, notes: "Step B3b: a firing Talon pair on the offbeat (the beam erases the fodder within a second)"}
+  - {t: 135, formation: line abreast, enemy: talon, count: 5, from: front, speed: 130}
+  - {t: 138.5, formation: pincer, enemy: talon, count: 4, from: sides, speed: 130, notes: "Step B3b: Harker's pairs out of the outer docks beside the wavering pair, its lane kept clear; warned 3 s ahead"}
+  - {t: 140, formation: line abreast, enemy: wavering-stormhawk, count: 2, from: front, easy: {count: 2}, hard: {count: 2}, notes: "The third wavering pair; Harker's wing"}
+  - {t: 143.5, formation: snake, enemy: skitter, count: 4, from: front, edge: right, skip: [easy], notes: "Step B3b: past the third wavering pair, its lane kept clear; not on easy"}
+  - {t: 145.5, formation: line abreast, enemy: talon, count: 2, from: front, skip: [easy], speed: 130, notes: "Step B3b: a firing Talon pair on the offbeat (the beam erases the fodder within a second); not on easy (the wavering pair holds 8 s there)"}
+  - {t: 147, formation: V-wing, enemy: talon, count: 7, from: front, leader: tip, speed: 130, notes: "A full wing; leader at the tip"}
+  - {t: 150, formation: line abreast, enemy: talon, count: 4, from: front, skip: [easy], speed: 130, notes: "Step B3b: a Talon line instead of the README's Mote Swarm (the beam erases the fodder); not on easy (the wavering pair holds 8 s there)"}
+  - {t: 151.5, formation: line abreast, enemy: talon, count: 2, from: front, speed: 130, notes: "Step B3b: a firing Talon pair on the offbeat (the beam erases the fodder within a second)"}
+  - {t: 153, formation: pincer, enemy: talon, count: 4, from: sides, speed: 130, notes: "Two pairs; warned 3 s ahead; Rook's flank bark"}
+  - t: 156
+    formation: swarm
+    enemy: asteroid-mite
+    count: 6
+    from: front
+    on_rocks:
+      chunk: belt-b
+      riders: 2
+      rocks:
+        - {at: [80, -30], drift: [10, -150]}
+        - {at: [240, -60], drift: [0, -150]}
+        - {at: [400, -30], drift: [-10, -150]}
+    notes: "Round 62: the last rock group, 5 rocks (3 with 2 riders, 2 with 1)"
+  - t: 156
+    formation: swarm
+    enemy: asteroid-mite
+    count: 2
+    from: front
+    on_rocks:
+      chunk: belt-c
+      riders: 1
+      rocks:
+        - {at: [160, -110], drift: [5, -150]}
+        - {at: [320, -110], drift: [-5, -150]}
+    notes: "Round 62: the last group's 2 one-rider rocks"
+  - t: 157.5
+    formation: swarm
+    enemy: mote-swarm
+    count: 6
+    from: front
+    speed: 200
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+    notes: "Step B3b: a looping swarm on the offbeat"
+  - {t: 162, formation: V-wing, enemy: talon, count: 5, from: front, leader: tip, speed: 130, notes: "The last wing; leader at the tip"}
+  - t: 165
+    formation: swarm
+    enemy: mote-swarm
+    count: 6
+    from: front
+    speed: 200
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+  - {t: 168, formation: line abreast, enemy: talon, count: 2, from: front, speed: 130, notes: "Step B3b: a firing Talon pair on the offbeat (the beam erases the fodder within a second)"}
+  - {t: 170, formation: line abreast, enemy: talon, count: 2, from: front, speed: 130, notes: "Step B3b: the last Talons, out to the outer ring"}
+
+halt_waves:  # the rescue halt's cycle: t s from the halt's start H, repeating every 16 s while a clamp gun stands, cut at the last one's fall (a wave in flight flies on)
+  every: 16
+  waves:
+    - {t: 1, formation: snake, enemy: skitter, count: 6, from: front, edge: left, notes: Halt cycle}
+    - {t: 5, formation: line abreast, enemy: talon, count: 4, from: front, skip: [easy], notes: "Halt cycle; not on easy"}
+    - t: 9
+      formation: swarm
+      enemy: mote-swarm
+      count: 6
+      from: front
+      paths: [[[240, -60], [160, 160], [320, 340], [240, 620]]]
+      notes: "Halt cycle (round 62: 8 → 6 motes, room for the rock groups)"
+    - {t: 11, formation: line abreast, enemy: talon, count: 4, from: front, skip: [easy, medium], notes: "Halt cycle, hard only (the README's pincer as a front line: a halt cycle's waves come from the front)"}
+    - {t: 13, formation: snake, enemy: skitter, count: 6, from: front, edge: right, notes: "Halt cycle (the typical halt ends ≈ H+14: the cycle starts again at H+17 if the clamps still stand)"}
+
+escort_swap: {at: [240, 250], join: 1}   # the prison tender's hold on the halted screen (x, y px below the top edge); Rook flies into his slot over 1 s
+
+ground_targets:  # at: [t, x], when it enters at the top edge and its x (ART-B's places on its blocks, pads and berths)
+  - target: Helix nests
+    section: 2
+    enemy: sam-nest
+    count: 3
+    at: [[34, 90], [34, 140], [34, 400]]   # helix-block's two pads, helix-pad
+    notes:
+      target: '[SAM Nest](../../../enemies/ground/sam-nest/README.md) ×{count} on the Helix dock block (t≈34)'
+      effect: Bounty {bounty} each
+  - target: Block C nests
+    section: 3
+    enemy: sam-nest
+    count: 3
+    dormant_until: 60   # the turn
+    at: [[57.148, 120], [57.148, 240], [57.148, 360]]   # 160 px below the top edge at the turn
+    notes:
+      target: 'SAM Nest ×{count} on **Block C**, **dormant until t={dormant_until}** (x 120, 240, 360; at the turn 160 px below the top edge)'
+      effect: Dark, white-lit, not shootable and not picked until they wake (the SAM Nest's *dormant until t*); bounty {bounty} each
+  - target: Canyon wall nests
+    section: 2
+    enemy: sam-nest
+    count: 2
+    at: [[45, 52], [45, 428]]   # step B3b: on the canyon's rock faces by docks 3 and 4 (no piece moved)
+    notes:
+      target: 'SAM Nest ×{count} on the canyon walls (t≈45; step B3b)'
+      effect: Bounty {bounty} each
+  - target: Turned wall nests
+    section: 3
+    enemy: sam-nest
+    count: 2
+    at: [[70, 52], [70, 428]]   # step B3b: on the rock faces by the turned Coalition blocks 3 and 4
+    notes:
+      target: 'SAM Nest ×{count} on the turned canyon walls (t≈70; step B3b)'
+      effect: Bounty {bounty} each
+  - target: Red block nests
+    section: 4
+    enemy: sam-nest
+    count: 3
+    at: [[84, 70], [84, 120], [84, 410]]   # red-block-d's pads, red-pad
+    notes:
+      target: SAM Nest ×{count} on red blocks (t≈84)
+      effect: Bounty {bounty} each
+  - target: Dock 7 nests
+    section: 4
+    enemy: sam-nest
+    count: 2
+    at: [[91, 52], [91, 428]]   # step B3b: dock 7's rim and the wall across
+    notes:
+      target: 'SAM Nest ×{count} by dock 7 (t≈91; step B3b)'
+      effect: Bounty {bounty} each
+  - target: Bridge block nests
+    section: 4
+    enemy: sam-nest
+    count: 3
+    at: [[100, 130], [100, 240], [100, 350]]   # red-block-e
+    notes:
+      target: SAM Nest ×{count} on the bridging red block (t≈100)
+      effect: Bounty {bounty} each
+  - target: Supply cache
+    section: 4
+    layer: ground
+    size: [40, 40]
+    hp: 20
+    reveals: Supply cache
+    at: [[108, 430]]   # the locker under Dock 6's crane gantry
+    notes:
+      target: 'The loyalists'' supply cache in Dock 6 (a `ground` trigger, {hp} HP, t≈108, x 430)'
+      effect: 'The secret: a crate worth 100 (655)'
+  - target: Clamp guns
+    section: 5
+    enemy: clamp-gun
+    count: 4
+    group: clamps   # the held arena's holders (The Rescue's `holds`)
+    dormant_until: 119.98   # step B3b: asleep until the halt (the clock stands at 119.98, its last step before 120), then the 1 s wake tell: none falls on the way in
+    at: [[115.52, 150], [115.52, 330], [117.12, 150], [117.12, 330]]   # y 330 and 170 on the halted screen
+    notes:
+      target: '**[Clamp gun](../../../enemies/ground/clamp-gun/README.md)** ×{count} on the prison tender''s docking clamps (the halted screen''s middle third: x 150 and 330, y 170 and 330)'
+      effect: 'Rook''s rescue: the halt ends with the last one; bounty {bounty} each'
+  - target: Canyon mouth nests
+    section: 7
+    enemy: sam-nest
+    count: 2
+    at: [[125, 52], [125, 428]]   # step B3b: on the canyon mouth's rock faces
+    notes:
+      target: 'SAM Nest ×{count} on the canyon mouth (t≈125; step B3b)'
+      effect: Bounty {bounty} each
+  - target: Outer dock nests
+    section: 7
+    enemy: sam-nest
+    count: 3
+    at: [[131, 90], [131, 240], [131, 390]]   # outer-dock-1..3
+    notes:
+      target: SAM Nest ×{count} on the outer docks (t≈131)
+      effect: Bounty {bounty} each
+  - target: Outer wall nests
+    section: 7
+    enemy: sam-nest
+    count: 4
+    at: [[146, 52], [146, 428], [160, 52], [160, 428]]   # step B3b: the outer canyon's last rock faces
+    notes:
+      target: 'SAM Nest ×{count} on the outer canyon walls (t≈146 and 160; step B3b)'
+      effect: Bounty {bounty} each
+secrets:
+  - name: Supply cache
+    crate: 100   # Act 1 terms: pays 655 with the act factor
+    radio: {speaker: Ceres Hub Control, portrait: ceres-control, line: "Dock Six stores. Take them, Aegis. Better you than Helix."}
+
+pickups:
+  - {pickup: overdrive, dropped_by: {wave: 22, enemy: talon, unit: first}}      # the first squad leader (the V-wing's tip)
+  - {pickup: shield cell, dropped_by: {wave: 105, enemy: talon, unit: last}}    # the t=105 pincer's last Talon
+
+drops:  # a loyalist ore hauler on the low-air layer releases an armour patch (the backdrop's hauler at t=150)
+  - {t: 150, x: 240, y: 380, pickup: armour patch}
+
+radio:  # trigger: t or event. Rook has no lines before the rescue (his barks dropped, as L27–L28); his rescue and t=141 lines are scripted (no requires). Harker is on the enemy channel (his voice's filter); Vorne is silent here.
+  - {t: 1, speaker: Ceres Hub Control, portrait: ceres-control, line: "Aegis flight, Ceres Hub Control. You heard him too. The Consortium is still voting. Keep our docks clear while they talk."}
+  - {t: 14, speaker: Varga, line: "Talons. Gold hexes are a light shield: keep firing through it."}
+  - {t: 24.5, speaker: Okafor, line: "The striped one leads the wing. Drop it and the rest break off."}
+  - {event: first-homing, speaker: Varga, line: "Helix missiles. Shoot the red-gold diamonds or outrun them.", notes: {trigger: "First SAM salvo (`first-homing`, t≈35)"}}
+  - {t: 46, speaker: Ceres Hub Control, portrait: ceres-control, line: "The vote is closing. If the lights go red, those are not my guns."}
+  - {t: 60, speaker: Ceres Hub Control, portrait: ceres-control, shout: false, line: "Block C just declared! The garrison is split. Their guns are hot!"}
+  - {t: 70.5, speaker: Harker, line: "Ceres Wing, Harker. We're Ascendancy now. Clear the CDF out."}
+  - {t: 79, speaker: Varga, line: "Those white blinkers are holding fire, Lancer. Let them go."}
+  - {event: neutral-left, enemy: wavering-stormhawk, speaker: Harker, line: "Who broke off? Ceres Wing, get back in line!", notes: {trigger: "A wavering pair leaves (`neutral-left`, the first time)"}}
+  - {t: 90, speaker: Okafor, line: "Ceres has turned, Lancer. Fight your way down to the transport."}
+  - {t: 101, speaker: Ceres Hub Control, portrait: ceres-control, line: "Dock 9's prison tender holds a CDF pilot. His fighter, too."}
+  - {t: 113, speaker: Okafor, line: "Dock 9 ahead. Break the clamps, Lancer. Bring him home."}
+  - {t: 119.9, speaker: Ceres Hub Control, portrait: ceres-control, line: "Four clamps, a gun on each. Break them and the tender lets go.", notes: {trigger: "the halt begins; it waits for Okafor's line"}}
+  - {event: holders-down, swap: bulwark, speaker: Okafor, line: "Bulwark, RTB. Rook, form on Lancer.", notes: {trigger: "The last clamp gun falls (`holders-down`) with the Bulwark flying in the slot"}}
+  - {event: holders-down, swap: leaves, speaker: Okafor, line: "Rook, you're clear. Form on the transport.", notes: {trigger: "The last clamp gun falls with no Rook to join the slot (`--escort none`: the Ember leaves upward)"}}
+  - {event: escort-joined, speaker: Rook, line: "Miss me? Don't answer that. Just shoot.", notes: {trigger: "Rook joins his slot (`escort-joined`, 1 s after)"}}
+  - {t: 133, speaker: Harker, line: "Rook on the Aegis net? Pity. I'd have bought you a drink."}
+  - {t: 141, speaker: Rook, line: "Harker's wing. I flew convoys with them. Doesn't matter now."}
+  - {event: secondary-objective, speaker: Varga, line: "None of the white ones fell. Someone in Ceres will remember that.", notes: {trigger: "Secondary met (the third pair gone, ≈ t=147)"}}
+  - {event: neutral-down, enemy: wavering-stormhawk, speaker: Harker, line: "That one held fire, Aegis. Remember that.", notes: {trigger: "Secondary failed (`neutral-down`, a wavering craft destroyed)"}}
+  - {t: 156, speaker: Ceres Hub Control, portrait: ceres-control, line: "Outer ring holds. Go. Tell Earth that not all of Ceres said yes."}
+  - {t: 163.5, speaker: Okafor, line: "You're clear of the canyon. The transport is at the outer ring."}
+  - {event: level-end, speaker: Okafor, line: "Ceres is lost, but we have Rook back. I'll take that trade.", notes: {trigger: Level end (the closing line)}}
+
+objectives:
+  primary: reach-end
+  secondary: {spared: wavering-stormhawk, label: HOLD FIRE, credits: 100, name: Hold fire on the wavering Ceres Wing}   # none of the six wavering Stormhawks destroyed (a hit does not fail it), met when the third pair has left; 100 in Act 1 terms: pays 655
+
+music:
+  track: 12           # Act 5 A "Hollow Rock" (audio/music track list)
+  start_section: 2    # section 1 the bed under the theme's intro reading (as Levels 25 and 27), the base stem from the canyon
+  full_section: 4     # the full mix from the turn (timed: t=60), held through the halt
+  stem_times:
+    - {t: 60, stems: full, fade: 1}   # the full mix as the lights go red
+  ambience: belt-station   # the belt's station bed (round 60 S.17)
+  end_jingle: mission-complete
+
+difficulty: {}  # the halt cycle's easy (no Talon wave) and hard (a fifth wave at H+11) are its waves' skips; the stat blocks' hooks apply (the Talon's easy pair every 2.0 s, hard 1.3 s and a parting pair; the SAM Nest's easy 6 s and 65°/s, hard salvos of 3 at 95°/s; the Mite's easy 130 px / 0.5 s / 220 px/s, hard 200 px / 300 px/s; the clamp gun's easy 2.6 s, hard pairs; the wavering pairs' easy 8 s hold, hard 40 px lower); the formation lever sizes the rest
+
+briefing:
+  pages:
+    - {speaker: Okafor, image: level-29-ceres-hub, line: "Vorne has told every station to choose. Ceres Hub has not answered: the Consortium is voting, and half its garrison is paid in Helix money. We keep Helix's Talons off the docks while they vote. If the hub turns, we fight our way out down the dock canyon."}
+    - {speaker: Varga, image: level-29-talon, line: "The Ascendancy's fighters are Talons. Their hulls carry a light hex shield: it soaks the first hit and grows back if you let it. Their missile nests fire homing diamonds: shoot them down. And the belt's rocks carry Vrell mites. Shoot the rock before you pass it."}
+  teaser: {speaker: Okafor, line: "Ceres has not chosen yet, Lancer. Fly in as if it had."}
+
+backdrop:
+  # Presentation only: Level 29's Ceres Hub (tools/art/backdrop_l29.py, step ART-B, from the level's data.yaml).
+  # The deep layer is space (the dust band, Ceres's limb, the transport); the canyon tile is opaque, the
+  # outer docks' tile transparent over space. Glows (-glow) are added by the game at their pieces: Block C's
+  # -glow until the turn (t=60), then -glow-red crossfaded over 1 s; coalition-block-3/-4 turn with it (B4).
+  # prison-tender-hold (6 frames) is not placed: the game draws it over prison-tender when the last clamp
+  # gun falls (4 steps a frame, the last held), then rook-launch (sprites) rises out of it.
+  scroll_factors: {deep: 0.12, far: 0.5, ground: 1, low-air: 1.35, high-air: 2.2}   # far, high-air unused
+  ramp: 2
+  haze_colour: 06060a
+  atmosphere:
+    clear: {haze: 0.0}
+  tile_sets:
+    belt-space: {layer: deep, height: 1024}   # space, the sunlit dust band, stars, far rocks
+    dock-canyon: {layer: ground, height: 960}   # the dock canyon in Ceres's crust (sections 2-6)
+    outer-docks: {layer: ground, height: 960}   # the outer docks' girders over space (section 7)
+  pieces:
+    ceres-limb: {layer: deep, size: [480, 760]}
+    cdf-transport: {layer: deep, size: [112, 176]}
+    crust-edge: {layer: ground, size: [480, 1100]}
+    docking-arm-1: {layer: ground, size: [112, 420]}
+    docking-arm-2: {layer: ground, size: [112, 360]}
+    dock-1: {layer: ground, size: [96, 128]}
+    dock-2: {layer: ground, size: [96, 128]}
+    dock-3: {layer: ground, size: [96, 128]}
+    dock-4: {layer: ground, size: [96, 128]}
+    dock-5: {layer: ground, size: [96, 128]}
+    dock-7: {layer: ground, size: [96, 128]}
+    dock-8: {layer: ground, size: [96, 128]}
+    helix-block: {layer: ground, size: [208, 176]}
+    helix-pad: {layer: ground, size: [96, 96]}
+    coalition-block-1: {layer: ground, size: [128, 144]}
+    coalition-block-2: {layer: ground, size: [128, 144]}
+    coalition-block-3: {layer: ground, size: [128, 144]}
+    coalition-block-4: {layer: ground, size: [128, 144]}
+    block-c: {layer: ground, size: [480, 224]}
+    red-block-d: {layer: ground, size: [208, 176]}
+    red-pad: {layer: ground, size: [96, 96]}
+    red-block-e: {layer: ground, size: [480, 200]}
+    dock-6: {layer: ground, size: [160, 208]}
+    dock-9: {layer: ground, size: [480, 540]}
+    prison-tender: {layer: ground, size: [128, 288]}
+    prison-tender-hold: {layer: ground, size: [128, 288], frames: 6, fps: 15}
+    canyon-mouth: {layer: ground, size: [480, 1280]}
+    outer-dock-1: {layer: ground, size: [144, 112]}
+    outer-dock-2: {layer: ground, size: [144, 112]}
+    outer-dock-3: {layer: ground, size: [144, 112]}
+    outer-ring: {layer: ground, size: [480, 240]}
+    ore-hauler: {layer: low-air, size: [64, 64], headings: 16}
+    cdf-patrol: {layer: low-air, size: [56, 56], headings: 16}
+    talon-pair: {layer: low-air, size: [48, 48], headings: 16}
+  placed:
+    # Ceres's sunlit limb on the right
+    - {piece: ceres-limb, t: 4.0, x: 240}
+    # the CDF transport at the rendezvous
+    - {piece: cdf-transport, t: 168.0, x: 330}
+    # the crust's edge, its top 120 rows over the canyon tile's seam (ground 3900)
+    - {piece: crust-edge, t: 26.667, x: 240}
+    # a docking arm off the crust
+    - {piece: docking-arm-1, t: 21.333, x: 64}
+    # a docking arm off the crust
+    - {piece: docking-arm-2, t: 21.583, x: 420}
+    # dock 1, on the left rim
+    - {piece: dock-1, t: 30, x: 52}
+    # dock 2, on the right rim
+    - {piece: dock-2, t: 36, x: 428}
+    # dock 3, on the left rim
+    - {piece: dock-3, t: 42, x: 52}
+    # dock 4, on the right rim
+    - {piece: dock-4, t: 48, x: 428}
+    # dock 5, on the left rim
+    - {piece: dock-5, t: 53, x: 52}
+    # dock 7, on the left rim
+    - {piece: dock-7, t: 94, x: 52}
+    # dock 8, on the right rim
+    - {piece: dock-8, t: 102, x: 428}
+    # Helix's dock block (nests x 90, 140 at t~34)
+    - {piece: helix-block, t: 36.92, x: 110}
+    # a Helix turret pad (the nest x 400 at t~34)
+    - {piece: helix-pad, t: 36.92, x: 400}
+    # a Coalition block on the rim
+    - {piece: coalition-block-1, t: 40, x: 440}
+    # a Coalition block on the rim
+    - {piece: coalition-block-2, t: 47, x: 40}
+    # a Coalition block on the rim (turns red with Block C)
+    - {piece: coalition-block-3, t: 66, x: 44}
+    # a Coalition block on the rim (turns red with Block C)
+    - {piece: coalition-block-4, t: 70, x: 436}
+    # Block C across the canyon: its nests (x 120, 240, 360) 160 px below the top edge at t=60
+    - {piece: block-c, t: 61.817, x: 240}
+    # a turned block (nests x 70, 120 at t~84)
+    - {piece: red-block-d, t: 86.92, x: 100}
+    # a turned turret pad (the nest x 410 at t~84)
+    - {piece: red-pad, t: 86.92, x: 410}
+    # a turned bridging block (nests x 130, 240, 350 at t~100)
+    - {piece: red-block-e, t: 102.92, x: 240}
+    # Dock 6: the crane gantry over the loyalists' locker (the secret, x 430 at t~108)
+    - {piece: dock-6, t: 110.82, x: 420}
+    # Dock 9 on the halted screen (ground rows 11680..+539): the clamp seats
+    - {piece: dock-9, t: 120.0, x: 240}
+    # the prison tender in the berth (screen 240, 250 on the halted screen)
+    - {piece: prison-tender, t: 120.939, x: 240}
+    # the canyon's mouth from the outer docks' seam (ground 12220) on
+    - {piece: canyon-mouth, t: 128.583, x: 240}
+    # an outer berth platform (the nest x 90 at t~131)
+    - {piece: outer-dock-1, t: 133.433, x: 90}
+    # an outer berth platform (the nest x 240 at t~131)
+    - {piece: outer-dock-2, t: 133.433, x: 240}
+    # an outer berth platform (the nest x 390 at t~131)
+    - {piece: outer-dock-3, t: 133.433, x: 390}
+    # the outer ring: its lower edge on the bottom edge at the level's end
+    - {piece: outer-ring, t: 170.75, x: 240}
+    # a loyalist hauler under Talon fire
+    - {piece: ore-hauler, t: 13.0, x: 420, path: [[11.0, 0, 0], [19.0, -340, 80]]}
+    # the Talons chasing it
+    - {piece: talon-pair, t: 13.4, x: 470, path: [[11.4, 0, 0], [19.4, -340, 80]]}
+    # a CDF patrol crossing the canyon
+    - {piece: cdf-patrol, t: 42.0, x: 40, path: [[39.0, 0, 0], [47.0, 400, -60]]}
+    # a hauler fleeing the red canyon
+    - {piece: ore-hauler, t: 96.0, x: 60, path: [[93.0, 0, 0], [101.0, 360, 40]]}
+    # CDF patrol and mutineers dogfighting
+    - {piece: cdf-patrol, t: 140.0, x: 440, path: [[137.0, 0, 0], [145.0, -400, 60]]}
+    # the Talons on its tail
+    - {piece: talon-pair, t: 140.5, x: 480, path: [[137.5, 0, 0], [145.5, -400, 60]]}
+    # the hauler that releases the armour patch (B2: a drop at (240, 380) at t=150)
+    - {piece: ore-hauler, t: 150.0, x: 30, path: [[146.0, 0, 0], [154.0, 420, 0]]}

@@ -1,0 +1,59 @@
+# Shard Drone stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/schemas-units/README.md
+# M9 part D, step D2 (Level 31): the approved stat block (round 60) as data. New in it (flown from step D1): the
+# `air-link` attack (a wave is one linked group: each drone linked to the next, a `circle` closed; the band touches the
+# ship for the attack's `bullet` class with its cooldown, lit `tell` s after the group's last drone is on the field; a
+# line abreast flies `spacing` px apart; a ring's centre descends and drifts toward the ship's x) and its hard hook
+# `air_link`. Under the target-the-objective hook (Level 31) a lit link also sweeps the escorted hull's sections (the
+# hull's own damage). HP 14 base: the beam era's ×2 flies it at 28.
+name: Shard Drone
+faction: Jovian Ascendancy
+layer: air        # `space` in vacuum: the air layer
+tier: small
+size: [40, 40]    # sprite px
+hitbox: [26, 26]
+parts: single
+orientation: radial   # a three-bladed gold shard spinning 360°/s
+hp: 14            # base; the beam era's ×2 flies it at 28: 0.22 s at the L31 reference of 128
+armour: none
+speed: 45         # px/s down the field (a line); a ring's centre 40
+machine: true     # the EMP Burst stuns it 3 s: its links drop, then relight after the tell
+movement:
+  sine: {amplitude: 30, period: 5}      # a line abreast's sway: 30 px to each side (60 px), s per full swing
+  orbit: {radius: 64, turn_rate: 60}    # a circle: px round its centre, °/s
+attacks:
+  - pattern: air-link
+    name: link
+    bullet: medium         # a touch on the ship
+    air_link: {band: 6, width: 8, cooldown: 0.5, tell: 0.8, spacing: 120, ring: {descend: 40, follow: 10}}   # px contact band, px drawn, s between touches, s lit after the group is in; px apart in a line; a ring's centre px/s down and toward the ship's x
+    notes:
+      text: '`link`: an energy beam between neighbouring drones (line: 2–3 links; circle: 4, closed), {air_link.width} px drawn, a {air_link.band} px contact band, `{bullet}` {damage} per touch with a {air_link.cooldown} s cooldown, the ship not pushed; lit {air_link.tell} s after the group''s last drone enters (the flicker is the tell)'
+  - pattern: aimed
+    name: bolt
+    bullet: small
+    interval: 3.0          # s
+    speed: 150             # px/s
+    first_shot_delay: 1.0  # s after it is on the screen
+    notes:
+      text: 'each drone also fires an `aimed` bolt every {interval} s (standard {speed} px/s, `{bullet}` {damage})'
+formations:
+  - {name: line abreast, size: [3, 4]}
+  - {name: circle, size: [4, 4]}
+weak_points: []
+drops: []
+traits: [piercing, spread, forward]
+bounty: 14
+first_level: 31
+difficulty:
+  easy: {attacks: {bolt: {interval: 4.0}}}
+  hard: {air_link: {tell: 0.5}, attacks: {bolt: {interval: 2.4}}}
+notes:
+  layer: ' (`space` in vacuum: the air layer)'
+  orientation: (a three-bladed gold shard spinning 360°/s)
+  armour: none (not on the [enemy shields](../../README.md#enemy-shields)' Act 5 list). HP {hp} base flies at 28 with the beam era's ×2
+  speed: 'down the field (a line); a circle''s centre {attacks.0.air_link.ring.descend} px/s'
+  movement: 'the group flies as one: **line abreast** (3–4 drones {attacks.0.air_link.spacing} px apart) descending with a `sine` sway of {movement.sine.amplitude} px each side over {movement.sine.period} s; or **circle** (4 drones on a {movement.orbit.radius} px radius turning {movement.orbit.turn_rate}°/s round a centre that descends at {attacks.0.air_link.ring.descend} px/s and drifts toward the ship''s x at {attacks.0.air_link.ring.follow} px/s)'
+  formations: (at most two linked groups on the screen)
+  weak_points: (the hub's red light is drawn only)
+  death: '`small` mechanical burst, gold shards; its links snap with a spark'
+  used_in: later Act 5 levels may use it (their docs decide)
+  difficulty: 'easy: groups of 3 only (the level''s waves), bolts every 4 s; hard: groups of 4 only, links lit after 0.5 s, bolts every 2.4 s'

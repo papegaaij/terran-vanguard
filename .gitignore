@@ -8,6 +8,7 @@ build/
 # Claude's working notes and step briefs (local only)
 /briefs/
 /*-gaps*.md
+/*-notes.md
 /act2-playtest.md
 /act2-final.md
 /pt2-*.md

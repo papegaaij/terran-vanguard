@@ -73,7 +73,7 @@ Used across level, enemy, weapon and hangar-intel documents so they can be compa
   `anti-ground`, `anti-sub`, `area`, `shield-breaker` (a hit empties an enemy's shield at once and
   holds its regrowth back; what a shield is: the [enemy shield rule](enemies/README.md#enemy-shields);
   the [Tesla Coil Pod](player/weapons/tesla-coil-pod/README.md) from L29, the EMP Burst strips shields
-  from L15; draft, pending the user's review in round 60, Q1).
+  from L15; draft, approved in round 60, Q1).
 - **Threat profile** (per level, shown in the hangar intel panel): dominant layers, attack
   directions, density (1–5), recommended weapon traits, hazards, boss.
 

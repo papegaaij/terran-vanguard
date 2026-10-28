@@ -1,6 +1,7 @@
 package vanguard.game.screen;
 
 import java.util.Optional;
+import vanguard.content.Channel;
 import vanguard.content.Expression;
 import vanguard.content.LevelData;
 import vanguard.content.SpecialsData;
@@ -142,37 +143,17 @@ final class RadioEvents {
                         warning.distorted().orElse(false),
                         RadioQueue.Priority.URGENT);
             }
-            case RADIO -> {
-                RadioCue cue = sortie.script().radio().get(events.value(i));
-                if (cue.trigger() == CueTrigger.MISSION_FAILED) {
-                    failureLine = Optional.of(failedGroupLine(cue));
-                    return;
-                }
-                int unit = LevelScreen.cueUnit(cue.trigger(), sortie);
-                if (barks != null && LevelScreen.scriptedForBarks(cue.trigger())) {
-                    // Rook's first kill (M5 part B), the first loop-back (M5 part D): a scripted
-                    // Rook line for the barks' spacing.
-                    barks.scripted(cue.speaker(), sortie.realSeconds());
-                }
-                RadioQueue.Message message = queue(
-                        cue.speaker(),
-                        cue.portrait(),
-                        cue.expression(),
-                        RadioSchedule.line(cue.line(), unit, allyName(unit), escortSide()),
-                        cue.distorted(),
-                        radioSchedule.priority(events.value(i)),
-                        // Round 45 B.a: a line held after its event (the Choir's words past the Colossus's death roar)
-                        (float) level.radioDelay(events.value(i)));
-                if (cue.trigger() == CueTrigger.SECONDARY_OBJECTIVE) {
-                    secondaryLine = message;
-                }
-                int index = events.value(i);
-                double duck =
-                        index < level.radio().size() ? level.radio().get(index).musicDuckDb() : 0;
-                if (duck > 0) {
-                    // M8 part F: the music ducks this much under the line while it plays (Level 26's Choir).
-                    duckLine = message;
-                    duckDb = duck;
+            case RADIO -> cueLine(events.value(i), 0);
+            // M9 part B (design/campaign Level 29, Radio): with no Rook to join the swap (an `--escort none` run: the
+            // Ember launches and leaves upward) Rook's rescue line plays all the same as the Ember leaves the hold,
+            // a join's length after the release (he flies elsewhere in the formation).
+            case ESCORT_SWAP -> {
+                if (events.value(i) == vanguard.sim.EscortSwap.LEAVES) {
+                    for (int c = 0; c < sortie.script().radio().size(); c++) {
+                        if (sortie.script().radio().get(c).trigger() == CueTrigger.ESCORT_JOINED) {
+                            cueLine(c, LEAVING_LINE_DELAY);
+                        }
+                    }
                 }
             }
             case WINGMAN_CRITICAL -> {
@@ -199,6 +180,46 @@ final class RadioEvents {
                 failureLine = Optional.empty();
             }
             default -> {}
+        }
+    }
+
+    /** M9 part B: Rook's rescue line waits a join's length after the release when the Ember leaves (s). */
+    static final float LEAVING_LINE_DELAY = 1;
+
+    /** Radio cue {@code line} set off, held {@code extraDelay} s past its own delay: its line queued. */
+    private void cueLine(int line, float extraDelay) {
+        RadioCue cue = sortie.script().radio().get(line);
+        if (cue.trigger() == CueTrigger.MISSION_FAILED) {
+            failureLine = Optional.of(failedGroupLine(cue));
+            return;
+        }
+        int unit = LevelScreen.cueUnit(cue.trigger(), sortie);
+        if (barks != null && LevelScreen.scriptedForBarks(cue.trigger())) {
+            // Rook's first kill (M5 part B), the first loop-back (M5 part D): a scripted
+            // Rook line for the barks' spacing.
+            barks.scripted(cue.speaker(), sortie.realSeconds());
+        }
+        RadioQueue.Message message = queue(
+                cue.speaker(),
+                cue.portrait(),
+                cue.expression(),
+                sectionLine(RadioSchedule.line(cue.line(), unit, allyName(unit), escortSide()), unit),
+                cue.distorted(),
+                radioSchedule.priority(line),
+                // Round 45 B.a: a line held after its event (the Choir's words past the Colossus's death roar)
+                (float) level.radioDelay(line) + extraDelay,
+                // M9 part A: the line's channel (its own, else its speaker's).
+                line < level.radio().size()
+                        ? level.radio().get(line).channel(services.content.voices()) == Channel.ENEMY
+                        : services.content.voices().channelOf(cue.speaker()) == Channel.ENEMY);
+        if (cue.trigger() == CueTrigger.SECONDARY_OBJECTIVE) {
+            secondaryLine = message;
+        }
+        double duck = line < level.radio().size() ? level.radio().get(line).musicDuckDb() : 0;
+        if (duck > 0) {
+            // M8 part F: the music ducks this much under the line while it plays (Level 26's Choir).
+            duckLine = message;
+            duckDb = duck;
         }
     }
 
@@ -239,6 +260,16 @@ final class RadioEvents {
                 cue.requiresNot());
     }
 
+    /**
+     * M9 part D: a hull escort's line with {@code {section}} as the hull section {@code unit}'s name ("The bow's
+     * hit!"; the voice lookup finds that section's take); other lines as they are.
+     */
+    private String sectionLine(String line, int unit) {
+        return unit >= 0 && sortie.hullEscort()
+                ? vanguard.content.voice.VoiceLines.sectionLine(line, sortie.allyName(unit))
+                : line;
+    }
+
     /** M5 part E: the name {@code {ally}} reads for convoy unit {@code unit}: a naval convoy's ship ("Halvorsen"); "" otherwise. */
     private String allyName(int unit) {
         return unit >= 0 && (sortie.navalConvoy() || sortie.groundAllies()) ? sortie.allyName(unit) : "";
@@ -260,7 +291,15 @@ final class RadioEvents {
             String line,
             boolean distorted,
             RadioQueue.Priority priority) {
-        return queue(speaker, portrait, expression, line, distorted, priority, 0);
+        return queue(
+                speaker,
+                portrait,
+                expression,
+                line,
+                distorted,
+                priority,
+                0,
+                services.content.voices().channelOf(speaker) == Channel.ENEMY);
     }
 
     /** As above, the line held {@code delay} seconds before it may open (round 45 B.a). */
@@ -271,7 +310,8 @@ final class RadioEvents {
             String line,
             boolean distorted,
             RadioQueue.Priority priority,
-            float delay) {
+            float delay,
+            boolean intercepted) {
         Optional<Voices.Voice> voice = services.voices.radio(speaker, line, expression);
         return radio.add(
                 speaker,
@@ -279,9 +319,11 @@ final class RadioEvents {
                 expression,
                 line,
                 distorted,
-                priority,
+                // M9 part A (design/ui/hud, Act 5 additions): an intercepted line is never urgent.
+                intercepted && priority == RadioQueue.Priority.URGENT ? RadioQueue.Priority.EVENT : priority,
                 voice.map(Voices.Voice::path),
                 voice.map(Voices.Voice::seconds).orElse(0f),
-                delay);
+                delay,
+                intercepted);
     }
 }

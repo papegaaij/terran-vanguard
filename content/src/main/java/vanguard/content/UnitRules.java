@@ -67,7 +67,7 @@ final class UnitRules {
         return era * returningFactor(content, enemy, inLevel);
     }
 
-    private static double returningFactor(Content content, EnemyData enemy, InLevel inLevel) {
+    static double returningFactor(Content content, EnemyData enemy, InLevel inLevel) {
         EnemyBasisData.SmallActHp small = content.enemyBasis().smallActHp();
         boolean smallUnit = enemy.tier() == Tier.SMALL
                 && small.units().stream()
@@ -155,7 +155,22 @@ final class UnitRules {
             InLevel inLevel,
             double arcFacing,
             Optional<Double> ramAfter) {
-        EnemyData stat = content.enemy(slug);
+        return enemy(content, content.enemy(slug), slug, difficulty, change, inLevel, arcFacing, ramAfter);
+    }
+
+    /**
+     * M9 part B: as {@link #enemy(Content, String, Difficulty, Optional, InLevel, double, Optional)} of the stat block
+     * {@code stat} (a wave leader's airframe, {@link EnemyData#asLeader}) flown as {@code slug}.
+     */
+    static EnemySpec enemy(
+            Content content,
+            EnemyData stat,
+            String slug,
+            Difficulty difficulty,
+            Optional<LevelData.EnemyChange> change,
+            InLevel inLevel,
+            double arcFacing,
+            Optional<Double> ramAfter) {
         double actHp = actHpFactor(content, stat, inLevel);
         // M8 part C (gap check D2): a unit entering under water flies its stat block's underwater changes.
         EnemyData enemy = inLevel.water() ? stat.inWater() : stat;
@@ -178,6 +193,8 @@ final class UnitRules {
         Optional<EnemySpec.Spawner> spawner = enemy.attacks().stream()
                 .flatMap(attack -> attack.spawn().stream())
                 .filter(EnemyData.Spawn::periodic)
+                // M9 part C: a stream launcher is a launcher (EnemySpec.launcher, MinefieldRules), not a spawner.
+                .filter(spawn -> spawn.stream().isEmpty())
                 .findFirst()
                 .map(spawn -> new EnemySpec.Spawner(
                         // M8 part D: a reef's fry draw their ram sooner than a school's (the spawn's ram_after).
@@ -234,7 +251,10 @@ final class UnitRules {
                                 .enemyHp(head.map(EnemyData.PartData::hp).orElse(enemy.hp()) * actHp, difficulty),
                         SimSpecs.hitbox(enemy.hitbox()),
                         Layers.of(enemy.layer()),
-                        content.enemyBasis().contactDamage().get(enemy.tier()),
+                        // M9 part B (design/campaign Level 29): a neutral craft has no contact (the ship passes under).
+                        enemy.isNeutral()
+                                ? 0
+                                : content.enemyBasis().contactDamage().get(enemy.tier()),
                         enemy.tier().compareTo(Tier.SMALL) <= 0,
                         head.map(EnemyData.PartData::bounty).orElse(enemy.bounty()),
                         movement.drift()
@@ -352,40 +372,57 @@ final class UnitRules {
         // M8 part D: a rise (the Abyss Ray) (AbyssRules).
         // M8 part E: a coil (the Spiral Nautilus) and a slowing ring (the Siren) (TrenchRules).
         // M8 part F: a lunge from a lure (the Glow Angler) (DarkRules).
-        return DarkRules.unit(
+        // M9 part A: the hex shield and a laser-line (BeltRules).
+        // M9 part C: a mine layer, facing armour, a launcher and a train's turret cars (MinefieldRules).
+        // M9 part D: a dash, air links and an aimed salvo's hatch tell (TugRules).
+        return TugRules.unit(
                 content,
                 enemy,
                 difficulty,
-                TrenchRules.unit(
+                MinefieldRules.unit(
                         content,
                         enemy,
                         difficulty,
-                        AbyssRules.unit(
+                        inLevel,
+                        BeltRules.unit(
+                                content,
                                 enemy,
-                                FoundryRules.unit(
+                                difficulty,
+                                inLevel,
+                                DarkRules.unit(
+                                        content,
                                         enemy,
                                         difficulty,
-                                        StormRules.unit(
+                                        TrenchRules.unit(
+                                                content,
                                                 enemy,
                                                 difficulty,
-                                                SiegeRules.unit(
-                                                        content,
+                                                AbyssRules.unit(
                                                         enemy,
-                                                        difficulty,
-                                                        actHp,
-                                                        TerrainRules.anchor(
-                                                                content,
+                                                        FoundryRules.unit(
                                                                 enemy,
                                                                 difficulty,
-                                                                MarsRules.kite(
+                                                                StormRules.unit(
                                                                         enemy,
-                                                                        hook,
-                                                                        MarsRules.burrower(
+                                                                        difficulty,
+                                                                        SiegeRules.unit(
                                                                                 content,
                                                                                 enemy,
-                                                                                hook,
                                                                                 difficulty,
-                                                                                machine)))))))));
+                                                                                actHp,
+                                                                                TerrainRules.anchor(
+                                                                                        content,
+                                                                                        enemy,
+                                                                                        difficulty,
+                                                                                        MarsRules.kite(
+                                                                                                enemy,
+                                                                                                hook,
+                                                                                                MarsRules.burrower(
+                                                                                                        content,
+                                                                                                        enemy,
+                                                                                                        hook,
+                                                                                                        difficulty,
+                                                                                                        machine))))))))))));
     }
 
     /** M5 part E: whether {@code attack} is a proximity ring (a {@code ring} fired within a reach, the Driftjelly's). */
@@ -507,6 +544,8 @@ final class UnitRules {
         List<EnemyData.Attack> attacks = enemy.attacks().stream()
                 .filter(attack -> !attack.pattern().equals("spawn"))
                 .filter(attack -> !attack.pattern().equals("laser-sweep"))
+                // M9 part A: a laser-line is the unit's line (EnemySpec.laserLine, BeltRules), not a gun.
+                .filter(attack -> !BeltRules.laserLine(attack))
                 .filter(attack -> !attack.pattern().equals("pounce"))
                 // M5 part E: a proximity ring is its own attack (EnemySpec.ring), not a gun.
                 .filter(attack -> !proximityRing(attack))
@@ -523,6 +562,10 @@ final class UnitRules {
                 // M8 part F: a lunging unit's ring is its lunge's (EnemySpec.lunge, DarkRules), not a gun.
                 .filter(attack ->
                         enemy.lungeRing().filter(ring -> ring == attack).isEmpty())
+                // M9 part C: a train's turret cars fire their attack (EnemySpec.Cars, MinefieldRules), not the engine.
+                .filter(attack -> !MinefieldRules.carAttack(enemy, attack))
+                // M9 part D: an air link is the unit's links (EnemySpec.airLink, TugRules), not a gun.
+                .filter(attack -> !TugRules.airLink(attack))
                 .filter(attack -> attack.firesOn(difficulty))
                 .filter(attack ->
                         attack.away().isEmpty() || enemy.movement().walk().isEmpty())
@@ -562,16 +605,22 @@ final class UnitRules {
         int fan = attack.count()
                 .map(count -> hook.flatMap(EnemyData.Hook::fanCount).orElse(count))
                 .orElse(1);
-        Optional<EnemyGun.MineSpec> mine = attack.mine()
-                .map(spore -> new EnemyGun.MineSpec(
-                        spore.arm(),
+        Optional<EnemyGun.MineSpec> mine = attack.mine().map(spore -> new EnemyGun.MineSpec(
+                        // M9 part C: hard's quicker arming of a line mine (the hook mine.arm).
+                        hook.flatMap(EnemyData.Hook::mine)
+                                .flatMap(EnemyData.MineChange::arm)
+                                .orElse(spore.arm()),
                         spore.life(),
                         spore.drift(),
                         spore.hp(),
                         hook.flatMap(EnemyData.Hook::ring).orElse(spore.ring()),
                         bulletDamage(content, spore.ringBullet()),
-                        hook.flatMap(EnemyData.Hook::mineBursts).orElse(true),
-                        spore.credits()));
+                        // M9 part C: a line mine never bursts on its own.
+                        !spore.lineMine()
+                                && hook.flatMap(EnemyData.Hook::mineBursts).orElse(true),
+                        spore.credits())
+                // M9 part C (design/enemies/space/minelayer): a line mine's proximity, blink, blast and chain.
+                .withLine(MinefieldRules.lineMine(content, spore)));
         Optional<EnemyGun.MortarSpec> mortar = attack.mortar()
                 .map(lob -> new EnemyGun.MortarSpec(
                         lob.marker(),

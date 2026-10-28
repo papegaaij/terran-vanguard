@@ -17,6 +17,9 @@ import java.util.Optional;
  *     the hab, the rail line); empty for none. Not with holds or an arena.
  * @param belts M7 part F: the conveyor belts on the ground (Level 19), which carry the ground units standing or walking
  *     on them; empty for none
+ * @param none M9 part C (design/campaign Level 30, {@code ground: none}): the level has no ground layer at all (space
+ *     only): the bomb deliveries ({@link WeaponSpec.Delivery#needsGround()}) fire nothing there and read {@code NO
+ *     GROUND} ({@link PlayerFire#idleReason}); no road, water, terrain, gates, no-surface zones or belts with it
  */
 public record GroundSpec(
         Optional<Road> road,
@@ -24,40 +27,65 @@ public record GroundSpec(
         Optional<TerrainSpec> terrain,
         List<Gate> gates,
         List<NoSurface> noSurface,
-        List<Belt> belts) {
+        List<Belt> belts,
+        boolean none) {
     /** Plain land: no road, terrain, gates, no-surface zones or belts. */
     public static final GroundSpec NONE =
             new GroundSpec(Optional.empty(), false, Optional.empty(), List.of(), List.of(), List.of());
+
+    /** M9 part C: no ground layer at all (Level 30, space only). */
+    public static final GroundSpec SPACE =
+            new GroundSpec(Optional.empty(), false, Optional.empty(), List.of(), List.of(), List.of(), true);
 
     public GroundSpec {
         gates = List.copyOf(gates);
         noSurface = List.copyOf(noSurface);
         belts = List.copyOf(belts);
+        if (none
+                && (road.isPresent()
+                        || water
+                        || terrain.isPresent()
+                        || !gates.isEmpty()
+                        || !noSurface.isEmpty()
+                        || !belts.isEmpty())) {
+            throw new IllegalArgumentException("a level without a ground layer has nothing on it (M9 part C)");
+        }
+    }
+
+    /** A level with a ground layer (every level before M9 part C). */
+    public GroundSpec(
+            Optional<Road> road,
+            boolean water,
+            Optional<TerrainSpec> terrain,
+            List<Gate> gates,
+            List<NoSurface> noSurface,
+            List<Belt> belts) {
+        this(road, water, terrain, gates, noSurface, belts, false);
     }
 
     /** These ground with another {@code road}. */
     public GroundSpec withRoad(Optional<Road> road) {
-        return new GroundSpec(road, water, terrain, gates, noSurface, belts);
+        return new GroundSpec(road, water, terrain, gates, noSurface, belts, none);
     }
 
     /** These ground with another {@code water}. */
     public GroundSpec withWater(boolean water) {
-        return new GroundSpec(road, water, terrain, gates, noSurface, belts);
+        return new GroundSpec(road, water, terrain, gates, noSurface, belts, none);
     }
 
     /** These ground with another {@code terrain}. */
     public GroundSpec withTerrain(Optional<TerrainSpec> terrain) {
-        return new GroundSpec(road, water, terrain, gates, noSurface, belts);
+        return new GroundSpec(road, water, terrain, gates, noSurface, belts, none);
     }
 
     /** These ground with another {@code noSurface}. */
     public GroundSpec withNoSurface(List<NoSurface> noSurface) {
-        return new GroundSpec(road, water, terrain, gates, noSurface, belts);
+        return new GroundSpec(road, water, terrain, gates, noSurface, belts, none);
     }
 
     /** These ground with another {@code belts}. */
     public GroundSpec withBelts(List<Belt> belts) {
-        return new GroundSpec(road, water, terrain, gates, noSurface, belts);
+        return new GroundSpec(road, water, terrain, gates, noSurface, belts, none);
     }
 
     /**

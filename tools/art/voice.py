@@ -30,8 +30,9 @@ logged (~/.cache/tv-tts/raw/voice/render-log.json and stdout).
 Post: the Choir's layering (choir() of tools/concept/audio/tts_r18.py) for a voice with
 `layering: choir`; then radio filter b (radio() there) for a radio line, the same plus dropouts
 and more crackle for a distorted one, the public-address filter (pa() there: horn band, slap
-echoes, a hall) for a voice with `filter: pa` (the Level 06 perimeter beacon), and no filter for
-a briefing page (dry: the same mastering, -16 LUFS, -1.5 dBFS ceiling).
+echoes, a hall) for a voice with `filter: pa` (the Level 06 perimeter beacon), the enemy channel's filter (enemy()
+below) for a voice with `filter: enemy` (Vorne, Harker; M9 part B) and for an intercepted briefing page (`channel:
+enemy`), and no filter for any other briefing page (dry: the same mastering, -16 LUFS, -1.5 dBFS ceiling).
 A radio line whose text ends in a dash is cut off (Level 10's Lifeline Three, "…What is that—",
 as auditioned in concept round 32): the dash is spoken as a comma, Whisper (faster-whisper
 base.en, in the Dia venv ~/.cache/tv-tts/venv-dia) times the take's words, and the take is cut hard
@@ -43,6 +44,8 @@ fading hiss); the file ends there, without the filter's closing click. The word 
 Rerun: python3 tools/art/voice.py            render what is missing, delete unused files
        python3 tools/art/voice.py --keep     the same, but only list the unused files
        python3 tools/art/voice.py --list     only print what would be rendered or deleted
+       python3 tools/art/voice.py --only <source prefix> ...   render only the missing lines whose source starts with
+                                             a prefix (repeatable: `--only "act-5-the-belt briefing"`); implies --keep
 Seeds are fixed, but GPU sampling is not bit-exact across drivers, so a rerun can differ slightly.
 """
 import json
@@ -270,6 +273,42 @@ def cut(line, x, s):
     return y
 
 
+def enemy(x, s):
+    """The enemy channel's filter (M9 part B; the voice README, Act 5 voices; auditioned in round 60 as enemy() of
+    tools/concept/audio/tts_r60.py): radio filter b's band (300 Hz-3.4 kHz, two passes), hiss with its slow flutter and
+    saturation, without its crackle and clicks; a steady static bed under the whole line (400 Hz-4 kHz band noise 26 dB
+    under the voice's RMS, swelling +-3 dB at 0.25 Hz); no dropouts. The intercept's static sweep in and out is the
+    game's (it plays instead of the squelch), not baked in. Mono float at s.SR in, (1, n) out at -16 LUFS."""
+    import numpy as np
+    sr = s.SR
+    rng = np.random.default_rng(60)
+    x = x / max(1e-9, np.max(np.abs(x))) * 0.8
+    pad = int(0.15 * sr)
+    voice = np.concatenate([np.zeros(pad), x, np.zeros(pad)])
+    n = len(voice)
+    t = np.arange(n) / sr
+    flutter = 1 + 0.15 * s.sine(0.7, n) + 0.1 * s.sine(3.1, n)
+    y = voice + s.noise(n, rng) * 0.019 * flutter
+    for _ in range(2):
+        y = s.svf(y, 300, mode="hp")
+        y = s.svf(y, 3400, mode="lp")
+    y = s.saturate(y * 1.6, 2.0) * 0.8
+    band = s.noise(n, rng)
+    for _ in range(2):
+        band = s.svf(band, 400, mode="hp")
+        band = s.svf(band, 4000, mode="lp")
+    active = np.abs(y) > 0.02
+    v_rms = np.sqrt(np.mean(y[active] ** 2)) if active.any() else 0.1
+    band = band / (np.sqrt(np.mean(band ** 2)) + 1e-12) * v_rms * 10 ** (-26 / 20)
+    band *= 10 ** (3 * np.sin(2 * np.pi * 0.25 * t) / 20)
+    y = y + band
+    # 5 ms fades: the channel opens and closes under the game's sweep, without filter b's clicks
+    fade = int(0.005 * sr)
+    y[:fade] *= np.linspace(0, 1, fade)
+    y[-fade:] *= np.linspace(1, 0, fade)
+    return s.master(y[None, :], target_lufs=-16.0, ceiling_db=-1.5)
+
+
 def post(line, log_entry):
     import numpy as np
     r18 = _filters()
@@ -281,6 +320,8 @@ def post(line, log_entry):
         x = x / max(1e-9, np.max(np.abs(x))) * 0.8
         pad = np.zeros(int(0.1 * s.SR))
         y = s.master(np.concatenate([pad, x, pad])[None, :], target_lufs=-16.0, ceiling_db=-1.5)
+    elif line["filter"] == "enemy":
+        y = enemy(x, s)
     elif cut_word(line):
         y = cut(line, x, s)
     else:
@@ -311,6 +352,11 @@ def main(args):
                    cwd=ROOT, check=True)
     lines = {line["path"]: line for line in json.loads(LINES.read_text())}
     todo = [line for path, line in lines.items() if not (ROOT / "assets" / path).exists()]
+    only = [args[i + 1] for i, a in enumerate(args) if a == "--only"]
+    if only:
+        # M9 part B: a step renders its own lines only; the others (and the unused files) are left alone
+        todo = [line for line in todo if any(line["source"].startswith(prefix) for prefix in only)]
+        args = args + ["--keep"]
     # Only files named by a key are this renderer's: a speaker's stage sound (the Choir sings,
     # copied by :pipeline:copyPlaceholderStageSounds) stays.
     unused = sorted(p for p in ASSETS.rglob("*.ogg")

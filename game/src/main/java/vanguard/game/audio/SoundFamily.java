@@ -50,6 +50,11 @@ abstract class SoundFamily {
      * {@link FlightSounds#UNIT_LOOP_LEVEL}), starting or stopping it, panned to {@code pan}; returns its new level.
      */
     final float fadeLoop(Sfx loop, float level, float target, float pan) {
+        return fadeLoop(loop, level, target, pan, 1);
+    }
+
+    /** M9 part C: as {@link #fadeLoop(Sfx, float, float, float)}, the loop started at {@code pitch}. */
+    final float fadeLoop(Sfx loop, float level, float target, float pan, float pitch) {
         if (target <= 0 && level <= 0) {
             if (bank.looping(loop)) {
                 bank.stop(loop);
@@ -59,7 +64,11 @@ abstract class SoundFamily {
         float now = level;
         if (!bank.looping(loop)) {
             now = 0;
-            bank.loop(loop, 0);
+            if (pitch == 1) {
+                bank.loop(loop, 0);
+            } else {
+                bank.loop(loop, 0, pitch);
+            }
         }
         float step = FlightSounds.UNIT_LOOP_LEVEL / FlightSounds.UNIT_FADE_STEPS;
         now = target > now ? Math.min(target, now + step) : Math.max(target, now - step);

@@ -24,3 +24,8 @@ Round 60 (Act 5 "The Belt" units, step ART-P-units): a/b mockups by `tools/conce
 - **Negative prompt:** the shared list above.
 - **Animation brief:** as A.
 - **Mockup generator:** `python3 tools/concept/enemies_r60.py rail-bunker b`
+
+## laser-line-capture-r61-a
+
+Concept round 61, frames of the [capture rig](../../../concept/prompts.md#belt-rig-capture-r61-a)'s run (a): the
+480×540 play field at rig ≈ 49.5, 50.3 and 51.0 s (the telegraph, its flicker, the live line).

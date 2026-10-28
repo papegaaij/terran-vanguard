@@ -9,14 +9,31 @@ import java.util.Optional;
  * @param speaker the speaker's short name, as on the radio ({@code Okafor}, {@code Varga})
  * @param expression the portrait's expression, neutral when not given
  * @param image the image's name, a file {@code ui/briefing/<image>.png} in the assets
+ * @param channel M9 part A (design/ui/briefing, Intercepted transmissions): the channel the page comes over, {@code
+ *     friendly} when not given; {@code enemy}: an intercepted page (Vorne's broadcast)
  */
-public record BriefingPage(String speaker, String line, Optional<Expression> expression, Optional<String> image) {
+public record BriefingPage(
+        String speaker,
+        String line,
+        Optional<Expression> expression,
+        Optional<String> image,
+        Optional<Channel> channel) {
+    /** A page on the friendly channel (every page before Act 5). */
+    public BriefingPage(String speaker, String line, Optional<Expression> expression, Optional<String> image) {
+        this(speaker, line, expression, image, Optional.empty());
+    }
+
     public BriefingPage {
         Check.that(!speaker.isBlank(), "speaker: must not be empty");
         Check.that(!line.isBlank(), "line: must not be empty");
         Check.that(
                 image.map(name -> name.matches("[a-z0-9]+(-[a-z0-9]+)*")).orElse(true),
                 "image: a lower-case kebab-case name");
+    }
+
+    /** M9 part A: the channel the page comes over, {@link Channel#FRIENDLY} when not given. */
+    public Channel onChannel() {
+        return channel.orElse(Channel.FRIENDLY);
     }
 
     /** The portrait's expression on this page. */

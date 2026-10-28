@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../../campaign]
-updated: 2026-10-27
+updated: 2026-10-28
 ---
 
 # Music
@@ -33,8 +33,8 @@ everywhere.
 | 9 | Act 3 B: Mars | Levels 18, 19 and the Level 21 approach (see *Act 3 music*) | "Grey Signal": dusty dub techno, 125 BPM, D minor, Vorne's motif as an intercepted radio whistle (a third stem) | 3:00 | P2 | sketch [act3-b-theme-r36-b](concept/act3-b-theme-r36-b.ogg) "Grey Signal" (chosen); full length with base, full and motif stems: [grey-signal-r41-a](concept/grey-signal-r41-a.ogg) (proposed, round 41) |
 | 10 | Act 4 A: Europa | Levels 22–28 | Muffled ambient trance, sonar pings, deep echoes | 3:00 | P2 | [europa-theme-r02-a](concept/europa-theme-r02-a.ogg) "Thera Deep" (chosen); full length with base, full and dark stems: [thera-deep-r51-a](concept/thera-deep-r51-a.ogg) (chosen, round 51) |
 | 11 | Act 4 B: Europa | Level 25, Levels 27–28 (see *Act 4 music*) | Muffled ambient drum & bass, Vorne's motif as a faint layer (L27–28) | 3:00 | P2 | sketches [act4-b-theme-r48-a](concept/act4-b-theme-r48-a.ogg) "Pressure Line" and [act4-b-theme-r48-b](concept/rejected/act4-b-theme-r48-b.ogg) "Black Current" (chosen, round 48: a); full length with base, full and motif stems: [pressure-line-r51-a](concept/pressure-line-r51-a.ogg) (chosen, round 51) |
-| 12 | Act 5 A: Asteroid belt | Levels 29, 30, 32, 34 (the base stem only) (see *Act 5 music*) | Driving industrial, metallic percussion, Vorne's motif in the open; full length with base, full and motif stems (draft, round 60) | 3:00 | P2 | [belt-theme-r03-a](concept/belt-theme-r03-a.ogg) "Hollow Rock" (chosen) |
-| 13 | Act 5 B: Asteroid belt | Levels 31, 33 and the Level 35 approach (see *Act 5 music*) | Colder and more industrial than the A theme (the enemy is human now); two sketches in round 60, one with Vorne's motif in the open; base, full and motif stems | 3:00 | P2 | sketches [act5-b-theme-r60-a](concept/act5-b-theme-r60-a.ogg) "Gilded Cage" and [act5-b-theme-r60-b](concept/act5-b-theme-r60-b.ogg) "Iron Vein" (proposed, round 60) |
+| 12 | Act 5 A: Asteroid belt | Levels 29, 30, 32, 34 (the base stem only) (see *Act 5 music*) | Driving industrial, metallic percussion, Vorne's motif in the open; full length with base, full and motif stems (draft, round 60) | 3:00 | P2 | [belt-theme-r03-a](concept/belt-theme-r03-a.ogg) "Hollow Rock" (chosen); full length with base, full and motif stems: [hollow-rock-r62-a](concept/hollow-rock-r62-a.ogg) (proposed, round 62; in `assets/music`) |
+| 13 | Act 5 B: Asteroid belt | Levels 31, 33 and the Level 35 approach (see *Act 5 music*) | Colder and more industrial than the A theme (the enemy is human now); two sketches in round 60, one with Vorne's motif in the open; base, full and motif stems | 3:00 | P2 | sketches [act5-b-theme-r60-a](concept/act5-b-theme-r60-a.ogg) "Gilded Cage" and [act5-b-theme-r60-b](concept/rejected/act5-b-theme-r60-b.ogg) "Iron Vein" (round 60: a chosen, b rejected); "Gilded Cage" at full length with its stems [gilded-cage-r64-a](concept/gilded-cage-r64-a.ogg) (round 64, M9 part D) |
 | 14 | Act 6 A: Jupiter | Levels 36–42 | Vast and stormy: storm strings, thunder, choir; Vorne's motif against the main motif | 3:00 | P3 | [jovian-theme-r03-a](concept/jovian-theme-r03-a.ogg) "Eye of the Storm" (chosen) |
 | 15 | Act 6 B: Jupiter | Levels 36–42 | Heavy, stormy, choir + distorted bass | 3:00 | P3 | — |
 | 16–17 | Act 7 A/B: Beyond the gate | Levels 43–50 | Alien, Choir motif fused with the main motif | 3:00 | P3 | — |
@@ -51,7 +51,7 @@ everywhere.
 | 28 | Credits | Credits roll | Upbeat remix of the title theme | 3:30 | P3 | — |
 | 29 | Debrief | Under the debrief, after the mission complete jingle (23) | Quiet, calm, a little proud; D major (the jingle's last chord), −18…−20 LUFS under the debrief's sounds and voice; not the hangar theme | 1:00–1:30 loop | P2 | [debrief-theme-r40-b](concept/debrief-theme-r40-b.ogg) "Stand Down" (chosen, round 40) |
 | 30 | Reveal sting | Level 28, the Ascendancy cruisers rising (see *Act 4 music*) | Dread rising for 4 s, a hit as the gun ports open, Vorne's motif hidden in it; B minor; ends unresolved | 0:09 | P2 | [reveal-sting-r48-a](concept/reveal-sting-r48-a.ogg) "Black and Gold" and [reveal-sting-r48-b](concept/rejected/reveal-sting-r48-b.ogg) "Ours" (chosen, round 48: a); production: [reveal-sting-r58-a](concept/reveal-sting-r58-a.ogg) (chosen, round 58, S.20; in the game since step H6, `music/reveal-sting.ogg`, a one-shot at the cruisers' rise) |
-| 31 | Rook's return sting | Level 29, Rook's Ember launching from the prison tender (see *Act 5 music*) | The main motif's horn call answering Vorne's motif: a short brass lift over the ducked theme, B minor turning to D major; a one-shot | 0:05 | P2 | [rook-return-r60-a](concept/rook-return-r60-a.ogg) "Horn Call" and [rook-return-r60-b](concept/rook-return-r60-b.ogg) "Answer" (proposed, round 60) |
+| 31 | Rook's return sting | Level 29, Rook's Ember launching from the prison tender (see *Act 5 music*) | The main motif's horn call answering Vorne's motif: a short brass lift over the ducked theme, B minor turning to D major; a one-shot | 0:05 | P2 | [rook-return-r60-a](concept/rook-return-r60-a.ogg) "Horn Call" and [rook-return-r60-b](concept/rejected/rook-return-r60-b.ogg) "Answer" (round 60: a chosen, b rejected) |
 
 The concept pieces are 40–65 s sketches of each track's style and material. Production
 versions are extended to the listed length.
@@ -337,7 +337,7 @@ act-complete fanfare (24), as Level 21's.
 
 ### Act 5 music (draft, round 60)
 
-**Status: draft, pending the user's review in round 60** (M9 design phase, step `m9-d-audio`, 2026-10-27), for the
+**Status: draft, approved in round 60** (M9 design phase, step `m9-d-audio`, 2026-10-27), for the
 [Act 5 README](../../campaign/act-5-the-belt/README.md)'s plan; the level documents carry the cues in their *Music &
 ambience* and place the switches. Act 5 is where **Vorne's motif comes into the open**: his broadcast opens the act
 ([Vorne](../../story/characters/vorne/README.md)), the Ascendancy fights beside the Vrell, and the motif stops being a
@@ -689,7 +689,7 @@ reverb's tail wraps round the loop; the same intro, loop and tail as the game's 
 |---|---|---|
 | [concept/reveal-sting-r58-a.ogg](concept/reveal-sting-r58-a.ogg) | #30 "Black and Gold" in production — B minor, 9.0 s: the round-48 sketch a (the tremolo strings, organ pedal and timpani roll swelling from muffled to open over the cruisers' 4 s rise, the motif stacked into a chord at 4.0 s as the gun ports open, the A♯ left hanging) with the voice pocket under its tail; −14.9 LUFS, −3.0 dBTP (the sketch's −15.0 / −3.1) | chosen (round 58, S.20: accepted) |
 
-Concept round 60 (M9 "Act 5 – The Belt" design phase, step AUD-P, 2026-10-27; pending the user's review in round 60) —
+Concept round 60 (M9 "Act 5 – The Belt" design phase, step AUD-P, 2026-10-27; approved in round 60) —
 two sketches for track 13, the Act 5 B theme, and two proposals for Rook's return sting (track 31), synthesized by
 `tools/concept/audio/music_r60.py` (deterministic; the round-02 loop format for the themes, the round-08 sting format;
 Vorne's motif in its own group in the themes, the production's third stem). Measured only, not listened to. Prompts:
@@ -697,10 +697,43 @@ Vorne's motif in its own group in the themes, the production's third stem). Meas
 
 | File | What | Status |
 |---|---|---|
-| [concept/act5-b-theme-r60-a.ogg](concept/act5-b-theme-r60-a.ogg) | #13 "Gilded Cage" — EBM and industrial techno, 126 BPM, E minor, 57.6 s (loop 357000 + 2016000 samples: 8.10 s + 45.71 s, 24 bars): a four-on-the-floor kick, a gated distorted 16th bass sequence, struck sheet metal on the backbeat, chains on the off-16ths and a press hammer every other bar, a cold string pad over Em – C – Am – B; **Vorne's motif in the open**: low brass and organ state it every 8 bars (and once in the intro), 4.6 dB under the full mix, and the struck metal answers it at speed in the next two bars; −14.3 LUFS, −1.2 dBTP, seam 0.23 | proposed (round 60) |
-| [concept/act5-b-theme-r60-b.ogg](concept/act5-b-theme-r60-b.ogg) | #13 "Iron Vein" — half-time industrial, 140 BPM, G minor, 58.7 s (loop 321300 + 2116800 samples: 7.29 s + 48.00 s, 28 bars): a heavy half-time beat with one big dark snare a bar, a sub bass, a grinding drill texture (band noise chopped at 16ths over a growling saw), a cold pad over Gm – E♭ – Cm – D, a drumless C section; **Vorne's motif only in the machines**: a sequencer arpeggio (G B♭ D F♯ in 16ths, soft low-pass, no resonant plucks) from the B section on, 9–11 dB under the mix, no brass; −14.3 LUFS, −1.7 dBTP, seam 0.40 | proposed (round 60) |
-| [concept/rook-return-r60-a.ogg](concept/rook-return-r60-a.ogg) | #31 "Horn Call" — 5.6 s: a timpani roll and low strings on B for one beat, then humanity's motif's horn call (D A D E F♯, in D major) in horns over D – A – G strings, its last note held over a B minor chord (organ, strings, timpani, sub): the theme's tonic, so Level 29's full mix carries on under it; −14.0 LUFS, −1.9 dBTP | proposed (round 60) |
-| [concept/rook-return-r60-b.ogg](concept/rook-return-r60-b.ogg) | #31 "Answer" — 6.2 s: Vorne's motif first, low and quiet (organ and cellos, B D F♯ A♯ in eighths), a snare roll and a swell, then the horn call answers it brighter (trumpets an octave up), landing on the same B minor chord with a timpani hit; −14.0 LUFS, −2.2 dBTP | proposed (round 60) |
+| [concept/act5-b-theme-r60-a.ogg](concept/act5-b-theme-r60-a.ogg) | #13 "Gilded Cage" — EBM and industrial techno, 126 BPM, E minor, 57.6 s (loop 357000 + 2016000 samples: 8.10 s + 45.71 s, 24 bars): a four-on-the-floor kick, a gated distorted 16th bass sequence, struck sheet metal on the backbeat, chains on the off-16ths and a press hammer every other bar, a cold string pad over Em – C – Am – B; **Vorne's motif in the open**: low brass and organ state it every 8 bars (and once in the intro), 4.6 dB under the full mix, and the struck metal answers it at speed in the next two bars; −14.3 LUFS, −1.2 dBTP, seam 0.23 | chosen (round 60) |
+| [concept/rook-return-r60-a.ogg](concept/rook-return-r60-a.ogg) | #31 "Horn Call" — 5.6 s: a timpani roll and low strings on B for one beat, then humanity's motif's horn call (D A D E F♯, in D major) in horns over D – A – G strings, its last note held over a B minor chord (organ, strings, timpani, sub): the theme's tonic, so Level 29's full mix carries on under it; −14.0 LUFS, −1.9 dBTP | chosen (round 60) |
+
+Concept round 62 (M9 part B, step AUD-B, 2026-10-28) — track 12 "Hollow Rock" at full length with its base and motif
+stems from one render, composed out from the chosen round-03 sketch by `tools/concept/audio/music_r62.py` (the method
+of tracks 9–11; deterministic) and copied into `assets/music` as final by `tools/art/themes.py` (as round 51's track
+10); its review is the round's. Rook's return sting (track 31) went into `assets/music/rook-return.ogg` as the round-60
+pick a, unchanged (`copyPlaceholderMusic`). Measured only, not listened to. Prompts:
+[concept/prompts.md](concept/prompts.md#hollow-rock-r62-a--track-12-hollow-rock-and-its-three-stems).
+
+| File | What | Status |
+|---|---|---|
+| [concept/hollow-rock-r62-a.ogg](concept/hollow-rock-r62-a.ogg) | #12 "Hollow Rock" full mix at full length: 181.8 s, loop 333200 + 7526400 samples (7.56 s + 170.67 s, 96 bars at 135 BPM), −14.1 LUFS, −1.6 dBTP, seam 0.35; the arpeggio without resonance, the static without crackle | chosen (round 62, M.1: ok) |
+| [concept/hollow-rock-base-r62-a.ogg](concept/hollow-rock-base-r62-a.ogg) | #12 base stem (kick, distorted bass, the anvils' low hits, pad, the conveyor, the radio static): same length, loop and gain, −14.7 LUFS (−0.6 LU), −2.2 dBTP, seam 0.91; Level 29 from section 2, Level 34 throughout (−3 dB) | chosen (round 62, M.1: ok) |
+| [concept/hollow-rock-motif-r62-a.ogg](concept/hollow-rock-motif-r62-a.ogg) | #12 motif stem (Vorne's motif in cold low brass and organ, the B minor ↔ G minor statement and the tutti): same length, loop and gain, −18.2 LUFS (−4.1 LU), statements 6 dB under the full mix on average (A −8.9, B −4.1, D −2.4 dB); the game adds it on top; alone under Vorne's broadcast (the Act 5 intro) | chosen (round 62, M.1: ok) |
+| [concept/hollow-rock-seam-r62-a.ogg](concept/hollow-rock-seam-r62-a.ogg) | Listening aid: the full mix across its loop seam, 8 s each side | chosen (round 62, M.1: ok; a listening aid) |
+| [concept/hollow-rock-base-seam-r62-a.ogg](concept/hollow-rock-base-seam-r62-a.ogg) | Listening aid: the base stem across its loop seam, 8 s each side | chosen (round 62, M.1: ok; a listening aid) |
+| [concept/hollow-rock-motif-seam-r62-a.ogg](concept/hollow-rock-motif-seam-r62-a.ogg) | Listening aid: the motif stem across its loop seam, 8 s each side | chosen (round 62, M.1: ok; a listening aid) |
+| [concept/hollow-rock-motif-mix-r62-a.ogg](concept/hollow-rock-motif-mix-r62-a.ogg) | Listening aid: loop bars 1–24 (A, B, A2), the full mix with the motif stem on top as Level 29 plays them from the turn, 42.7 s; the sum peaks at −0.3 dBFS | chosen (round 62, M.1: ok; a listening aid) |
+| [concept/hollow-rock-sheet-r62-a.png](concept/hollow-rock-sheet-r62-a.png) | Review sheet: the three files' waveforms with intro, loop and fade tail, their loop points, loudness, true peak, seam and size, and the loudness of each loop section (full, base, motif) | chosen (round 62, M.1: ok; a listening aid) |
+
+Concept round 64 (M9 part D, step AUD-D, 2026-10-28) — track 13 "Gilded Cage" at full length with its base and motif
+stems from one render, composed out from the chosen round-60 sketch by `tools/concept/audio/music_r64.py` (track 12's
+method; deterministic) and copied into `assets/music` as final by `tools/art/themes.py` (as round 62's track 12); its
+review is the round's. Measured only, not listened to. Prompts:
+[concept/prompts.md](concept/prompts.md#gilded-cage-r64-a--track-13-gilded-cage-and-its-three-stems).
+
+| File | What | Status |
+|---|---|---|
+| [concept/gilded-cage-r64-a.ogg](concept/gilded-cage-r64-a.ogg) | #13 "Gilded Cage" full mix at full length: 179.5 s, loop 357000 + 7392000 samples (8.10 s + 167.62 s, 88 bars at 126 BPM), −14.1 LUFS, −1.4 dBTP, seam 0.24; eleven 8-bar sections on the sketch's material, a new breakdown and a half-time drift | proposed (round 64) |
+| [concept/gilded-cage-base-r64-a.ogg](concept/gilded-cage-base-r64-a.ogg) | #13 base stem (kick, the bass sequence, the pad, the press hammer): same length, loop and gain, −14.3 LUFS (−0.2 LU), −2.4 dBTP, seam 0.20; Levels 31 and 33 from section 2, the Level 35 approach | proposed (round 64) |
+| [concept/gilded-cage-motif-r64-a.ogg](concept/gilded-cage-motif-r64-a.ogg) | #13 motif stem (Vorne's motif in low brass and organ, the tutti with trumpets in D and D2): same length, loop and gain, −20.4 LUFS (−6.3 LU), statements 6 dB under the full mix (−6.1, the tutti −5.7 dB); the game adds it on top; alone under Level 35's recruitment | proposed (round 64) |
+| [concept/gilded-cage-seam-r64-a.ogg](concept/gilded-cage-seam-r64-a.ogg) | Listening aid: the full mix across its loop seam, 8 s each side | proposed (round 64; a listening aid) |
+| [concept/gilded-cage-base-seam-r64-a.ogg](concept/gilded-cage-base-seam-r64-a.ogg) | Listening aid: the base stem across its loop seam, 8 s each side | proposed (round 64; a listening aid) |
+| [concept/gilded-cage-motif-seam-r64-a.ogg](concept/gilded-cage-motif-seam-r64-a.ogg) | Listening aid: the motif stem across its loop seam, 8 s each side | proposed (round 64; a listening aid) |
+| [concept/gilded-cage-motif-mix-r64-a.ogg](concept/gilded-cage-motif-mix-r64-a.ogg) | Listening aid: loop bars 1–24 (A, B, C), the full mix with the motif stem on top as Level 31 plays them from section 5, 45.7 s; the sum peaks at −0.7 dBFS | proposed (round 64; a listening aid) |
+| [concept/gilded-cage-sheet-r64-a.png](concept/gilded-cage-sheet-r64-a.png) | Review sheet: the three files' waveforms with intro, loop and fade tail, their loop points, loudness, true peak, seam and size, and the loudness of each loop section (full, base, motif) | proposed (round 64; a listening aid) |
 
 ## Implementation
 
@@ -759,11 +792,18 @@ Vorne's motif in its own group in the themes, the production's third stem). Meas
       `Level22SoundsTest.theMusicIsTheraDeepOverTheIceBedThenTheStationsBed`; both tracks in round 51; part H: Level
       28's music block, the reveal sting once at the cruisers' rise and the run under track 11's motif stem alone,
       `motif_after_boss`, `Level28SoundsTest.theBossThemeDropsUnderTheDiveAndTheRunPlaysTheMotifAlone`)
-- [ ] Act 5 (draft, pending round 60, M9): track 12 "Hollow Rock" at full length with base, full and motif stems
+- [ ] Act 5 (draft, decided in round 60, M9): track 12 "Hollow Rock" at full length with base, full and motif stems
       (part B); track 13, the B theme, from round 60's pick with its three stems (part D); track 19 "Iron Sovereign" at
       full length (part H); Rook's return sting (track 31) as a one-shot with the scripted duck (part B); the briefing's
       per-page music (`music: motif` under Vorne's intercepted pages, part B); Level 34's base stem at −3 dB with the
-      motif once (part G); each Act 5 level's music block as in *Act 5 music* (parts B–H)
+      motif once (part G); each Act 5 level's music block as in *Act 5 music* (parts B–H) (part B, steps AUD-B and B4:
+      track 12 at full length with its base, full and motif stems in `Tracks` (`hollow-rock`), Level 29's music block
+      (base from the canyon, full from the turn), Rook's sting once at the Ember's launch with its duck, the motif
+      stem alone under the intro's pages 2–3; `Level29SoundsTest`; in round 62, M.1–M.2; part C, step C4: Level 30's
+      music block, the base stem in section 1 and the full mix from section 2, `Level30SoundsTest`; heard in round 63's
+      captures; part D, steps AUD-D, D4 and D4b: track 13 "Gilded Cage" at full length with its base, full and motif stems in
+      `Tracks` (`gilded-cage`, in round 64, M.1), Level 31's music block (the intro in section 1, the base from section 2, the
+      full mix from the ambush) with the motif stem from t=24, `Level31SoundsTest`; heard in round 64's captures)
 
 ## Open questions
 
@@ -813,10 +853,12 @@ Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-a
 - 2026-10-26 (user, round 58 closed): Q.1 **a**: the Abyssal Maw keeps "The Choir Descends" as built (track 18, the
   game's file); the deep copy b (`choir-descends-deep-r58-b`, not the recommendation) and its two listening aids moved to
   `concept/rejected/`. S.20: track 30 "Black and Gold" in production (`reveal-sting-r58-a`) accepted, `chosen`.
-- 2026-10-27 (step `m9-d-audio`, M9 design phase; **pending the user's review in round 60**): *Act 5 music* drafted:
+- 2026-10-27 (step `m9-d-audio`, M9 design phase; **approved in round 60**): *Act 5 music* drafted:
   track 12 for Levels 29, 30, 32 and 34 (base stem only), track 13 for Levels 31, 33 and the Level 35 approach (the
   drafts of Levels 29–32 kept as they name their themes; the undrafted levels spread so B gets three levels), the motif in the open (about 6 dB under the full
   mix), muted in Level 33 (the Choir's level), alone under the broadcast and after the Sovereign; track 13's two
   sketch briefs; track 19 at full length without stems; a new track 31, Rook's return sting (Level 29's draft asked
   for a brass lift at the Ember's launch). Decided here (trivia): no new render for Level 34 (the base stem), no music
   change at the Sovereign's core opening, the motif stem as the broadcast's music (no new cue).
+- 2026-10-27 (user, [round 60](../../concept-rounds/round-60/README.md) closed): the Act 5 audio plan approved as drafted (D.19). **M.1 a**, "Gilded Cage" (track 13, the Act 5 B theme: EBM and industrial techno, 126 BPM, E minor; the sample-exact loop needs a whole-sample 16th, so not the draft's 128) is chosen; b "Iron Vein" rejected. **M.2 a**, "Horn Call" (track 31, Rook's return sting, 5.6 s) is chosen; b "Answer" rejected. The sketches (about 1 min) become the full length and stems at M9 part D.
+- 2026-10-28 (user, [round 62](../../concept-rounds/round-62/README.md), closed; page answers): M.1 ok: track 12 "Hollow Rock" at full length (181.8 s, with its base and motif stems) stays as built, M.2 ok: Rook's sting "Horn Call" as played once at the Ember's launch with its −6 dB duck. The listening aids and the review sheet stay in `concept/`.

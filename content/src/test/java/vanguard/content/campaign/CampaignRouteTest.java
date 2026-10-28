@@ -269,9 +269,15 @@ class CampaignRouteTest {
         assertEquals("act-4-deep-water", outro.script().actDirectory());
         assertEquals(28, outro.script().last());
         assertEquals(4, outro.script().pages().size());
-        assertTrue(
-                CampaignRoute.releaseEnd(content, campaign), "Level 29 is not built: Act 4's outro ends the release");
-        assertEquals(Optional.empty(), CampaignRoute.launch(content, campaign), "Level 29 is not built");
+        // M9 part B (step B2): Level 29 is built: Act 4's outro ends nothing; Act 5's intro (its title card and four
+        // pages) opens Level 29's briefing.
+        assertFalse(CampaignRoute.releaseEnd(content, campaign), "Level 29 is built: Act 4's outro ends nothing");
+        var act5 =
+                assertInstanceOf(CampaignRoute.Step.Briefing.class, CampaignRoute.beforeNextLevel(content, campaign));
+        assertEquals("act-5-the-belt", act5.script().actDirectory());
+        assertEquals("THE BELT", act5.script().titleCard().orElseThrow().name());
+        assertEquals(4 + 2, act5.script().pages().size(), "the act's four intro pages, then Level 29's two");
+        assertEquals(Optional.of("act-5-the-belt/level-29-betrayal-at-ceres"), CampaignRoute.launch(content, campaign));
     }
 
     /**
@@ -374,6 +380,79 @@ class CampaignRouteTest {
         Campaign reloaded =
                 Campaign.load(CampaignTest.RULES, SaveFormat.read(SaveFormat.write(campaign.save(Instant.EPOCH))));
         assertMissionBriefing(22, CampaignRoute.onContinue(content, reloaded));
+    }
+
+    /**
+     * M9 part B (design/campaign Act 5, Implementation): a real save of the v0.2 release at the Level 29 hangar, written
+     * by that release's {@code :content:playthroughSave} (medium, the balance plan through Level 28; its check of the
+     * level widened to the one after the last built level, which v0.2 could not name) with the {@code act-intro:1..4}
+     * flags the v0.2 game's briefings add (the tool flies without the route): Rook missing since Level 26, the loaner in
+     * his slot. Continue plays Act 5's title card, its four intro pages and Level 29's briefing once; reloaded, the next
+     * Continue opens Level 29's own briefing, never the intro twice.
+     */
+    @Test
+    void aRealV02SaveAtTheLevel29HangarPlaysTheActFiveIntroOnce() throws Exception {
+        String json;
+        try (var in = getClass().getResourceAsStream("/saves/v0.2-medium-level-29-hangar.json")) {
+            json = new String(in.readAllBytes(), java.nio.charset.StandardCharsets.UTF_8);
+        }
+        assertTrue(json.contains("\"version\" : 6"));
+
+        SaveGame save = SaveFormat.read(json);
+        assertEquals(29, save.nextLevel());
+        Campaign campaign = Campaign.load(CampaignTest.RULES, save);
+        assertTrue(campaign.actIntroShown(4) && !campaign.actIntroShown(5));
+        assertTrue(campaign.rookMissing());
+        Campaign.EscortFlight loaner = campaign.escortFlight().orElseThrow();
+        assertTrue(loaner.loaner() && loaner.rescue().isPresent(), "the loaner flies, Rook waits in the hold");
+
+        var briefing = assertInstanceOf(CampaignRoute.Step.Briefing.class, CampaignRoute.onContinue(content, campaign));
+        assertEquals("act-5-the-belt", briefing.script().actDirectory());
+        assertEquals("THE BELT", briefing.script().titleCard().orElseThrow().name());
+        assertEquals(29, briefing.script().mission());
+        assertEquals(4 + 2, briefing.script().pages().size(), "the act's four intro pages, then Level 29's two");
+        assertTrue(campaign.actIntroShown(5));
+        Campaign reloaded =
+                Campaign.load(CampaignTest.RULES, SaveFormat.read(SaveFormat.write(campaign.save(Instant.EPOCH))));
+        assertEquals(
+                2,
+                assertMissionBriefing(29, CampaignRoute.onContinue(content, reloaded))
+                        .pages()
+                        .size());
+        assertEquals(
+                2,
+                assertMissionBriefing(29, CampaignRoute.onContinue(content, reloaded))
+                        .pages()
+                        .size(),
+                "never twice");
+    }
+
+    /**
+     * M9 part B: Level 29 ends no act; M9 part C (step C2): Level 30 is built, so its win leads to Level 30's briefing;
+     * M9 part D (step D3): Level 31 is built too, and Level 31's win leads to the hangar (Level 32 has no briefing yet):
+     * the hangar cannot launch and the release ends there (the game's end card after the debrief).
+     */
+    @Test
+    void afterLevel31TheReleaseEnds() {
+        Campaign campaign = Campaign.start(CampaignTest.RULES, Difficulty.MEDIUM);
+        for (int i = 0; i < 29; i++) {
+            campaign.complete(CampaignTest.won("A", 80, 1000), 60);
+        }
+        assertTrue(CampaignRoute.actEnd(content, campaign).isEmpty(), "Level 29 ends no act");
+        assertTrue(CampaignRoute.launch(content, campaign).isPresent(), "Level 30 is built");
+        assertFalse(CampaignRoute.releaseEnd(content, campaign));
+        campaign.complete(CampaignTest.won("A", 80, 1000), 60);
+        assertTrue(CampaignRoute.actEnd(content, campaign).isEmpty(), "Level 30 ends no act");
+        assertTrue(CampaignRoute.launch(content, campaign).isPresent(), "Level 31 is built");
+        assertFalse(CampaignRoute.releaseEnd(content, campaign));
+        campaign.complete(CampaignTest.won("A", 80, 1000), 60);
+        assertTrue(CampaignRoute.actEnd(content, campaign).isEmpty(), "Level 31 ends no act");
+        assertInstanceOf(CampaignRoute.Step.Hangar.class, CampaignRoute.afterLevel(content, campaign));
+        assertTrue(CampaignRoute.launch(content, campaign).isEmpty(), "Level 32 is not built");
+        assertTrue(CampaignRoute.releaseEnd(content, campaign));
+        assertTrue(
+                content.acts().values().stream().allMatch(act -> act.nextAct().isEmpty()),
+                "no act names a next act: Act 4's moved off with the release's end");
     }
 
     /** M8 part B: a save at the Level 22 hangar that has seen Act 4's intro opens Level 22's own briefing. */

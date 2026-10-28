@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../story, ../../campaign]
-updated: 2026-10-27
+updated: 2026-10-28
 ---
 
 # Briefing screen
@@ -64,7 +64,7 @@ the real briefing text is written in each level document.
 
 ### Intercepted transmissions (draft)
 
-*Draft, step `m9-d-systems` (2026-10-27), **pending the user's review in round 60** (Q9 = a). The
+*Draft, step `m9-d-systems` (2026-10-27), **approved in round 60** (Q9 = a). The
 steady interference "comes with the first intercepted briefing" (Decisions, 2026-10-02): that is the
 Act 5 intro, whose pages 2–3 are Vorne's system-wide broadcast; the texts and the page order are the
 [act's](../../campaign/act-5-the-belt/README.md).*
@@ -139,6 +139,26 @@ Production art, UI batch part U3: the briefing images, rendered by [tools/art/br
 | [concept/level-27-briefing-capture-r57-a.png](concept/level-27-briefing-capture-r57-a.png) | Game capture, M8 part G (step G5, a playthrough save at Level 27): Level 27's two pages in the game, Okafor's sonar chart of the vent field and Varga's plume cycle with the grey hull below | chosen (round 57: accepted as final) |
 | [concept/act3-outro-final-r44-a.png](concept/act3-outro-final-r44-a.png) | Review sheet, M7 part H (round 44): the Act 3 outro's four 672×240 images (`act-3-outro-hellas`: the basin at dawn, the collapsed crater, the last spore trails; `act-3-outro-domes`: Ares Landing's domes at night, every pane lit, colonists on the ring road looking up; `act-3-outro-europa`: Varga's plot of the courses off Mars converging on Europa, the filed plate in a minimised window; `act-3-outro-aegis`: Aegis Wing refitting on the spaceport apron at dusk, Jupiter a bright point; `tools/art/outro_l21_images.py`, step ART-H3) | final (round 44, F.f: approved as final) |
 
+Production art, M9 part B (concept round 62, step ART-B): the Act 5 intro's four images and Level 29's two, rendered by `tools/art/briefing_images.py` into `assets/ui/briefing/`. Prompts: [concept/prompts.md](concept/prompts.md#round-62--production-the-act-5-intro-and-level-29-m9-part-b).
+
+| File | What | Status |
+|---|---|---|
+| [concept/briefing-images-final-r62-a.png](concept/briefing-images-final-r62-a.png) | Review sheet, M9 part B (round 62): the Act 5 intro's four 672×240 images (`act-5-all-channels`, `act-5-broadcast`, `act-5-stations-choose`, `act-5-burn-for-ceres`) and Level 29's two (`level-29-ceres-hub`, `level-29-talon`) | chosen (round 62, F.10: accepted as final) |
+| [concept/intercept-briefing-capture-r61-a.png](concept/intercept-briefing-capture-r61-a.png) | Game capture of an intercepted page (step A4, the [capture rig](../../enemies/concept/prompts.md#belt-rig-capture-r61-a)'s third Level 08 page, reached by Continue from a Level 08 save): `INTERCEPTED · ALL CHANNELS`, the amber plate and text, the steady interference with a tear over the portrait. Varga stands in for Vorne (the briefing has no plate for him yet) and the page has no image (a page with one crashes: round 61) | chosen (round 61, C.6: accepted) |
+| [concept/intercept-briefing-capture-r61-a.mp4](concept/intercept-briefing-capture-r61-a.mp4) | The page typing with the game's sound: the intercept's open, the carrier hiss under the typing | chosen (round 61, C.6: accepted) |
+
+Production art, M9 part C (concept round 63, step ART-C): Level 30's two images, rendered by `tools/art/briefing_images.py` into `assets/ui/briefing/`. Prompts: [concept/prompts.md](concept/prompts.md#round-63--production-level-30-m9-part-c).
+
+| File | What | Status |
+|---|---|---|
+| [concept/briefing-images-final-r63-a.png](concept/briefing-images-final-r63-a.png) | Review sheet, M9 part C (round 63): Level 30's two 672×240 images (`level-30-shipping-lane`: Okafor's chart of the lane, its buoys, the rock drift, the convoy's track and the tug's departure point; `level-30-minelayer`: Varga's scan of a Minelayer over its line, the clusters of four ringed, the gap marked, a lit mine inset) | chosen (round 63, F.7: accepted as final) |
+
+Production art, M9 part D (concept round 64, step ART-D): Level 31's two images, rendered by `tools/art/briefing_images.py` into `assets/ui/briefing/`. Prompts: [concept/prompts.md](concept/prompts.md#round-64--production-level-31-m9-part-d).
+
+| File | What | Status |
+|---|---|---|
+| [concept/briefing-images-final-r64-a.png](concept/briefing-images-final-r64-a.png) | Review sheet, M9 part D (round 64): Level 31's two 672×240 images (`level-31-mining-rig-escort`: Okafor's nav chart of the open belt, the tug's track from Bright Seam to the Vesta relay, the drift fields, the two outcrops' nests, the ambush point; `level-31-tug-sections`: Varga's diagram of the tug from above with its three bars, a Hornet's salvo onto the bow, a Shard line across the cargo, Darts from behind on the engines) | proposed (round 64) |
+
 ## Implementation
 
 - [x] Briefing script format: pages, speaker, text, objectives
@@ -158,7 +178,11 @@ Production art, UI batch part U3: the briefing images, rendered by [tools/art/br
       the act's and the level's data; `BriefingLayoutTest` passes with them
 - [ ] Intercepted pages as under *Intercepted transmissions* (draft): the steady interference over the portrait and
       image, the `INTERCEPTED · ALL CHANNELS` header, the amber plate and text, the carrier hiss, `channel: enemy` in
-      the data — **later: Act 5** (the act intro) — M9
+      the data — **later: Act 5** (the act intro) — M9 (part A, step A2: a page's `channel`, `BriefingPage.onChannel`, a
+      radio cue's `channel` and the voice table's `filter: enemy` for Vorne and Harker, `RadioCue.channel(voices)`;
+      step A3: the look and the sound, `BriefingScreen` (the header, the amber plate and text, the steady interference
+      over the portrait and the image with its tear, the intercept's open and close, the carrier while it types);
+      the act intro's pages with `channel: enemy` remain)
 - [ ] The act-title lettering (`assets/ui/act-N-*-title.png`, Acts 1-3) from a `tools/art` generator with the pixels unchanged
       and a `Source` chunk, instead of `tools/concept/ui_assets.py` (round 44, X.l: planned, step ART-K)
 
@@ -353,8 +377,11 @@ Production art, UI batch part U3: the briefing images, rendered by [tools/art/br
 - 2026-10-22 (user, round 52, closed): Level 23's two briefing images accepted as final (F.9).
 - 2026-10-25 (user, [round 57](../../concept-rounds/round-57/README.md) closed): Level 27's two briefing images accepted as final (F.7).
 - 2026-10-26 (user, [round 58](../../concept-rounds/round-58/README.md) closed): Level 28's two briefing images and the Act 4 outro's four accepted as final (F.7, F.8; the Helix Dynamics emblem as drawn).
-- 2026-10-27 (Act 5 design phase, step m9-d-systems; **pending the user's review in round 60**): the intercepted
+- 2026-10-27 (Act 5 design phase, step m9-d-systems; **approved in round 60**): the intercepted
   page drafted for the Act 5 intro's broadcast (Q9 = a): a steady interference over portrait and image, the
   `INTERCEPTED · ALL CHANNELS` header, the amber speaker plate and text, a carrier hiss instead of the typing blip,
   `channel: enemy` in the data. Alternatives of Q9 (all four pages Vorne; or no intercepted page, Vorne as radio
   lines at L29's start) change only how many pages use it.
+- 2026-10-27 (user, [round 60](../../concept-rounds/round-60/README.md) closed): the intercepted briefing pages approved as drafted (D.17; Q9 **a**: Vorne's broadcast as the act intro); the intercept sounds are S.11 a, S.12 a and S.13 a.
+- 2026-10-28 (user, [round 62](../../concept-rounds/round-62/README.md), closed; page answers): the six Act 5 briefing images (F.10: the intro's four and Level 29's two) accepted as final.
+- 2026-10-28 (user, rounds [61](../../concept-rounds/round-61/README.md) and [63](../../concept-rounds/round-63/README.md), closed): the intercepted page's amber look accepted (round 61 C.6); Level 30's two briefing images accepted (round 63 F.7).

@@ -306,6 +306,35 @@ final class Objectives {
         return true;
     }
 
+    /**
+     * M9 part B (design/campaign Level 29, "Hold fire"): a neutral craft of {@code slug} left the screen; returns
+     * whether that met a spared objective (the last of them gone, none destroyed). Counted in the escapes' tally.
+     */
+    boolean sparedLeft(String slug) {
+        if (!secondary.bySpared() || !secondary.spared().equals(slug) || escapesFailed || secondaryMet) {
+            return false;
+        }
+        escapesDestroyed++;
+        if (escapesDestroyed >= escapesTotal) {
+            return meet();
+        }
+        return false;
+    }
+
+    /** M9 part B: a neutral craft of {@code slug} was destroyed; returns whether that failed a spared objective. */
+    boolean sparedDestroyed(String slug) {
+        if (!secondary.bySpared() || !secondary.spared().equals(slug) || escapesFailed || secondaryMet) {
+            return false;
+        }
+        escapesFailed = true;
+        return true;
+    }
+
+    /** M9 part B: the neutral craft of a spared objective that left the screen in this attempt (else 0). */
+    int sparedLeft() {
+        return secondary.bySpared() ? escapesDestroyed : 0;
+    }
+
     /** A unit of {@code slug} of a wave tagged {@code tag} ("" for none) got away; returns whether that failed an escapes objective. */
     boolean escapeLost(String slug, String tag) {
         if (!secondary.counts(slug, tag) || escapesFailed || secondaryMet) {

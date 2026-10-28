@@ -1,0 +1,270 @@
+{
+  "version" : 6,
+  "created" : "2026-10-28T03:13:24.104819984Z",
+  "playtime" : 0.0,
+  "difficulty" : "MEDIUM",
+  "nextLevel" : 29,
+  "credits" : 43614,
+  "score" : 5752925,
+  "loadout" : {
+    "FRONT" : {
+      "item" : "harpoon-torpedoes",
+      "level" : 4
+    },
+    "REAR" : {
+      "item" : "tail-gun",
+      "level" : 3
+    },
+    "LEFT_WING" : {
+      "item" : "micro-missile-pod",
+      "level" : 3
+    },
+    "RIGHT_WING" : {
+      "item" : "micro-missile-pod",
+      "level" : 3
+    },
+    "GENERATOR" : {
+      "item" : "Mk IV \"Tokamak\"",
+      "level" : 1
+    },
+    "SHIELD" : {
+      "item" : "Mk III",
+      "level" : 1
+    },
+    "ARMOUR" : {
+      "item" : "Composite III",
+      "level" : 1
+    },
+    "ENGINE" : {
+      "item" : "Mk I",
+      "level" : 1
+    },
+    "SPECIAL" : {
+      "item" : "Sonar Pulse",
+      "level" : 1
+    },
+    "UTILITY_1" : {
+      "item" : "Pickup magnet",
+      "level" : 1
+    },
+    "UTILITY_2" : {
+      "item" : "Pressure hull",
+      "level" : 1
+    }
+  },
+  "inventory" : {
+    "FRONT" : [ {
+      "item" : "ion-beam",
+      "level" : 3
+    } ],
+    "REAR" : [ {
+      "item" : "depth-charges",
+      "level" : 3
+    } ],
+    "GENERATOR" : [ {
+      "item" : "Mk I \"Spark\"",
+      "level" : 1
+    }, {
+      "item" : "Mk II \"Arc\"",
+      "level" : 1
+    }, {
+      "item" : "Mk III \"Fusion\"",
+      "level" : 1
+    } ],
+    "SHIELD" : [ {
+      "item" : "Mk I",
+      "level" : 1
+    }, {
+      "item" : "Mk II",
+      "level" : 1
+    } ],
+    "PLATING" : [ {
+      "item" : "Standard",
+      "level" : 1
+    }, {
+      "item" : "Composite I",
+      "level" : 1
+    }, {
+      "item" : "Composite II",
+      "level" : 1
+    } ]
+  },
+  "unlocks" : [ "Targeting computer" ],
+  "specials" : {
+    "EMP Burst" : 2,
+    "Smart Bomb" : 1,
+    "Airstrike" : 0,
+    "Sonar Pulse" : 1
+  },
+  "armour" : 120.0,
+  "escort" : {
+    "hired" : true,
+    "side" : "left",
+    "fitted" : "autocannon",
+    "guns" : [ {
+      "item" : "autocannon",
+      "level" : 1
+    }, {
+      "item" : "mortar",
+      "level" : 1
+    } ],
+    "armour" : 0.0,
+    "flies" : "rook",
+    "bulwark" : {
+      "owned" : false,
+      "armour" : 120.0
+    }
+  },
+  "bays" : 0,
+  "retriesLeft" : null,
+  "grades" : {
+    "1" : "A+",
+    "2" : "A+",
+    "3" : "A",
+    "4" : "A",
+    "5" : "A+",
+    "6" : "A",
+    "7" : "A+",
+    "8" : "A+",
+    "9" : "B",
+    "10" : "A",
+    "11" : "A",
+    "12" : "A+",
+    "13" : "A+",
+    "14" : "A+",
+    "15" : "A",
+    "16" : "A+",
+    "17" : "A+",
+    "18" : "A+",
+    "19" : "A",
+    "20" : "A",
+    "21" : "A",
+    "22" : "A+",
+    "23" : "A+",
+    "24" : "A+",
+    "25" : "A+",
+    "26" : "A+",
+    "27" : "A",
+    "28" : "A+"
+  },
+  "dataCores" : [ "settlement log" ],
+  "storyFlags" : [ "act-intro:1", "free-charges:Airstrike", "free-charges:Smart Bomb", "free-charges:EMP Burst", "act-intro:2", "act-intro:3", "act-intro:4", "free-charges:Sonar Pulse", "rook-missing" ],
+  "stats" : {
+    "kills" : 6635,
+    "deaths" : 0,
+    "levels" : {
+      "1" : {
+        "credits" : 1442,
+        "kills" : 92
+      },
+      "2" : {
+        "credits" : 1520,
+        "kills" : 99
+      },
+      "3" : {
+        "credits" : 1345,
+        "kills" : 98
+      },
+      "4" : {
+        "credits" : 1187,
+        "kills" : 134
+      },
+      "5" : {
+        "credits" : 1574,
+        "kills" : 157
+      },
+      "6" : {
+        "credits" : 1632,
+        "kills" : 182
+      },
+      "7" : {
+        "credits" : 1962,
+        "kills" : 170
+      },
+      "8" : {
+        "credits" : 2123,
+        "kills" : 337
+      },
+      "9" : {
+        "credits" : 1703,
+        "kills" : 304
+      },
+      "10" : {
+        "credits" : 2207,
+        "kills" : 247
+      },
+      "11" : {
+        "credits" : 2108,
+        "kills" : 307
+      },
+      "12" : {
+        "credits" : 2998,
+        "kills" : 457
+      },
+      "13" : {
+        "credits" : 3089,
+        "kills" : 423
+      },
+      "14" : {
+        "credits" : 2999,
+        "kills" : 186
+      },
+      "15" : {
+        "credits" : 2998,
+        "kills" : 302
+      },
+      "16" : {
+        "credits" : 3836,
+        "kills" : 355
+      },
+      "17" : {
+        "credits" : 4099,
+        "kills" : 213
+      },
+      "18" : {
+        "credits" : 4195,
+        "kills" : 279
+      },
+      "19" : {
+        "credits" : 3859,
+        "kills" : 288
+      },
+      "20" : {
+        "credits" : 3082,
+        "kills" : 169
+      },
+      "21" : {
+        "credits" : 4292,
+        "kills" : 161
+      },
+      "22" : {
+        "credits" : 5095,
+        "kills" : 261
+      },
+      "23" : {
+        "credits" : 5827,
+        "kills" : 342
+      },
+      "24" : {
+        "credits" : 6462,
+        "kills" : 268
+      },
+      "25" : {
+        "credits" : 7151,
+        "kills" : 303
+      },
+      "26" : {
+        "credits" : 6516,
+        "kills" : 182
+      },
+      "27" : {
+        "credits" : 6856,
+        "kills" : 193
+      },
+      "28" : {
+        "credits" : 8302,
+        "kills" : 126
+      }
+    }
+  }
+}

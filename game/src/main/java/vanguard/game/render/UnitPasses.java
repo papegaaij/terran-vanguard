@@ -389,6 +389,21 @@ final class UnitPasses {
         if (mast != null) {
             return mast;
         }
+        // M9 part B: Level 29's units: a Talon leader, a SAM Nest's rack, a Mite's pose, a Stormhawk's bank and IFF.
+        AtlasRegion ceres = kinds.ceres(sortie).frame(sortie, enemy, look);
+        if (ceres != null) {
+            return ceres;
+        }
+        // M9 part C: a Minelayer laying, a Gunship's bays and lamps, a turret car's tell, a split train's wreck.
+        AtlasRegion minefield = kinds.minefield(sortie).frame(sortie, enemy, look, kinds.mines(sortie));
+        if (minefield != null) {
+            return minefield;
+        }
+        // M9 part D: a Hornet's hatches and fans, a Shard Drone's spin, a Buzzsaw's spin, tell and blur.
+        AtlasRegion rig = kinds.rig(sortie).frame(sortie, enemy, look);
+        if (rig != null) {
+            return rig;
+        }
         // M7 part C: a Tendril Anchor faces its partner and pulses.
         AtlasRegion anchor = kinds.tendrils(sortie).anchorFrame(sortie, enemy, look);
         if (anchor != null) {
@@ -643,7 +658,9 @@ final class UnitPasses {
         int sizes = look.frames().size / look.headings();
         boolean sized = segment && sizes > 1;
         long step = sized ? sizeIndex(chain, member, sizes) : look.step(sortie.tick(), k);
-        AtlasRegion frame = look.frame(member.facing(), step);
+        // M9 part C: a turret car's tell, a split train's wreck (MinefieldLooks).
+        AtlasRegion own = kinds.minefield(sortie).memberFrame(sortie, chain, member);
+        AtlasRegion frame = own != null ? own : look.frame(member.facing(), step);
         float scale = segment && !sized ? (float) (member.hitbox().width() / first) : 1;
         if (shadow) {
             Shadows.draw(
@@ -967,6 +984,12 @@ final class UnitPasses {
         drawPursuitTell(batch, sortie, alpha);
         // The Ghost Drones' eye glints before their bursts, through the dust like their lights.
         kinds.ghostDrones(sortie).drawGlints(batch, sortie, alpha);
+        // M9 part B: the Talons' and the clamp guns' muzzle glints, the clamps' gas.
+        kinds.ceres(sortie).drawGlints(batch, sortie, alpha, sortie.groundScroll());
+        // M9 part C: the Gunships' engines, bay flashes and plate sparks; the split trains' sparks and snaps.
+        kinds.minefield(sortie).drawGlints(batch, sortie, alpha);
+        // M9 part D: the Hornets' hatch bloom and launch flashes, the links' snaps, the Buzzsaws' ricochets.
+        kinds.rig(sortie).drawGlints(batch, sortie, alpha);
         batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
     }
 

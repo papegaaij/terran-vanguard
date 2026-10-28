@@ -176,10 +176,16 @@ class DeepWaterLooksTest {
             for (String name : List.of("AIRSTRIKE", "SONAR PULSE")) {
                 assertEquals(name, ShipPanel.cutLabel(name, room), reason + ": " + room);
             }
-            assertEquals("ORBITAL", ShipPanel.cutLabel("ORBITAL LANCE", room), reason + ": " + room);
+            // M9 part A: beside the shorter IN ROCK the Lance keeps its whole name.
+            String lance = ShipPanel.cutLabel("ORBITAL LANCE", room);
+            assertEquals(
+                    reason.word().length() <= "IN ROCK".length() ? "ORBITAL LANCE" : "ORBITAL",
+                    lance,
+                    reason + ": " + room);
         }
         assertEquals("UNDER ICE", SpecialLimits.Reason.UNDER_ICE.word());
         assertEquals("NO WATER", SpecialLimits.Reason.NO_WATER.word());
+        assertEquals("IN ROCK", SpecialLimits.Reason.IN_ROCK.word());
         assertEquals("AIRS", ShipPanel.cutLabel("AIRSTRIKE", 35));
         assertFalse(ShipPanel.BULWARK_NAME.isEmpty());
         // The weapons that can read NO WATER keep their name beside it.

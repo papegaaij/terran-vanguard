@@ -86,11 +86,20 @@ final class HitPasses {
             if (mine.armed() && hull.overlaps(x, y, EnemyGun.MineSpec.BOX, mine.x(), mine.y())) {
                 double damage = mine.gun().damage();
                 events.add(SimEvents.Type.MINE_BURST, mine.x(), mine.y());
+                if (mine.line()) {
+                    // M9 part C: a line mine touched bursts with its ring.
+                    force.lineMineBurst(mine, ship, false);
+                }
                 mines.free(i);
                 if (wingman.hit(damage, ship.x(), ship.y(), events)) {
                     return;
                 }
             }
+        }
+        // M9 part C: a line mine's blast.
+        double blast = force.blastDamage(hull, x, y);
+        if (blast > 0 && wingman.hit(blast, ship.x(), ship.y(), events)) {
+            return;
         }
         missilesAndConesHitWingman(hull, x, y);
         if (wingman.out()) {
@@ -135,7 +144,7 @@ final class HitPasses {
      * geysers still pass it.
      */
     void hitBulwark(Bulwark bulwark) {
-        if (bulwark.destroyed()) {
+        if (bulwark.out()) {
             return;
         }
         Hull hull = bulwark.hull();
@@ -157,11 +166,20 @@ final class HitPasses {
             if (mine.armed() && hull.overlaps(x, y, EnemyGun.MineSpec.BOX, mine.x(), mine.y())) {
                 double damage = mine.gun().damage();
                 events.add(SimEvents.Type.MINE_BURST, mine.x(), mine.y());
+                if (mine.line()) {
+                    // M9 part C: a line mine touched bursts with its ring.
+                    force.lineMineBurst(mine, ship, false);
+                }
                 mines.free(i);
                 if (bulwark.hit(damage, events)) {
                     return;
                 }
             }
+        }
+        // M9 part C: a line mine's blast.
+        double blast = force.blastDamage(hull, x, y);
+        if (blast > 0 && bulwark.hit(blast, events)) {
+            return;
         }
         Missiles missiles = force.missiles();
         for (int i = missiles.size() - 1; i >= 0; i--) {
@@ -285,6 +303,14 @@ final class HitPasses {
             double endX = fromX - Trig.sin(heading) * sweep.length();
             double endY = fromY - Trig.cos(heading) * sweep.length();
             if (hull.touchesSegment(x, y, fromX, fromY, endX, endY, sweep.width() / 2)) {
+                return true;
+            }
+        }
+        for (int j = 0; j < enemies.size(); j++) {
+            Enemy enemy = enemies.get(j);
+            // M9 part A: a live laser line's band too.
+            if (enemy.spec().laserLine().isPresent()
+                    && enemy.lineBeam.touches(enemy.spec().laserLine().get(), hull, x, y)) {
                 return true;
             }
         }
@@ -427,7 +453,7 @@ final class HitPasses {
                 }
             }
         }
-        if (beamsHit(hull) || bossBeamsHit(hull)) {
+        if (beamsHit(hull) || bossBeamsHit(hull) || linesHit(hull)) {
             return;
         }
         // An armed spore bursts on contact with the hull, dealing its layer's attack damage.
@@ -437,11 +463,24 @@ final class HitPasses {
             if (mine.armed() && hull.overlaps(ship.x(), ship.y(), EnemyGun.MineSpec.BOX, mine.x(), mine.y())) {
                 double damage = mine.gun().damage();
                 events.add(SimEvents.Type.MINE_BURST, mine.x(), mine.y());
+                if (mine.line()) {
+                    // M9 part C: a line mine touched bursts with its ring (none this close to the ship).
+                    force.lineMineBurst(mine, ship, false);
+                }
                 mines.free(i);
                 double lost = ship.defences().armourLost();
                 if (damaged(lost, ship.defences().takeShot(damage, events, ship.x(), ship.y()))) {
                     return;
                 }
+            }
+        }
+        // M9 part C (Level 30, C2 a): a proximity burst's blast where it touches the hull, once.
+        double blast = force.blastDamage(hull, ship.x(), ship.y());
+        if (blast > 0) {
+            events.add(SimEvents.Type.MINE_BLAST_HIT, ship.x(), ship.y(), (int) Math.ceil(blast));
+            double lost = ship.defences().armourLost();
+            if (damaged(lost, ship.defences().takeShot(blast, events, ship.x(), ship.y()))) {
+                return;
             }
         }
         if (missilesHit(hull)) {
@@ -620,6 +659,30 @@ final class HitPasses {
     }
 
     /**
+     * M9 part A (design/enemies/ground/rail-bunker, {@code laser-line}): a live line whose band touches the hull deals
+     * its damage, once per line; returns whether it wrecked the ship.
+     */
+    private boolean linesHit(Hull hull) {
+        Pool<Enemy> enemies = force.enemies();
+        for (int j = 0; j < enemies.size(); j++) {
+            Enemy enemy = enemies.get(j);
+            if (enemy.spec().laserLine().isEmpty()) {
+                continue;
+            }
+            EnemySpec.LaserLine line = enemy.spec().laserLine().get();
+            if (enemy.lineBeam.strikes(line, hull, ship.x(), ship.y())) {
+                enemy.lineBeam.markHit();
+                events.add(SimEvents.Type.LINE_HIT, ship.x(), ship.y(), enemy.kind());
+                double lost = ship.defences().armourLost();
+                if (damaged(lost, ship.defences().takeShot(line.damage(), events, ship.x(), ship.y()))) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
      * M5 part H (design/enemies, Boss attacks and root bursts; decision H5 = a): a boss's sweeping beam
      * touching the hull deals its damage, at most once per sweep; returns whether it wrecked the ship.
      */
@@ -737,6 +800,18 @@ final class HitPasses {
      * M7 part C (design/enemies/ground/tendril-anchor, Touch): a flared tendril touching the ship deals its
      * {@code medium} damage, shield first (not pushed; its own cooldown).
      */
+    /**
+     * M9 part D (design/enemies, Air links): a lit air link touching the ship's hull hurts it by its touch (the ship's
+     * cooldown; the ship is not pushed). Rook is never touched.
+     */
+    void touchAirLinks() {
+        double damage = force.airLinks().touch(ship.spec().hull(), ship.x(), ship.y());
+        if (damage > 0) {
+            double lost = ship.defences().armourLost();
+            damaged(lost, ship.defences().takeShot(damage, events, ship.x(), ship.y()));
+        }
+    }
+
     void touchTendrils() {
         double damage = links.touch(ship.spec().hull(), ship.x(), ship.y(), false);
         if (damage > 0) {

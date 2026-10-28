@@ -2,7 +2,9 @@ package vanguard.content;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import vanguard.content.AlliesBlock.HookMode;
 import vanguard.sim.PlayField;
 
 /**
@@ -35,6 +37,8 @@ public sealed interface EscortBlock permits LevelData {
      * @param liftoff M5 part D: an air escort's liftoff from its pads
      * @param climb M5 part D: an air escort's climb-out
      * @param scriptedLoss M5 part D: the unit lost in a scripted event (Level 10's Lifeline Three)
+     * @param hull M9 part D (design/allies/mining-tug; Level 31): a hull escort (an ally that {@code follows: hull}) gives
+     *     its {@code hull} instead of {@code y} or {@code stations}; each section home pays {@code credits}
      */
     public record Escort(
             String ally,
@@ -47,12 +51,25 @@ public sealed interface EscortBlock permits LevelData {
             Optional<List<Station>> stations,
             Optional<Liftoff> liftoff,
             Optional<Climb> climb,
-            Optional<ScriptedLoss> scriptedLoss) {
+            Optional<ScriptedLoss> scriptedLoss,
+            Optional<Hull> hull) {
         public Escort {
             Check.notNegative("credits", credits);
             Check.that(
-                    y.isPresent() != stations.isPresent(),
-                    "give the convoy's y (on the road) or its stations (in the air)");
+                    (y.isPresent() ? 1 : 0) + (stations.isPresent() ? 1 : 0) + (hull.isPresent() ? 1 : 0) == 1,
+                    "give the convoy's y (on the road), its stations (in the air) or (M9 part D) its hull");
+            if (hull.isPresent()) {
+                Check.that(
+                        enter.isEmpty()
+                                && hook.isEmpty()
+                                && easy.isEmpty()
+                                && hard.isEmpty()
+                                && liftoff.isEmpty()
+                                && climb.isEmpty()
+                                && scriptedLoss.isEmpty(),
+                        "a hull escort gives its entry, climb-out, HP and hook in its hull block (no enter, hook, easy,"
+                                + " hard, liftoff, climb or scripted_loss)");
+            }
             y = y.map(List::copyOf);
             y.ifPresent(heights -> Check.notEmpty("y", heights));
             stations = stations.map(List::copyOf);
@@ -63,7 +80,7 @@ public sealed interface EscortBlock permits LevelData {
                 Check.that(
                         liftoff.isEmpty() && climb.isEmpty() && scriptedLoss.isEmpty(),
                         "liftoff, climb and scripted_loss belong to an air escort (stations)");
-            } else {
+            } else if (stations.isPresent()) {
                 Check.that(enter.isEmpty(), "an air escort lifts off (liftoff) instead of rolling in (enter)");
                 Check.that(hook.isEmpty(), "an air escort has no hook: every enemy bullet and contact hurts it");
                 int units = stations.orElseThrow().size();
@@ -77,9 +94,10 @@ public sealed interface EscortBlock permits LevelData {
             }
         }
 
-        /** The number of units. */
+        /** The number of units (M9 part D: a hull's sections). */
         public int units() {
-            return y.map(List::size).orElseGet(() -> stations.orElseThrow().size());
+            return y.map(List::size).orElseGet(() -> stations.map(List::size)
+                    .orElseGet(() -> hull.orElseThrow().hp().size()));
         }
 
         /** Whether it is an air escort (stations in the band). */
@@ -105,6 +123,92 @@ public sealed interface EscortBlock permits LevelData {
             Check.that(phase >= 0 && phase <= 1, "phase: 0 to 1, was " + phase);
             Check.notNegative("sway", sway.x());
             Check.notNegative("sway", sway.y());
+        }
+    }
+
+    /**
+     * M9 part D, a hull escort (design/allies/mining-tug; design/campaign Level 31, The tug in this level): the hull's
+     * centre holds {@code station} (its {@code at} px below the top edge, with the sway), rising from below the bottom
+     * edge into it over the first {@code enter} s (untouchable) and climbing off the top edge at {@code climb}
+     * (untouchable; a section alive at its start is home). {@code hp}: each section's HP at medium, in the ally's
+     * section order. {@code targeted_by}: per enemy slug the hook's mode ({@code always} or {@code none}: a hooked
+     * Hornet's missiles home on the nearest section, a hooked Dart's chase crosses one, a hooked Shard Drone's links
+     * sweep one; the others never hurt it). {@code unhooked}: the times of the waves of a hooked kind that are not hooked
+     * (easy's every other Hornet wave, the Shard groups not sent across the hull). {@code easy} / {@code hard}: the HP,
+     * the modes (merged over) and the unhooked waves instead.
+     */
+    public record Hull(
+            Station station,
+            double enter,
+            Climb climb,
+            List<Double> hp,
+            Map<String, HookMode> targetedBy,
+            Optional<List<Double>> unhooked,
+            Optional<HullChange> easy,
+            Optional<HullChange> hard) {
+        public Hull {
+            Check.positive("enter", enter);
+            Check.that(climb.t() > enter, "climb.t: after the entry, was " + climb.t());
+            hp = List.copyOf(hp);
+            Check.notEmpty("hp", hp);
+            hp.forEach(h -> Check.positive("hp", h));
+            targetedBy = Map.copyOf(targetedBy);
+            targetedBy
+                    .values()
+                    .forEach(mode -> Check.that(
+                            mode == HookMode.ALWAYS || mode == HookMode.NONE,
+                            "targeted_by: a hull's hook is always or none, was " + mode));
+            unhooked = unhooked.map(List::copyOf);
+            int sections = hp.size();
+            easy.ifPresent(change -> change.check(sections));
+            hard.ifPresent(change -> change.check(sections));
+        }
+
+        /** The change of {@code difficulty}, if any. */
+        public Optional<HullChange> change(Difficulty difficulty) {
+            return switch (difficulty) {
+                case EASY -> easy;
+                case MEDIUM -> Optional.empty();
+                case HARD -> hard;
+            };
+        }
+
+        /** Each section's HP on {@code difficulty}. */
+        public List<Double> hp(Difficulty difficulty) {
+            return change(difficulty).flatMap(HullChange::hp).orElse(hp);
+        }
+
+        /** Per enemy slug its hook mode on {@code difficulty}: {@code targeted_by} with the difficulty's merged over it. */
+        public Map<String, HookMode> modes(Difficulty difficulty) {
+            Map<String, HookMode> modes = new java.util.TreeMap<>(targetedBy);
+            change(difficulty).flatMap(HullChange::targetedBy).ifPresent(modes::putAll);
+            return modes;
+        }
+
+        /** The times of the unhooked waves on {@code difficulty}. */
+        public List<Double> unhooked(Difficulty difficulty) {
+            return change(difficulty).flatMap(HullChange::unhooked).orElse(unhooked.orElse(List.of()));
+        }
+    }
+
+    /** M9 part D: a difficulty's change to a hull escort: its sections' HP, its hook's modes, its unhooked waves. */
+    public record HullChange(
+            Optional<List<Double>> hp, Optional<Map<String, HookMode>> targetedBy, Optional<List<Double>> unhooked) {
+        public HullChange {
+            hp = hp.map(List::copyOf);
+            targetedBy = targetedBy.map(Map::copyOf);
+            unhooked = unhooked.map(List::copyOf);
+            targetedBy.ifPresent(modes -> modes.values()
+                    .forEach(mode -> Check.that(
+                            mode == HookMode.ALWAYS || mode == HookMode.NONE,
+                            "targeted_by: a hull's hook is always or none, was " + mode)));
+        }
+
+        private void check(int sections) {
+            hp.ifPresent(list -> {
+                Check.that(list.size() == sections, "hp: one per section, " + sections + ", was " + list.size());
+                list.forEach(h -> Check.positive("hp", h));
+            });
         }
     }
 
@@ -252,6 +356,23 @@ public sealed interface EscortBlock permits LevelData {
             Check.notNegative("trails", trails);
             Check.that(t > trails, "rook_loss.t: after its trails, was " + t);
             Check.positive("spin", spin);
+        }
+    }
+
+    /**
+     * M9 part B (design/player/wingmen, Rook's rescue and return; design/campaign Level 29): the mid-level escort swap at
+     * the held arena's release: the craft in the prison tender's hold launches from {@code at} ({@code [x, y]}, y px
+     * below the top edge of the halted screen) and Rook joins his slot over {@code join} s (the loaner peels away).
+     */
+    public record EscortSwap(Point at, double join) {
+        public EscortSwap {
+            Check.positive("escort_swap.join", join);
+            Check.that(
+                    at.x() >= 0
+                            && at.x() <= vanguard.sim.PlayField.WIDTH
+                            && at.y() >= 0
+                            && at.y() <= vanguard.sim.PlayField.HEIGHT,
+                    "escort_swap.at: on the screen");
         }
     }
 }

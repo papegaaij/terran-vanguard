@@ -1,10 +1,15 @@
 # Generators: rendered into README.md. Schema: ../../tech/architecture/schemas-player/README.md
 spare_power: {regen_bonus_per_mw: 0.1, max_regen_bonus: 0.5}  # shield regen bonus per spare MW
+# M9 part A (README, Enemy drain effects): each latched drainer takes `per` MW off the effective output, all of them at
+# most `max`; under the load the shield's regen stops first, then the weapons' fire rate x E / (load - shield draw),
+# never below `floor`.
+drain: {per: 2, max: 6, floor: 0.5}
 models:
   # output MW, price cr (0 = starter), available
   - {name: 'Mk I "Spark"', output: 8, price: 0, available: start}
   - {name: 'Mk II "Arc"', output: 11, price: 1500, available: act 1}
   - {name: 'Mk III "Fusion"', output: 16, price: 4000, available: act 2}
   - {name: 'Mk IV "Tokamak"', output: 20, price: 9000, available: act 4}  # round 48 J1 (user): 18 → 20 MW, M8 part A
-  - {name: 'Mk V "Helix"', output: 22, price: 18000, available: act 5, notes: {available: '(Helix Dynamics tech, captured)'}}
+  # M9 part A (Q12 = c of round 60): captured Helix tech salvaged in L34, in the shop from the L35 visit
+  - {name: 'Mk V "Helix"', output: 22, price: 18000, available: L35, notes: {available: '(Helix Dynamics tech, captured)'}}
   - {name: 'Mk VI "Choir Core"', output: 27, price: 32000, available: act 7, notes: {available: (Vrell tech)}}

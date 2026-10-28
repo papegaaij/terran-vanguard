@@ -67,8 +67,37 @@ public record WaveSpec(
         List<List<At>> lanes,
         Optional<Double> pairSeconds,
         Optional<Pursuit> pursuit,
-        Optional<Mount> mount) {
+        Optional<Mount> mount,
+        Optional<EnemySpec> leader,
+        Optional<OnRocks> onRocks,
+        Optional<MineLines> mineLines) {
     public WaveSpec {
+        java.util.Objects.requireNonNull(mineLines);
+        if (mineLines.isPresent() && (enemy.mineLayer().isEmpty() || entry != Entry.REAR)) {
+            throw new IllegalArgumentException(
+                    enemy.slug() + ": a wave's mine lines are a mine layer's, entering from the rear (M9 part C)");
+        }
+        java.util.Objects.requireNonNull(leader);
+        java.util.Objects.requireNonNull(onRocks);
+        if (leader.isPresent()
+                && (count < 2
+                        || enemy.scatter().isEmpty()
+                        || enemy.chain().isPresent()
+                        || enemy.flock().isPresent()
+                        || mount.isPresent()
+                        || formation == Formation.PURSUIT)) {
+            throw new IllegalArgumentException(enemy.slug()
+                    + ": a wave's leader leads a plain wing of at least two whose units scatter (M9 part B)");
+        }
+        if (onRocks.isPresent()
+                && (enemy.ride().isEmpty()
+                        || count != onRocks.get().rocks().size() * onRocks.get().riders())) {
+            throw new IllegalArgumentException(enemy.slug()
+                    + ": a wave on rocks carries a rider unit's riders on each of its rocks (M9 part B): " + count);
+        }
+        if (onRocks.isPresent() && (mount.isPresent() || leader.isPresent() || !carried.isEmpty())) {
+            throw new IllegalArgumentException(enemy.slug() + ": a wave on rocks has no mount, leader or pickup");
+        }
         if (edge == Edge.TOP || edge == Edge.BOTTOM) {
             throw new IllegalArgumentException("a wave enters from no top or bottom edge: " + edge);
         }
@@ -110,6 +139,283 @@ public record WaveSpec(
         }
         if (mount.isPresent() && mount.get().wall() && mount.get().opposite() && edge != Edge.NONE) {
             throw new IllegalArgumentException("opposite nests stand on both walls: " + edge);
+        }
+    }
+
+    /** A wave without M9 part B's leader and rocks. */
+    public WaveSpec(
+            double t,
+            Formation formation,
+            EnemySpec enemy,
+            int count,
+            Entry entry,
+            Edge edge,
+            Optional<Double> holdSeconds,
+            Optional<Double> warningSeconds,
+            int breakGroup,
+            Optional<Double> speed,
+            Optional<Double> intervalSeconds,
+            List<Carried> carried,
+            Optional<At> at,
+            List<List<At>> paths,
+            Optional<LoopBack> loopBack,
+            String tag,
+            Optional<Field> field,
+            boolean clockwise,
+            List<List<At>> lanes,
+            Optional<Double> pairSeconds,
+            Optional<Pursuit> pursuit,
+            Optional<Mount> mount) {
+        this(
+                t,
+                formation,
+                enemy,
+                count,
+                entry,
+                edge,
+                holdSeconds,
+                warningSeconds,
+                breakGroup,
+                speed,
+                intervalSeconds,
+                carried,
+                at,
+                paths,
+                loopBack,
+                tag,
+                field,
+                clockwise,
+                lanes,
+                pairSeconds,
+                pursuit,
+                mount,
+                Optional.empty(),
+                Optional.empty());
+    }
+
+    /** Without M9 part C's mine lines. */
+    public WaveSpec(
+            double t,
+            Formation formation,
+            EnemySpec enemy,
+            int count,
+            Entry entry,
+            Edge edge,
+            Optional<Double> holdSeconds,
+            Optional<Double> warningSeconds,
+            int breakGroup,
+            Optional<Double> speed,
+            Optional<Double> intervalSeconds,
+            List<Carried> carried,
+            Optional<At> at,
+            List<List<At>> paths,
+            Optional<LoopBack> loopBack,
+            String tag,
+            Optional<Field> field,
+            boolean clockwise,
+            List<List<At>> lanes,
+            Optional<Double> pairSeconds,
+            Optional<Pursuit> pursuit,
+            Optional<Mount> mount,
+            Optional<EnemySpec> leader,
+            Optional<OnRocks> onRocks) {
+        this(
+                t,
+                formation,
+                enemy,
+                count,
+                entry,
+                edge,
+                holdSeconds,
+                warningSeconds,
+                breakGroup,
+                speed,
+                intervalSeconds,
+                carried,
+                at,
+                paths,
+                loopBack,
+                tag,
+                field,
+                clockwise,
+                lanes,
+                pairSeconds,
+                pursuit,
+                mount,
+                leader,
+                onRocks,
+                Optional.empty());
+    }
+
+    /**
+     * M9 part C (design/enemies/space/minelayer; Level 30): this mine layers' wave with its lines: unit i lays at
+     * {@code lines}' row and gap i (cycling). Set it last: the older {@code withX} copies leave it out.
+     */
+    public WaveSpec withMineLines(MineLines lines) {
+        return new WaveSpec(
+                t,
+                formation,
+                enemy,
+                count,
+                entry,
+                edge,
+                holdSeconds,
+                warningSeconds,
+                breakGroup,
+                speed,
+                intervalSeconds,
+                carried,
+                at,
+                paths,
+                loopBack,
+                tag,
+                field,
+                clockwise,
+                lanes,
+                pairSeconds,
+                pursuit,
+                mount,
+                leader,
+                onRocks,
+                Optional.of(lines));
+    }
+
+    /**
+     * M9 part C (design/enemies/space/minelayer; design/campaign Level 30, Mine lines in this level): where a mine
+     * layers' wave lays its lines. Unit i rises in its lane (from the wave's edge: {@code left}, {@code right}, or
+     * alternating from the left) to the lay row {@code rows[i % n]} px below the top edge and lays its line with its gap
+     * at the cluster boundary nearest {@code gapXs[i % m]} px from the left edge (authored per wave: Level 30's
+     * left-centre ≈ 160 or right-centre ≈ 320); the units enter the wave's interval apart (the staggered entry, 2.5 s at
+     * Level 30).
+     */
+    public record MineLines(List<Double> rows, List<Double> gapXs) {
+        public MineLines {
+            rows = List.copyOf(rows);
+            gapXs = List.copyOf(gapXs);
+            if (rows.isEmpty() || gapXs.isEmpty()) {
+                throw new IllegalArgumentException("mine lines have a lay row and a gap at least");
+            }
+            for (double row : rows) {
+                if (!(row > 0) || !(row < PlayField.HEIGHT)) {
+                    throw new IllegalArgumentException("a lay row lies inside the play field: " + row);
+                }
+            }
+            for (double x : gapXs) {
+                if (!(x >= 0) || !(x <= PlayField.WIDTH)) {
+                    throw new IllegalArgumentException("a line's gap lies inside the play field: " + x);
+                }
+            }
+        }
+
+        /** Unit {@code i}'s lay row, px below the top edge. */
+        public double row(int i) {
+            return rows.get(i % rows.size());
+        }
+
+        /** Unit {@code i}'s gap point, px from the left edge. */
+        public double gapX(int i) {
+            return gapXs.get(i % gapXs.size());
+        }
+    }
+
+    /**
+     * M9 part B (design/enemies/air/talon, Squad leader): this wave led by {@code leaderSpec}: its first unit (a
+     * V-wing's tip, place 0) flies the leader's stat block (the same airframe, its own HP, shield and bounty); killing it
+     * scatters the wave's living members ({@link EnemySpec#scatter()}). A leader leaving the screen alive changes
+     * nothing.
+     */
+    public WaveSpec withLeader(EnemySpec leaderSpec) {
+        return new WaveSpec(
+                t,
+                formation,
+                enemy,
+                count,
+                entry,
+                edge,
+                holdSeconds,
+                warningSeconds,
+                breakGroup,
+                speed,
+                intervalSeconds,
+                carried,
+                at,
+                paths,
+                loopBack,
+                tag,
+                field,
+                clockwise,
+                lanes,
+                pairSeconds,
+                pursuit,
+                mount,
+                Optional.of(leaderSpec),
+                onRocks,
+                mineLines);
+    }
+
+    /**
+     * M9 part B (design/enemies, Rock riding): this wave's units ride {@code rocks}: {@link OnRocks#riders()} on each
+     * rock, in the rocks' order (its count is rocks × riders; its formation, entry and edge are not read for the
+     * units, which ride; the entry's edge warning is).
+     */
+    public WaveSpec withRocks(OnRocks rocks) {
+        return new WaveSpec(
+                t,
+                formation,
+                enemy,
+                count,
+                entry,
+                edge,
+                holdSeconds,
+                warningSeconds,
+                breakGroup,
+                speed,
+                intervalSeconds,
+                carried,
+                at,
+                paths,
+                loopBack,
+                tag,
+                field,
+                clockwise,
+                lanes,
+                pairSeconds,
+                pursuit,
+                mount,
+                leader,
+                Optional.of(rocks),
+                mineLines);
+    }
+
+    /**
+     * M9 part B (design/enemies, Rock riding; design/enemies/space/asteroid-mite): a wave's rocks, each a small
+     * breakable chunk of {@code chunk}'s kind (its size, HP, damage; its own t, x and drift are not read) entering at
+     * its {@link Rock}'s point and drifting at its velocity, carrying {@code riders} of the wave's units round its rim
+     * (2–5). The rocks block shots of both sides as the debris does.
+     */
+    public record OnRocks(List<Rock> rocks, int riders, HazardSpec.DebrisSpec chunk) {
+        /** The most riders a rock carries. */
+        public static final int MOST_RIDERS = 5;
+
+        public OnRocks {
+            rocks = List.copyOf(rocks);
+            if (rocks.isEmpty() || riders < 1 || riders > MOST_RIDERS || chunk.large()) {
+                throw new IllegalArgumentException("a wave on rocks has rocks, each a small chunk with 1-" + MOST_RIDERS
+                        + " riders: " + rocks.size() + " rocks, " + riders + " riders");
+            }
+        }
+    }
+
+    /**
+     * M9 part B: one rock of a wave on rocks: it enters at ({@code x}, {@code y}) (px from the left, px up from the
+     * bottom edge: above the top edge for a rock from the front, beyond a side edge for one from a side) at the wave's
+     * time and drifts at ({@code vx}, {@code vy}) px/s on the screen (the scroll included).
+     */
+    public record Rock(double x, double y, double vx, double vy) {
+        public Rock {
+            if (!(vy < 0) && vx == 0) {
+                throw new IllegalArgumentException("a rock drifts onto and across the screen: " + vx + ", " + vy);
+            }
         }
     }
 
@@ -216,7 +522,9 @@ public record WaveSpec(
                 lanes,
                 pairSeconds,
                 pursuit,
-                Optional.of(point));
+                Optional.of(point),
+                leader,
+                onRocks);
     }
 
     /**
@@ -345,7 +653,9 @@ public record WaveSpec(
                 lanes,
                 pairSeconds,
                 Optional.of(block),
-                mount);
+                mount,
+                leader,
+                onRocks);
     }
 
     /**
@@ -484,7 +794,9 @@ public record WaveSpec(
                 walkerLanes,
                 pairSeconds,
                 pursuit,
-                mount);
+                mount,
+                leader,
+                onRocks);
     }
 
     /** M5 part G: this wave with its units entering in pairs {@code seconds} apart (see {@link #pairSeconds()}). */
@@ -511,7 +823,9 @@ public record WaveSpec(
                 lanes,
                 Optional.of(seconds),
                 pursuit,
-                mount);
+                mount,
+                leader,
+                onRocks);
     }
 
     /** M5 part G: this wave with {@code point} as its {@link #at()} (a whirl cluster's release point, a circle's centre). */
@@ -538,7 +852,9 @@ public record WaveSpec(
                 lanes,
                 pairSeconds,
                 pursuit,
-                mount);
+                mount,
+                leader,
+                onRocks);
     }
 
     /** A wave without M5 part F's clockwise circle. */
@@ -605,7 +921,9 @@ public record WaveSpec(
                 lanes,
                 pairSeconds,
                 pursuit,
-                mount);
+                mount,
+                leader,
+                onRocks);
     }
 
     /** A wave without M5 part E's field. */

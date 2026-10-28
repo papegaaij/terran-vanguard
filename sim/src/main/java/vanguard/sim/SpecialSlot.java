@@ -131,6 +131,8 @@ public final class SpecialSlot {
     private final int[] limitTicks;
 
     private final int[] limitModes;
+    /** M9 part A: per switch, the reason word its list gives ({@link SpecialLimits.Reason#NONE}: the setting's). */
+    private final SpecialLimits.Reason[] limitReasons;
     /** M8 part A: the Sonar Pulse's window still open, steps; 0 when it is closed. */
     private int sonarLeft;
     /** M8 part A: why the fitted special is greyed now; {@link SpecialLimits.Reason#NONE} when it works. */
@@ -175,9 +177,11 @@ public final class SpecialSlot {
         flares = spec == null || spec.flares() == null ? null : new Flares(spec.flares());
         limitTicks = new int[limits.switches().size()];
         limitModes = new int[limitTicks.length];
+        limitReasons = new SpecialLimits.Reason[limitTicks.length];
         for (int i = 0; i < limitTicks.length; i++) {
             SpecialLimits.Switch at = limits.switches().get(i);
             limitTicks[i] = SimStep.ticks(at.atSeconds());
+            limitReasons[i] = at.reason();
             limitModes[i] = at.forbidden().isEmpty()
                     ? RULE
                     : spec != null && at.forbidden().get().contains(spec.kind()) ? FORBIDDEN : ALLOWED;
@@ -285,11 +289,14 @@ public final class SpecialSlot {
             return SpecialLimits.Reason.NO_WATER;
         }
         int mode = RULE;
+        SpecialLimits.Reason word = SpecialLimits.Reason.NONE;
         for (int i = 0; i < limitTicks.length && limitTicks[i] <= levelTick; i++) {
             mode = limitModes[i];
+            word = limitReasons[i];
         }
         if (mode == FORBIDDEN) {
-            return setting.reason();
+            // M9 part A: an underground section's list reads its own word (IN ROCK), not the setting's.
+            return word != SpecialLimits.Reason.NONE ? word : setting.reason();
         }
         if (mode == RULE && setting == SpecialSpec.Setting.NOT_UNDER_WATER && medium.underwater()) {
             return SpecialLimits.Reason.UNDER_ICE;
@@ -625,9 +632,18 @@ public final class SpecialSlot {
      */
     private void strip(Pool<Enemy> enemies, SetPiece[] setPieces) {
         int stripped = 0;
+        // M9 part A (design/enemies, Enemy shields): every hex shield on the screen is emptied, its refill held for
+        // the machine stun (its ENEMY_SHIELD_BROKEN events at each unit).
+        int hold = SimStep.ticks(emp.machineStunSeconds());
         for (int j = 0; j < enemies.size(); j++) {
-            if (enemies.get(j).stripRing()) {
+            Enemy enemy = enemies.get(j);
+            if (enemy.stripRing()) {
                 stripped++;
+            }
+            if (enemy.hexShield.fitted()
+                    && PlayerFire.onField(enemy)
+                    && enemy.layer().touchable()) {
+                enemy.stripShield(hold);
             }
         }
         if (stripped > 0) {

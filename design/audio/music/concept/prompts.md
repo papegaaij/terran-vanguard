@@ -1402,3 +1402,75 @@ landing on the same B minor chord with a timpani hit and a cymbal. **Measured**:
 
 **AI prompt**: *"A six-second sting: a sinister four-note organ figure, low and quiet, answered by a bright heroic
 horn-and-trumpet call over a snare roll, landing on a B minor chord."*
+
+## hollow-rock-r62-a — track 12 "Hollow Rock" and its three stems
+
+From the chosen round-03 sketch [belt-theme-r03-a](belt-theme-r03-a.ogg) (135 BPM, B minor), by
+`tools/concept/audio/music_r62.py`. Composition: the sketch's 4-bar intro (radio static, two beeps, the pad, Vorne's
+motif in brass and organ, the anvils from bar 3, a snare roll) and a 96-bar loop of twelve 8-bar sections on its
+progressions, A = `Bm Bm G G Em Em F♯ F♯`, B = `Bm Gm Bm F♯ Bm Gm Em F♯`, D = `G G F♯ F♯ Bm Gm Em F♯`: A (the machine:
+four-on-the-floor kick, snare and an anvil on the backbeat, open hats, the syncopated distorted bass, the anvils'
+pattern, the distorted machine line and the arpeggio playing Vorne's 1–♭3–5–7 at speed; the motif once in cold low
+brass and organ), B (Vorne's 8-bar statement, timpani), A2, C (the conveyor breakdown doubled to 8 bars: no kit, the
+anvil 16ths, the bass held, the lone human horn twice, a riser), D (the build with the motif tutti, trumpets on top, a
+snare roll), B2, E (new, "drift": `Em Em G G Bm Bm F♯ F♯`, half time, no hats, the bass held, the arpeggio dark), F
+(the build: kick, then hats, then the snare, the machine line and a riser), D2 (the climax), B3, C2 (the breakdown
+again) and T (the turn back into A). Changes to the sketch's sound: the arpeggio's pluck without its resonance (q 1.4,
+the sketch's 3.0; an 80 ms filter envelope), the intro's static without its crackle.
+
+Stems: **base** kick, distorted bass, the anvils' low hits, pad, the conveyor, the radio static (Level 29 from section
+2, Level 34 throughout); **full** the base plus snare, hats, the anvils' top, crashes, steam, timpani, risers, the
+machine line, the arpeggio and the lone horn; **motif** Vorne's motif in brass and organ alone, in the open: its
+statements 6 dB under the full mix on average (the game adds it on top; alone under Vorne's broadcast in the Act 5
+intro).
+
+**Measured** (not listened to): 181.78 s, `LOOPSTART` 333200 (7.556 s), `LOOPLENGTH` 7526400 (170.667 s = 96 bars);
+full −14.1 LUFS, −1.6 dBTP, seam 0.35; base −14.7 LUFS (−0.6 LU), −2.2 dBTP, seam 0.91; motif −18.2 LUFS (−4.1 LU),
+−8.2 dBTP, seam 0.13; full + motif summed −13.5 LUFS, peak −0.3 dBFS. Loudness per section in the sheet.
+
+**AI prompt**: *"Driving industrial level theme for a 1990s sci-fi shooter in an asteroid-belt mining station, 135 BPM,
+B minor, four-on-the-floor kick, struck anvils and steam hisses as percussion, a syncopated distorted bass, a machine
+arpeggio, a cold pad, a villain's four-note motif stated in low brass and organ, a breakdown with a conveyor's ticking
+and a lone horn, about three minutes, instrumental, seamless loop."*
+
+- `hollow-rock-r62-a.ogg`, `hollow-rock-base-r62-a.ogg`, `hollow-rock-motif-r62-a.ogg`: the full mix and its two stems.
+- `hollow-rock-seam-r62-a.ogg`, `hollow-rock-base-seam-r62-a.ogg`, `hollow-rock-motif-seam-r62-a.ogg`: listening aids,
+  the last 8 s of each loop followed by the first 8 s after `LOOPSTART` (0.5 s fades).
+- `hollow-rock-motif-mix-r62-a.ogg`: listening aid, loop bars 1–24, the full mix with the motif stem on top (42.7 s).
+- `hollow-rock-sheet-r62-a.png`: review sheet: waveforms with intro (grey), loop (blue), fade tail (dark) and loop
+  points (amber), the measured numbers and a per-section loudness table.
+
+## gilded-cage-r64-a — track 13 "Gilded Cage" and its three stems
+
+From the chosen round-60 sketch [act5-b-theme-r60-a](act5-b-theme-r60-a.ogg) (126 BPM, E minor), by
+`tools/concept/audio/music_r64.py`. Composition: the sketch's 4-bar intro (the pad and the chains, Vorne's motif in
+the open, the kick, the press and a riser from bar 3) and an 88-bar loop of eleven 8-bar sections, A = `Em Em C C Am
+Am B B`: A (the cage: four-on-the-floor kick, struck sheet metal on the backbeat over a tight snare, chains on the
+off-16ths, the press hammer every other bar, the gated distorted 16th bass sequence, the cold string pad; the motif in
+low brass and organ, the struck metal playing it back at speed), B (+ hats and the high metal), C (+ the press
+doubled), Br (new, "the line stops": `Em Em Em Em C C B B`, no kick, the bass held, the chains on the beat, the struck
+metal playing the motif slowly, a riser and a kick fill), D (the hammer: the motif tutti with trumpets, timpani, a
+snare roll), B2, E (new, "drift": `Am Am C C Em Em B B`, half time, no hats, the bass held), F (the build: kick, then
+chains and metal, then the bass sequence, hats and a riser, a snare roll), D2, C2 and T (the turn back into A).
+
+Stems: **base** kick, the bass, the pad, the press hammer (Levels 31 and 33 from section 2, the Level 35 approach);
+**full** the base plus the struck sheet metal, snare, hats, chains, the high metal, crashes, timpani, risers and the
+struck metal's answer; **motif** Vorne's motif in brass and organ alone, in the open: its statements 6 dB under the
+full mix (the game adds it on top; alone under Level 35's recruitment after the boss).
+
+**Measured** (not listened to): 179.52 s, `LOOPSTART` 357000 (8.095 s), `LOOPLENGTH` 7392000 (167.619 s = 88 bars);
+full −14.1 LUFS, −1.4 dBTP, seam 0.24; base −14.3 LUFS (−0.2 LU), −2.4 dBTP, seam 0.20; motif −20.4 LUFS (−6.3 LU),
+−9.9 dBTP, seam 0.20; full + motif summed −13.9 LUFS, peak −0.7 dBFS. Loudness per section in the sheet.
+
+**AI prompt**: *"Cold EBM and industrial techno level theme for a 1990s sci-fi shooter in an asteroid belt, 126 BPM,
+E minor, four-on-the-floor kick, struck sheet metal, chains and a press hammer as percussion, a gated distorted 16th
+bass sequence, a cold string pad, a villain's four-note motif stated in low brass and organ every eight bars and
+answered by the struck metal, a drumless breakdown and a half-time drift, about three minutes, instrumental, seamless
+loop."*
+
+- `gilded-cage-r64-a.ogg`, `gilded-cage-base-r64-a.ogg`, `gilded-cage-motif-r64-a.ogg`: the full mix and its two stems.
+- `gilded-cage-seam-r64-a.ogg`, `gilded-cage-base-seam-r64-a.ogg`, `gilded-cage-motif-seam-r64-a.ogg`: listening aids,
+  the last 8 s of each loop followed by the first 8 s after `LOOPSTART` (0.5 s fades).
+- `gilded-cage-motif-mix-r64-a.ogg`: listening aid, loop bars 1–24, the full mix with the motif stem on top (45.7 s).
+- `gilded-cage-sheet-r64-a.png`: review sheet: waveforms with intro (grey), loop (blue), fade tail (dark) and loop
+  points (amber), the measured numbers and a per-section loudness table.

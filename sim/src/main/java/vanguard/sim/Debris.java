@@ -44,6 +44,20 @@ public final class Debris implements Hashed {
     }
 
     /**
+     * M9 part B (design/enemies, Rock riding): a wave's rock entering at (atX, atY) (y up; a side entry is moved to
+     * touch the play field's edge so it is not gone at once) and drifting at (velocityX, velocityY) px/s.
+     */
+    void enter(
+            HazardSpec.DebrisSpec debrisSpec, int index, double atX, double atY, double velocityX, double velocityY) {
+        place(debrisSpec, index, atX);
+        double half = debrisSpec.size().width() / 2;
+        x = prevX = Math.clamp(atX, 1 - half, PlayField.WIDTH + half - 1);
+        y = prevY = atY;
+        vx = velocityX;
+        vy = velocityY;
+    }
+
+    /**
      * Thrown from (x, y) at (vx, vy) px/s (a rock from a destroyed ground unit, Level 05); it vanishes
      * after {@code lifeTicks} steps. {@code index} is unique in an attempt.
      */
@@ -169,6 +183,15 @@ public final class Debris implements Hashed {
 
     double x() {
         return x;
+    }
+
+    /** M9 part B: its drift across the screen, px/s. */
+    double vx() {
+        return vx;
+    }
+
+    double vy() {
+        return vy;
     }
 
     double y() {

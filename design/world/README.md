@@ -23,7 +23,7 @@ levels of its act build on. Levels reference a setting; they do not redefine it.
 | [earth](earth/README.md) | Megacities, open ocean and arctic on Earth's surface | approved | n/a | chosen |
 | [mars](mars/README.md) | Red canyons, dust storms, terraforming domes, Olympus Mons | approved | n/a | chosen |
 | [europa](europa/README.md) | Cracked ice surface and the dark ocean beneath it | approved | n/a | chosen |
-| [belt](belt/README.md) | Asteroid fields and hollowed-out mining stations | draft | n/a | chosen |
+| [belt](belt/README.md) | Asteroid fields and hollowed-out mining stations | approved | n/a | chosen |
 | [jovian](jovian/README.md) | Jupiter's storms, floating cloud cities, Callisto HQ | draft | n/a | chosen |
 | [vrell-space](vrell-space/README.md) | The Tether Gate and the living, dying Vrell worlds beyond | draft | n/a | chosen |
 

@@ -48,8 +48,10 @@ public sealed interface ObjectivesBlock permits LevelData {
                     defend.isPresent() == primary.equals(DEFEND),
                     "a defend primary has its defend block, other primaries do not");
             Check.that(
-                    secondary.flatMap(Secondary::integrity).isEmpty() || defend.isPresent(),
-                    "an integrity secondary needs a defend primary");
+                    secondary.flatMap(Secondary::integrity).isEmpty()
+                            || defend.isPresent()
+                            || escort.flatMap(LevelData.Escort::hull).isPresent(),
+                    "an integrity secondary needs a defend primary (M9 part D: or a hull escort)");
             Check.that(
                     escort.isPresent() == primary.equals("escort"),
                     "an escort primary has its escort block, other primaries do not");
@@ -97,7 +99,9 @@ public sealed interface ObjectivesBlock permits LevelData {
      * (design/campaign Level 21, round 44 K.h): a {@code kill_ratio}'s {@code boss_counted: false} leaves the level's
      * bosses out of its count (their kills and the total); counted if not given. M8 part B (design/campaign Level 22,
      * Difficulty notes): an {@code escapes} objective's {@code easy} and {@code hard} change its {@code allowed} on
-     * that difficulty (0: every one destroyed).
+     * that difficulty (0: every one destroyed). M9 part B (design/campaign Level 29, "Hold fire"): {@code spared:
+     * <slug>}, none of the level's neutral craft of that kind destroyed (a hit does not fail it; the tracker's {@code
+     * label}), met when the last has left the screen, failed at the first destroyed.
      */
     public record Secondary(
             Optional<Double> killRatio,
@@ -119,7 +123,8 @@ public sealed interface ObjectivesBlock permits LevelData {
             Optional<Integer> allowed,
             Optional<Boolean> bossCounted,
             Optional<SecondaryChange> easy,
-            Optional<SecondaryChange> hard) {
+            Optional<SecondaryChange> hard,
+            Optional<String> spared) {
         /** M5 part F: what a {@code collect} objective counts, the level's weather sondes. */
         public static final String SONDES = "sondes";
 
@@ -162,6 +167,7 @@ public sealed interface ObjectivesBlock permits LevelData {
                     standing,
                     allowed,
                     bossCounted,
+                    Optional.empty(),
                     Optional.empty(),
                     Optional.empty());
         }
@@ -514,8 +520,9 @@ public sealed interface ObjectivesBlock permits LevelData {
                                     + (links.isPresent() ? 1 : 0)
                                     + (untouched.isPresent() ? 1 : 0)
                                     + (standing.isPresent() ? 1 : 0)
+                                    + (spared.isPresent() ? 1 : 0)
                             == 1,
-                    "give kill_ratio, groups, escapes, kill_all, parts, afloat, collect, integrity, links, untouched"
+                    "give kill_ratio, groups, escapes, kill_all, parts, afloat, collect, integrity, links, spared, untouched"
                             + " or standing");
             Check.that(links.orElse(true), "links: true, or leave it out");
             Check.that(untouched.orElse(true), "untouched: true, or leave it out");
@@ -543,11 +550,20 @@ public sealed interface ObjectivesBlock permits LevelData {
                                     || links.isPresent()
                                     || untouched.isPresent()
                                     || standing.isPresent()
+                                    || spared.isPresent()
                             ? label.isPresent()
                             // M7 part F: an escapes objective that allows some away may name its counter (Level 19's
                             // GREY TANKS 12/14).
-                            : label.isEmpty() || groups.isPresent() || allowed.isPresent(),
-                    "a kill_all, parts, afloat, collect, integrity, links, untouched or standing objective has its"
+                            // M9 part C: or a tagged one with a difficulty's allowance (Level 30's CONVOY 0/3).
+                            : label.isEmpty()
+                                    || groups.isPresent()
+                                    || allowed.isPresent()
+                                    || (tag.isPresent()
+                                            && (easy.flatMap(SecondaryChange::allowed)
+                                                            .isPresent()
+                                                    || hard.flatMap(SecondaryChange::allowed)
+                                                            .isPresent())),
+                    "a kill_all, parts, afloat, collect, integrity, links, spared, untouched or standing objective has its"
                             + " tracker label,"
                             + " a groups one or an escapes one with allowed may have one, the others none");
             Check.notNegative("credits", credits);

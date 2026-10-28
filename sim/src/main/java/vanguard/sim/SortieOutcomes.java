@@ -61,6 +61,11 @@ final class SortieOutcomes implements PlayerFire.Hits, EnemyForce.Escapes, Links
     }
 
     @Override
+    public void wreckPaid(Enemy car) {
+        s.tally.partKill(car.spec().bounty());
+    }
+
+    @Override
     public void released(Enemy spawner, int units) {
         // M5 part C: a periodic spawner's units count among the enemies as released.
         s.streamReleased += units;

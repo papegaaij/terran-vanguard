@@ -81,6 +81,14 @@ final class SpriteUse {
     /** The sprites of a level's tows: {@code lifeboat}, {@code lifeboat-pod}, {@code lifeboat-cable} and their {@code -glow}s. */
     static final String TOW_ROOT = "lifeboat";
 
+    /**
+     * M9 part C: a level's tows drawn in another look than {@link #TOW_ROOT} (the game's {@code TowLooks.LOOKS}), by
+     * level number: Level 30's dead beacon buoy, {@code debris-lane-buoy} tumbling and {@code -break} at the cut
+     * (tools/art/belt_units_c.py); M9 part D: Level 31's Dacosta's claim, {@code debris-claim-rock}
+     * (tools/art/belt_units_d.py).
+     */
+    static final Map<Integer, String> TOW_LOOKS = Map.of(30, "debris-lane-buoy", 31, "debris-claim-rock");
+
     /** The dust puffs of a level's collapse: {@code collapse-puff_0..7} (Level 09's arcology). */
     static final String COLLAPSE_ROOT = "collapse-puff";
 
@@ -183,6 +191,27 @@ final class SpriteUse {
      */
     static final List<String> BREAKOUT_ROOTS = List.of("ice-slab", "ice-shatter");
 
+    /**
+     * M9 part A: a level with a shielded enemy (its {@code shield}, design/enemies, Enemy shields) draws the hex shield's
+     * bubble, hit, break and refill per size tier, {@code enemy-shield-*} (tools/art/act5_gear.py {@code shield}; the
+     * game's EnemyShieldLooks); in the levels' unit atlases, not the shared pages (ART-A: ~600k px).
+     */
+    static final String SHIELD_ROOT = "enemy-shield";
+
+    /**
+     * M9 part A: a level whose homing missiles wear the Act 5 look ({@code homing: {look: diamond}}) draws the homing
+     * diamond, its exhaust, pop and fizzle, {@code homing-diamond*} (tools/art/act5_gear.py {@code diamond}; the game's
+     * DiamondLooks).
+     */
+    static final String DIAMOND_ROOT = "homing-diamond";
+
+    /**
+     * M9 part A: until a level's data uses the Act 5 effects ({@link #SHIELD_ROOT}, {@link #DIAMOND_ROOT}) they go in the
+     * unit atlas of the act's first level (Level 29, whose Talons wear the first shields), as an enemy whose art lands
+     * before its level does.
+     */
+    static final int ACT_5_FIRST_LEVEL = 29;
+
     /** The look of a destructible ground target that names none (Level 01's cargo container). */
     private static final String DEFAULT_LOOK = "cargo-container";
 
@@ -197,7 +226,7 @@ final class SpriteUse {
         content.weapons().keySet().forEach(shared::add);
         content.specials().specials().forEach(special -> shared.add(slug(special.name())));
         Map<String, Set<String>> levels = new TreeMap<>();
-        content.levels().forEach((key, level) -> levels.put(atlasOf(key), roots(content, level)));
+        content.levels().forEach((key, level) -> levels.put(atlasOf(key), roots(content, key, level)));
         // An enemy no level's data uses yet (its art lands before its level) goes in the unit atlas
         // of its stat block's first level, where that level's waves will claim it.
         Set<String> used = new TreeSet<>();
@@ -208,6 +237,13 @@ final class SpriteUse {
                         .add(slug);
             }
         });
+        // M9 part A: the Act 5 effects no level's data uses yet go in the act's first level's unit atlas.
+        for (String root : List.of(SHIELD_ROOT, DIAMOND_ROOT)) {
+            if (!used.contains(root)) {
+                levels.computeIfAbsent(atlasOf(ACT_5_FIRST_LEVEL), level -> new TreeSet<>())
+                        .add(root);
+            }
+        }
         // An ally likewise, by its optional first_level (Level 10's shuttle before the level's data).
         content.allies().allies().forEach((slug, ally) -> {
             if (!used.contains(slug)) {
@@ -249,8 +285,23 @@ final class SpriteUse {
         return String.format(Locale.ROOT, "level-%02d", number);
     }
 
-    /** The sprite roots a level uses. */
+    /** The sprite roots a level of {@code content} uses. */
     static Set<String> roots(Content content, LevelData level) {
+        String key = content.levels().entrySet().stream()
+                .filter(entry -> entry.getValue() == level)
+                .map(Map.Entry::getKey)
+                .findFirst()
+                .orElse(null);
+        return roots(content, key, level);
+    }
+
+    /** The look of the tows of the level with key {@code key} (null: none known): {@link #TOW_LOOKS}, else the lifeboat. */
+    static String towRoot(String key) {
+        return key == null ? TOW_ROOT : TOW_LOOKS.getOrDefault(Content.levelNumber(key), TOW_ROOT);
+    }
+
+    /** The sprite roots level {@code key} uses. */
+    static Set<String> roots(Content content, String key, LevelData level) {
         Set<String> enemies = new TreeSet<>();
         level.waves().forEach(wave -> wave.groupList().forEach(group -> enemies.add(group.enemy())));
         level.setPieces().ifPresent(pieces -> pieces.forEach(piece -> enemies.add(piece.enemy())));
@@ -278,10 +329,19 @@ final class SpriteUse {
         List<String> open = new ArrayList<>(enemies);
         while (!open.isEmpty()) {
             EnemyData enemy = content.enemy(open.removeLast());
+            if (enemy.shield().isPresent()) {
+                roots.add(SHIELD_ROOT);
+            }
             for (EnemyData.Attack attack : enemy.attacks()) {
+                if (attack.homing().flatMap(homing -> homing.look()).isPresent()) {
+                    roots.add(DIAMOND_ROOT);
+                }
                 attack.spawn().map(EnemyData.Spawn::enemy).filter(enemies::add).ifPresent(open::add);
                 String root = PATTERN_ROOTS.get(attack.pattern());
-                if (root != null) {
+                // M9 part C: a line mine is drawn in its layer's own frames (minelayer-mine*), claimed by the layer.
+                boolean lineMine =
+                        attack.mine().filter(EnemyData.Mine::lineMine).isPresent();
+                if (root != null && !lineMine) {
                     roots.add(root);
                 }
             }
@@ -306,8 +366,9 @@ final class SpriteUse {
             roots.add("flare");
             roots.add("headlight");
         });
-        // A tow is drawn as the lifeboat, its cargo pod and the cable (TowLooks), whatever its data.
-        level.tows().filter(tows -> !tows.isEmpty()).ifPresent(tows -> roots.add(TOW_ROOT));
+        // A tow is drawn as the lifeboat, its cargo pod and the cable (TowLooks), whatever its data; M9 part C: or in
+        // its level's own look (Level 30's dead beacon buoy).
+        level.tows().filter(tows -> !tows.isEmpty()).ifPresent(tows -> roots.add(towRoot(key)));
         // M5 part F: a level with weather draws its rain, gusts, lightning, hidden bodies' glow and sondes.
         level.weather().ifPresent(weather -> roots.add(WEATHER_ROOT));
         // M7 part C: a level with terrain draws the sparks of its rock.

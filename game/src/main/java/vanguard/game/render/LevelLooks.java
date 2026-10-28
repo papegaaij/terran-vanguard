@@ -9,6 +9,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
 import java.util.List;
 import vanguard.content.AlliesData;
+import vanguard.content.Content;
 import vanguard.content.Difficulty;
 import vanguard.content.LevelData;
 import vanguard.sim.BossSpec;
@@ -57,6 +58,10 @@ class LevelLooks {
     final ConvoyLooks convoy;
     /** M5 part D: an air escort's units (Level 10's shuttles), if the level has one. */
     final ShuttleLooks shuttles;
+    /** M9 part D: a hull escort's pivots (Level 31's tug), null without one; its looks built at the first draw. */
+    private final JsonValue tugPivots;
+
+    private TugLooks tug;
     /** M5 part D: a scripted loss's glow and lance (Level 10), if the level has one. */
     final LossLooks loss;
     /** M8 part F: Rook's loss's trails, flashes and spin-down (Level 26), if the level has one. */
@@ -176,6 +181,23 @@ class LevelLooks {
     final IceCrawlerLooks tenderDrops;
     /** M8 part E: the moored buoys releasing drops (Level 25's survey buoy); null without them. */
     final BuoyLooks buoys;
+    /** M9 part A: the Tesla Coil Pod's arcs; null without one fitted (built with the first sortie, {@link #stepped}). */
+    ArcLooks arcs;
+
+    private boolean arcsBuilt;
+    /**
+     * M9 part A: the hex shields' looks; null while their art is not loaded (it is in the Act 5 levels' unit atlases;
+     * built with the first sortie).
+     */
+    EnemyShieldLooks shields;
+    /** M9 part A: the units' {@code laser-line} telegraphs and rails. */
+    final LineLooks lines;
+    /** M9 part B: the escort swap's looks (Rook hidden in the hold, the Ember's launch, its flight away). */
+    final RescueLooks rescue;
+    /** M9 part A: the kills in vacuum (the belt's bursts, debris and drifting wrecks). */
+    final VacuumDeaths vacuumDeaths;
+    /** M9 part A: the level's homing missiles as homing diamonds; null in a level without them ({@link #diamonds}). */
+    DiamondLooks diamonds;
     /**
      * @param files the assets, for the pivot files of the cranes and set pieces
      * @param script the level's script, whose set pieces it draws
@@ -251,11 +273,16 @@ class LevelLooks {
                         .escort()
                         .map(escort -> pivots(files, escort.ally().slug()))
                         .orElse(null));
+        this.tugPivots = script.objectives()
+                .escort()
+                .filter(escort -> escort.hull().isPresent())
+                .map(escort -> pivots(files, TugLooks.SLUG))
+                .orElse(null);
         this.loss = new LossLooks(sprites, script);
         this.rookLoss = new RookLossLooks(sprites, files, script.rookLoss());
         this.flash = flash;
         this.farside = new FarsideLooks(sprites, script);
-        this.tows = new TowLooks(sprites);
+        this.tows = new TowLooks(sprites, Content.levelNumber(levelKey));
         this.shipLooks = new ShipLooks(sprites, files);
         this.wingmanLooks = new WingmanLooks(sprites, files, flash);
         this.shadows = new Shadows();
@@ -294,6 +321,9 @@ class LevelLooks {
             grade.rookLoss(rookLoss);
         }
         deepDeaths = new DeepDeaths(sprites, kinds);
+        vacuumDeaths = new VacuumDeaths(sprites, level);
+        lines = new LineLooks(sprites.pixel);
+        rescue = new RescueLooks(sprites);
         List<Double> waterlines = level.waterlines();
         shipHydro = new HydroLooks(sprites, "ship", waterlines);
         shipLooks.hydro(shipHydro);
@@ -333,6 +363,11 @@ class LevelLooks {
      */
     void groundAllies(LevelScript script, AlliesData allies) {
         domes = DomeLooks.of(sprites, script, DomeLooks.names(level, allies));
+    }
+
+    /** M9 part A: whether the level's homing missiles are homing diamonds ({@link DiamondLooks#diamonds}). */
+    void diamonds(boolean diamondMissiles) {
+        diamonds = DiamondLooks.of(sprites, diamondMissiles);
     }
 
     /**
@@ -415,6 +450,13 @@ class LevelLooks {
         lowAir.clear();
         flakFlashes.clear();
         arsenal.restart();
+        if (arcs != null) {
+            arcs.restart();
+        }
+        if (shields != null) {
+            shields.restart();
+        }
+        vacuumDeaths.restart();
         canyonLooks.restart();
         kinds.restart();
         deepWater.restart();
@@ -427,6 +469,17 @@ class LevelLooks {
      * drone breaks, dashes, scorch marks; {@link ArsenalLooks}).
      */
     void stepped(Sortie sortie) {
+        if (!arcsBuilt) {
+            arcs = ArcLooks.of(sprites, sortie.armament());
+            shields = EnemyShieldLooks.of(sprites, looks);
+            arcsBuilt = true;
+        }
+        if (shields != null) {
+            shields.stepped(sortie);
+        }
+        if (arcs != null) {
+            arcs.stepped(sortie);
+        }
         arsenal.stepped(sortie);
         deepWater.stepped(sortie);
         kinds.burrowers(sortie).stepped(sortie);
@@ -440,6 +493,13 @@ class LevelLooks {
         kinds.shellbacks(sortie).stepped(sortie);
         kinds.vortices(sortie).stepped(sortie);
         kinds.ghostDrones(sortie).stepped(sortie);
+        // M9 part B: Level 29's units' gun clocks, the Talons' wings, the opened clamps, the rocks shot apart.
+        kinds.ceres(sortie).stepped(sortie);
+        // M9 part C: the line mines' bursts; the Gunships' gun clocks, launches and plate sparks, the trains' splits.
+        kinds.mines(sortie).stepped(sortie);
+        kinds.minefield(sortie).stepped(sortie);
+        // M9 part D: the Hornets' launches, the links' snaps, the dashes' bounces, the shards and blades.
+        kinds.rig(sortie).stepped(sortie);
         if (walker != null) {
             walker.stepped(sortie);
         }
@@ -498,5 +558,13 @@ class LevelLooks {
         lowAir.step();
         deepWater.stepEffects();
         plain.step();
+    }
+
+    /** M9 part D: the hull escort's tug looks ({@link TugLooks}), built at the first draw (they read its sections). */
+    TugLooks tug(Sortie sortie) {
+        if (tug == null) {
+            tug = new TugLooks(sprites, flash, sortie, tugPivots);
+        }
+        return tug;
     }
 }

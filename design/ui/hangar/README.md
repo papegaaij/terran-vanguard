@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../../player, ../../systems/economy, ../../campaign]
-updated: 2026-10-26
+updated: 2026-10-28
 ---
 
 # Hangar
@@ -217,6 +217,9 @@ Production art, UI batch part U2 (for concept round 13, opened by part U3): the 
 | [concept/intel-final-r55-a.png](concept/intel-final-r55-a.png) | The `glow-angler` sensor L2 portrait (30x30; `tools/art/intel.py`, M8 part F batch) | chosen (round 55, F.8: accepted as final) |
 | [concept/intel-final-r57-a.png](concept/intel-final-r57-a.png) | The `depth-hunter` and `relay-beacon` sensor L2 portraits (30x30; `tools/art/intel.py`, M8 part G batch) | chosen (round 57: accepted as final) |
 | [concept/intel-final-r58-a.png](concept/intel-final-r58-a.png) | The `boss-abyssal-maw` sensor silhouette (40x40; `tools/art/intel.py` from `tools/art/abyssal_maw.py`'s sprites, M8 part H batch): the coil round the arena's edges with the head at the top | chosen (round 58: accepted as final) |
+| [concept/intel-final-r62-a.png](concept/intel-final-r62-a.png) | The `talon`, `sam-nest`, `asteroid-mite`, `clamp-gun` and `wavering-stormhawk` sensor L2 portraits (30x30; `tools/art/intel.py` from `tools/art/belt_units.py`'s production models in Q.11 b's gunmetal, M9 part B batch, step B4): Level 29's new units nose down (the SAM Nest's rack over its base, the Stormhawk's IFF light lit) | chosen (round 62, F.11: accepted as final) |
+| [concept/intel-final-r63-a.png](concept/intel-final-r63-a.png) | The `minelayer`, `gilded-gunship`, `dart-drone` and `rail-serpent` sensor L2 portraits (30x30; `tools/art/intel.py` from `tools/art/belt_units_c.py`'s production models, M9 part C batch, step C4): Level 30's new units nose down (the Minelayer's drum dark, the Gunship's doors shut and lamps dark, the Rail Serpent's engine car) | chosen (round 63, F.8: accepted as final) |
+| [concept/intel-final-r64-a.png](concept/intel-final-r64-a.png) | The `hornet`, `shard-drone` and `buzzsaw-drone` sensor L2 portraits (30x30; `tools/art/intel.py` from `tools/art/belt_units_d.py`'s production models in Q.11 b's gunmetal, M9 part D batch, step ART-D) | proposed (round 64) |
 | [concept/level-28-intel-capture-r58-a.png](concept/level-28-intel-capture-r58-a.png) | Game capture, M8 part H (step H7): the Level 28 hangar from a playthrough save (a sensor suite L3 fitted for the capture): Okafor's teaser, the threat strip with the Choir's lime mark at the pre-boss pause, the portraits, the Bulwark loaner with `ROOK MIA` | chosen (round 58: accepted as final) |
 | [concept/level-26-intel-capture-r55-a.png](concept/level-26-intel-capture-r55-a.png) | Game capture, M8 part F (step F6, a playthrough save at Level 26 on medium, a sensor suite L2 fitted for the capture): the hangar with Level 26's intel (Rook's teaser, the threat strip, the five portraits incl. the Glow Angler, the lure note), the panel at 1:1 | chosen (round 55, F.8: accepted as final) |
 | [concept/level-27-intel-capture-r57-a.png](concept/level-27-intel-capture-r57-a.png) | Game capture, M8 part G (step G5, a playthrough save at Level 27 with a sensor suite L3 fitted for the capture): the hangar before Level 27, Okafor's teaser, the threat strip, the five portraits with the Depth Hunter's `UNMARKED GREY`, the Bulwark loaner in the escort slot (`ROOK MIA`) | chosen (round 57: accepted as final) |
@@ -240,6 +243,8 @@ Light Drone Bay, EMP Burst, Orbital Lance and Shield Overcharge. Round 37 chose 
 | [concept/act3-hangar-capture-r37-a.mp4](concept/act3-hangar-capture-r37-a.mp4) | The same, 97 s | final (round 44, A.a: a record of production assets) |
 | [concept/act4-icons-final-r50-a.png](concept/act4-icons-final-r50-a.png) | The four Act 4 equipment icons (`tools/art/icons.py --act4`): Harpoon Torpedoes, Depth Charges, Sonar Pulse, Bulwark (escort) at 16 and 24 px, beside the Torpedo Pod, Proximity Mines, EMP Burst and Rook icons for the style (sheet) | chosen (round 50, F.7: accepted as final) |
 | [concept/act4-hangar-capture-r50-a.png](concept/act4-hangar-capture-r50-a.png) | Game capture (round 50, M8 part A, step A5), the hangar before Level 27 (Rook MIA) from a scratch save: the Harpoon Torpedoes row and its test fire, the escort callout with the loaner Bulwark and `ROOK MIA`, the escort shop's Bulwark row before and after `BUY`, the Depth Charges' test fire over water (sheet of 4 frames) | chosen (round 50, F.7: accepted) |
+| [concept/act5-icons-final-r61-a.png](concept/act5-icons-final-r61-a.png) | The two Act 5 weapon icons (`tools/art/icons.py --act5`, M9 part A): Tesla Coil Pod (the pod with an arc from its terminal) and Swarm Tail (three micro-missiles fanned out backwards) at 16 and 24 px, beside the Micro-missile Pod and Tail Gun icons for the style (sheet) | chosen (round 61, F.5: accepted) |
+| [concept/act5-hangar-capture-r61-a.png](concept/act5-hangar-capture-r61-a.png) | Game capture of the hangar before the [capture rig](../../enemies/concept/prompts.md#belt-rig-capture-r61-a)'s Level 08 (aborted to the hangar, `--loadout utility=sensor-suite:3 --special airstrike:2`): the Tesla Coil Pod in the L WING shop with `NEW` and the ◆ (the rig's intel recommends `shield-breaker`), its detail `<AREA> <SHIELD-BREAKER>` and the test fire's arc, the intel's `SPECIAL LIMITED · AIRSTRIKE: IN ROCK`; right: the REAR shop with the Swarm Tail. The intel's RECOMMEND row cuts `SHIELD-BREAKER` at the panel's edge | chosen (round 61, F.5: accepted) |
 
 **After a load and in a replay** (user decision 2026-10-18): Continue and Load game reach the
 hangar through the next level's briefing; that hangar does not autosave as it opens (a save was
@@ -376,3 +381,5 @@ Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-a
   escort ([mission select](../mission-select/README.md#decisions)).
 - 2026-10-25 (user, [round 57](../../concept-rounds/round-57/README.md) closed): the `depth-hunter` and `relay-beacon` intel portraits and Level 27's intel accepted as final (F.8).
 - 2026-10-26 (user, [round 58](../../concept-rounds/round-58/README.md) closed): the `boss-abyssal-maw` sensor silhouette and Level 28's intel accepted as final (F.6).
+- 2026-10-28 (user, [round 62](../../concept-rounds/round-62/README.md), closed; page answers): the five Level 29 intel portraits (F.11: Talon, SAM Nest, Asteroid Mite, clamp gun, wavering Stormhawk) accepted as final.
+- 2026-10-28 (user, [round 61](../../concept-rounds/round-61/README.md), closed): the Act 5 icons and the hangar's ◆ marker accepted (**F.5**). Round 63 closed the same day: the four intel portraits of Level 30 accepted (**F.8**).

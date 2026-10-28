@@ -3,7 +3,7 @@ title: Data file schemas — enemies and allies
 design: approved
 implementation: in-progress
 art: n/a
-updated: 2026-10-25
+updated: 2026-10-28
 ---
 
 # Data file schemas — enemies and allies
@@ -380,7 +380,9 @@ The schemas of the enemies' stat blocks and boss scripts and of the allies' file
   ring when the ship or Rook comes within its reach), all three only with a stride; the hooks **`lance`**
   (`charge`, `interval`, `last_interval`) and **`stomp`** (`tell`, `cooldown`). An aimed
   attack's **`homing`** (`turn_rate` °/s, `life` s, `hp`, `most` alive, `hatch` s of the hatch tell: its shots are
-  homing missiles; a boss's; the hook **`homing`** (`turn_rate`)); a boss attack's **`parts`** (the parts that fire
+  homing missiles; a boss's; the hook **`homing`** (`turn_rate`); M9 part A: `look: diamond`, the Ascendancy's homing
+  diamond, and `seekable: true`, picked by the player's homing shots, Rook and the Tesla arc when no unit is in their
+  reach, QA-1; both only on a unit of Act 5 on, `BeltChecks`); a boss attack's **`parts`** (the parts that fire
   it besides those naming it as their `attack`: the walker's pods fire one salvo pattern in phase 1, another
   later) and **`aim: facing`** (a walking boss's aimed or `fan` attack fired along its heading; round 43: a fan of
   2 over 180° leaves its flanks). Round 43: a boss's **`fan`** may take a `burst` and `burst_gap` (the walker's chin
@@ -400,7 +402,40 @@ The schemas of the enemies' stat blocks and boss scripts and of the allies' file
   per tier, `small_act_hp` (`cap`, `units`, `levels`: the `small` units that get the act HP factor, capped, in those levels; the user's Act 2
   playtest, 2026-10-18), `beam_era_hp` (`from_level`, `factor`, `tiers`: from that level on, the units of those
   tiers (bosses aside, below `huge`) take the factor on their HP on top of the act HP factor; M7 part E, step E5),
-  `formations` (name: description).
+  `formations` (name: description); M9 part A: `reference_dps` 29–35 (the generator's Act 5 hand plan) and **`shields`**
+  (`delay` s without a hit before a shield refills, `refill` of its maximum a second, `breaker_hold` s a `shield-breaker`
+  hit holds the refill back; [enemy shields](../../../enemies/README.md#enemy-shields)).
+- **M9 part A, Act 5's unit keys** (loaded and checked in step A2 by content's `EnemyData`, `BeltRules`, `BeltChecks`;
+  the simulation's in step A1): a stat block's **`shield`** (the hex shield's HP at medium; the difficulty's HP lever
+  and, on a returning `medium` or larger unit, the act HP factor on it, never the beam era's; only from Act 5) and the
+  attack pattern **`laser-line`** with its **`line`** (`telegraph` s, at least 0.8, `live` s, `band` px, `hold_within`
+  px: the unit holds fire while the ship is that close), its `bullet` (the damage once), `interval` (holding the
+  telegraph and the live time) and `first_shot_delay`, no `speed`; the hooks `telegraph` and `attacks.<name>.interval`
+  change it by difficulty. A laser line is the unit's `EnemySpec.laserLine`, not a gun.
+- **M9 part B, Level 29's unit keys** (loaded and checked in step B2 by content's `EnemyData`, `BeltRules`,
+  `BeltChecks`; flown from steps B1 and B1b): a stat block's **`leader`** (`hp`, `shield`, `bounty`: the airframe a
+  V-wing's tip flies with the wave's `leader: tip`, the Talon's gold stripe; only with a `V-wing` among its formations)
+  and **`neutral: true`** (a neutral craft: no attacks, no bounty, no contact; never counted as an enemy, never picked
+  by the seekers, Rook's and the Bulwark's shots pass through; Level 29's wavering Stormhawks); the movements
+  **`swoop_path`** (`lowest` `[min, max]` px below the top edge it bottoms out, drawn once per wave; `across` px it
+  travels across its lane; `fire_band` px below the top edge it fires within: the Talon's swoop of a V-wing, line
+  abreast, column or pincer), **`scatter`** (`speed` px/s, `seconds`: its wave's leader killed, it breaks off sideways
+  and leaves holding fire) and **`ride`** (`within` px, `tell` s, `gap` s between riders, `dive_speed` px/s, `tumble`
+  s a broken rock's riders tumble, `crawl` °/s round the rim: it rides a rock of its wave's `on_rocks`, only there); a
+  hover's **`peel`** (px/s: at its end it peels off to the nearer side edge); a homing attack's **`hold_within`** (px:
+  the unit holds fire while the ship is that close) and **`per_shooter: true`** (`most` counts only this unit's
+  missiles in flight); a ground turret's aimed `homing` attack with a `turn_rate` (its rack aims, no `aim: facing`:
+  the SAM Nest); the hooks **`parting_pair`** (`true`: a scattering unit fires one parting shot), **`ride`** (`within`,
+  `tell`, `dive_speed`) and **`hover_y`** (px: the hover's height instead). M9 part C (Level 30; loaded and checked from step C1, mapped
+  in step C2): the movement **`lay`** (`rise` px/s up its side lane from behind, `strafe` px/s across while laying,
+  `lane` px in from its side edge: a mine layer, with a line mine), a `mine` attack's line-mine keys **`proximity`** px,
+  **`blink`** s, **`blast`** (`radius` px, `bullet`: its damage), **`chain`** px, **`hop`** s and **`line`**
+  (`clusters`, `per_cluster`, `spacing`, `cluster_gap`, `gap`, optional `middle_short`, `most`; its `drift` 0); a
+  flyer's facing armour **`armour: {front_arc, factor}`** with a **`rear_plate`** (`arc`, `multiplier`: the engines);
+  a `spawn` with a **`stream`** (`gap`, `first`, `straight` s, `most` alive: a launcher beside the unit's other
+  attacks, its ring's `tell` its lamps); a segment chain's **`cars`** (`every`, `stagger`, `hp`, `bounty`, `attack`:
+  its turret cars, counted in the parts' HP and bounty) and a cut's **`wreck: true`**; the hooks **`mine`** (`gap`,
+  `middle_short`, `arm`) and **`chase`** (`turn_rate`).
 - **Allies** (`allies/data.yaml`): one entry per ally
   slug with `name`, `layer`, `size`, `hitbox`, `hp` (medium; the level sets difficulty variants),
   `damaged_by` (`objective_aimed`: only shots the target-the-objective hook aims at it;

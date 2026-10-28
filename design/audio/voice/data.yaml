@@ -28,7 +28,8 @@ expressions:   # exaggeration 0.25-2, cfg_weight (lower: slower, more dramatic),
 # shift: added to the expression's row (optional); fixed: settings for every line instead of the
 # expression's; layering: choir = the Choir's post-processing; pins: a line's seed by its key;
 # uncast: true = no voice cast yet (no ref): its lines have no voice file and play as text;
-# filter: pa = the public-address filter instead of the radio filter (an automated loudspeaker);
+# filter: pa = the public-address filter instead of the radio filter (an automated loudspeaker); enemy = the enemy
+# channel (M9 part A: the radio filter with a steady static bed; the speaker's lines and pages come over it);
 # stage: the sound (a file in assets/voice/<slug>/) a radio line plays when it is only a stage
 # direction in square brackets, which is not spoken (the Choir sings).
 speakers:
@@ -68,6 +69,11 @@ speakers:
       f6aaa2b9a46a: 258648631   # Level 25 t=158 "The trench opens ahead…": the key's seed jumped an octave on 23 % of the line (p90 about 400 Hz); the pin stays at 156 Hz (p90 210) and reads "Aegis" both ways
       553b9b37180b: 89375107    # Level 26 t=167.5 "Aegis Two, report. Rook? Rook, answer!": the key's seed jumped an octave on 31 % of the line (p90 about 400 Hz); the pin reads it word for word with the name prompt at 142 Hz (p90 190)
       4b4bcd5a2392: 152259044   # Act 4 outro page 1 "The Maw is dead…": every take of the key's seed and of four more pins (48 in all) held a 1.3-2.5 s pause in its first chunk (step H3, pending the user's review in round 58: the closest take kept)
+      75c0a0678123: 106         # Level 29 t=117 "Dock 9 ahead…": the key's seed read "Dot 9" both ways; the pin reads "Doc 9" (Dock, a homophone) and the rest word for word at 152 Hz
+      d371bdb9647f: 101         # Level 29 holders-down "Bulwark, RTB…": the key's seed added a second "Lancer"; the pin reads "RTB" as the letters and the line word for word at 137 Hz
+      8a3fba79fa37: 103         # Level 29 level-end "Ceres is lost…": the key's seed trailed a repeated "trade"; the pin reads word for word at 145 Hz
+      9ed7c0c8776e: 101   # Level 30 briefing page 1 "Ceres is lost…" (step C5: shortened to four lines, was e633469e30c7 at the same pin): the old key's seed read "Look flies" and "gunch at convoy"; the pin (chunk retries 102, 1102 for 1.3–1.4 s pauses) reads word for word with the name prompt at 149 Hz ("Ceres" and "Vorne" heard as "Sarah's" and "Vorn" without it)
+      0d76a1f8baa4: 103   # Level 30 secondary met "Convoy down…": the key's seed and 101 read "Convoid/Convoyed down"; the pin (its second take, 104) reads "Convoy down" both ways
   varga:
     names: [Varga]
     ref: ref-varga
@@ -105,6 +111,7 @@ speakers:
       d316a7f1c744: 221342345   # Level 25 briefing page 2 "The nests sing…": the key's seed ran high (median 216 Hz, p90 about 320); the pin stays at 204 Hz (p90 268)
       98a59ec8c2b3: 160064932   # Level 26 briefing page 2 "You'll see only what glows…": the key's seed jumped an octave on 18 % of the page (p90 about 470 Hz); the pin stays at 220 Hz (p90 284) and reads "Vrell" and "stalk" with the name prompt
       60a839dd854d: 101354349   # Level 26 t=110.5 "Your kin. It said your kin, Commander.": the key's seed jumped an octave on 22 % of the line (p90 about 500 Hz); the pin is the only steady one of five (214 Hz, p90 269)
+      f68cdb47e54d: 102         # Level 29 briefing page 2 "The Ascendancy's fighters…": the key's seed read "Misal nests" and "rail mites"; the pin reads "missile" and "Vrell mites" both ways
   rook:
     names: [Rook]
     ref: ref-rook
@@ -130,6 +137,8 @@ speakers:
       56de5260936b: 93088266    # Level 24 t=24 "Dark's coming, Lancer…": the key's seed jumped an octave on 13 % of the line (p90 about 400 Hz) and read "Darks come in"; the pin reads it word for word at his 154 Hz (p90 183)
       8689cf844d62: 141074656   # Level 26 t=148 "Lancer, if I buy you a drink…" (his quiet last beat, pinned as the voice design asks): the key's seed jumped an octave on 20 % of the line (p90 about 430 Hz); the pin is level and unhurried at 152 Hz (p90 176)
       799501ca3f8b: 127489028   # Level 26 t=161.2 (was 160.3) "Lancer, something's below u—" (cut inside "us"): spoken "u" before the respelling, its take read "Thumb, something's below you"; the pin reads "Lancer, something's below us" both ways, the only one of four seeds
+      5f914b5dd515: 104         # Level 29 escort-joined "Miss me?…" (his first line back): picked of six seeds for his lively base (198 Hz, quick, word for word both ways); the key's seed sat high and thin (228 Hz, few voiced frames)
+      e001dac31ca3: 102         # Level 29 t=141 "Harker's wing…" (step B4b's trim of "I know that wing…", whose pin 103 was slow and level): the most level of six seeds (142 Hz, p90 165, no jump), word for word both ways; neutral, no joke
   choir:
     names: [The Choir]
     ref: ref-varga
@@ -155,6 +164,39 @@ speakers:
     ref: ref-perimeter-beacon
     fixed: {exaggeration: 0.3, cfg_weight: 0.5, temperature: 0.6}
     filter: pa
+  # M9 part A (Act 5 voices, the enemy channel): `filter: enemy` puts a speaker's lines and pages on the enemy channel
+  # (the radio filter with a steady static bed, the amber INTERCEPT dress; intercepted briefing pages too).
+  vorne:   # round 60, V.1 a (Jeffrey Church); M9 part B (step VOX-B): ref-vorne is round 60's ref-vorne-r60-a pitched -2 semitones (formants preserved; tools/concept/audio/tts_r62.py --refs), so Chatterbox re-voices him lower (takes about 100-106 Hz instead of 115-130); the takes themselves are not shifted (round 61 C.9, round 62's comparison vorne-pitch-r62-a/b). The theatrical base: exaggeration +0.1, cfg_weight -0.1 (slower) on every row
+    names: [Vorne]
+    ref: ref-vorne
+    shift: {exaggeration: 0.1, cfg_weight: -0.1}
+    filter: enemy
+    pins:
+      69d286fb6676: 105         # Act 5 intro page 2 "Citizens of the solar system…": the key's seed slurred "the Vrell are" ("that Rell"); the pin reads word for word through the filter at 95 Hz (p95 117)
+  harker:   # Level 29 (the mutineers' flight lead, the enemy channel); auditioned in round 62 (step VOX-B, QB-1: a Ted Delorme, b David Clarke); his lines are rendered with both: a here into assets/voice/harker/, b from ref-harker-r62-b into concept/voice-harker-r62-b/ under the keys that ref gives, so the pick sets `ref` to the chosen clip as it is named (the name is part of the key: no rename) and, for b, moves those files into assets/ (as Dr. Brandt's in round 51)
+    names: [Harker]
+    ref: ref-harker-r62-b   # cast in round 62 (V.2 = b, David Clarke; the clip keeps its -r62- name: it is part of the lines' key); a's takes (Ted Delorme) in concept/rejected/voice-harker-r62-a/
+    filter: enemy
+    pins:   # by candidate a's keys (they apply while `ref` is a) and b's (while it is b)
+      35f4cf2532d8: 101         # a, Level 29 t=70.5 "Ceres Wing, Harker. We're Ascendancy now…" (step B4b; "Ceres is Vorne's now" read "borns" in most seeds): word for word with the name prompt at 108 Hz
+      b21cb3f53bd3: 101         # b, Level 29 t=70.5 "Ceres Wing, Harker. We're Ascendancy now…" (step B4b): every seed's "We're" read "Wear" or "Where" somewhere; the pin reads word for word dry with the name prompt at 122 Hz ("Wear" through the filter)
+      c2b4d483e96d: 102         # b, Level 29 t=133 "Rook on the Aegis net?…" (step B4b): the key's seed read "the ages, Nat" through the filter; the pin reads word for word at 125 Hz
+      c152a98f06b1: 102         # b, Level 29 neutral-left "Who broke off?…": the key's seed read "Hooprokoth" through the filter; the pin reads word for word at 110 Hz
+      552614d67ed7: 103         # b, Level 29 neutral-down "That one held fire…": the key's seed read "held five" through the filter; the pin reads word for word at 131 Hz
+  ceres-control:   # Level 29 (the loyalist dock controller, the friendly channel); auditioned in round 62 (step VOX-B, QB-1: a Paul Adams, b Phil Chenevert); his lines are rendered with both as Harker's: a here into assets/voice/ceres-control/, b from ref-ceres-control-r62-b into concept/voice-ceres-control-r62-b/
+    names: [Ceres Hub Control]
+    ref: ref-ceres-control-r62-a   # cast in round 62 (V.1 = a, Paul Adams; the clip keeps its -r62- name: it is part of the lines' key); b's takes (Phil Chenevert) in concept/rejected/voice-ceres-control-r62-b/
+    pins:   # by candidate a's keys (they apply while `ref` is a) and b's (while it is b)
+      87895a245ef7: 101         # a, Level 29 t=60 "Block C just declared!…" (step B4b: not shouted, "guns are hot" for "guns are live", which every seed read "guns alive"): word for word both ways through the filter at 125 Hz (seed 104, quicker, read "the gas in this split" through it)
+      2a82a54ba3f0: 104         # a, Level 29 t=101 "Dock 9's prison tender…" (step B4b): the key's seed opened with a stray "That"; the pin reads word for word with the name prompt at 144 Hz ("Doc" for "Dock" without it, as every seed)
+      4a3ee0a0d1e8: 103         # a, Level 29 t=156 "Outer ring holds…" (step B4b; "Tell Earth not all of Ceres…" broke after "not" in every seed, so "that" was added): word for word both ways at 155 Hz
+      23d924eada27: 101         # a, the supply cache's secret "Dock Six stores…": the key's seed trailed a "Thanks."; the pin reads word for word at 134 Hz
+      f8ba5ed91356: 103         # b, Level 29 t=1 "Aegis flight, Ceres Hub Control…": the key's seed read "you hurt him" both ways; the pin reads "heard" through the filter at 152 Hz
+      cbd4dd29293f: 102         # b, Level 29 t=46 "The vote is closing…" (step B4b): the key's seed read "the boat" through the filter; the pin reads word for word both ways at 164 Hz
+      ba32c66c3b1b: 102         # b, Level 29 t=101 "Dock 9's prison tender…" (step B4b): the key's seed read "Doc Nye's"; the pin reads word for word both ways ("Doc" for "Dock" without the name prompt) at 146 Hz
+      ea1c865931b8: 103         # b, Level 29 t=156 "Outer ring holds…" (step B4b): every seed of four read "holds" as "holes"; the pin reads the rest word for word through the filter at 154 Hz
+      e6f4f02c9f03: 102         # b, Level 29 t=119.9 "Four clamps, a gun on each…": the key's seed read "I've gone on each"; the pin reads word for word at 163 Hz
+      29751a733c37: 102         # b, the supply cache's secret "Dock Six stores…": the key's seed trailed a "Thanks."; the pin reads "Doc six stores…" (Dock, as every seed) at 142 Hz
   lifeboat-seven: {names: [Lifeboat Seven], ref: ref-lifeboat-seven}   # Level 07; cast in round 25 (a, Tadhg Hynes), neutral as auditioned
   civilian:   # Level 08 ("shelter nine"); cast in round 30 (b, Faith Abiola-Ellison), neutral as auditioned
     names: [Civilian]
@@ -226,3 +268,18 @@ speakers:
     pins:   # by candidate b's keys (they apply only while `ref` is b; a's four takes needed none)
       d6eaf31e59c8: 227357623   # Level 23 t=34 "Aegis, Thera Deep Control…" (b): the key's seed read "on the shot" for "shaft" and broke the name; the pin reads it word for word at 133 Hz
       fc3128b738ec: 267442516   # Level 23 survey probe "That's Conamara's probe…" (b): the key's seed jumped an octave (p90 about 440 Hz); the pin stays at 112 Hz, near the clip's 119
+  bellwether:   # Level 31 (M9 part D, step D2): the mining tug Bellwether's captain, a belt miner in her fifties, dry and tired (the story's speakers table); radio portrait radio-bellwether (step ART-D, `portrait: bellwether`); auditioned in round 64 (step VOX-D: a Lucy Burgoyne, b Laurie Anne Walden); her lines are rendered with both as Harker's: a here into assets/voice/bellwether/, b from ref-bellwether-r64-b into concept/voice-bellwether-r64-b/ under the keys that ref gives, so the pick sets `ref` to the chosen clip as it is named (the name is part of the key: no rename) and, for b, moves those files into assets/
+    names: [Bellwether]
+    ref: ref-bellwether-r64-a   # provisional (candidate a, Lucy Burgoyne) until round 64 picks
+    pins:   # by candidate a's keys (they apply while `ref` is a) and b's (while it is b); steps VOX-D and VOX-D2
+      71f731ce2d8c: 103         # a, Level 31 first-ally-hit "We're hit in the bow!…": the key's seed jumped to 208 Hz; the pin reads "bow" ("hitting" for "hit in" through the filter) at 156 Hz
+      17256fdb3b13: 104         # a, Level 31 first-ally-hit "We're hit in the cargo!…": the key's seed read "heading the cargo"; the pin reads word for word at 140 Hz
+      3a4d2bf5d199: 103         # a, Level 31 ally-lost "We've lost the bow!…": the key's seed jumped to 202 Hz; the pin reads word for word at 142 Hz
+      6f693a8b1b13: 102         # a, Level 31 t=86 "You know why half of Ceres turned?…": the key's seed read "half a series" both ways; the pin reads word for word with the name prompt at 136 Hz
+      d8fe3296137f: 104         # a, Level 31 t=93 "Lung rot, bone loss…" (step VOX-D2): the key's seed read "Langrot"; the pin reads word for word plain ("Long rot" with the name prompt, a homophone) at 135 Hz, the best of six seeds
+      d56a9127d093: 103         # a, Level 31 ally-lost "We've lost the cargo!…" (step VOX-D2): the key's seed was breathy (19 % voiced) and jumped to 400 Hz; the pin reads word for word at 154 Hz, 40 % voiced
+      ade8c334d602: 105         # a, the Dacosta's claim secret "That's old Dacosta's claim marker…" (step VOX-D2): "old" was lost in the key's seed and seeds 101-104 ("That's how/all Dacosta's"); the pin, the first clean one of 12 more, reads word for word with the name prompt at 142 Hz (no respelling)
+      1d349fe451cc: 102         # b, Level 31 first-ally-hit "We're hit in the bow!…" (step VOX-D2): the key's seed read "the bell"; the pin reads "the bow" both ways ("hitting" for "hit in", as a's) at 209 Hz
+      62f8693c5aff: 104         # b, Level 31 ally-lost "We've lost the bow!…" (step VOX-D2): the key's seed read "the bell, wish to flying"; the pin reads word for word both ways at 226 Hz (four of six seeds read "bell" with the name prompt)
+      7dd32c336e31: 102         # b, Level 31 first-ally-hit "We're hit in the cargo!…" (step VOX-D2): the key's seed read "the car though"; the pin reads word for word plain at 188 Hz
+      b8fba12216b9: 103         # b, Level 31 t=110 "Throwing you a patch…" (step VOX-D2): the key's seed read "Drawing"; the pin reads word for word both ways at 186 Hz

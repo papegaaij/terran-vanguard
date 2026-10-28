@@ -146,7 +146,9 @@ public final class CampaignRoute {
      * Whether an act outro that has just finished ends the release (M6 part B): the content has no
      * next level, so the end card, the name entry and the credits follow instead of the hangar. A
      * generic rule: {@code --act-end} on an earlier level is followed by its next level as before,
-     * and a replay never shows an outro.
+     * and a replay never shows an outro. M9 part B (step B3): the same after a won level that ends no act
+     * ({@link #afterLevel} gives the hangar) while the act's next level is not built: Level 29's win ends the
+     * release until Level 30 is built (the game's end card after its debrief is step B4's).
      */
     public static boolean releaseEnd(Content content, Campaign campaign) {
         return campaign.replay().isEmpty()

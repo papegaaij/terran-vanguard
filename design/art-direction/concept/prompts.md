@@ -581,3 +581,19 @@ variant a is in `assets/` until the pick. No bubbles (user feedback).
 The GIF plays the four rungs side by side over Thera Deep's farm floor (review grade), 3x.
 
 Closed in round 52 (user, 2026-10-22, F.7 = a): **Chosen: a** ("pressure flash", `underwater-burst-final-r52-a`, the frames in the game). **Rejected: b** ("quenched fire": `rejected/underwater-burst-final-r52-b.png`/`.gif`).
+
+## vacuum-burst-final-r61
+
+Production art of M9 part A (round 61), `tools/art/explosions.py --vacuum`. Artist brief: a kill in the asteroid belt's
+vacuum on the explosion ladder's four sizes: no smoke and no rising fireball; a white flash gone within 0.1 s, a thin
+white-blue ring racing out, hot sparks streaking straight out, and a ring of small gunmetal hull fragments flung out,
+tumbling, their edges glowing orange and cooling to grey before they fade. Proposal b adds a brief orange fireball
+core that burns out by a third of the burst.
+
+AI prompt: "1990s pre-rendered CGI explosion in space, brief white flash, thin shock ring, metal debris fragments
+flying outward in a ring, no smoke, sprite sheet on black"
+
+## vacuum-capture-r61-a
+
+Concept round 61, frames of the [capture rig](../../enemies/concept/prompts.md#belt-rig-capture-r61-a)'s Tesla run (b)
+at rig ≈ 32.9–33.3 s: a 240×240 crop of the play field, four frames, each scaled 2× (nearest); the burst a is in the game.

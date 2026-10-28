@@ -1,0 +1,231 @@
+backdrop:
+  # Presentation only: Level 30's shipping lane (tools/art/backdrop_l30.py, step ART-C, from the README's Layout table (no data.yaml yet: re-run after C2)).
+  # Space only (ground: none): the deep layer is the base (space, the lane's dust band); low-air holds the
+  # beacon buoys (animated: one strobe flash in 2 s), the last beacon and the dimmed rocks; high-air the
+  # close grit. At most two animated pieces on the screen at once: lane-buoy with tumbling-rock or
+  # lane-beacon (never a tumbling rock near the end).
+  scroll_factors: {deep: 0.12, far: 0.5, ground: 1, low-air: 1.35, high-air: 2.2}   # far, ground unused
+  ramp: 2
+  haze_colour: 09090e
+  atmosphere:
+    clear: {haze: 0.0}
+  tile_sets:
+    lane-space: {layer: deep, height: 1024}   # space, the lane's sunlit dust band, stars
+    lane-dust: {layer: high-air, height: 960}   # close grit and dust motes (transparent)
+  pieces:
+    ceres-behind: {layer: deep, size: [400, 400]}
+    far-rock-a: {layer: deep, size: [120, 100]}
+    far-rock-b: {layer: deep, size: [84, 72]}
+    far-rock-c: {layer: deep, size: [56, 48]}
+    convoy-lights: {layer: deep, size: [64, 120]}
+    open-belt: {layer: deep, size: [480, 420]}
+    lane-buoy: {layer: low-air, size: [40, 64], frames: 8, fps: 4}
+    lane-buoy-dark: {layer: low-air, size: [40, 64]}
+    lane-beacon: {layer: low-air, size: [64, 160], frames: 8, fps: 4}
+    tumbling-rock: {layer: low-air, size: [104, 104], frames: 16, fps: 2}
+    drift-rock-a: {layer: low-air, size: [88, 80]}
+    drift-rock-b: {layer: low-air, size: [64, 56]}
+  placed:
+    - {piece: lane-buoy, t: -1.79, x: 44}
+    - {piece: lane-buoy, t: 0.062, x: 436}
+    - {piece: lane-buoy, t: 1.914, x: 44}
+    - {piece: lane-buoy, t: 3.765, x: 436}
+    - {piece: lane-buoy, t: 5.617, x: 44}
+    - {piece: lane-buoy, t: 7.469, x: 436}
+    - {piece: lane-buoy, t: 9.321, x: 44}
+    - {piece: lane-buoy, t: 11.173, x: 436}
+    - {piece: lane-buoy, t: 13.025, x: 44}
+    - {piece: lane-buoy, t: 14.877, x: 436}
+    - {piece: lane-buoy, t: 16.728, x: 44}
+    - {piece: lane-buoy, t: 18.58, x: 436}
+    - {piece: lane-buoy, t: 20.432, x: 44}
+    - {piece: lane-buoy, t: 22.284, x: 436}
+    - {piece: lane-buoy, t: 24.136, x: 44}
+    - {piece: lane-buoy, t: 25.988, x: 436}
+    - {piece: lane-buoy, t: 27.84, x: 44}
+    - {piece: lane-buoy, t: 29.691, x: 436}
+    - {piece: lane-buoy, t: 31.816, x: 44}
+    # a shot-out buoy (section 2)
+    - {piece: lane-buoy-dark, t: 34.593, x: 436}
+    # a shot-out buoy (section 2)
+    - {piece: lane-buoy-dark, t: 37.37, x: 44}
+    - {piece: lane-buoy, t: 40.148, x: 436}
+    - {piece: lane-buoy, t: 42.926, x: 44}
+    - {piece: lane-buoy, t: 45.704, x: 436}
+    - {piece: lane-buoy, t: 48.481, x: 44}
+    # a shot-out buoy (section 2)
+    - {piece: lane-buoy-dark, t: 51.259, x: 436}
+    # a shot-out buoy (section 2)
+    - {piece: lane-buoy-dark, t: 54.037, x: 44}
+    - {piece: lane-buoy, t: 56.815, x: 436}
+    - {piece: lane-buoy, t: 59.593, x: 44}
+    - {piece: lane-buoy, t: 62.37, x: 436}
+    - {piece: lane-buoy, t: 65.148, x: 44}
+    # a shot-out buoy (section 2)
+    - {piece: lane-buoy-dark, t: 67.926, x: 436}
+    # a shot-out buoy (section 2)
+    - {piece: lane-buoy-dark, t: 70.704, x: 44}
+    - {piece: lane-buoy, t: 73.481, x: 436}
+    - {piece: lane-buoy, t: 76.259, x: 44}
+    - {piece: lane-buoy, t: 79.037, x: 436}
+    - {piece: lane-buoy, t: 81.815, x: 44}
+    # a shot-out buoy (section 2)
+    - {piece: lane-buoy-dark, t: 84.593, x: 436}
+    # a shot-out buoy (section 2)
+    - {piece: lane-buoy-dark, t: 87.37, x: 44}
+    - {piece: lane-buoy, t: 90.148, x: 436}
+    - {piece: lane-buoy, t: 92.926, x: 44}
+    - {piece: lane-buoy, t: 95.704, x: 436}
+    - {piece: lane-buoy, t: 98.481, x: 44}
+    - {piece: lane-buoy, t: 101.259, x: 436}
+    - {piece: lane-buoy, t: 104.037, x: 44}
+    - {piece: lane-buoy, t: 106.815, x: 436}
+    - {piece: lane-buoy, t: 109.593, x: 44}
+    - {piece: lane-buoy, t: 112.37, x: 436}
+    - {piece: lane-buoy, t: 115.148, x: 44}
+    - {piece: lane-buoy, t: 117.926, x: 436}
+    - {piece: lane-buoy, t: 120.704, x: 44}
+    - {piece: lane-buoy, t: 123.481, x: 436}
+    - {piece: lane-buoy, t: 126.259, x: 44}
+    - {piece: lane-buoy, t: 129.037, x: 436}
+    - {piece: lane-buoy, t: 131.815, x: 44}
+    - {piece: lane-buoy, t: 134.582, x: 436}
+    - {piece: lane-buoy, t: 136.896, x: 44}
+    - {piece: lane-buoy, t: 139.119, x: 436}
+    - {piece: lane-buoy, t: 141.341, x: 44}
+    - {piece: lane-buoy, t: 143.563, x: 436}
+    - {piece: lane-buoy, t: 145.785, x: 44}
+    - {piece: lane-buoy, t: 148.007, x: 436}
+    - {piece: lane-buoy, t: 150.23, x: 44}
+    - {piece: lane-buoy, t: 152.452, x: 436}
+    - {piece: lane-buoy, t: 154.674, x: 44}
+    - {piece: lane-buoy, t: 156.896, x: 436}
+    - {piece: lane-buoy, t: 159.119, x: 44}
+    - {piece: lane-buoy, t: 161.341, x: 436}
+    - {piece: lane-buoy, t: 163.563, x: 44}
+    - {piece: lane-buoy, t: 165.785, x: 436}
+    - {piece: lane-buoy, t: 168.007, x: 44}
+    - {piece: lane-buoy, t: 170.23, x: 436}
+    - {piece: lane-buoy, t: 172.452, x: 44}
+    # the lane's last beacon, its top row leaving the bottom edge at the end (t=178)
+    - {piece: lane-beacon, t: 175.407, x: 404}
+    # Ceres falling behind
+    - {piece: ceres-behind, t: -20.833, x: 330}
+    # a far rock
+    - {piece: far-rock-a, t: 12.0, x: 90}
+    # a far rock
+    - {piece: far-rock-c, t: 46.0, x: 400}
+    # a far rock
+    - {piece: far-rock-b, t: 70.0, x: 140}
+    # the convoy far ahead before it arrives (t=96-110)
+    - {piece: convoy-lights, t: 108.833, x: 300}
+    # a far rock
+    - {piece: far-rock-c, t: 120.0, x: 80}
+    # a far rock
+    - {piece: far-rock-a, t: 140.0, x: 380}
+    # the open belt ahead at the lane's end
+    - {piece: open-belt, t: 186.333, x: 240}
+    # a big rock tumbling past below the play plane
+    - {piece: tumbling-rock, t: 9.0, x: 400}
+    - {piece: drift-rock-a, t: 26.0, x: 70}
+    - {piece: drift-rock-b, t: 52.0, x: 410}
+    - {piece: tumbling-rock, t: 76.0, x: 70}
+    - {piece: drift-rock-a, t: 104.0, x: 420}
+    - {piece: drift-rock-b, t: 126.0, x: 60}
+    - {piece: tumbling-rock, t: 146.0, x: 420}
+sections:   # ART-C's reading of the README's Layout (speeds, 2 s eases); C2 writes the real ones
+  - {name: Lane Marker, end: 30, atmosphere: clear, tiles: ['lane-space', 'lane-dust']}
+  - {name: The Seeded Lane, end: 88, speed: 80, ramp: 2, atmosphere: clear, tiles: ['lane-space', 'lane-dust']}
+  - {name: Convoy Crossing, end: 134, speed: 80, atmosphere: clear, tiles: ['lane-space', 'lane-dust']}
+  - {name: Lane End, end: 178, speed: 100, ramp: 2, atmosphere: clear, tiles: ['lane-space', 'lane-dust']}
+# rows: the end's bottom edge 16340 (ground px); low-air 22059
+debris:
+  # Proposal (ART-C): the belt's rocks; small ones break (6 HP, part B's), large ones are walls (contact
+  # `large` 20 per the belt's hazards: a large unit's). The dead beacon buoy (the secret, 20 HP like a
+  # small rock, its crate on break) as a chunk of its own. C2 re-checks the large rocks against the
+  # authored gaps (never inside a line's gap when it is laid).
+  chunks:
+    belt-large-a: {size: [88, 80], damage: 20}
+    belt-large-b: {size: [66, 60], damage: 20}
+    belt-a: {size: [40, 36], hp: 6}
+    belt-b: {size: [36, 32], hp: 6}
+    belt-c: {size: [32, 28], hp: 6}
+    lane-buoy: {size: [28, 28], hp: 20}
+  clearance: 120
+  max_large: 2
+  placed:
+    - {t: 8, x: 100, chunk: belt-a, drift: [8, -30]}
+    - {t: 11.4, x: 380, chunk: belt-b, drift: [-12, -40]}
+    - {t: 14.8, x: 200, chunk: belt-c, drift: [16, -50]}
+    - {t: 18.2, x: 300, chunk: belt-a, drift: [-8, -60]}
+    - {t: 21.6, x: 140, chunk: belt-b, drift: [12, -30]}
+    - {t: 25, x: 340, chunk: belt-c, drift: [-16, -40]}
+    - {t: 28.4, x: 60, chunk: belt-a, drift: [8, -50]}
+    - {t: 31.8, x: 420, chunk: belt-b, drift: [-12, -60]}
+    - {t: 34.4, x: 100, chunk: belt-c, drift: [16, -30]}
+    - {t: 36, x: 60, chunk: belt-large-a, drift: [5, -20]}
+    - {t: 37, x: 380, chunk: belt-a, drift: [-8, -40]}
+    - {t: 42.2, x: 300, chunk: belt-c, drift: [-16, -60]}
+    - {t: 44.8, x: 140, chunk: belt-a, drift: [8, -30]}
+    - {t: 47.4, x: 340, chunk: belt-b, drift: [-12, -40]}
+    - {t: 50, x: 420, chunk: belt-large-b, drift: [-5, -20]}
+    - {t: 50, x: 60, chunk: belt-c, drift: [16, -50]}
+    - {t: 52.6, x: 420, chunk: belt-a, drift: [-8, -60]}
+    - {t: 55.2, x: 100, chunk: belt-b, drift: [12, -30]}
+    - {t: 57.8, x: 380, chunk: belt-c, drift: [-16, -40]}
+    - {t: 60.4, x: 200, chunk: belt-a, drift: [8, -50]}
+    - {t: 63, x: 300, chunk: belt-b, drift: [-12, -60]}
+    - {t: 65.6, x: 140, chunk: belt-c, drift: [16, -30]}
+    - {t: 66, x: 240, chunk: belt-large-a, drift: [-5, -20]}
+    - {t: 68.2, x: 340, chunk: belt-a, drift: [-8, -40]}
+    - {t: 70.8, x: 60, chunk: belt-b, drift: [12, -50]}
+    - {t: 73.4, x: 420, chunk: belt-c, drift: [-16, -60]}
+    - {t: 76, x: 100, chunk: belt-a, drift: [8, -30]}
+    - {t: 78.6, x: 380, chunk: belt-b, drift: [-12, -40]}
+    - {t: 80, x: 60, chunk: belt-large-b, drift: [5, -20]}
+    - {t: 81.2, x: 200, chunk: belt-c, drift: [16, -50]}
+    - {t: 83.8, x: 300, chunk: belt-a, drift: [-8, -60]}
+    - {t: 86.4, x: 140, chunk: belt-b, drift: [12, -30]}
+    - {t: 89, x: 340, chunk: belt-c, drift: [-16, -40]}
+    - {t: 91.6, x: 60, chunk: belt-a, drift: [8, -50]}
+    - {t: 92, x: 420, chunk: belt-large-a, drift: [-5, -20]}
+    - {t: 94.2, x: 420, chunk: belt-b, drift: [-12, -60]}
+    - {t: 96.8, x: 100, chunk: belt-c, drift: [16, -30]}
+    - {t: 99.4, x: 380, chunk: belt-a, drift: [-8, -40]}
+    - {t: 100, x: 60, chunk: belt-large-b, drift: [5, -20]}
+    - {t: 102, x: 200, chunk: belt-b, drift: [12, -50]}
+    - {t: 104.6, x: 300, chunk: belt-c, drift: [-16, -60]}
+    - {t: 107.2, x: 140, chunk: belt-a, drift: [8, -30]}
+    - {t: 109.8, x: 340, chunk: belt-b, drift: [-12, -40]}
+    - {t: 112, x: 240, chunk: belt-large-a, drift: [-5, -20]}
+    - {t: 112.4, x: 60, chunk: belt-c, drift: [16, -50]}
+    - {t: 115, x: 420, chunk: belt-a, drift: [-8, -60]}
+    - {t: 117.6, x: 100, chunk: belt-b, drift: [12, -30]}
+    - {t: 118, x: 60, chunk: lane-buoy, drift: [4, -12]}  # the dead beacon buoy (secret)
+    - {t: 120, x: 420, chunk: belt-large-b, drift: [-5, -20]}
+    - {t: 120.2, x: 380, chunk: belt-c, drift: [-16, -40]}
+    - {t: 122.8, x: 200, chunk: belt-a, drift: [8, -50]}
+    - {t: 125.4, x: 300, chunk: belt-b, drift: [-12, -60]}
+    - {t: 128, x: 60, chunk: belt-large-a, drift: [5, -20]}
+    - {t: 128, x: 140, chunk: belt-c, drift: [16, -30]}
+    - {t: 130.6, x: 340, chunk: belt-a, drift: [-8, -40]}
+    - {t: 133.2, x: 60, chunk: belt-b, drift: [12, -50]}
+    - {t: 135.8, x: 420, chunk: belt-c, drift: [-16, -60]}
+    - {t: 138.4, x: 100, chunk: belt-a, drift: [8, -30]}
+    - {t: 140, x: 420, chunk: belt-large-b, drift: [-5, -20]}
+    - {t: 141, x: 380, chunk: belt-b, drift: [-12, -40]}
+    - {t: 143.6, x: 200, chunk: belt-c, drift: [16, -50]}
+    - {t: 146.2, x: 300, chunk: belt-a, drift: [-8, -60]}
+    - {t: 148.8, x: 140, chunk: belt-b, drift: [12, -30]}
+    - {t: 150, x: 240, chunk: belt-large-a, drift: [-5, -20]}
+    - {t: 151.4, x: 340, chunk: belt-c, drift: [-16, -40]}
+    - {t: 154, x: 60, chunk: belt-a, drift: [8, -50]}
+    - {t: 156.6, x: 420, chunk: belt-b, drift: [-12, -60]}
+    - {t: 159.2, x: 100, chunk: belt-c, drift: [16, -30]}
+    - {t: 160, x: 60, chunk: belt-large-b, drift: [5, -20]}
+    - {t: 161.8, x: 380, chunk: belt-a, drift: [-8, -40]}
+    - {t: 164.4, x: 200, chunk: belt-b, drift: [12, -50]}
+    - {t: 167, x: 300, chunk: belt-c, drift: [-16, -60]}
+    - {t: 168, x: 420, chunk: belt-large-a, drift: [-5, -20]}
+    - {t: 169.6, x: 140, chunk: belt-a, drift: [8, -30]}
+  easy: {leave_out_large: 3}

@@ -1,10 +1,10 @@
 ---
 title: Rail Bunker
-design: draft
+design: approved
 implementation: not-started
 art: chosen
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../player/specials]
-updated: 2026-10-27
+updated: 2026-10-28
 ---
 
 # Rail Bunker
@@ -19,7 +19,7 @@ hit, dodged by leaving the line. Only `anti-ground` weapons and specials break i
 
 ### Stat block
 
-**Draft** (Act 5 design phase, step D-enemies-B; pending the user's review in round 60). A hand-written
+**Draft** (Act 5 design phase, step D-enemies-B; approved in round 60). A hand-written
 table: there is no `data.yaml` yet, the build turns it into one. Numbers at **medium** (see the
 [balancing basis](../../README.md#balancing-basis)); HP is in damage units (a Pulse Cannon L1 shot does 2),
 set at its first level from the proposed Act 5 reference DPS (judgement call J2: L33 136): 100 HP is 0.7 s
@@ -78,6 +78,8 @@ heavy gunshot); the death a heavy metal explosion.
 
 ## Concept art
 
+Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
+
 Chosen concept from [round 03](../../../concept-rounds/round-03/README.md) and the round-04 colour pass,
 listed in the [ground](../README.md#concept-art) Concept art table: an octagonal hardened bunker with a
 twin-rail cannon and gold coils, black and gold with a gunmetal accent and rim light
@@ -85,19 +87,20 @@ twin-rail cannon and gold coils, black and gold with a gunmetal accent and rim l
 [../concept/prompts.md](../concept/prompts.md). A round-60 readability check against the belt's rock (Q11)
 and the production frames (the turret at 32 angles, the charge glow, the wreck) follow in the build.
 
-Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's review board follows) — a/b proposals in the belt look of [Q11](../../README.md#open-questions) a (pending the user's review), each a PNG sheet (the source render, the sprites and states, the readability check over the darkest ground of Level 33 with the measured gold share, key frames) and a GIF in the 480×540 play field; generator `tools/concept/enemies_r60.py`. Prompts: [concept/prompts.md](concept/prompts.md).
+Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's review board follows) — a/b proposals in the belt look of [Q11](../../README.md#open-questions) a (gloss black; the user chose look b, gunmetal/charcoal with gold, in round 60, so the chosen variant is re-rendered in gunmetal in production), each a PNG sheet (the source render, the sprites and states, the readability check over the darkest ground of Level 33 with the measured gold share, key frames) and a GIF in the 480×540 play field; generator `tools/concept/enemies_r60.py`. Prompts: [concept/prompts.md](concept/prompts.md).
 
 | File | What | Status |
 |---|---|---|
-| [concept/rail-bunker-r60-a.png](concept/rail-bunker-r60-a.png) | Rail Bunker A, solid lock line — a thin red line from the muzzle through the ship to the edge, brightening 1 → 2 px over 1.0 s while the coils glow gold; the rail shot (sheet) | proposed |
-| [concept/rail-bunker-r60-a.gif](concept/rail-bunker-r60-a.gif) | Rail Bunker A, solid lock line — a thin red line from the muzzle through the ship to the edge, brightening 1 → 2 px over 1.0 s while the coils glow gold; the rail shot (motion) | proposed |
-| [concept/rail-bunker-r60-b.png](concept/rail-bunker-r60-b.png) | Rail Bunker B, dashed line with running chevrons — a dashed red line with gold chevrons running out along it, faster as the charge builds, solid for the last 0.2 s (sheet) | proposed |
-| [concept/rail-bunker-r60-b.gif](concept/rail-bunker-r60-b.gif) | Rail Bunker B, dashed line with running chevrons — a dashed red line with gold chevrons running out along it, faster as the charge builds, solid for the last 0.2 s (motion) | proposed |
+| [concept/rail-bunker-r60-a.png](concept/rail-bunker-r60-a.png) | Rail Bunker A, solid lock line — a thin red line from the muzzle through the ship to the edge, brightening 1 → 2 px over 1.0 s while the coils glow gold; the rail shot (sheet) | chosen (round 60) |
+| [concept/rail-bunker-r60-a.gif](concept/rail-bunker-r60-a.gif) | Rail Bunker A, solid lock line — a thin red line from the muzzle through the ship to the edge, brightening 1 → 2 px over 1.0 s while the coils glow gold; the rail shot (motion) | chosen (round 60) |
+| [concept/laser-line-capture-r61-a.png](concept/laser-line-capture-r61-a.png) | Game capture on the [capture rig](../../concept/prompts.md#belt-rig-capture-r61-a) (step A4; Spine Turrets on Level 08's landing pad stand in for the bunker): the thin red telegraph lines locked through the ship's position, the same lines flickering just before they fire, the live band (the provisional `LineLooks` gold round a white core until this unit's art) | chosen (round 61, C.5: accepted) |
 
 ## Implementation
 
 - [ ] Stat block loaded from a `data.yaml` (when the design is approved); global difficulty multipliers applied; tuned with `levelReport`
 - [ ] `laser-line`: the locked line, the brightening telegraph (≥ 0.8 s), the rail's band, `heavy` 10 once, any direction
+  (M9 part A: the simulation's `LineBeam` in step A1; step A3: a provisional look, `LineLooks`, a thin red telegraph
+  brightening and flickering, the live band in gold round a white core, until this unit's art)
 - [ ] Hardened: glance, the specials' damage, homing and Rook skip it without `anti-ground`
 - [ ] Production sprites from the chosen r04 concept (the turret at 32 angles, the coil glow, the wreck), the intel portrait
 - [ ] Death effect, bounty and sounds per this spec (Freesound, no bubbly sounds)
@@ -105,14 +108,17 @@ Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's r
 ## Open questions
 
 - J3 (shown in round 60): L33 gets ground (the bunkers need a surface), so `NO GROUND` moves to L30.
-- Q11 (pending round 60): the Ascendancy look on the belt, **a** recommended (the r04 concept already is it);
-  alternatives **b** gunmetal with gold, **c** black silhouettes with gold accents only.
+- Q11 (decided in round 60, **b**, not the recommendation): the Ascendancy look on the belt is gunmetal/charcoal hulls
+  with gold (≥ 20 % gold, rim light, red running lights); a (gloss black) and c (black silhouettes) rejected
+  ([enemies](../../README.md#factions-and-visual-language)).
 
 ## Decisions
 
 - 2026-09-30: concept round 03 drew the Rail Bunker; the round-04 colour pass (gunmetal accent) chosen.
 - 2026-10-27 (step D-enemies-B): promoted from the [ground roster](../README.md) to a draft spec for the Act 5
-  design phase; every number is a first draft, pending the user's review in round 60.
+  design phase; every number is a first draft, approved in round 60.
 - 2026-10-27 (decided by me, trivia): the rail aims at the ship (the roster's "along the player's column" read
   as through the ship's position, so it works up the screen too), damage `heavy` 10 (the basis's rail shots);
   the specials' own rules already let the Airstrike, the Smart Bomb and the Orbital Lance damage hardened targets.
+- 2026-10-27 (user, [round 60](../../../concept-rounds/round-60/README.md) closed): the design approved as drafted (`design: approved`); art A.13 **a**, "Rail Bunker A, solid lock line", chosen (`art: chosen`), the other variant in `concept/rejected/`. Q11 **b** (gunmetal/charcoal with gold, not gloss black): the chosen variant is re-rendered in gunmetal/charcoal in this part's production art, keeping the ≥ 20 % gold and the readability check.
+- 2026-10-28 (user, [round 61](../../../concept-rounds/round-61/README.md), closed): **C.5** accepted: the `laser-line` hits the ship once per line and passes through Rook and the escort drones; the provisional look stays until the bunker's art.

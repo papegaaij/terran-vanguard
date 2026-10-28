@@ -70,7 +70,22 @@ public final class Enemy implements Hashed {
         /** M8 part E: a coiling unit (design/enemies/naval/spiral-nautilus), placed by its {@link Coiling}. */
         COIL,
         /** M8 part F: a lunging unit (design/enemies/naval/glow-angler), placed by its {@link Lunging}. */
-        LURE
+        LURE,
+        /**
+         * M9 part B: a rider on its rock (design/enemies, Rock riding), placed by {@link RockRides} through its {@link
+         * Riding}: clinging, tumbling off a broken rock or in its tell; its leap is a plain {@link #LEAVE}.
+         */
+        RIDE,
+        /**
+         * M9 part C: a mine layer on its lay path (design/enemies/space/minelayer), placed by its {@link MineLaying}: up
+         * its side lane, then across its lay row laying its line.
+         */
+        LAY,
+        /**
+         * M9 part D: a dashing unit in its cycle (design/enemies/air/buzzsaw-drone), placed by its {@link Dashing}: chase,
+         * spin-up tell, a locked dash that ricochets, slow, again; then out through the nearest edge.
+         */
+        DASH
     }
 
     /**
@@ -267,6 +282,24 @@ public final class Enemy implements Hashed {
     /** An escort's circle round its carrier (hashed only for an escort). */
     final Escorting escorting = new Escorting(this);
 
+    /** M9 part B: a wing member's break-off after its leader's death (design/enemies/air/talon; hashed only then). */
+    final Scattering scattering = new Scattering(this);
+    /** M9 part B: a rider on its rock (design/enemies, Rock riding; hashed only for a rider). */
+    final Riding riding = new Riding(this);
+    /** M9 part B: it holds the level's arena (design/campaign Level 29's clamp guns; {@link GroundUnit#holder()}). */
+    boolean holder;
+    /**
+     * M9 part B: the level tick it wakes at while it is dormant (design/enemies/ground/sam-nest, Dormant until t); -1
+     * once awake (or never dormant). Then its {@link GroundUnit#WAKE_SECONDS} tell runs: {@link #wakeTicks} steps left.
+     */
+    int dormantTick = -1;
+
+    int wakeTicks;
+    /** M9 part B: it leads its wave (design/enemies/air/talon, Squad leader; {@link WaveSpec#leader()}). */
+    boolean leader;
+    /** M9 part B: its wave's number (the scatter finds its wing by it); -1 for a unit of no wave. Not hashed. */
+    int wave = -1;
+
     /** A walker's walk (design/enemies/ground/scuttler; hashed only for a walker or a volley wave's unit). */
     final Walking walking = new Walking(this);
     /** How far the ground scrolled since it entered (a walker's path's points and a lane scroll with it). */
@@ -343,6 +376,8 @@ public final class Enemy implements Hashed {
     final Lunging lunging = new Lunging();
     /** M5 part F: a chaser's chase, latch and shake-off (design/enemies/air/lamprey; hashed only with a chase). */
     final Chasing chasing = new Chasing(this);
+    /** M9 part D: a dashing unit's cycle (design/enemies/air/buzzsaw-drone; hashed only with a dash). */
+    final Dashing dashing = new Dashing(this);
 
     /**
      * M5 part G: a lane walker (design/enemies/naval/skimmer, user decision G4 = a): {@link #path} is its
@@ -414,6 +449,10 @@ public final class Enemy implements Hashed {
     final AuraRing auraRing = new AuraRing();
     /** Steps until {@link #damage} reports again (not hashed: it only spaces the events). */
     int absorbQuiet;
+    /** M9 part A, a hex shield (design/enemies, Enemy shields; {@link EnemyShield}); none for most units. */
+    final EnemyShield hexShield = new EnemyShield();
+    /** M9 part A, a {@code laser-line} (design/enemies/ground/rail-bunker; {@link LineBeam}); none for most units. */
+    final LineBeam lineBeam = new LineBeam();
     /** M7 part D: a unit part (design/enemies/ground/shellback, the vent); none for most units. */
     final PartHp partHp = new PartHp();
     /** M7 part D: its curl-roll (design/enemies/ground/shellback; hashed only with a roll). */
@@ -424,6 +463,10 @@ public final class Enemy implements Hashed {
     final VortexCycle vortexCycle = new VortexCycle();
     /** M7 part E: a lane strafer's flight and pass trigger (design/enemies/air/ghost-drone; hashed only with one). */
     final LaneStrafing laneStrafing = new LaneStrafing();
+    /** M9 part C: its lay path and line (design/enemies/space/minelayer); idle for any other unit. */
+    final MineLaying mineLaying = new MineLaying();
+    /** M9 part C: its launcher's streams (design/enemies/air/gilded-gunship), or its carrier as a launched unit. */
+    final Launching launching = new Launching();
 
     /** Its movement step (its flight, its stunned step). */
     final EnemyFlight flight = new EnemyFlight(this);
@@ -472,6 +515,21 @@ public final class Enemy implements Hashed {
      */
     public double ringTell(double alpha) {
         return song.tell(alpha);
+    }
+
+    /**
+     * M9 part D (design/enemies/air/hornet, the hatch glow): how far its gun's tell before its next volley has run, 0 to
+     * 1; 0 outside the tell, in a burst, or for a gun without a tell.
+     */
+    public double gunTell() {
+        if (spec.gun().isEmpty() || burstLeft > 0) {
+            return 0;
+        }
+        int tell = SimStep.ticks(spec.gun().get().tellSeconds());
+        if (tell <= 0 || volleyTicks <= 0 || volleyTicks > tell) {
+            return 0;
+        }
+        return 1 - (double) volleyTicks / tell;
     }
 
     /** M8 part E: seconds to its next ring; NaN for a unit without a song. */
@@ -533,6 +591,144 @@ public final class Enemy implements Hashed {
             double currentX,
             double currentY) {
         starts.root(enemySpec, enemyKind, atX, unitSerial, inGroup, currentX, currentY);
+    }
+
+    /** M9 part B: it holds the level's arena ({@link GroundUnit#holder()}). */
+    void holdsArena() {
+        holder = true;
+    }
+
+    /** M9 part B: it stays dormant until the level tick {@code tick} ({@link GroundUnit#dormantUntil()}). */
+    void dormantUntil(int tick) {
+        dormantTick = tick;
+        wakeTicks = 0;
+    }
+
+    /**
+     * M9 part B: at the level tick {@code levelTick}, a dormant unit whose time has come wakes: its tell starts; returns
+     * whether it woke now.
+     */
+    boolean wake(int levelTick) {
+        if (dormantTick < 0 || levelTick < dormantTick) {
+            return false;
+        }
+        dormantTick = -1;
+        // Its own step counts the wake's down at once: the gun is free a whole tell after the wake.
+        wakeTicks = Math.max(1, SimStep.ticks(GroundUnit.WAKE_SECONDS)) + 1;
+        return true;
+    }
+
+    /**
+     * M9 part B: it leads its wave (design/enemies/air/talon): it flies {@code leaderSpec}, the leader's stat block of
+     * its airframe ({@code leaderKind} its kind), from its entry on.
+     */
+    void lead(EnemySpec leaderSpec, int leaderKind) {
+        spec = leaderSpec;
+        kind = leaderKind;
+        box = leaderSpec.hitbox();
+        hp = leaderSpec.hp();
+        hexShield.start(leaderSpec);
+        leader = true;
+    }
+
+    /** M9 part B: whether it holds the level's arena (a clamp gun of Level 29's rescue halt). */
+    public boolean holder() {
+        return holder;
+    }
+
+    /** M9 part B: whether it is dormant (dark scenery, not hittable, not picked, not firing). */
+    public boolean dormant() {
+        return dormantTick >= 0;
+    }
+
+    /** M9 part B: whether its wake tell runs (it woke, its gun not yet free). */
+    public boolean waking() {
+        return wakeTicks > 0;
+    }
+
+    /** M9 part B: how far its wake tell is, 0 at the wake to 1 at its end; 1 for a unit not in one. */
+    public double wakeShare() {
+        int tell = Math.max(1, SimStep.ticks(GroundUnit.WAKE_SECONDS));
+        return wakeTicks > 0 ? Math.clamp(1 - (wakeTicks - 1.0) / tell, 0, 1) : 1;
+    }
+
+    /** M9 part B: whether it leads its wave (the gold stripe; its death scatters the wing). */
+    public boolean leader() {
+        return leader;
+    }
+
+    /** M9 part B: whether it breaks off after its leader's death (it holds its fire). */
+    public boolean scattering() {
+        return scattering.active();
+    }
+
+    /**
+     * M9 part B, step B1b (design/campaign Level 29, the wavering Stormhawks): whether its hover is over and it peels
+     * off sideways ({@link EnemySpec.Hover#peelSpeed()}).
+     */
+    public boolean peeling() {
+        return phase == Phase.LEAVE
+                && spec.hover().isPresent()
+                && spec.hover().get().peelSpeed() > 0;
+    }
+
+    /**
+     * M9 part B, step B1b (design/enemies/ground/sam-nest): whether its homing gun holds its fire (its clock waiting)
+     * because the ship's centre at (shipX, shipY) is within its {@link EnemyGun.HomingSpec#holdWithin()} of its centre.
+     */
+    boolean holdsFireAt(double shipX, double shipY) {
+        if (spec.gun().isEmpty() || spec.gun().get().homing().isEmpty()) {
+            return false;
+        }
+        double within = spec.gun().get().homing().get().holdWithin();
+        double dx = shipX - x;
+        double dy = shipY - y();
+        return within > 0 && dx * dx + dy * dy < within * within;
+    }
+
+    /** M9 part D: whether a dashing unit is in its dash (design/enemies/air/buzzsaw-drone): spun up, blades at full. */
+    public boolean dashing() {
+        return phase == Phase.DASH && dashing.dashing();
+    }
+
+    /** M9 part D: whether a dashing unit is in its spin-up tell (the rising whine, the rim flickering red). */
+    public boolean dashTelling() {
+        return phase == Phase.DASH && dashing.telling();
+    }
+
+    /** M9 part D: a dashing unit's tell's progress, 0–1 (0 outside its tell). */
+    public double dashTellShare() {
+        return phase == Phase.DASH ? dashing.tellShare() : 0;
+    }
+
+    /** M9 part D: the dashes a dashing unit finished (0 for others). */
+    public int dashes() {
+        return dashing.dashes();
+    }
+
+    /** M9 part D: the wave the unit came in with (its air-linked group's), -1 for none. */
+    public int wave() {
+        return wave;
+    }
+
+    /** M9 part B: whether it rides its rock (clinging, tumbling or in its tell). */
+    public boolean riding() {
+        return riding.riding();
+    }
+
+    /** M9 part B: whether a rider is in its tell before the leap (it crouches, its back glow flares). */
+    public boolean riderTelling() {
+        return riding.riding() && riding.state == Riding.TELL;
+    }
+
+    /** M9 part B: whether a rider tumbles off its broken rock. */
+    public boolean riderTumbling() {
+        return riding.riding() && riding.state == Riding.TUMBLE;
+    }
+
+    /** M9 part B: a rider's place on its rock's rim, radians from the right, y up (its clinging pose); 0 for others. */
+    public double rimAngle() {
+        return riding.rider() ? riding.angle : 0;
     }
 
     /** A ground unit entering at a side edge (design/campaign Level 13; {@link EnemyStarts#rootAtSide}). */
@@ -812,6 +1008,8 @@ public final class Enemy implements Hashed {
             stunDy = y - prevY;
         }
         empStun = ticks;
+        // M9 part A (design/enemies/ground/rail-bunker, EMP): a running laser line's telegraph is cancelled.
+        lineBeam.cancel();
     }
 
     /** M7 part A: whether the EMP Burst's stun holds it now (the crackle overlay, the dimmed glow). */
@@ -968,6 +1166,10 @@ public final class Enemy implements Hashed {
      * Every hit, contact and targeting rule reads this.
      */
     public Layer layer() {
+        if (dormantTick >= 0) {
+            // M9 part B: dormant, it is scenery: nothing touches it, nothing picks it (as under the sand).
+            return Layer.BURIED;
+        }
         if (spec.burrow().isPresent()) {
             // M7 part B: buried but while it is up (M7 = a).
             return burrowing.up() ? spec.layer() : Layer.BURIED;
@@ -999,7 +1201,8 @@ public final class Enemy implements Hashed {
      * an air escort's units): its layer collides with them, except (M8 part D) in a rise before its glide.
      */
     boolean bodyTouches() {
-        return layer().collidesWithPlayer() && !(phase == Phase.RISE && rising.harmless());
+        // M9 part B: a neutral craft has no contact (the ship passes under it).
+        return layer().collidesWithPlayer() && !(phase == Phase.RISE && rising.harmless()) && !spec.neutral();
     }
 
     /** M8 part D: where a unit with a rise is in it (design/enemies/naval/abyss-ray); {@link RisePhase#NONE} else. */
@@ -1289,6 +1492,60 @@ public final class Enemy implements Hashed {
         return spec.gun().isPresent() ? spec.gun().get().burst() - 1 - burstLeft : 0;
     }
 
+    /**
+     * M9 part A, a {@code shield-breaker} hit (design/enemies, Enemy shields; the Tesla Coil Pod's arc): its shield is
+     * emptied at once and its refill held back, and the whole of {@code amount} goes on to the hull (an aura ring and
+     * the hull's own rules as any hit); returns whether it was destroyed.
+     */
+    boolean damageBreaking(double amount) {
+        return damageBreaking(amount, 0, 0);
+    }
+
+    /**
+     * As {@link #damageBreaking(double)}; M9 part C: a hit flying at (shotVx, screenShotVy) on facing armour takes its
+     * factor ({@link #damageFacing}); (0, 0) for none.
+     */
+    boolean damageBreaking(double amount, double shotVx, double screenShotVy) {
+        if (!hexShield.fitted() || spec.shield().isEmpty()) {
+            return damageFacing(amount, false, shotVx, screenShotVy);
+        }
+        EnemySpec.Shield shield = spec.shield().get();
+        int hold = SimStep.ticks(shield.breakerHoldSeconds());
+        hexShield.empty(shield, hold, events, x, y(), kind);
+        boolean destroyed = damageFacing(amount, false, shotVx, screenShotVy);
+        // Its refill waits the breaker's hold, not the hold and then the delay (the hit just counted as one).
+        hexShield.empty(shield, hold, events, x, y(), kind);
+        return destroyed;
+    }
+
+    /**
+     * M9 part A, the EMP Burst (design/enemies, Enemy shields): its shield is emptied and its refill held back {@code
+     * ticks} steps (the stun's); returns whether it held anything.
+     */
+    boolean stripShield(int ticks) {
+        return spec.shield().isPresent() && hexShield.empty(spec.shield().get(), ticks, events, x, y(), kind);
+    }
+
+    /** M9 part A: its hex shield's points left; 0 without one or while it is down. */
+    public double shield() {
+        return hexShield.shield();
+    }
+
+    /** M9 part A: its hex shield's maximum (the stat block's); 0 without one. */
+    public double shieldMax() {
+        return hexShield.max();
+    }
+
+    /** M9 part A: whether its hex shield's refill is held back now (a breaker's hit, the EMP Burst). */
+    public boolean shieldHeld() {
+        return hexShield.held();
+    }
+
+    /** M9 part A: its {@code laser-line} now ({@link LineBeam}): its telegraph and live line, for the look and the hits. */
+    public LineBeam lineBeam() {
+        return lineBeam;
+    }
+
     /** Takes damage from a shot; returns whether it was destroyed. */
     boolean damage(double amount) {
         return damage(amount, false, false);
@@ -1311,6 +1568,17 @@ public final class Enemy implements Hashed {
     /** As {@link #damage(double, boolean, boolean)}; M8 part E: {@code antiSub} fire cracks a closed coil's shell. */
     boolean damage(double amount, boolean fromAbove, boolean blast, boolean antiSub) {
         return hurt.damage(amount, fromAbove, blast, antiSub);
+    }
+
+    /**
+     * M9 part C: a direct hit flying at (shotVx, screenShotVy) on its facing armour ({@link #platingFactor}): the
+     * factor applies after its shield; as {@link #damage(double, boolean, boolean, boolean)} for a unit without one.
+     */
+    boolean damageFacing(double amount, boolean antiSub, double shotVx, double screenShotVy) {
+        double plating = platingFactor(shotVx, screenShotVy);
+        return plating == 1
+                ? hurt.damage(amount, false, false, antiSub)
+                : hurt.damage(amount, false, false, antiSub, plating);
     }
 
     /** The hit points left. */
@@ -1933,5 +2201,57 @@ public final class Enemy implements Hashed {
     /** M7 part E: its lane strafe, for the {@link EnemyForce}'s pass trigger. */
     LaneStrafing laneStrafing() {
         return laneStrafing;
+    }
+
+    // ---- M9 part C: the mine layer, the facing armour and the launcher ----
+
+    /** M9 part C: whether it is a mine layer on its lay path (design/enemies/space/minelayer). */
+    public boolean mineLayer() {
+        return phase == Phase.LAY;
+    }
+
+    /** M9 part C: whether a mine layer strafes across its lay row, laying (false while it rises up its lane). */
+    public boolean laying() {
+        return phase == Phase.LAY && mineLaying.phase() == MineLaying.LAY;
+    }
+
+    /** M9 part C: a mine layer's strafe direction, 1 to the right and -1 to the left; 0 for any other unit. */
+    public int laySide() {
+        return phase == Phase.LAY ? mineLaying.side() : 0;
+    }
+
+    /** M9 part C: a mine layer's mines laid so far, of its line's {@link #lineMines()}; 0 for any other unit. */
+    public int minesLaid() {
+        return phase == Phase.LAY ? mineLaying.laidCount() : 0;
+    }
+
+    /** M9 part C: the mines of a mine layer's line; 0 for any other unit. */
+    public int lineMines() {
+        return phase == Phase.LAY ? mineLaying.lineMines() : 0;
+    }
+
+    /** M9 part C: its lay path, for the {@link EnemyFire}'s laying. */
+    MineLaying mineLaying() {
+        return mineLaying;
+    }
+
+    /**
+     * M9 part C (design/enemies/air/gilded-gunship): the factor its facing armour gives a direct hit flying at
+     * (shotVx, screenShotVy): {@link ArmourArcs#factor}; exactly 1 for a unit without one.
+     */
+    double platingFactor(double shotVx, double screenShotVy) {
+        return spec.facingArmour().isEmpty()
+                ? 1
+                : ArmourArcs.factor(spec.facingArmour().get(), shotVx, frame.vy(screenShotVy));
+    }
+
+    /** M9 part C: its gun's first volley comes {@code ticks} steps later (a train's staggered turret cars). */
+    void delayVolley(int ticks) {
+        volleyTicks += ticks;
+    }
+
+    /** M9 part C: the serial of the carrier that launched it; -1 for a unit not launched by a launcher. */
+    public int launchedBy() {
+        return launching.carrier();
     }
 }

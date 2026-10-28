@@ -12,6 +12,8 @@ import java.util.Map;
  * @param smallActHp the returning {@code small} units that get the act HP factor, and its cap for them
  * @param beamEraHp M7 part E: the HP factor of the beam era, from the level the balance plan fits the Ion Beam
  * @param formations the formation names with their descriptions
+ * @param shields M9 part A: the enemy shields' shared numbers (design/enemies, Enemy shields); a unit's own {@code
+ *     shield} is its HP
  */
 public record EnemyBasisData(
         Map<Integer, Double> referenceDps,
@@ -19,6 +21,7 @@ public record EnemyBasisData(
         Map<Tier, Double> contactDamage,
         SmallActHp smallActHp,
         BeamEraHp beamEraHp,
+        Shields shields,
         Map<String, String> formations) {
     public EnemyBasisData {
         referenceDps = Map.copyOf(referenceDps);
@@ -62,6 +65,18 @@ public record EnemyBasisData(
         /** The factor on a unit of {@code tier} in Level {@code level}: {@link #factor} from {@link #fromLevel}, else 1. */
         public double of(Tier tier, int level) {
             return level >= fromLevel && tiers.contains(tier) ? factor : 1;
+        }
+    }
+
+    /**
+     * M9 part A (design/enemies, Enemy shields): after {@code delay} s without a hit a shield refills at {@code refill}
+     * of its maximum a second; a {@code shield-breaker} hit empties it and holds the refill back {@code breaker_hold} s.
+     */
+    public record Shields(double delay, double refill, double breakerHold) {
+        public Shields {
+            Check.notNegative("shields.delay", delay);
+            Check.that(refill > 0, "shields.refill: more than 0");
+            Check.notNegative("shields.breaker_hold", breakerHold);
         }
     }
 

@@ -1,0 +1,89 @@
+{
+ "source": "tools/art/belt_units.py (production art, M9 part B batch)",
+ "size": [
+  40,
+  40
+ ],
+ "headings": 16,
+ "muzzle": [
+  [
+   20.0,
+   39.6
+  ],
+  [
+   12.5,
+   38.1
+  ],
+  [
+   6.1,
+   33.9
+  ],
+  [
+   1.9,
+   27.5
+  ],
+  [
+   0.4,
+   20.0
+  ],
+  [
+   1.9,
+   12.5
+  ],
+  [
+   6.1,
+   6.1
+  ],
+  [
+   12.5,
+   1.9
+  ],
+  [
+   20.0,
+   0.4
+  ],
+  [
+   27.5,
+   1.9
+  ],
+  [
+   33.9,
+   6.1
+  ],
+  [
+   38.1,
+   12.5
+  ],
+  [
+   39.6,
+   20.0
+  ],
+  [
+   38.1,
+   27.5
+  ],
+  [
+   33.9,
+   33.9
+  ],
+  [
+   27.5,
+   38.1
+  ]
+ ],
+ "clamp_size": [
+  96,
+  56
+ ],
+ "jaw": {
+  "left": [
+   80.0,
+   28.0
+  ],
+  "right": [
+   16.0,
+   28.0
+  ]
+ },
+ "note": "muzzle: per heading the barrel tip in the gun's frame; jaw: the gas burst's centre in the clamp's frame (the gun's centre is the clamp's centre)"
+}

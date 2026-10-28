@@ -56,6 +56,19 @@ final class PropPasses {
 
     /** The debris chunks' sprites by name, looked up once. */
     private final Map<String, AtlasRegion> debrisSprites = new HashMap<>();
+    /** M9 part B: per debris sprite its spin frames ({@value #SPIN_FRAMES}: the belt's rocks), when it has them. */
+    private final Map<String, Array<AtlasRegion>> debrisSpins = new HashMap<>();
+
+    /** M9 part B: a belt rock's spin set: frame k turned k x 22.5 degrees clockwise (tools/art/belt_units.py). */
+    static final int SPIN_FRAMES = 16;
+    /** M9 part B: a spin frame shows this many steps (22.5 degrees in 0.5 s: 45 degrees/s). */
+    static final int SPIN_FRAME_TICKS = 30;
+
+    /** M9 part B: the spin frame of a rock {@code serial} at step {@code tick}, every other rock turning the other way. */
+    static int spinFrame(long tick, int serial) {
+        long turn = tick / SPIN_FRAME_TICKS + serial * 5L;
+        return (int) Math.floorMod(serial % 2 == 0 ? turn : -turn, (long) SPIN_FRAMES);
+    }
 
     private final Array<AtlasRegion> mine;
 
@@ -113,6 +126,15 @@ final class PropPasses {
             if (sprite == null) {
                 sprite = sprites.region(chunk.sprite());
                 debrisSprites.put(chunk.sprite(), sprite);
+                Array<AtlasRegion> spin = sprites.frames(chunk.sprite());
+                if (spin.size == SPIN_FRAMES) {
+                    debrisSpins.put(chunk.sprite(), spin);
+                }
+            }
+            Array<AtlasRegion> spin = debrisSpins.get(chunk.sprite());
+            if (spin != null) {
+                // M9 part B: a belt rock turns through its 16 spin frames (a look: the simulation's rock does not).
+                sprite = spin.get(spinFrame(sortie.tick(), chunk.serial()));
             }
             if (!chunk.large() && chunk.ticksSinceHit() < HIT_FLASH_TICKS) {
                 flash.draw(
@@ -150,15 +172,20 @@ final class PropPasses {
 
     /**
      * The spore mines, additive and above the haze like bullets, each pulsing at its own phase:
-     * while one rises to the play plane it grows from 70 % and brightens from half, armed it is full.
+     * while one rises to the play plane it grows from 70 % and brightens from half, armed it is full (M9 part C: not
+     * the line mines, {@link MineLooks}).
      */
     void drawMines(SpriteBatch batch, Sortie sortie, float alpha) {
-        if (sortie.mineCount() == 0) {
+        if (sortie.mineCount() == 0 || mine == null) {
             return;
         }
         batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
         for (int i = 0; i < sortie.mineCount(); i++) {
             Mine spore = sortie.mine(i);
+            if (spore.line()) {
+                // M9 part C: a line mine has its own look (MineLooks).
+                continue;
+            }
             AtlasRegion frame = mine.get((int) ((sortie.tick() / MINE_FRAME_TICKS + i) % mine.size));
             double x = spore.renderX(alpha);
             double y = spore.renderY(alpha);

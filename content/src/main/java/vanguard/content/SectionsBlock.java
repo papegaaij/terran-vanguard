@@ -39,6 +39,10 @@ public sealed interface SectionsBlock permits LevelData {
      * @param underwaterLook M8 part C (the under-water render grade; part D's request: Level 24 darkens section by
      *     section): an under-water section's changes to the level's {@code underwater_look} ({@link
      *     LevelData#underwaterLookOf}); the level's look if not given
+     * @param underground M9 part A (design/player/specials, Act 5 specials; Level 32): the section lies inside rock (the
+     *     setting {@code underground}: its specials greyed {@code IN ROCK}); the level's if not given
+     * @param holds M9 part B (design/campaign Level 29, the rescue halt): on an arena of speed 0, the group of the
+     *     ground targets that hold it ({@link #held()}); none for a boss's arena
      */
     public record Section(
             String name,
@@ -52,7 +56,9 @@ public sealed interface SectionsBlock permits LevelData {
             Optional<Double> holdAfterBoss,
             Optional<Medium> medium,
             Optional<List<String>> specialLimits,
-            Optional<UnderwaterLookChange> underwaterLook) {
+            Optional<UnderwaterLookChange> underwaterLook,
+            Optional<Boolean> underground,
+            Optional<String> holds) {
         /** Without M8 part C's under-water look. */
         public Section(
                 String name,
@@ -78,6 +84,8 @@ public sealed interface SectionsBlock permits LevelData {
                     holdAfterBoss,
                     medium,
                     specialLimits,
+                    Optional.empty(),
+                    Optional.empty(),
                     Optional.empty());
         }
 
@@ -133,6 +141,12 @@ public sealed interface SectionsBlock permits LevelData {
                     "ramp: on a timed halt (speed 0 without an arena) or a moving section, not on an arena");
             holdAfterBoss.ifPresent(h -> Check.positive("hold_after_boss", h));
             Check.that(holdAfterBoss.isEmpty() || arena.orElse(false), "hold_after_boss: only on an arena");
+            // M9 part B (design/campaign Level 29, the rescue halt): a held arena names the group of its holders.
+            Check.that(
+                    holds.isEmpty()
+                            || (arena.orElse(false) && speed.filter(v -> v == 0).isPresent()),
+                    "holds: only on an arena of speed 0 (a held arena)");
+            Check.that(holds.isEmpty() || holdAfterBoss.isEmpty(), "holds: a held arena has no boss to hold after");
             specialLimits = specialLimits.map(List::copyOf);
         }
 
@@ -183,6 +197,15 @@ public sealed interface SectionsBlock permits LevelData {
         public boolean isArena() {
             return arena.orElse(false);
         }
+
+        /**
+         * M9 part B (design/campaign Level 29, the rescue halt): whether it is a held arena, its clock held by the ground
+         * units of its {@code holds} group (the clamp guns), not a boss: the scroll eases down across it (smoothstep from
+         * the section before's speed).
+         */
+        public boolean held() {
+            return holds.isPresent();
+        }
     }
 
     /**
@@ -224,11 +247,17 @@ public sealed interface SectionsBlock permits LevelData {
 
     /**
      * M8 part A (design/world/europa, Under water rules): what the play plane is in: {@code air} (every level before
-     * Act 4) or {@code underwater} (the water's factors, the hydro-kit, the special limits under the ice).
+     * Act 4) or {@code underwater} (the water's factors, the hydro-kit, the special limits under the ice); M9 part A:
+     * {@code vacuum} (Act 5's space, flown as air).
      */
     public enum Medium {
         AIR,
-        UNDERWATER
+        UNDERWATER,
+        /**
+         * M9 part A (design/world/belt, Vacuum rules): the belt's open space, presentation only: the simulation flies it
+         * as air, the setting is dry (the Sonar Pulse's {@code NO WATER}), the hydro-kit and the pressure hull idle.
+         */
+        VACUUM
     }
 
     /**

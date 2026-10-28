@@ -298,7 +298,7 @@ public final class Shot implements Hashed {
         }
         return switch (weapon.delivery()) {
             case BOLT, HOMING, TURRET, TORPEDO -> true;
-            case DROPPED, LOBBED, MINE, BEAM, DEPTH_CHARGE -> false;
+            case DROPPED, LOBBED, MINE, BEAM, DEPTH_CHARGE, ARC -> false;
         };
     }
 

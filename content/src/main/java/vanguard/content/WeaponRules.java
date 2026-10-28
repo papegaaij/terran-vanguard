@@ -103,6 +103,8 @@ final class WeaponRules {
             // M7 part A: the Light Drone Bay's drone fires standard bolts too.
             case "standard" -> Optional.of(WeaponSpec.Delivery.BOLT);
             case WeaponData.BEAM -> Optional.of(WeaponSpec.Delivery.BEAM);
+            // M9 part A: the Tesla Coil Pod's instant arc.
+            case WeaponData.ARC -> Optional.of(WeaponSpec.Delivery.ARC);
             case "homing" ->
                 Optional.of(weapon.slew().isPresent() ? WeaponSpec.Delivery.TURRET : WeaponSpec.Delivery.HOMING);
             case WeaponData.MINES -> Optional.of(WeaponSpec.Delivery.MINE);
@@ -176,6 +178,22 @@ final class WeaponRules {
                             shot.angle() - weapon.converge().orElse(0.0)));
             }
         }
+        if (delivery == WeaponSpec.Delivery.ARC) {
+            // M9 part A (design/player/weapons/tesla-coil-pod): an instant arc from the pod within its level's reach in
+            // the forward cone, sparks (the splash share) within its level's blast radius; shield-breaker by its trait.
+            return WeaponSpec.arc(
+                            slug,
+                            weapon.vfx(),
+                            weapon.sfx(),
+                            level.rate(),
+                            level.damage(),
+                            level.reach().orElseThrow(),
+                            Math.toRadians(weapon.cone().orElseThrow()),
+                            level.blast().orElseThrow(),
+                            weapon.splash().orElseThrow(),
+                            muzzles.getFirst())
+                    .withShieldBreaker(weapon.shieldBreaker());
+        }
         double speed = weapon.speed().map(WeaponData.Speed::start).orElse(0.0);
         WeaponSpec.Mines mines =
                 switch (delivery) {
@@ -228,7 +246,14 @@ final class WeaponRules {
                 // M5 part F (F3 = a): a side or rear weapon's shots hit a latched Lamprey.
                 .flanking(PartFRules.flanking(weapon))
                 // M8 part A: the anti-sub trait (full damage under water, the sub layer reached).
-                .antiSub(weapon.antiSub());
+                .antiSub(weapon.antiSub())
+                // M9 part A: the shield-breaker trait (an enemy shield emptied at once) and the Swarm Tail's rear-first
+                // pick.
+                .withShieldBreaker(weapon.shieldBreaker())
+                .withSeek(
+                        weapon.pick().orElse(WeaponData.Pick.NEAREST) == WeaponData.Pick.REAR_FIRST
+                                ? WeaponSpec.Seek.REAR_FIRST
+                                : WeaponSpec.Seek.NEAREST);
         // M8 part A: a torpedo's splash (the Harpoon Torpedoes'): its share of the damage in the level's blast radius.
         return weapon.splash().isPresent()
                 ? spec.splash(level.blast().orElseThrow(), weapon.splash().get())

@@ -66,6 +66,10 @@ class VoiceFilesTest {
             "act-4-deep-water/level-25-siren-trench",
             "act-4-deep-water/level-26-blackwater",
             "act-4-deep-water briefing",
+            "act-5-the-belt/level-29-betrayal-at-ceres",
+            "act-5-the-belt/level-30-minefield",
+            "act-5-the-belt/level-31-mining-rig-escort",
+            "act-5-the-belt briefing",
             "specials",
             "armour",
             VoiceLines.BARKS);

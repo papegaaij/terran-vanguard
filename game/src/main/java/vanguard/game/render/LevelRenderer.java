@@ -67,6 +67,14 @@ public final class LevelRenderer {
     }
 
     /**
+     * M9 part D4b: the look a level draws its tows in ({@link TowLooks#LOOKS}: Level 30's dead buoy, Level 31's claim
+     * rock), empty for the lifeboat; the tow's break sound follows it.
+     */
+    public static java.util.Optional<String> towLook(int level) {
+        return java.util.Optional.ofNullable(TowLooks.LOOKS.get(level));
+    }
+
+    /**
      * @param files the assets, for the pivot files of the cranes and set pieces
      * @param script the level's script, whose set pieces it draws
      * @param levelKey the level's key, {@code <act>/level-NN-<slug>}
@@ -105,6 +113,37 @@ public final class LevelRenderer {
     /** M8 part C: the kills below the waterline ({@link DeepDeaths}). */
     public DeepDeaths deepDeaths() {
         return passes.deepDeaths;
+    }
+
+    /** M9 part C: the play-field x of a backdrop strobe whose flash started in the last draw, NaN for none. */
+    public double strobed() {
+        return passes.backdrop.strobed();
+    }
+
+    /** M9 part A: the kills in vacuum ({@link VacuumDeaths}). */
+    public VacuumDeaths vacuumDeaths() {
+        return passes.vacuumDeaths;
+    }
+
+    /**
+     * M9 part C: whether a unit of {@code kind} breaks up in pieces of its own at its death (the Gilded Gunship's halves,
+     * {@link MinefieldLooks}) instead of leaving the vacuum wreck.
+     */
+    public boolean breaksUp(Sortie sortie, int kind) {
+        return passes.kinds.minefield(sortie).breaksUp(kind);
+    }
+
+    /**
+     * M9 part A: the level's homing missiles are the Ascendancy's homing diamonds ({@link DiamondLooks#diamonds}): they
+     * are drawn as diamonds, popping and fizzling as such.
+     */
+    public void diamonds(boolean diamonds) {
+        passes.diamonds(diamonds);
+    }
+
+    /** M9 part A: the homing diamonds' looks; null in a level without them. */
+    public DiamondLooks diamondLooks() {
+        return passes.diamonds;
     }
 
     /**

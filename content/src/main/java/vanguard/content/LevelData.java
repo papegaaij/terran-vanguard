@@ -78,6 +78,9 @@ import vanguard.sim.PlayField;
  *     Colossus's ridge crossing the ground; none if not given
  * @param medium M8 part A (design/world/europa, Under water rules): the level's medium, {@code air} if not given; a
  *     section may set its own ({@link #mediumOf})
+ * @param underground M9 part A (design/player/specials, Act 5 specials; Level 32): the level lies inside rock (the
+ *     setting {@code underground}, its specials greyed {@code IN ROCK}); a section may set its own ({@link
+ *     #undergroundOf})
  * @param specialLimits M8 part A (design/player/specials, Setting restrictions): the specials the level forbids, by
  *     their slugs, replacing its setting's list (a section's own replaces it again; {@link #specialLimitsOf}); the
  *     setting's if not given
@@ -143,7 +146,11 @@ public record LevelData(
         Optional<UnderwaterLook> underwaterLook,
         Optional<RookLoss> rookLoss,
         Optional<Cruisers> cruisers,
-        Optional<Double> armourFloor)
+        Optional<Double> armourFloor,
+        Optional<Boolean> underground,
+        Optional<HaltWaves> haltWaves,
+        Optional<EscortSwap> escortSwap,
+        Optional<String> ground)
         implements SectionsBlock,
                 WavesBlock,
                 SetPiecesBlock,
@@ -156,8 +163,18 @@ public record LevelData(
                 HazardsBlock,
                 WeatherBlock,
                 BriefingBlock {
+    /** M9 part C: {@code ground: none}, a space-only level (Level 30): no ground layer, the bombs idle. */
+    public static final String GROUND_NONE = "none";
+
+    /** M9 part C: whether the level has no ground layer ({@code ground: none}). */
+    public boolean noGround() {
+        return ground.isPresent();
+    }
+
     public LevelData {
         launch.ifPresent(kind -> Check.that(LAUNCH_DROP.equals(kind), "launch: only 'drop', was '" + kind + "'"));
+        // M9 part C (design/campaign Level 30): ground: none, a level without a ground layer.
+        ground.ifPresent(g -> Check.that(GROUND_NONE.equals(g), "ground: only 'none', was '" + g + "'"));
         noSurface = noSurface.map(List::copyOf);
         specialLimits = specialLimits.map(List::copyOf);
         dropFactor.ifPresent(factor -> Check.positive("drop_factor", factor));
@@ -239,7 +256,35 @@ public record LevelData(
      * (its medium and the level's {@code water}).
      */
     public List<String> forbiddenSpecials(int index, SpecialsData specials) {
-        return specials.forbidden(mediumOf(index), water.orElse(false), specialLimitsOf(index));
+        return specials.forbidden(mediumOf(index), water.orElse(false), undergroundOf(index), specialLimitsOf(index));
+    }
+
+    /**
+     * M9 part A (design/player/specials, Act 5 specials): whether section {@code index} lies inside rock (the setting
+     * {@code underground}): its own {@code underground}, else the level's; false when neither gives it.
+     */
+    public boolean undergroundOf(int index) {
+        return sections.get(index).underground().or(() -> underground).orElse(false);
+    }
+
+    /**
+     * M9 part A: the setting of section {@code index} (design/player/specials, Setting restrictions): underground,
+     * under water, dry or none (above water).
+     */
+    public Optional<SpecialsData.Setting> settingOf(int index) {
+        return SpecialsData.Setting.of(mediumOf(index), water.orElse(false), undergroundOf(index));
+    }
+
+    /**
+     * M9 part A: the HUD's reason word for {@code special} where section {@code index} forbids it: the reason of its
+     * setting's limit when that lists it ({@code IN ROCK} inside the asteroid, {@code UNDER ICE} under water), else the
+     * reason of the limit that lists it ({@link SpecialsData#reason(String)}); empty where it is not forbidden.
+     */
+    public Optional<String> forbiddenReason(int index, SpecialsData specials, String special) {
+        if (!forbiddenSpecials(index, specials).contains(special)) {
+            return Optional.empty();
+        }
+        return specials.reason(special, settingOf(index)).or(() -> specials.reason(special));
     }
 
     /**

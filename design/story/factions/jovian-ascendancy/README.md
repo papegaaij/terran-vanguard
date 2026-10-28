@@ -30,8 +30,8 @@ see [twist](../../twist/README.md)).
 
 - **Shapes**: angular, faceted, knife-edged, stealth-like. Long thin hulls, forward-swept wings,
   sharp chines. Clearly human-built, but more elegant and more expensive than Coalition gear.
-- **Colours**: gloss black, gold trim and gold crest (a rising sun over a ringed planet), red
-  running lights.
+- **Colours**: gloss black (the Level 28 cruisers) and, from Act 5 on, gunmetal/charcoal hulls (round 60, Q11 b),
+  with gold trim and gold crest (a rising sun over a ringed planet), red running lights.
 - **Engines**: hot orange-red thrust with a thin, focused flame.
 - **Late-war hybrids** (Act 6): Ascendancy hulls grafted with Vrell tissue — black and gold
   plating with teal glowing growths. The visual proof of the bargain.
@@ -59,7 +59,7 @@ see [twist](../../twist/README.md)).
 
 ### Act 5: the Ascendancy in the belt (draft)
 
-*Draft, step `m9-d-story` (2026-10-27), **pending the user's review in round 60**. The units' numbers and
+*Draft, step `m9-d-story` (2026-10-27), **approved in round 60**. The units' numbers and
 rules are in their own documents; this section only shows how the faction's doctrine reads in the act
 ([Act 5](../../../campaign/act-5-the-belt/README.md), the [belt](../../../world/belt/README.md)).*
 
@@ -70,8 +70,8 @@ rules are in their own documents; this section only shows how the faction's doct
   refugees' story), and Vorne's broadcast asks every station to choose. Ceres Hub declares for the
   Ascendancy and half its garrison mutinies (L29); the mutineers fly Talons, and some Ceres pilots in
   repainted CDF craft waver and peel off (round 60 Q10 b).
-- **Look**: the Ascendancy in the open, gloss black and gold with a strong rim light and red running
-  lights so it reads over dark rock (Q11 a; the rule is the [enemies](../../../enemies/README.md#factions-and-visual-language)
+- **Look**: the Ascendancy in the open, gunmetal/charcoal and gold with a strong rim light and red running
+  lights so it reads over dark rock (Q11 b, decided in round 60, diverging on purpose from the L28 cruisers' gloss black; the rule is the [enemies](../../../enemies/README.md#factions-and-visual-language)
   document's). The unmarked grey of Acts 3–4 is gone; the Warden Tank of L19 returns in livery in L34
   (J1, [Warden Tank](../../../enemies/ground/warden-tank/README.md)).
 - **Doctrine in Act 5's units**:
@@ -102,8 +102,8 @@ where the rule lives):
   ([Dart Drone](../../../enemies/air/dart-drone/README.md)).
 - Q10 the mutineers: (a) all fly Talons and fight, (c) a remembered story choice
   ([story](../../README.md#open-questions)).
-- Q11 the look on the belt: (b) gunmetal and charcoal hulls with gold, (c) black silhouettes with gold
-  accents only ([enemies](../../../enemies/README.md#factions-and-visual-language)).
+- Q11 the look on the belt: decided in round 60, **b** gunmetal and charcoal hulls with gold (a gloss black and
+  c black silhouettes rejected; [enemies](../../../enemies/README.md#factions-and-visual-language)).
 - Q12 the arsenal: the Mk V in the shop from the act's first visit under (a) or (b)
   ([generator](../../../player/generator/README.md)).
 
@@ -112,7 +112,7 @@ where the rule lives):
 - 2026-09-30: Ascendancy visual language: angular stealth, black and gold, red-orange engines;
   Act 6 hybrids with Vrell growths.
 - 2026-10-01: Approved by the user in the [Acts 1–2 design review](../../../reviews/acts-1-2/README.md).
-- 2026-10-27 (Act 5 design phase, step m9-d-story; **pending the user's review in round 60**): the
+- 2026-10-27 (Act 5 design phase, step m9-d-story; **approved in round 60**): the
   faction in Act 5: the belt held through Helix's cures and the Iron Sovereign, the mutiny at Ceres, the
   look in the open (Q11 a), the doctrine's Act 5 units, the drones as its popcorn (Q6 b), the uneasy
   alliance (L33), the captured Mk V (Q12 c).

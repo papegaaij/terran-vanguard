@@ -23,6 +23,9 @@ final class EnemyFire {
     private final Pool<EnemyBullet> bullets =
             new Pool<>(EnemyForce.BULLET_CAPACITY, EnemyBullet::new, EnemyBullet[]::new);
     private final Pool<Mine> mines = new Pool<>(MINE_CAPACITY, Mine::new, Mine[]::new);
+    /** M9 part C: the line mines' proximity, blast and chain rules, and the step's blasts. */
+    private final MineLines lines = new MineLines(MINE_CAPACITY);
+
     private final Pool<Lob> lobs = new Pool<>(LOB_CAPACITY, Lob::new, Lob[]::new);
     /** M7 part F: the bosses' homing missiles (the Revenant Walker's pods). */
     private final Missiles missiles;
@@ -63,6 +66,7 @@ final class EnemyFire {
         Pools.clear(bullets);
         Pools.clear(mines);
         Pools.clear(lobs);
+        lines.clearBlasts();
         missiles.reset();
     }
 
@@ -440,17 +444,106 @@ final class EnemyFire {
      * away from the ship (no bullet spawns close to it).
      */
     void moveMines(Ship ship) {
+        moveMines(ship, 0, Double.NaN, Double.NaN, Double.NaN, Double.NaN);
+    }
+
+    /**
+     * As {@link #moveMines(Ship)}; M9 part C: the line mines come down by the scroll's {@code scroll} px of this step,
+     * blink when the ship's centre (shipX, shipY) or Rook's (rookX, rookY) comes within their proximity (NaN: that
+     * craft triggers nothing now) and burst at their blink's end with their ring and their blast ({@link
+     * SimEvents.Type#MINE_BURST}, value 1); a set-off one bursts without a ring ({@link SimEvents.Type#MINE_CHAINED})
+     * and sets off its neighbours. The blasts wait for the hit passes ({@link #blastDamage}).
+     */
+    void moveMines(Ship ship, double scroll, double shipX, double shipY, double rookX, double rookY) {
+        lines.clearBlasts();
         for (int i = mines.size() - 1; i >= 0; i--) {
             Mine mine = mines.get(i);
-            if (!mine.move()) {
+            if (!mine.move(scroll)) {
                 EnemyGun.MineSpec spec = mine.spec();
                 if (mine.expired() && spec.bursts()) {
                     burst(mine.x(), mine.y(), spec.ring(), mine.gun().bulletSpeed(), spec.ringDamage(), ship);
                     events.add(SimEvents.Type.MINE_BURST, mine.x(), mine.y());
                 }
                 mines.free(i);
+                continue;
+            }
+            if (!mine.line()) {
+                continue;
+            }
+            int now = lines.step(mine, shipX, shipY, rookX, rookY, events);
+            if (now == MineLines.BLAST) {
+                EnemyGun.MineSpec spec = mine.spec();
+                burst(mine.x(), mine.y(), spec.ring(), mine.gun().bulletSpeed(), spec.ringDamage(), ship);
+                lines.blast(mine);
+                events.add(SimEvents.Type.MINE_BURST, mine.x(), mine.y(), 1);
+                mines.free(i);
+            } else if (now == MineLines.CHAINED) {
+                MineLines.setOffNeighbours(mines, mine);
+                events.add(SimEvents.Type.MINE_CHAINED, mine.x(), mine.y());
+                mines.free(i);
             }
         }
+    }
+
+    /**
+     * M9 part C: line mine {@code mine} was shot (or caught by a special's blast) or touched: it bursts with its ring
+     * (none near the ship); a shot one ({@code shot}) sets off its neighbours too. The caller frees it.
+     */
+    void lineMineBurst(Mine mine, Ship ship, boolean shot) {
+        EnemyGun.MineSpec spec = mine.spec();
+        burst(mine.x(), mine.y(), spec.ring(), mine.gun().bulletSpeed(), spec.ringDamage(), ship);
+        if (shot) {
+            MineLines.setOffNeighbours(mines, mine);
+        }
+    }
+
+    /** M9 part C: the damage of this step's mine blasts on {@code hull} at (x, y) ({@link MineLines#blastDamage}). */
+    double blastDamage(Hull hull, double x, double y) {
+        return lines.blasts() == 0 ? 0 : lines.blastDamage(hull, x, y);
+    }
+
+    /** M9 part C: the line mines alive (for a layer's limit). */
+    int lineMines() {
+        int n = 0;
+        for (int i = 0; i < mines.size(); i++) {
+            if (mines.get(i).line()) {
+                n++;
+            }
+        }
+        return n;
+    }
+
+    /**
+     * M9 part C (design/enemies/space/minelayer): mine layer {@code enemy} lays the mines of its line it has reached on
+     * its strafe, at its height (none while the enemies hold their fire: those mines are skipped).
+     */
+    void layLine(Enemy enemy, boolean firing) {
+        MineLaying laying = enemy.mineLaying();
+        EnemyGun gun = enemy.spec().gun().orElseThrow();
+        int most = enemy.spec().mineLayer().orElseThrow().most();
+        for (double x = laying.due(); !Double.isNaN(x); x = laying.due()) {
+            if (firing) {
+                layMine(gun, x, enemy.y(), most);
+            }
+            laying.laid();
+        }
+    }
+
+    /**
+     * M9 part C (design/enemies/space/minelayer): a layer lays a line mine of {@code gun}'s at (x, y), held in the
+     * field; refused (false) when the pool is full or {@code most} line mines are alive already.
+     */
+    boolean layMine(EnemyGun gun, double x, double y, int most) {
+        if (lineMines() >= most) {
+            return false;
+        }
+        Mine mine = mines.obtain();
+        if (mine == null) {
+            return false;
+        }
+        mine.drop(gun, x, y, 0);
+        events.add(SimEvents.Type.MINE_DROPPED, x, y, 1);
+        return true;
     }
 
     /**

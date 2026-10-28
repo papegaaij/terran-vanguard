@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""The balancing sheet for the player's equipment (Acts 1-4; Act 3 from M7 part A, Level 15's data from M7 part B;
-Act 4's visits from M8 part A).
+"""The balancing sheet for the player's equipment (Acts 1-5; Act 3 from M7 part A, Level 15's data from M7 part B;
+Act 4's visits from M8 part A; Act 5's visits from M9 part A, its levels' income budget(n) until they are built).
 
 The numbers come from the parts' data files (design/player/**/data.yaml, the economy, the
 difficulty levers, the enemies and the levels); the expected purchases per hangar visit are in
@@ -11,7 +11,8 @@ BalanceTest (this sheet's plan, DPS and enemy checks) and ActPlaythroughTest (Ac
 plan on every difficulty). This script prints the same sheet for reading:
 
 Usage:
-  python3 tools/balance.py              the sheet per visit, levels 01-28 (the plan's visits), and the enemy checks
+  python3 tools/balance.py              the sheet per visit, levels 01-35 (the plan's visits; the level checks where a
+                                        level has data, 01-28), and the enemy checks
   python3 tools/balance.py --weapons    print every weapon's per-level numbers
 
 Per visit: the income of the level before it (the level's typical haul from its credit-budget
@@ -55,6 +56,8 @@ ACCEPTED = {
     ("coilwyrm", "bounty"): "a multi-part enemy, cutting it up is extra work; a head-first kill pays 40",
     ("ravager", "ttk"): "a fast, fragile pack hunter (user decision 2026-10-07, M5 part C)",
     ("wraith", "ttk"): "set for the plan's rear DPS with its rear check instead (user decision D7 = a, M5 part D)",
+    ("clamp-gun", "bounty"): "Level 29's approved credit budget gives it (round 60; M9 part B, step B3)",
+    ("rail-serpent", "bounty"): "a multi-part train, the Coilwyrm's rule; an engine-first kill pays 40 (round 60; M9 part C, step C2)",
 }
 HOLD_SHARE = 0.6                 # a hold's cluster dies in at most this share of its window (BalanceTest, medium)
 REAR_SHARE = 0.6                 # a rear-ambush unit dies in at most this share of its flash and hold (BalanceTest, medium)
@@ -92,6 +95,9 @@ def budget(data, n):
     return b["base"] * b["growth"] ** (n - 1)
 
 
+ACT_5_PLANNED = range(29, 36)  # M9 part A (temporary): Act 5's visits are planned before its levels are built
+
+
 def level_dir(n):
     """The level's directory relative to design/, or None while it has no data file."""
     found = list((DESIGN / "campaign").glob(f"act-*/level-{n:02d}-*/data.yaml"))
@@ -109,6 +115,10 @@ def income(data, n):
     since part H), so a level without a data file is an error, no longer budget(n); M8 part I: Act 4's too (part A's
     temporary budget(n) for an Act 4 level without its data is gone)."""
     d = level_dir(n)
+    if not d and n in ACT_5_PLANNED:
+        # M9 part A (temporary, as M8 part A's for Act 4): an Act 5 level without its data earns budget(n), the
+        # generator's hand plan's haul; each level's part replaces it with its typical haul.
+        return round(budget(data, n))
     if not d:
         sys.exit(f"Level {n:02d} is in the balance plan but has no data.yaml")
     return typical_haul(d)
@@ -161,6 +171,14 @@ def apply_plan(data):
             state["slots"]["front"] = list(s["front"])
             for k in ("generator", "shield", "armor", "engine"):
                 state["core"][k] = s[k]
+        for slot, item in step.get("unfit", []):  # M9 part A: a fitted item off into the inventory
+            if slot == "utility":
+                if state["utility"].pop(item, None) is None:
+                    state["log"].append(f"!! unfit {item}: not fitted")
+                else:
+                    state["log"].append(f"unfit {item}")
+            else:
+                state["log"].append(f"!! unfit {slot}: only a utility module")
         for slot in step.get("sell", []):
             slug, _ = state["slots"].pop(slot)
             refund = round(state["invested"].pop(slot, 0) * data["economy"]["sell_back"])
@@ -207,6 +225,16 @@ def apply_plan(data):
                 state["log"].append(f"fit Rook's {escort_gun(data, slug)['name']} again")
             else:
                 state["log"].append(f"fit {W[slug]['name']} → {slot} again")
+        # M9 part A (BalancePlan's order): a visit's new generator before its upgrades, which it powers; the other core
+        # parts after them, as before
+        for kind, idx in step.get("core", []):
+            if kind != "generator":
+                continue
+            item = data["core"][kind][idx]
+            if available_from(data, item["available"]) > n:
+                state["log"].append(f"!! {kind} {item['name']} not available before L{key}")
+            pay(item["price"], f"{kind} {item['name']}")
+            state["core"][kind] = idx
         for slot, lvl in step.get("upgrade", []):
             slug, cur = state["slots"][slot]
             costs = upgrade_costs(W[slug])
@@ -214,8 +242,10 @@ def apply_plan(data):
                 pay(costs[l - 2], f"{W[slug]['name']} ({slot}) → L{l}", slot)
             state["slots"][slot] = [slug, lvl]
         for kind, idx in step.get("core", []):
+            if kind == "generator":
+                continue
             item = data["core"][kind][idx]
-            if data["availability"][item["available"]] > n:
+            if available_from(data, item["available"]) > n:
                 state["log"].append(f"!! {kind} {item['name']} not available before L{key}")
             pay(item["price"], f"{kind} {item['name']}")
             state["core"][kind] = idx
@@ -246,6 +276,13 @@ def apply_plan(data):
         state["earned"] = earned
         state["credits"] += earned
         state["income"] += earned
+
+
+def available_from(data, available):
+    """The level from whose visit an item is in the shop: an availability key (act 5) or an exact level (L35)."""
+    if re.fullmatch(r"L\d+", available):
+        return int(available[1:])
+    return data["availability"][available]
 
 
 def escort_gun(data, gun_id):
@@ -485,6 +522,7 @@ def bounty_problem(data, e):
 ACT_2 = range(8, 15)  # Levels 08-14
 ACT_3 = range(15, 22)  # Levels 15-21 (M7 part A: the reference DPS before the levels' data)
 ACT_4 = range(22, 29)  # Levels 22-28 (M8 part I: the act HP factor and the beam era through Act 4)
+ACT_5 = range(29, 36)  # Levels 29-35 (M9 part A: the reference DPS before the levels' data)
 
 
 def act_hp_report(ref, levels=ACT_2, act=2):
@@ -584,7 +622,7 @@ def report(data):
                                 "gentle onboarding (user decision 2026-10-01)")
             else:
                 flags.append(f"DPS {fwd:.0f} vs enemy reference {r:.0f}")
-        print(f"{n:02d}  | {budget(data, n):6.0f} | {st['credits'] + spent_here:12.0f} | {spent_here:10.0f} | "
+        print(f"{n:02d}{'*' if not level_dir(n) else ' '} | {budget(data, n):6.0f} | {st['credits'] + spent_here:12.0f} | {spent_here:10.0f} | "
               f"{st['credits']:4.0f} | {load_mw:4.1f}/{out:<3g} | {fwd:7.1f} | {(r or 0):7.0f} | {ratio} | "
               f"{rear:8.1f} | {volley:10.1f} | {escort_dps(data, st, n):8.1f} | "
               + "; ".join(st["log"]) + (("  <-- " + ", ".join(flags)) if flags else ""))
@@ -606,7 +644,7 @@ def report(data):
             problems += [f"L{n:02d}: {m}" for m in slow]
             accepted += [f"L{n:02d}: {m}" for m in pending]
     print("\nBefore visit: the credits after the level before it, which earns its typical haul (its "
-          "credit-budget table), "
+          "credit-budget table; * a level without data yet, M9 part A: budget(n)), "
           "plus the typical player's grade bonus "
           f"(+{data['plan']['typical_grade_bonus']:.0%}, a B). Spent here includes the repair estimate "
           "(the ship's, and Rook's from the L09 visit). Rook DPS: his gun's single-target DPS "
@@ -623,6 +661,7 @@ def report(data):
     act_hp_report(ref)
     act_hp_report(ref, ACT_3, 3)
     act_hp_report(ref, ACT_4, 4)
+    act_hp_report(ref, ACT_5, 5)
     beam_era_report(ref)
     problems += beam_era_problems(data)
     print("\nAccepted: " + ("none" if not accepted else "\n  " + "\n  ".join(accepted)))

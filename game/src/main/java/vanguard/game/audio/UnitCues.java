@@ -118,6 +118,10 @@ final class UnitCues extends SoundFamily {
     private final VentFieldCues ventField;
     /** M8 part H: a lob's burst in Level 28's run is a cruiser's flak airburst. */
     private final MawCues maw;
+    /** M9 part B: Level 29's units' shots and the clamps springing open. */
+    private final CeresCues ceres;
+    /** M9 part C: Level 30's line mines, Gunships' rings and turret cars' shots. */
+    private final MinefieldCues minefield;
 
     UnitCues(
             SoundMix mix,
@@ -130,8 +134,12 @@ final class UnitCues extends SoundFamily {
             AbyssCues abyss,
             TrenchCues trench,
             VentFieldCues ventField,
-            MawCues maw) {
+            MawCues maw,
+            CeresCues ceres,
+            MinefieldCues minefield) {
         super(mix);
+        this.ceres = ceres;
+        this.minefield = minefield;
         this.trench = trench;
         this.ventField = ventField;
         this.maw = maw;
@@ -178,6 +186,8 @@ final class UnitCues extends SoundFamily {
                 foundry.destroyed(events.value(i), pan);
                 // M8 part G: a Depth Hunter's hull break, a relay beacon's break over it.
                 ventField.destroyed(events.value(i), pan);
+                // M9 part B: a clamp gun's clamp springing open over its burst.
+                ceres.destroyed(events.value(i), pan);
             }
             // A heavy shot for a medium bullet: the event's value is the bullet's damage, the same
             // class boundary as its large orb.
@@ -198,6 +208,10 @@ final class UnitCues extends SoundFamily {
                     // M8 part D: an Abyss Ray's fan, a Barbfin's needle (AbyssCues).
                 } else if (ventField.fired(firer(events.x(i), events.y(i)), pan)) {
                     // M8 part G: a Depth Hunter's torpedo launch (VentFieldCues).
+                } else if (ceres.fired(firer(events.x(i), events.y(i)), pan)) {
+                    // M9 part B: a Talon's twin crack, a clamp gun's shot (CeresCues).
+                } else if (minefield.fired(firer(events.x(i), events.y(i)), pan)) {
+                    // M9 part C: a Gunship's ring, a turret car's shot (MinefieldCues).
                 } else {
                     bank.play(
                             FlightSounds.heavyShot(events.value(i))
@@ -208,10 +222,18 @@ final class UnitCues extends SoundFamily {
                             pan);
                 }
             }
-            case MINE_DROPPED ->
-                bank.play(alternate(Sfx.HIT_ORGANIC_A, Sfx.HIT_ORGANIC_B), ENEMY_FIRE, 0.6f * pitch(0.05), pan);
-            case MINE_BURST, MINE_DESTROYED ->
-                bank.play(alternate(Sfx.EXPLOSION_TINY_A, Sfx.EXPLOSION_TINY_B), EXPLOSIONS, pitch(0.06), pan);
+            case MINE_DROPPED -> {
+                // M9 part C: a line mine's drop and arming (MinefieldCues).
+                if (!minefield.mine(events.type(i), events.value(i), pan)) {
+                    bank.play(alternate(Sfx.HIT_ORGANIC_A, Sfx.HIT_ORGANIC_B), ENEMY_FIRE, 0.6f * pitch(0.05), pan);
+                }
+            }
+            case MINE_BURST, MINE_DESTROYED -> {
+                // M9 part C: a line mine's metallic bang (MinefieldCues).
+                if (!minefield.mine(events.type(i), events.value(i), pan)) {
+                    bank.play(alternate(Sfx.EXPLOSION_TINY_A, Sfx.EXPLOSION_TINY_B), EXPLOSIONS, pitch(0.06), pan);
+                }
+            }
             // M5 part F, Level 12 (round 34, the user's picks): the latch and the shake-off; the drain loop
             // follows the state (LevelCues).
             case LAMPREY_LATCHED -> bank.play(Sfx.LAMPREY_LATCH, LAMPREY_LATCH_LEVEL, pitch(0.04), pan);

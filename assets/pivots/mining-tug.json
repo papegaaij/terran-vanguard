@@ -1,0 +1,146 @@
+{
+ "source": "tools/art/belt_units_d.py (production art, M9 part D batch)",
+ "size": [
+  200,
+  300
+ ],
+ "headings": 1,
+ "sections": {
+  "bow": {
+   "offset": [
+    0,
+    -106
+   ],
+   "frame": [
+    208,
+    96
+   ],
+   "box": {
+    "centre": [
+     0.0,
+     -104.0
+    ],
+    "size": [
+     148,
+     86
+    ]
+   },
+   "hit": [
+    133,
+    77
+   ],
+   "smoke": [
+    [
+     -45,
+     -80
+    ],
+    [
+     35,
+     -105
+    ]
+   ]
+  },
+  "cargo": {
+   "offset": [
+    0,
+    0
+   ],
+   "frame": [
+    208,
+    128
+   ],
+   "box": {
+    "centre": [
+     0.0,
+     0.0
+    ],
+    "size": [
+     192,
+     128
+    ]
+   },
+   "hit": [
+    173,
+    115
+   ],
+   "smoke": [
+    [
+     -80,
+     -27
+    ],
+    [
+     80,
+     16
+    ],
+    [
+     19,
+     -9
+    ]
+   ]
+  },
+  "engines": {
+   "offset": [
+    0,
+    106
+   ],
+   "frame": [
+    208,
+    96
+   ],
+   "box": {
+    "centre": [
+     0.0,
+     106.0
+    ],
+    "size": [
+     144,
+     90
+    ]
+   },
+   "hit": [
+    130,
+    81
+   ],
+   "smoke": [
+    [
+     -45,
+     82
+    ],
+    [
+     52,
+     96
+    ]
+   ]
+  }
+ },
+ "bells": [
+  {
+   "at": [
+    0.0,
+    132.0
+   ],
+   "scale": 1.0
+  },
+  {
+   "at": [
+    -38.0,
+    124.8
+   ],
+   "scale": 0.6
+  },
+  {
+   "at": [
+    38.0,
+    124.8
+   ],
+   "scale": 0.6
+  }
+ ],
+ "frames": [
+  "intact",
+  "damaged",
+  "flicker",
+  "lost"
+ ],
+ "note": "y down, px from the tug's centre: each section's frame is drawn centred at its offset; box the measured opaque box (centre and size), hit 90 % of it (centred on the box); smoke the vents' points; bells the drive bells' mouths with the glow's scale"
+}

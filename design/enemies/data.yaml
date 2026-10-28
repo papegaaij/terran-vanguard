@@ -29,6 +29,13 @@ reference_dps:  # assumed single-target player DPS per level (medium)
   26: 112
   27: 116
   28: 120
+  29: 120  # Act 5 (M9 part A, J2 of round 60; the generator's Act 5 hand plan): 120 at L29, then +4 a level, from the
+  30: 124  # static measure (the plan's forward DPS 1.13 of it at L29); parts B-H measure each level with levelReport
+  31: 128
+  32: 132
+  33: 136
+  34: 140
+  35: 144
 bullet_damage:  # damage to the player per hit (shield first, overflow to armour)
   - {bullet: small, damage: 4, notes: {label: '`small` bullet', used_for: 'thorns, standard orbs, fan and ring bullets'}}
   - {bullet: medium, damage: 6, notes: {label: '`medium` bullet', used_for: 'large orbs, bursts from heavies, acid spit'}}
@@ -43,6 +50,10 @@ beam_era_hp:  # M7 part E, step E5 (the user's decision of 2026-10-19, "tougher,
   from_level: 18
   factor: 2
   tiers: [small]
+shields:  # M9 part A (README, Enemy shields; Q1 a of round 60): a unit's `shield` is its HP; these numbers are shared
+  delay: 2.0         # s without a hit before it refills
+  refill: 0.5        # of its maximum a second
+  breaker_hold: 3.0  # s a shield-breaker hit holds the refill back
 formations:  # the formation vocabulary: name and description
   single: One unit on its own, as when a new enemy is introduced.
   V-wing: A V of 3–9 units led by the tip.

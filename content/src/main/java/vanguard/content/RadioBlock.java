@@ -54,6 +54,12 @@ public sealed interface RadioBlock permits LevelData {
      *     interference shows this many seconds before a timed line plays (Level 26's Choir, 2 s); none if not given
      * @param duckDb M8 part F: the music ducks this many dB under the line while it plays (Level 26's Choir, 6); none
      *     if not given
+     * @param channel M9 part A (design/ui/hud, Act 5 additions): the channel the line comes over, overriding its
+     *     speaker's ({@link #channel(VoiceData)})
+     * @param swap M9 part B, step B4b: a {@code holders-down} cue in a level with an escort swap names what the swap
+     *     does, the one it plays for: {@code bulwark} (Rook joins, the Bulwark in the slot still flies and peels away),
+     *     {@code joins} (Rook joins, no Bulwark flying: the loaner lost), {@code leaves} (no Rook to join: the Ember
+     *     leaves upward), {@code empty} (Rook flew from the start: the hold opens empty)
      */
     public record RadioCue(
             Optional<Double> t,
@@ -77,8 +83,22 @@ public sealed interface RadioBlock permits LevelData {
             Optional<Double> below,
             Optional<Double> delay,
             Optional<Double> staticLead,
-            Optional<Double> duckDb) {
+            Optional<Double> duckDb,
+            Optional<Channel> channel,
+            Optional<String> swap) {
+        /** Step B4b: the escort swap outcomes a {@code holders-down} cue's {@code swap} names. */
+        public static final List<String> SWAPS = List.of(
+                vanguard.sim.EscortSwap.SUBJECT_BULWARK,
+                vanguard.sim.EscortSwap.SUBJECT_JOINS,
+                vanguard.sim.EscortSwap.SUBJECT_LEAVES,
+                vanguard.sim.EscortSwap.SUBJECT_EMPTY);
+
         public RadioCue {
+            Check.that(
+                    swap.isEmpty() || event.orElse(null) == CueEvent.HOLDERS_DOWN,
+                    "only a holders-down event names an escort swap's outcome (swap)");
+            swap.ifPresent(outcome ->
+                    Check.that(SWAPS.contains(outcome), "swap: one of " + SWAPS + ", was '" + outcome + "'"));
             staticLead.ifPresent(seconds -> {
                 Check.that(t.isPresent(), "static_lead: only on a timed line");
                 Check.that(seconds > 0 && seconds <= 10, "static_lead: above 0 and at most 10 s, was " + seconds);
@@ -110,14 +130,27 @@ public sealed interface RadioBlock permits LevelData {
             Check.that(
                     allies.isEmpty() || event.orElse(null) == CueEvent.LEVEL_END,
                     "only a level-end cue names the allies home");
-            boolean byEnemy = event.orElse(null) == CueEvent.FIRST_KILL || event.orElse(null) == CueEvent.ENEMY_ESCAPED;
+            // M9 part B (Level 29, Hold fire): a neutral craft's event names its kind too.
+            boolean byEnemy = event.orElse(null) == CueEvent.FIRST_KILL
+                    || event.orElse(null) == CueEvent.ENEMY_ESCAPED
+                    || event.orElse(null) == CueEvent.NEUTRAL_LEFT
+                    || event.orElse(null) == CueEvent.NEUTRAL_DOWN;
             Check.that(
                     enemy.isPresent() == byEnemy,
-                    "a first-kill or enemy-escaped event names its enemy, other triggers do not");
+                    "a first-kill, enemy-escaped, neutral-left or neutral-down event names its enemy, other triggers do"
+                            + " not");
             boolean byGroup = event.orElse(null) == CueEvent.GROUP_CLEARED || event.orElse(null) == CueEvent.GROUP_LOST;
             Check.that(
                     group.isPresent() == byGroup,
                     "a group-cleared or group-lost event names its group, other triggers do not");
+        }
+
+        /**
+         * M9 part A: the channel the line comes over: its own {@code channel}, else its speaker's in the voice table
+         * ({@code filter: enemy}: Vorne, Harker); friendly by default.
+         */
+        public Channel channel(VoiceData voices) {
+            return channel.orElseGet(() -> voices.channelOf(speaker));
         }
 
         /** M8 part F: the portrait's interference before the line, s: its {@code static_lead}; 0 if not given. */
@@ -293,7 +326,22 @@ public sealed interface RadioBlock permits LevelData {
          * with a boss. The simulation's {@code CueTrigger.BOSS_DIVE}; the presentation queues it as a phase line.
          */
         @JsonProperty("boss-dive")
-        BOSS_DIVE
+        BOSS_DIVE,
+        /** M9 part B (design/campaign Level 29): the attempt's first enemy homing missile launched; once. */
+        @JsonProperty("first-homing")
+        FIRST_HOMING,
+        /** M9 part B (Level 29, Hold fire): the first neutral craft of its {@code enemy} left the screen unharmed. */
+        @JsonProperty("neutral-left")
+        NEUTRAL_LEFT,
+        /** M9 part B (Level 29, Hold fire): the first neutral craft of its {@code enemy} destroyed. */
+        @JsonProperty("neutral-down")
+        NEUTRAL_DOWN,
+        /** M9 part B (Level 29, the rescue halt): the held arena's last holder fell; once. */
+        @JsonProperty("holders-down")
+        HOLDERS_DOWN,
+        /** M9 part B (design/player/wingmen, Rook's rescue): the rescued Rook reached his slot; once. */
+        @JsonProperty("escort-joined")
+        ESCORT_JOINED
     }
 
     /**

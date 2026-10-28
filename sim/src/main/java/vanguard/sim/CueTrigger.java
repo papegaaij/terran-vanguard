@@ -128,7 +128,34 @@ public enum CueTrigger {
      * M8 part H (design/enemies/bosses/abyssal-maw, the dive): a coiled boss dives ({@link SimEvents.Type#MAW_DIVE});
      * once. No subject (the radio event {@code boss-dive}; the presentation queues it as a phase line).
      */
-    BOSS_DIVE;
+    BOSS_DIVE,
+    /**
+     * M9 part B (design/campaign Level 29, radio): the attempt's first enemy homing missile launched ({@link
+     * SimEvents.Type#MISSILE_LAUNCHED}); once. No subject (the radio event {@code first-homing}).
+     */
+    FIRST_HOMING,
+    /**
+     * M9 part B (Level 29, Hold fire): the attempt's first neutral craft left the screen unharmed ({@link
+     * SimEvents.Type#NEUTRAL_LEFT}); once. Its subject is the craft's slug (the radio event {@code neutral-left}).
+     */
+    NEUTRAL_LEFT,
+    /**
+     * M9 part B: the attempt's first neutral craft destroyed ({@link SimEvents.Type#NEUTRAL_DOWN}); once. Its subject
+     * is the craft's slug (the radio event {@code neutral-down}).
+     */
+    NEUTRAL_DOWN,
+    /**
+     * M9 part B (Level 29, the rescue halt): the held arena's last holder fell ({@link SimEvents.Type#HOLDERS_DOWN});
+     * once. Its subject (step B4b) is what the level's escort swap does ({@code EscortSwap#radioSubject}: {@code
+     * bulwark}, {@code joins}, {@code leaves}, {@code empty}; none without a swap) (the radio event {@code
+     * holders-down}; the clock resumes, so a timed line can follow too).
+     */
+    HOLDERS_DOWN,
+    /**
+     * M9 part B (design/player/wingmen, Rook's rescue): the rescued Rook reached his slot at the escort swap's end
+     * ({@link SimEvents.Type#ESCORT_JOINED}); once. No subject (the radio event {@code escort-joined}: his first line).
+     */
+    ESCORT_JOINED;
 
     /** Between the part names of a {@link #BOSS_PART_DESTROYED} cue's subject. */
     public static final String PART_SEPARATOR = "|";

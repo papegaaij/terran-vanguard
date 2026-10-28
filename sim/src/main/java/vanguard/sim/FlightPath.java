@@ -46,6 +46,17 @@ public final class FlightPath {
     }
 
     /** One coordinate ({@code axis} 0 = x, 1 = y) of the uniform Catmull-Rom curve, end points repeated. */
+    /**
+     * M9 part B: a path straight through the sampled points ({@code xs[i]}, {@code ys[i]}), at least two, no spline
+     * between them (the caller samples its own curve: {@link SwoopPaths}).
+     */
+    static FlightPath sampled(double[] xs, double[] ys) {
+        if (xs.length != ys.length || xs.length < 2) {
+            throw new IllegalArgumentException("a sampled path needs at least two points, as many x as y");
+        }
+        return new FlightPath(xs.clone(), ys.clone());
+    }
+
     private static double catmullRom(double[] points, int count, int segment, int axis, double t) {
         double p0 = points[2 * Math.max(segment - 1, 0) + axis];
         double p1 = points[2 * segment + axis];

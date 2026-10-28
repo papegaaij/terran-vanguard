@@ -141,6 +141,11 @@ public final class Barks {
     private boolean lost;
     /** The level is won: the outro's radio is the closing lines', so no bark fires (see {@link #levelComplete}). */
     private boolean over;
+    /**
+     * M9 part B (Level 29, round 62): he is not yet in his slot (the rescued Rook in the tender's hold or flying into
+     * the slot, {@link #inSlot}): no bark fires and no kill counts for a streak.
+     */
+    private boolean benched;
     /** The player's armour latch: below the share since the last bark; null before the first step. */
     private Boolean playerLow;
 
@@ -435,6 +440,24 @@ public final class Barks {
         waiting = null;
     }
 
+    /**
+     * M9 part B (Level 29, round 62; the user's playtest of step B5): whether he flies in his slot, set by the screen
+     * before each step's events ({@link vanguard.sim.Wingman#waiting} or {@link vanguard.sim.Wingman#joining} is out
+     * of it). Out of it his barks are off: a kill streak in the rescue halt (the Bulwark in the slot) would hold
+     * Okafor's "Bulwark, RTB" back and leave his own "Miss me?" stale. A bark of his that still waits is withdrawn and
+     * the streak's kills start over, so his barks begin once he is in the slot.
+     */
+    public void inSlot(boolean inSlot) {
+        if (!inSlot && !benched) {
+            if (waiting != null && radio.waiting(waiting)) {
+                radio.withdraw(waiting);
+            }
+            waiting = null;
+            kills.clear();
+        }
+        benched = !inSlot;
+    }
+
     /** M8 part F: whether his barks have ended with his loss's trails in this attempt. */
     public boolean silenced() {
         return lost;
@@ -442,6 +465,9 @@ public final class Barks {
 
     /** An enemy was destroyed (by the player or by him): ten within five seconds is a streak, then the count starts over. */
     public boolean kill(double t) {
+        if (benched) {
+            return false;
+        }
         while (!kills.isEmpty() && t - kills.peekFirst() > streakSeconds) {
             kills.removeFirst();
         }
@@ -591,7 +617,7 @@ public final class Barks {
      */
     public boolean fire(Trigger trigger, double t, boolean top) {
         WingmenData.Bark bark = barks[trigger.ordinal()];
-        if (bark == null || over || lost) {
+        if (bark == null || over || lost || benched) {
             return false;
         }
         boolean eject = trigger == Trigger.ROOK_EJECTS;

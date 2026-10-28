@@ -74,6 +74,14 @@ public record Hull(List<Part> parts) {
         return false;
     }
 
+    /**
+     * M9 part D: whether the segment from (px, py) along (dx, dy), t in [0, 1], enters the box |x| &lt; hw, |y| &lt; hh
+     * (a box's centre at the origin; a hull escort's section under an air link).
+     */
+    static boolean segmentInBox(double px, double dx, double hw, double py, double dy, double hh) {
+        return slab(px, dx, hw, py, dy, hh);
+    }
+
     /** Whether the segment from (px, py) along (dx, dy), t in [0, 1], enters the box |x| < hw, |y| < hh. */
     private static boolean slab(double px, double dx, double hw, double py, double dy, double hh) {
         double enter = 0;

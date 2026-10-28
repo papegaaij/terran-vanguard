@@ -210,7 +210,7 @@ and opens the loadout's third utility slot; it is sold from the hangar visit bef
 
 ### Act 5: vacuum and the core tiers (draft)
 
-*Draft, step `m9-d-systems` (2026-10-27), **pending the user's review in round 60** (Q12 = c). Act 5
+*Draft, step `m9-d-systems` (2026-10-27), **approved in round 60** (Q12 = c). Act 5
 brings no new utility module; the belt's vacuum is defined in [the belt](../../world/belt/README.md#vacuum-rules).*
 
 - **Engine Mk IV** (345 px/s, 2 MW, 8 000) is in the shop from the L29 visit as listed. The typical
@@ -420,6 +420,6 @@ Prompts and capture notes: [concept/prompts.md](concept/prompts.md).
   drag"); their table rows set from `idea` to `draft` (written and decided in round 48; raising a row to `approved` is
   the user's).
 - 2026-10-22 (M8 part A, steps A3/A6; accepted in round 50 (2026-10-22)): the Auto-repair nanites are built in part A (D6, the Mk IV's reason); a hit pauses them for 1 s; the pip `+` beside the armour gauge while they repair.
-- 2026-10-27 (Act 5 design phase, step m9-d-systems; **pending the user's review in round 60**): Act 5 adds no
+- 2026-10-27 (Act 5 design phase, step m9-d-systems; **approved in round 60**): Act 5 adds no
   utility module (Q12 = c); the Engine Mk IV stays in Act 5; in vacuum the pressure hull does nothing and the plan
   stows it; the engine and the modules are never shed by a drain.

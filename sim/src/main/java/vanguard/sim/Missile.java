@@ -27,6 +27,16 @@ public final class Missile implements Hashed {
     private double speedFactor = 1;
     /** M8 part G: whether a heat plume bent it already (once per missile; hashed only once set). */
     private boolean bent;
+    /**
+     * M9 part B, step B1b: the serial of the unit that launched it ({@link Enemy#serial()}), -1 for a boss's or none;
+     * hashed only under a per-shooter cap ({@link EnemyGun.HomingSpec#perShooter()}).
+     */
+    private int owner = -1;
+    /**
+     * M9 part D (design/allies/mining-tug): the hull escort's section it homes on (the target-the-objective hook's
+     * {@code always}), -1 for the ship; hashed only for an aimed launcher's missile.
+     */
+    private int section = -1;
 
     /** Launched at (x, y) by {@code launcher} along {@code angle} (radians clockwise from straight down). */
     void launch(EnemyGun launcher, double startX, double startY, double angle, int id) {
@@ -46,6 +56,28 @@ public final class Missile implements Hashed {
         age = 0;
         lifeTicks = SimStep.ticks(spec.lifeSeconds());
         serial = id;
+        owner = -1;
+        section = -1;
+    }
+
+    /** M9 part B, step B1b: launched by the unit with serial {@code shooter} (its per-shooter cap counts it). */
+    void owner(int shooter) {
+        owner = shooter;
+    }
+
+    /** M9 part B, step B1b: the serial of the unit that launched it, -1 for none. */
+    int owner() {
+        return owner;
+    }
+
+    /** M9 part D: it homes on the hull escort's section {@code k} (-1: the ship). */
+    void section(int k) {
+        section = k;
+    }
+
+    /** M9 part D: the hull escort's section it homes on, -1 for the ship (and for every missile before part D). */
+    public int section() {
+        return section;
     }
 
     /**
@@ -82,6 +114,14 @@ public final class Missile implements Hashed {
         if (bent) {
             // M8 part G: only a torpedo a plume bent, so the other levels hash as before.
             hash.add(1);
+        }
+        if (spec.perShooter()) {
+            // M9 part B: only under a per-shooter cap, so the other levels hash as before.
+            hash.add(owner);
+        }
+        if (spec.aimed()) {
+            // M9 part D: only an aimed launcher's (the Hornet's), so the other levels hash as before.
+            hash.add(section);
         }
     }
 
@@ -129,6 +169,11 @@ public final class Missile implements Hashed {
     /** Its share of its life flown, 0–1. */
     public double age() {
         return Math.min(1, (double) age / Math.max(1, lifeTicks));
+    }
+
+    /** M9 part A (QA-1): whether homing shots, Rook and the Tesla arc may pick it (the Act 5 homing diamond). */
+    public boolean seekable() {
+        return spec.seekable();
     }
 
     /** The damage its burst on a hull deals. */

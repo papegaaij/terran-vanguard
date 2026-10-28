@@ -14,7 +14,9 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import vanguard.content.ActData;
+import vanguard.content.AlliesData;
 import vanguard.content.BriefingPage;
+import vanguard.content.Channel;
 import vanguard.content.Content;
 import vanguard.content.Expression;
 import vanguard.content.LevelData;
@@ -24,8 +26,8 @@ import vanguard.content.WingmenData;
 
 /**
  * The spoken lines (design/audio/voice, Offline pipeline): every radio cue of every level (with its
- * easy and hard variants, one line per convoy unit for {@code {ally}} and one per escort side for
- * {@code {side}}), the secrets' lines, the
+ * easy and hard variants, one line per convoy unit for {@code {ally}}, one per escort side for
+ * {@code {side}} and one per hull section for {@code {section}}), the secrets' lines, the
  * specials' calls, the low-armour line (source {@code armour}), the game over transmission (source {@code
  * retry game-over}), Rook's radio barks (source
  * {@code wingmen barks <trigger>}) and every page of the levels' and acts' briefings and of the acts' outros (spoken
@@ -44,6 +46,12 @@ public final class VoiceLines {
 
     /** The words {@link #SIDE} becomes: one voiced line each. */
     public static final List<String> SIDES = List.of("left", "right");
+
+    /**
+     * M9 part D: the placeholder in a hull escort's line that names the section it is about ("We're hit in the
+     * {section}!"; Level 31's mining tug, design/allies/mining-tug): one voiced line per section name.
+     */
+    public static final String SECTION = "{section}";
 
     /** The placeholder in a line that names the ground-target group it is about ("{group} is behind you"). */
     public static final String GROUP = "{group}";
@@ -75,7 +83,13 @@ public final class VoiceLines {
          * The public-address filter instead of the radio filter: horn loudspeakers with echoes, for a
          * speaker whose table says {@code filter: pa} (Level 06's perimeter beacon).
          */
-        PA;
+        PA,
+        /**
+         * M9 part B (design/audio/voice, Act 5 voices): the enemy channel's filter, radio filter b's band and saturation
+         * with a steady static bed and no crackle, for a speaker whose table says {@code filter: enemy} (Vorne, Harker)
+         * and for an intercepted briefing page ({@code channel: enemy}).
+         */
+        ENEMY;
 
         public String slug() {
             return name().toLowerCase(Locale.ROOT);
@@ -126,6 +140,25 @@ public final class VoiceLines {
     /** A cue's line with {@link #SIDE} as the escort's side ({@code left} or {@code right}). */
     public static String sideLine(String line, String side) {
         return line.replace(SIDE, side);
+    }
+
+    /** M9 part D: a cue's line with {@link #SECTION} as the hull section's name ({@code bow}). */
+    public static String sectionLine(String line, String section) {
+        return line.replace(SECTION, section);
+    }
+
+    /**
+     * M9 part D: the names of the sections of a level's hull escort (the ally's {@code sections} in hull order: bow,
+     * cargo, engines), what {@link #SECTION} becomes; empty without a hull escort.
+     */
+    public static List<String> sections(Content content, LevelData level) {
+        return level.objectives()
+                .escort()
+                .filter(escort -> escort.hull().isPresent())
+                .map(escort -> content.allies().allies().get(escort.ally()))
+                .flatMap(ally -> ally == null ? Optional.empty() : ally.sections())
+                .map(list -> list.stream().map(AlliesData.HullSection::name).toList())
+                .orElse(List.of());
     }
 
     /** A cue's line with {@link #GROUP} as the group's name; unchanged without a group. */
@@ -202,7 +235,11 @@ public final class VoiceLines {
             return Optional.empty();
         }
         VoiceData.Speaker table = voices.speakers().get(voice.get());
-        Filter post = filter != Filter.DRY && table.filter().isPresent() ? Filter.PA : filter;
+        Filter post = filter == Filter.DRY || filter == Filter.ENEMY
+                ? filter
+                : table.filter()
+                        .map(name -> VoiceData.Speaker.ENEMY.equals(name) ? Filter.ENEMY : Filter.PA)
+                        .orElse(filter);
         VoiceData.Settings settings = voices.settings(voice.get(), expression, shout);
         String key = key(String.join(
                 "\n",
@@ -311,7 +348,7 @@ public final class VoiceLines {
             LevelData data = level.getValue();
             String where = level.getKey();
             briefing(lines, voices, data.briefing().pages(), where + " briefing");
-            for (VoiceLine line : radio(voices, data, where)) {
+            for (VoiceLine line : radio(voices, data, sections(content, data), where)) {
                 add(lines, Optional.of(line));
             }
         }
@@ -320,6 +357,14 @@ public final class VoiceLines {
 
     /** The radio lines of one level (its cues with their variants and convoy units, and its secrets). */
     public static List<VoiceLine> radio(VoiceData voices, LevelData level, String where) {
+        return radio(voices, level, List.of(), where);
+    }
+
+    /**
+     * The radio lines of one level, a {@link #SECTION} line once per name in {@code sections} (M9 part D: the hull
+     * escort's sections, {@link #sections}; a line with it is kept as written when there are none).
+     */
+    public static List<VoiceLine> radio(VoiceData voices, LevelData level, List<String> sections, String where) {
         Map<String, VoiceLine> lines = new LinkedHashMap<>();
         int units = level.objectives().escort().map(LevelData.Escort::units).orElse(0);
         for (LevelData.RadioCue cue : level.radio()) {
@@ -338,6 +383,8 @@ public final class VoiceLines {
             for (String text : texts) {
                 if (text.contains(SIDE)) {
                     SIDES.forEach(side -> sided.add(sideLine(text, side)));
+                } else if (text.contains(SECTION) && !sections.isEmpty()) {
+                    sections.forEach(section -> sided.add(sectionLine(text, section)));
                 } else {
                     sided.add(text);
                 }
@@ -418,9 +465,13 @@ public final class VoiceLines {
         }
     }
 
-    /** A briefing page's line, spoken without the radio filter. */
+    /**
+     * A briefing page's line, spoken without the radio filter; an intercepted page ({@code channel: enemy}, M9 part
+     * B) through the enemy channel's filter.
+     */
     public static Optional<VoiceLine> briefingPage(VoiceData voices, BriefingPage page, String source) {
-        return line(voices, page.speaker(), page.line(), page.portrait(), false, Filter.DRY, source);
+        Filter filter = page.onChannel() == Channel.ENEMY ? Filter.ENEMY : Filter.DRY;
+        return line(voices, page.speaker(), page.line(), page.portrait(), false, filter, source);
     }
 
     /** Adds a line once per speaker and key. */
@@ -435,7 +486,8 @@ public final class VoiceLines {
     public static Map<String, VoiceLine> radioIndex(Content content) {
         Map<String, VoiceLine> index = new TreeMap<>();
         for (VoiceLine line : every(content)) {
-            if (line.filter() != Filter.DRY) {
+            // M9 part B: an intercepted briefing page has the enemy filter, but it is a page, not a radio line.
+            if (line.filter() != Filter.DRY && !line.source().matches(".* (briefing|outro) page \\d+")) {
                 index.putIfAbsent(
                         indexKey(line.speaker(), line.text(), line.expression().slug()), line);
             }

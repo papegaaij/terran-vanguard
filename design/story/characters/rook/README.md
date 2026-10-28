@@ -37,7 +37,7 @@ one-liner. When the player equips an AI wingman, it is Rook flying it (see
 
 ### Act 5: captivity and return (draft)
 
-*Draft, step `m9-d-story` (2026-10-27), **pending the user's review in round 60** (Q8 a: the rescue on
+*Draft, step `m9-d-story` (2026-10-27), **approved in round 60** (Q8 a: the rescue on
 the screen). The rules of the swap (when, what he flies with, the loaner's release, retries) are the
 [wingmen](../../../player/wingmen/README.md#rooks-rescue-and-return-l29l30) document's; the set piece's
 place and lines are Level 29's ([Act 5](../../../campaign/act-5-the-belt/README.md)).*
@@ -121,7 +121,7 @@ procedural faces only show the style (framing, lighting, colour treatment, frame
   the name plate **LT. K. TANAKA** and the role line **AEGIS TWO**, which the hangar intel also
   shows under his name for his teaser ([hangar](../../../ui/hangar/README.md#decisions)). `art`
   stays `chosen`, like Okafor's and Varga's.
-- 2026-10-27 (Act 5 design phase, step m9-d-story; **pending the user's review in round 60**): his
+- 2026-10-27 (Act 5 design phase, step m9-d-story; **approved in round 60**): his
   captivity and return (Q8 a): Helix took him and his Ember as a prize to a prison tender in Ceres Hub's
   Dock 9; Ceres Hub Control points the wing there in L29; his first posting was Ceres convoy escort, so
   he knows the mutineers; no lines before the rescue, back in the slot from L30.

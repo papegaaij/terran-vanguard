@@ -67,9 +67,13 @@ final class WalkerCues extends SoundFamily {
     /** M8 part G: Level 27's sounds, whose torpedoes are the level's homing missiles ({@link VentFieldCues}). */
     private final VentFieldCues ventField;
 
-    WalkerCues(SoundMix mix, VentFieldCues ventField) {
+    /** M9 part A: the Act 5 homing diamonds' launch and fall ({@link BeltCues}). */
+    private final BeltCues belt;
+
+    WalkerCues(SoundMix mix, VentFieldCues ventField, BeltCues belt) {
         super(mix);
         this.ventField = ventField;
+        this.belt = belt;
     }
 
     @Override
@@ -89,14 +93,20 @@ final class WalkerCues extends SoundFamily {
             case POD_HATCH -> bank.play(Sfx.WALKER_HATCH, WALKER_LEVEL, pitch(0.03), pan);
             case MISSILE_LAUNCHED -> {
                 // M8 part G: a Depth Hunter's torpedo launches with its volley's report (VentFieldCues.fired).
-                if (!ventField.torpedoes() && launchDue(lastLaunch, now)) {
+                // M9 part A: a homing diamond's launch (BeltCues).
+                if (!ventField.torpedoes()
+                        && !belt.launched(pan, events.x(i), events.y(i))
+                        && launchDue(lastLaunch, now)) {
                     bank.play(Sfx.WALKER_MISSILE, WALKER_LEVEL, pitch(0.04), pan);
                     lastLaunch = now;
                 }
             }
             case MISSILE_DESTROYED -> {
                 // M8 part G: a torpedo's impact or under-water burst (VentFieldCues).
-                if (!ventField.missileGone(events.value(i), pan) && events.value(i) == Missiles.SHOT_DOWN) {
+                // M9 part A: a homing diamond's fall (BeltCues).
+                if (!ventField.missileGone(events.value(i), pan)
+                        && !belt.gone(events.value(i), pan)
+                        && events.value(i) == Missiles.SHOT_DOWN) {
                     bank.play(alternate(Sfx.EXPLOSION_TINY_A, Sfx.EXPLOSION_TINY_B), EXPLOSIONS, pitch(0.05), pan);
                 }
             }

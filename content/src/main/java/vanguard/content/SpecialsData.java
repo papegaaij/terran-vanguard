@@ -30,14 +30,16 @@ public record SpecialsData(
         specials = List.copyOf(specials);
         limits = List.copyOf(limits);
         java.util.Set<Setting> settings = java.util.EnumSet.noneOf(Setting.class);
-        java.util.Set<String> limited = new java.util.HashSet<>();
         for (Limit limit : limits) {
             Check.that(settings.add(limit.setting()), "limits: the setting " + limit.setting() + " is listed twice");
+            // M9 part A: a special may be forbidden by more than one setting (the Airstrike under water and
+            // underground); each setting's limit gives its own reason word.
+            java.util.Set<String> once = new java.util.HashSet<>();
             for (String special : limit.forbids()) {
                 Check.that(
                         specials.stream().anyMatch(known -> known.name().equals(special)),
                         "limits: no special '" + special + "'");
-                Check.that(limited.add(special), "limits: '" + special + "' is forbidden by two settings");
+                Check.that(once.add(special), "limits: '" + special + "' is listed twice by one setting");
             }
         }
     }
@@ -49,10 +51,26 @@ public record SpecialsData(
      */
     public enum Setting {
         UNDERWATER,
-        DRY;
+        DRY,
+        /**
+         * M9 part A (design/player/specials, Act 5 specials): a level or section inside rock ({@code underground: true},
+         * Level 32's hollowed asteroid); it is dry too (the Sonar Pulse's {@code NO WATER} rule is the simulation's).
+         */
+        UNDERGROUND;
 
         /** The setting of a level or section: its medium and whether the level is water ({@code water: true}). */
         public static java.util.Optional<Setting> of(LevelData.Medium medium, boolean water) {
+            return of(medium, water, false);
+        }
+
+        /**
+         * M9 part A: the setting of a level or section: {@code underground} first (inside rock), then its medium
+         * ({@code vacuum} is dry) and whether the level is water.
+         */
+        public static java.util.Optional<Setting> of(LevelData.Medium medium, boolean water, boolean underground) {
+            if (underground) {
+                return java.util.Optional.of(UNDERGROUND);
+            }
             if (medium == LevelData.Medium.UNDERWATER) {
                 return java.util.Optional.of(UNDERWATER);
             }
@@ -86,12 +104,35 @@ public record SpecialsData(
      */
     public List<String> forbidden(
             LevelData.Medium medium, boolean water, java.util.Optional<List<String>> specialLimits) {
-        return specialLimits
-                .map(slugs -> slugs.stream().map(this::named).toList())
-                .orElseGet(() -> forbids(Setting.of(medium, water)));
+        return forbidden(medium, water, false, specialLimits);
     }
 
-    /** M8 part A: the HUD's reason word for a forbidden special: the reason of the limit that lists it. */
+    /** M9 part A: as {@link #forbidden(LevelData.Medium, boolean, Optional)}, inside rock when {@code underground}. */
+    public List<String> forbidden(
+            LevelData.Medium medium,
+            boolean water,
+            boolean underground,
+            java.util.Optional<List<String>> specialLimits) {
+        return specialLimits
+                .map(slugs -> slugs.stream().map(this::named).toList())
+                .orElseGet(() -> forbids(Setting.of(medium, water, underground)));
+    }
+
+    /**
+     * M9 part A: the HUD's reason word for {@code special} in {@code setting}: the reason of that setting's limit when it
+     * lists the special ({@code IN ROCK}); empty otherwise.
+     */
+    public java.util.Optional<String> reason(String special, java.util.Optional<Setting> setting) {
+        return setting.flatMap(at -> limits.stream()
+                .filter(limit -> limit.setting() == at && limit.forbids().contains(special))
+                .map(Limit::reason)
+                .findFirst());
+    }
+
+    /**
+     * M8 part A: the HUD's reason word for a forbidden special: the reason of the first limit that lists it (M9 part A:
+     * the Airstrike's {@code UNDER ICE}; a setting's own word by {@link #reason(String, Optional)}).
+     */
     public java.util.Optional<String> reason(String special) {
         return limits.stream()
                 .filter(limit -> limit.forbids().contains(special))

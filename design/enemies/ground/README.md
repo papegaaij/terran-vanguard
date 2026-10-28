@@ -3,7 +3,7 @@ title: Ground enemies
 design: approved
 implementation: in-progress
 art: final
-updated: 2026-10-27
+updated: 2026-10-28
 ---
 
 # Ground enemies
@@ -17,7 +17,7 @@ terrain, never collide with the player, and are what `anti-ground` and `area` we
 ## Contents
 
 Promoted to their own documents for the Acts 1–2 wrap-up, plus the Act 3 drafts of the overnight design phase (2026-10-12) and the Act 5 drafts of its design phase (2026-10-27,
-pending the user's review in round 60); the remaining units stay in the roster below.
+approved in round 60); the remaining units stay in the roster below.
 
 | Part | Summary | Design | Impl | Art |
 |---|---|---|---|---|
@@ -36,11 +36,12 @@ pending the user's review in round 60); the remaining units stay in the roster b
 | [siphon-pump](siphon-pump/README.md) | Vrell pump on Thera Deep's farm racks, no attack; Level 23's secondary (L23) | review | done | final |
 | [spawning-reef](spawning-reef/README.md) | Soft Vrell coral spawner releasing Glassfin fry; Level 24's secondary (L24) | review | in-progress | final |
 | [relay-beacon](relay-beacon/README.md) | Human-built relay mast with the Helix handshake, no attack; Level 27's secondary (L27) | review | in-progress | final |
-| [warden-tank](warden-tank/README.md) | Unmarked grey tank, hull and turret, bursts from behind (L19); Ascendancy livery at L34 | review | in-progress | final |
-| [sam-nest](sam-nest/README.md) | Ascendancy launcher, salvos of shootable homing diamonds; dormant until a station turns (L29) | draft | not-started | proposed |
-| [sentinel-tower](sentinel-tower/README.md) | Tower with a laser sweep in any direction, a full turn every third sweep, hardened collar (L32) | draft | not-started | proposed |
-| [strider](strider/README.md) | Biped mech with fans and a homing pod; a lost leg topples it, crushing ground units (L32) | draft | not-started | chosen |
-| [rail-bunker](rail-bunker/README.md) | Hardened bunker, a locked 1 s telegraph line then a `heavy` rail shot (L33) | draft | not-started | chosen |
+| [warden-tank](warden-tank/README.md) | Unmarked grey tank, hull and turret, bursts from behind (L19); Ascendancy livery at L34 | approved | in-progress | final |
+| [sam-nest](sam-nest/README.md) | Ascendancy launcher, salvos of shootable homing diamonds; dormant until a station turns (L29) | approved | done | chosen |
+| [clamp-gun](clamp-gun/README.md) | Helix turret on the prison tender's docking clamps; the four hold Level 29's rescue halt (L29) | approved | done | proposed |
+| [sentinel-tower](sentinel-tower/README.md) | Tower with a laser sweep in any direction, a full turn every third sweep, hardened collar (L32) | approved | not-started | chosen |
+| [strider](strider/README.md) | Biped mech with fans and a homing pod; a lost leg topples it, crushing ground units (L32) | approved | not-started | chosen |
+| [rail-bunker](rail-bunker/README.md) | Hardened bunker, a locked 1 s telegraph line then a `heavy` rail shot (L33) | approved | not-started | chosen |
 
 ## Roster
 
@@ -179,6 +180,14 @@ ice shelf; generator `tools/concept/enemies_r48.py`. Prompts:
 | [concept/drill-rig-capture-r51-a.png](concept/drill-rig-capture-r51-a.png) | Game capture, Level 22 (M8 part B, step B5, medium, `--invulnerable`, Hammer Mortar + two Bomb Racks): the first rig's tell (t=41.5), its ring of shards (t=42), the next tell with the bombs on it (t=45), the core's death (t=46.5), the stump and dead pumps (t=48); the second rig's remains (t=63.5) | chosen (round 51, F.1: accepted as final) |
 | [concept/drill-rig-capture-r51-a.mp4](concept/drill-rig-capture-r51-a.mp4) | The same run, t 37–51 with the game's sound: the ship moving under the first rig, the collar's hum, the tells and rings, the pumps and the core breaking, the death | chosen (round 51, F.1: accepted as final) |
 
+Production art, M9 part B (concept round 62, step ART-B): the SAM Nest re-rendered from round 60's chosen A.11 a in the Q.11 b look; generator `tools/art/belt_units.py sam`, held in `build/art-held/` until its data claims it. Prompts: [concept/prompts.md](concept/prompts.md#round-62--production-the-sam-nest-m9-part-b).
+
+| File | What | Status |
+|---|---|---|
+| [concept/sam-nest-final-r62-a.png](concept/sam-nest-final-r62-a.png) | SAM Nest final frames (`tools/art/belt_units.py`): the round base awake (red lights) and dormant (white), the wreck, the twin-tube rack at 16 headings shut and open (the tell), the folded dormant rack and the 1 s wake, the assembled nest (sheet) | chosen (round 62, F.2: accepted as final) |
+| [concept/sam-nest-final-r62-a.gif](concept/sam-nest-final-r62-a.gif) | A dormant white-lit nest waking red beside an awake one; racks turning to the ship, the hatch tell, salvos of two homing diamonds | chosen (round 62, F.2: accepted as final) |
+| [concept/sam-nest-capture-r62-a.png](concept/sam-nest-capture-r62-a.png) | Game capture, Level 29 (step B5): a SAM Nest pair on the Helix dock block, the hatch tell and a salvo of homing diamonds | chosen (round 62, F.2: accepted as final) |
+
 ## Implementation
 
 - [x] Each enemy promoted to its own directory with a stat block before it is implemented (every unit of Acts 1–2; the rule stands for the units of Acts 3–7, M6 part D)
@@ -212,8 +221,9 @@ ice shelf; generator `tools/concept/enemies_r48.py`. Prompts:
 - 2026-10-22 (user, round 52, closed): the siphon pump's final frames accepted (F.4; the part is `art: final`).
 - 2026-10-23 (user, round 53, closed): the spawning reef is look **b** "bone chimneys" (F.4; a moved to `concept/rejected/`); the part is `art: final`.
 - 2026-10-25 (user, [round 57](../../concept-rounds/round-57/README.md) closed): the relay beacon's final frames accepted as final (F.3); the part stays `art: final`.
-- 2026-10-27 (Act 5 design phase, step D-enemies-B; pending the user's review in round 60): the SAM Nest, the
+- 2026-10-27 (Act 5 design phase, step D-enemies-B; approved in round 60): the SAM Nest, the
   Sentinel Tower, the Rail Bunker and the Strider promoted from the roster to draft specs (the Rail Bunker and the
   Strider keep their chosen r04 and r05 concepts); the Warden Tank's Act 5 return drafted (`review`). **J1**: the
   roster's Crawler Tank (L34) dropped: the Warden Tank already fires back up the screen after passing and was
   scheduled in Ascendancy livery from Act 5, so L34 flies it instead (one unit, its art and sounds saved).
+- 2026-10-28 (user, [round 62](../../concept-rounds/round-62/README.md), closed; page answers): the **SAM Nest** (F.2) and the **clamp gun** (F.6, with the docking clamps, the gas and the Ember's launch, in Level 29's `concept/`) production art accepted as final. Sounds: the nest's hatch **b** (S.3), lock beep **b** (S.4) and wake `ab` (S.5 a's servo with S.4 b's lock beep, rebuilt by `tools/concept/audio/sfx_r62.py nest-wake-r62-ab`); the clamp gun's shot **b** (S.6) and the clamp's release **b** (S.7). C.2 accepted: the clamp guns sleep until the halt and carry 250 HP each. The a files moved to the sfx part's `concept/rejected/`.

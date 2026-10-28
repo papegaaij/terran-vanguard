@@ -307,16 +307,128 @@ public record EnemyGun(
      * speed and turns toward the ship at up to {@code turnRadiansPerSecond}; after {@code lifeSeconds} it fizzles.
      * It has {@code hp} (every shot of the player's and Rook's that reaches the air hits it, the Ion Beam too) and
      * at most {@code mostAlive} of them fly at once (a launch beyond that is left out). A pod's hatch opens {@code
-     * hatchSeconds} before its salvo (the tell, {@link SimEvents.Type#POD_HATCH}).
+     * hatchSeconds} before its salvo (the tell, {@link SimEvents.Type#POD_HATCH}). M9 part A (the Act 5 homing
+     * diamond; decided QA-1): a {@code seekable} missile is also a target the player's homing shots, Rook and the Tesla
+     * arc pick, but only when no unit is in their reach (the Revenant Walker's and the Depth Hunter's are not). M9 part
+     * B, step B1b (design/enemies/ground/sam-nest): a launcher holds its fire while the ship is within {@code
+     * holdWithin} px (0: never), and with {@code perShooter} {@code mostAlive} counts only its own missiles in flight.
+     * M9 part D (design/enemies/air/hornet): an {@code aimed} unit's missile is launched along the bearing to its target
+     * (the ship, or under the target-the-objective hook's {@code always} the objective's nearest section, snapped to the
+     * pods' 16 bearings) instead of along its facing, and homes on that target.
      */
     public record HomingSpec(
-            double turnRadiansPerSecond, double lifeSeconds, double hp, int mostAlive, double hatchSeconds) {
+            double turnRadiansPerSecond,
+            double lifeSeconds,
+            double hp,
+            int mostAlive,
+            double hatchSeconds,
+            boolean seekable,
+            double holdWithin,
+            boolean perShooter,
+            boolean aimed) {
+        /** M9 part B, step B1b: launched along the unit's facing (every unit's homing gun before part D). */
+        public HomingSpec(
+                double turnRadiansPerSecond,
+                double lifeSeconds,
+                double hp,
+                int mostAlive,
+                double hatchSeconds,
+                boolean seekable,
+                double holdWithin,
+                boolean perShooter) {
+            this(
+                    turnRadiansPerSecond,
+                    lifeSeconds,
+                    hp,
+                    mostAlive,
+                    hatchSeconds,
+                    seekable,
+                    holdWithin,
+                    perShooter,
+                    false);
+        }
+
+        /** A missile no homing shot picks (every homing missile of Acts 1–4). */
+        public HomingSpec(
+                double turnRadiansPerSecond, double lifeSeconds, double hp, int mostAlive, double hatchSeconds) {
+            this(turnRadiansPerSecond, lifeSeconds, hp, mostAlive, hatchSeconds, false);
+        }
+
+        /** M9 part A: without step B1b's hold distance and per-shooter cap. */
+        public HomingSpec(
+                double turnRadiansPerSecond,
+                double lifeSeconds,
+                double hp,
+                int mostAlive,
+                double hatchSeconds,
+                boolean seekable) {
+            this(turnRadiansPerSecond, lifeSeconds, hp, mostAlive, hatchSeconds, seekable, 0, false);
+        }
+
+        /** M9 part A: this missile seekable (the homing diamond) or not. */
+        public HomingSpec withSeekable(boolean picked) {
+            return new HomingSpec(
+                    turnRadiansPerSecond,
+                    lifeSeconds,
+                    hp,
+                    mostAlive,
+                    hatchSeconds,
+                    picked,
+                    holdWithin,
+                    perShooter,
+                    aimed);
+        }
+
+        /**
+         * M9 part B, step B1b (design/enemies/ground/sam-nest): a launcher that holds its fire (its gun's clock waiting)
+         * while the ship's centre is within {@code within} px of its own (0: never).
+         */
+        public HomingSpec withHoldWithin(double within) {
+            return new HomingSpec(
+                    turnRadiansPerSecond,
+                    lifeSeconds,
+                    hp,
+                    mostAlive,
+                    hatchSeconds,
+                    seekable,
+                    within,
+                    perShooter,
+                    aimed);
+        }
+
+        /**
+         * M9 part B, step B1b (design/enemies/ground/sam-nest): {@code mostAlive} counts only the shooter's own missiles
+         * in flight (true: at most 8 per nest) instead of every missile in flight (false, Acts 1–4).
+         */
+        public HomingSpec withPerShooter(boolean own) {
+            return new HomingSpec(
+                    turnRadiansPerSecond, lifeSeconds, hp, mostAlive, hatchSeconds, seekable, holdWithin, own, aimed);
+        }
+
+        /**
+         * M9 part D (design/enemies/air/hornet): a unit's missiles launched at its target and homing on it ({@code
+         * true}) or along its facing ({@code false}, every unit's before part D).
+         */
+        public HomingSpec withAimed(boolean atTarget) {
+            return new HomingSpec(
+                    turnRadiansPerSecond,
+                    lifeSeconds,
+                    hp,
+                    mostAlive,
+                    hatchSeconds,
+                    seekable,
+                    holdWithin,
+                    perShooter,
+                    atTarget);
+        }
+
         public HomingSpec {
             if (!(turnRadiansPerSecond >= 0)
                     || !(lifeSeconds > 0)
                     || !(hp > 0)
                     || mostAlive < 1
-                    || !(hatchSeconds >= 0)) {
+                    || !(hatchSeconds >= 0)
+                    || !(holdWithin >= 0)) {
                 throw new IllegalArgumentException("a homing missile turns, lives, has HP and a cap");
             }
         }
@@ -611,9 +723,64 @@ public record EnemyGun(
             int ring,
             double ringDamage,
             boolean bursts,
-            int credits) {
+            int credits,
+            Optional<LineMine> line) {
         /** A spore's hit box. */
         public static final Hitbox BOX = new Hitbox(10, 10);
+
+        public MineSpec {
+            java.util.Objects.requireNonNull(line);
+            if (line.isPresent() && drift != 0) {
+                throw new IllegalArgumentException("a line mine holds its place in the field: it does not drift");
+            }
+        }
+
+        /** A spore: no line mine's rules (every mine before M9 part C). */
+        public MineSpec(
+                double armSeconds,
+                double lifeSeconds,
+                double drift,
+                double hp,
+                int ring,
+                double ringDamage,
+                boolean bursts,
+                int credits) {
+            this(armSeconds, lifeSeconds, drift, hp, ring, ringDamage, bursts, credits, Optional.empty());
+        }
+
+        /** M9 part C: this mine with a line mine's rules ({@link LineMine}); empty for a spore. */
+        public MineSpec withLine(Optional<LineMine> withLine) {
+            return new MineSpec(armSeconds, lifeSeconds, drift, hp, ring, ringDamage, bursts, credits, withLine);
+        }
+    }
+
+    /**
+     * M9 part C (design/enemies, Mine lines; design/enemies/space/minelayer; Level 30's C1 a and C2 a): a mine of a
+     * laid line. It holds its place in the field and comes down with the scroll (no drift). Armed, while the ship's
+     * centre or Rook's is within {@code proximity} px it blinks {@code blinkSeconds}, then bursts: its ring (as every
+     * ring, none while the ship is within the bullets' no-fire distance) and a blast of {@code blastDamage} on the ship,
+     * Rook and the Bulwark where their hulls touch the disc of {@code blastRadius} px round it (0: no blast). Touched
+     * while armed it bursts at once with its ring (the contact deals the layer's attack damage). Shot (or blasted by a
+     * special) it bursts with its ring and sets off the mines of any line within {@code chainRadius} px, hop by hop
+     * {@code hopSeconds} apart; a set-off mine bursts without a ring and sets off its own neighbours (0: no chain).
+     */
+    public record LineMine(
+            double proximity,
+            double blinkSeconds,
+            double blastRadius,
+            double blastDamage,
+            double chainRadius,
+            double hopSeconds) {
+        public LineMine {
+            if (!(proximity > 0)
+                    || !(blinkSeconds >= 0)
+                    || !(blastRadius >= 0)
+                    || !(blastDamage >= 0)
+                    || !(chainRadius >= 0)
+                    || !(hopSeconds > 0)) {
+                throw new IllegalArgumentException("a line mine has a proximity, a blink, a blast, a chain and a hop");
+            }
+        }
     }
 
     /**

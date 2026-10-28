@@ -74,10 +74,13 @@ final class LevelChecks extends ContentChecks {
             }
             checkTime(level, "boss.t", boss.t());
         });
+        // M9 part B (Level 29, the rescue halt): or a held arena (its holders' group) without a boss.
         if (level.sections().stream().filter(LevelData.Section::isArena).count() > 1
-                || (level.sections().stream().anyMatch(LevelData.Section::isArena)
-                        && level.boss().isEmpty())) {
-            problem(level, "sections", "a level has at most one arena, and only with a boss");
+                || (level.sections().stream().anyMatch(section -> section.isArena() && !section.held())
+                        && level.boss().isEmpty())
+                || (level.sections().stream().anyMatch(LevelData.Section::held)
+                        && level.boss().isPresent())) {
+            problem(level, "sections", "a level has at most one arena, a boss's or a held one (without a boss)");
         }
         bosses.checkDebris(level);
         checkLevelRules(level);
@@ -149,7 +152,12 @@ final class LevelChecks extends ContentChecks {
                 }
             });
             if (target.enemy().isPresent()) {
-                target.group().ifPresent(group -> checkGroup(level, field + ".group", group));
+                // M9 part B: or the group that holds a held arena (its section's holds: the clamp guns).
+                target.group()
+                        .filter(group -> level.sections().stream()
+                                .noneMatch(section ->
+                                        section.holds().filter(group::equals).isPresent()))
+                        .ifPresent(group -> checkGroup(level, field + ".group", group));
             } else {
                 target.group().ifPresent(group -> checkDestructibleGroup(level, field + ".group", group));
             }
@@ -656,7 +664,9 @@ final class LevelChecks extends ContentChecks {
                                 .flatMap(EnemyData.Hover::edgeX)
                                 .isEmpty();
                 // M5 part F (F9 = a): a swarm of chasers needs no flock and flies no route.
-                boolean chasers = enemy.movement().chase().isPresent() && flock.isEmpty();
+                // M9 part B (Level 29): a swarm on rocks (the Asteroid Mites) rides its rocks: no flock, no route.
+                boolean chasers =
+                        (enemy.movement().chase().isPresent() || wave.onRocks().isPresent()) && flock.isEmpty();
                 swarm |= group.formation().equals("swarm") && !chasers;
                 // M7 part D: a unit with a flock that also lists other formations (the Dust Kite) flies those too.
                 // M7 part G: a flock's pursuit (the Mote Swarm in Level 20) is a swarm of its own (RetreatChecks).

@@ -1,10 +1,10 @@
 ---
 title: Level 32 – Deep Core
-design: draft
+design: approved
 implementation: not-started
 art: none
 depends-on: [../../../enemies/ground/sentinel-tower, ../../../enemies/ground/strider, ../../../enemies/ground/sam-nest, ../../../enemies/air/talon, ../../../enemies/air/dart-drone, ../../../world/belt, ../../../player/specials, ../../../player/wingmen, ../../../player/generator, ../../act-3-red-dust/level-16-valles-canyon-run, ../../act-3-red-dust/level-19-foundry-of-tharsis]
-updated: 2026-10-27
+updated: 2026-10-28
 ---
 
 # Level 32 – Deep Core
@@ -21,8 +21,7 @@ pairs walk the tunnel floors and topple onto their own guns when a leg goes, and
 vents close the level. No Airstrike or Orbital Lance inside the rock. Density 4, front only, ≈ 104–107
 enemies a minute at medium over 186 s.
 
-**Status: draft (Act 5 design phase, step `m9-d-levels-2`, 2026-10-27), pending the user's review in
-round 60.** Written from the act roster, the gap analysis's recommended answers (Q5 a branching tunnels,
+**Status: approved (Act 5 design phase, step `m9-d-levels-2`, 2026-10-27), approved in round 60.** Written from the act roster, the gap analysis's recommended answers (Q5 a branching tunnels,
 Q6 b the Dart Drone, Q1 a the enemy shields, Q11 a the Ascendancy look, Q12 c the arsenal), its decided
 L32 items (Strider pairs on the floors, Sentinels in side galleries, the refinery last, no Airstrike or
 Lance, blast doors as ground triggers) and the wave 1 documents; every number is a first draft for part E
@@ -184,7 +183,7 @@ Enemy definitions are linked per row; formation names from the
 in **Act 1 terms** with a `bounty_scale` (see *Credit budget*).
 
 - **HP** (the units' own pages, at the proposed L32 reference DPS **132**, judgement call J2): the Talon 32
-  (shield 2), the Sentinel's emitter 120 behind its hardened collar, the Strider 410 (hull 220, legs 80, pod
+  (shield 12 since round 62), the Sentinel's emitter 120 behind its hardened collar, the Strider 410 (hull 220, legs 80, pod
   30), the SAM Nest 20, the Dart 1, the Skitter, Needler and motes as built.
 - **Density and pacing** (the Act 2+ rules, `PacingTest` and `ActFloorTest`): **323–332 enemies** by route
   (the safer route 332, the richer 323: waves plus 16–23 ground units) over 186 s, **≈ 104–107 a minute**
@@ -454,7 +453,7 @@ None yet. The level needs (round 60's proposals, then part E's production art):
 
 ## Open questions
 
-The design choices below are drafted on the recommended option, **pending the user's review in round 60**;
+The design choices below are drafted on the recommended option, **approved in round 60**;
 the alternatives:
 
 - **Q5, branching tunnels** (gap analysis): **a** two forks, the ship's side at the fork's head picks the
@@ -472,8 +471,7 @@ the alternatives:
 ## Decisions
 
 - 2026-10-27 (Act 5 design phase, step `m9-d-levels-2`): drafted from the roster row, the gap analysis
-  (Q5 a, Q6 b, Q1 a, Q11 a, Q12 c and its decided L32 items) and the wave 1 documents; pending the user's
-  review in round 60.
+  (Q5 a, Q6 b, Q1 a, Q11 a, Q12 c and its decided L32 items) and the wave 1 documents; approved in round 60.
 - 2026-10-27: Level 16's terrain rules carry over unchanged; the galleries are Level 25's notches; no
   Sentinel in a fork's channel (its 300 px passage rule); front only, as the roster says (the Darts' wall
   bays near the top count as front).
@@ -481,3 +479,4 @@ the alternatives:
   channel by); the unchosen channel's ground units are dormant; the richer route pays about 10 % more.
 - 2026-10-27: the level meets the Act 2+ floor on every route (≈ 104–107 a minute); the refinery reuses
   Level 19's vents unchanged; the `TOWERS DOWN` secondary counts the four common-route Sentinels.
+- 2026-10-27 (user, [round 60](../../../concept-rounds/round-60/README.md) closed): the design approved as drafted (`design: approved`, D.5): Q5 **a** (two real forks), J.11 kept (the route choice has consequences, reversing Level 16's rejected M3 b); the tunnel bed is S.19 a. Q11 **b**: gunmetal/charcoal units.

@@ -41,7 +41,8 @@ public interface ChainSpecs {
             double headMultiplier,
             int headFirstBonus,
             java.util.Optional<Scatter> scatter,
-            java.util.List<EnemyGun> headAttacks) {
+            java.util.List<EnemyGun> headAttacks,
+            java.util.Optional<Cars> cars) {
         /** M8 part C: the most attacks a chain's head has. */
         public static final int MOST_HEAD_ATTACKS = 4;
 
@@ -50,6 +51,12 @@ public interface ChainSpecs {
             offsets = java.util.List.copyOf(offsets);
             headAttacks = java.util.List.copyOf(headAttacks);
             java.util.Objects.requireNonNull(scatter);
+            java.util.Objects.requireNonNull(cars);
+            if (cars.isPresent() && (segmentBoxes.size() < cars.get().every() || regrown != null)) {
+                throw new IllegalArgumentException(
+                        "a train has a turret car among its cars and never regrows (M9 part C): "
+                                + segmentBoxes.size());
+            }
             if (offsets.size() != segmentBoxes.size() + 2) {
                 throw new IllegalArgumentException("a chain has an offset per member: head, segments, tail");
             }
@@ -109,7 +116,40 @@ public interface ChainSpecs {
                     headMultiplier,
                     headFirstBonus,
                     java.util.Optional.empty(),
-                    java.util.List.of());
+                    java.util.List.of(),
+                    java.util.Optional.empty());
+        }
+
+        /** Without M9 part C's turret cars. */
+        public ChainSpec(
+                EnemySpec segment,
+                java.util.List<Hitbox> segmentBoxes,
+                EnemySpec tail,
+                int tailFirstBonus,
+                EnemySpec regrown,
+                double regrowSeconds,
+                double regrowSpeed,
+                java.util.List<Double> offsets,
+                double popSeconds,
+                double headMultiplier,
+                int headFirstBonus,
+                java.util.Optional<Scatter> scatter,
+                java.util.List<EnemyGun> headAttacks) {
+            this(
+                    segment,
+                    segmentBoxes,
+                    tail,
+                    tailFirstBonus,
+                    regrown,
+                    regrowSeconds,
+                    regrowSpeed,
+                    offsets,
+                    popSeconds,
+                    headMultiplier,
+                    headFirstBonus,
+                    scatter,
+                    headAttacks,
+                    java.util.Optional.empty());
         }
 
         /** M8 part C: this chain whose cut parts scatter ({@code regrown} must be null); empty for none. */
@@ -127,7 +167,8 @@ public interface ChainSpecs {
                     headMultiplier,
                     headFirstBonus,
                     withScatter,
-                    headAttacks);
+                    headAttacks,
+                    cars);
         }
 
         /** M8 part C: this chain with its head's attacks; an empty list for none. */
@@ -145,7 +186,50 @@ public interface ChainSpecs {
                     headMultiplier,
                     headFirstBonus,
                     scatter,
-                    withAttacks);
+                    withAttacks,
+                    cars);
+        }
+
+        /** M9 part C: this train with its turret cars (design/enemies/air/rail-serpent); empty for none. */
+        public ChainSpec withCars(java.util.Optional<Cars> withCars) {
+            return new ChainSpec(
+                    segment,
+                    segmentBoxes,
+                    tail,
+                    tailFirstBonus,
+                    regrown,
+                    regrowSeconds,
+                    regrowSpeed,
+                    offsets,
+                    popSeconds,
+                    headMultiplier,
+                    headFirstBonus,
+                    scatter,
+                    headAttacks,
+                    withCars);
+        }
+
+        /**
+         * M9 part C: the stat block of member {@code i} (0 the head's own is the unit's, not this): the tail, a turret
+         * car or a plain segment.
+         */
+        public EnemySpec memberSpec(int i) {
+            if (i == members() - 1) {
+                return tail;
+            }
+            return cars.isPresent() && i % cars.get().every() == 0 ? cars.get().turret() : segment;
+        }
+
+        /** M9 part C: the turret cars before member {@code i} (its place among them, for the stagger). */
+        public int turretsBefore(int i) {
+            if (cars.isEmpty()) {
+                return 0;
+            }
+            int n = 0;
+            for (int k = 1; k < i && k < members() - 1; k++) {
+                n += k % cars.get().every() == 0 ? 1 : 0;
+            }
+            return n;
         }
 
         /** Without M7 part C's head-first bonus. */
@@ -210,11 +294,49 @@ public interface ChainSpecs {
      * straight at {@code speed} px/s for {@code seconds}, its members hittable and firing nothing, then dies from the
      * cut backwards (one member every {@link ChainSpec#popSeconds()}), drifting to a halt as a dead chain does. A cut
      * of a scattering part only takes that member out of it.
+     *
+     * <p>M9 part C (design/enemies/air/rail-serpent, the machine split): a {@code wreck} instead loses power at once: it
+     * drifts on the cut's heading from {@code speed} px/s slowing evenly to a stop over {@code seconds}, its cars
+     * doomed (nothing hits them, they touch nothing, their turrets dark), then blows from the cut backwards one car
+     * every {@link ChainSpec#popSeconds()}, each paying its bounty as it blows ({@link SimEvents.Type#CHAIN_WRECK} at
+     * the cut).
      */
-    public record Scatter(double speed, double seconds) {
+    public record Scatter(double speed, double seconds, boolean wreck) {
         public Scatter {
             if (!(speed >= 0) || !(seconds >= 0)) {
                 throw new IllegalArgumentException("a scatter has a speed and a time: " + speed + ", " + seconds);
+            }
+        }
+
+        /** A water chain's swim (M8 part C), no wreck. */
+        public Scatter(double speed, double seconds) {
+            this(speed, seconds, false);
+        }
+    }
+
+    /**
+     * M9 part C (design/enemies/air/rail-serpent): a train's turret cars: every {@code every}-th car behind the engine
+     * (member every, 2 × every, ...; never the tail) flies {@code turret}'s stat block, its gun firing on its own clock
+     * while the car is on the play field, the k-th turret car's first shot {@code staggerSeconds} × k later than its
+     * gun's first-shot delay (the cars staggered); a turret's {@link EnemyGun#tellSeconds()} lights its lamp first
+     * ({@link SimEvents.Type#CAR_TELL}); a burst fires its shots its burst gap apart. A car doomed in a split or the
+     * engine's death is dark.
+     */
+    public record Cars(EnemySpec turret, int every, double staggerSeconds) {
+        public Cars {
+            java.util.Objects.requireNonNull(turret);
+            if (every < 1 || !(staggerSeconds >= 0) || turret.gun().isEmpty()) {
+                throw new IllegalArgumentException("a train's turret cars come every few cars, staggered, with a gun");
+            }
+            EnemyGun gun = turret.gun().get();
+            if (gun.up()
+                    || gun.mine().isPresent()
+                    || gun.mortar().isPresent()
+                    || gun.spiral().isPresent()
+                    || gun.homing().isPresent()
+                    || !Double.isNaN(gun.passWithinX())
+                    || !Double.isFinite(gun.intervalSeconds())) {
+                throw new IllegalArgumentException("a turret car's gun is an aimed shot, a burst or a fan: " + gun);
             }
         }
     }

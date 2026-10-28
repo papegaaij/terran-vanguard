@@ -138,7 +138,18 @@ public final class HangarScreen implements GameScreen {
      * has no next level (M6 part B).
      */
     public static GameScreen afterLevel(GameServices services, Campaign campaign) {
-        return screen(services, campaign, CampaignRoute.afterLevel(services.content, campaign));
+        CampaignRoute.Step step = CampaignRoute.afterLevel(services.content, campaign);
+        if (endsRelease(step, CampaignRoute.releaseEnd(services.content, campaign))) {
+            // M9 part B (step B4): a won level that ends no act while the act's next level is not built (Level 29
+            // until Level 30 is) ends the release as the last built act's outro does.
+            return new ReleaseEndScreen(services, campaign);
+        }
+        return screen(services, campaign, step);
+    }
+
+    /** M9 part B: whether the step after a won level's debrief is the release's end card instead of the hangar. */
+    static boolean endsRelease(CampaignRoute.Step afterLevel, boolean releaseEnd) {
+        return afterLevel instanceof CampaignRoute.Step.Hangar && releaseEnd;
     }
 
     /**

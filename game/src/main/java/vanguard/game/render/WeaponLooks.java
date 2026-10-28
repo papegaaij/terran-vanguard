@@ -185,6 +185,14 @@ public final class WeaponLooks {
                 shots = overdrive = byHeading(sprites.frames(slug + "-shot"));
                 glowing = false;
             }
+            case "swarm-tail" -> {
+                // M9 part A: the micro-missile with the warmer, ivory-white plume (tools/art/act5_gear.py swarm, 32
+                // headings); the pod's missile until its art exists.
+                shots = overdrive = sprites.has("swarm-tail-shot")
+                        ? byHeading(sprites.frames("swarm-tail-shot"))
+                        : byHeading(sprites.frames("micro-missile-pod-shot"));
+                glowing = false;
+            }
             case "swivel-gun" -> {
                 shots = overdrive = byHeading(sprites.frames("swivel-gun-shot"));
                 glowing = true;
@@ -264,8 +272,11 @@ public final class WeaponLooks {
             pod = sprites.frames(name);
             offsets = pods.offsets(name);
         }
-        // M7 part A: a beam glows at its nose and a drone fires from its orbit: no muzzle flash on the hull.
-        boolean hullMuzzle = !mount.bay() && weapon.delivery() != WeaponSpec.Delivery.BEAM;
+        // M7 part A: a beam glows at its nose and a drone fires from its orbit: no muzzle flash on the hull. M9 part A:
+        // an arc lights its pod's terminal instead (ArcLooks).
+        boolean hullMuzzle = !mount.bay()
+                && weapon.delivery() != WeaponSpec.Delivery.BEAM
+                && weapon.delivery() != WeaponSpec.Delivery.ARC;
         Look look = new Look(
                 shots,
                 overdrive,
@@ -314,6 +325,8 @@ public final class WeaponLooks {
             case "swivel-gun" -> "swivel";
             case "torpedo-pod" -> "torpedo";
             case "light-drone-bay" -> "drone-bay";
+            // M9 part A: the Tesla Coil Pod's coil pod (tools/art/act5_gear.py pod; pivots/pods.json).
+            case "tesla-coil-pod" -> "tesla-coil";
             // M7 part G: the rear-guard drone's bay pod (tools/art/light_drone.py --rear).
             case "rear-guard-drone-bay" -> "rear-guard-bay";
             default -> null;
@@ -351,9 +364,16 @@ public final class WeaponLooks {
             case "harpoon" ->
                 sprites.has("harpoon-torpedoes-hit") ? sprites.frames("harpoon-torpedoes-hit") : sprites.pulseImpact;
             case "vulcan", "ballistic" -> sprites.frames("ballistic-impact");
+            // M9 part A: the Tesla arc's flash and spark burst at the struck target (2 steps a frame, as an impact).
+            case ARC_VFX -> sprites.has(ARC_SPARK) ? sprites.frames(ARC_SPARK) : sprites.pulseImpact;
             default -> launcher(vfx) ? sprites.frames("explosive-impact") : sprites.pulseImpact;
         };
     }
+
+    /** M9 part A: the Tesla Coil Pod's effects family ({@code vfx: arc}). */
+    static final String ARC_VFX = "arc";
+    /** M9 part A: the arc's spark burst at the target (tools/art/act5_gear.py arc). */
+    static final String ARC_SPARK = "tesla-coil-pod-spark";
 
     /** M7 part A: a copy of {@code region} turned round (a half turn: flipped both ways). */
     private static AtlasRegion turnedRound(AtlasRegion region) {

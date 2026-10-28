@@ -131,13 +131,22 @@ final class EnemyChecks extends ContentChecks {
         }
         List<EnemyData.PartData> parts = enemy.partList().get();
         // A segment chain's body adds its segments to the parts.
+        // M9 part C: a train's turret cars (every every-th car) carry their own HP and bounty.
         double hp = parts.stream().mapToDouble(EnemyData.PartData::hp).sum()
-                + enemy.segmentChain().map(c -> c.segments() * c.hp()).orElse(0.0);
+                + enemy.segmentChain()
+                        .map(c -> (c.segments() - turretCars(c)) * c.hp()
+                                + turretCars(c)
+                                        * c.cars().map(EnemyData.Cars::hp).orElse(0.0))
+                        .orElse(0.0);
         if (hp != enemy.hp()) {
             problem(enemy, "hp", "is " + enemy.hp() + ", the parts' HP add up to " + hp);
         }
         int bounty = parts.stream().mapToInt(EnemyData.PartData::bounty).sum()
-                + enemy.segmentChain().map(c -> c.segments() * c.bounty()).orElse(0);
+                + enemy.segmentChain()
+                        .map(c -> (c.segments() - turretCars(c)) * c.bounty()
+                                + turretCars(c)
+                                        * c.cars().map(EnemyData.Cars::bounty).orElse(0))
+                        .orElse(0);
         if (bounty != enemy.bounty()) {
             problem(enemy, "bounty", "is " + enemy.bounty() + ", the parts' bounties add up to " + bounty);
         }
@@ -155,6 +164,11 @@ final class EnemyChecks extends ContentChecks {
                 }
             });
         }
+    }
+
+    /** M9 part C: a train's turret cars among its segments (every {@code every}-th car behind the engine). */
+    private static int turretCars(EnemyData.SegmentChain chain) {
+        return chain.cars().map(cars -> chain.segments() / cars.every()).orElse(0);
     }
 
     /**

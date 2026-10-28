@@ -1,0 +1,555 @@
+# Level 31 – Mining Rig Escort: the level script, rendered into README.md (briefing, threat profile, layout, waves,
+# radio, credit budget). Times are seconds from the level start. M9 part D, step D2, from the README's approved hand
+# tables (round 60, the tug 200×300: J.6 b) and ART-D's backdrop proposal (concept/backdrop-proposal.yaml: its backdrop
+# block, sections, nests and rocks adopted). Schema: ../../../tech/architecture/schemas-levels/README.md
+# Keys new in M9 part D (flown from step D1; loaded and checked from step D1, mapped in step D2; drawn and played by
+# step D4): the escort's `hull` block (the mining tug's station with its sway, entry, climb-out, HP per section by
+# difficulty, the hook per kind, the unhooked waves by their t), the `CLEAN HULL` integrity secondary on a hull escort,
+# the Shard Drone's linked waves (a line abreast `spacing` apart, a circle round its `at`) and the Buzzsaw's dashes.
+# Step D2's own placements (pending the user's review in round 64; logged in the README's Decisions): the sway ±10 px
+# across and ±2.5 px up and down (m9d §6, not the doc's ±20/±5: the strips beside the 200 px hull stay 130 px for the
+# rear and side entries); the rear Dart streams enter up the side edges (x 24 / 456, the §6 rule x ≤ 110 or ≥ 370) and
+# the side streams above the hull (y 120); Dacosta's claim flies as a tow (Level 30's buoy rule: the claim rock's
+# housing takes 6 hits and frees the crate), not as a debris chunk (a chunk carries no secret); the armour patch drops
+# at the cargo's place at t=110 whatever is left of the tug (the drop has no condition).
+scroll_speed: 120     # the tug's crawl, throughout
+launch_seconds: 5
+bounty_scale: 0.36    # every bounty × 0.36: the README's estimate 0.40, fitted in step D2 (the section pay 786 counted) with the launched Darts (two streams a Gunship) and the offbeat waves (levelReport: typical haul on budget(31) 5,329)
+control_prompts: []
+medium: vacuum        # the belt: short flashes, debris rings, drifting wrecks (design/world/belt)
+threat_profile:  # the hangar intel panel (design/ui/hangar) and the README's Threat profile table
+  setting: The belt, rock field
+  layers: [air, ground]
+  density: 4
+  traits: [spread, side, homing]
+  hazards: [drifting rocks, homing missiles]
+  boss: none
+  objective: ESCORT THE TUG   # the OBJECTIVE field from sensor L1
+  varga:
+    none: A mining tug full of refugees, and the whole belt after it.
+    l1: Attacks from behind too. Watch the tug's engines.
+    l2: "New: Hornets fire homing missiles at the tug. Shoot them down."
+    l3: Rear and side entries marked. Spread for the missiles.
+  notes:
+    Dominant layers: '`space` (the play plane in vacuum: Talons, Hornets, Gunships, Shard groups, Buzzsaws, Darts, Skitters, motes, Mites on rocks), `ground` (the tug''s hull; two rock outcrops with SAM Nests)'
+    Attack directions: '{directions}'
+    Density: '{density}'
+    Recommended traits: '{traits}'
+    Hazards: 'Drifting asteroids (big ones block shots and hurt on contact); homing missiles at the tug'
+    Boss / mid-boss: none
+    Sensor-suite detail: 'none: the open belt, `space` + `ground`, all directions, the objective `{objective}` · L1: + directions (front, sides, rear), density {density}, the hazard "drifting rocks", the secondary `CLEAN HULL` · L2: + Hornet (new), Shard Drone (new), Buzzsaw Drone (new), Dart Drone, Gilded Gunship, Talon, Asteroid Mite, SAM Nest portraits, the hooked kinds marked "targets the tug" · L3: + the rear and side entries on the threat arrows'
+
+sections:  # back to back from t = 0; 120 px/s throughout (184 s, 22,080 px)
+  - name: Bright Seam Dock
+    end: 24
+    atmosphere: clear
+    tiles: [open-space, open-dust]
+    notes:
+      layers:
+        ground: 'the mining rock Bright Seam''s dock gantries scrolling away, the tug rising into station (t 0–6).'
+        low-air: two small ore haulers with refugees falling in behind it, on the background only.
+      purpose: Popcorn and the first Darts at the bow.
+  - name: The Open Belt
+    end: 58
+    atmosphere: clear
+    tiles: [open-space, open-dust]
+    notes:
+      layers:
+        air: the first drifting rocks (t≈26), at most 2 big ones on the screen.
+        deep: Ceres a fading crescent behind.
+      purpose: The first Hornet (t=24) and the first Buzzsaws (t=30.5); the first rear Darts (t=38).
+  - name: The Linked Line
+    end: 92
+    atmosphere: clear
+    tiles: [open-space, open-dust]
+    notes:
+      layers:
+        ground: 'rock outcrop 1, a large asteroid''s sunlit face passing beside the tug with 3 SAM Nests on its pads (t≈60–66).'
+        air: sparse rocks.
+      purpose: The Shard groups (t=58 alone, then sent across the hull); the first Gunships.
+  - name: The Drift
+    end: 128
+    atmosphere: clear
+    tiles: [open-space, open-dust]
+    notes:
+      layers:
+        air: 'the densest rock drift (up to 3 big rocks and 6 small on the screen), small rocks with Mites riding; the secret''s claim rock (t≈100).'
+        ground: rock outcrop 2 with 3 SAM Nests (t≈119–126).
+      purpose: Buzzsaw ricochets off the big rocks; Mites leaping off; rear Darts.
+  - name: The Ambush
+    end: 164
+    atmosphere: clear
+    tiles: [open-space, open-dust]
+    notes:
+      layers:
+        air: rocks thinning.
+        deep: Ascendancy running lights in the dust band (the ambushers' carrier, scenery).
+      purpose: 'The heaviest pressure on the tug: three Hornets (t=134), Gunships, a Shard ring.'
+  - name: The Vesta Relay
+    end: 184
+    atmosphere: clear
+    tiles: [open-space, open-dust]
+    notes:
+      layers:
+        deep: the relay's beacon tower and a CDF frigate, growing.
+      purpose: The last waves; the climb-out at t=178.
+
+tows:  # Dacosta's claim (the secret): a small hollow rock with a claim marker drifting through the Drift on the play plane; its housing (the tow's cable box) takes 6 hits (the README's 12 HP at 2 a Pulse Cannon bolt) and frees the crate (Level 07's tow rule: shots pass the rest)
+  - {t: 100, x: 300, drift: [-18, -146], boat: [34, 30], pod: [20, 20], tether: [0, 0], cable: [24, 24], hits: 6, reveals: Dacosta's claim}
+
+debris:  # the belt's rocks (design/world/belt, hazards; Level 03's rules): small ones break and pay nothing, large ones are walls (contact `large` 20 once a second); bullets of both sides stop on both; they pass over the tug (ground layer); sprites assets/sprites/debris-<chunk>_N (16 spin frames)
+  chunks:
+    belt-large-a: {size: [88, 80], damage: 20}
+    belt-large-b: {size: [66, 60], damage: 20}
+    belt-a: {size: [40, 36], hp: 6}
+    belt-b: {size: [36, 32], hp: 6}
+    belt-c: {size: [32, 28], hp: 6}
+  clearance: 120        # px: a chunk never enters closer to the ship than this (it moves sideways)
+  max_large: 3          # the Drift's most on the screen
+  easy: {leave_out_large: 4}
+  placed:               # ART-D's lines (t it enters at the top edge, its x, the chunk, its drift [x, y] px/s, y up: the scroll plus 20–60); step D2 moved the large rocks of t=121 and 138 (x 420) 2.5 s earlier, out of the rear Dart entries at t=124.5 and 139.5 (no big rock in the ship's lowest 120 px while a rear wave enters)
+    - {t: 26, x: 100, chunk: belt-a, drift: [20, -150]}
+    - {t: 29, x: 380, chunk: belt-b, drift: [-30, -160]}
+    - {t: 30, x: 60, chunk: belt-large-a, drift: [10, -140]}
+    - {t: 32, x: 200, chunk: belt-c, drift: [40, -170]}
+    - {t: 35, x: 300, chunk: belt-a, drift: [-50, -180]}
+    - {t: 38, x: 140, chunk: belt-b, drift: [60, -150]}
+    - {t: 41, x: 340, chunk: belt-c, drift: [-20, -160]}
+    - {t: 44, x: 60, chunk: belt-a, drift: [30, -170]}
+    - {t: 44, x: 420, chunk: belt-large-b, drift: [-10, -140]}
+    - {t: 47, x: 420, chunk: belt-b, drift: [-40, -180]}
+    - {t: 50, x: 240, chunk: belt-c, drift: [50, -150]}
+    - {t: 52, x: 60, chunk: belt-large-a, drift: [10, -140]}
+    - {t: 53, x: 100, chunk: belt-a, drift: [-60, -160]}
+    - {t: 56, x: 380, chunk: belt-b, drift: [20, -170]}
+    - {t: 59, x: 200, chunk: belt-c, drift: [-30, -180]}
+    - {t: 63.6, x: 300, chunk: belt-a, drift: [40, -150]}
+    - {t: 68.2, x: 140, chunk: belt-b, drift: [-50, -160]}
+    - {t: 70, x: 420, chunk: belt-large-b, drift: [-10, -140]}
+    - {t: 72.8, x: 340, chunk: belt-c, drift: [60, -170]}
+    - {t: 77.4, x: 60, chunk: belt-a, drift: [-20, -180]}
+    - {t: 82, x: 420, chunk: belt-b, drift: [30, -150]}
+    - {t: 84, x: 60, chunk: belt-large-a, drift: [10, -140]}
+    - {t: 86.6, x: 240, chunk: belt-c, drift: [-40, -160]}
+    - {t: 91.2, x: 100, chunk: belt-a, drift: [50, -170]}
+    - {t: 94, x: 420, chunk: belt-large-b, drift: [-10, -140]}
+    - {t: 95.8, x: 380, chunk: belt-b, drift: [-60, -180]}
+    - {t: 97, x: 60, chunk: belt-large-a, drift: [10, -140]}
+    - {t: 97, x: 200, chunk: belt-c, drift: [20, -150]}
+    - {t: 98.2, x: 300, chunk: belt-a, drift: [-30, -160]}
+    - {t: 99.4, x: 140, chunk: belt-b, drift: [40, -170]}
+    - {t: 100.6, x: 340, chunk: belt-c, drift: [-50, -180]}
+    - {t: 101, x: 420, chunk: belt-large-b, drift: [-10, -140]}
+    - {t: 101.8, x: 60, chunk: belt-a, drift: [60, -150]}
+    - {t: 103, x: 420, chunk: belt-b, drift: [-20, -160]}
+    - {t: 104.2, x: 240, chunk: belt-c, drift: [30, -170]}
+    - {t: 105, x: 240, chunk: belt-large-a, drift: [-10, -140]}
+    - {t: 105.4, x: 100, chunk: belt-a, drift: [-40, -180]}
+    - {t: 106.6, x: 380, chunk: belt-b, drift: [50, -150]}
+    - {t: 107.8, x: 200, chunk: belt-c, drift: [-60, -160]}
+    - {t: 109, x: 60, chunk: belt-large-b, drift: [10, -140]}
+    - {t: 109, x: 300, chunk: belt-a, drift: [20, -170]}
+    - {t: 110.2, x: 140, chunk: belt-b, drift: [-30, -180]}
+    - {t: 111.4, x: 340, chunk: belt-c, drift: [40, -150]}
+    - {t: 112.6, x: 60, chunk: belt-a, drift: [-50, -160]}
+    - {t: 113, x: 420, chunk: belt-large-a, drift: [-10, -140]}
+    - {t: 113.8, x: 420, chunk: belt-b, drift: [60, -170]}
+    - {t: 115, x: 240, chunk: belt-c, drift: [-20, -180]}
+    - {t: 116.2, x: 100, chunk: belt-a, drift: [30, -150]}
+    - {t: 117, x: 60, chunk: belt-large-b, drift: [10, -140]}
+    - {t: 117.4, x: 380, chunk: belt-b, drift: [-40, -160]}
+    - {t: 118.5, x: 420, chunk: belt-large-a, drift: [-10, -140]}
+    - {t: 118.6, x: 200, chunk: belt-c, drift: [50, -170]}
+    - {t: 119.8, x: 300, chunk: belt-a, drift: [-60, -180]}
+    - {t: 121, x: 140, chunk: belt-b, drift: [20, -150]}
+    - {t: 122.2, x: 340, chunk: belt-c, drift: [-30, -160]}
+    - {t: 123.4, x: 60, chunk: belt-a, drift: [40, -170]}
+    - {t: 124.6, x: 420, chunk: belt-b, drift: [-50, -180]}
+    - {t: 125, x: 60, chunk: belt-large-b, drift: [10, -140]}
+    - {t: 125.8, x: 240, chunk: belt-c, drift: [60, -150]}
+    - {t: 127, x: 100, chunk: belt-a, drift: [-20, -160]}
+    - {t: 128.2, x: 380, chunk: belt-b, drift: [30, -170]}
+    - {t: 131.6, x: 200, chunk: belt-c, drift: [-40, -180]}
+    - {t: 135, x: 300, chunk: belt-a, drift: [50, -150]}
+    - {t: 135.5, x: 420, chunk: belt-large-a, drift: [-10, -140]}
+    - {t: 138.4, x: 140, chunk: belt-b, drift: [-60, -160]}
+    - {t: 141.8, x: 340, chunk: belt-c, drift: [20, -170]}
+    - {t: 145.2, x: 60, chunk: belt-a, drift: [-30, -180]}
+    - {t: 148.6, x: 420, chunk: belt-b, drift: [40, -150]}
+    - {t: 152, x: 60, chunk: belt-large-b, drift: [10, -140]}
+    - {t: 152, x: 240, chunk: belt-c, drift: [-50, -160]}
+    - {t: 155.4, x: 100, chunk: belt-a, drift: [60, -170]}
+    - {t: 158.8, x: 380, chunk: belt-b, drift: [-20, -180]}
+
+waves:
+  - {t: 4, formation: snake, enemy: skitter, count: 6, from: front, edge: left}
+  - {t: 6.5, formation: line abreast, enemy: talon, count: 4, from: front, speed: 130, notes: No leader}
+  - {t: 9, formation: snake, enemy: skitter, count: 6, from: front, edge: left}
+  - {t: 11.5, formation: stream, enemy: dart-drone, count: 4, from: front, interval: 0.4, notes: "The first Darts: they dive at the bow (hooked `always`)"}
+  - {t: 14, formation: V-wing, enemy: talon, count: 5, from: front, leader: tip, speed: 130, notes: Leader at the tip}
+  - t: 16.5
+    formation: swarm
+    enemy: mote-swarm
+    count: 10
+    from: front
+    speed: 200
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+  - {t: 19, formation: stream, enemy: dart-drone, count: 4, from: front, edge: right, interval: 0.4, notes: Hooked}
+  - {t: 21.5, formation: line abreast, enemy: talon, count: 2, from: front, speed: 130, notes: "Step D2: a firing Talon pair on the offbeat (the beam erases the fodder within a second)"}
+  - {t: 24, formation: single, enemy: hornet, count: 1, from: front, notes: "The first Hornet, alone, its salvos at the bow: quiet window of 3.5 s"}
+  - {t: 28, formation: snake, enemy: skitter, count: 6, from: front, edge: right}
+  - {t: 30.5, formation: stream, enemy: buzzsaw-drone, count: 3, from: sides, edge: left, interval: 0.6, warning: 3, notes: "The first Buzzsaws, warned 3 s ahead; they chase the ship only"}
+  - {t: 33, formation: snake, enemy: skitter, count: 6, from: front, edge: left}
+  - {t: 35.5, formation: line abreast, enemy: talon, count: 4, from: front, speed: 130}
+  - {t: 38, formation: stream, enemy: dart-drone, count: 5, from: rear, interval: 0.4, warning: 3, paths: [[[-56, 600], [10, 524]]], notes: "First rear entry, warned 3 s ahead, up the side edges beside the hull: they dive at the engines"}
+  - {t: 40.5, formation: line abreast, enemy: hornet, count: 2, from: front, notes: Hooked}
+  - t: 42
+    formation: swarm
+    enemy: asteroid-mite
+    count: 4
+    from: front
+    on_rocks:
+      chunk: belt-a
+      riders: 2
+      rocks:
+        - {at: [110, -30], drift: [10, -160]}
+        - {at: [350, -60], drift: [-10, -160]}
+    notes: "Step D2: a rock group on the offbeat (2 rocks with 2 riders arriving together)"
+  - {t: 43, formation: snake, enemy: skitter, count: 6, from: front, edge: right}
+  - {t: 45.5, formation: circle, enemy: buzzsaw-drone, count: 4, from: front, at: [240, 160], hold: 2, notes: "Tells staggered 0.4 s"}
+  - {t: 48, formation: V-wing, enemy: talon, count: 5, from: front, leader: tip, speed: 130, notes: A leader at the tip}
+  - t: 50.5
+    formation: swarm
+    enemy: mote-swarm
+    count: 10
+    from: front
+    speed: 200
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+  - {t: 53, formation: stream, enemy: dart-drone, count: 4, from: sides, edge: right, interval: 0.4, warning: 3, paths: [[[-20, 120], [160, 130]]], notes: "Hooked; warned; above the hull (y 120)"}
+  - {t: 55.5, formation: snake, enemy: skitter, count: 6, from: front, edge: left}
+  - {t: 58, formation: line abreast, enemy: shard-drone, count: 3, from: front, hard: {count: 4}, notes: "The first linked group, alone, sent down across the tug: quiet window of 3.5 s"}
+  - {t: 63, formation: snake, enemy: skitter, count: 6, from: front, edge: right, notes: Over the first SAM outcrop}
+  - t: 65.5
+    formation: swarm
+    enemy: asteroid-mite
+    count: 4
+    from: front
+    on_rocks:
+      chunk: belt-b
+      riders: 2
+      rocks:
+        - {at: [130, -30], drift: [10, -160]}
+        - {at: [330, -60], drift: [-10, -160]}
+    notes: "Step D2: a rock group on the offbeat (2 rocks with 2 riders arriving together)"
+  - {t: 67, formation: column, enemy: gilded-gunship, count: 2, from: front, interval: 2, notes: Dart streams from the bays (launched Darts hooked)}
+  - {t: 69.5, formation: line abreast, enemy: shard-drone, count: 4, from: front, easy: {count: 3}, notes: Sent across the tug}
+  - {t: 72, formation: stream, enemy: buzzsaw-drone, count: 4, from: sides, interval: 0.6, warning: 3, notes: Warned}
+  - {t: 74.5, formation: line abreast, enemy: hornet, count: 2, from: front, notes: Hooked}
+  - {t: 77, formation: line abreast, enemy: talon, count: 2, from: front, speed: 130, notes: "Step D2: a firing Talon pair on the offbeat (the beam erases the fodder within a second)"}
+  - {t: 79.5, formation: V-wing, enemy: talon, count: 6, from: front, leader: tip, speed: 130, notes: A leader at the tip}
+  - {t: 82, formation: circle, enemy: shard-drone, count: 4, from: front, at: [240, 100], hold: 20, easy: {count: 3}, notes: "A closed ring drifting toward the ship's x (not sent at the tug)"}
+  - {t: 84.5, formation: stream, enemy: dart-drone, count: 5, from: rear, interval: 0.4, warning: 3, paths: [[[-56, 600], [10, 524]]], notes: Hooked; warned}
+  - t: 87
+    formation: swarm
+    enemy: mote-swarm
+    count: 10
+    from: front
+    speed: 200
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+  - {t: 89, formation: line abreast, enemy: talon, count: 2, from: front, speed: 130, notes: "Step D2: a firing Talon pair on the offbeat (the beam erases the fodder within a second)"}
+  - {t: 89.5, formation: snake, enemy: skitter, count: 6, from: front, edge: left}
+  - t: 92
+    formation: swarm
+    enemy: asteroid-mite
+    count: 4
+    from: front
+    on_rocks:
+      chunk: belt-a
+      riders: 2
+      rocks:
+        - {at: [120, -30], drift: [10, -160]}
+        - {at: [340, -60], drift: [-10, -160]}
+    notes: "On small drifting rocks arriving together: the Drift begins"
+  - {t: 94.5, formation: stream, enemy: buzzsaw-drone, count: 4, from: sides, edge: left, interval: 0.6, warning: 3, notes: Warned; the big rocks bounce their dashes}
+  - {t: 97, formation: snake, enemy: skitter, count: 6, from: front, edge: right}
+  - t: 99.5
+    formation: swarm
+    enemy: asteroid-mite
+    count: 4
+    from: front
+    on_rocks:
+      chunk: belt-b
+      riders: 2
+      rocks:
+        - {at: [90, -40], drift: [10, -160]}
+        - {at: [380, -30], drift: [-10, -160]}
+    notes: "Rocks arriving together (2 with 2 riders, 1 with 1)"
+  - t: 99.5
+    formation: swarm
+    enemy: asteroid-mite
+    count: 1
+    from: front
+    on_rocks:
+      chunk: belt-c
+      riders: 1
+      rocks:
+        - {at: [230, -90], drift: [0, -160]}
+  - {t: 102, formation: stream, enemy: dart-drone, count: 5, from: rear, interval: 0.4, warning: 3, paths: [[[-56, 600], [10, 524]]], notes: Hooked; warned}
+  - {t: 104.5, formation: line abreast, enemy: hornet, count: 2, from: front, notes: Hooked}
+  - t: 107
+    formation: swarm
+    enemy: asteroid-mite
+    count: 4
+    from: front
+    on_rocks:
+      chunk: belt-a
+      riders: 2
+      rocks:
+        - {at: [120, -30], drift: [10, -160]}
+        - {at: [360, -60], drift: [-10, -160]}
+    notes: "Step D2: a rock group on the offbeat (2 rocks with 2 riders arriving together)"
+  - {t: 109.5, formation: circle, enemy: buzzsaw-drone, count: 5, from: front, at: [240, 160], hold: 2}
+  - t: 112
+    formation: swarm
+    enemy: asteroid-mite
+    count: 4
+    from: front
+    on_rocks:
+      chunk: belt-a
+      riders: 2
+      rocks:
+        - {at: [110, -40], drift: [10, -160]}
+        - {at: [350, -30], drift: [-10, -160]}
+  - {t: 114.5, formation: line abreast, enemy: talon, count: 2, from: front, speed: 130, notes: "Step D2: a firing Talon pair on the offbeat (the beam erases the fodder within a second)"}
+  - {t: 117, formation: pincer, enemy: talon, count: 6, from: sides, speed: 130, warning: 3, notes: Warned on both edges}
+  - {t: 119.5, formation: line abreast, enemy: shard-drone, count: 3, from: front, hard: {count: 4}, notes: Over the second SAM outcrop; sent across the tug}
+  - t: 122
+    formation: swarm
+    enemy: mote-swarm
+    count: 10
+    from: front
+    speed: 200
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+  - {t: 124.5, formation: stream, enemy: dart-drone, count: 4, from: rear, interval: 0.4, warning: 3, paths: [[[-56, 600], [10, 524]]], notes: Hooked; warned}
+  - {t: 125.5, formation: line abreast, enemy: talon, count: 2, from: front, speed: 130, notes: "Step D2: a firing Talon pair on the offbeat (the beam erases the fodder within a second)"}
+  - t: 127
+    formation: swarm
+    enemy: asteroid-mite
+    count: 4
+    from: front
+    on_rocks:
+      chunk: belt-b
+      riders: 2
+      rocks:
+        - {at: [130, -30], drift: [10, -160]}
+        - {at: [330, -60], drift: [-10, -160]}
+    notes: "Rocks arriving together (2 with 2 riders, 1 with 1)"
+  - t: 127
+    formation: swarm
+    enemy: asteroid-mite
+    count: 1
+    from: front
+    on_rocks:
+      chunk: belt-c
+      riders: 1
+      rocks:
+        - {at: [240, -100], drift: [0, -160]}
+  - {t: 129, formation: column, enemy: gilded-gunship, count: 1, from: front, notes: "The ambush begins: Darts hooked"}
+  - {t: 129, formation: carrier + escorts, enemy: talon, count: 4, from: front, notes: "The Gunship's escort in `orbit` at 90 px"}
+  - {t: 131.5, formation: snake, enemy: skitter, count: 6, from: front, edge: left}
+  - {t: 134, formation: line abreast, enemy: hornet, count: 3, from: front, notes: "Three Hornets: the most at once; hooked"}
+  - {t: 137, formation: circle, enemy: shard-drone, count: 4, from: front, at: [240, 100], hold: 20, easy: {count: 3}, notes: "A closed ring (not sent at the tug)"}
+  - {t: 139.5, formation: stream, enemy: dart-drone, count: 5, from: rear, interval: 0.4, warning: 3, paths: [[[-56, 600], [10, 524]]], notes: Hooked; warned}
+  - t: 141
+    formation: swarm
+    enemy: asteroid-mite
+    count: 4
+    from: front
+    on_rocks:
+      chunk: belt-b
+      riders: 2
+      rocks:
+        - {at: [100, -30], drift: [10, -160]}
+        - {at: [340, -60], drift: [-10, -160]}
+    notes: "Step D2: a rock group on the offbeat (2 rocks with 2 riders arriving together)"
+  - {t: 142, formation: snake, enemy: skitter, count: 6, from: front, edge: right}
+  - {t: 144.5, formation: column, enemy: gilded-gunship, count: 2, from: front, interval: 2, notes: Darts hooked}
+  - {t: 147, formation: stream, enemy: buzzsaw-drone, count: 4, from: sides, edge: right, interval: 0.6, warning: 3, notes: Warned}
+  - {t: 149.5, formation: line abreast, enemy: shard-drone, count: 4, from: front, easy: {count: 3}, notes: Sent across the tug}
+  - t: 152
+    formation: swarm
+    enemy: asteroid-mite
+    count: 4
+    from: front
+    on_rocks:
+      chunk: belt-a
+      riders: 2
+      rocks:
+        - {at: [140, -30], drift: [10, -160]}
+        - {at: [380, -60], drift: [-10, -160]}
+    notes: "Step D2: a rock group on the offbeat (2 rocks with 2 riders arriving together)"
+  - {t: 154.5, formation: V-wing, enemy: talon, count: 6, from: front, leader: tip, speed: 130, notes: A leader at the tip}
+  - {t: 157, formation: stream, enemy: dart-drone, count: 5, from: sides, edge: left, interval: 0.4, warning: 3, paths: [[[-20, 120], [160, 130]]], notes: "Hooked; warned; above the hull (y 120)"}
+  - t: 159.5
+    formation: swarm
+    enemy: mote-swarm
+    count: 10
+    from: front
+    speed: 200
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+  - {t: 162, formation: snake, enemy: skitter, count: 6, from: front, edge: left}
+  - {t: 163.5, formation: line abreast, enemy: talon, count: 2, from: front, speed: 130, notes: "Step D2: a firing Talon pair on the offbeat (the beam erases the fodder within a second)"}
+  - {t: 165, formation: V-wing, enemy: talon, count: 6, from: front, leader: tip, speed: 130, notes: The rendezvous in sight; a leader at the tip}
+  - {t: 167.5, formation: stream, enemy: dart-drone, count: 4, from: front, interval: 0.4, notes: Hooked}
+  - {t: 170, formation: snake, enemy: skitter, count: 6, from: front, edge: right}
+  - {t: 171.5, formation: line abreast, enemy: talon, count: 2, from: front, speed: 130, notes: "Step D2: a firing Talon pair on the offbeat (the beam erases the fodder within a second)"}
+  - {t: 172.5, formation: snake, enemy: skitter, count: 6, from: front, edge: left}
+  - {t: 175, formation: line abreast, enemy: talon, count: 4, from: front, speed: 130}
+  - {t: 177.5, formation: line abreast, enemy: talon, count: 2, from: front, speed: 130, notes: "Step D2: a firing Talon pair on the offbeat (the beam erases the fodder within a second)"}
+  - {t: 180, formation: snake, enemy: skitter, count: 6, from: front, edge: right, notes: "Step D2: the last wave, over the climb-out"}
+
+ground_targets:  # at: [t, x], when the nest enters at the top edge and its x (ART-D's pads on the outcrops, beside the swayed hull: x ≤ 100 or ≥ 380)
+  - target: SAM Nest trio on outcrop 1
+    section: 3
+    enemy: sam-nest
+    count: 3
+    at: [[60, 424], [60.75, 96], [61.28, 56]]
+    notes:
+      target: '[SAM Nest](../../../enemies/ground/sam-nest/README.md) trio on rock outcrop 1 (t≈60; x 424, 96, 56)'
+      effect: Bounty {bounty} each (Act 1 terms); their missiles at the ship only (unhooked); at most 3 firing
+  - target: SAM Nest trio on outcrop 2
+    section: 4
+    enemy: sam-nest
+    count: 3
+    at: [[119, 44], [119.5, 440], [120, 404]]
+    notes:
+      target: 'SAM Nest trio on rock outcrop 2 (t≈119; x 44, 440, 404)'
+      effect: Bounty {bounty} each
+
+secrets:
+  - name: Dacosta's claim
+    crate: 100   # Act 1 terms: pays 655 with the act factor (a prospector's stash)
+    radio: {speaker: Bellwether, portrait: bellwether, line: "That's old Dacosta's claim marker. He'd want it spent on a good cause."}
+
+pickups:
+  - {pickup: shield cell, dropped_by: {wave: 24, enemy: hornet, unit: first}}     # the first Hornet
+  - {pickup: overdrive, dropped_by: {wave: 134, enemy: hornet, unit: last}}       # the last Hornet of the t=134 trio
+
+drops:  # the Bellwether's crew throws an armour patch out of the cargo hatch (at the cargo's place under the station)
+  - {t: 110, x: 240, y: 380, pickup: armour patch}
+
+radio:  # trigger: t or event; every timed line one radio page (three 22-character lines: 5 s), the story pair two. The Bellwether is the tug's captain (a new speaker, uncast until VOX-D); {section} names the hit or lost section (bow, cargo, engines). Rook's lines need him flying (requires: escort).
+  - {t: 1, speaker: Bellwether, portrait: bellwether, line: "Bellwether to Aegis. Four hundred souls aboard. Stay close."}
+  - {t: 10, speaker: Okafor, line: "Lancer, the tug is yours. Nothing touches it."}
+  - {t: 16, speaker: Rook, requires: escort, line: "Big, slow and friendly. I can work with that."}
+  - {t: 25, speaker: Varga, line: "Hornet. Its missiles go for the tug. Two hits each."}
+  - {event: first-ally-hit, speaker: Bellwether, portrait: bellwether, line: "We're hit in the {section}! Get them off us!", notes: {trigger: "First section hit (`first-ally-hit`)"}}
+  - {t: 39, speaker: Okafor, line: "Contacts behind you, on the tug's engines."}
+  - {t: 59, speaker: Varga, line: "Linked drones. Kill one and its beams drop."}
+  - {t: 86, speaker: Bellwether, portrait: bellwether, line: "You know why half of Ceres turned? Helix came with medicine."}
+  - {t: 93, speaker: Bellwether, portrait: bellwether, line: "Lung rot, bone loss. Gone in a week. Nobody asked why."}
+  - {t: 101, speaker: Varga, line: "Vrell biotech. They were cured with the enemy's blood."}
+  - {t: 110, speaker: Bellwether, portrait: bellwether, line: "Throwing you a patch from the cargo hatch. It's all we've got."}
+  - {t: 130, speaker: Okafor, line: "Ambush ahead. Gunships and missile boats. Hold the line, Aegis."}
+  - {t: 137.5, speaker: Rook, requires: escort, line: "Three of them. I'll take the left one."}
+  - {event: ally-lost, speaker: Bellwether, portrait: bellwether, line: "We've lost the {section}! We're still flying.", notes: {trigger: "A section lost (`ally-lost`)"}}
+  - {t: 166, speaker: Okafor, line: "The Vesta relay. A frigate is waiting. Bring them in."}
+  - {t: 176.5, speaker: Bellwether, portrait: bellwether, line: "Relay in sight. Thank you, Aegis. Tell Ceres we made it."}
+  - {event: level-end, allies: [3, 3], speaker: Okafor, line: "Every one of them home. Well flown.", notes: {trigger: "Level end, all three sections home"}}
+  - {event: level-end, allies: [1, 2], speaker: Okafor, line: "They made it. Not all of the ship did. That's enough today.", notes: {trigger: "Level end, one or two sections lost"}}
+  - {event: mission-failed, speaker: Okafor, expression: grim, line: "The tug is gone, Lancer. Four hundred people. We go again.", notes: {trigger: Mission failed (the failed screen's line)}}
+
+objectives:
+  primary: escort
+  escort:
+    ally: mining-tug
+    credits: 40           # per section home, Act 1 terms: 262 in Act 5
+    hull:
+      station: {at: [240, 380], sway: [10, 2.5], period: 14, phase: 0}   # the centre px below the top edge; ±10 px across, ±2.5 px up and down (m9d §6, step D2)
+      enter: 6            # s rising from below the bottom edge, untouchable
+      climb: {t: 178, seconds: 6}   # the climb-out off the top edge, untouchable; every section alive at t=178 is home
+      hp: [240, 160, 160]   # bow, cargo, engines at medium
+      targeted_by: {hornet: always, dart-drone: always, shard-drone: always}
+      unhooked: [82, 137]   # the Shard rings, not sent across the hull
+      easy: {hp: [320, 220, 220], targeted_by: {dart-drone: none}, unhooked: [24, 74.5, 134, 82, 137]}   # every second Hornet wave hooked (40.5, 104.5); the Darts chase the ship
+      hard: {hp: [200, 150, 150], unhooked: []}   # every Hornet, Dart and Shard group sent at the tug; step D2: the README's 180 / 120 / 120 kept only 1 section home in one of 3 seeds (the bow lost, the missiles turning to the cargo)
+  secondary: {integrity: 0.5, label: CLEAN HULL, credits: 100, name: Every section home with half its hull}   # failed at once when a section drops below 50 %, met at the level end; 100 in Act 1 terms: pays 655
+
+music:
+  track: 13           # Act 5 B "Gilded Cage" (audio/music track list, round 60 M.1 a)
+  start_section: 2    # section 1 the intro, the base stem from the open belt
+  full_section: 5     # the full mix in the ambush
+  motif: {from: 24, sections: {}}   # Vorne's motif "in the open" (music, Cues per level (Act 5): on): track 13's motif stem on top from the base stem's start (section 2, t=24) to the end
+  ambience: belt-open   # the belt's open-space bed (the tug's engine bed over it while its engines live: step D4)
+  end_jingle: mission-complete
+
+difficulty: {}  # the stat blocks' hooks apply (the Hornet's easy salvo of 3 every 6 s at 65°/s, hard every 4 s at 100°/s; the Shard Drone's easy bolts every 4 s, hard links lit after 0.5 s and bolts every 2.4 s; the Buzzsaw's easy tell 0.8 s, 300 px/s, 2 bounces, hard 0.5 s, 400 px/s, 3 dashes; the Gunship's, the Dart's, the Talon's, the Mite's, the SAM Nest's); the escort's easy/hard HP and hooks; the Shard waves' easy/hard counts (groups of 3 on easy, 4 on hard); the formation lever sizes the rest
+
+briefing:
+  pages:
+    - {speaker: Okafor, image: level-31-mining-rig-escort, line: "The mining tug Bellwether broke out of Ceres with four hundred loyalists aboard. Miners, families, the garrison's wounded. The Ascendancy wants them back, or gone. Fly with the tug to the Vesta relay. It doesn't get there, we've failed."}
+    - {speaker: Varga, image: level-31-tug-sections, line: "Missile boats will go for the tug. Shoot the missiles, not only the boats: two hits each. The linked drones drag their beams across its hull; kill one drone and its beams drop."}
+  teaser: {speaker: Rook, line: "Escort duty. Big, slow and full of people. My favourite kind of job."}
+
+backdrop:
+  # Presentation only: Level 31's open belt (tools/art/backdrop_l31.py, step ART-D, from the README's Layout table adopted by step D2).
+  # A ground layer without a tile set: open space is the deep layer (the base); the ground holds the
+  # Bright Seam dock and the two outcrops (the nests' pads) and, drawn by the game, the tug. Low-air
+  # holds the refugee haulers (paths) and the dimmed rocks; high-air the close grit. At most two animated
+  # pieces on the screen at once (the relay's strobe, a tumbling rock).
+  scroll_factors: {deep: 0.12, far: 0.5, ground: 1, low-air: 1.35, high-air: 2.2}   # far unused
+  ramp: 2
+  haze_colour: 09090e
+  atmosphere:
+    clear: {haze: 0.0}
+  tile_sets:
+    open-space: {layer: deep, height: 1024}   # space, the sunlit dust band, stars
+    open-dust: {layer: high-air, height: 960}   # close grit and dust motes (transparent)
+  pieces:
+    ceres-crescent: {layer: deep, size: [360, 360]}
+    far-rock-a: {layer: deep, size: [120, 100]}
+    far-rock-b: {layer: deep, size: [84, 72]}
+    far-rock-c: {layer: deep, size: [56, 48]}
+    carrier-lights: {layer: deep, size: [140, 72]}
+    vesta-relay: {layer: deep, size: [140, 300], frames: 8, fps: 4}
+    cdf-frigate: {layer: deep, size: [64, 112]}
+    bright-seam-dock: {layer: ground, size: [480, 560]}
+    outcrop-1: {layer: ground, size: [480, 440]}
+    outcrop-2: {layer: ground, size: [480, 400]}
+    ore-hauler: {layer: low-air, size: [64, 64], headings: 16}
+    tumbling-rock: {layer: low-air, size: [104, 104], frames: 16, fps: 2}
+    drift-rock-a: {layer: low-air, size: [88, 80]}
+    drift-rock-b: {layer: low-air, size: [64, 56]}
+  placed:
+    # Bright Seam's dock scrolling away as the tug rises out of its cradle (t 0-6)
+    - {piece: bright-seam-dock, t: -2.0, x: 240}
+    # outcrop-1: its pads carry the nests at x 424 (t 60), x 96 (t 60.75), x 56 (t 61.28)
+    - {piece: outcrop-1, t: 62.983, x: 240}
+    # outcrop-2: its pads carry the nests at x 44 (t 119), x 440 (t 119.5), x 404 (t 120)
+    - {piece: outcrop-2, t: 121.85, x: 240}
+    # Ceres a fading crescent behind (sections 1-2)
+    - {piece: ceres-crescent, t: -13.889, x: 360}
+    # a far rock
+    - {piece: far-rock-a, t: 16.0, x: 80}
+    - {piece: far-rock-c, t: 44.0, x: 410}
+    - {piece: far-rock-b, t: 78.0, x: 130}
+    - {piece: far-rock-a, t: 104.0, x: 400}
+    - {piece: far-rock-c, t: 122.0, x: 60}
+    # the ambushers' carrier in the dust band (section 5)
+    - {piece: carrier-lights, t: 148.333, x: 330}
+    # the Vesta relay's beacon tower, centred 200 px down at the end (t=184)
+    - {piece: vesta-relay, t: 188.861, x: 330}
+    # a CDF frigate waiting at the relay
+    - {piece: cdf-frigate, t: 184.694, x: 200}
+    # a refugee hauler falling in behind the tug (left); step D2: on the screen at the start and falling back at 118 px/s
+    # of its own (BackdropCheck's 120 px/s cap: ART-D's hold behind the tug needed 162), out by the bottom edge at t≈5
+    - {piece: ore-hauler, t: -1.556, x: 64, path: [[-1.0, 0, 0.0], [2.0, 3, 354.0], [5.0, 6, 708.0]]}
+    # the second hauler (right)
+    - {piece: ore-hauler, t: -1.179, x: 416, path: [[-0.5, 0, 0.0], [2.5, -3, 354.0], [5.5, -6, 708.0]]}
+    # rocks drifting below the play plane, dimmed
+    - {piece: drift-rock-a, t: 34.0, x: 420}
+    - {piece: tumbling-rock, t: 50.0, x: 60}
+    - {piece: drift-rock-b, t: 84.0, x: 420}
+    - {piece: tumbling-rock, t: 100.0, x: 430}
+    - {piece: drift-rock-a, t: 114.0, x: 50}
+    - {piece: drift-rock-b, t: 146.0, x: 60}

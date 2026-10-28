@@ -53,10 +53,18 @@ final class Formations {
     private static final double CIRCLE_Y = 360;
     /** The gap between two break groups of a circle ("one by one"). */
     static final double BREAK_INTERVAL_SECONDS = 0.5;
+    /** M9 part D: a circle of dashing units breaks off this far apart, so their tells come one at a time. */
+    static final double DASH_BREAK_SECONDS = 0.4;
     /** Divers of a V go one after another this far apart (design/enemies/air/stinger), and the units of a column enter so. */
     static final double DIVE_STAGGER_SECONDS = 0.4;
     /** A convoy's units follow one another this far apart, and come down this far from their side edge. */
     static final double CONVOY_INTERVAL_SECONDS = 1.5;
+
+    /** M9 part C (design/enemies/space/minelayer): a layers' column enters this far apart by default (Level 30's 2.5 s). */
+    static final double LAYER_INTERVAL_SECONDS = 2.5;
+
+    /** M9 part C: a layer's lay row without its wave's mine lines, px below the top edge. */
+    static final double LAYER_ROW = 100;
 
     /** M5 part C: a pack's walkers enter this far apart, each on its own path (design/enemies, formation vocabulary). */
     static final double PACK_INTERVAL_SECONDS = 0.25;
@@ -175,6 +183,11 @@ final class Formations {
             planner.laneStrafes();
             return;
         }
+        if (wave.enemy().mineLayer().isPresent()) {
+            // M9 part C (design/enemies/space/minelayer): up a side lane from behind, then across laying its line.
+            planner.mineLayers();
+            return;
+        }
         if (wave.enemy().vortex().isPresent()) {
             planner.vortices();
             return;
@@ -193,6 +206,11 @@ final class Formations {
         }
         if (wave.enemy().sideHover().isPresent() && wave.entry() == Entry.SIDES) {
             planner.sideHovers();
+            return;
+        }
+        if (wave.enemy().swoopPath().isPresent() && Planner.swoops(wave.formation())) {
+            // M9 part B (design/enemies/air/talon): the wave flies its curve across the upper half.
+            planner.swoopPaths();
             return;
         }
         switch (wave.formation()) {
@@ -316,6 +334,39 @@ final class Formations {
                     path = FlightPath.through(x, HEIGHT + halfHeight, x, y + r, x + dir * r, y);
                 }
                 add(i, wave.t(), path, strafe.descentSpeed(), 0, Optional.empty(), Spawn.Exit.DOWN);
+            }
+        }
+
+        /**
+         * M9 part C (design/enemies/space/minelayer; design/campaign Level 30): mine layers from behind, whatever the
+         * formation, unit i entering {@code i} × the wave's interval (default {@link #LAYER_INTERVAL_SECONDS}: the
+         * staggered entry) after the wave's t, just below the bottom edge in the side lane of its edge (left, right;
+         * alternating from the left for any other), {@link EnemySpec.MineLayer#laneInset()} in from it. Its path runs
+         * up to its lay row at the gap point of its wave's {@link WaveSpec.MineLines} (unit i's; without them the row
+         * {@link #LAYER_ROW} below the top edge and the gap at the field's middle), where {@link MineLaying} reads its
+         * lay row and its gap; it flies by its lay path, not along the path.
+         */
+        void mineLayers() {
+            if (wave.entry() != WaveSpec.Entry.REAR) {
+                throw new IllegalArgumentException(enemy().slug() + ": a mine layer enters from the rear");
+            }
+            EnemySpec.MineLayer layer = enemy().mineLayer().orElseThrow();
+            double half = enemy().hitbox().height() / 2;
+            double interval = wave.intervalSeconds().orElse(LAYER_INTERVAL_SECONDS);
+            for (int i = 0; i < wave.count(); i++) {
+                boolean left =
+                        switch (wave.edge()) {
+                            case LEFT -> true;
+                            case RIGHT -> false;
+                            case NONE, ALTERNATING, TOP, BOTTOM -> i % 2 == 0;
+                        };
+                double laneX = left ? layer.laneInset() : WIDTH - layer.laneInset();
+                double row =
+                        wave.mineLines().isPresent() ? wave.mineLines().get().row(i) : LAYER_ROW;
+                double gapX =
+                        wave.mineLines().isPresent() ? wave.mineLines().get().gapX(i) : WIDTH / 2.0;
+                FlightPath path = FlightPath.through(laneX, -half - 1, laneX, HEIGHT - row, gapX, HEIGHT - row);
+                add(i, wave.t() + i * interval, path, layer.riseSpeed(), 0, Optional.empty(), Spawn.Exit.DOWN);
             }
         }
 
@@ -682,6 +733,82 @@ final class Formations {
             }
         }
 
+        /** M9 part B: whether a swoop path's wave of {@code formation} flies its curve (the others as before). */
+        static boolean swoops(WaveSpec.Formation formation) {
+            return formation == WaveSpec.Formation.V_WING
+                    || formation == WaveSpec.Formation.LINE_ABREAST
+                    || formation == WaveSpec.Formation.COLUMN
+                    || formation == WaveSpec.Formation.PINCER;
+        }
+
+        /**
+         * M9 part B (design/enemies/air/talon; {@link EnemySpec.SwoopPath}): the wave's units on its curve, the lowest
+         * point drawn once for the wave (then, from the front and centred, the side it sweeps toward). From the front
+         * each unit's curve enters across / 2 px before its formation place and bottoms out there: a V-wing's ranks
+         * one after another as in its glide, a line abreast together, a column {@link #DIVE_STAGGER_SECONDS} apart; a
+         * wave from the left edge's column sweeps right, from the right edge's left. A pincer's wings enter at their
+         * side edges, each wing's units {@link #V_SPACING} px apart along its curve. Nothing stops: each is gone at
+         * its curve's end.
+         */
+        void swoopPaths() {
+            EnemySpec.SwoopPath swoop = enemy().swoopPath().orElseThrow();
+            double speed = speed(enemy().speed());
+            double lowest = swoop.lowest().pick(rng);
+            if (wave.formation() == WaveSpec.Formation.PINCER) {
+                if (wave.entry() != Entry.SIDES || wave.edge() != Edge.NONE) {
+                    throw unsupported("a pincer enters from both sides");
+                }
+                FlightPath fromLeft = SwoopPaths.fromLeft(swoop.across(), lowest);
+                FlightPath fromRight = fromLeft.mirrored();
+                for (int i = 0; i < wave.count(); i++) {
+                    add(
+                            i,
+                            wave.t() + (i / 2) * V_SPACING / speed,
+                            i % 2 == 0 ? fromLeft : fromRight,
+                            speed,
+                            0,
+                            Optional.empty(),
+                            Spawn.Exit.DOWN);
+                }
+                return;
+            }
+            requireFront();
+            int side =
+                    switch (wave.edge()) {
+                        case LEFT -> 1;
+                        case RIGHT -> -1;
+                        default -> rng.nextDouble() < 0.5 ? -1 : 1;
+                    };
+            for (int i = 0; i < wave.count(); i++) {
+                double place;
+                double t;
+                switch (wave.formation()) {
+                    case V_WING -> {
+                        int rank = (i + 1) / 2;
+                        int wing = i == 0 ? 0 : (i % 2 == 1 ? -1 : 1);
+                        place = frontColumn() + wing * rank * V_SPACING;
+                        t = wave.t() + rank * V_RANK_STEP / speed;
+                    }
+                    case LINE_ABREAST -> {
+                        place = (i + 1) * WIDTH / (wave.count() + 1);
+                        t = wave.t();
+                    }
+                    default -> {
+                        place = frontColumn();
+                        t = wave.t() + i * DIVE_STAGGER_SECONDS;
+                    }
+                }
+                add(
+                        i,
+                        t,
+                        SwoopPaths.front(place - side * swoop.across() / 2, side, swoop.across(), lowest),
+                        speed,
+                        0,
+                        Optional.empty(),
+                        Spawn.Exit.DOWN);
+            }
+        }
+
         /** Whether its units stop on the screen: they hover, or pause before a dive. */
         private boolean stops() {
             return enemy().hover().isPresent() || enemy().dive().isPresent();
@@ -756,8 +883,15 @@ final class Formations {
                         case REAR -> true;
                         case SIDES -> throw unsupported("a line abreast enters from the front or the rear");
                     };
+            // M9 part D (design/enemies/space/shard-drone): a linked line flies its link's spacing apart, centred on
+            // its wave's at (else the field's middle).
+            double centre = wave.at().isPresent() ? wave.at().get().x() : WIDTH / 2;
             for (int i = 0; i < count; i++) {
-                double x = (i + 0.5) * WIDTH / count;
+                double x = enemy().airLink().isPresent()
+                        ? centre
+                                + (i - (count - 1) / 2.0)
+                                        * enemy().airLink().get().spacing()
+                        : (i + 0.5) * WIDTH / count;
                 FlightPath path = rear
                         ? FlightPath.through(x, -OUTSIDE, x, HEIGHT + OUTSIDE)
                         : FlightPath.through(x, HEIGHT + OUTSIDE, x, -OUTSIDE);
@@ -834,7 +968,9 @@ final class Formations {
                 double angle = StrictMath.PI / 2 + 2 * StrictMath.PI * i / wave.count();
                 double x = centreX + radius * StrictMath.cos(angle);
                 double y = centreY + radius * StrictMath.sin(angle);
-                double breakDelay = (double) (i / wave.breakGroup()) * BREAK_INTERVAL_SECONDS;
+                // M9 part D (design/enemies/air/buzzsaw-drone): dashing units break off 0.4 s apart (their tells).
+                double breakDelay = (double) (i / wave.breakGroup())
+                        * (enemy().dash().isPresent() ? DASH_BREAK_SECONDS : BREAK_INTERVAL_SECONDS);
                 var place = Optional.of(new Spawn.Orbit(centreX, centreY, radius, angle, rate));
                 add(
                         i,

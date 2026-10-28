@@ -52,6 +52,11 @@ final class Attempts {
         s.bossRetry = false;
         s.streamReleased = 0;
         s.resetArena();
+        s.holdersLeft = s.holders;
+        s.holdersOutSeen = 0;
+        if (s.rides != null) {
+            s.rides.reset();
+        }
         s.bossPasses.clearLaunches();
         s.fire.reset();
         s.special.reset();

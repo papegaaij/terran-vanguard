@@ -49,7 +49,8 @@ class BeamEraHpTest {
         return IntStream.rangeClosed(CONTENT.enemyBasis().beamEraHp().fromLevel(), 50)
                 .mapToObj(CONTENT::levelKey)
                 .flatMap(java.util.Optional::stream)
-                .filter(key -> !PacingTest.PENDING_ACT_TWO_RULE.contains(key));
+                .filter(key -> !PacingTest.PENDING_ACT_TWO_RULE.contains(key))
+                .filter(key -> !PacingTest.PENDING_AUTOPILOT.contains(key));
     }
 
     @ParameterizedTest
@@ -61,8 +62,9 @@ class BeamEraHpTest {
                 "Beam era %s: a killed small unit lives %.2f s on the screen, Level %02d %.2f s (%.2f×)%n",
                 key, life, REFERENCE_LEVEL, reference, life / reference);
         double most = most(key);
+        double least = PENDING_LEAST.getOrDefault(key, LEAST);
         assertTrue(
-                life >= LEAST * reference && life <= most * reference,
+                life >= least * reference && life <= most * reference,
                 key + ": " + life + " s vs Level " + REFERENCE_LEVEL + "'s " + reference + " s");
     }
 
@@ -83,6 +85,14 @@ class BeamEraHpTest {
      */
     static final java.util.Map<String, Double> PENDING_MOST =
             java.util.Map.of("act-4-deep-water/level-28-abyssal-maw", 1.6);
+
+    /**
+     * The least for a level measured under {@link #LEAST}, pending the user's review. None left: Level 29 Betrayal at
+     * Ceres (step B3: 0.71×, its Talons and SAM Nests dying within about a second of their entry under the plan's Ion
+     * Beam L4) passes with its waves' rework (step B3b, 2026-10-28, pending round 62: 0.93×, 1.49 s, the Talons swooping
+     * at 130 px/s in overlapping firing groups).
+     */
+    static final java.util.Map<String, Double> PENDING_LEAST = java.util.Map.of();
 
     /**
      * The mean time on the screen, from its entry to its death, of a {@code small} unit killed while on the screen, on

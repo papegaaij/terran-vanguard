@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 import vanguard.content.ActData;
 import vanguard.content.BriefingPage;
+import vanguard.content.Channel;
 import vanguard.content.Content;
 import vanguard.content.campaign.BriefingScript;
 import vanguard.content.campaign.Briefings;
@@ -250,13 +252,15 @@ public final class BriefingScreen implements GameScreen {
         this.campaign = campaign;
         this.script = script;
         this.next = next;
+        motifPath = interceptMotif(services.content, script.actDirectory());
         List<Integer> lengths = new ArrayList<>();
         for (BriefingPage page : script.pages()) {
             pageVoices.add(services.voices.briefing(page));
             Speaker speaker = Speaker.of(page.speaker(), page.portrait(), services.sprites);
             Optional<Texture> image = page.image().flatMap(name -> images.computeIfAbsent(name, this::image));
+            boolean intercepted = page.onChannel() == Channel.ENEMY;
             for (List<String> lines : screens(page, image.isPresent())) {
-                screens.add(new Screen(page.speaker(), speaker, image, lines, pageVoices.size() - 1));
+                screens.add(new Screen(page.speaker(), speaker, image, lines, pageVoices.size() - 1, intercepted));
                 lengths.add(lines.stream().mapToInt(String::length).sum());
             }
         }
@@ -284,11 +288,70 @@ public final class BriefingScreen implements GameScreen {
     }
 
     /**
+     * M9 part B (design/campaign Act 5, Act intro: pages 2-3 "play track 12's motif stem alone"): the motif stem of the
+     * act's first level's theme ({@code music/hollow-rock-motif.ogg}), played under an intercepted page instead of the
+     * briefing theme; empty when the act's first level has no theme with a motif stem.
+     */
+    static Optional<String> interceptMotif(vanguard.content.Content content, String actDirectory) {
+        return Optional.ofNullable(content.acts().get(actDirectory))
+                .flatMap(act -> content.levelKey(act.levels().first()))
+                .map(key -> content.level(key).music().track())
+                .flatMap(Tracks::name)
+                .map(Tracks::motifPath);
+    }
+
+    /** M9 part B: the intercept's motif stem ({@link #interceptMotif}). */
+    private final Optional<String> motifPath;
+
+    /** M9 part B: how far the music has crossed from the briefing theme to the intercept's motif (0 to 1). */
+    private float motifFade;
+
+    /** M9 part B: the intercept's motif stream, opened at the first intercepted page; empty before or without one. */
+    private Optional<MusicStreamer> motifMusic = Optional.empty();
+
+    /**
+     * M9 part B: the music crosses to the intercept's motif stem alone while an intercepted page shows and back to the
+     * briefing theme after it, over {@value #FADE_SECONDS} s.
+     */
+    private void followIntercept(float seconds, boolean intercepted) {
+        if (intercepted && motifMusic.isEmpty() && motifPath.isPresent()) {
+            var file = services.files.internal(motifPath.get());
+            if (file.exists()) {
+                motifMusic = MusicStreamer.play(services.audio, file, 0, services.mixer);
+            }
+        }
+        float target = intercepted && motifMusic.isPresent() ? 1 : 0;
+        float step = seconds / FADE_SECONDS;
+        motifFade = target > motifFade ? Math.min(target, motifFade + step) : Math.max(target, motifFade - step);
+        motifMusic.ifPresent(streamer -> streamer.setVolume(MUSIC_VOLUME * duck * motifFade));
+    }
+
+    /**
      * A screen of a briefing page: its speaker (the short name and the name plate with the page's
      * portrait), its image and the lines it shows.
      */
     private record Screen(
-            String speakerName, Speaker speaker, Optional<Texture> image, List<String> lines, int dataPage) {}
+            String speakerName,
+            Speaker speaker,
+            Optional<Texture> image,
+            List<String> lines,
+            int dataPage,
+            boolean intercepted) {}
+
+    /**
+     * M9 part A (design/ui/briefing, Intercepted transmissions): an intercepted page's header in place of the act and
+     * mission line.
+     */
+    static final String INTERCEPTED = "INTERCEPTED \u00b7 ALL CHANNELS";
+    /** M9 part A: the enemy channel's amber, its name plate's and its text's (the radio's, MissionPanel). */
+    static final Color ENEMY_CHANNEL = Color.valueOf("FFA035");
+    /** M9 part A: the carrier hiss under an intercepted page's typing, in place of the blip. */
+    static final float CARRIER_VOLUME = 1f;
+
+    /** The scratch region of the page's image under the steady interference (its tear). */
+    private final TextureRegion imageRegion = new TextureRegion();
+    /** Whether the shown screen is an intercepted page, at the last update (its open and close sounds). */
+    private boolean interceptShown;
 
     /** Upper case, as the bitmap fonts write it. */
     static String displayed(String text) {
@@ -375,6 +438,7 @@ public final class BriefingScreen implements GameScreen {
         if (pager.done()) {
             services.voices.stop();
             untilClosed = TransmissionStatic.SECONDS;
+            intercept(false, false);
             return Transition.STAY;
         }
         speak(seconds);
@@ -382,12 +446,32 @@ public final class BriefingScreen implements GameScreen {
             sinceOpened = 0;
         }
         int appeared = pager.update(seconds, services.settings().gameplay().briefingTextSpeed());
+        boolean intercepted = screens.get(pager.page()).intercepted();
+        intercept(intercepted, intercepted && !pager.pageComplete());
         for (int i = 0; i < appeared; i++) {
-            if (++typed % 2 == 0) {
+            // M9 part A: an intercepted page types under its carrier hiss, without the blip.
+            if (++typed % 2 == 0 && !intercepted) {
                 services.sfx.play(Sfx.TYPEWRITER, TYPING_VOLUME, 1, 0);
             }
         }
         return Transition.STAY;
+    }
+
+    /**
+     * M9 part A: the enemy channel's sounds: its static sweep as an intercepted page opens and as it closes (to a
+     * friendly page or the briefing's end), its carrier hiss while its text types ({@code typing}).
+     */
+    private void intercept(boolean intercepted, boolean typing) {
+        if (intercepted != interceptShown) {
+            services.sfx.play(intercepted ? Sfx.INTERCEPT_OPEN : Sfx.INTERCEPT_CLOSE, 1, 1, 0);
+            interceptShown = intercepted;
+        }
+        boolean carrier = services.sfx.looping(Sfx.INTERCEPT_CARRIER);
+        if (typing && !carrier) {
+            services.sfx.loop(Sfx.INTERCEPT_CARRIER, CARRIER_VOLUME);
+        } else if (!typing && carrier) {
+            services.sfx.stop(Sfx.INTERCEPT_CARRIER);
+        }
     }
 
     /** The short name of the current page's speaker. */
@@ -409,9 +493,19 @@ public final class BriefingScreen implements GameScreen {
     private void drawPages(SpriteBatch batch, Glass glass) {
         services.titleScene.draw(batch, 0.35f);
         glass.panel(batch, LEFT_X, HEADER_Y, PixelScreen.WIDTH - 2 * LEFT_X, 34, 0.85f);
-        glass.shadowed(batch, glass.fonts.body, displayed(script.header()), Glass.AMBER, LEFT_X + 14, HEADER_Y + 8);
-        glass.right(
-                batch, glass.fonts.body, script.mission(), Glass.WHITE, PixelScreen.WIDTH - LEFT_X - 14, HEADER_Y + 8);
+        if (screens.get(pager.page()).intercepted()) {
+            // M9 part A: an intercepted page's header in place of the act and mission line.
+            glass.shadowed(batch, glass.fonts.body, INTERCEPTED, ENEMY_CHANNEL, LEFT_X + 14, HEADER_Y + 8);
+        } else {
+            glass.shadowed(batch, glass.fonts.body, displayed(script.header()), Glass.AMBER, LEFT_X + 14, HEADER_Y + 8);
+            glass.right(
+                    batch,
+                    glass.fonts.body,
+                    script.mission(),
+                    Glass.WHITE,
+                    PixelScreen.WIDTH - LEFT_X - 14,
+                    HEADER_Y + 8);
+        }
         drawSpeaker(batch, glass);
         drawText(batch, glass);
         drawBottom(batch, glass);
@@ -419,7 +513,8 @@ public final class BriefingScreen implements GameScreen {
 
     private void drawSpeaker(SpriteBatch batch, Glass glass) {
         glass.panel(batch, LEFT_X, COLUMN_Y, LEFT_WIDTH, COLUMN_HEIGHT, 0.8f);
-        Speaker speaker = screens.get(pager.page()).speaker();
+        Screen screen = screens.get(pager.page());
+        Speaker speaker = screen.speaker();
         float centre = LEFT_X + LEFT_WIDTH / 2f;
         int portraitX = Math.round(centre - 72);
         int portraitY = COLUMN_Y + 18;
@@ -427,9 +522,22 @@ public final class BriefingScreen implements GameScreen {
         int portraitBottom = PixelScreen.HEIGHT - portraitY - 144;
         batch.draw(speaker.portrait(), portraitX, portraitBottom);
         float noise = TransmissionStatic.strength(sinceOpened, untilClosed);
-        services.transmissionStatic.draw(batch, portraitX, portraitBottom, 144, 144, noise);
-        glass.centred(batch, glass.fonts.body, speaker.name(), Glass.AMBER, centre, portraitY + 158);
-        glass.centred(batch, glass.fonts.label, speaker.role(), Glass.CYAN, centre, portraitY + 180);
+        if (screen.intercepted()) {
+            // M9 part A: the steady interference over an intercepted page's portrait for the whole page.
+            services.transmissionStatic.drawSteady(
+                    batch, speaker.portrait(), portraitX, portraitBottom, 144, 144, elapsed, noise);
+        } else {
+            services.transmissionStatic.draw(batch, portraitX, portraitBottom, 144, 144, noise);
+        }
+        Color plate = screen.intercepted() ? ENEMY_CHANNEL : Glass.AMBER;
+        glass.centred(batch, glass.fonts.body, speaker.name(), plate, centre, portraitY + 158);
+        glass.centred(
+                batch,
+                glass.fonts.label,
+                speaker.role(),
+                screen.intercepted() ? ENEMY_CHANNEL : Glass.CYAN,
+                centre,
+                portraitY + 180);
         String page = "PAGE " + (pager.page() + 1) + " / " + pager.pages();
         glass.centred(batch, glass.fonts.label, page, Glass.LABEL, centre, portraitY + 196);
     }
@@ -440,6 +548,19 @@ public final class BriefingScreen implements GameScreen {
         screen.image().ifPresent(image -> {
             glass.frame(batch, TEXT_X - 3, IMAGE_Y - 3, IMAGE_WIDTH + 6, IMAGE_HEIGHT + 6);
             batch.draw(image, TEXT_X, PixelScreen.HEIGHT - IMAGE_Y - IMAGE_HEIGHT);
+            if (screen.intercepted()) {
+                // M9 part A: the page's image received on the same feed, under the same interference.
+                imageRegion.setRegion(image);
+                services.transmissionStatic.drawSteady(
+                        batch,
+                        imageRegion,
+                        TEXT_X,
+                        PixelScreen.HEIGHT - IMAGE_Y - IMAGE_HEIGHT,
+                        Math.min(IMAGE_WIDTH, image.getWidth()),
+                        Math.min(IMAGE_HEIGHT, image.getHeight()),
+                        elapsed + 1.3f,
+                        TransmissionStatic.STEADY);
+            }
         });
         int top = textTop(screen.image().isPresent());
         BitmapFont font = glass.fonts.body;
@@ -450,12 +571,13 @@ public final class BriefingScreen implements GameScreen {
         for (int i = 0; i < lines.size() && left > 0; i++) {
             String line = lines.get(i).substring(0, Math.min(left, lines.get(i).length()));
             left -= line.length();
-            glass.shadowed(batch, font, line, Glass.WHITE, TEXT_X, top + i * LINE);
+            glass.shadowed(
+                    batch, font, line, screen.intercepted() ? ENEMY_CHANNEL : Glass.WHITE, TEXT_X, top + i * LINE);
             cursorX = TEXT_X + line.length() * 10 + 2;
             cursorY = top + i * LINE;
         }
         if (!pager.pageComplete() || elapsed % (2 * CURSOR_BLINK_SECONDS) < CURSOR_BLINK_SECONDS) {
-            glass.bar(batch, Glass.AMBER, cursorX, cursorY - 1, 10, 16);
+            glass.bar(batch, screen.intercepted() ? ENEMY_CHANNEL : Glass.AMBER, cursorX, cursorY - 1, 10, 16);
         }
     }
 
@@ -525,7 +647,8 @@ public final class BriefingScreen implements GameScreen {
         float target = services.voices.playing() ? LevelMusic.DUCKED : 1;
         duck += (target - duck) * Math.min(1, LevelMusic.DUCK_RATE * seconds);
         followFanfare(seconds, dataPage);
-        music.ifPresent(streamer -> streamer.setVolume(MUSIC_VOLUME * duck * fade));
+        followIntercept(seconds, screens.get(pager.page()).intercepted());
+        music.ifPresent(streamer -> streamer.setVolume(MUSIC_VOLUME * duck * fade * (1 - motifFade)));
     }
 
     /**
@@ -555,7 +678,11 @@ public final class BriefingScreen implements GameScreen {
     @Override
     public void dispose() {
         services.voices.stop();
+        if (services.sfx.looping(Sfx.INTERCEPT_CARRIER)) {
+            services.sfx.stop(Sfx.INTERCEPT_CARRIER);
+        }
         music.ifPresent(MusicStreamer::close);
+        motifMusic.ifPresent(MusicStreamer::close);
         fanfare.ifPresent(Fanfare::close);
         titleLettering.ifPresent(Texture::dispose);
         titleStill.ifPresent(Texture::dispose);

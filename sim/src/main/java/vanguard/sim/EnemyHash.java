@@ -95,6 +95,10 @@ final class EnemyHash {
         if (u.launched) {
             hash.add(1);
         }
+        // M9 part D's dashing units add theirs; earlier units hash as before.
+        if (u.spec.dash().isPresent()) {
+            u.dashing.addTo(hash);
+        }
         // M5 part F's chasers add theirs; earlier units hash as before.
         if (u.spec.chase().isPresent()) {
             u.chasing.addTo(hash);
@@ -126,6 +130,12 @@ final class EnemyHash {
             u.vortexCycle.addTo(hash);
         }
         // M7 part E's lane strafers add theirs; earlier units hash as before.
+        if (u.phase == Enemy.Phase.LAY) {
+            u.mineLaying.addTo(hash);
+        }
+        if (u.launching.active()) {
+            u.launching.addTo(hash);
+        }
         if (u.phase == Enemy.Phase.STRAFE) {
             u.laneStrafing.addTo(hash);
         }
@@ -155,6 +165,22 @@ final class EnemyHash {
         // M7 part F's turrets add theirs (the aim is hashed above); earlier units hash as before.
         if (u.spec.turret().isPresent()) {
             u.turretGun.addTo(hash);
+        }
+        // M9 part A's shields and laser lines add theirs; earlier units hash as before.
+        if (u.spec.shield().isPresent()) {
+            u.hexShield.addTo(hash);
+        }
+        if (u.spec.laserLine().isPresent()) {
+            u.lineBeam.addTo(hash);
+        }
+        // M9 part B's scatters, riders, dormant units, holders and leaders add theirs; earlier units hash as before.
+        u.scattering.addTo(hash);
+        u.riding.addTo(hash);
+        if (u.dormantTick >= 0 || u.wakeTicks > 0) {
+            hash.add(u.dormantTick).add(u.wakeTicks);
+        }
+        if (u.holder || u.leader) {
+            hash.add(u.holder ? 1 : 0).add(u.leader ? 1 : 0);
         }
     }
 }

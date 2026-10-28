@@ -1,0 +1,62 @@
+{
+ "source": "tools/art/belt_units_c.py (production art, M9 part C batch)",
+ "size": [
+  104,
+  104
+ ],
+ "headings": 1,
+ "engines": [
+  [
+   7.0,
+   50.2
+  ],
+  [
+   15.8,
+   26.3
+  ],
+  [
+   43.6,
+   13.0
+  ],
+  [
+   60.4,
+   13.0
+  ],
+  [
+   88.2,
+   26.3
+  ],
+  [
+   97.0,
+   50.2
+  ]
+ ],
+ "bays": [
+  [
+   28.5,
+   57.4
+  ],
+  [
+   75.5,
+   57.4
+  ],
+  [
+   28.5,
+   42.1
+  ],
+  [
+   75.5,
+   42.1
+  ]
+ ],
+ "dome": [
+  52.0,
+  48.4
+ ],
+ "plate": [
+  52.0,
+  80.0
+ ],
+ "frames": "bays * 4 + lamps (0..3 each)",
+ "note": "facing down (fixed): engines the four white-gold engines (the x2 arc), bays the belly doors the Darts leave by (the bay flash's centres), dome the ring's centre, plate the gold plate's centre; [x, y] px from the frame's top left"
+}

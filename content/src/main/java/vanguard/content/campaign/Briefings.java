@@ -142,6 +142,11 @@ public final class Briefings {
                                         : "BONUS: NO " + slug.replace('-', ' ').toUpperCase(Locale.ROOT)
                                                 + " GETS THROUGH"))
                         .or(() -> secondary.parts().map(parts -> partsLine(secondary, parts)))
+                        // M9 part B: Level 29's "Hold fire" (its data names the objective instead).
+                        .or(() -> secondary
+                                .spared()
+                                .map(slug -> "BONUS: DESTROY NO "
+                                        + slug.replace('-', ' ').toUpperCase(Locale.ROOT)))
                         // M5 part E: Level 11's "Convoy afloat" (its data may name it instead).
                         .or(() -> secondary.afloat().map(afloat -> "BONUS: NO CONVOY SHIP SUNK"))
                         // M5 part F: Level 12's sondes (its data names the objective instead).

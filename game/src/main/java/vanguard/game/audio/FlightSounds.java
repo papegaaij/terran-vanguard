@@ -73,6 +73,14 @@ public final class FlightSounds {
     private final LevelCues levels;
     /** M8 part A: the Act 4 systems: the limit chime, the sonar, the flares, the Bulwark, the harpoons' hit and run. */
     private final DeepWaterCues deepWater;
+    /** M9 part A: the Act 5 systems: the hex shields, the homing diamonds, the brown-out. */
+    private final BeltCues belt;
+    /** M9 part B: Level 29's units, the turning station and the escort swap. */
+    private final CeresCues ceres;
+    /** M9 part C: Level 30's mines, Gunships, Rail Serpents and lane buoys. */
+    private final MinefieldCues minefield;
+    /** M9 part D: Level 31's units and the tug. */
+    private final MiningRigCues rig;
     /** M8 part C: Level 23's sounds (the waterline, the pumps' hum, the eels', Glassfins' and pumps' extras). */
     private final UnderIceCues underIce;
     /** M8 part D: Level 24's units, beacons and wreck. */
@@ -124,6 +132,8 @@ public final class FlightSounds {
     /** M7 part A: the loops a flight holds, stopped as the level screen closes. */
     private static final Sfx[] FLIGHT_LOOPS = {
         Sfx.TORPEDO_RUN,
+        Sfx.HOMING_RUN,
+        Sfx.BROWNOUT_HUM,
         Sfx.BEACON_HUM,
         Sfx.LURE_HUM,
         Sfx.CROWN_HUM,
@@ -147,7 +157,14 @@ public final class FlightSounds {
         Sfx.PUMP_HUM,
         Sfx.SWARM_HUM,
         Sfx.COLOSSUS_SUCTION,
-        Sfx.NAUTILUS_SPIN
+        Sfx.NAUTILUS_SPIN,
+        Sfx.GUNSHIP_ENGINE,
+        Sfx.MINELAYER_DRONE,
+        Sfx.SERPENT_RUMBLE,
+        Sfx.LINK_HUM,
+        Sfx.SAW_WHINE,
+        Sfx.HORNET_HUM,
+        Sfx.TUG_ENGINE
     };
     /**
      * M7 part C: a unit's loop (the tendril hum and burn, the Threadcrawler's walk; design/audio/sfx, Mixing) is
@@ -200,7 +217,12 @@ public final class FlightSounds {
         storm = new StormCues(mix);
         ventField = new VentFieldCues(mix);
         maw = new MawCues(mix);
-        walker = new WalkerCues(mix, ventField);
+        belt = new BeltCues(mix);
+        ceres = new CeresCues(mix);
+        minefield = new MinefieldCues(mix);
+        rig = new MiningRigCues(mix);
+        belt.rig(rig);
+        walker = new WalkerCues(mix, ventField, belt);
         foundry = new FoundryCues(mix);
         pursuit = new PursuitCues(mix);
         colossus = new ColossusCues(mix);
@@ -208,8 +230,11 @@ public final class FlightSounds {
         abyss = new AbyssCues(mix);
         trench = new TrenchCues(mix);
         blackwater = new BlackwaterCues(mix);
-        units = new UnitCues(mix, looks, storm, foundry, walker, deepWater, underIce, abyss, trench, ventField, maw);
+        units = new UnitCues(
+                mix, looks, storm, foundry, walker, deepWater, underIce, abyss, trench, ventField, maw, ceres,
+                minefield);
         allies = new AllyCues(mix);
+        allies.rig(rig);
         arsenal = new ArsenalCues(mix);
         levels = new LevelCues(mix, underIce);
         all = new SoundFamily[] {
@@ -230,7 +255,11 @@ public final class FlightSounds {
             trench,
             blackwater,
             ventField,
-            maw
+            maw,
+            belt,
+            ceres,
+            minefield,
+            rig
         };
         for (SoundFamily family : all) {
             for (SimEvents.Type type : family.types()) {
@@ -248,6 +277,19 @@ public final class FlightSounds {
      */
     public void ridgePass(double seconds) {
         colossus.ridgePass(seconds);
+    }
+
+    /**
+     * M9 part A: the level's homing missiles are the Ascendancy's homing diamonds (a kind's {@code homing: {look:
+     * diamond}}): their launch, run loop and fall ({@link BeltCues}) in place of the walker's missile sounds.
+     */
+    /** M9 part C: a lane buoy's strobe flashed at play-field x {@code x} (the backdrop's draw): its faint tick. */
+    public void buoyTick(double x) {
+        minefield.buoyTick(x);
+    }
+
+    public void diamonds(boolean diamonds) {
+        belt.diamonds(diamonds);
     }
 
     /** M8 part D: the level's relay beacons (Level 24's backdrop), whose pulse pings while one is on the screen. */
@@ -416,6 +458,14 @@ public final class FlightSounds {
      */
     public void ground(boolean ground) {
         allies.ground(ground);
+    }
+
+    /**
+     * M9 part D4b: the look the level's tows are drawn in ({@code LevelRenderer.towLook}): a rock tow's housing (Level
+     * 31's claim rock) crumbles as it breaks instead of the lifeboat's cable snap.
+     */
+    public void towLook(String look) {
+        allies.towLook(look);
     }
 
     /**
@@ -631,6 +681,10 @@ public final class FlightSounds {
         blackwater.watch(sortie);
         ventField.watch(sortie);
         maw.watch(sortie);
+        belt.watch(sortie);
+        ceres.watch(sortie);
+        minefield.watch(sortie);
+        rig.watch(sortie);
         units.watchCanyon(sortie);
         units.watchSiege(sortie);
         storm.watch(sortie);
@@ -684,6 +738,9 @@ public final class FlightSounds {
             trench.silence(loop);
             blackwater.silence(loop);
             ventField.silence(loop);
+            belt.silence(loop);
+            minefield.silence(loop);
+            rig.silence(loop);
         }
         deepWater.silence();
     }

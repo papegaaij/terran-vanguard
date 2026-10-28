@@ -16,6 +16,8 @@ public final class Tracks {
     public static final int BOSS_WARNING = 22;
     /** Track 24, "Act Complete": the fanfare under the first page of an act outro (Level 07's Act 1 outro). */
     public static final int ACT_COMPLETE = 24;
+    /** M9 part B: track 31, Rook's return sting "Horn Call" (round 60 M.2 a), a one-shot at Level 29's rescue. */
+    public static final int ROOK_RETURN = 31;
     /** Track 29, "Stand Down": loops under the debrief after the mission complete jingle ({@link DebriefMusic}). */
     public static final int DEBRIEF = 29;
 
@@ -39,6 +41,10 @@ public final class Tracks {
             Map.entry(9, "grey-signal"),
             Map.entry(10, "thera-deep"),
             Map.entry(11, "pressure-line"),
+            // M9 part B: Act 5 A "Hollow Rock" (Level 29), its base and motif stems beside it.
+            Map.entry(12, "hollow-rock"),
+            // M9 part D: Act 5 B "Gilded Cage" (Level 31, round 60 M.1 a), its base and motif stems beside it.
+            Map.entry(13, "gilded-cage"),
             Map.entry(BOSS_VRELL, "choir-descends"),
             Map.entry(21, "miniboss-sting"),
             Map.entry(BOSS_WARNING, "boss-warning"),
@@ -46,7 +52,9 @@ public final class Tracks {
             Map.entry(ACT_COMPLETE, "act-complete"),
             Map.entry(25, "mission-failed"),
             Map.entry(26, "game-over"),
-            Map.entry(DEBRIEF, "debrief-theme"));
+            Map.entry(DEBRIEF, "debrief-theme"),
+            // M9 part B: track 31, Rook's return sting (Level 29's Ember launch, the theme ducked -6 dB under it).
+            Map.entry(ROOK_RETURN, "rook-return"));
 
     private Tracks() {}
 

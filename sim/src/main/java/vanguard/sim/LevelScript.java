@@ -44,6 +44,10 @@ import vanguard.sim.ObjectiveSpec.Naval;
  * @param armourFloor M8 part H, step H2 (design/campaign Level 28, The run cannot be lost; J2): from the level's boss's
  *     kill to the level's end the ship's armour stops at this many points (the run cannot be lost; {@link
  *     Defences#floor}); 0 (the default) for none
+ * @param haltCycle M9 part B (design/campaign Level 29): the waves of the held arena's halt on the halt's own clock
+ *     ({@link HaltCycle}); empty (the default) for none
+ * @param escortSwap M9 part B (design/player/wingmen, Rook's rescue and return): the mid-level escort swap at the held
+ *     arena's release ({@link EscortSwapSpec}); empty (the default) for none
  */
 public record LevelScript(
         int number,
@@ -64,8 +68,11 @@ public record LevelScript(
         MediumSpec medium,
         SpecialLimits specialLimits,
         Optional<RookLossSpec> rookLoss,
-        double armourFloor) {
+        double armourFloor,
+        Optional<HaltCycle> haltCycle,
+        Optional<EscortSwapSpec> escortSwap) {
     public LevelScript {
+        checkHeldArena(sections, groundUnits, setPieces, haltCycle, escortSwap, rookLoss);
         checkGroundAllies(
                 sections,
                 objectives.holds(),
@@ -112,6 +119,7 @@ public record LevelScript(
         }
         if (objectives.escort().isPresent()
                 && objectives.escort().get().air().isEmpty()
+                && objectives.escort().get().hull().isEmpty()
                 && ground.road().isEmpty()) {
             throw new IllegalArgumentException("a convoy follows the level's road");
         }
@@ -130,6 +138,98 @@ public record LevelScript(
                 && !(hazards.cruisers().get().endAt() < sections.getLast().end())) {
             throw new IllegalArgumentException("the cruisers' run ends before the level's end: " + hazards.cruisers());
         }
+    }
+
+    /** A level without M9 part B's halt cycle and escort swap. */
+    public LevelScript(
+            int number,
+            int act,
+            double launchSeconds,
+            boolean launchDrop,
+            List<Section> sections,
+            List<WaveSpec> waves,
+            List<GroundObjectSpec> groundObjects,
+            List<GroundUnit> groundUnits,
+            List<SetPieceSpec> setPieces,
+            int secrets,
+            List<RadioCue> radio,
+            ObjectiveSpec objectives,
+            GroundSpec ground,
+            HazardSpec hazards,
+            DropSpec drops,
+            MediumSpec medium,
+            SpecialLimits specialLimits,
+            Optional<RookLossSpec> rookLoss,
+            double armourFloor) {
+        this(
+                number,
+                act,
+                launchSeconds,
+                launchDrop,
+                sections,
+                waves,
+                groundObjects,
+                groundUnits,
+                setPieces,
+                secrets,
+                radio,
+                objectives,
+                ground,
+                hazards,
+                drops,
+                medium,
+                specialLimits,
+                rookLoss,
+                armourFloor,
+                Optional.empty(),
+                Optional.empty());
+    }
+
+    /**
+     * M9 part B (design/campaign Level 29, the rescue halt): a level whose ground units include a {@link
+     * GroundUnit#holder() holder} has a held arena: exactly one arena section, of speed 0, not crawling and without a
+     * hold after a boss, and no anchored, breaching or coiled boss (its holders hold the clock, not a boss). A halt
+     * cycle and an escort swap need one; the swap is not combined with Rook's scripted loss.
+     */
+    private static void checkHeldArena(
+            List<Section> sections,
+            List<GroundUnit> groundUnits,
+            List<SetPieceSpec> setPieces,
+            Optional<HaltCycle> haltCycle,
+            Optional<EscortSwapSpec> escortSwap,
+            Optional<RookLossSpec> rookLoss) {
+        java.util.Objects.requireNonNull(haltCycle);
+        java.util.Objects.requireNonNull(escortSwap);
+        boolean held = groundUnits.stream().anyMatch(GroundUnit::holder);
+        if (!held) {
+            if (haltCycle.isPresent() || escortSwap.isPresent()) {
+                throw new IllegalArgumentException("a halt cycle or an escort swap needs a held arena's holders");
+            }
+            return;
+        }
+        List<Section> arenas = sections.stream().filter(Section::arena).toList();
+        if (arenas.size() != 1
+                || arenas.getFirst().speed() != 0
+                || arenas.getFirst().holdAfterBossSeconds() > 0
+                || sections.getFirst().arena()) {
+            throw new IllegalArgumentException(
+                    "a held arena is one arena section of speed 0 after a moving one, without a hold after a boss");
+        }
+        double arenaEnd = arenas.getFirst().end();
+        if (groundUnits.stream().anyMatch(unit -> unit.holder() && !(unit.t() < arenaEnd))) {
+            throw new IllegalArgumentException("a held arena's holders enter before its end (" + arenaEnd + " s)");
+        }
+        if (setPieces.stream().anyMatch(piece -> piece.isBoss())) {
+            throw new IllegalArgumentException("a held arena's holders hold its clock: no boss fights in the level");
+        }
+        if (escortSwap.isPresent() && rookLoss.isPresent()) {
+            throw new IllegalArgumentException("an escort swap and Rook's scripted loss are not in one level");
+        }
+    }
+
+    /** M9 part B: whether the level has a held arena (a holder among its ground units). */
+    public boolean heldArena() {
+        return groundUnits.stream().anyMatch(GroundUnit::holder);
     }
 
     /** A level without M8 part H's armour floor. */
@@ -317,7 +417,9 @@ public record LevelScript(
                 .medium(medium)
                 .specialLimits(specialLimits)
                 .rookLoss(rookLoss)
-                .armourFloor(armourFloor);
+                .armourFloor(armourFloor)
+                .haltCycle(haltCycle)
+                .escortSwap(escortSwap);
     }
 
     /**
@@ -345,6 +447,8 @@ public record LevelScript(
         private SpecialLimits specialLimits = SpecialLimits.NONE;
         private Optional<RookLossSpec> rookLoss = Optional.empty();
         private double armourFloor = 0;
+        private Optional<HaltCycle> haltCycle = Optional.empty();
+        private Optional<EscortSwapSpec> escortSwap = Optional.empty();
 
         private Builder(int number, int act) {
             this.number = number;
@@ -456,6 +560,18 @@ public record LevelScript(
             return this;
         }
 
+        /** M9 part B: the held arena's halt cycle (design/campaign Level 29); empty by default. */
+        public Builder haltCycle(Optional<HaltCycle> haltCycle) {
+            this.haltCycle = haltCycle;
+            return this;
+        }
+
+        /** M9 part B: the mid-level escort swap (design/player/wingmen, Rook's rescue); empty by default. */
+        public Builder escortSwap(Optional<EscortSwapSpec> escortSwap) {
+            this.escortSwap = escortSwap;
+            return this;
+        }
+
         /** The level: the sub-records validated their own parts, the level checks them against each other. */
         public LevelScript build() {
             return new LevelScript(
@@ -477,7 +593,9 @@ public record LevelScript(
                     medium,
                     specialLimits,
                     rookLoss,
-                    armourFloor);
+                    armourFloor,
+                    haltCycle,
+                    escortSwap);
         }
     }
 
@@ -533,7 +651,8 @@ public record LevelScript(
      * M5 part G (design/campaign Level 13, The halt): the rules of a timed halt and the {@code defend}
      * primary the simulation needs. A timed halt (a section of speed 0 without an arena) and a defend
      * primary never come with hold zones or a boss arena; a defend primary has no escort or naval convoy
-     * beside it; an integrity secondary and the {@code ally-below} radio cues need a defend primary. The
+     * beside it; an integrity secondary (M9 part D: or a hull escort) and the {@code ally-below} radio cues need a
+     * defend primary. The
      * content's rules (a timed halt only with a defend primary; nothing entering at the top edge with the
      * scroll inside one, {@link #timedHaltAt(double)}) are the level validator's.
      */
@@ -556,8 +675,11 @@ public record LevelScript(
         if (defend.isPresent() && (escort.isPresent() || convoy.isPresent())) {
             throw new IllegalArgumentException("a defend primary has no escort or naval convoy beside it");
         }
-        if (secondary.integrity() > 0 && defend.isEmpty()) {
-            throw new IllegalArgumentException("an integrity secondary needs a defend primary");
+        if (secondary.integrity() > 0
+                && defend.isEmpty()
+                && (escort.isEmpty() || escort.get().hull().isEmpty())) {
+            // M9 part D: or a hull escort (Level 31's CLEAN HULL: every section home with at least the share).
+            throw new IllegalArgumentException("an integrity secondary needs a defend primary or a hull escort");
         }
         for (RadioCue cue : radio) {
             if (cue.trigger() == CueTrigger.ALLY_BELOW) {

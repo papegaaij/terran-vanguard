@@ -2,6 +2,7 @@ package vanguard.content;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
@@ -38,6 +39,8 @@ public record AlliesData(Map<String, Ally> allies) {
      *     hooked lob's direct hit one; empty for an ally with HP
      * @param sprite M7 part D, presentation: its sprites' base name (the Ares Landing dome's {@code ares-dome}); the
      *     slug if not given
+     * @param sections M9 part D (design/allies/mining-tug): a hull's sections in hull order (an ally that {@code
+     *     follows: hull}, its {@code size} the whole footprint); a level's escort gives their HP
      */
     public record Ally(
             String name,
@@ -54,7 +57,8 @@ public record AlliesData(Map<String, Ally> allies) {
             Optional<Double> glide,
             Optional<Flak> flak,
             Optional<Integer> hits,
-            Optional<String> sprite) {
+            Optional<String> sprite,
+            Optional<List<HullSection>> sections) {
         /** What a ground ally follows. */
         public static final String ROAD = "road";
         /** M5 part D: what an air ally follows, its station in the level's band. */
@@ -69,6 +73,13 @@ public record AlliesData(Map<String, Ally> allies) {
          * it scrolls in and where it stands while the ground halts.
          */
         public static final String GROUND = "ground";
+        /**
+         * M9 part D: what a hull escort's ally follows (Level 31's mining tug): one screen station with its sway, the
+         * ground scrolling beneath it; it is made of {@code sections}.
+         */
+        public static final String HULL = "hull";
+        /** M9 part D: a hull's most sections. */
+        public static final int MOST_SECTIONS = vanguard.sim.ObjectiveSpec.Hull.MOST_SECTIONS;
 
         /** Without M7 part D's hits and sprite. */
         public Ally(
@@ -100,6 +111,7 @@ public record AlliesData(Map<String, Ally> allies) {
                     glide,
                     flak,
                     Optional.empty(),
+                    Optional.empty(),
                     Optional.empty());
         }
 
@@ -120,7 +132,8 @@ public record AlliesData(Map<String, Ally> allies) {
                 @JsonProperty("glide") Optional<Double> glide,
                 @JsonProperty("flak") Optional<Flak> flak,
                 @JsonProperty("hits") Optional<Integer> hits,
-                @JsonProperty("sprite") Optional<String> sprite) {
+                @JsonProperty("sprite") Optional<String> sprite,
+                @JsonProperty("sections") Optional<List<HullSection>> sections) {
             Check.that(hp.isPresent() != hits.isPresent(), "give the ally's hp or (M7 part D) its hits, one of them");
             return new Ally(
                     name,
@@ -137,7 +150,8 @@ public record AlliesData(Map<String, Ally> allies) {
                     glide,
                     flak,
                     hits,
-                    sprite);
+                    sprite,
+                    sections);
         }
 
         public Ally {
@@ -151,13 +165,53 @@ public record AlliesData(Map<String, Ally> allies) {
             Check.share("smoke_below", smokeBelow);
             firstLevel.ifPresent(level -> Check.positive("first_level", level));
             Check.that(
-                    follows.equals(ROAD) || follows.equals(LANES) || follows.equals(STATIONS) || follows.equals(GROUND),
-                    "follows: 'road', 'lanes', 'stations' or 'ground', was '" + follows + "'");
+                    follows.equals(ROAD)
+                            || follows.equals(LANES)
+                            || follows.equals(STATIONS)
+                            || follows.equals(GROUND)
+                            || follows.equals(HULL),
+                    "follows: 'road', 'lanes', 'stations', 'ground' or 'hull', was '" + follows + "'");
             boolean air = follows.equals(LANES);
             boolean naval = follows.equals(STATIONS);
             boolean standing = follows.equals(GROUND);
+            boolean hull = follows.equals(HULL);
+            sections = sections.map(List::copyOf);
+            Check.that(hull == sections.isPresent(), "a hull (follows: hull) has its sections, no other ally any");
+            Check.that(
+                    hull
+                            == (damagedBy.missiles().isPresent()
+                                    || damagedBy.links().isPresent()),
+                    "only a hull (follows: hull) is hurt by hooked missiles and links, and a hull by one of them");
+            if (hull) {
+                List<HullSection> parts = sections.orElseThrow();
+                Check.that(
+                        !parts.isEmpty() && parts.size() <= MOST_SECTIONS,
+                        "sections: 1 to " + MOST_SECTIONS + ", was " + parts.size());
+                Check.that(layer.equals("ground"), "a hull lies on the ground layer");
+                Check.that(
+                        !damagedBy.objectiveAimed()
+                                && damagedBy.claws() == 0
+                                && !damagedBy.hitByBullets()
+                                && !damagedBy.hitByContact()
+                                && damagedBy.slams().isEmpty()
+                                && damagedBy.lobs().isEmpty()
+                                && damagedBy.bombs().isEmpty()
+                                && damagedBy.rolls().isEmpty(),
+                        "a hull is hurt only by hooked missiles, dives and links (Q-D2 = a)");
+                for (HullSection part : parts) {
+                    Check.that(
+                            Math.abs(part.offset().x()) + part.box().width() / 2 <= size.width() / 2 + 1e-9
+                                    && Math.abs(part.offset().y()) + part.box().height() / 2
+                                            <= size.height() / 2 + 1e-9,
+                            "sections: " + part.name() + "'s box lies inside the hull's size");
+                }
+                Check.that(
+                        parts.stream().map(HullSection::name).distinct().count() == parts.size(),
+                        "sections: each named once");
+            }
             Check.that(
                     standing
+                            || hull
                             || (damagedBy.dives().isEmpty()
                                     && damagedBy.lobs().isEmpty()
                                     && damagedBy.bombs().isEmpty()
@@ -217,9 +271,26 @@ public record AlliesData(Map<String, Ally> allies) {
             return hits.isPresent();
         }
 
+        /** M9 part D: whether it is a hull escort's ally (Level 31's mining tug), made of sections. */
+        public boolean hull() {
+            return follows.equals(HULL);
+        }
+
         /** M7 part D, presentation: its sprites' base name, its {@code sprite} or the slug. */
         public String spriteName(String slug) {
             return sprite.orElse(slug);
+        }
+    }
+
+    /**
+     * M9 part D (design/allies/mining-tug): a hull's section: its {@code name} (what {@code {section}} becomes in the
+     * radio lines, the HUD's bar label), its hit box's centre {@code offset} ({@code [x, y]}: px from the hull's centre,
+     * y down the screen), its hit {@code box}, and (presentation) its {@code smoke} points (the same frame).
+     */
+    public record HullSection(String name, Point offset, Size box, Optional<List<Point>> smoke) {
+        public HullSection {
+            Check.that(name != null && !name.isBlank(), "a section has a name");
+            smoke = smoke.map(List::copyOf);
         }
     }
 
@@ -262,6 +333,10 @@ public record AlliesData(Map<String, Ally> allies) {
      *     footprint passes beneath it (once per bomber, its load spent)
      * @param rolls M7 part D: the hits a rolling unit's roll deals as it crosses the ally's footprint (once per roll;
      *     the Shellback's)
+     * @param missiles M9 part D (design/allies/mining-tug): a hull's: the damage a hooked homing missile deals bursting in
+     *     a section's box
+     * @param links M9 part D: a hull's: the damage a hooked air link deals a section it touches, per touch
+     * @param linkCooldown M9 part D: a hull's: s between a link's touches on one section (with {@code links})
      */
     public record DamagedBy(
             boolean objectiveAimed,
@@ -272,7 +347,10 @@ public record AlliesData(Map<String, Ally> allies) {
             Optional<Double> dives,
             Optional<Boolean> lobs,
             Optional<Double> bombs,
-            Optional<Double> rolls) {
+            Optional<Double> rolls,
+            Optional<Double> missiles,
+            Optional<Double> links,
+            Optional<Double> linkCooldown) {
         /** Without M7 part D's bombs and rolls. */
         public DamagedBy(
                 boolean objectiveAimed,
@@ -285,7 +363,37 @@ public record AlliesData(Map<String, Ally> allies) {
             this(objectiveAimed, claws, bullets, contact, slams, dives, lobs, Optional.empty(), Optional.empty());
         }
 
+        /** Without M9 part D's missiles and links. */
+        public DamagedBy(
+                boolean objectiveAimed,
+                double claws,
+                Optional<Boolean> bullets,
+                Optional<Boolean> contact,
+                Optional<Double> slams,
+                Optional<Double> dives,
+                Optional<Boolean> lobs,
+                Optional<Double> bombs,
+                Optional<Double> rolls) {
+            this(
+                    objectiveAimed,
+                    claws,
+                    bullets,
+                    contact,
+                    slams,
+                    dives,
+                    lobs,
+                    bombs,
+                    rolls,
+                    Optional.empty(),
+                    Optional.empty(),
+                    Optional.empty());
+        }
+
         public DamagedBy {
+            missiles.ifPresent(n -> Check.positive("missiles", n));
+            links.ifPresent(n -> Check.positive("links", n));
+            linkCooldown.ifPresent(s -> Check.positive("link_cooldown", s));
+            Check.that(links.isPresent() == linkCooldown.isPresent(), "links and link_cooldown go together");
             bombs.ifPresent(n -> Check.positive("bombs", n));
             rolls.ifPresent(n -> Check.positive("rolls", n));
             Check.notNegative("claws", claws);

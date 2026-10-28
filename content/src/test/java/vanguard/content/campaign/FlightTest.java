@@ -21,7 +21,16 @@ class FlightTest {
     void theStarterCampaignFliesTheStarterLoadout() {
         Flight flight = Flight.of(CONTENT, HangarTest.CATALOGUE, Campaign.start(CampaignTest.RULES, Difficulty.HARD));
 
-        assertEquals(SimSpecs.starterLoadout(CONTENT, Difficulty.HARD), flight.loadout());
+        // M9 part A: with its power budget (the Mk I's 8 MW, the Pulse Cannon's and the starter shield's 4 MW load).
+        assertEquals(
+                SimSpecs.starterLoadout(CONTENT, Difficulty.HARD)
+                        .withPower(SimSpecs.power(
+                                CONTENT,
+                                8,
+                                4,
+                                CONTENT.shields().models().getFirst().name(),
+                                Difficulty.HARD)),
+                flight.loadout());
         assertEquals(List.of(new Flight.Weapon(Armament.Slot.FRONT, "Pulse Cannon", 1)), flight.weapons());
         assertEquals(4, flight.sparePower());
         assertEquals(List.of(), flight.notFlown());

@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: n/a
 depends-on: [../weapons, ../shields]
-updated: 2026-10-27
+updated: 2026-10-28
 ---
 
 # Generator
@@ -24,7 +24,7 @@ in [player](../README.md#power-budget).
 | Mk II "Arc" | 11 MW | 1 500 | act 1 |
 | Mk III "Fusion" | 16 MW | 4 000 | act 2 |
 | Mk IV "Tokamak" | 20 MW | 9 000 | act 4 |
-| Mk V "Helix" | 22 MW | 18 000 | act 5 (Helix Dynamics tech, captured) |
+| Mk V "Helix" | 22 MW | 18 000 | L35 (Helix Dynamics tech, captured) |
 | Mk VI "Choir Core" | 27 MW | 32 000 | act 7 (Vrell tech) |
 <!-- /data -->
 
@@ -36,8 +36,7 @@ in [player](../README.md#power-budget).
 
 ### Enemy drain effects
 
-*Final draft of the 2026-09-30 rules, step `m9-d-systems` (2026-10-27), **pending the user's review in
-round 60** (Q2 = a, recommended). The single definition of a drain; the drainer itself, its latch and
+*Final draft of the 2026-09-30 rules, step `m9-d-systems` (2026-10-27), **approved in round 60** (Q2 = a, recommended). The single definition of a drain; the drainer itself, its latch and
 how it is shaken off are the [Void Leech](../../enemies/space/void-leech/README.md)'s (introduced in L33, see the
 [act](../../campaign/act-5-the-belt/README.md)); the HUD's side is in [HUD](../../ui/hud/README.md#right-panel-ship).*
 
@@ -143,7 +142,7 @@ leave the nanites a luxury; rejected because a 3 MW module that no generator car
 
 ### Act 5 hand plan (draft)
 
-*Draft, step `m9-d-systems` (2026-10-27), **pending the user's review in round 60** (J2, Q12 = c). A
+*Draft, step `m9-d-systems` (2026-10-27), **approved in round 60** (J2, Q12 = c). A
 hand calculation for the design phase, no data file and not read by any test; part A of M9 replaces it
 by the measured balance plan (`balance-plan.yaml` visits 29–35, `reference_dps` 29–35 in
 `enemies/data.yaml`, `BalanceTest`, `ActPlaythroughTest`, `:content:levelReport`). Draws and DPS are
@@ -219,7 +218,7 @@ its fire to three; a player who turned one weapon down a level, or kept 2 MW spa
 regrowth. The drain's 2 MW a leech is the lever if part A finds the bite too soft (3 MW a leech: the
 typical plan's f 0.75 at three).
 
-**The Mk V "Helix" note.** Q12 = c of round 60 (recommended, pending the user): the Mk V is **captured
+**The Mk V "Helix" note.** Q12 = c of round 60 (recommended, decided the user): the Mk V is **captured
 Helix tech salvaged in L34** (a set-piece crate of the [Salvage Run](../../campaign/act-5-the-belt/README.md))
 and is in the shop from the **L35 visit**, not from the act's first visit as the data's `act 5` reads;
 part A sets that availability in [data.yaml](data.yaml) (a level unlock) once approved. Its **22 MW**
@@ -233,12 +232,18 @@ designed and the step can be measured then.
 - [x] Generator models and output values in the item data
 - [x] Load vs output check in the hangar with a projected-load bar
 - [x] Spare-power shield regen bonus
-- [ ] In-level output and the drain as under *Enemy drain effects*: the effective output, the shield's regeneration
+- [x] In-level output and the drain as under *Enemy drain effects*: the effective output, the shield's regeneration
   stopped first, the weapons' fire-rate factor (at least 0.5), the spare-power bonus from the effective output;
-  deterministic (hashed only in a level with a drainer) — M9 part A (with the Void Leech)
-- [ ] The drain's feedback: the HUD gauge (see [HUD](../../ui/hud/README.md)), the muzzle flicker, the dimmed shield
-  ring, the brown-out hum — M9 part A
-- [ ] The Mk V "Helix" in the shop from the L35 visit (salvaged in L34), the balance plan's visits 29–35 — M9 part A
+  deterministic (hashed only in a level with a drainer) — M9 part A (step A1: `PowerState`, `Sortie.drain`,
+  `PowerDrainTest`; step A2: `drain` in [data.yaml](data.yaml), the flight's budget `SimSpecs.power`/`Flight.of`,
+  `BeltKeysTest.theDrainFollowsTheHandPlansTable`; the Void Leech's latch calls `Sortie.drain` in part F)
+- [x] The drain's feedback: the HUD gauge (see [HUD](../../ui/hud/README.md)), the muzzle flicker, the dimmed shield
+  ring, the brown-out hum — M9 part A (step A3: `PowerRow`, `PlayerPasses`' flicker while f < 1, `ShipLooks`' ring at
+  40 % while the regen is stopped, the `brownout-hum` loop while the load is over E, `BeltCues`; `ActFiveLooksTest`,
+  `ActFiveSoundsTest`)
+- [x] The Mk V "Helix" in the shop from the L35 visit (salvaged in L34), the balance plan's visits 29–35 — M9 part A
+  (step A2: `available: L35`, `balance-plan.yaml` 29–35 as the hand plan above, the Act 5 levels' income budget(n) until
+  they are built; `BeltCampaignTest`, `BalanceTest`, `tools/balance.py` exit 0)
 
 ## Open questions
 
@@ -285,9 +290,10 @@ designed and the step can be measured then.
   ([balance-plan.yaml](../balance-plan.yaml)). `balance.py` (medium): left after the visit L22 1 980, L23 3 698, L24
   1 597, L25 4 436, L26 6 142, L27 1 770, L28 3 166; the forward DPS against the reference 1.04, 0.79, 1.00, 1.00, 1.07,
   1.03, 1.00 (energy weapons × 0.2 under water, `water(data, n, slug)`).
-- 2026-10-27 (Act 5 design phase, step m9-d-systems; **pending the user's review in round 60**): the drain rules
+- 2026-10-27 (Act 5 design phase, step m9-d-systems; **approved in round 60**): the drain rules
   written as a final draft (Q2 = a: −2 MW a latched leech to −6, the shield's regeneration shed first, then the
   weapons' fire rate × E ÷ (load − shield draw), at least 0.5; the feedback and the intel warning); the Act 5 hand
   plan (the Ion Beam L4 at L29, the Swarm Tail at L30 and L32, Composite IV at L31, the Mk V and the pods L4 at
   L35), the proposed `reference_dps` 120 → 144 (J2) and the power check under two and three leeches; the Mk V
   "Helix" salvaged in L34 and sold from the L35 visit at 22 MW (Q12 = c).
+- 2026-10-27 (user, [round 60](../../concept-rounds/round-60/README.md) closed): the Act 5 hand plan and the drain approved as drafted (D.15): Q2 **a** (a latched Void Leech drains the generator), J.2 (`reference_dps` 120 to 144), J.12 (2 MW per leech), Q12 **c**; the brown-out hum is S.10 a.

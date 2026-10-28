@@ -56,6 +56,8 @@ public final class Defences {
      * LevelScript#armourFloor()}); 0 (none) until {@link #floor} sets it, every restore clears it.
      */
     private double floor;
+    /** M9 part A: the power budget under a drain (design/player/generator, Enemy drain effects); null without one. */
+    private PowerState power;
 
     Defences(ShieldModel model, Plating plating, double mercySeconds) {
         this.model = model;
@@ -77,6 +79,11 @@ public final class Defences {
         pauseTicks = SimStep.ticks(spec.pauseSeconds());
         repairProgress = 0;
         repairPause = 0;
+    }
+
+    /** M9 part A: the power budget whose drain stops or slows the regeneration. */
+    void power(PowerState budget) {
+        power = budget;
     }
 
     /** A full shield over {@code armour} points, as at the start of an attempt. */
@@ -125,9 +132,12 @@ public final class Defences {
         double capacity = capacity();
         if (regenWait > 0) {
             regenWait--;
-        } else if (shield < capacity) {
+        } else if (shield < capacity && (power == null || !power.regenStopped())) {
+            // M9 part A: a load over the drained output stops the regen (its delay keeps running); under a drain the
+            // spare-power bonus follows the effective output.
             broken = false;
-            shield = Math.min(capacity, shield + regenPerStep);
+            double rate = power != null && power.draining() ? power.regenPerSecond() * SimStep.SECONDS : regenPerStep;
+            shield = Math.min(capacity, shield + rate);
         }
     }
 

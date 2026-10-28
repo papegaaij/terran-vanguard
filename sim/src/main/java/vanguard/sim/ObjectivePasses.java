@@ -108,6 +108,10 @@ final class ObjectivePasses {
         escapers += script.objectives().secondary().links()
                 ? script.ground().gates().size()
                 : 0;
+        // M9 part B: a spared objective counts its neutral craft (the waves' units of its slug).
+        escapers += script.objectives().secondary().bySpared()
+                ? force.unitsOf(script.objectives().secondary().spared())
+                : 0;
         return escapers;
     }
 
@@ -146,11 +150,19 @@ final class ObjectivePasses {
         Pool<Enemy> enemies = force.enemies();
         Enemy enemy = enemies.get(index);
         EnemySpec spec = enemy.spec();
+        if (spec.neutral()) {
+            // M9 part B (design/campaign Level 29, Hold fire): a neutral craft down is no kill: no credits, no chain;
+            // the first one fails a spared objective.
+            neutralDown(index, enemy);
+            return;
+        }
         events.add(SimEvents.Type.ENEMY_DESTROYED, enemy.x(), enemy.y(), enemy.kind());
         if (links != null && spec.link().isPresent()) {
             // M7 part C: a gate's anchor: its standing tendril breaks.
             links.anchorGone(enemy, true);
         }
+        // M9 part D: a linked drone's links snap.
+        force.linkMemberGone(enemy, true);
         if (spec.slowRing().isPresent()) {
             // M8 part E: shooting the sac ends the song, its ring in flight with it.
             force.silence(enemy);
@@ -248,7 +260,16 @@ final class ObjectivePasses {
             // M5 part D: a swarm's member drops out of its flock.
             force.flockMemberGone(enemy);
         }
+        if (enemy.leader()) {
+            // M9 part B (design/enemies/air/talon, Squad leader): its wing breaks off.
+            force.scatter(enemy, ship);
+        }
+        boolean holder = enemy.holder();
         enemies.free(index);
+        if (holder) {
+            // M9 part B: a held arena's holder fell.
+            s.holderDown(x, y);
+        }
         if (kills == 1) {
             radio.cue(CueTrigger.FIRST_KILL, spec.slug());
         }
@@ -266,6 +287,20 @@ final class ObjectivePasses {
     }
 
     /**
+     * M9 part B: neutral craft {@code index} ({@code craft}) was destroyed: its event and line, a spared objective
+     * failed by the first; no kill, no credits, no chain, no drops.
+     */
+    private void neutralDown(int index, Enemy craft) {
+        String slug = craft.spec().slug();
+        events.add(SimEvents.Type.NEUTRAL_DOWN, craft.x(), craft.y(), craft.kind());
+        if (objectives.sparedDestroyed(slug)) {
+            events.add(SimEvents.Type.OBJECTIVE_FAILED, craft.x(), craft.y());
+        }
+        force.enemies().free(index);
+        radio.cue(CueTrigger.NEUTRAL_DOWN, slug);
+    }
+
+    /**
      * M5 part F: an enemy's drop {@code every} with the level's drop factor: divided by it, rounded to
      * the nearest, at least 1 (Level 12's shield cells; the factor 1 elsewhere leaves it).
      */
@@ -274,11 +309,17 @@ final class ObjectivePasses {
         return factor == 1 ? every : Math.max(1, (int) Math.round(every / factor));
     }
 
-    /** A spore mine was shot: it pays its credits (no kill, no chain). */
+    /**
+     * A spore mine was shot: it pays its credits (no kill, no chain). M9 part C: a line mine bursts with its ring and
+     * sets off its neighbours within its chain reach ({@link MineLines}).
+     */
     void shootMine(int index) {
         Pool<Mine> mines = force.mines();
         Mine mine = mines.get(index);
         events.add(SimEvents.Type.MINE_DESTROYED, mine.x(), mine.y());
+        if (mine.line()) {
+            force.lineMineBurst(mine, ship, true);
+        }
         int credits = mine.spec().credits();
         tally.bounty(CreditSource.KILLS, credits);
         tally.scoreValue(credits);
@@ -422,7 +463,20 @@ final class ObjectivePasses {
         Convoy convoy = s.convoy;
         // M5 part E: a naval convoy's level-end cues count its damageable units afloat; it pays nothing.
         int home = convoy == null ? 0 : convoy.naval() ? convoy.afloat() : convoy.saveableAlive();
-        if (convoy != null && !convoy.naval() && !convoy.defend() && !convoy.groundAllies()) {
+        if (convoy != null && convoy.hull() != null) {
+            // M9 part D (design/allies/mining-tug): each section home pays its own credits, a payout of its own.
+            for (int k = 0; k < convoy.size(); k++) {
+                if (convoy.get(k).alive()) {
+                    int credits = convoy.hull().spec().sections().get(k).credits();
+                    s.escortCredits += tally.earn(CreditSource.OBJECTIVES, credits);
+                    tally.scoreValue(credits);
+                }
+            }
+            if (objectives.defended()) {
+                // An integrity secondary (Level 31's CLEAN HULL): every section home with at least its share.
+                paySecondary();
+            }
+        } else if (convoy != null && !convoy.naval() && !convoy.defend() && !convoy.groundAllies()) {
             // Each unit home is a payout of its own (design/campaign, Level 04: the escort objective).
             int credits = convoy.escort().credits();
             for (int k = 0; k < home; k++) {
@@ -467,6 +521,19 @@ final class ObjectivePasses {
      */
     void escaped(Enemy enemy) {
         String slug = enemy.spec().slug();
+        if (enemy.spec().neutral()) {
+            // M9 part B (Level 29, Hold fire): a neutral craft left the screen: it counts toward a spared objective.
+            events.add(SimEvents.Type.NEUTRAL_LEFT, enemy.x(), enemy.y(), enemy.kind());
+            radio.cue(CueTrigger.NEUTRAL_LEFT, slug);
+            if (objectives.sparedLeft(slug)) {
+                paySecondary();
+            }
+            return;
+        }
+        if (enemy.holder()) {
+            // M9 part B: a holder gone off the screen holds nothing any more (a held arena's are on the halted screen).
+            s.holderDown(enemy.x(), enemy.y());
+        }
         if (enemy.spec().pull().isPresent()) {
             // M7 part E: a Dust Devil that escapes carries off the pickups it held.
             s.pickupPasses.carryOff(enemy);
@@ -475,6 +542,8 @@ final class ObjectivePasses {
             // M7 part C: a gate's anchor left the screen: a tendril still standing is lost.
             links.anchorGone(enemy, false);
         }
+        // M9 part D: a linked drone left the screen: its links end.
+        force.linkMemberGone(enemy, false);
         if (enemy.group() >= 0) {
             int group = enemy.group();
             int state = objectives.groupUnitEscaped(group);

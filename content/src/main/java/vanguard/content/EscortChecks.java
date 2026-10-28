@@ -91,6 +91,10 @@ final class EscortChecks extends ContentChecks {
             problem(level, "objectives.escort.ally", "a " + convoy.ally() + " follows stations: give it in convoy");
             return;
         }
+        if (ally.hull() || convoy.hull().isPresent()) {
+            // M9 part D: a hull escort's block and its ally are TugChecks'.
+            return;
+        }
         if (ally.air() != convoy.air()) {
             problem(
                     level,

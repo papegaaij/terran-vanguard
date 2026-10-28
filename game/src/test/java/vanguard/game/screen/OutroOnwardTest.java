@@ -123,32 +123,25 @@ class OutroOnwardTest {
 
         assertEquals("ACT IV: DEEP WATER, THEN THE BRIEFING FOR MISSION 22: ICE SHELF", onward.next());
         assertEquals("ENTER TO ACT IV", onward.hint());
-        // M8 part H (step H3): the release ends after Level 28, Act 4 naming Act 5 (its `next_act`).
-        assertTrue(content.levelKey(28).isPresent(), "Level 28 is built (M8 part H)");
-        assertEquals("ACTS I-IV COMPLETE", ReleaseTexts.title(content));
-        assertEquals("ACT V - THE BELT. CERES. COMING SOON.", ReleaseTexts.comingSoon(content));
-        assertEquals(
-                "CONTINUE IN THE MAIN MENU RETURNS TO THE HANGAR AT THE END OF ACT IV.",
-                ReleaseTexts.continueLine(content));
-        assertEquals("ACT V - THE BELT: COMING SOON", ReleaseTexts.hangarLine(content), "the hangar before Level 29");
-        assertEquals(
-                "THE END OF THIS RELEASE AND THE CREDITS. ACT V - THE BELT IS COMING SOON.",
-                ReleaseTexts.outroNext(content));
+        // M9 part B (step B3): the release ends after Level 29, inside Act 5 (its texts: ReleaseTexts' open act).
+        assertTrue(content.levelKey(29).isPresent(), "Level 29 is built (M9 part B)");
     }
 
     /**
      * M8 part H (design/campaign Level 28, Act end): Level 28 ends Act 4 in Level 21's order: its outro's four voiced
-     * pages with their images, the act-complete fanfare under page 1, then the release's end (Level 29 is not built):
-     * the NEXT panel names Act V, the end card reads "ACTS I-IV COMPLETE" and "ACT V - THE BELT. CERES. COMING SOON.",
-     * the hangar before Level 29 "ACT V - THE BELT: COMING SOON" (Level 21's "ACT IV - DEEP WATER" line is gone).
+     * pages with their images, the act-complete fanfare under page 1. M9 part B (step B3): Level 29 is built and Act 4
+     * names no next act any more, so the outro leads on to Act 5's title card and the Level 29 briefing; the release
+     * ends inside Act 5 (step B4, pending round 62): "ACTS I-IV COMPLETE", "ACT V - THE BELT. LEVEL 31 COMING SOON.",
+     * the hangar before the next level "ACT V - THE BELT: LEVEL 31 COMING SOON". M9 part C (step C4): Level 30 is built,
+     * so the release ends after it, before Level 31; M9 part D (step D4): Level 31 is built, it ends before Level 32.
      */
     @Test
-    void afterAct4sOutroTheReleaseEndsWithActVComingSoon() {
+    void afterAct4sOutroComeAct5sTitleCardAndTheBriefingOfLevel29() {
         String directory = "act-4-deep-water";
         ActData act = content.acts().get(directory);
         assertEquals(28, act.levels().last(), "Act 4 ends with Level 28");
-        assertTrue(content.levelKey(29).isEmpty(), "Level 29 is not built");
-        assertTrue(act.nextAct().isPresent(), "Act 4 names the act after it");
+        assertTrue(content.levelKey(29).isPresent(), "Level 29 is built (M9 part B)");
+        assertTrue(act.nextAct().isEmpty(), "Act 4 names no next act any more");
         OutroScript outro = Briefings.outro(new CampaignRoute.ActEnd(directory, act, 28), 29)
                 .orElseThrow();
         assertEquals("ACT IV - DEEP WATER", outro.act());
@@ -168,16 +161,40 @@ class OutroOnwardTest {
                     page.image().orElseThrow());
         }
         BriefingScreen.Onward onward = BriefingScreen.onward(content, outro);
-        assertEquals(ReleaseTexts.outroNext(content), onward.next());
-        assertEquals("THE END OF THIS RELEASE AND THE CREDITS. ACT V - THE BELT IS COMING SOON.", onward.next());
-        assertEquals("ENTER TO THE END", onward.hint());
+        assertEquals("ACT V: THE BELT, THEN THE BRIEFING FOR MISSION 29: BETRAYAL AT CERES", onward.next());
+        assertEquals("ENTER TO ACT V", onward.hint());
+        assertTrue(content.levelKey(31).isPresent(), "Level 31 is built (M9 part D)");
+        assertTrue(content.levelKey(32).isEmpty(), "Level 32 is not built");
+        assertTrue(ReleaseTexts.openAct(content).isPresent(), "the release ends inside Act 5");
         assertEquals("ACTS I-IV COMPLETE", ReleaseTexts.title(content));
-        assertEquals("ACT V - THE BELT. CERES. COMING SOON.", ReleaseTexts.comingSoon(content));
-        assertEquals("ACT V - THE BELT: COMING SOON", ReleaseTexts.hangarLine(content));
+        assertEquals("ACT V - THE BELT. LEVEL 32 COMING SOON.", ReleaseTexts.comingSoon(content));
+        assertEquals("ACT V - THE BELT: LEVEL 32 COMING SOON", ReleaseTexts.hangarLine(content));
+        assertEquals(
+                "CONTINUE IN THE MAIN MENU RETURNS TO THE HANGAR BEFORE LEVEL 32.", ReleaseTexts.continueLine(content));
+        assertEquals(
+                "THE END OF THIS RELEASE AND THE CREDITS. ACT V - THE BELT: LEVEL 32 IS COMING SOON.",
+                ReleaseTexts.outroNext(content));
         assertTrue(
-                content.acts().values().stream().filter(other -> other != act).allMatch(other -> other.nextAct()
-                        .isEmpty()),
-                "only Act 4 names a next act");
+                content.acts().values().stream()
+                        .allMatch(other -> other.nextAct().isEmpty()),
+                "no act names a next act");
+    }
+
+    /**
+     * M9 part B (step B4): a won level that ends no act while the content has no next level (Level 29 until Level 30
+     * was built; M9 part C: Level 30 until Level 31 was; M9 part D: Level 31 until Level 32 is) ends the release as an act outro does: the end card instead of the hangar; a briefing or an outro
+     * never does, nor the hangar while the next level exists.
+     */
+    @Test
+    void aWonLevelBeforeAnUnbuiltOneEndsTheRelease() {
+        CampaignRoute.Step hangar = new CampaignRoute.Step.Hangar();
+        assertTrue(HangarScreen.endsRelease(hangar, true));
+        assertTrue(!HangarScreen.endsRelease(hangar, false), "the next level is built");
+        assertTrue(
+                !HangarScreen.endsRelease(new CampaignRoute.Step.Outro(outro(28, 29)), true), "the outro goes first");
+        assertEquals("VORNE", vanguard.game.ui.Speaker.plate("Vorne"));
+        assertEquals("JOVIAN ASCENDANCY", vanguard.game.ui.Speaker.role("Vorne"));
+        assertEquals("HARKER", vanguard.game.ui.Speaker.plate("Harker"));
     }
 
     /** M6 part B: the end card, then the name entry only for a top-10 score, then the credits. */

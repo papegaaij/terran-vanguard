@@ -60,10 +60,21 @@ final class StormChecks {
                                     && attack.name()
                                             .filter(part.attackNames()::contains)
                                             .isPresent());
+            // M9 part C: or before a stream launcher's volley (the Gilded Gunship's ring lamps) or a train's turret
+            // car's
+            // shot (its red lamp).
+            boolean launcher = enemy.attacks().stream()
+                    .anyMatch(a -> a.spawn().flatMap(EnemyData.Spawn::stream).isPresent());
+            boolean turretCar = enemy.segmentChain()
+                    .flatMap(EnemyData.SegmentChain::cars)
+                    .filter(cars -> attack.name().filter(cars.attack()::equals).isPresent())
+                    .isPresent();
             // M8 part E: or before each ring of a slowing ring (the Siren's sac glow).
             if (attack.tell().isPresent()
                     && attack.trigger().isEmpty()
                     && !chainHead
+                    && !launcher
+                    && !turretCar
                     && attack.slow().isEmpty()) {
                 problem.accept(
                         field + ".tell",

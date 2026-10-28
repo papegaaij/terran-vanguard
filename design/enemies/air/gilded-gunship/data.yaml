@@ -1,0 +1,69 @@
+# Gilded Gunship stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/schemas-units/README.md
+# M9 part C, step C2 (Level 30): the approved stat block (round 60) as data. New in it (flown from step C1): facing
+# armour on a flying unit (`armour: {front_arc, factor}`: direct shots from within ±45° of its facing do ×0.5; with
+# `rear_plate` the engines' arc, ×2), the ring's lamps (`tell`) and the Dart streams (`spawn` with a `stream`: a
+# launcher beside its ring). The hex `shield` is part A's: spent first at full damage, only the overflow takes a
+# factor. Its stream size by difficulty is the hook `spawn_count`.
+name: Gilded Gunship
+faction: Jovian Ascendancy
+layer: air
+tier: medium
+size: [88, 100]   # sprite px
+hitbox: [64, 76]
+parts: single     # the arcs are directional damage on one hull, not parts
+orientation: fixed   # always faces down; the arcs are measured from its facing
+hp: 88            # with the shield 1.5 s from straight in front, 0.8 s from the sides, 0.45 s into the engines at the L30 reference of 124
+armour: {front_arc: 45, factor: 0.5}   # ° each side of its facing: a direct shot from there does ×0.5
+rear_plate: {arc: 60, multiplier: 2}   # the engines: a direct shot within ±60° of its rear does ×2
+shield: 12        # M9 part A: the hex shield, spent first
+speed: 45         # px/s descent
+machine: true     # the EMP Burst stuns it 3 s
+movement:
+  drift: {speed: 45}                  # straight down through the whole screen (≈ 13 s), out through the bottom edge
+  sine: {amplitude: 20, period: 4}    # px to each side, s per full swing
+attacks:
+  - pattern: ring
+    name: ring
+    bullet: small
+    count: 12
+    interval: 3.0
+    speed: 110
+    first_shot_delay: 1.5   # s after it is on the screen
+    tell: 0.4               # s: its gold ring lamps light before each ring
+    notes:
+      text: '`{pattern}` of {count} every {interval} s (slow {speed} px/s, `{bullet}` = {damage}), its gold ring lamps lighting {tell} s before (the tell)'
+  - pattern: spawn
+    name: bays
+    spawn:
+      enemy: dart-drone
+      count: 3          # a stream (hook spawn_count: easy 2, hard 4)
+      every: 5          # s between two streams
+      telegraph: 0
+      arc: 60           # ° the stream spreads over round its facing (launched forward and to the sides)
+      speed: 240        # px/s, the launch
+      stream: {gap: 0.25, first: 1, straight: 0.4, most: 6}   # s apart; s after it is on the field; s straight before the chase; most alive
+    notes:
+      text: '`{pattern}`: a stream of {spawn.count} [Dart Drones](../dart-drone/README.md) out of the belly bays every {spawn.every} s, {spawn.stream.gap} s apart, launched forward and to the sides, at most {spawn.stream.most} alive per Gunship; contact `{tier}` = {contact_damage}'
+formations:
+  - {name: column, size: [2, 3]}   # 2 s apart
+  - {name: carrier + escorts}      # Talons in `orbit` at 90 px
+weak_points:
+  - {name: 'the two engine nacelles at the rear, glowing white-gold (the ×2 arc)'}
+drops: []
+traits: [rear, homing, side, shield-breaker]
+bounty: 28
+first_level: 30
+difficulty:
+  easy: {spawn_count: 2, attacks: {ring: {count: 10, interval: 3.6}}}
+  hard: {spawn_count: 4, attacks: {ring: {count: 14, interval: 2.6}}}
+notes:
+  parts: single (the arcs below are directional damage on one hull, not parts)
+  orientation: (always faces down; the arcs are measured from its facing)
+  armour: 'hex [shield](../../README.md#enemy-shields) **{shield}**, spent first at full damage; then **frontal armour**: a direct shot arriving within ±{armour.front_arc}° of its facing does ×{armour.factor}; **engines**: one arriving within ±{rear_plate.arc}° of its rear does ×{rear_plate.multiplier}; dropped bombs, lobbed shells and the Airstrike come from above and take neither factor. With the shield it falls in 1.5 s from straight in front, 0.8 s from the sides, 0.45 s into the engines at the L30 reference of 124'
+  speed: descent, a {movement.sine.amplitude} px `sine` sway
+  movement: '`straight` down through the whole screen with the sway (≈ 13 s on the screen); leaves through the bottom edge; never stops'
+  formations: '(a column''s Gunships 2 s apart; the escorts Talons in `orbit` at 90 px); the L30 convoy (a level secondary)'
+  bounty: '; its launched Darts pay their own'
+  death: '`medium` explosion, the hull breaks in two behind the armour plate, gold plates spin off; the bays stop launching at once'
+  used_in: the convoy secondary; its later Act 5 levels (e.g. the Sovereign's escort screen in L35) per the level drafts
+  difficulty: 'easy: ring of 10 every 3.6 s, streams of 2; hard: ring of 14 every 2.6 s, streams of 4'

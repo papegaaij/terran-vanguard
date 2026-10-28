@@ -23,6 +23,8 @@ final class EscortSlot {
     final Optional<Bulwark> bulwarkView;
     /** M8 part A: the Bulwark's armour at the start of the next attempt. */
     double bulwarkStart;
+    /** M9 part B: the level's escort swap (Rook's rescue); made once, idle without one. */
+    final EscortSwap swap;
 
     EscortSlot(
             Sortie sortie,
@@ -34,7 +36,14 @@ final class EscortSlot {
             FurnaceVents vents,
             EnemyForce force) {
         this.s = sortie;
-        wingman = loadout.wingman().map(flying -> new Wingman(flying, seed)).orElse(null);
+        if (loadout.rescue().isPresent() && sortie.script.escortSwap().isEmpty()) {
+            throw new IllegalArgumentException("a rescued Rook joins at the level's escort swap: the level has none");
+        }
+        // M9 part B: the rescued Rook flies in the slot from the swap on (waiting, out of the fight, until then).
+        wingman = loadout.wingman()
+                .or(loadout::rescue)
+                .map(flying -> new Wingman(flying, seed))
+                .orElse(null);
         if (wingman != null) {
             if (medium.water()) {
                 // M8 part A: his drag and his gun's layers under water.
@@ -42,6 +51,10 @@ final class EscortSlot {
             }
             wingman.canyon(canyon);
             wingman.links(links);
+            // M9 part A (QA-1): the seekable enemy missiles, his target when no unit is in his cone.
+            wingman.missiles(force.missiles());
+            // M9 part C: the line mines, whose proximity discs he keeps clear of.
+            wingman.mines(force.mines());
             if (vents.grates() > 0) {
                 wingman.vents(vents);
             }
@@ -55,9 +68,20 @@ final class EscortSlot {
                 wingman.loss().plan(sortie.script.rookLoss().get());
             }
         }
+        swap = new EscortSwap(
+                sortie.script.escortSwap().orElse(null),
+                loadout.rescue().isPresent(),
+                loadout.wingman().isPresent());
+        if (loadout.rescue().isPresent()) {
+            if (sortie.checkpointBoss >= 0) {
+                throw new IllegalArgumentException("an escort swap in a level with a boss checkpoint is not supported");
+            }
+            wingman.awaitRescue(swap);
+        }
         wingmanView = Optional.ofNullable(wingman);
         wingmanMount = loadout.armament().size();
-        wingmanStart = loadout.wingman().map(WingmanSpec::armour).orElse(0.0);
+        wingmanStart =
+                loadout.wingman().or(loadout::rescue).map(WingmanSpec::armour).orElse(0.0);
         bulwark = loadout.bulwark().map(flying -> new Bulwark(flying, seed)).orElse(null);
         if (bulwark != null) {
             if (medium.water()) {
@@ -76,7 +100,8 @@ final class EscortSlot {
             if (!(armour > 0)) {
                 throw new IllegalArgumentException("a retry needs the wingman's armour");
             }
-            wingmanStart = Math.min(armour, wingman.maxArmour());
+            // M9 part B: a rescued Rook starts every attempt at his full armour (a fresh start at each rescue).
+            wingmanStart = swap.kind() == EscortSwap.JOINS ? wingmanStart : Math.min(armour, wingman.maxArmour());
         }
         if (bulwark != null) {
             // M8 part A: the Bulwark starts the next attempt with its level-start armour as Rook does.
@@ -95,10 +120,22 @@ final class EscortSlot {
         if (bulwark != null) {
             bulwark.reset(bulwarkStart, shipX, shipY);
         }
+        swap.reset();
+    }
+
+    /** M9 part B, step B4b: the {@code holders-down} radio cue's subject ({@link EscortSwap#radioSubject}). */
+    String swapSubject() {
+        return swap.radioSubject(bulwark);
+    }
+
+    /** M9 part B: the held arena's last holder fell: the escort swap starts (nothing without one). */
+    void release() {
+        swap.release(bulwark, s.events);
     }
 
     /** The escort's step, the wind's {@code push} on the wingman first, the ground scrolling {@code scrollStep} px. */
     void fly(int commands, double push, double scrollStep) {
+        swap.step();
         if (wingman != null) {
             wingman.wind(push);
             flyWingman(commands, scrollStep);
@@ -131,6 +168,10 @@ final class EscortSlot {
     private void flyBulwark(int commands) {
         Ship ship = s.ship;
         bulwark.rememberPosition();
+        if (swap.flyBulwark(bulwark, s.events)) {
+            // M9 part B: peeling away at the escort swap ("Bulwark, RTB"): no fire.
+            return;
+        }
         if (s.launching()) {
             bulwark.formUp(ship.x(), ship.y());
             return;
@@ -221,6 +262,13 @@ final class EscortSlot {
         Ship ship = s.ship;
         EnemyForce force = s.force;
         wingman.rememberPosition();
+        if (swap.flyRook(wingman, ship.x(), ship.y(), s.events)) {
+            // M9 part B: the rescued Rook waits in the tender's hold, then flies into his slot (no AI, no gun).
+            if (swap.joined()) {
+                s.radio.cue(CueTrigger.ESCORT_JOINED, "");
+            }
+            return;
+        }
         if (s.launching()) {
             wingman.formUp(ship.x(), ship.y());
             return;

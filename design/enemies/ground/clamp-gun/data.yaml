@@ -1,0 +1,47 @@
+# Clamp gun stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/schemas-units/README.md
+# M9 part B, step B2 (Level 29, the rescue halt): the level's clamp guns (README Ground targets, approved in round 60) as a
+# unit data file (gap check m9b-gaps.md §4: the loader, the validator, the looks and the atlas key on unit kinds). A
+# level's held arena names their group (`holds: clamps` on the arena section): the clock stands while one stands.
+name: Clamp gun
+faction: Helix Dynamics
+layer: ground
+tier: medium
+size: [48, 48]    # sprite px
+hitbox: [36, 36]
+parts: single (the turret turns on its clamp)
+orientation: 16 angles
+hp: 250           # step B3b: 2.08 s at the L29 reference of 120; the four 1,000 together, ≈ 14 s at the boss rule's 0.6 × the reference (Level 29's typical halt; the draft's 80 fell in ≈ 3 s)
+armour: none
+speed: 0          # scrolls with the ground, then halts with the arena
+machine: true
+movement:
+  terrain: {}
+attacks:
+  - pattern: aimed
+    name: shot
+    bullet: small
+    interval: 2.0          # s
+    speed: 160             # px/s
+    first_shot_delay: 1.0  # s after it enters the screen
+    turn_rate: 120         # °/s, the turret
+    arc: 180               # all round
+    notes:
+      text: '`{pattern}` single shot every {interval} s (standard {speed} px/s, `{bullet}` = {damage}) with a 0.3 s red muzzle glint; the turret turns {turn_rate}°/s all round'
+formations:
+  - {name: turret nest, size: [4, 4]}
+weak_points: []
+drops: []
+traits: [anti-ground, forward]
+bounty: 10
+first_level: 29
+difficulty:
+  easy: {attacks: {shot: {interval: 2.6}}}
+  hard: {burst: 2}
+notes:
+  orientation: (the turret; its clamp faces the tender)
+  speed: (scrolls with the ground, halts with the rescue halt)
+  movement: '`terrain`: one on each of the prison tender''s four docking clamps, asleep until the halt (Level 29''s `dormant_until`); it holds the rescue halt (the level clock stands while one stands)'
+  formations: (Level 29's four, round the prison tender)
+  death: 'destroyed, the clamp springs open with a burst of gas and sparks'
+  used_in: L29 only (Dock 9's prison tender)
+  difficulty: 'easy: every 2.6 s; hard: `aimed` pairs'

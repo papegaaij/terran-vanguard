@@ -35,14 +35,22 @@ public record SpecialLimits(List<Switch> switches) {
 
     /**
      * From {@code atSeconds} on the level clock: {@code forbidden} lists the specials the level (or its section)
-     * forbids, replacing the specials' own settings; empty: the settings decide again.
+     * forbids, replacing the specials' own settings; empty: the settings decide again. M9 part A: {@code reason} is
+     * the word a special it forbids reads (an underground section's {@link Reason#IN_ROCK}); {@link Reason#NONE}: the
+     * special's own setting's word.
      */
-    public record Switch(double atSeconds, Optional<Set<SpecialSpec.Kind>> forbidden) {
+    public record Switch(double atSeconds, Optional<Set<SpecialSpec.Kind>> forbidden, Reason reason) {
         public Switch {
             if (!(atSeconds >= 0)) {
                 throw new IllegalArgumentException("a special limit switch is at 0 s or later: " + atSeconds);
             }
             forbidden = forbidden.map(Set::copyOf);
+            java.util.Objects.requireNonNull(reason);
+        }
+
+        /** A switch whose forbidden specials read their own settings' words (every switch of Act 4). */
+        public Switch(double atSeconds, Optional<Set<SpecialSpec.Kind>> forbidden) {
+            this(atSeconds, forbidden, Reason.NONE);
         }
     }
 
@@ -53,7 +61,12 @@ public record SpecialLimits(List<Switch> switches) {
         /** Under the ice, in water: no bomber or satellite cover. */
         UNDER_ICE("UNDER ICE"),
         /** No water to ping. */
-        NO_WATER("NO WATER");
+        NO_WATER("NO WATER"),
+        /**
+         * M9 part A (design/player/specials, Act 5 specials; Level 32): inside the asteroid, no bomber or satellite
+         * reaches the ship. Appended last so the earlier reasons keep their ordinals (the limit event's value).
+         */
+        IN_ROCK("IN ROCK");
 
         private final String word;
 

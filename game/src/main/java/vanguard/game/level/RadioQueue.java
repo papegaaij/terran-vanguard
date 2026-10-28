@@ -92,6 +92,7 @@ public final class RadioQueue {
      * @param expression the speaker's portrait expression ({@code grim})
      * @param voice the spoken line's asset path, empty for a line without a voice file
      * @param voiceSeconds the spoken line's length, 0 without one
+     * @param intercepted M9 part A: a line on the enemy channel (its amber dress, the steady interference)
      */
     public record Message(
             String speaker,
@@ -100,7 +101,20 @@ public final class RadioQueue {
             List<String> lines,
             boolean distorted,
             Optional<String> voice,
-            float voiceSeconds) {
+            float voiceSeconds,
+            boolean intercepted) {
+        /** A line on the friendly channel. */
+        public Message(
+                String speaker,
+                String portrait,
+                String expression,
+                List<String> lines,
+                boolean distorted,
+                Optional<String> voice,
+                float voiceSeconds) {
+            this(speaker, portrait, expression, lines, distorted, voice, voiceSeconds, false);
+        }
+
         int pages() {
             return (lines.size() + PAGE_LINES - 1) / PAGE_LINES;
         }
@@ -237,7 +251,26 @@ public final class RadioQueue {
             Optional<String> voice,
             float voiceSeconds,
             float delay) {
-        Message message = new Message(speaker, portrait, expression, wrap(line), distorted, voice, voiceSeconds);
+        return add(speaker, portrait, expression, line, distorted, priority, voice, voiceSeconds, delay, false);
+    }
+
+    /**
+     * As above; M9 part A (design/ui/hud, Act 5 additions): {@code intercepted}, a line on the enemy channel (Vorne,
+     * Harker), drawn in its amber dress under a steady interference and opened and closed by the intercept's sweep.
+     */
+    public Message add(
+            String speaker,
+            String portrait,
+            String expression,
+            String line,
+            boolean distorted,
+            Priority priority,
+            Optional<String> voice,
+            float voiceSeconds,
+            float delay,
+            boolean intercepted) {
+        Message message =
+                new Message(speaker, portrait, expression, wrap(line), distorted, voice, voiceSeconds, intercepted);
         if (outro && (priority == Priority.EVENT || priority == Priority.PHASE)) {
             return message;
         }

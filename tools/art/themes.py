@@ -32,6 +32,12 @@ Outputs:
                                    proposed in round 51, the concept sheet thera-deep-sheet-r51-a.png reviews them)
   assets/music/pressure-line{,-base,-motif}.ogg  #11 "Pressure Line", its base and motif stems (the same way from
                                    pressure-line{,-base,-motif}-r51-a; heard in game from Level 25)
+  assets/music/hollow-rock{,-base,-motif}.ogg  #12 "Hollow Rock", its base and motif stems (M9 part B: the same way
+                                   from tools/concept/audio/music_r62.py's hollow-rock{,-base,-motif}-r62-a; the round-03
+                                   pick composed out to full length, reviewed on hollow-rock-sheet-r62-a.png in round 62)
+  assets/music/gilded-cage{,-base,-motif}.ogg  #13 "Gilded Cage", its base and motif stems (M9 part D: the same way
+                                   from tools/concept/audio/music_r64.py's gilded-cage{,-base,-motif}-r64-a; the round-60
+                                   pick composed out to full length, reviewed on gilded-cage-sheet-r64-a.png in round 64)
   design/audio/music/concept/themes-final-r13-a.png      review sheet of round 13
   design/audio/music/concept/boss-music-final-r25-a.png  review sheet of round 25
   design/audio/music/concept/{choir-descends,boss-warning,act-complete}-final-r25-a.ogg
@@ -101,7 +107,8 @@ Usage: python3 tools/art/themes.py [title] [hangar] [briefing] [boss] [warning] 
                                    [miniboss] [complete] [failed] [gameover] [homefront]
                                    [homefront-base] [firestorm] [firestorm-base] [red-dust]
                                    [red-dust-base] [thera] [thera-base] [pressure]
-                                   [pressure-base] [pressure-motif]
+                                   [pressure-base] [pressure-motif] [hollow] [hollow-base]
+                                   [hollow-motif] [gilded] [gilded-base] [gilded-motif]
                                                        render (default all), then check and review
        python3 tools/art/themes.py --check [keys]      check only (default all)
        python3 tools/art/themes.py --review [keys]     review sheets (and r25/r26 aids) of the keys' rounds
@@ -159,6 +166,8 @@ ROUNDS = {
          "PRODUCTION ART, M7 PART B - R38", artkit.source_note(SCRIPT, "M7 part B")),
     # no sheet of its own: COPIED pieces, reviewed on music_r51b.py's concept sheets
     51: (None, None, None, artkit.source_note(SCRIPT, "M8 part B")),
+    62: (None, None, None, artkit.source_note(SCRIPT, "M9 part B")),
+    64: (None, None, None, artkit.source_note(SCRIPT, "M9 part D")),
 }
 # key: (asset name, music_r08 key, title shown on the sheet, round); loops first, then one-shots
 THEMES = {
@@ -174,6 +183,8 @@ THEMES = {
     "red-dust": ("red-dust-run", None, "RED DUST RUN - TRACK 8, ACT 3 A", 38),
     "thera": ("thera-deep", None, "THERA DEEP - TRACK 10, ACT 4 A", 51),
     "pressure": ("pressure-line", None, "PRESSURE LINE - TRACK 11, ACT 4 B", 51),
+    "hollow": ("hollow-rock", None, "HOLLOW ROCK - TRACK 12, ACT 5 A", 62),
+    "gilded": ("gilded-cage", None, "GILDED CAGE - TRACK 13, ACT 5 B", 64),
 }
 # key: (asset name, key of its full mix in THEMES, title, round, stem generator, chosen file)
 STEMS = {
@@ -196,6 +207,14 @@ STEMS = {
                       "music_r51b", "pressure-line-base-r51-a"),
     "pressure-motif": ("pressure-line-motif", "pressure", "PRESSURE LINE - TRACK 11, MOTIF STEM", 51,
                        "music_r51b", "pressure-line-motif-r51-a"),
+    "hollow-base": ("hollow-rock-base", "hollow", "HOLLOW ROCK - TRACK 12, BASE STEM", 62,
+                    "music_r62", "hollow-rock-base-r62-a"),
+    "hollow-motif": ("hollow-rock-motif", "hollow", "HOLLOW ROCK - TRACK 12, MOTIF STEM", 62,
+                     "music_r62", "hollow-rock-motif-r62-a"),
+    "gilded-base": ("gilded-cage-base", "gilded", "GILDED CAGE - TRACK 13, BASE STEM", 64,
+                    "music_r64", "gilded-cage-base-r64-a"),
+    "gilded-motif": ("gilded-cage-motif", "gilded", "GILDED CAGE - TRACK 13, MOTIF STEM", 64,
+                     "music_r64", "gilded-cage-motif-r64-a"),
 }
 # M8 part B: pieces copied from their concept file (key: its name in design/audio/music/concept): remuxed with the
 # SOURCE comment, packets unchanged, not re-rendered (music_r51b.py renders the full mixes and stems in one linked
@@ -206,6 +225,14 @@ COPIED = {
     "pressure": "pressure-line-r51-a",
     "pressure-base": "pressure-line-base-r51-a",
     "pressure-motif": "pressure-line-motif-r51-a",
+    # M9 part B: track 12 from music_r62.py (one linked render of ~5 min), reviewed on its concept sheet in round 62
+    "hollow": "hollow-rock-r62-a",
+    "hollow-base": "hollow-rock-base-r62-a",
+    "hollow-motif": "hollow-rock-motif-r62-a",
+    # M9 part D: track 13 from music_r64.py (one linked render of ~5 min), reviewed on its concept sheet in round 64
+    "gilded": "gilded-cage-r64-a",
+    "gilded-base": "gilded-cage-base-r64-a",
+    "gilded-motif": "gilded-cage-motif-r64-a",
 }
 CUES = {
     "warning": ("boss-warning", "warning", "RED ALERT - TRACK 22, BOSS WARNING", 25),

@@ -16,8 +16,14 @@ public final class Missiles {
     public static final int FIZZLED = 2;
     /** M8 part A: a {@link SimEvents.Type#MISSILE_DESTROYED} value: it burst on a decoy flare ({@link Flares}). */
     public static final int DECOYED = 3;
+    /**
+     * M9 part D: a {@link SimEvents.Type#MISSILE_DESTROYED} value: a hooked missile burst on a hull escort's section
+     * (design/allies/mining-tug); {@link SimEvents.Type#ALLY_HIT} follows when its damage is applied.
+     */
+    public static final int ON_ALLY = 4;
 
-    private static final int CAPACITY = 16;
+    /** M9 part B: room for three nests' per-shooter caps of 8 (every cap of Acts 1–4 is 8 or less in all). */
+    private static final int CAPACITY = 32;
     /** One this far outside the play field is gone without a trace, px. */
     private static final double FIELD_MARGIN = 60;
     /** A launch's heading snaps to the pod's 16 bearings (design: the pods snap to the ship's bearing). */
@@ -32,6 +38,14 @@ public final class Missiles {
 
     /** M8 part A: the fitted Decoy Flares; null without them. */
     private Flares decoys;
+
+    /** M9 part D: the level's hull escort, whose sections hooked missiles home on; null without one. */
+    private HullEscort hull;
+
+    /** M9 part D: the level's hull escort (design/allies/mining-tug), whose sections the hooked missiles go for. */
+    void hull(HullEscort escort) {
+        hull = escort;
+    }
 
     /** M8 part A: the fitted Decoy Flares, whose burning flares the missiles go for instead of the ship. */
     void decoys(Flares flares) {
@@ -91,8 +105,17 @@ public final class Missiles {
      * gun}'s most are in flight already. Returns whether it was launched.
      */
     boolean launchAlong(double x, double y, EnemyGun gun, double heading) {
+        return launchAlong(x, y, gun, heading, -1);
+    }
+
+    /**
+     * As {@link #launchAlong(double, double, EnemyGun, double)}, launched by the unit with serial {@code shooter}; M9
+     * part B, step B1b: under a per-shooter cap ({@link EnemyGun.HomingSpec#perShooter()}) only that unit's own
+     * missiles in flight count toward {@code gun}'s most.
+     */
+    boolean launchAlong(double x, double y, EnemyGun gun, double heading, int shooter) {
         EnemyGun.HomingSpec spec = gun.homing().orElseThrow();
-        if (pool.size() >= spec.mostAlive()) {
+        if ((spec.perShooter() ? inFlightOf(shooter) : pool.size()) >= spec.mostAlive()) {
             return false;
         }
         Missile missile = pool.obtain();
@@ -100,6 +123,41 @@ public final class Missiles {
             return false;
         }
         missile.launch(gun, x, y, heading, launched++, medium != null && medium.wet() ? medium.bulletSpeed() : 1);
+        missile.owner(shooter);
+        events.add(SimEvents.Type.MISSILE_LAUNCHED, x, y, missile.serial());
+        return true;
+    }
+
+    /**
+     * M9 part D (design/enemies/air/hornet): one missile of the aimed launcher {@code gun} from (x, y) of the unit with
+     * serial {@code shooter}, along the bearing to (targetX, targetY) snapped to the pods' 16 bearings (to the nearest
+     * burning decoy flare while one burns), homing on the hull escort's section {@code section} (-1: the ship). Left out
+     * when {@code gun}'s most are in flight (its own, under a per-shooter cap). Returns whether it was launched.
+     */
+    boolean launchAt(double x, double y, EnemyGun gun, double targetX, double targetY, int shooter, int section) {
+        EnemyGun.HomingSpec spec = gun.homing().orElseThrow();
+        if ((spec.perShooter() ? inFlightOf(shooter) : pool.size()) >= spec.mostAlive()) {
+            return false;
+        }
+        int flare = decoys == null ? -1 : decoys.nearest(x, y);
+        if (flare >= 0) {
+            targetX = decoys.get(flare).x();
+            targetY = decoys.get(flare).y();
+        }
+        Missile missile = pool.obtain();
+        if (missile == null) {
+            return false;
+        }
+        double bearing = StrictMath.atan2(-(targetX - x), -(targetY - y));
+        missile.launch(
+                gun,
+                x,
+                y,
+                Math.rint(bearing / BEARING_STEP) * BEARING_STEP,
+                launched++,
+                medium != null && medium.wet() ? medium.bulletSpeed() : 1);
+        missile.owner(shooter);
+        missile.section(hull == null ? -1 : section);
         events.add(SimEvents.Type.MISSILE_LAUNCHED, x, y, missile.serial());
         return true;
     }
@@ -107,7 +165,10 @@ public final class Missiles {
     /**
      * The missiles fly toward (shipX, shipY); one whose life ran out fizzles, one far off the field is gone. M8 part
      * A: while a decoy flare burns each flies toward the burning flare nearest to it instead, and one that reaches it
-     * bursts on it ({@link #DECOYED}; the flare burns on).
+     * bursts on it ({@link #DECOYED}; the flare burns on). M9 part D: a hooked missile flies toward its hull escort
+     * section's centre instead (one whose section was lost or can no longer be hit turns to the nearest living one, or
+     * the ship when none can be hit), and one inside its section's hit box bursts there ({@link #ON_ALLY}): the section
+     * takes the hull's missile damage ({@link HullEscort#hit}).
      */
     void fly(double shipX, double shipY) {
         boolean decoyed = decoys != null && decoys.burning();
@@ -116,10 +177,22 @@ public final class Missiles {
             int flare = decoyed ? decoys.nearest(missile.x(), missile.y()) : -1;
             double targetX = flare < 0 ? shipX : decoys.get(flare).x();
             double targetY = flare < 0 ? shipY : decoys.get(flare).y();
+            int section = missile.section();
+            if (section >= 0 && !hull.touchable(section)) {
+                section = hull.nearest(missile.x(), missile.y());
+                missile.section(section);
+            }
+            if (flare < 0 && section >= 0) {
+                targetX = hull.sectionX(section);
+                targetY = hull.sectionY(section);
+            }
             if (!missile.fly(targetX, targetY)) {
                 destroy(i, FIZZLED);
             } else if (flare >= 0 && Flares.BOX.overlaps(targetX, targetY, Missile.BOX, missile.x(), missile.y())) {
                 destroy(i, DECOYED);
+            } else if (section >= 0 && hull.touches(section, missile.x(), missile.y(), Missile.BOX)) {
+                hull.hit(section, hull.spec().missile());
+                destroy(i, ON_ALLY);
             } else if (!PlayField.overlaps(missile.x(), missile.y(), FAR)) {
                 pool.free(i);
             }
@@ -133,6 +206,17 @@ public final class Missiles {
         Missile missile = pool.get(index);
         events.add(SimEvents.Type.MISSILE_DESTROYED, missile.x(), missile.y(), cause);
         pool.free(index);
+    }
+
+    /** M9 part B, step B1b: how many missiles the unit with serial {@code shooter} has in flight. */
+    int inFlightOf(int shooter) {
+        int count = 0;
+        for (int i = 0; i < pool.size(); i++) {
+            if (pool.get(i).owner() == shooter) {
+                count++;
+            }
+        }
+        return count;
     }
 
     Pool<Missile> pool() {

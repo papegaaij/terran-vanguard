@@ -1,0 +1,75 @@
+{
+ "source": "tools/art/belt_units_c.py (production art, M9 part C batch)",
+ "size": [
+  96,
+  96
+ ],
+ "headings": 16,
+ "drum": [
+  [
+   48.0,
+   34.6
+  ],
+  [
+   53.1,
+   35.6
+  ],
+  [
+   57.5,
+   38.5
+  ],
+  [
+   60.4,
+   42.9
+  ],
+  [
+   61.4,
+   48.0
+  ],
+  [
+   60.4,
+   53.1
+  ],
+  [
+   57.5,
+   57.5
+  ],
+  [
+   53.1,
+   60.4
+  ],
+  [
+   48.0,
+   61.4
+  ],
+  [
+   42.9,
+   60.4
+  ],
+  [
+   38.5,
+   57.5
+  ],
+  [
+   35.6,
+   53.1
+  ],
+  [
+   34.6,
+   48.0
+  ],
+  [
+   35.6,
+   42.9
+  ],
+  [
+   38.5,
+   38.5
+  ],
+  [
+   42.9,
+   35.6
+  ]
+ ],
+ "note": "drum: per heading the mine drum's centre (where a laid mine appears), [x, y] px from the frame's top left"
+}

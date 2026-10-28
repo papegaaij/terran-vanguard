@@ -3,7 +3,7 @@ title: Data file schemas — levels and acts
 design: approved
 implementation: in-progress
 art: n/a
-updated: 2026-10-25
+updated: 2026-10-28
 ---
 
 # Data file schemas — levels and acts
@@ -169,8 +169,28 @@ optional `skip` list of the difficulties it is left out on (Level 06's hard-only
   (`none`, `l1`, `l2`, `l3`, all four required), and `notes` with the *Threat profile* rows,
   where `{directions}` is derived and the other `{fields}` come from the profile); `briefing`
   (`pages` of `speaker` and `line` with the optional portrait `expression` and `image`, the name of
-  a tactical map or mission image in `assets/ui/briefing/`, and the hangar `teaser`, rendered into
-  *Briefing*); `backdrop`
+  a tactical map or mission image in `assets/ui/briefing/`, M9 part A the optional `channel` (`enemy`: an intercepted
+  page, [briefing](../../../ui/briefing/README.md#intercepted-transmissions-draft); `friendly` by default), and the hangar
+  `teaser`, rendered into *Briefing*); M9 part A: a radio cue's optional `channel` (`friendly`, `enemy`) overrides its
+  speaker's (the voice table's `filter: enemy`: Vorne, Harker); the level's and a section's **`medium: vacuum`** (Act 5's
+  space: presentation and the dry setting, flown as air) and **`underground: true`** (inside rock: the specials'
+  `underground` limit, `IN ROCK`; a section's own, else the level's), both only from Act 5 (`BeltChecks`). M9 part B
+  (Level 29; loaded and checked in step B2, flown from steps B1 and B1b): an arena section of speed 0's **`holds`**
+  (a ground-target group: a held arena, its clock held while one of that group stands, not by a boss; the scroll eases
+  down across the section from the speed before; no boss in the level), **`halt_waves`** (`every` s, `waves`: plain
+  front waves on the halt's own clock, `t` s from its start, repeating while a holder stands, cut at the last one's
+  fall) and **`escort_swap`** (`at` `[x, y]`, the prison tender's hold on the halted screen, y px below the top edge;
+  `join` s: Rook's rescue in his last missing level), both only with a held arena; a wave's **`leader: tip`** (a
+  V-wing's tip flies its unit's `leader` airframe) and **`on_rocks`** (`chunk`, a small chunk of the level's `debris`;
+  `riders` 1–5 a rock; `rocks`, each `at` `[x, y]` (y px below the top edge) and `drift` `[x, y]` px/s on the screen,
+  y up as the debris'; the wave's count is rocks × riders on every difficulty, of a unit that `ride`s); a ground
+  target's **`dormant_until`** (a level time: the nest sleeps dark until then, then a 1 s wake tell); the secondary's
+  **`spared`** (a neutral craft's slug the level flies, with its `label`: met when the last has left, failed at the
+  first destroyed); the radio events **`first-homing`**, **`neutral-left`** and **`neutral-down`** (the latter two
+  name their `enemy`), **`holders-down`** (in a level with an `escort_swap` it names the swap's outcome it plays for as
+  **`swap`**: `bulwark` the Bulwark in the slot still flying, `joins` none flying, `leaves` no Rook to join, `empty`
+  Rook flying from the start; step B4b) and **`escort-joined`**. The act data's `briefing` pages take `channel:
+  enemy` (Act 5's Vorne). `backdrop`
   (presentation only, see below). The credit budget
   table is derived: kills × bounties (× `bounty_scale`), ground targets, crates, the objectives,
   each as a perfect run and as the typical haul (weighted by the economy's `typical_player`),
@@ -632,6 +652,11 @@ optional `skip` list of the difficulties it is left out on (Level 06's hard-only
   only in a phase listing that attack), `Eruption` and `DebrisFlow` (the time by phase index, 0 for none). An act's
   **`next_act`** (`act`, `name`, `setting`: the act after the release's last, not built yet, as the release's end and
   the hangar name it; `ActData.NextAct.comingSoon()`, `hangarLine()`).
+  M9 part C (Level 30; loaded and checked from step C1, mapped in step C2): the level's **`ground: none`** (no
+  ground layer, from Act 5: the bomb deliveries idle, no ground targets, terrain or ground units) and a mine layers'
+  wave's **`mine_lines`** (`rows` px below the top edge and `gaps` px from the left edge, unit i taking `rows[i % n]`
+  and the cluster boundary nearest `gaps[i % m]`; the units its `interval` apart); a tagged `escapes` secondary may
+  name its counter (`label`) when a difficulty allows some away (Level 30's `CONVOY`).
 - **Act** (`campaign/<act>/data.yaml`): `levels` `[first, last]` (global numbers), `title_card`
   (`act`, `name`, `line`), `briefing` (pages as a level's); `outro`, the act-end
   outro after the last level's debrief: `music` (a music file's name, `act-complete`: track 24

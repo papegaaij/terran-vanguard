@@ -29,6 +29,10 @@ final class Sightings {
     private final boolean rays;
     /** M8 part D: whether a rising unit's shadow appeared in this attempt (the radio's {@code first-ray}). */
     private boolean raySeen;
+    /** M9 part B: whether the level has a {@code first-homing} cue: only then is a missile launch watched. */
+    private final boolean homings;
+    /** M9 part B: whether an enemy homing missile was launched in this attempt (the radio's {@code first-homing}). */
+    private boolean homingSeen;
 
     /** With {@code events} and {@code radio} null: a copy for the boss checkpoint, never stepped. */
     Sightings(SimEvents events, Radio radio) {
@@ -36,6 +40,7 @@ final class Sightings {
         this.radio = radio;
         geysers = radio != null && radio.listens(CueTrigger.FIRST_GEYSER);
         rays = radio != null && radio.listens(CueTrigger.FIRST_RAY);
+        homings = radio != null && radio.listens(CueTrigger.FIRST_HOMING);
     }
 
     /** The step's first sightings: their cues. */
@@ -68,6 +73,10 @@ final class Sightings {
             raySeen = true;
             radio.cue(CueTrigger.FIRST_RAY, "");
         }
+        if (homings && !homingSeen && events.count(SimEvents.Type.MISSILE_LAUNCHED) > 0) {
+            homingSeen = true;
+            radio.cue(CueTrigger.FIRST_HOMING, "");
+        }
     }
 
     /** A new attempt: nothing seen. */
@@ -79,6 +88,7 @@ final class Sightings {
         ringSeen = false;
         geyserSeen = false;
         raySeen = false;
+        homingSeen = false;
     }
 
     /** Takes over what {@code other} has seen. */
@@ -90,6 +100,7 @@ final class Sightings {
         ringSeen = other.ringSeen;
         geyserSeen = other.geyserSeen;
         raySeen = other.raySeen;
+        homingSeen = other.homingSeen;
     }
 
     /** Each sighting only once seen, so the levels without it hash as before. */
@@ -112,6 +123,10 @@ final class Sightings {
         if (geyserSeen) {
             // M8 part B: only once a geyser told in a level with a first-geyser cue, so the other levels hash as
             // before.
+            hash.add(1);
+        }
+        if (homingSeen) {
+            // M9 part B: only once a homing launch was seen in a level with a first-homing cue.
             hash.add(1);
         }
         if (raySeen) {

@@ -430,7 +430,8 @@ final class IntelPanel {
                 level,
                 Field.TRAITS,
                 "RECOMMEND",
-                List.of(joined(level.profile().traits())),
+                // M9 part B: wrapped to the value column (Level 29's "SHIELD-BREAKER" ran off the panel's edge).
+                Words.wrap(joined(level.profile().traits()), VALUE_CHARS),
                 y,
                 step);
         return waves(canvas, level, y, step, unclassified) - step + LABEL_INK;
@@ -456,9 +457,9 @@ final class IntelPanel {
         String name = special.get();
         for (int i = 0; i < level.sections().size(); i++) {
             if (level.forbiddenSpecials(i, content.specials()).contains(name)) {
+                // M9 part A: the setting's own word where it has one (IN ROCK inside Level 32's asteroid).
                 return Optional.of(Names.of(name)
-                        + content.specials()
-                                .reason(name)
+                        + level.forbiddenReason(i, content.specials(), name)
                                 .map(reason -> ": " + reason)
                                 .orElse(""));
             }

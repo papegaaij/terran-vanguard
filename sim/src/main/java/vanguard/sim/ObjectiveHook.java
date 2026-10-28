@@ -122,6 +122,18 @@ final class ObjectiveHook {
     }
 
     /**
+     * The hook mode of {@code enemy}: its kind's; M9 part D: {@link HookMode#NONE} for a unit of a hull escort's
+     * unhooked wave.
+     */
+    HookMode mode(Enemy enemy) {
+        HookMode mode = mode(enemy.kind());
+        if (mode != HookMode.NONE && convoy.hull() != null && !convoy.hull().hooked(enemy.wave)) {
+            return HookMode.NONE;
+        }
+        return mode;
+    }
+
+    /**
      * M7 part D (design/enemies/ground/shellback, Curl and roll; design/allies): a rolling ball touching a standing
      * ground ally's footprint crushes it: one hit per roll per ally (its {@link AllySpec#rolls()}), whatever the
      * hook says (easy's unhooked Shellbacks crush too), applied with the step's other hooked hits. Round 40 R.c:
@@ -148,8 +160,16 @@ final class ObjectiveHook {
      * (units without the hook, fans and mines always aim at the ship).
      */
     int target(Enemy enemy, Ship ship) {
-        HookMode mode = mode(enemy.kind());
+        HookMode mode = mode(enemy);
         if (mode == HookMode.ALWAYS) {
+            if (convoy.hull() != null) {
+                // M9 part D (design/allies/mining-tug, Q-D2 = a): only a homing gun's missiles go at the hull's nearest
+                // section; every other shot of a hooked kind (the Shard Drone's bolts) stays on the ship.
+                return enemy.spec().gun().isPresent()
+                                && enemy.spec().gun().get().homing().isPresent()
+                        ? convoy.objective(enemy.x(), enemy.y())
+                        : -1;
+            }
             // M5 part G: every attack of the unit (a fan, a lob, a turret's barrel) at the objective.
             return enemy.spec().gun().isPresent()
                             && enemy.spec().gun().get().mine().isEmpty()

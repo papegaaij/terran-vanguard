@@ -29,6 +29,15 @@ final class EnemyDamage {
      * proximity mines, an {@code anti-sub} wingman gun), which cracks a coil's closed shell as a blast does (§5 E8).
      */
     boolean damage(double amount, boolean fromAbove, boolean blast, boolean antiSub) {
+        return damage(amount, fromAbove, blast, antiSub, 1);
+    }
+
+    /**
+     * As {@link #damage(double, boolean, boolean, boolean)}; M9 part C (design/enemies/air/gilded-gunship): a direct
+     * hit on facing armour, whose overflow past the hex shield takes {@code plating} (the shield spends itself at full
+     * damage first); exactly 1 for none.
+     */
+    boolean damage(double amount, boolean fromAbove, boolean blast, boolean antiSub, double plating) {
         if (u.growTicks > 0) {
             // M5 part H: a root burst's growth takes no damage while it grows.
             return false;
@@ -40,11 +49,16 @@ final class EnemyDamage {
             glancedOff();
             return false;
         }
-        // M7 part D: an aura ring spends itself first; only the overflow reaches the HP.
-        double left = absorb(amount);
+        // M9 part A: a hex shield spends itself first, then (M7 part D) an aura ring; only the overflow reaches the HP.
+        double left = absorb(shielded(amount));
         if (left <= 0) {
             u.ticksSinceHit = 0;
             return false;
+        }
+        if (plating != 1) {
+            // M9 part C: the armour plate halves it, the engines double it (after the shield).
+            plated(plating);
+            left *= plating;
         }
         // A segment chain's original head is a weak point (its spec carries the chain); a set
         // piece's parts multiply theirs in SetPiece.damagePart.
@@ -62,6 +76,14 @@ final class EnemyDamage {
             curl();
         }
         return u.hp <= 0;
+    }
+
+    /** M9 part A: spends its hex shield on {@code amount} of damage (none for most units); returns what is left. */
+    private double shielded(double amount) {
+        if (!u.hexShield.fitted()) {
+            return amount;
+        }
+        return u.hexShield.spend(amount, u.events, u.x, u.y(), u.kind, ABSORB_EVENT_GAP);
     }
 
     /** Spends its ring on {@code amount} of damage; returns what is left for the HP. */
@@ -89,12 +111,20 @@ final class EnemyDamage {
             glancedOff();
             return false;
         }
-        double left = absorb(amount);
+        double left = absorb(shielded(amount));
         u.ticksSinceHit = 0;
         if (left <= 0) {
             return false;
         }
         return u.partHp.take(p, left);
+    }
+
+    /** M9 part C: a hit on its facing armour: the plate's or the engines' flash (spaced like the absorb's). */
+    private void plated(double plating) {
+        if (u.absorbQuiet == 0) {
+            u.events.add(SimEvents.Type.PLATING_HIT, u.x, u.y(), plating < 1 ? ArmourArcs.FRONT : ArmourArcs.REAR);
+            u.absorbQuiet = ABSORB_EVENT_GAP;
+        }
     }
 
     /** A damage glanced off its curled shell: the grey flash's event (spaced like the absorb's). */

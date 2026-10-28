@@ -163,6 +163,10 @@ final class GroundPasses {
     void moveDebris() {
         for (int i = debris.size() - 1; i >= 0; i--) {
             if (!debris.get(i).move()) {
+                if (s.rides != null) {
+                    // M9 part B: a wave's rock left the screen: its clinging riders go with it.
+                    s.rides.left(debris.get(i));
+                }
                 debris.free(i);
             }
         }

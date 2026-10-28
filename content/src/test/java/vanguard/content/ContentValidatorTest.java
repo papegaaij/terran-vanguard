@@ -23,6 +23,7 @@ class ContentValidatorTest {
     private static final String LEVEL_01 = ACT_1 + "level-01-break-at-dawn/data.yaml";
     private static final String LEVEL_03 = ACT_1 + "level-03-spore-drift/data.yaml";
     private static final String LEVEL_07 = ACT_1 + "level-07-brood-carrier/data.yaml";
+    private static final String LEVEL_29 = "campaign/act-5-the-belt/level-29-betrayal-at-ceres/data.yaml";
 
     /** One change to a data file: its first {@code what} becomes {@code with}. */
     private record Edit(String path, String what, String with) {}
@@ -159,6 +160,16 @@ class ContentValidatorTest {
                 assertThrows(ContentException.class, () -> ContentLoader.load(files)).problems().stream()
                         .sorted()
                         .toList());
+    }
+
+    /** Step B3b: a held arena's holder asleep until the arena's end would never wake: the clock stands a step before. */
+    @Test
+    void aHeldArenasHolderWakesByItsHalt() {
+        assertEquals(
+                List.of(design(LEVEL_29)
+                        + "ground_targets: a held arena's holder wakes by its halt (the clock stands a step before"
+                        + " 120.0): dormant_until 120.0"),
+                problems(new Edit(LEVEL_29, "dormant_until: 119.98", "dormant_until: 120")));
     }
 
     /**

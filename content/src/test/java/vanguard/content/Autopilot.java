@@ -52,7 +52,8 @@ import vanguard.sim.Sortie;
  * F: every move planned among the Glow Anglers' lunges and the jellies' rings, Level 26), {@link VentPlay} (M8 part G: every
  * move planned among the heat plumes, the Depth Hunters' torpedoes and the bullets, the relay beacons first, Level 27; M8
  * part H: Level 28's approach too), {@link MawPlay} and {@link RunPlay} (M8 part H: the Abyssal Maw's arena and the
- * cruisers' run, Level 28) and the moves' {@link MovePlanner}. It reads the sortie's state only, so it is deterministic; the recorded replay stores its commands. Public for the campaign tests (the
+ * cruisers' run, Level 28), {@link HoldFirePlay} (M9 part B: no shot at a neutral craft, Level 29) and the moves'
+ * {@link MovePlanner}. It reads the sortie's state only, so it is deterministic; the recorded replay stores its commands. Public for the campaign tests (the
  * Act 1 playthrough, {@code ActPlaythroughTest}).
  */
 public final class Autopilot {
@@ -152,6 +153,10 @@ public final class Autopilot {
             // M7 part D: a wounded Shellback's roll would crush a dome: no shot at it until the dome is out of reach.
             commands &= ~Command.FIRE.bit();
         }
+        if (sortie.sparedTotal() > 0 && HoldFirePlay.holdFire(sortie)) {
+            // M9 part B: a neutral craft in the guns' band above it (Level 29's Hold fire, HoldFirePlay).
+            commands &= ~Command.FIRE.bit();
+        }
         if (sortie.vents().grates() > 0 && !VentPlay.plumes(sortie)) {
             // M8 part G: the plumes' discs are VentPlay's own.
             commands = HazardPlay.ventFilter(sortie, commands);
@@ -183,6 +188,11 @@ public final class Autopilot {
             // M8 part G: a level with heat plumes (Level 27): every move planned among the discs, the torpedoes and the
             // bullets, the beacons first (VentPlay); M8 part H: Level 28's approach (its Hunters, no plumes) too.
             return commands | VentPlay.move(sortie);
+        }
+        if (MinePlay.mined(sortie)) {
+            // M9 part C: a level with line mines (Level 30): every move planned among the lines, the rising layers, the
+            // rocks and the bullets, through the line ahead by its gap or a burned cluster (MinePlay).
+            return commands | MinePlay.move(sortie);
         }
         if (DarkPlay.dark(sortie)) {
             // M8 part F: a level with lunging units (Level 26's Glow Anglers; Level 27's few are VentPlay's): every
@@ -266,6 +276,7 @@ public final class Autopilot {
             // hits a buried Burrower.
             if (!enemy.cloaked()
                     && !enemy.growing()
+                    && !HoldFirePlay.neutral(enemy)
                     && enemy.layer().touchable()
                     && !TargetPlay.closedVortex(enemy)
                     && y < PlayField.HEIGHT - 10
@@ -406,6 +417,10 @@ public final class Autopilot {
         }
         if (sortie.airEscort()) {
             targetX = Math.clamp(targetX, SIDE_LANE, PlayField.WIDTH - SIDE_LANE);
+        }
+        if (sortie.sparedTotal() > 0) {
+            // M9 part B: out of the band below a neutral craft (Level 29's Hold fire, HoldFirePlay).
+            targetX = HoldFirePlay.clearX(sortie, targetX);
         }
         int sonde = TargetPlay.sondeToTake(sortie, shipY);
         if (sonde >= 0 && behind == null) {

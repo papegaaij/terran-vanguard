@@ -4,7 +4,8 @@ here from the concept tool tools/concept/ui_assets.py, the pixels unchanged).
 
 Outputs (assets/ui/, PNGs in Git LFS, each with the ``Source`` chunk that marks final art):
   assets/ui/<act>-title.png   an act title card's chrome lettering (the act number above the act's name) on a
-                              transparent canvas, one per act data file (design/campaign/act-*/data.yaml)
+                              transparent canvas, one per act data file (design/campaign/act-*/data.yaml; an act
+                              whose data is not written yet from ``PENDING``, its README's card: Act 5 until B2)
 
 The lettering uses the chosen act title card's chrome treatment (tools/concept/ui_r08.py's chrome_title,
 act-title-r08-a, imported unchanged) with the act number and name of the act's `title_card`; the game draws the
@@ -43,12 +44,25 @@ def title(card):
     return img
 
 
+# An act whose data file is not written yet: its title card from the act's README (M9 part B: Act 5's data comes
+# with step B2; the data's ``title_card`` replaces this once it exists).
+PENDING = {"act-5-the-belt": {"act": "ACT V", "name": "THE BELT", "line": "Ceres · August 2185"}}
+
+
+def cards():
+    out = {}
+    for data in sorted((ROOT / "design" / "campaign").glob("act-*/data.yaml")):
+        out[data.parent.name] = yaml.safe_load(data.read_text(encoding="utf-8"))["title_card"]
+    for act, card in PENDING.items():
+        out.setdefault(act, card)
+    return dict(sorted(out.items()))
+
+
 def main(check=False):
     differ = 0
-    for data in sorted((ROOT / "design" / "campaign").glob("act-*/data.yaml")):
-        card = yaml.safe_load(data.read_text(encoding="utf-8"))["title_card"]
+    for act, card in cards().items():
         img = title(card)
-        path = UI / f"{data.parent.name}-title.png"
+        path = UI / f"{act}-title.png"
         if check:
             same = path.exists() and np.array_equal(np.array(Image.open(path).convert("RGBA")), np.array(img))
             differ += not same

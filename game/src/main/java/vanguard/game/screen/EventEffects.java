@@ -19,6 +19,7 @@ import vanguard.game.audio.Sfx;
 import vanguard.game.render.AirborneWalkers;
 import vanguard.game.render.CreditNumbers;
 import vanguard.game.render.DeepDeaths;
+import vanguard.game.render.DiamondLooks;
 import vanguard.game.render.Effects;
 import vanguard.game.render.EnemyLooks;
 import vanguard.game.render.LevelRenderer;
@@ -26,6 +27,7 @@ import vanguard.game.render.ScreenFlash;
 import vanguard.game.render.SetPieceDeath;
 import vanguard.game.render.SetPieceWrecks;
 import vanguard.game.render.TriggerBreak;
+import vanguard.game.render.VacuumDeaths;
 import vanguard.game.render.WeaponLooks;
 import vanguard.sim.GroundObjectSpec;
 import vanguard.sim.Layer;
@@ -274,6 +276,8 @@ final class EventEffects {
                 wreckDriftY = drifting ? SimEvents.driftY(events.value(i + 1)) : 0;
                 if (deepDeath(kind, x, y, layer == Layer.GROUND)) {
                     // M8 part C: a kill below the waterline bursts under water (DeepDeaths): no fireball, no smoke.
+                } else if (vacuumDeath(kind, x, y, layer == Layer.GROUND)) {
+                    // M9 part A: a kill in vacuum flashes and throws its debris in a ring (VacuumDeaths): no smoke.
                 } else {
                     death(kind, x, y, layer == Layer.GROUND);
                 }
@@ -483,6 +487,16 @@ final class EventEffects {
     private void missileGone(int cause, double x, double y) {
         DeepDeaths deep = renderer.deepDeaths();
         boolean fizzled = cause == Missiles.FIZZLED;
+        DiamondLooks diamonds = renderer.diamondLooks();
+        if (diamonds != null) {
+            // M9 part A: a homing diamond pops (shot down or burst on a hull) or fizzles at its life's end.
+            effects.start(
+                    fizzled ? diamonds.fizzle() : diamonds.pop(),
+                    fizzled ? DiamondLooks.FIZZLE_FRAME_TICKS : DiamondLooks.POP_FRAME_TICKS,
+                    x,
+                    y);
+            return;
+        }
         if (deep.present() && renderer.underwaterAt(y)) {
             if (!fizzled) {
                 pieces.start(deep.smallCavity(), TINY_EXPLOSION_FRAME_TICKS, x, y);
@@ -893,7 +907,7 @@ final class EventEffects {
         // M8 part E: a Siren's nest dies on its wall, scrolling with the ground.
         boolean onGround = sortie.enemyKinds().get(kind).layer() == Layer.GROUND
                 || renderer.deepDeaths().mounted(sortie, kind);
-        if (!deepDeath(kind, x, y, onGround)) {
+        if (!deepDeath(kind, x, y, onGround) && !vacuumDeath(kind, x, y, onGround)) {
             death(kind, x, y, onGround);
         }
         trenchDeath(kind, x, y);
@@ -998,6 +1012,29 @@ final class EventEffects {
     }
 
     /** As above, on the ground or (a pouncer shot in the air) on the play field. */
+    /**
+     * M9 part A: a kill in vacuum (the belt's sections, {@link VacuumDeaths}): the vacuum burst of its rung over its
+     * debris ring, its own death pieces and glow, a medium or large unit's wreck drifting off; false (nothing started)
+     * outside vacuum.
+     */
+    private boolean vacuumDeath(int kind, double x, double y, boolean onGround) {
+        VacuumDeaths vacuum = renderer.vacuumDeaths();
+        if (!vacuum.at(sortie.levelSeconds())) {
+            return false;
+        }
+        EnemyLooks look = looks[kind];
+        start(pieces, vacuum.debris(look), TINY_EXPLOSION_FRAME_TICKS, x, y, 0, onGround);
+        EnemyLooks.DeathEffect deathPieces = look.deathPieces();
+        start(pieces, deathPieces.frames(), deathPieces.ticksPerFrame(), x, y, deathPieces.delayTicks(), onGround);
+        start(effects, vacuum.burst(look), TINY_EXPLOSION_FRAME_TICKS, x, y, 0, onGround);
+        EnemyLooks.DeathEffect glow = look.deathGlow();
+        start(effects, glow.frames(), glow.ticksPerFrame(), x, y, glow.delayTicks(), onGround);
+        if (!onGround && !renderer.breaksUp(sortie, kind)) {
+            vacuum.startWreck(look, x, y, sortie.tick(), sortie.groundScroll());
+        }
+        return true;
+    }
+
     private void death(int kind, double x, double y, boolean onGround) {
         EnemyLooks look = looks[kind];
         // M7 part E: a Dust Devil's funnel collapses under its grit cloud.

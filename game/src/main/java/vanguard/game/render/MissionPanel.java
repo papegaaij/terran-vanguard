@@ -14,6 +14,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 import java.util.Arrays;
 import java.util.List;
@@ -95,6 +96,13 @@ final class MissionPanel {
     private static final Color PROGRESS_EMPTY = Color.valueOf("102030");
     private static final Color SUCCESS = Color.valueOf("40FF80");
     private static final Color CHOIR = Color.valueOf("C890FF");
+    /**
+     * M9 part A (design/ui/hud, Act 5 additions): the enemy channel's amber, the name plate's and the subtitle's of an
+     * intercepted line (a deeper amber than the friendly names' yellow).
+     */
+    static final Color ENEMY_CHANNEL = Color.valueOf("FFA035");
+    /** M9 part A: the tag under an intercepted line's speaker. */
+    static final String INTERCEPT = "INTERCEPT";
 
     private final HudKit kit;
     private final GlyphLayout measure = new GlyphLayout();
@@ -190,6 +198,9 @@ final class MissionPanel {
             drawRelayTracker(batch, sortie);
         } else if (naval || ground) {
             drawConvoyTracker(batch, sortie);
+        } else if (sortie.hullEscort()) {
+            // M9 part D: Level 31's tug, its three section bars.
+            drawTugTracker(batch, sortie);
         } else if (sortie.airEscort()) {
             drawShuttleTracker(batch, sortie);
         } else if (two) {
@@ -274,17 +285,34 @@ final class MissionPanel {
             shownMessage = message;
             portrait = Portraits.radio(sprites, message.portrait(), message.expression());
         }
-        batch.draw(Portraits.frame(portrait, radio.sinceOpened()), X, portraitY);
+        TextureRegion face = Portraits.frame(portrait, radio.sinceOpened());
+        batch.draw(face, X, portraitY);
         float noise = Math.max(staticLead, TransmissionStatic.strength(radio.sinceOpened(), radio.untilClosed()));
-        transmissionStatic.draw(batch, X, portraitY, PORTRAIT, PORTRAIT, noise);
-        Color colour = message.distorted() ? CHOIR : HudKit.AMBER;
+        if (message.intercepted()) {
+            // M9 part A: an intercepted line keeps a steady interference over the portrait (rolling bands, a tear).
+            transmissionStatic.drawSteady(batch, face, X, portraitY, PORTRAIT, PORTRAIT, radio.sinceOpened(), noise);
+        } else {
+            transmissionStatic.draw(batch, X, portraitY, PORTRAIT, PORTRAIT, noise);
+        }
+        Color colour = message.distorted() ? CHOIR : message.intercepted() ? ENEMY_CHANNEL : HudKit.AMBER;
         String[] names = message.speaker().toUpperCase(Locale.ROOT).split(" ", 2);
         int nameX = X + PORTRAIT + MissionLayout.NAME_GAP;
         for (int i = 0; i < names.length; i++) {
             kit.text(batch, kit.body, names[i], colour, nameX, portraitTop - 2 - i * LINE, MissionLayout.NAME_WIDTH);
         }
+        if (message.intercepted()) {
+            // The small INTERCEPT tag under the speaker's name.
+            kit.text(
+                    batch,
+                    kit.small,
+                    INTERCEPT,
+                    ENEMY_CHANNEL,
+                    nameX,
+                    portraitTop - 2 - names.length * LINE,
+                    MissionLayout.NAME_WIDTH);
+        }
         List<String> lines = radio.visibleLines();
-        Color subtitle = message.distorted() ? CHOIR : HudKit.READOUT;
+        Color subtitle = message.distorted() ? CHOIR : message.intercepted() ? ENEMY_CHANNEL : HudKit.READOUT;
         kit.glow(batch, subtitle, X, subtitleTop - PAGE_WELL, WIDTH, PAGE_WELL);
         for (int i = 0; i < lines.size(); i++) {
             // A distorted transmission jitters a pixel now and then.
@@ -323,7 +351,27 @@ final class MissionPanel {
 
     private void drawTracker(SpriteBatch batch, Sortie sortie) {
         int wellTop = well(batch, MissionLayout.OBJECTIVE.yTop(), WELL);
+        if (sortie.halting() && sortie.holders() > 0) {
+            // M9 part B (design/campaign Level 29, the rescue halt): the clamp guns still standing on the objective
+            // line while they hold the halt (no boss bar), the secondary's line back after it.
+            int y = wellTop - TEXT_DROP;
+            kit.text(batch, kit.body, CLAMPS, HudKit.LABEL, X + PAD, y, TEXT_WIDTH);
+            kit.textRight(
+                    batch, kit.body, Integer.toString(sortie.holdersStanding()), HudKit.AMBER, X + PAD, y, TEXT_WIDTH);
+            return;
+        }
         drawSecondary(batch, sortie, wellTop, WELL);
+    }
+
+    /** M9 part B: the held arena's holders' line (Level 29's clamp guns). */
+    static final String CLAMPS = "CLAMPS";
+
+    /**
+     * M9 part B (design/campaign Level 29, Hold fire): a spared objective's count, {@code DONE} once met, {@code
+     * FAILED} once failed, else the neutral craft that have left of all, {@code 2 / 6}.
+     */
+    static String sparedCount(int left, int total, boolean met, boolean failed) {
+        return met ? "DONE" : failed ? "FAILED" : left + " / " + total;
     }
 
     /**
@@ -452,6 +500,169 @@ final class MissionPanel {
             boolean flash = k != scripted && since < FLASH_FRAMES && since / 8 % 2 == 0;
             kit.bar(batch, LOST, ALLY_DARK, left, bottom, ALLY_BAR_WIDTH, ALLY_BAR_HEIGHT, flash ? 1 : 0);
         }
+    }
+
+    /** M9 part D: the hull escort tracker's label (design/ui/hud, Act 5 additions; Level 31's tug). */
+    static final String TUG = "TUG";
+    /**
+     * M9 part D: the tug tracker's section slots on line two: {@value #TUG_STEP} px apart, each its label (the section's
+     * initial in the small font: the full names do not fit beside a bar, {@code MissionLayoutTest}), a gap and its bar.
+     */
+    static final int TUG_STEP = 67;
+
+    static final int TUG_LABEL_WIDTH = 8;
+    static final int TUG_LABEL_GAP = 4;
+    static final int TUG_BAR_WIDTH = 50;
+
+    /** M9 part D: a hull section's label on the tug tracker: its initial ({@code B}, {@code C}, {@code E}). */
+    static String tugLabel(String section) {
+        return section.isEmpty() ? "" : section.substring(0, 1).toUpperCase(Locale.ROOT);
+    }
+
+    /**
+     * M9 part D, the hull escort's two-line tracker (design/ui/hud, Act 5 additions; design/allies/mining-tug, HUD):
+     * line one {@code TUG} and the sections still alive of all ({@code TUG 2 / 3}), red and flashing red when the last
+     * is lost; line two a bar per section in hull order, each after its initial ({@link #tugLabel}): green, white for a
+     * moment on a hit, amber below half, a red flash and then dark when lost, full in pale mint under a green glow once
+     * home after the climb-out (the shuttle bars' rules, {@link #shuttleBar}). M9 part D4b: with an integrity secondary
+     * (Level 31's CLEAN HULL) its tag between {@code TUG} and the count ({@link #drawHullTag}) and its share as a tick
+     * on each flying section's bar.
+     */
+    private void drawTugTracker(SpriteBatch batch, Sortie sortie) {
+        int wellTop = well(batch, MissionLayout.TWO_OBJECTIVES.yTop(), MissionLayout.TWO_LINE_WELL);
+        if (sortie.primaryFailed() && primaryFailedFrame < 0) {
+            primaryFailedFrame = frame;
+        } else if (!sortie.primaryFailed()) {
+            primaryFailedFrame = -1;
+        }
+        boolean failFlash = primaryFailedFrame >= 0
+                && frame - primaryFailedFrame < FLASH_FRAMES
+                && (frame - primaryFailedFrame) / 8 % 2 == 0;
+        if (failFlash) {
+            kit.fill(batch, LOST, X, wellTop - LINE, WIDTH, LINE);
+        }
+        Color colour = failFlash ? HudKit.LCD : sortie.primaryFailed() ? LOST : HudKit.LABEL;
+        int count = sortie.allyCount();
+        int alive = 0;
+        for (int k = 0; k < count; k++) {
+            alive += sortie.ally(k).alive() ? 1 : 0;
+        }
+        int y = wellTop - TEXT_DROP;
+        kit.text(batch, kit.body, TUG, colour, X + PAD, y, TEXT_WIDTH);
+        String tally = shuttleCount(alive, count);
+        kit.textRight(batch, kit.body, tally, colour, X + PAD, y, TEXT_WIDTH);
+        double share = sortie.script().objectives().secondary().integrity();
+        if (share > 0) {
+            drawHullTag(batch, sortie, tally, wellTop, y);
+        }
+        if (allyLost.length != count) {
+            allyLost = new int[count];
+            Arrays.fill(allyLost, -1);
+        }
+        int bottom = wellTop - LINE - (MissionLayout.TWO_LINE_WELL - LINE + ALLY_BAR_HEIGHT) / 2;
+        for (int k = 0; k < count; k++) {
+            Ally ally = sortie.ally(k);
+            int left = X + PAD + k * TUG_STEP;
+            int barLeft = left + TUG_LABEL_WIDTH + TUG_LABEL_GAP;
+            kit.text(
+                    batch,
+                    kit.small,
+                    tugLabel(sortie.allyName(k)),
+                    ally.alive() ? HudKit.LABEL : LOST,
+                    left,
+                    bottom + ALLY_BAR_HEIGHT + 2);
+            if (ally.alive()) {
+                allyLost[k] = -1;
+                boolean home = ally.state() == Ally.State.HOME;
+                Color bar = shuttleBar(home, ally.ticksSinceHit() < ALLY_HIT_TICKS, ally.hpShare());
+                kit.bar(
+                        batch,
+                        bar,
+                        ALLY_DARK,
+                        barLeft,
+                        bottom,
+                        TUG_BAR_WIDTH,
+                        ALLY_BAR_HEIGHT,
+                        shuttleBarShare(home, ally.hpShare()));
+                if (home) {
+                    kit.glow(batch, SUCCESS, barLeft - 3, bottom - 3, TUG_BAR_WIDTH + 6, ALLY_BAR_HEIGHT + 6);
+                } else if (share > 0) {
+                    // M9 part D4b: the CLEAN HULL share as a tick on the bar (Level 13's relay bar's tick).
+                    batch.setColor(HudKit.LABEL);
+                    batch.draw(
+                            sprites.pixel,
+                            barLeft + (int) Math.round(TUG_BAR_WIDTH * share),
+                            bottom - 2,
+                            1,
+                            ALLY_BAR_HEIGHT + 4);
+                    batch.setColor(Color.WHITE);
+                }
+                continue;
+            }
+            if (allyLost[k] < 0) {
+                allyLost[k] = frame;
+            }
+            int since = frame - allyLost[k];
+            boolean flash = since < FLASH_FRAMES && since / 8 % 2 == 0;
+            kit.bar(batch, LOST, ALLY_DARK, barLeft, bottom, TUG_BAR_WIDTH, ALLY_BAR_HEIGHT, flash ? 1 : 0);
+        }
+    }
+
+    /** M9 part D4b: the gap kept between the CLEAN HULL tag and {@code TUG} or the count on line one. */
+    static final int TUG_TAG_GAP = 6;
+
+    /**
+     * M9 part D4b: the hull escort's integrity secondary as a tag in the small font on line one (design/ui/hud, Act 5
+     * additions): its label ({@code CLEAN HULL}) while every section holds its share, its last word and {@code FAILED}
+     * in red at once when a section drops below it, and {@code DONE} in green once met at the level end.
+     */
+    static String hullTag(String label, boolean met, boolean failed) {
+        String name = label.isEmpty() ? INTEGRITY : label.toUpperCase(Locale.ROOT);
+        if (!met && !failed) {
+            return name;
+        }
+        String last = name.substring(name.lastIndexOf(' ') + 1);
+        return last + " " + (met ? "DONE" : "FAILED");
+    }
+
+    /**
+     * M9 part D4b: the CLEAN HULL tag ({@link #hullTag}) centred between {@code TUG} and the count on line one, with
+     * the integrity line's flash behind it (green as it is met, red as it fails), the tag in the label colour, then
+     * green or red.
+     */
+    private void drawHullTag(SpriteBatch batch, Sortie sortie, String tally, int wellTop, int y) {
+        boolean met = sortie.secondaryMet();
+        boolean failed = sortie.integrityFailed();
+        if (met && integrityMetFrame < 0) {
+            integrityMetFrame = frame;
+        } else if (!met) {
+            integrityMetFrame = -1;
+        }
+        if (failed && integrityFailedFrame < 0) {
+            integrityFailedFrame = frame;
+        } else if (!failed) {
+            integrityFailedFrame = -1;
+        }
+        boolean flash = integrityMetFrame >= 0
+                && frame - integrityMetFrame < FLASH_FRAMES
+                && (frame - integrityMetFrame) / 8 % 2 == 0;
+        boolean failFlash = integrityFailedFrame >= 0
+                && frame - integrityFailedFrame < FLASH_FRAMES
+                && (frame - integrityFailedFrame) / 8 % 2 == 0;
+        String tag = hullTag(sortie.script().objectives().secondary().label(), met, failed);
+        measure.setText(kit.body, TUG);
+        float left = X + PAD + measure.width + TUG_TAG_GAP;
+        measure.setText(kit.body, tally);
+        float right = X + PAD + TEXT_WIDTH - measure.width - TUG_TAG_GAP;
+        measure.setText(kit.small, tag);
+        float tagLeft = Math.round(left + (right - left - measure.width) / 2);
+        if (flash || failFlash) {
+            kit.fill(batch, flash ? SUCCESS : LOST, tagLeft - 3, wellTop - LINE, measure.width + 6, LINE);
+        }
+        Color colour = flash || failFlash ? HudKit.LCD : met ? SUCCESS : failed ? LOST : HudKit.LABEL;
+        // On line one's baseline: the small font's cap height under the body's top.
+        float smallY = y - kit.body.getCapHeight() + kit.small.getCapHeight();
+        kit.text(batch, kit.small, tag, colour, tagLeft, Math.round(smallY));
     }
 
     /** M5 part G: the defend tracker's label (design/ui/hud, Level 13). */
@@ -877,6 +1088,14 @@ final class MissionPanel {
                                     sortie.escapesTotal(),
                                     sortie.script().objectives().secondary().escapesAllowed());
             kit.textRight(batch, kit.body, count, colour, X + PAD, y, TEXT_WIDTH);
+            return;
+        }
+        if (sortie.secondaryBySpared()) {
+            // M9 part B (Level 29's HOLD FIRE): the wavering craft gone unharmed of all, DONE when the last has left.
+            kit.text(batch, kit.body, escapesLabel, colour, X + PAD, y, TEXT_WIDTH);
+            String spared = sparedCount(
+                    sortie.sparedLeft(), sortie.sparedTotal(), sortie.secondaryMet(), sortie.secondaryFailed());
+            kit.textRight(batch, kit.body, spared, colour, X + PAD, y, TEXT_WIDTH);
             return;
         }
         // A kill ratio is judged at the level's end: the count runs on past the share, DONE only then.

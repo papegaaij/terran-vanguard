@@ -185,7 +185,8 @@ final class Beams {
             double limit = Math.min(reach, wallAhead(beam.x, half, beam.fromY));
             cast(m, weapon, beam.x, half, beam.fromY, limit, enemies, ground, spores);
             // M8 part A: under water a weapon without anti-sub does the water's share of its damage, every step.
-            double water = medium.wet() ? medium.damage(weapon) : 1;
+            // M9 part A: under a drain a beam's damage per second × the rate factor (exactly 1 without).
+            double water = (medium.wet() ? medium.damage(weapon) : 1) * fire.powerFactor();
             if (fire.links() != null) {
                 // M7 part C (M9 = a): the tendrils it crosses short of its end burn, and it goes on past them.
                 fire.links()
@@ -215,8 +216,9 @@ final class Beams {
                         if (enemy.damagePart(castPart, damage, false)) {
                             hits.unitPartDestroyed(castIndex, castPart, m);
                         }
-                    } else if (enemy.damage(damage * enemy.rearFactor(0, 1))) {
-                        // M7 part F: the beam goes up the screen: from behind a rear plate facing up it does more.
+                    } else if (enemy.damageFacing(damage * enemy.rearFactor(0, 1), false, 0, 1)) {
+                        // M7 part F: the beam goes up the screen: from behind a rear plate facing up it does more;
+                        // M9 part C: into facing armour's nose it does its front factor.
                         hits.enemyDestroyed(castIndex, m);
                     }
                 }

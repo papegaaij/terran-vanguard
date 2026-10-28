@@ -27,6 +27,19 @@ Outputs (assets/sprites/portraits/, packed onto the shared sprite pages as ``por
                                      the control room's warm grow-lamp light from the left with a cool teal rim from
                                      the round viewport behind him (dark water, a lamp-lit farm rack in it, the
                                      consoles' screens below)
+  radio-vorne-<neutral|smug|rage>.png, briefing-vorne-<...>.png   Chairman Vorne on the enemy channel (Act 5 intro
+                                     pages 2-3, Level 35; M9 part B batch, round 60's chosen A.20 a "the enemy
+                                     screen", tools/concept/belt_r60.py ``vorne_set('a')``: his own colours under the
+                                     amber tint on the plain amber screen, one 36-colour palette over the three;
+                                     smug: head back, one brow up; rage: cold, brows down, teeth bared and clenched,
+                                     the screen torn by static)
+  radio-ceres-control-neutral.png    72x72, Ceres Hub Control (Levels 29 and 35, teal; M9 part B batch, round 60
+                                     A.21 accepted: belt_r60.py ``ceres_controller``)
+  radio-harker-neutral.png           72x72, Harker, the mutineers' flight lead (Level 29, the amber enemy channel;
+                                     round 60 A.21: belt_r60.py ``harker``)
+  radio-bellwether-neutral.png       72x72, the mining tug Bellwether's captain (Level 31, the speaker `Bellwether`,
+                                     portrait `bellwether`, teal; M9 part D batch, round 60 A.21: belt_r60.py
+                                     ``bellwether_captain``), review design/story/characters/concept/portraits-final-r64-a.png
   design/story/characters/concept/portraits-final-r13-a.png/.gif   review sheet and loop
   design/story/characters/rook/concept/rook-briefing-portrait-final-r30-a.png   Rook's briefing
                                      portraits (round 30), next to his radio portraits and the
@@ -49,7 +62,12 @@ split so that **one 36-colour palette** serves all expressions of a character an
 change never shifts its colours; the interference rows are seeded per character, so they stay put
 too. The Choir is round 08's glyph (portraits_r08.choir_frame), all 32 frames of its loop.
 
-Vorne does not speak in Acts 1-2 and gets his portraits with Act 6.
+Vorne does not speak in Acts 1-4; his portraits come with Act 5 (``vorne``, below).
+
+The Act 5 speakers (``ACT5``: vorne, ceres-control, harker) are round 60's concept portraits, which already ran
+through this pipeline (tools/concept/belt_r60.py, imported unchanged): written here as production art, their review
+sheets design/story/characters/vorne/concept/vorne-portraits-final-r62-a.png and
+design/story/characters/concept/portraits-final-r62-a.png (round 62).
 
 Run: python3 tools/art/portraits.py [speaker ...] [--review]   (~1 min; with speaker slugs, e.g.
 generic-colonial, only their portraits; --review only rebuilds the sheets)
@@ -650,13 +668,126 @@ def review_thera():
     print(f"review: {png.relative_to(ROOT)}")
 
 
+# --------------------------------------------------------------------------- Act 5 (M9 part B)
+
+ACT5 = ("vorne", "ceres-control", "harker", "bellwether")
+ACT5_ROUND = "r62"
+ACT5_SOURCE = artkit.source_note(SCRIPT, "M9 part B batch")
+ACT5D_SOURCE = artkit.source_note(SCRIPT, "M9 part D batch")       # the Bellwether's captain (Level 31)
+ACT5D_ROUND = "r64"
+VORNE_EXPRESSIONS = ("neutral", "smug", "rage")
+VORNE_CONCEPT = ROOT / "design" / "story" / "characters" / "vorne" / "concept"
+
+
+def build_act5(only=ACT5):
+    """Vorne's three expressions (radio and briefing, A.20 a) and the two new radio speakers (A.21), from round 60's
+    concept functions (tools/concept/belt_r60.py, which runs this module's pipeline)."""
+    import belt_r60 as b60  # noqa: E402  (concept script, imported unchanged; imported late: it imports this module)
+    OUT.mkdir(parents=True, exist_ok=True)
+    if "vorne" in only:
+        for name, (radio, briefing) in b60.vorne_set("a").items():
+            artkit.save_png(radio, OUT / f"radio-vorne-{name}.png", ACT5_SOURCE)
+            artkit.save_png(briefing, OUT / f"briefing-vorne-{name}.png", ACT5_SOURCE)
+    for slug in ("ceres-control", "harker", "bellwether"):
+        if slug in only:
+            r03.CAST[slug] = b60.SPEAKERS[slug]
+            fig = artkit.quantize_set([b60._speaker_fig(slug)], r04.COLORS)[0]
+            artkit.save_png(b60.pt.screen(slug, fig)[0], OUT / f"radio-{slug}-neutral.png",
+                            ACT5D_SOURCE if slug == "bellwether" else ACT5_SOURCE)
+    print(f"Act 5 portraits ({', '.join(s for s in ACT5 if s in only)}) in {OUT.relative_to(ROOT)}")
+
+
+def review_act5():
+    """Round 62: Vorne's three at briefing size and at radio size 1x and 3x; Ceres Hub Control and Harker at 1x, 2x
+    and 4x and at 1x beside the other minor speakers."""
+    briefs = [load(f"briefing-vorne-{n}") for n in VORNE_EXPRESSIONS]
+    radios = [load(f"radio-vorne-{n}") for n in VORNE_EXPRESSIONS]
+    width = 16 + 3 * (216 + 12) + 16
+    sheet = raster.sheet(width, 60 + 170 + 90 + 230 + 30, f"VORNE'S PORTRAITS (FINAL {ACT5_ROUND.upper()})",
+                         f"PRODUCTION ART, M9 PART B BATCH - {ACT5_ROUND.upper()}")
+    raster.draw_text(sheet, 16, 38, f"ROUND 60 A.20 A, THE ENEMY SCREEN: BRIEFING 144X144 | RADIO 72X72 1X | RADIO 3X "
+                                    f"({artkit.colour_count(radios)} COLOURS)", raster.LABEL)
+    for i, (b, r, n) in enumerate(zip(briefs, radios, VORNE_EXPRESSIONS)):
+        x = 16 + i * (216 + 12)
+        sheet.alpha_composite(b, (x, 56))
+        raster.draw_text(sheet, x, 56 + 148, n.upper(), raster.LABEL_DIM)
+        sheet.alpha_composite(r, (x, 56 + 166))
+        sheet.alpha_composite(sprite.enlarge(r, 3), (x, 56 + 166 + 80))
+    VORNE_CONCEPT.mkdir(parents=True, exist_ok=True)
+    png = VORNE_CONCEPT / f"vorne-portraits-final-{ACT5_ROUND}-a.png"
+    sheet.convert("RGB").save(png, optimize=True)
+    print(f"review: {png.relative_to(ROOT)}")
+    others = ("generic-cdf", "generic-colonial", "conamara", "thera-deep", "ceres-control", "harker", "vorne")
+    width = 16 + 2 * (72 + 12 + 144 + 12 + 288 + 16) + 16
+    sheet = raster.sheet(width, 56 + 288 + 30 + 110, f"ACT 5 RADIO PORTRAITS (FINAL {ACT5_ROUND.upper()})",
+                         f"PRODUCTION ART, M9 PART B BATCH - {ACT5_ROUND.upper()}")
+    raster.draw_text(sheet, 16, 38, "CERES HUB CONTROL (TEAL) | HARKER (AMBER, THE CREST OVER HIS CDF PATCH): 72X72 AT "
+                                    "1X, 2X, 4X", raster.LABEL)
+    x = 16
+    for slug in ("ceres-control", "harker"):
+        img = load(f"radio-{slug}-neutral")
+        for zoom in (1, 2, 4):
+            sheet.alpha_composite(sprite.enlarge(img, zoom), (x, 56))
+            x += 72 * zoom + 12
+        x += 4
+    y = 56 + 288 + 16
+    raster.draw_text(sheet, 16, y, "AT 1X BESIDE THE OTHER MINOR SPEAKERS AND VORNE", raster.LABEL)
+    for i, slug in enumerate(others):
+        img = load(f"radio-{slug}-neutral")
+        sheet.alpha_composite(img, (16 + i * 84, y + 16))
+        raster.draw_text(sheet, 16 + i * 84, y + 92, slug.replace("generic-", "").upper()[:10], raster.LABEL_DIM)
+    png = CONCEPT / f"portraits-final-{ACT5_ROUND}-a.png"
+    sheet.convert("RGB").save(png, optimize=True)
+    print(f"review: {png.relative_to(ROOT)}")
+
+
+def review_bellwether():
+    """Round 64: the Bellwether's captain at 1x, 2x and 4x and at 1x beside the other Act 5 radio speakers."""
+    img = load("radio-bellwether-neutral")
+    others = ("ceres-control", "harker", "vorne", "generic-civilian", "generic-cdf", "okafor", "varga", "rook")
+    width = 16 + 72 + 12 + 144 + 12 + 288 + 16
+    sheet = raster.sheet(max(width, 16 + 9 * 84 + 16), 56 + 288 + 30 + 110,
+                         f"THE BELLWETHER'S CAPTAIN (FINAL {ACT5D_ROUND.upper()})",
+                         f"PRODUCTION ART, M9 PART D BATCH - {ACT5D_ROUND.upper()}")
+    raster.draw_text(sheet, 16, 38, f"ROUND 60 A.21 (ACCEPTED), TEAL: 72X72 AT 1X, 2X, 4X ({artkit.colour_count([img])} "
+                                    "COLOURS)", raster.LABEL)
+    x = 16
+    for zoom in (1, 2, 4):
+        sheet.alpha_composite(sprite.enlarge(img, zoom), (x, 56))
+        x += 72 * zoom + 12
+    y = 56 + 288 + 16
+    raster.draw_text(sheet, 16, y, "AT 1X BESIDE THE OTHER RADIO SPEAKERS", raster.LABEL)
+    for i, slug in enumerate(("bellwether",) + others):
+        sheet.alpha_composite(load(f"radio-{slug}-neutral"), (16 + i * 84, y + 16))
+        raster.draw_text(sheet, 16 + i * 84, y + 92, slug.replace("generic-", "").upper()[:10], raster.LABEL_DIM)
+    png = CONCEPT / f"portraits-final-{ACT5D_ROUND}-a.png"
+    sheet.convert("RGB").save(png, optimize=True)
+    print(f"review: {png.relative_to(ROOT)}")
+
+
 if __name__ == "__main__":
     only = tuple(a for a in sys.argv[1:] if not a.startswith("--"))
+    act5 = tuple(a for a in only if a in ACT5)
+    if act5:
+        if "--review" not in sys.argv[1:]:
+            build_act5(act5)
+        if set(act5) - {"bellwether"}:
+            review_act5()
+        if "bellwether" in act5:
+            review_bellwether()
+        only = tuple(a for a in only if a not in ACT5)
+        if not only:
+            sys.exit(0)
     unknown = set(only) - set(SPEAKERS) - {CHOIR}
     if unknown:
         sys.exit(f"unknown speakers: {', '.join(sorted(unknown))}")
     if "--review" not in sys.argv[1:]:
         build(only)
+        if not only:
+            build_act5()
+    if not only:
+        review_act5()
+        review_bellwether()
     if not only or set(only) - {"generic-colonial", "conamara", "thera-deep"}:
         review()
     if not only or "generic-colonial" in only:

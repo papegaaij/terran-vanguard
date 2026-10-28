@@ -46,6 +46,12 @@ public final class Bulwark {
     private double vy;
     private double armour;
     private boolean destroyed;
+    /**
+     * M9 part B (design/player/wingmen, Rook's rescue): it peels away at the level's escort swap ({@link EscortSwap},
+     * which hashes it): out of the fight, no fire, no hits, no lure.
+     */
+    private boolean departing;
+
     private int cooldown;
     private int sinceShot;
     /** The aimed volleys it drew in this attempt (the game's lure halo pulses on each). */
@@ -77,6 +83,7 @@ public final class Bulwark {
     void reset(double startArmour, double shipX, double shipY) {
         armour = startArmour;
         destroyed = false;
+        departing = false;
         cooldown = 0;
         sinceShot = Integer.MAX_VALUE;
         drawn = 0;
@@ -327,7 +334,33 @@ public final class Bulwark {
     public boolean drawing(double shipX, double shipY) {
         double dx = x - shipX;
         double dy = y - shipY;
-        return !destroyed && dx * dx + dy * dy <= drawRadiusSquared;
+        return !destroyed && !departing && dx * dx + dy * dy <= drawRadiusSquared;
+    }
+
+    /** M9 part B: whether it is out of the fight: destroyed, or peeling away at the escort swap. */
+    boolean out() {
+        return destroyed || departing;
+    }
+
+    /** M9 part B: whether it peels away (or has gone) at the level's escort swap (the look's "Bulwark, RTB"). */
+    public boolean departing() {
+        return departing;
+    }
+
+    /** M9 part B: it starts to peel away (the escort swap); its gun falls silent. */
+    void depart() {
+        departing = true;
+        vy = 0;
+    }
+
+    /**
+     * M9 part B: one step of its peel to its side's edge at its speed; returns whether it is past the edge (gone).
+     */
+    boolean peel() {
+        double side = spec.side().sign();
+        vx = side * spec.speed();
+        x += vx * SimStep.SECONDS;
+        return side > 0 ? x - spec.size() / 2 > PlayField.WIDTH : x + spec.size() / 2 < 0;
     }
 
     /** The aimed volleys it drew in this attempt. */

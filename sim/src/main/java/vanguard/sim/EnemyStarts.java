@@ -35,6 +35,7 @@ final class EnemyStarts {
         u.orbit = plan.orbit();
         u.exit = plan.exit();
         u.hp = u.spec.hp();
+        u.hexShield.start(u.spec);
         u.partHp.start(u.spec);
         u.ticksSinceHit = Integer.MAX_VALUE;
         u.burstLeft = 0;
@@ -51,6 +52,10 @@ final class EnemyStarts {
         }
         if (u.spec.gun().isPresent() && u.spec.gun().get().mine().isPresent()) {
             u.volleyTicks = SimStep.ticks(u.spec.gun().get().intervalSeconds());
+        }
+        if (u.spec.swoopPath().isPresent() && u.spec.gun().isPresent()) {
+            // M9 part B: its first shot after its gun's first-shot delay, counted in its fire band (EnemyGunnery).
+            u.volleyTicks = SimStep.ticks(u.spec.gun().get().firstShotDelay()) + 1;
         }
         u.prevX = u.x;
         u.prevY = u.y;
@@ -152,6 +157,24 @@ final class EnemyStarts {
             u.facing =
                     u.laneStrafing.phase() == Enemy.StrafePhase.DESCENT ? 0 : Enemy.heading(u.laneStrafing.side(), 0);
         }
+        if (u.spec.launcher().isPresent()) {
+            // M9 part C: a carrier's launcher clock (the Gilded Gunship's Dart streams).
+            u.launching.start(u.spec.launcher().get());
+        }
+        if (u.spec.mineLayer().isPresent() && u.phase == Enemy.Phase.ENTER) {
+            // M9 part C: a mine layer flies its lay path from its planned path's start (its lane) toward its end.
+            u.phase = Enemy.Phase.LAY;
+            u.mineLaying.start(
+                    u.spec.mineLayer().get(), u.path.startX(), u.path.startY(), u.path.endX(), u.path.endY());
+            u.x = u.prevX = u.mineLaying.x();
+            u.y = u.prevY = u.mineLaying.y();
+            u.facing = StrictMath.PI;
+        }
+        if (u.spec.dash().isPresent() && u.phase == Enemy.Phase.ENTER && u.orbit.isEmpty()) {
+            // M9 part D: a dashing unit flies in along its path; its cycle starts as it comes onto the play field (a
+            // circle's at its hold's end).
+            u.dashing.enter();
+        }
         if (u.spec.chase().isPresent() && u.phase == Enemy.Phase.ENTER) {
             // M5 part F: a chaser flies in along its path; its chase starts its delay after its entry.
             u.chasing.enter(SimStep.ticks(plan.chaseDelay()));
@@ -225,6 +248,7 @@ final class EnemyStarts {
         u.submerging.clear();
         u.ringWait = 0;
         u.chasing.clear();
+        u.dashing.clear();
         u.lane = false;
         u.attacks = 0;
         u.attackTarget = -1;
@@ -246,16 +270,26 @@ final class EnemyStarts {
         u.ramming.clear();
         u.auraRing.reset();
         u.absorbQuiet = 0;
+        u.lineBeam.clear();
         u.partHp.clear();
         u.curlRoll.clear();
         u.hoverTicks = 0;
         u.vortexCycle.clear();
         u.laneStrafing.clear();
+        u.mineLaying.clear();
+        u.launching.clear();
         u.rising.clear();
         u.hoverHold.clear();
         u.song.clear();
         u.coiling.clear();
         u.lunging.clear();
+        u.scattering.clear();
+        u.riding.clear();
+        u.holder = false;
+        u.dormantTick = -1;
+        u.wakeTicks = 0;
+        u.leader = false;
+        u.wave = -1;
     }
 
     /**
@@ -282,6 +316,7 @@ final class EnemyStarts {
         u.orbit = Optional.empty();
         u.exit = Spawn.Exit.DOWN;
         u.hp = u.spec.hp();
+        u.hexShield.start(u.spec);
         u.partHp.start(u.spec);
         u.ticksSinceHit = Integer.MAX_VALUE;
         u.volleyTicks = 0;
@@ -380,6 +415,7 @@ final class EnemyStarts {
         u.x = u.prevX = atX;
         u.y = u.prevY = PlayField.HEIGHT + u.box.height() / 2;
         u.hp = u.spec.hp();
+        u.hexShield.start(u.spec);
         u.partHp.start(u.spec);
         u.ticksSinceHit = Integer.MAX_VALUE;
         // M7 part F: a turret whose arc faces up the screen ({@code arc: up}) starts along it; 0 for any other.
@@ -461,6 +497,7 @@ final class EnemyStarts {
         u.orbit = Optional.empty();
         u.exit = Spawn.Exit.DOWN;
         u.hp = u.spec.hp();
+        u.hexShield.start(u.spec);
         u.partHp.start(u.spec);
         u.ticksSinceHit = Integer.MAX_VALUE;
         u.volleyTicks =
@@ -504,6 +541,7 @@ final class EnemyStarts {
         u.orbit = Optional.empty();
         u.exit = Spawn.Exit.DOWN;
         u.hp = u.spec.hp();
+        u.hexShield.start(u.spec);
         u.partHp.start(u.spec);
         u.ticksSinceHit = Integer.MAX_VALUE;
         u.volleyTicks = 0;

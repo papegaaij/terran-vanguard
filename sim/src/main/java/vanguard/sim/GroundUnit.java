@@ -9,6 +9,12 @@ import java.util.Optional;
  * straight down, positive to the right. M5 part H: a unit grown by a {@link RootBurst} appears at
  * its burst's point instead ({@link #fromBurst}): {@code t} is then when it appears (the burst's
  * time plus its telegraph) and {@code x} its own x (the burst's x plus its place in the burst).
+ *
+ * <p>M9 part B (design/campaign Level 29): a {@code holder} holds the level's arena (the rescue halt over Dock 9, held
+ * by the clamp guns): the level clock stays held at the arena's end while one stands ({@link LevelClock}). A unit
+ * {@code dormantUntil} a level time above 0 (Block C's SAM Nests, the SAM Nest's <em>dormant until t</em>) enters
+ * dark: not hittable, not picked by any seeker, not firing, until that time on the level clock; then it wakes with a
+ * {@link #WAKE_SECONDS} tell ({@link SimEvents.Type#WOKE}) and fires as its stat block says. 0 for none.
  */
 public record GroundUnit(
         double t,
@@ -17,11 +23,49 @@ public record GroundUnit(
         int group,
         double currentRadians,
         Optional<SideEntry> side,
-        Optional<RootBurst> burst) {
+        Optional<RootBurst> burst,
+        boolean holder,
+        double dormantUntil) {
+    /** M9 part B: a dormant unit's wake tell, s (design/enemies/ground/sam-nest: the rack lifts and lights red). */
+    public static final double WAKE_SECONDS = 1;
+
     public GroundUnit {
+        if (!(dormantUntil >= 0) || (dormantUntil > 0 && !(dormantUntil > t))) {
+            throw new IllegalArgumentException("a dormant unit wakes after it entered: " + dormantUntil + " s");
+        }
+        if (dormantUntil > 0 && (side.isPresent() || burst.isPresent())) {
+            throw new IllegalArgumentException("a dormant unit enters at the top edge with the ground");
+        }
         if (side.isPresent() && burst.isPresent()) {
             throw new IllegalArgumentException("a ground unit enters at a side or grows in a root burst, not both");
         }
+    }
+
+    /** Without M9 part B's arena holder and dormancy. */
+    public GroundUnit(
+            double t,
+            double x,
+            EnemySpec enemy,
+            int group,
+            double currentRadians,
+            Optional<SideEntry> side,
+            Optional<RootBurst> burst) {
+        this(t, x, enemy, group, currentRadians, side, burst, false, 0);
+    }
+
+    /** M9 part B: this unit as a holder of the level's arena (it holds the clock while it stands). */
+    public GroundUnit asHolder() {
+        return new GroundUnit(t, x, enemy, group, currentRadians, side, burst, true, dormantUntil);
+    }
+
+    /** M9 part B: this unit dormant until {@code until} s on the level clock (0 for none). */
+    public GroundUnit dormantUntil(double until) {
+        return new GroundUnit(t, x, enemy, group, currentRadians, side, burst, holder, until);
+    }
+
+    /** M9 part B: whether it enters dormant. */
+    public boolean dormant() {
+        return dormantUntil > 0;
     }
 
     /** Without M5 part H's root burst. */

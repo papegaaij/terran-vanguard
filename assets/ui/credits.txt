@@ -195,15 +195,35 @@ item|“Breaking_Ice_01.wav” by dheming
 detail|CC-BY 4.0 · freesound.org/people/dheming/sounds/268023
 item|“Fireworks 1.wav” by KandiKlover
 detail|CC-BY 4.0 · freesound.org/people/KandiKlover/sounds/640817
+item|“bottleRocket4.wav” by nicStage
+detail|CC-BY 4.0 · freesound.org/people/nicStage/sounds/60904
+item|“hydraulic shears breaks concrete 001.wav” by klankbeeld
+detail|CC-BY 4.0 · freesound.org/people/klankbeeld/sounds/541015
+item|“motorized_door_servo_sound_11062024” by Artninja
+detail|CC-BY 4.0 · freesound.org/people/Artninja/sounds/764849
+item|“Guns & Explosions Album - Autocannon - Shot 1.wav” by OGsoundFX
+detail|CC-BY 4.0 · freesound.org/people/OGsoundFX/sounds/423108
+item|“SDL Jet Engine Spool Up” by guitarduane
+detail|CC-BY 4.0 · freesound.org/people/guitarduane/sounds/788132
+item|“Eurofighter Typhoon Flyby 007 – Close Proximity” by TimoSchmied
+detail|CC-BY 4.0 · freesound.org/people/TimoSchmied/sounds/640503
+item|“Eurofighter Typhoon Flyby 003 – Close Proximity” by TimoSchmied
+detail|CC-BY 4.0 · freesound.org/people/TimoSchmied/sounds/640499
+item|“Fast Freight Train Clickety-Clack over Track Joint” by WeenyBeany
+detail|CC-BY 4.0 · freesound.org/people/WeenyBeany/sounds/769890
+item|“METLFric-Circular Saw Blade, Scrape on Concrete_02_With Impact_RG_2023_NTG4” by Riley_Garinger
+detail|CC-BY 4.0 · freesound.org/people/Riley_Garinger/sounds/720829
+item|“Fire Burst.wav” by SilverIllusionist
+detail|CC-BY 4.0 · freesound.org/people/SilverIllusionist/sounds/472688
 gap|
 role|WITH THANKS TO (CC0)
-text|adgawrhbshbffsfgvsrf, adviseme333, aerror, amenhotepIV, amholma, Ashley12275, AudioPapkin, aust_paul, BaggoNotes, bevibeldesign, Bikkit99, Bird_man, blaukreuz, Breviceps, brunoboselli, c64cosmin, C_Rogers, CCCanary, cellokratzer, CHallSmith, CmdRobot, cobratronik, coolguy244e, craigsmith, cubix, CVLTIV8R, Cyberios, Daleonfire, darcyadam, DasWaff, DBS_Sounds, decembered, deerlord, derplayer, DiArchangeli, dinodilopho, Division4884, dwswords, eardeer, Elektrocell, Elements-Library, Engineer_815, facklere, Filmscore, FlatHill, follytowers, fran_marenco, frankelmedico, GameAudio, Glitchedtones, gprosser, greatmganga, Heigh-hoo, HenKonen, hinchinbrook, hollandm, Hugofski, humanoide9000, ItsThatRoboGuy, ivolipa, iwanPlays, Jacco18, jamesabels, jamesdrake89, Jarusca, Jerimee, jhumbucker, JoelAudio, jokallset, JoMungus, JovianSounds, JSK_Productions, jvmyka@gmail.com, kalhan, Kinoton, kkenny101, kyles, lensflare8642, LilMati, loganzsound, lolamadeus, lorefold, lorenzgillner, LPA134, LucasDuff, magnuswaker, martinimeniscus, mattpavone, MBARI_MARS, MBPL, mediatheksuche, michael_grinnell, mickdow, Mihacappy, mitchelk, Mozfoo, NHMWretched, Nic3_one, NickPeeters, nicktermer, nicoproson, noahpardo, noirenex, Nordliecht, Nox_Sound, Noxdl, Osvoldon, peepholecircus, pengo_au, Peter_Gross, pgi, plasterbrain, PostProdDog, profoundsounds, Pól, qubodup, Raclure, reacthor, Reitanna, relwin, RoofDog, Rudmer_Rotteveel, RutgerMuller, Sadiquecat, SamsterBirdies, samueljustice00, sarana, Schmaddio, schots, SciFiSounds, SecureSubset, Sheyvan, sidohzen, Skullsmasha, StoneyJ, SuperPhat, tec_studio, The_Chemical_Workshop, The_Sean_, ThefitzyG, timgormly, TRP, uagadugu, Ubehag, unfa, Vrymaa, Walter_Odington, Wastefield, weaveofkev, Whats_The_Frequency_Kennett, wilhellboy, XfiXy8, xkeril, YouMightLikeThis, Za-Games, ZeSoundResearchInc.
+text|7of9Designs, adgawrhbshbffsfgvsrf, adviseme333, aerror, ajhartman42295, alegemaate, amenhotepIV, amholma, Ashley12275, AudioPapkin, aust_paul, BaggoNotes, bassmosphere, bevibeldesign, Bikkit99, Bird_man, blaukreuz, BogumilaMerc, Breviceps, brunoboselli, c64cosmin, C_Rogers, CCCanary, cellokratzer, CHallSmith, CmdRobot, cobratronik, coolguy244e, craigsmith, cubix, CVLTIV8R, Cyberios, Daleonfire, darcyadam, DasWaff, DBS_Sounds, decembered, deerlord, derplayer, DiArchangeli, dinodilopho, Division4884, dwswords, EagleStealthTeam, eardeer, Elektrocell, Elements-Library, Engineer_815, facklere, Filmscore, FlatHill, florianreichelt, follytowers, fran_marenco, frankelmedico, GameAudio, giuliorasi, Glitchedtones, gprosser, greatmganga, Heigh-hoo, HenKonen, hinchinbrook, hollandm, HootOwl, Hugofski, humanoide9000, ItsThatRoboGuy, ivolipa, iwanPlays, Jacco18, jamesabels, jamesdrake89, jameswrowles, Jarusca, jensfelger, Jerimee, jessepash, jhumbucker, JoelAudio, jokallset, JoMungus, JovianSounds, JSK_Productions, jukkako, jvmyka@gmail.com, kalhan, Kinoton, kkenny101, Kostrava, kyles, lensflare8642, leonelmail, LilMati, loganzsound, lolamadeus, lorefold, lorenzgillner, LPA134, LucasDuff, magnuswaker, martinimeniscus, mattpavone, MBARI_MARS, MBPL, mediatheksuche, michael_grinnell, Mick_, mickdow, Mihacappy, mitchelk, Mozfoo, mrmayo, Mrthenoronha, NHMWretched, Nic3_one, NickPeeters, nicktermer, nicoproson, noahpardo, noirenex, Nordliecht, Nox_Sound, Noxdl, Osvoldon, peepholecircus, pengo_au, Peter_Gross, pgi, pkri, plasterbrain, pointparkcinema, PostProdDog, profoundsounds, Pól, quantumriver, qubodup, Raclure, reacthor, ReadeOnly, reg7783, Reitanna, relwin, RoofDog, Rudmer_Rotteveel, RutgerMuller, Sadiquecat, SamsterBirdies, samueljustice00, sarana, Schmaddio, schots, SciFiSounds, SecureSubset, Sheyvan, sidohzen, Skullsmasha, StoneyJ, stuniverso, SuperPhat, Tairblenn, tec_studio, The_Chemical_Workshop, The_Sean_, ThefitzyG, TiesWijnen, timgormly, TRP, uagadugu, Ubehag, unfa, vestibule-door, Vrymaa, Wakerone, Walter_Odington, Wastefield, weaveofkev, Werra, Whats_The_Frequency_Kennett, wilhellboy, XfiXy8, xkeril, YouMightLikeThis, Za-Games, ZeSoundResearchInc., zmobie
 gap|
 title|VOICES
 text|Spoken by the Chatterbox text-to-speech engine (Resemble AI, MIT licence) in voices cloned from LibriVox recordings
 gap|
 role|READ BY (PUBLIC DOMAIN AND CC0)
-text|Aaron Bennett, Adrian Praetzellis, Alex Foster, Betsie Bush, Celine Major, Cori Samuel, Faith Abiola-Ellison, Gord Mackenzie, John Van Stan, Kara Shallenberg, Karen Savage, KevinS, Kristin Hughes, Margaret Espaillat, Maria Kasper, Mark F. Smith, Mark Nelson, MaryAnn, Patrick Eaton, Rick Rodstrom, Ruth Golding, Tadhg Hynes, Thomas A
+text|Aaron Bennett, Adrian Praetzellis, Alex Foster, Betsie Bush, Celine Major, Clive Catterall, Cori Samuel, David Clarke, Faith Abiola-Ellison, Gord Mackenzie, Gregg Margarite, Jeffrey Church, John Van Stan, Kara Shallenberg, Karen Savage, KevinS, Kristin Hughes, Laurie Anne Walden, Lucy Burgoyne, Margaret Espaillat, Maria Kasper, Mark F. Smith, Mark Nelson, MaryAnn, Patrick Eaton, Paul Adams, Rick Rodstrom, Ruth Golding, Tadhg Hynes, Thomas A
 gap|
 title|FONTS
 item|“DejaVu Sans Mono Bold” by DejaVu fonts team, after Bitstream Vera (Bitstream)

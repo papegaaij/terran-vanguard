@@ -245,4 +245,60 @@ public interface HostSpecs {
             this(name, hp, hitbox, dx, dy, bounty, silencesGun, 0);
         }
     }
+
+    /**
+     * M9 part A, an enemy shield (design/enemies, Enemy shields): a hex pool of {@code hp} over the hull (the
+     * difficulty's HP lever and a returning unit's act factor already in it, never the beam era's), full at the
+     * unit's start. Every hit spends it first at its full damage and the overflow goes on to the hull (and an aura
+     * ring); after {@code delaySeconds} without a hit it refills at {@code refillShare} of its maximum a second. A
+     * {@code shield-breaker} hit empties it at once (the whole hit to the hull) and holds the refill back {@code
+     * breakerHoldSeconds}; the EMP Burst empties it and holds the refill for the unit's stun.
+     */
+    public record Shield(double hp, double delaySeconds, double refillShare, double breakerHoldSeconds) {
+        public Shield {
+            if (!(hp > 0) || !(delaySeconds >= 0) || !(refillShare > 0) || !(breakerHoldSeconds >= 0)) {
+                throw new IllegalArgumentException("a shield has HP, a delay, a refill and a breaker hold: " + hp + ", "
+                        + delaySeconds + ", " + refillShare + ", " + breakerHoldSeconds);
+            }
+        }
+    }
+
+    /**
+     * M9 part C (design/enemies/air/gilded-gunship, its Dart streams; design/enemies/air/dart-drone): while it is on the
+     * play field it launches a stream of {@code stream} units of {@code unit} every {@code everySeconds} (the first
+     * {@code firstSeconds} after it entered the field), {@code gapSeconds} apart, out of its centre at {@code speed}
+     * px/s: a stream's units spread evenly over {@code spreadRadians} round its facing (straight down; one unit straight
+     * down). A launched unit with a chase flies straight {@code straightSeconds}, then chases ({@link Chase}), then flies
+     * straight on. A launch is skipped while {@code mostAlive} of its units are alive. Its units count among the level's
+     * enemies as they are launched; a stunned or destroyed carrier launches nothing more.
+     */
+    public record Launcher(
+            EnemySpec unit,
+            int stream,
+            double everySeconds,
+            double gapSeconds,
+            double firstSeconds,
+            double speed,
+            double spreadRadians,
+            double straightSeconds,
+            int mostAlive) {
+        public Launcher {
+            java.util.Objects.requireNonNull(unit);
+            if (stream < 1
+                    || !(gapSeconds > 0)
+                    || !(everySeconds > (stream - 1) * gapSeconds)
+                    || !(firstSeconds >= 0)
+                    || !(speed > 0)
+                    || !(spreadRadians >= 0)
+                    || !(spreadRadians <= StrictMath.PI)
+                    || !(straightSeconds >= 0)
+                    || mostAlive < 1) {
+                throw new IllegalArgumentException(
+                        "a launcher has streams of at least one unit inside its cycle, a speed, a spread and a cap");
+            }
+            if (unit.launcher().isPresent() || unit.chain().isPresent() || unit.layer() != Layer.AIR) {
+                throw new IllegalArgumentException("a launched unit is a plain air unit: " + unit.slug());
+            }
+        }
+    }
 }

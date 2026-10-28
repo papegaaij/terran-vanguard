@@ -1,6 +1,6 @@
 ---
 title: Strider
-design: draft
+design: approved
 implementation: not-started
 art: chosen
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../player/specials, ../../bosses/revenant-walker]
@@ -19,7 +19,7 @@ staggers, then **topples** along a marked line, crushing any ground unit beneath
 
 ### Stat block
 
-**Draft** (Act 5 design phase, step D-enemies-B; pending the user's review in round 60). A hand-written
+**Draft** (Act 5 design phase, step D-enemies-B; approved in round 60). A hand-written
 table: there is no `data.yaml` yet, the build turns it into one. Numbers at **medium** (see the
 [balancing basis](../../README.md#balancing-basis)); HP is in damage units (a Pulse Cannon L1 shot does 2),
 set at its first level from the proposed Act 5 reference DPS (judgement call J2: L32 132): the hull's 220 is
@@ -90,6 +90,8 @@ long metal groan into a heavy crash and rumble.
 
 ## Concept art
 
+Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
+
 Chosen concept from [round 05](../../../concept-rounds/round-05/README.md), listed in the
 [ground](../README.md#concept-art) Concept art table: a 120 px Ascendancy biped (red accent), an 8-frame walk
 cycle, the torso at 32 headings twisting to fire its shoulder cannons
@@ -98,14 +100,12 @@ only). Prompts: [../concept/prompts.md](../concept/prompts.md). The round-60 pro
 lacks (step ART-P-units): the shoulder pod, the knee glow, the stagger and the topple with its fall line, and
 the readability check against the tunnel floor (Q11).
 
-Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's review board follows) — a/b proposals in the belt look of [Q11](../../README.md#open-questions) a (pending the user's review), each a PNG sheet (the source render, the sprites and states, the readability check over the darkest ground of Level 32 with the measured gold share, key frames) and a GIF in the 480×540 play field; generator `tools/concept/enemies_r60.py`. Prompts: [concept/prompts.md](concept/prompts.md).
+Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's review board follows) — a/b proposals in the belt look of [Q11](../../README.md#open-questions) a (gloss black; the user chose look b, gunmetal/charcoal with gold, in round 60, so the chosen variant is re-rendered in gunmetal in production), each a PNG sheet (the source render, the sprites and states, the readability check over the darkest ground of Level 32 with the measured gold share, key frames) and a GIF in the 480×540 play field; generator `tools/concept/enemies_r60.py`. Prompts: [concept/prompts.md](concept/prompts.md).
 
 | File | What | Status |
 |---|---|---|
-| [concept/strider-r60-a.png](concept/strider-r60-a.png) | Strider A, rigid fall — it falls as one piece about its foot line, accelerating, onto the marked strip, and crushes a Rail Bunker; the new shoulder pod (sheet) | proposed |
-| [concept/strider-r60-a.gif](concept/strider-r60-a.gif) | Strider A, rigid fall — it falls as one piece about its foot line, accelerating, onto the marked strip, and crushes a Rail Bunker; the new shoulder pod (motion) | proposed |
-| [concept/strider-r60-b.png](concept/strider-r60-b.png) | Strider B, buckle and crumple — the lost leg's knee buckles, it pitches over and the torso breaks off the legs: two pieces (sheet) | proposed |
-| [concept/strider-r60-b.gif](concept/strider-r60-b.gif) | Strider B, buckle and crumple — the lost leg's knee buckles, it pitches over and the torso breaks off the legs: two pieces (motion) | proposed |
+| [concept/strider-r60-b.png](concept/strider-r60-b.png) | Strider B, buckle and crumple — the lost leg's knee buckles, it pitches over and the torso breaks off the legs: two pieces (sheet) | chosen (round 60) |
+| [concept/strider-r60-b.gif](concept/strider-r60-b.gif) | Strider B, buckle and crumple — the lost leg's knee buckles, it pitches over and the torso breaks off the legs: two pieces (motion) | chosen (round 60) |
 
 ## Implementation
 
@@ -117,17 +117,19 @@ Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's r
 
 ## Open questions
 
-- Q5 (pending round 60): L32's branching tunnels, **a** recommended; alternatives **b** (cosmetic forks) and
+- Q5 (decided in round 60): L32's branching tunnels, **a** recommended; alternatives **b** (cosmetic forks) and
   **c** (the same waves in both).
-- Q11 (pending round 60): the Ascendancy look on the belt, **a** recommended; alternatives **b** gunmetal with
-  gold, **c** black silhouettes with gold accents only.
+- Q11 (decided in round 60, **b**, not the recommendation): the Ascendancy look on the belt is gunmetal/charcoal hulls
+  with gold (≥ 20 % gold, rim light, red running lights); a (gloss black) and c (black silhouettes) rejected
+  ([enemies](../../README.md#factions-and-visual-language)).
 
 ## Decisions
 
 - 2026-09-30: added in the enemy variety pass; concept round 05 chosen (Ascendancy only: too mechanical for the Vrell).
 - 2026-10-27 (step D-enemies-B): promoted from the [ground roster](../README.md) to a draft spec for the Act 5
-  design phase; every number is a first draft, pending the user's review in round 60.
+  design phase; every number is a first draft, approved in round 60.
 - 2026-10-27 (the gap analysis's decision): the topple is presentation plus a one-time crush of ground units
   under its fall line (credits paid to the player); it never hurts the ship.
 - 2026-10-27 (decided by me, trivia): either leg topples it; the fall goes to the lost leg's side; hardened
   ground units are crushed too (a way to break a Rail Bunker without an `anti-ground` gun).
+- 2026-10-27 (user, [round 60](../../../concept-rounds/round-60/README.md) closed): the design approved as drafted (`design: approved`); art A.14 **b**, "Strider B, buckle and crumple", chosen (`art: chosen`), the other variant in `concept/rejected/`. Q11 **b** (gunmetal/charcoal with gold, not gloss black): the chosen variant is re-rendered in gunmetal/charcoal in this part's production art, keeping the ≥ 20 % gold and the readability check.

@@ -21,7 +21,7 @@ import vanguard.sim.Sortie;
 /**
  * A level's numbers for tuning its waves, computed by the campaign-wide tests' own code ({@link LevelMetrics}) with
  * their rules' verdicts: {@code ./gradlew :content:levelReport -Plevel=19 [-Pdifficulty=easy,medium,hard] [-Pseeds=3]
- * [-Pfit=test|plan|user] [-Pparts=pacing,floor,haul,boss,secondary,hp,pursuit,colossus] [-Pjson]}. It reads the design data at run time,
+ * [-Pfit=test|plan|user] [-Pparts=pacing,floor,haul,boss,secondary,hp,pursuit,colossus,hull] [-Pjson]}. It reads the design data at run time,
  * so a data.yaml edit needs no recompile; the flights run in parallel.
  *
  * <p>Per difficulty: the enemies (waves + ground) and their rate ({@link DensityTest}), the mean on the screen and the
@@ -46,7 +46,8 @@ final class LevelReport {
         SECONDARY,
         HP,
         PURSUIT,
-        COLOSSUS
+        COLOSSUS,
+        HULL
     }
 
     enum Fit {
@@ -103,7 +104,13 @@ final class LevelReport {
     }
 
     /** One flight on {@link LevelMetrics#SEED}: what the player saw, and the small units' life if it was watched. */
-    record Measured(String fit, boolean complete, LevelMetrics.Flight flight, double smallLife, int smallKilled) {}
+    record Measured(
+            String fit,
+            boolean complete,
+            LevelMetrics.Flight flight,
+            double smallLife,
+            int smallKilled,
+            Map<String, double[]> smallBySlug) {}
 
     /** The pacing rule as the level's {@link PacingTest} applies it at a difficulty. */
     record PacingRule(boolean applies, boolean strict, double limit, int allowed) {}
@@ -119,7 +126,8 @@ final class LevelReport {
             TypicalHaul haul,
             List<LevelMetrics.Run> runs,
             List<LevelMetrics.PursuitRun> pursuits,
-            List<LevelMetrics.ColossusRun> colossi) {}
+            List<LevelMetrics.ColossusRun> colossi,
+            List<LevelMetrics.HullRun> hulls) {}
 
     /** A level's report. */
     record Level(
@@ -231,6 +239,19 @@ final class LevelReport {
             pursuits.put(difficulty, list);
         }
 
+        // M9 part D (step D2): a hull escort's sections, hits and rear Darts, the same seeds with the plan's fit.
+        Map<Difficulty, List<Future<LevelMetrics.HullRun>>> hulls = new HashMap<>();
+        for (Difficulty difficulty : options.difficulties()) {
+            List<Future<LevelMetrics.HullRun>> list = new ArrayList<>();
+            boolean escorted = options.has(Part.HULL) && LevelMetrics.hasHull(SimSpecs.level(content, key, difficulty));
+            for (long seed = 1; escorted && seed <= options.seeds(); seed++) {
+                long s = seed;
+                list.add(pool.submit(() -> LevelMetrics.hull(
+                        content, key, difficulty, loadout(content, key, difficulty, floorFit), s, AUTOPILOT_STEPS)));
+            }
+            hulls.put(difficulty, list);
+        }
+
         // M7 part H: a breaching boss's phases, losses, bites and eruptions, the same seeds with the plan's fit.
         Map<Difficulty, List<Future<LevelMetrics.ColossusRun>>> colossi = new HashMap<>();
         for (Difficulty difficulty : options.difficulties()) {
@@ -265,6 +286,10 @@ final class LevelReport {
             for (Future<LevelMetrics.ColossusRun> fight : colossi.get(difficulty)) {
                 fights.add(fight.get());
             }
+            List<LevelMetrics.HullRun> tugs = new ArrayList<>();
+            for (Future<LevelMetrics.HullRun> tug : hulls.get(difficulty)) {
+                tugs.add(tug.get());
+            }
             rows.add(new ByDifficulty(
                     difficulty,
                     LevelMetrics.density(level),
@@ -279,7 +304,8 @@ final class LevelReport {
                     options.has(Part.HAUL) ? TypicalHaul.of(content, key, difficulty) : null,
                     done,
                     chases,
-                    fights));
+                    fights,
+                    tugs));
         }
         double referenceLife = Double.NaN;
         if (hpRun) {
@@ -332,7 +358,12 @@ final class LevelReport {
                 ? LevelMetrics.fly(sortie, PacingTest.MAX_STEPS, pacing, life)
                 : LevelMetrics.fly(sortie, PacingTest.MAX_STEPS, pacing);
         return new Measured(
-                fit, complete, pacing.flight(), smallLife ? life.seconds() : Double.NaN, smallLife ? life.killed() : 0);
+                fit,
+                complete,
+                pacing.flight(),
+                smallLife ? life.seconds() : Double.NaN,
+                smallLife ? life.killed() : 0,
+                smallLife ? life.bySlug() : Map.of());
     }
 
     // ---- the text report ----
@@ -484,6 +515,38 @@ final class LevelReport {
                     }
                 }
             }
+            for (LevelMetrics.HullRun tug : row.hulls()) {
+                StringBuilder sections = new StringBuilder();
+                for (int k = 0; k < tug.names().length; k++) {
+                    sections.append(k == 0 ? "" : ", ")
+                            .append(tug.names()[k])
+                            .append(String.format(
+                                    Locale.ROOT,
+                                    " %.0f%%%s (-%.0f)",
+                                    100 * tug.share()[k],
+                                    tug.alive()[k] ? "" : " lost",
+                                    tug.damage()[k]));
+                }
+                line(
+                        out,
+                        "hull",
+                        "%d/%d home%s: %s; missiles %d, links %d, dives %.0f; rear Darts %d/%d crossed, %.2f s first,"
+                                + " %.2f s mean (at least 0.8); Hornets %d/%d killed, %.2f s on the screen [plan fit]",
+                        tug.home(),
+                        tug.names().length,
+                        tug.clean() ? ", clean" : "",
+                        sections,
+                        tug.missiles(),
+                        tug.links(),
+                        tug.dives(),
+                        tug.rearCrossed(),
+                        tug.rearDarts(),
+                        tug.rearFirst(),
+                        tug.rearMean(),
+                        tug.hornetsKilled(),
+                        tug.hornets(),
+                        tug.hornetLife());
+            }
             if (!row.pursuits().isEmpty()) {
                 List<LevelMetrics.PursuitRun> chases = row.pursuits();
                 StringBuilder lunges = new StringBuilder();
@@ -567,6 +630,13 @@ final class LevelReport {
                         level.hpApplies()
                                 ? verdict(ratio >= BeamEraHpTest.LEAST && ratio <= BeamEraHpTest.most(level.key()))
                                 : "before the beam era, no rule");
+                // M9 part B (round 62): the same per small unit, to tune one unit's life (Level 29's Talon).
+                StringBuilder units = new StringBuilder();
+                row.floor().smallBySlug().forEach((slug, unit) -> units.append(units.isEmpty() ? "" : ", ")
+                        .append(String.format(Locale.ROOT, "%s %.2f s (%d)", slug, unit[1], (int) unit[0])));
+                if (!units.isEmpty()) {
+                    line(out, "  by unit", "%s", units);
+                }
             }
         }
         return out.toString();
@@ -723,6 +793,35 @@ final class LevelReport {
                     runs.add(r);
                 }
                 d.put("autopilot", runs);
+            }
+            if (!row.hulls().isEmpty()) {
+                List<Object> tugs = new ArrayList<>();
+                for (LevelMetrics.HullRun tug : row.hulls()) {
+                    tugs.add(ordered(
+                            "home", tug.home(),
+                            "clean", tug.clean(),
+                            "share",
+                                    java.util.Arrays.stream(tug.share())
+                                            .map(v -> round(v))
+                                            .boxed()
+                                            .toList(),
+                            "damage",
+                                    java.util.Arrays.stream(tug.damage())
+                                            .map(v -> round(v))
+                                            .boxed()
+                                            .toList(),
+                            "missiles", tug.missiles(),
+                            "links", tug.links(),
+                            "dives", round(tug.dives()),
+                            "rear_darts", tug.rearDarts(),
+                            "rear_crossed", tug.rearCrossed(),
+                            "rear_first", round(tug.rearFirst()),
+                            "rear_mean", round(tug.rearMean()),
+                            "hornets", tug.hornets(),
+                            "hornets_killed", tug.hornetsKilled(),
+                            "hornet_life", round(tug.hornetLife())));
+                }
+                d.put("hull", tugs);
             }
             if (!row.pursuits().isEmpty()) {
                 List<Object> chases = new ArrayList<>();

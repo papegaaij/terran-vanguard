@@ -89,6 +89,25 @@ import java.util.Optional;
  * @param coil M8 part E: its coiling orbit round the ship (design/enemies/naval/spiral-nautilus; {@link Coil}); empty
  *     for none
  * @param lunge M8 part F: its lunge from a lure (design/enemies/naval/glow-angler; {@link Lunge}); empty for none
+ * @param shield M9 part A: its hex shield (design/enemies, Enemy shields; {@link Shield}); empty for none
+ * @param laserLine M9 part A: its {@code laser-line} (design/enemies/ground/rail-bunker; {@link LaserLine}); empty for
+ *     none
+ * @param scatter M9 part B: how it breaks off when its wave's leader is killed (design/enemies/air/talon, Squad leader;
+ *     {@link SquadScatter}); empty for none (it flies on)
+ * @param ride M9 part B: it rides a rock of its wave (design/enemies, Rock riding; {@link Ride}); empty for none
+ * @param neutral M9 part B (design/campaign Level 29, the wavering Stormhawks): a neutral craft, not an enemy: no gun, no
+ *     contact, no bounty, never counted among the level's enemies (its kills, its total, the kill ratio), never a
+ *     seeker's target, and the escort's shots pass through it; the player's shots and specials hit it ({@link
+ *     #countsAsEnemy()})
+ * @param mineLayer M9 part C: it lays mine lines (design/enemies/space/minelayer; {@link MineLayer}): up a side lane from
+ *     the bottom edge to its lay row, then across, laying its gun's line mines; empty for none
+ * @param facingArmour M9 part C: its facing armour (design/enemies/air/gilded-gunship; {@link FacingArmour}): a direct hit's
+ *     factor by the direction it arrives from, after its shield; empty for none
+ * @param launcher M9 part C: the units it launches in streams while on the play field (the Gilded Gunship's Dart
+ *     Drones; {@link Launcher}); empty for none
+ * @param dash M9 part D: its dash cycle (design/enemies/air/buzzsaw-drone; {@link Dash}): chase, spin-up tell, a
+ *     locked dash that ricochets, again; empty for none
+ * @param airLink M9 part D: its wave's energy links (design/enemies/space/shard-drone; {@link AirLink}); empty for none
  */
 public record EnemySpec(
         String slug,
@@ -144,12 +163,145 @@ public record EnemySpec(
         Optional<Rise> rise,
         Optional<SlowRing> slowRing,
         Optional<Coil> coil,
-        Optional<Lunge> lunge)
+        Optional<Lunge> lunge,
+        Optional<Shield> shield,
+        Optional<LaserLine> laserLine,
+        Optional<SquadScatter> scatter,
+        Optional<Ride> ride,
+        boolean neutral,
+        Optional<SwoopPath> swoopPath,
+        Optional<MineLayer> mineLayer,
+        Optional<FacingArmour> facingArmour,
+        Optional<Launcher> launcher,
+        Optional<Dash> dash,
+        Optional<AirLink> airLink)
         implements FlightSpecs, WalkerSpecs, ChainSpecs, LayerSpecs, AttackSpecs, HostSpecs {
     /** M8 part B: the most destroyable parts a unit carries (the Drill Rig's four pumps). */
     public static final int MOST_PARTS = 4;
 
     public EnemySpec {
+        java.util.Objects.requireNonNull(mineLayer);
+        java.util.Objects.requireNonNull(facingArmour);
+        java.util.Objects.requireNonNull(launcher);
+        java.util.Objects.requireNonNull(dash);
+        java.util.Objects.requireNonNull(airLink);
+        if (dash.isPresent()
+                && (layer != Layer.AIR
+                        || terrain
+                        || gun.isPresent()
+                        || hover.isPresent()
+                        || dive.isPresent()
+                        || swoop.isPresent()
+                        || swoopPath.isPresent()
+                        || chain.isPresent()
+                        || flock.isPresent()
+                        || walker.isPresent()
+                        || laneStrafe.isPresent()
+                        || chase.isPresent()
+                        || spiral.isPresent()
+                        || ride.isPresent()
+                        || coil.isPresent()
+                        || lunge.isPresent()
+                        || rise.isPresent()
+                        || mineLayer.isPresent()
+                        || launcher.isPresent())) {
+            throw new IllegalArgumentException(slug
+                    + ": a dash is a plain air unit's without a gun, its dash cycle its only movement after its entry"
+                    + " (M9 part D, the Buzzsaw Drone)");
+        }
+        if (airLink.isPresent()
+                && (layer != Layer.AIR
+                        || terrain
+                        || chain.isPresent()
+                        || flock.isPresent()
+                        || walker.isPresent()
+                        || dash.isPresent()
+                        || chase.isPresent()
+                        || mineLayer.isPresent()
+                        || launcher.isPresent()
+                        || link.isPresent())) {
+            throw new IllegalArgumentException(
+                    slug + ": an air link joins plain air units of one wave (M9 part D, the Shard Drone)");
+        }
+        if (mineLayer.isPresent()
+                && (layer != Layer.AIR
+                        || gun.isEmpty()
+                        || gun.get().mine().isEmpty()
+                        || gun.get().mine().get().line().isEmpty()
+                        || terrain
+                        || hover.isPresent()
+                        || dive.isPresent()
+                        || swoop.isPresent()
+                        || swoopPath.isPresent()
+                        || chain.isPresent()
+                        || flock.isPresent()
+                        || walker.isPresent()
+                        || laneStrafe.isPresent()
+                        || chase.isPresent()
+                        || spiral.isPresent()
+                        || ride.isPresent()
+                        || coil.isPresent()
+                        || lunge.isPresent()
+                        || rise.isPresent()
+                        || sideHover.isPresent()
+                        || ambush.isPresent()
+                        || launcher.isPresent())) {
+            throw new IllegalArgumentException(slug
+                    + ": a mine layer is a plain air unit whose gun lays line mines, its lay path its only movement"
+                    + " (M9 part C, the Minelayer)");
+        }
+        if (facingArmour.isPresent() && (walker.isPresent() || chain.isPresent() || rearPlate.isPresent())) {
+            throw new IllegalArgumentException(
+                    slug + ": facing armour is a plain flying unit's (a walker has its frontal armour and rear plate)");
+        }
+        if (launcher.isPresent()
+                && (chain.isPresent()
+                        || flock.isPresent()
+                        || walker.isPresent()
+                        || spawner.isPresent()
+                        || brood.isPresent()
+                        || ring.isPresent()
+                        || terrain)) {
+            throw new IllegalArgumentException(
+                    slug + ": a launcher is a plain flying unit's, not a spawner's, a brood's or a ring's (M9 part C)");
+        }
+        java.util.Objects.requireNonNull(shield);
+        java.util.Objects.requireNonNull(laserLine);
+        java.util.Objects.requireNonNull(scatter);
+        java.util.Objects.requireNonNull(ride);
+        java.util.Objects.requireNonNull(swoopPath);
+        if (swoopPath.isPresent()
+                && (layer != Layer.AIR
+                        || terrain
+                        || hover.isPresent()
+                        || dive.isPresent()
+                        || swoop.isPresent()
+                        || chain.isPresent()
+                        || flock.isPresent()
+                        || walker.isPresent()
+                        || laneStrafe.isPresent()
+                        || chase.isPresent()
+                        || spiral.isPresent()
+                        || ride.isPresent()
+                        || coil.isPresent()
+                        || lunge.isPresent()
+                        || rise.isPresent()
+                        || sideHover.isPresent()
+                        || ambush.isPresent())) {
+            throw new IllegalArgumentException(
+                    slug + ": a swoop path is a plain air unit's, its only movement (M9 part B, the Talon)");
+        }
+        if (neutral && (gun.isPresent() || contactDamage != 0 || bounty != 0 || !seekersIgnore)) {
+            throw new IllegalArgumentException(
+                    slug + ": a neutral craft has no gun, no contact, no bounty, and the seekers ignore it");
+        }
+        if (ride.isPresent()
+                && (layer != Layer.AIR || gun.isPresent() || chain.isPresent() || flock.isPresent() || terrain)) {
+            throw new IllegalArgumentException(slug + ": a rider is a plain air unit without a gun (M9 part B)");
+        }
+        if (scatter.isPresent() && (chain.isPresent() || flock.isPresent() || terrain)) {
+            throw new IllegalArgumentException(slug + ": a scatter is a plain flying unit's (M9 part B)");
+        }
         if (turret.isPresent() && (walker.isEmpty() || gun.isEmpty() || chain.isPresent())) {
             throw new IllegalArgumentException(slug + ": a turret is a walker's with a gun (the Warden Tank)");
         }
@@ -292,6 +444,93 @@ public record EnemySpec(
     public EnemySpec withCoil(Optional<Coil> withCoil) {
         EnemySpecCopy copy = new EnemySpecCopy(this);
         copy.coil = withCoil;
+        return copy.build();
+    }
+
+    /** M9 part C: this air unit laying mine lines (design/enemies/space/minelayer); empty for none. */
+    public EnemySpec withMineLayer(Optional<MineLayer> withLayer) {
+        EnemySpecCopy copy = new EnemySpecCopy(this);
+        copy.mineLayer = withLayer;
+        return copy.build();
+    }
+
+    /** M9 part C: this flying unit with its facing armour (design/enemies/air/gilded-gunship); empty for none. */
+    public EnemySpec withFacingArmour(Optional<FacingArmour> withArmour) {
+        EnemySpecCopy copy = new EnemySpecCopy(this);
+        copy.facingArmour = withArmour;
+        return copy.build();
+    }
+
+    /** M9 part C: this flying unit launching its streams (the Gilded Gunship's Darts); empty for none. */
+    public EnemySpec withLauncher(Optional<Launcher> withLauncher) {
+        EnemySpecCopy copy = new EnemySpecCopy(this);
+        copy.launcher = withLauncher;
+        return copy.build();
+    }
+
+    /** M9 part D: this air unit with its dash cycle (design/enemies/air/buzzsaw-drone); empty for none. */
+    public EnemySpec withDash(Optional<Dash> withDash) {
+        EnemySpecCopy copy = new EnemySpecCopy(this);
+        copy.dash = withDash;
+        return copy.build();
+    }
+
+    /** M9 part D: this air unit linked to its wave's others (design/enemies/space/shard-drone); empty for none. */
+    public EnemySpec withAirLink(Optional<AirLink> withLink) {
+        EnemySpecCopy copy = new EnemySpecCopy(this);
+        copy.airLink = withLink;
+        return copy.build();
+    }
+
+    /** M9 part B: this unit with its scatter when its wave's leader is killed (design/enemies/air/talon); empty for none. */
+    public EnemySpec withScatter(Optional<SquadScatter> withScatter) {
+        EnemySpecCopy copy = new EnemySpecCopy(this);
+        copy.scatter = withScatter;
+        return copy.build();
+    }
+
+    /** M9 part B: this unit riding a rock of its wave (design/enemies, Rock riding); empty for none. */
+    public EnemySpec withSwoopPath(Optional<SwoopPath> withPath) {
+        EnemySpecCopy copy = new EnemySpecCopy(this);
+        copy.swoopPath = withPath;
+        return copy.build();
+    }
+
+    public EnemySpec withRide(Optional<Ride> withRide) {
+        EnemySpecCopy copy = new EnemySpecCopy(this);
+        copy.ride = withRide;
+        return copy.build();
+    }
+
+    /**
+     * M9 part B: this unit as a neutral craft or not ({@link #neutral()}); a neutral one is one the seekers ignore too.
+     */
+    public EnemySpec withNeutral(boolean isNeutral) {
+        EnemySpecCopy copy = new EnemySpecCopy(this);
+        copy.neutral = isNeutral;
+        copy.seekersIgnore |= isNeutral;
+        return copy.build();
+    }
+
+    /**
+     * M9 part B: whether it counts as an enemy: in the level's enemy total, the kills, the kill ratio, the density, the
+     * floor and the haul (false only for a {@link #neutral()} craft). Every counter asks this one predicate.
+     */
+    public boolean countsAsEnemy() {
+        return !neutral;
+    }
+
+    /** M9 part A: this unit with its hex shield (design/enemies, Enemy shields); empty for none. */
+    public EnemySpec withShield(Optional<Shield> withShield) {
+        EnemySpecCopy copy = new EnemySpecCopy(this);
+        copy.shield = withShield;
+        return copy.build();
+    }
+
+    /** M9 part A: this unit with its {@code laser-line} (design/enemies/ground/rail-bunker); empty for none. */
+    public EnemySpec withLaserLine(Optional<LaserLine> withLine) {
+        EnemySpecCopy copy = new EnemySpecCopy(this);
+        copy.laserLine = withLine;
         return copy.build();
     }
 

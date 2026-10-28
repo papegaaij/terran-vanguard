@@ -776,7 +776,155 @@ public final class SimEvents {
         /** M8 part H: a flak marker is set (at it; its burst is the lob's {@link #MORTAR_IMPACT}); value: its index. */
         FLAK,
         /** M8 part H: a cruiser's point defence fires a shot of its burst (at the turret); value: the cruiser. */
-        POINT_DEFENCE;
+        POINT_DEFENCE,
+        /**
+         * M9 part A (design/enemies, Enemy shields): a hit landed on a unit's hex shield and it held (at the unit; the
+         * hexes' flash); value: the unit's kind. At most one per unit every few steps (a beam's damage comes every step).
+         */
+        ENEMY_SHIELD_HIT,
+        /**
+         * M9 part A: a unit's hex shield was emptied (at the unit; the shatter ring): spent by a hit, a {@code
+         * shield-breaker} arc or the EMP Burst; value: the unit's kind.
+         */
+        ENEMY_SHIELD_BROKEN,
+        /** M9 part A: a unit's hex shield is full again after its refill (at the unit; the shimmer); value: its kind. */
+        ENEMY_SHIELD_REFILLED,
+        /**
+         * M9 part A (design/player/weapons/tesla-coil-pod): a pod's arc struck (at its target; the arc is drawn from
+         * the pod's muzzle to here for 0.08 s, {@link PlayerFire#arcX}); value: the mount.
+         */
+        ARC,
+        /**
+         * M9 part A (design/enemies/ground/rail-bunker, {@code laser-line}): a unit's line locked and its telegraph
+         * starts (at the unit; the line is {@link Enemy#lineBeam()}); value: the unit's kind.
+         */
+        LINE_TELEGRAPH,
+        /** M9 part A: a unit's laser line fires (at the unit): the rail's crack; value: the unit's kind. */
+        LINE_FIRED,
+        /** M9 part A: a laser line struck the ship (at the ship); value: the unit's kind. */
+        LINE_HIT,
+        /**
+         * M9 part A (design/player/generator, Enemy drain effects): the number of drainers on the ship changed (at the
+         * ship); value: how many drain now (0: the last let go).
+         */
+        POWER_DRAIN,
+        /**
+         * M9 part B (design/enemies/ground/sam-nest, Dormant until t; Level 29's turning station): a dormant unit woke
+         * at its time on the level clock (at the unit): its {@link GroundUnit#WAKE_SECONDS} tell starts (the rack
+         * lifts, the lights turn red); value: its kind.
+         */
+        WOKE,
+        /**
+         * M9 part B (design/enemies/air/talon, Squad leader): a wave's leader was killed and its living members break off
+         * (at the leader; the radio squelch); value: the leader's kind.
+         */
+        SQUAD_SCATTER,
+        /**
+         * M9 part B (design/enemies, Rock riding): a rider's tell before its leap starts (at the rider: it crouches, its
+         * back glow flares, the rock scrape); value: its kind.
+         */
+        RIDER_TELL,
+        /** M9 part B: a rider leaps off its rock at the ship (at the rider); value: its kind. */
+        RIDER_LEAP,
+        /**
+         * M9 part B (design/campaign Level 29, Hold fire): a neutral craft left the screen unharmed by kills (at the
+         * craft); value: its kind.
+         */
+        NEUTRAL_LEFT,
+        /** M9 part B: a neutral craft was destroyed (at the craft: its explosion); value: its kind. */
+        NEUTRAL_DOWN,
+        /**
+         * M9 part B (Level 29, the rescue halt): the held arena's last holder fell (at it): the clock resumes, the
+         * tender's clamps are open.
+         */
+        HOLDERS_DOWN,
+        /**
+         * M9 part B (design/player/wingmen, Rook's rescue): the escort swap starts (at its launch point, the tender's
+         * hold); value: {@link EscortSwap#JOINS} (the rescued Rook launches and joins; the Bulwark in the slot peels
+         * away), {@link EscortSwap#EMPTY} (Rook flew from the start: the hold opens empty) or {@link EscortSwap#LEAVES}
+         * (no Rook to join: the Ember launches and leaves upward; the Bulwark in the slot peels away all the same).
+         */
+        ESCORT_SWAP,
+        /** M9 part B: the rescued Rook reached his slot (at him): his barks are back. */
+        ESCORT_JOINED,
+        /** M9 part B: the Bulwark that peeled away at the escort swap crossed its side's edge (at it): gone. */
+        BULWARK_DEPARTED,
+        /**
+         * M9 part B, step B1b (design/campaign Level 29, the wavering Stormhawks): a hover's peel-off started (at the
+         * craft; {@link EnemySpec.Hover#peelSpeed()}); value: its kind.
+         */
+        PEEL_OFF,
+        /**
+         * M9 part C (design/enemies, Mine lines): an armed line mine's proximity blink starts (at the mine: the fast
+         * tick); its burst follows after the blink ({@link #MINE_BURST} value 1: the ring and the blast).
+         */
+        MINE_BLINK,
+        /**
+         * M9 part C (Level 30, C1 a): a line mine set off by a neighbour's burst bursts (at the mine: flash and debris,
+         * no ring; the chain crackle), setting off its own neighbours.
+         */
+        MINE_CHAINED,
+        /** M9 part C (Level 30, C2 a): a line mine's blast hit the ship (at the ship); value: the damage, rounded up. */
+        MINE_BLAST_HIT,
+        /**
+         * M9 part C (design/enemies/air/gilded-gunship): a carrier launched a unit of its stream (at the carrier: the
+         * bay door's clank, the pneumatic thump); value: the launched unit's kind.
+         */
+        LAUNCHED,
+        /**
+         * M9 part C (design/enemies/air/gilded-gunship, the arcs): a direct hit on a unit with facing armour (at the
+         * shot); value: {@link ArmourArcs#FRONT} (the armour plate: a grey-gold flash), {@link ArmourArcs#REAR} (the
+         * engines: a white flash). Spaced like the glance events.
+         */
+        PLATING_HIT,
+        /**
+         * M9 part C (design/enemies/air/rail-serpent, the machine split): a cut's rear cars lose power (at the cut: the
+         * coupler snap, the power-down whine); value: the cut member's kind. They drift to a stop, spark and blow
+         * from the cut backwards ({@link #CHAIN_POP}), each paying its bounty.
+         */
+        CHAIN_WRECK,
+        /**
+         * M9 part C (design/enemies/air/rail-serpent): a turret car's lamp lights before its shot (at the car, its
+         * gun's tell); value: its kind.
+         */
+        CAR_TELL,
+        /**
+         * M9 part D (design/enemies, Air links; the Shard Drone): an air link lit after its tell (at its middle: the
+         * flicker steadies, the hum starts); value: its slot ({@link AirLinks#SLOTS}).
+         */
+        AIR_LINK_LIT,
+        /**
+         * M9 part D: a lit air link touched a hull (at the hull); value: {@link AirLinks#TOUCH_SHIP} or {@link
+         * AirLinks#TOUCH_SECTION} + the hull escort's section.
+         */
+        AIR_LINK_TOUCH,
+        /**
+         * M9 part D: an air link broke for good (at its middle: the snap with a spark); value 0: a drone at its end was
+         * destroyed, 1: a drone at its end left the screen (no spark).
+         */
+        AIR_LINK_BROKEN,
+        /**
+         * M9 part D: the EMP Burst dropped a lit air link for its drones' stun (at its middle); it relights after its
+         * tell; value: its slot.
+         */
+        AIR_LINK_DROPPED,
+        /**
+         * M9 part D (design/enemies/air/buzzsaw-drone): a dashing unit's spin-up tell starts (at the unit: the whine
+         * rises, the rim flickers red); value: its kind.
+         */
+        DASH_TELL,
+        /** M9 part D: a dashing unit's dash starts along its locked bearing (at the unit); value: its kind. */
+        DASH_START,
+        /**
+         * M9 part D: a dash ricocheted (at the unit: the scrape-clang); value 0: off a play field edge, 1: off a large
+         * debris chunk.
+         */
+        DASH_BOUNCE,
+        /**
+         * M9 part D: a dashing unit smashed a small debris chunk (at the chunk; it breaks as from shots, {@link
+         * #DEBRIS_DESTROYED} follows); value: its kind.
+         */
+        DASH_SMASH;
 
         private static final Type[] VALUES = values();
     }

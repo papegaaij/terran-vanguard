@@ -118,6 +118,26 @@ final class LoadoutRules {
         return Math.clamp(sparePower * rule.regenBonusPerMw(), 0, rule.maxRegenBonus());
     }
 
+    /**
+     * M9 part A (design/player/generator, Enemy drain effects): the power budget in flight of a fit: the generator's
+     * {@code output}, the fitted {@code load} (MW, the shield's draw in it), the shield's draw and its regen with the
+     * difficulty's lever (without the spare-power bonus), the bonus rule and the drain's numbers. With no drainer
+     * latched the simulation flies exactly as without it.
+     */
+    static Loadout.Power power(Content content, double output, double load, String shield, Difficulty difficulty) {
+        ShieldData.Model model = named(content.shields().models(), ShieldData.Model::name, shield);
+        GeneratorData.SparePower rule = content.generators().sparePower();
+        GeneratorData.Drain drain = content.generators().drain();
+        return new Loadout.Power(
+                output,
+                Math.max(load, model.draw()),
+                model.draw(),
+                shield(content, model, difficulty).regenPerSecond(),
+                rule.regenBonusPerMw(),
+                rule.maxRegenBonus(),
+                new Loadout.Drain(drain.per(), drain.max(), drain.floor()));
+    }
+
     private static <T> T named(List<T> parts, Function<T, String> name, String wanted) {
         return parts.stream()
                 .filter(part -> name.apply(part).equals(wanted))

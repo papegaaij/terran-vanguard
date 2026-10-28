@@ -79,8 +79,23 @@ Act 4's still is built from Level 22's production backdrop (tools/art/backdrop_l
 assets/backdrop/level-22/) the same way, without haze (Europa has no air); Jupiter, the stars and the steam
 thread are drawn here (Jupiter's bands with tools/concept/europa_r48.py's ramp JUP).
 
-Run: python3 tools/art/act_stills.py [act-1] [act-2] [act-3] [act-4] [--review] | act-4-r52   (~30 s for all; after
-backdrop_l01.py, stormhawk.py, backdrop_l08.py, backdrop_l15.py and backdrop_l22.py)
+  act-5-the-belt-still.png        960x540 (M9 part D batch, concept round 64; round 63 T.1 c "the gold wing", from
+                                  tools/concept/act5_still_r63.py's idea c, whose render kit it imports): the belt's
+                                  rocks close up, the sun low on the left beside a huge rim-lit foreground rock, a big
+                                  sunlit rock top right, a drift of small rocks hazed in the sunlit dust band; a wing of
+                                  four Talons in echelon below the lettering in the production Talon's livery (gunmetal,
+                                  gold outer panels, the leader's gold spine), each banked its own way, their gold a
+                                  polished metal with a sheen band (round 63's flat chrome read as yellow), gold glints,
+                                  the engines' short trails; the sun's glare soft (a 1 / (1 + d^2) halo rolled off to
+                                  white above a knee, a stronger dither there) instead of round 63's clipped blob
+  design/campaign/act-5-the-belt/concept/act-5-still-final-r64-a.png   its review sheet, as Act 1's, with 2x crops
+  design/campaign/act-5-the-belt/concept/rejected/act-5-still-final-r62-a.png   ``act-5-r62`` only: round 62's rejected
+                                  still (Ceres Hub from the approach, Level 29's laid ground in perspective;
+                                  ``ceres_hub_still``) and its title card, as it was reviewed
+
+Run: python3 tools/art/act_stills.py [act-1] [act-2] [act-3] [act-4] [act-5] [--review] | act-4-r52 | act-5-r62 | --check
+(~1.5 min for all, act-5 ~1 min on 16 cores; after backdrop_l01.py, stormhawk.py, backdrop_l08.py, backdrop_l15.py,
+backdrop_l22.py and backdrop_l29.py; --check lists every still with its size and fails on a missing Source chunk)
 """
 import importlib.util
 import sys
@@ -1053,11 +1068,257 @@ def round52():
     print(f"sheet: {path.relative_to(ROOT)}")
 
 
+# --------------------------------------------------------------------------- Act 5 (M9 part D batch, round 64)
+
+A5_CONCEPT = DESIGN / "campaign" / "act-5-the-belt" / "concept"
+A5_NAME = "act-5-the-belt"
+A5_ROUND = "r64"
+A5_SOURCE = artkit.source_note(SCRIPT, "M9 part D batch")
+A5_R62 = "r62"                         # round 62's rejected still (``ceres_hub_still``): its sheet, ``act-5-r62``
+HORIZON5, CURVE5 = 236.0, 1.6e-4       # Ceres's horizon: a dwarf planet's stronger curve
+GROUND5 = 96_000.0                     # the crust's plane: distance ahead = GROUND5 / rows below the horizon
+NEAR5 = 300.0                          # texel rows of the strip before the screen's bottom row
+
+
+def ceres_hub_still():
+    """Act 5's still: Ceres Hub from the approach, Level 29's ground layer (tools/art/backdrop_l29.py ``ground_strip``:
+    the crust's ragged edge with the canyon's mouth, the dock canyon with its white lamps, the Helix block in charcoal
+    and gold among the grey Coalition blocks, Block C across it) in perspective from high up, running to Ceres's
+    curved horizon; space below the crust's edge in the foreground and over the horizon: the belt's sunlit dust band,
+    stars, the sun's glare at the top left."""
+    import backdrop_l29 as l29  # noqa: E402  (tools/art: the level's layout and laid ground)
+    r0 = l29.CANYON_SEAM - 1000
+    n = 4096
+    strip = l29.ground_strip(r0, n).astype(np.float64)
+    strip[..., :3] *= strip[..., 3:4] / 255
+    tile = np.array(Image.open(l29.OUT / "dock-canyon.png").convert("RGBA")).astype(np.float64)
+    hor = HORIZON5 + CURVE5 * (_xx - W / 2) ** 2
+    dy = np.maximum(_yy - hor, 0.5)
+    ground = _yy > hor
+    z = GROUND5 / dy
+    v = z - (GROUND5 / (H - 1 - HORIZON5) - NEAR5)            # texel rows above the strip's bottom
+    u = (_xx - W / 2) * z / FOCAL + 240
+    rim = np.where(u < 0, np.mod(u, 64), np.where(u >= 480, 416 + np.mod(u, 64), u))
+    foot = z / FOCAL
+    near = plane_sample(mip_chain(strip[::-1].copy()), rim, v, foot, False)
+    far = plane_sample(mip_chain(tile[::-1].copy()), rim, v + r0, foot, True)
+    k = (v >= n - 2)[..., None]
+    rgba = near * (1 - k) + far * k
+    a = np.clip(rgba[..., 3:4] / 255, 0, 1)
+    fall = (1 - np.exp(-z / 40000.0))[..., None]
+    rgb = rgba[..., :3] / np.maximum(a, 1e-6) * (1 - 0.3 * fall) + np.array((120, 110, 98.0)) * 0.3 * fall
+    sky = np.zeros((H, W, 3)) + np.array((3, 3, 7.0))
+    band = np.exp(-((_yy - 70 - (_xx - 480) * 0.22) / 60) ** 2) * (0.6 + 0.4 * raster.fbm(W, H, 32, 5501, octaves=3,
+                                                                                         period=False))
+    sky += band[..., None] * np.array((96, 76, 54.0))
+    rng = np.random.default_rng(5502)
+    for _ in range(160):
+        x, y = rng.integers(0, W), rng.integers(0, H)
+        bv = rng.uniform(60, 220)
+        sky[y, x] += (bv, bv * 0.97, bv * 0.9)
+    sky += (np.exp(-(np.hypot(_xx + 40, _yy + 60) / 160) ** 2) * 1.2)[..., None] * np.array((255, 236, 200.0))
+    out = np.where(ground[..., None], rgb * a + sky * (1 - a), sky)
+    out += (np.exp(-((_yy - hor) / 1.3) ** 2) * ground)[..., None] * np.array((60, 54, 44.0))   # the sunlit limb
+    return np.clip(out, 0, 255)
+
+
+# The gold wing (round 63 T.1 c, tools/concept/act5_still_r63.py's idea c, its render kit imported unchanged)
+A5_SUN = (150, 404)                    # the low sun, just clear of the foreground rock's edge
+A5_FRONT = (-10, 566)                  # the foreground rock's centre (radius 240 px)
+A5_BIG = (858, 118)                    # the big sunlit rock top right (radius 150 px)
+A5_DRIFT = (("f1", 880, 300, 30, 513, 0.5), ("f2", 380, 104, 18, 514, 0.62), ("f3", 560, 250, 12, 515, 0.66),
+            ("f4", 250, 276, 22, 516, 0.55), ("f5", 724, 214, 16, 517, 0.6), ("f6", 640, 84, 10, 518, 0.68),
+            ("f7", 120, 160, 14, 519, 0.6))        # the hazed small rocks: key, x, y, radius px, seed, haze share
+# the wing in echelon, receding to the left, the leader nearest: x, y, span px, leader, yaw, bank, pitch (degrees;
+# round 63 flew all four in one pose, round 64 turns each its own way: banking into the turn, the second levelling)
+A5_TALONS = [(320, 372, 84, False, -129, 29, -38), (454, 400, 110, False, -111, 13, -31),
+             (620, 402, 142, False, -121, 29, -37), (812, 402, 174, True, -108, 20, -33)]
+A5_KEY = (-2.4, 0.2, 1.1)              # the sun as the renderer's point key: low at the left, close (a falloff on the gold)
+A5_STRIPS = {"big": 4, "front": 8}
+A5_GLARE = np.array((255, 236, 205.0))
+A5_KNEE = 176.0                        # above it the still rolls off to white instead of clipping (the sun's glare)
+
+
+def _a5_sheen(p, n):
+    """The gold panels' albedo: a broad polished band across the wings (model space), darker toward root and tip."""
+    u = np.abs(p[:, 0]) * 0.8 + p[:, 1] * 0.6
+    return 0.62 + 0.61 * np.clip(1.2 - np.abs(u - 0.45) / 0.45, 0, 1) ** 1.5
+
+
+def _a5_rot(yaw, bank, pitch):
+    import act5_still_r63 as r63  # noqa: E402  (concept script, imported unchanged)
+    return r63.rx(pitch * r63.DEG) @ r63.rz(yaw * r63.DEG) @ r63.ry(bank * r63.DEG)
+
+
+def a5_talon_job(size, leader, yaw, bank, pitch):
+    """A Talon for the still: round 60's b model in the production Talon's livery (tools/art/belt_units.py
+    ``gunmetal``), its gold a polished metal (less mirror, a sheen band, lit by the close low key) instead of round
+    63's flat chrome, which read as yellow paint."""
+    import act5_still_r63 as r63  # noqa: E402
+    import belt_units as bu  # noqa: E402
+    import enemies_r60 as e60  # noqa: E402
+    from dataclasses import replace
+    from render.enemy_models import A_GOLD, hx  # noqa: E402
+    scene, mats = e60.talon_model("b", leader)
+    mats = bu.gunmetal(mats)
+    mats[A_GOLD] = replace(mats[A_GOLD], albedo=hx("d8902a"), metal=0.45, shininess=50, spec=1.5, pattern=_a5_sheen)
+    sc, mm = r63.posed(scene, mats, _a5_rot(yaw, bank, pitch), size / 2.1 / r63.PPU)
+    return sc, mm, (size + 8, size + 8, 4, 80), dict(key_pos=A5_KEY, exposure=0.92)
+
+
+def a5_parts():
+    """The models, rendered in parallel (the big rocks in row strips): the rocks as round 63's, the Talons here."""
+    import os
+    import act5_still_r63 as r63  # noqa: E402
+    import belt_units as bu  # noqa: E402
+    from concurrent.futures import ProcessPoolExecutor
+    jobs = [("big", r63.rock_job, (150, 511, (-3.4, -1.2, 0.9), 0.6, 1.25)),
+            ("front", r63.rock_job, (240, 512, (1.8, 1.2, -2.2), 0.2, 1.6))]
+    for i, (key, _, _, r, seed, _) in enumerate(A5_DRIFT):
+        jobs.append((key, r63.rock_job, (r, seed, (-3.4, -0.4, 1.0), 0.3 * i)))
+    for i, (_, _, size, leader, yaw, bank, pitch) in enumerate(A5_TALONS):
+        jobs.append((f"t{i}", a5_talon_job, (size, leader, yaw, bank, pitch)))
+    work = [(name, fn, args, i, A5_STRIPS.get(name, 1)) for name, fn, args in jobs for i in range(A5_STRIPS.get(name, 1))]
+    got = {}
+    with ProcessPoolExecutor(max_workers=min(16, os.cpu_count() or 4)) as ex:
+        for name, i, img in ex.map(r63._run, work):
+            got.setdefault(name, {})[i] = img
+    parts = {name: Image.fromarray(np.concatenate([np.array(rows[i]) for i in sorted(rows)], axis=0), "RGBA")
+             for name, rows in got.items()}
+    for i in range(len(A5_TALONS)):
+        parts[f"t{i}"] = bu.rim(parts[f"t{i}"])
+    return parts
+
+
+def a5_finish(rgb, soft):
+    """One 96-colour palette with 4x4 ordered dither (round 63's ``finish``): the median cut weighs the saturated
+    accents and the glare's gradient, and the dither is stronger in the glare (``soft`` 0..1), so it fades smoothly
+    instead of stepping into posterized rings."""
+    b = np.tile(artkit.BAYER4, (H // 4 + 1, W // 4 + 1))[:H, :W]
+    px = np.clip(rgb + ((b - 0.5) * (10.0 + 12.0 * soft))[..., None], 0, 255).astype(np.uint8)
+    flat = px.reshape(-1, 3).astype(int)
+    accent = flat[(flat.max(1) - flat.min(1) > 80) & (flat.max(1) > 110)]
+    glare = flat[soft.reshape(-1) > 0.15]
+    sample = np.concatenate([flat, np.repeat(accent, 24, axis=0), np.repeat(glare, 6, axis=0)]).astype(np.uint8)
+    palette = Image.fromarray(sample.reshape(-1, 1, 3), "RGB").quantize(
+        colors=STILL_COLOURS, method=Image.Quantize.MEDIANCUT, dither=Image.Dither.NONE)
+    out = Image.fromarray(px, "RGB").quantize(palette=palette, dither=Image.Dither.NONE)
+    return out.convert("RGB").convert("RGBA")
+
+
+def gold_wing_still(parts):
+    """Act 5's still, the gold wing: the belt's rocks close up, the sun low on the left beside a huge rim-lit foreground
+    rock, a big sunlit rock top right, a drift of small rocks hazed in the dust band; a wing of four Talons (the
+    production livery: gunmetal, gold outer panels, the leader's gold spine) in echelon below the lettering, each
+    banked its own way, gold glints and their engines' short trails. The sun's glare is a soft one: a small white
+    core, a halo falling off as 1 / (1 + d^2) and a wide warm wash, rolled off to white above a knee."""
+    import act5_still_r63 as r63  # noqa: E402
+    import belt_units as bu  # noqa: E402
+    sx, sy = A5_SUN
+    rgb = r63.space(6331, (-9999.0, -9999.0), 330, -0.24, band_k=1.25, stars=120)     # the sky without its glare
+    d = np.hypot(_xx - sx, _yy - sy)
+    rgb += (np.exp(-(d / 520) ** 2) * 0.18)[..., None] * np.array((170, 130, 90.0))
+    haze = np.array((120, 98, 74.0))
+    for key, x, y, _, _, k in A5_DRIFT:
+        im = np.array(parts[key]).astype(np.float64)
+        im[..., :3] = im[..., :3] * (1 - k) + haze * k
+        rgb = r63.paste(rgb, Image.fromarray(im.astype(np.uint8), "RGBA"), x, y)
+    rgb = r63.paste(rgb, parts["big"], *A5_BIG)
+    for i, (x, y, size, _, yaw, bank, pitch) in enumerate(A5_TALONS):
+        rot = _a5_rot(yaw, bank, pitch)
+        nose = rot @ np.array((0, 1.0, 0))
+        back = -np.array((nose[0], -nose[1])) / np.hypot(nose[0], nose[1])
+        for ex in (-0.12, 0.12):                                                   # the twin engines' short trails
+            e = rot @ np.array((ex, -0.74, 0)) * size / 2.1
+            px, py = x + e[0], y - e[1]
+            for t in np.linspace(0, 1, 12):
+                rgb = r63.glow(rgb, px + back[0] * 0.5 * size * t, py + back[1] * 0.5 * size * t, 1.6 + 2.5 * t,
+                               (255, 110, 50), 0.45 * (1 - t))
+        rgb = r63.paste(rgb, parts[f"t{i}"], x, y)
+        for ex in (-0.12, 0.12):
+            e = rot @ np.array((ex, -0.74, 0)) * size / 2.1
+            rgb = r63.glow(rgb, x + e[0], y - e[1], 2.5 + size / 80, (255, 170, 100), 1.2)
+    rgb = r63.paste(rgb, parts["front"], *A5_FRONT)
+    m = r63.mask_of(parts["front"], *A5_FRONT)                     # the glare spilling over the rock's edge
+    pad = np.pad(m, 2)
+    edge = m & ~(pad[:-4, 2:-2] & pad[2:-2, 4:] & pad[4:, 2:-2] & pad[2:-2, :-4])
+    rgb += (edge * np.exp(-(d / 110) ** 2) * 1.0)[..., None] * np.array((255, 226, 180.0))
+    glare = np.exp(-(d / 11) ** 2) * 3.0 + 1.1 / (1 + (d / 34) ** 2) + 0.32 / (1 + (d / 150) ** 2)
+    rgb += (glare * ~m + glare * m * 0.25)[..., None] * A5_GLARE              # the rock in front dims it
+    over = np.maximum(rgb - A5_KNEE, 0)
+    rgb = np.where(rgb < A5_KNEE, rgb, A5_KNEE + (255 - A5_KNEE) * (1 - np.exp(-over / (255 - A5_KNEE))))
+    img = Image.fromarray(np.clip(rgb, 0, 255).astype(np.uint8)).convert("RGBA")
+    for i, (x, y, size, *_rest) in enumerate(A5_TALONS):                    # gold glints where the sun catches a panel
+        t = parts[f"t{i}"]
+        gx, gy = r63.gold_glint(t)
+        w = 11 + size // 14 // 2 * 2
+        img = artkit.add_light(img, bu.star(w, 1.0, (255, 214, 120)),
+                               (int(x - t.width / 2 + gx - w / 2), int(y - t.height / 2 + gy - w / 2)))
+    soft = np.clip(1.6 / (1 + (d / 90) ** 2), 0, 1)
+    return a5_finish(np.array(img)[..., :3].astype(np.float64), soft)
+
+
+def build5():
+    OUT.mkdir(parents=True, exist_ok=True)
+    img = gold_wing_still(a5_parts())
+    artkit.save_png(img, OUT / f"{A5_NAME}-still.png", A5_SOURCE)
+    print(f"{A5_NAME}-still.png: {img.width}x{img.height}, {artkit.colour_count([img])} colours")
+
+
+def review5(img=None, rnd=A5_ROUND):
+    """The review sheet: the still at 1x, the title card over it, and (round 64) 2x crops of the wing and the glare.
+    ``img`` + ``rnd`` = A5_R62: round 62's rejected still's sheet, into concept/rejected/."""
+    final = img is None
+    img = Image.open(OUT / f"{A5_NAME}-still.png").convert("RGBA") if final else img
+    crops = [(712, 310, 912, 490), (36, 314, 276, 494)] if final else []        # the leader; the sun by the rock
+    title = ("ACT 5 TITLE-CARD STILL (FINAL R64): THE GOLD WING" if final
+             else "ACT 5 TITLE-CARD STILL (FINAL R62): CERES HUB")
+    batch = "M9 PART D BATCH" if final else "M9 PART B BATCH"
+    sheet = raster.sheet(1000, 40 + 2 * (H + 30) + (400 if crops else 0) + 10, title,
+                         f"PRODUCTION ART, {batch} - {rnd.upper()}")
+    raster.draw_text(sheet, 16, 38, f"THE STILL, 960X540 AT 1X ({artkit.colour_count([img])} COLOURS)", raster.LABEL)
+    sheet.alpha_composite(img, (16, 52))
+    raster.draw_text(sheet, 16, 52 + H + 14, f"THE TITLE CARD OVER IT: DARKENED TO {int(BRIGHTNESS * 100)} %, LETTERBOX, "
+                                             "CHROME LETTERING (THE GAME ADDS THE SETTINGS LINE AND THE MISSIONS)",
+                     raster.LABEL)
+    sheet.alpha_composite(title_card(img, A5_NAME), (16, 52 + H + 28))
+    if crops:
+        y = 52 + 2 * H + 28 + 16
+        raster.draw_text(sheet, 16, y, "2X DETAILS: THE WING'S GOLD AND BANKS; THE SUN'S SOFT GLARE BY THE FOREGROUND ROCK",
+                         raster.LABEL)
+        x = 16
+        for box in crops:
+            part = img.crop(box)
+            sheet.alpha_composite(part.resize((part.width * 2, part.height * 2), Image.NEAREST), (x, y + 14))
+            x += part.width * 2 + 16
+    folder = A5_CONCEPT if final else A5_CONCEPT / "rejected"
+    folder.mkdir(parents=True, exist_ok=True)
+    path = folder / f"act-5-still-final-{rnd}-a.png"
+    sheet.convert("RGB").save(path, optimize=True)
+    print(f"review: {path.relative_to(ROOT)}")
+
+
 if __name__ == "__main__":
+    if "--check" in sys.argv[1:]:
+        bad = 0
+        for name, src in (("act-1-first-contact", SOURCE), (A2_NAME, A2_SOURCE), ("act-3-red-dust", A3_SOURCE),
+                          (A4_NAME, A4_SOURCE), (A5_NAME, A5_SOURCE)):
+            path = OUT / f"{name}-still.png"
+            img = Image.open(path) if path.exists() else None
+            note = img.text.get(artkit.SOURCE_KEY, "") if img else ""
+            ok = img is not None and img.size == (W, H) and note.startswith(f"tools/art/{SCRIPT}") and (
+                src is None or note == src)
+            print(f"{'ok ' if ok else 'BAD'} {path.relative_to(ROOT)}: {img.size if img else None} {note!r}")
+            bad += not ok
+        sys.exit(1 if bad else 0)
     if "act-4-r52" in sys.argv[1:]:
         round52()
         sys.exit(0)
-    acts = [a for a in sys.argv[1:] if a in ("act-1", "act-2", "act-3", "act-4")] or ["act-1", "act-2", "act-3", "act-4"]
+    if "act-5-r62" in sys.argv[1:]:
+        review5(ui_dither(ceres_hub_still(), np.ones((H, W)), STILL_COLOURS).convert("RGB").convert("RGBA"), A5_R62)
+        sys.exit(0)
+    acts = [a for a in sys.argv[1:] if a in ("act-1", "act-2", "act-3", "act-4", "act-5")] or [
+        "act-1", "act-2", "act-3", "act-4", "act-5"]
     if "act-1" in acts:
         if "--review" not in sys.argv[1:]:
             build()
@@ -1074,3 +1335,7 @@ if __name__ == "__main__":
         if "--review" not in sys.argv[1:]:
             build4()
         review4()
+    if "act-5" in acts:
+        if "--review" not in sys.argv[1:]:
+            build5()
+        review5()

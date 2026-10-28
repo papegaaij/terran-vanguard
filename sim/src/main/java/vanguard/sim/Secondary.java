@@ -41,6 +41,10 @@ import java.util.List;
  * @param countsBosses step SIM-K (design/campaign Level 21, round 44 K.h: "count as the data says"): whether a kill
  *     ratio counts the level's bosses among its enemies (their kills and the total; {@link #withBossesCounted}); true
  *     unless the data says otherwise
+ * @param spared M9 part B (design/campaign Level 29, "Hold fire"; an inverted escapes objective): the slug of the
+ *     neutral craft none of which may be destroyed: met when the last of them has left the screen with none destroyed,
+ *     failed at once by the first destroyed (a hit does not fail it); empty for none ({@link #spared(String, int,
+ *     String)})
  */
 public record Secondary(
         double killRatio,
@@ -60,8 +64,23 @@ public record Secondary(
         boolean untouched,
         boolean standing,
         int escapesAllowed,
-        boolean countsBosses) {
+        boolean countsBosses,
+        String spared) {
     public Secondary {
+        if (!spared.isEmpty()
+                && (killRatio > 0
+                        || !groups.isEmpty()
+                        || !escapes.isEmpty()
+                        || !killAll.isEmpty()
+                        || !parts.isEmpty()
+                        || afloat
+                        || sondes
+                        || integrity > 0
+                        || links
+                        || untouched
+                        || standing)) {
+            throw new IllegalArgumentException("a spared objective counts its neutral craft, nothing else");
+        }
         if (!countsBosses && !(killRatio > 0)) {
             throw new IllegalArgumentException("only a kill ratio leaves the bosses out of its count");
         }
@@ -166,6 +185,67 @@ public record Secondary(
                 true);
     }
 
+    /** Without M9 part B's spared craft. */
+    public Secondary(
+            double killRatio,
+            int credits,
+            List<String> groups,
+            String escapes,
+            List<String> killAll,
+            String label,
+            String partsOf,
+            List<Integer> parts,
+            int beforePhase,
+            String tag,
+            boolean afloat,
+            boolean sondes,
+            double integrity,
+            boolean links,
+            boolean untouched,
+            boolean standing,
+            int escapesAllowed,
+            boolean countsBosses) {
+        this(
+                killRatio,
+                credits,
+                groups,
+                escapes,
+                killAll,
+                label,
+                partsOf,
+                parts,
+                beforePhase,
+                tag,
+                afloat,
+                sondes,
+                integrity,
+                links,
+                untouched,
+                standing,
+                escapesAllowed,
+                countsBosses,
+                "");
+    }
+
+    /**
+     * M9 part B (design/campaign Level 29, "Hold fire"): {@code spared: slug}, none of the neutral craft {@code slug}
+     * destroyed, for {@code credits}, with the tracker's {@code label} ({@code HOLD FIRE}): met when the last of them
+     * has left the screen, failed at the first destroyed.
+     */
+    public static Secondary spared(String slug, int credits, String label) {
+        if (slug.isEmpty()) {
+            throw new IllegalArgumentException("a spared objective names its craft");
+        }
+        return new Secondary(
+                0, credits, List.of(), "", List.of(), label, "", List.of(), -1, "", false, false, 0, false, false,
+                false, 0, true, slug);
+    }
+
+    /** M9 part B: whether it is a spared objective (the neutral craft none of which may be destroyed). */
+    public boolean bySpared() {
+        return !spared.isEmpty();
+    }
+
     /**
      * Step SIM-K (design/campaign Level 21, "the boss and its debris not counted"): this kill ratio counting the level's
      * bosses among its enemies ({@code counted}) or not.
@@ -189,7 +269,8 @@ public record Secondary(
                 untouched,
                 standing,
                 escapesAllowed,
-                counted);
+                counted,
+                spared);
     }
 
     /** Without M7 part F's escapes allowed. */
@@ -254,7 +335,8 @@ public record Secondary(
                 untouched,
                 standing,
                 allowed,
-                countsBosses);
+                countsBosses,
+                spared);
     }
 
     /** Without round 41's standing. */
@@ -524,7 +606,8 @@ public record Secondary(
                 && !afloat
                 && !byIntegrity()
                 && !untouched
-                && !standing;
+                && !standing
+                && spared.isEmpty();
     }
 
     /** Whether the objective is about groups rather than the kill ratio. */

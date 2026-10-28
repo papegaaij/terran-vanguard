@@ -241,6 +241,19 @@ public final class ShipLooks {
         batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
     }
 
+    /**
+     * M9 part A (design/player/generator, Enemy drain effects): the shield ring is drawn at this share while a drain
+     * stops the shield's regeneration.
+     */
+    static final float RING_DIMMED = 0.4f;
+
+    private boolean ringDimmed;
+
+    /** M9 part A: whether the shield ring is drawn dimmed (a drain stopped the shield's regeneration). */
+    public void ringDimmed(boolean dimmed) {
+        ringDimmed = dimmed;
+    }
+
     public void drawAbove(SpriteBatch batch, long tick, float alpha, float x, float y, float shimmer) {
         batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
         int spark = (int) ((tick - sparkStart + alpha) / SPARK_FRAME_TICKS);
@@ -252,7 +265,11 @@ public final class ShipLooks {
         if (shimmer > 0) {
             int frame = Math.min(ring.size - 1, (int) ((1 - shimmer) * ring.size));
             AtlasRegion region = ring.get(frame);
+            if (ringDimmed) {
+                batch.setColor(1, 1, 1, RING_DIMMED);
+            }
             batch.draw(region, x - region.getRegionWidth() / 2f, y - region.getRegionHeight() / 2f);
+            batch.setColor(com.badlogic.gdx.graphics.Color.WHITE);
         }
         batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
     }

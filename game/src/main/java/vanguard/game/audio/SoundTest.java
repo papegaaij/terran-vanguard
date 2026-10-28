@@ -61,6 +61,8 @@ public final class SoundTest implements AutoCloseable {
             new Track("ACT COMPLETE", "FANFARE: ACT OUTRO", "music/act-complete.ogg", false, CUE_VOLUME),
             // M8 part H: track 30, the reveal sting at Level 28's cruisers' rise (round 58 a as a stand-in).
             new Track("BLACK AND GOLD", "STING: THE REVEAL", "music/reveal-sting.ogg", false, CUE_VOLUME),
+            // M9 part B: track 31, Rook's return sting at Level 29's rescue (round 60 M.2 a).
+            new Track("HORN CALL", "STING: ROOK'S RETURN", "music/rook-return.ogg", false, CUE_VOLUME),
             new Track("GAME OVER", "CUE: GAME OVER", "music/game-over.ogg", false, CUE_VOLUME));
 
     /** Every sound effect but the music cues, which are tracks here. */

@@ -1,0 +1,46 @@
+# Buzzsaw Drone stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/schemas-units/README.md
+# M9 part D, step D2 (Level 31): the approved stat block (round 60) as data. New in it (flown from step D1): the `dash`
+# movement (chase at its `speed`, the spin-up tell, a locked dash ricocheting off the edges and the large drifting
+# rocks, small rocks smashed; out through the nearest edge after its dashes) and the hook `dash`. Contact only. A
+# `circle` of them orbits its point before they break off one by one into the chase (`orbit`, the wave's hold). HP 10
+# base: the beam era's ×2 flies it at 20.
+name: Buzzsaw Drone
+faction: Jovian Ascendancy
+layer: air
+tier: small
+size: [36, 36]    # sprite px
+hitbox: [26, 26]  # round
+parts: single
+orientation: radial   # six blades; spin 2 turns/s chasing, 6 turns/s spun up
+hp: 10            # base; the beam era's ×2 flies it at 20: 0.16 s at the L31 reference of 128
+armour: none
+speed: 120        # px/s chasing
+machine: true     # the EMP Burst stuns it 3 s: it stops spinning and coasts
+movement:
+  dash: {turn_rate: 120, chase: 2.5, tell: 0.6, tell_speed: 40, speed: 360, bounces: 3, slow: 0.5, dashes: 2}   # °/s chasing; s chasing; s spin-up tell; px/s in the tell; px/s dashing; bounces a dash; s slowing; dashes before it leaves
+  orbit: {radius: 60, turn_rate: 90}   # a circle's orbit before the break, px and °/s
+attacks: []       # contact only
+formations:
+  - {name: stream, size: [3, 6]}
+  - {name: circle, size: [4, 6]}
+weak_points:
+  - {name: the hub}
+drops: []
+traits: [spread, area, forward, piercing]
+bounty: 12
+first_level: 31
+difficulty:
+  easy: {dash: {tell: 0.8, speed: 300, bounces: 2}}
+  hard: {dash: {tell: 0.5, speed: 400, dashes: 3}}
+notes:
+  orientation: (six blades; `spin` 2 turns/s chasing, 6 turns/s spun up)
+  size: (a round hitbox)
+  armour: none (too small for a shield emitter). HP {hp} base flies at 20 with the beam era's ×2
+  speed: chasing; **{movement.dash.speed} px/s** dashing
+  movement: '`chase` (turn rate {movement.dash.turn_rate}°/s) for {movement.dash.chase} s; then the **spin-up tell {movement.dash.tell} s** (it slows to {movement.dash.tell_speed} px/s, the blades speed up with a rising whine, the gold rim flickers red); then a **dash** in a straight line along the bearing to the ship at the tell''s start (locked, not re-aimed), `ricochet` off the play-field edges and the big drifting asteroids up to {movement.dash.bounces} times; it then slows to {speed} px/s over {movement.dash.slow} s and chases again; after its {movement.dash.dashes}nd dash it leaves through the nearest edge'
+  attack: '`none`: contact `{tier}` = {contact_damage} (destroyed by the impact)'
+  formations: '(a stream from alternating sides, edge-warned on a side entry; a circle orbiting a point {movement.orbit.radius} px round, breaking off one by one, 0.4 s apart, into their chase; at most 6 on the screen, two dashing)'
+  weak_points: (drawn only)
+  death: '`small` explosion; the blades fly off as three spinning sparks (presentation, no damage)'
+  used_in: its later Act 5 levels per the level drafts
+  difficulty: 'easy: tell 0.8 s, dash 300 px/s, 2 bounces; hard: tell 0.5 s (the floor), dash 400 px/s, three dashes before it leaves'

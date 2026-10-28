@@ -1,0 +1,41 @@
+# Wavering Stormhawk stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/schemas-units/README.md
+# M9 part B, step B2 (Level 29, Hold fire): the level's wavering Ceres Wing Stormhawks (README Objective, approved in
+# round 60, look A.22 a) as a unit data file (gap check m9b-gaps.md §4). New in it (flown from steps B1, B1b): `neutral`
+# (no gun, no contact, no bounty, never counted as an enemy, the seekers never pick it, Rook's and the Bulwark's shots
+# pass through it) and the hover's `peel` (the peel-off to the nearer side edge). HP 20 base: the beam era's ×2 flies it
+# at the README's 40.
+name: Wavering Stormhawk
+faction: CDF (Ceres Wing)
+layer: air
+tier: small
+size: [40, 40]    # sprite px
+hitbox: [28, 28]
+parts: single
+orientation: 16 angles
+hp: 20            # base; the beam era's ×2 flies it at 40 (easy 30 / hard 52): two or three stray hits are survivable
+armour: none
+speed: 90         # px/s, its descent
+neutral: true
+movement:
+  hover: {seconds: 6, y: 150, peel: 260}   # s it holds, px below the top edge; px/s peel-off to the nearer side edge
+attacks: []
+formations:
+  - {name: line abreast, size: [2, 2]}
+weak_points: []
+drops: []
+traits: []
+bounty: 0
+first_level: 29
+difficulty:
+  easy: {hover_seconds: 8}
+  hard: {hover_y: 190}
+notes:
+  armour: none; HP {hp} base flies at 40 with the beam era's ×2
+  speed: descending; {movement.hover.peel} px/s peeling off
+  movement: 'a pair enters at the top, descends to {movement.hover.y} px below the top edge, holds there {movement.hover.seconds} s (a slow sway, a wing-waggle), then peels off to the nearer side edge at {movement.hover.peel} px/s; on the screen ≈ 9 s'
+  attack: '`none`: a **neutral** craft: no fire, no contact (the ship passes under it); a white IFF light blinking 1 Hz, a red flash on a hit; homing shots and Rook never pick it, Rook''s and the Bulwark''s shots pass through it; the player''s shots and specials hit it'
+  formations: (Level 29's three pairs)
+  bounty: '; never counted as an enemy (density, the floor, kill ratios)'
+  death: '`small` explosion; it fails the level''s Hold fire secondary'
+  used_in: L29 only (Ceres Hub's mutiny)
+  difficulty: 'easy: holds 8 s; hard: 40 px lower (190 px), among the waves'

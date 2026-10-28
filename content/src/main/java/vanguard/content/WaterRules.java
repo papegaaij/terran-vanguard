@@ -66,16 +66,30 @@ final class WaterRules {
     /**
      * The level's and its sections' lists of forbidden specials: a switch where a section's list (its own, else the
      * level's) differs from the one before it; {@link SpecialLimits#NONE} when no list is given anywhere (the specials'
-     * own settings decide by the medium).
+     * own settings decide by the medium). M9 part A: an underground section without its own list forbids the
+     * underground setting's specials, which read {@code IN ROCK}.
      */
     static SpecialLimits specialLimits(Content content, LevelData level) {
         List<SpecialLimits.Switch> switches = new ArrayList<>();
         Optional<Set<SpecialSpec.Kind>> before = Optional.empty();
+        SpecialLimits.Reason reasonBefore = SpecialLimits.Reason.NONE;
         for (int i = 0; i < level.sections().size(); i++) {
             Optional<Set<SpecialSpec.Kind>> now = level.specialLimitsOf(i).map(slugs -> kinds(content, slugs));
-            if (!Objects.equals(now, before)) {
-                switches.add(new SpecialLimits.Switch(start(level, i), now));
+            SpecialLimits.Reason reason = SpecialLimits.Reason.NONE;
+            if (now.isEmpty() && level.undergroundOf(i)) {
+                // M9 part A (design/player/specials, Act 5 specials): inside rock the underground setting's list,
+                // read IN ROCK.
+                now = Optional.of(kinds(
+                        content,
+                        content.specials().forbids(Optional.of(SpecialsData.Setting.UNDERGROUND)).stream()
+                                .map(SpecialsData::slug)
+                                .toList()));
+                reason = SpecialLimits.Reason.IN_ROCK;
+            }
+            if (!Objects.equals(now, before) || reason != reasonBefore) {
+                switches.add(new SpecialLimits.Switch(start(level, i), now, reason));
                 before = now;
+                reasonBefore = reason;
             }
         }
         return switches.isEmpty() ? SpecialLimits.NONE : new SpecialLimits(switches);

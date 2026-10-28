@@ -1,10 +1,10 @@
 ---
 title: Rail Serpent
-design: draft
-implementation: not-started
-art: proposed
+design: approved
+implementation: done
+art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../player/specials, ../coilwyrm, ../../../campaign/act-5-the-belt]
-updated: 2026-10-27
+updated: 2026-10-28
 ---
 
 # Rail Serpent
@@ -20,32 +20,34 @@ sparks and explode, while the front half runs on (Level 30).
 
 ### Stat block
 
-**Draft** (Act 5 design phase, pending the user's review in round 60). A hand-written table: there is
-no `data.yaml` yet, the build turns it into one. Numbers at **medium** (see the
+Approved in round 60 (drafted in the Act 5 design phase); rendered from [data.yaml](data.yaml) since M9
+part C (step C2). Numbers at **medium** (see the
 [balancing basis](../../README.md#balancing-basis)); HP is in damage units (a Pulse Cannon L1 shot does
 2), set at its first level from the proposed Act 5 reference DPS (L30 = 124). A `large` unit: in a later
 level its parts take the act HP factor (e.g. ×136/124 at L33).
 
+<!-- data: stat-block -->
 | Field | Value |
 |---|---|
-| Faction | Jovian Ascendancy; a **machine** (stunned 3 s by the [EMP Burst](../../../player/specials/README.md#emp-burst-l15): the train halts in place and its turrets go dark, then runs on along its path) |
+| Faction | Jovian Ascendancy (machine: the EMP Burst stuns it longest) |
 | Layer | `air` |
-| Size tier | `large` (a 10-car train ≈ 420 px long) |
-| Size | engine car 64×64 px, cars 48×48 px; hitboxes 70 % of the sprite |
+| Size tier | `large` |
+| Size | 64×64 px, hitbox 45×45 (the engine car); cars 48×48 px, a 10-car train ≈ 420 px long; hitboxes 70 % of the sprite |
 | Parts | engine car (`vital`), 8–14 cars (`destroyable`): every third car (3rd, 6th, 9th, 12th) a **turret car**, the last car the **tail** (`destroyable`, a bonus when destroyed first) |
 | Orientation | `32 angles` per car (each car faces along the path) |
-| HP | engine 150 (1.2 s at the L30 reference of 124), car 16, turret car 24, tail 20; a 10-car train 150 + 6 × 16 + 3 × 24 = 318 (easy 0.75 / hard 1.3 per part, from the global multipliers) |
+| HP | engine 150 (1.2 s at the L30 reference of 124), car 16, turret car 24, tail 20; a 10-car train 150 + 6 × 16 + 3 × 24 + 20 = 338 (easy 254 / hard 439, from the global multipliers) |
 | Armour / shield | none: the "armour" is its HP per car; no hex shield (an unmanned train) |
 | Speed | 170 px/s (the cars `chain` on the engine's path history at 0.85 × the car length) |
 | Movement | the engine flies an authored `swirl` or `cross` path from the wave, **entering from a side or the bottom edge** (`from: sides` / `rear`; a wave's first entry edge-warned 3 s ahead), crossing the screen once with at most one `loop`, and leaves through another edge |
 | Attack | each turret car: `aimed` single shot every 2.4 s, the turret cars staggered 0.6 s apart (standard 160 px/s, `small` = 4), a 0.2 s red lamp on the turret as the tell; contact `large` = 20 (engine) / `small` = 10 (cars) |
-| Formations | `snake` (one train), `pincer` (two trains from both sides, edge-warned) |
+| Formations | snake, pincer (one train, or two from both sides, edge-warned) |
 | Weak points | the engine's reactor glow (the vital part) |
-| Effective traits | `homing`, `piercing`, `beam` (along the train), `rear` (rear and side entries) |
-| Credits | engine 40, car 3, turret car 5, tail +10 when destroyed first; a 10-car train dismantled pays 40 + 6 × 3 + 3 × 5 = 73 (83 tail first); an engine-first kill pays the engine's 40 and the chained explosion's time bonus (the [multi-part](../../README.md#multi-part-enemies) scoring rule) |
+| Effective traits | `homing`, `piercing`, `beam`, `rear` |
+| Credits | 73 (score 730 × chain): a 10-car train dismantled (engine 40, car 3, turret car 5), 83 with the tail first (+10); an engine-first kill pays the engine's 40 and the chained explosion's time bonus (the [multi-part](../../README.md#multi-part-enemies) scoring rule) |
 | Death | engine killed: the whole train blows car by car from the front (0.1 s apart), each a `medium` explosion with gold debris; a split's rear half: see below |
-| First level / used in | L30 (behind the ship, beside the Minelayers); its later Act 5 levels per the level drafts |
+| First level / used in | L30; behind the ship, beside the Minelayers; its later Act 5 levels per the level drafts |
 | Difficulty hooks | easy: 8 cars, turrets every 3.0 s; hard: 14 cars, each turret a `burst` of 2 (0.15 s apart) |
+<!-- /data -->
 
 ### Behaviour
 
@@ -73,27 +75,27 @@ level its parts take the act HP factor (e.g. ×136/124 at L33).
 
 ## Concept art
 
+Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
+
 The chosen look of round 05, [rail-serpent-r05-a.png](../concept/rail-serpent-r05-a.png) and its
 [motion GIF](../concept/rail-serpent-r05-a.gif) (head car and 8 cars at 16 headings, red accent), is
 listed in the [air](../README.md#concept-art) Concept art table. Round 60's unit proposals add the
 turret cars, the 32 angles, the split's sparks and the belt readability of
 [Q11](../../README.md#open-questions).
 
-Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's review board follows) — a/b proposals in the belt look of [Q11](../../README.md#open-questions) a (pending the user's review), each a PNG sheet (the source render, the sprites and states, the readability check over the darkest ground of Level 30 with the measured gold share, key frames) and a GIF in the 480×540 play field; generator `tools/concept/enemies_r60.py`. Prompts: [concept/prompts.md](concept/prompts.md).
+Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's review board follows) — a/b proposals in the belt look of [Q11](../../README.md#open-questions) a (gloss black; the user chose look b, gunmetal/charcoal with gold, in round 60, so the chosen variant is re-rendered in gunmetal in production), each a PNG sheet (the source render, the sprites and states, the readability check over the darkest ground of Level 30 with the measured gold share, key frames) and a GIF in the 480×540 play field; generator `tools/concept/enemies_r60.py`. Prompts: [concept/prompts.md](concept/prompts.md).
 
 | File | What | Status |
 |---|---|---|
-| [concept/rail-serpent-r60-a.png](concept/rail-serpent-r60-a.png) | Rail Serpent A, gold spine and skirts — the r05 gold spine bar plus gold side skirts, a white-gold reactor on the engine, domed turret cars with a red lamp, gold tail fins; strong rim (sheet) | proposed |
-| [concept/rail-serpent-r60-a.gif](concept/rail-serpent-r60-a.gif) | Rail Serpent A, gold spine and skirts — the r05 gold spine bar plus gold side skirts, a white-gold reactor on the engine, domed turret cars with a red lamp, gold tail fins; strong rim (motion) | proposed |
-| [concept/rail-serpent-r60-b.png](concept/rail-serpent-r60-b.png) | Rail Serpent B, gold roofs and links — gold roof armour with a black centre stripe on every car, gold coupler links between the cars (sheet) | proposed |
-| [concept/rail-serpent-r60-b.gif](concept/rail-serpent-r60-b.gif) | Rail Serpent B, gold roofs and links — gold roof armour with a black centre stripe on every car, gold coupler links between the cars (motion) | proposed |
+| [concept/rail-serpent-r60-b.png](concept/rail-serpent-r60-b.png) | Rail Serpent B, gold roofs and links — gold roof armour with a black centre stripe on every car, gold coupler links between the cars (sheet) | chosen (round 60) |
+| [concept/rail-serpent-r60-b.gif](concept/rail-serpent-r60-b.gif) | Rail Serpent B, gold roofs and links — gold roof armour with a black centre stripe on every car, gold coupler links between the cars (motion) | chosen (round 60) |
 
 ## Implementation
 
-- [ ] Stat block loaded from a `data.yaml`; global difficulty multipliers applied; re-measured with `levelReport` at L30
-- [ ] The train on the existing `Chain` (path history), the turret cars' staggered aimed shots, side and rear entries with the edge warning on the first entry only
-- [ ] The machine split: the rear half drifts 1.5 s without damage, then explodes car by car paying its bounties; the front half runs on (the enemies item "a machine chain's split")
-- [ ] Production sprites (32 angles per car, the turret cars, the tail) via `tools/art/`; death effects, bounty and sounds (Freesound, CC0/CC-BY)
+- [x] Stat block loaded from a `data.yaml`; global difficulty multipliers applied; re-measured with `levelReport` at L30
+- [x] The train on the existing `Chain` (path history), the turret cars' staggered aimed shots, side and rear entries with the edge warning on the first entry only (step C1: `ChainSpec.withCars`; `RailSerpentTest.everyThirdCarIsATurretCarAndTheLastTheTail`, `theTurretCarsFireStaggeredEachAfterItsLamp`)
+- [x] The machine split: the rear half drifts 1.5 s without damage, then explodes car by car paying its bounties; the front half runs on (the enemies item "a machine chain's split") (step C1: `Scatter.wreck`; `RailSerpentTest.aCutStopsTheCarsBehindItWhichBlowFromTheCutBackwardsPayingTheirBounty`, `Level30Test.aWreckedTrainPays`)
+- [x] Production sprites (32 angles per car, the turret cars, the tail) via `tools/art/`; death effects, bounty and sounds (Freesound, CC0/CC-BY) (frames: `tools/art/belt_units_c.py serpent`, step ART-C: `rail-serpent` (engine), `-segment`, `-turret`, `-turret-tell`, `-tail` and the wrecks `-segment-wreck`, `-turret-wreck`, `-tail-wreck` at 32 headings, `-sparks`, `-snap`, `pivots/rail-serpent.json`; held until this unit's `data.yaml` exists; drawn by C4; accepted in round 63, 2026-10-28) (step C4: the engine, segments, turret cars and their tell, the tail, the wreck sets with their sparks and the snap at the cut; the rumble, the turret's shot and the split as round 63's **a** proposals, `Level30SoundsTest`; not made: the engine's whine; seen in round 63's captures)
 
 ## Open questions
 
@@ -102,6 +104,10 @@ Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's r
 ## Decisions
 
 - 2026-10-27 (step m9-d-enemies-a): drafted for the Act 5 design phase from the roster row and the
-  gap analysis; every number is a first draft pending the user's review in round 60. The split's
+  gap analysis; every number is a first draft approved in round 60. The split's
   drift is 1.5 s (the enemies document's earlier "after 1 s" raised to show the sparks), harmless to
   the ship, paying its cars.
+- 2026-10-27 (user, [round 60](../../../concept-rounds/round-60/README.md) closed): the design approved as drafted (`design: approved`); art A.5 **b**, "Rail Serpent B, gold roofs and links", chosen (`art: chosen`), the other variant in `concept/rejected/`. Q11 **b** (gunmetal/charcoal with gold, not gloss black): the chosen variant is re-rendered in gunmetal/charcoal in this part's production art, keeping the ≥ 20 % gold and the readability check.
+- 2026-10-28 (step ART-C, production art; accepted in round 63, 2026-10-28): A.5 b re-rendered in gunmetal (Q.11 b) with the gold roof only on its inner bands beside the black centre stripe (gold 23–32 %; b's full roofs gave 40–47 %) and gold coupler stubs front and rear that meet the next car's at about 40 px spacing (the "gold links" drawn in each car's sprite). Cars about 37×35 px on 48 px frames (the stat block's 48×48 sprites), the engine on 64. The split's rear part is drawn with wreck sets (lights dead, scorched, the gold dulled) and an additive spark loop: vacuum, so no smoke (the stat block's "spark and smoke").
+- 2026-10-28 (step C2, the data; accepted in round 63, 2026-10-28): the stat block as data: a 10-car train is the engine, 9 cars (`segments`, turret cars 3, 6 and 9) and the tail; its HP 338 counts the tail (the draft's 318 left it out; the content check now counts the turret cars' HP and bounty), the cut `{scatter: 68, seconds: 1.5, wreck: true}`, the turret cars' `car-gun` (`tell` 0.2 s, the first shot 0.5 s in, hard's `burst: 2` 0.15 s apart, easy 3.0 s), easy 7 / hard 13 `segments`.
+- 2026-10-28 (user, [round 63](../../../concept-rounds/round-63/README.md), closed): the final art accepted (**F.4**); sounds **S.4 a** (`serpent-shot`, the .50 BMG), **S.5 redo** (`serpent-rumble`, no note: new proposals in round 64's audio step; a keeps playing), **S.6 b** (`serpent-split`, the chain snap and arc welder).

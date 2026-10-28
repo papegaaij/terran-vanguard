@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../act-3-red-dust, ../../world/europa, ../../story/twist, ../../enemies/naval, ../../enemies/bosses/abyssal-maw, ../../player/systems]
-updated: 2026-10-27
+updated: 2026-10-28
 ---
 
 # Act 4 – Deep Water
@@ -85,8 +85,9 @@ black and gold rise through it beside the Vrell fleet and open fire on the Coali
 Format: the [briefing screen](../../ui/briefing/README.md), as Acts 1–3. Order: the L21 debrief with the
 act summary → Act 3's outro (which ends on "*Aegis Wing leaves Mars in four days*") → this act's title card →
 the act intro below → the L22 mission briefing → the hangar visit before L22 (autosave) → L22. (Since M8 part B
-Act 3 names no next act and its outro leads here; since M8 part H (step H3) this act's `next_act` names Act 5, so the
-release ends after Level 28.) The intro continues from Act 3's outro,
+Act 3 names no next act and its outro leads here; since M8 part H (step H3) this act's `next_act` named Act 5, so the
+release ended after Level 28; M9 part B, step B3, removed it again: Act 5's levels play and the release ends after
+Level 29.) The intro continues from Act 3's outro,
 which already told the Colossus's death, the Vrell leaving Mars and Varga's plot to Europa, so it opens on the
 arrival at Jupiter and does not repeat them. After the Maw falls the act ends in Level 21's order: the
 finale (the climb, the breakout, the reveal, the run, the orbit), the debrief with the act summary
@@ -143,9 +144,8 @@ Images are production art straight away (the build's art step makes them with `t
 page 1). It carries the beat the finale hands over: the wing escapes into orbit, and the Ascendancy has
 declared itself. The finale's closing radio already has the reveal's two lines, so the outro does not repeat
 them; Vorne's broadcast is **not** here (it opens Act 5). Texts (approved in round 48 (2026-10-22)); the pages live in
-the act's [data.yaml](data.yaml) (`outro`, M8 part H, step H3) and are rendered here, with the `next_act` that names Act 5
-on the release's end (`ACT V - THE BELT. CERES. COMING SOON.`; the setting CERES a default of step H3, pending the
-user's review in round 58):
+the act's [data.yaml](data.yaml) (`outro`, M8 part H, step H3) and are rendered here; the `next_act` that named Act 5
+on the release's end (`ACT V - THE BELT. CERES. COMING SOON.`, the v0.2 release) is gone since M9 part B, step B3:
 
 <!-- data: act-outro-pages -->
 | Page | Speaker | Image |

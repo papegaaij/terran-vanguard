@@ -1,8 +1,9 @@
-# The expected purchases of a typical medium player at each hangar visit, for Acts 1-4 (Act 3, Levels
+# The expected purchases of a typical medium player at each hangar visit, for Acts 1-5 (Act 3, Levels
 # 15-21, from M7 part A: the Ion Beam's hand plan; every level earns its own typical haul, M7 part I: the
 # budget(n) fallback for a level without data is gone; M8 part A: Act 4, Levels 22-28, from the generator's
 # hand plan of round 48, with a TEMPORARY budget(n) fallback for the Act 4 levels that have no data yet,
-# removed again in M8 part I).
+# removed again in M8 part I; M9 part A: Act 5, Levels 29-35, from the generator's Act 5 hand plan of round 60, with
+# a TEMPORARY budget(n) income for the Act 5 levels that have no data yet, removed again when they are built).
 # Read by the content tests BalanceTest (affordability, power load and DPS per visit) and
 # ActPlaythroughTest (Acts 1-3 flown with these purchases on every difficulty), and printed by
 # tools/balance.py as the balancing sheet; not a rule, and not read by the game. Every other number
@@ -16,6 +17,7 @@
 #   buys (M7 part A: the front gun is never unfitted, so a replaced one is sold from the inventory)
 #   (slot escort: Rook's gun by its id in wingmen/data.yaml, from Level 08 on)
 #   utility: [module, level]   charges: [special, count]
+#   unfit: [slot, item]   (M9 part A) takes a fitted item off into the inventory (slot utility: a module by name)
 #   fit: [slot, item]   fits an owned item again in place of the fitted one, which is kept (M5 part D);
 #   (slot special: a special by name, M7 part A: the charges of the one it replaces stay owned)
 # An optional `difficulties: {hard: {"NN": {...}}}` adds purchases to a visit on another
@@ -92,3 +94,15 @@ plan:
   "26": {upgrade: [[front, 4]]}    # Harpoon L4 (2 000), one visit before the hand plan's L27: L26's forward DPS would be 83 of 112 (0.74) without it; 16 of 16 MW
   "27": {core: [[generator, 3]], fit: [[rear, tail-gun]]}   # Mk IV "Tokamak" (9 000, 20 MW since round 48 J1); M8 part G (the user's Q.1 = a, round 57): the owned Tail Gun L3 on the rear again in place of the Depth Charges (kept) for the Depth Hunters and their torpedoes below the ship
   "28": {core: [[shield, 2]]}      # Shield Mk III (3 000; the Mk IV's 7 000 is not affordable) for the Abyssal Maw: 17 of 20 MW; the nanites (6 000) stay out of the typical plan
+  # Act 5 (M9 part A; the generator's Act 5 hand plan of round 60, J2 and Q12 = c, design/player/generator). Income:
+  # budget(n) for the levels without data (temporary, the act's parts replace it with each level's typical haul).
+  # In vacuum the Harpoon is idle (NO WATER) and the pressure hull does nothing: the L29 visit flies the owned Ion
+  # Beam again (raised to L4 for the act's first level) and takes the hull off; the EMP Burst fitted (its charges since
+  # L15) for the Ascendancy's shielded machines. Rook is missing in L29 (the loaner Bulwark flies), back from L30.
+  "29": {unfit: [[utility, Pressure hull]], fit: [[front, ion-beam], [special, EMP Burst]], upgrade: [[front, 4]]}   # Ion Beam L4 (5 000): 18 of 20 MW; forward DPS 135 against the reference 120 (1.13)
+  "30": {buy: [[rear, swarm-tail]], upgrade: [[rear, 2]]}   # Swarm Tail (3 500) and L2 (1 750) on the rear in place of the Tail Gun L3 (kept): 19.5 of 20 MW
+  "31": {core: [[armor, 4]]}       # Composite IV (6 000, 140 armour) for the escort level's hits; M9 part D (step D2): Level 31 flies this fit (PacingTest, levelReport: Level31Plan), 19.5 of 20 MW, its typical haul 5 303 (scale 0.36)
+  "32": {upgrade: [[rear, 3]]}     # Swarm Tail L3 (3 500): 20 of 20 MW; the Airstrike is forbidden inside the asteroid, the EMP stays fitted
+  "33": {}                         # nothing: no power room (20 of 20) and the Mk V not yet salvaged; saving
+  "34": {}                         # nothing: saving for the Mk V (the breather)
+  "35": {core: [[generator, 4]], upgrade: [[wing_l, 4], [wing_r, 4]]}   # Mk V "Helix" (18 000, salvaged in L34, in the shop from this visit) and both Micro-missile Pods L4 (3 200): 21 of 22 MW

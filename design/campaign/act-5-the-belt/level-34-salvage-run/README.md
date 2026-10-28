@@ -1,6 +1,6 @@
 ---
 title: Level 34 – Salvage Run
-design: draft
+design: approved
 implementation: not-started
 art: none
 depends-on: [../../../enemies/ground/warden-tank, ../../../enemies/air/talon, ../../../enemies/air/needler, ../../../enemies/space/asteroid-mite, ../../../player/generator, ../../../player/systems, ../../../world/belt, ../../../player/wingmen, ../../../systems/economy]
@@ -20,10 +20,9 @@ hold, the **Mk V "Helix" generator** the wing salvages (Q12 c; in the shop from 
 threat (≈ 86 a minute by count), no boss, 186 s: the graveyard's edge, the CDF picket, the Helix hulks, the
 freighter, the tangle and clear space.
 
-**Status: draft** (Act 5 design phase, step `m9-d-levels-3`, 2026-10-27), **pending the user's review in
-concept round 60**. Written from the act roster, the gap analysis's recommended answers (**Q12 c** the Mk V
-salvaged here, **Q11 a** the belt look, **Q1 a** the Talons' shields; judgement calls **J1** the Warden Tank for
-the Crawler Tank and **J2** the reference DPS 140, all pending in round 60) and the wave 1 documents. Every number
+**Status: approved** (Act 5 design phase, step `m9-d-levels-3`, 2026-10-27), **approved by the user in concept round 60 (2026-10-27)**. Written from the act roster, the gap analysis's recommended answers (**Q12 c** the Mk V
+salvaged here, **Q11 b** the belt look (gunmetal/charcoal with gold), **Q1 a** the Talons' shields; judgement calls **J1** the Warden Tank for
+the Crawler Tank and **J2** the reference DPS 140, all decided in round 60) and the wave 1 documents. Every number
 is a hand-written first draft at medium for part G to measure with `levelReport`; there is no `data.yaml` yet.
 
 ## Briefing
@@ -78,7 +77,7 @@ columns at a side of the front).
 - **Secondary** "Strip the graveyard" (`escapes: cargo-container`, label `CONTAINERS`): open at least **5 of the
   6** cargo containers before they leave the screen (easy 4, hard all 6), failed by the second container away.
   Pays **100** in Act 1 terms (655 in Act 5); the typical haul counts 50 %.
-- **The Helix core** (Q12 c, pending round 60) is a story pickup, not an objective: see *The freighter*.
+- **The Helix core** (Q12 c, decided in round 60) is a story pickup, not an objective: see *The freighter*.
 
 ## Layout
 
@@ -111,7 +110,7 @@ drifting with the ground. The Salvage scanner's bonus applies (outside the budge
 [ship systems](../../../player/systems/README.md#salvage-scanner-user-decision-d7-of-m5-part-a)). Homing shots and Rook
 never pick a container.
 
-**The freighter** (Q12 c, pending round 60): the hold scrolls in at t≈108; the crate (≈ 60 × 40 px, the Helix
+**The freighter** (Q12 c, decided in round 60): the hold scrolls in at t≈108; the crate (≈ 60 × 40 px, the Helix
 emblem on its seal) sits in four clamps (`ground` triggers, **15 HP** each, no bounty). With the four clamps
 down the crate floats up from the hold (t≈116–120 for a player who shoots at once) and is **collected by flying
 through it** (`HELIX CORE SALVAGED` on the HUD's event line). If the player misses it, the CDF salvage tug that
@@ -353,7 +352,7 @@ None yet. The level needs (part G's production art; the mood from the belt's rou
 
 ## Open questions
 
-Pending the user's review in round 60 (the gap analysis's questions this level follows):
+Approved in round 60 (the gap analysis's questions this level follows):
 
 - **Q12, Act 5's arsenal** (recommended **c**, drafted: the Mk V "Helix" salvaged here, in the shop from the L35
   visit). Alternatives: **a** lean, the core tiers only, the Mk V in the shop with the act's first visit as its data's
@@ -361,15 +360,15 @@ Pending the user's review in round 60 (the gap analysis's questions this level f
   for the Mk V. Under a and b the Q12 set piece and Okafor's core lines go.
 - **J1, the Warden Tank for the Crawler Tank** (drafted). Alternative: the roster's Crawler Tank (front and rear
   turrets), a new unit with its own art and sounds.
-- **Q11, the Ascendancy look** (recommended **a**). The tank in black and gold on the black Helix hulls is the act's
-  hardest readability case: the hulls are kept a step lighter (sunlit gold and grey faces) or the tanks run on the
-  CDF hulls only.
+- **Q11, the Ascendancy look** (decided in round 60, **b**, not the recommendation: gunmetal/charcoal with gold). The tank
+  on the black Helix hulls is still the act's hardest readability case (gunmetal on a dark hull): the hulls are kept a step
+  lighter (sunlit gold and grey faces) or the tanks run on the CDF hulls only; part G measures it.
 - **The core's fallback** (this step's): the tug picks a missed core up, so the unlock can never be lost. The
   alternative is a missable unlock (the core on sale only if collected), against the linear campaign.
 
 ## Decisions
 
-- 2026-10-27 (Act 5 design phase, step `m9-d-levels-3`; pending the user's review in round 60): drafted from the
+- 2026-10-27 (Act 5 design phase, step `m9-d-levels-3`; approved in round 60): drafted from the
   roster row, the gap analysis (§0, §1.1, §2.4, Q11 a, Q12 c, J1, J2) and the wave 1 documents (the Warden Tank's
   Act 5 section, the belt, the generator's Act 5 hand plan and Mk V note); Level 25 as the model.
 - 2026-10-27: a breather by threat, not by count: ≈ 86 a minute (266 in 186 s, a wave every 3 s), the Vrell popcorn
@@ -380,3 +379,4 @@ Pending the user's review in round 60 (the gap analysis's questions this level f
   fallback), not a missable secret.
 - 2026-10-27: the music follows the [Act 5 music plan](../../../audio/music/README.md#act-5-music-draft-round-60)
   (step m9-d-audio): track 12's base stem at −3 dB, the motif once at the core, `belt-open`.
+- 2026-10-27 (user, [round 60](../../../concept-rounds/round-60/README.md) closed): the design approved as drafted (`design: approved`, D.7): J.1 kept (the Warden Tank in livery instead of a Crawler Tank; its chosen variant is A.15 b, heavier gold, in the Q11 b gunmetal/charcoal livery), Q12 **c** (the Mk V Helix salvaged). Q11 **b**: part G measures the readability of the gunmetal tanks on the dark Helix hulls.

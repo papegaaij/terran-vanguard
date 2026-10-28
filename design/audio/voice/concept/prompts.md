@@ -526,3 +526,62 @@ b differ from them by timbre and pace more than by pitch.
 | b | Clive Catterall | [The Prince (version 4), ch. 1 (Machiavelli)](https://archive.org/details/theprincever4_1501_librivox), cut at 40 s | public domain (Public Domain Mark 1.0) | 92 Hz (96 Hz over 30 s, IQR 44 Hz), 2.5 words/s (takes 115 / 123 Hz); an older English voice, measured and dry |
 | c | Gregg Margarite | [Rastignac the Devil, ch. 2 (Farmer)](https://archive.org/details/rastignac_devil_1003_librivox), cut at 120 s | public domain | 89 Hz (84 Hz over 30 s, IQR 39 Hz), 2.6 words/s (takes 93 / 93 Hz); a deep American bass, warm and theatrical |
 
+
+## vorne-pitch
+
+Round 62 (Vorne's pitch, round 61 C.9; M9 part B, step VOX-B; pending the user's review), generated with
+`tools/concept/audio/tts_r62.py --pitch`: one chunk of the Act 5 intro's page 2 ("From this hour the Jovian Ascendancy
+governs itself, and it does not stand alone: the Vrell are our partners.") at Vorne's settings (0.6 / 0.4 / 0.7), seed
+100, through the enemy filter (`enemy()` of `tools/art/voice.py`, without the game's static sweep; −16.0 LUFS, OGG
+Vorbis q4, 44.1 kHz mono). **a**: with his production clip `refs/ref-vorne.wav`, round 60's Jeffrey Church clip pitched
+−2 semitones with ffmpeg's rubberband filter, formants preserved; Chatterbox re-voices the lowered clip, so the take
+itself is not shifted (90 Hz median, IQR 18 Hz; seeds 101/102: 96 / 101 Hz). **b**: the same with round 60's
+unshifted clip `refs/ref-vorne-r60-a.wav` (115 Hz, IQR 25 Hz; 114 / 122 Hz), as auditioned. Both read back word for
+word. Why the clip and not the takes: a rubberband shift of the takes at −1.5 / −2 / −3 semitones lowered them to
+104–110 / 102–107 / 98–101 Hz but moved the spectral centroid down 10 / 15 / 18 % and cut the spectral flatness to a
+half or a third (formant smearing, a duller, phasey voice); the clip shift kept both within 6 %; −3 semitones on the
+clip gave 84–96 Hz but one take of six came out unvoiced (a whisper) and others creaky. The voice README asks for
+about 105 Hz, below every cast man. Measured only, not listened to.
+
+## voice-ceres-control
+
+Round 62 (QB-1, the casting of Ceres Hub Control; M9 part B, step VOX-B; pending the user's review): the loyalist dock
+controller of Level 29 (speaker `ceres-control`, the friendly channel), a man, tired and steady, a mid register
+(130–150 Hz) between the Kilo Lead and Rook (the voice README's *Act 5 voices*). Two new LibriVox readers, never a
+main-cast reader nor a voice already cast or auditioned; clips cut by `tools/concept/audio/tts_r62.py --refs`. The
+audition files are his t=1 and t=101 lines as the game plays them (the production takes of `tools/art/voice.py` at the
+neutral row through radio filter b, 1 s apart; `tts_r62.py --auditions`); all seven of his Level 29 lines are rendered
+with both (a in `assets/voice/ceres-control/`, b in `concept/voice-ceres-control-r62-b/`). Every take read back right
+with the Act 5 name prompt but for homophones ("Doc" for "Dock", "guns alive" for "guns are live", b's "Hugh Control").
+Also measured and passed over: Bob Neufeld, 153 Hz, and Don W. Jenkins, 154 Hz (too high once Chatterbox lifts them);
+Barry Eads, 142 Hz, a take jumped to 182 Hz. Measured only, not listened to.
+
+| Variant | Reader | Source | Licence | Clip pitch |
+|---|---|---|---|---|
+| a | Paul Adams | [Sidelights on Relativity, ch. 1 (Einstein)](https://archive.org/details/sidelights_relativity_pa_librivox), cut at 66 s | public domain (Public Domain Mark 1.0) | 123 Hz, IQR 24 Hz, 2.7 words/s (takes 127–143 Hz, the t=60 shout 194 Hz); older, low and even |
+| b | Phil Chenevert | [A Spaceship Named McGuire, ch. 1 (Garrett)](https://archive.org/details/spaceshipnamedmcguire_pc_librivox), cut at 66 s | CC0 1.0 | 141 Hz, IQR 38 Hz, 2.4 words/s (takes 142–168 Hz, the shout 217 Hz); mid and clipped |
+
+## voice-harker
+
+Round 62 (QB-1, the casting of Harker; M9 part B, step VOX-B; pending the user's review): the mutineers' flight lead
+of Level 29 (speaker `harker`, the enemy channel: his lines through the enemy filter), a man of Rook's age, quick and
+hard, bitter rather than cruel; lower than Rook (146–188 Hz), 115–135 Hz, or a clearly different accent. Two new
+LibriVox readers as Hub Control's; the audition files are his t=68 and t=133 lines as the game plays them; all four
+of his lines are rendered with both (a in `assets/voice/harker/`, b in `concept/voice-harker-r62-b/`), every take read
+back right through the filter. Also measured and passed over: Lars Rolander, 95 Hz (a Swedish accent; takes 107 Hz,
+under the range); Kevin Green, 98 Hz with a wide range; Simon Evers, 116 Hz, quick with a 1.4 s pause in the clip;
+Peter Yearsley, 80 Hz. Measured only, not listened to.
+
+| Variant | Reader | Source | Licence | Clip pitch |
+|---|---|---|---|---|
+| a | Ted Delorme | [The Mysterious Stranger, ch. 1 (Twain)](https://archive.org/details/mysterious_stranger_td_librivox), cut at 66 s | public domain (Public Domain Mark 1.0) | 110 Hz, IQR 30 Hz, 2.7 words/s (takes 92–119 Hz); dry and rueful, American |
+| b | David Clarke | [The Count of Monte Cristo, ch. 1 (Dumas)](https://archive.org/details/count_montecristo_1308_librivox), cut at 72 s | CC0 1.0 | 104 Hz, IQR 21 Hz, 2.5 words/s (takes 110–131 Hz); hard and level, English (apart from Rook) |
+
+## voice-bellwether
+
+Round 64 (the casting of the Bellwether; M9 part D, steps VOX-D and VOX-D2; pending the user's review): the mining tug's captain of Level 31 (speaker `bellwether`, the friendly channel), a belt miner in her fifties, dry and tired, rougher and warmer than Dr. Brandt (168 Hz, dry and precise), ideally a regional accent, lower than Okafor (145–152 Hz) or clearly apart by timbre (the voice README's *Act 5 voices*). Two new LibriVox readers, never a main-cast reader nor a voice already cast or auditioned; clips cut by `tools/concept/audio/tts_r64.py --refs`. The audition files are her t=1 call and the t=86 / t=93 medicine story as the game plays them (the production takes of `tools/art/voice.py` at the neutral row through radio filter b, 1 s apart; `tts_r64.py --auditions`); all 12 of her Level 31 lines are rendered with both (a in `assets/voice/bellwether/`, b in `concept/voice-bellwether-r64-b/`), read back with Whisper (plain and with the Act 5 name prompt) and pinned where the key's seed misread (a seven, b four). Weak spots: a's short exclamations are breathy; b reads "bow" as "bell" in most seeds. Also measured and passed over: Mil Nicholson, 142–157 Hz (Okafor's pitch); Susan Umpleby, 164–201 Hz; Kirsty Leishman, 193–208 Hz; Moira Fogarty, 189 Hz; Christine Dufour, 170 Hz but quick; Lee Ann Howlett, 180 Hz; Bellona Times, 103–112 Hz (a man's register); seven more at 188–262 Hz (the list in `tts_r64.py`). Measured only, not listened to.
+
+| Variant | Reader | Source | Licence | Clip pitch |
+|---|---|---|---|---|
+| a | Lucy Burgoyne | [Sisters, ch. 1 (Ada Cambridge)](https://archive.org/details/sisters_0712_librivox), cut at 60 s | public domain | 134 Hz, IQR 27 Hz, 2.9 words/s (takes 135–156 Hz); low, level and older, an English woman's voice in an Australian novel |
+| b | Laurie Anne Walden | [A Diary from Dixie, ch. 1 (Mary Chesnut)](https://archive.org/details/diaryfromdixie_1101_librivox), cut at 120 s | public domain (Public Domain Mark 1.0) | 181 Hz, IQR 37 Hz, 2.4 words/s (takes 167–264 Hz); slow, plain and unhurried, American |

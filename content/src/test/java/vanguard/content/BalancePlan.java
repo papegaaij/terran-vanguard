@@ -154,8 +154,9 @@ public final class BalancePlan {
     public record Visit(int spent, List<String> log, List<String> problems) {}
 
     /**
-     * Buys the plan of the visit before {@code level} in {@code hangar}: sales, weapons, sales of
-     * owned weapons, refits of owned items, upgrades, core parts, utility modules, then special charges
+     * Buys the plan of the visit before {@code level} in {@code hangar}: (M9 part A) modules taken off, sales, weapons,
+     * sales of owned weapons, refits of owned items, a new generator, upgrades, the other core parts, utility modules,
+     * then special charges
      * and the refit of a special, as tools/balance.py does; then what the
      * plan's {@code difficulties} add on the campaign's difficulty.
      */
@@ -175,6 +176,21 @@ public final class BalancePlan {
         Campaign campaign = hangar.campaign();
         if (step.has("start")) {
             checkStart(campaign, step.path("start"), problems);
+        }
+        // M9 part A: a fitted utility module taken off into the inventory first (the pressure hull in vacuum).
+        for (JsonNode unfit : step.path("unfit")) {
+            if (!unfit.get(0).asString().equals("utility")) {
+                problems.add("unfit " + unfit.get(0).asString() + ": only a utility module");
+                continue;
+            }
+            String name = unfit.get(1).asString();
+            LoadoutSlot slot = utilitySlot(campaign, name);
+            Optional<Offer> fitted = row(hangar, slot, State.FITTED, catalogue.item(ItemKind.UTILITY, name));
+            if (fitted.isEmpty()) {
+                problems.add("unfit " + name + ": not fitted");
+                continue;
+            }
+            make(hangar, slot, fitted.get(), Action.UNFIT, "unfit " + name, log, problems);
         }
         for (JsonNode sell : step.path("sell")) {
             LoadoutSlot slot = slot(sell.asString());
@@ -213,12 +229,32 @@ public final class BalancePlan {
                 refit(hangar, fit, log, problems);
             }
         }
+        // M9 part A: a visit's new generator before its upgrades, which it powers (the Mk V and the pods' L4 at the L35
+        // visit); the other core parts after them, as before (no visit of Acts 1–4 buys a generator and upgrades).
+        for (JsonNode core : step.path("core")) {
+            if (core.get(0).asString().equals("generator")) {
+                LoadoutSlot slot = CORE.get(core.get(0).asString());
+                buyItem(
+                        hangar,
+                        slot,
+                        catalogue.items(slot.kind()).get(core.get(1).asInt()),
+                        log,
+                        problems);
+            }
+        }
         for (JsonNode upgrade : step.path("upgrade")) {
             upgradeTo(hangar, slot(upgrade.get(0).asString()), upgrade.get(1).asInt(), log, problems);
         }
         for (JsonNode core : step.path("core")) {
-            LoadoutSlot slot = CORE.get(core.get(0).asString());
-            buyItem(hangar, slot, catalogue.items(slot.kind()).get(core.get(1).asInt()), log, problems);
+            if (!core.get(0).asString().equals("generator")) {
+                LoadoutSlot slot = CORE.get(core.get(0).asString());
+                buyItem(
+                        hangar,
+                        slot,
+                        catalogue.items(slot.kind()).get(core.get(1).asInt()),
+                        log,
+                        problems);
+            }
         }
         for (JsonNode utility : step.path("utility")) {
             String name = utility.get(0).asString();

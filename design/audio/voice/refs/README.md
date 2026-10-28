@@ -1,10 +1,10 @@
 ---
 title: Reference voices
-design: draft
+design: approved
 implementation: in-progress
-art: chosen
+art: proposed
 depends-on: [..]
-updated: 2026-10-27
+updated: 2026-10-28
 ---
 
 # Reference voices
@@ -48,6 +48,11 @@ How the clips are chosen and used: [voice](../README.md#reference-voices).
 | `ref-vorne-r60-a.wav` | Vorne (`vorne`), candidate a | Jeffrey Church | [The Genealogy of Morals, ch. 1 (Nietzsche)](https://archive.org/details/genealogy_of_morals_1507_librivox) | public domain (Public Domain Mark 1.0) | proposed (round 60) |
 | `ref-vorne-r60-b.wav` | Vorne (`vorne`), candidate b | Clive Catterall | [The Prince (version 4), ch. 1 (Machiavelli)](https://archive.org/details/theprincever4_1501_librivox) | public domain (Public Domain Mark 1.0) | proposed (round 60) |
 | `ref-vorne-r60-c.wav` | Vorne (`vorne`), candidate c | Gregg Margarite | [Rastignac the Devil, ch. 2 (Farmer)](https://archive.org/details/rastignac_devil_1003_librivox) | public domain | proposed (round 60) |
+| `ref-vorne.wav` | Vorne (production clip) | Jeffrey Church | [The Genealogy of Morals, ch. 1 (Nietzsche)](https://archive.org/details/genealogy_of_morals_1507_librivox) | Public Domain Mark 1.0 | `ref-vorne-r60-a.wav` pitched −2 semitones, formants preserved (step VOX-B, `tools/concept/audio/tts_r62.py --refs`); pending round 62 (C.9) |
+| `ref-ceres-control-r62-a.wav` | Ceres Hub Control | Paul Adams | [Sidelights on Relativity, ch. 1 (Einstein)](https://archive.org/details/sidelights_relativity_pa_librivox) | Public Domain Mark 1.0 | chosen (round 62, V.1 = a); keeps its `-r62-` name (part of the lines' key) |
+| `ref-harker-r62-b.wav` | Harker | David Clarke | [The Count of Monte Cristo, ch. 1 (Dumas)](https://archive.org/details/count_montecristo_1308_librivox) | CC0 1.0 | chosen (round 62, V.2 = b); keeps its `-r62-` name (part of the lines' key) |
+| `ref-bellwether-r64-a.wav` | The Bellwether (`bellwether`), candidate a | Lucy Burgoyne | [Sisters, ch. 1 (Cambridge)](https://archive.org/details/sisters_0712_librivox) | public domain | proposed (round 64; the speaker table's provisional `ref`) |
+| `ref-bellwether-r64-b.wav` | The Bellwether (`bellwether`), candidate b | Laurie Anne Walden | [A Diary from Dixie, ch. 1 (Chesnut)](https://archive.org/details/diaryfromdixie_1101_librivox) | public domain (Public Domain Mark 1.0) | proposed (round 64) |
 
 Round 19's chosen candidates were renamed to `ref-<speaker>.wav`; the rejected candidates and
 round 18's Tranquility Control clip (David Leeson), which no speaker uses any more, were deleted
@@ -136,3 +141,7 @@ with their CREDITS.md rows (their sources and cuts stay in `tools/concept/audio/
   his Level 15 lines (round 38).
 - 2026-10-22 (user, round 51, V.1 = a): Dr. Brandt (`conamara`) is Margaret Espaillat; her clip `ref-conamara-r51-a.wav` keeps its `-r51-` name (it is part of her lines' key). Sue Anderson's clip b (`ref-conamara-r51-b.wav/.txt`) moved to `../concept/rejected/` with its CREDITS.md row.
 - 2026-10-22 (user, round 52, V.1 = b): Thera Deep Control (`thera-control`) is John Van Stan; his clip `ref-thera-control-r52-b.wav` keeps its `-r52-` name (it is part of his lines' key). Bruce Pirie's clip a (`ref-thera-control-r52-a.wav/.txt`) moved to `../concept/rejected/` with its CREDITS.md row.
+- 2026-10-27 (user, [round 60](../../../concept-rounds/round-60/README.md) closed): Vorne's reference candidates: **a** (Jeffrey Church) chosen in round 60, V.1 (the production render lowers its pitch toward the brief, see the [voice README](../README.md#decisions)); b and c rejected (the clips stay here as the record).
+- 2026-10-28 (step VOX-B, M9 part B; accepted in round 62): `ref-vorne.wav` added, Vorne's production clip (round 60's a pitched −2 semitones, so Chatterbox re-voices him nearer the brief's 105 Hz; the speaker table's `ref`); round 62's candidates for Ceres Hub Control and Harker added (`-r62-a/-b`, sources and licences in CREDITS.md via `briefs/credits-m9-voxb.md`).
+- 2026-10-28 (user, round 62, V.1 = a, V.2 = b): Ceres Hub Control is Paul Adams (`ref-ceres-control-r62-a.wav`), Harker is David Clarke (`ref-harker-r62-b.wav`); both keep their `-r62-` names (part of the lines' keys). Phil Chenevert's clip b (`ref-ceres-control-r62-b.wav/.txt`) and Ted Delorme's clip a (`ref-harker-r62-a.wav/.txt`) moved to `../concept/rejected/` with their CREDITS.md rows.
+- 2026-10-28 (steps VOX-D and VOX-D2, M9 part D; pending round 64): the Bellwether's two candidate clips `ref-bellwether-r64-a.wav` (Lucy Burgoyne, 134 Hz) and `-b.wav` (Laurie Anne Walden, 181 Hz) added (`tools/concept/audio/tts_r64.py --refs`, CREDITS.md rows); the pick keeps its clip's `-r64-` name (part of the lines' key), the other moves to `concept/rejected/` with its row.

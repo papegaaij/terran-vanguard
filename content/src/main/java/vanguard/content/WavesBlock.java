@@ -60,6 +60,10 @@ public sealed interface WavesBlock permits LevelData {
      *     turret nest}'s units stand on the ground at these xs (px from the left, one per unit), all at one row: they
      *     come in with the ground at the top edge at the wave's {@code t} ({@code from: front}), scrolling with it,
      *     their songs 1.5 s apart in turn (no terrain needed)
+     * @param leader M9 part B (design/enemies/air/talon, Squad leader): {@code tip}, a V-wing's tip flies its unit's
+     *     {@code leader} airframe; killing it scatters the wing
+     * @param onRocks M9 part B (design/enemies, Rock riding): its units ride these rocks ({@link OnRocks}); its count is
+     *     rocks × riders on every difficulty
      */
     public record Wave(
             double t,
@@ -91,7 +95,10 @@ public sealed interface WavesBlock permits LevelData {
             Optional<Pursuit> pursuit,
             Optional<Integer> cave,
             Optional<String> wall,
-            Optional<List<Double>> onGround) {
+            Optional<List<Double>> onGround,
+            Optional<String> leader,
+            Optional<OnRocks> onRocks,
+            Optional<MineLines> mineLines) {
         /** M8 part E: a wall's nests one after the other ({@link #wall}). */
         public static final String STAGGERED = "staggered";
 
@@ -179,7 +186,32 @@ public sealed interface WavesBlock permits LevelData {
                             || groups.orElseThrow().stream()
                                     .allMatch(group -> group.formation().equals("circle")),
                     "only a circle wave turns clockwise");
+            // M9 part B (design/enemies/air/talon, Squad leader): a V-wing's tip flies its unit's leader airframe.
+            leader.ifPresent(place -> Check.that(LEADER_TIP.equals(place), "leader: only 'tip', was '" + place + "'"));
+            Check.that(
+                    leader.isEmpty()
+                            || (single
+                                    && groups.orElseThrow()
+                                            .getFirst()
+                                            .formation()
+                                            .equals("V-wing")),
+                    "leader: tip only on a V-wing of one group");
+            // M9 part B (design/enemies, Rock riding): its units ride its rocks, riders on each.
+            Check.that(
+                    onRocks.isEmpty()
+                            || (single
+                                    && paths.isEmpty()
+                                    && lanes.isEmpty()
+                                    && easy.flatMap(Change::count).isEmpty()
+                                    && hard.flatMap(Change::count).isEmpty()
+                                    && groups.orElseThrow().getFirst().count()
+                                            == onRocks.get().rocks().size()
+                                                    * onRocks.get().riders()),
+                    "on_rocks: one group of rocks × riders units on every difficulty, no paths");
         }
+
+        /** M9 part B: the place of a V-wing's leader, its tip ({@link #leader}). */
+        public static final String LEADER_TIP = "tip";
 
         /** M5 part F: whether a circle wave orbits clockwise on the screen. */
         public boolean turnsClockwise() {
@@ -282,6 +314,69 @@ public sealed interface WavesBlock permits LevelData {
      * @param pairs M5 part G: a {@code column}'s units enter in pairs side by side, the pairs this many s
      *     apart (Level 13's hard Stingers at t=210)
      */
+    /**
+     * M9 part B (design/campaign Level 29, the rescue halt): the held arena's halt cycle: {@code waves} (plain front
+     * waves, each {@code t} s from the halt's start, below {@code every}) repeating every {@code every} s while a holder
+     * stands, cut at the last one's fall.
+     */
+    public record HaltWaves(double every, List<Wave> waves) {
+        public HaltWaves {
+            waves = List.copyOf(waves);
+            Check.positive("halt_waves.every", every);
+            Check.notEmpty("halt_waves.waves", waves);
+            for (Wave wave : waves) {
+                Check.that(wave.t() < every, "halt_waves: every wave starts inside the cycle, was " + wave.t());
+                Check.that(
+                        wave.from() == LevelData.Entry.FRONT
+                                && wave.warning().isEmpty()
+                                && wave.onRocks().isEmpty()
+                                && wave.leader().isEmpty(),
+                        "halt_waves: plain waves from the front, without warnings, rocks or leaders");
+            }
+        }
+    }
+
+    /**
+     * M9 part C (design/enemies/space/minelayer; design/campaign Level 30, Mine lines in this level): a mine layers'
+     * wave's lines: unit i lays at the row {@code rows[i % n]} px below the top edge with its gap at the cluster boundary
+     * nearest {@code gaps[i % m]} px from the left edge (left-centre ≈ 160, right-centre ≈ 320: authored per wave).
+     */
+    public record MineLines(List<Double> rows, List<Double> gaps) {
+        public MineLines {
+            rows = List.copyOf(rows);
+            gaps = List.copyOf(gaps);
+            Check.notEmpty("mine_lines.rows", rows);
+            Check.notEmpty("mine_lines.gaps", gaps);
+            rows.forEach(row -> Check.that(
+                    row > 0 && row < PlayField.HEIGHT, "mine_lines.rows: px below the top edge, was " + row));
+            gaps.forEach(gap ->
+                    Check.that(gap >= 0 && gap <= PlayField.WIDTH, "mine_lines.gaps: an x on the field, was " + gap));
+        }
+    }
+
+    /**
+     * M9 part B (design/enemies, Rock riding; design/campaign Level 29): a wave's rocks, each a small breakable chunk of
+     * the level's {@code debris} chunk {@code chunk}, carrying {@code riders} of the wave's units round its rim.
+     */
+    public record OnRocks(String chunk, int riders, List<RockData> rocks) {
+        public OnRocks {
+            rocks = List.copyOf(rocks);
+            Check.notEmpty("on_rocks.rocks", rocks);
+            Check.that(riders >= 1 && riders <= 5, "on_rocks.riders: 1-5 a rock, was " + riders);
+        }
+    }
+
+    /**
+     * M9 part B: one rock of a wave on rocks: it enters at {@code at} ({@code [x, y]}, y px below the top edge: above
+     * it for a rock from the front, a side edge's x for one from a side) and drifts at {@code drift} ({@code [x, y]}
+     * px/s on the screen, the scroll included; y up as the debris': negative drifts down the screen).
+     */
+    public record RockData(Point at, Point drift) {
+        public RockData {
+            Check.that(drift.y() < 0 || drift.x() != 0, "on_rocks: a rock drifts onto and across the screen");
+        }
+    }
+
     public record Change(
             Optional<LevelData.Entry> from,
             Optional<Edge> edge,

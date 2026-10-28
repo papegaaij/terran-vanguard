@@ -71,6 +71,14 @@ public record CampaignRules(
         public boolean missing(int level) {
             return level > lostAfter && level < back;
         }
+
+        /**
+         * M9 part B (design/player/wingmen, Rook's rescue and return): whether he is rescued in Level {@code level}, the
+         * last level he is missing in (Level 29: he joins at its escort swap and flies the rest of it).
+         */
+        public boolean rescued(int level) {
+            return level == back - 1 && missing(level);
+        }
     }
 
     /**

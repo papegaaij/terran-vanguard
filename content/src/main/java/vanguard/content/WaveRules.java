@@ -16,6 +16,7 @@ final class WaveRules {
 
     static void addWave(
             Content content,
+            LevelData level,
             LevelData.Wave wave,
             Difficulty difficulty,
             Map<String, LevelData.EnemyChange> enemyChanges,
@@ -38,8 +39,11 @@ final class WaveRules {
         for (int g = 0; g < groups.size(); g++) {
             LevelData.Group group = groups.get(g);
             // An authored count replaces the formation size lever.
-            int count = change.flatMap(LevelData.Change::count)
-                    .orElseGet(() -> content.difficulty().formationSize(group.count(), difficulty));
+            // M9 part B: a wave on rocks keeps its rocks × riders on every difficulty.
+            int count = wave.onRocks().isPresent()
+                    ? group.count()
+                    : change.flatMap(LevelData.Change::count)
+                            .orElseGet(() -> content.difficulty().formationSize(group.count(), difficulty));
             boolean first = g == 0;
             boolean last = g == groups.size() - 1;
             // M7 part D: a carrier naming its enemy is that enemy's first group's (Level 17's t=124 Choir Herald).
@@ -110,11 +114,23 @@ final class WaveRules {
             // M7 part G: a pursuit wave's block (Level 20's Mote Swarm, RetreatRules); M8 part E: a cave's or the
             // walls'
             // mount (TrenchRules).
-            out.add(TrenchRules.mount(
+            // M9 part B (Level 29): a V-wing's leader at its tip, a wave's rocks with their riders (BeltRules).
+            // M9 part C (Level 30): a mine layers' wave's lines, set last (MinefieldRules).
+            out.add(MinefieldRules.wave(
                     wave,
-                    wave.pursues()
-                            ? spec.withPursuit(RetreatRules.pursuit(content, wave, group.enemy(), difficulty))
-                            : spec));
+                    BeltRules.wave(
+                            content,
+                            level,
+                            wave,
+                            group.enemy(),
+                            difficulty,
+                            inLevel,
+                            TrenchRules.mount(
+                                    wave,
+                                    wave.pursues()
+                                            ? spec.withPursuit(
+                                                    RetreatRules.pursuit(content, wave, group.enemy(), difficulty))
+                                            : spec))));
         }
     }
 

@@ -1,8 +1,8 @@
 ---
 title: Void Leech
-design: draft
+design: approved
 implementation: not-started
-art: proposed
+art: chosen
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../player/generator, ../../air/lamprey]
 updated: 2026-10-27
 ---
@@ -20,7 +20,7 @@ target. In Level 33 it feeds on Ascendancy craft too.
 
 ### Stat block
 
-**Draft** (Act 5 design phase, step D-enemies-B; pending the user's review in round 60). A hand-written
+**Draft** (Act 5 design phase, step D-enemies-B; approved in round 60). A hand-written
 table: there is no `data.yaml` yet, the build turns it into one. Numbers at **medium** (see the
 [balancing basis](../../README.md#balancing-basis)); HP is in damage units (a Pulse Cannon L1 shot does 2),
 set at its first level from the proposed Act 5 reference DPS (judgement call J2: L33 136). As a `small` unit
@@ -83,18 +83,18 @@ claws on metal; the death a dry chitin crack.
 
 ## Concept art
 
-None yet: proposals (a/b) in round 60 (step ART-P-units, `tools/concept/enemies_r60.py`): a black-violet
+Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
+
+Round 60 proposals (a/b), made in the gloss-black look of Q11 a and chosen below (production re-renders the chosen one in gunmetal/charcoal, Q11 b) (step ART-P-units, `tools/concept/enemies_r60.py`): a black-violet
 leech with a pulsing violet power-draw sac (violet: the aimed-shot glow is taken; the leech differs by
 shape), a latched pose on the Stormhawk's hull and one on a Talon.
 
-Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's review board follows) — a/b proposals in the belt look of [Q11](../../README.md#open-questions) a (pending the user's review), each a PNG sheet (the source render, the sprites and states, the readability check over the darkest ground of Level 33 with the measured gold share, key frames) and a GIF in the 480×540 play field; generator `tools/concept/enemies_r60.py`. Prompts: [concept/prompts.md](concept/prompts.md).
+Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's review board follows) — a/b proposals in the belt look of [Q11](../../README.md#open-questions) a (gloss black; the user chose look b, gunmetal/charcoal with gold, in round 60, so the chosen variant is re-rendered in gunmetal in production), each a PNG sheet (the source render, the sprites and states, the readability check over the darkest ground of Level 33 with the measured gold share, key frames) and a GIF in the 480×540 play field; generator `tools/concept/enemies_r60.py`. Prompts: [concept/prompts.md](concept/prompts.md).
 
 | File | What | Status |
 |---|---|---|
-| [concept/void-leech-r60-a.png](concept/void-leech-r60-a.png) | Void Leech A, ringed leech — five tapering black-violet chitin rings, an oral sucker disc ringed with bone hooks, a pulsing violet sac (sheet) | proposed |
-| [concept/void-leech-r60-a.gif](concept/void-leech-r60-a.gif) | Void Leech A, ringed leech — five tapering black-violet chitin rings, an oral sucker disc ringed with bone hooks, a pulsing violet sac (motion) | proposed |
-| [concept/void-leech-r60-b.png](concept/void-leech-r60-b.png) | Void Leech B, ray leech — a flat undulating mantle with a glowing seam, a hooked mouth, the violet sac and veins (sheet) | proposed |
-| [concept/void-leech-r60-b.gif](concept/void-leech-r60-b.gif) | Void Leech B, ray leech — a flat undulating mantle with a glowing seam, a hooked mouth, the violet sac and veins (motion) | proposed |
+| [concept/void-leech-r60-a.png](concept/void-leech-r60-a.png) | Void Leech A, ringed leech — five tapering black-violet chitin rings, an oral sucker disc ringed with bone hooks, a pulsing violet sac (sheet) | chosen (round 60) |
+| [concept/void-leech-r60-a.gif](concept/void-leech-r60-a.gif) | Void Leech A, ringed leech — five tapering black-violet chitin rings, an oral sucker disc ringed with bone hooks, a pulsing violet sac (motion) | chosen (round 60) |
 
 ## Implementation
 
@@ -107,7 +107,7 @@ Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's r
 
 ## Open questions
 
-- Q2 (pending round 60): **a** recommended (−2 MW a leech, to −6, the shortfall order, the gauge and the
+- Q2 (decided in round 60): **a** recommended (−2 MW a leech, to −6, the shortfall order, the gauge and the
   feedback); alternatives **b** (a flat −20 % fire rate a leech, whatever the loadout) and **c** (each
   leech blacks out the fitted weapon with the highest draw until shaken off).
 - The latch slots: 3 at medium lets the drain reach the −6 MW cap; with 2 the cap is reached only at hard.
@@ -116,7 +116,8 @@ Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's r
 ## Decisions
 
 - 2026-10-27 (step D-enemies-B): drafted for the Act 5 design phase from the roster row and the gap
-  analysis; every number is a first draft, pending the user's review in round 60.
+  analysis; every number is a first draft, approved in round 60.
 - 2026-10-27 (the gap analysis's decision): the Lamprey's latch and shake-off with a new target (the
   generator) and look (black-violet, a pulsing power-draw glow); it also latches on Ascendancy units in
   L33 (a Talon with a leech loses its shield and drifts).
+- 2026-10-27 (user, [round 60](../../../concept-rounds/round-60/README.md) closed): the design approved as drafted (`design: approved`); art A.10 **a**, "Void Leech A, ringed leech", chosen (`art: chosen`), the other variant in `concept/rejected/`. Q11 **b** (gunmetal/charcoal with gold, not gloss black): the chosen variant is re-rendered in gunmetal/charcoal in this part's production art, keeping the ≥ 20 % gold and the readability check.

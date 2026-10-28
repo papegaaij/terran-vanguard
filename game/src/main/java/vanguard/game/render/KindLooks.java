@@ -75,6 +75,18 @@ final class KindLooks {
     /** M8 part G: the relay beacons' pulse, light, break and dark mast (built with the first sortie). */
     private BeaconLooks beacons;
 
+    /** M9 part B: Level 29's units' looks (the Talon, SAM Nest, Asteroid Mite, wavering Stormhawk, clamp gun). */
+    private CeresLooks ceres;
+
+    /** M9 part C: the line mines and the Minelayer's laying (Level 30). */
+    private MineLooks mines;
+
+    /** M9 part C: Level 30's Gilded Gunships and Rail Serpents. */
+    private MinefieldLooks minefield;
+
+    /** M9 part D: Level 31's Hornets, Shard Drones (and their air links) and Buzzsaw Drones. */
+    private MiningRigLooks rig;
+
     /** M8 part F: whether the level is a dark one ({@link DarkLight}): the units' glow-only frames are drawn. */
     private boolean dark;
 
@@ -131,6 +143,38 @@ final class KindLooks {
             vortices = new VortexLooks(sprites, sortie.enemyKinds());
         }
         return vortices;
+    }
+
+    /** M9 part B: Level 29's units' looks for the sortie's enemy kinds, built once. */
+    CeresLooks ceres(Sortie sortie) {
+        if (ceres == null) {
+            ceres = new CeresLooks(sprites, sortie.enemyKinds(), name -> LevelRenderer.pivots(files, name));
+        }
+        return ceres;
+    }
+
+    /** M9 part C: the line mines' looks for the sortie's enemy kinds, built once. */
+    MineLooks mines(Sortie sortie) {
+        if (mines == null) {
+            mines = new MineLooks(sprites, sortie.enemyKinds());
+        }
+        return mines;
+    }
+
+    /** M9 part C: Level 30's units' looks for the sortie's enemy kinds, built once. */
+    MinefieldLooks minefield(Sortie sortie) {
+        if (minefield == null) {
+            minefield = new MinefieldLooks(sprites, sortie.enemyKinds(), name -> LevelRenderer.pivots(files, name));
+        }
+        return minefield;
+    }
+
+    /** M9 part D: Level 31's units' looks for the sortie's enemy kinds, built once. */
+    MiningRigLooks rig(Sortie sortie) {
+        if (rig == null) {
+            rig = new MiningRigLooks(sprites, sortie.enemyKinds(), name -> LevelRenderer.pivots(files, name));
+        }
+        return rig;
     }
 
     /** M7 part E: the lane strafers' looks for the sortie's enemy kinds, built once. */
@@ -303,6 +347,18 @@ final class KindLooks {
         }
         if (ghostDrones != null) {
             ghostDrones.restart();
+        }
+        if (ceres != null) {
+            ceres.restart();
+        }
+        if (mines != null) {
+            mines.restart();
+        }
+        if (minefield != null) {
+            minefield.restart();
+        }
+        if (rig != null) {
+            rig.restart();
         }
         if (tanks != null) {
             tanks.restart();

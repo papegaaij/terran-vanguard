@@ -99,3 +99,60 @@ The art direction's homing diamond (round 59 C.7, moved to Act 5): every Ascenda
 - **Negative prompt:** magenta, needle yellow, blue or cyan, smoke trail, photo, perspective.
 - **Animation brief:** as A.
 - **Mockup generator:** `python3 tools/concept/enemies_r60.py homing-diamond b`
+
+## enemy-shield-final-r61
+
+Production art of M9 part A (round 61), `tools/art/act5_gear.py shield`. Artist brief: the Ascendancy's light hex
+shield as a round bubble over the unit (the round-60 Talon, Hornet and Gunship picks all wear it as a bubble), one
+circle per size tier (52, 92, 116 px), additive gold light: holding (a 4-frame shimmer), a hit lighting the hexes
+where it lands (a 28 px patch on the rim), emptied (a 0.2 s flash and a ring of gold shards flung out), refilling
+(shimmering in from the edge). Proposal a: a thin hex lattice at 40 % over the whole bubble. Proposal b: a smooth gold
+film with a bright rim and a soft top-left highlight, hexes only where a hit lands.
+
+AI prompt: "pre-rendered 1990s CGI game effect, translucent gold energy shield bubble with a thin hexagon lattice,
+bright rim, additive glow on black, top-down shoot'em up sprite"
+
+## enemy-shield-final-r64
+
+Production art, round 64 (step ART-F), `tools/art/act5_gear.py shield`: round 61's pick, proposal **a** (the hex lattice),
+written to `assets/sprites/enemy-shield-*` (the keys the game reads). Artist brief: as
+[enemy-shield-final-r61](#enemy-shield-final-r61) a, but the bubble seen face on: the thin gold lattice fades toward
+the middle (about 12 % over the unit, 38 % at the rim, fine 1 px lines) so the unit inside stays clear, the Gilded
+Gunship most of all (round 60 A.3's worry); the sheet shows it over the production Talon (shield 12), Hornet and Gunship
+at 1× and 2×.
+
+## homing-diamond-final-r61
+
+Production art of round 60's A.16 a (`tools/art/act5_gear.py diamond`): the crimson diamond with its dark rim, gold
+heart and white-hot core at 16 headings (18 px), a short thin pale-gold exhaust as its own additive sprite, a spark
+pop when shot down, a faint ring when it burns out.
+
+## belt-rig-capture-r61-a
+
+Concept round 61, a capture of the game, not generated art (M9 part A, step A4, 2026-10-28): the game built by `:desktop:installDist` (branch `m9-act-5`) on a private 960×540 Xvfb display, `--bench <s> --settings <scratch>/settings.properties --invulnerable` (auto-fire on), `ALSOFT_DRIVERS=wave` writing the game's own mix to a file, the screen recorded with ffmpeg `x11grab` at 30 fps, a small XTest driver steering the ship; the `.mp4` is a cut with the game's sound (H.264 main, AAC 96 kbps), the `.png` frames of it (the 480×540 play field, or crops). No Act 5 level exists yet. **The capture rig:** a scratch copy of the tree (never committed) in which Level 08 is the
+stand-in for an Act 5 level: `medium: vacuum` and `underground: true`; hex shields on the Stinger (2), Spore Bomber (6)
+and Mantis (8); the Needler's aimed shot along its facing with `homing: {…, look: diamond, seekable: true}`; a second
+attack on the Spine Turret, `pattern: laser-line` (`telegraph 0.9, live 0.2, band 8, hold_within 60`, every 3 s); a
+Vorne line at t = 26; a third briefing page from Varga on `channel: enemy` (no image, see round 61); the Tesla Coil Pod
+and Swarm Tail unlocked at 8 and `shield-breaker` in Level 08's recommended traits; `BeltChecks.firstLevel` returning 1
+(the Act 5 keys allowed before Level 29) and three drainers latched in `Sortie.step` at t = 30, 40, 50 and let go at
+60, 65, 70 (the Void Leech that latches them is part F). Runs: `--level 8 --invulnerable --special airstrike:2`, (a) the
+default fit, (b) `--loadout front=pulse-cannon:3,left=tesla-coil-pod:3,right=tesla-coil-pod:3,rear=swarm-tail:2`
+(over its output: `FIRE 50%` from the first drainer). This video is run (a), recording seconds 25–67.
+
+## enemy-shield-capture-r61-a
+
+Concept round 61, frames of the [capture rig](#belt-rig-capture-r61-a)'s runs: (a) at rig ≈ 27.5 and 31.9 s, (b) at
+≈ 32.6 and 45.2 s (the 480×540 play field). The `.mp4` is run (b), recording seconds 30–50.
+
+## homing-diamond-capture-r61-a
+
+Concept round 61, frames of the [capture rig](#belt-rig-capture-r61-a)'s run (a) at rig ≈ 28.0 and 28.7 s and two
+240×120 crops of the second scaled 2× (nearest).
+
+## enemy-shield-capture-r64-a
+
+Concept round 64, captures of the game (M9 part D, step D5) with the production hex lattice (round 61 F.2 a, ART-F):
+Level 29, the plan's Level 29 fit firing (`--level 29 --invulnerable --loadout front=ion-beam:4,rear=tail-gun:3,left=micro-missile-pod:3,right=micro-missile-pod:3,generator=3,shield=2,armor=3`),
+t≈13.4–14.1, a 200×200 crop at 2×: the t=13 Talons' bubbles, lit hexes on a hit, the shatter ring; and Level 30 at t=101
+(`--shots 6060`, not firing), a 240×240 crop at 2×: a convoy Gunship and its escort Talons shielded.

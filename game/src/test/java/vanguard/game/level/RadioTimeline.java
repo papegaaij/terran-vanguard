@@ -87,12 +87,16 @@ abstract class RadioTimeline {
     static final String LEVEL_26 = "act-4-deep-water/level-26-blackwater";
     static final String LEVEL_27 = "act-4-deep-water/level-27-hydrothermal-vents";
     static final String LEVEL_28 = "act-4-deep-water/level-28-abyssal-maw";
+    static final String LEVEL_29 = "act-5-the-belt/level-29-betrayal-at-ceres";
+    static final String LEVEL_30 = "act-5-the-belt/level-30-minefield";
+    static final String LEVEL_31 = "act-5-the-belt/level-31-mining-rig-escort";
 
     /** Rook's sides: a {@code {side}} line is played with each one's text. */
     static final List<String> SIDES = VoiceLines.SIDES;
 
     /**
-     * Levels whose lines are not rendered yet (none: Level 21's were rendered in M7 part H's step VOX-H, Level 20's
+     * Levels whose lines are not rendered yet (none: Level 29's were rendered in M9 part B's step VOX-B, Level 21's in M7
+     * part H's step VOX-H, Level 20's
      * in M7 part G's step VOX-G,
      * Level 14's in M5 part H's step H6,
      * Level 13's in M5 part G's step G6,
@@ -587,9 +591,14 @@ abstract class RadioTimeline {
         return VoiceLines.sideLine(VoiceLines.allyLine(cue.line(), 2), side);
     }
 
-    /** M7 part D: a cue's line as shown with {@code ally} for {@code {ally}} (a dome's name); "" as {@link #text}. */
+    /**
+     * M7 part D: a cue's line as shown with {@code ally} for {@code {ally}} (a dome's name); M9 part D: and for {@code
+     * {section}} (a hull section's name); "" as {@link #text}.
+     */
     static String text(RadioCue cue, String side, String ally) {
-        return ally.isEmpty() ? text(cue, side) : VoiceLines.sideLine(cue.line().replace(VoiceLines.ALLY, ally), side);
+        return ally.isEmpty()
+                ? text(cue, side)
+                : VoiceLines.sideLine(VoiceLines.sectionLine(cue.line().replace(VoiceLines.ALLY, ally), ally), side);
     }
 
     /**

@@ -1,10 +1,10 @@
 ---
 title: Level 33 – Leech Field
-design: draft
+design: approved
 implementation: not-started
 art: none
 depends-on: [../../../enemies/space/void-leech, ../../../enemies/ground/rail-bunker, ../../../enemies/air/talon, ../../../enemies/space/asteroid-mite, ../../../player/generator, ../../../world/belt, ../../../player/wingmen, ../../../story/characters/the-choir, ../../../systems/economy]
-updated: 2026-10-27
+updated: 2026-10-28
 ---
 
 # Level 33 – Leech Field
@@ -21,10 +21,9 @@ own [Talons](../../../enemies/air/talon/README.md) too: the uneasy alliance show
 one time in Act 5. Density 4, no boss, 178 s: the field's edge, the grown rocks, the bunker ridge, the
 feeding ground, the swarm and clear rock.
 
-**Status: draft** (Act 5 design phase, step `m9-d-levels-3`, 2026-10-27), **pending the user's review in
-concept round 60**. Written from the act roster, the gap analysis's recommended answers (**Q2 a** the drain,
-**Q1 a** the Talons' shields, **Q11 a** the belt look; judgement calls **J2** the reference DPS 136 and
-**J3** the ground layer for the bunkers, all pending in round 60) and the wave 1 documents. Every number is a
+**Status: approved** (Act 5 design phase, step `m9-d-levels-3`, 2026-10-27), **approved by the user in concept round 60 (2026-10-27)**. Written from the act roster, the gap analysis's recommended answers (**Q2 a** the drain,
+**Q1 a** the Talons' shields, **Q11 b** the belt look (gunmetal/charcoal with gold); judgement calls **J2** the reference DPS 136 and
+**J3** the ground layer for the bunkers, all decided in round 60) and the wave 1 documents. Every number is a
 hand-written first draft at medium for part F to measure with `levelReport`; there is no `data.yaml` yet.
 
 ## Briefing
@@ -89,7 +88,7 @@ Scroll **150 px/s**, **130 px/s** on the bunker ridge (the rail lines need room 
 change over 2 s). Setting: [the belt](../../../world/belt/README.md)'s Vrell-infested field, vacuum
 ([vacuum rules](../../../world/belt/README.md#vacuum-rules)): no weather, explosions flash and throw debris
 in a ring. **Light**: the belt's top-left sun on warm brown-grey rock, the sunlit dust band in the deep layer,
-the growth's black-violet sheen; a step lighter than Act 4 (Q11 a) so the Talons' black reads. Motion budget:
+the growth's black-violet sheen; a step lighter than Act 4 (Q11 b) so the Talons' gunmetal reads. Motion budget:
 the leeches and the rail lines are the strong elements, the drifting rocks the second; the growth is still.
 
 | Section | t (s) | Scroll (px) | Speed (px/s) | Layers and content | Purpose |
@@ -147,7 +146,7 @@ bottom edge):
 | t (s) | Section | Formation | Enemies (link) | Count | Enter from | Notes |
 |---|---|---|---|---|---|---|
 | 5 | 1 | swarm (on rocks) | [Asteroid Mite](../../../enemies/space/asteroid-mite/README.md) | 4 | front | Two rocks carrying the riders (rock riding) |
-| 7.5 | 1 | V-wing | [Talon](../../../enemies/air/talon/README.md) | 5 | front | Shielded Talons (2 HP hex shield; the leader 4) |
+| 7.5 | 1 | V-wing | [Talon](../../../enemies/air/talon/README.md) | 5 | front | Shielded Talons (12 HP hex shield; the leader 24: round 62) |
 | 10 | 1 | swarm | [Skitter](../../../enemies/air/skitter/README.md) | 5 | front | |
 | 12.5 | 1 | swarm (on rocks) | [Asteroid Mite](../../../enemies/space/asteroid-mite/README.md) | 5 | front (left) | |
 | 15 | 1 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front | |
@@ -223,7 +222,7 @@ bottom edge):
 
 ## Hazards
 
-- **Generator drain** (Q2 a, pending round 60): the [drain rules](../../../player/generator/README.md#enemy-drain-effects);
+- **Generator drain** (Q2 a, decided in round 60): the [drain rules](../../../player/generator/README.md#enemy-drain-effects);
   the leech's latch, shake-off and the EMP's answer are the [Void Leech](../../../enemies/space/void-leech/README.md)'s.
 - **Rail lines**: the [Rail Bunker](../../../enemies/ground/rail-bunker/README.md)'s locked line and its `heavy` hit;
   they fire up the screen too, so a bunker the ship has passed still matters.
@@ -368,7 +367,7 @@ None yet. The level needs (part F's production art; the mood from the belt's rou
 
 ## Open questions
 
-Pending the user's review in round 60 (the gap analysis's questions this level follows):
+Approved in round 60 (the gap analysis's questions this level follows):
 
 - **Q2, the drain** (recommended **a**, drafted: −2 MW a leech to −6, shield regrowth first, then the fire rate).
   Alternatives: **b** a flat −20 % fire rate a leech whatever the loadout (the briefing's and intel's "bring spare
@@ -376,14 +375,15 @@ Pending the user's review in round 60 (the gap analysis's questions this level f
   it is shaken off (the level would cut the leech count by a third).
 - **J3, ground in L33** (drafted: the Rail Bunkers on asteroid surfaces, so L30 is the act's only space-only
   level). Alternative: L33 space only, the bunkers moved to L34's hulls or dropped, `NO GROUND` back on L33.
-- **Q11, the Ascendancy look** (recommended **a**: gloss black, gold ≥ 20 %, rim light, red lights; the field a step
-  lighter than Act 4). Alternatives **b** gunmetal with gold, **c** black silhouettes with gold accents only.
+- **Q11, the Ascendancy look** (decided in round 60, **b**, not the recommendation: gunmetal/charcoal hulls, gold ≥ 20 %, rim
+  light, red lights; the field a step lighter than Act 4). Rejected: **a** gloss black, **c** black silhouettes with gold
+  accents only.
 - **Q1, enemy shields** (recommended **a**: the Talons' 2 HP hex shield, emptied by the EMP and by a leech on a prey
   Talon). Alternatives **b** shields only `shield-breaker`, beams and the EMP get through; **c** no shields in Act 5.
 
 ## Decisions
 
-- 2026-10-27 (Act 5 design phase, step `m9-d-levels-3`; pending the user's review in round 60): drafted from the
+- 2026-10-27 (Act 5 design phase, step `m9-d-levels-3`; approved in round 60): drafted from the
   roster row, the gap analysis (§0, §1.1, §2.4, §2.8, Q1 a, Q2 a, Q11 a, J2, J3) and the wave 1 documents
   (the Void Leech, the Rail Bunker, the Talon, the Asteroid Mite, the generator's drain rules, the belt);
   Level 25 as the model (every section, hand tables marked draft, no `data.yaml`).
@@ -399,6 +399,7 @@ Pending the user's review in round 60 (the gap analysis's questions this level f
 - 2026-10-27: the secret is the prospector's shack *Claim 114* (belt settlers, before the Vrell).
 - 2026-10-27, design phase: the hardened Rail Bunkers count at **0 %** in the typical haul (the plan's fit has no
   `anti-ground`), so the `bounty_scale` is recomputed **0.46 → 0.55** (typical 6,099, −0.0 %; perfect 11,680, 1.91 ×
-  the budget); the eight bunkers stay (step m9-d-act; pending the user's review in round 60).
+  the budget); the eight bunkers stay (step m9-d-act; approved in round 60).
 - 2026-10-27, design phase: rail lines pass the big rocks (accepted: the line is the bunker's `laser-line`, not a
   bullet; the rocks stop bullets only).
+- 2026-10-27 (user, [round 60](../../../concept-rounds/round-60/README.md) closed): the design approved as drafted (`design: approved`, D.6): Q2 **a** (a latched Void Leech drains the generator), J.12 kept (2 MW per leech), Q12 **c**; the brown-out hum is S.10 a, the rail line S.7 b and S.8 b. Q11 **b**: gunmetal/charcoal units.

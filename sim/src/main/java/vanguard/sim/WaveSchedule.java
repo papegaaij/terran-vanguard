@@ -57,6 +57,14 @@ final class WaveSchedule {
     private final boolean[] headFirsts;
     /** M8 part E: per planned unit, its mount on a wall or its swim out of a cave; null for any other. */
     private final WallMounts.Placed[] mounted;
+    /** M9 part B: per planned unit, its wave's leader's stat block when it leads its wave; null for any other. */
+    private final EnemySpec[] leaders;
+    /** M9 part B: per planned unit, the index of its wave in the plan's list (the scatter's wing). */
+    private final int[] waveIndexes;
+    /** M9 part B: per planned unit, its seat on a rock of its wave ({@link RockRides}); null for any other. */
+    private final RockRides.Seat[] seats;
+    /** M9 part B: the rocks the plan's waves on rocks carry (their numbers run from 0 in the plan's order). */
+    private final int rocks;
 
     private final int[] warningStarts;
     private final int[] warningEnds;
@@ -111,11 +119,22 @@ final class WaveSchedule {
         Map<Spawn, int[]> placeOf = new IdentityHashMap<>();
         Map<Spawn, Boolean> flipOf = new IdentityHashMap<>();
         Map<Spawn, Boolean> headFirstOf = new IdentityHashMap<>();
+        Map<Spawn, EnemySpec> leaderOf = new IdentityHashMap<>();
+        Map<Spawn, Integer> waveOf = new IdentityHashMap<>();
+        Map<Spawn, RockRides.Seat> seatOf = new IdentityHashMap<>();
+        int rockCount = 0;
         int clocks = 0;
         int burrows = 0;
-        for (WaveSpec wave : waves) {
+        for (int w = 0; w < waves.size(); w++) {
+            WaveSpec wave = waves.get(w);
             int before = planned.size();
-            if (wave.mount().isPresent()) {
+            if (wave.enemy().ride().isPresent() && wave.onRocks().isEmpty()) {
+                throw new IllegalArgumentException(wave.enemy().slug() + ": riders come on their wave's rocks");
+            }
+            if (wave.onRocks().isPresent()) {
+                // M9 part B: its units ride its rocks (design/enemies, Rock riding).
+                rockCount += RockRides.plan(wave, kinds.indexOf(wave.enemy()), rng, planned, seatOf, rockCount);
+            } else if (wave.mount().isPresent()) {
                 // M8 part E: a wall's nests or a cave's units.
                 mounts.plan(wave, kinds.indexOf(wave.enemy()), rng, planned, spans.apply(wave));
             } else {
@@ -139,6 +158,11 @@ final class WaveSchedule {
                     }
                 }
                 tagOf.put(planned.get(i), wave.tag());
+                waveOf.put(planned.get(i), w);
+                if (wave.leader().isPresent() && i == before) {
+                    // M9 part B: the wave's first unit (a V-wing's tip) leads it.
+                    leaderOf.put(planned.get(i), wave.leader().get());
+                }
                 placeOf.put(planned.get(i), new int[] {
                     i - before, wave.enemy().burrow().isPresent() ? burrows : -1, planned.size() - before
                 });
@@ -188,7 +212,14 @@ final class WaveSchedule {
         flips = new boolean[spawns.length];
         headFirsts = new boolean[spawns.length];
         mounted = new WallMounts.Placed[spawns.length];
+        leaders = new EnemySpec[spawns.length];
+        waveIndexes = new int[spawns.length];
+        seats = new RockRides.Seat[spawns.length];
+        rocks = rockCount;
         for (int i = 0; i < spawns.length; i++) {
+            leaders[i] = leaderOf.get(spawns[i]);
+            waveIndexes[i] = waveOf.getOrDefault(spawns[i], -1);
+            seats[i] = seatOf.get(spawns[i]);
             mounted[i] = mounts.placed(spawns[i]);
             flips[i] = flipOf.containsKey(spawns[i]);
             headFirsts[i] = headFirstOf.containsKey(spawns[i]);
@@ -337,6 +368,41 @@ final class WaveSchedule {
     /** M8 part E: the mount of the unit {@link #due} returned last (a wall's nest, a cave's swimmer); null for none. */
     WallMounts.Placed lastMounted() {
         return mounted[next - 1];
+    }
+
+    /**
+     * M9 part B: the leader's stat block when the unit {@link #due} returned last leads its wave ({@link
+     * WaveSpec#leader()}); null for any other.
+     */
+    EnemySpec lastLeader() {
+        return leaders[next - 1];
+    }
+
+    /** M9 part B: the index in the plan's list of the wave of the unit {@link #due} returned last. */
+    int lastWave() {
+        return waveIndexes[next - 1];
+    }
+
+    /** M9 part B: the seat on its wave's rock of the unit {@link #due} returned last; null for a unit riding none. */
+    RockRides.Seat lastSeat() {
+        return seats[next - 1];
+    }
+
+    /** M9 part B: the rocks the plan's waves on rocks carry. */
+    int rocks() {
+        return rocks;
+    }
+
+    /**
+     * M9 part B: the units the level sends that count as enemies ({@link EnemySpec#countsAsEnemy()}: all but its
+     * neutral craft).
+     */
+    int counted() {
+        int count = 0;
+        for (Spawn spawn : spawns) {
+            count += spawn.enemy().countsAsEnemy() ? 1 : 0;
+        }
+        return count;
     }
 
     /** The volley clock of the unit {@link #due} returned last; -1 without one. */

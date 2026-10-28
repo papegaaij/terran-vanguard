@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import vanguard.content.AlliesData;
 import vanguard.content.Content;
 import vanguard.content.ContentLoader;
+import vanguard.content.LevelData;
 
 class SpriteUseTest {
     private final Content content = ContentLoader.fromClasspath();
@@ -109,6 +110,23 @@ class SpriteUseTest {
         assertEquals(Set.of("level-07"), atlases.get("lifeboat-pod"));
         assertEquals(Set.of("level-07"), atlases.get("lifeboat-cable"));
         assertEquals(Set.of("level-07"), atlases.get("brood-carrier-hull"));
+    }
+
+    /**
+     * M9 part C: Level 30's tow (the dead beacon buoy) is drawn in its level's look ({@link SpriteUse#TOW_LOOKS}), not
+     * the lifeboat; its line mines in the Minelayer's frames, not the spore mine's.
+     */
+    @Test
+    void level30sTowClaimsTheDeadBuoyAndItsLineMinesNoSporeMine() {
+        Map<String, Set<String>> atlases = SpriteUse.atlases(
+                content, List.of("debris-lane-buoy", "debris-lane-buoy-break", "minelayer-mine-blast"));
+
+        assertEquals(Set.of("level-30"), atlases.get("debris-lane-buoy"));
+        assertEquals(Set.of("level-30"), atlases.get("debris-lane-buoy-break"));
+        assertEquals(Set.of("level-30"), atlases.get("minelayer-mine-blast"));
+        LevelData level30 = content.level(content.levelKey(30).orElseThrow());
+        assertFalse(SpriteUse.roots(content, level30).contains("spore-mine"), "line mines only");
+        assertFalse(SpriteUse.roots(content, level30).contains(SpriteUse.TOW_ROOT));
     }
 
     /**

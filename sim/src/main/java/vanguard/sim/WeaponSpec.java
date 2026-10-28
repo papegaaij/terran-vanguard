@@ -41,7 +41,10 @@ import java.util.List;
  * @param antiSub M8 part A: it has the {@code anti-sub} trait (design/world/europa, Under water rules): it reaches the
  *     {@code sub} layer and does full damage under water ({@link Medium})
  * @param splash M8 part A (design/player/weapons/harpoon-torpedoes): the share of a torpedo's damage its hit deals to
- *     the other units within its {@code blast} radius; 0 for none
+ *     the other units within its {@code blast} radius; 0 for none (M9 part A: an arc's sparks, the same rule)
+ * @param shieldBreaker M9 part A (design/enemies, Enemy shields): it has the {@code shield-breaker} trait: a hit
+ *     empties a unit's shield at once and holds its refill back
+ * @param seek M9 part A: a homing weapon's target pick ({@link Seek#NEAREST} for every other weapon)
  */
 public record WeaponSpec(
         String slug,
@@ -67,8 +70,17 @@ public record WeaponSpec(
         Mines mines,
         boolean flanking,
         boolean antiSub,
-        double splash) {
+        double splash,
+        boolean shieldBreaker,
+        Seek seek) {
     public WeaponSpec {
+        java.util.Objects.requireNonNull(seek);
+        if (seek != Seek.NEAREST && delivery != Delivery.HOMING) {
+            throw new IllegalArgumentException(slug + ": only a homing weapon has a seek rule: " + seek);
+        }
+        if (delivery == Delivery.ARC && (muzzles.size() != 1 || !(range > 0) || !(coneHalfAngle > 0))) {
+            throw new IllegalArgumentException(slug + ": an arc has one muzzle, a reach and a spread");
+        }
         muzzles = List.copyOf(muzzles);
         if (muzzles.isEmpty()) {
             throw new IllegalArgumentException("a volley has at least one projectile");
@@ -169,7 +181,9 @@ public record WeaponSpec(
                 mines,
                 flanking,
                 false,
-                0);
+                0,
+                false,
+                Seek.NEAREST);
     }
 
     /** A weapon without M5 part F's {@code side} or {@code rear} trait. */
@@ -222,60 +236,12 @@ public record WeaponSpec(
 
     /** This weapon with M5 part F's {@code side} or {@code rear} trait ({@code flanking}) or without it. */
     public WeaponSpec flanking(boolean sideOrRear) {
-        return new WeaponSpec(
-                slug,
-                vfx,
-                sfx,
-                delivery,
-                antiGround,
-                rate,
-                damage,
-                speed,
-                size,
-                range,
-                lifetimeSeconds,
-                pierce,
-                blast,
-                turnRate,
-                coneHalfAngle,
-                airSeconds,
-                snap,
-                muzzles,
-                endSpeed,
-                accelSeconds,
-                mines,
-                sideOrRear,
-                antiSub,
-                splash);
+        return copy(damage, blast, muzzles, sideOrRear, antiSub, splash, shieldBreaker, seek);
     }
 
     /** M8 part A: this weapon with the {@code anti-sub} trait ({@code antiSubTrait}) or without it. */
     public WeaponSpec antiSub(boolean antiSubTrait) {
-        return new WeaponSpec(
-                slug,
-                vfx,
-                sfx,
-                delivery,
-                antiGround,
-                rate,
-                damage,
-                speed,
-                size,
-                range,
-                lifetimeSeconds,
-                pierce,
-                blast,
-                turnRate,
-                coneHalfAngle,
-                airSeconds,
-                snap,
-                muzzles,
-                endSpeed,
-                accelSeconds,
-                mines,
-                flanking,
-                antiSubTrait,
-                splash);
+        return copy(damage, blast, muzzles, flanking, antiSubTrait, splash, shieldBreaker, seek);
     }
 
     /**
@@ -283,6 +249,39 @@ public record WeaponSpec(
      * its damage to the other units within {@code radius} px (its {@code blast}).
      */
     public WeaponSpec splash(double radius, double share) {
+        return copy(damage, radius, muzzles, flanking, antiSub, share, shieldBreaker, seek);
+    }
+
+    /**
+     * M9 part A (design/enemies, Enemy shields): this weapon with the {@code shield-breaker} trait ({@code breaker}) or
+     * without it: its hit on a shielded unit empties the shield at once, the whole hit going to the hull ({@link
+     * Enemy#damageBreaking}).
+     */
+    public WeaponSpec withShieldBreaker(boolean breaker) {
+        return copy(damage, blast, muzzles, flanking, antiSub, splash, breaker, seek);
+    }
+
+    /**
+     * M9 part A (design/player/weapons/swarm-tail): this homing weapon with its target pick {@code rule} ({@link
+     * Seek#NEAREST} for every homing weapon before it).
+     */
+    public WeaponSpec withSeek(Seek rule) {
+        return copy(damage, blast, muzzles, flanking, antiSub, splash, shieldBreaker, rule);
+    }
+
+    /**
+     * M9 part A, RF7: the one copy the {@code withX} copies go through: the components a copy may change, the others
+     * this weapon's (the canonical constructor's checks run).
+     */
+    private WeaponSpec copy(
+            double newDamage,
+            double newBlast,
+            List<Muzzle> newMuzzles,
+            boolean newFlanking,
+            boolean newAntiSub,
+            double newSplash,
+            boolean newShieldBreaker,
+            Seek newSeek) {
         return new WeaponSpec(
                 slug,
                 vfx,
@@ -290,24 +289,80 @@ public record WeaponSpec(
                 delivery,
                 antiGround,
                 rate,
-                damage,
+                newDamage,
                 speed,
                 size,
                 range,
                 lifetimeSeconds,
                 pierce,
-                radius,
+                newBlast,
                 turnRate,
                 coneHalfAngle,
                 airSeconds,
                 snap,
-                muzzles,
+                newMuzzles,
                 endSpeed,
                 accelSeconds,
                 mines,
-                flanking,
-                antiSub,
-                share);
+                newFlanking,
+                newAntiSub,
+                newSplash,
+                newShieldBreaker,
+                newSeek);
+    }
+
+    /**
+     * M9 part A (design/player/weapons/tesla-coil-pod, the {@code arc} delivery): {@code rate} arcs a second, each an
+     * instant hit of {@code damage} from {@code pod} on the nearest target within {@code reach} px in a forward arc of
+     * {@code spreadRadians} (everything but the wedge straight behind; a shielded unit first), and sparks: {@code
+     * sparkShare} of the damage on the other units within {@code sparkRadius} px of the struck one (the splash).
+     * Not {@code shield-breaker} until {@link #withShieldBreaker}; no projectile, speed or pierce.
+     */
+    public static WeaponSpec arc(
+            String slug,
+            String vfx,
+            String sfx,
+            double rate,
+            double damage,
+            double reach,
+            double spreadRadians,
+            double sparkRadius,
+            double sparkShare,
+            Muzzle pod) {
+        return new WeaponSpec(
+                        slug,
+                        vfx,
+                        sfx,
+                        Delivery.ARC,
+                        false,
+                        rate,
+                        damage,
+                        0,
+                        new Hitbox(1, 1),
+                        reach,
+                        0,
+                        1,
+                        0,
+                        0,
+                        spreadRadians / 2,
+                        0,
+                        0,
+                        List.of(pod))
+                .splash(sparkRadius, sparkShare);
+    }
+
+    /**
+     * M9 part A: how a homing weapon's projectile picks its target (design/player/weapons/swarm-tail). Each re-picks
+     * with its own rule when its target dies.
+     */
+    public enum Seek {
+        /** The nearest target in its seek radius and its cone (every homing weapon before the Swarm Tail). */
+        NEAREST,
+        /**
+         * The nearest enemy behind the ship's nose line (below the row of the ship's centre; above it in a reversed
+         * scroll) within its seek radius, all round; with none there the nearest anywhere within it.
+         */
+        REAR_FIRST
     }
 
     /** A weapon of the Act 1 kind: no acceleration, no mines. */
@@ -441,12 +496,19 @@ public record WeaponSpec(
          * (a level over water or under water): elsewhere its mount fires nothing. Appended last so the earlier
          * deliveries keep their ordinals.
          */
-        DEPTH_CHARGE;
+        DEPTH_CHARGE,
+        /**
+         * M9 part A (design/player/weapons/tesla-coil-pod, the {@code arc}): no projectile: on its fire step the pod
+         * strikes its target at once ({@link ArcFire}), on {@code air}, {@code low-air} and {@code ground} as a bolt
+         * (hardened ground glances it off; never {@code high-air} or {@code sub}); without a target it does not fire.
+         * Appended last so the earlier deliveries keep their ordinals.
+         */
+        ARC;
 
         /** Whether its projectiles hit enemies on {@code layer} on their way (blasts aside). */
         public boolean reaches(Layer layer) {
             return switch (this) {
-                case BOLT -> layer.hitByStandardShots();
+                case BOLT, ARC -> layer.hitByStandardShots();
                 // M7 part B: nothing reaches the buried layer.
                 case HOMING, TURRET, BEAM -> layer != Layer.SUB && layer.touchable();
                 case TORPEDO -> layer == Layer.SUB || layer == Layer.GROUND;
@@ -465,6 +527,14 @@ public record WeaponSpec(
         /** M8 part A: whether it runs only where there is water (its mount reads NO WATER elsewhere). */
         public boolean needsWater() {
             return this == TORPEDO || this == DEPTH_CHARGE;
+        }
+
+        /**
+         * M9 part C (design/campaign Level 30): whether it is a bomb delivery that needs a ground layer (dropped and
+         * lobbed: they hit only the ground); in a level without one its mount reads NO GROUND and fires nothing.
+         */
+        public boolean needsGround() {
+            return this == DROPPED || this == LOBBED;
         }
 
         /**
@@ -492,31 +562,7 @@ public record WeaponSpec(
      * (design/player/wingmen: Rook's guns are the player weapons' tables, scaled, from his nose).
      */
     public WeaponSpec scaled(double factor, List<Muzzle> from) {
-        return new WeaponSpec(
-                slug,
-                vfx,
-                sfx,
-                delivery,
-                antiGround,
-                rate,
-                damage * factor,
-                speed,
-                size,
-                range,
-                lifetimeSeconds,
-                pierce,
-                blast,
-                turnRate,
-                coneHalfAngle,
-                airSeconds,
-                snap,
-                from,
-                endSpeed,
-                accelSeconds,
-                mines,
-                flanking,
-                antiSub,
-                splash);
+        return copy(damage * factor, blast, from, flanking, antiSub, splash, shieldBreaker, seek);
     }
 
     int intervalTicks() {

@@ -127,9 +127,10 @@ class ActHpFactorTest {
 
     @Test
     void aLevelBeyondTheReferenceCurveIsAnError() {
-        // M7 part A: the curve ran to Level 21 (Act 3's reference DPS); M8 part A (step A2): to Level 28 (Act 4's), so
-        // Level 29 is beyond it (Act 4's cases: anActFourLevelUsesTheActFourCurve).
-        assertThrows(IllegalArgumentException.class, () -> SimSpecs.actHpFactor(CONTENT, "mantis", 5, 29));
+        // M7 part A: the curve ran to Level 21 (Act 3's reference DPS); M8 part A (step A2): to Level 28 (Act 4's); M9
+        // part A (step A2): to Level 35 (Act 5's), so Level 36 is beyond it.
+        assertEquals(144 / 52.0, SimSpecs.actHpFactor(CONTENT, "mantis", 5, 35), 1e-9);
+        assertThrows(IllegalArgumentException.class, () -> SimSpecs.actHpFactor(CONTENT, "mantis", 6, 36));
     }
 
     /**

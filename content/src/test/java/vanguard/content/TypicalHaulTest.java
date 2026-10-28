@@ -90,7 +90,17 @@ class TypicalHaulTest {
                         // M8 part H (step H3): the README's scale 0.74 (levelReport: typical +0.0 %; the README's
                         // credit
                         // table)
-                        Map.entry(28, 6_665)),
+                        Map.entry(28, 6_665),
+                        // M9 part B (step B3b): the waves' rework, the scale re-fitted to 0.35 (levelReport: typical
+                        // +0.6 % at 0.35; the README's credit table 7,889 counts the leaders' extra by hand)
+                        Map.entry(29, 7_924),
+                        // M9 part C (step C2): the README's waves with the offbeat waves, a Gunship's Darts as two
+                        // streams, the scale fitted to 0.43 (levelReport: typical +0.3 %)
+                        Map.entry(30, 8_654),
+                        // M9 part D (step D2): the README's waves with the offbeat waves and rock groups, a Gunship's
+                        // Darts as two streams, each tug section home paid, the scale fitted to 0.36 (levelReport:
+                        // typical -0.5 %)
+                        Map.entry(31, 8_618)),
                 perfect);
     }
 

@@ -1,0 +1,55 @@
+# SAM Nest stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/schemas-units/README.md
+# M9 part B, step B2 (Level 29): the approved stat block (round 60) as data. New in it (flown from steps B1, B1b): a
+# ground turret's homing salvo launched along its turning rack (an aimed attack with a `turn_rate`, no `aim: facing`),
+# the homing diamond (`look`, `seekable`: part A), the rack's hold fire while the ship is within `hold_within` px and the
+# cap `most` counted per nest (`per_shooter`). The level's `dormant_until` (Block C's nests) is the ground target's. HP 10
+# base: the beam era's ×2 flies it at 20.
+name: SAM Nest
+faction: Jovian Ascendancy
+layer: ground
+tier: small
+size: [44, 44]    # sprite px
+hitbox: [32, 32]
+parts: single (the launcher rack turns)
+orientation: 16 angles
+hp: 10            # base; the beam era's ×2 flies it at 20: 0.17 s at the L29 reference of 120
+armour: none
+speed: 0          # scrolls with the hull or rock
+machine: true     # the EMP Burst stuns it 3 s: no salvo (missiles in flight fly on)
+movement:
+  terrain: {}
+attacks:
+  - pattern: aimed
+    name: salvo
+    bullet: medium         # a missile's hit
+    interval: 4.5          # s between salvos
+    speed: 110             # px/s, the missile
+    first_shot_delay: 1.0  # s after it enters the screen (or wakes)
+    burst: 2               # missiles a salvo
+    burst_gap: 0.25        # s between them
+    turn_rate: 120         # °/s, the rack, toward the ship; the missiles leave along it
+    arc: 180               # all round: a nest the ship has passed fires up the screen
+    homing: {turn_rate: 80, life: 4, hp: 2, most: 8, hatch: 0.4, look: diamond, seekable: true, hold_within: 96, per_shooter: true}   # °/s, s, HP, at most in flight per nest, the hatch's lock tell s; the homing diamond; no salvo while the ship is within 96 px
+    notes:
+      text: '`homing`: a salvo of **{burst}** missiles, {burst_gap} s apart, every **{interval} s**, launched along the rack''s bearing (the rack turns {turn_rate}°/s all round); tell: the rack holds still and its hatch opens with a blinking red lock light for **{homing.hatch} s**. Missile (the homing diamond): {speed} px/s, turn rate {homing.turn_rate}°/s, life {homing.life} s, {homing.hp} HP, `{bullet}` {damage} on a hit; shootable by every weapon, homing shots and Rook; the Decoy Flares retarget it. At most {homing.most} alive per nest; it holds fire while the ship is within {homing.hold_within} px'
+formations:
+  - {name: turret nest, size: [2, 4]}
+weak_points: []
+drops: []
+traits: [anti-ground, area, homing, spread]
+bounty: 15
+first_level: 29
+difficulty:
+  easy: {attacks: {salvo: {interval: 6.0}}, homing: {turn_rate: 65}}
+  hard: {burst: 3, homing: {turn_rate: 95}}
+notes:
+  orientation: (the launcher rack; the base is fixed)
+  armour: none (not hardened). HP {hp} base flies at 20 with the beam era's ×2; missile {attacks.0.homing.hp}
+  speed: (scrolls with the hull or rock)
+  movement: '`terrain`; **dormant until t** where its level says (dark, white-lit, not shootable, not picked; then a 1 s wake tell)'
+  formations: (on a hull block or rock face; at most 3 nests firing at once, a level rule)
+  weak_points: (the open hatch's red light is drawn only)
+  bounty: '; missiles 0'
+  death: '`small` ground explosion, the rack thrown; a scorched launcher wreck stays'
+  used_in: 'Ceres Hub; later Act 5 levels, the Strider''s shoulder pod and the Iron Sovereign''s SAM batteries share its missile (their docs)'
+  difficulty: 'easy: every 6 s, turn rate 65°/s; hard: salvos of 3, turn rate 95°/s'

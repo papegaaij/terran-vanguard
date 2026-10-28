@@ -175,6 +175,15 @@ public final class Sortie {
     final Convoy convoy;
 
     final int launchTicks;
+    /** M9 part B: the rocks of the waves on rocks and their riders; null without such waves. */
+    final RockRides rides;
+    /** M9 part B: the held arena's holders (design/campaign Level 29's clamp guns); 0 without a held arena. */
+    final int holders;
+    /** M9 part B: the holders still standing (or yet to come) in this attempt. */
+    int holdersLeft;
+    /** M9 part B: the holders left out of the pool seen so far in this attempt. */
+    int holdersOutSeen;
+
     private final int endTicks;
     /** A secret's crate or data core: the level's own life for it. */
     private final int crateTicks;
@@ -206,6 +215,8 @@ public final class Sortie {
     private final Canyon canyon;
     /** M7 part C: the level's tendril gates (design/enemies/ground/tendril-anchor); null without. */
     final Links links;
+    /** M9 part D: whether a kind of the level dashes (the debris pass then runs). */
+    private final boolean dashers;
 
     int attempt = 1;
     boolean wrecked;
@@ -251,6 +262,9 @@ public final class Sortie {
     final int defendEndTicks;
     /** M5 part H: per root burst (in the level's order), its first growth's slot in the force's burst arrays. */
     final int[] burstSlots;
+
+    /** M9 part A: the power budget in flight, made once (the HUD reads it every frame). */
+    private final java.util.Optional<PowerState> powerView;
 
     /** @param armour the ship's armour at the level start (design/systems/retry: not full, unless it was full) */
     public Sortie(long seed, Loadout loadout, LevelScript script, Rules rules, double armour) {
@@ -321,10 +335,18 @@ public final class Sortie {
                 hits,
                 setPieces,
                 script.ground().water());
+        // M9 part C (Level 30): no ground layer: the bomb deliveries are idle (NO GROUND).
+        fire.noGround(script.ground().none());
         medium = new Medium(script.medium());
         // M8 part A: the Pressure hull takes the water's drag off the ship.
         medium.hull(loadout.pressureHull());
         fire.medium(medium);
+        if (loadout.power().isPresent()) {
+            // M9 part A: the power budget a drainer's latch sheds (design/player/generator, Enemy drain effects).
+            fire.power(loadout.power().get());
+            ship.defences().power(fire.power());
+        }
+        powerView = java.util.Optional.ofNullable(fire.power());
         terrainSpec = script.ground().terrain().orElse(null);
         canyon = terrainSpec == null ? null : new Canyon(terrainSpec.terrain());
         fire.canyon(canyon);
@@ -354,13 +376,23 @@ public final class Sortie {
                 ScrollPlan.spans(script),
                 // M7 part G: the waves and the ground units of a reversed scroll are flipped.
                 script.reverses() ? t -> travelAt(script, t) < 0 : t -> false,
-                WallMounts.of(script));
+                WallMounts.of(script),
+                // M9 part B: the held arena's halt cycle (Level 29).
+                script.haltCycle());
         force.canyon(canyon);
         if (medium.water()) {
             // M8 part A: the enemies' bullets and missiles fire at the water's speed.
             force.medium(medium);
         }
         fire.missiles(force.missiles());
+        rides = force.rocks() > 0 ? new RockRides(force.rocks(), debris, force.enemies(), events) : null;
+        force.rides(rides);
+        int holding = 0;
+        for (GroundUnit unit : script.groundUnits()) {
+            holding += unit.holder() ? 1 : 0;
+        }
+        holders = holding;
+        holdersLeft = holding;
         if (special.flares() != null) {
             // M8 part A: the homing missiles go for the burning decoy flares.
             force.missiles().decoys(special.flares());
@@ -370,6 +402,7 @@ public final class Sortie {
             walking |= piece.stride().isPresent();
         }
         walks = walking;
+        dashers = force.kinds().stream().anyMatch(kind -> kind.dash().isPresent());
         links = script.ground().gates().isEmpty()
                 ? null
                 : new Links(script.ground().gates(), events, hits);
@@ -577,6 +610,8 @@ public final class Sortie {
             if (latches.present()) {
                 latches.shake(commands);
             }
+            // M9 part A: a rear-first missile's "behind" follows the scroll.
+            fire.travel(clock.travel);
             fire.fire(commands, force.enemies(), ground);
         }
         if (launching() || !flying()) {
@@ -600,6 +635,11 @@ public final class Sortie {
                 force.bursts(levelTick, ship.x(), groundScroll, scrollStep);
             }
             force.spawn(levelTick);
+            // M9 part B: the dormant units whose time came wake; the held arena's halt lets in its cycle's waves.
+            force.wake(levelTick);
+            if (clock.heldArena) {
+                heldArenaStep();
+            }
             if (force.skipped() != skippedSeen) {
                 // M7 part G: a pursuit's refill motes left out (no room in the flock) count nowhere.
                 skippedSeen = force.skipped();
@@ -646,13 +686,30 @@ public final class Sortie {
             // M7 part C: the tendrils follow their anchors, before the beam burns them and they touch.
             links.step(scrollStep);
         }
+        if (force.airLinks() != null) {
+            // M9 part D: the air links follow their drones, tell, drop under the EMP and light.
+            force.airLinks().step(convoy == null ? null : convoy.hull());
+        }
+        if (dashers) {
+            // M9 part D: a dashing Buzzsaw bounces off the large rocks and smashes the small ones.
+            DashRocks.meet(force.enemies(), debris, rides, events);
+        }
         bossPasses.fireSetPieces(firing);
         if (cruisers != null) {
             // M8 part H: the cruisers' broadsides, flak and point defence on the level clock.
             cruisers.step(levelTick, firing, ship, force, rules.bulletBudget(), events);
         }
         force.moveBullets();
-        force.moveMines(ship);
+        // M9 part C: the line mines come down with the scroll and blink when the ship or Rook comes near.
+        boolean triggers = flying() && !complete && !failed;
+        boolean rook = wingman != null && !wingman.out();
+        force.moveMines(
+                ship,
+                scrollStep,
+                triggers ? ship.x() : Double.NaN,
+                triggers ? ship.y() : Double.NaN,
+                rook ? wingman.x() : Double.NaN,
+                rook ? wingman.y() : Double.NaN);
         if (force.missiles().size() > 0) {
             // M7 part F: the homing missiles steer toward the ship.
             force.missiles().fly(ship.x(), ship.y());
@@ -666,6 +723,10 @@ public final class Sortie {
                 scrollStep,
                 flying() && !complete && !failed && fire.deflectors().any() ? fire.deflectors() : null);
         groundPasses.moveDebris();
+        if (rides != null) {
+            // M9 part B: the riders on their rocks (moved just now), before the rocks stop the shots.
+            rides.step(ship.x(), ship.y());
+        }
         contacts.blockShots();
         if (cruisers != null) {
             // M8 part H: shots spark off the cruisers' hulls.
@@ -728,6 +789,9 @@ public final class Sortie {
                 if (links != null && !wrecked) {
                     hitPasses.touchTendrils();
                 }
+                if (force.airLinks() != null && !wrecked) {
+                    hitPasses.touchAirLinks();
+                }
             }
             if (latches.present()) {
                 latches.drainShield();
@@ -773,6 +837,78 @@ public final class Sortie {
         if (!complete && !wrecked && !failed && levelTick >= endTicks) {
             objectivePasses.completeLevel();
         }
+    }
+
+    /**
+     * M9 part B: the held arena's step after the spawns: a holder left out of the pool counts as down; the halt's cycle
+     * lets in its waves while the halt runs.
+     */
+    private void heldArenaStep() {
+        while (holdersOutSeen < force.holdersLeftOut()) {
+            holdersOutSeen++;
+            holderDown(ship.x(), ship.y());
+        }
+        if (clock.halting()) {
+            force.spawnHalt(clock.haltTicks - 1);
+        }
+    }
+
+    /**
+     * M9 part B (design/campaign Level 29, the rescue halt): a holder of the held arena fell (destroyed or gone) at (x,
+     * y); the last one releases the halt ({@link SimEvents.Type#HOLDERS_DOWN}, the radio's {@code holders-down}) and
+     * starts the escort swap.
+     */
+    void holderDown(double x, double y) {
+        if (holdersLeft <= 0) {
+            return;
+        }
+        holdersLeft--;
+        if (holdersLeft == 0) {
+            events.add(SimEvents.Type.HOLDERS_DOWN, x, y);
+            // Step B4b: the cue's subject says what the escort swap does ("Bulwark, RTB" only with the drone flying).
+            radio.cue(CueTrigger.HOLDERS_DOWN, escorts.swapSubject());
+            escorts.release();
+        }
+    }
+
+    /** M9 part B: the held arena's holders (Level 29's clamp guns: the {@code CLAMPS} line); 0 without a held arena. */
+    public int holders() {
+        return holders;
+    }
+
+    /** M9 part B: the held arena's holders still standing (or yet to come) in this attempt. */
+    public int holdersStanding() {
+        return holdersLeft;
+    }
+
+    /** M9 part B: whether the held arena's halt runs now (the clock held by a standing holder). */
+    public boolean halting() {
+        return clock.halting();
+    }
+
+    /** M9 part B: how long the held arena's halt has lasted in this attempt, s (real time); 0 before it. */
+    public double haltSeconds() {
+        return clock.haltTicks * SimStep.SECONDS;
+    }
+
+    /** M9 part B: the level's escort swap (Rook's rescue; {@link EscortSwap#planned()} false without one). */
+    public EscortSwap escortSwap() {
+        return escorts.swap;
+    }
+
+    /** M9 part B: whether the secondary objective spares the level's neutral craft ("Hold fire"). */
+    public boolean secondaryBySpared() {
+        return script.objectives().secondary().bySpared();
+    }
+
+    /** M9 part B: the neutral craft of a spared objective that left the screen in this attempt (the HOLD FIRE count). */
+    public int sparedLeft() {
+        return objectives.sparedLeft();
+    }
+
+    /** M9 part B: the neutral craft of a spared objective the level sends; 0 without one. */
+    public int sparedTotal() {
+        return secondaryBySpared() ? objectives.escapesTotal() : 0;
     }
 
     /** The level clock's step: {@link #CLOCK_ONE} is one step of script time. */
@@ -881,6 +1017,20 @@ public final class Sortie {
         return clock.travel;
     }
 
+    /**
+     * M9 part A (design/player/generator, Enemy drain effects): a drainer latched onto the ship ({@code delta} +1) or let
+     * go (−1: shaken off or killed), for part F's Void Leech; returns the drainers latched now (0 for a loadout without
+     * a power budget, which nothing drains).
+     */
+    public int drain(int delta) {
+        return fire.drain(delta);
+    }
+
+    /** M9 part A: the power budget in flight (the HUD's drain row); empty without one. */
+    public java.util.Optional<PowerState> power() {
+        return powerView;
+    }
+
     /** M7 part G: whether the scroll runs reversed now ({@link #travel()} is -1): the ground moves up the screen. */
     public boolean reversed() {
         return clock.travel < 0;
@@ -966,6 +1116,35 @@ public final class Sortie {
      * M7 part C: the level's tendril gates and their tendrils (design/enemies/ground/tendril-anchor); null in a
      * level without gates.
      */
+    /** M9 part D: the air links of the linked groups (design/enemies/space/shard-drone); null without such a unit. */
+    public AirLinks airLinks() {
+        return force.airLinks();
+    }
+
+    /** M9 part D: whether the escort objective is a hull escort (Level 31's mining tug). */
+    public boolean hullEscort() {
+        return convoy != null && convoy.hull() != null;
+    }
+
+    /**
+     * M9 part D: the hull escort's centre between the previous and the current step, px from the left edge; {@code
+     * alpha} in [0, 1]; NaN without a hull escort. Its sections are {@link #ally(int)} (in hull order, {@link
+     * #allySpec(int)} their boxes and HP, {@link #allyName(int)} their names).
+     */
+    public double hullX(double alpha) {
+        return hullEscort() ? convoy.hull().renderX(alpha) : Double.NaN;
+    }
+
+    /** M9 part D: as {@link #hullX(double)}, px from the bottom edge (y up). */
+    public double hullY(double alpha) {
+        return hullEscort() ? convoy.hull().renderY(alpha) : Double.NaN;
+    }
+
+    /** M9 part D: the hull escort's section {@code k}'s spec (its name, offset, box, HP and credits). */
+    public ObjectiveSpec.HullSection hullSection(int k) {
+        return convoy.hull().spec().sections().get(k);
+    }
+
     public Links links() {
         return links;
     }
@@ -1051,6 +1230,14 @@ public final class Sortie {
      */
     public boolean mountIdle(int m) {
         return fire.idle(fire.armament().mount(m).weapon());
+    }
+
+    /**
+     * M9 part C: why mount {@code m} fires nothing in this level (the HUD's word: {@code NO WATER}, {@code NO GROUND});
+     * {@link IdleReason#NONE} when it fires.
+     */
+    public IdleReason mountIdleReason(int m) {
+        return fire.idleReason(fire.armament().mount(m).weapon());
     }
 
     /**
@@ -1347,6 +1534,10 @@ public final class Sortie {
 
     /** M5 part E: naval convoy unit {@code k}'s name ({@code {ally}} in its lines: "Halvorsen"); "" for an escort's unit. */
     public String allyName(int k) {
+        if (hullEscort()) {
+            // M9 part D: the section's name ({@code {section}} in the hull escort's lines: "bow").
+            return hullSection(k).name();
+        }
         if (groundAllies()) {
             return convoy.groundSpec().units().get(k).name();
         }
@@ -1677,7 +1868,8 @@ public final class Sortie {
     public int enemyTotal() {
         // M7 part G: less the pursuits' refill motes left out (planned, they never entered).
         // Step SIM-K: its bosses left out when the secondary does not count them (Level 21's Colossus).
-        return force.units() - force.skipped() + countedPieces + streamReleased;
+        // M9 part B: the halt cycle's units as they come (as a stream's).
+        return force.units() - force.skipped() + countedPieces + streamReleased + force.haltReleased();
     }
 
     /** Kills needed for the secondary objective. */

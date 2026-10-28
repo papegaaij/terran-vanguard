@@ -130,6 +130,8 @@ public final class Wingman {
     private int ejectTicks;
     /** M8 part F: his scripted loss in a level with one (design/player/wingmen, Rook's loss); made once. */
     private final RookLoss loss = new RookLoss();
+    /** M9 part B: the level's escort swap he waits for as the rescued Rook ({@link EscortSwap}); null otherwise. */
+    private EscortSwap rescue;
 
     private double ejectX;
     private double ejectY;
@@ -208,8 +210,12 @@ public final class Wingman {
     private Canyon canyon;
     /** M7 part C: the level's tendril gates (a standing tendril is a wall to him); null without. */
     private Links links;
+    /** M9 part A: the enemies' homing missiles (the seekable ones are his last targets); null without. */
+    private Missiles missiles;
     /** M7 part F: the level's furnace vents; null without. */
     private FurnaceVents vents;
+    /** M9 part C: the enemies' mines, whose line mines he keeps clear of (null: none to read). */
+    private Pool<Mine> mines;
     /** M8 part H, step H2: the finale's cruisers, whose told bands he keeps out of; null without. */
     private CruiserRun cruisers;
     /** M7 part F: where his goal moves clear of the walker's flame cone and the furnace vents (made once). */
@@ -352,6 +358,12 @@ public final class Wingman {
                 evading = true;
             }
         }
+        if (mines != null && mines.size() > 0 && hazards.clearOfMines(goalX, goalY, mines, shipX)) {
+            // M9 part C (Level 30): out of the line mines' proximity discs, through the gap the ship flies.
+            goalX = hazards.x();
+            goalY = hazards.y();
+            evading = true;
+        }
         move(shipX, shipY);
         steerBank();
         slow.step();
@@ -395,6 +407,22 @@ public final class Wingman {
      */
     void links(Links gates) {
         links = gates;
+    }
+
+    /**
+     * M9 part A (decided QA-1): the enemies' homing missiles: a seekable one (the Act 5 homing diamond) in his cone is
+     * his target only when no unit or part is (his homing shots then lock onto it).
+     */
+    void missiles(Missiles flying) {
+        missiles = flying;
+    }
+
+    /**
+     * M9 part C (design/player/wingmen, Rook in the minefield): the enemies' mines; he keeps his goal out of the line
+     * mines' proximity discs ({@link RookHazards#clearOfMines}).
+     */
+    void mines(Pool<Mine> enemyMines) {
+        mines = enemyMines;
     }
 
     /**
@@ -549,7 +577,8 @@ public final class Wingman {
             // A flank threat: an enemy within the flank distance of him (not merely in the same
             // column of the screen, which every enemy far ahead would be).
             boolean beside = dx * dx + dy * dy <= flankDistance * flankDistance;
-            flank |= beside;
+            // M9 part B: a neutral craft is no threat (and never his target: the seekers ignore it).
+            flank |= beside && enemy.spec().countsAsEnemy();
             // M5 part C: on its current layer; a hardened unit only for an anti-ground gun. M7 part G (user
             // decision 2026-10-20): never one the seekers ignore (a mote), though it is a flank threat.
             if (!reaches(enemy.layer())
@@ -592,6 +621,24 @@ public final class Wingman {
                 if (rank < bestRank || (rank == bestRank && distance < bestDistance)) {
                     best = serial;
                     bestRank = rank;
+                    bestDistance = distance;
+                }
+            }
+        }
+        if (best < 0 && missiles != null && reaches(Layer.AIR)) {
+            // M9 part A (QA-1): with no unit or part in his cone, the nearest seekable missile in it.
+            for (int i = 0; i < missiles.size(); i++) {
+                Missile missile = missiles.get(i);
+                if (!missile.seekable()
+                        || !PlayField.overlaps(missile.x(), missile.y(), Missile.BOX)
+                        || !inCone(missile.x() - x, missile.y() - y)) {
+                    continue;
+                }
+                int serial = PlayerFire.MISSILE_SERIAL + missile.serial();
+                targetSeen |= serial == target;
+                double distance = (missile.x() - x) * (missile.x() - x) + (missile.y() - y) * (missile.y() - y);
+                if (distance < bestDistance) {
+                    best = serial;
                     bestDistance = distance;
                 }
             }
@@ -1501,12 +1548,47 @@ public final class Wingman {
      * barks and the {@code requires: escort} lines end with them).
      */
     public boolean onRadio() {
-        return !ejected && !loss.trailing();
+        return !ejected && !loss.trailing() && (rescue == null || rescue.joined());
     }
 
-    /** M8 part F: whether he is out of the fight in this attempt: ejected, or lost ({@link RookLoss}). */
+    /**
+     * M8 part F: whether he is out of the fight in this attempt: ejected, or lost ({@link RookLoss}); M9 part B: or, the
+     * rescued Rook, not yet in his slot (waiting in the tender's hold, or flying into the slot).
+     */
     boolean out() {
-        return ejected || loss.lost();
+        return ejected || loss.lost() || (rescue != null && !rescue.joined());
+    }
+
+    /** M9 part B: he is the rescued Rook of {@code swap}: out of the fight until he joins his slot. */
+    void awaitRescue(EscortSwap swap) {
+        rescue = swap;
+    }
+
+    /** M9 part B: whether he waits in the tender's hold for the escort swap (not on the screen). */
+    public boolean waiting() {
+        return rescue != null && !rescue.released();
+    }
+
+    /** M9 part B: whether he flies from the tender's hold into his slot (the escort swap's join). */
+    public boolean joining() {
+        return rescue != null && rescue.released() && !rescue.joined();
+    }
+
+    /** M9 part B: he stands at (atX, atY), at rest (in the tender's hold). */
+    void holdAt(double atX, double atY) {
+        x = atX;
+        y = atY;
+        vx = vy = 0;
+    }
+
+    /** M9 part B: his slot's x now beside the ship at {@code shipX}. */
+    double slotXAt(double shipX) {
+        return shipX + slotX();
+    }
+
+    /** M9 part B: his slot's y now beside the ship at {@code shipY}. */
+    double slotYAt(double shipY) {
+        return shipY + slotY();
     }
 
     /** Whether he has ejected in this attempt: out for the rest of it. */

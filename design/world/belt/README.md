@@ -1,10 +1,10 @@
 ---
 title: The belt
-design: draft
+design: approved
 implementation: n/a
 art: chosen
 depends-on: [../../campaign/act-5-the-belt, ../../enemies, ../../player/specials]
-updated: 2026-10-27
+updated: 2026-10-28
 ---
 
 # The belt
@@ -14,8 +14,8 @@ updated: 2026-10-27
 The asteroid belt: drifting rock fields and hundreds of hollowed-out mining stations, many
 chartered to Helix Dynamics. Setting for Act 5, where the Ascendancy fights openly alongside
 the Vrell and the stations must choose sides. Ends with the Iron Sovereign battle station.
-Act 5's per-level use, the vacuum rules and the hazards are a draft of 2026-10-27, pending the
-user's review in round 60.
+Act 5's per-level use, the vacuum rules and the hazards are a draft of 2026-10-27, used as approved
+by the Level 29–35 documents in round 60 (this README itself awaits the user's sign-off).
 
 ## Design
 
@@ -66,7 +66,7 @@ own the sections and the timings, these are their settings (draft).
 
 ### Vacuum rules
 
-*Draft, pending the user's review in round 60 (the gap check's trivia, decided: no new layer).*
+*Draft, used as approved by the Level 29–35 documents (round 60; the gap check's trivia, decided: no new layer).*
 
 - **`space` is `air`.** A unit written as `space` in a roster flies on the player's plane like an `air`
   unit; there is no `space` layer in the game, only a level's **vacuum presentation**. Every weapon hits
@@ -87,20 +87,21 @@ own the sections and the timings, these are their settings (draft).
 
 - Dark brown-grey rock, harsh distant sunlight from top-left, very high contrast.
 - Orange refinery light; cool white station lights.
-- Ascendancy structures gloss black with gold highlights and red lights — new to the palette.
-- **Ascendancy readability** (Q11 = a, recommended, pending round 60): black-and-gold units over dark
-  rock and space read poorly, so every Ascendancy unit is **gloss black with gold trim on at least 20 %
+- Ascendancy structures **gunmetal/charcoal** with gold highlights and red lights (round 60, Q11 b; the L28 cruisers stay gloss black) — new to the palette.
+- **Ascendancy readability** (Q11 = **b**, decided in round 60, not the recommendation): black-and-gold units over dark
+  rock and space read poorly, so every Ascendancy unit is **gunmetal or charcoal with gold trim on at least 20 %
   of its silhouette**, a strong **top-left rim light** (the belt's sun) and **red running lights**; the
   belt's backdrops are kept **a step lighter than Act 4's** (a sunlit dust band in the deep layer, warm
-  sunlit rock faces), so a black hull always has a lighter ground behind it. One readability check per
-  sprite sheet (the unit at play size over the darkest backdrop of its level). The look matches the L28
-  cruisers (final).
+  sunlit rock faces), so a dark hull always has a lighter ground behind it. One readability check per
+  sprite sheet (the unit at play size over the darkest backdrop of its level). It diverges on purpose from the L28
+  cruisers (final, gloss black); the Act 5 units' chosen variants are re-rendered in gunmetal/charcoal in their parts'
+  production art.
 - The Ascendancy's homing missiles are the art direction's **homing diamond** in red-gold with a short
   thin exhaust ([art direction](../../art-direction/README.md)).
 
 ### Hazards & set pieces
 
-*Draft, pending the user's review in round 60; the levels place them.*
+*Draft, used as approved by the Level 29–35 documents (round 60); the levels place them.*
 
 | Hazard / set piece | Levels | Rules (draft) |
 |---|---|---|
@@ -135,10 +136,12 @@ The concept files live in [art-direction](../../art-direction/README.md).
 
 ## Concept art
 
+Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
+
 The chosen scene (round 06, in [art direction](../../art-direction/README.md#concept-art)) sets the belt's look; see
 *Chosen scene* above.
 
-Concept round 60 (Act 5 "The Belt" design phase, step ART-P-world; all pending the user's review) — one mood still per
+Concept round 60 (Act 5 "The Belt" design phase, step ART-P-world; chosen in round 60: the mood ladder a, the readability frame b) — one mood still per
 level, L29–L35 (direction, not production backdrops), in two grades, and the Q11 readability frame: three Ascendancy
 units at play size over the darkest window of every level's still in both grades, in Q11's looks a, b and c, with
 the measured gold share. Backdrops and units are `tools/concept/enemies_r60.py`'s (the units' own sheets are in
@@ -148,18 +151,12 @@ tug in the [mining tug](../../allies/mining-tug/README.md#concept-art)). Generat
 
 | File | What | Status |
 |---|---|---|
-| [concept/belt-moods-r60-a.png](concept/belt-moods-r60-a.png) | Mood ladder A, a step lighter (Q11 a): lit Ceres Hub with a block turned red, the shipping lane's dust band and buoys, the rock field with the tug, the tunnels and the refinery's glow, the leech field, the graveyard, Ceres orbit under the station's rim; each still's mean luminance and darkest window | proposed |
-| [concept/belt-moods-r60-b.png](concept/belt-moods-r60-b.png) | Mood ladder B, harsh: the same seven stills under Act 4's deep-shadow grade | proposed |
-| [concept/belt-readability-r60-a.png](concept/belt-readability-r60-a.png) | Q11 frame A — gloss black, gold trim, strong gold rim (recommended): Talon leader, Hornet and SAM Nest over every level's darkest ground in both grades | proposed |
-| [concept/belt-readability-r60-b.png](concept/belt-readability-r60-b.png) | Q11 frame B — gunmetal hulls with the same gold, a softer rim | proposed |
-| [concept/belt-readability-r60-c.png](concept/belt-readability-r60-c.png) | Q11 frame C — black silhouettes, the gold dimmed to bronze accents, no rim, read by the red lights | proposed |
+| [concept/belt-moods-r60-a.png](concept/belt-moods-r60-a.png) | Mood ladder A, a step lighter (the backdrops' grade, A.18 a): lit Ceres Hub with a block turned red, the shipping lane's dust band and buoys, the rock field with the tug, the tunnels and the refinery's glow, the leech field, the graveyard, Ceres orbit under the station's rim; each still's mean luminance and darkest window | chosen (round 60) |
+| [concept/belt-readability-r60-b.png](concept/belt-readability-r60-b.png) | Q11 frame B — gunmetal hulls with the same gold, a softer rim (the chosen look) | chosen (round 60) |
 
 ## Open questions
 
-- Q11 of [round 60](../../concept-rounds/README.md) (the Ascendancy look on the belt): recommended (a)
-  above. Alternatives: (b) gunmetal/charcoal hulls with gold (reads better, but diverges from the final
-  L28 cruisers); (c) black silhouettes with gold accents only, read by their red lights (cheapest, poor
-  at speed).
+- Q11 of [round 60](../../concept-rounds/README.md) (the Ascendancy look on the belt): decided, **b** (see above).
 - J3 of round 60: L33 has asteroid surfaces on the ground layer (for the Rail Bunkers), so L30 is the
   only space-only level.
 
@@ -167,10 +164,19 @@ tug in the [mining tug](../../allies/mining-tug/README.md#concept-art)). Generat
 
 - 2026-09-30: The belt as Act 5; signature: a station turning sides mid-level.
 - 2026-10-01: Linked the chosen scene from art direction; `art: chosen`.
-- 2026-10-27 (Act 5 design phase, step m9-d-systems; **pending the user's review in round 60**): the
+- 2026-10-27 (Act 5 design phase, step m9-d-systems; used as approved by the Level 29–35 documents in round 60): the
   sub-locations per level (three new: the shipping lane, the Vrell-infested field, the ship graveyard);
   the vacuum rules (`space` = `air`, no new layer; no weather; specials forbidden only inside L32's
   asteroid); the hazards with draft numbers (small rocks break, big ones are walls; mining charges burst
   64 px and never hurt the ship; the turning station at ≈ t=60 of L29; the mass-relay flash once in L35's
   approach with a 1.2 s telegraph); ground in every level but L30 (J3); the Ascendancy readability rules
-  (Q11 = a).
+  (Q11 = a at the time of drafting; changed to b in round 60, below).
+- 2026-10-27 (user, [round 60](../../concept-rounds/round-60/README.md) closed): **Q11 b** — the Ascendancy look is
+  gunmetal/charcoal hulls with gold (not the recommended gloss black; the ≥ 20 % gold, rim light and red lights stay,
+  and the L28 cruisers diverge on purpose); the readability frame b is the record. **A.18 a** — the belt's backdrops are
+  a step lighter than Act 4's (the lighter grade; b, Act 4's harsh grade, rejected; the darkest windows of Levels 30, 31
+  and 35 are re-measured in the backdrop step). This document is not among the round's D rows, so it stays `draft` until
+  the user signs it off.
+- 2026-10-28 (M9 part A, step A4): set to `review` for [round 61](../../concept-rounds/round-61/README.md) (D.1), where the
+  user signs it off.
+- 2026-10-28 (user, [round 61](../../concept-rounds/round-61/README.md), closed): **D.1** the belt's world document approved (`design: approved`).

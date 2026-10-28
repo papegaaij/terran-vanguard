@@ -78,12 +78,24 @@ The schemas of the player's data files (weapons, the ship and its core parts, sp
   level and the overdrive add a **`fuse`** (s from the launch to the burst; only a depth charge's) and a `blast` (the
   burst radius); its tables are rendered by `tools/sync_tables.py`'s depth-charge rows. `notes.vfx` overrides the
   README's *Projectile family* cell (the round-48 sheets).
+  M9 part A (Act 5's pair, round 60; loaded and checked in step A2 by content's `WeaponData`, the simulation's specs
+  in step A1): **`hits: arc`** (the [Tesla Coil Pod](../../../player/weapons/tesla-coil-pod/README.md),
+  `WeaponData.ARC`, the simulation's `Delivery.ARC`) is a wing `pod` without `speed`, `size`, `range` or `lifetime`: a
+  `cone` (° of the forward arc it picks its target in), a `splash` (the sparks' share of the arc's damage on the other
+  units within its level's `blast` radius) and per level and the overdrive one shot in its `pattern`, a `rate`, a
+  `damage`, a **`reach`** (px from the pod; only an arc's) and a `blast` (the sparks' radius); its tables are rendered
+  by `tools/sync_tables.py`'s arc rows. The trait **`shield-breaker`** (`WeaponData.shieldBreaker`) empties an enemy
+  shield at once ([enemy shields](../../../enemies/README.md#enemy-shields)). **`pick`** (`nearest` when absent,
+  `rear-first`: the [Swarm Tail](../../../player/weapons/swarm-tail/README.md)'s nearest enemy behind the ship's nose
+  line within its `range` first, else the nearest anywhere in it) is a homing missile's (`hits: homing`, no `slew`).
 - **Ship and core parts**: ship (`acceleration_seconds`, `stop_seconds`, `precision_factor`,
   `size`, `edge_gap`, `hull` (hit boxes `[x, y, width, height]` from the sprite's top left), `collection_radius`, `mercy_seconds`, `bank_change_steps`,
   `mounts`: `front`, `wings`, `roots` (the side guns' muzzles), `rear`, `engines`; its speed is the fitted engine's); shields (`break_seconds`, `models` with
   `capacity`, `regen`, `delay`, `draw`); armour (`plating` with `max`, and the low-armour `radio`
   line: `speaker`, optional `expression` and `distorted`, `line`); generator
-  (`spare_power`, `models` with `output`); systems (`engines` with `speed`, `draw`; `bays` with `start` (the starting utility bays) and
+  (`spare_power`, `models` with `output`; M9 part A: `drain` with `per` (MW each latched drainer takes off the
+  effective output), `max` (MW all of them at most) and `floor` (the weapons' lowest fire-rate factor), the
+  [enemy drain effects](../../../player/generator/README.md#enemy-drain-effects)); systems (`engines` with `speed`, `draw`; `bays` with `start` (the starting utility bays) and
   `extra` (each bought bay's `price` and `available`; their count and `start` add up to the loadout's
   utility slots); `utility`
   with `draw`, one price per level, `design` status, the Pickup magnet's `magnet` (`radius`, `pull`, one

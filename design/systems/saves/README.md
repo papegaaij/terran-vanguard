@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: n/a
 depends-on: [../../ui/main-menu, ../../ui/hangar]
-updated: 2026-10-27
+updated: 2026-10-28
 ---
 
 # Saves
@@ -141,6 +141,12 @@ the act.
   Bulwark) and plays the Act 4 intro once on Continue
   (`CampaignRouteTest.aRealV01SaveAtTheLevel22HangarMigratesAndPlaysTheActFourIntroOnce`); the same save in the
   v0.2 Linux bundle's Continue opened Act 4's intro (page 1 of 6)
+- [x] A real v0.2 save carries on in Act 5 (M9 part B, step B3, 2026-10-28): the v0.2 release's own
+  `:content:playthroughSave` at the Level 29 hangar (medium; its level check widened by one, as v0.2 had no Level 29;
+  with the `act-intro:1..4` flags the v0.2 game's briefings add), kept as
+  `content/src/test/resources/saves/v0.2-medium-level-29-hangar.json` (format version 6, Rook missing, the loaner in
+  his slot), plays the Act 5 intro once on Continue and Level 29's own briefing after a reload
+  (`CampaignRouteTest.aRealV02SaveAtTheLevel29HangarPlaysTheActFiveIntroOnce`)
 - [x] Act intro once on Continue (L.6): the `act-intro:N` story flags, the version 3 migration's flags and
   `CampaignRoute.onContinue` — content built in M7 part B step B2 (tests in `CampaignRouteTest`,
   `SaveFormatTest`); the game's Continue (`HangarScreen.onContinue`, from the slots and the main menu) in

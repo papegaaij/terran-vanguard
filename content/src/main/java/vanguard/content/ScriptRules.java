@@ -10,6 +10,7 @@ import vanguard.content.UnitRules.InLevel;
 import vanguard.sim.AllySpec;
 import vanguard.sim.CueTrigger;
 import vanguard.sim.DropSpec;
+import vanguard.sim.EscortSwapSpec;
 import vanguard.sim.GroundSpec;
 import vanguard.sim.HazardSpec;
 import vanguard.sim.LevelScript;
@@ -58,7 +59,8 @@ final class ScriptRules {
                 continue;
             }
             // M8 part C (gap check D2): a wave entering under water flies its units' underwater changes.
-            WaveRules.addWave(content, wave, difficulty, enemyChanges, carried, waves, inLevel.at(level, wave.t()));
+            WaveRules.addWave(
+                    content, level, wave, difficulty, enemyChanges, carried, waves, inLevel.at(level, wave.t()));
         }
         LevelScript script = LevelScript.builder(levelKey(levelKey, 2), levelKey(levelKey, 1))
                 .launchSeconds(level.launchSeconds())
@@ -84,7 +86,11 @@ final class ScriptRules {
                                 .map(objective -> LevelRules.secondary(content, level, objective, difficulty))
                                 .orElse(Secondary.NONE),
                         level.objectives().targets().orElse(List.of()),
-                        level.objectives().escort().map(escort -> escort(content, escort, difficulty)),
+                        // M9 part D (Level 31): a hull escort's unhooked waves by their index in the waves.
+                        level.objectives()
+                                .escort()
+                                .map(escort -> TugRules.unhooked(
+                                        escort(content, escort, difficulty), escort, waves, difficulty)),
                         level.objectives().defend().map(defend -> PartGRules.defend(content, defend, difficulty)),
                         level.convoy().map(convoy -> PartERules.convoy(content, level, convoy, difficulty)),
                         // M7 part D: the ground allies come after (SiegeRules).
@@ -92,9 +98,13 @@ final class ScriptRules {
                         LevelRules.tows(level),
                         PartCRules.holds(level, difficulty),
                         PartCRules.collapse(level)))
-                .ground(GroundSpec.NONE
-                        .withRoad(level.road().map(road -> road(level, road)))
-                        .withWater(level.overWater()))
+                // M9 part C (Level 30): a level without a ground layer (`ground: none`): bomb deliveries idle.
+                .ground(
+                        level.noGround()
+                                ? GroundSpec.SPACE
+                                : GroundSpec.NONE
+                                        .withRoad(level.road().map(road -> road(level, road)))
+                                        .withWater(level.overWater()))
                 .hazards(HazardSpec.NONE
                         .withCranes(GroundRules.cranes(level, difficulty))
                         .withDebris(debris(level, difficulty))
@@ -124,6 +134,11 @@ final class ScriptRules {
                 .rookLoss(DarkRules.rookLoss(level))
                 // M8 part H: the armour floor from the boss's kill (Level 28's run cannot be lost).
                 .armourFloor(level.armourFloor().orElse(0.0))
+                // M9 part B (Level 29, the rescue halt): the held arena's halt cycle and the escort swap.
+                .haltCycle(BeltRules.haltCycle(content, level, difficulty, enemyChanges, inLevel))
+                .escortSwap(level.escortSwap()
+                        .map(swap -> new EscortSwapSpec(
+                                swap.at().x(), PlayField.HEIGHT - swap.at().y(), swap.join())))
                 .build();
         // M7 part B: the no-surface zones and the drop launch (Level 15); M7 part C: the canyon and its gates (Level
         // 16); M7 part D: the ground allies (Level 17's domes).
@@ -258,6 +273,10 @@ final class ScriptRules {
         if (escort.air()) {
             return ObjectiveSpec.Escort.air(spec, PartDRules.air(escort), escort.credits());
         }
+        if (escort.hull().isPresent()) {
+            // M9 part D (Level 31): the mining tug's hull escort (TugRules).
+            return TugRules.hull(ally, escort, spec, difficulty);
+        }
         LevelData.Enter enter = escort.enter().orElseThrow();
         return new ObjectiveSpec.Escort(
                 spec,
@@ -359,6 +378,12 @@ final class ScriptRules {
                         // M8 part H (gap check §5 H8): the boss's arrival and a coiled boss's dive (Level 28).
                         case BOSS_ARRIVAL -> CueTrigger.BOSS_ARRIVAL;
                         case BOSS_DIVE -> CueTrigger.BOSS_DIVE;
+                        // M9 part B (Level 29): the first SAM salvo, the wavering craft, the clamps, Rook's join.
+                        case FIRST_HOMING -> CueTrigger.FIRST_HOMING;
+                        case NEUTRAL_LEFT -> CueTrigger.NEUTRAL_LEFT;
+                        case NEUTRAL_DOWN -> CueTrigger.NEUTRAL_DOWN;
+                        case HOLDERS_DOWN -> CueTrigger.HOLDERS_DOWN;
+                        case ESCORT_JOINED -> CueTrigger.ESCORT_JOINED;
                     })
                     .orElse(CueTrigger.TIME);
             // Part G (LevelRules): a boss-destroyed cue's subject is the boss, a timeout cue its own

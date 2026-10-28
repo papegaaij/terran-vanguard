@@ -255,6 +255,8 @@ final class BossChecks extends ContentChecks {
             // M5 part G: or on a timed halt (no arena) of a level with a defend primary (PartGChecks).
             if (section.speed().filter(speed -> speed == 0).isPresent()
                     && !(section.isArena() && anchored)
+                    // M9 part B (Level 29, the rescue halt): or on a held arena (its holders hold the clock).
+                    && !section.held()
                     && !(section.timedHalt() && level.objectives().defend().isPresent())) {
                 problem(
                         level,

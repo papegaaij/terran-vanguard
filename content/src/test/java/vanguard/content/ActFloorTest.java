@@ -39,7 +39,8 @@ class ActFloorTest {
         return IntStream.rangeClosed(FIRST_LEVEL, 50)
                 .mapToObj(CONTENT::levelKey)
                 .flatMap(java.util.Optional::stream)
-                .filter(key -> !PENDING.contains(key));
+                .filter(key -> !PENDING.contains(key))
+                .filter(key -> !PacingTest.PENDING_AUTOPILOT.contains(key));
     }
 
     @ParameterizedTest

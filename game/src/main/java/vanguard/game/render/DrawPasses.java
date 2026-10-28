@@ -213,6 +213,8 @@ final class DrawPasses extends LevelLooks {
         backdrop.drawGroundTiles(batch, scroll, clock);
         convoy.drawRoad(batch, Math.round(scroll));
         // With Level 09's collapse's shadow, heap and base dust under the towers (CollapseLooks).
+        // M9 part B: the prison tender's hold opens at the escort swap's release (Level 29).
+        backdrop.holdOpened(sortie.escortSwap().released() ? sortie.escortSwap().ticksSinceRelease() : -1);
         backdrop.drawGroundPieces(batch, scroll, clock);
         if (ridge != null) {
             // M7 part G: the travelling ridge (the Dust Colossus's body under the sand) on the ground, both ways.
@@ -263,6 +265,8 @@ final class DrawPasses extends LevelLooks {
         }
         ground.drawGround(batch, sortie, alpha);
         convoy.drawConvoy(batch, sortie, alpha, play.whiteFlash);
+        // M9 part D: a hull escort's tug (Level 31's Bellwether) over the outcrops.
+        tug(sortie).draw(batch, sortie, alpha, play.whiteFlash);
         if (relay != null) {
             // M5 part G: the defended relay on its floe, its damage and, once online, its lights.
             relay.draw(batch, sortie, alpha, play.whiteFlash, seconds, clock.real());
@@ -307,6 +311,8 @@ final class DrawPasses extends LevelLooks {
         kinds.pumps(sortie).drawGround(batch, sortie, alpha);
         // M8 part D: the silt puffs at the walkers' feet on the sea floor, under them.
         plain.draw(batch, scroll);
+        // M9 part B: the SAM Nests' bases, the clamp guns' clamps and the opened clamps, under the ground units.
+        kinds.ceres(sortie).drawGround(batch, sortie, alpha, scroll);
         units.drawEnemies(batch, sortie, alpha, Depth.GROUND, Launched.ANY);
         kinds.crawlers(sortie).drawChains(batch, sortie, alpha, looks, units.unitFlash);
         kinds.crawlers(sortie).drawPores(batch, sortie, alpha, scroll);
@@ -320,6 +326,10 @@ final class DrawPasses extends LevelLooks {
         f.auras = auras;
         if (auras != null) {
             auras.drawRings(batch, sortie, alpha, true);
+        }
+        if (shields != null) {
+            // M9 part A: the ground units' hex shields.
+            shields.draw(batch, sortie, alpha, true);
         }
         // M5 part H: the root bursts' dust and the tear-free shockwave over the ground units.
         if (rootBursts != null) {
@@ -431,6 +441,8 @@ final class DrawPasses extends LevelLooks {
         shuttles.drawAir(batch, sortie, alpha, play.whiteFlash);
         // M7 part C: the gates' tendrils on the player's plane, under the air units.
         kinds.tendrils(sortie).draw(batch, sortie, alpha);
+        // M9 part D: the Shard groups' air links, under the drones.
+        kinds.rig(sortie).drawLinks(batch, sortie);
         if (auras != null) {
             // M7 part D: the Heralds' radius circles and threads under the flyers.
             auras.drawAuras(batch, sortie, alpha, clock.real());
@@ -440,6 +452,10 @@ final class DrawPasses extends LevelLooks {
             // M7 part D: the Heralds' crests over their bodies, the flyers' rings.
             auras.drawCrests(batch, sortie, alpha);
             auras.drawRings(batch, sortie, alpha, false);
+        }
+        if (shields != null) {
+            // M9 part A: the flyers' hex shields over their hulls.
+            shields.draw(batch, sortie, alpha, false);
         }
         units.drawChains(batch, sortie, alpha);
         if (tenderDrops != null) {
@@ -474,7 +490,15 @@ final class DrawPasses extends LevelLooks {
         // M5 part H: the free spire tearing loose, airborne or dying.
         setPieces.drawSpire(batch, sortie, wrecks, alpha, scroll, SpirePass.AIR);
         setPieces.drawWrecks(batch, sortie, wrecks, alpha, seconds);
+        // M9 part A: the wrecks drifting off in vacuum, under the death pieces.
+        vacuumDeaths.drawWrecks(batch, sortie.tick(), alpha, scroll);
         pieces.draw(batch, scroll);
+        // M9 part B: the Talons' wings spinning off, the belt's rocks shot apart.
+        kinds.ceres(sortie).drawPieces(batch, sortie, alpha);
+        // M9 part C: a Gunship's halves and gold plates flung out.
+        kinds.minefield(sortie).drawPieces(batch, sortie, alpha, scroll);
+        // M9 part D: a Shard Drone's shards, a Buzzsaw's blades.
+        kinds.rig(sortie).drawPieces(batch, sortie, alpha);
         props.drawDebris(batch, sortie, alpha);
         if (colossus != null) {
             // M7 part H: the rocks the breaching boss tears loose toward its mouth; its throe's plume and rock rain.
@@ -506,7 +530,9 @@ final class DrawPasses extends LevelLooks {
         Wingman rook = sortie.wingman().orElse(null);
         // M8 part A: the Bulwark flies in his slot.
         deepWater.drawBulwark(batch, sortie, alpha);
-        if (rook != null) {
+        // M9 part B: the rescued Rook hidden in the tender's hold, his Ember's launch out of it (RescueLooks).
+        rescue.draw(batch, sortie, rook, alpha);
+        if (rook != null && !rescue.hides(sortie, rook)) {
             wingmanLooks.draw(batch, rook, sortie.tick(), alpha, play.whiteFlash);
             // M8 part F: his spin-down after his loss (Level 26), in his craft's place.
             rookLoss.drawSpin(batch, rook, alpha);
@@ -533,6 +559,10 @@ final class DrawPasses extends LevelLooks {
         deepWater.drawOverShots(batch, sortie, alpha);
         if (sortie.flying()) {
             player.drawMuzzles(batch, sortie, alpha, true);
+            if (arcs != null) {
+                // M9 part A: the Tesla Coil Pod's arcs and its terminal's light.
+                arcs.draw(batch, sortie, alpha);
+            }
             // M7 part A: the fields, the drones' lights, the beams, the overcharge's shell.
             arsenal.drawOverShip(batch, sortie, alpha);
         }
@@ -629,11 +659,18 @@ final class DrawPasses extends LevelLooks {
             targeting.draw(batch, sortie, alpha);
         }
         props.drawMines(batch, sortie, alpha);
+        // M9 part C: the line mines, their lamps and bursts.
+        kinds.mines(sortie).draw(batch, sortie, alpha);
         // M5 part H: the Spire's sweep, its telegraph line and beam, with the bullets.
         setPieces.drawSpire(batch, sortie, wrecks, alpha, scroll, SpirePass.SWEEP);
+        // M9 part A: the laser lines' telegraphs and rails, with the bullets.
+        lines.draw(batch, sortie);
         if (walker != null) {
             // M7 part F: the homing missiles over their smoke trails, with the bullets.
             walker.drawMissiles(batch, sortie, alpha);
+        } else if (diamonds != null) {
+            // M9 part A: the Ascendancy's homing diamonds over their exhaust, with the bullets.
+            diamonds.draw(batch, sortie, alpha);
         } else {
             // M8 part G: the Depth Hunters' torpedoes over their wakes, with the bullets.
             kinds.hunters(sortie).drawTorpedoes(batch, sortie, alpha);
@@ -843,7 +880,7 @@ final class DrawPasses extends LevelLooks {
                     1);
         }
         Wingman rook = sortie.wingman().orElse(null);
-        if (rook != null) {
+        if (rook != null && !rescue.hides(sortie, rook)) {
             wingmanLooks.drawShadow(batch, rook, alpha);
         }
         deepWater.drawBulwarkShadow(batch, sortie, alpha);

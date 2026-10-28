@@ -87,6 +87,21 @@ public final class SfxBank implements Disposable, Mixer.Listener {
         loopVolumes[sfx.ordinal()] = volume;
     }
 
+    /**
+     * M9 part C: loops {@code sfx} at {@code pitch} (1 for the recorded pitch) until {@link #stop(Sfx)}: one file
+     * looped at a hull's own pitch (the Ascendancy turbine for the Gunship and the Minelayer).
+     */
+    public void loop(Sfx sfx, float volume, float pitch) {
+        stop(sfx);
+        voices.admit(sfx, clock.getAsLong(), true);
+        long id = sounds.get(sfx).loop(volume * mixer.gain(sfx.bus()), pitch, 0);
+        if (id != -1) {
+            voices.started(sfx, id, VoiceLimit.LOOPING);
+        }
+        loopIds[sfx.ordinal()] = id;
+        loopVolumes[sfx.ordinal()] = volume;
+    }
+
     /** Sets a running loop's volume (before the mixer's gain); nothing when it is not looping. */
     public void loopVolume(Sfx sfx, float volume) {
         if (loopVolumes[sfx.ordinal()] < 0) {
@@ -102,6 +117,14 @@ public final class SfxBank implements Disposable, Mixer.Listener {
             return;
         }
         sounds.get(sfx).setPan(loopIds[sfx.ordinal()], pan, loopVolumes[sfx.ordinal()] * mixer.gain(sfx.bus()));
+    }
+
+    /** M9 part D: sets a running loop's pitch (the Buzzsaw's whine with its spin); nothing when it is not looping. */
+    public void loopPitch(Sfx sfx, float pitch) {
+        if (loopVolumes[sfx.ordinal()] < 0) {
+            return;
+        }
+        sounds.get(sfx).setPitch(loopIds[sfx.ordinal()], pitch);
     }
 
     /** A running loop's volume before the mixer's gain; negative when it is not looping. */

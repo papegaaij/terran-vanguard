@@ -20,18 +20,24 @@ class ContentLoaderTest {
     void everyDataFileInTheDesignTreeLoadsAndValidates() {
         Content content = ContentLoader.load(DesignTree.dataFiles());
 
-        assertEquals(21, content.weapons().size()); // M7 part G: the Rear-guard Drone Bay; M8 part A: the two anti-sub
+        // M7 part G: the Rear-guard Drone Bay; M8 part A: the two anti-sub; M9 part A: the Tesla Coil Pod, the Swarm
+        // Tail
+        assertEquals(23, content.weapons().size());
         assertEquals(
                 List.of(
                         "abyss-ray",
                         "abyssal-maw",
+                        "asteroid-mite",
                         "barbfin",
                         "brood-carrier",
                         "brood-pod",
                         "burrower",
+                        "buzzsaw-drone",
                         "choir-herald",
+                        "clamp-gun",
                         "coilwyrm",
                         "creeper",
+                        "dart-drone",
                         "depth-hunter",
                         "driftjelly",
                         "drill-rig",
@@ -40,22 +46,28 @@ class ContentLoaderTest {
                         "dust-kite",
                         "eel-swarm",
                         "ghost-drone",
+                        "gilded-gunship",
                         "glassfin",
                         "glow-angler",
                         "gorgon-frigate",
                         "harbour-kraken",
                         "hive-node",
+                        "hornet",
                         "lamprey",
                         "leviathan",
                         "mantis",
+                        "minelayer",
                         "mote-swarm",
                         "needler",
                         "polyp-mortar",
+                        "rail-serpent",
                         "ravager",
                         "reef-spitter",
                         "relay-beacon",
                         "revenant-walker",
+                        "sam-nest",
                         "scuttler",
+                        "shard-drone",
                         "shellback",
                         "siege-spire",
                         "siphon-pump",
@@ -67,9 +79,11 @@ class ContentLoaderTest {
                         "spiral-nautilus",
                         "spore-bomber",
                         "stinger",
+                        "talon",
                         "tendril-anchor",
                         "threadcrawler",
                         "warden-tank",
+                        "wavering-stormhawk",
                         "whirl-seed",
                         "wraith"),
                 content.enemies().keySet().stream().sorted().toList());
@@ -177,7 +191,7 @@ class ContentLoaderTest {
                 LEVEL_01,
                 text -> text.replaceFirst("enemy: needler", "enemy: neddler"),
                 "design/" + LEVEL_01
-                        + ": waves[2].enemy: unknown enemy 'neddler' (known: abyss-ray, abyssal-maw, barbfin, brood-carrier, brood-pod, burrower, choir-herald, coilwyrm, creeper, depth-hunter, driftjelly, drill-rig, dust-colossus, dust-devil, dust-kite, eel-swarm, ghost-drone, glassfin, glow-angler, gorgon-frigate, harbour-kraken, hive-node, lamprey, leviathan, mantis, mote-swarm, needler, polyp-mortar, ravager, reef-spitter, relay-beacon, revenant-walker, scuttler, shellback, siege-spire, siphon-pump, siren, skimmer, skitter, spawning-reef, spine-turret, spiral-nautilus, spore-bomber, stinger, tendril-anchor, threadcrawler, warden-tank, whirl-seed, wraith)");
+                        + ": waves[2].enemy: unknown enemy 'neddler' (known: abyss-ray, abyssal-maw, asteroid-mite, barbfin, brood-carrier, brood-pod, burrower, buzzsaw-drone, choir-herald, clamp-gun, coilwyrm, creeper, dart-drone, depth-hunter, driftjelly, drill-rig, dust-colossus, dust-devil, dust-kite, eel-swarm, ghost-drone, gilded-gunship, glassfin, glow-angler, gorgon-frigate, harbour-kraken, hive-node, hornet, lamprey, leviathan, mantis, minelayer, mote-swarm, needler, polyp-mortar, rail-serpent, ravager, reef-spitter, relay-beacon, revenant-walker, sam-nest, scuttler, shard-drone, shellback, siege-spire, siphon-pump, siren, skimmer, skitter, spawning-reef, spine-turret, spiral-nautilus, spore-bomber, stinger, talon, tendril-anchor, threadcrawler, warden-tank, wavering-stormhawk, whirl-seed, wraith)");
     }
 
     @Test

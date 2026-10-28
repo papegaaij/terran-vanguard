@@ -45,6 +45,10 @@ final class AllyPasses {
             force.hook(convoy, convoy.defendSpec());
         } else if (convoy != null && convoy.groundAllies()) {
             force.hook(convoy, convoy.groundSpec().targetedBy());
+        } else if (convoy != null && convoy.hull() != null) {
+            // M9 part D: the hull escort's hook, per kind (always or none).
+            force.hook(convoy, convoy.hull().spec().targetedBy());
+            force.missiles().hull(convoy.hull());
         } else if (convoy != null && !convoy.naval()) {
             force.hook(convoy, convoy.escort().targetedBy());
         }
@@ -102,6 +106,10 @@ final class AllyPasses {
      * claws every unit its hit box overlaps, per second.
      */
     void hitAllies() {
+        if (convoy.hull() != null) {
+            hitHull();
+            return;
+        }
         AllySpec spec = convoy.spec(0);
         if (convoy.air()) {
             hitAirAllies(spec);
@@ -144,6 +152,42 @@ final class AllyPasses {
         }
         if (convoy.groundAllies()) {
             hitGroundAllies();
+        }
+    }
+
+    /**
+     * M9 part D (design/allies/mining-tug; Q-D2 = a): the hull escort's sections take the hooked attacks of the step,
+     * in hull order: a hooked chaser or diver crossing a section deals the hull's dive damage once (to the first
+     * section it touches; a chaser then flies straight on), and the hooked missiles' bursts and the air links' touches
+     * gathered in the moves ({@link HullEscort#hit}). Every other shot, ring and body passes over it.
+     */
+    private void hitHull() {
+        HullEscort hull = convoy.hull();
+        if (s.airLinks() != null) {
+            s.airLinks().touchHull(hull, force.hookOf());
+        }
+        double dive = hull.spec().dive();
+        Pool<Enemy> enemies = force.enemies();
+        for (int j = 0; j < enemies.size() && !s.failed && dive > 0; j++) {
+            Enemy enemy = enemies.get(j);
+            if (!enemy.divedAtObjective() || enemy.diveHit()) {
+                continue;
+            }
+            int k = hull.touching(enemy.x(), enemy.y(), enemy.hitbox());
+            if (k >= 0) {
+                enemy.markDiveHit();
+                if (enemy.phase == Enemy.Phase.CHASE) {
+                    // A Dart's chase is spent on its crossing: it flies straight on, shootable.
+                    enemy.chasing.release();
+                }
+                hull.hit(k, dive);
+            }
+        }
+        for (int k = 0; k < convoy.size() && !s.failed; k++) {
+            double hits = hull.takePending(k);
+            if (hits > 0 && convoy.get(k).alive()) {
+                hurt(k, hits, true);
+            }
         }
     }
 
@@ -345,7 +389,8 @@ final class AllyPasses {
         if (first) {
             radio.cue(CueTrigger.FIRST_ALLY_HIT, "");
         }
-        if (convoy.defend()) {
+        if (convoy.defend() || convoy.hull() != null) {
+            // M9 part D: a hull's section too (CLEAN HULL: every section home with at least half its hull).
             belowShares(ally);
         }
         if (!destroyed) {
@@ -358,7 +403,7 @@ final class AllyPasses {
         radio.cue(CueTrigger.ALLY_LOST, "");
         if (convoy.allLost()) {
             // M5 part G: a defend primary's too.
-            if ((convoy.air() || convoy.defend()) && rules.invulnerableShip()) {
+            if ((convoy.air() || convoy.defend() || convoy.hull() != null) && rules.invulnerableShip()) {
                 // The debug option that lets a capture see the level to its end keeps it going too.
                 return;
             }

@@ -2,6 +2,7 @@ package vanguard.sim;
 
 import static vanguard.sim.PlayerFire.CLIMB_TURN;
 import static vanguard.sim.PlayerFire.FLANK_PREFERENCE;
+import static vanguard.sim.PlayerFire.MISSILE_SERIAL;
 import static vanguard.sim.PlayerFire.PART_SERIAL;
 import static vanguard.sim.PlayerFire.TRIGGER_SERIAL;
 import static vanguard.sim.PlayerFire.distanceSquared;
@@ -146,7 +147,10 @@ final class Homing {
             return;
         }
         if (!found) {
-            int target = nearestInCone(shot, enemies, ground);
+            // M9 part A (design/player/weapons/swarm-tail): a rear-first missile picks behind the nose line first.
+            int target = shot.weapon().seek() == WeaponSpec.Seek.REAR_FIRST
+                    ? rearFirst(shot, enemies)
+                    : nearestInCone(shot, enemies, ground);
             shot.lock(target);
             found = target >= 0;
         }
@@ -177,6 +181,9 @@ final class Homing {
      * E: a unit that dives is lost to a missile); it is then at the target position.
      */
     private boolean locked(Shot shot, Pool<Enemy> enemies, Pool<GroundObject> ground) {
+        if (shot.target() >= MISSILE_SERIAL) {
+            return missile(shot.target()) && fire.medium().reaches(shot.weapon(), Layer.AIR);
+        }
         if (shot.target() >= TRIGGER_SERIAL) {
             return trigger(shot.target() - TRIGGER_SERIAL, ground);
         }
@@ -218,6 +225,10 @@ final class Homing {
     boolean located(int target, Pool<Enemy> enemies) {
         if (target < 0) {
             return false;
+        }
+        if (target >= MISSILE_SERIAL) {
+            targetLayer = Layer.AIR;
+            return missile(target);
         }
         if (target >= PART_SERIAL) {
             int piece = (target - PART_SERIAL) / SetPieceSpec.MAX_PARTS;
@@ -307,6 +318,13 @@ final class Homing {
                 }
             }
         }
+        if (nearest < 0 && weapon.delivery() == WeaponSpec.Delivery.HOMING) {
+            // M9 part A (QA-1): a seekable missile only when no unit or part is in reach.
+            nearest = nearestMissile(shot, best, true);
+            if (nearest >= 0) {
+                return nearest;
+            }
+        }
         if (weapon.delivery() == WeaponSpec.Delivery.TORPEDO) {
             for (int j = 0; j < ground.size(); j++) {
                 GroundObject object = ground.get(j);
@@ -333,5 +351,116 @@ final class Homing {
         }
         double off = Math.IEEEremainder(StrictMath.atan2(dx, dy) - shot.heading(), 2 * StrictMath.PI);
         return Math.abs(off) <= shot.weapon().coneHalfAngle();
+    }
+
+    /**
+     * M9 part A (design/player/weapons/swarm-tail, Rear first): the serial of the nearest enemy behind the ship's nose
+     * line (below the row of its centre; above it while the scroll runs reversed) within the shot's seek radius, all
+     * round; with none there the nearest anywhere within it; with none at all (QA-1) the nearest seekable missile;
+     * -1 for none. Mines and what the seekers ignore are never picked, nor a hardened unit without {@code
+     * anti-ground}. The target position is set.
+     */
+    int rearFirst(Shot shot, Pool<Enemy> enemies) {
+        WeaponSpec weapon = shot.weapon();
+        Medium medium = fire.medium();
+        double reach = shot.range() * shot.range();
+        double behind = reach;
+        double anywhere = reach;
+        int behindSerial = -1;
+        int anywhereSerial = -1;
+        double behindX = 0;
+        double behindY = 0;
+        double anywhereX = 0;
+        double anywhereY = 0;
+        for (int j = 0; j < enemies.size(); j++) {
+            Enemy enemy = enemies.get(j);
+            if (!onField(enemy)
+                    || enemy.latched()
+                    || enemy.spec().seekersIgnore()
+                    || !medium.reaches(weapon, enemy.layer())
+                    || (!weapon.antiGround() && enemy.spec().hardened())) {
+                continue;
+            }
+            double d = distanceSquared(shot.x(), shot.y(), enemy.x(), enemy.y());
+            if (d > reach) {
+                continue;
+            }
+            if (d <= anywhere) {
+                anywhere = d;
+                anywhereSerial = enemy.serial();
+                anywhereX = enemy.x();
+                anywhereY = enemy.y();
+            }
+            boolean back = fire.travel() < 0 ? enemy.y() > ship.y() : enemy.y() < ship.y();
+            if (back && d <= behind) {
+                behind = d;
+                behindSerial = enemy.serial();
+                behindX = enemy.x();
+                behindY = enemy.y();
+            }
+        }
+        if (behindSerial >= 0) {
+            targetX = behindX;
+            targetY = behindY;
+            return behindSerial;
+        }
+        if (anywhereSerial >= 0) {
+            targetX = anywhereX;
+            targetY = anywhereY;
+            return anywhereSerial;
+        }
+        return nearestMissile(shot, reach, false);
+    }
+
+    /**
+     * M9 part A (QA-1): the lock serial of the nearest seekable enemy missile within {@code best} (squared) of the shot
+     * (and in its cone when {@code cone}), -1 for none; the target position is set.
+     */
+    private int nearestMissile(Shot shot, double best, boolean cone) {
+        Missiles missiles = fire.missiles();
+        if (missiles == null || !fire.medium().reaches(shot.weapon(), Layer.AIR)) {
+            return -1;
+        }
+        int nearest = -1;
+        for (int i = 0; i < missiles.size(); i++) {
+            Missile missile = missiles.get(i);
+            if (!missile.seekable() || !PlayField.overlaps(missile.x(), missile.y(), Missile.BOX)) {
+                continue;
+            }
+            boolean inReach = cone
+                    ? inCone(shot, missile.x(), missile.y(), best)
+                    : distanceSquared(shot.x(), shot.y(), missile.x(), missile.y()) <= best;
+            if (inReach) {
+                best = distanceSquared(shot.x(), shot.y(), missile.x(), missile.y());
+                nearest = MISSILE_SERIAL + missile.serial();
+                targetX = missile.x();
+                targetY = missile.y();
+            }
+        }
+        return nearest;
+    }
+
+    /**
+     * M9 part A: whether the seekable missile with the lock serial {@code target} still flies on the field; it is then
+     * at the target position.
+     */
+    private boolean missile(int target) {
+        Missiles missiles = fire.missiles();
+        if (missiles == null) {
+            return false;
+        }
+        int serial = target - MISSILE_SERIAL;
+        for (int i = 0; i < missiles.size(); i++) {
+            Missile missile = missiles.get(i);
+            if (missile.serial() == serial) {
+                if (!PlayField.overlaps(missile.x(), missile.y(), Missile.BOX)) {
+                    return false;
+                }
+                targetX = missile.x();
+                targetY = missile.y();
+                return true;
+            }
+        }
+        return false;
     }
 }

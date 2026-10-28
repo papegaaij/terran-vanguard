@@ -1,10 +1,10 @@
 ---
 title: Voice
-design: draft
+design: approved
 implementation: in-progress
-art: chosen
+art: final
 depends-on: [.., ../../story/characters, ../../ui/hud, ../../ui/options, ../../tech/architecture]
-updated: 2026-10-27
+updated: 2026-10-28
 ---
 
 # Voice
@@ -23,7 +23,7 @@ speaker's stage sound instead. The engine and the radio filter were chosen in co
 
 | Part | Summary | Design | Impl | Art |
 |---|---|---|---|---|
-| [refs](refs/README.md) | Reference clips the voices are cloned from: LibriVox readings, public domain or CC0 | draft | in-progress | chosen |
+| [refs](refs/README.md) | Reference clips the voices are cloned from: LibriVox readings, public domain or CC0 | approved | in-progress | proposed |
 
 ## Design
 
@@ -405,7 +405,7 @@ Rook's scripted Level 26 and his silence in Levels 27–28 are in the
 
 ### Act 5 voices (draft, round 60)
 
-**Status: draft, pending the user's review in round 60** (M9 design phase, step `m9-d-audio`, 2026-10-27). Act 5 is
+**Status: draft, approved in round 60** (M9 design phase, step `m9-d-audio`, 2026-10-27). Act 5 is
 voiced as Acts 1–4: every radio line and briefing page, the act intro's four pages (pages 2–3 are Vorne's broadcast,
 Q9 a) and the outro's four; the hangar teaser and the intel lines stay text. The speakers, their channels and their
 portraits are in [characters](../../story/characters/README.md#act-5-speakers-draft); the lines are the level
@@ -437,7 +437,7 @@ their parts' rounds (Ceres Hub Control and Harker in part B's, the Bellwether in
   chairman, not a soldier ([Vorne](../../story/characters/vorne/README.md)). The reader must sit **below every cast
   man** (Ares Control 112 Hz, Thera Deep Control 119, Nansen 124, the Kilo Lead 129: a clip under about 105 Hz), slow
   (about 2 words a second or less) and with an orator's controlled range, not a monotone: a dramatic reading (a play,
-  a speech or an essay read aloud) rather than a flat narration. **Three candidates (a/b/c)** for the main villain.
+  a speech or an essay read aloud) rather than a flat narration. **Three candidates (a/b/c)** for the main villain; round 60 chose **a**, Jeffrey Church (about 130 Hz as rendered, above the brief's 105 Hz: the production render lowers it toward the brief, VOX-B trying a pitch shift of up to −3 semitones and keeping a only if it stays natural, else it reports).
   Audition lines: the broadcast's first sentence (intro page 2) and the recruitment ("*Lancer. You are wasted on
   Okafor. Come to Callisto. Name your price.*"). Settings (proposal): a theatrical base, exaggeration about 0.6,
   cfg_weight 0.4 (slower), temperature 0.7; his **rage** (Level 35's core opening, the bared-teeth portrait) is read
@@ -477,16 +477,44 @@ seeds, the plain spelling against a respelling; kept only where it reads better)
 
 | Name | Say | Respelling |
 |---|---|---|
-| Ceres (Hub) | SEER-eez | as written; "Seerees" if the read-back fails |
+| Ceres (Hub) | SEER-eez | as written (step VOX-B: read back "Ceres" in every Level 29 line with the name prompt) |
 | Vesta (the relay) | VES-tuh | as written |
 | Callisto | kuh-LIS-toh | as written |
 | Helix | HEE-lix | as written (Act 3, step VOX-C) |
-| Vorne (Silas) | VORN, SY-lus | as written |
+| Vorne (Silas) | VORN, SY-lus | as written (step VOX-B; one seed read "Borne", the pin reads "Vorne") |
 | Ascendancy, Jovian | uh-SEN-dun-see, JOH-vee-un | as written |
 | Sovereign (the Iron Sovereign) | SOV-rin | as written |
 | Harker, Bellwether | HAR-ker, BEL-weh-ther | as written |
-| Dacosta (L31's claim marker) | duh-KOS-tuh | "Da Costa" if the read-back fails |
-| RTB (Okafor's order at the rescue) | R-T-B, the letters | "R.T.B." if the letters run together |
+| Dacosta (L31's claim marker) | duh-KOS-tuh | as written (step VOX-D2: read back "Dacosta" with the name prompt in every seed; the pin also keeps "old" before it) |
+| RTB (Okafor's order at the rescue) | R-T-B, the letters | as written (step VOX-B: read back "RTB" in every take) |
+
+**Rendered (M9 part B, step VOX-B, 2026-10-28; accepted by the user in round 62).** The enemy filter is
+`enemy()` in `tools/art/voice.py` (round 60's audition filter without the static sweeps, which the game plays; 5 ms
+fades instead of filter b's clicks), for Harker's lines and Vorne's two intercepted pages (`channel: enemy`; the
+line list marks them with the filter `enemy`). **Vorne's pitch**: shifting the takes themselves (ffmpeg's rubberband,
+formants preserved) at −1.5 / −2 / −3 semitones lowered his median from 114–122 Hz to 104–110 / 102–107 / 98–101 Hz but
+moved the spectral centroid down 10 / 15 / 18 % and cut the spectral flatness to a half or a third (formant smearing,
+a dulled timbre); shifting his **reference clip** instead keeps both (centroid within 6 %), since Chatterbox re-voices
+the lowered clip: −2 semitones gives 100–106 Hz on the test chunk, −3 gave 84–96 Hz but one take of six came out
+unvoiced (a whisper) and others creaky. His production clip is therefore `refs/ref-vorne.wav`, round 60's clip
+pitched −2 semitones (`tools/concept/audio/tts_r62.py --refs`), the takes unshifted: pages 2–3 at 95 and 119 Hz (round
+60's renders 129–131 Hz), with the theatrical base as a `shift` (+0.1 exaggeration, −0.1 cfg_weight). Round 62 hears
+the same chunk shifted (a) and unshifted (b) to confirm C.9. **Ceres Hub Control and Harker** are cast with two
+LibriVox candidates each (QB-1, round 62): Hub Control a Paul Adams (clip 123 Hz; takes 127–143 Hz, the t=60 shout
+194), b Phil Chenevert (clip 141 Hz; takes 142–168 Hz, the shout 217); Harker a Ted Delorme (clip 110 Hz; takes
+92–119 Hz), b David Clarke (clip 104 Hz, English; takes 110–131 Hz). Their lines are rendered with both, a in
+`assets/voice/<speaker>/` (the speaker table's provisional `ref`), b in `concept/voice-<speaker>-r62-b/` under b's keys,
+so the pick needs no re-render. The Act 5 names read back as written (no respelling). Hub Control's t=60 line was a
+`shout: true` cue in the level data, read at the shout row, though this section asks for "urgent but not shouted";
+**step B4b** (2026-10-28) made it `shout: false` when it trimmed Level 29's radio to one HUD page a
+line, and re-rendered the 12 changed or new lines (Okafor 3, Varga 2, Hub Control 4 and Harker 2 with both candidates,
+Rook 1), each read back with Whisper (plain and with the Act 5 name prompt) and pinned where the key's seed misread:
+"Ceres is Vorne's now" read "borns" in most seeds, so Harker's line became "We're Ascendancy now"; "Tell Earth not all
+of Ceres said yes" broke after "not" in every seed ("that" added); "their guns are live" read "guns alive" in every
+seed ("hot"); candidate b's Hub Control reads "holds" as "holes" in every seed of the t=156 line.
+**Cast in round 62 (2026-10-28): Ceres Hub Control is Paul Adams (a), Harker is David Clarke (b)**, Vorne's pitch is a. The speaker table's `ref` is `ref-ceres-control-r62-a` and `ref-harker-r62-b` (the clips keep their `-r62-` names, part of the lines' keys); Harker's four b takes moved from `concept/voice-harker-r62-b/` into `assets/voice/harker/` and his a takes (Ted Delorme) went to `concept/rejected/voice-harker-r62-a/`; Hub Control's seven b takes (Phil Chenevert) are in `concept/rejected/voice-ceres-control-r62-b/`. The unpicked clips `ref-harker-r62-a` and `ref-ceres-control-r62-b` moved to `concept/rejected/` with their CREDITS.md rows.
+
+**Rendered: Level 31 and the Bellwether (M9 part D, steps VOX-D and VOX-D2, 2026-10-28; pending the user's review in round 64).** Level 31's 26 lines (its two briefing pages; Okafor's, Varga's and Rook's radio; the Bellwether's 12, the six `{section}` takes for bow, cargo and engines among them, and the Dacosta's claim secret) are in `assets/voice/`, every non-Bellwether line read back word for word with the Act 5 name prompt and none pinned. **The Bellwether** is cast with two LibriVox candidates as Ceres Hub Control and Harker were: a **Lucy Burgoyne** (*Sisters*, an Australian novel; clip 134 Hz; takes 135–156 Hz: low, level and older, under Okafor), b **Laurie Anne Walden** (*A Diary from Dixie*; clip 181 Hz; takes 167–264 Hz: a slow, plain American read, apart from Okafor by accent and pace rather than pitch). Her lines are rendered with both, a in `assets/voice/bellwether/` (the speaker table's provisional `ref`), b in `concept/voice-bellwether-r64-b/` under b's keys, so the pick needs no re-render; seven of a's takes and four of b's are pinned where the key's seed misread or jumped an octave. Dacosta reads as written: "old" was lost in the first five seeds of a's secret line ("That's how/all Dacosta's"), and the first clean one of 12 more seeds reads it word for word with the name prompt, so the respelling "Da Costa" was not needed. Left as weak spots for the round: a's short exclamations are breathy (the engines hit line about 30 % voiced, every seed tried alike), b reads "bow" as "bell" in most seeds (the pins read "bow"), and b's audition reads "phone loss" for "bone loss" once.
 
 ### Briefings
 
@@ -705,6 +733,20 @@ level).
       round 52, Levels 22–26 above, Levels 27 and 28 and the outro in parts G and H, reviewed in rounds 57 and 58; M8 part
       I: the 119 voiced Act 4 lines checked against a Whisper transcript, no file missing, none clipped; the whole Act 4
       listen-through accepted in round 59, V.1)
+- [x] Level 29's lines (24 radio lines with the supply cache's secret: Ceres Hub Control, Harker on the enemy filter,
+      Okafor, Varga, Rook's two lines from the rescue on), its two briefing pages and the Act 5 intro's four pages (Vorne's
+      pages 2–3 on the enemy filter) rendered: 30 files, 11 takes pinned; Ceres Hub Control's and Harker's 11 lines also
+      with candidate b (`concept/voice-<speaker>-r62-b/`, seven pins); every take read back right with the Act 5 name
+      prompt (homophones only: "Doc 9" for "Dock 9", "guns alive" for "guns are live"); `VoiceFilesTest` with Level 29
+      and the Act 5 briefing in `briefs/m9-voxb-tests.patch` (with `VoiceLines`' enemy filter) green in a snapshot
+      (M9 part B, step VOX-B, 2026-10-28; cast in round 62); step B4b's 12 trimmed or new lines
+      re-rendered with both candidates; heard in the game in round 62's captures (V.1–V.3 the casting and Vorne's pitch)
+- [x] Level 30's lines (16 radio lines: 12 timed, the convoy's met and escaped lines, the level end and the secret's; its two briefing
+      pages): 18 files in `assets/voice/{okafor,varga,rook}`, two pins (step C2); Okafor's page 1 shortened to four lines
+      and re-rendered (step C5: pin `9ed7c0c8776e` 101, read back word for word with the name prompt);
+      `VoiceFilesTest` and `RadioTimelineLevel30Test` (with Rook, `--escort none` and the Bulwark; step C4); heard in
+      round 63's captures
+- [x] Level 31's lines (its two briefing pages; Okafor, Varga and Rook; the Bellwether's 12 with the six `{section}` takes and the Dacosta's claim secret): 26 files, none of the others pinned; the Bellwether cast a/b for round 64 (`refs/ref-bellwether-r64-{a,b}.wav`, a in `assets/voice/bellwether/` with seven pins, b in `concept/voice-bellwether-r64-b/` with four; the auditions `concept/voice-bellwether-r64-{a,b}.ogg`); every take read back with the Act 5 name prompt (the weak spots in *Act 5 voices*, Rendered); `VoiceFilesTest` with Level 31 (M9 part D, steps VOX-D and VOX-D2, 2026-10-28; pending round 64)
 
 ## Concept art
 
@@ -785,9 +827,24 @@ row; b's clip is renamed `refs/ref-ares-control.wav` at the render step (part B)
 | [concept/voice-lance-control-r37-b.ogg](concept/voice-lance-control-r37-b.ogg) | Lance Control (round 37 audition), reader Celine Major (clip 159 Hz, take 162 Hz; seed 101, 2.62 s; `tools/concept/audio/tts_r37.py`) | chosen (round 37, S.16: Celine Major; her clip is `refs/ref-lance-control.wav`, the call rendered from it in step Q2) |
 | [concept/voice-conamara-r51-a.ogg](concept/voice-conamara-r51-a.ogg) | Dr. Brandt, `conamara` (round 51 audition), reader Margaret Espaillat (clip 168 Hz, a very narrow range, takes 165 / 162 Hz; Level 22's t=1 and t=100 lines, seeds 100 / 100, 17.1 s; `tools/concept/audio/tts_r51b.py`) | chosen (round 51: Dr. Brandt is Margaret Espaillat) |
 | [concept/voice-thera-control-r52-b.ogg](concept/voice-thera-control-r52-b.ogg) | Thera Deep Control, `thera-control` (round 52 audition), reader John Van Stan (clip 119 Hz, a narrow range, 1.7 words a second, takes 133 / 126 Hz; the same two lines, seeds 101 / 105, 14.3 s; `tools/concept/audio/tts_r52c.py`) | chosen (round 52, V.1 = b: Thera Deep Control is John Van Stan) |
-| [concept/voice-vorne-r60-a.ogg](concept/voice-vorne-r60-a.ogg) | Vorne, `vorne` (round 60 audition, step AUD-P), reader Jeffrey Church (The Genealogy of Morals; clip 103 Hz, a wide range, 2.0 words a second: a slow, deliberate argument read aloud; takes 131 / 129 Hz), the broadcast's opening and the recruitment through the new enemy filter (`filter: enemy`: filter b's band and saturation, no crackle, a steady static bed 26 dB under the voice swelling ±3 dB at 0.25 Hz, the intercept's sweep in and out), seeds 103 / 102, 19.7 s; `tools/concept/audio/tts_r60.py` | proposed (round 60) |
-| [concept/voice-vorne-r60-b.ogg](concept/voice-vorne-r60-b.ogg) | Vorne, candidate b, reader Clive Catterall (The Prince (version 4); clip 92 Hz, 2.5 words a second: an older English voice, measured and dry; takes 115 / 123 Hz), the same two lines, seeds 104 / 100, 16.7 s | proposed (round 60) |
-| [concept/voice-vorne-r60-c.ogg](concept/voice-vorne-r60-c.ogg) | Vorne, candidate c, reader Gregg Margarite (Rastignac the Devil; clip 89 Hz, 2.6 words a second: a deep American bass, warm and theatrical; takes 93 / 93 Hz, the only one under the cast men), the same two lines, seeds 102 / 102, 17.1 s | proposed (round 60) |
+| [concept/voice-vorne-r60-a.ogg](concept/voice-vorne-r60-a.ogg) | Vorne, `vorne` (round 60 audition, step AUD-P), reader Jeffrey Church (The Genealogy of Morals; clip 103 Hz, a wide range, 2.0 words a second: a slow, deliberate argument read aloud; takes 131 / 129 Hz), the broadcast's opening and the recruitment through the new enemy filter (`filter: enemy`: filter b's band and saturation, no crackle, a steady static bed 26 dB under the voice swelling ±3 dB at 0.25 Hz, the intercept's sweep in and out), seeds 103 / 102, 19.7 s; `tools/concept/audio/tts_r60.py` | chosen (round 60) |
+| [concept/vorne-pitch-r62-a.ogg](concept/vorne-pitch-r62-a.ogg) | Vorne's pitch (round 61 C.9, step VOX-B): the Act 5 intro page 2's chunk "From this hour the Jovian Ascendancy governs itself, and it does not stand alone: the Vrell are our partners." at his settings (0.6 / 0.4 / 0.7) through the enemy filter, **a** with the production clip `refs/ref-vorne.wav` (Jeffrey Church's clip pitched −2 semitones, formants preserved: Chatterbox re-voices him lower, 90 Hz median, IQR 18), seed 100, 6.8 s; `tools/concept/audio/tts_r62.py --pitch` | chosen (round 62, V.3 a: −2 semitones, the production clip) |
+| [concept/voice-ceres-control-r62-a.ogg](concept/voice-ceres-control-r62-a.ogg) | Ceres Hub Control, `ceres-control` (round 62 audition, QB-1), candidate a **Paul Adams** (Sidelights on Relativity; clip 123 Hz, IQR 24, 2.7 words a second: an older, low, even voice), Level 29's t=1 and t=101 lines as the game plays them (the production takes in `assets/voice/ceres-control/`, 1 s apart; takes 143 / 144 Hz; t=101 trimmed in step B4b), 15.9 s; `tools/concept/audio/tts_r62.py --auditions` | chosen (round 62, V.1 a: Paul Adams) |
+| [concept/voice-harker-r62-b.ogg](concept/voice-harker-r62-b.ogg) | The same with candidate b **David Clarke** (The Count of Monte Cristo; clip 104 Hz, IQR 21, 2.5 words a second: hard and level, an English voice apart from Rook's; takes 122 / 125 Hz), 10.8 s | chosen (round 62, V.2 b: David Clarke) |
+| [concept/voice-bellwether-r64-a.ogg](concept/voice-bellwether-r64-a.ogg) | The Bellwether, `bellwether` (round 64 audition, step VOX-D), candidate a **Lucy Burgoyne** (Sisters, Ada Cambridge; clip 134 Hz, IQR 27, 2.9 words a second: a low, level, older English woman's voice), Level 31's t=1 call and the t=86 / t=93 medicine story as the game plays them (the production takes in `assets/voice/bellwether/`, 1 s apart; 136 Hz, IQR 21), 16.4 s; `tools/concept/audio/tts_r64.py --auditions` | proposed (round 64) |
+| [concept/voice-bellwether-r64-b.ogg](concept/voice-bellwether-r64-b.ogg) | The same with candidate b **Laurie Anne Walden** (A Diary from Dixie, Mary Chesnut; clip 181 Hz, IQR 37, 2.4 words a second: slow, plain and unhurried, American; the takes in `concept/voice-bellwether-r64-b/`; 192 Hz, IQR 57), 14.2 s | proposed (round 64) |
+| [concept/voice-bellwether-r64-b/01f389d23fdd.ogg](concept/voice-bellwether-r64-b/01f389d23fdd.ogg) | The Bellwether's Level 31 line with candidate b (Laurie Anne Walden), keyed by `ref-bellwether-r64-b` (step VOX-D, `tools/art/voice.py`): secret Dacosta's claim "That's old Dacosta's claim marker. He'd …" | proposed (round 64) |
+| [concept/voice-bellwether-r64-b/1a4f695f80ba.ogg](concept/voice-bellwether-r64-b/1a4f695f80ba.ogg) | The Bellwether's Level 31 line with candidate b (Laurie Anne Walden), keyed by `ref-bellwether-r64-b` (step VOX-D, `tools/art/voice.py`): radio FIRST_ALLY_HIT "We're hit in the engines! Get them off u…" | proposed (round 64) |
+| [concept/voice-bellwether-r64-b/1d349fe451cc.ogg](concept/voice-bellwether-r64-b/1d349fe451cc.ogg) | The Bellwether's Level 31 line with candidate b (Laurie Anne Walden), keyed by `ref-bellwether-r64-b` (step VOX-D, `tools/art/voice.py`): radio FIRST_ALLY_HIT "We're hit in the bow! Get them off us!…" | proposed (round 64) |
+| [concept/voice-bellwether-r64-b/26ac41295633.ogg](concept/voice-bellwether-r64-b/26ac41295633.ogg) | The Bellwether's Level 31 line with candidate b (Laurie Anne Walden), keyed by `ref-bellwether-r64-b` (step VOX-D, `tools/art/voice.py`): radio t=176.5 "Relay in sight. Thank you, Aegis. Tell C…" | proposed (round 64) |
+| [concept/voice-bellwether-r64-b/62f8693c5aff.ogg](concept/voice-bellwether-r64-b/62f8693c5aff.ogg) | The Bellwether's Level 31 line with candidate b (Laurie Anne Walden), keyed by `ref-bellwether-r64-b` (step VOX-D, `tools/art/voice.py`): radio ALLY_LOST "We've lost the bow! We're still flying.…" | proposed (round 64) |
+| [concept/voice-bellwether-r64-b/6590e84c18f1.ogg](concept/voice-bellwether-r64-b/6590e84c18f1.ogg) | The Bellwether's Level 31 line with candidate b (Laurie Anne Walden), keyed by `ref-bellwether-r64-b` (step VOX-D, `tools/art/voice.py`): radio t=1.0 "Bellwether to Aegis. Four hundred souls …" | proposed (round 64) |
+| [concept/voice-bellwether-r64-b/7dd32c336e31.ogg](concept/voice-bellwether-r64-b/7dd32c336e31.ogg) | The Bellwether's Level 31 line with candidate b (Laurie Anne Walden), keyed by `ref-bellwether-r64-b` (step VOX-D, `tools/art/voice.py`): radio FIRST_ALLY_HIT "We're hit in the cargo! Get them off us!…" | proposed (round 64) |
+| [concept/voice-bellwether-r64-b/b8fba12216b9.ogg](concept/voice-bellwether-r64-b/b8fba12216b9.ogg) | The Bellwether's Level 31 line with candidate b (Laurie Anne Walden), keyed by `ref-bellwether-r64-b` (step VOX-D, `tools/art/voice.py`): radio t=110.0 "Throwing you a patch from the cargo hatc…" | proposed (round 64) |
+| [concept/voice-bellwether-r64-b/c96d2866dc3f.ogg](concept/voice-bellwether-r64-b/c96d2866dc3f.ogg) | The Bellwether's Level 31 line with candidate b (Laurie Anne Walden), keyed by `ref-bellwether-r64-b` (step VOX-D, `tools/art/voice.py`): radio ALLY_LOST "We've lost the engines! We're still flyi…" | proposed (round 64) |
+| [concept/voice-bellwether-r64-b/d59185a39a79.ogg](concept/voice-bellwether-r64-b/d59185a39a79.ogg) | The Bellwether's Level 31 line with candidate b (Laurie Anne Walden), keyed by `ref-bellwether-r64-b` (step VOX-D, `tools/art/voice.py`): radio t=86.0 "You know why half of Ceres turned? Helix…" | proposed (round 64) |
+| [concept/voice-bellwether-r64-b/ebc47d3f8f25.ogg](concept/voice-bellwether-r64-b/ebc47d3f8f25.ogg) | The Bellwether's Level 31 line with candidate b (Laurie Anne Walden), keyed by `ref-bellwether-r64-b` (step VOX-D, `tools/art/voice.py`): radio t=93.0 "Lung rot, bone loss. Gone in a week. Nob…" | proposed (round 64) |
+| [concept/voice-bellwether-r64-b/f923bec7656a.ogg](concept/voice-bellwether-r64-b/f923bec7656a.ogg) | The Bellwether's Level 31 line with candidate b (Laurie Anne Walden), keyed by `ref-bellwether-r64-b` (step VOX-D, `tools/art/voice.py`): radio ALLY_LOST "We've lost the cargo! We're still flying…" | proposed (round 64) |
 
 Concept [round 33](../../concept-rounds/round-33/README.md) (M5 part E, user decision E10 = a) — casting Level 11's Atlas Control, the CDF
 officer of convoy Atlas-Seven: three of its lines (the t=1 call, the `ally-hit` line with `{ally}` =
@@ -816,7 +873,7 @@ Ted Lienhart's audition, clip and transcript moved to `concept/rejected/`, the c
 ## Open questions
 
 - **Act 3**: the Choir's speech layering (a/b in part H's round).
-- **Act 5 (round 60)**: Vorne's voice (three readers, a/b/c); the enemy channel's filter as drafted (a steady static
+- **Act 5 (round 60, closed 2026-10-27)**: decided as drafted, Vorne a (Jeffrey Church; see *Decisions*). Asked then: Vorne's voice (three readers, a/b/c); the enemy channel's filter as drafted (a steady static
   bed, no crackle or dropouts on the words) or the friendly radio filter with only the intercept's open and close
   (cheaper, but the amber dress would be the only cue); Vorne auditioned now and the generic speakers in their parts'
   rounds (drafted), or all four in round 60.
@@ -948,9 +1005,20 @@ Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-a
   Measured only, not listened to.
 - 2026-10-26 (user, [round 59](../../concept-rounds/round-59/README.md) closed, V.1): the listen-through of the 119
   voiced Act 4 lines (14 minutes) **accepted**; the 8 flagged lines stay as they are. The Act 4 voice item is ticked.
-- 2026-10-27 (step `m9-d-audio`, M9 design phase; **pending the user's review in round 60**): *Act 5 voices* drafted:
+- 2026-10-27 (step `m9-d-audio`, M9 design phase; **approved in round 60**): *Act 5 voices* drafted:
   the enemy channel's filter (`filter: enemy`: a steady static bed, no crackle or dropouts, the intercept's open and
   close; also on `channel: enemy` briefing pages), Vorne's casting brief (below every cast man, three candidates,
   auditioned in round 60; his rage at the grim row, never shouted), the generic speakers Ceres Hub Control, Harker and
   the Bellwether (names and genders from the Level 29 and 31 drafts; cast in parts B and D), the Choir's Level 33
   line on Level 26's treatment, the Act 5 names to try.
+- 2026-10-28 (step VOX-B, M9 part B; accepted in round 62): Level 29's radio and briefing and the Act 5
+  intro rendered (30 files, *Act 5 voices*, Rendered). Vorne lowered by a −2 semitone **clip** shift (`ref-vorne`), not a
+  shift of the takes (which smeared the formants at every step tried); −3 rejected (an unvoiced take, creak).
+  Ceres Hub Control (a Paul Adams, b Phil Chenevert) and Harker (a Ted Delorme, b David Clarke) cast as candidates
+  for QB-1, a's `ref` in the speaker table until the pick (as Dr. Brandt and Thera Deep Control in rounds 51–52;
+  `uncast` gone, since a speaker with lines in `assets/` needs its clip). No respelling (Ceres, Vorne, Harker, Helix,
+  Vrell, RTB read back as written). Measured only, not listened to.
+- 2026-10-27 (user, [round 60](../../concept-rounds/round-60/README.md) closed): the Act 5 voice plan approved as drafted (D.19). **V.1 a**: Vorne is **Jeffrey Church**'s reference (b Clive Catterall and c Gregg Margarite rejected). The casting brief asked for a clip under about 105 Hz and a renders at about 130 Hz (Chatterbox lifts it): a is chosen as the voice, and the production render lowers it toward the brief; step VOX-B tries a pitch shift of up to −3 semitones and keeps a only if it stays natural, otherwise it reports back.
+- 2026-10-28 (user, [round 62](../../concept-rounds/round-62/README.md), closed; page answers): **V.1 a** Ceres Hub Control is Paul Adams (LibriVox; clip 123 Hz, takes 127-143 Hz); **V.2 b** Harker is David Clarke (English accent, apart from Rook; clip 104 Hz, takes 110-131 Hz); **V.3 a** Vorne's reference clip stays lowered 2 semitones (`refs/ref-vorne.wav`, takes about 90-119 Hz). The accepted C.6: Hub Control's t=60 call is not shouted. Harker's production takes are candidate b's (the a files were moved out of `assets/` and the b files in; same line keys under the clip name `ref-harker-r62-b`); the speaker table's `ref` follows; `tools/art/voice.py --check` reports 655 lines, 0 to render, 0 unused files. The audition files of the unpicked candidates, their line takes and clips moved to `concept/rejected/` (rows in its README, CREDITS.md paths updated, as rounds 51 and 52 did); `art: final`. The in-game credits roll names David Clarke and Paul Adams and no longer Ted Delorme or Phil Chenevert's Hub Control clip.
+- 2026-10-28 (user, [round 61](../../concept-rounds/round-61/README.md), closed): **C.9** accepted: Vorne keeps reference a with the pitch-down (round 62's V.3 a, −2 semitones, already built).
+- 2026-10-28 (steps VOX-D and VOX-D2, M9 part D; pending the user's review in round 64): Level 31's 26 lines rendered (*Act 5 voices*, Rendered); the Bellwether auditioned with a Lucy Burgoyne and b Laurie Anne Walden (LibriVox), her 12 lines with both, a provisional as the speaker table's `ref`; a's secret line pinned on the first clean one of 12 further seeds instead of respelling Dacosta; b pinned where it read "bell" for "bow", "car though" for "cargo" and "Drawing" for "Throwing". Measured only, not listened to.

@@ -73,6 +73,35 @@ public final class Backdrop {
      * (Level 24's {@code relay-beacon-glow}), drawn additively over the grade at the piece's place on its frame clock.
      */
     private final List<Array<AtlasRegion>> glows;
+    /**
+     * M9 part B (design/campaign Level 29, the turning station): per ground piece the light it turns to, or null: an
+     * image {@code <id>-glow-red} beside its {@code -glow}, crossfaded in over {@value #TURN_SECONDS} s from the level
+     * time {@link #turnAt} (Block C's and two Coalition blocks' white lights going red).
+     */
+    private final List<Array<AtlasRegion>> turnedGlows;
+    /**
+     * M9 part B (design/campaign Level 29, the rescue): per ground piece its hold opening, or null: a declared but
+     * unplaced piece {@code <id>-hold} (the prison tender's), drawn over the piece from the escort swap's release
+     * ({@link #holdOpened}), {@value #HOLD_FRAME_TICKS} steps a frame, its last frame held.
+     */
+    private final List<Array<AtlasRegion>> holds;
+
+    /** M9 part B: steps since the hold opened (the escort swap's release); -1 while it is shut. */
+    private int holdTicks = -1;
+
+    /** M9 part B: the suffix of a piece's hold opening. */
+    static final String HOLD = "-hold";
+
+    /** M9 part B: the hold opens at 15 fps (Level 29's data: {@code prison-tender-hold}, 6 frames). */
+    static final int HOLD_FRAME_TICKS = 4;
+
+    /** M9 part B: the hold opened {@code ticks} steps ago (the escort swap's release), -1 while it is shut. */
+    public void holdOpened(int ticks) {
+        holdTicks = ticks;
+    }
+
+    /** M9 part B: the level time the station turns: its dormant ground targets' wake ({@code dormant_until}); NaN. */
+    private final double turnAt;
 
     private final TowerProjection towers;
     private final Look[] looks;
@@ -129,6 +158,40 @@ public final class Backdrop {
      * A placed set piece with its images and its bottom edge on its layer; {@code pathStart} is its
      * path's first waypoint's script time (NaN without a path).
      */
+    /**
+     * M9 part C: the backdrop pieces with a strobe in their frame 0 (tools/art/backdrop_l30.py: Level 30's lane buoys and
+     * its last beacon, one flash in 2 s, all in step), heard as a faint tick as each flash starts ({@link #strobed()}).
+     */
+    static final java.util.Set<String> STROBES = java.util.Set.of("lane-buoy", "lane-beacon");
+
+    /** M9 part C: the strobe frame drawn at the last draw and at this one; the x of a flash started now, else NaN. */
+    private int strobeFrame = -1;
+
+    private double strobeX = Double.NaN;
+    private boolean strobeDrawn;
+
+    private void strobeSeen(int frame, double x) {
+        if (frame == 0 && strobeFrame != 0 && Double.isNaN(strobeX)) {
+            strobeX = x;
+        }
+        strobeDrawn = true;
+        drawnStrobeFrame = frame;
+    }
+
+    private int drawnStrobeFrame = -1;
+
+    /**
+     * M9 part C: after a frame's draw, the play-field x of a strobe whose flash started in it (NaN for none); the next
+     * frame starts afresh.
+     */
+    public double strobed() {
+        double x = strobeX;
+        strobeFrame = strobeDrawn ? drawnStrobeFrame : -1;
+        strobeDrawn = false;
+        strobeX = Double.NaN;
+        return x;
+    }
+
     private record Piece(
             BackdropData.PlacedPiece placed,
             BackdropData.Piece spec,
@@ -176,15 +239,30 @@ public final class Backdrop {
         }
         Piece[] onGround = pieces[BackdropLayer.GROUND.ordinal()];
         List<Array<AtlasRegion>> lights = new ArrayList<>();
+        List<Array<AtlasRegion>> turned = new ArrayList<>();
         for (Piece piece : onGround) {
             String light = piece.placed().piece() + GLOW;
             BackdropData.Piece spec = data.pieces().get(light);
             lights.add(
                     spec != null && spec.imageCount() == piece.images().size
                             ? sprites.backdrop(folder + light, spec.imageCount())
-                            : null);
+                            : spec == null ? undeclared(sprites, folder + light, piece.images().size) : null);
+            // M9 part B: the light the piece turns to ({@code <id>-glow-red}, Level 29's Block C) at the turn.
+            turned.add(undeclared(sprites, folder + light + TURNED, piece.images().size));
         }
         glows = lights;
+        turnedGlows = turned;
+        List<Array<AtlasRegion>> opened = new ArrayList<>();
+        for (Piece piece : onGround) {
+            String hold = piece.placed().piece() + HOLD;
+            BackdropData.Piece spec = data.pieces().get(hold);
+            opened.add(
+                    spec != null && spec.frames().isPresent()
+                            ? sprites.backdrop(folder + hold, spec.imageCount())
+                            : null);
+        }
+        holds = opened;
+        turnAt = turnSeconds(level);
         towers = new TowerProjection(towers(sprites, folder, level), pixel);
         for (int s = 0; s < sectionCount; s++) {
             for (String id : level.sections().get(s).tiles()) {
@@ -952,8 +1030,33 @@ public final class Backdrop {
                 continue;
             }
             float x = X0 + Math.round(placed.x() + placed.offsetX(along) - width / 2);
-            TextureRegion image = piece.images().get(imageAt(piece, clock.real(), along));
+            int frame = imageAt(piece, clock.real(), along);
+            TextureRegion image = piece.images().get(frame);
+            if (STROBES.contains(placed.piece()) && piece.spec().animated()) {
+                // M9 part C: a lane buoy's strobe flashes in frame 0 (its tick, BUOY_TICK).
+                strobeSeen(frame, placed.x());
+            }
             if (placed.mirrored()) {
+                batch.draw(image, x + width, y, -width, height);
+            } else {
+                batch.draw(image, x, y);
+            }
+            if (layer == BackdropLayer.GROUND && holdTicks >= 0) {
+                drawHold(batch, piece, x, y, width, height);
+            }
+        }
+    }
+
+    /** M9 part B: a piece's hold opening over it ({@link #holds}), its last frame held. */
+    private void drawHold(SpriteBatch batch, Piece piece, float x, float y, float width, float height) {
+        Piece[] onGround = pieces[BackdropLayer.GROUND.ordinal()];
+        for (int p = 0; p < onGround.length; p++) {
+            Array<AtlasRegion> hold = holds.get(p);
+            if (onGround[p] != piece || hold == null) {
+                continue;
+            }
+            TextureRegion image = hold.get(Math.min(hold.size - 1, holdTicks / HOLD_FRAME_TICKS));
+            if (piece.placed().mirrored()) {
                 batch.draw(image, x + width, y, -width, height);
             } else {
                 batch.draw(image, x, y);
@@ -963,6 +1066,43 @@ public final class Backdrop {
 
     /** M8 part D: the suffix of a ground piece's light ({@link #drawPieceGlows}). */
     static final String GLOW = "-glow";
+
+    /** M9 part B: the suffix of the light a piece turns to after its glow ({@link #turnedGlows}). */
+    static final String TURNED = "-red";
+
+    /** M9 part B: the turned lights' crossfade, s (design/campaign Level 29: "white to red over 1 s"). */
+    static final double TURN_SECONDS = 1;
+
+    /**
+     * M9 part B: a piece's light that the level's data does not declare (Level 29's backdrop: "glows are added by the
+     * game at their pieces"), from the backdrop atlas when it holds one with the piece's frame count; null otherwise.
+     */
+    private static Array<AtlasRegion> undeclared(Sprites sprites, String name, int count) {
+        if (!sprites.hasBackdrop(name)) {
+            return null;
+        }
+        Array<AtlasRegion> images = sprites.backdrop(name);
+        return images.size == count ? images : null;
+    }
+
+    /** M9 part B: the level time its dormant ground targets wake, the earliest; NaN without any. */
+    static double turnSeconds(LevelData level) {
+        double at = Double.NaN;
+        for (var target : level.groundTargets()) {
+            if (target.dormantUntil().isPresent() && !(target.dormantUntil().get() >= at)) {
+                at = target.dormantUntil().get();
+            }
+        }
+        return at;
+    }
+
+    /** M9 part B: how far the turned lights have come in at level time {@code script}: 0 before the turn, then to 1. */
+    static float turnShare(double turnAt, double script) {
+        if (Double.isNaN(turnAt)) {
+            return 0;
+        }
+        return (float) Math.clamp((script - turnAt) / TURN_SECONDS, 0, 1);
+    }
 
     /** M8 part D: whether a ground piece has its light ({@link #drawPieceGlows}): Level 24's relay beacons. */
     public boolean hasPieceGlows() {
@@ -1000,15 +1140,32 @@ public final class Backdrop {
             }
             float width = (float) piece.spec().size().width();
             float x = X0 + Math.round(piece.placed().x() + piece.placed().offsetX(along) - width / 2);
-            TextureRegion image = light.get(imageAt(piece, clock.real(), along));
-            if (piece.placed().mirrored()) {
-                batch.draw(image, x + width, y, -width, height);
-            } else {
-                batch.draw(image, x, y);
+            int frame = imageAt(piece, clock.real(), along);
+            Array<AtlasRegion> red = turnedGlows.get(p);
+            float turn = red == null ? 0 : turnShare(turnAt, clock.script());
+            if (turn < 1) {
+                if (turn > 0) {
+                    batch.setColor(1, 1, 1, 1 - turn);
+                }
+                drawLight(batch, light.get(frame), piece.placed().mirrored(), x, y, width, height);
             }
+            if (turn > 0) {
+                batch.setColor(1, 1, 1, turn);
+                drawLight(batch, red.get(frame), piece.placed().mirrored(), x, y, width, height);
+            }
+            batch.setColor(1, 1, 1, 1);
         }
         if (additive) {
             batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        }
+    }
+
+    private static void drawLight(
+            SpriteBatch batch, TextureRegion image, boolean mirrored, float x, float y, float width, float height) {
+        if (mirrored) {
+            batch.draw(image, x + width, y, -width, height);
+        } else {
+            batch.draw(image, x, y);
         }
     }
 

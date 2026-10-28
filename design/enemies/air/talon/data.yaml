@@ -1,0 +1,64 @@
+# Talon stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/schemas-units/README.md
+# M9 part B, step B2 (Level 29): the approved stat block (round 60) as data. New in it (flown from steps B1, B1b): the
+# `swoop_path` (step B1b's swoop: enters at the top across/2 before its formation place, bottoms out `lowest` px below
+# the top edge, leaves up through the top across/2 beyond it; a pincer's wings from their side edges), the squad
+# `scatter` when its wave's leader dies (the hook `parting_pair` on hard) and the `leader` airframe a V-wing's tip flies
+# (`leader: tip` on the wave). The hex `shield` is part A's. HP 16 base: the beam era's ×2 flies it at 32 (leader 48).
+# The aimed pair (two shots side by side, 12 px apart) is a 2-shot `fan` 4° wide centred on the ship: the simulation has no side-by-side offset
+# (pending the user's review in round 62).
+name: Talon
+faction: Jovian Ascendancy
+layer: air        # `space` in the belt's vacuum levels: the same layer
+tier: small
+size: [40, 36]    # sprite px
+hitbox: [28, 24]
+parts: single
+orientation: 16 angles
+hp: 16            # base; the beam era's ×2 flies it at 32: 0.27 s at the L29 reference of 120
+armour: none
+shield: 12        # M9 part A: the hex shield, spent first (the shared delay, refill and breaker hold); round 62: 2 → 12 (step B6: the Talon's life on the screen in L29 1.49 → 1.77 s)
+speed: 220        # px/s through the swoop
+machine: true     # the EMP Burst stuns it 3 s
+leader: {hp: 24, shield: 24, bounty: 25}   # a V-wing's tip (leader: tip): a gold stripe down the spine; 48 HP flown
+movement:
+  swoop_path: {lowest: [200, 260], across: 280, fire_band: 300}   # px below the top edge it bottoms out (drawn per wave); px it travels across the screen; it fires while within fire_band px of the top edge
+  scatter: {speed: 260, seconds: 1.5}   # its leader killed: breaks off sideways away from the wing's centre, holds fire, out by the nearer side edge
+  orbit: {radius: 90, turn_rate: 60}   # M9 part C (Level 30's convoy): as escorts it circles its carrier (`carrier + escorts`), px and °/s
+attacks:
+  - pattern: fan          # the aimed pair: a 2-shot fan centred on the ship
+    name: pair
+    bullet: small
+    count: 2               # the pair, a fan
+    spread: 4              # ° between the two shots
+    interval: 1.6          # s
+    speed: 160             # px/s
+    first_shot_delay: 0.25 # s: the red glint on the twin muzzles
+    notes:
+      text: '`aimed` **pair** (two shots {spread}° apart, both at the ship) every {interval} s while within {movement.swoop_path.fire_band} px of the top edge; standard {speed} px/s, `{bullet}` = {damage}; a {first_shot_delay} s red glint on the twin muzzles is the tell. Contact `{tier}` = {contact_damage} (destroyed by the impact)'
+formations:
+  - {name: V-wing, size: [5, 7]}
+  - {name: line abreast, size: [4, 6]}
+  - {name: pincer}
+  - {name: carrier + escorts}   # M9 part C: the Gilded Gunship's escorts (Level 30's convoy)
+weak_points:
+  - {name: the twin engine glow}
+drops: []
+traits: [spread, homing, forward]
+bounty: 12
+first_level: 29
+difficulty:
+  easy: {attacks: {pair: {interval: 2.0}}}
+  hard: {attacks: {pair: {interval: 1.3}}, parting_pair: true}
+notes:
+  layer: ' (`space` in the belt''s vacuum levels: the same layer)'
+  size: (leader the same airframe, a gold stripe down the spine)
+  orientation: (it banks through its swoop)
+  armour: 'hex [shield](../../README.md#enemy-shields) **{shield}** (leader {leader.shield}): spent first, refills 2 s after the last hit; `shield-breaker` and the EMP empty it. HP {hp} base flies at 32 with the beam era''s ×2 (leader {leader.hp}, 48)'
+  speed: through the swoop; {movement.scatter.speed} px/s scattering
+  movement: '`swoop`: enters at the top {movement.swoop_path.across} px across its lane on a curve, bottoms out {movement.swoop_path.lowest.0}–{movement.swoop_path.lowest.1} px below the top edge and leaves up through the top; a `pincer`''s wings enter at their side edges and leave up through the top; a V-wing flies behind its leader. Its leader killed: the wing **scatters** sideways at {movement.scatter.speed} px/s, holding fire, out by the nearer side edge within {movement.scatter.seconds} s; as a carrier''s escort it orbits it at {movement.orbit.radius} px'
+  formations: '(a V-wing''s tip is its leader; never more than two wings on the screen; as escorts, the Gilded Gunship''s in Level 30)'
+  weak_points: (drawn only)
+  bounty: '; leader {leader.bounty}'
+  death: '`small` explosion with gold sparks and a spinning wing; a scattering Talon killed pays the same'
+  used_in: Ceres Hub's mutineers; the act's main fighter in L29–L35; its airframe returns in Act 6 (the Chimera, the Honour Guard)
+  difficulty: 'easy: pair every 2.0 s, the leader''s wing scatters without firing; hard: pair every 1.3 s, each scattering Talon fires one parting pair as it breaks off'

@@ -127,6 +127,17 @@ class TestFireTest {
             case BEAM -> assertTrue(hits.stream().anyMatch(hit -> hit.y() > shipY + HULL), "ahead: " + where);
             // M8 AW: over the test range's water, the drums tossed forward burst among the submerged dummies ahead.
             case DEPTH_CHARGE -> assertTrue(hits.stream().anyMatch(hit -> hit.y() > shipY + HULL), "ahead: " + where);
+            // M9 part A: the arc strikes the dummies within its reach from its pod, never in the wedge behind.
+            case ARC -> {
+                double podX = shipX + weapon.muzzles().getFirst().dx();
+                double podY = shipY + weapon.muzzles().getFirst().dy();
+                assertTrue(
+                        hits.stream()
+                                .allMatch(hit -> Math.hypot(hit.x() - podX, hit.y() - podY)
+                                        <= weapon.range() + TestFire.TARGET_SIZE),
+                        "within its reach: " + where);
+                assertTrue(hits.stream().anyMatch(hit -> hit.y() > podY), "ahead: " + where);
+            }
         }
     }
 

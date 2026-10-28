@@ -79,3 +79,5 @@ flares:
 limits:
   - {setting: underwater, forbids: [Airstrike, Orbital Lance], reason: UNDER ICE}
   - {setting: dry, forbids: [Sonar Pulse], reason: NO WATER}
+  # M9 part A (README, Act 5 specials): inside rock (a level or section with `underground: true`, Level 32)
+  - {setting: underground, forbids: [Airstrike, Orbital Lance], reason: IN ROCK}

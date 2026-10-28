@@ -29,6 +29,9 @@ import static vanguard.game.level.RadioTimeline.LEVEL_25;
 import static vanguard.game.level.RadioTimeline.LEVEL_26;
 import static vanguard.game.level.RadioTimeline.LEVEL_27;
 import static vanguard.game.level.RadioTimeline.LEVEL_28;
+import static vanguard.game.level.RadioTimeline.LEVEL_29;
+import static vanguard.game.level.RadioTimeline.LEVEL_30;
+import static vanguard.game.level.RadioTimeline.LEVEL_31;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -36,6 +39,7 @@ import java.util.List;
 import java.util.Map;
 import vanguard.game.level.RadioTimeline.Event;
 import vanguard.sim.CueTrigger;
+import vanguard.sim.EscortSwap;
 import vanguard.sim.GroundUnit;
 import vanguard.sim.LevelScript;
 import vanguard.sim.ObjectiveSpec;
@@ -55,6 +59,7 @@ final class RadioRuns {
         runs.putAll(act2());
         runs.putAll(act3());
         runs.putAll(act4());
+        runs.putAll(act5());
         return runs;
     }
 
@@ -553,6 +558,104 @@ final class RadioRuns {
         // level's end at K+62).
         runs.put(LEVEL_28, level28Runs());
         return runs;
+    }
+
+    /**
+     * Act 5, The Belt (M9 part B, step B4). Level 29's events (step B3's measures; the radio is the same with the loaned
+     * Bulwark, an owned one and {@code --escort none}, whose Ember leaves upward: Rook's rescue line plays a join's
+     * length after the release all the same, RadioEvents): the first SAM salvo (t≈35); the first wavering pair gone
+     * (t≈85.5, its 8.5 s on the screen from t=77) or one shot down (t≈80); the rescue halt on its held clock
+     * ({@link Event#inArena}: the clock stands at the halt while a clamp gun stands) with the last clamp at H+13 (medium's
+     * typical halt, step B3b), H+7.6 (easy's) or H+19 (hard's), Rook in his slot a second later; the secondary met as the third pair leaves
+     * (t≈148.5); and a run whose clamps all fall before the halt (no halt: the clock runs through). Step B4b: the last
+     * clamp's cue names what the swap does ({@code EscortSwap#radioSubject}): the Bulwark flying ("Bulwark, RTB"), the
+     * loaner lost on hard's long halt (no Okafor line) and {@code --escort none} (the Ember leaves: "Rook, you're
+     * clear").
+     */
+    static Map<String, List<List<Event>>> act5() {
+        Map<String, List<List<Event>>> runs = new LinkedHashMap<>();
+        runs.put(LEVEL_29, level29Runs());
+        runs.put(LEVEL_30, level30Runs());
+        runs.put(LEVEL_31, level31Runs());
+        return runs;
+    }
+
+    /**
+     * M9 part C (step C4): Level 30's runs (Rook flies with every fit that has the escort; the Bulwark and {@code
+     * --escort none} have no radio of their own, so the fits without the escort stand for them). The secondary met as the
+     * convoy's last Gunship (t=110) dies, at step C3's autopilot times (easy t≈104.3, medium and hard t≈112.6–116.9;
+     * Rook's bark at t=123.5 and Okafor's tug line at t=131 after it); or failed: the first Gunship to leave the screen
+     * alive ({@code enemy-escaped}, a cue per enemy, not per tag), the lone t=40 one (t≈53.5), the first convoy Gunship
+     * (t≈109.5) or the last (t≈123.5).
+     */
+    static List<List<Event>> level30Runs() {
+        String gunship = "gilded-gunship";
+        return List.of(
+                List.of(),
+                List.of(new Event(104.3, CueTrigger.SECONDARY_OBJECTIVE, "")),
+                List.of(new Event(112.6, CueTrigger.SECONDARY_OBJECTIVE, "")),
+                List.of(new Event(115.5, CueTrigger.SECONDARY_OBJECTIVE, "")),
+                List.of(new Event(116.9, CueTrigger.SECONDARY_OBJECTIVE, "")),
+                List.of(new Event(53.5, CueTrigger.ENEMY_ESCAPED, gunship)),
+                List.of(new Event(109.5, CueTrigger.ENEMY_ESCAPED, gunship)),
+                List.of(new Event(123.5, CueTrigger.ENEMY_ESCAPED, gunship)));
+    }
+
+    /**
+     * M9 part D (step D4, step D2's measures): Level 31's runs (Rook flies with every fit that has the escort). The
+     * tug's first section hit ({@code first-ally-hit}) alone at the times the autopilot saw it (t≈12.5–128), and after a
+     * first hit at t=27 Dacosta's claim shot open (t≈101–107) or a section lost (t≈120–176: the closing line at 176.5
+     * waits for it). Each line names the engines ({@code {section}}: the longest name, the widest line).
+     */
+    static List<List<Event>> level31Runs() {
+        String section = "engines";
+        List<List<Event>> runs = new java.util.ArrayList<>();
+        runs.add(List.of());
+        for (double t : new double[] {12.5, 14, 26.5, 27.5, 30, 41.5, 44, 60, 86, 93.5, 100.5, 108, 128}) {
+            runs.add(List.of(Event.named(t, CueTrigger.FIRST_ALLY_HIT, section)));
+        }
+        Event hit = Event.named(27, CueTrigger.FIRST_ALLY_HIT, section);
+        for (double t : new double[] {101, 103, 105, 107}) {
+            runs.add(List.of(hit, new Event(t, CueTrigger.SECRET, "Dacosta's claim")));
+        }
+        for (double t : new double[] {120, 132, 136, 140, 145, 150, 160, 168, 176}) {
+            runs.add(List.of(hit, Event.named(t, CueTrigger.ALLY_LOST, section)));
+        }
+        return List.copyOf(runs);
+    }
+
+    /** M9 part B (step B4): Level 29's runs ({@link #act5()}'s note). */
+    static List<List<Event>> level29Runs() {
+        String hawk = "wavering-stormhawk";
+        Event homing = new Event(35, CueTrigger.FIRST_HOMING, "");
+        Event left = new Event(85.5, CueTrigger.NEUTRAL_LEFT, hawk);
+        Event met = new Event(148.5, CueTrigger.SECONDARY_OBJECTIVE, "");
+        return List.of(
+                List.of(),
+                List.of(homing, left, met),
+                rescue(homing, left, met, 13, EscortSwap.SUBJECT_BULWARK),
+                rescue(homing, left, met, 7.6, EscortSwap.SUBJECT_BULWARK),
+                rescue(homing, left, met, 19, EscortSwap.SUBJECT_BULWARK),
+                rescue(homing, left, met, 19, EscortSwap.SUBJECT_JOINS),
+                rescue(homing, left, met, 13, EscortSwap.SUBJECT_LEAVES),
+                List.of(
+                        new Event(34, CueTrigger.FIRST_HOMING, ""),
+                        new Event(80, CueTrigger.NEUTRAL_DOWN, hawk),
+                        Event.inArena(13, CueTrigger.HOLDERS_DOWN, EscortSwap.SUBJECT_BULWARK),
+                        Event.inArena(14, CueTrigger.ESCORT_JOINED, "")));
+    }
+
+    /**
+     * A Level 29 run: its events with the rescue halt's last clamp {@code halt} seconds into it (the swap doing {@code
+     * swap}), Rook a second later.
+     */
+    private static List<Event> rescue(Event homing, Event left, Event met, double halt, String swap) {
+        return List.of(
+                homing,
+                left,
+                Event.inArena(halt, CueTrigger.HOLDERS_DOWN, swap),
+                Event.inArena(halt + 1, CueTrigger.ESCORT_JOINED, ""),
+                met);
     }
 
     /** M8 part H (step H6): Level 28's runs ({@link #act4()}'s note). */

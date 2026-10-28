@@ -129,6 +129,10 @@ public record Flight(
             // M8 part A: the Auto-repair nanites at the best fitted level.
             flown = flown.withNanites(SimSpecs.nanites(content, nanites));
         }
+        // M9 part A (design/player/generator, Enemy drain effects): the power budget in flight, which a drainer's latch
+        // lowers; with none latched the sortie flies as without it.
+        flown = flown.withPower(SimSpecs.power(
+                content, output, load, loadout.get(LoadoutSlot.SHIELD).item(), campaign.difficulty()));
         Optional<Campaign.EscortFlight> flying = campaign.escortFlight();
         if (flying.isPresent()) {
             Campaign.EscortFlight escort = flying.get();
@@ -139,6 +143,12 @@ public record Flight(
             } else {
                 // M8 part A: the Bulwark, owned or on loan (Rook missing in Levels 27–29), with its armour.
                 flown = flown.withBulwark(SimSpecs.bulwark(content, escort.side(), escort.armour()));
+                // M9 part B (Level 29): Rook waiting in the prison tender's hold, at full armour, for the escort swap.
+                if (escort.rescue().isPresent()) {
+                    Fitted rook = escort.rescue().get();
+                    flown = flown.withRescue(SimSpecs.wingman(
+                            content, rook.item(), rook.level(), escort.side(), campaign.escortMaxArmour()));
+                }
             }
         }
         return new Flight(flown, weapons, spare, notFlown, sensor, targeting, salvage);

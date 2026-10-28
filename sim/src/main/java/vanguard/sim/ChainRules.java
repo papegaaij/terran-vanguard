@@ -26,6 +26,8 @@ final class ChainRules {
 
     private final int[] tailKinds;
     private final int[] regrownKinds;
+    /** M9 part C: per enemy kind, its train's turret car kind; -1 for others. */
+    private final int[] turretKinds;
 
     ChainRules(
             EnemyForce force,
@@ -44,12 +46,16 @@ final class ChainRules {
         segmentKinds = new int[kinds.size()];
         tailKinds = new int[kinds.size()];
         regrownKinds = new int[kinds.size()];
+        turretKinds = new int[kinds.size()];
         for (int k = 0; k < kinds.size(); k++) {
             var chain = kinds.get(k).chain();
             segmentKinds[k] = chain.isPresent() ? kinds.indexOf(chain.get().segment()) : -1;
             tailKinds[k] = chain.isPresent() ? kinds.indexOf(chain.get().tail()) : -1;
             regrownKinds[k] = chain.isPresent() && chain.get().regrown() != null
                     ? kinds.indexOf(chain.get().regrown())
+                    : -1;
+            turretKinds[k] = chain.isPresent() && chain.get().cars().isPresent()
+                    ? kinds.indexOf(chain.get().cars().get().turret())
                     : -1;
         }
     }
@@ -117,10 +123,20 @@ final class ChainRules {
                 break;
             }
             boolean tail = i == members - 1;
-            EnemySpec part = i == 0 ? head : tail ? spec.tail() : spec.segment();
-            int kind = i == 0 ? spawn.kind() : tail ? tailKinds[spawn.kind()] : segmentKinds[spawn.kind()];
+            EnemySpec part = i == 0 ? head : spec.memberSpec(i);
+            boolean turret = i > 0
+                    && spec.cars().isPresent()
+                    && part == spec.cars().get().turret()
+                    && !tail;
+            int kind = i == 0
+                    ? spawn.kind()
+                    : tail ? tailKinds[spawn.kind()] : turret ? turretKinds[spawn.kind()] : segmentKinds[spawn.kind()];
             Hitbox box = i == 0 || tail ? part.hitbox() : spec.segmentBoxes().get(i - 1);
             member.link(chain, i, part, kind, box, force.nextSerial(), 0, 0, 0);
+            if (turret) {
+                // M9 part C: the turret cars staggered (design/enemies/air/rail-serpent).
+                member.delayVolley(SimStep.ticks(spec.cars().get().staggerSeconds() * spec.turretsBefore(i)));
+            }
             if (i == 0) {
                 member.carry(spawn.carried());
             }
@@ -161,6 +177,10 @@ final class ChainRules {
                 chain.grown(head, ship.x(), ship.y());
             }
             Enemy popped = chain.popDue();
+            if (popped != null && chain.wreck()) {
+                // M9 part C: a machine split's car blows and pays its bounty.
+                escapes.wreckPaid(popped);
+            }
             if (popped != null) {
                 events.add(
                         SimEvents.Type.CHAIN_POP,
@@ -203,6 +223,10 @@ final class ChainRules {
         if (split) {
             chainsSpawned++;
             events.add(SimEvents.Type.CHAIN_CUT, enemy.x(), enemy.y(), enemy.kind());
+            if (rear.wreck()) {
+                // M9 part C: the cars behind the cut lose power.
+                events.add(SimEvents.Type.CHAIN_WRECK, enemy.x(), enemy.y(), enemy.kind());
+            }
         } else if (rear != null) {
             chains.free(chains.size() - 1);
         }

@@ -1,8 +1,8 @@
 # Act 4 – Deep Water: its levels and the act intro (title card and the four intro pages), rendered into README.md (Act
 # intro and outro). M8 part B, step B2, from the approved texts (round 48). M8 part H, step H3: the act-end outro after
 # Level 28 (the four approved pages, the text unchanged, one paragraph each, each with its image: tools/art/briefing_images.py,
-# step ART-H2) and the `next_act` for the release's end, which moves here from Level 21 (ACT V · THE BELT; its setting
-# CERES, Level 29's Ceres Hub, a default of this step pending the user's review in round 58).
+# step ART-H2). Its `next_act` (ACT V · THE BELT, CERES: the release's end from step H3) removed in M9 part B, step B3:
+# Act 5's levels play, the release ends after Level 29 until Act 5's own `next_act` (part H).
 # Schema: ../../tech/architecture/schemas-levels/README.md
 levels: [22, 28]
 
@@ -25,4 +25,3 @@ outro:  # after the Level 28 debrief with the act summary (Level 21's order), ea
     - {speaker: Okafor, image: act-4-outro-ready-room, line: "On Mars I told Dr. Varga to keep her eyes on the canyon. I silenced her, and I was wrong. That does not happen again. What she sees, she says, on every channel.", notes: {image: "Okafor alone in the transport's ready room under the lamps, Act 3's walker plate on a screen, her hands on the table"}}
     - {speaker: Okafor, expression: fierce, image: act-4-outro-aegis, line: "Whatever comes over the radio next, we hear it together. Rook is out there. We ship out, and we find him. Aegis Actual out.", notes: {image: "Aegis Wing's Stormhawks on the transport's flight deck, one rail left empty with Rook's name stencilled on it"}}
 
-next_act: {act: ACT V, name: THE BELT, setting: CERES}   # the release ends after this act: "ACT V - THE BELT. CERES. COMING SOON." on the release's end, "ACT V - THE BELT: COMING SOON" in the hangar before L29

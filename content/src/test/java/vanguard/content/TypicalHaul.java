@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import tools.jackson.databind.JsonNode;
@@ -14,6 +15,7 @@ import vanguard.sim.Layer;
 import vanguard.sim.LevelScript;
 import vanguard.sim.PickupType;
 import vanguard.sim.Secondary;
+import vanguard.sim.WaveSpec;
 
 /**
  * A level's credits at medium from its data (design/systems/economy, per-level budget): a perfect
@@ -26,6 +28,11 @@ import vanguard.sim.Secondary;
  * @param budget budget(n) of the economy, the typical haul's target
  */
 record TypicalHaul(int perfect, double typical, double budget) {
+    /**
+     * M9 part C (design/campaign Level 30, Density and pacing): the streams a launcher (the Gilded Gunship) sends before
+     * a typical kill.
+     */
+    static final int TYPICAL_STREAMS = 2;
 
     /** The typical haul's distance from the budget, as a share of it (+0.1 = 10 % above). */
     double offBudget() {
@@ -54,9 +61,17 @@ record TypicalHaul(int perfect, double typical, double budget) {
         Sum sum = new Sum(factor, factor * bountyScale);
         PlayerData.Credits salvage = content.player().pickups().salvage().credits();
 
-        for (var wave : level.waves()) {
+        // M9 part B (Level 29, the rescue halt): a typical halt's waves, one cycle of the halt cycle.
+        List<WaveSpec> waves = new ArrayList<>(level.waves());
+        level.haltCycle().ifPresent(cycle -> waves.addAll(cycle.waves()));
+        for (var wave : waves) {
             // M7 part G: a pursuit's refills too (LevelMetrics.planned, as tools/sync_tables.py).
             sum.bounty(LevelMetrics.planned(wave), wave.enemy().bounty(), rate(rate, wave.enemy()));
+            // M9 part B: a V-wing's leader pays its airframe's bounty; the typical haul counts it at the wing's (the
+            // README's "leader 25, counted at 12"), the perfect run takes the extra.
+            wave.leader()
+                    .ifPresent(leader ->
+                            sum.bounty(1, leader.bounty() - wave.enemy().bounty(), 0));
             // M7 part D: a unit part pays its own bounty (the Shellback's vent: 40 + 12 by parts, as the README's
             // table; M8 part B: each of its parts)
             for (EnemySpec.UnitPart part : wave.enemy().parts()) {
@@ -77,12 +92,20 @@ record TypicalHaul(int perfect, double typical, double budget) {
                     sum.bounty(wave.count(), chain.tailFirstBonus(), 0);
                     return;
                 }
-                sum.bounty(
-                        wave.count() * chain.segmentBoxes().size(),
-                        chain.segment().bounty(),
-                        rate(rate, wave.enemy()));
+                // M9 part C: a train's turret cars pay their own bounty (ChainSpec.memberSpec).
+                for (int i = 1; i <= chain.segmentBoxes().size(); i++) {
+                    sum.bounty(wave.count(), chain.memberSpec(i).bounty(), rate(rate, wave.enemy()));
+                }
                 sum.bounty(wave.count(), chain.tail().bounty(), rate(rate, wave.enemy()));
             });
+            // M9 part C (Level 30's Gilded Gunships): a launcher's units, two streams before a typical kill (as
+            // tools/sync_tables.py).
+            wave.enemy()
+                    .launcher()
+                    .ifPresent(launcher -> sum.bounty(
+                            wave.count() * TYPICAL_STREAMS * launcher.stream(),
+                            launcher.unit().bounty(),
+                            rate(rate, launcher.unit())));
             wave.enemy()
                     .brood()
                     .ifPresent(brood -> sum.bounty(
@@ -125,7 +148,11 @@ record TypicalHaul(int perfect, double typical, double budget) {
             }
         }
         // Each saveable unit home pays (M5 part D: not the scripted loss's, Level 10's Lifeline Three).
-        level.objectives().escort().ifPresent(escort -> sum.pay(escort.saveable(), escort.credits(), rate.primary()));
+        // M9 part D (Level 31's mining tug): a hull escort pays each section home its own credits.
+        level.objectives().escort().ifPresent(escort -> escort.hull()
+                .ifPresentOrElse(
+                        hull -> hull.sections().forEach(section -> sum.pay(1, section.credits(), rate.primary())),
+                        () -> sum.pay(escort.saveable(), escort.credits(), rate.primary())));
         for (var secret : data.secrets()) {
             sum.pay(1, secret.crate(), rate.secrets());
         }

@@ -1,0 +1,118 @@
+package vanguard.game.audio;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Files;
+import com.badlogic.gdx.backends.lwjgl3.audio.mock.MockAudio;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.Map;
+import org.junit.jupiter.api.Test;
+import vanguard.content.Content;
+import vanguard.content.ContentLoader;
+import vanguard.content.Difficulty;
+import vanguard.content.LevelData;
+import vanguard.content.SimSpecs;
+import vanguard.game.render.IceShelfFixture;
+import vanguard.game.render.SiegeUnitsFixture;
+import vanguard.game.settings.AudioSettings;
+import vanguard.sim.SimStep;
+import vanguard.sim.Sortie;
+
+/**
+ * M9 part B, Level 29's sounds (step B4; design/audio/sfx, Act 5 sounds; step AUD-B's round 62 proposals, their a
+ * variants until round 62 picks; design/audio/music track 12 and 31): every key plays its file; the level's theme, its
+ * stems, Rook's return sting and the station bed; and flown to the turn, invulnerable and firing: the Talons' whine and
+ * twin crack, the SAM Nests' hatch and lock beep, Block C's relays and klaxon and the nests' wake at t=60 (the first
+ * wake: the clamp guns' own wake at the halt is not the station's).
+ */
+class Level29SoundsTest {
+    private static final Path ASSETS = Path.of(System.getProperty("vanguard.assetsDir", "../assets"));
+    private static final Content CONTENT = ContentLoader.fromClasspath();
+    private static final String KEY = CONTENT.levelKey(29).orElseThrow();
+    private static final long NANOS_PER_STEP = 1_000_000_000L / SimStep.PER_SECOND;
+
+    private final long[] now = {0};
+    private final SfxBank bank =
+            new SfxBank(new MockAudio(), new Lwjgl3Files(), new Mixer(AudioSettings.defaults()), () -> now[0]);
+
+    @Test
+    void everyLevel29SoundPlaysItsProposal() {
+        Map<Sfx, String> files = Map.ofEntries(
+                Map.entry(Sfx.STATION_KLAXON, "sfx/station-klaxon-r62-a.ogg"),
+                Map.entry(Sfx.STATION_RELAYS, "sfx/station-relays-r62-a.ogg"),
+                Map.entry(Sfx.NEST_HATCH, "sfx/nest-hatch-r62-b.ogg"),
+                Map.entry(Sfx.NEST_LOCK, "sfx/nest-lock-r62-b.ogg"),
+                Map.entry(Sfx.NEST_WAKE, "sfx/nest-wake-r62-ab.ogg"),
+                Map.entry(Sfx.CLAMP_GUN_SHOT, "sfx/clamp-gun-shot-r62-b.ogg"),
+                Map.entry(Sfx.CLAMP_RELEASE, "sfx/clamp-release-r62-b.ogg"),
+                Map.entry(Sfx.EMBER_LAUNCH, "sfx/ember-launch-r62-a.ogg"),
+                Map.entry(Sfx.BULWARK_DEPART, "sfx/bulwark-depart-r62-a.ogg"),
+                Map.entry(Sfx.TALON_WHINE, "sfx/talon-whine-r62-a.ogg"),
+                Map.entry(Sfx.TALON_SHOT, "sfx/talon-shot-r62-b.ogg"),
+                Map.entry(Sfx.LEADER_SQUELCH, "sfx/leader-squelch-r62-b.ogg"),
+                Map.entry(Sfx.MITE_TELL, "sfx/mite-tell-r62-a.ogg"),
+                Map.entry(Sfx.MITE_LEAP, "sfx/mite-leap-r62-a.ogg"),
+                Map.entry(Sfx.AMBIENCE_BELT_STATION, "sfx/belt-station-r60-b.ogg"),
+                Map.entry(Sfx.ROOK_RETURN_STING, "music/rook-return.ogg"));
+        files.forEach((sfx, file) -> {
+            assertEquals(file, sfx.path(), sfx.name());
+            assertTrue(Files.isRegularFile(ASSETS.resolve(file)), file);
+        });
+        LevelData.Music music = CONTENT.level(KEY).music();
+        assertEquals(Sfx.AMBIENCE_BELT_STATION, Sfx.ambience(music.ambience()), "the belt's station bed");
+        String theme = Tracks.name(music.track()).orElseThrow();
+        assertEquals("hollow-rock", theme, "track 12");
+        for (String path : List.of(Tracks.path(theme), Tracks.basePath(theme), Tracks.motifPath(theme))) {
+            assertTrue(Files.isRegularFile(ASSETS.resolve(path)), path);
+        }
+        assertEquals("music/rook-return.ogg", Tracks.path(Tracks.ROOK_RETURN));
+        assertEquals(Bus.MUSIC, Sfx.ROOK_RETURN_STING.bus(), "the sting is music");
+    }
+
+    /** Flown to the turn and past it, invulnerable, firing from the middle of the canyon. */
+    @Test
+    void theTalonsTheNestsAndTheTurningStationSound() {
+        Sortie sortie = new Sortie(
+                1,
+                SimSpecs.starterLoadout(CONTENT, Difficulty.MEDIUM),
+                SimSpecs.level(CONTENT, KEY, Difficulty.MEDIUM),
+                SimSpecs.rules(CONTENT, KEY, Difficulty.MEDIUM).withInvulnerableShip(),
+                60);
+        FlightSounds sounds =
+                new FlightSounds(bank, SiegeUnitsFixture.quietLooks(sortie), sortie.armament(), List.of());
+        boolean whine = false;
+        boolean shot = false;
+        boolean hatch = false;
+        double relays = Double.NaN;
+        double klaxon = Double.NaN;
+        boolean wake = false;
+        while (sortie.levelSeconds() < 66) {
+            now[0] += NANOS_PER_STEP;
+            sortie.step(IceShelfFixture.toward(sortie, 240, 100));
+            sounds.step();
+            sounds.play(sortie.events());
+            sounds.watch(sortie);
+            whine |= bank.playing(Sfx.TALON_WHINE) > 0;
+            shot |= bank.playing(Sfx.TALON_SHOT) > 0;
+            hatch |= bank.playing(Sfx.NEST_HATCH) > 0 && bank.playing(Sfx.NEST_LOCK) > 0;
+            wake |= bank.playing(Sfx.NEST_WAKE) > 0;
+            if (Double.isNaN(relays) && bank.playing(Sfx.STATION_RELAYS) > 0) {
+                relays = sortie.levelSeconds();
+            }
+            if (Double.isNaN(klaxon) && bank.playing(Sfx.STATION_KLAXON) > 0) {
+                klaxon = sortie.levelSeconds();
+            }
+        }
+        assertTrue(whine, "a Talon swooping in");
+        assertTrue(shot, "a Talon's twin crack");
+        assertTrue(hatch, "a SAM Nest's hatch with its lock beep");
+        assertTrue(wake, "Block C's nests waking");
+        assertEquals(60, relays, 0.1, "the relays as Block C declares");
+        assertTrue(klaxon > relays && klaxon < relays + 1, "then the klaxon: " + klaxon);
+        sounds.stopLoops();
+        bank.dispose();
+    }
+}

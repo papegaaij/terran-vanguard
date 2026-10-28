@@ -2,8 +2,8 @@
 title: Chairman Silas Vorne
 design: approved
 implementation: n/a
-art: chosen
-updated: 2026-10-27
+art: final
+updated: 2026-10-28
 ---
 
 # Chairman Silas Vorne
@@ -40,7 +40,7 @@ mediocrity.
 
 ### Act 5 (draft)
 
-*Draft, step `m9-d-story` (2026-10-27), **pending the user's review in round 60**. The beats are kept
+*Draft, step `m9-d-story` (2026-10-27), **approved in round 60**. The beats are kept
 here; the texts belong to the [act's](../../../campaign/act-5-the-belt/README.md) intro and outro and to the
 level documents' radio.*
 
@@ -91,7 +91,9 @@ late-90s pre-rendered CGI style.
 
 ## Concept art
 
-Round 60 (Act 5 design phase, step ART-P-world; pending the user's review): his production portraits in the chosen
+Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
+
+Round 60 (Act 5 design phase, step ART-P-world; chosen in round 60): his production portraits in the chosen
 r04 style, rendered by `tools/concept/belt_r60.py` through `tools/art/portraits.py`'s style-B pipeline (imported
 unchanged; nothing written to `assets/` until chosen), a/b by the background behind him.
 
@@ -104,8 +106,13 @@ procedural faces only show the style (framing, lighting, colour treatment, frame
 | [concept/rejected/portrait-r03-a.png](concept/rejected/portrait-r03-a.png) | Style A "pre-rendered 3D bust": Vorne at 144×144 (briefing), 72×72 in the HUD A radio frame, 3× enlargement | rejected — style B preferred |
 | [concept/portrait-r03-b.png](concept/portrait-r03-b.png) | Style B "comm-screen pixel portrait": Vorne as a 72 px dithered amber enemy-channel portrait, 2× for the briefing, HUD radio frame | superseded by r04 |
 | [concept/portrait-r04-a.png](concept/portrait-r04-a.png) | Round 04: style B with retained colour — Vorne's own colours under the amber enemy-channel tint, 36 colours, soft dither; briefing 144×144, HUD 72×72, 3× (`tools/concept/portraits_r04.py`) | chosen |
-| [concept/vorne-portraits-r60-a.png](concept/vorne-portraits-r60-a.png) | Round 60, production portraits A — the enemy screen: radio 72 px and briefing 144 px in neutral, smug (head back, one brow up) and rage (cold: brows down, teeth bared and clenched, the screen tearing with static), one palette, on the plain amber screen | proposed |
-| [concept/vorne-portraits-r60-b.png](concept/vorne-portraits-r60-b.png) | Round 60, production portraits B — the Chairman's office: the same three with the gilded Ascendancy crest (sun rays over a ringed planet) behind his head and gold pilasters | proposed |
+| [concept/vorne-portraits-r60-a.png](concept/vorne-portraits-r60-a.png) | Round 60, production portraits A — the enemy screen: radio 72 px and briefing 144 px in neutral, smug (head back, one brow up) and rage (cold: brows down, teeth bared and clenched, the screen tearing with static), one palette, on the plain amber screen | chosen (round 60) |
+
+Production art, M9 part B (concept round 62, step ART-B): round 60's chosen A.20 a (the plain amber enemy screen) written as production art by `tools/art/portraits.py vorne`: `radio-vorne-<neutral|smug|rage>` (72 px) and `briefing-vorne-<…>` (144 px), one palette over the three. Prompts: [concept/prompts.md](concept/prompts.md#round-62--production-vornes-portraits-m9-part-b).
+
+| File | What | Status |
+|---|---|---|
+| [concept/vorne-portraits-final-r62-a.png](concept/vorne-portraits-final-r62-a.png) | Review sheet (`tools/art/portraits.py`, M9 part B): Vorne neutral, smug and rage at briefing size and at radio size 1× and 3× | chosen (round 62, F.8: accepted as final) |
 
 ## Open questions
 
@@ -122,8 +129,10 @@ procedural faces only show the style (framing, lighting, colour treatment, frame
 - 2026-09-30: Concept round 03: portrait style **B** (comm-screen pixel portrait) chosen, with a bit more colour retained so it looks less flat.
 - 2026-09-30: Concept round 04: style-B portrait with retained colour chosen.
 - 2026-10-01: Approved by the user in the [Acts 1–2 design review](../../../reviews/acts-1-2/README.md).
-- 2026-10-27 (Act 5 design phase, step m9-d-story; **pending the user's review in round 60**): his Act 5
+- 2026-10-27 (Act 5 design phase, step m9-d-story; **approved in round 60**): his Act 5
   beats (the broadcast as the act intro, Q9 a; silent in L29; the Sovereign's taunts with a cold rage in
   the core phase; the recruitment; Varga's look at his face in the outro); the Arc's "Act 4 end:
   broadcast" corrected to the 2026-09-30 story decision (the broadcast opens Act 5); his production
   portraits and voice come with Act 5 instead of Act 6.
+- 2026-10-27 (user, [round 60](../../../concept-rounds/round-60/README.md) closed): the Act 5 beats approved as drafted (J.8: cold, never shouting). **A.20 a**: the production portraits are the plain amber enemy screen (b, the Chairman's office with the crest, rejected); the rage face's faint teeth at 72 px are re-checked in production. His voice is V.1 **a** (Jeffrey Church; see the [voice](../../../audio/voice/README.md#act-5-voices-draft-round-60)).
+- 2026-10-28 (user, [round 62](../../../concept-rounds/round-62/README.md), closed; page answers): Vorne's three portraits (neutral, smug, rage; F.8) accepted as final; `art: final`. His pitch is V.3 a (the reference clip lowered 2 semitones, about 90 Hz), already the production render.

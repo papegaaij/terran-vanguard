@@ -1,0 +1,40 @@
+# Asteroid Mite stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/schemas-units/README.md
+# M9 part B, step B2 (Level 29): the approved stat block (round 60) as data. New in it (flown from step B1): the `ride`
+# movement (a wave's `on_rocks`: its riders on small breakable rocks; the proximity leap after a tell, a seeded order;
+# the riders of a broken rock tumble first) and the hook `ride`. The crawl round the rim (30 °/s) is step B1's default.
+name: Asteroid Mite
+faction: Vrell
+layer: air        # `space` in vacuum: a doc alias of the air layer
+tier: tiny
+size: [20, 20]    # sprite px
+hitbox: [14, 14]
+parts: single
+orientation: 16 angles
+hp: 1
+armour: none
+speed: 260        # px/s in its dive
+movement:
+  ride: {within: 160, tell: 0.4, gap: 0.15, dive_speed: 260, tumble: 0.3, crawl: 30}   # px from the rock to the ship that sets the riders off; s of each rider's tell; s between riders; px/s dive; s a broken rock's riders tumble; °/s crawl round the rim
+attacks: []       # contact only
+formations:
+  - {name: swarm, size: [1, 5]}   # on rocks: riders a rock (round 62: 1-5, Level 29 flies 1-2)
+weak_points:
+  - {name: teal glow along its back}
+drops: []
+traits: [spread, area, forward]
+bounty: 3
+first_level: 29
+difficulty:
+  easy: {ride: {within: 130, tell: 0.5, dive_speed: 220}}
+  hard: {ride: {within: 200, dive_speed: 300}}
+notes:
+  layer: ' (`space` in vacuum: a doc alias, see [space](../README.md#design))'
+  orientation: (a clinging pose per side of the rock, 4 crawl frames; a leap pose)
+  speed: in its dive; it rides its rock (the rock's drift plus the scroll) until then
+  movement: '`ride` ([rock riding](../../README.md#rock-riding)): rides a small drifting rock (1–5 a rock); when the ship''s centre comes within **{movement.ride.within} px** of the rock''s, each rider in turn ({movement.ride.gap} s apart, a seeded order) shows its tell for **{movement.ride.tell} s**, then `dive`s straight at the ship''s position at the tell''s end at {movement.ride.dive_speed} px/s, no steering, and flies on off the screen if it misses; a broken rock''s riders tumble {movement.ride.tumble} s first'
+  attack: '`none`: contact only (`{tier}` {contact_damage}; destroyed by the impact, as every `tiny` rammer)'
+  formations: '(on rocks: a group of 3–5 rocks drifting in together, from the front or the sides; never more than 5 rocks with riders on the screen)'
+  weak_points: (drawn only)
+  death: '`tiny` chitin burst, a teal spark; nothing left'
+  used_in: the rock fields of L30, L31 and L33 as popcorn (the level docs place them)
+  difficulty: 'easy: leaps within 130 px, tell 0.5 s, dive 220 px/s; hard: leaps within 200 px, dive 300 px/s'

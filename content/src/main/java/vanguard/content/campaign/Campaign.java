@@ -98,15 +98,35 @@ public final class Campaign {
      * @param side the side of the slot
      * @param armour the escort's armour at the start of the attempt
      * @param loaner M8 part A: a Bulwark on loan while Rook is missing and none is owned (free, whole every level)
+     * @param rescue M9 part B (design/player/wingmen, Rook's rescue and return; Level 29): Rook's gun at its level when he
+     *     waits in the prison tender's hold to join the Bulwark's slot at the level's escort swap (full armour); empty
+     *     for none
      */
     public record EscortFlight(
-            Escort.Escorter escorter, Optional<Fitted> gun, WingmanSpec.Side side, double armour, boolean loaner) {
+            Escort.Escorter escorter,
+            Optional<Fitted> gun,
+            WingmanSpec.Side side,
+            double armour,
+            boolean loaner,
+            Optional<Fitted> rescue) {
         public EscortFlight {
             if (gun.isPresent() != (escorter == Escort.Escorter.ROOK)
-                    || loaner && escorter != Escort.Escorter.BULWARK) {
+                    || loaner && escorter != Escort.Escorter.BULWARK
+                    || rescue.isPresent() && escorter != Escort.Escorter.BULWARK) {
                 throw new IllegalArgumentException(
-                        "Rook flies with a gun, the Bulwark without; only a Bulwark is lent");
+                        "Rook flies with a gun, the Bulwark without; only a Bulwark is lent or swapped for Rook");
             }
+        }
+
+        /** Without M9 part B's rescue. */
+        public EscortFlight(
+                Escort.Escorter escorter, Optional<Fitted> gun, WingmanSpec.Side side, double armour, boolean loaner) {
+            this(escorter, gun, side, armour, loaner, Optional.empty());
+        }
+
+        /** M9 part B: this Bulwark's flight with Rook waiting to be rescued, his gun {@code rook} at its level. */
+        public EscortFlight withRescue(Fitted rook) {
+            return new EscortFlight(escorter, gun, side, armour, loaner, Optional.of(rook));
         }
 
         /** Rook with his gun. */
@@ -560,8 +580,15 @@ public final class Campaign {
         // M8 part A: Rook is shot down at the end of his last level and back for the level he returns in.
         if (nextLevel == rules.escort().lostAfter() + 1 && !storyFlags.contains(ROOK_MISSING)) {
             storyFlags.add(ROOK_MISSING);
-        } else if (nextLevel == rules.escort().back()) {
-            storyFlags.remove(ROOK_MISSING);
+        } else if (nextLevel == rules.escort().back() && storyFlags.remove(ROOK_MISSING)) {
+            // M9 part A (design/player/wingmen, Rook's rescue and return): rescued at the win of his last missing
+            // level, Rook is back with full armour (a fresh start, not the hangar's state before his loss), and the
+            // slot
+            // defaults to him again; an owned Bulwark stays owned (with its armour) and can be chosen again.
+            if (gear.escort().hired()) {
+                gear = gear.withEscort(
+                        gear.escort().withArmour(escortMaxArmour()).withFlies(Escort.Escorter.ROOK));
+            }
         }
         retriesLeft = rules.retries(difficulty);
         hireWhenDue();
@@ -790,10 +817,14 @@ public final class Campaign {
         Escort.Bulwark bulwark = escort.bulwark();
         double bulwarkArmour = Math.min(bulwark.armour(), bulwarkMaxArmour());
         if (rookMissing(level)) {
-            return Optional.of(
-                    bulwark.owned()
-                            ? EscortFlight.bulwark(escort.side(), bulwarkArmour, false)
-                            : EscortFlight.bulwark(escort.side(), bulwarkMaxArmour(), true));
+            EscortFlight slot = bulwark.owned()
+                    ? EscortFlight.bulwark(escort.side(), bulwarkArmour, false)
+                    : EscortFlight.bulwark(escort.side(), bulwarkMaxArmour(), true);
+            // M9 part B (design/player/wingmen, Rook's rescue and return): in the rescue's level (Level 29) Rook waits
+            // in
+            // the prison tender's hold with the gun fitted at his loss, at its level; he joins at the escort swap.
+            Fitted rookGun = gear.loadout().get(LoadoutSlot.ESCORT);
+            return Optional.of(rules.escort().rescued(level) && rookGun != null ? slot.withRescue(rookGun) : slot);
         }
         if (bulwarkChosen(level)) {
             return Optional.of(EscortFlight.bulwark(escort.side(), bulwarkArmour, false));

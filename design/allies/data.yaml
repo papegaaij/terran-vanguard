@@ -94,3 +94,23 @@ ares-landing-dome:        # Level 17's five greenhouse domes (M7 part D, round 3
   smoke_below: 0.5        # share of its hits (unused by its looks: the inner green light flickers at one hit left, its document)
   sprite: ares-dome       # step ART-D's sprites: ares-dome, -crack-1..3, -flicker, -broken (Eden: ares-dome-eden)
   first_level: 17
+mining-tug:               # Level 31's Bellwether (M9 part D, step D2: round 60 J.6 b, 200x300; ART-D's measured section boxes)
+  name: Mining tug
+  layer: ground           # below the play plane: nothing on it collides with the ship, Rook or the rocks
+  size: [200, 300]        # sprite px: the footprint, nose up
+  hitbox: [200, 300]      # the footprint; the sections carry the hit boxes
+  hp: 560                 # unused for a hull (each section's HP is the level's: bow 240, cargo 160, engines 160 at medium)
+  damaged_by:             # only hooked attacks, each on one section (Q-D2 = a); every other shot, ring, dash and body passes over it
+    objective_aimed: false
+    claws: 0
+    missiles: 5           # a hooked homing missile bursting in a section's box
+    dives: 3              # a hooked diver (the Dart's chase) crossing a section, once per dive
+    links: 4              # a lit Shard link of a hooked kind across a section, per touch
+    link_cooldown: 0.5    # s per link and section
+  follows: hull           # one hull of sections holding a screen station with a sway (the level's escort.hull block)
+  headings: {count: 1, step: 10}   # one heading: the sway is a translation
+  smoke_below: 0.5        # share of a section's HP
+  sections:               # hull order, offsets px from the tug's centre (y down), hit boxes 90 % of the production sprite's opaque boxes (ART-D, tools/art/belt_units_d.py), smoke points the vents'
+    - {name: bow, offset: [0, -104], box: [133, 77], smoke: [[-45, -80], [35, -105]]}            # opaque 148x86
+    - {name: cargo, offset: [0, 0], box: [173, 115], smoke: [[-80, -27], [80, 16], [19, -9]]}    # opaque 192x128
+    - {name: engines, offset: [0, 106], box: [130, 81], smoke: [[-45, 82], [52, 96]]}            # opaque 144x90

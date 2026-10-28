@@ -155,6 +155,66 @@ class MissionLayoutTest {
     }
 
     /**
+     * M9 part D (design/ui/hud, Act 5 additions): the tug tracker's line one ({@code TUG 3 / 3}) and its three section
+     * bars on line two, each after its label: the full names ({@code ENGINES}) leave no bar beside them in a third of
+     * the well, so the labels are the sections' initials, and the three slots fill the well's text width.
+     */
+    @Test
+    void theTugTrackerFitsItsCountAndThreeSectionBars() {
+        assertTrue(
+                width(BODY, MissionPanel.TUG) + MissionPanel.MARK_GAP + width(BODY, MissionPanel.shuttleCount(3, 3))
+                        <= MissionLayout.TEXT_WIDTH,
+                "TUG and 3 / 3 fit");
+        List<String> sections = List.of("bow", "cargo", "engines");
+        int slot = MissionPanel.TUG_STEP - 4;
+        assertTrue(
+                width(SMALL, "ENGINES") + MissionPanel.TUG_LABEL_GAP + 24 > slot,
+                "the full names leave no room for a bar: the initials are used");
+        for (String section : sections) {
+            String label = MissionPanel.tugLabel(section);
+            assertEquals(1, label.length());
+            assertTrue(width(SMALL, label) <= MissionPanel.TUG_LABEL_WIDTH, label + " fits its label width");
+        }
+        assertEquals("E", MissionPanel.tugLabel("engines"));
+        int end = (sections.size() - 1) * MissionPanel.TUG_STEP
+                + MissionPanel.TUG_LABEL_WIDTH
+                + MissionPanel.TUG_LABEL_GAP
+                + MissionPanel.TUG_BAR_WIDTH;
+        assertTrue(end <= MissionLayout.TEXT_WIDTH, "the last bar ends at " + end);
+        assertTrue(
+                MissionPanel.TUG_LABEL_WIDTH + MissionPanel.TUG_LABEL_GAP + MissionPanel.TUG_BAR_WIDTH + 4
+                        <= MissionPanel.TUG_STEP,
+                "a gap between the slots");
+        assertTrue(MissionPanel.TUG_BAR_WIDTH >= 40, "a bar long enough to read a share");
+    }
+
+    /**
+     * M9 part D4b: Level 31's CLEAN HULL secondary as a tag in the small font between {@code TUG} and the count on line
+     * one: its label while every section holds half its hull, {@code HULL FAILED} as one drops below, {@code HULL DONE}
+     * at the level end; each fits between the two with its gaps.
+     */
+    @Test
+    void theCleanHullTagFitsBetweenTheTugAndItsCount() {
+        String key = CONTENT.levelKey(31).orElseThrow();
+        var secondary = vanguard.content.SimSpecs.level(CONTENT, key, vanguard.content.Difficulty.MEDIUM)
+                .objectives()
+                .secondary();
+        assertEquals(0.5, secondary.integrity(), 1e-9, "an integrity secondary");
+        String label = secondary.label();
+        assertEquals("CLEAN HULL", MissionPanel.hullTag(label, false, false));
+        assertEquals("HULL FAILED", MissionPanel.hullTag(label, false, true));
+        assertEquals("HULL DONE", MissionPanel.hullTag(label, true, false));
+        int room = MissionLayout.TEXT_WIDTH
+                - width(BODY, MissionPanel.TUG)
+                - width(BODY, MissionPanel.shuttleCount(3, 3))
+                - 2 * MissionPanel.TUG_TAG_GAP;
+        for (boolean[] state : new boolean[][] {{false, false}, {false, true}, {true, false}}) {
+            String tag = MissionPanel.hullTag(label, state[0], state[1]);
+            assertTrue(width(SMALL, tag) <= room, tag + " fits the " + room + " px between TUG and the count");
+        }
+    }
+
+    /**
      * 2026-10-08 (the round 32 capture read a home shuttle's bar as a lost one's): a unit home after
      * the climb-out shows a full bar in its own pale mint, unlike a flying unit's (green, white on a
      * hit, amber below half) and a lost one's (dark); its glow stays in the gap to the next bar.

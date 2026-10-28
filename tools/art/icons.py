@@ -34,6 +34,12 @@ design/player/weapons/rear-guard-drone-bay/concept/rear-guard-icon-final-r43-a.p
 Drone Bay's icon); the other icons are left as they are. A full run renders it too, with the same
 Source note.
 
+``--act5`` (M9 part A batch, step ART-A, concept round 61): only the two Act 5 weapons' icons:
+``tesla-coil-pod`` (the pod of tools/art/act5_gear.py ``tesla_pod_model`` with a jagged arc leaping from its
+terminal in the player shots' blue-white) and ``swarm-tail`` (three micro-missiles fanned out backwards, nose
+down, their trails curving back up); review sheet design/ui/hangar/concept/act5-icons-final-r61-a.png. A full
+run includes them once their data.yaml exists.
+
 ``--act4`` (M8 part A batch, step ART-A, concept round 50): only the four Act 4 items' icons, the round-48
 picks as emblems: ``harpoon-torpedoes`` (gear_r48's barbed harpoon, drawn 1.7x as stout, with its teal
 line), ``depth-charges`` (the navy drum over the arcs of its pressure dome), ``special-sonar-pulse`` (the
@@ -43,7 +49,7 @@ once their data lists them (``escort-bulwark`` always, beside ``escort-rook``).
 
 Run: python3 tools/art/icons.py [--review] [--variant a|b]   (~20 s; --review only rebuilds the sheets,
 --variant only that proposal sheet); python3 tools/art/icons.py --rear-guard [--review]   (~3 s);
-python3 tools/art/icons.py --act4 [--review]   (~5 s)
+python3 tools/art/icons.py --act4 [--review]   (~5 s); python3 tools/art/icons.py --act5 [--review]   (~3 s)
 """
 import re
 import sys
@@ -485,6 +491,49 @@ M8_BATCH = {"harpoon-torpedoes": _harpoon, "depth-charges": _depth_charge,
 M8_SOURCE = artkit.source_note(SCRIPT, "M8 part A batch")
 M8_REVIEW = CONCEPT / "act4-icons-final-r50-a.png"
 
+# --------------------------------------------------------------------------- the Act 5 items (M9 part A)
+
+def _tesla_pod():
+    """Tesla Coil Pod: the pod nose up on the left, an arc from its terminal to the upper right."""
+    import act5_gear
+    scene, mats = act5_gear.tesla_pod_model(act5_gear.ARC_VARIANT)
+    inner, extra = model_symbol(scene, mats, 0.5, 0.0, (0.0, -0.04, 0.0))
+    shot = len(MATS) + len(extra)
+
+    def symbol(p):
+        q = p + vec(0.36, 0.12, 0)
+        pts = [(-0.34, 0.42), (-0.06, 0.3), (0.1, 0.52), (0.36, 0.36), (0.46, 0.6), (0.72, 0.5)]
+        d = np.min([bolt(p, a, b, 0.07) for a, b in zip(pts[:-1], pts[1:])], axis=0)
+        fork = bolt(p, (0.1, 0.52), (0.22, 0.12), 0.05)
+        return union(inner(q), (np.minimum(d, fork), shot))
+    return symbol, extra + [v8.m_glow(SHOTS[2], 1.3)]
+
+
+def _swarm_tail():
+    """Swarm Tail: three micro-missiles fanned out backwards (nose down), trails curving back up."""
+    scene, mats = v8.missile_model()
+    fan = (-30.0, 0.0, 30.0)
+    parts = [model_symbol(scene, mats, 1.9, 180.0 + a, (0.0, 0.0, 0.0)) for a in fan]
+    extra = parts[0][1]
+    trail = len(MATS) + len(extra)
+    spots = [(-0.46, -0.22), (0.0, -0.3), (0.46, -0.22)]
+
+    def symbol(p):
+        items = []
+        for (inner, _), (x0, y0), a in zip(parts, spots, fan):
+            d, m = inner(p - vec(x0, y0, 0))
+            items.append((d, m))
+            back = np.array([-np.sin(np.radians(a)), 1.0]) / np.hypot(np.sin(np.radians(a)), 1.0)
+            start = np.array((x0, y0)) + back * 0.62
+            items.append((bolt(p, tuple(start), tuple(start + back * 0.36), 0.045), trail))
+        return union(*items)
+    return symbol, extra + [v8.m_glow((255, 228, 186), 1.3)]
+
+
+M9_BATCH = {"tesla-coil-pod": _tesla_pod, "swarm-tail": _swarm_tail}
+M9_SOURCE = artkit.source_note(SCRIPT, "M9 part A batch")
+M9_REVIEW = CONCEPT / "act5-icons-final-r61-a.png"
+
 G_BATCH = {"rear-guard-drone-bay": _rear_guard_pair}   # M7 part G (step ICON-G, round 43)
 G_SOURCE = artkit.source_note(SCRIPT, "M7 part G batch")
 G_CONCEPT = PLAYER / "weapons" / "rear-guard-drone-bay" / "concept"
@@ -504,6 +553,9 @@ def emblem(symbol, grade):
         mats += extra
     elif symbol in M8_BATCH:
         inner, extra = M8_BATCH[symbol]()
+        mats += extra
+    elif symbol in M9_BATCH:
+        inner, extra = M9_BATCH[symbol]()
         mats += extra
     elif symbol in G_BATCH:
         inner, extra = G_BATCH[symbol]()
@@ -559,7 +611,7 @@ def build():
     with ProcessPoolExecutor() as pool:
         for job, img in zip(jobs, pool.map(render, jobs)):
             artkit.save_png(img, OUT / f"{job[0]}.png", G_SOURCE if job[1] in G_BATCH
-                            else M8_SOURCE if job[1] in M8_BATCH else SOURCE)
+                            else M8_SOURCE if job[1] in M8_BATCH else M9_SOURCE if job[1] in M9_BATCH else SOURCE)
     print(f"{len(jobs)} icons ({len(jobs) // len(SIZES)} items x {len(SIZES)} sizes)")
 
 
@@ -694,8 +746,49 @@ def review_m8():
     print(f"review: {M8_REVIEW.relative_to(ROOT)}")
 
 
+def build_m9():
+    """The M9 part A batch only: writes its two icons, leaves every other icon as it is."""
+    OUT.mkdir(parents=True, exist_ok=True)
+    jobs = [(name + suffix, name, 0, size) for name in M9_BATCH for suffix, size in SIZES.items()]
+    with ProcessPoolExecutor() as pool:
+        for job, img in zip(jobs, pool.map(render, jobs)):
+            artkit.save_png(img, OUT / f"{job[0]}.png", M9_SOURCE)
+    print(f"{len(jobs)} icons (M9 part A batch)")
+
+
+def review_m9():
+    """Review sheet: the two Act 5 icons at 1x and enlarged, beside the icons they sit next to."""
+    labels = {"tesla-coil-pod": "TESLA COIL POD", "swarm-tail": "SWARM TAIL",
+              "micro-missile-pod": "MICRO-MISSILE POD (STYLE)", "tail-gun": "TAIL GUN (STYLE)"}
+    names = list(M9_BATCH) + ["micro-missile-pod", "tail-gun"]
+    cell = 260
+    sheet = raster.sheet(16 + 4 * cell + 16, 60 + 120 + 12, "ACT 5 EQUIPMENT ICONS (FINAL R61)",
+                         "PRODUCTION ART, M9 PART A BATCH - R61")
+    raster.draw_text(sheet, 16, 38, "16X16 (SHOP ROWS) AT 1X AND 4X, 24X24 (SELECTED, CALLOUTS) AT 1X AND 3X;"
+                                    " RIGHT: EXISTING ICONS FOR THE STYLE", raster.LABEL)
+    for i, name in enumerate(names):
+        x, y = 16 + i * cell, 56
+        small = Image.open(OUT / f"{name}.png").convert("RGBA")
+        large = Image.open(OUT / f"{name}-large.png").convert("RGBA")
+        plate_ = Image.new("RGBA", (cell - 8, 104), (6, 8, 26, 255))
+        plate_.alpha_composite(small, (2, 2))
+        plate_.alpha_composite(sprite.enlarge(small, 4), (22, 2))
+        plate_.alpha_composite(large, (92, 2))
+        plate_.alpha_composite(sprite.enlarge(large, 3), (120, 2))
+        sheet.alpha_composite(plate_, (x, y))
+        raster.draw_text(sheet, x + 2, y + 108, labels[name], raster.LABEL_DIM)
+    M9_REVIEW.parent.mkdir(parents=True, exist_ok=True)
+    sheet.convert("RGB").save(M9_REVIEW, optimize=True)
+    print(f"review: {M9_REVIEW.relative_to(ROOT)}")
+
+
 if __name__ == "__main__":
     args = sys.argv[1:]
+    if "--act5" in args:
+        if "--review" not in args:
+            build_m9()
+        review_m9()
+        sys.exit()
     if "--act4" in args:
         if "--review" not in args:
             build_m8()

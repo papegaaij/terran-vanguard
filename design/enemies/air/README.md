@@ -3,7 +3,7 @@ title: Air enemies
 design: approved
 implementation: in-progress
 art: final
-updated: 2026-10-27
+updated: 2026-10-28
 ---
 
 # Air enemies
@@ -17,7 +17,7 @@ levels.
 
 ## Contents
 
-Promoted to their own documents for the Acts 1–2 wrap-up, plus the Act 3 drafts of the overnight design phase (2026-10-12) and the Act 5 drafts of the design phase (2026-10-27, pending round 60); the remaining units stay in the roster below.
+Promoted to their own documents for the Acts 1–2 wrap-up, plus the Act 3 drafts of the overnight design phase (2026-10-12) and the Act 5 drafts of the design phase (2026-10-27, decided in round 60); the remaining units stay in the roster below.
 
 | Part | Summary | Design | Impl | Art |
 |---|---|---|---|---|
@@ -35,12 +35,13 @@ Promoted to their own documents for the Acts 1–2 wrap-up, plus the Act 3 draft
 | [choir-herald](choir-herald/README.md) | Support flyer whose aura rings shield nearby enemies (L17) | approved | done | final |
 | [ghost-drone](ghost-drone/README.md) | Grey human-built strafing drone, hint 1 (L18) | approved | in-progress | final |
 | [dust-kite](dust-kite/README.md) | Tiny Martian popcorn glider that rams (L15, M10 = b) | approved | in-progress | final |
-| [talon](talon/README.md) | Ascendancy interceptor: swoops, aimed pairs, a 2 HP hex shield, squad leaders (L29) | draft | not-started | proposed |
-| [dart-drone](dart-drone/README.md) | Tiny Ascendancy ram drone launched in streams by Gunships, stations and the Sovereign (L30) | draft | not-started | proposed |
-| [gilded-gunship](gilded-gunship/README.md) | Slow gunship: gilded front ×0.5, engines ×2, ring bursts, Dart streams (L30) | draft | not-started | proposed |
-| [rail-serpent](rail-serpent/README.md) | Drone train of 8–14 cars from the sides and rear; a cut's rear half drifts and blows (L30) | draft | not-started | proposed |
-| [hornet](hornet/README.md) | Hovering missile boat, salvos of 4 shootable homing diamonds (L31) | draft | not-started | proposed |
-| [buzzsaw-drone](buzzsaw-drone/README.md) | Radial blade drone: chase, 0.6 s spin-up, a dash that ricochets off edges and rocks (L31) | draft | not-started | proposed |
+| [talon](talon/README.md) | Ascendancy interceptor: swoops, aimed pairs, a 2 HP hex shield, squad leaders (L29) | approved | done | chosen |
+| [wavering-stormhawk](wavering-stormhawk/README.md) | Ceres Wing Stormhawk that holds fire: a neutral craft, Level 29's "Hold fire" (L29) | approved | done | chosen |
+| [dart-drone](dart-drone/README.md) | Tiny Ascendancy ram drone launched in streams by Gunships, stations and the Sovereign (L30) | approved | done | final |
+| [gilded-gunship](gilded-gunship/README.md) | Slow gunship: gilded front ×0.5, engines ×2, ring bursts, Dart streams (L30) | approved | done | final |
+| [rail-serpent](rail-serpent/README.md) | Drone train of 8–14 cars from the sides and rear; a cut's rear half drifts and blows (L30) | approved | done | final |
+| [hornet](hornet/README.md) | Hovering missile boat, salvos of 4 shootable homing diamonds (L31) | approved | done | chosen |
+| [buzzsaw-drone](buzzsaw-drone/README.md) | Radial blade drone: chase, 0.6 s spin-up, a dash that ricochets off edges and rocks (L31) | approved | done | chosen |
 
 ## Roster
 
@@ -155,6 +156,35 @@ follows) — each a PNG sheet plus a GIF in the 480×540 play field over Mars; g
 | [concept/ghost-drone-final-r41-a.png](concept/ghost-drone-final-r41-a.png) | Ghost Drone final sprites (`tools/art/storm_units.py`, the chosen facet dart a with the U.5 lamps): 16 headings, additive eye/tip glow, EMP lights-out, the glint tell, sparks and smoke death, in / out of the radius (sheet) | chosen (round 41) |
 | [concept/ghost-drone-final-r41-a.gif](concept/ghost-drone-final-r41-a.gif) | Ghost Drone final: a line abreast and a pincer strafing with their glint-told bursts over the storm plain, look b R 170, 15 fps | chosen (round 41) |
 
+Production art, M9 part B (concept round 62, step ART-B): the Talon re-rendered from round 60's chosen A.1 b in the Q.11 b look (gunmetal hull, gold panels, a 1 px gold rim); generator `tools/art/belt_units.py talon`, the frames held in `build/art-held/` until the Talon's data claims them. Prompts: [concept/prompts.md](concept/prompts.md#round-62--production-the-talon-m9-part-b).
+
+| File | What | Status |
+|---|---|---|
+| [concept/talon-final-r62-a.png](concept/talon-final-r62-a.png) | Talon final frames (`tools/art/belt_units.py`): 16 headings, the squad leader's 16 with the gold spine stripe, the twin muzzles' red glint, the spinning wing of the death, the units on Level 29's canyon with the hex shield (sheet); gold share 42–50 % | chosen (round 62, F.1: accepted as final); the user finds the Talons die easily and wants a stronger shield (→ part B, in the data) |
+| [concept/talon-final-r62-a.gif](concept/talon-final-r62-a.gif) | A V-wing swooping with its glint-told pairs and the hex shields, the leader shot and the wing scattering; then a line abreast | chosen (round 62, F.1: accepted as final); the user finds the Talons die easily and wants a stronger shield (→ part B, in the data) |
+| [concept/talon-capture-r62-a.png](concept/talon-capture-r62-a.png) | Game capture, Level 29 (step B5): a Talon line's hex shields flashing under the beam; a V-wing's leader shot and the wing scattering | chosen (round 62, F.1: accepted as final); the user finds the Talons die easily and wants a stronger shield (→ part B, in the data) |
+| [concept/talon-capture-r62-a.mp4](concept/talon-capture-r62-a.mp4) | Game capture with the game's sound: Level 29 ≈ 11–27 s, the first Talons, the first led V-wing, the Mite rocks from the left | chosen (round 62, F.1: accepted as final); the user finds the Talons die easily and wants a stronger shield (→ part B, in the data) |
+
+Production art, M9 part C (concept round 63, step ART-C): the Gilded Gunship (round 60 A.3 b), the Dart Drone (A.4 b) and the Rail Serpent (A.5 b) re-rendered in the Q.11 b look (gunmetal and charcoal hulls with gold, a 1 px gold/red rim), the gold kept to about 20–30 % (round 62 flagged the Talon's 42–50 % as heavy): the Gunship keeps b's gold scale front third with its pods gunmetal (28 %), the Serpent b's gold roof on the inner bands beside the black centre stripe with gold coupler links (23–32 %), the Dart's gold leading edges a little narrower (20–26 %). Generator `tools/art/belt_units_c.py gunship dart serpent`; briefs in [concept/prompts.md](concept/prompts.md#round-63--production-the-gilded-gunship-the-dart-drone-and-the-rail-serpent-m9-part-c).
+
+| File | What | Status |
+|---|---|---|
+| [concept/gilded-gunship-final-r63-a.png](concept/gilded-gunship-final-r63-a.png) | Gilded Gunship final frames (`tools/art/belt_units_c.py`): facing down (fixed) at the four lamp steps of the ring's tell and the four bay steps of the Dart launch, the engines' additive glow, the plate's glancing spark, the bay flash, the death's two halves and a spinning gold plate; on Level 30's space with the hex shield (sheet) | chosen (round 63, F.2-F.4: accepted as final) |
+| [concept/gilded-gunship-final-r63-a.gif](concept/gilded-gunship-final-r63-a.gif) | The Gunship descending with its sway under the hex shield: the gold lamps telling each ring of 12, the bays opening for a stream of three Darts, front shots glancing off the plate, then broken in two behind the plate | chosen (round 63, F.2-F.4: accepted as final) |
+| [concept/dart-drone-final-r63-a.png](concept/dart-drone-final-r63-a.png) | Dart Drone final frames (`tools/art/belt_units_c.py`): the chevron dart at 16 headings; beside the Lancer and a Talon at 1× (sheet) | chosen (round 63, F.2-F.4: accepted as final) |
+| [concept/dart-drone-final-r63-a.gif](concept/dart-drone-final-r63-a.gif) | Two streams of three Darts: straight out of the bay, a lazy 60°/s chase, then straight on; two shot down | chosen (round 63, F.2-F.4: accepted as final) |
+| [concept/rail-serpent-final-r63-a.png](concept/rail-serpent-final-r63-a.png) | Rail Serpent final frames (`tools/art/belt_units_c.py`): the engine car, the car, the turret car (lamp dark and the red tell) and the tail at 32 headings, the cut-off cars' wrecks (lights dead, scorched), the dead cars' sparks and the coupler's snap (sheet) | chosen (round 63, F.2-F.4: accepted as final) |
+| [concept/rail-serpent-final-r63-a.gif](concept/rail-serpent-final-r63-a.gif) | An 11-car train snaking in from the left, its turret cars telling red and firing; a car shot out: the rear cars drift on slowing and sparking, then pop from the cut back while the front runs on | chosen (round 63, F.2-F.4: accepted as final) |
+| [concept/gilded-gunship-capture-r63-a.png](concept/gilded-gunship-capture-r63-a.png) | Game capture, Level 30 (step C5): a Gunship entering, its lamps lit and a Dart out of the bays, the ring of 12, the beam on the front plate, broken in two | chosen (round 63, F.2-F.4: accepted as final) |
+| [concept/rail-serpent-capture-r63-a.png](concept/rail-serpent-capture-r63-a.png) | Game capture, Level 30 (step C5): the t=62 train snaking in, the beam reaching it, the cut, the rear cars drifting dead, then blowing car by car | chosen (round 63, F.2-F.4: accepted as final) |
+| [concept/rail-serpent-capture-r63-a.mp4](concept/rail-serpent-capture-r63-a.mp4) | Game capture with the game's sound: Level 30 ≈ 59–73 s, the right-edge warning, the train's rumble and turret shots, the split | chosen (round 63, F.2-F.4: accepted as final) |
+| [concept/hornet-final-r64-a.png](concept/hornet-final-r64-a.png) | Hornet final frames (`tools/art/belt_units_d.py`): round 60's A.2 b delta hover-boat in the Q.11 b gunmetal (gold leading edges, about 27 %), facing down (fixed) at the four hatch steps of the 0.5 s tell × four lift-fan rotor steps, the hatches' additive gold bloom, the launch flash at a wing-root cell; on Level 31's space beside the Lancer, a Talon and a homing diamond, under part A's hex shield (sheet) | proposed (round 64) |
+| [concept/hornet-final-r64-a.gif](concept/hornet-final-r64-a.gif) | A Hornet hovering in under its hex shield, the hatches glowing gold, then a salvo of four homing diamonds, the cells alternating | proposed (round 64) |
+| [concept/buzzsaw-drone-final-r64-a.png](concept/buzzsaw-drone-final-r64-a.png) | Buzzsaw Drone final frames (`tools/art/belt_units_d.py`): round 60's A.6 b in gunmetal, the gold kept to the blades' outer cutting edges (about 33 %; the picked all-gold blades read 47 %); 8 spin frames over the 60° loop, the red-flickered spin-up tell, the spun-up blur, the ricochet sparks, a flung blade (sheet) | proposed (round 64) |
+| [concept/buzzsaw-drone-final-r64-a.gif](concept/buzzsaw-drone-final-r64-a.gif) | A Buzzsaw chasing, its 0.6 s spin-up tell flickering red, then the straight dash ricocheting off the edges and a big rock, sparks at each bounce | proposed (round 64) |
+| [concept/hornet-capture-r64-a.png](concept/hornet-capture-r64-a.png) | Game capture, Level 31 (step D5, the plan's fit, t≈43–44; [recipe](concept/prompts.md#hornet-capture-r64-a)): the t=40.5 pair under their shields, their salvos curving onto the tug's bow, the bow's hit flash | proposed (round 64) |
+| [concept/buzzsaw-drone-capture-r64-a.png](concept/buzzsaw-drone-capture-r64-a.png) | Game capture, Level 31 (not firing, t≈33–34, 2×): the t=30.5 stream chasing beside the tug's left tank (a dash and a rock ricochet not caught clearly at game size) | proposed (round 64) |
+
 ## Implementation
 
 - [x] Each enemy promoted to its own directory with a stat block before it is implemented (every unit of Acts 1–2; the rule stands for the units of Acts 3–7, M6 part D)
@@ -184,8 +214,9 @@ follows) — each a PNG sheet plus a GIF in the 480×540 play field over Mars; g
   the Choir Herald, Ghost Drone and Dust Kite a/b, accepted in round 36 (2026-10-13).
 - 2026-10-13 (user, round 36): the Act 3 air units approved (D.15–D.17), the Dust Kite's name included. Picks: Choir Herald **b** (seraph), Ghost Drone **a** (facet dart, with the eye and running lights fix U.5 for the art step), Dust Kite **b** (crescent sail). The rejected variants moved to `concept/rejected/`.
 - 2026-10-20 (user, round 44, A.b (a): production assets (a `Source` chunk in `assets/`, every Concept art row decided)): **`art: final`** for this part. A later addition (a new sprite, a new concept round) is its own row and does not reopen the rest.
-- 2026-10-27 (step m9-d-enemies-a, Act 5 design phase, pending the user's review in round 60): the
+- 2026-10-27 (step m9-d-enemies-a, Act 5 design phase, approved in round 60): the
   Act 5 air units promoted to draft specs: Talon, Gilded Gunship, Hornet, Buzzsaw Drone and Rail
   Serpent from the roster, plus the new Dart Drone (the gap analysis's Q6 b, the Ascendancy's
   popcorn). Their Ascendancy hex shields follow the shared [enemy shields](../README.md#enemy-shields)
   rule (Q1 a); the Rail Serpent's machine split is the multi-part rule's.
+- 2026-10-28 (user, [round 62](../../concept-rounds/round-62/README.md), closed; page answers): the **Talon's** production art accepted as final (F.1: 16 headings, the leader's gold spine stripe, the twin muzzles' glint, the spinning wing of its death). The user's note: the Talons "die a bit easy" and the hex shield "could be a bit stronger" (also C.1, "the shield needs a bit more strength"): part B raises the Talon's shield in its data and README. Sounds: the turn-in whine a (S.10), the twin shot **b** (S.11), the leader's squelch **b** (S.12); a's shot and squelch moved to `concept/rejected/` in the sfx part.

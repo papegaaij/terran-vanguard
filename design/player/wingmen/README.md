@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../weapons, ../../story, ../../systems/saves, ../../ui/hangar, ../../ui/hud]
-updated: 2026-10-27
+updated: 2026-10-28
 ---
 
 # Wingmen and drones
@@ -103,7 +103,7 @@ field for 1 s. Formation changes and side swaps start after his reaction delay.
 | Dodging | Every 0.1 s he predicts enemy bullets 0.6 s ahead (user decision 2026-10-06; 0.4 s left him too little time against aimed fire); the soonest one that would pass within 14 px he decides on **once**: he **reacts to about 70 %** of them (user decision 2026-10-06), sidestepping up to 48 px at right angles to it after his reaction delay and keeping at it while it is the soonest, then back to his slot; the rest he misses and ignores. The 0.25 s delay inside the 0.6 s look-ahead leaves him 0.25–0.35 s to clear a bullet |
 | Firing cone | 30° ahead of his ship (15° either side of straight up), range 360 px: where he picks his target. His craft never turns (banking frames only), so he fires up the screen. With the Mortar (a lobbed gun) he picks among the ground targets anywhere ahead of him within the lob's 200 px instead (user decision 2026-10-07), so a target beside the player is his while he flies in formation |
 | Fire | Fires whenever the player is firing, at his gun's rate, with a target in his cone or without one; he never fires while the player does not. The target only decides what he aims at: a homing gun's shots start locked onto it (without one they find their own); the Mortar's shells land **on it** at any distance up to the lob's 200 px, their flight time and arc shortened to the distance (user decision 2026-10-07; without a target they land 200 px ahead, snapping to a ground target within 48 px, as the player's) |
-| Target priority | (1) an enemy the player damaged in the last 1.0 s; (2) an enemy within 160 px of him (flank threat); (3) the nearest enemy — all within his cone (the Mortar's: ahead within 200 px). Layers follow his gun's traits (Missiles can hit `high-air`; Mortar only `ground`); never `sub` (none of his guns is `anti-sub`) |
+| Target priority | (QA-1, decided 2026-10-27, confirmed in round 61 on 2026-10-28: an enemy homing missile, a homing diamond, is picked only when no enemy unit is in his cone) (1) an enemy the player damaged in the last 1.0 s; (2) an enemy within 160 px of him (flank threat); (3) the nearest enemy — all within his cone (the Mortar's: ahead within 200 px). Layers follow his gun's traits (Missiles can hit `high-air`; Mortar only `ground`); never `sub` (none of his guns is `anti-sub`) |
 
 Enemies never aim at Rook: aimed attacks and the target-the-objective hook pick the player or the
 objective as before, and Rook is hit by what crosses his path. He collects no pickups and is not
@@ -389,7 +389,7 @@ beat is in [Rook](../../story/characters/rook/README.md) and the L26 level draft
 
 ### Rook's rescue and return (L29–L30)
 
-*Act 5 draft, step `m9-d-systems` (2026-10-27), **pending the user's review in round 60** (Q8 = a: the
+*Act 5 draft, step `m9-d-systems` (2026-10-27), **approved in round 60** (Q8 = a: the
 rescue on the screen). The story beat is in [Rook](../../story/characters/rook/README.md); the set
 piece's place, timing and lines belong to L29's level document in [Act 5](../../campaign/act-5-the-belt/README.md).*
 
@@ -429,7 +429,7 @@ piece's place, timing and lines belong to L29's level document in [Act 5](../../
 | Light drone | wing mount | Orbits the ship at 36 px, fires a small gun at the point ahead of the nose, blocks bullets (breaks after 8 hits, rebuilds in 6 s at L1). Sold as the [Light Drone Bay](../weapons/light-drone-bay/README.md); see *Light drone* below | 2 → 3 | 2 000 | L15 | draft |
 | Rear-guard drone | wing mount | Trails 40 px behind the ship, fires backwards (`rear`), blocks bullets from behind. Sold as the [Rear-guard Drone Bay](../weapons/rear-guard-drone-bay/README.md); see *Rear-guard drone* below | 2 → 3 | 2 400 | L20 | draft |
 | Heavy drone "Bulwark" | escort | Tough (armour 120), slow-firing cannon (`anti-sub` under water), draws enemy fire; a free loaner while Rook is missing | 0 | 6 000 | L22 | draft |
-| Hunter drone | escort | Leaves formation to chase homing targets, fragile | 0 | 7 500 | Act 6 (was L29; Q12 = c of round 60, pending: covering Rook's absence is the Bulwark's job) | idea |
+| Hunter drone | escort | Leaves formation to chase homing targets, fragile | 0 | 7 500 | Act 6 (was L29; Q12 = c of round 60, decided: covering Rook's absence is the Bulwark's job) | idea |
 
 Unlock `Lnn` = in the shop from the hangar visit before level *nn*. The Bulwark arrives before
 Rook's absence (L27–L29) so the escort slot never has to stay empty.
@@ -558,10 +558,15 @@ built were accepted in concept round 28.
   orbit, block, break and rebuild built in M7 part A (`vanguard.sim.Drones`, `DronesTest`), the
   rear-guard drone's trail waits for part G (its bay's data and the `station: trail` keys written in
   step G2; flown from step G3, mapped in step G4)
-- [ ] The hunter drone's behaviours — **later: Act 6** (was L29; moved with Act 5's arsenal, Q12 = c of round 60, pending)
+- [ ] The hunter drone's behaviours — **later: Act 6** (was L29; moved with Act 5's arsenal, Q12 = c of round 60, decided)
 - [ ] Rook's rescue in L29 as in *Rook's rescue and return* (draft): the mid-level swap (the drone peels away, Rook
   joins with his gun at full armour, his first line, his barks back), the loaner returned after L29, the debug
-  starts — M9 (L29's part)
+  starts — M9 (L29's part) (M9 part A, step A2: the campaign's side: at Level 29's win Rook is back at full armour
+  and the slot defaults to him, the loaner gone from the L30 visit, an owned Bulwark kept with its armour,
+  `BeltCampaignTest`; the swap in the level is part B's) (M9 part B: the swap flown by the simulation, step B1; step
+  B2 the content: Level 29's `escort_swap`, `Campaign.EscortFlight.rescue` (the loaner or an owned Bulwark with Rook's
+  gun fitted at his loss, full armour) into `Loadout.withRescue`; `--escort` starts never carry a rescue;
+  `BeltCampaignTest.levelTwentyNinesFlightCarriesRooksRescue`; the looks, radio and debug runs are step B4's)
 - [ ] Rook missing for L27–L29 (only a heavy drone in the slot), back from L30 — Act 4's part built (L26's loss, L27–L28 with the loaner; M8 part I: `ActPlaythroughTest` flies them to the release's end), **later: Act 5** for L29 and his return at L30 (draft: *Rook's loss and absence*; the scripted loss at L26's end, the MIA card, the loaner, per-level availability in `Campaign.escortFlight()`) (M8 part A, step A2: `Campaign.escortFlight(level)` and `rookMissing(level)` from `rook.missing`, the story flag `rook-missing` from Level 26's win to Level 29's, the hangar's MIA rules (`Hangar.rookMissing`: no gun rows, no repair line), `Campaign.rookFlies` for his `requires: escort` lines; a `--level 27` start treats him as missing; the scripted loss is part F, the MIA card part A5) (M8 part F: the scripted loss at Level 26's end, `RookLossTest`, `RookLossLooksTest`, `Level26Test.rooksLossAndItsReplayOnARetry`; the debrief's `ROOK  MIA` row; the campaign playthrough's Level 26 win records him missing and the Level 27 visit has the loaner, `ActPlaythroughTest`; his absence through L29 and his return at L30 wait for Act 5's first levels)
 - [x] Rook under water: the hydro-kit's drag, his guns × 0.7, his formation in the trench walls and the dark (his lamp) — **later: Act 4** (M8 parts A–F: `UnderwaterTest.rooksGunsDoSevenTenthsAndHisCraftTakesTheDrag`; the walls' 24 px clearance of the canyon play, `RookCanyonTest`, in Level 25's trench; the Siren's slow on him, `Level25Test.theRingsSlowTheShipAndRook`; his lamp in Level 26's dark, `Level26LooksTest.onlyLevel26IsDark`)
 
@@ -612,8 +617,9 @@ Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-a
 - 2026-10-27 (user, the Act 4 playthrough done): a mission-select replay flies the replayed mission's escort, and a
   replay while Rook is lost (after Level 26) flies him at full armour with no repair warning (step K2, `8de88791`;
   [mission select](../../ui/mission-select/README.md#decisions)): decided, no longer pending.
-- 2026-10-27 (Act 5 design phase, step m9-d-systems; **pending the user's review in round 60**): Rook's rescue in
+- 2026-10-27 (Act 5 design phase, step m9-d-systems; **approved in round 60**): Rook's rescue in
   L29 on the screen (Q8 = a): the clamp guns of Dock 9's prison tender, his Ember launching at full armour with the
   gun he had, the drone in the slot peeling away, his first line and barks back; no lines before it; the loaner goes
   back to the CDF after L29 (an owned Bulwark stays); Rook in the slot by default from L30. The Hunter drone moves
   to Act 6 (Q12 = c).
+- 2026-10-27 (user, [round 60](../../concept-rounds/round-60/README.md) closed): the Act 5 section approved as drafted (D.16: Rook's rescue at Dock 9 and his return to the slot, Q8 **a**; the loaner Bulwark leaves). **QA-1** (decided 2026-10-27 by the main agent, confirmed in round 61 on 2026-10-28): Rook locks onto a homing diamond only when no enemy unit is in his cone.

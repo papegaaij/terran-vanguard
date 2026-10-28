@@ -30,7 +30,7 @@ who they are fighting and what to expect.
 |---|---|---|---|
 | Role | Player, allies | Main enemy, Acts 1–7 | Hidden enemy, revealed Act 4/5 |
 | Shapes | Blocky, functional, panel lines | Organic curves, chitin, tendrils | Angular, faceted, knife-edged |
-| Colours | Grey-white, navy, hazard orange | Dark chitin, bioluminescent teal/violet | Gloss black, gold trim, red glow |
+| Colours | Grey-white, navy, hazard orange | Dark chitin, bioluminescent teal/violet | Gloss black (L28) / gunmetal and charcoal (Act 5 on), gold trim, red glow |
 | Engines | Blue-white fusion flame | Pulsing glow sacs, no flame | Hot orange-red thrust |
 | Weapons | Tracers, missiles, lasers | Spores, acid, plasma globs, living drones | Precision lasers, rail guns, drones |
 | Doctrine | Hold the line | Swarm, overwhelm, adapt | Precision strikes, ambush, tech advantage |

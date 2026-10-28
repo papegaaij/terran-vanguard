@@ -1,0 +1,27 @@
+# Tesla Coil Pod: rendered into README.md (schema: ../../../tech/architecture/schemas-player/README.md). M9 part A.
+# An instant arc from the pod (hits: arc, no projectile): each level's `reach` (px) inside the forward `cone`
+# (degrees, everything but the wedge straight behind), the nearest target (a shielded unit first); sparks of
+# `splash` x its damage on the other units within its level's `blast` radius (px), not on the struck target.
+name: Tesla Coil Pod
+slot: wing
+traits: [area, shield-breaker]
+price: 3000
+unlock: 29
+draw: [2, 4]
+sfx: tesla           # the round-03 zap, final
+vfx: arc             # new family: a jagged blue-white arc with a violet fringe and a spark burst (round 60)
+hits: arc
+cone: 240            # degrees: the forward arc it picks its target in
+splash: 0.5          # the sparks' share of the arc's damage on the others within the level's blast radius
+pod: true
+seek: true           # every arc strikes its picked target: single-target DPS counts every arc
+levels:
+  - {pattern: [[0, 0]], rate: 4, damage: 3, reach: 140, blast: 24}
+  - {pattern: [[0, 0]], rate: 4, damage: 4.25, reach: 150, blast: 24}
+  - {pattern: [[0, 0]], rate: 5, damage: 4.6, reach: 160, blast: 28}
+  - {pattern: [[0, 0]], rate: 5, damage: 6.2, reach: 170, blast: 32}
+  - {pattern: [[0, 0]], rate: 5, damage: 8, reach: 180, blast: 36}
+overdrive: {pattern: [[0, 0]], rate: 6, damage: 8, reach: 190, blast: 40}
+notes:
+  vfx: new in round 60, a jagged blue-white arc with a violet fringe, three shapes in turn, and a spark burst at the target
+  layers_hit: '`air`, `low-air` and `ground` (hardened ground targets take it only with `anti-ground`, which it has not: the arc glances off them); not `high-air` (an arc needs a body in reach, not a lock), not the `sub` layer ([layer rules](../../../enemies/README.md#layer-rules))'

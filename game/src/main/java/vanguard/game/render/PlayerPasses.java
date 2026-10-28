@@ -140,6 +140,8 @@ final class PlayerPasses {
                 craft.bank() + ShipSpec.HARD_BANK,
                 x - hull.getRegionWidth() / 2f,
                 y + hull.getRegionHeight() / 2f);
+        // M9 part A: the shield's ring dims while a drain stops its regeneration.
+        shipLooks.ringDimmed(sortie.power().isPresent() && sortie.power().get().regenStopped());
         shipLooks.drawAbove(batch, sortie.tick(), alpha, x, y, shieldShimmer);
     }
 
@@ -184,6 +186,8 @@ final class PlayerPasses {
                             1 + SHELL_ARC_SCALE * (float) (shot.arc() * Math.sin(Math.PI * shot.airProgress(alpha))));
                 // M8 part A: a depth charge's drum (its fuse lamp is DeepWaterLooks').
                 case MINE, DEPTH_CHARGE -> drawCentred(batch, sprite, x, y);
+                // M7 part A: a beam fires no shot (ArsenalLooks); M9 part A: nor does an arc (ArcLooks).
+                case BEAM, ARC -> {}
                 case BOLT, HOMING, TURRET, TORPEDO -> {
                     double left = shot.rangeLeft();
                     if (left < FADE_SHARE) {
@@ -207,6 +211,11 @@ final class PlayerPasses {
         double shipX = ship.renderX(alpha);
         double shipY = ship.renderY(alpha);
         boolean overdrive = sortie.overdriveSeconds() > 0;
+        // M9 part A (design/player/generator, Enemy drain effects): while a drain cuts the fire rate the flashes
+        // flicker.
+        if (slowed(sortie) && flickerOff(sortie.tick())) {
+            return;
+        }
         for (int m = 0; m < weapons.size(); m++) {
             WeaponLooks.Look look = weapons.look(m);
             int frame = sortie.ticksSinceShot(m) / MUZZLE_FRAME_TICKS;
@@ -224,6 +233,19 @@ final class PlayerPasses {
                 drawCentred(batch, look.muzzle.get(frame), shipX + muzzle.dx(), shipY + muzzle.dy());
             }
         }
+    }
+
+    /** M9 part A: the muzzle flicker's rhythm under a drain: dark for {@value #MUZZLE_FLICKER_TICKS} of each two. */
+    static final int MUZZLE_FLICKER_TICKS = 2;
+
+    /** M9 part A: whether a drain cuts the weapons' rate of fire now (f below 1). */
+    static boolean slowed(Sortie sortie) {
+        return sortie.power().isPresent() && sortie.power().get().factor() < 1;
+    }
+
+    /** M9 part A: whether the muzzle flashes are dark at step {@code tick} while the fire rate is cut. */
+    static boolean flickerOff(long tick) {
+        return tick / MUZZLE_FLICKER_TICKS % 2 == 1;
     }
 
     /**

@@ -306,6 +306,8 @@ public final class LevelScreen implements GameScreen {
         sounds.breach(BreachLine.of(level));
         // M7 part D: Level 17's domes: glass hits and breaks, the bombers' drops.
         sounds.ground(sortie.groundAllies());
+        // M9 part D4b: a rock tow (Level 31's claim rock) breaks with a rock's crumble, not a cable's snap.
+        vanguard.game.render.LevelRenderer.towLook(levelNumber).ifPresent(sounds::towLook);
         // M5 part H: Level 14's canopy withers at the Siege Spire's death.
         sounds.canopy(Sfx.afterBoss(Sfx.ambience(level.music().ambience())) != null);
         // M7 part H: Level 21's ridge pass rumbles (the Colossus's back under the dunes); Level 20's ridge has its bed.
@@ -345,6 +347,10 @@ public final class LevelScreen implements GameScreen {
         renderer.difficulty(difficulty);
         // M7 part D: Level 17's domes, each in its sprite set.
         renderer.groundAllies(sortie.script(), services.content.allies());
+        // M9 part A: the Ascendancy's homing missiles are drawn and heard as homing diamonds.
+        boolean diamonds = vanguard.game.render.DiamondLooks.diamonds(services.content, sortie.enemyKinds());
+        renderer.diamonds(diamonds);
+        sounds.diamonds(diamonds);
         militiaFlak = level.flak().map(MilitiaFlak::new).orElse(null);
         warnings = new EdgeWarnings(services.sprites.pixel, services.fonts.body);
         banner = new BossBanner(services.sprites.pixel, services.fonts.heading, services.fonts.body);
@@ -696,6 +702,8 @@ public final class LevelScreen implements GameScreen {
             if (barks != null) {
                 // M5 part C: his spacing runs on real time, the waves' barks on the level clock.
                 barks.clock(sortie.levelSeconds(), sortie.realSeconds(), sortie.scriptRate());
+                // M9 part B (round 62): the rescued Rook barks only once he is in his slot (Level 29).
+                barks.inSlot(rookInSlot(sortie));
             }
             react(sortie.events());
             closeBannerOverFight();
@@ -879,6 +887,12 @@ public final class LevelScreen implements GameScreen {
                 case BOSS_DESTROYED -> music.bossDown();
                 // M8 part H: the reveal sting (track 30) at the cruisers' rise (Level 28).
                 case CRUISER_RISE -> music.reveal();
+                // M9 part B: Rook's return sting (track 31) as the rescued Ember launches from the tender's hold.
+                case ESCORT_SWAP -> {
+                    if (events.value(i) == vanguard.sim.EscortSwap.JOINS) {
+                        music.rookReturn();
+                    }
+                }
                 case BOSS_INCOMING -> {
                     // Round 41 (the 2026-10-19 playtest, Level 14): a boss with a lead time is announced that
                     // long before it arrives, so its warning box shows before the boss is reached.
@@ -1040,6 +1054,14 @@ public final class LevelScreen implements GameScreen {
     }
 
     /**
+     * M9 part B (Level 29, round 62): whether Rook flies in his slot, so his barks run: not while the rescued Rook waits
+     * in the tender's hold or flies into the slot ({@link Barks#inSlot}); always without an escort swap.
+     */
+    static boolean rookInSlot(Sortie sortie) {
+        return sortie.wingman().map(rook -> !rook.waiting() && !rook.joining()).orElse(true);
+    }
+
+    /**
      * Whether a cue's line counts as a scripted line for Rook's barks (their spacing, and a waiting
      * bark withdrawn): his first kill (M5 part B), the first loop-back (M5 part D, his flock line) and
      * the first boss part shot off (M5 part E, Level 11's severed slam arm) and the first latch (M5
@@ -1047,6 +1069,8 @@ public final class LevelScreen implements GameScreen {
      */
     static boolean scriptedForBarks(CueTrigger trigger) {
         return trigger == CueTrigger.ESCORT_FIRST_KILL
+                // M9 part B (round 62): the rescued Rook's first line as he joins his slot (Level 29's "Miss me?").
+                || trigger == CueTrigger.ESCORT_JOINED
                 || trigger == CueTrigger.FIRST_LOOP_BACK
                 // M5 part E: his line on the first slam arm severed (Level 11's calamari).
                 || trigger == CueTrigger.BOSS_PART_DESTROYED
@@ -1074,6 +1098,9 @@ public final class LevelScreen implements GameScreen {
         };
     }
 
+    /** M9 part A: whether the line on the radio came over the enemy channel (its close is the intercept's). */
+    private boolean openIntercepted;
+
     /** The radio's squelch on open and close, and a soft blip for every other typed character. */
     private void playRadio(float seconds) {
         float untilTimed = sortie.complete()
@@ -1082,10 +1109,12 @@ public final class LevelScreen implements GameScreen {
                         sortie.levelSeconds(), sortie.scriptRate(), RadioSchedule.escortFlying(sortie));
         switch (radio.update(seconds, untilTimed)) {
             case OPENED -> {
-                services.sfx.play(Sfx.RADIO_OPEN, RADIO_VOLUME, 1, 0);
                 // The voice starts with the message; an urgent line cuts the one that plays
                 // (design/audio/voice, Playback).
                 RadioQueue.Message message = radio.current().orElseThrow();
+                // M9 part A: an enemy-channel line opens with the intercept's static sweep instead of the squelch.
+                openIntercepted = message.intercepted();
+                services.sfx.play(openIntercepted ? Sfx.INTERCEPT_OPEN : Sfx.RADIO_OPEN, RADIO_VOLUME, 1, 0);
                 if (barks != null) {
                     // A Rook line on the radio, bark or scripted, starts the barks' spacing.
                     barks.opened(message.speaker(), sortie.realSeconds());
@@ -1096,7 +1125,8 @@ public final class LevelScreen implements GameScreen {
                                 services.voices::stop);
             }
             case CLOSED -> {
-                services.sfx.play(Sfx.RADIO_CLOSE, RADIO_VOLUME, 1, 0);
+                services.sfx.play(openIntercepted ? Sfx.INTERCEPT_CLOSE : Sfx.RADIO_CLOSE, RADIO_VOLUME, 1, 0);
+                openIntercepted = false;
                 services.voices.stop();
             }
             case TYPED -> {
@@ -1135,6 +1165,11 @@ public final class LevelScreen implements GameScreen {
                 (float) shimmer / SHIMMER_TICKS,
                 services.settings().gameplay().flashReduction(),
                 screenFlash);
+        // M9 part C: a lane buoy's strobe flashing as it passes ticks faintly.
+        double strobe = renderer.strobed();
+        if (!Double.isNaN(strobe) && sortie.flying() && !sortie.complete()) {
+            sounds.buoyTick(strobe);
+        }
         if (threatArrows != null && sortie.flying()) {
             threatArrows.draw(batch, sortie, clock.alpha());
         }

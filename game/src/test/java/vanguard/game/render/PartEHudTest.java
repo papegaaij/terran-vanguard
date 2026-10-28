@@ -16,6 +16,7 @@ import vanguard.content.Difficulty;
 import vanguard.content.SimSpecs;
 import vanguard.game.ui.Fonts;
 import vanguard.sim.Armament;
+import vanguard.sim.IdleReason;
 import vanguard.sim.Loadout;
 import vanguard.sim.Sortie;
 
@@ -85,10 +86,11 @@ class PartEHudTest {
                 SimSpecs.level(ArenaFixture.CONTENT, land, Difficulty.MEDIUM),
                 SimSpecs.rules(ArenaFixture.CONTENT, land, Difficulty.MEDIUM),
                 60);
-        boolean[] idle = new boolean[Armament.Slot.values().length];
+        IdleReason[] idle = new IdleReason[Armament.Slot.values().length];
         Hud.idle(overLand, idle);
-        boolean[] expected = new boolean[idle.length];
-        expected[Armament.Slot.LEFT_WING.ordinal()] = true;
+        IdleReason[] expected = new IdleReason[idle.length];
+        java.util.Arrays.fill(expected, IdleReason.NONE);
+        expected[Armament.Slot.LEFT_WING.ordinal()] = IdleReason.NO_WATER;
         assertArrayEquals(expected, idle, "NO WATER in the left wing's row");
         Sortie overWater = new Sortie(
                 1,
@@ -97,7 +99,43 @@ class PartEHudTest {
                 SimSpecs.rules(ArenaFixture.CONTENT, ArenaFixture.RULES_LEVEL, Difficulty.MEDIUM),
                 60);
         Hud.idle(overWater, idle);
-        assertArrayEquals(new boolean[idle.length], idle, "over water it runs");
+        java.util.Arrays.fill(expected, IdleReason.NONE);
+        assertArrayEquals(expected, idle, "over water it runs");
+    }
+
+    /**
+     * M9 part C (design/campaign Level 30, {@code ground: none}): a bomb rack reads {@code NO GROUND} in its row there,
+     * and its name fits beside the word.
+     */
+    @Test
+    void aBombRackReadsNoGroundInSpace() {
+        Loadout loadout = SimSpecs.loadout(
+                ArenaFixture.CONTENT,
+                ArenaFixture.CONTENT.systems().engines().getFirst().name(),
+                List.of(
+                        new SimSpecs.FittedWeapon(Armament.Slot.FRONT, SimSpecs.PULSE_CANNON, 1),
+                        new SimSpecs.FittedWeapon(Armament.Slot.LEFT_WING, "bomb-rack", 1)),
+                ArenaFixture.CONTENT.shields().models().getFirst().name(),
+                ArenaFixture.CONTENT.armour().plating().getFirst().name(),
+                0,
+                Difficulty.MEDIUM);
+        String space = ArenaFixture.CONTENT.levelKey(30).orElseThrow();
+        Sortie sortie = new Sortie(
+                1,
+                loadout,
+                SimSpecs.level(ArenaFixture.CONTENT, space, Difficulty.MEDIUM),
+                SimSpecs.rules(ArenaFixture.CONTENT, space, Difficulty.MEDIUM),
+                60);
+        IdleReason[] idle = new IdleReason[Armament.Slot.values().length];
+        Hud.idle(sortie, idle);
+        assertEquals(IdleReason.NO_GROUND, idle[Armament.Slot.LEFT_WING.ordinal()]);
+        assertEquals(IdleReason.NONE, idle[Armament.Slot.FRONT.ordinal()]);
+        assertEquals("NO GROUND", IdleReason.NO_GROUND.word());
+        String name = ShipPanel.hudName(
+                ArenaFixture.CONTENT.weapons().get("bomb-rack").name());
+        assertTrue(
+                width(SMALL, name) <= ShipPanel.nameWidth(IdleReason.NO_GROUND.word()),
+                name + ": " + width(SMALL, name));
     }
 
     private static BitmapFont.BitmapFontData font(String file) {

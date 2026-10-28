@@ -1,0 +1,33 @@
+# Swarm Tail: rendered into README.md (schema: ../../../tech/architecture/schemas-player/README.md). M9 part A.
+# Micro-missiles fired backwards out of the tail (angle 180) that pick the nearest enemy behind the ship's nose
+# line first (pick: rear-first), else the nearest anywhere within the seek radius (range), curving back up.
+name: Swarm Tail
+slot: rear
+traits: [rear, homing]
+price: 3500
+unlock: 30
+draw: [3, 5]
+sfx: micromissile    # a little lower than the pod's (the game's pitch)
+vfx: micromissile    # the exhaust tinted warmer (the game's look)
+hits: homing
+speed: [260, 480]    # launched backwards, accelerating
+accelerate: 0.3
+size: [4, 10]
+range: 320           # homing: the seek radius, all round
+lifetime: 1.6
+pick: rear-first
+seek: true
+# M9 part A (step A2, pending the user's review in round 61): the turn rates are the approved draft's x 1.5 (240 / 260
+# / 280 -> 360 / 390 / 420 deg/s): at 240 deg/s and 480 px/s (a turn radius of 115 px) a missile launched backwards
+# circled a target ahead of the ship or 120 px beside it and never struck it (0 DPS at L1); at 360 it strikes at about
+# its DPS wherever the target is within its seek radius (SwarmTailTest in content).
+levels:
+  - {pattern: [[0, 180]], rate: 3, damage: 5, turn: 360}
+  - {pattern: [[0, 180]], rate: 3.5, damage: 6, turn: 360}
+  - {pattern: [[0, 155], [0, 205]], rate: 2.5, damage: 6, turn: 360}
+  - {pattern: [[0, 155], [0, 205]], rate: 3, damage: 7, turn: 390}
+  - {pattern: [[0, 150], [0, 180], [0, 210]], rate: 2.5, damage: 7.33, turn: 390}
+overdrive: {pattern: [[0, 150], [0, 180], [0, 210]], rate: 3, damage: 7.5, turn: 420}
+notes:
+  vfx: the projectile sheet of concept round 08, the exhaust tinted warmer
+  layers_hit: '`air`, `low-air`, `ground` (hardened targets glance off) and **`high-air`** (homing), as the [Micro-missile Pod](../micro-missile-pod/README.md) ([layer rules](../../../enemies/README.md#layer-rules)); not the `sub` layer'

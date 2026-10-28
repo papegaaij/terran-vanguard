@@ -1,0 +1,38 @@
+# Dart Drone stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/schemas-units/README.md
+# M9 part C, step C2 (Level 30): the approved stat block (round 60) as data. A launched unit (its carrier's `spawn`
+# with a `stream`: the Gilded Gunship's bays): it flies the stream's `straight` 0.4 s along its launch direction, then
+# `chase`s with a low turn rate for 3 s, then flies straight on out of the field. Its hard turn rate is the hook
+# `chase` (new in step C2). A `tiny` unit: one-shot fodder in every level (no act or beam-era factor).
+name: Dart Drone
+faction: Jovian Ascendancy
+layer: air
+tier: tiny
+size: [20, 20]    # sprite px
+hitbox: [12, 12]
+parts: single
+orientation: 16 angles
+hp: 1
+armour: none
+speed: 240        # px/s
+machine: true     # the EMP Burst stuns it 3 s: it coasts on, lights out
+movement:
+  chase: {speed: 240, turn_rate: 60, seconds: 3}   # px/s, °/s, s: after its launch run it steers toward the ship, then flies straight on
+attacks: []       # contact only
+formations:
+  - {name: stream}   # launched in streams of 2–5, 0.25 s apart
+weak_points: []
+drops: []
+traits: [spread, area, forward]
+bounty: 2
+first_level: 30
+difficulty:
+  hard: {chase: {turn_rate: 80}}
+notes:
+  armour: none (too small for a shield emitter)
+  movement: '**launched** (`spawn` by its carrier): 0.4 s `straight` along the launch direction out of the bay, then `chase` with a low turn rate ({movement.chase.turn_rate}°/s) for {movement.chase.seconds} s, then `straight` on along its heading and out through the nearest edge; as a wave of its own: a `stream` from the top or the sides'
+  attack: '`none`: contact `{tier}` = {contact_damage} (destroyed by the impact)'
+  formations: '(launched in streams of 2–5, 0.25 s apart); `swarm`-like clouds from the Sovereign''s bays (its document)'
+  bounty: ', launched or not'
+  death: '`tiny` spark puff with gold flecks'
+  used_in: the Gilded Gunships' bays; L29's turned station and L35's Sovereign may launch them (the level and boss drafts decide)
+  difficulty: 'streams sized by the global formation lever (easy −1, hard +1 per stream); hard: turn rate 80°/s'

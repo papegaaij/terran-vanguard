@@ -57,7 +57,7 @@ Generated from [data.yaml](data.yaml) by `tools/sync_tables.py`; do not edit by 
 - [x] Layer hit rules for its traits (see Layers hit)
 - [x] Muzzle flash, projectile and impact sprites of its VFX family; sound of its family
 - [x] Behaviour as described above, except:
-- [ ] Over a level without ground the rack is idle and its HUD slot reads "NO GROUND" — **later: Act 5** (every Act 1–4 level has a ground layer or water, Level 07's picket wreckage included; the first without one is the Minefield, **L30**, the act's only space-only level: the Leech Field, L33, has asteroid surfaces with Rail Bunkers on its ground layer, J3 of round 60, pending the user's review)
+- [ ] Over a level without ground the rack is idle and its HUD slot reads "NO GROUND" — **later: Act 5** (every Act 1–4 level has a ground layer or water, Level 07's picket wreckage included; the first without one is the Minefield, **L30**, the act's only space-only level: the Leech Field, L33, has asteroid surfaces with Rail Bunkers on its ground layer, J3 of round 60, decided the user's review)
 - [x] Over water only surfaced naval targets: nothing new in the simulation once the `sub` layer
       exists (a submerged unit is not `ground`), a test pinning it (`SubLayerTest`) — M5 part E
       (step E2a, Level 11)
@@ -82,7 +82,7 @@ Generated from [data.yaml](data.yaml) by `tools/sync_tables.py`; do not edit by 
   one (E2 = a), and the impact shows a water splash; the same holds for the Hammer Mortar's and
   Rook's Mortar's shells and the Airstrike's bombs. The over-water item is tagged M5 part E, so the
   implementation is `in-progress` again until part E pins it.
-- 2026-10-27 (Act 5 design phase, step m9-d-systems; J3 of round 60, **pending the user's review**): the Leech
+- 2026-10-27 (Act 5 design phase, step m9-d-systems; J3 of round 60, **decided the user's review**): the Leech
   Field (L33) has ground (large asteroid surfaces with Rail Bunkers, a hardened ground unit that cannot sit in a
   space-only level), so the first level without ground, where the rack reads `NO GROUND`, is the **Minefield (L30)**;
   the item moves there. Like the Torpedo Pod's `NO WATER`, an idle rack still draws its power.

@@ -31,7 +31,7 @@ Variant shields (roster, alternative to the Mk line):
 | Name | Summary | Design |
 |---|---|---|
 | Reflex Shield | Capacity 40; bullets absorbed while above 75 % are reflected back upward. 6 MW, 12 000, act 6 | idea |
-| Bastion Shield | Capacity 120, regen only 2/s, 3.0 s delay. For tanky builds. 5 MW, 9 000, act 6 (was act 5; Q12 = c of round 60, pending) | idea |
+| Bastion Shield | Capacity 120, regen only 2/s, 3.0 s delay. For tanky builds. 5 MW, 9 000, act 6 (was act 5; Q12 = c of round 60, decided) | idea |
 
 Rules:
 - Damage goes to the shield first. Overflow damage in the same hit goes to armour.
@@ -42,9 +42,9 @@ Rules:
 - **Under a generator drain** (Act 5, the Void Leech, L33): when the drained output no longer covers
   the load, the shield's **regeneration stops first**, before any weapon slows; the shield keeps its
   charge and the hex ring is drawn dimmed until the load fits again. The rule and its numbers are the
-  [generator's](../generator/README.md#enemy-drain-effects) (draft, pending the user's review in round 60).
+  [generator's](../generator/README.md#enemy-drain-effects) (draft, approved in round 60).
 
-**Act 5** (draft, pending round 60, Q12 = c): the Mk V (80, 6 MW, 14 000) is in the shop from the L29
+**Act 5** (draft, decided in round 60, Q12 = c): the Mk V (80, 6 MW, 14 000) is in the shop from the L29
 visit as listed; the typical plan does not reach it (its 6 MW need the Mk V generator, see the
 [Act 5 hand plan](../generator/README.md#act-5-hand-plan-draft)). The Bastion Shield moves to Act 6 with
 the Reflex Shield: a variant line belongs with the heavier shields of Act 6, and Act 5's income does not
@@ -86,6 +86,6 @@ Production art for concept round 26 (the M4 part H batch), review files built fr
   The hit point is fixed at the front of the bubble (most bullets come from ahead) rather than at
   the bullet's side. Frames by `tools/art/ship_fx.py`, proposed for round 26 (`art: final`).
 - 2026-10-05: Concept round 26 closed (user: the round accepted as proposed): the hex-shimmer ring approved as **final** (`art: final`), with the hit point at the front of the bubble and the 4-frame fade as they are; the restore chime is played by part H's SFX pass, so every item is ticked and the document is `done`.
-- 2026-10-27 (Act 5 design phase, step m9-d-systems; **pending the user's review in round 60**): under a generator
+- 2026-10-27 (Act 5 design phase, step m9-d-systems; **approved in round 60**): under a generator
   drain the shield's regeneration stops first and its ring dims (Q2 = a, the rule in the generator); the Bastion
   Shield moves to Act 6 (Q12 = c; under (b) it stays in Act 5); the Mk V stays in Act 5.

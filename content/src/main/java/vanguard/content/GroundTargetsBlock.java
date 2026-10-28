@@ -48,6 +48,8 @@ public sealed interface GroundTargetsBlock permits LevelData {
      * @param arc M7 part F (design/campaign Level 19, Up-facing turret nests): {@code up}, an enemy nest placed turned
      *     180°: its guns' silence arc measured from straight up the screen (silent above the ship, firing after it
      *     has passed)
+     * @param dormantUntil M9 part B (design/campaign Level 29, Block C): an enemy nest dormant until this level time
+     *     (dark, not hittable, not picked, not firing; then a 1 s wake tell); awake from its entry if not given
      */
     public record GroundTarget(
             String target,
@@ -73,8 +75,14 @@ public sealed interface GroundTargetsBlock permits LevelData {
             Optional<Point> drift,
             Optional<SideEntry> side,
             Optional<String> link,
-            Optional<String> arc) {
+            Optional<String> arc,
+            Optional<Double> dormantUntil) {
         public GroundTarget {
+            // M9 part B (design/enemies/ground/sam-nest, Dormant until t): an enemy nest that wakes at a level time.
+            Check.that(
+                    dormantUntil.isEmpty() || (enemy.isPresent() && side.isEmpty()),
+                    "only an enemy nest on the ground sleeps until a time (dormant_until)");
+            dormantUntil.ifPresent(t -> Check.positive("dormant_until", t));
             arc.ifPresent(a -> Check.that(ARC_UP.equals(a), "arc: only 'up', was '" + a + "'"));
             Check.that(arc.isEmpty() || enemy.isPresent(), "only an enemy nest's guns are turned (arc: up)");
             link.ifPresent(kind -> Check.that(LINK_PAIRS.equals(kind), "link: only 'pairs', was '" + kind + "'"));

@@ -1,6 +1,6 @@
 ---
 title: Level 35 – Iron Sovereign
-design: draft
+design: approved
 implementation: not-started
 art: none
 depends-on: [../../../enemies/bosses/iron-sovereign, ../../../enemies/air/talon, ../../../enemies/air/gilded-gunship, ../../../enemies/air/hornet, ../../../enemies/air/rail-serpent, ../../../enemies/air/dart-drone, ../../../enemies/space/shard-drone, ../../../enemies/ground/rail-bunker, ../../../enemies/ground/sam-nest, ../../../world/belt, ../../../player/wingmen, ../../../story/characters/vorne, ../../../systems/economy]
@@ -20,10 +20,9 @@ a reactor core, Vorne on the enemy channel. About 92 s of approach, the fight on
 medium), then the station breaks apart, **Vorne offers Lancer a job**, Varga reads Callisto out of its nav
 core, and the act ends; the release's end names Act VI. Density 5.
 
-**Status: draft** (Act 5 design phase, step `m9-d-levels-3`, 2026-10-27), **pending the user's review in
-concept round 60**. Written from the act roster, the gap analysis's recommended answers (**Q7 a** the top-down
-rings, **Q1 a** the core's and the escort's shields, **Q6 b** the Dart Drones, **Q11 a** the belt look; judgement
-call **J2** the reference DPS 144, all pending in round 60) and the wave 1 and 2 documents. The boss document owns
+**Status: approved** (Act 5 design phase, step `m9-d-levels-3`, 2026-10-27), **approved by the user in concept round 60 (2026-10-27)**. Written from the act roster, the gap analysis's recommended answers (**Q7 a** the top-down
+rings, **Q1 a** the core's and the escort's shields, **Q6 b** the Dart Drones, **Q11 b** the belt look (gunmetal/charcoal with gold); judgement
+call **J2** the reference DPS 144, all decided in round 60) and the wave 1 and 2 documents. The boss document owns
 the fight (rings, batteries, phases, HP, tells, Vorne's lines and their wording); this document owns the approach,
 the timeline, the radio's order and delays, the economy and the act end. Every number is a hand-written first
 draft at medium for part H to measure with `levelReport`; there is no `data.yaml` yet.
@@ -92,8 +91,8 @@ the station (eased over the last 6 s, so nothing pops in: the station has been s
 ground since the hull, [the boss's arena](../../../enemies/bosses/iron-sovereign/README.md#arena)). Setting:
 [the belt](../../../world/belt/README.md)'s Ceres orbit, vacuum
 ([vacuum rules](../../../world/belt/README.md#vacuum-rules)). **Light**: Ceres's sunlit curve far below in the deep
-layer, the dust band, the station's gloss black and gold under the top-left sun with its red running lights
-(Q11 a); a step lighter than Act 4 so the black reads. Motion budget: the escort's waves and the Darts are the strong
+layer, the dust band, the station's gunmetal/charcoal and gold under the top-left sun with its red running lights
+(Q11 b, decided in round 60); a step lighter than Act 4 so the hulls read. Motion budget: the escort's waves and the Darts are the strong
 elements in the approach; in the arena the rings' turning and the fire arc's red band; after the kill the drifting
 ring segments.
 
@@ -233,7 +232,7 @@ Okafor, Varga, Rook, Ceres Hub Control** ([Act 5 speakers](../../../story/charac
 his portrait). **The Choir is silent** (the Ascendancy's boss; [the Choir](../../../story/characters/the-choir/README.md#act-5-draft)).
 The arena's clock halts, so the boss lines are events (`boss-arrival`, `boss-phase`), queued as `PHASE` lines (they
 wait for a gap, stale after 20 s, dropped at the kill). **Vorne's three fight lines and his recruitment line are
-the boss document's** ([Vorne](../../../enemies/bosses/iron-sovereign/README.md#vorne), wording pending round 60):
+the boss document's** ([Vorne](../../../enemies/bosses/iron-sovereign/README.md#vorne), wording decided in round 60):
 this table places them and sets their delays. **The closing lines are queued as `CLOSING` lines in order**
 (Level 21's rule: they never go stale and the debrief waits for the last); `delay` counts from the kill K.
 
@@ -424,7 +423,7 @@ orbit):
 
 ## Open questions
 
-Pending the user's review in round 60 (the gap analysis's questions this level follows):
+Approved in round 60 (the gap analysis's questions this level follows):
 
 - **Q7, the fight** (recommended **a**, drafted: top-down rings, the scroll halted). Alternatives (the spec's
   [variants](../../../enemies/bosses/iron-sovereign/README.md#variants-b-and-c-for-the-rounds-abc)): **b** a scrolling
@@ -435,7 +434,7 @@ Pending the user's review in round 60 (the gap analysis's questions this level f
 - **Q1, enemy shields** (recommended **a**: the Talons, Gunships and Hornets of the escort and the core's 80).
   Alternatives **b** shields only `shield-breaker`, beams and the EMP get through (the plan's fit could not open the
   core); **c** no shields in Act 5 (the core's phase 4 without its regrowth).
-- **Q11, the Ascendancy look** (recommended **a**). Alternatives **b** gunmetal with gold, **c** black silhouettes.
+- **Q11, the Ascendancy look** (decided in round 60, **b**, not the recommendation): gunmetal/charcoal hulls with gold; rejected: **a** gloss black, **c** black silhouettes.
 - **J2, the reference DPS 144** (the boss's HP and par use it).
 - **The boss's bounty**: 457 in Act 1 terms at the hand scale 0.56 (the boss document follows since step m9-d-act);
   the measured scale decides.
@@ -444,7 +443,7 @@ Pending the user's review in round 60 (the gap analysis's questions this level f
 
 ## Decisions
 
-- 2026-10-27 (Act 5 design phase, step `m9-d-levels-3`; pending the user's review in round 60): drafted from the roster
+- 2026-10-27 (Act 5 design phase, step `m9-d-levels-3`; approved in round 60): drafted from the roster
   row, the gap analysis (§0, §1.1, §2.4, §2.8, Q1 a, Q6 b, Q7 a, Q11 a, J2), the boss's README (the source of truth for
   the fight, Vorne's lines and the death) and Level 28's document as the model (every section, the act-end order, hand
   tables marked draft, no `data.yaml`).
@@ -458,7 +457,8 @@ Pending the user's review in round 60 (the gap analysis's questions this level f
   Callisto) plus Ceres Control's last line (the hub's lights white again); the Choir is silent; Varga's look at Vorne's face
   is the outro's.
 - 2026-10-27, design phase: Rook's t=69 line moves to **t=72**, after the lifeboat's event line (the secret, in reach
-  t≈63–69), so the two never collide (step m9-d-act; pending the user's review in round 60).
+  t≈63–69), so the two never collide (step m9-d-act; approved in round 60).
 - 2026-10-27: the act end follows Level 28's order; the release's end moves to Level 35 and names Act VI (`next_act`).
 - 2026-10-27: the music follows the [Act 5 music plan](../../../audio/music/README.md#act-5-music-draft-round-60) (step
   m9-d-audio): track 13 on the approach, track 19 for the fight, the motif stem alone after the kill, `belt-station`.
+- 2026-10-27 (user, [round 60](../../../concept-rounds/round-60/README.md) closed): the design approved as drafted (`design: approved`, D.8): Q7 **a** (top-down rings), Q9 **a** (Vorne's broadcast is the act intro), J.8 kept (Vorne cold, never shouting); the station is **A.17 b**, armoured links, with the **A.23 top-lit** atlas (about 0.6 pages); the rings' bed is S.16 a, the rail shot S.8 b. Q11 **b**: gunmetal/charcoal with gold.

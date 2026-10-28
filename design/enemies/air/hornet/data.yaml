@@ -1,0 +1,58 @@
+# Hornet stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/schemas-units/README.md
+# M9 part D, step D2 (Level 31): the approved stat block (round 60) as data. New in it (flown from step D1): the aimed
+# homing salvo (`homing.aimed`: launched at its target, the ship or, under the target-the-objective hook's `always`,
+# the escorted hull's nearest section) and its hatch tell (`homing.hatch`: the pod hatches glow gold before a salvo,
+# the gun's tell). A burst's interval counts from its last shot: a salvo of 4, 0.2 s apart, every 5 s is `interval:
+# 4.4` (easy 3 every 6 s: 5.6; hard 4 every 4 s: 3.4). The hex `shield` is part A's. A `medium` unit: no beam-era factor.
+name: Hornet
+faction: Jovian Ascendancy
+layer: air        # `space` in the belt's vacuum levels: the same layer
+tier: medium
+size: [72, 64]    # sprite px
+hitbox: [52, 44]
+parts: single     # two missile pods drawn on the flanks, not separate parts
+orientation: fixed   # faces down
+hp: 96            # with the shield 0.81 s at the L31 reference of 128
+armour: none
+shield: 12        # M9 part A: the hex shield, spent first; step D2: 8 → 12 (8 popped in 0.06 s under the plan's fit, no visible hold; README Decisions)
+speed: 140        # px/s entering and leaving
+machine: true     # the EMP Burst stuns it 3 s: no salvo (missiles in flight fly on)
+movement:
+  hover: {seconds: 9, y: [90, 150], drift: 20}   # holds 90-150 px below the top edge for 9 s with a 20 px/s sideways drift, then exits up
+attacks:
+  - pattern: aimed
+    name: salvo
+    bullet: medium         # a missile's hit
+    interval: 4.4          # s from a salvo's last missile to the next salvo's first: a salvo every 5 s
+    speed: 110             # px/s, the missile
+    first_shot_delay: 1.5  # s after it is on the screen
+    burst: 4               # missiles a salvo
+    burst_gap: 0.2         # s between them, the pods alternating
+    homing: {turn_rate: 80, life: 4, hp: 2, most: 8, hatch: 0.5, look: diamond, seekable: true, per_shooter: true, aimed: true}   # °/s, s, HP, at most in flight per Hornet, the hatch glow s; the homing diamond; launched at its target
+    notes:
+      text: '`homing` **salvo of {burst}** every 5 s, the pods alternating, {burst_gap} s apart (the first {first_shot_delay} s after it is on the screen): {speed} px/s, turn rate {homing.turn_rate}°/s, {homing.life} s life then they fizzle, **{homing.hp} HP** each, `{bullet}` = {damage} on impact; at most {homing.most} alive per Hornet; the pod hatches glow gold {homing.hatch} s before a salvo (the tell); launched at its target (the ship, or the escorted hull''s nearest section under the target-the-objective hook); the [Decoy Flares](../../../player/specials/README.md#decoy-flares-l27) retarget them. Contact `{tier}` = {contact_damage}'
+formations:
+  - {name: line abreast, size: [2, 3]}
+  - {name: single}   # with Talon escorts
+weak_points:
+  - {name: the pod hatches}
+drops: []
+traits: [forward, piercing, spread, homing, shield-breaker]
+bounty: 26
+first_level: 31
+difficulty:
+  easy: {attacks: {salvo: {interval: 5.6}}, burst: 3, homing: {turn_rate: 65}}
+  hard: {attacks: {salvo: {interval: 3.4}}, homing: {turn_rate: 100}}
+notes:
+  layer: ' (`space` in the belt''s vacuum levels: the same layer)'
+  parts: single (two missile pods drawn on the flanks, not separate parts)
+  orientation: (faces down)
+  armour: 'hex [shield](../../README.md#enemy-shields) **{shield}**: spent first, refills 2 s after the last hit; `shield-breaker` and the EMP empty it; missile {attacks.0.homing.hp}'
+  speed: entering and leaving; holding, a {movement.hover.drift} px/s sideways drift
+  movement: '`hover`: enters at the top, holds {movement.hover.y.0}–{movement.hover.y.1} px below the top edge for {movement.hover.seconds} s with the drift, then exits up'
+  formations: (at most three Hornets and 16 missiles on the screen)
+  weak_points: (drawn only)
+  bounty: '; missiles 0'
+  death: '`medium` explosion; any missile in a pod at that moment cooks off in a small flash (no bullets); missiles in flight fly on until their life ends'
+  used_in: the mining tug's main threat; its later Act 5 levels per the level drafts
+  difficulty: 'easy: salvo of 3 every 6 s, turn rate 65°/s; hard: salvo of 4 every 4 s, turn rate 100°/s'

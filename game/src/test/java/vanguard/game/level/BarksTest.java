@@ -170,6 +170,35 @@ class BarksTest {
         assertTrue(barks.fire(Trigger.OVERDRIVE, 50), "a new attempt barks again");
     }
 
+    /**
+     * M9 part B (round 62, the Rook-barks bug of step B5): the rescued Rook in the tender's hold barks nothing, so no
+     * kill streak in Level 29's halt holds Okafor's "Bulwark, RTB" back; his kills there count for no streak, and a
+     * bark of his that waits as he leaves his slot is withdrawn. In his slot he barks as ever.
+     */
+    @Test
+    void outOfHisSlotHeBarksNothingAndHisKillsCountForNoStreak() {
+        Barks barks = barks(29);
+        busy();
+        assertTrue(barks.fire(Trigger.OVERDRIVE, 1));
+        RadioQueue.Message overdrive = lastQueued;
+
+        barks.inSlot(false);
+
+        assertFalse(radio.waiting(overdrive), "the waiting bark left the queue");
+        for (int i = 0; i < 12; i++) {
+            assertFalse(barks.kill(10 + i * 0.2), "a kill in the halt");
+        }
+        assertFalse(barks.bossWarning(20));
+        assertFalse(barks.fire(Trigger.KILL_STREAK, 20));
+        assertEquals(1, queued.size());
+
+        barks.inSlot(true);
+        for (int i = 0; i < 9; i++) {
+            assertFalse(barks.kill(21 + i * 0.2), "the streak's count starts in the slot");
+        }
+        assertTrue(barks.kill(23), "the tenth kill in the slot");
+    }
+
     @Test
     void onlyOneBarkWaitsAndAHigherPriorityReplacesIt() {
         Barks barks = barks(8);

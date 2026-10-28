@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
+import java.util.Map;
 import vanguard.sim.Hitbox;
 import vanguard.sim.Sortie;
 import vanguard.sim.Tow;
@@ -27,6 +28,12 @@ import vanguard.sim.Tow;
  * its headings clockwise from hanging, then the same headings empty (the tumble is pre-rendered, the
  * key light fixed). Without them a placeholder in flat shapes of the tow's boxes: a pale hull with a
  * CDF blue band, an olive pod and the amber cable.
+ *
+ * <p>M9 part C: a level of {@link #LOOKS} draws its tows in a look of their own instead: Level 30's dead beacon buoy
+ * (design/campaign/act-5-the-belt/level-30-minefield, Secrets; tools/art/belt_units_c.py), {@code debris-lane-buoy}
+ * tumbling ({@link #BUOY_TURN} s a turn) while its housing (the tow's cable box at the buoy) holds, then its housing
+ * shot open, {@code debris-lane-buoy-break} ({@link #BUOY_BREAK_STEP} s a frame), and nothing after it: the crate falls
+ * out as the tow's pickup.
  */
 final class TowLooks {
     private static final float X0 = PixelScreen.PLAY_FIELD_X;
@@ -56,6 +63,18 @@ final class TowLooks {
 
     private static final int GLINT_DY = 7;
 
+    /**
+     * M9 part C: the tows' look by level number, where it is not the lifeboat (the pipeline's {@code
+     * SpriteUse.TOW_LOOKS}); M9 part D: Level 31's claim rock (Dacosta's claim).
+     */
+    static final Map<Integer, String> LOOKS = Map.of(30, "debris-lane-buoy", 31, "debris-claim-rock");
+
+    /** M9 part C: the dead buoy's tumble, seconds a turn (its 16 frames). */
+    static final double BUOY_TURN = 2.4;
+
+    /** M9 part C: the buoy's break, seconds a frame. */
+    static final double BUOY_BREAK_STEP = 0.07;
+
     private final TextureRegion pixel;
     private final Array<AtlasRegion> boat;
     private final AtlasRegion boatGlow;
@@ -63,8 +82,17 @@ final class TowLooks {
     private final Array<AtlasRegion> cable;
     private final Array<AtlasRegion> cableGlow;
     private final Array<AtlasRegion> glint;
+    /** M9 part C: the level's own tow look ({@link #LOOKS}) and its break, null for the lifeboat. */
+    private final Array<AtlasRegion> buoy;
+
+    private final Array<AtlasRegion> buoyBreak;
 
     TowLooks(Sprites sprites) {
+        this(sprites, 0);
+    }
+
+    /** @param level the level's number: its tows' look ({@link #LOOKS}) */
+    TowLooks(Sprites sprites, int level) {
         pixel = sprites.pixel;
         boat = sprites.has("lifeboat") ? sprites.frames("lifeboat") : null;
         boatGlow = sprites.has("lifeboat-glow") ? sprites.region("lifeboat-glow") : null;
@@ -72,6 +100,36 @@ final class TowLooks {
         cable = sprites.has("lifeboat-cable") ? sprites.frames("lifeboat-cable") : null;
         cableGlow = sprites.has("lifeboat-cable-glow") ? sprites.frames("lifeboat-cable-glow") : null;
         glint = sprites.glint;
+        String look = LOOKS.get(level);
+        buoy = look != null && sprites.has(look) ? sprites.frames(look) : null;
+        buoyBreak = look != null && sprites.has(look + "-break") ? sprites.frames(look + "-break") : null;
+    }
+
+    /** M9 part C: the buoy's tumble frame at {@code age} s of {@code frames}. */
+    static int buoyFrame(double age, int frames) {
+        return (int) Math.floorMod((long) Math.floor(age / BUOY_TURN * frames), (long) frames);
+    }
+
+    /** M9 part C: the buoy's break frame {@code loose} s after the cut, -1 once it is over. */
+    static int breakFrame(double loose, int frames) {
+        int frame = (int) Math.floor(loose / BUOY_BREAK_STEP);
+        return frame < frames ? frame : -1;
+    }
+
+    /** M9 part C: the dead buoy: tumbling while it holds, its break after the cut, then gone. */
+    private void drawBuoy(SpriteBatch batch, Tow tow, double x, double y, double age, float alpha) {
+        batch.setColor(Color.WHITE);
+        if (tow.holding()) {
+            drawCentred(batch, buoy.get(buoyFrame(age, buoy.size)), x, y);
+            return;
+        }
+        if (buoyBreak == null) {
+            return;
+        }
+        int frame = breakFrame(tow.looseSeconds(alpha), buoyBreak.size);
+        if (frame >= 0) {
+            drawCentred(batch, buoyBreak.get(frame), x, y);
+        }
     }
 
     /** The tows on the screen at the render time {@code seconds}: cable, pod, then the boat over the cable's end. */
@@ -85,6 +143,10 @@ final class TowLooks {
             double y = tow.renderY(alpha);
             var spec = tow.spec();
             double age = Math.max(0, seconds - spec.t());
+            if (buoy != null) {
+                drawBuoy(batch, tow, x, y, age, alpha);
+                continue;
+            }
             drawCable(batch, tow, x, y, age);
             drawPod(batch, tow, alpha);
             drawBoat(batch, tow, x, y, age);

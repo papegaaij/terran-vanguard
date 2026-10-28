@@ -34,7 +34,7 @@ end, afraid.
 
 ### Act 5 (draft)
 
-*Draft, step `m9-d-story` (2026-10-27), **pending the user's review in round 60**. The level
+*Draft, step `m9-d-story` (2026-10-27), **approved in round 60**. The level
 document places the line and the reactions to it ([Act 5](../../../campaign/act-5-the-belt/README.md),
 Level 33).*
 
@@ -79,6 +79,6 @@ Concept [round 08](../../../concept-rounds/round-08/README.md) — style-B portr
 - 2026-10-01: Concept round 08: portraits accepted.
 - 2026-10-01: Choir in Acts 1–2 confirmed by the user: it only sings ("[the Choir sings]") and Varga interprets it; the Choir, story and act documents agree.
 - 2026-10-01: Approved by the user in the [Acts 1–2 design review](../../../reviews/acts-1-2/README.md).
-- 2026-10-27 (Act 5 design phase, step m9-d-story; **pending the user's review in round 60**): the Choir
+- 2026-10-27 (Act 5 design phase, step m9-d-story; **approved in round 60**): the Choir
   speaks once in Act 5, in L33 before the leech swarm, of "the one who opened" with indifference; silent
   at L35 (the Ascendancy's boss).

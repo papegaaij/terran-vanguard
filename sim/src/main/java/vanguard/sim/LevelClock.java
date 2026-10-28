@@ -18,6 +18,13 @@ package vanguard.sim;
  * <p>M5 part G (design/campaign Level 13, user decisions G1–G6 = a): a <em>timed halt</em> is a section of speed 0
  * without an arena: the level clock runs on one step per step while the scroll eases into it and out of it ({@link
  * Sortie#timedHaltSpeed}).
+ *
+ * <p>M9 part B (design/campaign Level 29, the rescue halt; m9b-gaps.md §1.1): a <em>held arena</em> is an arena of
+ * speed 0 whose holders are ground units ({@link GroundUnit#holder()}, the clamp guns), not a boss: the scroll eases
+ * down over the arena section (smoothstep from the section before's speed), the level clock stands still at its end
+ * while a holder stands (the halt's own clock, {@link #haltTicks}, runs meanwhile on the real steps), and the section
+ * after eases up from the halt as after a boss's arena. Holders all down before the halt: the clock jumps to the
+ * arena's end (as a boss's early death) and the scroll ramps on from its speed then. No boss bar.
  */
 final class LevelClock {
     private final Sortie s;
@@ -70,6 +77,14 @@ final class LevelClock {
      * last non-zero one through the turnabout's zero. Follows the scroll (not hashed: the scroll decides it).
      */
     int travel = 1;
+    /** M9 part B: whether the level's arena is held by its holders ({@link LevelScript#heldArena()}). */
+    final boolean heldArena;
+    /** M9 part B: the steps the held arena's halt has lasted in this attempt (its clock held by a holder); 0 before. */
+    int haltTicks;
+    /** M9 part B: whether the holders fell before the halt and the clock jumped to the arena's end. */
+    boolean heldJumped;
+    /** M9 part B: the scroll's speed in the last moving step, px/s (a held arena's early jump ramps on from it). */
+    double lastSpeed;
 
     /** Finds the level's arena and its bosses; an anchored boss is anchored at the halt's scroll. */
     LevelClock(Sortie sortie, LevelScript script, SetPiece[] setPieces) {
@@ -113,7 +128,8 @@ final class LevelClock {
             }
         }
         arenaBoss = anchored;
-        arenaFromSpeed = anchored == null ? 0 : ScrollPlan.arenaFromSpeed(script);
+        heldArena = script.heldArena();
+        arenaFromSpeed = anchored == null && !heldArena ? 0 : ScrollPlan.arenaFromSpeed(script);
         SetPiece breaching = null;
         for (SetPiece piece : setPieces) {
             if (breaching == null && piece.breach().isPresent()) {
@@ -162,10 +178,26 @@ final class LevelClock {
             rampFrom = arenaSpeed;
             rampTicks = 0;
         }
+        if (heldArena
+                && !heldJumped
+                && s.holdersLeft == 0
+                && s.levelTick >= s.arenaStartTicks
+                && s.levelTick + 1 < s.arenaEndTicks) {
+            // M9 part B: the holders fell before the halt: the next section starts now, ramping on from this speed.
+            heldJumped = true;
+            s.levelTick = s.arenaEndTicks - 1;
+            s.tickFraction = 0;
+            rampFrom = lastSpeed;
+            rampTicks = 0;
+        }
         if (s.holdZones.holds()) {
             s.holdZones.ease();
         }
         boolean held = clockHeld();
+        if (held && heldArena) {
+            // M9 part B: the halt's own clock (its cycle of waves).
+            haltTicks++;
+        }
         if (postBossHold > 0) {
             postBossHold--;
         }
@@ -182,6 +214,7 @@ final class LevelClock {
             clockStep = 0;
         } else {
             double speed = scrollSpeed();
+            lastSpeed = speed;
             scrollStep = speed * SimStep.SECONDS;
             if (speed > 0) {
                 travel = 1;
@@ -233,6 +266,10 @@ final class LevelClock {
         if (s.arenaEndTicks < 0 || s.levelTick + 1 < s.arenaEndTicks || s.levelTick >= s.arenaEndTicks) {
             return false;
         }
+        if (heldArena) {
+            // M9 part B: a held arena's clock stands still while a holder stands.
+            return s.holdersLeft > 0;
+        }
         for (SetPiece piece : s.setPieces) {
             if (piece.boss().isPresent() && piece.present() && !piece.destroyed()) {
                 return true;
@@ -282,6 +319,12 @@ final class LevelClock {
             int n = SimStep.ticks(Sortie.ARENA_RAMP_SECONDS);
             speed = arenaFromSpeed * Math.max(0, n - 1 - (s.levelTick - s.arenaStartTicks)) / n;
         }
+        if (heldArena && rampTicks < 0 && s.levelTick >= s.arenaStartTicks && s.levelTick < s.arenaEndTicks) {
+            // M9 part B: into a held arena the scroll eases to a halt over the arena section (smoothstep).
+            int n = Math.max(1, s.arenaEndTicks - s.arenaStartTicks);
+            speed = arenaFromSpeed
+                    * (1 - ScrollPlan.smoothstep(Math.min(1, (s.levelTick - s.arenaStartTicks + 1.0) / n)));
+        }
         if (rampTicks >= 0 && easeOutOfArena) {
             // M7 part F: out of the arena the next section eases up over its ease (smoothstep), as a moving one does.
             speed = rampFrom + (speed - rampFrom) * ScrollPlan.smoothstep((rampTicks + 1.0) / rampLength);
@@ -315,8 +358,16 @@ final class LevelClock {
     void reset() {
         crawlLevel = crawlEaseTicks;
         postBossHold = 0;
+        haltTicks = 0;
+        heldJumped = false;
+        lastSpeed = 0;
         rampFrom = 0;
         rampTicks = -1;
+    }
+
+    /** M9 part B: whether a held arena's halt runs now (its clock held by a standing holder). */
+    boolean halting() {
+        return heldArena && clockHeld();
     }
 
     /** See {@link Sortie#groundSpeed()}. */

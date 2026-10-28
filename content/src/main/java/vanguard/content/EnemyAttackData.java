@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import java.util.Optional;
+import vanguard.content.EnemyMovementData.AirLink;
 import vanguard.content.EnemyMovementData.Aura;
 import vanguard.content.EnemyMovementData.Homing;
 import vanguard.content.EnemyMovementData.Link;
@@ -27,12 +28,21 @@ public sealed interface EnemyAttackData permits EnemyData {
      * the degrees each side of the facing from which direct shots glance off (dropped bombs, lobbed
      * shells and the specials ignore it; a walker's, Level 04). M5 part C: {@code hardened} flies for
      * an enemy (design/enemies/ground/hive-node): only anti-ground deliveries, the Airstrike and the
-     * Smart Bomb damage it.
+     * Smart Bomb damage it. M9 part C (design/enemies/air/gilded-gunship): with a {@code factor} it is facing armour on a
+     * unit that is not a walker: a direct hit arriving within {@code front_arc} of its facing does {@code factor} of its
+     * damage instead of glancing off (after its shield), a {@code rear_plate} giving its engines' arc and multiplier.
      */
-    record Armour(Optional<String> text, Optional<Double> frontArc) {
+    record Armour(Optional<String> text, Optional<Double> frontArc, Optional<Double> factor) {
         @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
         public Armour {
             frontArc.ifPresent(arc -> Check.notNegative("front_arc", arc));
+            factor.ifPresent(f -> Check.positive("factor", f));
+            Check.that(factor.isEmpty() || frontArc.isPresent(), "an armour factor goes with its front_arc");
+        }
+
+        /** M9 part C: whether it is facing armour (a front arc with a factor, not a walker's glance). */
+        public boolean facing() {
+            return factor.isPresent();
         }
 
         /** Whether it is {@code hardened}. */
@@ -65,7 +75,7 @@ public sealed interface EnemyAttackData permits EnemyData {
         /** The armour written as a text. */
         @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
         public static Armour of(String text) {
-            return new Armour(Optional.of(text), Optional.empty());
+            return new Armour(Optional.of(text), Optional.empty(), Optional.empty());
         }
     }
 
@@ -218,6 +228,25 @@ public sealed interface EnemyAttackData permits EnemyData {
      * @param arc a turret fires while the player is within this many degrees of its facing (down the screen)
      */
     /**
+     * M9 part A, a {@code laser-line}'s line (design/enemies/ground/rail-bunker; the vocabulary's {@code laser-line}):
+     * at the telegraph's start a line is locked from the unit through the ship's position to the screen's edge and drawn
+     * for {@code telegraph} s (at least 0.8, the vocabulary's minimum; a difficulty's hook {@code telegraph} replaces
+     * it), then it is live {@code live} s as a band {@code band} px wide that hits the ship once for the attack's bullet
+     * class; the unit holds fire while the ship is within {@code hold_within} px of it.
+     */
+    record Line(double telegraph, double live, double band, double holdWithin) {
+        /** The vocabulary's shortest telegraph (design/enemies, Attack pattern vocabulary). */
+        public static final double MIN_TELEGRAPH = 0.8;
+
+        public Line {
+            Check.that(telegraph >= MIN_TELEGRAPH, "line.telegraph: at least " + MIN_TELEGRAPH + " s");
+            Check.positive("line.live", live);
+            Check.positive("line.band", band);
+            Check.notNegative("line.hold_within", holdWithin);
+        }
+    }
+
+    /**
      * @param aim where a fan points, {@code target} (the default), {@code down} or {@code facing}; a walker's fan
      *     (M5 part B) is aimed at the player with {@code target} and along its facing with {@code facing};
      *     planned (part D) for the other units; M5 part D: an aimed attack's {@code up} (the Wraith, user
@@ -305,11 +334,25 @@ public sealed interface EnemyAttackData permits EnemyData {
             Optional<Boolean> reaim,
             Optional<List<String>> parts,
             Optional<Homing> homing,
-            Optional<Slow> slow) {
+            Optional<Slow> slow,
+            Optional<Line> line,
+            Optional<AirLink> airLink) {
         /** M7 part E: {@code while: open}, a spin cycle's open window. */
         public static final String WHILE_OPEN = "open";
 
+        /** M9 part A: the {@code laser-line} pattern (design/enemies/ground/rail-bunker), with its {@link Line}. */
+        public static final String LASER_LINE = "laser-line";
+
+        /** M9 part D: the {@code air-link} pattern (design/enemies/space/shard-drone), with its {@link AirLink}. */
+        public static final String AIR_LINK = "air-link";
+
         public Attack {
+            Check.that(
+                    pattern.equals(AIR_LINK) == airLink.isPresent(),
+                    "an air-link attack has its air_link, the others none");
+            Check.that(
+                    !pattern.equals(AIR_LINK) || (bullet.isPresent() && speed.isEmpty() && interval.isEmpty()),
+                    "an air-link attack names the bullet class of its touch, no speed or interval");
             whileState.ifPresent(state -> Check.that(
                     WHILE_OPEN.equals(state), "while: only 'open' (a spin cycle's window), was '" + state + "'"));
             Check.that(
@@ -367,6 +410,19 @@ public sealed interface EnemyAttackData permits EnemyData {
             Check.that(within.isEmpty() || interval.isPresent(), "a ring fired within a reach has its interval");
             Check.that(
                     pattern.equals("laser-sweep") == sweep.isPresent(), "a laser-sweep has its sweep, the others none");
+            // M9 part A (design/enemies/ground/rail-bunker): a laser-line's locked line, its bullet class once.
+            Check.that(pattern.equals(LASER_LINE) == line.isPresent(), "a laser-line has its line, the others none");
+            Check.that(
+                    !pattern.equals(LASER_LINE)
+                            || (bullet.isPresent() && speed.isEmpty() && interval.isPresent() && count.isEmpty()),
+                    "a laser-line has a bullet and an interval and no speed or count");
+            Check.that(
+                    line.isEmpty()
+                            || interval.filter(i -> i
+                                            >= line.get().telegraph()
+                                                    + line.get().live())
+                                    .isPresent(),
+                    "a laser-line's interval holds its telegraph and its live time");
             Check.that(
                     !pattern.equals("laser-sweep") || (bullet.isPresent() && speed.isEmpty()),
                     "a laser-sweep has a bullet and no speed");
@@ -379,13 +435,15 @@ public sealed interface EnemyAttackData permits EnemyData {
                             || pattern.equals("ring")
                             || pattern.equals("spiral")
                             || pattern.equals("laser-sweep")
+                            || pattern.equals(LASER_LINE)
                             || pattern.equals("pounce")
                             || pattern.equals("drain")
                             || pattern.equals("link")
                             || pattern.equals("pores")
-                            || pattern.equals("aura"),
-                    "pattern must be aimed, fan, mine, spawn, mortar, ring, spiral, laser-sweep, pounce, drain, link,"
-                            + " pores or aura, was '" + pattern + "'");
+                            || pattern.equals("aura")
+                            || pattern.equals(AIR_LINK),
+                    "pattern must be aimed, fan, mine, spawn, mortar, ring, spiral, laser-sweep, laser-line, pounce,"
+                            + " drain, link, pores, aura or air-link, was '" + pattern + "'");
             Check.that(pattern.equals("pounce") == pounce.isPresent(), "a pounce has its pounce, the others none");
             Check.that(
                     !pattern.equals("pounce") || (bullet.isEmpty() && speed.isEmpty() && interval.isPresent()),
@@ -409,9 +467,11 @@ public sealed interface EnemyAttackData permits EnemyData {
             Check.that(pattern.equals("spawn") == spawn.isPresent(), "a spawn attack has its spawn, the others none");
             Check.that(
                     pattern.equals("laser-sweep")
+                            || pattern.equals(LASER_LINE)
                             || pattern.equals("pounce")
                             || pattern.equals("drain")
                             || pattern.equals("link")
+                            || pattern.equals(AIR_LINK)
                             || pattern.equals("aura")
                             // M8 part E: a slowing ring is sound, no bullet (its speed below).
                             || slow.isPresent()
@@ -510,8 +570,13 @@ public sealed interface EnemyAttackData permits EnemyData {
             double speed,
             Optional<Integer> burstBounty,
             Optional<Double> shutWithin,
-            Optional<Double> ramAfter) {
+            Optional<Double> ramAfter,
+            Optional<Stream> stream) {
         public Spawn {
+            // M9 part C: a launcher's streams are periodic, from its centre, never shut, never bursting.
+            Check.that(
+                    stream.isEmpty() || (every.isPresent() && shutWithin.isEmpty() && ramAfter.isEmpty()),
+                    "a stream launcher has an every and no shut_within or ram_after");
             ramAfter.ifPresent(a -> Check.notNegative("ram_after", a));
             Check.that(every.isPresent() || ramAfter.isEmpty(), "only a periodic spawn has a ram_after");
             Check.positive("count", count);
@@ -533,6 +598,22 @@ public sealed interface EnemyAttackData permits EnemyData {
         /** Whether it is a periodic spawn (with {@code every}). */
         public boolean periodic() {
             return every.isPresent();
+        }
+    }
+
+    /**
+     * M9 part C (design/enemies/air/gilded-gunship, its Dart streams): a spawn that launches streams while its unit
+     * flies the field (the unit keeps its other attacks): {@code count} units every {@code every} s, {@code gap} s apart,
+     * the first stream {@code first} s after it entered the field, spread over the spawn's {@code arc} round its facing
+     * (down); a launched unit flies straight {@code straight} s before its chase; none while {@code most} of its units
+     * live.
+     */
+    record Stream(double gap, double first, double straight, int most) {
+        public Stream {
+            Check.positive("gap", gap);
+            Check.notNegative("first", first);
+            Check.notNegative("straight", straight);
+            Check.positive("most", most);
         }
     }
 
@@ -565,11 +646,77 @@ public sealed interface EnemyAttackData permits EnemyData {
      * {@code drift} px/s in a random direction, has {@code hp}, and bursts after {@code life} s into
      * a {@code ring} of {@code ringBullet} bullets at the attack's speed; destroyed it pays {@code credits}.
      */
-    record Mine(double arm, double life, double drift, double hp, int ring, String ringBullet, int credits) {
+    record Mine(
+            double arm,
+            double life,
+            double drift,
+            double hp,
+            int ring,
+            String ringBullet,
+            int credits,
+            Optional<Double> proximity,
+            Optional<Double> blink,
+            Optional<Blast> blast,
+            Optional<Double> chain,
+            Optional<Double> hop,
+            Optional<MineLine> line) {
         public Mine {
             Check.notNegative("arm", arm);
             Check.positive("life", life);
             Check.positive("hp", hp);
+            // M9 part C: a line mine has its proximity, blink and hop; it holds its place in the field.
+            Check.that(
+                    proximity.isPresent() == blink.isPresent() && proximity.isPresent() == hop.isPresent(),
+                    "a line mine has its proximity, blink and hop together");
+            Check.that(
+                    proximity.isPresent() || (blast.isEmpty() && chain.isEmpty() && line.isEmpty()),
+                    "only a line mine (with a proximity) has a blast, a chain or a line");
+            Check.that(proximity.isEmpty() || drift == 0, "a line mine holds its place: drift 0");
+            proximity.ifPresent(p -> Check.positive("proximity", p));
+            blink.ifPresent(b -> Check.notNegative("blink", b));
+            chain.ifPresent(c -> Check.notNegative("chain", c));
+            hop.ifPresent(h -> Check.positive("hop", h));
+        }
+
+        /** M9 part C: whether it is a line mine (design/enemies, Mine lines). */
+        public boolean lineMine() {
+            return proximity.isPresent();
+        }
+    }
+
+    /**
+     * M9 part C (design/campaign Level 30, C2 a): a line mine's proximity blast: the ship, Rook and the Bulwark take
+     * {@code bullet}'s damage once where their hulls touch the disc of {@code radius} px round the mine.
+     */
+    record Blast(double radius, String bullet) {
+        public Blast {
+            Check.positive("radius", radius);
+        }
+    }
+
+    /**
+     * M9 part C (design/enemies/space/minelayer, The mine line): a layer's line across the play field: {@code clusters}
+     * clusters of {@code perCluster} mines {@code spacing} px apart ({@code middleShort} fewer in a middle cluster: easy's
+     * 3 beside a wider gap), {@code clusterGap} px between two clusters and the one {@code gap} at the boundary its wave
+     * names; at most {@code most} line mines alive (an unfinished line is not topped up).
+     */
+    record MineLine(
+            int clusters,
+            int perCluster,
+            double spacing,
+            double clusterGap,
+            double gap,
+            Optional<Integer> middleShort,
+            int most) {
+        public MineLine {
+            Check.that(clusters >= 2, "a line has two clusters at least (its gap is at a boundary): " + clusters);
+            Check.positive("per_cluster", perCluster);
+            Check.positive("spacing", spacing);
+            Check.positive("cluster_gap", clusterGap);
+            Check.positive("gap", gap);
+            middleShort.ifPresent(
+                    m -> Check.that(m >= 0 && m < perCluster, "middle_short: 0 to per_cluster - 1, was " + m));
+            Check.positive("most", most);
         }
     }
 

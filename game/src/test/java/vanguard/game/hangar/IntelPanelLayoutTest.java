@@ -569,9 +569,11 @@ class IntelPanelLayoutTest {
                 continue;
             }
             Intel otherIntel = Intel.of(CONTENT, other, 3);
-            // M8 part H: Level 28's Hunter columns are marked too (level28sStripStopsAtTheMawsArrival).
+            // M8 part H: Level 28's Hunter columns are marked too (level28sStripStopsAtTheMawsArrival); M9 part C:
+            // Level 30's Minelayer columns from the rear too (its threat profile: "the wave strip marking the rear
+            // entries").
             assertEquals(
-                    other.equals(LEVEL_28),
+                    other.equals(LEVEL_28) || other.equals(CONTENT.levelKey(30).orElseThrow()),
                     otherIntel.marks().stream().anyMatch(mark -> mark.kind() == Intel.Mark.Kind.COLUMN),
                     other);
             Measure measure = new Measure();

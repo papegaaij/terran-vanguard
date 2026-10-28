@@ -14,6 +14,18 @@ final class RookHazards {
     /** Passes over the vents (a move clear of one row may land on another). */
     private static final int VENT_PASSES = 3;
 
+    /**
+     * M9 part C: his goal keeps this far outside a line mine's proximity, px (the 112 px gap leaves 2 px of goal; his
+     * steering's lag stays inside the margin).
+     */
+    static final double MINE_GAP = 6;
+
+    /** M9 part C: he keeps out of where a line mine comes down to in this many steps (1 s). */
+    private static final int MINE_LOOKAHEAD_TICKS = SimStep.ticks(1);
+
+    /** M9 part C: passes over the line mines (a cluster's discs overlap: a move clear of one lands in the next). */
+    private static final int MINE_PASSES = 6;
+
     private final double halfW;
     private final double halfH;
     private final double limit;
@@ -90,6 +102,68 @@ final class RookHazards {
             moved = true;
         }
         return moved;
+    }
+
+    /**
+     * M9 part C (design/player/wingmen, Rook in the minefield; Level 30): moves the goal (goalX, goalY) out of the
+     * proximity discs of the line mines among {@code mines} (his centre {@link #MINE_GAP} outside each), sideways
+     * toward {@code towardX} (the ship's x: the gap it flies) where the field allows, else straight away from the mine;
+     * spores are left to his dodge. Returns whether it moved; the goal is then ({@link #x()}, {@link #y()}).
+     */
+    boolean clearOfMines(double goalX, double goalY, Pool<Mine> mines, double towardX) {
+        gx = goalX;
+        gy = goalY;
+        boolean moved = false;
+        for (int pass = 0; pass < MINE_PASSES; pass++) {
+            boolean shifted = false;
+            for (int i = 0; i < mines.size(); i++) {
+                Mine mine = mines.get(i);
+                if (mine.line()) {
+                    // Where it comes down to in his look-ahead: he moves before the line reaches him.
+                    double lowY = mine.y() + Math.min(0, mine.stepY()) * MINE_LOOKAHEAD_TICKS;
+                    shifted |= clearOfMine(
+                            mine.x(),
+                            mine.y(),
+                            lowY,
+                            mine.spec().line().orElseThrow().proximity(),
+                            towardX);
+                }
+            }
+            moved |= shifted;
+            if (!shifted) {
+                break;
+            }
+        }
+        return moved;
+    }
+
+    /**
+     * Out of one mine's disc swept from (cx, cy) down to (cx, lowY): across it toward {@code towardX} at the goal's
+     * height, else away from its centre.
+     */
+    private boolean clearOfMine(double cx, double cy, double lowY, double proximity, double towardX) {
+        double out = proximity + MINE_GAP;
+        double dx = gx - cx;
+        double dy = gy - Math.clamp(gy, lowY, cy);
+        if (dx * dx + dy * dy >= out * out) {
+            return false;
+        }
+        double across = Math.sqrt(out * out - dy * dy) + 1;
+        double side = towardX >= cx ? 1 : -1;
+        double tx = cx + side * across;
+        if (tx >= limit && tx <= PlayField.WIDTH - limit) {
+            gx = tx;
+            return true;
+        }
+        tx = cx - side * across;
+        if (tx >= limit && tx <= PlayField.WIDTH - limit) {
+            gx = tx;
+            return true;
+        }
+        double d = Math.sqrt(dx * dx + dy * dy);
+        double uy = d > 1e-6 ? dy / d : -1;
+        gy = Math.clamp(cy + (uy >= 0 ? 1 : -1) * (out + 1), limit, PlayField.HEIGHT - limit);
+        return true;
     }
 
     /**

@@ -143,6 +143,10 @@ class ActFourDataTest {
     @Test
     void everyLevelSoFarFliesInTheAirWithTheDrySettingsLimits() {
         CONTENT.levels().forEach((key, level) -> {
+            // M9 part A/B: Act 5's levels fly in vacuum (BeltKeysTest).
+            if (Content.levelNumber(key) >= BeltChecks.firstLevel(CONTENT)) {
+                return;
+            }
             // M8 part C: Level 23 dives at its waterline (25.5 s): from there under water, the Airstrike and the Lance
             // forbidden, the Sonar Pulse free.
             boolean descent = key.equals("act-4-deep-water/level-23-through-the-ice");
