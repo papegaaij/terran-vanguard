@@ -38,11 +38,8 @@ final class MinefieldRules {
         Optional<Double> turnRate = hook.flatMap(EnemyData.Hook::chase).flatMap(EnemyData.ChaseChange::turnRate);
         if (chase.isPresent() && turnRate.isPresent()) {
             out = out.withChase(
-                    new EnemySpec.Chase(
-                            chase.get().speed(),
-                            Math.toRadians(turnRate.get()),
-                            chase.get().seconds()),
-                    out.latch());
+                    // M9 part F: the rebuilt chase keeps its drift (the leech's hard turn rate) and its hook's speed.
+                    PartFRules.chase(chase.get(), hook), out.latch());
         }
         Optional<EnemyData.Cars> cars = enemy.segmentChain().flatMap(EnemyData.SegmentChain::cars);
         if (cars.isPresent() && out.chain().isPresent()) {

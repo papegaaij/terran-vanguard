@@ -31,6 +31,10 @@ There is no index.html board in this round: the review page is built from this f
 `build/round45-tools/build_review.py` (untracked), and the voices are on [listen-through.html](listen-through.html)
 (generator `tools/concept/listen_through.py`, index in [listen-through.md](listen-through.md)).
 
+## Review
+
+Record of the decisions: [review.html](review.html)
+
 ## In the game
 
 `./gradlew :desktop:run --args="..."` with `--settings <file>` (a debug run writes no save):

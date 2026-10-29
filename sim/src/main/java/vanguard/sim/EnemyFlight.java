@@ -67,6 +67,11 @@ final class EnemyFlight {
         }
         u.prevX = u.x;
         u.prevY = u.y;
+        if (u.preyDrift > 0) {
+            // M9 part F (the uneasy alliance): a preyed unit has left its path: it drifts down until it is gone.
+            u.y -= u.preyDrift * SimStep.SECONDS;
+            return u.y + u.box.height() / 2 > 0;
+        }
         switch (u.phase) {
             case RIDE -> {
                 // M9 part B: its rock's pass places it after the rocks moved; gone when its rock carried it off.
@@ -153,8 +158,8 @@ final class EnemyFlight {
                 // M9 part D (design/allies/mining-tug): under the always hook it steers at the objective's nearest
                 // section instead of the ship; crossing it deals the dive once ({@link AllyPasses}).
                 u.divedAtObjective |= objective;
-                u.chasing.chase(objective ? diveX : shipX, objective ? diveY : shipY);
-                return true;
+                // M9 part F: false once carried off on its prey.
+                return u.chasing.chase(objective ? diveX : shipX, objective ? diveY : shipY);
             }
             case DASH -> {
                 // M9 part D: its dash cycle; gone once out through an edge after its last dash.
@@ -206,6 +211,17 @@ final class EnemyFlight {
                     // M9 part B: a dormant unit's rack stays still until it wakes.
                     track(aimX, aimY);
                 }
+                if (u.spec.groundSweep().isPresent() && u.dormantTick < 0 && u.wakeTicks == 0) {
+                    // M9 part E (design/enemies/ground/sentinel-tower): its sweep, all round, while on the field.
+                    u.groundSweep.step(
+                            u.spec.sweep().orElseThrow(),
+                            u.spec.groundSweep().get(),
+                            PlayField.overlaps(u.x, u.y, u.box),
+                            u.x,
+                            u.y,
+                            shipX,
+                            shipY);
+                }
                 return u.y + u.box.height() / 2 > 0 && !carriedOffTop(groundScroll);
             }
             case WALK -> {
@@ -219,7 +235,10 @@ final class EnemyFlight {
                 } else {
                     u.y -= groundScroll;
                     if (u.curlRoll.phase() == Enemy.CurlPhase.WALK) {
-                        walk();
+                        if (!u.toppling.active() && u.dormantTick < 0) {
+                            // M9 part E: a toppling walker stands where it lost its leg; a dormant one waits.
+                            walk();
+                        }
                     } else {
                         u.curlRoll.step(u, u.spec.roll().orElseThrow(), u.events, groundScroll);
                     }

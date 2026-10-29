@@ -40,6 +40,8 @@ Sonar Pulse pressed at t≈64 and t≈110, Rook along); their PNGs are frames of
 level in each row's text. The Angler's capture comes from a run with the guns held (so the lunges are not shot first).
 The briefing and intel captures come from a playthrough save at Level 26 (a sensor suite L2 fitted for the capture).
 
+Record of the decisions: [review.html](review.html)
+
 ## In the game
 
 The art below is already in `assets/` (the finals), and the **a** sound of every pair plays in the game until the

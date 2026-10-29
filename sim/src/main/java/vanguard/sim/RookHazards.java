@@ -34,6 +34,10 @@ final class RookHazards {
 
     private double gx;
     private double gy;
+    /** M9 part H, step H1b: where he is now ({@link #at}). */
+    private double rx;
+
+    private double ry;
 
     /**
      * @param hitbox his hit box
@@ -78,6 +82,11 @@ final class RookHazards {
             if (piece.breach().isPresent() && piece.present() && !piece.destroyed()) {
                 // M7 part H, step H3: out of the bite circle of a telling, risen or open mouth and out of a marker.
                 moved |= clearOfBreach(piece.breach().get());
+            }
+            if (piece.ring().isPresent() && piece.present() && !piece.destroyed()) {
+                // M9 part H, step H1b: out of a ringed boss's telling or sweeping laser wedge (its rail lines never hit
+                // him).
+                moved |= clearOfWedges(piece);
             }
         }
         if (vents != null) {
@@ -259,6 +268,113 @@ final class RookHazards {
             }
         }
         return false;
+    }
+
+    /** M9 part H, step H1b: where he is now (the laser wedges ask which side of the beam he is on). */
+    void at(double x, double y) {
+        rx = x;
+        ry = y;
+    }
+
+    /**
+     * M9 part H, step H1b (design/enemies/bosses/iron-sovereign, The escort): out of the way of each telling or sweeping
+     * laser wedge of {@code piece} (its origin, its first to its last edge, its beam's length; grown by his half size,
+     * the gap and half the beam's width). While it tells, a goal in the wedge turns round the origin past the edge
+     * nearer to him (the first edge is safe: the beam leaves it; the last: it comes there last). While the beam sweeps:
+     * ahead of the beam he goes past the last edge (else beyond its reach); behind it he stays behind it (a goal ahead
+     * of the beam turns back behind it, or he holds where he is), so he never crosses the beam.
+     */
+    private boolean clearOfWedges(SetPiece piece) {
+        boolean moved = false;
+        for (int a = 0; a < piece.attackCount(); a++) {
+            boolean beaming = piece.sweepBeaming(a);
+            if (!piece.sweepTelegraphing(a) && !beaming) {
+                continue;
+            }
+            EnemySpec.Sweep sweep =
+                    piece.boss().orElseThrow().attacks().get(a).sweep().orElseThrow();
+            double ox = piece.sweepOriginX(a);
+            double oy = piece.sweepOriginY(a);
+            double first = piece.sweepFrom(a);
+            double dir = piece.sweepTo(a) >= first ? 1 : -1;
+            double arc = Math.abs(piece.sweepTo(a) - first);
+            double margin = Math.max(halfW, halfH) + GAP + sweep.width() / 2;
+            double reach = sweep.length() + margin;
+            double goalDistance = Math.hypot(gx - ox, gy - oy);
+            double rookDistance = Math.hypot(rx - ox, ry - oy);
+            double goalGrow = grow(margin, goalDistance);
+            double rookGrow = grow(margin, rookDistance);
+            double goalAlong = along(gx - ox, gy - oy, first, dir);
+            double rookAlong = along(rx - ox, ry - oy, first, dir);
+            boolean goalIn = goalDistance < reach && goalAlong >= -goalGrow && goalAlong <= arc + goalGrow;
+            if (!beaming) {
+                if (!goalIn) {
+                    continue;
+                }
+                // Past the edge nearer to him, at the goal's distance.
+                boolean lastNearer = rookAlong > arc / 2;
+                if (!place(ox, oy, edge(first, dir, arc, goalGrow, lastNearer), goalDistance)
+                        && !place(ox, oy, edge(first, dir, arc, goalGrow, !lastNearer), goalDistance)) {
+                    beyond(ox, oy, reach);
+                }
+                moved = true;
+                continue;
+            }
+            double beam = Math.IEEEremainder(piece.sweepBeam(a, 0) - first, 2 * StrictMath.PI) * dir;
+            boolean rookBehind = rookDistance >= reach || rookAlong < beam - rookGrow;
+            boolean goalBehind = goalDistance >= reach || goalAlong < beam - goalGrow;
+            if (rookBehind && goalBehind) {
+                continue;
+            }
+            if (rookBehind) {
+                // The goal lies ahead of the beam: back behind it, or he holds.
+                if (!place(ox, oy, first + dir * (beam - goalGrow - 0.05), goalDistance)) {
+                    gx = rx;
+                    gy = ry;
+                }
+            } else if (!place(ox, oy, edge(first, dir, arc, rookGrow, true), rookDistance)) {
+                // Ahead of the beam: past its last edge, else out of its reach.
+                beyond(ox, oy, reach);
+            }
+            moved = true;
+        }
+        return moved;
+    }
+
+    /** The angle {@code margin} spans at {@code distance} (a half turn when closer than it). */
+    private static double grow(double margin, double distance) {
+        return distance > margin ? StrictMath.asin(Math.min(1, margin / distance)) : StrictMath.PI;
+    }
+
+    /** How far the bearing of (dx, dy) lies along a sweep from its {@code first} edge in its direction {@code dir}. */
+    private static double along(double dx, double dy, double first, double dir) {
+        return Math.IEEEremainder(StrictMath.atan2(-dx, -dy) - first, 2 * StrictMath.PI) * dir;
+    }
+
+    /** The heading just past the sweep's last edge ({@code last}) or before its first, by {@code grow}. */
+    private static double edge(double first, double dir, double arc, double grow, boolean last) {
+        return last ? first + dir * (arc + grow + 0.01) : first - dir * (grow + 0.01);
+    }
+
+    /** The goal at {@code distance} from (ox, oy) along {@code heading}, if inside the field's margins. */
+    private boolean place(double ox, double oy, double heading, double distance) {
+        double tx = ox - Trig.sin(heading) * distance;
+        double ty = oy - Trig.cos(heading) * distance;
+        if (tx < limit || tx > PlayField.WIDTH - limit || ty < limit || ty > PlayField.HEIGHT - limit) {
+            return false;
+        }
+        gx = tx;
+        gy = ty;
+        return true;
+    }
+
+    /** The goal beyond the beam's reach from (ox, oy), along his bearing from it, inside the margins. */
+    private void beyond(double ox, double oy, double reach) {
+        double dx = rx - ox;
+        double dy = ry - oy;
+        double distance = Math.max(1e-9, Math.hypot(dx, dy));
+        gx = Math.clamp(ox + dx / distance * (reach + 1), limit, PlayField.WIDTH - limit);
+        gy = Math.clamp(oy + dy / distance * (reach + 1), limit, PlayField.HEIGHT - limit);
     }
 
     /** Round 44: off a charging or firing rail lance's line, across it to the side the goal is on. */

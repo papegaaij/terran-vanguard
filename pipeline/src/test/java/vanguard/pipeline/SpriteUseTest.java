@@ -76,7 +76,11 @@ class SpriteUseTest {
                 "crew-rover-lights");
         Map<String, Set<String>> atlases = SpriteUse.atlases(content, props);
         for (String prop : props) {
-            assertEquals(Set.of("level-19"), atlases.get(prop), prop);
+            // M9 part E (step E2): Level 32's refinery flies the foundry's furnace vents too.
+            assertEquals(
+                    prop.startsWith("furnace-vent") ? Set.of("level-19", "level-32") : Set.of("level-19"),
+                    atlases.get(prop),
+                    prop);
         }
     }
 
@@ -276,12 +280,86 @@ class SpriteUseTest {
         Map<String, Set<String>> atlases = SpriteUse.atlases(content, roots);
 
         content.levels().forEach((key, level) -> {
+            Map<String, String> liveries = SpriteUse.liveried(content, key, level);
             for (String root : SpriteUse.roots(content, level)) {
+                if (liveries.containsKey(root)) {
+                    // M9 part G: the unit's hull is drawn in its livery's frames there (Level 34's tanks).
+                    assertTrue(atlases.get(liveries.get(root)).contains(SpriteUse.atlasOf(key)), root);
+                    continue;
+                }
                 Set<String> in = atlases.get(root);
                 assertTrue(
                         in.contains(SpriteUse.atlasOf(key)) || in.equals(Set.of(SpriteUse.SHARED)), root + ": " + in);
             }
         });
+    }
+
+    /**
+     * M9 part G (Level 34): the Warden Tank's Ascendancy livery only in the levels of its act (its own hull, turret and
+     * wreck give way there, its muzzle flash stays), the grey tank only before; the containers' CDF and Helix variants
+     * only where a target names them (not Level 01's plain container); the Helix core's frames with its story pickup.
+     */
+    @Test
+    void aLiveryAContainersVariantsAndAStoryPickupGoWhereTheyAreUsed() {
+        Map<String, Set<String>> atlases = SpriteUse.atlases(
+                content,
+                List.of(
+                        "warden-tank",
+                        "warden-tank-turret",
+                        "warden-tank-flash",
+                        "warden-tank-asc",
+                        "warden-tank-asc-turret",
+                        "cargo-container",
+                        "cargo-container-cdf",
+                        "cargo-container-helix-break",
+                        "helix-core",
+                        "helix-core-rise"));
+        String level34 = SpriteUse.atlasOf(34);
+        String level19 = SpriteUse.atlasOf(19);
+        assertTrue(atlases.get("warden-tank-asc").contains(level34));
+        assertFalse(atlases.get("warden-tank-asc").contains(level19), "no livery before Act 5");
+        assertTrue(atlases.get("warden-tank-asc-turret").contains(level34));
+        assertFalse(atlases.get("warden-tank-asc-turret").contains(level19));
+        assertFalse(atlases.get("warden-tank").contains(level34), "the grey hull: " + atlases.get("warden-tank"));
+        assertFalse(atlases.get("warden-tank-turret").contains(level34));
+        assertTrue(atlases.get("warden-tank").contains(level19), "Level 19's grey tanks");
+        assertTrue(atlases.get("warden-tank-flash").containsAll(Set.of(level19, level34)));
+        assertEquals(Set.of(level34), atlases.get("cargo-container-cdf"));
+        assertEquals(Set.of(level34), atlases.get("cargo-container-helix-break"));
+        assertTrue(atlases.get("cargo-container").contains(SpriteUse.atlasOf(1)));
+        assertEquals(Set.of(level34), atlases.get("helix-core"));
+        assertEquals(Set.of(level34), atlases.get("helix-core-rise"));
+    }
+
+    /**
+     * M9 part H (Level 35): the Iron Sovereign's frames and the mass relay's go in Level 35's atlas; its laser batteries
+     * draw the Sentinel Tower's wedge, beam and eye and its rail batteries the Rail Bunker's rail there (not the tower's
+     * head: no tower flies in Level 35); the relay is Level 35's only.
+     */
+    @Test
+    void theSovereignsBatteriesBringTheirUnitsLooksAndTheRelayItsFlash() {
+        Map<String, Set<String>> atlases = SpriteUse.atlases(
+                content,
+                List.of(
+                        "iron-sovereign-segment-outer",
+                        "iron-sovereign-core",
+                        "mass-relay-line",
+                        "mass-relay-bolt",
+                        "sentinel-tower-telegraph-120",
+                        "sentinel-tower-beam",
+                        "sentinel-tower-eye",
+                        "sentinel-tower-head",
+                        "rail-bunker-rail"));
+        String level35 = SpriteUse.atlasOf(35);
+        assertEquals(Set.of(level35), atlases.get("iron-sovereign-segment-outer"));
+        assertEquals(Set.of(level35), atlases.get("iron-sovereign-core"));
+        assertEquals(Set.of(level35), atlases.get("mass-relay-line"));
+        assertEquals(Set.of(level35), atlases.get("mass-relay-bolt"));
+        assertTrue(atlases.get("sentinel-tower-telegraph-120").contains(level35));
+        assertTrue(atlases.get("sentinel-tower-beam").contains(level35));
+        assertTrue(atlases.get("sentinel-tower-eye").contains(level35));
+        assertFalse(atlases.get("sentinel-tower-head").contains(level35), "no tower flies there");
+        assertTrue(atlases.get("rail-bunker-rail").contains(level35));
     }
 
     private Set<String> levelsUsing(String root) {

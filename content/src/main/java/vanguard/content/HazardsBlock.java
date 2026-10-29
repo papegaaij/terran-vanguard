@@ -8,7 +8,8 @@ import vanguard.sim.PlayField;
 
 /**
  * The level's hazards: the {@code cranes}, the mass-driver {@code sleds}, the low-gravity {@code rocks}, the {@code
- * tows}, the {@code debris} field, and the conveyor {@code belts} and furnace {@code vents}.
+ * tows}, the {@code debris} field, the conveyor {@code belts} and furnace {@code vents}, and (M9 part H) the mass-relay
+ * flash ({@code relay}).
  *
  * <p>It only holds the block's types (and their logic): {@link LevelData} implements it, so the rest of the game keeps
  * naming them as members of {@code LevelData} ({@code LevelData.Sleds}).
@@ -123,10 +124,21 @@ public sealed interface HazardsBlock permits LevelData {
      * {@code [dx, dy]} px from the boat's centre (y up: a positive dy trails above it). Shots and
      * bullets pass the boat and the pod, and the ship flies under them; only the {@code cable}, a hit
      * box midway between the two, takes the player's shots: {@code hits} of them cut it and the pod
-     * falls free as the crate of the secret it {@code reveals}.
+     * falls free as the crate of the secret it {@code reveals}. M9 (round 64 C.1 a, the Act 5 tows): with {@code
+     * beam_touch: true} a beam touching the cable box (the housing) counts one hit per 0.25 s of contact too
+     * (default false: Level 07's lifeboat counts shots only).
      */
     public record Tow(
-            double t, double x, Point drift, Size boat, Size pod, Point tether, Size cable, int hits, String reveals) {
+            double t,
+            double x,
+            Point drift,
+            Size boat,
+            Size pod,
+            Point tether,
+            Size cable,
+            int hits,
+            String reveals,
+            Optional<Boolean> beamTouch) {
         public Tow {
             Check.notNegative("t", t);
             Check.that(drift.y() < 0, "drift: a tow drifts down the screen (a negative y)");
@@ -619,6 +631,60 @@ public sealed interface HazardsBlock permits LevelData {
             markers.ifPresent(m -> Check.notNegative("markers", m));
             flakEvery.ifPresent(e -> Check.positive("flak_every", e));
             burst.ifPresent(b -> Check.positive("burst", b));
+        }
+    }
+
+    /**
+     * M9 part H (design/campaign Level 35, the mass-relay flash): once, at {@code t} s on the level clock, a horizontal
+     * line is locked through the ship's y and telegraphed {@code telegraph} s from the {@code from} edge ({@code right}
+     * or {@code left}); then it flashes, live {@code live} s, a band {@code band} px high that hits the ship once for
+     * {@code damage} (Rook and the enemies untouched). The difficulties' {@code easy} and {@code hard} change the
+     * telegraph (easy 1.5 s).
+     */
+    record Relay(
+            double t,
+            double telegraph,
+            double live,
+            double band,
+            double damage,
+            String from,
+            Optional<RelayChange> easy,
+            Optional<RelayChange> hard) {
+        public Relay {
+            Check.notNegative("t", t);
+            Check.positive("telegraph", telegraph);
+            Check.positive("live", live);
+            Check.positive("band", band);
+            Check.positive("damage", damage);
+            Check.that(from.equals("right") || from.equals("left"), "from: right or left, was '" + from + "'");
+        }
+
+        /** Whether it is telegraphed from the right edge. */
+        public boolean fromRight() {
+            return from.equals("right");
+        }
+
+        /** Its telegraph on {@code difficulty}, s. */
+        public double telegraphOn(Difficulty difficulty) {
+            Optional<RelayChange> change =
+                    switch (difficulty) {
+                        case EASY -> easy;
+                        case HARD -> hard;
+                        case MEDIUM -> Optional.empty();
+                    };
+            return change.flatMap(RelayChange::telegraph).orElse(telegraph);
+        }
+
+        /** The window, s on the level clock, from its telegraph's start to the end of its flash. */
+        public Span window(Difficulty difficulty) {
+            return new Span(t, t + telegraphOn(difficulty) + live);
+        }
+    }
+
+    /** A difficulty's change to the relay flash: its {@code telegraph} instead, s. */
+    record RelayChange(Optional<Double> telegraph) {
+        public RelayChange {
+            telegraph.ifPresent(s -> Check.positive("telegraph", s));
         }
     }
 }

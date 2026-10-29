@@ -156,6 +156,18 @@ class Act4ArsenalFlightTest {
             }
             LevelScript script = SimSpecs.level(CONTENT, key, Difficulty.MEDIUM);
             assertEquals(MediumSpec.AIR, script.medium(), key);
+            // M9 part E (step E2): Level 32 lies inside rock from its start (underground: the Airstrike and the Lance
+            // greyed IN ROCK, the specials' own limits).
+            if (level.underground().orElse(false)) {
+                assertEquals(
+                        new SpecialLimits(List.of(new SpecialLimits.Switch(
+                                0,
+                                Optional.of(Set.of(SpecialSpec.Kind.LANCE, SpecialSpec.Kind.AIRSTRIKE)),
+                                SpecialLimits.Reason.IN_ROCK))),
+                        script.specialLimits(),
+                        key);
+                continue;
+            }
             assertEquals(SpecialLimits.NONE, script.specialLimits(), key);
         }
     }

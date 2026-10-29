@@ -1474,3 +1474,73 @@ loop."*
 - `gilded-cage-motif-mix-r64-a.ogg`: listening aid, loop bars 1–24, the full mix with the motif stem on top (45.7 s).
 - `gilded-cage-sheet-r64-a.png`: review sheet: waveforms with intro (grey), loop (blue), fade tail (dark) and loop
   points (amber), the measured numbers and a per-section loudness table.
+
+## hollow-rock-conveyor-r65-a — track 12 "Hollow Rock"'s conveyor stem (Level 32's forks)
+
+A fourth stem for [hollow-rock-r62-a](hollow-rock-r62-a.ogg), by `tools/concept/audio/music_r65.py` (music_r62.py's
+render, voices, chains and seeds; new groups only). Level 32 asks for "the conveyor breakdown with the lone horn at the
+forks (sections 3 and 5)"; the game plays a theme's stems sample-aligned and switches them at times (`stem_times`, as
+Level 26's dark stem), so the breakdown cannot be jumped to: this stem plays the breakdown's material (sections C and C2)
+over the whole loop on each section's own chords: the conveyor (anvil 16ths at 3.1 kHz), the anvils' pattern at the
+breakdown's weight, the distorted bass held on each bar's root, the cold pad, the machine's arpeggio dark and quiet,
+a steam hiss every 4 bars and the **lone human horn** (humanity's motif on the flute) twice in every 8 bars, from the
+chord's root (B3, G3, E4, F♯3), minor or major with the chord, on bars 1 and 5 where the chord holds (bars 2 and 6 in C
+and C2, as the sketch). No kick, snare, hats, riser or brass (the motif stem can still play on top). Mastered linked to
+the full mix (its gain and peak correction); the run checks that the re-rendered full mix decodes to the shipped
+`hollow-rock-r62-a.ogg` sample for sample (identical), so the stem lines up with the files in `assets/music`.
+
+**Measured** (not listened to): 181.78 s, `LOOPSTART` 333200 (7.556 s), `LOOPLENGTH` 7526400 (170.667 s), aligned with
+the r62 files; −16.6 LUFS (−2.5 LU under the full mix; −16.4 to −16.8 LUFS in every section, against the full mix's
+breakdown C at −14.9), −3.0 dBTP, seam 0.24.
+
+**AI prompt**: *"The breakdown of an industrial asteroid-mining level theme, 135 BPM, B minor: no drums, a conveyor's
+ticking metal 16ths, struck anvils, a held distorted bass and a cold pad, a quiet machine arpeggio, a lone human horn
+calling a five-note motif every four bars, about three minutes, instrumental, seamless loop."*
+
+- `hollow-rock-conveyor-r65-a.ogg`: the stem.
+- `hollow-rock-conveyor-seam-r65-a.ogg`: listening aid, the last 8 s of the loop followed by the first 8 s after
+  `LOOPSTART` (0.5 s fades).
+- `hollow-rock-conveyor-join-r65-a.ogg`: listening aid, loop bars 1–16 (28.4 s): the full mix crossfading over 2 s into
+  the conveyor stem alone at bar 9, as a fork would switch.
+
+## iron-sovereign-full-r68-a — track 19 "Iron Sovereign" at full length (one full mix)
+
+From the chosen round-03 sketch [ascendancy-boss-r03-a](ascendancy-boss-r03-a.ogg) (147 BPM, F♯ minor), by
+`tools/concept/audio/music_r68.py`, the way track 18 went from its round-02 sketch to `choir-descends-full-r08-a` in
+round 08: the sketch's voices, grooves, chords, figures, mix chains and seeds; one full mix, no stems (a boss fight
+switches nothing). Composition: the sketch's 4-bar intro (the parade: rudiments growing, timpani, Vorne's motif in low
+brass on F♯ then C♯, the organ below) and a 72-bar loop of nine 8-bar sections, so the 2:00 does not play the 32-bar
+sketch twice: **A** march, **B** machine, **C** menace (half time, the motif at one note a bar) and build, **D** tutti
+(trumpets on the motif, the low-brass canon a bar behind) — the sketch's four, as they were — then **Br** (new, the
+machine alone: no drums, the 16th riff over a held bass, the organ on the chords, a metal tick and the timpani; from
+bar 5 the motif in low brass and organ, the kick and rudiments returning, a roll and a riser), **B2** (new, B's groove
+with the trumpets and the low brass playing the motif in diminution, one bar each on F♯m and Bm), **E** (new, parade
+ground: the snare corps in front, a heavier kick, tom runs, the motif in low brass and then in trumpets with the canon,
+stab figures on the G Neapolitan and on C♯), **F** (new, the build: kick and timpani on every beat over a held bass,
+the march from bar 3, the riff, the low-brass 8ths and the trumpets' motif on B from bar 5, a 4-bar riser and a roll)
+and **D2** (the tutti again, the organ on the motif an octave down), rolling into A. The breakdowns (Br, F's first
+half) and build-ups (C, Br, F) give a three-ring fight somewhere to breathe; the music does not follow the phases.
+
+| Bars | Section | Chords |
+|---|---|---|
+| 1–8 | A | `F♯m(maj7) F♯m D D Bm(maj7) Bm C♯ C♯` |
+| 9–16 | B | `F♯m D Bm C♯` × 2 |
+| 17–24 | C | `F♯m G F♯m G D Bm C♯ C♯` |
+| 25–32 | D | as A |
+| 33–40 | Br | `F♯m F♯m D D Bm Bm C♯ C♯` |
+| 41–48 | B2 | as B |
+| 49–56 | E | `F♯m F♯m G G F♯m F♯m C♯ C♯` |
+| 57–64 | F | as A |
+| 65–72 | D2 | as A |
+
+**Measured** (not listened to): 127.76 s, `LOOPSTART` 306000 (6.939 s, the sketch's), `LOOPLENGTH` 5184000 (117.551 s =
+72 bars; a 16th is exactly 4500 samples), −14.0 LUFS, −1.5 dBTP (the limiter's ceiling −3 dBFS, as track 12's: at
+round 08's −2 the encode reached −0.8 dBTP), seam 0.13, 2.7 MB; the tonal balance within 0.6 dB of the sketch's in every
+octave band. Loudness per section (LUFS): A −13.6, B −15.0, C −14.8, D −13.1, Br −16.6 (bars 1–4 −19.7, the drop),
+B2 −13.5, E −13.3, F −14.7 (bars 1–4 −16.6), D2 −12.9.
+
+**AI prompt**: *"Cold martial boss battle theme, 147 BPM, F sharp minor, military snare drum rudiments, timpani, low
+brass staccato ostinato, trumpets playing a stately minor-major-seventh villain motif, distorted 16th-note synth riff,
+metallic industrial hits, brass canon, human military menace, no choir, 1990s synth-orchestral and industrial hybrid,
+instrumental, full-length two-minute arrangement with a drumless machine breakdown, a snare-corps section and long
+build-ups, seamless loop."*

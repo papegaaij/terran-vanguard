@@ -352,6 +352,7 @@ public final class Wingman {
         evading |= clearOfLunge();
         if (setPieces.length > 0 || vents != null || cruisers != null) {
             // M7 part F: out of the walker's cone while it tells or burns, and off the glowing or burning vents.
+            hazards.at(x, y);
             if (hazards.clear(goalX, goalY, setPieces, vents, cruisers)) {
                 goalX = hazards.x();
                 goalY = hazards.y();
@@ -583,7 +584,9 @@ public final class Wingman {
             // decision 2026-10-20): never one the seekers ignore (a mote), though it is a flank threat.
             if (!reaches(enemy.layer())
                     || enemy.spec().seekersIgnore()
-                    || (enemy.spec().hardened() && !spec.gun().antiGround())
+                    || (enemy.spec().hardened()
+                            && !spec.gun().antiGround()
+                            && enemy.spec().core().isEmpty())
                     || !inCone(dx, dy)) {
                 continue;
             }
@@ -616,8 +619,13 @@ public final class Wingman {
                 int serial = PlayerFire.PART_SERIAL + k * SetPieceSpec.MAX_PARTS + p;
                 targetSeen |= serial == target;
                 double distance = (px - x) * (px - x) + (py - y) * (py - y);
-                // M7 part F: a walking boss's pods (its parts that are not vital) before its hull.
-                int rank = piece.stride().isPresent() && parts.get(p).vital() ? 4 : 3;
+                // M7 part F: a walking boss's pods (its parts that are not vital) before its hull. M9 part H, step H1b:
+                // a
+                // ringed boss's armed batteries (inside the fire arc) first, then the nearest part (the core once
+                // open).
+                int rank = piece.stride().isPresent() && parts.get(p).vital()
+                        ? 4
+                        : piece.ring().isPresent() && piece.ring().get().armed(p) ? 2 : 3;
                 if (rank < bestRank || (rank == bestRank && distance < bestDistance)) {
                     best = serial;
                     bestRank = rank;
@@ -678,7 +686,7 @@ public final class Wingman {
      * within the lob's range, so a ground target beside the player is his while he flies in
      * formation.
      */
-    private boolean inCone(double dx, double dy) {
+    boolean inCone(double dx, double dy) {
         if (spec.gun().delivery() == WeaponSpec.Delivery.LOBBED) {
             double reach = spec.gun().range();
             return dy > 0 && dx * dx + dy * dy <= reach * reach;
@@ -1479,6 +1487,11 @@ public final class Wingman {
         }
         // M8 part F: only in a level with his scripted loss, so the other levels hash as before.
         loss.addTo(hash);
+    }
+
+    /** Whether he moved his goal out of a hazard (or a body, a lane, a lunge) in his last step. */
+    boolean evading() {
+        return evading;
     }
 
     Hull hull() {

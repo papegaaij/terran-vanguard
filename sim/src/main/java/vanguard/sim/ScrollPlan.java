@@ -28,6 +28,18 @@ final class ScrollPlan {
     static double haltScroll(LevelScript script, double fromSpeed) {
         double scroll = 0;
         List<Section> sections = script.sections();
+        if (sections.stream().anyMatch(section -> section.easeSeconds() > 0)) {
+            // M9 part H (step H3): a level whose sections ease into each other (Level 35's halt eased over 6 s before
+            // its arena) scrolls by the eased speed, step by step as the clock does, up to the arena's start.
+            int arenaStart = 0;
+            for (int i = 0; i < sections.size() && !sections.get(i).arena(); i++) {
+                arenaStart = SimStep.ticks(sections.get(i).end());
+            }
+            for (int tick = 0; tick < arenaStart; tick++) {
+                scroll += timedHaltSpeed(sections, tick) * SimStep.SECONDS;
+            }
+            return scroll + easeDistance(fromSpeed);
+        }
         for (int i = 0; i < sections.size() && !sections.get(i).arena(); i++) {
             int start = i == 0 ? 0 : SimStep.ticks(sections.get(i - 1).end());
             scroll += (SimStep.ticks(sections.get(i).end()) - start)
@@ -178,7 +190,25 @@ final class ScrollPlan {
             double centre = PlayField.WIDTH / 2.0;
             double left = terrain.spanLeft(scroll, y, centre);
             double right = terrain.spanRight(scroll, y, centre);
-            if (Double.isNaN(left)) {
+            if (wave.branch().isPresent()) {
+                // M9 part E: a fork's branch's wave flies its own channel: the widest span on its side of the island.
+                java.util.List<Integer> forks = script.ground().terrain().get().forks();
+                double middle =
+                        terrain.islandMiddle(forks.get(wave.branch().get().fork()));
+                boolean leftSide = wave.branch().get().side() == Branch.LEFT;
+                left = Double.NaN;
+                right = Double.NaN;
+                double best = 0;
+                for (double x = 5; x < PlayField.WIDTH; x += 10) {
+                    double from = terrain.spanLeft(scroll, y, x);
+                    double to = terrain.spanRight(scroll, y, x);
+                    if (!Double.isNaN(from) && (from + to) / 2 < middle == leftSide && to - from > best) {
+                        best = to - from;
+                        left = from;
+                        right = to;
+                    }
+                }
+            } else if (Double.isNaN(left)) {
                 double best = 0;
                 for (double x = 5; x < PlayField.WIDTH; x += 10) {
                     double from = terrain.spanLeft(scroll, y, x);

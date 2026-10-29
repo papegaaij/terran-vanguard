@@ -1,0 +1,292 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Round 35: record of the decisions</title><style>
+:root{--bg:#f4f5f7;--fg:#1b2230;--mut:#5a6577;--card:#fff;--line:#d3d9e2;--acc:#1f5fa8;--ok:#1d6b3a;--okbg:#e3f3e8;
+--hi:#fff6dc;--hib:#d9b84a;--code:#e9edf3;--warn:#8a4b00}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10141b;--fg:#dde3ee;--mut:#98a3b6;--card:#171d27;
+--line:#2c3544;--acc:#7fb2ee;--ok:#7bd69a;--okbg:#163323;--hi:#2c2610;--hib:#8a7424;--code:#232c3a;--warn:#e3a35a;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#10141b;--fg:#dde3ee;--mut:#98a3b6;--card:#171d27;--line:#2c3544;--acc:#7fb2ee;--ok:#7bd69a;
+--okbg:#163323;--hi:#2c2610;--hib:#8a7424;--code:#232c3a;--warn:#e3a35a;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:60rem;margin:0 auto;padding:1rem 16px 4rem}
+h1{font-size:1.6rem;margin:.5rem 0}h2{font-size:1.25rem;margin:2rem 0 .5rem;border-bottom:1px solid var(--line);padding-bottom:.25rem}
+h3{font-size:1.02rem;margin:0;flex:1 1 12rem}a{color:var(--acc)}
+.sum{color:var(--mut)}.note{font-size:.9rem;color:var(--mut)}
+nav.sec{display:flex;flex-wrap:wrap;gap:.4rem;margin:1rem 0}nav.sec a{padding:.2rem .6rem;border:1px solid var(--line);border-radius:1rem;
+text-decoration:none;font-size:.9rem;background:var(--card)}
+.row{background:var(--card);border:1px solid var(--line);border-radius:.4rem;padding:.7rem .9rem;margin:.7rem 0;overflow-wrap:anywhere}
+.row header{display:flex;flex-wrap:wrap;gap:.3rem .6rem;align-items:baseline}
+.rid{font:600 .85rem ui-monospace,Menlo,Consolas,monospace;background:var(--code);padding:.05rem .4rem;border-radius:.25rem}
+.kind{font-size:.8rem;color:var(--mut)}.part{font-size:.88rem;margin:.2rem 0}
+.q,.weak,.rec,.sub,.line,dl{font-size:.92rem;margin:.45rem 0}.weak{color:var(--warn)}
+code{background:var(--code);padding:0 .25rem;border-radius:.2rem;font-size:.88em}
+.tag{font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;color:var(--mut);font-weight:700;margin-right:.3rem}
+.ans{margin:.5rem 0 0;padding:.45rem .6rem;border-left:4px solid var(--hib);background:var(--hi);border-radius:.2rem}
+.ans.out{border-left-color:var(--ok)}.ans.none{opacity:.7}
+.badge{font-size:.75rem;font-weight:700;padding:.05rem .4rem;border-radius:.6rem;background:var(--okbg);color:var(--ok)}
+.badge.pick{background:var(--hi);color:var(--warn);border:1px solid var(--hib)}
+dl{display:grid;grid-template-columns:7rem 1fr;gap:.2rem .6rem}dt{font-weight:700}dd{margin:0}
+.media{display:flex;flex-wrap:wrap;gap:.5rem;margin:.5rem 0}.m{margin:0;max-width:100%}.m figcaption{font-size:.75rem;color:var(--mut)}
+.m.img img{max-width:14rem;max-height:10rem;border:1px solid var(--line);border-radius:.2rem;background:#000;display:block}
+.m.vid video{width:14rem;max-width:100%}.m.aud audio{width:16rem;max-width:100%}.miss{color:var(--warn)}
+details{margin:.4rem 0;font-size:.9rem}summary{cursor:pointer;color:var(--acc)}
+.listen{font-size:.85rem;color:var(--mut);margin:.3rem 0;padding-left:1.2rem}.opts{color:var(--mut)}
+.sub{padding-left:.6rem;border-left:2px solid var(--line)}
+table{border-collapse:collapse;display:block;overflow-x:auto}td,th{border:1px solid var(--line);padding:.2rem .4rem}
+blockquote{margin:.4rem 0;padding-left:.8rem;border-left:3px solid var(--line)}
+@media (max-width:480px){dl{grid-template-columns:1fr}.m.img img{max-width:100%}}
+</style></head><body><main><p class="note"><a href="README.md">Round 35 README</a> · <a href="../README.md">All rounds</a> · built 2026-10-12 · recorded by <code>tools/concept/review_record.py 35</code></p><h1>Concept round 35: record of the decisions</h1><div class="sum"><p>The review round of M6 <em>Acts 1–2 release</em> (<span class="ref">roadmap</span>): part A mouse support, part B the high scores and the release's end, part C the release plumbing and part D the polish and close-out, built while the user was on vacation. Every default, pick and build choice below was taken on the user's behalf (the gap check's recommendation) and is <strong>pending the user's review</strong>; three of them were flagged risky (Q1 the end card's text, Q3 the main-menu change, Q5 Okafor's new line). It can be answered in the same sitting as <span class="ref">round 34</span>.</p><p>Open <span class="ref">index.html</span> in a browser (regenerate with <code>python3 tools/concept/board.py 35 --subjects pointer,app-icon,m6-capture</code>: round 34 already used the <code>r35</code> file names for Level 13, so the board keeps only this round's three subjects). The questions keep their numbers from the M6 gap check (Q1–Q15); the build's own choices are numbered per part (<code>A.1</code>, <code>B.1</code>, …), each answered <em>yes</em> (keep as built) or <em>no</em> (say what to change). Read the two boxes first: what changed in <strong>approved</strong> specs, and the two questions only the user can answer.</p><h3>In the game</h3><p><code>./gradlew :desktop:run --args="…"</code> with <code>--settings &lt;file&gt;</code> to keep the real settings apart. A debug run never writes a save or a score (the screens say so):</p><ul><li>the mouse, the SCORES screen and the hangar: no arguments, then New game;</li><li>the hard game over with Okafor's line: <code>--difficulty hard --level 8</code> and lose four times;</li><li>the release's end: <code>--level 14 --invulnerable --loadout front=lance-laser:5,left=micro-missile-pod:5,right=micro-missile-pod:5</code>, kill the Spire, then confirm through the debrief, the act summary and the outro. A played campaign (from a save after Level 13) shows the end card without the debug line and enters the score.</li></ul></div><p class="note">A read-only record: every row as the review page showed it, with the answer and the outcome from the round README (the record of truth). Media is linked from the design tree, not copied.</p><nav class="sec"><a href="#s-changes-to-approved-specs">Spec changes</a><a href="#s-needs-the-user-only">User only</a><a href="#s-a-mouse-part-a">Mouse</a><a href="#s-b-scores-and-the-release-s-end-part-b">Scores</a><a href="#s-c-release-part-c">Release</a><a href="#s-d-polish-part-d">Polish</a><a href="#s-captures">Captures</a><a href="#s-after-round-34">After 34</a></nav><section id="s-changes-to-approved-specs"><h2>Changes to approved specs</h2>
+<div class="sum"><p>Approved parts of the design that M6 changed, checked against the approved text in git (<code>50d4dce</code>) and the docs as they are now. Each <strong>C</strong> row is <em>accept</em> or <em>revert</em>. The documents involved are back in <code>design: review</code> until this round closes.</p></div>
+<article class="row" id="r-C1">
+<header><span class="rid">C1</span><h3>A SCORES item in the main menu (Q3 = a, flagged risky)</h3><span class="kind">spec change</span></header>
+<dl><dt>Approved</dt><dd>the menu: Continue, New game, Load game, Missions, Options, Credits, Quit</dd><dt>Built</dt><dd><strong>SCORES</strong> between Missions and Options opens the high scores: three tabs EASY / MEDIUM / HARD (Q / E, left / right or a click), opening on the most recent save's difficulty; the menu panel moved up 33 px so eight items end where seven did (<span class="ref">main menu</span>)</dd></dl>
+<div class="ans out"><span class="tag">Outcome</span> <span><strong>accepted</strong> (user)</span></div>
+</article>
+<article class="row" id="r-C2">
+<header><span class="rid">C2</span><h3>The game over screen differs from the chosen concept (game-over-r08-a)</h3><span class="kind">spec change</span></header>
+<dl><dt>Approved</dt><dd>the concept: chrome red-steel <code>GAME OVER</code>, a <code>CREDITS SPENT</code> row, the placeholder transmission "Aegis One is down. We hold the line without you, Lancer.", the footer "The last save can be loaded from the main menu.", a <code>.</code> key in the letter grid</dd><dt>Built</dt><dd><code>GAME OVER</code> in the red heading font at 2× (not the chrome lettering); <strong>SHIPS LOST</strong> instead of CREDITS SPENT (the campaign does not count spending); Okafor's new voiced line (Q5); the footer "NO RETRIES LEFT. CONTINUE RETURNS TO THE HANGAR BEFORE THIS MISSION."; <code>SP</code> (space) instead of <code>.</code> in the grid (<span class="ref">retry</span>, <span class="ref">debrief</span>)</dd></dl>
+<div class="ans out"><span class="tag">Outcome</span> <span><strong>accepted</strong> (user)</span></div>
+</article>
+<article class="row" id="r-C3">
+<header><span class="rid">C3</span><h3>When a score is entered (Q2 = a)</h3><span class="kind">spec change</span></header>
+<dl><dt>Approved</dt><dd>scoring: "It is filled in at game over (quitting a campaign) and at the campaign's end."</dd><dt>Built</dt><dd>at the <strong>hard game over</strong> and at the <strong>release's end</strong> only; quitting a campaign to the menu enters nothing (a save can be continued), so on easy and medium the release's end is the only entry (<span class="ref">scoring</span>)</dd></dl>
+<div class="ans out"><span class="tag">Outcome</span> <span><strong>accepted</strong> (user)</span></div>
+</article>
+<article class="row" id="r-C4">
+<header><span class="rid">C4</span><h3>The release&#x27;s end after Act 2 (Q1 = a)</h3><span class="kind">spec change</span></header>
+<dl><dt>Approved</dt><dd>credits: reachable "after the campaign ends" (later: Act 7); round 34's C13: Act 2's outro → autosave → the hangar reading <code>BEFORE L15 - NOT BUILT YET</code></dd><dt>Built</dt><dd>Act 2's outro → the end card → the name entry (when the score qualifies) → the credits roll → the main menu; the card writes the hangar's autosave, so Continue opens the hangar before Level 15, whose top bar reads <code>ACT III - RED DUST: COMING SOON</code> (<span class="ref">credits</span>, <span class="ref">hangar</span>, <span class="ref">Act 2</span>)</dd></dl>
+<div class="ans out"><span class="tag">Outcome</span> <span><strong>accepted</strong> (user)</span></div>
+</article>
+<article class="row" id="r-C5">
+<header><span class="rid">C5</span><h3>Rook&#x27;s guns table: Available act 2 (Q14 = b)</h3><span class="kind">spec change</span></header>
+<dl><dt>Approved</dt><dd>the hand-written table: Available <code>L08</code> for all four guns</dd><dt>Built</dt><dd>the table is rendered from the data, whose <code>available</code> is <code>act 2</code> (he joins at L08) (<span class="ref">wingmen</span>)</dd></dl>
+<div class="ans out"><span class="tag">Outcome</span> <span><strong>accepted</strong> (user)</span></div>
+</article>
+</section>
+<section id="s-needs-the-user-only"><h2>Needs the user only</h2>
+<div class="sum"><p>These two block the <code>v0.1</code> tag, not the work; nothing was changed for them.</p></div>
+<article class="row" id="r-Q11">
+<header><span class="rid">Q11</span><h3>The final title and the repository&#x27;s name</h3><span class="kind">user only</span></header>
+<dl><dt>Default</dt><dd>keep <em>Terran Vanguard</em> (the menu, the bundles, the zips) and the repository <code>conceptgame</code> (it is in the release URL)</dd><dt>Why only you</dt><dd>the main menu's open question says "confirm before release"; renaming the repository changes the public URLs</dd></dl>
+<div class="ans"><span class="tag">Answer</span> <span>keep both / keep title, rename repo / new title → <strong>open</strong>: keep both for now; the user settles it next week</span></div>
+</article>
+<article class="row" id="r-Q13">
+<header><span class="rid">Q13</span><h3>The licence of the game&#x27;s own art, music and voices</h3><span class="kind">user only</span></header>
+<dl><dt>Default</dt><dd>Apache-2.0, as the repository's <code>LICENSE</code> already implies: the bundle README and the credits roll say "Terran Vanguard is open source under the Apache Licence 2.0. Third-party assets keep their own licences, listed in CREDITS.md."</dd><dt>Why only you</dt><dd>legal: a licence for the art, music and voices is the owner's choice (e.g. CC-BY 4.0 for the assets instead)</dd></dl>
+<div class="ans"><span class="tag">Answer</span> <span>Apache-2.0 confirmed / another licence → <strong>Apache-2.0 confirmed</strong> (user) for the game's own art, music and voices</span></div>
+</article>
+</section>
+<section id="s-a-mouse-part-a"><h2>A — Mouse (part A)</h2>
+<div class="sum"><p>Mouse support on every out-of-game screen and overlay (<span class="ref">ui</span>, <span class="ref">hangar</span>, <span class="ref">options</span>).</p></div>
+<article class="row" id="r-Q6">
+<header><span class="rid">Q6</span><h3>The pointer</h3><span class="kind">final art</span></header>
+<div class="part"><a href="../../ui/README.md#concept-art">The pointer</a></div>
+<div class="q"><strong>final art</strong> (<code>tools/art/pointer.py</code> → <code>assets/ui/pointer.png</code>): Q6 = b, a glass arrow, 11×16 steel with an amber lit edge and a navy outline, hotspot at the tip, drawn at the integer pixel scale as a hardware cursor; the system arrow is the fallback (Q6 = a)</div>
+<div class="media"><figure class="m img"><a href="../../ui/concept/pointer-r35-a.png"><img loading="lazy" decoding="async" src="../../ui/concept/pointer-r35-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> at 1× (a 960×540 window) it is small; the amber edge reads as a yellow stripe on the yellow menu highlight</p>
+<div class="ans"><span class="tag">Answer</span> <span>glass pointer as final / system arrow / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>approved as final</strong> (user): the glass pointer</span></div>
+</article>
+<article class="row" id="r-Q7">
+<header><span class="rid">Q7</span><h3>Mouse in the overlays</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../ui/README.md#mouse">Mouse in the overlays</a></div>
+<div class="q"><strong>accept or change</strong>: the pause and mission failed screens take the mouse; the pointer is hidden only while flying</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> a lost or paused flight shows the pointer at once; flying hides it even over the HUD panels</p>
+<div class="ans"><span class="tag">Answer</span> <span>accept / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>accepted</strong> (user)</span></div>
+</article>
+<article class="row" id="r-A.1">
+<header><span class="rid">A.1</span><h3>Part A build choices</h3><span class="kind">yes or no, each</span></header>
+<div class="part"><a href="../../ui/README.md#decisions">Part A build choices</a></div>
+<div class="q"><strong>yes or no, each</strong>: (a)–(g) below</div>
+<div class="sub"><span class="rid">A.1a</span> Hover selects only while the pointer moves: the last device used owns the selection, so a resting pointer does not fight the keys. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">A.1b</span> A click on an item selects and confirms it at once; a click on a difficulty card starts the campaign. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">A.1c</span> The right button is Back everywhere; in the briefing it asks to quit, as Esc does (there is no page back). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">A.1d</span> In the hangar a slot (a mount's callout, Rook's callout, a module tile) is chosen by a click, not by hover, so moving across the schematic does not switch the shop list; shop rows, choice chips and commands follow hover. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">A.1e</span> A click that gives the window the focus is dropped for 0.1 s after the focus is gained. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">A.1f</span> The wheel scrolls the shop list (in Acts 1–2 the list always fits, so it never moves). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">A.1g</span> The system arrow is used when the custom cursor cannot be made. <span class="opts">yes / no</span></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> (f) is untested by a player: no Acts 1–2 shop list is longer than the panel</p>
+<div class="ans"><span class="tag">Answer</span> <span>all yes / some no</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>all yes</strong> (user)</span></div>
+</article>
+</section>
+<section id="s-b-scores-and-the-release-s-end-part-b"><h2>B — Scores and the release&#x27;s end (part B)</h2>
+<div class="sum"><p>The high scores (<span class="ref">scoring</span>), the game over screen (<span class="ref">retry</span>), the release's end (<span class="ref">credits</span>) and the SCORES screen (C1).</p></div>
+<article class="row" id="r-Q1">
+<header><span class="rid">Q1</span><h3>The release&#x27;s end</h3><span class="kind">text review</span></header>
+<div class="part"><a href="../../ui/credits/README.md#at-the-releases-end-m6-part-b">The release's end</a></div>
+<div class="q"><strong>text review</strong> (flagged risky, new player-facing text): the end card after Act 2's outro, then the name entry, the credits roll and the main menu (Q1 = a; b would go from the outro straight to the credits). The card's text in full:</div>
+<div class="media"><figure class="m miss"><figcaption>screens 6–8 <em>file not in repo</em> <code>m6-capture-r35-a-s6-8.webp</code></figcaption></figure></div>
+<details><summary>The end card</summary><p>as built (<code>ReleaseEndScreen</code>):</p><blockquote><p><strong>ACTS I-II COMPLETE</strong><br>MEDIUM - MISSIONS 01 - 14 FLOWN</p><p>CAMPAIGN: SCORE · ENEMIES DESTROYED · DATA CORES FOUND · A+ GRADES · SHIPS LOST · PLAYTIME</p><p><strong>TO BE CONTINUED</strong><br>ACT III - RED DUST. MARS. COMING SOON.<br>CONTINUE IN THE MAIN MENU RETURNS TO THE HANGAR AT THE END OF ACT II.</p><p>AUTOSAVED · hint <code>ENTER HIGH SCORES</code> (or <code>ENTER CREDITS</code> when the score does not qualify)</p></blockquote><p>The name entry that follows is headed <code>NEW HIGH SCORE</code> / <code>MEDIUM - SCORE 187 920 - RANK 1</code>; the hangar before Level 15 reads <code>ACT III - RED DUST: COMING SOON</code>. The title theme plays from the card through the credits.</p></details>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> "MARS." stands alone; "CONTINUE IN THE MAIN MENU RETURNS TO THE HANGAR AT THE END OF ACT II." is long and dim at 1×</p>
+<div class="ans"><span class="tag">Answer</span> <span>accept / change the text / b: no end card</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>accepted</strong> (user): the end card's text as built</span></div>
+</article>
+<article class="row" id="r-Q5">
+<header><span class="rid">Q5</span><h3>Okafor&#x27;s last transmission</h3><span class="kind">text and voice review</span></header>
+<div class="part"><a href="../../systems/retry/README.md#decisions">Okafor's last transmission</a></div>
+<div class="q"><strong>text and voice review</strong> (flagged risky, new story text): at the hard game over, 2.5 s after the game over cue, voiced with the radio filter (grim): <em>"Lancer is down. Aegis Wing, close ranks and hold the line. Okafor out."</em> The gap check's draft was "Lancer is down. Aegis Wing fights on without you. Okafor out."; the concept's placeholder "Aegis One is down. We hold the line without you, Lancer."</div>
+<div class="media"><figure class="m aud"><figcaption>the take</figcaption><audio controls preload="none" src="../../../assets/voice/okafor/111125288031.ogg"></audio></figure><figure class="m miss"><figcaption>screen 5 <em>file not in repo</em> <code>m6-capture-r35-a-s5.webp</code></figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the seed was pinned after eight takes because Whisper heard "age is wing" for "Aegis Wing" in the default seed; not listened to by Claude</p>
+<div class="ans"><span class="tag">Answer</span> <span>accept / change the line / redo the voice / b: leave it out</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>accepted</strong> (user): the line and its voice</span></div>
+</article>
+<article class="row" id="r-Q4">
+<header><span class="rid">Q4</span><h3>The name&#x27;s form</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../systems/scoring/README.md#high-scores">The name's form</a></div>
+<div class="q"><strong>accept or change</strong>: A–Z, 0–9, space and <code>-</code>, 3–10 characters without a space at either end, upper case in the 10×20 font; the letter grid (two rows of 20 keys, DEL and END) and typing (lower case raised), the mouse on the keys; the last name entered is offered</div>
+<div class="media"><figure class="m miss"><figcaption>screen 7 <em>file not in repo</em> <code>m6-capture-r35-a-s7.webp</code></figcaption></figure></div>
+<div class="ans"><span class="tag">Answer</span> <span>accept / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>accepted</strong> (user)</span></div>
+</article>
+<article class="row" id="r-Q2">
+<header><span class="rid">Q2</span><h3>When the name is entered</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../systems/scoring/README.md#high-scores">When the name is entered</a></div>
+<div class="q"><strong>pick a or b</strong> (a built, see C3): <strong>a</strong> at the hard game over and at the release's end, on every difficulty; <strong>b</strong> also when the player quits a campaign to the menu</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> on easy and medium a player who never finishes Act 2 never enters a score</p>
+<div class="ans"><span class="tag">Answer</span> <span>a / b</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>a</strong> (user), as built</span></div>
+</article>
+<article class="row" id="r-B.1">
+<header><span class="rid">B.1</span><h3>Part B build choices</h3><span class="kind">yes or no, each</span></header>
+<div class="part"><a href="../../systems/scoring/README.md#decisions">Part B build choices</a></div>
+<div class="q"><strong>yes or no, each</strong>: (a)–(j) below</div>
+<div class="sub"><span class="rid">B.1a</span> A score of 0 is never entered. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.1b</span> Esc (B, the right button) deletes a character; the entry cannot be skipped. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.1c</span> The last name is offered with the cursor on END, so a confirm keeps it. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.1d</span> An equal score ranks below the entries already there. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.1e</span> A damaged <code>scores.yaml</code> is read as an empty table and kept as <code>scores.yaml.bad</code> when the next score is written. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.1f</span> The SCORES screen opens on the most recent save's difficulty (medium without one); Esc, Enter or a click beside the tabs goes back. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.1g</span> The release's end plays the title theme from the end card through the credits. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.1h</span> The end card writes the hangar's autosave (never in a debug run), so Continue opens the hangar before Level 15. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.1i</span> The game over's footer: "NO RETRIES LEFT. CONTINUE RETURNS TO THE HANGAR BEFORE THIS MISSION.", and <code>GAME OVER</code> in the red heading font (C2). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.1j</span> <code>v0.1</code> small and dim in the bottom-left corner of the title and the menu (<code>dev</code> in an IDE run), as the approved mock shows. <span class="opts">yes / no</span></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> (j) makes the menu's corner busier in the capture's title screen</p>
+<div class="ans"><span class="tag">Answer</span> <span>all yes / some no</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>all yes</strong> (user)</span></div>
+</article>
+</section>
+<section id="s-c-release-part-c"><h2>C — Release (part C)</h2>
+<div class="sum"><p>The version, the icon, the bundles and the release notes (<span class="ref">release</span>).</p></div>
+<article class="row" id="r-Q9">
+<header><span class="rid">Q9</span><h3>The app icon</h3><span class="kind">final art</span></header>
+<div class="part"><a href="../../tech/release/README.md#application-icon">The app icon</a></div>
+<div class="q"><strong>final art</strong> (<code>tools/art/app_icon.py</code>): the Stormhawk from above, rendered from its production model, on a dark navy tile with the title logo's steel-blue trim, one 1024 px master drawn at 16–1024 px (window icons, <code>.ico</code>, <code>.icns</code>)</div>
+<div class="media"><figure class="m img"><a href="../../tech/release/concept/app-icon-r35-a.png"><img loading="lazy" decoding="async" src="../../tech/release/concept/app-icon-r35-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> at 16 px the ship is a small light cross and the trim takes a third of the tile</p>
+<div class="ans"><span class="tag">Answer</span> <span>approve as final / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>approved as final</strong> (user)</span></div>
+</article>
+<article class="row" id="r-Q8">
+<header><span class="rid">Q8</span><h3>Signing</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../tech/release/README.md#signing">Signing</a></div>
+<div class="q"><strong>accept or change</strong>: ship unsigned, with the SmartScreen and Gatekeeper steps in the release notes and the bundle README (b: an Apple Developer ID and a Windows certificate, which cost money every year)</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> whether the zipped, unsigned arm64 app opens after the <code>xattr</code> step (or needs <code>codesign --sign -</code>) is unverified: it needs the user's Mac</p>
+<div class="ans"><span class="tag">Answer</span> <span>unsigned / buy certificates</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>unsigned</strong> (user); R.5 open</span></div>
+</article>
+<article class="row" id="r-Q10">
+<header><span class="rid">Q10</span><h3>The version</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../tech/release/README.md#version">The version</a></div>
+<div class="q"><strong>accept or change</strong>: <code>0.1.0</code> in Gradle, <code>v0.1</code> on the menu, the zips <code>terran-vanguard-0.1.0-&lt;target&gt;.zip</code>, the tag <code>v0.1</code> (the CI release job fails when tag and version differ)</div>
+<div class="ans"><span class="tag">Answer</span> <span>accept / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>accepted</strong> (user)</span></div>
+</article>
+<article class="row" id="r-Q15">
+<header><span class="rid">Q15</span><h3>What the bundles carry</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../tech/release/README.md#bundles">What the bundles carry</a></div>
+<div class="q"><strong>accept or change</strong>: <code>README.txt</code> (start, unsigned steps, controls incl. the mouse, where settings, saves, scores and screenshots live, Acts 1–2 of 7), <code>LICENSE.txt</code>, <code>CREDITS.md</code>; on macOS beside the app</div>
+<div class="ans"><span class="tag">Answer</span> <span>accept / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>accepted</strong> (user)</span></div>
+</article>
+<article class="row" id="r-C.1">
+<header><span class="rid">C.1</span><h3>Part C build choices</h3><span class="kind">yes or no, each</span></header>
+<div class="part"><a href="../../tech/release/README.md#decisions">Part C build choices</a></div>
+<div class="q"><strong>yes or no, each</strong>: (a)–(b) below</div>
+<div class="sub"><span class="rid">C.1a</span> Each zip unpacks into a folder of its own, <code>terran-vanguard-0.1.0/</code>, instead of spilling the game's files into the folder it is unpacked in. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">C.1b</span> The licence ships as <code>LICENSE.txt</code> (the repository's <code>LICENSE</code>), so it opens with a double click on Windows. <span class="opts">yes / no</span></div>
+<div class="ans"><span class="tag">Answer</span> <span>all yes / some no</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>all yes</strong> (user)</span></div>
+</article>
+<article class="row" id="r-C.2">
+<header><span class="rid">C.2</span><h3>The release notes</h3><span class="kind">text review</span></header>
+<div class="part"><a href="../../tech/release/release-notes.md">The release notes</a></div>
+<div class="q"><strong>text review</strong>: the template <code>gh release create --notes-file</code> uses (the CI fills in the version and tag); quoted under the row on the review page</div>
+<details><summary>release-notes.md</summary><p># Terran Vanguard @tag@ — Acts 1 and 2</p><p>A late-90s style vertical shoot'em up set in 2185. This release holds the first two of the campaign's seven acts: fourteen levels on easy, medium or hard, with their briefings, radio chatter, shop and hangar, the Act 1 and Act 2 bosses and the act outros. The later acts follow in later releases.</p><p>## Download</p><div class="tbl"><table><thead><tr><th>System</th><th>File</th></tr></thead><tbody><tr><td>Windows 10/11, 64-bit</td><td><code>terran-vanguard-@version@-winX64.zip</code></td></tr><tr><td>macOS, Apple Silicon (M1 and later)</td><td><code>terran-vanguard-@version@-macM1.zip</code></td></tr><tr><td>macOS, Intel</td><td><code>terran-vanguard-@version@-macX64.zip</code></td></tr><tr><td>Linux, 64-bit x86</td><td><code>terran-vanguard-@version@-linuxX64.zip</code></td></tr></tbody></table></div><p>Unpack the zip anywhere and start the game from the <code>terran-vanguard-@version@</code> folder; it brings its own Java runtime, nothing has to be installed. <code>README.txt</code> in that folder has the controls and where the settings, saves and screenshots are kept.</p><p>## The game is not signed</p><ul><li><strong>Windows:</strong> SmartScreen may say "Windows protected your PC". Choose <strong>More info</strong>, then <strong>Run anyway</strong> (only on the first start).</li><li><strong>macOS:</strong> the first start is refused ("cannot be opened because the developer cannot be verified"). Control-click the app, choose <strong>Open</strong> and confirm, or choose <strong>Open Anyway</strong> in System Settings → Privacy &amp; Security. If macOS says the app is damaged, run once in Terminal: <code>xattr -dr com.apple.quarantine "/path/to/Terran Vanguard.app"</code>.</li><li><strong>Linux:</strong> if the game does not start, make it executable: <code>chmod +x terran-vanguard</code>.</li></ul><p>## Requirements</p><p>A 64-bit system with OpenGL 3.2 or newer (any graphics chip from the last ten years); keyboard or gamepad. The game starts in borderless full screen; Alt+Enter or F11 switch to a window.</p><p>## Licence and credits</p><p>The game is open source under the Apache License 2.0 (<code>LICENSE.txt</code>). <code>CREDITS.md</code> lists every third-party file (sound effects, fonts) with its author and licence.</p></details>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> "keyboard or gamepad" under Requirements does not mention the mouse in the menus</p>
+<div class="ans"><span class="tag">Answer</span> <span>accept / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>accepted</strong> (user)</span></div>
+</article>
+<article class="row" id="r-C.3">
+<header><span class="rid">C.3</span><h3>Bundle sizes</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../tech/release/README.md#bundles">Bundle sizes</a></div>
+<div class="q"><strong>accept or change</strong>: zips 148.6–152.2 MB (unpacked 185–198 MB; the fat jar is 124 MB of each); the Linux bundle with no JDK on the <code>PATH</code> ran at 322 fps with a 1.74 GB peak resident set (software renderer)</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the atlases and music dominate; no size budget was ever set</p>
+<div class="ans"><span class="tag">Answer</span> <span>accept / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>accepted</strong> (user)</span></div>
+</article>
+</section>
+<section id="s-d-polish-part-d"><h2>D — Polish (part D)</h2>
+<div class="sum"><p>The close-out (<span class="ref">roadmap</span>).</p></div>
+<article class="row" id="r-Q12">
+<header><span class="rid">Q12</span><h3>The polish pass</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../tech/roadmap/README.md#decisions">The polish pass</a></div>
+<div class="q"><strong>accept or change</strong>: the gap check's list: dev text a player can see (the hangar's not-built line, the intel panel's milestone), the placeholder audit as a test, the sync renderers (Q14), the docs reconciled, a per-level bench; the attract-mode demo stays out of v0.1</div>
+<div class="ans"><span class="tag">Answer</span> <span>accept / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>accepted</strong> (user)</span></div>
+</article>
+<article class="row" id="r-Q14">
+<header><span class="rid">Q14</span><h3>The rendered tables</h3><span class="kind">pick a, b or c</span></header>
+<div class="part"><a href="../../player/wingmen/README.md#decisions">The rendered tables</a></div>
+<div class="q"><strong>pick a, b or c</strong> (b built): <strong>a</strong> Rook's guns and barks only; <strong>b</strong> also the act outro's pages (<code>act-outro-pages</code>); <strong>c</strong> also the specials, allies and economy tables (would become Act 3 tooling)</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the guns' Available cell changed (C5)</p>
+<div class="ans"><span class="tag">Answer</span> <span>a / b / c</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>b</strong> (user), as built</span></div>
+</article>
+<article class="row" id="r-D.1">
+<header><span class="rid">D.1</span><h3>The placeholder audit</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../art-direction/production/README.md#decisions">The placeholder audit</a></div>
+<div class="q"><strong>accept or change</strong> (<code>PlaceholderAuditTest</code>): no shipped image of Levels 01–14 is a placeholder; 48 shipped files carry no production mark: 27 synthesized concept sounds (pickups, UI, launch rail, edge warning, the Leviathan's cry, save, mine arm, Driftjelly, the Choir's sting) treated as final, 2 act-title letterings, 19 Level 12–14 sounds waiting for round 34</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the 27 synthesized sounds were never given a <code>SOURCE</code> comment: final by the SFX rule, but the audit only knows them by a list</p>
+<div class="ans"><span class="tag">Answer</span> <span>accept / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>accepted</strong> (user)</span></div>
+</article>
+<article class="row" id="r-D.2">
+<header><span class="rid">D.2</span><h3>The per-level bench</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../tech/README.md#per-level-bench-m6-part-d">The per-level bench</a></div>
+<div class="q"><strong>accept or change</strong> (report only): Levels 01–14 on the software renderer at 250–367 fps, the longest frame 33–71 ms once per run, the live heap 40–90 MiB, the longest pause 1.0 ms with a 1 GiB heap, the resident set 1.1–1.7 GiB; no fix follows</div>
+<details><summary>Per-level bench (M6 part D)</summary><p>Measured 2026-10-12 on the development machine (20 threads, 62 GiB) without a GPU: Xvfb with Mesa's llvmpipe software renderer, so every frame is rasterised on the CPU, the nearest thing at hand to modest graphics hardware. Each of Levels 01–14 ran once from the <code>:desktop:installDist</code> build: <code>--bench &lt;s&gt; --level &lt;n&gt; --invulnerable --debug-speed 1</code> at medium, a 1920×1080 window (pixel scale 2), auto-fire on, the ship left at its start (nothing dodged, every attack's bullets on screen), Rook flying from Level 08, OpenAL Soft's <code>wave</code> driver, <code>-Xmx1g</code> (a modest machine's heap; the default is a quarter of the RAM) with <code>-Xlog:gc,safepoint</code>, the peak resident set from <code>/usr/bin/time -v</code>. The run is the level's last section end plus 15 s, so it covers the level and, where the boss is not killed, its fight; nothing was done between runs.</p><div class="tbl"><table><thead><tr><th>Level</th><th>Run s</th><th>Frames</th><th>Avg fps</th><th>Longest frame</th><th>GC cycles</th><th>Heap before GC (max)</th><th>Live after GC (max)</th><th>Longest pause</th><th>Peak RSS</th></tr></thead><tbody><tr><td>01</td><td>195</td><td>66 447</td><td>341</td><td>50.1 ms</td><td>9</td><td>806 MiB</td><td>88 MiB</td><td>0.13 ms</td><td>1 579 MiB</td></tr><tr><td>02</td><td>200</td><td>67 296</td><td>336</td><td>53.2 ms</td><td>7</td><td>574 MiB</td><td>46 MiB</td><td>0.21 ms</td><td>1 353 MiB</td></tr><tr><td>03</td><td>200</td><td>68 833</td><td>344</td><td>51.5 ms</td><td>9</td><td>908 MiB</td><td>46 MiB</td><td>0.17 ms</td><td>1 719 MiB</td></tr><tr><td>04</td><td>205</td><td>68 008</td><td>332</td><td>53.7 ms</td><td>9</td><td>848 MiB</td><td>66 MiB</td><td>1.01 ms</td><td>1 632 MiB</td></tr><tr><td>05</td><td>230</td><td>84 440</td><td>367</td><td>50.9 ms</td><td>10</td><td>792 MiB</td><td>88 MiB</td><td>0.16 ms</td><td>1 607 MiB</td></tr><tr><td>06</td><td>205</td><td>65 467</td><td>319</td><td>59.4 ms</td><td>5</td><td>308 MiB</td><td>44 MiB</td><td>0.17 ms</td><td>1 105 MiB</td></tr><tr><td>07</td><td>285</td><td>102 706</td><td>360</td><td>50.2 ms</td><td>9</td><td>702 MiB</td><td>40 MiB</td><td>0.16 ms</td><td>1 513 MiB</td></tr><tr><td>08</td><td>215</td><td>66 675</td><td>310</td><td>34.1 ms</td><td>9</td><td>792 MiB</td><td>40 MiB</td><td>0.26 ms</td><td>1 585 MiB</td></tr><tr><td>09</td><td>200</td><td>60 824</td><td>304</td><td>47.1 ms</td><td>6</td><td>560 MiB</td><td>44 MiB</td><td>0.18 ms</td><td>1 368 MiB</td></tr><tr><td>10</td><td>215</td><td>67 663</td><td>315</td><td>70.8 ms</td><td>10</td><td>804 MiB</td><td>42 MiB</td><td>0.19 ms</td><td>1 597 MiB</td></tr><tr><td>11</td><td>190</td><td>47 464</td><td>250</td><td>37.8 ms</td><td>8</td><td>820 MiB</td><td>90 MiB</td><td>0.89 ms</td><td>1 648 MiB</td></tr><tr><td>12</td><td>220</td><td>57 241</td><td>260</td><td>67.3 ms</td><td>9</td><td>908 MiB</td><td>42 MiB</td><td>0.21 ms</td><td>1 708 MiB</td></tr><tr><td>13</td><td>250</td><td>65 881</td><td>264</td><td>52.7 ms</td><td>10</td><td>864 MiB</td><td>88 MiB</td><td>0.17 ms</td><td>1 707 MiB</td></tr><tr><td>14</td><td>277</td><td>95 411</td><td>344</td><td>32.5 ms</td><td>11</td><td>838 MiB</td><td>66 MiB</td><td>0.20 ms</td><td>1 681 MiB</td></tr></tbody></table></div><ul><li><strong>Frame rate:</strong> 250–367 fps on average everywhere; the Act 2 ocean and storm levels (11–13) are the heaviest at 250–264 fps, about four times the 60 Hz budget even on the software renderer.</li><li><strong>Longest frame:</strong> 33–71 ms once per run. The bench line does not say when; the level's start (its unit atlas and backdrop pages uploaded) is the likely place, as in the spike's mode switch, but it is not separated here: a follow-up could log the frame times after the first second.</li><li><strong>Memory:</strong> the live heap after a collection stays at 40–90 MiB; with the 1 GiB cap, ZGC runs 5–11 cycles a level with the longest safepoint pause at 1.0 ms (gate 2: under 2 ms). The resident set peaks at 1.1–1.7 GiB, most of it the textures that llvmpipe keeps in the process's memory; on a GPU they live in video memory.</li><li>No level is near the limit, so no fix follows (report only, Q12).</li></ul></details>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the long frame is not located (likely the level start); llvmpipe keeps the textures in the process, so the RSS overstates a GPU machine</p>
+<div class="ans"><span class="tag">Answer</span> <span>accept / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>accepted</strong> (user)</span></div>
+</article>
+<article class="row" id="r-D.3">
+<header><span class="rid">D.3</span><h3>Part D build choices</h3><span class="kind">yes or no, each</span></header>
+<div class="part"><a href="../../tech/roadmap/README.md#decisions">Part D build choices</a></div>
+<div class="q"><strong>yes or no, each</strong>: (a)–(d) below</div>
+<div class="sub"><span class="rid">D.3a</span> The hangar intel's not-built line reads "FOLLOWS IN A LATER RELEASE." (was "FOLLOWS IN A LATER BUILD (M4)."). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">D.3b</span> The SCORES screen's line reads "A SCORE IS ENTERED AT A GAME OVER (HARD) AND AT THE END OF THE CAMPAIGN." (in v0.1 the end of the campaign is the release's end). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">D.3c</span> In the name entry the End key jumps to the END cell. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">D.3d</span> The synthesized concept sounds without a <code>SOURCE</code> comment count as final (D.1). <span class="opts">yes / no</span></div>
+<div class="ans"><span class="tag">Answer</span> <span>all yes / some no</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>all yes</strong> (user)</span></div>
+</article>
+</section>
+<section id="s-captures"><h2>Captures</h2>
+<article class="row" id="r-K.1">
+<header><span class="rid">K.1</span><h3>The release build</h3><span class="kind">game capture</span></header>
+<div class="part"><a href="../../ui/README.md#concept-art">The release build</a></div>
+<div class="q"><strong>game capture</strong> (part D, the <code>installDist</code> build, sound from the game's mix): the title with <code>v0.1</code> and the pointer → the menu → SCORES (tabs clicked) → New game → the briefing → the hangar by mouse (slots, items, an upgrade bought, undo, Launch hovered); a hard Level 08 lost a fourth time → the game over with Okafor's line; Level 14 won → debrief → act summary → outro → end card → name entry (<code>LANCER</code>) → credits → menu. 6.6 min with sound and a sheet of eight screens</div>
+<div class="media"><figure class="m img"><a href="../../ui/concept/m6-capture-r35-a.png"><img loading="lazy" decoding="async" src="../../ui/concept/m6-capture-r35-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure><figure class="m vid"><figcaption>video with sound</figcaption><video controls preload="none" playsinline src="../../ui/concept/m6-capture-r35-a.mp4"></video></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> debug runs, so <code>AUTOSAVE OFF - DEBUG RUN</code> and <code>SCORES OFF - DEBUG RUN: NOT SAVED.</code> are on the screen; the game over run scored 0, so it shows "NO SCORES YET." and no name entry at the game over; not listened to by Claude</p>
+<div class="ans"><span class="tag">Answer</span> <span>accept / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>accepted</strong> (user)</span></div>
+</article>
+</section>
+<section id="s-after-round-34"><h2>After round 34</h2>
+<div class="sum"><p>Blocked until round 34 closes; listed so nothing is lost. <em>Noted</em>, or a note.</p></div>
+<article class="row" id="r-R.1">
+<header><span class="rid">R.1</span><h3>The credits roll regenerated (28 attributed items today)</h3><span class="kind">after round 34</span></header>
+<dl><dt>Blocked by</dt><dd>round 34's sound picks (CC-BY files may come or go)</dd><dt>Then</dt><dd><code>./gradlew :pipeline:credits</code> rewrites <code>assets/ui/credits.txt</code> from CREDITS.md (<span class="ref">credits</span>)</dd></dl>
+<div class="ans out"><span class="tag">README: then</span> <span><code>./gradlew :pipeline:credits</code> rewrites <code>assets/ui/credits.txt</code> from CREDITS.md (<a href="../../ui/credits/README.md">credits</a>); <em>noted</em> (user)</span></div><div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-R.2">
+<header><span class="rid">R.2</span><h3>The placeholder audit&#x27;s 19 Level 12–14 sounds</h3><span class="kind">after round 34</span></header>
+<dl><dt>Blocked by</dt><dd>round 34's sound picks</dd><dt>Then</dt><dd>the known list in <code>PlaceholderAuditTest</code> shrinks</dd></dl>
+<div class="ans out"><span class="tag">README: then</span> <span>the known list in <code>PlaceholderAuditTest</code> shrinks; <em>noted</em> (user)</span></div><div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-R.3">
+<header><span class="rid">R.3</span><h3>The user&#x27;s playthrough fixes of Act 2</h3><span class="kind">after round 34</span></header>
+<dl><dt>Blocked by</dt><dd>round 34's P9</dd><dt>Then</dt><dd>fixed before the tag</dd></dl>
+<div class="ans out"><span class="tag">README: then</span> <span>fixed before the tag; <em>noted</em> (user)</span></div><div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-R.4">
+<header><span class="rid">R.4</span><h3>Merge and tag</h3><span class="kind">after round 34</span></header>
+<dl><dt>Blocked by</dt><dd>rounds 34 and 35, the user's playthrough</dd><dt>Then</dt><dd>M5 into <code>main</code>, then M6, a green CI on three OSes, then <code>v0.1</code> on <code>main</code> (the user; Q11 and Q13 first)</dd></dl>
+<div class="ans out"><span class="tag">README: then</span> <span>M5 into <code>main</code>, then M6, a green CI on three OSes, then <code>v0.1</code> on <code>main</code> (the user; Q11 and Q13 first); <strong>open</strong>: not possible until the commits can be signed (the user, next week)</span></div><div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-R.5">
+<header><span class="rid">R.5</span><h3>The unsigned arm64 app opened on a real Mac</h3><span class="kind">after round 34</span></header>
+<dl><dt>Blocked by</dt><dd>the user's Mac</dd><dt>Then</dt><dd>Q8's notes confirmed or <code>codesign --sign -</code> added</dd></dl>
+<div class="ans out"><span class="tag">README: then</span> <span>Q8's notes confirmed or <code>codesign --sign -</code> added; <em>noted</em> (user)</span></div><div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+</section></main></body></html>

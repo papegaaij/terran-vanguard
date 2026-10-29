@@ -71,20 +71,33 @@ final class TankLooks {
             double muzzleRecoil) {}
 
     TankLooks(Sprites sprites, List<EnemySpec> kinds, Function<String, JsonValue> pivots) {
+        this(sprites, kinds, pivots, Function.identity());
+    }
+
+    /**
+     * M9 part G: with each kind's sprite root ({@code roots}: a livery's, {@link EnemyLooks#root}): the turret, its stub
+     * and the wreck in the livery's frames; the muzzle flash and the pivots stay the unit's own (the same layout).
+     */
+    TankLooks(
+            Sprites sprites,
+            List<EnemySpec> kinds,
+            Function<String, JsonValue> pivots,
+            Function<String, String> roots) {
         frames = new Frames[kinds.size()];
         for (int k = 0; k < frames.length; k++) {
             EnemySpec kind = kinds.get(k);
             String slug = kind.slug();
-            if (kind.turret().isEmpty() || !sprites.has(slug + "-turret")) {
+            String art = roots.apply(slug);
+            if (kind.turret().isEmpty() || !sprites.has(art + "-turret")) {
                 continue;
             }
             JsonValue pivot = pivots.apply(slug);
             double muzzle = pivot == null ? 0 : pivot.getDouble("muzzle", 0);
             frames[k] = new Frames(
-                    sprites.frames(slug + "-turret"),
-                    sprites.has(slug + "-turret-stub") ? sprites.region(slug + "-turret-stub") : null,
+                    sprites.frames(art + "-turret"),
+                    sprites.has(art + "-turret-stub") ? sprites.region(art + "-turret-stub") : null,
                     sprites.has(slug + "-flash") ? sprites.frames(slug + "-flash") : new Array<>(),
-                    sprites.has(slug + "-wreck") ? sprites.frames(slug + "-wreck") : new Array<>(),
+                    sprites.has(art + "-wreck") ? sprites.frames(art + "-wreck") : new Array<>(),
                     muzzle,
                     pivot == null ? muzzle : pivot.getDouble("muzzle_recoil", muzzle));
         }

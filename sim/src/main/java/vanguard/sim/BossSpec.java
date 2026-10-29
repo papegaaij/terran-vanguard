@@ -59,6 +59,9 @@ import java.util.Optional;
  * @param debris M7 part H, step H3: the rocks a breaching boss tears loose toward its open mouth; empty for none
  * @param coil M8 part H (design/enemies/bosses/abyssal-maw): a coiled arena boss's body and script ({@link CoilArena});
  *     empty for every other boss. It needs an {@code arena} without lanes (its part layers, the throat's weak spot)
+ * @param rings M9 part H (design/enemies/bosses/iron-sovereign): a ringed arena boss's rotating rings, their fire arc
+ *     and locks ({@link RingArena}); empty for every other boss. It needs an {@code arena} without lanes (its part
+ *     layers), no stride, breach, coil or phase moves
  */
 public record BossSpec(
         double arriveSeconds,
@@ -88,7 +91,8 @@ public record BossSpec(
         Optional<Vents> vents,
         Optional<Eruption> eruption,
         Optional<DebrisFlow> debris,
-        Optional<CoilSpec> coil) {
+        Optional<CoilSpec> coil,
+        Optional<RingSpec> rings) {
     /** The beat a later phase holds its fire by default in the data (the frigate's crown opening), s. */
     public static final double PHASE_DELAY_SECONDS = 1;
     /** How much larger a unit is drawn on {@code high-air} than on the play plane; a boss's part offsets grow with it. */
@@ -167,11 +171,33 @@ public record BossSpec(
             }
             coil.get().check(barName, phases, attacks);
         }
+        if (rings.isPresent()) {
+            if (arena.isEmpty()
+                    || arena.get().lanes().count() > 0
+                    || stride.isPresent()
+                    || breach.isPresent()
+                    || coil.isPresent()
+                    || phases.stream().anyMatch(phase -> phase.move().isPresent())) {
+                throw new IllegalArgumentException(barName
+                        + ": a ringed boss has an arena without lanes, no stride, breach or coil and no phase moves");
+            }
+            rings.get().check(barName, phases, attacks);
+        }
     }
 
     /** M8 part H: this boss coiled round its arena ({@link CoilArena}, an arena boss without lanes); empty: none. */
     public BossSpec withCoil(Optional<CoilSpec> withCoil) {
         return new BossSpecBuilder(this).coil(withCoil).build();
+    }
+
+    /** M9 part H: this boss with {@code withRings}' rotating rings ({@link RingArena}, an arena boss without lanes); empty: none. */
+    public BossSpec withRings(Optional<RingSpec> withRings) {
+        return new BossSpecBuilder(this).rings(withRings).build();
+    }
+
+    /** M9 part H: whether its batteries ride rotating rings ({@link RingArena}): the Iron Sovereign. */
+    public boolean ringed() {
+        return rings.isPresent();
     }
 
     /** M8 part H: whether it is coiled round its arena ({@link CoilArena}): the Abyssal Maw. */
@@ -320,6 +346,12 @@ public record BossSpec(
                 .map(CoilSpec.Shed::enemy)
                 .filter(enemy -> !kinds.contains(enemy))
                 .ifPresent(kinds::add);
+        // M9 part H: a ringed boss's core bays' Dart Drones.
+        rings.flatMap(RingSpec::core)
+                .flatMap(RingSpec.Core::bays)
+                .map(bays -> bays.launcher().unit())
+                .filter(enemy -> !kinds.contains(enemy))
+                .ifPresent(kinds::add);
         return List.copyOf(kinds);
     }
 
@@ -391,7 +423,14 @@ public record BossSpec(
          * Attack#sweep()}'s arc, centred on the ship's bearing at the telegraph's start, shown for its
          * telegraph, then the beam sweeps it, hurting the ship and Rook once each per sweep.
          */
-        SWEEP
+        SWEEP,
+        /**
+         * M9 part H (design/enemies/bosses/iron-sovereign; {@link BossLines}): the Rail Bunker's {@code laser-line} from a
+         * part: {@link Attack#line()}'s telegraph, band and damage, its line locked at the telegraph's start from the part
+         * through the ship to the screen's edge; the boss telegraphs one line at a time, {@link BossLines#GAP_SECONDS}
+         * apart; it hurts the ship only. Its interval is the gun's (the line's own interval and first delay are not read).
+         */
+        LINE
     }
 
     /**
@@ -413,6 +452,7 @@ public record BossSpec(
      *     aim: down}); round 43: a walking boss's {@link Pattern#FAN} too, along its heading; empty for others
      * @param aimTurns round 40 (the Siege Spire's lanes, proposal 4a of the Act 2 playtest): its parts
      *     take turns to aim, one at a time ({@link AimTurns}); empty for none
+     * @param line M9 part H: a {@link Pattern#LINE}'s rail line (the Rail Bunker's numbers); empty for other patterns
      */
     public record Attack(
             String name,
@@ -428,7 +468,8 @@ public record BossSpec(
             boolean stagger,
             Optional<EnemySpec.Sweep> sweep,
             List<Integer> down,
-            Optional<AimTurns> aimTurns) {
+            Optional<AimTurns> aimTurns,
+            Optional<EnemySpec.LaserLine> line) {
         public Attack {
             parts = List.copyOf(parts);
             down = List.copyOf(down);
@@ -447,9 +488,69 @@ public record BossSpec(
             if ((pattern == Pattern.SWEEP) != sweep.isPresent()) {
                 throw new IllegalArgumentException(name + ": a sweep, and only a sweep, has a sweep block");
             }
+            if ((pattern == Pattern.LINE) != line.isPresent()) {
+                throw new IllegalArgumentException(name + ": a line, and only a line, has a laser line");
+            }
             if (stagger && rotate) {
                 throw new IllegalArgumentException(name + ": an attack rotates or staggers, not both");
             }
+        }
+
+        /** An attack without M9 part H's line. */
+        public Attack(
+                String name,
+                Pattern pattern,
+                EnemyGun gun,
+                double burstGapSeconds,
+                boolean rotate,
+                int count,
+                int arms,
+                double turnRadiansPerSecond,
+                double durationSeconds,
+                List<Integer> parts,
+                boolean stagger,
+                Optional<EnemySpec.Sweep> sweep,
+                List<Integer> down,
+                Optional<AimTurns> aimTurns) {
+            this(
+                    name,
+                    pattern,
+                    gun,
+                    burstGapSeconds,
+                    rotate,
+                    count,
+                    arms,
+                    turnRadiansPerSecond,
+                    durationSeconds,
+                    parts,
+                    stagger,
+                    sweep,
+                    down,
+                    aimTurns,
+                    Optional.empty());
+        }
+
+        /**
+         * M9 part H: this attack as a {@link Pattern#LINE} with the rail line {@code withLine} (the Rail Bunker's
+         * numbers; its gun's interval stays the boss's).
+         */
+        public Attack withLine(EnemySpec.LaserLine withLine) {
+            return new Attack(
+                    name,
+                    Pattern.LINE,
+                    gun,
+                    burstGapSeconds,
+                    rotate,
+                    count,
+                    arms,
+                    turnRadiansPerSecond,
+                    durationSeconds,
+                    parts,
+                    stagger,
+                    Optional.empty(),
+                    down,
+                    aimTurns,
+                    Optional.of(withLine));
         }
 
         /** An attack without round 40's aim turns. */

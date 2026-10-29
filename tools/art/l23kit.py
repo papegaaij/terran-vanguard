@@ -42,7 +42,7 @@ def _yaml(path):
 
 
 def level_roots():
-    """The roots the levels' data claims beyond the enemies: ground targets' and drops' ``sprite``/``look``."""
+    """The roots the levels' data claims beyond the enemies: ground targets' and drops' ``sprite``/``look``, story pickups."""
     roots = set()
     for f in (DESIGN / "campaign").glob("*/level-*/data.yaml"):
         data = _yaml(f)
@@ -54,6 +54,10 @@ def level_roots():
             for key in ("sprite", "look"):
                 if isinstance(d, dict) and d.get(key):
                     roots.add(str(d[key]))
+        # M9 part G: a story pickup is drawn in its own frames, named by its `story` (Level 34's helix-core).
+        for p in data.get("pickups") or []:
+            if isinstance(p, dict) and p.get("story"):
+                roots.add(str(p["story"]))
     return roots
 
 

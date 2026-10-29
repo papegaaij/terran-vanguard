@@ -177,12 +177,18 @@ final class BossRules {
                         // M5 part H (the Siege Spire; H5 = a): the mortar's lob and the laser sweep from a part.
                         case "mortar" -> BossSpec.Pattern.LOB;
                         case "laser-sweep" -> BossSpec.Pattern.SWEEP;
+                        // M9 part H (the Iron Sovereign): a rail line from a part (RingRules).
+                        case EnemyData.Attack.LASER_LINE -> BossSpec.Pattern.LINE;
                         default ->
                             throw new IllegalArgumentException(slug
-                                    + ": a boss fires aimed, fan, ring, spiral, mortar or laser-sweep attacks, not "
-                                    + attack.pattern());
+                                    + ": a boss fires aimed, fan, ring, spiral, mortar, laser-sweep or laser-line"
+                                    + " attacks, not " + attack.pattern());
                     };
+            // M9 part H: an attack taken from a ground unit (from) keeps that unit's hooks on its shape (the SAM
+            // Nest's burst and missiles, the Rail Bunker's telegraph, the Sentinel Tower's arc); the boss's otherwise.
+            Optional<EnemyData.Hook> shapeHook = RingRules.attackHook(content, attack, hook, difficulty);
             int burst = change.flatMap(EnemyData.AttackChange::burst)
+                    .or(() -> attack.from().isPresent() ? shapeHook.flatMap(EnemyData.Hook::burst) : Optional.empty())
                     .or(attack::burst)
                     .orElse(1);
             int count = change.flatMap(EnemyData.AttackChange::count)
@@ -213,14 +219,19 @@ final class BossRules {
                 throw new IllegalArgumentException(
                         slug + ": only a part firing an aimed attack aims down, not one firing " + name);
             }
-            double interval =
-                    attack.interval().orElseThrow() / levers.enemyFireRate().of(difficulty);
+            // M9 part H: an authored interval as it is, a ring battery's by the hook's ring_arena factor (RingRules).
+            double interval = RingRules.interval(content, enemy, attack, hook, difficulty);
             double damage = UnitRules.bulletDamage(content, attack.bullet().orElseThrow());
+            if (pattern == BossSpec.Pattern.LINE) {
+                attackNames.add(name);
+                attacks.add(RingRules.lineAttack(content, name, attack, shapeHook, interval, firing));
+                continue;
+            }
             if (pattern == BossSpec.Pattern.LOB || pattern == BossSpec.Pattern.SWEEP) {
                 // M5 part H: the lob and the sweep (PartHRules), each part on its own clock when staggered.
                 attackNames.add(name);
                 attacks.add(PartHRules.bossAttack(
-                        content, name, pattern, attack, hook, interval, damage, firing, difficulty));
+                        content, name, pattern, attack, shapeHook, interval, damage, firing, difficulty));
                 continue;
             }
             double speed =
@@ -239,7 +250,7 @@ final class BossRules {
                             Double.POSITIVE_INFINITY,
                             Double.POSITIVE_INFINITY)
                     // M7 part F: the walker's pods' homing missiles (FoundryRules).
-                    : FoundryRules.homing(attack, hook, EnemyGun.aimed(interval, 0, burst, speed, damage, false));
+                    : FoundryRules.homing(attack, shapeHook, EnemyGun.aimed(interval, 0, burst, speed, damage, false));
             attackNames.add(name);
             attacks.add(new BossSpec.Attack(
                     name,
@@ -265,7 +276,13 @@ final class BossRules {
         List<BossSpec.Phase> phases = new ArrayList<>();
         for (int f = 0; f < script.phases().size(); f++) {
             EnemyData.PhaseData phase = script.phases().get(f);
-            List<String> fired = phase.alternate().or(phase::attacks).orElse(List.of());
+            // M9 part H: an attack that does not fire on the difficulty (its `only`: the Sovereign's core rail on easy)
+            // leaves the phase.
+            List<String> fired = phase.alternate().or(phase::attacks).orElse(List.of()).stream()
+                    .filter(name -> enemy.attack(name)
+                            .map(attack -> attack.firesOn(difficulty))
+                            .orElse(true))
+                    .toList();
             List<Integer> firedIndexes = fired.stream()
                     .map(name -> {
                         int index = attackNames.indexOf(name);
@@ -461,6 +478,8 @@ final class BossRules {
                         .debris(ColossusRules.debris(content, enemy))
                         // M8 part H: a coiled boss's body and script (MawRules).
                         .coil(MawRules.coil(content, enemy, difficulty, inLevel))
+                        // M9 part H: a ringed boss's rings, fire arc and core (RingRules).
+                        .rings(RingRules.rings(content, enemy, difficulty, inLevel))
                         .build()));
     }
 

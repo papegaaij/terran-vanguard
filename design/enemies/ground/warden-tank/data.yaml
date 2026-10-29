@@ -47,6 +47,7 @@ drops: []
 traits: [anti-ground, rear]
 bounty: 28        # the parts' sum: hull 20, turret 8 (whole 26 by the hull's first_bonus)
 first_level: 19
+livery: {from_act: 5, sprite: warden-tank-asc, faction: Jovian Ascendancy}   # M9 part G (Level 34): the Ascendancy's gunmetal/charcoal with gold from Act 5 (round 60 J.1, A.15 b in Q.11 b); a look and an intel faction, the stat block unchanged
 difficulty:
   easy: {burst: 2, attacks: {burst: {interval: 3.0}}}
   hard: {burst: 4, attacks: {burst: {interval: 2.0}}, turret: {turn_rate: 160}}
@@ -61,5 +62,5 @@ notes:
   formations: '(one path, 1.5 s apart)'
   bounty: '; whole (hull first) 26; parts: hull 20, turret 8 (28)'
   death: '`medium` mechanical explosion with sparks and smoke; the burnt hull stays as a wreck (grey, no markings)'
-  used_in: introduced in Level 19 (Foundry of Tharsis); returns L39, L41 (Act 6) in Ascendancy livery
+  used_in: introduced in Level 19 (Foundry of Tharsis); returns in Ascendancy livery in L34 (Salvage Run, Act 5), L39, L41 (Act 6)
   difficulty: 'easy: 2-shot burst every 3.0 s; hard: 4-shot burst every 2.0 s, turret 160°/s'

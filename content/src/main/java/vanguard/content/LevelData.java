@@ -93,6 +93,7 @@ import vanguard.sim.PlayField;
  *     finale's cruiser run on the level clock; none if not given
  * @param armourFloor M8 part H (Level 28, The run cannot be lost; J2): from the boss's kill to the level's end the
  *     armour stops at this many points (only in a level with a boss); none (0) if not given
+ * @param relay M9 part H (design/campaign Level 35): the mass-relay flash, once on the level clock; none if not given
  */
 public record LevelData(
         double scrollSpeed,
@@ -150,7 +151,8 @@ public record LevelData(
         Optional<Boolean> underground,
         Optional<HaltWaves> haltWaves,
         Optional<EscortSwap> escortSwap,
-        Optional<String> ground)
+        Optional<String> ground,
+        Optional<Relay> relay)
         implements SectionsBlock,
                 WavesBlock,
                 SetPiecesBlock,
@@ -894,19 +896,27 @@ public record LevelData(
         /**
          * M7 part E (design/campaign Level 18, Music; track 9's motif stem): the motif layer plays over the theme from
          * level time {@code from} on, in every section the theme plays except those {@code sections} turns off
-         * ({@code {4: false}}: Level 18's eye); a section listed {@code true} plays it as well.
+         * ({@code {4: false}}: Level 18's eye); a section listed {@code true} plays it as well. M9 part G (design/campaign
+         * Level 34, Music &amp; ambience): {@code to}, the level time it goes out again (Level 34's window t=106-124 over
+         * the freighter's hold, ending inside a section); to the end of the level if not given.
          */
-        public record Motif(double from, Map<Integer, Boolean> sections) {
+        public record Motif(double from, Map<Integer, Boolean> sections, Optional<Double> to) {
             public Motif {
                 Check.notNegative("from", from);
                 sections = Map.copyOf(sections);
                 sections.keySet()
                         .forEach(section -> Check.that(section >= 1, "sections: count from 1, was " + section));
+                to.ifPresent(end -> Check.that(end > from, "motif.to: after from (" + from + "), was " + end));
+            }
+
+            /** Without M9 part G's end time: the motif plays to the end of the level. */
+            public Motif(double from, Map<Integer, Boolean> sections) {
+                this(from, sections, Optional.empty());
             }
 
             /** Whether the motif plays at level time {@code t} in section {@code section} (1-based). */
             public boolean on(int section, double t) {
-                return t >= from && sections.getOrDefault(section, true);
+                return t >= from && to.map(end -> t < end).orElse(true) && sections.getOrDefault(section, true);
             }
         }
 

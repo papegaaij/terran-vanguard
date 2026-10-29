@@ -23,6 +23,12 @@ final class Chasing {
     private int stunTicks;
     /** M9 part C: a launched unit (a Dart Drone): its chase starts along its launch heading, not its path's. */
     private boolean launched;
+    /** M9 part F: the serial of the prey unit it rides ({@link Enemy.LatchPhase#PREY}); -1 for none. */
+    private int preySerial = -1;
+    /** M9 part F: whether its prey was about to leave through the bottom edge at its last placing. */
+    private boolean preyLeaving;
+    /** M9 part F: carried off the screen on its prey: gone at its next step (away, not killed). */
+    private boolean carriedOff;
 
     Chasing(Enemy unit) {
         this.unit = unit;
@@ -37,6 +43,9 @@ final class Chasing {
         spot = -1;
         stunTicks = 0;
         launched = false;
+        preySerial = -1;
+        preyLeaving = false;
+        carriedOff = false;
     }
 
     /**
@@ -66,30 +75,91 @@ final class Chasing {
             return;
         }
         u.phase = Enemy.Phase.CHASE;
-        latchPhase = Enemy.LatchPhase.CHASE;
+        // M9 part F (design/enemies/space/void-leech): a drifting chaser drifts first, its chase within its distance.
+        latchPhase = u.spec.chase().orElseThrow().drifts() ? Enemy.LatchPhase.DRIFT : Enemy.LatchPhase.CHASE;
         chaseTicks = 0;
         heading = launched ? Enemy.heading(u.vx, u.vy) : Enemy.heading(u.path.dx(u.segment), u.path.dy(u.segment));
     }
 
     /**
-     * One step of a chase (design/enemies/air/lamprey): its heading turns toward the ship's centre by at most its
-     * turn rate and it flies along it at its chase speed; after its time it flies straight on.
+     * One step of a chase (design/enemies/air/lamprey): its heading turns toward the target's centre (the ship's, or a
+     * hunted prey's) by at most its turn rate and it flies along it at its chase speed; after its time it flies
+     * straight on. M9 part F: a drifting chaser drifts at its drift speed the same way until within its chase's
+     * distance; one riding a prey is placed by its {@link PreyLatches} (nothing here). Returns false once it is gone
+     * (carried off on its prey).
      */
-    void chase(double shipX, double shipY) {
+    boolean chase(double targetX, double targetY) {
         Enemy u = unit;
+        if (latchPhase == Enemy.LatchPhase.PREY) {
+            return !carriedOff;
+        }
         EnemySpec.Chase chase = u.spec.chase().orElseThrow();
-        double delta = Math.IEEEremainder(Enemy.heading(shipX - u.x, shipY - u.y) - heading, 2 * StrictMath.PI);
+        double dx = targetX - u.x;
+        double dy = targetY - u.y;
+        if (latchPhase == Enemy.LatchPhase.DRIFT && dx * dx + dy * dy <= chase.within() * chase.within()) {
+            latchPhase = Enemy.LatchPhase.CHASE;
+            chaseTicks = 0;
+        }
+        boolean drifting = latchPhase == Enemy.LatchPhase.DRIFT;
+        double speed = drifting ? chase.drift() : chase.speed();
+        double delta = Math.IEEEremainder(Enemy.heading(dx, dy) - heading, 2 * StrictMath.PI);
         double most = chase.turnRate() * SimStep.SECONDS;
         heading = Math.IEEEremainder(heading + Math.clamp(delta, -most, most), 2 * StrictMath.PI);
-        u.vx = -Trig.sin(heading) * chase.speed();
-        u.vy = -Trig.cos(heading) * chase.speed();
+        u.vx = -Trig.sin(heading) * speed;
+        u.vy = -Trig.cos(heading) * speed;
         u.x += u.vx * SimStep.SECONDS;
         u.y += u.vy * SimStep.SECONDS;
         u.facing = heading;
-        if (++chaseTicks >= SimStep.ticks(chase.seconds())) {
+        if (!drifting && ++chaseTicks >= SimStep.ticks(chase.seconds())) {
             u.phase = Enemy.Phase.LEAVE;
             latchPhase = Enemy.LatchPhase.ON;
         }
+        return true;
+    }
+
+    /**
+     * M9 part F (the uneasy alliance): it latches on {@code prey} at its {@code at} spot (the latch's spots, as on the
+     * ship); it rides it from now on, placed by its {@link PreyLatches}.
+     */
+    void latchPrey(Enemy prey, int at) {
+        Enemy u = unit;
+        spot = at;
+        preySerial = prey.serial;
+        preyLeaving = false;
+        latchPhase = Enemy.LatchPhase.PREY;
+        u.vx = u.vy = 0;
+        ride(prey.x, prey.y, false);
+    }
+
+    /**
+     * M9 part F: placed on its prey at (preyX, preyY) (its spot's offset, in its frame); {@code leaving} whether the
+     * prey is about to leave through the bottom edge (then its loss carries this unit off).
+     */
+    void ride(double preyX, double preyY, boolean leaving) {
+        Enemy u = unit;
+        EnemySpec.Spot at = u.spec.latch().orElseThrow().spots().get(spot);
+        u.prevX = u.x;
+        u.prevY = u.y;
+        u.x = preyX + at.dx();
+        u.y = preyY + u.frame.vy(at.dy());
+        preyLeaving = leaving;
+    }
+
+    /**
+     * M9 part F: its prey is gone: carried off with it when it was leaving through the bottom edge (away, at its next
+     * step), else thrown off it (the prey destroyed: stunned, then it flees).
+     */
+    void preyGone() {
+        if (preyLeaving) {
+            carriedOff = true;
+        } else {
+            shakeOff();
+        }
+    }
+
+    /** M9 part F: the serial of the prey it rides; -1 while it rides none. */
+    int preySerial() {
+        return latchPhase == Enemy.LatchPhase.PREY ? preySerial : -1;
     }
 
     /**
@@ -144,6 +214,7 @@ final class Chasing {
         u.phase = Enemy.Phase.STUNNED;
         latchPhase = Enemy.LatchPhase.STUNNED;
         stunTicks = 0;
+        preySerial = -1;
         // M7 part A: thrown off, it takes the shake-off's own stun instead of the EMP Burst's.
         u.empStun = 0;
     }
@@ -176,6 +247,7 @@ final class Chasing {
      */
     boolean latchable() {
         return latchPhase == Enemy.LatchPhase.ENTER
+                || latchPhase == Enemy.LatchPhase.DRIFT
                 || latchPhase == Enemy.LatchPhase.CHASE
                 || latchPhase == Enemy.LatchPhase.ON;
     }
@@ -197,12 +269,12 @@ final class Chasing {
                                 1, SimStep.ticks(unit.spec.latch().orElseThrow().stunSeconds())));
     }
 
-    /** Its state, in the order the unit's hash has always added it. */
     /** M9 part C: whether it was launched by a carrier (its chase waits in its straight flight out). */
     boolean launched() {
         return launched;
     }
 
+    /** Its state, in the order the unit's hash has always added it; M9 part F's prey only once it rode one. */
     void addTo(StateHash hash) {
         hash.add(latchPhase.ordinal())
                 .add(chaseWait)
@@ -210,5 +282,8 @@ final class Chasing {
                 .add(heading)
                 .add(spot)
                 .add(stunTicks);
+        if (preySerial >= 0 || preyLeaving || carriedOff) {
+            hash.add(preySerial).add(preyLeaving ? 1 : 0).add(carriedOff ? 1 : 0);
+        }
     }
 }

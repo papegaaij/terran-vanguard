@@ -143,7 +143,17 @@ public final class Enemy implements Hashed {
         /** Thrown off the hull: stunned, slowing to a stop, drifting with the wind. */
         STUNNED,
         /** Fleeing to the nearer side edge; it never latches again. */
-        FLEE
+        FLEE,
+        /**
+         * M9 part F (design/enemies/space/void-leech): drifting toward its target until within its chase's distance
+         * ({@link EnemySpec.Chase#within()}), then {@link #CHASE}.
+         */
+        DRIFT,
+        /**
+         * M9 part F (the uneasy alliance): latched on a prey unit at its {@link #spot()} ({@link Enemy#preySerial()}),
+         * riding it down; hit by any shot (it is not on the ship's hull).
+         */
+        PREY
     }
 
     /**
@@ -212,6 +222,15 @@ public final class Enemy implements Hashed {
 
     /** A laser sweep (design/enemies/air/mantis; hashed only with one). */
     final SweepBeam sweepBeam = new SweepBeam();
+    /** M9 part E: a fixed ground unit's sweep (design/enemies/ground/sentinel-tower; hashed only with one). */
+    final GroundSweepBeam groundSweep = new GroundSweepBeam();
+    /** M9 part E: a walker's topple (design/enemies/ground/strider; hashed only with one). */
+    final Toppling toppling = new Toppling();
+    /**
+     * M9 part E (design/campaign Level 32, The forks): a ground unit's branch, {@link Forks#code} (fork × 2 + side);
+     * -1 for a unit of no branch. Fixed at its entry (not hashed).
+     */
+    int branch = -1;
 
     int kind;
     int serial;
@@ -416,6 +435,12 @@ public final class Enemy implements Hashed {
      * number of them alive at once); hashed only when set.
      */
     boolean launched;
+
+    /**
+     * M9 part F (the uneasy alliance; {@link PreyLatches}): a preyed unit's drift down the screen, px/s; 0 while it is
+     * not preyed (every other unit). Preyed, it has left its path, its shield is empty for good and it does not fire.
+     */
+    double preyDrift;
 
     /**
      * M7 part A, the EMP Burst's stun (design/player/specials, EMP Burst): steps left; 0 when it is not
@@ -1003,6 +1028,15 @@ public final class Enemy implements Hashed {
         if (ticks <= 0) {
             return;
         }
+        if (spec.latch().isPresent()
+                && spec.latch().get().empThrows()
+                && (phase == Phase.LATCHED || chasing.phase() == LatchPhase.PREY)) {
+            // M9 part F (design/enemies/space/void-leech, EMP): a latched leech is thrown off as by a shake-off (its
+            // own stun, then it flees), on the ship or on its prey.
+            chasing.shakeOff();
+            events.add(SimEvents.Type.LATCH_THROWN, x, y(), kind);
+            return;
+        }
         if (empStun == 0) {
             stunDx = x - prevX;
             stunDy = y - prevY;
@@ -1010,6 +1044,10 @@ public final class Enemy implements Hashed {
         empStun = ticks;
         // M9 part A (design/enemies/ground/rail-bunker, EMP): a running laser line's telegraph is cancelled.
         lineBeam.cancel();
+        if (spec.groundSweep().isPresent()) {
+            // M9 part E (design/enemies/ground/sentinel-tower, EMP): the beam is cut mid-sweep.
+            groundSweep.cut();
+        }
     }
 
     /** M7 part A: whether the EMP Burst's stun holds it now (the crackle overlay, the dimmed glow). */
@@ -1041,6 +1079,34 @@ public final class Enemy implements Hashed {
      */
     void shakeOff() {
         chasing.shakeOff();
+    }
+
+    /**
+     * M9 part F (the uneasy alliance): whether a chaser that hunts prey ({@link LatchPhase#PREY}) has latched on it: its
+     * prey's serial; -1 otherwise.
+     */
+    public int preySerial() {
+        return chasing.preySerial();
+    }
+
+    /**
+     * M9 part F (Level 33's prey wings): whether it is preyed: a leech rides it, its shield is empty for good, it does
+     * not fire and it drifts down until it leaves (the Talon's dark lights).
+     */
+    public boolean preyed() {
+        return preyDrift > 0;
+    }
+
+    /**
+     * M9 part F (Level 33, at most 6 free leeches): whether it is a chaser loose on the play field: flying in, drifting,
+     * chasing, flying on, thrown off or fleeing; not latched on the ship nor riding a prey. False for any other unit.
+     */
+    public boolean loose() {
+        LatchPhase at = chasing.phase();
+        return at != LatchPhase.NONE
+                && at != LatchPhase.LATCHED
+                && at != LatchPhase.PREY
+                && PlayField.overlaps(x, y, box);
     }
 
     /** M5 part F: where a chaser is in its life; {@link LatchPhase#NONE} for any other unit. */
@@ -1726,6 +1792,9 @@ public final class Enemy implements Hashed {
 
     /** Whether its sweep is in its telegraph now. */
     public boolean telegraphing() {
+        if (spec.groundSweep().isPresent()) {
+            return empStun == 0 && groundSweep.telegraphing();
+        }
         return sweepBeam.running()
                 && empStun == 0
                 && sweepBeam.telegraphing(spec.sweep().orElseThrow());
@@ -1733,6 +1802,9 @@ public final class Enemy implements Hashed {
 
     /** Whether its beam is sweeping now (M7 part A: not while the EMP Burst stuns it; it resumes after). */
     public boolean sweeping() {
+        if (spec.groundSweep().isPresent()) {
+            return empStun == 0 && groundSweep.sweeping();
+        }
         return sweepBeam.running()
                 && empStun == 0
                 && sweepBeam.sweeping(spec.sweep().orElseThrow());
@@ -1740,27 +1812,42 @@ public final class Enemy implements Hashed {
 
     /** Whether the sweep just entered its beam this step (for its sound). */
     boolean sweepStarted() {
+        if (spec.groundSweep().isPresent()) {
+            return groundSweep.sweepStarted();
+        }
         return sweepBeam.sweepStarted(spec.sweep().orElseThrow());
     }
 
     /** Whether the sweep's telegraph just started this step (for its sound). */
     boolean telegraphStarted() {
+        if (spec.groundSweep().isPresent()) {
+            return groundSweep.telegraphStarted();
+        }
         return sweepBeam.telegraphStarted();
     }
 
     /** The sweep's centre, radians clockwise from straight down. */
     public double sweepCentre() {
+        if (spec.groundSweep().isPresent()) {
+            return frame.facing(groundSweep.centre());
+        }
         return frame.facing(sweepBeam.centre());
     }
 
     /** The sweep's first edge: from straight inward's side, radians clockwise from straight down. */
     public double sweepFrom() {
+        if (spec.groundSweep().isPresent()) {
+            return frame.facing(groundSweep.from());
+        }
         double half = spec.sweep().orElseThrow().arcRadians() / 2;
         return frame.facing(x < PlayField.WIDTH / 2.0 ? sweepBeam.centre() - half : sweepBeam.centre() + half);
     }
 
     /** The sweep's last edge, toward straight down. */
     public double sweepTo() {
+        if (spec.groundSweep().isPresent()) {
+            return frame.facing(groundSweep.to());
+        }
         double half = spec.sweep().orElseThrow().arcRadians() / 2;
         return frame.facing(x < PlayField.WIDTH / 2.0 ? sweepBeam.centre() + half : sweepBeam.centre() - half);
     }
@@ -1770,6 +1857,10 @@ public final class Enemy implements Hashed {
      * {@link #sweepFrom()} to {@link #sweepTo()} over the sweep; {@code alpha} interpolates between steps.
      */
     public double beam(double alpha) {
+        if (spec.groundSweep().isPresent()) {
+            // M9 part E: a ground sweep's beam, any way round (a full turn: 360°).
+            return frame.facing(groundSweep.beam(alpha));
+        }
         double into = sweepBeam.into(spec.sweep().orElseThrow(), alpha);
         double half = spec.sweep().orElseThrow().arcRadians() / 2;
         double from = x < PlayField.WIDTH / 2.0 ? sweepBeam.centre() - half : sweepBeam.centre() + half;
@@ -1795,11 +1886,29 @@ public final class Enemy implements Hashed {
 
     /** Whether the current sweep hit the ship already. */
     boolean sweepHit() {
-        return sweepBeam.hit();
+        return spec.groundSweep().isPresent() ? groundSweep.hit() : sweepBeam.hit();
     }
 
     void markSweepHit() {
-        sweepBeam.markHit();
+        if (spec.groundSweep().isPresent()) {
+            groundSweep.markHit();
+        } else {
+            sweepBeam.markHit();
+        }
+    }
+
+    /**
+     * M9 part E (design/enemies/ground/sentinel-tower): whether its current sweep (its telegraph or its beam) is a full
+     * turn: the telegraph draws the whole reach ring ({@link EnemySpec.Sweep#length()} round it) and the start ray
+     * ({@link #sweepFrom()}); false without a ground sweep.
+     */
+    public boolean sweepFullTurn() {
+        return spec.groundSweep().isPresent() && groundSweep.fullTurn();
+    }
+
+    /** M9 part E: the sweeps its ground sweep started so far (0 without one). */
+    public int sweepsStarted() {
+        return spec.groundSweep().isPresent() ? groundSweep.count() : 0;
     }
 
     /** Its hit box: its stat block's, or a chain member's own. */
@@ -2051,10 +2160,85 @@ public final class Enemy implements Hashed {
      * that carries it).
      */
     boolean gunQuiet() {
-        if (curlRoll.phase() != CurlPhase.WALK) {
+        if (curlRoll.phase() != CurlPhase.WALK || toppling.active()) {
+            // M9 part E: nor while it topples (design/enemies/ground/strider: the guns stop).
             return true;
         }
         return partHp.silenced(spec.parts());
+    }
+
+    /**
+     * M9 part E (design/enemies/ground/strider): whether its second attack (a walker's {@link EnemySpec.Walker#spit()},
+     * the Strider's pod) is quiet now: dormant or waking, toppling, or silenced for good with every part that carries it
+     * ({@link EnemySpec.UnitPart#silencesSpit()}) gone.
+     */
+    boolean spitQuiet() {
+        if (dormantTick >= 0 || wakeTicks > 0 || toppling.active()) {
+            return true;
+        }
+        boolean carried = false;
+        for (int p = 0; p < partHp.count(); p++) {
+            if (spec.parts().get(p).silencesSpit()) {
+                if (partHp.alive(p)) {
+                    return false;
+                }
+                carried = true;
+            }
+        }
+        return carried;
+    }
+
+    // ---- M9 part E: the topple (design/enemies/ground/strider) ----
+
+    /** M9 part E: whether it topples (staggers or falls), from the loss of a leg to its crush. */
+    public boolean toppling() {
+        return toppling.active();
+    }
+
+    /** M9 part E: whether it staggers (the tell: the fall line marked, the guns stopped). */
+    public boolean staggering() {
+        return toppling.active()
+                && toppling.ticks() < SimStep.ticks(spec.topple().orElseThrow().staggerSeconds());
+    }
+
+    /** M9 part E: whether it falls along its line (after the stagger, before the crush). */
+    public boolean falling() {
+        return toppling.active() && !staggering();
+    }
+
+    /**
+     * M9 part E: how far its topple is, 0 at the loss to 1 at the crush ({@code alpha} between steps); 0 while it
+     * stands.
+     */
+    public double toppleShare(double alpha) {
+        if (!toppling.active()) {
+            return 0;
+        }
+        EnemySpec.Topple topple = spec.topple().orElseThrow();
+        int total = SimStep.ticks(topple.staggerSeconds()) + SimStep.ticks(topple.fallSeconds());
+        return Math.clamp((toppling.ticks() + alpha) / total, 0, 1);
+    }
+
+    /**
+     * M9 part E: its fall line's direction across the screen, a unit vector from its centre toward the lost leg (the
+     * strip {@link EnemySpec.Topple#lineWidth()} × {@link EnemySpec.Topple#lineLength()} from its centre); 0 while it
+     * stands.
+     */
+    public double fallDirX() {
+        return toppling.dirX();
+    }
+
+    /** M9 part E: its fall line's direction up the screen (y up); 0 while it stands. */
+    public double fallDirY() {
+        return frame.vy(toppling.dirY());
+    }
+
+    /**
+     * M9 part E (design/campaign Level 32, The forks): its fork's branch ({@link Branch#code()}), -1 for a unit of no
+     * branch.
+     */
+    public int branch() {
+        return branch;
     }
 
     // ---- M7 part D: the curl-roll (design/enemies/ground/shellback) ----

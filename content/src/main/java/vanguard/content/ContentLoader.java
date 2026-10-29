@@ -128,6 +128,19 @@ public final class ContentLoader {
         if (!problems.isEmpty()) {
             throw new ContentException(problems);
         }
+        // M9 part H: a boss's attacks written `from` a ground unit take the unit's attack (RingRules.resolve).
+        Map<String, EnemyData> written = Map.copyOf(enemies);
+        for (Map.Entry<String, EnemyData> entry : enemies.entrySet()) {
+            EnemyData data = entry.getValue();
+            EnemyData resolved = RingRules.resolve(paths.get(data), data, written, problems);
+            if (resolved != data) {
+                paths.put(resolved, paths.get(data));
+                entry.setValue(resolved);
+            }
+        }
+        if (!problems.isEmpty()) {
+            throw new ContentException(problems);
+        }
         Content content = new Content(
                 part(parts, PlayerData.class),
                 part(parts, ShipData.class),

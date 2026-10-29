@@ -252,6 +252,36 @@ Outputs (assets/ui/briefing/<name>.png, 672x240, textures of their own like the 
   level-31-tug-sections   L31 p2: Varga's diagram of the tug from above (tools/art/belt_units_d.py's section sprites):
                           bow, cargo and engines with their bars, a Hornet's salvo curving onto the bow, a Shard line
                           sweeping across the cargo, Darts from behind on the engines
+  level-32-deep-core      L32 p1 (M9 part E batch): Okafor's consortium shaft chart of Kleopatra, the dog-bone asteroid
+                          in section: the shaft, the galleries, fork one (old drift / charge seam), the pumping hall,
+                          fork two (cooling ducts / ore chute), the refinery and the ore chute out; the towers marked
+  level-32-sentinel-sweep L32 p2: Varga's diagram (tools/art/belt_units_e.py's sprites): a Sentinel from above with its
+                          emitter, collar, 120 degree arc and reach ring; a Strider losing its left leg, the fall line
+                          marked across a SAM Nest
+  level-33-leech-field    L33 p1 (M9 part F batch): Okafor's chart of the Leech Field: the route through the big
+                          rocks from the field's edge to clear rock, the growth shaded violet, the Rail Bunkers as red
+                          ticks, the ridge, Ceres's light at the top edge
+  level-33-power-drain    L33 p2: Varga's diagram of the drain (tools/art/belt_units_f.py's sprites): two leeches
+                          latched on the Stormhawk, the gauge with 4 MW drained in amber, the shield ring dimmed, the
+                          shake-off as arrows
+  level-34-graveyard      L34 p1 (M9 part G batch): Okafor's chart of the ship graveyard: the lane through it, the CDF
+                          picket's broken frigates in grey, the Helix hulks dark with gold edges, the freighter boxed in
+                          gold, the tanks' roads as red dots, the containers as amber diamonds, Ceres and the Sovereign
+  level-34-helix-hold     L34 p2: Varga's salvage scan of the hold (tools/art/belt_units_g.py's sprites): the crate in
+                          its four clamps, the Helix seal lit, the core's power signature beside the Mk IV's
+  level-35-ceres-orbit    L35 p1 (M9 part H batch): Okafor's chart of Ceres orbit: the approach from the graveyard lane,
+                          the escort screen as gold contacts, the outer hull to the Sovereign over the north pole, the
+                          turned mass relay on the limb with its red line, Ceres Hub red, Ceres Control still CDF
+  level-35-sovereign-rings  L35 p2: Varga's plan of the station from above: the three rings with their batteries (SAM,
+                          rail, laser) and turning arrows, the 120 degree fire arc toward the ship in red, the core shut
+  act-5-outro-ceres       Act 5 outro p1: Ceres from orbit, the Sovereign's broken rings drifting apart over the pole,
+                          the dock canyon's lights white again
+  act-5-outro-face        Act 5 outro p2: Varga's screen: the recruitment feed paused on Vorne's face beside a 2179 Helix
+                          review photo of him at sixty (his portrait aged here), the nav core's route plot to Callisto
+  act-5-outro-ember       Act 5 outro p3: Rook's Ember back on its rail, the Helix clamps' scorch marks on its hull,
+                          Rook on the ladder with his helmet under his arm
+  act-5-outro-jupiter     Act 5 outro p4: the transport's forward view, Jupiter ahead and Callisto a dark disc beside
+                          it, every rail on the flight deck filled (Rook's Ember among them)
   design/ui/briefing/concept/briefing-images-final-r13-a.png   review sheet, Act 1 intro + L01-02
   design/ui/briefing/concept/briefing-images-final-r20-a.png   review sheet, L03-04 (M4 batch)
   design/ui/briefing/concept/briefing-images-final-r21-a.png   review sheet, L05 (M4 part E)
@@ -276,6 +306,10 @@ Outputs (assets/ui/briefing/<name>.png, 672x240, textures of their own like the 
   design/ui/briefing/concept/briefing-images-final-r55-a.png   review sheet, L26 (M8 part F)
   design/ui/briefing/concept/briefing-images-final-r57-a.png   review sheet, L27 (M8 part G)
   design/ui/briefing/concept/briefing-images-final-r58-a.png   review sheet, L28 + the Act 4 outro (M8 part H)
+  design/ui/briefing/concept/briefing-images-final-r65-a.png   review sheet, L32 (M9 part E)
+  design/ui/briefing/concept/briefing-images-final-r66-a.png   review sheet, L33 (M9 part F)
+  design/ui/briefing/concept/briefing-images-final-r67-a.png   review sheet, L34 (M9 part G)
+  design/ui/briefing/concept/briefing-images-final-r68-a.png   review sheet, L35 + the Act 5 outro (M9 part H)
  Every image is composed
 in layers like the hangar map (tools/art/ui_scenes.py): the display and planets posterized to 24
 colours with ordered dither, the lines, markers and labels to 16 of their own, then the sprites
@@ -326,7 +360,7 @@ SOURCE_M5G = artkit.source_note(SCRIPT, "M5 part G batch")
 SOURCE_M5H = artkit.source_note(SCRIPT, "M5 part H batch")
 SOURCE_M7B = artkit.source_note(SCRIPT, "M7 part B batch")
 SOURCE_M7C = artkit.source_note(SCRIPT, "M7 part C batch")
-ROUND = "r64"  # the open round; the sheet of an earlier batch: name its round (r13, r20, r21, r23, r25, r30, ..., r36)
+ROUND = "r68"  # the open round; the sheet of an earlier batch: name its round (r13, r20, r21, r23, r25, r30, ..., r36)
 OUT = ROOT / "assets" / "ui" / "briefing"
 CONCEPT = DESIGN / "ui" / "briefing" / "concept"
 W, H = 672, 240
@@ -6966,6 +7000,675 @@ def level_31_tug_sections():
     b.label(W - 10, H - 16, "ONLY WHAT IS AIMED AT IT HURTS IT", AMBER, right=True)
     return b
 
+
+# --------------------------------------------------------------------------- Level 32 (M9 part E)
+
+SOURCE_M9E = artkit.source_note(SCRIPT, "M9 part E batch")
+ROCK_DIM = (70, 62, 54)
+
+
+def level_32_deep_core():
+    """L32 p1: the miners' shaft chart of Kleopatra, the dog-bone asteroid in section: the shaft down from the left
+    lobe's sunlit face, the galleries, fork one (old drift / charge seam), the pumping hall in the neck, fork two
+    (cooling ducts / ore chute), the refinery in the right lobe and the ore chute out to space; the route in amber."""
+    b = Board()
+    cx0, cx1, cy = 180, 500, 124                                 # the two lobes' centres
+    lobe = ((b.xx - cx0) / 150) ** 2 + ((b.yy - cy) / 92) ** 2 < 1
+    lobe |= ((b.xx - cx1) / 150) ** 2 + ((b.yy - cy) / 98) ** 2 < 1
+    neck = (b.xx > cx0) & (b.xx < cx1) & (np.abs(b.yy - cy) < 52 + 18 * np.cos((b.xx - 340) / 160 * np.pi))
+    body = lobe | neck
+    n = raster.fbm(W, H, 16, 6321, octaves=4, period=False)
+    rock = np.array((30, 44, 58.0)) * (0.8 + 0.5 * n)[..., None]
+    b.base = np.where(body[..., None], rock, b.base)
+    edge = body & ~(np.roll(body, 2, 0) & np.roll(body, -2, 0) & np.roll(body, 2, 1) & np.roll(body, -2, 1))
+    b.base = np.where(edge[..., None], np.array((90, 150, 180.0)), b.base)
+    tag(b, 40, 22, "KLEOPATRA (SECTION)", CYAN)
+    # the route: the shaft from the left lobe's face, the galleries, fork one, the hall, fork two, the refinery, out
+    shaft = [(52, 94), (92, 110), (140, 122)]
+    gal = [(140, 122), (200, 126), (232, 124)]
+    hall = [(288, 124), (370, 124)]
+    ref = [(426, 124), (520, 128), (600, 120), (646, 108)]
+    b.line(shaft + gal, AMBER, 3, 240)
+    for (fx0, fx1), up, down in (((232, 288), "OLD DRIFT", "CHARGE SEAM"), ((370, 426), "COOLING DUCTS", "ORE CHUTE")):
+        b.line([(fx0, 124), (fx0 + 14, 108), (fx1 - 14, 108), (fx1, 124)], AMBER, 2, 240)
+        b.line([(fx0, 124), (fx0 + 14, 140), (fx1 - 14, 140), (fx1, 124)], AMBER, 2, 240)
+        fill(b, [(fx0 + 16, 116), (fx1 - 16, 116), (fx1 - 16, 132), (fx0 + 16, 132)], ROCK_DIM, 0.9)
+    b.line(hall, AMBER, 6, 240)
+    b.line(ref, AMBER, 4, 240)
+    b.arrow(630, 112, 662, 98, AMBER, 5, dashed=False)
+    tag(b, 222, 88, "OLD DRIFT", GREY)
+    tag(b, 222, 152, "CHARGE SEAM", RED)
+    tag(b, 352, 88, "COOLING DUCTS", RED)
+    tag(b, 372, 152, "ORE CHUTE", GREY)
+    tag(b, 292, 106, "PUMPING HALL", CYAN)
+    tag(b, 470, 158, "REFINERY", AMBER_E)
+    b.glow(520, 130, 26, (120, 50, 10), 0.8)
+    tag(b, W - 8, 146, "ORE CHUTE: OUT", GREEN, right=True)
+    tag(b, 20, 112, "SHAFT", CYAN)
+    for x, y in ((160, 112), (300, 112), (340, 136), (470, 112)):  # the towers in their galleries
+        b.marker(x, y, "chevron", RED, 3)
+    b.label(214, 196, "FORKS: THE SIDE YOU HOLD AT THE ROCK PICKS THE TUNNEL", WHITE)
+    b.label(214, 208, "RED LIGHTS: MORE GUNS, A CACHE BEHIND A DOOR", RED)
+    b.title("CONSORTIUM SHAFT CHART - KLEOPATRA MINE")
+    b.label(W - 10, 9, "CMDR. OKAFOR", CYAN_DIM, right=True)
+    b.label(10, H - 16, "IN THE SHAFT, OUT THE ORE CHUTE", AMBER)
+    return b
+
+
+def level_32_sentinel_sweep():
+    """L32 p2: Varga's diagram: a Sentinel from above (the emitter, the hardened collar), its 120 degree arc and the
+    full turn's reach ring; beside it a Strider losing a leg, its fall line marked across a SAM Nest."""
+    b = Board()
+    b.title("CDF SCAN - SENTINEL TOWER, STRIDER")
+    b.label(W - 10, 9, "DR. VARGA", CYAN_DIM, right=True)
+    tx, ty, reach = 132, 126, 100
+    k = reach / 220
+    b.ring(tx, ty, reach, colour=RED, alpha=230, width=2)
+    a0, a1 = 20, 140
+    b.draw.pieslice([tx - reach, ty - reach, tx + reach, ty + reach], a0, a1, fill=RED + (60,), outline=RED + (230,))
+    tower = held_frame("sentinel-tower", 0.55, 36)
+    head = held_frame("sentinel-tower-head_4", 0.55, 32)
+    b.sprite(tower, tx, ty)
+    b.sprite(head, tx, ty)
+    b.line([(tx + 6, ty - 4), (tx + 60, ty - 70)], CYAN, 1, 220)
+    tag(b, tx + 62, ty - 82, "EMITTER: SHOOT IT", CYAN)
+    b.line([(tx - 18, ty + 8), (tx - 70, ty + 70)], CYAN_DIM, 1, 220)
+    tag(b, 8, ty + 74, "COLLAR: BOMBS ONLY", GREY)
+    tag(b, tx - 6, ty + 104, "120 DEG ARC", RED)
+    tag(b, 8, 26, "EVERY 3RD SWEEP:", RED)
+    tag(b, 8, 38, "A FULL TURN - LEAVE THE RING", WHITE)
+    sx, sy = 470, 112                                            # the Strider, facing down; its left leg lost
+    legs = held_frame("strider-legs_2", 0.8, 40)
+    torso = held_frame("strider_0", 0.8, 40)
+    fill(b, [(sx, sy - 19), (sx + 112, sy - 19), (sx + 112, sy + 19), (sx, sy + 19)], (40, 10, 10), 0.8)
+    b.dashed([(sx, sy - 19), (sx + 112, sy - 19), (sx + 112, sy + 19), (sx, sy + 19), (sx, sy - 19)], RED, 1, 4, 3)
+    base = held_frame("sam-nest-base", 1.0, 28)
+    rack = held_frame("sam-nest_0", 1.0, 32)
+    b.sprite(base, sx + 88, sy)
+    b.sprite(rack, sx + 88, sy)
+    b.sprite(legs, sx, sy)
+    b.sprite(torso, sx, sy)
+    knee = held_frame("strider-knee_1", 1.4, 16)
+    b.sprite(knee, sx + 30, sy - 2)
+    b.marker(sx + 30, sy - 2, "cross", RED, 5)
+    tag(b, sx - 56, 30, "SHOOT A LEG:", RED)
+    tag(b, sx - 56, 42, "IT FALLS THAT WAY", WHITE)
+    b.arrow(sx + 20, sy + 36, sx + 100, sy + 36, RED, 5, dashed=True)
+    tag(b, sx + 10, sy + 46, "FALL LINE 48 X 140", RED)
+    tag(b, sx + 60, sy - 40, "CRUSHED", AMBER)
+    b.label(W - 10, H - 16, "AIM THE FALL AT THE GUNS BESIDE IT", AMBER, right=True)
+    return b
+
+
+# --------------------------------------------------------------------------- Level 33 (M9 part F)
+
+SOURCE_M9F = artkit.source_note(SCRIPT, "M9 part F batch")
+
+
+def level_33_leech_field():
+    """L33 p1: Okafor's chart of the Leech Field: the big rocks along the route from the field's edge (lower left) to
+    clear rock (upper right), the growth shaded violet over the middle rocks, the Rail Bunkers as red ticks on their
+    rock faces, the ridge, Ceres's light at the top edge; the route in amber."""
+    b = Board()
+    rng = np.random.default_rng(3401)
+    route = [(30, 206), (120, 188), (220, 160), (330, 128), (430, 104), (540, 76), (646, 50)]
+    rocks = [(70, 150, 26, 0.0), (150, 214, 22, 0.2), (196, 120, 34, 0.6), (262, 196, 30, 0.7), (300, 84, 28, 0.6),
+             (366, 170, 40, 0.9), (420, 60, 30, 0.9), (470, 150, 34, 0.9), (520, 110, 22, 0.5), (590, 150, 26, 0.0),
+             (610, 96, 18, 0.0)]
+    n = raster.fbm(W, H, 10, 3403, octaves=3, period=False)
+    for cx, cy, r, grown in rocks:
+        ang = np.arctan2(b.yy - cy, b.xx - cx)
+        rad = r * (1 + 0.16 * np.sin(3 * ang + cx) + 0.1 * np.sin(5 * ang + cy))
+        body = np.hypot(b.xx - cx, (b.yy - cy) * 1.1) < rad
+        col = np.array((52, 46, 40.0)) * (0.85 + 0.4 * n)[..., None]
+        if grown:
+            g = body & (n + 0.35 > 1.0 - grown)
+            b.base = np.where(body[..., None], col, b.base)
+            b.base = np.where(g[..., None], np.array((70, 34, 92.0)) * (0.8 + 0.4 * n)[..., None], b.base)
+        else:
+            b.base = np.where(body[..., None], col, b.base)
+        edge = body & ~(np.roll(body, 1, 0) & np.roll(body, -1, 0) & np.roll(body, 1, 1) & np.roll(body, -1, 1))
+        b.base = np.where(edge[..., None], np.array((120, 150, 170.0)), b.base)
+    ridge = [(318, 150), (350, 136), (392, 130), (430, 122)]          # the bunker ridge across the route
+    b.line(ridge, ROCK_DIM, 7, 255)
+    b.line(route, AMBER, 3, 240)
+    b.arrow(620, 56, 660, 44, AMBER, 5, dashed=False)
+    for x, y in ((182, 112), (330, 146), (424, 128), (352, 172), (392, 112), (474, 134), (506, 166), (530, 102)):
+        b.marker(x, y, "chevron", RED, 3)
+    b.glow(W - 150, -16, 64, (120, 96, 50), 0.9)                    # Ceres's light at the top edge
+    tag(b, W - 136, 24, "CERES", AMBER)
+    tag(b, 16, 168, "FIELD EDGE", GREY)
+    tag(b, 150, 92, "GROWTH: LEECH NESTS", VIOLET)
+    tag(b, 300, 186, "BUNKER RIDGE", RED)
+    tag(b, 452, 186, "THE SWARM", VIOLET)
+    tag(b, 560, 182, "CLEAR ROCK", GREY)
+    b.label(214, 208, "RED TICKS: RAIL BUNKERS. STEP OFF THE RED LINE", RED)
+    b.title("CDF NAV CHART - THE LEECH FIELD")
+    b.label(W - 10, 9, "CMDR. OKAFOR", CYAN_DIM, right=True)
+    b.label(10, H - 16, "CROSS IT. ROOK FLIES YOUR WING", AMBER)
+    del rng
+    return b
+
+
+def level_33_power_drain():
+    """L33 p2: Varga's diagram of the drain: a Void Leech latched on the Stormhawk's hull (tools/art/belt_units_f.py's
+    frames), the power gauge with 4 MW drained in the warning colour, the shield ring dimmed, the shake-off
+    (left-right-left-right) as arrows."""
+    b = Board()
+    b.title("CDF SCAN - VOID LEECH: THE DRAIN")
+    b.label(W - 10, 9, "DR. VARGA", CYAN_DIM, right=True)
+    sx, sy, k = 236, 126, 2.0
+    b.ring(sx, sy, 58, colour=CYAN_DIM, alpha=110, width=2)          # the shield ring, dimmed
+    tag(b, sx - 88, sy - 76, "SHIELD: NO REGROWTH", CYAN_DIM)
+    ship = held_frame("ship_2", k, 40)
+    b.sprite(ship, sx, sy)
+    pv = json.loads((ROOT / "build" / "art-held" / "pivots" / "void-leech.json").read_text(encoding="utf-8")) if (
+        ROOT / "build" / "art-held" / "pivots" / "void-leech.json").exists() else json.loads(
+        (ROOT / "assets" / "pivots" / "void-leech.json").read_text(encoding="utf-8"))
+    for i, spot in enumerate(("left", "tail")):
+        ox, oy = pv["spots"][spot]
+        b.sprite(held_frame(f"void-leech-latched_{i * 8 + 2}", k, 32), sx + ox * k, sy + oy * k)
+    b.glow(sx + pv["mouth"]["left"][0] * k, sy + pv["mouth"]["left"][1] * k, 14, (110, 50, 170), 0.9)
+    lx, ly = sx + pv["spots"]["left"][0] * k, sy + pv["spots"]["left"][1] * k
+    b.line([(lx - 18, ly + 8), (lx - 70, ly + 40)], VIOLET, 1, 220)
+    tag(b, 20, ly + 44, "LATCHED: -2 MW EACH", VIOLET)
+    gx, gy = 430, 70                                                 # the power gauge: 20 MW, 4 drained
+    tag(b, gx, gy - 18, "GENERATOR 20 MW", CYAN)
+    cell = 10
+    for i in range(20):
+        x0 = gx + i * (cell + 2)
+        if x0 + cell > W - 8:
+            break
+        col = AMBER if i >= 16 else CYAN
+        b.draw.rectangle([x0, gy, x0 + cell - 2, gy + 14], fill=col + (230,) if i < 16 else None,
+                         outline=col + (230,))
+    tag(b, gx, gy + 20, "-4 MW: TWO LEECHES", AMBER)
+    tag(b, gx, gy + 34, "MORE: YOUR GUNS SLOW", AMBER)
+    ay = 176                                                         # the shake-off
+    xs = [404, 452, 404, 452, 404]
+    for i in range(4):
+        b.arrow(xs[i], ay - 12 + i * 8, xs[i + 1], ay - 12 + i * 8, CYAN, 5, dashed=False)
+    tag(b, 486, ay - 4, "SHAKE: L-R-L-R", CYAN)
+    tag(b, 486, ay + 8, "IN 1.2 S", WHITE)
+    b.label(W - 10, H - 16, "BRING SPARE POWER. SHAKE THEM OFF", AMBER, right=True)
+    return b
+
+
+
+SOURCE_M9G = artkit.source_note(SCRIPT, "M9 part G batch")
+
+
+def _hull_poly(cx, cy, length, width, ang, bow=0.3):
+    """A ship's outline on the chart: a long hull at angle ``ang`` (radians, 0 = pointing right), its bow tapered."""
+    d = np.array((np.cos(ang), np.sin(ang)))
+    n = np.array((-d[1], d[0]))
+    c = np.array((cx, cy), float)
+    pts = [c - d * length / 2 + n * width / 2, c + d * (length / 2 - length * bow) + n * width / 2,
+           c + d * length / 2, c + d * (length / 2 - length * bow) - n * width / 2, c - d * length / 2 - n * width / 2]
+    return [tuple(p) for p in pts]
+
+
+def level_34_graveyard():
+    """L34 p1: Okafor's chart of the ship graveyard on the lane to Ceres: the lane through it (amber), the CDF picket's
+    three broken frigates in grey, the Helix hulks dark with gold edges, the big freighter boxed in gold, the tanks'
+    roads along the hulls as dotted red lines, the containers as amber diamonds; Ceres's point and the Sovereign's
+    ring at the top right."""
+    b = Board()
+    route = [(20, 214), (120, 196), (230, 160), (330, 132), (440, 104), (540, 74), (650, 40)]
+    hulls = [  # (cx, cy, length, width, angle, kind)
+        (150, 200, 120, 22, -0.32, "cdf"), (182, 150, 110, 20, -0.38, "cdf"), (120, 120, 100, 20, -0.25, "cdf"),
+        (290, 196, 130, 30, -0.3, "helix"), (318, 92, 120, 28, -0.42, "helix"),
+        (424, 150, 190, 62, -0.3, "freighter"),
+        (548, 140, 110, 24, 0.5, "cdf"), (560, 100, 120, 30, -0.6, "helix")]
+    grey = np.array((70, 84, 96.0))
+    dark = np.array((34, 32, 30.0))
+    for cx, cy, ln, wd, ang, kind in hulls:
+        img = Image.new("L", (W, H), 0)
+        ImageDraw.Draw(img).polygon(_hull_poly(cx, cy, ln, wd, ang, 0.18 if kind != "freighter" else 0.12), fill=255)
+        m = np.array(img) > 127
+        col = grey if kind == "cdf" else dark
+        b.base = np.where(m[..., None], col * (0.85 + 0.3 * raster.fbm(W, H, 6, 3471, octaves=2, period=False))[..., None],
+                          b.base)
+        pad = np.pad(m, 1)
+        edge = m & ~(pad[:-2, 1:-1] & pad[2:, 1:-1] & pad[1:-1, :-2] & pad[1:-1, 2:])
+        b.base = np.where(edge[..., None], np.array((150, 170, 180.0)) if kind == "cdf" else np.array(GOLD_A, float),
+                          b.base)
+        if kind in ("cdf", "helix") and ln > 105:
+            d = np.array((np.cos(ang), np.sin(ang)))
+            b.dashed([tuple(np.array((cx, cy)) - d * ln * 0.42), tuple(np.array((cx, cy)) + d * ln * 0.3)], RED, 1, 3, 3)
+    fx, fy = 424, 150
+    b.dashed([(fx - 70, fy + 30), (fx + 40, fy - 4)], RED, 1, 3, 3)
+    b.draw.rectangle([fx - 102, fy - 48, fx + 102, fy + 48], outline=GOLD_A + (240,), width=2)
+    b.line(route, AMBER, 2, 230)
+    b.arrow(630, 46, 662, 34, AMBER, 5, dashed=False)
+    for x, y in ((140, 182), (170, 136), (300, 182), (520, 128), (590, 118), (380, 140)):
+        b.marker(x, y, "diamond", AMBER, 3)
+    b.glow(W - 40, 46, 9, (200, 200, 220), 1.0)
+    b.ring(W - 76, 48, 16, 6, colour=GOLD_A, alpha=230)
+    tag(b, W - 136, 62, "CERES / SOVEREIGN", AMBER)
+    tag(b, 60, 92, "CDF PICKET", GREY)
+    tag(b, 256, 64, "HELIX HULKS", GOLD_A)
+    tag(b, 360, 202, "FREIGHTER: HOLD SEALED", AMBER)
+    tag(b, 520, 182, "THE TANGLE", GREY)
+    b.label(214, 224, "RED DOTS: TANK ROADS. AMBER: CONTAINERS", RED)
+    b.title("CDF NAV CHART - THE SHIP GRAVEYARD")
+    b.label(W - 10, 9, "CMDR. OKAFOR", CYAN_DIM, right=True)
+    return b
+
+
+def level_34_helix_hold():
+    """L34 p2: Varga's salvage scan of the freighter's hold (tools/art/belt_units_g.py's sprites): the crate in its four
+    clamps, the Helix emblem on its seal lit, the clamps' locks marked; the power signature of the fusion core in the
+    crate beside the Stormhawk's Mk IV for scale."""
+    b = Board()
+    b.title("CDF SCAN - HELIX FREIGHTER: THE HOLD")
+    b.label(W - 10, 9, "DR. VARGA", CYAN_DIM, right=True)
+    hx, hy, k = 190, 128, 2.0
+    b.bracket(hx - 128, hy - 92, hx + 128, hy + 92, CYAN_DIM, 10)
+    for gx in range(hx - 120, hx + 121, 26):
+        b.line([(gx, hy - 84), (gx, hy + 84)], CYAN_DIM, 1, 70)
+    b.sprite(held_frame("helix-core_1", k, 40), hx, hy)
+    for side, dx, dy in (("left", -46, -30), ("right", 46, -30), ("left", -46, 30), ("right", 46, 30)):
+        b.sprite(held_frame(f"hold-clamp-{side}_0", k, 28), hx + dx * k, hy + dy * k)
+        b.marker(hx + dx * k + (-26 if dx < 0 else 26), hy + dy * k, "dot", RED, 2)
+    b.glow(hx, hy, 18, (120, 90, 30), 0.8)
+    tag(b, hx - 120, hy - 108, "FOUR CLAMPS, LOCKED: 15 HP EACH", RED)
+    tag(b, hx - 60, hy + 100, "THE HELIX SEAL", GOLD_A)
+    px, py = 420, 64                                                  # the power signature
+    tag(b, px, py - 22, "POWER SIGNATURE", CYAN)
+    for i, (label, mw, col) in enumerate((("MK IV TOKAMAK", 20, CYAN), ("IN THE CRATE", 22, GOLD_A))):
+        y = py + i * 46
+        tag(b, px, y, label, col)
+        wv = 8
+        for j in range(mw):
+            x0 = px + j * (wv + 1)
+            b.draw.rectangle([x0, y + 12, x0 + wv - 2, y + 28], fill=col + (220,))
+        tag(b, px + mw * (wv + 1) + 4, y + 16, f"{mw} MW", col)
+    tag(b, px, py + 100, "FLY THROUGH IT ONCE IT FLOATS", AMBER)
+    b.label(W - 10, H - 16, "SHOOT THE CLAMPS. I WANT THAT CORE", AMBER, right=True)
+    return b
+
+
+# --------------------------------------------------------------------------- Level 35 and the Act 5 outro (M9 part H)
+
+SOURCE_M9H = artkit.source_note(SCRIPT, "M9 part H batch")
+CHARCOAL_S = (34, 34, 40)                            # the Sovereign's hull on the display
+
+
+def ceres_holo(b, cx, cy, r, seed=6801, light=(-0.6, -0.55, 0.45), gain=1.0):
+    """Ceres on the display: a cratered cream disc lit from the top left, its night side dark, a thin rim glow."""
+    nx, ny = (b.xx - cx) / r, (b.yy - cy) / r
+    r2 = nx ** 2 + ny ** 2
+    inside = r2 < 1
+    nz = np.sqrt(np.clip(1 - r2, 0, 1))
+    tex = raster.fbm(W, H, 10, seed, octaves=4, period=False)
+    L = np.array(light) / np.linalg.norm(light)
+    lit = np.clip(nx * L[0] + ny * L[1] + nz * L[2], 0.04, 1)
+    body = np.array(CERES_CREAM, float) * (0.5 + 0.5 * tex)[..., None] * lit[..., None] * 0.8 * gain
+    b.base = np.where(inside[..., None], body, b.base)
+    d = np.hypot(b.xx - cx, b.yy - cy)
+    b.base += (np.exp(-((d - r) / 2.5) ** 2) * 0.6)[..., None] * np.array((150, 140, 120.0)) * gain
+    return inside
+
+
+def annulus_poly(cx, cy, r0, r1, a0, a1, n=8):
+    """An annular segment's outline (angles in radians, screen y down)."""
+    outer = [(cx + r1 * math.cos(a), cy + r1 * math.sin(a)) for a in np.linspace(a0, a1, n)]
+    inner = [(cx + r0 * math.cos(a), cy + r0 * math.sin(a)) for a in np.linspace(a1, a0, n)]
+    return outer + inner
+
+
+def turn_arrow(b, cx, cy, r, a0, a1, colour):
+    """A curved arrow along radius r from angle a0 to a1 (radians, its head at a1)."""
+    pts = [(cx + r * math.cos(a), cy + r * math.sin(a)) for a in np.linspace(a0, a1, 14)]
+    b.line(pts, colour, 2)
+    tip = np.array(pts[-1])
+    d = tip - np.array(pts[-2])
+    d /= np.linalg.norm(d)
+    n = np.array((-d[1], d[0]))
+    b.draw.polygon([tuple(tip + d * 3), tuple(tip - d * 7 + n * 5), tuple(tip - d * 7 - n * 5)], fill=colour + (240,))
+
+
+def level_35_ceres_orbit():
+    """L35 p1: Okafor's chart of Ceres orbit: the approach from the graveyard lane (amber), the escort screen as gold
+    contacts, the station's outer hull as a long keel to the Sovereign at the north pole (its three rings in gold), the
+    mass relay on Ceres's limb with its red bearing line across the approach, Ceres Hub's red lights and Ceres Control
+    still on the CDF's side."""
+    b = Board()
+    cx, cy, r = 170, 318, 196
+    ceres_holo(b, cx, cy, r)
+    hub = (112, 214)
+    for k in range(12):
+        b.glow(hub[0] - 18 + k * 3, hub[1] + k * 0.8, 1.6, (255, 60, 40), 2.2)
+    b.glow(hub[0], hub[1] + 4, 14, (120, 20, 10), 0.8)
+    b.marker(hub[0], hub[1] - 12, "diamond", GREEN, 4)
+    tag(b, 20, 176, "CERES HUB: LIGHTS RED", RED)
+    tag(b, 20, 188, "CERES CONTROL: STILL OURS", GREEN)
+    pole = (cx + 12, cy - r)
+    sx, sy = pole[0] + 14, pole[1] - 52
+    for rr, col in ((22, GOLD_A), (15, GOLD_A), (9, GOLD_A)):
+        b.ring(sx, sy, rr, colour=col, alpha=230)
+    b.glow(sx, sy, 4, (220, 170, 70), 1.0)
+    tag(b, sx + 28, sy - 20, "IRON SOVEREIGN", GOLD_A)
+    tag(b, sx + 28, sy - 8, "OVER THE NORTH POLE", GREY)
+    hull = [(sx + 16, sy + 14), (sx + 150, sy + 56)]
+    b.line(hull, CHARCOAL_S, 9, 255)
+    b.line(hull, GOLD_A, 1, 200)
+    tag(b, sx + 70, sy + 46, "OUTER HULL: NESTS, BUNKERS", AMBER)
+    rng = np.random.default_rng(6803)
+    for _ in range(14):
+        x, y = rng.uniform(420, 520), rng.uniform(96, 178)
+        b.marker(x, y, "chevron", GOLD_A, 3)
+    tag(b, 426, 76, "ESCORT SCREEN", GOLD_A)
+    route = [(662, 210), (560, 176), (470, 140), (sx + 150, sy + 56), (sx + 24, sy + 18)]
+    b.line(route[:-1], AMBER, 2, 230)
+    b.arrow(route[-2][0], route[-2][1], route[-1][0], route[-1][1], AMBER, 5, dashed=False)
+    tag(b, 572, 192, "GRAVEYARD LANE", GREY)
+    a = math.radians(-42)
+    rx, ry = cx + r * math.cos(a), cy + r * math.sin(a)
+    b.glow(rx, ry, 4, (255, 50, 40), 1.0)
+    b.marker(rx, ry, "dot", RED, 3)
+    b.dashed([(rx, ry), (660, 120)], RED, 1, 6, 4)
+    tag(b, rx + 8, ry + 6, "MASS RELAY: TURNED", RED)
+    tag(b, 560, 104, "ITS LINE", RED)
+    b.title("CDF CHART - CERES ORBIT")
+    b.label(W - 10, 9, "CMDR. OKAFOR", CYAN_DIM, right=True)
+    b.label(W - 10, H - 16, "CERES CONTROL GUIDES YOU IN", AMBER, right=True)
+    return b
+
+
+def level_35_sovereign_rings():
+    """L35 p2: Varga's plan of the station from above: three rings round the core with their batteries (SAM, rail,
+    laser) and turning directions, the 120 degree fire arc toward the ship shaded red, the core's six petals shut."""
+    b = Board()
+    b.title("CDF SCAN - IRON SOVEREIGN, FROM ABOVE")
+    b.label(W - 10, 9, "DR. VARGA", CYAN_DIM, right=True)
+    cx, cy, k = 200, 112, 0.44
+    rings = [("OUTER", 180, 220, 200, 6, "sam", 15), ("MIDDLE", 123, 157, 140, 4, "rail", 0),
+             ("INNER", 70, 100, 85, 3, "laser", 0)]
+    for name, r0, r1, rm, n, kind, start in rings:
+        d = np.hypot(b.xx - cx, b.yy - cy)
+        band = (d > r0 * k) & (d < r1 * k)
+        b.base = np.where(band[..., None], np.array(CHARCOAL_S, float) * (0.9 + 0.3 * (b.yy < cy)[..., None]), b.base)
+        b.ring(cx, cy, r1 * k, colour=GOLD_A, alpha=200)
+        b.ring(cx, cy, r0 * k, colour=GOLD_A, alpha=120)
+    # the fire arc: 120 degrees round the bearing toward the ship (straight down here)
+    ship = (cx, 226)
+    wedge = [(cx, cy)] + [(cx + 104 * math.cos(math.radians(a)), cy + 104 * math.sin(math.radians(a)))
+                          for a in np.linspace(30, 150, 16)]
+    fill(b, wedge, (150, 20, 16), 0.45)
+    b.marker(*ship, "square", CYAN, 4)
+    tag(b, cx + 10, 222, "YOU", CYAN)
+    b.dashed([(cx, cy), ship], RED, 1, 4, 3)
+    for name, r0, r1, rm, n, kind, start in rings:
+        for j in range(n):
+            a = math.radians(90 + start + j * 360 / n)
+            x, y = cx + rm * k * math.cos(a), cy + rm * k * math.sin(a)
+            armed = 30 <= (math.degrees(a) % 360) <= 150
+            col = RED if armed else GOLD_A
+            if kind == "sam":
+                b.marker(x, y, "square", col, 3)
+            elif kind == "rail":
+                b.marker(x, y, "diamond", col, 3)
+            else:
+                b.draw.polygon([(x, y - 5), (x + 5, y + 4), (x - 5, y + 4)], outline=col + (255,))
+    turn_arrow(b, cx, cy, 104, math.radians(200), math.radians(250), CYAN)
+    turn_arrow(b, cx, cy, 74, math.radians(330), math.radians(280), CYAN)
+    turn_arrow(b, cx, cy, 50, math.radians(160), math.radians(200), CYAN)
+    for j in range(6):                                                 # the core's six petals, shut
+        a0 = math.radians(j * 60 + 4)
+        pts = [(cx, cy)] + [(cx + 17 * math.cos(a), cy + 17 * math.sin(a)) for a in np.linspace(a0, a0 + math.radians(52), 4)]
+        fill(b, pts, (70, 56, 30))
+        b.draw.polygon(pts, outline=GOLD_A + (230,))
+    b.glow(cx, cy, 5, (90, 70, 20), 0.6)
+    px = 352
+    rows = [("OUTER RING: 6 SAM, TURNS CLOCKWISE", GOLD_A, "square"), ("MIDDLE: 4 RAIL, TURNS COUNTER", GOLD_A, "diamond"),
+            ("INNER: 3 LASER, STEPS 120 DEG", GOLD_A, "tri"), ("RED: IN THE FIRE ARC, ARMED", RED, "square")]
+    for i, (text, col, kind) in enumerate(rows):
+        y = 36 + i * 16
+        if kind == "tri":
+            b.draw.polygon([(px, y - 1), (px + 5, y + 8), (px - 5, y + 8)], outline=col + (255,))
+        else:
+            b.marker(px, y + 3, kind, col, 3)
+        b.label(px + 12, y, text, col)
+    tag(b, px, 110, "THE ARC: 120 DEG, IT FACES YOU", RED)
+    b.label(px, 124, "MOVE, AND YOU CHOOSE WHICH GUNS FIRE", WHITE)
+    tag(b, px, 150, "KILL A RING'S GUNS: IT LOCKS", AMBER)
+    tag(b, px, 166, "LOCK ALL THREE: THE CORE OPENS", AMBER)
+    b.label(px, 184, "SIX PETALS, SHUT UNTIL THEN", GOLD_A)
+    b.label(W - 10, H - 16, "STAY OFF THE RED SIDE OF EVERY RING", AMBER, right=True)
+    return b
+
+
+def act5_outro_ceres():
+    """Act 5 outro p1: Ceres from orbit, the Sovereign's broken rings drifting apart over the north pole, the core's
+    crater glowing; the dock canyon's lights white again."""
+    b = Board()
+    b.base = b.base * 0.3
+    rng = np.random.default_rng(6811)
+    for _ in range(120):
+        x, y = int(rng.integers(0, W)), int(rng.integers(0, H))
+        b.base[y, x] += rng.uniform(30, 120)
+    cx, cy, r = 450, 340, 240
+    ceres_holo(b, cx, cy, r, seed=6812, gain=1.15)
+    for k in range(18):                                                   # the dock canyon, lights white again
+        x, y = 470 + k * 4 + rng.normal(0, 1), 168 + k * 1.2 + rng.normal(0, 1)
+        b.glow(x, y, 1.5, (240, 244, 255), 2.0)
+    b.glow(504, 178, 16, (60, 66, 80), 0.8)
+    tag(b, 470, 196, "CERES HUB: LIGHTS WHITE", WHITE)
+    sx, sy = 440, 56                                                      # over the north pole
+    b.glow(sx, sy, 10, (150, 90, 30), 0.9)
+    b.glow(sx, sy, 3, (255, 210, 140), 1.0)
+    for r0, r1, n, drift in ((36, 44, 12, 18), (24, 31, 8, 13), (14, 19, 6, 9)):
+        for j in range(n):
+            a0 = TAU_B * j / n + rng.uniform(-0.05, 0.05)
+            a1 = a0 + TAU_B / n * 0.82
+            am = (a0 + a1) / 2
+            dd = drift * rng.uniform(0.6, 1.4)
+            ox, oy = math.cos(am) * dd, math.sin(am) * dd * 0.8
+            spin = rng.uniform(-0.45, 0.45)
+            pts = annulus_poly(sx + ox, sy + oy, r0, r1, a0 + spin, a1 + spin, 5)
+            fill(b, pts, CHARCOAL_S)
+            b.draw.polygon([tuple(p) for p in pts], outline=GOLD_A + (150,))
+    tag(b, sx + 60, sy - 18, "THE SOVEREIGN: SCRAP", GOLD_A)
+    b.title("CDF TRANSPORT - CERES, FROM ORBIT")
+    tag(b, W - 10, 9, "CMDR. OKAFOR", CYAN, right=True)
+    px = 16
+    fill(b, [(px - 8, 120), (196, 120), (196, 206), (px - 8, 206)], (6, 10, 22), 0.85)
+    b.label(px, 128, "IRON SOVEREIGN: DOWN", GOLD_A)
+    b.label(px, 146, "CERES: OURS AGAIN", WHITE)
+    b.label(px, 164, "HALF THE BELT", AMBER)
+    b.label(px, 174, "STILL FLIES HIS COLOURS", AMBER)
+    b.label(px, 192, "EVERY STATION WATCHED", CYAN)
+    return b
+
+
+def aged(img):
+    """A portrait as an old file photo: grey and warm, the dark hair gone grey, the face lined."""
+    a = np.array(img.convert("RGBA")).astype(np.float64)
+    lum = a[..., :3] @ np.array((0.3, 0.55, 0.15))
+    h, w = lum.shape
+    yy, xx = np.mgrid[0:h, 0:w]
+    hair = (lum < 70) & (yy < h * 0.42) & (a[..., 3] > 0) & (np.abs(xx - w / 2) < w * 0.4)
+    lum = np.where(hair, 150 + 30 * ((xx + yy) % 3 == 0), lum)
+    for y0 in (0.33, 0.36, 0.56, 0.6):                                      # forehead and cheek lines
+        row = int(h * y0)
+        sel = (a[row, :, 3] > 0) & (lum[row] > 90)
+        lum[row, sel] *= 0.78
+    rgb = np.dstack([lum * 1.04, lum * 0.98, lum * 0.88])
+    return held_frame_img(Image.fromarray(np.dstack([np.clip(rgb, 0, 255), a[..., 3]]).astype(np.uint8), "RGBA"), 24)
+
+
+def act5_outro_face():
+    """Act 5 outro p2: Varga's screen: the recruitment feed paused on Vorne's face beside a 2179 Helix review photo of
+    him at sixty; the captured nav core's route plot to Callisto in a strip below."""
+    b = Board()
+    b.base = b.base * 0.45
+    b.title("CDF SCIENCE - THE FACE ON THE FEED")
+    b.label(W - 10, 9, "DR. VARGA", CYAN_DIM, right=True)
+    vorne = Image.open(SPRITES / "portraits" / "briefing-vorne-neutral.png").convert("RGBA")
+    lx, ly = 40, 28
+    feed = Image.new("RGBA", (144, 144), (34, 18, 4, 255))
+    feed.alpha_composite(vorne)
+    a = np.array(feed).astype(np.float64)
+    a[..., :3] = a[..., :3] * np.array((1.0, 0.82, 0.55))
+    a[::2, :, :3] *= 0.9
+    b.sprites.append((held_frame_img(Image.fromarray(a.astype(np.uint8), "RGBA"), 32), lx, ly))
+    b.draw.rectangle([lx - 2, ly - 2, lx + 145, ly + 145], outline=AMBER_E + (255,), width=2)
+    tag(b, lx + 152, ly + 4, "2185 - RECRUITMENT FEED", AMBER_E)
+    tag(b, lx + 152, ly + 16, "PAUSED", AMBER_E)
+    tag(b, lx + 152, ly + 120, "LOOKS FORTY", AMBER)
+    rx = 470
+    photo = Image.new("RGBA", (144, 144), (60, 58, 54, 255))
+    photo.alpha_composite(vorne)
+    b.sprites.append((aged(photo), rx, ly))
+    b.draw.rectangle([rx - 2, ly - 2, rx + 145, ly + 145], outline=GREY + (255,), width=2)
+    tag(b, rx - 6 - raster.text_width("HELIX DYNAMICS"), ly + 4, "HELIX DYNAMICS", GREY)
+    tag(b, rx - 6 - raster.text_width("ANNUAL REVIEW 2179"), ly + 16, "ANNUAL REVIEW 2179", GREY)
+    tag(b, rx - 6 - raster.text_width("AGE 60"), ly + 120, "AGE 60", WHITE)
+    b.arrow(rx - 70, ly + 76, lx + 210, ly + 76, GREEN, 4, dashed=True)
+    tag(b, 302, ly + 84, "SAME MAN", GREEN)
+    sx0, sx1, sy = 20, 652, 202
+    fill(b, [(sx0 - 4, 182), (sx1 + 4, 182), (sx1 + 4, 234), (sx0 - 4, 234)], (6, 10, 22), 1.0)
+    b.label(sx0, 186, "NAV CORE, CAPTURED: ROUTE PLOT", CYAN)
+    pts = [(sx0 + 40, sy + 14), (220, sy + 8), (400, sy + 18), (560, sy + 10), (sx1 - 40, sy + 14)]
+    b.dashed(pts, AMBER, 1, 4, 3)
+    b.marker(sx0 + 40, sy + 14, "dot", WHITE, 3)
+    tag(b, sx0 + 8, sy + 22, "CERES", WHITE)
+    b.glow(sx1 - 14, sy + 14, 8, (150, 100, 60), 1.0)
+    b.marker(sx1 - 40, sy + 14, "diamond", RED, 4)
+    tag(b, sx1 - 110, sy + 22, "CALLISTO", RED)
+    return b
+
+
+def flight_deck(b, hz=74, vx=336):
+    """The transport's flight deck in one-point perspective (the Act 4 outro's), returns the ground mask."""
+    ground = b.yy >= hz
+    dz = np.maximum(b.yy - hz, 1e-3)
+    gz = 800.0 / dz
+    gxw = (b.xx - vx) * gz / 40.0
+    joints = (np.abs(((gxw + 1000) % 24) - 12) > 11.4) | (np.abs((gz % 20) - 10) > 9.2 + np.clip(gz / 400, 0, 0.7))
+    deck = np.array([40, 42, 50.0]) * (0.6 + 0.4 * np.clip(dz / 170, 0, 1))[..., None]
+    deck = np.where(joints[..., None], deck * 0.7, deck)
+    ceil = np.array([14, 16, 24.0]) * (0.6 + 0.4 * np.clip((hz - b.yy) / hz, 0, 1))[..., None]
+    b.base = np.where(ground[..., None], deck, ceil)
+    return ground
+
+
+def rook_on_ladder():
+    """Rook on the ladder, seen from behind and the side: the flight suit (Ember's ochre and grey), one hand on a rung,
+    his white helmet under his left arm (a small sprite with its own palette: the display's 24 colours would lose it)."""
+    k = 4
+    img = Image.new("RGBA", (36 * k, 70 * k), (0, 0, 0, 0))
+    d = ImageDraw.Draw(img)
+
+    def poly(pts, col):
+        d.polygon([(x * k, y * k) for x, y in pts], fill=col + (255,))
+    suit, lit, dark = (112, 86, 52), (176, 140, 88), (52, 42, 32)
+    poly([(10, 22), (24, 22), (25, 44), (22, 66), (17, 66), (16, 46), (13, 66), (8, 66), (8, 44)], suit)
+    poly([(10, 22), (15, 22), (14, 44), (9, 44)], lit)
+    poly([(22, 24), (30, 12), (32, 14), (25, 28)], suit)                    # the right arm up to a rung
+    poly([(8, 66), (13, 66), (13, 69), (7, 69)], dark)
+    poly([(17, 66), (22, 66), (23, 69), (17, 69)], dark)
+    d.ellipse([12 * k, 10 * k, 22 * k, 22 * k], fill=(60, 44, 34, 255))     # his head, dark hair
+    d.ellipse([12 * k, 13 * k, 19 * k, 22 * k], fill=(150, 108, 80, 255))   # the face turned to the left
+    d.ellipse([1 * k, 30 * k, 13 * k, 41 * k], fill=(214, 218, 224, 255))   # the helmet under his left arm
+    d.rectangle([2 * k, 34 * k, 8 * k, 37 * k], fill=(40, 52, 76, 255))     # its visor
+    poly([(8, 26), (11, 26), (11, 40), (6, 42)], suit)                       # the left arm round it
+    img = img.resize((36, 70), Image.LANCZOS)
+    return held_frame_img(img, 16)
+
+
+def act5_outro_ember():
+    """Act 5 outro p3: Rook's Ember back on its launch rail on the transport's flight deck, the Helix clamps' scorch
+    marks on its hull; Rook on the ladder beside it, his helmet under his arm."""
+    import outro_l21_images as o21                                  # noqa: E402  (the tower's foreshortening)
+    b = Board()
+    hz, vx = 64, 336
+    flight_deck(b, hz, vx)
+    for x in (-300, -150, 150, 300):
+        b.line([(vx + x * 0.16, hz - 30), (vx + x, 0)], (120, 140, 170), 1, 150)
+    xn = 0
+    for s in (-10, 10):
+        b.line([(vx + (xn + s) * 0.14, hz + 2), (vx + xn + s, H)], (110, 120, 136), 1, 200)
+    for f in np.linspace(0.08, 1.0, 12):
+        y = hz + (H - hz) * f
+        b.glow(vx, y, 1.2, (255, 170, 80), 0.9)
+    craft = np.array(asset("rook_2")).astype(np.float64)              # the clamps' scorch marks on the hull
+    for x0, y0, x1, y1 in ((9, 18, 14, 24), (28, 18, 33, 24), (17, 30, 25, 34)):
+        craft[y0:y1, x0:x1, :3] *= 0.35
+    spr = o21.foreshortened(Image.fromarray(craft.astype(np.uint8), "RGBA"), 2.6, squash=0.62)
+    xk, yk = vx, 160
+    shadow(b, spr, xk, yk, 4, 6, 0.55)
+    b.sprite(spr, xk, yk)
+    b.glow(xk, yk + 30, 60, (70, 60, 50), 0.5)
+    lx = xk + 44                                                      # the ladder against the hull, Rook on it
+    for s in (0, 14):
+        b.line([(lx + s, yk - 14), (lx + s + 10, H - 22)], (170, 176, 186), 1, 240)
+    for k in range(8):
+        y = yk - 8 + k * 10
+        b.line([(lx + k * 1.0, y), (lx + 14 + k * 1.0, y)], (170, 176, 186), 1, 220)
+    b.glow(lx + 12, yk + 14, 30, (60, 60, 70), 0.6)
+    b.sprites.append((rook_on_ladder(), int(lx - 6), int(yk - 16)))
+    st = stencil("AEGIS TWO", 2, (230, 180, 80), squash=0.6)
+    b.sprite(st, vx, H - 26)
+    b.title("CDF TRANSPORT - FLIGHT DECK")
+    b.label(W - 10, 9, "ROOK", CYAN_DIM, right=True)
+    tag(b, xk - 170, yk - 40, "HELIX CLAMP MARKS", AMBER)
+    b.line([(xk - 110, yk - 32), (xk - 22, yk - 10)], AMBER, 1, 200)
+    tag(b, lx + 34, yk + 14, "ROOK", CYAN)
+    b.label(10, H - 16, "BACK IN THE SLOT", AMBER)
+    return b
+
+
+def act5_outro_jupiter():
+    """Act 5 outro p4: the transport's forward view through the open bay door, Jupiter ahead with Callisto a dark
+    cratered disc beside it; every rail on the flight deck filled, Rook's Ember among them."""
+    import outro_l21_images as o21                                  # noqa: E402
+    b = Board()
+    hz, vx = 74, 336
+    flight_deck(b, hz, vx)
+    dx0, dx1, dy0 = vx - 140, vx + 140, 6
+    door = (b.xx > dx0) & (b.xx < dx1) & (b.yy > dy0) & (b.yy < hz)
+    saved = b.base.copy()
+    b.base = np.where(door[..., None], np.array((3, 3, 7.0)), b.base)
+    jupiter_disc(b, vx - 30, 72, 62, strength=0.95)
+    n = 22                                                            # Callisto: a dark cratered disc
+    nx, ny = (b.xx - (vx + 92)) / n, (b.yy - 36) / n
+    r2 = nx ** 2 + ny ** 2
+    tex = raster.fbm(W, H, 4, 6821, octaves=3, period=False)
+    lit = np.clip(-0.6 * nx - 0.5 * ny + 0.5 * np.sqrt(np.clip(1 - r2, 0, 1)), 0.05, 1)
+    cal = np.array((96, 88, 80.0)) * (0.5 + 0.5 * tex)[..., None] * lit[..., None]
+    b.base = np.where((r2 < 1)[..., None], cal, b.base)
+    b.base = np.where(door[..., None], b.base, saved)
+    b.draw.rectangle([dx0, dy0, dx1, hz], outline=(80, 90, 104, 255), width=2)
+    b.glow(vx, H + 30, 260, (30, 60, 110), 0.7)
+    rails = [-250, -84, 84, 250]
+    ships = {0: ("LANCER", "ship_2", CYAN), 1: ("AEGIS TWO", "rook_2", AMBER), 2: ("AEGIS 3", "ship_2", GREY),
+             3: ("AEGIS 4", "ship_2", GREY)}
+    for i, xn in enumerate(rails):
+        for s_ in (-8, 8):
+            b.line([(vx + (xn + s_) * 0.14, hz + 2), (vx + xn + s_, H)], (110, 120, 136), 1, 200)
+        for f in np.linspace(0.08, 1.0, 12):
+            y = hz + (H - hz) * f
+            x = vx + xn * (y - hz) / (H - hz) * 0.86 + xn * 0.14
+            b.glow(x, y, 1.2, (255, 170, 80) if i == 1 else (90, 160, 220), 0.9)
+        yk = 172
+        k = 0.45 + 0.75 * (yk - hz) / (H - hz)
+        xk = vx + xn * ((yk - hz) / (H - hz) * 0.86 + 0.14)
+        label, spr_name, col = ships[i]
+        spr = o21.foreshortened(asset(spr_name), k * 1.3, squash=0.62)
+        shadow(b, spr, xk, yk, 3, 4, 0.5)
+        b.sprite(spr, xk, yk)
+        tag(b, xk - raster.text_width(label) / 2, yk + 30, label, col)
+    tag(b, vx - 30 - raster.text_width("JUPITER") / 2, hz - 12, "JUPITER", CYAN)
+    tag(b, dx1 + 8, 32, "CALLISTO", RED)
+    b.title("CDF TRANSPORT - FLIGHT DECK, BOUND FOR JUPITER")
+    b.label(10, H - 16, "FOUR OF FOUR ON THE RAILS", AMBER)
+    b.label(W - 10, H - 16, "AEGIS ACTUAL OUT", CYAN_DIM, right=True)
+    return b
+
+
 IMAGES = {
     "act-1-tether-gate": tether_gate,
     "act-1-outer-stations": outer_stations,
@@ -7058,6 +7761,18 @@ IMAGES = {
     "level-30-minelayer": level_30_minelayer,
     "level-31-mining-rig-escort": level_31_mining_rig_escort,
     "level-31-tug-sections": level_31_tug_sections,
+    "level-32-deep-core": level_32_deep_core,
+    "level-32-sentinel-sweep": level_32_sentinel_sweep,
+    "level-33-leech-field": level_33_leech_field,
+    "level-33-power-drain": level_33_power_drain,
+    "level-34-graveyard": level_34_graveyard,
+    "level-34-helix-hold": level_34_helix_hold,
+    "level-35-ceres-orbit": level_35_ceres_orbit,
+    "level-35-sovereign-rings": level_35_sovereign_rings,
+    "act-5-outro-ceres": act5_outro_ceres,
+    "act-5-outro-face": act5_outro_face,
+    "act-5-outro-ember": act5_outro_ember,
+    "act-5-outro-jupiter": act5_outro_jupiter,
 }
 
 # Review sheets per batch: round, the images on it, the batch name.
@@ -7091,6 +7806,10 @@ BATCHES = {
     "r62": (list(IMAGES)[81:87], "M9 PART B"),
     "r63": (list(IMAGES)[87:89], "M9 PART C"),
     "r64": (list(IMAGES)[89:91], "M9 PART D"),
+    "r65": (list(IMAGES)[91:93], "M9 PART E"),
+    "r66": (list(IMAGES)[93:95], "M9 PART F"),
+    "r67": (list(IMAGES)[95:97], "M9 PART G"),
+    "r68": (list(IMAGES)[97:103], "M9 PART H"),
 }
 
 
@@ -7120,6 +7839,10 @@ def build(names):
                   else SOURCE_M9B if name in BATCHES["r62"][0]
                   else SOURCE_M9C if name in BATCHES["r63"][0]
                   else SOURCE_M9D if name in BATCHES["r64"][0]
+                  else SOURCE_M9E if name in BATCHES["r65"][0]
+                  else SOURCE_M9F if name in BATCHES["r66"][0]
+                  else SOURCE_M9G if name in BATCHES["r67"][0]
+                  else SOURCE_M9H if name in BATCHES["r68"][0]
                   else SOURCE_M4)
         artkit.save_png(IMAGES[name]().image(), OUT / f"{name}.png", source)
     print(f"{len(names)} briefing images in {OUT.relative_to(ROOT)}")

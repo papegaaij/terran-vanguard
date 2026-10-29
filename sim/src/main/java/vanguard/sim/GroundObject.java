@@ -19,6 +19,8 @@ public final class GroundObject implements Hashed {
     private int ticksSinceHit;
     /** Whether a trigger is shut for now (the stuck sled's clamp while the rail is lit). */
     private boolean shut;
+    /** M9 part E: a fork's branch's object while that side is not chosen: dark, not hittable. */
+    private boolean dormant;
 
     /** @param index its place in the level's list of ground objects, unique in an attempt */
     void place(GroundObjectSpec objectSpec, int index) {
@@ -39,6 +41,7 @@ public final class GroundObject implements Hashed {
         hitsLeft = objectSpec.hits();
         ticksSinceHit = Integer.MAX_VALUE;
         shut = false;
+        dormant = false;
     }
 
     /**
@@ -67,7 +70,17 @@ public final class GroundObject implements Hashed {
 
     /** Whether shots still hit it: always for a destructible, until it is spent for a trigger. */
     boolean hittable() {
-        return !spec.trigger() || (hitsLeft > 0 && !shut);
+        return !dormant && (!spec.trigger() || (hitsLeft > 0 && !shut));
+    }
+
+    /** M9 part E: puts a fork's branch's object to sleep (its side not chosen yet, or not chosen), or wakes it. */
+    void dormant(boolean asleep) {
+        dormant = asleep;
+    }
+
+    /** M9 part E (design/campaign Level 32, The forks): whether it is dormant: dark, not hittable. */
+    public boolean dormant() {
+        return dormant;
     }
 
     /** Shuts a trigger for now, or opens it again: shots pass a shut one. */
@@ -112,6 +125,10 @@ public final class GroundObject implements Hashed {
         if (spec.lowAir()) {
             // M5 part F: only a drifting trigger, so the other levels hash as before.
             hash.add(x);
+        }
+        if (spec.branch().isPresent()) {
+            // M9 part E: only a fork's branch's object, so the other levels hash as before.
+            hash.add(dormant ? 1 : 0);
         }
     }
 

@@ -397,7 +397,8 @@ elsewhere in the formation).
 
 The Act 5 A theme **"Hollow Rock"** ([track 12](../../../audio/music/README.md#track-list), chosen in round
 03; full length and stems in M9 part B): its intro (radio static and Vorne's motif in cold brass and organ)
-under the approach, the **base stem from section 2** (the canyon), the **full mix from the turn at t=60**
+under the approach, the **base stem from section 2** (the canyon) with **Vorne's motif stem on top** from there to the
+end (the [Act 5 cues](../../../audio/music/README.md#cues-per-level-act-5): "on"), the **full mix from the turn at t=60**
 (Vorne's motif in full brass as the lights go red), held through the halt; at Rook's launch a short brass
 lift on the motif's answer (a sting in the stems, D-audio's call), then the full mix to the end. Ambience:
 the `belt-station` bed (station hum, hull creaks, distant dock machinery; the gap analysis's bed per
@@ -511,7 +512,8 @@ launch`: the clamp gun, its clamps springing open, the gas, Rook's Ember launchi
 - [x] Typical haul within ±5 % of budget(29) = 4 654 with the level's `bounty_scale` (`TypicalHaulTest`)
 - [x] Music and ambience: "Hollow Rock" by section, the `belt-station` bed, the klaxon, the clamp and launch
       sounds (step B4: `Level29SoundsTest`, track 12's three stems and Rook's sting in `Tracks`, the 14 sounds played
-      with their round 62 **a** proposals until the user's picks; heard in round 62's capture videos)
+      with their round 62 **a** proposals until the user's picks; heard in round 62's capture videos; step FIX1: the
+      motif stem on top from section 2, `music.motif`, `Level29SoundsTest`)
 - [x] Easy/hard variations as in *Difficulty notes*; the autopilot flies the level on every difficulty with the
       loaner and with `--escort none`, breaking the clamps and keeping the wavering craft alive in most runs (step B3:
       `Level29Test`, the plan's fit, 3 seeds a difficulty: won 9/9 without a retry, Hold fire met 9/9; after step
@@ -659,3 +661,5 @@ launch`: the clamp gun, its clamps springing open, the gas, Rook's Ember launchi
   game's `Barks` stay off until he is in his slot (`LevelScreen.rookInSlot`: not while he waits in the hold or flies
   into the slot); a bark waiting as he leaves it is withdrawn and his kills there count for no streak, and his "Miss
   me?" counts as a scripted Rook line for the barks' spacing; no radio text changed.
+- 2026-10-28 (step FIX1): the music block gains the motif cue the Act 5 table marks "on" (`motif: {from: 28}`, the
+  base stem's start in section 2, to the end); the theme's intro keeps its own statement under section 1.

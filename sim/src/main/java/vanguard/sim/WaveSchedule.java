@@ -65,6 +65,8 @@ final class WaveSchedule {
     private final RockRides.Seat[] seats;
     /** M9 part B: the rocks the plan's waves on rocks carry (their numbers run from 0 in the plan's order). */
     private final int rocks;
+    /** M9 part E: per planned unit, its wave's fork branch ({@link Branch#code()}); -1 for a unit of no branch. */
+    private final int[] branches;
 
     private final int[] warningStarts;
     private final int[] warningEnds;
@@ -122,6 +124,7 @@ final class WaveSchedule {
         Map<Spawn, EnemySpec> leaderOf = new IdentityHashMap<>();
         Map<Spawn, Integer> waveOf = new IdentityHashMap<>();
         Map<Spawn, RockRides.Seat> seatOf = new IdentityHashMap<>();
+        Map<Spawn, Integer> branchOf = new IdentityHashMap<>();
         int rockCount = 0;
         int clocks = 0;
         int burrows = 0;
@@ -158,6 +161,9 @@ final class WaveSchedule {
                     }
                 }
                 tagOf.put(planned.get(i), wave.tag());
+                if (wave.branch().isPresent()) {
+                    branchOf.put(planned.get(i), wave.branch().get().code());
+                }
                 waveOf.put(planned.get(i), w);
                 if (wave.leader().isPresent() && i == before) {
                     // M9 part B: the wave's first unit (a V-wing's tip) leads it.
@@ -215,11 +221,13 @@ final class WaveSchedule {
         leaders = new EnemySpec[spawns.length];
         waveIndexes = new int[spawns.length];
         seats = new RockRides.Seat[spawns.length];
+        branches = new int[spawns.length];
         rocks = rockCount;
         for (int i = 0; i < spawns.length; i++) {
             leaders[i] = leaderOf.get(spawns[i]);
             waveIndexes[i] = waveOf.getOrDefault(spawns[i], -1);
             seats[i] = seatOf.get(spawns[i]);
+            branches[i] = branchOf.getOrDefault(spawns[i], -1);
             mounted[i] = mounts.placed(spawns[i]);
             flips[i] = flipOf.containsKey(spawns[i]);
             headFirsts[i] = headFirstOf.containsKey(spawns[i]);
@@ -386,6 +394,20 @@ final class WaveSchedule {
     /** M9 part B: the seat on its wave's rock of the unit {@link #due} returned last; null for a unit riding none. */
     RockRides.Seat lastSeat() {
         return seats[next - 1];
+    }
+
+    /** M9 part E: the fork branch ({@link Branch#code()}) of the unit {@link #due} returned last; -1 for none. */
+    int lastBranch() {
+        return branches[next - 1];
+    }
+
+    /** M9 part E: the units counted as enemies the waves of the branch {@code code} plan. */
+    int branchUnits(int code) {
+        int count = 0;
+        for (int i = 0; i < spawns.length; i++) {
+            count += branches[i] == code && spawns[i].enemy().countsAsEnemy() ? 1 : 0;
+        }
+        return count;
     }
 
     /** M9 part B: the rocks the plan's waves on rocks carry. */

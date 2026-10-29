@@ -1,10 +1,10 @@
 ---
 title: Iron Sovereign
 design: approved
-implementation: not-started
+implementation: in-progress
 art: chosen
 depends-on: [../../../world/belt, ../../../campaign/act-5-the-belt, ../../ground/sam-nest, ../../ground/rail-bunker, ../../ground/sentinel-tower, ../../air/dart-drone, ../../../player/wingmen, ../../../story/characters/vorne, ../../../systems/economy]
-updated: 2026-10-27
+updated: 2026-10-29
 ---
 
 # Iron Sovereign
@@ -21,8 +21,8 @@ After its death Vorne offers Lancer a job.
 **Status: approved** by the user in concept round 60 (2026-10-27; drafted in the Act 5 design phase, step D-boss). It follows the gap analysis's recommended answers, all decided in round 60: **Q7 a** (the
 top-down rings; the alternatives under *Variants b and c*), **Q1 a** (the core's hex shield), **Q6 b**
 (the core's Dart streams), **Q11 b** (the belt look: gunmetal/charcoal with gold) and judgement call **J2** (Level 35's reference DPS
-144). Every number is a hand-written **draft** at medium; there is no `data.yaml` yet (M9 part H writes
-it once the design is approved).
+144). The numbers are in its [data.yaml](data.yaml) (M9 part H, step H2: the stat block below is rendered from it);
+the fight is measured and its HP tuned in step H3.
 
 ## Design
 
@@ -44,26 +44,28 @@ The reference DPS is the **proposed** Level 35 value of **144** (judgement call 
 The batteries reuse their ground units' attacks: their numbers live in those units' documents and are
 not repeated here; the boss sets only where and how often they fire.
 
+<!-- data: stat-block -->
 | Field | Value |
 |---|---|
-| Faction | Jovian Ascendancy; a **machine** (but a boss: never stunned, its shield emptied by the EMP Burst) |
-| Layer | `ground` (the station seen from above, in orbit under the play plane): every weapon hits its parts, `anti-ground` ×2; **not hardened** (unlike the Rail Bunkers on its outer hull in the approach); no collision with the ship or the escort, who fly over it freely |
+| Faction | Jovian Ascendancy (a machine, but a boss: never stunned, its shields emptied by the EMP Burst) |
+| Layer | `ground` (the station seen from above, under the play plane: every weapon hits its parts, `anti-ground` ×2; **not hardened**, unlike the Rail Bunkers on its outer hull; no collision with the ship or the escort, who fly over it freely) |
 | Size tier | `huge` |
-| Size | ≈ 440 px across (the outer ring's rim at radius 220 from the centre); the core 80 px across, hitbox 70×70; batteries: SAM 40×40 (hitbox 30×30), rail 48×48 (36×36), laser 44×44 (32×32) |
+| Size | 440×440 px, hitbox 70×70 (the outer ring's rim at radius 220 from the centre; the core 80 px across; batteries: SAM 40×40 (hitbox 30×30), rail 48×48 (36×36), laser 44×44 (32×32)) |
 | Parts | the **core** (`vital`; armoured while shut, phases 1–3); the **outer ring** (6 SAM batteries), the **middle ring** (4 rail batteries), the **inner ring** (3 laser batteries): every battery `destroyable`; the rings' hulls are **not hit areas** (shots pass over them as over terrain) |
-| Orientation | the rings `radial` (they turn about the centre; see *Presentation* for how they are drawn); every battery's turret `64 angles`, aiming on its own while its mount turns with the ring |
-| HP | SAM battery 220 each (1,320), rail battery 330 each (1,320), laser battery 440 each (1,320), core 5,000; **total 8,960** (easy 6,720 / hard 11,648, from the global multipliers); the core's hex shield 80 on top (phase 4) |
+| Orientation | `fixed` (the rings turn about the centre, their segments placed by angle; every battery's turret in `64 angles`, aiming on its own while its mount turns with the ring) |
+| HP | SAM battery 220 each, rail battery 330 each, laser battery 440 each, core 14,000; the core's hex shield 80 on top (phase 4); total 17960 (easy 13470 / hard 23348, from the global multipliers) |
 | Armour / shield | the core is armoured (shots spark grey, no damage) until it opens; open, it carries a **hex shield** of 80 under the [enemy shield rule](../../README.md#enemy-shields) (Q1 a: every weapon wears it down, the [Tesla Coil Pod](../../../player/weapons/tesla-coil-pod/README.md)'s `shield-breaker` empties it, the EMP Burst strips it) |
 | Speed | 0 px/s (the scroll halts over it); the rings turn: outer 6°/s clockwise, middle 10°/s counter-clockwise, inner in steps (120° in 4 s, then a 4 s hold), each lock speeding the survivors up |
 | Movement | anchored, its centre at (240, 160) (see *Arena*) |
-| Attack | per battery, only while its mount is inside the **fire arc** (see below): SAM batteries the [SAM Nest](../../ground/sam-nest/README.md)'s salvo (its homing diamonds, its tell), one salvo per battery every 6 s; rail batteries the [Rail Bunker](../../ground/rail-bunker/README.md)'s rail line (its lock, telegraph, band and `heavy` hit), one per battery every 5 s; laser batteries the [Sentinel Tower](../../ground/sentinel-tower/README.md)'s arc sweep (its telegraph, beam width and `laser` hit) with a 300 px beam, once per inner-ring hold; the shut core (phases 1–3) an aimed `fan` of 5 over 40° (`small`, 150 px/s) through its shutter slits every 3.0 s (2.5 s in phase 2, 2.0 s in phase 3), after a 0.5 s glow; the open core (phase 4) a 2-arm `spiral` (`small`, 130 px/s), [Dart Drone](../../air/dart-drone/README.md) streams and, below half its HP, its own rail line |
-| Formations | solo set piece (the roster's turret nest, three rings deep) |
-| Weak points | none beyond the parts: the core is the vital part once open |
-| Effective traits | `anti-ground`, `piercing`, `homing` (the batteries in the arc), `shield-breaker` (the core's shield, a bonus only) |
-| Credits | 457 in Act 1 terms (core 379, every battery 6); × 6.5536 (Act 5's factor 1.6⁴) × Level 35's `bounty_scale` 0.56 it pays **24 % of budget(35) ≈ 1,677** (see *Bounty*) |
-| Death | `huge` vacuum variant: the wrecked batteries cook off ring by ring, the core collapses and blows, the rings break into drifting segments; a 5 s chain, screen flash, credit shower (see *Death*) |
+| Attack | per battery, only while its mount is inside the **fire arc** (120°, see *Arena*): SAM batteries the [SAM Nest](../../ground/sam-nest/README.md)'s salvo (its homing diamonds, its tell), one salvo per battery every 6 s in turn (at most 8 station missiles alive); rail batteries the [Rail Bunker](../../ground/rail-bunker/README.md)'s rail line (its lock, telegraph, band and `heavy` hit), one per battery every 5 s in turn (one telegraphed at a time, ≥ 1.5 s apart); laser batteries the [Sentinel Tower](../../ground/sentinel-tower/README.md)'s arc sweep (its telegraph, beam width and `laser` hit) with a 300 px beam, once per inner-ring hold; the shut core (phases 1–3) an aimed `fan` of 5 over 40° (`small` = 4, 150 px/s) through its shutter slits every 3 s; 2.5 s in phase 2; 2 s in phase 3, each after a 0.5 s glow; the open core (phase 4) a 2-arm `spiral` (`small`, 130 px/s, the arms turning 72°/s, 5 bullets/s an arm) for 4 s, then a 2 s rest, [Dart Drone](../../air/dart-drone/README.md) streams from its rim bays; and, below 50 % of the core's HP, its own rail line every 6 s (none on easy) |
+| Formations | solo set piece |
+| Weak points | none |
+| Effective traits | `anti-ground`, `piercing`, `homing` |
+| Credits | 433 (score 4330 × chain) in Act 1 terms (core 355, every battery 6); × 6.5536 (Act 5's factor 1.6⁴) × Level 35's `bounty_scale` 0.59 it pays **24 % of budget(35) ≈ 1,674** (see *Bounty*) |
+| Death | `huge` vacuum variant: the wrecked batteries cook off ring by ring (0.15 s apart), the core collapses and blows, the rings break into drifting segments; a 5 s chain, screen flash, credit shower (see *Death*) |
 | First level / used in | L35; the L49 boss rush's echo (see *Echoes and relatives*) |
 | Difficulty hooks | hard: rings ×1.2 faster, fire arc 150°, battery intervals ×0.8, the core's spiral 3 arms, Dart streams +1, no boss checkpoint; easy: fire arc 90°, battery intervals ×1.3, the core's spiral 2 arms at 3 bullets/s an arm, no core rail line |
+<!-- /data -->
 
 ### Arena
 
@@ -92,7 +94,9 @@ still be shot: the arc gates its weapons, not its hitbox. The arc is drawn: a fa
 ring's hull over its live sector, and a battery's running lights switch gold → red as it enters.
 
 **Fire rules.** At most one rail line is telegraphed at a time (the boss staggers them ≥ 1.5 s
-apart); a rail battery holds fire while the ship is within 100 px (the bunker's); no
+apart); a rail line's direction locks at its telegraph's start and its origin rides with its battery as the ring turns
+(the Rail Bunker's rule since round 66's C.1 b; round 68's C.9 a, built in step FIX3 on the recommendation, pending
+the round); a rail battery holds fire while the ship is within 100 px (the bunker's); no
 enemy bullet or missile spawns within 72 px of the ship ([bullet rules](../../README.md#bullet-readability-rules)),
 so a battery the ship hovers over skips its shot. At most **8** SAM missiles from the station alive
 (a salvo past the cap is skipped). A laser battery fires only during the inner ring's hold, so its
@@ -155,8 +159,17 @@ playthrough tests can finish the fight.
 
 ### Duration and HP
 
-Target: the act-boss window **90–180 s** at medium, aimed at ≈ **150 s**; the **par** is 150 until part H
-measures the mean.
+Target: the act-boss window **90–180 s** at medium, aimed at ≈ **150 s**; the **par** is the measured mean, **150**.
+
+**Measured (M9 part H, step H3; pending the user's review in round 68):** the autopilot with the plan's Level 35 fit
+and Rook (`Level35Test`, five seeds) took the draft's station in **77 s** at medium: the rings ≈ 35 s (the spin-up
+4 s, phase 1 ≈ 30 s, phases 2 and 3 ≈ 3 s each: the beam's column burns the lowest battery of every ring at once, so
+the second and third locks follow the first within seconds) and the core ≈ 42 s. The core was tuned first and alone
+(no ring phase runs long): **core 5,000 → 14,000**, the station's total **17,960**; the fight is now **145–155 s on
+every seed, the mean 148.7 s**, so the par stays **150**. Easy ≈ 108 s, hard ≈ 248 s (the core ≈ 200 s under three
+spiral arms; hard has no window). The ship loses about 10 a fight at medium, no rail line strikes it, a sweep at most
+twice. Phase 1 for the calibration's random dodger: **1.18 ×** the Kraken's (inside H.4's 0.8–1.2). The paper
+estimate below (0.6 × 144) now reads 209 s; `BalanceTest` lists it as pending.
 
 Paper estimate: the effective boss DPS is 0.6 × 144 = **86.4**. Phases 1–3 at ×0.7 (moving targets, the
 choice of battery, shots that pass between batteries over the hulls): ≈ 60.5 on the batteries. Phase 4
@@ -164,7 +177,7 @@ at ×0.85 (the shield's regrowths, fire spent on Darts): ≈ 73.4 on the core. `
 and `piercing` columns make it shorter for the loadouts the level asks for: the measurement counts
 them, the paper does not.
 
-| Phase | HP | Time |
+| Phase (the draft's paper) | HP | Time |
 |---|---|---|
 | Intro, the spin-up, Vorne | — | ≈ 8 s |
 | 1 — Three rings (the first ring's batteries) | 1,320 | ≈ 22 s |
@@ -178,7 +191,9 @@ them, the paper does not.
 Sovereign has 13 batteries: a Smart Bomb on a full station is worth up to 13 × 150 = 1,950 (≈ 22 % of the
 bar; no battery dies of it, every battery's HP is above 150), an Orbital Lance up to 400 a part it crosses
 (it kills a SAM or a rail battery, never a laser battery). The draft keeps the specials' rule; part H
-measures it (see *Open questions*).
+measures it (see *Open questions*). **Measured (step H3, QH-1):** on the full station as the rings come up, a Smart
+Bomb takes **4.0 %** of the bar (60 a part it reaches) and an Orbital Lance held in one column **2.6–8.0 %** (five
+columns), both far under QH-1's 25 %: the per-part caps stay, no total cap.
 
 Lessons from Acts 2–4 the build must apply (M9 part H):
 - **Measure, then tune the HP, not the attacks** (Kraken, Spire, Colossus, walker, Maw): the autopilot
@@ -194,10 +209,9 @@ Lessons from Acts 2–4 the build must apply (M9 part H):
 An act boss aims at ≈ **24 %** of its level's budget (the economy's share under the perfect-run cap;
 Level 21's and Level 28's 24 %). budget(35) = 700 × 1.07³⁴ ≈ **6,985**; 24 % ≈ **1,676 paid**. Data is in
 Act 1 terms: **bounty = 1,676 ÷ (6.5536 × `bounty_scale`) ≈ 256 ÷ `bounty_scale`**. Level 35's scale is
-the level document's: at its hand estimate of **0.56** ([Level 35](../../../campaign/act-5-the-belt/level-35-iron-sovereign/README.md#credit-budget))
-that is **457** (core 379, each of the 13 batteries 6), paid **1,677 = 24.0 %** (this draft first assumed 0.75,
-Act 4's Level 28 scale, and 341). When the level's scale is measured, the bounty is recomputed with the same
-formula; the share stays at 24 %. The Darts pay their own bounty, outside the share.
+the level document's: measured in step H2 at **0.59** ([Level 35](../../../campaign/act-5-the-belt/level-35-iron-sovereign/README.md#credit-budget))
+that is **433** (core 355, each of the 13 batteries 6), paid **1,674 = 24.0 %** (this draft first assumed 0.75,
+Act 4's Level 28 scale, and 341; the level's hand estimate 0.56 gave 457). The share stays at 24 %. The Darts pay their own bounty, outside the share.
 
 ### Death
 
@@ -321,34 +335,62 @@ under *Variants b and c* only (no art). Generator `tools/concept/belt_r60.py`; p
 |---|---|---|
 | [concept/iron-sovereign-r60-b.png](concept/iron-sovereign-r60-b.png) | Iron Sovereign B, armoured links — every segment a separate block with a dark gap and a gold-edged cap plate, the gaps reading the turning (sheet) | chosen (round 60) |
 | [concept/iron-sovereign-r60-b.gif](concept/iron-sovereign-r60-b.gif) | Iron Sovereign B, armoured links — the fight and the death in the play field (motion) | chosen (round 60) |
+| [concept/iron-sovereign-final-r68-a.png](concept/iron-sovereign-final-r68-a.png) | Production art (step ART-H1, `tools/art/iron_sovereign.py`, A.23 top-lit): the station at rest and in phase 1, the segment sets, the seams at 1:1 at several angles and the turn-and-mirror rule against direct renders, the battery mounts and turrets (64 headings), the core shut / opening / open under the hex shield, the locked look, the death's frames, the bays, readability crops, the measured atlas share (0.65 of a page) (sheet) | proposed |
+| [concept/iron-sovereign-final-r68-a.gif](concept/iron-sovereign-final-r68-a.gif) | Production art: the intro (lights ring by ring, spin-up), phase 1 with the arc, the outer ring's lock, the core opening, the death (motion) | proposed |
+| [concept/sovereign-spinup-capture-r68-a.mp4](concept/sovereign-spinup-capture-r68-a.mp4) | Game capture (step H5; [recipe](concept/prompts.md#iron-sovereign-capture-r68-a)), clip with sound: the rings lighting and spinning up (under the `WARNING` banner) | proposed |
+| [concept/sovereign-spinup-capture-r68-a.png](concept/sovereign-spinup-capture-r68-a.png) | Game capture (step H5; [recipe](concept/prompts.md#iron-sovereign-capture-r68-a)), frames: the rings lighting and spinning up (under the `WARNING` banner) | proposed |
+| [concept/sovereign-sweep-capture-r68-a.mp4](concept/sovereign-sweep-capture-r68-a.mp4) | Game capture (step H5; [recipe](concept/prompts.md#iron-sovereign-capture-r68-a)), clip with sound: a laser battery's wedge in the inner ring's hold | proposed |
+| [concept/sovereign-sweep-capture-r68-a.png](concept/sovereign-sweep-capture-r68-a.png) | Game capture (step H5; [recipe](concept/prompts.md#iron-sovereign-capture-r68-a)), frames: a laser battery's wedge in the inner ring's hold | proposed |
+| [concept/sovereign-rail-capture-r68-a.mp4](concept/sovereign-rail-capture-r68-a.mp4) | Game capture (step H5; [recipe](concept/prompts.md#iron-sovereign-capture-r68-a)), clip with sound: rail batteries' lines from the turning middle ring | proposed |
+| [concept/sovereign-rail-capture-r68-a.png](concept/sovereign-rail-capture-r68-a.png) | Game capture (step H5; [recipe](concept/prompts.md#iron-sovereign-capture-r68-a)), frames: rail batteries' lines from the turning middle ring | proposed |
+| [concept/sovereign-lock-capture-r68-a.mp4](concept/sovereign-lock-capture-r68-a.mp4) | Game capture (step H5; [recipe](concept/prompts.md#iron-sovereign-capture-r68-a)), clip with sound: the inner ring locking: the grind, the lights out, the vented wrecks | proposed |
+| [concept/sovereign-lock-capture-r68-a.png](concept/sovereign-lock-capture-r68-a.png) | Game capture (step H5; [recipe](concept/prompts.md#iron-sovereign-capture-r68-a)), frames: the inner ring locking: the grind, the lights out, the vented wrecks | proposed |
+| [concept/sovereign-opening-capture-r68-a.mp4](concept/sovereign-opening-capture-r68-a.mp4) | Game capture (step H5; [recipe](concept/prompts.md#iron-sovereign-capture-r68-a)), clip with sound: the core's shutters opening to the reactor | proposed |
+| [concept/sovereign-opening-capture-r68-a.png](concept/sovereign-opening-capture-r68-a.png) | Game capture (step H5; [recipe](concept/prompts.md#iron-sovereign-capture-r68-a)), frames: the core's shutters opening to the reactor | proposed |
+| [concept/sovereign-spiral-capture-r68-a.mp4](concept/sovereign-spiral-capture-r68-a.mp4) | Game capture (step H5; [recipe](concept/prompts.md#iron-sovereign-capture-r68-a)), clip with sound: the open core's spiral | proposed |
+| [concept/sovereign-spiral-capture-r68-a.png](concept/sovereign-spiral-capture-r68-a.png) | Game capture (step H5; [recipe](concept/prompts.md#iron-sovereign-capture-r68-a)), frames: the open core's spiral | proposed |
+| [concept/sovereign-bays-capture-r68-a.mp4](concept/sovereign-bays-capture-r68-a.mp4) | Game capture (step H5; [recipe](concept/prompts.md#iron-sovereign-capture-r68-a)), clip with sound: a rim bay's Dart stream (the Ion Beam alone, no Rook) | proposed |
+| [concept/sovereign-bays-capture-r68-a.png](concept/sovereign-bays-capture-r68-a.png) | Game capture (step H5; [recipe](concept/prompts.md#iron-sovereign-capture-r68-a)), frames: a rim bay's Dart stream (the Ion Beam alone, no Rook) | proposed |
+| [concept/sovereign-death-capture-r68-a.mp4](concept/sovereign-death-capture-r68-a.mp4) | Game capture (step H5; [recipe](concept/prompts.md#iron-sovereign-capture-r68-a)), clip with sound: the cook-offs, the implosion, the white flash and the drift | proposed |
+| [concept/sovereign-death-capture-r68-a.png](concept/sovereign-death-capture-r68-a.png) | Game capture (step H5; [recipe](concept/prompts.md#iron-sovereign-capture-r68-a)), frames: the cook-offs, the implosion, the white flash and the drift | proposed |
+| [concept/sovereign-rings-capture-r68-a.png](concept/sovereign-rings-capture-r68-a.png) | Game capture (step H5; [recipe](concept/prompts.md#iron-sovereign-capture-r68-a)), frames: 1:1 crops of the rings, their batteries and the fire arc's band | proposed |
 
 ## Implementation
 
 To be built in M9 part H with Level 35; round 60 approved the design (2026-10-27).
 
-- [ ] Stat block and boss script in a `data.yaml` (the rings, their radii, speeds, directions and steps,
+- [x] Stat block and boss script in a `data.yaml` (the rings, their radii, speeds, directions and steps,
       the batteries and their units' attacks, the fire arc, the core's phases, the Darts, par), loaded;
-      global difficulty multipliers applied
-- [ ] The **rotating-ring mode** (new; gap analysis §2.8, size L): parts whose hitboxes orbit the centre,
+      global difficulty multipliers applied (step H2 on step H1c's keys; par 150 until step H3 measures it)
+- [x] The **rotating-ring mode** (new; gap analysis §2.8, size L): parts whose hitboxes orbit the centre,
       mounts turning with their ring, turrets aiming independently, firing gated by the arc that follows
       the ship; the inner ring's steps and holds; reusable by the Halo Platform (Act 6) and the L49 echo
-- [ ] Ring locks as phase triggers (every battery of a ring dead, any order), the survivors' speed-ups,
+      (steps H1a–H1c: the simulation's `RingArena`, `RingArenaTest`; step H4: `SovereignLooks`; recorded in round
+      68's captures, step H5)
+- [x] Ring locks as phase triggers (every battery of a ring dead, any order), the survivors' speed-ups,
       the bar of the station's total (batteries and core); the boss checkpoint keeps the ring angles,
-      speeds, locks and the batteries' HP, and a retry from it and a replay repeat the fight exactly
-- [ ] The core: armoured while shut and its `fan`; the opening; the hex shield (the
+      speeds, locks and the batteries' HP, and a retry from it and a replay repeat the fight exactly (steps H1a–H1b,
+      `RingLocksTest`; `Level35Test`'s checkpoint and determinism, step H3)
+- [x] The core: armoured while shut and its `fan`; the opening; the hex shield (the
       [enemy shield rule](../../README.md#enemy-shields)); the `spiral`, the Dart streams from the rim bays,
-      the core rail below half
-- [ ] Rook and the autopilot: armed batteries first, out of rail lines and sweep wedges, the core's
-      72 px kept
-- [ ] The fight measured over five seeds (the window, the HP tuned, the par set), phase 1 checked
+      the core rail below half (step H1b: `PartShields`, `BossLines`, the bays; step H4: the shutters, the reactor
+      glow, the shield's look; round 68 C.6 and C.7 for the EMP and the bays' rules)
+- [x] Rook and the autopilot: armed batteries first, out of rail lines and sweep wedges, the core's
+      72 px kept (Rook step H1b; the autopilot's `RingPlay` step H3)
+- [x] The fight measured over five seeds (the window, the HP tuned, the par set), phase 1 checked
       against the Kraken's band, the specials' per-part damage checked, the bounty at ≈ 24 % with Level
-      35's scale
-- [ ] Intro (the halt, the spin-up, Vorne's line), death (the cook-offs, the implosion, the segments
-      drifting, flash, credit shower), Vorne's taunts and the recruitment in Level 35's radio timeline
+      35's scale (step H3, `Level35Test`: the core 14,000, the mean 148.7 s, par 150; phase 1 1.18 ×; the Smart
+      Bomb 4 %, the Lance ≤ 8 %; the scale 0.59 kept)
+- [x] Intro (the halt, the spin-up, Vorne's line), death (the cook-offs, the implosion, the segments
+      drifting, flash, credit shower), Vorne's taunts and the recruitment in Level 35's radio timeline (steps H2 and
+      H4, `RadioTimelineLevel35Test`; recorded in round 68's captures, step H5: the spin-up runs mostly under the
+      `WARNING` banner, the drifting segments fade within ≈ 1 s of the white flash and the base disc stays ≈ 15 s)
 - [ ] Production art (≤ one atlas page, about 0.6 with the top-lit segments of A.23; the chosen look b in gunmetal/charcoal, Q11 b): the ring segments at their heading sets, the batteries' mounts
       and turrets, the core shut / opening / open, the locked look, the death, the intel silhouette;
-      readability checks over Level 35's backdrop
-- [ ] Sounds (Freesound, CC0/CC-BY) per the brief; the music #19 from the warning
+      readability checks over Level 35's backdrop (step ART-H1, in the game from step H4; round 68 H.1–H.2; the
+      readability over the backdrop in round 68's captures, step H5)
+- [ ] Sounds (Freesound, CC0/CC-BY) per the brief; the music #19 from the warning (steps AUD-H1 and AUD-H2; step H4
+      plays the a variants and track 19; round 68 M.1 and S.1–S.12)
 
 ## Open questions
 
@@ -371,7 +413,8 @@ All approved by the user in concept round 60:
 - Vorne in phase 4: cold and clipped, never a shout (this document), or the gap analysis's "rage" as a
   raised voice (against his character rule, which saves the shout for Act 6's end).
 - The specials on a many-part boss: keep the per-part caps (a Smart Bomb worth up to ≈ 1,950 on a full
-  station; this document, part H measures), or cap a special's total on one boss.
+  station; this document, part H measures), or cap a special's total on one boss. Measured in step H3: 4 % and at most
+  8 % of the bar, so the caps stay (QH-1 a; trivia in round 68).
 
 ## Decisions
 
@@ -395,3 +438,35 @@ All approved by the user in concept round 60:
   Vorne announces the boss and cracks without shouting; the rings drawn from segment sprites for the
   one-page budget; the L49 echo proposed as the outer ring round the open core.
 - 2026-10-27 (user, [round 60](../../../concept-rounds/round-60/README.md) closed): the design approved as drafted (`design: approved`, D.9): Q7 **a** (the three top-down rings), J.8 (Vorne cold and clipped, never shouting), J.2 (reference DPS 144), Q6 **b**. Art: **A.17 b**, armoured links (every segment a separate block with a dark gap and a gold-edged cap plate; the continuous wheel, a, rejected); **A.23 top-lit** (segments rendered once with the light fixed from the top, 90° turns, mirrored, a static rim overlay: about 0.6 pages, not the 3.1–3.6 of full sun). Q11 **b**: the production art is re-rendered in gunmetal/charcoal with gold. The rings' bed is S.16 a.
+- 2026-10-29 (M9 part H, step H2; pending round 68): the boss's `data.yaml` on step H1c's keys (decided as built:
+  `laser-line`, the spiral's `run`, `until: {locks: n}`, the battery attacks keep their units' difficulty hooks): the
+  three rings with the batteries `from:` the SAM Nest, the Rail Bunker and the Sentinel Tower (300 px), the core's
+  fans, spiral and rail (none on easy), the four rim bays at 60 px on the diagonals (ART-H1's), the phases by locks
+  and "The core" exposing the core with its armour patch; par **150** (the draft) until step H3; the bounty **433**
+  (core 355, 13 batteries × 6) at Level 35's measured scale 0.59, 24 % of budget(35). The stat block is rendered
+  from the data (a machine boss's faction cell reads "never stunned").
+- 2026-10-29 (M9 part H, step H3; pending round 68): the fight measured with the autopilot (`RingPlay`) and the plan's
+  fit and Rook over five seeds: the draft's 77 s at medium fell under the window, so the **core's HP 5,000 → 14,000**
+  (the brief's rule: the core first; the batteries kept, no ring phase runs long), the total 17,960, the mean 148.7 s,
+  the **par 150** kept; the alternative for the round (estimated, not flown): the core ≈ 9,000 and the batteries ×2 (a longer ring fight, a
+  shorter core). Phase 1 1.18 × the Kraken's; QH-1 measured (Smart Bomb 4 %, Lance ≤ 8 %): the per-part caps stay.
+  Found and fixed in the simulation: an anchored boss's halt place ignored the sections' eases (`ScrollPlan.haltScroll`),
+  so the station sat 456 px low (centre at y −76); it now sits at (240, 160) on the screen.
+- 2026-10-29 (M9 part H, step H5; pending the user's review in round 68, C.1): the round's alternative **flown** with
+  the autopilot over five seeds (the plan's fit and Rook, `Level35Test`'s flights; the data edited for the measure only
+  and restored): **b** (the core 9,000, every battery's HP ×2: SAM 440, rail 660, laser 880; total 16,920) lasts 141.3 s at
+  medium (134.8–147.8; `levelReport`'s test fit 143.1 s), easy 103.7 s, hard 229.4 s; its phases at medium 48.4 + 12.2
+  + 8.0 + 71.8 s (spin-up and phase 1, phase 2, phase 3, the core) against **a**'s 30.8 + 3.1 + 2.4 + 111.1 s (148.4 s).
+  b's two ring phases stay under the ≈ 15 s each the round asked for, so **a (as built) is recommended** and kept;
+  b also lets the sweeps strike the autopilot more (one seed 4 sweeps, over `Level35Test`'s 3). Recorded in round 68's
+  captures (step H5, the ship still with the plan's fit, `--invulnerable`): halt → rings lit ≈ +1.5–4 s, the inner
+  ring locked +31 s, the middle +40 s, the outer +49 s, the core open +52 s, the kill ≈ +148 s; the spin-up runs mostly
+  under the `WARNING` banner; the bay Darts die as they leave the bays with the plan's pods and Rook (captured with the
+  Ion Beam alone); the drifting segments fade within ≈ 1 s of the white flash while the plain base disc stays ≈ 15 s.
+- 2026-10-29 (step FIX3, on round 68's C.9 recommendation a, pending the round): the station's rail lines ride with
+  their battery on the turning ring, the direction locked at the telegraph's start (`BossLines`: the origin onto the
+  part's centre each step while it lives, a dead part's line keeps its last; `BossLinesTest`); the looks draw the
+  telegraph, rail and flash from the moving battery and RingPlay looks ahead along the moving band. `levelReport
+  -Plevel=35`: won 3/3, 0 retries a difficulty; the fight 108.5 s easy, 149.0 s medium (par 150), 249.3 s hard (as
+  before, ≈ 248 s). Step H5's `sovereign-rail-capture-r68-a` shows the lines fixed where they started (b); FIX3 did not
+  re-record it.

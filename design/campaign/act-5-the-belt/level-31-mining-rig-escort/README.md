@@ -1,10 +1,10 @@
 ---
 title: Level 31 – Mining Rig Escort
 design: approved
-implementation: done
-art: proposed
+implementation: in-progress
+art: final
 depends-on: [../../../allies/mining-tug, ../../../enemies/air/hornet, ../../../enemies/space/shard-drone, ../../../enemies/air/buzzsaw-drone, ../../../enemies/air/dart-drone, ../../../enemies/air/gilded-gunship, ../../../enemies/air/talon, ../../../enemies/space/asteroid-mite, ../../../enemies/ground/sam-nest, ../../../world/belt, ../../../player/wingmen, ../../../player/generator]
-updated: 2026-10-28
+updated: 2026-10-29
 ---
 
 # Level 31 – Mining Rig Escort
@@ -312,7 +312,7 @@ Totals: Skitter 90 · Talon 66 · Dart Drone 45 · Mote Swarm 50 · Hornet 10 ·
   `hit-crumble-r08-b`; step D4b), not the lifeboat's cable snap. The Salvage scanner's glint shows it at any range. Its event line, the
   Bellwether: "*That's old Dacosta's claim marker. He'd want it spent on a good cause.*"
 - **Shield cell**: dropped by the first Hornet (t=24) at its death.
-- **Armour patch**: the Bellwether's crew throws one out of the cargo hatch at t=110 (from the bow if the
+- **Armour patch**: the Bellwether's crew throws one out of the cargo hatch at t=118 (from the bow if the
   cargo is lost; none if both are), at the tug's position, drifting up toward the ship.
 - **Overdrive**: dropped by the last Hornet of the t=134 trio.
 
@@ -335,10 +335,10 @@ hit or lost section's name (`bow`, `cargo`, `engines`), a new placeholder.
 | First section hit (`first-ally-hit`) | The Bellwether's captain (Bellwether) | "We're hit in the {section}! Get them off us!" |
 | t=39 | Okafor | "Contacts behind you, on the tug's engines." |
 | t=59 | Varga | "Linked drones. Kill one and its beams drop." |
-| t=86 | The Bellwether's captain (Bellwether) | "You know why half of Ceres turned? Helix came with medicine." |
-| t=93 | The Bellwether's captain (Bellwether) | "Lung rot, bone loss. Gone in a week. Nobody asked why." |
-| t=101 | Varga | "Vrell biotech. They were cured with the enemy's blood." |
-| t=110 | The Bellwether's captain (Bellwether) | "Throwing you a patch from the cargo hatch. It's all we've got." |
+| t=79 | The Bellwether's captain (Bellwether) | "You know why half of Ceres turned? Helix came with medicine." |
+| t=86 | The Bellwether's captain (Bellwether) | "Lung rot, bone loss. Gone in a week. Nobody asked why." |
+| t=94 | Varga | "Vrell biotech. They were cured with the enemy's blood." |
+| t=118 | The Bellwether's captain (Bellwether) | "Throwing you a patch from the cargo hatch. It's all we've got." |
 | t=130 | Okafor | "Ambush ahead. Gunships and missile boats. Hold the line, Aegis." |
 | t=137.5 | Rook | "Three of them. I'll take the left one." |
 | A section lost (`ally-lost`) | The Bellwether's captain (Bellwether) | "We've lost the {section}! We're still flying." |
@@ -350,8 +350,10 @@ hit or lost section's name (`bow`, `cargo`, `engines`), a new placeholder.
 <!-- /data -->
 
 Timeline check (text, by the rule above): the captain's opening line (t=1) closes at about t=9.3, before
-Okafor's (t=10); her two-line story (t=86 and t=93) closes at about t=100.3, Varga's answer (t=101) at about
-t=107.2, before the patch line (t=110); Okafor's ambush call (t=130) closes before Rook's (t=137.5). The event lines take
+Okafor's (t=10); her two-line story (t=79 and t=86) and Varga's answer (t=94) close at about t=100.5, so the radio is
+free for the claim's line (two pages, about 14 s with its voice) when the claim is freed (t≈100.4–103.5: a bolt gun
+under it, the plan's beam, the autopilot's strays), before the patch line (t=118; step FIX1, `RadioTimelineLevel31Test`);
+Okafor's ambush call (t=130) closes before Rook's (t=137.5). The event lines take
 the gaps and drop after 6 s. **The story beat** (the act's L31 beat): Helix bought loyalty with Vrell
 cures, told by the refugees; Varga names what it was. Without Rook his two lines drop and nothing else
 moves.
@@ -429,13 +431,15 @@ in the [briefing](../../../ui/briefing/README.md#concept-art). Prompts: [concept
 
 | File | What | Status |
 |---|---|---|
-| [concept/backdrop-final-r64-a.png](concept/backdrop-final-r64-a.png) | Production backdrop (`tools/art/backdrop_l31.py`): eight screens at half size with stand-ins (the tug in its cradle at Bright Seam and rising, the open belt with Ceres behind, outcrop 1 with three nests beside the hull, the Drift with Dacosta's claim, outcrop 2, the ambushers' carrier lights, the Vesta relay and a CDF frigate), the pieces and the tile sets | proposed (round 64) |
-| [concept/backdrop-final-r64-a.gif](concept/backdrop-final-r64-a.gif) | t 0-8 at half size: the tug rising out of its cradle as the Bright Seam dock scrolls away, the refugee haulers falling in behind | proposed (round 64) |
-| [concept/backdrop-proposal.yaml](concept/backdrop-proposal.yaml) | The generator's `backdrop:` block, the sections, the tug's station band, the `ground_targets` on the outcrops' pads (x ≤ 100 or ≥ 380) and the `debris:` block (the belt's rocks, Dacosta's claim) for step D2 (not data) | proposed (round 64) |
-| [concept/claim-rock-final-r64-a.png](concept/claim-rock-final-r64-a.png) | Dacosta's claim (`tools/art/belt_units_d.py`): a small hollow rock with the prospector's claim marker bolted on, 16 spin frames, shot open with the crate's light; beside part B's small rocks (sheet) | proposed (round 64) |
-| [concept/level-31-hud-capture-r64-a.png](concept/level-31-hud-capture-r64-a.png) | Game capture (step D5; [recipe](concept/prompts.md#level-31-capture-r64-a)): the tug at its station with the HUD's `TUG 3 / 3`, its B/C/E bars and the `CLEAN HULL` tag, the Bellwether on the radio (the plan's fit, firing, t≈87); below, not firing (t≈83): the bow and the cargo lost (dark, venting), `HULL FAILED`, "We've lost the bow!" | proposed (round 64) |
-| [concept/dart-stream-capture-r64-a.png](concept/dart-stream-capture-r64-a.png) | Game capture, t≈39–41 (not firing): the t=38 rear Dart stream from the bottom corners closing on the engines, the engines' hit flash | proposed (round 64) |
-| [concept/claim-rock-capture-r64-a.png](concept/claim-rock-capture-r64-a.png) | Game capture, t≈100.7–102.5 (the Pulse Cannon L3, the ship nudged right): Dacosta's claim drifting in, broken open by the bolts (its chips in a ring, the crate's light), the crate drifting down | proposed (round 64) |
+| [concept/backdrop-final-r64-a.png](concept/backdrop-final-r64-a.png) | Production backdrop (`tools/art/backdrop_l31.py`): eight screens at half size with stand-ins (the tug in its cradle at Bright Seam and rising, the open belt with Ceres behind, outcrop 1 with three nests beside the hull, the Drift with Dacosta's claim, outcrop 2, the ambushers' carrier lights, the Vesta relay and a CDF frigate), the pieces and the tile sets | chosen (round 64, F.7: accepted as final) |
+| [concept/backdrop-final-r64-a.gif](concept/backdrop-final-r64-a.gif) | t 0-8 at half size: the tug rising out of its cradle as the Bright Seam dock scrolls away, the refugee haulers falling in behind | chosen (round 64, F.7: accepted as final) |
+| [concept/backdrop-proposal.yaml](concept/backdrop-proposal.yaml) | The generator's `backdrop:` block, the sections, the tug's station band, the `ground_targets` on the outcrops' pads (x ≤ 100 or ≥ 380) and the `debris:` block (the belt's rocks, Dacosta's claim) for step D2 (not data) | chosen (round 64, F.7: accepted as final) |
+| [concept/claim-rock-final-r64-a.png](concept/claim-rock-final-r64-a.png) | Dacosta's claim (`tools/art/belt_units_d.py`): a small hollow rock with the prospector's claim marker bolted on, 16 spin frames, shot open with the crate's light; beside part B's small rocks (sheet) | chosen (round 64, F.8: accepted as final) |
+| [concept/level-31-hud-capture-r64-a.png](concept/level-31-hud-capture-r64-a.png) | Game capture (step D5; [recipe](concept/prompts.md#level-31-capture-r64-a)): the tug at its station with the HUD's `TUG 3 / 3`, its B/C/E bars and the `CLEAN HULL` tag, the Bellwether on the radio (the plan's fit, firing, t≈87); below, not firing (t≈83): the bow and the cargo lost (dark, venting), `HULL FAILED`, "We've lost the bow!" | chosen (round 64: accepted with the level, F.7-F.8) |
+| [concept/dart-stream-capture-r64-a.png](concept/dart-stream-capture-r64-a.png) | Game capture, t≈39–41 (not firing): the t=38 rear Dart stream from the bottom corners closing on the engines, the engines' hit flash | chosen (round 64: accepted with the level, F.7-F.8) |
+| [concept/claim-rock-capture-r64-a.png](concept/claim-rock-capture-r64-a.png) | Game capture, t≈100.7–102.5 (the Pulse Cannon L3, the ship nudged right): Dacosta's claim drifting in, broken open by the bolts (its chips in a ring, the crate's light), the crate drifting down | chosen (round 64: accepted with the level, F.7-F.8) |
+| [concept/level-31-capture-r65-a.mp4](concept/level-31-capture-r65-a.mp4) | Game capture with the game's sound (step E5, after FIX1; [recipe](concept/prompts.md#level-31-capture-r65-a)): the Bellwether's retimed story lines (Laurie Anne Walden), the beam freeing Dacosta's claim, the softened hit flash | chosen (round 65, accepted with the level, C.7–C.8) |
+| [concept/claim-rock-capture-r65-a.png](concept/claim-rock-capture-r65-a.png) | Game capture, t=100.4–102.6: the claim rock freed by the beam's touch (round 64 C.1 a) | chosen (round 65, accepted with the level, C.7–C.8) |
 
 ## Implementation
 
@@ -451,7 +455,7 @@ in the [briefing](../../../ui/briefing/README.md#concept-art). Prompts: [concept
 - [x] Wave script to the Act 2+ rules (`ActFloorTest`, `PacingTest`), the quiet windows, edge warnings for
       every side and rear entry, the limits above
 - [x] Escort pay per section home and the `CLEAN HULL` secondary in the debrief (step D1: each section home pays its
-      own credits; D4: the debrief's `TUGS HOME n / 3` and the secondary; D4b: the `CLEAN HULL` tag on the HUD; seen in
+      own credits; D4: the debrief's `SECTIONS HOME n / 3` (step FIX1; `TUGS` before) and the secondary; D4b: the `CLEAN HULL` tag on the HUD; seen in
       round 64's captures)
 - [x] Radio voiced (the Bellwether a new generic speaker; the `{section}` placeholder), every timed line at
       most 1 s late, with Rook and without (`requires: escort`) (step D4b: `VoiceFilesTest` lists Level 31 rendered,
@@ -463,7 +467,20 @@ in the [briefing](../../../ui/briefing/README.md#concept-art). Prompts: [concept
 - [x] Easy/hard variations; the autopilot keeps at least 2 sections home on every difficulty (with and
       without Rook)
 - [x] Production art and captures for the round (ART-D; step D5: [round 64](../../../concept-rounds/round-64/README.md)'s
-      game captures)
+      game captures; all accepted)
+- [x] A beam's touch counts as one hit per 0.25 s on an Act 5 tow's housing (round 64 C.1 a; opt-in per level, so Level 07's
+      lifeboat and the recorded flights stay as they are; Level 30's buoy and this level's claim opt in) (step FIX1:
+      `beam_touch`, `TowBeamTest`, `Level31Test.thePlansBeamFreesTheClaim`: the plan's Ion Beam frees it at t≈101.1 on
+      medium)
+- [x] The round 64 sound picks played (`saw-spinup-r64-ab`, `tug-hit-r64-b`, `serpent-rumble-r64-a`; step FIX1: the
+      paths switched, the a files rejected, `SfxFilesTest`, `PlaceholderAuditTest`; the in-game credits name Laurie Anne
+      Walden, `:pipeline:credits`)
+- [ ] The Bellwether's b voice in `assets/voice/bellwether/` heard in a run (`VoiceFilesTest` passes; no capture with
+      sound yet)
+- [x] The claim's line plays when the claim is freed (step FIX1: the story lines t=86/93/101 moved to t=79/86/94 and the
+      patch line and drop from t=110 to t=118, no text changed; `RadioTimelineLevel31Test.theClaimsLinePlaysInEveryClaimRun`)
+- [x] A section's hit is a soft additive tint (40 % of the white flash setting, 2 steps), not a solid white flash; the
+      HUD bar keeps its white flash (step FIX1, `TugLooks`)
 
 ## Open questions
 
@@ -503,7 +520,7 @@ the alternatives:
 - 2026-10-27: Buzzsaws chase the ship only; Rook flies his slot as usual (no guard order); the escort pays
   40 a section home and the `CLEAN HULL` secondary rewards keeping every section above half.
 - 2026-10-27 (user, [round 60](../../../concept-rounds/round-60/README.md) closed): the design approved as drafted (`design: approved`, D.4) except the tug's size: **J.6 b**, the tug is **200×300 px** (see *Station*; part D re-measures the station, the sway, the lanes and the hit boxes), with the pressure-hull look (A.19 b); J.7 **a** (only hooked attacks hurt it); Q4 **a**. Q11 **b**: gunmetal/charcoal units; M.1 **a**, "Gilded Cage", is the level's B theme.
-- 2026-10-28 (M9 part D, step D2: the data, pending the user's review in round 64): built from the approved tables
+- 2026-10-28 (M9 part D, step D2: the data, accepted in round 64): built from the approved tables
   and ART-D's backdrop proposal, measured with `levelReport` (its new `hull` part: the sections' HP left, the hits by
   kind, the rear Darts' time to their first crossing, the Hornets' life on the screen). **The sway** ±10 px across and
   ±2.5 px up and down (m9d §6), not the doc's ±20 / ±5: the strips beside the 200 px hull stay 130 px for the rear and
@@ -538,14 +555,25 @@ the alternatives:
   medium and hard (easy's are unhooked and pass over it); the side Darts enter at y 121. **Dacosta's claim** (a tow:
   6 hits) takes the player's shots only, as every tow since Level 07: the plan's Ion Beam passes its housing, so on the
   plan's fit only the pods' stray missiles hit it (2 of 6 in a pass at 146 px/s); a bolt weapon (the Pulse Cannon L3)
-  frees it in one pass. Level 30's buoy is the same. Pending the user's review: let a beam's touch count as a hit on a
-  tow's housing (a simulation change), or keep the secrets for the bolt weapons.
+  frees it in one pass. Level 30's buoy is the same. Decided in round 64 (C.1 a): a beam's touch counts as a hit on a
+  tow's housing (a simulation change), see the last entry.
 - 2026-10-28 (step D5, round 64 opened): part D is built; [round 64](../../../concept-rounds/round-64/README.md) asks
   for the production art with game captures, the Bellwether's casting, the sounds and track 13, and the calls the build
-  made (pending the user's review in round 64): the Hornet's shield 12, the sway ±10 / ±2.5, the hard sections, the
+  made (accepted in round 64, C.2-C.8): the Hornet's shield 12, the sway ±10 / ±2.5, the hard sections, the
   offbeat waves, the rear and side Dart entries, the claim as a tow and the tows against the beam, the radio trims. Seen
   in the captures: the plan's fit with the ship left where it starts keeps every section home but lets the bow fall
   under half (`HULL FAILED` at t≈114, the Hornet pairs' salvos); the autopilot's runs keep it clean. Found, for the next
   game or content step: the claim's event line ("That's old Dacosta's claim marker…") is freed at t≈101–103, inside
   Varga's t=101 line, and goes stale before the radio is free (6 s): in the capture it never played; the debrief labels
   the hull's sections `TUGS HOME 3 / 3`.
+- 2026-10-28 (user, [round 64](../../../concept-rounds/round-64/README.md), closed; page answers): the production art accepted as final (**F.7** the open-belt backdrop, **F.8** Dacosta's claim rock, with the tug **F.3 a** filled to 200×300, the Hornet, Shard Drone, Buzzsaw **F.6 a** with the gold on the cutting edges, the Bellwether's portrait, the briefing images and the intel portraits; `art: final`); **V.1 b**, the Bellwether is Laurie Anne Walden (her 12 takes in `assets/voice/bellwether/`); **M.1** ok (track 13 "Gilded Cage"); **C.2-C.8** accepted (the Hornet's shield 12, the sway ±10 / ±2.5, hard's sections 200 / 150 / 150, the offbeat waves, the rear and side Dart entries, the claim as a tow of 6 hits, the radio trims); sounds: a for S.1-S.4, S.6, S.8-S.10, S.7 b (the tug's hull hit), S.5 b's spin-up on the grinder (`saw-spinup-r64-ab`). **C.1 a (an important concept)**: a beam's touch counts as one hit per 0.25 s on a tow's housing from Act 5 on (opt-in per level, so Level 07's lifeboat and the recorded flights stay unchanged): Dacosta's claim (6 hits) and Level 30's dead buoy (4) can be freed by the Ion Beam build; built in the next game step (the fix step). Found by the captures, not asked, for that step: the claim's event line goes stale (6 s) inside Varga's t=101 line, and the debrief labels the hull's sections `TUGS HOME`.
+- 2026-10-28 (step FIX1): round 64 C.1 a built: the claim's tow opts in (`beam_touch: true`); a beam touching the
+  housing counts a hit at once and every 0.25 s and passes on: the plan's Ion Beam frees it at t≈101.1 on medium (a
+  bolt gun under it at t≈100.4, the autopilot's strays alone at t≈103.4–103.5 in 2 of 9 runs). The claim's line is two
+  pages (about 14 s): to play it the story pair and Varga's answer move 7 s earlier (t=79, 86, 94, closing at about
+  t=100.5) and the patch line with its drop from t=110 to t=118 (the patch still lands in the Drift); no text changed.
+  The debrief's escort row reads `SECTIONS HOME n / 3`; a section's hit is a soft additive tint at 40 % instead of a
+  solid white flash (the HUD bar keeps its white flash). `CLEAN HULL` checked with the autopilot flying (the plan's
+  fit, `levelReport -Pparts=hull`): met on easy and medium in all three seeds (the bow at 67-97 %); hard loses it
+  (the bow 0-12 %), as the idle capture's t≈114 failure: a passive player losing it is fine, left as it is.
+- 2026-10-29 (user, [round 65](../../../concept-rounds/round-65/README.md), closed): **C.7** accepted: the Bellwether's story lines retimed to t=79/86/94 and the armour patch line and drop to t=118; the Level 31 capture with sound and the freed claim accepted with the level.

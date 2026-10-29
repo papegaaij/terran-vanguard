@@ -21,9 +21,9 @@ import vanguard.sim.PlayField;
  * relay beacons); on every difficulty at most {@value #MOST_NESTS} nests on the screen, never two of one wall within
  * {@value #NEST_GAP} px, every two rings at least {@value #PHASE_GAP} s apart and at most one ring in flight per wall;
  * no coiling unit holds while the flyable width at the top edge is under its orbit's least ({@code 2 × inner} plus its
- * hit box: no Nautilus in Level 25's 190 px narrows, §5 E9); in a trench (a terrain with notches) every enemy ground
- * target stands in the {@value TerrainBlock#FOOT_BAND} px foot band of a wall's or an island's line (the ledges, §5
- * E6), and the walls' notches are not rock.
+ * hit box: no Nautilus in Level 25's 190 px narrows, §5 E9); in a trench (a terrain with notches in a level under
+ * water; M9 part E: not Level 32's dry tunnels) every enemy ground target stands in the {@value TerrainBlock#FOOT_BAND}
+ * px foot band of a wall's or an island's line (the ledges, §5 E6), and the walls' notches are not rock.
  */
 final class TrenchChecks {
     /** The most nests on the screen at once (design/enemies/naval/siren). */
@@ -131,7 +131,11 @@ final class TrenchChecks {
         }
         terrain.ifPresent(t -> nests(content, level, t, problem));
         coils(content, level, problem);
-        terrain.filter(t -> !t.notchList().isEmpty()).ifPresent(t -> ledges(content, level, t, problem));
+        // M9 part E (step E2): the ledge rule is a trench's under water (Level 25's Reef Spitters); Level 32's tunnels
+        // have notches too, but their nests stand on the open floor.
+        if (level.underwater()) {
+            terrain.filter(t -> !t.notchList().isEmpty()).ifPresent(t -> ledges(content, level, t, problem));
+        }
     }
 
     private static void cave(

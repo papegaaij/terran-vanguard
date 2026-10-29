@@ -35,6 +35,8 @@ The review page is built from this file by `build/round61-tools/build_review.py`
 `tools/art/explosions.py --vacuum` and `tools/art/icons.py --act5`. The captures are game recordings with the game's own
 sound (Xvfb, `--bench`, `--invulnerable`); their PNGs are frames or crops of them.
 
+Record of the decisions: [review.html](review.html)
+
 ## In the game
 
 The proposal written to `assets/` plays in the game until you pick: the arc **a**, the shield **b**, the vacuum burst

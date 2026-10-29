@@ -1,0 +1,50 @@
+# Rail Bunker stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/schemas-units/README.md
+# M9 part F, step F2 (Level 33): the approved stat block (round 60) as data. Its `laser-line` (the rail) is part A's
+# (step A1: lock, telegraph, the band, once, any direction, the hold within 100 px, the EMP's cancel); new in it (step
+# F1): the line's `most_telegraphing` gate (a due line waits while 2 lines of the level telegraph). The rail turret's
+# turning is drawn only (the line locks through the ship at the telegraph's start).
+name: Rail Bunker
+faction: Jovian Ascendancy
+layer: ground
+tier: medium
+size: [72, 72]    # sprite px (the bunker's base 80 drawn; the turret 112 over it)
+hitbox: [56, 56]
+parts: single
+orientation: 32 angles   # the rail turret's headings; the bunker is fixed
+hp: 100
+armour: hardened  # only anti-ground weapons, the Airstrike, the Orbital Lance and the Smart Bomb damage it
+speed: 0          # scrolls with the rock or hull
+machine: true     # the EMP Burst stuns it 3 s: a running telegraph is cancelled
+movement:
+  terrain: {}
+attacks:
+  - pattern: laser-line
+    name: rail
+    bullet: heavy          # the rail's hit, once
+    interval: 4.5          # s, telegraph to telegraph
+    first_shot_delay: 1.5  # s after it enters at the top edge (a pair's second bunker later: the level's `staggered`)
+    line: {telegraph: 1.0, live: 0.2, band: 8, hold_within: 100, most_telegraphing: 2}   # s, s, px, px; at most 2 lines of the level telegraphed at once
+    notes:
+      text: '`{pattern}` (the rail): at the telegraph''s start the turret locks a line from its muzzle through the ship''s position to the screen edge and draws it as a thin red line, brightening, for **{line.telegraph} s** (the coils glow gold); then the rail fires along it, an {line.band} px hit band, live {line.live} s, **`{bullet}` {damage}** once; every **{interval} s**, telegraph to telegraph; it holds fire while the ship is within {line.hold_within} px; any direction, up the screen too; never more than {line.most_telegraphing} lines telegraphed at once'
+formations:
+  - {name: turret nest, size: [1, 3]}
+weak_points: []
+drops: []
+traits: [anti-ground]
+bounty: 45
+first_level: 33
+difficulty:
+  easy: {telegraph: 1.2, attacks: {rail: {interval: 6.0}}}
+  hard: {telegraph: 0.8, attacks: {rail: {interval: 3.6}}}
+notes:
+  size: (the chosen r04 concept's octagon)
+  layer: ' (hardened: only `anti-ground` weapons, the Airstrike, the Orbital Lance and the Smart Bomb damage it)'
+  orientation: '(the rail turret''s headings, turning 90°/s toward the ship, drawn; the bunker itself fixed)'
+  armour: 'hardened: other shots glance off with a spark; homing shots and Rook do not pick it unless their weapon is `anti-ground`'
+  speed: (scrolls with the rock or hull)
+  movement: '`terrain`'
+  formations: (single, or 2–3 along a rock face whose lines cross)
+  weak_points: (the gold coils glow during the charge, drawn only)
+  death: '`medium` ground explosion, the rail thrown; the cracked bunker shell stays as a wreck'
+  used_in: the asteroid surfaces of the Leech Field, judgement call J3; L35's approach on the Sovereign's outer hull; the Iron Sovereign's rail batteries share its line (the boss doc)
+  difficulty: 'easy: telegraph 1.2 s, every 6 s; hard: telegraph 0.8 s (the vocabulary''s minimum), every 3.6 s'

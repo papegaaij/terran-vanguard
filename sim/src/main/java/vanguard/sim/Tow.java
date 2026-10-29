@@ -12,6 +12,10 @@ package vanguard.sim;
  * falls out of it once it is down in the ship's part of the screen ({@link #RELEASE_Y}), or at once
  * when it is cut there, and is then an ordinary hidden crate (a pickup that drifts and expires like
  * every other), so a ship that stays low can collect it.
+ *
+ * <p>M9 (round 64 C.1 a, the Act 5 tows: Level 30's dead buoy, Level 31's claim): with {@link
+ * ObjectiveSpec.TowSpec#beamTouch()} a beam touching the cable box (there the housing) counts one hit per {@link
+ * #BEAM_HIT_TICKS} steps of contact, the first at once; the beam passes on.
  */
 public final class Tow implements Hashed {
     /** How fast a loose pod falls faster, px/s² down the screen. */
@@ -22,6 +26,9 @@ public final class Tow implements Hashed {
 
     /** The height (px above the bottom edge, y up) at or below which the crate falls out of a loose pod. */
     static final double RELEASE_Y = 160;
+
+    /** M9 (round 64 C.1 a): a beam's touch on an opted-in tow counts a hit per this many steps: 4 a second. */
+    static final int BEAM_HIT_TICKS = SimStep.ticks(0.25);
 
     private final ObjectiveSpec.TowSpec spec;
     private final int startTick;
@@ -41,6 +48,8 @@ public final class Tow implements Hashed {
     private boolean crateDue;
     /** The level tick it was last placed for. */
     private int tick;
+    /** M9 (round 64 C.1 a): the steps a beam has touched the cable box without a break; -1 while none touches it. */
+    private int beamTicks = -1;
 
     Tow(ObjectiveSpec.TowSpec spec) {
         this.spec = spec;
@@ -61,6 +70,7 @@ public final class Tow implements Hashed {
         this.hitsLeft = hitsLeft;
         this.cutTick = cutTick;
         this.crateDue = crateDue;
+        beamTicks = -1;
         update(levelTick);
         prevX = x;
         prevY = y;
@@ -126,6 +136,20 @@ public final class Tow implements Hashed {
     }
 
     /**
+     * M9 (round 64 C.1 a): a beam touches the cable box this step; returns whether the touch counts a hit (at once,
+     * then every {@link #BEAM_HIT_TICKS} steps while it lasts).
+     */
+    boolean beamTouch() {
+        beamTicks++;
+        return beamTicks % BEAM_HIT_TICKS == 0;
+    }
+
+    /** M9 (round 64 C.1 a): no beam touches the cable box this step; the next touch counts at once. */
+    void beamOff() {
+        beamTicks = -1;
+    }
+
+    /**
      * Whether the crate falls out of the loose pod now: once, when the pod is down at
      * {@link #RELEASE_Y} (or below it when cut); the pod's centre is where it drops.
      */
@@ -140,6 +164,10 @@ public final class Tow implements Hashed {
     @Override
     public void addTo(StateHash hash) {
         hash.add(x).add(y).add(present ? 1 : 0).add(hitsLeft).add(cutTick).add(crateDue ? 1 : 0);
+        if (spec.beamTouch()) {
+            // M9: only on an opted-in tow, so Level 07 hashes as before.
+            hash.add(beamTicks);
+        }
     }
 
     public ObjectiveSpec.TowSpec spec() {

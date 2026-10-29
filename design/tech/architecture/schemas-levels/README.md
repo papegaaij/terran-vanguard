@@ -3,7 +3,7 @@ title: Data file schemas — levels and acts
 design: approved
 implementation: in-progress
 art: n/a
-updated: 2026-10-28
+updated: 2026-10-29
 ---
 
 # Data file schemas — levels and acts
@@ -103,8 +103,8 @@ optional `skip` list of the difficulties it is left out on (Level 06's hard-only
   `speaker`, `line` (M5 part B: `{side}` in it becomes `left` or `right`, the escort's side: the
   save's, or `--escort`'s `side=`, left when he does not fly; such a line is voiced once per side
   and the subtitle shows the side's text),
-  `distorted`, the portrait's optional `expression` (`neutral`, `grim`, `fierce`; neutral if not
-  given; a secret's `radio` line takes it too), `shout: true` (the voice shouts the line, with the
+  `distorted`, the portrait's optional `expression` (`neutral`, `grim`, `fierce`; M9 part H: Vorne's own `smug` and
+  `rage`, his only (checked); neutral if not given; a secret's `radio` line takes it too), `shout: true` (the voice shouts the line, with the
   speaker table's `shout` row; separate from how the line queues), an event cue's optional `delay` (round 45 B.a,
   step C45: seconds, at least 0; the radio holds the line that long after its event, the lines queued after it
   waiting behind it, the debrief too; Level 21's Choir at the Colossus's death, 4.5 s; `RadioCue.delaySeconds()`, or
@@ -162,7 +162,9 @@ optional `skip` list of the difficulties it is left out on (Level 06's hard-only
   screen), the `boat` and `pod` sizes, the pod's `tether` `[dx, dy]` from the boat's centre, the
   `cable` size (its hit box midway between them, the only part shots hit; boat and pod let shots
   and bullets through and never collide), `hits` to cut it and the secret it `reveals` (the pod
-  falls free as that secret's crate);
+  falls free as that secret's crate), optional `beam_touch` (default false; the Act 5 tows, round 64
+  C.1 a: a beam whose column touches the cable box counts one hit per 0.25 s of contact, the first
+  at once, and passes on);
   `threat_profile` (the hangar intel: `setting`, `layers`, `density` 1–5, recommended `traits`,
   `hazards`, `boss`, optional `specials` limits, optional `objective` (the OBJECTIVE field
   shown from sensor L1, "ESCORT 5 CRAWLERS"), `varga`, Dr. Varga's line for each sensor level
@@ -184,15 +186,54 @@ optional `skip` list of the difficulties it is left out on (Level 06's hard-only
   V-wing's tip flies its unit's `leader` airframe) and **`on_rocks`** (`chunk`, a small chunk of the level's `debris`;
   `riders` 1–5 a rock; `rocks`, each `at` `[x, y]` (y px below the top edge) and `drift` `[x, y]` px/s on the screen,
   y up as the debris'; the wave's count is rocks × riders on every difficulty, of a unit that `ride`s); a ground
-  target's **`dormant_until`** (a level time: the nest sleeps dark until then, then a 1 s wake tell); the secondary's
+  target's **`dormant_until`** (a level time: the nest sleeps dark until then, then a 1 s wake tell); M9 part E (step
+  E3b, Level 32): a ground target's **`full_turn_first: true`** (a unit whose sweep has a `full_turn`, the Sentinel
+  Tower: each unit's first sweep is the full turn, then every `every`-th after it; none where a difficulty has no full
+  turn); M9 part F (steps F1, F2, Level 33): a wave's **`prey`** (`hold` s and `depth` `[min, max]` px below the top
+  edge: a V-wing or line abreast of a plain air unit flies a refuelling hold instead of its swoop and leaves straight
+  up; latched by a leech it drifts down instead), a wave's **`hunts: prey`** (its unit's latch has a `prey_drift`; it
+  follows a prey wave by at most 10 s and steers at the nearest free prey, then the ship) and a ground target's
+  **`staggered: true`** (a nest of a `laser-line` unit: the i-th of its n placements on that difficulty fires its first
+  line i × the interval / n after the stat block's first delay; checked in `LeechChecks`); a secret's `radio` line may
+  carry **`requires: escort`** as a timed line's (step F4: Rook's Claim 114 line plays only with him flying); the
+  hunters' and the prey's unit keys (`chase.within`/`drift`, `latch.drains: power`, `emp: throw`, `prey_drift`, the
+  rail's `most_telegraphing`) are in [units](../schemas-units/README.md); the hangar intel's wave strip marks a leech
+  wave's rear and side entries (violet ticks at sensor L3); the secondary's
   **`spared`** (a neutral craft's slug the level flies, with its `label`: met when the last has left, failed at the
   first destroyed); the radio events **`first-homing`**, **`neutral-left`** and **`neutral-down`** (the latter two
   name their `enemy`), **`holders-down`** (in a level with an `escort_swap` it names the swap's outcome it plays for as
   **`swap`**: `bulwark` the Bulwark in the slot still flying, `joins` none flying, `leaves` no Rook to join, `empty`
   Rook flying from the start; step B4b) and **`escort-joined`**. The act data's `briefing` pages take `channel:
-  enemy` (Act 5's Vorne). `backdrop`
+  enemy` (Act 5's Vorne). M9 part G (Level 34; loaded and checked in step G1 by content's `SalvageChecks`, flown from
+  step G1, drawn and heard from step G4; the defaults accepted in round 67): the secondary's **`escapes`**
+  may name an **object look** instead of a unit: the `sprite` of destructible ground targets (`cargo-container` if left
+  out; a variant `<look>-<variant>` counts too: Level 34's `cargo-container-cdf` and `-helix`); a counted object
+  destroyed by anything is opened, one leaving the screen is away; `allowed` per difficulty below the counted objects,
+  no `tag`, the look on no trigger, no counted object on a `branch`; the HUD tracker shows `label n / total` of the
+  objects opened (`Secondary.objectEscapes`). A placed pickup **`pickup: story`** with **`story`** (a kebab name: the
+  game's `<story>*` frames, `helix-core`) and **`dropped_by: {group, unit: last}`** (only a group of destructible
+  ground targets; at most one a level, none in a difficulty's extra pickups, never a target's `drop`/`bonus_drop`):
+  the group's last one down frees it at the group's centre, it rises 1.0 s untouchable, then drifts as a pickup
+  paying nothing, collected when the ship's collection radius touches its 60 × 40 box (no secret, no rating,
+  `StoryPickups`); the radio events **`story-collected`** and **`story-missed`** (missed: it leaves the screen or
+  its life runs out, or the group leaves unshot or the level ends first; only in a level with a story pickup). A
+  ground target's `sprite` (above) gives its own look: the containers' variants, the hold clamps
+  `hold-clamp-left|right`, the secrets' `vigil-shutter`, `sable-wren-hatch` and `old-marta-airlock`. The music's
+  `motif` may add **`to`** (a level time: the motif stem ends there, so its window may close inside a section; Level
+  34's 106–124), and Level 34's `ambience_layers` (below) carry the `wreck-groans` loop over `belt-open`. A unit's
+  `livery` is in [units](../schemas-units/README.md). M9 part H (Level 35; loaded and mapped in step H1c, flown from step H1b): the level's
+  **`relay`** (the mass-relay flash, once: `t` s on the level clock, `telegraph` s, `live` s, `band` px, `damage`,
+  `from: right|left`, `easy`/`hard` `{telegraph}`; `HazardSpec.Relay`); step H2's checks: no wave enters from 1.3 s
+  before its telegraph to 2.5 s after its flash (medium's), no ground unit with a `laser-line` on the field at its flash
+  on any difficulty, and in a level whose boss is ringed nothing on the ground still on the field when the arena
+  starts (the halt boundary). Level 35's stop before the arena is no timed halt (a `speed: 0` section outside an arena
+  needs a `defend` primary): its section "The Halt" eases to `speed: 1` (1 px/s, `ramp: 6`) and the arena's own 1 s ease
+  follows; an anchored boss's halt place (`ScrollPlan.haltScroll`) integrates such eased sections step by step (step H3;
+  only in a level with eases before its arena, so no Act 1–4 boss moves); the radio's `requires_not: escort` (above)
+  gives Okafor's closing answer without Rook (step H2). Every part H key is pending the user's review in round 68. `backdrop`
   (presentation only, see below). The credit budget
-  table is derived: kills × bounties (× `bounty_scale`), ground targets, crates, the objectives,
+  table is derived: kills × bounties (× `bounty_scale`, each payout rounded: a unit's parts each their own, the
+  Strider's), ground targets, crates, the objectives,
   each as a perfect run and as the typical haul (weighted by the economy's `typical_player`),
   against budget(n) of the economy; the attack directions are each entry's share of the enemies.
   M5 part C, for
@@ -546,6 +587,26 @@ optional `skip` list of the difficulties it is left out on (Level 06's hard-only
   ground, about 1.25: drawn only beyond the projected walls; only with terrain). The intel's wave strip
   marks each linked nest at its first pair (`Intel.Mark.Kind.GATE`) and each crawling wave flown at medium
   (`CRAWLER`), and a linked nest's unit joins the intel's enemies in order of appearance.
+  M9 part E, for [Level 32](../../../campaign/act-5-the-belt/level-32-deep-core/README.md) (loaded and checked in steps
+  E1/E2 by content's `TerrainBlock`, `LevelData` and `DeepCoreChecks`, mapped in step E2 by `DeepCoreRules`, flown from
+  steps E1/E3; the defaults accepted by the user in round 65): the terrain's **`forks`** (a list of `{island: i}`,
+  the `islands` index, fork 1 first: at the step an island's tip, its lowest row, reaches the ship's row the channel
+  holding the ship's centre is chosen, left of the island's middle `left`, else `right`; deterministic, the input decides
+  it; `BRANCH_CHOSEN`); a wave's and a ground target's **`branch`** (`fork` from 1, `side` `left` or `right`: a front wave
+  only, flown in its own channel only when that side is chosen, the other side's never spawns; a ground target dormant,
+  dark and not hittable, never homed on or paid, unless chosen, one that entered before the choice waking at it with the
+  1 s tell; not with `side`, `burst`, `holds` or `dormant_until`); the validator: the fork exists, a branch item at or
+  after its fork's latest choice (the tip at the bottom edge) and while its island is on the screen, a branch target in
+  its side's channel. A ground target's **`crate`** (credits in Act 1 terms: a destructible lock, a blast door's, that
+  frees a cache's crate paid at the secrets' rate but counting no secret; not with `reveals`) and **`blast`** (`radius`
+  px, `damage`: a mining charge on `ground`, `hp: 1`, no `crate` or `reveals`: destroyed by anything, its burst hits
+  every counted enemy, air or ground, hardened and parts included, within the radius and pays as the player's kills;
+  never the ship, Rook or a ground object, so no chain; `CHARGE_BLAST`); a blast door's lock (`sprite: blast-door*`)
+  and a ground-sweeping unit's emitter at least 40 px inside the field (QE-1 a), the sweeper never beside a passage
+  narrower than its reach plus 80 px nor over a fork island within its reach's rows. The radio events **`branch`**
+  (`fork`, `side`: the subject `"1:right"`) and **`topple-crush`** (the first topple that crushes a unit). The intel's wave
+  strip marks each fork at its branches' first item, with the richer side (more credits in its bounties and caches).
+  A forked level's credit budget table renders a row per route (`LL`, `LR`, `RL`, `RR`) and their mean as the total.
   M7 part D, for [Level 17](../../../campaign/act-3-red-dust/level-17-dome-siege/README.md) (loaded and checked
   in step D2 by content's `LevelData` and `SiegeChecks`, mapped in step D4, flown from steps D1/D3; the
   defaults pending the user's review in round 40): **`allies`** (ground allies outside the objectives, which

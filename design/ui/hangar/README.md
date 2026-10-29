@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../../player, ../../systems/economy, ../../campaign]
-updated: 2026-10-28
+updated: 2026-10-29
 ---
 
 # Hangar
@@ -219,10 +219,15 @@ Production art, UI batch part U2 (for concept round 13, opened by part U3): the 
 | [concept/intel-final-r58-a.png](concept/intel-final-r58-a.png) | The `boss-abyssal-maw` sensor silhouette (40x40; `tools/art/intel.py` from `tools/art/abyssal_maw.py`'s sprites, M8 part H batch): the coil round the arena's edges with the head at the top | chosen (round 58: accepted as final) |
 | [concept/intel-final-r62-a.png](concept/intel-final-r62-a.png) | The `talon`, `sam-nest`, `asteroid-mite`, `clamp-gun` and `wavering-stormhawk` sensor L2 portraits (30x30; `tools/art/intel.py` from `tools/art/belt_units.py`'s production models in Q.11 b's gunmetal, M9 part B batch, step B4): Level 29's new units nose down (the SAM Nest's rack over its base, the Stormhawk's IFF light lit) | chosen (round 62, F.11: accepted as final) |
 | [concept/intel-final-r63-a.png](concept/intel-final-r63-a.png) | The `minelayer`, `gilded-gunship`, `dart-drone` and `rail-serpent` sensor L2 portraits (30x30; `tools/art/intel.py` from `tools/art/belt_units_c.py`'s production models, M9 part C batch, step C4): Level 30's new units nose down (the Minelayer's drum dark, the Gunship's doors shut and lamps dark, the Rail Serpent's engine car) | chosen (round 63, F.8: accepted as final) |
-| [concept/intel-final-r64-a.png](concept/intel-final-r64-a.png) | The `hornet`, `shard-drone` and `buzzsaw-drone` sensor L2 portraits (30x30; `tools/art/intel.py` from `tools/art/belt_units_d.py`'s production models in Q.11 b's gunmetal, M9 part D batch, step ART-D) | proposed (round 64) |
+| [concept/intel-final-r64-a.png](concept/intel-final-r64-a.png) | The `hornet`, `shard-drone` and `buzzsaw-drone` sensor L2 portraits (30x30; `tools/art/intel.py` from `tools/art/belt_units_d.py`'s production models in Q.11 b's gunmetal, M9 part D batch, step ART-D) | chosen (round 64, F.11: accepted as final) |
 | [concept/level-28-intel-capture-r58-a.png](concept/level-28-intel-capture-r58-a.png) | Game capture, M8 part H (step H7): the Level 28 hangar from a playthrough save (a sensor suite L3 fitted for the capture): Okafor's teaser, the threat strip with the Choir's lime mark at the pre-boss pause, the portraits, the Bulwark loaner with `ROOK MIA` | chosen (round 58: accepted as final) |
 | [concept/level-26-intel-capture-r55-a.png](concept/level-26-intel-capture-r55-a.png) | Game capture, M8 part F (step F6, a playthrough save at Level 26 on medium, a sensor suite L2 fitted for the capture): the hangar with Level 26's intel (Rook's teaser, the threat strip, the five portraits incl. the Glow Angler, the lure note), the panel at 1:1 | chosen (round 55, F.8: accepted as final) |
 | [concept/level-27-intel-capture-r57-a.png](concept/level-27-intel-capture-r57-a.png) | Game capture, M8 part G (step G5, a playthrough save at Level 27 with a sensor suite L3 fitted for the capture): the hangar before Level 27, Okafor's teaser, the threat strip, the five portraits with the Depth Hunter's `UNMARKED GREY`, the Bulwark loaner in the escort slot (`ROOK MIA`) | chosen (round 57: accepted as final) |
+| [concept/intel-final-r65-a.png](concept/intel-final-r65-a.png) | The `sentinel-tower` and `strider` sensor L2 portraits (30x30; `tools/art/intel.py` from `tools/art/belt_units_e.py`'s production models in Q.11 b's gunmetal, M9 part E batch, step ART-E) | chosen (round 65, F.7 ok: accepted as final) |
+| [concept/intel-final-r66-a.png](concept/intel-final-r66-a.png) | The `void-leech` and `rail-bunker` sensor L2 portraits (30x30; `tools/art/intel.py` from `tools/art/belt_units_f.py`'s production models: the leech's Vrell black-violet, the bunker in Q.11 b's gunmetal, M9 part F batch, step ART-F2) | chosen (round 66, F.8 ok: accepted as final) |
+| [concept/intel-final-r67-a.png](concept/intel-final-r67-a.png) | The `warden-tank-asc` sensor L2 portrait (30x30; `tools/art/intel.py` from `tools/art/warden_tank.py`'s model in its Act 5 livery: A.15 b's gold on Q.11 b's gunmetal, driving down, the turret aimed along it; M9 part G batch, step ART-G) | chosen (round 67, G.7 ok: accepted as final) |
+| [concept/intel-capture-r67-a.png](concept/intel-capture-r67-a.png) | Game capture (step G5; [recipe](concept/prompts.md#intel-capture-r67-a)): the hangar before Level 34 at sensor L3: the liveried tank's portrait first, `OBJECTIVE: HELIX CORE`, the crates' sections underlined in gold | chosen (round 67, G.7 ok: accepted as final) |
+| [concept/intel-final-r68-a.png](concept/intel-final-r68-a.png) | The `boss-iron-sovereign` sensor L2 silhouette (40x40; `tools/art/intel.py` from `tools/art/iron_sovereign.py`'s frames: the three rings at rest with their batteries and the core, the base disc left out so the rings read; M9 part H batch, step ART-H1) | proposed |
 
 M4 part H, test fire ([round 26](../../concept-rounds/README.md)): a game capture, see
 [concept/prompts.md](concept/prompts.md#test-fire-capture-r26-a).
@@ -383,3 +388,5 @@ Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-a
 - 2026-10-26 (user, [round 58](../../concept-rounds/round-58/README.md) closed): the `boss-abyssal-maw` sensor silhouette and Level 28's intel accepted as final (F.6).
 - 2026-10-28 (user, [round 62](../../concept-rounds/round-62/README.md), closed; page answers): the five Level 29 intel portraits (F.11: Talon, SAM Nest, Asteroid Mite, clamp gun, wavering Stormhawk) accepted as final.
 - 2026-10-28 (user, [round 61](../../concept-rounds/round-61/README.md), closed): the Act 5 icons and the hangar's ◆ marker accepted (**F.5**). Round 63 closed the same day: the four intel portraits of Level 30 accepted (**F.8**).
+- 2026-10-28 (user, [round 64](../../concept-rounds/round-64/README.md), closed): **F.11** accepted: the Hornet's, Shard Drone's and Buzzsaw Drone's sensor L2 portraits are final.
+- 2026-10-29 (user, [round 65](../../concept-rounds/round-65/README.md), closed): **F.7** ok: the Sentinel Tower's and Strider's intel portraits accepted as final; **C.5** accepted (the intel marks each fork on the wave strip).

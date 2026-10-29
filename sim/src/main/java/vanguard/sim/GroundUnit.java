@@ -25,11 +25,17 @@ public record GroundUnit(
         Optional<SideEntry> side,
         Optional<RootBurst> burst,
         boolean holder,
-        double dormantUntil) {
+        double dormantUntil,
+        Optional<Branch> branch) {
     /** M9 part B: a dormant unit's wake tell, s (design/enemies/ground/sam-nest: the rack lifts and lights red). */
     public static final double WAKE_SECONDS = 1;
 
     public GroundUnit {
+        java.util.Objects.requireNonNull(branch);
+        if (branch.isPresent() && (dormantUntil > 0 || side.isPresent() || burst.isPresent() || holder)) {
+            throw new IllegalArgumentException(
+                    "a branch's unit enters at the top edge with the ground, dormant unless chosen (M9 part E)");
+        }
         if (!(dormantUntil >= 0) || (dormantUntil > 0 && !(dormantUntil > t))) {
             throw new IllegalArgumentException("a dormant unit wakes after it entered: " + dormantUntil + " s");
         }
@@ -39,6 +45,29 @@ public record GroundUnit(
         if (side.isPresent() && burst.isPresent()) {
             throw new IllegalArgumentException("a ground unit enters at a side or grows in a root burst, not both");
         }
+    }
+
+    /** Of no fork's branch (before M9 part E). */
+    public GroundUnit(
+            double t,
+            double x,
+            EnemySpec enemy,
+            int group,
+            double currentRadians,
+            Optional<SideEntry> side,
+            Optional<RootBurst> burst,
+            boolean holder,
+            double dormantUntil) {
+        this(t, x, enemy, group, currentRadians, side, burst, holder, dormantUntil, Optional.empty());
+    }
+
+    /**
+     * M9 part E (design/campaign Level 32, The forks): this unit as one of {@code fork}'s branch's: dormant (dark, not
+     * hittable, never picked, not firing, no bounty) unless that side is chosen; chosen, it wakes at the choice (with
+     * its {@link #WAKE_SECONDS} tell) or enters awake after it. An unchosen branch's units count nowhere.
+     */
+    public GroundUnit withBranch(Branch fork) {
+        return new GroundUnit(t, x, enemy, group, currentRadians, side, burst, holder, dormantUntil, Optional.of(fork));
     }
 
     /** Without M9 part B's arena holder and dormancy. */
@@ -55,12 +84,12 @@ public record GroundUnit(
 
     /** M9 part B: this unit as a holder of the level's arena (it holds the clock while it stands). */
     public GroundUnit asHolder() {
-        return new GroundUnit(t, x, enemy, group, currentRadians, side, burst, true, dormantUntil);
+        return new GroundUnit(t, x, enemy, group, currentRadians, side, burst, true, dormantUntil, branch);
     }
 
     /** M9 part B: this unit dormant until {@code until} s on the level clock (0 for none). */
     public GroundUnit dormantUntil(double until) {
-        return new GroundUnit(t, x, enemy, group, currentRadians, side, burst, holder, until);
+        return new GroundUnit(t, x, enemy, group, currentRadians, side, burst, holder, until, branch);
     }
 
     /** M9 part B: whether it enters dormant. */

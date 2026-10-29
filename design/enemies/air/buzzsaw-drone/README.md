@@ -2,7 +2,7 @@
 title: Buzzsaw Drone
 design: approved
 implementation: done
-art: chosen
+art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../player/specials, ../../../world/belt, ../../../campaign/act-5-the-belt]
 updated: 2026-10-28
 ---
@@ -87,8 +87,8 @@ Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's r
 - [x] Stat block loaded from a `data.yaml`; global difficulty multipliers and the beam-era factor applied; re-measured with `levelReport` at L31
 - [x] The chase → spin-up tell → locked dash cycle, ricochet off the edges and the big `Debris` rocks, small rocks smashed, deterministic and allocation-free (step D1: `Dashing`, `DashRocks`)
 - [x] Production sprites (radial spin frames, the red tell flicker) via `tools/art/`; death effect, bounty and sounds (Freesound, CC0/CC-BY)
-      (ART-D `belt_units_d.py`, the gold share a/b in round 64; step D4: `MiningRigLooks`, the whine pitched with the spin,
-      the spin-up and the ricochet round 64's a proposals until the pick; its death the `small` rung)
+      (ART-D `belt_units_d.py`, the gold share a in round 64; step D4: `MiningRigLooks`, the whine pitched with the spin,
+      the spin-up (round 64's `saw-spinup-r64-ab`, played since step FIX1) and the ricochet round 64's a picks; its death the `small` rung)
 
 ## Open questions
 
@@ -100,6 +100,7 @@ Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's r
   gap analysis; every number is a first draft approved in round 60. The roster's
   "4 blades" follows the chosen round 05 look: six blades.
 - 2026-10-27 (user, [round 60](../../../concept-rounds/round-60/README.md) closed): the design approved as drafted (`design: approved`); art A.6 **b**, "Buzzsaw Drone B, gold blades", chosen (`art: chosen`), the other variant in `concept/rejected/`. Q11 **b** (gunmetal/charcoal with gold, not gloss black): the chosen variant is re-rendered in gunmetal/charcoal in this part's production art, keeping the ≥ 20 % gold and the readability check.
-- 2026-10-28 (M9 part D, step D2; pending the user's review in round 64): the stat block as data (the `dash`
+- 2026-10-28 (M9 part D, step D2; accepted in round 64, below): the stat block as data (the `dash`
   movement and its hooks; a circle's `orbit` 60 px at 90°/s before the break, the fixture's). At L31 under the plan's
   fit a Buzzsaw lives ≈ 1.25–1.45 s on the screen (`levelReport`'s small units: within Level 10's band).
+- 2026-10-28 (user, [round 64](../../../concept-rounds/round-64/README.md), closed; page answers): **F.6 a**, the blades charcoal with the gold on their outer cutting edges (33 % gold, inside Q.11 b's 20-30 % within a margin: not round 60's six solid gold blades, b), accepted as final (`art: final`); sounds **S.4 a** (`saw-whine`, the angle grinder), **S.5 b with S.4 a** (`saw-spinup`: b's spin-up is its whine's recording glided up, so it rises to the circular saw's pitch, not the grinder loop's; rebuilt as `saw-spinup-r64-ab`, b's shape on the grinder's recording ending on the loop's pitch, by `tools/concept/audio/sfx_r64.py`), **S.6 a** (`saw-ricochet`); the game switches the spin-up's path in the next game step (a plays until then).

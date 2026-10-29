@@ -35,6 +35,8 @@ game recordings with the game's own sound (Xvfb, `--bench`, medium, `--invulnera
 Harpoon Torpedoes L3, Depth Charges L3, two Micro-Missile Pods, the Pressure hull, the Sonar Pulse, Rook along); their
 PNGs are frames of those runs side by side, the time in the level in each row's text.
 
+Record of the decisions: [review.html](review.html)
+
 ## In the game
 
 The art below is already in `assets/` (the finals; the spawning reef plays look **b** since step E5), the **a** sound of

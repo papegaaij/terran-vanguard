@@ -35,29 +35,33 @@ class ActFloorTest {
 
     private static final Content CONTENT = LevelMetrics.CONTENT;
 
-    static Stream<String> levels() {
+    /** M9 part E: a forked level (Level 32) on each of its routes ({@link RoutePlay}). */
+    static Stream<org.junit.jupiter.params.provider.Arguments> levels() {
         return IntStream.rangeClosed(FIRST_LEVEL, 50)
                 .mapToObj(CONTENT::levelKey)
                 .flatMap(java.util.Optional::stream)
                 .filter(key -> !PENDING.contains(key))
-                .filter(key -> !PacingTest.PENDING_AUTOPILOT.contains(key));
+                .filter(key -> !PacingTest.PENDING_AUTOPILOT.contains(key))
+                .flatMap(key -> RoutePlay.routes(CONTENT, key).stream()
+                        .map(route -> org.junit.jupiter.params.provider.Arguments.of(key, route)));
     }
 
     @ParameterizedTest
     @MethodSource("levels")
-    void theScreenIsBusyAndTheEnemiesFire(String key) {
+    void theScreenIsBusyAndTheEnemiesFire(String key, String route) {
         LevelMetrics.Flight flight =
-                PacingTest.fly(key, Difficulty.MEDIUM, PacingTest.planLoadout(key, Difficulty.MEDIUM));
+                PacingTest.fly(key, Difficulty.MEDIUM, PacingTest.planLoadout(key, Difficulty.MEDIUM), route);
+        String at = key + (route.isEmpty() ? "" : " route " + route);
         System.out.printf(
                 "Floor %s: %.2f enemies on the screen, %.1f shots a minute%n",
-                key, flight.meanOnScreen(), flight.shotsPerMinute());
+                at, flight.meanOnScreen(), flight.shotsPerMinute());
         // M7 part H (step H4): a level whose waves' rework is pending the user's review is measured, not asserted.
         assumeFalse(PacingTest.PENDING_WAVES.contains(key), key + ": its waves' rework is pending the user's review");
         assertTrue(
                 flight.meanOnScreen() >= MEAN_ON_SCREEN,
-                key + ": " + flight.meanOnScreen() + " enemies on the screen, at least " + MEAN_ON_SCREEN);
+                at + ": " + flight.meanOnScreen() + " enemies on the screen, at least " + MEAN_ON_SCREEN);
         assertTrue(
                 flight.shotsPerMinute() >= SHOTS_PER_MINUTE,
-                key + ": " + flight.shotsPerMinute() + " shots a minute, at least " + SHOTS_PER_MINUTE);
+                at + ": " + flight.shotsPerMinute() + " shots a minute, at least " + SHOTS_PER_MINUTE);
     }
 }

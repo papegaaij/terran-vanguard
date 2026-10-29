@@ -263,7 +263,15 @@ final class DrawPasses extends LevelLooks {
             // M8 part B: Conamara's ice-crawler driving up the road with the armour patch, and back.
             crawlerDrops.draw(batch, seconds);
         }
+        if (story != null) {
+            // M9 part G: Level 34's Helix core shut in the hold, under the clamps that hold it.
+            story.drawHold(batch, sortie, alpha);
+        }
         ground.drawGround(batch, sortie, alpha);
+        // M9 part E: Level 32's blast doors, mining charges and repair crate.
+        kinds.deepCore(sortie).drawObjects(batch, sortie, alpha, flash, play.whiteFlash);
+        // M9 part F: Level 33's Claim 114, its beacon blinking.
+        kinds.leechField(sortie).drawObjects(batch, sortie, alpha, flash, play.whiteFlash);
         convoy.drawConvoy(batch, sortie, alpha, play.whiteFlash);
         // M9 part D: a hull escort's tug (Level 31's Bellwether) over the outcrops.
         tug(sortie).draw(batch, sortie, alpha, play.whiteFlash);
@@ -313,7 +321,15 @@ final class DrawPasses extends LevelLooks {
         plain.draw(batch, scroll);
         // M9 part B: the SAM Nests' bases, the clamp guns' clamps and the opened clamps, under the ground units.
         kinds.ceres(sortie).drawGround(batch, sortie, alpha, scroll);
+        // M9 part E: the Striders' wrecks and hulks, the opened blast doors and repair crate.
+        kinds.deepCore(sortie).drawGround(batch, sortie, scroll);
+        // M9 part F: Claim 114 shot open.
+        kinds.leechField(sortie).drawGround(batch, sortie, scroll);
         units.drawEnemies(batch, sortie, alpha, Depth.GROUND, Launched.ANY);
+        // M9 part E: the Sentinels' telegraphs (the arc, the reach ring) and the toppling Striders' fall lines.
+        batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
+        kinds.deepCore(sortie).drawTells(batch, sortie, alpha);
+        batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         kinds.crawlers(sortie).drawChains(batch, sortie, alpha, looks, units.unitFlash);
         kinds.crawlers(sortie).drawPores(batch, sortie, alpha, scroll);
         // M7 part D: a Shellback's dead vent, vent swell and belly glow; the ground units' aura rings.
@@ -355,6 +371,10 @@ final class DrawPasses extends LevelLooks {
         if (maw != null) {
             // M8 part H: the dive's darkness, the lunge's shadow, the coil, the sacs, implants and head, its death.
             maw.draw(batch, sortie, alpha, play.whiteFlash);
+        }
+        if (sovereign != null) {
+            // M9 part H: the station: its base, rings, arc band, batteries, bays and core; its death.
+            sovereign.draw(batch, sortie, alpha, play.whiteFlash, scroll);
         }
         ground.drawGlints(batch, sortie, alpha);
         // M5 part E: the telegraphed lanes' marks and the slams' splashes over the convoy and the rafts.
@@ -499,6 +519,8 @@ final class DrawPasses extends LevelLooks {
         kinds.minefield(sortie).drawPieces(batch, sortie, alpha, scroll);
         // M9 part D: a Shard Drone's shards, a Buzzsaw's blades.
         kinds.rig(sortie).drawPieces(batch, sortie, alpha);
+        // M9 part E: the Sentinels' heads toppling off.
+        kinds.deepCore(sortie).drawPieces(batch, sortie, scroll);
         props.drawDebris(batch, sortie, alpha);
         if (colossus != null) {
             // M7 part H: the rocks the breaching boss tears loose toward its mouth; its throe's plume and rock rain.
@@ -510,6 +532,10 @@ final class DrawPasses extends LevelLooks {
         }
         props.drawSondes(batch, sortie, alpha);
         props.drawPickups(batch, sortie, alpha);
+        if (story != null) {
+            // M9 part G: the Helix core rising out of the hold, then drifting loose (PropPasses leaves it out).
+            story.drawAir(batch, sortie, alpha);
+        }
         if (storm != null) {
             // M7 part E: a faint glint on the pickups the dust would hide.
             storm.drawPickupGlints(batch, sortie, alpha);
@@ -664,7 +690,17 @@ final class DrawPasses extends LevelLooks {
         // M5 part H: the Spire's sweep, its telegraph line and beam, with the bullets.
         setPieces.drawSpire(batch, sortie, wrecks, alpha, scroll, SpirePass.SWEEP);
         // M9 part A: the laser lines' telegraphs and rails, with the bullets.
-        lines.draw(batch, sortie);
+        lines.draw(batch, sortie, kinds.leechField(sortie));
+        // M9 part F: the Rail Bunkers' locked lines, rails and muzzle flashes.
+        kinds.leechField(sortie).drawLines(batch, sortie, alpha);
+        if (sovereign != null) {
+            // M9 part H: the station's rail lines and laser sweeps.
+            sovereign.drawLines(batch, sortie, alpha);
+        }
+        if (massRelay != null) {
+            // M9 part H: the mass relay's line, bolt and trail.
+            massRelay.draw(batch, sortie, alpha);
+        }
         if (walker != null) {
             // M7 part F: the homing missiles over their smoke trails, with the bullets.
             walker.drawMissiles(batch, sortie, alpha);
@@ -676,6 +712,10 @@ final class DrawPasses extends LevelLooks {
             kinds.hunters(sortie).drawTorpedoes(batch, sortie, alpha);
         }
         props.drawBullets(batch, sortie, alpha);
+        if (massRelay != null) {
+            // M9 part H: the relay's flash over the field.
+            massRelay.drawFlash(batch, sortie, alpha, play.whiteFlash);
+        }
         screenFlash.draw(batch, sprites.pixel, alpha, play.whiteFlash);
         warnings.draw(batch, sortie.tick(), alpha);
         credits.draw(batch, font);
@@ -712,6 +752,10 @@ final class DrawPasses extends LevelLooks {
         if (maw != null) {
             // M8 part H: the Maw's teal lines, tells, sacs', implants' and head's glows, its death's flashes.
             maw.drawGlows(batch, sortie, alpha);
+        }
+        if (sovereign != null) {
+            // M9 part H: the station's tells and lights, the core's glow and shield, its death's flashes.
+            sovereign.drawGlows(batch, sortie, alpha, scroll);
         }
         if (tenderDrops != null) {
             tenderDrops.drawLights(batch, seconds);

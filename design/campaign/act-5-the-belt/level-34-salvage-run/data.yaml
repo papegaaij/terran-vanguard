@@ -1,0 +1,839 @@
+# Level 34 – Salvage Run: the level script, rendered into README.md (briefing, threat profile, layout, waves, ground
+# targets, radio, credit budget). Times are seconds from the level start. M9 part G, step G2, from the README's approved
+# hand tables (round 60) and ART-G's backdrop proposal (concept/backdrop-proposal.yaml: its backdrop block, the convoys'
+# road paths, the ground objects' places, the beacon's drop and the light debris adopted as they are).
+# Schema: ../../../tech/architecture/schemas-levels/README.md (the Act 5 keys: schemas-act-4)
+# Keys new in M9 part G (flown from step G1; loaded and checked from step G1, mapped in step G2; drawn and played by
+# step G4): the secondary's `escapes` over a ground object's look (`cargo-container`: its `-cdf` and `-helix` variants
+# count; destroyed = opened, off the bottom edge = away), a `story` pickup dropped by a destructible group (the Helix
+# core: it rises out of the hold at the four clamps' centre, pays nothing, collected by flying through it) with the
+# radio events `story-collected` and `story-missed`, the music's `motif.to` (the motif's window ends inside a section),
+# the Warden Tank's `livery` (its own data: the Ascendancy's look from Act 5).
+# Decided before G2 (m9g-gaps.md §5, pending round 67): QG-1 a (the Helix hulls a step lighter: backdrop), QG-2 a (the
+# crate rises on its seal's glow; a missed core is radio only, no tug sprite), the core a story pickup (not the L06 data
+# core), the Mk V's unlock the generator data's `available: L35`, the containers ground objects, the livery a look.
+# Step G2's own placements (pending the user's review in round 67; logged in the README's Decisions): the Skitter swarms
+# fly as snakes of 4 from alternating edges (a swarm needs a route, as Levels 29 and 33), the Mites' rocks drift at the
+# scroll plus 15 px/s (slow rocks: the riders stay longer under the beam), the Mote Swarms weave on Level 33's two paths
+# at 180 px/s, the far deck's tank pair at t=123 (ART-G), the radio's long lines trimmed to one page (gap check §4).
+scroll_speed: 130     # the graveyard; the freighter's hold 110 (eased over 2 s each way)
+launch_seconds: 5
+bounty_scale: 0.27    # every bounty × 0.27: the README's hand estimate 0.45 at ≈ 86 a minute, fitted in step G2 with the offbeat Talon trios (levelReport: typical haul on budget(34) 6,528)
+control_prompts: []
+medium: vacuum        # the belt: short flashes, debris rings, drifting wrecks (design/world/belt)
+threat_profile:  # the hangar intel panel (design/ui/hangar) and the README's Threat profile table
+  setting: The belt, Graveyard
+  layers: [ground, air]
+  density: 2
+  traits: [anti-ground, spread]
+  hazards: [tank fire, mining charges]
+  boss: none
+  objective: CROSS THE GRAVEYARD   # the OBJECTIVE field from sensor L1
+  varga:
+    none: A ship graveyard. Quiet, for once. Look in every wreck.
+    l1: Tanks on the hulls, a few fighters. Crates everywhere.
+    l2: The grey tanks of Tharsis, in Ascendancy colours now.
+    l3: Three hidden crates, six containers. Bring a scanner.
+  notes:
+    Dominant layers: '`ground` (the derelict hulls: Warden Tank convoys on their roads, the containers, the hidden crates, the freighter''s hold), `air` (written `space`: Needler lines, three Talon wings and a Talon line, the Vrell popcorn and the Asteroid Mites on their rocks)'
+    Attack directions: '{directions}'
+    Density: '{density}'
+    Recommended traits: '{traits}'
+    Hazards: 'The tanks'' bursts, also back up the screen; drifting asteroids; mining charges on the wrecks (they never hurt the ship)'
+    Boss / mid-boss: none
+    Sensor-suite detail: 'none: the belt, the ship graveyard, `ground` + `air`, front · L1: + direction, density {density}, hazards "tank fire" and "mining charges", the objective `{objective}` and the secondary `CONTAINERS 5/6` · L2: + Warden Tank (Ascendancy livery), Needler, Talon, Stinger, Asteroid Mite, Skitter, Mote Swarm portraits; the Helix crate marked as an objective pickup · L3: + the three hidden crates'' sections on the timeline strip, `anti-ground` highlighted'
+
+sections:  # back to back from t = 0; each speed change eased over 2 s (ramp); ART-G's reading of the Layout table
+  - name: Graveyard Edge
+    end: 25
+    atmosphere: clear
+    tiles: [grave-space, grave-dust]
+    notes:
+      layers:
+        ground: scattered hull plates and a broken CDF corvette's spine.
+        air: small drifting rocks with Mites.
+        deep: the dust band, far wrecks.
+      purpose: Popcorn and Needlers; the first container (t≈18).
+  - name: The CDF Picket
+    end: 65
+    atmosphere: clear
+    tiles: [grave-space, grave-dust]
+    notes:
+      layers:
+        ground: 'three broken CDF frigates side by side, their dorsal walkways the tanks'' roads (convoys t≈32, t≈50), a mining charge on a frigate''s flank (t≈51), two containers (t≈38, t≈58); the frigate *Vigil*''s bridge (t≈56, the first secret).'
+      purpose: The tanks in livery taught; the first Talon wing (t=39).
+  - name: Helix Hulks
+    end: 105
+    atmosphere: clear
+    tiles: [grave-space, grave-dust]
+    notes:
+      layers:
+        ground: 'gutted black-and-gold Helix ore freighters, tank convoys along their keels (t≈70, t≈88), a mining charge (t≈89), a container (t≈80); the Helix courier *Sable Wren* wedged between two hulls (t≈96, the second secret).'
+      purpose: Tanks and Needlers; the sky quiet between waves.
+  - name: The Freighter
+    end: 135
+    speed: 110
+    ramp: 2   # eased from 130 over its first 2 s
+    atmosphere: clear
+    tiles: [grave-space, grave-dust]
+    notes:
+      layers:
+        ground: 'one huge Helix freighter, its hold open to space; **the Helix core** in four clamps in the hold (t≈108–120); a tank pair on its far deck (t≈123). No air wave from t=113 to t=122.'
+      purpose: The salvage set piece (Q12 c).
+  - name: The Tangle
+    end: 172
+    speed: 130
+    ramp: 2   # eased from 110
+    atmosphere: clear
+    tiles: [grave-space, grave-dust]
+    notes:
+      layers:
+        ground: 'wrecks of both fleets tangled together, the tanks'' last convoys (t≈140, t≈158), a mining charge (t≈141), two containers (t≈150, t≈170); the prospector''s tender *Old Marta* under a Helix hull (t≈165, the third secret).'
+      purpose: The level's busiest stretch (still a breather).
+  - name: Clear Space
+    end: 186
+    atmosphere: clear
+    tiles: [grave-space, grave-dust]
+    notes:
+      layers:
+        ground: the last plates falling behind.
+        deep: Ceres ahead, a hard white point, and beside it a ring of gold lights, the Sovereign.
+      purpose: Release; the level ends at t=186.
+
+debris:  # the belt's small rocks (design/world/belt, hazards; Level 03's rules): they break and pay nothing; sprites assets/sprites/debris-<chunk>_N (part B's belt rocks); the Mites' rocks are the waves' on_rocks; ART-G's placements (none in the freighter's section or clear space, no big rock in Level 34)
+  chunks:
+    belt-a: {size: [40, 36], hp: 6}
+    belt-b: {size: [36, 32], hp: 6}
+    belt-c: {size: [32, 28], hp: 6}
+  clearance: 120        # px: a chunk never enters closer to the ship than this (it moves sideways)
+  placed:               # t it enters at the top edge, its x, the chunk, its drift [x, y] px/s (y up: the scroll plus 40-60)
+    - {t: 5, x: 120, chunk: belt-a, drift: [16, -170]}
+    - {t: 11.5, x: 360, chunk: belt-b, drift: [-24, -180]}
+    - {t: 19, x: 260, chunk: belt-c, drift: [32, -190]}
+    - {t: 31, x: 420, chunk: belt-a, drift: [-40, -170]}
+    - {t: 44, x: 230, chunk: belt-b, drift: [16, -180]}
+    - {t: 56.5, x: 380, chunk: belt-c, drift: [-24, -190]}
+    - {t: 72, x: 70, chunk: belt-a, drift: [32, -170]}
+    - {t: 83.5, x: 300, chunk: belt-b, drift: [-40, -180]}
+    - {t: 95, x: 160, chunk: belt-c, drift: [16, -190]}
+    - {t: 141.5, x: 70, chunk: belt-a, drift: [-24, -170]}
+    - {t: 152, x: 260, chunk: belt-b, drift: [32, -180]}
+    - {t: 163, x: 400, chunk: belt-c, drift: [-40, -190]}
+
+waves:
+  - {t: 5, formation: snake, enemy: skitter, count: 4, from: front, edge: left, notes: "Popcorn among the first hull plates"}
+  - {t: 6.5, formation: line abreast, enemy: talon, count: 3, from: front, speed: 110, hard: {count: 3}, notes: "Step G2: a firing Talon group on the offbeat (the beam erases the popcorn within a second)"}
+  - t: 8
+    formation: swarm
+    enemy: asteroid-mite
+    count: 4
+    from: front
+    on_rocks:
+      chunk: belt-a
+      riders: 2
+      rocks:
+        - {at: [130, -30], drift: [10, -145]}
+        - {at: [340, -70], drift: [-10, -145]}
+  - {t: 9.5, formation: line abreast, enemy: talon, count: 3, from: front, speed: 110, hard: {count: 3}, notes: "Step G2: a firing Talon group on the offbeat (the beam erases the popcorn within a second)"}
+  - t: 11
+    formation: swarm
+    enemy: mote-swarm
+    count: 7
+    from: front
+    speed: 180
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+  - {t: 12.5, formation: line abreast, enemy: talon, count: 3, from: front, speed: 110, hard: {count: 3}, notes: "Step G2: a firing Talon group on the offbeat (the beam erases the popcorn within a second)"}
+  - {t: 14, formation: line abreast, enemy: needler, count: 4, from: front, notes: "The level's shooters are the Needlers, the Talons and the tanks"}
+  - {t: 17, formation: snake, enemy: skitter, count: 4, from: front, edge: left}
+  - {t: 18.5, formation: line abreast, enemy: talon, count: 3, from: front, speed: 110, hard: {count: 3}, notes: "Step G2: a firing Talon group on the offbeat (the beam erases the popcorn within a second)"}
+  - t: 20
+    formation: swarm
+    enemy: asteroid-mite
+    count: 4
+    from: front
+    on_rocks:
+      chunk: belt-b
+      riders: 2
+      rocks:
+        - {at: [130, -30], drift: [10, -145]}
+        - {at: [340, -70], drift: [-10, -145]}
+  - {t: 21.5, formation: line abreast, enemy: talon, count: 3, from: front, speed: 110, hard: {count: 3}, notes: "Step G2: a firing Talon group on the offbeat (the beam erases the popcorn within a second)"}
+  - t: 23
+    formation: swarm
+    enemy: mote-swarm
+    count: 6
+    from: front
+    speed: 180
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+  - {t: 25, formation: line abreast, enemy: talon, count: 3, from: front, speed: 110, hard: {count: 3}, notes: "Step G2: a firing Talon group on the offbeat (the beam erases the popcorn within a second)"}
+  - {t: 27, formation: snake, enemy: skitter, count: 4, from: front, edge: left}
+  - {t: 28.5, formation: line abreast, enemy: talon, count: 3, from: front, speed: 110, hard: {count: 3}, notes: "Step G2: a firing Talon group on the offbeat (the beam erases the popcorn within a second)"}
+  - {t: 30, formation: line abreast, enemy: needler, count: 4, from: front}
+  - t: 32
+    formation: convoy
+    enemy: warden-tank
+    count: 2
+    from: front
+    interval: 1.5
+    paths:   # one per unit on its road (ART-G's proposal), unit i entering at t + 1.5 i s; the third for hard
+      - [[150, -40], [150, -358], [150, -760]]
+      - [[150, -40], [150, -163], [150, -603]]
+      - [[150, -40], [150, -408]]
+    easy: {count: 2}
+    hard: {count: 3}
+    notes: "In Ascendancy livery, x2 on cdf-frigate-a's walkway"
+  - t: 33
+    formation: swarm
+    enemy: asteroid-mite
+    count: 4
+    from: front
+    on_rocks:
+      chunk: belt-c
+      riders: 2
+      rocks:
+        - {at: [300, -30], drift: [10, -145]}
+        - {at: [410, -70], drift: [-10, -145]}
+  - {t: 34.5, formation: line abreast, enemy: talon, count: 3, from: front, speed: 110, hard: {count: 3}, notes: "Step G2: a firing Talon group on the offbeat (the beam erases the popcorn within a second)"}
+  - t: 36
+    formation: swarm
+    enemy: mote-swarm
+    count: 7
+    from: front
+    speed: 180
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+  - {t: 37.5, formation: line abreast, enemy: talon, count: 3, from: front, speed: 110, hard: {count: 3}, notes: "Step G2: a firing Talon group on the offbeat (the beam erases the popcorn within a second)"}
+  - {t: 39, formation: V-wing, enemy: talon, count: 5, from: front, leader: tip, speed: 130, notes: "The first Talons: a scavenger wing"}
+  - {t: 42, formation: snake, enemy: skitter, count: 4, from: front, edge: right}
+  - {t: 43.5, formation: line abreast, enemy: talon, count: 3, from: front, speed: 110, hard: {count: 3}, notes: "Step G2: a firing Talon group on the offbeat (the beam erases the popcorn within a second)"}
+  - t: 45
+    formation: swarm
+    enemy: asteroid-mite
+    count: 4
+    from: front
+    on_rocks:
+      chunk: belt-a
+      riders: 2
+      rocks:
+        - {at: [130, -30], drift: [10, -145]}
+        - {at: [340, -70], drift: [-10, -145]}
+  - {t: 46.5, formation: line abreast, enemy: talon, count: 3, from: front, speed: 110, hard: {count: 3}, notes: "Step G2: a firing Talon group on the offbeat (the beam erases the popcorn within a second)"}
+  - t: 48
+    formation: swarm
+    enemy: mote-swarm
+    count: 6
+    from: front
+    speed: 180
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+  - {t: 49.5, formation: line abreast, enemy: talon, count: 3, from: front, speed: 110, hard: {count: 3}, notes: "Step G2: a firing Talon group on the offbeat (the beam erases the popcorn within a second)"}
+  - t: 50
+    formation: convoy
+    enemy: warden-tank
+    count: 3
+    from: front
+    interval: 1.5
+    paths:   # one per unit on its road (ART-G's proposal), unit i entering at t + 1.5 i s; the third for hard
+      - [[314, -40], [314, -398], [342, -478], [342, -760]]
+      - [[314, -40], [314, -203], [342, -283], [342, -623]]
+      - [[325.2, -40], [342, -88], [342, -428]]
+    easy: {count: 2}
+    hard: {count: 3}
+    notes: "In Ascendancy livery, x3 on cdf-frigate-b's walkway, past the mining charge (t 51.2)"
+  - {t: 51, formation: column, enemy: needler, count: 4, from: front, edge: left}
+  - {t: 52.5, formation: line abreast, enemy: talon, count: 3, from: front, speed: 110, hard: {count: 3}, notes: "Step G2: a firing Talon group on the offbeat (the beam erases the popcorn within a second)"}
+  - {t: 54, formation: snake, enemy: skitter, count: 4, from: front, edge: left}
+  - {t: 55.5, formation: line abreast, enemy: talon, count: 3, from: front, speed: 110, hard: {count: 3}, notes: "Step G2: a firing Talon group on the offbeat (the beam erases the popcorn within a second)"}
+  - t: 57
+    formation: swarm
+    enemy: asteroid-mite
+    count: 4
+    from: front
+    on_rocks:
+      chunk: belt-b
+      riders: 2
+      rocks:
+        - {at: [130, -30], drift: [10, -145]}
+        - {at: [340, -70], drift: [-10, -145]}
+  - {t: 58.5, formation: line abreast, enemy: talon, count: 3, from: front, speed: 110, hard: {count: 3}, notes: "Step G2: a firing Talon group on the offbeat (the beam erases the popcorn within a second)"}
+  - t: 60
+    formation: swarm
+    enemy: mote-swarm
+    count: 7
+    from: front
+    speed: 180
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+  - {t: 61.5, formation: line abreast, enemy: talon, count: 3, from: front, speed: 110, hard: {count: 3}, notes: "Step G2: a firing Talon group on the offbeat (the beam erases the popcorn within a second)"}
+  - {t: 63, formation: column, enemy: stinger, count: 3, from: front, edge: right}
+  - {t: 65, formation: line abreast, enemy: talon, count: 3, from: front, speed: 110, hard: {count: 3}, notes: "Step G2: a firing Talon group on the offbeat (the beam erases the popcorn within a second)"}
+  - {t: 67, formation: snake, enemy: skitter, count: 4, from: front, edge: right}
+  - {t: 68.5, formation: line abreast, enemy: talon, count: 3, from: front, speed: 110, hard: {count: 3}, notes: "Step G2: a firing Talon group on the offbeat (the beam erases the popcorn within a second)"}
+  - {t: 70, formation: line abreast, enemy: needler, count: 4, from: front}
+  - t: 70
+    formation: convoy
+    enemy: warden-tank
+    count: 2
+    from: front
+    interval: 1.5
+    paths:   # one per unit on its road (ART-G's proposal), unit i entering at t + 1.5 i s; the third for hard
+      - [[356, -40], [356, -452], [342, -492], [342, -760]]
+      - [[356, -40], [356, -257], [342, -297], [342, -673]]
+      - [[356, -40], [356, -62], [342, -102], [342, -478]]
+    easy: {count: 2}
+    hard: {count: 3}
+    notes: "In Ascendancy livery, x2 along helix-hulk-a's keel"
+  - {t: 71.5, formation: line abreast, enemy: talon, count: 3, from: front, speed: 110, hard: {count: 3}, notes: "Step G2: a firing Talon group on the offbeat (the beam erases the popcorn within a second)"}
+  - t: 73
+    formation: swarm
+    enemy: asteroid-mite
+    count: 4
+    from: front
+    on_rocks:
+      chunk: belt-c
+      riders: 2
+      rocks:
+        - {at: [130, -30], drift: [10, -145]}
+        - {at: [340, -70], drift: [-10, -145]}
+  - {t: 74.5, formation: line abreast, enemy: talon, count: 3, from: front, speed: 110, hard: {count: 3}, notes: "Step G2: a firing Talon group on the offbeat (the beam erases the popcorn within a second)"}
+  - t: 76
+    formation: swarm
+    enemy: mote-swarm
+    count: 6
+    from: front
+    speed: 180
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+  - {t: 77.5, formation: line abreast, enemy: talon, count: 3, from: front, speed: 110, hard: {count: 3}, notes: "Step G2: a firing Talon group on the offbeat (the beam erases the popcorn within a second)"}
+  - {t: 79, formation: V-wing, enemy: talon, count: 5, from: front, leader: tip, speed: 130, notes: "The leader drops a shield cell"}
+  - {t: 82, formation: snake, enemy: skitter, count: 4, from: front, edge: right}
+  - {t: 83.5, formation: line abreast, enemy: talon, count: 3, from: front, speed: 110, hard: {count: 3}, notes: "Step G2: a firing Talon group on the offbeat (the beam erases the popcorn within a second)"}
+  - t: 85
+    formation: swarm
+    enemy: asteroid-mite
+    count: 4
+    from: front
+    on_rocks:
+      chunk: belt-a
+      riders: 2
+      rocks:
+        - {at: [130, -30], drift: [10, -145]}
+        - {at: [340, -70], drift: [-10, -145]}
+  - {t: 86.5, formation: line abreast, enemy: talon, count: 3, from: front, speed: 110, hard: {count: 3}, notes: "Step G2: a firing Talon group on the offbeat (the beam erases the popcorn within a second)"}
+  - t: 88
+    formation: swarm
+    enemy: mote-swarm
+    count: 7
+    from: front
+    speed: 180
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+  - t: 88
+    formation: convoy
+    enemy: warden-tank
+    count: 3
+    from: front
+    interval: 1.5
+    paths:   # one per unit on its road (ART-G's proposal), unit i entering at t + 1.5 i s; the third for hard
+      - [[114, -40], [114, -443], [128, -483], [128, -760]]
+      - [[114, -40], [114, -248], [128, -288], [128, -653]]
+      - [[114, -40], [114, -53], [128, -93], [128, -458]]
+    easy: {count: 2}
+    hard: {count: 3}
+    notes: "In Ascendancy livery, x3 along helix-hulk-b's keel, past the mining charge (t 89.2)"
+  - {t: 89.5, formation: line abreast, enemy: talon, count: 3, from: front, speed: 110, hard: {count: 3}, notes: "Step G2: a firing Talon group on the offbeat (the beam erases the popcorn within a second)"}
+  - {t: 91, formation: column, enemy: needler, count: 4, from: front}
+  - {t: 94, formation: snake, enemy: skitter, count: 4, from: front, edge: right}
+  - {t: 95.5, formation: line abreast, enemy: talon, count: 3, from: front, speed: 110, hard: {count: 3}, notes: "Step G2: a firing Talon group on the offbeat (the beam erases the popcorn within a second)"}
+  - t: 97
+    formation: swarm
+    enemy: asteroid-mite
+    count: 4
+    from: front
+    on_rocks:
+      chunk: belt-b
+      riders: 2
+      rocks:
+        - {at: [130, -30], drift: [10, -145]}
+        - {at: [340, -70], drift: [-10, -145]}
+  - {t: 98.5, formation: line abreast, enemy: talon, count: 3, from: front, speed: 110, hard: {count: 3}, notes: "Step G2: a firing Talon group on the offbeat (the beam erases the popcorn within a second)"}
+  - t: 100
+    formation: swarm
+    enemy: mote-swarm
+    count: 6
+    from: front
+    speed: 180
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+  - {t: 101.5, formation: line abreast, enemy: talon, count: 3, from: front, speed: 110, hard: {count: 3}, notes: "Step G2: a firing Talon group on the offbeat (the beam erases the popcorn within a second)"}
+  - {t: 103, formation: column, enemy: stinger, count: 3, from: front, edge: left}
+  - {t: 105, formation: line abreast, enemy: talon, count: 3, from: front, speed: 110, hard: {count: 3}, notes: "Step G2: a firing Talon group on the offbeat (the beam erases the popcorn within a second)"}
+  - {t: 107, formation: snake, enemy: skitter, count: 4, from: front, edge: left}
+  - {t: 108.5, formation: line abreast, enemy: talon, count: 3, from: front, speed: 110, hard: {count: 3}, notes: "Step G2: a firing Talon group on the offbeat (the beam erases the popcorn within a second)"}
+  - {t: 110, formation: line abreast, enemy: needler, count: 4, from: front}
+  - {t: 111.5, formation: line abreast, enemy: talon, count: 3, from: front, speed: 110, hard: {count: 3}, notes: "Step G2: a firing Talon group on the offbeat (the beam erases the popcorn within a second)"}
+  - t: 113
+    formation: swarm
+    enemy: mote-swarm
+    count: 6
+    from: front
+    speed: 180
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+    notes: "The last wave before the freighter's hold: none from t=113 to t=122 (hard: the Talon line at t=118)"
+  - {t: 118, formation: line abreast, enemy: talon, count: 4, from: front, speed: 130, skip: [easy, medium], notes: "Hard only: the set piece is not quiet on hard"}
+  - t: 122
+    formation: swarm
+    enemy: asteroid-mite
+    count: 4
+    from: front
+    on_rocks:
+      chunk: belt-c
+      riders: 2
+      rocks:
+        - {at: [130, -30], drift: [10, -145]}
+        - {at: [340, -70], drift: [-10, -145]}
+    notes: "After the Helix core (t≈116-120)"
+  - t: 123
+    formation: convoy
+    enemy: warden-tank
+    count: 2
+    from: front
+    interval: 1.5
+    paths:   # one per unit on its road (ART-G's proposal), unit i entering at t + 1.5 i s; the third for hard
+      - [[190, -40], [190, -511]]
+      - [[190, -40], [190, -346]]
+      - [[190, -40], [190, -181]]
+    easy: {count: 2}
+    hard: {count: 3}
+    notes: "In Ascendancy livery, x2 on the freighter's far deck (ART-G: t 123, its bow road ends at its tip)"
+  - {t: 123.5, formation: line abreast, enemy: talon, count: 3, from: front, speed: 110, hard: {count: 3}, notes: "Step G2: a firing Talon group on the offbeat (the beam erases the popcorn within a second)"}
+  - {t: 125, formation: snake, enemy: skitter, count: 4, from: front, edge: right}
+  - {t: 126.5, formation: line abreast, enemy: talon, count: 3, from: front, speed: 110, hard: {count: 3}, notes: "Step G2: a firing Talon group on the offbeat (the beam erases the popcorn within a second)"}
+  - {t: 128, formation: V-wing, enemy: talon, count: 5, from: front, leader: tip, speed: 130, notes: "The leader drops an overdrive"}
+  - t: 131
+    formation: swarm
+    enemy: mote-swarm
+    count: 7
+    from: front
+    speed: 180
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+  - {t: 133, formation: line abreast, enemy: talon, count: 3, from: front, speed: 110, hard: {count: 3}, notes: "Step G2: a firing Talon group on the offbeat (the beam erases the popcorn within a second)"}
+  - {t: 135, formation: snake, enemy: skitter, count: 4, from: front, edge: left}
+  - {t: 136.5, formation: line abreast, enemy: talon, count: 3, from: front, speed: 110, hard: {count: 3}, notes: "Step G2: a firing Talon group on the offbeat (the beam erases the popcorn within a second)"}
+  - {t: 138, formation: line abreast, enemy: needler, count: 4, from: front}
+  - t: 140
+    formation: convoy
+    enemy: warden-tank
+    count: 3
+    from: front
+    interval: 1.5
+    paths:   # one per unit on its road (ART-G's proposal), unit i entering at t + 1.5 i s; the third for hard
+      - [[318, -40], [318, -238.1], [300, -278.1], [300, -438.1], [316, -468.1], [316, -738.1]]
+      - [[318, -40], [318, -43.1], [300, -83.1], [300, -243.1], [316, -273.1], [316, -543.1]]
+      - [[300, -40], [300, -48.1], [316, -78.1], [316, -348.1]]
+    easy: {count: 2}
+    hard: {count: 3}
+    notes: "In Ascendancy livery, x3 through the tangle, past the mining charge (t 141.2)"
+  - t: 141
+    formation: swarm
+    enemy: asteroid-mite
+    count: 4
+    from: front
+    on_rocks:
+      chunk: belt-a
+      riders: 2
+      rocks:
+        - {at: [130, -30], drift: [10, -145]}
+        - {at: [340, -70], drift: [-10, -145]}
+  - {t: 142.5, formation: line abreast, enemy: talon, count: 3, from: front, speed: 110, hard: {count: 3}, notes: "Step G2: a firing Talon group on the offbeat (the beam erases the popcorn within a second)"}
+  - t: 144
+    formation: swarm
+    enemy: mote-swarm
+    count: 6
+    from: front
+    speed: 180
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+  - {t: 145.5, formation: line abreast, enemy: talon, count: 3, from: front, speed: 110, hard: {count: 3}, notes: "Step G2: a firing Talon group on the offbeat (the beam erases the popcorn within a second)"}
+  - {t: 147, formation: column, enemy: stinger, count: 3, from: front, edge: right}
+  - {t: 148.5, formation: line abreast, enemy: talon, count: 3, from: front, speed: 110, hard: {count: 3}, notes: "Step G2: a firing Talon group on the offbeat (the beam erases the popcorn within a second)"}
+  - {t: 150, formation: snake, enemy: skitter, count: 4, from: front, edge: right}
+  - {t: 151.5, formation: line abreast, enemy: talon, count: 3, from: front, speed: 110, hard: {count: 3}, notes: "Step G2: a firing Talon group on the offbeat (the beam erases the popcorn within a second)"}
+  - {t: 153, formation: line abreast, enemy: talon, count: 4, from: front, speed: 130}
+  - {t: 154.5, formation: line abreast, enemy: talon, count: 3, from: front, speed: 110, hard: {count: 3}, notes: "Step G2: a firing Talon group on the offbeat (the beam erases the popcorn within a second)"}
+  - t: 156
+    formation: swarm
+    enemy: asteroid-mite
+    count: 4
+    from: front
+    on_rocks:
+      chunk: belt-b
+      riders: 2
+      rocks:
+        - {at: [130, -30], drift: [10, -145]}
+        - {at: [340, -70], drift: [-10, -145]}
+  - {t: 157.5, formation: line abreast, enemy: talon, count: 3, from: front, speed: 110, hard: {count: 3}, notes: "Step G2: a firing Talon group on the offbeat (the beam erases the popcorn within a second)"}
+  - t: 158
+    formation: convoy
+    enemy: warden-tank
+    count: 3
+    from: front
+    interval: 1.5
+    paths:   # one per unit on its road (ART-G's proposal), unit i entering at t + 1.5 i s; the third for hard
+      - [[140.2, -40], [148, -318], [176, -368], [176, -718]]
+      - [[145.7, -40], [148, -123], [176, -173], [176, -523]]
+      - [[176, -40], [176, -328]]
+    easy: {count: 2}
+    hard: {count: 3}
+    notes: "In Ascendancy livery, x3, the last convoy"
+  - t: 159
+    formation: swarm
+    enemy: mote-swarm
+    count: 7
+    from: front
+    speed: 180
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+  - {t: 160.5, formation: line abreast, enemy: talon, count: 3, from: front, speed: 110, hard: {count: 3}, notes: "Step G2: a firing Talon group on the offbeat (the beam erases the popcorn within a second)"}
+  - {t: 162, formation: column, enemy: needler, count: 4, from: front, edge: left}
+  - {t: 165, formation: snake, enemy: skitter, count: 4, from: front, edge: left}
+  - {t: 166.5, formation: line abreast, enemy: talon, count: 3, from: front, speed: 110, hard: {count: 3}, notes: "Step G2: a firing Talon group on the offbeat (the beam erases the popcorn within a second)"}
+  - t: 168
+    formation: swarm
+    enemy: asteroid-mite
+    count: 4
+    from: front
+    on_rocks:
+      chunk: belt-c
+      riders: 2
+      rocks:
+        - {at: [130, -30], drift: [10, -145]}
+        - {at: [340, -70], drift: [-10, -145]}
+  - {t: 169.5, formation: line abreast, enemy: talon, count: 3, from: front, speed: 110, hard: {count: 3}, notes: "Step G2: a firing Talon group on the offbeat (the beam erases the popcorn within a second)"}
+  - t: 171
+    formation: swarm
+    enemy: mote-swarm
+    count: 6
+    from: front
+    speed: 180
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+  - {t: 173, formation: line abreast, enemy: talon, count: 3, from: front, speed: 110, hard: {count: 3}, notes: "Step G2: a firing Talon group on the offbeat (the beam erases the popcorn within a second)"}
+  - {t: 175, formation: snake, enemy: skitter, count: 4, from: front, edge: right, notes: "The last wave; the level ends at t=186"}
+  - {t: 177, formation: line abreast, enemy: talon, count: 3, from: front, speed: 110, hard: {count: 3}, notes: "Step G2: a firing Talon group on the offbeat (the beam erases the popcorn within a second)"}
+  - {t: 180.5, formation: line abreast, enemy: talon, count: 3, from: front, speed: 110, hard: {count: 3}, notes: "Step G2: a firing Talon group on the offbeat (the beam erases the popcorn within a second)"}
+  - {t: 183, formation: line abreast, enemy: talon, count: 3, from: front, speed: 110, hard: {count: 3}, notes: "Step G2: a firing Talon group on the offbeat (the beam erases the popcorn within a second)"}
+
+ground_targets:  # at: [t, x], when it enters at the top edge and its x (ART-G's places, every object on its hull's pixels)
+  - target: corvette container
+    section: 1
+    layer: ground
+    size: [40, 28]
+    sprite: cargo-container-cdf   # tools/art/belt_units_g.py: _0..2 intact, damaged, wrecked, -break; the cargo-container look's CDF variant
+    hp: 12
+    drop: medium salvage
+    at: [[18, 170]]   # on the corvette's spine
+    notes:
+      target: 'A CDF cargo container on a broken corvette''s spine (`ground`, {hp} HP, t≈18)'
+      effect: 'Opened, it drops a {drop} pickup ({drop_credits}); the secondary counts it'
+      budget: 'cargo containers (CDF and Helix) {count} × {drop} {drop_credits}'
+  - target: picket containers
+    section: 2
+    layer: ground
+    size: [40, 28]
+    sprite: cargo-container-cdf
+    hp: 12
+    drop: medium salvage
+    count: 2
+    at: [[38, 98], [58, 227]]   # on cdf-frigate-a, on the Vigil
+    notes:
+      target: 'CDF cargo containers ×{count} on the picket''s frigates (t≈38, 58)'
+      effect: 'Each drops a {drop} pickup ({drop_credits}); the secondary'
+      budget: '{count} × {drop} {drop_credits}'
+  - target: keel container
+    section: 3
+    layer: ground
+    size: [40, 28]
+    sprite: cargo-container-helix
+    hp: 12
+    drop: medium salvage
+    at: [[80, 364]]   # on helix-hulk-b
+    notes:
+      target: 'A Helix cargo container on a hulk''s keel (t≈80)'
+      effect: 'A {drop} pickup ({drop_credits}); the secondary'
+      budget: '{count} × {drop} {drop_credits}'
+  - target: tangle containers
+    section: 5
+    layer: ground
+    size: [40, 28]
+    hp: 12
+    drop: medium salvage
+    sprite: cargo-container-helix
+    at: [[150, 420]]   # on cdf-frigate-b in the tangle
+    notes:
+      target: 'A Helix cargo container in the tangle (t≈150)'
+      effect: 'A {drop} pickup ({drop_credits}); the secondary'
+      budget: '{count} × {drop} {drop_credits}'
+  - target: last container
+    section: 5
+    layer: ground
+    size: [40, 28]
+    sprite: cargo-container-cdf
+    hp: 12
+    drop: medium salvage
+    at: [[170, 334]]   # on the last plate
+    notes:
+      target: 'A CDF cargo container on the last plate (t≈170)'
+      effect: 'A {drop} pickup ({drop_credits}); the secondary''s last'
+      budget: '{count} × {drop} {drop_credits}'
+  - target: hold clamps left
+    section: 4
+    layer: ground
+    size: [32, 32]
+    sprite: hold-clamp-left   # the jaws gripping right, toward the crate
+    hp: 15
+    easy: {hp: 10}
+    group: helix-clamps   # the four clamps' last one destroyed frees the Helix core (pickups: story)
+    count: 2
+    at: [[108.61, 194], [108.06, 194]]
+    notes:
+      target: 'The freighter''s hold clamps ×{count} on the Helix crate''s left (`ground`, {hp} HP, t≈108)'
+      effect: 'The four clamps'' last one down frees the crate: it rises out of the hold, the Helix core, collected by flying through it (no credits; the Mk V comes with the win)'
+  - target: hold clamps right
+    section: 4
+    layer: ground
+    size: [32, 32]
+    sprite: hold-clamp-right   # the jaws gripping left
+    hp: 15
+    easy: {hp: 10}
+    group: helix-clamps
+    count: 2
+    at: [[108.61, 286], [108.06, 286]]
+    notes:
+      target: 'The hold clamps ×{count} on the crate''s right'
+      effect: 'As the left pair (one group of four)'
+  - target: picket charge
+    section: 2
+    layer: ground
+    size: [24, 24]
+    sprite: mining-charge   # Level 32's
+    hp: 1
+    blast: {radius: 64, damage: 80}
+    at: [[51.21, 350]]   # on cdf-frigate-b's flank, beside the t=50 convoy's road
+    notes:
+      target: 'A mining charge on a frigate''s flank beside the t≈50 convoy''s road (t≈51)'
+      effect: 'One hit: a 64 px burst of 80 to every enemy in it, a passing tank too (never the ship); pays nothing itself'
+  - target: keel charge
+    section: 3
+    layer: ground
+    size: [24, 24]
+    sprite: mining-charge
+    hp: 1
+    blast: {radius: 64, damage: 80}
+    at: [[89.21, 150]]   # on helix-hulk-b, beside the t=88 convoy's road
+    notes:
+      target: 'A mining charge beside the t≈88 convoy''s road (t≈89)'
+      effect: 'As above'
+  - target: tangle charge
+    section: 5
+    layer: ground
+    size: [24, 24]
+    sprite: mining-charge
+    hp: 1
+    blast: {radius: 64, damage: 80}
+    at: [[141.21, 282]]   # on tangle-a, beside the t=140 convoy's road
+    notes:
+      target: 'A mining charge beside the t≈140 convoy''s road (t≈141)'
+      effect: 'As above'
+  - target: Vigil
+    section: 2
+    layer: ground
+    size: [40, 40]
+    sprite: vigil-shutter   # shut, hit, open
+    hp: 20
+    hard: {hp: 28}
+    reveals: Vigil
+    at: [[56, 90]]   # the frigate Vigil's bridge
+    notes:
+      target: 'The frigate *Vigil*''s bridge, its blast shutter sealed (a `ground` trigger, {hp} HP, t≈56, x 90)'
+      effect: 'A secret: frees a crate worth 100 (655)'
+  - target: Sable Wren
+    section: 3
+    layer: ground
+    size: [40, 40]
+    sprite: sable-wren-hatch
+    hp: 20
+    hard: {hp: 28}
+    reveals: Sable Wren
+    at: [[96, 404]]   # the courier's cargo hatch, wedged between two hulks
+    notes:
+      target: 'The Helix courier *Sable Wren*''s cargo hatch (a `ground` trigger, {hp} HP, t≈96, x 404)'
+      effect: 'A secret: frees a crate worth 100 (655)'
+  - target: Old Marta
+    section: 5
+    layer: ground
+    size: [40, 40]
+    sprite: old-marta-airlock
+    hp: 20
+    hard: {hp: 28}
+    reveals: Old Marta
+    at: [[165, 240]]   # the prospector's tender's airlock under a Helix hull
+    notes:
+      target: 'The prospector''s tender *Old Marta*''s airlock (a `ground` trigger, {hp} HP, t≈165, x 240)'
+      effect: 'A secret: frees a crate worth 100 (655)'
+
+secrets:  # the Salvage scanner's level: three hidden crates, its glint shows each trigger at any range
+  - name: Vigil
+    crate: 100   # Act 1 terms: pays 655 with the act factor (the frigate's stores)
+    radio: {speaker: Okafor, line: "The Vigil. She held this lane in the first week. Take her stores, Lancer."}
+  - name: Sable Wren
+    crate: 100   # the courier's sealed medical crates
+    radio: {speaker: Varga, line: "Helix courier. Sealed medical crates. I know what's grown in those."}   # step FIX2: one HUD page (was "A Helix courier. …", two), so it fits before Varga's t=108 when the hatch is shot as it passes the ship (t≈99.5)
+  - name: Old Marta
+    crate: 100   # the tender's strongbox
+    radio: {speaker: Rook, requires: escort, line: "Old Marta. Somebody's grandmother's boat. Sorry, ma'am."}   # Rook's line: only with him flying
+
+pickups:
+  - {pickup: shield cell, dropped_by: {wave: 79, enemy: talon, unit: first}}    # the t=79 V-wing's leader (its tip)
+  - {pickup: overdrive, dropped_by: {wave: 128, enemy: talon, unit: first}}     # the t=128 V-wing's leader
+  - {pickup: story, story: helix-core, dropped_by: {group: helix-clamps, unit: last}}   # the Helix core (Q12 c, QG-2 a): rises out of the hold at the clamps' centre (108.3, 240) when the fourth is down; pays nothing, the Mk V comes with the win
+
+drops:  # the CDF beacon on the Vigil (Level 33's nav buoy) opens and releases an armour patch
+  - {t: 60, x: 235, y: 380, pickup: armour patch, sprite: nav-buoy}
+
+radio:  # trigger: t or event; the gap check's §4 trims (Varga t=150, Okafor t=157 and the core's line to one radio page: three 22-character lines, 5 s); Rook's lines need him flying (requires: escort)
+  - {t: 1, speaker: Okafor, line: "The graveyard, Lancer. Old wrecks, Helix and ours. The Ascendancy picks them over. So do we."}
+  - {t: 13.5, speaker: Rook, requires: escort, line: "Quiet out here. I don't trust quiet."}   # step FIX2: t=12 → 13.5, so it starts on time voiced behind the two-page t=1
+  - {t: 29, speaker: Varga, line: "Tanks on the hulls. The grey tanks from Tharsis, in their own colours now."}
+  - {t: 40, speaker: Okafor, line: "They've stopped hiding, Doctor. Every crate you find, Lancer, the wing keeps."}
+  - {t: 108, speaker: Varga, line: "That freighter's hold. Helix seals, a fusion core in the clamps. Shoot the clamps loose!"}
+  - {event: story-collected, speaker: Okafor, line: "Helix core aboard. It'll be on the rack before Ceres.", notes: {trigger: "The core collected (event)"}}
+  - {event: story-missed, speaker: Okafor, line: "Salvage tug has the core. Good enough, Lancer.", notes: {trigger: "The core missed (event: it leaves the screen, or the clamps leave unshot or the level ends first)"}}
+  - {t: 130, speaker: Rook, requires: escort, line: "Finders keepers. Tell Helix to send us a bill."}   # step G2: t=128 → 130, so a core collected as late as t≈122.8 still finds its gap (its line 6.8 s + 0.4)
+  - {t: 150, speaker: Varga, line: "Helix and ours, side by side, all dead. Look, Commander."}
+  - {t: 157, speaker: Okafor, line: "I'm looking, Doctor. Ceres ahead, Lancer. Rest while you can."}   # step FIX2: t=159 → 157, so with the secondary met at t≈151 its line, Okafor's and *Old Marta*'s (t≈166.4) all play
+  - {event: secondary-objective, speaker: Okafor, line: "Containers stripped. The quartermaster sends his thanks.", notes: {trigger: "Secondary met (at the end)"}}
+
+objectives:
+  primary: reach-end
+  secondary: {escapes: cargo-container, allowed: 1, easy: {allowed: 2}, hard: {allowed: 0}, label: CONTAINERS, credits: 100, name: Strip the graveyard}   # open at least 5 of the 6 cargo containers (CDF and Helix: the look's variants) before they leave the screen (easy 4, hard all 6), failed by the second away; 100 in Act 1 terms: pays 655
+
+music:
+  track: 12           # Act 5 A "Hollow Rock" (audio/music track list): "the A theme stripped"
+  start_section: 1    # the base stem from the start
+  full_section: 6
+  stems: {6: base}    # the base stem through the whole level, never the full mix
+  section_db: {1: -3}   # the base stem 3 dB down throughout
+  motif: {from: 106, to: 124, sections: {}}   # Vorne's motif stem once: in as the freighter's hold scrolls in, out after the core (to: M9 part G)
+  ambience: belt-open   # the belt's open-space bed (hull creaks, distant impacts, radio hiss through the hull)
+  ambience_layers:
+    - {ambience: wreck-groans, from: 0, to: 174, fade_in: 3, fade_out: 3}   # the wrecks' slow metal groans (round 67), out before clear space
+  end_jingle: mission-complete
+
+difficulty: {}  # the stat blocks' hooks apply (the Warden Tank's easy 2-shot burst every 3.0 s, hard 4 every 2.0 s; the Needler's, the Talon's, the Mite's); the convoys of 2 on easy and 3 on hard (21 tanks), the clamps 10 HP on easy, the secrets' triggers 28 HP on hard, hard's Talon line at t=118 in the hold's quiet window; the formation lever sizes the rest
+
+briefing:
+  pages:
+    - {speaker: Okafor, image: level-34-graveyard, line: "Before the Sovereign, we restock. A ship graveyard lies on the lane to Ceres, our hulls and Helix's. The Ascendancy has tanks on the wrecks. Take what you can carry, Lancer."}
+    - {speaker: Varga, image: level-34-helix-hold, line: "Helix freighters went down out there with their holds sealed. If one carried Helix tech, I want it. Their generators run hotter than ours."}
+  teaser: {speaker: Rook, line: "A salvage run. Finally, a mission where we get to keep things."}
+
+backdrop:
+  # Presentation only: Level 34's ship graveyard (tools/art/backdrop_l34.py, step ART-G, from the level's data.yaml).
+  # A ground layer without a tile set: open space is the deep layer (the base); the ground holds the
+  # hulls (CDF white-grey, Helix grey-gold with gold trim: QG-1 a) with the tank roads on their walkways
+  # and keels, the freighter (two pieces placed exactly: stern + bow, 12 px overlap) and the scattered
+  # plates; red-blink is the only animated ground piece (at most two on the screen). Deep: the dust band,
+  # far wrecks, a far hulk turning, Ceres's point and the Sovereign's gold ring at the end.
+  scroll_factors: {deep: 0.12, far: 0.5, ground: 1, low-air: 1.35, high-air: 2.2}   # far, low-air unused
+  ramp: 2
+  haze_colour: 09090e
+  atmosphere:
+    clear: {haze: 0.0}
+  tile_sets:
+    grave-space: {layer: deep, height: 1024}   # space, the sunlit dust band, stars
+    grave-dust: {layer: high-air, height: 960}   # close grit and dust motes (transparent)
+  pieces:
+    far-wreck-a: {layer: deep, size: [140, 64]}
+    far-wreck-b: {layer: deep, size: [110, 80]}
+    far-hulk-turn: {layer: deep, size: [120, 120], frames: 16, fps: 0.5}
+    ceres-point: {layer: deep, size: [48, 48]}
+    sovereign-lights: {layer: deep, size: [128, 64]}
+    plate-a: {layer: ground, size: [130, 100]}
+    plate-b: {layer: ground, size: [160, 116]}
+    plate-c: {layer: ground, size: [104, 140]}
+    plate-helix: {layer: ground, size: [124, 104]}
+    corvette-spine: {layer: ground, size: [140, 760]}
+    cdf-frigate-a: {layer: ground, size: [184, 1080]}
+    cdf-frigate-b: {layer: ground, size: [200, 1040]}
+    vigil: {layer: ground, size: [220, 1040]}
+    helix-hulk-a: {layer: ground, size: [240, 1120]}
+    helix-hulk-b: {layer: ground, size: [240, 1100]}
+    sable-wren: {layer: ground, size: [112, 224]}
+    freighter-stern: {layer: ground, size: [480, 1300]}
+    freighter-bow: {layer: ground, size: [480, 1500]}
+    tangle-a: {layer: ground, size: [480, 820]}
+    tangle-b: {layer: ground, size: [480, 840]}
+    old-marta: {layer: ground, size: [240, 300]}
+    red-blink: {layer: ground, size: [12, 12], frames: 2, fps: 1}
+  placed:
+    # the graveyard's edge: scattered plates
+    - {piece: plate-a, t: 3.0, x: 380}
+    - {piece: plate-c, t: 8.0, x: 96}
+    # a broken corvette's spine (the first container on it)
+    - {piece: corvette-spine, t: 20.0, x: 170}
+    - {piece: plate-b, t: 22.0, x: 370}
+    - {piece: plate-helix, t: 27.0, x: 410}
+    # a third frigate of the picket
+    - {piece: cdf-frigate-b, t: 31.0, x: 375}
+    - {piece: plate-b, t: 42.5, x: 70}
+    - {piece: plate-a, t: 47.0, x: 160}
+    - {piece: plate-c, t: 63.0, x: 400}
+    - {piece: plate-helix, t: 66.0, x: 80}
+    # a hulk at the right edge (the Sable Wren wedged against it)
+    - {piece: helix-hulk-a, t: 97.0, x: 560}
+    - {piece: helix-hulk-b, t: 83.0, x: 420}
+    - {piece: plate-helix, t: 80.0, x: 60}
+    - {piece: plate-a, t: 104.0, x: 80}
+    # the tangle begins
+    - {piece: cdf-frigate-a, t: 134.0, x: 110}
+    - {piece: helix-hulk-b, t: 137.0, x: 400}
+    - {piece: cdf-frigate-b, t: 153.0, x: 380}
+    - {piece: helix-hulk-a, t: 155.0, x: 90}
+    - {piece: plate-b, t: 151.0, x: 420}
+    # the last plates
+    - {piece: plate-c, t: 168.0, x: 90}
+    # the last container's plate
+    - {piece: plate-b, t: 172.2, x: 330}
+    - {piece: plate-a, t: 176.0, x: 140}
+    - {piece: plate-helix, t: 180.5, x: 380}
+    # cdf-frigate-a: its road carries the convoy of t 32 (x2)
+    - {piece: cdf-frigate-a, t: 37.6, x: 150}
+    # cdf-frigate-b: its road carries the convoy of t 50 (x3)
+    - {piece: cdf-frigate-b, t: 55.754, x: 330}
+    # helix-hulk-a: its road carries the convoy of t 70 (x2)
+    - {piece: helix-hulk-a, t: 75.985, x: 300}
+    # helix-hulk-b: its road carries the convoy of t 88 (x3)
+    - {piece: helix-hulk-b, t: 93.908, x: 170}
+    # tangle-a: its road carries the convoy of t 140 (x3)
+    - {piece: tangle-a, t: 145.062, x: 240}
+    # tangle-b: its road carries the convoy of t 158 (x3)
+    - {piece: tangle-b, t: 163.292, x: 240}
+    # the freighter's stern: the hold's crate at x 240 entering at t 108.3 (the clamps round it)
+    - {piece: freighter-stern, t: 112.118, x: 240}
+    # the freighter's bow, exactly on the stern (12 px overlap under its frame girder): the far deck's road (t 125)
+    - {piece: freighter-bow, t: 124.736, x: 240}
+    # the Vigil: her bridge's shutter at x 90 (t 56), the beacon's mount at x 235 (t 60)
+    - {piece: vigil, t: 60.077, x: 155}
+    # the Sable Wren wedged between two hulks (t 96)
+    - {piece: sable-wren, t: 98.354, x: 404}
+    # Old Marta under a Helix hull: her airlock at x 240 (t 165)
+    - {piece: old-marta, t: 167.723, x: 250}
+    # emergency lights blinking red
+    - {piece: red-blink, t: 30.538, x: 130}
+    - {piece: red-blink, t: 57.769, x: 60}
+    - {piece: red-blink, t: 84.077, x: 360}
+    - {piece: red-blink, t: 113.455, x: 400}
+    - {piece: red-blink, t: 145.769, x: 420}
+    - {piece: red-blink, t: 166.231, x: 70}
+    # far wrecks
+    - {piece: far-wreck-a, t: 20.0, x: 380}
+    - {piece: far-wreck-b, t: 60.0, x: 90}
+    # a far hulk turning slowly
+    - {piece: far-hulk-turn, t: 100.0, x: 400}
+    - {piece: far-wreck-a, t: 140.0, x: 110}
+    # Ceres ahead, a hard white point, 120 px down at the end (t=186)
+    - {piece: ceres-point, t: 195.615, x: 300}
+    # beside it the Sovereign's ring of gold lights
+    - {piece: sovereign-lights, t: 194.846, x: 380}

@@ -170,6 +170,30 @@ final class EnemyCarriers {
         escapes.released(carrier, 1);
     }
 
+    /**
+     * M9 part H, step H1b (design/enemies/bosses/iron-sovereign, Dart Drones): one unit of {@code launcher} out of a
+     * ringed boss's rim bay at (x, y) along {@code angle} (y up) at the launcher's speed, flying straight its time before
+     * its chase, its carrier {@link Launching#BOSS}; skipped while the launcher's most of the boss's units are alive.
+     * Returns whether it was launched.
+     */
+    boolean bayLaunch(EnemySpec.Launcher launcher, int kind, double x, double y, double angle) {
+        if (alive(Launching.BOSS) >= launcher.mostAlive()) {
+            return false;
+        }
+        Enemy unit = enemies.obtain();
+        int serial = force.nextSerial();
+        if (unit == null) {
+            return false;
+        }
+        double speed = launcher.speed();
+        unit.hatch(launcher.unit(), kind, x, y, Trig.cos(angle) * speed, Trig.sin(angle) * speed, serial);
+        unit.launching.launchedBy(Launching.BOSS);
+        if (launcher.unit().chase().isPresent()) {
+            unit.chasing.launch(SimStep.ticks(launcher.straightSeconds()));
+        }
+        return true;
+    }
+
     /** M9 part C: the units alive that the carrier with {@code serial} launched. */
     private int alive(int serial) {
         int n = 0;

@@ -101,6 +101,10 @@ class PlaceholderAuditTest {
             "M9 part B: round 60's pick for the belt station's ambience bed (the user, 2026-10-27: S.17 b), from the"
                     + " Freesound HQ previews of CC0 sounds until the originals (CREDITS rows from step AUD-P; by"
                     + " tools/concept/audio/sfx_r60.py)";
+    private static final String ROUND_60_E =
+            "M9 part E, step AUD-E: round 60's pick for the belt tunnel's ambience bed (the user, 2026-10-27: S.19 a),"
+                    + " from the Freesound HQ previews of CC0/CC-BY sounds until the originals (CREDITS rows from step"
+                    + " AUD-P; by tools/concept/audio/sfx_r60.py)";
     private static final String ROUND_60_MUSIC =
             "M9 part B: track 31, Rook's return sting (round 60 M.2 a \"Horn Call\", the user's pick, synthesized by"
                     + " tools/concept/audio/music_r60.py), the concept file";
@@ -117,9 +121,36 @@ class PlaceholderAuditTest {
                     + " from the Freesound HQ previews of CC0/CC-BY sounds (the arm tick and the buoy tick synthesized;"
                     + " CREDITS rows from step AUD-C; by tools/concept/audio/sfx_r63.py)";
     private static final String ROUND_64 =
-            "M9 part D, step D4: round 64's proposals for Level 31 (step AUD-D), their a variants until the user's picks,"
-                    + " from the Freesound HQ previews of CC0/CC-BY sounds (CREDITS rows from step AUD-D; by"
-                    + " tools/concept/audio/sfx_r64.py)";
+            "M9 part D, step D4: round 64's picks for Level 31 and the Rail Serpent's rumble (the user, 2026-10-28; step"
+                    + " AUD-D's proposals), from the Freesound HQ previews of CC0/CC-BY sounds until the originals"
+                    + " (CREDITS rows from step AUD-D; by tools/concept/audio/sfx_r64.py)";
+    private static final String ROUND_65 =
+            "M9 part E, step E4: round 65's picks for Level 32 (the user, 2026-10-29: a, but b for the Sentinel's servo,"
+                    + " the Strider's cannons and the mining charge's blast; step AUD-E's proposals), from the Freesound HQ"
+                    + " previews of CC0/CC-BY sounds (CREDITS rows from step AUD-E; by tools/concept/audio/sfx_r65.py)";
+    private static final String ROUND_60_F =
+            "M9 part F, step F4: round 60's picks for the rail line's charge and shot (the user, 2026-10-27: S.7 b, S.8 b),"
+                    + " first played by Level 33's Rail Bunkers, from the Freesound HQ previews of CC0/CC-BY sounds until"
+                    + " the originals (CREDITS rows from step AUD-P; by tools/concept/audio/sfx_r60.py)";
+    private static final String ROUND_66 =
+            "M9 part F, step F4: round 66's proposals for Level 33 (step AUD-F), their a variants until the user's picks,"
+                    + " from the Freesound HQ previews of CC0/CC-BY sounds (the brown-out warning synthesized; CREDITS rows"
+                    + " from step AUD-F; by tools/concept/audio/sfx_r66.py)";
+    private static final String ROUND_67 =
+            "M9 part G, step G4: round 67's proposals for Level 34 (step AUD-G), their a variants until the user's picks,"
+                    + " from the Freesound HQ previews of CC0/CC-BY sounds (CREDITS rows from step AUD-G; by"
+                    + " tools/concept/audio/sfx_r67.py)";
+    private static final String ROUND_68 =
+            "M9 part H, step H4: round 68's proposals for Level 35 (step AUD-H2), their a variants until the user's picks,"
+                    + " from the Freesound HQ previews of CC0/CC-BY sounds (CREDITS rows from step AUD-H2; by"
+                    + " tools/concept/audio/sfx_r68.py)";
+    private static final String ROUND_60_H =
+            "M9 part H, step H4: round 60's pick for the Iron Sovereign's rings turning (the user, 2026-10-27: S.16 a),"
+                    + " from the Freesound HQ previews of CC0/CC-BY sounds until the originals (CREDITS rows from step"
+                    + " AUD-P; by tools/concept/audio/sfx_r60.py)";
+    private static final String ROUND_68_MUSIC =
+            "M9 part H: track 19 \"Iron Sovereign\" (round 68 QH-3 a, step AUD-H1's full-length render of round 03's"
+                    + " pick, synthesized by tools/concept/audio/music_r68.py), the concept file until the user's pick";
     private static final String ROUND_58_MUSIC =
             "M8 part H: track 30, the reveal sting (round 58 a, the production of round 48's pick, synthesized by"
                     + " tools/concept/audio/music_r58h.py), a stand-in until the user's pick";
@@ -379,6 +410,7 @@ class PlaceholderAuditTest {
             Map.entry("sfx/intercept-close-r60-a.ogg", ROUND_60),
             Map.entry("sfx/intercept-carrier-r60-a.ogg", ROUND_60),
             Map.entry("sfx/belt-station-r60-b.ogg", ROUND_60_B),
+            Map.entry("sfx/belt-tunnel-r60-a.ogg", ROUND_60_E),
             Map.entry("music/rook-return.ogg", ROUND_60_MUSIC),
             Map.entry("sfx/station-klaxon-r62-a.ogg", ROUND_62),
             Map.entry("sfx/station-relays-r62-a.ogg", ROUND_62),
@@ -402,7 +434,6 @@ class PlaceholderAuditTest {
             Map.entry("sfx/mine-drop-r63-a.ogg", ROUND_63),
             Map.entry("sfx/mine-chain-r63-a.ogg", ROUND_63),
             Map.entry("sfx/serpent-shot-r63-a.ogg", ROUND_63),
-            Map.entry("sfx/serpent-rumble-r63-a.ogg", ROUND_63),
             Map.entry("sfx/serpent-split-r63-b.ogg", ROUND_63),
             Map.entry("sfx/gunship-ring-r63-b.ogg", ROUND_63),
             Map.entry("sfx/gunship-doors-r63-b.ogg", ROUND_63),
@@ -412,12 +443,50 @@ class PlaceholderAuditTest {
             Map.entry("sfx/link-flicker-r64-a.ogg", ROUND_64),
             Map.entry("sfx/link-snap-r64-a.ogg", ROUND_64),
             Map.entry("sfx/saw-whine-r64-a.ogg", ROUND_64),
-            Map.entry("sfx/saw-spinup-r64-a.ogg", ROUND_64),
+            Map.entry("sfx/saw-spinup-r64-ab.ogg", ROUND_64),
             Map.entry("sfx/saw-ricochet-r64-a.ogg", ROUND_64),
-            Map.entry("sfx/tug-hit-r64-a.ogg", ROUND_64),
+            Map.entry("sfx/tug-hit-r64-b.ogg", ROUND_64),
             Map.entry("sfx/tug-alarm-r64-a.ogg", ROUND_64),
             Map.entry("sfx/tug-lost-r64-a.ogg", ROUND_64),
             Map.entry("sfx/tug-engine-r64-a.ogg", ROUND_64),
+            Map.entry("sfx/serpent-rumble-r64-a.ogg", ROUND_64),
+            Map.entry("sfx/sentinel-charge-r65-a.ogg", ROUND_65),
+            Map.entry("sfx/sentinel-beam-r65-a.ogg", ROUND_65),
+            Map.entry("sfx/sentinel-servo-r65-b.ogg", ROUND_65),
+            Map.entry("sfx/sentinel-death-r65-a.ogg", ROUND_65),
+            Map.entry("sfx/strider-step-r65-a.ogg", ROUND_65),
+            Map.entry("sfx/strider-servo-r65-a.ogg", ROUND_65),
+            Map.entry("sfx/strider-cannon-r65-b.ogg", ROUND_65),
+            Map.entry("sfx/strider-snap-r65-a.ogg", ROUND_65),
+            Map.entry("sfx/strider-fall-r65-a.ogg", ROUND_65),
+            Map.entry("sfx/door-grind-r65-a.ogg", ROUND_65),
+            Map.entry("sfx/charge-blast-r65-b.ogg", ROUND_65),
+            Map.entry("sfx/rail-charge-r60-b.ogg", ROUND_60_F),
+            Map.entry("sfx/rail-shot-r60-b.ogg", ROUND_60_F),
+            Map.entry("sfx/leech-latch-r66-a.ogg", ROUND_66),
+            Map.entry("sfx/leech-drain-r66-a.ogg", ROUND_66),
+            Map.entry("sfx/leech-hum-r66-a.ogg", ROUND_66),
+            Map.entry("sfx/leech-shake-r66-a.ogg", ROUND_66),
+            Map.entry("sfx/leech-death-r66-a.ogg", ROUND_66),
+            Map.entry("sfx/brownout-warn-r66-b.ogg", ROUND_66),
+            Map.entry("sfx/bunker-death-r66-a.ogg", ROUND_66),
+            Map.entry("sfx/container-burst-r67-a.ogg", ROUND_67),
+            Map.entry("sfx/helix-core-r67-a.ogg", ROUND_67),
+            Map.entry("sfx/wreck-groans-r67-a.ogg", ROUND_67),
+            Map.entry("sfx/sovereign-spinup-r68-a.ogg", ROUND_68),
+            Map.entry("sfx/sovereign-step-r68-a.ogg", ROUND_68),
+            Map.entry("sfx/sovereign-hold-r68-a.ogg", ROUND_68),
+            Map.entry("sfx/sovereign-lock-r68-a.ogg", ROUND_68),
+            Map.entry("sfx/sovereign-klaxon-r68-a.ogg", ROUND_68),
+            Map.entry("sfx/sovereign-shutters-r68-a.ogg", ROUND_68),
+            Map.entry("sfx/sovereign-fan-r68-a.ogg", ROUND_68),
+            Map.entry("sfx/sovereign-spiral-r68-a.ogg", ROUND_68),
+            Map.entry("sfx/sovereign-cookoff-r68-a.ogg", ROUND_68),
+            Map.entry("sfx/sovereign-implosion-r68-a.ogg", ROUND_68),
+            Map.entry("sfx/relay-charge-r68-a.ogg", ROUND_68),
+            Map.entry("sfx/relay-flash-r68-a.ogg", ROUND_68),
+            Map.entry("sfx/sovereign-ring-turn-r60-a.ogg", ROUND_60_H),
+            Map.entry("music/iron-sovereign.ogg", ROUND_68_MUSIC),
             Map.entry("music/reveal-sting.ogg", ROUND_58_MUSIC),
             Map.entry("music/thera-deep-dark.ogg", ROUND_55_MUSIC),
             Map.entry("music/thera-deep-warm.ogg", ROUND_55_MUSIC),

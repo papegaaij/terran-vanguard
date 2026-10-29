@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../../enemies/space/minelayer, ../../../enemies/air/gilded-gunship, ../../../enemies/air/rail-serpent, ../../../enemies/air/dart-drone, ../../../enemies/README.md, ../../../player/weapons/swarm-tail, ../../../player/wingmen, ../../../world/belt]
-updated: 2026-10-28
+updated: 2026-10-29
 ---
 
 # Level 30 – Minefield
@@ -280,7 +280,8 @@ None: the level has no ground layer (`ground: none`).
 ## Secrets and pickups
 
 - **The dead beacon buoy** (t≈118, x 60, drifting down the left edge): a small breakable object on the play plane
-  (as built: Level 07's tow rule, its housing takes 4 hits; shots pass the rest); broken, its housing frees a hidden crate worth **100** in Act 1 terms (655 in Act 5),
+  (as built: Level 07's tow rule, its housing takes 4 hits; shots pass the rest; a beam's touch counts one hit per
+  0.25 s, `beam_touch`, round 64 C.1 a); broken, its housing frees a hidden crate worth **100** in Act 1 terms (655 in Act 5),
   the lane authority's emergency stores. The Salvage scanner's glint marks it. Rook's event line: "*Free stores from
   the lane authority. They won't miss them.*" (dropped after 6 s if the radio is busy).
 - **Overdrive**: dropped by the t=26 squad leader.
@@ -329,7 +330,8 @@ tone guide: a pause, a line, back to work).
 
 The Act 5 A theme **"Hollow Rock"** ([track 12](../../../audio/music/README.md#track-list), full length from M9
 part B): the **base stem** in section 1, the **full mix from section 2** (the first column), its conveyor breakdown
-(the lone human horn) under the convoy if the stems allow; the per-level music table and whether a later level takes
+(the lone human horn) under the convoy if the stems allow, with **Vorne's motif stem on top** from the base stem's
+start to the end (the [Act 5 cues](../../../audio/music/README.md#cues-per-level-act-5): "on"); the per-level music table and whether a later level takes
 the B theme (track 13) are D-audio's. Ambience: the `belt-open` bed (hull creaks, distant impacts, radio hiss, heard
 through the hull). New sounds this level needs, for the act's sfx step ([sfx](../../../audio/sfx/README.md)): the
 mines' drop, arm, blink, blast and chain ripple, the Minelayer's turbine, the Gunship's bay doors and ring, the Dart
@@ -395,6 +397,7 @@ two briefing images in the [briefing](../../../ui/briefing/README.md#concept-art
 | [concept/minefield-capture-r63-a.mp4](concept/minefield-capture-r63-a.mp4) | Game capture with the game's sound, two cuts: t≈15–30 (the `BOTTOM` warning, the first Minelayer laying, the line coming down, the blink and the blast; the ship not firing) and t≈40–49 (a Gunship's ring and Darts, a cluster going off) | chosen (round 63, F.5-F.6: accepted as final) |
 | [concept/level-30-hud-capture-r63-a.png](concept/level-30-hud-capture-r63-a.png) | Game capture, t≈103 (a debug loadout with the bomb rack): the weapons row `BOMB RACK  NO GROUND`, the secondary `CONVOY 1 / 3`, Rook on the radio | chosen (round 63, F.5-F.6: accepted as final) |
 | [concept/dead-buoy-capture-r63-a.png](concept/dead-buoy-capture-r63-a.png) | Game capture, t≈119–124 (the ship moved to the left edge): the beam on the dead beacon buoy, shot open, its crate drifting down and collected (+655) | chosen (round 63, F.5-F.6: accepted as final) |
+| [concept/dead-buoy-capture-r65-a.png](concept/dead-buoy-capture-r65-a.png) | Game capture (step E5; [recipe](concept/prompts.md#dead-buoy-capture-r65-a)), t=118.2–120.6 at 2x: the dead buoy freed by the beam's touch (round 64 C.1 a) | chosen (round 65, C.1 a accepted: the beam frees a dead buoy) |
 
 ## Implementation
 
@@ -428,6 +431,10 @@ two briefing images in the [briefing](../../../ui/briefing/README.md#concept-art
       rear layers) flies the level with Rook on every difficulty and with `--escort none`
 - [x] Production art and captures for part C's round (steps ART-C, C4, C5: [round
       63](../../../concept-rounds/round-63/README.md), the captures in this part's and the units' `concept/`)
+- [x] The dead buoy counts a beam's touch, one hit per 0.25 s (round 64 C.1 a; `beam_touch` on its tow; step FIX1:
+      `TowBeamTest`, `Level30Test.thePlansBeamFreesTheDeadBuoy`: the plan's Ion Beam frees it at t≈118.5 on medium)
+- [x] Vorne's motif stem on top of the theme from section 1 (step FIX1: `music.motif`, `Level30SoundsTest`); the
+      Rail Serpent's rumble is round 64's redo a (`serpent-rumble-r64-a`, step FIX1)
 
 ## Open questions
 
@@ -507,3 +514,10 @@ two briefing images in the [briefing](../../../ui/briefing/README.md#concept-art
   600 px down both sides); the Gunship faces down only; the convoy's lights are on the deep layer; the CDF lane-service
   drone has no art, so the t=100 armour patch appears without its carrier (as Level 29's).
 - 2026-10-28 (user, [round 63](../../../concept-rounds/round-63/README.md), closed): the final art (**F.5** large rocks and dead buoy, **F.6** backdrop) accepted; **C.3** the offbeat waves, **C.4** the chain reach 44 px, **C.5** the convoy as a column with escorts, **C.6** the trimmed radio and **C.7** the dead buoy as a tow accepted; sounds: S.2 a, S.3 a, S.4 a, S.9 a, S.10 a, **S.1 b**, **S.5 redo**, **S.6 b**, **S.7 b**, **S.8 b** (see the sfx README).
+- 2026-10-28 (user, [round 64](../../../concept-rounds/round-64/README.md), closed): **C.1 a**: a beam's touch counts as one hit per 0.25 s on a tow's housing from Act 5 on, opt-in per level, so the dead buoy (4 hits) can be freed by the Ion Beam build too; built in the next game step. The Rail Serpent's rumble is the redo's a (`serpent-rumble-r64-a`).
+- 2026-10-28 (step FIX1): round 64 C.1 a built: the buoy's tow opts in (`beam_touch: true`); a beam whose column
+  touches the housing below its end counts a hit at once and every 0.25 s while it lasts (several beams as one), and
+  passes on: the plan's Ion Beam frees it at t≈118.5 on medium, the autopilot flying around it. Level 07's lifeboat and
+  the recorded flights are unchanged. The music block gains the motif cue the Act 5 table marks "on" (from t=0, the
+  base stem's start), and the game plays round 64's serpent rumble.
+- 2026-10-29 (user, [round 65](../../../concept-rounds/round-65/README.md), closed): the dead buoy freed by the beam's touch (round 64's C.1 a), recorded in a game capture, accepted with the level.

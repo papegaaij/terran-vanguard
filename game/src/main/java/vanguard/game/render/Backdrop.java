@@ -121,11 +121,14 @@ public final class Backdrop {
     private WallProjection canyon;
     /**
      * M8 part E: the terrain whose notches (the side caves) have their mouths drawn over the walls ({@link
-     * #drawCaveMouths}); null without notches or without the art. Per side (left, right) the mouth's image.
+     * #drawCaveMouths}); null without notches or without the art. Per notch its mouth's image (null: none), its column
+     * on the wall's foot line and its row (from the top) on the notch's middle row.
      */
     private Terrain caves;
 
-    private final AtlasRegion[] caveMouths = new AtlasRegion[2];
+    private AtlasRegion[] caveMouths = new AtlasRegion[0];
+    private int[] caveFoot = new int[0];
+    private int[] caveMid = new int[0];
     /** M8 part E: drawn under the walls (over the floor); null for nothing ({@link #underWalls}). */
     private UnderTowers underWalls;
 
@@ -476,13 +479,32 @@ public final class Backdrop {
             canyon = null;
             return;
         }
-        // M8 part E: the side caves' mouths (Level 25's cave-mouth-left and -right, declared, not placed).
-        for (int side = 0; side < 2; side++) {
-            String mouth = folder + CAVE_MOUTH + (side == 0 ? "left" : "right");
-            caveMouths[side] =
-                    sprites.hasBackdrop(mouth) ? sprites.backdrop(mouth, 1).first() : null;
+        // M8 part E: the side caves' mouths (Level 25's cave-mouth-left and -right, declared, not placed); M9 part E:
+        // Level 32's galleries, one image per side and depth (gallery-<side>-<depth>) in place of them.
+        List<Terrain.Notch> notches = terrain.notches();
+        caveMouths = new AtlasRegion[notches.size()];
+        caveFoot = new int[notches.size()];
+        caveMid = new int[notches.size()];
+        boolean any = false;
+        for (int n = 0; n < notches.size(); n++) {
+            Terrain.Notch notch = notches.get(n);
+            int side = notch.side() == Terrain.Side.LEFT ? 0 : 1;
+            String sideName = side == 0 ? "left" : "right";
+            int depth = (int) Math.round(notch.depth());
+            String gallery = folder + GALLERY + sideName + "-" + depth;
+            String mouth = folder + CAVE_MOUTH + sideName;
+            if (sprites.hasBackdrop(gallery)) {
+                caveMouths[n] = sprites.backdrop(gallery, 1).first();
+                caveFoot[n] = side == 0 ? depth + GALLERY_RIM : GALLERY_SPILL;
+                caveMid[n] = caveMouths[n].getRegionHeight() / 2;
+            } else if (sprites.hasBackdrop(mouth)) {
+                caveMouths[n] = sprites.backdrop(mouth, 1).first();
+                caveFoot[n] = CAVE_FOOT[side];
+                caveMid[n] = CAVE_MID;
+            }
+            any |= caveMouths[n] != null;
         }
-        if (!terrain.notches().isEmpty() && (caveMouths[0] != null || caveMouths[1] != null)) {
+        if (any) {
             caves = terrain;
         }
         List<WallProjection.Island> islands = new ArrayList<>();
@@ -532,6 +554,16 @@ public final class Backdrop {
 
     static final int[] CAVE_FOOT = {84, 27};
     static final int CAVE_MID = 62;
+
+    /**
+     * M9 part E: Level 32's notch mouths ({@code gallery-<side>-<depth>}, tools/art/backdrop_l32.py): the foot line at
+     * column depth + {@link #GALLERY_RIM} (left) or {@link #GALLERY_SPILL} (right), the notch's middle row at the image's
+     * middle row.
+     */
+    static final String GALLERY = "gallery-";
+
+    static final int GALLERY_RIM = 16;
+    static final int GALLERY_SPILL = 28;
 
     static final String ICE_WALL = "ice-wall";
 
@@ -698,7 +730,8 @@ public final class Backdrop {
     /**
      * M8 part E: each notch's mouth on the screen ({@link #CAVE_MOUTH}), over the walls and under the ground objects
      * (Level 25's survey sub lies in one): its image's {@link #CAVE_FOOT} column on its wall's line at the notch's
-     * middle row, its {@link #CAVE_MID} row on that row, at full size (no projection).
+     * middle row, its {@link #CAVE_MID} row on that row, at full size (no projection); M9 part E: Level 32's galleries
+     * ({@link #GALLERY}) by the notch's side and depth, their foot column and middle row their own.
      */
     private void drawCaveMouths(SpriteBatch batch, long groundScroll) {
         if (caves == null) {
@@ -708,7 +741,7 @@ public final class Backdrop {
         for (int n = 0; n < notches.size(); n++) {
             Terrain.Notch notch = notches.get(n);
             int side = notch.side() == Terrain.Side.LEFT ? 0 : 1;
-            AtlasRegion mouth = caveMouths[side];
+            AtlasRegion mouth = caveMouths[n];
             double y = notch.scroll() - groundScroll + HEIGHT;
             if (mouth == null || y + mouth.getRegionHeight() < 0 || y - mouth.getRegionHeight() > HEIGHT) {
                 continue;
@@ -718,9 +751,7 @@ public final class Backdrop {
                 continue;
             }
             batch.draw(
-                    mouth,
-                    Math.round(X0 + foot - CAVE_FOOT[side]),
-                    Math.round(y - (mouth.getRegionHeight() - CAVE_MID)));
+                    mouth, Math.round(X0 + foot - caveFoot[n]), Math.round(y - (mouth.getRegionHeight() - caveMid[n])));
         }
     }
 

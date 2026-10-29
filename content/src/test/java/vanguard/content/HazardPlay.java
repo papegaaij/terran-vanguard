@@ -5,13 +5,14 @@ import vanguard.sim.Enemy;
 import vanguard.sim.FurnaceVents;
 import vanguard.sim.Hitbox;
 import vanguard.sim.PlayField;
+import vanguard.sim.RelayFlash;
 import vanguard.sim.SimStep;
 import vanguard.sim.Sortie;
 import vanguard.sim.Terrain;
 
 /**
  * The autopilot's hazards that filter or bend its move (see {@link Autopilot}): a gust's lean (M5 part F), the
- * canyon's rock (M7 part C) and the furnace vents' hot grates (M7 part F).
+ * canyon's rock (M7 part C), the furnace vents' hot grates (M7 part F) and the mass relay's flash (M9 part H).
  */
 final class HazardPlay {
     private HazardPlay() {}
@@ -64,21 +65,27 @@ final class HazardPlay {
         double shipY = sortie.ship().y();
         double scroll = sortie.groundScroll();
         double speed = sortie.groundSpeed();
+        // M9 part E: a forked level's route picks the channel a fork's island ahead splits (RoutePlay).
+        channel = RoutePlay.channel(sortie, channel, Terrain.row(scroll, shipY));
         double lo = Double.NEGATIVE_INFINITY;
         double hi = Double.POSITIVE_INFINITY;
-        double rockAhead = SirenPlay.rockAhead(sortie, terrain);
+        // M9 part E: into or out of a tower's notch (Level 32's gallery, TowerPlay) the notches are open and the pilot
+        // moves with the scroll: its hull's rows now, padded, instead of the look-ahead.
+        boolean notched = TowerPlay.notched(sortie);
+        double rockAhead = notched ? 0 : SirenPlay.rockAhead(sortie, terrain);
+        double hullRows = notched ? HULL_HALF_HEIGHT + TowerPlay.NOTCH_PAD : HULL_HALF_HEIGHT;
         for (double ahead = 0; ahead <= rockAhead + 1e-9; ahead += 0.1) {
             double at = scroll + speed * ahead;
-            for (double dy = -HULL_HALF_HEIGHT; dy <= HULL_HALF_HEIGHT; dy += HULL_HALF_HEIGHT) {
-                lo = Math.max(lo, channelLeft(terrain, at, shipY + dy, channel));
-                hi = Math.min(hi, channelRight(terrain, at, shipY + dy, channel));
+            for (double dy = -hullRows; dy <= hullRows + 1e-9; dy += notched ? hullRows / 2 : HULL_HALF_HEIGHT) {
+                lo = Math.max(lo, channelLeft(terrain, at, shipY + dy, channel, notched));
+                hi = Math.min(hi, channelRight(terrain, at, shipY + dy, channel, notched));
             }
         }
         double margin = HULL_HALF + ROCK_MARGIN;
         if (hi - lo < 2 * margin) {
             // The rock moves faster than the look-ahead allows: the span at its height now.
-            lo = channelLeft(terrain, scroll, shipY, channel);
-            hi = channelRight(terrain, scroll, shipY, channel);
+            lo = channelLeft(terrain, scroll, shipY, channel, notched);
+            hi = channelRight(terrain, scroll, shipY, channel, notched);
             margin = Math.min(margin, (hi - lo) / 2);
         }
         // M8 part E: a nest on a wall's foot (Level 25's Sirens) is rock to its hull while it scrolls past its height.
@@ -100,12 +107,27 @@ final class HazardPlay {
             return (commands & ~horizontal) | Command.LEFT.bit();
         }
         if (Command.LEFT.in(commands) && shipX <= left) {
-            return commands & ~Command.LEFT.bit();
+            // M9 part E: in the rock a dodge pinned against a wall goes the other way (dodged).
+            return dodged(sortie, commands)
+                    ? (commands & ~Command.LEFT.bit()) | Command.RIGHT.bit()
+                    : commands & ~Command.LEFT.bit();
         }
         if (Command.RIGHT.in(commands) && shipX >= right) {
-            return commands & ~Command.RIGHT.bit();
+            return dodged(sortie, commands)
+                    ? (commands & ~Command.RIGHT.bit()) | Command.LEFT.bit()
+                    : commands & ~Command.RIGHT.bit();
         }
         return commands;
+    }
+
+    /**
+     * M9 part E (Level 32): whether {@code commands} are a dodge ({@link DodgePlay#threat}) in a level with towers
+     * ({@link TowerPlay#towers}), where {@link DodgePlay}'s field edges are walls it can be pinned against; no other
+     * level's moves change.
+     */
+    private static boolean dodged(Sortie sortie, int commands) {
+        return TowerPlay.towers(sortie)
+                && DodgePlay.threat(sortie, sortie.ship().x(), sortie.ship().y()) != 0;
     }
 
     /**
@@ -162,14 +184,16 @@ final class HazardPlay {
      * only vanishes once C2 has inlined this; the 3-core macOS runner measured C1 code, 21 arrays a step (CI,
      * 2026-10-20).
      */
-    private static double channelLeft(Terrain terrain, double scroll, double y, Autopilot.Channel channel) {
-        double from = terrain.spanLeft(scroll, y, channelX(terrain, scroll, y, channel));
+    private static double channelLeft(
+            Terrain terrain, double scroll, double y, Autopilot.Channel channel, boolean notches) {
+        double from = terrain.spanLeft(scroll, y, channelX(terrain, scroll, y, channel), notches);
         return Double.isNaN(from) ? wallLeft(terrain, scroll, y) : from;
     }
 
     /** M7 part C: the right edge of the span {@link #channelLeft} gives the left edge of. */
-    private static double channelRight(Terrain terrain, double scroll, double y, Autopilot.Channel channel) {
-        double to = terrain.spanRight(scroll, y, channelX(terrain, scroll, y, channel));
+    private static double channelRight(
+            Terrain terrain, double scroll, double y, Autopilot.Channel channel, boolean notches) {
+        double to = terrain.spanRight(scroll, y, channelX(terrain, scroll, y, channel), notches);
         return Double.isNaN(to) ? wallRight(terrain, scroll, y) : to;
     }
 
@@ -193,6 +217,35 @@ final class HazardPlay {
     private static double wallRight(Terrain terrain, double scroll, double y) {
         double right = terrain.rightAt(Terrain.row(scroll, y));
         return Double.isNaN(right) ? PlayField.WIDTH : right;
+    }
+
+    /** M9 part H: the margin it keeps beyond the relay's band and its hull, px. */
+    private static final double RELAY_MARGIN = 8;
+
+    /**
+     * M9 part H (Level 35's mass relay, design/campaign Level 35): while the relay's line telegraphs or is live (it locks
+     * on the ship's height at its start), a ship whose hull touches its band (with {@link #RELAY_MARGIN}) steps off it
+     * up or down, the side with more room, its horizontal move kept; {@code commands} unchanged off the band, before and
+     * after the flash and in a level without a relay.
+     */
+    static int relay(Sortie sortie, int commands) {
+        if (sortie.relay().isEmpty()) {
+            return commands;
+        }
+        RelayFlash relay = sortie.relay().get();
+        if (!relay.telegraphing() && !relay.live()) {
+            return commands;
+        }
+        double shipY = sortie.ship().y();
+        double clear = relay.spec().bandPx() / 2 + MovePlanner.HULL_Y + RELAY_MARGIN;
+        if (Math.abs(shipY - relay.lineY()) >= clear) {
+            return commands;
+        }
+        double margin = sortie.ship().spec().edgeLimit();
+        boolean up = relay.lineY() + clear < PlayField.HEIGHT - margin
+                && (relay.lineY() - clear < margin || shipY >= relay.lineY());
+        int vertical = Command.UP.bit() | Command.DOWN.bit();
+        return (commands & ~vertical) | (up ? Command.UP.bit() : Command.DOWN.bit());
     }
 
     /** M7 part F: a furnace vent's grate counts as hot from this share of its tell on (it burns within ≈ 0.6 s). */

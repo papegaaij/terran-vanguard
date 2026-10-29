@@ -159,6 +159,8 @@ final class IntelPanel {
      * @param unclassified M7 part E: the enemy types still unclassified, by name, with what the intel calls them
      *     ({@link #unclassified})
      * @param limited M8 part A: the fitted special the level forbids, with its reason ({@link #limited})
+     * @param forks M9 part E: the level's forks on the wave strip ({@link #forks}); M9 part F: with its power drainers'
+     *     rear and side entries ({@link #ambushes})
      */
     void draw(
             SpriteBatch batch,
@@ -167,7 +169,8 @@ final class IntelPanel {
             Optional<BriefingPage> teaser,
             String levelKey,
             Map<String, String> unclassified,
-            Optional<String> limited) {
+            Optional<String> limited,
+            Strip forks) {
         glass.panel(batch, X, Y, WIDTH, HEIGHT, 0.86f);
         glass.header(batch, String.format(Locale.ROOT, "INTEL - L%02d", number), INNER, RIGHT, Y + 10);
         Canvas canvas = new Screen(batch);
@@ -177,7 +180,7 @@ final class IntelPanel {
             canvas.text("FOLLOWS IN A LATER RELEASE.", Glass.LABEL, INNER, Y + 64, false);
             return;
         }
-        layout(canvas, intel.get(), teaser.get(), levelKey, unclassified, limited);
+        layout(canvas, intel.get(), teaser.get(), levelKey, unclassified, limited, forks);
     }
 
     /** M7 part E: an unclassified unit's sensor picture: its silhouette of its size and layer (tools/art/intel.py). */
@@ -251,6 +254,18 @@ final class IntelPanel {
             String levelKey,
             Map<String, String> unclassified,
             Optional<String> limited) {
+        layout(canvas, level, teaser, levelKey, unclassified, limited, Strip.NONE);
+    }
+
+    /** As above; M9 part E: with the level's {@code forks} marked on the wave strip ({@link #forks}). */
+    static void layout(
+            Canvas canvas,
+            Intel level,
+            BriefingPage teaser,
+            String levelKey,
+            Map<String, String> unclassified,
+            Optional<String> limited,
+            Strip forks) {
         List<String> lines = quote(level);
         int quote = Y + HEIGHT - QUOTE_FOOT - LINE * (lines.size() - 1);
         fields(
@@ -258,9 +273,10 @@ final class IntelPanel {
                 level,
                 teaser,
                 levelKey,
-                rows(level, teaser, levelKey, quote, unclassified, limited),
+                rows(level, teaser, levelKey, quote, unclassified, limited, forks),
                 unclassified,
-                limited);
+                limited,
+                forks);
         for (String part : lines) {
             canvas.quote(part, INNER, quote);
             quote += LINE;
@@ -301,10 +317,11 @@ final class IntelPanel {
             String levelKey,
             int quote,
             Map<String, String> unclassified,
-            Optional<String> limited) {
+            Optional<String> limited,
+            Strip strip) {
         for (int step = STEP; step >= LINE; step--) {
             Rows rows = new Rows(step, Integer.MAX_VALUE);
-            if (fields(MEASURE, level, teaser, levelKey, rows, unclassified, limited) <= quote) {
+            if (fields(MEASURE, level, teaser, levelKey, rows, unclassified, limited, strip) <= quote) {
                 return rows;
             }
         }
@@ -314,7 +331,7 @@ final class IntelPanel {
                 names > 1;
                 names--) {
             Rows rows = new Rows(LINE, names);
-            if (fields(MEASURE, level, teaser, levelKey, rows, unclassified, limited) <= quote) {
+            if (fields(MEASURE, level, teaser, levelKey, rows, unclassified, limited, strip) <= quote) {
                 return rows;
             }
         }
@@ -329,7 +346,8 @@ final class IntelPanel {
             String levelKey,
             Rows rows,
             Map<String, String> unclassified,
-            Optional<String> limited) {
+            Optional<String> limited,
+            Strip forks) {
         int step = rows.step();
         int portraitY = Y + 26;
         canvas.portrait(teaser, INNER, portraitY, SPEAKER_PORTRAIT);
@@ -423,7 +441,25 @@ final class IntelPanel {
                     step);
         }
         y = boss(canvas, level, y, step, unclassified);
-        y = enemies(canvas, level, y, step, rows.names(), unclassified);
+        y = enemies(canvas, level, y, step, rows.names(), unclassified, forks.liveries());
+        if (level.shows(Field.ENEMIES)) {
+            // M9 part H (step G5's finding): a unit in its livery named with the faction it flies for in this act.
+            for (String enemy : level.enemies()) {
+                String faction = forks.factions().get(Portraits.slug(enemy));
+                if (faction == null) {
+                    continue;
+                }
+                for (String part : Words.wrap(factionTag(enemy, faction), VALUE_CHARS)) {
+                    canvas.text(part, Glass.AMBER, VALUE_X, y, false);
+                    y += step;
+                }
+            }
+        }
+        if (level.shows(Field.ENEMIES) && forks.objective().isPresent()) {
+            // M9 part G (design/campaign Level 34, Threat profile at L2): the story pickup marked as the objective's.
+            canvas.text(forks.objective().get(), Glass.AMBER, VALUE_X, y, false);
+            y += step;
+        }
         y = field(canvas, level, Field.SECRETS, "SECRETS", List.of(Integer.toString(level.secrets())), y, step);
         y = field(
                 canvas,
@@ -434,7 +470,7 @@ final class IntelPanel {
                 Words.wrap(joined(level.profile().traits()), VALUE_CHARS),
                 y,
                 step);
-        return waves(canvas, level, y, step, unclassified) - step + LABEL_INK;
+        return waves(canvas, level, y, step, unclassified, forks) - step + LABEL_INK;
     }
 
     /** M8 part A: the specials row's warning for a fitted special the next level forbids. */
@@ -488,17 +524,30 @@ final class IntelPanel {
 
     /** The enemy types' sensor portraits in a row, their names below in at most {@code lines} lines. */
     private static int enemies(
-            Canvas canvas, Intel intel, int y, int step, int lines, Map<String, String> unclassified) {
+            Canvas canvas,
+            Intel intel,
+            int y,
+            int step,
+            int lines,
+            Map<String, String> unclassified,
+            Map<String, String> liveries) {
         List<String> names = enemyNames(shown(intel.enemies(), unclassified), lines);
         if (!intel.shows(Field.ENEMIES)) {
             return field(canvas, intel, Field.ENEMIES, "ENEMIES", names, y, step);
         }
         int x = VALUE_X;
-        List<String> pictured = pictured(intel.enemies(), unclassified);
+        // M9 part G: a unit in its livery (the level's point: Level 34's tanks in Ascendancy colours) pictured early.
+        List<String> pictured = pictured(liveriedFirst(intel.enemies(), liveries), unclassified);
         for (String enemy : pictured.subList(0, Math.min(pictured.size(), PORTRAITS))) {
             // M7 part E: an unclassified unit's silhouette instead of its portrait.
             String picture = unclassified.containsKey(enemy) ? UNCLASSIFIED_PICTURE : "intel/";
-            canvas.picture(picture + Portraits.slug(enemy), x, y, PORTRAIT);
+            // M9 part G: a unit in its livery's portrait from the livery's act on (the Warden Tank in Act 5).
+            String slug = Portraits.slug(enemy);
+            canvas.picture(
+                    picture + (unclassified.containsKey(enemy) ? slug : liveries.getOrDefault(slug, slug)),
+                    x,
+                    y,
+                    PORTRAIT);
             x += PORTRAIT + PICTURE_GAP;
         }
         y = field(canvas, intel, Field.ENEMIES, "ENEMIES", names, y + PORTRAIT + PICTURE_GAP, step);
@@ -514,6 +563,21 @@ final class IntelPanel {
             y += step;
         }
         return y;
+    }
+
+    /** M9 part G: {@code enemies} (by name) with the ones in a livery ({@code liveries}, by slug) first, in order. */
+    static List<String> liveriedFirst(List<String> enemies, Map<String, String> liveries) {
+        if (liveries.isEmpty()) {
+            return enemies;
+        }
+        List<String> order = new ArrayList<>();
+        enemies.stream()
+                .filter(name -> liveries.containsKey(Portraits.slug(name)))
+                .forEach(order::add);
+        enemies.stream()
+                .filter(name -> !liveries.containsKey(Portraits.slug(name)))
+                .forEach(order::add);
+        return order;
     }
 
     /** M8 part G: the units the intel shows as human-built and unmarked (the Depth Hunter), tagged from sensor L2. */
@@ -636,7 +700,8 @@ final class IntelPanel {
         return y + step;
     }
 
-    private static int waves(Canvas canvas, Intel intel, int y, int step, Map<String, String> unclassified) {
+    private static int waves(
+            Canvas canvas, Intel intel, int y, int step, Map<String, String> unclassified, Strip strip) {
         if (!intel.shows(Field.WAVES)) {
             return field(canvas, intel, Field.WAVES, "WAVES", List.of(), y, step);
         }
@@ -742,7 +807,285 @@ final class IntelPanel {
                 canvas.fill(Glass.ALERT, at - TARGET_BAR / 2f + 1, y + 2, TARGET_BAR, 2);
             }
         }
+        strip.relay().filter(flash -> flash <= finale).ifPresent(flash -> {
+            // M9 part H (design/campaign Level 35, Sensor-suite detail at L3): the mass relay's flash as a crimson tick
+            // two pixels above and below the strip with a bar across its middle, a line across the field (pending the
+            // user's review).
+            float at = (float) (VALUE_X + width * flash / intel.seconds());
+            canvas.fill(RELAY_RED, at, y - 3, 2, 14);
+            canvas.fill(RELAY_RED, at - 2, y + 3, 6, 2);
+        });
+        for (Ambush ambush : strip.ambushes()) {
+            // M9 part F (design/campaign Level 33, Sensor-suite detail at L3: "the rear and side entries on the threat
+            // arrows"): a power drainers' wave from behind as a leech-violet tick over the strip's lower half and two
+            // pixels below it, one from the sides the same with a pixel's bar across its foot (pending the user's
+            // review).
+            float at = (float) (VALUE_X + width * ambush.t() / intel.seconds());
+            canvas.fill(LEECH_VIOLET, at, y + 3, 2, ambush.rear() ? 8 : 6);
+            if (!ambush.rear()) {
+                canvas.fill(LEECH_VIOLET, at - 2, y + 8, 6, 1);
+            }
+        }
+        for (Span crate : strip.crates()) {
+            // M9 part G (design/campaign Level 34, Sensor-suite detail at L3): a hidden crate's section as a gold
+            // underline a pixel below the strip, a pixel short at each end so neighbouring sections read apart (pending
+            // the user's review).
+            float left = (float) (VALUE_X + width * crate.from() / intel.seconds());
+            float right = (float) (VALUE_X + width * crate.to() / intel.seconds());
+            canvas.fill(CRATE_GOLD, left + 1, y + 10, right - left - 2, 2);
+        }
+        for (Fork fork : strip.forks()) {
+            // M9 part E (design/campaign Level 32, Sensor-suite detail at L3: "the two forks and which channel is the
+            // richer"): a fork as a white tick the strip's full depth, the richer channel's side a gold "arm" above
+            // it, up and to that side (pending the user's review).
+            float at = (float) (VALUE_X + width * fork.t() / intel.seconds());
+            canvas.fill(Glass.WHITE, at, y - 1, 2, 10);
+            if (fork.richer() >= 0) {
+                float arm = fork.richer() == 0 ? at - FORK_ARM : at + 2;
+                canvas.fill(Glass.AMBER, arm, y - 3, FORK_ARM, 2);
+            }
+        }
         return y + step;
+    }
+
+    /**
+     * M9 part F: the Void Leeches' rear and side entries on the wave strip: the leech's violet sac (pending the user's
+     * review).
+     */
+    static final Color LEECH_VIOLET = new Color(170 / 255f, 96 / 255f, 230 / 255f, 1);
+
+    /** M9 part F: a wave of power drainers entering from behind ({@code rear}) or from the sides, at {@code t}. */
+    record Ambush(double t, boolean rear) {}
+
+    /**
+     * M9 part E–G: what the wave strip marks beyond the content's intel: the forks, the drainers' entries and the hidden
+     * crates' sections.
+     */
+    record Strip(
+            List<Fork> forks,
+            List<Ambush> ambushes,
+            List<Span> crates,
+            Optional<String> objective,
+            Map<String, String> liveries,
+            Map<String, String> factions,
+            Optional<Double> relay) {
+        static final Strip NONE =
+                new Strip(List.of(), List.of(), List.of(), Optional.empty(), Map.of(), Map.of(), Optional.empty());
+
+        Strip(List<Fork> forks, List<Ambush> ambushes) {
+            this(forks, ambushes, List.of(), Optional.empty(), Map.of(), Map.of(), Optional.empty());
+        }
+    }
+
+    /**
+     * M9 part G (design/campaign Level 34, Sensor-suite detail at L2: "Warden Tank (Ascendancy livery)"): the units the
+     * level's act shows in a livery, by their portraits' slug, with the livery's sprite ({@code warden-tank} to {@code
+     * warden-tank-asc}, its intel portrait {@code intel/warden-tank-asc}); none before the livery's act.
+     */
+    static Map<String, String> liveries(Content content, String levelKey) {
+        if (levelKey.isEmpty()) {
+            return Map.of();
+        }
+        int act = vanguard.game.render.EnemyLooks.act(levelKey);
+        Map<String, String> liveries = new java.util.TreeMap<>();
+        content.enemies()
+                .forEach((slug, enemy) -> enemy.liverySprite(act).ifPresent(sprite -> liveries.put(slug, sprite)));
+        return liveries;
+    }
+
+    /**
+     * M9 part H (step H4, step G5's finding; design/campaign Level 34, Sensor-suite detail at L2: "Warden Tank (Ascendancy
+     * livery)"): the faction the intel names each unit in a livery of in the level's act ({@code EnemyData.factionIn}:
+     * the Warden Tank's Jovian Ascendancy from Act 5), by its portrait's slug; none before the livery's act.
+     */
+    static Map<String, String> factions(Content content, String levelKey) {
+        if (levelKey.isEmpty()) {
+            return Map.of();
+        }
+        int act = vanguard.game.render.EnemyLooks.act(levelKey);
+        Map<String, String> factions = new java.util.TreeMap<>();
+        content.enemies().forEach((slug, enemy) -> {
+            if (enemy.liverySprite(act).isPresent()) {
+                factions.put(slug, enemy.factionIn(act));
+            }
+        });
+        return factions;
+    }
+
+    /** M9 part H: a unit's faction tag under the enemies' names, {@code WARDEN TANK: JOVIAN ASCENDANCY}. */
+    static String factionTag(String name, String faction) {
+        return Names.of(name) + ": " + faction.toUpperCase(Locale.ROOT);
+    }
+
+    /**
+     * M9 part G (design/campaign Level 34, Sensor-suite detail at L2: "the Helix crate marked as an objective pickup"):
+     * the tag under the enemies' names of a level with a story pickup, {@code OBJECTIVE: HELIX CORE}; empty without.
+     */
+    static Optional<String> objectivePickup(Content content, String levelKey) {
+        if (levelKey.isEmpty()) {
+            return Optional.empty();
+        }
+        return content.level(levelKey).pickups().stream()
+                .flatMap(pickup -> pickup.story().stream())
+                .findFirst()
+                .map(story -> OBJECTIVE_PICKUP + story.replace('-', ' ').toUpperCase(Locale.ROOT));
+    }
+
+    /** M9 part G: the objective pickup's tag's start. */
+    static final String OBJECTIVE_PICKUP = "OBJECTIVE: ";
+
+    /** M9 part G: a section of the level, from {@code from} to {@code to} s, that holds a hidden crate. */
+    record Span(double from, double to) {}
+
+    /**
+     * M9 part G (design/campaign Level 34, Sensor-suite detail at L3: "the three hidden crates' sections on the timeline
+     * strip"): the levels whose strip marks the sections of their secrets' triggers (the Salvage scanner's level).
+     */
+    static final java.util.Set<Integer> CRATE_STRIPS = java.util.Set.of(34);
+
+    /** M9 part G: a hidden crate's section's underline on the wave strip, the crates' gold. */
+    static final Color CRATE_GOLD = new Color(230 / 255f, 180 / 255f, 60 / 255f, 1);
+
+    /**
+     * M9 part G: level {@code levelKey}'s sections that hold a secret's trigger (its first place's time), in order and
+     * each once; none for a level not in {@link #CRATE_STRIPS}.
+     */
+    static List<Span> crates(Content content, String levelKey) {
+        if (levelKey.isEmpty() || !CRATE_STRIPS.contains(Content.levelNumber(levelKey))) {
+            return List.of();
+        }
+        vanguard.content.LevelData level = content.level(levelKey);
+        List<Span> spans = new ArrayList<>();
+        for (vanguard.content.LevelData.GroundTarget target : level.groundTargets()) {
+            if (target.reveals().isEmpty() || target.at().isEmpty()) {
+                continue;
+            }
+            double t = target.at().getFirst().t();
+            double from = 0;
+            for (var section : level.sections()) {
+                if (t < section.end()) {
+                    Span span = new Span(from, section.end());
+                    if (!spans.contains(span)) {
+                        spans.add(span);
+                    }
+                    break;
+                }
+                from = section.end();
+            }
+        }
+        spans.sort(java.util.Comparator.comparingDouble(Span::from));
+        return spans;
+    }
+
+    /** Level {@code levelKey}'s strip marks: its {@link #forks} and {@link #ambushes}. */
+    static Strip strip(Content content, String levelKey) {
+        return new Strip(
+                forks(content, levelKey),
+                ambushes(content, levelKey),
+                crates(content, levelKey),
+                objectivePickup(content, levelKey),
+                liveries(content, levelKey),
+                factions(content, levelKey),
+                relayFlash(content, levelKey));
+    }
+
+    /**
+     * M9 part H (design/campaign Level 35, Sensor-suite detail at L3: "the timeline strip marks the mass-relay flash (61
+     * s)"): when the level's mass relay fires, s (its telegraph's start plus the telegraph); empty without a relay.
+     */
+    static Optional<Double> relayFlash(Content content, String levelKey) {
+        if (levelKey.isEmpty()) {
+            return Optional.empty();
+        }
+        return content.level(levelKey).relay().map(relay -> relay.t() + relay.telegraph());
+    }
+
+    /** M9 part H: the mass relay's flash on the strip: its crimson. */
+    static final Color RELAY_RED = new Color(1f, 0.23f, 0.16f, 1);
+
+    /**
+     * M9 part F (design/campaign Level 33): level {@code levelKey}'s waves at medium of an enemy whose latch drains the
+     * generator (the Void Leech) entering from the rear or the sides; none for a level without.
+     */
+    static List<Ambush> ambushes(Content content, String levelKey) {
+        if (levelKey.isEmpty()) {
+            return List.of();
+        }
+        List<Ambush> ambushes = new ArrayList<>();
+        for (vanguard.content.LevelData.Wave wave : content.level(levelKey).waves()) {
+            Entry from = wave.from();
+            if ((from != Entry.REAR && from != Entry.SIDES) || !wave.fliesOn(vanguard.content.Difficulty.MEDIUM)) {
+                continue;
+            }
+            boolean drains = wave.groupList().stream().anyMatch(group -> content.enemy(group.enemy())
+                    .latch()
+                    .flatMap(latch -> latch.drains())
+                    .filter("power"::equals)
+                    .isPresent());
+            if (drains) {
+                ambushes.add(new Ambush(wave.t(), from == Entry.REAR));
+            }
+        }
+        return ambushes;
+    }
+
+    /** M9 part E: a fork's richer arm on the wave strip, px. */
+    static final int FORK_ARM = 4;
+
+    /**
+     * M9 part E (design/campaign Level 32, The forks): a fork on the wave strip at {@code t} (its branches' first item:
+     * the latest choice falls just before it), {@code richer} the channel with more on it (0 left, 1 right, -1 even).
+     */
+    record Fork(double t, int richer) {}
+
+    /**
+     * M9 part E: level {@code levelKey}'s forks for the wave strip (none for a level without): per fork the first of its
+     * branches' waves and ground targets at medium, and the richer side: the more credits in its units' bounties (its
+     * waves' at medium, its ground units') and its caches.
+     */
+    static List<Fork> forks(Content content, String levelKey) {
+        if (levelKey.isEmpty()) {
+            return List.of();
+        }
+        vanguard.content.LevelData level = content.level(levelKey);
+        int count = level.terrain().map(terrain -> terrain.forkList().size()).orElse(0);
+        List<Fork> forks = new ArrayList<>();
+        for (int f = 1; f <= count; f++) {
+            double first = Double.POSITIVE_INFINITY;
+            double[] weight = new double[2];
+            for (vanguard.content.LevelData.Wave wave : level.waves()) {
+                var branch = wave.branch().orElse(null);
+                if (branch == null || branch.fork() != f || !wave.fliesOn(vanguard.content.Difficulty.MEDIUM)) {
+                    continue;
+                }
+                first = Math.min(first, wave.t());
+                for (vanguard.content.LevelData.Group group : wave.groupList()) {
+                    weight[side(branch)] +=
+                            group.count() * content.enemy(group.enemy()).bounty();
+                }
+            }
+            for (vanguard.content.LevelData.GroundTarget target : level.groundTargets()) {
+                var branch = target.branch().orElse(null);
+                if (branch == null || branch.fork() != f || target.at().isEmpty()) {
+                    continue;
+                }
+                first = Math.min(first, target.at().getFirst().t());
+                int bounty = target.enemy()
+                        .map(enemy -> content.enemy(enemy).bounty())
+                        .orElse(0);
+                weight[side(branch)] +=
+                        target.at().size() * bounty + target.crate().orElse(0);
+            }
+            if (Double.isFinite(first)) {
+                int richer = weight[0] == weight[1] ? -1 : weight[0] > weight[1] ? 0 : 1;
+                forks.add(new Fork(first, richer));
+            }
+        }
+        return forks;
+    }
+
+    private static int side(vanguard.content.TerrainBlock.Branch branch) {
+        return branch.side().equals("left") ? 0 : 1;
     }
 
     /**

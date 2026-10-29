@@ -12,7 +12,8 @@ import org.junit.jupiter.api.Test;
  * M9 part A, step A1 (design/enemies/ground/rail-bunker, {@code laser-line}): any unit's line, every 4.5 s telegraph to
  * telegraph: a 1.0 s telegraph locks a line from the unit through the ship's position to the screen's edge (lock, not
  * track), then it is live 0.2 s, an 8 px band dealing its damage to the ship once; it holds fire while the ship is
- * within 100 px; the EMP Burst's stun cancels a running telegraph. Also the {@code IN ROCK} limit word of Level 32.
+ * within 100 px; the EMP Burst's stun cancels a running telegraph. Round 66's C.1 b: the origin rides with the unit
+ * ({@link RailBunkerTest}). Also the {@code IN ROCK} limit word of Level 32.
  */
 class LaserLineTest {
     private final SimEvents events = new SimEvents(64);
@@ -87,7 +88,9 @@ class LaserLineTest {
 
     @Test
     void aLiveLineStrikesTheShipOnce() {
-        LevelScript level = TorpedoTest.units(false, new GroundUnit(0, Ship.START_X + 100, Act5Specs.RAIL_BUNKER, -1));
+        // Straight above the ship: the line rides with the scrolling bunker along itself (round 66's C.1 b), so it
+        // still finds a still ship (a diagonal line would slide off it).
+        LevelScript level = TorpedoTest.units(false, new GroundUnit(0, Ship.START_X, Act5Specs.RAIL_BUNKER, -1));
         Sortie sortie = new Sortie(1, TestSpecs.LOADOUT, level, TestSpecs.RULES, TestSpecs.FULL_ARMOUR);
         int hits = TorpedoTest.count(sortie, SimStep.ticks(4), Command.NONE, SimEvents.Type.LINE_HIT);
         assertEquals(1, hits, "the ship stood still on the line");

@@ -166,6 +166,8 @@ public final class Sortie {
     private final HazardSpec.Darkness darkness;
     /** Part G: the tows (Level 07's lifeboat). */
     final Tow[] tows;
+    /** M9 (round 64 C.1 a): whether a tow counts a beam's touch (Level 30's buoy, Level 31's claim). */
+    private final boolean beamTows;
     /** Part G: the set piece of a parts objective (Level 07's carrier); -1 without one. */
     private final int partsPiece;
 
@@ -215,6 +217,17 @@ public final class Sortie {
     private final Canyon canyon;
     /** M7 part C: the level's tendril gates (design/enemies/ground/tendril-anchor); null without. */
     final Links links;
+    /** M9 part E: the level's route choice (design/campaign Level 32, The forks); null without forks. */
+    final Forks forks;
+    /** M9 part E: the mining charges' bursts (design/world/belt); null in a level without a charge. */
+    final Charges charges;
+    /** M9 part G: the level's story pickup (design/campaign Level 34, the Helix core); null without one. */
+    final StoryPickups story;
+
+    private final java.util.Optional<StoryPickups> storyView;
+    /** M9 part E: whether a kind of the level topples (design/enemies/ground/strider). */
+    private final boolean topples;
+
     /** M9 part D: whether a kind of the level dashes (the debris pass then runs). */
     private final boolean dashers;
 
@@ -258,6 +271,10 @@ public final class Sortie {
     final CruiserRun cruisers;
     /** {@link #cruisers} for the presentation, made once. */
     private final java.util.Optional<CruiserRun> cruisersView;
+    /** M9 part H, step H1b: the mass relay's flash (Level 35); null without. */
+    final RelayFlash relay;
+
+    private final java.util.Optional<RelayFlash> relayView;
     /** M5 part G: the step the defend primary's synchronisation completes at; -1 without one. */
     final int defendEndTicks;
     /** M5 part H: per root burst (in the level's order), its first growth's slot in the force's burst arrays. */
@@ -319,6 +336,7 @@ public final class Sortie {
         rootedArena = anchored != null && anchored.arena().orElseThrow().rooted();
         darkness = script.hazards().darkness().orElse(null);
         tows = script.objectives().tows().stream().map(Tow::new).toArray(Tow[]::new);
+        beamTows = script.objectives().tows().stream().anyMatch(ObjectiveSpec.TowSpec::beamTouch);
         int[] partDropPiece = new int[script.drops().partDrops().size()];
         for (int d = 0; d < partDropPiece.length; d++) {
             partDropPiece[d] = pieceOf(script.drops().partDrops().get(d).slug());
@@ -403,6 +421,18 @@ public final class Sortie {
         }
         walks = walking;
         dashers = force.kinds().stream().anyMatch(kind -> kind.dash().isPresent());
+        topples = force.kinds().stream().anyMatch(kind -> kind.topple().isPresent());
+        charges = script.groundObjects().stream()
+                        .anyMatch(object -> object.blast().isPresent())
+                ? new Charges()
+                : null;
+        forks = terrainSpec == null || terrainSpec.forks().isEmpty()
+                ? null
+                : new Forks(
+                        terrainSpec.terrain(),
+                        terrainSpec.forks(),
+                        force.branchUnits(terrainSpec.forks().size()));
+        force.forks(forks);
         links = script.ground().gates().isEmpty()
                 ? null
                 : new Links(script.ground().gates(), events, hits);
@@ -425,6 +455,12 @@ public final class Sortie {
         vents = new FurnaceVents(script.hazards().vents(), arenaStartTicks >= 0 ? arenaStartTicks : Integer.MAX_VALUE);
         plumes = vents.plumes() ? new HeatPlumes(vents, events) : null;
         radio = new Radio(script.radio(), events, ship, Radio.fitted(loadout.armament(), special));
+        story = script.groundObjects().stream().anyMatch(object -> object.groupDrop()
+                        .filter(PickupType.STORY::equals)
+                        .isPresent())
+                ? new StoryPickups(events, radio)
+                : null;
+        storyView = java.util.Optional.ofNullable(story);
         convoy = AllyPasses.convoy(script, force);
         surfaceZones = SurfaceZones.of(script);
         force.surfaceZones(surfaceZones);
@@ -447,6 +483,8 @@ public final class Sortie {
                 .map(spec -> new CruiserRun(spec, seed))
                 .orElse(null);
         cruisersView = java.util.Optional.ofNullable(cruisers);
+        relay = script.hazards().relay().map(RelayFlash::new).orElse(null);
+        relayView = java.util.Optional.ofNullable(relay);
         fire.cruisers(cruisers);
         if (wingman != null && cruisers != null) {
             // M8 part H: Rook keeps out of the told broadside bands.
@@ -634,6 +672,10 @@ public final class Sortie {
                 // M5 part H: the root bursts' telegraphs, before their growths are let in.
                 force.bursts(levelTick, ship.x(), groundScroll, scrollStep);
             }
+            if (forks != null) {
+                // M9 part E: a fork whose island's tip reaches the ship's row is chosen before its branch's waves come.
+                forks.step(levelTick, groundScroll, ship.x(), ship.y(), force.enemies(), ground, events, radio);
+            }
             force.spawn(levelTick);
             // M9 part B: the dormant units whose time came wake; the held arena's halt lets in its cycle's waves.
             force.wake(levelTick);
@@ -699,6 +741,10 @@ public final class Sortie {
             // M8 part H: the cruisers' broadsides, flak and point defence on the level clock.
             cruisers.step(levelTick, firing, ship, force, rules.bulletBudget(), events);
         }
+        if (relay != null) {
+            // M9 part H, step H1b: the mass relay's line and flash on the level clock (its hit in the hit pass).
+            relay.step(levelTick, ship.y(), events);
+        }
         force.moveBullets();
         // M9 part C: the line mines come down with the scroll and blink when the ship or Rook comes near.
         boolean triggers = flying() && !complete && !failed;
@@ -733,6 +779,10 @@ public final class Sortie {
             cruisers.blockShots(fire.shots(), medium, events);
         }
         groundPasses.scrollGround(scrollStep);
+        if (story != null) {
+            // M9 part G: the freed core rises out of the hold with the ground, then joins the pickups.
+            story.step(scrollStep, pickupPasses);
+        }
         pickupPasses.driftPickups();
         fire.hitEnemies(force.enemies());
         fire.hitSetPieces();
@@ -743,6 +793,10 @@ public final class Sortie {
         }
         fire.hitGround(ground, force.enemies(), force.mines());
         fire.burn(force.enemies(), ground, force.mines());
+        if (beamTows) {
+            // M9 (round 64 C.1 a): an opted-in tow's housing counts a beam's touch, after the beams found their ends.
+            contacts.burnTows();
+        }
         if (plumes != null && !complete) {
             // M8 part G: after the player's hits, so a unit a shot killed is paid once; a plume's kill is the player's.
             plumes.burn(force.enemies(), plumeKills);
@@ -755,6 +809,14 @@ public final class Sortie {
         special.update(scrollStep, force.enemies(), ground, setPieces, hits);
         special.bomb(force.enemies(), ground, setPieces, hits, force.bullets(), force.lobs(), force.mines());
         special.lance(ship.x(), force.enemies(), ground, setPieces, hits);
+        if (charges != null) {
+            // M9 part E: the charges destroyed this step burst, after every hit pass.
+            charges.burst(force.enemies(), events, hits);
+        }
+        if (topples) {
+            // M9 part E: the toppling walkers stagger, fall and crush (the EMP Burst does not stop them).
+            Topples.step(force.enemies(), events, hits, radio);
+        }
         if (rootedArena) {
             bossPasses.rootHits();
         }
@@ -1112,6 +1174,11 @@ public final class Sortie {
         return cruisersView;
     }
 
+    /** M9 part H, step H1b: the mass relay's flash (Level 35); empty without. */
+    public java.util.Optional<RelayFlash> relay() {
+        return relayView;
+    }
+
     /**
      * M7 part C: the level's tendril gates and their tendrils (design/enemies/ground/tendril-anchor); null in a
      * level without gates.
@@ -1157,6 +1224,19 @@ public final class Sortie {
     /** M7 part C: whether the ship's wall contact cooldown runs (the hit flash may follow it); false without terrain. */
     public boolean wallCooling() {
         return contacts.wallCooling();
+    }
+
+    /** M9 part E (design/campaign Level 32, The forks): the level's forks; 0 without. */
+    public int forkCount() {
+        return forks == null ? 0 : forks.count();
+    }
+
+    /**
+     * M9 part E: the side chosen at fork {@code fork} (from 0): {@link Branch#LEFT} or {@link Branch#RIGHT}; -1 before
+     * its choice.
+     */
+    public int forkSide(int fork) {
+        return forks.side(fork);
     }
 
     /** A hash over the complete state; equal hashes mean equal replays. */
@@ -1774,6 +1854,14 @@ public final class Sortie {
         return attempt;
     }
 
+    /**
+     * M9 part G (design/campaign Level 34, The freighter): the level's story pickup (the Helix core): its state (waiting,
+     * rising, loose, collected, missed), its rise and where it rises; empty in a level without one.
+     */
+    public java.util.Optional<StoryPickups> storyPickup() {
+        return storyView;
+    }
+
     /** Distance the ground layer has scrolled in this attempt, in pixels. */
     public double groundScroll() {
         return groundScroll;
@@ -1869,7 +1957,13 @@ public final class Sortie {
         // M7 part G: less the pursuits' refill motes left out (planned, they never entered).
         // Step SIM-K: its bosses left out when the secondary does not count them (Level 21's Colossus).
         // M9 part B: the halt cycle's units as they come (as a stream's).
-        return force.units() - force.skipped() + countedPieces + streamReleased + force.haltReleased();
+        // M9 part E: less the units of the fork branches not chosen (they never come).
+        return force.units()
+                - force.skipped()
+                + countedPieces
+                + streamReleased
+                + force.haltReleased()
+                - (forks == null ? 0 : forks.unchosen());
     }
 
     /** Kills needed for the secondary objective. */
@@ -1900,7 +1994,11 @@ public final class Sortie {
         return objectives.escapesTotal();
     }
 
-    /** M7 part F: the units of an escapes objective's enemy that got away in this attempt (with escapes allowed). */
+    /**
+     * M7 part F: the units of an escapes objective's enemy that got away in this attempt (with escapes allowed); M9 part
+     * G: an object escapes objective's ground objects that left the screen (Level 34's containers away; {@link
+     * #escapesDestroyed()} counts those opened).
+     */
     public int escapesLost() {
         return objectives.escapesLost();
     }

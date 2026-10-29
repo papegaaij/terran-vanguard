@@ -90,7 +90,13 @@ final class WalkerCues extends SoundFamily {
     void play(SimEvents events, int i, float pan) {
         switch (events.type(i)) {
             case WALKER_STEP -> bank.play(Sfx.WALKER_STOMP, WALKER_LEVEL, pitch(0.03), pan);
-            case POD_HATCH -> bank.play(Sfx.WALKER_HATCH, WALKER_LEVEL, pitch(0.03), pan);
+            // M9 part H: the Iron Sovereign's SAM racks open as the SAM Nest's do.
+            case POD_HATCH ->
+                bank.play(
+                        SovereignCues.ringed(mix.watched) != null ? Sfx.NEST_HATCH : Sfx.WALKER_HATCH,
+                        WALKER_LEVEL,
+                        pitch(0.03),
+                        pan);
             case MISSILE_LAUNCHED -> {
                 // M8 part G: a Depth Hunter's torpedo launches with its volley's report (VentFieldCues.fired).
                 // M9 part A: a homing diamond's launch (BeltCues).

@@ -43,6 +43,10 @@ The rows are in this order:
 5. **Build choices** (`B.…`) per step, each item *yes* (keep as built) or *no* (say what), and the
    **findings** (`R.…`) the steps raised, with the save format (`V.1`).
 
+## Review
+
+Record of the decisions: [review.html](review.html)
+
 ## In the game
 
 `./gradlew :desktop:run --args="…"` with `--settings <file>` to keep the real settings apart (a debug

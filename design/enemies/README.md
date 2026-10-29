@@ -709,9 +709,9 @@ clear. Prompts: [concept/prompts.md](concept/prompts.md#enemy-shield-final-r64).
 
 | File | What | Status |
 |---|---|---|
-| [concept/enemy-shield-final-r64-a.png](concept/enemy-shield-final-r64-a.png) | Enemy hex shield final frames (a, the hex lattice): the three tiers' holding loop, refill and break, the hit's lit hexes; the lattice fades from 38 % at the rim to 12 % over the unit; over the production Talon (shield 12), Hornet and Gilded Gunship at 1× and 2× (sheet) | proposed (round 64) |
-| [concept/enemy-shield-final-r64-a.gif](concept/enemy-shield-final-r64-a.gif) | The three units shielded: hits, emptied, 2 s quiet, the refill, 2× | proposed (round 64) |
-| [concept/enemy-shield-capture-r64-a.png](concept/enemy-shield-capture-r64-a.png) | Game captures of the production lattice (step D5; [recipe](concept/prompts.md#enemy-shield-capture-r64-a)): Level 29's first Talons under the beam at 2× (the bubble, lit hexes on a hit, the shatter ring) and a Level 30 convoy Gunship with its escort Talons at 2× | proposed (round 64) |
+| [concept/enemy-shield-final-r64-a.png](concept/enemy-shield-final-r64-a.png) | Enemy hex shield final frames (a, the hex lattice): the three tiers' holding loop, refill and break, the hit's lit hexes; the lattice fades from 38 % at the rim to 12 % over the unit; over the production Talon (shield 12), Hornet and Gilded Gunship at 1× and 2× (sheet) | chosen (round 64, F.1: accepted as final) |
+| [concept/enemy-shield-final-r64-a.gif](concept/enemy-shield-final-r64-a.gif) | The three units shielded: hits, emptied, 2 s quiet, the refill, 2× | chosen (round 64, F.1: accepted as final) |
+| [concept/enemy-shield-capture-r64-a.png](concept/enemy-shield-capture-r64-a.png) | Game captures of the production lattice (step D5; [recipe](concept/prompts.md#enemy-shield-capture-r64-a)): Level 29's first Talons under the beam at 2× (the bubble, lit hexes on a hit, the shatter ring) and a Level 30 convoy Gunship with its escort Talons at 2× | chosen (round 64, F.1: accepted as final) |
 
 ## Implementation
 
@@ -862,7 +862,8 @@ Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-a
   (judgement call **J2**: 120 → 144, the Ion Beam L4 at the L29 visit); `space` closed as a document alias of `air`.
 - 2026-10-27 (user, [round 60](../concept-rounds/round-60/README.md) closed): the Act 5 enemy design approved as drafted (D.10–D.12 with the units): Q1 **a** (enemy shields: a hex HP pool that regrows 2 s after the last hit, emptied at once and held back 3 s by a `shield-breaker`), Q3 **a** (mine lines, J.5 C1 a and C2 a), Q6 **b** (the Dart Drone), J.1 (the Warden Tank in livery), J.2 (reference DPS 120 to 144); **Q11 b**, the Ascendancy's Act 5 look is gunmetal/charcoal with gold, not gloss black (see *Factions*); **A.16 a** the homing diamond (b rejected); the shield sounds are S.1 a, S.2 b, S.3 a, the homing sounds S.4 b, S.5 a, S.6 b. **QA-1** (decided 2026-10-27 by the main agent, confirmed in round 61 on 2026-10-28): homing shots, Rook and the Tesla arc lock onto homing diamonds only when no enemy unit is in reach.
 - 2026-10-28 (user, [round 61](../concept-rounds/round-61/README.md), closed): **F.2 a**, the hex lattice, not the recommendation (the game's gold film **b** is rejected; the swap of the shield frames to a is a later art step, **a to production in ART-F**, the game draws b until then); F.6 the homing diamond accepted; **C.1** (QA-1: homing shots, Rook and the Tesla arc lock onto a diamond only when no unit is in reach) confirmed; **C.3** the breaker's 3 s hold and **C.8** the refill sound when the shield is full again accepted.
-- 2026-10-28 (M9, step ART-F; review in round 64): the enemy hex shield's production frames are now round 61's **a**,
+- 2026-10-28 (M9, step ART-F; accepted in round 64): the enemy hex shield's production frames are now round 61's **a**,
   the hex lattice (`act5_gear.py shield`, same keys, sizes and frame counts: no game change). Round 60's worry that the
   lattice reads heavy over the Gilded Gunship: the lattice now fades toward the bubble's middle (12 % over the unit, 38 %
   at the rim, round 61's sheet drew it evenly at 40 %; `shield --r61` rebuilds that sheet).
+- 2026-10-28 (user, [round 64](../concept-rounds/round-64/README.md), closed; page answers): **F.1** accepted: the enemy hex shield's production frames (round 61's F.2 a, the hex lattice, fading toward the middle) are final (`art: final`); **C.2** accepted (the Hornet's shield 12).

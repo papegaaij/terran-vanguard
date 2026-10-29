@@ -62,6 +62,18 @@ public final class SetPiece implements Hashed {
     final CoilArena coil;
     /** {@link #coil} for the presentation, made once. */
     private final java.util.Optional<CoilArena> coilView;
+    /** M9 part H: a ringed boss's rings, fire arc and locks; null for any other. */
+    final RingArena ring;
+    /** {@link #ring} for the presentation, made once. */
+    private final java.util.Optional<RingArena> ringView;
+    /** M9 part H, step H1b: its rail lines; null for a boss without a line attack. */
+    final BossLines lines;
+    /** {@link #lines} for the presentation, made once. */
+    private final java.util.Optional<BossLines> linesView;
+    /** M9 part H, step H1b: its part shields; null for a boss without one. */
+    final PartShields shields;
+    /** {@link #shields} for the presentation, made once. */
+    private final java.util.Optional<PartShields> shieldsView;
     /** M7 part F: a walking boss's hatches (its homing salvos' tell; round 44: its pods' armour). */
     final BossHatches hatches;
     /** M5 part H: its attacks' sweeps (design/enemies, Boss attacks and root bursts). */
@@ -97,6 +109,12 @@ public final class SetPiece implements Hashed {
         breachView = java.util.Optional.ofNullable(breach);
         coil = boss != null && boss.coil().isPresent() ? new CoilArena(this, boss, spec) : null;
         coilView = java.util.Optional.ofNullable(coil);
+        ring = boss != null && boss.rings().isPresent() ? new RingArena(this, boss, spec) : null;
+        ringView = java.util.Optional.ofNullable(ring);
+        lines = BossLines.any(boss) ? new BossLines(this, boss, count) : null;
+        linesView = java.util.Optional.ofNullable(lines);
+        shields = PartShields.any(boss) ? new PartShields(this, boss, count) : null;
+        shieldsView = java.util.Optional.ofNullable(shields);
         hatches = new BossHatches(
                 this, boss, count, stride != null && boss.stride().get().hatchArmour());
         sweeps = new BossSweeps(this, boss);
@@ -140,6 +158,16 @@ public final class SetPiece implements Hashed {
                 // M8 part H: under the water at its rest until it arrives.
                 coil.reset();
                 motion.placeAt(coil.headX(), coil.headY());
+            }
+            if (ring != null) {
+                // M9 part H: the rings at rest, none lit or locked (the boss checkpoint restarts them fresh).
+                ring.reset();
+            }
+            if (lines != null) {
+                lines.reset();
+            }
+            if (shields != null) {
+                shields.reset();
             }
             chains.place();
         }
@@ -215,6 +243,14 @@ public final class SetPiece implements Hashed {
      */
     void act(double shipX, double shipY, BossActions actions, boolean firing) {
         guns.act(shipX, shipY, actions, firing);
+    }
+
+    /**
+     * M9 part H: whether part {@code p} may fire now (for the looks, Rook and the autopilot): a ringed boss's battery
+     * while it lives inside its fire arc ({@link RingArena#armed}); any other boss's part while it lives.
+     */
+    public boolean partArmed(int p) {
+        return parts.partHp[p] > 0 && (ring == null || ring.battery(p) < 0 || ring.armed(p));
     }
 
     /** M7 part F: whether part {@code p}'s hatch is open (its homing salvo's tell and the salvo). */
@@ -460,6 +496,14 @@ public final class SetPiece implements Hashed {
             // M8 part H: nothing fires, no sweep, no wall.
             coil.died();
         }
+        if (ring != null) {
+            // M9 part H: the rings stop; the batteries cook off.
+            ring.died();
+        }
+        if (lines != null) {
+            // M9 part H, step H1b: no rail line after the kill.
+            lines.reset();
+        }
     }
 
     /** The body touching the ship: whether it deals its contact damage now (at most once per its interval). */
@@ -552,6 +596,17 @@ public final class SetPiece implements Hashed {
                 // M8 part H: only a coiled boss (Level 28) hashes these.
                 coil.addTo(hash);
             }
+            if (ring != null) {
+                // M9 part H: only a ringed boss (Level 35) hashes these (step H1b: its hatches, lines and shields too).
+                ring.addTo(hash);
+                hatches.addTo(hash);
+            }
+            if (lines != null) {
+                lines.addTo(hash);
+            }
+            if (shields != null) {
+                shields.addTo(hash);
+            }
             if (stride != null) {
                 // M7 part F: only a walking boss (Level 19) hashes these.
                 stride.addTo(hash);
@@ -616,6 +671,50 @@ public final class SetPiece implements Hashed {
     /** M8 part H: a coiled boss's body, wall and script; empty for any other. */
     public java.util.Optional<CoilArena> coil() {
         return coilView;
+    }
+
+    /** M9 part H: a ringed boss's rings, fire arc and locks; empty for any other. */
+    public java.util.Optional<RingArena> ring() {
+        return ringView;
+    }
+
+    /** M9 part H, step H1b: its rail lines (the look, Rook, the autopilot); empty for a boss without a line attack. */
+    public java.util.Optional<BossLines> lines() {
+        return linesView;
+    }
+
+    /** M9 part H, step H1b: its part shields (the core's hex shield); empty for a boss without one. */
+    public java.util.Optional<PartShields> shields() {
+        return shieldsView;
+    }
+
+    /** M9 part H, step H1b: its shield events go to the sortie's {@code events}. */
+    void useEvents(SimEvents events) {
+        if (shields != null) {
+            shields.events(events);
+        }
+    }
+
+    /**
+     * M9 part H, step H1b: a {@code shield-breaker} hit on part {@code p} at (hx, hy) (the Tesla Coil Pod's arc): its
+     * shield emptied and its refill held, the whole of {@code amount} to the part; returns whether that destroyed it.
+     */
+    boolean damagePartBreaking(int p, double amount, double hx, double hy) {
+        if (shields == null || !shields.fitted(p)) {
+            return damagePartAt(p, amount, hx, hy);
+        }
+        shields.breaking(p);
+        boolean destroyed = damagePartAt(p, amount, hx, hy);
+        // Its refill waits the breaker's hold, not the hold and then the delay (the hit just counted as one).
+        shields.breaking(p);
+        return destroyed;
+    }
+
+    /** M9 part H, step H1b: the EMP Burst empties its touchable parts' shields, their refill held {@code ticks}. */
+    void stripShields(int ticks) {
+        if (shields != null) {
+            shields.strip(ticks);
+        }
     }
 
     /**

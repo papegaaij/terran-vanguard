@@ -861,8 +861,11 @@ final class Formations {
                         speed(enemy().speed()),
                         hover.seconds().pick(rng),
                         Optional.empty(),
-                        // M7 part D: a Herald's hover ends straight up (its stat block's exit: back).
-                        enemy().aura().isPresent() ? Spawn.Exit.UP : Spawn.Exit.awayFromCentre(x));
+                        // M7 part D: a Herald's hover ends straight up (its stat block's exit: back); M9 part F: a prey
+                        // wing's refuelling hold too (Level 33, QF-1 a).
+                        enemy().aura().isPresent() || enemy().preyRole() == EnemySpec.PreyRole.PREY
+                                ? Spawn.Exit.UP
+                                : Spawn.Exit.awayFromCentre(x));
             }
         }
 

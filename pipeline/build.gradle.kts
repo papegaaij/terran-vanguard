@@ -373,6 +373,9 @@ val copyPlaceholderSounds = tasks.register<JavaExec>("copyPlaceholderSounds") {
         // M9 part B: round 60's pick for the belt station's ambience bed (S.17 b, the user, 2026-10-27; CC0 Freesound HQ
         // previews cut by tools/concept/audio/sfx_r60.py, its CREDITS.md rows): Levels 29 and 35.
         "belt-station-r60-b.ogg",
+        // M9 part E (step AUD-E): round 60's pick for the belt tunnel's ambience bed (S.19 a, the user, 2026-10-27; CC0/
+        // CC-BY Freesound HQ previews cut by tools/concept/audio/sfx_r60.py, its CREDITS.md rows): Level 32.
+        "belt-tunnel-r60-a.ogg",
         // M9 part B, step B4: Level 29's sounds (step AUD-B's round 62 proposals, CC0/CC-BY Freesound HQ previews cut by
         // tools/concept/audio/sfx_r62.py, their CREDITS.md rows; the lock beep synthesized), as the user picked them in
         // round 62 (2026-10-28): b for the nest's hatch and lock, the clamp gun's shot, the clamp's release, the Talon's
@@ -391,6 +394,61 @@ val copyPlaceholderSounds = tasks.register<JavaExec>("copyPlaceholderSounds") {
         "leader-squelch-r62-b.ogg",
         "mite-tell-r62-a.ogg",
         "mite-leap-r62-a.ogg",
+        // M9 part E, step E4: Level 32's sounds (step AUD-E's round 65 proposals, CC0/CC-BY Freesound HQ previews cut by
+        // tools/concept/audio/sfx_r65.py, their CREDITS.md rows), as the user picked them (2026-10-29: a, but b for
+        // the servo, the cannons and the blast; step G4): the
+        // Sentinel Tower's charge, beam, servo and death, the Strider's step, servo, cannons, snap and fall, the blast
+        // door's grind and the mining charge's blast.
+        "sentinel-charge-r65-a.ogg",
+        "sentinel-beam-r65-a.ogg",
+        "sentinel-servo-r65-b.ogg",
+        "sentinel-death-r65-a.ogg",
+        "strider-step-r65-a.ogg",
+        "strider-servo-r65-a.ogg",
+        "strider-cannon-r65-b.ogg",
+        "strider-snap-r65-a.ogg",
+        "strider-fall-r65-a.ogg",
+        "door-grind-r65-a.ogg",
+        "charge-blast-r65-b.ogg",
+        // M9 part F, step F4: round 60's picks for the rail line's charge and shot (S.7 b, S.8 b, the user, 2026-10-27;
+        // CC0/CC-BY Freesound HQ previews cut by tools/concept/audio/sfx_r60.py, their CREDITS.md rows), first played by
+        // Level 33's Rail Bunkers; and Level 33's sounds (step AUD-F's round 66 proposals, CC0/CC-BY Freesound HQ
+        // previews cut by tools/concept/audio/sfx_r66.py, their CREDITS.md rows; the brown-out warning synthesized),
+        // their a variants until the user's picks: the Void Leech's latch, drain, hum, shake-off and death, the
+        // brown-out warning and the Rail Bunker's death.
+        "rail-charge-r60-b.ogg",
+        "rail-shot-r60-b.ogg",
+        "leech-latch-r66-a.ogg",
+        "leech-drain-r66-a.ogg",
+        "leech-hum-r66-a.ogg",
+        "leech-shake-r66-a.ogg",
+        "leech-death-r66-a.ogg",
+        "brownout-warn-r66-b.ogg",
+        "bunker-death-r66-a.ogg",
+        // M9 part G, step G4: Level 34's sounds (step AUD-G's round 67 proposals, CC0/CC-BY Freesound HQ previews cut by
+        // tools/concept/audio/sfx_r67.py, their CREDITS.md rows), their a variants until the user's picks: a cargo
+        // container's burst, the Helix core's pickup and the wrecks' groans (an ambience layer); a hold clamp's release
+        // is Level 29's clamp release (round 67's S.2 "dock").
+        "container-burst-r67-a.ogg",
+        "helix-core-r67-a.ogg",
+        "wreck-groans-r67-a.ogg",
+        // M9 part H, step H4: Level 35's sounds (step AUD-H2's round 68 proposals, CC0/CC-BY Freesound HQ previews cut
+        // by tools/concept/audio/sfx_r68.py, their CREDITS.md rows), their a variants until the user's picks: the Iron
+        // Sovereign's spin-up, inner-ring step and hold, ring lock, klaxon, core shutters, fan, spiral, cook-offs and
+        // implosion, the mass relay's charge and flash; and round 60's pick for the rings' grind bed (S.16 a).
+        "sovereign-ring-turn-r60-a.ogg",
+        "sovereign-spinup-r68-a.ogg",
+        "sovereign-step-r68-a.ogg",
+        "sovereign-hold-r68-a.ogg",
+        "sovereign-lock-r68-a.ogg",
+        "sovereign-klaxon-r68-a.ogg",
+        "sovereign-shutters-r68-a.ogg",
+        "sovereign-fan-r68-a.ogg",
+        "sovereign-spiral-r68-a.ogg",
+        "sovereign-cookoff-r68-a.ogg",
+        "sovereign-implosion-r68-a.ogg",
+        "relay-charge-r68-a.ogg",
+        "relay-flash-r68-a.ogg",
     )
 }
 
@@ -454,6 +512,9 @@ val copyPlaceholderMusic = tasks.register<JavaExec>("copyPlaceholderMusic") {
         // M9 part B: track 31, Rook's return sting (round 60 M.2 a "Horn Call", the user's pick, synthesized by
         // tools/concept/audio/music_r60.py), a one-shot at Level 29's Ember launch over the theme's -6 dB duck.
         "rook-return-r60-a.ogg=rook-return.ogg",
+        // M9 part H: track 19 "Iron Sovereign" (round 68 QH-3 a, step AUD-H1's full-length render of round 03's pick, one
+        // mix), Level 35's boss track after the warning.
+        "iron-sovereign-full-r68-a.ogg=iron-sovereign.ogg",
     )
 }
 

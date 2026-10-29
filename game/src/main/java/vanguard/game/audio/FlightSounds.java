@@ -81,6 +81,12 @@ public final class FlightSounds {
     private final MinefieldCues minefield;
     /** M9 part D: Level 31's units and the tug. */
     private final MiningRigCues rig;
+    /** M9 part E: Level 32's Sentinel Towers, Striders, blast doors and mining charges. */
+    private final DeepCoreCues deepCore;
+    /** M9 part H: Level 35's Iron Sovereign and mass relay. */
+    private final SovereignCues sovereign;
+    /** M9 part F: Level 33's rail lines and Void Leeches. */
+    private final LeechFieldCues leechField;
     /** M8 part C: Level 23's sounds (the waterline, the pumps' hum, the eels', Glassfins' and pumps' extras). */
     private final UnderIceCues underIce;
     /** M8 part D: Level 24's units, beacons and wreck. */
@@ -131,9 +137,11 @@ public final class FlightSounds {
 
     /** M7 part A: the loops a flight holds, stopped as the level screen closes. */
     private static final Sfx[] FLIGHT_LOOPS = {
+        Sfx.SOVEREIGN_RING_TURN,
         Sfx.TORPEDO_RUN,
         Sfx.HOMING_RUN,
         Sfx.BROWNOUT_HUM,
+        Sfx.LEECH_HUM,
         Sfx.BEACON_HUM,
         Sfx.LURE_HUM,
         Sfx.CROWN_HUM,
@@ -164,7 +172,9 @@ public final class FlightSounds {
         Sfx.LINK_HUM,
         Sfx.SAW_WHINE,
         Sfx.HORNET_HUM,
-        Sfx.TUG_ENGINE
+        Sfx.TUG_ENGINE,
+        Sfx.SENTINEL_BEAM,
+        Sfx.SENTINEL_SERVO
     };
     /**
      * M7 part C: a unit's loop (the tendril hum and burn, the Threadcrawler's walk; design/audio/sfx, Mixing) is
@@ -221,6 +231,9 @@ public final class FlightSounds {
         ceres = new CeresCues(mix);
         minefield = new MinefieldCues(mix);
         rig = new MiningRigCues(mix);
+        deepCore = new DeepCoreCues(mix);
+        sovereign = new SovereignCues(mix);
+        leechField = new LeechFieldCues(mix);
         belt.rig(rig);
         walker = new WalkerCues(mix, ventField, belt);
         foundry = new FoundryCues(mix);
@@ -231,8 +244,21 @@ public final class FlightSounds {
         trench = new TrenchCues(mix);
         blackwater = new BlackwaterCues(mix);
         units = new UnitCues(
-                mix, looks, storm, foundry, walker, deepWater, underIce, abyss, trench, ventField, maw, ceres,
-                minefield);
+                mix,
+                looks,
+                storm,
+                foundry,
+                walker,
+                deepWater,
+                underIce,
+                abyss,
+                trench,
+                ventField,
+                maw,
+                ceres,
+                minefield,
+                deepCore,
+                leechField);
         allies = new AllyCues(mix);
         allies.rig(rig);
         arsenal = new ArsenalCues(mix);
@@ -259,7 +285,10 @@ public final class FlightSounds {
             belt,
             ceres,
             minefield,
-            rig
+            rig,
+            deepCore,
+            leechField,
+            sovereign
         };
         for (SoundFamily family : all) {
             for (SimEvents.Type type : family.types()) {
@@ -685,6 +714,9 @@ public final class FlightSounds {
         ceres.watch(sortie);
         minefield.watch(sortie);
         rig.watch(sortie);
+        deepCore.watch(sortie);
+        sovereign.watch(sortie);
+        leechField.watch(sortie);
         units.watchCanyon(sortie);
         units.watchSiege(sortie);
         storm.watch(sortie);
@@ -741,6 +773,9 @@ public final class FlightSounds {
             belt.silence(loop);
             minefield.silence(loop);
             rig.silence(loop);
+            deepCore.silence(loop);
+            sovereign.silence(loop);
+            leechField.silence(loop);
         }
         deepWater.silence();
     }
@@ -797,6 +832,8 @@ public final class FlightSounds {
             case DATA_CORE -> Sfx.DATA_CORE;
             case SHIELD_CELL -> Sfx.SHIELD_CELL;
             case ARMOUR_PATCH -> Sfx.ARMOUR_PATCH;
+            // M9 part G (Level 34): the Helix core's hum swell, over the large salvage pickup (PlayerCues).
+            case STORY -> Sfx.HELIX_CORE;
         };
     }
 

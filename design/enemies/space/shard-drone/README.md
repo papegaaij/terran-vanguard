@@ -2,7 +2,7 @@
 title: Shard Drone
 design: approved
 implementation: done
-art: chosen
+art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../player/specials]
 updated: 2026-10-28
 ---
@@ -104,7 +104,7 @@ Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's r
 - [x] The tug hook in L31 (with the level and the tug)
 - [x] Production sprites (the spin, the link beam), the intel portrait (step D4: drawn by `MiningRigLooks`, the strip tiled along each link)
 - [x] Death effect, bounty and sounds per this spec (Freesound, no bubbly sounds) (step D4: the shards and the snap in
-      `MiningRigLooks`, its death the `small` rung; the links' hum, flicker and snap round 64's a proposals until the pick)
+      `MiningRigLooks`, its death the `small` rung; the links' hum, flicker and snap round 64's a picks)
 
 ## Open questions
 
@@ -124,8 +124,9 @@ Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's r
   doc, which owns the number; step m9-d-act, approved in round 60). The ship's touch
   stays 6.
 - 2026-10-27 (user, [round 60](../../../concept-rounds/round-60/README.md) closed): the design approved as drafted (`design: approved`); art A.9 **b**, "Shard Drone B, tri-prism, lightning links", chosen (`art: chosen`), the other variant in `concept/rejected/`. Q11 **b** (gunmetal/charcoal with gold, not gloss black): the chosen variant is re-rendered in gunmetal/charcoal in this part's production art, keeping the ≥ 20 % gold and the readability check.
-- 2026-10-28 (M9 part D, step D2; pending the user's review in round 64): the stat block as data (the `air-link`
+- 2026-10-28 (M9 part D, step D2; accepted in round 64, below): the stat block as data (the `air-link`
   attack and the bolt; the line's sway `sine` 30 px each side, the ring's `orbit` and its centre's descent and follow
   on the link's `ring`). The bolts are not staggered across a group (a unit's attack has no per-member offset): every
   drone of a group fires on its own clock from its entry. Under the plan's fit at L31 a group lives ≈ 2.3 s on the
   screen and is broken before its links reach the tug's hull (0–2 touches a run).
+- 2026-10-28 (user, [round 64](../../../concept-rounds/round-64/README.md), closed; page answers): the final art accepted (**F.5**: the tri-prism in gunmetal with its thickened struts and the crimson-gold link strip; `art: final`); sounds **S.1 a** (`link-hum`, the Jacob's ladder), **S.2 a** (`link-flicker`), **S.3 a** (`link-snap`), all in the game already; b rejected.

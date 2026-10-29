@@ -1,0 +1,190 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Round 61: record of the decisions</title><style>
+:root{--bg:#f4f5f7;--fg:#1b2230;--mut:#5a6577;--card:#fff;--line:#d3d9e2;--acc:#1f5fa8;--ok:#1d6b3a;--okbg:#e3f3e8;
+--hi:#fff6dc;--hib:#d9b84a;--code:#e9edf3;--warn:#8a4b00}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10141b;--fg:#dde3ee;--mut:#98a3b6;--card:#171d27;
+--line:#2c3544;--acc:#7fb2ee;--ok:#7bd69a;--okbg:#163323;--hi:#2c2610;--hib:#8a7424;--code:#232c3a;--warn:#e3a35a;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#10141b;--fg:#dde3ee;--mut:#98a3b6;--card:#171d27;--line:#2c3544;--acc:#7fb2ee;--ok:#7bd69a;
+--okbg:#163323;--hi:#2c2610;--hib:#8a7424;--code:#232c3a;--warn:#e3a35a;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:60rem;margin:0 auto;padding:1rem 16px 4rem}
+h1{font-size:1.6rem;margin:.5rem 0}h2{font-size:1.25rem;margin:2rem 0 .5rem;border-bottom:1px solid var(--line);padding-bottom:.25rem}
+h3{font-size:1.02rem;margin:0;flex:1 1 12rem}a{color:var(--acc)}
+.sum{color:var(--mut)}.note{font-size:.9rem;color:var(--mut)}
+nav.sec{display:flex;flex-wrap:wrap;gap:.4rem;margin:1rem 0}nav.sec a{padding:.2rem .6rem;border:1px solid var(--line);border-radius:1rem;
+text-decoration:none;font-size:.9rem;background:var(--card)}
+.row{background:var(--card);border:1px solid var(--line);border-radius:.4rem;padding:.7rem .9rem;margin:.7rem 0;overflow-wrap:anywhere}
+.row header{display:flex;flex-wrap:wrap;gap:.3rem .6rem;align-items:baseline}
+.rid{font:600 .85rem ui-monospace,Menlo,Consolas,monospace;background:var(--code);padding:.05rem .4rem;border-radius:.25rem}
+.kind{font-size:.8rem;color:var(--mut)}.part{font-size:.88rem;margin:.2rem 0}
+.q,.weak,.rec,.sub,.line,dl{font-size:.92rem;margin:.45rem 0}.weak{color:var(--warn)}
+code{background:var(--code);padding:0 .25rem;border-radius:.2rem;font-size:.88em}
+.tag{font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;color:var(--mut);font-weight:700;margin-right:.3rem}
+.ans{margin:.5rem 0 0;padding:.45rem .6rem;border-left:4px solid var(--hib);background:var(--hi);border-radius:.2rem}
+.ans.out{border-left-color:var(--ok)}.ans.none{opacity:.7}
+.badge{font-size:.75rem;font-weight:700;padding:.05rem .4rem;border-radius:.6rem;background:var(--okbg);color:var(--ok)}
+.badge.pick{background:var(--hi);color:var(--warn);border:1px solid var(--hib)}
+dl{display:grid;grid-template-columns:7rem 1fr;gap:.2rem .6rem}dt{font-weight:700}dd{margin:0}
+.media{display:flex;flex-wrap:wrap;gap:.5rem;margin:.5rem 0}.m{margin:0;max-width:100%}.m figcaption{font-size:.75rem;color:var(--mut)}
+.m.img img{max-width:14rem;max-height:10rem;border:1px solid var(--line);border-radius:.2rem;background:#000;display:block}
+.m.vid video{width:14rem;max-width:100%}.m.aud audio{width:16rem;max-width:100%}.miss{color:var(--warn)}
+details{margin:.4rem 0;font-size:.9rem}summary{cursor:pointer;color:var(--acc)}
+.listen{font-size:.85rem;color:var(--mut);margin:.3rem 0;padding-left:1.2rem}.opts{color:var(--mut)}
+.sub{padding-left:.6rem;border-left:2px solid var(--line)}
+table{border-collapse:collapse;display:block;overflow-x:auto}td,th{border:1px solid var(--line);padding:.2rem .4rem}
+blockquote{margin:.4rem 0;padding-left:.8rem;border-left:3px solid var(--line)}
+@media (max-width:480px){dl{grid-template-columns:1fr}.m.img img{max-width:100%}}
+</style></head><body><main><p class="note"><a href="README.md">Round 61 README</a> · <a href="../README.md">All rounds</a> · built 2026-10-28 · recorded by <code>tools/concept/review_record.py 61</code></p><h1>Concept round 61: record of the decisions</h1><div class="sum"><p>The review round of M9 part A <em>Act 5 systems</em> (<span class="ref">roadmap</span>): enemy hex shields and <code>shield-breaker</code>, the Tesla Coil Pod and the Swarm Tail, the homing diamond, the generator drain and its HUD row, the <code>laser-line</code>, vacuum (its bursts and wrecks) and the <code>IN ROCK</code> limit, the enemy channel on the radio and the intercepted briefing page, the hangar's ◆ marker, <code>reference_dps</code> 29–35 and the Act 5 balance plan. No Act 5 level exists yet, so the Tesla Coil Pod was flown on the real Level 08, and everything else on a <strong>capture rig</strong>: Level 08 in a scratch copy made <code>vacuum</code> and <code>underground</code>, with shields on its Stingers, Spore Bombers and Mantises, homing diamonds from its Needlers, laser lines from its Spine Turrets, a Vorne line, an intercepted page and three drainers latched at set seconds (the <span class="ref">recipe</span>; nothing of it is in the repository). The art and sound are Act 2's units standing in for the Ascendancy's.</p><p>Answer the rows below: the production art (a or b, or accept or redo), nine calls the build made (accept or change; the recommendation is pre-selected) and the belt README to approve. Decided as trivia and only logged (the parts' <em>Decisions</em>): the balance plan's new <code>unfit</code> step, the plan buying the generator before upgrades, and hard's Act 5 plan without the Ion Beam.</p><h3>In the game</h3><p>The proposal written to <code>assets/</code> plays in the game until you pick: the arc <strong>a</strong>, the shield <strong>b</strong>, the vacuum burst <strong>a</strong>. The sounds are round 60's picks (S.1–S.6, S.10–S.13), still cut from the Freesound previews; the Tesla Coil Pod zaps with the <code>tesla</code> family's final r03 a and the Swarm Tail plays the micro-missile launch a little lower.</p></div><p class="note">A read-only record: every row as the review page showed it, with the answer and the outcome from the round README (the record of truth). Media is linked from the design tree, not copied.</p><nav class="sec"><a href="#s-art-final">Art</a><a href="#s-calls-the-build-made">Calls</a><a href="#s-document-to-approve">Docs</a></nav><section id="s-art-final"><h2>Art — final</h2>
+<article class="row" id="r-F.1">
+<header><span class="rid">F.1</span><h3>Tesla Coil Pod</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../player/weapons/tesla-coil-pod/README.md#concept-art">Tesla Coil Pod</a></div>
+<div class="q"><strong>pick a or b</strong> (<code>tools/art/act5_gear.py arc pod</code>): the arc from the pod to its target, three jagged shapes in turn, a white core with forks and a spark burst at the target. <strong>a</strong> blue-white with a violet fringe (the player's cool colours; in the game); <strong>b</strong> white-gold, the colour of the shield it breaks. The pod itself (copper coil rings, a white insulator, a glowing terminal) is the same in both. The capture: Level 08 with two L3 pods and the Swarm Tail, the ship steered up into the waves</div>
+<div class="media"><figure class="m img"><a href="../../player/weapons/tesla-coil-pod/concept/tesla-arc-final-r61-a.png"><img loading="lazy" decoding="async" src="../../player/weapons/tesla-coil-pod/concept/tesla-arc-final-r61-a.png" alt="arc a"></a><figcaption>arc a</figcaption></figure><figure class="m img"><a href="../../player/weapons/tesla-coil-pod/concept/tesla-arc-final-r61-a.gif"><img loading="lazy" decoding="async" src="../../player/weapons/tesla-coil-pod/concept/tesla-arc-final-r61-a.gif" alt="arc a · motion"></a><figcaption>arc a · motion</figcaption></figure><figure class="m img"><a href="../../player/weapons/tesla-coil-pod/concept/rejected/tesla-arc-final-r61-b.png"><img loading="lazy" decoding="async" src="../../player/weapons/tesla-coil-pod/concept/rejected/tesla-arc-final-r61-b.png" alt="arc b"></a><figcaption>arc b</figcaption></figure><figure class="m img"><a href="../../player/weapons/tesla-coil-pod/concept/rejected/tesla-arc-final-r61-b.gif"><img loading="lazy" decoding="async" src="../../player/weapons/tesla-coil-pod/concept/rejected/tesla-arc-final-r61-b.gif" alt="arc b · motion"></a><figcaption>arc b · motion</figcaption></figure><figure class="m img"><a href="../../player/weapons/tesla-coil-pod/concept/tesla-coil-pod-final-r61-a.png"><img loading="lazy" decoding="async" src="../../player/weapons/tesla-coil-pod/concept/tesla-coil-pod-final-r61-a.png" alt="pod"></a><figcaption>pod</figcaption></figure><figure class="m img"><a href="../../player/weapons/tesla-coil-pod/concept/tesla-coil-pod-final-r61-a.gif"><img loading="lazy" decoding="async" src="../../player/weapons/tesla-coil-pod/concept/tesla-coil-pod-final-r61-a.gif" alt="pod · motion"></a><figcaption>pod · motion</figcaption></figure><figure class="m img"><a href="../../player/weapons/tesla-coil-pod/concept/tesla-coil-pod-capture-r61-a.png"><img loading="lazy" decoding="async" src="../../player/weapons/tesla-coil-pod/concept/tesla-coil-pod-capture-r61-a.png" alt="capture"></a><figcaption>capture</figcaption></figure><figure class="m vid"><figcaption>video with sound</figcaption><video controls preload="none" playsinline src="../../player/weapons/tesla-coil-pod/concept/tesla-coil-pod-capture-r61-a.mp4"></video></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the reach (160 px at L3) means the pods stay silent while the ship hangs back at the bottom edge; b's gold arc meets gold shields and gold diamonds on the same screen</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; b rejected (<code>concept/rejected/</code>); a is in the game</span></div>
+</article>
+<article class="row" id="r-F.2">
+<header><span class="rid">F.2</span><h3>Enemy hex shield</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../enemies/README.md#concept-art">Enemy hex shield</a></div>
+<div class="q"><strong>pick a or b</strong> (<code>tools/art/act5_gear.py shield</code>): the bubble per size tier (52, 92, 116 px), its hit on the rim toward the ship, the 0.2 s shatter, the refill's shimmer from the edge. <strong>b</strong> "gold film" (in the game; round 60 found the lattice heavy over the Gunship): a smooth gold film with a bright rim, hexes only where a hit lands; <strong>a</strong> "hex lattice": a thin gold lattice over the whole bubble. The captures: the rig's Stingers, Spore Bombers and Mantises shielded, the Tesla arcs breaking them</div>
+<div class="media"><figure class="m img"><a href="../../enemies/concept/enemy-shield-final-r61-a.png"><img loading="lazy" decoding="async" src="../../enemies/concept/enemy-shield-final-r61-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/concept/enemy-shield-final-r61-a.gif"><img loading="lazy" decoding="async" src="../../enemies/concept/enemy-shield-final-r61-a.gif" alt="a · motion"></a><figcaption>a · motion</figcaption></figure><figure class="m img"><a href="../../enemies/concept/rejected/enemy-shield-final-r61-b.png"><img loading="lazy" decoding="async" src="../../enemies/concept/rejected/enemy-shield-final-r61-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/concept/rejected/enemy-shield-final-r61-b.gif"><img loading="lazy" decoding="async" src="../../enemies/concept/rejected/enemy-shield-final-r61-b.gif" alt="b · motion"></a><figcaption>b · motion</figcaption></figure><figure class="m img"><a href="../../enemies/concept/enemy-shield-capture-r61-a.png"><img loading="lazy" decoding="async" src="../../enemies/concept/enemy-shield-capture-r61-a.png" alt="capture"></a><figcaption>capture</figcaption></figure><figure class="m vid"><figcaption>video with sound</figcaption><video controls preload="none" playsinline src="../../enemies/concept/enemy-shield-capture-r61-a.mp4"></video></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> over a column of 40 px Stingers the 52 px bubbles touch; the hit flash is small at game size; the units are Act 2's stand-ins, not the Talon</p>
+<p class="rec"><span class="tag">Recommendation</span> b</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge pick">not the recommendation</span> <span><strong>a</strong> — not the recommendation: the hex lattice, not the gold film b the game draws</span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; b rejected; the swap of the game's shield frames to a is a later art step (ART-F), b stays in <code>assets/</code> until then</span></div>
+</article>
+<article class="row" id="r-F.3">
+<header><span class="rid">F.3</span><h3>Vacuum kill bursts</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../art-direction/README.md#concept-art">Vacuum kill bursts</a></div>
+<div class="q"><strong>pick a or b</strong> (<code>tools/art/explosions.py --vacuum</code>): a kill in vacuum flashes and throws a debris ring, no smoke; a medium or large unit's wreck drifts off with the scroll, turning and fading. <strong>a</strong> "flash and ring" (in the game): a white flash gone within 0.1 s, a thin white-blue ring, sparks; <strong>b</strong> "flash and fireball": the same with a brief orange core</div>
+<div class="media"><figure class="m img"><a href="../../art-direction/concept/vacuum-burst-final-r61-a.png"><img loading="lazy" decoding="async" src="../../art-direction/concept/vacuum-burst-final-r61-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../art-direction/concept/vacuum-burst-final-r61-a.gif"><img loading="lazy" decoding="async" src="../../art-direction/concept/vacuum-burst-final-r61-a.gif" alt="a · motion"></a><figcaption>a · motion</figcaption></figure><figure class="m img"><a href="../../art-direction/concept/rejected/vacuum-burst-final-r61-b.png"><img loading="lazy" decoding="async" src="../../art-direction/concept/rejected/vacuum-burst-final-r61-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../art-direction/concept/rejected/vacuum-burst-final-r61-b.gif"><img loading="lazy" decoding="async" src="../../art-direction/concept/rejected/vacuum-burst-final-r61-b.gif" alt="b · motion"></a><figcaption>b · motion</figcaption></figure><figure class="m img"><a href="../../art-direction/concept/vacuum-capture-r61-a.png"><img loading="lazy" decoding="async" src="../../art-direction/concept/vacuum-capture-r61-a.png" alt="capture"></a><figcaption>capture</figcaption></figure><figure class="m vid"><figcaption>video with sound</figcaption><video controls preload="none" playsinline src="../../enemies/concept/belt-rig-capture-r61-a.mp4"></video></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> a's burst is over quickly and easy to miss in a busy wave; the rig flies over Level 08's city, not the belt</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; b rejected; a is in the game</span></div>
+</article>
+<article class="row" id="r-F.4">
+<header><span class="rid">F.4</span><h3>Swarm Tail</h3><span class="kind">accept or redo</span></header>
+<div class="part"><a href="../../player/weapons/swarm-tail/README.md#concept-art">Swarm Tail</a></div>
+<div class="q"><strong>accept or redo</strong> (<code>tools/art/act5_gear.py swarm</code>): the micro-missile at 32 headings with an <strong>ivory-white plume</strong> (the wing pods' is cyan; orange and yellow are enemy bullet colours), launched backwards and curving onto targets behind</div>
+<div class="media"><figure class="m img"><a href="../../player/weapons/swarm-tail/concept/swarm-tail-final-r61-a.png"><img loading="lazy" decoding="async" src="../../player/weapons/swarm-tail/concept/swarm-tail-final-r61-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure><figure class="m img"><a href="../../player/weapons/swarm-tail/concept/swarm-tail-final-r61-a.gif"><img loading="lazy" decoding="async" src="../../player/weapons/swarm-tail/concept/swarm-tail-final-r61-a.gif" alt="GIF"></a><figcaption>GIF</figcaption></figure><figure class="m img"><a href="../../player/weapons/swarm-tail/concept/swarm-tail-capture-r61-a.png"><img loading="lazy" decoding="async" src="../../player/weapons/swarm-tail/concept/swarm-tail-capture-r61-a.png" alt="capture"></a><figcaption>capture</figcaption></figure><figure class="m vid"><figcaption>video with sound</figcaption><video controls preload="none" playsinline src="../../player/weapons/tesla-coil-pod/concept/tesla-coil-pod-capture-r61-a.mp4"></video></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> at game size the plume reads as a thin white streak behind the ship, easy to lose</p>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>accepted</span></div>
+</article>
+<article class="row" id="r-F.5">
+<header><span class="rid">F.5</span><h3>Act 5 icons and the hangar</h3><span class="kind">accept or redo</span></header>
+<div class="part"><a href="../../ui/hangar/README.md#concept-art">Act 5 icons and the hangar</a></div>
+<div class="q"><strong>accept or redo</strong> (<code>tools/art/icons.py --act5</code>): the Tesla Coil Pod (the pod with an arc from its terminal) and Swarm Tail (three micro-missiles fanned backwards) at 16 and 24 px. The capture: the hangar before the rig's Level 08: the Tesla Coil Pod in the shop with <code>NEW</code> and the ◆ (the intel recommends <code>shield-breaker</code>), its detail <code>&lt;AREA&gt; &lt;SHIELD-BREAKER&gt;</code> and its test fire, the intel's <code>AIRSTRIKE: IN ROCK</code>, the Swarm Tail in the rear shop</div>
+<div class="media"><figure class="m img"><a href="../../ui/hangar/concept/act5-icons-final-r61-a.png"><img loading="lazy" decoding="async" src="../../ui/hangar/concept/act5-icons-final-r61-a.png" alt="icons"></a><figcaption>icons</figcaption></figure><figure class="m img"><a href="../../ui/hangar/concept/act5-hangar-capture-r61-a.png"><img loading="lazy" decoding="async" src="../../ui/hangar/concept/act5-hangar-capture-r61-a.png" alt="hangar capture"></a><figcaption>hangar capture</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the Tesla icon is a bit thin at 16 px; the intel's RECOMMEND row cuts <code>SHIELD-BREAKER</code> at the panel's edge (a fix for part B, before Level 29's intel)</p>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>accepted</span></div>
+</article>
+<article class="row" id="r-F.6">
+<header><span class="rid">F.6</span><h3>Homing diamond</h3><span class="kind">accept or redo</span></header>
+<div class="part"><a href="../../enemies/README.md#concept-art">Homing diamond</a></div>
+<div class="q"><strong>accept or redo</strong> (<code>tools/art/act5_gear.py diamond</code>, round 60 A.16 a): the diamond at 16 headings, its exhaust (two flicker frames), the shot-down pop and the end-of-life fizzle. The capture: the rig's Needlers launching diamonds down that turn onto the ship</div>
+<div class="media"><figure class="m img"><a href="../../enemies/concept/homing-diamond-final-r61-a.png"><img loading="lazy" decoding="async" src="../../enemies/concept/homing-diamond-final-r61-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure><figure class="m img"><a href="../../enemies/concept/homing-diamond-final-r61-a.gif"><img loading="lazy" decoding="async" src="../../enemies/concept/homing-diamond-final-r61-a.gif" alt="GIF"></a><figcaption>GIF</figcaption></figure><figure class="m img"><a href="../../enemies/concept/homing-diamond-capture-r61-a.png"><img loading="lazy" decoding="async" src="../../enemies/concept/homing-diamond-capture-r61-a.png" alt="capture"></a><figcaption>capture</figcaption></figure><figure class="m vid"><figcaption>video with sound</figcaption><video controls preload="none" playsinline src="../../enemies/concept/belt-rig-capture-r61-a.mp4"></video></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> in the game the diamonds read orange-red rather than gold over a dark ground</p>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>accepted</span></div>
+</article>
+<article class="row" id="r-K.1">
+<header><span class="rid">K.1</span><h3>The power row under a drain</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../ui/hud/README.md#concept-art">The power row under a drain</a></div>
+<div class="q"><strong>accept or change</strong> (game captures): the power row while drainers are latched: <code>POWER DRAIN</code> with the drained MW hatched dark red at the gauge's top end, the readout <code>6/8</code> and <code>4/8</code>, <code>REGEN OFF</code> when the load passes the output, <code>FIRE 50%</code> when the weapons are short too; the muzzles flicker and the shield ring dims in the play field</div>
+<div class="media"><figure class="m img"><a href="../../ui/hud/concept/power-row-capture-r61-a.png"><img loading="lazy" decoding="async" src="../../ui/hud/concept/power-row-capture-r61-a.png" alt="captures"></a><figcaption>captures</figcaption></figure><figure class="m vid"><figcaption>video with sound</figcaption><video controls preload="none" playsinline src="../../enemies/concept/belt-rig-capture-r61-a.mp4"></video></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the rig's Tesla fit is over its output from the first drainer (a debug fit skips the power cap), so <code>FIRE 50%</code> shows at once</p>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>accepted</span></div>
+</article>
+</section>
+<section id="s-calls-the-build-made"><h2>Calls the build made</h2>
+<div class="sum"><p>Nine of the rules the steps had to decide where the approved documents left a gap or a choice. Each is built as described; the recommendation is pre-selected. The rest are in the parts' <em>Decisions</em> logs.</p></div>
+<article class="row" id="r-C.1">
+<header><span class="rid">C.1</span><h3>Who locks onto a homing diamond (QA-1)</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../enemies/README.md#attack-pattern-vocabulary">Who locks onto a homing diamond (QA-1)</a></div>
+<div class="q"><strong>accept or change</strong> (decided 2026-10-27, the gap check's QA-1): the player's homing shots, the Swarm Tail, Rook and the Tesla arc may pick an enemy homing diamond as their target <strong>only when no enemy unit is in reach</strong>; then they shoot it down like a unit. Otherwise a stream of diamonds would pull every homing shot off the units that fire them. Recommended: accept (change: diamonds first, a missile defence; or never)</div>
+<div class="media"><figure class="m vid"><figcaption>video with sound</figcaption><video controls preload="none" playsinline src="../../enemies/concept/belt-rig-capture-r61-a.mp4"></video></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> a diamond aimed at the ship flies on while a unit is in reach</p>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>confirmed</span></div>
+</article>
+<article class="row" id="r-C.2">
+<header><span class="rid">C.2</span><h3>The Swarm Tail&#x27;s turn rates</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../player/weapons/swarm-tail/README.md#decisions">The Swarm Tail's turn rates</a></div>
+<div class="q"><strong>accept or change</strong>: the turn rates are the draft's ×1.5, 360 / 360 / 360 / 390 / 390°/s, overdrive 420 (were 240 … 280). Measured on a test range: at 240°/s and 480 px/s a missile launched backwards circles a target ahead of or beside the ship and never strikes it (0 DPS at L1); at 360°/s it strikes at about its DPS ahead, beside and behind. Speed, life, seek radius and DPS unchanged. Recommended: accept</div>
+<div class="media"><figure class="m vid"><figcaption>video with sound</figcaption><video controls preload="none" playsinline src="../../player/weapons/tesla-coil-pod/concept/tesla-coil-pod-capture-r61-a.mp4"></video></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>confirmed</span></div>
+</article>
+<article class="row" id="r-C.3">
+<header><span class="rid">C.3</span><h3>The breaker&#x27;s hold</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../enemies/README.md#enemy-shields">The breaker's hold</a></div>
+<div class="q"><strong>accept or change</strong>: a <code>shield-breaker</code> hit (the Tesla arc) empties the shield and the refill starts <strong>3 s after that hit in total</strong> (not the usual 2 s quiet plus 3 s); a later normal hit restarts only the usual 2 s, never shortening the hold; the EMP holds it for its machine stun. Recommended: accept</div>
+<div class="media"><figure class="m vid"><figcaption>video with sound</figcaption><video controls preload="none" playsinline src="../../enemies/concept/enemy-shield-capture-r61-a.mp4"></video></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>confirmed</span></div>
+</article>
+<article class="row" id="r-C.4">
+<header><span class="rid">C.4</span><h3>What the Tesla arc picks</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../player/weapons/tesla-coil-pod/README.md#behaviour">What the Tesla arc picks</a></div>
+<div class="q"><strong>accept or change</strong>: the arc never picks a hardened unit (it would glance off; it looks for the next), does pick boss parts (it hits the part, like a bolt), and does not chain from target to target (its sparks are the splash); the sparks ignore spore mines (a mine in the struck spot still bursts). Recommended: accept</div>
+<div class="media"><figure class="m img"><a href="../../player/weapons/tesla-coil-pod/concept/tesla-coil-pod-capture-r61-a.png"><img loading="lazy" decoding="async" src="../../player/weapons/tesla-coil-pod/concept/tesla-coil-pod-capture-r61-a.png" alt="capture"></a><figcaption>capture</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> over hardened ground the pods fall silent</p>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>confirmed</span></div>
+</article>
+<article class="row" id="r-C.5">
+<header><span class="rid">C.5</span><h3>The laser line hurts the ship, not Rook</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../enemies/ground/rail-bunker/README.md#concept-art">The laser line hurts the ship, not Rook</a></div>
+<div class="q"><strong>accept or change</strong>: the <code>laser-line</code> (the Rail Bunker, the Sovereign's batteries, the mass relay) hits the ship once per line for its bullet class and passes through Rook and the escort drones (as the laser sweep does); the line is locked at the telegraph's start, so a sidestep clears it. The capture shows the provisional look (a thin red telegraph that brightens and flickers, the live band in gold round a white core) until the bunker's art</div>
+<div class="media"><figure class="m img"><a href="../../enemies/ground/rail-bunker/concept/laser-line-capture-r61-a.png"><img loading="lazy" decoding="async" src="../../enemies/ground/rail-bunker/concept/laser-line-capture-r61-a.png" alt="laser-line capture"></a><figcaption>laser-line capture</figcaption></figure><figure class="m vid"><figcaption>video with sound</figcaption><video controls preload="none" playsinline src="../../enemies/concept/belt-rig-capture-r61-a.mp4"></video></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> Rook can fly through a line untouched</p>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>confirmed</span></div>
+</article>
+<article class="row" id="r-C.6">
+<header><span class="rid">C.6</span><h3>The enemy channel&#x27;s colour and tag</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../ui/hud/README.md#concept-art">The enemy channel's colour and tag</a></div>
+<div class="q"><strong>accept or change</strong>: the enemy channel's plate, name and text are amber <code>FFA035</code> (the friendly radio's is green), the radio row shows an <code>INTERCEPT</code> tag under the name, the portrait sits under a steady interference with rolling bands and a short tear every few seconds; an intercepted briefing page is headed <code>INTERCEPTED · ALL CHANNELS</code> in the same amber; never urgent (no red). Recommended: accept</div>
+<div class="media"><figure class="m img"><a href="../../ui/hud/concept/intercept-radio-capture-r61-a.png"><img loading="lazy" decoding="async" src="../../ui/hud/concept/intercept-radio-capture-r61-a.png" alt="radio capture"></a><figcaption>radio capture</figcaption></figure><figure class="m img"><a href="../../ui/briefing/concept/intercept-briefing-capture-r61-a.png"><img loading="lazy" decoding="async" src="../../ui/briefing/concept/intercept-briefing-capture-r61-a.png" alt="briefing capture"></a><figcaption>briefing capture</figcaption></figure><figure class="m vid"><figcaption>video with sound</figcaption><video controls preload="none" playsinline src="../../ui/briefing/concept/intercept-briefing-capture-r61-a.mp4"></video></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the rig's page is Varga's: the briefing has no name plate for Vorne yet, and an intercepted page <strong>with an image crashes the game</strong> (both fixed in part B, before the Act 5 intro)</p>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>confirmed</span></div>
+</article>
+<article class="row" id="r-C.7">
+<header><span class="rid">C.7</span><h3>Which units leave a wreck in vacuum</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../world/belt/README.md#vacuum-rules">Which units leave a wreck in vacuum</a></div>
+<div class="q"><strong>accept or change</strong>: only medium and large units leave a drifting wreck after their burst; tiny and small units vanish in the flash and debris ring (dozens of drifting popcorn wrecks would clutter the field and the GPU). Recommended: accept</div>
+<div class="media"><figure class="m img"><a href="../../art-direction/concept/vacuum-capture-r61-a.png"><img loading="lazy" decoding="async" src="../../art-direction/concept/vacuum-capture-r61-a.png" alt="vacuum capture"></a><figcaption>vacuum capture</figcaption></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>confirmed</span></div>
+</article>
+<article class="row" id="r-C.8">
+<header><span class="rid">C.8</span><h3>When the shield&#x27;s refill sound plays</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#act-5-sounds-draft-round-60">When the shield's refill sound plays</a></div>
+<div class="q"><strong>accept or change</strong>: the refill hum (S.3 a) plays once when a shield is <strong>full again</strong>, not when it starts to regrow: it tells the player the work is undone; the regrowth itself is silent and shown by the shimmer. Recommended: accept</div>
+<div class="media"><figure class="m vid"><figcaption>video with sound</figcaption><video controls preload="none" playsinline src="../../enemies/concept/enemy-shield-capture-r61-a.mp4"></video></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the hum comes a second or two after the shimmer starts</p>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>confirmed</span></div>
+</article>
+<article class="row" id="r-C.9">
+<header><span class="rid">C.9</span><h3>Vorne&#x27;s voice</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../audio/voice/README.md#decisions">Vorne's voice</a></div>
+<div class="q"><strong>accept or change</strong>: Vorne keeps round 60's reference <strong>a</strong> (V.1 a) and the production render lowers it toward the casting brief (about 105 Hz) with a pitch shift of up to −3 semitones, kept only if it stays natural (step VOX-B); otherwise a stays as it is and the step reports back. Recommended: accept</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> a renders at about 130 Hz, above the brief</p>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>confirmed</span></div>
+</article>
+</section>
+<section id="s-document-to-approve"><h2>Document to approve</h2>
+<article class="row" id="r-D.1">
+<header><span class="rid">D.1</span><h3>The belt</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../world/belt/README.md">The belt</a></div>
+<div class="q"><strong>approve or change</strong>: the belt's world document (the per-level sub-locations of Act 5, the parallax layers, the vacuum rules, the palette and the lighter grade, the hazards and set pieces, the natives). The seven level documents approved in round 60 already use it, but the README itself was not among round 60's documents</div>
+<p class="rec"><span class="tag">Recommendation</span> approve</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>approve</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>approved: <code>design/world/belt/README.md</code> is <code>design: approved</code> (2026-10-28)</span></div>
+</article>
+</section></main></body></html>

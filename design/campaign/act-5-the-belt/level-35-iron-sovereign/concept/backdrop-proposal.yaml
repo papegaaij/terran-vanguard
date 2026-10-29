@@ -1,0 +1,156 @@
+backdrop:
+  # Presentation only: Level 35's Ceres orbit and the Sovereign's hull (tools/art/backdrop_l35.py, step
+  # ART-H2, from the level's data.yaml). Open space is the deep layer (the base) with Ceres's curve below; the ground
+  # is the outer hull's tile set in section 3 only, its two ends pieces with the tile's exact rows
+  # (hull-start, hull-end: the neck runs on to the station's centre under ART-H1's base disc). The far
+  # layer holds the tenders far below (section 2), low-air the loyalist wrecks (section 1). Animated: the
+  # red blinks only (at most two on the screen).
+  scroll_factors: {deep: 0.12, far: 0.5, ground: 1, low-air: 1.35, high-air: 2.2}
+  ramp: 2
+  haze_colour: 09090e
+  atmosphere:
+    clear: {haze: 0.0}
+  tile_sets:
+    orbit-space: {layer: deep, height: 1024}   # space, the sunlit dust band, stars
+    sovereign-hull: {layer: ground, height: 960}   # the outer hull (opaque), section 3
+    orbit-dust: {layer: high-air, height: 960}   # close grit (transparent)
+  pieces:
+    ceres-curve: {layer: deep, size: [480, 760]}
+    ceres-pole: {layer: deep, size: [480, 760]}
+    tender-a: {layer: far, size: [72, 148]}
+    tender-b: {layer: far, size: [64, 124]}
+    docking-spar: {layer: far, size: [64, 420]}
+    patrol-boat-wreck: {layer: low-air, size: [96, 176]}
+    loyalist-wreck-a: {layer: low-air, size: [64, 72]}
+    loyalist-wreck-b: {layer: low-air, size: [56, 64]}
+    hull-start: {layer: ground, size: [480, 480]}
+    hull-end: {layer: ground, size: [480, 1280]}
+    sam-pad: {layer: ground, size: [64, 64]}
+    bunker-pad: {layer: ground, size: [96, 96]}
+    lifeboat-clamps: {layer: ground, size: [112, 80]}
+    beacon-wreck: {layer: ground, size: [128, 112]}
+    fragment-a: {layer: ground, size: [176, 120]}
+    fragment-b: {layer: ground, size: [136, 152]}
+    fragment-c: {layer: ground, size: [112, 96]}
+    red-blink: {layer: ground, size: [12, 12], frames: 2, fps: 1}
+  placed:
+    # the hull's south bulkhead; its top rows the tile's own (exact rows 8120..8599: covers the seam at 8540)
+    - {piece: hull-start, t: 50.565, x: 240}
+    # the hull's north bulkhead, the neck and the collar under the station's centre (row 14168); bottom rows the tile's own (exact rows 13010..14289: covers the seam at 13050)
+    - {piece: hull-end, t: 85.801, x: 240}
+    # the SAM Nests' pads (under the nests)
+    - {piece: sam-pad, t: 53.947, x: 90}
+    - {piece: sam-pad, t: 53.947, x: 150}
+    - {piece: sam-pad, t: 53.947, x: 390}
+    - {piece: sam-pad, t: 65.947, x: 80}
+    - {piece: sam-pad, t: 65.947, x: 140}
+    - {piece: sam-pad, t: 65.947, x: 260}
+    - {piece: sam-pad, t: 75.947, x: 120}
+    - {piece: sam-pad, t: 75.947, x: 330}
+    - {piece: sam-pad, t: 75.947, x: 390}
+    # the Rail Bunkers' pads
+    - {piece: bunker-pad, t: 57.54, x: 110}
+    - {piece: bunker-pad, t: 57.54, x: 370}
+    - {piece: bunker-pad, t: 72.04, x: 100}
+    - {piece: bunker-pad, t: 73.04, x: 380}
+    - {piece: bunker-pad, t: 80.04, x: 90}
+    - {piece: bunker-pad, t: 80.04, x: 390}
+    # the clamps holding the Ceres lifeboat (the secret's trigger sprite between the jaws)
+    - {piece: lifeboat-clamps, t: 67.907, x: 400}
+    # the crashed loyalist fighter: the beacon (nav-buoy) on its back at (240, 160 down) at t=80
+    - {piece: beacon-wreck, t: 80.733, x: 240}
+    # a red hull light blinking
+    - {piece: red-blink, t: 53.8, x: 34}
+    - {piece: red-blink, t: 60.467, x: 437}
+    - {piece: red-blink, t: 66.0, x: 437}
+    - {piece: red-blink, t: 73.0, x: 34}
+    - {piece: red-blink, t: 75.8, x: 437}
+    - {piece: red-blink, t: 87.698, x: 200}
+    # the station's broken plates after the kill
+    - {piece: fragment-a, t: 104.0, x: 110}
+    - {piece: fragment-c, t: 112.0, x: 360}
+    - {piece: fragment-b, t: 121.0, x: 140}
+    - {piece: fragment-c, t: 127.0, x: 400}
+    # Ceres's sunlit curve low on the left, Ceres Hub's red lights on the night side
+    - {piece: ceres-curve, t: 0.437, x: 240}
+    # Ceres's north pole far below the halted station (centred 380 down at t=92)
+    - {piece: ceres-pole, t: 82.412, x: 240}
+    # the Sovereign's tenders and a docking spar far below
+    - {piece: docking-spar, t: 23.625, x: 380}
+    - {piece: tender-a, t: 30.0, x: 120}
+    - {piece: tender-b, t: 41.0, x: 330}
+    - {piece: tender-a, t: 47.875, x: 70}
+    # loyalist wrecks and the dead Ceres patrol boat drifting
+    - {piece: loyalist-wreck-a, t: 4.0, x: 110}
+    - {piece: patrol-boat-wreck, t: 9.0, x: 360}
+    - {piece: loyalist-wreck-b, t: 14.0, x: 90}
+    - {piece: loyalist-wreck-a, t: 18.0, x: 410}
+sections:   # ART-H2's reading of the README's Layout (160, the hull 150 eased over 2 s; the halt eased down over [85.5, 91.5] as a 0.5 s timed halt before the 1 s arena, the wreck eased up to 60); H2 writes the real ones
+  - {name: Ceres Orbit, end: 20, atmosphere: clear, tiles: [orbit-space, orbit-dust], notes: {'layers': {'deep': "Ceres's curve, Ceres Hub's lights (red since Level 29), the dust band.", 'low-air': 'loyalist wrecks and a dead Ceres patrol boat drifting.'}, 'purpose': 'Talons and popcorn; Ceres Hub Control comes on the radio.'}}
+  - {name: The Escort Screen, end: 50, atmosphere: clear, tiles: [orbit-space, orbit-dust], notes: {'layers': {'far': "the Sovereign's tenders and docking spars far below.", 'air': 'the escort.'}, 'purpose': "The Gunships' Dart streams (t=20), the Rail Serpent pincer (t=35), the Hornets; Talon pincers from the sides."}}
+  - {name: The Outer Hull, end: 80, speed: 150, ramp: 2, atmosphere: clear, tiles: [orbit-space, sovereign-hull, orbit-dust], notes: {'layers': {'ground': "the station's outer hull (black plating, gold trim, red lights): SAM Nest groups (t≈52, 64, 74), Rail Bunker pairs (t≈55.5, 70, 78), a Ceres garrison lifeboat clamped to the hull (t≈66, the secret). **The mass-relay flash** at t=61."}, 'purpose': "The hull's guns; the flash once; a rear V-wing (t=68.5)."}}
+  - {name: The Rings' Edge, end: 85.5, speed: 150, atmosphere: clear, tiles: [orbit-space, orbit-dust], notes: {'layers': {'ground': "the outer ring's rim rolls into view, then the middle and inner rings and the core."}, 'purpose': 'The last wave (t=83.5); the pre-boss pause begins (t≈84).'}}
+  - {name: The Halt, end: 92, speed: 1, ramp: 6, atmosphere: clear, tiles: [orbit-space, orbit-dust], notes: {'layers': {'ground': "the station's centre reaching its place (240, 160 on the screen) as the scroll comes to rest."}, 'purpose': 'The pre-boss pause (t≈84-92); nothing on the ground is left on the field.'}}
+  - {name: The Sovereign, end: 93, speed: 0, arena: True, hold_after_boss: 6, atmosphere: clear, tiles: [orbit-space, orbit-dust], notes: {'layers': {'ground': 'the station filling the field, its centre at (240, 160) ([arena](../../../enemies/bosses/iron-sovereign/README.md#arena)).', 'deep': 'Ceres far below.'}, 'purpose': 'The boss fight (≈ 145 s at medium); the scroll halted and the clock stopped while the station lives.'}}
+  - {name: The Wreck, end: 131.5, speed: 60, ramp: 2, atmosphere: clear, tiles: [orbit-space, orbit-dust], notes: {'layers': {'ground': "the broken rings drifting apart, slowly turning, the core's crater glowing."}, 'purpose': "The closing lines (K+5 to ≈ K+43): Okafor, Vorne's offer, the answer, Varga's data, Ceres Control; no enemies (the level's outro for the pacing checks)."}}
+# rows: the hull tile from 8540 to 13050 (ground px); the halted screen 13788..14327 (t=92); the end's bottom edge 16038
+arena:   # for H2/H4: where the boss's arena starts and the station stands
+  section: The Sovereign
+  halt_t: 92
+  scroll: 13788            # the ground's scroll while halted (the bottom edge's row)
+  centre_row: 14168        # the station's centre: screen (240, 160) down = sim (240, 380)
+  disc_enters_t: 85.94   # ART-H1's 456 px base disc's bottom edge reaches the top edge (it scrolls in with the ground)
+  neck: [152, 328]     # the neck under the ship band in the arena (screen y > 388)
+ground_targets:  # at: [t, x], when the target enters at the top edge and its x (on the pads; a nest 44 px,
+  # a bunker 72 px, the lifeboat 32 px tall: tools/art/l35_props.py `ceres-lifeboat`, 20 HP, 28 on hard,
+  # the crate 100). The t=70 pair staggered 1 s (their lines never both on the ship's row); the t~56
+  # pair at 55.5 (off the screen by t=59.6, the flash at 61). Every x >= 80 px inside the field.
+  - target: SAM Nest group x3 on the hull
+    section: 3
+    enemy: sam-nest
+    count: 3
+    at: [[52, 90], [52, 150], [52, 390]]
+  - target: Rail Bunker pair on the hull
+    section: 3
+    enemy: rail-bunker
+    count: 2
+    at: [[55.5, 110], [55.5, 370]]
+  - target: SAM Nest group x3 on the hull
+    section: 3
+    enemy: sam-nest
+    count: 3
+    at: [[64, 80], [64, 140], [64, 260]]
+  - target: The Ceres garrison lifeboat (the secret)
+    section: 3
+    sprite: ceres-lifeboat
+    size: [56, 32]
+    hp: 20   # hard 28
+    at: [[66, 400]]
+  - target: Rail Bunker pair on the hull
+    section: 3
+    enemy: rail-bunker
+    count: 2
+    at: [[70, 100], [71, 380]]
+  - target: SAM Nest group x3 on the hull
+    section: 3
+    enemy: sam-nest
+    count: 3
+    at: [[74, 120], [74, 330], [74, 390]]
+  - target: Rail Bunker pair on the hull
+    section: 3
+    enemy: rail-bunker
+    count: 2
+    at: [[78, 90], [78, 390]]
+drops:   # the CDF beacon: Level 33's nav buoy (tools/art/belt_units_f.py `nav-buoy`; H4 adds it to BuoyLooks.MOORED as F4 did) on the crashed loyalist fighter (`beacon-wreck`)
+  - {t: 80, x: 240, y: 380, pickup: armour patch, sprite: nav-buoy}
+debris:
+  # Proposal (ART-H2): the README's two small asteroids in section 1 (part B's small belt rocks, 6 HP; no
+  # large rock in orbit). H2 checks them against the waves (no rock within 40 px of a spawn point).
+  chunks:
+    belt-a: {size: [40, 36], hp: 6}
+    belt-b: {size: [36, 32], hp: 6}
+  clearance: 120
+  max_large: 0
+  placed:
+    - {t: 8.8, x: 330, chunk: belt-a, drift: [-14, -170]}
+    - {t: 16.2, x: 140, chunk: belt-b, drift: [18, -185]}

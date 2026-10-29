@@ -617,6 +617,7 @@ music:
   full_section: 4     # the full mix from the turn (timed: t=60), held through the halt
   stem_times:
     - {t: 60, stems: full, fade: 1}   # the full mix as the lights go red
+  motif: {from: 28, sections: {}}   # Vorne's motif "in the open" (music, Cues per level (Act 5): on, the broadcast has just aired): track 12's motif stem on top from the base stem's start (section 2, t=28) to the end
   ambience: belt-station   # the belt's station bed (round 60 S.17)
   end_jingle: mission-complete
 

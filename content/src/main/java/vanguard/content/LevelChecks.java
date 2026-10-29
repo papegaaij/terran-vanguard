@@ -95,11 +95,12 @@ final class LevelChecks extends ContentChecks {
             // M8 part B: or a ground target of it (Level 22's Drill Rigs).
             boolean placed = level.groundTargets().stream()
                     .anyMatch(target -> target.enemy().filter(slug::equals).isPresent());
-            if (!levelEnemies.contains(slug) && !placed) {
+            // M9 part G (Level 34's "Strip the graveyard"): or a ground object's look (an object escapes objective).
+            if (!levelEnemies.contains(slug) && !placed && SalvageChecks.objectsOf(level, slug) == 0) {
                 problem(
                         level,
                         "objectives.secondary.escapes",
-                        "no wave or ground target of '" + slug + "' in this level");
+                        "no wave, ground target or object look of '" + slug + "' in this level");
             }
         });
         level.crateSeconds().ifPresent(seconds -> {

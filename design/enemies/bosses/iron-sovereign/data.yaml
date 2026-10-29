@@ -1,0 +1,110 @@
+# Iron Sovereign stat block and boss script at medium: the stat block is rendered into README.md.
+# Schema: ../../../tech/architecture/schemas-units/README.md (the rings: RingBlock, M9 part H)
+# M9 part H, step H2 (Level 35's act boss; approved in round 60, Q7 a: the top-down rings, A.17 b, Q1 a the core's
+# shield, Q6 b the Darts): an anchored arena boss on the `ground` layer, its centre (240, 160) on the screen. Three rings
+# turn round the core (`boss.rings`, flown by the simulation's RingArena, steps H1a-H1b): the outer (radius 200, 12
+# segments, 6°/s clockwise) carries 6 SAM batteries, the middle (140, 8 segments, 10°/s counter-clockwise) 4 rail
+# batteries, the inner (85, 6 segments) steps 120° in 4 s and holds 4 s with 3 laser batteries. A battery fires only
+# while its mount is in the fire arc (120°, centred on the bearing to the ship, clamped 30°-150°); its attack is its
+# ground unit's (`from:`: the SAM Nest's salvo, the Rail Bunker's line, the Sentinel Tower's sweep at 300 px; the unit's
+# difficulty hooks give their hard and easy shape). The batteries are appended to `part_list` as `<attack>-1…` in ring
+# order (core 0, sam-1..6, rail-1..4, laser-1..3). A ring locks when its every battery is dead (2 s grind); the phase is
+# the count of locked rings; at three the core opens (3 s, untouchable), its hex shield 80, its spiral, its bays' Dart
+# streams and below 50 % its own rail line.
+# The numbers are the spec's draft at medium (round 60) but the core's HP: step H3 measured the fight with the autopilot over five seeds
+# (the plan's fit and Rook): the draft's 77 s fell under the window, so the core 5,000 -> 14,000 (the batteries kept: no
+# ring phase runs long), 149 s, the par 150 kept (pending round 68). The bounty is 24 % of budget(35) at Level 35's
+# measured scale (H2; re-measured in H3 with the fight won: 0.59 kept, the typical haul +1.7 %).
+# Step H1c's naming (pending round 68): the line pattern `laser-line`, the spiral's `run`, `until: {locks: n}`; the
+# battery attacks keep their units' difficulty hooks. ART-H1's four rim bays at 60 px on the diagonals (`start: 45`).
+name: Iron Sovereign
+faction: Jovian Ascendancy
+layer: ground       # the station seen from above, under the play plane: every weapon hits its parts, anti-ground ×2; not hardened; no collision
+tier: huge
+size: [440, 440]    # the outer ring's rim at radius 220 (the core 80 px across)
+hitbox: [70, 70]    # the core's box (the rings' hulls are no hit areas)
+parts: multi
+part_list:  # the core only: the batteries come from boss.rings (appended in ring order, outer first)
+  - {name: core, offset: [0, 0], hitbox: [70, 70], hp: 14000, kind: vital, bounty: 355}   # armoured until "The core" exposes it; the rest of the 24 % after the batteries' 13 × 6; HP tuned in step H3 (draft 5,000)
+orientation: fixed  # the rings turn about the centre (their segments placed by angle); every battery's turret in 64 angles
+hp: 17960           # the parts' sum: the 13 batteries 3,960 (SAM 220 ×6, rail 330 ×4, laser 440 ×3) and the core 14,000
+armour: 'the core until it opens'
+speed: 0
+machine: true       # a machine, but a boss: never stunned; the EMP Burst empties its open core's shield
+movement:
+  anchored: {y: 160}   # the core's centre, px below the top edge on the halted arena (sim (240, 380))
+attacks:
+  - {name: sam, pattern: aimed, from: sam-nest, interval: 6, staggered: true, notes: {text: "SAM batteries the [SAM Nest](../../ground/sam-nest/README.md)'s salvo (its homing diamonds, its tell), one salvo per battery every {interval} s in turn (at most 8 station missiles alive)"}}
+  - {name: rail, pattern: laser-line, from: rail-bunker, interval: 5, staggered: true, notes: {text: "rail batteries the [Rail Bunker](../../ground/rail-bunker/README.md)'s rail line (its lock, telegraph, band and `heavy` hit), one per battery every {interval} s in turn (one telegraphed at a time, ≥ 1.5 s apart)"}}
+  - {name: laser, pattern: laser-sweep, from: {unit: sentinel-tower, length: 300}, interval: 4.5, notes: {text: "laser batteries the [Sentinel Tower](../../ground/sentinel-tower/README.md)'s arc sweep (its telegraph, beam width and `laser` hit) with a 300 px beam, once per inner-ring hold"}}
+  - {name: core-fan-1, pattern: fan, bullet: small, interval: 3.0, speed: 150, count: 5, spread: 40, notes: {text: "the shut core (phases 1–3) an aimed `{pattern}` of {count} over {spread}° (`{bullet}` = {damage}, {speed} px/s) through its shutter slits every {interval} s"}}
+  - {name: core-fan-2, pattern: fan, bullet: small, interval: 2.5, speed: 150, count: 5, spread: 40, notes: {text: "{interval} s in phase 2"}}
+  - {name: core-fan-3, pattern: fan, bullet: small, interval: 2.0, speed: 150, count: 5, spread: 40, notes: {text: "{interval} s in phase 3, each after a 0.5 s glow"}}
+  - {name: core-spiral, pattern: spiral, bullet: small, interval: 0.2, speed: 130, arms: 2, turn_rate: 72, duration: 4, notes: {text: "the open core (phase 4) a {arms}-arm `{pattern}` (`{bullet}`, {speed} px/s, the arms turning {turn_rate}°/s, 5 bullets/s an arm) for {duration} s, then a 2 s rest, [Dart Drone](../../air/dart-drone/README.md) streams from its rim bays"}}
+  - {name: core-rail, pattern: laser-line, from: rail-bunker, interval: 6, only: [medium, hard], notes: {text: "and, below 50 % of the core's HP, its own rail line every {interval} s (none on easy)"}}
+formations:
+  - {name: solo set piece}
+weak_points: []
+drops: []           # "The core"'s armour patch is its drop
+traits: [anti-ground, piercing, homing]
+bounty: 433         # the parts' sum: core 355, the 13 batteries 6 each: 24 % of budget(35) at Level 35's bounty scale 0.59 (1,676 ÷ (6.5536 × 0.59))
+first_level: 35
+difficulty:
+  easy: {ring_arena: {arc: 90, interval: 1.3}, attacks: {core-spiral: {interval: 0.333}}}   # the arc 90°, the batteries' intervals ×1.3, the spiral's arms at 3 bullets/s; no core rail (its `only`)
+  hard: {ring_arena: {speed: 1.2, arc: 150, interval: 0.8}, spawn_count: 5, attacks: {core-spiral: {arms: 3}}}   # the rings ×1.2, the arc 150°, the intervals ×0.8, 3 spiral arms, Dart streams of 5
+boss:
+  kind: boss        # the act boss: the long bar
+  bar_name: IRON SOVEREIGN
+  par: 150          # s from the bar to the kill: the Boss rush bonus; the autopilot's measured mean 148.7 s at medium (step H3, five seeds 145-155 s)
+  death_seconds: 5  # the batteries cook off ring by ring 0.15 s apart, the rings crack, the core implodes and blows
+  rings:
+    - name: outer
+      radius: 200
+      segments: 12
+      speed: 6      # °/s
+      direction: cw
+      batteries: {count: 6, part: {hp: 220, box: [30, 30], bounty: 6}, attack: sam}
+    - name: middle
+      radius: 140
+      segments: 8
+      speed: 10
+      direction: ccw
+      batteries: {count: 4, part: {hp: 330, box: [36, 36], bounty: 6}, attack: rail}
+    - name: inner
+      radius: 85
+      segments: 6
+      direction: cw
+      step: {angle: 120, seconds: 4, hold: 4, tell: 0.4}   # 120° in 4 s, then a 4 s hold (the tell its last 0.4 s: the teeth flash, a clank)
+      batteries: {count: 3, part: {hp: 440, box: [32, 32], bounty: 6}, attack: laser}
+  fire_arc: {degrees: 120, clamp: [30, 150]}   # centred on the bearing from the centre to the ship (90° = down), clamped to the lower half
+  spin_up: 4        # s from the halt: the rings light outer → inner and spin up (invulnerable, nothing fires)
+  grind: 2          # s: a locked ring grinds to a halt
+  speed_ups: [1, 1.25, 1.5]   # the surviving rings' speed by the count of locked rings
+  cookoff: 0.15     # s between two batteries' cook-offs in the death chain
+  core:
+    part: core
+    glow: 0.5       # s: the shutter slits glow before each fan
+    opening: 3      # s: the petals open (untouchable, a klaxon)
+    shield: 80      # the open core's hex shield (the enemy shield rule: delay 2 s, refill 50 %/s, the breaker's hold 3 s)
+    spiral: {attack: core-spiral, run: 4, rest: 2, tell: 0.6}
+    rail: {attack: core-rail, below: 0.5}
+    bays: {count: 4, radius: 60, start: 45, from: dart-drone, stream: 4, every: 5, gap: 0.4, first: 1, speed: 240, spread: 30, straight: 0.4, most_alive: 16, tell: 0.5, skip_within: 72}   # ART-H1's rim bays at 60 px on the diagonals; one bay every 5 s, the nearest the ship first (one within 72 px skips)
+  phases:
+    - {name: Three rings, until: {locks: 1}, attacks: [sam, rail, laser, core-fan-1]}
+    - {name: Two rings, until: {locks: 2}, attacks: [sam, rail, laser, core-fan-2]}
+    - {name: One ring, until: {locks: 3}, attacks: [sam, rail, laser, core-fan-3]}
+    - {name: The core, until: {parts: [core]}, attacks: [core-spiral, core-rail], exposes: [core], drop: armour patch}   # the armour patch as the phase begins
+notes:
+  layer: ' (the station seen from above, under the play plane: every weapon hits its parts, `anti-ground` ×2; **not hardened**, unlike the Rail Bunkers on its outer hull; no collision with the ship or the escort, who fly over it freely)'
+  size: '(the outer ring''s rim at radius 220 from the centre; the core 80 px across; batteries: SAM 40×40 (hitbox 30×30), rail 48×48 (36×36), laser 44×44 (32×32))'
+  parts: 'the **core** (`vital`; armoured while shut, phases 1–3); the **outer ring** (6 SAM batteries), the **middle ring** (4 rail batteries), the **inner ring** (3 laser batteries): every battery `destroyable`; the rings'' hulls are **not hit areas** (shots pass over them as over terrain)'
+  orientation: '(the rings turn about the centre, their segments placed by angle; every battery''s turret in `64 angles`, aiming on its own while its mount turns with the ring)'
+  hp: 'SAM battery {boss.rings.0.batteries.part.hp} each, rail battery {boss.rings.1.batteries.part.hp} each, laser battery {boss.rings.2.batteries.part.hp} each, core 14,000; the core''s hex shield {boss.core.shield} on top (phase 4); total'
+  armour: 'the core is armoured (shots spark grey, no damage) until it opens; open, it carries a **hex shield** of {boss.core.shield} under the [enemy shield rule](../../README.md#enemy-shields) (Q1 a: every weapon wears it down, the [Tesla Coil Pod](../../../player/weapons/tesla-coil-pod/README.md)''s `shield-breaker` empties it, the EMP Burst strips it)'
+  speed: '(the scroll halts over it); the rings turn: outer {boss.rings.0.speed}°/s clockwise, middle {boss.rings.1.speed}°/s counter-clockwise, inner in steps ({boss.rings.2.step.angle}° in {boss.rings.2.step.seconds} s, then a {boss.rings.2.step.hold} s hold), each lock speeding the survivors up'
+  movement: 'anchored, its centre at (240, {movement.anchored.y}) (see *Arena*)'
+  attack_prefix: 'per battery, only while its mount is inside the **fire arc** ({boss.fire_arc.degrees}°, see *Arena*): '
+  bounty: ' in Act 1 terms (core 355, every battery 6); × 6.5536 (Act 5''s factor 1.6⁴) × Level 35''s `bounty_scale` 0.59 it pays **24 % of budget(35) ≈ 1,674** (see *Bounty*)'
+  death: '`huge` vacuum variant: the wrecked batteries cook off ring by ring ({boss.cookoff} s apart), the core collapses and blows, the rings break into drifting segments; a {boss.death_seconds} s chain, screen flash, credit shower (see *Death*)'
+  used_in: 'the L49 boss rush''s echo (see *Echoes and relatives*)'
+  difficulty: 'hard: rings ×1.2 faster, fire arc 150°, battery intervals ×0.8, the core''s spiral 3 arms, Dart streams +1, no boss checkpoint; easy: fire arc 90°, battery intervals ×1.3, the core''s spiral 2 arms at 3 bullets/s an arm, no core rail line'

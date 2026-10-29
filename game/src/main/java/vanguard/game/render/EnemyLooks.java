@@ -138,7 +138,10 @@ public record EnemyLooks(
             Tier.LARGE,
             // M8 part G: the relay beacon (a `medium` target) dies in a `small` burst (its stat block).
             BeaconLooks.SLUG,
-            Tier.SMALL);
+            Tier.SMALL,
+            // M9 part E: the Strider's hull kill is a `large` mechanical explosion (its stat block).
+            DeepCoreLooks.STRIDER,
+            Tier.LARGE);
     /**
      * M8 part B: the Drill Rig's collar spins at this rate (assets/pivots/drill-rig.json's {@code spin}: 8 frames of 15
      * degrees, 180 degrees/s), not the Vrell's organic 10 fps.
@@ -150,7 +153,8 @@ public record EnemyLooks(
      */
     private static final java.util.Set<String> OWN_REMAINS = java.util.Set.of(DrillRigLooks.SLUG);
     /** M9 part B: units whose {@code -wreck} is their remains (the SAM Nest; other wrecks are their looks' own). */
-    private static final java.util.Set<String> WRECK_REMAINS = java.util.Set.of(CeresLooks.NEST);
+    private static final java.util.Set<String> WRECK_REMAINS =
+            java.util.Set.of(CeresLooks.NEST, LeechFieldLooks.BUNKER);
     /**
      * M7 part E: a unit whose death sounds other than its rung's two files (design/audio/sfx): the Ghost Drone's
      * mechanical break-up is the {@code small} rung's Ghost Drone entry (round 41 a, proposed): it must sound built,
@@ -176,7 +180,41 @@ public record EnemyLooks(
 
     /** The looks of the level's enemy kinds, indexed like {@code Sortie.enemyKinds()}. */
     public static EnemyLooks[] of(List<EnemySpec> kinds, Sprites sprites, Content content) {
-        return kinds.stream().map(kind -> of(kind.slug(), sprites, content)).toArray(EnemyLooks[]::new);
+        return of(kinds, sprites, content, 1);
+    }
+
+    /**
+     * The looks of the level's enemy kinds in act {@code act} (1-based), indexed like {@code Sortie.enemyKinds()}: M9 part
+     * G, a unit with a livery from that act on (the Warden Tank in Ascendancy colours from Act 5) has its hull drawn in
+     * the livery's frames ({@link #root}).
+     */
+    public static EnemyLooks[] of(List<EnemySpec> kinds, Sprites sprites, Content content, int act) {
+        return kinds.stream()
+                .map(kind -> of(kind.slug(), sprites, content, act))
+                .toArray(EnemyLooks[]::new);
+    }
+
+    /**
+     * M9 part G: the sprite root a unit is drawn with in act {@code act}: its livery's ({@code livery.sprite}, the same
+     * frame layout) from the livery's act on when its frames are on the pages, else its own slug. A part of a unit
+     * ({@code coilwyrm-segment}) keeps its own.
+     */
+    public static String root(Content content, String slug, int act, Sprites sprites) {
+        return root(content, slug, act, sprites::has);
+    }
+
+    static String root(Content content, String slug, int act, java.util.function.Predicate<String> has) {
+        EnemyData data = content.enemies().get(slug);
+        if (data == null) {
+            return slug;
+        }
+        return data.liverySprite(act).filter(has).orElse(slug);
+    }
+
+    /** M9 part G: the act number of a level key ({@code act-5-the-belt/level-34-...} is 5). */
+    public static int act(String levelKey) {
+        String act = Content.actDirectory(levelKey);
+        return Integer.parseInt(act.substring("act-".length(), act.indexOf('-', "act-".length())));
     }
 
     /**
@@ -184,14 +222,14 @@ public record EnemyLooks(
      * {@code -regrown}) take their unit's stat block, its segments and tail popping as {@code tiny}
      * units; a unit without frames yet gets placeholder shapes.
      */
-    private static EnemyLooks of(String slug, Sprites sprites, Content content) {
+    private static EnemyLooks of(String slug, Sprites sprites, Content content, int act) {
         String unit = slug;
         while (!content.enemies().containsKey(unit) && unit.contains("-")) {
             unit = unit.substring(0, unit.lastIndexOf('-'));
         }
         EnemyData data = content.enemy(unit);
         boolean part = !unit.equals(slug) && !slug.endsWith("-regrown");
-        return of(slug, sprites, data, part);
+        return of(slug, part ? slug : root(content, slug, act, sprites), sprites, data, part);
     }
 
     /**
@@ -229,15 +267,16 @@ public record EnemyLooks(
      * death animations are its slug's {@code -death} (glow) and {@code -tatters} or {@code -husk}
      * (pieces), played at its tier's frame rate.
      */
-    private static EnemyLooks of(String slug, Sprites sprites, EnemyData data, boolean tinyPart) {
+    private static EnemyLooks of(String slug, String root, Sprites sprites, EnemyData data, boolean tinyPart) {
         Orientation orientation = data.orientation();
         Array<AtlasRegion> none = new Array<>();
         boolean walker = data.movement().walk().isPresent();
-        int walkFrames = walker ? sprites.frames(slug).size / orientation.headings() : 1;
+        int walkFrames = walker ? sprites.frames(root).size / orientation.headings() : 1;
         // M7 part C: a ground chain (the Threadcrawler) has its own head art ({@code <slug>-head}) and its
         // parts' headings are its orientation's (16), not the Coilwyrm's production set of 48.
         boolean crawler = data.movement().crawl().isPresent();
-        String art = crawler && !sprites.has(slug) && sprites.has(slug + "-head") ? slug + "-head" : slug;
+        // M9 part G: a livery's hull frames ({@code root}); its other sets stay the unit's own.
+        String art = crawler && !sprites.has(slug) && sprites.has(slug + "-head") ? slug + "-head" : root;
         Array<AtlasRegion> frames =
                 sprites.has(art) ? sprites.frames(art) : Placeholders.frames(slug, orientation.headings());
         // M8 part C: the Eel Swarm's parts have their orientation's 16 headings (EelLooks), not the Coilwyrm's 48.
@@ -249,7 +288,10 @@ public record EnemyLooks(
                         && !eel
                         && frames.size % CHAIN_HEADINGS == 0
                 ? CHAIN_HEADINGS
-                : orientation.headings();
+                // M9 part F: the Rail Bunker's fixed base (its 32 headings are its turret's, LeechFieldLooks).
+                : slug.equals(LeechFieldLooks.BUNKER) && frames.size == 1 && sprites.has(slug + "-turret")
+                        ? 1
+                        : orientation.headings();
         Tier tier = tinyPart ? Tier.TINY : DEATH_TIERS.getOrDefault(slug, data.tier());
         boolean iris = data.attacks().stream()
                         .flatMap(attack -> attack.spawn().stream())

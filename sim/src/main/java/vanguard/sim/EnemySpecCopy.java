@@ -74,6 +74,10 @@ final class EnemySpecCopy {
     Optional<EnemySpec.Launcher> launcher;
     Optional<EnemySpec.Dash> dash;
     Optional<EnemySpec.AirLink> airLink;
+    Optional<Hitbox> core;
+    Optional<EnemySpec.GroundSweep> groundSweep;
+    Optional<EnemySpec.Topple> topple;
+    EnemySpec.PreyRole preyRole;
 
     /** The base stats with every other component left out ({@link EnemySpec#of}). */
     EnemySpecCopy(
@@ -150,6 +154,10 @@ final class EnemySpecCopy {
         launcher = Optional.empty();
         dash = Optional.empty();
         airLink = Optional.empty();
+        core = Optional.empty();
+        groundSweep = Optional.empty();
+        topple = Optional.empty();
+        preyRole = EnemySpec.PreyRole.NONE;
     }
 
     EnemySpecCopy(EnemySpec spec) {
@@ -218,6 +226,10 @@ final class EnemySpecCopy {
         launcher = spec.launcher();
         dash = spec.dash();
         airLink = spec.airLink();
+        core = spec.core();
+        groundSweep = spec.groundSweep();
+        topple = spec.topple();
+        preyRole = spec.preyRole();
     }
 
     EnemySpec build() {
@@ -286,6 +298,10 @@ final class EnemySpecCopy {
                 facingArmour,
                 launcher,
                 dash,
-                airLink);
+                airLink,
+                core,
+                groundSweep,
+                topple,
+                preyRole);
     }
 }

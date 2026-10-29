@@ -41,6 +41,8 @@ import java.util.Optional;
  *     a returning unit's act factor on it, never the beam era's); none without one
  * @param neutral M9 part B (design/campaign Level 29, Hold fire): a neutral craft ({@link #isNeutral})
  * @param leader M9 part B (design/enemies/air/talon): the airframe its wave's leader flies ({@link Leader})
+ * @param livery M9 part G (design/enemies/ground/warden-tank, Act 5: the return in livery): the look and the intel's
+ *     faction it flies with from an act on ({@link Livery}); the simulation never sees it
  */
 public record EnemyData(
         String name,
@@ -82,15 +84,52 @@ public record EnemyData(
         Optional<Underwater> underwater,
         Optional<Double> shield,
         Optional<Boolean> neutral,
-        Optional<Leader> leader)
-        implements EnemyMovementData, EnemyAttackData, EnemyBossData, EnemyHookData, ColossusBlock, MawBlock {
+        Optional<Leader> leader,
+        Optional<Livery> livery)
+        implements EnemyMovementData,
+                EnemyAttackData,
+                EnemyBossData,
+                EnemyHookData,
+                ColossusBlock,
+                MawBlock,
+                RingBlock {
     public EnemyData {
+        // M9 part H: a ringed boss's batteries are parts too, appended in ring order (RingBlock).
+        partList = RingBlock.withBatteries(partList, boss);
         Layers.of(layer);
         Check.positive("hp", hp);
         Check.notNegative("speed", speed);
         Check.notNegative("bounty", bounty);
         Check.positive("first_level", firstLevel);
         shield.ifPresent(points -> Check.positive("shield", points));
+    }
+
+    /**
+     * M9 part G (design/enemies/ground/warden-tank, Act 5: the return in livery; m9g-gaps.md §1 #2): from act {@code
+     * from_act} on, the unit flies the {@code sprite} set (the game's looks pick its frames: the Warden Tank's {@code
+     * warden-tank-asc}) and the intel names it of {@code faction} ({@code Jovian Ascendancy}); its stat block is
+     * unchanged (no new slug) and the simulation never sees a look.
+     */
+    public record Livery(int fromAct, String sprite, String faction) {
+        public Livery {
+            Check.that(fromAct >= 2 && fromAct <= 7, "livery.from_act: an act from 2 to 7, was " + fromAct);
+            Check.that(
+                    sprite.matches("[a-z0-9]+(-[a-z0-9]+)*"),
+                    "livery.sprite: a kebab-case sprite set, was '" + sprite + "'");
+            Check.that(!faction.isBlank(), "livery.faction: the faction the intel names");
+        }
+    }
+
+    /**
+     * M9 part G: the sprite set it flies with in act {@code act}: its livery's from that act on; empty for its own.
+     */
+    public Optional<String> liverySprite(int act) {
+        return livery.filter(l -> act >= l.fromAct()).map(Livery::sprite);
+    }
+
+    /** M9 part G: the faction the intel names it of in act {@code act}: its livery's from that act on, else its own. */
+    public String factionIn(int act) {
+        return livery.filter(l -> act >= l.fromAct()).map(Livery::faction).orElse(faction);
     }
 
     /**
@@ -151,7 +190,8 @@ public record EnemyData(
                 underwater,
                 lead.shield().or(() -> shield),
                 neutral,
-                leader);
+                leader,
+                livery);
     }
 
     /**
@@ -221,6 +261,65 @@ public record EnemyData(
     /** M8 part H: whether it is a coiled boss ({@code boss.coil}: the Abyssal Maw). */
     public boolean coils() {
         return boss.flatMap(BossData::coil).isPresent();
+    }
+
+    /** M9 part H: whether it is a ringed boss ({@code boss.rings}: the Iron Sovereign). */
+    public boolean ringed() {
+        return boss.flatMap(BossData::rings).isPresent();
+    }
+
+    /** M9 part H: its ring changes on {@code difficulty} ({@code ring_arena}); empty without. */
+    public Optional<RingArenaChange> ringArena(Difficulty difficulty) {
+        return hook(difficulty).flatMap(Hook::ringArena);
+    }
+
+    /**
+     * M9 part H: this stat block with {@code resolved} attacks instead (the loader's: a {@code from} attack taken from
+     * its ground unit, {@link RingRules#resolve}).
+     */
+    public EnemyData withAttacks(List<Attack> resolved) {
+        return new EnemyData(
+                name,
+                faction,
+                layer,
+                tier,
+                size,
+                hitbox,
+                parts,
+                partList,
+                orientation,
+                hp,
+                armour,
+                speed,
+                movement,
+                resolved,
+                formations,
+                weakPoints,
+                drops,
+                traits,
+                bounty,
+                firstLevel,
+                difficulty,
+                chains,
+                boss,
+                segmentChain,
+                cloak,
+                submerge,
+                latch,
+                machine,
+                roll,
+                vortex,
+                pull,
+                intel,
+                turret,
+                rearPlate,
+                pursuit,
+                seekersIgnore,
+                underwater,
+                shield,
+                neutral,
+                leader,
+                livery);
     }
 
     /** M7 part H: its eruption on {@code difficulty}: the boss script's with the difficulty's marker time. */
@@ -360,7 +459,8 @@ public record EnemyData(
                 Optional.empty(),
                 shield,
                 neutral,
-                leader);
+                leader,
+                livery);
     }
 
     /** M8 part F: its lunge on {@code difficulty}: the stat block's with the difficulty's trigger distance. */

@@ -301,6 +301,8 @@ public record ObjectiveSpec(
      * @param cable the cable's hit box, px, centred midway between the boat's and the pod's centres
      * @param crateCredits the crate's credits
      * @param secret the secret's name, for its radio cue
+     * @param beamTouch M9 (round 64 C.1 a, the Act 5 tows): a beam touching the cable box (the housing) counts one
+     *     hit per {@link Tow#BEAM_HIT_TICKS} steps of contact, the first at once; off for Level 07's lifeboat
      */
     public record TowSpec(
             double t,
@@ -314,11 +316,29 @@ public record ObjectiveSpec(
             Hitbox cable,
             int hits,
             int crateCredits,
-            String secret) {
+            String secret,
+            boolean beamTouch) {
         public TowSpec {
             if (!(vy < 0) || hits < 1) {
                 throw new IllegalArgumentException(secret + ": a tow drifts down the screen and its cable takes hits");
             }
+        }
+
+        /** A tow whose cable counts the player's shots only (Level 07's lifeboat). */
+        public TowSpec(
+                double t,
+                double x,
+                double vx,
+                double vy,
+                Hitbox boat,
+                Hitbox pod,
+                double podDx,
+                double podDy,
+                Hitbox cable,
+                int hits,
+                int crateCredits,
+                String secret) {
+            this(t, x, vx, vy, boat, pod, podDx, podDy, cable, hits, crateCredits, secret, false);
         }
     }
 

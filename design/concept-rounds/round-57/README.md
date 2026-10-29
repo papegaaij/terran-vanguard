@@ -42,6 +42,8 @@ Flares fitted (fired at t≈59 and 62.5), the *Marlin* and the beacons from runs
 frames side by side, the time in the level in each row's text. The briefing and intel captures come from a
 playthrough save at Level 27 (a sensor suite L3 fitted for the capture).
 
+Record of the decisions: [review.html](review.html)
+
 ## In the game
 
 The art below is already in `assets/` (the finals), and the **a** sound of every pair plays in the game until the

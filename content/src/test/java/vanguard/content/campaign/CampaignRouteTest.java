@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import tools.jackson.databind.json.JsonMapper;
@@ -429,11 +430,13 @@ class CampaignRouteTest {
 
     /**
      * M9 part B: Level 29 ends no act; M9 part C (step C2): Level 30 is built, so its win leads to Level 30's briefing;
-     * M9 part D (step D3): Level 31 is built too, and Level 31's win leads to the hangar (Level 32 has no briefing yet):
-     * the hangar cannot launch and the release ends there (the game's end card after the debrief).
+     * M9 part D (step D3): Level 31 is built too; M9 part E (step E3): so is Level 32; M9 part F (step F3): so is Level
+     * 33; M9 part G (step G3): so is Level 34; M9 part H (step H3): Level 35 is built and ends Act 5: after Level 34 its
+     * briefing and launch, after Level 35 Act 5's outro (four pages), which ends the release (Act 5's {@code next_act},
+     * Act 6 at Callisto; Level 36 is not built); no other act names a next act.
      */
     @Test
-    void afterLevel31TheReleaseEnds() {
+    void afterLevel34ComesLevel35AndTheReleaseEndsAfterAct5sOutro() {
         Campaign campaign = Campaign.start(CampaignTest.RULES, Difficulty.MEDIUM);
         for (int i = 0; i < 29; i++) {
             campaign.complete(CampaignTest.won("A", 80, 1000), 60);
@@ -441,18 +444,34 @@ class CampaignRouteTest {
         assertTrue(CampaignRoute.actEnd(content, campaign).isEmpty(), "Level 29 ends no act");
         assertTrue(CampaignRoute.launch(content, campaign).isPresent(), "Level 30 is built");
         assertFalse(CampaignRoute.releaseEnd(content, campaign));
+        for (int level = 30; level <= 34; level++) {
+            campaign.complete(CampaignTest.won("A", 80, 1000), 60);
+            assertTrue(CampaignRoute.actEnd(content, campaign).isEmpty(), "Level " + level + " ends no act");
+            assertTrue(CampaignRoute.launch(content, campaign).isPresent(), "Level " + (level + 1) + " is built");
+            assertFalse(CampaignRoute.releaseEnd(content, campaign));
+        }
+        var briefing = assertInstanceOf(CampaignRoute.Step.Briefing.class, CampaignRoute.afterLevel(content, campaign));
+        assertEquals(35, briefing.script().mission());
+        assertTrue(briefing.script().titleCard().isEmpty());
+        assertEquals(Optional.of("act-5-the-belt/level-35-iron-sovereign"), CampaignRoute.launch(content, campaign));
+
         campaign.complete(CampaignTest.won("A", 80, 1000), 60);
-        assertTrue(CampaignRoute.actEnd(content, campaign).isEmpty(), "Level 30 ends no act");
-        assertTrue(CampaignRoute.launch(content, campaign).isPresent(), "Level 31 is built");
-        assertFalse(CampaignRoute.releaseEnd(content, campaign));
-        campaign.complete(CampaignTest.won("A", 80, 1000), 60);
-        assertTrue(CampaignRoute.actEnd(content, campaign).isEmpty(), "Level 31 ends no act");
-        assertInstanceOf(CampaignRoute.Step.Hangar.class, CampaignRoute.afterLevel(content, campaign));
-        assertTrue(CampaignRoute.launch(content, campaign).isEmpty(), "Level 32 is not built");
-        assertTrue(CampaignRoute.releaseEnd(content, campaign));
+
+        assertTrue(CampaignRoute.actEnd(content, campaign).isPresent(), "Level 35 ends Act 5");
+        var outro = assertInstanceOf(CampaignRoute.Step.Outro.class, CampaignRoute.afterLevel(content, campaign));
+        assertEquals("act-5-the-belt", outro.script().actDirectory());
+        assertEquals(35, outro.script().last());
+        assertEquals(4, outro.script().pages().size());
         assertTrue(
-                content.acts().values().stream().allMatch(act -> act.nextAct().isEmpty()),
-                "no act names a next act: Act 4's moved off with the release's end");
+                CampaignRoute.releaseEnd(content, campaign), "Level 36 is not built: Act 5's outro ends the release");
+        assertEquals(Optional.empty(), CampaignRoute.launch(content, campaign), "Level 36 is not built");
+        assertEquals(
+                List.of("act-5-the-belt"),
+                content.acts().entrySet().stream()
+                        .filter(act -> act.getValue().nextAct().isPresent())
+                        .map(java.util.Map.Entry::getKey)
+                        .toList(),
+                "only Act 5 names a next act: Act 4's moved off with the release's end");
     }
 
     /** M8 part B: a save at the Level 22 hangar that has seen Act 4's intro opens Level 22's own briefing. */

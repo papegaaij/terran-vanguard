@@ -30,6 +30,8 @@ The review page is built from this file by `build/round50-tools/build_review.py`
 `tools/art/act4_gear.py` and `tools/art/icons.py --act4`, the sounds `tools/concept/audio/sfx_r50a.py`. The captures
 are game recordings with the game's own sound (Xvfb, `--bench`); their PNGs are single frames or a before/after pair.
 
+Record of the decisions: [review.html](review.html)
+
 ## In the game
 
 The art below is already in `assets/` (the finals) and the **a** sound of every pair plays in the game until you

@@ -21,6 +21,8 @@ Nothing is in `assets/` yet. Round 48 is the Act 4 round on another branch, so t
 The review page is built from this file by `build/round49-tools/build_review.py` (untracked); the proposals are in
 [the sfx part](../../audio/sfx/README.md#concept-art) and the generator is `tools/concept/audio/sfx_r49m.py`.
 
+Record of the decisions: [review.html](review.html)
+
 ## Sounds: the dome hit
 
 | # | Part | What is proposed | Review files | Weak spots (Claude) | Answer | Outcome |

@@ -1,0 +1,453 @@
+# Level 35 – Iron Sovereign: the level script, rendered into README.md (briefing, threat profile, layout, waves, ground
+# targets, radio, credit budget). Times are seconds from the level start. M9 part H, step H2, from the README's approved
+# hand tables (round 60) and ART-H2's backdrop proposal (concept/backdrop-proposal.yaml: its backdrop block, its sections
+# with the halt eased down over [85.5, 91.5] before the 1 s arena (the ground's scroll 13,788 at the halt, the
+# README's 13,850; ART-H2's 0.5 s timed halt is a 1 px/s section here: the simulation allows a timed halt only with a
+# defend primary), the hull guns' and the lifeboat's places on their pads, the beacon's drop and the light
+# debris adopted as they are; the tenders on the far layer).
+# Schema: ../../../tech/architecture/schemas-levels/README.md (the relay: M9 part H; the boss's rings: schemas-units)
+# Keys new in M9 part H (flown from steps H1a-H1b, loaded and checked from step H1c and H2, drawn and played by step H4):
+# the boss's `rings` (its own data), the level's `relay` (the mass-relay flash: once, a horizontal line through the
+# ship), Vorne's `smug` and `rage` portraits (expressions of his only), `requires_not: escort` on Okafor's closing answer
+# (the existing key; the gap check's `requires: no-escort`), the relay's quiet window and the halt boundary (content's
+# RingChecks: no wave enters t 58.5-63.5, no line-firing unit on the field at the flash, nothing on the ground on the
+# field when the arena starts).
+# Decided before H2 (m9h-gaps.md §4-§5, pending round 68): every approach line one radio page and retimed; the t≈56
+# bunker pair at t=55.5; the rear Talon V-wing on the plain rear entry; the serpent pincer as two `snake` waves; the
+# kill ratio 65 % of what the simulation counts; the level ends 1 s after the last closing line (text model).
+# Step H2's own placements (pending the user's review in round 68; logged in the README's Decisions): Rook's relay line
+# right after the flash (t=63: "rail gun" is the relay), before the lifeboat's event line; Varga t=76.5, Okafor t=83.5;
+# the skitter swarms as snakes of 4 from alternating edges (a swarm needs a route, as Levels 29, 33 and 34), the motes on
+# Level 31's two paths at 200 px/s; hard's fourth SAM Nest in each group on the hull's open plating (no pad).
+scroll_speed: 160     # the escort screen; the outer hull 150, eased to the halt over the rings' edge
+launch_seconds: 5
+bounty_scale: 0.59    # every bounty × 0.59: the README's hand estimate 0.56, fitted in step H2 with the boss at 24 % and its 52 Darts (levelReport: typical haul on budget(35) 6,985)
+control_prompts: []
+medium: vacuum        # the belt: short flashes, debris rings, drifting wrecks (design/world/belt)
+threat_profile:  # the hangar intel panel (design/ui/hangar) and the README's Threat profile table
+  setting: The belt, Ceres orbit
+  layers: [air, ground]
+  density: 5
+  traits: [piercing, anti-ground]
+  hazards: [mass relay, rail lines]
+  boss: Iron Sovereign
+  objective: DESTROY THE IRON SOVEREIGN   # the OBJECTIVE field from sensor L1
+  varga:
+    none: Ceres orbit. One huge contact. Vorne's battle station.
+    l1: An escort screen, then the station. From every side.
+    l2: Talons, Gunships, Hornets, Serpents. The Iron Sovereign.
+    l3: Piercing for the rings, anti-ground for the batteries.
+  notes:
+    Dominant layers: '`air` (written `space`: the Talons, Gunships and their Darts, Hornets, the Rail Serpents, the Shard Drones, the Vrell popcorn), `ground` (the outer hull''s SAM Nests and Rail Bunkers; the Sovereign itself, seen from above)'
+    Attack directions: '{directions} (the approach by its waves; the station''s batteries in the fight fire from all round the arena and are not in the numbers)'
+    Density: '{density}'
+    Recommended traits: '{traits} (the boss''s columns of batteries and its `ground` layer; `homing` helps on the batteries in the arc)'
+    Hazards: 'The mass-relay flash (once, t=61); SAM homing diamonds and rail lines on the hull; the Sovereign''s batteries, its core''s fan, spiral, rail and Dart streams'
+    Boss / mid-boss: 'Act boss [Iron Sovereign](../../../enemies/bosses/iron-sovereign/README.md)'
+    Sensor-suite detail: '**none**: the belt, Ceres orbit, `air` + `ground`, all directions. **L1**: + the directions, density {density}, hazards "mass relay" and "rail lines", the objective `{objective}`. **L2**: + Talon, Gilded Gunship, Hornet, Rail Serpent, Shard Drone, Dart Drone, SAM Nest, Rail Bunker portraits; the boss''s name and silhouette (`iron-sovereign`). **L3**: + `piercing` and `anti-ground` highlighted; the timeline strip marks the mass-relay flash (61 s) and the boss (92 s); 1 secret.'
+
+sections:  # back to back from t = 0; each speed change eased over 2 s (ramp); ART-H2's reading of the Layout table (the halt eased over 6 s before the arena: 150 px/s until 85.5, ≈ 0 at 91.5)
+  - name: Ceres Orbit
+    end: 20
+    atmosphere: clear
+    tiles: [orbit-space, orbit-dust]
+    notes:
+      layers:
+        deep: 'Ceres''s curve, Ceres Hub''s lights (red since Level 29), the dust band.'
+        low-air: loyalist wrecks and a dead Ceres patrol boat drifting.
+      purpose: Talons and popcorn; Ceres Hub Control comes on the radio.
+  - name: The Escort Screen
+    end: 50
+    atmosphere: clear
+    tiles: [orbit-space, orbit-dust]
+    notes:
+      layers:
+        far: the Sovereign's tenders and docking spars far below.
+        air: the escort.
+      purpose: 'The Gunships'' Dart streams (t=20), the Rail Serpent pincer (t=35), the Hornets; Talon pincers from the sides.'
+  - name: The Outer Hull
+    end: 80
+    speed: 150
+    ramp: 2   # eased from 160 over its first 2 s
+    atmosphere: clear
+    tiles: [orbit-space, sovereign-hull, orbit-dust]
+    notes:
+      layers:
+        ground: 'the station''s outer hull (black plating, gold trim, red lights): SAM Nest groups (t≈52, 64, 74), Rail Bunker pairs (t≈55.5, 70, 78), a Ceres garrison lifeboat clamped to the hull (t≈66, the secret). **The mass-relay flash** at t=61.'
+      purpose: The hull's guns; the flash once; a rear V-wing (t=68.5).
+  - name: The Rings' Edge
+    end: 85.5
+    speed: 150
+    atmosphere: clear
+    tiles: [orbit-space, orbit-dust]
+    notes:
+      layers:
+        ground: 'the outer ring''s rim rolls into view, then the middle and inner rings and the core.'
+      purpose: The last wave (t=83.5); the pre-boss pause begins (t≈84).
+  - name: The Halt
+    end: 92
+    speed: 1
+    ramp: 6   # eased from 150 down to 1 px/s over [85.5, 91.5] (a speed change's ease; the simulation allows a timed halt of speed 0 only with a defend primary), then the arena's 1 s ease to rest
+    atmosphere: clear
+    tiles: [orbit-space, orbit-dust]
+    notes:
+      layers:
+        ground: 'the station''s centre reaching its place (240, 160 on the screen) as the scroll comes to rest.'
+      purpose: The pre-boss pause (t≈84-92); nothing on the ground is left on the field.
+  - name: The Sovereign
+    end: 93   # the level clock halts here while the Sovereign lives; the kill resumes it after hold_after_boss
+    speed: 0
+    arena: true
+    hold_after_boss: 6   # s the clock stays halted after the kill: the 5 s death chain (its `death_seconds`; the flash and the credit shower over the core, collectable), one second more: the clock reads 87 + K from then (K+6 = t=93)
+    atmosphere: clear
+    tiles: [orbit-space, orbit-dust]
+    notes:
+      layers:
+        ground: 'the station filling the field, its centre at (240, 160) ([arena](../../../enemies/bosses/iron-sovereign/README.md#arena)).'
+        deep: Ceres far below.
+      purpose: The boss fight (≈ 145 s at medium); the scroll halted and the clock stopped while the station lives.
+  - name: The Wreck
+    end: 131.5   # K+44.5: the closing queue's last line (Ceres Control) ends ≈ K+43.4 by the radio's text model, then 1 s
+    speed: 60
+    ramp: 2   # eased up from the halt over 2 s
+    atmosphere: clear
+    tiles: [orbit-space, orbit-dust]
+    notes:
+      layers:
+        ground: 'the broken rings drifting apart, slowly turning, the core''s crater glowing.'
+      purpose: 'The closing lines (K+5 to ≈ K+43): Okafor, Vorne''s offer, the answer, Varga''s data, Ceres Control; no enemies (the level''s outro for the pacing checks).'
+
+debris:  # the belt's small rocks (design/world/belt, hazards; Level 03's rules): they break and pay nothing; ART-H2's two in section 1 (no large rock in orbit)
+  chunks:
+    belt-a: {size: [40, 36], hp: 6}
+    belt-b: {size: [36, 32], hp: 6}
+  clearance: 120        # px: a chunk never enters closer to the ship than this (it moves sideways)
+  max_large: 0
+  placed:               # t it enters at the top edge, its x, the chunk, its drift [x, y] px/s (y up)
+    - {t: 8.8, x: 330, chunk: belt-a, drift: [-14, -170]}
+    - {t: 16.2, x: 140, chunk: belt-b, drift: [18, -185]}
+
+relay:  # the mass-relay flash (design/world/belt, Hazards; Level 35's Layout): at t=59.8 a line locked through the ship's y, telegraphed from the right edge; the flash at t=61 (easy 61.3), 16 px, live 0.2 s, 20 damage (two `heavy`), the ship only (Rook and the enemies untouched)
+  t: 59.8
+  telegraph: 1.2
+  live: 0.2
+  band: 16
+  damage: 20
+  from: right
+  easy: {telegraph: 1.5}
+
+# The README's waves at their times: 136 wave enemies at medium, the Gunships' Darts and the 15 hull guns on top (the
+# kill ratio counts what the simulation counts). Talons fly at 130 px/s (V-wings with a leader at the tip, lines
+# abreast, pincers from both edges warned 3 s ahead, the rear V-wing up from the bottom edge warned 3 s ahead); the
+# Skitters as snakes of 4 from alternating edges; the motes on two weaving paths at 200 px/s; the Rail Serpent pincer
+# two trains, one an edge (warned 3 s ahead). No wave enters from t=58.5 to t=63.5 (the relay) nor after t=83.5.
+waves:
+  - {t: 5, formation: V-wing, enemy: talon, count: 5, from: front, leader: tip, speed: 130, notes: "Ceres Hub's loyalist wrecks drift below; the leader at the tip"}
+  - {t: 7.5, formation: snake, enemy: skitter, count: 4, from: front, edge: left}
+  - {t: 10, formation: line abreast, enemy: talon, count: 4, from: front, speed: 130}
+  - t: 12.5
+    formation: swarm
+    enemy: mote-swarm
+    count: 6
+    from: front
+    speed: 200
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+  - {t: 15, formation: V-wing, enemy: talon, count: 5, from: front, leader: tip, speed: 130}
+  - {t: 17.5, formation: snake, enemy: skitter, count: 4, from: front, edge: right}
+  - {t: 20, formation: column, enemy: gilded-gunship, count: 2, from: front, interval: 2, easy: {count: 1}, notes: "Each Gunship launches Dart streams (3 every 5 s, at most 6 alive): ≈ 12 Darts from this pair"}
+  - {t: 22.5, formation: pincer, enemy: talon, count: 6, from: sides, speed: 130, warning: 3, notes: Edge warnings at t=19.5}
+  - t: 25
+    formation: swarm
+    enemy: mote-swarm
+    count: 6
+    from: front
+    speed: 200
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+  - {t: 27.5, formation: line abreast, enemy: hornet, count: 2, from: front}
+  - {t: 30, formation: V-wing, enemy: talon, count: 5, from: front, leader: tip, speed: 130}
+  - {t: 32.5, formation: snake, enemy: skitter, count: 4, from: front, edge: left}
+  - t: 35
+    formation: snake
+    enemy: rail-serpent
+    count: 1
+    from: sides
+    edge: left
+    warning: 3
+    paths: [[[-60, 110], [100, 140], [210, 250], [260, 400], [180, 520], [-80, 580]]]
+    notes: "The pincer's left train (10 cars), warned 3 s ahead at the left edge; its engine drops an overdrive"
+  - t: 35
+    formation: snake
+    enemy: rail-serpent
+    count: 1
+    from: sides
+    edge: right
+    warning: 3
+    paths: [[[540, 170], [380, 200], [270, 310], [220, 460], [300, 560], [560, 620]]]
+    notes: "The pincer's right train (10 cars), warned 3 s ahead at the right edge"
+  - {t: 38.5, formation: V-wing, enemy: talon, count: 5, from: front, leader: tip, speed: 130}
+  - t: 41
+    formation: swarm
+    enemy: mote-swarm
+    count: 6
+    from: front
+    speed: 200
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+  - {t: 43.5, formation: single, enemy: hornet, count: 1, from: front, notes: "Escorted by the Talons of t=38.5"}
+  - {t: 46, formation: line abreast, enemy: shard-drone, count: 4, from: front, notes: "Their links lit 0.8 s after the last drone enters"}
+  - {t: 48.5, formation: snake, enemy: skitter, count: 4, from: front, edge: right}
+  - {t: 51, formation: V-wing, enemy: talon, count: 5, from: front, leader: tip, speed: 130}
+  - t: 53.5
+    formation: swarm
+    enemy: mote-swarm
+    count: 6
+    from: front
+    speed: 200
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+  - {t: 56, formation: column, enemy: gilded-gunship, count: 2, from: front, interval: 2, easy: {count: 1}, hard: {count: 3}, notes: "≈ 12 more Darts; the second Gunship drops a shield cell; hard a third"}
+  - {t: 58.5, formation: pincer, enemy: talon, count: 6, from: sides, speed: 130, warning: 3, notes: "Edge warnings at t=55.5; then **no wave until t=63.5**: the mass-relay flash (telegraph t=59.8, flash t=61)"}
+  - {t: 63.5, formation: snake, enemy: skitter, count: 4, from: front, edge: left}
+  - {t: 66, formation: line abreast, enemy: hornet, count: 2, from: front}
+  - {t: 68.5, formation: stream, enemy: dart-drone, count: 5, from: rear, interval: 0.4, warning: 3, notes: "From behind (BOTTOM warning at t=65.5): a Dart stream, the station's own chasers (the README's rear Talon V-wing: the simulation flies a Talon only on its swoop, from the front or the sides)"}
+  - t: 71
+    formation: swarm
+    enemy: mote-swarm
+    count: 6
+    from: front
+    speed: 200
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+  - {t: 73.5, formation: line abreast, enemy: talon, count: 4, from: front, speed: 130}
+  - {t: 76, formation: snake, enemy: skitter, count: 4, from: front, edge: right}
+  - {t: 78.5, formation: V-wing, enemy: talon, count: 5, from: front, leader: tip, speed: 130}
+  - t: 81
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    speed: 200
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+  - {t: 83.5, formation: line abreast, enemy: talon, count: 4, from: front, speed: 130, notes: "The last wave: the pre-boss pause t≈84-92"}
+
+ground_targets:  # at: [t, x], when it enters at the top edge and its x (ART-H2's places: the nests and bunkers on their pads, the lifeboat in its clamps)
+  - target: Hull SAM group 1
+    section: 3
+    enemy: sam-nest
+    count: 3
+    at: [[52, 90], [52, 150], [52, 390]]
+    hard: {at: [[52, 90], [52, 150], [52, 330], [52, 390]]}
+    notes:
+      target: '[SAM Nest](../../../enemies/ground/sam-nest/README.md) group ×3 on the hull (t≈52)'
+      effect: Bounty {bounty} each; homing diamonds, shootable, the Decoy Flares retarget them
+  - target: Hull bunker pair 1
+    section: 3
+    enemy: rail-bunker
+    count: 2
+    staggered: true   # the right one's first line half the interval after the left one's
+    at: [[55.5, 110], [55.5, 370]]   # t≈56 → 55.5 (gap check §4): off the screen at ≈ 59.6, before the flash at 61
+    notes:
+      target: '[Rail Bunker](../../../enemies/ground/rail-bunker/README.md) pair (t≈55.5), off the screen before the flash'
+      effect: Bounty {bounty} each; hardened
+  - target: Hull SAM group 2
+    section: 3
+    enemy: sam-nest
+    count: 3
+    at: [[64, 80], [64, 140], [64, 260]]
+    hard: {at: [[64, 80], [64, 140], [64, 260], [64, 320]]}
+    notes:
+      target: 'SAM Nest group ×3 (t≈64)'
+      effect: Bounty {bounty} each
+  - target: Ceres lifeboat
+    section: 3
+    layer: ground
+    size: [56, 32]
+    sprite: ceres-lifeboat
+    hp: 20
+    hard: {hp: 28}
+    reveals: Ceres lifeboat
+    at: [[66, 400]]   # in the station's docking clamps
+    notes:
+      target: 'The Ceres garrison lifeboat clamped to the hull (`ground` trigger, {hp} HP, hard 28, t≈66, x 400)'
+      effect: 'The secret: frees a crate worth 100 (655)'
+  - target: Hull bunker pair 2
+    section: 3
+    enemy: rail-bunker
+    count: 2
+    at: [[70, 100], [71, 380]]   # staggered 1 s by their entries: their lines never both on the ship's row
+    notes:
+      target: 'Rail Bunker pair (t≈70, staggered 1 s), their lines never both on the ship''s row'
+      effect: Bounty {bounty} each
+  - target: Hull SAM group 3
+    section: 3
+    enemy: sam-nest
+    count: 3
+    at: [[74, 120], [74, 330], [74, 390]]
+    hard: {at: [[74, 120], [74, 200], [74, 330], [74, 390]]}
+    notes:
+      target: 'SAM Nest group ×3 (t≈74)'
+      effect: Bounty {bounty} each
+  - target: Hull bunker pair 3
+    section: 3
+    enemy: rail-bunker
+    count: 2
+    staggered: true
+    at: [[78, 90], [78, 390]]   # the last hull guns: off the screen by ≈ 82, before the halt
+    notes:
+      target: 'Rail Bunker pair (t≈78), off the screen before the halt'
+      effect: Bounty {bounty} each
+
+secrets:
+  - name: Ceres lifeboat
+    crate: 100   # Act 1 terms: pays 655 with the act factor (the garrison lifeboat's stores)
+    radio: {speaker: Ceres Hub Control, portrait: ceres-control, line: "One of our lifeboats. Empty. Take the stores, Aegis."}   # one page (gap check §4): queued behind Rook's t=63 line when he flies
+
+pickups:
+  - {pickup: overdrive, dropped_by: {wave: 35, enemy: rail-serpent, unit: first}}     # the first Rail Serpent's engine
+  - {pickup: shield cell, dropped_by: {wave: 56, enemy: gilded-gunship, unit: last}}  # the second Gunship of the t=56 column (hard: the third)
+
+drops:  # the CDF beacon (Level 33's nav buoy) on a crashed loyalist fighter on the hull releases an armour patch before the arena; the boss's phase 4 drops the second
+  - {t: 80, x: 240, y: 380, pickup: armour patch, sprite: nav-buoy}
+
+boss:  # the act boss: the arena's start is its arrival (the warning, the bar, the boss checkpoint on easy and medium); the station has scrolled in with the hull; its rings spin up over 4 s
+  enemy: iron-sovereign
+  t: 92
+  x: 240
+  section: 6
+  notes:
+    from: 'the ground (it scrolls in with the hull and halts at the centre (240, 160))'
+    waves: 'At the arena''s start: the warning, the bar and the checkpoint; the rings, the batteries, the core and its Darts as in its spec; no other waves in the arena'
+    spawns: {dart-drone: 84}   # the Darts its rim bays launch in a typical fight (step H3: 84 at medium as measured with the core tuned, ≈ 21 streams of 4 over its ≈ 110 s): the typical haul's count
+
+radio:  # trigger: t or event; every approach line one radio page (three 22-character lines, gap check §4). Speakers Okafor, Varga, Rook (requires: escort), Ceres Hub Control and Vorne on the enemy channel (his voice's filter); the Choir is silent. The arena's clock halts, so the boss lines are events (PHASE lines: they wait for a gap, stale after 20 s, dropped at the kill); the closing lines are CLOSING lines in order (`boss-destroyed`; `delay` counts from the kill, a line waits behind the one before it; the debrief waits for the last)
+  - {t: 1, speaker: Okafor, line: "Break the Sovereign's screen, Lancer. Then break the station."}
+  - {t: 9.5, speaker: Ceres Hub Control, portrait: ceres-control, line: "Ceres Control, still on the dock channel. I'll guide you in."}
+  - {t: 23, speaker: Rook, requires: escort, line: "Gunships with darts. I'll take the darts, you take the boats."}
+  - {t: 36, speaker: Varga, line: "Rail Serpents on both flanks. Hit the engine first."}
+  - {t: 46, speaker: Okafor, line: "SAMs and rail bunkers on the hull. Flares if you have them."}
+  - {t: 55.5, speaker: Ceres Hub Control, portrait: ceres-control, line: "The mass relay is turning on you! Red line: move!"}   # the warning before the 59.8 telegraph (ends ≈ 62.1)
+  - {t: 63, speaker: Rook, requires: escort, line: "That rail gun was aimed at us? I'm flattered."}   # right after the flash (the relay is the rail gun), before the lifeboat's line
+  - {t: 76.5, speaker: Varga, line: "The rings are turning. Three of them, guns on every ring."}
+  - {t: 83.5, speaker: Okafor, line: "This is Vorne's station. Everything you have, Lancer."}   # ends ≈ 90.8, over the pre-boss pause
+  - {event: boss-arrival, speaker: Vorne, expression: smug, line: "Welcome to Ceres, Lancer. The Sovereign was built to hold the Belt. Do try to make this interesting.", notes: {trigger: "Boss arrival (`boss-arrival`, the spin-up), the enemy channel"}}
+  - {event: boss-arrival, speaker: Varga, line: "The guns fire only on the side facing you. Destroy a ring's guns.", notes: {trigger: "Boss arrival, queued after Vorne's (`PHASE`)"}}
+  - {event: boss-phase, phase: Two rings, speaker: Vorne, line: "Such dedication. Such waste. You could have been on the winning side, pilot.", notes: {trigger: "First ring locked (`boss-phase` Two rings), the enemy channel"}}
+  - {event: boss-phase, phase: One ring, speaker: Rook, requires: escort, line: "One ring left. It's running out of guns.", notes: {trigger: "Second ring locked (`boss-phase` One ring)"}}
+  - {event: boss-phase, phase: The core, speaker: Vorne, expression: rage, line: "Enough. You are becoming expensive.", notes: {trigger: "Third ring locked, the core opening (`boss-phase` The core), the enemy channel: cold and clipped, never raised"}}
+  - {event: boss-phase, phase: The core, speaker: Varga, line: "The core is open! Its shield is thin. A Tesla hit empties it.", notes: {trigger: "The core, queued after Vorne's (`PHASE`)"}}
+  - {event: boss-destroyed, delay: 5, speaker: Okafor, line: "The Sovereign is down! Ceres orbit is ours, Aegis Wing.", notes: {trigger: "Sovereign destroyed (`boss-destroyed`, `delay: 5`, `CLOSING`), at the flash"}}
+  - {event: boss-destroyed, speaker: Vorne, line: "Lancer. You are wasted on Okafor. Come to Callisto. Name your price.", notes: {trigger: "Then (`CLOSING`): steady and warm again, the enemy channel"}}
+  - {event: boss-destroyed, speaker: Rook, requires: escort, line: "Funny. We were just heading your way.", notes: {trigger: "Then (`CLOSING`, with Rook)"}}
+  - {event: boss-destroyed, speaker: Okafor, requires_not: escort, line: "Our pilots are not for sale, Vorne.", notes: {trigger: "Then (`CLOSING`, without Rook: replaces his line)"}}
+  - {event: boss-destroyed, speaker: Varga, line: "Its nav core took every order from one place. Callisto.", notes: {trigger: "Then (`CLOSING`)"}}
+  - {event: boss-destroyed, speaker: Ceres Hub Control, portrait: ceres-control, line: "Ceres to Aegis. The hub lights are white again. Thank you.", notes: {trigger: "Then (`CLOSING`); the level ends 1 s after it"}}
+
+objectives:
+  primary: reach-end   # the arena makes the kill a condition of the level's end; the line reads the boss's name (threat_profile.objective)
+  secondary: {kill_ratio: 0.65, boss_counted: false, credits: 100, name: Break the screen}   # at least 65 % of the approach's planned units (the waves and the hull guns: 99 of 151 at medium, step H3; the Gunships' Darts count as kills, not in the requirement; the Sovereign and its Darts not counted), judged at the end; no radio line (100 in Act 1 terms: pays 655)
+
+music:
+  track: 13           # Act 5 B "Gilded Cage" (audio/music track list)
+  start_section: 1    # the base stem from the start
+  full_section: 2     # the full mix from the escort screen (t=20)
+  motif: {from: 0, to: 86, sections: {}}   # Vorne's motif "in the open" (the Ascendancy's level): track 13's motif stem on top from the start, out at the halt (fading from t=86)
+  stem_times:         # out over the station at the halt (t=86-88), into the boss warning
+    - {t: 86, stems: none, db: -40, fade: 2}
+  ambience: belt-station   # the belt's station bed (round 60 S.17)
+  end_jingle: mission-complete
+  boss_warning: boss-warning      # track 22 with the klaxon and the banner at the arena's start (t=92)
+  boss_track: iron-sovereign      # track 19 "Iron Sovereign" after the warning (one full mix, round 68 QH-3 a: H4 imports it), fading at the kill
+  motif_after_boss: {from: 93, to: 131.5, fade_in: 3, fade_out: 3}   # track 13's motif stem alone under the closing lines (K+6 to the level's end)
+
+difficulty: {}  # the stat blocks' hooks apply (the Talon's easy pair every 2.0 s, hard 1.3 s and a parting pair; the Gunship's easy ring of 10 / 3.6 s and streams of 2, hard 14 / 2.6 s and streams of 4; the Hornet's easy salvo of 3 every 6 s, hard every 4 s; the Serpent's easy 8 cars, hard 14; the Shard Drone's; the SAM Nest's easy 6 s at 65°/s, hard salvos of 3; the Rail Bunker's easy 1.2 s telegraph every 6 s, hard 0.8 s every 3.6 s); one Gunship a column on easy, a third at t=56 on hard; the hull's SAM groups of 4 on hard; the lifeboat 28 HP on hard; the relay's easy telegraph 1.5 s; the formation lever sizes the rest
+
+briefing:
+  pages:
+    - {speaker: Okafor, image: level-35-ceres-orbit, line: "The Iron Sovereign holds Ceres orbit: Vorne's battle station. Ceres Control is still on our side and will guide you in. Break its escort, then break the station, Lancer."}
+    - {speaker: Varga, image: level-35-sovereign-rings, line: "Three gun rings turn round a reactor. The batteries only fire on the side that faces you. Destroy a ring's guns and it locks. Lock all three and the core opens."}
+  teaser: {speaker: Okafor, line: "The Sovereign is next. Whatever you salvaged, fit it now."}
+
+backdrop:
+  # Presentation only: Level 35's Ceres orbit and the Sovereign's hull (tools/art/backdrop_l35.py, step ART-H2; its
+  # proposal, concept/backdrop-proposal.yaml, adopted in step H2). Open space is the deep layer (the base) with Ceres's
+  # curve below; the ground is the outer hull's tile set in section 3 only, its two ends pieces with the tile's exact rows
+  # (hull-start, hull-end: the neck runs on to the station's centre under ART-H1's base disc). The far layer holds the
+  # tenders far below (section 2), low-air the loyalist wrecks (section 1). Animated: the red blinks only (at most two on
+  # the screen). Re-run the generator after the data moves a section or a target.
+  scroll_factors: {deep: 0.12, far: 0.5, ground: 1, low-air: 1.35, high-air: 2.2}
+  ramp: 2
+  haze_colour: 09090e
+  atmosphere:
+    clear: {haze: 0.0}
+  tile_sets:
+    orbit-space: {layer: deep, height: 1024}   # space, the sunlit dust band, stars
+    sovereign-hull: {layer: ground, height: 960}   # the outer hull (opaque), section 3
+    orbit-dust: {layer: high-air, height: 960}   # close grit (transparent)
+  pieces:
+    ceres-curve: {layer: deep, size: [480, 760]}
+    ceres-pole: {layer: deep, size: [480, 760]}
+    tender-a: {layer: far, size: [72, 148]}
+    tender-b: {layer: far, size: [64, 124]}
+    docking-spar: {layer: far, size: [64, 420]}
+    patrol-boat-wreck: {layer: low-air, size: [96, 176]}
+    loyalist-wreck-a: {layer: low-air, size: [64, 72]}
+    loyalist-wreck-b: {layer: low-air, size: [56, 64]}
+    hull-start: {layer: ground, size: [480, 480]}
+    hull-end: {layer: ground, size: [480, 1280]}
+    sam-pad: {layer: ground, size: [64, 64]}
+    bunker-pad: {layer: ground, size: [96, 96]}
+    lifeboat-clamps: {layer: ground, size: [112, 80]}
+    beacon-wreck: {layer: ground, size: [128, 112]}
+    fragment-a: {layer: ground, size: [176, 120]}
+    fragment-b: {layer: ground, size: [136, 152]}
+    fragment-c: {layer: ground, size: [112, 96]}
+    red-blink: {layer: ground, size: [12, 12], frames: 2, fps: 1}
+  placed:
+    # the hull's south bulkhead; its top rows the tile's own (exact rows 8120..8599: covers the seam at 8540)
+    - {piece: hull-start, t: 50.565, x: 240}
+    # the hull's north bulkhead, the neck and the collar under the station's centre (row 14165); bottom rows the tile's own (exact rows 13010..14289: covers the seam at 13050)
+    - {piece: hull-end, t: 85.801, x: 240}
+    # the SAM Nests' pads (under the nests)
+    - {piece: sam-pad, t: 53.947, x: 90}
+    - {piece: sam-pad, t: 53.947, x: 150}
+    - {piece: sam-pad, t: 53.947, x: 390}
+    - {piece: sam-pad, t: 65.947, x: 80}
+    - {piece: sam-pad, t: 65.947, x: 140}
+    - {piece: sam-pad, t: 65.947, x: 260}
+    - {piece: sam-pad, t: 75.947, x: 120}
+    - {piece: sam-pad, t: 75.947, x: 330}
+    - {piece: sam-pad, t: 75.947, x: 390}
+    # the Rail Bunkers' pads
+    - {piece: bunker-pad, t: 57.54, x: 110}
+    - {piece: bunker-pad, t: 57.54, x: 370}
+    - {piece: bunker-pad, t: 72.04, x: 100}
+    - {piece: bunker-pad, t: 73.04, x: 380}
+    - {piece: bunker-pad, t: 80.04, x: 90}
+    - {piece: bunker-pad, t: 80.04, x: 390}
+    # the clamps holding the Ceres lifeboat (the secret's trigger sprite between the jaws)
+    - {piece: lifeboat-clamps, t: 67.907, x: 400}
+    # the crashed loyalist fighter: the beacon (nav-buoy) on its back at (240, 160 down) at t=80
+    - {piece: beacon-wreck, t: 80.733, x: 240}
+    # a red hull light blinking
+    - {piece: red-blink, t: 53.8, x: 34}
+    - {piece: red-blink, t: 60.467, x: 437}
+    - {piece: red-blink, t: 66.0, x: 437}
+    - {piece: red-blink, t: 73.0, x: 34}
+    - {piece: red-blink, t: 75.8, x: 437}
+    - {piece: red-blink, t: 87.698, x: 200}
+    # the station's broken plates after the kill
+    - {piece: fragment-a, t: 104.0, x: 110}
+    - {piece: fragment-c, t: 112.0, x: 360}
+    - {piece: fragment-b, t: 121.0, x: 140}
+    - {piece: fragment-c, t: 127.0, x: 400}
+    # Ceres's sunlit curve low on the left, Ceres Hub's red lights on the night side
+    - {piece: ceres-curve, t: 0.437, x: 240}
+    # Ceres's north pole far below the halted station (centred 380 down at t=92)
+    - {piece: ceres-pole, t: 82.412, x: 240}
+    # the Sovereign's tenders and a docking spar far below
+    - {piece: docking-spar, t: 23.625, x: 380}
+    - {piece: tender-a, t: 30.0, x: 120}
+    - {piece: tender-b, t: 41.0, x: 330}
+    - {piece: tender-a, t: 47.875, x: 70}
+    # loyalist wrecks and the dead Ceres patrol boat drifting
+    - {piece: loyalist-wreck-a, t: 4.0, x: 110}
+    - {piece: patrol-boat-wreck, t: 9.0, x: 360}
+    - {piece: loyalist-wreck-b, t: 14.0, x: 90}
+    - {piece: loyalist-wreck-a, t: 18.0, x: 410}

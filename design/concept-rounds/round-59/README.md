@@ -46,6 +46,8 @@ from four runs with the ship held at the left, in the middle, at the right and w
 keys held from just after the kill). Their PNGs are frames of the play field at 1:1 side by side, labelled with the
 fight's second (from the warning) or the level's clock.
 
+Record of the decisions: [review.html](review.html)
+
 ## In the game
 
 The redone motion and the cruisers' rise are in the game, as are the three round 58 b sounds and the two Europa beds.

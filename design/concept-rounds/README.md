@@ -3,7 +3,7 @@ title: Concept rounds
 design: review
 implementation: n/a
 art: chosen
-updated: 2026-10-28
+updated: 2026-10-29
 ---
 
 # Concept rounds
@@ -16,6 +16,9 @@ choices still to be made. The proposals themselves live in the `concept/` direct
 they belong to; a round only collects them.
 
 ## Contents
+
+Rounds 34 onwards (reviewed as artifact pages, which are not kept in the repo) have a record of their decisions
+next to the README: `round-NN/review.html`, linked from each round's *Review* section.
 
 | Part | Summary | Design | Impl | Art |
 |---|---|---|---|---|
@@ -83,6 +86,10 @@ they belong to; a round only collects them.
 | [round-62](round-62/README.md) | M9 part B, Level 29 "Betrayal at Ceres" and the Act 5 intro: the final art of the Talon, SAM Nest, Asteroid Mite and belt rocks, wavering Stormhawk, clamp gun and tender, Level 29's backdrop, the Act 5 portraits, title card, briefing images and intel with game captures; the casting of Ceres Hub Control and Harker and Vorne's pitch; "Hollow Rock", Rook's sting and fourteen sounds; six calls the build made | review | n/a | proposed |
 | [round-63](round-63/README.md) | M9 part C, Level 30 "Minefield": the new Act 5 title card (a/b/c), the final art of the Minelayer and its mines, the Gilded Gunship, the Dart Drone, the Rail Serpent, the belt's large rocks and the dead buoy, Level 30's backdrop, briefing images and intel with game captures; ten sounds; seven calls the build made | review | n/a | proposed |
 | [round-64](round-64/README.md) | M9 part D, Level 31 "Mining Rig Escort": the hex shield and the Act 5 title card in production, the final art of the mining tug (a/b), the Hornet, the Shard Drone, the Buzzsaw (a/b), Level 31's backdrop, the claim rock, the Bellwether's portrait, briefing images and intel with game captures; the Bellwether's casting; "Gilded Cage" and eleven sounds; eight calls the build made incl. the tows against the beam | review | n/a | proposed |
+| [round-65](round-65/README.md) | M9 part E, Level 32 "Deep Core": the final art of the Sentinel Tower, the Strider, the blast doors, charges and crate, Level 32's backdrop with the forks' reading (QE-2, a/b/c), briefing images and intel with game captures; eleven sounds and track 12's conveyor stem; eight calls the build made (QE-1 where the towers stand, QE-3 the full turn first); Level 31 recorded with sound after FIX1 | review | n/a | proposed |
+| [round-66](round-66/README.md) | M9 part F, Level 33 "Leech Field": the final art of the Void Leech (its colour) and the prey Talon's look (QF-2, a/b), the Rail Bunker, Level 33's backdrop, the grown rocks, Claim 114 and the nav buoy, briefing images and intel with game captures; seven sounds; eight calls the build made (the rail line on a scrolling bunker, the prey wing's timing) | review | n/a | proposed |
+| [round-67](round-67/README.md) | M9 part G, Level 34 "Salvage Run": the final art of the Warden Tank in livery and its readability on the Helix hulls (QG-1, a/b/c), the Helix core's salvage (QG-2, a/b), Level 34's backdrop, the salvage objects, briefing images and intel with game captures; four sounds; six calls the build made (the level's density); **partly answered 2026-10-29** (G.4–G.7, S.1, S.3, S.2 "dock" and the calls decided; 4 rows re-shown after a redo: G.1, G.2, G.3, S.4) | review | n/a | proposed |
+| [round-68](round-68/README.md) | M9 part H, Level 35 "Iron Sovereign" and Act 5's end: the boss fight's calls first (the fight's length and the core's HP flown both ways, C.1), the final art of the Iron Sovereign, Level 35's backdrop, the mass relay's flash (QH-2, a/b), the lifeboat, briefing and outro images and the intel silhouette with game clips; track 19 at full length and twelve sounds; nine calls the build made | review | n/a | proposed |
 
 ## Design
 
@@ -98,6 +105,15 @@ How a round works:
    the part's Concept art table, `art` status and Decisions log are updated, and the round's
    Choices table gets the outcome. When every choice is answered, the round's `design` status
    becomes `approved` and it is marked closed below.
+
+**Record page.** The review pages of rounds 34 onwards were artifacts and lived only in the untracked
+`build/roundNN-review/`. At every round's close, once the README's *Answer* and *Outcome* cells are filled, run
+`python3 tools/concept/review_record.py NN` (`--check` lists what it could not map): it writes
+`round-NN/review.html`, a lean static page (inline CSS, light/dark, no script) with every row as the review page showed
+it plus the user's answer and the outcome, read-only. It copies no media: the originals in the parts' `concept/` and
+`concept/rejected/` directories (and `assets/voice/`) are linked by relative path. Link it from the round's README
+(one line under *Review*: `Record of the decisions: [review.html](review.html)`). It reads `build/roundNN-review/index.html`, so run it
+before that directory is cleaned.
 
 ## Rounds
 
@@ -163,4 +179,8 @@ How a round works:
 | 61 | 2026-10-28 | closed | M9 part A, the Act 5 systems and arsenal (F.1–F.6 final art with game captures from Level 08 and a capture rig, K.1 the power row under a drain, C.1–C.9 calls the build made, D.1 the belt README; closed 2026-10-28: F.1 a, **F.2 a** (the hex lattice, not the recommendation; ART-F swaps the frames), F.3 a, F.4-F.6 and K.1 accepted, C.1-C.9 accepted, D.1 the belt document approved) |
 | 62 | 2026-10-28 | closed | M9 part B, Level 29 "Betrayal at Ceres" and the Act 5 intro (F.1–F.11 final art with game captures, V.1–V.3 the casting and Vorne's pitch, M.1–M.2 "Hollow Rock" and Rook's sting in the level, S.1–S.15 sounds, C.1–C.6 calls the build made; found: Rook's barks before the rescue, a code fix; closed 2026-10-28: F.1, F.2, F.4-F.8, F.10-F.11 accepted, F.3 redo (more rocks with Mites in Level 29's waves; the Mite's art kept), **F.9 redo** (a new Act 5 title card), V.1 a, V.2 b, V.3 a, M.1-M.2 ok, sounds all a except S.3 b, S.4 b, S.6 b, S.7 b, S.11 b, S.12 b (S.5 a with S.4 b), S.15 left out; C.1 change (the Talon's shield stronger), C.2-C.6 accepted) |
 | 63 | 2026-10-28 | closed | M9 part C, Level 30 "Minefield" (T.1 the new Act 5 title card a/b/c, F.1–F.8 final art with game captures of Level 30 and the release's end, S.1–S.10 ten sounds, C.1–C.7 calls the build made: the Talon's shield 12, Level 29's Mite rock groups, Level 30's offbeat waves, the chain reach 44 px, the convoy with escorts, the radio trims, the dead buoy as a tow; closed 2026-10-28: **T.1 c** (the gold wing, not the recommendation; production in ART-F), F.1-F.8 and C.1-C.7 accepted, sounds S.1 b, S.2-S.4 a, **S.5 redo** (new proposals in round 64), S.6-S.8 b, S.9-S.10 a) |
-| 64 | 2026-10-28 | open | M9 part D, Level 31 "Mining Rig Escort" (F.1–F.2 the hex shield and the title card in production, F.3–F.11 final art with game captures incl. the tug's proportions a/b and the Buzzsaw's gold a/b, V.1 the Bellwether's casting, M.1 track 13 "Gilded Cage", S.1–S.11 sounds incl. the serpent rumble's redo, C.1–C.8 calls the build made: the tows against the beam (an important concept), the Hornet's shield 12, the sway, hard's sections, the offbeat waves, the Dart entries, the claim as a tow, the radio trims) |
+| 64 | 2026-10-28 | closed | M9 part D, Level 31 "Mining Rig Escort" (F.1–F.2 the hex shield and the title card in production, F.3–F.11 final art with game captures incl. the tug's proportions a/b and the Buzzsaw's gold a/b, V.1 the Bellwether's casting, M.1 track 13 "Gilded Cage", S.1–S.11 sounds incl. the serpent rumble's redo, C.1–C.8 calls the build made: the tows against the beam (an important concept), the Hornet's shield 12, the sway, hard's sections, the offbeat waves, the Dart entries, the claim as a tow, the radio trims; closed 2026-10-28: F.1–F.2, F.4–F.5, F.7–F.11, M.1 and C.2–C.8 accepted, **F.3 a** (the tug filled to 200×300), **F.6 a** (the Buzzsaw's gold on the edges), **V.1 b** (the Bellwether is Laurie Anne Walden), **C.1 a** (a beam counts on a tow), sounds a except **S.7 b** and **S.5 b** rebuilt on the grinder as `saw-spinup-r64-ab`) |
+| 65 | 2026-10-29 | closed | M9 part E, Level 32 "Deep Core" (F.1–F.7 final art with game captures incl. the forks' reading QE-2 a/b/c, M.1 track 12's conveyor stem, S.1–S.11 sounds, C.1–C.8 calls the build made: QE-1 where the towers stand, QE-3 the full turn first, FIX1's Level 31 radio and tug flash; closed 2026-10-29: all as recommended except sounds **S.3 b**, **S.7 b**, **S.11 b**; M.1 ok, F.1 a, F.2–F.7 ok, C.1 a, C.2 a, C.3–C.8 accepted) |
+| 66 | 2026-10-29 | closed | M9 part F, Level 33 "Leech Field" (F.1–F.8 final art with game captures incl. the prey Talon's look QF-2 a/b and the leech's colour, S.1–S.7 sounds, C.1–C.8 calls the build made: the rail line on a scrolling bunker, QF-1's retiming, the offbeat waves and bounty scale 0.43, the leech rules, LeechPlay, the radio, hard's third bunker's pad, the intel's leech marks; closed 2026-10-29: all as recommended except **C.1 b** (the rail line rides with the bunker, built in FIX3), **S.6 b** (the heavier drooping brown-out warning) and **C.7 b** (the recommendation: a pad at x 240); F.1 a (the prey Talon by tint), F.2 ok (the leech stays black-violet), F.3–F.8 ok, sounds a for S.1–S.5 and S.7, C.2–C.6 and C.8 accepted) |
+| 67 | 2026-10-29 | open | M9 part G, Level 34 "Salvage Run" (G.1–G.7 final art with game captures, S.1–S.4 four sounds, C.1–C.6 calls the build made; partly answered 2026-10-29: G.4–G.7 ok, S.1 a, S.3 a, S.2 "dock" (the hold clamps reuse Level 29's Dock 9 clamp release), C.1 a, C.4 a, C.2/C.3/C.5/C.6 accepted; **4 rows re-shown after a redo: G.1, G.2 (b/c need renderings), G.3 (new clips), S.4 (louder)**) |
+| 68 | 2026-10-29 | open | M9 part H, Level 35 "Iron Sovereign" and Act 5's end (C.1, C.5, C.6, C.9 the boss fight's calls, C.1 flown both ways; H.1–H.7 final art with game clips, H.4 the relay's flash a/b; M.1 track 19 and S.1–S.12 sounds; C.2–C.4, C.7, C.8 calls the build made) |

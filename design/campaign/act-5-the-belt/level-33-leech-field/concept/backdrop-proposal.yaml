@@ -1,0 +1,184 @@
+backdrop:
+  # Presentation only: Level 33's Leech Field (tools/art/backdrop_l33.py, step ART-F2, from the level's data.yaml).
+  # A ground layer without a tile set: open space is the deep layer (the base); the ground holds the
+  # asteroid faces (bare at the edge, overgrown in sections 2-5, gold-lit clear rock at the end) with the
+  # bunkers' pads and Claim 114's ledge, and the pulsing leech sacs (the only animated pieces: at most two
+  # on the screen). Low-air holds the leeched Talons' drifting wrecks (dimmed); high-air the close grit.
+  scroll_factors: {deep: 0.12, far: 0.5, ground: 1, low-air: 1.35, high-air: 2.2}   # far unused
+  ramp: 2
+  haze_colour: 09090e
+  atmosphere:
+    clear: {haze: 0.0}
+  tile_sets:
+    field-space: {layer: deep, height: 1024}   # space, the sunlit dust band, stars
+    field-dust: {layer: high-air, height: 960}   # close grit and dust motes (transparent)
+  pieces:
+    sun-point: {layer: deep, size: [96, 96]}
+    far-rock-a: {layer: deep, size: [120, 100]}
+    far-rock-b: {layer: deep, size: [84, 72]}
+    ceres-ahead: {layer: deep, size: [300, 300]}
+    edge-rock-a: {layer: ground, size: [260, 220]}
+    edge-rock-b: {layer: ground, size: [200, 170]}
+    grown-face-1: {layer: ground, size: [480, 460]}
+    grown-face-2: {layer: ground, size: [480, 420]}
+    ridge-1: {layer: ground, size: [480, 400]}
+    ridge-2: {layer: ground, size: [480, 400]}
+    feeding-face: {layer: ground, size: [480, 520]}
+    nest-face-1: {layer: ground, size: [480, 460]}
+    nest-face-2: {layer: ground, size: [480, 440]}
+    nest-face-3: {layer: ground, size: [480, 420]}
+    clear-face-a: {layer: ground, size: [480, 400]}
+    clear-rock-b: {layer: ground, size: [260, 220]}
+    leech-sacs: {layer: ground, size: [64, 48], frames: 4, fps: 2}
+    talon-wreck-a: {layer: low-air, size: [64, 64]}
+    talon-wreck-b: {layer: low-air, size: [64, 64]}
+  placed:
+    # grown-face-1: its pads carry the bunkers at x 112 (t 33.5)
+    - {piece: grown-face-1, t: 36.007, x: 240}
+    # ridge-1: its pads carry the bunkers at x 92 (t 68), x 388 (t 68)
+    - {piece: ridge-1, t: 70.323, x: 240}
+    # ridge-2: its pads carry the bunkers at x 84 (t 86), x 396 (t 86.15)
+    - {piece: ridge-2, t: 88.431, x: 240}
+    # nest-face-1: its pads carry the bunkers at x 100 (t 132), x 380 (t 132)
+    - {piece: nest-face-1, t: 134.173, x: 240}
+    # nest-face-2: its pads carry the bunkers at x 320 (t 150)
+    - {piece: nest-face-2, t: 152.107, x: 240}
+    # the feeding ground: Claim 114's ledge at x 380 (t 104)
+    - {piece: feeding-face, t: 106.027, x: 240}
+    - {piece: edge-rock-a, t: 6.0, x: 380}
+    - {piece: edge-rock-b, t: 13.0, x: 90}
+    - {piece: edge-rock-a, t: 20.0, x: 120}
+    - {piece: edge-rock-b, t: 26.0, x: 400}
+    - {piece: grown-face-2, t: 42.0, x: 260}
+    - {piece: edge-rock-b, t: 48.5, x: 60}
+    - {piece: grown-face-2, t: 54.0, x: 200}
+    - {piece: grown-face-2, t: 77.0, x: 250}
+    - {piece: edge-rock-b, t: 95.5, x: 70}
+    - {piece: grown-face-2, t: 112.0, x: 230}
+    - {piece: nest-face-3, t: 124.0, x: 240}
+    - {piece: grown-face-2, t: 141.0, x: 260}
+    - {piece: nest-face-3, t: 157.0, x: 250}
+    - {piece: clear-face-a, t: 167.0, x: 240}
+    - {piece: clear-rock-b, t: 172.5, x: 90}
+    - {piece: clear-face-a, t: 177.0, x: 300}
+    # leech sacs pulsing in the growth
+    - {piece: leech-sacs, t: 29.267, x: 300}
+    - {piece: leech-sacs, t: 44.6, x: 120}
+    - {piece: leech-sacs, t: 79.769, x: 400}
+    - {piece: leech-sacs, t: 109.4, x: 140}
+    - {piece: leech-sacs, t: 134.6, x: 260}
+    - {piece: leech-sacs, t: 145.4, x: 330}
+    - {piece: leech-sacs, t: 158.667, x: 180}
+    # a leeched Talon's wreck drifting below the play plane
+    - {piece: talon-wreck-a, t: 100.0, x: 120}
+    - {piece: talon-wreck-b, t: 108.0, x: 300}
+    - {piece: talon-wreck-a, t: 115.0, x: 70}
+    # the Sun as a bright point (section 1)
+    - {piece: sun-point, t: 8.333, x: 96}
+    # far rocks
+    - {piece: far-rock-a, t: 30.0, x: 400}
+    - {piece: far-rock-b, t: 70.0, x: 80}
+    - {piece: far-rock-a, t: 120.0, x: 90}
+    - {piece: far-rock-b, t: 150.0, x: 410}
+    # Ceres's light ahead, centred 120 px down at the end (t=178)
+    - {piece: ceres-ahead, t: 186.333, x: 300}
+sections:   # ART-F2's reading of the README's Layout (150 px/s, the ridge 130 with 2 s eases); F2 writes the real ones
+  - {name: Field Edge, end: 24, atmosphere: clear, tiles: ['field-space', 'field-dust'], notes: {'layers': {'ground': 'the first small asteroid surfaces, bare sunlit rock.', 'air': 'drifting rocks, two carrying Asteroid Mites.', 'deep': 'the dust band, the Sun as a bright point.'}, 'purpose': 'Popcorn and Talons; the first leech stream from the rear (t=22.5), alone.'}}
+  - {name: The Grown Rocks, end: 60, atmosphere: clear, tiles: ['field-space', 'field-dust'], notes: {'layers': {'ground': 'large asteroid surfaces overgrown with black-violet Vrell growth (leech sacs pulsing), the first Rail Bunker dug into a rock face (t=33.5).', 'low-air': 'smaller rocks.'}, 'purpose': 'The bunker taught alone; leeches from the sides and the rear.'}}
+  - {name: Bunker Ridge, end: 95, speed: 130, ramp: 2, atmosphere: clear, tiles: ['field-space', 'field-dust'], notes: {'layers': {'ground': 'a long rock ridge with bunker pairs (t≈68, t≈86) whose lines cross with a safe column between; the growth on its flanks.'}, 'purpose': 'The first **prey** wing (t=62.5): the leeches feed on the Talons.'}}
+  - {name: The Feeding Ground, end: 118, speed: 150, ramp: 2, atmosphere: clear, tiles: ['field-space', 'field-dust'], notes: {'layers': {'ground': "the growth at its thickest, the drifting wrecks of latched Talons (scenery), the prospector's claim shack *Claim 114* in the growth (t≈104, the secret)."}, 'purpose': 'The second prey wing; then the Choir (t=118).'}}
+  - {name: The Swarm, end: 163, atmosphere: clear, tiles: ['field-space', 'field-dust'], notes: {'layers': {'ground': 'leech nests in the growth, a bunker pair (t≈132) and a single bunker (t≈150).', 'air': 'rocks thick with riders.'}, 'purpose': 'The leeches at their densest (at most 6 free on the screen), every 7.5 s from the rear or a side.'}}
+  - {name: Clear Rock, end: 178, atmosphere: clear, tiles: ['field-space', 'field-dust'], notes: {'layers': {'ground': "the rocks thinning, the growth gone, bare rock lit gold; Ceres's light ahead in the deep layer."}, 'purpose': 'Release; the level ends at t=178.'}}
+# rows: the end's bottom edge 26000 (ground px); low-air 35100
+ground_targets:  # at: [t, x], when the target enters at the top edge and its x (on the faces' pads;
+  # a bunker 72 px, Claim 114 48 px: the shack's sprite `claim-shack`, 20 HP, 28 on hard). The pads'
+  # pairs stand at one row: their lines cross over the ship; the first delays' stagger (half the
+  # interval) is F2's. Every bunker x is >= 84 px inside the 480 px field.
+  - target: Rail Bunker single on grown-face-1
+    section: 2
+    enemy: rail-bunker
+    count: 1
+    at: [[33.5, 112]]
+  - target: Rail Bunker pair on ridge-1
+    section: 3
+    enemy: rail-bunker
+    count: 2
+    at: [[68, 92], [68, 388]]
+  - target: Rail Bunker pair on ridge-2
+    section: 3
+    enemy: rail-bunker
+    count: 2
+    at: [[86, 84], [86.15, 396]]
+    hard: {at: [[86, 84], [86.15, 396], [86.1, 240]]}
+  - target: Rail Bunker pair on nest-face-1
+    section: 5
+    enemy: rail-bunker
+    count: 2
+    at: [[132, 100], [132, 380]]
+    hard: {at: [[132, 100], [132, 380], [132, 240]]}
+  - target: Rail Bunker single on nest-face-2
+    section: 5
+    enemy: rail-bunker
+    count: 1
+    at: [[150, 320]]
+  - target: Claim 114
+    section: 4
+    sprite: claim-shack
+    size: [48, 48]
+    at: [[104, 380]]
+drops:   # the CDF nav buoy (tools/art/belt_units_f.py `nav-buoy`, BuoyLooks' frames: F4 adds it to MOORED)
+  - {t: 160, x: 240, y: 380, pickup: armour patch, sprite: nav-buoy}
+debris:
+  # Proposal (ART-F2): the Leech Field's grown rocks (tools/art/belt_units_f.py); small ones break (6 HP,
+  # part B's), large ones are walls (contact `large` 20, the belt's hazards). The Mites' rocks are the
+  # waves' on_rocks (use the grown-a/b/c chunks). At most two big rocks on the screen; F2 checks the
+  # waves (no rock line within 40 px of a spawn point, no big rock in the ship's lowest 120 px while a
+  # rear leech wave enters).
+  chunks:
+    grown-large-a: {size: [88, 80], damage: 20}
+    grown-large-b: {size: [66, 60], damage: 20}
+    grown-a: {size: [40, 36], hp: 6}
+    grown-b: {size: [36, 32], hp: 6}
+    grown-c: {size: [32, 28], hp: 6}
+  clearance: 120
+  max_large: 2
+  easy: {leave_out_large: 4}
+  placed:
+    - {t: 3.5, x: 110, chunk: grown-a, drift: [20, -180]}
+    - {t: 9, x: 70, chunk: grown-large-a, drift: [12, -165]}
+    - {t: 10, x: 370, chunk: grown-b, drift: [-30, -190]}
+    - {t: 16.5, x: 200, chunk: grown-c, drift: [40, -200]}
+    - {t: 19, x: 410, chunk: grown-large-b, drift: [-12, -165]}
+    - {t: 23, x: 300, chunk: grown-a, drift: [-50, -210]}
+    - {t: 29.5, x: 150, chunk: grown-b, drift: [60, -180]}
+    - {t: 36, x: 60, chunk: grown-large-a, drift: [12, -165]}
+    - {t: 36, x: 330, chunk: grown-c, drift: [-20, -190]}
+    - {t: 42.5, x: 60, chunk: grown-a, drift: [30, -200]}
+    - {t: 46, x: 420, chunk: grown-large-b, drift: [-12, -165]}
+    - {t: 49, x: 420, chunk: grown-b, drift: [-40, -210]}
+    - {t: 55.5, x: 240, chunk: grown-c, drift: [50, -180]}
+    - {t: 58, x: 70, chunk: grown-large-a, drift: [12, -165]}
+    - {t: 62, x: 110, chunk: grown-a, drift: [-60, -190]}
+    - {t: 68.5, x: 370, chunk: grown-b, drift: [20, -200]}
+    - {t: 73, x: 410, chunk: grown-large-b, drift: [-12, -165]}
+    - {t: 75, x: 200, chunk: grown-c, drift: [-30, -210]}
+    - {t: 81.5, x: 300, chunk: grown-a, drift: [40, -180]}
+    - {t: 84, x: 60, chunk: grown-large-a, drift: [12, -165]}
+    - {t: 88, x: 150, chunk: grown-b, drift: [-50, -190]}
+    - {t: 94.5, x: 330, chunk: grown-c, drift: [60, -200]}
+    - {t: 101, x: 60, chunk: grown-a, drift: [-20, -210]}
+    - {t: 101, x: 420, chunk: grown-large-b, drift: [-12, -165]}
+    - {t: 107.5, x: 420, chunk: grown-b, drift: [30, -180]}
+    - {t: 111, x: 70, chunk: grown-large-a, drift: [12, -165]}
+    - {t: 114, x: 240, chunk: grown-c, drift: [-40, -190]}
+    - {t: 124, x: 410, chunk: grown-large-b, drift: [-12, -165]}
+    - {t: 127, x: 370, chunk: grown-b, drift: [-60, -210]}
+    - {t: 133.5, x: 200, chunk: grown-c, drift: [20, -180]}
+    - {t: 134, x: 60, chunk: grown-large-a, drift: [12, -165]}
+    - {t: 140, x: 300, chunk: grown-a, drift: [-30, -190]}
+    - {t: 145, x: 420, chunk: grown-large-b, drift: [-12, -165]}
+    - {t: 146.5, x: 150, chunk: grown-b, drift: [40, -200]}
+    - {t: 153, x: 330, chunk: grown-c, drift: [-50, -210]}
+    - {t: 155, x: 70, chunk: grown-large-a, drift: [12, -165]}
+    - {t: 159.5, x: 60, chunk: grown-a, drift: [60, -180]}
+    - {t: 166, x: 420, chunk: grown-b, drift: [-20, -190]}

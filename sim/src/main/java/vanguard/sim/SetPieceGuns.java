@@ -23,6 +23,11 @@ final class SetPieceGuns {
     private final StrideArena stride;
     private final BreachArena breach;
     private final CoilArena coil;
+    private final RingArena ring;
+    /** M9 part H, step H1b: the rail lines and the part shields; null without. */
+    private final BossLines lines;
+
+    private final PartShields shields;
     /** {@link SetPieceParts#partHp}: the guns of wrecked parts are silent. */
     private final double[] partHp;
 
@@ -71,6 +76,9 @@ final class SetPieceGuns {
         stride = piece.stride;
         breach = piece.breach;
         coil = piece.coil;
+        ring = piece.ring;
+        lines = piece.lines;
+        shields = piece.shields;
         partHp = parts.partHp;
         int count = spec.parts().size();
         volleyTicks = new int[count];
@@ -156,6 +164,11 @@ final class SetPieceGuns {
 
     /** As {@link SetPiece#act}. */
     void act(double shipX, double shipY, BossActions actions, boolean firing) {
+        if (ring != null && piece.destroyed()) {
+            // M9 part H: the batteries cook off after the kill.
+            ring.dying(actions);
+            return;
+        }
         if (boss == null || !motion.present || piece.destroyed()) {
             return;
         }
@@ -166,6 +179,10 @@ final class SetPieceGuns {
         }
         windows.tick();
         hatches.tick();
+        if (shields != null) {
+            // M9 part H, step H1b: the part shields refill on the real steps.
+            shields.step();
+        }
         if (motion.moveTicks >= 0) {
             return;
         }
@@ -174,8 +191,19 @@ final class SetPieceGuns {
             sweeps.step(actions);
         }
         phaseTicks++;
+        if (ring != null) {
+            // M9 part H: the arc follows the ship, the rings turn, and a ring whose last battery died locks; step H1b:
+            // the core opens, tells its spiral and launches from its bays.
+            ring.step(shipX, shipY, phase, actions, firing);
+        }
+        if (lines != null) {
+            // M9 part H, step H1b: the running rail line goes on; the oldest due one starts when the gate allows.
+            lines.step(shipX, shipY, ring, actions);
+        }
         while (phase < boss.phases().size() - 1 && phaseOver(boss.phases().get(phase))) {
-            if (!partsDown(boss.phases().get(phase)) && !arenaOver(boss.phases().get(phase))) {
+            if (!partsDown(boss.phases().get(phase))
+                    && !arenaOver(boss.phases().get(phase))
+                    && (ring == null || !ring.phaseOver(phase))) {
                 timeouts |= 1L << phase;
                 actions.timeout(phase);
             }
@@ -191,6 +219,12 @@ final class SetPieceGuns {
         if (coil != null) {
             // M8 part H: the coil's events, strikes, fire and sheds on its own clocks.
             coil.act(actions, firing);
+            return;
+        }
+        if (ring != null && ring.silent()) {
+            // M9 part H: silent until the rings are up to speed (the phase's clocks start then); step H1b: and while
+            // the
+            // core opens.
             return;
         }
         if (breach != null) {
@@ -226,8 +260,14 @@ final class SetPieceGuns {
             alternate(current, actions, firing);
         } else {
             for (int i = 0; i < current.attacks().size(); i++) {
-                runAttack(current.attacks().get(i), current, actions, firing);
+                int a = current.attacks().get(i);
+                if (ring == null || !ring.firesAtHolds(a)) {
+                    runAttack(a, current, actions, firing);
+                }
             }
+        }
+        if (ring != null) {
+            ringHolds(current, actions, firing);
         }
         if (current.windows().isPresent()) {
             windows.step(current.windows().get(), shipX, shipY, actions, firing);
@@ -276,11 +316,47 @@ final class SetPieceGuns {
         }
     }
 
-    /** Whether the phase is over: its parts are down, its timer ran out, or (M5 part E) its slams or its HP share. */
+    /**
+     * M9 part H: a stepping ring's attack fires once at each hold's start, from its armed batteries (the laser
+     * batteries' sweep: its wedge never moves under it), while the phase has it.
+     */
+    private void ringHolds(BossSpec.Phase current, BossActions actions, boolean firing) {
+        for (int i = 0; i < ring.ringCount(); i++) {
+            int a = ring.holdAttack(i);
+            if (a < 0 || !ring.holdStarted(i) || !firing || !inPhase(current, a)) {
+                continue;
+            }
+            BossSpec.Attack attack = boss.attacks().get(a);
+            List<Integer> batteries = ring.spec().rings().get(i).parts();
+            for (int k = 0; k < batteries.size(); k++) {
+                int p = batteries.get(k);
+                if (ring.armed(p)) {
+                    fireFrom(a, p, attack, actions);
+                }
+            }
+        }
+    }
+
+    private static boolean inPhase(BossSpec.Phase current, int a) {
+        for (int i = 0; i < current.attacks().size(); i++) {
+            if (current.attacks().get(i) == a) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Whether the phase is over: its parts are down, its timer ran out, (M5 part E) its slams or its HP share, or (M9
+     * part H) its count of locked rings.
+     */
     private boolean phaseOver(BossSpec.Phase current) {
         if (coil != null && coil.holdsPhase(phase)) {
             // M8 part H: the dive's phase does not end before its dive is over.
             return false;
+        }
+        if (ring != null && ring.phaseOver(phase)) {
+            return true;
         }
         return partsDown(current)
                 || arenaOver(current)
@@ -451,7 +527,10 @@ final class SetPieceGuns {
     private void fireAttack(
             int a, BossSpec.Attack attack, BossSpec.Phase current, BossActions actions, boolean firing) {
         if (attack.pattern() == BossSpec.Pattern.SPIRAL) {
-            spiral(a, attack, current, actions, firing);
+            if (ring == null || ring.spiralling(a)) {
+                // M9 part H, step H1b: the open core's spiral only in its cycle's run.
+                spiral(a, attack, current, actions, firing);
+            }
             return;
         }
         if (attackBurstLeft[a] > 0) {
@@ -462,8 +541,13 @@ final class SetPieceGuns {
             }
         }
         if (--attackTicks[a] > 0) {
-            if (stride != null && attack.gun().homing().isPresent()) {
+            if ((stride != null || ring != null) && attack.gun().homing().isPresent()) {
+                // M9 part H, step H1b: a ringed boss's SAM batteries' hatches too (the SAM Nest's tell).
                 hatches.tell(attack, current, attackTicks[a], attackNext[a], actions, firing);
+            }
+            if (ring != null && firing && ring.glowDue(attack, attackTicks[a])) {
+                // M9 part H, step H1b: the shut core's slits glow before its fan.
+                actions.ring(SimEvents.Type.CORE_GLOW, motion.x, motion.y, a);
             }
             return;
         }
@@ -539,6 +623,24 @@ final class SetPieceGuns {
     }
 
     private void fireFrom(int a, int p, BossSpec.Attack attack, BossActions actions) {
+        if (ring != null && (!ring.fires(p) || !ring.attackFires(a))) {
+            // M9 part H: a battery fires only while armed (alive, its ring turning, inside the fire arc); step H1b: the
+            // core's rail only below its HP share.
+            return;
+        }
+        if (attack.pattern() == BossSpec.Pattern.LINE) {
+            // M9 part H, step H1b: its rail line is due; the boss starts one at a time (BossLines).
+            lines.request(a, p);
+            return;
+        }
+        if (ring != null && attack.gun().homing().isPresent()) {
+            // M9 part H, step H1b: a SAM battery's salvo only through its open hatch (told while armed), under the
+            // station's cap of its gun's most missiles alive.
+            if (attack.gun().homing().get().hatchSeconds() <= 0 || hatches.open(p)) {
+                actions.stationMissile(parts.partX(p), parts.partY(p), attack.gun());
+            }
+            return;
+        }
         if (breach != null && !arena.layer(p).touchable()) {
             // M7 part H, step H3: a breaching boss fires from no buried part (a sunk spine vent).
             return;

@@ -37,7 +37,17 @@ How the game draws it, back to front: the hull (heading from its path, the tread
 distance driven), the turret (its own aim; the recoil frame for ~0.1 s after each shot, the flash at
 the muzzle on the shot), or the stub once the turret is gone; the wreck replaces both on death.
 
-Run: python3 tools/art/warden_tank.py [--review]   (~1 min on 20 cores; renders cached in the system
+The Act 5 livery (``--livery asc``; M9 part G batch, step ART-G, review round 67): the same model and frames in
+the chosen round-60 A.15 **b** (tools/concept/enemies_r60.py ``warden_hull("b")`` / ``warden_turret("b")``: heavier
+gold, the track guards, the engine deck's facets and the turret roof's outer ring gold, the white accent, bright red
+running lights) in Q.11 b's gunmetal and charcoal (tools/art/belt_units.py ``gunmetal``) with the belt's 1 px gold/red
+rim (belt_units.py ``rim``); the wreck burnt black and gold, the stub the livery's ring. Written as
+``warden-tank-asc``, ``-asc-turret``, ``-asc-turret-stub``, ``-asc-wreck`` (the same frame layout; the muzzle flash
+is the grey tank's ``warden-tank-flash``, the pivots the same numbers in ``pivots/warden-tank-asc.json``), held in
+build/art-held/ until the tank's data names the livery (``livery: {sprite: warden-tank-asc}``); review
+design/enemies/ground/concept/warden-tank-asc-final-r67-a.png/.gif (on Level 34's Helix hull when its backdrop exists).
+
+Run: python3 tools/art/warden_tank.py [--livery asc] [--review]   (~1 min on 20 cores; renders cached in the system
 temp dir, conceptgame-cache/warden-tank/; --review rebuilds the review from the written files)
 """
 import contextlib
@@ -71,6 +81,16 @@ ROOT_NAME = "warden-tank"
 CONCEPT = DESIGN / "enemies" / "ground" / "concept"
 DATA = DESIGN / "enemies" / "ground" / "warden-tank" / "data.yaml"
 HELD = ROOT / "build" / "art-held"
+LIVERY = "grey"                            # "asc": the Act 5 Ascendancy livery (round 60 A.15 b, Q.11 b)
+
+
+def set_livery(livery):
+    """Switch the module to a livery before building (the workers fork with it)."""
+    global LIVERY, ROOT_NAME, SOURCE, REVIEW_ROUND, BATCH
+    LIVERY = livery
+    if livery == "asc":
+        ROOT_NAME, BATCH, REVIEW_ROUND = "warden-tank-asc", "M9 part G batch", "r67"
+        SOURCE = artkit.source_note(SCRIPT, BATCH)
 CACHE = Path(tempfile.gettempdir()) / "conceptgame-cache" / "warden-tank"
 
 SIZE, STUB, FLASH = 76, 40, 32
@@ -108,7 +128,7 @@ def turret_scene(recoil=0.0, snapped=False):
             items += [(sd_box(p, (0, 0.66 - recoil, 0.44), (0.08, 0.42, 0.06), 0.02), A_FACET),
                       (sd_box(p, (0, 1.06 - recoil, 0.44), (0.12, 0.06, 0.08), 0.0), A_GOLD)]
         return union(*items)
-    return scene
+    return _gold_roof(scene)
 
 
 def stub_scene():
@@ -132,7 +152,27 @@ def stub_scene():
 
 
 def hull_scene(tread=0.0):
-    return am.warden_hull(tread)[0]
+    scene = am.warden_hull(tread)[0]
+    if LIVERY != "asc":
+        return scene
+
+    def gilded(p):                          # enemies_r60.warden_hull("b"): gold track guards, gold facets
+        d, m = scene(p)
+        m = np.where((m == A_TREAD) & (p[:, 2] > 0.17), A_GOLD, m)
+        return d, np.where(m == A_FACET, A_GOLD, m)
+    return gilded
+
+
+def _gold_roof(scene):
+    """enemies_r60.warden_turret("b"): the turret roof's outer ring gold."""
+    if LIVERY != "asc":
+        return scene
+
+    def gilded(p):
+        d, m = scene(p)
+        r = np.hypot(p[:, 0], p[:, 1] + 0.05)
+        return d, np.where((m == A_HULL) & (r > 0.3), A_GOLD, m)
+    return gilded
 
 
 def wreck_scene():
@@ -151,9 +191,31 @@ def wreck_scene():
     return scene
 
 
+def asc_mats(wreck=False, lit=False, tread=0.0):
+    """The Act 5 livery: enemies_r60.warden_mats("b") (belt_mats with the white accent, red lights x1.3, the
+    tread slot) in Q.11 b's gunmetal; the wreck burnt: the gunmetal near black, the gold scorched, lights out."""
+    import belt_units as bu  # noqa: E402  (the Q.11 b kit)
+    m = bu.gunmetal(bu.e60.warden_mats("b", 1.0, tread))
+    if wreck:
+        scorch = _scorch()
+        m[A_HULL] = replace(m[A_HULL], albedo=(0.17, 0.17, 0.19), spec=0.35, pattern=scorch)
+        m[A_FACET] = replace(m[A_FACET], albedo=(0.13, 0.13, 0.15), spec=0.3, pattern=scorch)
+        m[A_GOLD] = replace(m[A_GOLD], albedo=tuple(c * 0.55 for c in m[A_GOLD].albedo), spec=0.35, pattern=scorch)
+        m[A_GUN] = replace(m[A_GUN], albedo=(0.3, 0.29, 0.3), spec=0.3, pattern=scorch)
+        m[A_RED] = Material((0.05, 0.04, 0.04))
+        m[A_ENGINE] = Material((0.06, 0.04, 0.03), emission=(0.25, 0.08, 0.02))
+        m[A_TREAD] = replace(m[A_TREAD], albedo=(0.08, 0.08, 0.09))
+        if lit:
+            m[A_HULL] = replace(m[A_HULL], albedo=(0.35, 0.37, 0.42))
+            m[A_ENGINE] = Material((0.06, 0.04, 0.03), emission=(0.8, 0.26, 0.05))
+    return m
+
+
 def mats(wreck=False, lit=False, tread=0.0):
     """The concept's grey livery (enemies_r36.grey_tank): unmarked_mats with the hex panelling and the
     tread slot in dark grey; the wreck burnt: darker, scorched, every light out."""
+    if LIVERY == "asc":
+        return asc_mats(wreck, lit, tread)
     _, base = am.warden_hull(tread)              # the tread bands' phase lives in the material
     m = r36.unmarked_mats(1.0, hull_pattern=r36.em._hex(9))
     m.append(replace(base[A_TREAD], albedo=r36.UG[1]))
@@ -187,7 +249,8 @@ REV = {"hull": 2}                         # the tread frame's material phase
 
 
 def _job_key(job):
-    return hashlib.sha1((repr(job) + f"/{REV.get(job[0], 1)}").encode()).hexdigest()[:20]
+    return hashlib.sha1((repr(job) + f"/{REV.get(job[0], 1)}" + ("" if LIVERY == "grey" else f"/{LIVERY}/2"))
+                        .encode()).hexdigest()[:20]
 
 
 def model_for(job):
@@ -207,6 +270,10 @@ def model_for(job):
 
 
 def render_job(job):
+    if isinstance(job[-1], str) and job[-1] in ("grey", "asc"):     # the livery rides along (forkserver workers)
+        if job[-1] != LIVERY:
+            set_livery(job[-1])
+        job = job[:-1]
     path = CACHE / f"{_job_key(job)}.png"
     if path.exists():
         return Image.open(path).convert("RGBA")
@@ -214,7 +281,11 @@ def render_job(job):
     rot = model_rotation(h)
     scene = (lambda p, s=scene0, r=rot: s(sdf.rotate_z(p, r)))
     hi, factor = artkit.render_hi(scene, model_space_materials(m, rot), (size, size), size / S)
-    img = grey_rim(artkit.native(hi, factor))
+    if LIVERY == "asc":
+        import belt_units as bu  # noqa: E402
+        img = bu.rim(artkit.native(hi, factor))
+    else:
+        img = grey_rim(artkit.native(hi, factor))
     CACHE.mkdir(parents=True, exist_ok=True)
     img.save(path)
     return img
@@ -272,6 +343,8 @@ def flash_frames():
 # =========================================================================== output
 
 def claimed():
+    if LIVERY == "asc":                    # the livery's frames once the tank's data names them
+        return DATA.exists() and ROOT_NAME in DATA.read_text(encoding="utf-8")
     return DATA.exists()
 
 
@@ -334,22 +407,26 @@ def jobs():
 def build():
     js = jobs()
     with ProcessPoolExecutor() as pool:
-        out = dict(zip(js, pool.map(render_job, js)))
+        out = dict(zip(js, pool.map(render_job, [j + (LIVERY,) for j in js])))
 
     def of(kind):
         return [out[j] for j in js if j[0] == kind]
-    write("warden-tank", artkit.quantize_set(of("hull"), 32))
-    write("warden-tank-turret", artkit.quantize_set(of("turret"), 24))
-    write("warden-tank-turret-stub", artkit.quantize_set(of("stub"), 16), single=True)
-    write("warden-tank-flash", flash_frames())
-    write("warden-tank-wreck", artkit.quantize_set(of("wreck"), 32))
+    r = ROOT_NAME
+    write(r, artkit.quantize_set(of("hull"), 36 if LIVERY == "asc" else 32))
+    write(f"{r}-turret", artkit.quantize_set(of("turret"), 28 if LIVERY == "asc" else 24))
+    write(f"{r}-turret-stub", artkit.quantize_set(of("stub"), 16), single=True)
+    if LIVERY != "asc":                     # the livery draws the grey tank's flash (the same colours)
+        write("warden-tank-flash", flash_frames())
+    write(f"{r}-wreck", artkit.quantize_set(of("wreck"), 32))
     with target():
         artkit.write_pivots(ROOT_NAME, SOURCE, pivots())
 
 
-def intel_model():
+def intel_model(livery="grey"):
     """(scene, mats) for the hangar intel portrait: the hull driving down (heading 0) with the turret
-    aimed down along it, at rest; the grey livery."""
+    aimed down along it, at rest; the grey livery (``asc``: the Act 5 livery)."""
+    if livery != LIVERY:
+        set_livery(livery)
     hull, tur = hull_scene(0.0), turret_scene()
     rot = model_rotation(heading(0, HEADINGS))
     return (lambda p: union(hull(sdf.rotate_z(p, rot)), tur(sdf.rotate_z(p, rot)))), \
@@ -414,8 +491,33 @@ def ship_at(t):
     return 340 - 20 * math.sin((t - 7.0) * 1.5), 110
 
 
+L34_GROUND = ROOT / "assets" / "backdrop" / "level-34" / "helix-hulk-a.png"
+
+
+def asc_ground():
+    """The livery's review ground: Level 34's Helix hulk (its keel road under x 240) when its backdrop exists, a
+    tall strip scrolled by the belt's 40 px/s; else charcoal plating."""
+    if L34_GROUND.exists():
+        hull = Image.open(L34_GROUND).convert("RGBA")
+        import backdrop_l34 as l34  # noqa: E402  (the road's x on the hulk)
+        road = l34.road_x("helix-hulk-a")
+        strip = Image.new("RGBA", (FW, hull.height), (14, 13, 18, 255))
+        strip.alpha_composite(hull, (int(BELT_X - road), 0))
+        return strip
+    strip = Image.new("RGBA", (FW, FH * 2), (60, 58, 62, 255))
+    return strip
+
+
+def ground_at(bg, t):
+    if LIVERY != "asc":
+        return belt(bg.copy(), t)
+    off = int(t * BELT_SPEED)
+    top = max(0, bg.height - FH - off)
+    return bg.crop((0, top, FW, top + FH))
+
+
 def review_gif(s):
-    bg = ground()
+    bg = ground() if LIVERY != "asc" else asc_ground()
     fps, T = FPS, 11.0
     tanks = [{"y0": -40 - 92 * i, "aim": np.pi / 2, "next": 0.8 + 0.7 * i, "shots": [], "turret": True,
               "dead": None} for i in range(3)]
@@ -426,7 +528,7 @@ def review_gif(s):
     orb = artkit.load_frames("orb-medium")
     for f in range(int(T * fps)):
         t = f / fps
-        img = belt(bg.copy(), t)
+        img = ground_at(bg, t)
         sx, sy = ship_at(t)
         for i, tk in enumerate(tanks):
             x, y = BELT_X, tk["y0"] + 80 * t           # 40 px/s drive + the 40 px/s belt
@@ -478,7 +580,8 @@ def review_gif(s):
                 img = glow_c(img, boom[k], bxx, byy)
         shipf = artkit.load_frames("ship")
         paste_c(img, shipf[len(shipf) // 2], sx, sy)
-        raster.draw_text(img, 8, FH - 14, f"WARDEN TANK FINAL R42 - {t:4.1f} S", raster.LABEL)
+        raster.draw_text(img, 8, FH - 14, f"{ROOT_NAME.upper()} FINAL {REVIEW_ROUND.upper()} - {t:4.1f} S",
+                         raster.LABEL)
         frames.append(img)
     return frames
 
@@ -495,7 +598,8 @@ def assembled(s, k, a, recoil=0, stub=False):
 
 def review():
     artkit.REVIEW_ROUND = REVIEW_ROUND
-    s = {name: load(name) for name in SET_NAMES}
+    s = {name: load(name if name == "warden-tank-flash" else name.replace("warden-tank", ROOT_NAME, 1))
+         for name in SET_NAMES}
     gif = review_gif(s)
     hull, tur = s["warden-tank"], s["warden-tank-turret"]
     combos = [assembled(s, k, a, rc, st) for k, a, rc, st in
@@ -514,8 +618,17 @@ def review():
         ("FRAMES FROM THE GIF: THE CONVOY ON ITS BELT, A BURST, FIRING BACK UP, THE STUB, THE WRECK",
          [gif[i].resize((240, 270), Image.LANCZOS) for i in (30, 54, 140, 175, 200)], 1, False),
     ]
-    sheet = artkit.review_sheet("WARDEN TANK - FINAL SPRITES (ACT 3 UNMARKED GREY, L19)", rows, width=1400, batch=BATCH)
-    artkit.save_review(sheet, gif, CONCEPT, "warden-tank", fps=FPS)
+    if LIVERY == "asc":
+        rows[-1] = ("FRAMES FROM THE GIF: THE CONVOY ON A HELIX HULK'S KEEL (LEVEL 34), A BURST, FIRING BACK UP, "
+                    "THE STUB, THE WRECK", rows[-1][1], 1, False)
+        rows[-2] = ("WRECK, 16 HEADINGS (BURNT BLACK AND GOLD, THE ENGINE DECK BLOWN, THE TURRET ASKEW)",
+                    rows[-2][1], 1, False)
+        title = "WARDEN TANK IN ASCENDANCY LIVERY - FINAL SPRITES (A.15 B, Q.11 B GUNMETAL, L34)"
+    else:
+        title = "WARDEN TANK - FINAL SPRITES (ACT 3 UNMARKED GREY, L19)"
+    artkit.REVIEW_ROUND = REVIEW_ROUND         # (importing backdrop_l34 for the livery's ground sets other rounds)
+    sheet = artkit.review_sheet(title, rows, width=1400, batch=BATCH)
+    artkit.save_review(sheet, gif, CONCEPT, ROOT_NAME, fps=FPS)
 
 
 SET_NAMES = ["warden-tank", "warden-tank-turret", "warden-tank-turret-stub", "warden-tank-flash",
@@ -523,6 +636,8 @@ SET_NAMES = ["warden-tank", "warden-tank-turret", "warden-tank-turret-stub", "wa
 
 
 if __name__ == "__main__":
+    if "--livery" in sys.argv[1:]:
+        set_livery(sys.argv[sys.argv.index("--livery") + 1])
     if "--review" not in sys.argv[1:]:
         build()
     review()

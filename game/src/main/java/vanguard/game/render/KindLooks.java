@@ -86,16 +86,27 @@ final class KindLooks {
 
     /** M9 part D: Level 31's Hornets, Shard Drones (and their air links) and Buzzsaw Drones. */
     private MiningRigLooks rig;
+    /** M9 part E: Level 32's Sentinel Towers, Striders and ground targets; built at the first use. */
+    private DeepCoreLooks deepCore;
+    /** M9 part F: Level 33's Rail Bunkers, prey Talons and their leeches, Claim 114; built at the first use. */
+    private LeechFieldLooks leechField;
 
     /** M8 part F: whether the level is a dark one ({@link DarkLight}): the units' glow-only frames are drawn. */
     private boolean dark;
 
     private final Sprites sprites;
     private final Files files;
+    /** M9 part G: each kind's sprite root (a livery's from its act on, {@link EnemyLooks#root}); its slug by default. */
+    private java.util.function.Function<String, String> roots = java.util.function.Function.identity();
 
     KindLooks(Sprites sprites, Files files) {
         this.sprites = sprites;
         this.files = files;
+    }
+
+    /** M9 part G: the kinds' sprite roots (a livery's), before the first look that reads them is built. */
+    void roots(java.util.function.Function<String, String> roots) {
+        this.roots = roots;
     }
 
     /** M7 part B: the Burrowers' looks for the sortie's enemy kinds, built once. */
@@ -177,6 +188,22 @@ final class KindLooks {
         return rig;
     }
 
+    /** M9 part E: Level 32's units' and ground targets' looks for the sortie's enemy kinds, built once. */
+    DeepCoreLooks deepCore(Sortie sortie) {
+        if (deepCore == null) {
+            deepCore = new DeepCoreLooks(sprites, sortie.enemyKinds(), name -> LevelRenderer.pivots(files, name));
+        }
+        return deepCore;
+    }
+
+    /** M9 part F: Level 33's units' and ground target's looks for the sortie's enemy kinds, built once. */
+    LeechFieldLooks leechField(Sortie sortie) {
+        if (leechField == null) {
+            leechField = new LeechFieldLooks(sprites, sortie.enemyKinds(), name -> LevelRenderer.pivots(files, name));
+        }
+        return leechField;
+    }
+
     /** M7 part E: the lane strafers' looks for the sortie's enemy kinds, built once. */
     GhostDroneLooks ghostDrones(Sortie sortie) {
         if (ghostDrones == null) {
@@ -188,7 +215,7 @@ final class KindLooks {
     /** M7 part F: the turret units' looks for the sortie's enemy kinds, built once. */
     TankLooks tanks(Sortie sortie) {
         if (tanks == null) {
-            tanks = new TankLooks(sprites, sortie.enemyKinds(), name -> LevelRenderer.pivots(files, name));
+            tanks = new TankLooks(sprites, sortie.enemyKinds(), name -> LevelRenderer.pivots(files, name), roots);
         }
         return tanks;
     }
@@ -359,6 +386,12 @@ final class KindLooks {
         }
         if (rig != null) {
             rig.restart();
+        }
+        if (deepCore != null) {
+            deepCore.restart();
+        }
+        if (leechField != null) {
+            leechField.restart();
         }
         if (tanks != null) {
             tanks.restart();

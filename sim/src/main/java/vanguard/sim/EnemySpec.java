@@ -108,6 +108,19 @@ import java.util.Optional;
  * @param dash M9 part D: its dash cycle (design/enemies/air/buzzsaw-drone; {@link Dash}): chase, spin-up tell, a
  *     locked dash that ricochets, again; empty for none
  * @param airLink M9 part D: its wave's energy links (design/enemies/space/shard-drone; {@link AirLink}); empty for none
+ * @param core M9 part E (design/enemies/ground/sentinel-tower, the hardened collar): on a {@link #hardened()} unit, the
+ *     box round its centre that every weapon damages (the emitter): a shot of a weapon without {@code anti-ground} that
+ *     lands on the hit box outside it glances off, one that lands in it (or flies on into it) damages the unit, a beam
+ *     whose line crosses it reaches it, and the seekers (homing shots, Rook) pick the unit and aim at its centre;
+ *     empty for a plain hardened unit (or none)
+ * @param groundSweep M9 part E (the Sentinel Tower): its {@link #sweep()} is a ground unit's, aimed all round on the
+ *     ship's bearing and due while it is on the play field, every few sweeps a full turn ({@link GroundSweep}); empty
+ *     for a hovering unit's sweep (the Mantis's) or none
+ * @param topple M9 part E (design/enemies/ground/strider, The topple): a walker's stagger, fall and crush once a part
+ *     that {@link UnitPart#topples()} is lost ({@link Topple}); empty for none
+ * @param preyRole M9 part F (design/enemies/space/void-leech, The uneasy alliance; Level 33): a wave's marked prey (a
+ *     hunting latch takes it instead of the ship: {@link PreyLatches}) or a chaser that hunts the nearest free prey
+ *     instead of the ship ({@link PreyRole}); {@link PreyRole#NONE} for every other unit
  */
 public record EnemySpec(
         String slug,
@@ -174,7 +187,11 @@ public record EnemySpec(
         Optional<FacingArmour> facingArmour,
         Optional<Launcher> launcher,
         Optional<Dash> dash,
-        Optional<AirLink> airLink)
+        Optional<AirLink> airLink,
+        Optional<Hitbox> core,
+        Optional<GroundSweep> groundSweep,
+        Optional<Topple> topple,
+        PreyRole preyRole)
         implements FlightSpecs, WalkerSpecs, ChainSpecs, LayerSpecs, AttackSpecs, HostSpecs {
     /** M8 part B: the most destroyable parts a unit carries (the Drill Rig's four pumps). */
     public static final int MOST_PARTS = 4;
@@ -185,6 +202,42 @@ public record EnemySpec(
         java.util.Objects.requireNonNull(launcher);
         java.util.Objects.requireNonNull(dash);
         java.util.Objects.requireNonNull(airLink);
+        java.util.Objects.requireNonNull(core);
+        java.util.Objects.requireNonNull(groundSweep);
+        java.util.Objects.requireNonNull(topple);
+        java.util.Objects.requireNonNull(preyRole);
+        if (preyRole == PreyRole.PREY
+                && (layer != Layer.AIR
+                        || terrain
+                        || latch.isPresent()
+                        || chain.isPresent()
+                        || flock.isPresent()
+                        || walker.isPresent())) {
+            throw new IllegalArgumentException(slug + ": prey is a plain air unit without a latch (M9 part F)");
+        }
+        if (preyRole == PreyRole.HUNTER
+                && (chase.isEmpty() || latch.isEmpty() || !latch.get().hunts())) {
+            throw new IllegalArgumentException(
+                    slug + ": a prey hunter is a chaser whose latch takes prey (M9 part F, the Void Leech)");
+        }
+        if (core.isPresent()
+                && (!hardened
+                        || core.get().width() > hitbox.width()
+                        || core.get().height() > hitbox.height())) {
+            throw new IllegalArgumentException(slug + ": a core lies inside a hardened unit's hit box (M9 part E)");
+        }
+        if (groundSweep.isPresent() && (sweep.isEmpty() || !terrain || hover.isPresent() || sideHover.isPresent())) {
+            throw new IllegalArgumentException(slug + ": a ground sweep is a fixed ground unit's sweep (M9 part E)");
+        }
+        boolean toppling = parts.stream().anyMatch(UnitPart::topples);
+        if (toppling != topple.isPresent() || (topple.isPresent() && walker.isEmpty())) {
+            throw new IllegalArgumentException(slug + ": a walker topples with a part that topples it (M9 part E)");
+        }
+        if (parts.stream().anyMatch(UnitPart::silencesSpit)
+                && (walker.isEmpty() || walker.get().spit().isEmpty())) {
+            throw new IllegalArgumentException(
+                    slug + ": only a walker's second attack is silenced by a part (M9 part E)");
+        }
         if (dash.isPresent()
                 && (layer != Layer.AIR
                         || terrain
@@ -473,6 +526,54 @@ public record EnemySpec(
         EnemySpecCopy copy = new EnemySpecCopy(this);
         copy.dash = withDash;
         return copy.build();
+    }
+
+    /** M9 part E: this hardened unit with its core, the box every weapon damages ({@link #core()}); empty for none. */
+    public EnemySpec withCore(Optional<Hitbox> withCore) {
+        EnemySpecCopy copy = new EnemySpecCopy(this);
+        copy.core = withCore;
+        return copy.build();
+    }
+
+    /** M9 part E: this fixed ground unit's sweep aimed all round, with its full turns ({@link GroundSweep}). */
+    public EnemySpec withGroundSweep(Optional<GroundSweep> withGroundSweep) {
+        EnemySpecCopy copy = new EnemySpecCopy(this);
+        copy.groundSweep = withGroundSweep;
+        return copy.build();
+    }
+
+    /**
+     * M9 part E: this walker with its destroyable {@code withParts} and its topple ({@link Topple}), set together (a
+     * part that topples needs the topple and the other way round).
+     */
+    public EnemySpec withToppleParts(List<UnitPart> withParts, Optional<Topple> withTopple) {
+        EnemySpecCopy copy = new EnemySpecCopy(this);
+        copy.parts = withParts;
+        copy.topple = withTopple;
+        return copy.build();
+    }
+
+    /**
+     * M9 part F (Level 33, the uneasy alliance): this unit as a wave's prey ({@link PreyRole#PREY}), a prey hunter
+     * ({@link PreyRole#HUNTER}) or neither.
+     */
+    public EnemySpec withPreyRole(PreyRole role) {
+        EnemySpecCopy copy = new EnemySpecCopy(this);
+        copy.preyRole = role;
+        return copy.build();
+    }
+
+    /**
+     * M9 part F (design/enemies/space/void-leech, The uneasy alliance): a unit's part in Level 33's prey beat. A {@link
+     * #PREY} unit (a marked Talon wing's) is latched by a touching chaser whose latch {@link Latch#hunts()} instead of
+     * the ship: its shield emptied for good, no fire, it leaves its path and drifts down until it leaves (its hover
+     * ends straight up while it is free). A {@link #HUNTER} chaser drifts and chases the nearest free prey on the play
+     * field instead of the ship (the ship once none is left).
+     */
+    public enum PreyRole {
+        NONE,
+        PREY,
+        HUNTER
     }
 
     /** M9 part D: this air unit linked to its wave's others (design/enemies/space/shard-drone); empty for none. */

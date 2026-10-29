@@ -18,7 +18,8 @@ import vanguard.sim.Sortie;
  * apart at least), one quiet run loop for the nearest diamond in flight ({@link Sfx#HOMING_RUN}, louder as it closes,
  * as the Depth Hunters' torpedoes' run) and a diamond shot down ({@link Sfx#HOMING_DOWN}; one that burst on a hull is
  * the hull's hit, one that ran out just goes); and the ship's brown-out hum while its load is over the drained output
- * ({@link Sfx#BROWNOUT_HUM}, design/player/generator, Enemy drain effects).
+ * ({@link Sfx#BROWNOUT_HUM}, design/player/generator, Enemy drain effects), with M9 part F's two-note warning as it
+ * starts ({@link Sfx#BROWNOUT_WARN}).
  */
 final class BeltCues extends SoundFamily {
     private static final Set<SimEvents.Type> TYPES = EnumSet.of(
@@ -154,6 +155,8 @@ final class BeltCues extends SoundFamily {
         boolean brownOut = flying && sortie.power().map(PowerState::overLoad).orElse(false);
         if (brownOut && !bank.looping(Sfx.BROWNOUT_HUM)) {
             bank.loop(Sfx.BROWNOUT_HUM, BROWNOUT_LEVEL);
+            // M9 part F: the warning once as the load first passes E (again only after it fits and passes again).
+            bank.play(Sfx.BROWNOUT_WARN, BROWNOUT_LEVEL, 1, 0);
         } else if (!brownOut && bank.looping(Sfx.BROWNOUT_HUM)) {
             bank.stop(Sfx.BROWNOUT_HUM);
         }

@@ -77,6 +77,8 @@ final class EnemyForce {
     private final WalkerFire walkers;
     /** The units' step in {@link #move}. */
     private final EnemyMoves moves;
+    /** M9 part F: the prey latches (Level 33's uneasy alliance); null in a level without a prey unit. */
+    private final PreyLatches prey;
     /** M7 part E: the pull on the ship. */
     private final EnemyPull pull;
     /** The entries: waves, halt cycle, ground units, the units let in outside the waves. */
@@ -225,8 +227,23 @@ final class EnemyForce {
                 chainRules,
                 flocks,
                 carriers);
+        // M9 part F: only in a level with prey (Level 33's marked Talon wings).
+        prey = kinds.stream().anyMatch(kind -> kind.preyRole() == EnemySpec.PreyRole.PREY)
+                ? new PreyLatches(enemies, events)
+                : null;
         moves = new EnemyMoves(
-                this, enemies, events, escapes, guns, objectiveHook, burrowers, carriers, walkers, rings, rollers);
+                this,
+                enemies,
+                events,
+                escapes,
+                guns,
+                objectiveHook,
+                burrowers,
+                carriers,
+                walkers,
+                rings,
+                rollers,
+                prey);
     }
 
     /** M9 part D: the air links of the linked groups; null in a level without an air-linked unit. */
@@ -360,6 +377,16 @@ final class EnemyForce {
     /** M9 part B: the halt cycle's units let in so far in this attempt. */
     int haltReleased() {
         return entries.haltReleased();
+    }
+
+    /** M9 part E: the level's forks ({@link EnemyEntries#forks}). */
+    void forks(Forks levelForks) {
+        entries.forks(levelForks);
+    }
+
+    /** M9 part E: per fork branch, the units counted as enemies it sends ({@link EnemyEntries#branchUnits}). */
+    int[] branchUnits(int forks) {
+        return entries.branchUnits(forks);
     }
 
     /** M9 part B: the rocks' pass of the waves on rocks (the riders board at their entry). */
@@ -508,6 +535,10 @@ final class EnemyForce {
             rings.step(groundScroll);
         }
         moves.step(ship, firing, groundScroll);
+        if (prey != null) {
+            // M9 part F: the leeches on their prey, then the new prey latches.
+            prey.step();
+        }
 
         if (auras) {
             // M7 part D: the Heralds' rings after the moves (the hits of this step meet this step's rings).
@@ -617,6 +648,14 @@ final class EnemyForce {
      */
     void launch(EnemySpec enemy, double x, double y, double angle, double speed, double glideSeconds) {
         entries.launch(enemy, x, y, angle, speed, glideSeconds);
+    }
+
+    /**
+     * M9 part H, step H1b: one unit of {@code launcher} out of a ringed boss's rim bay at (x, y) along {@code angle}
+     * ({@link EnemyCarriers#bayLaunch}); returns whether it was launched.
+     */
+    boolean bayLaunch(EnemySpec.Launcher launcher, double x, double y, double angle) {
+        return carriers.bayLaunch(launcher, kinds.indexOf(launcher.unit()), x, y, angle);
     }
 
     /**

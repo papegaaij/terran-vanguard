@@ -45,6 +45,9 @@ import java.util.List;
  *     neutral craft none of which may be destroyed: met when the last of them has left the screen with none destroyed,
  *     failed at once by the first destroyed (a hit does not fail it); empty for none ({@link #spared(String, int,
  *     String)})
+ * @param objects M9 part G (design/campaign Level 34, "Strip the graveyard"): {@code escapes} names a ground object's
+ *     look, not an enemy: the level's destructibles of that look (or a variant of it, {@code <look>-<variant>}) count,
+ *     a destroyed one as opened, one leaving the screen as away ({@link #objectEscapes(String, int, int, String)})
  */
 public record Secondary(
         double killRatio,
@@ -65,8 +68,26 @@ public record Secondary(
         boolean standing,
         int escapesAllowed,
         boolean countsBosses,
-        String spared) {
+        String spared,
+        boolean objects) {
     public Secondary {
+        if (objects
+                && (escapes.isEmpty()
+                        || !tag.isEmpty()
+                        || killRatio > 0
+                        || !groups.isEmpty()
+                        || !killAll.isEmpty()
+                        || !parts.isEmpty()
+                        || afloat
+                        || sondes
+                        || integrity > 0
+                        || links
+                        || untouched
+                        || standing
+                        || !spared.isEmpty())) {
+            throw new IllegalArgumentException(
+                    "an object escapes objective counts its look's ground objects, nothing else");
+        }
         if (!spared.isEmpty()
                 && (killRatio > 0
                         || !groups.isEmpty()
@@ -143,6 +164,76 @@ public record Secondary(
         if (afloat && (!groups.isEmpty() || !escapes.isEmpty() || !killAll.isEmpty() || !parts.isEmpty())) {
             throw new IllegalArgumentException("an afloat objective counts the convoy, nothing else");
         }
+    }
+
+    /** Without M9 part G's object escapes. */
+    public Secondary(
+            double killRatio,
+            int credits,
+            List<String> groups,
+            String escapes,
+            List<String> killAll,
+            String label,
+            String partsOf,
+            List<Integer> parts,
+            int beforePhase,
+            String tag,
+            boolean afloat,
+            boolean sondes,
+            double integrity,
+            boolean links,
+            boolean untouched,
+            boolean standing,
+            int escapesAllowed,
+            boolean countsBosses,
+            String spared) {
+        this(
+                killRatio,
+                credits,
+                groups,
+                escapes,
+                killAll,
+                label,
+                partsOf,
+                parts,
+                beforePhase,
+                tag,
+                afloat,
+                sondes,
+                integrity,
+                links,
+                untouched,
+                standing,
+                escapesAllowed,
+                countsBosses,
+                spared,
+                false);
+    }
+
+    /**
+     * M9 part G (design/campaign Level 34, "Strip the graveyard"): {@code escapes: look} naming a ground object's look,
+     * for {@code credits}, with the tracker's {@code label} ({@code CONTAINERS}): every destructible of that look (or a
+     * variant, {@code <look>-<variant>}) counts, a destroyed one as opened, one leaving the screen as away; met as soon
+     * as all but {@code allowed} are opened (or at the level's end with no more than {@code allowed} away), failed by
+     * the away one past {@code allowed}.
+     */
+    public static Secondary objectEscapes(String look, int allowed, int credits, String label) {
+        if (look.isEmpty()) {
+            throw new IllegalArgumentException("an object escapes objective names its look");
+        }
+        return new Secondary(
+                0, credits, List.of(), look, List.of(), label, "", List.of(), -1, "", false, false, 0, false, false,
+                false, allowed, true, "", true);
+    }
+
+    /**
+     * M9 part G: whether a ground object of {@code look} counts towards an object escapes objective: the look itself or
+     * a variant of it ({@code <look>-<variant>}); without allocating.
+     */
+    public boolean countsObject(String look) {
+        return objects
+                && look.startsWith(escapes)
+                && (look.length() == escapes.length() || look.charAt(escapes.length()) == '-');
     }
 
     /** Without step SIM-K's bosses left out (they count). */
@@ -270,7 +361,8 @@ public record Secondary(
                 standing,
                 escapesAllowed,
                 counted,
-                spared);
+                spared,
+                objects);
     }
 
     /** Without M7 part F's escapes allowed. */
@@ -336,7 +428,8 @@ public record Secondary(
                 standing,
                 allowed,
                 countsBosses,
-                spared);
+                spared,
+                objects);
     }
 
     /** Without round 41's standing. */
@@ -635,11 +728,11 @@ public record Secondary(
      * objective scoped to a tag counts only the units of the waves with that tag).
      */
     public boolean counts(String slug) {
-        return (escapes.equals(slug) && tag.isEmpty()) || killAll.contains(slug);
+        return !objects && ((escapes.equals(slug) && tag.isEmpty()) || killAll.contains(slug));
     }
 
     /** Whether a unit of {@code slug} of a wave tagged {@code waveTag} ("" for none) counts towards it. */
     public boolean counts(String slug, String waveTag) {
-        return (escapes.equals(slug) && (tag.isEmpty() || tag.equals(waveTag))) || killAll.contains(slug);
+        return !objects && ((escapes.equals(slug) && (tag.isEmpty() || tag.equals(waveTag))) || killAll.contains(slug));
     }
 }

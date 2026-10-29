@@ -141,6 +141,13 @@ public interface AttackSpecs {
      * outward from its spot at {@code throwSpeed} px/s, slowing to a stop over {@code stunSeconds}, it
      * then flees at its speed to the nearer side edge and never latches again.
      *
+     * <p>M9 part F (design/enemies/space/void-leech): with {@code drainsPower} a latched unit lowers the generator's
+     * effective output instead (one drainer of {@link PowerState}; no shield drain, {@code drainRate} 0); with {@code
+     * empThrows} the EMP Burst throws every latched unit off as a shake-off (the Lamprey's: it stays latched, its drain
+     * paused); with a {@code preyDrift} above 0 it latches on a touched free {@link EnemySpec.PreyRole#PREY} unit
+     * instead of the ship (that unit's shield emptied for good, no fire, drifting down at {@code preyDrift} px/s until
+     * it leaves; {@link PreyLatches}).
+     *
      * @param spots the offsets of the left, right and tail spots from the ship's centre, px, y up
      */
     public record Latch(
@@ -151,7 +158,10 @@ public interface AttackSpecs {
             double withinSeconds,
             double stunSeconds,
             double throwSpeed,
-            double drainRate) {
+            double drainRate,
+            boolean drainsPower,
+            boolean empThrows,
+            double preyDrift) {
         /** The spot on the hull's left side. */
         public static final int LEFT = 0;
         /** The spot on the hull's right side. */
@@ -165,10 +175,87 @@ public interface AttackSpecs {
                 throw new IllegalArgumentException("a latch has slots, the left, right and tail spots, a shake of at"
                         + " least two reversals within a time, and a stun");
             }
-            if (!(damageFactor > 0) || throwSpeed < 0 || drainRate < 0) {
+            if (!(damageFactor > 0) || throwSpeed < 0 || drainRate < 0 || !(preyDrift >= 0)) {
                 throw new IllegalArgumentException(
-                        "a latch's damage factor is positive, its throw and drain not negative");
+                        "a latch's damage factor is positive, its throw, drain and prey drift not negative");
             }
+        }
+
+        /** The Lamprey's latch (before M9 part F): it drains the shield, the EMP leaves it latched, no prey. */
+        public Latch(
+                int slots,
+                java.util.List<Spot> spots,
+                double damageFactor,
+                int reversals,
+                double withinSeconds,
+                double stunSeconds,
+                double throwSpeed,
+                double drainRate) {
+            this(
+                    slots,
+                    spots,
+                    damageFactor,
+                    reversals,
+                    withinSeconds,
+                    stunSeconds,
+                    throwSpeed,
+                    drainRate,
+                    false,
+                    false,
+                    0);
+        }
+
+        /** M9 part F: this latch draining the generator's output ({@code power}) instead of the shield. */
+        public Latch withDrainsPower(boolean power) {
+            return new Latch(
+                    slots,
+                    spots,
+                    damageFactor,
+                    reversals,
+                    withinSeconds,
+                    stunSeconds,
+                    throwSpeed,
+                    drainRate,
+                    power,
+                    empThrows,
+                    preyDrift);
+        }
+
+        /** M9 part F: this latch thrown off by the EMP Burst ({@code thrown}) instead of staying latched. */
+        public Latch withEmpThrows(boolean thrown) {
+            return new Latch(
+                    slots,
+                    spots,
+                    damageFactor,
+                    reversals,
+                    withinSeconds,
+                    stunSeconds,
+                    throwSpeed,
+                    drainRate,
+                    drainsPower,
+                    thrown,
+                    preyDrift);
+        }
+
+        /** M9 part F: this latch latching on prey too, its prey drifting down at {@code speed} px/s (0: none). */
+        public Latch withPreyDrift(double speed) {
+            return new Latch(
+                    slots,
+                    spots,
+                    damageFactor,
+                    reversals,
+                    withinSeconds,
+                    stunSeconds,
+                    throwSpeed,
+                    drainRate,
+                    drainsPower,
+                    empThrows,
+                    speed);
+        }
+
+        /** M9 part F: whether it latches on a touched prey unit. */
+        public boolean hunts() {
+            return preyDrift > 0;
         }
 
         /** The hull spot for a touch at ({@code dx}, {@code dy}) from the ship's centre, y up. */
@@ -246,7 +333,7 @@ public interface AttackSpecs {
      * intervalSeconds}, telegraph to telegraph (the first {@code firstDelaySeconds} after its start), while the unit is
      * on the play field and the ship is farther than {@code holdWithinPx} from it, a telegraph of {@code
      * telegraphSeconds} locks a line from its centre through the ship's position to the screen's edge (lock, not
-     * track); then the line is live {@code liveSeconds}: a band {@code bandPx} wide that deals {@code damage} to the
+     * track: the direction is locked, the origin rides with the unit, round 66's C.1 b); then the line is live {@code liveSeconds}: a band {@code bandPx} wide that deals {@code damage} to the
      * ship once. Enemy fire never hurts enemies. The EMP Burst's stun cancels a running telegraph (no shot).
      */
     public record LaserLine(
@@ -256,7 +343,36 @@ public interface AttackSpecs {
             double damage,
             double intervalSeconds,
             double firstDelaySeconds,
-            double holdWithinPx) {
+            double holdWithinPx,
+            int mostTelegraphing) {
+        /** A line without the gate (before M9 part F). */
+        public LaserLine(
+                double telegraphSeconds,
+                double liveSeconds,
+                double bandPx,
+                double damage,
+                double intervalSeconds,
+                double firstDelaySeconds,
+                double holdWithinPx) {
+            this(telegraphSeconds, liveSeconds, bandPx, damage, intervalSeconds, firstDelaySeconds, holdWithinPx, 0);
+        }
+
+        /**
+         * M9 part F (design/enemies/ground/rail-bunker, Level 33): this line waiting, when due, while {@code most}
+         * lines of the level (any unit's) telegraph (0: no gate).
+         */
+        public LaserLine withMostTelegraphing(int most) {
+            return new LaserLine(
+                    telegraphSeconds,
+                    liveSeconds,
+                    bandPx,
+                    damage,
+                    intervalSeconds,
+                    firstDelaySeconds,
+                    holdWithinPx,
+                    most);
+        }
+
         public LaserLine {
             if (!(telegraphSeconds > 0)
                     || !(liveSeconds > 0)
@@ -264,7 +380,8 @@ public interface AttackSpecs {
                     || !(damage >= 0)
                     || !(intervalSeconds >= telegraphSeconds + liveSeconds)
                     || !(firstDelaySeconds >= 0)
-                    || !(holdWithinPx >= 0)) {
+                    || !(holdWithinPx >= 0)
+                    || mostTelegraphing < 0) {
                 throw new IllegalArgumentException("a laser line telegraphs, lives, has a band and an interval that "
                         + "holds both: " + telegraphSeconds + ", " + liveSeconds + ", " + intervalSeconds);
             }
@@ -422,6 +539,64 @@ public interface AttackSpecs {
                         + " and a drift: " + band + ", " + damage + ", " + cooldownSeconds + ", " + tellSeconds + ", "
                         + spacing + ", " + descend + ", " + follow);
             }
+        }
+    }
+
+    /**
+     * M9 part E, a fixed ground unit's sweep (design/enemies/ground/sentinel-tower, {@code laser-sweep}): its {@link
+     * Sweep} is due while the unit is on the play field (the first {@link Sweep#firstDelaySeconds()} after it comes
+     * onto it, then one every {@link Sweep#intervalSeconds()}, telegraph to telegraph), centred on the ship's bearing
+     * at the telegraph's start in any direction (no clamp: a tower the ship passed sweeps up the screen), sweeping its
+     * arc one way and the next the other. Every {@code fullTurnEvery}-th sweep (0: never) is a <b>full turn</b>: a
+     * telegraph of {@code fullTurnTelegraphSeconds} (the whole reach ring and the start ray, on the ship's bearing),
+     * then the beam turns 360° over {@code fullTurnSeconds}, the full turns' direction alternating; the next telegraph
+     * comes {@code fullTurnSlotSeconds} after the full turn's. With {@code firstFullTurn} (a level's placement, Level
+     * 32's towers: QE-3 a) the first sweep is a full turn and every {@code fullTurnEvery}-th after it; without, the
+     * first full turn is the {@code fullTurnEvery}-th sweep. Each sweep hits the ship once at most. The EMP Burst's stun
+     * cuts a running sweep; the next telegraph starts after the stun.
+     */
+    record GroundSweep(
+            int fullTurnEvery,
+            double fullTurnSeconds,
+            double fullTurnTelegraphSeconds,
+            double fullTurnSlotSeconds,
+            boolean firstFullTurn) {
+        /** No full turns (the easy Sentinel's). */
+        public static final GroundSweep ARCS_ONLY = new GroundSweep(0, 1, 1, 2);
+
+        public GroundSweep {
+            if (fullTurnEvery < 0
+                    || !(fullTurnSeconds > 0)
+                    || !(fullTurnTelegraphSeconds > 0)
+                    || !(fullTurnSlotSeconds >= fullTurnSeconds + fullTurnTelegraphSeconds)) {
+                throw new IllegalArgumentException("a full turn comes every few sweeps, telegraphed, in its slot: "
+                        + fullTurnEvery + ", " + fullTurnSeconds + ", " + fullTurnTelegraphSeconds + ", "
+                        + fullTurnSlotSeconds);
+            }
+        }
+
+        /** The full turns counted from the {@code fullTurnEvery}-th sweep (the first an arc). */
+        public GroundSweep(
+                int fullTurnEvery,
+                double fullTurnSeconds,
+                double fullTurnTelegraphSeconds,
+                double fullTurnSlotSeconds) {
+            this(fullTurnEvery, fullTurnSeconds, fullTurnTelegraphSeconds, fullTurnSlotSeconds, false);
+        }
+
+        /** This sweep with its first sweep a full turn (no change without full turns). */
+        public GroundSweep withFirstFullTurn() {
+            return new GroundSweep(fullTurnEvery, fullTurnSeconds, fullTurnTelegraphSeconds, fullTurnSlotSeconds, true);
+        }
+
+        /** Whether the {@code n}-th sweep (from 1) is a full turn. */
+        public boolean fullTurn(int n) {
+            return fullTurnEvery > 0 && (firstFullTurn ? n - 1 : n) % fullTurnEvery == 0;
+        }
+
+        /** The {@code n}-th sweep's number among the full turns (from 1), if it is one: their direction alternates. */
+        public int fullTurnNumber(int n) {
+            return firstFullTurn ? (n - 1) / fullTurnEvery + 1 : n / fullTurnEvery;
         }
     }
 }

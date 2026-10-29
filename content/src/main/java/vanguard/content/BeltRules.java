@@ -96,20 +96,22 @@ final class BeltRules {
     /**
      * The unit's {@code laser-line} at {@code difficulty}: the line's telegraph (the hook's {@code telegraph} instead),
      * its live time, band and hold, the attack's bullet class as its damage, its interval (the hook's authored one, or
-     * the fire-rate lever's) and its first shot's delay.
+     * the fire-rate lever's), its first shot's delay and (M9 part F) its gate of lines telegraphed at once.
      */
     static Optional<EnemySpec.LaserLine> line(Content content, EnemyData enemy, Difficulty difficulty) {
         Optional<EnemyData.Hook> hook = UnitRules.hook(enemy, difficulty);
         return enemy.attacks().stream().filter(BeltRules::laserLine).findFirst().map(attack -> {
             EnemyData.Line line = attack.line().orElseThrow();
             return new EnemySpec.LaserLine(
-                    hook.flatMap(EnemyData.Hook::telegraph).orElse(line.telegraph()),
-                    line.live(),
-                    line.band(),
-                    UnitRules.bulletDamage(content, attack.bullet().orElseThrow()),
-                    UnitRules.interval(content, attack, hook, difficulty),
-                    attack.firstShotDelay().orElse(0.0),
-                    line.holdWithin());
+                            hook.flatMap(EnemyData.Hook::telegraph).orElse(line.telegraph()),
+                            line.live(),
+                            line.band(),
+                            UnitRules.bulletDamage(content, attack.bullet().orElseThrow()),
+                            UnitRules.interval(content, attack, hook, difficulty),
+                            attack.firstShotDelay().orElse(0.0),
+                            line.holdWithin())
+                    // M9 part F (Level 33): the gate of at most that many lines telegraphed at once.
+                    .withMostTelegraphing(line.mostTelegraphing().orElse(0));
         });
     }
 
@@ -128,15 +130,18 @@ final class BeltRules {
             WaveSpec spec) {
         WaveSpec out = spec;
         if (wave.leader().isPresent()) {
-            out = out.withLeader(UnitRules.enemy(
-                    content,
-                    content.enemy(slug).asLeader(),
-                    slug,
-                    difficulty,
-                    Optional.empty(),
-                    inLevel,
-                    0,
-                    Optional.empty()));
+            // M9 part F: a prey wing's leader holds and is prey as its wing (Level 33).
+            out = out.withLeader(PartFRules.preyRole(
+                    wave,
+                    UnitRules.enemy(
+                            content,
+                            content.enemy(slug).asLeader(),
+                            slug,
+                            difficulty,
+                            Optional.empty(),
+                            inLevel,
+                            0,
+                            Optional.empty())));
         }
         if (wave.onRocks().isPresent()) {
             LevelData.OnRocks rocks = wave.onRocks().get();

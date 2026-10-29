@@ -154,12 +154,35 @@ public interface FlightSpecs {
      * inside the play field, then a swarm member's start delay) it steers toward the ship's centre at
      * {@code speed} px/s, turning at most {@code turnRate} radians a second, for {@code seconds}; then
      * it flies straight on along its heading at its speed and leaves the screen.
+     *
+     * <p>M9 part F (design/enemies/space/void-leech): with a {@code drift} above 0 it first drifts from its entry at
+     * {@code drift} px/s, steering toward its target's centre (the ship, or the prey it hunts) at its turn rate, and its
+     * chase starts only once its centre is within {@code within} px of the target's; both 0 for the chase from the entry.
      */
-    public record Chase(double speed, double turnRate, double seconds) {
+    public record Chase(double speed, double turnRate, double seconds, double within, double drift) {
         public Chase {
             if (!(speed > 0) || !(turnRate > 0) || !(seconds > 0)) {
                 throw new IllegalArgumentException("a chase has a speed, a turn rate and a time");
             }
+            if (!(within >= 0) || !(drift >= 0) || (within > 0) != (drift > 0)) {
+                throw new IllegalArgumentException(
+                        "a chase drifts within a distance, or neither (M9 part F): " + within + ", " + drift);
+            }
+        }
+
+        /** The chase from its entry (before M9 part F). */
+        public Chase(double speed, double turnRate, double seconds) {
+            this(speed, turnRate, seconds, 0, 0);
+        }
+
+        /** M9 part F: this chase after a drift at {@code driftSpeed} px/s until within {@code distance} px. */
+        public Chase withDrift(double distance, double driftSpeed) {
+            return new Chase(speed, turnRate, seconds, distance, driftSpeed);
+        }
+
+        /** M9 part F: whether it drifts before its chase. */
+        public boolean drifts() {
+            return drift > 0;
         }
     }
 

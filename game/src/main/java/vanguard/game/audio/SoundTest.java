@@ -54,6 +54,8 @@ public final class SoundTest implements AutoCloseable {
                     "music/choir-descends.ogg",
                     true,
                     THEME_VOLUME),
+            // M9 part H: track 19, the Ascendancy's boss theme (round 68 QH-3 a), Level 35's boss.
+            new Track("IRON SOVEREIGN", "BOSS THEME: THE ASCENDANCY", "music/iron-sovereign.ogg", true, THEME_VOLUME),
             new Track("MISSION COMPLETE", "JINGLE: DEBRIEF", "music/mission-complete.ogg", false, CUE_VOLUME),
             new Track("STAND DOWN", "DEBRIEF THEME", "music/debrief-theme.ogg", true, CUE_VOLUME),
             new Track("MISSION FAILED", "STING: MISSION FAILED", "music/mission-failed.ogg", false, CUE_VOLUME),

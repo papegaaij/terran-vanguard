@@ -3,17 +3,22 @@ package vanguard.content;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import org.junit.jupiter.api.Test;
 
 /**
  * Every level's typical haul lands within 5 % of its budget, and a perfect run earns well above it
- * (design/systems/economy, per-level budget; user decision 2026-10-04).
+ * (design/systems/economy, per-level budget; user decision 2026-10-04). M9 part E (design/campaign Level 32, Credit
+ * budget): a forked level's haul is the mean of its routes' ({@link RoutePlay}), each route within {@link
+ * #ROUTE_TOLERANCE} of the budget.
  */
 class TypicalHaulTest {
     /** The most the typical haul may be off its budget, as a share of it. */
     static final double TOLERANCE = 0.05;
+    /** M9 part E: the most a forked level's route's typical haul may be off the budget (the README's ±8 %). */
+    static final double ROUTE_TOLERANCE = 0.08;
     /** A perfect run earns at least this many budgets. */
     static final double PERFECT_BUDGETS = 1.4;
 
@@ -37,6 +42,38 @@ class TypicalHaulTest {
             }
         });
         assertTrue(off.isEmpty(), "off budget:" + off);
+    }
+
+    /** M9 part E: each route of a forked level lands within {@link #ROUTE_TOLERANCE} of the budget (Level 32's four). */
+    @Test
+    void eachRouteOfAForkedLevelLandsNearTheBudget() {
+        StringBuilder off = new StringBuilder();
+        int forked = 0;
+        for (String key : content.levels().keySet()) {
+            List<String> routes = RoutePlay.routes(content, key);
+            if (routes.size() == 1) {
+                continue;
+            }
+            forked++;
+            for (String route : routes) {
+                TypicalHaul haul = TypicalHaul.of(content, key, Difficulty.MEDIUM, route);
+                System.out.printf(
+                        "Level %02d route %s: typical %.0f, budget %.0f (%+.1f %%), perfect %d%n",
+                        Content.levelNumber(key),
+                        route,
+                        haul.typical(),
+                        haul.budget(),
+                        100 * haul.offBudget(),
+                        haul.perfect());
+                if (Math.abs(haul.offBudget()) > ROUTE_TOLERANCE) {
+                    off.append(String.format(
+                            " Level %02d %s: %.0f vs %.0f;",
+                            Content.levelNumber(key), route, haul.typical(), haul.budget()));
+                }
+            }
+        }
+        assertTrue(forked > 0, "Level 32 has forks");
+        assertTrue(off.isEmpty(), "a route off budget:" + off);
     }
 
     @Test
@@ -100,7 +137,25 @@ class TypicalHaulTest {
                         // M9 part D (step D2): the README's waves with the offbeat waves and rock groups, a Gunship's
                         // Darts as two streams, each tug section home paid, the scale fitted to 0.36 (levelReport:
                         // typical -0.5 %)
-                        Map.entry(31, 8_618)),
+                        Map.entry(31, 8_618),
+                        // M9 part E (step E3): the routes' mean (LL 9,578, LR 9,215, RL 10,088, RR 9,725), the scale
+                        // fitted to 0.34 in step E2; the README's credit table the same since step E3b
+                        // (tools/sync_tables.py pays each of a Strider's parts its own rounded bounty, as the game)
+                        Map.entry(32, 9_652),
+                        // M9 part F (step F3): step F2's waves with the offbeat Talon groups, the scale fitted to 0.43
+                        // with the hardened Rail Bunkers at 0 % in the typical haul (TypicalHaul.UNPAID_HARDENED; the
+                        // perfect run takes them: levelReport 11,712; the README's credit table 11,706 pays a leader's
+                        // extra as its rounded bounty less the wing's, 6 × 36, here 6 × 37 as Level 29's)
+                        Map.entry(33, 11_712),
+                        // M9 part G (step G3): step G2's waves with the offbeat Talon trios, the scale fitted to 0.27;
+                        // the six containers' medium salvage, the three crates, the secondary; the Helix core (a STORY
+                        // pickup) pays 0 (levelReport and the README's credit table 10,894)
+                        Map.entry(34, 10_894),
+                        // M9 part H (step H3): Level 35's kills, leaders, hull guns, the Sovereign (433), its 84 bay
+                        // Darts
+                        // in a typical fight (the core tuned to 14,000), the lifeboat's crate and the secondary at the
+                        // scale 0.59 (levelReport 10,717; step H2's 10,467 counted 52 Darts)
+                        Map.entry(35, 10_717)),
                 perfect);
     }
 

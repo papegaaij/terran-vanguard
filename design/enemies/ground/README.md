@@ -3,7 +3,7 @@ title: Ground enemies
 design: approved
 implementation: in-progress
 art: final
-updated: 2026-10-28
+updated: 2026-10-29
 ---
 
 # Ground enemies
@@ -39,9 +39,9 @@ approved in round 60); the remaining units stay in the roster below.
 | [warden-tank](warden-tank/README.md) | Unmarked grey tank, hull and turret, bursts from behind (L19); Ascendancy livery at L34 | approved | in-progress | final |
 | [sam-nest](sam-nest/README.md) | Ascendancy launcher, salvos of shootable homing diamonds; dormant until a station turns (L29) | approved | done | chosen |
 | [clamp-gun](clamp-gun/README.md) | Helix turret on the prison tender's docking clamps; the four hold Level 29's rescue halt (L29) | approved | done | proposed |
-| [sentinel-tower](sentinel-tower/README.md) | Tower with a laser sweep in any direction, a full turn every third sweep, hardened collar (L32) | approved | not-started | chosen |
-| [strider](strider/README.md) | Biped mech with fans and a homing pod; a lost leg topples it, crushing ground units (L32) | approved | not-started | chosen |
-| [rail-bunker](rail-bunker/README.md) | Hardened bunker, a locked 1 s telegraph line then a `heavy` rail shot (L33) | approved | not-started | chosen |
+| [sentinel-tower](sentinel-tower/README.md) | Tower with a laser sweep in any direction, a full turn every third sweep, hardened collar (L32) | approved | done | final |
+| [strider](strider/README.md) | Biped mech with fans and a homing pod; a lost leg topples it, crushing ground units (L32) | approved | done | final |
+| [rail-bunker](rail-bunker/README.md) | Hardened bunker, a locked 1 s telegraph line then a `heavy` rail shot (L33) | approved | done | final |
 
 ## Roster
 
@@ -187,6 +187,23 @@ Production art, M9 part B (concept round 62, step ART-B): the SAM Nest re-render
 | [concept/sam-nest-final-r62-a.png](concept/sam-nest-final-r62-a.png) | SAM Nest final frames (`tools/art/belt_units.py`): the round base awake (red lights) and dormant (white), the wreck, the twin-tube rack at 16 headings shut and open (the tell), the folded dormant rack and the 1 s wake, the assembled nest (sheet) | chosen (round 62, F.2: accepted as final) |
 | [concept/sam-nest-final-r62-a.gif](concept/sam-nest-final-r62-a.gif) | A dormant white-lit nest waking red beside an awake one; racks turning to the ship, the hatch tell, salvos of two homing diamonds | chosen (round 62, F.2: accepted as final) |
 | [concept/sam-nest-capture-r62-a.png](concept/sam-nest-capture-r62-a.png) | Game capture, Level 29 (step B5): a SAM Nest pair on the Helix dock block, the hatch tell and a salvo of homing diamonds | chosen (round 62, F.2: accepted as final) |
+| [concept/sentinel-tower-final-r65-a.png](concept/sentinel-tower-final-r65-a.png) | Sentinel Tower final frames (`tools/art/belt_units_e.py`, round 60's A.12 a in Q.11 b's gunmetal and gold): the collar, the stump, the head's topple, the eye glow, the beam strip and tip, the emitter head at 16 of its 32 headings, the assembled tower at 1x and 3x (sheet) | chosen (round 65, F.3 ok: accepted as final) |
+| [concept/sentinel-tower-final-r65-a.gif](concept/sentinel-tower-final-r65-a.gif) | A tower in the tunnel: two arc sweeps (the 0.8 s wedge telegraph, the beam across the ship's bearing), the full turn's reach ring and sweep, the emitter shot down (the head toppling off, the stump) | chosen (round 65, F.3 ok: accepted as final) |
+| [concept/strider-final-r65-a.png](concept/strider-final-r65-a.png) | Strider final frames (`tools/art/belt_units_e.py`, the r05 walker with round 60's pod and A.14 b's fall, Q.11 b): legs + torso + pod at 8 headings, the walk cycle, the torso and pod (shut / open), the fall to one side (stagger 2 + fall 4), the wreck (sheet) | chosen (round 65, F.4 ok: accepted as final) |
+| [concept/strider-final-r65-a.gif](concept/strider-final-r65-a.gif) | A Strider walking and firing, its pod's tell, the knee hits, the leg lost: the stagger with the fall line, the buckle and fall, the crush of the SAM Nest under the line | chosen (round 65, F.4 ok: accepted as final) |
+| [concept/sentinel-tower-capture-r65-a.png](concept/sentinel-tower-capture-r65-a.png) | Game capture, Level 32 (step E5; [recipe](concept/prompts.md#sentinel-tower-capture-r65-a)): the gallery tower's full turn on medium (QE-3 a) and its arc on easy | chosen (round 65, accepted with the level, F.3–F.4) |
+| [concept/strider-capture-r65-a.png](concept/strider-capture-r65-a.png) | Game capture, Level 32 ([recipe](concept/prompts.md#strider-capture-r65-a)): Striders walking, the stagger and fall, the crush of the hall's SAM pair | chosen (round 65, accepted with the level, F.3–F.4) |
+| [concept/strider-capture-r65-a.mp4](concept/strider-capture-r65-a.mp4) | Game capture with the game's sound: the hall Strider's topple onto the SAM pair | chosen (round 65, accepted with the level, F.3–F.4) |
+| [concept/rail-bunker-final-r66-a.png](concept/rail-bunker-final-r66-a.png) | Rail Bunker final frames (`tools/art/belt_units_f.py`, the chosen r04 bunker with A.13 a's solid lock line in Q.11 b's gunmetal, gold 26-27 %): the octagon, the turret at 8 of its 32 headings, the coils' charge glow, the wreck, the rail strip and flash (sheet) | chosen (round 66, F.3 ok: accepted as final) |
+| [concept/rail-bunker-final-r66-a.gif](concept/rail-bunker-final-r66-a.gif) | A bunker on the grown rock: the locked red line brightening over 1.0 s with the coils, the rail shot, a second lock, the bunker destroyed and its wreck | chosen (round 66, F.3 ok: accepted as final) |
+| [concept/rail-bunker-capture-r66-a.png](concept/rail-bunker-capture-r66-a.png) | Game capture, Level 33 (step F5; [recipe](concept/prompts.md#rail-bunker-capture-r66-a)): the ridge pair's lines, the line leaving the turret as the bunker scrolls, the rail shot, a still ship hit | chosen (round 66, F.3 ok; stale: it shows C.1 a's line leaving the turret, which C.1 b replaced in step FIX3, where the line rides on the muzzle) |
+| [concept/warden-tank-asc-final-r67-a.png](concept/warden-tank-asc-final-r67-a.png) | Warden Tank in its Act 5 Ascendancy livery, final frames (`tools/art/warden_tank.py --livery asc`: round 60's A.15 b, heavier gold, in Q.11 b's gunmetal with the 1 px gold/red rim; `warden-tank-asc*`, the grey tank's frame layout): the hull at 16 headings and its tread frames, the turret at 32 aims with the recoil, the stub, the wreck burnt black and gold (sheet) | proposed |
+| [concept/warden-tank-asc-final-r67-a.gif](concept/warden-tank-asc-final-r67-a.gif) | A convoy of three on a Level 34 Helix hulk's keel: the bursts, firing back up the screen, a turret shot off, a tank destroyed and its wreck | proposed |
+| [concept/warden-tank-asc-capture-r67-a.png](concept/warden-tank-asc-capture-r67-a.png) | Game capture, Level 34 (step G5; [recipe](concept/prompts.md#warden-tank-asc-capture-r67-a)): convoys in livery on a CDF walkway and a Helix keel road, a mining charge taking a hit tank, the keel charge blown as a convoy passes | proposed |
+| [concept/warden-tank-asc-clip-r67-1.mp4](concept/warden-tank-asc-clip-r67-1.mp4) | Game clip 1 with the game's sound (re-shown in round 67 on 2026-10-29; [recipe](concept/prompts.md#warden-tank-asc-clip-r67-1-4)): a convoy of three on a Helix hulk's keel road (the t=88 convoy, t 87.9–97.5, the ship holding fire); Level 34 at medium, cropped 300×540 on the tanks | proposed |
+| [concept/warden-tank-asc-clip-r67-2.mp4](concept/warden-tank-asc-clip-r67-2.mp4) | Game clip 2 with the game's sound (re-shown in round 67 on 2026-10-29; [recipe](concept/prompts.md#warden-tank-asc-clip-r67-1-4)): a convoy of two on a CDF frigate's walkway (the t=32 convoy, t 31.8–40.5, the ship holding fire); Level 34 at medium, cropped 300×540 on the tanks | proposed |
+| [concept/warden-tank-asc-clip-r67-3.mp4](concept/warden-tank-asc-clip-r67-3.mp4) | Game clip 3 with the game's sound (re-shown in round 67 on 2026-10-29; [recipe](concept/prompts.md#warden-tank-asc-clip-r67-1-4)): a mining charge taking a passing tank: the t=50 convoy on the picket frigate's walkway, the lead tank hit, the charge beside the road blown at t≈54.2 and the tank wrecked (t 50.0–57.8); Level 34 at medium, cropped 300×540 on the tanks | proposed |
+| [concept/warden-tank-asc-clip-r67-4.mp4](concept/warden-tank-asc-clip-r67-4.mp4) | Game clip 4 with the game's sound (re-shown in round 67 on 2026-10-29; [recipe](concept/prompts.md#warden-tank-asc-clip-r67-1-4)): tanks wrecked on the freighter's fore deck: the t=123 pair killed by the beam and the escort, their burnt black-and-gold wrecks scrolling down (t 123.0–131.0); Level 34 at medium, cropped 300×540 on the tanks | proposed |
 
 ## Implementation
 
@@ -227,3 +244,4 @@ Production art, M9 part B (concept round 62, step ART-B): the SAM Nest re-render
   roster's Crawler Tank (L34) dropped: the Warden Tank already fires back up the screen after passing and was
   scheduled in Ascendancy livery from Act 5, so L34 flies it instead (one unit, its art and sounds saved).
 - 2026-10-28 (user, [round 62](../../concept-rounds/round-62/README.md), closed; page answers): the **SAM Nest** (F.2) and the **clamp gun** (F.6, with the docking clamps, the gas and the Ember's launch, in Level 29's `concept/`) production art accepted as final. Sounds: the nest's hatch **b** (S.3), lock beep **b** (S.4) and wake `ab` (S.5 a's servo with S.4 b's lock beep, rebuilt by `tools/concept/audio/sfx_r62.py nest-wake-r62-ab`); the clamp gun's shot **b** (S.6) and the clamp's release **b** (S.7). C.2 accepted: the clamp guns sleep until the halt and carry 250 HP each. The a files moved to the sfx part's `concept/rejected/`.
+- 2026-10-29 (user, [round 65](../../concept-rounds/round-65/README.md), closed): **F.3** (Sentinel Tower) and **F.4** (Strider) ok: their production sprites, GIFs and Level 32 captures are chosen as final; the sounds are in the [sfx](../../audio/sfx/README.md#decisions) decisions.

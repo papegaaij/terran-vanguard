@@ -44,3 +44,15 @@ main, AAC). PNGs: frames of the same recordings, crops of the play field labelle
   [shard-drone-capture-r64-a](../../../../enemies/space/concept/prompts.md#shard-drone-capture-r64-a),
   [enemy-shield-capture-r64-a](../../../../enemies/concept/prompts.md#enemy-shield-capture-r64-a),
   [release-end-capture-r64-a and act-5-title-capture-r64-a](../../concept/prompts.md#release-end-capture-r64-a).
+
+## level-31-capture-r65-a
+
+Concept round 65, captures of the game (M9 part E, step E5, after FIX1): Level 31 as
+[round 64's run B](#level-31-capture-r64-a) with the plan's fit, `controls.auto-fire=false`, no fire until t=70 (the
+hooked attacks reach the hull), then firing, the ship nudged right to x≈292 at t≈98.6.
+
+- **level-31-capture-r65-a.mp4**: with sound: t=78.6–93 (the Bellwether's story lines at t=79 and 86, retimed by FIX1,
+  in Laurie Anne Walden's voice), t=99.4–104 (the beam on Dacosta's claim: freed at t≈101.5, round 64 C.1 a) and
+  t=65.5–67.5 (Shard links across the cargo: the softened hit flash).
+- **claim-rock-capture-r65-a**: t=100.4–102.6: the claim rock under the beam's touch, broken open, the crate drifting
+  down over the tug.

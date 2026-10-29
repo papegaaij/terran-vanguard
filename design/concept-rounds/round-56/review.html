@@ -1,0 +1,115 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Round 56: record of the decisions</title><style>
+:root{--bg:#f4f5f7;--fg:#1b2230;--mut:#5a6577;--card:#fff;--line:#d3d9e2;--acc:#1f5fa8;--ok:#1d6b3a;--okbg:#e3f3e8;
+--hi:#fff6dc;--hib:#d9b84a;--code:#e9edf3;--warn:#8a4b00}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10141b;--fg:#dde3ee;--mut:#98a3b6;--card:#171d27;
+--line:#2c3544;--acc:#7fb2ee;--ok:#7bd69a;--okbg:#163323;--hi:#2c2610;--hib:#8a7424;--code:#232c3a;--warn:#e3a35a;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#10141b;--fg:#dde3ee;--mut:#98a3b6;--card:#171d27;--line:#2c3544;--acc:#7fb2ee;--ok:#7bd69a;
+--okbg:#163323;--hi:#2c2610;--hib:#8a7424;--code:#232c3a;--warn:#e3a35a;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:60rem;margin:0 auto;padding:1rem 16px 4rem}
+h1{font-size:1.6rem;margin:.5rem 0}h2{font-size:1.25rem;margin:2rem 0 .5rem;border-bottom:1px solid var(--line);padding-bottom:.25rem}
+h3{font-size:1.02rem;margin:0;flex:1 1 12rem}a{color:var(--acc)}
+.sum{color:var(--mut)}.note{font-size:.9rem;color:var(--mut)}
+nav.sec{display:flex;flex-wrap:wrap;gap:.4rem;margin:1rem 0}nav.sec a{padding:.2rem .6rem;border:1px solid var(--line);border-radius:1rem;
+text-decoration:none;font-size:.9rem;background:var(--card)}
+.row{background:var(--card);border:1px solid var(--line);border-radius:.4rem;padding:.7rem .9rem;margin:.7rem 0;overflow-wrap:anywhere}
+.row header{display:flex;flex-wrap:wrap;gap:.3rem .6rem;align-items:baseline}
+.rid{font:600 .85rem ui-monospace,Menlo,Consolas,monospace;background:var(--code);padding:.05rem .4rem;border-radius:.25rem}
+.kind{font-size:.8rem;color:var(--mut)}.part{font-size:.88rem;margin:.2rem 0}
+.q,.weak,.rec,.sub,.line,dl{font-size:.92rem;margin:.45rem 0}.weak{color:var(--warn)}
+code{background:var(--code);padding:0 .25rem;border-radius:.2rem;font-size:.88em}
+.tag{font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;color:var(--mut);font-weight:700;margin-right:.3rem}
+.ans{margin:.5rem 0 0;padding:.45rem .6rem;border-left:4px solid var(--hib);background:var(--hi);border-radius:.2rem}
+.ans.out{border-left-color:var(--ok)}.ans.none{opacity:.7}
+.badge{font-size:.75rem;font-weight:700;padding:.05rem .4rem;border-radius:.6rem;background:var(--okbg);color:var(--ok)}
+.badge.pick{background:var(--hi);color:var(--warn);border:1px solid var(--hib)}
+dl{display:grid;grid-template-columns:7rem 1fr;gap:.2rem .6rem}dt{font-weight:700}dd{margin:0}
+.media{display:flex;flex-wrap:wrap;gap:.5rem;margin:.5rem 0}.m{margin:0;max-width:100%}.m figcaption{font-size:.75rem;color:var(--mut)}
+.m.img img{max-width:14rem;max-height:10rem;border:1px solid var(--line);border-radius:.2rem;background:#000;display:block}
+.m.vid video{width:14rem;max-width:100%}.m.aud audio{width:16rem;max-width:100%}.miss{color:var(--warn)}
+details{margin:.4rem 0;font-size:.9rem}summary{cursor:pointer;color:var(--acc)}
+.listen{font-size:.85rem;color:var(--mut);margin:.3rem 0;padding-left:1.2rem}.opts{color:var(--mut)}
+.sub{padding-left:.6rem;border-left:2px solid var(--line)}
+table{border-collapse:collapse;display:block;overflow-x:auto}td,th{border:1px solid var(--line);padding:.2rem .4rem}
+blockquote{margin:.4rem 0;padding-left:.8rem;border-left:3px solid var(--line)}
+@media (max-width:480px){dl{grid-template-columns:1fr}.m.img img{max-width:100%}}
+</style></head><body><main><p class="note"><a href="README.md">Round 56 README</a> · <a href="../README.md">All rounds</a> · built 2026-10-24 · recorded by <code>tools/concept/review_record.py 56</code></p><h1>Concept round 56: record of the decisions</h1><div class="sum"><p>The review round of the <strong>under-water weapons rework (AW)</strong>, built after your playtest of Levels 22–25 on 2026-10-23 (the Ion Beam outclassed the anti-sub weapons, the Harpoon was tuned for single targets, the Depth Charges were rolled out behind the ship and trapped a beam player). It is the rework only: part G (Level 27) has <strong>not started</strong>. <strong>You can now play Levels 22–26 with the rework</strong>; what you are asked is whether the numbers and texts are right. The build (step log in <code>m8-gaps.md</code>, 2026-10-23 and 2026-10-24: the playtest, AW-P, AW1–AW3, VOX-AW): the energy weapons do ×0.2 damage and reach ×0.4 under water; the Harpoon is a fast, light swarm-killer (about 3 a second, 33 damage, a 52 px splash, homing only in a ±15° cone ahead, +50 % speed); the Depth Charges are tossed about 200 px ahead over the hull and burst on their fuse or on touching a swimmer; the Barbfin is tougher; Levels 23–26's waves are retuned; the balance plan sells nothing; the warnings are voiced and shown (Okafor's intro, Varga's briefing and radio, the hangar notice). All checks are green. The recommendation is pre-selected on every row.</p></div><p class="note">A read-only record: every row as the review page showed it, with the answer and the outcome from the round README (the record of truth). Media is linked from the design tree, not copied.</p><nav class="sec"><a href="#s-art">Art</a><a href="#s-calls-the-build-made">Calls</a><a href="#s-question">Question</a></nav><section id="s-art"><h2>Art</h2>
+<article class="row" id="r-A.1">
+<header><span class="rid">A.1</span><h3>The under-water weapons&#x27; looks</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../player/weapons/harpoon-torpedoes/README.md#concept-art">The under-water weapons' looks</a></div>
+<div class="q"><strong>accept or change</strong>: the four stills as one row: the <strong>toss</strong> (a depth charge thrown forward from the stern rack over the hull, swelling on its 0.15 s arc and dropping in ahead), the <strong>charges</strong> bursting 150–200 px ahead among a swarm with the harpoon cables above, the <strong>harpoon</strong> (Glassfin swarms falling to the reworked torpedo and its splash) and the <strong>weak beam</strong> (the Ion Beam L3 at 40 % strength, short and faint, scattering out over its last 72 px). Variants not built: the toss from a nose tube, a dim boil-off tip on the beam.</div>
+<div class="media"><figure class="m img"><a href="../../player/weapons/harpoon-torpedoes/concept/aw-capture-r56-a-toss.png"><img loading="lazy" decoding="async" src="../../player/weapons/harpoon-torpedoes/concept/aw-capture-r56-a-toss.png" alt="toss"></a><figcaption>toss</figcaption></figure><figure class="m img"><a href="../../player/weapons/harpoon-torpedoes/concept/aw-capture-r56-a-charges.png"><img loading="lazy" decoding="async" src="../../player/weapons/harpoon-torpedoes/concept/aw-capture-r56-a-charges.png" alt="charges"></a><figcaption>charges</figcaption></figure><figure class="m img"><a href="../../player/weapons/harpoon-torpedoes/concept/aw-capture-r56-a-harpoon.png"><img loading="lazy" decoding="async" src="../../player/weapons/harpoon-torpedoes/concept/aw-capture-r56-a-harpoon.png" alt="harpoon"></a><figcaption>harpoon</figcaption></figure><figure class="m img"><a href="../../player/weapons/harpoon-torpedoes/concept/aw-capture-r56-a-beam.png"><img loading="lazy" decoding="async" src="../../player/weapons/harpoon-torpedoes/concept/aw-capture-r56-a-beam.png" alt="beam"></a><figcaption>beam</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the toss has no sound of its own (it reuses the roll-out)</p>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: accepted</span></div>
+</article>
+</section>
+<section id="s-calls-the-build-made"><h2>Calls the build made</h2>
+<div class="sum"><p>Each is built as described; the recommendation is pre-selected. Every number is in the weapon's <code>data.yaml</code>.</p></div>
+<article class="row" id="r-C.1">
+<header><span class="rid">C.1</span><h3>Harpoon Torpedoes</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../player/weapons/harpoon-torpedoes/README.md#design">Harpoon Torpedoes</a></div>
+<div class="q"><strong>accept or change</strong> the new numbers: 2.4 to 3 a second (L1 to L4), damage 27 to 33, blast 40 to 52 px with the splash at 0.6, speed 540 to 780 px/s, homing only in a ±15° cone ahead, the turn 90°/s kept; prices and draw unchanged. The Harpoon at L3 does 87 DPS under water for 4 MW.</div>
+<div class="media"><figure class="m img"><a href="../../player/weapons/harpoon-torpedoes/concept/aw-capture-r56-a-harpoon.png"><img loading="lazy" decoding="async" src="../../player/weapons/harpoon-torpedoes/concept/aw-capture-r56-a-harpoon.png" alt="the harpoon still"></a><figcaption>the harpoon still</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> one torpedo no longer kills a tough target alone, it needs about two hits</p>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: accepted</span></div>
+</article>
+<article class="row" id="r-C.2">
+<header><span class="rid">C.2</span><h3>Depth Charges</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../player/weapons/depth-charges/README.md#design">Depth Charges</a></div>
+<div class="q"><strong>accept or change</strong> the new numbers: tossed about 200 px ahead, 1.0 to 1.3 charges a second, damage 28 to 50, burst 48 to 60 px, fuse 1.4 to 1.3 s; the charges keep the rear slot.</div>
+<div class="media"><figure class="m img"><a href="../../player/weapons/harpoon-torpedoes/concept/aw-capture-r56-a-toss.png"><img loading="lazy" decoding="async" src="../../player/weapons/harpoon-torpedoes/concept/aw-capture-r56-a-toss.png" alt="the toss"></a><figcaption>the toss</figcaption></figure><figure class="m img"><a href="../../player/weapons/harpoon-torpedoes/concept/aw-capture-r56-a-charges.png"><img loading="lazy" decoding="async" src="../../player/weapons/harpoon-torpedoes/concept/aw-capture-r56-a-charges.png" alt="the burst"></a><figcaption>the burst</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the rear slot now fires forward, which the name no longer says</p>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: accepted</span></div>
+</article>
+<article class="row" id="r-C.3">
+<header><span class="rid">C.3</span><h3>The beam under water, and Level 26</h3><span class="kind">keep or make Level 26&#x27;s units tougher under water</span></header>
+<div class="part"><a href="../../world/europa/README.md#decisions">The beam under water, and Level 26</a></div>
+<div class="q"><strong>keep or make Level 26's units tougher under water</strong>. The energy weapons do ×0.2 damage and reach ×0.4 (the L3 beam: 80 DPS in the air, 16 under water, a short stub). A flight with a beam plus tail-gun loadout fails Levels 23, 24 and 25 as you wanted, but <strong>still clears Level 26</strong>: its jellies and Anglers are fragile. <strong>keep</strong>: a beam player who gets that far has earned it. <strong>tougher</strong>: more HP for Level 26's swimmers only, so the beam cannot clear it. Recommended: keep</div>
+<div class="media"><figure class="m img"><a href="../../player/weapons/harpoon-torpedoes/concept/aw-capture-r56-a-beam.png"><img loading="lazy" decoding="async" src="../../player/weapons/harpoon-torpedoes/concept/aw-capture-r56-a-beam.png" alt="the beam still"></a><figcaption>the beam still</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> measured by one scratch flight, not asserted by a test</p>
+<p class="rec"><span class="tag">Recommendation</span> keep</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>keep</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: kept (the beam may still clear Level 26)</span></div>
+</article>
+<article class="row" id="r-C.4">
+<header><span class="rid">C.4</span><h3>The Barbfin and the retuned waves</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../enemies/naval/barbfin/README.md#decisions">The Barbfin and the retuned waves</a></div>
+<div class="q"><strong>accept or change</strong>: the Barbfin tougher, 12 to 26 HP (52 at Levels 24 and 25 with the beam era's ×2), because the new Harpoon killed it before its first needle; the waves of Levels 23 to 26 retuned (the Lampreys of Level 23 come as a stream, Level 24's bounty 0.40, Level 25's 0.42). All won on all three difficulties.</div>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: accepted</span></div>
+</article>
+<article class="row" id="r-C.5">
+<header><span class="rid">C.5</span><h3>No selling, credits left</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../player/balance-plan.yaml">No selling, credits left</a></div>
+<div class="q"><strong>accept or change</strong>: the balance plan sells nothing; the Harpoon L1 is bought at Level 22, the Harpoon L1 and the Depth Charges L1 fitted at Level 23, upgraded at Level 24 (Level 24 also buys the Pressure hull and a wing pod's Micro-missiles L3). Credits left per visit: Level 22 <strong>1,980</strong>, Level 23 <strong>3,698</strong>, Level 24 <strong>1,597</strong>, Level 25 <strong>4,436</strong>.</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the Level 24 margin is the thin one</p>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: accepted</span></div>
+</article>
+<article class="row" id="r-C.6">
+<header><span class="rid">C.6</span><h3>A latched Lamprey and the bosses</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../player/weapons/depth-charges/README.md#decisions">A latched Lamprey and the bosses</a></div>
+<div class="q"><strong>accept or change</strong>: a Lamprey latched on the hull sets a charge off at once (its burst never hurts the ship), and a boss's body or living part counts as a swimmer, so a charge bursts on it.</div>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: accepted</span></div>
+</article>
+<article class="row" id="r-C.7">
+<header><span class="rid">C.7</span><h3>The warning texts</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../campaign/act-4-deep-water/README.md#decisions">The warning texts</a></div>
+<div class="q"><strong>accept or change</strong> the four wordings: Okafor's intro page 3 ("Guns lose a third of their bite, beams and lasers nearly all. Save your credits for torpedoes and charges."), Varga's Level 23 briefing ("guns lose a third, beams and lasers nearly all"), her radio line at t=13.5 ("Torpedoes and charges bite as ever; guns lose a third, beams nearly all.") and the hangar's second notice before Level 23, <strong>ENERGY WEAPONS SCATTER IN WATER: FIT TORPEDOES AND DEPTH CHARGES</strong>. The three voice lines are re-recorded.</div>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: accepted</span></div>
+</article>
+</section>
+<section id="s-question"><h2>Question</h2>
+<article class="row" id="r-Q.1">
+<header><span class="rid">Q.1</span><h3>The waterline strip</h3><span class="kind">yes or no</span></header>
+<div class="part"><a href="../../ui/hangar/README.md#decisions">The waterline strip</a></div>
+<div class="q"><strong>yes or no</strong>: the strip shown as the ship goes under (UNDER WATER · BULLETS ×0.7 · DRAG · TORPEDOES +50 %) names the guns, the drag and the torpedoes but not the energy weapons. Should it also say so (for example ENERGY ×0.2)? Recommended: yes, it is the one place a player reads while flying. Not built; it comes with part G's build if you say yes.</div>
+<p class="rec"><span class="tag">Recommendation</span> yes</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>yes</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: yes; built in step FX: <code>BULLETS ×0.7 · BEAMS ×0.2 · TORPEDOES +50 %</code> (<code>DRAG</code> dropped to fit one line)</span></div>
+</article>
+</section></main></body></html>

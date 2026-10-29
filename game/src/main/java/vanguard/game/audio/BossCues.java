@@ -76,6 +76,11 @@ final class BossCues extends SoundFamily {
     private final Sfx[] arrivals;
     /** Whether a boss of the level brings its own phase sounds (its turn and its iris, not the generic phase blast). */
     private final boolean ownPhaseSounds;
+    /**
+     * M9 part H: whether a boss of the level has rings (the Iron Sovereign): its phases sound as its rings lock
+     * (SovereignCues), its bays' Darts with the Dart's launch, not the carrier's spit.
+     */
+    private boolean ringed;
     /** Whether each set piece's death is huge: an act boss, or a set piece that is no boss. */
     private boolean[] hugeDeath;
     /** Whether each set piece's death is an act boss's tail-to-head chain. */
@@ -134,6 +139,9 @@ final class BossCues extends SoundFamily {
             case "dust-colossus" -> Sfx.COLOSSUS_DEATH;
             // M8 part H: the Abyssal Maw's (round 58 a until the user's pick), over its 4 s chain.
             case "abyssal-maw" -> Sfx.MAW_DEATH;
+            // M9 part H: the Iron Sovereign's cook-offs from the kill (round 68 a until the user's pick); its implosion
+            // and the huge rung come after them (SovereignCues).
+            case "iron-sovereign" -> Sfx.SOVEREIGN_COOKOFF;
             default -> null;
         };
     }
@@ -199,6 +207,7 @@ final class BossCues extends SoundFamily {
             SetPiece piece = sortie.setPiece(k);
             boolean boss = piece.boss().isPresent();
             hugeDeath[k] = !boss || LevelRenderer.flashesAtDeath(piece);
+            ringed |= piece.ring().isPresent();
             finale[k] = boss && LevelRenderer.tailToHead(piece);
         }
     }
@@ -295,14 +304,19 @@ final class BossCues extends SoundFamily {
                 }
             }
             case BOSS_PHASE -> {
-                if (!ownPhaseSounds) {
+                if (!ownPhaseSounds && !ringed) {
                     bank.play(alternate(Sfx.EXPLOSION_LARGE_A, Sfx.EXPLOSION_LARGE_B), EXPLOSIONS, 0.9f, pan);
                 }
             }
             // A unit leaving an open window (the carrier's sacs): counted, played after the step's events.
             case BOSS_LAUNCHED -> {
-                launches++;
-                launchPan += pan;
+                if (ringed) {
+                    // M9 part H: a bay's Dart leaves on its own (a stream 0.4 s apart): the Dart's launch each.
+                    bank.play(Sfx.DART_LAUNCH, EXPLOSIONS, pitch(0.06), pan);
+                } else {
+                    launches++;
+                    launchPan += pan;
+                }
             }
             case BOSS_DESTROYED -> {
                 bank.play(Sfx.SALVAGE_LARGE, PICKUPS, 1, pan);

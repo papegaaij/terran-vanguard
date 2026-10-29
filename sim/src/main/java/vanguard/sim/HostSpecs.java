@@ -206,6 +206,10 @@ public interface HostSpecs {
      * interval {@code slowsGunSeconds} longer for each of them lost (the Shellback's one vent: silenced with it).
      * Killing the body pays the unit's bounty plus the {@code firstBonus} of every part still standing (the
      * whole: the Shellback's 40 + 8; the Drill Rig's 40 + 4 a pump).
+     *
+     * <p>M9 part E (design/enemies/ground/strider): a part that {@code topples} the walker (a leg) starts its {@link
+     * EnemySpec.Topple} when it is lost; a part that {@code silencesSpit} carries the walker's second attack (its {@link
+     * EnemySpec.Walker#spit()}: the Strider's pod and its homing salvos), which stops for good once every such part is gone.
      */
     public record UnitPart(
             String name,
@@ -216,7 +220,9 @@ public interface HostSpecs {
             int bounty,
             boolean silencesGun,
             int firstBonus,
-            double slowsGunSeconds) {
+            double slowsGunSeconds,
+            boolean topples,
+            boolean silencesSpit) {
         public UnitPart {
             if (!(hp > 0)) {
                 throw new IllegalArgumentException(name + ": a unit part has HP: " + hp);
@@ -225,6 +231,32 @@ public interface HostSpecs {
                 throw new IllegalArgumentException(
                         name + ": only a part that carries the gun slows it, by 0 s or more: " + slowsGunSeconds);
             }
+        }
+
+        /** Without M9 part E's topple and second attack (M8 part B). */
+        public UnitPart(
+                String name,
+                double hp,
+                Hitbox hitbox,
+                double dx,
+                double dy,
+                int bounty,
+                boolean silencesGun,
+                int firstBonus,
+                double slowsGunSeconds) {
+            this(name, hp, hitbox, dx, dy, bounty, silencesGun, firstBonus, slowsGunSeconds, false, false);
+        }
+
+        /** M9 part E: this part toppling its walker when it is lost (a Strider's leg). */
+        public UnitPart withTopples() {
+            return new UnitPart(
+                    name, hp, hitbox, dx, dy, bounty, silencesGun, firstBonus, slowsGunSeconds, true, silencesSpit);
+        }
+
+        /** M9 part E: this part carrying its walker's second attack (the Strider's pod and its homing salvos). */
+        public UnitPart withSilencesSpit() {
+            return new UnitPart(
+                    name, hp, hitbox, dx, dy, bounty, silencesGun, firstBonus, slowsGunSeconds, topples, true);
         }
 
         /** A part whose loss does not slow the gun (M7 part D). */

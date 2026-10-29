@@ -7,6 +7,9 @@ package vanguard.sim;
  * cycle, a stream's units its gap apart. Each {@link Enemy} owns one (hashed only on a carrier).
  */
 final class Launching {
+    /** M9 part H, step H1b: the carrier of a unit a ringed boss's bay launched ({@link #carrier()}). */
+    static final int BOSS = -2;
+
     /** Whether its stat block has a launcher (its clock runs). */
     private boolean carrier;
     /** Steps to the next stream's first unit. */

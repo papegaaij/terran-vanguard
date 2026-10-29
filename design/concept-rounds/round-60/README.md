@@ -41,6 +41,8 @@ The review page is built from this file by `build/round60-tools/build_review.py`
 [index.html](index.html). The art rows have sheets (PNG) and a motion clip each; the sound rows' weak spots are
 measured, not listened to.
 
+Record of the decisions: [review.html](review.html)
+
 ## Questions
 
 The twelve design questions of the gap analysis, with the options, what each costs and what was drafted. The recommendation is pre-selected.

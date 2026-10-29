@@ -36,13 +36,16 @@ final class GroundRules {
                 continue;
             }
             // M7 part F: a nest placed turned (arc: up, Level 19's gantry nests) has its guns' facing.
-            EnemySpec dry = UnitRules.enemy(
-                    content,
-                    target.enemy().get(),
-                    difficulty,
-                    Optional.empty(),
-                    inLevel,
-                    FoundryRules.arcFacing(target));
+            // M9 part E, step E3b (Level 32, QE-3 a): a tower whose first sweep is a full turn.
+            EnemySpec dry = DeepCoreRules.firstFullTurn(
+                    target,
+                    UnitRules.enemy(
+                            content,
+                            target.enemy().get(),
+                            difficulty,
+                            Optional.empty(),
+                            inLevel,
+                            FoundryRules.arcFacing(target)));
             int group = target.group().map(groups::indexOf).orElse(-1);
             List<LevelData.Placement> at =
                     switch (difficulty) {
@@ -54,18 +57,23 @@ final class GroundRules {
                     };
             // M5 part E: a nest's current, along which its drifting units (rafts) drift.
             double current = Math.toRadians(target.current().orElse(0.0));
-            for (LevelData.Placement placement : at) {
+            for (int index = 0; index < at.size(); index++) {
+                LevelData.Placement placement = at.get(index);
                 // M8 part C (gap check D2): a nest entering under water has its unit's underwater changes.
                 InLevel where = inLevel.at(level, placement.t());
-                EnemySpec enemy = where.water()
-                        ? UnitRules.enemy(
-                                content,
-                                target.enemy().get(),
-                                difficulty,
-                                Optional.empty(),
-                                where,
-                                FoundryRules.arcFacing(target))
+                EnemySpec wet = where.water()
+                        ? DeepCoreRules.firstFullTurn(
+                                target,
+                                UnitRules.enemy(
+                                        content,
+                                        target.enemy().get(),
+                                        difficulty,
+                                        Optional.empty(),
+                                        where,
+                                        FoundryRules.arcFacing(target)))
                         : dry;
+                // M9 part F (Level 33): a bunker pair's or trio's first lines staggered over the interval.
+                EnemySpec enemy = staggered(target, wet, index, at.size());
                 // M5 part G: a nest entering from a side edge, drifting across (Level 13's mortar floe).
                 GroundUnit unit = target.side().isPresent()
                         ? PartGRules.fromSide(placement, target.side().get(), enemy, group)
@@ -78,13 +86,34 @@ final class GroundRules {
                 if (target.group().filter(holders::contains).isPresent()) {
                     unit = unit.asHolder();
                 }
-                units.add(unit);
+                // M9 part E (Level 32): a fork branch's unit, dormant unless chosen.
+                units.add(DeepCoreRules.unit(target, unit));
             }
         }
         // M5 part H: the root bursts' growths, placed at their bursts' points (Level 14).
         units.addAll(PartHRules.rootBurstUnits(content, level, difficulty, inLevel.act(), inLevel.level()));
         units.sort(Comparator.comparingDouble(GroundUnit::t));
         return units;
+    }
+
+    /**
+     * M9 part F (design/campaign Level 33): the {@code index}-th of {@code of} units of a {@code staggered} nest, its first
+     * line {@code index} × its interval / {@code of} later; a unit of another nest, or without a line, as it is.
+     */
+    static EnemySpec staggered(LevelData.GroundTarget target, EnemySpec enemy, int index, int of) {
+        if (!target.staggered().orElse(false) || enemy.laserLine().isEmpty() || index == 0) {
+            return enemy;
+        }
+        EnemySpec.LaserLine line = enemy.laserLine().get();
+        return enemy.withLaserLine(Optional.of(new EnemySpec.LaserLine(
+                line.telegraphSeconds(),
+                line.liveSeconds(),
+                line.bandPx(),
+                line.damage(),
+                line.intervalSeconds(),
+                line.firstDelaySeconds() + index * line.intervalSeconds() / of,
+                line.holdWithinPx(),
+                line.mostTelegraphing())));
     }
 
     /**
@@ -189,7 +218,8 @@ final class GroundRules {
                         target.bounty().orElse(0),
                         target.drop().map(SimSpecs::pickup),
                         hits,
-                        secret.map(LevelData.Secret::crate).orElse(0),
+                        // M9 part E (Level 32): a cache's lock frees its crate without a secret.
+                        secret.map(LevelData.Secret::crate).orElse(DeepCoreRules.crate(target)),
                         secret.map(LevelData.Secret::name).orElse(""),
                         target.hardened().orElse(false),
                         secret.map(sec -> secretNames.indexOf(sec.name())).orElse(-1),
@@ -205,9 +235,12 @@ final class GroundRules {
                         group < 0 ? 0 : groupSizes[group],
                         groupDrop);
                 // M5 part F: a trigger on low-air drifting in screen space (Level 12's canister).
-                objects.add(target.drift()
-                        .map(drift -> object.drifting(drift.x(), drift.y()))
-                        .orElse(object));
+                // M9 part E (Level 32): a mining charge's burst, a fork branch's object.
+                objects.add(DeepCoreRules.object(
+                        target,
+                        target.drift()
+                                .map(drift -> object.drifting(drift.x(), drift.y()))
+                                .orElse(object)));
             }
         }
         objects.sort(Comparator.comparingDouble(GroundObjectSpec::t));

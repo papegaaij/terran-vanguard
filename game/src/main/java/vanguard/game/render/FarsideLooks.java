@@ -435,7 +435,10 @@ public final class FarsideLooks implements Disposable {
         batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
         for (int i = 0; i < sortie.enemyCount(); i++) {
             Enemy enemy = sortie.enemy(i);
-            if (enemy.spec().sweep().isEmpty() || !(enemy.telegraphing() || enemy.sweeping())) {
+            if (enemy.spec().sweep().isEmpty()
+                    || enemy.spec().groundSweep().isPresent()
+                    || !(enemy.telegraphing() || enemy.sweeping())) {
+                // M9 part E: a ground sweep's (the Sentinel Tower's) are DeepCoreLooks'.
                 continue;
             }
             var sweep = enemy.spec().sweep().get();
@@ -504,8 +507,7 @@ public final class FarsideLooks implements Disposable {
      * The beam strip tiled from (x, y) along {@code heading}, {@code length} long, each tile rotated
      * about the beam's start; the last tile cut to what is left.
      */
-    private static void drawBeam(
-            SpriteBatch batch, TextureRegion strip, double x, double y, double heading, double length) {
+    static void drawBeam(SpriteBatch batch, TextureRegion strip, double x, double y, double heading, double length) {
         float degrees = degrees(heading);
         int w = strip.getRegionWidth();
         int h = strip.getRegionHeight();
@@ -540,7 +542,7 @@ public final class FarsideLooks implements Disposable {
     }
 
     /** A heading (radians clockwise from straight down) as a batch rotation: 0° points right, counter-clockwise. */
-    private static float degrees(double heading) {
+    static float degrees(double heading) {
         return (float) Math.toDegrees(Math.atan2(-Math.cos(heading), -Math.sin(heading)));
     }
 

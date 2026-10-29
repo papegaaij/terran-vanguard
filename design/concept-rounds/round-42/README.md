@@ -40,6 +40,10 @@ Open [index.html](index.html) in a browser (regenerate with
 `python3 tools/concept/board.py 42 --subjects revenant-walker-final,warden-tank-final,backdrop-final,l19-props-final,intel-final,briefing-images-final,walker-stomp,walker-hatch,walker-missile,walker-flame-tell,walker-flame,vent-tell,vent-burst,tank-tracks,tank-turret,tank-burst,tank-death,belt-rumble,mars-foundry,level-19-capture,level-14-fixes,level-17-fixes,level-15-end`).
 Each row carries a recommendation; **B**, **T** and **X** rows list build choices: *yes* (keep as built) or *no* (say what).
 
+## Review
+
+Record of the decisions: [review.html](review.html)
+
 ## In the game
 
 `./gradlew :desktop:run --args="..."` with `--settings <file>` (a debug run writes no save):

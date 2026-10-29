@@ -73,6 +73,7 @@ public record LevelScript(
         Optional<EscortSwapSpec> escortSwap) {
     public LevelScript {
         checkHeldArena(sections, groundUnits, setPieces, haltCycle, escortSwap, rookLoss);
+        checkForks(ground, waves, groundUnits, groundObjects);
         checkGroundAllies(
                 sections,
                 objectives.holds(),
@@ -619,6 +620,23 @@ public record LevelScript(
         GroundSpec gated = new GroundSpec(
                 ground.road(), ground.water(), ground.terrain(), pairs, ground.noSurface(), ground.belts());
         return toBuilder().groundUnits(units).ground(gated).build();
+    }
+
+    /**
+     * M9 part E (design/campaign Level 32, The forks): every branch's wave, ground unit and ground object names one of
+     * the terrain's forks.
+     */
+    private static void checkForks(
+            GroundSpec ground, List<WaveSpec> waves, List<GroundUnit> groundUnits, List<GroundObjectSpec> objects) {
+        int forks = ground.terrain().map(terrain -> terrain.forks().size()).orElse(0);
+        java.util.stream.Stream<Optional<Branch>> branches = java.util.stream.Stream.concat(
+                java.util.stream.Stream.concat(
+                        waves.stream().map(WaveSpec::branch),
+                        groundUnits.stream().map(GroundUnit::branch)),
+                objects.stream().map(GroundObjectSpec::branch));
+        if (branches.anyMatch(branch -> branch.isPresent() && branch.get().fork() >= forks)) {
+            throw new IllegalArgumentException("a branch belongs to one of the terrain's " + forks + " forks");
+        }
     }
 
     /**

@@ -21,12 +21,15 @@ import vanguard.sim.IdleReason;
 import vanguard.sim.LevelScript;
 import vanguard.sim.Loadout;
 import vanguard.sim.Mine;
+import vanguard.sim.Pickup;
+import vanguard.sim.PickupType;
 import vanguard.sim.RadioCue;
 import vanguard.sim.Rules;
 import vanguard.sim.Secondary;
 import vanguard.sim.SimEvents;
 import vanguard.sim.SimStep;
 import vanguard.sim.Sortie;
+import vanguard.sim.Tow;
 import vanguard.sim.WarningEdge;
 import vanguard.sim.WaveSpec;
 import vanguard.sim.Wingman;
@@ -626,6 +629,63 @@ class Level30Test {
             assertTrue(met > SEEDS / 2, difficulty + ": the convoy stopped in most runs, " + met + "/" + SEEDS);
         }
         System.out.println(report);
+    }
+
+    /**
+     * Round 64 C.1 a: the dead beacon buoy (a tow, t=118, 4 hits) opts in to the beam's touch ({@code beam_touch}: one
+     * hit per 0.25 s on its housing), so the balance plan's fit (the Ion Beam in front) frees it on medium: the autopilot
+     * flies the level, under the buoy from a second before it enters until it is freed, then under the crate, and is not
+     * invulnerable. The crate is collected and the secret's line plays.
+     */
+    @Test
+    void thePlansBeamFreesTheDeadBuoy() {
+        Sortie sortie = sortie(content, planLoadout(content, Difficulty.MEDIUM), 1, Difficulty.MEDIUM, false);
+        Tow tow = sortie.tow(0);
+        assertTrue(tow.spec().beamTouch());
+        int found = 0;
+        int line = 0;
+        int steps = 0;
+        double freedAt = Double.NaN;
+        boolean collected = false;
+        while (!sortie.complete() && steps++ < MAX_STEPS && !collected) {
+            Pickup crate = crate(sortie);
+            if (sortie.levelSeconds() < tow.spec().t() - 1) {
+                sortie.step(Autopilot.commands(sortie));
+            } else if (tow.holding()) {
+                steer(sortie, tow.present() ? tow.cableX() : tow.spec().x(), 60, true);
+            } else if (crate != null) {
+                steer(sortie, crate.renderX(), 60, false);
+            } else {
+                sortie.step(Autopilot.commands(sortie));
+            }
+            SimEvents events = sortie.events();
+            for (int i = 0; i < events.size(); i++) {
+                if (events.type(i) == SimEvents.Type.SECRET_FOUND) {
+                    found++;
+                    freedAt = sortie.levelSeconds();
+                }
+                if (events.type(i) == SimEvents.Type.RADIO
+                        && sortie.script().radio().get(events.value(i)).trigger() == CueTrigger.SECRET) {
+                    line++;
+                }
+            }
+            collected = sortie.result().credits().secrets() > 0;
+        }
+        System.out.printf(
+                "Level 30 dead buoy (the plan's beam): found %d at t %.1f, collected at t %.1f%n",
+                found, freedAt, sortie.levelSeconds());
+        assertEquals(1, found, "the buoy's crate freed");
+        assertTrue(collected, "and collected");
+        assertEquals(1, line, "the secret's line");
+    }
+
+    private static Pickup crate(Sortie sortie) {
+        for (int i = 0; i < sortie.pickupCount(); i++) {
+            if (sortie.pickup(i).type() == PickupType.HIDDEN_CRATE) {
+                return sortie.pickup(i);
+            }
+        }
+        return null;
     }
 
     /** A cut train's rear part wrecks and its cars pay as they blow: flown on the seeds until one is seen. */

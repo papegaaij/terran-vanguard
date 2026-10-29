@@ -338,7 +338,16 @@ final class EventEffects {
                         services.sprites.explosionSmall, TINY_EXPLOSION_FRAME_TICKS, x, y, 0, sortie.groundScroll());
             case PART_DESTROYED -> {
                 if (!arenaPartDown(events.value(i), x, y)) {
-                    if (arenaBoss()) {
+                    if (ringBoss() && services.sprites.has("explosion-vacuum-medium")) {
+                        // M9 part H: a battery of the Iron Sovereign bursts in vacuum (no fire, no rising smoke).
+                        effects.startOnGround(
+                                services.sprites.frames("explosion-vacuum-medium"),
+                                MEDIUM_EXPLOSION_FRAME_TICKS,
+                                x,
+                                y,
+                                0,
+                                sortie.groundScroll());
+                    } else if (arenaBoss()) {
                         // Round 41 (the 2026-10-19 playtest): an anchored boss's part (the Spire's core in its
                         // kill step) bursts on the ground and scrolls away with its wreck once the scroll resumes.
                         effects.startOnGround(
@@ -355,6 +364,8 @@ final class EventEffects {
                     walkerDeath(events.value(i), x, y);
                 } else if (sortie.setPiece(events.value(i)).breach().isPresent()) {
                     colossusDeath(events.value(i), x, y);
+                } else if (sortie.setPiece(events.value(i)).ring().isPresent()) {
+                    ringDeath(events.value(i), x, y);
                 } else if (sortie.setPiece(events.value(i)).arena().isPresent()) {
                     arenaDeath(events.value(i), x, y);
                 } else {
@@ -733,6 +744,16 @@ final class EventEffects {
         return false;
     }
 
+    /** M9 part H: whether the level has a ringed boss (the Iron Sovereign), whose batteries burst in vacuum. */
+    private boolean ringBoss() {
+        for (int k = 0; k < sortie.setPieceCount(); k++) {
+            if (sortie.setPiece(k).ring().isPresent()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /** Whether the level has an anchored arena boss (the Kraken, the Siege Spire), whose parts lie on the ground. */
     private boolean arenaBoss() {
         for (int k = 0; k < sortie.setPieceCount(); k++) {
@@ -854,6 +875,22 @@ final class EventEffects {
         showerDelay = LevelRenderer.colossusShowerTicks();
         if (LevelRenderer.flashesAtDeath(piece)) {
             screenFlash.startAt(LevelRenderer.colossusFlashTicks(), x, y);
+        }
+    }
+
+    /**
+     * M9 part H: the Iron Sovereign's death (design/enemies/bosses/iron-sovereign, Death: "the wrecked batteries cook off
+     * ring by ring ... the core collapses inward and then blows ... then the screen flash (an act boss) and the credit
+     * shower over the core"): its cook-offs, drifting segments, implosion and blast are {@code SovereignLooks}', its
+     * sounds {@code SovereignCues}'; here the white flash over the field and the credit shower, both at the core's blow
+     * ({@link LevelRenderer#ringBlastTicks}).
+     */
+    private void ringDeath(int k, double x, double y) {
+        SetPiece piece = sortie.setPiece(k);
+        int blow = LevelRenderer.ringBlastTicks(piece);
+        showerDelay = blow;
+        if (LevelRenderer.flashesAtDeath(piece)) {
+            screenFlash.start(blow);
         }
     }
 

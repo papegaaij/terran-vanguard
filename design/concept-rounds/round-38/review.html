@@ -1,0 +1,287 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Round 38: record of the decisions</title><style>
+:root{--bg:#f4f5f7;--fg:#1b2230;--mut:#5a6577;--card:#fff;--line:#d3d9e2;--acc:#1f5fa8;--ok:#1d6b3a;--okbg:#e3f3e8;
+--hi:#fff6dc;--hib:#d9b84a;--code:#e9edf3;--warn:#8a4b00}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10141b;--fg:#dde3ee;--mut:#98a3b6;--card:#171d27;
+--line:#2c3544;--acc:#7fb2ee;--ok:#7bd69a;--okbg:#163323;--hi:#2c2610;--hib:#8a7424;--code:#232c3a;--warn:#e3a35a;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#10141b;--fg:#dde3ee;--mut:#98a3b6;--card:#171d27;--line:#2c3544;--acc:#7fb2ee;--ok:#7bd69a;
+--okbg:#163323;--hi:#2c2610;--hib:#8a7424;--code:#232c3a;--warn:#e3a35a;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:60rem;margin:0 auto;padding:1rem 16px 4rem}
+h1{font-size:1.6rem;margin:.5rem 0}h2{font-size:1.25rem;margin:2rem 0 .5rem;border-bottom:1px solid var(--line);padding-bottom:.25rem}
+h3{font-size:1.02rem;margin:0;flex:1 1 12rem}a{color:var(--acc)}
+.sum{color:var(--mut)}.note{font-size:.9rem;color:var(--mut)}
+nav.sec{display:flex;flex-wrap:wrap;gap:.4rem;margin:1rem 0}nav.sec a{padding:.2rem .6rem;border:1px solid var(--line);border-radius:1rem;
+text-decoration:none;font-size:.9rem;background:var(--card)}
+.row{background:var(--card);border:1px solid var(--line);border-radius:.4rem;padding:.7rem .9rem;margin:.7rem 0;overflow-wrap:anywhere}
+.row header{display:flex;flex-wrap:wrap;gap:.3rem .6rem;align-items:baseline}
+.rid{font:600 .85rem ui-monospace,Menlo,Consolas,monospace;background:var(--code);padding:.05rem .4rem;border-radius:.25rem}
+.kind{font-size:.8rem;color:var(--mut)}.part{font-size:.88rem;margin:.2rem 0}
+.q,.weak,.rec,.sub,.line,dl{font-size:.92rem;margin:.45rem 0}.weak{color:var(--warn)}
+code{background:var(--code);padding:0 .25rem;border-radius:.2rem;font-size:.88em}
+.tag{font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;color:var(--mut);font-weight:700;margin-right:.3rem}
+.ans{margin:.5rem 0 0;padding:.45rem .6rem;border-left:4px solid var(--hib);background:var(--hi);border-radius:.2rem}
+.ans.out{border-left-color:var(--ok)}.ans.none{opacity:.7}
+.badge{font-size:.75rem;font-weight:700;padding:.05rem .4rem;border-radius:.6rem;background:var(--okbg);color:var(--ok)}
+.badge.pick{background:var(--hi);color:var(--warn);border:1px solid var(--hib)}
+dl{display:grid;grid-template-columns:7rem 1fr;gap:.2rem .6rem}dt{font-weight:700}dd{margin:0}
+.media{display:flex;flex-wrap:wrap;gap:.5rem;margin:.5rem 0}.m{margin:0;max-width:100%}.m figcaption{font-size:.75rem;color:var(--mut)}
+.m.img img{max-width:14rem;max-height:10rem;border:1px solid var(--line);border-radius:.2rem;background:#000;display:block}
+.m.vid video{width:14rem;max-width:100%}.m.aud audio{width:16rem;max-width:100%}.miss{color:var(--warn)}
+details{margin:.4rem 0;font-size:.9rem}summary{cursor:pointer;color:var(--acc)}
+.listen{font-size:.85rem;color:var(--mut);margin:.3rem 0;padding-left:1.2rem}.opts{color:var(--mut)}
+.sub{padding-left:.6rem;border-left:2px solid var(--line)}
+table{border-collapse:collapse;display:block;overflow-x:auto}td,th{border:1px solid var(--line);padding:.2rem .4rem}
+blockquote{margin:.4rem 0;padding-left:.8rem;border-left:3px solid var(--line)}
+@media (max-width:480px){dl{grid-template-columns:1fr}.m.img img{max-width:100%}}
+</style></head><body><main><p class="note"><a href="README.md">Round 38 README</a> · <a href="../README.md">All rounds</a> · built 2026-10-14 · recorded by <code>tools/concept/review_record.py 38</code></p><h1>Concept round 38: record of the decisions</h1><div class="sum"><p>The review round of M7 part B <em>Level 15 + Act 3 intro</em> (<span class="ref">roadmap</span>), built while the user was on vacation: the <code>buried</code> layer and the <span class="ref">Burrower</span> (screen-fixed while it swims, bulges and is up, the user's Q1 = a of 2026-10-14), the <span class="ref">Dust Kite</span>'s swoop, <span class="ref">Level 15 Olympus Descent</span> with its drop launch, cloud deck and Olympus backdrop, the <span class="ref">Act 3</span> title card and intro played once from a release save (L.6), Ares Control voiced with the respelling list, track 8 "Red Dust Run" with a provisional base stem, the Mars ambiences, and the economy re-planned on the user's decision of 2026-10-14 (budget(n) is the absolute typical haul; round 37 R.1 reverted). The documents stay <code>design: approved</code> (round 36); every default, pick and build choice below was taken on the user's behalf and is <strong>pending the user's review</strong>. Where the round offers an a/b, the game plays <strong>a</strong> until the round closes.</p><p>Open <span class="ref">index.html</span> in a browser (regenerate with <code>python3 tools/concept/board.py 38 --subjects backdrop-final,l15-props-final,burrower-final,dust-kite-final,intel-final,portraits-final,act-3-still-final,briefing-images-final,burrow-bulge,burrow-bulge-mix,burrow-dive,entry-roar,mars-dust,red-dust-run-final,red-dust-run-seam-final,red-dust-run-base-final,red-dust-run-base-seam-final,music-final,level-15-capture,act-3-intro-capture</code>). The rows are in this order:</p><ol><li><strong>Changes to approved specs</strong> (<code>C…</code>): <em>accept</em> or <em>revert</em>;</li><li><strong>Art</strong> (<code>F.…</code> final art to approve): <em>approve as final</em> / <em>redo</em>;</li><li><strong>Sounds</strong> (<code>S.…</code>) and <strong>Music</strong> (<code>M.…</code>): <em>a</em> / <em>b</em> / <em>redo</em>, or <em>approve</em> / <em>redo</em>;</li><li><strong>Voices</strong> (<code>V.…</code>): Ares Control's cast and lines, the respellings, Level 15's and the Act 3 intro's lines, the re-keyed Act 2 outro page; <em>accept</em> / <em>redo</em> (say which line);</li><li><strong>Captures</strong> (<code>K.…</code>): the game as built, <em>accept</em> or <em>change</em>;</li><li><strong>Build choices</strong> (<code>B.…</code>) per step, each item <em>yes</em> (keep as built) or <em>no</em> (say what), and the <strong>findings and records</strong> (<code>R.…</code>).</li></ol><h3>In the game</h3><p><code>./gradlew :desktop:run --args="…"</code> with <code>--settings &lt;file&gt;</code> to keep the real settings apart (a debug run writes no save):</p><ul><li>Level 15 with the balance plan's ship: <code>--level 15 --loadout front=pulse-cannon:4,left=micro-missile-pod:2,right=micro-missile-pod:2,rear=tail-gun:2,generator=1,shield=1,armor=2 --special airstrike:2 --escort rook:autocannon:1</code>;</li><li>the Act 3 intro: <code>--start title</code> with a version 3 save at the Level 15 hangar in <code>saves/</code> next to the settings file (the <span class="ref">capture</span> used step B4's hand-written one), then CONTINUE;</li><li>in a build of this branch, the release's end after Act 2 no longer fires (Level 15 exists), and the hangar after Level 15 cannot launch Level 16 until part C (expected).</li></ul></div><p class="note">A read-only record: every row as the review page showed it, with the answer and the outcome from the round README (the record of truth). Media is linked from the design tree, not copied.</p><nav class="sec"><a href="#s-changes-to-approved-specs">Changes</a><a href="#s-art-final">Final art</a><a href="#s-sounds">Sounds</a><a href="#s-music">Music</a><a href="#s-voices">Voices</a><a href="#s-captures">Captures</a><a href="#s-build-choices-and-findings">Choices</a></nav><section id="s-changes-to-approved-specs"><h2>Changes to approved specs</h2>
+<div class="sum"><p>What the steps changed in the approved Level 15 document to make it work. Each <strong>C</strong> row is <em>accept</em> or <em>revert</em>.</p></div>
+<article class="row" id="r-C1">
+<header><span class="rid">C1</span><h3>Varga&#x27;s kite warning at t=34.5</h3><span class="kind">spec change</span></header>
+<dl><dt>Approved</dt><dd>Level 15's radio: Varga's "Those kites ride the dust…" at t=33.5</dd><dt>Built</dt><dd>t=34.5: Rook's t=23.5 line (with the escort only) holds the radio as text until a second past 33.5, so the line would start late (<code>RadioTimelineTest</code>, step VOX-B; <span class="ref">Level 15</span>)</dd></dl>
+<div class="ans out"><span class="tag">Outcome</span> <span><strong>accepted</strong> (user): in Level 15's radio table</span></div>
+</article>
+<article class="row" id="r-C2">
+<header><span class="rid">C2</span><h3>Easy&#x27;s first pincer as two ranks</h3><span class="kind">spec change</span></header>
+<dl><dt>Approved</dt><dd>Difficulty notes: on easy both Needler pincers enter from the front as a line abreast</dd><dt>Built</dt><dd>the t=49 one as two ranks of 2 at t=49 and 51 (the autopilot clears one line in under a second, leaving the screen empty over 3 s before the t=52.5 snake, <code>PacingTest</code>; step B3; <span class="ref">Level 15</span>)</dd></dl>
+<div class="ans out"><span class="tag">Outcome</span> <span><strong>accepted</strong> (user): in Level 15's difficulty notes</span></div>
+</article>
+</section>
+<section id="s-art-final"><h2>Art — final</h2>
+<div class="sum"><p>Production art drawn from round 36's picks (<code>tools/art/</code>), in the game now.</p></div>
+<article class="row" id="r-F.1">
+<header><span class="rid">F.1</span><h3>Olympus backdrop</h3><span class="kind">final art</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-15-olympus-descent/README.md#concept-art">Olympus backdrop</a></div>
+<div class="q"><strong>final art</strong> (<code>tools/art/backdrop_l15.py</code>, from the Olympus still r36-a and parallax r02-c): Mars far below on <code>deep</code> (Olympus Mons' caldera, the flank's lava channels), cirrus and entry streaks on <code>high-air</code>, the cloud deck's banks and its close-over on <code>low-air</code>, the slopes, Lycus escarpment and station, the dunes, the crashed lander and the rail line; the transport's underside over the launch</div>
+<div class="media"><figure class="m img"><a href="../../campaign/act-3-red-dust/level-15-olympus-descent/concept/backdrop-final-r38-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-3-red-dust/level-15-olympus-descent/concept/backdrop-final-r38-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure><figure class="m img"><a href="../../campaign/act-3-red-dust/level-15-olympus-descent/concept/backdrop-final-r38-a.gif"><img loading="lazy" decoding="async" src="../../campaign/act-3-red-dust/level-15-olympus-descent/concept/backdrop-final-r38-a.gif" alt="sheet · motion"></a><figcaption>sheet · motion</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the deep layer's parallax factor 0.15 (a default); the great cliff drawn as perspective towers along the right edge reads as a narrow wall strip in flight (<span class="ref">capture</span>)</p>
+<div class="ans"><span class="tag">Answer</span> <span>approve as final / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>approved as final</strong> (user)</span></div>
+</article>
+<article class="row" id="r-F.2">
+<header><span class="rid">F.2</span><h3>Level 15&#x27;s props</h3><span class="kind">final art</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-15-olympus-descent/README.md#concept-art">Level 15's props</a></div>
+<div class="q"><strong>final art</strong> (<code>tools/art/l15_props.py</code>): the station's supply containers (Level 01's container model in colony off-white and amber; intact, damaged, wreck, break-apart), the drop pod under basalt rubble, cleared hit by hit, with its blinking beacon</div>
+<div class="media"><figure class="m img"><a href="../../campaign/act-3-red-dust/level-15-olympus-descent/concept/l15-props-final-r38-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-3-red-dust/level-15-olympus-descent/concept/l15-props-final-r38-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure><figure class="m img"><a href="../../campaign/act-3-red-dust/level-15-olympus-descent/concept/l15-props-final-r38-a.gif"><img loading="lazy" decoding="async" src="../../campaign/act-3-red-dust/level-15-olympus-descent/concept/l15-props-final-r38-a.gif" alt="sheet · motion"></a><figcaption>sheet · motion</figcaption></figure></div>
+<div class="ans"><span class="tag">Answer</span> <span>approve as final / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>approved as final</strong> (user)</span></div>
+</article>
+<article class="row" id="r-F.3">
+<header><span class="rid">F.3</span><h3>Burrower</h3><span class="kind">final art</span></header>
+<div class="part"><a href="../../enemies/ground/burrower/README.md#concept-art">Burrower</a></div>
+<div class="q"><strong>final art</strong> (<code>tools/art/burrower.py</code>, U.1 = a): the sand maw at 64 px, the ripple in 16 headings, the bulge with lime cracks, the breach, the sand bow wave while it is up (Q1 = a), the maw opening and firing, the dive, the filling hole, the crater and the death</div>
+<div class="media"><figure class="m img"><a href="../../enemies/ground/concept/burrower-final-r38-a.png"><img loading="lazy" decoding="async" src="../../enemies/ground/concept/burrower-final-r38-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure><figure class="m img"><a href="../../enemies/ground/concept/burrower-final-r38-a.gif"><img loading="lazy" decoding="async" src="../../enemies/ground/concept/burrower-final-r38-a.gif" alt="sheet · motion"></a><figcaption>sheet · motion</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the bulge glows lime (the spec says only cracks); the ripple is small and quiet on dark basalt</p>
+<div class="ans"><span class="tag">Answer</span> <span>approve as final / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>approved as final</strong> (user)</span></div>
+</article>
+<article class="row" id="r-F.4">
+<header><span class="rid">F.4</span><h3>Dust Kite</h3><span class="kind">final art</span></header>
+<div class="part"><a href="../../enemies/air/dust-kite/README.md#concept-art">Dust Kite</a></div>
+<div class="q"><strong>final art</strong> (<code>tools/art/dust_kite.py</code>, U.7 = b): the crescent sail in 16 headings × 4 membrane flexes, its tatters and the death's teal spark and dust puff</div>
+<div class="media"><figure class="m img"><a href="../../enemies/air/concept/dust-kite-final-r38-a.png"><img loading="lazy" decoding="async" src="../../enemies/air/concept/dust-kite-final-r38-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure><figure class="m img"><a href="../../enemies/air/concept/dust-kite-final-r38-a.gif"><img loading="lazy" decoding="async" src="../../enemies/air/concept/dust-kite-final-r38-a.gif" alt="sheet · motion"></a><figcaption>sheet · motion</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> at the capture's half size the kites are hard to pick out over the rust (as designed: "you barely see them")</p>
+<div class="ans"><span class="tag">Answer</span> <span>approve as final / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>approved as final</strong> (user)</span></div>
+</article>
+<article class="row" id="r-F.5">
+<header><span class="rid">F.5</span><h3>Intel pictures</h3><span class="kind">final art</span></header>
+<div class="part"><a href="../../ui/hangar/README.md#concept-art">Intel pictures</a></div>
+<div class="q"><strong>final art</strong> (<code>tools/art/intel.py burrower dust-kite</code>): the 30×30 sensor-L2 portraits of the two new units</div>
+<div class="media"><figure class="m img"><a href="../../ui/hangar/concept/intel-final-r38-a.png"><img loading="lazy" decoding="async" src="../../ui/hangar/concept/intel-final-r38-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure></div>
+<div class="ans"><span class="tag">Answer</span> <span>approve as final / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>approved as final</strong> (user)</span></div>
+</article>
+<article class="row" id="r-F.6">
+<header><span class="rid">F.6</span><h3>Ares Control&#x27;s portrait</h3><span class="kind">final art</span></header>
+<div class="part"><a href="../../story/characters/README.md#concept-art">Ares Control's portrait</a></div>
+<div class="q"><strong>final art</strong> (<code>tools/art/portraits.py generic-colonial</code>, C.1 = b): the dust-suit controller on the friendly teal channel, next to the CDF and civilian generics</div>
+<div class="media"><figure class="m img"><a href="../../story/characters/concept/portraits-final-r38-a.png"><img loading="lazy" decoding="async" src="../../story/characters/concept/portraits-final-r38-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure></div>
+<div class="ans"><span class="tag">Answer</span> <span>approve as final / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>approved as final</strong> (user)</span></div>
+</article>
+<article class="row" id="r-F.7">
+<header><span class="rid">F.7</span><h3>Act 3 title card</h3><span class="kind">final art</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/README.md#concept-art">Act 3 title card</a></div>
+<div class="q"><strong>final art</strong> (<code>tools/art/act_stills.py act-3</code>, from Level 15's backdrop): Mars from the entry corridor, Olympus Mons far below, the deck's banks, a dust-storm front on the horizon; the chrome <code>RED DUST</code> lettering over it</div>
+<div class="media"><figure class="m img"><a href="../../campaign/act-3-red-dust/concept/act-3-still-final-r38-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-3-red-dust/concept/act-3-still-final-r38-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the <code>RED DUST</code> lettering is taller than Act 2's (the shorter words)</p>
+<div class="ans"><span class="tag">Answer</span> <span>approve as final / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>approved as final</strong> (user)</span></div>
+</article>
+<article class="row" id="r-F.8">
+<header><span class="rid">F.8</span><h3>Briefing images</h3><span class="kind">final art</span></header>
+<div class="part"><a href="../../ui/briefing/README.md#concept-art">Briefing images</a></div>
+<div class="q"><strong>final art</strong> (<code>tools/art/briefing_images.py</code>, six): the Act 3 intro's four (Mars in the transport's forward view, the CDF globe of the Vrell's spread, the colonists' dome, the drop route) and Level 15's two (the descent route, the Burrower scan)</div>
+<div class="media"><figure class="m img"><a href="../../ui/briefing/concept/briefing-images-final-r38-a.png"><img loading="lazy" decoding="async" src="../../ui/briefing/concept/briefing-images-final-r38-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the Mars map is a simplified drawing of the real planet: some places sit a few degrees off</p>
+<div class="ans"><span class="tag">Answer</span> <span>approve as final / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>approved as final</strong> (user)</span></div>
+</article>
+</section>
+<section id="s-sounds"><h2>Sounds</h2>
+<div class="sum"><p>Round 38's a/b for Level 15 (<span class="ref">sfx</span>, <code>tools/concept/audio/sfx_r38.py</code>, from credited CC0 and CC-BY originals plus synthesized layers); the game plays <strong>a</strong> until the pick. Not listened to by Claude: checked by envelopes, spectrograms, levels and loop seams; no bubbly or popping layers.</p></div>
+<article class="row" id="r-S.1">
+<header><span class="rid">S.1</span><h3>Burrower bulge</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Burrower bulge</a></div>
+<div class="q"><strong>pick a or b</strong>: a = <strong>no file</strong>, the chosen eruption (round 36 a) started at the bulge, its first 1.0 s the rumble and its impact at the surfacing (the game's default); b = a crack layer of sand and crust cracking faster towards the break, played over the eruption (1.27 s)</div>
+<div class="media"><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/burrow-bulge-r38-b.ogg"></audio></figure><figure class="m aud"><figcaption>b as mixed</figcaption><audio controls preload="none" src="../../audio/sfx/concept/burrow-bulge-mix-r38-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> b's sparse early cracks are the one layer with isolated transients (masked in the mix)</p>
+<div class="ans"><span class="tag">Answer</span> <span>a / b / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>b</strong> (user): the crack layer over the eruption, both from the bulge's start (<code>Sfx.BURROW_BULGE</code>, step R38C)</span></div>
+</article>
+<article class="row" id="r-S.2">
+<header><span class="rid">S.2</span><h3>Burrower dive</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Burrower dive</a></div>
+<div class="q"><strong>pick a or b</strong>: a "sand pour", a sand hiss under a falling low-pass with small stones dropping in (0.62 s); b "grain slide", a dense rain of noise grains falling 5 → 1 kHz over a slump (0.55 s)</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/burrow-dive-r38-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/burrow-dive-r38-b.ogg"></audio></figure></div>
+<div class="ans"><span class="tag">Answer</span> <span>a / b / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>b</strong> (user), in the game since step R38C; a in <code>concept/rejected/</code></span></div>
+</article>
+<article class="row" id="r-S.3">
+<header><span class="rid">S.3</span><h3>Entry roar</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Entry roar</a></div>
+<div class="q"><strong>pick a or b</strong>, the <code>mars-entry</code> ambience of sections 1–2, crossfading to <code>mars-dust</code> over 2 s at section 3: a "recorded roar", a howl high-passed to its thin roar over a hull buffet; b "synthesized roar", a thin air roar with a wandering whistle; seamless 12 s loops at −36 dB</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/entry-roar-r38-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/entry-roar-r38-b.ogg"></audio></figure></div>
+<div class="ans"><span class="tag">Answer</span> <span>a / b / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>a</strong> (user); b in <code>concept/rejected/</code></span></div>
+</article>
+<article class="row" id="r-S.4">
+<header><span class="rid">S.4</span><h3>Mars dust wind</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Mars dust wind</a></div>
+<div class="q"><strong>pick a or b</strong>, <code>mars-dust</code> (Level 15 from section 3, Levels 20–21): a "recorded dust wind", a sandstorm on slow gusts over a cold wind's moan, calmer than <code>mars-storm</code>; b "synthesized dust wind", a thin wind with a faint whistle and grit rising with the gusts; seamless 16 s loops at −36 dB</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/mars-dust-r38-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/mars-dust-r38-b.ogg"></audio></figure></div>
+<div class="ans"><span class="tag">Answer</span> <span>a / b / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>a</strong> (user); b in <code>concept/rejected/</code></span></div>
+</article>
+</section>
+<section id="s-music"><h2>Music</h2>
+<article class="row" id="r-M.1">
+<header><span class="rid">M.1</span><h3>Track 8 &quot;Red Dust Run&quot;</h3><span class="kind">final mix</span></header>
+<div class="part"><a href="../../audio/music/README.md#track-8-red-dust-run-in-production-m7-part-b">Track 8 "Red Dust Run"</a></div>
+<div class="q"><strong>final mix</strong> (<code>tools/art/themes.py red-dust</code>, <code>music_r38.py</code>): the round-02 sketch at full length, 181.8 s: the sketch's intro, then a 96-bar loop of twelve sections (A, B, the new "caravan" D, A2, the dust storm C, the new bridge E, B2, the desert F, the build G, the climax B3, A3, the turnaround); −14 LUFS, a clean loop seam</div>
+<div class="media"><figure class="m aud"><figcaption>full mix</figcaption><audio controls preload="none" src="../../audio/music/concept/red-dust-run-final-r38-a.ogg"></audio></figure><figure class="m aud"><figcaption>loop seam</figcaption><audio controls preload="none" src="../../audio/music/concept/red-dust-run-seam-final-r38-a.ogg"></audio></figure><figure class="m img"><a href="../../audio/music/concept/music-final-r38-a.png"><img loading="lazy" decoding="async" src="../../audio/music/concept/music-final-r38-a.png" alt="loudness sheet"></a><figcaption>loudness sheet</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> not listened to by Claude; sections range −12.9 to −16.7 LUFS</p>
+<div class="ans"><span class="tag">Answer</span> <span>approve as final / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>approved as final</strong> (user)</span></div>
+</article>
+<article class="row" id="r-M.2">
+<header><span class="rid">M.2</span><h3>Track 8&#x27;s base stem</h3><span class="kind">provisional stem</span></header>
+<div class="part"><a href="../../audio/music/README.md#track-8-red-dust-run-in-production-m7-part-b">Track 8's base stem</a></div>
+<div class="q"><strong>provisional stem</strong>, a default: the music README wants the full mix approved before its stems, but Level 15 plays the base stem from section 2, so it was rendered with the full mix (the same render: hand drums, bass, wind, drone, string pads and kicks; no breakbeat top, reed, melody or arpeggio) and is reviewed with it</div>
+<div class="media"><figure class="m aud"><figcaption>base stem</figcaption><audio controls preload="none" src="../../audio/music/concept/red-dust-run-base-final-r38-a.ogg"></audio></figure><figure class="m aud"><figcaption>its loop seam</figcaption><audio controls preload="none" src="../../audio/music/concept/red-dust-run-base-seam-final-r38-a.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> a redo of M.1 re-renders the stem too</p>
+<div class="ans"><span class="tag">Answer</span> <span>approve / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>approved</strong> (user): the base stem stays as rendered</span></div>
+</article>
+</section>
+<section id="s-voices"><h2>Voices</h2>
+<div class="sum"><p>The lines as the game plays them from <code>assets/voice/</code> (rendered in step VOX-B through the radio filter; all of them in the <span class="ref">Listening</span> table). <strong>LISTEN</strong> marks the takes Claude flagged.</p></div>
+<article class="row" id="r-V.1">
+<header><span class="rid">V.1</span><h3>Ares Control</h3><span class="kind">accept the cast and his five lines</span></header>
+<div class="part"><a href="../../audio/voice/README.md#concept-art">Ares Control</a></div>
+<div class="q"><strong>accept the cast and his five lines</strong> (round 36 S.6 = b, Thomas A): his reference clip trimmed of its long pauses (12.0 → 10.3 s), his takes retried by <code>voice.py</code> when a mid-line pause is over 0.8 s (three retried); t=12, t=84, the drop pod, t=158.5, the secondary</div>
+<div class="media"><figure class="m aud"><figcaption>reference</figcaption><audio controls preload="none" src="../../audio/voice/refs/ref-ares-control.wav"></audio></figure><figure class="m aud"><figcaption>t=12</figcaption><audio controls preload="none" src="../../../assets/voice/ares-control/884c091c79bb.ogg"></audio></figure><figure class="m aud"><figcaption>t=84</figcaption><audio controls preload="none" src="../../../assets/voice/ares-control/9beef5fc32a2.ogg"></audio></figure><figure class="m aud"><figcaption>drop pod</figcaption><audio controls preload="none" src="../../../assets/voice/ares-control/d5164ec2b9e1.ogg"></audio></figure><figure class="m aud"><figcaption>t=158.5</figcaption><audio controls preload="none" src="../../../assets/voice/ares-control/c901a8fc4732.ogg"></audio></figure><figure class="m aud"><figcaption>secondary</figcaption><audio controls preload="none" src="../../../assets/voice/ares-control/988b50c6dbd3.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> LISTEN t=84 ("…Lycus Station…" may sound like "Like a station") and the drop pod ("…last week" may sound like "ages")</p>
+<div class="ans"><span class="tag">Answer</span> <span>accept / redo (say which)</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>accepted</strong> (user)</span></div>
+</article>
+<article class="row" id="r-V.2">
+<header><span class="rid">V.2</span><h3>The respellings</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../audio/voice/README.md#concept-art">The respellings</a></div>
+<div class="q"><strong>accept or change</strong>: the text as spoken uses Airees (Ares), Skyaparelli, Burrows (accepted at the audition), Vallis Marinairis and Coprateez (kept: the plain spellings were read back as "Vales/Valet's" and "cop rates"); Lycus and Eos stay plain (read back as well as the respelled ones)</div>
+<div class="media"><figure class="m aud"><figcaption>Okafor, &quot;Airees&quot;</figcaption><audio controls preload="none" src="../../../assets/voice/okafor/543313dab5f6.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> read back by a recogniser, not by ear</p>
+<div class="ans"><span class="tag">Answer</span> <span>accept / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>accepted</strong> (user)</span></div>
+</article>
+<article class="row" id="r-V.3">
+<header><span class="rid">V.3</span><h3>Level 15&#x27;s radio</h3><span class="kind">accept or redo</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-15-olympus-descent/README.md#radio-chatter">Level 15's radio</a></div>
+<div class="q"><strong>accept or redo</strong>: Okafor's five, Varga's four, Rook's three (his <code>{side}</code> line in both takes, pinned)</div>
+<div class="media"><figure class="m aud"><figcaption>Okafor t=1</figcaption><audio controls preload="none" src="../../../assets/voice/okafor/15e482c34ea8.ogg"></audio></figure><figure class="m aud"><figcaption>Rook t=23.5 left</figcaption><audio controls preload="none" src="../../../assets/voice/rook/aef1e736b4b8.ogg"></audio></figure><figure class="m aud"><figcaption>Rook t=23.5 right</figcaption><audio controls preload="none" src="../../../assets/voice/rook/f8ce36c82ede.ogg"></audio></figure><figure class="m aud"><figcaption>Varga t=34.5</figcaption><audio controls preload="none" src="../../../assets/voice/varga/90fe04e9c27e.ogg"></audio></figure><figure class="m aud"><figcaption>Okafor t=45.5</figcaption><audio controls preload="none" src="../../../assets/voice/okafor/d44ba7a6cd66.ogg"></audio></figure><figure class="m aud"><figcaption>Varga t=57</figcaption><audio controls preload="none" src="../../../assets/voice/varga/045cc85a820e.ogg"></audio></figure><figure class="m aud"><figcaption>Varga first surfacing</figcaption><audio controls preload="none" src="../../../assets/voice/varga/af6ba53edfea.ogg"></audio></figure><figure class="m aud"><figcaption>Rook t=100</figcaption><audio controls preload="none" src="../../../assets/voice/rook/6c2bcadeaff8.ogg"></audio></figure><figure class="m aud"><figcaption>Okafor t=110</figcaption><audio controls preload="none" src="../../../assets/voice/okafor/4aae6723796c.ogg"></audio></figure><figure class="m aud"><figcaption>Varga t=149.5</figcaption><audio controls preload="none" src="../../../assets/voice/varga/60f9f139a66e.ogg"></audio></figure><figure class="m aud"><figcaption>Okafor t=168</figcaption><audio controls preload="none" src="../../../assets/voice/okafor/b52e65ba5d17.ogg"></audio></figure><figure class="m aud"><figcaption>Okafor end</figcaption><audio controls preload="none" src="../../../assets/voice/okafor/78127783274c.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the texts are in <span class="ref">Listening</span></p>
+<div class="ans"><span class="tag">Answer</span> <span>accept / redo (say which)</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>accepted</strong> (user)</span></div>
+</article>
+<article class="row" id="r-V.4">
+<header><span class="rid">V.4</span><h3>The Act 3 intro and Level 15&#x27;s briefing</h3><span class="kind">accept or redo</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/README.md#act-intro-and-outro">The Act 3 intro and Level 15's briefing</a></div>
+<div class="q"><strong>accept or redo</strong>: the four intro pages (Okafor, Varga, Okafor, Okafor fierce; 17.5, 11.4, 12.6, 11.7 s) and Level 15's two (Okafor, Varga)</div>
+<div class="media"><figure class="m aud"><figcaption>intro 1</figcaption><audio controls preload="none" src="../../../assets/voice/okafor/543313dab5f6.ogg"></audio></figure><figure class="m aud"><figcaption>intro 2</figcaption><audio controls preload="none" src="../../../assets/voice/varga/70e7a8277e18.ogg"></audio></figure><figure class="m aud"><figcaption>intro 3</figcaption><audio controls preload="none" src="../../../assets/voice/okafor/473f82872a3c.ogg"></audio></figure><figure class="m aud"><figcaption>intro 4</figcaption><audio controls preload="none" src="../../../assets/voice/okafor/33b81d9b9254.ogg"></audio></figure><figure class="m aud"><figcaption>briefing 1</figcaption><audio controls preload="none" src="../../../assets/voice/okafor/0b9c66f21b87.ogg"></audio></figure><figure class="m aud"><figcaption>briefing 2</figcaption><audio controls preload="none" src="../../../assets/voice/varga/16033c921c9d.ogg"></audio></figure></div>
+<div class="ans"><span class="tag">Answer</span> <span>accept / redo (say which)</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>accepted</strong> (user)</span></div>
+</article>
+<article class="row" id="r-V.5">
+<header><span class="rid">V.5</span><h3>Act 2 outro, page 3</h3><span class="kind">accept the re-keyed take</span></header>
+<div class="part"><a href="../../campaign/act-2-homefront/README.md#act-intro-and-outro">Act 2 outro, page 3</a></div>
+<div class="q"><strong>accept the re-keyed take</strong>: the respelling changes the line's key, so the accepted Act 2 file was rendered again with "Airees" (the old take deleted)</div>
+<div class="media"><figure class="m aud"><figcaption>the take</figcaption><audio controls preload="none" src="../../../assets/voice/okafor/dbf8451c1c3f.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> LISTEN: "Airees"</p>
+<div class="ans"><span class="tag">Answer</span> <span>accept / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>accepted</strong> (user)</span></div>
+</article>
+</section>
+<section id="s-captures"><h2>Captures</h2>
+<div class="sum"><p>The <code>installDist</code> build on a private display, the game's own sound (its <code>wave</code> mix); how each was taken is in its folder's <code>concept/prompts.md</code>.</p></div>
+<article class="row" id="r-K.1">
+<header><span class="rid">K.1</span><h3>Level 15</h3><span class="kind">game capture</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-15-olympus-descent/README.md#concept-art">Level 15</a></div>
+<div class="q"><strong>game capture</strong>: a whole medium run with the plan's L15 ship and Rook, <strong>no <code>--invulnerable</code></strong> (armour 100 → 93): the drop under the transport, the deck closing over, the Burrowers' bulge, surfacing, rings and dive, the Dust Kites, Lycus Survey Station, the drop pod's rubble (secret found), the pincer, the dune field, the rail line, the debrief (198 / 200, A+) and the hangar; 3:53 with sound and a sheet of 20 frames</div>
+<div class="media"><figure class="m img"><a href="../../campaign/act-3-red-dust/level-15-olympus-descent/concept/level-15-capture-r38-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-3-red-dust/level-15-olympus-descent/concept/level-15-capture-r38-a.png" alt="level-15-capture-r38-a.png"></a><figcaption>level-15-capture-r38-a.png</figcaption></figure><figure class="m vid"><figcaption>video with sound</figcaption><video controls preload="none" playsinline src="../../campaign/act-3-red-dust/level-15-olympus-descent/concept/level-15-capture-r38-a.mp4"></video></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the driver stays at the bottom, so the crate and the containers' salvage are not picked up; the timing findings are <span class="ref">R.3</span></p>
+<div class="ans"><span class="tag">Answer</span> <span>accept / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>accepted</strong> (user)</span></div>
+</article>
+<article class="row" id="r-K.2">
+<header><span class="rid">K.2</span><h3>Act 3 intro (L.6)</h3><span class="kind">game capture</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/README.md#concept-art">Act 3 intro (L.6)</a></div>
+<div class="q"><strong>game capture</strong>: a version 3 save at the Level 15 hangar continued from the main menu: the title card (by itself after ≈ 3.5 s), the four voiced intro pages, Level 15's two briefing pages, the hangar; a sheet of 10 frames and 42 s of video</div>
+<div class="media"><figure class="m img"><a href="../../campaign/act-3-red-dust/concept/act-3-intro-capture-r38-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-3-red-dust/concept/act-3-intro-capture-r38-a.png" alt="act-3-intro-capture-r38-a.png"></a><figcaption>act-3-intro-capture-r38-a.png</figcaption></figure><figure class="m vid"><figcaption>video with sound</figcaption><video controls preload="none" playsinline src="../../campaign/act-3-red-dust/concept/act-3-intro-capture-r38-a.mp4"></video></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> step B4's hand-written save, not one written by the M6 release; a debug run writes no save, so "only once" is shown by the tests, not here; the intro pages wear Level 15's header and objectives, as the briefing screen draws act pages</p>
+<div class="ans"><span class="tag">Answer</span> <span>accept / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>accepted</strong> (user)</span></div>
+</article>
+</section>
+<section id="s-build-choices-and-findings"><h2>Build choices and findings</h2>
+<div class="sum"><p>What the steps chose where the documents are silent, and what they found. <strong>B</strong> rows: each item <em>yes</em> (keep as built) or <em>no</em> (say what). <strong>R</strong> rows: as their answer cell says.</p></div>
+<article class="row" id="r-B.1">
+<header><span class="rid">B.1</span><h3>Burrower and Dust Kite in the simulation</h3><span class="kind">yes or no, each</span></header>
+<div class="part"><a href="../../enemies/ground/burrower/README.md">Burrower and Dust Kite in the simulation</a></div>
+<div class="q"><strong>yes or no, each</strong> (step B1): (a)–(f) below</div>
+<div class="sub"><span class="rid">B.1a</span> A Burrower lives at most 30 s (never cut short while it is up), then swims off the bottom edge under the sand: an escape, no bounty. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.1b</span> The Dust Kite's swoop bends 60 px across the ship's lane. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.1c</span> The surfacing spot is picked as the swim starts and checked again as the bulge starts (at least 110 px from the ship). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.1d</span> When the top edge leaves too little room ahead of the ship, the spot is mirrored below it. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.1e</span> The stagger: a unit bulges 0.8 s after its wave's last bulge, and only while fewer than two of its wave would be up when it surfaces. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.1f</span> A spot in a no-surface zone moves to the nearest allowed point beside or beyond the zone; without one the surfacing is skipped (it still counts as one of its three). <span class="opts">yes / no</span></div>
+<div class="ans"><span class="tag">Answer</span> <span>all yes / some no</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>all yes</strong> (user)</span></div>
+</article>
+<article class="row" id="r-B.2">
+<header><span class="rid">B.2</span><h3>Level 15&#x27;s data and the content</h3><span class="kind">yes or no, each</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-15-olympus-descent/README.md">Level 15's data and the content</a></div>
+<div class="q"><strong>yes or no, each</strong> (steps B2, B3): (a)–(g) below</div>
+<div class="sub"><span class="rid">B.2a</span> <code>launch: drop</code>: the ship and Rook drop in from above the top edge to the start spot over the first 5 s, under the transport's pass. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.2b</span> The no-surface zones cover the station's pads and hab, the escarpment's cliff strip and the rail line. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.2c</span> The hard-only Spine Turret pair stands beside the rail line at t≈185. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.2d</span> The hangar's intel strip marks the six Burrower fields (<code>BURROW_FIELD</code>). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.2e</span> L.6's flag: a story flag <code>act-intro:N</code> per act whose intro was shown; a version 3 save is migrated with <code>act-intro:1</code> and, from Level 08 on, <code>act-intro:2</code>, so only Act 3's intro plays on Continue. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.2f</span> The <code>mars-entry</code> ambience key for sections 1–2 (a new name next to <code>mars-dust</code>). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.2g</span> The simulation's V-wing places gliding units (the Dust Kites) in their wing slots as they fly down; earlier V-wings are unchanged. <span class="opts">yes / no</span></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> (g) touched the simulation from a content step (old waves unchanged, a test added)</p>
+<div class="ans"><span class="tag">Answer</span> <span>all yes / some no</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>all yes</strong> (user)</span></div>
+</article>
+<article class="row" id="r-B.3">
+<header><span class="rid">B.3</span><h3>In the game</h3><span class="kind">yes or no, each</span></header>
+<div class="part"><a href="../../enemies/ground/burrower/README.md#implementation">In the game</a></div>
+<div class="q"><strong>yes or no, each</strong> (step B4): (a)–(f) below</div>
+<div class="sub"><span class="rid">B.3a</span> The transport's underside is drawn as a 75 % overhead pass in normal blending, chosen by its piece name (no data key). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.3b</span> Up to 32 Burrower craters stay on the ground at once (the oldest goes). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.3c</span> A Burrower killed early in its dive leaves its crater but no open hole. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.3d</span> <code>mars-entry</code> plays in sections 1–2 and crossfades over 2 s to <code>mars-dust</code> at section 3. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.3e</span> The eruption sound starts with the bulge (S.1 a), the dive plays its own sound. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.3f</span> Continue goes through the intro check from both the main menu and the save slots. <span class="opts">yes / no</span></div>
+<div class="ans"><span class="tag">Answer</span> <span>all yes / some no</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>all yes</strong> (user); (e) now with S.1's crack layer over the eruption</span></div>
+</article>
+<article class="row" id="r-R.1">
+<header><span class="rid">R.1</span><h3>The Act 3 economy</h3><span class="kind">record of your decision</span></header>
+<div class="part"><a href="../../systems/economy/README.md">The Act 3 economy</a></div>
+<div class="q"><strong>record of your decision</strong> (2026-10-14, option a): budget(n) is the absolute typical haul, round 37 R.1's act-factor income reverted, the Act 3 purchases re-planned (step B3): an EMP charge at L15, the Mk III at L16, saving at L17, the Ion Beam at L2 at L18 (the Pulse Cannon sold), L3 at L19, the Tail Gun L3 at L20, Composite III at L21; Level 15's own data earns 1 800 (<code>bounty_scale</code> 0.42). <strong>Finding</strong>: on hard the beam is refused at L18 (about 330 short after the repairs), so hard keeps the Pulse Cannon L4 (77 forward, 0.77× the reference at L21) and banks about 7 100 by the L21 visit</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> hard is tighter on purpose (2026-10-05); a hard player banking 7 100 without the beam may be a plan artefact rather than a real squeeze</p>
+<div class="ans"><span class="tag">Answer</span> <span>noted / change the hard plan (say how)</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>noted</strong> (user): the hard plan unchanged</span></div>
+</article>
+<article class="row" id="r-R.2">
+<header><span class="rid">R.2</span><h3>The Burrowers&#x27; kill share</h3><span class="kind">finding</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-15-olympus-descent/README.md#credit-budget">The Burrowers' kill share</a></div>
+<div class="q"><strong>finding</strong>: the autopilot kills every Burrower it sees surface (27 / 27 medium, 21 / 21 easy, 32 / 32 hard, none escaped), above the 80 % the haul assumes, so the surfaced windows were not retuned; the capture's pilot killed 198 / 200 of everything</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the autopilot lines up under a bulge; a human may not</p>
+<div class="ans"><span class="tag">Answer</span> <span>accept / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>accepted</strong> (user)</span></div>
+</article>
+<article class="row" id="r-R.3">
+<header><span class="rid">R.3</span><h3>What the Level 15 capture found</h3><span class="kind">findings: fix or keep, each</span></header>
+<div class="part"><a href="#captures">What the Level 15 capture found</a></div>
+<div class="q"><strong>findings: fix or keep, each</strong> (below; nothing changed)</div>
+<div class="media"><figure class="m img"><a href="../../campaign/act-3-red-dust/level-15-olympus-descent/concept/level-15-capture-r38-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-3-red-dust/level-15-olympus-descent/concept/level-15-capture-r38-a.png" alt="K.1 sheet"></a><figcaption>K.1 sheet</figcaption></figure></div>
+<details><summary>Findings</summary><p>seen in the Level 15 capture and not changed (Claude's reading):</p><ul><li><strong>(a)</strong> The cloud deck covers the whole field for about 3 s (t≈61.5–64.5; closing from ≈ 60, parted by ≈ 65.5) where the README says about 2 s at t≈62–64.</li><li><strong>(b)</strong> The first field's first bulge came at t≈71.5 and its surfacing at ≈ 72.5; the README expects the first surfacing from t≈69.5. Varga's <code>first-surfacing</code> line still falls in the t=68–84 gap.</li><li><strong>(c)</strong> The rail line crosses the screen at t≈186–188, but the last field is still surfacing to t≈194 and the level's end lines start at ≈ 196: the level ends over the dunes, not over the rail line.</li></ul></details>
+<div class="ans"><span class="tag">Answer</span> <span>keep all / fix some (say which)</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>keep all</strong> (user): (a)–(c) as built; Level 15's prose now gives the measured ≈ 3 s close-over and the ≈ 72.5 first surfacing</span></div>
+</article>
+</section></main></body></html>

@@ -110,6 +110,35 @@ final class ContentValidator {
         content.enemies()
                 .values()
                 .forEach(enemy -> TugChecks.enemy(enemy, content, (field, message) -> problem(enemy, field, message)));
+        // M9 part E (Level 32): the forks' branches, the towers' and locks' placement, the collar, the topple.
+        content.levels()
+                .forEach((key, level) ->
+                        DeepCoreChecks.level(content, level, (field, message) -> problem(level, field, message)));
+        content.enemies()
+                .values()
+                .forEach(enemy -> DeepCoreChecks.enemy(enemy, (field, message) -> problem(enemy, field, message)));
+        // M9 part F (Level 33): the power-draining latch, the drift, prey wings and their hunters.
+        content.levels()
+                .forEach((key, level) ->
+                        LeechChecks.level(content, level, (field, message) -> problem(level, field, message)));
+        content.enemies()
+                .values()
+                .forEach(enemy -> LeechChecks.enemy(enemy, (field, message) -> problem(enemy, field, message)));
+        // M9 part G (Level 34): object escapes, the story pickup and its cues, a unit's livery.
+        content.levels()
+                .forEach((key, level) ->
+                        SalvageChecks.level(content, level, (field, message) -> problem(level, field, message)));
+        content.enemies()
+                .values()
+                .forEach(enemy ->
+                        SalvageChecks.enemy(content, enemy, (field, message) -> problem(enemy, field, message)));
+        // M9 part H (Level 35): a ringed boss's rings, fire arc, locks, batteries and core; a level's placement of it.
+        content.enemies()
+                .values()
+                .forEach(enemy -> RingChecks.enemy(content, enemy, (field, message) -> problem(enemy, field, message)));
+        content.levels()
+                .values()
+                .forEach(level -> RingChecks.level(content, level, (field, message) -> problem(level, field, message)));
         return sink.list();
     }
 

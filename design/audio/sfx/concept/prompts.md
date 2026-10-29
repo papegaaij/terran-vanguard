@@ -5528,7 +5528,7 @@ Generator: `tools/concept/audio/sfx_r64.py` (cut from the Freesound HQ previews;
 
 ### link-hum-r64-a — "Jacob's ladder.wav" by jensfelger
 
-Proposed (round 64), cut from the HQ previews by `tools/concept/audio/sfx_r64.py`.
+Chosen (round 64, S.1 a picked), cut from the HQ previews by `tools/concept/audio/sfx_r64.py`.
 Source: <https://freesound.org/people/jensfelger/sounds/367456/> (Jacob's ladder.wav by jensfelger, CC0 1.0).
 Use: one loop while any Shard link is lit, panned to the nearest group (Level 31's groups of 3-4 drones joined by crimson-gold links, sweeping down as barriers and across the tug).
 Brief: a steady electrical transformer hum (a 50/60 Hz buzz) that crackles: live energy between the drones, under the fire; distinct from the generator brown-out's sagging hum (concept/brownout-hum-r60-a.ogg), which can play with it; a real recording, heavy, nothing bubbly or popping.
@@ -5537,7 +5537,7 @@ Edit: 4.00 s, band RMS −35.0 dB, peak −8.6 dBFS, −30.6 LUFS.
 
 ### link-hum-r64-b — "transformer at night.wav" by ideaph + "Zapping - High Voltage Electricity Buzz Isolated" by el_boss
 
-Proposed (round 64), cut from the HQ previews by `tools/concept/audio/sfx_r64.py`.
+Rejected (round 64, S.1 a picked), cut from the HQ previews by `tools/concept/audio/sfx_r64.py`.
 Sources: <https://freesound.org/people/ideaph/sounds/641208/> (transformer at night.wav by ideaph, CC0 1.0), <https://freesound.org/people/el_boss/sounds/740198/> (Zapping - High Voltage Electricity Buzz Isolated by el_boss, CC0 1.0).
 Use: one loop while any Shard link is lit, panned to the nearest group (Level 31's groups of 3-4 drones joined by crimson-gold links, sweeping down as barriers and across the tug).
 Brief: a steady electrical transformer hum (a 50/60 Hz buzz) that crackles: live energy between the drones, under the fire; distinct from the generator brown-out's sagging hum (concept/brownout-hum-r60-a.ogg), which can play with it; a real recording, heavy, nothing bubbly or popping.
@@ -5546,7 +5546,7 @@ Edit: 6.00 s, band RMS −35.0 dB, peak −25.6 dBFS, −32.4 LUFS.
 
 ### link-flicker-r64-a — "Jacob's ladder.wav" by jensfelger
 
-Proposed (round 64), cut from the HQ previews by `tools/concept/audio/sfx_r64.py`.
+Chosen (round 64, S.2 a picked), cut from the HQ previews by `tools/concept/audio/sfx_r64.py`.
 Source: <https://freesound.org/people/jensfelger/sounds/367456/> (Jacob's ladder.wav by jensfelger, CC0 1.0).
 Use: a group's links flickering for 0.8 s before they light (0.5 s on hard): after the group's last drone enters, and when the links relight after the EMP's stun; then the hum loop takes over.
 Brief: a stuttering buzz: the links' hum cutting in and out, then holding as they light; a real recording, heavy, nothing bubbly or popping.
@@ -5555,7 +5555,7 @@ Edit: 0.80 s, the loudest 100 ms band −28.0 dB, peak −16.1 dBFS, −30.0 LUF
 
 ### link-flicker-r64-b — "transformer at night.wav" by ideaph + "Zapping - High Voltage Electricity Buzz Isolated" by el_boss
 
-Proposed (round 64), cut from the HQ previews by `tools/concept/audio/sfx_r64.py`.
+Rejected (round 64, S.2 a picked), cut from the HQ previews by `tools/concept/audio/sfx_r64.py`.
 Sources: <https://freesound.org/people/ideaph/sounds/641208/> (transformer at night.wav by ideaph, CC0 1.0), <https://freesound.org/people/el_boss/sounds/740198/> (Zapping - High Voltage Electricity Buzz Isolated by el_boss, CC0 1.0).
 Use: a group's links flickering for 0.8 s before they light (0.5 s on hard): after the group's last drone enters, and when the links relight after the EMP's stun; then the hum loop takes over.
 Brief: a stuttering buzz: the links' hum cutting in and out, then holding as they light; a real recording, heavy, nothing bubbly or popping.
@@ -5564,7 +5564,7 @@ Edit: 0.82 s, the loudest 100 ms band −28.0 dB, peak −21.4 dBFS, −31.4 LUF
 
 ### link-snap-r64-a — "Flash 1,2MV_3.wav" by jensfelger
 
-Proposed (round 64), cut from the HQ previews by `tools/concept/audio/sfx_r64.py`.
+Chosen (round 64, S.3 a picked), cut from the HQ previews by `tools/concept/audio/sfx_r64.py`.
 Source: <https://freesound.org/people/jensfelger/sounds/367453/> (Flash 1,2MV_3.wav by jensfelger, CC0 1.0).
 Use: a link breaking as one of its two drones dies (a middle drone drops both its links: one snap); a few times a group, over the drone's own death (its `small` rung).
 Brief: a sharp electric snap: the energy shorting out, dry and short; no pop; a real recording, heavy, nothing bubbly or popping.
@@ -5573,7 +5573,7 @@ Edit: 0.45 s, the loudest 100 ms band −24.3 dB, peak −9.1 dBFS, −22.4 LUFS
 
 ### link-snap-r64-b — "JacobsLadderSingle2.flac" by Halleck
 
-Proposed (round 64), cut from the HQ previews by `tools/concept/audio/sfx_r64.py`.
+Rejected (round 64, S.3 a picked), cut from the HQ previews by `tools/concept/audio/sfx_r64.py`.
 Source: <https://freesound.org/people/Halleck/sounds/19487/> (JacobsLadderSingle2.flac by Halleck, CC-BY 4.0).
 Use: a link breaking as one of its two drones dies (a middle drone drops both its links: one snap); a few times a group, over the drone's own death (its `small` rung).
 Brief: a sharp electric snap: the energy shorting out, dry and short; no pop; a real recording, heavy, nothing bubbly or popping.
@@ -5582,7 +5582,7 @@ Edit: 0.35 s, the loudest 100 ms band −25.1 dB, peak −5.1 dBFS, −inf LUFS.
 
 ### saw-whine-r64-a — "9in Angle Grinder" by jameswrowles
 
-Proposed (round 64), cut from the HQ previews by `tools/concept/audio/sfx_r64.py`.
+Chosen (round 64, S.4 a picked), cut from the HQ previews by `tools/concept/audio/sfx_r64.py`.
 Source: <https://freesound.org/people/jameswrowles/sounds/516593/> (9in Angle Grinder by jameswrowles, CC0 1.0).
 Use: one loop while a Buzzsaw Drone is on the screen, for the nearest; its pitch follows the spin (the game pitches it: 2 turns/s chasing, up to 6 when spun up).
 Brief: a real circular saw or angle grinder's whine, steady, under the fire; a real recording, heavy, nothing bubbly or popping.
@@ -5591,7 +5591,7 @@ Edit: 3.00 s, band RMS −36.4 dB, peak −23.4 dBFS, −30.3 LUFS.
 
 ### saw-whine-r64-b — "Foley_Mechanism_Circular_Saw_Powering_Stereo.wav" by Nox_Sound
 
-Proposed (round 64), cut from the HQ previews by `tools/concept/audio/sfx_r64.py`.
+Rejected (round 64, S.4 a picked), cut from the HQ previews by `tools/concept/audio/sfx_r64.py`.
 Source: <https://freesound.org/people/Nox_Sound/sounds/554366/> (Foley_Mechanism_Circular_Saw_Powering_Stereo.wav by Nox_Sound, CC0 1.0).
 Use: one loop while a Buzzsaw Drone is on the screen, for the nearest; its pitch follows the spin (the game pitches it: 2 turns/s chasing, up to 6 when spun up).
 Brief: a real circular saw or angle grinder's whine, steady, under the fire; a real recording, heavy, nothing bubbly or popping.
@@ -5600,7 +5600,7 @@ Edit: 2.00 s, band RMS −40.8 dB, peak −20.1 dBFS, −30.3 LUFS.
 
 ### saw-spinup-r64-a — "9in Angle Grinder" by jameswrowles
 
-Proposed (round 64), cut from the HQ previews by `tools/concept/audio/sfx_r64.py`.
+Rejected (round 64, S.5 ab picked), cut from the HQ previews by `tools/concept/audio/sfx_r64.py`.
 Source: <https://freesound.org/people/jameswrowles/sounds/516593/> (9in Angle Grinder by jameswrowles, CC0 1.0).
 Use: each Buzzsaw's 0.6 s spin-up tell before a dash (0.8 s on easy, 0.5 s on hard; the blades speed up and the gold rim flickers red); a group staggers its tells 0.4 s apart.
 Brief: the saw's whine rising sharply to a scream: the machine spinning up, ending on the loop's pitch (the a/b should match the whine's); a real recording, heavy, nothing bubbly or popping.
@@ -5609,16 +5609,25 @@ Edit: 0.61 s, the loudest 100 ms band −26.3 dB, peak −13.8 dBFS, −25.3 LUF
 
 ### saw-spinup-r64-b — "Foley_Mechanism_Circular_Saw_Powering_Stereo.wav" by Nox_Sound
 
-Proposed (round 64), cut from the HQ previews by `tools/concept/audio/sfx_r64.py`.
+Rejected (round 64, S.5 ab picked), cut from the HQ previews by `tools/concept/audio/sfx_r64.py`.
 Source: <https://freesound.org/people/Nox_Sound/sounds/554366/> (Foley_Mechanism_Circular_Saw_Powering_Stereo.wav by Nox_Sound, CC0 1.0).
 Use: each Buzzsaw's 0.6 s spin-up tell before a dash (0.8 s on easy, 0.5 s on hard; the blades speed up and the gold rim flickers red); a group staggers its tells 0.4 s apart.
 Brief: the saw's whine rising sharply to a scream: the machine spinning up, ending on the loop's pitch (the a/b should match the whine's); a real recording, heavy, nothing bubbly or popping.
 This one: the circular saw (the whine b) glided from 0.3 to 0.85 speed and swelling: a thinner 'wheeeEEE' rising to a shriek, 0.6 s.
 Edit: 0.61 s, the loudest 100 ms band −31.5 dB, peak −12.9 dBFS, −24.3 LUFS.
 
+### saw-spinup-r64-ab — "9in Angle Grinder" by jameswrowles
+
+Chosen (round 64, S.5 b's shape with S.4 a's grinder), cut from the HQ preview by `tools/concept/audio/sfx_r64.py saw-spinup-r64-ab`.
+Source: <https://freesound.org/people/jameswrowles/sounds/516593/> (9in Angle Grinder by jameswrowles, CC0 1.0).
+Use: each Buzzsaw's 0.6 s spin-up tell before a dash.
+Brief: the user picked b's spin-up (its whine's recording glided up) with the grinder loop (S.4 a), so b's shape on the grinder's recording, ending on the loop's pitch.
+This one: the angle grinder glided from 0.3 up to 1.0 speed, swelling, high-passed at 100 Hz and low-passed at 7 kHz as b: a thinner 'wheeeEEE' than a that ends on the grinder's whine, 0.6 s.
+Edit: 0.61 s, the loudest 100 ms band −26.4 dB, peak −14.4 dBFS, −25.3 LUFS.
+
 ### saw-ricochet-r64-a — "METLFric-Circular Saw Blade, Scrape on Concrete_02_With Impact_RG_2023_NTG4" by Riley_Garinger
 
-Proposed (round 64), cut from the HQ previews by `tools/concept/audio/sfx_r64.py`.
+Chosen (round 64, S.6 a picked), cut from the HQ previews by `tools/concept/audio/sfx_r64.py`.
 Source: <https://freesound.org/people/Riley_Garinger/sounds/720829/> (METLFric-Circular Saw Blade, Scrape on Concrete_02_With Impact_RG_2023_NTG4 by Riley_Garinger, CC-BY 4.0).
 Use: a Buzzsaw's dash bouncing off a big drifting rock or the field's edge (up to 3 bounces a dash, 2 on easy; small rocks are smashed instead and play their own break).
 Brief: a metal scrape-clang: the spinning blade striking stone and skidding off; a real recording, heavy, nothing bubbly or popping.
@@ -5627,7 +5636,7 @@ Edit: 0.55 s, the loudest 100 ms band −27.4 dB, peak −16.9 dBFS, −25.2 LUF
 
 ### saw-ricochet-r64-b — "METLImpt_Metal Resonant Scrape Impact_SDFY_Metal Resonant.wav" by SoundDesignForYou
 
-Proposed (round 64), cut from the HQ previews by `tools/concept/audio/sfx_r64.py`.
+Rejected (round 64, S.6 a picked), cut from the HQ previews by `tools/concept/audio/sfx_r64.py`.
 Source: <https://freesound.org/people/SoundDesignForYou/sounds/697758/> (METLImpt_Metal Resonant Scrape Impact_SDFY_Metal Resonant.wav by SoundDesignForYou, CC0 1.0).
 Use: a Buzzsaw's dash bouncing off a big drifting rock or the field's edge (up to 3 bounces a dash, 2 on easy; small rocks are smashed instead and play their own break).
 Brief: a metal scrape-clang: the spinning blade striking stone and skidding off; a real recording, heavy, nothing bubbly or popping.
@@ -5636,7 +5645,7 @@ Edit: 0.60 s, the loudest 100 ms band −27.4 dB, peak −11.5 dBFS, −24.4 LUF
 
 ### tug-hit-r64-a — "HUTCH HD SFX 2014 0143" by leonelmail + "metal crank groan.flac" by kyles
 
-Proposed (round 64), cut from the HQ previews by `tools/concept/audio/sfx_r64.py`.
+Rejected (round 64, S.7 b picked), cut from the HQ previews by `tools/concept/audio/sfx_r64.py`.
 Sources: <https://freesound.org/people/leonelmail/sounds/462819/> (HUTCH HD SFX 2014 0143 by leonelmail, CC0 1.0), <https://freesound.org/people/kyles/sounds/453333/> (metal crank groan.flac by kyles, CC0 1.0).
 Use: each hit on one of the tug's three sections (a Hornet missile bursting on it, a Dart diving it, a Shard link dragged across it), throttled to once per 0.2 s; the HUD's section bar flashes white.
 Brief: a heavy hull impact: metal struck hard with a groan, big and hollow (a ship's hull, not a tin can); a real recording, heavy, nothing bubbly or popping.
@@ -5645,7 +5654,7 @@ Edit: 0.70 s, the loudest 100 ms band −25.0 dB, peak −7.8 dBFS, −23.0 LUFS
 
 ### tug-hit-r64-b — "Kicking_Dumpster.wav" by kmyers1316 + "cemeterygate15.aif" by celadon_noise
 
-Proposed (round 64), cut from the HQ previews by `tools/concept/audio/sfx_r64.py`.
+Chosen (round 64, S.7 b picked), cut from the HQ previews by `tools/concept/audio/sfx_r64.py`.
 Sources: <https://freesound.org/people/kmyers1316/sounds/344592/> (Kicking_Dumpster.wav by kmyers1316, CC0 1.0), <https://freesound.org/people/celadon_noise/sounds/399450/> (cemeterygate15.aif by celadon_noise, CC0 1.0).
 Use: each hit on one of the tug's three sections (a Hornet missile bursting on it, a Dart diving it, a Shard link dragged across it), throttled to once per 0.2 s; the HUD's section bar flashes white.
 Brief: a heavy hull impact: metal struck hard with a groan, big and hollow (a ship's hull, not a tin can); a real recording, heavy, nothing bubbly or popping.
@@ -5654,7 +5663,7 @@ Edit: 0.70 s, the loudest 100 ms band −25.1 dB, peak −15.4 dBFS, −25.8 LUF
 
 ### tug-alarm-r64-a — "Factory Warning Buzzer" by qubodup
 
-Proposed (round 64), cut from the HQ previews by `tools/concept/audio/sfx_r64.py`.
+Chosen (round 64, S.8 a picked), cut from the HQ previews by `tools/concept/audio/sfx_r64.py`.
 Source: <https://freesound.org/people/qubodup/sounds/832414/> (Factory Warning Buzzer by qubodup, CC0 1.0).
 Use: a tug section falling below 50 % (it starts to smoke) and again when it is lost (with the loss below): up to six times a level; over the music, with the radio's `first-ally-hit` / `ally-lost` line.
 Brief: a klaxon burst: a ship's alarm, two blasts; distinct from Level 29's station klaxon (concept/station-klaxon-r62-a.ogg). The relay's chosen integrity alarm (concept/integrity-alarm-r35-a.ogg, the same 'an ally is hurt' event, kept in round 47) is the third option; a real recording, heavy, nothing bubbly or popping.
@@ -5663,7 +5672,7 @@ Edit: 2.10 s, the loudest 100 ms band −23.0 dB, peak −12.4 dBFS, −20.1 LUF
 
 ### tug-alarm-r64-b — "120616 Boat horn, harbour tour, NYC.flac" by TRP
 
-Proposed (round 64), cut from the HQ previews by `tools/concept/audio/sfx_r64.py`.
+Rejected (round 64, S.8 a picked), cut from the HQ previews by `tools/concept/audio/sfx_r64.py`.
 Source: <https://freesound.org/people/TRP/sounds/577494/> (120616 Boat horn, harbour tour, NYC.flac by TRP, CC0 1.0).
 Use: a tug section falling below 50 % (it starts to smoke) and again when it is lost (with the loss below): up to six times a level; over the music, with the radio's `first-ally-hit` / `ally-lost` line.
 Brief: a klaxon burst: a ship's alarm, two blasts; distinct from Level 29's station klaxon (concept/station-klaxon-r62-a.ogg). The relay's chosen integrity alarm (concept/integrity-alarm-r35-a.ogg, the same 'an ally is hurt' event, kept in round 47) is the third option; a real recording, heavy, nothing bubbly or popping.
@@ -5672,7 +5681,7 @@ Edit: 1.65 s, the loudest 100 ms band −22.0 dB, peak −12.5 dBFS, −21.9 LUF
 
 ### tug-lost-r64-a — "Big Structure Collision Heard from Inside" by Osvoldon + "designed metal shearing, ripping.wav" by vestibule-door + "Fire Burst.wav" by SilverIllusionist
 
-Proposed (round 64), cut from the HQ previews by `tools/concept/audio/sfx_r64.py`.
+Chosen (round 64, S.9 a picked), cut from the HQ previews by `tools/concept/audio/sfx_r64.py`.
 Sources: <https://freesound.org/people/Osvoldon/sounds/653294/> (Big Structure Collision Heard from Inside by Osvoldon, CC0 1.0), <https://freesound.org/people/vestibule-door/sounds/669692/> (designed metal shearing, ripping.wav by vestibule-door, CC0 1.0), <https://freesound.org/people/SilverIllusionist/sounds/472688/> (Fire Burst.wav by SilverIllusionist, CC-BY 4.0).
 Use: a tug section lost (its lights go out, a short fire flare, then it vents): up to three times a level, with the alarm above; the third loss breaks the hull and fails the escort.
 Brief: a structural failure: tearing metal and a fire flare's roar; heavy, no pop; a real recording, heavy, nothing bubbly or popping.
@@ -5681,7 +5690,7 @@ Edit: 1.80 s, the loudest 100 ms band −23.1 dB, peak −5.8 dBFS, −19.1 LUFS
 
 ### tug-lost-r64-b — "Kicking_Dumpster.wav" by kmyers1316 + "designed metal shearing, ripping.wav" by vestibule-door + "TF_Flame.flac" by copyc4t
 
-Proposed (round 64), cut from the HQ previews by `tools/concept/audio/sfx_r64.py`.
+Rejected (round 64, S.9 a picked), cut from the HQ previews by `tools/concept/audio/sfx_r64.py`.
 Sources: <https://freesound.org/people/kmyers1316/sounds/344592/> (Kicking_Dumpster.wav by kmyers1316, CC0 1.0), <https://freesound.org/people/vestibule-door/sounds/669692/> (designed metal shearing, ripping.wav by vestibule-door, CC0 1.0), <https://freesound.org/people/copyc4t/sounds/235731/> (TF_Flame.flac by copyc4t, CC-BY 4.0).
 Use: a tug section lost (its lights go out, a short fire flare, then it vents): up to three times a level, with the alarm above; the third loss breaks the hull and fails the escort.
 Brief: a structural failure: tearing metal and a fire flare's roar; heavy, no pop; a real recording, heavy, nothing bubbly or popping.
@@ -5690,7 +5699,7 @@ Edit: 1.70 s, the loudest 100 ms band −21.8 dB, peak −7.7 dBFS, −19.1 LUFS
 
 ### tug-engine-r64-a — "Engine Train Idle" by Wakerone
 
-Proposed (round 64), cut from the HQ previews by `tools/concept/audio/sfx_r64.py`.
+Chosen (round 64, S.10 a picked), cut from the HQ previews by `tools/concept/audio/sfx_r64.py`.
 Source: <https://freesound.org/people/Wakerone/sounds/417553/> (Engine Train Idle by Wakerone, CC0 1.0).
 Use: Level 31: a layer over the `belt-open` bed while the tug's engines section lives (it stops when the engines are lost), from the tug's rise into its station until its climb-out.
 Brief: a huge mining machine's low drive rumble, a diesel-electric thrum heard through the hull; seamless, steady, under everything; a real recording, heavy, nothing bubbly or popping.
@@ -5699,7 +5708,7 @@ Edit: 8.00 s, band RMS −38.1 dB, peak −22.3 dBFS, −33.9 LUFS.
 
 ### tug-engine-r64-b — "Diesel Locomotive V16 GE Engine Idling (Loop)" by WeenyBeany + "Engine-Room-door-018.wav" by Astounded
 
-Proposed (round 64), cut from the HQ previews by `tools/concept/audio/sfx_r64.py`.
+Rejected (round 64, S.10 a picked), cut from the HQ previews by `tools/concept/audio/sfx_r64.py`.
 Sources: <https://freesound.org/people/WeenyBeany/sounds/773336/> (Diesel Locomotive V16 GE Engine Idling (Loop) by WeenyBeany, CC-BY 4.0), <https://freesound.org/people/Astounded/sounds/520807/> (Engine-Room-door-018.wav by Astounded, CC-BY 4.0).
 Use: Level 31: a layer over the `belt-open` bed while the tug's engines section lives (it stops when the engines are lost), from the tug's rise into its station until its climb-out.
 Brief: a huge mining machine's low drive rumble, a diesel-electric thrum heard through the hull; seamless, steady, under everything; a real recording, heavy, nothing bubbly or popping.
@@ -5708,7 +5717,7 @@ Edit: 6.00 s, band RMS −38.0 dB, peak −26.2 dBFS, −35.2 LUFS.
 
 ### serpent-rumble-r64-a — "electric train engine sound effect" by Garuda1982 + "TTC - Subway Ride, Union to Dundas, Ambience - Toronto, Canada" by Podel1
 
-Proposed (round 64), cut from the HQ previews by `tools/concept/audio/sfx_r64.py`.
+Chosen (round 64, S.11 a picked), cut from the HQ previews by `tools/concept/audio/sfx_r64.py`.
 Sources: <https://freesound.org/people/Garuda1982/sounds/559381/> (electric train engine sound effect by Garuda1982, CC-BY 4.0), <https://freesound.org/people/Podel1/sounds/736492/> (TTC - Subway Ride, Union to Dundas, Ambience - Toronto, Canada by Podel1, CC-BY 4.0).
 Use: one loop while a Rail Serpent is on the screen, for the nearest (the Act 3 rule: once per kind); Level 30 and later Act 5 levels.
 Brief: a heavy rail car's rumble with a rhythmic coupling clatter (a real train), under the fire, seamless; this redo is to carry the engine's electric whine, which neither round-63 loop had; a real recording, heavy, nothing bubbly or popping.
@@ -5717,9 +5726,644 @@ Edit: 6.00 s, band RMS −34.7 dB, peak −16.4 dBFS, −29.1 LUFS.
 
 ### serpent-rumble-r64-b — "Moscow monorail_Interior.WAV" by softwalls + "TTC - Subway Ride, Union to Dundas, Ambience - Toronto, Canada" by Podel1
 
-Proposed (round 64), cut from the HQ previews by `tools/concept/audio/sfx_r64.py`.
+Rejected (round 64, S.11 a picked), cut from the HQ previews by `tools/concept/audio/sfx_r64.py`.
 Sources: <https://freesound.org/people/softwalls/sounds/384528/> (Moscow monorail_Interior.WAV by softwalls, CC0 1.0), <https://freesound.org/people/Podel1/sounds/736492/> (TTC - Subway Ride, Union to Dundas, Ambience - Toronto, Canada by Podel1, CC-BY 4.0).
 Use: one loop while a Rail Serpent is on the screen, for the nearest (the Act 3 rule: once per kind); Level 30 and later Act 5 levels.
 Brief: a heavy rail car's rumble with a rhythmic coupling clatter (a real train), under the fire, seamless; this redo is to carry the engine's electric whine, which neither round-63 loop had; a real recording, heavy, nothing bubbly or popping.
 This one: a monorail car's low electric drone (slowed to 0.8) with the soft thumps of a subway car over the rail joints, low-passed to 900 Hz: a hum and a faint rhythmic thud, no clatter and no whine, 6.0 s loop.
 Edit: 6.00 s, band RMS −35.0 dB, peak −14.4 dBFS, −29.0 LUFS.
+
+## Concept round 65, step AUD-E (Level 32: the Sentinel Tower's charge, beam, head turn and death, the Strider's step, torso servo, twin cannons, leg snap and fall, the blast door's grind and the mining charge's blast)
+
+Generator: `tools/concept/audio/sfx_r65.py` (cut from the Freesound HQ previews; nothing synthesized). Not proposed again: the tunnel bed (round 60 S.19 a), the furnace roar (Level 19's foundry bed, vent tell and burst), the SAM Nest's hatch, lock and salvo (round 62), the shared homing launch (the Strider's pod). Not listened to by Claude: checked by level, peaks, onsets, spectra and the loop seams. Passed over (read in their descriptions): designed or synthesized "robot", "laser charge" and "power up" sounds of the searches (Artninja's TF-inspired footsteps, magnuswaker's laser charge-ups, DAN2008's "Charged up", the sci-fi cannons).
+
+### sentinel-charge-r65-a — "Device powering up.wav" by spoonsandlessspoons + "ELECSprk_Electrical Discharges With Sparking.Steady 2_EM.mp3" by newlocknew
+
+Proposed (round 65), cut from the HQ previews by `tools/concept/audio/sfx_r65.py`.
+Sources: <https://freesound.org/people/spoonsandlessspoons/sounds/361339/> (Device powering up.wav by spoonsandlessspoons, CC-BY 4.0), <https://freesound.org/people/newlocknew/sounds/702908/> (ELECSprk_Electrical Discharges With Sparking.Steady 2_EM.mp3 by newlocknew, CC-BY 4.0).
+Use: each Sentinel sweep's telegraph (Level 32's side galleries; at most 2 towers sweeping at once): the 0.8 s arc telegraph (the crimson arc drawn), and from 0.2 s into the full turn's 1.0 s telegraph (the reach ring drawn first); the live beam's loop follows at its end.
+Brief: a rising electrical hum: a transformer or a capacitor bank charging, building to the beam; distinct from the rail line's chosen charge (concept/rail-charge-r60-b.ogg, a rising whine); a real recording, heavy, nothing bubbly or popping.
+This one: a machine powering up, its 40 Hz hum glided up from 1.5 to 3 times its speed, with an electric discharge's crackle swelling in over its last half: a low 'mmmMMMM' rising into a fizz, 0.8 s.
+Edit: 0.80 s, the loudest 100 ms band −29.1 dB, peak −12.8 dBFS, −26.2 LUFS.
+
+### sentinel-charge-r65-b — "Gym Lights Powering Up" by OBXJohn
+
+Proposed (round 65), cut from the HQ previews by `tools/concept/audio/sfx_r65.py`.
+Source: <https://freesound.org/people/OBXJohn/sounds/262510/> (Gym Lights Powering Up by OBXJohn, CC0 1.0).
+Use: each Sentinel sweep's telegraph (Level 32's side galleries; at most 2 towers sweeping at once): the 0.8 s arc telegraph (the crimson arc drawn), and from 0.2 s into the full turn's 1.0 s telegraph (the reach ring drawn first); the live beam's loop follows at its end.
+Brief: a rising electrical hum: a transformer or a capacitor bank charging, building to the beam; distinct from the rail line's chosen charge (concept/rail-charge-r60-b.ogg, a rising whine); a real recording, heavy, nothing bubbly or popping.
+This one: a gym's metal-halide lights powering up: their ballasts' 120 Hz hum gliding up and swelling into the lamps' strike at its end: a buzzier, more mains-like 'bzzzZZT' than a, 0.8 s.
+Edit: 0.80 s, the loudest 100 ms band −29.9 dB, peak −16.5 dBFS, −25.3 LUFS.
+
+### sentinel-beam-r65-a — "welder 2.wav" by SpeedY
+
+Proposed (round 65), cut from the HQ previews by `tools/concept/audio/sfx_r65.py`.
+Source: <https://freesound.org/people/SpeedY/sounds/62923/> (welder 2.wav by SpeedY, CC0 1.0).
+Use: one loop while a Sentinel's beam sweeps (1.6 s an arc, 3.0 s a full turn; the nearest tower when two sweep), panned to the tower; cut at once when the EMP stuns it.
+Brief: a harsh sizzle: an arc welder or an electric arc, raw and steady, under the fire; not the Mantis's sweep (concept/enemy-mantis-sweep-r23-b.ogg); a real recording, heavy, nothing bubbly or popping.
+This one: a stick welder's arc burning steadily: a harsh frying sizzle over its 100 Hz buzz, 3.0 s loop.
+Edit: 3.00 s, band RMS −34.0 dB, peak −15.6 dBFS, −29.2 LUFS.
+
+### sentinel-beam-r65-b — "ELECSprk_Electrical Discharges With Sparking.Steady 2_EM.mp3" by newlocknew
+
+Proposed (round 65), cut from the HQ previews by `tools/concept/audio/sfx_r65.py`.
+Source: <https://freesound.org/people/newlocknew/sounds/702908/> (ELECSprk_Electrical Discharges With Sparking.Steady 2_EM.mp3 by newlocknew, CC-BY 4.0).
+Use: one loop while a Sentinel's beam sweeps (1.6 s an arc, 3.0 s a full turn; the nearest tower when two sweep), panned to the tower; cut at once when the EMP stuns it.
+Brief: a harsh sizzle: an arc welder or an electric arc, raw and steady, under the fire; not the Mantis's sweep (concept/enemy-mantis-sweep-r23-b.ogg); a real recording, heavy, nothing bubbly or popping.
+This one: a steady high-voltage discharge sparking: a brighter, crackling sizzle than a with less buzz under it, 3.0 s loop.
+Edit: 3.00 s, band RMS −41.0 dB, peak −22.2 dBFS, −29.3 LUFS.
+
+### sentinel-servo-r65-a — "Running Gear" by Vurca
+
+Proposed (round 65), cut from the HQ previews by `tools/concept/audio/sfx_r65.py`.
+Source: <https://freesound.org/people/Vurca/sounds/315753/> (Running Gear by Vurca, CC0 1.0).
+Use: under the beam while a Sentinel's head turns with it (its sweeps: the arc's 1.6 s and the full turn's 3.0 s), quieter than the beam; the game may pitch it down for the full turn.
+Brief: a low servo grind: a heavy turret's gear motor turning, steady; a real recording, heavy, nothing bubbly or popping.
+This one: a running gear train slowed to 0.7: a low, even mechanical grind with a gear whine, 2.0 s loop.
+Edit: 2.00 s, band RMS −39.1 dB, peak −18.5 dBFS, −35.1 LUFS.
+
+### sentinel-servo-r65-b — "Stripped Gears in VAV Box" by itickets
+
+Proposed (round 65), cut from the HQ previews by `tools/concept/audio/sfx_r65.py`.
+Source: <https://freesound.org/people/itickets/sounds/490919/> (Stripped Gears in VAV Box by itickets, CC0 1.0).
+Use: under the beam while a Sentinel's head turns with it (its sweeps: the arc's 1.6 s and the full turn's 3.0 s), quieter than the beam; the game may pitch it down for the full turn.
+Brief: a low servo grind: a heavy turret's gear motor turning, steady; a real recording, heavy, nothing bubbly or popping.
+This one: stripped gears grinding in a ventilation box, slowed to 0.8: a rougher, rattling grind than a, 2.0 s loop.
+Edit: 2.00 s, band RMS −39.1 dB, peak −25.6 dBFS, −35.5 LUFS.
+
+### sentinel-death-r65-a — "Big Structure Collision Heard from Inside" by Osvoldon + "Scrap metal dropping / crashing" by SamsterBirdies + "snd_metal_smash.wav" by gristi
+
+Proposed (round 65), cut from the HQ previews by `tools/concept/audio/sfx_r65.py`.
+Sources: <https://freesound.org/people/Osvoldon/sounds/653294/> (Big Structure Collision Heard from Inside by Osvoldon, CC0 1.0), <https://freesound.org/people/SamsterBirdies/sounds/587443/> (Scrap metal dropping / crashing by SamsterBirdies, CC0 1.0), <https://freesound.org/people/gristi/sounds/562198/> (snd_metal_smash.wav by gristi, CC0 1.0).
+Use: a Sentinel destroyed (four in Level 32; `TOWERS DOWN` counts them), over its `medium` ground explosion: the head topples off and the scorched stump stays.
+Brief: a heavy metal crash with the head falling: a structure breaking, then the head's smaller clattering impact; a real recording, heavy, nothing bubbly or popping.
+This one: a massive structure's collision heard from inside with scrap metal crashing over it, then a metal smash 0.5 s later (the head landing): 'KRRASH ... klang', 1.2 s.
+Edit: 1.20 s, the loudest 100 ms band −23.3 dB, peak −4.0 dBFS, −17.4 LUFS.
+
+### sentinel-death-r65-b — "Kicking_Dumpster.wav" by kmyers1316 + "metal-impact" by JeffPearson
+
+Proposed (round 65), cut from the HQ previews by `tools/concept/audio/sfx_r65.py`.
+Sources: <https://freesound.org/people/kmyers1316/sounds/344592/> (Kicking_Dumpster.wav by kmyers1316, CC0 1.0), <https://freesound.org/people/JeffPearson/sounds/850040/> (metal-impact by JeffPearson, CC0 1.0).
+Use: a Sentinel destroyed (four in Level 32; `TOWERS DOWN` counts them), over its `medium` ground explosion: the head topples off and the scorched stump stays.
+Brief: a heavy metal crash with the head falling: a structure breaking, then the head's smaller clattering impact; a real recording, heavy, nothing bubbly or popping.
+This one: a kicked steel dumpster slowed to 0.6, then a resonant metal impact ringing 0.4 s later (the head): a duller 'DOOMF' with a long bell-like 'dongg' after it, 1.3 s.
+Edit: 1.30 s, the loudest 100 ms band −19.0 dB, peak −9.0 dBFS, −21.3 LUFS.
+
+### strider-step-r65-a — "Big robot footstep 002" by AudioPapkin + "Hydraulic Hiss, TTC bus door" by OttisG
+
+Proposed (round 65), cut from the HQ previews by `tools/concept/audio/sfx_r65.py`.
+Sources: <https://freesound.org/people/AudioPapkin/sounds/813053/> (Big robot footstep 002 by AudioPapkin, CC0 1.0), <https://freesound.org/people/OttisG/sounds/852991/> (Hydraulic Hiss, TTC bus door by OttisG, CC-BY 4.0).
+Use: each footfall of a walking Strider (Level 32's tunnel floors, in pairs: at most two walking; 32 px/s, an 8-frame walk cycle, two footfalls a cycle), throttled so a pair does not drown the music.
+Brief: a heavy metal stomp with a short hydraulic hiss (a hydraulic press or a car lift); smaller than the Revenant Walker's chosen stride (concept/walker-stomp-r46-a.ogg); a real recording, heavy, nothing bubbly or popping.
+This one: the Revenant Walker's chosen stride made smaller: the same big robot footstep and bus door's hydraulic hiss, sped to 1.25 (higher and shorter): 'KLUMP-tsss', 0.8 s.
+Edit: 0.80 s, the loudest 100 ms band −27.1 dB, peak −12.0 dBFS, −22.4 LUFS.
+
+### strider-step-r65-b — "big metallic robot footsteps" by gladkiy + "Air (or steam) pressure release" by brunoboselli
+
+Proposed (round 65), cut from the HQ previews by `tools/concept/audio/sfx_r65.py`.
+Sources: <https://freesound.org/people/gladkiy/sounds/342235/> (big metallic robot footsteps by gladkiy, CC0 1.0), <https://freesound.org/people/brunoboselli/sounds/457294/> (Air (or steam) pressure release by brunoboselli, CC0 1.0).
+Use: each footfall of a walking Strider (Level 32's tunnel floors, in pairs: at most two walking; 32 px/s, an 8-frame walk cycle, two footfalls a cycle), throttled so a pair does not drown the music.
+Brief: a heavy metal stomp with a short hydraulic hiss (a hydraulic press or a car lift); smaller than the Revenant Walker's chosen stride (concept/walker-stomp-r46-a.ogg); a real recording, heavy, nothing bubbly or popping.
+This one: a big metal footstep (sped to 1.1) with an air pressure release's short hiss: a clangier, deeper thud than a with a sharper 'pssh', 0.75 s.
+Edit: 0.75 s, the loudest 100 ms band −27.0 dB, peak −11.0 dBFS, −23.1 LUFS.
+
+### strider-servo-r65-a — "ELECTRIC_MOTOR.aif" by jacobsteel
+
+Proposed (round 65), cut from the HQ previews by `tools/concept/audio/sfx_r65.py`.
+Source: <https://freesound.org/people/jacobsteel/sounds/336665/> (ELECTRIC_MOTOR.aif by jacobsteel, CC-BY 4.0).
+Use: the Strider's torso twisting toward the ship to fire (32 angles), as it starts a turn; throttled to once per 0.5 s a Strider (it turns often).
+Brief: a servo whine: an electric motor driving the torso round, short and mechanical; a real recording, heavy, nothing bubbly or popping.
+This one: an electric motor's whine glided up from 0.75 to its own speed: a gritty, mid 'vwiiir', 0.5 s.
+Edit: 0.50 s, the loudest 100 ms band −32.0 dB, peak −22.2 dBFS, −28.8 LUFS.
+
+### strider-servo-r65-b — "ServoMotor.wav" by derjuli
+
+Proposed (round 65), cut from the HQ previews by `tools/concept/audio/sfx_r65.py`.
+Source: <https://freesound.org/people/derjuli/sounds/824121/> (ServoMotor.wav by derjuli, CC0 1.0).
+Use: the Strider's torso twisting toward the ship to fire (32 angles), as it starts a turn; throttled to once per 0.5 s a Strider (it turns often).
+Brief: a servo whine: an electric motor driving the torso round, short and mechanical; a real recording, heavy, nothing bubbly or popping.
+This one: a servo motor slowed to 0.5: a cleaner, higher and thinner 'eeeee' than a, 0.5 s.
+Edit: 0.50 s, the loudest 100 ms band −35.0 dB, peak −21.4 dBFS, −28.6 LUFS.
+
+### strider-cannon-r65-a — "Autocannon Shot 1" by qubodup + "Autocannon Shot 2" by qubodup
+
+Proposed (round 65), cut from the HQ previews by `tools/concept/audio/sfx_r65.py`.
+Sources: <https://freesound.org/people/qubodup/sounds/854183/> (Autocannon Shot 1 by qubodup, CC0 1.0), <https://freesound.org/people/qubodup/sounds/854184/> (Autocannon Shot 2 by qubodup, CC0 1.0).
+Use: each fan of the Strider's twin cannons (3 shots 12° apart, every 2.4 s; easy 3.0 s, hard a fan of 5 every 2.0 s), after the torso's 0.3 s hold; the shoulder pod's homing salvo plays the shared homing launch.
+Brief: a deep double gunshot: two heavy cannons firing as one doubled boom; a real recording, heavy, nothing bubbly or popping.
+This one: two autocannon shots slowed to 0.85, 70 ms apart: a hard, cracking 'BA-DAM', 0.67 s.
+Edit: 0.67 s, the loudest 100 ms band −22.2 dB, peak −11.4 dBFS, −22.6 LUFS.
+
+### strider-cannon-r65-b — "Howitzer Artillery Gun Shot Sound Effect 01" by qubodup + "Howitzer Artillery Gun Shot Sound Effect 02" by qubodup
+
+Proposed (round 65), cut from the HQ previews by `tools/concept/audio/sfx_r65.py`.
+Sources: <https://freesound.org/people/qubodup/sounds/161343/> (Howitzer Artillery Gun Shot Sound Effect 01 by qubodup, CC0 1.0), <https://freesound.org/people/qubodup/sounds/161342/> (Howitzer Artillery Gun Shot Sound Effect 02 by qubodup, CC0 1.0).
+Use: each fan of the Strider's twin cannons (3 shots 12° apart, every 2.4 s; easy 3.0 s, hard a fan of 5 every 2.0 s), after the torso's 0.3 s hold; the shoulder pod's homing salvo plays the shared homing launch.
+Brief: a deep double gunshot: two heavy cannons firing as one doubled boom; a real recording, heavy, nothing bubbly or popping.
+This one: two howitzer shots sped to 1.3, 80 ms apart: a deeper, boomier 'BOOM-BOOM' than a, less crack, 0.68 s.
+Edit: 0.68 s, the loudest 100 ms band −22.3 dB, peak −12.0 dBFS, −21.1 LUFS.
+
+### strider-snap-r65-a — "snd_metal_smash.wav" by gristi + "Power Spark" by qubodup
+
+Proposed (round 65), cut from the HQ previews by `tools/concept/audio/sfx_r65.py`.
+Sources: <https://freesound.org/people/gristi/sounds/562198/> (snd_metal_smash.wav by gristi, CC0 1.0), <https://freesound.org/people/qubodup/sounds/442670/> (Power Spark by qubodup, CC-BY 4.0).
+Use: a Strider's leg destroyed (80 HP; it sparks at the knee and the stagger starts); the fall below follows at once.
+Brief: a metal snap with sparks: a load-bearing strut breaking, dry and sharp; no pop; a real recording, heavy, nothing bubbly or popping.
+This one: a metal smash with an electric power spark crackling under its tail: a bright 'KSHANG-tssk', 0.54 s.
+Edit: 0.56 s, the loudest 100 ms band −23.5 dB, peak −10.6 dBFS, −20.1 LUFS.
+
+### strider-snap-r65-b — "Breaking lock.aif" by MAJ061785 + "CircuitBreaker_02" by Wavewire
+
+Proposed (round 65), cut from the HQ previews by `tools/concept/audio/sfx_r65.py`.
+Sources: <https://freesound.org/people/MAJ061785/sounds/85533/> (Breaking lock.aif by MAJ061785, CC-BY 3.0), <https://freesound.org/people/Wavewire/sounds/855099/> (CircuitBreaker_02 by Wavewire, CC-BY 4.0).
+Use: a Strider's leg destroyed (80 HP; it sparks at the knee and the stagger starts); the fall below follows at once.
+Brief: a metal snap with sparks: a load-bearing strut breaking, dry and sharp; no pop; a real recording, heavy, nothing bubbly or popping.
+This one: a lock breaking (slowed to 0.8) with a circuit breaker's arc snapping: a tighter, lower 'KRAK-zt' than a, 0.4 s.
+Edit: 0.40 s, the loudest 100 ms band −21.2 dB, peak −4.0 dBFS, −inf LUFS.
+
+### strider-fall-r65-a — "Metallic Groan" by hinchinbrook + "Big Structure Collision Heard from Inside" by Osvoldon + "Scrap metal dropping / crashing" by SamsterBirdies
+
+Proposed (round 65), cut from the HQ previews by `tools/concept/audio/sfx_r65.py`.
+Sources: <https://freesound.org/people/hinchinbrook/sounds/496836/> (Metallic Groan by hinchinbrook, CC0 1.0), <https://freesound.org/people/Osvoldon/sounds/653294/> (Big Structure Collision Heard from Inside by Osvoldon, CC0 1.0), <https://freesound.org/people/SamsterBirdies/sounds/587443/> (Scrap metal dropping / crashing by SamsterBirdies, CC0 1.0).
+Use: a Strider's topple, played at the leg's loss: the 0.6 s stagger and the 0.8 s fall, the crash landing at 1.4 s with the crush (the units it crushes play their own rungs).
+Brief: a long metal groan into a heavy crash and rumble: the hull tipping over and slamming down; its crash exactly 1.4 s in; a real recording, heavy, nothing bubbly or popping.
+This one: a metallic groan slowed to 0.75 swelling for 1.4 s, then a massive structure's collision heard from inside with scrap metal crashing over it, rolling out low: 'grrrooaaan-KRRASH-rrrmm', 3.2 s.
+Edit: 3.20 s, the loudest 100 ms band −20.0 dB, peak −6.7 dBFS, −20.5 LUFS.
+
+### strider-fall-r65-b — "Door_Metal_Groans_Ext.wav" by Cell31_Sound_Productions + "Kicking_Dumpster.wav" by kmyers1316 + "Scrap metal dropping / crashing" by SamsterBirdies + "Quake Short.wav" by TheMinkman
+
+Proposed (round 65), cut from the HQ previews by `tools/concept/audio/sfx_r65.py`.
+Sources: <https://freesound.org/people/Cell31_Sound_Productions/sounds/264014/> (Door_Metal_Groans_Ext.wav by Cell31_Sound_Productions, CC-BY 4.0), <https://freesound.org/people/kmyers1316/sounds/344592/> (Kicking_Dumpster.wav by kmyers1316, CC0 1.0), <https://freesound.org/people/SamsterBirdies/sounds/587443/> (Scrap metal dropping / crashing by SamsterBirdies, CC0 1.0), <https://freesound.org/people/TheMinkman/sounds/199803/> (Quake Short.wav by TheMinkman, CC0 1.0).
+Use: a Strider's topple, played at the leg's loss: the 0.6 s stagger and the 0.8 s fall, the crash landing at 1.4 s with the crush (the units it crushes play their own rungs).
+Brief: a long metal groan into a heavy crash and rumble: the hull tipping over and slamming down; its crash exactly 1.4 s in; a real recording, heavy, nothing bubbly or popping.
+This one: a heavy door's metal groan slowed to 0.8 for 1.4 s, then a kicked steel dumpster slowed to 0.5 with a scrap metal crash and an earthquake's rumble under it: a creakier groan and a longer, lower rumble than a, 3.25 s.
+Edit: 3.25 s, the loudest 100 ms band −20.1 dB, peak −8.2 dBFS, −22.6 LUFS.
+
+### door-grind-r65-a — "open rolling door 150328_0543 MS.wav" by klankbeeld + "HUTCH HD SFX 2014 0143" by leonelmail
+
+Proposed (round 65), cut from the HQ previews by `tools/concept/audio/sfx_r65.py`.
+Sources: <https://freesound.org/people/klankbeeld/sounds/315943/> (open rolling door 150328_0543 MS.wav by klankbeeld, CC-BY 4.0), <https://freesound.org/people/leonelmail/sounds/462819/> (HUTCH HD SFX 2014 0143 by leonelmail, CC0 1.0).
+Use: a blast door's lock destroyed (Level 32: the two richer channels' caches and the hall's secret): the door pair slides open and the cache's crate floats out; three times a level at most.
+Brief: a heavy door grinding open on rails, a deep clunk as it stops; a real recording, heavy, nothing bubbly or popping.
+This one: an industrial rolling door opening, slowed to 0.85, then a deep hollow metal impact as it stops: a low rumbling 'rrrrrrRRR-DOMM', 2.05 s.
+Edit: 2.05 s, the loudest 100 ms band −25.4 dB, peak −8.6 dBFS, −22.0 LUFS.
+
+### door-grind-r65-b — "KA_Warehouse_Creaking_Door_Roll_Open_ST" by Kristoffer_Andersson + "Mechanical Slide (aiff)" by steaq
+
+Proposed (round 65), cut from the HQ previews by `tools/concept/audio/sfx_r65.py`.
+Sources: <https://freesound.org/people/Kristoffer_Andersson/sounds/851264/> (KA_Warehouse_Creaking_Door_Roll_Open_ST by Kristoffer_Andersson, CC0 1.0), <https://freesound.org/people/steaq/sounds/144315/> (Mechanical Slide (aiff) by steaq, CC0 1.0).
+Use: a blast door's lock destroyed (Level 32: the two richer channels' caches and the hall's secret): the door pair slides open and the cache's crate floats out; three times a level at most.
+Brief: a heavy door grinding open on rails, a deep clunk as it stops; a real recording, heavy, nothing bubbly or popping.
+This one: a warehouse door creaking as it rolls open, slowed to 0.7, then a mechanical slide's thud: a screechier, more grinding 'skrrreeeek-THUNK' than a, 2.05 s.
+Edit: 2.05 s, the loudest 100 ms band −25.0 dB, peak −7.6 dBFS, −22.2 LUFS.
+
+### charge-blast-r65-a — "Quarry blasting.wav" by juskiddink + "Rocks hit.wav" by scarbelly25
+
+Proposed (round 65), cut from the HQ previews by `tools/concept/audio/sfx_r65.py`.
+Sources: <https://freesound.org/people/juskiddink/sounds/82682/> (Quarry blasting.wav by juskiddink, CC-BY 4.0), <https://freesound.org/people/scarbelly25/sounds/33940/> (Rocks hit.wav by scarbelly25, CC0 1.0).
+Use: a mining charge shot (1 hit): its 64 px burst (Level 32: 3 in each richer channel, 2 by the hall's SAM pair, 4 on the refinery's gantry; later Level 34); a charge does not set off another.
+Brief: a sharp quarry blast, the `medium` rung's weight with a rock crack in it; a real recording, heavy, nothing bubbly or popping.
+This one: a quarry blast recorded at the quarry, with rocks striking rock on its front: a deep 'BOOM' with a stony 'krak' in its attack, 1.4 s.
+Edit: 1.40 s, the loudest 100 ms band −18.3 dB, peak −3.3 dBFS, −18.3 LUFS.
+
+### charge-blast-r65-b — "120527 05 Dynamite 1.WAV" by Evan Cruder + "Cracking Earthquake (cracking soil, cracking stone)" by uagadugu
+
+Proposed (round 65), cut from the HQ previews by `tools/concept/audio/sfx_r65.py`.
+Sources: <https://freesound.org/people/Evan Cruder/sounds/160797/> (120527 05 Dynamite 1.WAV by Evan Cruder, CC0 1.0), <https://freesound.org/people/uagadugu/sounds/222521/> (Cracking Earthquake (cracking soil, cracking stone) by uagadugu, CC0 1.0).
+Use: a mining charge shot (1 hit): its 64 px burst (Level 32: 3 in each richer channel, 2 by the hall's SAM pair, 4 on the refinery's gantry; later Level 34); a charge does not set off another.
+Brief: a sharp quarry blast, the `medium` rung's weight with a rock crack in it; a real recording, heavy, nothing bubbly or popping.
+This one: a dynamite charge going off, with stone cracking under it: a sharper, drier blast than a with a longer crumbling crack, 1.4 s.
+Edit: 1.40 s, the loudest 100 ms band −18.2 dB, peak −3.0 dBFS, −16.5 LUFS.
+
+## Concept round 66, step AUD-F (Level 33: the Void Leech's latch, drain whine, latched hum, shake-off and death, the generator's brown-out warning, the Rail Bunker's death)
+
+Generator: `tools/concept/audio/sfx_r66.py` (cut from the Freesound HQ previews; the brown-out warning synthesized, the warnings' family). Not proposed again: the brown-out hum (round 60 S.10 a), the rail line's charge and shot (round 60 S.7 b, S.8 b), the hex shield's set (round 60), the open-space bed (round 60 S.18 a), the Talon (round 62). Not listened to by Claude: checked by level, peaks, onsets, spectra and the loop seams. Passed over (read in their descriptions): designed or synthesized "power down", "electro bomb" and sci-fi buzz sounds of the searches, wet insect crushes (the leech is dry), the transmission-line buzz and the pylon hum (already the Lamprey's drain, round 46).
+
+### leech-latch-r66-a — "staple_gun_02.wav" by movingplaid + "Leg vise - Clang" by ldezem
+
+Proposed (round 66), cut from the HQ previews by `tools/concept/audio/sfx_r66.py`.
+Sources: <https://freesound.org/people/movingplaid/sounds/88564/> (staple_gun_02.wav by movingplaid, CC-BY 4.0), <https://freesound.org/people/ldezem/sounds/386196/> (Leg vise - Clang by ldezem, CC0 1.0).
+Use: a Void Leech latching on the ship's hull (the left, right or tail spot; at most 3 latched, 2 on easy; Level 33's rear and side streams), panned to its spot; a leech latching on a prey Talon plays it quieter.
+Brief: a dry clamp: a heavy staple gun or a ratchet biting on metal; not the Lamprey's wet latch (concept/lamprey-latch-r34-a.ogg, a suck and bite): this one is dry and mechanical; a real recording, heavy, nothing bubbly or popping.
+This one: a heavy staple gun fired into metal, slowed to 0.75, a vise's clang faint under it: one hard dry 'TCHAK' with a short ring, 0.4 s.
+Edit: 0.41 s, the loudest 100 ms band −24.2 dB, peak −8.9 dBFS, −22.6 LUFS.
+
+### leech-latch-r66-b — "ratchet socket wrench tool" by AlaskaRobotics + "Chambering 1" by magnuswaker
+
+Proposed (round 66), cut from the HQ previews by `tools/concept/audio/sfx_r66.py`.
+Sources: <https://freesound.org/people/AlaskaRobotics/sounds/551497/> (ratchet socket wrench tool by AlaskaRobotics, CC0 1.0), <https://freesound.org/people/magnuswaker/sounds/523058/> (Chambering 1 by magnuswaker, CC0 1.0).
+Use: a Void Leech latching on the ship's hull (the left, right or tail spot; at most 3 latched, 2 on easy; Level 33's rear and side streams), panned to its spot; a leech latching on a prey Talon plays it quieter.
+Brief: a dry clamp: a heavy staple gun or a ratchet biting on metal; not the Lamprey's wet latch (concept/lamprey-latch-r34-a.ogg, a suck and bite): this one is dry and mechanical; a real recording, heavy, nothing bubbly or popping.
+This one: a socket wrench's ratchet slowed to 0.65 biting, then a rifle bolt's clack locking it: a two-stage 'krrrk-CHAK', busier and longer than a, 0.55 s.
+Edit: 0.54 s, the loudest 100 ms band −26.9 dB, peak −11.7 dBFS, −22.1 LUFS.
+
+### leech-drain-r66-a — "Angle grinder - Milwaukee 125mm - Stop 1 time" by ldezem
+
+Proposed (round 66), cut from the HQ previews by `tools/concept/audio/sfx_r66.py`.
+Source: <https://freesound.org/people/ldezem/sounds/386084/> (Angle grinder - Milwaukee 125mm - Stop 1 time by ldezem, CC0 1.0).
+Use: each leech starting to drain (with its latch: the generator's output −2 MW, stacking to −6): once per latch, from 0.1 s after the clamp; the latched hum below carries the drain after it.
+Brief: a falling electrical whine: a motor spinning down, the power being pulled out of the ship; a real recording, heavy, nothing bubbly or popping.
+This one: an angle grinder spinning down after its trigger is let go, glided from its own speed to 0.8: a gritty high whine falling 'vwiiiooow', 1.1 s.
+Edit: 1.10 s, the loudest 100 ms band −29.7 dB, peak −15.3 dBFS, −26.3 LUFS.
+
+### leech-drain-r66-b — "Electric motor engine start stop" by kentspublicdomain
+
+Proposed (round 66), cut from the HQ previews by `tools/concept/audio/sfx_r66.py`.
+Source: <https://freesound.org/people/kentspublicdomain/sounds/476943/> (Electric motor engine start stop by kentspublicdomain, CC0 1.0).
+Use: each leech starting to drain (with its latch: the generator's output −2 MW, stacking to −6): once per latch, from 0.1 s after the clamp; the latched hum below carries the drain after it.
+Brief: a falling electrical whine: a motor spinning down, the power being pulled out of the ship; a real recording, heavy, nothing bubbly or popping.
+This one: an electric motor stopping, sped from 1.4 to its own speed: a lower, smoother hum falling away 'mmmmooowm' than a, 1.0 s.
+Edit: 1.00 s, the loudest 100 ms band −28.0 dB, peak −17.8 dBFS, −27.7 LUFS.
+
+### leech-hum-r66-a — "Power Buzz SFX loop" by unfa
+
+Proposed (round 66), cut from the HQ previews by `tools/concept/audio/sfx_r66.py`.
+Source: <https://freesound.org/people/unfa/sounds/222676/> (Power Buzz SFX loop by unfa, CC0 1.0).
+Use: one loop while any leech is latched on the ship (not on a Talon), its level stepping with the latched count (the file is the three-leech level: one leech −6 dB, two −3 dB); under the brown-out hum when the load passes the output (concept/brownout-hum-r60-a.ogg, a transformer's sag), cut at once when the last leech is shaken off, killed or thrown off by the EMP.
+Brief: a low electrical hum, dry, the ship's power being sucked out; distinct from the brown-out hum and the Lamprey's drain (concept/lamprey-drain-r46-b.ogg, a Tesla coil's hum); a real recording, heavy, nothing bubbly or popping.
+This one: a mains power buzz (its 50 Hz fundamental filtered out, its raw harmonics from 150 Hz up kept), throbbing once a second with the leech's sac (dipping 5 dB between the beats): 'bzzZZ bzzZZ', 4.0 s loop.
+Edit: 4.00 s, band RMS −38.1 dB, peak −22.4 dBFS, −27.9 LUFS.
+
+### leech-hum-r66-b — "Foley_Mechanism_Light_Buzz_Short_Loop_Mono_DR05.wav" by Nox_Sound + "Hard-drive spin-up/spin-down" by SamsterBirdies
+
+Proposed (round 66), cut from the HQ previews by `tools/concept/audio/sfx_r66.py`.
+Sources: <https://freesound.org/people/Nox_Sound/sounds/553075/> (Foley_Mechanism_Light_Buzz_Short_Loop_Mono_DR05.wav by Nox_Sound, CC0 1.0), <https://freesound.org/people/SamsterBirdies/sounds/567609/> (Hard-drive spin-up/spin-down by SamsterBirdies, CC0 1.0).
+Use: one loop while any leech is latched on the ship (not on a Talon), its level stepping with the latched count (the file is the three-leech level: one leech −6 dB, two −3 dB); under the brown-out hum when the load passes the output (concept/brownout-hum-r60-a.ogg, a transformer's sag), cut at once when the last leech is shaken off, killed or thrown off by the EMP.
+Brief: a low electrical hum, dry, the ship's power being sucked out; distinct from the brown-out hum and the Lamprey's drain (concept/lamprey-drain-r46-b.ogg, a Tesla coil's hum); a real recording, heavy, nothing bubbly or popping.
+This one: a light fitting's buzz slowed to 0.8 over a hard drive's 120 Hz spin hum: a steady, thinner and higher 'zzzzz' than a, no throb, 4.0 s loop.
+Edit: 4.00 s, band RMS −33.0 dB, peak −20.4 dBFS, −29.6 LUFS.
+
+### leech-shake-r66-a — "metal plate scratch and hit" by Ridderick + "scratching metal with fingernails 01" by rubberduck9999
+
+Proposed (round 66), cut from the HQ previews by `tools/concept/audio/sfx_r66.py`.
+Sources: <https://freesound.org/people/Ridderick/sounds/707638/> (metal plate scratch and hit by Ridderick, CC0 1.0), <https://freesound.org/people/rubberduck9999/sounds/672951/> (scratching metal with fingernails 01 by rubberduck9999, CC0 1.0).
+Use: the shake-off (four reversals in 1.2 s) throwing every latched leech off at once, and the EMP throwing them off: once per throw, however many leeches.
+Brief: a scrape of claws on metal: the leeches torn off the hull; not the Lamprey's wet slap (concept/lamprey-shake-r34-a.ogg); a real recording, heavy, nothing bubbly or popping.
+This one: a metal plate knocked, then fingernails dragged across metal, slowed to 0.7: a 'tok' into a raspy claw screech 'skrrrriik', 0.75 s.
+Edit: 0.74 s, the loudest 100 ms band −27.1 dB, peak −10.8 dBFS, −22.3 LUFS.
+
+### leech-shake-r66-b — "metal plate scratch" by Ridderick
+
+Proposed (round 66), cut from the HQ previews by `tools/concept/audio/sfx_r66.py`.
+Source: <https://freesound.org/people/Ridderick/sounds/707639/> (metal plate scratch by Ridderick, CC0 1.0).
+Use: the shake-off (four reversals in 1.2 s) throwing every latched leech off at once, and the EMP throwing them off: once per throw, however many leeches.
+Brief: a scrape of claws on metal: the leeches torn off the hull; not the Lamprey's wet slap (concept/lamprey-shake-r34-a.ogg); a real recording, heavy, nothing bubbly or popping.
+This one: a metal plate scraped hard, slowed to 0.85: a lower, grittier grinding scrape 'shhkrrrk' than a, no knock, 0.7 s.
+Edit: 0.70 s, the loudest 100 ms band −24.2 dB, peak −12.1 dBFS, −22.3 LUFS.
+
+### leech-death-r66-a — "crack nut.wav" by gusgus26 + "electricspark.wav" by knova
+
+Proposed (round 66), cut from the HQ previews by `tools/concept/audio/sfx_r66.py`.
+Sources: <https://freesound.org/people/gusgus26/sounds/121193/> (crack nut.wav by gusgus26, CC0 1.0), <https://freesound.org/people/knova/sounds/169666/> (electricspark.wav by knova, CC-BY 4.0).
+Use: a Void Leech killed (free, latched on the ship or on a Talon), over its `small` death: up to a stream of 4-6 in a few seconds.
+Brief: a dry chitin crack with a violet spark: a shell cracking, short; no splat, no pop; a real recording, heavy, nothing bubbly or popping.
+This one: a nut cracking, slowed to 0.5, a short electric spark fizzing after it: a hard 'KRAK-tsss', 0.5 s.
+Edit: 0.51 s, the loudest 100 ms band −27.8 dB, peak −5.2 dBFS, −24.0 LUFS.
+
+### leech-death-r66-b — "Bone crack" by shtran + "shell crunch - wide 05.wav" by Anthousai + "Electric Sparks" by mikiko850
+
+Proposed (round 66), cut from the HQ previews by `tools/concept/audio/sfx_r66.py`.
+Sources: <https://freesound.org/people/shtran/sounds/512049/> (Bone crack by shtran, CC0 1.0), <https://freesound.org/people/Anthousai/sounds/336625/> (shell crunch - wide 05.wav by Anthousai, CC0 1.0), <https://freesound.org/people/mikiko850/sounds/849772/> (Electric Sparks by mikiko850, CC-BY 4.0).
+Use: a Void Leech killed (free, latched on the ship or on a Talon), over its `small` death: up to a stream of 4-6 in a few seconds.
+Brief: a dry chitin crack with a violet spark: a shell cracking, short; no splat, no pop; a real recording, heavy, nothing bubbly or popping.
+This one: a bone cracking, slowed to 0.8, with a shell crunch on it and a quick spark snap: a duller, crunchier 'KRRCH-tk' than a, 0.45 s.
+Edit: 0.42 s, the loudest 100 ms band −31.2 dB, peak −5.1 dBFS, −22.6 LUFS.
+
+### brownout-warn-r66-a — synthesized
+
+Proposed (round 66), synthesized by `tools/concept/audio/sfx_r66.py` (no third-party source).
+Use: the ship's load first passing the drained output (a second latched leech on the hand plan; once per drop below the load, not again while it stays below); the brown-out hum loop (concept/brownout-hum-r60-a.ogg) starts with it.
+Brief: a short falling two-note warning tone (synthesized: the warnings' family, as the edge warning's ping, concept/ui-edge-warning-r11-b.ogg); uneasy, not an alarm.
+This one: two pings a minor third down (1.6 kHz, then 1.35 kHz, 0.17 s apart), the edge warning's own ping: a light 'dee-doo', 0.5 s.
+Edit: 0.55 s, the loudest 100 ms band −25.0 dB, peak −17.9 dBFS, −24.4 LUFS.
+
+### brownout-warn-r66-b — synthesized
+
+Proposed (round 66), synthesized by `tools/concept/audio/sfx_r66.py` (no third-party source).
+Use: the ship's load first passing the drained output (a second latched leech on the hand plan; once per drop below the load, not again while it stays below); the brown-out hum loop (concept/brownout-hum-r60-a.ogg) starts with it.
+Brief: a short falling two-note warning tone (synthesized: the warnings' family, as the edge warning's ping, concept/ui-edge-warning-r11-b.ogg); uneasy, not an alarm.
+This one: a beep and one a fifth lower (1.2 kHz, then 800 Hz sagging 8 % as it fades): a heavier, drooping 'beep-bowww' than a, 0.5 s.
+Edit: 0.55 s, the loudest 100 ms band −25.0 dB, peak −18.9 dBFS, −24.7 LUFS.
+
+### bunker-death-r66-a — "Guns & Explosions Album - Metal impact 5.wav" by OGsoundFX + "G32-10-Massive Electrical Discharges.wav" by craigsmith
+
+Proposed (round 66), cut from the HQ previews by `tools/concept/audio/sfx_r66.py`.
+Sources: <https://freesound.org/people/OGsoundFX/sounds/423117/> (Guns & Explosions Album - Metal impact 5.wav by OGsoundFX, CC-BY 4.0), <https://freesound.org/people/craigsmith/sounds/438494/> (G32-10-Massive Electrical Discharges.wav by craigsmith, CC0 1.0).
+Use: a Rail Bunker destroyed (hardened: only an `anti-ground` weapon, a special, a mining charge or a Strider's fall kills one; Level 33's asteroid faces, later Level 35's hull), over its `medium` ground explosion; its telegraph, if running, is cancelled.
+Brief: a heavy metal explosion: the turret wrecked, its rail coil shorting out; a real recording, heavy, nothing bubbly or popping.
+This one: a heavy metal impact, a massive electrical discharge buzzing out under its tail (the coil shorting): 'KLANG-bzzzrt', 1.0 s.
+Edit: 1.00 s, the loudest 100 ms band −20.1 dB, peak −5.4 dBFS, −19.0 LUFS.
+
+### bunker-death-r66-b — "Loud Bang Crashing Metal Chunk Dropped in Metal Dumpster" by qubodup + "Electric Sparks" by mikiko850
+
+Proposed (round 66), cut from the HQ previews by `tools/concept/audio/sfx_r66.py`.
+Sources: <https://freesound.org/people/qubodup/sounds/859154/> (Loud Bang Crashing Metal Chunk Dropped in Metal Dumpster by qubodup, CC0 1.0), <https://freesound.org/people/mikiko850/sounds/849772/> (Electric Sparks by mikiko850, CC-BY 4.0).
+Use: a Rail Bunker destroyed (hardened: only an `anti-ground` weapon, a special, a mining charge or a Strider's fall kills one; Level 33's asteroid faces, later Level 35's hull), over its `medium` ground explosion; its telegraph, if running, is cancelled.
+Brief: a heavy metal explosion: the turret wrecked, its rail coil shorting out; a real recording, heavy, nothing bubbly or popping.
+This one: a metal chunk crashing into a steel dumpster, sparks spitting twice after it: a deeper, rattling 'BLAMM ... tsk tsk' than a, 1.2 s.
+Edit: 1.20 s, the loudest 100 ms band −20.0 dB, peak −7.6 dBFS, −25.0 LUFS.
+
+## Concept round 68, step AUD-H2 (Level 35: the Iron Sovereign's spin-up, inner-ring step and hold, ring lock, klaxon, core shutters, `fan` and `spiral` guns, cook-offs and implosion; the mass relay's charge and flash)
+
+Generator: `tools/concept/audio/sfx_r68.py` (cut from the Freesound HQ previews; the klaxons played into a 300 m steel tunnel's recorded impulse response; nothing synthesized). Not proposed again: the ring bed (round 60 S.16 a), the rail line's charge and shot (round 60 S.7 b, S.8 b: the batteries' and the core rail's; the mass relay is their long version, made here from their own recordings), the hex shield's set and the homing launch, run and kill (round 60), the Sentinel's sweep (round 65: the laser batteries), the Dart's launch (round 63: the rim bays), the `huge` rung. The inner ring's step is split in two files (the unlock with its 0.4 s tell, the hold's clunk) because the turn's length changes with the phase (4.0 / 3.2 / 2.7 s) and the difficulty. Not listened to by Claude: checked by level, peaks and onsets. Passed over (read in their descriptions): synthesized alarms ("FmKlaxonReverberant", "Industrial Alarm" made in a DAW, "horn 01/02"), designed implosions and shockwaves ("implosion_near", "Shockwave"), a 1925 car klaxon (comic).
+
+### sovereign-spinup-r68-a — "Rail Grinding Machine with Rythmic Clang Berlin Night" by giuliorasi + "big_metal_unlock_and_slam.wav" by simpsi
+
+Proposed (round 68), cut from the HQ previews by `tools/concept/audio/sfx_r68.py`.
+Sources: <https://freesound.org/people/giuliorasi/sounds/812360/> (Rail Grinding Machine with Rythmic Clang Berlin Night by giuliorasi, CC0 1.0), <https://freesound.org/people/simpsi/sounds/175663/> (big_metal_unlock_and_slam.wav by simpsi, CC-BY 3.0).
+Use: the boss's ≈ 8 s intro: each ring starting to turn as its lights come on, outer → middle → inner (three times, a few seconds apart), panned to nothing (the station fills the field); the ring bed (concept/sovereign-ring-turn-r60-a.ogg) takes over once the rings reach speed.
+Brief: a huge bearing grinding up to speed: a crane's slewing ring or a turntable, pitched down, a rising rumble; a real recording, heavy, nothing bubbly or popping.
+This one: the ring bed's own recording (a rail-grinding machine with its rhythmic clang) glided from 0.15 up to the bed's 0.5 and swelling, a big latch's clank as it lets go: 'KLANK ... grrrrRRRR', the clangs speeding up into the bed's ticks, 2.5 s.
+Edit: 2.50 s, the loudest 100 ms band −26.1 dB, peak −8.7 dBFS, −25.4 LUFS.
+
+### sovereign-spinup-r68-b — "R03-30-Large Factory Machines Starts, Works, Stops.wav" by craigsmith
+
+Proposed (round 68), cut from the HQ previews by `tools/concept/audio/sfx_r68.py`.
+Source: <https://freesound.org/people/craigsmith/sounds/482740/> (R03-30-Large Factory Machines Starts, Works, Stops.wav by craigsmith, CC0 1.0).
+Use: the boss's ≈ 8 s intro: each ring starting to turn as its lights come on, outer → middle → inner (three times, a few seconds apart), panned to nothing (the station fills the field); the ring bed (concept/sovereign-ring-turn-r60-a.ogg) takes over once the rings reach speed.
+Brief: a huge bearing grinding up to speed: a crane's slewing ring or a turntable, pitched down, a rising rumble; a real recording, heavy, nothing bubbly or popping.
+This one: a big factory machine starting up, an octave down rising to near its own pitch: a rougher, airier motor whine winding up 'vvvoooOOOMM' than a, no clangs, 2.5 s.
+Edit: 2.50 s, the loudest 100 ms band −26.1 dB, peak −9.0 dBFS, −23.8 LUFS.
+
+### sovereign-step-r68-a — "big_metal_unlock_and_slam.wav" by simpsi + "ratchet_winching_and_turning_sound_slow_speed" by Artninja
+
+Proposed (round 68), cut from the HQ previews by `tools/concept/audio/sfx_r68.py`.
+Sources: <https://freesound.org/people/simpsi/sounds/175663/> (big_metal_unlock_and_slam.wav by simpsi, CC-BY 3.0), <https://freesound.org/people/Artninja/sounds/755384/> (ratchet_winching_and_turning_sound_slow_speed by Artninja, CC-BY 4.0).
+Use: the inner ring unlocking for each 120° step (every 8 s: 4 s turning, 4 s holding; phase 2 3.2 s, phase 3 2.7 s turning): with the 0.4 s tell (its gold teeth flash), the turn's first clicks under it; the ring bed carries the turn, the hold's clunk below ends it.
+Brief: a heavy ratchet clank, then the grind starting: a giant pawl lifting off a toothed rim; a real recording, heavy, nothing bubbly or popping.
+This one: a big metal latch unlocked, slowed to 0.75, then a winch's ratchet turning, slowed to 0.55: 'KLA-KLANK, tak-tak-tak', 1.1 s.
+Edit: 1.10 s, the loudest 100 ms band −24.2 dB, peak −9.0 dBFS, −24.4 LUFS.
+
+### sovereign-step-r68-b — "door metal big heavy close kinda slam thud echo offmic.wav" by kyles + "Ratchet - Stahlwille - Tighten 1" by ldezem
+
+Proposed (round 68), cut from the HQ previews by `tools/concept/audio/sfx_r68.py`.
+Sources: <https://freesound.org/people/kyles/sounds/406197/> (door metal big heavy close kinda slam thud echo offmic.wav by kyles, CC0 1.0), <https://freesound.org/people/ldezem/sounds/386206/> (Ratchet - Stahlwille - Tighten 1 by ldezem, CC0 1.0).
+Use: the inner ring unlocking for each 120° step (every 8 s: 4 s turning, 4 s holding; phase 2 3.2 s, phase 3 2.7 s turning): with the 0.4 s tell (its gold teeth flash), the turn's first clicks under it; the ring bed carries the turn, the hold's clunk below ends it.
+Brief: a heavy ratchet clank, then the grind starting: a giant pawl lifting off a toothed rim; a real recording, heavy, nothing bubbly or popping.
+This one: a heavy steel door's slam, slowed to 0.8, then a socket ratchet tightening slowed to 0.45 (each click a big clack): a deeper 'DOMM, krrk-krrk-krrk' than a, 1.0 s.
+Edit: 1.02 s, the loudest 100 ms band −24.2 dB, peak −6.8 dBFS, −23.0 LUFS.
+
+### sovereign-hold-r68-a — "big_metal_unlock_and_slam.wav" by simpsi
+
+Proposed (round 68), cut from the HQ previews by `tools/concept/audio/sfx_r68.py`.
+Source: <https://freesound.org/people/simpsi/sounds/175663/> (big_metal_unlock_and_slam.wav by simpsi, CC-BY 3.0).
+Use: the inner ring locking into its hold at the end of each 120° step (then 4 s still while its laser batteries sweep).
+Brief: a heavy clunk: the giant pawl dropping back into the rim; a real recording, heavy, nothing bubbly or popping.
+This one: a big metal bolt slammed home, slowed to 0.85: a hard ringing 'KLANNG', 1.0 s.
+Edit: 1.00 s, the loudest 100 ms band −22.2 dB, peak −5.1 dBFS, −17.6 LUFS.
+
+### sovereign-hold-r68-b — "Closing large metal door-001" by AudioPapkin
+
+Proposed (round 68), cut from the HQ previews by `tools/concept/audio/sfx_r68.py`.
+Source: <https://freesound.org/people/AudioPapkin/sounds/814976/> (Closing large metal door-001 by AudioPapkin, CC0 1.0).
+Use: the inner ring locking into its hold at the end of each 120° step (then 4 s still while its laser batteries sweep).
+Brief: a heavy clunk: the giant pawl dropping back into the rim; a real recording, heavy, nothing bubbly or popping.
+This one: a large metal door closing, slowed to 0.75: a deeper, duller 'DOOMF' than a, less ring, 1.0 s.
+Edit: 1.00 s, the loudest 100 ms band −22.0 dB, peak −4.1 dBFS, −18.2 LUFS.
+
+### sovereign-lock-r68-a — "Train Brakes" by KodyTron + "Rail Grinding Machine with Rythmic Clang Berlin Night" by giuliorasi + "Metallic Groan" by hinchinbrook + "Electric Sparks" by mikiko850 + "door metal big heavy close kinda slam thud echo offmic.wav" by kyles
+
+Proposed (round 68), cut from the HQ previews by `tools/concept/audio/sfx_r68.py`.
+Sources: <https://freesound.org/people/KodyTron/sounds/640998/> (Train Brakes by KodyTron, CC-BY 4.0), <https://freesound.org/people/giuliorasi/sounds/812360/> (Rail Grinding Machine with Rythmic Clang Berlin Night by giuliorasi, CC0 1.0), <https://freesound.org/people/hinchinbrook/sounds/496836/> (Metallic Groan by hinchinbrook, CC0 1.0), <https://freesound.org/people/mikiko850/sounds/849772/> (Electric Sparks by mikiko850, CC-BY 4.0), <https://freesound.org/people/kyles/sounds/406197/> (door metal big heavy close kinda slam thud echo offmic.wav by kyles, CC0 1.0).
+Use: a ring's last battery killed (three times a fight, in any order; a `boss-phase`): the ring grinds to a halt in 2 s, sparks, its lights going out, then stays still; the bed goes on for the rings still turning.
+Brief: a long metal brake screech and a groan as the ring grinds to a halt, sparks crackling; the stop at 2 s; a real recording, heavy, nothing bubbly or popping.
+This one: a train's brakes screeching, glided down from its own pitch to 0.6 (slowing), over the ring bed's own grind winding down from 0.5 to 0.12, a metal groan and sparks crackling, a heavy door's thud as it stops at 2.0 s: 'SKREEEEeeeoww ... DOMM', 2.6 s.
+Edit: 2.60 s, the loudest 100 ms band −21.7 dB, peak −3.3 dBFS, −16.0 LUFS.
+
+### sovereign-lock-r68-b — "Metallic Screech.wav" by astronaut_13579 + "Bending Metal" by NachtmahrTV + "electricspark.wav" by knova + "Closing large metal door-001" by AudioPapkin
+
+Proposed (round 68), cut from the HQ previews by `tools/concept/audio/sfx_r68.py`.
+Sources: <https://freesound.org/people/astronaut_13579/sounds/117081/> (Metallic Screech.wav by astronaut_13579, CC-BY 3.0), <https://freesound.org/people/NachtmahrTV/sounds/556714/> (Bending Metal by NachtmahrTV, CC0 1.0), <https://freesound.org/people/knova/sounds/169666/> (electricspark.wav by knova, CC-BY 4.0), <https://freesound.org/people/AudioPapkin/sounds/814976/> (Closing large metal door-001 by AudioPapkin, CC0 1.0).
+Use: a ring's last battery killed (three times a fight, in any order; a `boss-phase`): the ring grinds to a halt in 2 s, sparks, its lights going out, then stays still; the bed goes on for the rings still turning.
+Brief: a long metal brake screech and a groan as the ring grinds to a halt, sparks crackling; the stop at 2 s; a real recording, heavy, nothing bubbly or popping.
+This one: a metal screech glided down from 0.85 to 0.5 (two of its strokes run together), over bending metal slowed to 0.6 (a deep creaking groan), two spark bursts, a large door's closing thud at 2.0 s: a harsher, more grinding 'KRRIIIIIK' with a lower groan than a, 2.75 s.
+Edit: 2.75 s, the loudest 100 ms band −21.0 dB, peak −12.1 dBFS, −21.2 LUFS.
+
+### sovereign-klaxon-r68-a — "Klaxon on axis Long.wav" by jameswrowles + "Balloon Pop, 300m Long Steel Tunnel (192khz IR Sample / Impulse Response)" by modusmogulus
+
+Proposed (round 68), cut from the HQ previews by `tools/concept/audio/sfx_r68.py`.
+Sources: <https://freesound.org/people/jameswrowles/sounds/514981/> (Klaxon on axis Long.wav by jameswrowles, CC0 1.0), <https://freesound.org/people/modusmogulus/sounds/846029/> (Balloon Pop, 300m Long Steel Tunnel (192khz IR Sample / Impulse Response) by modusmogulus, CC0 1.0).
+Use: twice a fight: the intro (as the rings spin up, from the core) and the core's opening (3 s while the petals part and the core is invulnerable); over the music (no change at the opening: the klaxon and Vorne's line carry it).
+Brief: an industrial or ship's alarm horn, reverberant, 3 s: a real klaxon, the warnings' family; distinct from Level 29's station klaxon (concept/station-klaxon-r62-a.ogg, a fire station's diaphone) and the tug's buzzer (concept/tug-alarm-r64-a.ogg); a real recording, heavy, nothing bubbly or popping.
+This one: an industrial hooter (a mains-driven klaxon horn) slowed to 0.85, three 0.8 s blasts a second apart, played into a 300 m steel tunnel: a harsh buzzing 'BRAAAP BRAAAP BRAAAP' ringing on between the blasts, 3.4 s.
+Edit: 3.40 s, the loudest 100 ms band −22.0 dB, peak −11.8 dBFS, −20.1 LUFS.
+
+### sovereign-klaxon-r68-b — "Submarie dive horn_better.wav" by CGEffex + "Balloon Pop, 300m Long Steel Tunnel (192khz IR Sample / Impulse Response)" by modusmogulus
+
+Proposed (round 68), cut from the HQ previews by `tools/concept/audio/sfx_r68.py`.
+Sources: <https://freesound.org/people/CGEffex/sounds/104882/> (Submarie dive horn_better.wav by CGEffex, CC-BY 4.0), <https://freesound.org/people/modusmogulus/sounds/846029/> (Balloon Pop, 300m Long Steel Tunnel (192khz IR Sample / Impulse Response) by modusmogulus, CC0 1.0).
+Use: twice a fight: the intro (as the rings spin up, from the core) and the core's opening (3 s while the petals part and the core is invulnerable); over the music (no change at the opening: the klaxon and Vorne's line carry it).
+Brief: an industrial or ship's alarm horn, reverberant, 3 s: a real klaxon, the warnings' family; distinct from Level 29's station klaxon (concept/station-klaxon-r62-a.ogg, a fire station's diaphone) and the tug's buzzer (concept/tug-alarm-r64-a.ogg); a real recording, heavy, nothing bubbly or popping.
+This one: a submarine's dive alarm (an archive recording), three of its rising-and-falling 'aaOOO-gah' cycles, in the same steel tunnel: lower and more of a ship's horn than a, 3.3 s.
+Edit: 3.30 s, the loudest 100 ms band −22.0 dB, peak −11.6 dBFS, −23.6 LUFS.
+
+### sovereign-shutters-r68-a — "Air (or steam) pressure release" by brunoboselli + "Large hydraulic door" by nooly + "Closing large metal door-001" by AudioPapkin + "door metal big heavy close kinda slam thud echo offmic.wav" by kyles
+
+Proposed (round 68), cut from the HQ previews by `tools/concept/audio/sfx_r68.py`.
+Sources: <https://freesound.org/people/brunoboselli/sounds/457294/> (Air (or steam) pressure release by brunoboselli, CC0 1.0), <https://freesound.org/people/nooly/sounds/331357/> (Large hydraulic door by nooly, CC-BY 3.0), <https://freesound.org/people/AudioPapkin/sounds/814976/> (Closing large metal door-001 by AudioPapkin, CC0 1.0), <https://freesound.org/people/kyles/sounds/406197/> (door metal big heavy close kinda slam thud echo offmic.wav by kyles, CC0 1.0).
+Use: the core's opening (phase 4): its six armoured petals part over 3 s (with the klaxon); the thud is the petals reaching open at ≈ 2.9 s.
+Brief: massive hydraulic doors: a hiss and a deep sliding thud (six petals moving together); a real recording, heavy, nothing bubbly or popping.
+This one: an air pressure release's hiss, a large hypermarket door's hydraulic run slowed to 0.6, then a large metal door's closing thud and a steel door's slam as they reach open: 'PSSSHHH-rrrrrrrr-DOMM', 3.65 s.
+Edit: 3.65 s, the loudest 100 ms band −22.2 dB, peak −3.5 dBFS, −20.2 LUFS.
+
+### sovereign-shutters-r68-b — "Hydraulic Hiss, TTC bus door" by OttisG + "Hydraulic Door" by Autobot8299
+
+Proposed (round 68), cut from the HQ previews by `tools/concept/audio/sfx_r68.py`.
+Sources: <https://freesound.org/people/OttisG/sounds/852991/> (Hydraulic Hiss, TTC bus door by OttisG, CC-BY 4.0), <https://freesound.org/people/Autobot8299/sounds/841192/> (Hydraulic Door by Autobot8299, CC0 1.0).
+Use: the core's opening (phase 4): its six armoured petals part over 3 s (with the klaxon); the thud is the petals reaching open at ≈ 2.9 s.
+Brief: massive hydraulic doors: a hiss and a deep sliding thud (six petals moving together); a real recording, heavy, nothing bubbly or popping.
+This one: a bus door's hydraulic hiss slowed to 0.75 over a hydraulic door's run slowed to 0.7 and its own heavy stop: a longer hiss and a lower, rumbling slide 'hsssss-mmmmmm-THUMM' than a, 3.75 s.
+Edit: 3.75 s, the loudest 100 ms band −22.2 dB, peak −5.4 dBFS, −21.1 LUFS.
+
+### sovereign-fan-r68-a — "Autocannon Three Shot Burst" by qubodup
+
+Proposed (round 68), cut from the HQ previews by `tools/concept/audio/sfx_r68.py`.
+Source: <https://freesound.org/people/qubodup/sounds/854186/> (Autocannon Three Shot Burst by qubodup, CC0 1.0).
+Use: the shut core's aimed `fan` of 5 through its shutter slits (phases 1–3, every 3.0 / 2.5 / 2.0 s, after a 0.5 s gold glow).
+Brief: a hard mechanical gun burst: an autocannon; a real recording, heavy, nothing bubbly or popping.
+This one: an autocannon's three-shot burst slowed to 0.9: 'BAM-BAM-BAM' 0.3 s apart, 0.9 s.
+Edit: 0.90 s, the loudest 100 ms band −20.0 dB, peak −5.0 dBFS, −19.6 LUFS.
+
+### sovereign-fan-r68-b — "Air Defense Artillery Avenger Training .50cal (tH4YBTw8vk8).flac" by qubodup
+
+Proposed (round 68), cut from the HQ previews by `tools/concept/audio/sfx_r68.py`.
+Source: <https://freesound.org/people/qubodup/sounds/160355/> (Air Defense Artillery Avenger Training .50cal (tH4YBTw8vk8).flac by qubodup, CC0 1.0).
+Use: the shut core's aimed `fan` of 5 through its shutter slits (phases 1–3, every 3.0 / 2.5 / 2.0 s, after a 0.5 s gold glow).
+Brief: a hard mechanical gun burst: an autocannon; a real recording, heavy, nothing bubbly or popping.
+This one: a .50 calibre air-defence gun's burst slowed to 0.85: five quicker, tighter shots 'BRRRAP', 0.75 s.
+Edit: 0.75 s, the loudest 100 ms band −20.0 dB, peak −3.4 dBFS, −18.1 LUFS.
+
+### sovereign-spiral-r68-a — "Autocannon Shot 1" by qubodup
+
+Proposed (round 68), cut from the HQ previews by `tools/concept/audio/sfx_r68.py`.
+Source: <https://freesound.org/people/qubodup/sounds/854183/> (Autocannon Shot 1 by qubodup, CC0 1.0).
+Use: the open core's 2-arm `spiral` (phase 4: 5 bullets a second an arm, 4 s on, 2 s rest; 3 arms on hard): one shot per bullet, throttled in the game.
+Brief: the `fan`'s gun, lighter: a short single shot that can repeat without drowning the fight; a real recording, heavy, nothing bubbly or popping.
+This one: one autocannon shot sped to 1.25: a short hard 'tak', 0.2 s.
+Edit: 0.20 s, the loudest 100 ms band −28.1 dB, peak −13.6 dBFS, −inf LUFS.
+
+### sovereign-spiral-r68-b — "Air Defense Artillery Avenger Training .50cal (tH4YBTw8vk8).flac" by qubodup
+
+Proposed (round 68), cut from the HQ previews by `tools/concept/audio/sfx_r68.py`.
+Source: <https://freesound.org/people/qubodup/sounds/160355/> (Air Defense Artillery Avenger Training .50cal (tH4YBTw8vk8).flac by qubodup, CC0 1.0).
+Use: the open core's 2-arm `spiral` (phase 4: 5 bullets a second an arm, 4 s on, 2 s rest; 3 arms on hard): one shot per bullet, throttled in the game.
+Brief: the `fan`'s gun, lighter: a short single shot that can repeat without drowning the fight; a real recording, heavy, nothing bubbly or popping.
+This one: one shot of the .50 calibre's burst sped to 1.1: a thinner, drier 'tk' than a, 0.15 s.
+Edit: 0.17 s, the loudest 100 ms band −28.1 dB, peak −9.4 dBFS, −inf LUFS.
+
+### sovereign-cookoff-r68-a — "Sharp Explosion 1 (of 5)" by Rudmer_Rotteveel + "Sharp Explosion 4 (of 5)" by Rudmer_Rotteveel + "Sharp Explosion 3 (of 5)" by Rudmer_Rotteveel + "Sharp Explosion 2 (of 5)" by Rudmer_Rotteveel + "Sharp Explosion 5 (of 5)" by Rudmer_Rotteveel + "Bending Metal" by NachtmahrTV
+
+Proposed (round 68), cut from the HQ previews by `tools/concept/audio/sfx_r68.py`.
+Sources: <https://freesound.org/people/Rudmer_Rotteveel/sounds/336006/> (Sharp Explosion 1 (of 5) by Rudmer_Rotteveel, CC0 1.0), <https://freesound.org/people/Rudmer_Rotteveel/sounds/336011/> (Sharp Explosion 4 (of 5) by Rudmer_Rotteveel, CC0 1.0), <https://freesound.org/people/Rudmer_Rotteveel/sounds/336004/> (Sharp Explosion 3 (of 5) by Rudmer_Rotteveel, CC0 1.0), <https://freesound.org/people/Rudmer_Rotteveel/sounds/336005/> (Sharp Explosion 2 (of 5) by Rudmer_Rotteveel, CC0 1.0), <https://freesound.org/people/Rudmer_Rotteveel/sounds/336010/> (Sharp Explosion 5 (of 5) by Rudmer_Rotteveel, CC0 1.0), <https://freesound.org/people/NachtmahrTV/sounds/556714/> (Bending Metal by NachtmahrTV, CC0 1.0).
+Use: the core at 0: the wrecked batteries cook off ring by ring, outer → middle → inner, 0.15 s apart (6 SAM, 4 rail, 3 laser: 13 in 1.8 s), each a short vacuum flash; the rings crack at their joints; the implosion follows.
+Brief: rapid secondary detonations and tearing metal: a chain, each ring a little heavier; a real recording, heavy, nothing bubbly or popping.
+This one: five sharp explosion recordings in turn, 13 of them 0.15 s apart: the outer six sped to 1.2, the middle four as recorded, the inner three slowed to 0.8 (deeper), bending metal creaking under them: a rattling 'ba-ba-ba-ba-ba-ba-BA-BA-BA-BA-BOM-BOM-BOM', 2.6 s.
+Edit: 2.60 s, the loudest 100 ms band −18.9 dB, peak −2.2 dBFS, −17.1 LUFS.
+
+### sovereign-cookoff-r68-b — "Multiple Deep Explosions (Noisy rec)" by Rudmer_Rotteveel + "Metallic Groan" by hinchinbrook
+
+Proposed (round 68), cut from the HQ previews by `tools/concept/audio/sfx_r68.py`.
+Sources: <https://freesound.org/people/Rudmer_Rotteveel/sounds/336007/> (Multiple Deep Explosions (Noisy rec) by Rudmer_Rotteveel, CC0 1.0), <https://freesound.org/people/hinchinbrook/sounds/496836/> (Metallic Groan by hinchinbrook, CC0 1.0).
+Use: the core at 0: the wrecked batteries cook off ring by ring, outer → middle → inner, 0.15 s apart (6 SAM, 4 rail, 3 laser: 13 in 1.8 s), each a short vacuum flash; the rings crack at their joints; the implosion follows.
+Brief: rapid secondary detonations and tearing metal: a chain, each ring a little heavier; a real recording, heavy, nothing bubbly or popping.
+This one: 13 deep explosions cut from one field recording of a series, 0.15 s apart, the outer six sped to 1.2, the inner three slowed to 0.8, a metal groan under them: a deeper, rounder rolling chain than a (the recording's distant road hiss under it), 2.6 s.
+Edit: 2.60 s, the loudest 100 ms band −18.0 dB, peak −5.9 dBFS, −18.8 LUFS.
+
+### sovereign-implosion-r68-a — "Dry thunder2.wav" by juskiddink + "Bending Metal" by NachtmahrTV + "Fireball" by NearTheAtmoshphere
+
+Proposed (round 68), cut from the HQ previews by `tools/concept/audio/sfx_r68.py`.
+Sources: <https://freesound.org/people/juskiddink/sounds/101934/> (Dry thunder2.wav by juskiddink, CC-BY 4.0), <https://freesound.org/people/NachtmahrTV/sounds/556714/> (Bending Metal by NachtmahrTV, CC0 1.0), <https://freesound.org/people/NearTheAtmoshphere/sounds/683179/> (Fireball by NearTheAtmoshphere, CC0 1.0).
+Use: after the cook-offs: the core collapses inward (the petals folding in, a white-gold implosion) and then blows; the `huge` rung starts at the whoomph, 1.15 s in, under the screen flash.
+Brief: a deep implosion: the air sucked inward, metal folding, a deep 'whoomph' (no pop); a real recording, heavy, nothing bubbly or popping.
+This one: a dry thunderclap reversed and slowed to 0.8 (its rumble sucked back into the crack), bending metal under it, cut at the crack into a recorded fireball slowed to 0.5: 'hhhhwwuuUUP-WHOOMF', 2.15 s.
+Edit: 2.15 s, the loudest 100 ms band −18.1 dB, peak −5.4 dBFS, −19.1 LUFS.
+
+### sovereign-implosion-r68-b — "Thunder, Close" by Fission9 + "Closing large metal door-001" by AudioPapkin + "Sharp Explosion 2 (of 5)" by Rudmer_Rotteveel
+
+Proposed (round 68), cut from the HQ previews by `tools/concept/audio/sfx_r68.py`.
+Sources: <https://freesound.org/people/Fission9/sounds/505113/> (Thunder, Close by Fission9, CC0 1.0), <https://freesound.org/people/AudioPapkin/sounds/814976/> (Closing large metal door-001 by AudioPapkin, CC0 1.0), <https://freesound.org/people/Rudmer_Rotteveel/sounds/336005/> (Sharp Explosion 2 (of 5) by Rudmer_Rotteveel, CC0 1.0).
+Use: after the cook-offs: the core collapses inward (the petals folding in, a white-gold implosion) and then blows; the `huge` rung starts at the whoomph, 1.15 s in, under the screen flash.
+Brief: a deep implosion: the air sucked inward, metal folding, a deep 'whoomph' (no pop); a real recording, heavy, nothing bubbly or popping.
+This one: a close thunder reversed and slowed to 0.7, then a large metal door's thud slowed to 0.5 (the petals slamming in) with an explosion slowed to 0.45: a darker suck and a heavier metal 'DOOMF' than a, 2.15 s.
+Edit: 2.15 s, the loudest 100 ms band −18.2 dB, peak −2.1 dBFS, −17.3 LUFS.
+
+### relay-charge-r68-a — "Rising electric hum.aif" by jukkako + "hum electric transformer in large room1.flac" by kyles
+
+Proposed (round 68), cut from the HQ previews by `tools/concept/audio/sfx_r68.py`.
+Sources: <https://freesound.org/people/jukkako/sounds/616084/> (Rising electric hum.aif by jukkako, CC0 1.0), <https://freesound.org/people/kyles/sounds/453444/> (hum electric transformer in large room1.flac by kyles, CC0 1.0).
+Use: Level 35, once at t=59.8: the mass relay's 1.2 s telegraph (a thin red line across the whole field through the ship; easy 1.5 s: it starts 0.3 s into the telegraph); the flash below at its end.
+Brief: the rail line's chosen charge (concept/rail-charge-r60-b.ogg, a rising hum over a slowed transformer) in its long version: a huge capacitor whine building for 1.2 s; a real recording, heavy, nothing bubbly or popping.
+This one: the chosen rail charge's own two recordings stretched to 1.2 s: the rising electric hum gliding up from 0.7 to 1.5 and swelling, over the transformer hum slowed to 0.8: the bunker's charge, longer, 1.2 s.
+Edit: 1.20 s, the loudest 100 ms band −24.0 dB, peak −12.0 dBFS, −22.9 LUFS.
+
+### relay-charge-r68-b — "Rising electric hum.aif" by jukkako + "hum electric transformer in large room1.flac" by kyles + "Camera Flash Charging.aif" by ftpalad
+
+Proposed (round 68), cut from the HQ previews by `tools/concept/audio/sfx_r68.py`.
+Sources: <https://freesound.org/people/jukkako/sounds/616084/> (Rising electric hum.aif by jukkako, CC0 1.0), <https://freesound.org/people/kyles/sounds/453444/> (hum electric transformer in large room1.flac by kyles, CC0 1.0), <https://freesound.org/people/ftpalad/sounds/119902/> (Camera Flash Charging.aif by ftpalad, CC0 1.0).
+Use: Level 35, once at t=59.8: the mass relay's 1.2 s telegraph (a thin red line across the whole field through the ship; easy 1.5 s: it starts 0.3 s into the telegraph); the flash below at its end.
+Brief: the rail line's chosen charge (concept/rail-charge-r60-b.ogg, a rising hum over a slowed transformer) in its long version: a huge capacitor whine building for 1.2 s; a real recording, heavy, nothing bubbly or popping.
+This one: the same two recordings lower (the hum gliding from 0.5 to 1.2, the transformer at 0.6) with a camera flash's charging whine pitched well down rising over them: bigger and deeper than a, a whine on top, 1.2 s.
+Edit: 1.20 s, the loudest 100 ms band −24.6 dB, peak −10.6 dBFS, −21.0 LUFS.
+
+### relay-flash-r68-a — "Whip Crack 01.wav" by CGEffex + "Howitzer Gun Shots" by qubodup + "metal glass makes long 'PING!' sound.aif" by Tomlija + "Thunder Clap" by DaniloSFX
+
+Proposed (round 68), cut from the HQ previews by `tools/concept/audio/sfx_r68.py`.
+Sources: <https://freesound.org/people/CGEffex/sounds/93100/> (Whip Crack 01.wav by CGEffex, CC-BY 4.0), <https://freesound.org/people/qubodup/sounds/67516/> (Howitzer Gun Shots by qubodup, CC0 1.0), <https://freesound.org/people/Tomlija/sounds/101246/> (metal glass makes long 'PING!' sound.aif by Tomlija, CC-BY 3.0), <https://freesound.org/people/DaniloSFX/sounds/672776/> (Thunder Clap by DaniloSFX, CC0 1.0).
+Use: Level 35, once at t=61: the mass relay's flash along its line (16 px wide, live 0.2 s, 20 damage), at the charge's end; the thunder's tail runs under the next seconds (no wave until t=63.5).
+Brief: the rail line's chosen shot (concept/rail-shot-r60-b.ogg, a whip crack on a howitzer shot with a long metal ping) in its long version: the crack with a long rolling thunder tail; a real recording, heavy, nothing bubbly or popping.
+This one: the chosen rail shot's three recordings (the whip crack, the howitzer, the metal ping, its ping longer) with a thunderclap's roll under them: 'KRAKK-rrrrooooommmm', 3.9 s.
+Edit: 3.88 s, the loudest 100 ms band −16.2 dB, peak −2.3 dBFS, −19.9 LUFS.
+
+### relay-flash-r68-b — "Whip Crack 01.wav" by CGEffex + "Howitzer Gun Shots" by qubodup + "metal glass makes long 'PING!' sound.aif" by Tomlija + "Huge Thunder Crack [XY + MS]" by -CASK-
+
+Proposed (round 68), cut from the HQ previews by `tools/concept/audio/sfx_r68.py`.
+Sources: <https://freesound.org/people/CGEffex/sounds/93100/> (Whip Crack 01.wav by CGEffex, CC-BY 4.0), <https://freesound.org/people/qubodup/sounds/67516/> (Howitzer Gun Shots by qubodup, CC0 1.0), <https://freesound.org/people/Tomlija/sounds/101246/> (metal glass makes long 'PING!' sound.aif by Tomlija, CC-BY 3.0), <https://freesound.org/people/-CASK-/sounds/732992/> (Huge Thunder Crack [XY + MS] by -CASK-, CC-BY 4.0).
+Use: Level 35, once at t=61: the mass relay's flash along its line (16 px wide, live 0.2 s, 20 damage), at the charge's end; the thunder's tail runs under the next seconds (no wave until t=63.5).
+Brief: the rail line's chosen shot (concept/rail-shot-r60-b.ogg, a whip crack on a howitzer shot with a long metal ping) in its long version: the crack with a long rolling thunder tail; a real recording, heavy, nothing bubbly or popping.
+This one: the same shot with a huge thunder crack slowed to 0.8 under it: a second, deeper crack and a longer, lower rumble than a, 4.0 s.
+Edit: 4.00 s, the loudest 100 ms band −16.2 dB, peak −2.9 dBFS, −21.2 LUFS.
+
+### container-burst-r67-a — "Large Bolt Cutter" by jameswrowles + "Closing large metal door-002" by AudioPapkin
+
+Proposed (round 67), cut from the HQ previews by `tools/concept/audio/sfx_r67.py`.
+Sources: <https://freesound.org/people/jameswrowles/sounds/516591/> (Large Bolt Cutter by jameswrowles, CC0 1.0), <https://freesound.org/people/AudioPapkin/sounds/814977/> (Closing large metal door-002 by AudioPapkin, CC0 1.0).
+Use: a cargo container destroyed (Level 34: six, t≈18, 38, 58, 80, 150 and 170; 12 HP, no bounty; the secondary `CONTAINERS n/6` counts them), over its destruction, as its salvage pickup of 50 (328) drifts out.
+Brief: a cargo latch blowing and a short metal clang: a latch or bolt cracking, then the container's steel door slamming open; short and dry, no pop; a real recording, heavy, nothing bubbly or popping.
+This one: a large bolt cutter snapping a bolt (slowed to 0.85), then a big metal door slammed 40 ms later: a sharp 'KTAK' into a ringing 'KLANGG', 1.35 s.
+Edit: 1.34 s, the loudest 100 ms band −22.2 dB, peak −9.5 dBFS, −23.9 LUFS.
+
+### container-burst-r67-b — "industrial_nailgun_1shot+ring" by gilly11 + "big_metal_unlock_and_slam.wav" by simpsi
+
+Proposed (round 67), cut from the HQ previews by `tools/concept/audio/sfx_r67.py`.
+Sources: <https://freesound.org/people/gilly11/sounds/143615/> (industrial_nailgun_1shot+ring by gilly11, CC-BY 3.0), <https://freesound.org/people/simpsi/sounds/175663/> (big_metal_unlock_and_slam.wav by simpsi, CC-BY 3.0).
+Use: a cargo container destroyed (Level 34: six, t≈18, 38, 58, 80, 150 and 170; 12 HP, no bounty; the secondary `CONTAINERS n/6` counts them), over its destruction, as its salvage pickup of 50 (328) drifts out.
+Brief: a cargo latch blowing and a short metal clang: a latch or bolt cracking, then the container's steel door slamming open; short and dry, no pop; a real recording, heavy, nothing bubbly or popping.
+This one: an industrial nail gun's shot (a pneumatic bang), then a heavy garage door's metal slam (slowed to 0.9) 50 ms later: a drier 'PTAK' into a lower, boomier 'BLAMM' with the garage's echo, 1.45 s.
+Edit: 1.45 s, the loudest 100 ms band −23.4 dB, peak −5.9 dBFS, −20.1 LUFS.
+
+### hold-clamp-r67-a — "Automotive Two Post Lift" by j_soundeffects + "door metal big heavy close kinda slam thud echo offmic.wav" by kyles + "Pressure Hiss" by magnuswaker
+
+Proposed (round 67), cut from the HQ previews by `tools/concept/audio/sfx_r67.py`.
+Sources: <https://freesound.org/people/j_soundeffects/sounds/863975/> (Automotive Two Post Lift by j_soundeffects, CC-BY 4.0), <https://freesound.org/people/kyles/sounds/406197/> (door metal big heavy close kinda slam thud echo offmic.wav by kyles, CC0 1.0), <https://freesound.org/people/magnuswaker/sounds/581083/> (Pressure Hiss by magnuswaker, CC0 1.0).
+Use: each of the freighter hold's four clamps destroyed (Level 34, t≈108-120; 15 HP, no bounty; a player who shoots at once clears all four in about 2 s, so up to four close together); with the fourth the Helix core floats up out of the hold.
+Brief: a heavy hydraulic unlock: a locking bolt clacking free and the pressure venting; heavier than Level 29's Dock 9 clamp (concept/clamp-release-r62-b.ogg, the fallback: answer 'dock'); a real recording, heavy, nothing bubbly or popping.
+This one: a car lift's hydraulic carriage dropping onto its lock (slowed to 0.75) over a heavy steel door's thud, with a pressure valve's hiss over it: a heavy 'KLAKK-pssshh', 0.95 s.
+Edit: 0.92 s, the loudest 100 ms band −25.1 dB, peak −12.2 dBFS, −26.2 LUFS.
+
+### hold-clamp-r67-b — "Motors_Hydraulic_Handycap_Ramp" by SoundsofTheMachine + "Air release" by davidlay1
+
+Proposed (round 67), cut from the HQ previews by `tools/concept/audio/sfx_r67.py`.
+Sources: <https://freesound.org/people/SoundsofTheMachine/sounds/784981/> (Motors_Hydraulic_Handycap_Ramp by SoundsofTheMachine, CC0 1.0), <https://freesound.org/people/davidlay1/sounds/416080/> (Air release by davidlay1, CC0 1.0).
+Use: each of the freighter hold's four clamps destroyed (Level 34, t≈108-120; 15 HP, no bounty; a player who shoots at once clears all four in about 2 s, so up to four close together); with the fourth the Helix core floats up out of the hold.
+Brief: a heavy hydraulic unlock: a locking bolt clacking free and the pressure venting; heavier than Level 29's Dock 9 clamp (concept/clamp-release-r62-b.ogg, the fallback: answer 'dock'); a real recording, heavy, nothing bubbly or popping.
+This one: a van's hydraulic ramp locking home (slowed to 0.8) with an air release venting under its tail: a lower, rattling 'kr-KUNK-unk' with a longer 'hhhhh', 1.25 s.
+Edit: 1.25 s, the loudest 100 ms band −25.1 dB, peak −11.3 dBFS, −23.2 LUFS.
+
+### helix-core-r67-a — "Transformer buzz" by logant547
+
+Proposed (round 67), cut from the HQ previews by `tools/concept/audio/sfx_r67.py`.
+Source: <https://freesound.org/people/logant547/sounds/677736/> (Transformer buzz by logant547, CC0 1.0).
+Use: once, the Helix core collected (Level 34, t≈116-124: flown through as it drifts after the clamps; `HELIX CORE SALVAGED`), over the large salvage pickup; Vorne's motif stem is on in the music then; not the secrets' cue; a missed core plays nothing (Okafor's tug line).
+Brief: a deep power hum swelling: a big machine or transformer powering up as the core comes alive, about 2 s (the sfx README's row: the large salvage pickup with a short power-up hum); a real recording, heavy, nothing bubbly or popping.
+This one: a power transformer's mains hum glided up from 0.55 to its own speed while it swells 18 dB: a deep, even 'mmmMMMM' rising in pitch, 2.0 s.
+Edit: 2.00 s, the loudest 100 ms band −22.5 dB, peak −8.1 dBFS, −20.0 LUFS.
+
+### helix-core-r67-b — "Large Industrial Machine Starting up and running" by ryks88
+
+Proposed (round 67), cut from the HQ previews by `tools/concept/audio/sfx_r67.py`.
+Source: <https://freesound.org/people/ryks88/sounds/709257/> (Large Industrial Machine Starting up and running by ryks88, CC-BY 4.0).
+Use: once, the Helix core collected (Level 34, t≈116-124: flown through as it drifts after the clamps; `HELIX CORE SALVAGED`), over the large salvage pickup; Vorne's motif stem is on in the music then; not the secrets' cue; a missed core plays nothing (Okafor's tug line).
+Brief: a deep power hum swelling: a big machine or transformer powering up as the core comes alive, about 2 s (the sfx README's row: the large salvage pickup with a short power-up hum); a real recording, heavy, nothing bubbly or popping.
+This one: a large industrial air scrubber switching on, slowed (0.6 gliding to 0.9) and swelling: a rougher machine 'vrrumMMMM' with the motor's kick at its start, 2.2 s.
+Edit: 2.20 s, the loudest 100 ms band −22.0 dB, peak −10.7 dBFS, −22.4 LUFS.
+
+### wreck-groans-r67-a — "Metal Creaks_Groans.wav" by Cell31_Sound_Productions
+
+Proposed (round 67), cut from the HQ previews by `tools/concept/audio/sfx_r67.py`.
+Source: <https://freesound.org/people/Cell31_Sound_Productions/sounds/380403/> (Metal Creaks_Groans.wav by Cell31_Sound_Productions, CC-BY 4.0).
+Use: a sparse layer over the `belt-open` bed through the ship graveyard (Level 34, t=0-174: the level's `ambience_layers`, faded in over 3 s and out over 3 s before section 6's clear space), looping at the ambience's level.
+Brief: the wrecks' slow metal groans: huge hulls stressing in the cold, a few long low groans with quiet between; not rhythmic, no clanks or pops; under the music, heard in the quiet stretches; a real recording, heavy, nothing bubbly or popping.
+This one: three groans of stressed metal slowed to 0.6 (deep and slow), 1.0, 11.5 and 20.5 s into the loop with quiet between: long low 'grrroooann's, 30 s loop.
+Edit: 30.00 s, re-levelled 2026-10-29 (round 67 S.4 re-shown: too quiet) to its loudest short-term loudness (3 s) −13.2 LUFS under a −1.5 dBFS ceiling: peak −1.6 dBFS, −13.7 LUFS (was −38.3 LUFS).
+
+### wreck-groans-r67-b — "liner gangplank groaning.WAV" by phonoflora + "Bending Metal" by NachtmahrTV
+
+Proposed (round 67), cut from the HQ previews by `tools/concept/audio/sfx_r67.py`.
+Sources: <https://freesound.org/people/phonoflora/sounds/500008/> (liner gangplank groaning.WAV by phonoflora, CC0 1.0), <https://freesound.org/people/NachtmahrTV/sounds/556714/> (Bending Metal by NachtmahrTV, CC0 1.0).
+Use: a sparse layer over the `belt-open` bed through the ship graveyard (Level 34, t=0-174: the level's `ambience_layers`, faded in over 3 s and out over 3 s before section 6's clear space), looping at the ambience's level.
+Brief: the wrecks' slow metal groans: huge hulls stressing in the cold, a few long low groans with quiet between; not rhythmic, no clanks or pops; under the music, heard in the quiet stretches; a real recording, heavy, nothing bubbly or popping.
+This one: a cruise liner's steel gangplank groaning (slowed to 0.55) twice and a bending metal sheet (slowed to 0.65) between them, 1.5, 11 and 20 s into the loop: creakier, more grinding groans than a, 30 s loop.
+Edit: 30.00 s, re-levelled 2026-10-29 (round 67 S.4 re-shown: too quiet) to its loudest short-term loudness (3 s) −13.2 LUFS under a −1.5 dBFS ceiling: peak −1.7 dBFS, −15.0 LUFS (was −31.0 LUFS).
+
+### wreck-groans-solo-r67-a, -b and wreck-groans-mix-r67-a, -b — review files (round 67 S.4, re-shown 2026-10-29)
+
+Made by `tools/concept/audio/wreck_groans_mix_r67.py` from the re-levelled `wreck-groans-r67-a`/`-b` (their sources
+above) and, for the mix, the game's own files: `assets/music/hollow-rock-base.ogg` (track 12's base stem, ours) and
+`assets/sfx/belt-open-r60-a.ogg` (the bed, its sources in CREDITS.md). Not proposals: what the round plays so the
+layer can be judged.
+Solo: each variant alone, scaled so its loudest momentary loudness (400 ms) matches the mean of S.1–S.3's a (−19.5
+LUFS): a −10.7 dB, b −9.2 dB.
+In the mix: Level 34 t=8–28 rendered offline at the game's gains (default settings: music 1, effects 0.5): the base
+stem at 0.6 × −3 dB (0.425), the bed and the layer at 0.7 × 0.5 (0.35), no radio duck, no effects. Measured (EBU R128
+short-term, 3 s): the groans peak at −22.8 (a) and −22.4 (b) LUFS against the bed + music's −21.3 (median; −20.8 at
+most): 1.5 and 1.1 dB under it, clearly heard; before the re-level they were 26.1 (a) and 17.2 (b) dB under it.

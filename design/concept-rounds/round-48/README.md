@@ -28,6 +28,8 @@ seam). The sound-effect briefs and their candidate recordings are listed so the 
 The review page is built from this file by `build/round48-tools/build_review.py` (untracked); the proposals are in the
 parts' `concept/` directories. The board `index.html` shows every image side by side.
 
+Record of the decisions: [review.html](review.html)
+
 ## Questions
 
 The twelve open questions of the Act 4 gap analysis. Each lists its options, its costs and what I already drafted from the recommendation.

@@ -22,6 +22,8 @@ one you pick is rebuilt from the full-quality original afterwards with the same 
 The review page is built from this file by `build/round47-tools/build_review.py` (untracked); the proposals are in
 [the sfx part](../../audio/sfx/README.md#concept-art) and the generator is `tools/concept/audio/sfx_r47l.py`.
 
+Record of the decisions: [review.html](review.html)
+
 ## Sounds: the five redos
 
 | # | Part | What is proposed | Review files | Weak spots (Claude) | Answer | Outcome |

@@ -40,7 +40,8 @@ final class LevelRules {
                     hitbox(tow.cable()),
                     tow.hits(),
                     secret.crate(),
-                    secret.name()));
+                    secret.name(),
+                    tow.beamTouch().orElse(false)));
         }
         return tows;
     }
@@ -92,6 +93,14 @@ final class LevelRules {
             // M9 part B (design/campaign Level 29, Hold fire): none of the neutral craft destroyed.
             return Secondary.spared(
                     secondary.spared().get(),
+                    secondary.credits(),
+                    secondary.label().orElseThrow());
+        }
+        if (SalvageChecks.objectEscapes(content, level, secondary)) {
+            // M9 part G (Level 34's "Strip the graveyard"): escapes names a ground object's look, not a unit.
+            return Secondary.objectEscapes(
+                    secondary.escapes().orElseThrow(),
+                    secondary.escapesAllowed(difficulty),
                     secondary.credits(),
                     secondary.label().orElseThrow());
         }
@@ -166,6 +175,12 @@ final class LevelRules {
     static String subject(LevelData level, LevelData.RadioCue cue) {
         if (cue.event().orElse(null) == LevelData.CueEvent.BOSS_DESTROYED) {
             return boss(level, "a boss-destroyed cue");
+        }
+        if (cue.event().orElse(null) == LevelData.CueEvent.BRANCH) {
+            // M9 part E: a branch cue's fork and side ("1:right", the simulation's subject).
+            return new TerrainBlock.Branch(cue.fork().orElseThrow(), cue.side().orElseThrow())
+                    .sim()
+                    .subject();
         }
         // Step B4b: a holders-down cue's escort swap outcome (the simulation cues it with the swap's).
         return cue.enemy().or(cue::group).or(cue::phase).or(cue::swap).orElse("");

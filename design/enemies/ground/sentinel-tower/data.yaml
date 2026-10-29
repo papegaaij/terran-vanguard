@@ -1,0 +1,50 @@
+# Sentinel Tower stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/schemas-units/README.md
+# M9 part E, step E2 (Level 32): the approved stat block (round 60) as data. New in it (flown from step E1): the
+# hardened collar round a hittable emitter (`armour.collar`: the emitter's box, the hit box is the collar), the laser
+# sweep of a ground unit (a `terrain` unit's `laser-sweep`: aimed all round, no clamp) with its `full_turn`, and the
+# hook `full_turn_every`. Medium tier, first level 32: no act or beam-era factor there.
+name: Sentinel Tower
+faction: Jovian Ascendancy
+layer: ground
+tier: medium
+size: [80, 80]    # sprite px: the tower seen from above, its head at the centre
+hitbox: [72, 72]  # the collar
+parts: single (the emitter head turns with the beam)
+orientation: fixed
+hp: 120           # the emitter's: 0.9 s at the L32 reference of 132
+armour: {collar: [28, 28]}   # the emitter's box on the centre; elsewhere on the collar a non-anti-ground shot glances
+speed: 0          # scrolls with the rock
+machine: true     # the EMP Burst stuns it 3 s: the beam is cut, the next telegraph after the stun
+movement:
+  terrain: {}
+attacks:
+  - pattern: laser-sweep
+    name: sweep
+    bullet: laser             # damage once per sweep
+    aim: target               # centred on the ship's bearing at the telegraph's start, any direction
+    interval: 4.5             # s, telegraph to telegraph (a full turn's slot 6 s)
+    first_shot_delay: 1.0     # s after it comes onto the field: the first telegraph
+    sweep: {arc: 120, duration: 1.6, telegraph: 0.8, length: 220, width: 6, full_turn: {every: 3, duration: 3.0, telegraph: 1.0, slot: 6.0}}   # °, s, s, px, px; every 3rd sweep a full turn: 360° over 3 s, telegraphed 1 s, the next telegraph 6 s after its own
+    notes:
+      text: '`{pattern}` from the emitter: a beam {sweep.length} px long and {sweep.width} px wide; an **arc sweep** turns {sweep.arc}° over {sweep.duration} s, centred on the ship''s bearing at the telegraph''s start, in any direction (the arcs alternate their sense); every {sweep.full_turn.every}rd sweep is a **full turn**, 360° over {sweep.full_turn.duration} s (the direction alternates); telegraph: the arc (for a full turn the whole reach ring and the start ray) drawn crimson for **{sweep.telegraph} s** (full turn **{sweep.full_turn.telegraph} s**); a sweep every {interval} s, telegraph to telegraph (the full turn''s slot {sweep.full_turn.slot} s), the first {first_shot_delay} s after it comes onto the field; `{bullet}` {damage} per touch, once per sweep (the ship and Rook); the beam passes over walls'
+formations:
+  - {name: turret nest, size: [1, 2]}
+weak_points: []
+drops: []
+traits: [anti-ground, beam, piercing]
+bounty: 40
+first_level: 32
+difficulty:
+  easy: {sweep_arc: 100, full_turn_every: 0, attacks: {sweep: {interval: 5.5}}}
+  hard: {sweep_arc: 160, full_turn_every: 2, attacks: {sweep: {interval: 3.6}}}
+notes:
+  size: '(the collar; the emitter 28×28 on the centre)'
+  orientation: '(the tower; the emitter head `32 angles`, turning with the beam)'
+  armour: '**hardened collar**: a non-`anti-ground` shot that lands on the collar outside the 28×28 emitter glances off with a spark; an `anti-ground` shot or a blast (a special, a mining charge) anywhere on the collar damages the emitter; a beam whose line crosses the emitter reaches it; homing shots and Rook aim at the emitter'
+  speed: (scrolls with the rock)
+  movement: '`terrain`: stands in a gallery notch or on a wall''s foot, its emitter at least 40 px inside the field (QE-1 a); never beside a passage narrower than its reach plus 80 px (300 px), never beside a fork''s island'
+  formations: (single, or a pair across a hall, their notches offset so the two never sweep the same rows at once; at most 2 sweeping at once, a level rule)
+  weak_points: (the emitter, its vital part, glows crimson while the beam is live)
+  death: '`medium` ground explosion, the head topples off; the scorched tower stump stays'
+  used_in: 'Deep Core''s side galleries, the pumping hall and the crucible gallery'
+  difficulty: 'easy: 100° arcs, no full turn, a sweep every 5.5 s; hard: 160° arcs, every second sweep a full turn, a sweep every 3.6 s'

@@ -453,7 +453,7 @@ final class HitPasses {
                 }
             }
         }
-        if (beamsHit(hull) || bossBeamsHit(hull) || linesHit(hull)) {
+        if (beamsHit(hull) || bossBeamsHit(hull) || linesHit(hull) || bossLinesHit(hull) || relayHit(hull)) {
             return;
         }
         // An armed spore bursts on contact with the hull, dealing its layer's attack damage.
@@ -680,6 +680,41 @@ final class HitPasses {
             }
         }
         return false;
+    }
+
+    /**
+     * M9 part H, step H1b ({@link BossLines}): a boss's live rail line whose band touches the hull deals its damage, once
+     * per line; returns whether it wrecked the ship.
+     */
+    private boolean bossLinesHit(Hull hull) {
+        for (int k = 0; k < setPieces.length; k++) {
+            BossLines lines = setPieces[k].lines;
+            if (lines == null || !setPieces[k].present() || !lines.strikes(hull, ship.x(), ship.y())) {
+                continue;
+            }
+            lines.markHit();
+            events.add(SimEvents.Type.BOSS_LINE_HIT, ship.x(), ship.y(), lines.part());
+            double lost = ship.defences().armourLost();
+            if (damaged(lost, ship.defences().takeShot(lines.damage(), events, ship.x(), ship.y()))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * M9 part H, step H1b ({@link RelayFlash}, design/campaign Level 35): the mass relay's live flash whose band touches
+     * the hull deals its damage, once; returns whether it wrecked the ship.
+     */
+    private boolean relayHit(Hull hull) {
+        RelayFlash relay = s.relay;
+        if (relay == null || !relay.strikes(hull, ship.x(), ship.y())) {
+            return false;
+        }
+        relay.markHit();
+        events.add(SimEvents.Type.RELAY_HIT, ship.x(), ship.y(), 0);
+        double lost = ship.defences().armourLost();
+        return damaged(lost, ship.defences().takeShot(relay.spec().damage(), events, ship.x(), ship.y()));
     }
 
     /**

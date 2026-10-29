@@ -1,0 +1,649 @@
+# Level 33 – Leech Field: the level script, rendered into README.md (briefing, threat profile, layout, waves, ground
+# targets, radio, credit budget). Times are seconds from the level start. M9 part F, step F2, from the README's approved
+# hand tables (round 60) and ART-F2's backdrop proposal (concept/backdrop-proposal.yaml: its backdrop block, the
+# bunkers' and Claim 114's places, the nav buoy's drop and the grown rocks adopted as they are).
+# Schema: ../../../tech/architecture/schemas-levels/README.md (the Act 5 keys: schemas-act-4)
+# Keys new in M9 part F (flown from step F1; loaded and checked from step F1, mapped in step F2; drawn and played by
+# step F4): a wave's `prey` (QF-1 a, pending round 66: the wing's refuelling hold, `hold` s at `depth` px below the top
+# edge, then out straight up; latched by a leech, a Talon leaves it and drifts down) and `hunts: prey` (its leeches
+# steer at the nearest free prey, then the ship; the stream enters at the wing's height from its side by its route
+# `paths`, timed after the wing has settled), a ground target's `staggered` (step F2: the i-th of n bunkers of a nest
+# fires its first line i × interval / n later: a pair half the interval apart, hard's trio a third).
+# Step F2's own placements (pending the user's review in round 66): the Skitter swarms fly as snakes of 5 from
+# alternating edges (as Level 29's; a swarm needs a route), the leeches' rear ambushes as swarms from the rear (the
+# Lamprey's; a rear ambush formation needs an ambush path), the rocks with riders drift at the scroll plus 30 px/s,
+# the music's full mix by a stem time at t=121 (the Swarm's first wave; section 5 starts at t=118 under the Choir),
+# hard's third bunker of the t≈86 and t≈132 nests at x 240 between the pads.
+scroll_speed: 150     # the field; the bunker ridge 130 (eased over 2 s each way)
+launch_seconds: 5
+bounty_scale: 0.43    # every bounty × 0.43: the README's hand estimate 0.55 with the hardened bunkers at 0 %, fitted in step F2 with the offbeat Talon groups (levelReport with the bunkers at 0 %: typical haul on budget(33) 6,101)
+control_prompts: []
+medium: vacuum        # the belt: short flashes, debris rings, drifting wrecks (design/world/belt)
+threat_profile:  # the hangar intel panel (design/ui/hangar) and the README's Threat profile table
+  setting: The belt, Leech Field
+  layers: [air, ground]
+  density: 4
+  traits: [rear, side]
+  hazards: [power drain, rail lines]
+  boss: none
+  objective: CROSS THE LEECH FIELD   # the OBJECTIVE field from sensor L1
+  varga:
+    none: A rock field full of leeches. Bring spare power, Lancer.
+    l1: Leeches from behind and the sides. Bunkers on the rocks.
+    l2: "New: Void Leeches drain your generator. Bunkers fire lines."
+    l3: Rear and side guns throw a leech off. Keep 4 MW spare.
+  notes:
+    Dominant layers: '`air` (written `space` in the belt: the Talons, the Void Leeches, the Asteroid Mites on their rocks, the Vrell popcorn), `ground` (the Rail Bunkers on the large asteroid surfaces, judgement call J3)'
+    Attack directions: '{directions}'
+    Density: '{density}'
+    Recommended traits: '{traits} (the roster''s `beam` replaced: a latched leech is hit only by rear and side fire, see *Decisions*)'
+    Hazards: 'Generator drain (the leeches); the Rail Bunkers'' rail lines; drifting asteroids (small ones break, big ones block)'
+    Boss / mid-boss: none
+    Sensor-suite detail: 'none: the belt, Leech Field, `air` + `ground`, front, rear and sides · L1: + directions, density {density}, hazards "power drain" and "rail lines", the objective `{objective}` and the secondary `LEECHES` · L2: + Void Leech (new), Rail Bunker (new), Talon, Asteroid Mite, Stinger, Skitter, Mote Swarm portraits; the drain marked "power, not shield" · L3: + the rear and side entries on the threat arrows, `rear` and `side` highlighted'
+
+sections:  # back to back from t = 0; each speed change eased over 2 s (ramp); ART-F2's reading of the Layout table
+  - name: Field Edge
+    end: 24
+    atmosphere: clear
+    tiles: [field-space, field-dust]
+    notes:
+      layers:
+        ground: the first small asteroid surfaces, bare sunlit rock.
+        air: drifting rocks, two carrying Asteroid Mites.
+        deep: the dust band, the Sun as a bright point.
+      purpose: Popcorn and Talons; the first leech stream from the rear (t=22.5), alone.
+  - name: The Grown Rocks
+    end: 60
+    atmosphere: clear
+    tiles: [field-space, field-dust]
+    notes:
+      layers:
+        ground: 'large asteroid surfaces overgrown with black-violet Vrell growth (leech sacs pulsing), the first Rail Bunker dug into a rock face (t=33.5).'
+        low-air: smaller rocks.
+      purpose: The bunker taught alone; leeches from the sides and the rear.
+  - name: Bunker Ridge
+    end: 95
+    speed: 130
+    ramp: 2   # eased from 150 over its first 2 s
+    atmosphere: clear
+    tiles: [field-space, field-dust]
+    notes:
+      layers:
+        ground: 'a long rock ridge with bunker pairs (t≈68, t≈86) whose lines cross with a safe column between; the growth on its flanks.'
+      purpose: 'The first **prey** wing (t=62.5): the leeches feed on the Talons.'
+  - name: The Feeding Ground
+    end: 118
+    speed: 150
+    ramp: 2   # eased from 130
+    atmosphere: clear
+    tiles: [field-space, field-dust]
+    notes:
+      layers:
+        ground: 'the growth at its thickest, the drifting wrecks of latched Talons (scenery), the prospector''s claim shack *Claim 114* in the growth (t≈104, the secret).'
+      purpose: The second prey wing; then the Choir (t=118).
+  - name: The Swarm
+    end: 163
+    atmosphere: clear
+    tiles: [field-space, field-dust]
+    notes:
+      layers:
+        ground: 'leech nests in the growth, a bunker pair (t≈132) and a single bunker (t≈150).'
+        air: rocks thick with riders.
+      purpose: 'The leeches at their densest (at most 6 free on the screen), every 7.5 s from the rear or a side.'
+  - name: Clear Rock
+    end: 178
+    atmosphere: clear
+    tiles: [field-space, field-dust]
+    notes:
+      layers:
+        ground: 'the rocks thinning, the growth gone, bare rock lit gold; Ceres''s light ahead in the deep layer.'
+      purpose: Release; the level ends at t=178.
+
+debris:  # the belt's grown rocks (design/world/belt, hazards; Level 03's rules): small ones break and pay nothing, large ones are walls (contact `large` 20 once a second); bullets of both sides stop on both; sprites assets/sprites/debris-<chunk>_N (16 spin frames); the Mites' rocks are the waves' on_rocks (grown-a/b/c); ART-F2's placements
+  chunks:
+    grown-large-a: {size: [88, 80], damage: 20}
+    grown-large-b: {size: [66, 60], damage: 20}
+    grown-a: {size: [40, 36], hp: 6}
+    grown-b: {size: [36, 32], hp: 6}
+    grown-c: {size: [32, 28], hp: 6}
+  clearance: 120        # px: a chunk never enters closer to the ship than this (it moves sideways)
+  max_large: 2          # large rocks on the screen at once
+  easy: {leave_out_large: 4}
+  placed:               # t it enters at the top edge, its x, the chunk, its drift [x, y] px/s (y up: the scroll plus 15-60); ART-F2's, the large ones at x 60-70 or 410-420
+    - {t: 3.5, x: 110, chunk: grown-a, drift: [20, -180]}
+    - {t: 9, x: 70, chunk: grown-large-a, drift: [12, -165]}
+    - {t: 10, x: 370, chunk: grown-b, drift: [-30, -190]}
+    - {t: 16.5, x: 200, chunk: grown-c, drift: [40, -200]}
+    - {t: 17.5, x: 410, chunk: grown-large-b, drift: [-12, -165]}   # step F2: 1.5 s earlier, out of the ship's lowest 120 px before the rear leeches (t=22.5)
+    - {t: 23, x: 300, chunk: grown-a, drift: [-50, -210]}
+    - {t: 29.5, x: 150, chunk: grown-b, drift: [60, -180]}
+    - {t: 36, x: 60, chunk: grown-large-a, drift: [12, -165]}
+    - {t: 36, x: 330, chunk: grown-c, drift: [-20, -190]}
+    - {t: 42.5, x: 60, chunk: grown-a, drift: [30, -200]}
+    - {t: 44.5, x: 420, chunk: grown-large-b, drift: [-12, -165]}   # step F2: 1.5 s earlier (the t=49.5 ambush)
+    - {t: 49, x: 420, chunk: grown-b, drift: [-40, -210]}
+    - {t: 55.5, x: 240, chunk: grown-c, drift: [50, -180]}
+    - {t: 58, x: 70, chunk: grown-large-a, drift: [12, -165]}
+    - {t: 62, x: 110, chunk: grown-a, drift: [-60, -190]}
+    - {t: 68.5, x: 370, chunk: grown-b, drift: [20, -200]}
+    - {t: 70.5, x: 410, chunk: grown-large-b, drift: [-12, -165]}   # step F2: 2.5 s earlier (the t=75 ambush)
+    - {t: 75, x: 200, chunk: grown-c, drift: [-30, -210]}
+    - {t: 81.5, x: 300, chunk: grown-a, drift: [40, -180]}
+    - {t: 84, x: 60, chunk: grown-large-a, drift: [12, -165]}
+    - {t: 88, x: 150, chunk: grown-b, drift: [-50, -190]}
+    - {t: 94.5, x: 330, chunk: grown-c, drift: [60, -200]}
+    - {t: 101, x: 60, chunk: grown-a, drift: [-20, -210]}
+    - {t: 101, x: 420, chunk: grown-large-b, drift: [-12, -165]}
+    - {t: 107.5, x: 420, chunk: grown-b, drift: [30, -180]}
+    - {t: 111, x: 70, chunk: grown-large-a, drift: [12, -165]}
+    - {t: 114, x: 240, chunk: grown-c, drift: [-40, -190]}
+    - {t: 124, x: 410, chunk: grown-large-b, drift: [-12, -165]}
+    - {t: 127, x: 370, chunk: grown-b, drift: [-60, -210]}
+    - {t: 131.5, x: 60, chunk: grown-large-a, drift: [12, -165]}   # step F2: 2.5 s earlier (the t=136 ambush)
+    - {t: 133.5, x: 200, chunk: grown-c, drift: [20, -180]}
+    - {t: 140, x: 300, chunk: grown-a, drift: [-30, -190]}
+    - {t: 145, x: 420, chunk: grown-large-b, drift: [-12, -165]}
+    - {t: 146.5, x: 150, chunk: grown-b, drift: [40, -200]}
+    - {t: 153, x: 330, chunk: grown-c, drift: [-50, -210]}
+    - {t: 155, x: 70, chunk: grown-large-a, drift: [12, -165]}
+    - {t: 159.5, x: 60, chunk: grown-a, drift: [60, -180]}
+    - {t: 166, x: 420, chunk: grown-b, drift: [-20, -190]}
+
+waves:
+  - t: 5
+    formation: swarm
+    enemy: asteroid-mite
+    count: 4
+    from: front
+    on_rocks:
+      chunk: grown-a
+      riders: 2
+      rocks:
+        - {at: [130, -30], drift: [10, -180]}
+        - {at: [340, -70], drift: [-10, -180]}
+    notes: "Two rocks carrying the riders"
+  - {t: 7.5, formation: V-wing, enemy: talon, count: 5, from: front, leader: tip, speed: 130, notes: "Shielded Talons; the leader at the tip"}
+  - {t: 8.75, formation: line abreast, enemy: talon, count: 3, from: front, speed: 130, notes: "Step F2: a firing Talon group on the offbeat (the beam erases the popcorn within a second)"}
+  - {t: 10, formation: snake, enemy: skitter, count: 5, from: front, edge: left}
+  - t: 12.5
+    formation: swarm
+    enemy: asteroid-mite
+    count: 4
+    from: front
+    on_rocks:
+      chunk: grown-b
+      riders: 2
+      rocks:
+        - {at: [90, -30], drift: [10, -180]}
+        - {at: [200, -70], drift: [-10, -180]}
+  - t: 12.5
+    formation: swarm
+    enemy: asteroid-mite
+    count: 1
+    from: front
+    on_rocks:
+      chunk: grown-c
+      riders: 1
+      rocks:
+        - {at: [150, -110], drift: [5, -180]}
+  - {t: 15, formation: line abreast, enemy: talon, count: 4, from: front, speed: 130}
+  - t: 17.5
+    formation: swarm
+    enemy: mote-swarm
+    count: 9
+    from: front
+    speed: 200
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+  - {t: 18.75, formation: line abreast, enemy: talon, count: 3, from: front, speed: 130, notes: "Step F2: a firing Talon group on the offbeat (the beam erases the popcorn within a second)"}
+  - {t: 20, formation: column, enemy: stinger, count: 4, from: front, edge: right}
+  - {t: 20, formation: line abreast, enemy: talon, count: 2, from: front, speed: 130, notes: "Step F2: a Talon pair over the Stinger column (both fire at once)"}
+  - {t: 22.5, formation: stream, enemy: void-leech, count: 4, from: rear, interval: 0.5, warning: 3, easy: {count: 3}, notes: "The first leeches, alone, from the rear (BOTTOM warning 3 s ahead); a quiet window of 3.5 s after it"}
+  - {t: 26, formation: snake, enemy: skitter, count: 5, from: front, edge: right}
+  - {t: 27.25, formation: line abreast, enemy: talon, count: 3, from: front, speed: 130, notes: "Step F2: a firing Talon group on the offbeat (the beam erases the popcorn within a second)"}
+  - t: 28.5
+    formation: swarm
+    enemy: asteroid-mite
+    count: 4
+    from: front
+    on_rocks:
+      chunk: grown-c
+      riders: 2
+      rocks:
+        - {at: [130, -30], drift: [10, -180]}
+        - {at: [340, -70], drift: [-10, -180]}
+  - {t: 31, formation: V-wing, enemy: talon, count: 5, from: front, leader: tip, speed: 130, notes: "The leader drops a shield cell"}
+  - {t: 37, formation: stream, enemy: void-leech, count: 5, from: sides, edge: left, interval: 0.5, warning: 3, easy: {count: 3}, notes: "Edge warning at t=34; the first Rail Bunker on the screen (t=33.5)"}
+  - {t: 39.5, formation: snake, enemy: skitter, count: 5, from: front, edge: left}
+  - {t: 40.75, formation: line abreast, enemy: talon, count: 3, from: front, speed: 130, notes: "Step F2: a firing Talon group on the offbeat (the beam erases the popcorn within a second)"}
+  - {t: 42, formation: line abreast, enemy: talon, count: 4, from: front, speed: 130}
+  - t: 44.5
+    formation: swarm
+    enemy: asteroid-mite
+    count: 4
+    from: front
+    on_rocks:
+      chunk: grown-a
+      riders: 2
+      rocks:
+        - {at: [300, -30], drift: [10, -180]}
+        - {at: [400, -70], drift: [-10, -180]}
+  - t: 44.5
+    formation: swarm
+    enemy: asteroid-mite
+    count: 1
+    from: front
+    on_rocks:
+      chunk: grown-b
+      riders: 1
+      rocks:
+        - {at: [350, -110], drift: [5, -180]}
+  - {t: 47, formation: column, enemy: stinger, count: 4, from: front}
+  - {t: 47, formation: line abreast, enemy: talon, count: 2, from: front, speed: 130, notes: "Step F2: a Talon pair over the Stinger column (both fire at once)"}
+  - {t: 49.5, formation: swarm, enemy: void-leech, count: 4, from: rear, warning: 3, easy: {count: 2}, notes: "Rear ambush (BOTTOM warning at t=46.5)"}
+  - {t: 50.75, formation: line abreast, enemy: talon, count: 3, from: front, speed: 130, notes: "Step F2: a firing Talon group on the offbeat (the beam erases the popcorn within a second)"}
+  - t: 52
+    formation: swarm
+    enemy: mote-swarm
+    count: 9
+    from: front
+    speed: 200
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+  - {t: 54.5, formation: V-wing, enemy: talon, count: 5, from: front, leader: tip, speed: 130}
+  - {t: 55.75, formation: line abreast, enemy: talon, count: 3, from: front, speed: 130, notes: "Step F2: a firing Talon group on the offbeat (the beam erases the popcorn within a second)"}
+  - t: 57
+    formation: swarm
+    enemy: asteroid-mite
+    count: 4
+    from: front
+    on_rocks:
+      chunk: grown-b
+      riders: 2
+      rocks:
+        - {at: [130, -30], drift: [10, -180]}
+        - {at: [340, -70], drift: [-10, -180]}
+  - {t: 60, formation: snake, enemy: skitter, count: 5, from: front, edge: right}
+  - {t: 62.5, formation: V-wing, enemy: talon, count: 7, from: front, speed: 130, prey: {hold: 5, depth: [140, 200]}, easy: {count: 7}, hard: {count: 7}, notes: "Prey: a refuelling hold (5 s at 140-200 px), the t=63.5 leeches feed on them"}
+  - {t: 63.5, formation: stream, enemy: void-leech, count: 5, from: sides, edge: right, speed: 190, interval: 0.35, warning: 3, hunts: prey, paths: [[[-40, 170], [520, 170]]], easy: {count: 3}, notes: "Aimed at the prey wing, at its height from its side as it settles (edge warning 3 s ahead)"}
+  - t: 67.5
+    formation: swarm
+    enemy: asteroid-mite
+    count: 4
+    from: front
+    on_rocks:
+      chunk: grown-c
+      riders: 2
+      rocks:
+        - {at: [130, -30], drift: [10, -160]}
+        - {at: [340, -70], drift: [-10, -160]}
+  - t: 67.5
+    formation: swarm
+    enemy: asteroid-mite
+    count: 1
+    from: front
+    on_rocks:
+      chunk: grown-a
+      riders: 1
+      rocks:
+        - {at: [230, -110], drift: [5, -160]}
+  - {t: 68.75, formation: line abreast, enemy: talon, count: 3, from: front, speed: 130, notes: "Step F2: a firing Talon group on the offbeat (the beam erases the popcorn within a second)"}
+  - {t: 70, formation: line abreast, enemy: talon, count: 4, from: front, speed: 130}
+  - t: 72.5
+    formation: swarm
+    enemy: mote-swarm
+    count: 9
+    from: front
+    speed: 200
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+  - {t: 75, formation: swarm, enemy: void-leech, count: 4, from: rear, warning: 3, easy: {count: 2}, notes: "Rear ambush (BOTTOM warning at t=72)"}
+  - {t: 77.5, formation: column, enemy: stinger, count: 4, from: front, edge: left}
+  - {t: 77.5, formation: line abreast, enemy: talon, count: 2, from: front, speed: 130, notes: "Step F2: a Talon pair over the Stinger column (both fire at once)"}
+  - {t: 78.75, formation: line abreast, enemy: talon, count: 3, from: front, speed: 130, notes: "Step F2: a firing Talon group on the offbeat (the beam erases the popcorn within a second)"}
+  - {t: 80, formation: snake, enemy: skitter, count: 5, from: front, edge: left}
+  - {t: 82.5, formation: V-wing, enemy: talon, count: 5, from: front, leader: tip, speed: 130}
+  - {t: 85, formation: stream, enemy: void-leech, count: 5, from: sides, edge: left, interval: 0.5, warning: 3, easy: {count: 3}, notes: "Edge warning at t=82"}
+  - t: 87.5
+    formation: swarm
+    enemy: asteroid-mite
+    count: 4
+    from: front
+    on_rocks:
+      chunk: grown-a
+      riders: 2
+      rocks:
+        - {at: [130, -30], drift: [10, -160]}
+        - {at: [340, -70], drift: [-10, -160]}
+  - {t: 88.75, formation: line abreast, enemy: talon, count: 3, from: front, speed: 130, notes: "Step F2: a firing Talon group on the offbeat (the beam erases the popcorn within a second)"}
+  - t: 90
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    speed: 200
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+  - {t: 92.5, formation: line abreast, enemy: talon, count: 4, from: front, speed: 130}
+  - {t: 95, formation: V-wing, enemy: talon, count: 6, from: front, speed: 130, prey: {hold: 5, depth: [140, 200]}, easy: {count: 6}, hard: {count: 7}, notes: "Prey again: the t=96 stream feeds on them"}
+  - {t: 96, formation: stream, enemy: void-leech, count: 4, from: sides, edge: right, speed: 190, interval: 0.35, warning: 3, hunts: prey, paths: [[[-40, 170], [520, 170]]], easy: {count: 3}, notes: "Aimed at the prey wing as it settles (edge warning 3 s ahead)"}
+  - {t: 98.75, formation: line abreast, enemy: talon, count: 3, from: front, speed: 130, notes: "Step F2: a firing Talon group on the offbeat (the beam erases the popcorn within a second)"}
+  - {t: 100, formation: snake, enemy: skitter, count: 5, from: front, edge: right}
+  - t: 102.5
+    formation: swarm
+    enemy: asteroid-mite
+    count: 4
+    from: front
+    on_rocks:
+      chunk: grown-b
+      riders: 2
+      rocks:
+        - {at: [130, -30], drift: [10, -180]}
+        - {at: [340, -70], drift: [-10, -180]}
+  - t: 102.5
+    formation: swarm
+    enemy: asteroid-mite
+    count: 1
+    from: front
+    on_rocks:
+      chunk: grown-c
+      riders: 1
+      rocks:
+        - {at: [230, -110], drift: [5, -180]}
+  - {t: 105, formation: column, enemy: stinger, count: 4, from: front}
+  - {t: 105, formation: line abreast, enemy: talon, count: 2, from: front, speed: 130, notes: "Step F2: a Talon pair over the Stinger column (both fire at once)"}
+  - {t: 106.25, formation: line abreast, enemy: talon, count: 3, from: front, speed: 130, notes: "Step F2: a firing Talon group on the offbeat (the beam erases the popcorn within a second)"}
+  - {t: 107.5, formation: swarm, enemy: void-leech, count: 5, from: rear, warning: 3, easy: {count: 3}, hard: {count: 5}, notes: "Rear ambush (BOTTOM warning at t=104.5)"}
+  - t: 110
+    formation: swarm
+    enemy: mote-swarm
+    count: 9
+    from: front
+    speed: 200
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+  - {t: 111.25, formation: line abreast, enemy: talon, count: 3, from: front, speed: 130, notes: "Step F2: a firing Talon group on the offbeat (the beam erases the popcorn within a second)"}
+  - {t: 112.5, formation: line abreast, enemy: talon, count: 4, from: front, speed: 130}
+  - t: 115
+    formation: swarm
+    enemy: asteroid-mite
+    count: 4
+    from: front
+    on_rocks:
+      chunk: grown-c
+      riders: 2
+      rocks:
+        - {at: [130, -30], drift: [10, -180]}
+        - {at: [340, -70], drift: [-10, -180]}
+    notes: "The last wave before the Choir (t=118): no wave for 6 s"
+  - {t: 121, formation: stream, enemy: void-leech, count: 5, from: rear, interval: 0.5, warning: 3, easy: {count: 3}, notes: "The Swarm begins: BOTTOM warning at t=118, under the Choir's line"}
+  - {t: 123.5, formation: snake, enemy: skitter, count: 5, from: front, edge: left}
+  - {t: 124.75, formation: line abreast, enemy: talon, count: 3, from: front, speed: 130, notes: "Step F2: a firing Talon group on the offbeat (the beam erases the popcorn within a second)"}
+  - {t: 126, formation: V-wing, enemy: talon, count: 5, from: front, leader: tip, speed: 130, notes: "The leader drops an overdrive"}
+  - {t: 128.5, formation: stream, enemy: void-leech, count: 4, from: sides, edge: left, interval: 0.5, warning: 3, easy: {count: 3}, notes: "Edge warning at t=125.5"}
+  - t: 131
+    formation: swarm
+    enemy: asteroid-mite
+    count: 4
+    from: front
+    on_rocks:
+      chunk: grown-a
+      riders: 2
+      rocks:
+        - {at: [130, -30], drift: [10, -180]}
+        - {at: [340, -70], drift: [-10, -180]}
+  - t: 131
+    formation: swarm
+    enemy: asteroid-mite
+    count: 1
+    from: front
+    on_rocks:
+      chunk: grown-b
+      riders: 1
+      rocks:
+        - {at: [230, -110], drift: [5, -180]}
+  - t: 133.5
+    formation: swarm
+    enemy: mote-swarm
+    count: 9
+    from: front
+    speed: 200
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+  - {t: 136, formation: swarm, enemy: void-leech, count: 5, from: rear, warning: 3, easy: {count: 3}, hard: {count: 5}, notes: "Rear ambush (BOTTOM warning at t=133)"}
+  - {t: 138.5, formation: line abreast, enemy: talon, count: 4, from: front, speed: 130}
+  - {t: 139.75, formation: line abreast, enemy: talon, count: 3, from: front, speed: 130, notes: "Step F2: a firing Talon group on the offbeat (the beam erases the popcorn within a second)"}
+  - {t: 141, formation: snake, enemy: skitter, count: 5, from: front, edge: right}
+  - {t: 143.5, formation: stream, enemy: void-leech, count: 4, from: sides, edge: right, interval: 0.5, warning: 3, easy: {count: 3}, notes: "Edge warning at t=140.5"}
+  - {t: 146, formation: column, enemy: stinger, count: 4, from: front}
+  - {t: 146, formation: line abreast, enemy: talon, count: 2, from: front, speed: 130, notes: "Step F2: a Talon pair over the Stinger column (both fire at once)"}
+  - t: 148.5
+    formation: swarm
+    enemy: asteroid-mite
+    count: 4
+    from: front
+    on_rocks:
+      chunk: grown-b
+      riders: 2
+      rocks:
+        - {at: [130, -30], drift: [10, -180]}
+        - {at: [340, -70], drift: [-10, -180]}
+  - {t: 149.75, formation: line abreast, enemy: talon, count: 3, from: front, speed: 130, notes: "Step F2: a firing Talon group on the offbeat (the beam erases the popcorn within a second)"}
+  - {t: 151, formation: swarm, enemy: void-leech, count: 5, from: rear, warning: 3, easy: {count: 3}, hard: {count: 5}, notes: "Rear ambush (BOTTOM warning at t=148)"}
+  - {t: 153.5, formation: V-wing, enemy: talon, count: 5, from: front, leader: tip, speed: 130}
+  - t: 156
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    speed: 200
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+  - {t: 157.25, formation: line abreast, enemy: talon, count: 3, from: front, speed: 130, notes: "Step F2: a firing Talon group on the offbeat (the beam erases the popcorn within a second)"}
+  - {t: 158.5, formation: stream, enemy: void-leech, count: 4, from: sides, edge: left, interval: 0.5, warning: 3, easy: {count: 3}, notes: "Edge warning at t=155.5; the last leeches"}
+  - {t: 161, formation: snake, enemy: skitter, count: 5, from: front, edge: left}
+  - {t: 163.25, formation: line abreast, enemy: talon, count: 3, from: front, speed: 130, notes: "Step F2: a firing Talon group on the offbeat (the beam erases the popcorn within a second)"}
+  - {t: 165, formation: line abreast, enemy: talon, count: 4, from: front, speed: 130}
+  - t: 168
+    formation: swarm
+    enemy: asteroid-mite
+    count: 4
+    from: front
+    on_rocks:
+      chunk: grown-c
+      riders: 2
+      rocks:
+        - {at: [130, -30], drift: [10, -180]}
+        - {at: [340, -70], drift: [-10, -180]}
+  - {t: 171, formation: snake, enemy: skitter, count: 5, from: front, edge: right, notes: "The last wave; the level ends at t=178"}
+  - {t: 172.5, formation: line abreast, enemy: talon, count: 4, from: front, speed: 130, notes: "Step F2: the last Talons over clear rock (no stretch over 2 s before the end)"}
+  - {t: 175.5, formation: line abreast, enemy: talon, count: 2, from: front, speed: 130, notes: "Step F2: a firing Talon pair on the offbeat (the beam erases the popcorn within a second)"}
+
+ground_targets:  # at: [t, x], when it enters at the top edge and its x (ART-F2's places: the bunkers on the faces' pads, Claim 114 on its ledge)
+  - target: First bunker
+    section: 2
+    enemy: rail-bunker
+    count: 1
+    at: [[33.5, 112]]   # grown-face-1's pad
+    notes:
+      target: '[Rail Bunker](../../../enemies/ground/rail-bunker/README.md) on a rock face (t≈33.5), alone'
+      effect: 'Bounty {bounty}; hardened (only `anti-ground` weapons and the specials hurt it); its first line taught with no air wave until t=37'
+  - target: Ridge pair 1
+    section: 3
+    enemy: rail-bunker
+    count: 2
+    staggered: true   # the right one's first line half the interval after the left one's
+    at: [[68, 92], [68, 388]]   # ridge-1's pads
+    notes:
+      target: 'Rail Bunker pair on the ridge (t≈68), their lines crossing with a safe column between'
+      effect: 'Bounty {bounty} each; their first lines half the interval apart; never more than 2 lines telegraphed at once (the bunker''s rule)'
+  - target: Ridge pair 2
+    section: 3
+    enemy: rail-bunker
+    count: 2
+    staggered: true
+    at: [[86, 84], [86.15, 396]]   # ridge-2's pads
+    hard: {at: [[86, 84], [86.15, 396], [86.1, 240]]}   # a trio on the ridge's length, a third of the interval apart
+    notes:
+      target: 'Rail Bunker pair on the ridge (t≈86; hard a trio)'
+      effect: 'Bounty {bounty} each; staggered as the first pair (hard''s trio a third of the interval apart)'
+  - target: Nest pair
+    section: 5
+    enemy: rail-bunker
+    count: 2
+    staggered: true
+    at: [[132, 100], [132, 380]]   # nest-face-1's pads
+    hard: {at: [[132, 100], [132, 380], [132, 240]]}
+    notes:
+      target: 'Rail Bunker pair in the growth (t≈132; hard a trio)'
+      effect: 'Bounty {bounty} each; staggered (hard''s trio a third of the interval apart)'
+  - target: Last bunker
+    section: 5
+    enemy: rail-bunker
+    count: 1
+    at: [[150, 320]]   # nest-face-2's pad
+    notes:
+      target: 'Rail Bunker, single (t≈150)'
+      effect: 'Bounty {bounty}'
+  - target: Claim 114
+    section: 4
+    layer: ground
+    size: [48, 48]
+    sprite: claim-shack
+    hp: 20
+    easy: {hp: 15}
+    hard: {hp: 28}
+    reveals: Claim 114
+    at: [[104, 380]]   # its ledge on the feeding face
+    notes:
+      target: 'The prospector''s shack *Claim 114* in the growth (a `ground` trigger, {hp} HP, t≈104, x 380)'
+      effect: 'The secret: frees a crate worth 100 (655)'
+
+secrets:
+  - name: Claim 114
+    crate: 100   # Act 1 terms: pays 655 with the act factor (the prospector's strongbox)
+    radio: {speaker: Rook, requires: escort, line: "Claim 114. Someone staked this rock. The Vrell got here first."}   # Rook's line: only with him flying (step F4)
+
+pickups:
+  - {pickup: shield cell, dropped_by: {wave: 31, enemy: talon, unit: first}}    # the t=31 V-wing's leader (its tip)
+  - {pickup: overdrive, dropped_by: {wave: 126, enemy: talon, unit: first}}     # the t=126 V-wing's leader, at the Swarm's start
+
+drops:  # a CDF nav buoy (the low-air layer) opens and releases an armour patch at the Swarm's end
+  - {t: 160, x: 240, y: 380, pickup: armour patch, sprite: nav-buoy}
+
+radio:  # trigger: t or event; every timed line one radio page (three 22-character lines: 5 s), the Choir's two. Rook's lines need him flying (requires: escort; the secret's line has no requires key). The Choir: the HUD portrait's static 2 s before it, the music 6 dB under it (Level 26's).
+  - {t: 1, speaker: Okafor, line: "Leech Field, Lancer. Bunkers on the rocks. Keep your power up."}
+  - {t: 13, speaker: Rook, requires: escort, line: "Rocks with teeth. Lovely. Keep your tail clear, Lancer."}
+  - {t: 23, speaker: Varga, line: "Leeches behind you! They drain power. Jink to throw them."}
+  - {t: 34.5, speaker: Okafor, line: "Rail Bunker. A red line: it's locked on. Step off the line."}
+  - {t: 46, speaker: Varga, line: "Rear and side guns hit a latched leech. Front guns can't."}
+  - {t: 65, speaker: Varga, line: "They're on the Talons too. Feeding on their own allies."}   # step F2: t=63.5 → 65, at the first prey latch (the stream enters at t=63.5)
+  - {t: 71.5, speaker: Okafor, line: "Some alliance. Don't count on it, Doctor. Keep firing."}
+  - {t: 86.5, speaker: Rook, requires: escort, line: "Two red lines. I'll take the space between, thanks."}
+  - {t: 97.5, speaker: Varga, line: "More Talons with leeches. They just drift."}   # step F2: t=96 → 97.5, at the second wing's first latch
+  - {t: 118, speaker: The Choir, distorted: true, static_lead: 2, duck_db: 6, line: "…the one who opened… calls to us… we do not answer… the door is open… we are going…"}
+  - {t: 130, speaker: Varga, line: "'The one who opened.' That's Vorne. They don't care about him."}   # t=128 → 130 (gap check §4): after the Choir's voiced line and its lead
+  - {t: 137, speaker: Okafor, line: "Then he's alone in it. Good. Leeches from every side now."}
+  - {t: 150, speaker: Rook, requires: escort, line: "Lancer, you've got passengers. Shake 'em loose!"}
+  - {t: 164, speaker: Okafor, line: "Clear rock ahead. The graveyard next, then the Sovereign."}
+  - {event: secondary-objective, speaker: Okafor, line: "Field's clean. Not one leech left to follow us home.", notes: {trigger: "Secondary met (at the end)"}}
+
+objectives:
+  primary: reach-end
+  secondary: {escapes: void-leech, allowed: 15, easy: {allowed: 10}, hard: {allowed: 18}, label: LEECHES, credits: 100, name: Purge the field}   # at least 48 of the 63 Void Leeches destroyed before they leave the screen (easy 30 of 40, hard 56 of 74: a quarter allowed away), failed by the sixteenth away (a shaken-off leech that flees, or one carried off on a prey Talon, counts as away); 100 in Act 1 terms: pays 655
+
+music:
+  track: 13           # Act 5 B "Gilded Cage" (audio/music track list)
+  start_section: 1    # the base stem from the start
+  full_section: 6     # (the full mix comes in at t=121 by its stem time, held to the end)
+  stem_times:
+    - {t: 121, stems: full, fade: 1}   # the full mix with the Swarm's first wave, after the Choir's line (t=118, ducked 6 dB by its radio line)
+  ambience: belt-open   # the belt's open-space bed (hull creaks, distant impacts, radio hiss through the hull)
+  end_jingle: mission-complete
+  # no motif: Vorne's motif is muted all level (the Vrell's field, the Choir's level)
+
+difficulty: {}  # the stat blocks' hooks apply (the leech's easy 2 slots and 160 px/s chase, hard 220 px/s and 200°/s; the Rail Bunker's easy 1.2 s telegraph every 6 s, hard 0.8 s every 3.6 s; the Talon's easy pair every 2.0 s, hard 1.3 s and a parting pair; the Mite's); the leech waves' easy and hard counts (easy streams of 3, ambushes of 2-3; hard ambushes of 5), the prey wings never cut, the bunker trios on hard; the formation lever sizes the rest
+
+briefing:
+  pages:
+    - {speaker: Okafor, image: level-33-leech-field, line: "Between the deep core and Ceres lies a rock field the Vrell have grown over. The Ascendancy keeps rail bunkers on the big rocks. Cross it, Lancer. Rook flies your wing."}
+    - {speaker: Varga, image: level-33-power-drain, line: "The growth is full of leeches. They latch on and feed on your generator: your shield stops regrowing, then your guns slow. Bring spare power, and shake them off."}
+  teaser: {speaker: Rook, line: "Varga says bring spare power. I'm bringing spare jokes."}
+
+backdrop:
+  # Presentation only: Level 33's Leech Field (tools/art/backdrop_l33.py, step ART-F2, from the README's Layout table (re-run on step F2's data)).
+  # A ground layer without a tile set: open space is the deep layer (the base); the ground holds the
+  # asteroid faces (bare at the edge, overgrown in sections 2-5, gold-lit clear rock at the end) with the
+  # bunkers' pads and Claim 114's ledge, and the pulsing leech sacs (the only animated pieces: at most two
+  # on the screen). Low-air holds the leeched Talons' drifting wrecks (dimmed); high-air the close grit.
+  scroll_factors: {deep: 0.12, far: 0.5, ground: 1, low-air: 1.35, high-air: 2.2}   # far unused
+  ramp: 2
+  haze_colour: 09090e
+  atmosphere:
+    clear: {haze: 0.0}
+  tile_sets:
+    field-space: {layer: deep, height: 1024}   # space, the sunlit dust band, stars
+    field-dust: {layer: high-air, height: 960}   # close grit and dust motes (transparent)
+  pieces:
+    sun-point: {layer: deep, size: [96, 96]}
+    far-rock-a: {layer: deep, size: [120, 100]}
+    far-rock-b: {layer: deep, size: [84, 72]}
+    ceres-ahead: {layer: deep, size: [300, 300]}
+    edge-rock-a: {layer: ground, size: [260, 220]}
+    edge-rock-b: {layer: ground, size: [200, 170]}
+    grown-face-1: {layer: ground, size: [480, 460]}
+    grown-face-2: {layer: ground, size: [480, 420]}
+    ridge-1: {layer: ground, size: [480, 400]}
+    ridge-2: {layer: ground, size: [480, 400]}
+    feeding-face: {layer: ground, size: [480, 520]}
+    nest-face-1: {layer: ground, size: [480, 460]}
+    nest-face-2: {layer: ground, size: [480, 440]}
+    nest-face-3: {layer: ground, size: [480, 420]}
+    clear-face-a: {layer: ground, size: [480, 400]}
+    clear-rock-b: {layer: ground, size: [260, 220]}
+    leech-sacs: {layer: ground, size: [64, 48], frames: 4, fps: 2}
+    talon-wreck-a: {layer: low-air, size: [64, 64]}
+    talon-wreck-b: {layer: low-air, size: [64, 64]}
+  placed:
+    # grown-face-1: its pads carry the bunkers at x 112 (t 33.5)
+    - {piece: grown-face-1, t: 36.007, x: 240}
+    # ridge-1: its pads carry the bunkers at x 92 (t 68), x 388 (t 68)
+    - {piece: ridge-1, t: 70.323, x: 240}
+    # ridge-2: its pads carry the bunkers at x 84 (t 86), x 396 (t 86.15)
+    - {piece: ridge-2, t: 88.431, x: 240}
+    # nest-face-1: its pads carry the bunkers at x 100 (t 132), x 380 (t 132)
+    - {piece: nest-face-1, t: 134.173, x: 240}
+    # nest-face-2: its pads carry the bunkers at x 320 (t 150)
+    - {piece: nest-face-2, t: 152.107, x: 240}
+    # the feeding ground: Claim 114's ledge at x 380 (t 104)
+    - {piece: feeding-face, t: 106.027, x: 240}
+    - {piece: edge-rock-a, t: 6.0, x: 380}
+    - {piece: edge-rock-b, t: 13.0, x: 90}
+    - {piece: edge-rock-a, t: 20.0, x: 120}
+    - {piece: edge-rock-b, t: 26.0, x: 400}
+    - {piece: grown-face-2, t: 42.0, x: 260}
+    - {piece: edge-rock-b, t: 48.5, x: 60}
+    - {piece: grown-face-2, t: 54.0, x: 200}
+    - {piece: grown-face-2, t: 77.0, x: 250}
+    - {piece: edge-rock-b, t: 95.5, x: 70}
+    - {piece: grown-face-2, t: 112.0, x: 230}
+    - {piece: nest-face-3, t: 124.0, x: 240}
+    - {piece: grown-face-2, t: 141.0, x: 260}
+    - {piece: nest-face-3, t: 157.0, x: 250}
+    - {piece: clear-face-a, t: 167.0, x: 240}
+    - {piece: clear-rock-b, t: 172.5, x: 90}
+    - {piece: clear-face-a, t: 177.0, x: 300}
+    # leech sacs pulsing in the growth
+    - {piece: leech-sacs, t: 29.267, x: 300}
+    - {piece: leech-sacs, t: 44.6, x: 120}
+    - {piece: leech-sacs, t: 79.769, x: 400}
+    - {piece: leech-sacs, t: 109.4, x: 140}
+    - {piece: leech-sacs, t: 134.6, x: 260}
+    - {piece: leech-sacs, t: 145.4, x: 330}
+    - {piece: leech-sacs, t: 158.667, x: 180}
+    # a leeched Talon's wreck drifting below the play plane
+    - {piece: talon-wreck-a, t: 100.0, x: 120}
+    - {piece: talon-wreck-b, t: 108.0, x: 300}
+    - {piece: talon-wreck-a, t: 115.0, x: 70}
+    # the Sun as a bright point (section 1)
+    - {piece: sun-point, t: 8.333, x: 96}
+    # far rocks
+    - {piece: far-rock-a, t: 30.0, x: 400}
+    - {piece: far-rock-b, t: 70.0, x: 80}
+    - {piece: far-rock-a, t: 120.0, x: 90}
+    - {piece: far-rock-b, t: 150.0, x: 410}
+    # Ceres's light ahead, centred 120 px down at the end (t=178)
+    - {piece: ceres-ahead, t: 186.333, x: 300}

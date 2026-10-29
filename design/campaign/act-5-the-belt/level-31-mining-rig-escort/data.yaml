@@ -94,8 +94,8 @@ sections:  # back to back from t = 0; 120 px/s throughout (184 s, 22,080 px)
         deep: the relay's beacon tower and a CDF frigate, growing.
       purpose: The last waves; the climb-out at t=178.
 
-tows:  # Dacosta's claim (the secret): a small hollow rock with a claim marker drifting through the Drift on the play plane; its housing (the tow's cable box) takes 6 hits (the README's 12 HP at 2 a Pulse Cannon bolt) and frees the crate (Level 07's tow rule: shots pass the rest)
-  - {t: 100, x: 300, drift: [-18, -146], boat: [34, 30], pod: [20, 20], tether: [0, 0], cable: [24, 24], hits: 6, reveals: Dacosta's claim}
+tows:  # Dacosta's claim (the secret): a small hollow rock with a claim marker drifting through the Drift on the play plane; its housing (the tow's cable box) takes 6 hits (the README's 12 HP at 2 a Pulse Cannon bolt) and frees the crate (Level 07's tow rule: shots pass the rest); `beam_touch`: a beam's touch on the housing counts a hit per 0.25 s (round 64 C.1 a)
+  - {t: 100, x: 300, drift: [-18, -146], boat: [34, 30], pod: [20, 20], tether: [0, 0], cable: [24, 24], hits: 6, reveals: Dacosta's claim, beam_touch: true}
 
 debris:  # the belt's rocks (design/world/belt, hazards; Level 03's rules): small ones break and pay nothing, large ones are walls (contact `large` 20 once a second); bullets of both sides stop on both; they pass over the tug (ground layer); sprites assets/sprites/debris-<chunk>_N (16 spin frames)
   chunks:
@@ -436,7 +436,7 @@ pickups:
   - {pickup: overdrive, dropped_by: {wave: 134, enemy: hornet, unit: last}}       # the last Hornet of the t=134 trio
 
 drops:  # the Bellwether's crew throws an armour patch out of the cargo hatch (at the cargo's place under the station)
-  - {t: 110, x: 240, y: 380, pickup: armour patch}
+  - {t: 118, x: 240, y: 380, pickup: armour patch}
 
 radio:  # trigger: t or event; every timed line one radio page (three 22-character lines: 5 s), the story pair two. The Bellwether is the tug's captain (a new speaker, uncast until VOX-D); {section} names the hit or lost section (bow, cargo, engines). Rook's lines need him flying (requires: escort).
   - {t: 1, speaker: Bellwether, portrait: bellwether, line: "Bellwether to Aegis. Four hundred souls aboard. Stay close."}
@@ -446,10 +446,10 @@ radio:  # trigger: t or event; every timed line one radio page (three 22-charact
   - {event: first-ally-hit, speaker: Bellwether, portrait: bellwether, line: "We're hit in the {section}! Get them off us!", notes: {trigger: "First section hit (`first-ally-hit`)"}}
   - {t: 39, speaker: Okafor, line: "Contacts behind you, on the tug's engines."}
   - {t: 59, speaker: Varga, line: "Linked drones. Kill one and its beams drop."}
-  - {t: 86, speaker: Bellwether, portrait: bellwether, line: "You know why half of Ceres turned? Helix came with medicine."}
-  - {t: 93, speaker: Bellwether, portrait: bellwether, line: "Lung rot, bone loss. Gone in a week. Nobody asked why."}
-  - {t: 101, speaker: Varga, line: "Vrell biotech. They were cured with the enemy's blood."}
-  - {t: 110, speaker: Bellwether, portrait: bellwether, line: "Throwing you a patch from the cargo hatch. It's all we've got."}
+  - {t: 79, speaker: Bellwether, portrait: bellwether, line: "You know why half of Ceres turned? Helix came with medicine."}
+  - {t: 86, speaker: Bellwether, portrait: bellwether, line: "Lung rot, bone loss. Gone in a week. Nobody asked why."}
+  - {t: 94, speaker: Varga, line: "Vrell biotech. They were cured with the enemy's blood."}
+  - {t: 118, speaker: Bellwether, portrait: bellwether, line: "Throwing you a patch from the cargo hatch. It's all we've got."}
   - {t: 130, speaker: Okafor, line: "Ambush ahead. Gunships and missile boats. Hold the line, Aegis."}
   - {t: 137.5, speaker: Rook, requires: escort, line: "Three of them. I'll take the left one."}
   - {event: ally-lost, speaker: Bellwether, portrait: bellwether, line: "We've lost the {section}! We're still flying.", notes: {trigger: "A section lost (`ally-lost`)"}}

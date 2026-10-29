@@ -34,6 +34,8 @@ Harpoon Torpedoes L3, Depth Charges L3, two Micro-Missile Pods L3, the Pressure 
 their PNGs are frames of those runs side by side, the time in the level in each row's text. The briefing and intel
 captures come from a playthrough save at Level 25 (the sensor suite at L2).
 
+Record of the decisions: [review.html](review.html)
+
 ## In the game
 
 The art below is already in `assets/` (the finals), and the **a** sound of every pair played in the game until the

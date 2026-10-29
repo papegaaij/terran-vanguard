@@ -84,8 +84,8 @@ sections:  # back to back from t = 0; each speed change eased over 2 s (ramp)
         deep: the open belt ahead.
       purpose: 'Lines, a Serpent pincer (t=145), a Gunship pair, the run to the open belt. Level end at t=178 as the last beacon passes the bottom edge.'
 
-tows:  # the dead beacon buoy (the secret): drifting down the left edge on the play plane; its housing (the tow's cable box) takes 4 hits and frees the crate (Level 07's tow rule: shots pass the rest)
-  - {t: 118, x: 60, drift: [4, -92], boat: [28, 28], pod: [20, 20], tether: [0, 0], cable: [24, 24], hits: 4, reveals: dead beacon buoy}
+tows:  # the dead beacon buoy (the secret): drifting down the left edge on the play plane; its housing (the tow's cable box) takes 4 hits and frees the crate (Level 07's tow rule: shots pass the rest); `beam_touch`: a beam's touch on the housing counts a hit per 0.25 s (round 64 C.1 a)
+  - {t: 118, x: 60, drift: [4, -92], boat: [28, 28], pod: [20, 20], tether: [0, 0], cable: [24, 24], hits: 4, reveals: dead beacon buoy, beam_touch: true}
 
 debris:  # the belt's rocks (design/world/belt, hazards; Level 03's rules): small ones break and pay nothing, large ones are walls (contact `large` 20 once a second); bullets of both sides stop on both; sprites assets/sprites/debris-<chunk>_N (16 spin frames)
   chunks:
@@ -680,6 +680,7 @@ music:
   track: 12           # Act 5 A "Hollow Rock" (audio/music track list)
   start_section: 1    # the base stem in the lane's first section
   full_section: 2     # the full mix from the seeded lane (the first column)
+  motif: {from: 0, sections: {}}   # Vorne's motif "in the open" (music, Cues per level (Act 5): on): track 12's motif stem on top from the base stem's start (section 1) to the end
   ambience: belt-open   # the belt's open-space bed (hull creaks, distant impacts, radio hiss through the hull)
   end_jingle: mission-complete
 

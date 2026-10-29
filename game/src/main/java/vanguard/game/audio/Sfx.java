@@ -1065,7 +1065,10 @@ public enum Sfx {
     NEST_WAKE("sfx/nest-wake-r62-ab.ogg", 3, Bus.EFFECTS, ENEMY_FIRE),
     /** M9 part B: a clamp gun's shot (Level 29's Dock 9). */
     CLAMP_GUN_SHOT("sfx/clamp-gun-shot-r62-b.ogg", 3, Bus.EFFECTS, ENEMY_FIRE),
-    /** M9 part B: a docking clamp springing open as its gun dies (a hydraulic release, a gas burst, a clang). */
+    /**
+     * M9 part B: a docking clamp springing open as its gun dies (a hydraulic release, a gas burst, a clang); M9 part G:
+     * also a Level 34 hold clamp destroyed (round 67's S.2 "dock": Dock 9's release, at most 2 at once of the four).
+     */
     CLAMP_RELEASE("sfx/clamp-release-r62-b.ogg", 2, Bus.EFFECTS, EXPLOSION),
     /** M9 part B: Rook's Ember launching from the prison tender's hold (a jet spooling up into a whoosh). */
     EMBER_LAUNCH("sfx/ember-launch-r62-a.ogg", 1, Bus.EFFECTS, WARNING),
@@ -1092,6 +1095,11 @@ public enum Sfx {
      * far impact, a seamless 16 s loop), looped: Level 30.
      */
     AMBIENCE_BELT_OPEN("sfx/belt-open-r60-a.ogg", 1, Bus.EFFECTS, AMBIENCE),
+    /**
+     * M9 part E (design/audio/sfx, round 60 S.19 a, the user's pick): the belt's tunnels, a mining base's air handlers,
+     * pumps and distant machinery in rock (Level 32).
+     */
+    AMBIENCE_BELT_TUNNEL("sfx/belt-tunnel-r60-a.ogg", 1, Bus.EFFECTS, AMBIENCE),
     /** M9 part C: an armed line mine's 0.6 s proximity blink (S.14 a: rising dry ticks). */
     MINE_BLINK("sfx/mine-blink-r60-a.ogg", 3, Bus.EFFECTS, WARNING),
     /** M9 part C: a line mine bursting, by proximity, shot or touched (S.15 a: a metallic bang). */
@@ -1114,8 +1122,11 @@ public enum Sfx {
     MINE_CHAIN("sfx/mine-chain-r63-a.ogg", 2, Bus.EFFECTS, EXPLOSION),
     /** M9 part C: a Rail Serpent turret car's single shot (a sharp crack). */
     SERPENT_SHOT("sfx/serpent-shot-r63-a.ogg", 3, Bus.EFFECTS, ENEMY_FIRE),
-    /** M9 part C: a Rail Serpent's rumble (a freight train's clickety-clack), one loop for the nearest on the screen. */
-    SERPENT_RUMBLE("sfx/serpent-rumble-r63-a.ogg", 1, Bus.EFFECTS, ENEMY_FIRE),
+    /**
+     * M9 part C: a Rail Serpent's rumble, one loop for the nearest on the screen (round 64's redo, S.11 a: an electric
+     * loco's traction whine over a rail-joint clatter).
+     */
+    SERPENT_RUMBLE("sfx/serpent-rumble-r64-a.ogg", 1, Bus.EFFECTS, ENEMY_FIRE),
     /** M9 part C: a Rail Serpent cut: the coupler's snap, the power-down whine over sparks. */
     SERPENT_SPLIT("sfx/serpent-split-r63-b.ogg", 2, Bus.EFFECTS, EXPLOSION),
     /** M9 part C: a Gilded Gunship's ring of slow bullets (a hollow mortar thump). */
@@ -1127,8 +1138,8 @@ public enum Sfx {
     /** M9 part C: a lane beacon buoy's strobe as it passes (a faint tick). */
     BUOY_TICK("sfx/buoy-tick-r63-a.ogg", 2, Bus.EFFECTS, AMBIENCE),
     /**
-     * M9 part D (design/audio/sfx, Act 5 sounds; step AUD-D's round 64 proposals, their a variants until the round's
-     * picks, levelled in their files): one loop while any Shard Drone's air link is lit, panned to the nearest group
+     * M9 part D (design/audio/sfx, Act 5 sounds; step AUD-D's round 64 proposals as the user picked them, 2026-10-28:
+     * a, except the spin-up `ab` and the tug hit b; levelled in their files): one loop while any Shard Drone's air link is lit, panned to the nearest group
      * (a mains transformer's hum with a crackle).
      */
     LINK_HUM("sfx/link-hum-r64-a.ogg", 1, Bus.EFFECTS, ENEMY_FIRE),
@@ -1139,11 +1150,11 @@ public enum Sfx {
     /** M9 part D: the nearest Buzzsaw's spin, one loop pitched with the spin (2 turns/s chasing, 6 spun up). */
     SAW_WHINE("sfx/saw-whine-r64-a.ogg", 1, Bus.EFFECTS, ENEMY_FIRE),
     /** M9 part D: a Buzzsaw's spin-up tell before its dash (played at speed 0.6 s / its tell). */
-    SAW_SPINUP("sfx/saw-spinup-r64-a.ogg", 2, Bus.EFFECTS, WARNING),
+    SAW_SPINUP("sfx/saw-spinup-r64-ab.ogg", 2, Bus.EFFECTS, WARNING),
     /** M9 part D: a Buzzsaw's dash bouncing off a big rock or the edge (a scrape-clang). */
     SAW_RICOCHET("sfx/saw-ricochet-r64-a.ogg", 3, Bus.EFFECTS, ENEMY_FIRE),
     /** M9 part D: a hit on one of the mining tug's sections (a heavy hull impact), at most once per 0.2 s. */
-    TUG_HIT("sfx/tug-hit-r64-a.ogg", 2, Bus.EFFECTS, EXPLOSION),
+    TUG_HIT("sfx/tug-hit-r64-b.ogg", 2, Bus.EFFECTS, EXPLOSION),
     /** M9 part D: the tug's klaxon burst: a section below 50 %, and again when it is lost. */
     TUG_ALARM("sfx/tug-alarm-r64-a.ogg", 1, Bus.EFFECTS, WARNING),
     /** M9 part D: a tug section lost (over the alarm). */
@@ -1155,6 +1166,108 @@ public enum Sfx {
      * on the screen.
      */
     HORNET_HUM("sfx/ascendancy-turbine-r60-a.ogg", 1, Bus.EFFECTS, ENEMY_FIRE),
+    /**
+     * M9 part E (design/audio/sfx, Act 5 sounds; step AUD-E's round 65 proposals as the user picked them, 2026-10-29:
+     * a, but b for the Sentinel's servo, the Strider's cannons and the charge's blast; levelled in their files): a Sentinel Tower's sweep telegraph (a rising electrical hum, 0.8 s; a full turn's
+     * 1.0 s telegraph plays it from 0.2 s in).
+     */
+    SENTINEL_CHARGE("sfx/sentinel-charge-r65-a.ogg", 2, Bus.EFFECTS, WARNING),
+    /** M9 part E: a Sentinel's live beam, one loop for the nearest sweeping tower (a discharge's sizzle). */
+    SENTINEL_BEAM("sfx/sentinel-beam-r65-a.ogg", 1, Bus.EFFECTS, ENEMY_FIRE),
+    /** M9 part E: a Sentinel's head turning with the beam, a loop a few dB under it (a low gear grind). */
+    SENTINEL_SERVO("sfx/sentinel-servo-r65-b.ogg", 1, Bus.EFFECTS, ENEMY_FIRE),
+    /** M9 part E: a Sentinel's death over the `medium` rung (a heavy metal crash, the head's impact after it). */
+    SENTINEL_DEATH("sfx/sentinel-death-r65-a.ogg", 2, Bus.EFFECTS, EXPLOSION),
+    /** M9 part E: a Strider's footfall (a metal stomp with a hydraulic hiss), throttled per walker. */
+    STRIDER_STEP("sfx/strider-step-r65-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
+    /** M9 part E: a Strider's torso starting a turn toward the ship (a servo whine). */
+    STRIDER_SERVO("sfx/strider-servo-r65-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
+    /** M9 part E: a Strider's fan of its twin cannons (a deep doubled gunshot), once per fan. */
+    STRIDER_CANNON("sfx/strider-cannon-r65-b.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
+    /** M9 part E: a Strider's leg destroyed (a metal snap with sparks), the stagger's start. */
+    STRIDER_SNAP("sfx/strider-snap-r65-a.ogg", 2, Bus.EFFECTS, EXPLOSION),
+    /** M9 part E: a Strider's topple with the snap: the groan, the crash exactly 1.4 s in (the crush), a rumble. */
+    STRIDER_FALL("sfx/strider-fall-r65-a.ogg", 2, Bus.EFFECTS, EXPLOSION),
+    /** M9 part E: a blast door's lock destroyed, the doors grinding open (its clunk at about 1.35 s). */
+    DOOR_GRIND("sfx/door-grind-r65-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
+    /** M9 part E: a mining charge's burst (a quarry blast with a rock crack). */
+    CHARGE_BLAST("sfx/charge-blast-r65-b.ogg", 3, Bus.EFFECTS, EXPLOSION),
+    /**
+     * M9 part F (design/audio/sfx, Act 5 sounds; round 60's picks S.7 b and S.8 b, first played by Level 33's Rail
+     * Bunkers): the rail line's 1.0 s telegraph (a rising hum over a slowed transformer), cut when the EMP cancels it.
+     */
+    RAIL_CHARGE("sfx/rail-charge-r60-b.ogg", 2, Bus.EFFECTS, WARNING),
+    /** M9 part F: a rail line firing (a whip crack on a howitzer shot with a long metal ping). */
+    RAIL_SHOT("sfx/rail-shot-r60-b.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
+    /**
+     * M9 part F (step AUD-F's round 66 proposals, their a variants until the round's picks, levelled in their files): a
+     * Void Leech latching on the ship (at its spot) or, quieter, on a prey Talon.
+     */
+    LEECH_LATCH("sfx/leech-latch-r66-a.ogg", 2, Bus.EFFECTS, WARNING),
+    /** M9 part F: a leech starting to drain the generator, 0.1 s after its latch (a falling electric whine). */
+    LEECH_DRAIN("sfx/leech-drain-r66-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
+    /** M9 part F: the latched leeches' hum, one loop while any drains, its level by how many (the file: three). */
+    LEECH_HUM("sfx/leech-hum-r66-a.ogg", 1, Bus.EFFECTS, WARNING),
+    /** M9 part F: leeches thrown off the hull (a shake-off or the EMP), once per throw. */
+    LEECH_SHAKE("sfx/leech-shake-r66-a.ogg", 1, Bus.EFFECTS, WARNING),
+    /** M9 part F: a Void Leech killed, over its `small` rung (a wet chitin crack). */
+    LEECH_DEATH("sfx/leech-death-r66-a.ogg", 3, Bus.EFFECTS, EXPLOSION),
+    /**
+     * M9 part F: the load first passing the drained output (a synthesized warning, round 66's S.6 b), with the
+     * brown-out hum.
+     */
+    BROWNOUT_WARN("sfx/brownout-warn-r66-b.ogg", 1, Bus.EFFECTS, WARNING),
+    /** M9 part F: a Rail Bunker destroyed, over its `medium` ground rung (a heavy metal explosion). */
+    BUNKER_DEATH("sfx/bunker-death-r66-a.ogg", 2, Bus.EFFECTS, EXPLOSION),
+    /**
+     * M9 part G (design/audio/sfx, Act 5 sounds; step AUD-G's round 67 proposals, their a variants until the round's
+     * picks, levelled in their files): a cargo container of Level 34 destroyed, over its break as its salvage drifts out
+     * (a latch cracking, the steel door slamming open).
+     */
+    CONTAINER_BURST("sfx/container-burst-r67-a.ogg", 2, Bus.EFFECTS, EXPLOSION),
+    /** M9 part G: the Helix core collected, over the large salvage pickup (a deep power hum swelling); once. */
+    HELIX_CORE("sfx/helix-core-r67-a.ogg", 1, Bus.EFFECTS, PICKUP),
+    /**
+     * M9 part G: the wrecks' slow metal groans (a seamless 30 s loop, silent between three groans), an ambience layer
+     * over the belt's open bed (Level 34, {@code ambience_layers}).
+     */
+    AMBIENCE_WRECK_GROANS("sfx/wreck-groans-r67-a.ogg", 1, Bus.EFFECTS, AMBIENCE),
+    /**
+     * M9 part H (design/audio/sfx, Act 5 sounds; step AUD-H2's round 68 proposals, their a variants until the round's
+     * picks, levelled in their files): the Iron Sovereign's rings starting to turn at the intro, once per ring as it
+     * lights (a rising mechanical spin-up, 2.5 s; the three may overlap).
+     */
+    SOVEREIGN_SPINUP("sfx/sovereign-spinup-r68-a.ogg", 3, Bus.EFFECTS, BOSS),
+    /**
+     * M9 part H (round 60's pick S.16 a): the rings' grind bed, one loop while any ring turns (stopped when the last
+     * locks, at the kill and as the level ends).
+     */
+    SOVEREIGN_RING_TURN("sfx/sovereign-ring-turn-r60-a.ogg", 1, Bus.EFFECTS, AMBIENCE),
+    /** M9 part H: the inner ring unlocking for a step, at its 0.4 s tell (a ratchet clank and a gear run). */
+    SOVEREIGN_STEP("sfx/sovereign-step-r68-a.ogg", 1, Bus.EFFECTS, BOSS),
+    /** M9 part H: the inner ring's step ending, its hold starting (a heavy latch). */
+    SOVEREIGN_HOLD("sfx/sovereign-hold-r68-a.ogg", 1, Bus.EFFECTS, BOSS),
+    /** M9 part H: a ring's last battery killed, the ring grinding to a halt (a metal screech, the stop's thud at 2.0 s). */
+    SOVEREIGN_LOCK("sfx/sovereign-lock-r68-a.ogg", 2, Bus.EFFECTS, WARNING),
+    /** M9 part H: the station's klaxon, at the intro and over the core's opening (over the music, no duck of its own). */
+    SOVEREIGN_KLAXON("sfx/sovereign-klaxon-r68-a.ogg", 1, Bus.EFFECTS, WARNING),
+    /** M9 part H: the core's shutters parting over its 3 s opening (the petals' thud at about 2.8 s). */
+    SOVEREIGN_SHUTTERS("sfx/sovereign-shutters-r68-a.ogg", 1, Bus.EFFECTS, BOSS),
+    /** M9 part H: the shut core's fan of five, once per fan at the shot (after its 0.5 s glow). */
+    SOVEREIGN_FAN("sfx/sovereign-fan-r68-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
+    /** M9 part H: the open core's spiral, one per bullet at most every 0.1 s (a short reactor zap). */
+    SOVEREIGN_SPIRAL("sfx/sovereign-spiral-r68-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
+    /**
+     * M9 part H: the death's cook-offs, the whole chain in one file from its first (13 hits 0.15 s apart, outer to
+     * inner, as the batteries cook off).
+     */
+    SOVEREIGN_COOKOFF("sfx/sovereign-cookoff-r68-a.ogg", 1, Bus.EFFECTS, BOSS),
+    /** M9 part H: the core's collapse after the cook-offs (its whoomph 1.15 s in, where the huge rung starts). */
+    SOVEREIGN_IMPLOSION("sfx/sovereign-implosion-r68-a.ogg", 1, Bus.EFFECTS, BOSS),
+    /** M9 part H: Level 35's mass-relay telegraph (a rising capacitor charge, 1.2 s; it ends at the flash). */
+    RELAY_CHARGE("sfx/relay-charge-r68-a.ogg", 1, Bus.EFFECTS, WARNING),
+    /** M9 part H: the mass relay's flash (a thunder crack with a long rolling tail, about 4 s). */
+    RELAY_FLASH("sfx/relay-flash-r68-a.ogg", 1, Bus.EFFECTS, WARNING),
     /** The mission complete jingle (design/audio/music, track 23), played as a one-shot. */
     MISSION_COMPLETE("music/mission-complete.ogg", 1, Bus.MUSIC, WARNING),
     /**
@@ -1269,6 +1382,10 @@ public enum Sfx {
             case "belt-station" -> AMBIENCE_BELT_STATION;
             // M9 part C: the belt's open space (Level 30).
             case "belt-open" -> AMBIENCE_BELT_OPEN;
+            // M9 part E: the belt's tunnels (Level 32).
+            case "belt-tunnel" -> AMBIENCE_BELT_TUNNEL;
+            // M9 part G: the graveyard's metal groans, a layer over the open bed (Level 34).
+            case "wreck-groans" -> AMBIENCE_WRECK_GROANS;
             default -> throw new IllegalArgumentException("no ambience for " + setting + " yet");
         };
     }

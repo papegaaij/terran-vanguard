@@ -147,8 +147,11 @@ final class DodgePlay {
         // Level 05: with a battery unit on the screen it holds its line and dodges only the closest bullets.
         // M8 part B: so it does over a Drill Rig it bombs (an anti-ground gun fitted).
         boolean overRig = TargetPlay.overRig(sortie);
-        boolean holding =
-                TargetPlay.battery(sortie, shipY) != null || TargetPlay.hardenedTarget(sortie) != null || overRig;
+        // M9 part E: so it does under a Sentinel Tower's emitter while its shield holds (Level 32, TowerPlay).
+        boolean holding = TargetPlay.battery(sortie, shipY) != null
+                || TargetPlay.hardenedTarget(sortie) != null
+                || overRig
+                || TowerPlay.holding(sortie, shipY);
         double bulletDx = holding ? 18 : 24;
         // M8 part E: slowed by a Siren's ring, it looks further up (Level 25, SirenPlay).
         double bulletDy = SirenPlay.dangerRange(sortie, holding ? 40 : DANGER);

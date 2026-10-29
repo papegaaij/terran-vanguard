@@ -39,12 +39,26 @@ final class GroundPasses {
      * empty in a level without one).
      */
     final int[] groupDemolished;
+    /**
+     * M9 part G (design/campaign Level 34, The freighter): per destructible group, the sums of its destroyed
+     * destructibles' x and of their y plus the ground's scroll then, for the story pickup's rise at the group's centre;
+     * null in a level without a story pickup.
+     */
+    private final double[] groupSumX;
+
+    private final double[] groupSumY;
     /** Rocks thrown in this attempt, for their serials. */
     int rocksThrown;
     /** The next ground object and debris chunk of the script to let in. */
     int nextGroundObject;
 
     int nextDebris;
+
+    /** M9 part G: the destructible group whose last part frees the level's story pickup; -1 without one. */
+    private final int storyGroup;
+
+    /** Step FIX2: how many of the story group left the screen undestroyed in this attempt. */
+    private int storyGroupGone;
 
     GroundPasses(
             Sortie s,
@@ -83,12 +97,30 @@ final class GroundPasses {
             destructibleGroups = Math.max(destructibleGroups, object.group() + 1);
         }
         groupDemolished = new int[destructibleGroups];
+        boolean story = false;
+        for (GroundObjectSpec object : script.groundObjects()) {
+            story |= object.groupDrop().filter(PickupType.STORY::equals).isPresent();
+        }
+        int storyGroup = -1;
+        for (GroundObjectSpec object : script.groundObjects()) {
+            if (object.groupDrop().filter(PickupType.STORY::equals).isPresent()) {
+                storyGroup = object.group();
+            }
+        }
+        this.storyGroup = storyGroup;
+        groupSumX = story ? new double[destructibleGroups] : null;
+        groupSumY = story ? new double[destructibleGroups] : null;
     }
 
     /** A new attempt: nothing let in, spent, demolished or thrown. */
     void reset() {
         java.util.Arrays.fill(secretTriggersSpent, 0);
         java.util.Arrays.fill(groupDemolished, 0);
+        storyGroupGone = 0;
+        if (groupSumX != null) {
+            java.util.Arrays.fill(groupSumX, 0);
+            java.util.Arrays.fill(groupSumY, 0);
+        }
         rocksThrown = 0;
         nextGroundObject = 0;
         nextDebris = 0;
@@ -114,6 +146,15 @@ final class GroundPasses {
         }
     }
 
+    /** M9 part G: the story pickup's group sums; only in a level with a story pickup, so the others hash as before. */
+    void addStoryTo(StateHash hash) {
+        if (groupSumX != null) {
+            for (int g = 0; g < groupSumX.length; g++) {
+                hash.add(groupSumX[g]).add(groupSumY[g]);
+            }
+        }
+    }
+
     void placeGroundObjects() {
         List<GroundObjectSpec> objects = script.groundObjects();
         while (nextGroundObject < objects.size()
@@ -122,6 +163,11 @@ final class GroundPasses {
             if (object != null) {
                 // M7 part G: up from the bottom edge while the scroll runs reversed.
                 object.place(objects.get(nextGroundObject), nextGroundObject, s.travel() < 0);
+                if (s.forks != null && object.spec().branch().isPresent()) {
+                    // M9 part E: a fork's branch's object sleeps until (unless) its side is chosen.
+                    object.dormant(
+                            s.forks.dormantOnEntry(object.spec().branch().get().code()));
+                }
             }
             nextGroundObject++;
         }
@@ -174,7 +220,19 @@ final class GroundPasses {
 
     void scrollGround(double distance) {
         for (int i = ground.size() - 1; i >= 0; i--) {
-            if (!ground.get(i).scroll(distance)) {
+            GroundObject object = ground.get(i);
+            if (!object.scroll(distance)) {
+                if (!object.dormant() && objectives.objectAway(object.spec())) {
+                    // M9 part G (Level 34's "Strip the graveyard"): the container past the allowed ones fails it.
+                    events.add(SimEvents.Type.OBJECTIVE_FAILED, object.x(), object.y());
+                }
+                if (storyGroup >= 0 && object.spec().group() == storyGroup && s.story != null) {
+                    // Step FIX2: the story group's last part gone uncleared: the core is never freed (the tug's line).
+                    if (++storyGroupGone + groupDemolished[storyGroup]
+                            == object.spec().groupSize()) {
+                        s.story.lost(object.x(), object.y());
+                    }
+                }
                 ground.free(i);
             }
         }
@@ -245,11 +303,42 @@ final class GroundPasses {
             // A destructible that hides a secret (Level 04's dugout) reveals it when destroyed.
             released(object);
         }
-        if (spec.group() >= 0
-                && ++groupDemolished[spec.group()] == spec.groupSize()
-                && spec.groupDrop().isPresent()) {
-            // M5 part E: the group's last destructible drops its pickup (Level 11's armour patch).
-            s.pickupPasses.drop(spec.groupDrop().get(), object.x(), object.y());
+        if (spec.cache()) {
+            // M9 part E (design/campaign Level 32, Blast doors): a cache's lock: its doors open, its crate floats out.
+            events.add(
+                    SimEvents.Type.CACHE_OPENED,
+                    object.x(),
+                    object.y(),
+                    script.groundObjects().indexOf(spec));
+            Pickup crate = pickups.obtain();
+            if (crate != null) {
+                crate.drop(PickupType.HIDDEN_CRATE, spec.crateCredits(), object.x(), object.y(), crateTicks);
+            }
+        }
+        if (spec.blast().isPresent() && s.charges != null) {
+            // M9 part E (design/world/belt, Mining charges): it bursts with the step's other charges.
+            s.charges.queue(object.x(), object.y(), spec.blast().get());
+        }
+        if (spec.group() >= 0) {
+            int group = spec.group();
+            if (groupSumX != null) {
+                groupSumX[group] += object.x();
+                groupSumY[group] += object.y() + s.groundScroll;
+            }
+            if (++groupDemolished[group] == spec.groupSize() && spec.groupDrop().isPresent()) {
+                if (spec.groupDrop().get() == PickupType.STORY && s.story != null) {
+                    // M9 part G (Level 34, The freighter): the last clamp frees the core, rising at the clamps' centre.
+                    s.story.rise(
+                            groupSumX[group] / spec.groupSize(), groupSumY[group] / spec.groupSize() - s.groundScroll);
+                } else {
+                    // M5 part E: the group's last destructible drops its pickup (Level 11's armour patch).
+                    s.pickupPasses.drop(spec.groupDrop().get(), object.x(), object.y());
+                }
+            }
+        }
+        if (objectives.objectOpened(spec)) {
+            // M9 part G (Level 34's "Strip the graveyard"): the container that met it.
+            s.objectivePasses.paySecondary();
         }
         ground.free(index);
     }

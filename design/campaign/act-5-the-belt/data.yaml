@@ -1,10 +1,9 @@
 # Act 5 – The Belt: its levels and the act intro (title card and the four intro pages), rendered into README.md (Act
 # intro and outro). M9 part B, step B2, from the approved texts (round 60). Pages 2–3 are Vorne's broadcast on the
-# enemy channel (`channel: enemy`: the amber frame and the steady interference, the enemy voice filter; part A). The
-# outro (after Level 35) and the `next_act` (Act 6 on the release's end) come with part H; until then Act 4's
-# `next_act` stays (the release's end after the last built act: step B3/B4).
-# Page 3's "smug" Vorne is drawn neutral: the expressions are neutral, grim and fierce (Vorne's smug and rage portraits
-# wait for an expression of their own; pending the user's review in round 62).
+# enemy channel (`channel: enemy`: the amber frame and the steady interference, the enemy voice filter; part A). M9
+# part H, step H2: the outro after Level 35 (the four approved pages, the text unchanged, each voiced and with its image:
+# tools/art/briefing_images.py, step ART-H2) and the `next_act` (Act 6 on the release's end, which moves here from the
+# last act built before); page 3's Vorne wears his own `smug` expression (part H; it was drawn neutral until then).
 # Schema: ../../tech/architecture/schemas-levels/README.md
 levels: [29, 35]
 
@@ -16,5 +15,15 @@ title_card:  # over the act's still (ui/act-5-the-belt-still.png, tools/art/act_
 briefing:  # two pages by Commander Okafor, two by Chairman Vorne on the enemy channel (approved in round 60), each voiced and with its image (tools/art/briefing_images.py)
   - {speaker: Okafor, expression: grim, image: act-5-all-channels, line: "Ten days out of Europa, and he is on every channel at once: every station in the belt, every ship, every screen on Earth. I said we would hear it together, Aegis. Listen."}
   - {speaker: Vorne, channel: enemy, image: act-5-broadcast, line: "Citizens of the solar system. My name is Silas Vorne. From this hour the Jovian Ascendancy governs itself, and it does not stand alone: the Vrell are our partners. The old order is ending. I merely opened the door."}
-  - {speaker: Vorne, channel: enemy, image: act-5-stations-choose, line: "No Ascendancy city has been touched. Ask yourselves why — then ask who you would rather stand beside. To the stations of the belt: choose the side that will still be here."}
+  - {speaker: Vorne, expression: smug, channel: enemy, image: act-5-stations-choose, line: "No Ascendancy city has been touched. Ask yourselves why — then ask who you would rather stand beside. To the stations of the belt: choose the side that will still be here."}
   - {speaker: Okafor, expression: fierce, image: act-5-burn-for-ceres, line: "He did not ask Earth. He asked the belt, and if the stations choose him, every ship we have is cut off from Jupiter. We burn for Ceres, and we keep listening for Rook. Mission briefing follows. Aegis Actual out."}
+
+outro:  # after the Level 35 debrief with the act summary (Level 21's order), each page voiced and with its image (tools/art/briefing_images.py, step ART-H2)
+  music: act-complete  # track 24 under the first page, played once
+  pages:
+    - {speaker: Okafor, expression: grim, image: act-5-outro-ceres, line: "The Iron Sovereign is scrap over Ceres, and the hub's lights are white again. Half the belt still flies his colours. But every station watched a Coalition wing break his station, and they will remember it.", notes: {image: "Ceres Hub from orbit, the Sovereign's broken rings drifting apart over the pole, the dock canyon's lights white again"}}
+    - {speaker: Varga, expression: grim, image: act-5-outro-face, line: "The nav core says Callisto, and so did he. I saw his face on that feed, Commander. He looks forty. He was sixty when I left Helix. The cures the Bellwether's people told us about: he took them himself.", notes: {image: "Varga's screen: the recruitment feed paused on Vorne's face beside a 2179 Helix review photo of him at sixty, the nav core's route plot to Callisto in a strip below"}}
+    - {speaker: Rook, image: act-5-outro-ember, line: "Back in the slot, Commander, and staying there. Wherever we fly next, I'll keep one eye on what's below us. Learned that one the hard way.", notes: {image: "Rook's Ember back on its rail on the transport's flight deck, the Helix clamps' scorch marks on its hull, Rook on the ladder with his helmet under his arm"}}
+    - {speaker: Okafor, expression: fierce, image: act-5-outro-jupiter, line: "Vorne made his offer on an open channel. Here is our answer, on every channel: we are coming to Callisto. Rest, refit, rearm. Aegis Actual out.", notes: {image: "The transport's forward view, Jupiter ahead with Callisto a dark cratered disc beside it, every rail on the flight deck filled"}}
+
+next_act: {act: ACT VI, name: JOVIAN STORM, setting: CALLISTO}   # the release ends after this act: "ACT VI - JOVIAN STORM. CALLISTO. COMING SOON." on the release's end, "ACT VI - JOVIAN STORM: COMING SOON" in the hangar before L36

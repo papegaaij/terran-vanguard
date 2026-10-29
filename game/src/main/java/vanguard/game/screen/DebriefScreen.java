@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
+import vanguard.content.AlliesData;
 import vanguard.content.campaign.ActSummary;
 import vanguard.content.campaign.Campaign;
 import vanguard.content.campaign.CampaignRoute;
@@ -258,7 +259,7 @@ public final class DebriefScreen implements GameScreen {
         if (escort.present()) {
             // The escort objective's own row: "CRAWLERS HOME 4 / 5 + 120 CR" (design/campaign, Level 04).
             rows.add(new Row(
-                    alliesLabel(escort.ally()) + " HOME",
+                    alliesLabel(escort.ally(), services.content.allies()) + " HOME",
                     escort.home() + " / " + escort.units(),
                     escort.credits(),
                     "+ ",
@@ -361,6 +362,18 @@ public final class DebriefScreen implements GameScreen {
                     VALUE));
         }
         return rows;
+    }
+
+    /** A hull escort's sections home (step FIX1, Level 31's mining tug): "SECTIONS HOME 3 / 3". */
+    static final String SECTIONS = "SECTIONS";
+
+    /**
+     * The escort row's label: a hull escort's ally ({@code follows: hull}, Level 31's mining tug) counts its sections,
+     * "SECTIONS"; any other its units, as {@link #alliesLabel(String)}.
+     */
+    static String alliesLabel(String slug, AlliesData allies) {
+        AlliesData.Ally ally = allies.allies().get(slug);
+        return ally != null && AlliesData.Ally.HULL.equals(ally.follows()) ? SECTIONS : alliesLabel(slug);
     }
 
     /** {@code civilian-crawler} reads "CRAWLERS". */

@@ -1,10 +1,10 @@
 ---
 title: Void Leech
 design: approved
-implementation: not-started
-art: chosen
+implementation: done
+art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../player/generator, ../../air/lamprey]
-updated: 2026-10-27
+updated: 2026-10-29
 ---
 
 # Void Leech
@@ -20,33 +20,34 @@ target. In Level 33 it feeds on Ascendancy craft too.
 
 ### Stat block
 
-**Draft** (Act 5 design phase, step D-enemies-B; approved in round 60). A hand-written
-table: there is no `data.yaml` yet, the build turns it into one. Numbers at **medium** (see the
+**Draft** (Act 5 design phase, step D-enemies-B; approved in round 60). Rendered from [data.yaml](data.yaml) since M9 part F (step F2, 2026-10-29; its header lists the build's own readings: the drift steers at the target's centre, the EMP throws a leech off a prey Talon too). Numbers at **medium** (see the
 [balancing basis](../../README.md#balancing-basis)); HP is in damage units (a Pulse Cannon L1 shot does 2),
 set at its first level from the proposed Act 5 reference DPS (judgement call J2: L33 136). As a `small` unit
 it takes the **beam-era ×2** on its HP: 6 is flown as 12, and a latched leech takes ×2 damage (the
 Lamprey's rule).
 
+<!-- data: stat-block -->
 | Field | Value |
 |---|---|
-| Faction | Vrell (stunned 1.5 s by the EMP Burst) |
-| Layer | `space` (the `air` layer in vacuum) |
+| Faction | Vrell |
+| Layer | `air` (`space` in vacuum: a doc alias, see [space](../README.md#design)) |
 | Size tier | `small` |
 | Size | 32×32 px, hitbox 20×24 |
 | Parts | single |
 | Orientation | `16 angles` (16 headings × 4 swim frames; a latched pose per hull spot, a stunned pose) |
-| HP | 6 (easy 4 / hard 8, from the global multipliers); ×2 in the beam era: 12 (easy 9 / hard 16) |
-| Armour / shield | none |
-| Speed | 50 px/s drifting, 190 px/s chasing (turning 160°/s) |
-| Movement | `drift`s in from the rear or a side edge (edge-warned, as every side and rear entry) toward the ship's lane; within **220 px** of the ship it `chase`s for up to 4 s, then flies straight on and leaves; `latch` on contact at the left, right or tail spot (the [Lamprey](../../air/lamprey/README.md)'s spots); **3 latch slots** (easy 2) |
+| HP | 6 (easy 4 / hard 8, from the global multipliers) |
+| Armour / shield | none (HP 6 base: the beam era's ×2 flies it at 12, easy 9 / hard 16) |
+| Speed | 50 px/s drifting; 190 px/s chasing (turning 160°/s) |
+| Movement | `drift`s in from the rear or a side edge (edge-warned, as every side and rear entry) at 50 px/s toward the ship (a hunting stream: toward the nearest free prey); within **220 px** of it it `chase`s for up to 4 s, then flies straight on and leaves; `latch` on contact at the left, right or tail spot (the [Lamprey](../../air/lamprey/README.md)'s spots); **3 latch slots** (easy 2); 4 reversals within 1.2 s throw every latched one off, stunned 1 s, then it flees; the EMP Burst throws them off too; it latches on a touched prey unit, which drifts down at 60 px/s |
 | Attack | `drain`: while latched, the generator's **effective output −2 MW** (stacking to −6 MW; the [generator's drain rules](../../../player/generator/README.md#enemy-drain-effects)); no damage to shield or armour; with every slot taken, a touch is a `small` contact (10) and the leech dies |
-| Formations | stream (4–6, 0.5 s apart), rear ambush (3–5 from the bottom edge) |
+| Formations | stream, rear ambush (3–5) (streams of 4–6, 0.5 s apart, from a side or the rear; ambushes from the bottom edge) |
 | Weak points | the power-draw sac on its back (drawn only; it pulses brighter while it drains) |
 | Effective traits | `homing`, `side`, `rear`, `area` |
 | Credits | 12 (score 120 × chain) |
 | Death | `small` dry chitin crack with a violet spark; on death or shake-off the output returns at once |
-| First level / used in | L33 (Leech Field); later levels may use it (their docs decide) |
+| First level / used in | L33; the Leech Field; later levels may use it (their docs decide) |
 | Difficulty hooks | easy: 2 latch slots, chase 160 px/s; hard: chase 220 px/s, turning 200°/s |
+<!-- /data -->
 
 ### Behaviour
 
@@ -98,12 +99,15 @@ Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's r
 
 ## Implementation
 
-- [ ] Stat block loaded from a `data.yaml` (when the design is approved); global difficulty multipliers and the beam-era factor applied
-- [ ] Drift in, chase, latch on 3 slots (the Lamprey's `Latches`), shake-off, stun and flee
-- [ ] The generator drain while latched (the generator's in-level output, built by the player step), restored at once on death or shake-off
-- [ ] The EMP throw-off; prey latching on marked Ascendancy units (shield emptied, no fire, drifting out)
-- [ ] Production sprites (swim frames, latched poses on the ship and on a Talon, the stunned pose), the intel portrait
-- [ ] Death effect, bounty and sounds per this spec (Freesound, no bubbly sounds)
+- [x] Stat block loaded from a `data.yaml` (when the design is approved); global difficulty multipliers and the beam-era factor applied
+- [x] Drift in, chase, latch on 3 slots (the Lamprey's `Latches`), shake-off, stun and flee
+- [x] The generator drain while latched (the generator's in-level output, built by the player step), restored at once on death or shake-off
+- [x] The EMP throw-off; prey latching on marked Ascendancy units (shield emptied, no fire, drifting out)
+- [x] Production sprites (swim frames, latched poses on the ship and on a Talon, the stunned pose), the intel portrait
+      (step F4: `LeechFieldLooks`, the sac's pulse once a second and the drain's glow at the pivot file's mouths in
+      `LampreyLooks`; the prey Talon tinted and tumbling, QF-2 a, picked in round 66; the hangar strip's rear and side marks)
+- [x] Death effect, bounty and sounds per this spec (Freesound, no bubbly sounds) (step F4, `LeechFieldCues`; the
+      sounds: round 66's S.1-S.5 a picks)
 
 ## Open questions
 
@@ -111,7 +115,7 @@ Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's r
   feedback); alternatives **b** (a flat −20 % fire rate a leech, whatever the loadout) and **c** (each
   leech blacks out the fitted weapon with the highest draw until shaken off).
 - The latch slots: 3 at medium lets the drain reach the −6 MW cap; with 2 the cap is reached only at hard.
-  Decided as 3 (easy 2), pending the round.
+  Decided as 3 (easy 2); the build's rules accepted in round 66 (C.4).
 
 ## Decisions
 
@@ -121,3 +125,4 @@ Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's r
   generator) and look (black-violet, a pulsing power-draw glow); it also latches on Ascendancy units in
   L33 (a Talon with a leech loses its shield and drifts).
 - 2026-10-27 (user, [round 60](../../../concept-rounds/round-60/README.md) closed): the design approved as drafted (`design: approved`); art A.10 **a**, "Void Leech A, ringed leech", chosen (`art: chosen`), the other variant in `concept/rejected/`. Q11 **b** (gunmetal/charcoal with gold, not gloss black): the chosen variant is re-rendered in gunmetal/charcoal in this part's production art, keeping the ≥ 20 % gold and the readability check.
+- 2026-10-29 (user, [round 66](../../../concept-rounds/round-66/README.md), closed): the production art accepted: **F.2 ok, black-violet** (the leech keeps the Vrell's black-violet with the lavender light rim, no gold; gunmetal not taken) and **F.1 a** (the prey Talon by the game's tint, tumbling, the leech on its back; no lights-out frames), `art: final`; sounds **S.1-S.5 a** (`leech-latch`, `leech-drain`, `leech-hum`, `leech-shake`, `leech-death`); the build's rules (C.4: the drift steers at the ship's centre, a leech on a prey takes ×1 damage, the EMP throws leeches off the ship and off their prey, thrown-off and fleeing leeches count as free) and C.8 (the intel's leech marks) accepted.

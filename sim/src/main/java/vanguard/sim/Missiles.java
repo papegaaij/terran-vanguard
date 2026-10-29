@@ -22,8 +22,13 @@ public final class Missiles {
      */
     public static final int ON_ALLY = 4;
 
-    /** M9 part B: room for three nests' per-shooter caps of 8 (every cap of Acts 1–4 is 8 or less in all). */
-    private static final int CAPACITY = 32;
+    /**
+     * M9 part B: room for three nests' per-shooter caps of 8 (every cap of Acts 1–4 is 8 or less in all); M9 part H,
+     * step H1b: 48, for Level 35's hard hull SAM groups of 4 × 8 and the Hornets' salvos.
+     */
+    private static final int CAPACITY = 48;
+    /** M9 part H, step H1b: the owner of a ringed boss's SAM batteries' missiles (the station's cap counts them). */
+    static final int STATION = -2;
     /** One this far outside the play field is gone without a trace, px. */
     private static final double FIELD_MARGIN = 60;
     /** A launch's heading snaps to the pod's 16 bearings (design: the pods snap to the ship's bearing). */
@@ -94,6 +99,37 @@ public final class Missiles {
                 Math.rint(bearing / BEARING_STEP) * BEARING_STEP,
                 launched++,
                 medium != null && medium.wet() ? medium.bulletSpeed() : 1);
+        events.add(SimEvents.Type.MISSILE_LAUNCHED, x, y, missile.serial());
+        return true;
+    }
+
+    /**
+     * M9 part H, step H1b (design/enemies/bosses/iron-sovereign, Fire rules): one missile of {@code gun} from a ringed
+     * boss's SAM battery at (x, y), as {@link #launch}, owned by the {@link #STATION}: left out while the station's own
+     * missiles in flight reach its gun's most (8 across its batteries). Returns whether it was launched.
+     */
+    boolean launchStation(double x, double y, EnemyGun gun, double shipX, double shipY) {
+        if (inFlightOf(STATION) >= gun.homing().orElseThrow().mostAlive()) {
+            return false;
+        }
+        int flare = decoys == null ? -1 : decoys.nearest(x, y);
+        if (flare >= 0) {
+            shipX = decoys.get(flare).x();
+            shipY = decoys.get(flare).y();
+        }
+        Missile missile = pool.obtain();
+        if (missile == null) {
+            return false;
+        }
+        double bearing = StrictMath.atan2(-(shipX - x), -(shipY - y));
+        missile.launch(
+                gun,
+                x,
+                y,
+                Math.rint(bearing / BEARING_STEP) * BEARING_STEP,
+                launched++,
+                medium != null && medium.wet() ? medium.bulletSpeed() : 1);
+        missile.owner(STATION);
         events.add(SimEvents.Type.MISSILE_LAUNCHED, x, y, missile.serial());
         return true;
     }

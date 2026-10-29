@@ -10,6 +10,7 @@ import java.nio.file.Path;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
 import vanguard.content.Content;
@@ -40,6 +41,46 @@ class Level30SoundsTest {
     private final SfxBank bank =
             new SfxBank(new MockAudio(), new Lwjgl3Files(), new Mixer(AudioSettings.defaults()), () -> now[0]);
 
+    /**
+     * Step FIX1 (design/audio/music, Cues per level (Act 5): Vorne's motif "on"): track 12's motif stem on top of
+     * Level 30's theme from the base stem's start (section 1) to the end.
+     */
+    @Test
+    void theMotifPlaysOnTopFromTheBaseStemsStartToTheEnd() {
+        LevelData.Music data = CONTENT.level(KEY).music();
+        String theme = Tracks.name(data.track()).orElseThrow();
+        assertEquals("hollow-rock", theme);
+        assertTrue(Files.isRegularFile(ASSETS.resolve(Tracks.motifPath(theme))), "track 12's motif stem");
+        assertTrue(data.motif().isPresent(), "the level's motif cue");
+        assertEquals(1, data.startSection());
+        MockAudio audio = new MockAudio();
+        Lwjgl3Files files = new Lwjgl3Files();
+        Mixer mixer = new Mixer(AudioSettings.defaults());
+        SfxBank sfx = new SfxBank(audio, files, mixer);
+        LevelMusic music = new LevelMusic(
+                        audio,
+                        mixer,
+                        files.internal(Tracks.basePath(theme)),
+                        files.internal(Tracks.path(theme)),
+                        sfx,
+                        Sfx.ambience(data.ambience()),
+                        data.startSection(),
+                        0,
+                        data::full,
+                        Double.POSITIVE_INFINITY,
+                        Optional.empty())
+                .motif(files.internal(Tracks.motifPath(theme)), data::motifOn);
+        music.update(1, 0.05, 0.1f, false);
+        assertTrue(music.stemsOn() && music.motifOn(), "the base stem with the motif from the start");
+        music.update(2, 40, 0.1f, false);
+        assertTrue(data.full(2));
+        assertTrue(music.motifOn(), "over the full mix from the first column");
+        music.update(4, 175, 0.1f, false);
+        assertTrue(music.motifOn(), "to the end");
+        music.dispose();
+        sfx.dispose();
+    }
+
     @Test
     void everyLevel30SoundPlaysItsFile() {
         Map<Sfx, String> files = Map.ofEntries(
@@ -52,7 +93,7 @@ class Level30SoundsTest {
                 Map.entry(Sfx.LINE_MINE_DROP, "sfx/mine-drop-r63-a.ogg"),
                 Map.entry(Sfx.MINE_CHAIN, "sfx/mine-chain-r63-a.ogg"),
                 Map.entry(Sfx.SERPENT_SHOT, "sfx/serpent-shot-r63-a.ogg"),
-                Map.entry(Sfx.SERPENT_RUMBLE, "sfx/serpent-rumble-r63-a.ogg"),
+                Map.entry(Sfx.SERPENT_RUMBLE, "sfx/serpent-rumble-r64-a.ogg"),
                 Map.entry(Sfx.SERPENT_SPLIT, "sfx/serpent-split-r63-b.ogg"),
                 Map.entry(Sfx.GUNSHIP_RING, "sfx/gunship-ring-r63-b.ogg"),
                 Map.entry(Sfx.GUNSHIP_DOORS, "sfx/gunship-doors-r63-b.ogg"),

@@ -293,7 +293,10 @@ final class Homing {
                     && !enemy.latched()
                     && !enemy.spec().seekersIgnore()
                     && medium.reaches(weapon, enemy.layer())
-                    && (weapon.antiGround() || !enemy.spec().hardened())
+                    // M9 part E: a hardened collar's core (the Sentinel's emitter) is a target: the shot aims at it.
+                    && (weapon.antiGround()
+                            || !enemy.spec().hardened()
+                            || enemy.spec().core().isPresent())
                     && inCone(shot, enemy.x(), enemy.y(), best)) {
                 best = distanceSquared(shot.x(), shot.y(), enemy.x(), enemy.y());
                 nearest = enemy.serial();
@@ -378,7 +381,9 @@ final class Homing {
                     || enemy.latched()
                     || enemy.spec().seekersIgnore()
                     || !medium.reaches(weapon, enemy.layer())
-                    || (!weapon.antiGround() && enemy.spec().hardened())) {
+                    || (!weapon.antiGround()
+                            && enemy.spec().hardened()
+                            && enemy.spec().core().isEmpty())) {
                 continue;
             }
             double d = distanceSquared(shot.x(), shot.y(), enemy.x(), enemy.y());

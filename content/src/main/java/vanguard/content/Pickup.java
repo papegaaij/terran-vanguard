@@ -19,5 +19,11 @@ public enum Pickup {
     @JsonProperty("special charge")
     SPECIAL_CHARGE,
     @JsonProperty("data core")
-    DATA_CORE
+    DATA_CORE,
+    /**
+     * M9 part G (design/campaign Level 34, The freighter): a story pickup (the Helix core), named by its pickup's {@code
+     * story}; only a destructible group's last unit drops it ({@code dropped_by: {group, unit: last}}); pays nothing.
+     */
+    @JsonProperty("story")
+    STORY
 }

@@ -30,13 +30,17 @@ import vanguard.sim.PlayField;
  * @param notches M8 part E (design/campaign Level 25, The caves; m8e-gaps.md §1.1, §5 E5): caves cut into the walls,
  *     flyable dead ends with rock on three sides; the geometry rules (width, channels, slope) read the walls' lines
  *     without them, {@link #rock} opens them
+ * @param forks M9 part E (design/campaign Level 32, The forks; route choice Q5 a): the islands where the route is chosen,
+ *     fork 1 first: when an island's tip reaches the ship's row, the channel the ship's centre is in is the branch; the
+ *     waves, ground targets and radio cues of a fork's {@code branch} fly, wake or play only on their side
  */
 public record TerrainBlock(
         Optional<List<WallPoint>> left,
         Optional<List<WallPoint>> right,
         Optional<List<Island>> islands,
         Contact contact,
-        Optional<List<Notch>> notches) {
+        Optional<List<Notch>> notches,
+        Optional<List<Fork>> forks) {
     /** The flyable width the validator asks for wherever there are walls, px (the ship's hull is 36 px wide). */
     public static final double MIN_WIDTH = 180;
 
@@ -57,6 +61,20 @@ public record TerrainBlock(
         right = right.map(points -> wall("right", points));
         islands = islands.map(List::copyOf);
         islands.ifPresent(list -> Check.notEmpty("islands", list));
+        forks = forks.map(List::copyOf);
+        int islandCount = islands.map(List::size).orElse(0);
+        forks.ifPresent(list -> {
+            Check.that(
+                    !list.isEmpty() && list.size() <= vanguard.sim.Branch.MOST_FORKS,
+                    "forks: one to " + vanguard.sim.Branch.MOST_FORKS + " forks");
+            for (int i = 0; i < list.size(); i++) {
+                int island = list.get(i).island();
+                Check.that(island >= 0 && island < islandCount, "forks[" + i + "]: one of the islands (from 0)");
+                for (int j = 0; j < i; j++) {
+                    Check.that(list.get(j).island() != island, "forks[" + i + "]: each island is one fork");
+                }
+            }
+        });
         notches = notches.map(List::copyOf);
         if (notches.isPresent()) {
             List<Notch> list = notches.get();
@@ -85,7 +103,32 @@ public record TerrainBlock(
             Optional<List<WallPoint>> right,
             Optional<List<Island>> islands,
             Contact contact) {
-        this(left, right, islands, contact, Optional.empty());
+        this(left, right, islands, contact, Optional.empty(), Optional.empty());
+    }
+
+    /** M9 part E: the forks, none if not given (fork 1 first). */
+    public List<Fork> forkList() {
+        return forks.orElse(List.of());
+    }
+
+    /** M9 part E (design/campaign Level 32, The forks): a fork at island {@code island} (its index, from 0). */
+    public record Fork(int island) {}
+
+    /**
+     * M9 part E (design/campaign Level 32, The forks): a wave's, ground target's or radio cue's branch: the {@code
+     * side} ({@code left} or {@code right}) channel of fork {@code fork} (from 1).
+     */
+    public record Branch(int fork, String side) {
+        public Branch {
+            Check.that(fork >= 1, "branch.fork: from 1, was " + fork);
+            Check.that(side.equals("left") || side.equals("right"), "branch.side: left or right, was '" + side + "'");
+        }
+
+        /** The simulation's branch (fork from 0). */
+        public vanguard.sim.Branch sim() {
+            return new vanguard.sim.Branch(
+                    fork - 1, side.equals("left") ? vanguard.sim.Branch.LEFT : vanguard.sim.Branch.RIGHT);
+        }
     }
 
     /** M8 part E: the notches, none if not given (in the order given: a cave wave names its notch by this index). */

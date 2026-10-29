@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../story, ../../campaign]
-updated: 2026-10-28
+updated: 2026-10-29
 ---
 
 # Briefing screen
@@ -157,7 +157,11 @@ Production art, M9 part D (concept round 64, step ART-D): Level 31's two images,
 
 | File | What | Status |
 |---|---|---|
-| [concept/briefing-images-final-r64-a.png](concept/briefing-images-final-r64-a.png) | Review sheet, M9 part D (round 64): Level 31's two 672×240 images (`level-31-mining-rig-escort`: Okafor's nav chart of the open belt, the tug's track from Bright Seam to the Vesta relay, the drift fields, the two outcrops' nests, the ambush point; `level-31-tug-sections`: Varga's diagram of the tug from above with its three bars, a Hornet's salvo onto the bow, a Shard line across the cargo, Darts from behind on the engines) | proposed (round 64) |
+| [concept/briefing-images-final-r64-a.png](concept/briefing-images-final-r64-a.png) | Review sheet, M9 part D (round 64): Level 31's two 672×240 images (`level-31-mining-rig-escort`: Okafor's nav chart of the open belt, the tug's track from Bright Seam to the Vesta relay, the drift fields, the two outcrops' nests, the ambush point; `level-31-tug-sections`: Varga's diagram of the tug from above with its three bars, a Hornet's salvo onto the bow, a Shard line across the cargo, Darts from behind on the engines) | chosen (round 64, F.10: accepted as final) |
+| [concept/briefing-images-final-r65-a.png](concept/briefing-images-final-r65-a.png) | Review sheet, M9 part E (round 65): Level 32's two 672×240 images (`level-32-deep-core`: Okafor's consortium shaft chart of Kleopatra in section, the shaft, galleries, both forks with their channels named, the pumping hall, the refinery, the ore chute out, the towers marked; `level-32-sentinel-sweep`: Varga's diagram of a Sentinel with its emitter, collar, 120° arc and reach ring, and a Strider losing a leg, its fall line across a SAM Nest) | chosen (round 65, F.6 ok: accepted as final) |
+| [concept/briefing-images-final-r66-a.png](concept/briefing-images-final-r66-a.png) | Review sheet, M9 part F (round 66): Level 33's two 672×240 images (`level-33-leech-field`: Okafor's nav chart of the Leech Field, the route through the big rocks from the field's edge to clear rock, the growth shaded violet, the Rail Bunkers as red ticks, the ridge, Ceres's light at the top edge; `level-33-power-drain`: Varga's diagram of two leeches latched on the Stormhawk, the generator gauge with 4 MW drained in amber, the shield ring dimmed, the shake-off as arrows) | chosen (round 66, F.7 ok: accepted as final) |
+| [concept/briefing-images-final-r67-a.png](concept/briefing-images-final-r67-a.png) | Review sheet, M9 part G (round 67): Level 34's two 672×240 images (`level-34-graveyard`: Okafor's nav chart of the ship graveyard, the lane through it, the CDF picket's frigates in grey, the Helix hulks dark with gold edges, the freighter boxed in gold, the tanks' roads as red dots, the containers as amber diamonds, Ceres and the Sovereign at the top right; `level-34-helix-hold`: Varga's salvage scan of the hold, the crate in its four clamps from `tools/art/belt_units_g.py`'s sprites, the Helix seal lit, the core's 22 MW signature beside the Mk IV's 20) | chosen (round 67, G.6 ok: accepted as final) |
+| [concept/briefing-images-final-r68-a.png](concept/briefing-images-final-r68-a.png) | Review sheet, M9 part H (round 68): Level 35's two 672×240 images (`level-35-ceres-orbit`: Okafor's chart of Ceres orbit, the escort screen in gold, the outer hull to the Sovereign over the north pole, the turned mass relay's red line, Ceres Hub red and Ceres Control still CDF; `level-35-sovereign-rings`: Varga's plan of the three rings with their SAM, rail and laser batteries and turning arrows, the 120° fire arc toward the ship in red, the core's six petals shut) and the Act 5 outro's four (`act-5-outro-ceres`: the broken rings drifting over Ceres's pole, the hub's lights white again; `act-5-outro-face`: the recruitment feed paused on Vorne beside his aged 2179 Helix photo, the nav core's route to Callisto; `act-5-outro-ember`: Rook's Ember on its rail with the clamps' scorch marks, Rook on the ladder; `act-5-outro-jupiter`: Jupiter and Callisto through the bay door, all four rails filled) | proposed |
 
 ## Implementation
 
@@ -385,3 +389,5 @@ Production art, M9 part D (concept round 64, step ART-D): Level 31's two images,
 - 2026-10-27 (user, [round 60](../../concept-rounds/round-60/README.md) closed): the intercepted briefing pages approved as drafted (D.17; Q9 **a**: Vorne's broadcast as the act intro); the intercept sounds are S.11 a, S.12 a and S.13 a.
 - 2026-10-28 (user, [round 62](../../concept-rounds/round-62/README.md), closed; page answers): the six Act 5 briefing images (F.10: the intro's four and Level 29's two) accepted as final.
 - 2026-10-28 (user, rounds [61](../../concept-rounds/round-61/README.md) and [63](../../concept-rounds/round-63/README.md), closed): the intercepted page's amber look accepted (round 61 C.6); Level 30's two briefing images accepted (round 63 F.7).
+- 2026-10-28 (user, [round 64](../../concept-rounds/round-64/README.md), closed): **F.10** accepted: Level 31's two briefing images (Okafor's nav chart, Varga's tug diagram) are final.
+- 2026-10-29 (user, [round 65](../../concept-rounds/round-65/README.md), closed): **F.6** ok: Level 32's two briefing images (Okafor's shaft chart, Varga's arc and fall-line diagram) accepted as final.

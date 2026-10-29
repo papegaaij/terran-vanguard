@@ -13,6 +13,7 @@ import vanguard.content.AlliesData;
 import vanguard.content.Content;
 import vanguard.content.EnemyData;
 import vanguard.content.LevelData;
+import vanguard.content.RingBlock;
 import vanguard.content.SectionsBlock;
 
 /**
@@ -88,6 +89,23 @@ final class SpriteUse {
      * (tools/art/belt_units_d.py).
      */
     static final Map<Integer, String> TOW_LOOKS = Map.of(30, "debris-lane-buoy", 31, "debris-claim-rock");
+
+    /**
+     * M9 part H (Level 35, the game's {@code MassRelayLooks}): a level's mass-relay flash, {@code mass-relay-line},
+     * {@code -glow}, {@code -bolt}, {@code -trail} and variant b's {@code -slug} (tools/art/l35_props.py).
+     */
+    static final String RELAY_ROOT = "mass-relay";
+
+    /**
+     * M9 part H (the Iron Sovereign's batteries, the game's {@code SovereignLooks}): a boss attack taken from a ground
+     * unit ({@code from}) is drawn with that unit's telegraph and beam, not its body: the Sentinel Tower's arc wedges,
+     * beam and eye, the Rail Bunker's rail and muzzle flash.
+     */
+    static final Map<String, List<String>> FROM_LOOKS = Map.of(
+            "sentinel-tower",
+            List.of("sentinel-tower-telegraph", "sentinel-tower-beam", "sentinel-tower-eye"),
+            "rail-bunker",
+            List.of("rail-bunker-rail", "rail-bunker-flash"));
 
     /** The dust puffs of a level's collapse: {@code collapse-puff_0..7} (Level 09's arcology). */
     static final String COLLAPSE_ROOT = "collapse-puff";
@@ -251,12 +269,25 @@ final class SpriteUse {
                         .add(slug));
             }
         });
+        // M9 part G: the variant roots one level claims and another's shorter root would claim too (Level 34's livery
+        // and
+        // container variants), and each level's sprites its livery replaces.
+        Set<String> variants = variantRoots(content);
+        Map<String, Set<String>> excluded = new TreeMap<>();
+        Map<String, Map<String, String>> replaced = new TreeMap<>();
+        Set<String> names = new java.util.HashSet<>(sprites);
+        content.levels().forEach((key, level) -> {
+            excluded.put(atlasOf(key), excluded(levels.get(atlasOf(key)), variants));
+            replaced.put(atlasOf(key), liveried(content, key, level));
+        });
         Map<String, Set<String>> atlases = new TreeMap<>();
         List<String> orphans = new ArrayList<>();
         for (String sprite : sprites) {
             Set<String> users = new TreeSet<>();
             levels.forEach((level, roots) -> {
-                if (claims(roots, sprite)) {
+                if (claims(roots, sprite)
+                        && !claims(excluded.getOrDefault(level, Set.of()), sprite)
+                        && !replacedBy(replaced.getOrDefault(level, Map.of()), sprite, names)) {
                     users.add(level);
                 }
             });
@@ -337,6 +368,8 @@ final class SpriteUse {
                     roots.add(DIAMOND_ROOT);
                 }
                 attack.spawn().map(EnemyData.Spawn::enemy).filter(enemies::add).ifPresent(open::add);
+                // M9 part H: a boss battery's attack taken from a ground unit draws that unit's telegraph and beam.
+                attack.from().map(RingBlock.From::unit).map(FROM_LOOKS::get).ifPresent(roots::addAll);
                 String root = PATTERN_ROOTS.get(attack.pattern());
                 // M9 part C: a line mine is drawn in its layer's own frames (minelayer-mine*), claimed by the layer.
                 boolean lineMine =
@@ -347,6 +380,11 @@ final class SpriteUse {
             }
         }
         roots.addAll(enemies);
+        if (key != null) {
+            // M9 part G: a unit flying in its livery in this level's act draws the livery's frames (Level 34's tanks).
+            int act = act(key);
+            enemies.forEach(slug -> content.enemy(slug).liverySprite(act).ifPresent(roots::add));
+        }
         level.objectives().escort().ifPresent(escort -> roots.add(escort.ally()));
         // M5 part G: a defend primary's ally (Level 13's relay) and the supply drones carrying the drops.
         level.objectives().defend().ifPresent(defend -> roots.add(defend.ally()));
@@ -358,6 +396,10 @@ final class SpriteUse {
             roots.add("ore-canister");
         });
         level.rocks().ifPresent(rocks -> roots.add("rock"));
+        // M9 part H: the mass relay's flash (Level 35).
+        level.relay().ifPresent(relay -> roots.add(RELAY_ROOT));
+        // M9 part G: a story pickup in its own frames, named by its story (Level 34's Helix core).
+        level.pickups().forEach(pickup -> pickup.story().ifPresent(roots::add));
         // M5 part C: a collapse's dust is drawn with its puff sprites (CollapseLooks).
         level.collapse().ifPresent(collapse -> roots.add(COLLAPSE_ROOT));
         // M5 part D: a scripted loss is drawn with the glow and the lance (LossLooks).
@@ -400,6 +442,75 @@ final class SpriteUse {
             roots.add(ROOT_BURST_ROOT);
         }
         return roots;
+    }
+
+    /**
+     * M9 part G: the roots that are a variant of a shorter root: every level's ground targets' looks ({@code
+     * cargo-container-cdf} of Level 01's {@code cargo-container}) and every unit's livery ({@code warden-tank-asc} of the
+     * {@code warden-tank}).
+     */
+    static Set<String> variantRoots(Content content) {
+        Set<String> variants = new TreeSet<>();
+        content.levels().values().forEach(level -> level.groundTargets()
+                .forEach(target -> target.sprite().ifPresent(variants::add)));
+        content.enemies().values().forEach(enemy -> enemy.livery().ifPresent(livery -> variants.add(livery.sprite())));
+        return variants;
+    }
+
+    /**
+     * M9 part G: the variant roots a level with {@code roots} does not claim although one of its shorter roots would
+     * (Level 01's {@code cargo-container} leaves the CDF and Helix variants to Level 34; Level 19's {@code warden-tank}
+     * the Ascendancy livery).
+     */
+    static Set<String> excluded(Set<String> roots, Set<String> variants) {
+        Set<String> excluded = new TreeSet<>();
+        for (String variant : variants) {
+            if (!roots.contains(variant) && roots.stream().anyMatch(root -> variant.startsWith(root + "-"))) {
+                excluded.add(variant);
+            }
+        }
+        return excluded;
+    }
+
+    /**
+     * M9 part G: the units of level {@code key} that fly in a livery there (its act at or after the livery's {@code
+     * from_act}) and their livery's root, which the level claims too: their own frames give way to the livery's of the
+     * same name ({@link #replacedBy}).
+     */
+    static Map<String, String> liveried(Content content, String key, LevelData level) {
+        int act = act(key);
+        Map<String, String> units = new TreeMap<>();
+        for (String root : roots(content, key, level)) {
+            EnemyData enemy = content.enemies().get(root);
+            if (enemy != null) {
+                enemy.liverySprite(act).ifPresent(livery -> units.put(root, livery));
+            }
+        }
+        return units;
+    }
+
+    /**
+     * M9 part G: whether {@code sprite} is a liveried unit's own frame that its livery replaces: the livery has the frame
+     * of the same name ({@code warden-tank-turret_3} gives way to {@code warden-tank-asc-turret_3}; the unit's {@code
+     * -flash}, which the livery has not, stays).
+     */
+    static boolean replacedBy(Map<String, String> units, String sprite, Set<String> sprites) {
+        for (Map.Entry<String, String> unit : units.entrySet()) {
+            String own = unit.getKey();
+            String livery = unit.getValue();
+            if (!claims(Set.of(livery), sprite)
+                    && claims(Set.of(own), sprite)
+                    && sprites.contains(livery + sprite.substring(own.length()))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /** M9 part G: the act number of a level key ({@code act-5-the-belt/level-34-...} is 5). */
+    static int act(String key) {
+        String act = Content.actDirectory(key);
+        return Integer.parseInt(act.substring("act-".length(), act.indexOf('-', "act-".length())));
     }
 
     /** M8 part H: whether the level leaves the water: a section in the air after an under-water one (Level 28's breakout). */

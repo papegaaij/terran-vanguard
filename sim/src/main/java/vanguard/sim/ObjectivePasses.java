@@ -89,7 +89,16 @@ final class ObjectivePasses {
      * pieces, a parts objective's parts, M5 part F's sondes, M7 part C's tendrils): its {@code n / total}.
      */
     static int escapers(LevelScript script, EnemyForce force, SetPiece[] setPieces, int partsPiece) {
-        String tag = script.objectives().secondary().tag();
+        Secondary secondary = script.objectives().secondary();
+        if (secondary.objects()) {
+            // M9 part G (Level 34's "Strip the graveyard"): the destructibles of its look, not units.
+            int objects = 0;
+            for (GroundObjectSpec object : script.groundObjects()) {
+                objects += !object.trigger() && secondary.countsObject(object.look()) ? 1 : 0;
+            }
+            return objects;
+        }
+        String tag = secondary.tag();
         int escapers = tag.isEmpty()
                 ? force.unitsOf(script.objectives().secondary().escapes())
                 : force.unitsOf(script.objectives().secondary().escapes(), tag);
@@ -131,6 +140,12 @@ final class ObjectivePasses {
         Enemy enemy = force.enemies().get(index);
         events.add(SimEvents.Type.UNIT_PART_DESTROYED, enemy.partX(part), enemy.partY(part), enemy.kind());
         tally.partKill(enemy.spec().parts().get(part).bounty());
+        if (enemy.spec().parts().get(part).topples()
+                && enemy.toppling.start(enemy.partX(part) - enemy.x(), enemy.partY(part) - enemy.y())) {
+            // M9 part E (design/enemies/ground/strider, The topple): a lost leg: it staggers toward it, its line
+            // marked.
+            events.add(SimEvents.Type.TOPPLE_TELL, enemy.x(), enemy.y(), enemy.kind());
+        }
     }
 
     /**
@@ -171,9 +186,12 @@ final class ObjectivePasses {
         // M8 part C: a chain head's head-first pickup drops only with a head-first kill.
         boolean dropsCarried = true;
         // M8 part H, step H2 (§5 H7): a boss's shed unit is no kill where the kill ratio leaves the bosses out.
-        boolean counted = enemy.chain() == null
-                || !enemy.chain().bossShed()
-                || script.objectives().secondary().countsBosses();
+        boolean counted = (enemy.chain() == null
+                        || !enemy.chain().bossShed()
+                        || script.objectives().secondary().countsBosses())
+                // M9 part H, step H1b: so is a ringed boss's bay Dart.
+                && (enemy.launchedBy() != Launching.BOSS
+                        || script.objectives().secondary().countsBosses());
         if (enemy.grounded() && (enemy.driftX() != 0 || enemy.driftY() != 0)) {
             // M5 part G: its remains drift on with its floe (Level 13's mortars).
             events.add(
@@ -460,6 +478,10 @@ final class ObjectivePasses {
     void completeLevel() {
         s.complete = true;
         events.add(SimEvents.Type.LEVEL_COMPLETE, ship.x(), ship.y());
+        if (s.story != null) {
+            // Step FIX2: a story pickup still unreleased at the end is missed (the tug's line), as one that leaves.
+            s.story.lost(ship.x(), ship.y());
+        }
         Convoy convoy = s.convoy;
         // M5 part E: a naval convoy's level-end cues count its damageable units afloat; it pays nothing.
         int home = convoy == null ? 0 : convoy.naval() ? convoy.afloat() : convoy.saveableAlive();

@@ -1,0 +1,211 @@
+backdrop:
+  # Presentation only: Level 34's ship graveyard (tools/art/backdrop_l34.py, step ART-G, from the level's data.yaml).
+  # A ground layer without a tile set: open space is the deep layer (the base); the ground holds the
+  # hulls (CDF white-grey, Helix grey-gold with gold trim: QG-1 a) with the tank roads on their walkways
+  # and keels, the freighter (two pieces placed exactly: stern + bow, 12 px overlap) and the scattered
+  # plates; red-blink is the only animated ground piece (at most two on the screen). Deep: the dust band,
+  # far wrecks, a far hulk turning, Ceres's point and the Sovereign's gold ring at the end.
+  scroll_factors: {deep: 0.12, far: 0.5, ground: 1, low-air: 1.35, high-air: 2.2}   # far, low-air unused
+  ramp: 2
+  haze_colour: 09090e
+  atmosphere:
+    clear: {haze: 0.0}
+  tile_sets:
+    grave-space: {layer: deep, height: 1024}   # space, the sunlit dust band, stars
+    grave-dust: {layer: high-air, height: 960}   # close grit and dust motes (transparent)
+  pieces:
+    far-wreck-a: {layer: deep, size: [140, 64]}
+    far-wreck-b: {layer: deep, size: [110, 80]}
+    far-hulk-turn: {layer: deep, size: [120, 120], frames: 16, fps: 0.5}
+    ceres-point: {layer: deep, size: [48, 48]}
+    sovereign-lights: {layer: deep, size: [128, 64]}
+    plate-a: {layer: ground, size: [130, 100]}
+    plate-b: {layer: ground, size: [160, 116]}
+    plate-c: {layer: ground, size: [104, 140]}
+    plate-helix: {layer: ground, size: [124, 104]}
+    corvette-spine: {layer: ground, size: [140, 760]}
+    cdf-frigate-a: {layer: ground, size: [184, 1080]}
+    cdf-frigate-b: {layer: ground, size: [200, 1040]}
+    vigil: {layer: ground, size: [220, 1040]}
+    helix-hulk-a: {layer: ground, size: [240, 1120]}
+    helix-hulk-b: {layer: ground, size: [240, 1100]}
+    sable-wren: {layer: ground, size: [112, 224]}
+    freighter-stern: {layer: ground, size: [480, 1300]}
+    freighter-bow: {layer: ground, size: [480, 1500]}
+    tangle-a: {layer: ground, size: [480, 820]}
+    tangle-b: {layer: ground, size: [480, 840]}
+    old-marta: {layer: ground, size: [240, 300]}
+    red-blink: {layer: ground, size: [12, 12], frames: 2, fps: 1}
+  placed:
+    # the graveyard's edge: scattered plates
+    - {piece: plate-a, t: 3.0, x: 380}
+    - {piece: plate-c, t: 8.0, x: 96}
+    # a broken corvette's spine (the first container on it)
+    - {piece: corvette-spine, t: 20.0, x: 170}
+    - {piece: plate-b, t: 22.0, x: 370}
+    - {piece: plate-helix, t: 27.0, x: 410}
+    # a third frigate of the picket
+    - {piece: cdf-frigate-b, t: 31.0, x: 375}
+    - {piece: plate-b, t: 42.5, x: 70}
+    - {piece: plate-a, t: 47.0, x: 160}
+    - {piece: plate-c, t: 63.0, x: 400}
+    - {piece: plate-helix, t: 66.0, x: 80}
+    # a hulk at the right edge (the Sable Wren wedged against it)
+    - {piece: helix-hulk-a, t: 97.0, x: 560}
+    - {piece: helix-hulk-b, t: 83.0, x: 420}
+    - {piece: plate-helix, t: 80.0, x: 60}
+    - {piece: plate-a, t: 104.0, x: 80}
+    # the tangle begins
+    - {piece: cdf-frigate-a, t: 134.0, x: 110}
+    - {piece: helix-hulk-b, t: 137.0, x: 400}
+    - {piece: cdf-frigate-b, t: 153.0, x: 380}
+    - {piece: helix-hulk-a, t: 155.0, x: 90}
+    - {piece: plate-b, t: 151.0, x: 420}
+    # the last plates
+    - {piece: plate-c, t: 168.0, x: 90}
+    # the last container's plate
+    - {piece: plate-b, t: 172.2, x: 330}
+    - {piece: plate-a, t: 176.0, x: 140}
+    - {piece: plate-helix, t: 180.5, x: 380}
+    # cdf-frigate-a: its road carries the convoy of t 32 (x2)
+    - {piece: cdf-frigate-a, t: 37.6, x: 150}
+    # cdf-frigate-b: its road carries the convoy of t 50 (x3)
+    - {piece: cdf-frigate-b, t: 55.754, x: 330}
+    # helix-hulk-a: its road carries the convoy of t 70 (x2)
+    - {piece: helix-hulk-a, t: 75.985, x: 300}
+    # helix-hulk-b: its road carries the convoy of t 88 (x3)
+    - {piece: helix-hulk-b, t: 93.908, x: 170}
+    # tangle-a: its road carries the convoy of t 140 (x3)
+    - {piece: tangle-a, t: 145.062, x: 240}
+    # tangle-b: its road carries the convoy of t 158 (x3)
+    - {piece: tangle-b, t: 163.292, x: 240}
+    # the freighter's stern: the hold's crate at x 240 entering at t 108.3 (the clamps round it)
+    - {piece: freighter-stern, t: 112.118, x: 240}
+    # the freighter's bow, exactly on the stern (12 px overlap under its frame girder): the far deck's road (t 125)
+    - {piece: freighter-bow, t: 124.736, x: 240}
+    # the Vigil: her bridge's shutter at x 90 (t 56), the beacon's mount at x 235 (t 60)
+    - {piece: vigil, t: 60.077, x: 155}
+    # the Sable Wren wedged between two hulks (t 96)
+    - {piece: sable-wren, t: 98.354, x: 404}
+    # Old Marta under a Helix hull: her airlock at x 240 (t 165)
+    - {piece: old-marta, t: 167.723, x: 250}
+    # emergency lights blinking red
+    - {piece: red-blink, t: 30.538, x: 130}
+    - {piece: red-blink, t: 57.769, x: 60}
+    - {piece: red-blink, t: 84.077, x: 360}
+    - {piece: red-blink, t: 113.455, x: 400}
+    - {piece: red-blink, t: 145.769, x: 420}
+    - {piece: red-blink, t: 166.231, x: 70}
+    # far wrecks
+    - {piece: far-wreck-a, t: 20.0, x: 380}
+    - {piece: far-wreck-b, t: 60.0, x: 90}
+    # a far hulk turning slowly
+    - {piece: far-hulk-turn, t: 100.0, x: 400}
+    - {piece: far-wreck-a, t: 140.0, x: 110}
+    # Ceres ahead, a hard white point, 120 px down at the end (t=186)
+    - {piece: ceres-point, t: 195.615, x: 300}
+    # beside it the Sovereign's ring of gold lights
+    - {piece: sovereign-lights, t: 194.846, x: 380}
+sections:   # ART-G's reading of the README's Layout (130 px/s, the freighter 110 with 2 s eases); G2 writes the real ones
+  - {name: Graveyard Edge, end: 25, atmosphere: clear, tiles: ['grave-space', 'grave-dust'], notes: {'layers': {'ground': "scattered hull plates and a broken CDF corvette's spine.", 'air': 'small drifting rocks with Mites.', 'deep': 'the dust band, far wrecks.'}, 'purpose': 'Popcorn and Needlers; the first container (t≈18).'}}
+  - {name: The CDF Picket, end: 65, atmosphere: clear, tiles: ['grave-space', 'grave-dust'], notes: {'layers': {'ground': "three broken CDF frigates side by side, their dorsal walkways the tanks' roads (convoys t≈32, t≈50), a mining charge on a frigate's flank (t≈51), two containers (t≈38, t≈58); the frigate *Vigil*'s bridge (t≈56, the first secret)."}, 'purpose': 'The tanks in livery taught; the first Talon wing (t=39).'}}
+  - {name: Helix Hulks, end: 105, atmosphere: clear, tiles: ['grave-space', 'grave-dust'], notes: {'layers': {'ground': 'gutted black-and-gold Helix ore freighters, tank convoys along their keels (t≈70, t≈88), a mining charge (t≈89), a container (t≈80); the Helix courier *Sable Wren* wedged between two hulls (t≈96, the second secret).'}, 'purpose': 'Tanks and Needlers; the sky quiet between waves.'}}
+  - {name: The Freighter, end: 135, speed: 110, ramp: 2, atmosphere: clear, tiles: ['grave-space', 'grave-dust'], notes: {'layers': {'ground': 'one huge Helix freighter, its hold open to space; **the Helix core** in four clamps in the hold (t≈108–120); a tank pair on its far deck (t≈123). No air wave from t=113 to t=122.'}, 'purpose': 'The salvage set piece (Q12 c).'}}
+  - {name: The Tangle, end: 172, speed: 130, ramp: 2, atmosphere: clear, tiles: ['grave-space', 'grave-dust'], notes: {'layers': {'ground': "wrecks of both fleets tangled together, the tanks' last convoys (t≈140, t≈158), a mining charge (t≈141), two containers (t≈150, t≈170); the prospector's tender *Old Marta* under a Helix hull (t≈165, the third secret)."}, 'purpose': "The level's busiest stretch (still a breather)."}}
+  - {name: Clear Space, end: 186, atmosphere: clear, tiles: ['grave-space', 'grave-dust'], notes: {'layers': {'ground': 'the last plates falling behind.', 'deep': 'Ceres ahead, a hard white point, and beside it a ring of gold lights, the Sovereign.'}, 'purpose': 'Release; the level ends at t=186.'}}
+# rows: the end's bottom edge 23580 (ground px)
+convoys:   # the Warden Tank convoys on their roads: one path per unit (unit i enters at t + i x 1.5 s, its
+  # path in screen x, y below the top edge at its own entry: the sim's walker rule), 720 px of road
+  # from the entry; a path per unit (a pair's third path where its road reaches, for a hard extra). The
+  # roads jog at the plates' seams (the tank's 60 deg/s turn). Another interval moves the paths:
+  # re-run --proposal after changing INTERVAL in the generator.
+  - t: 32   # x2 on cdf-frigate-a
+    interval: 1.5
+    paths:
+      - [[150, -40], [150, -358], [150, -760]]
+      - [[150, -40], [150, -163], [150, -603]]
+      - [[150, -40], [150, -408]]
+  - t: 50   # x3 on cdf-frigate-b
+    interval: 1.5
+    paths:
+      - [[314, -40], [314, -398], [342, -478], [342, -760]]
+      - [[314, -40], [314, -203], [342, -283], [342, -623]]
+      - [[325.2, -40], [342, -88], [342, -428]]
+  - t: 70   # x2 on helix-hulk-a
+    interval: 1.5
+    paths:
+      - [[356, -40], [356, -452], [342, -492], [342, -760]]
+      - [[356, -40], [356, -257], [342, -297], [342, -673]]
+      - [[356, -40], [356, -62], [342, -102], [342, -478]]
+  - t: 88   # x3 on helix-hulk-b
+    interval: 1.5
+    paths:
+      - [[114, -40], [114, -443], [128, -483], [128, -760]]
+      - [[114, -40], [114, -248], [128, -288], [128, -653]]
+      - [[114, -40], [114, -53], [128, -93], [128, -458]]
+  - t: 123   # x2 on freighter-bow
+    interval: 1.5
+    paths:
+      - [[190, -40], [190, -511]]
+      - [[190, -40], [190, -346]]
+      - [[190, -40], [190, -181]]
+  - t: 140   # x3 on tangle-a
+    interval: 1.5
+    paths:
+      - [[318, -40], [318, -238.1], [300, -278.1], [300, -438.1], [316, -468.1], [316, -738.1]]
+      - [[318, -40], [318, -43.1], [300, -83.1], [300, -243.1], [316, -273.1], [316, -543.1]]
+      - [[300, -40], [300, -48.1], [316, -78.1], [316, -348.1]]
+  - t: 158   # x3 on tangle-b
+    interval: 1.5
+    paths:
+      - [[140.2, -40], [148, -318], [176, -368], [176, -718]]
+      - [[145.7, -40], [148, -123], [176, -173], [176, -523]]
+      - [[176, -40], [176, -328]]
+ground_objects:   # at: [t, x], when the object enters at the top edge and its x (on its hull's pixels).
+  # Containers 40x28 (12 HP, `sprite: cargo-container-cdf|-helix`: _0..2 intact/damaged/wrecked + -break);
+  # charges `mining-charge` 24x24 (E's), on a road's flank (64 px blast); the hold's clamps 32x32 (15 HP,
+  # group helix-clamps, `sprite: hold-clamp-left|-right`, the jaws facing the crate); the crate's place
+  # (60x40, the story pickup `helix-core` rises there: helix-core, -rise, -drift, -glow); the secrets' triggers 40x40 (20 HP,
+  # 28 hard) with their own looks: vigil-shutter, sable-wren-hatch, old-marta-airlock (_0..2: shut, hit,
+  # open).
+  - {kind: cargo-container-cdf, at: [18, 170], size: [40, 28]}   # on corvette-spine
+  - {kind: cargo-container-cdf, at: [38, 98], size: [40, 28]}   # on cdf-frigate-a
+  - {kind: cargo-container-cdf, at: [58, 227], size: [40, 28]}   # on vigil
+  - {kind: cargo-container-helix, at: [80, 364], size: [40, 28]}   # on helix-hulk-b
+  - {kind: cargo-container-helix, at: [150, 420], size: [40, 28]}   # on cdf-frigate-b
+  - {kind: cargo-container-cdf, at: [170, 334], size: [40, 28]}   # on plate-b
+  - {kind: mining-charge, at: [51.21, 350], size: [24, 24]}   # on cdf-frigate-b
+  - {kind: mining-charge, at: [89.21, 150], size: [24, 24]}   # on helix-hulk-b
+  - {kind: mining-charge, at: [141.21, 282], size: [24, 24]}   # on tangle-a
+  - {kind: hold-clamp-left, at: [108.61, 194], size: [32, 32]}   # on freighter-stern
+  - {kind: hold-clamp-right, at: [108.61, 286], size: [32, 32]}   # on freighter-stern
+  - {kind: hold-clamp-left, at: [108.06, 194], size: [32, 32]}   # on freighter-stern
+  - {kind: hold-clamp-right, at: [108.06, 286], size: [32, 32]}   # on freighter-stern
+  - {kind: helix-core, at: [108.3, 240], size: [60, 40]}   # on freighter-stern
+  - {kind: vigil-shutter, at: [56, 90], size: [40, 40]}   # on vigil
+  - {kind: sable-wren-hatch, at: [96, 404], size: [40, 40]}   # on sable-wren
+  - {kind: old-marta-airlock, at: [165, 240], size: [40, 40]}   # on old-marta
+drops:   # the CDF beacon on the Vigil (Level 33's nav-buoy frames: BuoyLooks.MOORED)
+  - {t: 60, x: 235, y: 380, pickup: armour patch, sprite: nav-buoy}
+debris:
+  # Proposal (ART-G): a few of the belt's small rocks drifting through sections 1-3 and 5 (part B's
+  # debris-belt-a/b/c, 6 HP), none in the freighter's section (t 105-135) or clear space; the Mites' own
+  # rocks are their waves' on_rocks. No big rocks in Level 34.
+  chunks:
+    belt-a: {size: [40, 36], hp: 6}
+    belt-b: {size: [36, 32], hp: 6}
+    belt-c: {size: [32, 28], hp: 6}
+  clearance: 120
+  placed:
+    - {t: 5, x: 120, chunk: belt-a, drift: [16, -170]}
+    - {t: 11.5, x: 360, chunk: belt-b, drift: [-24, -180]}
+    - {t: 19, x: 260, chunk: belt-c, drift: [32, -190]}
+    - {t: 31, x: 420, chunk: belt-a, drift: [-40, -170]}
+    - {t: 44, x: 230, chunk: belt-b, drift: [16, -180]}
+    - {t: 56.5, x: 380, chunk: belt-c, drift: [-24, -190]}
+    - {t: 72, x: 70, chunk: belt-a, drift: [32, -170]}
+    - {t: 83.5, x: 300, chunk: belt-b, drift: [-40, -180]}
+    - {t: 95, x: 160, chunk: belt-c, drift: [16, -190]}
+    - {t: 141.5, x: 70, chunk: belt-a, drift: [-24, -170]}
+    - {t: 152, x: 260, chunk: belt-b, drift: [32, -180]}
+    - {t: 163, x: 400, chunk: belt-c, drift: [-40, -190]}

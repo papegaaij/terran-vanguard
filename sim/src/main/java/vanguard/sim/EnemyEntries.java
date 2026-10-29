@@ -61,6 +61,8 @@ final class EnemyEntries {
     private int[] gateOf;
     /** M9 part B: the rocks of the waves on rocks and their riders ({@link RockRides}); null without such waves. */
     private RockRides rides;
+    /** M9 part E: the level's forks ({@link Forks}); null without. */
+    private Forks forks;
 
     /**
      * @param reversedAt M7 part G: whether the scroll runs reversed at a level time, s: the ground units entering then
@@ -94,7 +96,9 @@ final class EnemyEntries {
         this.chainRules = chainRules;
         this.flocks = flocks;
         this.carriers = carriers;
-        dormants = groundUnits.stream().anyMatch(GroundUnit::dormant);
+        // M9 part E: a fork branch's ground units sleep until (unless) their side is chosen.
+        dormants = groundUnits.stream()
+                .anyMatch(unit -> unit.dormant() || unit.branch().isPresent());
         this.groundUnits = groundUnits;
         groundKinds = new int[groundUnits.size()];
         groundTicks = new int[groundUnits.size()];
@@ -175,6 +179,11 @@ final class EnemyEntries {
         return haltReleased;
     }
 
+    /** M9 part E: the level's forks: a branch's waves fly only when it is chosen, its ground units sleep till then. */
+    void forks(Forks levelForks) {
+        forks = levelForks;
+    }
+
     /** M9 part B: the rocks' pass of the waves on rocks (the riders board at their entry). */
     void rides(RockRides rockRides) {
         rides = rockRides;
@@ -201,6 +210,11 @@ final class EnemyEntries {
     /** Lets in every unit of {@code schedule} due at {@code tick}; their wave numbers start at {@code waveBase}. */
     private void spawnDue(WaveSchedule schedule, int tick, int waveBase) {
         for (Spawn spawn = schedule.due(tick); spawn != null; spawn = schedule.due(tick)) {
+            if (forks != null && schedule.lastBranch() >= 0 && !forks.chosen(schedule.lastBranch())) {
+                // M9 part E: a branch not chosen (its fork's choice falls before its waves): it never comes.
+                spawned++;
+                continue;
+            }
             if (spawn.enemy().chain().isPresent()) {
                 chainRules.spawnChain(spawn);
                 continue;
@@ -318,6 +332,13 @@ final class EnemyEntries {
             if (enemy != null && unit.dormant()) {
                 // M9 part B: dark scenery until its time on the level clock.
                 enemy.dormantUntil(SimStep.ticks(unit.dormantUntil()));
+            }
+            if (enemy != null && unit.branch().isPresent()) {
+                // M9 part E: a fork branch's unit: dark scenery until its side is chosen, for good if it is not.
+                enemy.branch = unit.branch().get().code();
+                if (forks == null || forks.dormantOnEntry(enemy.branch)) {
+                    enemy.dormantUntil(Integer.MAX_VALUE);
+                }
             }
             spawned++;
             nextGround++;
@@ -439,6 +460,23 @@ final class EnemyEntries {
     }
 
     /** See {@link EnemyForce#units()}. */
+    /**
+     * M9 part E: per fork branch ({@link Branch#code()}, {@code forks} × 2 of them), the units counted as enemies its
+     * waves and ground units send.
+     */
+    int[] branchUnits(int forks) {
+        int[] out = new int[2 * forks];
+        for (int code = 0; code < out.length; code++) {
+            out[code] = waves.branchUnits(code);
+        }
+        for (GroundUnit unit : groundUnits) {
+            if (unit.branch().isPresent() && unit.enemy().countsAsEnemy()) {
+                out[unit.branch().get().code()]++;
+            }
+        }
+        return out;
+    }
+
     int units() {
         int count = waves.counted() + groundUnits.size();
         for (EnemySpec kind : kinds) {

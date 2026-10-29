@@ -147,6 +147,23 @@ interface BossActions {
     /** M8 part H: a coiled boss's event {@code type} at (x, y) with its {@code value} ({@link CoilArena}). */
     default void coil(SimEvents.Type type, double x, double y, int value) {}
 
+    /** M9 part H: a ringed boss's event {@code type} at (x, y) with its {@code value} ({@link RingArena}). */
+    default void ring(SimEvents.Type type, double x, double y, int value) {}
+
+    /**
+     * M9 part H, step H1b: a ringed boss's SAM battery at (x, y) launches one missile of the homing {@code gun} at the
+     * ship, under the station's own cap (its gun's most alive, across its batteries); by default an aimed shot.
+     */
+    default void stationMissile(double x, double y, EnemyGun gun) {
+        aimed(x, y, gun);
+    }
+
+    /**
+     * M9 part H, step H1b: a ringed boss's rim bay at (x, y) launches one unit of {@code launcher} along {@code angle}
+     * (radians, y up: (cos, sin) of it), flying straight its launcher's time before its chase.
+     */
+    default void bayLaunch(EnemySpec.Launcher launcher, double x, double y, double angle) {}
+
     /** M8 part H: a coiled boss dives (the radio's {@code boss-dive}). */
     default void dive() {}
 

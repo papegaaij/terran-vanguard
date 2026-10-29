@@ -1,0 +1,82 @@
+# M9 part H, step H1c (RingKeysTest): a test ringed boss mirroring the simulation's fixture Act5HSpecs.SOVEREIGN
+# (sim/src/test/java/vanguard/sim/Act5HSpecs.java) at the boss doc's medium numbers: the core 70x70 (5,000 HP, vital,
+# exposed in the last phase), the outer ring (radius 200, 6°/s clockwise) with 6 SAM batteries, the middle ring (140,
+# 10°/s counter-clockwise) with 4 rail batteries, the inner ring (85) stepping 120° in 4 s, holding 4 s (tell 0.4 s)
+# with 3 laser batteries; the batteries' attacks taken from the SAM Nest, the Rail Bunker and the Sentinel Tower.
+name: Test Sovereign
+faction: Jovian Ascendancy
+layer: ground
+tier: huge
+size: [440, 440]
+hitbox: [70, 70]
+parts: multi
+part_list:
+  - {name: core, offset: [0, 0], hitbox: [70, 70], hp: 5000, kind: vital, bounty: 379}
+orientation: fixed
+hp: 8960
+armour: 'the core until it opens'
+speed: 0
+machine: true
+movement:
+  anchored: {y: 160}
+attacks:
+  - {name: sam, pattern: aimed, from: sam-nest, interval: 6, staggered: true}
+  - {name: rail, pattern: laser-line, from: rail-bunker, interval: 5, staggered: true}
+  - {name: laser, pattern: laser-sweep, from: {unit: sentinel-tower, length: 300}, interval: 4.5}
+  - {name: core-fan-1, pattern: fan, bullet: small, interval: 3.0, speed: 150, count: 5, spread: 40}
+  - {name: core-fan-2, pattern: fan, bullet: small, interval: 2.5, speed: 150, count: 5, spread: 40}
+  - {name: core-fan-3, pattern: fan, bullet: small, interval: 2.0, speed: 150, count: 5, spread: 40}
+  - {name: core-spiral, pattern: spiral, bullet: small, interval: 0.2, speed: 130, arms: 2, turn_rate: 72, duration: 4}
+  - {name: core-rail, pattern: laser-line, from: rail-bunker, interval: 6, only: [medium, hard]}
+formations:
+  - {name: solo set piece}
+weak_points: []
+drops: []
+traits: [anti-ground, piercing, homing]
+bounty: 457
+first_level: 35
+difficulty:
+  easy: {ring_arena: {arc: 90, interval: 1.3}}
+  hard: {ring_arena: {speed: 1.2, arc: 150, interval: 0.8}}
+boss:
+  kind: boss
+  bar_name: TEST SOVEREIGN
+  par: 150
+  death_seconds: 5
+  rings:
+    - name: outer
+      radius: 200
+      segments: 12
+      speed: 6
+      direction: cw
+      batteries: {count: 6, part: {hp: 220, box: [30, 30], bounty: 6}, attack: sam}
+    - name: middle
+      radius: 140
+      segments: 8
+      speed: 10
+      direction: ccw
+      batteries: {count: 4, part: {hp: 330, box: [36, 36], bounty: 6}, attack: rail}
+    - name: inner
+      radius: 85
+      segments: 6
+      direction: cw
+      step: {angle: 120, seconds: 4, hold: 4, tell: 0.4}
+      batteries: {count: 3, part: {hp: 440, box: [32, 32], bounty: 6}, attack: laser}
+  fire_arc: {degrees: 120, clamp: [30, 150]}
+  spin_up: 4
+  grind: 2
+  speed_ups: [1, 1.25, 1.5]
+  cookoff: 0.15
+  core:
+    part: core
+    glow: 0.5
+    opening: 3
+    shield: 80
+    spiral: {attack: core-spiral, run: 4, rest: 2, tell: 0.6}
+    rail: {attack: core-rail, below: 0.5}
+    bays: {count: 4, radius: 40, start: 0, from: dart-drone, stream: 4, every: 5, gap: 0.4, first: 1, speed: 240, spread: 30, straight: 0.4, most_alive: 16, tell: 0.5, skip_within: 72}
+  phases:
+    - {name: Three rings, until: {locks: 1}, attacks: [sam, rail, laser, core-fan-1]}
+    - {name: Two rings, until: {locks: 2}, attacks: [sam, rail, laser, core-fan-2]}
+    - {name: One ring, until: {locks: 3}, attacks: [sam, rail, laser, core-fan-3]}
+    - {name: The core, until: {parts: [core]}, attacks: [core-spiral, core-rail], exposes: [core]}

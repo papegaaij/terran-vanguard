@@ -133,7 +133,10 @@ class OutroOnwardTest {
      * names no next act any more, so the outro leads on to Act 5's title card and the Level 29 briefing; the release
      * ends inside Act 5 (step B4, pending round 62): "ACTS I-IV COMPLETE", "ACT V - THE BELT. LEVEL 31 COMING SOON.",
      * the hangar before the next level "ACT V - THE BELT: LEVEL 31 COMING SOON". M9 part C (step C4): Level 30 is built,
-     * so the release ends after it, before Level 31; M9 part D (step D4): Level 31 is built, it ends before Level 32.
+     * so the release ends after it, before Level 31; M9 part D (step D4): Level 31 is built, it ends before Level 32;
+     * M9 part E (step E4): Level 32 is built, it ends before Level 33;
+     * M9 part F (step F4): Level 33 is built, it ends before Level 34; M9 part G (step G4): Level 34 is built, it ends
+     * before Level 35; M9 part H (step H4): Level 35 is built and ends Act 5 ({@link #afterAct5sOutroTheReleaseEnds}).
      */
     @Test
     void afterAct4sOutroComeAct5sTitleCardAndTheBriefingOfLevel29() {
@@ -163,26 +166,66 @@ class OutroOnwardTest {
         BriefingScreen.Onward onward = BriefingScreen.onward(content, outro);
         assertEquals("ACT V: THE BELT, THEN THE BRIEFING FOR MISSION 29: BETRAYAL AT CERES", onward.next());
         assertEquals("ENTER TO ACT V", onward.hint());
-        assertTrue(content.levelKey(31).isPresent(), "Level 31 is built (M9 part D)");
-        assertTrue(content.levelKey(32).isEmpty(), "Level 32 is not built");
-        assertTrue(ReleaseTexts.openAct(content).isPresent(), "the release ends inside Act 5");
-        assertEquals("ACTS I-IV COMPLETE", ReleaseTexts.title(content));
-        assertEquals("ACT V - THE BELT. LEVEL 32 COMING SOON.", ReleaseTexts.comingSoon(content));
-        assertEquals("ACT V - THE BELT: LEVEL 32 COMING SOON", ReleaseTexts.hangarLine(content));
+        assertTrue(content.levelKey(35).isPresent(), "Level 35 is built (M9 part H)");
+    }
+
+    /**
+     * M9 part H (design/campaign Level 35, Act end; step H4): Level 35 ends Act 5 in Level 28's order: the act summary in
+     * the debrief, then the outro's four voiced pages with their images (Okafor, Varga, Rook, Okafor), the act-complete
+     * fanfare under page 1. Act 5 names the act after it ({@code next_act}: Act 6, Jovian Storm, Callisto), so with no
+     * level after 35 built the outro leads to the release's end: "ACTS I-V COMPLETE", "ACT VI - JOVIAN STORM. CALLISTO.
+     * COMING SOON.", and the hangar before Level 36 reads "ACT VI - JOVIAN STORM: COMING SOON".
+     */
+    @Test
+    void afterAct5sOutroTheReleaseEnds() {
+        String directory = "act-5-the-belt";
+        ActData act = content.acts().get(directory);
+        assertEquals(35, act.levels().last(), "Act 5 ends with Level 35");
+        assertTrue(content.levelKey(35).isPresent(), "Level 35 is built (M9 part H)");
+        assertTrue(content.levelKey(36).isEmpty(), "Level 36 is not built");
+        OutroScript outro = Briefings.outro(new CampaignRoute.ActEnd(directory, act, 35), 36)
+                .orElseThrow();
+        assertEquals("ACT V - THE BELT", outro.act());
+        assertEquals(29, outro.first());
+        assertEquals(35, outro.last());
+        assertEquals(Optional.of("act-complete"), outro.music(), "track 24 under page 1");
         assertEquals(
-                "CONTINUE IN THE MAIN MENU RETURNS TO THE HANGAR BEFORE LEVEL 32.", ReleaseTexts.continueLine(content));
+                List.of("Okafor", "Varga", "Rook", "Okafor"),
+                outro.pages().stream().map(BriefingPage::speaker).toList());
         assertEquals(
-                "THE END OF THIS RELEASE AND THE CREDITS. ACT V - THE BELT: LEVEL 32 IS COMING SOON.",
+                List.of("act-5-outro-ceres", "act-5-outro-face", "act-5-outro-ember", "act-5-outro-jupiter"),
+                outro.pages().stream().map(page -> page.image().orElseThrow()).toList());
+        for (BriefingPage page : outro.pages()) {
+            assertTrue(
+                    Files.isRegularFile(
+                            ASSETS.resolve("ui/briefing/" + page.image().orElseThrow() + ".png")),
+                    page.image().orElseThrow());
+        }
+        BriefingScreen.Onward onward = BriefingScreen.onward(content, outro);
+        assertEquals(ReleaseTexts.outroNext(content), onward.next());
+        assertEquals("ENTER TO THE END", onward.hint());
+        assertTrue(ReleaseTexts.openAct(content).isEmpty(), "the release ends with Act 5 complete");
+        assertEquals("ACTS I-V COMPLETE", ReleaseTexts.title(content));
+        assertEquals("ACT VI - JOVIAN STORM. CALLISTO. COMING SOON.", ReleaseTexts.comingSoon(content));
+        assertEquals("ACT VI - JOVIAN STORM: COMING SOON", ReleaseTexts.hangarLine(content));
+        assertEquals(
+                "CONTINUE IN THE MAIN MENU RETURNS TO THE HANGAR AT THE END OF ACT V.",
+                ReleaseTexts.continueLine(content));
+        assertEquals(
+                "THE END OF THIS RELEASE AND THE CREDITS. ACT VI - JOVIAN STORM IS COMING SOON.",
                 ReleaseTexts.outroNext(content));
-        assertTrue(
-                content.acts().values().stream()
-                        .allMatch(other -> other.nextAct().isEmpty()),
-                "no act names a next act");
+        assertEquals(
+                List.of(directory),
+                content.acts().entrySet().stream()
+                        .filter(entry -> entry.getValue().nextAct().isPresent())
+                        .map(java.util.Map.Entry::getKey)
+                        .toList(),
+                "only Act 5 names a next act");
     }
 
     /**
      * M9 part B (step B4): a won level that ends no act while the content has no next level (Level 29 until Level 30
-     * was built; M9 part C: Level 30 until Level 31 was; M9 part D: Level 31 until Level 32 is) ends the release as an act outro does: the end card instead of the hangar; a briefing or an outro
+     * was built; M9 part C: Level 30 until Level 31 was; M9 part D: Level 31 until Level 32 was; M9 part E: Level 32 until Level 33 was; M9 part F: Level 33 until Level 34 was; M9 part G: Level 34 until Level 35 was) ends the release as an act outro does: the end card instead of the hangar; a briefing or an outro
      * never does, nor the hangar while the next level exists.
      */
     @Test

@@ -362,7 +362,43 @@ final class Objectives {
         return meet();
     }
 
-    /** M7 part F: the units of an escapes objective that got away in this attempt (with escapes allowed; else 0). */
+    /**
+     * M9 part G (design/campaign Level 34, "Strip the graveyard"): ground object {@code object} was destroyed; an object
+     * escapes objective counts a destructible of its look as opened (always, for the tracker) and returns whether that
+     * met it (all but its allowed opened, not failed).
+     */
+    boolean objectOpened(GroundObjectSpec object) {
+        if (!secondary.objects() || object.trigger() || !secondary.countsObject(object.look())) {
+            return false;
+        }
+        escapesDestroyed++;
+        if (!escapesFailed && escapesDestroyed >= escapesNeeded()) {
+            return meet();
+        }
+        return false;
+    }
+
+    /**
+     * M9 part G: ground object {@code object} left the screen; an object escapes objective counts a destructible of its
+     * look as away (always, for the tracker) and returns whether that failed it (the one past its allowed, before it
+     * was met).
+     */
+    boolean objectAway(GroundObjectSpec object) {
+        if (!secondary.objects() || object.trigger() || !secondary.countsObject(object.look())) {
+            return false;
+        }
+        escapesLost++;
+        if (escapesFailed || secondaryMet || escapesLost <= secondary.escapesAllowed()) {
+            return false;
+        }
+        escapesFailed = true;
+        return true;
+    }
+
+    /**
+     * M7 part F: the units of an escapes objective that got away in this attempt (with escapes allowed; else 0); M9 part
+     * G: the ground objects of an object escapes objective that left the screen (always counted).
+     */
     int escapesLost() {
         return escapesLost;
     }
@@ -501,8 +537,10 @@ final class Objectives {
             // M7 part D: only with an untouched (round 41: or standing) objective, so the other levels hash as before.
             hash.add(untouchedFailed ? 1 : 0);
         }
-        if (secondary.escapesAllowed() > 0) {
-            // M7 part F: only with escapes allowed, so the other levels hash as before.
+        if (secondary.escapesAllowed() > 0 || secondary.objects()) {
+            // M7 part F: only with escapes allowed (M9 part G: or an object escapes objective), so the other levels
+            // hash
+            // as before.
             hash.add(escapesLost);
         }
     }

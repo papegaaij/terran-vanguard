@@ -66,3 +66,10 @@ Concept round 64, a capture of the game (M9 part D, step D5), Level 31 as the
 on it, the bow lost (its fire flare, dark), the cargo lost, the hull venting; `.mp4` two cuts with the game's sound: run A
 t≈85–94 (the hull whole, `CLEAN HULL`, the Bellwether's medicine story) and run B t≈74–86 (the salvos, the hit sounds,
 the alarm, the bow's and the cargo's loss, "We've lost the bow!").
+
+## mining-tug-capture-r65-a
+
+Concept round 65 (M9 part E, step E5, after FIX1's softer hit flash): Level 31's
+[run](../../../campaign/act-5-the-belt/level-31-mining-rig-escort/concept/prompts.md#level-31-capture-r65-a) not firing,
+t=66.03–66.17 (three frames 1/15 s apart): Shard links dragged across the cargo, the section's flash at 40 % for two
+steps over the hull.

@@ -1,0 +1,837 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Round 44: record of the decisions</title><style>
+:root{--bg:#f4f5f7;--fg:#1b2230;--mut:#5a6577;--card:#fff;--line:#d3d9e2;--acc:#1f5fa8;--ok:#1d6b3a;--okbg:#e3f3e8;
+--hi:#fff6dc;--hib:#d9b84a;--code:#e9edf3;--warn:#8a4b00}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10141b;--fg:#dde3ee;--mut:#98a3b6;--card:#171d27;
+--line:#2c3544;--acc:#7fb2ee;--ok:#7bd69a;--okbg:#163323;--hi:#2c2610;--hib:#8a7424;--code:#232c3a;--warn:#e3a35a;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#10141b;--fg:#dde3ee;--mut:#98a3b6;--card:#171d27;--line:#2c3544;--acc:#7fb2ee;--ok:#7bd69a;
+--okbg:#163323;--hi:#2c2610;--hib:#8a7424;--code:#232c3a;--warn:#e3a35a;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:60rem;margin:0 auto;padding:1rem 16px 4rem}
+h1{font-size:1.6rem;margin:.5rem 0}h2{font-size:1.25rem;margin:2rem 0 .5rem;border-bottom:1px solid var(--line);padding-bottom:.25rem}
+h3{font-size:1.02rem;margin:0;flex:1 1 12rem}a{color:var(--acc)}
+.sum{color:var(--mut)}.note{font-size:.9rem;color:var(--mut)}
+nav.sec{display:flex;flex-wrap:wrap;gap:.4rem;margin:1rem 0}nav.sec a{padding:.2rem .6rem;border:1px solid var(--line);border-radius:1rem;
+text-decoration:none;font-size:.9rem;background:var(--card)}
+.row{background:var(--card);border:1px solid var(--line);border-radius:.4rem;padding:.7rem .9rem;margin:.7rem 0;overflow-wrap:anywhere}
+.row header{display:flex;flex-wrap:wrap;gap:.3rem .6rem;align-items:baseline}
+.rid{font:600 .85rem ui-monospace,Menlo,Consolas,monospace;background:var(--code);padding:.05rem .4rem;border-radius:.25rem}
+.kind{font-size:.8rem;color:var(--mut)}.part{font-size:.88rem;margin:.2rem 0}
+.q,.weak,.rec,.sub,.line,dl{font-size:.92rem;margin:.45rem 0}.weak{color:var(--warn)}
+code{background:var(--code);padding:0 .25rem;border-radius:.2rem;font-size:.88em}
+.tag{font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;color:var(--mut);font-weight:700;margin-right:.3rem}
+.ans{margin:.5rem 0 0;padding:.45rem .6rem;border-left:4px solid var(--hib);background:var(--hi);border-radius:.2rem}
+.ans.out{border-left-color:var(--ok)}.ans.none{opacity:.7}
+.badge{font-size:.75rem;font-weight:700;padding:.05rem .4rem;border-radius:.6rem;background:var(--okbg);color:var(--ok)}
+.badge.pick{background:var(--hi);color:var(--warn);border:1px solid var(--hib)}
+dl{display:grid;grid-template-columns:7rem 1fr;gap:.2rem .6rem}dt{font-weight:700}dd{margin:0}
+.media{display:flex;flex-wrap:wrap;gap:.5rem;margin:.5rem 0}.m{margin:0;max-width:100%}.m figcaption{font-size:.75rem;color:var(--mut)}
+.m.img img{max-width:14rem;max-height:10rem;border:1px solid var(--line);border-radius:.2rem;background:#000;display:block}
+.m.vid video{width:14rem;max-width:100%}.m.aud audio{width:16rem;max-width:100%}.miss{color:var(--warn)}
+details{margin:.4rem 0;font-size:.9rem}summary{cursor:pointer;color:var(--acc)}
+.listen{font-size:.85rem;color:var(--mut);margin:.3rem 0;padding-left:1.2rem}.opts{color:var(--mut)}
+.sub{padding-left:.6rem;border-left:2px solid var(--line)}
+table{border-collapse:collapse;display:block;overflow-x:auto}td,th{border:1px solid var(--line);padding:.2rem .4rem}
+blockquote{margin:.4rem 0;padding-left:.8rem;border-left:3px solid var(--line)}
+@media (max-width:480px){dl{grid-template-columns:1fr}.m.img img{max-width:100%}}
+</style></head><body><main><p class="note"><a href="README.md">Round 44 README</a> · <a href="../README.md">All rounds</a> · built 2026-10-20 · recorded by <code>tools/concept/review_record.py 44</code></p><h1>Concept round 44: record of the decisions</h1><div class="sum"><p>Your rule of 2026-10-20 still stands: <strong>every undecided point is a question here, with a recommendation; nothing undecided gets built.</strong> Round 43's answers were built since: the walker's second rework, Level 20's two levers and the ridge key, and <strong>M7 part H</strong> (Level 21, the Dust Colossus and the act end). The round holds, in this order:</p><ol><li><strong>The Revenant Walker's second rework</strong> (<code>W</code> rows, step WR2): the capture and the numbers it was tuned to.</li><li><strong>The sounds</strong> (<code>S</code> rows): eighteen proposals from the Freesound database (the Colossus's six subjects, the walker's lance charge, lance shot and stomp shockwave; <em>a</em>, <em>b</em> or <em>redo</em>). Claude has not listened to any of them; the game plays the <em>a</em> variants for now (the Colossus's ridge pass plays <em>b</em>).</li><li><strong>Level 20's levers</strong> (<code>L</code> rows): the swarm's two levers, the easy and hard lunge cadence, and one limit to raise.</li><li><strong>Level 21's final art</strong> (<code>F</code> rows), <strong>voices</strong> (<code>V</code> rows), <strong>captures</strong> (<code>K</code> rows) and the <strong>build choices</strong> of the six steps that built it (<code>B</code> rows).</li><li><strong>Part H's open questions</strong> (<code>Q</code> rows): the wave rework the floor needs, the phase-1 calibration, the par, a safe spot, a hard HP key, the nests' zones, the Choir's take and a block of small defaults.</li><li><strong>The art audit and approvals</strong> (<code>A</code> rows), <strong>the new glows</strong> (<code>G</code> rows), <strong>Act 2 to final</strong> (<code>X</code> rows) and <strong>part I's questions</strong> (<code>I</code> rows), then <strong>Act 4</strong> (<code>J</code>) and the <strong>records</strong> (<code>N</code>).</li></ol><p><strong>Part H in short.</strong> Level 21 is the end of Act 3: the CDF's rim line, the inner wall, the dune sea with the ridge that moves under the sand, the lime hollow, then the arena that crawls at 20 px/s while the Dust Colossus breaches from the four edges and, in phase 3, under the ship; its suction pulls the ship and Rook, its debris stops your shots, its spine vents shoot in phase 2. Its death is the Choir's first spoken words, the settling dust, the debrief with <code>ACT III COMPLETE · RED DUST</code>, the four outro pages and the release's end ("ACTS I-III COMPLETE", "ACT IV - DEEP WATER. EUROPA. COMING SOON."). It is built and flown whole by the autopilot on every difficulty (medium: the fight 101.7 s, the haul +0.7 % of the budget). <strong>Two of the level's rules fail on purpose</strong>: the floor and the gaps (Q.1), because H.1 (round 43) said to rework the waves only if they fail and only you decide the rework.</p><p>Open <span class="ref">index.html</span> in a browser (regenerate with <code>python3 tools/concept/board.py 44 --subjects level-19-walker,level-21-capture,level-21-act-end,colossus-bulge,colossus-eruption,colossus-suction,colossus-bite,colossus-death,colossus-ridge,walker-lance-charge,walker-lance-shot,walker-shockwave,backdrop-final,l21-props-final,dust-colossus-final,intel-final,briefing-images-final,act3-outro-final</code>). Each row carries a recommendation; <strong>B</strong> rows and the <em>Proposals</em> blocks list items: <em>yes</em> (keep as built / take it) or <em>no</em> (say what). Where the Answer column lists options, the first marked <em>(recommended)</em> is mine.</p><h3>In the game</h3><p><code>./gradlew :desktop:run --args="..."</code> with <code>--settings &lt;file&gt;</code> (a debug run writes no save):</p><ul><li>Level 21 with an approximation of the balance plan's ship and Rook's Autocannon: <code>--start level --level 21 --loadout front=ion-beam:3,left=micro-missile-pod:2,right=micro-missile-pod:2,rear=tail-gun:3,generator=2,shield=1,armor=3 --special airstrike:2 --escort rook:autocannon:1</code> (<code>--difficulty easy|hard</code>; <code>--invulnerable</code> to see the whole level; <code>--act-end</code> shows the act's end after the kill and <code>--debug-speed 4</code> shortens the approach);</li><li>Level 19's reworked walker: the same options with <code>--level 19</code> and <code>--escort rook:mortar:1</code>;</li><li>Level 20's levers: <code>--level 20</code> with Level 20's fit (round 43's <em>In the game</em>);</li><li>the numbers: <code>./gradlew :content:levelReport -Plevel=21 -Pparts=pacing,floor,haul,boss,colossus</code> (and <code>-Plevel=19</code>, <code>-Plevel=20 -Pparts=pursuit</code>).</li></ul></div><p class="note">A read-only record: every row as the review page showed it, with the answer and the outcome from the round README (the record of truth). Media is linked from the design tree, not copied.</p><nav class="sec"><a href="#s-the-walker-s-second-rework">Walker</a><a href="#s-sounds">Sounds</a><a href="#s-level-20-s-levers">Level 20</a><a href="#s-level-21-final-art">L21 art</a><a href="#s-voices">Voices</a><a href="#s-captures">Captures</a><a href="#s-level-21-s-build">L21 build</a><a href="#s-part-h-s-questions">Part H</a><a href="#s-the-art-audit-and-approvals">Art audit</a><a href="#s-new-glows">Glows</a><a href="#s-act-2-to-final">Act 2</a><a href="#s-part-i-s-questions">Part I</a><a href="#s-after-part-i">Act 4</a><a href="#s-records">Records</a></nav><section id="s-the-walker-s-second-rework"><h2>The Walker&#x27;s second rework</h2>
+<div class="sum"><p>Round 43's W.a change ("The first missile hatch is destroyed before the walker has a chance of ever using it. That's too easy. When both missile hatches are destroyed, the walker is mostly toothless.") was built in step WR2 (<span class="ref">the walker</span>): the shoulder pods are <strong>armoured until their hatch opens</strong>, a back-mounted <strong>rail lance</strong> fires once both pods are gone (a 1 s charge line through where the ship was, a 0.3 s heavy shot, every 4 s, every 3 s in phase 3) and the <strong>stomp shockwave</strong> (a 0.5 s brace with a ground ring, then a ring out to 110 px within 90 px of the walker, so hugging it costs something). Measured with the autopilot and the plan's Level 19 fit.</p></div>
+<article class="row" id="r-W.a">
+<header><span class="rid">W.a</span><h3>The reworked fight</h3><span class="kind">check capture</span></header>
+<div class="part"><a href="../../enemies/bosses/revenant-walker/README.md">The reworked fight</a></div>
+<div class="q"><strong>check capture</strong> (step WR2, 94 s with sound, the fight 72 s): the pods' hatches opening and their salvos, the stomp's brace ring, the cone, the red rail lance's charge line and shot once both pods are gone and in phase 3, the topple and the wreck. <strong>Recommendation: accept</strong></div>
+<div class="media"><figure class="m vid"><figcaption>video with sound</figcaption><video controls preload="none" playsinline src="../../campaign/act-3-red-dust/level-19-foundry-of-tharsis/concept/level-19-walker-r44-a.mp4"></video></figure><figure class="m img"><a href="../../campaign/act-3-red-dust/level-19-foundry-of-tharsis/concept/level-19-walker-r44-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-3-red-dust/level-19-foundry-of-tharsis/concept/level-19-walker-r44-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> flown by the test autopilot, not by you; <strong>the lance's and the shockwave's sounds in the clip are placeholders</strong> (recorded before the r44 sounds were wired); the stomp ring barely shows (W.h)</p>
+<div class="ans"><span class="tag">Answer</span> <span>accept (recommended) / change (say what)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>accept (recommended) (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-W.b">
+<header><span class="rid">W.b</span><h3>HP 1,350 and par 51</h3><span class="kind">yes or no</span></header>
+<div class="part"><a href="../../enemies/bosses/revenant-walker/README.md#duration-and-hp">HP 1,350 and par 51</a></div>
+<div class="q"><strong>yes or no</strong>: the pods have 80 HP each and the hull 1,190 (1,350 in all, from 3,170); the fight is <strong>46–59 s</strong> in the fixture (mean 50.8 s), <strong>50–59 s in the level at medium</strong> (one of five fixture seeds 80 s: a down pass at the ship and a horizontal pass with a pod alive), no retries at medium, easy 32–33 s. The par is <strong>51 s</strong>, below the 60 s the design aimed at (window 45–75 s). <code>WALKER_EFFICIENCY</code> 1.08 → 0.52. <strong>Recommendation: yes</strong></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the length steps with the passes, so the HP sit on a plateau (W.g); the autopilot is the measure, you may find it longer or shorter</p>
+<div class="ans"><span class="tag">Answer</span> <span>yes (recommended) / no, a longer fight (say how long)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>yes (recommended) (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-W.c">
+<header><span class="rid">W.c</span><h3>Hard keeps medium&#x27;s lance, stomp and phase 1</h3><span class="kind">yes or no</span></header>
+<div class="part"><a href="../../enemies/bosses/revenant-walker/README.md#duration-and-hp">Hard keeps medium's lance, stomp and phase 1</a></div>
+<div class="q"><strong>yes or no</strong>: with a faster lance and stomp and salvos of 4 on hard the ship reached the walker with half its armour and died in the fight (5 retries, and the pacing test's hard run did not finish), so hard uses medium's lance and stomp timing and phase-1 salvos of 3; hard stays harder through the difficulty table's HP and speed (≈ 104 s in the fixture, 95–131 s in the level, 2 retries in 3 runs, all won). Easy: the lance charge 1.3 s every 5 / 3.8 s, the stomp brace 0.7 s. <strong>Recommendation: yes</strong></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> hard is longer than medium by HP and pace only; round 43's W.d accepted a long hard fight</p>
+<div class="ans"><span class="tag">Answer</span> <span>yes (recommended) / no, hard fiercer (say what)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>yes (recommended) (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-W.d">
+<header><span class="rid">W.d</span><h3>The hatches jam open in phase 3</h3><span class="kind">yes or no</span></header>
+<div class="part"><a href="../../enemies/bosses/revenant-walker/README.md#phases">The hatches jam open in phase 3</a></div>
+<div class="q"><strong>yes or no</strong>: my addition to your design. From phase 3 a living pod's hatch stays open (no armour), so the overheat never stalls on a pod that cannot be hit. <strong>Recommendation: yes</strong></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> without it a pod that happens to be shut would hold the fight open</p>
+<div class="ans"><span class="tag">Answer</span> <span>yes (recommended) / no, they stay armoured</span></div><div class="ans out"><span class="tag">Outcome</span> <span>yes (recommended) (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-W.e">
+<header><span class="rid">W.e</span><h3>Phase 2&#x27;s salvos every 4 s per pod</h3><span class="kind">yes or no</span></header>
+<div class="part"><a href="../../enemies/bosses/revenant-walker/README.md#phases">Phase 2's salvos every 4 s per pod</a></div>
+<div class="q"><strong>yes or no</strong>: each living pod fires salvos of 3 every 4 s (3 s in phase 3), the lance every 4 s / 3 s and the stomp at most every 4 s were the tuned levers (the first tries: 3.5 / 2.5 / 3 s). <strong>Recommendation: yes</strong></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> numbers tuned on the autopilot's dodging</p>
+<div class="ans"><span class="tag">Answer</span> <span>yes (recommended) / no (say what)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>yes (recommended) (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-W.f">
+<header><span class="rid">W.f</span><h3>Phase 1&#x27;s loss: AT_MOST 2.2</h3><span class="kind">yes or no</span></header>
+<div class="part"><a href="../../enemies/bosses/revenant-walker/README.md#duration-and-hp">Phase 1's loss: AT_MOST 2.2</a></div>
+<div class="q"><strong>yes or no</strong>: the random dodger loses <strong>23.7 per 10 s</strong> of phase 1 against the Kraken's 11.4 (×2.1; the stomp catches it straying over the walker); the calibration test now allows 1.3–2.2× (round 43: 1.3–2×). <strong>Recommendation: yes</strong></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the random dodger is a harness, not a player</p>
+<div class="ans"><span class="tag">Answer</span> <span>yes (recommended) / no, tune phase 1 down</span></div><div class="ans out"><span class="tag">Outcome</span> <span>yes (recommended) (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-W.g">
+<header><span class="rid">W.g</span><h3>The narrow HP plateau</h3><span class="kind">yes or no, a known risk</span></header>
+<div class="part"><a href="../../enemies/bosses/revenant-walker/README.md#duration-and-hp">The narrow HP plateau</a></div>
+<div class="q"><strong>yes or no, a known risk</strong>: the fight length steps with the passes: hull 1,180 gives a 48.6 s mean, 1,200 puts one fixture seed at 79 s. A later change to the walker's attacks or speed needs a re-measure and an HP re-tune. <strong>Recommendation: yes, accept the plateau</strong> (no code protects it, the tests do)</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the tests (<code>RevenantWalkerTest</code>, <code>FoundryKeysTest</code>) would show a break, not prevent it</p>
+<div class="ans"><span class="tag">Answer</span> <span>accept (recommended) / no, find a wider plateau (say how)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>accept (recommended) (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-W.h">
+<header><span class="rid">W.h</span><h3>Question: the stomp ring barely shows</h3><span class="kind">check</span></header>
+<div class="part"><strong>Question: the stomp ring barely shows</strong></div>
+<div class="q">in the capture the expanding ring (110 px, <code>medium</code> damage) is faint against the foundry floor and the brace ring is thin; the walker's feet and the lance's red line read well. Options: leave it; a <strong>brighter, thicker ring</strong> (a look change only: no number moves, a small game step); a ground crack decal under the footfall. <strong>Recommendation: the brighter ring</strong></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> a ring you cannot read is a hit you cannot dodge; the autopilot reads it from the data, not the picture</p>
+<div class="ans"><span class="tag">Answer</span> <span>brighter ring (recommended) / leave it / crack decal</span></div><div class="ans out"><span class="tag">Outcome</span> <span>brighter ring (user, 2026-10-20); planned</span></div>
+</article>
+</section>
+<section id="s-sounds"><h2>Sounds</h2>
+<div class="sum"><p>All from the Freesound database (CC0 or CC-BY, <span class="ref">CREDITS.md</span>), cut and layered by <code>tools/concept/audio/sfx_r44.py</code>, <strong>never synthesized</strong>; two variants each, pending your listening (Claude has not listened: envelopes, levels and loop seams only; no bubbly or popping layers). A CC-BY file you pick goes on the in-game credits screen. The game plays the <em>a</em> variants for now (the walker's lance and shockwave, the Colossus's bulge, eruption, suction, bite and death) and <strong>the ridge pass plays <em>b</strong></em> (step HB: <em>a</em> pans left to right and the ridge travels right to left; <em>b</em> is panned right to left). My recommendations are guesses from the descriptions.</p></div>
+<article class="row" id="r-S.a">
+<header><span class="rid">S.a</span><h3>Colossus bulge</h3><span class="kind">check</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Colossus bulge</a></div>
+<div class="q">new, each breach's 2.0 s swelling bulge and the eruption marker. <strong>a</strong>: an earthquake's cracking soil and stone swelling in, sand pouring off the bulge (CC0 ×2), 2.1 s. <strong>b</strong>: a large low rumble's crescendo with a heavy stone grind and sand flowing (CC-BY 4.0 ×2 + CC-BY 3.0), 2.1 s. <strong>Recommendation: a</strong> (CC0, the crack reads as soil under load)</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/colossus-bulge-r44-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/colossus-bulge-r44-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> a: loudest 100 ms band −24.2 dB, −16.0 LUFS; b: −22.4 dB, −16.3 LUFS; it plays at every breach tell (about every 13 s)</p>
+<div class="ans"><span class="tag">Answer</span> <span>a / b / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span>a (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-S.b">
+<header><span class="rid">S.b</span><h3>Colossus eruption</h3><span class="kind">check</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Colossus eruption</a></div>
+<div class="q">new, the breach as the mouth rises. <strong>a</strong>: an earth impact's boom, a deep creature roar rising out of it, rock and sand pouring back (CC-BY 4.0 + CC0 ×2), 2.6 s. <strong>b</strong>: a massive explosion's boom, a deep monster roar and a landslide's roar, sand pouring back (CC0 ×3 + CC-BY 4.0 ×2), 2.6 s. <strong>Recommendation: a</strong> (the roar rises out of the impact; b is two roars)</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/colossus-eruption-r44-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/colossus-eruption-r44-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> a: loudest 100 ms band −17.4 dB, −15.9 LUFS; b: −19.9 dB, −14.4 LUFS; the boom is the loudest sound of the level's fight</p>
+<div class="ans"><span class="tag">Answer</span> <span>a / b / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span>a (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-S.c">
+<header><span class="rid">S.c</span><h3>Colossus suction (loop)</h3><span class="kind">check</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Colossus suction (loop)</a></div>
+<div class="q">new, the draw while the mouth is open, panned to the mouth and louder the nearer the ship. <strong>a</strong>: air rushing into a chimney, a deep steady draw, under a sandstorm (CC0 ×2), a seamless 4 s loop. <strong>b</strong>: a large industrial turbine's fan slowed to 0.8, a monster's inhale under it, sand flowing (CC0 ×2 + CC-BY 3.0), a seamless 4 s loop. <strong>Recommendation: a</strong> (steady, no fan blades to beat against the beam)</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/colossus-suction-r44-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/colossus-suction-r44-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> both −28.1 dB in the band (the walker's flame loop level); peaks a −9.9 dBFS, b −9.1</p>
+<div class="ans"><span class="tag">Answer</span> <span>a / b / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span>a (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-S.d">
+<header><span class="rid">S.d</span><h3>Colossus bite</h3><span class="kind">check</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Colossus bite</a></div>
+<div class="q">new, the snap. <strong>a</strong>: a massive structure's deep impact with bones crunching slowed to 0.6, and a large stone scraping (CC0 ×2 + CC-BY 4.0), 0.9 s. <strong>b</strong>: an earth impact's boom with a bone crack slowed to 0.55 and a heavy stone grind after it (CC-BY 4.0 ×2 + CC-BY 3.0), 1.0 s. <strong>Recommendation: a</strong> (CC0 mostly, the crunch is the bite)</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/colossus-bite-r44-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/colossus-bite-r44-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the bites are slowed bone crunches: a crackle check was the AUD-H review point and I cannot do it by ear (a: loudest band −18.9 dB, b: −20.3 dB)</p>
+<div class="ans"><span class="tag">Answer</span> <span>a / b / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span>a (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-S.e">
+<header><span class="rid">S.e</span><h3>Colossus death</h3><span class="kind">check</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Colossus death</a></div>
+<div class="q">new, the <code>huge</code> rung with the Choir's words under it. <strong>a</strong>: a deep roar shuddering, chained eruptions, then a rock avalanche's rumble subsiding (CC0 ×3 + CC-BY 4.0 ×2), 6.1 s. <strong>b</strong>: a deep monster roar, a building collapsing and two deep booms over a landslide, rock pouring in (CC-BY 4.0 ×2 + CC0 ×2 + CC-BY 3.0), 6.0 s. <strong>Recommendation: a</strong> (the rumble that subsides is the sinking into the sand)</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/colossus-death-r44-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/colossus-death-r44-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the level's biggest moment; the game's chain is 3 s under a 6.1 s sound (a review point of step HB, B.f)</p>
+<div class="ans"><span class="tag">Answer</span> <span>a / b / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span>a (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-S.f">
+<header><span class="rid">S.f</span><h3>Ridge pass</h3><span class="kind">check</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Ridge pass</a></div>
+<div class="q">new, the Colossus's back passing under the sand at t≈64–72, panned across, over the basin rumble. <strong>a</strong>: a subway train passing under a bridge, sand flowing off the ridge, panned <strong>left to right</strong> (CC0 + CC-BY 3.0), 7.0 s, −20 LUFS. <strong>b</strong>: a large low rumble passing with a heavy stone grind and sand pouring, panned <strong>right to left</strong> (CC-BY 4.0 ×2 + CC0), 7.0 s, −20 LUFS. The ridge travels right to left, so the game plays <strong>b</strong>. <strong>Recommendation: b</strong></div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/colossus-ridge-r44-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/colossus-ridge-r44-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> a is a train: it may read as a train; b is quieter in the band (−24.6 dB against −21.4)</p>
+<div class="ans"><span class="tag">Answer</span> <span>a / b / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>a</strong> (user, 2026-10-20), mirrored for Level 21's right-to-left track (the game played <em>b</em> meanwhile)</span></div>
+</article>
+<article class="row" id="r-S.g">
+<header><span class="rid">S.g</span><h3>Walker lance charge</h3><span class="kind">check</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Walker lance charge</a></div>
+<div class="q">new, the rail lance's 1 s charge. <strong>a</strong>: a power charge rising, its pitch gliding up, a Tesla coil's sparking swelling under it (CC-BY 4.0 + CC0), 1.05 s. <strong>b</strong>: a high-voltage discharge's buzz swelling and gliding up, a Tesla coil's sparks on top, a low rumble rising (CC0 ×2 + CC-BY 4.0), 1.05 s. <strong>Recommendation: a</strong> (a clean rising line you can time a dodge to)</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/walker-lance-charge-r44-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/walker-lance-charge-r44-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> a: −21.2 LUFS, b: −16.2 LUFS: b is louder; the charge is a tell, so it must be heard over the fight</p>
+<div class="ans"><span class="tag">Answer</span> <span>a / b / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>b</strong> (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-S.h">
+<header><span class="rid">S.h</span><h3>Walker lance shot</h3><span class="kind">check</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Walker lance shot</a></div>
+<div class="q">new, the 0.3 s heavy shot. <strong>a</strong>: a real railgun, an extremely loud cannon (CC0), 1.6 s. <strong>b</strong>: a shipboard railgun's heavy boom with a high-voltage discharge's crack on its attack (CC0 ×2), 1.6 s. <strong>Recommendation: b</strong> (the crack on the attack is the "rail" and its deeper boom matches the walker)</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/walker-lance-shot-r44-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/walker-lance-shot-r44-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> a: −16.2 dB, b: −17.7 dB; "a real railgun" is one file; its tail is longer than the 0.3 s shot</p>
+<div class="ans"><span class="tag">Answer</span> <span>a / b / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span>a (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-S.i">
+<header><span class="rid">S.i</span><h3>Walker shockwave</h3><span class="kind">check</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Walker shockwave</a></div>
+<div class="q">new, the stomp's ring. <strong>a</strong>: a giant's footfall and an explosion's shockwave rolling out of it (CC0 ×2), 1.6 s. <strong>b</strong>: a giant's step, a loud thump and a massive structure's deep impact rolling out, rubble shaken loose (CC0 ×2 + CC-BY 4.0 + CC-BY 3.0), 1.48 s. <strong>Recommendation: a</strong> (CC0 only; it rolls out, as the ring does)</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/walker-shockwave-r44-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/walker-shockwave-r44-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the brace tell before the ring still uses a placeholder (the hatch and footfall pitched down)</p>
+<div class="ans"><span class="tag">Answer</span> <span>a / b / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span>a (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-S.j">
+<header><span class="rid">S.j</span><h3>Question: a mouth&#x27;s death sound</h3><span class="kind">check</span></header>
+<div class="part"><strong>Question: a mouth's death sound</strong></div>
+<div class="q">the sfx README's Dust Colossus row lists "a mouth's death" next to the death chain; the part H sound list and the game have only the <strong>boss's</strong> death (S.e). A mouth that is destroyed in phase 2 or 3 (the spine vents die on their own) is covered by the eruption and the death chain. <strong>Recommendation: none needed</strong> (the death chain is the mouth's death: there is only one mouth)</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> nothing is built; if you want one, it is a redo</p>
+<div class="ans"><span class="tag">Answer</span> <span>none needed (recommended) / make one (say what it should be)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>none needed (user, 2026-10-20)</span></div>
+</article>
+</section>
+<section id="s-level-20-s-levers"><h2>Level 20&#x27;s levers</h2>
+<div class="sum"><p>Round 43's Q.1, Q.2 and Q.4 answers were built in step LQ (data only for the levers; a small code step for the ridge key). Measured with the plan's fit, medium unless said.</p></div>
+<article class="row" id="r-L.a">
+<header><span class="rid">L.a</span><h3>The two levers</h3><span class="kind">yes or no</span></header>
+<div class="part"><a href="../../enemies/air/mote-swarm/README.md">The two levers</a></div>
+<div class="q"><strong>yes or no</strong> (Q.1, built as you decided): the band's lag 90 → <strong>30 px/s</strong> and a lunge every <strong>4 s</strong> at medium. The swarm now holds <strong>1.03 motes on the screen</strong> (from 0.77) and <strong>8–9 of 27–28 lunges carry motes</strong> (from 2–4 of 18); the level's floor 3.67 on the screen and 35.6 shots a minute, no gap over 2 s. <strong>Recommendation: yes</strong></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the levers are for the autopilot's play; a human's beam may still melt the swarm</p>
+<div class="ans"><span class="tag">Answer</span> <span>yes (recommended) / no (say what)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>yes (recommended) (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-L.b">
+<header><span class="rid">L.b</span><h3>Easy 5.5 s and hard 3 s</h3><span class="kind">yes or no</span></header>
+<div class="part"><a href="../../enemies/air/mote-swarm/README.md">Easy 5.5 s and hard 3 s</a></div>
+<div class="q"><strong>yes or no</strong>: you decided medium's 4 s; easy lunges every <strong>5.5 s</strong> and hard every <strong>3 s</strong>. <strong>Recommendation: yes</strong></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> hard's swarm lunges twice as often as the original 6 s; the autopilot won every hard run</p>
+<div class="ans"><span class="tag">Answer</span> <span>yes (recommended) / no (say what)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>yes (recommended) (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-L.c">
+<header><span class="rid">L.c</span><h3>Question: BeamEraHpTest REVERSED_MOST 2.5 → 2.6</h3><span class="kind">check</span></header>
+<div class="part">**Question: <code>BeamEraHpTest</code> REVERSED_MOST 2.5 → 2.6**</div>
+<div class="q">the swarm now lives longer, so the small units' time on the screen in the reversed level is <strong>2.53×</strong> Level 10's (the test held it to 2.5×; round 43's Q.2 accepted 2.5× at 2.48×). The test's limit for a reversed level is raised to 2.6×; the alternative is lowering Level 20's small HP. <strong>Recommendation: accept 2.6×</strong></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> each accepted limit is one more exception; this is the reversed level's, where the rear guns, not the beam, meet them</p>
+<div class="ans"><span class="tag">Answer</span> <span>accept (recommended) / lower the limit and the HP</span></div><div class="ans out"><span class="tag">Outcome</span> <span>accept (recommended) (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-L.d">
+<header><span class="rid">L.d</span><h3>The ridge key</h3><span class="kind">yes or no</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-20-retreat-from-hellas/README.md#hazards">The ridge key</a></div>
+<div class="q"><strong>yes or no</strong> (Q.4, built as you decided): a level key <code>ridge {t, seconds, from, to, depth}</code> (<code>LevelData.Ridge</code>) read by <code>RidgeLooks</code>; Level 20's track moved into its data (the stand-in line is gone) and Level 21 uses the same key (t=64, 8 s, right to left, 150 px down); <code>SpriteUse</code> claims the ridge's sprites by the key. <strong>Recommendation: yes</strong></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the path is still a straight line in screen space</p>
+<div class="ans"><span class="tag">Answer</span> <span>yes (recommended) / no (say what)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>yes (recommended) (user, 2026-10-20)</span></div>
+</article>
+</section>
+<section id="s-level-21-final-art"><h2>Level 21 — final art</h2>
+<div class="sum"><p>Level 21's production art (steps ART-H1, ART-H2, ART-H3; <code>tools/art/</code>), in the game now; every file is pending your review.</p></div>
+<article class="row" id="r-F.a">
+<header><span class="rid">F.a</span><h3>Level 21 backdrop</h3><span class="kind">final art</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-21-dust-colossus/README.md#concept-art">Level 21 backdrop</a></div>
+<div class="q"><strong>final art</strong> (<code>tools/art/backdrop_l21.py</code>, 32 images): the CDF line on the rim and the retreat's wrecks down the basin wall, the inner wall's terraces with landslide fans of red sand and the CDF hauler's wreck, the dune sea with old breach craters, the lime hollow's crust cracked in rings and lit lime from below, the arena's 512 px basin floor and, after the kill, the settled floor from the next seam with the collapsed crater, the furrow and the Vrell lifting off. <strong>Recommendation: approve as final</strong></div>
+<div class="media"><figure class="m img"><a href="../../campaign/act-3-red-dust/level-21-dust-colossus/concept/backdrop-final-r44-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-3-red-dust/level-21-dust-colossus/concept/backdrop-final-r44-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure><figure class="m img"><a href="../../campaign/act-3-red-dust/level-21-dust-colossus/concept/backdrop-final-r44-a.gif"><img loading="lazy" decoding="async" src="../../campaign/act-3-red-dust/level-21-dust-colossus/concept/backdrop-final-r44-a.gif" alt="GIF"></a><figcaption>GIF</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the inner wall's section is heavy with dust; the lift-offs sit on <code>high-air</code>; the CDF hauler's wreck is an invented one</p>
+<div class="ans"><span class="tag">Answer</span> <span>approve as final / redo (say what)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>approve as final (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-F.b">
+<header><span class="rid">F.b</span><h3>Level 21 props</h3><span class="kind">final art</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-21-dust-colossus/README.md#concept-art">Level 21 props</a></div>
+<div class="q"><strong>final art</strong> (<code>tools/art/l21_props.py</code>): the survey crawler under its slide (buried, hit, cleared with the crate) and on its ledge, the CDF hauler's wreck with the nest's deck spots, the ridge pass over the dune sea from Level 20's ridge sprites. <strong>Recommendation: approve as final</strong></div>
+<div class="media"><figure class="m img"><a href="../../campaign/act-3-red-dust/level-21-dust-colossus/concept/l21-props-final-r44-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-3-red-dust/level-21-dust-colossus/concept/l21-props-final-r44-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure><figure class="m img"><a href="../../campaign/act-3-red-dust/level-21-dust-colossus/concept/l21-props-final-r44-a.gif"><img loading="lazy" decoding="async" src="../../campaign/act-3-red-dust/level-21-dust-colossus/concept/l21-props-final-r44-a.gif" alt="GIF"></a><figcaption>GIF</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the crawler's hard HP key is Q.5; the ridge's path is the key's straight line</p>
+<div class="ans"><span class="tag">Answer</span> <span>approve as final / redo (say what)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>approve as final (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-F.c">
+<header><span class="rid">F.c</span><h3>Dust Colossus production art</h3><span class="kind">final art</span></header>
+<div class="part"><a href="../../enemies/bosses/dust-colossus/README.md#concept-art">Dust Colossus production art</a></div>
+<div class="q"><strong>final art</strong> (<code>tools/art/dust_colossus.py</code>, 98 frames, about 75 % of one atlas page): the chosen r36 b mouth at 72 px/unit in five poses (four edge breaches leaning 30° into the field on the body's neck, upright under the ship) with rise, risen, half open, open, the bite's tell and snap and the dive; the gullet glow; the death (rears, shudders with lime ichor, sinks under pouring sand); the funnel loop and the crater; the bulge, phase 3's marker, the spine vent, the death's bursts, four debris rocks. <strong>Recommendation: approve as final</strong></div>
+<div class="media"><figure class="m img"><a href="../../enemies/bosses/concept/dust-colossus-final-r44-a.png"><img loading="lazy" decoding="async" src="../../enemies/bosses/concept/dust-colossus-final-r44-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure><figure class="m img"><a href="../../enemies/bosses/concept/dust-colossus-final-r44-a.gif"><img loading="lazy" decoding="async" src="../../enemies/bosses/concept/dust-colossus-final-r44-a.gif" alt="GIF"></a><figcaption>GIF</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> 72 px/unit (the mandibles' open reach trimmed to 1.5 units for the one-page budget); the edge poses lean 30°; the shut frames are busy; the bulge's violet cracks are dim</p>
+<div class="ans"><span class="tag">Answer</span> <span>approve as final / redo (say what)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>approve as final (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-F.d">
+<header><span class="rid">F.d</span><h3>Dust Colossus intel picture</h3><span class="kind">final art</span></header>
+<div class="part"><a href="../../ui/hangar/README.md#concept-art">Dust Colossus intel picture</a></div>
+<div class="q"><strong>final art</strong> (<code>tools/art/intel.py boss-dust-colossus</code>): the 40×40 sensor silhouette of the open mouth as phase 3 shows it, outline only, for the hangar's intel at sensor level 2. <strong>Recommendation: approve as final</strong></div>
+<div class="media"><figure class="m img"><a href="../../ui/hangar/concept/intel-final-r44-a.png"><img loading="lazy" decoding="async" src="../../ui/hangar/concept/intel-final-r44-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> a mouth seen straight from above: the contour reads as a gear</p>
+<div class="ans"><span class="tag">Answer</span> <span>approve as final / redo (say what)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>approve as final (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-F.e">
+<header><span class="rid">F.e</span><h3>Level 21&#x27;s two briefing images</h3><span class="kind">final art</span></header>
+<div class="part"><a href="../../ui/briefing/README.md#concept-art">Level 21's two briefing images</a></div>
+<div class="q"><strong>final art</strong> (<code>tools/art/briefing_images.py</code>, 672×240 each): <code>level-21-hellas-basin</code> (the basin on a CDF plot, the CDF line held on the rim, the terraces, the dune sea with a moving seismic contact, the lime hollow with seismic rings, the descent route and five sections) and <code>level-21-colossus-scan</code> (Varga's seismic cut with the body under the sand, the ridge and a breaching mouth, beside a breach from above with the gullet, the bite circle and the suction). <strong>Recommendation: approve as final</strong></div>
+<div class="media"><figure class="m img"><a href="../../ui/briefing/concept/briefing-images-final-r44-a.png"><img loading="lazy" decoding="async" src="../../ui/briefing/concept/briefing-images-final-r44-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure><figure class="m miss"><figcaption>basin <em>file not in repo</em> <code>level-21-hellas-basin.webp</code></figcaption></figure><figure class="m miss"><figcaption>scan <em>file not in repo</em> <code>level-21-colossus-scan.webp</code></figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the crater is small on the first plot; violet wisps on the scan</p>
+<div class="ans"><span class="tag">Answer</span> <span>approve as final / redo (say what)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>approve as final (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-F.f">
+<header><span class="rid">F.f</span><h3>The Act 3 outro&#x27;s four images</h3><span class="kind">final art</span></header>
+<div class="part"><a href="../../ui/briefing/README.md#concept-art">The Act 3 outro's four images</a></div>
+<div class="q"><strong>final art</strong> (<code>tools/art/outro_l21_images.py</code>, 672×240 each): <code>act-3-outro-hellas</code> (the basin at dawn, the collapsed crater, the last spore trails), <code>-domes</code> (Ares Landing's domes at night, every pane lit, colonists on the ring road looking up), <code>-europa</code> (Varga's plot of the courses off Mars converging on Europa, the filed plate in a minimised window), <code>-aegis</code> (Aegis Wing refitting on the spaceport apron at dusk, Jupiter a bright point). <strong>Recommendation: approve as final</strong></div>
+<div class="media"><figure class="m img"><a href="../../ui/briefing/concept/act3-outro-final-r44-a.png"><img loading="lazy" decoding="async" src="../../ui/briefing/concept/act3-outro-final-r44-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure><figure class="m miss"><figcaption>hellas <em>file not in repo</em> <code>act-3-outro-hellas.webp</code></figcaption></figure><figure class="m miss"><figcaption>domes <em>file not in repo</em> <code>act-3-outro-domes.webp</code></figcaption></figure><figure class="m miss"><figcaption>europa <em>file not in repo</em> <code>act-3-outro-europa.webp</code></figcaption></figure><figure class="m miss"><figcaption>aegis <em>file not in repo</em> <code>act-3-outro-aegis.webp</code></figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the ship sprites on the Aegis page are squashed by the scene's perspective; Jupiter is tan</p>
+<div class="ans"><span class="tag">Answer</span> <span>approve as final / redo (say which, and what)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>approve as final (user, 2026-10-20)</span></div>
+</article>
+</section>
+<section id="s-voices"><h2>Voices</h2>
+<div class="sum"><p>Level 21's voices and the Act 3 outro's (step VOX-H, <code>tools/art/voice.py</code>: 21 lines and the outro's four pages, 25 files, seven takes pinned). Not heard by Claude beyond a speech check (Whisper read-back) and pitch. A name check: "Basin", "Hellas", "Vrell" and "Aegis" read back right with the name prompts in nearly every take; <strong>"Vrellon" for "Vrell on" at t=1</strong> is the one to listen for.</p></div>
+<article class="row" id="r-V.a">
+<header><span class="rid">V.a</span><h3>The Choir&#x27;s first words</h3><span class="kind">listen</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-21-dust-colossus/README.md#radio-chatter">The Choir's first words</a></div>
+<div class="q"><strong>listen</strong>: the Colossus's death, "…many… we are many… we are going…" as one take in Varga's reference voice with the Choir's settings and the <code>distorted</code> filter (pinned, 4.1 s with the tail, inside the 6 s slot). The fragments are not spoken separately and the drone joins and the a/b layering are not built (Q.7).</div>
+<div class="media"><figure class="m aud"><figcaption>death</figcaption><audio controls preload="none" src="../../../assets/voice/choir/a200f821d3c6.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> Whisper cannot read the layered file (expected); the raw take reads "Many, we are many, we are going."; the key's seed and five of six more said a fragment twice</p>
+<div class="ans"><span class="tag">Answer</span> <span>accept / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span>accept (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-V.b">
+<header><span class="rid">V.b</span><h3>Okafor, t=53</h3><span class="kind">listen</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-21-dust-colossus/README.md#radio-chatter">Okafor, t=53</a></div>
+<div class="q"><strong>listen</strong>: "Basin floor ahead. Keep your speed up and your eyes on the sand." (pinned)</div>
+<div class="media"><figure class="m aud"><figcaption>t=53</figcaption><audio controls preload="none" src="../../../assets/voice/okafor/4039b813137a.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> Whisper reads "Base and floor" in nearly every seed; the pin reads "Basin floor" through the filter at about 148 Hz</p>
+<div class="ans"><span class="tag">Answer</span> <span>accept / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span>accept (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-V.c">
+<header><span class="rid">V.c</span><h3>Okafor, outro page 1</h3><span class="kind">listen</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-21-dust-colossus/README.md#act-end">Okafor, outro page 1</a></div>
+<div class="q"><strong>listen</strong>: "The Colossus is dead. Within a day the Vrell lifted off from every site on Mars…" (pinned)</div>
+<div class="media"><figure class="m aud"><figcaption>page 1</figcaption><audio controls preload="none" src="../../../assets/voice/okafor/1d76337fde0a.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> every take of three seeds held a 1.1–2.6 s pause in the first chunk; the pin's sixth take has none</p>
+<div class="ans"><span class="tag">Answer</span> <span>accept / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span>accept (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-V.d">
+<header><span class="rid">V.d</span><h3>Okafor, outro page 4</h3><span class="kind">listen</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-21-dust-colossus/README.md#act-end">Okafor, outro page 4</a></div>
+<div class="q"><strong>listen</strong>: "Europa means Thera Deep and Conamara Station…"</div>
+<div class="media"><figure class="m aud"><figcaption>page 4</figcaption><audio controls preload="none" src="../../../assets/voice/okafor/2414b6d773a4.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> reads "Thera, Deep" with a small break inside the name; "Conamara" is right with the name prompt</p>
+<div class="ans"><span class="tag">Answer</span> <span>accept / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span>accept (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-V.e">
+<header><span class="rid">V.e</span><h3>Varga, t=37</h3><span class="kind">listen</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-21-dust-colossus/README.md#radio-chatter">Varga, t=37</a></div>
+<div class="q"><strong>listen</strong>: "Burrowers on the wall. And the song is coming from the floor." (pinned)</div>
+<div class="media"><figure class="m aud"><figcaption>t=37</figcaption><audio controls preload="none" src="../../../assets/voice/varga/7ba95ec98d89.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the key's seed jumped an octave (p90 about 490 Hz); the pin stays near her 190 Hz</p>
+<div class="ans"><span class="tag">Answer</span> <span>accept / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span>accept (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-V.f">
+<header><span class="rid">V.f</span><h3>Varga, briefing page 2</h3><span class="kind">listen</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-21-dust-colossus/README.md#briefing">Varga, briefing page 2</a></div>
+<div class="q"><strong>listen</strong>: "The song comes from under the basin floor. It's one organism, the size of a colony…" (pinned)</div>
+<div class="media"><figure class="m aud"><figcaption>page 2</figcaption><audio controls preload="none" src="../../../assets/voice/varga/38ee1a81a162.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the key's seed ran "lime. Bring" into "lime, brings"; the pin reads "Bring" every way</p>
+<div class="ans"><span class="tag">Answer</span> <span>accept / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span>accept (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-V.g">
+<header><span class="rid">V.g</span><h3>Rook, t=13</h3><span class="kind">listen</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-21-dust-colossus/README.md#radio-chatter">Rook, t=13</a></div>
+<div class="q"><strong>listen</strong>: "On your left, Lancer. Let's finish this." (pinned; the right-side take is not)</div>
+<div class="media"><figure class="m aud"><figcaption>left</figcaption><audio controls preload="none" src="../../../assets/voice/rook/4dfea2344c1f.ogg"></audio></figure><figure class="m aud"><figcaption>right</figcaption><audio controls preload="none" src="../../../assets/voice/rook/11064e2aae5b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the key's seed of the left take was barely voiced (8 %); the pin is voiced at about 132 Hz like the right</p>
+<div class="ans"><span class="tag">Answer</span> <span>accept / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span>accept (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-V.h">
+<header><span class="rid">V.h</span><h3>Ares Control, t=21</h3><span class="kind">listen</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-21-dust-colossus/README.md#radio-chatter">Ares Control, t=21</a></div>
+<div class="q"><strong>listen</strong>: "Ares Control, Aegis. All of Mars is listening today." (pinned)</div>
+<div class="media"><figure class="m aud"><figcaption>t=21</figcaption><audio controls preload="none" src="../../../assets/voice/ares-control/1724a21edd38.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the key's seed jumped to about 440 Hz; the pin stays near his 133 Hz and reads "Aegis" through the filter</p>
+<div class="ans"><span class="tag">Answer</span> <span>accept / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span>accept (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-V.i">
+<header><span class="rid">V.i</span><h3>The other Level 21 lines and the outro</h3><span class="kind">accept or redo</span></header>
+<div class="part">The other Level 21 lines and the outro</div>
+<div class="q"><strong>accept or redo</strong>: Okafor t=1, t=74, the phase-2 line, the closing "I heard it, Doctor. Log everything." and the level end, briefing page 1, outro page 2; Varga t=65.5, t=111, the phase-3 line, "Commander… that was not singing. Those were words.", outro page 3; Rook's phase-2 "Remember the moles"; Ares Control t=84, the dinner line and the survey crawler's line</div>
+<div class="media"><figure class="m aud"><figcaption>Okafor t=1</figcaption><audio controls preload="none" src="../../../assets/voice/okafor/e9c10250b592.ogg"></audio></figure><figure class="m aud"><figcaption>t=74</figcaption><audio controls preload="none" src="../../../assets/voice/okafor/c68995a78326.ogg"></audio></figure><figure class="m aud"><figcaption>phase 2</figcaption><audio controls preload="none" src="../../../assets/voice/okafor/6a54c634e2d7.ogg"></audio></figure><figure class="m aud"><figcaption>log everything</figcaption><audio controls preload="none" src="../../../assets/voice/okafor/4dee5e86664a.ogg"></audio></figure><figure class="m aud"><figcaption>level end</figcaption><audio controls preload="none" src="../../../assets/voice/okafor/59b3a42b7575.ogg"></audio></figure><figure class="m aud"><figcaption>page 1</figcaption><audio controls preload="none" src="../../../assets/voice/okafor/62abc59ee33d.ogg"></audio></figure><figure class="m aud"><figcaption>outro 2</figcaption><audio controls preload="none" src="../../../assets/voice/okafor/9999db0bc65a.ogg"></audio></figure><figure class="m aud"><figcaption>Varga t=65.5</figcaption><audio controls preload="none" src="../../../assets/voice/varga/085bd7bde3f4.ogg"></audio></figure><figure class="m aud"><figcaption>t=111</figcaption><audio controls preload="none" src="../../../assets/voice/varga/2c267c44b9d4.ogg"></audio></figure><figure class="m aud"><figcaption>phase 3</figcaption><audio controls preload="none" src="../../../assets/voice/varga/a97c1888d281.ogg"></audio></figure><figure class="m aud"><figcaption>not singing</figcaption><audio controls preload="none" src="../../../assets/voice/varga/9c0c2a5918d8.ogg"></audio></figure><figure class="m aud"><figcaption>outro 3</figcaption><audio controls preload="none" src="../../../assets/voice/varga/b63158ee18ad.ogg"></audio></figure><figure class="m aud"><figcaption>Rook moles</figcaption><audio controls preload="none" src="../../../assets/voice/rook/95309d52c071.ogg"></audio></figure><figure class="m aud"><figcaption>Ares t=84</figcaption><audio controls preload="none" src="../../../assets/voice/ares-control/1a06e2e1d51f.ogg"></audio></figure><figure class="m aud"><figcaption>dinner</figcaption><audio controls preload="none" src="../../../assets/voice/ares-control/2641ba897209.ogg"></audio></figure><figure class="m aud"><figcaption>crawler</figcaption><audio controls preload="none" src="../../../assets/voice/ares-control/9b3a30a1a7b6.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> checked by Whisper read-back only; no radio retime (the timed lines never overlap, the closest t=13 → 21 leaves about 5 s)</p>
+<div class="ans"><span class="tag">Answer</span> <span>accept all / redo (say which)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>accept all (user, 2026-10-20)</span></div>
+</article>
+</section>
+<section id="s-captures"><h2>Captures</h2>
+<div class="sum"><p>Game captures of Level 21 from a snapshot of the finished build (step H5; part 3 re-recorded after GFX3 by step H5R; Xvfb, the sound from a wave file); flown by the content tests' autopilot, medium, the balance plan's fit, so <strong>they show the autopilot's flight, not yours</strong>. The walker's capture is W.a, the Act 2 captures are the <code>X</code> rows, the two new glows the <code>G</code> rows.</p></div>
+<article class="row" id="r-K.a">
+<header><span class="rid">K.a</span><h3>Level 21: the approach</h3><span class="kind">game capture, part 1 of 3</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-21-dust-colossus/README.md#concept-art">Level 21: the approach</a></div>
+<div class="q"><strong>game capture, part 1 of 3</strong> (78.5 s, with sound): the rim and the inner wall's slides, the hauler's wreck nest (0:38), the Mantis pincer under the LEFT/RIGHT warning with the survey crawler on its tread at the left edge (0:46), the dune crest mortars (0:59), the ridge pass with Varga's "That ridge isn't a dune" (1:05-1:13). <strong>Recommendation: accept</strong></div>
+<div class="media"><figure class="m vid"><figcaption>video with sound</figcaption><video controls preload="none" playsinline src="../../campaign/act-3-red-dust/level-21-dust-colossus/concept/level-21-capture-r44-a-p1.mp4"></video></figure><figure class="m img"><a href="../../campaign/act-3-red-dust/level-21-dust-colossus/concept/level-21-capture-r44-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-3-red-dust/level-21-dust-colossus/concept/level-21-capture-r44-a.png" alt="sheet, all three parts"></a><figcaption>sheet, all three parts</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the autopilot did not free the crawler (SECRETS 0 / 1); the approach is thin on screen (Q.1)</p>
+<div class="ans"><span class="tag">Answer</span> <span>accept / change (say what)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>accept (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-K.b">
+<header><span class="rid">K.b</span><h3>Level 21: the hollow and phases 1-2</h3><span class="kind">game capture, part 2 of 3</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-21-dust-colossus/README.md#concept-art">Level 21: the hollow and phases 1-2</a></div>
+<div class="q"><strong>game capture, part 2 of 3</strong> (91 s, with sound): the lime hollow, the Choir singing (0:20), the "DUST COLOSSUS APPROACHING" warning (0:27), Varga's t=111 line, the front breach, the bite tell (the teeth flash white, 0:44), the left edge warning and the left breach with the gullet open (0:47-0:55), phase 2 at 0:53 (Okafor, then Rook's moles line), hunting breaches from the rear and the left with their warnings, the spine vents firing on the ridge (1:04), debris rocks, suction streaks. <strong>Recommendation: accept</strong></div>
+<div class="media"><figure class="m vid"><figcaption>video with sound</figcaption><video controls preload="none" playsinline src="../../campaign/act-3-red-dust/level-21-dust-colossus/concept/level-21-capture-r44-a-p2.mp4"></video></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the front mouth sits partly under the boss bar; <strong>no bite circle is drawn</strong> (the tell is the white teeth only); the suction streaks are faint (a review point of HA)</p>
+<div class="ans"><span class="tag">Answer</span> <span>accept / change (say what)</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>change</strong> (user, 2026-10-20): "What are those turrets popping up out of the ground? I think they should be part of the Colossus, but then they should be placed on its spine, not like this in the sand. They have the same moving issue as the creature itself (see below).  I think the creature also needs something extras. The few small blasts don't do such a large creature justice. Think of something to add." Planned (steps SIM-K, ART-K, GK, L21R): the vents become organs on its spine and a death throe is added; nothing is ticked until built</span></div>
+</article>
+<article class="row" id="r-K.c">
+<header><span class="rid">K.c</span><h3>Level 21: phase 3, the kill and the settling dust</h3><span class="kind">game capture, part 3 of 3</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-21-dust-colossus/README.md#concept-art">Level 21: phase 3, the kill and the settling dust</a></div>
+<div class="q"><strong>game capture, part 3 of 3</strong> (97.5 s, with sound; <strong>re-recorded after step GFX3</strong> under the same file name, N.h, a new run with the same outcome): phase 3 (Varga's "It's under you!", 0:25), <strong>Rook shot down</strong> ("Punching out! Give 'em hell!", 0:30), the eruption marker (now a pale lime ring round a cracked bulge under the ship, 0:33.5-0:35) and one eruption (0:35), the kill at ≈ 0:37.6 (boss time 1:40 against the par 102): the death frames (0:37.6-0:39.9), the ridge's split crackling lime-yellow, the sinkhole and the furrow (0:40) and the white flash with pale chunks on top, the Choir's words (0:44), the sinkhole scrolling off, the settled floor (from ≈ 0:56), Varga's "not singing", Ares Control and Okafor's closing line, the debrief (1:22: 100 / 107, rank A, the secondary met). <strong>Recommendation: accept</strong></div>
+<div class="media"><figure class="m vid"><figcaption>video with sound</figcaption><video controls preload="none" playsinline src="../../campaign/act-3-red-dust/level-21-dust-colossus/concept/level-21-capture-r44-a-p3.mp4"></video></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the autopilot lost Rook in phase 3; <strong>Varga's phase-3 line shows a second time over the kill</strong> (0:37-0:42, after Rook's line cut it); the death is shorter than the 3 s chain (≈ 2.3 s) and its last frame reads as four grey lumps; no separate eruptions along the ridge read; the flash comes after the sinkhole is already there; the settled floor runs about 26 s before the debrief</p>
+<div class="ans"><span class="tag">Answer</span> <span>accept / change (say what)</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>change</strong> (user, 2026-10-20): "The ground moves underneath the Colossus. When the Colossus is out of the ground, the background cannot move, or the Colossus must move together with the ground." Planned (steps SIM-K, GK, L21R): the crawl halts while the Colossus is out of the ground; nothing is ticked until built</span></div>
+</article>
+<article class="row" id="r-K.d">
+<header><span class="rid">K.d</span><h3>Level 21: the act&#x27;s end</h3><span class="kind">game capture</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-21-dust-colossus/README.md#concept-art">Level 21: the act's end</a></div>
+<div class="q"><strong>game capture</strong> (139 s, with sound; the menus paged by snapshot hooks): Okafor's closing line, the debrief and stamp, ACT III COMPLETE, Act 3's outro (four pages typed and voiced), the release end card "ACTS I-III COMPLETE ... ACT IV - DEEP WATER. EUROPA. COMING SOON.", the hangar with "ACT IV - DEEP WATER: COMING SOON" and Mission 22's "NO INTEL YET". <strong>Recommendation: accept</strong></div>
+<div class="media"><figure class="m vid"><figcaption>video with sound</figcaption><video controls preload="none" playsinline src="../../campaign/act-3-red-dust/level-21-dust-colossus/concept/level-21-act-end-r44-a.mp4"></video></figure><figure class="m img"><a href="../../campaign/act-3-red-dust/level-21-dust-colossus/concept/level-21-act-end-r44-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-3-red-dust/level-21-dust-colossus/concept/level-21-act-end-r44-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> a debug run: the credits roll and the name entry are not shown (the end card handed straight to the hangar's Continue)</p>
+<div class="ans"><span class="tag">Answer</span> <span>accept / change (say what)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>accept (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-K.e">
+<header><span class="rid">K.e</span><h3>Question: the Colossus&#x27;s death</h3><span class="kind">check</span></header>
+<div class="part"><strong>Question: the Colossus's death</strong></div>
+<div class="q">H5's first run showed only a pop (the mouth vanished within a frame); step GFX3 fixed it (N.h) and part 3 was re-recorded: now the UNDER pose's death frames play (the shudder with lime ichor, the rearing, the sinking), the ridge's split glows, then <code>colossus-sinkhole</code> and <code>colossus-furrow</code> fade in at the kill spot and scroll on, with the white flash and pale chunks. <strong>Recommendation: accept the death as re-recorded</strong>; the small weak spots of K.c go to part I's polish if you want them</div>
+<div class="media"><figure class="m img"><a href="../../campaign/act-3-red-dust/level-21-dust-colossus/concept/level-21-capture-r44-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-3-red-dust/level-21-dust-colossus/concept/level-21-capture-r44-a.png" alt="sheet: four death frames and the sinkhole"></a><figcaption>sheet: four death frames and the sinkhole</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> ≈ 2.3 s of frames, not the 3 s chain; the last frame (four grey lumps) reads oddly; the HB bursts along the ridge do not read as eruptions</p>
+<div class="ans"><span class="tag">Answer</span> <span>accept (recommended) / change (say what)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>accept (recommended) (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-K.f">
+<header><span class="rid">K.f</span><h3>Level 21&#x27;s run in numbers</h3><span class="kind">yes or no, each</span></header>
+<div class="part">Level 21's run in numbers</div>
+<div class="q"><strong>yes or no, each</strong>: (a)-(e) below. <strong>Recommendation: all yes</strong></div>
+<div class="sub"><span class="rid">K.fa</span> The run was won with rank A, boss time 1:40 against the par 102 (1:42), 100 of 107 kills, the secondary met. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">K.fb</span> The autopilot never frees the survey crawler (SECRETS 0 / 1): it is the autopilot's choice, not a fault of the level. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">K.fc</span> Rook is shot down in phase 3 ("Punching out! Give 'em hell!"). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">K.fd</span> The section-6 lift-offs read only as faint plumes. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">K.fe</span> The settled floor shows for about 20 s before the debrief (about 26 s in the re-recorded part 3). <span class="opts">yes / no</span></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the autopilot's flight; the 107 counts the boss (K.h)</p>
+<div class="ans"><span class="tag">Answer</span> <span>all yes / some no</span></div><div class="ans out"><span class="tag">Outcome</span> <span>all yes (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-K.g">
+<header><span class="rid">K.g</span><h3>The HUD&#x27;s KILLS box in Level 21</h3><span class="kind">yes or no</span></header>
+<div class="part">The HUD's KILLS box in Level 21</div>
+<div class="q"><strong>yes or no</strong>: keep the HUD showing kills against the <strong>65 % target</strong> ("KILLS 100 / 70", then DONE), or show the level's total (107)? The 70 is the secondary objective's target, not a bug (step GFX3 checked it): the tracker shows <code>KILLS n / target</code>, as Level 01's <code>KILLS n / 76</code> (the <span class="ref">HUD</span>, your decision of 2026-10-02). <strong>Recommendation: keep</strong></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> next to the debrief's 100 / 107 the two numbers look like a mismatch</p>
+<div class="ans"><span class="tag">Answer</span> <span>keep (recommended) / show the total</span></div><div class="ans out"><span class="tag">Outcome</span> <span>keep (recommended) (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-K.h">
+<header><span class="rid">K.h</span><h3>Level 21&#x27;s kill count and the boss</h3><span class="kind">yes or no</span></header>
+<div class="part">Level 21's kill count and the boss</div>
+<div class="q"><strong>yes or no</strong>: Level 21's data says the secondary's 65 % is of the level's enemies, <strong>the boss and its debris not counted</strong>, but <code>Sortie.enemyTotal()</code> counts the set pieces, so the debrief's 107 (and the target 70 = 65 % of 107) include the Colossus. <strong>Recommendation: count it as the data says</strong> (106 enemies, the target 69): a small sim/content fix in part I, measured with the level-metrics tool</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> <code>enemyTotal()</code> counts every level's set pieces, so the fix touches each boss level's count and its haul</p>
+<div class="ans"><span class="tag">Answer</span> <span>count as the data says (recommended) / keep the boss in the count</span></div><div class="ans out"><span class="tag">Outcome</span> <span>count as the data says (recommended) (user, 2026-10-20); the small sim/content fix (106 enemies, the target 69) is planned for part I</span></div>
+</article>
+</section>
+<section id="s-level-21-s-build"><h2>Level 21&#x27;s build</h2>
+<div class="sum"><p><strong>B</strong> rows: each item <em>yes</em> (keep as built) or <em>no</em> (say what). These are the choices the six code steps made that nobody asked them about; the measured questions are <code>Q</code>. Level 21's numbers (the level-metrics tool, medium, the plan's fit, seed 2185): <strong>106 enemies ≈ 66 a minute</strong> (96 + 10 ground), the fight 101.7 s, the haul +0.7 % of the budget at <code>bounty_scale</code> 0.74, the boss 325 (22.7 %), the autopilot wins every seed on every difficulty with Rook and without him; the floor (1.78 on the screen) and the gaps (5) are <strong>Q.1</strong>.</p></div>
+<article class="row" id="r-B.a">
+<header><span class="rid">B.a</span><h3>The breach machinery</h3><span class="kind">yes or no, each</span></header>
+<div class="part"><a href="../../enemies/bosses/dust-colossus/README.md#breaches">The breach machinery</a></div>
+<div class="q"><strong>yes or no, each</strong> (step PH1, simulation): (a)-(g) below. <strong>Recommendation: all yes</strong></div>
+<div class="sub"><span class="rid">B.aa</span> The arena crawls because its section's <code>crawl</code> flag says so (the boss breaches); Level 05's and Level 07's moving arenas are unchanged. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.ab</span> The suction keeps pulling through the bite's tell, not only while the mouth is open. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.ac</span> A bite lands when the ship's centre is within 70 px of the gullet. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.ad</span> A breach cycle (bulge, tell, rise, open, bite, dive) is 12.8 s. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.ae</span> A phase change finishes the running breach first. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.af</span> The buried mouth is shielded: nothing hits it until it opens. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.ag</span> The ridge's curve through the dune sea (the pass's path). <span class="opts">yes / no</span></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> tested on built arenas (<code>BreachArenaTest</code>, <code>CrawlingArenaTest</code>), not by you</p>
+<div class="ans"><span class="tag">Answer</span> <span>all yes / some no</span></div><div class="ans out"><span class="tag">Outcome</span> <span>all yes (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-B.b">
+<header><span class="rid">B.b</span><h3>Vents, eruption and debris</h3><span class="kind">yes or no, each</span></header>
+<div class="part"><a href="../../enemies/bosses/dust-colossus/README.md#suction-and-debris">Vents, eruption and debris</a></div>
+<div class="q"><strong>yes or no, each</strong> (step PH3, simulation): (a)-(g) below. <strong>Recommendation: all yes</strong> (the safe spot is Q.4)</div>
+<div class="sub"><span class="rid">B.ba</span> The pulled debris rocks accelerate at 60 px/s². <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.bb</span> The spine vents rise in phases 2 and 3, and fire 1 s after the mouth opens (the burst attack). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.bc</span> Rocks fly only while the mouth is open. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.bd</span> Phase 3's armour patch lies at the arena's centre. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.be</span> The rocks miss Rook. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.bf</span> The eruption marker replaces the UNDER tell and rise in phase 3; an eruption cycle is 10.3 s. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.bg</span> Debris stops the player's shots and breaks on the hull (H.7 c); it does not stop the enemy's bullets. <span class="opts">yes / no</span></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> <code>BreachHazardsTest</code> only</p>
+<div class="ans"><span class="tag">Answer</span> <span>all yes / some no</span></div><div class="ans out"><span class="tag">Outcome</span> <span>all yes (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-B.c">
+<header><span class="rid">B.c</span><h3>Level 21&#x27;s data</h3><span class="kind">yes or no, each</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-21-dust-colossus/README.md#waves">Level 21's data</a></div>
+<div class="q"><strong>yes or no, each</strong> (step PH2, data): (a)-(f) below. <strong>Recommendation: all yes</strong></div>
+<div class="sub"><span class="rid">B.ca</span> The gullet's box is 70×70 px. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.cb</span> The vents' aimed bursts are <code>small</code> at 130 px/s; the spiral's arms turn 90°/s; hard's rings are 16 in both phases. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.cc</span> The basin rumble starts at the ridge pass (t=64) with a 30 s swell and is cut at the kill. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.cd</span> The t=101 Stinger V-wing is folded into earlier groups (H.3): the screen clears while the Choir sings. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.ce</span> The ridge pass is the <code>ridge</code> key (t=64, 8 s, right to left, 150 px down). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.cf</span> <code>Unmapped</code> is empty: Level 21 is flown by every campaign-wide test. <span class="opts">yes / no</span></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the wave count is Q.1</p>
+<div class="ans"><span class="tag">Answer</span> <span>all yes / some no</span></div><div class="ans out"><span class="tag">Outcome</span> <span>all yes (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-B.d">
+<header><span class="rid">B.d</span><h3>The measured fight</h3><span class="kind">yes or no, each</span></header>
+<div class="part"><a href="../../enemies/bosses/dust-colossus/README.md#duration-and-hp">The measured fight</a></div>
+<div class="q"><strong>yes or no, each</strong> (step H4, tests): (a)-(c) below. <strong>Recommendation: all yes</strong> (the par is Q.3, the calibration Q.2)</div>
+<div class="sub"><span class="rid">B.da</span> <strong>The bug fix</strong>: the ring, the fan and the spiral had no firing part (<code>parts: [mouth]</code> was missing), so the gullet never fired in the first measurements; every figure here is after the fix. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.db</span> <code>bounty_scale</code> <strong>0.74</strong> (typical +0.7 %, perfect 1.43×) and the boss <strong>325</strong> (mouth 289, vents 12 each): H.5's 22.7 % share. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.dc</span> The autopilot's colossus play (<code>ColossusPlay</code>: out of the bite circle and the marker, against the pull, the suction and the pulled rocks in the look-ahead) is the measure. <span class="opts">yes / no</span></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the autopilot is the measure</p>
+<div class="ans"><span class="tag">Answer</span> <span>all yes / some no</span></div><div class="ans out"><span class="tag">Outcome</span> <span>all yes (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-B.e">
+<header><span class="rid">B.e</span><h3>Level 21 in the game</h3><span class="kind">yes or no, each</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-21-dust-colossus/README.md#implementation">Level 21 in the game</a></div>
+<div class="q"><strong>yes or no, each</strong> (step HA, game): (a)-(e) below. <strong>Recommendation: all yes</strong> (the small defaults are Q.8)</div>
+<div class="sub"><span class="rid">B.ea</span> The crawl's backdrop: the arena's 512 px tile, the settled floor from the next seam after the kill, the lift-offs shifted by the kill's jump. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.eb</span> <code>ColossusLooks</code>: the five poses, the funnel, the bulge, the marker, the gullet's glow, the craters, the vents, the streaks, the rocks and the death frames (the furrow and the sinkhole at the kill). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.ec</span> The intel panel's OBJECTIVE line wraps (the long "DESTROY THE DUST COLOSSUS"). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.ed</span> The release's end texts come from the data's <code>next_act</code> (<code>ReleaseTexts</code>; H.7 d). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.ee</span> The faint sand streaks behind the breaches (a review point of step HA). <span class="opts">yes / no</span></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the Colossus's looks are judged by captures only</p>
+<div class="ans"><span class="tag">Answer</span> <span>all yes / some no</span></div><div class="ans out"><span class="tag">Outcome</span> <span>all yes (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-B.f">
+<header><span class="rid">B.f</span><h3>Level 21&#x27;s sound and the act end</h3><span class="kind">yes or no, each</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-21-dust-colossus/README.md#music--ambience">Level 21's sound and the act end</a></div>
+<div class="q"><strong>yes or no, each</strong> (step HB, game): (a)-(h) below. <strong>Recommendation: all yes</strong></div>
+<div class="sub"><span class="rid">B.fa</span> The r44 sounds play as provisional picks (all <em>a</em>, the ridge <em>b</em>; S rows) and are recorded in the sfx README's decisions. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.fb</span> <code>ColossusCues</code>: the bulge at each breach tell and eruption marker, the eruption as the mouth rises, the bite's snap and the suction as one loop panned to the mouth (its far share 35 %), the ridge rumble once at t=64 (the pan in the file). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.fc</span> The walker's lance and shockwave play <em>a</em> too (the brace tell stays a placeholder). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.fd</span> The basin rumble swells +4 dB into the fight and is cut at the kill; the wind drops 9 dB from t=245 (the arena's end). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.fe</span> The death's bursts run along the furrow and the flash is local (the Spire's rule), with the credit shower. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.ff</span> The Choir's glyph on the radio is unchanged; Level 21 is out of the unvoiced list. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.fg</span> Act end: <code>OutroOnwardTest</code> (Act 3's outro to the release's end), <code>DebriefActEndTest</code> (Act III) and <code>ReleaseTexts</code> are green. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.fh</span> The death's 3 s chain under the 6.1 s death sound, and the death unseen in a normal run (the sound outlasts the chain): a review point of step HB. <span class="opts">yes / no</span></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> not heard by Claude</p>
+<div class="ans"><span class="tag">Answer</span> <span>all yes / some no</span></div><div class="ans out"><span class="tag">Outcome</span> <span>all yes (user, 2026-10-20)</span></div>
+</article>
+</section>
+<section id="s-part-h-s-questions"><h2>Part H&#x27;s questions</h2>
+<div class="sum"><p>What the build found and did <strong>not</strong> decide: nothing here is built until you answer; the recommendations first.</p></div>
+<article class="row" id="r-Q.1">
+<header><span class="rid">Q.1</span><h3>Level 21&#x27;s floor and gaps</h3><span class="kind">Question.</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-21-dust-colossus/README.md#waves">Level 21's floor and gaps</a></div>
+<div class="q"><strong>Question.</strong> With H.1's count-neutral 106 units the level misses the Act 2+ rules at medium: <strong>1.78 enemies on the screen</strong> (the floor asks 2.5) and <strong>5 stretches over 2 s</strong> (at most 3); easy has 3 over 3 s (at most 2); hard is fine (2.77, 3 gaps). The beam kills the t=9.5 and t=64 Kite swarms at once. Levels 17-20 fly 197-226 units at 2.6-3.7 on the screen. H.1 allows more when the floor fails: <strong>rework the waves with more firing groups as Level 20 did</strong> (tougher groups for the remaining Kites, the two swarms held longer, up to 150-170 units), measured to the rules (<code>PacingTest</code>, <code>ActFloorTest</code>), the haul re-scaled. <strong>Recommendation: yes</strong></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the count and the pace go up in a level that already ends in a long fight; <code>PacingTest.PENDING_WAVES</code> stays until you answer</p>
+<div class="ans"><span class="tag">Answer</span> <span>yes, rework to the rules (recommended) / no, accept the floor (say how far) / another way (say)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>yes, rework to the rules (user, 2026-10-20); the build is planned, not started</span></div>
+</article>
+<article class="row" id="r-Q.2">
+<header><span class="rid">Q.2</span><h3>Phase 1&#x27;s calibration</h3><span class="kind">Question.</span></header>
+<div class="part"><a href="../../enemies/bosses/dust-colossus/README.md#duration-and-hp">Phase 1's calibration</a></div>
+<div class="q"><strong>Question.</strong> Phase 1 costs the random dodger <strong>6.3 per 10 s</strong>, <strong>0.55×</strong> the Kraken's 11.4; round 43's H.4 asked 0.8-1.2× (the test holds 0.45× until you answer). More phase-1 fire: <strong>rings every 2.0 s (from 2.5)</strong> and measure; phase 2's fan from phase 1 only if that is not enough; the HP do not move. <strong>Recommendation: the rings every 2.0 s</strong></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the harness is not a player; the rings also pace the bites</p>
+<div class="ans"><span class="tag">Answer</span> <span>rings every 2.0 s (recommended) / the fan from phase 1 / rings faster or denser (100 → 130 px/s, 12 → 16) / leave it at 0.55×</span></div><div class="ans out"><span class="tag">Outcome</span> <span>rings every 2.0 s (recommended) (user, 2026-10-20); the build is planned, not started</span></div>
+</article>
+<article class="row" id="r-Q.3">
+<header><span class="rid">Q.3</span><h3>The par: 102 s</h3><span class="kind">Question.</span></header>
+<div class="part"><a href="../../enemies/bosses/dust-colossus/README.md#duration-and-hp">The par: 102 s</a></div>
+<div class="q"><strong>Question.</strong> The measured fight at the spec's HP lasts <strong>101.7 s</strong> at medium (five seeds 100.9-103.1 s, easy 87 s, hard 142 s, every seed won; no bite and no eruption reached the ship, at most 12 shield and armour lost). The draft's par was 130 s: it would need a mouth of <strong>≈ 7,300 HP</strong> (hard ≈ 185 s). <strong>Recommendation: keep 102 s and 5,600 HP</strong> (inside the boss window of 90-180 s)</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the autopilot is the measure; a human takes longer than the autopilot</p>
+<div class="ans"><span class="tag">Answer</span> <span>keep 102 s / 5,600 (recommended) / raise the HP (say to what)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>5,600 (recommended) (user, 2026-10-20): the par 102 s and 5,600 HP stay, nothing to build</span></div>
+</article>
+<article class="row" id="r-Q.4">
+<header><span class="rid">Q.4</span><h3>The erupted mouth&#x27;s safe spot</h3><span class="kind">Question.</span></header>
+<div class="part"><a href="../../enemies/bosses/dust-colossus/README.md#breaches">The erupted mouth's safe spot</a></div>
+<div class="q"><strong>Question.</strong> Phase 3's eruption leaves the mouth standing over the ship's spot; a ship on the mouth draws <strong>no spiral and no ring</strong> (eruption and bite still hit), as the walker's safe spot (round 43's W.e). H4 then fixed the spiral's firing part, and the autopilot stands 170 px off the mouth, so the effect was never seen. <strong>Recommendation: re-measure first</strong> (a step after your answer, with a ship parked on the mouth); <strong>if it is still safe, a short ring at the eruption</strong> (about 100 px, <code>medium</code>, a tell as the footfall's), as the walker's stomp</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> nothing built; the numbers would be set when built</p>
+<div class="ans"><span class="tag">Answer</span> <span>re-measure, then a short ring if still safe (recommended) / leave it / a ring regardless</span></div><div class="ans out"><span class="tag">Outcome</span> <span>re-measure, then a short ring if still safe (recommended) (user, 2026-10-20); the build is planned, not started</span></div>
+</article>
+<article class="row" id="r-Q.5">
+<header><span class="rid">Q.5</span><h3>The survey crawler&#x27;s hard HP</h3><span class="kind">Question.</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-21-dust-colossus/README.md#secrets-and-pickups">The survey crawler's hard HP</a></div>
+<div class="q"><strong>Question.</strong> The secret's trigger has 20 HP on every difficulty; the design says 28 on hard. A trigger needs a hard-HP key (a small content key) to say it. <strong>Recommendation: add the key</strong> (hard's crawler 28 HP, the autopilot's secret stays met)</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> one more data key, one content test</p>
+<div class="ans"><span class="tag">Answer</span> <span>add the key (recommended) / 20 HP on all difficulties</span></div><div class="ans out"><span class="tag">Outcome</span> <span>add the key (recommended) (user, 2026-10-20); the build is planned, not started</span></div>
+</article>
+<article class="row" id="r-Q.6">
+<header><span class="rid">Q.6</span><h3>no_surface zones in arena levels</h3><span class="kind">Question.</span></header>
+<div class="part">[<code>no_surface</code> zones in arena levels](../../campaign/act-3-red-dust/level-21-dust-colossus/README.md#ground-targets)</div>
+<div class="q"><strong>Question.</strong> The simulation refuses a <code>no_surface</code> zone in a level with an arena, so Level 21's nests have none; Level 21's zones would end before the arena anyway. <strong>Recommendation: leave as is</strong> (no code: the refusal never bites while the zones end before the arena)</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> a Burrower field could rise under a nest; not measured</p>
+<div class="ans"><span class="tag">Answer</span> <span>leave as is (recommended) / lift the refusal for zones that end before the arena</span></div><div class="ans out"><span class="tag">Outcome</span> <span>leave as is (recommended) (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-Q.7">
+<header><span class="rid">Q.7</span><h3>The Choir&#x27;s speech as one take</h3><span class="kind">Question.</span></header>
+<div class="part"><a href="../../audio/voice/README.md">The Choir's speech as one take</a></div>
+<div class="q"><strong>Question.</strong> The design asks for the Choir's words with drone joins (0.7 s) between separately spoken fragments and an a/b layering; that needs a <code>voice.py</code> change. VOX-H rendered one take through the round-18 layering (V.a). <strong>Recommendation: accept the take unless it sounds wrong</strong> to you; the join and the layering move to the pool of nice-to-haves</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> not heard by Claude</p>
+<div class="ans"><span class="tag">Answer</span> <span>accept the take (recommended) / build the joins and the layering (a small voice step)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>accept the take (recommended) (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-Q.8">
+<header><span class="rid">Q.8</span><h3>Small defaults</h3><span class="kind">Proposals, each yes/no</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-21-dust-colossus/README.md#implementation">Small defaults</a></div>
+<div class="q"><strong>Proposals, each yes/no</strong>: (a)-(d) below. <strong>Recommendation: all yes</strong></div>
+<div class="sub"><span class="rid">Q.8a</span> After the kill the settled floor takes up to ≈ 27 s to come to rest (H.6 said at most 20 s); the 32 s settling section covers it. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">Q.8b</span> A <strong>2 px screen shake</strong> on the ridge pass (and on Level 20's, which shares it): the game's first shake (<code>ScreenShake</code>). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">Q.8c</span> The boss's silhouette on the Level 3 strip at its time, now drawn for <strong>every boss level</strong> (Level 14's too: H.7 e). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">Q.8d</span> The ridge's mark on the Level 3 strip is <strong>not done</strong>: it needs a content <code>Intel</code> mark kind (part I picks it up). <span class="opts">yes / no</span></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> (b) is the game's first shake</p>
+<div class="ans"><span class="tag">Answer</span> <span>all yes / some no</span></div><div class="ans out"><span class="tag">Outcome</span> <span>all yes (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-Q.9">
+<header><span class="rid">Q.9</span><h3>Phase 3&#x27;s length</h3><span class="kind">Question.</span></header>
+<div class="part"><a href="../../enemies/bosses/dust-colossus/README.md#phases">Phase 3's length</a></div>
+<div class="q"><strong>Question.</strong> In K.c phase 3 lasts only about 12 s with one eruption (it starts at 25 % of the mouth's HP). <strong>Recommendation: raise the phase-3 share</strong> so that it gets about 3 eruptions, measured (HP total unchanged, so the par moves only by what the measure shows)</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> one autopilot run; it moves Q.3's par</p>
+<div class="ans"><span class="tag">Answer</span> <span>raise the share, measured (recommended) / leave it</span></div><div class="ans out"><span class="tag">Outcome</span> <span>raise the share, measured (recommended) (user, 2026-10-20); the build is planned, not started</span></div>
+</article>
+<article class="row" id="r-Q.10">
+<header><span class="rid">Q.10</span><h3>The bite tell</h3><span class="kind">Question.</span></header>
+<div class="part"><a href="../../enemies/bosses/dust-colossus/README.md#breaches">The bite tell</a></div>
+<div class="q"><strong>Question.</strong> The bite's tell is only the teeth flashing white (K.b); no circle shows where the bite lands (70 px). <strong>Recommendation: a faint 70 px bite circle on the sand during the tell</strong></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> a circle adds clutter in a busy arena</p>
+<div class="ans"><span class="tag">Answer</span> <span>faint circle (recommended) / leave it</span></div><div class="ans out"><span class="tag">Outcome</span> <span>faint circle (recommended) (user, 2026-10-20); the build is planned, not started</span></div>
+</article>
+<article class="row" id="r-Q.11">
+<header><span class="rid">Q.11</span><h3>The front breach under the boss bar</h3><span class="kind">Question.</span></header>
+<div class="part"><a href="../../enemies/bosses/dust-colossus/README.md#breaches">The front breach under the boss bar</a></div>
+<div class="q"><strong>Question.</strong> The front breach's mouth sits partly under the boss bar (K.b). <strong>Recommendation: move the front point down to clear the bar</strong> (the other points unchanged)</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> moves the front point's geometry the autopilot was measured on</p>
+<div class="ans"><span class="tag">Answer</span> <span>move it (recommended) / leave it</span></div><div class="ans out"><span class="tag">Outcome</span> <span>move it (recommended) (user, 2026-10-20); the build is planned, not started</span></div>
+</article>
+</section>
+<section id="s-the-art-audit-and-approvals"><h2>The art audit and approvals</h2>
+<div class="sum"><p>The audit (step ART-AUDIT, <code>ui/hangar</code> and <code>ui/briefing</code>'s Concept art tables) merged with part I's Q6 into one row (A.a). The second row is the long list of the other 37 <code>art: chosen</code> READMEs (the audit counted 35 before the Colossus and Levels 17-18; A.b). A.c is the only approval that is yours alone.</p></div>
+<article class="row" id="r-A.a">
+<header><span class="rid">A.a</span><h3>The art audit (part I&#x27;s Q6)</h3><span class="kind">yes or no</span></header>
+<div class="part"><a href="../../ui/hangar/README.md#concept-art">The art audit (part I's Q6)</a></div>
+<div class="q"><strong>yes or no</strong>: hangar 23 and briefing 21 rows were still <code>chosen</code>. (1) <strong>3 superseded mockups to <code>rejected/</code></strong>: <code>hangar-r07-b</code> (a layout mockup; the screen is built by <code>tools/art/ui_kit.py</code> and <code>ui_scenes.py</code>), <code>briefing-r08-a</code> (the same, <code>briefing_images.py</code> and the kit), <code>act-title-r08-a</code> (<code>assets/ui/act-N-title.png</code> by <code>tools/art/act_stills.py</code>); (2) <strong>41 review sheets and captures to <code>final</code></strong> (they document production assets: <code>hangar-final-r13-a</code>, <code>hangar-capture-final-r13-a</code>, the intel sheets r13-r42, <code>test-fire-capture-r26-a</code>, <code>act3-icons-r37-a</code>, the Act 3 hangar capture, <code>briefing-final-r13-a</code>, <code>briefing-capture-final-r13-a</code> and the 17 briefing-image sheets); (3) <code>ui/hangar</code> and <code>ui/briefing</code> to <strong><code>art: final</code></strong>; (4) the capture-only <code>chosen</code> rows in Levels 17 and 18 and the Act 3 README the same. Nothing needs production art (0 left). <strong>Recommendation: yes, all four</strong></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the rounds 41 and 42 rows had no explicit approval note; you approved those rounds' art in their closing</p>
+<div class="ans"><span class="tag">Answer</span> <span>all four (recommended) / some no (say which)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>all four (recommended) (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-A.b">
+<header><span class="rid">A.b</span><h3>The 37 other art: chosen READMEs</h3><span class="kind">Proposals, each yes/no</span></header>
+<div class="part">The 37 other <code>art: chosen</code> READMEs</div>
+<div class="q"><strong>Proposals, each yes/no</strong>: (a)-(d) below. <strong>Recommendation: all yes</strong></div>
+<div class="sub"><span class="rid">A.ba</span> <strong>To <code>final</code>: the parts whose assets are production</strong> (a <code>Source</code> chunk in <code>assets/</code>, every Concept art row chosen or rejected): <code>enemies/air</code>, <code>enemies/naval</code>, <code>enemies</code> (the umbrella), <code>player</code>, <code>player/specials</code>, <code>player/weapons</code>, <code>player/weapons/deflector-pod</code>, <code>ui</code>, <code>audio/music</code>, <code>audio</code>, <code>campaign/act-3-red-dust</code>, <code>campaign/act-3-red-dust/level-17-dome-siege</code>. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">A.bb</span> <strong>To <code>final</code> once their last <code>proposed</code> rows are decided</strong> (they stay <code>chosen</code> until then): <code>enemies/ground</code> (2 proposed), <code>enemies/bosses</code> and <code>enemies/bosses/dust-colossus</code> (round 44's F.c), <code>audio/sfx</code> (this round's 18), <code>campaign/act-3-red-dust/level-18-dust-storm</code> (5 proposed). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">A.bc</span> <strong>Keep <code>chosen</code>: concept-only parts</strong> (mood stills, character boards; their game assets are made per level): <code>world</code>, <code>world/belt</code>, <code>world/earth</code>, <code>world/earth-orbit</code>, <code>world/europa</code>, <code>world/jovian</code>, <code>world/luna</code>, <code>world/mars</code>, <code>world/vrell-space</code>, <code>story</code>, <code>story/characters</code> and its five children (<code>okafor</code>, <code>rook</code>, <code>the-choir</code>, <code>varga</code>, <code>vorne</code>), <code>art-direction</code>, <code>enemies/space</code> (Act 4 and later). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">A.bd</span> <strong>Keep <code>chosen</code>: the voice</strong> (<code>audio/voice</code>, <code>audio/voice/refs</code>): the cast is chosen and the lines are rendered, but the listen-through is part I's round 45 (I.5). <span class="opts">yes / no</span></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the frontmatter has one <code>art</code> value for a table of mixed items</p>
+<div class="ans"><span class="tag">Answer</span> <span>all yes / some no</span></div><div class="ans out"><span class="tag">Outcome</span> <span>all yes (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-A.c">
+<header><span class="rid">A.c</span><h3>The rear-guard drone bay&#x27;s design</h3><span class="kind">approval</span></header>
+<div class="part"><a href="../../player/weapons/rear-guard-drone-bay/README.md">The rear-guard drone bay's design</a></div>
+<div class="q"><strong>approval</strong> (only you approve): its design review (round 36 D.26's wingmen table moved over, built in part G, played in rounds 43's captures K.c and K.d, the art approved as final in round 43) → <strong>approved</strong>? <strong>Recommendation: approve</strong></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> main reverted it from <code>approved</code> to <code>review</code> after part G because only you approve</p>
+<div class="ans"><span class="tag">Answer</span> <span>approve (recommended) / not yet (say what)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>approve (recommended) (user, 2026-10-20)</span></div>
+</article>
+</section>
+<section id="s-new-glows"><h2>New glows</h2>
+<div class="sum"><p>Two glows never seen before in a capture (step ACT2-CAP; <code>briefs</code> clips from a snapshot build) and one art question.</p></div>
+<article class="row" id="r-G.a">
+<header><span class="rid">G.a</span><h3>The payroll safe&#x27;s strobe (Level 19)</h3><span class="kind">game capture</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-19-foundry-of-tharsis/README.md#concept-art">The payroll safe's strobe (Level 19)</a></div>
+<div class="q"><strong>game capture</strong> (9 s, with sound): the shift office scrolling down the left wall at about 130 px/s, the safe's door lamp blinking green about twice a second with a small green halo spilling just past its box. It reads as a blinking green lamp. <strong>Recommendation: accept</strong></div>
+<div class="media"><figure class="m vid"><figcaption>video with sound</figcaption><video controls preload="none" playsinline src="../../campaign/act-3-red-dust/level-19-foundry-of-tharsis/concept/payroll-safe-glow-r44-a.mp4"></video></figure><figure class="m img"><a href="../../campaign/act-3-red-dust/level-19-foundry-of-tharsis/concept/payroll-safe-glow-r44-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-3-red-dust/level-19-foundry-of-tharsis/concept/payroll-safe-glow-r44-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> <strong>weak</strong>: the halo is small (≈ 12 px) and easy to miss at play speed among the belts</p>
+<div class="ans"><span class="tag">Answer</span> <span>accept / change (say what)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>accept (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-G.b">
+<header><span class="rid">G.b</span><h3>The greenhouse frame&#x27;s glow and the seed capsule (Level 17)</h3><span class="kind">game capture, snapshot-patched</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-17-dome-siege/README.md#concept-art">The greenhouse frame's glow and the seed capsule (Level 17)</a></div>
+<div class="q"><strong>game capture, snapshot-patched</strong> (8 s, with sound; fire held by the hook from 66 to 78.5 s because the autopilot shoots the frame about 1.5 s after it enters): the collapsed greenhouse frame drawn with the capsule's <code>seed-capsule-glow</code> (it has no glow of its own): a small warm-yellow glint swells and fades slowly (brightest ≈ 0:02.4); fire resumes, the frame breaks at ≈ 0:04.2, the capsule is caught (+256). <strong>Recommendation: accept the glint</strong> (it is an optional secret's pointer)</div>
+<div class="media"><figure class="m vid"><figcaption>video with sound</figcaption><video controls preload="none" playsinline src="../../campaign/act-3-red-dust/level-17-dome-siege/concept/greenhouse-frame-glow-r44-a.mp4"></video></figure><figure class="m img"><a href="../../campaign/act-3-red-dust/level-17-dome-siege/concept/greenhouse-frame-glow-r44-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-3-red-dust/level-17-dome-siege/concept/greenhouse-frame-glow-r44-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> <strong>weak</strong>: a soft glint, not a strobe you notice; the clip shows what the live game does not (the held fire)</p>
+<div class="ans"><span class="tag">Answer</span> <span>accept / change (say what)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>accept (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-G.c">
+<header><span class="rid">G.c</span><h3>Question: the greenhouse frame&#x27;s hit flash</h3><span class="kind">check</span></header>
+<div class="part"><strong>Question: the greenhouse frame's hit flash</strong></div>
+<div class="q">the frame's hit flash covers the <strong>whole 64×48 sprite as a white slab</strong> (the clip at ≈ 0:04): the burnt ground pad is baked into the sprite (about 79 % opaque; <code>tools/art/siege_units.py</code>), so the flash lights the pad too. <strong>Recommendation: split the pad off as a ground decal</strong> (a small art step: the frame sprite becomes the frame only and the pad a decal under it; the final asset changes, the generator is reproducible)</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the frame is <code>art: final</code> since round 40: a change to an approved final asset needs your word</p>
+<div class="ans"><span class="tag">Answer</span> <span>split the pad (recommended) / leave the slab</span></div><div class="ans out"><span class="tag">Outcome</span> <span>split the pad (recommended) (user, 2026-10-20)</span></div>
+</article>
+</section>
+<section id="s-act-2-to-final"><h2>Act 2 to final</h2>
+<div class="sum"><p>What is left to make Act 2 final (the audit of <code>act2-final.md</code>): no production art is missing, three voice lines that the audit counted open were rendered on 2026-10-19 by step VOX2 (the audit was wrong), and the only open work was captures and ticks. <strong>The captures</strong> (step ACT2-CAP, medium, the plan's fit, flown by the autopilot) are the <code>X.a-X.e</code> rows; their rows are in the levels' Concept art tables and the round-40 items of Levels 11 and 14, the Harbour Kraken and the Siege Spire are ticked with them. <strong>The questions</strong> (<code>X.f-X.l</code>) are yours.</p></div>
+<article class="row" id="r-X.a">
+<header><span class="rid">X.a</span><h3>Level 11&#x27;s reworked arena</h3><span class="kind">game capture</span></header>
+<div class="part"><a href="../../campaign/act-2-homefront/level-11-atlantic-convoy/README.md#concept-art">Level 11's reworked arena</a></div>
+<div class="q"><strong>game capture</strong> (94 s, with sound; level t ≈ mp4 time + 148): Varga's rising-contact line, Rook's "Here comes the big one.", the halt with Tiamat and the convoy gliding to its lanes, lane telegraphs and slams, the Halvorsen and the Saint-Laurent hit but holding, the head surfacing, the kill (≈ 1:06) and "All three hulls afloat". <strong>Okafor's teaching line was not heard</strong> (a bug: both cues fired in one step and the root hint went stale behind it); step FXL11 fixed it (X.b, record N.d). <strong>Recommendation: accept</strong></div>
+<div class="media"><figure class="m vid"><figcaption>video with sound</figcaption><video controls preload="none" playsinline src="../../campaign/act-2-homefront/level-11-atlantic-convoy/concept/level-11-arena-r44-a.mp4"></video></figure><figure class="m img"><a href="../../campaign/act-2-homefront/level-11-atlantic-convoy/concept/level-11-arena-r44-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-2-homefront/level-11-atlantic-convoy/concept/level-11-arena-r44-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the clip is the build <strong>before</strong> the fix; the autopilot's flight</p>
+<div class="ans"><span class="tag">Answer</span> <span>accept / change (say what)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>accept (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-X.b">
+<header><span class="rid">X.b</span><h3>The first-telegraph line, as fixed</h3><span class="kind">patched demonstration</span></header>
+<div class="part"><a href="../../campaign/act-2-homefront/level-11-atlantic-convoy/README.md#concept-art">The first-telegraph line, as fixed</a></div>
+<div class="q"><strong>patched demonstration</strong> (32 s, with sound; not the live game): the same run with <code>first-ship-telegraph</code> queued as a PHASE line (20 s stale), which is what step FXL11 built: Okafor's line (0:01-0:08), then his root hint "The arms are rooted at the rim. Cut a root and that lane is safe!" voiced in full (0:09-0:15), then the Saint-Laurent hit. <strong>Recommendation: accept the fix</strong></div>
+<div class="media"><figure class="m vid"><figcaption>video with sound</figcaption><video controls preload="none" playsinline src="../../campaign/act-2-homefront/level-11-atlantic-convoy/concept/level-11-shipcue-r44-a.mp4"></video></figure><figure class="m img"><a href="../../campaign/act-2-homefront/level-11-atlantic-convoy/concept/level-11-shipcue-r44-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-2-homefront/level-11-atlantic-convoy/concept/level-11-shipcue-r44-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> recorded from a patched snapshot; the live game now does this by <code>RadioSchedule.priority</code> (a test in <code>RadioTimelineLevel11Test</code>)</p>
+<div class="ans"><span class="tag">Answer</span> <span>accept / change (say what)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>accept (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-X.c">
+<header><span class="rid">X.c</span><h3>Level 14&#x27;s new briefing page</h3><span class="kind">game capture</span></header>
+<div class="part"><a href="../../campaign/act-2-homefront/level-14-siege-spire/README.md#concept-art">Level 14's new briefing page</a></div>
+<div class="q"><strong>game capture</strong> (17.5 s): Varga's page 2 (the briefing shown before a debug level start by a hook, paged on by itself once the voice ends): the root-scan image, her text typed and voiced, the hand-over to the level. <strong>Recommendation: accept</strong></div>
+<div class="media"><figure class="m vid"><figcaption>video with sound</figcaption><video controls preload="none" playsinline src="../../campaign/act-2-homefront/level-14-siege-spire/concept/level-14-briefing-r44-a.mp4"></video></figure><figure class="m img"><a href="../../campaign/act-2-homefront/level-14-siege-spire/concept/level-14-briefing-r44-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-2-homefront/level-14-siege-spire/concept/level-14-briefing-r44-a.png" alt="page"></a><figcaption>page</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the page is paged by a hook here; in play you press the key</p>
+<div class="ans"><span class="tag">Answer</span> <span>accept / change (say what)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>accept (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-X.d">
+<header><span class="rid">X.d</span><h3>Level 14&#x27;s kinder fight</h3><span class="kind">game capture</span></header>
+<div class="part"><a href="../../campaign/act-2-homefront/level-14-siege-spire/README.md#concept-art">Level 14's kinder fight</a></div>
+<div class="q"><strong>game capture</strong> (152 s, with sound; level t ≈ mp4 time + 90): the last waves, Okafor's root-grid line, "SIEGE SPIRE APPROACHING", the Choir, Varga, <strong>Rook's halt line "Missiles on the roots, I'll keep the flyers off you."</strong> (0:28-0:34), the roots' fire, the sweeps, the crown opening, the kill (≈ 2:05), the daylight and the debrief (A+, boss time 1:44 against a par of 1:43, ROOTS 8 / 8). <strong>Recommendation: accept</strong></div>
+<div class="media"><figure class="m vid"><figcaption>video with sound</figcaption><video controls preload="none" playsinline src="../../campaign/act-2-homefront/level-14-siege-spire/concept/level-14-fight-r44-a.mp4"></video></figure><figure class="m img"><a href="../../campaign/act-2-homefront/level-14-siege-spire/concept/level-14-fight-r44-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-2-homefront/level-14-siege-spire/concept/level-14-fight-r44-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the autopilot's flight</p>
+<div class="ans"><span class="tag">Answer</span> <span>accept / change (say what)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>accept (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-X.e">
+<header><span class="rid">X.e</span><h3>Proximity Mines in Level 12</h3><span class="kind">sound capture</span></header>
+<div class="part"><a href="../../player/weapons/proximity-mines/README.md#concept-art">Proximity Mines in Level 12</a></div>
+<div class="q"><strong>sound capture</strong> (30 s, level t ≈ 15-45, with the mines on the rear instead of the plan's Tail Gun): the mines dropping about once a second and holding in the rain, the drop (now −10 dB) and the arm sounds in the mix. <strong>Recommendation: accept</strong></div>
+<div class="media"><figure class="m vid"><figcaption>video with sound</figcaption><video controls preload="none" playsinline src="../../player/weapons/proximity-mines/concept/proximity-mines-l12-r44-a.mp4"></video></figure><figure class="m img"><a href="../../player/weapons/proximity-mines/concept/proximity-mines-l12-r44-a.png"><img loading="lazy" decoding="async" src="../../player/weapons/proximity-mines/concept/proximity-mines-l12-r44-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> not listened to by Claude: a spectral check finds the arm chirp's 2.6 kHz tone above the storm bed about once a second, the drop clunk cannot be separated from the rain by measurement, so whether it is still audible is for your ear; the mines (small dark-blue dots) are hard to see on the dark sea</p>
+<div class="ans"><span class="tag">Answer</span> <span>accept / change (say what: the drop louder, the chirp quieter, the mines brighter)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>accept (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-X.f">
+<header><span class="rid">X.f</span><h3>Rook&#x27;s halt line at level t≈118</h3><span class="kind">yes or no</span></header>
+<div class="part"><a href="../../campaign/act-2-homefront/level-14-siege-spire/README.md#radio-chatter">Rook's halt line at level t≈118</a></div>
+<div class="q"><strong>yes or no</strong> (a finding of X.d): Rook's halt line is voiced at level t≈118, queued behind Okafor, the Choir and Varga, not at the halt itself. It is heard at 0:28 of the clip. <strong>Recommendation: yes, keep it</strong> (the radio never overlaps; the line still arrives while the roots fire)</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the line promises to keep the flyers off you a while after the halt</p>
+<div class="ans"><span class="tag">Answer</span> <span>yes (recommended) / no, move it earlier (say where)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>yes (recommended) (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-X.g">
+<header><span class="rid">X.g</span><h3>Question: Act 2&#x27;s stale &quot;pending the user&#x27;s review&quot; notes</h3><span class="kind">check</span></header>
+<div class="part"><strong>Question: Act 2's stale "pending the user's review" notes</strong></div>
+<div class="q">the Level 08-11 and Level 14 READMEs and some units still say a default was "pending the user's review" though rounds 34, 40 and 41 accepted the build. Rewrite them as <strong>accepted in round N (date)</strong>: L08 (3 places), L09 (2), L10 (1), L11 (2), L14 (H1-H10 taken as recommended). <strong>Recommendation: yes</strong></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> pure wording, no number moves</p>
+<div class="ans"><span class="tag">Answer</span> <span>yes (recommended) / no, leave</span></div><div class="ans out"><span class="tag">Outcome</span> <span>yes (recommended) (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-X.h">
+<header><span class="rid">X.h</span><h3>Question: Level 13&#x27;s G1-G7 and Level 14&#x27;s H1-H10 → &quot;None open&quot;</h3><span class="kind">check</span></header>
+<div class="part"><strong>Question: Level 13's G1-G7 and Level 14's H1-H10 → "None open"</strong></div>
+<div class="q">the two READMEs' <em>Open questions</em> sections still list their review items as waiting; round 34 closed them. <strong>Recommendation: yes</strong></div>
+<div class="ans"><span class="tag">Answer</span> <span>yes (recommended) / no</span></div><div class="ans out"><span class="tag">Outcome</span> <span>yes (recommended) (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-X.i">
+<header><span class="rid">X.i</span><h3>Question: chosen rows for production art → final</h3><span class="kind">check</span></header>
+<div class="part">**Question: <code>chosen</code> rows for production art → <code>final</code>**</div>
+<div class="q">the Level 08-14 Concept art tables mark the final backdrops, props and captures <code>chosen</code> though they are production art; the audit's list is Level 08 (lines 404-418) and Level 14 (451-461) among others. <strong>Recommendation: yes, to <code>final</code></strong> where the file has a <code>Source</code> chunk or is a capture of production art</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the same wording as the Act 3 rows of A.a</p>
+<div class="ans"><span class="tag">Answer</span> <span>yes (recommended) / no</span></div><div class="ans out"><span class="tag">Outcome</span> <span>yes (recommended) (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-X.j">
+<header><span class="rid">X.j</span><h3>Question: the umbrella parts per act ticket</h3><span class="kind">check</span></header>
+<div class="part"><strong>Question: the umbrella parts per act ticket</strong></div>
+<div class="q"><code>audio/voice</code> (design: draft), <code>art-direction/production</code>, <code>audio/music</code>, <code>audio/sfx</code>, <code>enemies</code>, <code>ui/hud</code>, <code>ui/hangar</code> and the allies' relay sprite stay <code>draft</code> or <code>in-progress</code> because of Act 3+ tickets. Judge them <strong>per act ticket</strong> (every Act 2 box in them is ticked), i.e. Act 2 is final without them. <strong>Recommendation: yes</strong></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> <code>audio/voice</code> stays <code>design: draft</code> until you approve it</p>
+<div class="ans"><span class="tag">Answer</span> <span>yes (recommended) / no, Act 2 waits for the whole game</span></div><div class="ans out"><span class="tag">Outcome</span> <span>yes (recommended) (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-X.k">
+<header><span class="rid">X.k</span><h3>Question: player/armor and player/generator → art: n/a</h3><span class="kind">check</span></header>
+<div class="part">**Question: <code>player/armor</code> and <code>player/generator</code> → <code>art: n/a</code>**</div>
+<div class="q">the two parts have only icons (made with the shop) and <code>art: none</code>. <strong>Recommendation: yes, <code>n/a</code></strong></div>
+<div class="ans"><span class="tag">Answer</span> <span>yes (recommended) / no, produce art</span></div><div class="ans out"><span class="tag">Outcome</span> <span>yes (recommended) (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-X.l">
+<header><span class="rid">X.l</span><h3>Question: the act-title lettering</h3><span class="kind">check</span></header>
+<div class="part"><strong>Question: the act-title lettering</strong></div>
+<div class="q"><code>assets/ui/act-N-*-title.png</code> (Acts 1-3) were made by <code>tools/concept/ui_assets.py</code>, a concept mockup tool, and carry no <code>Source</code> chunk; the act's still does. <strong>Recommendation: yes, a <code>tools/art</code> generator</strong> (a small art step, the pixels unchanged where you approved them)</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the pixel result is meant to be identical</p>
+<div class="ans"><span class="tag">Answer</span> <span>yes (recommended) / no, keep the concept tool</span></div><div class="ans out"><span class="tag">Outcome</span> <span>yes (recommended) (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-X.m">
+<header><span class="rid">X.m</span><h3>Question: one playthrough for M5 and M7</h3><span class="kind">check</span></header>
+<div class="part"><strong>Question: one playthrough for M5 and M7</strong></div>
+<div class="q">the Act 2 playthrough (round 34 P9) and the Act 3 playthrough are the same one: part I's Q3 save (a tool writes the medium campaign at the L15 hangar with Acts 1-2 won on the plan and Rook hired); you play Act 3 and replay L08/L09/L11/L14 from mission select. <strong>Recommendation: yes</strong></div>
+<div class="ans"><span class="tag">Answer</span> <span>yes (recommended) / no, two playthroughs</span></div><div class="ans out"><span class="tag">Outcome</span> <span>yes (recommended) (user, 2026-10-20)</span></div>
+</article>
+</section>
+<section id="s-part-i-s-questions"><h2>Part I&#x27;s questions</h2>
+<div class="sum"><p>From the gap check of part I (<code>m7i-gaps.md</code> §4), asked now so part I starts decided (it depends on A-H); Q6 of the gap check is <strong>A.a</strong> above (merged with the art audit), Q7 is consistent with <strong>X.g</strong>. Measured on the code of commit dd81d58 (Levels 15-20, medium, 3 seeds: every run won, the floor and the haul fine everywhere; hard's L15/L16 crowding kept by you).</p></div>
+<article class="row" id="r-I.1">
+<header><span class="rid">I.1</span><h3>Act 3&#x27;s playthrough rules</h3><span class="kind">Question.</span></header>
+<div class="part"><a href="../../tech/roadmap/README.md#m7-parts">Act 3's playthrough rules</a></div>
+<div class="q"><strong>Question.</strong> The same rules as Acts 1-2: each level won within 12 attempts; Act 3's end credits within 15 % of the expert's bound (hard at most 25 % under); Rook's ejections and refused full charges printed, not failed. If the bound misses: move the plan's purchases first (Act 3's big items: the third bay, the beam levels), then <code>bounty_scale</code> per level, never the bound's tolerance; at most three passes, else a round-45 finding. <strong>Recommendation: yes, as written</strong></div>
+<div class="ans"><span class="tag">Answer</span> <span>yes (recommended) / no (say what)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>yes (recommended) (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-I.2">
+<header><span class="rid">I.2</span><h3>The first release</h3><span class="kind">Question.</span></header>
+<div class="part"><a href="../../tech/roadmap/README.md#m7-parts">The first release</a></div>
+<div class="q"><strong>Question.</strong> <code>main</code> already holds Levels 15-17, so a <code>v0.1</code> on main's tip ends in a dead hangar after Level 17. (a) The first release is <strong>Acts 1-3</strong>, still <code>v0.1</code> (nothing was ever tagged; the title shows <code>v0.1</code>), tagged after part I, the playthrough fixes and the merge; (b) tag Acts 1-2 now from a release branch with Act 3's data removed (an extra branch, a CI run and support burden); (c) tag main as it is. <strong>Recommendation: (a)</strong></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the release waits for your playthrough</p>
+<div class="ans"><span class="tag">Answer</span> <span>(a) Acts 1-3 as v0.1 (recommended) / (b) a release branch / (c) main as is</span></div><div class="ans out"><span class="tag">Outcome</span> <span>(a) Acts 1-3 as v0.1 (recommended) (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-I.3">
+<header><span class="rid">I.3</span><h3>The playthrough save</h3><span class="kind">Question.</span></header>
+<div class="part"><a href="../../tech/roadmap/README.md#m7-parts">The playthrough save</a></div>
+<div class="q"><strong>Question.</strong> A tool writes the medium campaign at the L15 hangar (Acts 1-2 won on the plan, Rook hired) into a slot next to a temp settings file; you play Act 3 from there and replay the reworked L08/L09/L11/L14 from mission select on the same save; both open playthroughs (M5 and M7) close with it. <strong>Recommendation: yes, medium</strong> (say if you want hard or a new game from L01)</div>
+<div class="ans"><span class="tag">Answer</span> <span>yes, medium (recommended) / hard / a new game from L01</span></div><div class="ans out"><span class="tag">Outcome</span> <span>yes, medium (recommended) (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-I.4">
+<header><span class="rid">I.4</span><h3>The architecture&#x27;s hand-written tables</h3><span class="kind">Question.</span></header>
+<div class="part"><a href="../../tech/architecture/README.md">The architecture's hand-written tables</a></div>
+<div class="q"><strong>Question.</strong> The specials, allies and economy tables (<code>later: Act 3</code> tooling): render them through <code>tools/sync_tables.py</code> in part I, or drop the tag and keep them hand-written. <strong>Recommendation: drop the tag</strong> (they are stable and rarely edited)</div>
+<div class="ans"><span class="tag">Answer</span> <span>drop the tag (recommended) / render them</span></div><div class="ans out"><span class="tag">Outcome</span> <span>drop the tag (recommended) (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-I.5">
+<header><span class="rid">I.5</span><h3>The listen-through</h3><span class="kind">Question.</span></header>
+<div class="part"><a href="../../audio/voice/README.md">The listen-through</a></div>
+<div class="q"><strong>Question.</strong> One page of every voiced Act 3 line in play order (lines already pinned in rounds 38-43 marked, so you may skip them), each line accept/redo, in round 45. <strong>Recommendation: yes</strong></div>
+<div class="ans"><span class="tag">Answer</span> <span>yes (recommended) / no, per round only</span></div><div class="ans out"><span class="tag">Outcome</span> <span>yes (recommended) (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-I.7">
+<header><span class="rid">I.7</span><h3>Act 3&#x27;s stale &quot;pending the user&#x27;s review&quot; notes</h3><span class="kind">Question</span></header>
+<div class="part">Act 3's stale "pending the user's review" notes</div>
+<div class="q"><strong>Question</strong> (consistent with X.g). Rewrite the Act 3 tree's and Act 3 units' notes (about 55, plus the units) as <strong>accepted in round N (date)</strong>; the older acts' stay as X.g decides. <strong>Recommendation: yes, Act 3 only</strong></div>
+<div class="ans"><span class="tag">Answer</span> <span>yes (recommended) / no</span></div><div class="ans out"><span class="tag">Outcome</span> <span>yes (recommended) (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-I.8">
+<header><span class="rid">I.8</span><h3>When an Act 3 level is done</h3><span class="kind">Question.</span></header>
+<div class="part">[When an Act 3 level is <code>done</code>](../../tech/roadmap/README.md#m7-parts)</div>
+<div class="q"><strong>Question.</strong> When its round has closed and its checklist is ticked (Act 2's rule); the playthrough stays an act-level item in the Act 3 README and the roadmap. <strong>Recommendation: yes</strong></div>
+<div class="ans"><span class="tag">Answer</span> <span>yes (recommended) / no (say when)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>yes (recommended) (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-I.9">
+<header><span class="rid">I.9</span><h3>The macOS arm64 check</h3><span class="kind">Question.</span></header>
+<div class="part"><a href="../../tech/roadmap/README.md#m7-parts">The macOS arm64 check</a></div>
+<div class="q"><strong>Question.</strong> The release's last check on your Mac: <strong>block the tag on it</strong>, or ship with the bundle marked "untested on Apple silicon" in the release notes. <strong>Recommendation: block only if you can open it within a day of the tag</strong>; otherwise ship marked untested</div>
+<div class="ans"><span class="tag">Answer</span> <span>block (if within a day) (recommended) / ship marked untested</span></div><div class="ans out"><span class="tag">Outcome</span> <span>block (if within a day) (recommended) (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-I.10">
+<header><span class="rid">I.10</span><h3>Hard in Act 3 as measured</h3><span class="kind">Question.</span></header>
+<div class="part"><a href="../../tech/roadmap/README.md#m7-parts">Hard in Act 3 as measured</a></div>
+<div class="q"><strong>Question.</strong> Levels 15 and 16's crowding on hard kept (Level 15's 388 enemies at 4.79 on the screen, Level 16's 4.38); Level 17's hard secondary 0/3; Level 19's walker 95-131 s with a retry (round 43's W.d). Report in round 45 only, <strong>no new hard ceiling test</strong>. <strong>Recommendation: yes</strong></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> hard may be tedious at L15-L16; you have not played it</p>
+<div class="ans"><span class="tag">Answer</span> <span>yes (recommended) / no, add a ceiling</span></div><div class="ans out"><span class="tag">Outcome</span> <span>yes (recommended) (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-I.11">
+<header><span class="rid">I.11</span><h3>A sim refactor in part I</h3><span class="kind">Question.</span></header>
+<div class="part"><a href="../../tech/roadmap/README.md#m7-parts">A sim refactor in part I</a></div>
+<div class="q"><strong>Question.</strong> <code>Enemy</code> (3,320 lines) and <code>EnemySpec</code> (3,135) are the largest classes and part H added to <code>SetPiece</code> (2,515): one refactor step after H's sim steps, behaviour and golden hashes unchanged: <code>EnemySpec</code> into per-behaviour spec records first, before Act 4. <strong>Recommendation: yes</strong></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> a refactor in the middle of the close-out</p>
+<div class="ans"><span class="tag">Answer</span> <span>yes (recommended) / no, after Act 4's design</span></div><div class="ans out"><span class="tag">Outcome</span> <span>yes (recommended) (user, 2026-10-20)</span></div>
+</article>
+</section>
+<section id="s-after-part-i"><h2>After part I</h2>
+<article class="row" id="r-J.a">
+<header><span class="rid">J.a</span><h3>Act 4 &quot;Deep Water&quot;</h3><span class="kind">Question</span></header>
+<div class="part"><a href="../../campaign/README.md">Act 4 "Deep Water"</a></div>
+<div class="q"><strong>Question</strong> (plan ahead): after part I and the v0.1 release, start <strong>Act 4 "Deep Water" (Europa)</strong>'s design phase as Act 3's: the act README, the levels, the enemies, the story beats, concept art and one big round; nothing built before you approve it. <strong>Recommendation: yes</strong></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the Europa-under-ice setting needs the underwater low-pass and Decoy Flares (the tags <code>later: Act 4</code>)</p>
+<div class="ans"><span class="tag">Answer</span> <span>yes (recommended) / no, polish first / a different order (say)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>yes (recommended) (user, 2026-10-20)</span></div>
+</article>
+</section>
+<section id="s-records"><h2>Records</h2>
+<div class="sum"><p>A record, nothing to answer.</p></div>
+<article class="row" id="r-N.a">
+<header><span class="rid">N.a</span><h3>Commit 85cd717 (signed, local, not pushed): &quot;Act 3: Walker follow-up, Level 20 levers, Level 21 sim/data/art (work in progress)&quot;: WR2, LQ, the ridge key, PH1-PH3 (sim and data of Level 21) and the art; the part H code steps H4, HA, HB and FXL11 are on top of it, uncommitted</h3><span class="kind">not done yet</span></header>
+<dl><dt>Blocked by</dt><dd>—</dd><dt>Then</dt><dd>commit and push on your word</dd></dl>
+<div class="ans out"><span class="tag">README: then</span> <span>commit and push on your word (noted by the user, 2026-10-20)</span></div><div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-N.b">
+<header><span class="rid">N.b</span><h3>H4&#x27;s fix: the Colossus&#x27;s attacks had no firing part (parts: [mouth] was missing from the ring, the fan and the spiral), so the gullet never fired in the first measurements; fixed, and every number in this round is after it</h3><span class="kind">not done yet</span></header>
+<dl><dt>Blocked by</dt><dd>—</dd><dt>Then</dt><dd>built; B.d (a)</dd></dl>
+<div class="ans out"><span class="tag">README: then</span> <span>built; B.d (a) (noted by the user, 2026-10-20)</span></div><div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-N.c">
+<header><span class="rid">N.c</span><h3>VOX-H&#x27;s correction: the audit counted Act 2&#x27;s three voice lines open (Okafor&#x27;s first-ship-telegraph, Varga&#x27;s Level 14 page, Rook&#x27;s halt line); they were rendered by VOX2 on 2026-10-19, so Act 2 only needed captures and ticks</h3><span class="kind">not done yet</span></header>
+<dl><dt>Blocked by</dt><dd>—</dd><dt>Then</dt><dd>noted</dd></dl>
+<div class="ans out"><span class="tag">README: then</span> <span>noted (noted by the user, 2026-10-20)</span></div><div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-N.d">
+<header><span class="rid">N.d</span><h3>Step FXL11: Okafor&#x27;s first-ship-telegraph queued behind its twin cue and went stale (an EVENT line, 6 s); now a PHASE line (20 s) in RadioSchedule.priority with a test; the greenhouse flash is art (G.c)</h3><span class="kind">not done yet</span></header>
+<dl><dt>Blocked by</dt><dd>G.c for the flash</dd><dt>Then</dt><dd>built; X.b shows it</dd></dl>
+<div class="ans out"><span class="tag">README: then</span> <span>built; X.b shows it (noted by the user, 2026-10-20)</span></div><div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-N.e">
+<header><span class="rid">N.e</span><h3>Level 11&#x27;s arena capture (X.a) was recorded before the fix, the patched clip (X.b) after</h3><span class="kind">not done yet</span></header>
+<dl><dt>Blocked by</dt><dd>—</dd><dt>Then</dt><dd>noted</dd></dl>
+<div class="ans out"><span class="tag">README: then</span> <span>noted (noted by the user, 2026-10-20)</span></div><div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-N.f">
+<header><span class="rid">N.f</span><h3>Not started (each waits for its answer): the Level 21 wave rework (Q.1), phase 1&#x27;s rings (Q.2), the safe spot&#x27;s re-measure (Q.4), the crawler&#x27;s hard key (Q.5), the walker&#x27;s brighter ring (W.h), the greenhouse decal (G.c), the act-title generator (X.l), the Act 2 and Act 3 wording rewrites (X.g, I.7), part I and Act 4</h3><span class="kind">not done yet</span></header>
+<dl><dt>Blocked by</dt><dd>the answers above</dd><dt>Then</dt><dd>built after the round; noted</dd></dl>
+<div class="ans out"><span class="tag">README: then</span> <span>built after the round; noted (noted by the user, 2026-10-20)</span></div><div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-N.g">
+<header><span class="rid">N.g</span><h3>Docs ticks (this step): part H&#x27;s Level 21 and Colossus checklists where code and tests are in (the unticked ones named in the READMEs: waves, ground targets and the crawler&#x27;s key, the intel strip&#x27;s ridge mark, the captures); the sfx README&#x27;s provisional picks; the roadmap&#x27;s part H: built, pending round 44</h3><span class="kind">not done yet</span></header>
+<dl><dt>Blocked by</dt><dd>—</dd><dt>Then</dt><dd>noted</dd></dl>
+<div class="ans out"><span class="tag">README: then</span> <span>noted (noted by the user, 2026-10-20)</span></div><div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-N.h">
+<header><span class="rid">N.h</span><h3>Step GFX3 (done): fixed the kill that showed almost nothing (the death frames, the ridge&#x27;s split, the sinkhole and the furrow now draw through the chain) and raised the marker&#x27;s and the suction streaks&#x27; contrast; it found the HUD&#x27;s &quot;100 / 70&quot; is not a bug (70 is the 65 % target, K.g). Step H5R re-recorded phase 3 and the death as level-21-capture-r44-a-p3 (same name) and rebuilt the sheet&#x27;s death tiles and crops from that run</h3><span class="kind">not done yet</span></header>
+<dl><dt>Blocked by</dt><dd>—</dd><dt>Then</dt><dd>K.c, K.e, K.g and K.h are judged on it</dd></dl>
+<div class="ans out"><span class="tag">README: then</span> <span>K.c, K.e, K.g and K.h are judged on it (noted by the user, 2026-10-20)</span></div><div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+</section></main></body></html>

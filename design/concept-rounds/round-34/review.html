@@ -1,0 +1,1239 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Round 34: record of the decisions</title><style>
+:root{--bg:#f4f5f7;--fg:#1b2230;--mut:#5a6577;--card:#fff;--line:#d3d9e2;--acc:#1f5fa8;--ok:#1d6b3a;--okbg:#e3f3e8;
+--hi:#fff6dc;--hib:#d9b84a;--code:#e9edf3;--warn:#8a4b00}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10141b;--fg:#dde3ee;--mut:#98a3b6;--card:#171d27;
+--line:#2c3544;--acc:#7fb2ee;--ok:#7bd69a;--okbg:#163323;--hi:#2c2610;--hib:#8a7424;--code:#232c3a;--warn:#e3a35a;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#10141b;--fg:#dde3ee;--mut:#98a3b6;--card:#171d27;--line:#2c3544;--acc:#7fb2ee;--ok:#7bd69a;
+--okbg:#163323;--hi:#2c2610;--hib:#8a7424;--code:#232c3a;--warn:#e3a35a;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:60rem;margin:0 auto;padding:1rem 16px 4rem}
+h1{font-size:1.6rem;margin:.5rem 0}h2{font-size:1.25rem;margin:2rem 0 .5rem;border-bottom:1px solid var(--line);padding-bottom:.25rem}
+h3{font-size:1.02rem;margin:0;flex:1 1 12rem}a{color:var(--acc)}
+.sum{color:var(--mut)}.note{font-size:.9rem;color:var(--mut)}
+nav.sec{display:flex;flex-wrap:wrap;gap:.4rem;margin:1rem 0}nav.sec a{padding:.2rem .6rem;border:1px solid var(--line);border-radius:1rem;
+text-decoration:none;font-size:.9rem;background:var(--card)}
+.row{background:var(--card);border:1px solid var(--line);border-radius:.4rem;padding:.7rem .9rem;margin:.7rem 0;overflow-wrap:anywhere}
+.row header{display:flex;flex-wrap:wrap;gap:.3rem .6rem;align-items:baseline}
+.rid{font:600 .85rem ui-monospace,Menlo,Consolas,monospace;background:var(--code);padding:.05rem .4rem;border-radius:.25rem}
+.kind{font-size:.8rem;color:var(--mut)}.part{font-size:.88rem;margin:.2rem 0}
+.q,.weak,.rec,.sub,.line,dl{font-size:.92rem;margin:.45rem 0}.weak{color:var(--warn)}
+code{background:var(--code);padding:0 .25rem;border-radius:.2rem;font-size:.88em}
+.tag{font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;color:var(--mut);font-weight:700;margin-right:.3rem}
+.ans{margin:.5rem 0 0;padding:.45rem .6rem;border-left:4px solid var(--hib);background:var(--hi);border-radius:.2rem}
+.ans.out{border-left-color:var(--ok)}.ans.none{opacity:.7}
+.badge{font-size:.75rem;font-weight:700;padding:.05rem .4rem;border-radius:.6rem;background:var(--okbg);color:var(--ok)}
+.badge.pick{background:var(--hi);color:var(--warn);border:1px solid var(--hib)}
+dl{display:grid;grid-template-columns:7rem 1fr;gap:.2rem .6rem}dt{font-weight:700}dd{margin:0}
+.media{display:flex;flex-wrap:wrap;gap:.5rem;margin:.5rem 0}.m{margin:0;max-width:100%}.m figcaption{font-size:.75rem;color:var(--mut)}
+.m.img img{max-width:14rem;max-height:10rem;border:1px solid var(--line);border-radius:.2rem;background:#000;display:block}
+.m.vid video{width:14rem;max-width:100%}.m.aud audio{width:16rem;max-width:100%}.miss{color:var(--warn)}
+details{margin:.4rem 0;font-size:.9rem}summary{cursor:pointer;color:var(--acc)}
+.listen{font-size:.85rem;color:var(--mut);margin:.3rem 0;padding-left:1.2rem}.opts{color:var(--mut)}
+.sub{padding-left:.6rem;border-left:2px solid var(--line)}
+table{border-collapse:collapse;display:block;overflow-x:auto}td,th{border:1px solid var(--line);padding:.2rem .4rem}
+blockquote{margin:.4rem 0;padding-left:.8rem;border-left:3px solid var(--line)}
+@media (max-width:480px){dl{grid-template-columns:1fr}.m.img img{max-width:100%}}
+</style></head><body><main><p class="note"><a href="README.md">Round 34 README</a> · <a href="../README.md">All rounds</a> · built 2026-10-12 · recorded by <code>tools/concept/review_record.py 34</code></p><h1>Concept round 34: record of the decisions</h1><div class="sum"><p>The combined review round of M5's last four parts (<span class="ref">roadmap</span>), built while the user was on vacation ("collect everything for one large round at the end"). It replaces the planned rounds 34 (part F, Level 12 <em>Storm Front</em>), 35 (part G, Level 13 <em>Polar Relay</em>), 36 (part H, Level 14 <em>Siege Spire</em> and the Act 2 end) and 37 (part I, the close-out); the concept</p></div><p class="note">A read-only record: every row as the review page showed it, with the answer and the outcome from the round README (the record of truth). Media is linked from the design tree, not copied.</p><nav class="sec"><a href="#s-specs">Spec changes</a><a href="#s-problems">Open problems</a><a href="#s-l12">Level 12</a><a href="#s-l13">Level 13</a><a href="#s-l14">Level 14</a><a href="#s-part-i">Part I</a><a href="#s-voices">Voices</a><a href="#s-sounds">Sounds</a></nav><section id="s-specs"><h2>Changes to approved specs</h2>
+<div class="sum"><p>Approved parts of the design (the Acts 1–2 review of 2026-10-01 and the user's later rules) that the build changed. Each <strong>C</strong> row is <em>accept</em> or <em>revert</em>; checked against the approved text in git (<code>5d8204c</code>) and the docs as they are now.</p></div>
+<article class="row" id="r-C1">
+<header><span class="rid">C1</span><h3>The Spire fight&#x27;s creep is dropped (H1 = a)</h3><span class="kind">spec change</span></header>
+<dl><dt>Approved</dt><dd>Level 14: "During boss phase 1 the scroll creeps at 15 px/s, so the roots come into range in turn"</dd><dt>Built</dt><dd>the arena is a halt (speed 0), all six roots on the screen from the start; "in turn" comes from the staggered fire and the player's choice of root (<span class="ref">Level 14</span>)</dd></dl>
+<div class="ans out"><span class="tag">README: built (where)</span> <span>the arena is a halt (speed 0), all six roots on the screen from the start; "in turn" comes from the staggered fire and the player's choice of root (<a href="../../campaign/act-2-homefront/level-14-siege-spire/README.md#decisions">Level 14</a>)</span></div><div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-C2">
+<header><span class="rid">C2</span><h3>Level 14&#x27;s root field scrolls at 80 px/s</h3><span class="kind">spec change</span></header>
+<dl><dt>Approved</dt><dd>section 3 <em>Root Field</em> at 140 px/s</dd><dt>Built</dt><dd>80 px/s, so a growth (1 s after its dust, firing 0.75 s later) is not 350 px down the screen before it fires (step H4)</dd></dl>
+<div class="ans out"><span class="tag">README: built (where)</span> <span>80 px/s, so a growth (1 s after its dust, firing 0.75 s later) is not 350 px down the screen before it fires (step H4)</span></div><div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-C3">
+<header><span class="rid">C3</span><h3>Level 14&#x27;s daylight drifts at 25 px/s</h3><span class="kind">spec change</span></header>
+<dl><dt>Approved</dt><dd>section 6 <em>Daylight</em> 253–265 at 140 px/s</dd><dt>Built</dt><dd>12 s at 25 px/s (40 after H7b, 25 after H9) so the stump stays on the screen while the light falls on it; 13,320 px of ground in all</dd></dl>
+<div class="ans out"><span class="tag">README: built (where)</span> <span>12 s at 25 px/s (40 after H7b, 25 after H9) so the stump stays on the screen while the light falls on it; 13,320 px of ground in all</span></div><div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-C4">
+<header><span class="rid">C4</span><h3>Level 13&#x27;s grid online and jingle times</h3><span class="kind">spec change</span></header>
+<dl><dt>Approved</dt><dd>section 5 <em>Grid Online</em> 220–235 (the relay's lights); the mission-complete jingle "on <em>Grid sync complete</em>" (t=218); Okafor's "Well held" at t=220</dd><dt>Built</dt><dd>the lights and the grid-online sound at t=218 (the sync's end); the theme fades with the 2.6 s chord and the jingle starts at <strong>t=220.6</strong> (<code>jingle: {t: 218, fade: 2.6}</code>, step G8); "Well held" at t=233.5; the debrief silent</dd></dl>
+<div class="ans out"><span class="tag">README: built (where)</span> <span>the lights and the grid-online sound at t=218 (the sync's end); the theme fades with the 2.6 s chord and the jingle starts at <strong>t=220.6</strong> (<code>jingle: {t: 218, fade: 2.6}</code>, step G8); "Well held" at t=233.5; the debrief silent</span></div><div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-C5">
+<header><span class="rid">C5</span><h3>Shortened and split briefing texts, new teasers and intel lines</h3><span class="kind">spec change</span></header>
+<dl><dt>Approved</dt><dd>one Okafor page each for Levels 13 and 14, a longer Level 12 page 1, one teaser and one Varga intel line per level</dd><dt>Built</dt><dd>two one-screen pages per level (Okafor, Varga), shortened; Level 12's and 14's teasers rewritten for Rook; four intel lines per level. Both versions are quoted under each level's <em>Texts</em></dd></dl>
+<div class="ans out"><span class="tag">README: built (where)</span> <span>two one-screen pages per level (Okafor, Varga), shortened; Level 12's and 14's teasers rewritten for Rook; four intel lines per level. Both versions are quoted under each level's <em>Texts</em></span></div><div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-C6">
+<header><span class="rid">C6</span><h3>Level 14&#x27;s hard fight runs over the window</h3><span class="kind">spec change</span></header>
+<dl><dt>Approved</dt><dd>H10: a fight of ≈ 135 s inside 90–180 s</dd><dt>Built</dt><dd>hard: <code>SiegeSpireTest</code> mean <strong>195 s</strong> (4 of 5 won), full level runs <strong>204 s</strong>; medium 129.5 s, easy 95.8 s</dd></dl>
+<div class="ans out"><span class="tag">README: built (where)</span> <span>hard: <code>SiegeSpireTest</code> mean <strong>195 s</strong> (4 of 5 won), full level runs <strong>204 s</strong>; medium 129.5 s, easy 95.8 s</span></div><div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-C7">
+<header><span class="rid">C7</span><h3>The maw&#x27;s launch lanes are spread evenly</h3><span class="kind">spec change</span></header>
+<dl><dt>Approved</dt><dd>the Siege Spire spec: a launched Wraith "swoops down a lane toward the player's side" (the spec still says so)</dd><dt>Built</dt><dd>the lanes lie evenly across the field as a rear ambush wave's: x 160 / 320 for two, 120 / 240 / 360 for three (<code>sim/.../Launches.java</code>, step H3)</dd></dl>
+<div class="ans out"><span class="tag">README: built (where)</span> <span>the lanes lie evenly across the field as a rear ambush wave's: x 160 / 320 for two, 120 / 240 / 360 for three (<code>sim/.../Launches.java</code>, step H3)</span></div><div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-C8">
+<header><span class="rid">C8</span><h3>The Spire&#x27;s bounty is 26.8 % of the budget</h3><span class="kind">spec change</span></header>
+<dl><dt>Approved</dt><dd>720 ≈ 30 % of the old L14 budget; H10: ≈ 506 paid (30 % of budget(14) 1,687)</dd><dt>Built</dt><dd>372 in Act 1 terms, <strong>452 paid = 26.8 %</strong>: at 30 % a perfect run falls under the economy's 1.4 × budget (<code>TypicalHaulTest</code>)</dd></dl>
+<div class="ans out"><span class="tag">README: built (where)</span> <span>372 in Act 1 terms, <strong>452 paid = 26.8 %</strong>: at 30 % a perfect run falls under the economy's 1.4 × budget (<code>TypicalHaulTest</code>)</span></div><div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-C9">
+<header><span class="rid">C9</span><h3>The Spire&#x27;s HP ×1.8 (H10 = a, measured)</h3><span class="kind">spec change</span></header>
+<dl><dt>Approved</dt><dd>6,690 in all (pods 370, mortar roots 430, maw 1,600, core 2,750)</dd><dt>Built</dt><dd>12,040 (665 / 775 / 2,880 / 4,950): with the spec's HP the autopilot's fight lasted ≈ 76 s</dd></dl>
+<div class="ans out"><span class="tag">README: built (where)</span> <span>12,040 (665 / 775 / 2,880 / 4,950): with the spec's HP the autopilot's fight lasted ≈ 76 s</span></div><div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-C10">
+<header><span class="rid">C10</span><h3>The HUD&#x27;s radio rule, for all levels (HUD, back to design: review)</h3><span class="kind">spec change</span></header>
+<dl><dt>Approved</dt><dd>2026-10-02/03 (user): timed lines first; an event line waits for a gap and is stale after 6 s; closing lines never dropped</dd><dt>Built</dt><dd>H7b: a <code>boss-phase</code> line is stale after <strong>20 s</strong> and dropped at the boss's death; a secondary line still waiting at a boss warning is <strong>dropped</strong> (or cut under 1.5 s). H9: a closing line queued on a <strong>free</strong> radio goes <strong>ahead</strong> of the next timed line, which then may start more than 1 s late. Effect: Level 14's root-grid line plays at ≈ 93.5, the Choir at ≈ 104 and Varga's "that's the Spire" at ≈ 110, <strong>over the Spire's arrival</strong> (t=108)</dd></dl>
+<div class="ans out"><span class="tag">README: built (where)</span> <span>H7b: a <code>boss-phase</code> line is stale after <strong>20 s</strong> and dropped at the boss's death; a secondary line still waiting at a boss warning is <strong>dropped</strong> (or cut under 1.5 s). H9: a closing line queued on a <strong>free</strong> radio goes <strong>ahead</strong> of the next timed line, which then may start more than 1 s late. Effect: Level 14's root-grid line plays at ≈ 93.5, the Choir at ≈ 104 and Varga's "that's the Spire" at ≈ 110, <strong>over the Spire's arrival</strong> (t=108)</span></div><div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-C11">
+<header><span class="rid">C11</span><h3>Level 13&#x27;s relay integrity (G2 = a, measured)</h3><span class="kind">spec change</span></header>
+<dl><dt>Approved</dt><dd>600 medium / 900 easy / 450 hard</dd><dt>Built</dt><dd><strong>240 / 340 / 520</strong>: hard above medium because hard's load is 3.4 × medium's</dd></dl>
+<div class="ans out"><span class="tag">README: built (where)</span> <span><strong>240 / 340 / 520</strong>: hard above medium because hard's load is 3.4 × medium's</span></div><div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-C12">
+<header><span class="rid">C12</span><h3>Level 14&#x27;s timeline and radio (stated defaults)</h3><span class="kind">spec change</span></header>
+<dl><dt>Approved</dt><dd>the boss warning before an arrival at t=113; "no enemies before t=24"; Hammer Lead t=16, Rook t=7.5 and t=80, Varga t=22, the Choir t=98</dd><dt>Built</dt><dd>warning, arrival and checkpoint all at <strong>t=108</strong>; popcorn from t=8; Hammer Lead t=13, Rook t=21 (t=80 dropped: his bark says it), Varga t=31.5, the Choir t=96</dd></dl>
+<div class="ans out"><span class="tag">README: built (where)</span> <span>warning, arrival and checkpoint all at <strong>t=108</strong>; popcorn from t=8; Hammer Lead t=13, Rook t=21 (t=80 dropped: his bark says it), Varga t=31.5, the Choir t=96</span></div><div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-C13">
+<header><span class="rid">C13</span><h3>The Act 2 end order (H6 = a; Act 2, back to design: review)</h3><span class="kind">spec change</span></header>
+<dl><dt>Approved</dt><dd>"the act complete fanfare plays over L14's daylight outro, followed by the act debrief"</dd><dt>Built</dt><dd>Act 1's order: the kill → the daylight without music → the debrief with <code>ACT II COMPLETE · HOMEFRONT</code> (the mission-complete jingle) → four voiced outro pages with <em>act complete</em> under page 1 → the hangar (<code>BEFORE L15 - NOT BUILT YET</code>)</dd></dl>
+<div class="ans out"><span class="tag">README: built (where)</span> <span>Act 1's order: the kill → the daylight without music → the debrief with <code>ACT II COMPLETE · HOMEFRONT</code> (the mission-complete jingle) → four voiced outro pages with <em>act complete</em> under page 1 → the hangar (<code>BEFORE L15 - NOT BUILT YET</code>)</span></div><div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+</section>
+<section id="s-problems"><h2>Open problems</h2>
+<div class="sum"><p>Not decided by the build; each <strong>P</strong> row needs the user's call (or is a known gap).</p></div>
+<article class="row" id="r-P1">
+<header><span class="rid">P1</span><h3>Rook ejects</h3><span class="kind">open problem</span></header>
+<dl><dt>What we know</dt><dd><code>ActPlaythroughTest</code> (Acts 1–2 as one campaign, Rook from L08 with repairs): he ejects in Level 14's Spire fight on <strong>medium and hard</strong>, and on <strong>hard</strong> in Levels 10 and 11 too</dd><dt>Proposal</dt><dd>accept (he comes back repaired), or make the Spire / hard kinder to him</dd></dl>
+<div class="ans out"><span class="tag">README: proposal (pending)</span> <span>accept (he comes back repaired), or make the Spire / hard kinder to him → <strong>accepted</strong> (user)</span></div><div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-P2">
+<header><span class="rid">P2</span><h3>The capture pilot cannot survive the Spire&#x27;s phase 1</h3><span class="kind">open problem</span></header>
+<dl><dt>What we know</dt><dd>the H8 run on the balance plan's L14 fit (cores included, no <code>--invulnerable</code>) was lost five times, 28–37 s into the fight, no kill in 420 s. H8b calibration (armour lost per 10 s): the scripted driver 31–40 at the Spire against 9–11 at the Kraken and 4–10 at the Brood Carrier (it loses there too); the autopilot 1.6 / 1.5 / 0.8 and wins all 8. The Spire's damage to the driver: pods' aimed orbs 54 %, the lob's ring 36 %, its direct hit 9 % (both track the ship)</dd><dt>Proposal</dt><dd>no data change (the driver does not sidestep lob markers); <strong>design call</strong>: a kinder Spire for non-dodgers (e.g. two pods firing straight down)?</dd></dl>
+<div class="ans out"><span class="tag">README: proposal (pending)</span> <span>no data change (the driver does not sidestep lob markers); <strong>design call</strong>: a kinder Spire for non-dodgers (e.g. two pods firing straight down)? → <strong>a kinder Spire</strong> (user), built in step K2: the outer pods 1 and 4 fire straight down, the lobs every 8 s (was 4), the roots' HP ×1.04; the dodging driver's armour lost per 10 s medium 30.6 → 9.8 (the Kraken 10.5), easy 12.1 → 1.5, hard 38.1 → 23.4; pending the user's review: easy much kinder</span></div><div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-P3">
+<header><span class="rid">P3</span><h3>Act 2 ends far richer than the static sheet</h3><span class="kind">open problem</span></header>
+<dl><dt>What we know</dt><dd><code>ActPlaythroughTest</code>: every level won at the first attempt on every difficulty; Act 2 ends with <strong>18,251 / 14,669 / 10,897</strong> credits (easy / medium / hard)</dd><dt>Proposal</dt><dd>review the economy (the typical haul per level is on budget; the surplus is the autopilot's perfect flying)</dd></dl>
+<div class="ans out"><span class="tag">README: proposal (pending)</span> <span>review the economy (the typical haul per level is on budget; the surplus is the autopilot's perfect flying) → <strong>review</strong> (user) → step K4's economy review (<code>econ-review.md</code>, repo root), option <strong>A</strong> (user): the surplus is the autopilot's near-perfect collection and the grade bonus; step K2 models a typical B-grade bonus and Rook's repairs in the balance plan and bounds the expert run (±15 %); pending the user's review: hard's expert margin is close</span></div><div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-P4">
+<header><span class="rid">P4</span><h3>Level 12&#x27;s Wraith rear check</h3><span class="kind">open problem</span></header>
+<dl><dt>What we know</dt><dd>the plan's rear gun against the returning Wraith (18 HP with the act HP factor): <strong>0.62</strong> of its window, over the limit 0.6 (<code>BalanceTest.REAR_PENDING</code>, printed by <code>balance.py</code> as an accepted exception)</dd><dt>Proposal</dt><dd>accept, or lower the Wraith's L12 HP / raise the plan's rear gun</dd></dl>
+<div class="ans out"><span class="tag">README: proposal (pending)</span> <span>accept, or lower the Wraith's L12 HP / raise the plan's rear gun → <strong>accepted</strong> (user)</span></div><div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-P5">
+<header><span class="rid">P5</span><h3>Not captured</h3><span class="kind">open problem</span></header>
+<dl><dt>What we know</dt><dd>still unseen: Level 13's relay-lost mission-failed screen; Level 12's Spore Bomber revealed by a flash (no Spore Bomber is under a bank at a flash in the run). Captured since (step CF, 2026-10-12): Level 14's daylight at 25 px/s (14.3d: the stump on the screen ≈ 21 s after the kill), Level 13 after G5c (13.3c: every hull on water) and the Proximity Mines in play (12.3c: the arm chirp is in the mix, <strong>the drop is not heard</strong>)</dd><dt>Proposal</dt><dd>capture the two left when the user wants (one short run each); the mine drop's level is a call for 12.3c</dd></dl>
+<div class="ans out"><span class="tag">README: proposal (pending)</span> <span>capture the two left when the user wants (one short run each); the mine drop's level is a call for 12.3c → <strong>capture both now</strong> (user): step K6</span></div><div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-P6">
+<header><span class="rid">P6</span><h3>Easy Level 14&#x27;s Airstrike charge refused</h3><span class="kind">open problem</span></header>
+<dl><dt>What we know</dt><dd>the plan buys a charge the special already carries at its most (4)</dd><dt>Proposal</dt><dd>accepted in the test as "the special carries its most"</dd></dl>
+<div class="ans out"><span class="tag">README: proposal (pending)</span> <span>accepted in the test as "the special carries its most" → <strong>accepted</strong> (user)</span></div><div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-P7">
+<header><span class="rid">P7</span><h3>The sub layer&#x27;s three-OS check</h3><span class="kind">open problem</span></header>
+<dl><dt>What we know</dt><dd>needs CI on Windows and macOS</dd><dt>Proposal</dt><dd>after the user commits and pushes</dd></dl>
+<div class="ans out"><span class="tag">README: proposal (pending)</span> <span>after the user commits and pushes → <strong>open</strong>: after the user commits and pushes</span></div><div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-P8">
+<header><span class="rid">P8</span><h3>Human item: the voice listen-through</h3><span class="kind">open problem</span></header>
+<dl><dt>What we know</dt><dd>53 new voiced lines (below) plus Nansen's audition; none listened to by Claude (Whisper and pitch only)</dd><dt>Proposal</dt><dd>the user listens (<span>Listening</span>)</dd></dl>
+<div class="ans out"><span class="tag">README: proposal (pending)</span> <span>the user listens (<a href="#listening">Listening</a>) → <strong>done</strong>: the user listened, every line fine</span></div><div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-P9">
+<header><span class="rid">P9</span><h3>Human item: the user&#x27;s playthrough of Act 2</h3><span class="kind">open problem</span></header>
+<dl><dt>What we know</dt><dd>Levels 08–14 and the act end</dd><dt>Proposal</dt><dd>the user plays (<code>--level 8</code>, or from a save after Level 07)</dd></dl>
+<div class="ans out"><span class="tag">README: proposal (pending)</span> <span>the user plays (<code>--level 8</code>, or from a save after Level 07) → <strong>open</strong>: the user cannot play this week</span></div><div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+</section>
+<section id="s-l12"><h2>Level 12 — Storm Front</h2>
+<div class="sum"><p>Level 12 is <code>design: review</code>; <span class="ref">its document</span>, the <span class="ref">Lamprey</span>. Part F's questions F1–F9 were <strong>the user's own answers</strong> (2026-10-09); only the build after that is pending.</p></div>
+<article class="row" id="r-12.1a">
+<header><span class="rid">12.1a</span><h3>The eye</h3><span class="kind">pick a / b</span></header>
+<div class="part"><a href="../../campaign/act-2-homefront/level-12-storm-front/README.md#concept-art">The eye</a></div>
+<div class="q"><strong>pick a or b</strong> (<code>tools/art/eye_l12.py</code>): the eye's cloud wall turning clockwise at 3°/s and its light shaft. <strong>a</strong> "billowing wall, cool shaft" (round billows, silver inner faces, a cool pool of light up and left); <strong>b</strong> "banded spiral wall, warm shaft" (spiral bands with two feeder arms, pale gold, sun glints on the swell). a is in the game</div>
+<div class="media"><figure class="m img"><a href="../../campaign/act-2-homefront/level-12-storm-front/concept/eye-r34-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-2-homefront/level-12-storm-front/concept/eye-r34-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../campaign/act-2-homefront/level-12-storm-front/concept/eye-r34-a.gif"><img loading="lazy" decoding="async" src="../../campaign/act-2-homefront/level-12-storm-front/concept/eye-r34-a.gif" alt="a · animation"></a><figcaption>a · animation</figcaption></figure><figure class="m img"><a href="../../campaign/act-2-homefront/level-12-storm-front/concept/rejected/eye-r34-b.png"><img loading="lazy" decoding="async" src="../../campaign/act-2-homefront/level-12-storm-front/concept/rejected/eye-r34-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../campaign/act-2-homefront/level-12-storm-front/concept/rejected/eye-r34-b.gif"><img loading="lazy" decoding="async" src="../../campaign/act-2-homefront/level-12-storm-front/concept/rejected/eye-r34-b.gif" alt="b · animation"></a><figcaption>b · animation</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> either look: the game's 2 s dissolve in and out leaves a ghost of the ring over the storm at t≈149</p>
+<div class="ans out"><span class="tag">Outcome</span> <span><strong>a</strong> (user); b rejected</span></div>
+</article>
+<article class="row" id="r-12.1b">
+<header><span class="rid">12.1b</span><h3>The latch</h3><span class="kind">pick a / b</span></header>
+<div class="part"><a href="../../enemies/air/lamprey/README.md#concept-art">The latch</a></div>
+<div class="q"><strong>pick a or b</strong> (<code>tools/art/lamprey.py</code>): a Lamprey on the hull draining the shield. <strong>a</strong> "gulp": the body nearly still, swallowing in 0.4 s gulps, the ship's own shield ring pulsing with each gulp; <strong>b</strong> "siphon": the tail lashing, cyan shield motes spiralling into a teal glow at the mouth (<code>lamprey-drain</code>, no ring). a is in the game</div>
+<div class="media"><figure class="m img"><a href="../../enemies/air/lamprey/concept/rejected/latch-r34-a.png"><img loading="lazy" decoding="async" src="../../enemies/air/lamprey/concept/rejected/latch-r34-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/air/lamprey/concept/rejected/latch-r34-a.gif"><img loading="lazy" decoding="async" src="../../enemies/air/lamprey/concept/rejected/latch-r34-a.gif" alt="a · animation"></a><figcaption>a · animation</figcaption></figure><figure class="m img"><a href="../../enemies/air/lamprey/concept/latch-r34-b.png"><img loading="lazy" decoding="async" src="../../enemies/air/lamprey/concept/latch-r34-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/air/lamprey/concept/latch-r34-b.gif"><img loading="lazy" decoding="async" src="../../enemies/air/lamprey/concept/latch-r34-b.gif" alt="b · animation"></a><figcaption>b · animation</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the capture found a's look "ok" at 1:1; b not seen in the game</p>
+<div class="ans out"><span class="tag">Outcome</span> <span><strong>b</strong> "siphon" (user); a rejected; built in steps K1 and K3</span></div>
+</article>
+<article class="row" id="r-12.2a">
+<header><span class="rid">12.2a</span><h3>Lamprey</h3><span class="kind">final art</span></header>
+<div class="part"><a href="../../enemies/air/lamprey/README.md#concept-art">Lamprey</a></div>
+<div class="q"><strong>final art</strong> (<code>tools/art/lamprey.py</code>, from the chosen concept): 16 headings × 4 swim frames (36 px), the latched pose at the left, right and tail spots, the stunned tumble (8 frames), the wet pop and the tatters</div>
+<div class="media"><figure class="m img"><a href="../../enemies/air/lamprey/concept/lamprey-final-r34-a.png"><img loading="lazy" decoding="async" src="../../enemies/air/lamprey/concept/lamprey-final-r34-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure><figure class="m img"><a href="../../enemies/air/lamprey/concept/lamprey-final-r34-a.gif"><img loading="lazy" decoding="async" src="../../enemies/air/lamprey/concept/lamprey-final-r34-a.gif" alt="animation"></a><figcaption>animation</figcaption></figure></div>
+<div class="ans out"><span class="tag">Outcome</span> <span>approved as <strong>final</strong></span></div>
+</article>
+<article class="row" id="r-12.2b">
+<header><span class="rid">12.2b</span><h3>Storm backdrop</h3><span class="kind">final art</span></header>
+<div class="part"><a href="../../campaign/act-2-homefront/level-12-storm-front/README.md#concept-art">Storm backdrop</a></div>
+<div class="q"><strong>final art</strong> (<code>tools/art/backdrop_l12.py</code>, from scene-storm-r10-a on Level 11's ocean kit): the storm sea in two layers, the eye's calm chop with its seam pieces, opaque scud banks on <code>low-air</code> (≈ 12 / 22 / 35 % at the edges), two tall banks over the drifting canister, the eye's ring and shaft (look a), the breakout's light</div>
+<div class="media"><figure class="m img"><a href="../../campaign/act-2-homefront/level-12-storm-front/concept/backdrop-final-r34-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-2-homefront/level-12-storm-front/concept/backdrop-final-r34-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure><figure class="m img"><a href="../../campaign/act-2-homefront/level-12-storm-front/concept/backdrop-final-r34-a.gif"><img loading="lazy" decoding="async" src="../../campaign/act-2-homefront/level-12-storm-front/concept/backdrop-final-r34-a.gif" alt="animation"></a><figcaption>animation</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> big bright crests; slab-like tall banks; the GIF is 7.9 MB</p>
+<div class="ans out"><span class="tag">Outcome</span> <span>approved as <strong>final</strong></span></div>
+</article>
+<article class="row" id="r-12.2c">
+<header><span class="rid">12.2c</span><h3>Level 12 props</h3><span class="kind">final art</span></header>
+<div class="part"><a href="../../campaign/act-2-homefront/level-12-storm-front/README.md#concept-art">Level 12 props</a></div>
+<div class="q"><strong>final art</strong> (<code>tools/art/l12_props.py</code>): the weather sonde (blink, collect pop), the supply canister under its drogue chute (intact, hit, spent) with its beacon glow, rain streaks, the gust arrow and streaks, lightning bolts, a lit cloud, a hidden body's glow</div>
+<div class="media"><figure class="m img"><a href="../../campaign/act-2-homefront/level-12-storm-front/concept/l12-props-final-r34-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-2-homefront/level-12-storm-front/concept/l12-props-final-r34-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure><figure class="m img"><a href="../../campaign/act-2-homefront/level-12-storm-front/concept/l12-props-final-r34-a.gif"><img loading="lazy" decoding="async" src="../../campaign/act-2-homefront/level-12-storm-front/concept/l12-props-final-r34-a.gif" alt="animation"></a><figcaption>animation</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the rain stays faint at 1:1 in the game (12.7b (q))</p>
+<div class="ans out"><span class="tag">Outcome</span> <span>approved as <strong>final</strong></span></div>
+</article>
+<article class="row" id="r-12.2d">
+<header><span class="rid">12.2d</span><h3>Level 12 briefing images</h3><span class="kind">final art</span></header>
+<div class="part"><a href="../../ui/briefing/README.md#concept-art">Level 12 briefing images</a></div>
+<div class="q"><strong>final art</strong> (<code>tools/art/briefing_images.py</code>, 672×240): Okafor's <code>level-12-storm-front</code> (the storm off the Azores winding clockwise onto the convoy lanes, the route in through the wall and the eye) and Varga's <code>level-12-sonde-scan</code> (a sonde in the rain beside a pressure plot whose curve is a regular saw)</div>
+<div class="media"><figure class="m img"><a href="../../ui/briefing/concept/briefing-images-final-r34-a.png"><img loading="lazy" decoding="async" src="../../ui/briefing/concept/briefing-images-final-r34-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure></div>
+<div class="ans out"><span class="tag">Outcome</span> <span>approved as <strong>final</strong></span></div>
+</article>
+<article class="row" id="r-12.2e">
+<header><span class="rid">12.2e</span><h3>Lamprey intel portrait</h3><span class="kind">final art</span></header>
+<div class="part"><a href="../../ui/hangar/README.md#concept-art">Lamprey intel portrait</a></div>
+<div class="q"><strong>final art</strong> (<code>tools/art/intel.py</code>): the 30×30 portrait from the production model</div>
+<div class="media"><figure class="m img"><a href="../../ui/hangar/concept/intel-final-r34-a.png"><img loading="lazy" decoding="async" src="../../ui/hangar/concept/intel-final-r34-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure></div>
+<div class="ans out"><span class="tag">Outcome</span> <span>approved as <strong>final</strong></span></div>
+</article>
+<article class="row" id="r-12.3a">
+<header><span class="rid">12.3a</span><h3>Level 12 in the game</h3><span class="kind">capture</span></header>
+<div class="part"><a href="../../campaign/act-2-homefront/level-12-storm-front/README.md#concept-art">Level 12 in the game</a></div>
+<div class="q"><strong>game capture</strong> after the fixes of 2026-10-11 (step F8; medium, the plan's fit with Rook, no <code>--invulnerable</code>): 226 / 234 kills, sondes 3 / 3, the canister broken in the t=99.5 flash, three latches (the <code>SHAKE OFF</code> · <code>LEFT-RIGHT</code> prompt on the second, shaken off), the gust arrow clear of the edge warnings, grade A, 3,024 credits; 15 frames and the whole run with sound</div>
+<div class="media"><figure class="m img"><a href="../../campaign/act-2-homefront/level-12-storm-front/concept/level-12-capture-final-r34-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-2-homefront/level-12-storm-front/concept/level-12-capture-final-r34-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure><figure class="m vid"><figcaption>video</figcaption><video controls preload="none" playsinline src="../../campaign/act-2-homefront/level-12-storm-front/concept/level-12-capture-final-r34-a.mp4"></video></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> predates G8's louder shake-off (+3.5 dB); the prompt is centred in the play field (≈ 185 px from a ship at x 55); 4 of 14 thunders detectable in the mix; the plan's fit is never latched before t≈112; the video is 27.9 MB</p>
+<div class="ans out"><span class="tag">Outcome</span> <span>accepted</span></div>
+</article>
+<article class="row" id="r-12.3b">
+<header><span class="rid">12.3b</span><h3>Level 12 readability</h3><span class="kind">capture</span></header>
+<div class="part"><a href="../../campaign/act-2-homefront/level-12-storm-front/README.md#concept-art">Level 12 readability</a></div>
+<div class="q"><strong>1:1 and 2× crops</strong> (retaken in step G9 after the fixes): rain, gust telegraph, a Spore Bomber under a bank, the canister's glint and flash, latches, a stunned Lamprey, a sonde, the eye, the breakout light, <code>SONDES</code>, <code>SHIELD DRAIN</code>, the prompt in the play field, the debrief row</div>
+<div class="media"><figure class="m img"><a href="../../campaign/act-2-homefront/level-12-storm-front/concept/level-12-readability-r34-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-2-homefront/level-12-storm-front/concept/level-12-readability-r34-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the reveal of a body under a bank was never seen (P5)</p>
+<div class="ans out"><span class="tag">Outcome</span> <span>accepted; the reveal under a bank captured now (P5)</span></div>
+</article>
+<article class="row" id="r-12.3c">
+<header><span class="rid">12.3c</span><h3>Proximity Mines in play</h3><span class="kind">capture</span></header>
+<div class="part"><a href="../../campaign/act-2-homefront/level-12-storm-front/README.md#concept-art">Proximity Mines in play</a></div>
+<div class="q"><strong>supplementary clip</strong> (step CF, 24 s with sound + sheet): the plan's L12 fit with <code>rear=proximity-mines:1</code> (t 14–30, the left flank wave) and a control run with the music and radio off (Pulse Cannon L1 + mines); the sheet plots the mix around a drop</div>
+<div class="media"><figure class="m img"><a href="../../campaign/act-2-homefront/level-12-storm-front/concept/level-12-capture-mines-r34-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-2-homefront/level-12-storm-front/concept/level-12-capture-mines-r34-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure><figure class="m vid"><figcaption>video</figcaption><video controls preload="none" playsinline src="../../campaign/act-2-homefront/level-12-storm-front/concept/level-12-capture-mines-r34-a.mp4"></video></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the <strong>arm chirp</strong> is in the mix (found 0.38–0.40 s after each drop at its −10 dB; a quiet tick under the guns); the <strong>drop is not heard</strong>: at the shots' −14 dB its click and clunk sit ≈ 10 dB under the control's mix and 15–20 dB under the real mix, masked by the front gun firing on the same tick (proposal, pending: raise the drop to the arm's level or above); the mines are small dark discs under the ship's tail, readable at 2×</p>
+<div class="ans out"><span class="tag">Outcome</span> <span>accepted, with the drop raised since (not re-captured)</span></div>
+</article>
+<article class="row" id="r-12.4a">
+<header><span class="rid">12.4a</span><h3>Thunder</h3><span class="kind">pick a / b</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Thunder</a></div>
+<div class="q"><strong>pick a or b</strong>, three each (<code>tools/concept/audio/sfx_r34.py</code>, played in turn 0.3–1.5 s after each flash): <strong>a</strong> the storm bed's own thunder (FlatHill, CC0); <strong>b</strong> close strikes (loganzsound, CC0), a crack then the roll. a is in the game</div>
+<ul class="listen"><li><strong>thunder a</strong>: the bed&#x27;s own thunder: a big clap and roll, a distant roll, a deep low roll</li><li><strong>thunder b</strong>: close strikes: a sharp crack, then the roll, farther each time</li></ul>
+<div class="media"><figure class="m aud"><figcaption>a · thunder 1</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/thunder-1-r34-a.ogg"></audio></figure><figure class="m aud"><figcaption>a · thunder 2</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/thunder-2-r34-a.ogg"></audio></figure><figure class="m aud"><figcaption>a · thunder 3</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/thunder-3-r34-a.ogg"></audio></figure><figure class="m aud"><figcaption>b · thunder 1</figcaption><audio controls preload="none" src="../../audio/sfx/concept/thunder-1-r34-b.ogg"></audio></figure><figure class="m aud"><figcaption>b · thunder 2</figcaption><audio controls preload="none" src="../../audio/sfx/concept/thunder-2-r34-b.ogg"></audio></figure><figure class="m aud"><figcaption>b · thunder 3</figcaption><audio controls preload="none" src="../../audio/sfx/concept/thunder-3-r34-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> not listened to by Claude</p>
+<div class="ans out"><span class="tag">Outcome</span> <span><strong>b</strong>, the close strikes (user); a rejected; step K1</span></div>
+</article>
+<article class="row" id="r-12.4b">
+<header><span class="rid">12.4b</span><h3>Gust</h3><span class="kind">pick a / b</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Gust</a></div>
+<div class="q"><strong>pick a or b</strong>: <strong>a</strong> synthesized wind rising over the telegraph with a hollow howl; <strong>b</strong> a recorded gust (cobratronik, CC0) in the same envelope. Both pan from the upwind side</div>
+<ul class="listen"><li><strong>gust a / b</strong>: synthesized howl / a recorded gust; does it read as &quot;pushed from the left&quot;?</li></ul>
+<div class="media"><figure class="m aud"><figcaption>a · gust</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/gust-r34-a.ogg"></audio></figure><figure class="m aud"><figcaption>b · gust</figcaption><audio controls preload="none" src="../../audio/sfx/concept/gust-r34-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the capture heard the gust 8 of 9 times after it was raised to the warnings' level</p>
+<div class="ans out"><span class="tag">Outcome</span> <span><strong>b</strong>, the recorded gust (user); a rejected; step K1</span></div>
+</article>
+<article class="row" id="r-12.4c">
+<header><span class="rid">12.4c</span><h3>Latch</h3><span class="kind">pick a / b</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Latch</a></div>
+<div class="q"><strong>pick a or b</strong>: <strong>a</strong> suck and bite (inhaling rush, the bite at 0.16 s, grinding teeth); <strong>b</strong> clamp on the hull (a wet splat on a metallic thud, gnawing; JustInvoke CC-BY)</div>
+<ul class="listen"><li><strong>latch a / b</strong>: suck and bite / a wet splat on a metal thud (not bubbly?)</li></ul>
+<div class="media"><figure class="m aud"><figcaption>a · lamprey latch</figcaption><audio controls preload="none" src="../../audio/sfx/concept/lamprey-latch-r34-a.ogg"></audio></figure><figure class="m aud"><figcaption>b · lamprey latch</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/lamprey-latch-r34-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> b's wet splat: check it is not "bubbly"</p>
+<div class="ans out"><span class="tag">Outcome</span> <span><strong>a</strong>; b rejected</span></div>
+</article>
+<article class="row" id="r-12.4d">
+<header><span class="rid">12.4d</span><h3>Drain loop</h3><span class="kind">pick a / b</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Drain loop</a></div>
+<div class="q"><strong>pick a or b</strong>, a seamless 2.4 s loop while a Lamprey drains: <strong>a</strong> a low electric hum throbbing with the gulps; <strong>b</strong> a siphoning whine with crackle (zimbot, CC-BY)</div>
+<ul class="listen"><li><strong>drain loop a / b</strong>: a throbbing hum / a siphoning whine (2.4 s loops)</li></ul>
+<div class="media"><figure class="m aud"><figcaption>a · lamprey drain</figcaption><audio controls preload="none" src="../../audio/sfx/concept/lamprey-drain-r34-a.ogg"></audio></figure><figure class="m aud"><figcaption>b · lamprey drain</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/lamprey-drain-r34-b.ogg"></audio></figure></div>
+<div class="ans out"><span class="tag">Outcome</span> <span><strong>a</strong>; b rejected</span></div>
+</article>
+<article class="row" id="r-12.4e">
+<header><span class="rid">12.4e</span><h3>Shake-off, chime, rain bed</h3><span class="kind">sounds</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Shake-off, chime, rain bed</a></div>
+<div class="q"><strong>accept or redo</strong>, one version each: the <strong>shake-off</strong> (a wet slap and a squeal whooshing away; +3.5 dB in step G8), the <strong>sonde chime</strong> (telemetry chirp into two bell tones), the <strong>rain-only storm bed</strong> (F6 = a, a 10 s loop cut from the FlatHill source)</div>
+<ul class="listen"><li><strong>shake-off</strong>: a wet slap and a squeal whooshing away (+3.5 dB since G8)</li><li><strong>sonde chime</strong>: a telemetry chirp into two bell tones</li><li><strong>rain bed</strong>: the rain-only bed (10 s loop): too loud or too thin?</li></ul>
+<div class="media"><figure class="m aud"><figcaption>lamprey shake</figcaption><audio controls preload="none" src="../../audio/sfx/concept/lamprey-shake-r34-a.ogg"></audio></figure><figure class="m aud"><figcaption>sonde chime</figcaption><audio controls preload="none" src="../../audio/sfx/concept/sonde-chime-r34-a.ogg"></audio></figure><figure class="m aud"><figcaption>ambience storm rain</figcaption><audio controls preload="none" src="../../audio/sfx/concept/ambience-storm-rain-r34-a.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the shake-off was marginal under the busy mix before G8</p>
+<div class="ans out"><span class="tag">Outcome</span> <span>accepted</span></div>
+</article>
+<article class="row" id="r-12.4f">
+<header><span class="rid">12.4f</span><h3>Level 12&#x27;s lines voiced</h3><span class="kind">voices</span></header>
+<div class="part"><a href="../../audio/voice/README.md#decisions">Level 12's lines voiced</a></div>
+<div class="q"><strong>listen</strong>: 18 lines with the cast voices (Okafor 5, Varga 8, Rook 5), six takes pinned</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> LISTEN: Varga's "herding" (Whisper hears "hurting" in all 24 seeds), "sonde", a few takes end in a breath or murmur</p>
+<div class="ans out"><span class="tag">Outcome</span> <span>heard, accepted (I.4)</span></div>
+</article>
+<article class="row" id="r-12.5">
+<header><span class="rid">12.5</span><h3>Level 12 texts</h3><span class="kind">texts</span></header>
+<div class="part"><a href="#level-12-texts">Level 12 texts</a></div>
+<div class="q"><strong>text review</strong>: the two briefing pages (page 1 shortened, C5), Rook's teaser, Varga's four intel lines, the radio script, the HUD's words</div>
+<details><summary>Level 12 texts</summary><p>From <span class="ref">Level 12's data</span>.</p><p><strong>Briefing</strong>, two pages, one screen each:</p><blockquote><p><strong>Commander Okafor</strong> (<code>level-12-storm-front</code>): "Lancer, Aegis Actual. A storm system has formed off the Azores, and it's moving onto the convoy lanes faster than any storm should. Vrell flyers are using it as cover. Clear the storm front so the next convoy can follow. Expect contacts from every side."</p><p><strong>Dr. Varga</strong> (<code>level-12-sonde-scan</code>): "The pressure readings make no sense. Three CDF weather sondes are still transmitting inside the front. Fly through them for me and I can tell you why."</p></blockquote><p><em>Approved page 1 (C5)</em> ended: "…so the next convoy can follow. Visibility will be poor and contacts will come from every side. Homing weapons will help when you can't see what you're shooting." Varga's page is unchanged.</p><p><strong>Hangar teaser</strong> (Rook, not voiced): "A storm that blew up in six hours, and things in it that bite. Homing missiles, Lancer: you won't see much in there." <em>Approved:</em> "A storm that formed in six hours. Contacts from every side: homing weapons recommended."</p><p><strong>Varga's intel lines</strong> (L2 and L3 shortened to fit the panel; the approved single line was "They'll come from all sides, Lancer, and the cloud hides them. Homing missiles see through rain. Spread fire for the seeds."):</p><div class="tbl"><table><thead><tr><th>Sensor suite</th><th>Line</th></tr></thead><tbody><tr><td>none</td><td>"A storm off the Azores, Lancer, and it grew in hours. Air contacts inside it."</td></tr><tr><td>L1</td><td>"From every side. Gusts will push you sideways: watch for the wind arrows."</td></tr><tr><td>L2</td><td>"New: an eel that drains your shield. Shake it off."</td></tr><tr><td>L3</td><td>"Homing sees through the rain. Spread for the seeds."</td></tr></tbody></table></div><p><strong>Radio script</strong> (the eye's lines retimed to 149.5–182.5 for the typing time; Rook's lines only while he flies):</p><div class="tbl"><table><thead><tr><th>Trigger</th><th>Speaker</th><th>Line</th></tr></thead><tbody><tr><td>t=2</td><td>Okafor</td><td>"Weather service calls it the worst Atlantic storm in forty years. It formed in six hours. Stay together."</td></tr><tr><td>t=14</td><td>Rook</td><td>"Feel that? The wind's trying to take the stick off me."</td></tr><tr><td>t=30</td><td>Varga</td><td>"Eel-shaped contacts. They latch on and drain your shield. Shake hard to throw them off."</td></tr><tr><td>The attempt's first latch</td><td>Rook</td><td>"You've got a passenger! Shake it off!"</td></tr><tr><td>t=44</td><td>Rook</td><td>"Seeds on the wind, left side!"</td></tr><tr><td>t=58</td><td>Varga</td><td>"There's a CDF sonde out there. Fly through it and I can read its data."</td></tr><tr><td>t=86</td><td>Varga</td><td>"Lightning shows what's in the clouds. Watch the flashes."</td></tr><tr><td>t=128</td><td>Okafor</td><td>"Storm wall ahead. Instruments will be useless in there. Fly by eye."</td></tr><tr><td>t=149.5</td><td>Rook</td><td>"Blue sky. I'd almost forgotten what it looks like."</td></tr><tr><td>t=157</td><td>Varga</td><td>"Lancer, look at them. They're circling with the wind. They aren't caught in this storm. They're steering it."</td></tr><tr><td>t=169.5</td><td>The Choir (distorted)</td><td>"[the Choir sings]"</td></tr><tr><td>t=176</td><td>Okafor</td><td>"Say again, Doctor?"</td></tr><tr><td>t=182.5</td><td>Varga</td><td>"They're herding the weather, Commander. They understand our climate better than we do."</td></tr><tr><td>t=200</td><td>Rook</td><td>"Next time, I'm bringing an umbrella."</td></tr><tr><td>Canister broken (secret)</td><td>Varga</td><td>"A CDF supply canister. Lucky find in this soup."</td></tr><tr><td>Secondary met</td><td>Varga</td><td>"Three sondes, full data. They fed the storm, Commander. I'll have the pattern by morning."</td></tr><tr><td>Level end</td><td>Okafor</td><td>"You're through. The storm is breaking up behind you, as if someone let it go."</td></tr></tbody></table></div><p><strong>On screen</strong>: the objective <code>SONDES 3</code> (briefing, from sensor L1); the tracker <code>SONDES n / 3</code> and the debrief row <code>SONDES n / 3</code>; the shield row's amber <code>SHIELD DRAIN</code>; the event prompt <code>SHAKE OFF</code> · <code>LEFT-RIGHT</code> in the play field; the secondary "Fly through all three sondes".</p></details>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the approved page 1's homing advice moved to the teaser</p>
+<div class="ans out"><span class="tag">Outcome</span> <span>accepted</span></div>
+</article>
+<article class="row" id="r-12.6">
+<header><span class="rid">12.6</span><h3>Level 12 numbers</h3><span class="kind">numbers</span></header>
+<div class="part"><a href="#level-12-numbers">Level 12 numbers</a></div>
+<div class="q">accept or change</div>
+<details><summary>Level 12 numbers</summary><ul><li><strong>Enemies</strong> (medium <strong>234</strong>, easy 182, hard 287): Skitter 111, Needler 43, Whirl Seed 42, Lamprey 27, Wraith 5, Spore Bomber 4, Mantis 2; <strong>70.2 a minute</strong> (Act 2's minimum is 50); directions front 70 / sides 24 / rear 6 % (no rear Skitter stream is possible: only chasers stream from the rear).</li><li><strong>Credits</strong>: budget(12) <strong>1,473</strong>, <code>bounty_scale</code> <strong>0.75</strong>, typical haul <strong>1,476</strong> (+0.2 %), perfect run <strong>2,514</strong> (1.71 × budget); the canister 130 and the secondary 75 in Act 1 terms (pay 208 and 120).</li><li><strong>Wind</strong>: gusts from the left, 2.5 s, <strong>40 px/s</strong> (easy 25, hard 55), telegraph 1.0 s (easy 1.5 s); the storm wall's 20 px/s drift (none on easy); hard's extra gusts at t=34 and 72; none in the eye.</li><li><strong>The Lamprey</strong>: drain 8 shield a second (hard 12), the shield's regeneration paused while latched; hard 2 latch slots; shield cells drop ×1.5 (<code>drop_factor</code>).</li><li><strong>Sondes and canister</strong>: sondes at x 400, 70, 390 (t 60, 110, 165), 60 px/s down (≈ 9–11 s on the screen), collected within 36 px; the canister at (420, top) at t=99 drifting (−24, −70) px/s, ≈ 8 s, lit by the flashes at 99.5 and 103.5; hard 5 hits.</li><li><strong>Autopilot</strong> (seed 2185, A+ on all three): easy 2 latches, 5.3 shield drained per latch, 3 sondes; medium 4 / 9.5 / 3; hard 8 / 17.4, <strong>25 armour lost</strong> and <strong>2 sondes</strong> (secondary failed).</li><li><strong>Sound levels</strong>: gust and shake-off at the warnings' level (0 dB), drain loop −6 dB, chime −4 dB, a latch or shake-off ducks the theme 6 dB for 1 s; the theme −6 dB in the eye (F5 = a).</li><li><strong>Atlas</strong>: Level 12's own, 3 of 6 pages.</li></ul></details>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> 234 units, not the estimated 175–185; rear only 6 %</p>
+<div class="ans out"><span class="tag">Outcome</span> <span>accepted</span></div>
+</article>
+<article class="row" id="r-12.7a">
+<header><span class="rid">12.7a</span><h3>Part F decisions</h3><span class="kind">decisions</span></header>
+<div class="part"><a href="#level-12-decisions-and-build-choices">Part F decisions</a></div>
+<div class="q"><strong>for the record</strong>: F1–F9 and the defaults were the user's own (2026-10-09; F7 = b); check they were carried out</div>
+<details><summary>The decisions</summary><p><strong>Part F decisions (the user's own, 2026-10-09; row 12.7a)</strong>: F1 = a (banks hide only <code>low-air</code> bodies, a flash makes them see-through), F2 = a (the canister always hittable, seen in two flashes), F3 = a (what hits a latched Lamprey goes by weapon), F4 = a (one latch per Lamprey), F5 = a (base stem at −6 dB in the eye), F6 = a (a rain-only bed and thunder one-shots), <strong>F7 = b</strong> (sondes on the play plane at 60 px/s, no magnet), F8 = a (art straight to production, a/b for the eye, the latch and four sounds), F9 = a (a Lamprey swarm is a swarm of chasers); the storm turns <strong>clockwise</strong> on purpose (user); all defaults applied (see <span class="ref">Level 12's Decisions</span>).</p></details>
+<div class="ans out"><span class="tag">Outcome</span> <span>confirmed</span></div>
+</article>
+<article class="row" id="r-12.7b">
+<header><span class="rid">12.7b</span><h3>Level 12 build choices</h3><span class="kind">build choices</span></header>
+<div class="part"><a href="#level-12-decisions-and-build-choices">Level 12 build choices</a></div>
+<div class="q"><strong>yes or no, each</strong>: (a)–(x)</div>
+<div class="sub"><span class="rid">12.7b.a</span> A Lamprey touching the ship before its chase latches at once. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">12.7b.b</span> No drain during the ship's mercy time. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">12.7b.c</span> Rook touching a Lamprey is a contact (he is never latched). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">12.7b.d</span> The latch spots: left (−22, −13), right (21, −13), tail (0, −35) from the ship's centre. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">12.7b.e</span> A sonde enters and leaves 24 px outside the edge, is collected only while the ship flies, and is lost once wholly below the bottom edge; sondes are not allowed in a level with a boss checkpoint. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">12.7b.f</span> A placed pickup (the eye's armour patch, x 300) enters with its centre on the top edge. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">12.7b.g</span> The canister is not hit by bombs, shells or torpedoes, and is gone once off the screen. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">12.7b.h</span> <strong>234 units</strong> at medium (70 a minute) instead of 175–185: leaner popcorn left empty screens over 3 s with the plan's two Micro-missile Pods; the eye keeps four small popcorn waves. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">12.7b.i</span> <code>bounty_scale</code> 0.75 (the estimate was ≈ 0.9 at 50 a minute). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">12.7b.j</span> Rear only 6 % (the Wraiths and Lampreys); the extra popcorn from the sides. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">12.7b.k</span> Sondes at x 400 / 70 / 390; the canister's entry and drift as in the numbers. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">12.7b.l</span> The rain's density keys (none until t=10, 0.4 in sections 2–3, 1 in the wall's peak, 0 in the eye, 0.4 at the breakout thinning to 0). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">12.7b.m</span> The eye's radio at 149.5 / 157 / 169.5 (the Choir) / 176 / 182.5. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">12.7b.n</span> Varga's L2 and L3 intel lines shortened; the prompt's keys <code>LEFT-RIGHT</code>. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">12.7b.o</span> Lightning: the bolt at x 84 or 396 in turn, a 0.1 s sky tint, the banks tinted and seen through for 0.5 s; the flash reduction (0.35) dims everything but the see-through. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">12.7b.p</span> A <code>weather-glow</code> pulse (4 fps) on every <code>low-air</code> unit under the banks, the canister its own. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">12.7b.q</span> Rain: 480 streaks at density 1, longer in the wall, drawn so the brightest pixel adds 40 % of white (the high-air cap read on what is drawn: 0.64 of the image); still faint at 1:1. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">12.7b.r</span> The gust telegraph: the arrow at twice its size, 72 px in from the upwind edge and 60 px below the top, seven streaks; the upwind cue is the gust sound panned 0.3. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">12.7b.s</span> The reveal: <code>low-air</code> units and the canister drawn again over the banks at 0.6 × reveal, held 0.2 s, faded over 0.3 s (not seen in a capture with a unit, P5). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">12.7b.t</span> The shake-off prompt in the play field, centred (so the shake does not move it), on every latch of 0.3 s or more, at most 6 s each, until the attempt's first shake-off. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">12.7b.u</span> The latch, gust and shake-off at the warnings' level, the theme's 6 dB duck, the shake-off file +3.5 dB (G8). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">12.7b.v</span> The eye's ring and shaft fade over the backdrop's 5 s ramps (the 2 s dissolve ghost, 12.1a). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">12.7b.w</span> The plan's fit is not latched before t≈112 (the early Lampreys die first). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">12.7b.x</span> The canister breaks at once when the ship parks under it (its crate can be missed). <span class="opts">yes / no</span></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> (q) reads the rain's 40 % cap on what is drawn</p>
+<div class="ans out"><span class="tag">Outcome</span> <span>yes, but <strong>(b) no</strong>: a latched Lamprey keeps draining through the mercy time (step K2)</span></div>
+</article>
+</section>
+<section id="s-l13"><h2>Level 13 — Polar Relay</h2>
+<div class="sum"><p>Level 13 is <code>design: review</code>; <span class="ref">its document</span>, the <span class="ref">Skimmer</span>, <span class="ref">Nansen Relay and the drone</span>. G1–G9 were answered <strong>a</strong> on the user's behalf.</p></div>
+<article class="row" id="r-13.1a">
+<header><span class="rid">13.1a</span><h3>Nansen Relay</h3><span class="kind">pick a / b</span></header>
+<div class="part"><a href="../../allies/README.md#concept-art">Nansen Relay</a></div>
+<div class="q"><strong>pick a or b</strong> (<code>tools/art/relay.py</code>, production quality, 96×96): intact / damaged / critical / destroyed, the grid-online light sequence, fire, the smoke column. <strong>a</strong> "ice station"; <strong>b</strong> "grid node" (a hardened blockhouse with three phased-array faces). a is in the game</div>
+<div class="media"><figure class="m img"><a href="../../allies/concept/rejected/relay-r35-a.png"><img loading="lazy" decoding="async" src="../../allies/concept/rejected/relay-r35-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../allies/concept/rejected/relay-r35-a.gif"><img loading="lazy" decoding="async" src="../../allies/concept/rejected/relay-r35-a.gif" alt="a · animation"></a><figcaption>a · animation</figcaption></figure><figure class="m img"><a href="../../allies/concept/relay-r35-b.png"><img loading="lazy" decoding="async" src="../../allies/concept/relay-r35-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../allies/concept/relay-r35-b.gif"><img loading="lazy" decoding="async" src="../../allies/concept/relay-r35-b.gif" alt="b · animation"></a><figcaption>b · animation</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> a's damage smoke was unreadable on the ice until G7 made it rise and drift</p>
+<div class="ans out"><span class="tag">Outcome</span> <span><strong>b</strong> "grid node" (user); a rejected; produced in step K3</span></div>
+</article>
+<article class="row" id="r-13.1b">
+<header><span class="rid">13.1b</span><h3>Whiteout</h3><span class="kind">pick a / b</span></header>
+<div class="part"><a href="../../campaign/act-2-homefront/level-13-polar-relay/README.md#concept-art">Whiteout</a></div>
+<div class="q"><strong>pick a or b</strong> (<code>tools/art/whiteout_l13.py</code>): the whiteout peak (176–188, easy 6 s). <strong>a</strong> "rolling banks"; <strong>b</strong> "blizzard curtain". a is in the game</div>
+<div class="media"><figure class="m img"><a href="../../campaign/act-2-homefront/level-13-polar-relay/concept/rejected/whiteout-r35-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-2-homefront/level-13-polar-relay/concept/rejected/whiteout-r35-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../campaign/act-2-homefront/level-13-polar-relay/concept/rejected/whiteout-r35-a.gif"><img loading="lazy" decoding="async" src="../../campaign/act-2-homefront/level-13-polar-relay/concept/rejected/whiteout-r35-a.gif" alt="a · animation"></a><figcaption>a · animation</figcaption></figure><figure class="m img"><a href="../../campaign/act-2-homefront/level-13-polar-relay/concept/whiteout-r35-b.png"><img loading="lazy" decoding="async" src="../../campaign/act-2-homefront/level-13-polar-relay/concept/whiteout-r35-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../campaign/act-2-homefront/level-13-polar-relay/concept/whiteout-r35-b.gif"><img loading="lazy" decoding="async" src="../../campaign/act-2-homefront/level-13-polar-relay/concept/whiteout-r35-b.gif" alt="b · animation"></a><figcaption>b · animation</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the banks are static images cross-faded (the roll is the game's); snow faint at medium</p>
+<div class="ans out"><span class="tag">Outcome</span> <span><strong>b</strong> "blizzard curtain" (user); a rejected; built in step K3</span></div>
+</article>
+<article class="row" id="r-13.2a">
+<header><span class="rid">13.2a</span><h3>Skimmer</h3><span class="kind">final art</span></header>
+<div class="part"><a href="../../enemies/naval/skimmer/README.md">Skimmer</a></div>
+<div class="q"><strong>final art</strong> (<code>tools/art/skimmer.py</code>, from the chosen round-06 concept): 16 headings × 2 tail frames with the collar, the sub-pass body, a wake per heading, the flip-and-sink; with its wakes, sink and death effect in the game</div>
+<div class="media"><figure class="m img"><a href="../../enemies/naval/skimmer/concept/skimmer-final-r35-a.png"><img loading="lazy" decoding="async" src="../../enemies/naval/skimmer/concept/skimmer-final-r35-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure><figure class="m img"><a href="../../enemies/naval/skimmer/concept/skimmer-final-r35-a.gif"><img loading="lazy" decoding="async" src="../../enemies/naval/skimmer/concept/skimmer-final-r35-a.gif" alt="animation"></a><figcaption>animation</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the tail beats at 10 fps in the game (the art suggests 8)</p>
+<div class="ans out"><span class="tag">Outcome</span> <span>approved as <strong>final</strong></span></div>
+</article>
+<article class="row" id="r-13.2b">
+<header><span class="rid">13.2b</span><h3>Arctic backdrop</h3><span class="kind">final art</span></header>
+<div class="part"><a href="../../campaign/act-2-homefront/level-13-polar-relay/README.md#concept-art">Arctic backdrop</a></div>
+<div class="q"><strong>final art</strong> (<code>tools/art/backdrop_l13.py</code>, from scene-arctic-r09-a; after G5b and G5c): one unique ground strip (the approach and the halt's frame), leads cut along every Skimmer lane (58 px either side), the relay's and the hut's floes, brash where the walkers cross, dark water drifting on <code>deep</code>, loose ice and the mortars' floe drifting, pale fog and the whiteout banks</div>
+<div class="media"><figure class="m img"><a href="../../campaign/act-2-homefront/level-13-polar-relay/concept/backdrop-final-r35-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-2-homefront/level-13-polar-relay/concept/backdrop-final-r35-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure><figure class="m img"><a href="../../campaign/act-2-homefront/level-13-polar-relay/concept/backdrop-final-r35-a.gif"><img loading="lazy" decoding="async" src="../../campaign/act-2-homefront/level-13-polar-relay/concept/backdrop-final-r35-a.gif" alt="animation"></a><figcaption>animation</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> <strong>the halt now reads as the relay's floe in brash-strewn water with floes only at the side edges</strong> (ice 20 % of the halt's frame, was 29 %); three parallel S-shaped intro leads 210 px apart; faint contour steps in the fog at 2×</p>
+<div class="ans out"><span class="tag">Outcome</span> <span>approved as <strong>final</strong></span></div>
+</article>
+<article class="row" id="r-13.2c">
+<header><span class="rid">13.2c</span><h3>Drone and research hut</h3><span class="kind">final art</span></header>
+<div class="part"><a href="../../campaign/act-2-homefront/level-13-polar-relay/README.md#concept-art">Drone and research hut</a></div>
+<div class="q"><strong>final art</strong>, one version each (<code>tools/art/l13_props.py</code>): the CDF supply drone (rotors, clamps, nav lights, the patch in its bay, its arc from the helipad) and the research hut (four states, the hatch beacon)</div>
+<div class="media"><figure class="m img"><a href="../../campaign/act-2-homefront/level-13-polar-relay/concept/l13-props-final-r35-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-2-homefront/level-13-polar-relay/concept/l13-props-final-r35-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure><figure class="m img"><a href="../../campaign/act-2-homefront/level-13-polar-relay/concept/l13-props-final-r35-a.gif"><img loading="lazy" decoding="async" src="../../campaign/act-2-homefront/level-13-polar-relay/concept/l13-props-final-r35-a.gif" alt="animation"></a><figcaption>animation</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the drone also carries Level 14's patch (from the bottom edge)</p>
+<div class="ans out"><span class="tag">Outcome</span> <span>approved as <strong>final</strong></span></div>
+</article>
+<article class="row" id="r-13.2d">
+<header><span class="rid">13.2d</span><h3>Level 13 briefing images</h3><span class="kind">final art</span></header>
+<div class="part"><a href="../../ui/briefing/README.md#concept-art">Level 13 briefing images</a></div>
+<div class="q"><strong>final art</strong>: Okafor's <code>level-13-relay-grid</code> (the Arctic from above the pole, the relay and the grid it ties together, an inset of the halt) and Varga's <code>level-13-ice-field</code> (a Skimmer weaving in its lead, a Scuttler's armoured front arc, a shot at the relay with the ship in its way)</div>
+<div class="media"><figure class="m img"><a href="../../ui/briefing/concept/briefing-images-final-r35-a.png"><img loading="lazy" decoding="async" src="../../ui/briefing/concept/briefing-images-final-r35-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure></div>
+<div class="ans out"><span class="tag">Outcome</span> <span>approved as <strong>final</strong></span></div>
+</article>
+<article class="row" id="r-13.2e">
+<header><span class="rid">13.2e</span><h3>Skimmer intel portrait</h3><span class="kind">final art</span></header>
+<div class="part"><a href="../../ui/hangar/README.md#concept-art">Skimmer intel portrait</a></div>
+<div class="q"><strong>final art</strong>: the 30×30 portrait from the production model</div>
+<div class="media"><figure class="m img"><a href="../../ui/hangar/concept/intel-final-r35-a.png"><img loading="lazy" decoding="async" src="../../ui/hangar/concept/intel-final-r35-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure></div>
+<div class="ans out"><span class="tag">Outcome</span> <span>approved as <strong>final</strong></span></div>
+</article>
+<article class="row" id="r-13.3a">
+<header><span class="rid">13.3a</span><h3>Level 13 in the game</h3><span class="kind">capture</span></header>
+<div class="part"><a href="../../campaign/act-2-homefront/level-13-polar-relay/README.md#concept-art">Level 13 in the game</a></div>
+<div class="q"><strong>game capture</strong> (step G7; medium, the plan's fit with Rook, no <code>--invulnerable</code>): 193 / 208 kills, the relay at <strong>54 %</strong> (secondary met), secret 1 / 1, grade A, 2,776 credits; 16 frames (three from shorter runs: easy's whiteout, the damage smoke, the destroyed relay) and the whole run with sound</div>
+<div class="media"><figure class="m img"><a href="../../campaign/act-2-homefront/level-13-polar-relay/concept/level-13-capture-final-r35-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-2-homefront/level-13-polar-relay/concept/level-13-capture-final-r35-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure><figure class="m vid"><figcaption>video</figcaption><video controls preload="none" playsinline src="../../campaign/act-2-homefront/level-13-polar-relay/concept/level-13-capture-final-r35-a.mp4"></video></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> <strong>predates the fixes</strong> (G5b, G5c, G8): an intro Skimmer crossing a floe, grey fog smudges, the mortars' wreck left at the edge, the chord over the jingle; medium is tight with the plan's fit (armour 53 / 60, relay 54 %); the debrief comes ≈ 16 s after the level's end behind two radio lines</p>
+<div class="ans out"><span class="tag">Outcome</span> <span>accepted</span></div>
+</article>
+<article class="row" id="r-13.3b">
+<header><span class="rid">13.3b</span><h3>Level 13 fixes</h3><span class="kind">capture</span></header>
+<div class="part"><a href="../../campaign/act-2-homefront/level-13-polar-relay/README.md#concept-art">Level 13 fixes</a></div>
+<div class="q"><strong>supplementary clip</strong> (step G9, 45 s with sound + sheet): the t=20 Skimmers on their leads, the mortars' wreck riding its floe (t 77), the pale fog against the old grey (t 145), the whiteout (176–186), the chord (218.05–220.65) then the jingle without overlap</div>
+<div class="media"><figure class="m img"><a href="../../campaign/act-2-homefront/level-13-polar-relay/concept/level-13-capture-fixes-r35-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-2-homefront/level-13-polar-relay/concept/level-13-capture-fixes-r35-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure><figure class="m vid"><figcaption>video</figcaption><video controls preload="none" playsinline src="../../campaign/act-2-homefront/level-13-polar-relay/concept/level-13-capture-fixes-r35-a.mp4"></video></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> it shows two hulls touching floe edges (t 24.5, 27.5), fixed <strong>after</strong> it by G5c's wider leads (recaptured in 13.3c); the wreck's remains fade in over ≈ 0.5 s</p>
+<div class="ans out"><span class="tag">Outcome</span> <span>accepted</span></div>
+</article>
+<article class="row" id="r-13.3c">
+<header><span class="rid">13.3c</span><h3>Level 13 leads after G5c</h3><span class="kind">capture</span></header>
+<div class="part"><a href="../../campaign/act-2-homefront/level-13-polar-relay/README.md#concept-art">Level 13 leads after G5c</a></div>
+<div class="q"><strong>supplementary clip</strong> (step CF, 22 s with sound + sheet; no firing, <code>--invulnerable</code>): the t=20 Skimmers through their whole leads (t 18–30), then the halt frame (t 40–50): the relay's floe in brash-strewn water, small floes along the side edges</div>
+<div class="media"><figure class="m img"><a href="../../campaign/act-2-homefront/level-13-polar-relay/concept/level-13-capture-leads-r35-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-2-homefront/level-13-polar-relay/concept/level-13-capture-leads-r35-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure><figure class="m vid"><figcaption>video</figcaption><video controls preload="none" playsinline src="../../campaign/act-2-homefront/level-13-polar-relay/concept/level-13-capture-leads-r35-a.mp4"></video></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> <strong>every hull on open water</strong>: a scan at 10 fps (t 18.5–30.5) finds nothing white under a hull but its wake; the nearest floe edge ≈ 15 px off (t 21.6)</p>
+<div class="ans out"><span class="tag">Outcome</span> <span>accepted</span></div>
+</article>
+<article class="row" id="r-13.4a">
+<header><span class="rid">13.4a</span><h3>Relay hit</h3><span class="kind">pick a / b</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Relay hit</a></div>
+<div class="q"><strong>pick a or b</strong> (<code>sfx_r35.py</code>): <strong>a</strong> struck plating and a spark (CC0 recordings); <strong>b</strong> a dull thud and the link glitching</div>
+<ul class="listen"><li><strong>relay hit a / b</strong>: struck plating and a spark / a thud and a link glitch</li></ul>
+<div class="media"><figure class="m aud"><figcaption>a · relay hit</figcaption><audio controls preload="none" src="../../audio/sfx/concept/relay-hit-r35-a.ogg"></audio></figure><figure class="m aud"><figcaption>b · relay hit</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/relay-hit-r35-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> plays often (at −2 dB)</p>
+<div class="ans out"><span class="tag">Outcome</span> <span><strong>a</strong>; b rejected</span></div>
+</article>
+<article class="row" id="r-13.4b">
+<header><span class="rid">13.4b</span><h3>Integrity alarm</h3><span class="kind">pick a / b</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Integrity alarm</a></div>
+<div class="q"><strong>pick a or b</strong> (synthesized), once at 50 % and once at 25 %: <strong>a</strong> a hi-lo two-tone ×3; <strong>b</strong> three rising whoops</div>
+<ul class="listen"><li><strong>integrity alarm a / b</strong>: a hi-lo two-tone / three rising whoops</li></ul>
+<div class="media"><figure class="m aud"><figcaption>a · integrity alarm</figcaption><audio controls preload="none" src="../../audio/sfx/concept/integrity-alarm-r35-a.ogg"></audio></figure><figure class="m aud"><figcaption>b · integrity alarm</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/integrity-alarm-r35-b.ogg"></audio></figure></div>
+<div class="ans out"><span class="tag">Outcome</span> <span><strong>a</strong>; b rejected</span></div>
+</article>
+<article class="row" id="r-13.4c">
+<header><span class="rid">13.4c</span><h3>Grid online</h3><span class="kind">pick a / b</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Grid online</a></div>
+<div class="q"><strong>pick a or b</strong> at t=218, leading into the jingle: <strong>a</strong> five breakers closing, a mains hum swelling, an A-major bloom (synthesized); <strong>b</strong> a spin-up into a contact clunk (Glitchedtones, CC0)</div>
+<ul class="listen"><li><strong>grid online a / b</strong>: breakers, a hum and a chord / a spin-up and a clunk (2.6 s, into the jingle)</li></ul>
+<div class="media"><figure class="m aud"><figcaption>a · grid online</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/grid-online-r35-a.ogg"></audio></figure><figure class="m aud"><figcaption>b · grid online</figcaption><audio controls preload="none" src="../../audio/sfx/concept/grid-online-r35-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the chord is as loud as the jingle (it now ends before it, C4)</p>
+<div class="ans out"><span class="tag">Outcome</span> <span><strong>b</strong>, the spin-up into a contact clunk (user); a rejected; step K1</span></div>
+</article>
+<article class="row" id="r-13.4d">
+<header><span class="rid">13.4d</span><h3>Drone launch, relay destroyed</h3><span class="kind">sounds</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Drone launch, relay destroyed</a></div>
+<div class="q"><strong>accept or redo</strong>, one version each: the <strong>drone launch</strong> (four rotors spinning up, climbing away; +2 dB after G7) and <strong>relay destroyed</strong> (a big boom, metal rumbling, a power-down)</div>
+<ul class="listen"><li><strong>drone launch</strong>: four rotors spinning up and climbing away</li><li><strong>relay destroyed</strong>: a boom, metal rumbling, a power-down</li></ul>
+<div class="media"><figure class="m aud"><figcaption>drone launch</figcaption><audio controls preload="none" src="../../audio/sfx/concept/drone-launch-r35-a.ogg"></audio></figure><figure class="m aud"><figcaption>relay destroyed</figcaption><audio controls preload="none" src="../../audio/sfx/concept/relay-destroyed-r35-a.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> not listened to by Claude; the capture heard all of Level 13's sounds</p>
+<div class="ans out"><span class="tag">Outcome</span> <span>accepted</span></div>
+</article>
+<article class="row" id="r-13.4e">
+<header><span class="rid">13.4e</span><h3>Nansen&#x27;s voice</h3><span class="kind">pick a / b</span></header>
+<div class="part"><a href="../../audio/voice/README.md#concept-art">Nansen's voice</a></div>
+<div class="q"><strong>audition, pick a or b</strong> (<code>tools/concept/audio/tts_r35.py</code>, Chatterbox, radio filter b): the CDF officer at Nansen Relay, three lines 1 s apart (t=36 arrival, the 50 % line, t=218 grid sync). <strong>a</strong> Patrick Eaton (LibriVox, male, 124 Hz); <strong>b</strong> Sharon Riskedahl (LibriVox, female, 172 Hz). His five lines play as <strong>text</strong> until cast</div>
+<div class="media"><figure class="m aud"><figcaption>a · three lines, Patrick Eaton</figcaption><audio controls preload="none" src="../../audio/voice/concept/voice-nansen-r35-a.ogg"></audio></figure><figure class="m aud"><figcaption>b · three lines, Sharon Riskedahl</figcaption><audio controls preload="none" src="../../audio/voice/concept/rejected/voice-nansen-r35-b.ogg"></audio></figure><figure class="m miss"><figcaption>reference clip a <em>file not in repo</em> <code>ref-nansen-r35-a.mp3</code></figcaption></figure><figure class="m aud"><figcaption>reference clip b</figcaption><audio controls preload="none" src="../../audio/voice/concept/rejected/ref-nansen-r35-b.wav"></audio></figure></div>
+<details><summary>Reference clip transcripts</summary><p><strong>Reference clip a:</strong> and by Captain Penny of the Lady Franklin. In October 1854, Dr Ray brought home the only additional information respecting them, which has ever reached us, from the Eskimo of Boothia Felix.</p><p><strong>Reference clip b:</strong> Seneca. Unseen and untrodden under their spotless mantle of ice, the rigid polar region slept the profound asleep of death from the earth.</p></details>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> after the pick his lines are rendered and <code>RadioTimelineTest</code> rerun (his t=36 line meets Okafor's t=47.5 only if it runs over ≈ 10 s)</p>
+<div class="ans out"><span class="tag">Outcome</span> <span><strong>a</strong>, Patrick Eaton (user); b rejected; cast and his five lines rendered in step K1</span></div>
+</article>
+<article class="row" id="r-13.4f">
+<header><span class="rid">13.4f</span><h3>Level 13&#x27;s lines voiced</h3><span class="kind">voices</span></header>
+<div class="part"><a href="../../audio/voice/README.md#decisions">Level 13's lines voiced</a></div>
+<div class="q"><strong>listen</strong>: 15 lines (Okafor 8, Varga 4, Rook 3), three pinned; the briefing pages re-rendered after shortening</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> LISTEN: Varga's t=13 pin still has a few high syllables; "floes" sounds like "flows"</p>
+<div class="ans out"><span class="tag">Outcome</span> <span>heard, accepted (I.4)</span></div>
+</article>
+<article class="row" id="r-13.5">
+<header><span class="rid">13.5</span><h3>Level 13 texts</h3><span class="kind">texts</span></header>
+<div class="part"><a href="#level-13-texts">Level 13 texts</a></div>
+<div class="q"><strong>text review</strong>: the two briefing pages (shortened and split, C5), Rook's teaser, Varga's four intel lines, the radio script with Nansen's lines, the HUD's words</div>
+<details><summary>Level 13 texts</summary><p>From <span class="ref">Level 13's data</span>.</p><p><strong>Briefing</strong>, two pages, one screen each (shortened and split by the main agent, C5):</p><blockquote><p><strong>Commander Okafor</strong> (<code>level-13-relay-grid</code>): "Lancer, Aegis Actual. Nansen Relay ties every gun on the planet into one defence grid, and a Vrell landing force is crossing the pack ice to it. Hold over the relay for three minutes while it synchronises. They will come from every side. Aegis Actual out."</p><p><strong>Dr. Varga</strong> (<code>level-13-ice-field</code>): "Fast boats weave in the leads: lead your shots or spray. Walkers' claws are armoured in front, so hit them from the side. Shots at the relay are aimed at it: stand in the way. Side and rear guns will earn their keep."</p></blockquote><p><em>Approved (one Okafor page)</em>: "Lancer, Aegis Actual. Thanks to Atlas-Seven, Nansen Relay in the high Arctic is back at full power. It ties every gun, radar and satellite on the planet into one defence grid, and the Vrell have worked that out. A landing force is moving on it across the pack ice: fast boats in the leads between the floes, and walkers on the floes themselves. Hold position over the relay for three minutes while it synchronises the grid. They will come from every side, including behind you. If the relay falls, we lose the grid. Aegis Actual out."</p><p><strong>Hangar teaser</strong> (Rook, not voiced; unchanged): "Defend the Arctic relay for three minutes. Attacks from every edge: rear and side guns pay off."</p><p><strong>Varga's intel lines</strong> (the approved single line: "They'll come from all four edges, Lancer. Side and rear guns will earn their keep, and spread fire for the boats."):</p><div class="tbl"><table><thead><tr><th>Sensor suite</th><th>Line</th></tr></thead><tbody><tr><td>none</td><td>"Pack ice, Lancer. Boats in the leads, walkers on the floes, and no front line out there."</td></tr><tr><td>L1</td><td>"They'll come from all four edges. Side and rear guns will earn their keep."</td></tr><tr><td>L2</td><td>"New: the Skimmer, a fast boat that weaves. The walkers are back, and the divers."</td></tr><tr><td>L3</td><td>"Spread fire for the boats, side shots for the walkers. Hold the relay for three minutes."</td></tr></tbody></table></div><p><strong>Radio script</strong> (Nansen's lines as text with the generic CDF portrait until he is cast; Rook's only while he flies):</p><div class="tbl"><table><thead><tr><th>Trigger</th><th>Speaker</th><th>Line</th></tr></thead><tbody><tr><td>t=1</td><td>Okafor</td><td>"Nansen Relay coordinates every gun on the planet. If it goes dark, so does the grid."</td></tr><tr><td>t=13</td><td>Varga</td><td>"Fast boats in the leads. They weave. Lead your shots, or spray."</td></tr><tr><td>t=24</td><td>Rook</td><td>"Cold enough for you, Lancer? My canopy's frosting on the inside."</td></tr><tr><td>t=36</td><td>Nansen</td><td>"Aegis, Nansen. Very glad to see you. They come at us from every direction out here."</td></tr><tr><td>t=47.5</td><td>Okafor</td><td>"Lancer, you're holding station over the relay. Nothing touches it."</td></tr><tr><td>t=58.5</td><td>Rook</td><td>"Contacts, all sides! Pick a direction, any direction."</td></tr><tr><td>t=102</td><td>Varga</td><td>"Walkers on the floes. Their claws are armoured from the front. Hit them from the side."</td></tr><tr><td>t=154</td><td>Okafor</td><td>"Divers inbound. They're going for the relay, not you."</td></tr><tr><td>t=162 (the first drone's release)</td><td>Nansen</td><td>"Supply drone away. Catch it, Aegis."</td></tr><tr><td>t=172</td><td>Okafor</td><td>"Weather's turning. Whiteout coming in from the edges."</td></tr><tr><td>t=179</td><td>The Choir (distorted)</td><td>"[the Choir sings]"</td></tr><tr><td>Relay below 50 %</td><td>Nansen</td><td>"Integrity at half! We can't take much more!"</td></tr><tr><td>Relay below 25 %</td><td>Okafor</td><td>"Lancer, the relay is failing. Everything else can wait."</td></tr><tr><td>t=218</td><td>Nansen</td><td>"Grid sync complete. Every battery on Earth just came back online."</td></tr><tr><td>Secondary met</td><td>Nansen</td><td>"Integrity holding above half. You kept the lights on, Aegis."</td></tr><tr><td>t=233.5</td><td>Okafor</td><td>"Well held, Aegis. Now we can see the whole board."</td></tr><tr><td>Hut's cache (secret)</td><td>Varga (new)</td><td>"A CDF research cache. Somebody left that hut in a hurry."</td></tr><tr><td>Level end</td><td>Rook</td><td>"Next time they need a relay defended, I'm asking for one with palm trees."</td></tr><tr><td>Relay destroyed (mission failed)</td><td>Okafor</td><td>"Nansen is gone. Pull back, Lancer."</td></tr></tbody></table></div><p><strong>On screen</strong>: the objective <code>DEFEND NANSEN RELAY</code>; tracker line 1 <code>RELAY</code> with the integrity bar (a tick at 50 %, amber below it) and the countdown from <code>2:58</code>; line 2 <code>INTEGRITY &gt; 50 %</code> (the font has no <code>≥</code>: a <code>&gt;</code> with a one-pixel bar under it), then <code>DONE</code> or <code>FAILED</code>; the debrief row <code>RELAY n %</code> (rounded down); the secondary "Keep the relay at 50 % or more".</p></details>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the shortened page 1 drops the Atlas-Seven link, "including behind you" and "if the relay falls"</p>
+<div class="ans out"><span class="tag">Outcome</span> <span>accepted</span></div>
+</article>
+<article class="row" id="r-13.6">
+<header><span class="rid">13.6</span><h3>Level 13 numbers</h3><span class="kind">numbers</span></header>
+<div class="part"><a href="#level-13-numbers">Level 13 numbers</a></div>
+<div class="q">accept or change</div>
+<details><summary>Level 13 numbers</summary><ul><li><strong>The halt</strong>: an approach of ≈ 5,460 px, the halt eased in over 2 s at t≈38–40, the synchronisation t=40–218 (178 s), an exit of ≈ 1,960 px; the relay at x 240, 290 px up, an 80×80 hit box.</li><li><strong>Enemies</strong>: easy 160, medium <strong>208</strong>, hard 260 (the plan's 196; popcorn as streams of 4 for the 3 s pacing rule); <strong>54.3 a minute</strong>.</li><li><p><strong>The relay</strong> (guarding autopilot, 8 seeds per difficulty):</p><div class="tbl"><table><thead><tr><th>Difficulty</th><th>Damage taken</th><th>Integrity</th><th>Left at t=218</th><th>Secondary met</th></tr></thead><tbody><tr><td>Easy</td><td>48–56</td><td>340 (approved 900)</td><td>84–86 %</td><td>8 of 8</td></tr><tr><td>Medium</td><td>112–124</td><td>240 (approved 600)</td><td>48–53 % (median 50 %)</td><td>7 of 8</td></tr><tr><td>Hard</td><td>386–410</td><td>520 (approved 450)</td><td>21–26 %</td><td>0 of 8</td></tr></tbody></table></div><p>Nearly all of it is the Scuttlers' fans in arc. A human letting the walkers fire loses medium's secondary.</p></li><li><strong>Credits</strong>: budget(13) <strong>1,577</strong>, <code>bounty_scale</code> <strong>0.67</strong>, typical haul <strong>1,606</strong> (+1.8 %), perfect run <strong>2,466</strong> (1.56 ×); the hut's cache 110 and the secondary 95 in Act 1 terms (pay 176 and 152).</li><li><strong>Whiteout</strong>: 176–188 at medium (4 s ramps), easy 6 s (179–185), the wind +3 dB at the peak; snow on high-air 0 / 30 % / full by the atmosphere.</li><li><strong>Sounds</strong>: relay hit and drone launch −2 dB (the drone +2 dB after G7), alarm, grid online and relay destroyed at the warnings' level.</li><li><strong><code>Level13Test</code></strong>: A+ / A+ / A (easy / medium / hard).</li></ul></details>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> medium's relay is a knife edge (median 50 % left)</p>
+<div class="ans out"><span class="tag">Outcome</span> <span>accepted</span></div>
+</article>
+<article class="row" id="r-13.7a">
+<header><span class="rid">13.7a</span><h3>Part G decisions</h3><span class="kind">decisions</span></header>
+<div class="part"><a href="#level-13-decisions-and-build-choices">Part G decisions</a></div>
+<div class="q"><strong>check</strong>: G1–G9 = a and the stated defaults, taken on the user's behalf</div>
+<details><summary>The decisions</summary><p><strong>Part G decisions on the user's behalf (row 13.7a; <span class="ref">Level 13's Decisions</span>)</strong>: <strong>G1 = a</strong> the hook modes exact on the relay-aimed rule (<code>alternate</code>, <code>in-arc</code>, <code>always</code>; the Stinger dives, hits once and flies on); <strong>G2 = a</strong> the waves kept, the integrity tuned per difficulty; <strong>G3 = a</strong> halted time counts as scroll time (≈ 190 units from all edges); <strong>G4 = a</strong> Skimmers walk ground lanes in fixed leads, loose ice drifts; <strong>G5 = a</strong> <code>water: true</code> for the whole field, the water splash by unit; <strong>G6 = a</strong> the supply drone is presentation, releasing an ordinary patch; <strong>G7 = a</strong> the whiteout hides ground units at the edges, air stays visible; <strong>G8 = a</strong> one jingle at the sync's end, the debrief without; <strong>G9 = a</strong> a/b for the relay, the whiteout, three sounds and Nansen, the rest straight to production. <strong>The stated defaults</strong>: the halt as a speed-0 section with 2 s eases; the defend primary on the escort's machinery; the hook configuration per kind (easy Stingers unhooked); the secondary <code>integrity: 0.5</code>; data in Act 1 terms with a <code>bounty_scale</code>; ≥ 50 a minute, 3 s edge warnings; the Scuttlers' lanes ending short of the relay; the mortars' floe from the left at t=66; the Needler circle over the relay; the radio retimed (Rook's t=82 and t=122 dropped); the HUD's <code>RELAY</code> tracker; the atmosphere split at t=140; "Homefront" from section 2; the threat profile from the data (a <code>defend</code> level is excepted from the 60 %-from-the-top rule); the plan's L13 visit as written; Rook does not guard the relay; L13's own atlas.</p></details>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> G1 leaves the Stinger flying on after its dive (not a kamikaze)</p>
+<div class="ans out"><span class="tag">Outcome</span> <span>confirmed</span></div>
+</article>
+<article class="row" id="r-13.7b">
+<header><span class="rid">13.7b</span><h3>Level 13 build choices</h3><span class="kind">build choices</span></header>
+<div class="part"><a href="#level-13-decisions-and-build-choices">Level 13 build choices</a></div>
+<div class="q"><strong>yes or no, each</strong>: (a)–(t)</div>
+<div class="sub"><span class="rid">13.7b.a</span> The Stinger's fan under <code>always</code> keeps its 0.6 s timing (it fires from below the relay); the relay's lob also hurts the ship inside its circle. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">13.7b.b</span> The integrity <strong>240 / 340 / 520</strong> (hard above medium: hard's load is 3.4 ×). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">13.7b.c</span> 208 units; the rear popcorn as Skitter line abreasts, the t=140 rear stream as a snake on a path, the t=200 rear Needlers a line abreast. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">13.7b.d</span> <code>bounty_scale</code> 0.67. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">13.7b.e</span> Traits <code>spread</code> and <code>rear</code> (<code>side</code> only in the notes: three do not fit the panel). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">13.7b.f</span> The secret's line is Varga's (new); Nansen uses the generic CDF portrait. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">13.7b.g</span> Grid online at t=218 (the README's t=220 read as the sync's completion) and the jingle at 220.6 after the chord (C4). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">13.7b.h</span> The countdown from 2:58, rounding up; <code>&gt;</code> with a bar for <code>≥</code>; <code>RELAY n %</code> rounded down; the relay's HUD pip unused. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">13.7b.i</span> The drone swings 110 px out (the first right, the second left), 4 s each way, only while the relay stands. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">13.7b.j</span> The relay's damage smoke rising and drifting below 50 %, fire below 25 %, a smoke column when destroyed. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">13.7b.k</span> The Skimmer's tail at 10 fps; a burst within 8 px of a Skimmer is the water splash, every other burst on the ice the ground's. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">13.7b.l</span> Snow on high-air by the atmosphere (0 / 30 % / full), at most 40 % a flake. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">13.7b.m</span> The ground as one unique strip (a halt shows section 1's ground); the leads ring the relay's floe; the Scuttlers wade across the leads (brash rubble chokes there). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">13.7b.n</span> Loose ice drifting 6 px/s in the leads' outer margins; the mortars' floe at 10 px/s overlapping the relay floe's edge; static fog and whiteout banks cross-faded. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">13.7b.o</span> Three parallel S-shaped intro leads 210 px apart (G5b; a data change would merge them). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">13.7b.p</span> The leads 58 px either side (G5c): the halt is mostly water, floes only at the side edges. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">13.7b.q</span> The fog lighter than the round-35 render (pale, soft-edged). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">13.7b.r</span> The mortars' wreck drifts on with its floe (<code>WRECK_DRIFT</code>, presentation only); its remains fade in over ≈ 0.5 s. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">13.7b.s</span> The level ends ≈ 16 s before the debrief (t 216–251 without enemies, two radio lines). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">13.7b.t</span> Medium stays tight with the plan's fit (the capture: armour 53 / 60, relay 54 %). <span class="opts">yes / no</span></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> (b) hard's relay is stronger than medium's</p>
+<div class="ans out"><span class="tag">Outcome</span> <span>yes, each</span></div>
+</article>
+</section>
+<section id="s-l14"><h2>Level 14 — Siege Spire and the Act 2 end</h2>
+<div class="sum"><p>Level 14 is <code>design: review</code>; <span class="ref">its document</span>, the <span class="ref">Siege Spire</span>, the <span class="ref">Act 2 end</span>. H1–H10 were answered <strong>a</strong> on the user's behalf; <strong>H1 changes an approved spec</strong> (C1).</p></div>
+<article class="row" id="r-14.1a">
+<header><span class="rid">14.1a</span><h3>Root burst</h3><span class="kind">pick a / b</span></header>
+<div class="part"><a href="../../campaign/act-2-homefront/level-14-siege-spire/README.md#concept-art">Root burst</a></div>
+<div class="q"><strong>pick a or b</strong> (<code>tools/art/root_burst.py</code>): the 1 s telegraph and the eruption that grows a Spine Turret and a Polyp Mortar. <strong>a</strong> "breaking paving" (cracks with violet glow, dust, a slate root arching out); <strong>b</strong> "creep surge" (creep tendrils, spore mist, a sac mound splitting into buds). a is in the game</div>
+<div class="media"><figure class="m img"><a href="../../campaign/act-2-homefront/level-14-siege-spire/concept/root-burst-r36-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-2-homefront/level-14-siege-spire/concept/root-burst-r36-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../campaign/act-2-homefront/level-14-siege-spire/concept/root-burst-r36-a.gif"><img loading="lazy" decoding="async" src="../../campaign/act-2-homefront/level-14-siege-spire/concept/root-burst-r36-a.gif" alt="a · animation"></a><figcaption>a · animation</figcaption></figure><figure class="m img"><a href="../../campaign/act-2-homefront/level-14-siege-spire/concept/rejected/root-burst-r36-b.png"><img loading="lazy" decoding="async" src="../../campaign/act-2-homefront/level-14-siege-spire/concept/rejected/root-burst-r36-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../campaign/act-2-homefront/level-14-siege-spire/concept/rejected/root-burst-r36-b.gif"><img loading="lazy" decoding="async" src="../../campaign/act-2-homefront/level-14-siege-spire/concept/rejected/root-burst-r36-b.gif" alt="b · animation"></a><figcaption>b · animation</figcaption></figure></div>
+<div class="ans out"><span class="tag">Outcome</span> <span><strong>a</strong>; b rejected</span></div>
+</article>
+<article class="row" id="r-14.1b">
+<header><span class="rid">14.1b</span><h3>Daylight</h3><span class="kind">pick a / b</span></header>
+<div class="part"><a href="../../campaign/act-2-homefront/level-14-siege-spire/README.md#concept-art">Daylight</a></div>
+<div class="q"><strong>pick a or b</strong> (<code>tools/art/daylight_l14.py</code>, stills): the 12 s after the kill. <strong>a</strong> "golden hour" (warm grade, low-sun beams through the tearing canopy); <strong>b</strong> "pale dawn" (cool grade, haze burning off the lake, no beams). a is in the game</div>
+<div class="media"><figure class="m img"><a href="../../campaign/act-2-homefront/level-14-siege-spire/concept/daylight-r36-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-2-homefront/level-14-siege-spire/concept/daylight-r36-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../campaign/act-2-homefront/level-14-siege-spire/concept/rejected/daylight-r36-b.png"><img loading="lazy" decoding="async" src="../../campaign/act-2-homefront/level-14-siege-spire/concept/rejected/daylight-r36-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> stills only; the game's daylight at 25 px/s is in 14.3d</p>
+<div class="ans out"><span class="tag">Outcome</span> <span><strong>a</strong>; b rejected</span></div>
+</article>
+<article class="row" id="r-14.2a">
+<header><span class="rid">14.2a</span><h3>Siege Spire</h3><span class="kind">final art</span></header>
+<div class="part"><a href="../../enemies/bosses/siege-spire/README.md#concept-art">Siege Spire</a></div>
+<div class="q"><strong>final art</strong> (<code>tools/art/siege_spire.py</code>, from the chosen concept): the trunk (3 maw steps), six roots alive and dead, pods (32 headings), mortars, husks, the stump, the lift, the free spire (16 headings over 60°), the emitter and maw glows, debris; ≈ 41 % of an atlas page</div>
+<div class="media"><figure class="m img"><a href="../../enemies/bosses/siege-spire/concept/siege-spire-final-r36-a.png"><img loading="lazy" decoding="async" src="../../enemies/bosses/siege-spire/concept/siege-spire-final-r36-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure><figure class="m img"><a href="../../enemies/bosses/siege-spire/concept/siege-spire-final-r36-a.gif"><img loading="lazy" decoding="async" src="../../enemies/bosses/siege-spire/concept/siege-spire-final-r36-a.gif" alt="animation"></a><figcaption>animation</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the free spire is big and sat on the stump (the stump is now drawn as ash, H7b); the canopy's tear is subtle</p>
+<div class="ans out"><span class="tag">Outcome</span> <span>approved as <strong>final</strong></span></div>
+</article>
+<article class="row" id="r-14.2b">
+<header><span class="rid">14.2b</span><h3>The Spire&#x27;s death</h3><span class="kind">final art</span></header>
+<div class="part"><a href="../../enemies/bosses/siege-spire/README.md#concept-art">The Spire's death</a></div>
+<div class="q"><strong>final art</strong> (<code>tools/art/siege_spire_death.py</code>, 8 frames over the 3 s chain): the core's light cracking out along the six petals, then the chunks flying apart and burning down; the game's bursts over it</div>
+<div class="media"><figure class="m img"><a href="../../enemies/bosses/siege-spire/concept/rejected/siege-spire-death-final-r36-a.png"><img loading="lazy" decoding="async" src="../../enemies/bosses/siege-spire/concept/rejected/siege-spire-death-final-r36-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure><figure class="m img"><a href="../../enemies/bosses/siege-spire/concept/rejected/siege-spire-death-final-r36-a.gif"><img loading="lazy" decoding="async" src="../../enemies/bosses/siege-spire/concept/rejected/siege-spire-death-final-r36-a.gif" alt="animation"></a><figcaption>animation</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> a 2D break-up; the act bosses' full-screen white flash at the end is kept (as Level 07's)</p>
+<div class="ans out"><span class="tag">Outcome</span> <span><strong>redo</strong> (user: "split the arms and let them fall down"; it collapses, it does not sink and drift): r36-b (step K3) approved as <strong>final</strong>, r36-a rejected</span></div>
+</article>
+<article class="row" id="r-14.2b-2">
+<header><span class="rid">14.2b-2</span><h3>The Spire&#x27;s death, redone</h3><span class="kind">final art (redo)</span></header>
+<div class="q">your call on the redo after 14.2b ("Split the arms and let them fall down" and "break it into natural pieces, detach the arms … it collapses, it does not sink and drift"): the free spire dies in the air above its ash stump; the six arms break off at their joints and fly apart, the crown cracks into three chunks, the core bursts; every piece shrinks and darkens as it falls toward the ground, meets its shadow and lands in pale stone-dust plumes; the last frame is the debris lying round the stump. 8 frames over 3 s, 332×414 (tools/art/siege_spire_death.py). The animation plays over the arena, starting with the live spire; the sheet's rows 3–4 show every frame at 1× over the ash stump.</div>
+<div class="media"><figure class="m img"><a href="../../enemies/bosses/siege-spire/concept/siege-spire-death-final-r36-b.gif"><img loading="lazy" decoding="async" src="../../enemies/bosses/siege-spire/concept/siege-spire-death-final-r36-b.gif" alt="animation over the arena"></a><figcaption>animation over the arena</figcaption></figure><figure class="m img"><a href="../../enemies/bosses/siege-spire/concept/siege-spire-death-final-r36-b.png"><img loading="lazy" decoding="async" src="../../enemies/bosses/siege-spire/concept/siege-spire-death-final-r36-b.png" alt="sheet"></a><figcaption>sheet</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> frames 3–4 still read as one dense mass (the crown only starts to part); the last frame shows a dark round lid in the middle of the stump (the trunk's broken top) that can read as a hole; the core burst in frame 2 is a large lime-white blob</p>
+<div class="ans out"><span class="tag">Outcome</span> <span>redone twice after your 14.2b answer (2026-10-12); the first redo was rejected by Claude before showing it (the arms never separated)</span></div>
+<div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-14.2c">
+<header><span class="rid">14.2c</span><h3>Geneva backdrop</h3><span class="kind">final art</span></header>
+<div class="part"><a href="../../campaign/act-2-homefront/level-14-siege-spire/README.md#concept-art">Geneva backdrop</a></div>
+<div class="q"><strong>final art</strong> (<code>tools/art/backdrop_l14.py</code>, from scene-geneva-r10-a; after H9's slower daylight): the lakefront, the old town, the root field, the Concord plaza under the anchor, the daylight tiles; the Rhône with the Pont du Mont-Blanc, Saint-Pierre, the Molard, the Jet d'Eau, the Ravagers' crater, Hammer flight; the canopy's veins and tear, the beams</div>
+<div class="media"><figure class="m img"><a href="../../campaign/act-2-homefront/level-14-siege-spire/concept/backdrop-final-r36-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-2-homefront/level-14-siege-spire/concept/backdrop-final-r36-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure><figure class="m img"><a href="../../campaign/act-2-homefront/level-14-siege-spire/concept/backdrop-final-r36-a.gif"><img loading="lazy" decoding="async" src="../../campaign/act-2-homefront/level-14-siege-spire/concept/backdrop-final-r36-a.gif" alt="animation"></a><figcaption>animation</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> no <code>deep</code> layer, the lake painted on the ground with the shadow baked; the daylight graded by position along the strip; static lamps and Jet d'Eau; one wide bridge; 4 tear and 2 beam frames</p>
+<div class="ans out"><span class="tag">Outcome</span> <span>approved as <strong>final</strong></span></div>
+</article>
+<article class="row" id="r-14.2d">
+<header><span class="rid">14.2d</span><h3>Armoured car</h3><span class="kind">final art</span></header>
+<div class="part"><a href="../../campaign/act-2-homefront/level-14-siege-spire/README.md#concept-art">Armoured car</a></div>
+<div class="q"><strong>final art</strong> (<code>tools/art/l14_props.py</code>): the CDF car under creep, cleared hit by hit, the hatch open with the crate</div>
+<div class="media"><figure class="m img"><a href="../../campaign/act-2-homefront/level-14-siege-spire/concept/l14-props-final-r36-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-2-homefront/level-14-siege-spire/concept/l14-props-final-r36-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure><figure class="m img"><a href="../../campaign/act-2-homefront/level-14-siege-spire/concept/l14-props-final-r36-a.gif"><img loading="lazy" decoding="async" src="../../campaign/act-2-homefront/level-14-siege-spire/concept/l14-props-final-r36-a.gif" alt="animation"></a><figcaption>animation</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> its hit flash is faint in the game</p>
+<div class="ans out"><span class="tag">Outcome</span> <span>approved as <strong>final</strong></span></div>
+</article>
+<article class="row" id="r-14.2e">
+<header><span class="rid">14.2e</span><h3>Act 2 outro images</h3><span class="kind">final art</span></header>
+<div class="part"><a href="../../campaign/act-2-homefront/README.md">Act 2 outro images</a></div>
+<div class="q"><strong>final art</strong> (<code>tools/art/outro_l14_images.py</code>): the four outro pages: the stump in Geneva at sunrise (the production stump at 0.40 scale), the wall of names at dawn, Ares Landing's signal from Mars, Aegis Wing and the Mars transport at dusk</div>
+<div class="media"><figure class="m img"><a href="../../campaign/act-2-homefront/level-14-siege-spire/concept/act-2-outro-final-r36-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-2-homefront/level-14-siege-spire/concept/act-2-outro-final-r36-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure></div>
+<div class="ans out"><span class="tag">Outcome</span> <span>approved as <strong>final</strong></span></div>
+</article>
+<article class="row" id="r-14.2f">
+<header><span class="rid">14.2f</span><h3>Level 14 briefing images</h3><span class="kind">final art</span></header>
+<div class="part"><a href="../../ui/briefing/README.md#concept-art">Level 14 briefing images</a></div>
+<div class="q"><strong>final art</strong>: Okafor's <code>level-14-spire-over-geneva</code> (the Spire rising out of the Concord rotunda into the canopy, the route) and Varga's <code>level-14-root-scan</code> (the root grid, a burst in detail, a Wraith from behind)</div>
+<div class="media"><figure class="m img"><a href="../../ui/briefing/concept/briefing-images-final-r36-a.png"><img loading="lazy" decoding="async" src="../../ui/briefing/concept/briefing-images-final-r36-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure></div>
+<div class="ans out"><span class="tag">Outcome</span> <span>approved as <strong>final</strong></span></div>
+</article>
+<article class="row" id="r-14.2g">
+<header><span class="rid">14.2g</span><h3>Spire intel silhouette</h3><span class="kind">final art</span></header>
+<div class="part"><a href="../../ui/hangar/README.md#concept-art">Spire intel silhouette</a></div>
+<div class="q"><strong>final art</strong>: the 40×40 boss silhouette, the rooted body as the arena first shows it</div>
+<div class="media"><figure class="m img"><a href="../../ui/hangar/concept/intel-final-r36-a.png"><img loading="lazy" decoding="async" src="../../ui/hangar/concept/intel-final-r36-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> rooted, not the free spire</p>
+<div class="ans out"><span class="tag">Outcome</span> <span>approved as <strong>final</strong></span></div>
+</article>
+<article class="row" id="r-14.3a">
+<header><span class="rid">14.3a</span><h3>Level 14 in the game</h3><span class="kind">capture</span></header>
+<div class="part"><a href="../../campaign/act-2-homefront/level-14-siege-spire/README.md#concept-art">Level 14 in the game</a></div>
+<div class="q"><strong>game capture</strong> (step H7; medium, a strong fit with Rook, <strong><code>--invulnerable</code></strong>): 115 / 117 kills, ROOTS 8 / 8, secret 1 / 1, the Spire in 1:26 (par 2:10), A+; 19 frames and the whole run with sound through the act end</div>
+<div class="media"><figure class="m img"><a href="../../campaign/act-2-homefront/level-14-siege-spire/concept/level-14-capture-final-r36-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-2-homefront/level-14-siege-spire/concept/level-14-capture-final-r36-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure><figure class="m vid"><figcaption>video</figcaption><video controls preload="none" playsinline src="../../campaign/act-2-homefront/level-14-siege-spire/concept/level-14-capture-final-r36-a.mp4"></video></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> <strong>predates H7b and H9</strong> (stale phase lines, the roots line over the arrival, the stump scrolling off, Hammer over the car); invulnerable (P2)</p>
+<div class="ans out"><span class="tag">Outcome</span> <span>accepted</span></div>
+</article>
+<article class="row" id="r-14.3b">
+<header><span class="rid">14.3b</span><h3>Level 14 fixes</h3><span class="kind">capture</span></header>
+<div class="part"><a href="../../campaign/act-2-homefront/level-14-siege-spire/README.md#concept-art">Level 14 fixes</a></div>
+<div class="q"><strong>supplementary capture</strong> (step H8): Hammer at x 130, the growths firing ≈ 290 px above the bottom, Rook's warning bark and phase-3 line, the ash stump under the free spire, the withering 3 s after the kill, the daylight at 40 px/s; the bottom row a run <strong>without</strong> <code>--invulnerable</code> on the plan's fit, lost five times</div>
+<div class="media"><figure class="m img"><a href="../../campaign/act-2-homefront/level-14-siege-spire/concept/level-14-capture-fixes-r36-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-2-homefront/level-14-siege-spire/concept/level-14-capture-fixes-r36-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure><figure class="m vid"><figcaption>video</figcaption><video controls preload="none" playsinline src="../../campaign/act-2-homefront/level-14-siege-spire/concept/level-14-capture-fixes-r36-a.mp4"></video></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> predates H9 (the roots line, 25 px/s, the drone: see 14.3d); the growths still crowd a ship standing under them</p>
+<div class="ans out"><span class="tag">Outcome</span> <span>accepted</span></div>
+</article>
+<article class="row" id="r-14.3c">
+<header><span class="rid">14.3c</span><h3>The act end</h3><span class="kind">capture</span></header>
+<div class="part"><a href="../../campaign/act-2-homefront/README.md">The act end</a></div>
+<div class="q"><strong>capture</strong> from the same run (a real kill): the daylight and the closing line, the debrief, the act summary, the four voiced outro pages, the hangar before L15</div>
+<div class="media"><figure class="m img"><a href="../../campaign/act-2-homefront/level-14-siege-spire/concept/act-2-outro-capture-r36-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-2-homefront/level-14-siege-spire/concept/act-2-outro-capture-r36-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the act summary page is silent (as Act 1's)</p>
+<div class="ans out"><span class="tag">Outcome</span> <span>accepted</span></div>
+</article>
+<article class="row" id="r-14.3d">
+<header><span class="rid">14.3d</span><h3>Level 14 after H9</h3><span class="kind">capture</span></header>
+<div class="part"><a href="../../campaign/act-2-homefront/level-14-siege-spire/README.md#concept-art">Level 14 after H9</a></div>
+<div class="q"><strong>supplementary clip</strong> (step CF, 47 s with sound + sheet; the H7 recipe, <code>--invulnerable</code>): ROOTS 8 / 8 at ≈ 94.5 and Okafor's grid line, the CDF supply drone carrying the armour patch in from the bottom edge (t 96.5–103), the Choir and Varga after the line; the kill at ≈ 194.5 through the daylight at 25 px/s to the debrief</div>
+<div class="media"><figure class="m img"><a href="../../campaign/act-2-homefront/level-14-siege-spire/concept/level-14-capture-daylight-r36-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-2-homefront/level-14-siege-spire/concept/level-14-capture-daylight-r36-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure><figure class="m vid"><figcaption>video</figcaption><video controls preload="none" playsinline src="../../campaign/act-2-homefront/level-14-siege-spire/concept/level-14-capture-daylight-r36-a.mp4"></video></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the grid line plays at ≈ 95–104, the Choir ≈ 105, Varga ≈ 111 over the warning (as H9 planned); the drone climbs to its stop, releases the patch at ≈ 100 and leaves downwards past the ship by ≈ 104; <strong>the stump stays on the screen through the beams</strong> (≈ 200–211): its body leaves the bottom edge at ≈ 212, the last root tips at ≈ 215.3 (≈ 21 s after the kill, the estimate was 15 s), the debrief at ≈ 217.5</p>
+<div class="ans out"><span class="tag">Outcome</span> <span>accepted</span></div>
+</article>
+<article class="row" id="r-14.4a">
+<header><span class="rid">14.4a</span><h3>Root burst sound</h3><span class="kind">pick a / b</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Root burst sound</a></div>
+<div class="q"><strong>pick a or b</strong> (<code>sfx_r36.py</code>): <strong>a</strong> paving cracking under a rumble, a masonry crunch at 1.0 s; <strong>b</strong> a wet creep surge and a creaking root, a wet tear at 1.0 s</div>
+<ul class="listen"><li><strong>root burst a / b</strong>: cracking paving and a crunch / a wet surge and tear (b: a Squelch layer, bubbly?)</li></ul>
+<div class="media"><figure class="m aud"><figcaption>a · root burst</figcaption><audio controls preload="none" src="../../audio/sfx/concept/root-burst-r36-a.ogg"></audio></figure><figure class="m aud"><figcaption>b · root burst</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/root-burst-r36-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> <strong>b has a "Squelch" layer: bubbly risk</strong></p>
+<div class="ans out"><span class="tag">Outcome</span> <span><strong>a</strong>; b rejected</span></div>
+</article>
+<article class="row" id="r-14.4b">
+<header><span class="rid">14.4b</span><h3>Tear-free roar</h3><span class="kind">pick a / b</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Tear-free roar</a></div>
+<div class="q"><strong>pick a or b</strong>: <strong>a</strong> a tectonic rip, root snaps, a shockwave boom, a deep roar under the lift; <strong>b</strong> a creature bellow rising with the lift, wet tearing, an air shockwave</div>
+<ul class="listen"><li><strong>tear-free roar a / b</strong>: a tectonic rip and a deep roar / a rising creature bellow</li></ul>
+<div class="media"><figure class="m aud"><figcaption>a · tear free roar</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/tear-free-roar-r36-a.ogg"></audio></figure><figure class="m aud"><figcaption>b · tear free roar</figcaption><audio controls preload="none" src="../../audio/sfx/concept/tear-free-roar-r36-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> b shares its dragon roar with the Ravager's pounce b and its sea-creature roar with the Kraken's death</p>
+<div class="ans out"><span class="tag">Outcome</span> <span><strong>b</strong>, the creature bellow (user); a rejected; step K1</span></div>
+</article>
+<article class="row" id="r-14.4c">
+<header><span class="rid">14.4c</span><h3>Canopy withering</h3><span class="kind">pick a / b</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Canopy withering</a></div>
+<div class="q"><strong>pick a or b</strong>, 3 s after the kill: <strong>a</strong> a dry crackling shrivel and a far tear into wind; <strong>b</strong> a dying exhale, a groan and sigh into wind</div>
+<ul class="listen"><li><strong>canopy withering a / b</strong>: a dry crackling shrivel / a dying exhale and sigh</li></ul>
+<div class="media"><figure class="m aud"><figcaption>a · canopy withering</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/canopy-withering-r36-a.ogg"></audio></figure><figure class="m aud"><figcaption>b · canopy withering</figcaption><audio controls preload="none" src="../../audio/sfx/concept/canopy-withering-r36-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> its first second is masked by the death chain</p>
+<div class="ans out"><span class="tag">Outcome</span> <span><strong>b</strong>, the dying exhale (user); a rejected; step K1</span></div>
+</article>
+<article class="row" id="r-14.4d">
+<header><span class="rid">14.4d</span><h3>Root growth, canopy hum</h3><span class="kind">sounds</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Root growth, canopy hum</a></div>
+<div class="q"><strong>accept or redo</strong>, one version each: the <strong>root growth</strong> (a stretching creak and a knock) and the <strong>canopy hum</strong> (an 8 s loop on 46 Hz, the level's ambience, cut at the kill as the city's rises). The maw reuses the Brood Carrier's sac (0.85 pitch), the sweep the Mantis's</div>
+<ul class="listen"><li><strong>root growth</strong>: a stretching creak and a knock as it sets</li><li><strong>canopy hum</strong>: the level&#x27;s ambience, an 8 s loop on 46 Hz (headphones)</li></ul>
+<div class="media"><figure class="m aud"><figcaption>root growth</figcaption><audio controls preload="none" src="../../audio/sfx/concept/root-growth-r36-a.ogg"></audio></figure><figure class="m aud"><figcaption>canopy hum</figcaption><audio controls preload="none" src="../../audio/sfx/concept/canopy-hum-r36-a.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the hum is mostly under 200 Hz (small speakers lose it)</p>
+<div class="ans out"><span class="tag">Outcome</span> <span>accepted</span></div>
+</article>
+<article class="row" id="r-14.4e">
+<header><span class="rid">14.4e</span><h3>Level 14&#x27;s and the outro&#x27;s lines voiced</h3><span class="kind">voices</span></header>
+<div class="part"><a href="../../audio/voice/README.md#decisions">Level 14's and the outro's lines voiced</a></div>
+<div class="q"><strong>listen</strong>: 20 lines (Okafor 11 with the four outro pages, Varga 6, Rook 2, Hammer Lead 1), three pinned</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> LISTEN: Varga's t=102 sits high (259 Hz); Hammer Lead's "flight"; "Ares", "Root grid"</p>
+<div class="ans out"><span class="tag">Outcome</span> <span>heard, accepted (I.4)</span></div>
+</article>
+<article class="row" id="r-14.5">
+<header><span class="rid">14.5</span><h3>Level 14 texts</h3><span class="kind">texts</span></header>
+<div class="part"><a href="#level-14-texts">Level 14 texts</a></div>
+<div class="q"><strong>text review</strong>: the two briefing pages (rewritten and split, C5), Rook's teaser, Varga's four intel lines, the radio script, the four outro pages (approved text, unchanged), the screens' words</div>
+<details><summary>Level 14 texts</summary><p>From <span class="ref">Level 14's data</span> and the <span class="ref">Act 2 data</span>.</p><p><strong>Briefing</strong>, two pages, one screen each (shortened by the main agent from step H5's versions, C5):</p><blockquote><p><strong>Commander Okafor</strong> (<code>level-14-spire-over-geneva</code>): "Lancer, Aegis Actual. Something grew out of Geneva Concord two nights ago: the Siege Spire, three kilometres tall and still growing. Your flight goes in first, along the lakefront and through the old town to the rotunda. Destroy it. Aegis Actual out."</p><p><strong>Dr. Varga</strong> (<code>level-14-root-scan</code>): "The Vrell fight as one, and I believe the Spire binds them. Its roots run under the old town and grow guns where they break the surface. Kill the roots and the trunk starves. Bring anti-ground and something that pierces. When the crown opens, look behind you."</p></blockquote><p><em>Approved (one Okafor page)</em>: "Lancer, Aegis Actual. Two nights ago something grew out of the heart of Geneva Concord. It is three kilometres tall and it is still growing. We call it the Siege Spire. The Vrell across Earth fight as one, and Dr. Varga believes the Spire is what binds them. Its roots run under the whole old town, and they grow guns where they break the surface. Tonight the Coalition puts everything it has left into the air. Your flight goes in first: along the lakefront, through the old town, to the Concord rotunda where the trunk stands. Destroy the Spire. Aegis Actual out."</p><p><strong>Hangar teaser</strong> (Rook, not voiced): "Roots first, flyers from behind, then the Spire. I'll take the six o'clock." <em>Approved:</em> "The Siege Spire. Roots on the ground, flyers from behind, then a fight in the open. Anti-ground and piercing recommended."</p><p><strong>Varga's intel lines</strong> (L2 and L3 shortened; the approved single line: "Bring anti-ground for the roots and something that pierces. When the crown opens, look behind you."):</p><div class="tbl"><table><thead><tr><th>Sensor suite</th><th>Line</th></tr></thead><tbody><tr><td>none</td><td>"Geneva Concord, Lancer. Something has grown here for two nights, on the ground and in the air."</td></tr><tr><td>L1</td><td>"Mostly from ahead. Roots break the streets: watch for the dust."</td></tr><tr><td>L2</td><td>"Root guns, hive nodes, cloaked Wraiths. And the Spire."</td></tr><tr><td>L3</td><td>"Bring anti-ground. When the crown opens, look behind you."</td></tr></tbody></table></div><p><strong>Radio script</strong> (retimed in step H6; with H9's rule the root-grid line goes ahead, C10):</p><div class="tbl"><table><thead><tr><th>Trigger</th><th>Speaker</th><th>Line</th></tr></thead><tbody><tr><td>t=1</td><td>Okafor</td><td>"All units, Aegis Actual. Everything the Coalition has left is in the air over Geneva tonight. Make it count."</td></tr><tr><td>t=13</td><td>Hammer Lead</td><td>"Hammer flight on station. Call your targets, Aegis."</td></tr><tr><td>t=21</td><td>Rook</td><td>"Lancer, whatever happens in there, I'm on your wing. As usual."</td></tr><tr><td>t=31.5</td><td>Varga</td><td>"The canopy is one organism. The roots feed the trunk. Kill the roots and the trunk starves."</td></tr><tr><td>t=54</td><td>Varga</td><td>"Hive nodes in the Molard. Hardened, like Lagos."</td></tr><tr><td>t=62</td><td>Okafor</td><td>"Roots surfacing in the streets! They're growing guns."</td></tr><tr><td>Armoured car's cache (secret)</td><td>Okafor</td><td>"That car's crew left their supplies behind. They'd want you to have them, Lancer."</td></tr><tr><td>Secondary met (≈ 93.5)</td><td>Okafor</td><td>"Root grid in the old town destroyed. The engineers will thank you."</td></tr><tr><td>t=96 (≈ 104 after the root-grid line)</td><td>The Choir (distorted)</td><td>"[the Choir sings]"</td></tr><tr><td>t=102 (≈ 110)</td><td>Varga</td><td>"It's singing to the whole city. Lancer, that's the Spire."</td></tr><tr><td>t=108 (the boss warning)</td><td>Rook</td><td>his boss-warning bark (not a scripted line)</td></tr><tr><td>Phase 2 (Maw)</td><td>Varga</td><td>"The crown is opening. It's launching flyers, and they'll loop behind you."</td></tr><tr><td>Phase 3 (Free spire)</td><td>Okafor (fierce)</td><td>"It's tearing loose! Stay on it, Lancer!"</td></tr><tr><td>Phase 3, after Okafor's</td><td>Rook</td><td>"Roots and all. Somebody call a gardener."</td></tr><tr><td>Spire destroyed</td><td>Varga</td><td>"The canopy's dying. All of it, all at once."</td></tr><tr><td>Level end (the closing line)</td><td>Okafor</td><td>"Every Vrell on Earth just lost its voice. They're scattering. We take the fight to them now."</td></tr></tbody></table></div><p><strong>The Act 2 outro</strong> (four voiced pages, Okafor; H7 = a: the approved act debrief, one paragraph a page, unchanged):</p><blockquote><p>1 (grim, <code>act-2-outro-stump</code>): "The Siege Spire is dead. Within the hour every Vrell force on Earth lost its coordination. Some are digging in, most are scattering, and the army is clearing them city by city."</p><p>2 (grim, <code>act-2-outro-names</code>): "Nova Lagos is counting its losses. So is Geneva. So are we. Remember the names, then get some sleep."</p><p>3 (grim, <code>act-2-outro-mars</code>): "An hour ago Ares Landing sent a priority signal. Mars is under siege, and the colonies have been holding alone for three weeks."</p><p>4 (fierce, <code>act-2-outro-aegis</code>): "We take the fight to them now. Aegis Wing ships out for Mars in seventy-two hours. Aegis Actual out."</p></blockquote><p><strong>On screen</strong>: the objective <code>DESTROY THE SIEGE SPIRE</code>; the boss bar <code>SIEGE SPIRE</code>; the tracker <code>ROOTS n / 8</code> (easy <code>n / 4</code>), then <code>DONE</code> or <code>FAILED</code>, and the debrief row <code>ROOTS n / 8</code>; the secondary "Destroy every root-burst growth"; the act summary <code>ACT II COMPLETE · HOMEFRONT</code> (Levels 08–14, DATA CORES <code>NONE FOUND</code>); the hangar after the outro <code>BEFORE L15 - NOT BUILT YET</code> (H9 = a).</p></details>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the approved briefing's "Tonight the Coalition puts everything it has left into the air" moved to the t=1 line</p>
+<div class="ans out"><span class="tag">Outcome</span> <span>accepted</span></div>
+</article>
+<article class="row" id="r-14.6">
+<header><span class="rid">14.6</span><h3>Level 14 numbers</h3><span class="kind">numbers</span></header>
+<div class="part"><a href="#level-14-numbers">Level 14 numbers</a></div>
+<div class="q">accept or change</div>
+<details><summary>Level 14 numbers</summary><ul><li><strong>Scroll</strong>: 140 px/s; the root field (section 3) <strong>80 px/s</strong> (C2); the arena a halt at t=108–≈ 250; the daylight 12 s at <strong>25 px/s</strong> (C3); 13,020 px of ground to the arena, 13,320 in all.</li><li><strong>Enemies to the arena</strong>: easy 81, medium <strong>112</strong> (95 wave units and the ground units), hard 142; <strong>67.6 a minute</strong>; only the 12 s daylight is quiet.</li><li><strong>Root bursts</strong> at t=63 / 74 / 84 / 92, x 150 / 330 / 170 / 320, 100–140 px below the top edge; the growths 52 px apart; the first shot <strong>0.75 s</strong> after growing (hard 0.5 s), ≈ 290 px above the bottom edge; <code>ROOTS</code> 8 (easy 4), the secondary 63 in Act 1 terms (pays 101).</li><li><strong>The Spire</strong>: HP <strong>12,040</strong> (pods 665, mortar roots 775, maw 2,880, core 4,950; easy 9,030, hard 15,652); the fight (autopilot, five seeds) medium <strong>129.5 s</strong> (126.1–131.7), <strong>par 130 s</strong>, easy 95.8 s, hard <strong>195 s</strong> (4 of 5 won); full level runs 97 / 136 / 204 s (C6).</li><li><strong>Its attacks</strong>: pods' aimed orbs (150 px/s, 6) every 1.6 s staggered; the mortar roots' lob every 4 s (a 1 s marker, a 40 px impact for 10, a ring of 10, hard 12); the free spire's lob and sweep (120°, hard 180°, a 0.6 s telegraph, a 300 × 8 px beam for 1.2 s) every 2.5 s in turn; the maw open all phase 2, launches of 2 Wraiths every 8 s (hard 3), at most 4 alive; the lift 3 s to (240, 120).</li><li><strong>Credits</strong>: budget(14) <strong>1,687</strong>, <code>bounty_scale</code> <strong>0.76</strong>, typical haul <strong>1,703</strong> (+1.0 %), perfect run <strong>2,397</strong> (1.42 ×); the Spire 372 in Act 1 terms, <strong>452 paid = 26.8 %</strong> (C8); its Wraiths budgeted at 6 (three launches of 2); the car's crate 88 (pays 141).</li><li><strong>Atlas</strong>: Level 14's own, 5 of 6 pages.</li></ul></details>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> hard's fight over the window (C6); the bounty share (C8)</p>
+<div class="ans out"><span class="tag">Outcome</span> <span>accepted</span></div>
+</article>
+<article class="row" id="r-14.7a">
+<header><span class="rid">14.7a</span><h3>Part H decisions</h3><span class="kind">decisions</span></header>
+<div class="part"><a href="#level-14-decisions-and-build-choices">Part H decisions</a></div>
+<div class="q"><strong>check</strong>: H1–H10 = a and the stated defaults, taken on the user's behalf</div>
+<details><summary>The decisions</summary><p><strong>Part H decisions on the user's behalf (row 14.7a; <span class="ref">Level 14's Decisions</span>)</strong>: <strong>H1 = a</strong> no creep, the arena a halt (C1); <strong>H2 = a</strong> data-driven root bursts (silent invulnerable growths, 100–400 px below the top, not within 60 px of the ship's x); <strong>H3 = a</strong> the maw's Wraiths as ambush launches with a 3 s bottom-edge warning, at most 4 alive; <strong>H4 = a</strong> one boss and one bar, a phase <code>move</code> lifting it in ≈ 3 s, the stump from the boss's state; <strong>H5 = a</strong> the boss attacks <code>lob</code> and <code>sweep</code> on the enemy code; <strong>H6 = a</strong> Act 1's act-end order (C13); <strong>H7 = a</strong> four outro pages with images and voices; <strong>H8 = a</strong> a/b for the root burst, the daylight, the roar and the withering, the rest straight to production; <strong>H9 = a</strong> after the outro the hangar reads <code>BEFORE L15 - NOT BUILT YET</code> (M6 owns the release's end); <strong>H10 = a</strong> the Spire built with the spec's HP, measured and tuned (C6, C8, C9). <strong>The stated defaults</strong>: arrival, warning and checkpoint at t=108 (C12); the creep-free sections; primary <code>reach-end</code> with the arena as its condition; the secondary <code>groups</code> of the 8 growths; popcorn from t=8 at ≥ 50 a minute; the t=82 and t=104 rear Wraiths kept; the Ravagers' crater a burst without growths; data in Act 1 terms with a <code>bounty_scale</code>; the act HP factor for the returning medium units (Creeper 40, Hive Node 81, Ravager 20, Wraith 19); the four intel lines and two briefing pages; Rook's t=80 line dropped; the drone's patch a placed pickup; edge warnings 3 s; the daylight without enemies or music, the closing line queued; "Firestorm" from section 2; the plan's L14 visit unchanged; the threat profile from the data; L14's own atlas.</p></details>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> H1 (C1)</p>
+<div class="ans out"><span class="tag">Outcome</span> <span>confirmed</span></div>
+</article>
+<article class="row" id="r-14.7b">
+<header><span class="rid">14.7b</span><h3>Level 14 build choices</h3><span class="kind">build choices</span></header>
+<div class="part"><a href="#level-14-decisions-and-build-choices">Level 14 build choices</a></div>
+<div class="q"><strong>yes or no, each</strong>: (a)–(w)</div>
+<div class="sub"><span class="rid">14.7b.a</span> A burst's <code>t</code> is its telegraph's start; the burst scrolls; the growths appear ≈ 140 px lower 1 s later; a burst within 60 px of the ship's x shifts away. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">14.7b.b</span> Growing growths are invulnerable (shots glance) and silent until their first shot. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">14.7b.c</span> The growths' first shot after 0.75 s (hard 0.5 s): ≈ 290 px above the bottom edge, still crowding a ship standing under them. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">14.7b.d</span> The boss attacks reuse the enemy patterns' names (<code>mortar</code>, <code>laser-sweep</code>); the lob's impact 59 steps after its marker; the sweep centred on the ship's bearing, alternating sides, hurting once per sweep. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">14.7b.e</span> The maw's launch lanes evenly spread (C7); four planned launch sets cycled; the warning at least 3 s; at most 4 alive (excess dropped); the maw window always open. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">14.7b.f</span> The lift eased (smoothstep), the layer flipping to <code>air</code> at its end; the stump is the destroyed and armoured parts; the armour patch drops at phase 3. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">14.7b.g</span> The anchor 196 px below the top edge, the free station (240, 120); the trunk armoured (the stump), the maw before the core in the hit order. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">14.7b.h</span> Easy's t=82 Wraiths replaced by a Needler V-wing from the front; the hard Molard nest of three Spine Turrets. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">14.7b.i</span> Rook's phase-3 line queued after Okafor's (a <code>PHASE</code> line, stale after 20 s); the car's secret line given to Okafor. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">14.7b.j</span> The burst positions chosen for the backdrop; the car at t=14.5, x 330; the drone's patch at t=100, x 240, carried in by Level 13's drone from below the bottom edge (no launch sound). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">14.7b.k</span> The radio retimed (C12) and the root-grid line ahead of the Choir (C10): Varga's "that's the Spire" over the Spire's arrival. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">14.7b.l</span> The pods snap to the ship's bearing (no turn rate); the crown opens over 0.5 s; the maw flares at each launch; the free spire turns at 2 frames a second. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">14.7b.m</span> The tear-free shockwave: ten dust puffs out to 170 px and sixteen slate shards over 1.5 s. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">14.7b.n</span> The sweep's telegraph a pulsing crimson line, its beam a crimson band with a hot core. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">14.7b.o</span> The death: eight frames over the 3 s chain, fourteen bursts, three blasts, the act bosses' white flash (kept, as Level 07's), the credit shower. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">14.7b.p</span> The stump drawn as ash (60 % toward grey) under the free spire. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">14.7b.q</span> The daylight on real seconds: the canopy's veins fading 2–7 s, the tear 0.5–8.5 s, the beams 2.5–5 s; the stump ≈ 15 s on the screen at 25 px/s (estimated). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">14.7b.r</span> The canopy hum fading over 2 s at the kill, the city's ambience rising over 7 s; the withering 3 s after the kill. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">14.7b.s</span> Hammer flight at x 130 over the lake (clear of the car), t≈12–20. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">14.7b.t</span> The act summary page silent (as Act 1's). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">14.7b.u</span> The backdrop's choices (14.2c weak spots) and the intel silhouette rooted. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">14.7b.v</span> <code>--loadout</code> takes <code>generator=</code>, <code>shield=</code>, <code>armor=</code> (the debug start can fit the plan's cores). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">14.7b.w</span> The main capture flown <code>--invulnerable</code> (P2). <span class="opts">yes / no</span></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> (c) the growths' first shot</p>
+<div class="ans out"><span class="tag">Outcome</span> <span>yes, each</span></div>
+</article>
+</section>
+<section id="s-part-i"><h2>Part I — the close-out</h2>
+<div class="sum"><p>The <span class="ref">close-out</span> ticked the Act 2 checklists, retagged what belongs to later acts and ran Acts 1–2 as one campaign. Its gap list is <code>part-i-gaps.md</code> (repo root).</p></div>
+<article class="row" id="r-I.1">
+<header><span class="rid">I.1</span><h3>Campaign playthrough</h3><span class="kind">accept / change</span></header>
+<div class="part"><a href="../../player/wingmen/README.md">Campaign playthrough</a></div>
+<div class="q"><strong>accept or change</strong>: <code>ActPlaythroughTest</code> flies Levels 01–14 as one campaign on every difficulty, Rook from L08 with repairs; every level won at the first attempt; <code>BalanceTest</code> and <code>balance.py</code> print Rook's DPS (12 / 15)</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> P1, P3, P6</p>
+<div class="ans out"><span class="tag">Outcome</span> <span>accepted</span></div>
+</article>
+<article class="row" id="r-I.2">
+<header><span class="rid">I.2</span><h3>Retagged items</h3><span class="kind">yes / no</span></header>
+<div class="part"><a href="../../campaign/README.md">Retagged items</a></div>
+<div class="q"><strong>yes or no</strong>: Rook's guns and barks tables rendered by <code>sync_tables.py</code> → later: M6 (the hand-written tables match the data today); the campaign sequence 15→50, threat profiles 15–50, the <code>beam</code> and <code>shield-breaker</code> rows, unused movement and attack patterns (<code>submerged ambush</code>: Act 4) and later variety checks → Acts 3–7</div>
+<div class="ans out"><span class="tag">Outcome</span> <span>yes</span></div>
+</article>
+<article class="row" id="r-I.3">
+<header><span class="rid">I.3</span><h3>Act 2 variety</h3><span class="kind">accept</span></header>
+<div class="part"><a href="../../enemies/README.md">Act 2 variety</a></div>
+<div class="q"><strong>accept</strong>: Act 2 passes the variety checklist as built (the table corrected: no <code>large</code> unit in Act 2)</div>
+<div class="ans out"><span class="tag">Outcome</span> <span>accepted</span></div>
+</article>
+<article class="row" id="r-I.4">
+<header><span class="rid">I.4</span><h3>Voice listen-through</h3><span class="kind">human item</span></header>
+<div class="part"><a href="#listening">Voice listen-through</a></div>
+<div class="q"><strong>human item (P8)</strong>: the user listens to Act 2's voiced lines</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> none listened to by Claude</p>
+<div class="ans out"><span class="tag">Outcome</span> <span><strong>done</strong> (the user listened, every line fine)</span></div>
+</article>
+<article class="row" id="r-I.5">
+<header><span class="rid">I.5</span><h3>Playthrough</h3><span class="kind">human item</span></header>
+<div class="part">Playthrough</div>
+<div class="q"><strong>human item (P9)</strong>: the user plays Act 2</div>
+<div class="ans out"><span class="tag">Outcome</span> <span><strong>open</strong>: the user cannot play this week</span></div>
+</article>
+<article class="row" id="r-I.6">
+<header><span class="rid">I.6</span><h3>M5 itself</h3><span class="kind">check</span></header>
+<div class="part"><a href="../../tech/roadmap/README.md#m5-parts">M5 itself</a></div>
+<div class="q">after this round: Levels 12–14 <code>approved</code>, the art <code>final</code>, M5 <code>done</code>; the <code>sub</code> layer's three-OS check after the push (P7)</div>
+<div class="ans out"><span class="tag">Outcome</span> <span>Levels 12–14 <code>approved</code>, their art <code>final</code>, parts F–H done; M5 stays open for I.5 (P9) and P7</span></div>
+</article>
+</section>
+<section id="s-voices"><h2>Listening: the voiced lines</h2>
+<div class="sum"><p>53 voiced lines as the game plays them, and Nansen's audition (row 13.4e). Lines marked <strong>LISTEN</strong> are the ones Whisper or the pitch check flagged; none were listened to by Claude.</p></div>
+<article class="row" id="r-13.4e">
+<header><span class="rid">13.4e</span><h3>Nansen&#x27;s voice</h3><span class="kind">pick a / b</span></header>
+<div class="part"><a href="../../audio/voice/README.md#concept-art">Nansen's voice</a></div>
+<div class="q"><strong>audition, pick a or b</strong> (<code>tools/concept/audio/tts_r35.py</code>, Chatterbox, radio filter b): the CDF officer at Nansen Relay, three lines 1 s apart (t=36 arrival, the 50 % line, t=218 grid sync). <strong>a</strong> Patrick Eaton (LibriVox, male, 124 Hz); <strong>b</strong> Sharon Riskedahl (LibriVox, female, 172 Hz). His five lines play as <strong>text</strong> until cast</div>
+<div class="media"><figure class="m aud"><figcaption>a · three lines, Patrick Eaton</figcaption><audio controls preload="none" src="../../audio/voice/concept/voice-nansen-r35-a.ogg"></audio></figure><figure class="m aud"><figcaption>b · three lines, Sharon Riskedahl</figcaption><audio controls preload="none" src="../../audio/voice/concept/rejected/voice-nansen-r35-b.ogg"></audio></figure><figure class="m miss"><figcaption>reference clip a <em>file not in repo</em> <code>ref-nansen-r35-a.mp3</code></figcaption></figure><figure class="m aud"><figcaption>reference clip b</figcaption><audio controls preload="none" src="../../audio/voice/concept/rejected/ref-nansen-r35-b.wav"></audio></figure></div>
+<details><summary>Reference clip transcripts</summary><p><strong>Reference clip a:</strong> and by Captain Penny of the Lady Franklin. In October 1854, Dr Ray brought home the only additional information respecting them, which has ever reached us, from the Eskimo of Boothia Felix.</p><p><strong>Reference clip b:</strong> Seneca. Unseen and untrodden under their spotless mantle of ice, the rigid polar region slept the profound asleep of death from the earth.</p></details>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> after the pick his lines are rendered and <code>RadioTimelineTest</code> rerun (his t=36 line meets Okafor's t=47.5 only if it runs over ≈ 10 s)</p>
+<div class="ans out"><span class="tag">Outcome</span> <span><strong>a</strong>, Patrick Eaton (user); b rejected; cast and his five lines rendered in step K1</span></div>
+</article>
+<h3>Level 12</h3>
+<article class="row" id="r-V12.01">
+<header><span class="rid">V12.01</span><h3>Okafor · briefing page 1</h3><span class="kind">voice line</span></header>
+<p class="line">&quot;Lancer, Aegis Actual. A storm system has formed off the Azores, and it&#x27;s moving onto the convoy lanes…&quot;</p>
+<div class="media"><figure class="m aud"><figcaption>take</figcaption><audio controls preload="none" src="../../../assets/voice/okafor/8f88578b0e56.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> LISTEN: "Azores", "Vrell"</p>
+<div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-V12.02">
+<header><span class="rid">V12.02</span><h3>Varga · briefing page 2</h3><span class="kind">voice line</span></header>
+<p class="line">&quot;The pressure readings make no sense. Three CDF weather sondes are still transmitting inside the front.…&quot;</p>
+<div class="media"><figure class="m aud"><figcaption>take</figcaption><audio controls preload="none" src="../../../assets/voice/varga/f4f2a71ee4e2.ogg"></audio></figure></div>
+<div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-V12.03">
+<header><span class="rid">V12.03</span><h3>Okafor · t=2</h3><span class="kind">voice line</span></header>
+<p class="line">&quot;Weather service calls it the worst Atlantic storm in forty years. It formed in six hours. Stay together.&quot;</p>
+<div class="media"><figure class="m aud"><figcaption>take</figcaption><audio controls preload="none" src="../../../assets/voice/okafor/bcb16d08c14f.ogg"></audio></figure></div>
+<div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-V12.04">
+<header><span class="rid">V12.04</span><h3>Rook · t=14</h3><span class="kind">voice line</span></header>
+<p class="line">&quot;Feel that? The wind&#x27;s trying to take the stick off me.&quot;</p>
+<div class="media"><figure class="m aud"><figcaption>take</figcaption><audio controls preload="none" src="../../../assets/voice/rook/431e26a3fe8c.ogg"></audio></figure></div>
+<div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-V12.05">
+<header><span class="rid">V12.05</span><h3>Varga · t=30</h3><span class="kind">voice line</span></header>
+<p class="line">&quot;Eel-shaped contacts. They latch on and drain your shield. Shake hard to throw them off.&quot;</p>
+<div class="media"><figure class="m aud"><figcaption>take</figcaption><audio controls preload="none" src="../../../assets/voice/varga/dd97a15d5b15.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> pinned take (the key seed jumped an octave)</p>
+<div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-V12.06">
+<header><span class="rid">V12.06</span><h3>Rook · t=44</h3><span class="kind">voice line</span></header>
+<p class="line">&quot;Seeds on the wind, left side!&quot;</p>
+<div class="media"><figure class="m aud"><figcaption>take</figcaption><audio controls preload="none" src="../../../assets/voice/rook/e5c16ad01548.ogg"></audio></figure></div>
+<div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-V12.07">
+<header><span class="rid">V12.07</span><h3>Varga · t=58</h3><span class="kind">voice line</span></header>
+<p class="line">&quot;There&#x27;s a CDF sonde out there. Fly through it and I can read its data.&quot;</p>
+<div class="media"><figure class="m aud"><figcaption>take</figcaption><audio controls preload="none" src="../../../assets/voice/varga/cda9d1e479a9.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> pinned take; LISTEN: "sonde"</p>
+<div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-V12.08">
+<header><span class="rid">V12.08</span><h3>Varga · t=86</h3><span class="kind">voice line</span></header>
+<p class="line">&quot;Lightning shows what&#x27;s in the clouds. Watch the flashes.&quot;</p>
+<div class="media"><figure class="m aud"><figcaption>take</figcaption><audio controls preload="none" src="../../../assets/voice/varga/092a1fd001d8.ogg"></audio></figure></div>
+<div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-V12.09">
+<header><span class="rid">V12.09</span><h3>Okafor · t=128</h3><span class="kind">voice line</span></header>
+<p class="line">&quot;Storm wall ahead. Instruments will be useless in there. Fly by eye.&quot;</p>
+<div class="media"><figure class="m aud"><figcaption>take</figcaption><audio controls preload="none" src="../../../assets/voice/okafor/20736f1ea907.ogg"></audio></figure></div>
+<div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-V12.10">
+<header><span class="rid">V12.10</span><h3>Rook · t=149.5</h3><span class="kind">voice line</span></header>
+<p class="line">&quot;Blue sky. I&#x27;d almost forgotten what it looks like.&quot;</p>
+<div class="media"><figure class="m aud"><figcaption>take</figcaption><audio controls preload="none" src="../../../assets/voice/rook/6773e26259c2.ogg"></audio></figure></div>
+<div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-V12.11">
+<header><span class="rid">V12.11</span><h3>Varga · t=157</h3><span class="kind">voice line</span></header>
+<p class="line">&quot;Lancer, look at them. They&#x27;re circling with the wind. They aren&#x27;t caught in this storm. They&#x27;re steering it.&quot;</p>
+<div class="media"><figure class="m aud"><figcaption>take</figcaption><audio controls preload="none" src="../../../assets/voice/varga/a7198db19798.ogg"></audio></figure></div>
+<div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-V12.12">
+<header><span class="rid">V12.12</span><h3>Okafor · t=176</h3><span class="kind">voice line</span></header>
+<p class="line">&quot;Say again, Doctor?&quot;</p>
+<div class="media"><figure class="m aud"><figcaption>take</figcaption><audio controls preload="none" src="../../../assets/voice/okafor/602de261bd41.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> pinned take</p>
+<div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-V12.13">
+<header><span class="rid">V12.13</span><h3>Varga · t=182.5</h3><span class="kind">voice line</span></header>
+<p class="line">&quot;They&#x27;re herding the weather, Commander. They understand our climate better than we do.&quot;</p>
+<div class="media"><figure class="m aud"><figcaption>take</figcaption><audio controls preload="none" src="../../../assets/voice/varga/d65128aa69af.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> LISTEN: "herding" (Whisper hears "hurting" in every seed)</p>
+<div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-V12.14">
+<header><span class="rid">V12.14</span><h3>Rook · t=200</h3><span class="kind">voice line</span></header>
+<p class="line">&quot;Next time, I&#x27;m bringing an umbrella.&quot;</p>
+<div class="media"><figure class="m aud"><figcaption>take</figcaption><audio controls preload="none" src="../../../assets/voice/rook/3b94f40871f1.ogg"></audio></figure></div>
+<div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-V12.15">
+<header><span class="rid">V12.15</span><h3>Rook · first latch</h3><span class="kind">voice line</span></header>
+<p class="line">&quot;You&#x27;ve got a passenger! Shake it off!&quot;</p>
+<div class="media"><figure class="m aud"><figcaption>take</figcaption><audio controls preload="none" src="../../../assets/voice/rook/0d795fb668a6.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> pinned take</p>
+<div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-V12.16">
+<header><span class="rid">V12.16</span><h3>Okafor · level end</h3><span class="kind">voice line</span></header>
+<p class="line">&quot;You&#x27;re through. The storm is breaking up behind you, as if someone let it go.&quot;</p>
+<div class="media"><figure class="m aud"><figcaption>take</figcaption><audio controls preload="none" src="../../../assets/voice/okafor/12cd1dbbab5a.ogg"></audio></figure></div>
+<div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-V12.17">
+<header><span class="rid">V12.17</span><h3>Varga · secondary met</h3><span class="kind">voice line</span></header>
+<p class="line">&quot;Three sondes, full data. They fed the storm, Commander. I&#x27;ll have the pattern by morning.&quot;</p>
+<div class="media"><figure class="m aud"><figcaption>take</figcaption><audio controls preload="none" src="../../../assets/voice/varga/c7a82e12794e.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> pinned take; LISTEN: "sondes"</p>
+<div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-V12.18">
+<header><span class="rid">V12.18</span><h3>Varga · secret drifting canister</h3><span class="kind">voice line</span></header>
+<p class="line">&quot;A CDF supply canister. Lucky find in this soup.&quot;</p>
+<div class="media"><figure class="m aud"><figcaption>take</figcaption><audio controls preload="none" src="../../../assets/voice/varga/de6dd3e53a7a.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> pinned take (the key seed ended in murmurs)</p>
+<div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<h3>Level 13</h3>
+<article class="row" id="r-V13.01">
+<header><span class="rid">V13.01</span><h3>Okafor · briefing page 1</h3><span class="kind">voice line</span></header>
+<p class="line">&quot;Lancer, Aegis Actual. Nansen Relay ties every gun on the planet into one defence grid, and a Vrell…&quot;</p>
+<div class="media"><figure class="m aud"><figcaption>take</figcaption><audio controls preload="none" src="../../../assets/voice/okafor/bb18f2e538a8.ogg"></audio></figure></div>
+<div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-V13.02">
+<header><span class="rid">V13.02</span><h3>Varga · briefing page 2</h3><span class="kind">voice line</span></header>
+<p class="line">&quot;Fast boats weave in the leads: lead your shots or spray. Walkers&#x27; claws are armoured in front, so hit…&quot;</p>
+<div class="media"><figure class="m aud"><figcaption>take</figcaption><audio controls preload="none" src="../../../assets/voice/varga/3e3034f49873.ogg"></audio></figure></div>
+<div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-V13.03">
+<header><span class="rid">V13.03</span><h3>Okafor · t=1</h3><span class="kind">voice line</span></header>
+<p class="line">&quot;Nansen Relay coordinates every gun on the planet. If it goes dark, so does the grid.&quot;</p>
+<div class="media"><figure class="m aud"><figcaption>take</figcaption><audio controls preload="none" src="../../../assets/voice/okafor/356bd92ff35b.ogg"></audio></figure></div>
+<div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-V13.04">
+<header><span class="rid">V13.04</span><h3>Varga · t=13</h3><span class="kind">voice line</span></header>
+<p class="line">&quot;Fast boats in the leads. They weave. Lead your shots, or spray.&quot;</p>
+<div class="media"><figure class="m aud"><figcaption>take</figcaption><audio controls preload="none" src="../../../assets/voice/varga/240e8b557207.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> pinned take; LISTEN: still a few high syllables (30 % of frames over 300 Hz)</p>
+<div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-V13.05">
+<header><span class="rid">V13.05</span><h3>Rook · t=24</h3><span class="kind">voice line</span></header>
+<p class="line">&quot;Cold enough for you, Lancer? My canopy&#x27;s frosting on the inside.&quot;</p>
+<div class="media"><figure class="m aud"><figcaption>take</figcaption><audio controls preload="none" src="../../../assets/voice/rook/ec2638fd4fc6.ogg"></audio></figure></div>
+<div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-V13.06">
+<header><span class="rid">V13.06</span><h3>Okafor · t=47.5</h3><span class="kind">voice line</span></header>
+<p class="line">&quot;Lancer, you&#x27;re holding station over the relay. Nothing touches it.&quot;</p>
+<div class="media"><figure class="m aud"><figcaption>take</figcaption><audio controls preload="none" src="../../../assets/voice/okafor/239a2e047da2.ogg"></audio></figure></div>
+<div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-V13.07">
+<header><span class="rid">V13.07</span><h3>Rook · t=58.5</h3><span class="kind">voice line</span></header>
+<p class="line">&quot;Contacts, all sides! Pick a direction, any direction.&quot;</p>
+<div class="media"><figure class="m aud"><figcaption>take</figcaption><audio controls preload="none" src="../../../assets/voice/rook/c2a515c7fc87.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> pinned take</p>
+<div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-V13.08">
+<header><span class="rid">V13.08</span><h3>Varga · t=102</h3><span class="kind">voice line</span></header>
+<p class="line">&quot;Walkers on the floes. Their claws are armoured from the front. Hit them from the side.&quot;</p>
+<div class="media"><figure class="m aud"><figcaption>take</figcaption><audio controls preload="none" src="../../../assets/voice/varga/4444e5960c1d.ogg"></audio></figure></div>
+<div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-V13.09">
+<header><span class="rid">V13.09</span><h3>Okafor · t=154</h3><span class="kind">voice line</span></header>
+<p class="line">&quot;Divers inbound. They&#x27;re going for the relay, not you.&quot;</p>
+<div class="media"><figure class="m aud"><figcaption>take</figcaption><audio controls preload="none" src="../../../assets/voice/okafor/1a268a5f0bc9.ogg"></audio></figure></div>
+<div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-V13.10">
+<header><span class="rid">V13.10</span><h3>Okafor · t=172</h3><span class="kind">voice line</span></header>
+<p class="line">&quot;Weather&#x27;s turning. Whiteout coming in from the edges.&quot;</p>
+<div class="media"><figure class="m aud"><figcaption>take</figcaption><audio controls preload="none" src="../../../assets/voice/okafor/a8d8a6e61f1f.ogg"></audio></figure></div>
+<div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-V13.11">
+<header><span class="rid">V13.11</span><h3>Okafor · t=233.5</h3><span class="kind">voice line</span></header>
+<p class="line">&quot;Well held, Aegis. Now we can see the whole board.&quot;</p>
+<div class="media"><figure class="m aud"><figcaption>take</figcaption><audio controls preload="none" src="../../../assets/voice/okafor/360a71efde31.ogg"></audio></figure></div>
+<div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-V13.12">
+<header><span class="rid">V13.12</span><h3>Rook · level end</h3><span class="kind">voice line</span></header>
+<p class="line">&quot;Next time they need a relay defended, I&#x27;m asking for one with palm trees.&quot;</p>
+<div class="media"><figure class="m aud"><figcaption>take</figcaption><audio controls preload="none" src="../../../assets/voice/rook/c5016a2df23f.ogg"></audio></figure></div>
+<div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-V13.13">
+<header><span class="rid">V13.13</span><h3>Okafor · mission failed</h3><span class="kind">voice line</span></header>
+<p class="line">&quot;Nansen is gone. Pull back, Lancer.&quot;</p>
+<div class="media"><figure class="m miss"><figcaption>take <em>file not in repo</em> <code>49386929d4bb.mp3</code></figcaption></figure></div>
+<div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-V13.14">
+<header><span class="rid">V13.14</span><h3>Okafor · relay below 25 %</h3><span class="kind">voice line</span></header>
+<p class="line">&quot;Lancer, the relay is failing. Everything else can wait.&quot;</p>
+<div class="media"><figure class="m aud"><figcaption>take</figcaption><audio controls preload="none" src="../../../assets/voice/okafor/b6f615cc246d.ogg"></audio></figure></div>
+<div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-V13.15">
+<header><span class="rid">V13.15</span><h3>Varga · secret research hut cache</h3><span class="kind">voice line</span></header>
+<p class="line">&quot;A CDF research cache. Somebody left that hut in a hurry.&quot;</p>
+<div class="media"><figure class="m aud"><figcaption>take</figcaption><audio controls preload="none" src="../../../assets/voice/varga/bc756d169e74.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> pinned take; LISTEN: "hut"</p>
+<div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<h3>Level 14</h3>
+<article class="row" id="r-V14.01">
+<header><span class="rid">V14.01</span><h3>Okafor · briefing page 1</h3><span class="kind">voice line</span></header>
+<p class="line">&quot;Lancer, Aegis Actual. Something grew out of Geneva Concord two nights ago: the Siege Spire, three…&quot;</p>
+<div class="media"><figure class="m aud"><figcaption>take</figcaption><audio controls preload="none" src="../../../assets/voice/okafor/67dbf1110958.ogg"></audio></figure></div>
+<div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-V14.02">
+<header><span class="rid">V14.02</span><h3>Varga · briefing page 2</h3><span class="kind">voice line</span></header>
+<p class="line">&quot;The Vrell fight as one, and I believe the Spire binds them. Its roots run under the old town and grow…&quot;</p>
+<div class="media"><figure class="m miss"><figcaption>take <em>file not in repo</em> <code>0e226d3a4ff2.mp3</code></figcaption></figure></div>
+<div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-V14.03">
+<header><span class="rid">V14.03</span><h3>Okafor · t=1</h3><span class="kind">voice line</span></header>
+<p class="line">&quot;All units, Aegis Actual. Everything the Coalition has left is in the air over Geneva tonight. Make it count.&quot;</p>
+<div class="media"><figure class="m aud"><figcaption>take</figcaption><audio controls preload="none" src="../../../assets/voice/okafor/1c2c3e042a52.ogg"></audio></figure></div>
+<div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-V14.04">
+<header><span class="rid">V14.04</span><h3>Hammer Lead · t=13</h3><span class="kind">voice line</span></header>
+<p class="line">&quot;Hammer flight on station. Call your targets, Aegis.&quot;</p>
+<div class="media"><figure class="m aud"><figcaption>take</figcaption><audio controls preload="none" src="../../../assets/voice/hammer-lead/4a0877190476.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> pinned take; LISTEN: "flight"</p>
+<div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-V14.05">
+<header><span class="rid">V14.05</span><h3>Rook · t=21</h3><span class="kind">voice line</span></header>
+<p class="line">&quot;Lancer, whatever happens in there, I&#x27;m on your wing. As usual.&quot;</p>
+<div class="media"><figure class="m aud"><figcaption>take</figcaption><audio controls preload="none" src="../../../assets/voice/rook/0e06f6d30260.ogg"></audio></figure></div>
+<div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-V14.06">
+<header><span class="rid">V14.06</span><h3>Varga · t=31.5</h3><span class="kind">voice line</span></header>
+<p class="line">&quot;The canopy is one organism. The roots feed the trunk. Kill the roots and the trunk starves.&quot;</p>
+<div class="media"><figure class="m aud"><figcaption>take</figcaption><audio controls preload="none" src="../../../assets/voice/varga/c7d887d4846e.ogg"></audio></figure></div>
+<div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-V14.07">
+<header><span class="rid">V14.07</span><h3>Varga · t=54</h3><span class="kind">voice line</span></header>
+<p class="line">&quot;Hive nodes in the Molard. Hardened, like Lagos.&quot;</p>
+<div class="media"><figure class="m aud"><figcaption>take</figcaption><audio controls preload="none" src="../../../assets/voice/varga/b0a8f0d09999.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> pinned take; LISTEN: "hive nodes" (raw take still reads "five")</p>
+<div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-V14.08">
+<header><span class="rid">V14.08</span><h3>Okafor · t=62</h3><span class="kind">voice line</span></header>
+<p class="line">&quot;Roots surfacing in the streets! They&#x27;re growing guns.&quot;</p>
+<div class="media"><figure class="m aud"><figcaption>take</figcaption><audio controls preload="none" src="../../../assets/voice/okafor/fa7514bdb6a8.ogg"></audio></figure></div>
+<div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-V14.09">
+<header><span class="rid">V14.09</span><h3>Varga · t=102</h3><span class="kind">voice line</span></header>
+<p class="line">&quot;It&#x27;s singing to the whole city. Lancer, that&#x27;s the Spire.&quot;</p>
+<div class="media"><figure class="m aud"><figcaption>take</figcaption><audio controls preload="none" src="../../../assets/voice/varga/57a6cc0ed4ed.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> LISTEN: sits higher than her other lines (259 Hz median)</p>
+<div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-V14.10">
+<header><span class="rid">V14.10</span><h3>Varga · Spire destroyed</h3><span class="kind">voice line</span></header>
+<p class="line">&quot;The canopy&#x27;s dying. All of it, all at once.&quot;</p>
+<div class="media"><figure class="m aud"><figcaption>take</figcaption><audio controls preload="none" src="../../../assets/voice/varga/c66890f5c69c.ogg"></audio></figure></div>
+<div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-V14.11">
+<header><span class="rid">V14.11</span><h3>Okafor · phase 3 (Free spire)</h3><span class="kind">voice line</span></header>
+<p class="line">&quot;It&#x27;s tearing loose! Stay on it, Lancer!&quot;</p>
+<div class="media"><figure class="m aud"><figcaption>take</figcaption><audio controls preload="none" src="../../../assets/voice/okafor/c28e5f89ef7f.ogg"></audio></figure></div>
+<div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-V14.12">
+<header><span class="rid">V14.12</span><h3>Rook · phase 3, after Okafor</h3><span class="kind">voice line</span></header>
+<p class="line">&quot;Roots and all. Somebody call a gardener.&quot;</p>
+<div class="media"><figure class="m aud"><figcaption>take</figcaption><audio controls preload="none" src="../../../assets/voice/rook/8c39dc4dc9f7.ogg"></audio></figure></div>
+<div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-V14.13">
+<header><span class="rid">V14.13</span><h3>Varga · phase 2 (Maw)</h3><span class="kind">voice line</span></header>
+<p class="line">&quot;The crown is opening. It&#x27;s launching flyers, and they&#x27;ll loop behind you.&quot;</p>
+<div class="media"><figure class="m aud"><figcaption>take</figcaption><audio controls preload="none" src="../../../assets/voice/varga/35324e4ed247.ogg"></audio></figure></div>
+<div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-V14.14">
+<header><span class="rid">V14.14</span><h3>Okafor · level end</h3><span class="kind">voice line</span></header>
+<p class="line">&quot;Every Vrell on Earth just lost its voice. They&#x27;re scattering. We take the fight to them now.&quot;</p>
+<div class="media"><figure class="m aud"><figcaption>take</figcaption><audio controls preload="none" src="../../../assets/voice/okafor/e295d4babb93.ogg"></audio></figure></div>
+<div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-V14.15">
+<header><span class="rid">V14.15</span><h3>Okafor · secondary met</h3><span class="kind">voice line</span></header>
+<p class="line">&quot;Root grid in the old town destroyed. The engineers will thank you.&quot;</p>
+<div class="media"><figure class="m aud"><figcaption>take</figcaption><audio controls preload="none" src="../../../assets/voice/okafor/dd76b7e52c21.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> LISTEN: "Root grid" (Whisper hears "route grid")</p>
+<div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-V14.16">
+<header><span class="rid">V14.16</span><h3>Okafor · secret armoured car</h3><span class="kind">voice line</span></header>
+<p class="line">&quot;That car&#x27;s crew left their supplies behind. They&#x27;d want you to have them, Lancer.&quot;</p>
+<div class="media"><figure class="m aud"><figcaption>take</figcaption><audio controls preload="none" src="../../../assets/voice/okafor/282cefb59e48.ogg"></audio></figure></div>
+<div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<h3>Act 2 outro</h3>
+<article class="row" id="r-VA2.01">
+<header><span class="rid">VA2.01</span><h3>Okafor · page 1</h3><span class="kind">voice line</span></header>
+<p class="line">&quot;The Siege Spire is dead. Within the hour every Vrell force on Earth lost its coordination. Some are…&quot;</p>
+<div class="media"><figure class="m aud"><figcaption>take</figcaption><audio controls preload="none" src="../../../assets/voice/okafor/0164616b057b.ogg"></audio></figure></div>
+<div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-VA2.02">
+<header><span class="rid">VA2.02</span><h3>Okafor · page 2</h3><span class="kind">voice line</span></header>
+<p class="line">&quot;Nova Lagos is counting its losses. So is Geneva. So are we. Remember the names, then get some sleep.&quot;</p>
+<div class="media"><figure class="m aud"><figcaption>take</figcaption><audio controls preload="none" src="../../../assets/voice/okafor/9ab0fa49eb2b.ogg"></audio></figure></div>
+<div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-VA2.03">
+<header><span class="rid">VA2.03</span><h3>Okafor · page 3</h3><span class="kind">voice line</span></header>
+<p class="line">&quot;An hour ago Ares Landing sent a priority signal. Mars is under siege, and the colonies have been holding…&quot;</p>
+<div class="media"><figure class="m miss"><figcaption>take <em>file not in repo</em> <code>8daf90352d85.mp3</code></figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> LISTEN: "Ares" (Whisper hears "air is")</p>
+<div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-VA2.04">
+<header><span class="rid">VA2.04</span><h3>Okafor · page 4</h3><span class="kind">voice line</span></header>
+<p class="line">&quot;We take the fight to them now. Aegis Wing ships out for Mars in seventy-two hours. Aegis Actual out.&quot;</p>
+<div class="media"><figure class="m aud"><figcaption>take</figcaption><audio controls preload="none" src="../../../assets/voice/okafor/db5a71987932.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> pinned take; LISTEN: "ships out for Mars"</p>
+<div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+</section>
+<section id="s-sounds"><h2>Sounds</h2>
+<div class="sum"><p>The sound proposals of the three levels in one place, with their listening points. These are the same rows as in the level sections: an answer here is the answer there.</p></div>
+<article class="row" id="r-12.4a">
+<header><span class="rid">12.4a</span><h3>Thunder</h3><span class="kind">pick a / b</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Thunder</a></div>
+<div class="q"><strong>pick a or b</strong>, three each (<code>tools/concept/audio/sfx_r34.py</code>, played in turn 0.3–1.5 s after each flash): <strong>a</strong> the storm bed's own thunder (FlatHill, CC0); <strong>b</strong> close strikes (loganzsound, CC0), a crack then the roll. a is in the game</div>
+<ul class="listen"><li><strong>thunder a</strong>: the bed&#x27;s own thunder: a big clap and roll, a distant roll, a deep low roll</li><li><strong>thunder b</strong>: close strikes: a sharp crack, then the roll, farther each time</li></ul>
+<div class="media"><figure class="m aud"><figcaption>a · thunder 1</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/thunder-1-r34-a.ogg"></audio></figure><figure class="m aud"><figcaption>a · thunder 2</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/thunder-2-r34-a.ogg"></audio></figure><figure class="m aud"><figcaption>a · thunder 3</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/thunder-3-r34-a.ogg"></audio></figure><figure class="m aud"><figcaption>b · thunder 1</figcaption><audio controls preload="none" src="../../audio/sfx/concept/thunder-1-r34-b.ogg"></audio></figure><figure class="m aud"><figcaption>b · thunder 2</figcaption><audio controls preload="none" src="../../audio/sfx/concept/thunder-2-r34-b.ogg"></audio></figure><figure class="m aud"><figcaption>b · thunder 3</figcaption><audio controls preload="none" src="../../audio/sfx/concept/thunder-3-r34-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> not listened to by Claude</p>
+<div class="ans out"><span class="tag">Outcome</span> <span><strong>b</strong>, the close strikes (user); a rejected; step K1</span></div>
+</article>
+<article class="row" id="r-12.4b">
+<header><span class="rid">12.4b</span><h3>Gust</h3><span class="kind">pick a / b</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Gust</a></div>
+<div class="q"><strong>pick a or b</strong>: <strong>a</strong> synthesized wind rising over the telegraph with a hollow howl; <strong>b</strong> a recorded gust (cobratronik, CC0) in the same envelope. Both pan from the upwind side</div>
+<ul class="listen"><li><strong>gust a / b</strong>: synthesized howl / a recorded gust; does it read as &quot;pushed from the left&quot;?</li></ul>
+<div class="media"><figure class="m aud"><figcaption>a · gust</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/gust-r34-a.ogg"></audio></figure><figure class="m aud"><figcaption>b · gust</figcaption><audio controls preload="none" src="../../audio/sfx/concept/gust-r34-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the capture heard the gust 8 of 9 times after it was raised to the warnings' level</p>
+<div class="ans out"><span class="tag">Outcome</span> <span><strong>b</strong>, the recorded gust (user); a rejected; step K1</span></div>
+</article>
+<article class="row" id="r-12.4c">
+<header><span class="rid">12.4c</span><h3>Latch</h3><span class="kind">pick a / b</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Latch</a></div>
+<div class="q"><strong>pick a or b</strong>: <strong>a</strong> suck and bite (inhaling rush, the bite at 0.16 s, grinding teeth); <strong>b</strong> clamp on the hull (a wet splat on a metallic thud, gnawing; JustInvoke CC-BY)</div>
+<ul class="listen"><li><strong>latch a / b</strong>: suck and bite / a wet splat on a metal thud (not bubbly?)</li></ul>
+<div class="media"><figure class="m aud"><figcaption>a · lamprey latch</figcaption><audio controls preload="none" src="../../audio/sfx/concept/lamprey-latch-r34-a.ogg"></audio></figure><figure class="m aud"><figcaption>b · lamprey latch</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/lamprey-latch-r34-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> b's wet splat: check it is not "bubbly"</p>
+<div class="ans out"><span class="tag">Outcome</span> <span><strong>a</strong>; b rejected</span></div>
+</article>
+<article class="row" id="r-12.4d">
+<header><span class="rid">12.4d</span><h3>Drain loop</h3><span class="kind">pick a / b</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Drain loop</a></div>
+<div class="q"><strong>pick a or b</strong>, a seamless 2.4 s loop while a Lamprey drains: <strong>a</strong> a low electric hum throbbing with the gulps; <strong>b</strong> a siphoning whine with crackle (zimbot, CC-BY)</div>
+<ul class="listen"><li><strong>drain loop a / b</strong>: a throbbing hum / a siphoning whine (2.4 s loops)</li></ul>
+<div class="media"><figure class="m aud"><figcaption>a · lamprey drain</figcaption><audio controls preload="none" src="../../audio/sfx/concept/lamprey-drain-r34-a.ogg"></audio></figure><figure class="m aud"><figcaption>b · lamprey drain</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/lamprey-drain-r34-b.ogg"></audio></figure></div>
+<div class="ans out"><span class="tag">Outcome</span> <span><strong>a</strong>; b rejected</span></div>
+</article>
+<article class="row" id="r-12.4e">
+<header><span class="rid">12.4e</span><h3>Shake-off, chime, rain bed</h3><span class="kind">sounds</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Shake-off, chime, rain bed</a></div>
+<div class="q"><strong>accept or redo</strong>, one version each: the <strong>shake-off</strong> (a wet slap and a squeal whooshing away; +3.5 dB in step G8), the <strong>sonde chime</strong> (telemetry chirp into two bell tones), the <strong>rain-only storm bed</strong> (F6 = a, a 10 s loop cut from the FlatHill source)</div>
+<ul class="listen"><li><strong>shake-off</strong>: a wet slap and a squeal whooshing away (+3.5 dB since G8)</li><li><strong>sonde chime</strong>: a telemetry chirp into two bell tones</li><li><strong>rain bed</strong>: the rain-only bed (10 s loop): too loud or too thin?</li></ul>
+<div class="media"><figure class="m aud"><figcaption>lamprey shake</figcaption><audio controls preload="none" src="../../audio/sfx/concept/lamprey-shake-r34-a.ogg"></audio></figure><figure class="m aud"><figcaption>sonde chime</figcaption><audio controls preload="none" src="../../audio/sfx/concept/sonde-chime-r34-a.ogg"></audio></figure><figure class="m aud"><figcaption>ambience storm rain</figcaption><audio controls preload="none" src="../../audio/sfx/concept/ambience-storm-rain-r34-a.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the shake-off was marginal under the busy mix before G8</p>
+<div class="ans out"><span class="tag">Outcome</span> <span>accepted</span></div>
+</article>
+<article class="row" id="r-13.4a">
+<header><span class="rid">13.4a</span><h3>Relay hit</h3><span class="kind">pick a / b</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Relay hit</a></div>
+<div class="q"><strong>pick a or b</strong> (<code>sfx_r35.py</code>): <strong>a</strong> struck plating and a spark (CC0 recordings); <strong>b</strong> a dull thud and the link glitching</div>
+<ul class="listen"><li><strong>relay hit a / b</strong>: struck plating and a spark / a thud and a link glitch</li></ul>
+<div class="media"><figure class="m aud"><figcaption>a · relay hit</figcaption><audio controls preload="none" src="../../audio/sfx/concept/relay-hit-r35-a.ogg"></audio></figure><figure class="m aud"><figcaption>b · relay hit</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/relay-hit-r35-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> plays often (at −2 dB)</p>
+<div class="ans out"><span class="tag">Outcome</span> <span><strong>a</strong>; b rejected</span></div>
+</article>
+<article class="row" id="r-13.4b">
+<header><span class="rid">13.4b</span><h3>Integrity alarm</h3><span class="kind">pick a / b</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Integrity alarm</a></div>
+<div class="q"><strong>pick a or b</strong> (synthesized), once at 50 % and once at 25 %: <strong>a</strong> a hi-lo two-tone ×3; <strong>b</strong> three rising whoops</div>
+<ul class="listen"><li><strong>integrity alarm a / b</strong>: a hi-lo two-tone / three rising whoops</li></ul>
+<div class="media"><figure class="m aud"><figcaption>a · integrity alarm</figcaption><audio controls preload="none" src="../../audio/sfx/concept/integrity-alarm-r35-a.ogg"></audio></figure><figure class="m aud"><figcaption>b · integrity alarm</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/integrity-alarm-r35-b.ogg"></audio></figure></div>
+<div class="ans out"><span class="tag">Outcome</span> <span><strong>a</strong>; b rejected</span></div>
+</article>
+<article class="row" id="r-13.4c">
+<header><span class="rid">13.4c</span><h3>Grid online</h3><span class="kind">pick a / b</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Grid online</a></div>
+<div class="q"><strong>pick a or b</strong> at t=218, leading into the jingle: <strong>a</strong> five breakers closing, a mains hum swelling, an A-major bloom (synthesized); <strong>b</strong> a spin-up into a contact clunk (Glitchedtones, CC0)</div>
+<ul class="listen"><li><strong>grid online a / b</strong>: breakers, a hum and a chord / a spin-up and a clunk (2.6 s, into the jingle)</li></ul>
+<div class="media"><figure class="m aud"><figcaption>a · grid online</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/grid-online-r35-a.ogg"></audio></figure><figure class="m aud"><figcaption>b · grid online</figcaption><audio controls preload="none" src="../../audio/sfx/concept/grid-online-r35-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the chord is as loud as the jingle (it now ends before it, C4)</p>
+<div class="ans out"><span class="tag">Outcome</span> <span><strong>b</strong>, the spin-up into a contact clunk (user); a rejected; step K1</span></div>
+</article>
+<article class="row" id="r-13.4d">
+<header><span class="rid">13.4d</span><h3>Drone launch, relay destroyed</h3><span class="kind">sounds</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Drone launch, relay destroyed</a></div>
+<div class="q"><strong>accept or redo</strong>, one version each: the <strong>drone launch</strong> (four rotors spinning up, climbing away; +2 dB after G7) and <strong>relay destroyed</strong> (a big boom, metal rumbling, a power-down)</div>
+<ul class="listen"><li><strong>drone launch</strong>: four rotors spinning up and climbing away</li><li><strong>relay destroyed</strong>: a boom, metal rumbling, a power-down</li></ul>
+<div class="media"><figure class="m aud"><figcaption>drone launch</figcaption><audio controls preload="none" src="../../audio/sfx/concept/drone-launch-r35-a.ogg"></audio></figure><figure class="m aud"><figcaption>relay destroyed</figcaption><audio controls preload="none" src="../../audio/sfx/concept/relay-destroyed-r35-a.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> not listened to by Claude; the capture heard all of Level 13's sounds</p>
+<div class="ans out"><span class="tag">Outcome</span> <span>accepted</span></div>
+</article>
+<article class="row" id="r-14.4a">
+<header><span class="rid">14.4a</span><h3>Root burst sound</h3><span class="kind">pick a / b</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Root burst sound</a></div>
+<div class="q"><strong>pick a or b</strong> (<code>sfx_r36.py</code>): <strong>a</strong> paving cracking under a rumble, a masonry crunch at 1.0 s; <strong>b</strong> a wet creep surge and a creaking root, a wet tear at 1.0 s</div>
+<ul class="listen"><li><strong>root burst a / b</strong>: cracking paving and a crunch / a wet surge and tear (b: a Squelch layer, bubbly?)</li></ul>
+<div class="media"><figure class="m aud"><figcaption>a · root burst</figcaption><audio controls preload="none" src="../../audio/sfx/concept/root-burst-r36-a.ogg"></audio></figure><figure class="m aud"><figcaption>b · root burst</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/root-burst-r36-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> <strong>b has a "Squelch" layer: bubbly risk</strong></p>
+<div class="ans out"><span class="tag">Outcome</span> <span><strong>a</strong>; b rejected</span></div>
+</article>
+<article class="row" id="r-14.4b">
+<header><span class="rid">14.4b</span><h3>Tear-free roar</h3><span class="kind">pick a / b</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Tear-free roar</a></div>
+<div class="q"><strong>pick a or b</strong>: <strong>a</strong> a tectonic rip, root snaps, a shockwave boom, a deep roar under the lift; <strong>b</strong> a creature bellow rising with the lift, wet tearing, an air shockwave</div>
+<ul class="listen"><li><strong>tear-free roar a / b</strong>: a tectonic rip and a deep roar / a rising creature bellow</li></ul>
+<div class="media"><figure class="m aud"><figcaption>a · tear free roar</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/tear-free-roar-r36-a.ogg"></audio></figure><figure class="m aud"><figcaption>b · tear free roar</figcaption><audio controls preload="none" src="../../audio/sfx/concept/tear-free-roar-r36-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> b shares its dragon roar with the Ravager's pounce b and its sea-creature roar with the Kraken's death</p>
+<div class="ans out"><span class="tag">Outcome</span> <span><strong>b</strong>, the creature bellow (user); a rejected; step K1</span></div>
+</article>
+<article class="row" id="r-14.4c">
+<header><span class="rid">14.4c</span><h3>Canopy withering</h3><span class="kind">pick a / b</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Canopy withering</a></div>
+<div class="q"><strong>pick a or b</strong>, 3 s after the kill: <strong>a</strong> a dry crackling shrivel and a far tear into wind; <strong>b</strong> a dying exhale, a groan and sigh into wind</div>
+<ul class="listen"><li><strong>canopy withering a / b</strong>: a dry crackling shrivel / a dying exhale and sigh</li></ul>
+<div class="media"><figure class="m aud"><figcaption>a · canopy withering</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/canopy-withering-r36-a.ogg"></audio></figure><figure class="m aud"><figcaption>b · canopy withering</figcaption><audio controls preload="none" src="../../audio/sfx/concept/canopy-withering-r36-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> its first second is masked by the death chain</p>
+<div class="ans out"><span class="tag">Outcome</span> <span><strong>b</strong>, the dying exhale (user); a rejected; step K1</span></div>
+</article>
+<article class="row" id="r-14.4d">
+<header><span class="rid">14.4d</span><h3>Root growth, canopy hum</h3><span class="kind">sounds</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Root growth, canopy hum</a></div>
+<div class="q"><strong>accept or redo</strong>, one version each: the <strong>root growth</strong> (a stretching creak and a knock) and the <strong>canopy hum</strong> (an 8 s loop on 46 Hz, the level's ambience, cut at the kill as the city's rises). The maw reuses the Brood Carrier's sac (0.85 pitch), the sweep the Mantis's</div>
+<ul class="listen"><li><strong>root growth</strong>: a stretching creak and a knock as it sets</li><li><strong>canopy hum</strong>: the level&#x27;s ambience, an 8 s loop on 46 Hz (headphones)</li></ul>
+<div class="media"><figure class="m aud"><figcaption>root growth</figcaption><audio controls preload="none" src="../../audio/sfx/concept/root-growth-r36-a.ogg"></audio></figure><figure class="m aud"><figcaption>canopy hum</figcaption><audio controls preload="none" src="../../audio/sfx/concept/canopy-hum-r36-a.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the hum is mostly under 200 Hz (small speakers lose it)</p>
+<div class="ans out"><span class="tag">Outcome</span> <span>accepted</span></div>
+</article>
+</section></main></body></html>

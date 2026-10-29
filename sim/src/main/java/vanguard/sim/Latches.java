@@ -17,6 +17,8 @@ final class Latches {
     private final EnemySpec.Latch latch;
     /** The steps of the last reversals of the commanded horizontal direction while latched, a ring. */
     private final int[] reversals;
+    /** M9 part F: whether a unit of the level drains the generator's output while latched (the Void Leech). */
+    private final boolean powerDrainers;
 
     private int reversalNext;
     /** The last commanded horizontal direction, -1 left, 1 right, 0 none yet. */
@@ -33,11 +35,14 @@ final class Latches {
         this.events = events;
         this.radio = radio;
         EnemySpec.Latch firstLatch = null;
+        boolean power = false;
         for (EnemySpec kind : force.kinds()) {
             if (firstLatch == null && kind.latch().isPresent()) {
                 firstLatch = kind.latch().get();
             }
+            power |= kind.latch().isPresent() && kind.latch().get().drainsPower();
         }
+        powerDrainers = power;
         latch = firstLatch;
         reversals = new int[latch == null ? 0 : latch.reversals()];
         clearReversals();
@@ -83,7 +88,9 @@ final class Latches {
         }
         Pool<Enemy> enemies = force.enemies();
         for (int j = 0; j < enemies.size(); j++) {
-            if (enemies.get(j).draining()) {
+            Enemy enemy = enemies.get(j);
+            // M9 part F: a power drainer (the Void Leech) drains no shield points.
+            if (enemy.draining() && !enemy.spec().latch().orElseThrow().drainsPower()) {
                 return true;
             }
         }
@@ -169,21 +176,38 @@ final class Latches {
         reversalNext = 0;
     }
 
-    /** M5 part F: every latched unit drains the shield at its rate (design/enemies/air/lamprey). */
+    /**
+     * M5 part F: every latched unit drains the shield at its rate (design/enemies/air/lamprey). M9 part F
+     * (design/enemies/space/void-leech; design/player/generator, Enemy drain effects): a latched power drainer lowers
+     * the generator's output instead: the power budget's drainers follow the power drainers latched now, so a latch, a
+     * shake-off, an EMP throw or a kill changes the output in the same step (nothing without a power budget).
+     */
     void drainShield() {
         Pool<Enemy> enemies = force.enemies();
         int count = 0;
+        int drainingPower = 0;
         for (int j = 0; j < enemies.size(); j++) {
             Enemy enemy = enemies.get(j);
             if (enemy.latched()) {
                 count++;
-                if (enemy.draining()) {
+                EnemySpec.Latch held = enemy.spec().latch().orElseThrow();
+                if (held.drainsPower()) {
+                    drainingPower++;
+                } else if (enemy.draining()) {
                     // M7 part A: a latched unit the EMP Burst stuns stays latched, its drain paused.
-                    double rate = enemy.spec().latch().orElseThrow().drainRate();
-                    ship.defences().drain(rate * SimStep.SECONDS, events, ship.x(), ship.y());
+                    ship.defences().drain(held.drainRate() * SimStep.SECONDS, events, ship.x(), ship.y());
                 }
             }
         }
         latchedCount = count;
+        if (powerDrainers && s.power().isPresent()) {
+            int now = s.power().get().drainers();
+            while (now < drainingPower) {
+                now = s.drain(1);
+            }
+            while (now > drainingPower) {
+                now = s.drain(-1);
+            }
+        }
     }
 }

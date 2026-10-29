@@ -47,10 +47,17 @@ final class LineLooks {
 
     /** With the bullets: every running line. */
     void draw(SpriteBatch batch, Sortie sortie) {
+        draw(batch, sortie, null);
+    }
+
+    /** With the bullets: every running line but a Rail Bunker's with its art (M9 part F: {@code own} draws those). */
+    void draw(SpriteBatch batch, Sortie sortie, LeechFieldLooks own) {
         boolean any = false;
         for (int i = 0; i < sortie.enemyCount(); i++) {
             Enemy enemy = sortie.enemy(i);
-            if (enemy.spec().laserLine().isEmpty() || !enemy.lineBeam().running()) {
+            if (enemy.spec().laserLine().isEmpty()
+                    || !enemy.lineBeam().running()
+                    || (own != null && own.draws(enemy))) {
                 continue;
             }
             if (!any) {

@@ -63,6 +63,10 @@ final class VentPlay {
     static final double BESIDE = 10;
     /** It keeps off the side edges, px. */
     static final double EDGE = 40;
+    /** M9 part H: how near the lifeboat's x it closes in on (the beam on its 56 px box), px. */
+    static final double SECRET_COLUMN = 12;
+    /** M9 part H: the extra cost it accepts to close in on the lifeboat. */
+    static final double SECRET_TIE = 20;
     /** A torpedo this close launches the Decoy Flares (if fitted and ready), px. */
     static final double FLARE_RANGE = 140;
 
@@ -132,8 +136,13 @@ final class VentPlay {
         double targetY = hunters ? UNDER_HUNTERS_Y : CRUISE_Y;
         Pickup pickup = sortie.pickupCount() > 0 ? sortie.pickup(0) : null;
         boolean plumes = plumes(sortie);
+        // M9 part H: Level 35's Ceres lifeboat on the hull (a level with the mass relay; no other level's flight
+        // changes).
+        GroundObject secret = sortie.relay().isPresent() ? TargetPlay.secretTarget(sortie, shipY) : null;
         if (beacon != null) {
             targetX = beacon.renderX(1);
+        } else if (secret != null) {
+            targetX = secret.renderX();
         } else if (pickup != null && (above == null || pickup.renderY(1) < 300)) {
             targetX = pickup.renderX();
             targetY = Math.max(40, pickup.renderY(1) - 10);
@@ -165,10 +174,20 @@ final class VentPlay {
                     MovePlanner.MOVE_Y[m],
                     targetX,
                     targetY,
-                    beacon != null ? BEACON_X : ALONG_X);
+                    beacon != null || secret != null ? BEACON_X : ALONG_X);
             if (cost < least) {
                 least = cost;
                 best = m;
+            }
+        }
+        if (secret != null && Math.abs(shipX - targetX) > SECRET_COLUMN) {
+            // M9 part H: the look-ahead's full-speed end overshoots the lifeboat as far as it falls short of it (a tie
+            // 40 px off it): the way straight at it when it costs no more than the best (nothing in its way).
+            int toward = shipX < targetX ? 2 : 1;
+            double cost =
+                    cost(sortie, MovePlanner.MOVE_X[toward], MovePlanner.MOVE_Y[toward], targetX, targetY, BEACON_X);
+            if (cost <= least + SECRET_TIE) {
+                best = toward;
             }
         }
         return MovePlanner.MOVES[best] | (flaresDue(sortie) ? Command.SPECIAL.bit() : 0);

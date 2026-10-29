@@ -66,6 +66,10 @@ class EnemySpecCopyTest {
                 Act5CSpecs.SERPENT,
                 Act5DSpecs.BUZZSAW,
                 Act5DSpecs.SHARD,
+                Act5ESpecs.SENTINEL,
+                Act5ESpecs.STRIDER,
+                Act5FSpecs.HUNTER,
+                Act5FSpecs.PREY_TALON,
                 ThreadcrawlerTest.crawler(4, ThreadcrawlerTest.PORES, new double[] {0, 5_000}, new double[] {100, 100}),
                 EnemySpec.of("whirl-seed", 1, new Hitbox(14, 14), Layer.AIR, 4, true, 3, 150)
                         .withSpiral(Optional.of(new EnemySpec.Spiral(3, 0.5, 40, 60, 0)))

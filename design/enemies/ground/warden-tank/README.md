@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../player/specials, ../../../campaign/act-3-red-dust, ../../../campaign/act-5-the-belt]
-updated: 2026-10-27
+updated: 2026-10-29
 ---
 
 # Warden Tank
@@ -45,7 +45,7 @@ gets the act HP factor of a `medium` unit (every part).
 | Effective traits | `anti-ground`, `rear` |
 | Credits | 28 (score 280 × chain); whole (hull first) 26; parts: hull 20, turret 8 (28) |
 | Death | `medium` mechanical explosion with sparks and smoke; the burnt hull stays as a wreck (grey, no markings) |
-| First level / used in | L19; introduced in Level 19 (Foundry of Tharsis); returns L39, L41 (Act 6) in Ascendancy livery |
+| First level / used in | L19; introduced in Level 19 (Foundry of Tharsis); returns in Ascendancy livery in L34 (Salvage Run, Act 5), L39, L41 (Act 6) |
 | Difficulty hooks | easy: 2-shot burst every 3.0 s; hard: 4-shot burst every 2.0 s, turret 160°/s |
 <!-- /data -->
 
@@ -90,7 +90,9 @@ updates the data's *First level / used in* row (L34 added before Act 6's L39 and
 - **Livery.** The chosen r05-a concept is the Act 5 look (the r05 black livery re-rendered in the Act 5 gunmetal/charcoal with gold trim, white accent, rim light; red
   running lights per Q11 b, decided in round 60); its wreck is black and gold too. The intel names it Ascendancy
   from Act 5 (Act 3's "unidentified" stays for Levels 19–21). The production frames reuse
-  `tools/art/warden_tank.py` with the livery changed (no new model).
+  `tools/art/warden_tank.py` with the livery changed (no new model). The data's `livery` key (step G2: `from_act:
+  5`, `sprite: warden-tank-asc`, `faction: Jovian Ascendancy`) names the frames and the intel's faction from Act 5;
+  the stat block stays one (no new unit slug).
 
 ### Difficulty and level use
 
@@ -118,8 +120,11 @@ turret at 32 headings tracking the player, tread marks. It is chosen **in Ascend
 Production art (Act 3 grey): [warden-tank-final-r42-a.png](../concept/warden-tank-final-r42-a.png)
 ([GIF](../concept/warden-tank-final-r42-a.gif)), `tools/art/warden_tank.py` (sprite names and frame layout in its
 docstring and `briefs/m7f-names.md`); approved as final by the user in round 42 (F.b, 2026-10-20). Prompt notes:
-[../concept/prompts.md](../concept/prompts.md#warden-tank-final-r42-a). The Ascendancy livery (Act 5+) is not
-produced yet.
+[../concept/prompts.md](../concept/prompts.md#warden-tank-final-r42-a). The Ascendancy livery (Act 5+) is
+proposed in round 67 (M9 part G, step ART-G): [warden-tank-asc-final-r67-a.png](../concept/warden-tank-asc-final-r67-a.png)
+([GIF](../concept/warden-tank-asc-final-r67-a.gif)), `tools/art/warden_tank.py --livery asc` (A.15 b in Q.11 b's
+gunmetal, the frames `warden-tank-asc*`); its readability on Level 34's hulls in
+[the level's 1:1 crops](../../../campaign/act-5-the-belt/level-34-salvage-run/concept/tank-readability-final-r67-a.png).
 
 Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's review board follows) — a/b proposals in the belt look of [Q11](../../README.md#open-questions) a (gloss black; the user chose look b, gunmetal/charcoal with gold, in round 60, so the chosen variant is re-rendered in gunmetal in production), each a PNG sheet (the source render, the sprites and states, the readability check over the darkest ground of Level 34 with the measured gold share, key frames) and a GIF in the 480×540 play field; generator `tools/concept/enemies_r60.py`. Prompts: [concept/prompts.md](concept/prompts.md).
 
@@ -135,8 +140,10 @@ Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's r
 - [x] Turret burst: 0.3 s still before it fires, 3 shots 0.15 s apart, every 2.5 s, any direction (step F3: `WardenTankTest`)
 - [x] Rear plate ×1.5 within ±50° of the rear; the turret's loss silences it (step F3: `EnemySpec.RearPlate`, `WardenTankTest`)
 - [ ] EMP stun 3 s (machine)
-- [ ] Unmarked grey livery and wreck for Act 3; Ascendancy livery from Act 5
-- [ ] Act 5 (when the draft is approved): L34 in the data's *used in* row, the act HP factor at L34 (hull 97, turret 30), the intel label "Ascendancy" from Act 5, the livery's production frames and wreck (`tools/art/warden_tank.py`)
+- [x] Unmarked grey livery and wreck for Act 3; Ascendancy livery from Act 5 (step G4: `warden-tank-asc` from Act 5,
+      the grey frames only before it; seen in round 67's captures, step G5)
+- [x] Act 5 (when the draft is approved): L34 in the data's *used in* row, the act HP factor at L34 (hull 97, turret 30), the intel label "Ascendancy" from Act 5, the livery's production frames and wreck (`tools/art/warden_tank.py`) (step G2: the *used in* row, the `livery` key and the frames `warden-tank-asc*` in `assets/`; the act HP factor with step G3, the liveried intel portrait with step G4; the intel's faction tag
+      "WARDEN TANK: JOVIAN ASCENDANCY" from sensor L2 (`EnemyData.factionIn`, found by step G5) with step H4)
 - [x] Data file with the stat block (when Level 19 is built): step F2, the `turret` and `rear_plate`
       keys loaded, checked and mapped (`FoundryRules`)
 - [x] Production art (round of part F; approved as final in round 42, F.b)
@@ -169,3 +176,9 @@ Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's r
   drafted (*Act 5: the return in livery*): L34 in Ascendancy livery replaces the roster's Crawler Tank (J1), hull 97
   and turret 30 by the act HP factor, intel "Ascendancy" from Act 5. The design is `review` until the round.
 - 2026-10-27 (user, [round 60](../../../concept-rounds/round-60/README.md) closed): the design approved as drafted (`design: approved`); art A.15 **b**, "Warden Tank B, heavier gold", chosen (`art: chosen`), the other variant in `concept/rejected/`. Q11 **b** (gunmetal/charcoal with gold, not gloss black): the chosen variant is re-rendered in gunmetal/charcoal in this part's production art, keeping the ≥ 20 % gold and the readability check.
+- 2026-10-29 (M9 part G, step G2): the data's `livery: {from_act: 5, sprite: warden-tank-asc, faction: Jovian
+  Ascendancy}` and the *used in* row (L34 before Act 6's L39 and L41); `tools/art/warden_tank.py --livery asc` re-run, its
+  frames now claimed in `assets/sprites/` (the muzzle flash stays `warden-tank-flash`).
+- 2026-10-29 (step G5, pending the user's review in round 67): the livery seen in Level 34's game captures at 1:1 on
+  the CDF walkways, the Helix keel roads and the freighter's deck (QG-1); a mining charge (80) finishes a tank the guns
+  have hit and strips a fresh one's turret (round 67's C.4).

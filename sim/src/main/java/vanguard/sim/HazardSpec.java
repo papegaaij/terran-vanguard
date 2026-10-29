@@ -17,6 +17,7 @@ import java.util.Optional;
  * @param sondes M5 part F: the weather sondes to fly through (Level 12)
  * @param cruisers M8 part H, step H2: the finale's two Ascendancy cruisers (Level 28's run, {@link CruiserRun}); empty
  *     for none
+ * @param relay M9 part H, step H1b: the mass relay's flash (Level 35, {@link RelayFlash}); empty for none
  */
 public record HazardSpec(
         List<CraneSpec> cranes,
@@ -27,8 +28,9 @@ public record HazardSpec(
         Optional<Darkness> darkness,
         Optional<Weather> weather,
         Optional<Sondes> sondes,
-        Optional<CruiserRunSpec> cruisers) {
-    /** No hazards: no cranes, debris, sleds, rocks, vents, darkness, weather, sondes or cruisers. */
+        Optional<CruiserRunSpec> cruisers,
+        Optional<Relay> relay) {
+    /** No hazards: no cranes, debris, sleds, rocks, vents, darkness, weather, sondes, cruisers or relay. */
     public static final HazardSpec NONE = new HazardSpec(
             List.of(),
             List.of(),
@@ -38,7 +40,22 @@ public record HazardSpec(
             Optional.empty(),
             Optional.empty(),
             Optional.empty(),
+            Optional.empty(),
             Optional.empty());
+
+    /** The hazards before M9 part H's relay (none). */
+    public HazardSpec(
+            List<CraneSpec> cranes,
+            List<DebrisSpec> debris,
+            Optional<SledSpec> sled,
+            Optional<RockSpec> rocks,
+            List<VentRow> vents,
+            Optional<Darkness> darkness,
+            Optional<Weather> weather,
+            Optional<Sondes> sondes,
+            Optional<CruiserRunSpec> cruisers) {
+        this(cranes, debris, sled, rocks, vents, darkness, weather, sondes, cruisers, Optional.empty());
+    }
 
     /** The hazards before M8 part H's cruisers (none). */
     public HazardSpec(
@@ -60,51 +77,76 @@ public record HazardSpec(
                 .sorted(java.util.Comparator.comparingDouble(VentRow::t))
                 .toList();
         java.util.Objects.requireNonNull(cruisers);
+        java.util.Objects.requireNonNull(relay);
     }
 
     /** These hazards with another {@code cranes}. */
     public HazardSpec withCranes(List<CraneSpec> cranes) {
-        return new HazardSpec(cranes, debris, sled, rocks, vents, darkness, weather, sondes, cruisers);
+        return new HazardSpec(cranes, debris, sled, rocks, vents, darkness, weather, sondes, cruisers, relay);
     }
 
     /** These hazards with another {@code debris}. */
     public HazardSpec withDebris(List<DebrisSpec> debris) {
-        return new HazardSpec(cranes, debris, sled, rocks, vents, darkness, weather, sondes, cruisers);
+        return new HazardSpec(cranes, debris, sled, rocks, vents, darkness, weather, sondes, cruisers, relay);
     }
 
     /** These hazards with another {@code sled}. */
     public HazardSpec withSled(Optional<SledSpec> sled) {
-        return new HazardSpec(cranes, debris, sled, rocks, vents, darkness, weather, sondes, cruisers);
+        return new HazardSpec(cranes, debris, sled, rocks, vents, darkness, weather, sondes, cruisers, relay);
     }
 
     /** These hazards with another {@code rocks}. */
     public HazardSpec withRocks(Optional<RockSpec> rocks) {
-        return new HazardSpec(cranes, debris, sled, rocks, vents, darkness, weather, sondes, cruisers);
+        return new HazardSpec(cranes, debris, sled, rocks, vents, darkness, weather, sondes, cruisers, relay);
     }
 
     /** These hazards with another {@code vents}. */
     public HazardSpec withVents(List<VentRow> vents) {
-        return new HazardSpec(cranes, debris, sled, rocks, vents, darkness, weather, sondes, cruisers);
+        return new HazardSpec(cranes, debris, sled, rocks, vents, darkness, weather, sondes, cruisers, relay);
     }
 
     /** These hazards with another {@code darkness}. */
     public HazardSpec withDarkness(Optional<Darkness> darkness) {
-        return new HazardSpec(cranes, debris, sled, rocks, vents, darkness, weather, sondes, cruisers);
+        return new HazardSpec(cranes, debris, sled, rocks, vents, darkness, weather, sondes, cruisers, relay);
     }
 
     /** These hazards with another {@code weather}. */
     public HazardSpec withWeather(Optional<Weather> weather) {
-        return new HazardSpec(cranes, debris, sled, rocks, vents, darkness, weather, sondes, cruisers);
+        return new HazardSpec(cranes, debris, sled, rocks, vents, darkness, weather, sondes, cruisers, relay);
     }
 
     /** These hazards with another {@code sondes}. */
     public HazardSpec withSondes(Optional<Sondes> sondes) {
-        return new HazardSpec(cranes, debris, sled, rocks, vents, darkness, weather, sondes, cruisers);
+        return new HazardSpec(cranes, debris, sled, rocks, vents, darkness, weather, sondes, cruisers, relay);
+    }
+
+    /** M9 part H, step H1b: these hazards with another {@code relay}. */
+    public HazardSpec withRelay(Optional<Relay> relay) {
+        return new HazardSpec(cranes, debris, sled, rocks, vents, darkness, weather, sondes, cruisers, relay);
+    }
+
+    /**
+     * M9 part H, step H1b (design/campaign Level 35, the mass-relay flash; design/world/belt): the turned mass relay fires
+     * once. At {@code t} s on the level clock its thin red line is drawn across the whole field, horizontal through the
+     * ship's height at that moment (locked; the relay lies off the right edge when {@code fromRight}, else the left);
+     * after {@code telegraphSeconds} it flashes along the line, a band {@code bandPx} wide, live {@code liveSeconds}:
+     * {@code damage} to the ship once. Nothing else is hurt (Rook and the enemies on the line are untouched). The
+     * difficulty's telegraph (easy 1.5 s) is the content's.
+     */
+    public record Relay(
+            double t, double telegraphSeconds, double liveSeconds, double bandPx, double damage, boolean fromRight) {
+        public Relay {
+            if (!(t >= 0) || !(telegraphSeconds > 0) || !(liveSeconds > 0) || !(bandPx > 0) || !(damage > 0)) {
+                throw new IllegalArgumentException("a relay flash has a time, a telegraph, a live time, a band and"
+                        + " damage: " + t + ", " + telegraphSeconds + ", " + liveSeconds + ", " + bandPx + ", "
+                        + damage);
+            }
+        }
     }
 
     /** M8 part H: these hazards with another {@code cruisers}. */
     public HazardSpec withCruisers(Optional<CruiserRunSpec> cruisers) {
-        return new HazardSpec(cranes, debris, sled, rocks, vents, darkness, weather, sondes, cruisers);
+        return new HazardSpec(cranes, debris, sled, rocks, vents, darkness, weather, sondes, cruisers, relay);
     }
 
     /**

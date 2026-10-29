@@ -64,6 +64,11 @@ public sealed interface WavesBlock permits LevelData {
      *     {@code leader} airframe; killing it scatters the wing
      * @param onRocks M9 part B (design/enemies, Rock riding): its units ride these rocks ({@link OnRocks}); its count is
      *     rocks × riders on every difficulty
+     * @param prey M9 part F (design/enemies/space/void-leech, The uneasy alliance; Level 33, QF-1 a pending round 66):
+     *     its units are prey ({@link PreyHold}): a {@code hunts: prey} leech latches on them instead of the ship; they
+     *     fly a refuelling hold instead of their swoop (from the front)
+     * @param hunts M9 part F: {@code prey}: its leeches drift and chase the nearest free prey on the screen instead of
+     *     the ship (the ship once none is left); only on a wave of a unit whose latch has a {@code prey_drift}
      */
     public record Wave(
             double t,
@@ -98,7 +103,13 @@ public sealed interface WavesBlock permits LevelData {
             Optional<List<Double>> onGround,
             Optional<String> leader,
             Optional<OnRocks> onRocks,
-            Optional<MineLines> mineLines) {
+            Optional<MineLines> mineLines,
+            Optional<TerrainBlock.Branch> branch,
+            Optional<PreyHold> prey,
+            Optional<String> hunts) {
+        /** M9 part F: the {@code hunts} value of a leech wave sent at a prey wing. */
+        public static final String PREY = "prey";
+
         /** M8 part E: a wall's nests one after the other ({@link #wall}). */
         public static final String STAGGERED = "staggered";
 
@@ -106,6 +117,16 @@ public sealed interface WavesBlock permits LevelData {
         public static final String OPPOSITE = "opposite";
 
         public Wave {
+            // M9 part F (Level 33, the uneasy alliance): a prey wing holds from the front; a hunting wave hunts prey.
+            Check.that(
+                    prey.isEmpty() || (from == LevelData.Entry.FRONT && cave.isEmpty() && wall.isEmpty()),
+                    "a prey wing flies its hold from the front (from: front)");
+            hunts.ifPresent(h -> Check.that(PREY.equals(h), "hunts: prey, was '" + h + "'"));
+            Check.that(prey.isEmpty() || hunts.isEmpty(), "a wave is prey or hunts it, not both");
+            // M9 part E (design/campaign Level 32, The forks): a branch's wave flies in its channel from the front.
+            Check.that(
+                    branch.isEmpty() || (from == LevelData.Entry.FRONT && cave.isEmpty() && wall.isEmpty()),
+                    "a branch's wave enters from the front (from: front), not out of a cave or off the walls");
             onGround = onGround.map(List::copyOf);
             onGround.ifPresent(xs -> {
                 Check.that(!xs.isEmpty(), "on_ground: the nests' xs");
@@ -358,6 +379,20 @@ public sealed interface WavesBlock permits LevelData {
      * M9 part B (design/enemies, Rock riding; design/campaign Level 29): a wave's rocks, each a small breakable chunk of
      * the level's {@code debris} chunk {@code chunk}, carrying {@code riders} of the wave's units round its rim.
      */
+    /**
+     * M9 part F (Level 33, QF-1 a pending round 66): a prey wing's refuelling hold instead of its unit's swoop: its units
+     * come down to {@code depth} ({@code [min, max]} px below the top edge, its formation's stops), hold {@code hold} s
+     * and leave straight up; latched by a leech they leave it and drift down instead.
+     */
+    public record PreyHold(double hold, Span depth) {
+        public PreyHold {
+            Check.positive("prey.hold", hold);
+            Check.that(
+                    depth.min() > 0 && depth.max() < PlayField.HEIGHT,
+                    "prey.depth: [min, max] px below the top edge, on the play field");
+        }
+    }
+
     public record OnRocks(String chunk, int riders, List<RockData> rocks) {
         public OnRocks {
             rocks = List.copyOf(rocks);

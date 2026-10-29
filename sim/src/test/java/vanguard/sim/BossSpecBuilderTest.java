@@ -27,7 +27,8 @@ class BossSpecBuilderTest {
                         PartHSpecs.spire(),
                         NavalConvoyTest.boss(),
                         RevenantWalkerSimTest.walker(true, 2),
-                        RevenantWalkerSimTest.striking(true))
+                        RevenantWalkerSimTest.striking(true),
+                        Act5HSpecs.SOVEREIGN)
                 .stream()
                 .map(piece -> piece.boss().orElseThrow())
                 .map(boss -> boss.barName().equals("TEST CARRIER") ? boss.withIncomingSeconds(3) : boss)

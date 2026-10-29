@@ -137,6 +137,14 @@ class BalanceTest {
             "ravager ttk",
             "16 HP at L09's reference DPS 63 is 0.25 s, below the medium class's 0.4-1.5 s: a fast,"
                     + " fragile pack hunter (user decision 2026-10-07, M5 part C)",
+            "sentinel-tower bounty",
+            "the approved stat block's 40 (round 60) is above the medium class's 18-30: a tower behind a hardened"
+                    + " collar, which the plan (no anti-ground) reaches only with the beam through the emitter or a"
+                    + " charge; kept as approved (round 65, M9 part E)",
+            "strider ttk",
+            "the whole 410 HP at L32's reference DPS 132 is 3.1 s, above the large class's 1-3 s: the approved"
+                    + " stat block (round 60) sums the hull 220, two legs of 80 and the pod 30, and a leg (0.6 s)"
+                    + " topples it; kept as approved (round 65, M9 part E)",
             "wraith ttk",
             "16 HP at L10's reference DPS 66 is 0.24 s, below the medium class's 0.4–1.5 s: set for the plan's"
                     + " rear DPS (Tail Gun L1, 10) with its rear check instead (user decision D7 = a, 2026-10-08,"
@@ -156,6 +164,11 @@ class BalanceTest {
      * (remove it here) or a new one appears.
      */
     static final Map<String, String> PENDING = Map.of(
+            "iron-sovereign ttk",
+            "the paper fight (the 13 batteries' 3,960 HP and the core's 14,000 at 0.6 × L35's reference 144) is 209 s,"
+                    + " above the act boss's 90-180 s: the core tuned on the autopilot's measured fight (the plan's fit"
+                    + " and Rook, 149 s at medium over five seeds: the beam's columns, the pods and Rook beat the paper's"
+                    + " 0.6); M9 part H, step H3, pending round 68",
             "clamp-gun ttk",
             "250 HP at L29's reference DPS 120 is 2.1 s, above the medium class's 0.4-1.5 s: the four hold the"
                     + " rescue halt, 1,000 HP together for the README's typical halt of about 14 s at the boss rule's"
@@ -1173,6 +1186,11 @@ class BalanceTest {
     static double lanelessSeconds(EnemyData enemy, double dps) {
         List<EnemyData.PartData> parts = enemy.partList().orElseThrow();
         double seconds = vanguard.sim.Sortie.ARENA_RAMP_SECONDS;
+        // M9 part H (step H3): a ringed boss's phases end on its rings' locks: every battery's HP is taken before the
+        // core's last phase (the Iron Sovereign).
+        for (var ring : enemy.boss().orElseThrow().rings().orElse(List.of())) {
+            seconds += ring.batteries().count() * ring.batteries().part().hp() / dps;
+        }
         for (EnemyData.PhaseData phase : enemy.boss().orElseThrow().phases()) {
             seconds += phase.delay().orElse(0.0)
                     + phase.move().flatMap(EnemyData.MoveData::descend).orElse(0.0);

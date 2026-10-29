@@ -1,10 +1,10 @@
 ---
 title: Rail Bunker
 design: approved
-implementation: not-started
-art: chosen
+implementation: done
+art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../player/specials]
-updated: 2026-10-28
+updated: 2026-10-29
 ---
 
 # Rail Bunker
@@ -19,38 +19,41 @@ hit, dodged by leaving the line. Only `anti-ground` weapons and specials break i
 
 ### Stat block
 
-**Draft** (Act 5 design phase, step D-enemies-B; approved in round 60). A hand-written
-table: there is no `data.yaml` yet, the build turns it into one. Numbers at **medium** (see the
+**Draft** (Act 5 design phase, step D-enemies-B; approved in round 60). Rendered from [data.yaml](data.yaml) since M9 part F (step F2, 2026-10-29; its header lists the build's own readings: a pair's or trio's first lines are staggered by the level (`staggered`)). Numbers at **medium** (see the
 [balancing basis](../../README.md#balancing-basis)); HP is in damage units (a Pulse Cannon L1 shot does 2),
 set at its first level from the proposed Act 5 reference DPS (judgement call J2: L33 136): 100 HP is 0.7 s
 at the reference, but only an `anti-ground` weapon or a special reaches it. Fire rates are tuned per level
 with `levelReport`.
 
+<!-- data: stat-block -->
 | Field | Value |
 |---|---|
-| Faction | Ascendancy; a **machine** (stunned 3 s by the EMP Burst) |
+| Faction | Jovian Ascendancy (machine: the EMP Burst stuns it longest) |
 | Layer | `ground` (hardened: only `anti-ground` weapons, the Airstrike, the Orbital Lance and the Smart Bomb damage it) |
 | Size tier | `medium` |
-| Size | 72×72 px (the chosen r04 concept's octagon), hitbox 56×56 |
+| Size | 72×72 px, hitbox 56×56 (the chosen r04 concept's octagon) |
 | Parts | single |
-| Orientation | `fixed` bunker; the rail turret `32 angles`, turning 90°/s toward the ship |
+| Orientation | `32 angles` (the rail turret's headings, turning 90°/s toward the ship, drawn; the bunker itself fixed) |
 | HP | 100 (easy 75 / hard 130, from the global multipliers) |
 | Armour / shield | hardened: other shots glance off with a spark; homing shots and Rook do not pick it unless their weapon is `anti-ground` |
 | Speed | 0 px/s (scrolls with the rock or hull) |
 | Movement | `terrain` |
-| Attack | `laser-line` (the rail): at the telegraph's start the turret locks a line from its muzzle through the ship's position to the screen edge and draws it as a thin red line, brightening, for **1.0 s** (the coils glow gold); then the rail fires along it, 10 px drawn, an 8 px hit band, live 0.2 s, **`heavy` 10** once; every **4.5 s**, telegraph to telegraph; it holds fire while the ship is within 100 px; any direction, up the screen too |
-| Formations | turret nest (single, or 2–3 along a rock face whose lines cross) |
+| Attack | `laser-line` (the rail): at the telegraph's start the turret locks a line from its muzzle through the ship's position to the screen edge and draws it as a thin red line, brightening, for **1 s** (the coils glow gold); then the rail fires along it, an 8 px hit band, live 0.2 s, **`heavy` 10** once; every **4.5 s**, telegraph to telegraph; it holds fire while the ship is within 100 px; any direction, up the screen too; never more than 2 lines telegraphed at once |
+| Formations | turret nest (1–3) (single, or 2–3 along a rock face whose lines cross) |
 | Weak points | none (the gold coils glow during the charge, drawn only) |
-| Effective traits | `anti-ground` (and the specials) |
+| Effective traits | `anti-ground` |
 | Credits | 45 (score 450 × chain) |
 | Death | `medium` ground explosion, the rail thrown; the cracked bunker shell stays as a wreck |
-| First level / used in | L33 (the asteroid surfaces of the Leech Field, judgement call J3); L35's approach on the Sovereign's outer hull; the Iron Sovereign's rail batteries share its line (the boss doc) |
+| First level / used in | L33; the asteroid surfaces of the Leech Field, judgement call J3; L35's approach on the Sovereign's outer hull; the Iron Sovereign's rail batteries share its line (the boss doc) |
 | Difficulty hooks | easy: telegraph 1.2 s, every 6 s; hard: telegraph 0.8 s (the vocabulary's minimum), every 3.6 s |
+<!-- /data -->
 
 ### Behaviour
 
-- **Lock, not track.** The line is fixed when the telegraph starts: a sidestep out of the 8 px band during
-  the second is always enough. Its warning is the bright red line (crimson is the lasers' hue; the line
+- **Lock, not track.** The line's *direction* is fixed when the telegraph starts, and its origin stays on the
+  turret and **rides with the bunker** (it scrolls on with the rock or hull; round 66's C.1 b, built in step FIX3): a
+  sidestep out of the 8 px band during the second is enough for a diagonal line, while the band slides down with the
+  ground, so a still ship is missed by diagonal lines and hit by near-vertical ones. Its warning is the bright red line (crimson is the lasers' hue; the line
   stays thin until it fires), so it reads at speed.
 - **Hardened.** As the [Hive Node](../hive-node/README.md) and the Drill Rig: a standard loadout glances off,
   the player needs an `anti-ground` weapon (the Bomb Rack, the Hammer Mortar) or a special. A bunker is a
@@ -97,13 +100,23 @@ Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's r
 
 ## Implementation
 
-- [ ] Stat block loaded from a `data.yaml` (when the design is approved); global difficulty multipliers applied; tuned with `levelReport`
-- [ ] `laser-line`: the locked line, the brightening telegraph (≥ 0.8 s), the rail's band, `heavy` 10 once, any direction
+- [x] Stat block loaded from a `data.yaml` (when the design is approved); global difficulty multipliers applied; tuned with `levelReport`
+- [x] `laser-line`: the locked line, the brightening telegraph (≥ 0.8 s), the rail's band, `heavy` 10 once, any direction
   (M9 part A: the simulation's `LineBeam` in step A1; step A3: a provisional look, `LineLooks`, a thin red telegraph
   brightening and flickering, the live band in gold round a white core, until this unit's art)
-- [ ] Hardened: glance, the specials' damage, homing and Rook skip it without `anti-ground`
-- [ ] Production sprites from the chosen r04 concept (the turret at 32 angles, the coil glow, the wreck), the intel portrait
-- [ ] Death effect, bounty and sounds per this spec (Freesound, no bubbly sounds)
+- [x] Hardened: glance, the specials' damage, homing and Rook skip it without `anti-ground`
+- [x] The locked line rides with the bunker (round 66's C.1 b: the direction locked at the telegraph's start, the origin on the turret; the drawn telegraph, rail and flash follow)
+      (step FIX3: `LineBeam.ride` moves a running line's origin onto its unit each step after the moves, a stunned
+      unit's too, so the telegraph, the live band and the hit test ride with it; `RailBunkerTest`: on the muzzle with the
+      direction locked, a diagonal line slides off a still ship, a near-vertical one hits it and a sidestep dodges, the
+      gate of 2 unchanged; `LeechFieldLooks` draws the telegraph, rail and flash from the bunker as drawn, the fading
+      rail riding on with it; the autopilot's line rule looks ahead along the moving band. The Iron Sovereign's
+      batteries' lines ride the same way, `BossLines`, pending round 68)
+- [x] Production sprites from the chosen r04 concept (the turret at 32 angles, the coil glow, the wreck), the intel portrait
+      (step F4: `LeechFieldLooks` in place of `LineLooks`' placeholder for the unit: the turret turning at 90°/s and onto
+      the locked line, the coils by the charge, the rail strip live and fading from the muzzle's distance, the flash)
+- [x] Death effect, bounty and sounds per this spec (Freesound, no bubbly sounds) (step F4: round 60's rail charge and
+      shot, round 66's death proposal a, picked: S.7 a)
 
 ## Open questions
 
@@ -122,3 +135,8 @@ Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's r
   the specials' own rules already let the Airstrike, the Smart Bomb and the Orbital Lance damage hardened targets.
 - 2026-10-27 (user, [round 60](../../../concept-rounds/round-60/README.md) closed): the design approved as drafted (`design: approved`); art A.13 **a**, "Rail Bunker A, solid lock line", chosen (`art: chosen`), the other variant in `concept/rejected/`. Q11 **b** (gunmetal/charcoal with gold, not gloss black): the chosen variant is re-rendered in gunmetal/charcoal in this part's production art, keeping the ≥ 20 % gold and the readability check.
 - 2026-10-28 (user, [round 61](../../../concept-rounds/round-61/README.md), closed): **C.5** accepted: the `laser-line` hits the ship once per line and passes through Rook and the escort drones; the provisional look stays until the bunker's art.
+- 2026-10-29 (user, [round 66](../../../concept-rounds/round-66/README.md), closed): the production art accepted (F.3 ok: the base, the turret at 32 headings, the coils' glow, the rail strip and flash, the wreck; `art:` stays `chosen` until the line below is built, then `final`); the death sound **S.7 a** (`bunker-death`); **C.1 b** (not the recommendation): the rail line rides with the bunker: the direction is locked at the telegraph's start and the origin stays on the turret, moving with the bunker, so the band slides down with the ground (a still ship is missed by diagonal lines, hit by near-vertical ones); built in FIX3 (sim), replacing step F4's line fixed on the screen. **C.7 b**: hard's third bunker gets a pad at x 240 (FIX3's art part).
+- 2026-10-29 (step FIX3): C.1 b built: the line's origin rides with the bunker (sim, look and autopilot), the direction
+  locked; `art: final` (F.3 ok, the last open item). The ground's `rail-bunker-capture-r66-a.png` shows C.1 a's line
+  leaving the turret: kept as round 66's record and marked stale in the ground's Concept art table (FIX3's 1:1 check
+  on Level 33 at t≈69.4–70.5: the red line stays on the scrolling turret's muzzle).

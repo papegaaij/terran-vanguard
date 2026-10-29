@@ -56,8 +56,18 @@ final class LevelReport {
         USER
     }
 
+    /**
+     * The report's options; M9 part E: {@code route} a forked level's route for every flight ({@link RoutePlay}), null
+     * (the default) for a report per route.
+     */
     record Options(
-            List<Integer> levels, List<Difficulty> difficulties, int seeds, Fit fit, Set<Part> parts, boolean json) {
+            List<Integer> levels,
+            List<Difficulty> difficulties,
+            int seeds,
+            Fit fit,
+            Set<Part> parts,
+            boolean json,
+            String route) {
         static Options parse(String... args) {
             List<Integer> levels = new ArrayList<>();
             List<Difficulty> difficulties = List.of(Difficulty.values());
@@ -65,6 +75,7 @@ final class LevelReport {
             Fit fit = Fit.TEST;
             Set<Part> parts = EnumSet.allOf(Part.class);
             boolean json = false;
+            String route = null;
             for (int i = 0; i < args.length; i++) {
                 String arg = args[i];
                 switch (arg) {
@@ -82,6 +93,13 @@ final class LevelReport {
                         difficulties = list;
                     }
                     case "--seeds" -> seeds = Integer.parseInt(args[++i]);
+                    // M9 part E: a forked level's route for every flight of this run (RoutePlay; a side per fork).
+                    case "--route" -> {
+                        route = args[++i].strip().toUpperCase(Locale.ROOT);
+                        if (!route.matches("[LR]*")) {
+                            throw new IllegalArgumentException("a route is a side per fork, L or R: " + route);
+                        }
+                    }
                     case "--fit" -> fit = Fit.valueOf(args[++i].toUpperCase(Locale.ROOT));
                     case "--parts" -> {
                         parts = EnumSet.noneOf(Part.class);
@@ -95,7 +113,8 @@ final class LevelReport {
             if (levels.isEmpty()) {
                 throw new IllegalArgumentException("no level: -Plevel=<n>[,<n>...]");
             }
-            return new Options(List.copyOf(levels), List.copyOf(difficulties), seeds, fit, Set.copyOf(parts), json);
+            return new Options(
+                    List.copyOf(levels), List.copyOf(difficulties), seeds, fit, Set.copyOf(parts), json, route);
         }
 
         boolean has(Part part) {
@@ -132,6 +151,7 @@ final class LevelReport {
     /** A level's report. */
     record Level(
             String key,
+            String route,
             int number,
             int act,
             String fit,
@@ -156,7 +176,14 @@ final class LevelReport {
             for (int number : options.levels()) {
                 String key =
                         content.levelKey(number).orElseThrow(() -> new IllegalArgumentException("no level " + number));
-                levels.add(measure(content, key, options, pool));
+                // M9 part E: a forked level is reported per route (-Proute: that one), each on its own route.
+                List<String> routes =
+                        options.route() != null && RoutePlay.forks(SimSpecs.level(content, key, Difficulty.MEDIUM)) > 0
+                                ? List.of(options.route())
+                                : RoutePlay.routes(content, key);
+                for (String route : routes) {
+                    levels.add(measure(content, key, options, pool, route));
+                }
             }
             if (options.json()) {
                 List<Map<String, Object>> list = new ArrayList<>();
@@ -178,8 +205,15 @@ final class LevelReport {
         }
     }
 
-    /** Measures the level: its flights and runs in parallel on {@code pool}. */
+    /** Measures the level: its flights and runs in parallel on {@code pool} (a forked level on its first route). */
     static Level measure(Content content, String key, Options options, ExecutorService pool)
+            throws InterruptedException, ExecutionException {
+        return measure(
+                content, key, options, pool, RoutePlay.routes(content, key).getFirst());
+    }
+
+    /** M9 part E: measures the level on {@code route} ({@link RoutePlay#NONE} for a level without forks). */
+    static Level measure(Content content, String key, Options options, ExecutorService pool, String route)
             throws InterruptedException, ExecutionException {
         int number = Content.levelNumber(key);
         boolean wantFlights = options.has(Part.PACING) || options.has(Part.FLOOR) || options.has(Part.HP);
@@ -200,18 +234,19 @@ final class LevelReport {
             if (options.has(Part.PACING) || (medium && fit.equals(floorFit))) {
                 flights.put(
                         difficulty + "/" + fit,
-                        pool.submit(() -> flight(content, key, difficulty, fit, medium && fit.equals(floorFit))));
+                        pool.submit(
+                                () -> flight(content, key, difficulty, fit, medium && fit.equals(floorFit), route)));
             }
             if (medium && !fit.equals(floorFit) && (options.has(Part.FLOOR) || options.has(Part.HP))) {
                 flights.put(
                         difficulty + "/" + floorFit,
-                        pool.submit(() -> flight(content, key, difficulty, floorFit, true)));
+                        pool.submit(() -> flight(content, key, difficulty, floorFit, true, route)));
             }
         }
         String reference = content.levelKey(BeamEraHpTest.REFERENCE_LEVEL).orElseThrow();
         boolean hpRun = options.has(Part.HP) && options.difficulties().contains(Difficulty.MEDIUM);
         Future<Measured> referenceFlight = hpRun && !reference.equals(key)
-                ? pool.submit(() -> flight(content, reference, Difficulty.MEDIUM, "plan", true))
+                ? pool.submit(() -> flight(content, reference, Difficulty.MEDIUM, "plan", true, RoutePlay.NONE))
                 : null;
 
         // The autopilot runs, seeds 1..N per difficulty (the level tests').
@@ -221,7 +256,13 @@ final class LevelReport {
             for (long seed = 1; wantRuns && seed <= options.seeds(); seed++) {
                 long s = seed;
                 list.add(pool.submit(() -> LevelMetrics.autopilot(
-                        content, key, difficulty, loadout(content, key, difficulty, floorFit), s, AUTOPILOT_STEPS)));
+                        content,
+                        key,
+                        difficulty,
+                        loadout(content, key, difficulty, floorFit),
+                        s,
+                        AUTOPILOT_STEPS,
+                        route)));
             }
             runs.put(difficulty, list);
         }
@@ -292,7 +333,7 @@ final class LevelReport {
             }
             rows.add(new ByDifficulty(
                     difficulty,
-                    LevelMetrics.density(level),
+                    LevelMetrics.density(level, route),
                     LevelMetrics.densityMinimum(level),
                     pacing == null || !options.has(Part.PACING) ? null : pacing.get(),
                     new PacingRule(
@@ -301,7 +342,7 @@ final class LevelReport {
                             strict ? PacingTest.ACT_TWO_EMPTY_SECONDS : PacingTest.EMPTY_SECONDS,
                             strict ? PacingTest.ACT_TWO_LONG_PAUSES : PacingTest.LONG_PAUSES),
                     floor == null ? null : floor.get(),
-                    options.has(Part.HAUL) ? TypicalHaul.of(content, key, difficulty) : null,
+                    options.has(Part.HAUL) ? TypicalHaul.of(content, key, difficulty, route) : null,
                     done,
                     chases,
                     fights,
@@ -319,6 +360,7 @@ final class LevelReport {
         }
         return new Level(
                 key,
+                route,
                 number,
                 SimSpecs.level(content, key, Difficulty.MEDIUM).act(),
                 options.fit().name().toLowerCase(Locale.ROOT),
@@ -348,15 +390,24 @@ final class LevelReport {
                 : PacingTest.planLoadout(key, difficulty);
     }
 
-    /** One flight on the campaign tests' seed with the pacing probe and, if asked, the small units' life. */
-    static Measured flight(Content content, String key, Difficulty difficulty, String fit, boolean smallLife) {
+    /**
+     * One flight on the campaign tests' seed with the pacing probe and, if asked, the small units' life; M9 part E: on
+     * {@code route} ({@link RoutePlay}).
+     */
+    static Measured flight(
+            Content content, String key, Difficulty difficulty, String fit, boolean smallLife, String route) {
         Sortie sortie = LevelMetrics.sortie(
-                content, key, difficulty, loadout(content, key, difficulty, fit), LevelMetrics.SEED);
+                content, key, difficulty, loadout(content, key, difficulty, fit), LevelMetrics.SEED, route);
         LevelMetrics.Pacing pacing = new LevelMetrics.Pacing();
         LevelMetrics.SmallLife life = new LevelMetrics.SmallLife(content);
         boolean complete = smallLife
                 ? LevelMetrics.fly(sortie, PacingTest.MAX_STEPS, pacing, life)
                 : LevelMetrics.fly(sortie, PacingTest.MAX_STEPS, pacing);
+        if (sortie.forkCount() > 0 && !RoutePlay.flown(sortie).equals(route)) {
+            // M9 part E: the autopilot left its route (a fork's channel it could not reach in time).
+            System.err.println(Content.levelName(key) + " " + difficulty + " " + fit + ": route " + route + " flown as "
+                    + RoutePlay.flown(sortie));
+        }
         return new Measured(
                 fit,
                 complete,
@@ -372,9 +423,10 @@ final class LevelReport {
         StringBuilder out = new StringBuilder();
         out.append(String.format(
                 Locale.ROOT,
-                "Level %02d %s (Act %d), fit %s, %d autopilot seed%s%n",
+                "Level %02d %s%s (Act %d), fit %s, %d autopilot seed%s%n",
                 level.number(),
                 Content.levelName(level.key()),
+                level.route().isEmpty() ? "" : ", route " + level.route(),
                 level.act(),
                 level.fit(),
                 level.seeds(),
@@ -461,7 +513,13 @@ final class LevelReport {
                         haul.typical(),
                         haul.budget(),
                         100 * haul.offBudget(),
-                        medium ? ": " + verdict(Math.abs(haul.offBudget()) <= TypicalHaulTest.TOLERANCE) : "",
+                        medium
+                                ? ": "
+                                        + verdict(Math.abs(haul.offBudget())
+                                                <= (level.route().isEmpty()
+                                                        ? TypicalHaulTest.TOLERANCE
+                                                        : TypicalHaulTest.ROUTE_TOLERANCE))
+                                : "",
                         haul.perfect(),
                         haul.perfect() / haul.budget(),
                         medium ? ": " + verdict(haul.perfect() >= TypicalHaulTest.PERFECT_BUDGETS * haul.budget()) : "",
@@ -715,6 +773,9 @@ final class LevelReport {
         Map<String, Object> out = new LinkedHashMap<>();
         out.put("level", level.number());
         out.put("key", level.key());
+        if (!level.route().isEmpty()) {
+            out.put("route", level.route());
+        }
         out.put("act", level.act());
         out.put("fit", level.fit());
         out.put("seeds", level.seeds());

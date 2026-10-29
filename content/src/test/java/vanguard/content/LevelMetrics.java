@@ -61,18 +61,33 @@ final class LevelMetrics {
 
     /** A sortie of the level at full armour. */
     static Sortie sortie(Content content, String key, Difficulty difficulty, Loadout loadout, long seed) {
-        return new Sortie(
-                seed,
-                loadout,
-                SimSpecs.level(content, key, difficulty),
-                SimSpecs.rules(content, key, difficulty),
-                loadout.plating().maxArmour());
+        return sortie(content, key, difficulty, loadout, seed, RoutePlay.NONE);
+    }
+
+    /** M9 part E: a sortie of the level at full armour, flown on {@code route} ({@link RoutePlay#fly}). */
+    static Sortie sortie(Content content, String key, Difficulty difficulty, Loadout loadout, long seed, String route) {
+        return RoutePlay.fly(
+                new Sortie(
+                        seed,
+                        loadout,
+                        SimSpecs.level(content, key, difficulty),
+                        SimSpecs.rules(content, key, difficulty),
+                        loadout.plating().maxArmour()),
+                route);
     }
 
     /** What a flight's watcher sees: each new attempt, then every step after it is flown. */
     interface Probe {
         /** A new attempt began this step (the level was retried): forget the last one. */
         default void newAttempt() {}
+
+        /**
+         * M9 part H (step H2): a new attempt restarted at the boss checkpoint (the approach before it unchanged): forget
+         * the last one, as {@link #newAttempt()}, unless the probe measures only the approach.
+         */
+        default void bossRetry() {
+            newAttempt();
+        }
 
         /** The sortie after its {@code step}-th step (1 for the first). */
         void stepped(Sortie sortie, int step);
@@ -91,8 +106,14 @@ final class LevelMetrics {
             Level04Test.step(sortie);
             if (sortie.attempt() != attempt) {
                 attempt = sortie.attempt();
+                // M9 part H: a retry from the boss checkpoint starts at the arena, past the launch.
+                boolean fromBoss = sortie.levelSeconds() > BOSS_RETRY_SECONDS;
                 for (Probe probe : probes) {
-                    probe.newAttempt();
+                    if (fromBoss) {
+                        probe.bossRetry();
+                    } else {
+                        probe.newAttempt();
+                    }
                 }
             }
             for (Probe probe : probes) {
@@ -117,8 +138,24 @@ final class LevelMetrics {
         }
     }
 
-    /** {@link PacingTest}'s and {@link ActFloorTest}'s measure: see {@link Flight}. */
+    /** M9 part H: a new attempt starting past this level time restarted at the boss checkpoint, s. */
+    static final double BOSS_RETRY_SECONDS = 1;
+
+    /**
+     * {@link PacingTest}'s and {@link ActFloorTest}'s measure: see {@link Flight}. M9 part H (step H2): a retry from the
+     * boss checkpoint keeps the approach it measured (the fight is outside it), so a lost fight still reads the approach.
+     */
     static final class Pacing implements Probe {
+        @Override
+        public void bossRetry() {
+            // The approach was flown on the attempt that took the checkpoint: keep it; the empty stretch open at the
+            // loss ends there.
+            if (emptySince >= 0) {
+                stretches.add(new double[] {emptySince, realSeconds});
+                emptySince = -1;
+            }
+        }
+
         private final List<double[]> stretches = new ArrayList<>();
         private double emptySince = -1;
         private double seconds;
@@ -148,7 +185,7 @@ final class LevelMetrics {
             realSeconds = sortie.realSeconds();
             // A boss fight has its own tests of what it fires (KrakenTest, SiegeSpireTest): the floor's means are the
             // level's around it (step WB, pending the user's review).
-            if (sortie.flying() && !bossFight(sortie)) {
+            if (sortie.flying() && !bossFight(sortie) && !wreck(sortie)) {
                 seconds += SimStep.SECONDS;
                 flown++;
                 onScreen += enemiesOnScreen(sortie);
@@ -654,6 +691,20 @@ final class LevelMetrics {
     }
 
     /** Whether a boss (a set piece) is engaged and alive: its fight, left out of the floor's means. */
+    /**
+     * M9 part H (step H3): whether a ringed boss lies dead (Level 35's Iron Sovereign): the wreck after its kill is the
+     * level's outro, outside the floor's means (Level 28's rule, there by its armour floor).
+     */
+    private static boolean wreck(Sortie sortie) {
+        for (int i = 0; i < sortie.setPieceCount(); i++) {
+            SetPiece piece = sortie.setPiece(i);
+            if (piece.destroyed() && piece.ring().isPresent()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private static boolean bossFight(Sortie sortie) {
         for (int i = 0; i < sortie.setPieceCount(); i++) {
             SetPiece piece = sortie.setPiece(i);
@@ -751,6 +802,14 @@ final class LevelMetrics {
     }
 
     static Density density(LevelScript level) {
+        return density(level, RoutePlay.NONE);
+    }
+
+    /**
+     * M9 part E (Level 32): the density as {@code route} flies the level: only its branches' waves and units count
+     * ({@link RoutePlay#NONE}: every branch).
+     */
+    static Density density(LevelScript level, String route) {
         double end = level.seconds();
         double start = 0;
         // M9 part B (Level 29, the rescue halt): a held arena does not end the count: the whole level and a typical
@@ -771,6 +830,9 @@ final class LevelMetrics {
             halt = typicalHalt(cycle);
         }
         for (WaveSpec wave : counted) {
+            if (!RoutePlay.on(route, wave.branch())) {
+                continue;
+            }
             if (wave.t() < end && wave.enemy().countsAsEnemy()) {
                 int released = wave.enemy().brood().map(EnemySpec.Brood::count).orElse(0)
                         + wave.enemy().spawner().map(EnemySpec.Spawner::count).orElse(0);
@@ -779,6 +841,9 @@ final class LevelMetrics {
         }
         int ground = 0;
         for (GroundUnit unit : level.groundUnits()) {
+            if (!RoutePlay.on(route, unit.branch())) {
+                continue;
+            }
             if (unit.t() < end && unit.enemy().countsAsEnemy()) {
                 // M5 part C: a periodic spawner (Level 09's Hive Nodes) counts one release
                 ground +=
@@ -885,7 +950,19 @@ final class LevelMetrics {
 
     /** The autopilot's run of the level with {@code loadout} on {@code seed}, at most {@code maxSteps}. */
     static Run autopilot(Content content, String key, Difficulty difficulty, Loadout loadout, long seed, int maxSteps) {
-        Sortie sortie = sortie(content, key, difficulty, loadout, seed);
+        return autopilot(content, key, difficulty, loadout, seed, maxSteps, RoutePlay.NONE);
+    }
+
+    /** M9 part E: the same on {@code route} ({@link RoutePlay}). */
+    static Run autopilot(
+            Content content,
+            String key,
+            Difficulty difficulty,
+            Loadout loadout,
+            long seed,
+            int maxSteps,
+            String route) {
+        Sortie sortie = sortie(content, key, difficulty, loadout, seed, route);
         fly(sortie, maxSteps);
         return Run.of(sortie);
     }

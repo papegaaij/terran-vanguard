@@ -71,7 +71,7 @@ tasks.test {
 /**
  * A level's numbers for tuning (LevelReport, CLAUDE.md Tools): ./gradlew :content:levelReport -Plevel=19
  * [-Pdifficulty=easy,medium,hard] [-Pseeds=3] [-Pfit=test|plan|user] [-Pparts=pacing,floor,haul,boss,secondary,hp,pursuit,colossus]
- * [-Pjson]. It runs on the test classes and reads the design data at run time: a data.yaml edit needs no recompile.
+ * [-Pjson] [-Proute=LR] (M9 part E: a forked level's route, a side per fork; without it a forked level is reported per route). It runs on the test classes and reads the design data at run time: a data.yaml edit needs no recompile.
  */
 tasks.register<JavaExec>("levelReport") {
     group = "verification"
@@ -80,7 +80,7 @@ tasks.register<JavaExec>("levelReport") {
     mainClass = "vanguard.content.LevelReport"
     maxHeapSize = "2g"
     systemProperty("vanguard.designDir", rootProject.layout.projectDirectory.dir("design").asFile.absolutePath)
-    val options = listOf("level", "difficulty", "seeds", "fit", "parts").mapNotNull { name ->
+    val options = listOf("level", "difficulty", "seeds", "fit", "parts", "route").mapNotNull { name ->
         providers.gradleProperty(name).orNull?.let { listOf("--$name", it) }
     }.flatten()
     args(options + if (providers.gradleProperty("json").isPresent) listOf("--json") else listOf())

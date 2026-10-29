@@ -19,5 +19,11 @@ public enum PickupType {
     /** +1 charge of the fitted special, up to its most; only dropped when a special is fitted. */
     SPECIAL_CHARGE,
     /** A data core: a lore entry that unlocks one shop item early (design/systems/economy); no credits. */
-    DATA_CORE
+    DATA_CORE,
+    /**
+     * M9 part G (design/campaign Level 34, The freighter; the Helix core): a story pickup, dropped only as a destructible
+     * group's {@code groupDrop} ({@link StoryPickups}: it rises out of the hold, untouchable, then drifts as any pickup
+     * until the ship flies through its box); pays nothing, is never a secret and plays no {@code SECRET} cue.
+     */
+    STORY
 }

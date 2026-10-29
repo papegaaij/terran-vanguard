@@ -17,10 +17,32 @@ final class EnemyShield {
     private int hold;
     /** Steps until a hit is reported again (not hashed: it only spaces the events). */
     private int quiet;
+    /** M9 part H: its events' types (a unit's, or a boss part's {@link PartShields}). */
+    private final SimEvents.Type hitType;
+
+    private final SimEvents.Type brokenType;
+    private final SimEvents.Type refilledType;
+
+    /** A unit's shield (its {@code ENEMY_SHIELD_*} events, value its kind). */
+    EnemyShield() {
+        this(false);
+    }
+
+    /** M9 part H, step H1b: {@code part}: a boss part's shield ({@code PART_SHIELD_*} events, value the part). */
+    EnemyShield(boolean part) {
+        hitType = part ? SimEvents.Type.PART_SHIELD_HIT : SimEvents.Type.ENEMY_SHIELD_HIT;
+        brokenType = part ? SimEvents.Type.PART_SHIELD_BROKEN : SimEvents.Type.ENEMY_SHIELD_BROKEN;
+        refilledType = part ? SimEvents.Type.PART_SHIELD_REFILLED : SimEvents.Type.ENEMY_SHIELD_REFILLED;
+    }
 
     /** A new life with {@code spec}'s shield, full; none without one. */
     void start(EnemySpec spec) {
-        max = spec.shield().isPresent() ? spec.shield().get().hp() : 0;
+        start(spec.shield().isPresent() ? spec.shield().get().hp() : 0);
+    }
+
+    /** M9 part H: full at {@code hp} (0: none). */
+    void start(double hp) {
+        max = hp;
         shield = max;
         idle = 0;
         hold = 0;
@@ -78,7 +100,7 @@ final class EnemyShield {
         boolean wasDown = shield < max;
         shield = Math.min(max, shield + spec.refillShare() * max * SimStep.SECONDS);
         if (wasDown && shield >= max) {
-            events.add(SimEvents.Type.ENEMY_SHIELD_REFILLED, x, y, kind);
+            events.add(refilledType, x, y, kind);
         }
     }
 
@@ -100,9 +122,9 @@ final class EnemyShield {
         shield -= taken;
         if (shield <= 1e-9) {
             shield = 0;
-            events.add(SimEvents.Type.ENEMY_SHIELD_BROKEN, x, y, kind);
+            events.add(brokenType, x, y, kind);
         } else if (quiet == 0) {
-            events.add(SimEvents.Type.ENEMY_SHIELD_HIT, x, y, kind);
+            events.add(hitType, x, y, kind);
             quiet = eventGap;
         }
         return amount - taken;
@@ -122,7 +144,7 @@ final class EnemyShield {
         idle = SimStep.ticks(spec.delaySeconds());
         hold = Math.max(hold, ticks);
         if (had) {
-            events.add(SimEvents.Type.ENEMY_SHIELD_BROKEN, x, y, kind);
+            events.add(brokenType, x, y, kind);
         }
         return had;
     }

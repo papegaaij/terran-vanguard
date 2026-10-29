@@ -697,7 +697,7 @@ final class PlayerFire {
                 if ((!onPart && !onBody) || (weapon.pierce() > 1 && shot.struck(2 * enemy.serial()))) {
                     continue;
                 }
-                if ((enemy.spec().hardened() && !weapon.antiGround())
+                if ((enemy.spec().hardened() && !weapon.antiGround() && !onCore(shot, weapon.size(), enemy))
                         || (enemy.glances(shot.vx(), shot.vy()) && !(weapon.antiSub() && enemy.shellClosed()))
                         || enemy.growing()) {
                     // A hardened unit (M5 part C) without anti-ground, or a walker's frontal armour
@@ -762,6 +762,39 @@ final class PlayerFire {
                 enemy.partY(p),
                 (part.width() + size.width()) / 2,
                 (part.height() + size.height()) / 2);
+    }
+
+    /**
+     * M9 part E (design/enemies/ground/sentinel-tower, the hardened collar): whether {@code shot}, of {@code size}, over
+     * a hardened unit with a core lands on the core (the emitter) or flies on into it: it overlaps the core's box, or
+     * its line of flight as far as the unit's box is wide and tall crosses it (as {@link #towardPart}). False for a
+     * unit without a core. Allocates nothing.
+     */
+    static boolean onCore(Shot shot, Hitbox size, Enemy enemy) {
+        if (enemy.spec().core().isEmpty()) {
+            return false;
+        }
+        Hitbox core = enemy.spec().core().get();
+        if (size.overlaps(shot.x(), shot.y(), core, enemy.x(), enemy.y())) {
+            return true;
+        }
+        double vx = shot.vx();
+        double vy = shot.vy();
+        double speed = Math.hypot(vx, vy);
+        if (speed == 0) {
+            return false;
+        }
+        Hitbox body = enemy.hitbox();
+        double reach = body.width() + body.height();
+        return segmentCrossesBox(
+                shot.x(),
+                shot.y(),
+                vx / speed * reach,
+                vy / speed * reach,
+                enemy.x(),
+                enemy.y(),
+                (core.width() + size.width()) / 2,
+                (core.height() + size.height()) / 2);
     }
 
     /**

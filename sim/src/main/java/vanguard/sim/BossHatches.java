@@ -82,7 +82,8 @@ final class BossHatches {
     }
 
     private void openHatch(int p, int open, BossActions actions) {
-        if (piece.partHp(p) > 0 && piece.partOnField(p)) {
+        // M9 part H, step H1b: a ringed boss's battery only while armed (any other boss's part: while it lives).
+        if (piece.partArmed(p) && piece.partOnField(p)) {
             hatchTicks[p] = open;
             actions.hatch(p, piece.partX(p), piece.partY(p));
         }

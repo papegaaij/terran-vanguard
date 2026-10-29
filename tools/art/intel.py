@@ -53,7 +53,15 @@ Outputs (assets/sprites/intel/, packed onto the shared sprite pages as ``intel/<
                      dark, the Gilded Gunship with its doors shut and lamps dark, the Dart, the Rail Serpent's engine
                      car); hornet, shard-drone, buzzsaw-drone (Level 31, M9 part D batch, step ART-D: the
                      production models of tools/art/belt_units_d.py: the Hornet facing down with its hatches dark,
-                     the Shard Drone's tri-prism, the Buzzsaw's gold-edged blades)
+                     the Shard Drone's tri-prism, the Buzzsaw's gold-edged blades); sentinel-tower, strider (Level
+                     32, M9 part E batch, step ART-E: the production models of tools/art/belt_units_e.py: the
+                     Sentinel's collar with its head facing down, the Strider walking down with its torso and pod);
+                     void-leech, rail-bunker (Level 33, M9 part F batch, step ART-F2: the production models of
+                     tools/art/belt_units_f.py: the Void Leech swimming down, its sac lit; the Rail Bunker's
+                     octagon with its turret aiming down, the coils dark); warden-tank-asc (Level 34, M9 part G
+                     batch, step ART-G: the Warden Tank in its Act 5 Ascendancy livery, tools/art/warden_tank.py
+                     ``intel_model("asc")``: the gunmetal hull with A.15 b's gold, driving down, the turret aimed along
+                     it; the intel names the livery's faction from Act 5)
   unclassified-<enemy>.png  30x30 the sensor-L2 picture of a unit the intel does not name yet
                      (`unclassified_until_flown`, M7 part E batch): unclassified-ghost-drone, the Ghost
                      Drone's outline only, filled flat in dark teal with the plate's grid and a cyan rim
@@ -71,7 +79,9 @@ Outputs (assets/sprites/intel/, packed onto the shared sprite pages as ``intel/<
                      boss, M7 part H batch: the open mouth of tools/art/dust_colossus.py as phase 3 shows it,
                      straight up, the outline only); abyssal-maw (L28's act boss, M8 part H batch: the coil of
                      tools/art/abyssal_maw.py round the arena's edges with the head and its sacs at the top, as
-                     phase 1 shows it, the outline only)
+                     phase 1 shows it, the outline only); iron-sovereign (L35's act boss, M9 part H batch: the
+                     three rings of tools/art/iron_sovereign.py at rest with their batteries and the core, the
+                     base disc left out so the rings read, the outline only)
   design/ui/hangar/concept/intel-final-r13-a.png   review sheet of the UI batch's pictures
   design/ui/hangar/concept/intel-final-r16-a.png   review sheet of the M4 part C batch's
   design/ui/hangar/concept/intel-final-r17-a.png   review sheet of the M4 part D batch's
@@ -91,6 +101,10 @@ Outputs (assets/sprites/intel/, packed onto the shared sprite pages as ``intel/<
   design/ui/hangar/concept/intel-final-r62-a.png   review sheet of the M9 part B batch's
   design/ui/hangar/concept/intel-final-r63-a.png   review sheet of the M9 part C batch's
   design/ui/hangar/concept/intel-final-r64-a.png   review sheet of the M9 part D batch's
+  design/ui/hangar/concept/intel-final-r65-a.png   review sheet of the M9 part E batch's
+  design/ui/hangar/concept/intel-final-r66-a.png   review sheet of the M9 part F batch's
+  design/ui/hangar/concept/intel-final-r67-a.png   review sheet of the M9 part G batch's
+  design/ui/hangar/concept/intel-final-r68-a.png   review sheet of the M9 part H batch's
 
 The names are the enemy's or boss's name as a slug (vanguard.game.render.Portraits.slug). A
 portrait is the unit's chosen round-04 model (tools/concept/enemies_r04.py, imported unchanged) in
@@ -132,9 +146,12 @@ import dust_kite  # noqa: E402  (the Dust Kite's production model)
 import drill_rig  # noqa: E402  (the Drill Rig's production models)
 import abyss_ray  # noqa: E402  (the Abyss Ray's production model)
 import abyssal_maw  # noqa: E402  (the Abyssal Maw's production sprites)
+import iron_sovereign  # noqa: E402  (the Iron Sovereign's production sprites)
 import belt_units  # noqa: E402  (M9 part B: Level 29's production models)
 import belt_units_c  # noqa: E402  (M9 part C: Level 30's production models)
 import belt_units_d  # noqa: E402  (M9 part D: Level 31's production models)
+import belt_units_e  # noqa: E402  (M9 part E: Level 32's production models)
+import belt_units_f  # noqa: E402  (M9 part F: Level 33's production models)
 import barbfin  # noqa: E402  (the Barbfin's production model)
 import siren  # noqa: E402  (the Siren's production model)
 import glow_angler  # noqa: E402  (the Glow Angler's production model)
@@ -200,7 +217,11 @@ BATCHES = {"spore-bomber": "M4 part C batch", "whirl-seed": "M4 part C batch",
            "clamp-gun": "M9 part B batch", "wavering-stormhawk": "M9 part B batch",
            "minelayer": "M9 part C batch", "gilded-gunship": "M9 part C batch", "dart-drone": "M9 part C batch",
            "rail-serpent": "M9 part C batch",
-           "hornet": "M9 part D batch", "shard-drone": "M9 part D batch", "buzzsaw-drone": "M9 part D batch"}
+           "hornet": "M9 part D batch", "shard-drone": "M9 part D batch", "buzzsaw-drone": "M9 part D batch",
+           "sentinel-tower": "M9 part E batch", "strider": "M9 part E batch",
+           "void-leech": "M9 part F batch", "rail-bunker": "M9 part F batch",
+           "warden-tank-asc": "M9 part G batch",
+           "boss-iron-sovereign": "M9 part H batch"}
 # the concept round that reviews a batch
 ROUNDS = {UI_BATCH: "r13", "M4 part C batch": "r16", "M4 part D batch": "r17", "M4 part F batch": "r23",
           "M5 part B batch": "r30", "M5 part C batch": "r31", "M5 part D batch": "r32", "M5 part E batch": "r33",
@@ -210,7 +231,8 @@ ROUNDS = {UI_BATCH: "r13", "M4 part C batch": "r16", "M4 part D batch": "r17", "
           "M8 part C batch": "r52", "M8 part D batch": "r53", "M8 part E batch": "r54",
           "M8 part F batch": "r55", "M8 part G batch": "r57",
           "M8 part H batch": "r58", "M9 part B batch": "r62", "M9 part C batch": "r63",
-          "M9 part D batch": "r64"}
+          "M9 part D batch": "r64", "M9 part E batch": "r65", "M9 part F batch": "r66", "M9 part G batch": "r67",
+          "M9 part H batch": "r68"}
 OUT = SPRITES / "intel"
 CONCEPT = DESIGN / "ui" / "hangar" / "concept"
 PORTRAIT = 30
@@ -245,6 +267,7 @@ ENEMIES = {
     "dust-devil": storm_units.devil_intel_model,
     "ghost-drone": storm_units.ghost_intel_model,
     "warden-tank": warden_tank.intel_model,
+    "warden-tank-asc": lambda: warden_tank.intel_model("asc"),
     "revenant-walker": lambda: walker_model(),
     "drill-rig": drill_rig.intel_model,
     "glassfin": glassfin.intel_model,
@@ -258,7 +281,7 @@ ENEMIES = {
 # units the intel shows unnamed before their first level is flown: name -> the model whose outline it shows
 UNCLASSIFIED = {"ghost-drone": storm_units.ghost_intel_model}
 BOSSES = ("gorgon-frigate", "brood-carrier", "leviathan", "harbour-kraken", "siege-spire", "revenant-walker",
-          "dust-colossus", "abyssal-maw")
+          "dust-colossus", "abyssal-maw", "iron-sovereign")
 # silhouettes of contacts the intel cannot classify: drawn with the unclassified pictures' sensor noise
 NOISY = {"revenant-walker"}
 # portraits that are not one model: name -> the 8x render (an RGBA array), as sdf.render gives it
@@ -456,11 +479,56 @@ def buzzsaw_drone_hi():
     return belt_hi(*belt_units_d.turned(*belt_units_d.saw_model(), 0, 48), belt_units_d.SAW_EXT)
 
 
+def stack_hi(layers):
+    """8x renders composited bottom to top (straight alpha)."""
+    out = layers[0]
+    for top in layers[1:]:
+        ga, ba = top[..., 3:4], out[..., 3:4]
+        alpha = ga + ba * (1 - ga)
+        rgb = (top[..., :3] * ga + out[..., :3] * ba * (1 - ga)) / np.maximum(alpha, 1e-6)
+        out = np.concatenate([rgb, alpha], axis=-1)
+    return out
+
+
+def sentinel_tower_hi():
+    """The Sentinel Tower from above: the gold-banded collar with its head facing down, the lens dark."""
+    be = belt_units_e
+    return stack_hi([belt_hi(*be.turned(*be._sen_body(), 0, 32), be.SEN_EXT),
+                     belt_hi(*be.turned(*be._sen_head(), 0, 32), be.SEN_EXT)])
+
+
+def strider_hi():
+    """The Strider walking down: the legs mid-stride, the torso and its pod facing down."""
+    be = belt_units_e
+    legs = be.e60.strider_legs(phase=2 * np.pi / 8)[0]
+    mats = be._str_mats()
+    return stack_hi([belt_hi(*be.turned(legs, mats, 0, 16), be.STR_EXT),
+                     belt_hi(*be.turned(be._torso_scene(), mats, 0, 32), be.STR_EXT),
+                     belt_hi(*be.turned(lambda p: be._pod_scene()(p - np.array((*be.POD, 0.0))), mats, 0, 32),
+                             be.STR_EXT)])
+
+
+def void_leech_hi():
+    """The Void Leech swimming down, its violet sac lit (belt_units_f.py's frames: Vrell black-violet)."""
+    bf = belt_units_f
+    scene, mats = bf.e60.leech_model("a", phase=bf.TAU / 4, pulse=0.8)
+    return belt_hi(*bf.turned(scene, mats, 0, 16), bf.LEECH_EXT)
+
+
+def rail_bunker_hi():
+    """The Rail Bunker from above: the gunmetal octagon with its gold rim, the turret aiming down, the coils dark."""
+    bf = belt_units_f
+    mats = bf._rb_mats()
+    return stack_hi([belt_hi(*bf.turned(bf._rb_base_scene(), mats, 0, 32), bf.TUR_EXT),
+                     belt_hi(*bf.turned(bf._rb_turret_scene(), mats, 0, 32), bf.TUR_EXT)])
+
+
 HI = {"reef-spitter": reef_spitter_hi, "relay-beacon": relay_beacon.intel_hi, "depth-hunter": depth_hunter_hi,
       "talon": talon_hi, "sam-nest": sam_nest_hi, "asteroid-mite": mite_hi, "clamp-gun": clamp_gun_hi,
       "wavering-stormhawk": hawk_hi, "minelayer": minelayer_hi, "gilded-gunship": gunship_hi, "dart-drone": dart_hi,
       "rail-serpent": rail_serpent_hi, "hornet": hornet_hi, "shard-drone": shard_drone_hi,
-      "buzzsaw-drone": buzzsaw_drone_hi}
+      "buzzsaw-drone": buzzsaw_drone_hi, "sentinel-tower": sentinel_tower_hi, "strider": strider_hi,
+      "void-leech": void_leech_hi, "rail-bunker": rail_bunker_hi}
 
 
 def portrait(slug):
@@ -531,7 +599,7 @@ def silhouette(slug):
     mask = {"gorgon-frigate": gorgon_mask, "brood-carrier": carrier_mask, "leviathan": leviathan_mask,
             "harbour-kraken": kraken_mask, "siege-spire": spire_mask, "revenant-walker": walker_mask,
             "dust-colossus": dust_colossus.intel_mask,
-            "abyssal-maw": abyssal_maw.intel_mask}[slug]()
+            "abyssal-maw": abyssal_maw.intel_mask, "iron-sovereign": iron_sovereign.intel_mask}[slug]()
     ys, xs = np.nonzero(mask)
     mask = mask[ys.min():ys.max() + 1, xs.min():xs.max() + 1]
     inner = SILHOUETTE - 6

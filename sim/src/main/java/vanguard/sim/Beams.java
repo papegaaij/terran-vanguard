@@ -300,6 +300,23 @@ final class Beams {
             double y = columnContact(x, half, fromY, enemy.x(), enemy.y(), enemy.hitbox());
             boolean damageable =
                     (weapon.antiGround() || !enemy.spec().hardened()) && !enemy.glances(0, 1) && !enemy.growing();
+            if (!weapon.antiGround() && enemy.spec().core().isPresent()) {
+                // M9 part E (design/enemies/ground/sentinel-tower): the collar does not stop a beam; the beam reaches
+                // the emitter where its column crosses it.
+                double coreY = columnContact(
+                        x,
+                        half,
+                        fromY,
+                        enemy.x(),
+                        enemy.y(),
+                        enemy.spec().core().get());
+                if (coreY < limit) {
+                    consider(CAST_ENEMY, coreY, layer, j, -1);
+                } else {
+                    consider(CAST_BLOCKED, y, layer, j, -1);
+                }
+                continue;
+            }
             // M7 part D: a unit part first, so a tie goes to it (the Shellback's vent); round 40 R.a: a column
             // through the part burns over the body to it (the vent on the back of the shell is seen from above). M8
             // part B: of several parts in the column (a Drill Rig's pumps), the nearest.

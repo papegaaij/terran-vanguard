@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * A set piece's parts (out of {@link SetPiece}): their HP and hit clocks, which of them take damage now, where they lie
  * (their pose offsets, a lifted boss's stump, a walking boss's turn, a breaching boss's vents, a coiled boss's
- * implants), what touches them and the damage they take. Its arrays are allocated once; the coordinator hashes them.
+ * implants, a ringed boss's batteries), what touches them and the damage they take. Its arrays are allocated once; the coordinator hashes them.
  */
 final class SetPieceParts {
     private final SetPiece piece;
@@ -18,6 +18,9 @@ final class SetPieceParts {
     private final StrideArena stride;
     private final BreachArena breach;
     private final CoilArena coil;
+    private final RingArena ring;
+    /** M9 part H, step H1b: the part shields; null without. */
+    private final PartShields shields;
 
     final double[] partHp;
     final int[] partTicksSinceHit;
@@ -45,6 +48,8 @@ final class SetPieceParts {
         stride = piece.stride;
         breach = piece.breach;
         coil = piece.coil;
+        ring = piece.ring;
+        shields = piece.shields;
         int parts = spec.parts().size();
         partHp = new double[parts];
         partTicksSinceHit = new int[parts];
@@ -138,6 +143,10 @@ final class SetPieceParts {
         }
         int phase = piece.phase();
         if (!piece.engaged() || piece.moving() || armoured[p] || phase < exposedFrom[p]) {
+            return true;
+        }
+        if (ring != null && (ring.spinningUp() || ring.untouchable(p))) {
+            // M9 part H: invulnerable until the rings are up to speed; step H1b: the core while it opens.
             return true;
         }
         if (breach != null && !arena.layer(p).touchable()) {
@@ -247,6 +256,10 @@ final class SetPieceParts {
             return damagePart(p, amount);
         }
         partTicksSinceHit[p] = 0;
+        amount = shielded(p, amount);
+        if (amount <= 0) {
+            return false;
+        }
         if (coil != null) {
             // M8 part H: the throat while the jaw is open; an implant's hits count on the head.
             int q = coil.hpPart(p);
@@ -287,11 +300,20 @@ final class SetPieceParts {
     /** As {@link SetPiece#damagePart}. */
     boolean damagePart(int p, double amount) {
         partTicksSinceHit[p] = 0;
+        amount = shielded(p, amount);
+        if (amount <= 0) {
+            return false;
+        }
         int q = hpPart(p);
         partTicksSinceHit[q] = 0;
         boolean alive = partHp[q] > 0;
         partHp[q] -= amount * spec.parts().get(p).multiplier();
         return alive && partHp[q] <= 0;
+    }
+
+    /** M9 part H, step H1b: part {@code p}'s shield spends itself first (at the full damage); what is left. */
+    private double shielded(int p, double amount) {
+        return shields == null ? amount : shields.spend(p, amount);
     }
 
     /** As {@link SetPiece#hpPart}. */
@@ -302,6 +324,10 @@ final class SetPieceParts {
     /** As {@link SetPiece#damagePartFlat}. */
     boolean damagePartFlat(int p, double amount) {
         partTicksSinceHit[p] = 0;
+        amount = shielded(p, amount);
+        if (amount <= 0) {
+            return false;
+        }
         int q = hpPart(p);
         partTicksSinceHit[q] = 0;
         boolean alive = partHp[q] > 0;
@@ -360,6 +386,10 @@ final class SetPieceParts {
             // M8 part H: an implant rides its coil segment.
             return coil.implantX(coil.implant(p)) - x;
         }
+        if (ring != null && ring.battery(p) >= 0) {
+            // M9 part H: a battery's mount turns with its ring.
+            return ring.offsetX(p);
+        }
         if (coil != null) {
             // Round 58 F.2: the head's parts (the gill sacs) turn with the head as it swims along the coil's path.
             return coil.turnX(poseDx[pose][p], poseDy[pose][p]) * motion.scale();
@@ -390,6 +420,9 @@ final class SetPieceParts {
         }
         if (coil != null && coil.implant(p) >= 0) {
             return coil.implantY(coil.implant(p)) - y;
+        }
+        if (ring != null && ring.battery(p) >= 0) {
+            return ring.offsetY(p);
         }
         if (coil != null) {
             return coil.turnY(poseDx[pose][p], poseDy[pose][p]) * motion.scale();

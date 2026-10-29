@@ -765,9 +765,7 @@ class Level31Test {
     /**
      * Dacosta's claim is a tow (t=100, 6 hits): its housing shot through frees the hidden crate ({@code SECRET_FOUND},
      * the Bellwether's secret line) and a ship that flies under it collects it. Flown with the Pulse Cannon L3 in front:
-     * a tow's cable takes the player's shots, not a beam (the simulation's tow rule since Level 07), so the plan's Ion
-     * Beam passes it and only the pods' stray missiles hit it (2 of 6 in a pass; Level 30's buoy alike; pending the
-     * user's review).
+     * a bolt gun's shots count on the housing (Level 07's tow rule).
      */
     @Test
     void dacostasClaimFreesItsCrate() {
@@ -779,11 +777,33 @@ class Level31Test {
                 content.armour().plating().get(4).name(),
                 0,
                 Difficulty.MEDIUM);
-        Sortie sortie = sortie(content, bolts, 1, Difficulty.MEDIUM, true);
+        flyForTheClaim(sortie(content, bolts, 1, Difficulty.MEDIUM, true), "the Pulse Cannon");
+    }
+
+    /**
+     * Round 64 C.1 a: the claim opts in to the beam's touch ({@code beam_touch}: one hit per 0.25 s), so the balance
+     * plan's fit (the Ion Beam in front) frees it too on medium: the autopilot flies the level, under the claim from a
+     * second before it enters until it breaks, then under the crate, and is not invulnerable.
+     */
+    @Test
+    void thePlansBeamFreesTheClaim() {
+        assertTrue(SimSpecs.level(content, LEVEL, Difficulty.MEDIUM)
+                .objectives()
+                .tows()
+                .getFirst()
+                .beamTouch());
+        flyForTheClaim(
+                sortie(content, planLoadout(content, Difficulty.MEDIUM), 1, Difficulty.MEDIUM, false),
+                "the plan's beam");
+    }
+
+    /** Flies {@code sortie} for the claim (the autopilot around it) and checks it freed, collected and announced. */
+    private static void flyForTheClaim(Sortie sortie, String fit) {
         Tow tow = sortie.tow(0);
         int found = 0;
         int line = 0;
         int steps = 0;
+        double freedAt = Double.NaN;
         boolean collected = false;
         while (!sortie.complete() && steps++ < MAX_STEPS && !collected) {
             int commands;
@@ -801,7 +821,10 @@ class Level31Test {
             sortie.step(commands);
             SimEvents events = sortie.events();
             for (int i = 0; i < events.size(); i++) {
-                found += events.type(i) == SimEvents.Type.SECRET_FOUND ? 1 : 0;
+                if (events.type(i) == SimEvents.Type.SECRET_FOUND) {
+                    found++;
+                    freedAt = sortie.levelSeconds();
+                }
                 if (events.type(i) == SimEvents.Type.RADIO
                         && sortie.script().radio().get(events.value(i)).trigger() == CueTrigger.SECRET) {
                     line++;
@@ -809,10 +832,12 @@ class Level31Test {
             }
             collected = sortie.result().credits().secrets() > 0;
         }
-        System.out.printf("Level 31 Dacosta's claim: found %d, collected at t %.1f%n", found, sortie.levelSeconds());
-        assertEquals(1, found, "the claim's crate freed");
-        assertTrue(collected, "and collected");
-        assertEquals(1, line, "the Bellwether's line");
+        System.out.printf(
+                "Level 31 Dacosta's claim (%s): found %d at t %.1f, collected at t %.1f%n",
+                fit, found, freedAt, sortie.levelSeconds());
+        assertEquals(1, found, fit + ": the claim's crate freed");
+        assertTrue(collected, fit + ": and collected");
+        assertEquals(1, line, fit + ": the Bellwether's line");
     }
 
     private static Pickup crate(Sortie sortie) {

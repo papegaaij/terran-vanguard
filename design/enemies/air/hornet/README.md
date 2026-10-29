@@ -2,7 +2,7 @@
 title: Hornet
 design: approved
 implementation: done
-art: chosen
+art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../player/specials, ../../../art-direction, ../../../campaign/act-5-the-belt]
 updated: 2026-10-28
 ---
@@ -92,7 +92,7 @@ Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's r
 - [x] The hex shield per [enemy shields](../../README.md#enemy-shields)
 - [x] Production sprites and the homing diamond via `tools/art/`; death effect, bounty and sounds (Freesound, CC0/CC-BY)
       (ART-D `belt_units_d.py`, the homing diamond part A's; step D4: `MiningRigLooks`, the hover hum, pod hatch and
-      launch from round 60/62 picks; in round 64 with game captures)
+      launch from round 60/62 picks; accepted in round 64 with game captures)
 
 ## Open questions
 
@@ -106,10 +106,11 @@ Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's r
   reuse the Revenant Walker's homing numbers (110 px/s, 4 s, 2 HP, `medium` 6) with a slower turn
   (80°/s), as four of them come at once.
 - 2026-10-27 (user, [round 60](../../../concept-rounds/round-60/README.md) closed): the design approved as drafted (`design: approved`); art A.2 **b**, "Hornet B, delta hover-boat", chosen (`art: chosen`), the other variant in `concept/rejected/`. Q11 **b** (gunmetal/charcoal with gold, not gloss black): the chosen variant is re-rendered in gunmetal/charcoal in this part's production art, keeping the ≥ 20 % gold and the readability check.
-- 2026-10-28 (M9 part D, step D2; pending the user's review in round 64): the stat block as data. A burst's
+- 2026-10-28 (M9 part D, step D2; accepted in round 64, below): the stat block as data. A burst's
   interval counts from its last shot: the salvo every 5 s is `interval: 4.4` (easy 5.6, hard 3.4); the hatch glow is
   the gun's tell (0.5 s). **Shield 8 → 12** (the Talon's round-62 check): under the plan's fit 8 pops in 0.06 s
   (invisible); 12 holds ≈ 0.09 s under the whole forward DPS, ≈ 0.13 s under the beam alone, a visible flash and no
   wall (the Gilded Gunship's 12 on a hull of about the same HP). `levelReport` at L31 (3 seeds): the Hornets live
   5–6.5 s of their 9 s hold at medium (3 s easy, 8–8.6 s hard, the autopilot busy with the missiles), the bow's hits
   within the seed spread at 8, 12, 16 and 24.
+- 2026-10-28 (user, [round 64](../../../concept-rounds/round-64/README.md), closed; page answers): the final art accepted (**F.4**: round 60's A.2 b delta hover-boat in Q.11 b gunmetal with gold leading edges, the hatch tell and the lift fans; `art: final`); **C.2** accepted (the hex shield 8 to 12: a visible flash, no wall).

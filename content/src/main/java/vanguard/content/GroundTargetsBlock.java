@@ -50,6 +50,19 @@ public sealed interface GroundTargetsBlock permits LevelData {
      *     has passed)
      * @param dormantUntil M9 part B (design/campaign Level 29, Block C): an enemy nest dormant until this level time
      *     (dark, not hittable, not picked, not firing; then a 1 s wake tell); awake from its entry if not given
+     * @param crate M9 part E (design/campaign Level 32, Blast doors): a destructible that is a cache's lock frees a crate
+     *     of these credits (Act 1 terms) when destroyed, without a secret (a branch's cache); none if not given
+     * @param blast M9 part E (design/world/belt, Mining charges): a destructible that is a mining charge bursts when
+     *     destroyed ({@link BlastData}); none if not given
+     * @param branch M9 part E (design/campaign Level 32, The forks): the fork branch it belongs to: dormant (dark, not
+     *     hittable, never firing or paying) unless its side is chosen; none if not given
+     * @param fullTurnFirst M9 part E, step E3b (design/campaign Level 32, QE-3 a): an enemy nest of a unit whose ground
+     *     sweep has full turns (the Sentinel Tower) makes each unit's first sweep a full turn, then every {@code every}-th
+     *     after it (no change where a difficulty has none: easy); the stat block's count if not given
+     * @param staggered M9 part F (design/campaign Level 33, the Rail Bunkers): an enemy nest of a unit with a {@code
+     *     laser-line} whose units' first lines are staggered evenly over the line's interval at that difficulty: the
+     *     i-th of n placements (in the difficulty's {@code at} order) fires its first line i × interval / n later than
+     *     its stat block's first delay (a pair half the interval apart, hard's trio a third); none if not given
      */
     public record GroundTarget(
             String target,
@@ -76,8 +89,32 @@ public sealed interface GroundTargetsBlock permits LevelData {
             Optional<SideEntry> side,
             Optional<String> link,
             Optional<String> arc,
-            Optional<Double> dormantUntil) {
+            Optional<Double> dormantUntil,
+            Optional<Integer> crate,
+            Optional<BlastData> blast,
+            Optional<TerrainBlock.Branch> branch,
+            Optional<Boolean> fullTurnFirst,
+            Optional<Boolean> staggered) {
         public GroundTarget {
+            Check.that(staggered.isEmpty() || enemy.isPresent(), "only an enemy nest's lines are staggered");
+            Check.that(
+                    fullTurnFirst.isEmpty() || enemy.isPresent(), "only an enemy nest's sweep has a full turn first");
+            crate.ifPresent(credits -> Check.positive("crate", credits));
+            Check.that(
+                    crate.isEmpty() || (enemy.isEmpty() && hp.isPresent() && reveals.isEmpty()),
+                    "a cache's lock (crate) is a destructible revealing no secret");
+            Check.that(
+                    blast.isEmpty()
+                            || (enemy.isEmpty()
+                                    && hp.isPresent()
+                                    && reveals.isEmpty()
+                                    && crate.isEmpty()
+                                    && layer.filter("ground"::equals).isPresent()),
+                    "a mining charge (blast) is a plain destructible on the ground");
+            Check.that(
+                    branch.isEmpty() || (side.isEmpty() && dormantUntil.isEmpty() && drift.isEmpty() && link.isEmpty()),
+                    "a branch's ground target stands on the ground from its entry, dormant unless chosen (no side,"
+                            + " dormant_until, drift or link)");
             // M9 part B (design/enemies/ground/sam-nest, Dormant until t): an enemy nest that wakes at a level time.
             Check.that(
                     dormantUntil.isEmpty() || (enemy.isPresent() && side.isEmpty()),
@@ -142,6 +179,17 @@ public sealed interface GroundTargetsBlock permits LevelData {
                             || easy.flatMap(Placements::at).isEmpty()
                                     && hard.flatMap(Placements::at).isEmpty(),
                     "only enemies have easy/hard placements");
+        }
+    }
+
+    /**
+     * M9 part E, a mining charge's burst (design/world/belt, Mining charges): {@code damage} to every enemy (air and
+     * ground, hardened ones included) whose hit box lies within {@code radius} px; never the ship, Rook or another charge.
+     */
+    public record BlastData(double radius, double damage) {
+        public BlastData {
+            Check.positive("radius", radius);
+            Check.positive("damage", damage);
         }
     }
 

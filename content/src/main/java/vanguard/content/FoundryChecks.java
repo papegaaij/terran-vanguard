@@ -106,8 +106,17 @@ final class FoundryChecks {
             // (homing.aimed).
             boolean aimedHoming =
                     attack.homing().flatMap(EnemyData.Homing::aimed).orElse(false);
+            // M9 part E (design/enemies/ground/strider): or a walker's second attack at its target, carried by a part
+            // (the shoulder pod's salvos beside the cannons).
+            boolean walkerPod = aimedHoming
+                    && enemy.movement().walk().isPresent()
+                    && enemy.attacks().size() == 2
+                    && attack.name().isPresent()
+                    && enemy.partList().orElse(List.of()).stream().anyMatch(part -> part.attackNames()
+                            .contains(attack.name().get()));
             if (attack.homing().isPresent()
                     && !boss
+                    && !walkerPod
                     && (!attack.pattern().equals("aimed")
                             || (attack.aim().filter("facing"::equals).isEmpty()
                                     && !aimedHoming
@@ -117,7 +126,8 @@ final class FoundryChecks {
                 problem.accept(
                         field + ".homing",
                         "only a boss's parts, a unit's one aimed attack along its facing (aim: facing), at its target"
-                                + " (homing.aimed) or a ground turret's turning rack (turn_rate) fire homing missiles");
+                                + " (homing.aimed), a ground turret's turning rack (turn_rate) or a walker's pod (a part's"
+                                + " attack, homing.aimed, beside its other attack) fire homing missiles");
             }
             if (aimedHoming && (boss || attack.aim().isPresent())) {
                 problem.accept(
@@ -297,11 +307,15 @@ final class FoundryChecks {
                                     .filter(group -> group.enemy().equals(slug))
                                     .mapToInt(LevelData.Group::count)
                                     .sum();
+                    // M9 part G (Level 34's containers): an object escapes objective counts its look's destructibles.
+                    int counted = SalvageChecks.objectEscapes(content, level, secondary)
+                            ? SalvageChecks.objectsOf(level, slug)
+                            : units;
                     for (Difficulty difficulty : Difficulty.values()) {
-                        if (secondary.escapesAllowed(difficulty) >= units) {
+                        if (secondary.escapesAllowed(difficulty) >= counted) {
                             problem.accept(
                                     "objectives.secondary.allowed",
-                                    difficulty + ": fewer may get away than the " + units + " '" + slug
+                                    difficulty + ": fewer may get away than the " + counted + " '" + slug
                                             + "' the level flies");
                         }
                     }

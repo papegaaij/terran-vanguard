@@ -138,12 +138,38 @@ public record GroundSpec(
      * @param cooldownSeconds after a touch, how long further contact only clamps the hull, without
      *     damage or push (0.5 s)
      */
-    public record TerrainSpec(Terrain terrain, double damage, double push, double pushSeconds, double cooldownSeconds) {
+    public record TerrainSpec(
+            Terrain terrain,
+            double damage,
+            double push,
+            double pushSeconds,
+            double cooldownSeconds,
+            List<Integer> forks) {
         public TerrainSpec {
             java.util.Objects.requireNonNull(terrain);
             if (!(damage >= 0) || !(push >= 0) || !(pushSeconds > 0) || !(cooldownSeconds >= 0)) {
                 throw new IllegalArgumentException("a wall contact has a damage, a push over some time and a cooldown");
             }
+            forks = List.copyOf(forks);
+            if (forks.size() > Forks.MOST_FORKS
+                    || forks.stream().distinct().count() != forks.size()
+                    || forks.stream().anyMatch(island -> island < 0 || island >= terrain.islands())) {
+                throw new IllegalArgumentException("a fork is one of the terrain's islands, each once: " + forks);
+            }
+        }
+
+        /** Without M9 part E's forks. */
+        public TerrainSpec(Terrain terrain, double damage, double push, double pushSeconds, double cooldownSeconds) {
+            this(terrain, damage, push, pushSeconds, cooldownSeconds, List.of());
+        }
+
+        /**
+         * M9 part E (design/campaign Level 32, The forks; route choice Q5 a): this terrain with its forks, each the index
+         * of its island ({@link Terrain#islands()}' order), fork 0 first: when an island's tip reaches the ship's row,
+         * the channel the ship's centre is in is chosen ({@link Forks}).
+         */
+        public TerrainSpec withForks(List<Integer> islands) {
+            return new TerrainSpec(terrain, damage, push, pushSeconds, cooldownSeconds, islands);
         }
     }
 

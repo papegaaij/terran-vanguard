@@ -361,7 +361,10 @@ def stat_block(d):
     weak = ", ".join(w["name"] + (f" (×{num(w['multiplier'])})" if "multiplier" in w else "")
                      for w in e["weak_points"]) or "none"
     rows = [
-        ["Faction", e["faction"] + (" (machine: the EMP Burst stuns it longest)" if e.get("machine") else "")],
+        # M9 part H: a machine boss is never stunned (the EMP Burst empties its shields)
+        ["Faction", e["faction"] + ((" (a machine, but a boss: never stunned, its shields emptied by the EMP Burst)"
+                                     if "boss" in e else " (machine: the EMP Burst stuns it longest)")
+                                    if e.get("machine") else "")],
         ["Layer", f"`{e['layer']}`" + fill(notes.get("layer", ""), values)],
         ["Size tier", f"`{e['tier']}`"],
         ["Size", f"{e['size'][0]}×{e['size'][1]} px, hitbox {e['hitbox'][0]}×{e['hitbox'][1]}" + suffix("size")],
@@ -788,12 +791,18 @@ def terrain_table(d):
     notches = terrain.get("notches", [])
     if notches:
         # M8 part E: the side caves (Level 25), each a notch in its wall with the time it reaches the top edge
-        listed = "; ".join(f"{k} {n['side']} {num(round(time_at(level, n['scroll']), 1))} ({grouped(n['scroll'], ',')})"
-                           for k, n in enumerate(notches))
         sizes = {(n["width"], n["depth"]) for n in notches}
-        size = " and ".join(f"{num(w)} px along the wall, {num(d)} deep" for w, d in sorted(sizes))
-        out += (f"\n\n**Notches** (the side caves, {size}; index, wall, t at the top edge of the middle (scroll px)): "
-                f"{listed}.")
+        if len(sizes) == 1:
+            listed = "; ".join(f"{k} {n['side']} {num(round(time_at(level, n['scroll']), 1))} ({grouped(n['scroll'], ',')})"
+                               for k, n in enumerate(notches))
+            size = " and ".join(f"{num(w)} px along the wall, {num(d)} deep" for w, d in sorted(sizes))
+            out += (f"\n\n**Notches** (the side caves, {size}; index, wall, t at the top edge of the middle (scroll px)): "
+                    f"{listed}.")
+        else:  # M9 part E (Level 32): notches of several sizes, each with its own
+            listed = "; ".join(f"{k} {n['side']} {num(round(time_at(level, n['scroll']), 1))} ({grouped(n['scroll'], ',')}), "
+                               f"{num(n['width'])} × {num(n['depth'])} px" for k, n in enumerate(notches))
+            out += (f"\n\n**Notches** (index, wall, t at the top edge of the middle (scroll px), length along the wall × "
+                    f"depth): {listed}.")
     contact = terrain["contact"]
     damage = contact["damage"]
     out += (f"\n\n**Contact**: {num(damage['medium'])} per touch (easy {num(damage['easy'])}, hard {num(damage['hard'])}), "
@@ -808,6 +817,8 @@ def waves(d):
     for w in level["waves"]:
         gs = groups(w)
         enter = entry(w, level)
+        if "branch" in w:  # M9 part E (Level 32): a fork branch's wave flies its channel only when it is chosen
+            enter += f" (fork {w['branch']['fork']}, {w['branch']['side']} channel)"
         rows.append((w["t"], [num(w["t"]), str(section_of(level, w["t"])), " + ".join(dict.fromkeys(g["formation"] for g in gs)),
                               " + ".join(enemy_link(d, g["enemy"]) for g in gs),
                               " + ".join(str(g["count"]) for g in gs)
@@ -845,6 +856,8 @@ def waves(d):
     totals = " · ".join(f"{enemy_name(slug)} {n}" for slug, n in all_totals.items() if not neutral(slug))
     if "halt_waves" in level:
         totals += " (with one cycle of the halt waves: a typical halt)"
+    if routes(level):  # M9 part E (Level 32): every branch counted; a route flies one channel of each fork
+        totals += " (every fork's branches together; a route flies one channel of each fork)"
     spared = [f"the {enemy_name(slug)}s ({n})" for slug, n in all_totals.items() if neutral(slug)]
     if spared:
         totals += "; " + ", ".join(spared) + " are not enemies"
@@ -1055,11 +1068,59 @@ def whole_part(e):
 TYPICAL_STREAMS = 2
 
 
+def routes(level):
+    """M9 part E (Level 32): a forked level's routes, a side per fork ("LR": fork 1 left, fork 2 right); [] without
+    forks."""
+    forks = len(level.get("terrain", {}).get("forks", []))
+    out = [""]
+    for _ in range(forks):
+        out = [r + side for r in out for side in "LR"]
+    return out if forks else []
+
+
+def on_route(item, route):
+    """Whether a wave or a ground target flies on `route` (one without a branch always)."""
+    branch = item.get("branch")
+    return branch is None or route[branch["fork"] - 1] == ("L" if branch["side"] == "left" else "R")
+
+
+def route_level(level, route):
+    """The level as `route` flies it: the other branches' waves and ground targets left out."""
+    return level | {"waves": [w for w in level["waves"] if on_route(w, route)],
+                    "ground_targets": [g for g in level["ground_targets"] if on_route(g, route)]}
+
+
 def credit_budget(d):
     """The level's credits at medium: a perfect run, and the typical haul (each source weighted by
     the economy's typical player) that should land on budget(n). Bounties (kills, parts, ground
-    targets) are × the act factor × the level's bounty_scale, rounded half to even per payout."""
+    targets) are × the act factor × the level's bounty_scale, rounded half to even per payout. M9 part E (Level 32): a
+    forked level's table has a row per route and the routes' mean as its total (the typical haul's target)."""
     level = data(d)
+    if routes(level):
+        economy = load("systems/economy/data.yaml")
+        budget = economy["budget"]["base"] * economy["budget"]["growth"] ** (level_number(d) - 1)
+        names = level.get("notes", {}).get("routes", {})
+        rows = []
+        for route in routes(level):
+            perfect, typical, _ = credit_rows(d, route_level(level, route))
+            rows.append([f"Route {route}" + (f": {names[route]}" if route in names else ""), perfect, typical])
+        perfect = sum(r[1] for r in rows) / len(rows)
+        typical = sum(r[2] for r in rows) / len(rows)
+        scale = level.get("bounty_scale", 1)
+        note = f" (the routes' mean, bounty scale {scale})"
+        spread = " ".join(f"{r[0].split(':')[0][6:]} {100 * (r[2] - budget) / budget:+.0f} %" for r in rows)
+        cells = [[source, grouped(round(p), ","), grouped(round(t), ",")] for source, p, t in rows]
+        return table(["Source", "Perfect run", "Typical haul"], cells + [
+            [f"**Total**{note}", f"**{grouped(round(perfect), ',')}**", f"**{grouped(round(typical), ',')}**"],
+            [f"Budget(n) = the typical haul's target; the mean {100 * (typical - budget) / budget:+.0f} % "
+             f"(by route: {spread}), perfect {perfect / budget:.2f} × budget", "", grouped(round(budget), ",")]])
+    perfect, typical, table_text = credit_rows(d, level)
+    return table_text
+
+
+def credit_rows(d, level):
+    """The credit budget of `level` (the level's data, or a route's of it): its perfect run, its typical haul and the
+    rendered table."""
     economy = load("systems/economy/data.yaml")
     n_level = level_number(d)
     budget = economy["budget"]["base"] * economy["budget"]["growth"] ** (n_level - 1)
@@ -1112,6 +1173,8 @@ def credit_budget(d):
             return ([(n, bounty(vital["bounty"]), layer_rate(slug)),
                      (n, bounty(vital["first_bonus"]), layer_rate(slug), False)]
                     + [(n, bounty(p["bounty"]), 0) for p in others])
+        if not chain and e.get("part_list"):  # M9 part E (step E3b): the Strider, each part's bounty rounded, as the game
+            return [(n, bounty(p["bounty"]), layer_rate(slug)) for p in e["part_list"]]
         if not chain:
             return [(n, bounty(e["bounty"]), layer_rate(slug))]
         head, tail = e["part_list"][0], e["part_list"][1]
@@ -1169,6 +1232,8 @@ def credit_budget(d):
         whole: the body's bounty and first bonus, as the parts' bounties); another by its stat block's bounty."""
         e = load(f"{enemy_dir(slug)}/data.yaml")
         vital = whole_part(e)
+        if not vital and e.get("part_list"):  # each part's own bounty, rounded (as the game; step E3b)
+            return [(n, bounty(p["bounty"]), rate["ground_targets"]) for p in e["part_list"]]
         if not vital:
             return [(n, bounty(stat_bounty(slug)), rate["ground_targets"])]
         return ([(n, bounty(vital["bounty"]), rate["ground_targets"])]
@@ -1204,8 +1269,15 @@ def credit_budget(d):
         e = load(f"{enemy_dir(boss['enemy'])}/data.yaml")
         paying = [p for p in e["part_list"] if p.get("bounty")]  # fire-only parts pay nothing
         names = " + ".join(part_names(paying))
-        add(f"{boss_kind(boss['enemy']).capitalize()}: {e['name']} ({names})",
-            [(1, bounty(p["bounty"]), 1) for p in paying])
+        items = [(1, bounty(p["bounty"]), 1) for p in paying]
+        # M9 part H (the Iron Sovereign): a ringed boss's batteries are parts its rings append
+        batteries = [r["batteries"] for r in e["boss"].get("rings", []) if r["batteries"]["part"].get("bounty")]
+        if batteries:
+            count = sum(b["count"] for b in batteries)
+            each = sorted({b["part"]["bounty"] for b in batteries})
+            names += f" + {count} batteries × {'/'.join(str(x) for x in each)}"
+            items += [(b["count"], bounty(b["part"]["bounty"]), 1) for b in batteries]
+        add(f"{boss_kind(boss['enemy']).capitalize()}: {e['name']} ({names})", items)
         streams = boss.get("notes", {}).get("streams", 0)
         for enemy, count in boss_streams(boss["enemy"]):
             if streams:
@@ -1237,6 +1309,11 @@ def credit_budget(d):
             continue
         add(f"Secret: {s['name']} (hidden crate, {round(100 * s['crate'] / budget)}% of budget)",
             [(1, pay(s["crate"]), rate["secrets"])])
+    # M9 part E (Level 32): a blast door's cache (a destructible with a crate, no secret) pays as a secret's
+    caches = [g for g in level["ground_targets"] if "crate" in g]
+    if caches:
+        add("Caches: " + " + ".join(f"{g['target']} {pay(g['crate'])}" for g in caches) + " (blast doors' crates)",
+            [(len(g["at"]), pay(g["crate"]), rate["secrets"]) for g in caches])
     secondary = level["objectives"].get("secondary")  # M5 part D: a level may have none (Level 10)
     count = 1
     if secondary is None:
@@ -1272,7 +1349,7 @@ def credit_budget(d):
     typical = sum(r[2] for r in rows)
     cells = [[source, grouped(p, ","), grouped(round(t), ",")] for source, p, t in rows]
     note = f" (bounty scale {scale})" if scale != 1 else ""
-    return table(["Source", "Perfect run", "Typical haul"], cells + [
+    return perfect, typical, table(["Source", "Perfect run", "Typical haul"], cells + [
         [f"**Total**{note}", f"**{grouped(perfect, ',')}**", f"**{grouped(round(typical), ',')}**"],
         [f"Budget(n) = the typical haul's target; typical {100 * (typical - budget) / budget:+.0f} %, "
          f"perfect {perfect / budget:.2f} × budget", "", grouped(round(budget), ",")]])

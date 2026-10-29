@@ -9,6 +9,7 @@ import vanguard.sim.DropSpec;
 import vanguard.sim.EnemySpec;
 import vanguard.sim.HazardSpec;
 import vanguard.sim.PickupType;
+import vanguard.sim.Range;
 
 /**
  * M5 part F's rules for the simulation (design/campaign Level 12 Storm Front, design/enemies/air/lamprey;
@@ -34,21 +35,64 @@ final class PartFRules {
         }
         EnemyData.Chase homing = chase.get();
         Optional<EnemySpec.Latch> latch = enemy.latch().map(data -> {
-            double rate = hook.flatMap(EnemyData.Hook::drain).orElseGet(() -> drainRate(enemy));
+            // M9 part F: a power drainer has no shield-drain rate (its drain attack has none).
+            double rate =
+                    data.drainsPower() ? 0 : hook.flatMap(EnemyData.Hook::drain).orElseGet(() -> drainRate(enemy));
             EnemyData.Spots spots = data.spots();
             return new EnemySpec.Latch(
-                    hook.flatMap(EnemyData.Hook::latchSlots).orElse(data.slots()),
-                    List.of(spot(spots.left()), spot(spots.right()), spot(spots.tail())),
-                    data.damageFactor(),
-                    data.shake().reversals(),
-                    data.shake().within(),
-                    data.stun(),
-                    data.throwSpeed(),
-                    rate);
+                            hook.flatMap(EnemyData.Hook::latchSlots).orElse(data.slots()),
+                            List.of(spot(spots.left()), spot(spots.right()), spot(spots.tail())),
+                            data.damageFactor(),
+                            data.shake().reversals(),
+                            data.shake().within(),
+                            data.stun(),
+                            data.throwSpeed(),
+                            rate)
+                    .withDrainsPower(data.drainsPower())
+                    .withEmpThrows(data.empThrows())
+                    .withPreyDrift(data.preyDrift().orElse(0.0));
         });
-        return spec.withChase(
-                new EnemySpec.Chase(homing.speed(), Math.toRadians(homing.turnRate()), homing.seconds()), latch);
+        return spec.withChase(chase(homing, hook), latch);
     }
+
+    /**
+     * The sim's chase of a stat block's {@code chase}: its speed (M9 part F: the hook's {@code chase.speed} instead), its
+     * turn rate (M9 part C: the hook's {@code chase.turn_rate} instead), its time and (M9 part F) its drift within a
+     * distance.
+     */
+    static EnemySpec.Chase chase(EnemyData.Chase homing, Optional<EnemyData.Hook> hook) {
+        Optional<EnemyData.ChaseChange> change = hook.flatMap(EnemyData.Hook::chase);
+        EnemySpec.Chase chase = new EnemySpec.Chase(
+                change.flatMap(EnemyData.ChaseChange::speed).orElse(homing.speed()),
+                Math.toRadians(change.flatMap(EnemyData.ChaseChange::turnRate).orElse(homing.turnRate())),
+                homing.seconds());
+        return homing.drift().isPresent()
+                ? chase.withDrift(homing.within().orElseThrow(), homing.drift().get())
+                : chase;
+    }
+
+    /**
+     * M9 part F (design/campaign Level 33, QF-1 a pending round 66): a wave's unit as its wave casts it: a {@code prey}
+     * wing's unit flies its refuelling hold (no swoop path; the hold's seconds and depth; prey for the leeches), a
+     * {@code hunts: prey} wave's unit hunts the free prey; any other wave's as it is.
+     */
+    static EnemySpec preyRole(LevelData.Wave wave, EnemySpec unit) {
+        if (wave.prey().isPresent()) {
+            LevelData.PreyHold hold = wave.prey().get();
+            return unit.withSwoopPath(Optional.empty())
+                    .withHover(Optional.of(new EnemySpec.Hover(
+                            new Range(hold.hold(), hold.hold()),
+                            new Range(hold.depth().min(), hold.depth().max()))))
+                    .withPreyRole(EnemySpec.PreyRole.PREY);
+        }
+        if (wave.hunts().filter(HUNTS_PREY::equals).isPresent()) {
+            return unit.withPreyRole(EnemySpec.PreyRole.HUNTER);
+        }
+        return unit;
+    }
+
+    /** M9 part F: a wave's {@code hunts} that sends its leeches at the prey wings. */
+    static final String HUNTS_PREY = "prey";
 
     /** The rate of a unit's {@code drain} attack, shield points a second; 0 without one. */
     static double drainRate(EnemyData enemy) {

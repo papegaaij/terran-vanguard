@@ -38,6 +38,10 @@ Open [index.html](index.html) in a browser (regenerate with
 Each row carries a recommendation; **B** rows list build choices: *yes* (keep as built) or *no* (say what). Where the
 Answer column lists options, the first marked *(recommended)* is mine.
 
+## Review
+
+Record of the decisions: [review.html](review.html)
+
 ## In the game
 
 `./gradlew :desktop:run --args="..."` with `--settings <file>` (a debug run writes no save):

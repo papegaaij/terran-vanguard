@@ -1,0 +1,247 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Round 50: record of the decisions</title><style>
+:root{--bg:#f4f5f7;--fg:#1b2230;--mut:#5a6577;--card:#fff;--line:#d3d9e2;--acc:#1f5fa8;--ok:#1d6b3a;--okbg:#e3f3e8;
+--hi:#fff6dc;--hib:#d9b84a;--code:#e9edf3;--warn:#8a4b00}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10141b;--fg:#dde3ee;--mut:#98a3b6;--card:#171d27;
+--line:#2c3544;--acc:#7fb2ee;--ok:#7bd69a;--okbg:#163323;--hi:#2c2610;--hib:#8a7424;--code:#232c3a;--warn:#e3a35a;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#10141b;--fg:#dde3ee;--mut:#98a3b6;--card:#171d27;--line:#2c3544;--acc:#7fb2ee;--ok:#7bd69a;
+--okbg:#163323;--hi:#2c2610;--hib:#8a7424;--code:#232c3a;--warn:#e3a35a;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:60rem;margin:0 auto;padding:1rem 16px 4rem}
+h1{font-size:1.6rem;margin:.5rem 0}h2{font-size:1.25rem;margin:2rem 0 .5rem;border-bottom:1px solid var(--line);padding-bottom:.25rem}
+h3{font-size:1.02rem;margin:0;flex:1 1 12rem}a{color:var(--acc)}
+.sum{color:var(--mut)}.note{font-size:.9rem;color:var(--mut)}
+nav.sec{display:flex;flex-wrap:wrap;gap:.4rem;margin:1rem 0}nav.sec a{padding:.2rem .6rem;border:1px solid var(--line);border-radius:1rem;
+text-decoration:none;font-size:.9rem;background:var(--card)}
+.row{background:var(--card);border:1px solid var(--line);border-radius:.4rem;padding:.7rem .9rem;margin:.7rem 0;overflow-wrap:anywhere}
+.row header{display:flex;flex-wrap:wrap;gap:.3rem .6rem;align-items:baseline}
+.rid{font:600 .85rem ui-monospace,Menlo,Consolas,monospace;background:var(--code);padding:.05rem .4rem;border-radius:.25rem}
+.kind{font-size:.8rem;color:var(--mut)}.part{font-size:.88rem;margin:.2rem 0}
+.q,.weak,.rec,.sub,.line,dl{font-size:.92rem;margin:.45rem 0}.weak{color:var(--warn)}
+code{background:var(--code);padding:0 .25rem;border-radius:.2rem;font-size:.88em}
+.tag{font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;color:var(--mut);font-weight:700;margin-right:.3rem}
+.ans{margin:.5rem 0 0;padding:.45rem .6rem;border-left:4px solid var(--hib);background:var(--hi);border-radius:.2rem}
+.ans.out{border-left-color:var(--ok)}.ans.none{opacity:.7}
+.badge{font-size:.75rem;font-weight:700;padding:.05rem .4rem;border-radius:.6rem;background:var(--okbg);color:var(--ok)}
+.badge.pick{background:var(--hi);color:var(--warn);border:1px solid var(--hib)}
+dl{display:grid;grid-template-columns:7rem 1fr;gap:.2rem .6rem}dt{font-weight:700}dd{margin:0}
+.media{display:flex;flex-wrap:wrap;gap:.5rem;margin:.5rem 0}.m{margin:0;max-width:100%}.m figcaption{font-size:.75rem;color:var(--mut)}
+.m.img img{max-width:14rem;max-height:10rem;border:1px solid var(--line);border-radius:.2rem;background:#000;display:block}
+.m.vid video{width:14rem;max-width:100%}.m.aud audio{width:16rem;max-width:100%}.miss{color:var(--warn)}
+details{margin:.4rem 0;font-size:.9rem}summary{cursor:pointer;color:var(--acc)}
+.listen{font-size:.85rem;color:var(--mut);margin:.3rem 0;padding-left:1.2rem}.opts{color:var(--mut)}
+.sub{padding-left:.6rem;border-left:2px solid var(--line)}
+table{border-collapse:collapse;display:block;overflow-x:auto}td,th{border:1px solid var(--line);padding:.2rem .4rem}
+blockquote{margin:.4rem 0;padding-left:.8rem;border-left:3px solid var(--line)}
+@media (max-width:480px){dl{grid-template-columns:1fr}.m.img img{max-width:100%}}
+</style></head><body><main><p class="note"><a href="README.md">Round 50 README</a> · <a href="../README.md">All rounds</a> · built 2026-10-22 · recorded by <code>tools/concept/review_record.py 50</code></p><h1>Concept round 50: record of the decisions</h1><div class="sum"><p>The review round of M8 part A <em>Act 4 systems</em> (<span class="ref">roadmap</span>): the under-water mode (the drag, every shot at ×0.7 speed and damage unless <code>anti-sub</code>, the beams' reach, the torpedoes' range, the waterline switch), the specials' limits with their words on the HUD (<code>UNDER ICE</code>, <code>NO WATER</code>), the Sonar Pulse, the Decoy Flares, the Harpoon Torpedoes, the Depth Charges, the pressure hull, the Auto-repair nanites, the Mk IV generator, the Bulwark heavy drone and Rook's per-level availability, <code>reference_dps</code> 22–28 and the Act 4 balance plan. No Act 4 level exists yet, so everything was flown on Act 2–3 levels: Level 11 for the water levels' <code>sub</code> layer (its Driftjelly fields), and Levels 18–20 with the debug option <code>--medium underwater@10</code> (dry for the first 10 s, then under water), always <code>--invulnerable</code>. Answer the rows below: the production art (accept or redo), the sounds (a, b or redo), seven calls the build made (accept or change; the recommendation is pre-selected) and one question ahead of Level 23. The many small rules decided on the way are in the parts' <em>Decisions</em> logs, marked "pending the user's review in round 50"; they are not asked here.</p><h3>In the game</h3><p>The art below is already in <code>assets/</code> (the finals) and the <strong>a</strong> sound of every pair plays in the game until you pick; the Torpedo Pod keeps its chosen launch until S.6 is answered. The Sonar Pulse's ping (S.7 a) and the Decoy Flares' launch (round 08's a) are the chosen files; nothing new is proposed for the flares.</p></div><p class="note">A read-only record: every row as the review page showed it, with the answer and the outcome from the round README (the record of truth). Media is linked from the design tree, not copied.</p><nav class="sec"><a href="#s-art-final">Art</a><a href="#s-sounds">Sounds</a><a href="#s-calls-the-build-made">Calls</a><a href="#s-ahead-level-23">Level 23</a></nav><section id="s-art-final"><h2>Art — final</h2>
+<article class="row" id="r-F.1">
+<header><span class="rid">F.1</span><h3>Harpoon Torpedoes</h3><span class="kind">final art</span></header>
+<div class="part"><a href="../../player/weapons/harpoon-torpedoes/README.md#concept-art">Harpoon Torpedoes</a></div>
+<div class="q"><strong>final art</strong> (<code>tools/art/act4_gear.py harpoon</code>, round 48 G1 = a): the barbed harpoon at 32 headings with its motor glow and launch light, the line of light (cable) trailing to the nose and fading 0.35 s after a hit, the impact's dark cavity, teal ring and barb sparks. The capture: Level 18 under water from 10 s, harpoons at L3 with the Depth Charges and two micro-missile pods, the ship swept left and right (the drag); before 10 s the row reads <code>HARPOONS … NO WATER</code></div>
+<div class="media"><figure class="m img"><a href="../../player/weapons/harpoon-torpedoes/concept/harpoon-torpedoes-final-r50-a.png"><img loading="lazy" decoding="async" src="../../player/weapons/harpoon-torpedoes/concept/harpoon-torpedoes-final-r50-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure><figure class="m img"><a href="../../player/weapons/harpoon-torpedoes/concept/harpoon-torpedoes-final-r50-a.gif"><img loading="lazy" decoding="async" src="../../player/weapons/harpoon-torpedoes/concept/harpoon-torpedoes-final-r50-a.gif" alt="GIF"></a><figcaption>GIF</figcaption></figure><figure class="m img"><a href="../../player/weapons/harpoon-torpedoes/concept/harpoon-torpedoes-capture-r50-a.png"><img loading="lazy" decoding="async" src="../../player/weapons/harpoon-torpedoes/concept/harpoon-torpedoes-capture-r50-a.png" alt="capture"></a><figcaption>capture</figcaption></figure><figure class="m vid"><figcaption>video with sound</figcaption><video controls preload="none" playsinline src="../../player/weapons/harpoon-torpedoes/concept/harpoon-torpedoes-capture-r50-a.mp4"></video></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> over the water levels (Level 11–13) the cables and bursts are drawn in the <code>sub</code> pass, under the sea's surface, so they read dim there; Mars's backdrop under water has no grade yet (the Europa grade is part C)</p>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: accepted, <code>art: final</code></span></div>
+</article>
+<article class="row" id="r-F.2">
+<header><span class="rid">F.2</span><h3>Depth Charges</h3><span class="kind">final art</span></header>
+<div class="part"><a href="../../player/weapons/depth-charges/README.md#concept-art">Depth Charges</a></div>
+<div class="q"><strong>final art</strong> (<code>tools/art/act4_gear.py charges</code>, round 48 G2 = a): the drum's 16 spin frames in three sinking stages, the fuse lamp blinking faster towards the burst, the pressure-dome bursts at 40 / 52 / 64 px with a dark cavity. The capture: Level 11 above water, the charges rolling off the stern and bursting on the Driftjelly fields' submerged jellies (the <code>sub</code> layer)</div>
+<div class="media"><figure class="m img"><a href="../../player/weapons/depth-charges/concept/depth-charges-final-r50-a.png"><img loading="lazy" decoding="async" src="../../player/weapons/depth-charges/concept/depth-charges-final-r50-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure><figure class="m img"><a href="../../player/weapons/depth-charges/concept/depth-charges-final-r50-a.gif"><img loading="lazy" decoding="async" src="../../player/weapons/depth-charges/concept/depth-charges-final-r50-a.gif" alt="GIF"></a><figcaption>GIF</figcaption></figure><figure class="m img"><a href="../../player/weapons/depth-charges/concept/depth-charges-capture-r50-a.png"><img loading="lazy" decoding="async" src="../../player/weapons/depth-charges/concept/depth-charges-capture-r50-a.png" alt="capture"></a><figcaption>capture</figcaption></figure><figure class="m vid"><figcaption>video with sound</figcaption><video controls preload="none" playsinline src="../../player/weapons/depth-charges/concept/depth-charges-capture-r50-a.mp4"></video></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> with the ship at the bottom edge the charges roll off the screen before they burst (B.7)</p>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: accepted, <code>art: final</code></span></div>
+</article>
+<article class="row" id="r-F.3">
+<header><span class="rid">F.3</span><h3>Sonar Pulse</h3><span class="kind">final art</span></header>
+<div class="part"><a href="../../player/specials/README.md#concept-art">Sonar Pulse</a></div>
+<div class="q"><strong>final art</strong> (<code>tools/art/act4_gear.py sonar</code>, round 48 G3 = b): the dashed double ring sweeping the field in 0.5 s, the contact brackets snapping in over a third of a second and blinking in the last second. The capture: Level 11 (a <code>water: true</code> level), the pulse's ring and brackets on the units in reach</div>
+<div class="media"><figure class="m img"><a href="../../player/specials/concept/sonar-pulse-final-r50-a.png"><img loading="lazy" decoding="async" src="../../player/specials/concept/sonar-pulse-final-r50-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure><figure class="m img"><a href="../../player/specials/concept/sonar-pulse-final-r50-a.gif"><img loading="lazy" decoding="async" src="../../player/specials/concept/sonar-pulse-final-r50-a.gif" alt="GIF"></a><figcaption>GIF</figcaption></figure><figure class="m img"><a href="../../player/specials/concept/sonar-pulse-capture-r50-a.png"><img loading="lazy" decoding="async" src="../../player/specials/concept/sonar-pulse-capture-r50-a.png" alt="capture"></a><figcaption>capture</figcaption></figure><figure class="m vid"><figcaption>video with sound</figcaption><video controls preload="none" playsinline src="../../player/specials/concept/sonar-pulse-capture-r50-a.mp4"></video></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the brackets have no sound of their own; on Level 11's busy sea the submerged jellies under the brackets are faint</p>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: accepted</span></div>
+</article>
+<article class="row" id="r-F.4">
+<header><span class="rid">F.4</span><h3>Decoy Flares</h3><span class="kind">final art</span></header>
+<div class="part"><a href="../../player/specials/README.md#concept-art">Decoy Flares</a></div>
+<div class="q"><strong>final art</strong> (<code>tools/art/act4_gear.py flares</code>, round 09's a): the white-hot flare's 4-frame flicker and its warm halo, four flares fanned 120° behind the ship. The capture: Level 19 under water, flares launched as the Revenant Walker's shoulder pods fire their homing missiles; a missile turns for the nearest burning flare and bursts on it</div>
+<div class="media"><figure class="m img"><a href="../../player/specials/concept/decoy-flares-final-r50-a.png"><img loading="lazy" decoding="async" src="../../player/specials/concept/decoy-flares-final-r50-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure><figure class="m img"><a href="../../player/specials/concept/decoy-flares-final-r50-a.gif"><img loading="lazy" decoding="async" src="../../player/specials/concept/decoy-flares-final-r50-a.gif" alt="GIF"></a><figcaption>GIF</figcaption></figure><figure class="m img"><a href="../../player/specials/concept/decoy-flares-capture-r50-a.png"><img loading="lazy" decoding="async" src="../../player/specials/concept/decoy-flares-capture-r50-a.png" alt="capture"></a><figcaption>capture</figcaption></figure><figure class="m vid"><figcaption>video with sound</figcaption><video controls preload="none" playsinline src="../../player/specials/concept/decoy-flares-capture-r50-a.mp4"></video></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the halo is dithered (no smooth gradient at this size); no smoke under water; the walker's missiles are few in the capture (its pods fell early to the L4 harpoons)</p>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: accepted</span></div>
+</article>
+<article class="row" id="r-F.5">
+<header><span class="rid">F.5</span><h3>Bulwark heavy drone</h3><span class="kind">final art</span></header>
+<div class="part"><a href="../../player/wingmen/README.md#concept-art">Bulwark heavy drone</a></div>
+<div class="q"><strong>final art</strong> (<code>tools/art/act4_gear.py bulwark</code>, round 48 G4 = a): the 36×36 hull intact / hit / under half, the pump-jets, the lure halo while it draws fire, its shell, muzzle light and hit sparks, the loss (light, ring, debris). The capture: Level 19 under water with <code>--escort bulwark</code>: in the wing slot with its halo, firing beside the ship, taking the drawn volleys</div>
+<div class="media"><figure class="m img"><a href="../../player/wingmen/concept/bulwark-final-r50-a.png"><img loading="lazy" decoding="async" src="../../player/wingmen/concept/bulwark-final-r50-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure><figure class="m img"><a href="../../player/wingmen/concept/bulwark-final-r50-a.gif"><img loading="lazy" decoding="async" src="../../player/wingmen/concept/bulwark-final-r50-a.gif" alt="GIF"></a><figcaption>GIF</figcaption></figure><figure class="m img"><a href="../../player/wingmen/concept/bulwark-capture-r50-a.png"><img loading="lazy" decoding="async" src="../../player/wingmen/concept/bulwark-capture-r50-a.png" alt="capture"></a><figcaption>capture</figcaption></figure><figure class="m vid"><figcaption>video with sound</figcaption><video controls preload="none" playsinline src="../../player/wingmen/concept/bulwark-capture-r50-a.mp4"></video></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> its cannon, hit and loss reuse existing sounds at a lower pitch (no new file)</p>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: accepted</span></div>
+</article>
+<article class="row" id="r-F.6">
+<header><span class="rid">F.6</span><h3>Hydro-kit (the ship and Rook)</h3><span class="kind">final art</span></header>
+<div class="part"><a href="../../world/europa/README.md#concept-art">Hydro-kit (the ship and Rook)</a></div>
+<div class="q"><strong>final art</strong> (<code>tools/art/act4_gear.py hydro</code>, round 48 E10 = a): the Stormhawk's five banking frames with the sealed refit, Rook's craft with the same kit parts; drawn whenever the ship is under water. The capture: Level 20 dry, then under water from 10 s (the ship and Rook switch to the kit), with the Ion Beam's reach, the Torpedo Pods waking from <code>NO WATER</code> and the Airstrike greying to <code>UNDER ICE</code></div>
+<div class="media"><figure class="m img"><a href="../../world/europa/concept/hydro-kit-final-r50-a.png"><img loading="lazy" decoding="async" src="../../world/europa/concept/hydro-kit-final-r50-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure><figure class="m img"><a href="../../world/europa/concept/hydro-kit-final-r50-a.gif"><img loading="lazy" decoding="async" src="../../world/europa/concept/hydro-kit-final-r50-a.gif" alt="GIF"></a><figcaption>GIF</figcaption></figure><figure class="m img"><a href="../../world/europa/concept/underwater-capture-r50-a.png"><img loading="lazy" decoding="async" src="../../world/europa/concept/underwater-capture-r50-a.png" alt="capture: dry, then under water"></a><figcaption>capture: dry, then under water</figcaption></figure><figure class="m vid"><figcaption>video with sound</figcaption><video controls preload="none" playsinline src="../../world/europa/concept/underwater-capture-r50-a.mp4"></video></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> Rook's kit parts placed by hand; the engine flames still show under water</p>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: accepted (Europa stays <code>art: chosen</code> for its backdrops)</span></div>
+</article>
+<article class="row" id="r-F.7">
+<header><span class="rid">F.7</span><h3>Act 4 hangar icons</h3><span class="kind">final art</span></header>
+<div class="part"><a href="../../ui/hangar/README.md#concept-art">Act 4 hangar icons</a></div>
+<div class="q"><strong>final art</strong> (<code>tools/art/icons.py --act4</code>): Harpoon Torpedoes, Depth Charges, Sonar Pulse and the Bulwark at 16 and 24 px beside the Torpedo Pod, Proximity Mines, EMP Burst and Rook for the style; the capture is the hangar before Level 22 with the new shop rows, the Bulwark row and the escort callout</div>
+<div class="media"><figure class="m img"><a href="../../ui/hangar/concept/act4-icons-final-r50-a.png"><img loading="lazy" decoding="async" src="../../ui/hangar/concept/act4-icons-final-r50-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure><figure class="m img"><a href="../../ui/hangar/concept/act4-hangar-capture-r50-a.png"><img loading="lazy" decoding="async" src="../../ui/hangar/concept/act4-hangar-capture-r50-a.png" alt="hangar capture"></a><figcaption>hangar capture</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the harpoon's icon is drawn with a 1.7× stroke so its barb reads at 16 px</p>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: accepted</span></div>
+</article>
+<article class="row" id="r-K.1">
+<header><span class="rid">K.1</span><h3>The HUD&#x27;s special limits</h3><span class="kind">game capture</span></header>
+<div class="part"><a href="../../ui/hud/README.md#concept-art">The HUD's special limits</a></div>
+<div class="q"><strong>game capture</strong>: the special row greyed in the compact form with its amber reason word: <code>NO WATER</code> (the Sonar Pulse on Level 18 before the water, the Harpoons and Depth Charges reading <code>NO WATER</code> too) and <code>UNDER ICE</code> (the Airstrike on Level 20 under water); the row flashes once and plays the limit chime (S.8) as the ship crosses the waterline (in F.6's video at 10 s)</div>
+<div class="media"><figure class="m img"><a href="../../ui/hud/concept/special-limits-capture-r50-a.png"><img loading="lazy" decoding="async" src="../../ui/hud/concept/special-limits-capture-r50-a.png" alt="capture"></a><figcaption>capture</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> <code>ORBITAL LANCE</code> is cut to <code>ORBITAL</code> in the compact row to fit its word</p>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: accepted</span></div>
+</article>
+</section>
+<section id="s-sounds"><h2>Sounds</h2>
+<div class="sum"><p>Every file is cut from Freesound's public HQ previews (a pick is rebuilt from its original afterwards with the same settings) or, for the limit chime, synthesized. The rule for all of them (round 48, Q12 a): real recordings, heavy and big, muffled and pressured under water, <strong>no bubbles, nothing that pops</strong>, no low-pass on the sfx bus. They are levelled beside the files they stand with, so they play at the same game levels. Not listened to by Claude: checked by level, peaks, onsets, spectrograms and loop seams; no recommendation.</p></div>
+<article class="row" id="r-S.1">
+<header><span class="rid">S.1</span><h3>Harpoon launch</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Harpoon launch</a></div>
+<div class="q"><strong>pick a or b</strong>. <strong>Plays</strong> at every Harpoon Torpedoes shot: the front <code>anti-sub</code> weapon, bought from the L22 visit and firing from Level 23's waterline on, 0.8–1 shots a second (two torpedoes side by side at L5), mostly under water; the ship's own fire, so it plays all the time and must not tire. <strong>Should sound like</strong> the Torpedo Pod's family made heavier, without bubbles: a pneumatic tube's thump as the torpedo is pushed out, then its motor's whirr running off ahead; muffled, pressured and short. <strong>a</strong> (0.82 s): a hard compressed-air blast (a pneumatic "thoomp") muffled, on a cannon's deep thump at quarter speed, and from 0.12 s a submarine motor's whirr rising in pitch as it runs away and fades: punchy and clean, the most "pneumatic launch, then a motor leaving". <strong>b</strong> (0.9 s): an old film-library recording of a submarine firing a torpedo (a pressurised hiss with thumps and thunks in it), muffled, over the Torpedo Pod's launch slowed and muffled hard: bigger and lower, more hiss and mechanism than a, less punch</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/shot-harpoon-r50-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/shot-harpoon-r50-b.ogg"></audio></figure><figure class="m aud"><figcaption>compare: the Torpedo Pod&#x27;s launch</figcaption><audio controls preload="none" src="../../audio/sfx/concept/shot-torpedo-r03-a.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> a carries a CC-BY layer (credited)</p>
+<div class="ans"><span class="tag">Answer</span> <span><strong>b</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: b picked (launch r50-b in the game)</span></div>
+</article>
+<article class="row" id="r-S.2">
+<header><span class="rid">S.2</span><h3>Harpoon run loop</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Harpoon run loop</a></div>
+<div class="q"><strong>pick a or b</strong>. <strong>Plays</strong> while any Harpoon Torpedo runs ahead of the ship: one seamless loop for all of them (a torpedo lives about 2.5 s under water, so with the weapon firing it runs nearly all the time), low under the launches and hits. <strong>Should sound like</strong> a torpedo's motor and propeller running away through the water: a steady, muffled, heavy whirr or thrum; no bubbles, no clicks. <strong>a</strong> (4.0 s loop): a submarine's motor recorded under water (a steady, fairly high, muffled whirr) over a deep submarine rumble: a machine's whine running on, the most "motor". <strong>b</strong> (4.0 s loop): a real ship's propeller through a hydrophone (a low churning thrum with the blades' beat in it), muffled, with the motor slowed quietly under it: lower and rougher, the most "propeller in water"</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/harpoon-run-r50-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/harpoon-run-r50-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the loop plays most of the time: listen for tiring</p>
+<div class="ans"><span class="tag">Answer</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: a picked</span></div>
+</article>
+<article class="row" id="r-S.3">
+<header><span class="rid">S.3</span><h3>Harpoon hit</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Harpoon hit</a></div>
+<div class="q"><strong>pick a or b</strong>. <strong>Plays</strong> when a Harpoon Torpedo hits (with its 20 px splash), under water and on a <code>water: true</code> level's surface, up to about once a second; the target's own death plays its explosion over it. <strong>Should sound like</strong> a heavy thud: a deep, pressured under-water blast with a muffled body and a short low tail; no splash, no bubble rattle; short enough to repeat. <strong>a</strong> (1.2 s): an under-water deep impact (a massive dull hit with a churning body) on a depth bomb's sub-bass boom: a heavy, very low "thoom" with a rolling tail. <strong>b</strong> (1.2 s): an old film-library torpedo explosion (a big blast with rumble), muffled, on a depth bomb's boom: rougher and more "explosion" than a, with grit in it</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/harpoon-hit-r50-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/harpoon-hit-r50-b.ogg"></audio></figure><figure class="m aud"><figcaption>compare: what a torpedo&#x27;s impact plays today</figcaption><audio controls preload="none" src="../../audio/sfx/concept/explosion-water-r03-a.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> a's energy is nearly all deep bass: on small speakers it is the quieter of the two</p>
+<div class="ans"><span class="tag">Answer</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: a picked</span></div>
+</article>
+<article class="row" id="r-S.4">
+<header><span class="rid">S.4</span><h3>Depth charge roll-out</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Depth charge roll-out</a></div>
+<div class="q"><strong>pick a or b</strong>. <strong>Plays</strong> at every Depth Charges volley: the rear <code>anti-sub</code> weapon (from the L22 visit, firing from Level 23's waterline): a barrel rolls off the stern 1–1.4 times a second (two at L5); the ship's own fire, so often. <strong>Should sound like</strong> a heavy barrel clank as the charge rolls off its rail: steel on steel, weighty and short, slightly muffled. <strong>a</strong> (0.5 s): a steel barrel slammed down (a hard clank with a smaller rebound 0.1 s later), slowed, over an oil drum's hollow boom: the more metallic and ringing. <strong>b</strong> (0.5 s): a heavy metal hatch slamming shut on a big robot's deep steel stomp: darker, more "latch and weight", less ring</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/shot-depth-charge-r50-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/shot-depth-charge-r50-b.ogg"></audio></figure><figure class="m aud"><figcaption>compare: the mines&#x27; drop</figcaption><audio controls preload="none" src="../../audio/sfx/concept/shot-mine-r03-a.ogg"></audio></figure></div>
+<div class="ans"><span class="tag">Answer</span> <span><strong>b</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: b picked (roll-out r50-b in the game)</span></div>
+</article>
+<article class="row" id="r-S.5">
+<header><span class="rid">S.5</span><h3>Depth charge burst</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Depth charge burst</a></div>
+<div class="q"><strong>pick a or b</strong>. <strong>Plays</strong> when a charge bursts on its fuse, 0.7–0.9 s after the roll-out, behind the ship: about once a second, two at L5; above water too (on the <code>sub</code> layer). <strong>Should sound like</strong> a heavy, low under-water thud: a pressure wave rather than a fireball, deep and muffled with a short low tail; no splash, no bubbles. <strong>a</strong> (1.5 s): a depth bomb's sub-bass boom with a real explosion's body over it: a deep, round pressure "whumpf", the softer and rounder. <strong>b</strong> (1.5 s): an old film-library torpedo explosion slowed and muffled hard on a depth bomb's boom: a deeper, rumbling "thoom" with a rough edge, more weight</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/depth-charge-burst-r50-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/depth-charge-burst-r50-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> it plays often next to S.3: the two should differ</p>
+<div class="ans"><span class="tag">Answer</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: a picked</span></div>
+</article>
+<article class="row" id="r-S.6">
+<header><span class="rid">S.6</span><h3>Torpedo Pod launch, without its bubbles</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Torpedo Pod launch, without its bubbles</a></div>
+<div class="q"><strong>pick a or b</strong>. <strong>Plays</strong> at every Torpedo Pod shot (a wing mount, Level 11 on and all of Act 4; Rook's torpedo gun too). Today it plays the chosen <code>shot-torpedo-r03-a</code>, whose "under water" character is its author's phaser over a muffled launch: that sweep reads as bubbly (round 48, Q12: no bubbles). <strong>Should sound like</strong> the chosen launch as it is (the same muffled rush and thump), without the warble. <strong>a</strong> (1.0 s): the author's dry version (the file the chosen one was made from) muffled the same way: smooth, no warble. <strong>b</strong> (1.0 s): the chosen file with the phaser's fast sweep smoothed out (each frequency's level held steady over 90 ms): the closest to what plays now, a little duller</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/shot-torpedo-r50-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/shot-torpedo-r50-b.ogg"></audio></figure><figure class="m aud"><figcaption>compare: now</figcaption><audio controls preload="none" src="../../audio/sfx/concept/shot-torpedo-r03-a.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> until you pick, the game keeps r03-a, so the Act 2 levels sound as before</p>
+<div class="ans"><span class="tag">Answer</span> <span><strong>keep r03-a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: r03-a kept; both r50 launches rejected</span></div>
+</article>
+<article class="row" id="r-S.7">
+<header><span class="rid">S.7</span><h3>Sonar Pulse call</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Sonar Pulse call</a></div>
+<div class="q"><strong>pick a or b</strong>. <strong>Plays</strong> at each Sonar Pulse (from the L22 unlock; in water only; at most 4 charges, 1.5 s between pulses), with the ring sweeping the field in 0.5 s. <strong>Should sound like</strong> a soft, heavy, low ping that fills the water; no bubbles, no pops. <strong>a</strong> = the chosen <code>special-sonar-r04-a</code> (a clean single ping; plays now). <strong>b</strong> (3.0 s): a real 625 Hz active sonar ping slowed to about 530 Hz (a lower, longer "pinnng") over a heavy low sonar hit's thump and rumble: the same role, deeper and weightier</div>
+<div class="media"><figure class="m aud"><figcaption>a (chosen, plays now)</figcaption><audio controls preload="none" src="../../audio/sfx/concept/special-sonar-r04-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/special-sonar-r50-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> b is three times as long as a</p>
+<div class="ans"><span class="tag">Answer</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: a picked: r04-a kept; r50-b rejected</span></div>
+</article>
+<article class="row" id="r-S.8">
+<header><span class="rid">S.8</span><h3>Special limit chime</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Special limit chime</a></div>
+<div class="q"><strong>pick a or b</strong>. <strong>Plays</strong> when the HUD's special row changes state at once as the ship crosses a waterline (greyed with <code>UNDER ICE</code> or <code>NO WATER</code>, or usable again; the row flashes once): a few times in Levels 23 and 28. A press on a greyed or empty special keeps the chosen denied buzz r08-a. <strong>Should sound like</strong> a short soft UI chime (synthesized, never bubbly), the cooldown-ready chime's family but clearly "changed", not "ready". <strong>a</strong> (0.55 s): two soft bells falling, E6 then A5 80 ms later (the ready chime turned round): a light "switched off". <strong>b</strong> (0.6 s): one soft glass fifth an octave lower, C5–G5, muted: a darker, rounder "tonk"</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/special-limit-r50-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/special-limit-r50-b.ogg"></audio></figure><figure class="m aud"><figcaption>compare: the ready chime</figcaption><audio controls preload="none" src="../../audio/sfx/concept/cooldown-ready-r37-a.ogg"></audio></figure></div>
+<div class="ans"><span class="tag">Answer</span> <span><strong>b</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: b picked (chime r50-b in the game)</span></div>
+</article>
+</section>
+<section id="s-calls-the-build-made"><h2>Calls the build made</h2>
+<div class="sum"><p>Seven of the rules the steps had to decide where the approved documents left a gap or a choice. Each is built as described; the recommendation is pre-selected. The rest are in the parts' <em>Decisions</em> logs.</p></div>
+<article class="row" id="r-B.1">
+<header><span class="rid">B.1</span><h3>The Bulwark&#x27;s draw-fire</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../player/wingmen/README.md#decisions">The Bulwark's draw-fire</a></div>
+<div class="q"><strong>accept or change</strong>: while the Bulwark is within 150 px of the ship, each <strong>aimed volley</strong> an enemy fires goes to the Bulwark with a 30 % chance (the gap check's D11 said per bullet; per volley keeps a fan or a burst together instead of splitting it between the two). Turret barrels, aim-along fans and the convoy's shots are never drawn. Recommended: accept</div>
+<div class="media"><figure class="m vid"><figcaption>video with sound</figcaption><video controls preload="none" playsinline src="../../player/wingmen/concept/bulwark-capture-r50-a.mp4"></video></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> per bullet would spread the draw more evenly but splits patterns</p>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: accepted</span></div>
+</article>
+<article class="row" id="r-B.2">
+<header><span class="rid">B.2</span><h3>The Sonar Pulse in any water</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../player/specials/README.md#decisions">The Sonar Pulse in any water</a></div>
+<div class="q"><strong>accept or change</strong>: the Sonar Pulse works wherever there is water: under water and on the Act 2 water levels (Levels 11–13, <code>water: true</code>, where it opens the <code>sub</code> layer to every weapon for 6 s); it reads <code>NO WATER</code> on dry levels and on L22's ice. The specials table's "above water → forbidden" was read as the ice and the dry shaft. Recommended: accept (the water levels get a use for it)</div>
+<div class="media"><figure class="m vid"><figcaption>video with sound</figcaption><video controls preload="none" playsinline src="../../player/specials/concept/sonar-pulse-capture-r50-a.mp4"></video></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: accepted</span></div>
+</article>
+<article class="row" id="r-B.3">
+<header><span class="rid">B.3</span><h3>Rook and the Bulwark in one slot</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../player/wingmen/README.md#decisions">Rook and the Bulwark in one slot</a></div>
+<div class="q"><strong>accept or change</strong>: buying the Bulwark fits it in the escort slot (FIT / UNFIT on its row switch back to Rook); an owned Bulwark flies while Rook is missing (the loaner only when none is owned); a destroyed Bulwark is rebuilt free for the next level, its damage otherwise repaired at 8 cr a point; with an owned Bulwark chosen and Rook grounded (unrepaired) nobody flies — the player's choice. Recommended: accept</div>
+<div class="media"><figure class="m img"><a href="../../ui/hangar/concept/act4-hangar-capture-r50-a.png"><img loading="lazy" decoding="async" src="../../ui/hangar/concept/act4-hangar-capture-r50-a.png" alt="hangar capture"></a><figcaption>hangar capture</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the free rebuild makes losing it cost nothing beyond the level</p>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: accepted</span></div>
+</article>
+<article class="row" id="r-B.4">
+<header><span class="rid">B.4</span><h3>Enemy shells under water</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../world/europa/README.md#decisions">Enemy shells under water</a></div>
+<div class="q"><strong>accept or change</strong>: under water every bullet and missile spawns at ×0.7 speed, but lobbed shells (mortars) and spore mines keep their speed: they are thrown or drifting, not fired, and slowing them would make their landing marks lie. Recommended: accept</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> a mortar shell outruns the bullets around it under water</p>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: accepted</span></div>
+</article>
+<article class="row" id="r-B.5">
+<header><span class="rid">B.5</span><h3>When the plan buys the anti-sub guns</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../player/generator/README.md#decisions">When the plan buys the anti-sub guns</a></div>
+<div class="q"><strong>accept or change</strong>: the Harpoon Torpedoes and Depth Charges are sold from the L22 visit (both idle on L22's dry ice, <code>NO WATER</code>); the Act 4 balance plan buys the Harpoon at L22 but keeps the Ion Beam fitted on the dry ice, fits the Harpoon at L23 with the Depth Charges (both raised to L3 there) and the Harpoon to L4 at L26, buys the pressure hull at L24, flies the free Sonar charge at L23 (the Airstrike is forbidden under water), takes the Shield Mk III at L28 rather than the nanites, and flies the loaner Bulwark at L27–28. Recommended: accept</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> a player who fits the Harpoon at L22 carries a silent front gun through that level</p>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: accepted</span></div>
+</article>
+<article class="row" id="r-B.6">
+<header><span class="rid">B.6</span><h3>How the Bulwark fights</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../player/wingmen/README.md#decisions">How the Bulwark fights</a></div>
+<div class="q"><strong>accept or change</strong>: it fires one shell a second (500 px/s, full damage under water as <code>anti-sub</code>) only while the player fires; boss beams, flame cones and vents pass through it (it shields only from bullets); a rammer that hits it dies without doing ram damage; it reaches its slot in 0.4 s and settles in 0.25 s. Recommended: accept</div>
+<div class="media"><figure class="m vid"><figcaption>video with sound</figcaption><video controls preload="none" playsinline src="../../player/wingmen/concept/bulwark-capture-r50-a.mp4"></video></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: accepted</span></div>
+</article>
+<article class="row" id="r-B.7">
+<header><span class="rid">B.7</span><h3>Charges dropped at the bottom edge</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../player/weapons/depth-charges/README.md#decisions">Charges dropped at the bottom edge</a></div>
+<div class="q"><strong>accept or change</strong>: a charge rolls backwards from the stern (147 px/s under water) and bursts on its fuse; one that leaves the field first is lost, so with the ship at the bottom edge the charges never burst on the screen. Recommended: accept (the rear weapon rewards flying higher; a change would hold the charge at the edge and burst it there)</div>
+<div class="media"><figure class="m vid"><figcaption>video with sound</figcaption><video controls preload="none" playsinline src="../../player/weapons/depth-charges/concept/depth-charges-capture-r50-a.mp4"></video></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the autopilot and many players hug the bottom edge</p>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: accepted</span></div>
+</article>
+</section>
+<section id="s-ahead-level-23"><h2>Ahead: Level 23</h2>
+<article class="row" id="r-Q.1">
+<header><span class="rid">Q.1</span><h3>The dry shaft (Level 23)</h3><span class="kind">pick a, b or c</span></header>
+<div class="part"><a href="../../campaign/act-4-deep-water/level-23-through-the-ice/README.md">The dry shaft (Level 23)</a></div>
+<div class="q"><strong>pick a, b or c</strong> (part C's gap check, an important concept). <strong>The problem:</strong> Level 23 opens with 25.5 s in the shaft above the waterline, dry. There the Harpoon Torpedoes, the Depth Charges and the Sonar Pulse all read <code>NO WATER</code>, so the guns the player just bought for the act stay silent for the first 15 % of the level: only the wing missiles and Rook fire, and the homing missiles never target the Mote Swarm at t = 19. <strong>a)</strong> keep it as approved: <code>NO WATER</code> until the waterline, the dry popcorn left to the wings and Rook, the crossing flashes the rows back on (cost: a quiet front gun at the start; nothing to build; part C measures it with <code>levelReport</code> and the autopilot). <strong>b)</strong> move the waterline to t ≈ 12 (the surface waves t = 4–10 only, Varga's lines moved; cost: an approved layout changed, a shorter shaft mouth). <strong>c)</strong> a new rule: torpedo-type weapons fire dry as straight unguided shots in a level that has a waterline (cost: a rule that muddles L22's <code>NO WATER</code> lesson). Recommended: <strong>a</strong> (built so; b only if part C's measures fail)</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> under a the first 25 s lean on the wing weapons</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: a, kept as approved; part C measures it with <code>levelReport</code> and the autopilot</span></div>
+</article>
+</section></main></body></html>

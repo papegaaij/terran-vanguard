@@ -3,7 +3,7 @@ title: Data file schemas — voice
 design: approved
 implementation: in-progress
 art: n/a
-updated: 2026-10-25
+updated: 2026-10-29
 ---
 
 # Data file schemas — voice
@@ -14,7 +14,8 @@ The schema of the voice file: Chatterbox's expression settings and the speakers'
 
 ## Design
 
-- **Voice** (`audio/voice/data.yaml`): `expressions` (`neutral`, `grim`, `fierce` and `shout`,
+- **Voice** (`audio/voice/data.yaml`): `expressions` (`neutral`, `grim`, `fierce`, M9 part H's `smug` and `rage`
+  (Vorne's: the neutral and the grim rows' numbers) and `shout`,
   each `exaggeration`, `cfg_weight`, `temperature`: Chatterbox's settings) and `speakers` by voice
   slug: `names` (the speakers as the level data writes them), `ref` (the clip in
   `design/audio/voice/refs/`), optional `shift` (added to the expression's row), `fixed` (settings

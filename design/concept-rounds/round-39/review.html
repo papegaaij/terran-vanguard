@@ -1,0 +1,274 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Round 39: record of the decisions</title><style>
+:root{--bg:#f4f5f7;--fg:#1b2230;--mut:#5a6577;--card:#fff;--line:#d3d9e2;--acc:#1f5fa8;--ok:#1d6b3a;--okbg:#e3f3e8;
+--hi:#fff6dc;--hib:#d9b84a;--code:#e9edf3;--warn:#8a4b00}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10141b;--fg:#dde3ee;--mut:#98a3b6;--card:#171d27;
+--line:#2c3544;--acc:#7fb2ee;--ok:#7bd69a;--okbg:#163323;--hi:#2c2610;--hib:#8a7424;--code:#232c3a;--warn:#e3a35a;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#10141b;--fg:#dde3ee;--mut:#98a3b6;--card:#171d27;--line:#2c3544;--acc:#7fb2ee;--ok:#7bd69a;
+--okbg:#163323;--hi:#2c2610;--hib:#8a7424;--code:#232c3a;--warn:#e3a35a;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:60rem;margin:0 auto;padding:1rem 16px 4rem}
+h1{font-size:1.6rem;margin:.5rem 0}h2{font-size:1.25rem;margin:2rem 0 .5rem;border-bottom:1px solid var(--line);padding-bottom:.25rem}
+h3{font-size:1.02rem;margin:0;flex:1 1 12rem}a{color:var(--acc)}
+.sum{color:var(--mut)}.note{font-size:.9rem;color:var(--mut)}
+nav.sec{display:flex;flex-wrap:wrap;gap:.4rem;margin:1rem 0}nav.sec a{padding:.2rem .6rem;border:1px solid var(--line);border-radius:1rem;
+text-decoration:none;font-size:.9rem;background:var(--card)}
+.row{background:var(--card);border:1px solid var(--line);border-radius:.4rem;padding:.7rem .9rem;margin:.7rem 0;overflow-wrap:anywhere}
+.row header{display:flex;flex-wrap:wrap;gap:.3rem .6rem;align-items:baseline}
+.rid{font:600 .85rem ui-monospace,Menlo,Consolas,monospace;background:var(--code);padding:.05rem .4rem;border-radius:.25rem}
+.kind{font-size:.8rem;color:var(--mut)}.part{font-size:.88rem;margin:.2rem 0}
+.q,.weak,.rec,.sub,.line,dl{font-size:.92rem;margin:.45rem 0}.weak{color:var(--warn)}
+code{background:var(--code);padding:0 .25rem;border-radius:.2rem;font-size:.88em}
+.tag{font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;color:var(--mut);font-weight:700;margin-right:.3rem}
+.ans{margin:.5rem 0 0;padding:.45rem .6rem;border-left:4px solid var(--hib);background:var(--hi);border-radius:.2rem}
+.ans.out{border-left-color:var(--ok)}.ans.none{opacity:.7}
+.badge{font-size:.75rem;font-weight:700;padding:.05rem .4rem;border-radius:.6rem;background:var(--okbg);color:var(--ok)}
+.badge.pick{background:var(--hi);color:var(--warn);border:1px solid var(--hib)}
+dl{display:grid;grid-template-columns:7rem 1fr;gap:.2rem .6rem}dt{font-weight:700}dd{margin:0}
+.media{display:flex;flex-wrap:wrap;gap:.5rem;margin:.5rem 0}.m{margin:0;max-width:100%}.m figcaption{font-size:.75rem;color:var(--mut)}
+.m.img img{max-width:14rem;max-height:10rem;border:1px solid var(--line);border-radius:.2rem;background:#000;display:block}
+.m.vid video{width:14rem;max-width:100%}.m.aud audio{width:16rem;max-width:100%}.miss{color:var(--warn)}
+details{margin:.4rem 0;font-size:.9rem}summary{cursor:pointer;color:var(--acc)}
+.listen{font-size:.85rem;color:var(--mut);margin:.3rem 0;padding-left:1.2rem}.opts{color:var(--mut)}
+.sub{padding-left:.6rem;border-left:2px solid var(--line)}
+table{border-collapse:collapse;display:block;overflow-x:auto}td,th{border:1px solid var(--line);padding:.2rem .4rem}
+blockquote{margin:.4rem 0;padding-left:.8rem;border-left:3px solid var(--line)}
+@media (max-width:480px){dl{grid-template-columns:1fr}.m.img img{max-width:100%}}
+</style></head><body><main><p class="note"><a href="README.md">Round 39 README</a> · <a href="../README.md">All rounds</a> · built 2026-10-14 · recorded by <code>tools/concept/review_record.py 39</code></p><h1>Concept round 39: record of the decisions</h1><div class="sum"><p>The review round of M7 part C <em>Level 16</em> (<span class="ref">roadmap</span>), built while the user was on vacation: terrain collision (the canyon's walls and rock islands, the ship's and Rook's contact and push, shots, beams, missiles and enemy bullets against rock), the walls projected rising toward the camera from their foot (round 36 MA.1 = b), the <span class="ref">Tendril Anchor</span> gates (<code>link</code>, a beam burning the tendril) with the new <code>links</code> secondary and its BARRIERS tracker, the <span class="ref">Threadcrawler</span> as a ground chain along the walls' foot, <span class="ref">Level 16 Valles Canyon Run</span>'s data, its Valles backdrop and props, and the part's sounds. The documents stay <code>design: approved</code> (round 36); every default, pick and build choice below was taken on the user's behalf and is <strong>pending the user's review</strong>. Level 16's voices were rendered afterwards (step VOX-C, 2026-10-18): the capture still shows its radio as text, the game plays the voices.</p><p>Open <span class="ref">index.html</span> in a browser (regenerate with <code>python3 tools/concept/board.py 39 --subjects backdrop-final,l16-props-final,tendril-anchor-final,threadcrawler-final,intel-final,briefing-images-final,tendril-hum,tendril-burn,tendril-break,crawler-walk,mars-canyon,level-16-capture</code>). The rows are in this order:</p><ol><li><strong>Changes to approved specs</strong> (<code>C…</code>): <em>accept</em> or <em>revert</em> (C1: pick which document wins);</li><li><strong>Art</strong> (<code>F.…</code> final art to approve): <em>approve as final</em> / <em>redo</em>;</li><li><strong>Sounds</strong> (<code>S.…</code>, one variant each): <em>accept</em> / <em>redo</em>;</li><li><strong>Voices</strong> (<code>V.…</code>): <em>accept</em> / <em>redo</em> (say which line), the texts in <span class="ref">Listening</span>;</li><li><strong>Captures</strong> (<code>K.…</code>): the game as built, <em>accept</em> or <em>change</em>;</li><li><strong>Build choices</strong> (<code>B.…</code>) per step, each item <em>yes</em> (keep as built) or <em>no</em> (say what), and the <strong>findings</strong> (<code>R.…</code>).</li></ol><h3>In the game</h3><p><code>./gradlew :desktop:run --args="…"</code> with <code>--settings &lt;file&gt;</code> to keep the real settings apart (a debug run writes no save):</p><ul><li>Level 16 with the balance plan's ship: <code>--start level --level 16 --loadout front=pulse-cannon:4,left=micro-missile-pod:2,right=micro-missile-pod:2,rear=tail-gun:2,generator=2,shield=1,armor=2 --special airstrike:2 --escort rook:autocannon:1</code>;</li><li>with a beam for the tendrils: <code>--special orbital-lance:2</code> (as the capture), or <code>front=ion-beam:2</code> in the loadout.</li></ul></div><p class="note">A read-only record: every row as the review page showed it, with the answer and the outcome from the round README (the record of truth). Media is linked from the design tree, not copied.</p><nav class="sec"><a href="#s-changes-to-approved-specs">Changes</a><a href="#s-art-final">Final art</a><a href="#s-sounds">Sounds</a><a href="#s-voices">Voices</a><a href="#s-captures">Captures</a><a href="#s-build-choices-and-findings">Choices</a></nav><section id="s-changes-to-approved-specs"><h2>Changes to approved specs</h2>
+<div class="sum"><p>What the steps found contradicting or changed in the approved documents. Each <strong>C</strong> row is <em>accept</em> or <em>revert</em>; C1 asks which document wins.</p></div>
+<article class="row" id="r-C1">
+<header><span class="rid">C1</span><h3>The Orbital Lance and rock</h3><span class="kind">spec change</span></header>
+<dl><dt>Approved</dt><dd>The <span class="ref">specials</span> spec: the Lance's column is "not stopped" (it burns the full play field's height). Level 16's <em>What walls stop</em> table and the plan: <code>beam</code> (Ion Beam, <strong>Orbital Lance</strong>) "ends at the first rock"</dd><dt>Built</dt><dd><strong>not stopped by rock</strong> (the specials spec; step C1). The Ion Beam ends at the first rock. Level 16's table still lists the Lance with the beam</dd></dl>
+<div class="ans"><span class="tag">Answer</span> <span>specials wins (fix Level 16's table) / Level 16 wins (the Lance stops at rock)</span></div>
+</article>
+<article class="row" id="r-C2">
+<header><span class="rid">C2</span><h3>The fork&#x27;s channel is the widest, not edge</h3><span class="kind">spec change</span></header>
+<dl><dt>Approved</dt><dd>Level 16's wave table: in the fork (t=66–80) a wave's <code>edge</code> picks the channel (left, right, alternating channels)</dd><dt>Built</dt><dd>the span mapping puts a fork wave in the <strong>widest</strong> channel at its row (both are 150 px, so in practice the left one first); <code>edge</code> does not choose (step C4, <code>Formations.plan</code> with the span)</dd></dl>
+<div class="ans"><span class="tag">Answer</span> <span>accept / revert (make <code>edge</code> choose)</span></div>
+</article>
+<article class="row" id="r-C3">
+<header><span class="rid">C3</span><h3>Flyer shadows on the walls</h3><span class="kind">spec change</span></header>
+<dl><dt>Approved</dt><dd>Level 16's rendering: shadows fall on the floor</dd><dt>Built</dt><dd>the air units' shadows fall on the wall faces and the plateau too, where they cross them (step G1)</dd></dl>
+<div class="ans"><span class="tag">Answer</span> <span>accept / revert (floor only)</span></div>
+</article>
+</section>
+<section id="s-art-final"><h2>Art — final</h2>
+<div class="sum"><p>Production art from round 36's picks (<code>tools/art/</code>, step ART-C), in the game now.</p></div>
+<article class="row" id="r-F.1">
+<header><span class="rid">F.1</span><h3>Valles backdrop</h3><span class="kind">final art</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-16-valles-canyon-run/README.md#concept-art">Valles backdrop</a></div>
+<div class="q"><strong>final art</strong> (<code>tools/art/backdrop_l16.py</code>, from the canyon walls b and the Valles still of round 36): the Noctis plateau with its chasms (a new <code>far</code> set <code>noctis-chasm</code> at 0.6), the canyon floor, the rapids' riverbed, the Eos chaos, the plateau at 1.25, the wall and foot textures, the mesa and pillar faces and tops, the seam pieces, the cliff road, the burnt cliff habitats on the faces, the Helix station, the arches and the dust</div>
+<div class="media"><figure class="m img"><a href="../../campaign/act-3-red-dust/level-16-valles-canyon-run/concept/backdrop-final-r39-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-3-red-dust/level-16-valles-canyon-run/concept/backdrop-final-r39-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure><figure class="m img"><a href="../../campaign/act-3-red-dust/level-16-valles-canyon-run/concept/backdrop-final-r39-a.gif"><img loading="lazy" decoding="async" src="../../campaign/act-3-red-dust/level-16-valles-canyon-run/concept/backdrop-final-r39-a.gif" alt="sheet · motion"></a><figcaption>sheet · motion</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> <strong>in flight the walls read as flat vertical bands</strong> (a lip line, the face's striations, the foot band) rather than as cliffs rising toward the camera; the mesa and the pillar read as flat polygons (<span class="ref">K.1</span>, <span class="ref">R.1</span>)</p>
+<div class="ans"><span class="tag">Answer</span> <span>approve as final / redo</span></div>
+</article>
+<article class="row" id="r-F.2">
+<header><span class="rid">F.2</span><h3>Level 16&#x27;s props</h3><span class="kind">final art</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-16-valles-canyon-run/README.md#concept-art">Level 16's props</a></div>
+<div class="q"><strong>final art</strong> (<code>tools/art/canyon_units.py</code>): the Candor relay hut hit by hit and its beacon, the cargo rovers (intact, damaged, wreck), the wall spark and its dust</div>
+<div class="media"><figure class="m img"><a href="../../campaign/act-3-red-dust/level-16-valles-canyon-run/concept/l16-props-final-r39-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-3-red-dust/level-16-valles-canyon-run/concept/l16-props-final-r39-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure><figure class="m img"><a href="../../campaign/act-3-red-dust/level-16-valles-canyon-run/concept/l16-props-final-r39-a.gif"><img loading="lazy" decoding="async" src="../../campaign/act-3-red-dust/level-16-valles-canyon-run/concept/l16-props-final-r39-a.gif" alt="sheet · motion"></a><figcaption>sheet · motion</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the rovers have no break-apart frames (<span class="ref">R.2</span>)</p>
+<div class="ans"><span class="tag">Answer</span> <span>approve as final / redo</span></div>
+</article>
+<article class="row" id="r-F.3">
+<header><span class="rid">F.3</span><h3>Tendril Anchor</h3><span class="kind">final art</span></header>
+<div class="part"><a href="../../enemies/ground/tendril-anchor/README.md#concept-art">Tendril Anchor</a></div>
+<div class="q"><strong>final art</strong> (<code>tools/art/canyon_units.py</code>, from the chosen r36-a): the polyp clamp in its headings and pulse, the tendril (dormant flicker, flare, rope, burn, wither, frayed ends)</div>
+<div class="media"><figure class="m img"><a href="../../enemies/ground/concept/tendril-anchor-final-r39-a.png"><img loading="lazy" decoding="async" src="../../enemies/ground/concept/tendril-anchor-final-r39-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure><figure class="m img"><a href="../../enemies/ground/concept/tendril-anchor-final-r39-a.gif"><img loading="lazy" decoding="async" src="../../enemies/ground/concept/tendril-anchor-final-r39-a.gif" alt="sheet · motion"></a><figcaption>sheet · motion</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> at 1:1 the anchors are small grey clamps at the walls' foot; the dormant tendril a thin red line</p>
+<div class="ans"><span class="tag">Answer</span> <span>approve as final / redo</span></div>
+</article>
+<article class="row" id="r-F.4">
+<header><span class="rid">F.4</span><h3>Threadcrawler</h3><span class="kind">final art</span></header>
+<div class="part"><a href="../../enemies/ground/threadcrawler/README.md#concept-art">Threadcrawler</a></div>
+<div class="q"><strong>final art</strong> (<code>tools/art/canyon_units.py</code>): head, segments and tail in 16 headings with jaw and leg phases, the pore glow and flash, the husk</div>
+<div class="media"><figure class="m img"><a href="../../enemies/ground/concept/threadcrawler-final-r39-a.png"><img loading="lazy" decoding="async" src="../../enemies/ground/concept/threadcrawler-final-r39-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure><figure class="m img"><a href="../../enemies/ground/concept/threadcrawler-final-r39-a.gif"><img loading="lazy" decoding="async" src="../../enemies/ground/concept/threadcrawler-final-r39-a.gif" alt="sheet · motion"></a><figcaption>sheet · motion</figcaption></figure></div>
+<div class="ans"><span class="tag">Answer</span> <span>approve as final / redo</span></div>
+</article>
+<article class="row" id="r-F.5">
+<header><span class="rid">F.5</span><h3>Intel pictures</h3><span class="kind">final art</span></header>
+<div class="part"><a href="../../ui/hangar/README.md#concept-art">Intel pictures</a></div>
+<div class="q"><strong>final art</strong> (<code>tools/art/intel.py</code>): the sensor-L2 portraits of the Tendril Anchor and the Threadcrawler</div>
+<div class="media"><figure class="m img"><a href="../../ui/hangar/concept/intel-final-r39-a.png"><img loading="lazy" decoding="async" src="../../ui/hangar/concept/intel-final-r39-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure></div>
+<div class="ans"><span class="tag">Answer</span> <span>approve as final / redo</span></div>
+</article>
+<article class="row" id="r-F.6">
+<header><span class="rid">F.6</span><h3>Briefing images</h3><span class="kind">final art</span></header>
+<div class="part"><a href="../../ui/briefing/README.md#concept-art">Briefing images</a></div>
+<div class="q"><strong>final art</strong> (<code>tools/art/briefing_images.py</code>): Level 16's two, the canyon route and the tendril scan</div>
+<div class="media"><figure class="m img"><a href="../../ui/briefing/concept/briefing-images-final-r39-a.png"><img loading="lazy" decoding="async" src="../../ui/briefing/concept/briefing-images-final-r39-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure></div>
+<div class="ans"><span class="tag">Answer</span> <span>approve as final / redo</span></div>
+</article>
+</section>
+<section id="s-sounds"><h2>Sounds</h2>
+<div class="sum"><p>Round 39's sounds (<span class="ref">sfx</span>, <code>tools/concept/audio/sfx_r39.py</code>, all synthesized, step AUD-C), <strong>one variant each</strong>, in the game now; the wall scrape is round 36's chosen b. Not listened to by Claude: checked by envelopes, spectrograms, levels and loop seams; no bubbly or popping layers.</p></div>
+<article class="row" id="r-S.1">
+<header><span class="rid">S.1</span><h3>Tendril hum</h3><span class="kind">check</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Tendril hum</a></div>
+<div class="q">a taut 120 Hz drone with odd harmonics over a steady fizz, no wobble, seamless 6 s loop; the nearest tendril, panned, at 0.4 while dormant</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/tendril-hum-r39-a.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> 77 % of its energy below 200 Hz: small speakers may lose it</p>
+<div class="ans"><span class="tag">Answer</span> <span>accept / redo</span></div>
+</article>
+<article class="row" id="r-S.2">
+<header><span class="rid">S.2</span><h3>Tendril burn</h3><span class="kind">check</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Tendril burn</a></div>
+<div class="q">a noise-grain crackle over a dry sizzle, seamless 2 s loop while a beam burns a tendril</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/tendril-burn-r39-a.ogg"></audio></figure></div>
+<div class="ans"><span class="tag">Answer</span> <span>accept / redo</span></div>
+</article>
+<article class="row" id="r-S.3">
+<header><span class="rid">S.3</span><h3>Tendril break</h3><span class="kind">check</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Tendril break</a></div>
+<div class="q">a whip-crack and a falling whine, 0.9 s, when a tendril or an anchor dies</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/tendril-break-r39-a.ogg"></audio></figure></div>
+<div class="ans"><span class="tag">Answer</span> <span>accept / redo</span></div>
+</article>
+<article class="row" id="r-S.4">
+<header><span class="rid">S.4</span><h3>Threadcrawler walk</h3><span class="kind">check</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Threadcrawler walk</a></div>
+<div class="q">twelve legs ticking at 8.4 steps a second over a rock rustle, seamless 3 s loop (the nearest crawler, panned)</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/crawler-walk-r39-a.ogg"></audio></figure></div>
+<div class="ans"><span class="tag">Answer</span> <span>accept / redo</span></div>
+</article>
+<article class="row" id="r-S.5">
+<header><span class="rid">S.5</span><h3>Mars canyon ambience</h3><span class="kind">check</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Mars canyon ambience</a></div>
+<div class="q"><code>mars-canyon</code>: a dust wind with a resonant canyon howl breathing with the gusts, seamless 16 s loop</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/mars-canyon-r39-a.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the gusts swing ±9 dB</p>
+<div class="ans"><span class="tag">Answer</span> <span>accept / redo</span></div>
+</article>
+</section>
+<section id="s-voices"><h2>Voices</h2>
+<article class="row" id="r-V.1">
+<header><span class="rid">V.1</span><h3>Level 16&#x27;s radio and briefing</h3><span class="kind">accept or redo</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-16-valles-canyon-run/README.md#radio-chatter">Level 16's radio and briefing</a></div>
+<div class="q"><strong>accept or redo</strong> (step VOX-C, <code>tools/art/voice.py</code> through the radio filter, the pages dry): the two briefing pages (Okafor 14.4 s, Varga 11.9 s), Okafor's six, Varga's five, Rook's two (his t=11 <code>{side}</code> line in both takes), Ares Control's four, the Choir's song reused; Airees, Vallis Marinairis and Coprateez as approved, Eos and Helix plain (Noctis and Candor are in no voiced line); four seeds pinned (Okafor t=1 read "Canyon Martha Head", Varga t=114 "Rell", Ares Control t=22 a high jump, the relay hut's line ran high and read "If that's")</div>
+<div class="media"><figure class="m aud"><figcaption>briefing 1</figcaption><audio controls preload="none" src="../../../assets/voice/okafor/87e20a9bb6a8.ogg"></audio></figure><figure class="m aud"><figcaption>briefing 2</figcaption><audio controls preload="none" src="../../../assets/voice/varga/c66f61226d1a.ogg"></audio></figure><figure class="m aud"><figcaption>Okafor t=1</figcaption><audio controls preload="none" src="../../../assets/voice/okafor/100852a91877.ogg"></audio></figure><figure class="m aud"><figcaption>Rook t=11 left</figcaption><audio controls preload="none" src="../../../assets/voice/rook/601e8e194c0c.ogg"></audio></figure><figure class="m aud"><figcaption>Rook t=11 right</figcaption><audio controls preload="none" src="../../../assets/voice/rook/81da6aa7b614.ogg"></audio></figure><figure class="m aud"><figcaption>Ares Control t=22</figcaption><audio controls preload="none" src="../../../assets/voice/ares-control/728e990f43d1.ogg"></audio></figure><figure class="m aud"><figcaption>Okafor first wall touch</figcaption><audio controls preload="none" src="../../../assets/voice/okafor/f052a5892823.ogg"></audio></figure><figure class="m aud"><figcaption>Varga t=33</figcaption><audio controls preload="none" src="../../../assets/voice/varga/42d94f4d28f0.ogg"></audio></figure><figure class="m miss"><figcaption>Varga t=47 <em>file not in repo</em> <code>9f06f1dd1404.mp3</code></figcaption></figure><figure class="m aud"><figcaption>Okafor t=60</figcaption><audio controls preload="none" src="../../../assets/voice/okafor/acc1ccbb21c2.ogg"></audio></figure><figure class="m aud"><figcaption>relay hut (secret)</figcaption><audio controls preload="none" src="../../../assets/voice/ares-control/beaf54a50a1b.ogg"></audio></figure><figure class="m aud"><figcaption>Varga t=81</figcaption><audio controls preload="none" src="../../../assets/voice/varga/e48eeca2fe4c.ogg"></audio></figure><figure class="m aud"><figcaption>Rook t=94</figcaption><audio controls preload="none" src="../../../assets/voice/rook/25aeb30c5848.ogg"></audio></figure><figure class="m aud"><figcaption>Varga t=114</figcaption><audio controls preload="none" src="../../../assets/voice/varga/4e10c065c26c.ogg"></audio></figure><figure class="m aud"><figcaption>Okafor t=126</figcaption><audio controls preload="none" src="../../../assets/voice/okafor/9836d26ce91b.ogg"></audio></figure><figure class="m aud"><figcaption>Ares Control t=146</figcaption><audio controls preload="none" src="../../../assets/voice/ares-control/542a8ae3d550.ogg"></audio></figure><figure class="m aud"><figcaption>secondary</figcaption><audio controls preload="none" src="../../../assets/voice/ares-control/c784b5d61643.ogg"></audio></figure><figure class="m aud"><figcaption>Varga t=173</figcaption><audio controls preload="none" src="../../../assets/voice/varga/333c46eba272.ogg"></audio></figure><figure class="m aud"><figcaption>Okafor t=180</figcaption><audio controls preload="none" src="../../../assets/voice/okafor/a4014d88e261.ogg"></audio></figure><figure class="m aud"><figcaption>Okafor end</figcaption><audio controls preload="none" src="../../../assets/voice/okafor/3af9b9cd6a58.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> LISTEN Ares Control t=146 ("Eos": read as "Eos" only with the name prompt, "Beause" without), Rook t=94 ("Coprateez" and "Okafor"), Varga t=114 ("Vrell all round it" reads as "…all rounded"), Ares Control t=22 (the opening: one read-back heard "The Aegis"); the texts are in <span class="ref">Listening</span></p>
+<div class="ans"><span class="tag">Answer</span> <span>accept / redo (say which)</span></div>
+</article>
+<article class="row" id="r-V.2">
+<header><span class="rid">V.2</span><h3>Level 16&#x27;s radio timing</h3><span class="kind">accept or revert</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-16-valles-canyon-run/README.md#radio-chatter">Level 16's radio timing</a></div>
+<div class="q"><strong>accept or revert</strong> (step VOX-C, a data edit): the Choir t=162 → 166 and Varga's reply t=169.5 → 173. The secondary's closing line takes a free radio at once and holds it about 7 s, so with gate 6 falling after t≈155 it held the Choir back by up to 6 s; <code>RadioTimelineTest</code> now plays Level 16 (the wall touch early or late, the relay hut, the secondary at t=155, 158 or 159, with and without Rook), every timed line within 1 s</div>
+<div class="ans"><span class="tag">Answer</span> <span>accept / revert</span></div>
+</article>
+</section>
+<section id="s-captures"><h2>Captures</h2>
+<div class="sum"><p>The <code>installDist</code> build on a private display, the game's own sound (its <code>wave</code> mix); how it was taken is in the level's <code>concept/prompts.md</code>.</p></div>
+<article class="row" id="r-K.1">
+<header><span class="rid">K.1</span><h3>Level 16</h3><span class="kind">game capture</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-16-valles-canyon-run/README.md#concept-art">Level 16</a></div>
+<div class="q"><strong>game capture</strong>: a whole medium run with the plan's L16 ship and Rook, the Orbital Lance as its special (the plan has no beam before Level 18), <strong>no <code>--invulnerable</code></strong>: the mouth's walls rising from flat, gate 1 dormant → flare → anchor kill → wither, the Lance burning gate 2, three wall touches (shield, push), the fork's mesa and the relay hut (secret found), the first crawler's pore waves, the pillar, the rovers, the Helix station, the narrows' gates, the second crawler crossing the floor, the Burrowers, the debrief (210 / 215, no armour lost, BARRIERS 9 / 9, A+ 99); 3:51 with sound and a sheet of 20 frames</div>
+<div class="media"><figure class="m img"><a href="../../campaign/act-3-red-dust/level-16-valles-canyon-run/concept/level-16-capture-r39-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-3-red-dust/level-16-valles-canyon-run/concept/level-16-capture-r39-a.png" alt="level-16-capture-r39-a.png"></a><figcaption>level-16-capture-r39-a.png</figcaption></figure><figure class="m vid"><figcaption>video with sound</figcaption><video controls preload="none" playsinline src="../../campaign/act-3-red-dust/level-16-valles-canyon-run/concept/level-16-capture-r39-a.mp4"></video></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> radio as text (V.1); no crawler cut shown; the driver flies by dead reckoning at the bottom, so the wall touches are deliberate</p>
+<div class="ans"><span class="tag">Answer</span> <span>accept / change</span></div>
+</article>
+</section>
+<section id="s-build-choices-and-findings"><h2>Build choices and findings</h2>
+<div class="sum"><p>What the steps chose where the documents are silent, and what they found. <strong>B</strong> rows: each item <em>yes</em> (keep as built) or <em>no</em> (say what). <strong>R</strong> rows: as their answer cell says.</p></div>
+<article class="row" id="r-B.1">
+<header><span class="rid">B.1</span><h3>Terrain in the simulation</h3><span class="kind">yes or no, each</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-16-valles-canyon-run/README.md#terrain">Terrain in the simulation</a></div>
+<div class="q"><strong>yes or no, each</strong> (step C1): (a)–(g) below</div>
+<div class="sub"><span class="rid">B.1a</span> The Orbital Lance is not stopped by rock (C1 asks which document wins). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.1b</span> A dash (Evasive thrusters) into rock clamps the ship without damage. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.1c</span> The field's own edges (x 0 and 480) do no damage. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.1d</span> Islands are convex polygons. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.1e</span> A wave entering from a side under the span mapping emerges from the rock. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.1f</span> Homing missiles without a blast only spark on rock; rock stops a shot after its hit has passed. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.1g</span> Rook keeps 24 px off the walls and trails the ship (the TRAIL position) where the canyon is narrow. <span class="opts">yes / no</span></div>
+<div class="ans"><span class="tag">Answer</span> <span>all yes / some no</span></div>
+</article>
+<article class="row" id="r-B.2">
+<header><span class="rid">B.2</span><h3>Tendrils and crawlers in the simulation</h3><span class="kind">yes or no, each</span></header>
+<div class="part"><a href="../../enemies/ground/tendril-anchor/README.md">Tendrils and crawlers in the simulation</a></div>
+<div class="q"><strong>yes or no, each</strong> (step C3): (a)–(f) below</div>
+<div class="sub"><span class="rid">B.2a</span> A pore glows from the crawler's first frame on screen; off-screen or dying pores skip their shot. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.2b</span> A beam burns a dormant tendril too. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.2c</span> The touch cooldown is shared per craft (all tendrils and walls). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.2d</span> Rook's 12 px clearance below a standing tendril may lag a step. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.2e</span> A burnt tendril's bounty counts as a part kill. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.2f</span> A cut crawler's members cannot be hit until they burst. <span class="opts">yes / no</span></div>
+<div class="ans"><span class="tag">Answer</span> <span>all yes / some no</span></div>
+</article>
+<article class="row" id="r-B.3">
+<header><span class="rid">B.3</span><h3>Level 16&#x27;s data</h3><span class="kind">yes or no, each</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-16-valles-canyon-run/README.md">Level 16's data</a></div>
+<div class="q"><strong>yes or no, each</strong> (steps C2, C4): (a)–(l) below</div>
+<div class="sub"><span class="rid">B.3a</span> The gates are linked nests among the ground targets (<code>link: pairs</code>). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.3b</span> The anchors stand <strong>20 px</strong> off the wall line (C2 had 12; at 20 a beam reaches each one from a ship clear of the rock). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.3c</span> The crawl paths are terrain rows, starting 30 rows higher so hard's 16-segment body enters from above the top edge. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.3d</span> The walls' height ramps from 0 to full over rows 2,850–4,180 (the mouth) and back over 31,250–34,850 (the outflow). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.3e</span> The Threadcrawler's whole bounty paid as its head's first bonus (48); the anchors' orb fires 1.0 s after it appears. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.3f</span> The section peaks (the rapids' medium dust 110–120, the outflow clear from 178). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.3g</span> The slope rule applies to the walls only (not the islands). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.3h</span> The hangar's CRAWLER marks on medium only. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.3i</span> Seven popcorn waves moved by ≤ 1 s for the pacing rule (13.5, 17, 20.5, 48.5, 81.5, 138). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.3j</span> Four Dust Kite waves fly straight authored paths (66.5 and 72 at x 115 / mirror 365; 135.5 and 142 at x 240): their 50 px sway hit the rock. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.3k</span> The intel setting reads "Mars, Valles Marineris" (the panel's width). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.3l</span> Typical haul 1,944 (+0.7 % of budget(16)), 69.7 enemies a minute, the autopilot touching a wall about six times a run. <span class="opts">yes / no</span></div>
+<div class="ans"><span class="tag">Answer</span> <span>all yes / some no</span></div>
+</article>
+<article class="row" id="r-B.4">
+<header><span class="rid">B.4</span><h3>In the game</h3><span class="kind">yes or no, each</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-16-valles-canyon-run/README.md#implementation">In the game</a></div>
+<div class="q"><strong>yes or no, each</strong> (steps G1, G2): (a)–(k) below</div>
+<div class="sub"><span class="rid">B.4a</span> The islands have no foot band; the plateau layer does not drift. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.4b</span> The scrape at −2 dB, panned at the contact; the hit flash 0.1 s. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.4c</span> The burnt cliff habitats are backdrop placements drawn on the wall faces (<code>cliff-habitat</code>). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.4d</span> The unit loops at 1.0, the tendril hum at 0.4 while dormant, 0.2 s fades, the nearest unit. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.4e</span> A crawler's cut plays the Coilwyrm's rip at pitch 0.8, −3 dB. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.4f</span> The intel strip's ticks: GATE in cyan (full depth), CRAWLER in green (lower half). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.4g</span> The anchors turn to face their partner; the tendril sways 5 px. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.4h</span> The relay hut's burst is a small explosion. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.4i</span> The BARRIERS tracker flashes green per tendril broken; the debrief row <code>BARRIERS BROKEN n / 9</code>. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.4j</span> The crawler's husk stays where its head died; the cut part writhes. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.4k</span> The Threadcrawler's tier bursts are the generic ones, not the Coilwyrm's wet ones. <span class="opts">yes / no</span></div>
+<div class="ans"><span class="tag">Answer</span> <span>all yes / some no</span></div>
+</article>
+<article class="row" id="r-B.5">
+<header><span class="rid">B.5</span><h3>The backdrop&#x27;s names</h3><span class="kind">yes or no, each</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-16-valles-canyon-run/README.md#concept-art">The backdrop's names</a></div>
+<div class="q"><strong>yes or no, each</strong> (step ART-C): (a)–(c) below</div>
+<div class="sub"><span class="rid">B.5a</span> <code>noctis-plateau</code> is the ground of section 1, with a new far set <code>noctis-chasm</code> (×0.6) seen through its cracks. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.5b</span> The extra names: <code>dust-veil</code>, <code>narrows-dust</code>, <code>dust-streaks</code>, <code>canyon-mouth</code>, <code>seam-rapids</code>, <code>seam-narrows</code>, <code>seam-eos</code>, <code>habitat-pad</code>. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.5c</span> The Helix station on the right (north) plateau. <span class="opts">yes / no</span></div>
+<div class="ans"><span class="tag">Answer</span> <span>all yes / some no</span></div>
+</article>
+<article class="row" id="r-R.1">
+<header><span class="rid">R.1</span><h3>The walls&#x27; look in flight</h3><span class="kind">finding</span></header>
+<div class="part"><a href="#captures">The walls' look in flight</a></div>
+<div class="q"><strong>finding</strong>: in the capture the walls read as flat bands of striped rock at the field's edges; the lean toward the camera and the plateau's height do not come across at 1:1 or on the sheet; the mesa and the pillar look like flat polygons</div>
+<div class="media"><figure class="m img"><a href="../../campaign/act-3-red-dust/level-16-valles-canyon-run/concept/level-16-capture-r39-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-3-red-dust/level-16-valles-canyon-run/concept/level-16-capture-r39-a.png" alt="K.1 sheet"></a><figcaption>K.1 sheet</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> Claude's reading of stills; motion may help a little</p>
+<div class="ans"><span class="tag">Answer</span> <span>keep / rework the projection or textures (say how)</span></div>
+</article>
+<article class="row" id="r-R.2">
+<header><span class="rid">R.2</span><h3>The rovers&#x27; break-apart</h3><span class="kind">fix made in step C5</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-16-valles-canyon-run/README.md#ground-targets">The rovers' break-apart</a></div>
+<div class="q"><strong>fix made in step C5</strong>: every Level 16 start crashed (<code>no frames 'canyon-rover-break'</code>): the game wanted break-apart frames for every destructible ground object and the rovers have none. A ground object now breaks apart only when its look has the frames; a rover leaves its wreck and the small explosion</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the tests did not start Level 16's screen with the real atlas</p>
+<div class="ans"><span class="tag">Answer</span> <span>keep / add a rover break-apart (art)</span></div>
+</article>
+<article class="row" id="r-R.3">
+<header><span class="rid">R.3</span><h3>The Lance&#x27;s scorch on sand</h3><span class="kind">finding</span></header>
+<div class="part"><a href="../../player/specials/README.md">The Lance's scorch on sand</a></div>
+<div class="q"><strong>finding</strong>: the Orbital Lance's scorch line (round 37) reads as a solid black 40 px stripe on the canyon's pale sand for several seconds</div>
+<div class="ans"><span class="tag">Answer</span> <span>keep / soften it</span></div>
+</article>
+<article class="row" id="r-R.4">
+<header><span class="rid">R.4</span><h3>A beam at Level 16</h3><span class="kind">finding</span></header>
+<div class="part"><a href="../../player/balance-plan.yaml">A beam at Level 16</a></div>
+<div class="q"><strong>finding</strong>: Level 16 recommends <code>beam</code> and its radio says "A beam burns through those tendrils", but the plan buys the Ion Beam at Level 18 and the Lance unlocks at Level 17, so a player on the plan meets Level 16 with no beam; every gate still falls to an anchor kill (the capture's gate 1 fell ≈ 0.6 s after it entered, before its tell ended)</div>
+<div class="ans"><span class="tag">Answer</span> <span>noted / change the plan or the hint</span></div>
+</article>
+<article class="row" id="r-R.5">
+<header><span class="rid">R.5</span><h3>The Helix glimpse</h3><span class="kind">finding</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-16-valles-canyon-run/README.md#layout">The Helix glimpse</a></div>
+<div class="q"><strong>finding</strong>: the station on the plateau layer (×1.25 at 230 px/s) is on screen for about 3 s (t ≈ 115.5–118.5), where the README says t ≈ 113–124</div>
+<div class="ans"><span class="tag">Answer</span> <span>keep / slow it (say how)</span></div>
+</article>
+</section></main></body></html>

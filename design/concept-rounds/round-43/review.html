@@ -1,0 +1,552 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Round 43: record of the decisions</title><style>
+:root{--bg:#f4f5f7;--fg:#1b2230;--mut:#5a6577;--card:#fff;--line:#d3d9e2;--acc:#1f5fa8;--ok:#1d6b3a;--okbg:#e3f3e8;
+--hi:#fff6dc;--hib:#d9b84a;--code:#e9edf3;--warn:#8a4b00}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10141b;--fg:#dde3ee;--mut:#98a3b6;--card:#171d27;
+--line:#2c3544;--acc:#7fb2ee;--ok:#7bd69a;--okbg:#163323;--hi:#2c2610;--hib:#8a7424;--code:#232c3a;--warn:#e3a35a;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#10141b;--fg:#dde3ee;--mut:#98a3b6;--card:#171d27;--line:#2c3544;--acc:#7fb2ee;--ok:#7bd69a;
+--okbg:#163323;--hi:#2c2610;--hib:#8a7424;--code:#232c3a;--warn:#e3a35a;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:60rem;margin:0 auto;padding:1rem 16px 4rem}
+h1{font-size:1.6rem;margin:.5rem 0}h2{font-size:1.25rem;margin:2rem 0 .5rem;border-bottom:1px solid var(--line);padding-bottom:.25rem}
+h3{font-size:1.02rem;margin:0;flex:1 1 12rem}a{color:var(--acc)}
+.sum{color:var(--mut)}.note{font-size:.9rem;color:var(--mut)}
+nav.sec{display:flex;flex-wrap:wrap;gap:.4rem;margin:1rem 0}nav.sec a{padding:.2rem .6rem;border:1px solid var(--line);border-radius:1rem;
+text-decoration:none;font-size:.9rem;background:var(--card)}
+.row{background:var(--card);border:1px solid var(--line);border-radius:.4rem;padding:.7rem .9rem;margin:.7rem 0;overflow-wrap:anywhere}
+.row header{display:flex;flex-wrap:wrap;gap:.3rem .6rem;align-items:baseline}
+.rid{font:600 .85rem ui-monospace,Menlo,Consolas,monospace;background:var(--code);padding:.05rem .4rem;border-radius:.25rem}
+.kind{font-size:.8rem;color:var(--mut)}.part{font-size:.88rem;margin:.2rem 0}
+.q,.weak,.rec,.sub,.line,dl{font-size:.92rem;margin:.45rem 0}.weak{color:var(--warn)}
+code{background:var(--code);padding:0 .25rem;border-radius:.2rem;font-size:.88em}
+.tag{font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;color:var(--mut);font-weight:700;margin-right:.3rem}
+.ans{margin:.5rem 0 0;padding:.45rem .6rem;border-left:4px solid var(--hib);background:var(--hi);border-radius:.2rem}
+.ans.out{border-left-color:var(--ok)}.ans.none{opacity:.7}
+.badge{font-size:.75rem;font-weight:700;padding:.05rem .4rem;border-radius:.6rem;background:var(--okbg);color:var(--ok)}
+.badge.pick{background:var(--hi);color:var(--warn);border:1px solid var(--hib)}
+dl{display:grid;grid-template-columns:7rem 1fr;gap:.2rem .6rem}dt{font-weight:700}dd{margin:0}
+.media{display:flex;flex-wrap:wrap;gap:.5rem;margin:.5rem 0}.m{margin:0;max-width:100%}.m figcaption{font-size:.75rem;color:var(--mut)}
+.m.img img{max-width:14rem;max-height:10rem;border:1px solid var(--line);border-radius:.2rem;background:#000;display:block}
+.m.vid video{width:14rem;max-width:100%}.m.aud audio{width:16rem;max-width:100%}.miss{color:var(--warn)}
+details{margin:.4rem 0;font-size:.9rem}summary{cursor:pointer;color:var(--acc)}
+.listen{font-size:.85rem;color:var(--mut);margin:.3rem 0;padding-left:1.2rem}.opts{color:var(--mut)}
+.sub{padding-left:.6rem;border-left:2px solid var(--line)}
+table{border-collapse:collapse;display:block;overflow-x:auto}td,th{border:1px solid var(--line);padding:.2rem .4rem}
+blockquote{margin:.4rem 0;padding-left:.8rem;border-left:3px solid var(--line)}
+@media (max-width:480px){dl{grid-template-columns:1fr}.m.img img{max-width:100%}}
+</style></head><body><main><p class="note"><a href="README.md">Round 43 README</a> · <a href="../README.md">All rounds</a> · built 2026-10-20 · recorded by <code>tools/concept/review_record.py 43</code></p><h1>Concept round 43: record of the decisions</h1><div class="sum"><p>Your rule of 2026-10-20: <strong>every undecided point is a question here, with a recommendation; nothing undecided gets built.</strong> Five things wait for an answer:</p><ol><li><strong>The Revenant Walker's rework</strong> (round 42's <code>K.a</code> change, <code>W</code> rows): the capture, the HP cut, the fiercer phase 1, hard's long fight, and one question (a safe spot over the walker).</li><li><strong>The sounds from the Freesound database</strong> (<code>S</code> rows): Level 19's eleven redone or new subjects (two variants each: <em>a</em>, <em>b</em> or <em>redo</em>) and Level 20's three. Claude has not listened to any of them.</li><li><strong>M7 part G, Level 20 Retreat from Hellas</strong> (<span class="ref">roadmap</span>): the final art (<code>F</code>), the voices (<code>V</code>), the capture (<code>K</code>) and the build choices of the steps (<code>B</code>), then <strong>five questions</strong> (<code>Q</code>): the swarm that still mostly melts, the beam-era limit for a reversed level, whether turrets count as seekers, the ridge's data key, and the hangar's and the briefing's art status.</li><li><strong>Part H's questions</strong> (<code>H</code> rows, Level 21 and the act end), answered here so part H starts decided.</li><li><strong>Records</strong> (last section): the macOS CI fix, the allocation guard, round 42's close.</li></ol><p><strong>Part G in short.</strong> Level 20 is the retreat: the scroll eases to zero at the turnabout and runs the other way, so the ground moves down the screen and the rear guns face what is ahead by travel. A pursuing <span class="ref">Mote Swarm</span> holds a band behind the ship, tells, lunges and climbs back; the rim's flak and the militia's guns wait at the top; Rook flies his Autocannon; the <span class="ref">rear-guard drone bay</span> is the new wing item. The level is a count-neutral rework of the approved waves (197 enemies, about 71 a minute at medium). Part H (Level 21, the Dust Colossus) is <strong>not started</strong>.</p><p>Open <span class="ref">index.html</span> in a browser (regenerate with <code>python3 tools/concept/board.py 43 --subjects walker-hatch,walker-flame-tell,walker-flame,vent-tell,vent-burst,tank-tracks,tank-turret,tank-burst,walker-vent-hit,walker-death,walker-wreck-settle,basin-rumble,swarm-hum,swarm-lunge,level-19-walker,backdrop-final,l20-props-final,rear-guard-drone-final,rear-guard-icon-final,level-20-capture,level-20-swarm,level-20-drone,rear-guard-drone-testfire</code>). Each row carries a recommendation; <strong>B</strong> rows list build choices: <em>yes</em> (keep as built) or <em>no</em> (say what). Where the Answer column lists options, the first marked <em>(recommended)</em> is mine.</p><h3>In the game</h3><p><code>./gradlew :desktop:run --args="..."</code> with <code>--settings &lt;file&gt;</code> (a debug run writes no save):</p><ul><li>Level 20 with the balance plan's ship and Rook's Autocannon: <code>--start level --level 20 --loadout front=ion-beam:3,left=micro-missile-pod:2,right=micro-missile-pod:2,rear=tail-gun:3,generator=2,shield=1,armor=2 --special airstrike:2 --escort rook:autocannon:1</code> (<code>--difficulty easy|hard</code>; <code>--invulnerable</code> to see the whole level; <code>--escort none</code> to fly without Rook);</li><li>the rear-guard drone bay on the wings instead of the pods (K.c's run): <code>left=rear-guard-drone-bay,right=rear-guard-drone-bay</code>;</li><li>Level 19's reworked walker: the same options with <code>--level 19</code> and <code>--escort rook:mortar:1</code>;</li><li>the numbers: <code>./gradlew :content:levelReport -Plevel=20 -Pparts=pursuit,pacing,floor,haul,hp</code>.</li></ul></div><p class="note">A read-only record: every row as the review page showed it, with the answer and the outcome from the round README (the record of truth). Media is linked from the design tree, not copied.</p><nav class="sec"><a href="#s-the-walker-s-rework">Walker</a><a href="#s-sounds">Sounds</a><a href="#s-art-final">Level 20 art</a><a href="#s-voices">Voices</a><a href="#s-captures">Capture</a><a href="#s-level-20-s-build">Level 20</a><a href="#s-questions">Questions</a><a href="#s-part-h-s-questions">Part H</a><a href="#s-records">Records</a></nav><section id="s-the-walker-s-rework"><h2>The Walker&#x27;s rework</h2>
+<div class="sum"><p>Round 42's <code>K.a</code> change ("The walker looks like a real easy target. It needs to do a lot more shooting and the flame needs to be bigger.") was built in step WR (<span class="ref">the walker</span>, numbers measured with the autopilot and the plan's Level 19 fit, five seeds).</p></div>
+<article class="row" id="r-W.a">
+<header><span class="rid">W.a</span><h3>The reworked fight</h3><span class="kind">check capture</span></header>
+<div class="part"><a href="../../enemies/bosses/revenant-walker/README.md">The reworked fight</a></div>
+<div class="q"><strong>check capture</strong> (step WR): 83 s of the fight with sound: the chin's fans every phase (3-way in phase 1, three aimed in phase 2, 5-way over 40° in phase 3, in bursts), the flank guns (a fan of 2 over 180°, bursts of 3 and 4), salvos of 3 (at most 8 missiles alive), the cone 240 px ±32° with its swivel and a tracking burn (40°/s from phase 2). About 100 shots a minute against 41 before (phase 1 ≈ 125). <strong>Recommendation: accept</strong></div>
+<div class="media"><figure class="m vid"><figcaption>video with sound</figcaption><video controls preload="none" playsinline src="../../campaign/act-3-red-dust/level-19-foundry-of-tharsis/concept/level-19-walker-r43-a.mp4"></video></figure><figure class="m img"><a href="../../campaign/act-3-red-dust/level-19-foundry-of-tharsis/concept/level-19-walker-r43-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-3-red-dust/level-19-foundry-of-tharsis/concept/level-19-walker-r43-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> flown by the test autopilot, not by you; the autopilot's phase 3 lasts about 10 s and much of it hugs the walker (see W.d)</p>
+<div class="ans"><span class="tag">Answer</span> <span>accept (recommended) / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>change</strong> (user, 2026-10-20): "The first missile hatch is destroyed before the walker has a chance of ever using it. That's too easy. When both missile hatches are destroyed, the walker is mostly toothless. Can't you add something else that keeps the final part interesting?" Decided with the user: the pods stay armoured until their hatch opens, a back-mounted rail lance fires once the pods are gone, and the stomp shockwave (step WR2)</span></div>
+</article>
+<article class="row" id="r-W.b">
+<header><span class="rid">W.b</span><h3>HP cut 3,740 → 3,170</h3><span class="kind">yes or no</span></header>
+<div class="part"><a href="../../enemies/bosses/revenant-walker/README.md#duration-and-hp">HP cut 3,740 → 3,170</a></div>
+<div class="q"><strong>yes or no</strong>: with the new fire the autopilot stands off behind the 240 px cone and the fight ran 80–110 s at medium, phase 3 alone up to 54 s. The HP are cut to <strong>3,170</strong> (hull 2,310, pods 430; ×0.85): the fight <strong>56–60 s</strong> on all five seeds (mean 57.1; in the level 56.8–68.2 s), the <strong>par 57</strong> (easy 33–39 s), <code>WALKER_EFFICIENCY</code> 1.39 → 1.08. Bounty unchanged. <strong>Recommendation: yes</strong></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the cut is for the autopilot's play; a human who does not hug the cone may need more or less</p>
+<div class="ans"><span class="tag">Answer</span> <span>yes (recommended) / no (say what)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>yes (recommended) (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-W.c">
+<header><span class="rid">W.c</span><h3>Phase 1&#x27;s loss</h3><span class="kind">yes or no</span></header>
+<div class="part"><a href="../../enemies/bosses/revenant-walker/README.md#duration-and-hp">Phase 1's loss</a></div>
+<div class="q"><strong>yes or no</strong>: the random dodger now loses <strong>21.0 per 10 s</strong> of phase 1 against the Kraken's 11.4 (×1.84; the calibration test asks 1.3–2×). Round 36's "a kinder phase 1" is reversed at your request: fierce but fair. <strong>Recommendation: yes</strong></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the random dodger is a harness, not a player</p>
+<div class="ans"><span class="tag">Answer</span> <span>yes (recommended) / no (say what)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>yes (recommended) (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-W.d">
+<header><span class="rid">W.d</span><h3>Hard&#x27;s long fight</h3><span class="kind">yes or no</span></header>
+<div class="part"><a href="../../enemies/bosses/revenant-walker/README.md#duration-and-hp">Hard's long fight</a></div>
+<div class="q"><strong>yes or no</strong>: on hard the fight runs <strong>98–106 s alone, 111–174 s in the level, with one retry</strong> (hard's pace 185 shots a minute, phase 3 about 240). All won, no retry at medium. <strong>Recommendation: yes</strong>, hard is meant to be long</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> 174 s is a long time at one boss; hard's HP stay as the difficulty table says</p>
+<div class="ans"><span class="tag">Answer</span> <span>yes (recommended) / no, shorten hard</span></div><div class="ans out"><span class="tag">Outcome</span> <span>yes (recommended) (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-W.e">
+<header><span class="rid">W.e</span><h3>Question: the safe spot over the walker</h3><span class="kind">check</span></header>
+<div class="part"><strong>Question: the safe spot over the walker</strong></div>
+<div class="q">no gun fires within <strong>72 px</strong> of the hull, so a ship that hugs the walker is safe from every gun (only the cone, which the autopilot keeps out of, can still burn it); this is how the autopilot survives phase 3. The options: leave it; a short-range <strong>stomp shockwave</strong> (a ring when a leg lands, 72–110 px, the same tell as the footfall) so that hugging costs something; or shrink the dead zone. <strong>Recommendation: the stomp shockwave</strong> (for instance a ring of about 110 px with a short tell on the footfall, damage like a missile, walking phases only; the numbers would be set when built)</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> a shockwave makes phase 3 harder again and the par moves (re-measure after it)</p>
+<div class="ans"><span class="tag">Answer</span> <span>stomp shockwave (recommended) / leave it / shrink the dead zone</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>stomp shockwave</strong> (recommended) (user, 2026-10-20): "And as noted above, something else for the longer range." Step WR2 builds the shockwave and the rail lance (W.a)</span></div>
+</article>
+</section>
+<section id="s-sounds"><h2>Sounds</h2>
+<div class="sum"><p>All from the Freesound database (CC0 or CC-BY, <span class="ref">CREDITS.md</span>), cut and layered by <code>tools/concept/audio/sfx_r43.py</code> and <code>sfx_r43g.py</code>, <strong>never synthesized</strong>; two variants each, pending your listening (Claude has not listened: envelopes, levels and loop seams only; no bubbly or popping layers). A CC-BY file you pick goes on the in-game credits screen. The game plays the <em>a</em> variants of Level 20 for now; Level 19 keeps round 42's sounds until you pick. Your round-42 notes are quoted in the <em>What is proposed</em> column. My recommendations are guesses from the descriptions.</p></div>
+<article class="row" id="r-S.a">
+<header><span class="rid">S.a</span><h3>Walker hatch</h3><span class="kind">check</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Walker hatch</a></div>
+<div class="q">redo (you: "That's not a hatch, that's a pop. Isn't this supposed to be a heavy thing? Search for sounds in the free database."). <strong>a</strong>: air brakes releasing and a large metal door slamming (CC-BY 4.0 + CC0), 1.05 s. <strong>b</strong>: a submarine hatch's clank and creak over a steam release with a deep impact under the clank (CC0), 1.01 s. <strong>Recommendation: b</strong> (the deep impact is the weight)</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/walker-hatch-r43-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/walker-hatch-r43-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> both are loudest 100 ms −20.1 dB; the tell is 0.4 s before a salvo</p>
+<div class="ans"><span class="tag">Answer</span> <span>a / b / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>b</strong> (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-S.b">
+<header><span class="rid">S.b</span><h3>Walker flame tell</h3><span class="kind">check</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Walker flame tell</a></div>
+<div class="q">redo (you: "Again way too small. Search in the database for large venting."). <strong>a</strong>: a huge gas vent opening (CC-BY 3.0), 0.87 s. <strong>b</strong>: a 1000 hp boiler's safety valve opening, slowed to 0.85 (CC0), 0.84 s. <strong>Recommendation: a</strong></div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/walker-flame-tell-r43-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/walker-flame-tell-r43-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the cone's tell is 0.6 s: both may be longer than the tell</p>
+<div class="ans"><span class="tag">Answer</span> <span>a / b / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>a</strong> (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-S.c">
+<header><span class="rid">S.c</span><h3>Walker flame</h3><span class="kind">check</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Walker flame</a></div>
+<div class="q">redo (you: "Also too small. Search for large gas burns or large flamethrower"). <strong>a</strong>: a flamethrower's long burst, slowed to 0.85 (CC0), a seamless 4 s loop. <strong>b</strong>: a flamethrower's deep roar (CC-BY 3.0), a seamless 4 s loop. <strong>Recommendation: b</strong> (deeper, 3 dB louder at the peak)</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/walker-flame-r43-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/walker-flame-r43-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> loops: −28 dB in the band</p>
+<div class="ans"><span class="tag">Answer</span> <span>a / b / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>b</strong> (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-S.d">
+<header><span class="rid">S.d</span><h3>Vent tell</h3><span class="kind">check</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Vent tell</a></div>
+<div class="q">redo (you: "Same thing"). <strong>a</strong>: a balloon burner's roar swelling in (CC0), 1.05 s. <strong>b</strong>: a brighter balloon burner's roar swelling in (CC0), 1.05 s. <strong>Recommendation: a</strong> (darker; the vents are furnace vents)</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/vent-tell-r43-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/vent-tell-r43-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> both are balloon burners, so the difference is small</p>
+<div class="ans"><span class="tag">Answer</span> <span>a / b / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>a</strong> (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-S.e">
+<header><span class="rid">S.e</span><h3>Vent burst</h3><span class="kind">check</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Vent burst</a></div>
+<div class="q">redo (you: "Same thing"). <strong>a</strong>: a deep flame burst with the end of a gas burner's burn, dying away (CC0 ×2), 1.6 s. <strong>b</strong>: a fire burst roaring out (CC-BY 4.0), 1.6 s. <strong>Recommendation: a</strong> (CC0, deeper)</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/vent-burst-r43-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/vent-burst-r43-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> a ripple plays up to three at once</p>
+<div class="ans"><span class="tag">Answer</span> <span>a / b / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>a</strong> (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-S.f">
+<header><span class="rid">S.f</span><h3>Tank tracks</h3><span class="kind">check</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Tank tracks</a></div>
+<div class="q">redo (you: "Search for sounds of a real tank driving"). <strong>a</strong>: a T-26 tank driving, tracks and engine (CC0), a seamless 4 s loop. <strong>b</strong>: a tracked bulldozer driving (CC-BY 4.0), a seamless 4 s loop. <strong>Recommendation: a</strong> (a real tank)</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/tank-tracks-r43-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/tank-tracks-r43-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> loops: −32 dB in the band; the nearest tank only</p>
+<div class="ans"><span class="tag">Answer</span> <span>a / b / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>a</strong> (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-S.g">
+<header><span class="rid">S.g</span><h3>Tank turret</h3><span class="kind">check</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Tank turret</a></div>
+<div class="q">redo (you: "You should really stop trying to make these sounds yourself. Use the database."). <strong>a</strong>: a real artillery turret re-aligning (CC0), 0.8 s. <strong>b</strong>: a factory overhead crane rolling (CC0), 0.9 s. <strong>Recommendation: a</strong></div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/tank-turret-r43-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/tank-turret-r43-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> −23 dB in the band, quiet; the turret's lock is the tell</p>
+<div class="ans"><span class="tag">Answer</span> <span>a / b / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>a</strong> (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-S.h">
+<header><span class="rid">S.h</span><h3>Tank burst</h3><span class="kind">check</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Tank burst</a></div>
+<div class="q">redo (you: "Not a heavy cannon. Not even a small cannon."). <strong>a</strong>: a tank cannon firing three shots 0.15 s apart (CC0), 1.18 s. <strong>b</strong>: a heavy artillery shot, three times 0.15 s apart (CC-BY 4.0), 1.38 s. <strong>Recommendation: a</strong> (a real tank's gun)</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/tank-burst-r43-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/tank-burst-r43-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the burst is three shots</p>
+<div class="ans"><span class="tag">Answer</span> <span>a / b / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>a</strong> (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-S.i">
+<header><span class="rid">S.i</span><h3>Walker vent hit</h3><span class="kind">check</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Walker vent hit</a></div>
+<div class="q">new (you: "make these three"). <strong>a</strong>: a big stereo metal hit on a lift door (CC0), 0.55 s. <strong>b</strong>: a hollow metal impact with a burst of steam (CC0 ×2), 0.52 s. <strong>Recommendation: b</strong> (the vent is steam)</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/walker-vent-hit-r43-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/walker-vent-hit-r43-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> plays on every hit of the vent window</p>
+<div class="ans"><span class="tag">Answer</span> <span>a / b / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>a</strong> (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-S.j">
+<header><span class="rid">S.j</span><h3>Walker death</h3><span class="kind">check</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Walker death</a></div>
+<div class="q">new (the <code>huge</code> rung). <strong>a</strong>: a large explosion with debris, the hull landing with a massive impact and a metal crash (CC0 ×3), 5.6 s. <strong>b</strong>: two chained blasts, the final boom with a car crash's metal and a radiator rumbling (CC0 ×4), 5.6 s. <strong>Recommendation: a</strong> (the topple's landing)</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/walker-death-r43-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/walker-death-r43-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the level's biggest moment; the topple and the chained blasts are one step in the game</p>
+<div class="ans"><span class="tag">Answer</span> <span>a / b / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>a</strong> (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-S.k">
+<header><span class="rid">S.k</span><h3>Walker wreck settle</h3><span class="kind">check</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Walker wreck settle</a></div>
+<div class="q">new. <strong>a</strong>: a bunker door's low metallic groan slowed to 0.85 over an engine cooling (CC0 ×2), 5.0 s. <strong>b</strong>: a giant metal structure creaking over an engine cooling (CC0 ×2), 5.0 s. <strong>Recommendation: a</strong></div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/walker-wreck-settle-r43-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/walker-wreck-settle-r43-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> −24 dB in the band, quiet by design</p>
+<div class="ans"><span class="tag">Answer</span> <span>a / b / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>a</strong> (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-S.l">
+<header><span class="rid">S.l</span><h3>Basin rumble (Level 20)</h3><span class="kind">check</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Basin rumble (Level 20)</a></div>
+<div class="q">new, a second ambience loop at the Colossus ridge's pass. <strong>a</strong>: an earthquake's earth rumble, deep, with rock grinding (CC0), a seamless 16 s loop. <strong>b</strong>: an earthquake's rumble with creaks and groans over a deep distant rumble (CC-BY 4.0 + CC0), a seamless 12 s loop. <strong>Recommendation: a</strong></div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/basin-rumble-r43-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/basin-rumble-r43-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> at the bed's loudness (−28 LUFS) the band RMS is −42 (a) and −34 (b); the sources are designed rumbles, not field recordings</p>
+<div class="ans"><span class="tag">Answer</span> <span>a / b / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>a</strong> (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-S.m">
+<header><span class="rid">S.m</span><h3>Swarm hum (Level 20)</h3><span class="kind">check</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Swarm hum (Level 20)</a></div>
+<div class="q">new, the pursuit's band hum. <strong>a</strong>: a designed swarm drone slowed to 0.85 over a bee box's hive hum (CC0 ×2), a seamless 6 s loop. <strong>b</strong>: a large swarm of flies slowed to 0.8 over blowflies (CC-BY 3.0 + CC0), a seamless 6 s loop. <strong>Recommendation: a</strong></div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/swarm-hum-r43-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/swarm-hum-r43-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> a's bee box has birds in the background; the loop joins are +10 / +7.6 dB louder than the body</p>
+<div class="ans"><span class="tag">Answer</span> <span>a / b / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>a</strong> (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-S.n">
+<header><span class="rid">S.n</span><h3>Swarm lunge (Level 20)</h3><span class="kind">check</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Swarm lunge (Level 20)</a></div>
+<div class="q">new. <strong>a</strong>: hum a's swarm swelling in and gliding up, a powerful whoosh at its end (CC0 ×2), 0.8 s. <strong>b</strong>: hum b's flies swelling in, a big swoosh at its end (CC-BY 3.0 + CC0), 0.8 s. <strong>Recommendation: a</strong> (goes with hum a)</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/swarm-lunge-r43-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/swarm-lunge-r43-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the whoosh must not read as a pop; it is 0.8 s, the tell 0.8 s</p>
+<div class="ans"><span class="tag">Answer</span> <span>a / b / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>a</strong> (user, 2026-10-20)</span></div>
+</article>
+</section>
+<section id="s-art-final"><h2>Art — final</h2>
+<div class="sum"><p>Level 20's production art (steps ART-G1, ART-G2, ICON-G; <code>tools/art/</code>), in the game now; every file is pending your review. The Mote Swarm's own art is final since round 32 and does not change.</p></div>
+<article class="row" id="r-F.a">
+<header><span class="rid">F.a</span><h3>Level 20 backdrop</h3><span class="kind">final art</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-20-retreat-from-hellas/README.md#concept-art">Level 20 backdrop</a></div>
+<div class="q"><strong>final art</strong> (<code>tools/art/backdrop_l20.py</code>): one strip keyed by strip row and flown both ways: the basin floor's salt flats and dune sea with the Vrell staging grounds and the dune ridge at t≈42, the terraces, the upper terraces and the rim. <strong>Recommendation: approve as final</strong></div>
+<div class="media"><figure class="m img"><a href="../../campaign/act-3-red-dust/level-20-retreat-from-hellas/concept/backdrop-final-r43-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-3-red-dust/level-20-retreat-from-hellas/concept/backdrop-final-r43-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure><figure class="m img"><a href="../../campaign/act-3-red-dust/level-20-retreat-from-hellas/concept/backdrop-final-r43-a.gif"><img loading="lazy" decoding="async" src="../../campaign/act-3-red-dust/level-20-retreat-from-hellas/concept/backdrop-final-r43-a.gif" alt="GIF"></a><figcaption>GIF</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the pillars' sizes are set in data (160 / 112 / 168 × 160)</p>
+<div class="ans"><span class="tag">Answer</span> <span>approve as final / redo (say what)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>approved as final (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-F.b">
+<header><span class="rid">F.b</span><h3>Level 20 props</h3><span class="kind">final art</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-20-retreat-from-hellas/README.md#concept-art">Level 20 props</a></div>
+<div class="q"><strong>final art</strong> (<code>tools/art/l20_props.py</code>): the travelling Colossus ridge (lengths, head and tail in 16 headings, the crest glow, sand slides; shared with Level 21) crossing the floor at t=12-20, and the emergency cache. <strong>Recommendation: approve as final</strong></div>
+<div class="media"><figure class="m img"><a href="../../campaign/act-3-red-dust/level-20-retreat-from-hellas/concept/l20-props-final-r43-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-3-red-dust/level-20-retreat-from-hellas/concept/l20-props-final-r43-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure><figure class="m img"><a href="../../campaign/act-3-red-dust/level-20-retreat-from-hellas/concept/l20-props-final-r43-a.gif"><img loading="lazy" decoding="async" src="../../campaign/act-3-red-dust/level-20-retreat-from-hellas/concept/l20-props-final-r43-a.gif" alt="GIF"></a><figcaption>GIF</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the ridge's path is a stand-in (see Q.4)</p>
+<div class="ans"><span class="tag">Answer</span> <span>approve as final / redo (say what)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>approved as final (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-F.c">
+<header><span class="rid">F.c</span><h3>Rear-guard drone and bay pod</h3><span class="kind">final art</span></header>
+<div class="part"><a href="../../player/weapons/rear-guard-drone-bay/README.md#concept-art">Rear-guard drone and bay pod</a></div>
+<div class="q"><strong>final art</strong> (<code>tools/art/light_drone.py --rear</code>): the light drone's disc with a forked twin gun and blue fins, 16 gun headings, the trailing pair firing back and blocking, the break and the rebuild; the bay pod turned round (dock ring at the back) on each bank frame. <strong>Recommendation: approve as final</strong></div>
+<div class="media"><figure class="m img"><a href="../../player/weapons/rear-guard-drone-bay/concept/rear-guard-drone-final-r43-a.png"><img loading="lazy" decoding="async" src="../../player/weapons/rear-guard-drone-bay/concept/rear-guard-drone-final-r43-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure><figure class="m img"><a href="../../player/weapons/rear-guard-drone-bay/concept/rear-guard-drone-final-r43-a.gif"><img loading="lazy" decoding="async" src="../../player/weapons/rear-guard-drone-bay/concept/rear-guard-drone-final-r43-a.gif" alt="GIF"></a><figcaption>GIF</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> my reading: the light drone with a twin gun is close to the light drone at game size</p>
+<div class="ans"><span class="tag">Answer</span> <span>approve as final / redo (say what)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>approved as final (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-F.d">
+<header><span class="rid">F.d</span><h3>Rear-guard hangar icon</h3><span class="kind">final art</span></header>
+<div class="part"><a href="../../player/weapons/rear-guard-drone-bay/README.md#concept-art">Rear-guard hangar icon</a></div>
+<div class="q"><strong>final art</strong> (<code>tools/art/icons.py --rear-guard</code>): the bay's shop icon, small and large. <strong>Recommendation: approve as final</strong></div>
+<div class="media"><figure class="m img"><a href="../../player/weapons/rear-guard-drone-bay/concept/rear-guard-icon-final-r43-a.png"><img loading="lazy" decoding="async" src="../../player/weapons/rear-guard-drone-bay/concept/rear-guard-icon-final-r43-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> beside the Light Drone Bay's icon it differs by the reversed dock only</p>
+<div class="ans"><span class="tag">Answer</span> <span>approve as final / redo (say what)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>approved as final (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-F.e">
+<header><span class="rid">F.e</span><h3>Okafor&#x27;s briefing image level-20-hellas-fallback</h3><span class="kind">final art</span></header>
+<div class="part">[Okafor's briefing image <code>level-20-hellas-fallback</code>](../../ui/briefing/README.md#concept-art)</div>
+<div class="q"><strong>final art</strong> (<code>tools/art/briefing_images.py</code>, 672×240): a CDF terrain plot of the Hellas basin's north side, the fallback route to the rim. <strong>Recommendation: approve as final</strong></div>
+<div class="media"><figure class="m miss"><figcaption>image <em>file not in repo</em> <code>level-20-hellas-fallback.webp</code></figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> seen only in the briefing; the walker report's page is Level 19's</p>
+<div class="ans"><span class="tag">Answer</span> <span>approve as final / redo (say what)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>approved as final (user, 2026-10-20)</span></div>
+</article>
+</section>
+<section id="s-voices"><h2>Voices</h2>
+<div class="sum"><p>Level 20's voices (step VOX-G, <code>tools/art/voice.py</code>: 22 lines and Rook's three "Up top!" barks, 25 files, four takes pinned). Not heard by Claude beyond a speech check (Whisper read-back) and pitch. A name check: "Hellas" is read back as "Heller's" or "Helis" in some takes, so listen for the name first.</p></div>
+<article class="row" id="r-V.a">
+<header><span class="rid">V.a</span><h3>Rook&#x27;s &quot;Up top!&quot; barks</h3><span class="kind">listen</span></header>
+<div class="part"><a href="../../player/wingmen/README.md">Rook's "Up top!" barks</a></div>
+<div class="q"><strong>listen</strong>: the three rear-wave barks, said when a wave comes from the top by travel: "Up top! Coming down on us!", "Up top, Lancer! They're on our tails!", "Contacts up top! Keep moving!"</div>
+<div class="media"><figure class="m aud"><figcaption>1</figcaption><audio controls preload="none" src="../../../assets/voice/rook/46b437f17faf.ogg"></audio></figure><figure class="m aud"><figcaption>2</figcaption><audio controls preload="none" src="../../../assets/voice/rook/60315a316c8f.ogg"></audio></figure><figure class="m aud"><figcaption>3</figcaption><audio controls preload="none" src="../../../assets/voice/rook/e2f4b105f151.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> flagged by VOX-G for a listen</p>
+<div class="ans"><span class="tag">Answer</span> <span>accept / redo (say which)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>accept (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-V.b">
+<header><span class="rid">V.b</span><h3>Okafor, the opening (t=1)</h3><span class="kind">listen</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-20-retreat-from-hellas/README.md#radio-chatter">Okafor, the opening (t=1)</a></div>
+<div class="q"><strong>listen</strong>: "Hellas basin, Aegis. The Vrell are massing on the floor. Hit them before they move." (pinned)</div>
+<div class="media"><figure class="m aud"><figcaption>t=1</figcaption><audio controls preload="none" src="../../../assets/voice/okafor/3a33859ee853.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> flagged by VOX-G: low in the first take, and one read-back said "the rail"</p>
+<div class="ans"><span class="tag">Answer</span> <span>accept / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span>accept (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-V.c">
+<header><span class="rid">V.c</span><h3>Ares Control, the emergency cache</h3><span class="kind">listen</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-20-retreat-from-hellas/README.md#secrets-and-pickups">Ares Control, the emergency cache</a></div>
+<div class="q"><strong>listen</strong>: "Hellas Outpost's emergency cache. Better you than the Vrell." (pinned)</div>
+<div class="media"><figure class="m aud"><figcaption>secret</figcaption><audio controls preload="none" src="../../../assets/voice/ares-control/625324f0c4ed.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> flagged by VOX-G for a listen; the name "Hellas"</p>
+<div class="ans"><span class="tag">Answer</span> <span>accept / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span>accept (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-V.d">
+<header><span class="rid">V.d</span><h3>Ares Control (t=131)</h3><span class="kind">listen</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-20-retreat-from-hellas/README.md#radio-chatter">Ares Control (t=131)</a></div>
+<div class="q"><strong>listen</strong>: "Militia on the rim, Aegis. We can see your dust. Keep coming."</div>
+<div class="media"><figure class="m aud"><figcaption>t=131</figcaption><audio controls preload="none" src="../../../assets/voice/ares-control/69d12604b55b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> flagged by VOX-G for a listen</p>
+<div class="ans"><span class="tag">Answer</span> <span>accept / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span>accept (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-V.e">
+<header><span class="rid">V.e</span><h3>Rook (t=113)</h3><span class="kind">listen</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-20-retreat-from-hellas/README.md#radio-chatter">Rook (t=113)</a></div>
+<div class="q"><strong>listen</strong>: the quiet beat, "Lancer... if I don't come back from one of these, call my mum yourself. No form letters." (pinned)</div>
+<div class="media"><figure class="m aud"><figcaption>t=113</figcaption><audio controls preload="none" src="../../../assets/voice/rook/ecd5c0dc3734.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> flagged by VOX-G for a listen</p>
+<div class="ans"><span class="tag">Answer</span> <span>accept / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span>accept (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-V.f">
+<header><span class="rid">V.f</span><h3>Okafor, the secondary</h3><span class="kind">listen</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-20-retreat-from-hellas/README.md#radio-chatter">Okafor, the secondary</a></div>
+<div class="q"><strong>listen</strong>: "You thinned them on the way out. They'll remember that." (pinned)</div>
+<div class="media"><figure class="m aud"><figcaption>secondary</figcaption><audio controls preload="none" src="../../../assets/voice/okafor/da4292c3163f.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> flagged by VOX-G for a listen</p>
+<div class="ans"><span class="tag">Answer</span> <span>accept / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span>accept (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-V.g">
+<header><span class="rid">V.g</span><h3>The other Level 20 lines</h3><span class="kind">accept or redo</span></header>
+<div class="part">The other Level 20 lines</div>
+<div class="q"><strong>accept or redo</strong>: Okafor t=20 "All Aegis units, break off! Fall back to the rim!", t=75, t=152, the level end "We gave up the basin today…" and briefing page 1; Varga t=12.5, 27.5, 47, 106, 124.5 and briefing page 2; Ares Control t=35 and t=160; Rook t=56, 64, 98, 143.5</div>
+<div class="media"><figure class="m aud"><figcaption>Okafor t=20</figcaption><audio controls preload="none" src="../../../assets/voice/okafor/a2a2f76cb87a.ogg"></audio></figure><figure class="m aud"><figcaption>t=75</figcaption><audio controls preload="none" src="../../../assets/voice/okafor/31f53ed02b6a.ogg"></audio></figure><figure class="m aud"><figcaption>t=152</figcaption><audio controls preload="none" src="../../../assets/voice/okafor/fe29401962a4.ogg"></audio></figure><figure class="m aud"><figcaption>level end</figcaption><audio controls preload="none" src="../../../assets/voice/okafor/37c606f178d8.ogg"></audio></figure><figure class="m aud"><figcaption>page 1</figcaption><audio controls preload="none" src="../../../assets/voice/okafor/9f5c31ec0e5f.ogg"></audio></figure><figure class="m aud"><figcaption>Varga t=12.5</figcaption><audio controls preload="none" src="../../../assets/voice/varga/d17f3ff0463f.ogg"></audio></figure><figure class="m aud"><figcaption>t=27.5</figcaption><audio controls preload="none" src="../../../assets/voice/varga/6e6d9867a780.ogg"></audio></figure><figure class="m aud"><figcaption>t=47</figcaption><audio controls preload="none" src="../../../assets/voice/varga/0460ab62a7ab.ogg"></audio></figure><figure class="m aud"><figcaption>t=106</figcaption><audio controls preload="none" src="../../../assets/voice/varga/9b39b49dfabb.ogg"></audio></figure><figure class="m aud"><figcaption>t=124.5</figcaption><audio controls preload="none" src="../../../assets/voice/varga/f4e186ca1f60.ogg"></audio></figure><figure class="m aud"><figcaption>page 2</figcaption><audio controls preload="none" src="../../../assets/voice/varga/e25bb31d7399.ogg"></audio></figure><figure class="m aud"><figcaption>Ares t=35</figcaption><audio controls preload="none" src="../../../assets/voice/ares-control/8ca54427014f.ogg"></audio></figure><figure class="m aud"><figcaption>t=160</figcaption><audio controls preload="none" src="../../../assets/voice/ares-control/c3b98722acb7.ogg"></audio></figure><figure class="m aud"><figcaption>Rook t=56</figcaption><audio controls preload="none" src="../../../assets/voice/rook/414f83c9beb8.ogg"></audio></figure><figure class="m aud"><figcaption>t=64</figcaption><audio controls preload="none" src="../../../assets/voice/rook/7ff3d2e81ad6.ogg"></audio></figure><figure class="m aud"><figcaption>t=98</figcaption><audio controls preload="none" src="../../../assets/voice/rook/3a9819cc3b09.ogg"></audio></figure><figure class="m aud"><figcaption>t=143.5</figcaption><audio controls preload="none" src="../../../assets/voice/rook/e5dc0742715c.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> checked by Whisper read-back only</p>
+<div class="ans"><span class="tag">Answer</span> <span>accept all / redo (say which)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>accept all (user, 2026-10-20)</span></div>
+</article>
+</section>
+<section id="s-captures"><h2>Captures</h2>
+<div class="sum"><p>Game captures from a snapshot of the finished build (step G5a, <code>briefs/r43-captures.md</code>; Xvfb, the sound from a wave file); flown by the content tests' autopilot, medium, the balance plan's fit (the walker's capture, W.a, is in its own section). <strong>They show the state before step GFX2's readability fixes</strong> (record N.f) and are re-recorded under the same names.</p></div>
+<article class="row" id="r-K.a">
+<header><span class="rid">K.a</span><h3>Level 20</h3><span class="kind">game capture</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-20-retreat-from-hellas/README.md#concept-art">Level 20</a></div>
+<div class="q"><strong>game capture</strong> (205 s, with sound): a whole medium run with the plan's fit and Rook's Autocannon (<code>concept/prompts.md</code>). To see: the strike and the Colossus ridge crossing, the turnabout (the scroll easing to zero at about 0:21 and reversing, the TOP "! REAR" and bottom "! AHEAD" warnings), the pursuing swarm's entry at 0:23, Rook's "Up top!" (0:55, 1:37, 2:22), the Wraiths from the rear, the nests and mortars on the dune ridge, the terraces and the rim road, the emergency cache on its ledge, the swarm dropping back, the lull with the supply drone and the armour patch, the second pursuit, the rim guns and their flak, the debrief (rank A, 167 of 197, the secondary met). <strong>Recommendation: accept</strong></div>
+<div class="media"><figure class="m vid"><figcaption>video with sound</figcaption><video controls preload="none" playsinline src="../../campaign/act-3-red-dust/level-20-retreat-from-hellas/concept/level-20-capture-r43-a.mp4"></video></figure><figure class="m img"><a href="../../campaign/act-3-red-dust/level-20-retreat-from-hellas/concept/level-20-capture-r43-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-3-red-dust/level-20-retreat-from-hellas/concept/level-20-capture-r43-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> flown by the test autopilot, not by you; <strong>the swarm melts under the beam within a second or two, each refill too</strong> (Q.1); the emergency cache passes unopened (SECRETS 0 of 1: the autopilot does not take it)</p>
+<div class="ans"><span class="tag">Answer</span> <span>accept / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span>accept (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-K.b">
+<header><span class="rid">K.b</span><h3>The pursuit swarm alone</h3><span class="kind">demonstration</span></header>
+<div class="part"><a href="../../enemies/air/mote-swarm/README.md">The pursuit swarm alone</a></div>
+<div class="q"><strong>demonstration</strong>: the same fit with the autopilot's fire held and no Rook, so the motes live: the entry under the TOP warning, the band at the top following the ship, the tell (the flock contracts and brightens), lunges down the lane and the climb back, refills joining, the break-off at t=108, the lull's start (105 s). Not a normal run: the ship never fires. It is what the swarm is meant to look like. <strong>Recommendation: accept the look</strong> (the lever question is Q.1)</div>
+<div class="media"><figure class="m vid"><figcaption>video with sound</figcaption><video controls preload="none" playsinline src="../../campaign/act-3-red-dust/level-20-retreat-from-hellas/concept/level-20-swarm-r43-a.mp4"></video></figure><figure class="m img"><a href="../../campaign/act-3-red-dust/level-20-retreat-from-hellas/concept/level-20-swarm-r43-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-3-red-dust/level-20-retreat-from-hellas/concept/level-20-swarm-r43-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the ship never fires, so it shows the design, not a flight</p>
+<div class="ans"><span class="tag">Answer</span> <span>accept / change (say what)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>accept (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-K.c">
+<header><span class="rid">K.c</span><h3>The rear-guard drone in flight</h3><span class="kind">game capture</span></header>
+<div class="part"><a href="../../player/weapons/rear-guard-drone-bay/README.md">The rear-guard drone in flight</a></div>
+<div class="q"><strong>game capture</strong> (48 s, Level 20 from t≈15 to 63): the Rear-guard Drone Bay L1 in place of the left pod (the plan does not fit it): the drone trails below the ship through the turnabout and the first pursuit, swings out in turns and fires straight back beside the Tail Gun. <strong>Recommendation: accept</strong></div>
+<div class="media"><figure class="m vid"><figcaption>video with sound</figcaption><video controls preload="none" playsinline src="../../campaign/act-3-red-dust/level-20-retreat-from-hellas/concept/level-20-drone-r43-a.mp4"></video></figure><figure class="m img"><a href="../../campaign/act-3-red-dust/level-20-retreat-from-hellas/concept/level-20-drone-r43-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-3-red-dust/level-20-retreat-from-hellas/concept/level-20-drone-r43-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> one bay at level 1; the pursuit's motes die at the beam before the drone meets one</p>
+<div class="ans"><span class="tag">Answer</span> <span>accept / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span>accept (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-K.d">
+<header><span class="rid">K.d</span><h3>The drone&#x27;s test fire in the shop</h3><span class="kind">game capture</span></header>
+<div class="part"><a href="../../player/weapons/rear-guard-drone-bay/README.md">The drone's test fire in the shop</a></div>
+<div class="q"><strong>game capture</strong> (12 s, silent): the hangar before Level 20, the left wing, the Rear-guard Drone (NEW, 2,400) selected, its test-fire box at level 1: the drone trails and fires back at the dummies as they pass behind. <strong>Recommendation: accept</strong></div>
+<div class="media"><figure class="m vid"><figcaption>video with sound</figcaption><video controls preload="none" playsinline src="../../player/weapons/rear-guard-drone-bay/concept/rear-guard-drone-testfire-r43-a.mp4"></video></figure><figure class="m img"><a href="../../player/weapons/rear-guard-drone-bay/concept/rear-guard-drone-testfire-r43-a.png"><img loading="lazy" decoding="async" src="../../player/weapons/rear-guard-drone-bay/concept/rear-guard-drone-testfire-r43-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> a test save, no sound</p>
+<div class="ans"><span class="tag">Answer</span> <span>accept / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span>accept (user, 2026-10-20)</span></div>
+</article>
+</section>
+<section id="s-level-20-s-build"><h2>Level 20&#x27;s build</h2>
+<div class="sum"><p><strong>B</strong> rows: each item <em>yes</em> (keep as built) or <em>no</em> (say what). Level 20's numbers (the level-metrics tool, medium, the plan's fit): <strong>197 enemies (175 + 22 ground) ≈ 71 a minute</strong>, 3.38 on the screen and 34.5 shots a minute, 2 gaps over 2 s (hard none), the haul −0.3 % of the budget (2,525 against 2,532), the autopilot wins every seed on every difficulty with Rook and without him.</p></div>
+<article class="row" id="r-B.a">
+<header><span class="rid">B.a</span><h3>Reverse scroll in the simulation</h3><span class="kind">yes or no, each</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-20-retreat-from-hellas/README.md#implementation">Reverse scroll in the simulation</a></div>
+<div class="q"><strong>yes or no, each</strong> (step PG1): (a)-(f) below. <strong>Recommendation: all yes</strong></div>
+<div class="sub"><span class="rid">B.aa</span> A signed <code>Section</code> speed and <code>Sortie.travel</code>/<code>reversed</code>/<code>travelAt</code>: the sign picks entry edges, routes, ground objects, roads, backdrop tiling and parallax; front and rear read travel (<code>TravelFrame</code>). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.ab</span> A wave's <code>flipped</code> state is fixed per wave time (the mirror), so a wave is not flipped half-way through. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.ac</span> Chains and armoured walkers are never flipped. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.ad</span> A script that reverses is cross-checked and refuses terrain, <code>no-surface</code> set pieces and the other things that cannot run backwards. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.ae</span> A new <code>WarningEdge.TOP</code> (bit 3). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.af</span> <code>MarsRules</code> eases the scroll after a reversed section. <span class="opts">yes / no</span></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> tested on a script built in the test, mirror property only</p>
+<div class="ans"><span class="tag">Answer</span> <span>all yes / some no</span></div><div class="ans out"><span class="tag">Outcome</span> <span>all yes (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-B.b">
+<header><span class="rid">B.b</span><h3>Level 20&#x27;s data and waves</h3><span class="kind">yes or no, each</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-20-retreat-from-hellas/README.md#waves">Level 20's data and waves</a></div>
+<div class="q"><strong>yes or no, each</strong> (steps PG2, G4): (a)-(j) below. <strong>Recommendation: all yes</strong></div>
+<div class="sub"><span class="rid">B.ba</span> Count-neutral, "tougher, not more": 197 enemies ≈ 71 a minute (easy 157, hard 239), the approved anchors keep their times. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.bb</span> The eight bottom popcorn threes became firing groups, then <strong>firing pairs</strong> on every difficulty (the rear guns serve one at a time); the Stinger V at t=71 a three; the Burrower fields at 52.5, 87 and 150 pairs. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.bc</span> Three spine nests ×3 (t≈66 on the basin floor, ≈96 on a terrace step, ≈155 on the rim road), and the rim road's nests at t≈140 and 155 stand on the road. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.bd</span> The lull as six kite flocks of 3, 2.5 s apart (t=110.5–123), three strike waves (t=11.5, 15, 18.5) and Needler pincers at t=22.5 and 25.5. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.be</span> <code>bounty_scale</code> 0.83 (the haul −0.3 % of the budget), within the design's 0.70–0.85 band. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.bf</span> <code>small_act_hp</code> +20 and the beam-era HP apply; the Burrower, Dust Devil and Wraith take the act factor. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.bg</span> Each pursuit's break-off is its wave's <code>break_at</code> (t=108 and t=163; the second inside section 7, not "its section's end"). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.bh</span> The BOTTOM lessons use the existing wave key <code>warning</code> on a front wave in a reversed section (no new <code>warn</code> key); the pursuits' and Wraiths' TOP warnings are 4 s on easy; the t=20.5 Skitters stream 0.6 s apart. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.bi</span> Motes that have no room in a 24-member flock are never spawned and count nowhere (not in the density, not in the kill ratio). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.bj</span> The secondary is the kill ratio at 65 %, reachable without a mote (<code>Level20Test</code>), judged at the level end. <span class="opts">yes / no</span></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> 71 a minute is below Levels 18–19's 101–107, by design</p>
+<div class="ans"><span class="tag">Answer</span> <span>all yes / some no</span></div><div class="ans out"><span class="tag">Outcome</span> <span>all yes (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-B.c">
+<header><span class="rid">B.c</span><h3>The pursuit in the simulation</h3><span class="kind">yes or no, each</span></header>
+<div class="part"><a href="../../enemies/air/mote-swarm/README.md">The pursuit in the simulation</a></div>
+<div class="q"><strong>yes or no, each</strong> (step PG3): (a)-(g) below. <strong>Recommendation: all yes</strong></div>
+<div class="sub"><span class="rid">B.ca</span> Five phases: band, tell, dive, climb, break (<code>Pursuit</code>), the <code>WaveSpec.Pursuit</code> block in data. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.cb</span> The leader bobs ±40 px in the band. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.cc</span> The tell waits until the leader has reached the band. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.cd</span> The dive goes diagonally (the design says "straight down the ship's lane" to 140 px below where the ship was at the tell's start; PG3 flies it at an angle from the leader's band position). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.ce</span> The clump swirls during the tell. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.cf</span> Pursuit events fire only while motes are in the flock. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.cg</span> The trail drone's station follows with a smoothed lag. <span class="opts">yes / no</span></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the swarm itself melts (Q.1)</p>
+<div class="ans"><span class="tag">Answer</span> <span>all yes / some no</span></div><div class="ans out"><span class="tag">Outcome</span> <span>all yes (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-B.d">
+<header><span class="rid">B.d</span><h3>The rear-guard drone bay</h3><span class="kind">yes or no, each</span></header>
+<div class="part"><a href="../../player/weapons/rear-guard-drone-bay/README.md">The rear-guard drone bay</a></div>
+<div class="q"><strong>yes or no, each</strong> (steps PG3, G4, GB): (a)-(d) below. <strong>Recommendation: all yes</strong></div>
+<div class="sub"><span class="rid">B.da</span> The drone flies at every level and in overdrive (<code>SimSpecs.flies</code> is true), 40 px behind the ship, firing back. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.db</span> It is not in the balance plan: the plan's Level 20 visit buys the Tail Gun L3 and no level test is flown with the bay; it is the player's survival choice. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.dc</span> The weapons document's numbers (price 2,400 cr, draw 2 → 3 MW, unlock at Level 20, the per-level DPS and hits) are the wingmen table moved over unchanged (round 36, D.26). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.dd</span> The shop sells it from the hangar visit before Level 20. <span class="opts">yes / no</span></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> not in the balance plan, so no level test fits it</p>
+<div class="ans"><span class="tag">Answer</span> <span>all yes / some no</span></div><div class="ans out"><span class="tag">Outcome</span> <span>all yes (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-B.e">
+<header><span class="rid">B.e</span><h3>Level 20 in the game</h3><span class="kind">yes or no, each</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-20-retreat-from-hellas/README.md#implementation">Level 20 in the game</a></div>
+<div class="q"><strong>yes or no, each</strong> (steps GA, GB): (a)-(h) below. <strong>Recommendation: all yes</strong></div>
+<div class="sub"><span class="rid">B.ea</span> The warning labels by travel ("! REAR" and "! AHEAD", step GA's wording), the TOP edge's warning and the wave banners by travel. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.eb</span> The intel panel's TURN and LULL marks (the lull rule, the mark colours: GA's choices). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.ec</span> The tell's glow on the swarm (<code>PursuitLooks</code>) and the band's hum with the lunge sound (<code>PursuitCues</code>). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.ed</span> The rim flak is a <code>band: top</code> flak, and it acts on low-air units (a review point of step GB). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.ee</span> The ridge's path is a stand-in line for now (the pass's key is Q.4). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.ef</span> The <em>a</em> variants of the new sounds are in <code>assets/</code> as provisional (S.l–S.n), until you pick. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.eg</span> Rook's "Up top!" barks come from the data's <code>top_lines</code>, by travel, and stay silent for the BOTTOM entries. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.eh</span> The basin rumble is a second ambience layer (<code>ambience_layers</code>), and the ridge's pass is tied to its layer start (Q.4). <span class="opts">yes / no</span></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the wording and colours are judgement calls</p>
+<div class="ans"><span class="tag">Answer</span> <span>all yes / some no</span></div><div class="ans out"><span class="tag">Outcome</span> <span>all yes (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-B.f">
+<header><span class="rid">B.f</span><h3>Rook in the retreat</h3><span class="kind">yes or no, each</span></header>
+<div class="part"><a href="../../player/wingmen/README.md">Rook in the retreat</a></div>
+<div class="q"><strong>yes or no, each</strong> (steps PG1, PG3, G4): (a)-(d) below. <strong>Recommendation: all yes</strong></div>
+<div class="sub"><span class="rid">B.fa</span> His slot reads travel and he ignores the BOTTOM edge while the scroll is reversed. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.fb</span> The plan's fit gives him his owned Autocannon again (air-heavy level; your Q.2 of 2026-10-20). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.fc</span> He stays out of the lunge lane during a tell. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.fd</span> The autopilot's retreat play (<code>RetreatPlay</code>: the middle band, the unit it kills soonest, out of a lunge's path, a look-ahead over the bullets from both edges) is the measure. <span class="opts">yes / no</span></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> Rook's play is the autopilot's, measured only</p>
+<div class="ans"><span class="tag">Answer</span> <span>all yes / some no</span></div><div class="ans out"><span class="tag">Outcome</span> <span>all yes (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-B.g">
+<header><span class="rid">B.g</span><h3>The allocation guard</h3><span class="kind">yes or no, each</span></header>
+<div class="part"><a href="../../tech/architecture/README.md">The allocation guard</a></div>
+<div class="q"><strong>yes or no, each</strong> (step C1G, approved "if cheap"): (a)-(c) below. <strong>Recommendation: all yes</strong></div>
+<div class="sub"><span class="rid">B.ga</span> <code>:content:allocationTest</code> runs the 20 zero-allocation tests under <code>-XX:TieredStopAtLevel=1</code> (the C1-only JIT that exposed the macOS failure) in their own forks, parallel to <code>test</code>. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.gb</span> It is wired into <code>check</code>: +34 s (4:42 → 5:16). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.gc</span> The zero-allocation tests therefore run twice (once in <code>test</code>, once here). <span class="opts">yes / no</span></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> +34 s on <code>:content:check</code> (4:42 → 5:16, measured on a loaded machine)</p>
+<div class="ans"><span class="tag">Answer</span> <span>all yes / some no</span></div><div class="ans out"><span class="tag">Outcome</span> <span>all yes (user, 2026-10-20)</span></div>
+</article>
+</section>
+<section id="s-questions"><h2>Questions</h2>
+<div class="sum"><p>Points that came out of part G and were <strong>not built</strong> until you decide; the <em>Answer</em> column has the options, my recommendation first.</p></div>
+<article class="row" id="r-Q.1">
+<header><span class="rid">Q.1</span><h3>The Mote Swarm still mostly melts</h3><span class="kind">Question.</span></header>
+<div class="part"><a href="../../enemies/air/mote-swarm/README.md">The Mote Swarm still mostly melts</a></div>
+<div class="q"><strong>Question.</strong> After "homing ignores motes" (step SW) the swarm holds <strong>0.77 motes on the screen</strong> at medium (easy 0.35, hard 1.03) and 2–4 of 18 lunges carry motes: the beam and Rook's Autocannon still hit it on the nose. Levers, measured and not applied: <strong>the band's lag 90 → 30 px/s: 0.87</strong> (3–6 lunges with motes); <strong>a lunge every 4 s instead of 6: 0.94</strong> (6–7 of 27); together not measured. Others: the motes' HP, more refills. <strong>Recommendation: both measured levers together</strong> (data only, no code, no new rule; I would re-measure them together and report)</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the capture K.a shows the swarm dying within a second or two of its entry and of each refill; the levers are for the autopilot's play; a swarm that is mostly empty is a pursuit in name only</p>
+<div class="ans"><span class="tag">Answer</span> <span>both levers (recommended) / band lag only / lunge every 4 s only / motes' HP / more refills / leave it</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>both levers</strong> (recommended) (user, 2026-10-20); data only, built after the close and re-measured</span></div>
+</article>
+<article class="row" id="r-Q.2">
+<header><span class="rid">Q.2</span><h3>The beam-era limit for a reversed level</h3><span class="kind">Question.</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-20-retreat-from-hellas/README.md#waves">The beam-era limit for a reversed level</a></div>
+<div class="q"><strong>Question.</strong> <code>BeamEraHpTest</code> holds small units to 2.5× Level 10's time on the screen; for a <strong>reversed</strong> level (the rear guns, not the beam, face them) it allows 2.5× and Level 20 is at <strong>2.48×</strong> (2.30× before the seekers skipped motes). <strong>Recommendation: accept</strong> (2.5× for a reversed level)</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> 2.48 against 2.5: no room left, a later change may break it</p>
+<div class="ans"><span class="tag">Answer</span> <span>accept (recommended) / lower the limit and lower the HP</span></div><div class="ans out"><span class="tag">Outcome</span> <span>accept (recommended) (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-Q.3">
+<header><span class="rid">Q.3</span><h3>Turrets count as seekers</h3><span class="kind">Question.</span></header>
+<div class="part"><a href="../../enemies/air/mote-swarm/README.md">Turrets count as seekers</a></div>
+<div class="q"><strong>Question.</strong> <code>seekers_ignore</code> covers the player's homing shots, torpedoes, <strong>turrets</strong>, and Rook's target pick. The turrets are my reading: a turret that picks its own target is a seeker. <strong>Recommendation: yes</strong></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> a turret that cannot aim at a mote may look broken</p>
+<div class="ans"><span class="tag">Answer</span> <span>yes (recommended) / no, turrets still shoot motes</span></div><div class="ans out"><span class="tag">Outcome</span> <span>yes (recommended) (user, 2026-10-20)</span></div>
+</article>
+<article class="row" id="r-Q.4">
+<header><span class="rid">Q.4</span><h3>The ridge&#x27;s path</h3><span class="kind">Question.</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-20-retreat-from-hellas/README.md#hazards">The ridge's path</a></div>
+<div class="q"><strong>Question.</strong> The travelling ridge's pass is tied to the <strong>basin rumble's layer start</strong> (<code>RidgeLooks</code>), and its path is a stand-in line. Level 21 shares the ridge. <strong>Recommendation: a data key</strong>: a level key <code>ridge {t, seconds, from, to, depth}</code> read by <code>RidgeLooks</code> (Level 20's track moves into its data; Level 21 uses the same key)</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> a key is a small content and game step</p>
+<div class="ans"><span class="tag">Answer</span> <span>data key (recommended) / keep it tied to the rumble</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>data key</strong> (recommended) (user, 2026-10-20); built after the close</span></div>
+</article>
+<article class="row" id="r-Q.5">
+<header><span class="rid">Q.5</span><h3>art: final for the hangar and the briefing</h3><span class="kind">Question.</span></header>
+<div class="part">[<code>art: final</code> for the hangar and the briefing](../../ui/hangar/README.md)</div>
+<div class="q"><strong>Question.</strong> Round 42's close left <code>design/ui/hangar</code> and <code>design/ui/briefing</code> at <code>art: chosen</code> because their Concept art tables still hold older mockups next to the approved finals. <strong>Recommendation: <code>final</code> for the approved items only</strong> (the older mockups stay <code>chosen</code>, rejected files are not touched); the READMEs' <code>art:</code> stays <code>chosen</code> until every item is final</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the frontmatter has one <code>art</code> value for a table of mixed items</p>
+<div class="ans"><span class="tag">Answer</span> <span>final for the approved items only (recommended) / the parts' <code>art</code> to final too / leave</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>final for the approved items only</strong> (recommended) (user, 2026-10-20); the user asked: "When do we move the remaining hangar and briefing art to final?" An audit step lists the remaining <code>chosen</code> items for the next round</span></div>
+</article>
+</section>
+<section id="s-part-h-s-questions"><h2>Part H&#x27;s questions</h2>
+<div class="sum"><p>Level 21 and the act end (the Dust Colossus), from the gap check (<span class="ref">part H plan</span>). Part H starts as soon as these are answered; <strong>nothing is built before</strong>. Recommendations first.</p></div>
+<article class="row" id="r-H.1">
+<header><span class="rid">H.1</span><h3>Level 21&#x27;s pacing</h3><span class="kind">Question.</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-21-dust-colossus/README.md">Level 21's pacing</a></div>
+<div class="q"><strong>Question.</strong> Count-neutral swaps as Level 20: the Kite V-wings become swarms and 3–4 Kite groups become Needler/Stinger firing groups (≈ 107 enemies, ≈ 66 a minute), and more only if the measured floor fails. <strong>Recommendation: yes</strong> (your Level 20 answer 4)</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the floor is measured only after the build</p>
+<div class="ans"><span class="tag">Answer</span> <span>yes (recommended) / no, more enemies (say what)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>yes (user, 2026-10-20), as recommended</span></div>
+</article>
+<article class="row" id="r-H.2">
+<header><span class="rid">H.2</span><h3>Rook&#x27;s gun at Level 21</h3><span class="kind">Question.</span></header>
+<div class="part"><a href="../../player/wingmen/README.md">Rook's gun at Level 21</a></div>
+<div class="q"><strong>Question.</strong> The balance plan carries Level 20's Autocannon. The approach is air-heavy and the debris rocks are <code>air</code>, which the Mortar cannot hit; the Autocannon still hits the risen mouth (<code>ground</code>). <strong>Recommendation: keep the Autocannon</strong></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the boss fight is <code>ground</code>: the Mortar would hit more of it</p>
+<div class="ans"><span class="tag">Answer</span> <span>keep the Autocannon (recommended) / the Mortar</span></div><div class="ans out"><span class="tag">Outcome</span> <span>keep the Autocannon (user, 2026-10-20), as recommended</span></div>
+</article>
+<article class="row" id="r-H.3">
+<header><span class="rid">H.3</span><h3>A pause before the boss</h3><span class="kind">Question</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-21-dust-colossus/README.md">A pause before the boss</a></div>
+<div class="q"><strong>Question</strong> (your round-41 note on Level 14). Drop the t=101 Stinger V-wing (or fold its four into earlier groups) so the screen clears while the Choir sings, with <strong>no</strong> incoming box (nothing to fly toward; the warning stays at t=105). Uses the third allowed gap. <strong>Recommendation: yes</strong></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the level loses 4 enemies and its last Stinger wave</p>
+<div class="ans"><span class="tag">Answer</span> <span>yes (recommended) / no, keep the wave</span></div><div class="ans out"><span class="tag">Outcome</span> <span>yes (user, 2026-10-20), as recommended</span></div>
+</article>
+<article class="row" id="r-H.4">
+<header><span class="rid">H.4</span><h3>Phase 1&#x27;s calibration band</h3><span class="kind">Question.</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-21-dust-colossus/README.md">Phase 1's calibration band</a></div>
+<div class="q"><strong>Question.</strong> The spec says about the Kraken's loss or less; your walker note in round 42 asked for more shooting. <strong>Recommendation: 0.8–1.2× the Kraken's 11.4 per 10 s</strong> with the random-dodge harness: kind, but not idle (the walker is ×1.84, W.c)</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the harness is not a player</p>
+<div class="ans"><span class="tag">Answer</span> <span>0.8–1.2× (recommended) / the walker's ×1.3–2 / less than the Kraken</span></div><div class="ans out"><span class="tag">Outcome</span> <span>0.8–1.2× (user, 2026-10-20), as recommended</span></div>
+</article>
+<article class="row" id="r-H.5">
+<header><span class="rid">H.5</span><h3>The boss bounty</h3><span class="kind">Question.</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-21-dust-colossus/README.md">The boss bounty</a></div>
+<div class="q"><strong>Question.</strong> When the measured <code>bounty_scale</code> moves from 0.80: keep the boss's share at <strong>22.7 %</strong> (bounty = 0.227 × 2,709 ÷ (2.56 × scale), ≈ 320 at 0.75), as long as the perfect run stays at least 1.4×. <strong>Recommendation: yes</strong></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the share is the highest of the campaign's bosses</p>
+<div class="ans"><span class="tag">Answer</span> <span>yes (recommended) / a lower share (say what)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>yes (user, 2026-10-20), as recommended</span></div>
+</article>
+<article class="row" id="r-H.6">
+<header><span class="rid">H.6</span><h3>Section 6&#x27;s ground</h3><span class="kind">Question.</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-21-dust-colossus/README.md">Section 6's ground</a></div>
+<div class="q"><strong>Question.</strong> A "strip from the tile's seam" can wait up to a tile's length at 25 px/s, longer than the 32 s section, for a long tile. <strong>Recommendation:</strong> the arena tile repeats at 512 px and section 6's tiles start at the next seam (at most 20 s); the collapsed crater and the furrow are props placed at the kill</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> one more 512 px tile and a few props</p>
+<div class="ans"><span class="tag">Answer</span> <span>the 512 px tile and props (recommended) / keep the strip</span></div><div class="ans out"><span class="tag">Outcome</span> <span>the 512 px tile and props (user, 2026-10-20), as recommended</span></div>
+</article>
+<article class="row" id="r-H.7">
+<header><span class="rid">H.7</span><h3>Part H&#x27;s small defaults</h3><span class="kind">Proposals, each yes/no</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-21-dust-colossus/README.md">Part H's small defaults</a></div>
+<div class="q"><strong>Proposals, each yes/no</strong>: (a)-(h) below. <strong>Recommendation: all yes</strong></div>
+<div class="sub"><span class="rid">H.7a</span> The ease 140 → 20 over the arena's first 2 s (t=105–107; the table's scroll px shift ≈ 120 px) instead of from t=103. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">H.7b</span> The suction pulls no pickups (phase 3's patch is not swallowed). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">H.7c</span> Debris stops the player's shots, not the enemy's bullets. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">H.7d</span> The release's end reads "ACTS I-III COMPLETE" and "ACT IV - DEEP WATER. EUROPA. COMING SOON.", the Continue button "…AT THE END OF ACT III", and the next act's name comes from a <code>next_act</code> key in Act 3's data. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">H.7e</span> The Level 3 strip's boss mark: the boss's silhouette at its time, drawn for Level 14 too. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">H.7f</span> The ridge pass as a level key <code>ridge {t, seconds, from, to, depth}</code> read by <code>RidgeLooks</code> (Level 20's track moved into its data), as Q.4's recommendation. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">H.7g</span> The usual 5 s launch from the bottom edge over the rim's CDF line (the design says "no launch" in the README). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">H.7h</span> A phase-2 point is fixed when its edge warning starts (3 s before the rise), the front one at its tell. <span class="opts">yes / no</span></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> (d) changes the release's end texts</p>
+<div class="ans"><span class="tag">Answer</span> <span>all yes / some no</span></div><div class="ans out"><span class="tag">Outcome</span> <span>all yes (user, 2026-10-20)</span></div>
+</article>
+</section>
+<section id="s-records"><h2>Records</h2>
+<div class="sum"><p>A record, nothing to answer.</p></div>
+<article class="row" id="r-N.a">
+<header><span class="rid">N.a</span><h3>The macOS CI fix (commit b239705): Level16Test.steppingAWholeLevelDoesNotAllocate allocated 7,660,800 bytes on macOS only (ubuntu and windows green): the test autopilot&#x27;s HazardPlay.channelSpan made a double[2] 21 times a step (672 B × 11,400 steps, exactly), which only the C1-only JIT does not remove; replaced by two doubles, bit-identical; the sim was clean</h3><span class="kind">not done yet</span></header>
+<dl><dt>Blocked by</dt><dd>—</dd><dt>Then</dt><dd>built, pushed</dd></dl>
+<div class="ans out"><span class="tag">README: then</span> <span>built, pushed; noted (user, 2026-10-20)</span></div><div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-N.b">
+<header><span class="rid">N.b</span><h3>The C1-only allocation guard (your decision of 2026-10-20: &quot;if cheap&quot;): :content:allocationTest, +34 s on check</h3><span class="kind">not done yet</span></header>
+<dl><dt>Blocked by</dt><dd>B.g</dd><dt>Then</dt><dd>built; yes/no in B.g</dd></dl>
+<div class="ans out"><span class="tag">README: then</span> <span>built; yes/no in B.g; noted (user, 2026-10-20)</span></div><div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-N.c">
+<header><span class="rid">N.c</span><h3>Round 42 closed (docs 0): your 116 answers recorded; the Warden Tank and the Walker and Level 19&#x27;s art final; ui/hangar and ui/briefing left at art: chosen</h3><span class="kind">not done yet</span></header>
+<dl><dt>Blocked by</dt><dd>Q.5</dd><dt>Then</dt><dd>closed</dd></dl>
+<div class="ans out"><span class="tag">README: then</span> <span>closed; noted (user, 2026-10-20)</span></div><div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-N.d">
+<header><span class="rid">N.d</span><h3>Commit 423f0ff (signed, pushed to m7-act-3): part F, the playtest fixes, Levels 15–17&#x27;s rework, the refactors</h3><span class="kind">not done yet</span></header>
+<dl><dt>Blocked by</dt><dd>—</dd><dt>Then</dt><dd>pushed</dd></dl>
+<div class="ans out"><span class="tag">README: then</span> <span>pushed; noted (user, 2026-10-20)</span></div><div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-N.f">
+<header><span class="rid">N.f</span><h3>Fixed after the first capture, re-recorded (steps GFX2, G5R): the motes now pale-rimmed with light shadows, the swarm&#x27;s tell a white-hot clump with a ring, the rim flak with a bright core (still short and small), the rear-guard drone outlined and its shot amber, the shop&#x27;s names unclipped (&quot;REAR-GUARD BAY&quot; / &quot;REAR-GUARD DRONE BAY L1&quot;), no empty warning box. The emergency cache&#x27;s strobe was a bug (the game never loaded a destructible&#x27;s glow frames): fixed in step CSF; the clip level-20-cache-strobe-r43-a was recorded from a patched build before that fix. K.a-K.d show the fixed build</h3><span class="kind">not done yet</span></header>
+<dl><dt>Blocked by</dt><dd>—</dd><dt>Then</dt><dd>noted</dd></dl>
+<div class="ans out"><span class="tag">README: then</span> <span>noted (user, 2026-10-20)</span></div><div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-N.e">
+<header><span class="rid">N.e</span><h3>Not started: part H (Level 21), the ridge&#x27;s data key (Q.4), the walker&#x27;s stomp (W.e), the lever changes (Q.1)</h3><span class="kind">not done yet</span></header>
+<dl><dt>Blocked by</dt><dd>the answers above</dd><dt>Then</dt><dd>built after the round</dd></dl>
+<div class="ans out"><span class="tag">README: then</span> <span>built after the round; noted (user, 2026-10-20)</span></div><div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+</section></main></body></html>

@@ -12,6 +12,9 @@ import vanguard.content.EnemyMovementData.Lance;
 import vanguard.content.EnemyMovementData.Plate;
 import vanguard.content.EnemyMovementData.Stomp;
 import vanguard.content.MawBlock.CoilData;
+import vanguard.content.RingBlock.CoreData;
+import vanguard.content.RingBlock.FireArc;
+import vanguard.content.RingBlock.RingData;
 
 /**
  * A boss's keys in its stat block ({@link EnemyData}, {@code boss:}): its lanes, slams, surfacing, releases,
@@ -45,6 +48,13 @@ public sealed interface EnemyBossData permits EnemyData {
      * @param eruption M7 part H: a breaching boss's eruption under the ship
      * @param debris M7 part H: a breaching boss's debris rocks
      * @param coil M8 part H: a coiled arena boss's body and script (the Abyssal Maw; {@link MawBlock})
+     * @param rings M9 part H: a ringed boss's rings, outer first (the Iron Sovereign; {@link RingBlock})
+     * @param fireArc M9 part H: a ringed boss's fire arc
+     * @param spinUp M9 part H: a ringed boss's spin-up from the halt, s ({@link RingBlock#SPIN_UP} if not given)
+     * @param grind M9 part H: a locked ring's grind to a halt, s ({@link RingBlock#GRIND} if not given)
+     * @param speedUps M9 part H: the survivors' speed factors by the locked rings ({@link RingBlock#SPEED_UPS})
+     * @param cookoff M9 part H: the batteries' cook-offs' spacing at the death, s ({@link RingBlock#COOKOFF})
+     * @param core M9 part H: a ringed boss's core (its opening, shield, spiral, rail and bays)
      */
     record BossData(
             String kind,
@@ -65,7 +75,14 @@ public sealed interface EnemyBossData permits EnemyData {
             Optional<Vents> vents,
             Optional<Eruption> eruption,
             Optional<DebrisData> debris,
-            Optional<CoilData> coil) {
+            Optional<CoilData> coil,
+            Optional<List<RingData>> rings,
+            Optional<FireArc> fireArc,
+            Optional<Double> spinUp,
+            Optional<Double> grind,
+            Optional<List<Double>> speedUps,
+            Optional<Double> cookoff,
+            Optional<CoreData> core) {
         public BossData {
             Check.that(
                     kind.equals("boss") || kind.equals("mid-boss"),
@@ -74,6 +91,26 @@ public sealed interface EnemyBossData permits EnemyData {
             Check.notEmpty("phases", phases);
             deathSeconds.ifPresent(d -> Check.notNegative("death_seconds", d));
             Check.that(lanes.isPresent() == slam.isPresent(), "a boss with lanes has a slam cycle, and only it");
+            rings = rings.map(List::copyOf);
+            speedUps = speedUps.map(List::copyOf);
+            spinUp.ifPresent(s -> Check.notNegative("spin_up", s));
+            grind.ifPresent(g -> Check.notNegative("grind", g));
+            cookoff.ifPresent(c -> Check.notNegative("cookoff", c));
+            speedUps.ifPresent(list -> {
+                Check.notEmpty("speed_ups", list);
+                list.forEach(f -> Check.positive("speed_ups[]", f));
+            });
+            rings.ifPresent(list -> Check.notEmpty("rings", list));
+            Check.that(
+                    rings.isPresent()
+                            || (fireArc.isEmpty()
+                                    && spinUp.isEmpty()
+                                    && grind.isEmpty()
+                                    && speedUps.isEmpty()
+                                    && cookoff.isEmpty()
+                                    && core.isEmpty()),
+                    "only a ringed boss (rings) has a fire_arc, spin_up, grind, speed_ups, cookoff or core");
+            Check.that(rings.isEmpty() || fireArc.isPresent(), "a ringed boss has its fire_arc");
             poses.ifPresent(list -> list.forEach(pose -> Check.that(
                     list.stream()
                                     .filter(other -> other.name().equals(pose.name()))
@@ -291,7 +328,8 @@ public sealed interface EnemyBossData permits EnemyData {
      * The end of a phase: at most {@code left} (0 when left out) of {@code parts} alive, or part G
      * {@code seconds} after the phase engaged (after its move), whichever comes first; at least one
      * of the two. M5 part E: or after {@code slams} impacts, or once {@code parts} hold less than the
-     * share {@code below} of their HP (instead of {@code left}).
+     * share {@code below} of their HP (instead of {@code left}). M9 part H (a ringed boss, the Iron Sovereign): or, alone,
+     * once {@code locks} of its rings are locked (every battery of a ring dead), in any order.
      */
     record Until(
             Optional<List<String>> parts,
@@ -299,10 +337,16 @@ public sealed interface EnemyBossData permits EnemyData {
             Optional<Double> seconds,
             Optional<Integer> slams,
             Optional<Double> below,
-            Optional<Share> share) {
+            Optional<Share> share,
+            Optional<Integer> locks) {
         public Until {
             Check.that(
-                    parts.isPresent() || seconds.isPresent() || slams.isPresent(), "until has parts, seconds or slams");
+                    parts.isPresent() || seconds.isPresent() || slams.isPresent() || locks.isPresent(),
+                    "until has parts, seconds, slams or locks");
+            locks.ifPresent(n -> Check.positive("locks", n));
+            Check.that(
+                    locks.isEmpty() || (parts.isEmpty() && seconds.isEmpty() && slams.isEmpty()),
+                    "until has its locks alone");
             parts.ifPresent(list -> Check.notEmpty("parts", list));
             left.ifPresent(l -> Check.notNegative("left", l));
             Check.that(left.isEmpty() || parts.isPresent(), "until has a left only with its parts");

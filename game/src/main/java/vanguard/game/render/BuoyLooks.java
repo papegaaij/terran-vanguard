@@ -20,7 +20,7 @@ import vanguard.sim.PlayField;
 public final class BuoyLooks {
     private static final float X0 = PixelScreen.PLAY_FIELD_X;
     /** The drops released by a moored buoy: the buoys' sprite roots. */
-    static final Set<String> MOORED = Set.of("survey-buoy");
+    static final Set<String> MOORED = Set.of("survey-buoy", "nav-buoy");
     /** The hatch's opening frame shows this long from the drop, s. */
     static final double OPENING_SECONDS = 0.2;
     /** The strobe's rate. */

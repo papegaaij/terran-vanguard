@@ -69,7 +69,12 @@ class VoiceFilesTest {
             "act-5-the-belt/level-29-betrayal-at-ceres",
             "act-5-the-belt/level-30-minefield",
             "act-5-the-belt/level-31-mining-rig-escort",
+            "act-5-the-belt/level-32-deep-core",
+            "act-5-the-belt/level-33-leech-field",
+            "act-5-the-belt/level-34-salvage-run",
+            "act-5-the-belt/level-35-iron-sovereign",
             "act-5-the-belt briefing",
+            "act-5-the-belt outro",
             "specials",
             "armour",
             VoiceLines.BARKS);

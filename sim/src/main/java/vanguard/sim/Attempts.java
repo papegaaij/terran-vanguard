@@ -57,6 +57,15 @@ final class Attempts {
         if (s.rides != null) {
             s.rides.reset();
         }
+        if (s.forks != null) {
+            s.forks.reset();
+        }
+        if (s.charges != null) {
+            s.charges.reset();
+        }
+        if (s.story != null) {
+            s.story.reset();
+        }
         s.bossPasses.clearLaunches();
         s.fire.reset();
         s.special.reset();
@@ -88,6 +97,9 @@ final class Attempts {
         s.sondes.reset();
         if (s.cruisers != null) {
             s.cruisers.reset();
+        }
+        if (s.relay != null) {
+            s.relay.reset();
         }
         s.latches.reset();
         s.allies.reset();

@@ -3,7 +3,7 @@ title: Data file schemas — enemies and allies
 design: approved
 implementation: in-progress
 art: n/a
-updated: 2026-10-28
+updated: 2026-10-29
 ---
 
 # Data file schemas — enemies and allies
@@ -436,6 +436,81 @@ The schemas of the enemies' stat blocks and boss scripts and of the allies' file
   attacks, its ring's `tell` its lamps); a segment chain's **`cars`** (`every`, `stagger`, `hp`, `bounty`, `attack`:
   its turret cars, counted in the parts' HP and bounty) and a cut's **`wreck: true`**; the hooks **`mine`** (`gap`,
   `middle_short`, `arm`) and **`chase`** (`turn_rate`).
+  M9 part E (Level 32; loaded and checked in steps E1/E2 by content's `EnemyData`, `FoundryChecks` and `DeepCoreChecks`,
+  mapped in step E2 by `UnitRules`/`DeepCoreRules`, flown from step E1; the defaults accepted by the user in round 65):
+  the armour **`armour: {collar: [w, h]}`** (a hardened collar, `hardened` true: the hit box is the collar, the emitter's
+  box on the centre inside it; a non-`anti-ground` shot on the collar outside the emitter glances, `SHOT_GLANCED`, on the
+  emitter it damages; `anti-ground` shots, specials and charges anywhere; a beam where its column crosses the emitter;
+  homing shots and Rook pick it); a `laser-sweep` on a `movement: terrain` unit is a **ground sweep** (no `origin`, no
+  hover: due while on the field, centred on the ship's bearing any way round, arcs alternating their direction) whose
+  `sweep` may add **`full_turn`** (`every`: every n-th sweep turns 360° from the ship's bearing, full turns alternating;
+  `duration` s, `telegraph` s, the reach ring drawn first; `slot` s to the next telegraph; only on a terrain unit), with
+  the hooks `sweep_arc`, **`full_turn_every`** (0 none, e.g. easy; 2 hard) and `attacks: {sweep: {interval}}`; a level's
+  ground target may make the first sweep the full turn (`full_turn_first`, [levels](../schemas-levels/README.md)). A
+  walker's **`walk.topple`** (`stagger` s, `fall` s, `line` `[width, length]` px) with parts **`topples: true`** (a
+  `destroyable` part, e.g. a leg, whose loss starts the topple: the stagger, guns quiet and no more damage taken, then the
+  fall toward the lost part, and 1.4 s after the loss the crush of every counted, non-dormant ground unit under the line,
+  paid; `TOPPLE_TELL`, `TOPPLE_FALL`, `TOPPLE_CRUSH`; topple and a `topples` part come together) and a part's
+  **`attack: salvo`** (the pod: it fires the walker's named second attack, an `aimed` pattern with `homing: {…, aimed:
+  true}`, as the walk's spit, its `burst` missiles at once along the bearing to the ship; the pod's loss silences it).
+  M9 part F (Level 33; loaded and checked in step F1 by content's `EnemyData` and `LeechChecks`, mapped in step F2 by
+  `PartFRules`/`BeltRules`/`MinefieldRules`, flown from step F1; the defaults accepted in round 66):
+  the movement `chase` may add **`within`** and **`drift`** (both or neither: from its entry it drifts at `drift` px/s,
+  steering at its target's centre (the ship, or the prey it hunts) at the chase's `turn_rate`, with no time limit; once
+  its centre is within `within` px it chases for `seconds`, then flies straight on and out; it latches while drifting
+  too; the unit's `speed` is its way in, the drift's); a `latch`'s **`drains: power`** (default `shield`: while latched
+  it lowers the generator's effective output by 2 MW, stacking with every latched drainer, the output back in the same
+  step it is shaken off, thrown off or killed; no shield drain, so its `drain` attack has no `rate`; a loadout without a
+  power budget is never drained), **`emp: throw`** (default `hold`: the EMP Burst throws a latched unit off, from the ship
+  or from its prey, as a shake-off: stunned `stun` s, then it flees; a free one gets the EMP's Vrell stun) and
+  **`prey_drift`** (px/s: it latches on a touched free prey unit, a wave's `prey` in
+  [levels](../schemas-levels/README.md), which loses its hex shield with no refill, stops firing and drifts down at that
+  speed until it leaves; a rider is hit by any shot at ×1, never moves on to the ship, drops off stunned when its prey
+  dies and leaves as escaped when its prey leaves the screen); the hooks **`chase: {speed, turn_rate}`** (the speed new
+  beside the turn rate; a hook keeps `within` and `drift`) and `latch_slots`. A `laser-line`'s `line` may add
+  **`most_telegraphing`** (n: a due line waits while n lines of any unit telegraph, in pool order, its interval clock
+  waiting too; the Rail Bunker's 2).
+  M9 part G (Level 34; loaded and checked in step G1 by content's `EnemyData`, drawn from step G4; pending the user's
+  review in round 67): a unit's **`livery`** `{from_act, sprite, faction}` (presentation only, the simulation never
+  sees it): from act `from_act` on (2–7, after the act of the unit's first level) the game draws the unit from the
+  `sprite` set instead of its own (hull, turret, stub and wreck; the muzzle flash stays the unit's), the atlases give
+  the livery's frames only to that act's levels and the plain ones only to the levels before it, and the intel names
+  the unit's `faction` (`EnemyData.liverySprite(act)`, `factionIn(act)`; the Warden Tank's `warden-tank-asc`,
+  Jovian Ascendancy, from Act 5).
+- **M9 part H, a ringed boss's keys** (the [Iron Sovereign](../../../enemies/bosses/iron-sovereign/README.md), Level 35;
+  loaded and checked in step H1c by content's `EnemyData` (`RingBlock`), `RingRules` and `RingChecks`, flown from steps
+  H1a/H1b; the defaults pending the user's review in round 68). Angles: a ring's `start`, a step's `angle` and the bays'
+  `start` are ° clockwise on the screen from straight down; the fire arc's `clamp` is the boss doc's bearings (90°
+  straight down, clockwise from the right), mapped −90°. In the `boss` block: **`rings`** (outer first, at most 3: `name`,
+  `radius` px, `segments` (the game's hull pieces only), either `speed` °/s with `direction: cw|ccw` or **`step`**
+  (`angle` °, `seconds`, `hold` s, `tell` s inside the hold) with its `direction`, `start` ° (0 if not given: the first
+  battery straight down), **`batteries`** (`count`, `name` (the attack's if not given), `part` {`hp`, `box` `[w, h]`,
+  `bounty`}, `attack`: the boss attack they fire); the batteries are appended to the `part_list` as `destroyable` parts
+  named `<name>-1` … in ring order, at their mounts' rest places, so the bar, the phases' `exposes`, Rook and the looks
+  see them as parts), **`fire_arc`** (`degrees`, `clamp` `[min, max]` bearings), **`spin_up`** (s from the halt; 4),
+  **`grind`** (s; 2), **`speed_ups`** (the survivors' factors by the locked rings; `[1, 1.25, 1.5]`), **`cookoff`** (s
+  between the batteries' cook-offs at the death; 0.15) and **`core`** (`part`, `glow` s before each shut-core fan,
+  `opening` s untouchable as the phase exposing it starts, `shield` (its hex shield's HP under the enemy shield rule,
+  by the HP lever), `spiral` {`attack`, `run`, `rest`, `tell` s}, `rail` {`attack` (a `laser-line`), `below` (the core's
+  HP share under which it fires)}, `bays` {`count`, `radius` px, `start` °, `from` (the launched plain air unit),
+  `stream`, `every`, `gap`, `first` (s after the opening), `speed` (the unit's if not given), `spread` °, `straight` s,
+  `most_alive`, `tell` s, `skip_within` px}); a phase's **`until: {locks: n}`** (alone: the phase ends once n rings are
+  locked, in any order; rising, at most the rings, the last phase on its parts). An attack's **`from`** (a boss's only:
+  the unit's slug, or `{unit, attack, length}`): written with its `name`, `pattern` (the unit's: `aimed`, `laser-line`,
+  `laser-sweep`), `interval`, `staggered`, `rotate`, `parts`, `only` and nothing of the unit's shape, the loader takes
+  the bullet, speed, burst, homing, line or sweep from the unit's attack (a sweep at `length` px, without the unit's full
+  turn), and the unit's hooks change that shape per difficulty (the SAM Nest's burst and turn rate, the Rail Bunker's
+  telegraph, the Sentinel Tower's arc); a boss's `laser-line` is a rail line from its parts (`BossSpec.Pattern.LINE`,
+  `staggered` allowed). A boss attack's `only` leaves its phases on the other difficulties (the core rail's `[medium,
+  hard]`). The hook **`ring_arena`** (`speed` factor on the rings, a step's `seconds` divided by it; `arc` ° instead;
+  `interval` factor on the battery attacks' intervals instead of the fire-rate lever; an authored `attacks.<name>.interval`
+  stays final, as for a unit); the boss's `spawn_count` hook sizes the bays' streams. Checked: the arc 60–180° (each
+  difficulty's), each ring across the field (2 × radius + a battery ≤ 480; at the level's boss `x` both sides), its
+  battery attack a known one, a `laser-sweep` on a stepping ring only and its telegraph + sweep within the hold, each
+  battery a part of its own, the SAM hatch rule (a homing battery's `hatch` shorter than its staggered turn, interval ÷
+  batteries, on every difficulty), the core a part and no battery that a phase exposes, its spiral a `spiral`, its rail a
+  `laser-line`, its bays' unit a plain air unit and their tell between two streams; `locks`, `ring_arena` and `from`
+  only on a ringed boss (`from` on a boss).
 - **Allies** (`allies/data.yaml`): one entry per ally
   slug with `name`, `layer`, `size`, `hitbox`, `hp` (medium; the level sets difficulty variants),
   `damaged_by` (`objective_aimed`: only shots the target-the-objective hook aims at it;

@@ -1,0 +1,59 @@
+{
+ "source": "tools/art/l35_props.py (production art, M9 part H batch)",
+ "variant": "a",
+ "line": {
+  "strip": "mass-relay-line",
+  "tile_w": 32,
+  "rows": 6,
+  "frames_by_progress": 4
+ },
+ "glow": {
+  "sprite": "mass-relay-glow",
+  "x": 476,
+  "frames_by_progress": 4
+ },
+ "bolt": {
+  "strip": "mass-relay-bolt",
+  "tile_w": 32,
+  "rows": 24,
+  "band": 16,
+  "fps": 20,
+  "seconds": 0.2
+ },
+ "trail": {
+  "strip": "mass-relay-trail",
+  "tile_w": 32,
+  "rows": 24,
+  "fps": 10,
+  "seconds": 0.6
+ },
+ "flash": {
+  "colour": [
+   255,
+   236,
+   222
+  ],
+  "alpha": [
+   [
+    0.0,
+    0.55
+   ],
+   [
+    0.05,
+    0.4
+   ],
+   [
+    0.15,
+    0.0
+   ]
+  ]
+ },
+ "b": {
+  "slug": "mass-relay-slug",
+  "nose_x": 6,
+  "speed": 2400.0,
+  "fps": 20,
+  "rule": "the bolt strip only right of the nose (x > 480 - speed * s), then the trail"
+ },
+ "telegraph": 1.2
+}

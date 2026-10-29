@@ -52,7 +52,11 @@ import vanguard.sim.Sortie;
  * F: every move planned among the Glow Anglers' lunges and the jellies' rings, Level 26), {@link VentPlay} (M8 part G: every
  * move planned among the heat plumes, the Depth Hunters' torpedoes and the bullets, the relay beacons first, Level 27; M8
  * part H: Level 28's approach too), {@link MawPlay} and {@link RunPlay} (M8 part H: the Abyssal Maw's arena and the
- * cruisers' run, Level 28), {@link HoldFirePlay} (M9 part B: no shot at a neutral craft, Level 29) and the moves'
+ * cruisers' run, Level 28), {@link HoldFirePlay} (M9 part B: no shot at a neutral craft, Level 29), {@link TowerPlay}
+ * and {@link RoutePlay} (M9 part E: the Sentinel Towers' emitters, their notches, and the route through the forks, Level
+ * 32), {@link LeechPlay} (M9 part F: the Void Leeches' latches and the Rail Bunkers' lines, Level 33), {@link
+ * SalvagePlay} (M9 part G: the containers, the hold's clamps, the hidden crates and the story pickup, Level 34), {@link
+ * RingPlay} (M9 part H: the Iron Sovereign's rings, Level 35; the mass relay's line is {@link HazardPlay}'s) and the moves'
  * {@link MovePlanner}. It reads the sortie's state only, so it is deterministic; the recorded replay stores its commands. Public for the campaign tests (the
  * Act 1 playthrough, {@code ActPlaythroughTest}).
  */
@@ -149,6 +153,8 @@ public final class Autopilot {
      */
     public static int commands(Sortie sortie, ArenaPlay play, Channel channel) {
         int commands = pilot(sortie, play);
+        // M9 part H: off the mass relay's locked line in its telegraph (Level 35, HazardPlay).
+        commands = HazardPlay.relay(sortie, commands);
         if (sortie.groundAllies() && SiegePlay.rollThreat(sortie)) {
             // M7 part D: a wounded Shellback's roll would crush a dome: no shot at it until the dome is out of reach.
             commands &= ~Command.FIRE.bit();
@@ -161,13 +167,24 @@ public final class Autopilot {
             // M8 part G: the plumes' discs are VentPlay's own.
             commands = HazardPlay.ventFilter(sortie, commands);
         }
-        return sortie.terrain() == null ? commands : HazardPlay.canyon(sortie, commands, channel);
+        if (sortie.terrain() == null) {
+            return commands;
+        }
+        // M9 part E: a tower's notch (Level 32's gallery Sentinel, TowerPlay): into it under the tower, and out again.
+        commands = TowerPlay.move(sortie, commands);
+        return HazardPlay.canyon(sortie, commands, channel);
     }
 
     private static int pilot(Sortie sortie, ArenaPlay play) {
         double shipX = sortie.ship().x();
         double shipY = sortie.ship().y();
         int commands = Command.FIRE.bit();
+        if (LeechPlay.field(sortie)) {
+            // M9 part F: a level with power-draining latches (Level 33): the shake-off or the ride, the EMP, every
+            // other
+            // move planned among the bullets, the bodies, the rocks and the rail lines (LeechPlay).
+            return commands | LeechPlay.move(sortie);
+        }
         if (sortie.latched() > 0) {
             // M5 part F: a latched Lamprey drains the shield; shake it off at once (4 reversals within 1.2 s).
             boolean left = ((long) Math.floor(sortie.realSeconds() / SHAKE_SECONDS)) % 2 == 0;
@@ -179,6 +196,12 @@ public final class Autopilot {
             // the
             // lunge's column, the fan walls' gaps and the bullets.
             return commands | MawPlay.move(sortie, coiled);
+        }
+        SetPiece ringed = RingPlay.ringedBoss(sortie);
+        if (ringed != null) {
+            // M9 part H: the Iron Sovereign's rings (Level 35, RingPlay): every move planned among the bullets, the
+            // station's missiles, its rail lines, its sweeps' wedges and the bays, under the armed batteries first.
+            return commands | RingPlay.move(sortie, ringed);
         }
         if (RunPlay.running(sortie)) {
             // M8 part H: the cruisers' run (Level 28's finale, RunPlay): the free band, off the flak.
@@ -359,6 +382,14 @@ public final class Autopilot {
         if (shadow != null) {
             lowest = shadow;
         }
+        // M9 part E: a Sentinel Tower above it (Level 32, TowerPlay): under its emitter, before the air units.
+        Enemy tower = TowerPlay.target(sortie, shipY);
+        if (tower != null) {
+            // low, so the tower stays above it, in the beam's line, as long as possible (as a battery)
+            lowest = tower;
+            targetY = Math.min(targetY, TowerPlay.low(sortie));
+        }
+        double waiting = tower == null && TowerPlay.towers(sortie) ? TowerPlay.next(sortie) : Double.NaN;
         Enemy anchor = TargetPlay.gateAnchor(sortie, shipX, shipY);
         if (anchor != null) {
             // M7 part C: a gate's anchor before its tendril reaches the ship, holding low meanwhile (Level 16).
@@ -377,6 +408,10 @@ public final class Autopilot {
         }
         if (walker != null) {
             targetX = walker.renderX(1);
+        } else if (!Double.isNaN(waiting)) {
+            // M9 part E: under the next tower's x before it enters (TowerPlay).
+            targetX = waiting;
+            targetY = Math.min(targetY, TowerPlay.low(sortie));
         } else if (lowest != null) {
             targetX = overRig && lowest == rig ? TargetPlay.partsFirstX(rig) : lowest.renderX(1);
         } else {
@@ -414,6 +449,20 @@ public final class Autopilot {
             // Level 10's ferry hatch (2026-10-08: 50 HP): it lines up under it to shoot it open; M7 part C: Level 16's
             // relay hut (in the left channel; the rock keeps a pilot in the right one from it).
             targetX = cache.renderX();
+        }
+        if (behind == null && SalvagePlay.salvage(sortie)) {
+            // M9 part G: a salvage level (Level 34, SalvagePlay): the story pickup waited under and flown through, else
+            // the lowest container, hold clamp or hidden crate before the air units.
+            if (SalvagePlay.coreOut(sortie)) {
+                targetX = SalvagePlay.coreX(sortie);
+                targetY = SalvagePlay.coreY(sortie);
+            } else {
+                GroundObject salvage = SalvagePlay.target(sortie, shipY);
+                if (salvage != null) {
+                    targetX = salvage.renderX();
+                    targetY = SalvagePlay.targetY(salvage, targetY);
+                }
+            }
         }
         if (sortie.airEscort()) {
             targetX = Math.clamp(targetX, SIDE_LANE, PlayField.WIDTH - SIDE_LANE);

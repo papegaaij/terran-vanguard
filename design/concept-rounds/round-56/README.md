@@ -32,6 +32,8 @@ Micro-Missile Pods L2, Sonar Pulse) and Level 24 with `front=ion-beam:3,generato
 Closed 2026-10-24: everything accepted as built (C.3: the beam may still clear Level 26, the units kept as they are);
 Q.1 yes, built in step FX (the strip `UNDER WATER · BULLETS ×0.7 · BEAMS ×0.2 · TORPEDOES +50 %`).
 
+Record of the decisions: [review.html](review.html)
+
 ## Art
 
 | # | Part | What is proposed | Review files | Weak spots (Claude) | Answer | Outcome |

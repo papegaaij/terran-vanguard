@@ -70,6 +70,10 @@ final class SortieHash {
             // M8 part H: only in a level with the cruisers' run.
             s.cruisers.addTo(hash);
         }
+        if (s.relay != null) {
+            // M9 part H, step H1b: only in a level with the mass relay's flash.
+            s.relay.addTo(hash);
+        }
         if (s.force.chains().size() > 0) {
             Pools.addAll(hash, s.force.chains());
         }
@@ -161,6 +165,15 @@ final class SortieHash {
         }
         if (s.rides != null) {
             s.rides.addTo(hash);
+        }
+        if (s.forks != null) {
+            // M9 part E: only in a level with forks, so the other levels hash as before.
+            s.forks.addTo(hash);
+        }
+        if (s.story != null) {
+            // M9 part G: only in a level with a story pickup, so the other levels hash as before.
+            s.story.addTo(hash);
+            s.groundPasses.addStoryTo(hash);
         }
         s.escorts.swap.addTo(hash, s.bulwark);
         // M8 part E: only in a level with a ring unit, so the other levels hash as before.

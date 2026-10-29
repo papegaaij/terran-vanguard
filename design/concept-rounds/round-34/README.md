@@ -48,6 +48,10 @@ per level and one for part I, each in the same order:
 
 Read the two boxes first: what changed in **approved** specs, and the problems still open.
 
+## Review
+
+Record of the decisions: [review.html](review.html)
+
 ## Changes to approved specs
 
 Approved parts of the design (the Acts 1–2 review of 2026-10-01 and the user's later rules) that the

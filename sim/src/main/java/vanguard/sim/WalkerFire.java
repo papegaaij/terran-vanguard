@@ -66,7 +66,8 @@ final class WalkerFire {
             return;
         }
         boolean fan = enemy.volleyGroup() >= 0 ? enemy.staggeredVolley(volleyClocks) : enemy.trigger();
-        boolean spit = enemy.spit(ship.x(), ship.y());
+        // M9 part E: a quiet second attack (the Strider's pod gone, or it topples) waits; earlier walkers never are.
+        boolean spit = !enemy.spitQuiet() && enemy.spit(ship.x(), ship.y());
         if (enemy.landedNow()) {
             events.add(SimEvents.Type.POUNCE_LANDED, enemy.x(), enemy.y(), enemy.kind());
         }
@@ -107,12 +108,51 @@ final class WalkerFire {
                         enemy.frame());
             }
         }
-        if (spit) {
+        if (spit
+                && enemy.spec()
+                        .walker()
+                        .orElseThrow()
+                        .spit()
+                        .orElseThrow()
+                        .homing()
+                        .isPresent()) {
+            // M9 part E (design/enemies/ground/strider, the shoulder pod): a homing salvo at the ship.
+            salvo(enemy, enemy.spec().walker().get().spit().get(), ship);
+        } else if (spit) {
             EnemyGun gun = enemy.spec().walker().orElseThrow().spit().orElseThrow();
             int target = objectiveHook.mode(enemy.kind()) == HookMode.NEAREST
                     ? objectiveHook.convoy().nearest(enemy.x(), enemy.y(), ship.x(), ship.y())
                     : -1;
             guns.fire(enemy.x(), enemy.y(), gun, false, 0, ship, target, false, enemy.frame());
         }
+    }
+
+    /**
+     * M9 part E (design/enemies/ground/strider): a walker's homing salvo from its pod (its second attack): {@code gun}'s
+     * {@link EnemyGun#burst()} missiles at once from the pod (its part carrying the attack, else its centre), launched
+     * along the bearing to the ship spread {@link EnemyGun#spreadRadians()} apart, each under the gun's cap.
+     */
+    private void salvo(Enemy enemy, EnemyGun gun, Ship ship) {
+        int pod = podOf(enemy);
+        double x = pod < 0 ? enemy.x() : enemy.partX(pod);
+        double y = pod < 0 ? enemy.y() : enemy.partY(pod);
+        double bearing = Enemy.heading(ship.x() - x, ship.y() - y);
+        int count = gun.burst();
+        for (int k = 0; k < count; k++) {
+            double heading = bearing + (k - (count - 1) / 2.0) * gun.spreadRadians();
+            if (guns.missiles().launchAlong(x, y, gun, heading, enemy.serial())) {
+                events.add(SimEvents.Type.ENEMY_FIRED, x, y, (int) gun.damage());
+            }
+        }
+    }
+
+    /** The part carrying a walker's second attack (its pod), -1 for none. */
+    private static int podOf(Enemy enemy) {
+        for (int p = 0; p < enemy.partCount(); p++) {
+            if (enemy.spec().parts().get(p).silencesSpit()) {
+                return p;
+            }
+        }
+        return -1;
     }
 }

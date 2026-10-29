@@ -1,0 +1,460 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Round 46: record of the decisions</title><style>
+:root{--bg:#f4f5f7;--fg:#1b2230;--mut:#5a6577;--card:#fff;--line:#d3d9e2;--acc:#1f5fa8;--ok:#1d6b3a;--okbg:#e3f3e8;
+--hi:#fff6dc;--hib:#d9b84a;--code:#e9edf3;--warn:#8a4b00}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10141b;--fg:#dde3ee;--mut:#98a3b6;--card:#171d27;
+--line:#2c3544;--acc:#7fb2ee;--ok:#7bd69a;--okbg:#163323;--hi:#2c2610;--hib:#8a7424;--code:#232c3a;--warn:#e3a35a;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#10141b;--fg:#dde3ee;--mut:#98a3b6;--card:#171d27;--line:#2c3544;--acc:#7fb2ee;--ok:#7bd69a;
+--okbg:#163323;--hi:#2c2610;--hib:#8a7424;--code:#232c3a;--warn:#e3a35a;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:60rem;margin:0 auto;padding:1rem 16px 4rem}
+h1{font-size:1.6rem;margin:.5rem 0}h2{font-size:1.25rem;margin:2rem 0 .5rem;border-bottom:1px solid var(--line);padding-bottom:.25rem}
+h3{font-size:1.02rem;margin:0;flex:1 1 12rem}a{color:var(--acc)}
+.sum{color:var(--mut)}.note{font-size:.9rem;color:var(--mut)}
+nav.sec{display:flex;flex-wrap:wrap;gap:.4rem;margin:1rem 0}nav.sec a{padding:.2rem .6rem;border:1px solid var(--line);border-radius:1rem;
+text-decoration:none;font-size:.9rem;background:var(--card)}
+.row{background:var(--card);border:1px solid var(--line);border-radius:.4rem;padding:.7rem .9rem;margin:.7rem 0;overflow-wrap:anywhere}
+.row header{display:flex;flex-wrap:wrap;gap:.3rem .6rem;align-items:baseline}
+.rid{font:600 .85rem ui-monospace,Menlo,Consolas,monospace;background:var(--code);padding:.05rem .4rem;border-radius:.25rem}
+.kind{font-size:.8rem;color:var(--mut)}.part{font-size:.88rem;margin:.2rem 0}
+.q,.weak,.rec,.sub,.line,dl{font-size:.92rem;margin:.45rem 0}.weak{color:var(--warn)}
+code{background:var(--code);padding:0 .25rem;border-radius:.2rem;font-size:.88em}
+.tag{font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;color:var(--mut);font-weight:700;margin-right:.3rem}
+.ans{margin:.5rem 0 0;padding:.45rem .6rem;border-left:4px solid var(--hib);background:var(--hi);border-radius:.2rem}
+.ans.out{border-left-color:var(--ok)}.ans.none{opacity:.7}
+.badge{font-size:.75rem;font-weight:700;padding:.05rem .4rem;border-radius:.6rem;background:var(--okbg);color:var(--ok)}
+.badge.pick{background:var(--hi);color:var(--warn);border:1px solid var(--hib)}
+dl{display:grid;grid-template-columns:7rem 1fr;gap:.2rem .6rem}dt{font-weight:700}dd{margin:0}
+.media{display:flex;flex-wrap:wrap;gap:.5rem;margin:.5rem 0}.m{margin:0;max-width:100%}.m figcaption{font-size:.75rem;color:var(--mut)}
+.m.img img{max-width:14rem;max-height:10rem;border:1px solid var(--line);border-radius:.2rem;background:#000;display:block}
+.m.vid video{width:14rem;max-width:100%}.m.aud audio{width:16rem;max-width:100%}.miss{color:var(--warn)}
+details{margin:.4rem 0;font-size:.9rem}summary{cursor:pointer;color:var(--acc)}
+.listen{font-size:.85rem;color:var(--mut);margin:.3rem 0;padding-left:1.2rem}.opts{color:var(--mut)}
+.sub{padding-left:.6rem;border-left:2px solid var(--line)}
+table{border-collapse:collapse;display:block;overflow-x:auto}td,th{border:1px solid var(--line);padding:.2rem .4rem}
+blockquote{margin:.4rem 0;padding-left:.8rem;border-left:3px solid var(--line)}
+@media (max-width:480px){dl{grid-template-columns:1fr}.m.img img{max-width:100%}}
+</style></head><body><main><p class="note"><a href="README.md">Round 46 README</a> · <a href="../README.md">All rounds</a> · built 2026-10-20 · recorded by <code>tools/concept/review_record.py 46</code></p><h1>Concept round 46: record of the decisions</h1><div class="sum"><p>Your rule of 2026-10-20: <strong>ask only about artwork, sounds, boss fights and important game concepts.</strong> This round holds two things:</p><ol><li><strong>Sounds</strong> (<code>J</code> and <code>K</code> rows, 42 subjects). You said the synthesized sounds are horrible for "explosions, fire, turrets, hits, etc. Everything that needs to sound somewhat accurate", and that the Ghost Drone sounds are "pling plong on a xylophone". Each subject has two variants <strong>a</strong> and <strong>b</strong> built from Freesound recordings (CC0 or CC-BY only, credits in <span class="ref">CREDITS.md</span>), playable next to the <strong>old</strong> file the game uses now. Answer per row: a, b, or redo (say why). Nothing is in <code>assets/</code> yet; the picks move there when you answer. Where one variant is clearly better I say so; otherwise I have no recommendation, because I cannot listen. The Freesound daily download quota ran out during the work, so a redo can start tomorrow at the earliest.</li><li><strong>The GitHub README</strong> (<code>R</code> rows): you found the start of the README not very inviting. A draft with a hero GIF, eight screenshots and a feature list, to use as drafted or change. <strong>No GitHub release exists yet</strong>, so the draft's Download link points to an empty page until the first <code>v*</code> tag.</li></ol><p>Pickups, UI sounds, pings, jingles and music were not touched.</p></div><p class="note">A read-only record: every row as the review page showed it, with the answer and the outcome from the round README (the record of truth). Media is linked from the design tree, not copied.</p><nav class="sec"><a href="#s-sounds-act-3-enemies">Sounds: Act 3 enemies</a><a href="#s-sounds-beds-rare-sounds-and-player-gear">Sounds: beds, rare sounds and player gear</a><a href="#s-the-github-readme">The GitHub README</a></nav><section id="s-sounds-act-3-enemies"><h2>Sounds: Act 3 enemies</h2>
+<article class="row" id="r-J.1">
+<header><span class="rid">J.1</span><h3>ghost-drone-drop</h3><span class="kind">Ghost Drone drop into its lane</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">ghost-drone-drop</a></div>
+<div class="q"><strong>Ghost Drone drop into its lane (L18, L19).</strong> <strong>a</strong>: a jet's turbine whine passing, its speed gliding down from 1.3 to 0.8 (CC0). <strong>b</strong>: a Eurofighter's close flyby, its speed gliding down from 1.25 to 0.8 (CC-BY 4.0). No recommendation (I cannot listen; both are real recordings).</div>
+<div class="media"><figure class="m aud"><figcaption>old (in the game now)</figcaption><audio controls preload="none" src="../../audio/sfx/concept/ghost-drone-drop-r41-a.ogg"></audio></figure><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/ghost-drone-drop-r46-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/ghost-drone-drop-r46-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the weakest subject of the batch: both are jet flybys (the database has no falling turbine whine), so a redo may be the honest answer</p>
+<div class="ans"><span class="tag">Answer</span> <span>b</span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: <strong>b</strong> picked</span></div>
+</article>
+<article class="row" id="r-J.2">
+<header><span class="rid">J.2</span><h3>ghost-drone-glint</h3><span class="kind">Ghost Drone&#x27;s targeting glint.</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">ghost-drone-glint</a></div>
+<div class="q"><strong>Ghost Drone's targeting glint.</strong> <strong>a</strong>: an electric relay latching (two dry clicks) (CC0). <strong>b</strong>: a camera shutter's two clicks with a rifle's bolt release under them (CC-BY 4.0). No recommendation (I cannot listen; both are real recordings).</div>
+<div class="media"><figure class="m aud"><figcaption>old (in the game now)</figcaption><audio controls preload="none" src="../../audio/sfx/concept/ghost-drone-glint-r41-a.ogg"></audio></figure><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/ghost-drone-glint-r46-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/ghost-drone-glint-r46-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> a is quiet (levelled at -32 dB)</p>
+<div class="ans"><span class="tag">Answer</span> <span>b</span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: <strong>b</strong> picked</span></div>
+</article>
+<article class="row" id="r-J.3">
+<header><span class="rid">J.3</span><h3>ghost-drone-burst</h3><span class="kind">Ghost Drone&#x27;s three-shot burst.</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">ghost-drone-burst</a></div>
+<div class="q"><strong>Ghost Drone's three-shot burst.</strong> <strong>a</strong>: an M16's three-round burst (shots 0.14 s apart) (CC0). <strong>b</strong>: an automatic rifle's three-shot burst (shots 0.1 s apart) (CC0). <strong>Recommendation: a (b is the weaker one)</strong></div>
+<div class="media"><figure class="m aud"><figcaption>old (in the game now)</figcaption><audio controls preload="none" src="../../audio/sfx/concept/ghost-drone-burst-r41-a.ogg"></audio></figure><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/ghost-drone-burst-r46-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/ghost-drone-burst-r46-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> b is the weaker variant</p>
+<div class="ans"><span class="tag">Answer</span> <span>a</span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: <strong>a</strong> picked</span></div>
+</article>
+<article class="row" id="r-J.4">
+<header><span class="rid">J.4</span><h3>ghost-drone-death</h3><span class="kind">Ghost Drone death.</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">ghost-drone-death</a></div>
+<div class="q"><strong>Ghost Drone death.</strong> <strong>a</strong>: Freesound (CC0, CC-BY 4.0, <span class="ref">CREDITS.md</span>) — <code>ghost-drone-death</code> a: a dry bang and a heavy metal crunch, a burst of sparks and parts falling (). <strong>b</strong>: Freesound (CC0, CC-BY 4.0, <span class="ref">CREDITS.md</span>) — <code>ghost-drone-death</code> b: a metal crash, a real quadcopter hitting a wall and falling, smashed debris and sparks (). No recommendation (I cannot listen; both are real recordings).</div>
+<div class="media"><figure class="m aud"><figcaption>old (in the game now)</figcaption><audio controls preload="none" src="../../audio/sfx/concept/ghost-drone-death-r41-a.ogg"></audio></figure><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/ghost-drone-death-r46-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/ghost-drone-death-r46-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> none noted</p>
+<div class="ans"><span class="tag">Answer</span> <span>b</span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: <strong>b</strong> picked</span></div>
+</article>
+<article class="row" id="r-J.5">
+<header><span class="rid">J.5</span><h3>devil-spin</h3><span class="kind">Dust Devil spin loop.</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">devil-spin</a></div>
+<div class="q"><strong>Dust Devil spin loop.</strong> <strong>a</strong>: Freesound (CC-BY 4.0, CC0, <span class="ref">CREDITS.md</span>) — <code>devil-spin</code> a: inside a tornado (a steady whirling roar) with a sandstorm's grit (). <strong>b</strong>: Freesound (CC0, CC-BY 3.0, <span class="ref">CREDITS.md</span>) — <code>devil-spin</code> b: a tornado through a squeaking metal structure, sand flowing (). No recommendation (I cannot listen; both are real recordings).</div>
+<div class="media"><figure class="m aud"><figcaption>old (in the game now)</figcaption><audio controls preload="none" src="../../audio/sfx/concept/devil-spin-r41-a.ogg"></audio></figure><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/devil-spin-r46-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/devil-spin-r46-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> none noted</p>
+<div class="ans"><span class="tag">Answer</span> <span>a</span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: <strong>a</strong> picked</span></div>
+</article>
+<article class="row" id="r-J.6">
+<header><span class="rid">J.6</span><h3>devil-open</h3><span class="kind">Dust Devil opening.</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">devil-open</a></div>
+<div class="q"><strong>Dust Devil opening.</strong> <strong>a</strong>: a gust swelling in over a heavy stone door grinding open (its hollow resonance) (CC0). <strong>b</strong>: Freesound (CC0, CC-BY 4.0, <span class="ref">CREDITS.md</span>) — <code>devil-open</code> b: a powerful whoosh with stone dragging on stone (). No recommendation (I cannot listen; both are real recordings).</div>
+<div class="media"><figure class="m aud"><figcaption>old (in the game now)</figcaption><audio controls preload="none" src="../../audio/sfx/concept/devil-open-r41-a.ogg"></audio></figure><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/devil-open-r46-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/devil-open-r46-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> none noted</p>
+<div class="ans"><span class="tag">Answer</span> <span>a</span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: <strong>a</strong> picked</span></div>
+</article>
+<article class="row" id="r-J.7">
+<header><span class="rid">J.7</span><h3>devil-spiral</h3><span class="kind">Dust Devil spiral shot.</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">devil-spiral</a></div>
+<div class="q"><strong>Dust Devil spiral shot.</strong> <strong>a</strong>: a throw of dust with sand sliding off a shovel (CC0). <strong>b</strong>: a big swoosh with sand pouring (CC0). No recommendation (I cannot listen; both are real recordings).</div>
+<div class="media"><figure class="m aud"><figcaption>old (in the game now)</figcaption><audio controls preload="none" src="../../audio/sfx/concept/devil-spiral-r41-a.ogg"></audio></figure><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/devil-spiral-r46-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/devil-spiral-r46-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> none noted</p>
+<div class="ans"><span class="tag">Answer</span> <span>a</span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: <strong>a</strong> picked</span></div>
+</article>
+<article class="row" id="r-J.8">
+<header><span class="rid">J.8</span><h3>shellback-curl</h3><span class="kind">Shellback curling up.</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">shellback-curl</a></div>
+<div class="q"><strong>Shellback curling up.</strong> <strong>a</strong>: Freesound (CC-BY 4.0, CC0, <span class="ref">CREDITS.md</span>) — <code>shellback-curl</code> a: stone dragging on stone, closing on a heavy stone clack (). <strong>b</strong>: a heavy stone grind, closing on a stone-on-stone knock (CC-BY 4.0). No recommendation (I cannot listen; both are real recordings).</div>
+<div class="media"><figure class="m aud"><figcaption>old (in the game now)</figcaption><audio controls preload="none" src="../../audio/sfx/concept/shellback-curl-r40-a.ogg"></audio></figure><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/shellback-curl-r46-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/shellback-curl-r46-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> none noted</p>
+<div class="ans"><span class="tag">Answer</span> <span>b</span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: <strong>b</strong> picked</span></div>
+</article>
+<article class="row" id="r-J.9">
+<header><span class="rid">J.9</span><h3>shellback-uncurl</h3><span class="kind">Shellback uncurling.</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">shellback-uncurl</a></div>
+<div class="q"><strong>Shellback uncurling.</strong> <strong>a</strong>: Freesound (CC-BY 4.0, CC0, <span class="ref">CREDITS.md</span>) — <code>shellback-uncurl</code> a: stone dragging open, a loose stone clack and sand pouring off (). <strong>b</strong>: a heavy stone door grinding open, a stone clack and sand sliding off (CC0). No recommendation (I cannot listen; both are real recordings).</div>
+<div class="media"><figure class="m aud"><figcaption>old (in the game now)</figcaption><audio controls preload="none" src="../../audio/sfx/concept/shellback-uncurl-r40-a.ogg"></audio></figure><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/shellback-uncurl-r46-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/shellback-uncurl-r46-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> none noted</p>
+<div class="ans"><span class="tag">Answer</span> <span>b</span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: <strong>b</strong> picked</span></div>
+</article>
+<article class="row" id="r-J.10">
+<header><span class="rid">J.10</span><h3>shellback-roll</h3><span class="kind">Shellback roll.</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">shellback-roll</a></div>
+<div class="q"><strong>Shellback roll.</strong> <strong>a</strong>: Freesound (CC-BY 4.0, CC0, <span class="ref">CREDITS.md</span>) — <code>shellback-roll</code> a: a boulder rolling with gravel falling (). <strong>b</strong>: a large low rumble with stone dragging on stone (CC-BY 4.0). No recommendation (I cannot listen; both are real recordings).</div>
+<div class="media"><figure class="m aud"><figcaption>old (in the game now)</figcaption><audio controls preload="none" src="../../audio/sfx/concept/shellback-roll-r40-a.ogg"></audio></figure><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/shellback-roll-r46-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/shellback-roll-r46-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> none noted</p>
+<div class="ans"><span class="tag">Answer</span> <span>b</span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: <strong>b</strong> picked</span></div>
+</article>
+<article class="row" id="r-J.11">
+<header><span class="rid">J.11</span><h3>shellback-lob</h3><span class="kind">Shellback&#x27;s lobbed shell.</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">shellback-lob</a></div>
+<div class="q"><strong>Shellback's lobbed shell.</strong> <strong>a</strong>: Freesound (CC-BY 4.0, CC0, <span class="ref">CREDITS.md</span>) — <code>shellback-lob</code> a: a real M224 mortar firing, slowed to 0.85, with a pressure hiss (). <strong>b</strong>: a 120 mm mortar shot, slowed to 0.8, with a pressure hiss (CC0). No recommendation (I cannot listen; both are real recordings).</div>
+<div class="media"><figure class="m aud"><figcaption>old (in the game now)</figcaption><audio controls preload="none" src="../../audio/sfx/concept/shellback-lob-r40-a.ogg"></audio></figure><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/shellback-lob-r46-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/shellback-lob-r46-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> none noted</p>
+<div class="ans"><span class="tag">Answer</span> <span>b</span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: <strong>b</strong> picked</span></div>
+</article>
+<article class="row" id="r-J.12">
+<header><span class="rid">J.12</span><h3>shellback-walk</h3><span class="kind">Shellback walk.</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">shellback-walk</a></div>
+<div class="q"><strong>Shellback walk.</strong> <strong>a</strong>: Freesound (CC-BY 3.0, CC0, <span class="ref">CREDITS.md</span>) — <code>shellback-walk</code> a: a big creature's footsteps (two to a loop) with stones clacking (). <strong>b</strong>: a monster's heavy stomps (two to a loop) with stone knocking on stone (CC-BY 4.0). No recommendation (I cannot listen; both are real recordings).</div>
+<div class="media"><figure class="m aud"><figcaption>old (in the game now)</figcaption><audio controls preload="none" src="../../audio/sfx/concept/shellback-walk-r40-a.ogg"></audio></figure><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/shellback-walk-r46-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/shellback-walk-r46-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> none noted</p>
+<div class="ans"><span class="tag">Answer</span> <span>b</span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: <strong>b</strong> picked</span></div>
+</article>
+<article class="row" id="r-J.13">
+<header><span class="rid">J.13</span><h3>crawler-walk</h3><span class="kind">Threadcrawler walk loop.</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">crawler-walk</a></div>
+<div class="q"><strong>Threadcrawler walk loop.</strong> <strong>a</strong>: fingers tapping like bug legs (a dense skitter) over gravel (CC0). <strong>b</strong>: a crab walking, slowed to 0.85, over the tapping legs (CC0). No recommendation (I cannot listen; both are real recordings).</div>
+<div class="media"><figure class="m aud"><figcaption>old (in the game now)</figcaption><audio controls preload="none" src="../../audio/sfx/concept/crawler-walk-r39-a.ogg"></audio></figure><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/crawler-walk-r46-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/crawler-walk-r46-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> none noted</p>
+<div class="ans"><span class="tag">Answer</span> <span>a</span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: <strong>a</strong> picked</span></div>
+</article>
+<article class="row" id="r-J.14">
+<header><span class="rid">J.14</span><h3>tendril-hum</h3><span class="kind">Tendril hum loop.</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">tendril-hum</a></div>
+<div class="q"><strong>Tendril hum loop.</strong> <strong>a</strong>: an electric transformer's hum in a large room with high-voltage lines buzzing (CC0). <strong>b</strong>: Freesound (CC-BY 4.0, CC0, <span class="ref">CREDITS.md</span>) — <code>tendril-hum</code> b: a power pylon's buzz with high-voltage lines crackling (). No recommendation (I cannot listen; both are real recordings).</div>
+<div class="media"><figure class="m aud"><figcaption>old (in the game now)</figcaption><audio controls preload="none" src="../../audio/sfx/concept/tendril-hum-r39-a.ogg"></audio></figure><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/tendril-hum-r46-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/tendril-hum-r46-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> none noted</p>
+<div class="ans"><span class="tag">Answer</span> <span>redo (the user: "Keep the old one, it's fine" (the old tendril hum stays; both r46 variants rejected))</span></div><div class="ans out"><span class="tag">Outcome</span> <span>redo, next round</span></div>
+</article>
+<article class="row" id="r-J.15">
+<header><span class="rid">J.15</span><h3>tendril-burn</h3><span class="kind">Tendril burn.</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">tendril-burn</a></div>
+<div class="q"><strong>Tendril burn.</strong> <strong>a</strong>: an electric welder's crackle (CC0). <strong>b</strong>: Freesound (CC0, CC-BY 4.0, <span class="ref">CREDITS.md</span>) — <code>tendril-burn</code> b: a TIG welder's hiss with electric sparks (). No recommendation (I cannot listen; both are real recordings).</div>
+<div class="media"><figure class="m aud"><figcaption>old (in the game now)</figcaption><audio controls preload="none" src="../../audio/sfx/concept/tendril-burn-r39-a.ogg"></audio></figure><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/tendril-burn-r46-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/tendril-burn-r46-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> none noted</p>
+<div class="ans"><span class="tag">Answer</span> <span>a</span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: <strong>a</strong> picked</span></div>
+</article>
+<article class="row" id="r-J.16">
+<header><span class="rid">J.16</span><h3>tendril-break</h3><span class="kind">Tendril break.</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">tendril-break</a></div>
+<div class="q"><strong>Tendril break.</strong> <strong>a</strong>: Freesound (CC-BY 4.0, CC0, <span class="ref">CREDITS.md</span>) — <code>tendril-break</code> a: a whip crack and a motor winding down, its speed gliding from 1.4 to 0.6 (). <strong>b</strong>: Freesound (CC-BY 4.0, CC0, <span class="ref">CREDITS.md</span>) — <code>tendril-break</code> b: a cable snapping with a whip crack, a fan slowing to a stop, its speed gliding from 2 to 0.8 (). No recommendation (I cannot listen; both are real recordings).</div>
+<div class="media"><figure class="m aud"><figcaption>old (in the game now)</figcaption><audio controls preload="none" src="../../audio/sfx/concept/tendril-break-r39-a.ogg"></audio></figure><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/tendril-break-r46-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/tendril-break-r46-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> none noted</p>
+<div class="ans"><span class="tag">Answer</span> <span>b</span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: <strong>b</strong> picked</span></div>
+</article>
+<article class="row" id="r-J.17">
+<header><span class="rid">J.17</span><h3>burrow-dive</h3><span class="kind">Burrower dive.</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">burrow-dive</a></div>
+<div class="q"><strong>Burrower dive.</strong> <strong>a</strong>: sand sliding off a shovel, its speed gliding down from 1 to 0.75 (CC0). <strong>b</strong>: sand sliding on metal, gliding down, with sand pouring (CC0). No recommendation (I cannot listen; both are real recordings).</div>
+<div class="media"><figure class="m aud"><figcaption>old (in the game now)</figcaption><audio controls preload="none" src="../../audio/sfx/concept/burrow-dive-r38-b.ogg"></audio></figure><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/burrow-dive-r46-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/burrow-dive-r46-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> none noted</p>
+<div class="ans"><span class="tag">Answer</span> <span>a</span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: <strong>a</strong> picked</span></div>
+</article>
+<article class="row" id="r-J.18">
+<header><span class="rid">J.18</span><h3>herald-song</h3><span class="kind">Choir Herald song loop.</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">herald-song</a></div>
+<div class="q"><strong>Choir Herald song loop.</strong> <strong>a</strong>: a short choir's 'aah', slowed to 0.85 (darker) (CC0). <strong>b</strong>: a choir's chord changing, a low throat chant under it (CC0). No recommendation (I cannot listen; both are real recordings).</div>
+<div class="media"><figure class="m aud"><figcaption>old (in the game now)</figcaption><audio controls preload="none" src="../../audio/sfx/concept/herald-song-r40-a.ogg"></audio></figure><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/herald-song-r46-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/herald-song-r46-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> none noted</p>
+<div class="ans"><span class="tag">Answer</span> <span>redo (the user: "Also explain what this is supposed to sound like")</span></div><div class="ans out"><span class="tag">Outcome</span> <span>redo, next round</span></div>
+</article>
+<article class="row" id="r-J.19">
+<header><span class="rid">J.19</span><h3>herald-aura</h3><span class="kind">Choir Herald aura loop.</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">herald-aura</a></div>
+<div class="q"><strong>Choir Herald aura loop.</strong> <strong>a</strong>: an ethereal choir drone, high-passed at 1.5 kHz (CC-BY 4.0). <strong>b</strong>: a choir's held chord, high-passed at 1.5 kHz (CC0). No recommendation (I cannot listen; both are real recordings).</div>
+<div class="media"><figure class="m aud"><figcaption>old (in the game now)</figcaption><audio controls preload="none" src="../../audio/sfx/concept/herald-aura-r40-a.ogg"></audio></figure><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/herald-aura-r46-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/herald-aura-r46-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> none noted</p>
+<div class="ans"><span class="tag">Answer</span> <span>b</span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: <strong>b</strong> picked</span></div>
+</article>
+<article class="row" id="r-J.20">
+<header><span class="rid">J.20</span><h3>aura-absorb</h3><span class="kind">Choir Herald aura absorbing a hit.</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">aura-absorb</a></div>
+<div class="q"><strong>Choir Herald aura absorbing a hit.</strong> <strong>a</strong>: a burst of electric sparks over a muffled metal punch (CC-BY 4.0). <strong>b</strong>: Freesound (CC0, CC-BY 4.0, <span class="ref">CREDITS.md</span>) — <code>aura-absorb</code> b: a force field's hit with a crackle of sparks over a muffled punch (). No recommendation (I cannot listen; both are real recordings).</div>
+<div class="media"><figure class="m aud"><figcaption>old (in the game now)</figcaption><audio controls preload="none" src="../../audio/sfx/concept/aura-absorb-r40-a.ogg"></audio></figure><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/aura-absorb-r46-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/aura-absorb-r46-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> none noted</p>
+<div class="ans"><span class="tag">Answer</span> <span>b</span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: <strong>b</strong> picked</span></div>
+</article>
+<article class="row" id="r-J.21">
+<header><span class="rid">J.21</span><h3>walker-stomp</h3><span class="kind">Revenant Walker stomp.</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">walker-stomp</a></div>
+<div class="q"><strong>Revenant Walker stomp.</strong> <strong>a</strong>: Freesound (CC0, CC-BY 4.0, <span class="ref">CREDITS.md</span>) — <code>walker-stomp</code> a: a big robot's footstep with a bus door's hydraulic hiss (). <strong>b</strong>: a mech's step and its servo, a pressure hiss (CC0). No recommendation (I cannot listen; both are real recordings).</div>
+<div class="media"><figure class="m aud"><figcaption>old (in the game now)</figcaption><audio controls preload="none" src="../../audio/sfx/concept/walker-stomp-r42-a.ogg"></audio></figure><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/walker-stomp-r46-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/walker-stomp-r46-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> none noted</p>
+<div class="ans"><span class="tag">Answer</span> <span>a</span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: <strong>a</strong> picked</span></div>
+</article>
+<article class="row" id="r-J.22">
+<header><span class="rid">J.22</span><h3>tank-death</h3><span class="kind">Tank death.</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">tank-death</a></div>
+<div class="q"><strong>Tank death.</strong> <strong>a</strong>: a real military explosive, a large metal vehicle crashing and a flame burst (CC0). <strong>b</strong>: Freesound (CC0, CC-BY 4.0, <span class="ref">CREDITS.md</span>) — <code>tank-death</code> b: a large explosion with debris, a metal crash, fire roaring out, metal wreckage (). No recommendation (I cannot listen; both are real recordings).</div>
+<div class="media"><figure class="m aud"><figcaption>old (in the game now)</figcaption><audio controls preload="none" src="../../audio/sfx/concept/tank-death-r42-a.ogg"></audio></figure><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/tank-death-r46-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/tank-death-r46-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> none noted</p>
+<div class="ans"><span class="tag">Answer</span> <span>a</span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: <strong>a</strong> picked</span></div>
+</article>
+</section>
+<section id="s-sounds-beds-rare-sounds-and-player-gear"><h2>Sounds: beds, rare sounds and player gear</h2>
+<article class="row" id="r-K.1">
+<header><span class="rid">K.1</span><h3>canopy-hum</h3><span class="kind">Level 14 bed</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">canopy-hum</a></div>
+<div class="q"><strong>Level 14 bed (the canopy over the megacity).</strong> <strong>a</strong>: a deep time-stretched voice drone (the living canopy), slowed to 0.85, over a large basement's deep furnace hum (CC0). <strong>b</strong>: Freesound (CC-BY 4.0, CC0, <span class="ref">CREDITS.md</span>) — <code>canopy-hum</code> b: wind humming and howling in power lines, slowed to 0.7, over a transformer's hum in a large room (). No recommendation (I cannot listen; both are real recordings).</div>
+<div class="media"><figure class="m aud"><figcaption>old (in the game now)</figcaption><audio controls preload="none" src="../../audio/sfx/concept/canopy-hum-r36-a.ogg"></audio></figure><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/canopy-hum-r46-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/canopy-hum-r46-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> a: its layer is a designed voice drone from the database, not a field recording; very bass-heavy (it hits the loudness ceiling first, band RMS ≈ −48 dB)</p>
+<div class="ans"><span class="tag">Answer</span> <span>a</span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: <strong>a</strong> picked</span></div>
+</article>
+<article class="row" id="r-K.2">
+<header><span class="rid">K.2</span><h3>mars-canyon</h3><span class="kind">Level 16 bed</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">mars-canyon</a></div>
+<div class="q"><strong>Level 16 bed (Mars canyon).</strong> <strong>a</strong>: a low wind in a desert canyon with a moaning whistling wind howling through it (CC0). <strong>b</strong>: Freesound (CC-BY 4.0, CC0, <span class="ref">CREDITS.md</span>) — <code>mars-canyon</code> b: a howling wind over a sandstorm's grit (). No recommendation (I cannot listen; both are real recordings).</div>
+<div class="media"><figure class="m aud"><figcaption>old (in the game now)</figcaption><audio controls preload="none" src="../../audio/sfx/concept/mars-canyon-r39-a.ogg"></audio></figure><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/mars-canyon-r46-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/mars-canyon-r46-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> none noted</p>
+<div class="ans"><span class="tag">Answer</span> <span>a</span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: <strong>a</strong> picked</span></div>
+</article>
+<article class="row" id="r-K.3">
+<header><span class="rid">K.3</span><h3>mars-colony</h3><span class="kind">Level 17 bed</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">mars-colony</a></div>
+<div class="q"><strong>Level 17 bed (the dome colony).</strong> <strong>a</strong>: an open plain's wind, an underground ventilation plant's hum and a distant freight train clicking by (CC0). <strong>b</strong>: Freesound (CC0, CC-BY 4.0, <span class="ref">CREDITS.md</span>) — <code>mars-colony</code> b: a thin sand wind, an industrial ventilation hum and a distant freight train's steel clanking (). No recommendation (I cannot listen; both are real recordings).</div>
+<div class="media"><figure class="m aud"><figcaption>old (in the game now)</figcaption><audio controls preload="none" src="../../audio/sfx/concept/mars-colony-r40-a.ogg"></audio></figure><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/mars-colony-r46-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/mars-colony-r46-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> none noted</p>
+<div class="ans"><span class="tag">Answer</span> <span>b</span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: <strong>b</strong> picked</span></div>
+</article>
+<article class="row" id="r-K.4">
+<header><span class="rid">K.4</span><h3>mars-foundry</h3><span class="kind">Level 19 bed</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">mars-foundry</a></div>
+<div class="q"><strong>Level 19 bed (the foundry).</strong> <strong>a</strong>: a foundry furnace's roar, a factory's overhead crane rumbling (the conveyors), a far heavy hammer every 4 s and a low wind (CC0). <strong>b</strong>: a foundry's furnace, a big industrial fan (the blowers), a steel mill's deep drone, a low wind and a far giant hammer every 8 s (CC0). No recommendation (I cannot listen; both are real recordings).</div>
+<div class="media"><figure class="m aud"><figcaption>old (in the game now)</figcaption><audio controls preload="none" src="../../audio/sfx/concept/mars-foundry-r42-a.ogg"></audio></figure><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/mars-foundry-r46-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/mars-foundry-r46-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> b: very bass-heavy (band RMS ≈ −40 dB under the loudness ceiling); a and b built from cached originals (the daily download limit)</p>
+<div class="ans"><span class="tag">Answer</span> <span>b</span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: <strong>b</strong> picked</span></div>
+</article>
+<article class="row" id="r-K.5">
+<header><span class="rid">K.5</span><h3>enemy-leviathan-cry</h3><span class="kind">Leviathan&#x27;s cry.</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">enemy-leviathan-cry</a></div>
+<div class="q"><strong>Leviathan's cry.</strong> <strong>a</strong>: a blue whale's B call (a deep falling moan), slowed to 0.9, over an underwater rumble (CC-BY 4.0). <strong>b</strong>: two humpback whale calls, slowed to 0.5 (deep and mournful) (CC-BY 4.0). No recommendation (I cannot listen; both are real recordings).</div>
+<div class="media"><figure class="m aud"><figcaption>old (in the game now)</figcaption><audio controls preload="none" src="../../audio/sfx/concept/enemy-leviathan-cry-r16-a.ogg"></audio></figure><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/enemy-leviathan-cry-r46-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/enemy-leviathan-cry-r46-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> none noted</p>
+<div class="ans"><span class="tag">Answer</span> <span>redo (the user: "Neither options sound like a whale cry. Probably too low quality")</span></div><div class="ans out"><span class="tag">Outcome</span> <span>redo, next round</span></div>
+</article>
+<article class="row" id="r-K.6">
+<header><span class="rid">K.6</span><h3>driftjelly-pulse</h3><span class="kind">Driftjelly pulse.</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">driftjelly-pulse</a></div>
+<div class="q"><strong>Driftjelly pulse.</strong> <strong>a</strong>: Freesound (CC-BY 3.0, CC-BY 4.0, <span class="ref">CREDITS.md</span>) — <code>driftjelly-pulse</code> a: a muffled underwater impact over an underwater rumble (). <strong>b</strong>: a massive structure bending (a deep groan), slowed to 0.8, with the underwater impact's tail (CC-BY 3.0). No recommendation (I cannot listen; both are real recordings).</div>
+<div class="media"><figure class="m aud"><figcaption>old (in the game now)</figcaption><audio controls preload="none" src="../../audio/sfx/concept/driftjelly-pulse-r33-a.ogg"></audio></figure><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/driftjelly-pulse-r46-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/driftjelly-pulse-r46-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> none noted</p>
+<div class="ans"><span class="tag">Answer</span> <span>b</span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: <strong>b</strong> picked</span></div>
+</article>
+<article class="row" id="r-K.7">
+<header><span class="rid">K.7</span><h3>lamprey-drain</h3><span class="kind">Lamprey drain.</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">lamprey-drain</a></div>
+<div class="q"><strong>Lamprey drain.</strong> <strong>a</strong>: Freesound (CC-BY 4.0, CC0, <span class="ref">CREDITS.md</span>) — <code>lamprey-drain</code> a: a Jacob's ladder's buzzing arc slowed to 0.6, over a transformer's hum (). <strong>b</strong>: a Tesla coil sparking and humming, slowed to 0.7, over a loose light fixture's hum and crackle (CC0). No recommendation (I cannot listen; both are real recordings).</div>
+<div class="media"><figure class="m aud"><figcaption>old (in the game now)</figcaption><audio controls preload="none" src="../../audio/sfx/concept/lamprey-drain-r34-a.ogg"></audio></figure><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/lamprey-drain-r46-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/lamprey-drain-r46-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> none noted</p>
+<div class="ans"><span class="tag">Answer</span> <span>b</span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: <strong>b</strong> picked</span></div>
+</article>
+<article class="row" id="r-K.8">
+<header><span class="rid">K.8</span><h3>sonde-chime</h3><span class="kind">Sonde chime.</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">sonde-chime</a></div>
+<div class="q"><strong>Sonde chime.</strong> <strong>a</strong>: a heavy mechanical clamp slamming shut with a radio squelch (the telemetry handed over) (CC0). <strong>b</strong>: a heavy dungeon door's latch clanking shut with a radio squelch (CC0). No recommendation (I cannot listen; both are real recordings).</div>
+<div class="media"><figure class="m aud"><figcaption>old (in the game now)</figcaption><audio controls preload="none" src="../../audio/sfx/concept/sonde-chime-r34-a.ogg"></audio></figure><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/sonde-chime-r46-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/sonde-chime-r46-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> keeps the name <code>sonde-chime</code> for the game cue, but has no bell; b from cached originals</p>
+<div class="ans"><span class="tag">Answer</span> <span>a</span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: <strong>a</strong> picked</span></div>
+</article>
+<article class="row" id="r-K.9">
+<header><span class="rid">K.9</span><h3>integrity-alarm</h3><span class="kind">Integrity alarm.</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">integrity-alarm</a></div>
+<div class="q"><strong>Integrity alarm.</strong> <strong>a</strong>: a navy ship's danger whistle siren (a real one) (CC0). <strong>b</strong>: a submarine's dive horn, two blasts (a real one) (CC-BY 4.0). No recommendation (I cannot listen; both are real recordings).</div>
+<div class="media"><figure class="m aud"><figcaption>old (in the game now)</figcaption><audio controls preload="none" src="../../audio/sfx/concept/integrity-alarm-r35-a.ogg"></audio></figure><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/integrity-alarm-r46-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/integrity-alarm-r46-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> b: a dive horn restored from archive.org (a designed sound, not a field recording)</p>
+<div class="ans"><span class="tag">Answer</span> <span>redo (the user: "Tell what this is needed for.")</span></div><div class="ans out"><span class="tag">Outcome</span> <span>redo, next round</span></div>
+</article>
+<article class="row" id="r-K.10">
+<header><span class="rid">K.10</span><h3>drone-launch</h3><span class="kind">Combat Drone launch.</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">drone-launch</a></div>
+<div class="q"><strong>Combat Drone launch.</strong> <strong>a</strong>: a drone taking off, slowed to 0.75 (bigger rotors) (CC-BY 4.0). <strong>b</strong>: a quadcopter's rotors starting and taking off, slowed to 0.75 (CC0). No recommendation (I cannot listen; both are real recordings).</div>
+<div class="media"><figure class="m aud"><figcaption>old (in the game now)</figcaption><audio controls preload="none" src="../../audio/sfx/concept/drone-launch-r35-a.ogg"></audio></figure><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/drone-launch-r46-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/drone-launch-r46-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> none noted</p>
+<div class="ans"><span class="tag">Answer</span> <span>a</span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: <strong>a</strong> picked</span></div>
+</article>
+<article class="row" id="r-K.11">
+<header><span class="rid">K.11</span><h3>dome-hit</h3><span class="kind">Dome hit.</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">dome-hit</a></div>
+<div class="q"><strong>Dome hit.</strong> <strong>a</strong>: Freesound (CC0, CC-BY 4.0, <span class="ref">CREDITS.md</span>) — <code>dome-hit</code> a: a bang on thick glass with a heavy thud behind it, a glass door's creak and ice cracking (the stress lines) (). <strong>b</strong>: Freesound (CC-BY 4.0, CC0, <span class="ref">CREDITS.md</span>) — <code>dome-hit</code> b: a heavy thud on a window, a heavy glass door's creak and a frozen lake's fine cracking (). No recommendation (I cannot listen; both are real recordings).</div>
+<div class="media"><figure class="m aud"><figcaption>old (in the game now)</figcaption><audio controls preload="none" src="../../audio/sfx/concept/dome-hit-r40-a.ogg"></audio></figure><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/dome-hit-r46-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/dome-hit-r46-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> none noted</p>
+<div class="ans"><span class="tag">Answer</span> <span>redo (the user: "Neither sound like glass being hit. Glass being hit is a sharp sound, not a thud.")</span></div><div class="ans out"><span class="tag">Outcome</span> <span>redo, next round</span></div>
+</article>
+<article class="row" id="r-K.12">
+<header><span class="rid">K.12</span><h3>dash</h3><span class="kind">The ship&#x27;s dash.</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">dash</a></div>
+<div class="q"><strong>The ship's dash.</strong> <strong>a</strong>: Freesound (CC-BY 4.0, CC0, <span class="ref">CREDITS.md</span>) — <code>dash</code> a: a compressed-air blast with a jet thruster's bassy roar (). <strong>b</strong>: an afterburner's roar, sped to 1.2, with a gas release's hiss (CC0). No recommendation (I cannot listen; both are real recordings).</div>
+<div class="media"><figure class="m aud"><figcaption>old (in the game now)</figcaption><audio controls preload="none" src="../../audio/sfx/concept/dash-r37-a.ogg"></audio></figure><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/dash-r46-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/dash-r46-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> none noted</p>
+<div class="ans"><span class="tag">Answer</span> <span>b</span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: <strong>b</strong> picked</span></div>
+</article>
+<article class="row" id="r-K.13">
+<header><span class="rid">K.13</span><h3>overcharge-whoosh</h3><span class="kind">Overcharge on.</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">overcharge-whoosh</a></div>
+<div class="q"><strong>Overcharge on.</strong> <strong>a</strong>: a camera flash charging, its whine gliding up, a powerful whoosh at its end (CC0). <strong>b</strong>: Freesound (CC-BY 4.0, CC0, <span class="ref">CREDITS.md</span>) — <code>overcharge-whoosh</code> b: a phasing power-up gliding up with a Tesla coil's sparks swelling under it (). No recommendation (I cannot listen; both are real recordings).</div>
+<div class="media"><figure class="m aud"><figcaption>old (in the game now)</figcaption><audio controls preload="none" src="../../audio/sfx/concept/overcharge-whoosh-r37-b.ogg"></audio></figure><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/overcharge-whoosh-r46-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/overcharge-whoosh-r46-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> b: a designed power-up from the database, not a field recording</p>
+<div class="ans"><span class="tag">Answer</span> <span>b</span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: <strong>b</strong> picked</span></div>
+</article>
+<article class="row" id="r-K.14">
+<header><span class="rid">K.14</span><h3>overcharge-end</h3><span class="kind">Overcharge off.</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">overcharge-end</a></div>
+<div class="q"><strong>Overcharge off.</strong> <strong>a</strong>: the camera flash's charge whine gliding down and fading (CC0). <strong>b</strong>: Freesound (CC-BY 4.0, CC0, <span class="ref">CREDITS.md</span>) — <code>overcharge-end</code> b: the phasing power-up gliding down with the Tesla coil's sparks dying (). No recommendation (I cannot listen; both are real recordings).</div>
+<div class="media"><figure class="m aud"><figcaption>old (in the game now)</figcaption><audio controls preload="none" src="../../audio/sfx/concept/overcharge-end-r37-a.ogg"></audio></figure><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/overcharge-end-r46-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/overcharge-end-r46-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> none noted</p>
+<div class="ans"><span class="tag">Answer</span> <span>b</span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: <strong>b</strong> picked</span></div>
+</article>
+<article class="row" id="r-K.15">
+<header><span class="rid">K.15</span><h3>emp-ring</h3><span class="kind">EMP ring.</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">emp-ring</a></div>
+<div class="q"><strong>EMP ring.</strong> <strong>a</strong>: Freesound (CC-BY 4.0, CC0, <span class="ref">CREDITS.md</span>) — <code>emp-ring</code> a: a Jacob's ladder's arc buzzing out, a Tesla coil's sparks and a massive structure's deep impact (). <strong>b</strong>: a high-voltage discharge with a taser's crack on its attack over a deep boom (CC0). No recommendation (I cannot listen; both are real recordings).</div>
+<div class="media"><figure class="m aud"><figcaption>old (in the game now)</figcaption><audio controls preload="none" src="../../audio/sfx/concept/emp-ring-r37-b.ogg"></audio></figure><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/emp-ring-r46-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/emp-ring-r46-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> none noted</p>
+<div class="ans"><span class="tag">Answer</span> <span>b</span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: <strong>b</strong> picked</span></div>
+</article>
+<article class="row" id="r-K.16">
+<header><span class="rid">K.16</span><h3>emp-powerdown</h3><span class="kind">EMP power-down.</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">emp-powerdown</a></div>
+<div class="q"><strong>EMP power-down.</strong> <strong>a</strong>: a large machine powering down, played fast and gliding down from 3x to 1x (CC-BY 4.0). <strong>b</strong>: a transformer's hum sagging (gliding 1.0 to 0.6) with a loose light fixture's flickering crackle (CC0). No recommendation (I cannot listen; both are real recordings).</div>
+<div class="media"><figure class="m aud"><figcaption>old (in the game now)</figcaption><audio controls preload="none" src="../../audio/sfx/concept/emp-powerdown-r37-b.ogg"></audio></figure><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/emp-powerdown-r46-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/emp-powerdown-r46-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> none noted</p>
+<div class="ans"><span class="tag">Answer</span> <span>a</span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: <strong>a</strong> picked</span></div>
+</article>
+<article class="row" id="r-K.17">
+<header><span class="rid">K.17</span><h3>ion-beam-stop</h3><span class="kind">Ion Beam stop.</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">ion-beam-stop</a></div>
+<div class="q"><strong>Ion Beam stop.</strong> <strong>a</strong>: Freesound (CC0, CC-BY 4.0, <span class="ref">CREDITS.md</span>) — <code>ion-beam-stop</code> a: a Tesla coil's hum and a large machine gliding down together (1.0 to 0.35) (). <strong>b</strong>: Freesound (CC-BY 4.0, CC0, <span class="ref">CREDITS.md</span>) — <code>ion-beam-stop</code> b: a Jacob's ladder's arc buzz and a transformer's hum gliding down to nothing (). No recommendation (I cannot listen; both are real recordings).</div>
+<div class="media"><figure class="m aud"><figcaption>old (in the game now)</figcaption><audio controls preload="none" src="../../audio/sfx/concept/ion-beam-stop-r37-b.ogg"></audio></figure><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/ion-beam-stop-r46-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/ion-beam-stop-r46-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> none noted</p>
+<div class="ans"><span class="tag">Answer</span> <span>a</span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: <strong>a</strong> picked</span></div>
+</article>
+<article class="row" id="r-K.18">
+<header><span class="rid">K.18</span><h3>beam-impact</h3><span class="kind">Beam impact.</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">beam-impact</a></div>
+<div class="q"><strong>Beam impact.</strong> <strong>a</strong>: arc welding: a dry crackling sizzle over its 120 Hz buzz (CC-BY 4.0). <strong>b</strong>: Freesound (CC0, CC-BY 4.0, <span class="ref">CREDITS.md</span>) — <code>beam-impact</code> b: MIG welding over a Jacob's ladder's arc buzz slowed to 0.6 (). No recommendation (I cannot listen; both are real recordings).</div>
+<div class="media"><figure class="m aud"><figcaption>old (in the game now)</figcaption><audio controls preload="none" src="../../audio/sfx/concept/beam-impact-r37-a.ogg"></audio></figure><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/beam-impact-r46-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/beam-impact-r46-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> a: arc welding, crackly, peaks at −5 dBFS</p>
+<div class="ans"><span class="tag">Answer</span> <span>a</span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: <strong>a</strong> picked</span></div>
+</article>
+<article class="row" id="r-K.19">
+<header><span class="rid">K.19</span><h3>drone-rebuild</h3><span class="kind">Combat Drone rebuild.</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">drone-rebuild</a></div>
+<div class="q"><strong>Combat Drone rebuild.</strong> <strong>a</strong>: Freesound (CC0, CC-BY 4.0, <span class="ref">CREDITS.md</span>) — <code>drone-rebuild</code> a: an electric turret motor whirring up (gliding 0.8 to 1.2) into a rifle bolt's metal clack (). <strong>b</strong>: a sci-fi mechanical door's servo and clunk (CC0). No recommendation (I cannot listen; both are real recordings).</div>
+<div class="media"><figure class="m aud"><figcaption>old (in the game now)</figcaption><audio controls preload="none" src="../../audio/sfx/concept/drone-rebuild-r37-a.ogg"></audio></figure><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/drone-rebuild-r46-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/drone-rebuild-r46-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> built from cached originals (the daily download limit)</p>
+<div class="ans"><span class="tag">Answer</span> <span>a</span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: <strong>a</strong> picked</span></div>
+</article>
+<article class="row" id="r-K.20">
+<header><span class="rid">K.20</span><h3>launch-rail</h3><span class="kind">Launch rail at every level start.</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">launch-rail</a></div>
+<div class="q"><strong>Launch rail at every level start.</strong> <strong>a</strong>: Freesound (CC0, CC-BY 4.0, <span class="ref">CREDITS.md</span>) — <code>launch-rail</code> a: a pressure hiss building and a fighter jet's close pass (the shuttle's run) into a large metal door slamming (the buffer) and a steam safety valve venting (). <strong>b</strong>: Freesound (CC-BY 4.0, CC0, <span class="ref">CREDITS.md</span>) — <code>launch-rail</code> b: a hydraulic hiss, a subway train rushing past under a bridge (the shuttle's run), a bunker's heavy metal gate slamming (the buffer) and gas and steam escaping (). No recommendation (I cannot listen; both are real recordings).</div>
+<div class="media"><figure class="m aud"><figcaption>old (in the game now)</figcaption><audio controls preload="none" src="../../audio/sfx/concept/launch-rail-r11-b.ogg"></audio></figure><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/launch-rail-r46-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/launch-rail-r46-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> built from cached originals (the daily download limit); the buffer clunk at ≈ 3.6 s in both</p>
+<div class="ans"><span class="tag">Answer</span> <span>redo (the user: "Neither sounds like a launch. Maybe look for aircraft carrier launch sounds.")</span></div><div class="ans out"><span class="tag">Outcome</span> <span>redo, next round</span></div>
+</article>
+</section>
+<section id="s-the-github-readme"><h2>The GitHub README</h2>
+<article class="row" id="r-R.1">
+<header><span class="rid">R.1</span><h3>The README&#x27;s start</h3><span class="kind">The draft</span></header>
+<div class="part"><a href="readme-draft.md">The README's start</a></div>
+<div class="q"><strong>The draft</strong> of the new top of <code>README.md</code> (the repository's front page): a centred title, the death-throe GIF, a two-sentence pitch, a Download link, a 4 x 2 screenshot table with captions and a Features list; the old text about the design tree, CLAUDE.md, concept rounds and Git LFS moves under a section "The project". The text is in <span class="ref">readme-draft.md</span> and summarised in the box below. <strong>Recommendation: use as drafted</strong></div>
+<div class="media"><figure class="m miss"><figcaption>the · motion <em>file not in repo</em> <code>level-21-colossus-death.mp4</code></figcaption></figure></div>
+<details><summary>readme-draft.md</summary><p>&lt;!-- Draft of the new top section of README.md (step README-CAP, pending the user's review). It replaces the README from its first line down to (not including) "## Building and running"; the paragraphs about design/, CLAUDE.md, concept rounds and Git LFS move under "## The project". Image paths are relative to the repository root. The images are in Git LFS: GitHub renders LFS images in a README (served from media.githubusercontent.com). Note: the repository has no published release yet (<code>gh release list</code> is empty, no <code>v*</code> tag), so the Download link leads to an empty page until the first <code>v*</code> tag lets CI publish the bundles. --&gt;</p><p>&lt;h1 align="center"&gt;Terran Vanguard&lt;/h1&gt;</p><p>&lt;p align="center"&gt; &lt;img src="../../../docs/screenshots/level-21-colossus-death.gif" width="640" alt="The Dust Colossus erupts under the ship, takes the Ion Beam and dies in its death throe"&gt; &lt;/p&gt;</p><p>&lt;p align="center"&gt; &lt;b&gt;A late-90s style vertical shoot'em up.&lt;/b&gt;&lt;br&gt; The year is 2185. An alien fleet pours through a gate at the edge of the solar system, and one pilot flies against it, from the Moon to the streets of Earth and the red dust of Mars. &lt;/p&gt;</p><p>&lt;p align="center"&gt; &lt;a href="https://github.com/papegaaij/terran-vanguard/releases/latest"&gt;&lt;b&gt;Download the latest release&lt;/b&gt;&lt;/a&gt; · Windows · Linux · macOS (Intel and Apple Silicon) &lt;/p&gt;</p><p>## Screenshots</p><p>&lt;table&gt; &lt;tr&gt; &lt;td width="50%"&gt;&lt;img src="../../../docs/screenshots/level-07-brood-carrier.png" alt="Level 07, the Brood Carrier"&gt;&lt;/td&gt; &lt;td width="50%"&gt;&lt;img src="../../../docs/screenshots/level-11-harbour-kraken.png" alt="Level 11, the Harbour Kraken"&gt;&lt;/td&gt; &lt;/tr&gt; &lt;tr&gt; &lt;td&gt;Act I, Level 07: the Brood Carrier opens its core over the Moon.&lt;/td&gt; &lt;td&gt;Act II, Level 11: the Harbour Kraken surfaces under the Atlantic convoy.&lt;/td&gt; &lt;/tr&gt; &lt;tr&gt; &lt;td&gt;&lt;img src="../../../docs/screenshots/level-14-siege-spire.png" alt="Level 14, the Siege Spire"&gt;&lt;/td&gt; &lt;td&gt;&lt;img src="../../../docs/screenshots/level-19-revenant-walker.png" alt="Level 19, the Revenant Walker"&gt;&lt;/td&gt; &lt;/tr&gt; &lt;tr&gt; &lt;td&gt;Act II, Level 14: the Siege Spire tears loose from the city and sweeps its beam.&lt;/td&gt; &lt;td&gt;Act III, Level 19: the Revenant Walker burns the foundry floor.&lt;/td&gt; &lt;/tr&gt; &lt;tr&gt; &lt;td&gt;&lt;img src="../../../docs/screenshots/level-21-dust-colossus.png" alt="Level 21, the Dust Colossus"&gt;&lt;/td&gt; &lt;td&gt;&lt;img src="../../../docs/screenshots/hangar.png" alt="The hangar shop"&gt;&lt;/td&gt; &lt;/tr&gt; &lt;tr&gt; &lt;td&gt;Act III, Level 21: the Dust Colossus breaches, its spine trailing across the field.&lt;/td&gt; &lt;td&gt;The hangar: buy, upgrade and fit weapons and parts between missions.&lt;/td&gt; &lt;/tr&gt; &lt;tr&gt; &lt;td&gt;&lt;img src="../../../docs/screenshots/briefing.png" alt="A mission briefing"&gt;&lt;/td&gt; &lt;td&gt;&lt;img src="../../../docs/screenshots/title-screen.png" alt="The title screen"&gt;&lt;/td&gt; &lt;/tr&gt; &lt;tr&gt; &lt;td&gt;Every mission opens with a voiced briefing and a tactical map.&lt;/td&gt; &lt;td&gt;The title screen.&lt;/td&gt; &lt;/tr&gt; &lt;/table&gt;</p><p>## Features</p><ul><li><strong>Three acts, 21 levels</strong> of a planned seven-act, ~50-level campaign: First Contact on the Moon, Homefront on Earth, Red Dust on Mars.</li><li><strong>Bosses</strong> that fill the screen: the Brood Carrier, the Gorgon Frigate, the Harbour Kraken, the Siege Spire, the Revenant Walker and the Dust Colossus, each with its own phases and death.</li><li><strong>Rook</strong>, your wingman from Act II on: he flies in the escort slot with the gun you buy him, takes hits, and talks back.</li><li><strong>A Tyrian-style loadout</strong>: front and rear guns, two wing mounts, generator, shield, armour, utility modules and a special, bought and upgraded in the hangar with the credits you earn; power draw, a regenerating shield and armour that does not regenerate.</li><li><strong>The pre-rendered look</strong> of the late 90s: CGI sprites and backdrops, a portrait play field with HUD side panels on a 16:9 screen.</li><li><strong>Voiced radio chatter and briefings</strong> that tell the story in flight, from first contact to the twist.</li><li>Three difficulties, mission grades and high scores, keyboard and gamepad.</li></ul><p>## The project</p></details>
+<details><summary>The draft text</summary><ul><li>Title: <strong>Terran Vanguard</strong>, then the GIF.</li><li>Pitch: "A late-90s style vertical shoot'em up. The year is 2185. An alien fleet pours through a gate at the edge of the solar system, and one pilot flies against it, from the Moon to the streets of Earth and the red dust of Mars."</li><li>Download: "Download the latest release" (Windows, Linux, macOS Intel and Apple Silicon), linking to the releases page.</li><li>Screenshots: the eight captioned PNGs of rows R.2-R.9.</li><li>Features: three acts and 21 levels of a planned 50; six bosses; Rook, your wingman; a Tyrian-style loadout; the pre-rendered look; voiced radio chatter and briefings; three difficulties, grades, high scores, keyboard and gamepad.</li></ul></details>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> <strong>No release exists yet</strong>, so the Download link points to an empty releases page until the first <code>v*</code> tag lets CI publish the bundles</p>
+<div class="ans"><span class="tag">Answer</span> <span>as drafted</span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: used as drafted (applied to README.md by the main agent)</span></div>
+</article>
+<article class="row" id="r-R.2">
+<header><span class="rid">R.2</span><h3>The title screen</h3><span class="kind">check</span></header>
+<div class="part"><a href="../../../docs/screenshots/title-screen.png">The title screen</a></div>
+<div class="q">the screenshot "The title screen" in the README's table (1920 x 1080 PNG, Git LFS). <strong>Recommendation: keep</strong></div>
+<div class="media"><figure class="m miss"><figcaption>The title screen <em>file not in repo</em> <code>title-screen.webp</code></figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> none noted</p>
+<div class="ans"><span class="tag">Answer</span> <span>keep</span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: kept</span></div>
+</article>
+<article class="row" id="r-R.3">
+<header><span class="rid">R.3</span><h3>A mission briefing</h3><span class="kind">check</span></header>
+<div class="part"><a href="../../../docs/screenshots/briefing.png">A mission briefing</a></div>
+<div class="q">the screenshot "A mission briefing" in the README's table (1920 x 1080 PNG, Git LFS). <strong>Recommendation: keep</strong></div>
+<div class="media"><figure class="m miss"><figcaption>A mission briefing <em>file not in repo</em> <code>briefing.webp</code></figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> none noted</p>
+<div class="ans"><span class="tag">Answer</span> <span>keep</span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: kept</span></div>
+</article>
+<article class="row" id="r-R.4">
+<header><span class="rid">R.4</span><h3>The hangar shop</h3><span class="kind">check</span></header>
+<div class="part"><a href="../../../docs/screenshots/hangar.png">The hangar shop</a></div>
+<div class="q">the screenshot "The hangar shop" in the README's table (1920 x 1080 PNG, Git LFS). <strong>Recommendation: keep</strong></div>
+<div class="media"><figure class="m miss"><figcaption>The hangar shop <em>file not in repo</em> <code>hangar.webp</code></figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> none noted</p>
+<div class="ans"><span class="tag">Answer</span> <span>keep</span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: kept</span></div>
+</article>
+<article class="row" id="r-R.5">
+<header><span class="rid">R.5</span><h3>Level 07, the Brood Carrier</h3><span class="kind">check</span></header>
+<div class="part"><a href="../../../docs/screenshots/level-07-brood-carrier.png">Level 07, the Brood Carrier</a></div>
+<div class="q">the screenshot "Level 07, the Brood Carrier" in the README's table (1920 x 1080 PNG, Git LFS). <strong>Recommendation: keep</strong></div>
+<div class="media"><figure class="m miss"><figcaption>Level 07, the Brood Carrier <em>file not in repo</em> <code>level-07-brood-carrier.webp</code></figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> none noted</p>
+<div class="ans"><span class="tag">Answer</span> <span>keep</span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: kept</span></div>
+</article>
+<article class="row" id="r-R.6">
+<header><span class="rid">R.6</span><h3>Level 11, the Harbour Kraken</h3><span class="kind">check</span></header>
+<div class="part"><a href="../../../docs/screenshots/level-11-harbour-kraken.png">Level 11, the Harbour Kraken</a></div>
+<div class="q">the screenshot "Level 11, the Harbour Kraken" in the README's table (1920 x 1080 PNG, Git LFS). <strong>Recommendation: keep</strong></div>
+<div class="media"><figure class="m miss"><figcaption>Level 11, the Harbour Kraken <em>file not in repo</em> <code>level-11-harbour-kraken.webp</code></figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> none noted</p>
+<div class="ans"><span class="tag">Answer</span> <span>keep</span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: kept</span></div>
+</article>
+<article class="row" id="r-R.7">
+<header><span class="rid">R.7</span><h3>Level 14, the Siege Spire</h3><span class="kind">check</span></header>
+<div class="part"><a href="../../../docs/screenshots/level-14-siege-spire.png">Level 14, the Siege Spire</a></div>
+<div class="q">the screenshot "Level 14, the Siege Spire" in the README's table (1920 x 1080 PNG, Git LFS). <strong>Recommendation: keep</strong></div>
+<div class="media"><figure class="m miss"><figcaption>Level 14, the Siege Spire <em>file not in repo</em> <code>level-14-siege-spire.webp</code></figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> none noted</p>
+<div class="ans"><span class="tag">Answer</span> <span>keep</span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: kept</span></div>
+</article>
+<article class="row" id="r-R.8">
+<header><span class="rid">R.8</span><h3>Level 19, the Revenant Walker</h3><span class="kind">check</span></header>
+<div class="part"><a href="../../../docs/screenshots/level-19-revenant-walker.png">Level 19, the Revenant Walker</a></div>
+<div class="q">the screenshot "Level 19, the Revenant Walker" in the README's table (1920 x 1080 PNG, Git LFS). <strong>Recommendation: keep</strong></div>
+<div class="media"><figure class="m miss"><figcaption>Level 19, the Revenant Walker <em>file not in repo</em> <code>level-19-revenant-walker.webp</code></figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> none noted</p>
+<div class="ans"><span class="tag">Answer</span> <span>keep</span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: kept</span></div>
+</article>
+<article class="row" id="r-R.9">
+<header><span class="rid">R.9</span><h3>Level 21, the Dust Colossus</h3><span class="kind">check</span></header>
+<div class="part"><a href="../../../docs/screenshots/level-21-dust-colossus.png">Level 21, the Dust Colossus</a></div>
+<div class="q">the screenshot "Level 21, the Dust Colossus" in the README's table (1920 x 1080 PNG, Git LFS). <strong>Recommendation: keep</strong></div>
+<div class="media"><figure class="m miss"><figcaption>Level 21, the Dust Colossus <em>file not in repo</em> <code>level-21-dust-colossus.webp</code></figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> none noted</p>
+<div class="ans"><span class="tag">Answer</span> <span>keep</span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: kept</span></div>
+</article>
+<article class="row" id="r-R.10">
+<header><span class="rid">R.10</span><h3>The death-throe GIF</h3><span class="kind">check</span></header>
+<div class="part"><a href="../../../docs/screenshots/level-21-colossus-death.gif">The death-throe GIF</a></div>
+<div class="q">the hero image at the top of the README (4.96 MB, Git LFS). <strong>Recommendation: keep</strong></div>
+<div class="media"><figure class="m miss"><figcaption>the · motion <em>file not in repo</em> <code>level-21-colossus-death.mp4</code></figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> none noted</p>
+<div class="ans"><span class="tag">Answer</span> <span>keep</span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed: kept</span></div>
+</article>
+</section></main></body></html>

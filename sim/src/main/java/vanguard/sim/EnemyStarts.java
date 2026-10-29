@@ -230,6 +230,9 @@ final class EnemyStarts {
         u.chain = null;
         u.link = 0;
         u.sweepBeam.clear();
+        u.groundSweep.clear();
+        u.toppling.clear();
+        u.branch = -1;
         u.broodTicks = -1;
         u.escorting.clear();
         u.walking.clear();
@@ -259,6 +262,7 @@ final class EnemyStarts {
         u.growTotal = 0;
         u.rootBurst = -1;
         u.launched = false;
+        u.preyDrift = 0;
         u.empStun = 0;
         u.stunDx = 0;
         u.stunDy = 0;

@@ -75,6 +75,8 @@ class LevelLooks {
 
     /** Level 07's lifeboat tow. */
     final TowLooks tows;
+    /** M9 part G: the level's story pickup (Level 34's Helix core: in the hold, rising, loose); null without one. */
+    final StoryLooks story;
     /** The ship's engine flames, damage smoke and sparks and its shield ring. */
     final ShipLooks shipLooks;
     /** Rook's craft, its flames, smoke, muzzle flash and eject pod (M5 part A). */
@@ -151,6 +153,13 @@ class LevelLooks {
     final ColossusLooks colossus;
     /** M8 part H: the coiled boss (the Abyssal Maw), its coil, head, sacs, implants, dive, lunge and death; null without it. */
     final MawLooks maw;
+    /**
+     * M9 part H: the ringed boss (the Iron Sovereign), its rings, batteries, bays, core, lines and death; null without
+     * it.
+     */
+    final SovereignLooks sovereign;
+    /** M9 part H: Level 35's mass-relay flash; null without a relay. */
+    final MassRelayLooks massRelay;
     /** M8 part H: the finale's cruisers (Level 28's run); null without them. */
     final CruiserLooks cruisers;
     /** M8 part H: the breakout through the ice ceiling and the orbit's white (Level 28); null in another level. */
@@ -243,6 +252,8 @@ class LevelLooks {
         walker = WalkerLooks.of(sprites, flash, boss, bossPivots);
         colossus = ColossusLooks.of(sprites, flash, boss, bossPivots, folder);
         maw = MawLooks.of(sprites, flash, boss);
+        sovereign = SovereignLooks.of(sprites, flash, boss, bossPivots);
+        massRelay = MassRelayLooks.of(sprites, script);
         foundry = FoundryLooks.of(sprites, level, script);
         plumes = PlumeLooks.of(sprites, level);
         rootBursts = RootBurstLooks.of(sprites, script);
@@ -283,6 +294,7 @@ class LevelLooks {
         this.flash = flash;
         this.farside = new FarsideLooks(sprites, script);
         this.tows = new TowLooks(sprites, Content.levelNumber(levelKey));
+        this.story = StoryLooks.of(sprites, level, script.groundObjects()).orElse(null);
         this.shipLooks = new ShipLooks(sprites, files);
         this.wingmanLooks = new WingmanLooks(sprites, files, flash);
         this.shadows = new Shadows();
@@ -305,6 +317,7 @@ class LevelLooks {
         setPieces = new SetPiecePasses(flash, play, font, setPieceLooks, bossLooks, kraken, spire);
         player = new PlayerPasses(sprites, weapons, flash, play, shipLooks, arsenal, canyonLooks, water != null);
         props = new PropPasses(sprites, flash, play, clock, craneLooks, script);
+        props.ownStory(story != null);
         deepWater = new DeepWaterLooks(sprites, looks, weapons, water != null);
         plain = new PlainLooks(sprites);
         // M8 part C: the under-water grade, the hydro-kit's effects, the tender, the ice shaft's walls.
@@ -426,6 +439,12 @@ class LevelLooks {
         if (maw != null) {
             maw.reset();
         }
+        if (sovereign != null) {
+            sovereign.reset();
+        }
+        if (massRelay != null) {
+            massRelay.reset();
+        }
         if (cruisers != null) {
             cruisers.reset();
         }
@@ -459,6 +478,9 @@ class LevelLooks {
         vacuumDeaths.restart();
         canyonLooks.restart();
         kinds.restart();
+        if (story != null) {
+            story.restart();
+        }
         deepWater.restart();
         plain.clear();
         props.restartBullets();
@@ -500,6 +522,15 @@ class LevelLooks {
         kinds.minefield(sortie).stepped(sortie);
         // M9 part D: the Hornets' launches, the links' snaps, the dashes' bounces, the shards and blades.
         kinds.rig(sortie).stepped(sortie);
+        // M9 part E: the towers' heads and telegraphs, the Striders' torsos, guns' clocks and knees, the remains,
+        // bursts.
+        kinds.deepCore(sortie).stepped(sortie);
+        // M9 part F: the Rail Bunkers' turrets and rails, the prey Talons' tumble, Claim 114 shot open.
+        kinds.leechField(sortie).stepped(sortie);
+        if (story != null) {
+            // M9 part G: the story pickup's group's places on the ground (the crate in the hold at their centre).
+            story.stepped(sortie);
+        }
         if (walker != null) {
             walker.stepped(sortie);
         }
@@ -508,6 +539,12 @@ class LevelLooks {
         }
         if (maw != null) {
             maw.stepped(sortie);
+        }
+        if (sovereign != null) {
+            sovereign.stepped(sortie);
+        }
+        if (massRelay != null) {
+            massRelay.stepped(sortie);
         }
         if (cruisers != null) {
             cruisers.stepped(sortie);
@@ -563,7 +600,7 @@ class LevelLooks {
     /** M9 part D: the hull escort's tug looks ({@link TugLooks}), built at the first draw (they read its sections). */
     TugLooks tug(Sortie sortie) {
         if (tug == null) {
-            tug = new TugLooks(sprites, flash, sortie, tugPivots);
+            tug = new TugLooks(sprites, sortie, tugPivots);
         }
         return tug;
     }

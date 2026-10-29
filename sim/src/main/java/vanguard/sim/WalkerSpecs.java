@@ -141,4 +141,23 @@ public interface WalkerSpecs {
             }
         }
     }
+
+    /**
+     * M9 part E, a walker's topple (design/enemies/ground/strider, The topple; design/enemies, Topple): once a part that
+     * {@link EnemySpec.UnitPart#topples()} is lost, the walker <b>staggers</b> {@code staggerSeconds} (it stands, its guns stop,
+     * the fall line is marked: a strip {@code lineWidth} px wide and {@code lineLength} px long from its centre toward
+     * the lost part, its direction fixed at the loss), then <b>falls</b> {@code fallSeconds} and is destroyed on
+     * landing (its bounty and every part not yet paid by their first bonus, a kill), and every ground unit whose hit
+     * box overlaps the strip is destroyed too (hardened ones included; paid and counted as kills). It takes no more
+     * damage from the loss on (it is falling) and the EMP Burst does not stop it. It never hurts the ship, Rook or an
+     * air unit, nor the ground objects.
+     */
+    record Topple(double staggerSeconds, double fallSeconds, double lineWidth, double lineLength) {
+        public Topple {
+            if (!(staggerSeconds > 0) || !(fallSeconds > 0) || !(lineWidth > 0) || !(lineLength > 0)) {
+                throw new IllegalArgumentException("a topple staggers, falls and crushes a strip: " + staggerSeconds
+                        + ", " + fallSeconds + ", " + lineWidth + ", " + lineLength);
+            }
+        }
+    }
 }

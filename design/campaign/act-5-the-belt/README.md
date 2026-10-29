@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: chosen
 depends-on: [../act-4-deep-water, ../../world/belt, ../../story/twist, ../../story/characters/vorne, ../../enemies/bosses/iron-sovereign, ../../player/generator]
-updated: 2026-10-28
+updated: 2026-10-29
 ---
 
 # Act 5 – The Belt
@@ -34,11 +34,11 @@ for Act 5 yet: every number here is a hand table marked draft, taken from the le
 |---|---|---|---|---|
 | [level-29-betrayal-at-ceres](level-29-betrayal-at-ceres/README.md) | Ceres Hub's dock canyon: the station turns sides at t=60, the wing breaks the clamps at Dock 9 and Rook returns; Talon, SAM Nest, Asteroid Mite; the "Hold fire" secondary | approved | in-progress | final |
 | [level-30-minefield](level-30-minefield/README.md) | The shipping lane, space only: Minelayers from behind lay lines with one gap, Gilded Gunships with Darts, Rail Serpents; the Gunship convoy secondary; Rook back in the slot | approved | done | final |
-| [level-31-mining-rig-escort](level-31-mining-rig-escort/README.md) | The open belt: escort the refugee tug *Bellwether* (three sections, hurt only by hooked attacks) to the Vesta relay; Hornet salvos, Shard Drone links, Buzzsaw ricochets, rear Dart streams; the `CLEAN HULL` secondary | approved | done | proposed |
-| [level-32-deep-core](level-32-deep-core/README.md) | Inside the hollowed asteroid Kleopatra: tunnels with two route-choice forks (one safer, one richer), Sentinel Towers in the galleries, Strider pairs that topple, blast-door caches, the refinery's vents; no Airstrike or Lance; the `TOWERS DOWN` secondary | approved | not-started | none |
-| [level-33-leech-field](level-33-leech-field/README.md) | The Vrell-grown rock field: Void Leeches from behind and the sides drain the generator, Rail Bunkers on the rocks, prey Talon wings, the Choir's one Act 5 line; the `LEECHES` purge secondary | approved | not-started | none |
-| [level-34-salvage-run](level-34-salvage-run/README.md) | The breather: a ship graveyard with Warden Tanks in Ascendancy livery on the hulls, six containers and three hidden crates, the Mk V "Helix" salvaged from a freighter's hold; the `CONTAINERS` secondary | approved | not-started | none |
-| [level-35-iron-sovereign](level-35-iron-sovereign/README.md) | Ceres orbit: the escort screen, the outer hull and the mass-relay flash, then the Iron Sovereign's rotating rings; Vorne's offer, Callisto, the act end and the release's end naming Act VI | approved | not-started | none |
+| [level-31-mining-rig-escort](level-31-mining-rig-escort/README.md) | The open belt: escort the refugee tug *Bellwether* (three sections, hurt only by hooked attacks) to the Vesta relay; Hornet salvos, Shard Drone links, Buzzsaw ricochets, rear Dart streams; the `CLEAN HULL` secondary | approved | in-progress | final |
+| [level-32-deep-core](level-32-deep-core/README.md) | Inside the hollowed asteroid Kleopatra: tunnels with two route-choice forks (one safer, one richer), Sentinel Towers in the galleries, Strider pairs that topple, blast-door caches, the refinery's vents; no Airstrike or Lance; the `TOWERS DOWN` secondary | approved | done | final |
+| [level-33-leech-field](level-33-leech-field/README.md) | The Vrell-grown rock field: Void Leeches from behind and the sides drain the generator, Rail Bunkers on the rocks, prey Talon wings, the Choir's one Act 5 line; the `LEECHES` purge secondary | approved | done | final |
+| [level-34-salvage-run](level-34-salvage-run/README.md) | The breather: a ship graveyard with Warden Tanks in Ascendancy livery on the hulls, six containers and three hidden crates, the Mk V "Helix" salvaged from a freighter's hold; the `CONTAINERS` secondary | approved | in-progress | proposed |
+| [level-35-iron-sovereign](level-35-iron-sovereign/README.md) | Ceres orbit: the escort screen, the outer hull and the mass-relay flash, then the Iron Sovereign's rotating rings; Vorne's offer, Callisto, the act end and the release's end naming Act VI | approved | in-progress | proposed |
 
 ## Design
 
@@ -120,8 +120,8 @@ M9 part B). Text (draft):
 **Act intro** (four pages, each voiced and with its own image in `assets/ui/briefing/`, as Act 4's). Texts (draft,
 decided in round 60); two by Commander Okafor, two by Chairman Vorne on the enemy channel. The title card and the pages
 live in the act's [data.yaml](data.yaml) (`levels`, `title_card`, `briefing` with `channel: enemy` on pages 2–3; M9
-part B, step B2) and are rendered here; page 3's Vorne is drawn neutral until a `smug` expression exists (pending
-round 62). The images are production
+part B, step B2) and are rendered here; page 3's Vorne wears his own `smug` expression (M9 part H, step H2: the
+expressions `smug` and `rage` are his only, voiced as neutral and grim). The images are production
 art straight away (part B, `tools/art/briefing_images.py`); Vorne's portrait on pages 2–3 is his production
 briefing portrait (proposed in round 60):
 
@@ -161,26 +161,30 @@ not repeat them; it carries the five beats the act hands over (the fall, the dat
 Texts (draft, decided in round 60), with the `next_act` that names Act 6 on the release's end (`ACT VI - JOVIAN STORM.
 CALLISTO. COMING SOON.`):
 
+<!-- data: act-outro-pages -->
 | Page | Speaker | Image |
 |---|---|---|
 | 1 | Commander Okafor (grim) | `act-5-outro-ceres`: Ceres Hub from orbit, the Sovereign's broken rings drifting apart over the pole, the dock canyon's lights white again |
 | 2 | Dr. Varga (grim) | `act-5-outro-face`: Varga's screen: the recruitment feed paused on Vorne's face beside a 2179 Helix review photo of him at sixty, the nav core's route plot to Callisto in a strip below |
 | 3 | Rook | `act-5-outro-ember`: Rook's Ember back on its rail on the transport's flight deck, the Helix clamps' scorch marks on its hull, Rook on the ladder with his helmet under his arm |
-| 4 | Commander Okafor (fierce) | `act-5-outro-jupiter`: the transport's forward view, Jupiter ahead with Callisto a dark cratered disc beside it, every rail on the flight deck filled |
+| 4 | Commander Okafor (fierce) | `act-5-outro-jupiter`: The transport's forward view, Jupiter ahead with Callisto a dark cratered disc beside it, every rail on the flight deck filled |
+<!-- /data -->
 
-> **Commander Okafor:** "The Iron Sovereign is scrap over Ceres, and the hub's lights are white again.
-> Half the belt still flies his colours. But every station watched a Coalition wing break his
-> station, and they will remember it."
+<!-- data: act-outro -->
+> **Commander Okafor:** "The Iron Sovereign is scrap over Ceres, and the hub's lights are white
+> again. Half the belt still flies his colours. But every station watched a Coalition wing break
+> his station, and they will remember it."
 >
-> **Dr. Varga:** "The nav core says Callisto, and so did he. I saw his face on that feed, Commander.
-> He looks forty. He was sixty when I left Helix. The cures the Bellwether's people told us about:
-> he took them himself."
+> **Dr. Varga:** "The nav core says Callisto, and so did he. I saw his face on that feed,
+> Commander. He looks forty. He was sixty when I left Helix. The cures the Bellwether's people
+> told us about: he took them himself."
 >
-> **Rook:** "Back in the slot, Commander, and staying there. Wherever we fly next, I'll keep one eye
-> on what's below us. Learned that one the hard way."
+> **Rook:** "Back in the slot, Commander, and staying there. Wherever we fly next, I'll keep one
+> eye on what's below us. Learned that one the hard way."
 >
 > **Commander Okafor:** "Vorne made his offer on an open channel. Here is our answer, on every
 > channel: we are coming to Callisto. Rest, refit, rearm. Aegis Actual out."
+<!-- /data -->
 
 Page 2 is Varga's Act 5 beat (her document's sample line, read low and level, not as a revelation); page 3 is Rook's
 one more line his document promises (a callback to Level 26's "*something's below u—*"); page 4 keeps Okafor's Act 4
@@ -462,16 +466,21 @@ round 63's render kit imported unchanged) into `assets/ui/act-5-the-belt-still.p
 
 | File | What | Status |
 |---|---|---|
-| [concept/act-5-still-final-r64-a.png](concept/act-5-still-final-r64-a.png) | Review sheet: the still (the gold wing: four Talons in the production livery in echelon, each banked its own way, their gold a polished metal with a sheen band; the sun's soft glare by the rim-lit foreground rock), the title card `ACT V / THE BELT` over it, 2× crops of the leader and the glare | proposed (round 64) |
-| [concept/act-5-title-capture-r64-a.png](concept/act-5-title-capture-r64-a.png) | Game capture (step D5; [recipe](concept/prompts.md#release-end-capture-r64-a)): the production title card in the game (Continue from a `v0.2` save at Level 29) and the intro's page 1 | proposed (round 64) |
-| [concept/act-5-title-capture-r64-a.mp4](concept/act-5-title-capture-r64-a.mp4) | Game capture with the game's sound: the title card and the intro's page 1 (Okafor's voice) | proposed (round 64) |
-| [concept/release-end-capture-r64-a.png](concept/release-end-capture-r64-a.png) | Game capture (step D5): Level 31's debrief (`TUGS HOME 3 / 3`, +786, the secondary missed) and the release's end card after it (Level 32 coming soon) | proposed (round 64) |
+| [concept/act-5-still-final-r64-a.png](concept/act-5-still-final-r64-a.png) | Review sheet: the still (the gold wing: four Talons in the production livery in echelon, each banked its own way, their gold a polished metal with a sheen band; the sun's soft glare by the rim-lit foreground rock), the title card `ACT V / THE BELT` over it, 2× crops of the leader and the glare | chosen (round 64, F.2: accepted as final) |
+| [concept/act-5-title-capture-r64-a.png](concept/act-5-title-capture-r64-a.png) | Game capture (step D5; [recipe](concept/prompts.md#release-end-capture-r64-a)): the production title card in the game (Continue from a `v0.2` save at Level 29) and the intro's page 1 | chosen (round 64, accepted) |
+| [concept/act-5-title-capture-r64-a.mp4](concept/act-5-title-capture-r64-a.mp4) | Game capture with the game's sound: the title card and the intro's page 1 (Okafor's voice) | chosen (round 64, F.2: accepted as final) |
+| [concept/release-end-capture-r64-a.png](concept/release-end-capture-r64-a.png) | Game capture (step D5): Level 31's debrief (`TUGS HOME 3 / 3`, +786, the secondary missed) and the release's end card after it (Level 32 coming soon) | chosen (round 64, accepted) |
+| [concept/release-end-capture-r65-a.png](concept/release-end-capture-r65-a.png) | Game capture (step E5; [recipe](concept/prompts.md#release-end-capture-r65-a)): Level 32's debrief and the release's end after it ("LEVEL 33 COMING SOON") | chosen (round 65, accepted with the level) |
+| [concept/release-end-capture-r66-a.png](concept/release-end-capture-r66-a.png) | Game capture (step F5; [recipe](concept/prompts.md#release-end-capture-r66-a)): Level 33's debrief and the release's end after it ("LEVEL 34 COMING SOON") | chosen (round 66, accepted with the level, F.1–F.6) |
+| [concept/release-end-capture-r67-a.png](concept/release-end-capture-r67-a.png) | Game capture (step G5; [recipe](concept/prompts.md#release-end-capture-r67-a)): Level 34's debrief and the release's end after it ("LEVEL 35 COMING SOON") | proposed |
+| [concept/act-end-capture-r68-a.mp4](concept/act-end-capture-r68-a.mp4) | Game capture (step H5; [recipe](concept/prompts.md#act-end-capture-r68-a)), clip with sound: the debrief, the act summary, the four outro pages and `ACTS I-V COMPLETE` | proposed |
+| [concept/act-end-capture-r68-a.png](concept/act-end-capture-r68-a.png) | Game capture (step H5; [recipe](concept/prompts.md#act-end-capture-r68-a)), frames: the debrief, the act summary, the four outro pages and `ACTS I-V COMPLETE` | proposed |
 
 ## Implementation
 
-- [ ] All 7 levels promoted to level documents (drafts written 2026-10-27, decided in round 60) and implemented (M9
-      parts B–H).
-- [ ] Act data file: `levels: [29, 35]`, the title card, the four intro pages (pages 2–3 `channel: enemy`, `music:
+- [x] All 7 levels promoted to level documents (drafts written 2026-10-27, decided in round 60) and implemented (M9
+      parts B–H). (Part H, steps H2–H4: Level 35, the last; the rounds' art and sound picks for part H in round 68.)
+- [x] Act data file: `levels: [29, 35]`, the title card, the four intro pages (pages 2–3 `channel: enemy`, `music:
       motif`) and the four outro pages with their images and expressions, rendered into *Act intro and outro* as
       marked tables (part B for the intro, part H for the outro with `next_act` `{act: ACT VI, name: JOVIAN STORM,
       setting: CALLISTO}`); Act 4's `next_act` removed when Act 5's levels play. (M9 part B, step B2: the act's
@@ -479,25 +488,30 @@ round 63's render kit imported unchanged) into `assets/ui/act-5-the-belt-still.p
       Act 4's `next_act` kept until the release's end moves (steps B3/B4); the motif under pages 2–3 is the game's.
       Step B3: Act 4's `next_act` removed, the release ends after Level 29's win until part H. Step B4: the intro
       built in the game, Vorne's name plate, the intercepted page's image, the motif stem under pages 2–3; seen in round
-      62's capture. The outro is part H's.)
-- [ ] The title card's still (`tools/art/act_stills.py act-5` from Level 29's backdrop) and lettering; the eight
+      62's capture. M9 part H, step H2: the four outro pages (`music: act-complete`, each voiced) and the `next_act`
+      (ACT VI · JOVIAN STORM, CALLISTO) in the data, rendered here; page 3's Vorne `smug`, re-voiced. Step H4: the
+      game's act end and release end after L35; recorded in round 68's captures, step H5.)
+- [x] The title card's still (`tools/art/act_stills.py act-5` from Level 29's backdrop) and lettering; the eight
       intro and outro briefing images and the fourteen level briefing images (`tools/art/briefing_images.py`). (M9
       part B, step ART-B: the still and the title, the four intro images and Level 29's two, in round 62 F.9–F.10;
-      the outro's and Levels 30–35's in their parts.)
-- [ ] The act's systems (M9 part A and the levels' parts): enemy hex shields and `shield-breaker`, the homing
+      the outro's and Levels 30–35's in their parts; part H, step ART-H2: Level 35's two and the outro's four, in the
+      game from step H2, round 68 H.6–H.7.)
+- [x] The act's systems (M9 part A and the levels' parts): enemy hex shields and `shield-breaker`, the homing
       diamond, mine lines, air links, topple, rock riding, `laser-line`, the generator drain and its HUD gauge,
       vacuum and the `IN ROCK` limits, the enemy channel on the radio and the intercepted briefing page, Rook's
       rescue and the loaner's release, the mining tug escort, the route-choice forks and the `branch` radio
-      trigger, the `{section}` placeholder, the rotating-ring boss.
+      trigger, the `{section}` placeholder, the rotating-ring boss. (Parts A–H; the rotating rings steps H1a–H1c and
+      H4.)
 - [x] `reference_dps` 29–35 and the Act 5 balance plan (`balance-plan.yaml` visits 29–35) before any Act 5 level
       data (M9 part A): `enemies/data.yaml`, `ActHpFactorTest`, `BalanceTest`, `tools/balance.py` exit 0 (step A2: the
       static measure, forward / reference 1.12 · 1.09 · 1.05 · 1.02 · 0.99 · 0.96 · 1.02; each level's part measures
       its own with `levelReport`).
-- [ ] Every level within the act's density band (`DensityTest`, `PacingTest`, `ActFloorTest`), the beam era's HP
+- [x] Every level within the act's density band (`DensityTest`, `PacingTest`, `ActFloorTest`), the beam era's HP
       re-measured in vacuum (`BeamEraHpTest`) and its typical haul within ±5 % of its budget (`TypicalHaulTest`;
-      L32's routes ±8 %).
-- [ ] The act-end order after L35 (Level 28's) and the release's end moved from L28 to L35; the hangar before L36
-      reads `ACT VI - JOVIAN STORM: COMING SOON`.
+      L32's routes ±8 %). (Levels 29–35 green in step H4's and H5's full `check`.)
+- [x] The act-end order after L35 (Level 28's) and the release's end moved from L28 to L35; the hangar before L36
+      reads `ACT VI - JOVIAN STORM: COMING SOON`. (Step H4, `OutroOnwardTest`; recorded in round 68's captures, step
+      H5.)
 - [x] A save at the L29 hangar from the `v0.2` release plays the Act 5 intro **once** on Continue (the
       `act-intro:N` flag), not repeating the title card of an act already seen. (M9 part B, step B3: a real v0.2 save,
       `CampaignRouteTest`; the game's Continue as Act 4's.)
@@ -568,3 +582,13 @@ recommended answer except Q11 (b) and the tug's size (J.6 b):
   Round 63's weak spots fixed: the four Talons each in their own bank and heading (round 63 flew one pose), their gold the
   production livery's polished metal (less mirror, a sheen band, lit by the low key) instead of flat yellow, the sun's
   glare a soft halo rolled off to white with a stronger dither instead of a clipped, posterized blob.
+- 2026-10-28 (user, [round 64](../../concept-rounds/round-64/README.md), closed; page answers): the Act 5 title card's still in production (round 63's T.1 c, the gold wing) accepted as final (**F.2**), with the release's end card after Level 31 ("LEVEL 32 COMING SOON"); the hex shield **F.1** accepted too (see [enemies](../../enemies/README.md#enemy-shields)); Level 31's art, the Bellwether's voice (**V.1 b**, Laurie Anne Walden), track 13 and the sounds are decided in [its Decisions](level-31-mining-rig-escort/README.md#decisions). **C.1 a**: a beam's touch counts on an Act 5 tow (Level 30's buoy, Level 31's claim), opt-in per level; built in the next game step.
+- 2026-10-29 (M9 part H, step H2; pending round 68): the act's `outro` (the four approved pages, the text unchanged, voiced)
+  and its `next_act` (`ACT VI - JOVIAN STORM. CALLISTO.`) are in the act's data, rendered into *Act intro and outro*;
+  Vorne's `smug` and `rage` are expressions of his only (the content checks it), voiced with the neutral and the grim
+  rows (never `shout`); the intro's page 3 wears `smug` (re-voiced: the expression is part of the voice key; the old
+  take listed as unused).
+- 2026-10-29 (user, [round 65](../../concept-rounds/round-65/README.md), closed): the release's end after Level 32 (the debrief, "ACTS I-IV COMPLETE", "ACT V - THE BELT. LEVEL 33 COMING SOON.") captured and accepted; Level 32's art and calls are in its [README](level-32-deep-core/README.md#decisions).
+- 2026-10-29 (M9 part H, step H5; pending the user's review in round 68): part H built: Level 35, the Iron Sovereign
+  and the act's end (the debrief's act summary, the four outro pages, `ACTS I-V COMPLETE` and Act VI's coming-soon),
+  recorded in round 68's captures; the release's end now after Level 35.

@@ -26,6 +26,7 @@ public record BriefingPage(
     public BriefingPage {
         Check.that(!speaker.isBlank(), "speaker: must not be empty");
         Check.that(!line.isBlank(), "line: must not be empty");
+        Expression.checkSpeaker(speaker, expression);
         Check.that(
                 image.map(name -> name.matches("[a-z0-9]+(-[a-z0-9]+)*")).orElse(true),
                 "image: a lower-case kebab-case name");

@@ -52,4 +52,58 @@ class ActFiveHangarTest {
         }
         assertTrue(traits <= ShopPanel.WIDTH - 20, "the traits fit the detail: " + traits);
     }
+
+    /**
+     * M9 part E (step E4; design/campaign Level 32, Sensor-suite detail): Level 32's two forks on the L3 wave strip at
+     * their branches' first items, the richer channel marked (fork one's charge seam right, fork two's cooling ducts
+     * left); a level without forks has none. Its fitted Airstrike or Orbital Lance reads {@code IN ROCK} (part A).
+     */
+    @Test
+    void level32sForksAreOnTheWaveStripAndItsSpecialsAreInRock() {
+        String deepCore = CONTENT.levelKey(32).orElseThrow();
+        List<IntelPanel.Fork> forks = IntelPanel.forks(CONTENT, deepCore);
+        assertEquals(2, forks.size());
+        assertTrue(
+                forks.get(0).t() >= 56 && forks.get(0).t() < 70,
+                "fork one at " + forks.get(0).t());
+        assertTrue(
+                forks.get(1).t() >= 116 && forks.get(1).t() < 130,
+                "fork two at " + forks.get(1).t());
+        assertEquals(1, forks.get(0).richer(), "the charge seam (right) is the richer");
+        assertEquals(0, forks.get(1).richer(), "the cooling ducts (left) are the richer");
+        assertEquals(List.of(), IntelPanel.forks(CONTENT, CONTENT.levelKey(31).orElseThrow()));
+        assertEquals(List.of(), IntelPanel.forks(CONTENT, ""));
+        assertEquals(
+                java.util.Optional.of("AIRSTRIKE: IN ROCK"),
+                IntelPanel.limited(CONTENT, deepCore, java.util.Optional.of("Airstrike")));
+        assertEquals(
+                java.util.Optional.of("ORBITAL LANCE: IN ROCK"),
+                IntelPanel.limited(CONTENT, deepCore, java.util.Optional.of("Orbital Lance")));
+        assertEquals(
+                java.util.Optional.empty(), IntelPanel.limited(CONTENT, deepCore, java.util.Optional.of("EMP Burst")));
+    }
+
+    /**
+     * M9 part F (step F4; design/campaign Level 33, Sensor-suite detail at L3: "the rear and side entries on the threat
+     * arrows"): Level 33's Void Leech waves from the rear and the sides are marked on the wave strip, its Talons' front
+     * waves are not; a level without power drainers has none. The Rail Bunker and the leech have their sensor portraits.
+     */
+    @Test
+    void level33sStripMarksTheLeechesRearAndSideEntries() {
+        String field = CONTENT.levelKey(33).orElseThrow();
+        List<IntelPanel.Ambush> ambushes = IntelPanel.ambushes(CONTENT, field);
+        assertTrue(ambushes.stream().anyMatch(IntelPanel.Ambush::rear), "rear ambushes: " + ambushes);
+        assertTrue(ambushes.stream().anyMatch(a -> !a.rear()), "side streams: " + ambushes);
+        assertTrue(ambushes.stream().allMatch(a -> a.t() > 0 && a.t() < 180), "inside the level: " + ambushes);
+        assertEquals(
+                List.of(), IntelPanel.ambushes(CONTENT, CONTENT.levelKey(32).orElseThrow()));
+        assertEquals(List.of(), IntelPanel.ambushes(CONTENT, ""));
+        assertEquals(
+                IntelPanel.Strip.NONE.forks(), IntelPanel.strip(CONTENT, field).forks());
+        java.nio.file.Path intel =
+                java.nio.file.Path.of(System.getProperty("vanguard.assetsDir", "../assets"), "sprites", "intel");
+        for (String slug : new String[] {"rail-bunker", "void-leech"}) {
+            assertTrue(java.nio.file.Files.isRegularFile(intel.resolve(slug + ".png")), slug + "'s sensor portrait");
+        }
+    }
 }

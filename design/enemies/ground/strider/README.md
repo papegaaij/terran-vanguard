@@ -1,10 +1,10 @@
 ---
 title: Strider
 design: approved
-implementation: not-started
-art: chosen
+implementation: done
+art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../player/specials, ../../bosses/revenant-walker]
-updated: 2026-10-27
+updated: 2026-10-29
 ---
 
 # Strider
@@ -19,33 +19,35 @@ staggers, then **topples** along a marked line, crushing any ground unit beneath
 
 ### Stat block
 
-**Draft** (Act 5 design phase, step D-enemies-B; approved in round 60). A hand-written
-table: there is no `data.yaml` yet, the build turns it into one. Numbers at **medium** (see the
+Approved in round 60 (Act 5 design phase, step D-enemies-B); the table is rendered from the
+[data.yaml](data.yaml) (M9 part E, step E2). Numbers at **medium** (see the
 [balancing basis](../../README.md#balancing-basis)); HP is in damage units (a Pulse Cannon L1 shot does 2),
 set at its first level from the proposed Act 5 reference DPS (judgement call J2: L32 132): the hull's 220 is
 1.7 s (a `large` part, 1–3 s), a leg's 80 is 0.6 s, so the legs are the quick kill for a player who aims.
 Fire rates are tuned per level with `levelReport`.
 
+<!-- data: stat-block -->
 | Field | Value |
 |---|---|
-| Faction | Ascendancy; a **machine** (stunned 3 s by the EMP Burst) |
+| Faction | Jovian Ascendancy (machine: the EMP Burst stuns it longest) |
 | Layer | `ground` |
 | Size tier | `large` |
-| Size | 120×120 px (the chosen r05 concept); hitboxes: hull 64×64 on the centre, each leg 22×40 at ±42 px across its heading, the pod 24×24 on the left shoulder |
+| Size | 120×120 px, hitbox 64×64 (hull 64×64 on the centre, each leg 22×40 at ±42 px across its heading, the pod 24×24 on the left shoulder) |
 | Parts | hull (`vital`), left and right leg (`destroyable`: either one topples it), shoulder pod (`destroyable`: silences the missiles) |
-| Orientation | legs and hull `16 angles` × an 8-frame walk cycle; the torso `32 angles`, twisting toward the ship to fire |
+| Orientation | `16 angles` (legs and hull × an 8-frame walk cycle; the torso `32 angles`, twisting toward the ship to fire) |
 | HP | hull 220 · leg 80 each · pod 30; whole 410 (easy 308 / hard 533, from the global multipliers) |
-| Armour / shield | none (not on the [enemy shields](../../README.md#enemy-shields)' Act 5 list) |
-| Speed | 32 px/s along its path (plus the scroll), turning 45°/s |
-| Movement | `walk` along an authored path on a tunnel floor or a hull road; a pair walks 1.5 s apart or on mirrored paths |
-| Attack | twin cannons: a `fan` of 3 (12° apart) along the torso's aim at the ship, every 2.4 s, standard 160 px/s, `medium` 6; tell: the torso holds still 0.3 s and the muzzles glow. Shoulder pod: a `homing` salvo of 2 (the homing diamond, as the [SAM Nest](../sam-nest/README.md)'s and the Hornet's missile: 110 px/s, 80°/s, 2 HP, `medium` 6, life 4 s) every 5 s; tell: the hatch opens 0.4 s |
-| Formations | solo, pairs |
-| Weak points | the legs (destroyable parts; the knee joints glow red when hit) and the pod |
+| Armour / shield | none |
+| Speed | 32 px/s (plus the scroll), turning 45°/s |
+| Movement | `walk` along an authored path on a tunnel floor or a hull road; a pair walks 1.5 s apart or on mirrored paths. **Topple**: a lost leg staggers it 0.6 s (guns quiet, the fall line marked: 48×140 px from its centre toward the lost leg), it falls 0.8 s and on landing crushes every ground unit whose box overlaps the line (hardened ones too; paid, counted as kills), never the ship, Rook, air units or ground objects |
+| Attack | twin cannons: a 3-way `fan` (12° apart) along the torso's aim at the ship every 2.4 s, 160 px/s, `medium` 6; tell: the torso holds still 0.3 s and the muzzles glow; shoulder pod: a `homing` salvo of 2 (the homing diamond, as the SAM Nest's: 110 px/s, 80°/s, 2 HP, `medium` 6, life 4 s) every 5 s, launched together along the bearing to the ship; tell: the hatch opens 0.4 s |
+| Formations | single, convoy (2) (pairs; at most two walking at once, a level rule) |
+| Weak points | the legs, the pod (destroyable parts; the knee joints glow red when hit) |
 | Effective traits | `anti-ground`, `piercing`, `homing` |
-| Credits | 60 (score 600 × chain); parts: hull 40, legs 6 each, pod 8; a topple pays every part not yet paid (the whole 60) |
-| Death | hull destroyed: a `large` mechanical explosion in place, the burnt hulk stays as a wreck; toppled: see *The topple* |
-| First level / used in | L32 (Deep Core, the tunnel floors); later Act 5 levels may use it (their docs decide), with the act HP factor of a `large` unit |
+| Credits | 60 (score 600 × chain); parts: hull 40, legs 6 each, pod 8; a body kill or a topple pays every part not yet paid (the whole 60) |
+| Death | hull destroyed: a `large` mechanical explosion in place, the burnt hulk stays as a wreck; toppled: the fall's ground shock and dust ring, the wreck along the line |
+| First level / used in | L32; Deep Core's tunnel floors and the refinery |
 | Difficulty hooks | easy: a fan of 3 every 3.0 s, salvos of 1 every 6 s; hard: a fan of 5 every 2.0 s, salvos of 3 |
+<!-- /data -->
 
 ### The topple
 
@@ -109,11 +111,13 @@ Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's r
 
 ## Implementation
 
-- [ ] Stat block loaded from a `data.yaml` (when the design is approved); global difficulty multipliers applied; tuned with `levelReport`
-- [ ] `walk` on a path with the twisting torso (`32 angles`); the fan and the pod's homing salvos with their tells
-- [ ] Destroyable legs and pod; the stagger tell, the marked fall line, the fall and the one-time crush of ground units (credits paid)
-- [ ] Production sprites from the chosen r05 concept with the pod, the stagger and topple frames and the wreck; the intel portrait
-- [ ] Death effect, bounty and sounds per this spec (Freesound, no bubbly sounds)
+- [x] Stat block loaded from a `data.yaml` (when the design is approved); global difficulty multipliers applied; tuned with `levelReport`
+- [x] `walk` on a path with the twisting torso (`32 angles`); the fan and the pod's homing salvos with their tells
+- [x] Destroyable legs and pod; the stagger tell, the marked fall line, the fall and the one-time crush of ground units (credits paid)
+      (step E1 `Toppling`; captured in round 65: the hall Strider's crush of the SAM pair)
+- [x] Production sprites from the chosen r05 concept with the pod, the stagger and topple frames and the wreck; the intel portrait
+- [x] Death effect, bounty and sounds per this spec (Freesound, no bubbly sounds) (step E4; round 65's picks: all a but the twin cannons b, `strider-cannon-r65-b`,
+      which step G4 switches in)
 
 ## Open questions
 
@@ -133,3 +137,11 @@ Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's r
 - 2026-10-27 (decided by me, trivia): either leg topples it; the fall goes to the lost leg's side; hardened
   ground units are crushed too (a way to break a Rail Bunker without an `anti-ground` gun).
 - 2026-10-27 (user, [round 60](../../../concept-rounds/round-60/README.md) closed): the design approved as drafted (`design: approved`); art A.14 **b**, "Strider B, buckle and crumple", chosen (`art: chosen`), the other variant in `concept/rejected/`. Q11 **b** (gunmetal/charcoal with gold, not gloss black): the chosen variant is re-rendered in gunmetal/charcoal in this part's production art, keeping the ≥ 20 % gold and the readability check.
+- 2026-10-29 (step E2): the stat block as data (`data.yaml`, the table rendered from it). Each part's `first_bonus`
+  is its bounty (6, 6, 8), so a body kill or a topple pays the whole 60; the pod carries the second attack (the homing
+  salvo, fired as the walker's spit all at once, its 0.4 s hatch the tell), the cannons the fan. The parts' sides
+  follow the art (`tools/art/belt_units_e.py`'s knees): facing down the screen, the walker's own left leg is at screen
+  right (`leg-left` dx +42) and the pod on its left shoulder (+19, 15 toward the tail). The whole 410 HP is 3.1 s at
+  L32's reference DPS, above the large class's 1–3 s (BalanceTest lists it as pending, round 65); a leg (0.6 s) topples
+  it.
+- 2026-10-29 (user, [round 65](../../../concept-rounds/round-65/README.md), closed): **F.4** ok (the production sprites and captures final, `art: final`); **S.5 a** (`strider-step`), **S.6 a** (`strider-servo`), **S.7 b** (`strider-cannon`, the boomier howitzer 'BOOM-BOOM'; step G4 switches it in), **S.8 a** (`strider-snap`), **S.9 a** (`strider-fall`); **C.4** accepted as built (the 0.7 s earlier entry, no damage while toppling, the explosion on landing).

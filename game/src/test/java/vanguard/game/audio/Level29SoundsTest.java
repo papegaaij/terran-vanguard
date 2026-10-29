@@ -1,6 +1,7 @@
 package vanguard.game.audio;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Files;
@@ -9,6 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import vanguard.content.Content;
 import vanguard.content.ContentLoader;
@@ -37,6 +39,47 @@ class Level29SoundsTest {
     private final long[] now = {0};
     private final SfxBank bank =
             new SfxBank(new MockAudio(), new Lwjgl3Files(), new Mixer(AudioSettings.defaults()), () -> now[0]);
+
+    /**
+     * Step FIX1 (design/audio/music, Cues per level (Act 5): Vorne's motif "on"): track 12's motif stem on top of
+     * Level 29's theme from the base stem's start (section 2) to the end.
+     */
+    @Test
+    void theMotifPlaysOnTopFromTheBaseStemsStartToTheEnd() {
+        LevelData.Music data = CONTENT.level(KEY).music();
+        String theme = Tracks.name(data.track()).orElseThrow();
+        assertEquals("hollow-rock", theme);
+        assertTrue(Files.isRegularFile(ASSETS.resolve(Tracks.motifPath(theme))), "track 12's motif stem");
+        assertTrue(data.motif().isPresent(), "the level's motif cue");
+        assertEquals(2, data.startSection());
+        MockAudio audio = new MockAudio();
+        Lwjgl3Files files = new Lwjgl3Files();
+        Mixer mixer = new Mixer(AudioSettings.defaults());
+        SfxBank sfx = new SfxBank(audio, files, mixer);
+        LevelMusic music = new LevelMusic(
+                        audio,
+                        mixer,
+                        files.internal(Tracks.basePath(theme)),
+                        files.internal(Tracks.path(theme)),
+                        sfx,
+                        Sfx.ambience(data.ambience()),
+                        data.startSection(),
+                        0,
+                        data::full,
+                        Double.POSITIVE_INFINITY,
+                        Optional.empty())
+                .motif(files.internal(Tracks.motifPath(theme)), data::motifOn);
+        music.update(1, 10, 0.1f, false);
+        assertFalse(music.motifOn(), "no motif under the intro (the theme's own statement)");
+        music.update(2, 28.05, 0.1f, false);
+        assertTrue(music.stemsOn() && music.motifOn(), "the base stem with the motif from t=28");
+        music.update(4, 70, 0.1f, false);
+        assertTrue(music.motifOn(), "over the full mix from the turn");
+        music.update(6, 160, 0.1f, false);
+        assertTrue(music.motifOn(), "to the end");
+        music.dispose();
+        sfx.dispose();
+    }
 
     @Test
     void everyLevel29SoundPlaysItsProposal() {

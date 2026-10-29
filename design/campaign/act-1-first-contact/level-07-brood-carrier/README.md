@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../../enemies/bosses/brood-carrier, ../../../world/earth-orbit]
-updated: 2026-10-05
+updated: 2026-10-28
 ---
 
 # Level 07 – Brood Carrier
@@ -183,7 +183,9 @@ Pickup types are defined in [player](../../../player/README.md#in-level-pickups)
   the top, and is then an ordinary hidden crate ([pickups](../../../player/README.md#in-level-pickups):
   it drifts down at 40 px/s and is gone after 6 s), so a ship that stays low collects it. Sizes for
   the art step: boat 72×36 px, pod 32×32 px hanging 70 px above (behind) the boat's centre, the
-  cable's hit box 16×40 px midway between them (the data's `tows`).
+  cable's hit box 16×40 px midway between them (the data's `tows`). The cable counts the player's
+  shots only; from Act 5 a level may opt a tow in to a beam's touch (`beam_touch`: one hit per
+  0.25 s of contact, round 64 C.1 a; Level 30's buoy and Level 31's claim), the lifeboat does not.
 - **Armour patch** ×2: dropped by the second Mantis of the t=74 pincer and by the last Needler
   of the t=96 line, just before the boss. Not on hard.
 - **Overdrive** ×2: dropped by the Brood Pod of the t=58 group and by the carrier's first

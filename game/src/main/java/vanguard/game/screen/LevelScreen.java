@@ -217,6 +217,11 @@ public final class LevelScreen implements GameScreen {
      * TORPEDOES +50 %}, 4 s below the ship); null in a level that never goes under water.
      */
     private final EventPrompt rulesStrip;
+    /**
+     * M9 part G (design/campaign Level 34, The freighter): the story pickup's line in the play field once collected
+     * ({@code HELIX CORE SALVAGED}, the event prompt's look); null in a level without one.
+     */
+    private final EventPrompt storyLine;
     /** M8 part C: the medium's edge for the waterline's tell (the strip, the weapon rows' flash). */
     private final WaterlineTell waterlineTell = new WaterlineTell();
     /** The collect pop's sprite and its frames' steps (20 fps). */
@@ -267,7 +272,9 @@ public final class LevelScreen implements GameScreen {
         radioEvents = new RadioEvents(services, level, sortie, radio, radioSchedule, barks);
         staticLeads = new StaticLeads(level.radio());
         wrecks = new SetPieceWrecks(sortie.setPieceCount());
-        looks = EnemyLooks.of(sortie.enemyKinds(), services.sprites, services.content);
+        // M9 part G: a unit in its livery from the livery's act on (the Warden Tank in Ascendancy colours, Act 5).
+        int act = EnemyLooks.act(levelKey);
+        looks = EnemyLooks.of(sortie.enemyKinds(), services.sprites, services.content, act);
         weaponLooks = new WeaponLooks(
                 sortie.armament(),
                 flight.weapons().stream().mapToInt(Flight.Weapon::level).toArray(),
@@ -343,6 +350,7 @@ public final class LevelScreen implements GameScreen {
                 level,
                 sortie.script(),
                 levelKey);
+        renderer.liveries(slug -> EnemyLooks.root(services.content, slug, act, services.sprites));
         // M5 part G: easy's shorter whiteout (Level 13), in the backdrop and the snow; M7 part E: the storm's radii.
         renderer.difficulty(difficulty);
         // M7 part D: Level 17's domes, each in its sprite set.
@@ -371,6 +379,16 @@ public final class LevelScreen implements GameScreen {
                                 services.fonts.label.getData().hasGlyph('\u00d7') ? "\u00d7" : "x"),
                         WaterlineTell.SECONDS)
                 : null;
+        storyLine = level.pickups().stream()
+                .flatMap(pickup -> pickup.story().stream())
+                .findFirst()
+                .map(story -> new EventPrompt(
+                        services.sprites.pixel,
+                        services.fonts.body,
+                        storyName(story),
+                        STORY_SALVAGED,
+                        STORY_LINE_SECONDS))
+                .orElse(null);
         threatArrows = flight.sensor() >= THREAT_ARROW_SENSOR ? new ThreatArrows() : null;
         renderer.modules(
                 flight.targeting()
@@ -534,6 +552,16 @@ public final class LevelScreen implements GameScreen {
                         cue.expression().orElse(Expression.NEUTRAL).slug()))
                 .map(voice -> new LevelMusic.VoiceLoop(
                         services.files.internal(voice.path()), loop.section(), (float) Math.pow(10, loop.db() / 20)));
+    }
+
+    /** M9 part G: the story pickup's line's second word: {@code HELIX CORE SALVAGED}. */
+    static final String STORY_SALVAGED = "SALVAGED";
+    /** M9 part G: how long the story pickup's line shows, s. */
+    static final double STORY_LINE_SECONDS = 3;
+
+    /** M9 part G: a story's name on the HUD: {@code helix-core} reads {@code HELIX CORE}. */
+    static String storyName(String story) {
+        return story.replace('-', ' ').toUpperCase(Locale.ROOT);
     }
 
     /** The file name of a level theme by its track number (design/audio/music, track list). */
@@ -918,9 +946,17 @@ public final class LevelScreen implements GameScreen {
                     services.save(SaveSlots.Slot.AUTOSAVE, campaign);
                     failedIn = FAILED_SCREEN_SECONDS;
                 }
+                case STORY_COLLECTED -> {
+                    if (storyLine != null) {
+                        storyLine.flash(sortie.realSeconds());
+                    }
+                }
                 case SORTIE_RESTARTED -> {
                     if (latchPrompt != null) {
                         latchPrompt.reset();
+                    }
+                    if (storyLine != null) {
+                        storyLine.reset();
                     }
                     if (rulesStrip != null) {
                         rulesStrip.reset();
@@ -1025,9 +1061,14 @@ public final class LevelScreen implements GameScreen {
     /** How far a boss part reaches up and down from its centre, for {@link #fightsUnderBanner}. */
     static final double PART_REACH = 32;
 
-    /** Whether {@code piece} is engaged (its phases run, its guns fire) with a living part under the warning band. */
+    /**
+     * Whether {@code piece} is engaged (its phases run, its guns fire) with a living part under the warning band; M9 part
+     * H: a ringed boss (the Iron Sovereign) fights once its rings are up, not while they spin up (nothing fires then).
+     */
     static boolean fightsUnderBanner(SetPiece piece) {
-        if (!piece.engaged() || piece.destroyed()) {
+        if (!piece.engaged()
+                || piece.destroyed()
+                || piece.ring().map(vanguard.sim.RingArena::spinningUp).orElse(false)) {
             return false;
         }
         for (int p = 0; p < piece.partCount(); p++) {
@@ -1179,6 +1220,9 @@ public final class LevelScreen implements GameScreen {
         }
         if (rulesStrip != null && sortie.flying()) {
             rulesStrip.draw(batch, sortie.ship().renderY(clock.alpha()), sortie.realSeconds());
+        }
+        if (storyLine != null && sortie.flying()) {
+            storyLine.draw(batch, sortie.ship().renderY(clock.alpha()), sortie.realSeconds());
         }
         banner.draw(batch, sortie.tick(), clock.alpha());
         if (shake != 0) {

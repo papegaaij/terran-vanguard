@@ -21,6 +21,8 @@ final class EnemyMoves {
     private final SonarRings rings;
     /** M7 part D: whether a kind of the level has a curl-roll (its ball crushes ground targets). */
     private final boolean rollers;
+    /** M9 part F: the prey latches; null in a level without a prey unit. */
+    private final PreyLatches prey;
     /** M5 part F: the level's wind this step, px/s to the right; exactly 0 without weather. */
     private double wind;
 
@@ -35,7 +37,8 @@ final class EnemyMoves {
             EnemyCarriers carriers,
             WalkerFire walkers,
             SonarRings rings,
-            boolean rollers) {
+            boolean rollers,
+            PreyLatches prey) {
         this.force = force;
         this.enemies = enemies;
         this.events = events;
@@ -47,6 +50,7 @@ final class EnemyMoves {
         this.walkers = walkers;
         this.rings = rings;
         this.rollers = rollers;
+        this.prey = prey;
     }
 
     /** M5 part F: the level's wind for the next step, px/s to the right. */
@@ -76,8 +80,18 @@ final class EnemyMoves {
                 // M8 part E: a hover's drift keeps off the level's rock (none: as before).
                 enemy.hoverHold.canyon(canyon);
             }
+            double chaseX = ship.x();
+            double chaseY = ship.y();
+            if (prey != null && enemy.spec().preyRole() == EnemySpec.PreyRole.HUNTER && enemy.latchable()) {
+                // M9 part F (the uneasy alliance): a hunter drifts and chases the nearest free prey (else the ship).
+                Enemy hunted = prey.target(enemy);
+                if (hunted != null) {
+                    chaseX = hunted.x();
+                    chaseY = hunted.y();
+                }
+            }
             boolean flying = dive < 0
-                    ? enemy.move(ship.x(), ship.y(), groundScroll, aimX, aimY, wind)
+                    ? enemy.move(chaseX, chaseY, groundScroll, aimX, aimY, wind)
                     : enemy.move(
                             ship.x(),
                             ship.y(),
@@ -147,6 +161,9 @@ final class EnemyMoves {
                 enemies.free(i);
             } else if (stunned) {
                 // Stunned: it neither fires nor bursts, spawns, pounces or sweeps; its timers wait.
+                continue;
+            } else if (enemy.preyed()) {
+                // M9 part F (the uneasy alliance): a preyed unit no longer fires.
                 continue;
             } else if (enemy.spec().brood().isPresent() && enemy.burstDue()) {
                 carriers.hatch(enemy, ship);

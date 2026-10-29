@@ -1,0 +1,7 @@
+{
+ "source": "tools/art/warden_tank.py (production art, M9 part G batch)",
+ "note": "the turret, its stub and the wreck are centred on the hull's centre (the tank's position); the muzzle flash is centred `muzzle` px along the turret's aim from it (aim k: k x 11.25 degrees clockwise from straight down), `muzzle_recoil` in the recoil frame",
+ "scale": 33.043,
+ "muzzle": 37.3,
+ "muzzle_recoil": 32.1
+}

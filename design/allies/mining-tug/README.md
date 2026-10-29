@@ -2,9 +2,9 @@
 title: Mining tug
 design: approved
 implementation: done
-art: chosen
+art: final
 depends-on: [../../enemies, ../../ui/hud, ../../world/belt, ../../campaign/act-5-the-belt/level-31-mining-rig-escort]
-updated: 2026-10-28
+updated: 2026-10-29
 ---
 
 # Mining tug
@@ -75,11 +75,12 @@ rock field, hooked Hornet missiles, the cargo venting below 50 %, the bow lost, 
 |---|---|---|
 | [concept/mining-tug-r60-b.png](concept/mining-tug-r60-b.png) | Mining tug B, pressure hull — one enclosed older hull, the sections told by colour bands and hazard chevrons at the waists, window rows, side tanks, one big and two small bells (sheet) | chosen (round 60) |
 | [concept/mining-tug-r60-b.gif](concept/mining-tug-r60-b.gif) | Mining tug B, pressure hull — on station under hooked fire (motion) | chosen (round 60) |
-| [concept/mining-tug-final-r64-a.png](concept/mining-tug-final-r64-a.png) | The *Bellwether* final frames (`tools/art/belt_units_d.py`): the chosen pressure hull b at 200×300 (QD-3 a: the hull, tanks and window rows widened ×1.61, lengthened ×1.14, the bells kept); the bow, cargo and engines each intact, below 50 %, lights out (the flicker) and lost; the tug composed in five states, the measured hit boxes, the bells' glow, the climb-out flare, the vent loop and the loss's fire flare (sheet) | proposed (round 64) |
-| [concept/mining-tug-final-r64-a.gif](concept/mining-tug-final-r64-a.gif) | On station with its sway on Level 31's space, two Hornets' homing diamonds hitting the bow and the cargo: the cargo venting below 50 % with its lights flickering, the bow lost in a fire flare and dark, the tug flying on | proposed (round 64) |
-| [concept/mining-tug-capture-r64-a.png](concept/mining-tug-capture-r64-a.png) | Game capture, Level 31 (step D5, not firing, t≈75–89; [recipe](concept/prompts.md#mining-tug-capture-r64-a)): a Gunship over the bow, Hornet salvos and a Shard line on it, the bow lost (its fire flare, then dark), the cargo lost, the hull venting | proposed (round 64) |
-| [concept/mining-tug-capture-r64-a.mp4](concept/mining-tug-capture-r64-a.mp4) | Game capture with the game's sound, two cuts: the hull whole under the plan's fit (`CLEAN HULL`, the Bellwether's medicine story, the engine bed), then not firing: the salvos, the hits, the alarm, the bow's and the cargo's loss | proposed (round 64) |
-| [concept/allies-proposal.yaml](concept/allies-proposal.yaml) | The tug's sections for the allies' data (step D2; not data): offsets, the hit boxes measured from the production alpha (bow 133×77 at (0, −104), cargo 173×115 at (0, 0), engines 130×81 at (0, +106)), the smoke points | proposed (round 64) |
+| [concept/mining-tug-final-r64-a.png](concept/mining-tug-final-r64-a.png) | The *Bellwether* final frames (`tools/art/belt_units_d.py`): the chosen pressure hull b at 200×300 (QD-3 a: the hull, tanks and window rows widened ×1.61, lengthened ×1.14, the bells kept); the bow, cargo and engines each intact, below 50 %, lights out (the flicker) and lost; the tug composed in five states, the measured hit boxes, the bells' glow, the climb-out flare, the vent loop and the loss's fire flare (sheet) | chosen (round 64, F.3 a: filled to 200×300, accepted as final) |
+| [concept/mining-tug-final-r64-a.gif](concept/mining-tug-final-r64-a.gif) | On station with its sway on Level 31's space, two Hornets' homing diamonds hitting the bow and the cargo: the cargo venting below 50 % with its lights flickering, the bow lost in a fire flare and dark, the tug flying on | chosen (round 64, F.3 a: filled to 200×300, accepted as final) |
+| [concept/mining-tug-capture-r64-a.png](concept/mining-tug-capture-r64-a.png) | Game capture, Level 31 (step D5, not firing, t≈75–89; [recipe](concept/prompts.md#mining-tug-capture-r64-a)): a Gunship over the bow, Hornet salvos and a Shard line on it, the bow lost (its fire flare, then dark), the cargo lost, the hull venting | chosen (round 64, F.3 a: filled to 200×300, accepted as final) |
+| [concept/mining-tug-capture-r64-a.mp4](concept/mining-tug-capture-r64-a.mp4) | Game capture with the game's sound, two cuts: the hull whole under the plan's fit (`CLEAN HULL`, the Bellwether's medicine story, the engine bed), then not firing: the salvos, the hits, the alarm, the bow's and the cargo's loss | chosen (round 64, F.3 a: filled to 200×300, accepted as final) |
+| [concept/mining-tug-capture-r65-a.png](concept/mining-tug-capture-r65-a.png) | Game capture, Level 31 (step E5, after FIX1; [recipe](concept/prompts.md#mining-tug-capture-r65-a)): the softened hit flash (40 % for two steps) under Shard links | chosen (round 65, C.8 accepted: the softer hit flash) |
+| [concept/allies-proposal.yaml](concept/allies-proposal.yaml) | The tug's sections for the allies' data (step D2; not data): offsets, the hit boxes measured from the production alpha (bow 133×77 at (0, −104), cargo 173×115 at (0, 0), engines 130×81 at (0, +106)), the smoke points | chosen (round 64, F.3 a: accepted; the sections' data as built) |
 
 ## Implementation
 
@@ -93,7 +94,7 @@ rock field, hooked Hornet missiles, the cargo venting below 50 %, the bow lost, 
       all three lost fails the escort; the pay per section home
 - [x] HUD tracker `TUG n / 3` with three section bars (`MissionLayoutTest`); radio `{section}`
 - [x] Production art (three sections × intact, damaged, lost; engine glow; lights) and sounds (ART-D, the proportions
-      a/b in round 64; step D4: `TugLooks`, the hit, alarm, loss and engine bed round 64's a proposals until the pick)
+      a in round 64; step D4: `TugLooks`, the alarm, loss and engine bed round 64's a picks, the hit its b, played since step FIX1)
 
 ## Open questions
 
@@ -117,7 +118,12 @@ Approved in round 60:
   sections with ART-D's measured hit boxes and smoke points, `damaged_by` missiles 5, dives 3, links 4 with a 0.5 s
   cooldown) and placed by Level 31's `escort.hull` block (its sway ±10 / ±2.5 px: the level's Decisions). The table's
   sway (20 px across, 5 px up and down) is the level's to set; Level 31 flies the narrower one.
-- 2026-10-28 (step D5; pending the user's review in round 64): the spec and the look as built go to
+- 2026-10-28 (step D5; decided in round 64, below): the spec and the look as built go to
   [round 64](../../concept-rounds/round-64/README.md): the proportions a (the hull widened to fill 200×300, built) or b,
   the four sounds (a plays until the pick), the sway the level flies. Seen in the captures: a hit flashes the whole
   section's silhouette solid white for a few frames (strong on a 200 px hull under a salvo).
+- 2026-10-28 (user, [round 64](../../concept-rounds/round-64/README.md), closed; page answers): **F.3 a**, the tug filled to 200×300 (the hull widened ×1.61, lengthened ×1.14; the hit boxes as measured from the alpha), accepted as final (`art: final`); **S.7 b** the hull hit (`tug-hit`, the kicked steel dumpster with the iron gate's groan; the game copies the b file in and switches its path in the next game step, a plays until then), **S.8 a** (`tug-alarm`), **S.9 a** (`tug-lost`), **S.10 a** (`tug-engine`: the a files the game plays); **C.3** accepted (the sway ±10 px across and ±2.5 px up and down, as the level flies it). C.1 a (a beam counts on a tow) is the level's: see Level 31's Decisions.
+- 2026-10-28 (step FIX1): a section's hit is a soft additive tint (the frame added over itself at 40 % of the white
+  flash setting, 2 steps) instead of the solid white silhouette D5's captures showed; the HUD's section bar keeps its
+  white flash. The game plays the hull hit b (`tug-hit-r64-b`); the debrief counts the hull's `SECTIONS HOME n / 3`.
+- 2026-10-29 (user, [round 65](../../concept-rounds/round-65/README.md), closed): **C.8** accepted: a tug section's hit is a soft tint (a 40 % frame over itself for 2 steps), not the solid white flash; the HUD's section bar keeps its white flash.

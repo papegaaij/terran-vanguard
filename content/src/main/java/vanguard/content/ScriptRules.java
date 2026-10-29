@@ -99,12 +99,15 @@ final class ScriptRules {
                         PartCRules.holds(level, difficulty),
                         PartCRules.collapse(level)))
                 // M9 part C (Level 30): a level without a ground layer (`ground: none`): bomb deliveries idle.
-                .ground(
+                // M9 part E (Level 32): a forked terrain from the start (the branch waves' check needs its forks).
+                .ground(DeepCoreRules.forkedTerrain(
+                        level,
+                        difficulty,
                         level.noGround()
                                 ? GroundSpec.SPACE
                                 : GroundSpec.NONE
                                         .withRoad(level.road().map(road -> road(level, road)))
-                                        .withWater(level.overWater()))
+                                        .withWater(level.overWater())))
                 .hazards(HazardSpec.NONE
                         .withCranes(GroundRules.cranes(level, difficulty))
                         .withDebris(debris(level, difficulty))
@@ -117,7 +120,9 @@ final class ScriptRules {
                         .withWeather(level.weather().flatMap(weather -> PartFRules.weather(level, weather, difficulty)))
                         .withSondes(level.sondes().map(PartFRules::sondes))
                         // M8 part H: the finale's cruiser run (Level 28).
-                        .withCruisers(MawRules.cruisers(content, level, difficulty)))
+                        .withCruisers(MawRules.cruisers(content, level, difficulty))
+                        // M9 part H: the mass-relay flash (Level 35).
+                        .withRelay(RingRules.relay(level, difficulty)))
                 .drops(DropSpec.NONE
                         .withGroupDrops(groupDrops(level, carried))
                         .withPartDrops(LevelRules.partDrops(content, level, carried, SimSpecs::pickup))
@@ -384,6 +389,12 @@ final class ScriptRules {
                         case NEUTRAL_DOWN -> CueTrigger.NEUTRAL_DOWN;
                         case HOLDERS_DOWN -> CueTrigger.HOLDERS_DOWN;
                         case ESCORT_JOINED -> CueTrigger.ESCORT_JOINED;
+                        // M9 part E (Level 32): a fork's branch chosen, the first topple's crush.
+                        case BRANCH -> CueTrigger.BRANCH;
+                        case TOPPLE_CRUSH -> CueTrigger.TOPPLE_CRUSH;
+                        // M9 part G (Level 34): the Helix core collected or missed.
+                        case STORY_COLLECTED -> CueTrigger.STORY_COLLECTED;
+                        case STORY_MISSED -> CueTrigger.STORY_MISSED;
                     })
                     .orElse(CueTrigger.TIME);
             // Part G (LevelRules): a boss-destroyed cue's subject is the boss, a timeout cue its own
@@ -426,7 +437,13 @@ final class ScriptRules {
                     line.distorted().orElse(false),
                     line.expression().orElse(Expression.NEUTRAL).slug(),
                     // M7 part B: a generic portrait for a speaker without one of his own (Level 15's Ares Control).
-                    line.portrait().orElse(line.speaker())));
+                    line.portrait().orElse(line.speaker()),
+                    false,
+                    0,
+                    Integer.MAX_VALUE,
+                    // M9 part F: Level 33's secret line is Rook's: it needs him flying (requires: escort).
+                    LevelRules.requirement(line.requires()),
+                    0));
         }
         return cues;
     }

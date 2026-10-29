@@ -38,6 +38,8 @@ the sounds `tools/concept/audio/sfx_r52c.py`, the audition `tools/concept/audio/
 `--invulnerable`, the balance plan's Level 23 fit: Harpoon Torpedoes L3, Depth Charges L3, two Micro-Missile Pods, the
 Sonar Pulse, Rook along); their PNGs are frames of that run side by side, the time in the level in each row's text.
 
+Record of the decisions: [review.html](review.html)
+
 ## In the game
 
 The art below is already in `assets/` (the finals; the under-water bursts play **a**), the **a** sound of every pair

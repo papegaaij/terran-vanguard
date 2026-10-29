@@ -32,6 +32,10 @@ import static vanguard.game.level.RadioTimeline.LEVEL_28;
 import static vanguard.game.level.RadioTimeline.LEVEL_29;
 import static vanguard.game.level.RadioTimeline.LEVEL_30;
 import static vanguard.game.level.RadioTimeline.LEVEL_31;
+import static vanguard.game.level.RadioTimeline.LEVEL_32;
+import static vanguard.game.level.RadioTimeline.LEVEL_33;
+import static vanguard.game.level.RadioTimeline.LEVEL_34;
+import static vanguard.game.level.RadioTimeline.LEVEL_35;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -577,7 +581,146 @@ final class RadioRuns {
         runs.put(LEVEL_29, level29Runs());
         runs.put(LEVEL_30, level30Runs());
         runs.put(LEVEL_31, level31Runs());
+        runs.put(LEVEL_32, level32Runs());
+        runs.put(LEVEL_33, level33Runs());
+        runs.put(LEVEL_34, level34Runs());
+        runs.put(LEVEL_35, level35Runs());
         return runs;
+    }
+
+    /**
+     * M9 part H (step H4, step H2's data): Level 35's runs. The approach has no event line (the lifeboat's secret has
+     * none); the arena starts at t=92 with the boss's arrival (Vorne's smug welcome, Varga's after it), the clock halts
+     * at t=93 while the station lives; its phases come with its ring locks (any order: "Two rings", "One ring", then "The
+     * core" as the third locks) and its kill starts the closing queue (Okafor at K+5, Vorne's offer, Rook's answer with
+     * him or Okafor's without him, Varga, Ceres Control). Step H3's measures (the core 14,000 HP): at medium the first
+     * lock ≈ 26-30 s into the halt, the second and third seconds after it (the beam burns every ring at once), the kill
+     * ≈ 148 s (easy ≈ 108, hard ≈ 248); with an evenly paced fight, a fast one, a run whose second and third locks fall
+     * in one step (two phase cues at once) and a short one.
+     */
+    static List<List<Event>> level35Runs() {
+        String sovereign = "iron-sovereign";
+        Event arrival = new Event(92, CueTrigger.BOSS_ARRIVAL, "");
+        return List.of(
+                List.of(),
+                sovereign(arrival, 26, 28, 33, 148, sovereign),
+                sovereign(arrival, 30, 60, 95, 145, sovereign),
+                sovereign(arrival, 18, 19, 20, 108, sovereign),
+                sovereign(arrival, 45, 52, 58, 250, sovereign),
+                sovereign(arrival, 12, 14, 16, 40, sovereign),
+                sovereign(arrival, 26, 33, 33, 140, sovereign));
+    }
+
+    /** A Level 35 run: the arrival, then the three locks' phases and the kill this many seconds into the halt. */
+    private static List<Event> sovereign(
+            Event arrival, double two, double one, double core, double kill, String sovereign) {
+        return List.of(
+                arrival,
+                Event.inArena(two, CueTrigger.BOSS_PHASE, "Two rings"),
+                Event.inArena(one, CueTrigger.BOSS_PHASE, "One ring"),
+                Event.inArena(core, CueTrigger.BOSS_PHASE, "The core"),
+                Event.inArena(kill, CueTrigger.BOSS_DESTROYED, sovereign));
+    }
+
+    /**
+     * M9 part G (step G4, step G2's measures): Level 34's runs (Rook flies with every fit that has the escort; *Old
+     * Marta*'s line is his, {@code requires: escort}). The three secrets shot open as their triggers come on the screen
+     * (*Vigil* t≈56, *Sable Wren* t≈96, *Old Marta* t≈165); the Helix core collected once it is loose (the fourth clamp
+     * down from t≈108.3, its 1 s rise: t≈110 at the earliest, t≈122.8 the latest that finds its gap before Rook's t=130)
+     * or missed (it leaves the screen or its time runs out, t≈114–121); the secondary met as the needed container opens (easy the fourth,
+     * t≈82; medium the fifth, t≈151; hard the sixth, t≈171) or at the level's end with one away (t=186). Step FIX2
+     * (pending round 67) put back the runs step G4 left out: *Sable Wren*'s hatch shot as it passes the ship (t≈99.5;
+     * her line trimmed to one page, so it fits before Varga's t=108), the secondary met at t≈151 with *Old Marta* shot
+     * open after it (Okafor's t=159 moved to 157), and the clamps never shot: the core is missed as the last clamp
+     * leaves the bottom edge (t≈113.8).
+     */
+    static List<List<Event>> level34Runs() {
+        CueTrigger secret = CueTrigger.SECRET;
+        CueTrigger collected = CueTrigger.STORY_COLLECTED;
+        CueTrigger missed = CueTrigger.STORY_MISSED;
+        CueTrigger met = CueTrigger.SECONDARY_OBJECTIVE;
+        return List.of(
+                List.of(),
+                List.of(new Event(57, secret, "Vigil")),
+                List.of(new Event(97, secret, "Sable Wren")),
+                List.of(new Event(166.4, secret, "Old Marta")),
+                List.of(new Event(110, collected, "")),
+                List.of(new Event(116, collected, "")),
+                List.of(new Event(122.8, collected, "")),
+                List.of(new Event(114, missed, "")),
+                List.of(new Event(120, missed, "")),
+                List.of(new Event(82, met, "")),
+                List.of(new Event(151, met, "")),
+                List.of(new Event(171, met, "")),
+                List.of(new Event(186, met, "")),
+                List.of(
+                        new Event(57, secret, "Vigil"),
+                        new Event(97, secret, "Sable Wren"),
+                        new Event(112, collected, ""),
+                        new Event(151, met, "")),
+                List.of(new Event(166.4, secret, "Old Marta"), new Event(171, met, "")),
+                List.of(new Event(99.5, secret, "Sable Wren")),
+                List.of(new Event(113.8, missed, "")),
+                List.of(new Event(151, met, ""), new Event(166.4, secret, "Old Marta")),
+                List.of(
+                        new Event(57, secret, "Vigil"),
+                        new Event(99.5, secret, "Sable Wren"),
+                        new Event(116, collected, ""),
+                        new Event(151, met, ""),
+                        new Event(168, secret, "Old Marta")),
+                List.of(
+                        new Event(58, secret, "Vigil"),
+                        new Event(82, met, ""),
+                        new Event(97, secret, "Sable Wren"),
+                        new Event(121, missed, ""),
+                        new Event(168, secret, "Old Marta")));
+    }
+
+    /**
+     * M9 part F (step F4, step F3's flights): Level 33's runs (Rook flies with every fit that has the escort; the secret's
+     * line is his, {@code requires: escort}). *Claim 114* shot open as it comes on the screen at t=104 (by t≈108 at the
+     * latest, the ledge's shack in the growth); the secondary met at the leech kill that makes it unable to fail (48 of
+     * 63 at medium: from the Swarm on, t≈125, to the last stream, t≈172), alone and after the secret.
+     */
+    static List<List<Event>> level33Runs() {
+        String claim = "Claim 114";
+        CueTrigger secret = CueTrigger.SECRET;
+        CueTrigger met = CueTrigger.SECONDARY_OBJECTIVE;
+        return List.of(
+                List.of(),
+                List.of(new Event(104.5, secret, claim)),
+                List.of(new Event(106, secret, claim)),
+                List.of(new Event(108, secret, claim)),
+                List.of(new Event(125, met, "")),
+                List.of(new Event(140, met, "")),
+                List.of(new Event(155, met, "")),
+                List.of(new Event(165, met, "")),
+                List.of(new Event(172, met, "")),
+                List.of(new Event(105, secret, claim), new Event(150, met, "")),
+                List.of(new Event(107, secret, claim), new Event(168, met, "")));
+    }
+
+    /**
+     * M9 part E (step E4, step E2's measures): Level 32's runs per route (Rook flies with every fit that has the escort).
+     * Fork one's choice (the ship's side as the island's tip reaches its row: t≈52.6 with the ship at the top edge to
+     * t≈56.75 at the bottom, the latest) plays its side's line, the left (the old drift) or the right (the charge seam);
+     * fork two has no line. The first topple crush (`topple-crush`, Rook's bark): the seam's Strider by its nests
+     * (t≈63, the right only), the hall pair by theirs (t≈94), the refinery's lone one by the gantry trio (t≈163). The
+     * secondary met as the fourth tower dies: the crucible's (t=150, on the screen to t≈155.5), the last of the four.
+     */
+    static List<List<Event>> level32Runs() {
+        CueTrigger branch = CueTrigger.BRANCH;
+        CueTrigger crush = CueTrigger.TOPPLE_CRUSH;
+        CueTrigger met = CueTrigger.SECONDARY_OBJECTIVE;
+        return List.of(
+                List.of(),
+                List.of(new Event(56.75, branch, "1:left")),
+                List.of(new Event(56.75, branch, "1:right")),
+                List.of(new Event(52.6, branch, "1:left"), new Event(94, crush, ""), new Event(151, met, "")),
+                List.of(new Event(52.6, branch, "1:right"), new Event(63, crush, ""), new Event(153, met, "")),
+                List.of(new Event(55, branch, "1:right"), new Event(94, crush, ""), new Event(155.5, met, "")),
+                List.of(new Event(54, branch, "1:left"), new Event(163, crush, "")),
+                List.of(new Event(56, branch, "1:right"), new Event(66, crush, ""), new Event(151, met, "")));
     }
 
     /**
@@ -604,7 +747,8 @@ final class RadioRuns {
     /**
      * M9 part D (step D4, step D2's measures): Level 31's runs (Rook flies with every fit that has the escort). The
      * tug's first section hit ({@code first-ally-hit}) alone at the times the autopilot saw it (t≈12.5–128), and after a
-     * first hit at t=27 Dacosta's claim shot open (t≈101–107) or a section lost (t≈120–176: the closing line at 176.5
+     * first hit at t=27 Dacosta's claim shot open (step FIX1's measures: a bolt gun under it t≈100.4, the plan's beam
+     * t≈101.1, the autopilot's strays t≈103.4–103.5) or a section lost (t≈120–176: the closing line at 176.5
      * waits for it). Each line names the engines ({@code {section}}: the longest name, the widest line).
      */
     static List<List<Event>> level31Runs() {
@@ -615,7 +759,7 @@ final class RadioRuns {
             runs.add(List.of(Event.named(t, CueTrigger.FIRST_ALLY_HIT, section)));
         }
         Event hit = Event.named(27, CueTrigger.FIRST_ALLY_HIT, section);
-        for (double t : new double[] {101, 103, 105, 107}) {
+        for (double t : new double[] {100.4, 101, 102, 103, 103.5}) {
             runs.add(List.of(hit, new Event(t, CueTrigger.SECRET, "Dacosta's claim")));
         }
         for (double t : new double[] {120, 132, 136, 140, 145, 150, 160, 168, 176}) {

@@ -1,0 +1,379 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Round 37: record of the decisions</title><style>
+:root{--bg:#f4f5f7;--fg:#1b2230;--mut:#5a6577;--card:#fff;--line:#d3d9e2;--acc:#1f5fa8;--ok:#1d6b3a;--okbg:#e3f3e8;
+--hi:#fff6dc;--hib:#d9b84a;--code:#e9edf3;--warn:#8a4b00}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10141b;--fg:#dde3ee;--mut:#98a3b6;--card:#171d27;
+--line:#2c3544;--acc:#7fb2ee;--ok:#7bd69a;--okbg:#163323;--hi:#2c2610;--hib:#8a7424;--code:#232c3a;--warn:#e3a35a;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#10141b;--fg:#dde3ee;--mut:#98a3b6;--card:#171d27;--line:#2c3544;--acc:#7fb2ee;--ok:#7bd69a;
+--okbg:#163323;--hi:#2c2610;--hib:#8a7424;--code:#232c3a;--warn:#e3a35a;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:60rem;margin:0 auto;padding:1rem 16px 4rem}
+h1{font-size:1.6rem;margin:.5rem 0}h2{font-size:1.25rem;margin:2rem 0 .5rem;border-bottom:1px solid var(--line);padding-bottom:.25rem}
+h3{font-size:1.02rem;margin:0;flex:1 1 12rem}a{color:var(--acc)}
+.sum{color:var(--mut)}.note{font-size:.9rem;color:var(--mut)}
+nav.sec{display:flex;flex-wrap:wrap;gap:.4rem;margin:1rem 0}nav.sec a{padding:.2rem .6rem;border:1px solid var(--line);border-radius:1rem;
+text-decoration:none;font-size:.9rem;background:var(--card)}
+.row{background:var(--card);border:1px solid var(--line);border-radius:.4rem;padding:.7rem .9rem;margin:.7rem 0;overflow-wrap:anywhere}
+.row header{display:flex;flex-wrap:wrap;gap:.3rem .6rem;align-items:baseline}
+.rid{font:600 .85rem ui-monospace,Menlo,Consolas,monospace;background:var(--code);padding:.05rem .4rem;border-radius:.25rem}
+.kind{font-size:.8rem;color:var(--mut)}.part{font-size:.88rem;margin:.2rem 0}
+.q,.weak,.rec,.sub,.line,dl{font-size:.92rem;margin:.45rem 0}.weak{color:var(--warn)}
+code{background:var(--code);padding:0 .25rem;border-radius:.2rem;font-size:.88em}
+.tag{font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;color:var(--mut);font-weight:700;margin-right:.3rem}
+.ans{margin:.5rem 0 0;padding:.45rem .6rem;border-left:4px solid var(--hib);background:var(--hi);border-radius:.2rem}
+.ans.out{border-left-color:var(--ok)}.ans.none{opacity:.7}
+.badge{font-size:.75rem;font-weight:700;padding:.05rem .4rem;border-radius:.6rem;background:var(--okbg);color:var(--ok)}
+.badge.pick{background:var(--hi);color:var(--warn);border:1px solid var(--hib)}
+dl{display:grid;grid-template-columns:7rem 1fr;gap:.2rem .6rem}dt{font-weight:700}dd{margin:0}
+.media{display:flex;flex-wrap:wrap;gap:.5rem;margin:.5rem 0}.m{margin:0;max-width:100%}.m figcaption{font-size:.75rem;color:var(--mut)}
+.m.img img{max-width:14rem;max-height:10rem;border:1px solid var(--line);border-radius:.2rem;background:#000;display:block}
+.m.vid video{width:14rem;max-width:100%}.m.aud audio{width:16rem;max-width:100%}.miss{color:var(--warn)}
+details{margin:.4rem 0;font-size:.9rem}summary{cursor:pointer;color:var(--acc)}
+.listen{font-size:.85rem;color:var(--mut);margin:.3rem 0;padding-left:1.2rem}.opts{color:var(--mut)}
+.sub{padding-left:.6rem;border-left:2px solid var(--line)}
+table{border-collapse:collapse;display:block;overflow-x:auto}td,th{border:1px solid var(--line);padding:.2rem .4rem}
+blockquote{margin:.4rem 0;padding-left:.8rem;border-left:3px solid var(--line)}
+@media (max-width:480px){dl{grid-template-columns:1fr}.m.img img{max-width:100%}}
+</style></head><body><main><p class="note"><a href="README.md">Round 37 README</a> · <a href="../README.md">All rounds</a> · built 2026-10-13 · recorded by <code>tools/concept/review_record.py 37</code></p><h1>Concept round 37: record of the decisions</h1><div class="sum"><p>The review round of M7 part A <em>Act 3 systems</em> (<span class="ref">roadmap</span>), built while the user was on vacation: the Ion Beam and its <code>beam</code> delivery, the Light Drone Bay and its drones, the Deflector Pod, the Rear Lance, the EMP Burst with the <code>machine</code> flag, the Orbital Lance, the Shield Overcharge with the cooldown rules and the HUD ring, the Evasive thrusters' dash and its pip, the third utility bay (save format 4), <code>reference_dps</code> 15–21 and the balance plan to Level 21. No Act 3 level exists yet, so everything is flown on Act 1–2 levels with <code>--loadout</code> and <code>--special</code>. The documents stay <code>design: approved</code> (round 36); every default, pick and build choice below was taken on the user's behalf and is <strong>pending the user's review</strong>. Where the round offers an a/b, the game plays <strong>a</strong> until the round closes.</p><p>Open <span class="ref">index.html</span> in a browser (regenerate with <code>python3 tools/concept/board.py 37 --subjects deflector-pod,orbital-lance,act3-icons,ion-beam-final,light-drone-final,emp-burst-final,shield-overcharge-final,ion-beam-start,ion-beam-stop,beam-impact,beam-impact-rock,deflector-tick,deflector-return,emp-ring,emp-powerdown,lance-rumble,overcharge-whoosh,overcharge-end,cooldown-ready,dash,drone-break,drone-rebuild,voice-lance-control,arsenal-capture,specials-capture,dash-capture,act3-hangar-capture</code>). The rows are in this order:</p><ol><li><strong>Changes to approved specs</strong> (<code>C…</code>): <em>accept</em> or <em>revert</em>;</li><li><strong>Art</strong> (<code>F.…</code> final art to approve, <code>P.…</code> a/b picks): <em>approve as final</em> / <em>redo</em>, or <em>a</em> / <em>b</em>;</li><li><strong>Sounds</strong> (<code>S.…</code>, the 15 equipment sounds and Lance Control's voice): <em>a</em> / <em>b</em> / <em>redo</em>;</li><li><strong>Captures</strong> (<code>K.…</code>): the game as built, <em>accept</em> or <em>change</em>;</li><li><strong>Build choices</strong> (<code>B.…</code>) per step, each item <em>yes</em> (keep as built) or <em>no</em> (say what), and the <strong>findings</strong> (<code>R.…</code>) the steps raised, with the save format (<code>V.1</code>).</li></ol><h3>In the game</h3><p><code>./gradlew :desktop:run --args="…"</code> with <code>--settings &lt;file&gt;</code> to keep the real settings apart (a debug run writes no save):</p><ul><li>the arsenal: <code>--level 5 --loadout front=ion-beam:2,left=light-drone-bay,right=deflector-pod,utility=evasive-thrusters</code> plus <code>--special emp-burst:3</code>, <code>--special orbital-lance:2</code>, <code>--special shield-overcharge</code> or <code>--special smart-bomb:3</code>; the Dash is V (or the left bumper) or a double-tap of a direction;</li><li><code>--difficulty hard</code> brings enough bullets for the drones and the Deflector Pod;</li><li>the hangar's third bay and the Act 3 shop rows need a save at Level 15 or later (the <span class="ref">capture</span> used a hand-written one).</li></ul></div><p class="note">A read-only record: every row as the review page showed it, with the answer and the outcome from the round README (the record of truth). Media is linked from the design tree, not copied.</p><nav class="sec"><a href="#s-changes-to-approved-specs">Changes</a><a href="#s-art-final">Final art</a><a href="#s-art-picks">Picks</a><a href="#s-sounds">Sounds</a><a href="#s-captures">Captures</a><a href="#s-build-choices-and-findings">Choices</a></nav><section id="s-changes-to-approved-specs"><h2>Changes to approved specs</h2>
+<div class="sum"><p>Round 36 approved the drone's HUD pips and the special row's text; the HUD's 8 px font and the weapons box forced a different layout. Each <strong>C</strong> row is <em>accept</em> or <em>revert</em>.</p></div>
+<article class="row" id="r-C1">
+<header><span class="rid">C1</span><h3>The light drone&#x27;s hits as a strip under its row</h3><span class="kind">spec change</span></header>
+<dl><dt>Approved</dt><dd>round 36, G.2 = a: the drone's HUD hits-left pips <strong>in place of</strong> the level pips</dd><dt>Built</dt><dd>the level pips stay; the drone's hits are a 2 px strip of five pips under its row, cyan, refilling dim while its bay rebuilds it (<span class="ref">HUD</span>)</dd></dl>
+<div class="ans out"><span class="tag">Outcome</span> <span><strong>accepted</strong> (user)</span></div>
+</article>
+<article class="row" id="r-C2">
+<header><span class="rid">C2</span><h3>The compact special row for a cooldown special</h3><span class="kind">spec change</span></header>
+<dl><dt>Approved</dt><dd>the specials' HUD ring: <code>SHIELD OVERCHARGE 27s</code> / <code>READY</code> beside the ringed icon</dd><dt>Built</dt><dd>the 8 px font cannot fit it: for a cooldown special or a name over 10 characters the row goes compact, the ringed icon where the word <code>SPECIAL</code> stands and <code>OVERCHARGE 27s</code> / <code>READY</code> after it (the Orbital Lance's name and charges likewise); the Act 1–2 specials and the EMP Burst keep the row as it was (<span class="ref">HUD</span>)</dd></dl>
+<div class="ans out"><span class="tag">Outcome</span> <span><strong>accepted</strong> (user)</span></div>
+</article>
+</section>
+<section id="s-art-final"><h2>Art — final</h2>
+<div class="sum"><p>Production art drawn from round 36's picks (<code>tools/art/</code>), in the game now.</p></div>
+<article class="row" id="r-F.1">
+<header><span class="rid">F.1</span><h3>Ion Beam</h3><span class="kind">final art</span></header>
+<div class="part"><a href="../../player/weapons/ion-beam/README.md#concept-art">Ion Beam</a></div>
+<div class="q"><strong>final art</strong> (<code>tools/art/ion_beam.py</code>, G.1 = a): six 64 px column tiles per level width, the tips, the large and small contact flares, the rock-scorch flare, dust, scorch mark and glance spark</div>
+<div class="media"><figure class="m img"><a href="../../player/weapons/ion-beam/concept/ion-beam-final-r37-a.png"><img loading="lazy" decoding="async" src="../../player/weapons/ion-beam/concept/ion-beam-final-r37-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure><figure class="m img"><a href="../../player/weapons/ion-beam/concept/ion-beam-final-r37-a.gif"><img loading="lazy" decoding="async" src="../../player/weapons/ion-beam/concept/ion-beam-final-r37-a.gif" alt="sheet · motion"></a><figcaption>sheet · motion</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the rock scorch shows on ground units until Level 16 brings rock walls; see the <span class="ref">capture</span> for the flare on a big target</p>
+<div class="ans"><span class="tag">Answer</span> <span>approve as final / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>approved as final</strong> (user)</span></div>
+</article>
+<article class="row" id="r-F.2">
+<header><span class="rid">F.2</span><h3>Light drone</h3><span class="kind">final art</span></header>
+<div class="part"><a href="../../player/weapons/light-drone-bay/README.md#concept-art">Light drone</a></div>
+<div class="q"><strong>final art</strong> (<code>tools/art/light_drone.py</code>, G.2 = a): the disc drone in 16 headings, its shot, break and rebuild, the dock-ring bay on the five banking frames</div>
+<div class="media"><figure class="m img"><a href="../../player/weapons/light-drone-bay/concept/light-drone-final-r37-a.png"><img loading="lazy" decoding="async" src="../../player/weapons/light-drone-bay/concept/light-drone-final-r37-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure><figure class="m img"><a href="../../player/weapons/light-drone-bay/concept/light-drone-final-r37-a.gif"><img loading="lazy" decoding="async" src="../../player/weapons/light-drone-bay/concept/light-drone-final-r37-a.gif" alt="sheet · motion"></a><figcaption>sheet · motion</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the rebuild is shortened in the GIF's loop</p>
+<div class="ans"><span class="tag">Answer</span> <span>approve as final / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>approved as final</strong> (user)</span></div>
+</article>
+<article class="row" id="r-F.3">
+<header><span class="rid">F.3</span><h3>EMP Burst</h3><span class="kind">final art</span></header>
+<div class="part"><a href="../../player/specials/README.md#concept-art">EMP Burst</a></div>
+<div class="q"><strong>final art</strong> (<code>tools/art/act3_specials.py</code>, G.3 = a): the ring as a 60×128 strip mapped round the circle with four crackle frames; the stun crackle overlay in three sizes</div>
+<div class="media"><figure class="m img"><a href="../../player/specials/concept/emp-burst-final-r37-a.png"><img loading="lazy" decoding="async" src="../../player/specials/concept/emp-burst-final-r37-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure><figure class="m img"><a href="../../player/specials/concept/emp-burst-final-r37-a.gif"><img loading="lazy" decoding="async" src="../../player/specials/concept/emp-burst-final-r37-a.gif" alt="sheet · motion"></a><figcaption>sheet · motion</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the GIF's Ghost Drones are stand-ins: no Act 1–2 unit is a machine</p>
+<div class="ans"><span class="tag">Answer</span> <span>approve as final / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>approved as final</strong> (user)</span></div>
+</article>
+<article class="row" id="r-F.4">
+<header><span class="rid">F.4</span><h3>Shield Overcharge</h3><span class="kind">final art</span></header>
+<div class="part"><a href="../../player/specials/README.md#concept-art">Shield Overcharge</a></div>
+<div class="q"><strong>final art</strong> (<code>tools/art/act3_specials.py</code>, G.4 = b): the white double shell loop and the activation flare</div>
+<div class="media"><figure class="m img"><a href="../../player/specials/concept/shield-overcharge-final-r37-a.png"><img loading="lazy" decoding="async" src="../../player/specials/concept/shield-overcharge-final-r37-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure><figure class="m img"><a href="../../player/specials/concept/shield-overcharge-final-r37-a.gif"><img loading="lazy" decoding="async" src="../../player/specials/concept/shield-overcharge-final-r37-a.gif" alt="sheet · motion"></a><figcaption>sheet · motion</figcaption></figure></div>
+<div class="ans"><span class="tag">Answer</span> <span>approve as final / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>approved as final</strong> (user)</span></div>
+</article>
+</section>
+<section id="s-art-picks"><h2>Art — picks</h2>
+<div class="sum"><p>Round 36 showed no look for these; the game draws <strong>a</strong> until the pick.</p></div>
+<article class="row" id="r-P.1">
+<header><span class="rid">P.1</span><h3>Deflector Pod</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../player/weapons/deflector-pod/README.md#concept-art">Deflector Pod</a></div>
+<div class="q"><strong>pick a or b</strong> (<code>tools/art/deflector_pod.py</code>): a "field band", an emitter pod with a cyan dome, the field a thin cyan band with a faint glow, a catch lighting a short arc white with sparks; b "plate lattice", a pod with three emitter vanes, the field as five thin hex-cell plates, a catch flashing the plate with a spark ring</div>
+<div class="media"><figure class="m img"><a href="../../player/weapons/deflector-pod/concept/deflector-pod-r37-a.png"><img loading="lazy" decoding="async" src="../../player/weapons/deflector-pod/concept/deflector-pod-r37-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../player/weapons/deflector-pod/concept/deflector-pod-r37-a.gif"><img loading="lazy" decoding="async" src="../../player/weapons/deflector-pod/concept/deflector-pod-r37-a.gif" alt="a · motion"></a><figcaption>a · motion</figcaption></figure><figure class="m img"><a href="../../player/weapons/deflector-pod/concept/rejected/deflector-pod-r37-b.png"><img loading="lazy" decoding="async" src="../../player/weapons/deflector-pod/concept/rejected/deflector-pod-r37-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../player/weapons/deflector-pod/concept/rejected/deflector-pod-r37-b.gif"><img loading="lazy" decoding="async" src="../../player/weapons/deflector-pod/concept/rejected/deflector-pod-r37-b.gif" alt="b · motion"></a><figcaption>b · motion</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> b's plates are busier next to the drone pods and the shield ring</p>
+<div class="ans"><span class="tag">Answer</span> <span>a / b / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>a</strong> (user); b in <code>concept/rejected/</code></span></div>
+</article>
+<article class="row" id="r-P.2">
+<header><span class="rid">P.2</span><h3>Orbital Lance</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../player/specials/README.md#concept-art">Orbital Lance</a></div>
+<div class="q"><strong>pick a or b</strong> (<code>tools/art/act3_specials.py</code>): a "piercing ray", a solid red targeting line, a column with a wide white-hot core and a blue halo with striations racing down; b "descending rings", a dashed double red line with chevrons, a narrower core with bright rings travelling down</div>
+<div class="media"><figure class="m img"><a href="../../player/specials/concept/rejected/orbital-lance-r37-a.png"><img loading="lazy" decoding="async" src="../../player/specials/concept/rejected/orbital-lance-r37-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../player/specials/concept/rejected/orbital-lance-r37-a.gif"><img loading="lazy" decoding="async" src="../../player/specials/concept/rejected/orbital-lance-r37-a.gif" alt="a · motion"></a><figcaption>a · motion</figcaption></figure><figure class="m img"><a href="../../player/specials/concept/orbital-lance-r37-b.png"><img loading="lazy" decoding="async" src="../../player/specials/concept/orbital-lance-r37-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../player/specials/concept/orbital-lance-r37-b.gif"><img loading="lazy" decoding="async" src="../../player/specials/concept/orbital-lance-r37-b.gif" alt="b · motion"></a><figcaption>b · motion</figcaption></figure></div>
+<div class="ans"><span class="tag">Answer</span> <span>a / b / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>b</strong> (user; in the game since step Q2); a in <code>concept/rejected/</code></span></div>
+</article>
+<article class="row" id="r-P.3">
+<header><span class="rid">P.3</span><h3>Act 3 hangar icons</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../ui/hangar/README.md#concept-art">Act 3 hangar icons</a></div>
+<div class="q"><strong>pick a or b</strong> (<code>tools/art/icons.py</code>, 16 and 24 px): the seven new items (Ion Beam, Rear Lance, Deflector Pod, Light Drone Bay, EMP Burst, Orbital Lance, Shield Overcharge); a draws each as its effect (a thick beam with a contact star, the Lance Laser's emblem turned round, the pod with its arc, the disc drone, a ring with a bolt, a column on a target ring, two nested shields); b as an emblem (an emitter ring, a lance through two marks, the arc catching a bolt, a drone on an orbit arc, concentric arcs, a satellite over a column, a shield with an up arrow)</div>
+<div class="media"><figure class="m img"><a href="../../ui/hangar/concept/act3-icons-r37-a.png"><img loading="lazy" decoding="async" src="../../ui/hangar/concept/act3-icons-r37-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../ui/hangar/concept/rejected/act3-icons-r37-b.png"><img loading="lazy" decoding="async" src="../../ui/hangar/concept/rejected/act3-icons-r37-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> a's EMP ring and Overcharge shields are close at 16 px</p>
+<div class="ans"><span class="tag">Answer</span> <span>a / b / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>a</strong> (user); b in <code>concept/rejected/</code></span></div>
+</article>
+</section>
+<section id="s-sounds"><h2>Sounds</h2>
+<div class="sum"><p>Round 37's a/b for the Act 3 equipment (<span class="ref">sfx</span>, <code>tools/concept/audio/sfx_r37.py</code>, every source CC0); the game plays <strong>a</strong> until the pick. Not listened to by Claude: checked by envelopes, spectrograms, levels and loop seams; no bubbly or popping layers.</p></div>
+<article class="row" id="r-S.1">
+<header><span class="rid">S.1</span><h3>Ion Beam start</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Ion Beam start</a></div>
+<div class="q"><strong>pick a or b</strong>, played <strong>with</strong> the chosen loop (r36-a): a "charge snap", the round-04 start's rise at 1.8× speed, a hiss and the loop's body rising onto its pitch (0.40 s); b "ion strike", an arc crack and the body settling 220 → 110 Hz (0.45 s)</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/ion-beam-start-r37-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/ion-beam-start-r37-b.ogg"></audio></figure><figure class="m aud"><figcaption>loop</figcaption><audio controls preload="none" src="../../audio/sfx/concept/ion-beam-loop-r36-a.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the round-04 start (0.9 s) was too long for a beam at full length in 0.05 s</p>
+<div class="ans"><span class="tag">Answer</span> <span>a / b / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>a</strong> (user); b in <code>concept/rejected/</code></span></div>
+</article>
+<article class="row" id="r-S.2">
+<header><span class="rid">S.2</span><h3>Ion Beam stop</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Ion Beam stop</a></div>
+<div class="q"><strong>pick a or b</strong>: a "power down, short", the round-04 stop's first fall over the body sliding 110 → 45 Hz (0.55 s); b "ion collapse", the body sliding 110 → 35 Hz (0.62 s)</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/ion-beam-stop-r37-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/ion-beam-stop-r37-b.ogg"></audio></figure></div>
+<div class="ans"><span class="tag">Answer</span> <span>a / b / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>b</strong> (user); in the game since step Q2; a in <code>concept/rejected/</code></span></div>
+</article>
+<article class="row" id="r-S.3">
+<header><span class="rid">S.3</span><h3>Beam impact sizzle</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Beam impact sizzle</a></div>
+<div class="q"><strong>pick a or b</strong>, a loop while the beam burns a target: a "arc scorch", a fluttering dry sizzle over a burning body; b "cutting torch" (a plasma cutter recording), both 1.5 s at −38 dB</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/beam-impact-r37-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/beam-impact-r37-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> at −38 dB, 1–2.5 LU under the beam loop, it may be lost in a busy mix</p>
+<div class="ans"><span class="tag">Answer</span> <span>a / b / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>a</strong> (user); b in <code>concept/rejected/</code></span></div>
+</article>
+<article class="row" id="r-S.4">
+<header><span class="rid">S.4</span><h3>Beam impact on rock</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Beam impact on rock</a></div>
+<div class="q"><strong>pick a or b</strong>: S.3's a or b with a grit crackle and a stone roar (for the rock walls of Level 16; until then on ground objects)</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/beam-impact-rock-r37-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/beam-impact-rock-r37-b.ogg"></audio></figure></div>
+<div class="ans"><span class="tag">Answer</span> <span>a / b / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>b</strong> (user); in the game since step Q2; a in <code>concept/rejected/</code></span></div>
+</article>
+<article class="row" id="r-S.5">
+<header><span class="rid">S.5</span><h3>Deflector tick</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Deflector tick</a></div>
+<div class="q"><strong>pick a or b</strong>, a bullet caught: a the shield hit at 1.6× speed with a glassy tick; b "dry deflect", a high snap with three metal partials (0.12 s)</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/deflector-tick-r37-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/deflector-tick-r37-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> heard many times a second under a stream</p>
+<div class="ans"><span class="tag">Answer</span> <span>a / b / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>a</strong> (user); b in <code>concept/rejected/</code></span></div>
+</article>
+<article class="row" id="r-S.6">
+<header><span class="rid">S.6</span><h3>Deflector charge return</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Deflector charge return</a></div>
+<div class="q"><strong>pick a or b</strong>: a "soft rise", two voices easing up a fifth; b "charge settle", a fifth fading in over an air whoosh (0.45 s)</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/deflector-return-r37-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/deflector-return-r37-b.ogg"></audio></figure></div>
+<div class="ans"><span class="tag">Answer</span> <span>a / b / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>b</strong> (user); in the game since step Q2; a in <code>concept/rejected/</code></span></div>
+</article>
+<article class="row" id="r-S.7">
+<header><span class="rid">S.7</span><h3>EMP ring</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">EMP ring</a></div>
+<div class="q"><strong>pick a or b</strong>: a "the tesla, layered", four ever slower zaps spreading out, arcs and a thump (1.35 s); b "arc ring", a dying electric buzz, a discharge crack, arcs and a thump (1.34 s)</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/emp-ring-r37-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/emp-ring-r37-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> b is about 5 LU quieter than a at the same peak level</p>
+<div class="ans"><span class="tag">Answer</span> <span>a / b / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>b</strong> (user); in the game since step Q2; a in <code>concept/rejected/</code></span></div>
+</article>
+<article class="row" id="r-S.8">
+<header><span class="rid">S.8</span><h3>EMP power-down</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">EMP power-down</a></div>
+<div class="q"><strong>pick a or b</strong>, a stunned machine (a Vrell unit 6 dB lower): a "spin-down whine", a relay clunk and a whine falling 1400 → 180 Hz; b "buzz dies", a 100 Hz buzz sagging to 70 Hz (0.9 s)</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/emp-powerdown-r37-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/emp-powerdown-r37-b.ogg"></audio></figure></div>
+<div class="ans"><span class="tag">Answer</span> <span>a / b / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>b</strong> (user); in the game since step Q2; a in <code>concept/rejected/</code></span></div>
+</article>
+<article class="row" id="r-S.9">
+<header><span class="rid">S.9</span><h3>Orbital Lance rumble</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Orbital Lance rumble</a></div>
+<div class="q"><strong>pick a or b</strong>, under the chosen loop c: a "orbital roar", a deep roar over low voices on 41 Hz; b "the ground answers" (an earthquake recording), seamless 3.0 s loops at −36 dB</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/lance-rumble-r37-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/lance-rumble-r37-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> 41 Hz is lost on laptop and phone speakers</p>
+<div class="ans"><span class="tag">Answer</span> <span>a / b / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>b</strong> (user); in the game since step Q2; a in <code>concept/rejected/</code></span></div>
+</article>
+<article class="row" id="r-S.10">
+<header><span class="rid">S.10</span><h3>Overcharge activation</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Overcharge activation</a></div>
+<div class="q"><strong>pick a or b</strong>: a "the restore, charged", a power-up with a whoosh and shimmer; b "double shell", a pad rising an octave as its filter opens, a whoosh and a bloom (1.0 s)</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/overcharge-whoosh-r37-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/overcharge-whoosh-r37-b.ogg"></audio></figure></div>
+<div class="ans"><span class="tag">Answer</span> <span>a / b / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>b</strong> (user); in the game since step Q2; a in <code>concept/rejected/</code></span></div>
+</article>
+<article class="row" id="r-S.11">
+<header><span class="rid">S.11</span><h3>Overcharge end</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Overcharge end</a></div>
+<div class="q"><strong>pick a or b</strong>: a "shimmer fades", high partials gliding down; b "the charge drains", the restore's source backwards under a falling shimmer (0.9 s)</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/overcharge-end-r37-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/overcharge-end-r37-b.ogg"></audio></figure></div>
+<div class="ans"><span class="tag">Answer</span> <span>a / b / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>a</strong> (user); b in <code>concept/rejected/</code></span></div>
+</article>
+<article class="row" id="r-S.12">
+<header><span class="rid">S.12</span><h3>Cooldown ready chime</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Cooldown ready chime</a></div>
+<div class="q"><strong>pick a or b</strong>: a "two soft bells", A5 then E6; b "glass fifth", one soft C6–G6 chord (0.5 s)</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/cooldown-ready-r37-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/cooldown-ready-r37-b.ogg"></audio></figure></div>
+<div class="ans"><span class="tag">Answer</span> <span>a / b / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>a</strong> (user); b in <code>concept/rejected/</code></span></div>
+</article>
+<article class="row" id="r-S.13">
+<header><span class="rid">S.13</span><h3>Dash</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Dash</a></div>
+<div class="q"><strong>pick a or b</strong>: a "thruster puff", a jet noise burst sweeping 600 → 2500 → 900 Hz over a short roar; b "rocket kick", two afterburner recordings (0.35 s)</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/dash-r37-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/dash-r37-b.ogg"></audio></figure></div>
+<div class="ans"><span class="tag">Answer</span> <span>a / b / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>a</strong> (user); b in <code>concept/rejected/</code></span></div>
+</article>
+<article class="row" id="r-S.14">
+<header><span class="rid">S.14</span><h3>Drone break</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Drone break</a></div>
+<div class="q"><strong>pick a or b</strong>: a the metal hit and a <code>tiny</code> blast with sparks (0.49 s); b "crunch", a metal impact and a small explosion (0.63 s)</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/drone-break-r37-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/drone-break-r37-b.ogg"></audio></figure></div>
+<div class="ans"><span class="tag">Answer</span> <span>a / b / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>a</strong> (user); b in <code>concept/rejected/</code></span></div>
+</article>
+<article class="row" id="r-S.15">
+<header><span class="rid">S.15</span><h3>Drone rebuilt</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#concept-art">Drone rebuilt</a></div>
+<div class="q"><strong>pick a or b</strong>: a "materialise", a soft saw pad easing up a fourth; b "three bells", E5, A5, E6 over a faint sparkle (0.6 s)</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/drone-rebuild-r37-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/drone-rebuild-r37-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> b's bells are close to S.12's chime</p>
+<div class="ans"><span class="tag">Answer</span> <span>a / b / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>a</strong> (user); b in <code>concept/rejected/</code></span></div>
+</article>
+<article class="row" id="r-S.16">
+<header><span class="rid">S.16</span><h3>Lance Control&#x27;s voice</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../audio/voice/README.md#concept-art">Lance Control's voice</a></div>
+<div class="q"><strong>pick a or b</strong> (<code>tools/concept/audio/tts_r37.py</code>, through radio filter b): the line "Lance uplink locked. Firing!"; a reader Ted Lienhart (132 Hz, 2.06 s); b reader Celine Major (159 Hz, 2.62 s, rising to ≈ 350 Hz on "Firing!"). Until the pick the game shows the line as text with the radio blip</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/voice/concept/rejected/voice-lance-control-r37-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/voice/concept/voice-lance-control-r37-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> through the filter the recogniser hears "Lands up, link" (a) and "Plants up, link" (b): "uplink" may blur for a listener too</p>
+<div class="ans"><span class="tag">Answer</span> <span>a / b / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>b</strong> (user): Celine Major, cast and rendered in step Q2; a's audition and clip in <code>concept/rejected/</code></span></div>
+</article>
+</section>
+<section id="s-captures"><h2>Captures</h2>
+<div class="sum"><p>The <code>installDist</code> build on a private display, the game's own sound (its <code>wave</code> mix), on Act 1–2 levels with the part-A loadout; how each was taken is in its folder's <code>concept/prompts.md</code>.</p></div>
+<article class="row" id="r-K.1">
+<header><span class="rid">K.1</span><h3>Ion Beam, drones, Deflector Pod</h3><span class="kind">game capture</span></header>
+<div class="part"><a href="../../player/weapons/README.md#concept-art">Ion Beam, drones, Deflector Pod</a></div>
+<div class="q"><strong>game capture</strong>: the beam's contact flare and heat tint on a tough target, the drones orbiting, firing, breaking and rebuilding with the HUD hits strip, the Deflector Pod catching bullets and its charges returning (L05 and L07; 53 s with sound and a sheet of 18 frames)</div>
+<div class="media"><figure class="m img"><a href="../../player/weapons/concept/arsenal-capture-r37-a.png"><img loading="lazy" decoding="async" src="../../player/weapons/concept/arsenal-capture-r37-a.png" alt="arsenal-capture-r37-a.png"></a><figcaption>arsenal-capture-r37-a.png</figcaption></figure><figure class="m vid"><figcaption>video with sound</figcaption><video controls preload="none" playsinline src="../../player/weapons/concept/arsenal-capture-r37-a.mp4"></video></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> scratch data: the drone breaks after 2 hits (with the real 8 it was hit 3–4 times in two hard minutes and never broke); the beam findings are <span class="ref">R.4</span></p>
+<div class="ans"><span class="tag">Answer</span> <span>accept / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>accepted</strong> (user)</span></div>
+</article>
+<article class="row" id="r-K.2">
+<header><span class="rid">K.2</span><h3>Specials</h3><span class="kind">game capture</span></header>
+<div class="part"><a href="../../player/specials/README.md#concept-art">Specials</a></div>
+<div class="q"><strong>game capture</strong>: the EMP Burst's ring and the crackle on a stunned machine and a Vrell unit, the Orbital Lance with Lance Control's line, the Shield Overcharge's shell and white cores, then its cooldown ring through to <code>READY</code>; the Smart Bomb still working (L05, L07, L09, L14; 46 s)</div>
+<div class="media"><figure class="m img"><a href="../../player/specials/concept/specials-capture-r37-a.png"><img loading="lazy" decoding="async" src="../../player/specials/concept/specials-capture-r37-a.png" alt="specials-capture-r37-a.png"></a><figcaption>specials-capture-r37-a.png</figcaption></figure><figure class="m vid"><figcaption>video with sound</figcaption><video controls preload="none" playsinline src="../../player/specials/concept/specials-capture-r37-a.mp4"></video></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the machines are Needlers made machines in scratch data (no Act 1–2 unit is one); the READY flash lasts one rendered frame (<span class="ref">R.4</span>)</p>
+<div class="ans"><span class="tag">Answer</span> <span>accept / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>accepted</strong> (user)</span></div>
+</article>
+<article class="row" id="r-K.3">
+<header><span class="rid">K.3</span><h3>Dash</h3><span class="kind">game capture</span></header>
+<div class="part"><a href="../../player/systems/README.md#concept-art">Dash</a></div>
+<div class="q"><strong>game capture</strong>: the dash by the button and by a double-tap, its afterimages and burst, the dash pip emptying and refilling, a dash refused while it cools (L05 hard; 19 s)</div>
+<div class="media"><figure class="m img"><a href="../../player/systems/concept/dash-capture-r37-a.png"><img loading="lazy" decoding="async" src="../../player/systems/concept/dash-capture-r37-a.png" alt="dash-capture-r37-a.png"></a><figcaption>dash-capture-r37-a.png</figcaption></figure><figure class="m vid"><figcaption>video with sound</figcaption><video controls preload="none" playsinline src="../../player/systems/concept/dash-capture-r37-a.mp4"></video></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the pip's white "ready" state lasts one rendered frame (<span class="ref">R.4</span>)</p>
+<div class="ans"><span class="tag">Answer</span> <span>accept / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>accepted</strong> (user)</span></div>
+</article>
+<article class="row" id="r-K.4">
+<header><span class="rid">K.4</span><h3>Hangar, Act 3</h3><span class="kind">game capture</span></header>
+<div class="part"><a href="../../ui/hangar/README.md#concept-art">Hangar, Act 3</a></div>
+<div class="q"><strong>game capture</strong>: the third utility bay bought and its <code>UTL</code> tile, the Act 3 shop rows (four weapons, three specials, the Evasive thrusters), the Shield Overcharge bought (before Level 19, a hand-written save; 97 s)</div>
+<div class="media"><figure class="m img"><a href="../../ui/hangar/concept/act3-hangar-capture-r37-a.png"><img loading="lazy" decoding="async" src="../../ui/hangar/concept/act3-hangar-capture-r37-a.png" alt="act3-hangar-capture-r37-a.png"></a><figcaption>act3-hangar-capture-r37-a.png</figcaption></figure><figure class="m vid"><figcaption>video with sound</figcaption><video controls preload="none" playsinline src="../../ui/hangar/concept/act3-hangar-capture-r37-a.mp4"></video></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the bay's own SELL row is not shown (the run ended first); the shop findings are <span class="ref">R.4</span></p>
+<div class="ans"><span class="tag">Answer</span> <span>accept / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>accepted</strong> (user)</span></div>
+</article>
+</section>
+<section id="s-build-choices-and-findings"><h2>Build choices and findings</h2>
+<div class="sum"><p>What the steps chose where the documents are silent, and what they found. <strong>B</strong> rows: each item <em>yes</em> (keep as built) or <em>no</em> (say what). <strong>R</strong> and <strong>V</strong> rows: as their answer cell says.</p></div>
+<article class="row" id="r-B.1">
+<header><span class="rid">B.1</span><h3>Beam, drones, Deflector Pod in the simulation</h3><span class="kind">yes or no, each</span></header>
+<div class="part"><a href="../../player/weapons/README.md">Beam, drones, Deflector Pod in the simulation</a></div>
+<div class="q"><strong>yes or no, each</strong> (step A1): (a)–(f) below</div>
+<div class="sub"><span class="rid">B.1a</span> A beam on a trigger (which counts hits, not damage) counts one hit per 0.1 s of contact, the first at once: 10 a second, like a fast gun. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.1b</span> The beam stops at something it cannot damage above the ground layer (an armoured set-piece body or neck, a shielded part, a unit that takes no damage now) and shows a glance at its edge; hardened ground is passed over. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.1c</span> A rebuilt drone fades in over 0.3 s moving from its bay to its orbit; while it fades in it neither fires nor blocks, and nothing hits it. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.1d</span> A mortar blob that would land on the ship and lands in a field with a charge left is caught instead of hitting it (its ring of bullets still forms). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.1e</span> A bullet is caught when its centre enters a field; one on the ship's centre line goes to the pod with more charges left (the left one on a tie). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.1f</span> During an overdrive a pod uses the next level's radius and interval, its cap rises to the next level's charges with the new charges empty; when the overdrive ends the charges above the normal cap are lost. <span class="opts">yes / no</span></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> (d) is visible only on hard; (a) makes a beam on a trigger far stronger than a gun on one</p>
+<div class="ans"><span class="tag">Answer</span> <span>all yes / some no</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>all yes</strong> (user)</span></div>
+</article>
+<article class="row" id="r-B.2">
+<header><span class="rid">B.2</span><h3>Specials and the dash in the simulation</h3><span class="kind">yes or no, each</span></header>
+<div class="part"><a href="../../player/specials/README.md">Specials and the dash in the simulation</a></div>
+<div class="q"><strong>yes or no, each</strong> (step A3): (a)–(g) below</div>
+<div class="sub"><span class="rid">B.2a</span> A stunned unit's own clock stops: it fires nothing and its timers wait; a unit on a path drifts on with its velocity and resumes its path shifted by the drift, without jumping back. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.2b</span> A chain stops whole and flies on after its stun; a latched Lamprey stays latched and its drain pauses. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.2c</span> A new burst restarts a running stun (no stacking); bosses, mid-bosses, set-piece parts and <code>sub</code> units are never stunned; the aura and shield strip does nothing until the Choir Herald's <code>aura</code> (part D). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.2d</span> A cooldown special is ready at every attempt's start, a retry and a boss checkpoint; a press up to 0.1 s before it is ready fires it when it is; a special charge pickup takes 10 s off a running cooldown and nothing when it is ready. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.2e</span> The Shield Overcharge ends at an attempt's start; a shield cell picked up during it fills only to the raised capacity. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.2f</span> The dash goes in the direction held, straight ahead with none; a double-tap counts only that direction pressed, released and pressed again within 0.25 s with nothing else pressed between; a dash asked for while it cools does nothing, silently. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.2g</span> <code>Command.DASH</code> is the last command bit, and every new state is hashed only when its equipment is fitted, so recordings and the Level 01 golden replay are unchanged. <span class="opts">yes / no</span></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> no Act 1–2 unit is a machine, so (a)–(c) were checked on test units and in the capture's scratch data</p>
+<div class="ans"><span class="tag">Answer</span> <span>all yes / some no</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>all yes</strong> (user)</span></div>
+</article>
+<article class="row" id="r-B.3">
+<header><span class="rid">B.3</span><h3>Data, shop and balance</h3><span class="kind">yes or no, each</span></header>
+<div class="part"><a href="../../player/balance-plan.yaml">Data, shop and balance</a></div>
+<div class="q"><strong>yes or no, each</strong> (steps A2, A4): (a)–(d) below</div>
+<div class="sub"><span class="rid">B.3a</span> The balance plan from L15: one EMP charge on top of the free one with the Airstrike fitted again (the EMP charges wait for a level with machines), the generator Mk III at L16, saving at L17, the Ion Beam bought at L2 at L18 with the Pulse Cannon sold, L3 at L19, the Tail Gun L3 at L20, Composite III at L21. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.3b</span> <code>--loadout</code> fits a cooldown special with one "charge" (it is owned once); the debug option <code>utility3=</code> counts the third bay bought. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.3c</span> A second set of Evasive thrusters in the other bay adds nothing. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.3d</span> The EMP Burst counts as nothing for a level's <code>required</code> traits; the Orbital Lance counts as <code>anti-ground</code> (it burns hardened targets). <span class="opts">yes / no</span></div>
+<div class="ans"><span class="tag">Answer</span> <span>all yes / some no</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>all yes</strong> (user); (a) superseded by R.1's re-plan (step Q1)</span></div>
+</article>
+<article class="row" id="r-B.4">
+<header><span class="rid">B.4</span><h3>Hangar</h3><span class="kind">yes or no, each</span></header>
+<div class="part"><a href="../../ui/hangar/README.md#decisions">Hangar</a></div>
+<div class="q"><strong>yes or no, each</strong> (step A5): (a)–(e) below</div>
+<div class="sub"><span class="rid">B.4a</span> The third bay's <code>UTL</code> tile sits in the schematic's lower right corner, opposite Rook's callout (the module row has no room for an eighth 48 px tile). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.4b</span> The bay is bought from a bay row at the end of the utility slots' shops and sold from its own slot's shop (refused while a module is fitted), and is not listed before the L15 visit (no locked row). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.4c</span> The Act 3 specials' tiles read <code>EMP</code>, <code>LANCE</code> and <code>OVRCHG</code>; the drone bay's <code>DRONE BAY</code>. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.4d</span> The Deflector Pod's test fire has the dummies fire a slow (110 px/s) harmless bullet at the ship every 0.6 s, so the catch and the charge return show. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.4e</span> A test-fire dummy stands one second of the L1 Ion Beam. <span class="opts">yes / no</span></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> (a) puts the tile far from the other two</p>
+<div class="ans"><span class="tag">Answer</span> <span>all yes / some no</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>all yes</strong> (user)</span></div>
+</article>
+<article class="row" id="r-B.5">
+<header><span class="rid">B.5</span><h3>In flight and the HUD</h3><span class="kind">yes or no, each</span></header>
+<div class="part"><a href="../../ui/hud/README.md#decisions">In flight and the HUD</a></div>
+<div class="q"><strong>yes or no, each</strong> (step A6): (a)–(h) below</div>
+<div class="sub"><span class="rid">B.5a</span> The cooldown ring is 28 dots round the 16 px icon: dim cyan while it cools, cyan when ready, white for 12 frames as it gets there; the overcharge's white arc drains anticlockwise over it. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.5b</span> The dash pip is a 16×6 cell right of the shield's label plate, filling dim cyan over the cooldown, cyan when ready, white for 10 frames as it gets there; the hull shows every other two steps while the dash makes it invulnerable, with three fading afterimages. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.5c</span> Until the walls of Level 16 the beam's rock-scorch flare and scorch marks show where it burns a ground object, and the scorch marks under a ground unit too. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.5d</span> The EMP ring fades to 65 % over its run; the crackle comes in three sizes by the unit's size (under 32 px, under 64 px, above); a stunned Vrell unit's glow drops to 35 % and a machine's lights go out. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.5e</span> The lance's scorch columns fade over 4 s, their embers over 1.2 s. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.5f</span> The overcharge's shell fades to half over the excess's bleed. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.5g</span> The Orbital Lance's call is Lance Control's line, urgent like Hammer Lead's (the call is picked by the special's kind), shown as text with the blip until the voice is chosen (S.16). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.5h</span> The Options screen's Controls tab shows the Dash's primary slot as the fixed <code>DOUBLE-TAP</code>; V and the left bumper stay remappable. <span class="opts">yes / no</span></div>
+<div class="ans"><span class="tag">Answer</span> <span>all yes / some no</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>all yes</strong> (user)</span></div>
+</article>
+<article class="row" id="r-B.6">
+<header><span class="rid">B.6</span><h3>Sounds in flight</h3><span class="kind">yes or no, each</span></header>
+<div class="part"><a href="../../audio/sfx/README.md#decisions">Sounds in flight</a></div>
+<div class="q"><strong>yes or no, each</strong> (step A6): (a)–(d) below</div>
+<div class="sub"><span class="rid">B.6a</span> The beam's start plays with its loop, not before it; the stop at the release. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.6b</span> The impact sizzle plays at its file's −38 dB under the loop. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.6c</span> The EMP's power-down plays once a step for what the ring reaches: a machine's at the explosions' level, a Vrell unit's 6 dB lower. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">B.6d</span> A drone's absorbed hit plays the metal hit 12 dB under the hits. <span class="opts">yes / no</span></div>
+<div class="ans"><span class="tag">Answer</span> <span>all yes / some no</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>all yes</strong> (user)</span></div>
+</article>
+<article class="row" id="r-R.1">
+<header><span class="rid">R.1</span><h3>The balance&#x27;s income without level data</h3><span class="kind">finding: which reading is right?</span></header>
+<div class="part"><a href="../../player/balance-plan.yaml">The balance's income without level data</a></div>
+<div class="q"><strong>finding: which reading is right?</strong> The gap check said the income fallback for a level without data (Levels 15–21 today) must be <code>budget(n) × act factor</code> (≈ 4 600 a level instead of ≈ 1 800). Step A2 found the opposite and built nothing: <code>budget(n)</code> is already the typical haul of level <em>n</em> in its own act (Act 2's hauls land on it unscaled: L14 1 703 of 1 687), so the plan's Act 3 visits use <code>budget(n)</code> as it is (1 805 at L15 → 2 709 at L21)</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> if A2 is wrong the Act 3 plan is about 2.5× too poor, and the beam's 5 000 would be bought far too late; the Act 3 levels' data (part B on) settles it</p>
+<div class="ans"><span class="tag">Answer</span> <span>A2's reading (no change) / apply the act factor</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>apply the act factor</strong> (user): income fallback budget(n) × 1.6^(act − 1), the Act 3 purchases re-planned (step Q1)</span></div>
+</article>
+<article class="row" id="r-R.2">
+<header><span class="rid">R.2</span><h3>The hard sheet at Level 18</h3><span class="kind">finding</span></header>
+<div class="part"><a href="../../player/weapons/ion-beam/README.md">The hard sheet at Level 18</a></div>
+<div class="q"><strong>finding</strong>: on hard (income × 0.9) the plan cannot afford the Ion Beam at the L18 visit and stays at 77 forward DPS (medium: the beam at L2 at L18, 80, then 100 from L19). Nothing changed: hard is meant to be tighter (2026-10-05)</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the reference DPS rises to 88–100 meanwhile, so a hard player is 10–20 % short in L18–L21 until the beam</p>
+<div class="ans"><span class="tag">Answer</span> <span>accept / change (say what)</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>accepted</strong> (user); moot since R.1's re-plan (hard buys the beam at L17)</span></div>
+</article>
+<article class="row" id="r-R.3">
+<header><span class="rid">R.3</span><h3>The Deflector Pod&#x27;s data layout</h3><span class="kind">finding</span></header>
+<div class="part"><a href="../../player/weapons/deflector-pod/README.md#decisions">The Deflector Pod's data layout</a></div>
+<div class="q"><strong>finding</strong>: the field's numbers (<code>radius</code>, <code>charges</code>, <code>recharge</code>) sit in each of its five <code>levels</code> and its <code>overdrive</code> under <code>hits: deflector</code>, not in a separate <code>deflector</code> block as the gap check had it, so every weapon keeps five levels and an overdrive for the shop's prices and draws</div>
+<div class="ans"><span class="tag">Answer</span> <span>accept / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>accepted</strong> (user)</span></div>
+</article>
+<article class="row" id="r-R.4">
+<header><span class="rid">R.4</span><h3>What the captures found</h3><span class="kind">findings: fix or keep, each</span></header>
+<div class="part"><a href="#captures">What the captures found</a></div>
+<div class="q"><strong>findings: fix or keep, each</strong> (below; step A8 fixed all but (c), which waits for your call)</div>
+<div class="media"><figure class="m img"><a href="../../player/weapons/concept/arsenal-capture-r37-a.png"><img loading="lazy" decoding="async" src="../../player/weapons/concept/arsenal-capture-r37-a.png" alt="arsenal sheet"></a><figcaption>arsenal sheet</figcaption></figure><figure class="m img"><a href="../../ui/hangar/concept/act3-hangar-capture-r37-a.png"><img loading="lazy" decoding="async" src="../../ui/hangar/concept/act3-hangar-capture-r37-a.png" alt="hangar sheet"></a><figcaption>hangar sheet</figcaption></figure></div>
+<details><summary>Findings</summary><p>seen in the captures and not fixed (Claude's reading):</p><ul><li><strong>(a)</strong> The heat tint on a Gorgon Frigate tentacle shows as a flat pure-white silhouette for over a second, more a blink than a steady tint.</li><li><strong>(b)</strong> On the frigate's hull the column ends without a contact flare.</li><li><strong>(c)</strong> The column runs on past the Brood Carrier in its first (high-air) phase and past the Siege Spire (Level 14, t 114) instead of stopping on them.</li><li><strong>(d)</strong> The cooldown ring's white READY flash and the dash pip's white state count rendered frames (12 and 10), so at an uncapped 460 fps they last about 20–25 ms; they should count time.</li><li><strong>(e)</strong> In the hangar the Shield Overcharge shows <code>SELL 5 000</code> right after buying (the visit's undo refund, probably, not the 60 % sell-back) and an empty <code>VS FITTED:</code> line.</li><li><strong>(f)</strong> The EMP Burst's FIT was refused with "NEEDS 1 MW MORE POWER" at 0 MW draw, while the Overcharge fitted in the same state (the scratch save was over its 14 MW cap).</li><li><strong>(g)</strong> "1 FREE EMP BURST CHARGE" stays on the message line on every slot until the next transaction; after buying the bay the cursor lands on the locked IFF spoofer row.</li></ul></details>
+<details><summary>Fixed in step A8</summary><p>all but (c), which is left as built for your answer (the approved rule may well pass the Carrier's first phase and the Spire). Not yet seen in a new capture; each has a test (<code>ArsenalHudTest</code>, <code>ActThreeHangarTest</code>).</p><ul><li><strong>(a)</strong> The head of the Gorgon Frigate the beam burns now takes the steady heat tint every other target gets instead of the white hit flash, which the beam renewed every step.</li><li><strong>(b)</strong> Where something the beam cannot damage stops it (the frigate's closed hull, a shielded part), the column now ends at its edge (not bored 4 px in) in the glance spark, the "glance at its edge" of B.1 (b); a burn's contact flare would read as damage, so it is not used there.</li><li><strong>(d)</strong> The READY flash and the dash pip's white state now last 0.2 s of game time (12 simulation steps) whatever the frame rate; the dash pip's was 10 frames, it now matches the ring's 0.2 s.</li><li><strong>(e)</strong> The <code>SELL 5 000</code> is the designed full refund of something bought during the same visit (the sale's dialog says so; a later visit sells it at the 60 % share). The detail now says so too (<code>BOUGHT THIS VISIT: FULL REFUND</code>), and the <code>VS FITTED:</code> line is left out when nothing differs (the Overcharge shares no stat with a charge special and draws the same 0 MW).</li><li><strong>(f)</strong> Specials draw no power; the refusal came from the hand-written save, already 1 MW over its generator (15 / 14 MW): every fit was checked against the cap, even one adding nothing, while buying the Overcharge was not. Now a change is refused for power only when it widens the gap, so an over-cap loadout (a hand-written save, or one from before a draw changed) can still fit a special or swap to a lighter item; a change that adds draw stays refused.</li><li><strong>(g)</strong> The visit's notice (the free charges) leaves the message line on the next move or slot change; a transaction's message still stays until the next transaction. After buying a bay the cursor goes to the bay's new slot (its <code>UTL</code> tile), on its first row.</li></ul></details>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> (c) may be the approved rule (hardened ground passed over; the Carrier's first phase may be untargetable) rather than a bug; (f) was seen with a save over its power cap</p>
+<div class="ans"><span class="tag">Answer</span> <span>fix all / some (say which)</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>fix all</strong> (user): (a), (b), (d)–(g) as fixed in step A8; (c) fixed in step Q1 (<code>PlayerFire.cast</code>'s <code>CAST_ARMOUR</code>: a set piece's armour stops the beam on every layer with the glance, its damageable parts burn; <code>IonBeamBossesTest</code>)</span></div>
+</article>
+<article class="row" id="r-V.1">
+<header><span class="rid">V.1</span><h3>Save format 4</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../systems/saves/README.md#decisions">Save format 4</a></div>
+<div class="q"><strong>accept or change</strong> (Q1 = a, built in step A2): a <code>bays</code> field (the utility bays bought, 0 or 1); a version 3 save is migrated with 0; an owned cooldown special is held in <code>specials</code> with 1 (no format change for it); <code>SaveFormatTest</code> covers the migration</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the M6 release's saves are version 3: the migration is the only path they take</p>
+<div class="ans"><span class="tag">Answer</span> <span>accept / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>accepted</strong> (user)</span></div>
+</article>
+</section></main></body></html>

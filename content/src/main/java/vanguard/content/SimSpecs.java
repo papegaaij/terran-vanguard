@@ -339,6 +339,8 @@ public final class SimSpecs {
             case ARMOUR_PATCH -> PickupType.ARMOUR_PATCH;
             case SPECIAL_CHARGE -> PickupType.SPECIAL_CHARGE;
             case DATA_CORE -> PickupType.DATA_CORE;
+            // M9 part G (Level 34): the Helix core, a group's story pickup.
+            case STORY -> PickupType.STORY;
             default -> throw new IllegalArgumentException("the pickup " + pickup + " is not implemented yet");
         };
     }

@@ -23,18 +23,21 @@ class DensityTest {
 
     private static final Content CONTENT = LevelMetrics.CONTENT;
 
-    static Stream<String> levels() {
-        return CONTENT.levels().keySet().stream();
+    /** M9 part E: a forked level (Level 32) on each of its routes ({@link RoutePlay}). */
+    static Stream<org.junit.jupiter.params.provider.Arguments> levels() {
+        return CONTENT.levels().keySet().stream().flatMap(key -> RoutePlay.routes(CONTENT, key).stream()
+                .map(route -> org.junit.jupiter.params.provider.Arguments.of(key, route)));
     }
 
     @ParameterizedTest
     @MethodSource("levels")
-    void theLevelReachesItsMinimumDensity(String key) {
+    void theLevelReachesItsMinimumDensity(String key, String route) {
         LevelScript level = SimSpecs.level(CONTENT, key, Difficulty.MEDIUM);
-        double density = perMinute(level);
+        double density = LevelMetrics.density(level, route).perMinute();
         int minimum = LevelMetrics.densityMinimum(level);
-        System.out.printf("Density %s: %.1f enemies per minute (minimum %d)%n", key, density, minimum);
-        assertTrue(density >= minimum, key + ": " + density + " enemies per minute, minimum " + minimum);
+        String at = key + (route.isEmpty() ? "" : " route " + route);
+        System.out.printf("Density %s: %.1f enemies per minute (minimum %d)%n", at, density, minimum);
+        assertTrue(density >= minimum, at + ": " + density + " enemies per minute, minimum " + minimum);
     }
 
     /** The level's enemies per minute of scroll, from the end of the launch to its first arena. */

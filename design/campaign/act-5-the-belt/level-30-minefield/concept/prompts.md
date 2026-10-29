@@ -46,3 +46,10 @@ level time ≈ recording − 7 s. PNGs: frames of the same recordings (`--shots`
   [gilded-gunship-capture-r63-a](../../../../enemies/air/concept/prompts.md#gilded-gunship-capture-r63-a),
   [rail-serpent-capture-r63-a](../../../../enemies/air/concept/prompts.md#rail-serpent-capture-r63-a),
   [release-end-capture-r63-a](../../concept/prompts.md#release-end-capture-r63-a).
+
+## dead-buoy-capture-r65-a
+
+Concept round 65, a capture of the game (M9 part E, step E5): Level 30 with the plan's fit (as
+[round 63's run](#level-30-capture-r63-a), `armor=3`), auto-fire on, the ship moved to x≈55 at t≈114: t=118.2–120.6 at
+2x, the dead buoy drifting into the beam, its housing counting the beam's touch (round 64 C.1 a) and breaking open, the
+crate freed.

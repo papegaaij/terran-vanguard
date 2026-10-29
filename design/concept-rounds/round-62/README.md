@@ -41,6 +41,8 @@ The review page is built from this file by `build/round62-tools/build_review.py`
 balance plan's Level 29 fit, the ship left mid-screen; the [recipe](../../campaign/act-5-the-belt/level-29-betrayal-at-ceres/concept/prompts.md#level-29-capture-r62-a)); their PNGs
 are `--shots` frames of the same start. With the ship standing still the halt lasts ≈ 35 s (the autopilot's ≈ 13 s).
 
+Record of the decisions: [review.html](review.html)
+
 ## Art — final
 
 Straight to production in round 60's look (Q.11 b gunmetal and charcoal with gold, A.18 a the lighter belt grade); in

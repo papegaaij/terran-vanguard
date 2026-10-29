@@ -1,0 +1,166 @@
+backdrop:
+  # Presentation only: Level 32's tunnels (tools/art/backdrop_l32.py, step ART-E, from the README and ART-E's terrain proposal (no data.yaml yet: re-run after E2)).
+  # No deep layer (the ground is opaque; the walls' rims project beyond the field's edges). The walls and the
+  # islands are the terrain's (WallProjection's ice path, CanyonProfile's convention): ice-wall (cut rock
+  # with the lamp strings), ice-wall-glow (the lamps and the red running lights, additive), ice-wall-foot,
+  # drift-rock-face/-top_0..2 and duct-rock-face/-top_0..2 (the islands' looks). A piece's -glow is added
+  # over it at its placement. gallery-<side>-<depth> are drawn by the game at the terrain's notches (E4).
+  scroll_factors: {far: 0.5, ground: 1, low-air: 1.35, high-air: 2.2}   # far unused, given as the loader asks
+  ramp: 2
+  haze_colour: 120e0a  # the refinery's smoke
+  atmosphere:
+    clear: {haze: 0.0}
+  tile_sets:
+    tunnel-floor: {layer: ground, height: 960}   # sections 1-2: cut rock, dust, old track grooves, a cable run
+    fork-drift-seam: {layer: ground, height: 960}   # section 3: the old drift left (cold, rails, bore holes), the charge seam right (fresh cuts)
+    pumping-hall: {layer: ground, height: 960}   # section 4: the hall's plates, pipe runs, drains
+    fork-ducts-chute: {layer: ground, height: 960}   # section 5: the cooling ducts left, the ore chute's conveyors right
+    furnace-floor: {layer: ground, height: 960}   # section 6: cast plates, the slag channel, the furnaces' orange light
+  pieces:
+    shaft-mouth: {layer: ground, size: [480, 2040]}
+    shaft-mouth-glow: {layer: ground, size: [480, 2040]}
+    seam-fork-drift-seam: {layer: ground, size: [480, 320]}
+    seam-pumping-hall: {layer: ground, size: [480, 320]}
+    seam-fork-ducts-chute: {layer: ground, size: [480, 320]}
+    seam-furnace-floor: {layer: ground, size: [480, 320]}
+    seam-mouth: {layer: ground, size: [160, 128]}
+    seam-mouth-glow: {layer: ground, size: [160, 128]}
+    drift-mouth: {layer: ground, size: [160, 128]}
+    drift-mouth-glow: {layer: ground, size: [160, 128]}
+    ducts-mouth: {layer: ground, size: [160, 128]}
+    ducts-mouth-glow: {layer: ground, size: [160, 128]}
+    conveyor-mouth: {layer: ground, size: [160, 128]}
+    conveyor-mouth-glow: {layer: ground, size: [160, 128]}
+    pump: {layer: ground, size: [112, 112]}
+    pump-glow: {layer: ground, size: [112, 112]}
+    refinery-gate: {layer: ground, size: [420, 72]}
+    refinery-gate-glow: {layer: ground, size: [420, 72]}
+    crucible: {layer: ground, size: [144, 144]}
+    crucible-glow: {layer: ground, size: [144, 144]}
+    gantry: {layer: ground, size: [420, 88]}
+    gantry-glow: {layer: ground, size: [420, 88]}
+    chute-end: {layer: ground, size: [480, 2040]}
+    chute-space: {layer: ground, size: [480, 2040]}
+    gallery-left-56: {layer: ground, size: [100, 172]}
+    gallery-right-56: {layer: ground, size: [100, 172]}
+    gallery-left-16: {layer: ground, size: [60, 172]}
+    gallery-right-16: {layer: ground, size: [60, 172]}
+    gallery-left-26: {layer: ground, size: [70, 172]}
+  placed:
+    # 1. Kleopatra's sunlit face round the shaft's lip, the gantries; exact rows
+    - {piece: shaft-mouth, t: 5.769, x: 240}
+    # section 3's seam (ground 7560): tunnel-floor into fork-drift-seam; exact rows
+    - {piece: seam-fork-drift-seam, t: 56.077, x: 240}
+    # section 4's seam (ground 10160): fork-drift-seam into pumping-hall; exact rows
+    - {piece: seam-pumping-hall, t: 76.077, x: 240}
+    # section 5's seam (ground 15360): pumping-hall into fork-ducts-chute; exact rows
+    - {piece: seam-fork-ducts-chute, t: 116.077, x: 240}
+    # section 6's seam (ground 18220): fork-ducts-chute into furnace-floor; exact rows
+    - {piece: seam-furnace-floor, t: 138.167, x: 240}
+    # fork 1's richer channel's mouth at the island's tip (QE-2 a)
+    - {piece: seam-mouth, t: 55.831, x: 392}
+    # fork 1's safer channel's mouth at the island's tip (QE-2 a)
+    - {piece: drift-mouth, t: 55.831, x: 88}
+    # fork 2's richer channel's mouth at the island's tip (QE-2 a)
+    - {piece: ducts-mouth, t: 115.831, x: 88}
+    # fork 2's safer channel's mouth at the island's tip (QE-2 a)
+    - {piece: conveyor-mouth, t: 115.831, x: 392}
+    # a pump of the pumping hall (t=83)
+    - {piece: pump, t: 85.508, x: 112}
+    # a pump of the pumping hall (t=95)
+    - {piece: pump, t: 97.508, x: 370}
+    # a pump of the pumping hall (t=106)
+    - {piece: pump, t: 108.508, x: 110}
+    # the refinery's gate (the repair crate's lock on it)
+    - {piece: refinery-gate, t: 136.776, x: 240}
+    # the crucible beside the crucible gallery's Sentinel
+    - {piece: crucible, t: 152.85, x: 150}
+    # the gantry across the furnace floor (the SAM trio on it at t=162)
+    - {piece: gantry, t: 164.45, x: 240}
+    # the ore chute's conveyors to the mouth's lip; exact rows
+    - {piece: chute-end, t: 182.667, x: 240}
+    # belt space beyond the chute's mouth, to the outro's end; exact rows
+    - {piece: chute-space, t: 199.667, x: 240}
+# sections' tiles: 1: [tunnel-floor]; 2: [tunnel-floor]; 3: [fork-drift-seam]; 4: [pumping-hall]; 5: [fork-ducts-chute]; 6: [furnace-floor]
+
+# terrain this art is drawn for (ART-E's proposal (the README's wall table, QE-1 a)); E2: adopt it or re-run the generator after changing it
+terrain:
+  left:
+    - [520, 0, 0]   # t=4.0 at the top edge
+    - [1820, 70]   # t=14.0 at the top edge
+    - [6240, 70]   # t=48.0 at the top edge
+    - [6760, 10]   # t=52.0 at the top edge
+    - [9230, 10]   # t=71.0 at the top edge
+    - [9620, 30]   # t=74.0 at the top edge
+    - [14300, 30]   # t=110.0 at the top edge
+    - [14638, 10]   # t=112.6 at the top edge
+    - [17225, 10]   # t=132.5 at the top edge
+    - [17680, 40]   # t=136.0 at the top edge
+    - [22480, 40]   # t=175.9 at the top edge
+    - [23680, 0, 0]   # t=185.9 at the top edge
+  right:
+    - [520, 480, 0]
+    - [1820, 410]
+    - [6240, 410]
+    - [6760, 470]
+    - [9230, 470]
+    - [9620, 450]
+    - [14300, 450]
+    - [14638, 470]
+    - [17225, 470]
+    - [17680, 440]
+    - [22480, 440]
+    - [23680, 480, 0]
+  islands:
+    - name: fork 1   # tip row 6838 (reaches the ship's row at t~55.98, the bottom edge at t=56.75); channels 10-165 and 315-470 (155 px)
+      look: drift-rock
+      points: [[240, 6838], [282, 6852], [311, 6890], [315, 6948], [315, 9160], [307, 9206], [270, 9226], [240, 9230], [210, 9226], [173, 9206], [165, 9160], [165, 6948], [169, 6890], [198, 6852]]
+    - name: fork 2   # tip row 14638 (reaches the ship's row at t~115.98, the bottom edge at t=116.75); channels 10-165 and 315-470 (155 px)
+      look: duct-rock
+      points: [[240, 14638], [282, 14652], [311, 14690], [315, 14748], [315, 17155], [307, 17201], [270, 17221], [240, 17225], [210, 17221], [173, 17201], [165, 17155], [165, 14748], [169, 14690], [198, 14652]]
+  forks: [{island: 0}, {island: 1}]   # fork 1: left the old drift (safer), right the charge seam; fork 2: left the cooling ducts (richer), right the ore chute
+  notches:   # side, scroll = the terrain row of the notch's middle, width along the wall, depth into it
+    - {side: left, scroll: 1890, width: 140, depth: 56}   # the shaft mouth's launch bay (the Darts at t=15.5); t=14.5 at the top edge
+    - {side: right, scroll: 3160, width: 140, depth: 56}   # the gallery Sentinel (t=24, x 426: its emitter 40 px inside the field); t=24.3 at the top edge
+    - {side: right, scroll: 5375, width: 140, depth: 56}   # the right gallery's launch bay (the Darts at t=42.5); t=41.3 at the top edge
+    - {side: left, scroll: 10310, width: 140, depth: 16}   # the hall Sentinel (t=79, x 54: its emitter 40 px inside the field); t=79.3 at the top edge
+    - {side: right, scroll: 10531, width: 140, depth: 16}   # the hall Sentinel (t=80.7, x 426: its emitter 40 px inside the field); t=81.0 at the top edge
+    - {side: left, scroll: 19410, width: 140, depth: 26}   # the crucible Sentinel (t=150, x 54: its emitter 40 px inside the field); t=150.3 at the top edge
+  contact: {damage: {easy: 6, medium: 10, hard: 10}, push: 28, push_seconds: 0.12, cooldown: 0.5}
+# the notches' mouths: gallery-<side>-<depth> (backdrop_l32.py, not placed; E4 draws one per notch of that
+# side and depth over the wall: the foot line at column depth + 16 (left) / 28 (right), the notch's middle on the image's middle row)
+# ground targets this art is laid out for (t at the top edge, x; QE-1 a: the emitters and the locks
+# at least 40 px inside the field; the branch items after their fork's latest choice and while
+# its island is on screen: fork 1 t 56.75-71.0, fork 2 t 116.75-132.5):
+proposed_targets:
+  - {what: 'sentinel-tower', t: 24, x: 426}   # the gallery Sentinel, in its notch
+  - {what: 'sentinel-tower', t: 79, x: 54}   # the hall Sentinel, in its notch
+  - {what: 'sentinel-tower', t: 80.7, x: 426}   # the hall Sentinel, in its notch
+  - {what: 'sentinel-tower', t: 150, x: 54}   # the crucible Sentinel, in its notch
+  - {what: 'blast-door-right (lock 20 HP, branch fork 1 right)', t: 66, x: 428}   # the charge seam's cache (crate 50)
+  - {what: 'blast-door-sealed-right (lock 30 HP)', t: 100, x: 408}   # the consortium store (the secret, 100)
+  - {what: 'blast-door-left (lock 20 HP, branch fork 2 left)', t: 128, x: 52}   # the cooling ducts' cache (crate 50)
+  - {what: 'repair-crate (lock 10 HP)', t: 134.6, x: 240}   # the refinery gate's armour patch
+  - {what: 'mining-charge (branch fork 1 right)', t: 60.4, x: 452}   # the charge seam, by the SAM pair and the Strider's path
+  - {what: 'mining-charge (branch fork 1 right)', t: 61.4, x: 392}   # the charge seam, by the SAM pair and the Strider's path
+  - {what: 'mining-charge (branch fork 1 right)', t: 63.4, x: 336}   # the charge seam, by the SAM pair and the Strider's path
+  - {what: 'sam-nest (branch fork 1 right)', t: 62, x: 352}   # the charge seam's SAM pair
+  - {what: 'sam-nest (branch fork 1 right)', t: 62, x: 432}   # the charge seam's SAM pair
+  - {what: 'sam-nest', t: 92, x: 300}   # the hall's SAM pair (a topple's mark)
+  - {what: 'sam-nest', t: 92, x: 360}   # the hall's SAM pair (a topple's mark)
+  - {what: 'mining-charge', t: 91.4, x: 250}   # by the hall's SAM pair
+  - {what: 'mining-charge', t: 92.6, x: 410}   # by the hall's SAM pair
+  - {what: 'sam-nest (branch fork 2 left)', t: 119, x: 60}   # the cooling ducts' SAM pairs
+  - {what: 'sam-nest (branch fork 2 left)', t: 119, x: 120}   # the cooling ducts' SAM pairs
+  - {what: 'sam-nest (branch fork 2 left)', t: 126, x: 60}   # the cooling ducts' SAM pairs
+  - {what: 'sam-nest (branch fork 2 left)', t: 126, x: 120}   # the cooling ducts' SAM pairs
+  - {what: 'mining-charge (branch fork 2 left)', t: 119.8, x: 90}   # the cooling ducts
+  - {what: 'mining-charge (branch fork 2 left)', t: 123, x: 46}   # the cooling ducts
+  - {what: 'mining-charge (branch fork 2 left)', t: 126.8, x: 90}   # the cooling ducts
+  - {what: 'sam-nest', t: 162, x: 180}   # the gantry's SAM trio
+  - {what: 'sam-nest', t: 162, x: 240}   # the gantry's SAM trio
+  - {what: 'sam-nest', t: 162, x: 300}   # the gantry's SAM trio
+  - {what: 'mining-charge', t: 161.4, x: 150}   # on the gantry by the trio
+  - {what: 'mining-charge', t: 161.4, x: 330}   # on the gantry by the trio
+  - {what: 'mining-charge', t: 162.8, x: 210}   # on the gantry by the trio
+  - {what: 'mining-charge', t: 162.8, x: 270}   # on the gantry by the trio

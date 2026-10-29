@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../../campaign]
-updated: 2026-10-28
+updated: 2026-10-29
 ---
 
 # Music
@@ -39,7 +39,7 @@ everywhere.
 | 15 | Act 6 B: Jupiter | Levels 36–42 | Heavy, stormy, choir + distorted bass | 3:00 | P3 | — |
 | 16–17 | Act 7 A/B: Beyond the gate | Levels 43–50 | Alien, Choir motif fused with the main motif | 3:00 | P3 | — |
 | 18 | Boss: Vrell | Vrell act bosses | Choir, pounding drums | 2:00 loop | P1 | [boss-theme-r02-a](concept/boss-theme-r02-a.ogg) "The Choir Descends" (chosen); full length: [choir-descends-full-r08-a](concept/choir-descends-full-r08-a.ogg) (chosen); Level 28's deep copy (round 58, Q.1 b): [choir-descends-deep-r58-b](concept/rejected/choir-descends-deep-r58-b.ogg) (rejected, round 58: the built theme stays) |
-| 19 | Boss: Ascendancy | Ascendancy bosses (Iron Sovereign, Level 35; Ascendant, Act 6) | Martial and cold: snare rudiments, timpani, machine riff, Vorne's motif; full length, one full mix (draft, round 60) | 2:00 loop | P2 | [ascendancy-boss-r03-a](concept/ascendancy-boss-r03-a.ogg) "Iron Sovereign" (chosen) |
+| 19 | Boss: Ascendancy | Ascendancy bosses (Iron Sovereign, Level 35; Ascendant, Act 6) | Martial and cold: snare rudiments, timpani, machine riff, Vorne's motif; full length, one full mix (draft, round 60) | 2:00 loop | P2 | [ascendancy-boss-r03-a](concept/ascendancy-boss-r03-a.ogg) "Iron Sovereign" (chosen); full length: [iron-sovereign-full-r68-a](concept/iron-sovereign-full-r68-a.ogg) (proposed, round 68) |
 | 20 | Final boss | Level 50 (Choir Heart) | All motifs, full orchestra + beat; the Choir motif against the main motif | 3:00 loop | P3 | [final-boss-r03-a](concept/final-boss-r03-a.ogg) "Choir Heart" (chosen) |
 | 21 | Mini-boss sting | Mini-boss entrance | 4 s stinger, then back to the level track | 0:04 | P2 | [miniboss-sting-r08-a](concept/miniboss-sting-r08-a.ogg) "Contact Heavy" (chosen) |
 | 22 | Boss warning | Before the boss | Alarm + riser, 5 s, bridges to the boss track | 0:05 | P1 | [boss-warning-r08-a](concept/boss-warning-r08-a.ogg) "Red Alert" (chosen) |
@@ -726,14 +726,40 @@ review is the round's. Measured only, not listened to. Prompts:
 
 | File | What | Status |
 |---|---|---|
-| [concept/gilded-cage-r64-a.ogg](concept/gilded-cage-r64-a.ogg) | #13 "Gilded Cage" full mix at full length: 179.5 s, loop 357000 + 7392000 samples (8.10 s + 167.62 s, 88 bars at 126 BPM), −14.1 LUFS, −1.4 dBTP, seam 0.24; eleven 8-bar sections on the sketch's material, a new breakdown and a half-time drift | proposed (round 64) |
-| [concept/gilded-cage-base-r64-a.ogg](concept/gilded-cage-base-r64-a.ogg) | #13 base stem (kick, the bass sequence, the pad, the press hammer): same length, loop and gain, −14.3 LUFS (−0.2 LU), −2.4 dBTP, seam 0.20; Levels 31 and 33 from section 2, the Level 35 approach | proposed (round 64) |
-| [concept/gilded-cage-motif-r64-a.ogg](concept/gilded-cage-motif-r64-a.ogg) | #13 motif stem (Vorne's motif in low brass and organ, the tutti with trumpets in D and D2): same length, loop and gain, −20.4 LUFS (−6.3 LU), statements 6 dB under the full mix (−6.1, the tutti −5.7 dB); the game adds it on top; alone under Level 35's recruitment | proposed (round 64) |
-| [concept/gilded-cage-seam-r64-a.ogg](concept/gilded-cage-seam-r64-a.ogg) | Listening aid: the full mix across its loop seam, 8 s each side | proposed (round 64; a listening aid) |
-| [concept/gilded-cage-base-seam-r64-a.ogg](concept/gilded-cage-base-seam-r64-a.ogg) | Listening aid: the base stem across its loop seam, 8 s each side | proposed (round 64; a listening aid) |
-| [concept/gilded-cage-motif-seam-r64-a.ogg](concept/gilded-cage-motif-seam-r64-a.ogg) | Listening aid: the motif stem across its loop seam, 8 s each side | proposed (round 64; a listening aid) |
-| [concept/gilded-cage-motif-mix-r64-a.ogg](concept/gilded-cage-motif-mix-r64-a.ogg) | Listening aid: loop bars 1–24 (A, B, C), the full mix with the motif stem on top as Level 31 plays them from section 5, 45.7 s; the sum peaks at −0.7 dBFS | proposed (round 64; a listening aid) |
-| [concept/gilded-cage-sheet-r64-a.png](concept/gilded-cage-sheet-r64-a.png) | Review sheet: the three files' waveforms with intro, loop and fade tail, their loop points, loudness, true peak, seam and size, and the loudness of each loop section (full, base, motif) | proposed (round 64; a listening aid) |
+| [concept/gilded-cage-r64-a.ogg](concept/gilded-cage-r64-a.ogg) | #13 "Gilded Cage" full mix at full length: 179.5 s, loop 357000 + 7392000 samples (8.10 s + 167.62 s, 88 bars at 126 BPM), −14.1 LUFS, −1.4 dBTP, seam 0.24; eleven 8-bar sections on the sketch's material, a new breakdown and a half-time drift | chosen (round 64, M.1: ok) |
+| [concept/gilded-cage-base-r64-a.ogg](concept/gilded-cage-base-r64-a.ogg) | #13 base stem (kick, the bass sequence, the pad, the press hammer): same length, loop and gain, −14.3 LUFS (−0.2 LU), −2.4 dBTP, seam 0.20; Levels 31 and 33 from section 2, the Level 35 approach | chosen (round 64, M.1: ok) |
+| [concept/gilded-cage-motif-r64-a.ogg](concept/gilded-cage-motif-r64-a.ogg) | #13 motif stem (Vorne's motif in low brass and organ, the tutti with trumpets in D and D2): same length, loop and gain, −20.4 LUFS (−6.3 LU), statements 6 dB under the full mix (−6.1, the tutti −5.7 dB); the game adds it on top; alone under Level 35's recruitment | chosen (round 64, M.1: ok) |
+| [concept/gilded-cage-seam-r64-a.ogg](concept/gilded-cage-seam-r64-a.ogg) | Listening aid: the full mix across its loop seam, 8 s each side | chosen (round 64, M.1: ok; a listening aid) |
+| [concept/gilded-cage-base-seam-r64-a.ogg](concept/gilded-cage-base-seam-r64-a.ogg) | Listening aid: the base stem across its loop seam, 8 s each side | chosen (round 64, M.1: ok; a listening aid) |
+| [concept/gilded-cage-motif-seam-r64-a.ogg](concept/gilded-cage-motif-seam-r64-a.ogg) | Listening aid: the motif stem across its loop seam, 8 s each side | chosen (round 64, M.1: ok; a listening aid) |
+| [concept/gilded-cage-motif-mix-r64-a.ogg](concept/gilded-cage-motif-mix-r64-a.ogg) | Listening aid: loop bars 1–24 (A, B, C), the full mix with the motif stem on top as Level 31 plays them from section 5, 45.7 s; the sum peaks at −0.7 dBFS | chosen (round 64, M.1: ok; a listening aid) |
+| [concept/gilded-cage-sheet-r64-a.png](concept/gilded-cage-sheet-r64-a.png) | Review sheet: the three files' waveforms with intro, loop and fade tail, their loop points, loudness, true peak, seam and size, and the loudness of each loop section (full, base, motif) | chosen (round 64, M.1: ok; a listening aid) |
+
+
+Concept round 65 (M9 part E, step AUD-E, 2026-10-28) — a fourth stem for track 12 "Hollow Rock", `conveyor`, for
+Level 32's forks (sections 3 and 5: "the conveyor breakdown with the lone horn"): the breakdown's material (the
+conveyor, the anvils, the held bass, the pad, the dark arpeggio and the lone human horn every 4 bars on each section's
+chords) over the whole loop, so a `stem_times` switch lands in it wherever the fork falls; from music_r62.py's render
+by `tools/concept/audio/music_r65.py`, sample-aligned with the shipped files (the re-rendered full mix checked identical
+to `hollow-rock-r62-a`). A proposal for round 65 (not in `assets/music`); Level 32 plays the base stem at the forks
+until the pick. Measured only, not listened to. Prompts:
+[concept/prompts.md](concept/prompts.md#hollow-rock-conveyor-r65-a--track-12-hollow-rocks-conveyor-stem-level-32s-forks).
+
+| File | What | Status |
+|---|---|---|
+| [concept/hollow-rock-conveyor-r65-a.ogg](concept/hollow-rock-conveyor-r65-a.ogg) | #12 conveyor stem (the conveyor breakdown over the whole loop: anvil 16ths, the anvils' pattern, the bass held, pad, the arpeggio dark, the lone horn twice every 8 bars): same length, loop and gain as the r62 files, −16.6 LUFS (−2.5 LU), −3.0 dBTP, seam 0.24; Level 32's forks | chosen (round 65, M.1: ok; in `assets/music/hollow-rock-conveyor.ogg` since step G4, `tools/art/themes.py`'s remux) |
+| [concept/hollow-rock-conveyor-seam-r65-a.ogg](concept/hollow-rock-conveyor-seam-r65-a.ogg) | Listening aid: the conveyor stem across its loop seam, 8 s each side | chosen (round 65, M.1: ok; a listening aid) |
+| [concept/hollow-rock-conveyor-join-r65-a.ogg](concept/hollow-rock-conveyor-join-r65-a.ogg) | Listening aid: loop bars 1–16, the full mix crossfading over 2 s into the conveyor stem alone at bar 9 (as a fork switches), 28.4 s | chosen (round 65, M.1: ok; a listening aid) |
+
+Concept round 68 (M9 part H, step AUD-H1, 2026-10-29) — track 19 "Iron Sovereign" at full length, one full mix, no
+stems (QH-3 a, pending round 68), composed out from the chosen round-03 sketch by `tools/concept/audio/music_r68.py`
+(track 18's round-08 method; deterministic). A proposal for round 68 (not in `assets/music`: part H's import). Measured
+only, not listened to. Prompts:
+[concept/prompts.md](concept/prompts.md#iron-sovereign-full-r68-a--track-19-iron-sovereign-at-full-length-one-full-mix).
+
+| File | What | Status |
+|---|---|---|
+| [concept/iron-sovereign-full-r68-a.ogg](concept/iron-sovereign-full-r68-a.ogg) | #19 "Iron Sovereign" full mix at full length: 127.8 s, loop 306000 + 5184000 samples (6.94 s + 117.55 s, 72 bars at 147 BPM), −14.0 LUFS, −1.5 dBTP, seam 0.13; the sketch's four sections and five new ones on its material (the machine alone, the motif in diminution over the machine, a snare-corps parade ground, a long build, a second tutti) | proposed (round 68) |
 
 ## Implementation
 
@@ -792,7 +818,7 @@ review is the round's. Measured only, not listened to. Prompts:
       `Level22SoundsTest.theMusicIsTheraDeepOverTheIceBedThenTheStationsBed`; both tracks in round 51; part H: Level
       28's music block, the reveal sting once at the cruisers' rise and the run under track 11's motif stem alone,
       `motif_after_boss`, `Level28SoundsTest.theBossThemeDropsUnderTheDiveAndTheRunPlaysTheMotifAlone`)
-- [ ] Act 5 (draft, decided in round 60, M9): track 12 "Hollow Rock" at full length with base, full and motif stems
+- [x] Act 5 (draft, decided in round 60, M9): track 12 "Hollow Rock" at full length with base, full and motif stems
       (part B); track 13, the B theme, from round 60's pick with its three stems (part D); track 19 "Iron Sovereign" at
       full length (part H); Rook's return sting (track 31) as a one-shot with the scripted duck (part B); the briefing's
       per-page music (`music: motif` under Vorne's intercepted pages, part B); Level 34's base stem at −3 dB with the
@@ -800,10 +826,21 @@ review is the round's. Measured only, not listened to. Prompts:
       track 12 at full length with its base, full and motif stems in `Tracks` (`hollow-rock`), Level 29's music block
       (base from the canyon, full from the turn), Rook's sting once at the Ember's launch with its duck, the motif
       stem alone under the intro's pages 2–3; `Level29SoundsTest`; in round 62, M.1–M.2; part C, step C4: Level 30's
-      music block, the base stem in section 1 and the full mix from section 2, `Level30SoundsTest`; heard in round 63's
+      music block, the base stem in section 1 and the full mix from section 2, `Level30SoundsTest`; step FIX1: the motif
+      stem on top in Levels 29 (from section 2) and 30 (from section 1), `music.motif`; heard in round 63's
       captures; part D, steps AUD-D, D4 and D4b: track 13 "Gilded Cage" at full length with its base, full and motif stems in
       `Tracks` (`gilded-cage`, in round 64, M.1), Level 31's music block (the intro in section 1, the base from section 2, the
-      full mix from the ambush) with the motif stem from t=24, `Level31SoundsTest`; heard in round 64's captures)
+      full mix from the ambush) with the motif stem from t=24, `Level31SoundsTest`; heard in round 64's captures; part E,
+      steps AUD-E and E4: Level 32's music block (track 12's intro reading over the shaft mouth, the base from section 2,
+      the full mix in the refinery, the motif stem from t=18), the base stem at the forks until round 65's M.1 (the
+      conveyor stem, proposed); recorded in round 65's captures (step E5); part F, step F4: Level 33's music block (track
+      13's base stem from the start, the full mix by its stem time at t=121, the motif stem muted all level, the Choir's
+      line ducking it 6 dB), `Level33SoundsTest`; recorded in round 66's captures (step F5); part G, step G4: Level 34's
+      music block (track 12's base stem alone at −3 dB, Vorne's motif stem once from t=106 to t=124 by the motif's new
+      `to`), `Level34SoundsTest`; recorded in round 67's captures (step G5); part H, steps AUD-H1, H2 and H4: track 19
+      "Iron Sovereign" at full length in `Tracks` (`iron-sovereign`, one mix, round 68 M.1), Level 35's music block
+      (track 13's stems by section, out at the halt, the warning and track 19, the motif stem alone after the kill,
+      `act-complete` under the outro); recorded in round 68's captures (step H5))
 
 ## Open questions
 
@@ -862,3 +899,6 @@ Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-a
   change at the Sovereign's core opening, the motif stem as the broadcast's music (no new cue).
 - 2026-10-27 (user, [round 60](../../concept-rounds/round-60/README.md) closed): the Act 5 audio plan approved as drafted (D.19). **M.1 a**, "Gilded Cage" (track 13, the Act 5 B theme: EBM and industrial techno, 126 BPM, E minor; the sample-exact loop needs a whole-sample 16th, so not the draft's 128) is chosen; b "Iron Vein" rejected. **M.2 a**, "Horn Call" (track 31, Rook's return sting, 5.6 s) is chosen; b "Answer" rejected. The sketches (about 1 min) become the full length and stems at M9 part D.
 - 2026-10-28 (user, [round 62](../../concept-rounds/round-62/README.md), closed; page answers): M.1 ok: track 12 "Hollow Rock" at full length (181.8 s, with its base and motif stems) stays as built, M.2 ok: Rook's sting "Horn Call" as played once at the Ember's launch with its −6 dB duck. The listening aids and the review sheet stay in `concept/`.
+- 2026-10-28 (user, [round 64](../../concept-rounds/round-64/README.md), closed; page answers): **M.1** ok: track 13 "Gilded Cage" at full length (179.5 s with its base and motif stems) stays as built.
+- 2026-10-29 (M9 part H gap check, QH-3 a on its recommendation, pending round 68): track 19 "Iron Sovereign" extended from the chosen round-03 sketch to a 2:00 loop, one full mix (`iron-sovereign-full-r68-a`, step AUD-H1), not a new variant beside it; the limiter's ceiling −3 dBFS (as track 12's) to keep the true peak under −1 dBTP.
+- 2026-10-29 (user, [round 65](../../concept-rounds/round-65/README.md), closed; page answers): **M.1** ok: track 12 "Hollow Rock"'s `conveyor` stem for Level 32's forks. Step G4 imported it as `assets/music/hollow-rock-conveyor.ogg` (`tools/art/themes.py`'s remux, as the other stems; audio identical) and switched Level 32's music block to it at the forks (`stem_times`: alone under the motif for 16 s from each choice, in and out over 2 s).

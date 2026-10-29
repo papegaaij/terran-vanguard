@@ -1,0 +1,59 @@
+# Void Leech stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/schemas-units/README.md
+# M9 part F, step F2 (Level 33): the approved stat block (round 60) as data, flown from step F1. New in it: the latch's
+# `drains: power` (a latched leech is one drainer of the generator: −2 MW each by the drain rules; its drain attack has no
+# rate), `emp: throw` (the EMP Burst throws it off as a shake-off) and `prey_drift` (it latches on a touched prey unit
+# too, which drifts down at that speed), the chase's `within` and `drift` (drift in at 50 px/s toward its target, the
+# chase only within 220 px of it) and the hook `chase.speed`. HP 6 base: the beam era's ×2 flies it at 12.
+name: Void Leech
+faction: Vrell
+layer: air        # `space` in vacuum: a doc alias of the air layer
+tier: small
+size: [32, 32]    # sprite px
+hitbox: [20, 24]
+parts: single
+orientation: 16 angles
+hp: 6             # base; the beam era's ×2 flies it at 12; ×2 damage taken while latched on the ship (latch.damage_factor)
+armour: none
+speed: 50         # px/s: its way in along its entry (the drift's speed)
+movement:
+  chase: {speed: 190, turn_rate: 160, seconds: 4, within: 220, drift: 50}   # px/s, °/s, s; it drifts at `drift` px/s toward its target (the ship, or the prey it hunts) until within `within` px, then chases, then flies straight on and out
+latch:
+  slots: 3                  # latched at once (easy 2, the hook latch_slots)
+  spots:                    # [dx, dy] px from the ship's centre, y up: the Lamprey's spots (tools/art/belt_units_f.py's pivots/void-leech.json, y flipped)
+    left: [-21, -13]
+    right: [20, -13]
+    tail: [0, -34]          # for a touch within 45° of straight down from the ship's centre
+  damage_factor: 2          # the damage it takes while latched on the ship
+  shake: {reversals: 4, within: 1.2}   # reversals of the commanded horizontal direction (neutral steps ignored) throw off every latched one
+  stun: 1                   # s thrown off: outward from its spot, slowing to a stop, then it flees to the nearer side edge
+  throw: 120                # px/s, its outward start speed
+  drains: power             # the generator's effective output, −2 MW a leech (the drain rules), not the shield
+  emp: throw                # the EMP Burst throws it off (as a shake-off)
+  prey_drift: 60            # px/s a prey unit it latches on drifts down
+attacks:
+  - pattern: drain
+    notes:
+      text: '`{pattern}`: while latched, the generator''s **effective output −2 MW** (stacking to −6 MW; the [generator''s drain rules](../../../player/generator/README.md#enemy-drain-effects)); no damage to shield or armour; with every slot taken, a touch is a `{tier}` contact ({contact_damage}) and the leech dies'
+formations:
+  - {name: stream}
+  - {name: rear ambush, size: [3, 5]}
+weak_points:
+  - {name: the power-draw sac on its back}
+drops: []
+traits: [homing, side, rear, area]
+bounty: 12
+first_level: 33
+difficulty:
+  easy: {latch_slots: 2, chase: {speed: 160}}
+  hard: {chase: {speed: 220, turn_rate: 200}}
+notes:
+  layer: ' (`space` in vacuum: a doc alias, see [space](../README.md#design))'
+  orientation: (16 headings × 4 swim frames; a latched pose per hull spot, a stunned pose)
+  armour: 'none (HP {hp} base: the beam era''s ×2 flies it at 12, easy 9 / hard 16)'
+  speed: drifting; {movement.chase.speed} px/s chasing (turning {movement.chase.turn_rate}°/s)
+  movement: '`drift`s in from the rear or a side edge (edge-warned, as every side and rear entry) at {movement.chase.drift} px/s toward the ship (a hunting stream: toward the nearest free prey); within **{movement.chase.within} px** of it it `chase`s for up to {movement.chase.seconds} s, then flies straight on and leaves; `latch` on contact at the left, right or tail spot (the [Lamprey](../../air/lamprey/README.md)''s spots); **{latch.slots} latch slots** (easy 2); {latch.shake.reversals} reversals within {latch.shake.within} s throw every latched one off, stunned {latch.stun} s, then it flees; the EMP Burst throws them off too; it latches on a touched prey unit, which drifts down at {latch.prey_drift} px/s'
+  formations: (streams of 4–6, 0.5 s apart, from a side or the rear; ambushes from the bottom edge)
+  weak_points: (drawn only; it pulses brighter while it drains)
+  death: '`small` dry chitin crack with a violet spark; on death or shake-off the output returns at once'
+  used_in: the Leech Field; later levels may use it (their docs decide)
+  difficulty: 'easy: 2 latch slots, chase 160 px/s; hard: chase 220 px/s, turning 200°/s'

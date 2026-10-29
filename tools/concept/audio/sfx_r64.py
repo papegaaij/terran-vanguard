@@ -24,7 +24,7 @@ variant is made of):
   link-snap-r64-*      ≈ 0.35-0.45 s: a broken link, a sharp electric snap
   saw-whine-r64-*      seamless LOOPs (2-3 s): the Buzzsaw's spin, a real grinder or saw (the game pitches it)
   saw-spinup-r64-*     ≈ 0.6 s: the Buzzsaw's 0.6 s spin-up tell, the same machine glided up to the loop's pitch
-                       (the pick should match the whine's)
+                       (the pick should match the whine's); a, b and `ab`, the pick (S.5 b's shape on S.4 a's grinder)
   saw-ricochet-r64-*   ≈ 0.5-0.6 s: a dash bouncing off a big rock or the edge, a metal scrape-clang
   tug-hit-r64-*        ≈ 0.7 s: a hit on a tug section, a heavy hull impact with a groan
   tug-alarm-r64-*      ≈ 1.6-2 s: a section below 50 % and lost, an alarm's two blasts
@@ -205,6 +205,13 @@ SOUNDS = {
         "b": ([L(554366, 3.5, 0.6, speed=(0.3, 0.85), fin=0.02, fout=0.03, hp=100.0, lp=7000.0, swell=(-14.0, 1.0))],
               "the circular saw (the whine b) glided from 0.3 to 0.85 speed and swelling: a thinner 'wheeeEEE' "
               "rising to a shriek, 0.6 s"),
+        # round 64's pick (S.5 b with S.4 a): b's spin-up is its whine's recording glided up, so b alone rises to the
+        # circular saw's pitch; the pick is b's shape (the glide's ratio 0.3 to 1.0, the filters, the swell) on the
+        # grinder's recording (the whine a), ending on the grinder loop's pitch
+        "ab": ([L(516593, 6.5, 0.6, speed=(0.3, 1.0), fin=0.02, fout=0.03, hp=100.0, lp=7000.0, swell=(-14.0, 1.0))],
+               "b's spin-up shape on the angle grinder (the whine a): glided from 0.3 up to 1.0 speed, the loop's "
+               "pitch, swelling, high-passed at 100 Hz and low-passed at 7 kHz as b: a thinner 'wheeeEEE' than a "
+               "that ends on the grinder's whine, 0.6 s"),
     }),
     "saw-ricochet": ("shot", -27.0, -6.0, -25.0, "Buzzsaw Drone: a ricochet",
                      "a Buzzsaw's dash bouncing off a big drifting rock or the field's edge (up to 3 bounces a dash, 2 "

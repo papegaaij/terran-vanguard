@@ -153,6 +153,10 @@ final class PickupPasses {
                 stays = magnet ? pickup.pull(ship.x(), ship.y(), magnetStep) : pickup.drift(distance);
             }
             if (!stays) {
+                if (pickup.type() == PickupType.STORY && s.story != null) {
+                    // M9 part G: the core drifted off the screen or ran out of time: the tug's line.
+                    s.story.missed(pickup.x(), pickup.y());
+                }
                 pickups.free(i);
             } else if (canyon != null) {
                 slideOffRock(pickup);
@@ -207,6 +211,9 @@ final class PickupPasses {
     void carryOff(Enemy holder) {
         for (int i = pickups.size() - 1; i >= 0; i--) {
             if (pickups.get(i).heldBy() == holder.serial()) {
+                if (pickups.get(i).type() == PickupType.STORY && s.story != null) {
+                    s.story.missed(pickups.get(i).x(), pickups.get(i).y());
+                }
                 pickups.free(i);
             }
         }
@@ -278,7 +285,11 @@ final class PickupPasses {
             }
             double dx = pickup.x() - ship.x();
             double dy = pickup.y() - ship.y();
-            if (dx * dx + dy * dy <= radius * radius) {
+            boolean touched = pickup.type() == PickupType.STORY
+                    // M9 part G: the core's crate is collected by flying through its box.
+                    ? StoryPickups.touches(pickup.x(), pickup.y(), ship.x(), ship.y(), radius)
+                    : dx * dx + dy * dy <= radius * radius;
+            if (touched) {
                 apply(pickup);
                 pickups.free(i);
             }
@@ -298,12 +309,18 @@ final class PickupPasses {
                 coresCollected[pickup.credits()] = true;
                 radio.cue(CueTrigger.SECRET, secretNames[pickup.credits()]);
             }
+            case STORY -> {
+                // M9 part G: no credits, no secret; its own event and cue (after the pickup's event below).
+            }
         }
         events.add(
                 SimEvents.Type.PICKUP_COLLECTED,
                 pickup.x(),
                 pickup.y(),
                 pickup.type().ordinal());
+        if (pickup.type() == PickupType.STORY && s.story != null) {
+            s.story.collected(pickup.x(), pickup.y());
+        }
     }
 
     /**

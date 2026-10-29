@@ -41,6 +41,8 @@ final class PropPasses {
     private static final int ROCK_TUMBLE_TICKS = 6;
 
     private static final int BLINK_TICKS = SimStep.ticks(1.5);
+    /** M9 part G: whether the level's story pickup has its own looks ({@link StoryLooks}), not the crate. */
+    private boolean ownStory;
 
     /** A spore mine pulses at 10 fps; while it rises it grows from 70 % and brightens from half. */
     private static final int MINE_FRAME_TICKS = 6;
@@ -242,10 +244,19 @@ final class PropPasses {
         }
     }
 
+    /** M9 part G: the level's story pickup is drawn by {@link StoryLooks}, not here. */
+    void ownStory(boolean own) {
+        ownStory = own;
+    }
+
     void drawPickups(SpriteBatch batch, Sortie sortie, float alpha) {
         for (int i = 0; i < sortie.pickupCount(); i++) {
             Pickup pickup = sortie.pickup(i);
             if (pickup.ticksLeft() < BLINK_TICKS && pickup.ticksLeft() / 6 % 2 == 0) {
+                continue;
+            }
+            if (pickup.type() == PickupType.STORY && ownStory) {
+                // M9 part G: a story pickup is StoryLooks' (its own frames, named by its story).
                 continue;
             }
             Array<AtlasRegion> frames = pickupFrames(pickup.type());
@@ -267,6 +278,8 @@ final class PropPasses {
             case SPECIAL_CHARGE -> sprites.crate;
             // The amber orb of round 23 b (tools/art/l06_props.py).
             case DATA_CORE -> sprites.frames("pickup-data-core");
+            // M9 part G: a story pickup without its own frames (StoryLooks draws Level 34's Helix core).
+            case STORY -> sprites.crate;
         };
     }
 

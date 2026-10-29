@@ -1,0 +1,782 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Round 36: record of the decisions</title><style>
+:root{--bg:#f4f5f7;--fg:#1b2230;--mut:#5a6577;--card:#fff;--line:#d3d9e2;--acc:#1f5fa8;--ok:#1d6b3a;--okbg:#e3f3e8;
+--hi:#fff6dc;--hib:#d9b84a;--code:#e9edf3;--warn:#8a4b00}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10141b;--fg:#dde3ee;--mut:#98a3b6;--card:#171d27;
+--line:#2c3544;--acc:#7fb2ee;--ok:#7bd69a;--okbg:#163323;--hi:#2c2610;--hib:#8a7424;--code:#232c3a;--warn:#e3a35a;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#10141b;--fg:#dde3ee;--mut:#98a3b6;--card:#171d27;--line:#2c3544;--acc:#7fb2ee;--ok:#7bd69a;
+--okbg:#163323;--hi:#2c2610;--hib:#8a7424;--code:#232c3a;--warn:#e3a35a;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:60rem;margin:0 auto;padding:1rem 16px 4rem}
+h1{font-size:1.6rem;margin:.5rem 0}h2{font-size:1.25rem;margin:2rem 0 .5rem;border-bottom:1px solid var(--line);padding-bottom:.25rem}
+h3{font-size:1.02rem;margin:0;flex:1 1 12rem}a{color:var(--acc)}
+.sum{color:var(--mut)}.note{font-size:.9rem;color:var(--mut)}
+nav.sec{display:flex;flex-wrap:wrap;gap:.4rem;margin:1rem 0}nav.sec a{padding:.2rem .6rem;border:1px solid var(--line);border-radius:1rem;
+text-decoration:none;font-size:.9rem;background:var(--card)}
+.row{background:var(--card);border:1px solid var(--line);border-radius:.4rem;padding:.7rem .9rem;margin:.7rem 0;overflow-wrap:anywhere}
+.row header{display:flex;flex-wrap:wrap;gap:.3rem .6rem;align-items:baseline}
+.rid{font:600 .85rem ui-monospace,Menlo,Consolas,monospace;background:var(--code);padding:.05rem .4rem;border-radius:.25rem}
+.kind{font-size:.8rem;color:var(--mut)}.part{font-size:.88rem;margin:.2rem 0}
+.q,.weak,.rec,.sub,.line,dl{font-size:.92rem;margin:.45rem 0}.weak{color:var(--warn)}
+code{background:var(--code);padding:0 .25rem;border-radius:.2rem;font-size:.88em}
+.tag{font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;color:var(--mut);font-weight:700;margin-right:.3rem}
+.ans{margin:.5rem 0 0;padding:.45rem .6rem;border-left:4px solid var(--hib);background:var(--hi);border-radius:.2rem}
+.ans.out{border-left-color:var(--ok)}.ans.none{opacity:.7}
+.badge{font-size:.75rem;font-weight:700;padding:.05rem .4rem;border-radius:.6rem;background:var(--okbg);color:var(--ok)}
+.badge.pick{background:var(--hi);color:var(--warn);border:1px solid var(--hib)}
+dl{display:grid;grid-template-columns:7rem 1fr;gap:.2rem .6rem}dt{font-weight:700}dd{margin:0}
+.media{display:flex;flex-wrap:wrap;gap:.5rem;margin:.5rem 0}.m{margin:0;max-width:100%}.m figcaption{font-size:.75rem;color:var(--mut)}
+.m.img img{max-width:14rem;max-height:10rem;border:1px solid var(--line);border-radius:.2rem;background:#000;display:block}
+.m.vid video{width:14rem;max-width:100%}.m.aud audio{width:16rem;max-width:100%}.miss{color:var(--warn)}
+details{margin:.4rem 0;font-size:.9rem}summary{cursor:pointer;color:var(--acc)}
+.listen{font-size:.85rem;color:var(--mut);margin:.3rem 0;padding-left:1.2rem}.opts{color:var(--mut)}
+.sub{padding-left:.6rem;border-left:2px solid var(--line)}
+table{border-collapse:collapse;display:block;overflow-x:auto}td,th{border:1px solid var(--line);padding:.2rem .4rem}
+blockquote{margin:.4rem 0;padding-left:.8rem;border-left:3px solid var(--line)}
+@media (max-width:480px){dl{grid-template-columns:1fr}.m.img img{max-width:100%}}
+</style></head><body><main><p class="note"><a href="README.md">Round 36 README</a> · <a href="../README.md">All rounds</a> · built 2026-10-12 · recorded by <code>tools/concept/review_record.py 36</code></p><h1>Concept round 36: record of the decisions</h1><div class="sum"><p>The Act 3 design phase, built overnight on the user's behalf (2026-10-12, the user away and asked for it: design documents and concept proposals only, no game code). Levels 15–21 on Mars are draft level documents; the act README, the Mars setting, nine new units, two bosses, the Act 3 arsenal and the Act 3 audio briefs are drafts; every part without chosen art has an a/b proposal. Every open design question of the gap analysis (<code>m7-gaps.md</code> §3, M1–M19) was answered with its <strong>recommended</strong> option, and everything below is <strong>pending the user's review</strong>. Nothing here is <code>approved</code> until the user says so; M7's build parts A–I start from the answers.</p><p>Open <span class="ref">index.html</span> in a browser (regenerate with <code>python3 tools/concept/board.py 36 --subjects burrower,tendril-anchor,choir-herald,ghost-drone,warden-tank,revenant-walker,dust-colossus,mars-olympus,mars-valles,mars-ares-landing,mars-storm-plains,mars-tharsis-foundry,mars-hellas,mars-panorama,canyon-walls,storm-radius,dome,ion-beam,light-drone,emp-burst,shield-overcharge,act3-b-theme,burrow-eruption,canyon-scrape,ion-beam-loop,dust-storm-bed,dust-kite,generic-colonial,voice-ares-control</code>: round 34 already used the <code>r36</code> names for Level 14's files, so the board keeps only tonight's subjects). The rows are in this order:</p><ol><li><strong>Your calls</strong> (<code>M…</code>): the questions marked <em>user</em> in the gap analysis, with the recommendation taken and what the drafts built from it: <em>keep</em> or <em>change</em>;</li><li><strong>The other design answers</strong> (<code>M…</code>): one <em>accept</em> or <em>change</em> each;</li><li><strong>Act 2 leftovers</strong> (<code>L.…</code>) found tonight;</li><li><strong>Art</strong> per area (<code>U.…</code> units, <code>B.…</code> bosses, <code>MA.…</code> Mars, <code>G.…</code> gear, <code>C.…</code> characters, <code>S.…</code> audio): <em>pick a or b</em>, or <em>accept</em> / <em>redo</em>;</li><li><strong>Documents to approve</strong> (<code>D.…</code>): <em>approve</em> or <em>change</em>; the act's intro and outro texts and every level's summary are quoted under their rows;</li><li><strong>Open questions</strong> the drafts raised (<code>Q.…</code>): each row's proposals are answered one by one, <em>yes</em> (take the proposal) or <em>no</em> (say what in the note).</li></ol></div><p class="note">A read-only record: every row as the review page showed it, with the answer and the outcome from the round README (the record of truth). Media is linked from the design tree, not copied.</p><nav class="sec"><a href="#s-your-calls">Your calls</a><a href="#s-the-other-design-answers">Other answers</a><a href="#s-act-2-leftovers">Act 2</a><a href="#s-art-units">Units</a><a href="#s-art-bosses">Bosses</a><a href="#s-art-mars">Mars</a><a href="#s-art-gear">Gear</a><a href="#s-art-characters">Portrait</a><a href="#s-audio">Audio</a><a href="#s-documents-to-approve">Documents</a><a href="#s-open-questions">Questions</a></nav><section id="s-your-calls"><h2>Your calls</h2>
+<div class="sum"><p>The gap analysis's questions marked <em>user</em>. The drafts were written from the recommended option of each; <em>keep</em> leaves the drafts as they are, <em>change</em> names the other option.</p></div>
+<article class="row" id="r-M1">
+<header><span class="rid">M1</span><h3>Canyon wall contact</h3><span class="kind">your call</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-16-valles-canyon-run/README.md">Canyon wall contact</a></div>
+<div class="q"><strong>your call</strong>: (a, taken) damage and push-back: a touch costs 10 armour/shield (easy 6) and pushes the ship 28 px off the wall, then 0.5 s without contact damage; (b) instant death; (c) a hard clamp, no damage. Built into Level 16's draft, the Mars README and the sfx brief (the wall scrape, <span class="ref">S.3</span>)</div>
+<div class="media"><figure class="m img"><a href="../../world/mars/concept/rejected/canyon-walls-r36-a.png"><img loading="lazy" decoding="async" src="../../world/mars/concept/rejected/canyon-walls-r36-a.png" alt="canyon-walls-r36-a.png"></a><figcaption>canyon-walls-r36-a.png</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> a dense 180 px narrows plus gusts can bounce a ship between both walls; the push is untested with Rook's AI</p>
+<div class="ans"><span class="tag">Answer</span> <span>keep a / b / c</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>kept a</strong> (user)</span></div>
+</article>
+<article class="row" id="r-M3">
+<header><span class="rid">M3</span><h3>Branching canyon</h3><span class="kind">your call</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-16-valles-canyon-run/README.md">Branching canyon</a></div>
+<div class="q"><strong>your call</strong>: (a, taken) visual branches on one screen: a mesa splits the canyon into two channels of 150 px, each with its own targets (the Candor relay hut secret on one side), rejoining later; (b) a real route choice with separate sections</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> (a) is a short fork, not a choice of path; (b) doubles the level's waves, tests and art</p>
+<div class="ans"><span class="tag">Answer</span> <span>keep a / b</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>kept a</strong> (user)</span></div>
+</article>
+<article class="row" id="r-M4">
+<header><span class="rid">M4</span><h3>Reverse scroll and the pursuers</h3><span class="kind">your call</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-20-retreat-from-hellas/README.md">Reverse scroll and the pursuers</a></div>
+<div class="q"><strong>your call</strong>: (a, taken) the terrain moves up the screen, the ship keeps facing up and retreats toward the bottom; the Mote Swarm presses from the <strong>top</strong> (front guns hold it), ambushes come up from the <strong>bottom</strong> (rear guns clear the way). Level 20: 20 s of strike, then the scroll eases through zero into reverse; a TOP edge warning; a new <code>pursuit</code> formation; (b) the swarm from the bottom; (c) normal scroll, the retreat only in the story</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> a retreat with the guns facing the pursuers is the opposite of the roster's text; the bottom entries are unwarned after the first three (Q.20)</p>
+<div class="ans"><span class="tag">Answer</span> <span>keep a / b / c</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>kept a</strong> (user)</span></div>
+</article>
+<article class="row" id="r-M6">
+<header><span class="rid">M6</span><h3>What the dust storm hides</h3><span class="kind">your call</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-18-dust-storm/README.md">What the dust storm hides</a></div>
+<div class="q"><strong>your call</strong>: (a, taken) a look only: outside about 170 px the ground and <code>low-air</code> vanish into dust, air units dim to silhouettes with their glow, <strong>bullets always visible</strong>, everything hittable; (b) as a, but shots cannot hit what is unseen; (c) bullets hidden too. Level 18's radius 170 px (easy 200, hard 150; 150 / 180 / 130 deep in the storm); the look's a/b is <span class="ref">MA.2</span></div>
+<div class="media"><figure class="m img"><a href="../../world/mars/concept/rejected/storm-radius-r36-a.png"><img loading="lazy" decoding="async" src="../../world/mars/concept/rejected/storm-radius-r36-a.png" alt="storm-radius-r36-a.png"></a><figcaption>storm-radius-r36-a.png</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> homing gets no real edge in (a): the storm only hides the ground</p>
+<div class="ans"><span class="tag">Answer</span> <span>keep a / b / c</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>kept a</strong> (user)</span></div>
+</article>
+<article class="row" id="r-M10">
+<header><span class="rid">M10</span><h3>Act 3&#x27;s popcorn</h3><span class="kind">your call</span></header>
+<div class="part"><a href="../../enemies/air/dust-kite/README.md">Act 3's popcorn</a></div>
+<div class="q"><strong>your call</strong>: (b, taken) returning Skitters, Needlers, Stingers, Whirl Seeds and Wraiths <strong>plus</strong> a new Martian popcorn flyer, the <strong>Dust Kite</strong> (tiny, 1 HP, a rust membrane glider with a teal spine that rams), in every Act 3 level; (a) the returning units only</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the Dust Kite's art: see <span class="ref">U.7</span>; its name is a working name</p>
+<div class="ans"><span class="tag">Answer</span> <span>keep b / a</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>kept b</strong>: the Dust Kite (user)</span></div>
+</article>
+<article class="row" id="r-M13">
+<header><span class="rid">M13</span><h3>How Okafor silences Varga</h3><span class="kind">your call</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/README.md#voice">How Okafor silences Varga</a></div>
+<div class="q"><strong>your call</strong>: (a, taken) in private: the hangar intel and the briefings carry it; in the levels only Varga's observation and Okafor's cut-off: Level 16 "Eyes on the canyon, Doctor.", Levels 17 and 19 "Not on this channel, Doctor.", Level 18 "Later, Doctor. Eyes on the storm."; Varga's approved Act 3 Helix line placed in Level 17; (b) openly on the radio</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the refrain twice and a variant once may feel scripted; the Level 18 briefing carries one Helix sentence (Q.18)</p>
+<div class="ans"><span class="tag">Answer</span> <span>keep a / b</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>kept a</strong> (user)</span></div>
+</article>
+<article class="row" id="r-M14">
+<header><span class="rid">M14</span><h3>Where the Choir first speaks</h3><span class="kind">your call</span></header>
+<div class="part"><a href="../../enemies/bosses/dust-colossus/README.md">Where the Choir first speaks</a></div>
+<div class="q"><strong>your call</strong>: (a, taken) Level 21, as the Colossus dies: "…many… we are many… we are going…" in fragments, then Varga's "that was not singing" and Okafor's "Log everything"; (b) Level 20 under the retreat; (c) the act outro</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the speech treatment (Choir layering a/b) waits for part H's round</p>
+<div class="ans"><span class="tag">Answer</span> <span>keep a / b / c</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>kept a</strong> (user)</span></div>
+</article>
+<article class="row" id="r-M17">
+<header><span class="rid">M17</span><h3>Rook&#x27;s Act 3 role</h3><span class="kind">your call</span></header>
+<div class="part"><a href="../../player/wingmen/README.md">Rook's Act 3 role</a></div>
+<div class="q"><strong>your call</strong>: (a, taken) he flies all seven levels from the escort slot (his lines <code>requires: escort</code>, one dry joke a level), the canyon tests his AI, and one quiet beat in Level 20's lull foreshadows Act 4; (b) also a new Act 3 gun for him</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the quiet beat plays even without Rook in the slot (Q.20)</p>
+<div class="ans"><span class="tag">Answer</span> <span>keep a / b</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>kept a</strong> (user)</span></div>
+</article>
+</section>
+<section id="s-the-other-design-answers"><h2>The other design answers</h2>
+<div class="sum"><p>Not user calls in the gap analysis, but each changes what M7 builds. <em>Accept</em> keeps the recommendation, <em>change</em> says what.</p></div>
+<article class="row" id="r-M2">
+<header><span class="rid">M2</span><h3>Wall geometry</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-16-valles-canyon-run/README.md">Wall geometry</a></div>
+<div class="q"><strong>accept or change</strong>: per-side wall polylines by scroll distance plus island polygons in the level data; walls stop bolts, lances, beams, enemy bullets, homing missiles and mines; pickups slide along them</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> a new data type and collision queries in the sim (the largest single piece of M7, part C)</p>
+<div class="ans"><span class="tag">Answer</span> <span>accept / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>accepted</strong> (user)</span></div>
+</article>
+<article class="row" id="r-M5">
+<header><span class="rid">M5</span><h3>Reverse-scroll implementation</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-20-retreat-from-hellas/README.md">Reverse-scroll implementation</a></div>
+<div class="q"><strong>accept or change</strong>: a signed scroll speed per section; the entry edge follows the sign; front/rear and the 60 % front rule read by travel direction; a TOP warning edge</div>
+<div class="ans"><span class="tag">Answer</span> <span>accept / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>accepted</strong> (user)</span></div>
+</article>
+<article class="row" id="r-M7">
+<header><span class="rid">M7</span><h3>The buried layer</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../enemies/ground/burrower/README.md">The buried layer</a></div>
+<div class="q"><strong>accept or change</strong>: a new <code>BURIED</code> layer after <code>SUB</code>: nothing hits it, not even the Smart Bomb; no contact</div>
+<div class="ans"><span class="tag">Answer</span> <span>accept / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>accepted</strong> (user)</span></div>
+</article>
+<article class="row" id="r-M8">
+<header><span class="rid">M8</span><h3>The Choir Herald&#x27;s aura</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../enemies/air/choir-herald/README.md">The Choir Herald's aura</a></div>
+<div class="q"><strong>accept or change</strong>: units within about 90 px get a ring that absorbs damage up to 1× their HP (at most 40), refilled slowly while the Herald lives; the EMP Burst strips it</div>
+<div class="ans"><span class="tag">Answer</span> <span>accept / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>accepted</strong> (user)</span></div>
+</article>
+<article class="row" id="r-M9">
+<header><span class="rid">M9</span><h3>The tendril barrier</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../enemies/ground/tendril-anchor/README.md">The tendril barrier</a></div>
+<div class="q"><strong>accept or change</strong>: the tendril has its own 40 HP, hit only by <code>beam</code>; the anchors (12 HP) by everything; touching it deals <code>medium</code> 6 with a cooldown</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> Level 16 must stay passable without a beam: the anchors are the way for other loadouts</p>
+<div class="ans"><span class="tag">Answer</span> <span>accept / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>accepted</strong> (user)</span></div>
+</article>
+<article class="row" id="r-M11">
+<header><span class="rid">M11</span><h3>Power for the Ion Beam</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../player/weapons/ion-beam/README.md">Power for the Ion Beam</a></div>
+<div class="q"><strong>accept or change</strong>: the hand check found a Mk III generator cannot carry the roster's beam (draw 5 → 9) by Level 16; proposal: keep the generator tiers, beam draw <strong>4 → 8</strong>, L1 raised 35 → <strong>45 DPS</strong>, upgrades priced on 2 500; the Evasive thrusters' 2 MW do not fit a typical Act 3 loadout</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> a hand check only; <code>balance-plan.yaml</code> gets its Act 3 rows in part A</p>
+<div class="ans"><span class="tag">Answer</span> <span>accept / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>accepted</strong> (user)</span></div>
+</article>
+<article class="row" id="r-M12">
+<header><span class="rid">M12</span><h3>Economy at the act step</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/README.md#density-and-threat-profile">Economy at the act step</a></div>
+<div class="q"><strong>accept or change</strong>: accept a low <code>bounty_scale</code> where the act factor jumps (Level 15 at 0.42); the act's scales then run 0.42–0.95; <code>ActPlaythroughTest</code>'s expert bound extended to Act 3</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> Levels 18 and 20 at 0.92–0.95 (cheap mixes on high budgets)</p>
+<div class="ans"><span class="tag">Answer</span> <span>accept / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>accepted</strong> (user)</span></div>
+</article>
+<article class="row" id="r-M15">
+<header><span class="rid">M15</span><h3>Hint 2&#x27;s presentation</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../enemies/bosses/revenant-walker/README.md">Hint 2's presentation</a></div>
+<div class="q"><strong>accept or change</strong>: after the walker dies the scroll crawls past the wreck at 20 px/s for 10 s with a radio exchange; Level 20's briefing image shows the filed plate</div>
+<div class="media"><figure class="m img"><a href="../../enemies/bosses/concept/revenant-walker-r36-a.png"><img loading="lazy" decoding="async" src="../../enemies/bosses/concept/revenant-walker-r36-a.png" alt="revenant-walker-r36-a.png"></a><figcaption>revenant-walker-r36-a.png</figcaption></figure></div>
+<div class="ans"><span class="tag">Answer</span> <span>accept / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>accepted</strong> (user)</span></div>
+</article>
+<article class="row" id="r-M16">
+<header><span class="rid">M16</span><h3>The domes in Level 17</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-17-dome-siege/README.md">The domes in Level 17</a></div>
+<div class="q"><strong>accept or change</strong>: a new ally, the <em>Ares Landing dome</em> (<code>ground</code>, 120 px, Eden 144; breaks on the 3rd hit, easy 4, hard 2), five named domes, hurt only by hooked bombers (and the hooked Shellbacks, Q.17); the secondary "No dome hit" (a new kind <code>untouched</code>, 100)</div>
+<div class="media"><figure class="m img"><a href="../../world/mars/concept/dome-r36-a.png"><img loading="lazy" decoding="async" src="../../world/mars/concept/dome-r36-a.png" alt="dome-r36-a.png"></a><figcaption>dome-r36-a.png</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the dome is a draft roster row in allies, not its own document yet</p>
+<div class="ans"><span class="tag">Answer</span> <span>accept / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>accepted</strong> (user)</span></div>
+</article>
+<article class="row" id="r-M18">
+<header><span class="rid">M18</span><h3>Reference DPS for Act 3</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/README.md#units-in-the-act">Reference DPS for Act 3</a></div>
+<div class="q"><strong>accept or change</strong>: 76 · 80 · 84 · 88 · 92 · 96 · 100 for Levels 15–21 (an act-opener dip, then +4 a level), the act HP factors from it</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> to be confirmed by the Act 3 balance plan in part A</p>
+<div class="ans"><span class="tag">Answer</span> <span>accept / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>accepted</strong> (user)</span></div>
+</article>
+<article class="row" id="r-M19">
+<header><span class="rid">M19</span><h3>Draft numbers</h3><span class="kind">check</span></header>
+<div class="part">Draft numbers</div>
+<div class="q"><strong>check</strong>: hand-written tables only tonight, no <code>data.yaml</code> anywhere under <code>design/</code> (the strict loader would read it); each build part moves its numbers into data and marks the tables</div>
+<div class="ans"><span class="tag">Answer</span> <span>noted</span></div><div class="ans out"><span class="tag">Outcome</span> <span>noted (user)</span></div>
+</article>
+</section>
+<section id="s-act-2-leftovers"><h2>Act 2 leftovers</h2>
+<div class="sum"><p>Found while the round-34 and round-35 follow-ups ran tonight (steps K6–K10).</p></div>
+<article class="row" id="r-L.1">
+<header><span class="rid">L.1</span><h3>Level 12&#x27;s Spore Bomber reveal</h3><span class="kind">your call</span></header>
+<div class="part"><a href="../../campaign/act-2-homefront/level-12-storm-front/README.md">Level 12's Spore Bomber reveal</a></div>
+<div class="q"><strong>your call</strong>: the reveal capture (round 34's P5) needed a scratch data variant (the t=146 Spore Bomber pair moved to t=101.5): the real data never puts a Spore Bomber under a bank at a lightning flash, so the promised reveal does not happen in play. Add a pair at t≈101.5 to the real data, as the capture's variant?</div>
+<div class="media"><figure class="m img"><a href="../../campaign/act-2-homefront/level-12-storm-front/concept/level-12-capture-reveal-r34-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-2-homefront/level-12-storm-front/concept/level-12-capture-reveal-r34-a.png" alt="level-12-capture-reveal-r34-a.png"></a><figcaption>level-12-capture-reveal-r34-a.png</figcaption></figure><figure class="m vid"><figcaption>video with sound</figcaption><video controls preload="none" playsinline src="../../campaign/act-2-homefront/level-12-storm-front/concept/level-12-capture-reveal-r34-a.mp4"></video></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> an extra pair changes Level 12's density, haul and replay hash (a re-recorded golden replay)</p>
+<div class="ans"><span class="tag">Answer</span> <span>add the pair / leave the data</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>add the pair</strong> (user): the Spore Bomber pair at t≈101.5 goes into the Level 12 data (step N2)</span></div>
+</article>
+<article class="row" id="r-L.2">
+<header><span class="rid">L.2</span><h3>The intel&#x27;s boss mark</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../ui/hangar/README.md">The intel's boss mark</a></div>
+<div class="q"><strong>accept or change</strong>: a red full-height BOSS tick on the hangar intel's wave strip at the boss's time (sensor L3), now on every boss level: L05, L07, L11 and L14 (Level 14's approved spec promised it; the others follow)</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> not captured</p>
+<div class="ans"><span class="tag">Answer</span> <span>accept / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>accepted</strong> (user)</span></div>
+</article>
+<article class="row" id="r-L.3">
+<header><span class="rid">L.3</span><h3>Mission failed: the radio box</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../systems/retry/README.md">Mission failed: the radio box</a></div>
+<div class="q"><strong>accept or change</strong>: when the mission failed or game over screen opens, the HUD's radio queue is cleared and a playing voice cut, so the screen's own line is the only one (Level 13 showed Varga's stale line next to Okafor's)</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> an approved document's sentence changed (retry: back to review)</p>
+<div class="ans"><span class="tag">Answer</span> <span>accept / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>accepted</strong> (user)</span></div>
+</article>
+<article class="row" id="r-L.4">
+<header><span class="rid">L.4</span><h3>Okafor&#x27;s Level 13 failure line</h3><span class="kind">listen</span></header>
+<div class="part"><a href="../../campaign/act-2-homefront/level-13-polar-relay/README.md">Okafor's Level 13 failure line</a></div>
+<div class="q"><strong>listen</strong>: "Nansen is gone. Pull back, Lancer." now with <code>expression: grim</code> (the portrait and the voice's grim settings), re-rendered</div>
+<div class="media"><figure class="m aud"><figcaption>the take</figcaption><audio controls preload="none" src="../../../assets/voice/okafor/7f735b28f819.ogg"></audio></figure></div>
+<div class="ans"><span class="tag">Answer</span> <span>accept / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>accepted</strong> (user)</span></div>
+</article>
+<article class="row" id="r-L.5">
+<header><span class="rid">L.5</span><h3>The Lamprey&#x27;s latch spots</h3><span class="kind">your call</span></header>
+<div class="part"><a href="../../enemies/air/lamprey/README.md">The Lamprey's latch spots</a></div>
+<div class="q"><strong>your call</strong>: the latch look b's frames sit 1 px off the latch spots in the data</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> invisible at speed; noticeable only on a still frame</p>
+<div class="ans"><span class="tag">Answer</span> <span>move the data 1 px / leave it</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>move the data 1 px</strong> (user; step N2)</span></div>
+</article>
+<article class="row" id="r-L.6">
+<header><span class="rid">L.6</span><h3>Release saves at the Level 15 hangar</h3><span class="kind">your call</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/README.md#act-intro-and-outro">Release saves at the Level 15 hangar</a></div>
+<div class="q"><strong>your call</strong>: every player of the M6 release has a save at the Level 15 hangar, written before Act 3 existed; Act 2's precedent would skip Act 3's intro for all of them. Proposal: Continue on such a save plays the title card, the four intro pages and the Level 15 briefing once, then opens the hangar</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> needs a flag in the save (intro seen)</p>
+<div class="ans"><span class="tag">Answer</span> <span>play it once / skip it</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>play it once</strong> (user): in the act README's checklist, built in M7 part B</span></div>
+</article>
+</section>
+<section id="s-art-units"><h2>Art — units</h2>
+<div class="sum"><p>The new Act 3 units, a/b each (the 480×540 field over Mars; <code>tools/concept/enemies_r36.py</code>). The Threadcrawler, Shellback and Dust Devil keep their chosen art; the Dust Kite (U.7) was added after the round opened.</p></div>
+<article class="row" id="r-U.1">
+<header><span class="rid">U.1</span><h3>Burrower</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../enemies/ground/burrower/README.md">Burrower</a></div>
+<div class="q"><strong>pick a or b</strong>: a "sand maw", a slate/lime radial worm head (furrow, bulge tell, breach, ring of orbs, submerge); b "sand clam", a bone/violet armoured clam shell that faces the ship</div>
+<div class="media"><figure class="m img"><a href="../../enemies/ground/concept/burrower-r36-a.png"><img loading="lazy" decoding="async" src="../../enemies/ground/concept/burrower-r36-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/ground/concept/burrower-r36-a.gif"><img loading="lazy" decoding="async" src="../../enemies/ground/concept/burrower-r36-a.gif" alt="a · motion"></a><figcaption>a · motion</figcaption></figure><figure class="m img"><a href="../../enemies/ground/concept/rejected/burrower-r36-b.png"><img loading="lazy" decoding="async" src="../../enemies/ground/concept/rejected/burrower-r36-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/ground/concept/rejected/burrower-r36-b.gif"><img loading="lazy" decoding="async" src="../../enemies/ground/concept/rejected/burrower-r36-b.gif" alt="b · motion"></a><figcaption>b · motion</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the slate was lightened to read on the rust; check it against the sand</p>
+<div class="ans"><span class="tag">Answer</span> <span>a / b / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>a</strong> (user); b in <code>concept/rejected/</code></span></div>
+</article>
+<article class="row" id="r-U.2">
+<header><span class="rid">U.2</span><h3>Tendril Anchor</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../enemies/ground/tendril-anchor/README.md">Tendril Anchor</a></div>
+<div class="q"><strong>pick a or b</strong>: a polyp clamps on the walls with a fleshy rope link; b spine pylons with a crackling three-strand filament</div>
+<div class="media"><figure class="m img"><a href="../../enemies/ground/concept/tendril-anchor-r36-a.png"><img loading="lazy" decoding="async" src="../../enemies/ground/concept/tendril-anchor-r36-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/ground/concept/tendril-anchor-r36-a.gif"><img loading="lazy" decoding="async" src="../../enemies/ground/concept/tendril-anchor-r36-a.gif" alt="a · motion"></a><figcaption>a · motion</figcaption></figure><figure class="m img"><a href="../../enemies/ground/concept/rejected/tendril-anchor-r36-b.png"><img loading="lazy" decoding="async" src="../../enemies/ground/concept/rejected/tendril-anchor-r36-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/ground/concept/rejected/tendril-anchor-r36-b.gif"><img loading="lazy" decoding="async" src="../../enemies/ground/concept/rejected/tendril-anchor-r36-b.gif" alt="b · motion"></a><figcaption>b · motion</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the burning beam is a mock-up, not the Ion Beam's look (<span class="ref">G.1</span>)</p>
+<div class="ans"><span class="tag">Answer</span> <span>a / b / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>a</strong> (user); b in <code>concept/rejected/</code></span></div>
+</article>
+<article class="row" id="r-U.3">
+<header><span class="rid">U.3</span><h3>Choir Herald</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../enemies/air/choir-herald/README.md">Choir Herald</a></div>
+<div class="q"><strong>pick a or b</strong>: a "cantor bell", teal-black with a sound-wave aura and escort rings; b "seraph", bone with a floating halo crest and segmented violet rings</div>
+<div class="media"><figure class="m img"><a href="../../enemies/air/concept/rejected/choir-herald-r36-a.png"><img loading="lazy" decoding="async" src="../../enemies/air/concept/rejected/choir-herald-r36-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/air/concept/rejected/choir-herald-r36-a.gif"><img loading="lazy" decoding="async" src="../../enemies/air/concept/rejected/choir-herald-r36-a.gif" alt="a · motion"></a><figcaption>a · motion</figcaption></figure><figure class="m img"><a href="../../enemies/air/concept/choir-herald-r36-b.png"><img loading="lazy" decoding="async" src="../../enemies/air/concept/choir-herald-r36-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/air/concept/choir-herald-r36-b.gif"><img loading="lazy" decoding="async" src="../../enemies/air/concept/choir-herald-r36-b.gif" alt="b · motion"></a><figcaption>b · motion</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the role colours: the support's rings must not read as a bullet colour</p>
+<div class="ans"><span class="tag">Answer</span> <span>a / b / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>b</strong> (user); a in <code>concept/rejected/</code></span></div>
+</article>
+<article class="row" id="r-U.4">
+<header><span class="rid">U.4</span><h3>Ghost Drone</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../enemies/air/ghost-drone/README.md">Ghost Drone</a></div>
+<div class="q"><strong>pick a or b</strong>: a "facet dart", a grey faceted arrowhead; b "crescent", a forward-swept wing round a sensor pod; both plain grey, no trim, no markings (hint 1)</div>
+<div class="media"><figure class="m img"><a href="../../enemies/air/concept/ghost-drone-r36-a.png"><img loading="lazy" decoding="async" src="../../enemies/air/concept/ghost-drone-r36-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/air/concept/ghost-drone-r36-a.gif"><img loading="lazy" decoding="async" src="../../enemies/air/concept/ghost-drone-r36-a.gif" alt="a · motion"></a><figcaption>a · motion</figcaption></figure><figure class="m img"><a href="../../enemies/air/concept/rejected/ghost-drone-r36-b.png"><img loading="lazy" decoding="async" src="../../enemies/air/concept/rejected/ghost-drone-r36-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/air/concept/rejected/ghost-drone-r36-b.gif"><img loading="lazy" decoding="async" src="../../enemies/air/concept/rejected/ghost-drone-r36-b.gif" alt="b · motion"></a><figcaption>b · motion</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> see U.5: at 40 px neither shows its red eye or running lights</p>
+<div class="ans"><span class="tag">Answer</span> <span>a / b / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>a</strong> (user); b in <code>concept/rejected/</code></span></div>
+</article>
+<article class="row" id="r-U.5">
+<header><span class="rid">U.5</span><h3>Ghost Drone: eye and running lights</h3><span class="kind">fix to propose</span></header>
+<div class="part"><a href="../../enemies/air/ghost-drone/README.md">Ghost Drone: eye and running lights</a></div>
+<div class="q"><strong>fix to propose</strong> (found by the Mars step): the spec says "only its red eye and white running lights show at range", and the storm stills (<span class="ref">MA.2</span>, <span class="ref">MA.4</span>) paint them on, but the drone's own sprite has no running lights in either variant and its red eye (on the 260 px source) is lost at 40 px. Proposal: re-render the chosen variant with an emissive red eye of at least 2×2 px and two white wing-tip running lights (glow drawn additively, like the Vrell glow), so the dust-storm silhouette works from the sprite itself</div>
+<div class="media"><figure class="m img"><a href="../../world/mars/concept/rejected/storm-radius-r36-a.png"><img loading="lazy" decoding="async" src="../../world/mars/concept/rejected/storm-radius-r36-a.png" alt="storm-radius-r36-a.png"></a><figcaption>storm-radius-r36-a.png</figcaption></figure></div>
+<div class="ans"><span class="tag">Answer</span> <span>fix in the chosen variant / leave it</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>fix in the chosen variant</strong> (user): the art step re-renders Ghost Drone a</span></div>
+</article>
+<article class="row" id="r-U.6">
+<header><span class="rid">U.6</span><h3>Warden Tank, unmarked</h3><span class="kind">accept or redo</span></header>
+<div class="part"><a href="../../enemies/ground/warden-tank/README.md">Warden Tank, unmarked</a></div>
+<div class="q"><strong>accept or redo</strong>: the chosen r05-a model with only its livery changed for Act 3: unmarked grey, no gold, no accent, next to r05-a</div>
+<div class="media"><figure class="m img"><a href="../../enemies/ground/concept/warden-tank-r36-a.png"><img loading="lazy" decoding="async" src="../../enemies/ground/concept/warden-tank-r36-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure><figure class="m img"><a href="../../enemies/ground/concept/warden-tank-r36-a.gif"><img loading="lazy" decoding="async" src="../../enemies/ground/concept/warden-tank-r36-a.gif" alt="GIF"></a><figcaption>GIF</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the unmarked livery keeps the red sensors (the grey machines' shared mark)</p>
+<div class="ans"><span class="tag">Answer</span> <span>accept / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>accepted</strong> (user): the grey livery chosen</span></div>
+</article>
+<article class="row" id="r-U.7">
+<header><span class="rid">U.7</span><h3>Dust Kite</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../enemies/air/dust-kite/README.md">Dust Kite</a></div>
+<div class="q"><strong>pick a or b</strong>: a "diamond kite", a rust membrane on a bone cross strut with a teal-glowing spine and a whip tail; b "crescent sail", a bat-like swept rust sail on bone finger struts, teal nodes along a segmented body; both 24 px, 16 headings × 4 membrane-flex frames, the 0.3 s entry shimmer and a rust dust-puff death (M10 = b)</div>
+<div class="media"><figure class="m img"><a href="../../enemies/air/concept/rejected/dust-kite-r36-a.png"><img loading="lazy" decoding="async" src="../../enemies/air/concept/rejected/dust-kite-r36-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/air/concept/rejected/dust-kite-r36-a.gif"><img loading="lazy" decoding="async" src="../../enemies/air/concept/rejected/dust-kite-r36-a.gif" alt="a · motion"></a><figcaption>a · motion</figcaption></figure><figure class="m img"><a href="../../enemies/air/concept/dust-kite-r36-b.png"><img loading="lazy" decoding="async" src="../../enemies/air/concept/dust-kite-r36-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/air/concept/dust-kite-r36-b.gif"><img loading="lazy" decoding="async" src="../../enemies/air/concept/dust-kite-r36-b.gif" alt="b · motion"></a><figcaption>b · motion</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> at 24 px the two read alike in motion; the rust-and-teal pairing is the Lamprey's and the Ravager's (told apart by size)</p>
+<div class="ans"><span class="tag">Answer</span> <span>a / b / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>b</strong> (user); a in <code>concept/rejected/</code></span></div>
+</article>
+</section>
+<section id="s-art-bosses"><h2>Art — bosses</h2>
+<div class="sum"><p>The Act 3 mid-boss and act boss, a/b each (<code>tools/concept/bosses_r36.py</code>).</p></div>
+<article class="row" id="r-B.1">
+<header><span class="rid">B.1</span><h3>Revenant Walker</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../enemies/bosses/revenant-walker/README.md">Revenant Walker</a></div>
+<div class="q"><strong>pick a or b</strong>: a "Strider heavy", an unmarked grey reverse-knee biped, two shoulder missile boxes, a tail flamer, a hot-amber reactor on its back, the wreck's plate ground blank; b "Siege crawler", a low four-legged hull with a dozer prow, vertical launch blocks, a twin flamer, the plate cut off with a torch</div>
+<div class="media"><figure class="m img"><a href="../../enemies/bosses/concept/revenant-walker-r36-a.png"><img loading="lazy" decoding="async" src="../../enemies/bosses/concept/revenant-walker-r36-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/bosses/concept/revenant-walker-r36-a.gif"><img loading="lazy" decoding="async" src="../../enemies/bosses/concept/revenant-walker-r36-a.gif" alt="a · motion"></a><figcaption>a · motion</figcaption></figure><figure class="m img"><a href="../../enemies/bosses/concept/rejected/revenant-walker-r36-b.png"><img loading="lazy" decoding="async" src="../../enemies/bosses/concept/rejected/revenant-walker-r36-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/bosses/concept/rejected/revenant-walker-r36-b.gif"><img loading="lazy" decoding="async" src="../../enemies/bosses/concept/rejected/revenant-walker-r36-b.gif" alt="b · motion"></a><figcaption>b · motion</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the GIFs condense the fight (one pass; the spec has passes from every edge and three phases); the hot-amber reactor follows the Ascendancy rule for exposed cores; the spec's <em>Size</em> row says "four legs", which fits only b</p>
+<div class="ans"><span class="tag">Answer</span> <span>a / b / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>a</strong> (user): the biped; the <em>Size</em> and <em>Look</em> rows follow; b in <code>concept/rejected/</code></span></div>
+</article>
+<article class="row" id="r-B.2">
+<header><span class="rid">B.2</span><h3>Dust Colossus</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../enemies/bosses/dust-colossus/README.md">Dust Colossus</a></div>
+<div class="q"><strong>pick a or b</strong>: a "Rearing maw", a segmented slate worm arching out of a cracking sand dome, three jaw plates round rings of teeth and a lime throat; b "Sinkhole colony", the ground collapses into a funnel, four bone mandibles round a lime throat, violet vein ridges under the sand</div>
+<div class="media"><figure class="m img"><a href="../../enemies/bosses/concept/rejected/dust-colossus-r36-a.png"><img loading="lazy" decoding="async" src="../../enemies/bosses/concept/rejected/dust-colossus-r36-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/bosses/concept/rejected/dust-colossus-r36-a.gif"><img loading="lazy" decoding="async" src="../../enemies/bosses/concept/rejected/dust-colossus-r36-a.gif" alt="a · motion"></a><figcaption>a · motion</figcaption></figure><figure class="m img"><a href="../../enemies/bosses/concept/dust-colossus-r36-b.png"><img loading="lazy" decoding="async" src="../../enemies/bosses/concept/dust-colossus-r36-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/bosses/concept/dust-colossus-r36-b.gif"><img loading="lazy" decoding="async" src="../../enemies/bosses/concept/dust-colossus-r36-b.gif" alt="b · motion"></a><figcaption>b · motion</figcaption></figure></div>
+<div class="ans"><span class="tag">Answer</span> <span>a / b / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>b</strong> (user); the spec's <em>Look</em> follows; a in <code>concept/rejected/</code></span></div>
+</article>
+</section>
+<section id="s-art-mars"><h2>Art — Mars</h2>
+<div class="sum"><p>The setting's looks (<code>tools/concept/mars_r36.py</code>); the chosen round-03 scene stays the base.</p></div>
+<article class="row" id="r-MA.1">
+<header><span class="rid">MA.1</span><h3>Canyon walls</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../world/mars/README.md#concept-art">Canyon walls</a></div>
+<div class="q"><strong>pick a or b</strong>: a the rim at scale 1.0 is the collision line and the faces drop to the floor at 0.6 (the decided art-direction rule, the chosen r03-c); b the floor at 1.0 and the walls rise toward the camera to 1.25 like Level 08's towers, the collision at their foot (reads as flying inside the canyon; amends the art-direction rule)</div>
+<div class="media"><figure class="m img"><a href="../../world/mars/concept/rejected/canyon-walls-r36-a.png"><img loading="lazy" decoding="async" src="../../world/mars/concept/rejected/canyon-walls-r36-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../world/mars/concept/rejected/canyon-walls-r36-a.gif"><img loading="lazy" decoding="async" src="../../world/mars/concept/rejected/canyon-walls-r36-a.gif" alt="a · motion"></a><figcaption>a · motion</figcaption></figure><figure class="m img"><a href="../../world/mars/concept/canyon-walls-r36-b.png"><img loading="lazy" decoding="async" src="../../world/mars/concept/canyon-walls-r36-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../world/mars/concept/canyon-walls-r36-b.gif"><img loading="lazy" decoding="async" src="../../world/mars/concept/canyon-walls-r36-b.gif" alt="b · motion"></a><figcaption>b · motion</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> Level 16's draft is written for a (gameplay on the rim bands); b moves the anchors to the walls' foot</p>
+<div class="ans"><span class="tag">Answer</span> <span>a / b</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>b</strong> (user): amends the art-direction perspective rule; Level 16 adapted (anchors at the walls' foot, the rim bands gone); a in <code>concept/rejected/</code></span></div>
+</article>
+<article class="row" id="r-MA.2">
+<header><span class="rid">MA.2</span><h3>Storm radius</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../world/mars/README.md#concept-art">Storm radius</a></div>
+<div class="q"><strong>pick a or b</strong>: a a clear 170 px bubble with a hard 10 px edge, a banded rust veil beyond; b a soft ragged falloff over about 120 px with drifting dust tongues, units fading gradually to silhouettes</div>
+<div class="media"><figure class="m img"><a href="../../world/mars/concept/rejected/storm-radius-r36-a.png"><img loading="lazy" decoding="async" src="../../world/mars/concept/rejected/storm-radius-r36-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../world/mars/concept/rejected/storm-radius-r36-a.gif"><img loading="lazy" decoding="async" src="../../world/mars/concept/rejected/storm-radius-r36-a.gif" alt="a · motion"></a><figcaption>a · motion</figcaption></figure><figure class="m img"><a href="../../world/mars/concept/storm-radius-r36-b.png"><img loading="lazy" decoding="async" src="../../world/mars/concept/storm-radius-r36-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../world/mars/concept/storm-radius-r36-b.gif"><img loading="lazy" decoding="async" src="../../world/mars/concept/storm-radius-r36-b.gif" alt="b · motion"></a><figcaption>b · motion</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the Ghost Drones' lights are painted on here (U.5)</p>
+<div class="ans"><span class="tag">Answer</span> <span>a / b</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>b</strong> (user): in Level 18 and Mars; a in <code>concept/rejected/</code></span></div>
+</article>
+<article class="row" id="r-MA.3">
+<header><span class="rid">MA.3</span><h3>Ares Landing dome</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../world/mars/README.md#concept-art">Ares Landing dome</a></div>
+<div class="q"><strong>pick a or b</strong>: a geodesic glass on a concrete ring, green-lit crops inside; b a ribbed composite pressure dome on a regolith berm; both 120 px (Eden 144) with hit and broken states</div>
+<div class="media"><figure class="m img"><a href="../../world/mars/concept/dome-r36-a.png"><img loading="lazy" decoding="async" src="../../world/mars/concept/dome-r36-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../world/mars/concept/rejected/dome-r36-b.png"><img loading="lazy" decoding="async" src="../../world/mars/concept/rejected/dome-r36-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the states are overlays; production renders them</p>
+<div class="ans"><span class="tag">Answer</span> <span>a / b</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>a</strong> (user); b in <code>concept/rejected/</code></span></div>
+</article>
+<article class="row" id="r-MA.4">
+<header><span class="rid">MA.4</span><h3>Mood stills</h3><span class="kind">accept or redo, as direction</span></header>
+<div class="part"><a href="../../world/mars/README.md#concept-art">Mood stills</a></div>
+<div class="q"><strong>accept or redo, as direction</strong> (not production backdrops): one still per sub-location: Olympus descent (L15), Valles with the Helix station (L16), Ares Landing (L17), the storm plains (L18), the Tharsis Foundry (L19), the Hellas basin with the ridge and the lime hollow (L20–L21)</div>
+<div class="media"><figure class="m img"><a href="../../world/mars/concept/mars-olympus-r36-a.png"><img loading="lazy" decoding="async" src="../../world/mars/concept/mars-olympus-r36-a.png" alt="Olympus"></a><figcaption>Olympus</figcaption></figure><figure class="m img"><a href="../../world/mars/concept/mars-valles-r36-a.png"><img loading="lazy" decoding="async" src="../../world/mars/concept/mars-valles-r36-a.png" alt="Valles"></a><figcaption>Valles</figcaption></figure><figure class="m img"><a href="../../world/mars/concept/mars-ares-landing-r36-a.png"><img loading="lazy" decoding="async" src="../../world/mars/concept/mars-ares-landing-r36-a.png" alt="Ares Landing"></a><figcaption>Ares Landing</figcaption></figure><figure class="m img"><a href="../../world/mars/concept/mars-storm-plains-r36-a.png"><img loading="lazy" decoding="async" src="../../world/mars/concept/mars-storm-plains-r36-a.png" alt="storm plains"></a><figcaption>storm plains</figcaption></figure><figure class="m img"><a href="../../world/mars/concept/mars-tharsis-foundry-r36-a.png"><img loading="lazy" decoding="async" src="../../world/mars/concept/mars-tharsis-foundry-r36-a.png" alt="Tharsis"></a><figcaption>Tharsis</figcaption></figure><figure class="m img"><a href="../../world/mars/concept/mars-hellas-r36-a.png"><img loading="lazy" decoding="async" src="../../world/mars/concept/mars-hellas-r36-a.png" alt="Hellas"></a><figcaption>Hellas</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the units on them are variant a of tonight's proposals, for scale only</p>
+<div class="ans"><span class="tag">Answer</span> <span>accept all / redo some (say which)</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>accepted all</strong> (user), as direction</span></div>
+</article>
+<article class="row" id="r-MA.5">
+<header><span class="rid">MA.5</span><h3>Panorama</h3><span class="kind">accept or redo, as direction</span></header>
+<div class="part"><a href="../../world/mars/README.md#concept-art">Panorama</a></div>
+<div class="q"><strong>accept or redo, as direction</strong>: a wide 960×540 mood still of the act in a voxel-terrain look (domes, the canyon, Olympus Mons, a storm front) for the title card and the briefing horizons</div>
+<div class="media"><figure class="m img"><a href="../../world/mars/concept/mars-panorama-r36-a.png"><img loading="lazy" decoding="async" src="../../world/mars/concept/mars-panorama-r36-a.png" alt="panorama"></a><figcaption>panorama</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the weakest still: blocky domes</p>
+<div class="ans"><span class="tag">Answer</span> <span>accept / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>accepted</strong> (user), as direction</span></div>
+</article>
+</section>
+<section id="s-art-gear"><h2>Art — gear</h2>
+<div class="sum"><p>The Act 3 equipment's looks, a/b each (<code>tools/concept/gear_r36.py</code>).</p></div>
+<article class="row" id="r-G.1">
+<header><span class="rid">G.1</span><h3>Ion Beam</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../player/weapons/ion-beam/README.md">Ion Beam</a></div>
+<div class="q"><strong>pick a or b</strong>: a the chosen round-08/09 beam family drawn per level (6 → 14 px, overdrive 18 px), first-target contact, a tendril burnt through, rock-scorch, the glance spark over hardened ground; b "ion stream", a white core in a cyan sheath with helix strands and packets, a ring splash, slag beads on rock</div>
+<div class="media"><figure class="m img"><a href="../../player/weapons/concept/ion-beam-r36-a.png"><img loading="lazy" decoding="async" src="../../player/weapons/concept/ion-beam-r36-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../player/weapons/concept/ion-beam-r36-a.gif"><img loading="lazy" decoding="async" src="../../player/weapons/concept/ion-beam-r36-a.gif" alt="a · motion"></a><figcaption>a · motion</figcaption></figure><figure class="m img"><a href="../../player/weapons/concept/rejected/ion-beam-r36-b.png"><img loading="lazy" decoding="async" src="../../player/weapons/concept/rejected/ion-beam-r36-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../player/weapons/concept/rejected/ion-beam-r36-b.gif"><img loading="lazy" decoding="async" src="../../player/weapons/concept/rejected/ion-beam-r36-b.gif" alt="b · motion"></a><figcaption>b · motion</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the rock island is a stand-in for the canyon art (MA.1)</p>
+<div class="ans"><span class="tag">Answer</span> <span>a / b</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>a</strong> (user); b in <code>concept/rejected/</code></span></div>
+</article>
+<article class="row" id="r-G.2">
+<header><span class="rid">G.2</span><h3>Light drone</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../player/weapons/light-drone-bay/README.md">Light drone</a></div>
+<div class="q"><strong>pick a or b</strong>: a a disc drone with a dock-ring bay pod; b a dart drone like a miniature Stormhawk with a launch-rail bay; both with the orbit, convergence, block, break and rebuild</div>
+<div class="media"><figure class="m img"><a href="../../player/weapons/concept/light-drone-r36-a.png"><img loading="lazy" decoding="async" src="../../player/weapons/concept/light-drone-r36-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../player/weapons/concept/light-drone-r36-a.gif"><img loading="lazy" decoding="async" src="../../player/weapons/concept/light-drone-r36-a.gif" alt="a · motion"></a><figcaption>a · motion</figcaption></figure><figure class="m img"><a href="../../player/weapons/concept/rejected/light-drone-r36-b.png"><img loading="lazy" decoding="async" src="../../player/weapons/concept/rejected/light-drone-r36-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../player/weapons/concept/rejected/light-drone-r36-b.gif"><img loading="lazy" decoding="async" src="../../player/weapons/concept/rejected/light-drone-r36-b.gif" alt="b · motion"></a><figcaption>b · motion</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the HUD's hits-left pips take the place of the weapon's level pips</p>
+<div class="ans"><span class="tag">Answer</span> <span>a / b</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>a</strong> (user); b in <code>concept/rejected/</code></span></div>
+</article>
+<article class="row" id="r-G.3">
+<header><span class="rid">G.3</span><h3>EMP Burst</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../player/specials/README.md">EMP Burst</a></div>
+<div class="q"><strong>pick a or b</strong>: a a ring with crackling arcs, machines' lights out for 3 s, the Vrell's glow dimmed for 1.5 s; b "arc front", a dashed double ring forking into each unit, flicker and a spark cage</div>
+<div class="media"><figure class="m img"><a href="../../player/specials/concept/emp-burst-r36-a.png"><img loading="lazy" decoding="async" src="../../player/specials/concept/emp-burst-r36-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../player/specials/concept/emp-burst-r36-a.gif"><img loading="lazy" decoding="async" src="../../player/specials/concept/emp-burst-r36-a.gif" alt="a · motion"></a><figcaption>a · motion</figcaption></figure><figure class="m img"><a href="../../player/specials/concept/rejected/emp-burst-r36-b.png"><img loading="lazy" decoding="async" src="../../player/specials/concept/rejected/emp-burst-r36-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../player/specials/concept/rejected/emp-burst-r36-b.gif"><img loading="lazy" decoding="async" src="../../player/specials/concept/rejected/emp-burst-r36-b.gif" alt="b · motion"></a><figcaption>b · motion</figcaption></figure></div>
+<div class="ans"><span class="tag">Answer</span> <span>a / b</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>a</strong> (user); b in <code>concept/rejected/</code></span></div>
+</article>
+<article class="row" id="r-G.4">
+<header><span class="rid">G.4</span><h3>Shield Overcharge</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../player/specials/README.md">Shield Overcharge</a></div>
+<div class="q"><strong>pick a or b</strong>: a a gold flare and shimmer, the shield bar 0–90 with a gold upper half, the cooldown ring; b a white-hot double shell, the bar 0–45 with white second-layer cores</div>
+<div class="media"><figure class="m img"><a href="../../player/specials/concept/rejected/shield-overcharge-r36-a.png"><img loading="lazy" decoding="async" src="../../player/specials/concept/rejected/shield-overcharge-r36-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../player/specials/concept/rejected/shield-overcharge-r36-a.gif"><img loading="lazy" decoding="async" src="../../player/specials/concept/rejected/shield-overcharge-r36-a.gif" alt="a · motion"></a><figcaption>a · motion</figcaption></figure><figure class="m img"><a href="../../player/specials/concept/shield-overcharge-r36-b.png"><img loading="lazy" decoding="async" src="../../player/specials/concept/shield-overcharge-r36-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../player/specials/concept/shield-overcharge-r36-b.gif"><img loading="lazy" decoding="async" src="../../player/specials/concept/shield-overcharge-r36-b.gif" alt="b · motion"></a><figcaption>b · motion</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> a's gold is the Ascendancy's colour; the special row is too narrow for "OVERCHARGE"</p>
+<div class="ans"><span class="tag">Answer</span> <span>a / b</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>b</strong> (user): the Overcharge is white in the specials document; a in <code>concept/rejected/</code></span></div>
+</article>
+</section>
+<section id="s-art-characters"><h2>Art — characters</h2>
+<div class="sum"><p>Act 3's one new radio portrait, in the chosen style B (<code>tools/concept/portraits_r36.py</code>), added after the round opened.</p></div>
+<article class="row" id="r-C.1">
+<header><span class="rid">C.1</span><h3>Ares Control&#x27;s radio portrait</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../story/characters/README.md#concept-art">Ares Control's radio portrait</a></div>
+<div class="q"><strong>pick a or b</strong>: Level 15's <code>radio-generic-colonial</code>, Ares Landing's flight controller (Levels 15–17 and 19–21), older than Rook, proud and tired: a "the old controller", a dust-orange militia cap, a boom mic and a rust work jacket; b "the dust-suit controller", the same man as a surface worker, goggles on the brow and a respirator. Both on the <strong>teal</strong> friendly channel like the CDF officer (amber stays the enemy's)</div>
+<div class="sub"><span class="rid">C.1a</span> Ares Control stays on the teal friendly channel (the colony is a friend; amber stays the enemy's), not a channel colour of his own. <span class="opts">yes / no</span></div>
+<div class="media"><figure class="m img"><a href="../../story/characters/concept/rejected/generic-colonial-r36-a.png"><img loading="lazy" decoding="async" src="../../story/characters/concept/rejected/generic-colonial-r36-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../story/characters/concept/generic-colonial-r36-b.png"><img loading="lazy" decoding="async" src="../../story/characters/concept/generic-colonial-r36-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> on the teal channel he is told from the CDF officer only by the cap, the rust clothes and his age</p>
+<div class="ans"><span class="tag">Answer</span> <span>a / b / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>b</strong> (user), the teal channel <strong>yes</strong> (C.1a); a in <code>concept/rejected/</code></span></div>
+</article>
+</section>
+<section id="s-audio"><h2>Audio</h2>
+<div class="sum"><p>Sketches and sounds for Act 3 (<code>tools/concept/audio/music_r36b.py</code>, <code>sfx_r36b.py</code>; two CC-BY sources, in CREDITS.md). No bubbly or popping layers.</p></div>
+<article class="row" id="r-S.1">
+<header><span class="rid">S.1</span><h3>Track 9, the Act 3 B theme</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../audio/music/README.md">Track 9, the Act 3 B theme</a></div>
+<div class="q"><strong>pick a or b</strong>: a "Oxide Drift", 126 BPM, A harmonic minor / E phrygian dominant, track 8's hand drums and reed over techno, Vorne's motif on cold organ and brass far back; b "Grey Signal", 125 BPM D minor dub techno, the motif as an intercepted whistle through a radio band-pass. Both about 65 s sketches with the motif in its own group</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/music/concept/rejected/act3-b-theme-r36-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/music/concept/act3-b-theme-r36-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the brief said B phrygian at 122 BPM; neither sketch keeps that key (Q.24)</p>
+<div class="ans"><span class="tag">Answer</span> <span>a / b / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>b</strong> (user): track 9's brief follows "Grey Signal"; a in <code>concept/rejected/</code></span></div>
+</article>
+<article class="row" id="r-S.2">
+<header><span class="rid">S.2</span><h3>Burrow eruption</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../audio/sfx/README.md">Burrow eruption</a></div>
+<div class="q"><strong>pick a or b</strong>: a "sand burst", the tell's rumble swelling over 1.0 s, then an impact and sand raining down; b "the swimmer breaks out", sand churning, a muffled growl, gravel thrown up (2.1 s each)</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/burrow-eruption-r36-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/burrow-eruption-r36-b.ogg"></audio></figure></div>
+<div class="ans"><span class="tag">Answer</span> <span>a / b / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>a</strong> (user); b in <code>concept/rejected/</code></span></div>
+</article>
+<article class="row" id="r-S.3">
+<header><span class="rid">S.3</span><h3>Canyon wall scrape</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../audio/sfx/README.md">Canyon wall scrape</a></div>
+<div class="q"><strong>pick a or b</strong>: a "rock grind", the hull dragged on stone with grit falling (0.65 s); b "metal screech" with a spark hiss (0.6 s)</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/canyon-scrape-r36-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/canyon-scrape-r36-b.ogg"></audio></figure></div>
+<div class="ans"><span class="tag">Answer</span> <span>a / b / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>b</strong> (user); a in <code>concept/rejected/</code></span></div>
+</article>
+<article class="row" id="r-S.4">
+<header><span class="rid">S.4</span><h3>Ion Beam loop</h3><span class="kind">pick a, b or keep</span></header>
+<div class="part"><a href="../../audio/sfx/README.md">Ion Beam loop</a></div>
+<div class="q"><strong>pick a, b or keep</strong>: a "the chosen hum, heavier", the round-04 loop's source with an ion body (2.6 s loop); b "ion stream", synthesized buzz and shimmer (2.0 s loop); or keep the chosen round-04 loop unchanged</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/ion-beam-loop-r36-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/ion-beam-loop-r36-b.ogg"></audio></figure><figure class="m aud"><figcaption>r04-a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/shot-beam-r04-a.ogg"></audio></figure></div>
+<div class="ans"><span class="tag">Answer</span> <span>a / b / keep r04-a</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>a</strong> (user); b in <code>concept/rejected/</code></span></div>
+</article>
+<article class="row" id="r-S.5">
+<header><span class="rid">S.5</span><h3>Dust-storm bed</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../audio/sfx/README.md">Dust-storm bed</a></div>
+<div class="q"><strong>pick a or b</strong>: Level 18's <code>mars-storm</code> ambience, a seamless 16 s loop: a "recorded front", a sandstorm over a furious low howl; b "synthesized front", a roar, grit hiss and a wandering howl swelling with gusts</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/dust-storm-bed-r36-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/dust-storm-bed-r36-b.ogg"></audio></figure></div>
+<div class="ans"><span class="tag">Answer</span> <span>a / b / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>a</strong> (user); b in <code>concept/rejected/</code></span></div>
+</article>
+<article class="row" id="r-S.6">
+<header><span class="rid">S.6</span><h3>Ares Control&#x27;s voice</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../audio/voice/README.md#concept-art">Ares Control's voice</a></div>
+<div class="q"><strong>pick a or b</strong>: casting Ares Control, three of his lines (Level 15's t=12 jab, Level 17's dome names, Level 21's closing line) through radio filter b at his drier base settings: a reader David Wales (clip 102 Hz, 21.7 s); b reader Thomas A (clip 112 Hz, 25.2 s). The text as spoken uses the proposed respellings, answered below</div>
+<div class="sub"><span class="rid">S.6a</span> Ares is spoken from the respelling "Airees" (AIR-eez). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">S.6b</span> Schiaparelli is spoken from the respelling "Skyaparelli" (skyah-pah-REL-ee). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">S.6c</span> Burroughs is spoken from the respelling "Burrows". <span class="opts">yes / no</span></div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/voice/concept/rejected/voice-ares-control-r36-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/voice/concept/voice-ares-control-r36-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> measured only, not listened to; b holds a pause of about 2 s inside its second and third lines</p>
+<div class="ans"><span class="tag">Answer</span> <span>a / b / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>b</strong> (user): Thomas A, his mid-line pauses noted for the render step; the respellings (a)–(c) <strong>yes</strong>; a and its reference clip in <code>concept/rejected/</code></span></div>
+</article>
+</section>
+<section id="s-documents-to-approve"><h2>Documents to approve</h2>
+<div class="sum"><p>Every Act 3 document written tonight (<code>design: draft</code>). <em>Approve</em> sets it to <code>approved</code> after the round's other answers are worked in; <em>change</em> says what. The texts the player reads or hears are quoted under the rows.</p></div>
+<article class="row" id="r-D.1">
+<header><span class="rid">D.1</span><h3>Act 3 – Red Dust</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/README.md">Act 3 – Red Dust</a></div>
+<div class="q"><strong>approve or change</strong>: the act README: the Contents of seven levels, the timeline (nine days' crossing, five weeks of siege, June 2185), the title card, the act intro (four pages) and outro (four pages, the Vrell leave Mars for Europa), the units with their HP factors, the new-mechanics table, the density band 60–72 a minute (breather 48–55) applied to Levels 15, 16, 17 and 19, the threat profiles, music and voice per level (one colony voice, Ares Control)</div>
+<details><summary>Act intro and outro</summary><blockquote><p>ACT III · RED DUST · Mars · June 2185 (the title card, 3.5 s over the act's still)</p></blockquote><blockquote><p><strong>Page 1, Commander Okafor (grim):</strong> "Nine days at full burn. Ares Landing has now held alone for five weeks: no fleet, no supply drops, only militia guns and the air its domes still make. Every colony on Mars is cut off from every other."<br><strong>Page 2, Dr. Varga:</strong> "The Vrell came down in the Hellas basin, in the south, and spread north from there. They have changed for Mars: they swim through the sand and ride the dust storms. They are learning this planet faster than we did."<br><strong>Page 3, Commander Okafor:</strong> "The colonists asked Earth for help long before the Gate opened, and got committees. They will not thank us for coming late. They don't have to. We fly for them anyway."<br><strong>Page 4, Commander Okafor (fierce):</strong> "We go in from the west, past Olympus Mons, and take the canyons back one at a time. Drop in ninety minutes. Mission briefing follows. Aegis Actual out."</p></blockquote><p>The outro, after the Level 21 debrief (track 24 under page 1):</p><blockquote><p><strong>Page 1, Commander Okafor (grim):</strong> "The Colossus is dead. Within a day the Vrell lifted off from every site on Mars: the basin, the plains, the foundry. Ares Landing opened its shelters this morning, for the first time in six weeks."<br><strong>Page 2, Commander Okafor:</strong> "The colonists have not forgiven Earth for coming late, and they are right not to. But last night every dome in Ares Landing burned its lights for Aegis Wing. Take that with you."<br><strong>Page 3, Dr. Varga (grim):</strong> "I tracked their fleet off Mars. It is not going home. Every course bends toward Jupiter and ends at one moon: Europa. It told us '<em>we are going</em>'. Now we know where."<br><strong>Page 4, Commander Okafor (fierce):</strong> "Europa means Thera Deep and Conamara Station, and Conamara reports tremors under the ice. We refit, and we follow them. Aegis Wing leaves Mars in four days. Aegis Actual out."</p></blockquote></details>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the texts below are drafts; Okafor's "We fly for them anyway" carries the colonists' resentment</p>
+<div class="ans"><span class="tag">Answer</span> <span>approve / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>approved</strong> (user)</span></div>
+</article>
+<article class="row" id="r-D.2">
+<header><span class="rid">D.2</span><h3>Level 15 – Olympus Descent</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-15-olympus-descent/README.md">Level 15 – Olympus Descent</a></div>
+<div class="q"><strong>approve or change</strong>: 190 s in five sections, the descent through two cloud decks; the Burrower's first sight at t=68; Dust Kite popcorn; 200 enemies ≈ 65 a minute; <code>bounty_scale</code> 0.42; a drop-pod secret; Ares Control's first lines</div>
+<div class="media"><figure class="m img"><a href="../../world/mars/concept/mars-olympus-r36-a.png"><img loading="lazy" decoding="async" src="../../world/mars/concept/mars-olympus-r36-a.png" alt="Olympus still"></a><figcaption>Olympus still</figcaption></figure></div>
+<details><summary>The level&#x27;s summary</summary><p>Act 3's opener. Aegis Wing drops from the Mars transport into a contested entry corridor, falls through the cloud deck past the flank of Olympus Mons and crosses the Tharsis dunes to the rail line of the colonies, which have held alone for five weeks. The level introduces the <span class="ref">Burrower</span>, the act's first unit that can be hit only while it is surfaced (the new <code>buried</code> layer), and the Martian popcorn, the <span class="ref">Dust Kite</span>. 190 s of scroll in five sections, no boss.</p><p><strong>Status (overnight design phase, 2026-10-12).</strong> A draft written from the act roster, the gap analysis's §1.7 rules and the recommended answers to its questions (M7 = a, M10 = b, M12 = a, M17 = a, M18 = a, M19), all <strong>pending the user's review in concept round 36</strong>. Every number here is a hand-written draft: there is no <code>data.yaml</code> yet (M19: the content loader would read it). M7 part B moves the numbers into the level's data and turns these tables into marked ones.</p></details>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> Skitter streams 4 → 3 in the harmonising; the secret is 14 % of the budget (Q.15)</p>
+<div class="ans"><span class="tag">Answer</span> <span>approve / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>approved</strong> (user)</span></div>
+</article>
+<article class="row" id="r-D.3">
+<header><span class="rid">D.3</span><h3>Level 16 – Valles Canyon Run</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-16-valles-canyon-run/README.md">Level 16 – Valles Canyon Run</a></div>
+<div class="q"><strong>approve or change</strong>: terrain collision (M1–M3), the mesa fork, minimum width 180 px, six tendril gates, the Coprates rapids at 230 px/s, the Candor hut secret; 215 enemies ≈ 70 a minute; <code>bounty_scale</code> 0.54; the Helix glimpse</div>
+<div class="media"><figure class="m img"><a href="../../world/mars/concept/mars-valles-r36-a.png"><img loading="lazy" decoding="async" src="../../world/mars/concept/mars-valles-r36-a.png" alt="Valles still"></a><figcaption>Valles still</figcaption></figure></div>
+<details><summary>The level&#x27;s summary</summary><p>The canyon run: Aegis Wing flies the Valles Marineris east toward Ares Landing, the one road the Vrell do not hold from the air. The level introduces <strong>terrain collision</strong>: canyon walls that narrow the flyable area and hurt on touch, a rock island that splits the canyon into two channels, and a fast scroll. The Vrell have strung the canyon shut with <span class="ref">Tendril Anchor</span> barriers (a <code>beam</code> burns through the tendril) and a <span class="ref">Threadcrawler</span> crawls along the rims. On the north rim the Helix research station stands untouched. 190 s of scroll in six sections, no boss.</p><p><strong>Status (overnight design phase, 2026-10-12).</strong> A draft carrying the terrain design (M1–M3 of the gap analysis) with the recommended options, all <strong>pending the user's review in concept round 36</strong>. Every number is a hand-written draft (M19: no <code>data.yaml</code>); M7 part C builds the terrain and moves the numbers into the level's data.</p></details>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the wall camera model (MA.1); new radio events (first surfacing, first wall contact)</p>
+<div class="ans"><span class="tag">Answer</span> <span>approve / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>approved</strong> (user)</span></div>
+</article>
+<article class="row" id="r-D.4">
+<header><span class="rid">D.4</span><h3>Level 17 – Dome Siege</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-17-dome-siege/README.md">Level 17 – Dome Siege</a></div>
+<div class="q"><strong>approve or change</strong>: five named domes as allies (M16), the secondary "No dome hit"; the Shellback and Choir Herald introduced; the Helix compound set piece and "Not on this channel"; 172 s, 196 enemies ≈ 70 a minute; <code>bounty_scale</code> 0.60</div>
+<div class="media"><figure class="m img"><a href="../../world/mars/concept/mars-ares-landing-r36-a.png"><img loading="lazy" decoding="async" src="../../world/mars/concept/mars-ares-landing-r36-a.png" alt="Ares Landing still"></a><figcaption>Ares Landing still</figcaption></figure></div>
+<details><summary>The level&#x27;s summary</summary><p>Ares Landing, the oldest colony on Mars, is under siege. Its people are sheltered below ground, but the five greenhouse domes that feed it stand in the open, and Vrell <span class="ref">Spore Bombers</span> and the new <span class="ref">Shellback</span> beasts go for the glass. The level introduces the Shellback and the <span class="ref">Choir Herald</span>, a support flyer that sings shield rings onto its escorts, and the domes as a new ally (M16 = a): the secondary objective is that no dome is hit. On the way between the outer domes and the inner ring the Vrell sweep past the untouched Helix compound. 172 s: two slow dome sections (80 and 70 px/s) framed by faster approach, compound and spaceport sections.</p><p><strong>Status (overnight design phase, 2026-10-12).</strong> A draft written before part D of M7: the numbers are hand-written first values (M19: no <code>data.yaml</code> until the level is built), the §3 questions of the <span class="ref">gap analysis</span> taken as recommended (M6–M18) and pending the user's review in concept round 36.</p></details>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> Shellbacks threaten the domes too (Q.17); the Helix swarm 10 → 8 in the harmonising</p>
+<div class="ans"><span class="tag">Answer</span> <span>approve / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>approved</strong> (user)</span></div>
+</article>
+<article class="row" id="r-D.5">
+<header><span class="rid">D.5</span><h3>Level 18 – Dust Storm</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-18-dust-storm/README.md">Level 18 – Dust Storm</a></div>
+<div class="q"><strong>approve or change</strong>: the act's breather, 183 s; the visibility radius (M6); Dust Devils; the Ghost Drones' first sight at t=69.5 (hint 1) with Vorne's motif; 149 enemies ≈ 50 a minute; <code>bounty_scale</code> 0.92; secondary 65 % kills</div>
+<div class="media"><figure class="m img"><a href="../../world/mars/concept/mars-storm-plains-r36-a.png"><img loading="lazy" decoding="async" src="../../world/mars/concept/mars-storm-plains-r36-a.png" alt="storm still"></a><figcaption>storm still</figcaption></figure></div>
+<details><summary>The level&#x27;s summary</summary><p>A storm front rolls across the northern plains of Mars with Vrell inside it, and Aegis Wing sweeps it before it reaches Ares Landing. Inside the storm the view shrinks to a radius round the ship (M6 = a: a look only, bullets always visible, everything hittable). The level introduces the roaming <span class="ref">Dust Devil</span> vortices, which pull the ship and the pickups, and the grey, unmarked <span class="ref">Ghost Drone</span>: Varga's first sight of it is <strong>hint 1</strong> of the <span class="ref">twist</span> ("<em>That's not Vrell. That signature is... ours?</em>"). The act's breather: ≈ 50 enemies a minute (§1.7 allows down to 44). 183 s: clear plains, the storm front, the deep storm, a calm eye, the back wall and the clearing.</p><p><strong>Status (overnight design phase, 2026-10-12).</strong> A draft written before part E of M7: hand-written first values (M19), the §3 questions of the <span class="ref">gap analysis</span> taken as recommended and pending the user's review in concept round 36.</p></details>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the radius and pickups' glints (Q.18)</p>
+<div class="ans"><span class="tag">Answer</span> <span>approve / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>approved</strong> (user)</span></div>
+</article>
+<article class="row" id="r-D.6">
+<header><span class="rid">D.6</span><h3>Level 19 – Foundry of Tharsis</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-19-foundry-of-tharsis/README.md">Level 19 – Foundry of Tharsis</a></div>
+<div class="q"><strong>approve or change</strong>: Warden Tanks on conveyors (40 px/s up), furnace vents, turrets firing after the ship passes; the Revenant Walker mid-boss and the hint-2 wreck crawl; 172 enemies ≈ 62 a minute; <code>bounty_scale</code> 0.52 (walker bounty 262, 14.8 %); secondary 12 of 14 tanks</div>
+<div class="media"><figure class="m img"><a href="../../world/mars/concept/mars-tharsis-foundry-r36-a.png"><img loading="lazy" decoding="async" src="../../world/mars/concept/mars-tharsis-foundry-r36-a.png" alt="Tharsis still"></a><figcaption>Tharsis still</figcaption></figure></div>
+<details><summary>The level&#x27;s summary</summary><p>The Tharsis Foundry, the colony Helix Dynamics money built on the Tharsis plateau, has gone quiet: the Vrell hold its lower works together with grey, unmarked machines, and two hundred crew are sealed in the smelter tower. Aegis Wing clears the works from the slag fields to the casting yard: <span class="ref">Warden Tanks</span> ride the conveyors, furnace vents flare from the floor and gantry turrets fire <strong>after the ship has passed</strong>, so the level asks for <code>rear</code> and <code>anti-ground</code>. In the casting yard the scroll halts for the mid-boss, the <span class="ref">Revenant Walker</span>; its wreck, serial plates filed off, is <strong>hint 2</strong> of the <span class="ref">twist</span>, shown in a slow crawl past it (M15 = a). About 172 s of level clock plus a ≈ 60 s fight; ≈ 62 enemies a minute.</p><p><strong>Status (overnight design phase, 2026-10-12).</strong> A draft written before part F of M7: hand-written first values (M19), the §3 questions of the <span class="ref">gap analysis</span> taken as recommended and pending the user's review in concept round 36.</p></details>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the turrets are up-facing Spine Turrets (a new <code>arc</code> parameter)</p>
+<div class="ans"><span class="tag">Answer</span> <span>approve / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>approved</strong> (user)</span></div>
+</article>
+<article class="row" id="r-D.7">
+<header><span class="rid">D.7</span><h3>Level 20 – Retreat from Hellas</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-20-retreat-from-hellas/README.md">Level 20 – Retreat from Hellas</a></div>
+<div class="q"><strong>approve or change</strong>: 20 s of strike, then the reverse scroll (M4, M5); the Mote Swarm pursuit from the top (53 of 178 enemies), ambushes from the bottom; a TOP edge warning; ≈ 64 a minute; <code>bounty_scale</code> 0.95; Rook's quiet beat</div>
+<div class="media"><figure class="m img"><a href="../../world/mars/concept/mars-hellas-r36-a.png"><img loading="lazy" decoding="async" src="../../world/mars/concept/mars-hellas-r36-a.png" alt="Hellas still"></a><figcaption>Hellas still</figcaption></figure></div>
+<details><summary>The level&#x27;s summary</summary><p>Aegis Wing strikes the Vrell staging grounds on the floor of the Hellas basin, and the strike goes wrong: something kilometres long moves under the sand, the basin boils with Vrell, and Okafor orders a retreat to the rim. After 20 s of normal flight the scroll <strong>reverses</strong> (M4 = a, M5 = a): the ground moves up the screen, the ship keeps facing up and flies backwards toward the bottom, a pursuing <span class="ref">Mote Swarm</span> presses from the <strong>top</strong> (held by the front guns), and the Burrowers, Dust Devils and popcorn that have cut the way back come up from the <strong>bottom</strong> (cleared by the rear guns). A genuine retreat: the war is not going well. Rook's one quiet line in the lull foreshadows Act 4. About 172 s; ≈ 64 enemies a minute, a third of them the pursuit swarm.</p><p><strong>Status (overnight design phase, 2026-10-12).</strong> A draft written before part G of M7: hand-written first values (M19), the §3 questions of the <span class="ref">gap analysis</span> taken as recommended and pending the user's review in concept round 36.</p></details>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> a new <code>pursuit</code> formation; the scale is high (Q.20)</p>
+<div class="ans"><span class="tag">Answer</span> <span>approve / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>approved</strong> (user)</span></div>
+</article>
+<article class="row" id="r-D.8">
+<header><span class="rid">D.8</span><h3>Level 21 – Dust Colossus</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-21-dust-colossus/README.md">Level 21 – Dust Colossus</a></div>
+<div class="q"><strong>approve or change</strong>: 105 s of approach (rim, inner wall, dune sea with the ridge pass, lime hollow) ≈ 66 a minute, the Colossus on an arena crawling at 20 px/s, 32 s of settling dust with the Choir's first words; Level 14's act-end order (the release's end moves to Level 21, the hangar before L22 reads <code>ACT IV - DEEP WATER: COMING SOON</code>); budget 2,709, <code>bounty_scale</code> ≈ 0.80</div>
+<div class="media"><figure class="m img"><a href="../../world/mars/concept/mars-hellas-r36-a.png"><img loading="lazy" decoding="async" src="../../world/mars/concept/mars-hellas-r36-a.png" alt="Hellas still"></a><figcaption>Hellas still</figcaption></figure></div>
+<details><summary>The level&#x27;s summary</summary><p>The Act 3 finale. After the retreat along the Hellas rim, Aegis Wing turns round and goes down into the basin, where every Vrell attack on Mars began. Lancer and Rook descend the inner wall, cross the dune sea and reach the lime hollow at the basin's lowest point. There the act boss rises out of the sand: the <span class="ref">Dust Colossus</span>, which breaches at the edges of the field, front, sides and rear, and then under the ship. 105 s of approach, then the fight on a slowly crawling arena (about 130 s at medium), then 32 s of settling dust while the Choir speaks its first words and the Vrell leave Mars. The act end follows Level 14's order.</p><p><strong>Status (overnight design phase, 2026-10-12).</strong> A draft written from the act roster, the gap analysis's §1.7 rules, its recommended answers (M7 = a, M10 = b, M12 = a, M14 = a, M17 = a, M18 = a, M19) and the boss spec. Everything here is <strong>pending the user's review in concept round 36</strong>. Every number is a hand-written draft; there is no <code>data.yaml</code> (M19). M7 part H moves the numbers into the level's data and turns these tables into marked ones.</p></details>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the boss's bounty share 22.7 % against the spec's 30 % (Q.21)</p>
+<div class="ans"><span class="tag">Answer</span> <span>approve / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>approved</strong> (user)</span></div>
+</article>
+<article class="row" id="r-D.9">
+<header><span class="rid">D.9</span><h3>Burrower</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../enemies/ground/burrower/README.md">Burrower</a></div>
+<div class="q"><strong>approve or change</strong>: sand-swimmer under the new <code>buried</code> layer; 1.0 s bulge tell, surfaces, a <code>ring</code>, dives after 2 s; HP 44, bounty 24 (L15)</div>
+<div class="ans"><span class="tag">Answer</span> <span>approve / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>approved</strong> (user)</span></div>
+</article>
+<article class="row" id="r-D.10">
+<header><span class="rid">D.10</span><h3>Tendril Anchor</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../enemies/ground/tendril-anchor/README.md">Tendril Anchor</a></div>
+<div class="q"><strong>approve or change</strong>: anchor pairs (12 HP, bounty 12) with a 40 HP tendril hit only by <code>beam</code>, <code>medium</code> 6 on touch (M9) (L16)</div>
+<div class="ans"><span class="tag">Answer</span> <span>approve / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>approved</strong> (user)</span></div>
+</article>
+<article class="row" id="r-D.11">
+<header><span class="rid">D.11</span><h3>Threadcrawler</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../enemies/ground/threadcrawler/README.md">Threadcrawler</a></div>
+<div class="q"><strong>approve or change</strong>: a ground centipede of 10–16 segments on canyon floors and walls (head 80, 8 a segment, tail 20), a travelling spore wave (L16)</div>
+<div class="ans"><span class="tag">Answer</span> <span>approve / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>approved</strong> (user)</span></div>
+</article>
+<article class="row" id="r-D.12">
+<header><span class="rid">D.12</span><h3>Shellback</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../enemies/ground/shellback/README.md">Shellback</a></div>
+<div class="q"><strong>approve or change</strong>: an armoured beast (body 120, vent 24 HP) with a spore mortar; curls and rolls once, crushing, then shows its belly (L17)</div>
+<div class="ans"><span class="tag">Answer</span> <span>approve / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>approved</strong> (user)</span></div>
+</article>
+<article class="row" id="r-D.13">
+<header><span class="rid">D.13</span><h3>Dust Devil</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../enemies/ground/dust-devil/README.md">Dust Devil</a></div>
+<div class="q"><strong>approve or change</strong>: a spinning vortex (52 HP, bounty 26) that pulls the ship and pickups; its core opens once a cycle (L18)</div>
+<div class="ans"><span class="tag">Answer</span> <span>approve / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>approved</strong> (user)</span></div>
+</article>
+<article class="row" id="r-D.14">
+<header><span class="rid">D.14</span><h3>Warden Tank</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../enemies/ground/warden-tank/README.md">Warden Tank</a></div>
+<div class="q"><strong>approve or change</strong>: unmarked grey in Act 3, hull and turret (64 + 20), the turret fires back up the screen after passing (L19)</div>
+<div class="ans"><span class="tag">Answer</span> <span>approve / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>approved</strong> (user)</span></div>
+</article>
+<article class="row" id="r-D.15">
+<header><span class="rid">D.15</span><h3>Choir Herald</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../enemies/air/choir-herald/README.md">Choir Herald</a></div>
+<div class="q"><strong>approve or change</strong>: a support flyer (60 HP, bounty 30) whose aura rings shield nearby enemies (M8) (L17)</div>
+<div class="ans"><span class="tag">Answer</span> <span>approve / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>approved</strong> (user)</span></div>
+</article>
+<article class="row" id="r-D.16">
+<header><span class="rid">D.16</span><h3>Ghost Drone</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../enemies/air/ghost-drone/README.md">Ghost Drone</a></div>
+<div class="q"><strong>approve or change</strong>: a grey human-built strafing drone (14 HP, bounty 14), one re-aimed 3-shot burst per pass with a 0.3 s eye-glint tell; hint 1 (L18)</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the <code>machine</code> flag for the EMP is new in the stat block</p>
+<div class="ans"><span class="tag">Answer</span> <span>approve / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>approved</strong> (user)</span></div>
+</article>
+<article class="row" id="r-D.17">
+<header><span class="rid">D.17</span><h3>Dust Kite</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../enemies/air/dust-kite/README.md">Dust Kite</a></div>
+<div class="q"><strong>approve or change</strong>: the tiny Martian popcorn glider (1 HP, bounty 4) that rams (M10 = b), in every Act 3 level</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> art: see <span class="ref">U.7</span>; the enemies index's variety row does not list it yet</p>
+<div class="ans"><span class="tag">Answer</span> <span>approve / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>approved</strong> (user)</span></div>
+</article>
+<article class="row" id="r-D.18">
+<header><span class="rid">D.18</span><h3>Revenant Walker</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../enemies/bosses/revenant-walker/README.md">Revenant Walker</a></div>
+<div class="q"><strong>approve or change</strong>: the Act 3 mid-boss: passes on lanes with 3 s edge warnings, a front plate, two homing pods, two vents, a rear flame cone; phases Stride / Hunt / Overheat; HP 2,200 at reference 92 (par 60 s); bounty 262 (Level 19's scale); the wreck crawl (hint 2)</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the <em>Size</em> row reads "four legs" (only B.1's b)</p>
+<div class="ans"><span class="tag">Answer</span> <span>approve / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>approved</strong> (user)</span></div>
+</article>
+<article class="row" id="r-D.19">
+<header><span class="rid">D.19</span><h3>Dust Colossus</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../enemies/bosses/dust-colossus/README.md">Dust Colossus</a></div>
+<div class="q"><strong>approve or change</strong>: the act boss, buried, breaching front, left, right and rear, then under the ship (1.5 s marker); mouths open 7 s, bite <code>heavy</code> 10, suction 45 px/s, debris, spine vents; HP 5,600 + 840 (par 130 s); the Choir speaks at its death</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the bounty follows Level 21's 300 (Q.21)</p>
+<div class="ans"><span class="tag">Answer</span> <span>approve / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>approved</strong> (user)</span></div>
+</article>
+<article class="row" id="r-D.20">
+<header><span class="rid">D.20</span><h3>Ion Beam</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../player/weapons/ion-beam/README.md">Ion Beam</a></div>
+<div class="q"><strong>approve or change</strong>: the front <code>beam</code>: 45 → 130 DPS, 5 000 cr, from L15; the beam rules (first target, walls, tendrils, hardened targets passed over, reaches <code>high-air</code>); the M11 power check</div>
+<div class="ans"><span class="tag">Answer</span> <span>approve / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>approved</strong> (user)</span></div>
+</article>
+<article class="row" id="r-D.21">
+<header><span class="rid">D.21</span><h3>Rear Lance</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../player/weapons/rear-lance/README.md">Rear Lance</a></div>
+<div class="q"><strong>approve or change</strong>: a rear piercing lance, 18 → 60 DPS, draw 3 → 5, 2 800 cr, from L17; walls stop it; in the reverse scroll "rear" stays the screen's bottom</div>
+<div class="ans"><span class="tag">Answer</span> <span>approve / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>approved</strong> (user)</span></div>
+</article>
+<article class="row" id="r-D.22">
+<header><span class="rid">D.22</span><h3>Deflector Pod</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../player/weapons/deflector-pod/README.md">Deflector Pod</a></div>
+<div class="q"><strong>approve or change</strong>: a wing pod with a half-disc field (22 → 30 px) catching 3 → 5 bullets, recharging every 0.67 → 0.4 s; draw 2 → 3, 1 600 cr, from L18; bullets only</div>
+<div class="ans"><span class="tag">Answer</span> <span>approve / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>approved</strong> (user)</span></div>
+</article>
+<article class="row" id="r-D.23">
+<header><span class="rid">D.23</span><h3>Light Drone Bay</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../player/weapons/light-drone-bay/README.md">Light Drone Bay</a></div>
+<div class="q"><strong>approve or change</strong>: a wing bay launching a drone: 10 → 30 DPS, 8 → 12 hits, rebuilt in 6 → 4 s, draw 2 → 3, 2 000 cr, from L15; aims at a convergence point</div>
+<div class="ans"><span class="tag">Answer</span> <span>approve / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>approved</strong> (user)</span></div>
+</article>
+<article class="row" id="r-D.24">
+<header><span class="rid">D.24</span><h3>Specials, Act 3 rows</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../player/specials/README.md">Specials, Act 3 rows</a></div>
+<div class="q"><strong>approve or change</strong> (draft rows in an approved document): the EMP Burst (machines 3 s, Vrell 1.5 s, auras and shields stripped, bosses never stunned), the Orbital Lance (a 40 px column for 3 s, 400 a second, at most 400 per boss part) and the Shield Overcharge (twice the capacity for 8 s, 45 s cooldown); the cooldown rules and the HUD ring</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the HUD and controls documents do not have the cooldown ring and the dash pip yet</p>
+<div class="ans"><span class="tag">Answer</span> <span>approve / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>approved</strong> (user)</span></div>
+</article>
+<article class="row" id="r-D.25">
+<header><span class="rid">D.25</span><h3>Systems, Act 3 sections</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../player/systems/README.md">Systems, Act 3 sections</a></div>
+<div class="q"><strong>approve or change</strong> (draft sections in an approved document): the Evasive thrusters (a dash of 72 px in 0.12 s by double-tap or a button, 0.25 s invulnerable, 3 s cooldown) and the third utility bay (on sale once from L15)</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the thrusters' 2 MW do not fit a typical Act 3 loadout</p>
+<div class="ans"><span class="tag">Answer</span> <span>approve / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>approved</strong> (user)</span></div>
+</article>
+<article class="row" id="r-D.26">
+<header><span class="rid">D.26</span><h3>Wingmen, Act 3 drones</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../player/wingmen/README.md">Wingmen, Act 3 drones</a></div>
+<div class="q"><strong>approve or change</strong> (draft sections in an approved document): the light drone (orbit 36 px, convergence 140 px, break and rebuild) and the rear-guard drone (40 px behind, fires backwards, 9 → 26 DPS; its bay needs a weapons document in part G)</div>
+<div class="ans"><span class="tag">Answer</span> <span>approve / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>approved</strong> (user)</span></div>
+</article>
+<article class="row" id="r-D.27">
+<header><span class="rid">D.27</span><h3>Mars</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../world/mars/README.md">Mars</a></div>
+<div class="q"><strong>approve or change</strong>: the geography (west to east, then south), the sub-locations per level, the Helix sites (the Valles rim station and the Ares Landing compound), the five domes, the hazards, the natives linked to their units</div>
+<div class="ans"><span class="tag">Answer</span> <span>approve / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>approved</strong> (user)</span></div>
+</article>
+<article class="row" id="r-D.28">
+<header><span class="rid">D.28</span><h3>Music, Act 3</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../audio/music/README.md">Music, Act 3</a></div>
+<div class="q"><strong>approve or change</strong> (a draft section in an approved document): track 8 in Levels 15–17 and 20, track 9 in 18, 19 and the Level 21 approach; Vorne's motif as a third stem in Levels 18–19, muted in 21; the cues per level</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> track 8 exists only as a 53.8 s sketch (its full length is part B's)</p>
+<div class="ans"><span class="tag">Answer</span> <span>approve / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>approved</strong> (user)</span></div>
+</article>
+<article class="row" id="r-D.29">
+<header><span class="rid">D.29</span><h3>Sound effects, Act 3</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../audio/sfx/README.md">Sound effects, Act 3</a></div>
+<div class="q"><strong>approve or change</strong> (a draft section in an approved document): Act 3's sounds with briefs (terrain, units, bosses, equipment) and five Mars ambiences; reuses where a chosen file fits; a unit's loop plays once per kind, for the nearest unit</div>
+<div class="ans"><span class="tag">Answer</span> <span>approve / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>approved</strong> (user)</span></div>
+</article>
+<article class="row" id="r-D.30">
+<header><span class="rid">D.30</span><h3>Voice, Act 3</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../audio/voice/README.md">Voice, Act 3</a></div>
+<div class="q"><strong>approve or change</strong> (a draft section): Ares Control (a man, older than Rook, about 39 takes, cast a/b in part B), Lance Control (the Orbital Lance's caller), Okafor's refrain as one file, the Choir's speech in fragments, a respelling list for the Mars names</div>
+<div class="ans"><span class="tag">Answer</span> <span>approve / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>approved</strong> (user)</span></div>
+</article>
+</section>
+<section id="s-open-questions"><h2>Open questions</h2>
+<div class="sum"><p>The questions the drafts raised, one row per document. Each proposal is answered on its own: <em>yes</em> takes it, <em>no</em> says what instead (in the note).</p></div>
+<article class="row" id="r-Q.15">
+<header><span class="rid">Q.15</span><h3>Level 15</h3><span class="kind">proposals</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-15-olympus-descent/README.md#open-questions">Level 15</a></div>
+<div class="q"><strong>proposals</strong>: (a)–(d) below</div>
+<div class="sub"><span class="rid">Q.15a</span> Ares Control gets a new generic colonial radio portrait (<code>radio-generic-colonial</code>), cast a/b in part B's round. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">Q.15b</span> A submerged Burrower counts as on the screen for <code>PacingTest</code> (its ripple is visible). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">Q.15c</span> The drop-pod secret stays 100 in Act 1 terms (256 at ×2.56, 14 % of the budget). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">Q.15d</span> The Burrower's formation is called <code>field</code> (not the spec's <code>swarm</code>). <span class="opts">yes / no</span></div>
+<div class="ans"><span class="tag">Answer</span> <span>all yes / some no</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>all yes</strong> (user)</span></div>
+</article>
+<article class="row" id="r-Q.16">
+<header><span class="rid">Q.16</span><h3>Level 16</h3><span class="kind">proposals</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-16-valles-canyon-run/README.md#open-questions">Level 16</a></div>
+<div class="q"><strong>proposals</strong>: (a)–(d) below (the wall camera model is <span class="ref">MA.1</span>)</div>
+<div class="sub"><span class="rid">Q.16a</span> A new secondary kind <code>links</code> (break every tendril gate), not the standard 65 % kill ratio. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">Q.16b</span> Wall contact costs 6 on easy (10 on medium and hard). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">Q.16c</span> The Helix glimpse here (Varga's observation, Okafor's "Eyes on the canyon, Doctor."), the silencing in Level 17; not the whole beat in Level 17. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">Q.16d</span> Rook trails the player at 240 px through the canyon. <span class="opts">yes / no</span></div>
+<div class="ans"><span class="tag">Answer</span> <span>all yes / some no</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>all yes</strong> (user)</span></div>
+</article>
+<article class="row" id="r-Q.17">
+<header><span class="rid">Q.17</span><h3>Level 17</h3><span class="kind">proposals</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-17-dome-siege/README.md#open-questions">Level 17</a></div>
+<div class="q"><strong>proposals</strong>: (a)–(d) below</div>
+<div class="sub"><span class="rid">Q.17a</span> The hooked Shellbacks' mortar and roll hurt the domes too (not bombers only, as M16 reads). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">Q.17b</span> "No dome hit" is all or nothing, tuned by measurement as Level 11's convoy (not "4 of 5 untouched"). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">Q.17c</span> <code>bounty_scale</code> 0.60, above M12's 0.3–0.5, accepted. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">Q.17d</span> Ares Control is the colony's one voice across the act (Ares Warden merged into him). <span class="opts">yes / no</span></div>
+<div class="ans"><span class="tag">Answer</span> <span>all yes / some no</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>all yes</strong> (user)</span></div>
+</article>
+<article class="row" id="r-Q.18">
+<header><span class="rid">Q.18</span><h3>Level 18</h3><span class="kind">proposals</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-18-dust-storm/README.md#open-questions">Level 18</a></div>
+<div class="q"><strong>proposals</strong>: (a)–(d) below</div>
+<div class="sub"><span class="rid">Q.18a</span> The radius 170 / 150 px (easy 200 / 180, hard 150 / 130), checked in part E's captures. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">Q.18b</span> Pickups outside the radius show as a glint (not hidden like the ground). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">Q.18c</span> <code>bounty_scale</code> 0.92 for the breather, kept (not densified to ≈ 55 a minute at 0.84). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">Q.18d</span> One Helix sentence on Okafor's briefing page (M13 = a's "briefings carry it"), not only in the hangar intel. <span class="opts">yes / no</span></div>
+<div class="ans"><span class="tag">Answer</span> <span>all yes / some no</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>all yes</strong> (user)</span></div>
+</article>
+<article class="row" id="r-Q.19">
+<header><span class="rid">Q.19</span><h3>Level 19</h3><span class="kind">proposals</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-19-foundry-of-tharsis/README.md#open-questions">Level 19</a></div>
+<div class="q"><strong>proposals</strong>: (a)–(e) below</div>
+<div class="sub"><span class="rid">Q.19a</span> The rear-firing turrets are up-facing Spine Turrets (<code>arc: up</code>), not a new grey machine turret. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">Q.19b</span> The secondary is "12 of 14 grey tanks" (not all 14, nor the 65 % kill ratio). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">Q.19c</span> The furnace vents fire every 3.5 s for <code>heavy</code> 10 once per burst (not <code>medium</code> 6). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">Q.19d</span> Kite pairs at the edges during the wreck crawl keep <code>PacingTest</code> green (the crawl does not count as one of the level's two longer pauses). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">Q.19e</span> <code>bounty_scale</code> 0.52, slightly above M12's 0.3–0.5, accepted. <span class="opts">yes / no</span></div>
+<div class="ans"><span class="tag">Answer</span> <span>all yes / some no</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>all yes</strong> (user)</span></div>
+</article>
+<article class="row" id="r-Q.20">
+<header><span class="rid">Q.20</span><h3>Level 20</h3><span class="kind">proposals</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-20-retreat-from-hellas/README.md#open-questions">Level 20</a></div>
+<div class="q"><strong>proposals</strong>: (a)–(f) below</div>
+<div class="sub"><span class="rid">Q.20a</span> The strike opener: 20 s of normal scroll, then the turn (not reversed from the start). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">Q.20b</span> The pursuit: 10 motes plus refills of 3 every 10 s, a lunge every 6 s at 240 px/s, tuned in part G's captures. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">Q.20c</span> Bottom entries unwarned after the first three (not warned throughout like a rear entry). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">Q.20d</span> Rook's quiet beat plays without <code>requires: escort</code> (not only with Rook in the slot). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">Q.20e</span> Track 8 for the retreat (not track 9, as the roadmap's part G row reads). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">Q.20f</span> <code>bounty_scale</code> 0.95 kept (no pricier units to bring it toward 0.6). <span class="opts">yes / no</span></div>
+<div class="ans"><span class="tag">Answer</span> <span>all yes / some no</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>all yes</strong> (user)</span></div>
+</article>
+<article class="row" id="r-Q.21">
+<header><span class="rid">Q.21</span><h3>Level 21</h3><span class="kind">proposals</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/level-21-dust-colossus/README.md#open-questions">Level 21</a></div>
+<div class="q"><strong>proposals</strong>: (a)–(f) below</div>
+<div class="sub"><span class="rid">Q.21a</span> The boss's share 22.7 % (300 in Act 1 terms at scale 0.80, the perfect-run bound); the spec's 790 does not hold with this level's mix (not reshaping the approach to reach 25–27 %). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">Q.21b</span> The arena's crawl is a seamless tile on real seconds, the clock halting at t=245 (not a long unique strip). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">Q.21c</span> The secondary is the 65 % kill ratio (not "destroy 6 spine vents"). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">Q.21d</span> Vorne's motif muted in Level 21 (the Colossus is pure Vrell). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">Q.21e</span> Five closing lines (≈ 34 s, the debrief waits), not shortened to ≈ 26 s without Ares Control's line. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">Q.21f</span> ≈ 66 enemies a minute is right for the act's finale. <span class="opts">yes / no</span></div>
+<div class="ans"><span class="tag">Answer</span> <span>all yes / some no</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>all yes</strong> (user)</span></div>
+</article>
+<article class="row" id="r-Q.22">
+<header><span class="rid">Q.22</span><h3>The units</h3><span class="kind">proposals</span></header>
+<div class="part"><a href="../../enemies/README.md">The units</a></div>
+<div class="q"><strong>proposals</strong>: (a)–(i) below, one per unit document</div>
+<div class="sub"><span class="rid">Q.22a</span> Burrower: in Level 18's storm only its bulge shows, not its ripple. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">Q.22b</span> Tendril Anchor: a broken tendril does not regrow while both anchors live. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">Q.22c</span> Threadcrawler: once per level it crosses the canyon floor from wall to wall, its body across the path. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">Q.22d</span> Shellback: the roll follows its authored path (it does not steer toward the domes). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">Q.22e</span> Dust Devil: a Smart Bomb or Airstrike hits it while closed (blasts ignore the vanes' armour). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">Q.22f</span> Warden Tank: the intel lists the Act 3 tanks as "unidentified", not Ascendancy. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">Q.22g</span> Choir Herald: a unit's ring thins as its absorb value drains. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">Q.22h</span> Ghost Drone: the intel shows "unidentified contacts" until Level 18 is first flown. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">Q.22i</span> Dust Kite: the name and the unit (M10 = b). <span class="opts">yes / no</span></div>
+<div class="ans"><span class="tag">Answer</span> <span>all yes / some no</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>all yes</strong> (user)</span></div>
+</article>
+<article class="row" id="r-Q.23">
+<header><span class="rid">Q.23</span><h3>The bosses and the arsenal</h3><span class="kind">proposals</span></header>
+<div class="part"><a href="../../enemies/bosses/README.md">The bosses and the arsenal</a></div>
+<div class="q"><strong>proposals</strong>: (a)–(i) below</div>
+<div class="sub"><span class="rid">Q.23a</span> Revenant Walker: it leaves the screen between passes (3 s under an edge warning), not turning on the spot. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">Q.23b</span> Revenant Walker: the flame deals <code>heavy</code> 10 once per burn (not <code>small</code> ticks). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">Q.23c</span> Dust Colossus: the suction pulls the ship gently (any engine outruns it), not only the debris. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">Q.23d</span> Dust Colossus: the debris is rock hazards (not partly ore pickups). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">Q.23e</span> Dust Colossus: phase 3 breaches under the ship (not at random points). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">Q.23f</span> Ion Beam: draw 4 → 8 (not the roster's 5 → 9), L1 at 45 DPS (not 35), upgrades on a 2 500 base. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">Q.23g</span> Ion Beam: no <code>shield-breaker</code> (the EMP Burst strips shields from L15). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">Q.23h</span> Deflector Pod: a caught bullet pays nothing back. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">Q.23i</span> The walker's weak point is a hot-amber reactor on its back (the Ascendancy rule for exposed cores), as both concepts draw it. <span class="opts">yes / no</span></div>
+<div class="ans"><span class="tag">Answer</span> <span>all yes / some no</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>all yes</strong> (user)</span></div>
+</article>
+<article class="row" id="r-Q.24">
+<header><span class="rid">Q.24</span><h3>The act, audio and voice</h3><span class="kind">proposals</span></header>
+<div class="part"><a href="../../campaign/act-3-red-dust/README.md#open-questions">The act, audio and voice</a></div>
+<div class="q"><strong>proposals</strong>: (a)–(h) below</div>
+<div class="sub"><span class="rid">Q.24a</span> The density band 60–72 a minute (the breather 48–55) for the act, as applied to Levels 15, 16, 17 and 19. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">Q.24b</span> The timeline: nine days' crossing, five weeks of siege, June 2185 (not "three weeks" and a near-instant crossing). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">Q.24c</span> Okafor's refrain "Not on this channel, Doctor." in Levels 17 and 19, varied in Level 18; Varga's approved Act 3 line in Level 17. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">Q.24d</span> Vorne's motif as a third lockstep stream (not five premixed files). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">Q.24e</span> Track 9's key and tempo follow the picked sketch (S.1), not the brief's B phrygian at 122 BPM. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">Q.24f</span> The Mars names respelled for the voice (Ares, Schiaparelli, Valles Marineris, Lycus, Coprates, Eos, Burroughs), not seed pins only. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">Q.24g</span> The Orbital Lance's caller is "Lance Control". <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">Q.24h</span> The geography: Ares Landing east of the Valles' end on the edge of the northern plains, the foundry back west on the plateau. <span class="opts">yes / no</span></div>
+<div class="ans"><span class="tag">Answer</span> <span>all yes / some no</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>all yes</strong> (user)</span></div>
+</article>
+<article class="row" id="r-Q.25">
+<header><span class="rid">Q.25</span><h3>Bookkeeping</h3><span class="kind">proposals</span></header>
+<div class="part"><a href="../../tech/roadmap/README.md">Bookkeeping</a></div>
+<div class="q"><strong>proposals</strong>: (a)–(f) below, the shared documents the drafts touch but did not change</div>
+<div class="sub"><span class="rid">Q.25a</span> The roadmap gets the M7 row and its parts A–I from the gap analysis (§4.1), with track 9 moved from part G to part E. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">Q.25b</span> The Ares Landing dome becomes its own allies document in part D (now a draft roster row). <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">Q.25c</span> The architecture's secondary kinds get <code>untouched</code> (Level 17) and <code>links</code> (Level 16), the formations <code>pursuit</code> (Level 20) and <code>field</code> (Level 15), the Spine Turret an <code>arc</code> parameter (Level 19), in the parts that build them. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">Q.25d</span> The enemies index's variety checklist lists the Dust Kite as Act 3's new <code>tiny</code> unit. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">Q.25e</span> The HUD and controls documents get the cooldown ring and the dash pip in part A. <span class="opts">yes / no</span></div>
+<div class="sub"><span class="rid">Q.25f</span> The Revenant Walker's <em>Size</em> row follows the variant picked in B.1. <span class="opts">yes / no</span></div>
+<div class="ans"><span class="tag">Answer</span> <span>all yes / some no</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>all yes</strong> (user)</span></div>
+</article>
+</section></main></body></html>

@@ -120,6 +120,14 @@ public final class LevelRenderer {
         return passes.backdrop.strobed();
     }
 
+    /**
+     * M9 part G: each enemy kind's sprite root ({@link EnemyLooks#root}: the Warden Tank's Ascendancy livery from Act 5),
+     * for the looks beyond the hull (its turret and wreck); before the first draw.
+     */
+    public void liveries(java.util.function.Function<String, String> roots) {
+        passes.kinds.roots(roots);
+    }
+
     /** M9 part A: the kills in vacuum ({@link VacuumDeaths}). */
     public VacuumDeaths vacuumDeaths() {
         return passes.vacuumDeaths;
@@ -407,6 +415,16 @@ public final class LevelRenderer {
 
     public static int colossusShowerTicks() {
         return SimStep.ticks(ColossusThroe.SHOWER_SECONDS);
+    }
+
+    /**
+     * M9 part H: the steps from a ringed boss's kill (the Iron Sovereign) to its core's blow, its white flash and its
+     * credit shower: every battery's cook-off, then the implosion's blow ({@link SovereignLooks}).
+     */
+    public static int ringBlastTicks(SetPiece piece) {
+        var rings = piece.boss().flatMap(vanguard.sim.BossSpec::rings).orElseThrow();
+        int batteries = rings.rings().stream().mapToInt(r -> r.parts().size()).sum();
+        return SimStep.ticks(batteries * rings.cookoffSeconds() + SovereignLooks.BLAST_AFTER);
     }
 
     /** M5 part H: whether a set piece is the Siege Spire, drawn by its own looks (its death too). */

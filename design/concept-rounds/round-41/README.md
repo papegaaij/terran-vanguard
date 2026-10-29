@@ -41,6 +41,10 @@ Open [index.html](index.html) in a browser (regenerate with
 `41 40` brings in round 40's dome-break files, and with them round 40's `backdrop-final` (Level 17's), `intel-final`
 and `briefing-images-final` sections, already final: round 41's are the r41 ones). Each row carries a recommendation; **B** rows are *yes* (keep as built) or *no* (say what).
 
+## Review
+
+Record of the decisions: [review.html](review.html)
+
 ## In the game
 
 `./gradlew :desktop:run --args="..."` with `--settings <file>` (a debug run writes no save):

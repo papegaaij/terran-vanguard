@@ -924,7 +924,127 @@ public final class SimEvents {
          * M9 part D: a dashing unit smashed a small debris chunk (at the chunk; it breaks as from shots, {@link
          * #DEBRIS_DESTROYED} follows); value: its kind.
          */
-        DASH_SMASH;
+        DASH_SMASH,
+        /**
+         * M9 part E (design/campaign Level 32, The forks): a fork's branch was chosen (at the ship); value: {@link
+         * Forks#code} (fork × 2 + side, {@link Branch#LEFT} 0 / {@link Branch#RIGHT} 1).
+         */
+        BRANCH_CHOSEN,
+        /**
+         * M9 part E (design/enemies/ground/strider, The topple): a walker lost a leg and staggers (at the walker: the
+         * knee sparks, the fall line is marked); value: its kind. Its fall line: {@link Enemy#fallDirX()}, {@link Enemy#fallDirY()}.
+         */
+        TOPPLE_TELL,
+        /** M9 part E: a staggering walker starts to fall along its line (at the walker); value: its kind. */
+        TOPPLE_FALL,
+        /**
+         * M9 part E: a toppled walker landed (at its fall line's middle: the ground shock and dust ring); value: the
+         * number of ground units it crushed (their {@link #ENEMY_DESTROYED} come just before, the walker's just after).
+         */
+        TOPPLE_CRUSH,
+        /**
+         * M9 part E (design/world/belt, Mining charges): a mining charge burst (at the charge: the blast); value: the
+         * number of enemies its blast destroyed.
+         */
+        CHARGE_BLAST,
+        /**
+         * M9 part E (design/campaign Level 32, Blast doors): a cache's lock was destroyed and its crate floats out (at the
+         * lock); value: the ground object's index in the level's list (its doors slide open).
+         */
+        CACHE_OPENED,
+        /**
+         * M9 part F (design/enemies/space/void-leech, EMP): the EMP Burst threw a latched unit off (the ship's hull or its
+         * prey; the shake-off's scrape), at the unit; value: its kind.
+         */
+        LATCH_THROWN,
+        /**
+         * M9 part F (the uneasy alliance): a hunting chaser latched on a prey unit, at the chaser on its spot; value: the
+         * spot ({@link EnemySpec.Latch#LEFT} ...).
+         */
+        PREY_LATCHED,
+        /**
+         * M9 part F: a prey unit was latched: its lights go out, its shield is emptied for good and it leaves its path to
+         * drift down (at the prey); value: its kind.
+         */
+        PREY_DRIFT,
+        /**
+         * M9 part G (design/campaign Level 34, The freighter): the story pickup's group fell and it starts to rise out of
+         * the hold (at the group's centre: the clamps' release, the crate lifting on its seal's glow; {@link
+         * StoryPickups}).
+         */
+        STORY_RISE,
+        /**
+         * M9 part G: the ship flew through the story pickup (at it; the HUD's event line {@code HELIX CORE SALVAGED});
+         * its {@link #PICKUP_COLLECTED} comes just before.
+         */
+        STORY_COLLECTED,
+        /** M9 part G: the story pickup left the screen or ran out of time uncollected (where it was last). */
+        STORY_MISSED,
+        /**
+         * M9 part H (design/enemies/bosses/iron-sovereign; {@link RingArena}): a ring's lights come on in the spin-up (at
+         * the station's centre); value: the ring (0 the first, the outer).
+         */
+        RING_LIT,
+        /** M9 part H: the spin-up is over, every ring at speed (at the centre): the station fights; value 0. */
+        RINGS_UP,
+        /** M9 part H: a stepping ring's teeth flash before its step (at the centre); value: the ring. */
+        RING_STEP_TELL,
+        /** M9 part H: a stepping ring starts its step (at the centre: the ratchet's clank); value: the ring. */
+        RING_STEP,
+        /** M9 part H: a stepping ring's step is over and it holds (at the centre); value: the ring. */
+        RING_HOLD,
+        /**
+         * M9 part H: a ring's last battery died: it locks and starts to grind to a halt (at the centre: the screech,
+         * its lights out); value: the ring. The boss's phase cue follows when the lock ends its phase.
+         */
+        RING_LOCKED,
+        /** M9 part H: a locked ring's grind is over, it stands still (at the centre); value: the ring. */
+        RING_HALTED,
+        /**
+         * M9 part H: a wrecked battery cooks off in the boss's death (at the battery); value: {@link
+         * RingArena#cookoffValue} (ring × {@link RingArena#COOKOFF_RING} + its index on the ring).
+         */
+        RING_COOKOFF,
+        /**
+         * M9 part H, step H1b ({@link BossLines}): a boss part's rail line starts its telegraph, locked from the part
+         * through the ship (at the part); value: the part.
+         */
+        BOSS_LINE_TELEGRAPH,
+        /** M9 part H: a boss part's rail line fires along its locked line (at its origin); value: the part. */
+        BOSS_LINE_FIRED,
+        /** M9 part H: a boss's live rail line struck the ship (at the ship); value: the part it came from. */
+        BOSS_LINE_HIT,
+        /**
+         * M9 part H ({@link RingCore}): the shut core's shutter slits glow before its fan (at the core); value: the
+         * attack.
+         */
+        CORE_GLOW,
+        /** M9 part H: the station shudders, the rings go dark and the core's petals start to open (at the core). */
+        CORE_OPENING,
+        /** M9 part H: the core's petals are open: it can be hit, its shield up (at the core). */
+        CORE_OPEN,
+        /** M9 part H: the open core's reactor brightens before its spiral (at the core). */
+        CORE_SPIRAL_TELL,
+        /** M9 part H: a rim bay's doors open before its Dart stream (at the bay); value: the bay. */
+        BAY_TELL,
+        /**
+         * M9 part H ({@link PartShields}): a boss part's hex shield took a hit (spaced as a unit's; at the part); value:
+         * the part.
+         */
+        PART_SHIELD_HIT,
+        /** M9 part H: a boss part's hex shield was emptied (a hit, a breaker's hit or the EMP; at the part); value: the part. */
+        PART_SHIELD_BROKEN,
+        /** M9 part H: a boss part's hex shield is full again (at the part); value: the part. */
+        PART_SHIELD_REFILLED,
+        /**
+         * M9 part H ({@link RelayFlash}, design/campaign Level 35): the mass relay's line is drawn across the field,
+         * through the ship's height (at the field's edge the relay lies off, on the line); value 0.
+         */
+        RELAY_TELEGRAPH,
+        /** M9 part H: the mass relay fires along its line (at the edge, on the line); value 0. */
+        RELAY_FIRED,
+        /** M9 part H: the relay's flash struck the ship (at the ship); value 0. */
+        RELAY_HIT;
 
         private static final Type[] VALUES = values();
     }

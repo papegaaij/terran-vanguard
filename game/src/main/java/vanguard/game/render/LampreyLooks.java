@@ -25,8 +25,18 @@ import vanguard.sim.SimStep;
  * @param stunned the stun's tumble
  * @param gulp the shield ring's strength on each latched frame (look a; all 0 for look b)
  * @param drain the siphon's glow at the mouth, {@value #LATCHED_FRAMES} frames (look b); empty for look a
+ * @param fps the latched frames' rate: the Lamprey's {@value #FPS}; M9 part F, the Void Leech's sac: one pulse a second
+ *     ({@link LeechFieldLooks#PULSE_FPS}, its pivot file's {@code mouth} names it)
+ * @param drainAt where the drain's glow is centred at each spot, px from the ship's centre, y up: {@link #DRAIN_AT}, or
+ *     the pivot file's {@code mouth} (y down there)
  */
-record LampreyLooks(Array<AtlasRegion> latched, Array<AtlasRegion> stunned, float[] gulp, Array<AtlasRegion> drain) {
+record LampreyLooks(
+        Array<AtlasRegion> latched,
+        Array<AtlasRegion> stunned,
+        float[] gulp,
+        Array<AtlasRegion> drain,
+        double fps,
+        int[][] drainAt) {
     /** The latched pose's frames a spot (a 0.4 s gulp or lash at 10 fps). */
     static final int LATCHED_FRAMES = 4;
 
@@ -49,11 +59,35 @@ record LampreyLooks(Array<AtlasRegion> latched, Array<AtlasRegion> stunned, floa
             return null;
         }
         Array<AtlasRegion> drain = sprites.has(slug + "-drain") ? sprites.frames(slug + "-drain") : new Array<>();
+        int[][] mouth = mouth(pivots);
         return new LampreyLooks(
                 sprites.frames(slug + "-latched"),
                 sprites.frames(slug + "-stunned"),
                 gulp(pivots, drain.size > 0),
-                drain);
+                drain,
+                mouth == null ? FPS : LeechFieldLooks.PULSE_FPS,
+                mouth == null ? DRAIN_AT : mouth);
+    }
+
+    /**
+     * M9 part F: the drain's contact at each spot (left, right, tail) from the pivot file's {@code mouth} (px from the
+     * ship's centre, y down there, so flipped); null without it (the Lamprey's {@link #DRAIN_AT}).
+     */
+    static int[][] mouth(JsonValue pivots) {
+        if (pivots == null || !pivots.has("mouth") || !pivots.get("mouth").isObject()) {
+            return null;
+        }
+        JsonValue mouth = pivots.get("mouth");
+        String[] spots = {"left", "right", "tail"};
+        int[][] at = new int[spots.length][];
+        for (int i = 0; i < spots.length; i++) {
+            if (!mouth.has(spots[i])) {
+                return null;
+            }
+            float[] xy = mouth.get(spots[i]).asFloatArray();
+            at[i] = new int[] {Math.round(xy[0]), -Math.round(xy[1])};
+        }
+        return at;
     }
 
     /** The shield ring's strengths: none for look b (the siphon), else the pivot file's or {@link #GULP}. */
@@ -71,12 +105,27 @@ record LampreyLooks(Array<AtlasRegion> latched, Array<AtlasRegion> stunned, floa
 
     /** The latched frame's index at {@code spot} at step {@code tick}, each unit at its {@code phase}. */
     static int latchedIndex(int spot, long tick, int phase) {
-        return spot * LATCHED_FRAMES + gulpFrame(tick, phase);
+        return latchedIndex(spot, tick, phase, FPS);
+    }
+
+    /** The latched frame's index at {@code spot} at step {@code tick} at {@code fps}. */
+    static int latchedIndex(int spot, long tick, int phase, double fps) {
+        return spot * LATCHED_FRAMES + gulpFrame(tick, phase, fps);
     }
 
     /** The gulp's (or lash's) frame (0 to 3) at step {@code tick}. */
     static int gulpFrame(long tick, int phase) {
-        return (int) Math.floorMod((long) Math.floor(tick * FPS / SimStep.PER_SECOND) + phase, (long) LATCHED_FRAMES);
+        return gulpFrame(tick, phase, FPS);
+    }
+
+    /** The latched frames' frame (0 to 3) at step {@code tick} at {@code fps}. */
+    static int gulpFrame(long tick, int phase, double fps) {
+        return (int) Math.floorMod((long) Math.floor(tick * fps / SimStep.PER_SECOND) + phase, (long) LATCHED_FRAMES);
+    }
+
+    /** This unit's latched frame at {@code spot} at step {@code tick}. */
+    int frameAt(int spot, long tick, int phase) {
+        return latchedIndex(spot, tick, phase, fps);
     }
 
     /** The stun's frame at its progress (0 thrown off, 1 the stun's end): a full turn over the stun. */
@@ -102,8 +151,8 @@ record LampreyLooks(Array<AtlasRegion> latched, Array<AtlasRegion> stunned, floa
         if (!siphon()) {
             return;
         }
-        AtlasRegion frame = drain.get(Math.floorMod(gulpFrame(tick, phase), drain.size));
-        int[] at = DRAIN_AT[Math.clamp(spot, 0, DRAIN_AT.length - 1)];
+        AtlasRegion frame = drain.get(Math.floorMod(gulpFrame(tick, phase, fps), drain.size));
+        int[] at = drainAt[Math.clamp(spot, 0, drainAt.length - 1)];
         batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
         batch.draw(
                 frame,

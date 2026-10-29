@@ -1,0 +1,38 @@
+{
+ "source": "tools/art/belt_units_f.py (production art, M9 part F batch)",
+ "headings": 16,
+ "swim_frames": 4,
+ "latched_index": "spot * 4 + frame (spots left, right, tail)",
+ "prey_index": "talon heading * 4 + frame, 48x48 at the Talon's centre",
+ "stunned_frames": 8,
+ "ship_frame": "ship_2",
+ "spots": {
+  "left": [
+   -21,
+   13
+  ],
+  "right": [
+   20,
+   13
+  ],
+  "tail": [
+   0,
+   34
+  ]
+ },
+ "mouth": {
+  "left": [
+   -8,
+   13
+  ],
+  "right": [
+   7,
+   13
+  ],
+  "tail": [
+   0,
+   21
+  ]
+ },
+ "note": "spots: where a latched frame's centre sits relative to the ship's centre (px, y down; the Lamprey's spots); mouth: the contact point (void-leech-drain's centre) relative to the ship's centre. The prey frames are the Talon's size: draw them at the Talon's centre after its frame of the same heading"
+}

@@ -38,7 +38,8 @@ final class EnemyDamage {
      * damage first); exactly 1 for none.
      */
     boolean damage(double amount, boolean fromAbove, boolean blast, boolean antiSub, double plating) {
-        if (u.growTicks > 0) {
+        if (u.growTicks > 0 || u.toppling.active()) {
+            // M9 part E: nor does a toppling walker: it falls and is destroyed on landing.
             // M5 part H: a root burst's growth takes no damage while it grows.
             return false;
         }
@@ -104,7 +105,7 @@ final class EnemyDamage {
      * off); returns whether this destroyed it.
      */
     boolean damagePart(int p, double amount, boolean fromAbove) {
-        if (!u.partAlive(p) || u.growTicks > 0) {
+        if (!u.partAlive(p) || u.growTicks > 0 || u.toppling.active()) {
             return false;
         }
         if (u.armoured()) {

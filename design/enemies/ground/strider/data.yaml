@@ -1,0 +1,71 @@
+# Strider stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/schemas-units/README.md
+# M9 part E, step E2 (Level 32): the approved stat block (round 60) as data. New in it (flown from step E1): legs that
+# topple the walker (`topples: true` parts, the walk's `topple`: stagger, fall, the fall line), the shoulder pod that
+# carries its second attack (`attack: salvo`, a homing salvo fired all at once along the bearing to the ship, the pod's
+# hatch as the tell). Credits: hull 40, legs 6, pod 8; each part's first_bonus is its bounty, so a body kill or a topple
+# pays every part still standing: the whole 60. Large tier, first level 32: no act factor there.
+name: Strider
+faction: Jovian Ascendancy
+layer: ground
+tier: large
+size: [120, 120]  # sprite px (the legs' frame; the torso 96×96 on the centre)
+hitbox: [64, 64]  # the hull's
+parts: multi
+part_list:  # offsets in its own frame (facing down the screen: dx to screen right, dy up towards its tail); the walker's own left leg is at screen right (tools/art/belt_units_e.py's knees)
+  - {name: hull, offset: [0, 0], hitbox: [64, 64], hp: 220, kind: vital, bounty: 40}
+  - {name: leg-left, offset: [42, 0], hitbox: [22, 40], hp: 80, kind: destroyable, bounty: 6, first_bonus: 6, topples: true}
+  - {name: leg-right, offset: [-42, 0], hitbox: [22, 40], hp: 80, kind: destroyable, bounty: 6, first_bonus: 6, topples: true}
+  - {name: pod, offset: [19, 15], hitbox: [24, 24], hp: 30, kind: destroyable, bounty: 8, first_bonus: 8, attack: salvo}   # the left shoulder (the art's pod pivot in torso frame 0); its loss silences the salvo
+orientation: 16 angles
+hp: 410           # the parts' sum: hull 220, legs 80 each, pod 30
+armour: none
+speed: 32         # px/s walking, on top of the scroll
+machine: true     # the EMP Burst stuns it 3 s: frozen mid-stride, no fire; a stagger under way still falls
+movement:
+  walk: {speed: 32, turn_rate: 45, stride: 32, topple: {stagger: 0.6, fall: 0.8, line: [48, 140]}}   # px/s, °/s, px of ground per 8-frame walk cycle; the topple: s staggering, s falling, the fall line px wide × long
+attacks:
+  - pattern: fan
+    name: cannons
+    bullet: medium
+    interval: 2.4
+    speed: 160
+    count: 3
+    spread: 12
+    notes:
+      text: 'twin cannons: a {count}-way `{pattern}` ({spread}° apart) along the torso''s aim at the ship every {interval} s, {speed} px/s, `{bullet}` {damage}; tell: the torso holds still 0.3 s and the muzzles glow'
+  - pattern: aimed
+    name: salvo
+    bullet: medium
+    interval: 5
+    speed: 110
+    burst: 2
+    burst_gap: 0.25
+    homing: {turn_rate: 80, life: 4, hp: 2, most: 8, hatch: 0.4, look: diamond, seekable: true, per_shooter: true, aimed: true}
+    notes:
+      text: 'shoulder pod: a `homing` salvo of {burst} (the homing diamond, as the SAM Nest''s: {speed} px/s, {homing.turn_rate}°/s, {homing.hp} HP, `{bullet}` {damage}, life {homing.life} s) every {interval} s, launched together along the bearing to the ship; tell: the hatch opens {homing.hatch} s'
+formations:
+  - {name: single}
+  - {name: convoy, size: [2]}
+weak_points:
+  - {name: the legs}
+  - {name: the pod}
+drops: []
+traits: [anti-ground, piercing, homing]
+bounty: 60
+first_level: 32
+difficulty:
+  easy: {burst: 1, attacks: {cannons: {interval: 3.0}, salvo: {interval: 6.0}}}
+  hard: {fan_count: 5, burst: 3, attacks: {cannons: {interval: 2.0}}}
+notes:
+  parts: 'hull (`vital`), left and right leg (`destroyable`: either one topples it), shoulder pod (`destroyable`: silences the missiles)'
+  size: '(hull 64×64 on the centre, each leg 22×40 at ±42 px across its heading, the pod 24×24 on the left shoulder)'
+  orientation: '(legs and hull × an 8-frame walk cycle; the torso `32 angles`, twisting toward the ship to fire)'
+  hp: 'hull 220 · leg 80 each · pod 30; whole'
+  speed: (plus the scroll), turning 45°/s
+  movement: '`walk` along an authored path on a tunnel floor or a hull road; a pair walks 1.5 s apart or on mirrored paths. **Topple**: a lost leg staggers it {movement.walk.topple.stagger} s (guns quiet, the fall line marked: {movement.walk.topple.line.0}×{movement.walk.topple.line.1} px from its centre toward the lost leg), it falls {movement.walk.topple.fall} s and on landing crushes every ground unit whose box overlaps the line (hardened ones too; paid, counted as kills), never the ship, Rook, air units or ground objects'
+  formations: (pairs; at most two walking at once, a level rule)
+  weak_points: (destroyable parts; the knee joints glow red when hit)
+  bounty: '; parts: hull 40, legs 6 each, pod 8; a body kill or a topple pays every part not yet paid (the whole 60)'
+  death: 'hull destroyed: a `large` mechanical explosion in place, the burnt hulk stays as a wreck; toppled: the fall''s ground shock and dust ring, the wreck along the line'
+  used_in: 'Deep Core''s tunnel floors and the refinery'
+  difficulty: 'easy: a fan of 3 every 3.0 s, salvos of 1 every 6 s; hard: a fan of 5 every 2.0 s, salvos of 3'

@@ -45,22 +45,25 @@ class BeamEraHpTest {
     private static final int MAX_STEPS = 60 * 60 * 20;
     private static final Content CONTENT = LevelMetrics.CONTENT;
 
-    static Stream<String> levels() {
+    /** M9 part E: a forked level (Level 32) on each of its routes ({@link RoutePlay}). */
+    static Stream<org.junit.jupiter.params.provider.Arguments> levels() {
         return IntStream.rangeClosed(CONTENT.enemyBasis().beamEraHp().fromLevel(), 50)
                 .mapToObj(CONTENT::levelKey)
                 .flatMap(java.util.Optional::stream)
                 .filter(key -> !PacingTest.PENDING_ACT_TWO_RULE.contains(key))
-                .filter(key -> !PacingTest.PENDING_AUTOPILOT.contains(key));
+                .filter(key -> !PacingTest.PENDING_AUTOPILOT.contains(key))
+                .flatMap(key -> RoutePlay.routes(CONTENT, key).stream()
+                        .map(route -> org.junit.jupiter.params.provider.Arguments.of(key, route)));
     }
 
     @ParameterizedTest
     @MethodSource("levels")
-    void theSmallUnitsLiveAsLongAsOnLevelTen(String key) {
+    void theSmallUnitsLiveAsLongAsOnLevelTen(String key, String route) {
         double reference = smallLife(CONTENT.levelKey(REFERENCE_LEVEL).orElseThrow());
-        double life = smallLife(key);
+        double life = smallLife(key, route);
         System.out.printf(
-                "Beam era %s: a killed small unit lives %.2f s on the screen, Level %02d %.2f s (%.2f×)%n",
-                key, life, REFERENCE_LEVEL, reference, life / reference);
+                "Beam era %s%s: a killed small unit lives %.2f s on the screen, Level %02d %.2f s (%.2f×)%n",
+                key, route.isEmpty() ? "" : " route " + route, life, REFERENCE_LEVEL, reference, life / reference);
         double most = most(key);
         double least = PENDING_LEAST.getOrDefault(key, LEAST);
         assertTrue(
@@ -99,8 +102,18 @@ class BeamEraHpTest {
      * the attempt that completes the level at medium with the plan's fit.
      */
     static double smallLife(String key) {
+        return smallLife(key, RoutePlay.NONE);
+    }
+
+    /** M9 part E: the same on {@code route} ({@link RoutePlay}). */
+    static double smallLife(String key, String route) {
         Sortie sortie = LevelMetrics.sortie(
-                CONTENT, key, Difficulty.MEDIUM, PacingTest.planLoadout(key, Difficulty.MEDIUM), LevelMetrics.SEED);
+                CONTENT,
+                key,
+                Difficulty.MEDIUM,
+                PacingTest.planLoadout(key, Difficulty.MEDIUM),
+                LevelMetrics.SEED,
+                route);
         LevelMetrics.SmallLife life = new LevelMetrics.SmallLife(CONTENT);
         assertTrue(LevelMetrics.fly(sortie, MAX_STEPS, life), key + " completes");
         assertTrue(life.killed() > 0, key + ": small units killed");

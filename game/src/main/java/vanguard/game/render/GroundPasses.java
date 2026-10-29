@@ -165,6 +165,13 @@ final class GroundPasses {
                 drawRising(batch, object, alpha, false);
                 continue;
             }
+            if ((DeepCoreLooks.OBJECTS.contains(object.spec().look())
+                            || LeechFieldLooks.SHACKS.contains(object.spec().look()))
+                    && sprites.has(object.spec().look())) {
+                // M9 part F: Level 33's Claim 114 is LeechFieldLooks' (M9 part H: and Level 35's lifeboat).
+                // M9 part E: Level 32's blast doors, mining charges and repair crate are DeepCoreLooks' own.
+                continue;
+            }
             boolean ownLook = object.spec().trigger()
                     && triggerLooks.contains(object.spec().look());
             if (object.spec().trigger() && !ownLook && triggerLight != null && !sledClamp(sortie, object)) {
@@ -260,7 +267,8 @@ final class GroundPasses {
         batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
         for (int i = 0; i < sortie.groundObjectCount(); i++) {
             GroundObject object = sortie.groundObject(i);
-            if (object.spec().dark()) {
+            if (object.spec().dark() || object.dormant() || object.spec().look().equals(DeepCoreLooks.CHARGE)) {
+                // M9 part E: nor an unchosen branch's (dark), nor a mining charge (no loot).
                 continue;
             }
             int phase = (int) object.renderX() * 7;

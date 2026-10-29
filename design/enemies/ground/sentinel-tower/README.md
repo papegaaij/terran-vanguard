@@ -1,10 +1,10 @@
 ---
 title: Sentinel Tower
 design: approved
-implementation: not-started
-art: chosen
+implementation: done
+art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../player/specials]
-updated: 2026-10-27
+updated: 2026-10-29
 ---
 
 # Sentinel Tower
@@ -19,32 +19,34 @@ reach. A hardened collar shields the base; the emitter on top takes every weapon
 
 ### Stat block
 
-**Draft** (Act 5 design phase, step D-enemies-B; approved in round 60). A hand-written
-table: there is no `data.yaml` yet, the build turns it into one. Numbers at **medium** (see the
+Approved in round 60 (Act 5 design phase, step D-enemies-B); the table is rendered from the
+[data.yaml](data.yaml) (M9 part E, step E2). Numbers at **medium** (see the
 [balancing basis](../../README.md#balancing-basis)); HP is in damage units (a Pulse Cannon L1 shot does 2),
 set at its first level from the proposed Act 5 reference DPS (judgement call J2: L32 132): the emitter's
 120 HP is 0.9 s. Sweep rates are tuned per level with `levelReport`.
 
+<!-- data: stat-block -->
 | Field | Value |
 |---|---|
-| Faction | Ascendancy; a **machine** (stunned 3 s by the EMP Burst) |
+| Faction | Jovian Ascendancy (machine: the EMP Burst stuns it longest) |
 | Layer | `ground` |
 | Size tier | `medium` |
-| Size | 80×80 px (the tower seen from above, its head at the centre); hitboxes: emitter 28×28 on the centre, collar 72×72 |
-| Parts | emitter (`vital`), hardened collar (no HP: a hit area) |
-| Orientation | `fixed` tower; the emitter head `32 angles`, turning with the beam |
-| HP | emitter 120 (easy 90 / hard 156, from the global multipliers) |
-| Armour / shield | **hardened collar**: a non-`anti-ground` shot that lands on the collar outside the emitter glances off with a spark; an `anti-ground` shot or blast anywhere on the collar damages the emitter; a beam whose line crosses the emitter reaches it (the collar does not stop a beam) |
-| Speed | 0 px/s (scrolls with the tunnel) |
-| Movement | `terrain` |
-| Attack | `laser-sweep`: a beam **220 px** long, 6 px wide, from the emitter; an **arc sweep** turns 120° over 1.6 s, centred on the ship's bearing at the telegraph's start, in any direction; every third sweep is a **full turn**, 360° over 3.0 s (the direction alternates); telegraph: the arc (or, for a full turn, the whole reach ring and the start ray) drawn crimson for **0.8 s** (full turn **1.0 s**); a sweep every 4.5 s, telegraph to telegraph (the full turn's slot 6 s); `laser` 8 per touch, once per sweep; the beam passes over walls |
-| Formations | turret nest (single, or a pair across a gallery whose reaches leave a lane) |
-| Weak points | the emitter (the vital part; it glows crimson while the beam is live) |
+| Size | 80×80 px, hitbox 72×72 (the collar; the emitter 28×28 on the centre) |
+| Parts | single (the emitter head turns with the beam) |
+| Orientation | `fixed` (the tower; the emitter head `32 angles`, turning with the beam) |
+| HP | 120 (easy 90 / hard 156, from the global multipliers) |
+| Armour / shield | **hardened collar**: a non-`anti-ground` shot that lands on the collar outside the 28×28 emitter glances off with a spark; an `anti-ground` shot or a blast (a special, a mining charge) anywhere on the collar damages the emitter; a beam whose line crosses the emitter reaches it; homing shots and Rook aim at the emitter |
+| Speed | 0 px/s (scrolls with the rock) |
+| Movement | `terrain`: stands in a gallery notch or on a wall's foot, its emitter at least 40 px inside the field (QE-1 a); never beside a passage narrower than its reach plus 80 px (300 px), never beside a fork's island |
+| Attack | `laser-sweep` from the emitter: a beam 220 px long and 6 px wide; an **arc sweep** turns 120° over 1.6 s, centred on the ship's bearing at the telegraph's start, in any direction (the arcs alternate their sense); every 3rd sweep is a **full turn**, 360° over 3 s (the direction alternates); telegraph: the arc (for a full turn the whole reach ring and the start ray) drawn crimson for **0.8 s** (full turn **1 s**); a sweep every 4.5 s, telegraph to telegraph (the full turn's slot 6 s), the first 1 s after it comes onto the field; `laser` 8 per touch, once per sweep (the ship and Rook); the beam passes over walls |
+| Formations | turret nest (1–2) (single, or a pair across a hall, their notches offset so the two never sweep the same rows at once; at most 2 sweeping at once, a level rule) |
+| Weak points | none (the emitter, its vital part, glows crimson while the beam is live) |
 | Effective traits | `anti-ground`, `beam`, `piercing` |
 | Credits | 40 (score 400 × chain) |
 | Death | `medium` ground explosion, the head topples off; the scorched tower stump stays |
-| First level / used in | L32 (Deep Core, the side galleries); later Act 5 levels may use it (their docs decide) |
+| First level / used in | L32; Deep Core's side galleries, the pumping hall and the crucible gallery |
 | Difficulty hooks | easy: 100° arcs, no full turn, a sweep every 5.5 s; hard: 160° arcs, every second sweep a full turn, a sweep every 3.6 s |
+<!-- /data -->
 
 ### Behaviour
 
@@ -54,7 +56,9 @@ set at its first level from the proposed Act 5 reference DPS (judgement call J2:
 - **The full turn.** A 220 px beam turning 120°/s cannot be outrun near the tower; the 1.0 s telegraph draws
   the reach ring so the ship leaves it (down the field, or to the far side of the tunnel). The level places
   each tower so its reach always leaves a way out: no tower in a passage narrower than its reach plus 80 px,
-  and never two full-turn towers overlapping.
+  and never two full-turn towers overlapping. A level may make each tower's **first** sweep the full turn
+  (a ground target's `full_turn_first`, then every third after it): Level 32's towers, about 4.7 s on the
+  field, sweep only once (QE-3 a).
 - **Hardened collar.** The roster's "hardened base": front guns must hit the 28 px emitter; `anti-ground`
   weapons (the Bomb Rack, the Hammer Mortar) and blasts (specials, mining charges) damage it anywhere on the
   tower; the Ion Beam reaches it through the collar when its line crosses the emitter. Homing shots aim at the
@@ -93,11 +97,13 @@ Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's r
 
 ## Implementation
 
-- [ ] Stat block loaded from a `data.yaml` (when the design is approved); global difficulty multipliers applied; tuned with `levelReport`
-- [ ] The emitter and the hardened collar (glance outside the emitter, `anti-ground` and blasts through, the beam's line rule)
-- [ ] `laser-sweep` in any direction (no clamp), the arc and full-turn telegraphs, the full turn every third sweep (hard: every second)
-- [ ] Production sprites (the tower, the head at 32 angles, the stump), the beam and the reach ring, the intel portrait
-- [ ] Death effect, bounty and sounds per this spec (Freesound, no bubbly sounds)
+- [x] Stat block loaded from a `data.yaml` (when the design is approved); global difficulty multipliers applied; tuned with `levelReport`
+- [x] The emitter and the hardened collar (glance outside the emitter, `anti-ground` and blasts through, the beam's line rule)
+- [x] `laser-sweep` in any direction (no clamp), the arc and full-turn telegraphs, the full turn every third sweep (hard: every second)
+      (step E1 `GroundSweepBeam`; Level 32's first sweep the full turn, step E3b; captured in round 65)
+- [x] Production sprites (the tower, the head at 32 angles, the stump), the beam and the reach ring, the intel portrait
+- [x] Death effect, bounty and sounds per this spec (Freesound, no bubbly sounds) (step E4; round 65's picks: all a but the head's turn b, `sentinel-servo-r65-b`,
+      which step G4 switches in)
 
 ## Open questions
 
@@ -115,3 +121,12 @@ Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's r
   gun can still kill it with aim, `anti-ground` with ease); the "360°" is the full turn every third sweep, with
   a reach ring telegraph of 1.0 s; the beam is 220 px so a tunnel always leaves a way out.
 - 2026-10-27 (user, [round 60](../../../concept-rounds/round-60/README.md) closed): the design approved as drafted (`design: approved`); art A.12 **a**, "Sentinel Tower A, lighthouse", chosen (`art: chosen`), the other variant in `concept/rejected/`. Q11 **b** (gunmetal/charcoal with gold, not gloss black): the chosen variant is re-rendered in gunmetal/charcoal in this part's production art, keeping the ≥ 20 % gold and the readability check.
+- 2026-10-29 (step E2): the stat block as data (`data.yaml`, the table rendered from it); the collar as
+  `armour.collar` (the emitter's 28×28 box inside the 72×72 hit box), the sweep's full turn and the hooks'
+  `full_turn_every` as E1 flies them. The bounty 40 lies above the medium class's 18–30 (BalanceTest lists it as
+  pending, round 65), kept as approved.
+- 2026-10-29 (step E3b, QE-3 a, decided by the user in round 65, C.2 a): Level 32's towers sweep once each on the
+  field, so the level makes that first sweep the full turn on medium and hard (`full_turn_first` on its ground
+  targets; the count from it: every third after it, hard every second); the stat block stays as approved for
+  later levels.
+- 2026-10-29 (user, [round 65](../../../concept-rounds/round-65/README.md), closed): **F.3** ok (the production sprites and captures final, `art: final`); **S.1 a** (`sentinel-charge`), **S.2 a** (`sentinel-beam`), **S.3 b** (`sentinel-servo`, the rattling stripped-gear grind; step G4 switches it in), **S.4 a** (`sentinel-death`); **C.1 a** (the towers' emitters at least 40 px inside the field) and **C.2 a** (the full turn first on medium and hard) accepted as built.

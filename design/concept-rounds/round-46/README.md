@@ -32,6 +32,8 @@ Pickups, UI sounds, pings, jingles and music were not touched.
 The review page is built from this file by `build/round46-tools/build_review.py` (untracked); the proposals are in
 [the sfx part](../../audio/sfx/README.md#concept-art).
 
+Record of the decisions: [review.html](review.html)
+
 ## Sounds: Act 3 enemies
 
 | # | Part | What is proposed | Review files | Weak spots (Claude) | Answer | Outcome |

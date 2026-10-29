@@ -70,9 +70,15 @@ public record WaveSpec(
         Optional<Mount> mount,
         Optional<EnemySpec> leader,
         Optional<OnRocks> onRocks,
-        Optional<MineLines> mineLines) {
+        Optional<MineLines> mineLines,
+        Optional<Branch> branch) {
     public WaveSpec {
         java.util.Objects.requireNonNull(mineLines);
+        java.util.Objects.requireNonNull(branch);
+        if (branch.isPresent() && entry != Entry.FRONT) {
+            throw new IllegalArgumentException(
+                    enemy.slug() + ": a branch's wave flies in its channel from the front (M9 part E)");
+        }
         if (mineLines.isPresent() && (enemy.mineLayer().isEmpty() || entry != Entry.REAR)) {
             throw new IllegalArgumentException(
                     enemy.slug() + ": a wave's mine lines are a mine layer's, entering from the rear (M9 part C)");
@@ -140,6 +146,97 @@ public record WaveSpec(
         if (mount.isPresent() && mount.get().wall() && mount.get().opposite() && edge != Edge.NONE) {
             throw new IllegalArgumentException("opposite nests stand on both walls: " + edge);
         }
+    }
+
+    /** A wave of no fork's branch (before M9 part E). */
+    public WaveSpec(
+            double t,
+            Formation formation,
+            EnemySpec enemy,
+            int count,
+            Entry entry,
+            Edge edge,
+            Optional<Double> holdSeconds,
+            Optional<Double> warningSeconds,
+            int breakGroup,
+            Optional<Double> speed,
+            Optional<Double> intervalSeconds,
+            List<Carried> carried,
+            Optional<At> at,
+            List<List<At>> paths,
+            Optional<LoopBack> loopBack,
+            String tag,
+            Optional<Field> field,
+            boolean clockwise,
+            List<List<At>> lanes,
+            Optional<Double> pairSeconds,
+            Optional<Pursuit> pursuit,
+            Optional<Mount> mount,
+            Optional<EnemySpec> leader,
+            Optional<OnRocks> onRocks,
+            Optional<MineLines> mineLines) {
+        this(
+                t,
+                formation,
+                enemy,
+                count,
+                entry,
+                edge,
+                holdSeconds,
+                warningSeconds,
+                breakGroup,
+                speed,
+                intervalSeconds,
+                carried,
+                at,
+                paths,
+                loopBack,
+                tag,
+                field,
+                clockwise,
+                lanes,
+                pairSeconds,
+                pursuit,
+                mount,
+                leader,
+                onRocks,
+                mineLines,
+                Optional.empty());
+    }
+
+    /**
+     * M9 part E (design/campaign Level 32, The forks): this wave as one of {@code fork}'s branch's: it flies only when
+     * that side is chosen (else it never comes and counts nowhere). Set it last: the older {@code withX} copies leave it
+     * out.
+     */
+    public WaveSpec withBranch(Branch fork) {
+        return new WaveSpec(
+                t,
+                formation,
+                enemy,
+                count,
+                entry,
+                edge,
+                holdSeconds,
+                warningSeconds,
+                breakGroup,
+                speed,
+                intervalSeconds,
+                carried,
+                at,
+                paths,
+                loopBack,
+                tag,
+                field,
+                clockwise,
+                lanes,
+                pairSeconds,
+                pursuit,
+                mount,
+                leader,
+                onRocks,
+                mineLines,
+                Optional.of(fork));
     }
 
     /** A wave without M9 part B's leader and rocks. */

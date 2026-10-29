@@ -43,6 +43,8 @@ III, Composite III, the Pressure hull, the Pickup magnet, the Sonar Pulse, the B
 in each row's text. The briefing, the hangar's intel, the debrief and the act's end come from a playthrough save at
 Level 28 (`:content:playthroughSave -Plevel=28`) flown to the release's end.
 
+Record of the decisions: [review.html](review.html)
+
 ## In the game
 
 The art below is already in `assets/` (the finals), and the **a** sound of every pair plays in the game until the

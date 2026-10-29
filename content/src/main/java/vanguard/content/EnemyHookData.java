@@ -7,6 +7,7 @@ import vanguard.content.ColossusBlock.EruptionChange;
 import vanguard.content.ColossusBlock.SuctionChange;
 import vanguard.content.EnemyMovementData.Ring;
 import vanguard.content.MawBlock.CoilArenaChange;
+import vanguard.content.RingBlock.RingArenaChange;
 
 /**
  * An enemy's difficulty overrides in its stat block ({@link EnemyData}, {@code difficulty:}): the hooks per
@@ -96,10 +97,14 @@ public sealed interface EnemyHookData permits EnemyData {
         }
     }
 
-    /** M9 part C (design/enemies/air/dart-drone): a difficulty's chase turn rate instead, °/s (the Dart's hard 80). */
-    record ChaseChange(Optional<Double> turnRate) {
+    /**
+     * M9 part C (design/enemies/air/dart-drone): a difficulty's chase turn rate instead, °/s (the Dart's hard 80); M9
+     * part F (design/enemies/space/void-leech): its chase speed instead, px/s (the leech's easy 160, hard 220).
+     */
+    record ChaseChange(Optional<Double> turnRate, Optional<Double> speed) {
         public ChaseChange {
             turnRate.ifPresent(r -> Check.positive("chase.turn_rate", r));
+            speed.ifPresent(v -> Check.positive("chase.speed", v));
         }
     }
 
@@ -281,6 +286,10 @@ public sealed interface EnemyHookData permits EnemyData {
      * @param chase M9 part C: a chase's turn rate instead (the Dart Drone's hard 80°/s)
      * @param dash M9 part D: a dash's tell, speed, bounces or dashes instead (the Buzzsaw Drone's easy and hard)
      * @param airLink M9 part D: an air link's tell instead (the Shard Drone's hard 0.5 s)
+     * @param fullTurnEvery M9 part E: a ground sweep's full turn every this many sweeps instead, 0 for none (the
+     *     Sentinel Tower's easy 0, hard 2)
+     * @param ringArena M9 part H: a ringed boss's ring speed factor, fire arc and battery interval factor instead (the Iron
+     *     Sovereign's; {@link RingBlock.RingArenaChange})
      */
     record Hook(
             Optional<List<String>> leadsTargetIn,
@@ -330,8 +339,11 @@ public sealed interface EnemyHookData permits EnemyData {
             Optional<MineChange> mine,
             Optional<ChaseChange> chase,
             Optional<DashChange> dash,
-            Optional<AirLinkChange> airLink) {
+            Optional<AirLinkChange> airLink,
+            Optional<Integer> fullTurnEvery,
+            Optional<RingArenaChange> ringArena) {
         public Hook {
+            fullTurnEvery.ifPresent(n -> Check.notNegative("full_turn_every", n));
             hoverY.ifPresent(y -> Check.positive("hover_y", y));
             swoopSpeed.ifPresent(s -> Check.positive("swoop_speed", s));
             drain.ifPresent(d -> Check.positive("drain", d));

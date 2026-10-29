@@ -59,17 +59,20 @@ class PacingTest {
                 .mapToObj(CONTENT::levelKey)
                 .flatMap(java.util.Optional::stream)
                 .filter(key -> !PENDING_AUTOPILOT.contains(key))
-                .flatMap(key -> Stream.of(Difficulty.values()).map(difficulty -> Arguments.of(key, difficulty)));
+                .flatMap(key -> Stream.of(Difficulty.values())
+                        .flatMap(difficulty -> RoutePlay.routes(CONTENT, key).stream()
+                                .map(route -> Arguments.of(key, difficulty, route))));
     }
 
+    /** M9 part E: a forked level (Level 32) is flown on each of its routes ({@link RoutePlay}), each to the rule. */
     @ParameterizedTest
     @MethodSource("levels")
-    void theScreenIsNeverEmptyForLong(String key, Difficulty difficulty) {
+    void theScreenIsNeverEmptyForLong(String key, Difficulty difficulty, String route) {
         boolean strict = strict(key, difficulty);
         double limit = strict ? ACT_TWO_EMPTY_SECONDS : EMPTY_SECONDS;
         int allowed = strict ? ACT_TWO_LONG_PAUSES : LONG_PAUSES;
         Loadout loadout = strict ? strongLoadout(key, difficulty) : planLoadout(key, difficulty);
-        LevelMetrics.Flight flight = fly(key, difficulty, loadout);
+        LevelMetrics.Flight flight = fly(key, difficulty, loadout, route);
         List<double[]> pauses = flight.pausesOver(limit);
 
         StringBuilder text = new StringBuilder();
@@ -77,8 +80,15 @@ class PacingTest {
             text.append(String.format(" %.1f-%.1f s (%.1f s)", pause[0], pause[1], pause[1] - pause[0]));
         }
         System.out.printf(
-                "Pacing %s %s: %.2f on the screen, %.1f shots a minute, %d pauses over %.0f s:%s%n",
-                key, difficulty, flight.meanOnScreen(), flight.shotsPerMinute(), pauses.size(), limit, text);
+                "Pacing %s%s %s: %.2f on the screen, %.1f shots a minute, %d pauses over %.0f s:%s%n",
+                key,
+                route.isEmpty() ? "" : " route " + route,
+                difficulty,
+                flight.meanOnScreen(),
+                flight.shotsPerMinute(),
+                pauses.size(),
+                limit,
+                text);
         assumeFalse(PENDING_WAVES.contains(key), key + ": its waves' rework is pending the user's review");
         assertTrue(pauses.size() <= allowed, "pauses over " + limit + " s:" + text);
     }
@@ -213,13 +223,28 @@ class PacingTest {
             Map.entry(Level29Test.LEVEL, Level29Test::planLoadout),
             Map.entry(Level30Test.LEVEL, Level30Test::planLoadout),
             // M9 part D: Level 31's plan fit (step D2's stand-in moved into Level31Test in step D3).
-            Map.entry(Level31Test.LEVEL, Level31Test::planLoadout));
+            Map.entry(Level31Test.LEVEL, Level31Test::planLoadout),
+            // M9 part E: Level 32's plan fit (step E2's stand-in moved into Level32Test in step E3).
+            Map.entry(Level32Test.LEVEL, Level32Test::planLoadout),
+            // M9 part F: Level 33's plan fit with its power budget (step F2's stand-in moved into Level33Test in step
+            // F3).
+            Map.entry(Level33Test.LEVEL, Level33Test::planLoadout),
+            // M9 part G: Level 34's plan fit, Level 33's (the plan's L34 visit buys nothing: saving for the Mk V; step
+            // G2's stand-in moved into Level34Test in step G3).
+            Map.entry(Level34Test.LEVEL, Level34Test::planLoadout),
+            // M9 part H: Level 35's plan fit (step H2's stand-in moved into Level35Test in step H3).
+            Map.entry(Level35Test.LEVEL, Level35Test::planLoadout));
 
     /** Flies the level with the autopilot on {@link LevelMetrics#SEED} and measures it ({@link LevelMetrics.Pacing}). */
     static LevelMetrics.Flight fly(String key, Difficulty difficulty, Loadout loadout) {
-        Sortie sortie = LevelMetrics.sortie(CONTENT, key, difficulty, loadout, LevelMetrics.SEED);
+        return fly(key, difficulty, loadout, RoutePlay.NONE);
+    }
+
+    /** M9 part E: the same on {@code route} ({@link RoutePlay}). */
+    static LevelMetrics.Flight fly(String key, Difficulty difficulty, Loadout loadout, String route) {
+        Sortie sortie = LevelMetrics.sortie(CONTENT, key, difficulty, loadout, LevelMetrics.SEED, route);
         LevelMetrics.Pacing pacing = new LevelMetrics.Pacing();
-        assertTrue(LevelMetrics.fly(sortie, MAX_STEPS, pacing), key + " " + difficulty + " completes");
+        assertTrue(LevelMetrics.fly(sortie, MAX_STEPS, pacing), key + " " + route + " " + difficulty + " completes");
         return pacing.flight();
     }
 }

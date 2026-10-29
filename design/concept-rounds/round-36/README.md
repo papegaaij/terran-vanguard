@@ -50,6 +50,10 @@ subjects). The rows are in this order:
 6. **Open questions** the drafts raised (`Q.…`): each row's proposals are answered one by one,
    *yes* (take the proposal) or *no* (say what in the note).
 
+## Review
+
+Record of the decisions: [review.html](review.html)
+
 ## Your calls
 
 The gap analysis's questions marked *user*. The drafts were written from the recommended option of

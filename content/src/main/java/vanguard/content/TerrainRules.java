@@ -69,12 +69,15 @@ final class TerrainRules {
     static Optional<GroundSpec.TerrainSpec> terrain(LevelData level, Difficulty difficulty) {
         return level.terrain().map(block -> {
             TerrainBlock.Contact contact = block.contact();
-            return new GroundSpec.TerrainSpec(
-                    terrain(block),
-                    contact.damage().of(difficulty),
-                    contact.push(),
-                    contact.pushSeconds(),
-                    contact.cooldown());
+            // M9 part E (Level 32): the forks' islands (DeepCoreRules).
+            return DeepCoreRules.forks(
+                    block,
+                    new GroundSpec.TerrainSpec(
+                            terrain(block),
+                            contact.damage().of(difficulty),
+                            contact.push(),
+                            contact.pushSeconds(),
+                            contact.cooldown()));
         });
     }
 

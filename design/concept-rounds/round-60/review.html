@@ -1,0 +1,733 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Round 60: record of the decisions</title><style>
+:root{--bg:#f4f5f7;--fg:#1b2230;--mut:#5a6577;--card:#fff;--line:#d3d9e2;--acc:#1f5fa8;--ok:#1d6b3a;--okbg:#e3f3e8;
+--hi:#fff6dc;--hib:#d9b84a;--code:#e9edf3;--warn:#8a4b00}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10141b;--fg:#dde3ee;--mut:#98a3b6;--card:#171d27;
+--line:#2c3544;--acc:#7fb2ee;--ok:#7bd69a;--okbg:#163323;--hi:#2c2610;--hib:#8a7424;--code:#232c3a;--warn:#e3a35a;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#10141b;--fg:#dde3ee;--mut:#98a3b6;--card:#171d27;--line:#2c3544;--acc:#7fb2ee;--ok:#7bd69a;
+--okbg:#163323;--hi:#2c2610;--hib:#8a7424;--code:#232c3a;--warn:#e3a35a;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:60rem;margin:0 auto;padding:1rem 16px 4rem}
+h1{font-size:1.6rem;margin:.5rem 0}h2{font-size:1.25rem;margin:2rem 0 .5rem;border-bottom:1px solid var(--line);padding-bottom:.25rem}
+h3{font-size:1.02rem;margin:0;flex:1 1 12rem}a{color:var(--acc)}
+.sum{color:var(--mut)}.note{font-size:.9rem;color:var(--mut)}
+nav.sec{display:flex;flex-wrap:wrap;gap:.4rem;margin:1rem 0}nav.sec a{padding:.2rem .6rem;border:1px solid var(--line);border-radius:1rem;
+text-decoration:none;font-size:.9rem;background:var(--card)}
+.row{background:var(--card);border:1px solid var(--line);border-radius:.4rem;padding:.7rem .9rem;margin:.7rem 0;overflow-wrap:anywhere}
+.row header{display:flex;flex-wrap:wrap;gap:.3rem .6rem;align-items:baseline}
+.rid{font:600 .85rem ui-monospace,Menlo,Consolas,monospace;background:var(--code);padding:.05rem .4rem;border-radius:.25rem}
+.kind{font-size:.8rem;color:var(--mut)}.part{font-size:.88rem;margin:.2rem 0}
+.q,.weak,.rec,.sub,.line,dl{font-size:.92rem;margin:.45rem 0}.weak{color:var(--warn)}
+code{background:var(--code);padding:0 .25rem;border-radius:.2rem;font-size:.88em}
+.tag{font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;color:var(--mut);font-weight:700;margin-right:.3rem}
+.ans{margin:.5rem 0 0;padding:.45rem .6rem;border-left:4px solid var(--hib);background:var(--hi);border-radius:.2rem}
+.ans.out{border-left-color:var(--ok)}.ans.none{opacity:.7}
+.badge{font-size:.75rem;font-weight:700;padding:.05rem .4rem;border-radius:.6rem;background:var(--okbg);color:var(--ok)}
+.badge.pick{background:var(--hi);color:var(--warn);border:1px solid var(--hib)}
+dl{display:grid;grid-template-columns:7rem 1fr;gap:.2rem .6rem}dt{font-weight:700}dd{margin:0}
+.media{display:flex;flex-wrap:wrap;gap:.5rem;margin:.5rem 0}.m{margin:0;max-width:100%}.m figcaption{font-size:.75rem;color:var(--mut)}
+.m.img img{max-width:14rem;max-height:10rem;border:1px solid var(--line);border-radius:.2rem;background:#000;display:block}
+.m.vid video{width:14rem;max-width:100%}.m.aud audio{width:16rem;max-width:100%}.miss{color:var(--warn)}
+details{margin:.4rem 0;font-size:.9rem}summary{cursor:pointer;color:var(--acc)}
+.listen{font-size:.85rem;color:var(--mut);margin:.3rem 0;padding-left:1.2rem}.opts{color:var(--mut)}
+.sub{padding-left:.6rem;border-left:2px solid var(--line)}
+table{border-collapse:collapse;display:block;overflow-x:auto}td,th{border:1px solid var(--line);padding:.2rem .4rem}
+blockquote{margin:.4rem 0;padding-left:.8rem;border-left:3px solid var(--line)}
+@media (max-width:480px){dl{grid-template-columns:1fr}.m.img img{max-width:100%}}
+</style></head><body><main><p class="note"><a href="README.md">Round 60 README</a> · <a href="../README.md">All rounds</a> · built 2026-10-27 · recorded by <code>tools/concept/review_record.py 60</code></p><h1>Concept round 60: record of the decisions</h1><div class="sum"><p>Act 5 (Levels 29-35, the asteroid belt and Ceres Hub, <span class="ref">the act</span>) has been <strong>designed</strong> on branch <code>m9-act-5</code>: the act, its seven levels, the Iron Sovereign, the new units, the mining tug and the systems are written as <code>draft</code> documents from the recommended answers to the questions below (you asked for that), and nothing is built yet: no <code>data.yaml</code>, no code, until you have answered this round. The art, the music and the sounds are mockups for you to choose from. The refactoring before Act 5 (the content validator split by concern, the enemy data by family, the golden flights, the spec builders, the set-piece and renderer split) is done and pushed; it needs no answer.</p><p>Answer by section, in this order:</p><ul><li><strong>Questions Q.1-Q.12</strong>: the twelve design questions, each with its options, the recommendation pre-selected and what was drafted (so far the recommendation in every case).</li><li><strong>Judgement calls J.1-J.12</strong>: choices the drafting made where the questions left a gap, each with what it does and the alternative; the recommendation is the draft.</li><li><strong>Art A.1-A.23</strong>: the units, the boss, the belt's mood, the tug, Vorne's portraits and the speakers, each a or b.</li><li><strong>Music M.1-M.2, sounds S.1-S.19, Vorne's voice V.1</strong>: pick a or b by how each sounds; every row says where and when it plays and what it should sound like.</li><li><strong>Documents D.1-D.19</strong>: the drafts to approve, one row each.</li></ul><p>Rows left unanswered keep the recommendation (the draft). Only you approve a document; nothing here sets <code>design: approved</code> by itself.</p></div><p class="note">A read-only record: every row as the review page showed it, with the answer and the outcome from the round README (the record of truth). Media is linked from the design tree, not copied.</p><nav class="sec"><a href="#s-questions">Questions</a><a href="#s-judgement-calls">Calls</a><a href="#s-art-the-units">Units</a><a href="#s-art-boss-world-and-people">Art</a><a href="#s-music">Music</a><a href="#s-sounds">Sounds</a><a href="#s-voice">Voice</a><a href="#s-documents-to-approve">Docs</a></nav><section id="s-questions"><h2>Questions</h2>
+<div class="sum"><p>The twelve design questions of the gap analysis, with the options, what each costs and what was drafted. The recommendation is pre-selected.</p></div>
+<article class="row" id="r-Q.1">
+<header><span class="rid">Q.1</span><h3>Enemy shields and shield-breaker</h3><span class="kind">pick a, b or c</span></header>
+<div class="part">[Enemy shields and <code>shield-breaker</code>](../../enemies/README.md#enemy-shields)</div>
+<div class="q"><strong>pick a, b or c</strong> (concept). The Ascendancy's doctrine is shields on enemies, yet nothing defined them. <strong>a</strong> a shield is a gold hex HP pool over the hull: every weapon hits it, it regrows 2 s after the last hit; a <code>shield-breaker</code> hit (the Tesla Coil Pod) empties it at once and stops the regrowth for 3 s; the EMP strips it; light in Act 5 (Talon 2, Hornet 8, Gunship 12, the Sovereign's core), heavier from Act 6. Cost: one damage branch and a hex flash. <strong>b</strong> shields block everything but <code>shield-breaker</code>, beams and the EMP: forces the Tesla pod in Act 5 and frustrates loadouts already bought. <strong>c</strong> no mechanic in Act 5, shields arrive with Act 6: the L29 shop moment is empty. <strong>Drafted:</strong> a (the enemies README, the Talon, Hornet, Gunship and Sovereign docs, the Tesla Coil Pod).</div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>drafted as recommended</span></div>
+</article>
+<article class="row" id="r-Q.2">
+<header><span class="rid">Q.2</span><h3>The generator drain (L33)</h3><span class="kind">pick a, b or c</span></header>
+<div class="part"><a href="../../player/generator/README.md#enemy-drain-effects">The generator drain (L33)</a></div>
+<div class="q"><strong>pick a, b or c</strong> (concept). <strong>a</strong> a latched Void Leech lowers the generator's output by 2 MW (stacking to -6): over the load, shield regeneration stops first, then every weapon's fire rate falls by output over load; the HUD gauge shows the drained MW, the muzzles flicker, the shield ring dims, Varga warns in the hangar. Heavy loadouts on small generators suffer most (the act's energy identity). Cost: an in-level power model, subtle without the feedback. <strong>b</strong> flat: each leech takes 20 % of the fire rate whatever the loadout: cheap and readable, but the generator choice stops mattering. <strong>c</strong> each leech blacks out the fitted weapon with the highest draw until shaken off: very readable, punishes every loadout alike. <strong>Drafted:</strong> a, with the feedback (the generator README's hand plan and <em>Enemy drain effects</em>, Level 33).</div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>drafted as recommended</span></div>
+</article>
+<article class="row" id="r-Q.3">
+<header><span class="rid">Q.3</span><h3>Minefields (L30)</h3><span class="kind">pick a, b or c</span></header>
+<div class="part"><a href="../../enemies/README.md#mine-lines">Minefields (L30)</a></div>
+<div class="q"><strong>pick a, b or c</strong> (concept). <strong>a</strong> Minelayers pass from behind and lay lines with one gap; a mine arms after 1 s, blinks 0.6 s when the ship comes within 48 px, then bursts in a ring of 8; a shot mine bursts at once and sets off the mines near it (shoot one to clear a stretch). Cost: extends the <code>Mine</code>; a maze that rewards piercing and spread. <strong>b</strong> static contact mines as walls, no burst: cheap, a weaving test only. <strong>c</strong> seeker mines that drift toward the ship: another homing threat on top of the SAMs and Hornets. <strong>Drafted:</strong> a (<span class="ref">Level 30</span>, the Minelayer). The two build rules under it are J.5.</div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>drafted as recommended</span></div>
+</article>
+<article class="row" id="r-Q.4">
+<header><span class="rid">Q.4</span><h3>The mining tug escort (L31)</h3><span class="kind">pick a, b or c</span></header>
+<div class="part"><a href="../../allies/mining-tug/README.md">The mining tug escort (L31)</a></div>
+<div class="q"><strong>pick a, b or c</strong> (concept). <strong>a</strong> a huge mining tug on the ground layer holds a station in the lower half and crawls up through the level; three hull sections (bow, cargo, engines) with their HP in the HUD; Hornets, Shard links and Gunships target it; every section lost lowers the reward, all three lost fails the mission. Cost: a new huge ally sprite, a convoy rule and per-part HP. <strong>b</strong> three ore haulers as an L04/L11 convoy: cheap, repeats Acts 1-2. <strong>c</strong> the tug flies on the play plane ahead of the ship and you must not shoot through it: blocks your fire. <strong>Drafted:</strong> a (<span class="ref">Level 31</span>: bow 240, cargo 160, engines 160 HP, a <code>CLEAN HULL</code> secondary). Its size and what hurts it are J.6 and J.7.</div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>drafted as recommended</span></div>
+</article>
+<article class="row" id="r-Q.5">
+<header><span class="rid">Q.5</span><h3>Branching tunnels (L32)</h3><span class="kind">pick a, b or c</span></header>
+<div class="part"><a href="../../campaign/act-5-the-belt/level-32-deep-core/README.md">Branching tunnels (L32)</a></div>
+<div class="q"><strong>pick a, b or c</strong> (concept). <strong>a</strong> two forks: a rock island splits the tunnel and the side the ship is on at the fork's head picks the branch; each branch has its own waves (one safer, one richer: a cache and mining charges); they rejoin. Cost: a route-gated wave condition and about twice the wave authoring for the branch stretches; replays stay deterministic. <strong>b</strong> cosmetic forks, blast doors close the side passages: one route, branching in name only. <strong>c</strong> forks with the same waves in both: the choice is meaningless. <strong>Drafted:</strong> a (each branch about 16 s, about 13 extra waves; the richer pays about 10 % more and costs more fire). This reverses Level 16's rejected real route choice, J.11.</div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>drafted as recommended</span></div>
+</article>
+<article class="row" id="r-Q.6">
+<header><span class="rid">Q.6</span><h3>Popcorn in a human war: the Dart Drone</h3><span class="kind">pick a, b or c</span></header>
+<div class="part"><a href="../../enemies/air/dart-drone/README.md">Popcorn in a human war: the Dart Drone</a></div>
+<div class="q"><strong>pick a, b or c</strong> (concept). The floor (70 a minute, many small easy units) clashes with the Ascendancy's few, tough units. <strong>a</strong> mixed waves: the Vrell carry the count (Skitters, Mote Swarms, Asteroid Mites), the Ascendancy brings the shots; Levels 30, 32 and 35 fall short. <strong>b</strong> (a) plus one new tiny Ascendancy <strong>Dart Drone</strong>, launched in streams by Gunships, stations and the Sovereign (launched units count toward the density, the boss's do not). Cost: one small sprite and sound. <strong>c</strong> Talons in great numbers: contradicts the doctrine and a shielded popcorn is tedious. <strong>Drafted:</strong> b (the Dart Drone doc; built in part C, J.4).</div>
+<p class="rec"><span class="tag">Recommendation</span> b</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>b</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>the Dart Drone: built in part C</span></div>
+</article>
+<article class="row" id="r-Q.7">
+<header><span class="rid">Q.7</span><h3>The Iron Sovereign fight (boss)</h3><span class="kind">pick a, b or c</span></header>
+<div class="part"><a href="../../enemies/bosses/iron-sovereign/README.md">The Iron Sovereign fight (boss)</a></div>
+<div class="q"><strong>pick a, b or c</strong> (boss fight). <strong>a</strong> top-down rings: the scroll halts over the station (on the ground layer, so <code>anti-ground</code> and piercing pay); three concentric rings turn at different speeds and directions; their batteries (rail line, homing diamonds, laser sweep) fire only in the lower arc facing the ship, so the rotation brings them in and out; killing a ring's batteries locks it; with all three locked the core opens (the last phase, Dart streams, Vorne). Cost: a rotating-parts boss mode, reused by the Halo Platform and the Level 49 echo. <strong>b</strong> a scrolling fortress: the level crosses the outer, middle and inner ring as hull sections, then the core: cheaper (tileable hull), loses the rotation identity. <strong>c</strong> a tilted wheel: rings seen as ellipses, batteries swing from behind (untouchable) to the front: pseudo-3D art and depth sorting, a readability risk. <strong>Drafted:</strong> a: rings of 6, 4 and 3 batteries, the core 5,000 HP, 8,960 HP in all, par 150 s, hex shield on the core, Vorne cold at the opening (J.8); its art is A.17, its sounds S.7, S.8 and S.16.</div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>drafted as recommended</span></div>
+</article>
+<article class="row" id="r-Q.8">
+<header><span class="rid">Q.8</span><h3>Rook&#x27;s rescue (L29)</h3><span class="kind">pick a, b or c</span></header>
+<div class="part"><a href="../../player/wingmen/README.md#rooks-rescue-and-return-l29l30">Rook's rescue (L29)</a></div>
+<div class="q"><strong>pick a, b or c</strong> (story). <strong>a</strong> on screen: at about t=120 the scroll halts over Dock 9, a prison tender in clamps; break its four clamp guns (the halt lasts until they fall, nothing to fail); Rook's Ember launches, the loaner Bulwark peels away and Rook flies the last section in the slot: "Miss me? Don't answer that. Just shoot." Cost: a mid-level escort swap and a dock set piece. <strong>b</strong> radio only: loyalists free him off screen and he flies from Level 30: cheap, but Act 4's on-screen loss gets an off-screen return. <strong>c</strong> in the Level 29 debrief and the Level 30 briefing only: the flattest. <strong>Drafted:</strong> a (<span class="ref">Level 29</span>: the clock stops while the four clamp guns stand, about 186 s, Rook's sting is M.2).</div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>drafted as recommended</span></div>
+</article>
+<article class="row" id="r-Q.9">
+<header><span class="rid">Q.9</span><h3>Vorne&#x27;s broadcast as the act intro</h3><span class="kind">pick a, b or c</span></header>
+<div class="part"><a href="../../campaign/act-5-the-belt/README.md#act-intro-and-outro">Vorne's broadcast as the act intro</a></div>
+<div class="q"><strong>pick a, b or c</strong> (story). <strong>a</strong> the intro is the broadcast: page 1 Okafor ("all channels, he is on every one"), pages 2-3 Vorne on the amber enemy channel with steady interference (Vorne at a gilded lectern, Ceres Hub's lights turning red), page 4 Okafor's answer and the order to Ceres. Cost: Vorne cast now, production portraits (A.20), an interference page. <strong>b</strong> all four pages Vorne, Okafor only in the Level 29 briefing: loses "we hear it together". <strong>c</strong> Okafor's usual intro, Vorne heard as radio lines at Level 29's start: the broadcast shrinks to subtitles. <strong>Drafted:</strong> a (the <span class="ref">briefing</span> gets the intercept page: S.11-S.13 are its sounds, V.1 his voice).</div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>drafted as recommended</span></div>
+</article>
+<article class="row" id="r-Q.10">
+<header><span class="rid">Q.10</span><h3>The mutineer pilots (L29)</h3><span class="kind">pick a, b or c</span></header>
+<div class="part"><a href="../../campaign/act-5-the-belt/level-29-betrayal-at-ceres/README.md">The mutineer pilots (L29)</a></div>
+<div class="q"><strong>pick a, b or c</strong> (story; the act's open question). <strong>a</strong> linear: mutineers fly Talons, the cost is told in the radio (Rook names one). <strong>b</strong> a small mercy: in Level 29 some Ceres pilots in repainted CDF craft waver (a white IFF blink, hold fire, peel off after about 6 s); a secondary "Hold fire" pays if none is shot; spread fire can spoil it (only the bonus is lost). Cost: a repainted CDF craft (A.22), a non-firing leave pattern, an inverted secondary. <strong>c</strong> a real story choice remembered later: branching story against the linear campaign. <strong>Drafted:</strong> b (the Hold fire secondary, 655 credits; the mutineer lead is Harker, J.10).</div>
+<p class="rec"><span class="tag">Recommendation</span> b</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>b</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>the mutineers waver; "Hold fire"</span></div>
+</article>
+<article class="row" id="r-Q.11">
+<header><span class="rid">Q.11</span><h3>The Ascendancy look on the belt</h3><span class="kind">pick a, b or c</span></header>
+<div class="part"><a href="../../world/belt/README.md">The Ascendancy look on the belt</a></div>
+<div class="q"><strong>pick a, b or c</strong> (art direction). Black-and-gold units over dark rock and space read poorly. <strong>a</strong> gloss black with gold trim, a strong top-left gold rim light and red running lights, gold on at least 20 % of the silhouette, the belt backdrops a step lighter than Act 4 (sunlit dust band, warm rock). Cost: one readability check per sheet. <strong>b</strong> gunmetal or charcoal hulls with gold: reads better, diverges from the Level 28 cruisers (final). <strong>c</strong> black silhouettes with gold accents only, read by their red lights: cheapest, poor at speed. The frames show a Talon leader, a Hornet and a SAM Nest at play size over every level's darkest 200 by 96 window, in two backdrop grades, with the measured gold share. <strong>Drafted:</strong> a (every unit sheet below).</div>
+<div class="media"><figure class="m img"><a href="../../world/belt/concept/rejected/belt-readability-r60-a.png"><img loading="lazy" decoding="async" src="../../world/belt/concept/rejected/belt-readability-r60-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../world/belt/concept/belt-readability-r60-b.png"><img loading="lazy" decoding="async" src="../../world/belt/concept/belt-readability-r60-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../world/belt/concept/rejected/belt-readability-r60-c.png"><img loading="lazy" decoding="async" src="../../world/belt/concept/rejected/belt-readability-r60-c.png" alt="c · sheet"></a><figcaption>c · sheet</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the gold share on the station levels is under a's 20 % (19 % and 16 %); the darkest windows of Levels 30, 31 and 35 are near-black in a (see A.18)</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge pick">not the recommendation</span> <span><strong>b</strong> (not the recommendation)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>gunmetal/charcoal hulls with gold; the unit variants are re-rendered in gunmetal in production; a and c rejected</span></div>
+</article>
+<article class="row" id="r-Q.12">
+<header><span class="rid">Q.12</span><h3>Act 5&#x27;s arsenal (economy)</h3><span class="kind">pick a, b or c</span></header>
+<div class="part"><a href="../../player/generator/README.md#act-5-hand-plan-draft">Act 5's arsenal (economy)</a></div>
+<div class="q"><strong>pick a, b or c</strong> (concept, economy). The <code>act 5</code> rows and ideas sum to about 105,000 credits against about 41,000 of income. <strong>a</strong> lean: the <span class="ref">Tesla Coil Pod</span> (Level 29, <code>shield-breaker</code>) and the core tiers only (Mk V generator, Shield Mk V, Composite IV, Engine Mk IV): least art and sound, few new toys. <strong>b</strong> the full roster (also Swarm Tail, Plasma Arc, Time Dilation, Hunter drone, Bastion Shield): six new items, most unaffordable, Time Dilation a new global time scale. <strong>c</strong> the Tesla Coil Pod (Level 29), the <span class="ref">Swarm Tail</span> (Level 30, <code>rear</code> plus <code>homing</code>, for the rear Minelayers and Serpents) and the core tiers with the Mk V Helix salvaged in Level 34 (in the shop from the Level 35 visit); Plasma Arc, Time Dilation, the Hunter drone and the Bastion Shield move to Act 6. Cost: two weapons. <strong>Drafted:</strong> c.</div>
+<p class="rec"><span class="tag">Recommendation</span> c</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>c</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>the middle arsenal: Tesla Coil Pod and Swarm Tail</span></div>
+</article>
+</section>
+<section id="s-judgement-calls"><h2>Judgement calls</h2>
+<div class="sum"><p>Calls the drafting made (the gap analysis's J1-J3 and the build questions of Levels 30 and 31). Each is drafted as the recommendation.</p></div>
+<article class="row" id="r-J.1">
+<header><span class="rid">J.1</span><h3>Warden Tank in livery instead of a Crawler Tank (L34)</h3><span class="kind">keep or change</span></header>
+<div class="part"><a href="../../enemies/ground/warden-tank/README.md">Warden Tank in livery instead of a Crawler Tank (L34)</a></div>
+<div class="q"><strong>keep or change</strong>. The gap analysis had a new Crawler Tank for Level 34. The built Warden Tank already fires bursts back up the screen after it has passed, and its document schedules Ascendancy black and gold from Act 5. <strong>keep</strong> (drafted): Level 34 flies the Warden Tank in livery on the derelict hulls; a unit, its art and its sounds saved; the act's ground movers are the Strider and the Warden Tank. <strong>change</strong>: build the Crawler Tank.</div>
+<p class="rec"><span class="tag">Recommendation</span> keep</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>keep</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>kept as drafted</span></div>
+</article>
+<article class="row" id="r-J.2">
+<header><span class="rid">J.2</span><h3>The reference_dps curve 120 to 144</h3><span class="kind">keep or change</span></header>
+<div class="part">[The <code>reference_dps</code> curve 120 to 144](../../enemies/README.md#balancing-basis)</div>
+<div class="q"><strong>keep or change</strong>. Act 5's enemy HP is set from a reference DPS: <strong>120 at Level 29, then +4 a level to 144 at the Iron Sovereign</strong> (the plan's dry loadout without the torpedoes is about 110, too tight, so it buys the Ion Beam L4 at the Level 29 visit: forward DPS 135, 1.13 of 120, falling to 0.96 at the Level 34 breather and 1.02 at the boss; Act 4 ran 0.79-1.07). <strong>keep</strong> (drafted). <strong>change</strong>: hold 120 flat, the act gets easier (135 is 1.13 of it all the way).</div>
+<p class="rec"><span class="tag">Recommendation</span> keep</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>keep</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>kept as drafted</span></div>
+</article>
+<article class="row" id="r-J.3">
+<header><span class="rid">J.3</span><h3>Level 33 gets ground, NO GROUND moves to Level 30</h3><span class="kind">keep or change</span></header>
+<div class="part">[Level 33 gets ground, <code>NO GROUND</code> moves to Level 30](../../campaign/act-5-the-belt/level-33-leech-field/README.md)</div>
+<div class="q"><strong>keep or change</strong>. The plan had the Bomb Rack read <code>NO GROUND</code> in Level 33. Level 33 now has Rail Bunkers dug into the rocks (hardened: only <code>anti-ground</code> and the landing blasts hurt them), so the Bomb Rack and piercing pay there, and <code>NO GROUND</code> moves to <strong>Level 30</strong>, the act's only space-only level (Level 31 keeps a ground layer: two SAM Nest outcrops besides the tug). <strong>keep</strong> (drafted). <strong>change</strong>: Level 33 stays space only without Rail Bunkers.</div>
+<p class="rec"><span class="tag">Recommendation</span> keep</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>keep</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>kept as drafted</span></div>
+</article>
+<article class="row" id="r-J.4">
+<header><span class="rid">J.4</span><h3>The Dart Drone is built in part C (Level 30)</h3><span class="kind">keep or change</span></header>
+<div class="part"><a href="../../enemies/air/dart-drone/README.md">The Dart Drone is built in part C (Level 30)</a></div>
+<div class="q"><strong>keep or change</strong>. The Gunship launches Dart streams (Q.6 b) and the Gunship comes first in Level 30; Level 30 is mostly Ascendancy and its floor (at least 70 enemies a minute, target 80-120) is short without them (about 85 a minute still inside the band, 101 with the Darts). <strong>keep</strong> (drafted): the Dart Drone (a tiny unit and its looks) is built in part C, part D reuses it. <strong>change</strong>: build it in part D and let Level 30 run without Darts.</div>
+<p class="rec"><span class="tag">Recommendation</span> keep</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>keep</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>kept as drafted</span></div>
+</article>
+<article class="row" id="r-J.5">
+<header><span class="rid">J.5</span><h3>The mine lines: clusters of 4 and a 40 px blast (L30)</h3><span class="kind">keep or change</span></header>
+<div class="part"><a href="../../enemies/README.md#mine-lines">The mine lines: clusters of 4 and a 40 px blast (L30)</a></div>
+<div class="q"><strong>keep or change</strong> (two build questions under Q.3 a). <strong>C1, what one shot clears:</strong> <strong>a</strong> (drafted) mines 32 px apart in clusters of 4, clusters 56 px apart, one passage gap of at least 80 px (an authored 112 px): a shot clears its cluster, the line stays a maze that rewards spread and piercing; <strong>b</strong> even spacing of at most 40 px: one shot clears the whole line, trivial once known; <strong>c</strong> spacing over 40 px: no chains. <strong>C2, the proximity burst near the ship:</strong> the engine never spawns a bullet within 72 px of the ship, so a ring-only burst cannot hurt a ship hugging the mine. <strong>a</strong> (drafted) a 40 px blast of <code>heavy</code> 10 at the burst plus the ring of 8; <strong>b</strong> ring only (hugging a blinking mine is safe); <strong>c</strong> the mine ring exempt from the 72 px rule (point-blank rings, against the readability rule). Mines pay nothing.</div>
+<p class="rec"><span class="tag">Recommendation</span> C1 a, C2 a</p>
+<div class="ans"><span class="tag">Answer</span> <span><strong>C1 a, C2 a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>kept as drafted</span></div>
+</article>
+<article class="row" id="r-J.6">
+<header><span class="rid">J.6</span><h3>The tug&#x27;s size on the field (L31)</h3><span class="kind">pick a, b or c</span></header>
+<div class="part"><a href="../../allies/mining-tug/README.md">The tug's size on the field (L31)</a></div>
+<div class="q"><strong>pick a, b or c</strong> (art, a build question under Q.4). The tug covers a lot of the 480 by 540 play field and the ship flies over it for most of the level. <strong>a</strong> (drafted) about <strong>160 by 260</strong>, centre about 150 px above the bottom edge, a slow sway: the upper 55 % stays open. <strong>b</strong> 200 by 300: the hull dominates, bullets over a busy sprite (42 % of the width, 56 % of the height). <strong>c</strong> 120 by 200: less huge.</div>
+<div class="media"><figure class="m img"><a href="../../allies/mining-tug/concept/rejected/mining-tug-r60-a.png"><img loading="lazy" decoding="async" src="../../allies/mining-tug/concept/rejected/mining-tug-r60-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../allies/mining-tug/concept/mining-tug-r60-b.png"><img loading="lazy" decoding="async" src="../../allies/mining-tug/concept/mining-tug-r60-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../allies/mining-tug/concept/rejected/mining-tug-r60-a.gif"><img loading="lazy" decoding="async" src="../../allies/mining-tug/concept/rejected/mining-tug-r60-a.gif" alt="a · motion"></a><figcaption>a · motion</figcaption></figure><figure class="m img"><a href="../../allies/mining-tug/concept/mining-tug-r60-b.gif"><img loading="lazy" decoding="async" src="../../allies/mining-tug/concept/mining-tug-r60-b.gif" alt="b · motion"></a><figcaption>b · motion</figcaption></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge pick">not the recommendation</span> <span><strong>b</strong> (not the recommendation)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>the tug is 200 by 300 px; Level 31 and part D re-measure</span></div>
+</article>
+<article class="row" id="r-J.7">
+<header><span class="rid">J.7</span><h3>What hurts the tug (L31)</h3><span class="kind">pick a, b or c</span></header>
+<div class="part"><a href="../../allies/mining-tug/README.md">What hurts the tug (L31)</a></div>
+<div class="q"><strong>pick a, b or c</strong> (a build question under Q.4). The tug is on the ground layer, so bullets pass over it unless hooked. <strong>a</strong> (drafted) only attacks aimed at it hurt it: Hornet missiles home on a section (shoot them down), Dart Drones dive it, Shard links sweep across it; rings and unhooked fire pass over; the HUD flashes the hit section. <strong>b</strong> every enemy bullet crossing its box (the Level 10 air-ally rule): unreadable over a 160 px hull and very punishing. <strong>c</strong> only missiles.</div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>only hooked attacks hurt the tug</span></div>
+</article>
+<article class="row" id="r-J.8">
+<header><span class="rid">J.8</span><h3>Vorne is cold, never shouting</h3><span class="kind">keep or change</span></header>
+<div class="part"><a href="../../enemies/bosses/iron-sovereign/README.md">Vorne is cold, never shouting</a></div>
+<div class="q"><strong>keep or change</strong>. The gap analysis (Q7) wrote "Vorne's rage" for the Sovereign's last phase. His character rule is that he never shouts until the end of Act 6, so the core's opening line is short, cold and clipped ("Enough. You are becoming expensive."), the portrait's <em>rage</em> alternate being cold with teeth clenched. <strong>keep</strong> (drafted). <strong>change</strong>: a real shout (breaks the rule early).</div>
+<p class="rec"><span class="tag">Recommendation</span> keep</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>keep</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>kept as drafted</span></div>
+</article>
+<article class="row" id="r-J.9">
+<header><span class="rid">J.9</span><h3>Rook&#x27;s Ceres convoy background</h3><span class="kind">keep or change</span></header>
+<div class="part"><a href="../../story/characters/rook/README.md">Rook's Ceres convoy background</a></div>
+<div class="q"><strong>keep or change</strong>. New backstory for Rook: his first posting was belt convoy escort out of Ceres, so he flew with half the mutineers ("I know that wing. I flew convoys with half of them. Doesn't matter now."; he knows Harker). It makes the Level 29 betrayal personal and explains why Dock 9's loyalists point to him. <strong>keep</strong> (drafted). <strong>change</strong>: leave his past as it is and the lines go.</div>
+<p class="rec"><span class="tag">Recommendation</span> keep</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>keep</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>kept as drafted</span></div>
+</article>
+<article class="row" id="r-J.10">
+<header><span class="rid">J.10</span><h3>The new names</h3><span class="kind">keep or change</span></header>
+<div class="part"><a href="../../story/characters/README.md#act-5-speakers-draft">The new names</a></div>
+<div class="q"><strong>keep or change</strong> (placeholders). <strong>Harker</strong>, the mutineers' flight lead (a Ceres garrison pilot; Rook flew convoys with him); the tug <strong>Bellwether</strong> and her captain (the call sign); <strong>Bright Seam</strong>, the mining rock whose dock Level 31 starts at; <strong>Dacosta</strong>, the prospector whose claim is Level 31's secret; the <strong>Vesta relay</strong>, the escort's goal; <strong>Kleopatra</strong>, the asteroid Level 32 hollows out. <strong>keep</strong> (drafted). <strong>change</strong>: give your own names in the note.</div>
+<p class="rec"><span class="tag">Recommendation</span> keep</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>keep</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>kept as drafted</span></div>
+</article>
+<article class="row" id="r-J.11">
+<header><span class="rid">J.11</span><h3>Level 32&#x27;s route choice reverses Level 16&#x27;s rejected M3 b</h3><span class="kind">keep or change</span></header>
+<div class="part"><a href="../../campaign/act-5-the-belt/level-32-deep-core/README.md">Level 32's route choice reverses Level 16's rejected M3 b</a></div>
+<div class="q"><strong>keep or change</strong>. Level 16's fork was visual only because the real route choice (its M3 b) was rejected for doubling the waves, tests and art. Q.5 a brings it back as a real choice: the branches are short (about 16 s each), the extra waves about 13, the art one island per fork with two dressings; every route stays on its budget (the route-mean haul within 5 %, each route within 8 %). <strong>keep</strong> (drafted, follows your answer to Q.5). <strong>change</strong>: cosmetic forks again.</div>
+<p class="rec"><span class="tag">Recommendation</span> keep</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>keep</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>kept as drafted</span></div>
+</article>
+<article class="row" id="r-J.12">
+<header><span class="rid">J.12</span><h3>The drain&#x27;s strength: 2 MW per leech</h3><span class="kind">keep or change</span></header>
+<div class="part"><a href="../../player/generator/README.md#enemy-drain-effects">The drain's strength: 2 MW per leech</a></div>
+<div class="q"><strong>keep or change</strong> (Q.2 a's number). Each latched leech takes 2 MW, up to 6; the drain may prove mild (the generator hand plan notes it). <strong>keep</strong> (drafted): measured at part A with <code>levelReport</code> and the autopilot. <strong>change</strong>: 3 MW a leech, the lever if it proves too mild in the build; you can also name it later.</div>
+<p class="rec"><span class="tag">Recommendation</span> keep</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>keep</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>kept as drafted</span></div>
+</article>
+</section>
+<section id="s-art-the-units"><h2>Art: the units</h2>
+<div class="sum"><p>The fifteen Act 5 units and the homing diamond in the Q.11 a belt look, each a PNG sheet (the source render, the sprites and states, the readability check over the darkest ground of the level with the measured gold share) and a GIF in the 480 by 540 play field; generator <code>tools/concept/enemies_r60.py</code>.</p></div>
+<article class="row" id="r-A.1">
+<header><span class="rid">A.1</span><h3>Talon (L29)</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../enemies/air/talon/README.md">Talon (L29)</a></div>
+<div class="q"><strong>pick a or b</strong> (art, the chosen look in the belt livery of Q.11 a). <strong>a</strong> Talon A, gold trim — the r04 gold chines and spine plus gold wing-tip caps, a strong 2 px gold rim; the hex shield hugs the hull. <strong>b</strong> Talon B, gold panels — the outer wing panels and tail fins in gold, a 1 px rim; the hex shield as a round bubble.</div>
+<div class="media"><figure class="m img"><a href="../../enemies/air/talon/concept/rejected/talon-r60-a.png"><img loading="lazy" decoding="async" src="../../enemies/air/talon/concept/rejected/talon-r60-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/air/talon/concept/talon-r60-b.png"><img loading="lazy" decoding="async" src="../../enemies/air/talon/concept/talon-r60-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/air/talon/concept/rejected/talon-r60-a.gif"><img loading="lazy" decoding="async" src="../../enemies/air/talon/concept/rejected/talon-r60-a.gif" alt="a · motion"></a><figcaption>a · motion</figcaption></figure><figure class="m img"><a href="../../enemies/air/talon/concept/talon-r60-b.gif"><img loading="lazy" decoding="async" src="../../enemies/air/talon/concept/talon-r60-b.gif" alt="b · motion"></a><figcaption>b · motion</figcaption></figure></div>
+<div class="ans"><span class="tag">Answer</span> <span><strong>b</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other variant in <code>concept/rejected/</code>; re-rendered in gunmetal in production (Q.11 b)</span></div>
+</article>
+<article class="row" id="r-A.2">
+<header><span class="rid">A.2</span><h3>Hornet (L31)</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../enemies/air/hornet/README.md">Hornet (L31)</a></div>
+<div class="q"><strong>pick a or b</strong> (art, the chosen look in the belt livery of Q.11 a). <strong>a</strong> Hornet A, twin-pod boat — a slim fuselage with gold spine and canards, two fat missile pods on gold pylons, gold-capped, two gold-glowing hatches each; strong rim. <strong>b</strong> Hornet B, delta hover-boat — a broad black delta with gold leading edges, four lift fans, the missile cells in the wing roots; a round hex bubble.</div>
+<div class="media"><figure class="m img"><a href="../../enemies/air/hornet/concept/rejected/hornet-r60-a.png"><img loading="lazy" decoding="async" src="../../enemies/air/hornet/concept/rejected/hornet-r60-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/air/hornet/concept/hornet-r60-b.png"><img loading="lazy" decoding="async" src="../../enemies/air/hornet/concept/hornet-r60-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/air/hornet/concept/rejected/hornet-r60-a.gif"><img loading="lazy" decoding="async" src="../../enemies/air/hornet/concept/rejected/hornet-r60-a.gif" alt="a · motion"></a><figcaption>a · motion</figcaption></figure><figure class="m img"><a href="../../enemies/air/hornet/concept/hornet-r60-b.gif"><img loading="lazy" decoding="async" src="../../enemies/air/hornet/concept/hornet-r60-b.gif" alt="b · motion"></a><figcaption>b · motion</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the b homing diamond (a gold kite) is close in colour to the hull's gold pods and may lose its read against them; the diamond is drawn a on a, b on b</p>
+<div class="ans"><span class="tag">Answer</span> <span><strong>b</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other variant in <code>concept/rejected/</code>; re-rendered in gunmetal in production (Q.11 b)</span></div>
+</article>
+<article class="row" id="r-A.3">
+<header><span class="rid">A.3</span><h3>Gilded Gunship (L30)</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../enemies/air/gilded-gunship/README.md">Gilded Gunship (L30)</a></div>
+<div class="q"><strong>pick a or b</strong> (art, the chosen look in the belt livery of Q.11 a). <strong>a</strong> Gilded Gunship A, gilded chevron — the r04 gold chevron plate across the nose, white-gold engines, twelve ring lamps, flank bay doors; strong rim. <strong>b</strong> Gilded Gunship B, gold scale plate — the whole front third in gold scale armour and gold pod tops; a round hex bubble.</div>
+<div class="media"><figure class="m img"><a href="../../enemies/air/gilded-gunship/concept/rejected/gilded-gunship-r60-a.png"><img loading="lazy" decoding="async" src="../../enemies/air/gilded-gunship/concept/rejected/gilded-gunship-r60-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/air/gilded-gunship/concept/gilded-gunship-r60-b.png"><img loading="lazy" decoding="async" src="../../enemies/air/gilded-gunship/concept/gilded-gunship-r60-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/air/gilded-gunship/concept/rejected/gilded-gunship-r60-a.gif"><img loading="lazy" decoding="async" src="../../enemies/air/gilded-gunship/concept/rejected/gilded-gunship-r60-a.gif" alt="a · motion"></a><figcaption>a · motion</figcaption></figure><figure class="m img"><a href="../../enemies/air/gilded-gunship/concept/gilded-gunship-r60-b.gif"><img loading="lazy" decoding="async" src="../../enemies/air/gilded-gunship/concept/gilded-gunship-r60-b.gif" alt="b · motion"></a><figcaption>b · motion</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the hex shield reads heavy over the hull (more so b's round bubble)</p>
+<div class="ans"><span class="tag">Answer</span> <span><strong>b</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other variant in <code>concept/rejected/</code>; re-rendered in gunmetal in production (Q.11 b)</span></div>
+</article>
+<article class="row" id="r-A.4">
+<header><span class="rid">A.4</span><h3>Dart Drone (L30)</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../enemies/air/dart-drone/README.md">Dart Drone (L30)</a></div>
+<div class="q"><strong>pick a or b</strong> (art, the chosen look in the belt livery of Q.11 a). <strong>a</strong> Dart Drone A, needle dart — a slim black needle, a gold nose cone, small swept gold fins, one red light; strong rim. <strong>b</strong> Dart Drone B, chevron dart — a black arrowhead with gold leading edges and a red light in the notch.</div>
+<div class="media"><figure class="m img"><a href="../../enemies/air/dart-drone/concept/rejected/dart-drone-r60-a.png"><img loading="lazy" decoding="async" src="../../enemies/air/dart-drone/concept/rejected/dart-drone-r60-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/air/dart-drone/concept/dart-drone-r60-b.png"><img loading="lazy" decoding="async" src="../../enemies/air/dart-drone/concept/dart-drone-r60-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/air/dart-drone/concept/rejected/dart-drone-r60-a.gif"><img loading="lazy" decoding="async" src="../../enemies/air/dart-drone/concept/rejected/dart-drone-r60-a.gif" alt="a · motion"></a><figcaption>a · motion</figcaption></figure><figure class="m img"><a href="../../enemies/air/dart-drone/concept/dart-drone-r60-b.gif"><img loading="lazy" decoding="async" src="../../enemies/air/dart-drone/concept/dart-drone-r60-b.gif" alt="b · motion"></a><figcaption>b · motion</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> tiny (20 px): may be hard to read at speed</p>
+<div class="ans"><span class="tag">Answer</span> <span><strong>b</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other variant in <code>concept/rejected/</code>; re-rendered in gunmetal in production (Q.11 b)</span></div>
+</article>
+<article class="row" id="r-A.5">
+<header><span class="rid">A.5</span><h3>Rail Serpent (L30)</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../enemies/air/rail-serpent/README.md">Rail Serpent (L30)</a></div>
+<div class="q"><strong>pick a or b</strong> (art, the chosen look in the belt livery of Q.11 a). <strong>a</strong> Rail Serpent A, gold spine and skirts — the r05 gold spine bar plus gold side skirts, a white-gold reactor on the engine, domed turret cars with a red lamp, gold tail fins; strong rim. <strong>b</strong> Rail Serpent B, gold roofs and links — gold roof armour with a black centre stripe on every car, gold coupler links between the cars.</div>
+<div class="media"><figure class="m img"><a href="../../enemies/air/rail-serpent/concept/rejected/rail-serpent-r60-a.png"><img loading="lazy" decoding="async" src="../../enemies/air/rail-serpent/concept/rejected/rail-serpent-r60-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/air/rail-serpent/concept/rail-serpent-r60-b.png"><img loading="lazy" decoding="async" src="../../enemies/air/rail-serpent/concept/rail-serpent-r60-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/air/rail-serpent/concept/rejected/rail-serpent-r60-a.gif"><img loading="lazy" decoding="async" src="../../enemies/air/rail-serpent/concept/rejected/rail-serpent-r60-a.gif" alt="a · motion"></a><figcaption>a · motion</figcaption></figure><figure class="m img"><a href="../../enemies/air/rail-serpent/concept/rail-serpent-r60-b.gif"><img loading="lazy" decoding="async" src="../../enemies/air/rail-serpent/concept/rail-serpent-r60-b.gif" alt="b · motion"></a><figcaption>b · motion</figcaption></figure></div>
+<div class="ans"><span class="tag">Answer</span> <span><strong>b</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other variant in <code>concept/rejected/</code>; re-rendered in gunmetal in production (Q.11 b)</span></div>
+</article>
+<article class="row" id="r-A.6">
+<header><span class="rid">A.6</span><h3>Buzzsaw Drone (L31)</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../enemies/air/buzzsaw-drone/README.md">Buzzsaw Drone (L31)</a></div>
+<div class="q"><strong>pick a or b</strong> (art, the chosen look in the belt livery of Q.11 a). <strong>a</strong> Buzzsaw Drone A, gunmetal blades, gold tips — the r05 gunmetal blades with gold tips round a gold hub ring and a red eye; strong rim. <strong>b</strong> Buzzsaw Drone B, gold blades — six solid gold blades round a black hub; the tell's red flicker covers the disc.</div>
+<div class="media"><figure class="m img"><a href="../../enemies/air/buzzsaw-drone/concept/rejected/buzzsaw-drone-r60-a.png"><img loading="lazy" decoding="async" src="../../enemies/air/buzzsaw-drone/concept/rejected/buzzsaw-drone-r60-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/air/buzzsaw-drone/concept/buzzsaw-drone-r60-b.png"><img loading="lazy" decoding="async" src="../../enemies/air/buzzsaw-drone/concept/buzzsaw-drone-r60-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/air/buzzsaw-drone/concept/rejected/buzzsaw-drone-r60-a.gif"><img loading="lazy" decoding="async" src="../../enemies/air/buzzsaw-drone/concept/rejected/buzzsaw-drone-r60-a.gif" alt="a · motion"></a><figcaption>a · motion</figcaption></figure><figure class="m img"><a href="../../enemies/air/buzzsaw-drone/concept/buzzsaw-drone-r60-b.gif"><img loading="lazy" decoding="async" src="../../enemies/air/buzzsaw-drone/concept/buzzsaw-drone-r60-b.gif" alt="b · motion"></a><figcaption>b · motion</figcaption></figure></div>
+<div class="ans"><span class="tag">Answer</span> <span><strong>b</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other variant in <code>concept/rejected/</code>; re-rendered in gunmetal in production (Q.11 b)</span></div>
+</article>
+<article class="row" id="r-A.7">
+<header><span class="rid">A.7</span><h3>Asteroid Mite (L29)</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../enemies/space/asteroid-mite/README.md">Asteroid Mite (L29)</a></div>
+<div class="q"><strong>pick a or b</strong> (art, the chosen look in the belt livery of Q.11 a). <strong>a</strong> Asteroid Mite A, tick — a round plated plum abdomen with a teal seam, a small dark head with bone mandibles, six short splayed legs. <strong>b</strong> Asteroid Mite B, flea — a long flat segmented body with three teal spots and two big folded bone-kneed hind legs.</div>
+<div class="media"><figure class="m img"><a href="../../enemies/space/asteroid-mite/concept/asteroid-mite-r60-a.png"><img loading="lazy" decoding="async" src="../../enemies/space/asteroid-mite/concept/asteroid-mite-r60-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/space/asteroid-mite/concept/rejected/asteroid-mite-r60-b.png"><img loading="lazy" decoding="async" src="../../enemies/space/asteroid-mite/concept/rejected/asteroid-mite-r60-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/space/asteroid-mite/concept/asteroid-mite-r60-a.gif"><img loading="lazy" decoding="async" src="../../enemies/space/asteroid-mite/concept/asteroid-mite-r60-a.gif" alt="a · motion"></a><figcaption>a · motion</figcaption></figure><figure class="m img"><a href="../../enemies/space/asteroid-mite/concept/rejected/asteroid-mite-r60-b.gif"><img loading="lazy" decoding="async" src="../../enemies/space/asteroid-mite/concept/rejected/asteroid-mite-r60-b.gif" alt="b · motion"></a><figcaption>b · motion</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> tiny (20 px): may be hard to read against the rock and the station hull</p>
+<div class="ans"><span class="tag">Answer</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other variant in <code>concept/rejected/</code>; re-rendered in gunmetal in production (Q.11 b)</span></div>
+</article>
+<article class="row" id="r-A.8">
+<header><span class="rid">A.8</span><h3>Minelayer (L30)</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../enemies/space/minelayer/README.md">Minelayer (L30)</a></div>
+<div class="q"><strong>pick a or b</strong> (art, the chosen look in the belt livery of Q.11 a). <strong>a</strong> Minelayer A, hopper barge — a wide flat black hull with a gold edge band, two engine sponsons, a gold mine drum at the stern; mine: a black ball with four gold spikes and a red lamp; strong rim. <strong>b</strong> Minelayer B, catamaran — two slim black hulls with gold noses and tails joined by a gold bridge deck, the gold mine rack between them; mine: a flat black disc with a gold rim, three prongs and a red eye.</div>
+<div class="media"><figure class="m img"><a href="../../enemies/space/minelayer/concept/minelayer-r60-a.png"><img loading="lazy" decoding="async" src="../../enemies/space/minelayer/concept/minelayer-r60-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/space/minelayer/concept/rejected/minelayer-r60-b.png"><img loading="lazy" decoding="async" src="../../enemies/space/minelayer/concept/rejected/minelayer-r60-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/space/minelayer/concept/minelayer-r60-a.gif"><img loading="lazy" decoding="async" src="../../enemies/space/minelayer/concept/minelayer-r60-a.gif" alt="a · motion"></a><figcaption>a · motion</figcaption></figure><figure class="m img"><a href="../../enemies/space/minelayer/concept/rejected/minelayer-r60-b.gif"><img loading="lazy" decoding="async" src="../../enemies/space/minelayer/concept/rejected/minelayer-r60-b.gif" alt="b · motion"></a><figcaption>b · motion</figcaption></figure></div>
+<div class="ans"><span class="tag">Answer</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other variant in <code>concept/rejected/</code>; re-rendered in gunmetal in production (Q.11 b)</span></div>
+</article>
+<article class="row" id="r-A.9">
+<header><span class="rid">A.9</span><h3>Shard Drone (L31)</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../enemies/space/shard-drone/README.md">Shard Drone (L31)</a></div>
+<div class="q"><strong>pick a or b</strong> (art, the chosen look in the belt livery of Q.11 a). <strong>a</strong> Shard Drone A, tri-blade, beam links — three long gold shard blades round a black hub with a red light; links: a crimson beam with a dark rim and a pale core; strong rim. <strong>b</strong> Shard Drone B, tri-prism, lightning links — a black triangular frame with a gold prism at each corner; links: crackling crimson lightning with a gold core.</div>
+<div class="media"><figure class="m img"><a href="../../enemies/space/shard-drone/concept/rejected/shard-drone-r60-a.png"><img loading="lazy" decoding="async" src="../../enemies/space/shard-drone/concept/rejected/shard-drone-r60-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/space/shard-drone/concept/shard-drone-r60-b.png"><img loading="lazy" decoding="async" src="../../enemies/space/shard-drone/concept/shard-drone-r60-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/space/shard-drone/concept/rejected/shard-drone-r60-a.gif"><img loading="lazy" decoding="async" src="../../enemies/space/shard-drone/concept/rejected/shard-drone-r60-a.gif" alt="a · motion"></a><figcaption>a · motion</figcaption></figure><figure class="m img"><a href="../../enemies/space/shard-drone/concept/shard-drone-r60-b.gif"><img loading="lazy" decoding="async" src="../../enemies/space/shard-drone/concept/shard-drone-r60-b.gif" alt="b · motion"></a><figcaption>b · motion</figcaption></figure></div>
+<div class="ans"><span class="tag">Answer</span> <span><strong>b</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other variant in <code>concept/rejected/</code>; re-rendered in gunmetal in production (Q.11 b)</span></div>
+</article>
+<article class="row" id="r-A.10">
+<header><span class="rid">A.10</span><h3>Void Leech (L33)</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../enemies/space/void-leech/README.md">Void Leech (L33)</a></div>
+<div class="q"><strong>pick a or b</strong> (art, the chosen look in the belt livery of Q.11 a). <strong>a</strong> Void Leech A, ringed leech — five tapering black-violet chitin rings, an oral sucker disc ringed with bone hooks, a pulsing violet sac. <strong>b</strong> Void Leech B, ray leech — a flat undulating mantle with a glowing seam, a hooked mouth, the violet sac and veins.</div>
+<div class="media"><figure class="m img"><a href="../../enemies/space/void-leech/concept/void-leech-r60-a.png"><img loading="lazy" decoding="async" src="../../enemies/space/void-leech/concept/void-leech-r60-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/space/void-leech/concept/rejected/void-leech-r60-b.png"><img loading="lazy" decoding="async" src="../../enemies/space/void-leech/concept/rejected/void-leech-r60-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/space/void-leech/concept/void-leech-r60-a.gif"><img loading="lazy" decoding="async" src="../../enemies/space/void-leech/concept/void-leech-r60-a.gif" alt="a · motion"></a><figcaption>a · motion</figcaption></figure><figure class="m img"><a href="../../enemies/space/void-leech/concept/rejected/void-leech-r60-b.gif"><img loading="lazy" decoding="async" src="../../enemies/space/void-leech/concept/rejected/void-leech-r60-b.gif" alt="b · motion"></a><figcaption>b · motion</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> black-violet over the Level 33 rock: hard to see (the darkest ground of the level)</p>
+<div class="ans"><span class="tag">Answer</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other variant in <code>concept/rejected/</code>; re-rendered in gunmetal in production (Q.11 b)</span></div>
+</article>
+<article class="row" id="r-A.11">
+<header><span class="rid">A.11</span><h3>SAM Nest (L29)</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../enemies/ground/sam-nest/README.md">SAM Nest (L29)</a></div>
+<div class="q"><strong>pick a or b</strong> (art, the chosen look in the belt livery of Q.11 a). <strong>a</strong> SAM Nest A, twin tubes on a round base — a round armoured base with a gold ring and four lights, two missile tubes on a yoke under a gold hatch, a red lock light; strong rim. <strong>b</strong> SAM Nest B, four-cell box on a hex base — a hexagonal base with gold edges, a square box launcher with four cells in a gold frame.</div>
+<div class="media"><figure class="m img"><a href="../../enemies/ground/sam-nest/concept/sam-nest-r60-a.png"><img loading="lazy" decoding="async" src="../../enemies/ground/sam-nest/concept/sam-nest-r60-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/ground/sam-nest/concept/rejected/sam-nest-r60-b.png"><img loading="lazy" decoding="async" src="../../enemies/ground/sam-nest/concept/rejected/sam-nest-r60-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/ground/sam-nest/concept/sam-nest-r60-a.gif"><img loading="lazy" decoding="async" src="../../enemies/ground/sam-nest/concept/sam-nest-r60-a.gif" alt="a · motion"></a><figcaption>a · motion</figcaption></figure><figure class="m img"><a href="../../enemies/ground/sam-nest/concept/rejected/sam-nest-r60-b.gif"><img loading="lazy" decoding="async" src="../../enemies/ground/sam-nest/concept/rejected/sam-nest-r60-b.gif" alt="b · motion"></a><figcaption>b · motion</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the b homing diamond (a gold kite) is close in colour to the base's gold edges</p>
+<div class="ans"><span class="tag">Answer</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other variant in <code>concept/rejected/</code>; re-rendered in gunmetal in production (Q.11 b)</span></div>
+</article>
+<article class="row" id="r-A.12">
+<header><span class="rid">A.12</span><h3>Sentinel Tower (L32)</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../enemies/ground/sentinel-tower/README.md">Sentinel Tower (L32)</a></div>
+<div class="q"><strong>pick a or b</strong> (art, the chosen look in the belt livery of Q.11 a). <strong>a</strong> Sentinel Tower A, lighthouse — a gold-banded octagonal hardened collar, a round shaft, a black sphere head with a gold equator ring and a lens snout; strong rim. <strong>b</strong> Sentinel Tower B, pylon — a square collar with four gold-edged buttress fins, a flat disc head with a gold rim and a long crimson slit lens.</div>
+<div class="media"><figure class="m img"><a href="../../enemies/ground/sentinel-tower/concept/sentinel-tower-r60-a.png"><img loading="lazy" decoding="async" src="../../enemies/ground/sentinel-tower/concept/sentinel-tower-r60-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/ground/sentinel-tower/concept/rejected/sentinel-tower-r60-b.png"><img loading="lazy" decoding="async" src="../../enemies/ground/sentinel-tower/concept/rejected/sentinel-tower-r60-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/ground/sentinel-tower/concept/sentinel-tower-r60-a.gif"><img loading="lazy" decoding="async" src="../../enemies/ground/sentinel-tower/concept/sentinel-tower-r60-a.gif" alt="a · motion"></a><figcaption>a · motion</figcaption></figure><figure class="m img"><a href="../../enemies/ground/sentinel-tower/concept/rejected/sentinel-tower-r60-b.gif"><img loading="lazy" decoding="async" src="../../enemies/ground/sentinel-tower/concept/rejected/sentinel-tower-r60-b.gif" alt="b · motion"></a><figcaption>b · motion</figcaption></figure></div>
+<div class="ans"><span class="tag">Answer</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other variant in <code>concept/rejected/</code>; re-rendered in gunmetal in production (Q.11 b)</span></div>
+</article>
+<article class="row" id="r-A.13">
+<header><span class="rid">A.13</span><h3>Rail Bunker (L33)</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../enemies/ground/rail-bunker/README.md">Rail Bunker (L33)</a></div>
+<div class="q"><strong>pick a or b</strong> (art, the chosen look in the belt livery of Q.11 a). <strong>a</strong> Rail Bunker A, solid lock line — a thin red line from the muzzle through the ship to the edge, brightening 1 → 2 px over 1.0 s while the coils glow gold; the rail shot. <strong>b</strong> Rail Bunker B, dashed line with running chevrons — a dashed red line with gold chevrons running out along it, faster as the charge builds, solid for the last 0.2 s.</div>
+<div class="media"><figure class="m img"><a href="../../enemies/ground/rail-bunker/concept/rail-bunker-r60-a.png"><img loading="lazy" decoding="async" src="../../enemies/ground/rail-bunker/concept/rail-bunker-r60-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/ground/rail-bunker/concept/rejected/rail-bunker-r60-b.png"><img loading="lazy" decoding="async" src="../../enemies/ground/rail-bunker/concept/rejected/rail-bunker-r60-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/ground/rail-bunker/concept/rail-bunker-r60-a.gif"><img loading="lazy" decoding="async" src="../../enemies/ground/rail-bunker/concept/rail-bunker-r60-a.gif" alt="a · motion"></a><figcaption>a · motion</figcaption></figure><figure class="m img"><a href="../../enemies/ground/rail-bunker/concept/rejected/rail-bunker-r60-b.gif"><img loading="lazy" decoding="async" src="../../enemies/ground/rail-bunker/concept/rejected/rail-bunker-r60-b.gif" alt="b · motion"></a><figcaption>b · motion</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> it gained a gold rim on the octagon, a change to its chosen round 04 look (to meet Q11 a's gold share)</p>
+<div class="ans"><span class="tag">Answer</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other variant in <code>concept/rejected/</code>; re-rendered in gunmetal in production (Q.11 b)</span></div>
+</article>
+<article class="row" id="r-A.14">
+<header><span class="rid">A.14</span><h3>Strider (L32)</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../enemies/ground/strider/README.md">Strider (L32)</a></div>
+<div class="q"><strong>pick a or b</strong> (art, the chosen look in the belt livery of Q.11 a). <strong>a</strong> Strider A, rigid fall — it falls as one piece about its foot line, accelerating, onto the marked strip, and crushes a Rail Bunker; the new shoulder pod. <strong>b</strong> Strider B, buckle and crumple — the lost leg's knee buckles, it pitches over and the torso breaks off the legs: two pieces.</div>
+<div class="media"><figure class="m img"><a href="../../enemies/ground/strider/concept/rejected/strider-r60-a.png"><img loading="lazy" decoding="async" src="../../enemies/ground/strider/concept/rejected/strider-r60-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/ground/strider/concept/strider-r60-b.png"><img loading="lazy" decoding="async" src="../../enemies/ground/strider/concept/strider-r60-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/ground/strider/concept/rejected/strider-r60-a.gif"><img loading="lazy" decoding="async" src="../../enemies/ground/strider/concept/rejected/strider-r60-a.gif" alt="a · motion"></a><figcaption>a · motion</figcaption></figure><figure class="m img"><a href="../../enemies/ground/strider/concept/strider-r60-b.gif"><img loading="lazy" decoding="async" src="../../enemies/ground/strider/concept/strider-r60-b.gif" alt="b · motion"></a><figcaption>b · motion</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the b homing diamond (a gold kite) is close in colour to the hull gold</p>
+<div class="ans"><span class="tag">Answer</span> <span><strong>b</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other variant in <code>concept/rejected/</code>; re-rendered in gunmetal in production (Q.11 b)</span></div>
+</article>
+<article class="row" id="r-A.15">
+<header><span class="rid">A.15</span><h3>Warden Tank in livery (L34)</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../enemies/ground/warden-tank/README.md">Warden Tank in livery (L34)</a></div>
+<div class="q"><strong>pick a or b</strong> (art, the chosen look in the belt livery of Q.11 a). <strong>a</strong> Warden Tank A, r05 livery with red running lights — gloss black, the r05 gold side stripes, turret ring and muzzle, gold track edges, the white accent, red running lights; strong rim. <strong>b</strong> Warden Tank B, heavier gold — gold track guards, a gold engine deck and a gold turret roof on the same model.</div>
+<div class="media"><figure class="m img"><a href="../../enemies/ground/warden-tank/concept/rejected/warden-tank-r60-a.png"><img loading="lazy" decoding="async" src="../../enemies/ground/warden-tank/concept/rejected/warden-tank-r60-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/ground/warden-tank/concept/warden-tank-r60-b.png"><img loading="lazy" decoding="async" src="../../enemies/ground/warden-tank/concept/warden-tank-r60-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/ground/warden-tank/concept/rejected/warden-tank-r60-a.gif"><img loading="lazy" decoding="async" src="../../enemies/ground/warden-tank/concept/rejected/warden-tank-r60-a.gif" alt="a · motion"></a><figcaption>a · motion</figcaption></figure><figure class="m img"><a href="../../enemies/ground/warden-tank/concept/warden-tank-r60-b.gif"><img loading="lazy" decoding="async" src="../../enemies/ground/warden-tank/concept/warden-tank-r60-b.gif" alt="b · motion"></a><figcaption>b · motion</figcaption></figure></div>
+<div class="ans"><span class="tag">Answer</span> <span><strong>b</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other variant in <code>concept/rejected/</code>; re-rendered in gunmetal in production (Q.11 b)</span></div>
+</article>
+<article class="row" id="r-A.16">
+<header><span class="rid">A.16</span><h3>The homing diamond</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../art-direction/README.md">The homing diamond</a></div>
+<div class="q"><strong>pick a or b</strong> (art; every Act 5 homing missile: the Hornet's pods, the SAM Nest, the Strider's pod, the Sovereign's batteries). <strong>a</strong> a broad crimson-red diamond with a dark rim, a gold inner diamond, a white-hot core and a short thin pale-gold exhaust, 32 headings. <strong>b</strong> a slimmer gold kite with a long nose, a red core, a white tip and a dotted pale-gold exhaust of three fading dots. The unit sheets draw a with their a variants and b with their b.</div>
+<div class="media"><figure class="m img"><a href="../../enemies/concept/homing-diamond-r60-a.png"><img loading="lazy" decoding="async" src="../../enemies/concept/homing-diamond-r60-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/concept/rejected/homing-diamond-r60-b.png"><img loading="lazy" decoding="async" src="../../enemies/concept/rejected/homing-diamond-r60-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/concept/homing-diamond-r60-a.gif"><img loading="lazy" decoding="async" src="../../enemies/concept/homing-diamond-r60-a.gif" alt="a · motion"></a><figcaption>a · motion</figcaption></figure><figure class="m img"><a href="../../enemies/concept/rejected/homing-diamond-r60-b.gif"><img loading="lazy" decoding="async" src="../../enemies/concept/rejected/homing-diamond-r60-b.gif" alt="b · motion"></a><figcaption>b · motion</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> b (gold) is close to the hull gold of the Hornet, SAM Nest and Strider it flies from; a (red) stands out</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other variant in <code>concept/rejected/</code>; re-rendered in gunmetal in production (Q.11 b)</span></div>
+</article>
+</section>
+<section id="s-art-boss-world-and-people"><h2>Art: boss, world and people</h2>
+<div class="sum"><p>The Iron Sovereign, the belt's mood, the tug, Vorne's portraits, the speakers sheet and the wavering Stormhawks; generator <code>tools/concept/belt_r60.py</code> and <code>tools/concept/enemies_r60.py</code>.</p></div>
+<article class="row" id="r-A.17">
+<header><span class="rid">A.17</span><h3>The Iron Sovereign (L35)</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../enemies/bosses/iron-sovereign/README.md">The Iron Sovereign (L35)</a></div>
+<div class="q"><strong>pick a or b</strong> (art, boss). About 440 px across (the core 80 px, ring bands at 70-100, 123-157 and 180-220 px from the centre): three counter-turning rings of 6, 4 and 3 batteries around the core. <strong>a</strong> Iron Sovereign A, continuous wheel — the segments butt into smooth rings, gold lips and teeth on every rim, red lights on the ribs. <strong>b</strong> Iron Sovereign B, armoured links — every segment a separate block with a dark gap and a gold-edged cap plate, the gaps reading the turning.</div>
+<div class="media"><figure class="m img"><a href="../../enemies/bosses/iron-sovereign/concept/rejected/iron-sovereign-r60-a.png"><img loading="lazy" decoding="async" src="../../enemies/bosses/iron-sovereign/concept/rejected/iron-sovereign-r60-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/bosses/iron-sovereign/concept/iron-sovereign-r60-b.png"><img loading="lazy" decoding="async" src="../../enemies/bosses/iron-sovereign/concept/iron-sovereign-r60-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/bosses/iron-sovereign/concept/rejected/iron-sovereign-r60-a.gif"><img loading="lazy" decoding="async" src="../../enemies/bosses/iron-sovereign/concept/rejected/iron-sovereign-r60-a.gif" alt="a · motion"></a><figcaption>a · motion</figcaption></figure><figure class="m img"><a href="../../enemies/bosses/iron-sovereign/concept/iron-sovereign-r60-b.gif"><img loading="lazy" decoding="async" src="../../enemies/bosses/iron-sovereign/concept/iron-sovereign-r60-b.gif" alt="b · motion"></a><figcaption>b · motion</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the gold share on the station is under Q.11 a's 20 % (19 % and 16 %); the atlas budget is A.23's question</p>
+<div class="ans"><span class="tag">Answer</span> <span><strong>b</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>armoured links chosen; a rejected</span></div>
+</article>
+<article class="row" id="r-A.23">
+<header><span class="rid">A.23</span><h3>The Sovereign&#x27;s atlas budget</h3><span class="kind">pick one</span></header>
+<div class="part"><a href="../../enemies/bosses/iron-sovereign/README.md#implementation">The Sovereign's atlas budget</a></div>
+<div class="q"><strong>pick one</strong> (art production; a question about how it is built). Rendered at full sun, the turning rings need <strong>3.1-3.6 atlas pages</strong> (every segment at every heading with the light turning with it), against the ticket's 1 page (the whole of Level 35 stays at 6 pages or under, as Level 28's 7). <strong>proposed (top-lit):</strong> the segments rendered once with the light fixed from the top (45 degree segments), rotated in 90 degree turns and mirrored, plus a rim-light overlay: about <strong>0.6 pages</strong>, losing the sun gradient round the wheel (the highlight no longer travels with the sun). <strong>full sun:</strong> 3.1-3.6 pages, the full gradient, the level's atlas over the budget (so some other level art would shrink).</div>
+<div class="media"><figure class="m img"><a href="../../enemies/bosses/iron-sovereign/concept/rejected/iron-sovereign-r60-a.png"><img loading="lazy" decoding="async" src="../../enemies/bosses/iron-sovereign/concept/rejected/iron-sovereign-r60-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/bosses/iron-sovereign/concept/iron-sovereign-r60-b.png"><img loading="lazy" decoding="async" src="../../enemies/bosses/iron-sovereign/concept/iron-sovereign-r60-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the cost is measured on the proposal's sheets, not built</p>
+<p class="rec"><span class="tag">Recommendation</span> top-lit</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>top-lit</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>about 0.6 atlas pages; full sun rejected</span></div>
+</article>
+<article class="row" id="r-A.18">
+<header><span class="rid">A.18</span><h3>The belt moods, Levels 29-35</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../world/belt/README.md">The belt moods, Levels 29-35</a></div>
+<div class="q"><strong>pick a or b</strong> (art; the backdrops' grade). One still per level (lit Ceres Hub with a block turned red, the shipping lane's dust band and buoys, the rock field with the tug, the tunnels and the refinery's glow, the leech field, the graveyard, Ceres orbit under the station's rim), each with its mean luminance and its darkest 200 by 96 window. <strong>a</strong> a step lighter than Act 4 (Q.11 a). <strong>b</strong> harsh: the same seven stills under Act 4's deep-shadow grade.</div>
+<div class="media"><figure class="m img"><a href="../../world/belt/concept/belt-moods-r60-a.png"><img loading="lazy" decoding="async" src="../../world/belt/concept/belt-moods-r60-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../world/belt/concept/rejected/belt-moods-r60-b.png"><img loading="lazy" decoding="async" src="../../world/belt/concept/rejected/belt-moods-r60-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the darkest windows of Levels 30, 31 and 35 are near-black</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>the lighter grade chosen; b rejected</span></div>
+</article>
+<article class="row" id="r-A.19">
+<header><span class="rid">A.19</span><h3>The mining tug Bellwether (L31)</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../allies/mining-tug/README.md">The mining tug <em>Bellwether</em> (L31)</a></div>
+<div class="q"><strong>pick a or b</strong> (art; size by J.6). <strong>a</strong> Mining tug A, ore frame — yellow-grey hazard girders, a blunt bridge with a crane and grapple, white habitat cans and ochre ore boxes lashed on, three drive bells in a tank ring. <strong>b</strong> Mining tug B, pressure hull — one enclosed older hull, the sections told by colour bands and hazard chevrons at the waists, window rows, side tanks, one big and two small bells.</div>
+<div class="media"><figure class="m img"><a href="../../allies/mining-tug/concept/rejected/mining-tug-r60-a.png"><img loading="lazy" decoding="async" src="../../allies/mining-tug/concept/rejected/mining-tug-r60-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../allies/mining-tug/concept/mining-tug-r60-b.png"><img loading="lazy" decoding="async" src="../../allies/mining-tug/concept/mining-tug-r60-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../allies/mining-tug/concept/rejected/mining-tug-r60-a.gif"><img loading="lazy" decoding="async" src="../../allies/mining-tug/concept/rejected/mining-tug-r60-a.gif" alt="a · motion"></a><figcaption>a · motion</figcaption></figure><figure class="m img"><a href="../../allies/mining-tug/concept/mining-tug-r60-b.gif"><img loading="lazy" decoding="async" src="../../allies/mining-tug/concept/mining-tug-r60-b.gif" alt="b · motion"></a><figcaption>b · motion</figcaption></figure></div>
+<div class="ans"><span class="tag">Answer</span> <span><strong>b</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>the pressure hull chosen; a rejected</span></div>
+</article>
+<article class="row" id="r-A.20">
+<header><span class="rid">A.20</span><h3>Vorne&#x27;s production portraits</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../story/characters/vorne/README.md">Vorne's production portraits</a></div>
+<div class="q"><strong>pick a or b</strong> (art; the enemy-channel portrait in neutral, smug and cold-rage expressions, at radio 72 px and briefing 144 px). <strong>a</strong> Round 60, production portraits A — the enemy screen: radio 72 px and briefing 144 px in neutral, smug (head back, one brow up) and rage (cold: brows down, teeth bared and clenched, the screen tearing with static), one palette, on the plain amber screen. <strong>b</strong> Round 60, production portraits B — the Chairman's office: the same three with the gilded Ascendancy crest (sun rays over a ringed planet) behind his head and gold pilasters.</div>
+<div class="media"><figure class="m img"><a href="../../story/characters/vorne/concept/vorne-portraits-r60-a.png"><img loading="lazy" decoding="async" src="../../story/characters/vorne/concept/vorne-portraits-r60-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../story/characters/vorne/concept/rejected/vorne-portraits-r60-b.png"><img loading="lazy" decoding="async" src="../../story/characters/vorne/concept/rejected/vorne-portraits-r60-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the rage face's teeth are faint at the radio's 72 px</p>
+<div class="ans"><span class="tag">Answer</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>the plain amber screen chosen; b rejected</span></div>
+</article>
+<article class="row" id="r-A.21">
+<header><span class="rid">A.21</span><h3>The Act 5 radio speakers</h3><span class="kind">accept or redo</span></header>
+<div class="part"><a href="../../story/characters/README.md#act-5-speakers-draft">The Act 5 radio speakers</a></div>
+<div class="q"><strong>accept or redo</strong> (art, one sheet). Ceres Hub Control and the <em>Bellwether</em>'s captain (teal) and Harker (amber, the Ascendancy crest stitched over his CDF patch), at 72 px in the radio speakers' style B, neutral only, at 1x, 3x and in a line-up with the production speakers.</div>
+<div class="media"><figure class="m img"><a href="../../story/characters/concept/act5-speakers-r60-a.png"><img loading="lazy" decoding="async" src="../../story/characters/concept/act5-speakers-r60-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>the speakers sheet accepted</span></div>
+</article>
+<article class="row" id="r-A.22">
+<header><span class="rid">A.22</span><h3>The wavering Stormhawks (L29)</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../campaign/act-5-the-belt/level-29-betrayal-at-ceres/README.md">The wavering Stormhawks (L29)</a></div>
+<div class="q"><strong>pick a or b</strong> (art; Q.10 b's repainted CDF craft, 40 by 40 px, a white IFF light). <strong>a</strong> Wavering Stormhawk A, Ceres Wing ochre — the CDF airframe in grey with sand-ochre panels, the Ascendancy crest painted over the roundel, the white IFF light. <strong>b</strong> Wavering Stormhawk B, hasty blackout — the CDF scheme half overpainted black, the crest stencilled.</div>
+<div class="media"><figure class="m img"><a href="../../campaign/act-5-the-belt/concept/wavering-stormhawk-r60-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-5-the-belt/concept/wavering-stormhawk-r60-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../campaign/act-5-the-belt/concept/rejected/wavering-stormhawk-r60-b.png"><img loading="lazy" decoding="async" src="../../campaign/act-5-the-belt/concept/rejected/wavering-stormhawk-r60-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../campaign/act-5-the-belt/concept/wavering-stormhawk-r60-a.gif"><img loading="lazy" decoding="async" src="../../campaign/act-5-the-belt/concept/wavering-stormhawk-r60-a.gif" alt="a · motion"></a><figcaption>a · motion</figcaption></figure><figure class="m img"><a href="../../campaign/act-5-the-belt/concept/rejected/wavering-stormhawk-r60-b.gif"><img loading="lazy" decoding="async" src="../../campaign/act-5-the-belt/concept/rejected/wavering-stormhawk-r60-b.gif" alt="b · motion"></a><figcaption>b · motion</figcaption></figure></div>
+<div class="ans"><span class="tag">Answer</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>Ceres Wing ochre chosen; b rejected</span></div>
+</article>
+</section>
+<section id="s-music"><h2>Music</h2>
+<div class="sum"><p>Two cues for track 13 and Rook's sting (track 31), sketches of about a minute; the full lengths and stems come at part D.</p></div>
+<article class="row" id="r-M.1">
+<header><span class="rid">M.1</span><h3>Track 13, the Act 5 B theme (act5-b-theme)</h3><span class="kind">pick a or b</span></header>
+<div class="part">[Track 13, the Act 5 B theme (<code>act5-b-theme</code>)](../../audio/music/README.md#act-5-music-draft-round-60)</div>
+<div class="q"><strong>pick a or b</strong>. <strong>Plays:</strong> Levels 31, 33 and the Level 35 approach (the A/B split in the music README's <em>Cues per level (Act 5)</em>): the B theme of the belt, the act where the enemy is human. <strong>Should sound like:</strong> colder and more industrial than the A theme "Hollow Rock"; no bubbly or popping sounds, no resonant plucks; one sketch with Vorne's motif in the open. <strong>a "Gilded Cage"</strong> (57.6 s, a seamless loop of 45.7 s): EBM and industrial techno, 126 BPM, E minor: a four-on-the-floor kick, a gated distorted 16th bass sequence, struck sheet metal, chains and a press hammer as the percussion, a cold string pad; Vorne's motif stated in the open by low brass and organ every 8 bars (4.6 dB under the full mix), the struck metal answering it. <strong>b "Iron Vein"</strong> (58.7 s, a seamless loop of 48.0 s): half-time, 140 BPM, G minor, darker and roomier: a heavy beat with one huge snare a bar, a sub bass, a grinding drill texture, a cold pad, a drumless middle; the motif only in the machines, a sequencer arpeggio inside the groove (no brass).</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/music/concept/act5-b-theme-r60-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/music/concept/rejected/act5-b-theme-r60-b.ogg"></audio></figure><figure class="m aud"><figcaption>compare: the A theme, Hollow Rock</figcaption><audio controls preload="none" src="../../audio/music/concept/belt-theme-r03-a.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> a runs at 126 BPM, not the draft's 128 (the sample-exact loop needs a whole-sample 16th); sketches (≈ 1 min), the full length and stems come at M9 part D</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>"Gilded Cage" (126 BPM) chosen; b rejected</span></div>
+</article>
+<article class="row" id="r-M.2">
+<header><span class="rid">M.2</span><h3>Rook&#x27;s return sting (track 31, rook-return)</h3><span class="kind">pick a or b</span></header>
+<div class="part">[Rook's return sting (track 31, <code>rook-return</code>)](../../audio/music/README.md#act-5-music-draft-round-60)</div>
+<div class="q"><strong>pick a or b</strong>. <strong>Plays:</strong> Level 29, once: as the prison tender opens and Rook's Ember launches, over the theme ducked −6 dB for 5 s. <strong>Should sound like:</strong> the main motif's horn call answering Vorne's motif, a short brass lift on a timpani roll, about 5 s, ending on the theme's tonic (B) so the full mix carries on. <strong>a "Horn Call"</strong> (5.6 s): a timpani roll and low strings for one beat, then the horn call (D A D E F♯) in horns over D – A – G strings, its last note held over a B minor chord. <strong>b "Answer"</strong> (6.2 s): Vorne's motif first, low and quiet in organ and cellos, a snare roll, then the horn call answers brighter with trumpets on top and lands on the same B minor chord with a timpani hit.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/music/concept/rook-return-r60-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/music/concept/rejected/rook-return-r60-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> both at the A theme's 135 BPM but not synced to it (a one-shot over the ducked theme)</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>"Horn Call" chosen; b rejected</span></div>
+</article>
+</section>
+<section id="s-sounds"><h2>Sounds</h2>
+<div class="sum"><p>The nineteen sounds of Act 5, cut from Freesound's public previews (CC0 or CC-BY, recorded in <span class="ref">CREDITS.md</span>) or, for the mine's blink, synthesised.</p></div>
+<article class="row" id="r-S.1">
+<header><span class="rid">S.1</span><h3>The enemy shield: a hit (enemy-shield-hit)</h3><span class="kind">pick a or b</span></header>
+<div class="part">[The enemy shield: a hit (<code>enemy-shield-hit</code>)](../../audio/sfx/README.md#act-5-sounds-draft-round-60)</div>
+<div class="q"><strong>pick a or b</strong>. <strong>Plays:</strong> every hit on a hex shield of the Talon, the Hornet, the Gilded Gunship and the Iron Sovereign's core (the shared hex shield), throttled to once per 0.15 s per unit: often, under the fire. <strong>Should sound like:</strong> a small glassy tick: a glass tapped with metal, dry and short; no ring-out, no pop. <strong>a</strong> (0.18 s): a knife tapping a wine glass: a bright dry 'tink', 0.18 s. <strong>b</strong> (0.18 s): a large wine glass tapped, slowed to 0.85 (a little lower and fuller than a), with the tip of an anvil strike sped up under it for the metal: a 'tick' with more body, 0.16 s.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/enemy-shield-hit-r60-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/enemy-shield-hit-r60-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> a sits mostly above 5 kHz (8 % of its energy in the 200 Hz–5 kHz band): bright, may read as a click on small speakers</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other variant in <code>concept/rejected/</code></span></div>
+</article>
+<article class="row" id="r-S.2">
+<header><span class="rid">S.2</span><h3>The enemy shield: emptied (enemy-shield-break)</h3><span class="kind">pick a or b</span></header>
+<div class="part">[The enemy shield: emptied (<code>enemy-shield-break</code>)](../../audio/sfx/README.md#act-5-sounds-draft-round-60)</div>
+<div class="q"><strong>pick a or b</strong>. <strong>Plays:</strong> a hex shield of the Talon, the Hornet, the Gilded Gunship and the Iron Sovereign's core (the shared hex shield) emptied (by damage, a <code>shield-breaker</code> hit or the EMP): now and then, a clear reward. <strong>Should sound like:</strong> a brittle shatter: tempered glass bursting, about 0.3 s, small enough for a Talon. <strong>a</strong> (0.38 s): a hit on a car's windshield: a hard crack and the safety glass crazing, 0.38 s. <strong>b</strong> (0.36 s): a glass breaking, cut to the burst and its first shards, over the wine glass's tap sped up (the shield's own 'tick' in the burst): brighter and more splintery than a, 0.36 s.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/enemy-shield-break-r60-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/enemy-shield-break-r60-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> a is mostly high (33 % in band), held at its ceiling, so 5 dB under the target in band</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge pick">not the recommendation</span> <span><strong>b</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other variant in <code>concept/rejected/</code></span></div>
+</article>
+<article class="row" id="r-S.3">
+<header><span class="rid">S.3</span><h3>The enemy shield: the refill (enemy-shield-refill)</h3><span class="kind">pick a or b</span></header>
+<div class="part">[The enemy shield: the refill (<code>enemy-shield-refill</code>)](../../audio/sfx/README.md#act-5-sounds-draft-round-60)</div>
+<div class="q"><strong>pick a or b</strong>. <strong>Plays:</strong> a hex shield of the Talon, the Hornet, the Gilded Gunship and the Iron Sovereign's core (the shared hex shield) starting to refill after its delay: now and then. <strong>Should sound like:</strong> a soft rising electrical shimmer, quiet: a feedback cue that the shield is back. <strong>a</strong> (0.70 s): a rising electric hum, its pitch gliding up an octave over the cue and swelling in, the wine glass's ring slowed to 0.7 faint under its end: 0.7 s. <strong>b</strong> (0.70 s): a Tesla coil humming and sparking, high-passed to its fizz and gliding up: a crackling shimmer, more electric than a, 0.7 s.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/enemy-shield-refill-r60-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/enemy-shield-refill-r60-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> b (the Tesla coil) is fizzier and quieter in band than a</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other variant in <code>concept/rejected/</code></span></div>
+</article>
+<article class="row" id="r-S.4">
+<header><span class="rid">S.4</span><h3>The homing missile: launch (homing-launch)</h3><span class="kind">pick a or b</span></header>
+<div class="part">[The homing missile: launch (<code>homing-launch</code>)](../../audio/sfx/README.md#act-5-sounds-draft-round-60)</div>
+<div class="q"><strong>pick a or b</strong>. <strong>Plays:</strong> each homing-missile launch of the Hornet's pods, the SAM Nest, the Strider's pod and the Iron Sovereign's SAM batteries (the shared homing diamond; Levels 29-35); pitched per launcher in the game (the Hornet's pods higher, the SAM racks lower); a salvo plays it 2-4 times in a row. <strong>Should sound like:</strong> a short hissing rocket launch (a model rocket or a firework's launch, cut short); the round compares it with reusing the chosen enemy missile launch (concept/enemy-missile-r08-a.ogg). <strong>a</strong> (0.60 s): a rocket's launch: an ignition and a hard rushing hiss, cut short, 0.6 s. <strong>b</strong> (0.55 s): a bottle rocket going off (a sharp ignition and a thin whooshing hiss) over a hobby rocket's burn: thinner and higher than a, 0.55 s.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/homing-launch-r60-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/homing-launch-r60-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the chosen enemy missile launch (<span class="ref">r08 a</span>) is the third option: reuse it pitched per launcher</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge pick">not the recommendation</span> <span><strong>b</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other variant in <code>concept/rejected/</code></span></div>
+</article>
+<article class="row" id="r-S.5">
+<header><span class="rid">S.5</span><h3>The homing missile: the run (loop) (homing-run)</h3><span class="kind">pick a or b</span></header>
+<div class="part">[The homing missile: the run (loop) (<code>homing-run</code>)](../../audio/sfx/README.md#act-5-sounds-draft-round-60)</div>
+<div class="q"><strong>pick a or b</strong>. <strong>Plays:</strong> one quiet loop while any homing missile flies (Level 31's 'missile run'), for the nearest. <strong>Should sound like:</strong> a thin rocket-motor hiss, quiet, steady, under the fire; no whistle. <strong>a</strong> (a seamless loop, 1.0 s): a hobby rocket's burn at its steadiest, thinned (high-passed at 400 Hz): a fizzing hiss, 1.0 s loop. <strong>b</strong> (a seamless loop, 1.0 s): the rocket launch's sustained rush sped to 1.1: rougher and more of a roar than a, 1.0 s loop.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/homing-run-r60-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/homing-run-r60-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> a fades about 6 dB over its 1 s (the burn decaying), so the loop pulses once a second</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other variant in <code>concept/rejected/</code></span></div>
+</article>
+<article class="row" id="r-S.6">
+<header><span class="rid">S.6</span><h3>The homing missile: shot down (homing-down)</h3><span class="kind">pick a or b</span></header>
+<div class="part">[The homing missile: shot down (<code>homing-down</code>)](../../audio/sfx/README.md#act-5-sounds-draft-round-60)</div>
+<div class="q"><strong>pick a or b</strong>. <strong>Plays:</strong> a homing missile shot down (by the player's fire or a shield-breaker): often in a salvo. <strong>Should sound like:</strong> a small dry crack with a metal ring; no pop, smaller than an enemy's death. <strong>a</strong> (0.45 s): a whip crack's dry snap with an anvil strike sped to 1.2 ringing under it: 'crack-ting', 0.45 s. <strong>b</strong> (0.42 s): a distant propelled grenade's burst (a dry thud-crack) with a struck iron bar's ring: darker and more of a blast than a, 0.42 s.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/homing-down-r60-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/homing-down-r60-b.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge pick">not the recommendation</span> <span><strong>b</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other variant in <code>concept/rejected/</code></span></div>
+</article>
+<article class="row" id="r-S.7">
+<header><span class="rid">S.7</span><h3>The rail line: the charge (rail-charge)</h3><span class="kind">pick a or b</span></header>
+<div class="part">[The rail line: the charge (<code>rail-charge</code>)](../../audio/sfx/README.md#act-5-sounds-draft-round-60)</div>
+<div class="q"><strong>pick a or b</strong>. <strong>Plays:</strong> the rail line's 1.0 s telegraph: the Rail Bunker's rail, the Iron Sovereign's rail batteries and (its long version) Level 35's mass relay; the shot follows at its end. <strong>Should sound like:</strong> a rising capacitor whine (a camera flash charging, pitched down) over a low hum, exactly as long as the telegraph (1.0 s), building to the shot. <strong>a</strong> (1.00 s): a camera flash's charging whine pitched down and gliding up an octave, swelling, over a 50 Hz mains hum: 'wheeeee' rising to the shot, 1.0 s. <strong>b</strong> (1.00 s): a rising electric hum gliding up, swelling hard at its end, over a transformer's hum slowed to 0.8: lower and more of a building drone than a, 1.0 s.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/rail-charge-r60-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rail-charge-r60-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> both end abruptly (30 ms) so the shot lands on the cut</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge pick">not the recommendation</span> <span><strong>b</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other variant in <code>concept/rejected/</code></span></div>
+</article>
+<article class="row" id="r-S.8">
+<header><span class="rid">S.8</span><h3>The rail line: the shot (rail-shot)</h3><span class="kind">pick a or b</span></header>
+<div class="part">[The rail line: the shot (<code>rail-shot</code>)](../../audio/sfx/README.md#act-5-sounds-draft-round-60)</div>
+<div class="q"><strong>pick a or b</strong>. <strong>Plays:</strong> each rail shot: the Rail Bunker's rail, the Iron Sovereign's rail batteries and (its long version) Level 35's mass relay (the mass relay plays it with a long thunder tail, made at the part). <strong>Should sound like:</strong> a violent electric crack with a short metallic ring (a large spark gap or a whip crack layered on a heavy gunshot). <strong>a</strong> (0.90 s): a high-voltage discharge's crack on a .50 calibre sniper shot, an anvil strike slowed to 0.8 ringing under them: a hard electric 'KRACK' with a metal ring and the rifle's boom, 0.9 s. <strong>b</strong> (0.91 s): a whip crack on a howitzer's shot, a long metal 'PING' under them: heavier and more of a cannon than a, the ring brighter, 0.9 s.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/rail-shot-r60-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rail-shot-r60-b.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge pick">not the recommendation</span> <span><strong>b</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other variant in <code>concept/rejected/</code></span></div>
+</article>
+<article class="row" id="r-S.9">
+<header><span class="rid">S.9</span><h3>The Ascendancy turbines (loop) (ascendancy-turbine)</h3><span class="kind">pick a or b</span></header>
+<div class="part">[The Ascendancy turbines (loop) (<code>ascendancy-turbine</code>)](../../audio/sfx/README.md#act-5-sounds-draft-round-60)</div>
+<div class="q"><strong>pick a or b</strong>. <strong>Plays:</strong> the engine loops of the Gilded Gunship, the Hornet and the Minelayer, once per kind, for the nearest; pitched per hull in the game (the Gunship this pitch, the Hornet higher, the Minelayer lower). <strong>Should sound like:</strong> a real jet or turbine idle: a deep turbine drone, quiet, under the enemy fire. <strong>a</strong> (a seamless loop, 6.0 s): an F-22's idle slowed to 0.6: a deep steady turbine drone with its high whine kept faint, 6.0 s loop. <strong>b</strong> (a seamless loop, 6.0 s): a jet idling or taxiing slowed to 0.65: rougher, with a throbbing low end and a thinner whine than a, 6.0 s loop.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/ascendancy-turbine-r60-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/ascendancy-turbine-r60-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> one loop for three hulls: the game pitches it (the Hornet up, the Minelayer down)</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other variant in <code>concept/rejected/</code></span></div>
+</article>
+<article class="row" id="r-S.10">
+<header><span class="rid">S.10</span><h3>The generator brown-out (loop) (brownout-hum)</h3><span class="kind">pick a or b</span></header>
+<div class="part">[The generator brown-out (loop) (<code>brownout-hum</code>)](../../audio/sfx/README.md#act-5-sounds-draft-round-60)</div>
+<div class="q"><strong>pick a or b</strong>. <strong>Plays:</strong> a loop while the generator's drained output is below the load (the Void Leech's drain, the Shard Drone's links): the player's ship browning out. <strong>Should sound like:</strong> a low sagging hum (a transformer under load, its pitch drooping) with a faint relay chatter; uneasy, not an alarm. <strong>a</strong> (a seamless loop, 8.0 s): a transformer's hum in a large room slowed to 0.85, sagging 5 dB every 2 s, a relay clicking twice and once more now and then: 8.0 s loop. <strong>b</strong> (a seamless loop, 8.0 s): a power transformer in a basement slowed to 0.8, sagging 6 dB every 4 s, a contactor and motor relays chattering once a loop: buzzier than a, 8.0 s loop.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/brownout-hum-r60-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/brownout-hum-r60-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the sag is a level dip, not a pitch droop (a loop cannot droop); the falling two-note warning one-shot is synthesized at the part</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other variant in <code>concept/rejected/</code></span></div>
+</article>
+<article class="row" id="r-S.11">
+<header><span class="rid">S.11</span><h3>The intercept: open (intercept-open)</h3><span class="kind">pick a or b</span></header>
+<div class="part">[The intercept: open (<code>intercept-open</code>)](../../audio/sfx/README.md#act-5-sounds-draft-round-60)</div>
+<div class="q"><strong>pick a or b</strong>. <strong>Plays:</strong> an enemy-channel line (the HUD) or an intercepted briefing page opening, instead of the squelch: Vorne and Harker. <strong>Should sound like:</strong> a short static sweep: a shortwave receiver tuned across a band onto a strong carrier, 0.3 s, no crackle. <strong>a</strong> (0.35 s): a radio tuned through static, played gliding down from 1.8 to 0.9, landing on a steady shortwave noise: 'shhwip-hhh', 0.35 s. <strong>b</strong> (0.30 s): an AM radio tuned across the band, gliding up and swelling in: a rising sweep, 0.3 s.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/intercept-open-r60-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/intercept-open-r60-b.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other variant in <code>concept/rejected/</code></span></div>
+</article>
+<article class="row" id="r-S.12">
+<header><span class="rid">S.12</span><h3>The intercept: close (intercept-close)</h3><span class="kind">pick a or b</span></header>
+<div class="part">[The intercept: close (<code>intercept-close</code>)](../../audio/sfx/README.md#act-5-sounds-draft-round-60)</div>
+<div class="q"><strong>pick a or b</strong>. <strong>Plays:</strong> an enemy-channel line or intercepted page closing. <strong>Should sound like:</strong> the open's sweep falling away, 0.3 s, no crackle. <strong>a</strong> (0.32 s): the radio's static gliding down from 1.0 to 0.5 and fading: a falling 'hhwoo', 0.3 s. <strong>b</strong> (0.30 s): the AM radio's sweep gliding down and fading, 0.3 s.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/intercept-close-r60-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/intercept-close-r60-b.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other variant in <code>concept/rejected/</code></span></div>
+</article>
+<article class="row" id="r-S.13">
+<header><span class="rid">S.13</span><h3>The intercept: carrier hiss (loop) (intercept-carrier)</h3><span class="kind">pick a or b</span></header>
+<div class="part">[The intercept: carrier hiss (loop) (<code>intercept-carrier</code>)](../../audio/sfx/README.md#act-5-sounds-draft-round-60)</div>
+<div class="q"><strong>pick a or b</strong>. <strong>Plays:</strong> an intercepted briefing page while its text types, in place of the typing blip (Vorne's broadcast pages, the act's intro). <strong>Should sound like:</strong> a faint steady carrier hiss with a slow swell; distinct from the Choir's static lead (concept/choir-static-r55-b.ogg) so the two enemy voices never sound alike. <strong>a</strong> (a seamless loop, 8.0 s): a shortwave radio's noise band-passed to 400 Hz-4 kHz, swelling 3 dB every 4 s: a soft even 'hhhh', 8.0 s loop. <strong>b</strong> (a seamless loop, 8.0 s): a pulsating shortwave noise band-passed the same: the interference's own slow throb in it, 8.0 s loop.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/intercept-carrier-r60-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/intercept-carrier-r60-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> b's pulsing is the recording's own and may read as a throb</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other variant in <code>concept/rejected/</code></span></div>
+</article>
+<article class="row" id="r-S.14">
+<header><span class="rid">S.14</span><h3>The mine: proximity blink (mine-blink)</h3><span class="kind">pick a or b</span></header>
+<div class="part">[The mine: proximity blink (<code>mine-blink</code>)](../../audio/sfx/README.md#act-5-sounds-draft-round-60)</div>
+<div class="q"><strong>pick a or b</strong>. <strong>Plays:</strong> an armed mine's 0.6 s proximity blink as the ship comes near (the Minelayer's mine lines, Level 30's minefield), before its burst. <strong>Should sound like:</strong> a faster tick, rising, over the 0.6 s blink (synthesized allowed: a signal, not a machine); dry, no beep melody. <strong>a</strong> (0.63 s): 13 dry ticks, the gap shrinking from 110 to 25 ms and the pitch rising from 2.0 to 3.2 kHz: 'tik . tik . tik tik-tiktiktik', 0.6 s. <strong>b</strong> (0.62 s): 7 short square-ish beeps, the gap shrinking from 120 to 45 ms and the pitch rising an octave from 1.2 kHz, the last held: 'bip . bip . bip-bip-bipbeeep', 0.6 s.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/mine-blink-r60-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/mine-blink-r60-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> synthesized (a signal: the README allows it)</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other variant in <code>concept/rejected/</code></span></div>
+</article>
+<article class="row" id="r-S.15">
+<header><span class="rid">S.15</span><h3>The mine: burst (mine-burst)</h3><span class="kind">pick a or b</span></header>
+<div class="part">[The mine: burst (<code>mine-burst</code>)](../../audio/sfx/README.md#act-5-sounds-draft-round-60)</div>
+<div class="q"><strong>pick a or b</strong>. <strong>Plays:</strong> a mine bursting (proximity, shot or in a chain); the chain's ripple is cut from the pick at the part. <strong>Should sound like:</strong> a sharp metallic blast, the <code>small</code> rung's weight but harder (a mine must be heard). <strong>a</strong> (1.00 s): a metallic bang: a hard crack with a steel body ringing into the boom, 1.0 s. <strong>b</strong> (1.00 s): an explosion in a metal can over a deep metal boom: tighter and tinnier at the top than a, heavier underneath, 1.0 s.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/mine-burst-r60-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/mine-burst-r60-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> a is boomier (59 % under 200 Hz), b tighter; the chain's ripple is cut from the pick at the part</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other variant in <code>concept/rejected/</code></span></div>
+</article>
+<article class="row" id="r-S.16">
+<header><span class="rid">S.16</span><h3>The Iron Sovereign&#x27;s rings turning (loop) (sovereign-ring-turn)</h3><span class="kind">pick a or b</span></header>
+<div class="part">[The Iron Sovereign's rings turning (loop) (<code>sovereign-ring-turn</code>)](../../audio/sfx/README.md#act-5-sounds-draft-round-60)</div>
+<div class="q"><strong>pick a or b</strong>. <strong>Plays:</strong> Level 35's boss fight: a low bed while the Iron Sovereign's rings turn (the spin-up, the ring step and the lock are separate one-shots, made at the boss's part). <strong>Should sound like:</strong> a deep grind with slow gear-tooth ticks: a huge bearing turning, heavy and mechanical. <strong>a</strong> (a seamless loop, 8.0 s): a rail-grinding machine at night with its rhythmic clang, slowed to half: a deep grinding drone, the clangs slowed into heavy ticks, 8.0 s loop. <strong>b</strong> (a seamless loop, 8.0 s): inside a working windmill, its great gears and millstone turning, slowed to 0.55, over a transformer's hum slowed to 0.6: slower, creakier ticks than a over a heavier bed, 8.0 s loop.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/sovereign-ring-turn-r60-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/sovereign-ring-turn-r60-b.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other variant in <code>concept/rejected/</code></span></div>
+</article>
+<article class="row" id="r-S.17">
+<header><span class="rid">S.17</span><h3>The belt station bed (belt-station)</h3><span class="kind">pick a or b</span></header>
+<div class="part">[The belt station bed (<code>belt-station</code>)](../../audio/sfx/README.md#act-5-sounds-draft-round-60)</div>
+<div class="q"><strong>pick a or b</strong>. <strong>Plays:</strong> Level 29 (Ceres Hub's dock canyon) and Level 35 (the Helix yards in Ceres orbit): the act's ambience bed on the effects bus at the beds' 0.70, under the music; heard in the quiet stretches, a level's start and the pause before a boss; Level 29 adds the hub's alarm as a layer from the turn. <strong>Should sound like:</strong> a big station heard through the hull: a deep ventilation roar, a low transformer hum, distant dock machinery (a crane's slew, a heavy hatch now and then), hull creaks; no voices, no PA; a seamless 16 s loop. <strong>a</strong> (a seamless loop, 16.0 s): a large industrial ventilation fan's room tone muffled at 1.5 kHz over a transformer's hum; once a loop a far heavy metal boom (a hatch) and a liner's gangplank groaning, slowed (the dock): 16.0 s loop. <strong>b</strong> (a seamless loop, 16.0 s): a ferry's engine room slowed to 0.7 and muffled (heard through a bulkhead) under a ventilation fan; once a loop a far rail-grinding machine's clanking (the dock machinery) and a slow metal creak: more of a working machine than a, 16.0 s loop.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/belt-station-r60-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/belt-station-r60-b.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge pick">not the recommendation</span> <span><strong>b</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other variant in <code>concept/rejected/</code></span></div>
+</article>
+<article class="row" id="r-S.18">
+<header><span class="rid">S.18</span><h3>The belt open-space bed (belt-open)</h3><span class="kind">pick a or b</span></header>
+<div class="part">[The belt open-space bed (<code>belt-open</code>)](../../audio/sfx/README.md#act-5-sounds-draft-round-60)</div>
+<div class="q"><strong>pick a or b</strong>. <strong>Plays:</strong> Levels 30, 31, 33 and 34 (the shipping lane, the rock fields, the leech field, the graveyard): the act's ambience bed on the effects bus at the beds' 0.70, under the music; heard in the quiet stretches, a level's start and the pause before a boss. <strong>Should sound like:</strong> open space heard through the hull (no silent vacuum): the cockpit's low hum, hull creaks and ticks of metal in the cold, distant dull impacts (rocks on rock, far off), a faint radio hiss; no wind; a seamless 16 s loop. <strong>a</strong> (a seamless loop, 16.0 s): a jet's idle slowed to half and muffled at 600 Hz (the cockpit's hum), a pulsating shortwave hiss far under it; twice a loop a slow metal creak, once a distant explosion's dull thud muffled to a far impact: 16.0 s loop. <strong>b</strong> (a seamless loop, 16.0 s): a ferry's engine room slowed to half and muffled at 600 Hz, a pulsating shortwave hiss far under it; once a loop a liner's gangplank groaning, slowed (the hull), and a deep far thump: darker and more of a hull than a, 16.0 s loop.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/belt-open-r60-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/belt-open-r60-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> a's first seconds carry the creak and swell louder than the rest</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other variant in <code>concept/rejected/</code></span></div>
+</article>
+<article class="row" id="r-S.19">
+<header><span class="rid">S.19</span><h3>The belt tunnel bed (belt-tunnel)</h3><span class="kind">pick a or b</span></header>
+<div class="part">[The belt tunnel bed (<code>belt-tunnel</code>)](../../audio/sfx/README.md#act-5-sounds-draft-round-60)</div>
+<div class="q"><strong>pick a or b</strong>. <strong>Plays:</strong> Level 32 (the hollowed asteroid; the refinery's furnace roar under its section 6 is Level 19's vent and furnace sounds): the act's ambience bed on the effects bus at the beds' 0.70, under the music; heard in the quiet stretches, a level's start and the pause before a boss. <strong>Should sound like:</strong> an asteroid's interior: rock creaking and groaning, pumps and ventilation fans through the walls, a distant drill biting rock now and then, a machine thump; no drips; a seamless 16 s loop. <strong>a</strong> (a seamless loop, 16.0 s): a ventilation fan's room tone slowed to 0.8 and muffled; once a loop a jackhammer in an underground mine far off through the rock, a massive structure's slow bend (the rock groaning) and a deep machine thump: 16.0 s loop. <strong>b</strong> (a seamless loop, 16.0 s): a large industrial ventilation fan's room tone slowed to 0.6 (the pumps and fans) over a machine grinding and drilling, slowed and muffled to a drone in the walls; once a loop a deep earthquake rumble (the rock heaving) and a quarry drill biting rock far off: lower and rockier than a, 16.0 s loop.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/belt-tunnel-r60-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/belt-tunnel-r60-b.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other variant in <code>concept/rejected/</code></span></div>
+</article>
+</section>
+<section id="s-voice"><h2>Voice</h2>
+<div class="sum"><p>Vorne's casting (the enemy-channel broadcast), three readers through the enemy filter.</p></div>
+<article class="row" id="r-V.1">
+<header><span class="rid">V.1</span><h3>Vorne&#x27;s voice (vorne)</h3><span class="kind">pick a, b or c</span></header>
+<div class="part">[Vorne's voice (<code>vorne</code>)](../../audio/voice/README.md#act-5-voices-draft-round-60)</div>
+<div class="q"><strong>pick a, b or c</strong>. <strong>Plays:</strong> the Act 5 intro's two broadcast pages, Level 35 (the core's opening, the recruitment), Acts 6–7 later; always on the enemy channel. <strong>Should sound like:</strong> an older man's polished low voice, a chairman, not a soldier: patient, amused, warm on the surface and cold under it; below every cast man; slow, an orator's controlled range. Each reads the broadcast's opening and the recruitment through the new enemy filter (filter b's band, no crackle, a steady static bed swelling slowly, the intercept's sweep in and out). <strong>a</strong> Jeffrey Church (19.7 s): slow and deliberate, the widest rise and fall; Chatterbox lifts him to ≈ 130 Hz (by the Kilo Lead). <strong>b</strong> Clive Catterall (16.7 s): an older English voice, measured and dry; ≈ 115–123 Hz. <strong>c</strong> Gregg Margarite (17.1 s): a deep American bass, warm and theatrical; ≈ 93 Hz, the only one under the cast men.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/voice/concept/voice-vorne-r60-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/voice/concept/rejected/voice-vorne-r60-b.ogg"></audio></figure><figure class="m aud"><figcaption>c</figcaption><audio controls preload="none" src="../../audio/voice/concept/rejected/voice-vorne-r60-c.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> a's first line keeps a 1.06 s rest between sentences (every take of his did); the filter's sweeps are the intercept proposals a, whichever S.11/S.12 picks</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>Jeffrey Church; the production render lowers it toward the brief (VOX-B: up to −3 semitones, kept only if natural)</span></div>
+</article>
+</section>
+<section id="s-documents-to-approve"><h2>Documents to approve</h2>
+<div class="sum"><p>The drafts, one row each. Approving a row approves the document as drafted (with your answers above applied); change means a note on the row.</p></div>
+<article class="row" id="r-D.1">
+<header><span class="rid">D.1</span><h3>The act README</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../campaign/act-5-the-belt/README.md">The act README</a></div>
+<div class="q"><strong>approve or change</strong>. Levels 29-35 pulled together: the synopsis and story beats, the act intro (Vorne's broadcast) and outro, the settings, the units and their HP factors, the density and haul ladder (113, 101, 112, 104-107, 110, 86, 114 a minute; <code>bounty_scale</code> 0.44, 0.45, 0.40, 0.42, 0.55, 0.45, 0.56), the threat profile, music and voice. Nothing is built from it before you approve.</div>
+<p class="rec"><span class="tag">Recommendation</span> approve</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>approve</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>approved 2026-10-27 (<code>design: approved</code>)</span></div>
+</article>
+<article class="row" id="r-D.2">
+<header><span class="rid">D.2</span><h3>Level 29 Betrayal at Ceres</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../campaign/act-5-the-belt/level-29-betrayal-at-ceres/README.md">Level 29 Betrayal at Ceres</a></div>
+<div class="q"><strong>approve or change</strong>. the dock canyon, the station turns at t=60, Dock 9 and Rook's return, 113 a minute, the Hold fire secondary.</div>
+<p class="rec"><span class="tag">Recommendation</span> approve</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>approve</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>approved 2026-10-27 (<code>design: approved</code>)</span></div>
+</article>
+<article class="row" id="r-D.3">
+<header><span class="rid">D.3</span><h3>Level 30 Minefield</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../campaign/act-5-the-belt/level-30-minefield/README.md">Level 30 Minefield</a></div>
+<div class="q"><strong>approve or change</strong>. space only, 15 mine lines, about 48 Darts, 101 a minute, the convoy secondary.</div>
+<p class="rec"><span class="tag">Recommendation</span> approve</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>approve</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>approved 2026-10-27 (<code>design: approved</code>)</span></div>
+</article>
+<article class="row" id="r-D.4">
+<header><span class="rid">D.4</span><h3>Level 31 Mining Rig Escort</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../campaign/act-5-the-belt/level-31-mining-rig-escort/README.md">Level 31 Mining Rig Escort</a></div>
+<div class="q"><strong>approve or change</strong>. the tug with three sections, Hornet salvos, Shard links, Buzzsaws, the CLEAN HULL secondary, 184 s.</div>
+<p class="rec"><span class="tag">Recommendation</span> approve</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>approve</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>approved 2026-10-27 (<code>design: approved</code>)</span></div>
+</article>
+<article class="row" id="r-D.5">
+<header><span class="rid">D.5</span><h3>Level 32 Deep Core</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../campaign/act-5-the-belt/level-32-deep-core/README.md">Level 32 Deep Core</a></div>
+<div class="q"><strong>approve or change</strong>. the hollowed asteroid, two real forks, Sentinel Towers, toppling Striders, blast-door caches, the TOWERS DOWN secondary.</div>
+<p class="rec"><span class="tag">Recommendation</span> approve</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>approve</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>approved 2026-10-27 (<code>design: approved</code>)</span></div>
+</article>
+<article class="row" id="r-D.6">
+<header><span class="rid">D.6</span><h3>Level 33 Leech Field</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../campaign/act-5-the-belt/level-33-leech-field/README.md">Level 33 Leech Field</a></div>
+<div class="q"><strong>approve or change</strong>. 63 leeches draining the generator, Rail Bunkers, prey Talon wings, the Choir's one line, the purge secondary.</div>
+<p class="rec"><span class="tag">Recommendation</span> approve</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>approve</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>approved 2026-10-27 (<code>design: approved</code>)</span></div>
+</article>
+<article class="row" id="r-D.7">
+<header><span class="rid">D.7</span><h3>Level 34 Salvage Run</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../campaign/act-5-the-belt/level-34-salvage-run/README.md">Level 34 Salvage Run</a></div>
+<div class="q"><strong>approve or change</strong>. the breather: Warden Tanks in livery, six containers and three crates, the Mk V Helix salvaged.</div>
+<p class="rec"><span class="tag">Recommendation</span> approve</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>approve</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>approved 2026-10-27 (<code>design: approved</code>)</span></div>
+</article>
+<article class="row" id="r-D.8">
+<header><span class="rid">D.8</span><h3>Level 35 Iron Sovereign</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../campaign/act-5-the-belt/level-35-iron-sovereign/README.md">Level 35 Iron Sovereign</a></div>
+<div class="q"><strong>approve or change</strong>. the approach (92 s, the mass-relay flash), the boss fight, Vorne's offer, the act end and the release's end naming Act VI.</div>
+<p class="rec"><span class="tag">Recommendation</span> approve</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>approve</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>approved 2026-10-27 (<code>design: approved</code>)</span></div>
+</article>
+<article class="row" id="r-D.9">
+<header><span class="rid">D.9</span><h3>The Iron Sovereign</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../enemies/bosses/iron-sovereign/README.md">The Iron Sovereign</a></div>
+<div class="q"><strong>approve or change</strong> (boss fight, Q.7 a): the three rings and their batteries, the locks, the core and its Dart streams, the par and HP, Vorne's lines (cold, J.8).</div>
+<p class="rec"><span class="tag">Recommendation</span> approve</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>approve</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>approved 2026-10-27 (<code>design: approved</code>)</span></div>
+</article>
+<article class="row" id="r-D.10">
+<header><span class="rid">D.10</span><h3>Air units: Talon, Hornet, Gilded Gunship, Dart Drone, Rail Serpent, Buzzsaw Drone</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../enemies/air/README.md">Air units: Talon, Hornet, Gilded Gunship, Dart Drone, Rail Serpent, Buzzsaw Drone</a></div>
+<div class="q"><strong>approve or change</strong>. The six air unit documents (HP from the J.2 curve, shields from Q.1 a, the Dart streams, the Serpent's machine split, the Buzzsaw's ricochet).</div>
+<p class="rec"><span class="tag">Recommendation</span> approve</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>approve</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>approved 2026-10-27 (<code>design: approved</code>)</span></div>
+</article>
+<article class="row" id="r-D.11">
+<header><span class="rid">D.11</span><h3>Space units: Asteroid Mite, Minelayer, Shard Drone, Void Leech</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../enemies/space/README.md">Space units: Asteroid Mite, Minelayer, Shard Drone, Void Leech</a></div>
+<div class="q"><strong>approve or change</strong>. The four space unit documents (the mine lines of Q.3 a and J.5, the air links, the leech's drain by Q.2 a).</div>
+<p class="rec"><span class="tag">Recommendation</span> approve</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>approve</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>approved 2026-10-27 (<code>design: approved</code>)</span></div>
+</article>
+<article class="row" id="r-D.12">
+<header><span class="rid">D.12</span><h3>Ground units: SAM Nest, Sentinel Tower, Rail Bunker, Strider, Warden Tank</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../enemies/ground/README.md">Ground units: SAM Nest, Sentinel Tower, Rail Bunker, Strider, Warden Tank</a></div>
+<div class="q"><strong>approve or change</strong>. The five ground unit documents (the rail line, the toppling and crushing, the hardened bunker, the Warden Tank's return in livery by J.1).</div>
+<p class="rec"><span class="tag">Recommendation</span> approve</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>approve</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>approved 2026-10-27 (<code>design: approved</code>)</span></div>
+</article>
+<article class="row" id="r-D.13">
+<header><span class="rid">D.13</span><h3>The mining tug</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../allies/mining-tug/README.md">The mining tug</a></div>
+<div class="q"><strong>approve or change</strong>. The three sections and their HP, the hooked attacks (J.7), the size (J.6), the HUD's section display.</div>
+<p class="rec"><span class="tag">Recommendation</span> approve</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>approve</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>approved 2026-10-27 (<code>design: approved</code>)</span></div>
+</article>
+<article class="row" id="r-D.14">
+<header><span class="rid">D.14</span><h3>Weapons: Tesla Coil Pod and Swarm Tail</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../player/weapons/README.md">Weapons: Tesla Coil Pod and Swarm Tail</a></div>
+<div class="q"><strong>approve or change</strong>. The two new weapons of Q.12 c (the Tesla Coil Pod's <code>shield-breaker</code> at Level 29, the Swarm Tail's homing rear fire at Level 30) and the Bomb Rack's <code>NO GROUND</code>.</div>
+<p class="rec"><span class="tag">Recommendation</span> approve</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>approve</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>approved 2026-10-27 (<code>design: approved</code>)</span></div>
+</article>
+<article class="row" id="r-D.15">
+<header><span class="rid">D.15</span><h3>Generator and the drain</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../player/generator/README.md#act-5-hand-plan-draft">Generator and the drain</a></div>
+<div class="q"><strong>approve or change</strong>. The Act 5 hand plan (reference DPS, the Mk V Helix) and the drain's rules (Q.2 a, J.12), the HUD's power gauge.</div>
+<p class="rec"><span class="tag">Recommendation</span> approve</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>approve</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>approved 2026-10-27 (<code>design: approved</code>)</span></div>
+</article>
+<article class="row" id="r-D.16">
+<header><span class="rid">D.16</span><h3>Wingmen: Rook&#x27;s return</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../player/wingmen/README.md#rooks-rescue-and-return-l29l30">Wingmen: Rook's return</a></div>
+<div class="q"><strong>approve or change</strong>. Rook's rescue at Dock 9 and his return to the slot (Q.8 a), the loaner Bulwark's departure.</div>
+<p class="rec"><span class="tag">Recommendation</span> approve</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>approve</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>approved 2026-10-27 (<code>design: approved</code>)</span></div>
+</article>
+<article class="row" id="r-D.17">
+<header><span class="rid">D.17</span><h3>HUD and briefing additions</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../ui/hud/README.md#act-5-additions-draft">HUD and briefing additions</a></div>
+<div class="q"><strong>approve or change</strong>. The enemy-channel lines, the power gauge, the tug's section HP, the intercepted briefing pages (<span class="ref">briefing</span>).</div>
+<p class="rec"><span class="tag">Recommendation</span> approve</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>approve</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>approved 2026-10-27 (<code>design: approved</code>)</span></div>
+</article>
+<article class="row" id="r-D.18">
+<header><span class="rid">D.18</span><h3>The story</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../story/README.md">The story</a></div>
+<div class="q"><strong>approve or change</strong>. The act's story beats, the speakers (Harker, Ceres Hub Control, the Bellwether's captain), Vorne's broadcast, Rook's captivity, the Choir's line, Varga's beats, the Ascendancy's belt section.</div>
+<p class="rec"><span class="tag">Recommendation</span> approve</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>approve</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>approved 2026-10-27 (<code>design: approved</code> on the story documents that were drafts)</span></div>
+</article>
+<article class="row" id="r-D.19">
+<header><span class="rid">D.19</span><h3>The audio plan</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../audio/music/README.md#act-5-music-draft-round-60">The audio plan</a></div>
+<div class="q"><strong>approve or change</strong>. The music cues per level (<span class="ref">music</span>: track 12 for Levels 29, 30, 32, 34, track 13 for 31, 33 and the Level 35 approach, the boss's #19, Rook's sting 31), the <span class="ref">sound list</span>, the <span class="ref">voices</span> and the enemy-channel filter.</div>
+<p class="rec"><span class="tag">Recommendation</span> approve</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>approve</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>approved 2026-10-27 (the music, sounds and voices plans)</span></div>
+</article>
+</section></main></body></html>

@@ -18,16 +18,34 @@ public sealed interface RadioBlock permits LevelData {
      * A spoken line; {@code distorted} for transmissions such as the Choir's.
      *
      * @param expression the speaker's portrait expression, neutral when not given
+     * @param requires M9 part F (Level 33's secret, Rook's line): what has to be fitted for it to play ({@code escort}:
+     *     Rook flying), as a radio cue's {@code requires}
      */
     public record RadioLine(
             String speaker,
             String line,
             Optional<Boolean> distorted,
             Optional<Expression> expression,
-            Optional<String> portrait) {
+            Optional<String> portrait,
+            Optional<String> requires) {
+        public RadioLine {
+            requires.ifPresent(Requirement::check);
+            Expression.checkSpeaker(speaker, expression);
+        }
+
         /** Without M7 part B's generic portrait. */
         public RadioLine(String speaker, String line, Optional<Boolean> distorted, Optional<Expression> expression) {
             this(speaker, line, distorted, expression, Optional.empty());
+        }
+
+        /** Without M9 part F's requirement. */
+        public RadioLine(
+                String speaker,
+                String line,
+                Optional<Boolean> distorted,
+                Optional<Expression> expression,
+                Optional<String> portrait) {
+            this(speaker, line, distorted, expression, portrait, Optional.empty());
         }
     }
 
@@ -85,7 +103,9 @@ public sealed interface RadioBlock permits LevelData {
             Optional<Double> staticLead,
             Optional<Double> duckDb,
             Optional<Channel> channel,
-            Optional<String> swap) {
+            Optional<String> swap,
+            Optional<Integer> fork,
+            Optional<String> side) {
         /** Step B4b: the escort swap outcomes a {@code holders-down} cue's {@code swap} names. */
         public static final List<String> SWAPS = List.of(
                 vanguard.sim.EscortSwap.SUBJECT_BULWARK,
@@ -94,6 +114,14 @@ public sealed interface RadioBlock permits LevelData {
                 vanguard.sim.EscortSwap.SUBJECT_EMPTY);
 
         public RadioCue {
+            Expression.checkSpeaker(speaker, expression);
+            // M9 part E (design/campaign Level 32, The forks): a branch cue names its fork (from 1) and side.
+            Check.that(
+                    (fork.isPresent() && side.isPresent()) == (event.orElse(null) == CueEvent.BRANCH),
+                    "a branch event names its fork and side, other triggers do not");
+            side.ifPresent(
+                    s -> Check.that(s.equals("left") || s.equals("right"), "side: left or right, was '" + s + "'"));
+            fork.ifPresent(f -> Check.that(f >= 1, "fork: from 1, was " + f));
             Check.that(
                     swap.isEmpty() || event.orElse(null) == CueEvent.HOLDERS_DOWN,
                     "only a holders-down event names an escort swap's outcome (swap)");
@@ -341,7 +369,19 @@ public sealed interface RadioBlock permits LevelData {
         HOLDERS_DOWN,
         /** M9 part B (design/player/wingmen, Rook's rescue): the rescued Rook reached his slot; once. */
         @JsonProperty("escort-joined")
-        ESCORT_JOINED
+        ESCORT_JOINED,
+        /** M9 part E (design/campaign Level 32, The forks): its {@code fork}'s {@code side} was chosen; once a fork. */
+        @JsonProperty("branch")
+        BRANCH,
+        /** M9 part E (design/enemies/ground/strider, The topple): the attempt's first topple crushed a ground unit. */
+        @JsonProperty("topple-crush")
+        TOPPLE_CRUSH,
+        /** M9 part G (design/campaign Level 34, The freighter): the ship collected the story pickup; once. */
+        @JsonProperty("story-collected")
+        STORY_COLLECTED,
+        /** M9 part G: the story pickup left the screen or ran out uncollected (the salvage tug's line); once. */
+        @JsonProperty("story-missed")
+        STORY_MISSED
     }
 
     /**

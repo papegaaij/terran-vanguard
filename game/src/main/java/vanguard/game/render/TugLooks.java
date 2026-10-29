@@ -21,7 +21,9 @@ import vanguard.sim.Sortie;
  * <ul>
  *   <li>a section below 50 % shows its damaged frame with its lights flickering ({@value #FLICKER_HZ} Hz, one beat in
  *       three dark) and a venting plume trailing down from each of its smoke points ({@code -vent}, a loop);
- *   <li>a hit flashes its section white ({@value #HIT_FLASH_TICKS} steps);
+ *   <li>a hit brightens its section with a soft additive tint ({@value #HIT_TINT} of the white flash's strength,
+ *       {@value #HIT_FLASH_TICKS} steps; step FIX1: a solid white flash was harsh under a salvo), the HUD's section bar
+ *       still flashing white;
  *   <li>a lost section flares ({@code -burn}, additive, {@value #BURN_FRAME_TICKS} steps a frame), then lies dark and
  *       vents; the tug flies on;
  *   <li>its living engines glow at the drive bells ({@code -glow}, additive, the small bells at their scale) and burn
@@ -43,8 +45,10 @@ final class TugLooks {
     static final int LOST = 3;
     /** The damaged lights' flicker: one beat in three dark at this rate. */
     static final double FLICKER_HZ = 9;
-    /** A hit's white flash on its section. */
+    /** A hit's tint on its section, steps. */
     static final int HIT_FLASH_TICKS = 2;
+    /** A hit's additive tint, a share of the white flash setting's strength (step FIX1: not a solid white flash). */
+    static final float HIT_TINT = 0.4f;
     /** The loss's fire flare, steps a frame (8 frames: 0.8 s). */
     static final int BURN_FRAME_TICKS = 6;
     /** The vents' plume, steps a frame (a 10 fps loop). */
@@ -58,7 +62,6 @@ final class TugLooks {
 
     private static final double FLARE_INSET = 12;
 
-    private final FlashShader flash;
     /** Per section in hull order: its frames, its frame's centre from the hull's (y up), its smoke points (y up). */
     private final List<Array<AtlasRegion>> frames;
 
@@ -75,8 +78,7 @@ final class TugLooks {
     private final Array<AtlasRegion> burn;
     private final boolean drawn;
 
-    TugLooks(Sprites sprites, FlashShader flash, Sortie sortie, JsonValue pivots) {
-        this.flash = flash;
+    TugLooks(Sprites sprites, Sortie sortie, JsonValue pivots) {
         int count = sortie.hullEscort() ? sortie.allyCount() : 0;
         frames = new ArrayList<>(count);
         for (int k = 0; k < count; k++) {
@@ -177,12 +179,14 @@ final class TugLooks {
         for (int k = count - 1; k >= 0; k--) {
             Ally section = sortie.ally(k);
             AtlasRegion region = frames.get(k).get(section.lost() ? LOST : frame(section.hpShare(), tick));
-            float cx = (float) Math.round(PlayFrame.X0 + x + offset[k][0]);
-            float cy = (float) Math.round(y + offset[k][1]);
-            if (!section.lost() && section.ticksSinceHit() < HIT_FLASH_TICKS) {
-                flash.draw(batch, region, cx, cy, Color.WHITE, whiteFlash);
-            } else {
+            PlayFrame.drawCentred(batch, region, x + offset[k][0], y + offset[k][1]);
+            if (!section.lost() && section.ticksSinceHit() < HIT_FLASH_TICKS && whiteFlash > 0) {
+                // The frame again, added on top at a share of its own light: a brief brightening, not a white plate.
+                batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
+                batch.setColor(1, 1, 1, HIT_TINT * whiteFlash);
                 PlayFrame.drawCentred(batch, region, x + offset[k][0], y + offset[k][1]);
+                batch.setColor(Color.WHITE);
+                batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
             }
         }
         drawVents(batch, sortie, x, y, tick);

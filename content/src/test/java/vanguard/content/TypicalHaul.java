@@ -6,13 +6,17 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.function.BiFunction;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.dataformat.yaml.YAMLMapper;
+import vanguard.sim.Armament;
 import vanguard.sim.BossSpec;
 import vanguard.sim.EnemySpec;
 import vanguard.sim.Layer;
 import vanguard.sim.LevelScript;
+import vanguard.sim.Loadout;
 import vanguard.sim.PickupType;
 import vanguard.sim.Secondary;
 import vanguard.sim.WaveSpec;
@@ -34,6 +38,14 @@ record TypicalHaul(int perfect, double typical, double budget) {
      */
     static final int TYPICAL_STREAMS = 2;
 
+    /**
+     * M9 part F (design/campaign Level 33, Credit budget; decided in the design phase): the levels whose hardened ground
+     * units the typical haul counts at 0 % when the balance plan's fit there has no {@code anti-ground} gun (only those
+     * and the specials hurt them), by the plan's fit; a test-side rule, no data key. Level 33's Rail Bunkers.
+     */
+    static final Map<String, BiFunction<Content, Difficulty, Loadout>> UNPAID_HARDENED =
+            Map.of(Level33Test.LEVEL, Level33Test::planLoadout);
+
     /** The typical haul's distance from the budget, as a share of it (+0.1 = 10 % above). */
     double offBudget() {
         return (typical - budget) / budget;
@@ -51,8 +63,38 @@ record TypicalHaul(int perfect, double typical, double budget) {
         return of(content, key, difficulty, content.level(key).bounties());
     }
 
-    /** The same with the bounties × {@code bountyScale} instead of the level's {@code bounty_scale} (the report's fit). */
+    /**
+     * The same with the bounties × {@code bountyScale} instead of the level's {@code bounty_scale} (the report's fit). M9
+     * part E (design/campaign Level 32, Credit budget): a forked level's haul is the mean of its routes' (the perfect run
+     * rounded half to even), as tools/sync_tables.py's table.
+     */
     static TypicalHaul of(Content content, String key, Difficulty difficulty, double bountyScale) {
+        List<String> routes = RoutePlay.routes(content, key);
+        if (routes.size() == 1) {
+            return of(content, key, difficulty, bountyScale, RoutePlay.NONE);
+        }
+        double perfect = 0;
+        double typical = 0;
+        double budget = 0;
+        for (String route : routes) {
+            TypicalHaul haul = of(content, key, difficulty, bountyScale, route);
+            perfect += haul.perfect();
+            typical += haul.typical();
+            budget = haul.budget();
+        }
+        return new TypicalHaul((int) Math.rint(perfect / routes.size()), typical / routes.size(), budget);
+    }
+
+    /** M9 part E: the haul of one route of a forked level ({@link RoutePlay}; the level's own at its bounty scale). */
+    static TypicalHaul of(Content content, String key, Difficulty difficulty, String route) {
+        return of(content, key, difficulty, content.level(key).bounties(), route);
+    }
+
+    /**
+     * M9 part E: the haul of {@code route} with the bounties × {@code bountyScale}: the branches it does not fly left out
+     * ({@link RoutePlay#NONE}: every branch counted).
+     */
+    static TypicalHaul of(Content content, String key, Difficulty difficulty, double bountyScale, String route) {
         LevelData data = content.level(key);
         LevelScript level = SimSpecs.level(content, key, difficulty);
         EconomyData economy = content.economy();
@@ -65,6 +107,10 @@ record TypicalHaul(int perfect, double typical, double budget) {
         List<WaveSpec> waves = new ArrayList<>(level.waves());
         level.haltCycle().ifPresent(cycle -> waves.addAll(cycle.waves()));
         for (var wave : waves) {
+            // M9 part E: on a route only its branches (RoutePlay).
+            if (!RoutePlay.on(route, wave.branch())) {
+                continue;
+            }
             // M7 part G: a pursuit's refills too (LevelMetrics.planned, as tools/sync_tables.py).
             sum.bounty(LevelMetrics.planned(wave), wave.enemy().bounty(), rate(rate, wave.enemy()));
             // M9 part B: a V-wing's leader pays its airframe's bounty; the typical haul counts it at the wing's (the
@@ -111,11 +157,18 @@ record TypicalHaul(int perfect, double typical, double budget) {
                     .ifPresent(brood -> sum.bounty(
                             wave.count() * brood.count(), brood.enemy().bounty(), rate(rate, brood.enemy())));
         }
+        boolean hardenedUnpaid = UNPAID_HARDENED.containsKey(key)
+                && !antiGround(UNPAID_HARDENED.get(key).apply(content, difficulty));
         for (var unit : level.groundUnits()) {
-            sum.bounty(1, unit.enemy().bounty(), rate.groundTargets());
+            if (!RoutePlay.on(route, unit.branch())) {
+                continue;
+            }
+            // M9 part F: a hardened unit the plan's fit cannot hurt pays the typical player nothing (UNPAID_HARDENED)
+            double groundShare = hardenedUnpaid && unit.enemy().hardened() ? 0 : rate.groundTargets();
+            sum.bounty(1, unit.enemy().bounty(), groundShare);
             // M8 part B: a ground unit's parts pay their own bounty (the Drill Rig's pumps: 40 + 4 × 4)
             for (EnemySpec.UnitPart part : unit.enemy().parts()) {
-                sum.bounty(1, part.bounty(), rate.groundTargets());
+                sum.bounty(1, part.bounty(), groundShare);
             }
             // M5 part C: a periodic spawner (Level 09's Hive Nodes) counts one release, as DensityTest
             unit.enemy()
@@ -124,8 +177,17 @@ record TypicalHaul(int perfect, double typical, double budget) {
                             sum.bounty(spawner.count(), spawner.enemy().bounty(), rate(rate, spawner.enemy())));
         }
         for (var object : level.groundObjects()) {
+            if (!RoutePlay.on(route, object.branch())) {
+                continue;
+            }
             sum.bounty(1, object.bounty(), rate.groundTargets());
             sum.pay(1, credits(salvage, object.drop()), rate.groundTargets() * rate.pickups());
+            // M9 part G (Level 34): a group's drop is a pickup's (an armour patch, the Helix core's STORY pickup): no
+            // credits, none counted (credits(...) pays STORY 0 too).
+            // M9 part E (Level 32): a blast door's cache pays its crate as a secret's (the README's 50 %).
+            if (object.cache()) {
+                sum.pay(1, object.crateCredits(), rate.secrets());
+            }
         }
         JsonNode bossNotes = bossNotes(key);
         int streams = bossNotes.path("streams").asInt(0);
@@ -163,6 +225,16 @@ record TypicalHaul(int perfect, double typical, double budget) {
         return new TypicalHaul(sum.perfect, sum.typical, economy.budget().of(level.number()));
     }
 
+    /** M9 part F: whether {@code loadout} carries an {@code anti-ground} gun (the Bomb Rack, the Hammer Mortar). */
+    static boolean antiGround(Loadout loadout) {
+        for (Armament.Mount mount : loadout.armament().mounts()) {
+            if (mount.fires() && mount.weapon().antiGround()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private static double rate(EconomyData.TypicalPlayer rate, EnemySpec enemy) {
         return enemy.layer() == Layer.GROUND ? rate.groundTargets() : rate.airKills();
     }
@@ -172,6 +244,8 @@ record TypicalHaul(int perfect, double typical, double budget) {
             case SMALL_SALVAGE -> salvage.small();
             case MEDIUM_SALVAGE -> salvage.medium();
             case LARGE_SALVAGE -> salvage.large();
+            // M9 part G: a story pickup (Level 34's Helix core) pays nothing; its value is the unlock
+            case STORY -> 0;
             default -> 0;
         };
     }

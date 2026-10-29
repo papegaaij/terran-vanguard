@@ -646,6 +646,12 @@ public final class SpecialSlot {
                 enemy.stripShield(hold);
             }
         }
+        for (SetPiece piece : setPieces) {
+            // M9 part H, step H1b: a boss's part shields too (the Sovereign's core), never a stun.
+            if (piece.present()) {
+                piece.stripShields(hold);
+            }
+        }
         if (stripped > 0) {
             events.add(SimEvents.Type.RINGS_STRIPPED, bombX, bombY, stripped);
         }

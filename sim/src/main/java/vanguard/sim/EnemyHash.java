@@ -46,7 +46,10 @@ final class EnemyHash {
         if (u.chain != null) {
             hash.add(u.chain.serial()).add(u.link);
         }
-        if (u.spec.sweep().isPresent()) {
+        if (u.spec.groundSweep().isPresent()) {
+            // M9 part E: a ground sweep's state instead of the hover's (the Sentinel Tower's).
+            u.groundSweep.addTo(hash);
+        } else if (u.spec.sweep().isPresent()) {
             u.sweepBeam.addTo(hash);
         }
         u.walking.addTo(hash);
@@ -103,6 +106,10 @@ final class EnemyHash {
         if (u.spec.chase().isPresent()) {
             u.chasing.addTo(hash);
             hash.add(u.entered ? 1 : 0);
+        }
+        if (u.preyDrift > 0) {
+            // M9 part F: only a preyed unit, so the other levels hash as before.
+            hash.add(u.preyDrift);
         }
         if (u.empStun != 0 || u.offX != 0 || u.offY != 0) {
             // M7 part A: only while the EMP Burst stuns it or after it drifted, so other runs hash as before.
@@ -181,6 +188,10 @@ final class EnemyHash {
         }
         if (u.holder || u.leader) {
             hash.add(u.holder ? 1 : 0).add(u.leader ? 1 : 0);
+        }
+        // M9 part E's topples add theirs; earlier units hash as before.
+        if (u.spec.topple().isPresent()) {
+            u.toppling.addTo(hash);
         }
     }
 }

@@ -838,8 +838,112 @@ class IntelPanelLayoutTest {
 
     private static Measure assertFits(
             Intel intel, BriefingPage teaser, String level, String where, Map<String, String> unclassified) {
+        return assertFits(intel, teaser, level, where, unclassified, IntelPanel.Strip.NONE);
+    }
+
+    /**
+     * M9 part G (step G4; design/campaign Level 34, Sensor-suite detail): from L2 the Warden Tank's portrait in its
+     * Ascendancy livery and the Helix core tagged as the objective's pickup under the names; at L3 the three hidden
+     * crates' sections underlined in gold on the wave strip; M9 part H (step H4): from L2 the tank's faction in Act 5
+     * under the names ({@code EnemyData.factionIn}). Every sensor level fits with the level's strip; no other
+     * level has the tag or the gold.
+     */
+    @Test
+    void level34sIntelShowsTheLiveryTheCoreAndTheCratesSections() {
+        String level = CONTENT.levelKey(34).orElseThrow();
+        IntelPanel.Strip strip = IntelPanel.strip(CONTENT, level);
+        for (int sensor = 0; sensor <= 3; sensor++) {
+            Measure measure = assertFits(
+                    Intel.of(CONTENT, level, sensor),
+                    CONTENT.level(level).briefing().teaser(),
+                    level,
+                    "L" + sensor + ": ",
+                    Map.of(),
+                    strip);
+            List<String> texts = measure.parts.stream().map(Box::what).toList();
+            assertFalse(texts.contains("intel/warden-tank"), "not the grey tank's portrait at L" + sensor);
+            assertEquals(
+                    sensor >= 2,
+                    texts.contains("intel/warden-tank-asc"),
+                    "the livery's portrait (pictured first) at L" + sensor + ": " + texts);
+            assertEquals(
+                    sensor >= 2,
+                    texts.contains("text \"OBJECTIVE: HELIX CORE\""),
+                    "the core's tag at L" + sensor + ": " + texts);
+            // M9 part H (step H4, step G5's finding): the liveried tank named with its faction in Act 5.
+            assertEquals(
+                    sensor >= 2,
+                    texts.stream().anyMatch(text -> text.startsWith("text \"WARDEN TANK: JOVIAN")),
+                    "the tank's faction at L" + sensor + ": " + texts);
+            long gold = measure.fills.stream()
+                    .filter(fill -> fill.colour().equals(IntelPanel.CRATE_GOLD))
+                    .count();
+            assertEquals(sensor >= 3 ? 3 : 0, gold, "the crates' sections at L" + sensor);
+        }
+        assertEquals(java.util.Map.of("warden-tank", "warden-tank-asc"), strip.liveries());
+        assertEquals(java.util.Map.of("warden-tank", "Jovian Ascendancy"), strip.factions());
+        assertEquals("WARDEN TANK: JOVIAN ASCENDANCY", IntelPanel.factionTag("Warden Tank", "Jovian Ascendancy"));
+        assertTrue(
+                IntelPanel.factions(CONTENT, CONTENT.levelKey(19).orElseThrow()).isEmpty(),
+                "Level 19's tank flies unmarked, no faction tag");
+        for (String other : CONTENT.levels().keySet()) {
+            if (other.equals(level)) {
+                continue;
+            }
+            IntelPanel.Strip otherStrip = IntelPanel.strip(CONTENT, other);
+            assertTrue(otherStrip.objective().isEmpty() && otherStrip.crates().isEmpty(), other);
+            assertEquals(
+                    vanguard.game.render.EnemyLooks.act(other) >= 5,
+                    !otherStrip.liveries().isEmpty(),
+                    other + ": the livery from Act 5 only");
+        }
+    }
+
+    /**
+     * M9 part H (step H4; design/campaign Level 35, Sensor-suite detail): at L3 the wave strip marks the mass relay's flash
+     * (61 s: its telegraph from 59.8 s, 1.2 s) with a crimson tick and the boss's arrival (92 s) with its silhouette;
+     * every sensor level fits with the level's strip; no other level has a relay.
+     */
+    @Test
+    void level35sIntelMarksTheRelaysFlashAndTheBoss() {
+        String level = CONTENT.levelKey(35).orElseThrow();
+        IntelPanel.Strip strip = IntelPanel.strip(CONTENT, level);
+        assertEquals(61, strip.relay().orElseThrow(), 1e-9, "the flash at 61 s");
+        assertStripSilhouette(35, "iron-sovereign", 92);
+        for (int sensor = 0; sensor <= 3; sensor++) {
+            Measure measure = assertFits(
+                    Intel.of(CONTENT, level, sensor),
+                    CONTENT.level(level).briefing().teaser(),
+                    level,
+                    "L" + sensor + ": ",
+                    Map.of(),
+                    strip);
+            List<String> texts = measure.parts.stream().map(Box::what).toList();
+            long red = measure.fills.stream()
+                    .filter(fill -> fill.colour().equals(IntelPanel.RELAY_RED))
+                    .count();
+            assertEquals(sensor >= 3 ? 2 : 0, red, "the relay's tick at L" + sensor);
+            assertEquals(
+                    sensor >= 3,
+                    measure.marks.stream().anyMatch(mark -> mark.name().equals("intel/boss-iron-sovereign")),
+                    "the boss's silhouette on the strip at L" + sensor + ": " + texts);
+        }
+        for (String other : CONTENT.levels().keySet()) {
+            if (!other.equals(level)) {
+                assertTrue(IntelPanel.strip(CONTENT, other).relay().isEmpty(), other);
+            }
+        }
+    }
+
+    private static Measure assertFits(
+            Intel intel,
+            BriefingPage teaser,
+            String level,
+            String where,
+            Map<String, String> unclassified,
+            IntelPanel.Strip strip) {
         Measure measure = new Measure();
-        IntelPanel.layout(measure, intel, teaser, level, unclassified);
+        IntelPanel.layout(measure, intel, teaser, level, unclassified, java.util.Optional.empty(), strip);
         List<Box> all = new ArrayList<>(measure.parts);
         all.addAll(measure.quote);
         for (Box box : all) {

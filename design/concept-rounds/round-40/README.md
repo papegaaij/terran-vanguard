@@ -43,6 +43,10 @@ Open [index.html](index.html) in a browser (regenerate with
 art picks, music, sounds, voices, captures, the Level 16 redo, the Act 2 rework, build choices and findings, what is not done yet.
 Each row carries a recommendation; **B** rows are *yes* (keep as built) or *no* (say what).
 
+## Review
+
+Record of the decisions: [review.html](review.html)
+
 ## In the game
 
 `./gradlew :desktop:run --args="..."` with `--settings <file>` (a debug run writes no save):

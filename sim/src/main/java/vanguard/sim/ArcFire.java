@@ -136,7 +136,11 @@ final class ArcFire {
             double px = target.partX(part);
             double py = target.partY(part);
             mark(m, px, py);
-            if (target.damagePartAt(part, damage, px, py)) {
+            // M9 part H, step H1b: a breaker's arc empties a boss part's shield (the Sovereign's core).
+            boolean destroyed = weapon.shieldBreaker()
+                    ? target.damagePartBreaking(part, damage, px, py)
+                    : target.damagePartAt(part, damage, px, py);
+            if (destroyed) {
                 hits.partDestroyed(piece, part, m);
             }
             sparks(m, weapon, damage, -1, px, py, enemies);

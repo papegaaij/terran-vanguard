@@ -35,6 +35,8 @@ Outputs:
   assets/music/hollow-rock{,-base,-motif}.ogg  #12 "Hollow Rock", its base and motif stems (M9 part B: the same way
                                    from tools/concept/audio/music_r62.py's hollow-rock{,-base,-motif}-r62-a; the round-03
                                    pick composed out to full length, reviewed on hollow-rock-sheet-r62-a.png in round 62)
+  assets/music/hollow-rock-conveyor.ogg  its conveyor stem for Level 32's forks (M9 part G: the same way from
+                                   tools/concept/audio/music_r65.py's hollow-rock-conveyor-r65-a, picked in round 65)
   assets/music/gilded-cage{,-base,-motif}.ogg  #13 "Gilded Cage", its base and motif stems (M9 part D: the same way
                                    from tools/concept/audio/music_r64.py's gilded-cage{,-base,-motif}-r64-a; the round-60
                                    pick composed out to full length, reviewed on gilded-cage-sheet-r64-a.png in round 64)
@@ -108,7 +110,7 @@ Usage: python3 tools/art/themes.py [title] [hangar] [briefing] [boss] [warning] 
                                    [homefront-base] [firestorm] [firestorm-base] [red-dust]
                                    [red-dust-base] [thera] [thera-base] [pressure]
                                    [pressure-base] [pressure-motif] [hollow] [hollow-base]
-                                   [hollow-motif] [gilded] [gilded-base] [gilded-motif]
+                                   [hollow-motif] [hollow-conveyor] [gilded] [gilded-base] [gilded-motif]
                                                        render (default all), then check and review
        python3 tools/art/themes.py --check [keys]      check only (default all)
        python3 tools/art/themes.py --review [keys]     review sheets (and r25/r26 aids) of the keys' rounds
@@ -168,6 +170,7 @@ ROUNDS = {
     51: (None, None, None, artkit.source_note(SCRIPT, "M8 part B")),
     62: (None, None, None, artkit.source_note(SCRIPT, "M9 part B")),
     64: (None, None, None, artkit.source_note(SCRIPT, "M9 part D")),
+    65: (None, None, None, artkit.source_note(SCRIPT, "M9 part G")),
 }
 # key: (asset name, music_r08 key, title shown on the sheet, round); loops first, then one-shots
 THEMES = {
@@ -211,6 +214,9 @@ STEMS = {
                     "music_r62", "hollow-rock-base-r62-a"),
     "hollow-motif": ("hollow-rock-motif", "hollow", "HOLLOW ROCK - TRACK 12, MOTIF STEM", 62,
                      "music_r62", "hollow-rock-motif-r62-a"),
+    # M9 part G: track 12's fourth stem for Level 32's forks (round 65 M.1, the user 2026-10-29), music_r65.py's
+    "hollow-conveyor": ("hollow-rock-conveyor", "hollow", "HOLLOW ROCK - TRACK 12, CONVEYOR STEM", 65,
+                        "music_r65", "hollow-rock-conveyor-r65-a"),
     "gilded-base": ("gilded-cage-base", "gilded", "GILDED CAGE - TRACK 13, BASE STEM", 64,
                     "music_r64", "gilded-cage-base-r64-a"),
     "gilded-motif": ("gilded-cage-motif", "gilded", "GILDED CAGE - TRACK 13, MOTIF STEM", 64,
@@ -229,6 +235,8 @@ COPIED = {
     "hollow": "hollow-rock-r62-a",
     "hollow-base": "hollow-rock-base-r62-a",
     "hollow-motif": "hollow-rock-motif-r62-a",
+    # M9 part G: track 12's conveyor stem from music_r65.py (linked to the r62 render), reviewed in round 65
+    "hollow-conveyor": "hollow-rock-conveyor-r65-a",
     # M9 part D: track 13 from music_r64.py (one linked render of ~5 min), reviewed on its concept sheet in round 64
     "gilded": "gilded-cage-r64-a",
     "gilded-base": "gilded-cage-base-r64-a",

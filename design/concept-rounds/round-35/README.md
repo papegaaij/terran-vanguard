@@ -40,6 +40,10 @@ numbered per part (`A.1`, `B.1`, …), each answered *yes* (keep as built) or *n
 change). Read the two boxes first: what changed in **approved** specs, and the two questions only
 the user can answer.
 
+## Review
+
+Record of the decisions: [review.html](review.html)
+
 ## Changes to approved specs
 
 Approved parts of the design that M6 changed, checked against the approved text in git (`50d4dce`)

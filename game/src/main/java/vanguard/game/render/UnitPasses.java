@@ -160,6 +160,21 @@ final class UnitPasses {
                 }
                 continue;
             }
+            if (kinds.leechField(sortie).riding(enemy)) {
+                // M9 part F: a leech riding a prey Talon is drawn on it (LeechFieldLooks).
+                continue;
+            }
+            if (kinds.leechField(sortie).draws(enemy)) {
+                // M9 part F: a Rail Bunker's base, turret and coils; a prey Talon darkened, tumbling, its leeches on
+                // it.
+                kinds.leechField(sortie).draw(batch, sortie, enemy, looks[enemy.kind()], alpha, unitFlash);
+                continue;
+            }
+            if (kinds.deepCore(sortie).draws(enemy)) {
+                // M9 part E: a Sentinel Tower's collar and head, a Strider's legs, torso and pod (or its fall).
+                kinds.deepCore(sortie).draw(batch, sortie, enemy, alpha, unitFlash);
+                continue;
+            }
             if (kinds.sirens(sortie).draws(enemy)) {
                 // M8 part E: a Siren on its wall's foot.
                 kinds.sirens(sortie).draw(batch, sortie, enemy, alpha, unitFlash);
@@ -758,10 +773,10 @@ final class UnitPasses {
             int spot = enemy.spot();
             EnemySpec.Spot offset = enemy.spec().latch().orElseThrow().spots().get(spot);
             int phase = enemy.serial();
-            AtlasRegion frame = look.latched().get(LampreyLooks.latchedIndex(spot, sortie.tick(), phase));
+            AtlasRegion frame = look.latched().get(look.frameAt(spot, sortie.tick(), phase));
             drawUnit(batch, enemy, frame, shipX + offset.dx(), shipY + offset.dy());
             look.drawDrain(batch, spot, sortie.tick(), phase, (float) (X0 + shipX), (float) shipY);
-            gulp = Math.max(gulp, look.gulpStrength(LampreyLooks.gulpFrame(sortie.tick(), phase)));
+            gulp = Math.max(gulp, look.gulpStrength(LampreyLooks.gulpFrame(sortie.tick(), phase, look.fps())));
         }
         shipLooks.drawGulp(batch, Math.round(X0 + shipX), Math.round(shipY), gulp);
     }
@@ -990,6 +1005,8 @@ final class UnitPasses {
         kinds.minefield(sortie).drawGlints(batch, sortie, alpha);
         // M9 part D: the Hornets' hatch bloom and launch flashes, the links' snaps, the Buzzsaws' ricochets.
         kinds.rig(sortie).drawGlints(batch, sortie, alpha);
+        // M9 part E: the Sentinels' eyes and beams, the Striders' knees and muzzles, the charges' bursts.
+        kinds.deepCore(sortie).drawGlints(batch, sortie, alpha);
         batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
     }
 

@@ -155,7 +155,28 @@ public enum CueTrigger {
      * M9 part B (design/player/wingmen, Rook's rescue): the rescued Rook reached his slot at the escort swap's end
      * ({@link SimEvents.Type#ESCORT_JOINED}); once. No subject (the radio event {@code escort-joined}: his first line).
      */
-    ESCORT_JOINED;
+    ESCORT_JOINED,
+    /**
+     * M9 part E (design/campaign Level 32, The forks): a fork's branch was chosen ({@link SimEvents.Type#BRANCH_CHOSEN});
+     * once per fork. Its subject names the fork (from 1) and the side: {@code 1:left}, {@code 1:right}, {@code 2:left}
+     * ... (the radio event {@code branch} with its {@code fork} and {@code side}).
+     */
+    BRANCH,
+    /**
+     * M9 part E (design/enemies/ground/strider, The topple): the attempt's first topple crushed a ground unit ({@link
+     * SimEvents.Type#TOPPLE_CRUSH} with a value above 0); once. No subject (the radio event {@code topple-crush}).
+     */
+    TOPPLE_CRUSH,
+    /**
+     * M9 part G (design/campaign Level 34, The freighter): the ship collected the story pickup ({@link
+     * SimEvents.Type#STORY_COLLECTED}); once. No subject (the radio event {@code story-collected}).
+     */
+    STORY_COLLECTED,
+    /**
+     * M9 part G: the story pickup left the screen or ran out of time uncollected ({@link SimEvents.Type#STORY_MISSED}:
+     * the salvage tug's line); once. No subject (the radio event {@code story-missed}).
+     */
+    STORY_MISSED;
 
     /** Between the part names of a {@link #BOSS_PART_DESTROYED} cue's subject. */
     public static final String PART_SEPARATOR = "|";

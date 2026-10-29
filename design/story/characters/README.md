@@ -121,7 +121,7 @@ Production art, M9 part B (concept round 62, step ART-B): the Act 5 radio speake
 |---|---|---|
 | [concept/portraits-final-r62-a.png](concept/portraits-final-r62-a.png) | Review sheet (`tools/art/portraits.py`, M9 part B): `radio-ceres-control-neutral` (Ceres Hub Control, teal) and `radio-harker-neutral` (Harker, amber, the crest over his CDF patch) at 1×, 2×, 4× and beside the other minor speakers and Vorne | chosen (round 62, F.8: accepted as final) |
 | [concept/harker-capture-r62-a.png](concept/harker-capture-r62-a.png) | Game capture, Level 29 (step B5): Harker's t=70.5 line on the enemy channel | chosen (round 62, F.8: the capture accepted) |
-| [concept/portraits-final-r64-a.png](concept/portraits-final-r64-a.png) | Review sheet (`tools/art/portraits.py`, M9 part D): `radio-bellwether-neutral`, the *Bellwether*'s captain (teal; round 60 A.21's accepted bust) at 1×, 2× and 4× and at 1× beside the other radio speakers | proposed (round 64) |
+| [concept/portraits-final-r64-a.png](concept/portraits-final-r64-a.png) | Review sheet (`tools/art/portraits.py`, M9 part D): `radio-bellwether-neutral`, the *Bellwether*'s captain (teal; round 60 A.21's accepted bust) at 1×, 2× and 4× and at 1× beside the other radio speakers | chosen (round 64, F.9: accepted as final) |
 
 ## Decisions
 
@@ -155,3 +155,4 @@ Production art, M9 part B (concept round 62, step ART-B): the Act 5 radio speake
   captain's call sign), Bright Seam, Dacosta's claim, the Vesta relay and Kleopatra.
 - 2026-10-27 (user, [round 60](../../concept-rounds/round-60/README.md) closed): the Act 5 speakers approved as drafted (D.18, J.10); **A.21** accepted: the radio sheet of Ceres Hub Control, the *Bellwether*'s captain (teal) and Harker (amber, the Ascendancy crest stitched over his CDF patch) is the portraits' reference (`concept/act5-speakers-r60-a.png`, chosen).
 - 2026-10-28 (user, [round 62](../../concept-rounds/round-62/README.md), closed; page answers): the Act 5 radio portraits (Ceres Hub Control and Harker, F.8) accepted as final; `art: final`. Casting: Ceres Hub Control is Paul Adams (V.1 a), Harker is David Clarke (V.2 b), see the [voice part](../../audio/voice/README.md#decisions).
+- 2026-10-28 (user, [round 64](../../concept-rounds/round-64/README.md), closed): **F.9** accepted: the Bellwether's radio portrait (`radio-bellwether-neutral`, teal) is final; **V.1 b**: her voice is Laurie Anne Walden (see [voice](../../audio/voice/README.md#decisions)).

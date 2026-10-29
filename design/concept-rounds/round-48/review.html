@@ -1,0 +1,489 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Round 48: record of the decisions</title><style>
+:root{--bg:#f4f5f7;--fg:#1b2230;--mut:#5a6577;--card:#fff;--line:#d3d9e2;--acc:#1f5fa8;--ok:#1d6b3a;--okbg:#e3f3e8;
+--hi:#fff6dc;--hib:#d9b84a;--code:#e9edf3;--warn:#8a4b00}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10141b;--fg:#dde3ee;--mut:#98a3b6;--card:#171d27;
+--line:#2c3544;--acc:#7fb2ee;--ok:#7bd69a;--okbg:#163323;--hi:#2c2610;--hib:#8a7424;--code:#232c3a;--warn:#e3a35a;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#10141b;--fg:#dde3ee;--mut:#98a3b6;--card:#171d27;--line:#2c3544;--acc:#7fb2ee;--ok:#7bd69a;
+--okbg:#163323;--hi:#2c2610;--hib:#8a7424;--code:#232c3a;--warn:#e3a35a;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:60rem;margin:0 auto;padding:1rem 16px 4rem}
+h1{font-size:1.6rem;margin:.5rem 0}h2{font-size:1.25rem;margin:2rem 0 .5rem;border-bottom:1px solid var(--line);padding-bottom:.25rem}
+h3{font-size:1.02rem;margin:0;flex:1 1 12rem}a{color:var(--acc)}
+.sum{color:var(--mut)}.note{font-size:.9rem;color:var(--mut)}
+nav.sec{display:flex;flex-wrap:wrap;gap:.4rem;margin:1rem 0}nav.sec a{padding:.2rem .6rem;border:1px solid var(--line);border-radius:1rem;
+text-decoration:none;font-size:.9rem;background:var(--card)}
+.row{background:var(--card);border:1px solid var(--line);border-radius:.4rem;padding:.7rem .9rem;margin:.7rem 0;overflow-wrap:anywhere}
+.row header{display:flex;flex-wrap:wrap;gap:.3rem .6rem;align-items:baseline}
+.rid{font:600 .85rem ui-monospace,Menlo,Consolas,monospace;background:var(--code);padding:.05rem .4rem;border-radius:.25rem}
+.kind{font-size:.8rem;color:var(--mut)}.part{font-size:.88rem;margin:.2rem 0}
+.q,.weak,.rec,.sub,.line,dl{font-size:.92rem;margin:.45rem 0}.weak{color:var(--warn)}
+code{background:var(--code);padding:0 .25rem;border-radius:.2rem;font-size:.88em}
+.tag{font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;color:var(--mut);font-weight:700;margin-right:.3rem}
+.ans{margin:.5rem 0 0;padding:.45rem .6rem;border-left:4px solid var(--hib);background:var(--hi);border-radius:.2rem}
+.ans.out{border-left-color:var(--ok)}.ans.none{opacity:.7}
+.badge{font-size:.75rem;font-weight:700;padding:.05rem .4rem;border-radius:.6rem;background:var(--okbg);color:var(--ok)}
+.badge.pick{background:var(--hi);color:var(--warn);border:1px solid var(--hib)}
+dl{display:grid;grid-template-columns:7rem 1fr;gap:.2rem .6rem}dt{font-weight:700}dd{margin:0}
+.media{display:flex;flex-wrap:wrap;gap:.5rem;margin:.5rem 0}.m{margin:0;max-width:100%}.m figcaption{font-size:.75rem;color:var(--mut)}
+.m.img img{max-width:14rem;max-height:10rem;border:1px solid var(--line);border-radius:.2rem;background:#000;display:block}
+.m.vid video{width:14rem;max-width:100%}.m.aud audio{width:16rem;max-width:100%}.miss{color:var(--warn)}
+details{margin:.4rem 0;font-size:.9rem}summary{cursor:pointer;color:var(--acc)}
+.listen{font-size:.85rem;color:var(--mut);margin:.3rem 0;padding-left:1.2rem}.opts{color:var(--mut)}
+.sub{padding-left:.6rem;border-left:2px solid var(--line)}
+table{border-collapse:collapse;display:block;overflow-x:auto}td,th{border:1px solid var(--line);padding:.2rem .4rem}
+blockquote{margin:.4rem 0;padding-left:.8rem;border-left:3px solid var(--line)}
+@media (max-width:480px){dl{grid-template-columns:1fr}.m.img img{max-width:100%}}
+</style></head><body><main><p class="note"><a href="README.md">Round 48 README</a> · <a href="../README.md">All rounds</a> · built 2026-10-22 · recorded by <code>tools/concept/review_record.py 48</code></p><h1>Concept round 48: record of the decisions</h1><div class="sum"><p>The Act 4 design phase, <strong>drafted overnight on your behalf</strong>, on branch <code>m8-act-4</code> (a separate worktree from Act 3's <code>m7-act-3</code>; nothing of it is in the game yet). Everything below is a draft for you to judge: the act's story and levels 22–28, the new units, the Abyssal Maw, the arsenal, the under-water rules, plus the art and music proposals. Your rule of 2026-10-20 holds: <strong>only artwork, sounds, boss fights and important game concepts are asked</strong>; no build yes/no lists. Each question has its <strong>recommendation marked</strong> (the drafts were written from it: change the answer and I redraft that part). Rows run in this order: the twelve questions, the judgement calls the drafting steps flagged, the art (units, boss and cruiser, Europa, gear), the music, the sounds not made yet, and the documents to approve.</p><p><strong>Sounds:</strong> the Freesound daily quota (500 downloads) ran out again (HTTP 429), so <strong>no sound effect was made</strong>; only four pieces of music (synthesized, my own score; I cannot listen, they are checked by loudness and the loop seam). The sound-effect briefs and their candidate recordings are listed so the next round can start at once.</p></div><p class="note">A read-only record: every row as the review page showed it, with the answer and the outcome from the round README (the record of truth). Media is linked from the design tree, not copied.</p><nav class="sec"><a href="#s-questions">Questions</a><a href="#s-judgement-calls">Calls</a><a href="#s-art-units">Units</a><a href="#s-art-boss-and-cruiser">Cruiser</a><a href="#s-art-europa">Europa</a><a href="#s-art-gear">Gear</a><a href="#s-music">Music</a><a href="#s-sounds-not-made-yet">Sounds</a><a href="#s-documents-to-approve">Docs</a></nav><section id="s-questions"><h2>Questions</h2>
+<div class="sum"><p>The twelve open questions of the Act 4 gap analysis. Each lists its options, its costs and what I already drafted from the recommendation.</p></div>
+<article class="row" id="r-Q1">
+<header><span class="rid">Q1</span><h3>How hard the water bites</h3><span class="kind">Concept</span></header>
+<div class="part">How hard the water bites</div>
+<div class="q"><strong>Concept</strong> Drafted table: every non-<code>anti-sub</code> weapon halved, bullets x0.7, drag, shield regeneration -25 %, beam range halved. The typical loadout (Ion Beam, missiles, Tail Gun) has no <code>anti-sub</code> item, so at Level 23 it loses more than half its damage and needs about 5,300 credits of new weapons against a 3,000 visit. (a) As drafted. (b) Softened: keep the feel (drag, bullets x0.7, torpedo range +50 %, beam reach x0.75) and the pressure (non-<code>anti-sub</code> x0.7), drop the top-speed and shield-penalties, the hydro-kit stays free and automatic, Depth Charges become a rear launcher of sinking charges. (c) No penalty, <code>anti-sub</code> x1.5. Costs: (a) a hard economy and power wall at the act start; (b) a real reason to buy torpedoes without scrapping the old loadout; (c) makes <code>anti-sub</code> optional. Drafted from (b): the weapons, Harpoon Torpedoes, Depth Charges and the systems README; the levels' enemy counts assume it. <strong>Recommendation: b</strong></div>
+<p class="rec"><span class="tag">Recommendation</span> b</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>b</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed (2026-10-22)</span></div>
+</article>
+<article class="row" id="r-Q2">
+<header><span class="rid">Q2</span><h3>How dark Europa is</h3><span class="kind">Concept</span></header>
+<div class="part">How dark Europa is</div>
+<div class="q"><strong>Concept</strong> Under 20 km of ice there is no sun. (a) Lamp-lit to black: Thera Deep's farm lamps give the lit stretches, darker every level (L23 farms, L24 lamps' edge, L25 trench with beacon pulses, L26 black, L27 vent glow, L28 hatchery light). (b) Dark everywhere from Level 23, headlight and glow only. (c) Keep the bright round-07 look. Costs: (b) monotonous and hard to read for six levels; (c) contradicts the setting and makes Level 26 a gimmick. The a/b files below are the two grades on the same frame and the Level 23-28 ladder. Drafted from (a): every level's backdrop and light notes. <strong>Recommendation: a</strong></div>
+<div class="media"><figure class="m img"><a href="../../world/europa/concept/underwater-grade-r48-a.png"><img loading="lazy" decoding="async" src="../../world/europa/concept/underwater-grade-r48-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../world/europa/concept/underwater-grade-r48-a.gif"><img loading="lazy" decoding="async" src="../../world/europa/concept/underwater-grade-r48-a.gif" alt="a · motion"></a><figcaption>a · motion</figcaption></figure><figure class="m img"><a href="../../world/europa/concept/rejected/underwater-grade-r48-b.png"><img loading="lazy" decoding="async" src="../../world/europa/concept/rejected/underwater-grade-r48-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../world/europa/concept/rejected/underwater-grade-r48-b.gif"><img loading="lazy" decoding="async" src="../../world/europa/concept/rejected/underwater-grade-r48-b.gif" alt="b · motion"></a><figcaption>b · motion</figcaption></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed (2026-10-22)</span></div>
+</article>
+<article class="row" id="r-Q3">
+<header><span class="rid">Q3</span><h3>Popcorn units under water</h3><span class="kind">Concept</span></header>
+<div class="part">Popcorn units under water</div>
+<div class="q"><strong>Concept</strong> Acts 2-3 met the floor with flyers (Skitters, Needlers, Stingers, Dust Kite). (a) Two new Vrell swimmers: a <code>tiny</code> school (Glassfin, glass fry that stream and ram) and a <code>small</code> firing swimmer (Barbfin), plus the Driftjelly, Lamprey and Reef Spitter returning. (b) The Act 1-3 flyers re-tinted and 'swimming'. (c) Only the roster's six units plus returns. Costs: (a) two small sprites; (b) a Stinger in water reads wrong; (c) the density floor cannot be met without spamming large units. Drafted from (a): Glassfin and Barbfin are specced and in the levels; their art is in the unit rows. <strong>Recommendation: a</strong></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed (2026-10-22)</span></div>
+</article>
+<article class="row" id="r-Q4">
+<header><span class="rid">Q4</span><h3>What the dark hides in Level 26</h3><span class="kind">Concept</span></header>
+<div class="part">What the dark hides in Level 26</div>
+<div class="q"><strong>Concept</strong> (a) A look only: outside the light cone units show only their glow, bullets are always bright, everything is hittable; the Sonar Pulse lights every unit and lure for 6 s (and gives full damage for all weapons for those 6 s). (b) As (a) but shots only hit lit units. (c) Sonar-blip only: units appear between pings. Costs: (b) punishes non-homing loadouts in the act's breather; (c) a new display mode and hard to read. Drafted from (a): the Level 26 spec and the Sonar Pulse; the darkness look itself is a/b in the Europa art rows (E9). <strong>Recommendation: a</strong></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed (2026-10-22)</span></div>
+</article>
+<article class="row" id="r-Q5">
+<header><span class="rid">Q5</span><h3>The Siren&#x27;s slow</h3><span class="kind">Concept</span></header>
+<div class="part">The Siren's slow</div>
+<div class="q"><strong>Concept</strong> (a) A visible ring you dodge like a bullet ring; a hit slows the ship to 60 % speed for 2 s with a sonar shimmer on the ship, then 3 s of immunity; no damage. (b) As first drafted (2 s, no immunity). (c) The ring jams weapons for 1 s instead. Costs: (b) chained slows with drag feel unfair; (c) a stronger punishment with no counterplay. Drafted from (a): the Siren spec and Level 25. <strong>Recommendation: a</strong></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed (2026-10-22)</span></div>
+</article>
+<article class="row" id="r-Q6">
+<header><span class="rid">Q6</span><h3>The Glow Angler&#x27;s lure</h3><span class="kind">Concept</span></header>
+<div class="part">The Glow Angler's lure</div>
+<div class="q"><strong>Concept</strong> (a) A near-miss lure: it glows like a pickup but in Vrell teal, with a visible stalk on approach; Varga warns at its first sight; touching it triggers the lunge. (b) It looks exactly like a pickup, a real trick. (c) No pickup mimicry, just an ambusher in the dark. Costs: (b) frustrating and teaches distrust of pickups; (c) loses the unit's idea. Drafted from (a): the Angler spec and Level 26. <strong>Recommendation: a</strong></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed (2026-10-22)</span></div>
+</article>
+<article class="row" id="r-Q7">
+<header><span class="rid">Q7</span><h3>Rook&#x27;s shoot-down (story)</h3><span class="kind">Concept</span></header>
+<div class="part">Rook's shoot-down (story)</div>
+<div class="q"><strong>Concept</strong> (a) On screen at the end of Level 26: in the black, torpedo trails from unseen Depth Hunters (their first appearance, unexplained), Rook's light spins down into the dark, his last line cut mid-word; with <code>--escort none</code> it is radio only. The escort slot shows him MIA in Levels 27-29 and offers the Bulwark heavy drone. (b) Radio only. (c) Told in the Level 27 briefing. Costs: (a) a scripted escort loss and one shot of Depth Hunter fire before Level 27; (b)/(c) the act's emotional beat happens off-stage. Drafted from (a). <strong>Recommendation: a</strong></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed (2026-10-22)</span></div>
+</article>
+<article class="row" id="r-Q8">
+<header><span class="rid">Q8</span><h3>The Choir in Level 26 (story)</h3><span class="kind">Concept</span></header>
+<div class="part">The Choir in Level 26 (story)</div>
+<div class="q"><strong>Concept</strong> The drafted line 'Your kin opened the door. Why do you fight?' is the Act 5-6 voice two levels before the reveal. (a) Keep the arc: fragments at the Acts 3-4 stage that only hint ('...small ones... in the dark... your kin... came before you...'). (b) Keep the drafted line, the reveal foreshadowed hard. (c) The Choir only sings in Level 26 and speaks at the Maw's death. Drafted from (a). <strong>Recommendation: a</strong></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed (2026-10-22)</span></div>
+</article>
+<article class="row" id="r-Q9">
+<header><span class="rid">Q9</span><h3>The Abyssal Maw fight (boss)</h3><span class="kind">Concept</span></header>
+<div class="part">The Abyssal Maw fight (boss)</div>
+<div class="q"><strong>Concept</strong> The drafted jaw-snap from below repeats the Dust Colossus. (a) As drafted: rises from below on a shadow tell, eel trails, fan walls. (b) A coiled guardian: the scroll halts over the hatchery vent; a serpent leviathan coils round it, head at the top, its segmented body sweeping the arena's edges; phase 1 head and gill sacs, eel swarms shed from its body; phase 2 bioluminescent <code>fan</code> walls and one dive into the dark and a return from below; phase 3 its Helix implants spark open, human machinery as the weak point. (c) An ascent chase up the vent chimney from the bottom edge. Costs: (a) deja vu after Level 21; (c) a whole rear-gun fight on weakened weapons. The a/b art below is (a) 'Rising maw' and (b) 'Coiled guardian' (the b head reads a little beetle-like). Drafted from (b): the boss spec and Level 28. <strong>Recommendation: b</strong></div>
+<div class="media"><figure class="m img"><a href="../../enemies/bosses/concept/rejected/abyssal-maw-r48-a.png"><img loading="lazy" decoding="async" src="../../enemies/bosses/concept/rejected/abyssal-maw-r48-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/bosses/concept/rejected/abyssal-maw-r48-a.gif"><img loading="lazy" decoding="async" src="../../enemies/bosses/concept/rejected/abyssal-maw-r48-a.gif" alt="a · motion"></a><figcaption>a · motion</figcaption></figure><figure class="m img"><a href="../../enemies/bosses/concept/abyssal-maw-r48-b.png"><img loading="lazy" decoding="async" src="../../enemies/bosses/concept/abyssal-maw-r48-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/bosses/concept/abyssal-maw-r48-b.gif"><img loading="lazy" decoding="async" src="../../enemies/bosses/concept/abyssal-maw-r48-b.gif" alt="b · motion"></a><figcaption>b · motion</figcaption></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> b</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>b</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed (2026-10-22)</span></div>
+</article>
+<article class="row" id="r-Q10">
+<header><span class="rid">Q10</span><h3>The reveal (set piece)</h3><span class="kind">Concept</span></header>
+<div class="part">The reveal (set piece)</div>
+<div class="q"><strong>Concept</strong> (a) Breakout and run: after the Maw dies the wing climbs the drill shaft and breaks through the ice (the medium switches back to air); Ascendancy cruisers in black and gold rise beside the Vrell fleet and fire; a 30-40 s survive section dodging their barrages (invulnerable huge set pieces, no new fighters) to the extraction; Okafor: 'Those are ours'; then the debrief and the outro. (b) The reveal in the outro pages only (stills). (c) As (a) plus the first Ascendancy fighters. Costs: (b) the act's climax becomes a slideshow; (c) pulls Act 5 units forward. Drafted from (a): Level 28 and the boss spec; the cruiser look is a/b in row B1. <strong>Recommendation: a</strong></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed (2026-10-22)</span></div>
+</article>
+<article class="row" id="r-Q11">
+<header><span class="rid">Q11</span><h3>How visible the Ascendancy is before the reveal</h3><span class="kind">Concept</span></header>
+<div class="part">How visible the Ascendancy is before the reveal</div>
+<div class="q"><strong>Concept</strong> (a) Grey until Level 28: the Depth Hunters are unmarked grey like Act 3's machines; the Helix hull code is found under the paint on a wreck (Level 27, radio plus a briefing image, no second wreck crawl); the beacons pulse red-gold; black and gold appears only on the cruisers. (b) The Depth Hunters already show black-and-gold trim. Cost of (b): it spoils the reveal one level early. Drafted from (a) (and the story README's 'black and gold' beacons are corrected). <strong>Recommendation: a</strong></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed (2026-10-22)</span></div>
+</article>
+<article class="row" id="r-Q12">
+<header><span class="rid">Q12</span><h3>The under-water sound</h3><span class="kind">Concept</span></header>
+<div class="part">The under-water sound</div>
+<div class="q"><strong>Concept</strong> The rules forbid bubbly and popping sounds and ask for heavy, big sounds; the drafted sfx-bus low-pass makes everything muffled and small, and the chosen torpedo launch and the Act 4 A theme contain bubbles. (a) A light touch: no bus low-pass; heavy real under-water recordings (Freesound) for explosions and the Maw, a muffled ambience bed, no bubble pops anywhere (the A theme's bubble layer removed in its full-length version). (b) The low-pass bus as drafted. Cost of (b): every heavy sound loses its punch for six levels. Drafted from (a): the audio READMEs and the music rows below. <strong>Recommendation: a</strong></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed (2026-10-22)</span></div>
+</article>
+</section>
+<section id="s-judgement-calls"><h2>Judgement calls</h2>
+<div class="sum"><p>Things the drafting steps decided that change how the act plays or feels; each has the choice the draft made.</p></div>
+<article class="row" id="r-J1">
+<header><span class="rid">J1</span><h3>Generator Mk IV: 20 MW</h3><span class="kind">Concept</span></header>
+<div class="part">Generator Mk IV: 20 MW</div>
+<div class="q"><strong>Concept</strong> The roadmap drew the Mk IV Tokamak at 18 MW for 9,000 credits. By hand the 18 MW unit carries a full <code>anti-sub</code> build (Harpoons, Depth Charges, the Mk IV shield) but not the Auto-repair nanites; 20 MW carries the nanites too. 20 MW makes the act's last purchase feel like an upgrade, 18 MW forces a choice between nanites and the second <code>anti-sub</code> weapon. <strong>Recommendation: 20 MW</strong></div>
+<p class="rec"><span class="tag">Recommendation</span> 20 MW</p>
+<div class="ans"><span class="tag">Answer</span> <span><strong>20 MW</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed (2026-10-22)</span></div>
+</article>
+<article class="row" id="r-J2">
+<header><span class="rid">J2</span><h3>The Level 28 run cannot be lost</h3><span class="kind">Concept</span></header>
+<div class="part">The Level 28 run cannot be lost</div>
+<div class="q"><strong>Concept</strong> In the 35-second run under the cruisers' barrage the armour stops at 1 until the level ends: hits cost shield and armour as usual (the repair bill follows in the hangar) but the story beat after the Maw is never replayed. Alternative: a checkpoint at the breakout, so a lost run replays only the climb and the run. Costs: the floor takes the danger out of the last 35 seconds; the checkpoint is the first one in the game. <strong>Recommendation: Floor at 1</strong></div>
+<p class="rec"><span class="tag">Recommendation</span> Floor at 1</p>
+<div class="ans"><span class="tag">Answer</span> <span><strong>Floor at 1</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed (2026-10-22)</span></div>
+</article>
+<article class="row" id="r-J3">
+<header><span class="rid">J3</span><h3>Rook&#x27;s loss replays on every retry</h3><span class="kind">Concept</span></header>
+<div class="part">Rook's loss replays on every retry</div>
+<div class="q"><strong>Concept</strong> If the armour hits zero in the last seconds of Level 26 after Rook was shot down, the retry flies the level again with Rook and the shoot-down is replayed in full (radio only if he was ejected earlier in the attempt). Alternative: after the first viewing a retry skips the scripted loss and has him leave quietly. Cost of the replay: a strong beat that repeats; cost of skipping: the beat changes between attempts. <strong>Recommendation: Replay</strong></div>
+<p class="rec"><span class="tag">Recommendation</span> Replay</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>Replay</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed (2026-10-22)</span></div>
+</article>
+<article class="row" id="r-J4">
+<header><span class="rid">J4</span><h3>Three Abyss Rays in Level 24, no mid-boss</h3><span class="kind">Concept</span></header>
+<div class="part">Three Abyss Rays in Level 24, no mid-boss</div>
+<div class="q"><strong>Concept</strong> Act 4 has no mid-boss (the pacing table lists Acts 1, 2, 3, 6, 7). The Abyss Ray, a huge manta that rises under the ship on a shadow tell, is the act's large set-piece unit: Level 24 flies three of them (first one with four Barbfin escorts, then two later), 210 HP at the reference damage. Alternative: one Ray in Level 24 and a pair later, so the plain's reefs get the stage between. <strong>Recommendation: Three</strong></div>
+<p class="rec"><span class="tag">Recommendation</span> Three</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>Three</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed (2026-10-22)</span></div>
+</article>
+<article class="row" id="r-J5">
+<header><span class="rid">J5</span><h3>Two new speakers: Dr. Ilse Brandt and Thera Deep Control</h3><span class="kind">Concept</span></header>
+<div class="part">Two new speakers: Dr. Ilse Brandt and Thera Deep Control</div>
+<div class="q"><strong>Concept</strong> Level 22 opens on Conamara Station with Dr. Ilse Brandt, its director and Varga's former colleague from the Helix years (dry, tired, hiding something); Levels 23 and 27 carry Thera Deep Control, the harbour controller (a calm man's voice, older than Rook's). Both are new casting for the voice pipeline. The alternative is Varga and Okafor relaying everything, with no new voices. <strong>Recommendation: Both</strong></div>
+<p class="rec"><span class="tag">Recommendation</span> Both</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>Both</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed (2026-10-22)</span></div>
+</article>
+<article class="row" id="r-J6">
+<header><span class="rid">J6</span><h3>Level 27&#x27;s hull-code clue and the Bulwark</h3><span class="kind">Concept</span></header>
+<div class="part">Level 27's hull-code clue and the Bulwark</div>
+<div class="q"><strong>Concept</strong> Hint 3 of the reveal is the Helix hull code <code>HLX-DS-0417</code> found under the paint of a Depth Hunter wreck at Level 27, shown as a radio line and a briefing image (no wreck crawl; Level 19 did one). Rook is missing, so the Bulwark heavy drone (the old Warden drone, renamed) takes the escort slot, drawing fire in a 150 px radius. Alternative: no escort in Levels 27-28 and the clue only on the radio. <strong>Recommendation: As drafted</strong></div>
+<p class="rec"><span class="tag">Recommendation</span> As drafted</p>
+<div class="ans"><span class="tag">Answer</span> <span><strong>As drafted</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed (2026-10-22)</span></div>
+</article>
+</section>
+<section id="s-art-units"><h2>Art: units</h2>
+<div class="sum"><p>The new swimmers and the drill rig, a/b each: a sheet (the source render, the sprites, the key frames, the play field at 1x) and a GIF in the 480x540 play field under the under-water grade of the unit's first level, the ship for scale.</p></div>
+<article class="row" id="r-U1">
+<header><span class="rid">U1</span><h3>eel-swarm</h3><span class="kind">Art</span></header>
+<div class="part"><a href="../../enemies/naval/eel-swarm/README.md">eel-swarm</a></div>
+<div class="q"><strong>Art</strong> <strong>Eel Swarm (Levels 23-28).</strong> A chain of 12 segments whose head fires aimed shots and fans; a lateral stripe runs to the head as the tell; a cut scatters the tail. <strong>a</strong>: rust ribbon eels with a violet stripe, the lead eel's lime gills and jaws. <strong>b</strong>: armoured lantern eels, teal-black plates, violet photophores, a bone skull and violet maw. <strong>Recommendation: a</strong></div>
+<div class="media"><figure class="m img"><a href="../../enemies/naval/concept/eel-swarm-r48-a.png"><img loading="lazy" decoding="async" src="../../enemies/naval/concept/eel-swarm-r48-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/naval/concept/eel-swarm-r48-a.gif"><img loading="lazy" decoding="async" src="../../enemies/naval/concept/eel-swarm-r48-a.gif" alt="a · motion"></a><figcaption>a · motion</figcaption></figure><figure class="m img"><a href="../../enemies/naval/concept/rejected/eel-swarm-r48-b.png"><img loading="lazy" decoding="async" src="../../enemies/naval/concept/rejected/eel-swarm-r48-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/naval/concept/rejected/eel-swarm-r48-b.gif"><img loading="lazy" decoding="async" src="../../enemies/naval/concept/rejected/eel-swarm-r48-b.gif" alt="b · motion"></a><figcaption>b · motion</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> b blends with the Level 23 floor</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed (2026-10-22)</span></div>
+</article>
+<article class="row" id="r-U2">
+<header><span class="rid">U2</span><h3>abyss-ray</h3><span class="kind">Art</span></header>
+<div class="part"><a href="../../enemies/naval/abyss-ray/README.md">abyss-ray</a></div>
+<div class="q"><strong>Art</strong> <strong>Abyss Ray (Level 24 on).</strong> A 200 px manta: its shadow grows under the ship's plane, it rises, sheds four Barbfin, fires three 9-way fans and sinks. <strong>a</strong>: a teal-black manta with teal veins, lime gill slits and a violet mouth. <strong>b</strong>: a bone skate, a bone disc with a tubercle ridge, violet spots and a whip tail. <strong>Recommendation: b</strong></div>
+<div class="media"><figure class="m img"><a href="../../enemies/naval/concept/rejected/abyss-ray-r48-a.png"><img loading="lazy" decoding="async" src="../../enemies/naval/concept/rejected/abyss-ray-r48-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/naval/concept/rejected/abyss-ray-r48-a.gif"><img loading="lazy" decoding="async" src="../../enemies/naval/concept/rejected/abyss-ray-r48-a.gif" alt="a · motion"></a><figcaption>a · motion</figcaption></figure><figure class="m img"><a href="../../enemies/naval/concept/abyss-ray-r48-b.png"><img loading="lazy" decoding="async" src="../../enemies/naval/concept/abyss-ray-r48-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/naval/concept/abyss-ray-r48-b.gif"><img loading="lazy" decoding="async" src="../../enemies/naval/concept/abyss-ray-r48-b.gif" alt="b · motion"></a><figcaption>b · motion</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> a is faint at 1x (dark on dark)</p>
+<p class="rec"><span class="tag">Recommendation</span> b</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>b</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed (2026-10-22)</span></div>
+</article>
+<article class="row" id="r-U3">
+<header><span class="rid">U3</span><h3>siren</h3><span class="kind">Art</span></header>
+<div class="part"><a href="../../enemies/naval/siren/README.md">siren</a></div>
+<div class="q"><strong>Art</strong> <strong>Siren (Level 25 on).</strong> A trench-wall nest with a throat sac that glows teal as the tell, then a sonar ring that slows the ship. <strong>a</strong>: a slate spiral conch shell in a cave mouth with a smooth sound ring. <strong>b</strong>: a slate frill bell, a dome with five membrane frills and a rippled double-wavefront ring. <strong>Recommendation: b</strong></div>
+<div class="media"><figure class="m img"><a href="../../enemies/naval/concept/rejected/siren-r48-a.png"><img loading="lazy" decoding="async" src="../../enemies/naval/concept/rejected/siren-r48-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/naval/concept/rejected/siren-r48-a.gif"><img loading="lazy" decoding="async" src="../../enemies/naval/concept/rejected/siren-r48-a.gif" alt="a · motion"></a><figcaption>a · motion</figcaption></figure><figure class="m img"><a href="../../enemies/naval/concept/siren-r48-b.png"><img loading="lazy" decoding="async" src="../../enemies/naval/concept/siren-r48-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/naval/concept/siren-r48-b.gif"><img loading="lazy" decoding="async" src="../../enemies/naval/concept/siren-r48-b.gif" alt="b · motion"></a><figcaption>b · motion</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> a looks metallic</p>
+<p class="rec"><span class="tag">Recommendation</span> b</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>b</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed (2026-10-22)</span></div>
+</article>
+<article class="row" id="r-U4">
+<header><span class="rid">U4</span><h3>glow-angler</h3><span class="kind">Art</span></header>
+<div class="part"><a href="../../enemies/naval/glow-angler/README.md">glow-angler</a></div>
+<div class="q"><strong>Art</strong> <strong>Glow Angler (Level 26 on).</strong> An ambusher in the dark: its teal lure on a stalk looks like a pickup until it lunges. <strong>a</strong>: a rust angler, toothed gape and crimson eyes, the lure on a bone stalk (shown beside a real salvage pickup). <strong>b</strong>: a teal-black gulper with a pouch mouth, a whip tail and a longer stalk. <strong>Recommendation: a</strong></div>
+<div class="media"><figure class="m img"><a href="../../enemies/naval/concept/glow-angler-r48-a.png"><img loading="lazy" decoding="async" src="../../enemies/naval/concept/glow-angler-r48-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/naval/concept/glow-angler-r48-a.gif"><img loading="lazy" decoding="async" src="../../enemies/naval/concept/glow-angler-r48-a.gif" alt="a · motion"></a><figcaption>a · motion</figcaption></figure><figure class="m img"><a href="../../enemies/naval/concept/rejected/glow-angler-r48-b.png"><img loading="lazy" decoding="async" src="../../enemies/naval/concept/rejected/glow-angler-r48-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/naval/concept/rejected/glow-angler-r48-b.gif"><img loading="lazy" decoding="async" src="../../enemies/naval/concept/rejected/glow-angler-r48-b.gif" alt="b · motion"></a><figcaption>b · motion</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> b looks rocket-like</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed (2026-10-22)</span></div>
+</article>
+<article class="row" id="r-U5">
+<header><span class="rid">U5</span><h3>depth-hunter</h3><span class="kind">Art</span></header>
+<div class="part"><a href="../../enemies/naval/depth-hunter/README.md">depth-hunter</a></div>
+<div class="q"><strong>Art</strong> <strong>Depth Hunter (Level 27 on).</strong> The first human-built unit under the ice, unmarked plain grey (Q11 a), bow torpedo tubes and a red sensor. <strong>a</strong>: a pump-jet cigar with a ducted shroud. <strong>b</strong>: a flat glider, a lifting body with twin dorsal tubes and a red sensor slit.</div>
+<div class="media"><figure class="m img"><a href="../../enemies/naval/concept/rejected/depth-hunter-r48-a.png"><img loading="lazy" decoding="async" src="../../enemies/naval/concept/rejected/depth-hunter-r48-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/naval/concept/rejected/depth-hunter-r48-a.gif"><img loading="lazy" decoding="async" src="../../enemies/naval/concept/rejected/depth-hunter-r48-a.gif" alt="a · motion"></a><figcaption>a · motion</figcaption></figure><figure class="m img"><a href="../../enemies/naval/concept/depth-hunter-r48-b.png"><img loading="lazy" decoding="async" src="../../enemies/naval/concept/depth-hunter-r48-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/naval/concept/depth-hunter-r48-b.gif"><img loading="lazy" decoding="async" src="../../enemies/naval/concept/depth-hunter-r48-b.gif" alt="b · motion"></a><figcaption>b · motion</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the torpedoes reuse the walker missile (a stand-in)</p>
+<div class="ans"><span class="tag">Answer</span> <span><strong>b</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed (2026-10-22)</span></div>
+</article>
+<article class="row" id="r-U6">
+<header><span class="rid">U6</span><h3>glassfin</h3><span class="kind">Art</span></header>
+<div class="part"><a href="../../enemies/naval/glassfin/README.md">glassfin</a></div>
+<div class="q"><strong>Art</strong> <strong>Glassfin (Levels 23-28).</strong> The tiny school that streams up and rams; a glint is the tell, death is a glass shatter. <strong>a</strong>: a 16 px clear glass needle with a teal spine. <strong>b</strong>: a flat clear glass leaf with a teal spine.</div>
+<div class="media"><figure class="m img"><a href="../../enemies/naval/concept/glassfin-r48-a.png"><img loading="lazy" decoding="async" src="../../enemies/naval/concept/glassfin-r48-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/naval/concept/glassfin-r48-a.gif"><img loading="lazy" decoding="async" src="../../enemies/naval/concept/glassfin-r48-a.gif" alt="a · motion"></a><figcaption>a · motion</figcaption></figure><figure class="m img"><a href="../../enemies/naval/concept/rejected/glassfin-r48-b.png"><img loading="lazy" decoding="async" src="../../enemies/naval/concept/rejected/glassfin-r48-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/naval/concept/rejected/glassfin-r48-b.gif"><img loading="lazy" decoding="async" src="../../enemies/naval/concept/rejected/glassfin-r48-b.gif" alt="b · motion"></a><figcaption>b · motion</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> in the motion it enters from the top (spec: streams up)</p>
+<div class="ans"><span class="tag">Answer</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed (2026-10-22)</span></div>
+</article>
+<article class="row" id="r-U7">
+<header><span class="rid">U7</span><h3>barbfin</h3><span class="kind">Art</span></header>
+<div class="part"><a href="../../enemies/naval/barbfin/README.md">barbfin</a></div>
+<div class="q"><strong>Art</strong> <strong>Barbfin (Level 24 on).</strong> The small firing swimmer: a spitting needle, 32 headings. <strong>a</strong>: a bone lionfish, bone fin rays and webbing with a barbed violet-tipped snout. <strong>b</strong>: a plated box, bone armour plates with violet seams and a barbed snout.</div>
+<div class="media"><figure class="m img"><a href="../../enemies/naval/concept/barbfin-r48-a.png"><img loading="lazy" decoding="async" src="../../enemies/naval/concept/barbfin-r48-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/naval/concept/barbfin-r48-a.gif"><img loading="lazy" decoding="async" src="../../enemies/naval/concept/barbfin-r48-a.gif" alt="a · motion"></a><figcaption>a · motion</figcaption></figure><figure class="m img"><a href="../../enemies/naval/concept/rejected/barbfin-r48-b.png"><img loading="lazy" decoding="async" src="../../enemies/naval/concept/rejected/barbfin-r48-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/naval/concept/rejected/barbfin-r48-b.gif"><img loading="lazy" decoding="async" src="../../enemies/naval/concept/rejected/barbfin-r48-b.gif" alt="b · motion"></a><figcaption>b · motion</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the needles are yellow (spec: violet)</p>
+<div class="ans"><span class="tag">Answer</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed (2026-10-22)</span></div>
+</article>
+<article class="row" id="r-U8">
+<header><span class="rid">U8</span><h3>drill-rig</h3><span class="kind">Art</span></header>
+<div class="part"><a href="../../enemies/ground/drill-rig/README.md">drill-rig</a></div>
+<div class="q"><strong>Art</strong> <strong>Drill Rig (Level 22).</strong> A Vrell ground structure on the ice shelf: pumps first, then the core under the bore; shards ring it, bombs take the pumps. <strong>a</strong>: a bone bore tower, a slate base with a spinning crown of bone teeth round the lime bore and four lime-veined pump sacs on hoses. <strong>b</strong>: a rust auger flower, a rust mound with three turning auger blades and ribbed bellows pumps.</div>
+<div class="media"><figure class="m img"><a href="../../enemies/ground/concept/rejected/drill-rig-r48-a.png"><img loading="lazy" decoding="async" src="../../enemies/ground/concept/rejected/drill-rig-r48-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/ground/concept/rejected/drill-rig-r48-a.gif"><img loading="lazy" decoding="async" src="../../enemies/ground/concept/rejected/drill-rig-r48-a.gif" alt="a · motion"></a><figcaption>a · motion</figcaption></figure><figure class="m img"><a href="../../enemies/ground/concept/drill-rig-r48-b.png"><img loading="lazy" decoding="async" src="../../enemies/ground/concept/drill-rig-r48-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/ground/concept/drill-rig-r48-b.gif"><img loading="lazy" decoding="async" src="../../enemies/ground/concept/drill-rig-r48-b.gif" alt="b · motion"></a><figcaption>b · motion</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> a looks tyre-like; b's augers are faint</p>
+<div class="ans"><span class="tag">Answer</span> <span><strong>b</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed (2026-10-22)</span></div>
+</article>
+</section>
+<section id="s-art-boss-and-cruiser"><h2>Art: boss and cruiser</h2>
+<article class="row" id="r-B1">
+<header><span class="rid">B1</span><h3>Ascendancy cruiser</h3><span class="kind">Art</span></header>
+<div class="part"><a href="../../enemies/bosses/abyssal-maw/README.md#concept-art">Ascendancy cruiser</a></div>
+<div class="q"><strong>Art</strong> <strong>The reveal's cruiser (Level 28).</strong> The faction's first black-and-gold hulls, invulnerable set pieces about 220x640 px, one each side with half the hull beyond the field's edge; two break up through the ice beside the wing and fire. <strong>a</strong> 'Regent wedge': a long faceted wedge with a stepped spine and a bridge tower. <strong>b</strong> 'Forked monitor': a forked ram bow with sponsons carrying twin casemate guns. The Maw itself is row Q9.</div>
+<div class="media"><figure class="m img"><a href="../../enemies/bosses/concept/rejected/ascendancy-cruiser-r48-a.png"><img loading="lazy" decoding="async" src="../../enemies/bosses/concept/rejected/ascendancy-cruiser-r48-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/bosses/concept/rejected/ascendancy-cruiser-r48-a.gif"><img loading="lazy" decoding="async" src="../../enemies/bosses/concept/rejected/ascendancy-cruiser-r48-a.gif" alt="a · motion"></a><figcaption>a · motion</figcaption></figure><figure class="m img"><a href="../../enemies/bosses/concept/ascendancy-cruiser-r48-b.png"><img loading="lazy" decoding="async" src="../../enemies/bosses/concept/ascendancy-cruiser-r48-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/bosses/concept/ascendancy-cruiser-r48-b.gif"><img loading="lazy" decoding="async" src="../../enemies/bosses/concept/ascendancy-cruiser-r48-b.gif" alt="b · motion"></a><figcaption>b · motion</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> both mockups show the placeholder hull code <code>HX-427</code>; Level 27 sets <code>HLX-DS-0417</code> (the production art uses it)</p>
+<div class="ans"><span class="tag">Answer</span> <span><strong>b</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed (2026-10-22)</span></div>
+</article>
+</section>
+<section id="s-art-europa"><h2>Art: Europa</h2>
+<div class="sum"><p>Mood stills per level (one proposal each: accept or ask for a change), the darkness look and the hydro-kit. The grade a/b is Q2.</p></div>
+<article class="row" id="r-E1">
+<header><span class="rid">E1</span><h3>Ice shelf</h3><span class="kind">Art</span></header>
+<div class="part"><a href="../../world/europa/README.md#concept-art">Ice shelf</a></div>
+<div class="q"><strong>Art</strong> <strong>Level 22.</strong> Ridged white-blue ice in hard sunlight, an open lead mirroring Jupiter, a Vrell bore site with steaming cracks and turrets, an ice geyser.</div>
+<div class="media"><figure class="m img"><a href="../../world/europa/concept/europa-ice-shelf-r48-a.png"><img loading="lazy" decoding="async" src="../../world/europa/concept/europa-ice-shelf-r48-a.png" alt="still"></a><figcaption>still</figcaption></figure></div>
+<div class="ans"><span class="tag">Answer</span> <span><strong>accept</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed (2026-10-22)</span></div>
+</article>
+<article class="row" id="r-E2">
+<header><span class="rid">E2</span><h3>The descent</h3><span class="kind">Art</span></header>
+<div class="part"><a href="../../world/europa/README.md#concept-art">The descent</a></div>
+<div class="q"><strong>Art</strong> <strong>Level 23, sections 1-2.</strong> The drilled shaft receding below; the waterline crossing: dry ice behind the ship, the water grade ahead.</div>
+<div class="media"><figure class="m img"><a href="../../world/europa/concept/europa-descent-r48-a.png"><img loading="lazy" decoding="async" src="../../world/europa/concept/europa-descent-r48-a.png" alt="still"></a><figcaption>still</figcaption></figure></div>
+<div class="ans"><span class="tag">Answer</span> <span><strong>accept</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed (2026-10-22)</span></div>
+</article>
+<article class="row" id="r-E3">
+<header><span class="rid">E3</span><h3>Thera Deep</h3><span class="kind">Art</span></header>
+<div class="part"><a href="../../world/europa/README.md#concept-art">Thera Deep</a></div>
+<div class="q"><strong>Art</strong> <strong>Level 23, section 3.</strong> The chosen round-07 kelp farms, now lit only by grow-lamp pools with the water dark between, two Vrell siphon pumps.</div>
+<div class="media"><figure class="m img"><a href="../../world/europa/concept/europa-thera-deep-r48-a.png"><img loading="lazy" decoding="async" src="../../world/europa/concept/europa-thera-deep-r48-a.png" alt="still"></a><figcaption>still</figcaption></figure></div>
+<div class="ans"><span class="tag">Answer</span> <span><strong>accept</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed (2026-10-22)</span></div>
+</article>
+<article class="row" id="r-E4">
+<header><span class="rid">E4</span><h3>Abyssal plain</h3><span class="kind">Art</span></header>
+<div class="part"><a href="../../world/europa/README.md#concept-art">Abyssal plain</a></div>
+<div class="q"><strong>Art</strong> <strong>Level 24.</strong> The plain at the lamps' edge, warm behind and dark ahead, spawning reefs, a relay beacon, an Abyss Ray's shadow below the plane.</div>
+<div class="media"><figure class="m img"><a href="../../world/europa/concept/europa-abyssal-plain-r48-a.png"><img loading="lazy" decoding="async" src="../../world/europa/concept/europa-abyssal-plain-r48-a.png" alt="still"></a><figcaption>still</figcaption></figure></div>
+<div class="ans"><span class="tag">Answer</span> <span><strong>accept</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed (2026-10-22)</span></div>
+</article>
+<article class="row" id="r-E5">
+<header><span class="rid">E5</span><h3>Siren trench</h3><span class="kind">Art</span></header>
+<div class="part"><a href="../../world/europa/README.md#concept-art">Siren trench</a></div>
+<div class="q"><strong>Art</strong> <strong>Level 25.</strong> Trench walls with nests and a cave notch, red-gold beacons, a sonar ring, about 14 % ambient light.</div>
+<div class="media"><figure class="m img"><a href="../../world/europa/concept/europa-siren-trench-r48-a.png"><img loading="lazy" decoding="async" src="../../world/europa/concept/europa-siren-trench-r48-a.png" alt="still"></a><figcaption>still</figcaption></figure></div>
+<div class="ans"><span class="tag">Answer</span> <span><strong>accept</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed (2026-10-22)</span></div>
+</article>
+<article class="row" id="r-E6">
+<header><span class="rid">E6</span><h3>Hydrothermal vents</h3><span class="kind">Art</span></header>
+<div class="part"><a href="../../world/europa/README.md#concept-art">Hydrothermal vents</a></div>
+<div class="q"><strong>Art</strong> <strong>Level 27.</strong> Black smokers, amber mats, a heat plume erupting, the scorched grey Depth Hunter wreck.</div>
+<div class="media"><figure class="m img"><a href="../../world/europa/concept/europa-vents-r48-a.png"><img loading="lazy" decoding="async" src="../../world/europa/concept/europa-vents-r48-a.png" alt="still"></a><figcaption>still</figcaption></figure></div>
+<div class="ans"><span class="tag">Answer</span> <span><strong>accept</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed (2026-10-22)</span></div>
+</article>
+<article class="row" id="r-E7">
+<header><span class="rid">E7</span><h3>The hatchery</h3><span class="kind">Art</span></header>
+<div class="part"><a href="../../world/europa/README.md#concept-art">The hatchery</a></div>
+<div class="q"><strong>Art</strong> <strong>Level 28.</strong> Brood galleries of egg racks, the vent's red-amber glow ahead, spores.</div>
+<div class="media"><figure class="m img"><a href="../../world/europa/concept/europa-hatchery-r48-a.png"><img loading="lazy" decoding="async" src="../../world/europa/concept/europa-hatchery-r48-a.png" alt="still"></a><figcaption>still</figcaption></figure></div>
+<div class="ans"><span class="tag">Answer</span> <span><strong>accept</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed (2026-10-22)</span></div>
+</article>
+<article class="row" id="r-E8">
+<header><span class="rid">E8</span><h3>The breakout</h3><span class="kind">Art</span></header>
+<div class="part"><a href="../../world/europa/README.md#concept-art">The breakout</a></div>
+<div class="q"><strong>Art</strong> <strong>Level 28, sections 6-8.</strong> The climb under a cracking ice ceiling, the burst with tumbling slabs, the night ice under Jupiter with Vrell carriers rising (three frames at 1x).</div>
+<div class="media"><figure class="m img"><a href="../../world/europa/concept/europa-breakout-r48-a.png"><img loading="lazy" decoding="async" src="../../world/europa/concept/europa-breakout-r48-a.png" alt="still"></a><figcaption>still</figcaption></figure></div>
+<div class="ans"><span class="tag">Answer</span> <span><strong>accept</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed (2026-10-22)</span></div>
+</article>
+<article class="row" id="r-E9">
+<header><span class="rid">E9</span><h3>Darkness (Level 26)</h3><span class="kind">Art</span></header>
+<div class="part"><a href="../../world/europa/README.md#concept-art">Darkness (Level 26)</a></div>
+<div class="q"><strong>Art</strong> <strong>The darkness look, Q4 a.</strong> <strong>a</strong>: the spec's hard 70 degree, 260 px headlight cone, units show only their glow with a 15 % rim, the lure beside a gold pickup, Rook's lamp, the Sonar Pulse on. <strong>b</strong>: a soft lamp pool round the ship and a long faint beam with back-scatter, units fading in near the ship.</div>
+<div class="media"><figure class="m img"><a href="../../world/europa/concept/darkness-r48-a.png"><img loading="lazy" decoding="async" src="../../world/europa/concept/darkness-r48-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../world/europa/concept/darkness-r48-a.gif"><img loading="lazy" decoding="async" src="../../world/europa/concept/darkness-r48-a.gif" alt="a · motion"></a><figcaption>a · motion</figcaption></figure><figure class="m img"><a href="../../world/europa/concept/rejected/darkness-r48-b.png"><img loading="lazy" decoding="async" src="../../world/europa/concept/rejected/darkness-r48-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../world/europa/concept/rejected/darkness-r48-b.gif"><img loading="lazy" decoding="async" src="../../world/europa/concept/rejected/darkness-r48-b.gif" alt="b · motion"></a><figcaption>b · motion</figcaption></figure></div>
+<div class="ans"><span class="tag">Answer</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed (2026-10-22)</span></div>
+</article>
+<article class="row" id="r-E10">
+<header><span class="rid">E10</span><h3>Hydro-kit</h3><span class="kind">Art</span></header>
+<div class="part"><a href="../../world/europa/README.md#concept-art">Hydro-kit</a></div>
+<div class="q"><strong>Art</strong> <strong>The Stormhawk's hydro-kit (Level 23 on)</strong>, the automatic free refit. <strong>a</strong> sealed refit: pump-jet shrouds, ballast saddles, twin headlights, nav lights, banking frames against stock. <strong>b</strong> pontoon kit: wing pontoons with lamps, a sonar blister and ducted engines (the pontoons sit where the weapon pods mount).</div>
+<div class="media"><figure class="m img"><a href="../../world/europa/concept/hydro-kit-r48-a.png"><img loading="lazy" decoding="async" src="../../world/europa/concept/hydro-kit-r48-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../world/europa/concept/rejected/hydro-kit-r48-b.png"><img loading="lazy" decoding="async" src="../../world/europa/concept/rejected/hydro-kit-r48-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> b's pontoons cover the weapon mounts</p>
+<div class="ans"><span class="tag">Answer</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed (2026-10-22)</span></div>
+</article>
+</section>
+<section id="s-art-gear"><h2>Art: gear</h2>
+<div class="sum"><p>The Act 4 equipment, a/b each, in the play field under the under-water grade (stand-in targets).</p></div>
+<article class="row" id="r-G1">
+<header><span class="rid">G1</span><h3>Harpoon Torpedoes</h3><span class="kind">Art</span></header>
+<div class="part"><a href="../../player/weapons/harpoon-torpedoes/README.md">Harpoon Torpedoes</a></div>
+<div class="q"><strong>Art</strong> <strong>Front <code>anti-sub</code> weapon (Level 23 on).</strong> A 6x22 px torpedo at 250 to 365 px/s on the screen, weak homing, a 20 px impact blast; single at L3, two parallel at L5. <strong>a</strong> 'barbed harpoon': a gunmetal shaft with a steel spear head and swept barbs, a teal motor ring and a cable-thin line of light behind; the impact a dark cavity flash and a teal ring. <strong>b</strong> 'heavy torpedo': a white UTC torpedo with a cobalt nose band and a pump-jet shroud, a straight white-teal wake; the impact a white flash and a double ring.</div>
+<div class="media"><figure class="m img"><a href="../../player/weapons/concept/harpoon-torpedoes-r48-a.png"><img loading="lazy" decoding="async" src="../../player/weapons/concept/harpoon-torpedoes-r48-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../player/weapons/concept/harpoon-torpedoes-r48-a.gif"><img loading="lazy" decoding="async" src="../../player/weapons/concept/harpoon-torpedoes-r48-a.gif" alt="a · motion"></a><figcaption>a · motion</figcaption></figure><figure class="m img"><a href="../../player/weapons/concept/rejected/harpoon-torpedoes-r48-b.png"><img loading="lazy" decoding="async" src="../../player/weapons/concept/rejected/harpoon-torpedoes-r48-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../player/weapons/concept/rejected/harpoon-torpedoes-r48-b.gif"><img loading="lazy" decoding="async" src="../../player/weapons/concept/rejected/harpoon-torpedoes-r48-b.gif" alt="b · motion"></a><figcaption>b · motion</figcaption></figure></div>
+<div class="ans"><span class="tag">Answer</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed (2026-10-22)</span></div>
+</article>
+<article class="row" id="r-G2">
+<header><span class="rid">G2</span><h3>Depth Charges</h3><span class="kind">Art</span></header>
+<div class="part"><a href="../../player/weapons/depth-charges/README.md">Depth Charges</a></div>
+<div class="q"><strong>Art</strong> <strong>Rear <code>anti-sub</code> weapon.</strong> Rolled out of the stern, slowing to a hover, sinking with the scroll (smaller, darker), bursting on the fuse; burst radius 40 / 52 / 64 px by level. <strong>a</strong> 'drum': a navy drum with yellow bands and a white fuse lamp blinking faster; the burst a pressure dome with a dark cavity and a bright rim. <strong>b</strong> 'finned canister': a grey canister with a dome and cross fins, a cyan fuse ring that closes; the burst a sharp double shock ring that refracts the floor.</div>
+<div class="media"><figure class="m img"><a href="../../player/weapons/concept/depth-charges-r48-a.png"><img loading="lazy" decoding="async" src="../../player/weapons/concept/depth-charges-r48-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../player/weapons/concept/depth-charges-r48-a.gif"><img loading="lazy" decoding="async" src="../../player/weapons/concept/depth-charges-r48-a.gif" alt="a · motion"></a><figcaption>a · motion</figcaption></figure><figure class="m img"><a href="../../player/weapons/concept/rejected/depth-charges-r48-b.png"><img loading="lazy" decoding="async" src="../../player/weapons/concept/rejected/depth-charges-r48-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../player/weapons/concept/rejected/depth-charges-r48-b.gif"><img loading="lazy" decoding="async" src="../../player/weapons/concept/rejected/depth-charges-r48-b.gif" alt="b · motion"></a><figcaption>b · motion</figcaption></figure></div>
+<div class="ans"><span class="tag">Answer</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed (2026-10-22)</span></div>
+</article>
+<article class="row" id="r-G3">
+<header><span class="rid">G3</span><h3>Sonar Pulse</h3><span class="kind">Art</span></header>
+<div class="part"><a href="../../player/specials/README.md">Sonar Pulse</a></div>
+<div class="q"><strong>Art</strong> <strong>Special (Level 22 on).</strong> Under water it lights every unit and lure for 6 s and gives full damage for them; above water it reveals <code>sub</code> targets. <strong>a</strong> 'flood': a soft teal band with two echoes that lights the water it passes; every unit is drawn whole with a teal outline, blinking in the last second. <strong>b</strong> 'echo marks': a crisp dashed pale-cyan double ring; the water stays black and units get contact brackets that ping as the ring reaches them. Both show the HUD special row including <code>NO WATER</code>.</div>
+<div class="media"><figure class="m img"><a href="../../player/specials/concept/rejected/sonar-pulse-r48-a.png"><img loading="lazy" decoding="async" src="../../player/specials/concept/rejected/sonar-pulse-r48-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../player/specials/concept/rejected/sonar-pulse-r48-a.gif"><img loading="lazy" decoding="async" src="../../player/specials/concept/rejected/sonar-pulse-r48-a.gif" alt="a · motion"></a><figcaption>a · motion</figcaption></figure><figure class="m img"><a href="../../player/specials/concept/sonar-pulse-r48-b.png"><img loading="lazy" decoding="async" src="../../player/specials/concept/sonar-pulse-r48-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../player/specials/concept/sonar-pulse-r48-b.gif"><img loading="lazy" decoding="async" src="../../player/specials/concept/sonar-pulse-r48-b.gif" alt="b · motion"></a><figcaption>b · motion</figcaption></figure></div>
+<div class="ans"><span class="tag">Answer</span> <span><strong>b</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed (2026-10-22)</span></div>
+</article>
+<article class="row" id="r-G4">
+<header><span class="rid">G4</span><h3>Bulwark heavy drone</h3><span class="kind">Art</span></header>
+<div class="part"><a href="../../player/wingmen/README.md">Bulwark heavy drone</a></div>
+<div class="q"><strong>Art</strong> <strong>Escort-slot drone (Level 22 on; the old Warden drone, renamed).</strong> 36x36 px, hit box 14x14, wing slot (56, +20), draws fire within 150 px; shown intact, hit and under half. <strong>a</strong> 'turtle': a domed blue-grey armour shell with a cobalt rim band, skirts, a heavy barrel and twin pump-jets; it draws fire with a slow cyan lure halo. <strong>b</strong> 'riot barge': a slab hull behind a wide curved shield blade, the cannon through its slit, four corner thrusters; a white strobe beacon.</div>
+<div class="media"><figure class="m img"><a href="../../player/wingmen/concept/bulwark-r48-a.png"><img loading="lazy" decoding="async" src="../../player/wingmen/concept/bulwark-r48-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../player/wingmen/concept/bulwark-r48-a.gif"><img loading="lazy" decoding="async" src="../../player/wingmen/concept/bulwark-r48-a.gif" alt="a · motion"></a><figcaption>a · motion</figcaption></figure><figure class="m img"><a href="../../player/wingmen/concept/rejected/bulwark-r48-b.png"><img loading="lazy" decoding="async" src="../../player/wingmen/concept/rejected/bulwark-r48-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../player/wingmen/concept/rejected/bulwark-r48-b.gif"><img loading="lazy" decoding="async" src="../../player/wingmen/concept/rejected/bulwark-r48-b.gif" alt="b · motion"></a><figcaption>b · motion</figcaption></figure></div>
+<div class="ans"><span class="tag">Answer</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed (2026-10-22)</span></div>
+</article>
+</section>
+<section id="s-music"><h2>Music</h2>
+<div class="sum"><p>The two music items of the act (the A theme 'Thera Deep' already exists as a sketch from the roster). <strong>No sound effect was made:</strong> Freesound refused the first original download of the night with <code>HTTP 429 Too Many Requests</code> (500 downloads a day), as it did the night before; the sound-effect briefs below wait for the quota to reset.</p></div>
+<article class="row" id="r-M1">
+<header><span class="rid">M1</span><h3>Track 11, the Act 4 B theme</h3><span class="kind">Music</span></header>
+<div class="part"><a href="../../audio/music/README.md#concept-art">Track 11, the Act 4 B theme</a></div>
+<div class="q"><strong>Music</strong> <strong>Where and when:</strong> Level 25 (the trench: B base from section 2, the full mix in section 5, out into silence as the lights go out) and Levels 27-28, with Vorne's motif as a faint third layer only in Levels 27-28 (muted in Level 25). <strong>Should sound like:</strong> muffled ambient drum and bass, the A theme 'Thera Deep' family (pads, sonar), heavier and colder; the motif 18-20 dB under the mix, never in the open; no bubble layer. <strong>a</strong> 'Pressure Line' (175 BPM, F minor): a rolling two-step break under a water filter that breathes but never opens fully, a deep reese and sub, warm wide pads, a soft lamp-like arpeggio through a delay, the A theme's sonar ping every two bars, a slow flute line, far whale calls in the drumless breakdown; the motif is track 9's intercepted whistle, muffled by the water (52.5 s, loop 43.9 s). <strong>b</strong> 'Black Current' (140 BPM half-time, C minor): darker and roomier, one heavy kick-and-snare figure a bar with a long snare reverb, rolling shakers, a growling reese swelling over each pair of bars, dub chord stabs with a long ping-pong echo, a pressure drone; the motif is the machines themselves, a cold organ and low brass far behind the hull (58.7 s, loop 48.0 s).</div>
+<div class="media"><figure class="m aud"><figcaption>a &#x27;Pressure Line&#x27;</figcaption><audio controls preload="none" src="../../audio/music/concept/act4-b-theme-r48-a.ogg"></audio></figure><figure class="m aud"><figcaption>b &#x27;Black Current&#x27;</figcaption><audio controls preload="none" src="../../audio/music/concept/rejected/act4-b-theme-r48-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> synthesized, not listened to by me: checked by loudness (-14.3 LUFS), peaks and the loop seam</p>
+<div class="ans"><span class="tag">Answer</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed (2026-10-22)</span></div>
+</article>
+<article class="row" id="r-M2">
+<header><span class="rid">M2</span><h3>Track 30, the reveal sting</h3><span class="kind">Music</span></header>
+<div class="part"><a href="../../audio/music/README.md#concept-art">Track 30, the reveal sting</a></div>
+<div class="q"><strong>Music</strong> <strong>Where and when:</strong> Level 28, about 18 s after the Maw's death, as the two Ascendancy cruisers rise through the ice (4 s) and their amber gun ports open; Varga and Okafor speak over its tail. <strong>Should sound like:</strong> the twist in one gesture: dread rising for 4 s, a hit at the gun ports, Vorne's motif hidden in it (heard but not stated; Act 5 states it), B minor, about 9 s, ending unresolved. <strong>a</strong> 'Black and Gold' (orchestral): low tremolo strings, an organ pedal and a timpani roll swelling from muffled to open; at 4.0 s a brass-and-organ tutti whose notes enter one at a time in the motif's rhythm, so it arrives as a chord, not a tune; the major seventh left hanging on top. <strong>b</strong> 'Ours': the thin intercepted whistle of Act 3 plays the motif out of radio static over a sub swell and a low brass cluster; at 4.0 s a deep impact and the radio filter bursts open into full low brass and organ on the motif's last two notes, the seventh held over a B-minor drone: the voice from Mars was the fleet.</div>
+<div class="media"><figure class="m aud"><figcaption>a &#x27;Black and Gold&#x27;</figcaption><audio controls preload="none" src="../../audio/music/concept/reveal-sting-r48-a.ogg"></audio></figure><figure class="m aud"><figcaption>b &#x27;Ours&#x27;</figcaption><audio controls preload="none" src="../../audio/music/concept/rejected/reveal-sting-r48-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> synthesized, not listened to by me (a -15.0 LUFS, b -14.5 LUFS)</p>
+<div class="ans"><span class="tag">Answer</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed (2026-10-22)</span></div>
+</article>
+</section>
+<section id="s-sounds-not-made-yet"><h2>Sounds not made yet</h2>
+<div class="sum"><p>One row per group: where and when it plays and what it should sound like. Nothing to answer; the redo step makes them from real recordings (CC0 or CC-BY, heavy and big, no bubbles, nothing that pops, no low-pass on the sfx bus) when the quota resets, and they come to the next round as a/b/redo next to each other. The full briefs are in the <span class="ref">sfx part</span>.</p></div>
+<article class="row" id="r-N1">
+<header><span class="rid">N1</span><h3>Ambience beds, seven (16 s loops): europa-ice (Level 22, 23&#x27;s shaft mouth, 28 after the breakout), the Conamara station hum (end of Level 22), europa-under (Levels 23-24), europa-trench (25, 26&#x27;s scarp), europa-black (26), europa-vents (27), the hatchery pulse (28).</h3><span class="kind">not done yet</span></header>
+<dl><dt>Blocked by</dt><dd>Freesound quota (HTTP 429)</dd><dt>Then</dt><dd>Should sound like: a cold wind over open ice with deep ice groans; a big building's ventilation hum; muffled deep water with a heavy pressure rumble, hull creaks and far whale-like calls; rock grinding far off; a heavy pressure drone in total dark (the scariest bed of the act); a deep roaring hydrothermal field with slow surges; the vent bed with a heartbeat-like pressure throb. No bubbles, no splashes, no hiss-pops. Candidates already listed per bed.</dd></dl>
+<div class="ans out"><span class="tag">README: then</span> <span>Should sound like: a cold wind over open ice with deep ice groans; a big building's ventilation hum; muffled deep water with a heavy pressure rumble, hull creaks and far whale-like calls; rock grinding far off; a heavy pressure drone in total dark (the scariest bed of the act); a deep roaring hydrothermal field with slow surges; the vent bed with a heartbeat-like pressure throb. No bubbles, no splashes, no hiss-pops. Candidates already listed per bed.</span></div><div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-N2">
+<header><span class="rid">N2</span><h3>Under-water explosions, small to huge (every kill below the waterline, Levels 23-28; the huge rung for the Maw).</h3><span class="kind">not done yet</span></header>
+<dl><dt>Blocked by</dt><dd>Freesound quota (HTTP 429)</dd><dt>Then</dt><dd>Should sound like: deep, heavy pressure booms with a muffled body and a long low tail; no splash, no bubble rattle. Candidates: the chosen <code>explosion-underwater-r04-a</code>, two real under-water explosions, three new CC0/CC-BY depth-bomb recordings to fetch.</dd></dl>
+<div class="ans out"><span class="tag">README: then</span> <span>Should sound like: deep, heavy pressure booms with a muffled body and a long low tail; no splash, no bubble rattle. Candidates: the chosen <code>explosion-underwater-r04-a</code>, two real under-water explosions, three new CC0/CC-BY depth-bomb recordings to fetch.</span></div><div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-N3">
+<header><span class="rid">N3</span><h3>Terrain and set pieces, twelve: ice crack and geyser burst (22), waterline crossing and hydro-kit refit tell (23), wall scrape (23, 25), siphon pump hum and break (23), reef iris and collapse (24), beacon pulse (24), heat plume and vent eruption (27), headlight click and Rook&#x27;s lamp flicker and spin-down (26), the breakout (28).</h3><span class="kind">not done yet</span></header>
+<dl><dt>Blocked by</dt><dd>Freesound quota (HTTP 429)</dd><dt>Then</dt><dd>Should sound like: heavy and physical: ice cracking and a roaring steam column; a deep muffled whoomph of submersion; clamps and a hydraulic seal; metal or stone grinding; a deep clean sonar ping; a relay clunk; an electrical flicker then an engine winding down; ice tearing and a huge crash into open air. Nothing that pops or bubbles.</dd></dl>
+<div class="ans out"><span class="tag">README: then</span> <span>Should sound like: heavy and physical: ice cracking and a roaring steam column; a deep muffled whoomph of submersion; clamps and a hydraulic seal; metal or stone grinding; a deep clean sonar ping; a relay clunk; an electrical flicker then an engine winding down; ice tearing and a huge crash into open air. Nothing that pops or bubbles.</span></div><div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-N4">
+<header><span class="rid">N4</span><h3>Enemies, eleven: Drill Rig, Eel Swarm, Glassfin, Abyss Ray, Barbfin, Siren, Spiral Nautilus, Glow Angler, Driftjelly (reuses the round-46 pick), Depth Hunter, Scuttler on silt (reuse).</h3><span class="kind">not done yet</span></header>
+<dl><dt>Blocked by</dt><dd>Freesound quota (HTTP 429)</dd><dt>Then</dt><dd>Should sound like: a low drill whine with a grinding bite; a dull pressure thump and a wet tearing slide; a thin dry glass shatter; a low swelling horn-like call (the Ray's tell); a sharp spit; a soft heavy sung sweep spreading out (the Siren, sung rather than pinged) with a falling tone on the slowed ship; a heavy rolling grind; a faint electric hum and a surge with a jaw snap; a human submarine's ballast blow, pneumatic launch thump and metal break-up (a machine, not a creature).</dd></dl>
+<div class="ans out"><span class="tag">README: then</span> <span>Should sound like: a low drill whine with a grinding bite; a dull pressure thump and a wet tearing slide; a thin dry glass shatter; a low swelling horn-like call (the Ray's tell); a sharp spit; a soft heavy sung sweep spreading out (the Siren, sung rather than pinged) with a falling tone on the slowed ship; a heavy rolling grind; a faint electric hum and a surge with a jaw snap; a human submarine's ballast blow, pneumatic launch thump and metal break-up (a machine, not a creature).</span></div><div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-N5">
+<header><span class="rid">N5</span><h3>The Abyssal Maw and the cruisers, twelve: arrival roar, gill breath, throat charge, coil sweep, eel shed, dive, lunge, implant spark and burst, death, cruiser rise, broadsides and point defence.</h3><span class="kind">not done yet</span></header>
+<dl><dt>Blocked by</dt><dd>Freesound quota (HTTP 429)</dd><dt>Then</dt><dd>Should sound like: a vast slow subsonic groan; a deep pressure thump with a soft exhale like a heartbeat under water; a rising low drone with a growl; a grinding groan of plates and a heavy swish; a wet slide; a long falling roar as the music drops; a rushing surge and heavy jaw snap; electrical arcing for the Helix implants (machine, not creature: the clue is in the sound); three heavy cracks, a dying groan and a deep boom; a deep engine thrum with ice grinding off the hull; big naval gun volleys and rapid autocannon.</dd></dl>
+<div class="ans out"><span class="tag">README: then</span> <span>Should sound like: a vast slow subsonic groan; a deep pressure thump with a soft exhale like a heartbeat under water; a rising low drone with a growl; a grinding groan of plates and a heavy swish; a wet slide; a long falling roar as the music drops; a rushing surge and heavy jaw snap; electrical arcing for the Helix implants (machine, not creature: the clue is in the sound); three heavy cracks, a dying groan and a deep boom; a deep engine thrum with ice grinding off the hull; big naval gun volleys and rapid autocannon.</span></div><div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+<article class="row" id="r-N6">
+<header><span class="rid">N6</span><h3>Player equipment and voices: Harpoon launch and impact, Depth Charge roll-out and burst, the Choir&#x27;s whisper (Level 26), Rook&#x27;s cut-off (Level 26, t=160).</h3><span class="kind">not done yet</span></header>
+<dl><dt>Blocked by</dt><dd>Freesound quota (HTTP 429)</dd><dt>Then</dt><dd>Should sound like: a pneumatic tube thump and a motor whirr running off, no bubbles; a heavy barrel clank then a low under-water thud; the Choir through the voice pipeline's layered, pitched-down, reversed-whisper treatment (no new file); Rook's Lifeline Three cut with static. The Sonar Pulse keeps the chosen CC0 ping and the Decoy Flares the chosen flares sound.</dd></dl>
+<div class="ans out"><span class="tag">README: then</span> <span>Should sound like: a pneumatic tube thump and a motor whirr running off, no bubbles; a heavy barrel clank then a low under-water thud; the Choir through the voice pipeline's layered, pitched-down, reversed-whisper treatment (no new file); Rook's Lifeline Three cut with static. The Sonar Pulse keeps the chosen CC0 ping and the Decoy Flares the chosen flares sound.</span></div><div class="ans none"><span class="tag">Answer</span> <span>not recorded</span></div>
+</article>
+</section>
+<section id="s-documents-to-approve"><h2>Documents to approve</h2>
+<div class="sum"><p>The drafts themselves (<code>design: draft</code>; nothing is set to approved until you say so). Open the document and answer approve or change.</p></div>
+<article class="row" id="r-D1">
+<header><span class="rid">D1</span><h3>The act</h3><span class="kind">Document</span></header>
+<div class="part"><a href="../../campaign/act-4-deep-water/README.md">The act</a></div>
+<div class="q"><strong>Document</strong> Act 4 'Deep Water' as a whole: title card, intro and outro pages (four each), the units and HP table, density and haul plan, music and voice plan, the checklist, and the roadmap's M8 with parts A-I.</div>
+<div class="ans"><span class="tag">Answer</span> <span><strong>approve</strong> (design: approved)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed (2026-10-22)</span></div>
+</article>
+<article class="row" id="r-D2">
+<header><span class="rid">D2</span><h3>Level 22, Ice Shelf</h3><span class="kind">Document</span></header>
+<div class="part"><a href="../../campaign/act-4-deep-water/level-22-ice-shelf/README.md">Level 22, Ice Shelf</a></div>
+<div class="q"><strong>Document</strong> The level draft: sections, wave tables, hazards, radio script and a density drafted to the Act 2+ floor (to be measured in the build).</div>
+<div class="ans"><span class="tag">Answer</span> <span><strong>approve</strong> (design: approved)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed (2026-10-22)</span></div>
+</article>
+<article class="row" id="r-D3">
+<header><span class="rid">D3</span><h3>Level 23, Through the Ice</h3><span class="kind">Document</span></header>
+<div class="part"><a href="../../campaign/act-4-deep-water/level-23-through-the-ice/README.md">Level 23, Through the Ice</a></div>
+<div class="q"><strong>Document</strong> The level draft: sections, wave tables, hazards, radio script and a density drafted to the Act 2+ floor (to be measured in the build).</div>
+<div class="ans"><span class="tag">Answer</span> <span><strong>approve</strong> (design: approved)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed (2026-10-22)</span></div>
+</article>
+<article class="row" id="r-D4">
+<header><span class="rid">D4</span><h3>Level 24, Abyssal Plain</h3><span class="kind">Document</span></header>
+<div class="part"><a href="../../campaign/act-4-deep-water/level-24-abyssal-plain/README.md">Level 24, Abyssal Plain</a></div>
+<div class="q"><strong>Document</strong> The level draft: sections, wave tables, hazards, radio script and a density drafted to the Act 2+ floor (to be measured in the build).</div>
+<div class="ans"><span class="tag">Answer</span> <span><strong>approve</strong> (design: approved)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed (2026-10-22)</span></div>
+</article>
+<article class="row" id="r-D5">
+<header><span class="rid">D5</span><h3>Level 25, Siren Trench</h3><span class="kind">Document</span></header>
+<div class="part"><a href="../../campaign/act-4-deep-water/level-25-siren-trench/README.md">Level 25, Siren Trench</a></div>
+<div class="q"><strong>Document</strong> The level draft: sections, wave tables, hazards, radio script and a density drafted to the Act 2+ floor (to be measured in the build).</div>
+<div class="ans"><span class="tag">Answer</span> <span><strong>approve</strong> (design: approved)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed (2026-10-22)</span></div>
+</article>
+<article class="row" id="r-D6">
+<header><span class="rid">D6</span><h3>Level 26, Blackwater</h3><span class="kind">Document</span></header>
+<div class="part"><a href="../../campaign/act-4-deep-water/level-26-blackwater/README.md">Level 26, Blackwater</a></div>
+<div class="q"><strong>Document</strong> The level draft: sections, wave tables, hazards, radio script and a density drafted to the Act 2+ floor (to be measured in the build).</div>
+<div class="ans"><span class="tag">Answer</span> <span><strong>approve</strong> (design: approved)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed (2026-10-22)</span></div>
+</article>
+<article class="row" id="r-D7">
+<header><span class="rid">D7</span><h3>Level 27, Hydrothermal Vents</h3><span class="kind">Document</span></header>
+<div class="part"><a href="../../campaign/act-4-deep-water/level-27-hydrothermal-vents/README.md">Level 27, Hydrothermal Vents</a></div>
+<div class="q"><strong>Document</strong> The level draft: sections, wave tables, hazards, radio script and a density drafted to the Act 2+ floor (to be measured in the build).</div>
+<div class="ans"><span class="tag">Answer</span> <span><strong>approve</strong> (design: approved)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed (2026-10-22)</span></div>
+</article>
+<article class="row" id="r-D8">
+<header><span class="rid">D8</span><h3>Level 28, Abyssal Maw</h3><span class="kind">Document</span></header>
+<div class="part"><a href="../../campaign/act-4-deep-water/level-28-abyssal-maw/README.md">Level 28, Abyssal Maw</a></div>
+<div class="q"><strong>Document</strong> The level draft: sections, wave tables, hazards, radio script and a density drafted to the Act 2+ floor (to be measured in the build).</div>
+<div class="ans"><span class="tag">Answer</span> <span><strong>approve</strong> (design: approved)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed (2026-10-22)</span></div>
+</article>
+<article class="row" id="r-D9">
+<header><span class="rid">D9</span><h3>The Abyssal Maw</h3><span class="kind">Document</span></header>
+<div class="part"><a href="../../enemies/bosses/abyssal-maw/README.md">The Abyssal Maw</a></div>
+<div class="q"><strong>Document</strong> The boss spec: the coiled guardian in three phases, HP 6,700 plus four 150 HP gill sacs, par 130 s, bounty 510 at the draft, the reveal staging, the cruisers, the can't-lose run, the sounds brief.</div>
+<div class="ans"><span class="tag">Answer</span> <span><strong>approve</strong> (design: approved)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed (2026-10-22)</span></div>
+</article>
+<article class="row" id="r-D10">
+<header><span class="rid">D10</span><h3>The Act 4 units</h3><span class="kind">Document</span></header>
+<div class="part"><a href="../../enemies/naval/README.md">The Act 4 units</a></div>
+<div class="q"><strong>Document</strong> The naval units (Eel Swarm, Abyss Ray, Siren, Spiral Nautilus, Glow Angler, Barbfin, Glassfin, Depth Hunter) and the Drill Rig: stat blocks, behaviour, tells, bounties.</div>
+<div class="ans"><span class="tag">Answer</span> <span><strong>approve</strong> (design: approved)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed (2026-10-22)</span></div>
+</article>
+<article class="row" id="r-D11">
+<header><span class="rid">D11</span><h3>The systems</h3><span class="kind">Document</span></header>
+<div class="part"><a href="../../player/systems/README.md">The systems</a></div>
+<div class="q"><strong>Document</strong> Under-water mode (plane, drag, bullets x0.7, non-<code>anti-sub</code> x0.7, beam reach), the darkness rules, the Siren slow, plumes and eruptions, the ice surface; with the Harpoon Torpedoes, Depth Charges, Sonar Pulse, Bulwark and the Mk IV generator.</div>
+<div class="ans"><span class="tag">Answer</span> <span><strong>approve</strong> (design: approved)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed (2026-10-22)</span></div>
+</article>
+<article class="row" id="r-D12">
+<header><span class="rid">D12</span><h3>Europa and the story</h3><span class="kind">Document</span></header>
+<div class="part"><a href="../../world/europa/README.md">Europa and the story</a></div>
+<div class="q"><strong>Document</strong> The setting document (the lamp-lit ladder, hazards, locations) and the story README's Act 4 arc, the reveal's hints and the new speakers.</div>
+<div class="ans"><span class="tag">Answer</span> <span><strong>approve</strong> (design: approved)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed (2026-10-22)</span></div>
+</article>
+<article class="row" id="r-D13">
+<header><span class="rid">D13</span><h3>The audio plan</h3><span class="kind">Document</span></header>
+<div class="part"><a href="../../audio/music/README.md">The audio plan</a></div>
+<div class="q"><strong>Document</strong> The music, sfx and voice READMEs' Act 4 sections: tracks 11 and 30, the bed and sfx list, the casting of Dr. Brandt and Thera Deep Control.</div>
+<div class="ans"><span class="tag">Answer</span> <span><strong>approve</strong> (design: approved)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>closed (2026-10-22)</span></div>
+</article>
+</section></main></body></html>

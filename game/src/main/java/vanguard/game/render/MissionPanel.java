@@ -1083,10 +1083,16 @@ final class MissionPanel {
                     ? "DONE"
                     : sortie.secondaryFailed()
                             ? "FAILED"
-                            : escapesCount(
-                                    sortie.escapesDestroyed(),
-                                    sortie.escapesTotal(),
-                                    sortie.script().objectives().secondary().escapesAllowed());
+                            : sortie.script().objectives().secondary().objects()
+                                    // M9 part G (Level 34's CONTAINERS n / 6): the objects opened of all the level has.
+                                    ? escapesCount(sortie.escapesDestroyed(), sortie.escapesTotal(), 0)
+                                    : escapesCount(
+                                            sortie.escapesDestroyed(),
+                                            sortie.escapesTotal(),
+                                            sortie.script()
+                                                    .objectives()
+                                                    .secondary()
+                                                    .escapesAllowed());
             kit.textRight(batch, kit.body, count, colour, X + PAD, y, TEXT_WIDTH);
             return;
         }

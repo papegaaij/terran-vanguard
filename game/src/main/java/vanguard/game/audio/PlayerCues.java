@@ -212,6 +212,10 @@ final class PlayerCues extends SoundFamily {
                 if (type == PickupType.OVERDRIVE) {
                     bank.play(Sfx.OVERDRIVE_START, PICKUPS, 1, 0);
                 }
+                if (type == PickupType.STORY) {
+                    // M9 part G (AUD-G): the core's hum swells over the large salvage pickup's sound.
+                    bank.play(Sfx.SALVAGE_LARGE, PICKUPS, 1, pan);
+                }
             }
             case SHIELD_HIT -> bank.play(Sfx.SHIELD_HIT, PLAYER_DAMAGE, pitch(0.05), pan);
             case SHIELD_BROKEN -> bank.play(Sfx.SHIELD_BREAK, PLAYER_DAMAGE, 1, pan);

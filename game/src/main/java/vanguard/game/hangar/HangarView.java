@@ -74,7 +74,8 @@ public final class HangarView implements Disposable {
                         content,
                         key,
                         Optional.ofNullable(state.hangar().campaign().loadout().get(LoadoutSlot.SPECIAL))
-                                .map(Fitted::item))));
+                                .map(Fitted::item))),
+                levelKey.map(key -> IntelPanel.strip(content, key)).orElse(IntelPanel.Strip.NONE));
     }
 
     @Override

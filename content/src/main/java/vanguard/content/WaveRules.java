@@ -71,9 +71,13 @@ final class WaveRules {
             EnemySpec mapped = UnitRules.enemy(
                     content, group.enemy(), difficulty, Optional.ofNullable(enemyChanges.get(group.enemy())), inLevel);
             // M7 part C: a crawl wave's chain crawls its ground path (the Threadcrawler).
-            EnemySpec unit = wave.crawl()
-                    .map(path -> TerrainRules.crawl(content, content.enemy(group.enemy()), difficulty, mapped, path))
-                    .orElse(mapped);
+            // M9 part F: a prey wing's hold, a hunting stream's hunters (Level 33).
+            EnemySpec unit = PartFRules.preyRole(
+                    wave,
+                    wave.crawl()
+                            .map(path ->
+                                    TerrainRules.crawl(content, content.enemy(group.enemy()), difficulty, mapped, path))
+                            .orElse(mapped));
             WaveSpec spec = PartGRules.lanesAndPairs(
                     wave,
                     change,
@@ -116,21 +120,24 @@ final class WaveRules {
             // mount (TrenchRules).
             // M9 part B (Level 29): a V-wing's leader at its tip, a wave's rocks with their riders (BeltRules).
             // M9 part C (Level 30): a mine layers' wave's lines, set last (MinefieldRules).
-            out.add(MinefieldRules.wave(
+            // M9 part E (Level 32): a fork branch's wave, set very last (DeepCoreRules).
+            out.add(DeepCoreRules.wave(
                     wave,
-                    BeltRules.wave(
-                            content,
-                            level,
+                    MinefieldRules.wave(
                             wave,
-                            group.enemy(),
-                            difficulty,
-                            inLevel,
-                            TrenchRules.mount(
+                            BeltRules.wave(
+                                    content,
+                                    level,
                                     wave,
-                                    wave.pursues()
-                                            ? spec.withPursuit(
-                                                    RetreatRules.pursuit(content, wave, group.enemy(), difficulty))
-                                            : spec))));
+                                    group.enemy(),
+                                    difficulty,
+                                    inLevel,
+                                    TrenchRules.mount(
+                                            wave,
+                                            wave.pursues()
+                                                    ? spec.withPursuit(RetreatRules.pursuit(
+                                                            content, wave, group.enemy(), difficulty))
+                                                    : spec)))));
         }
     }
 

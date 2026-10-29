@@ -31,13 +31,19 @@ public sealed interface EnemyAttackData permits EnemyData {
      * Smart Bomb damage it. M9 part C (design/enemies/air/gilded-gunship): with a {@code factor} it is facing armour on a
      * unit that is not a walker: a direct hit arriving within {@code front_arc} of its facing does {@code factor} of its
      * damage instead of glancing off (after its shield), a {@code rear_plate} giving its engines' arc and multiplier.
+     * M9 part E (design/enemies/ground/sentinel-tower): {@code collar: [w, h]} is a <b>hardened collar</b>: hardened, but
+     * the box of {@code [w, h]} on its centre (the emitter) takes every weapon (a beam whose column crosses it too), and
+     * the seekers pick the unit.
      */
-    record Armour(Optional<String> text, Optional<Double> frontArc, Optional<Double> factor) {
+    record Armour(Optional<String> text, Optional<Double> frontArc, Optional<Double> factor, Optional<Size> collar) {
         @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
         public Armour {
             frontArc.ifPresent(arc -> Check.notNegative("front_arc", arc));
             factor.ifPresent(f -> Check.positive("factor", f));
             Check.that(factor.isEmpty() || frontArc.isPresent(), "an armour factor goes with its front_arc");
+            Check.that(
+                    collar.isEmpty() || (frontArc.isEmpty() && factor.isEmpty()),
+                    "a hardened collar (collar) has no front_arc or factor");
         }
 
         /** M9 part C: whether it is facing armour (a front arc with a factor, not a walker's glance). */
@@ -45,9 +51,9 @@ public sealed interface EnemyAttackData permits EnemyData {
             return factor.isPresent();
         }
 
-        /** Whether it is {@code hardened}. */
+        /** Whether it is {@code hardened} (M9 part E: or a hardened collar). */
         public boolean hardened() {
-            return text.filter("hardened"::equals).isPresent();
+            return text.filter("hardened"::equals).isPresent() || collar.isPresent();
         }
 
         /**
@@ -75,7 +81,7 @@ public sealed interface EnemyAttackData permits EnemyData {
         /** The armour written as a text. */
         @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
         public static Armour of(String text) {
-            return new Armour(Optional.of(text), Optional.empty(), Optional.empty());
+            return new Armour(Optional.of(text), Optional.empty(), Optional.empty(), Optional.empty());
         }
     }
 
@@ -99,6 +105,8 @@ public sealed interface EnemyAttackData permits EnemyData {
      *     stops when every part that carries it is lost; none if not given
      * @param attacks M8 part C (design/enemies/naval/eel-swarm: the head's aimed shot and its fan): the unit's attacks
      *     the part fires, by name, instead of one {@code attack} ({@link #attackNames})
+     * @param topples M9 part E (design/enemies/ground/strider, The topple): a walker's {@code destroyable} part whose loss
+     *     topples it (a leg; the walk's {@code topple}); false if not given
      */
     record PartData(
             String name,
@@ -114,8 +122,12 @@ public sealed interface EnemyAttackData permits EnemyData {
             Optional<List<SpotData>> spots,
             Optional<String> aim,
             Optional<Double> slows,
-            Optional<List<String>> attacks) {
+            Optional<List<String>> attacks,
+            Optional<Boolean> topples) {
         public PartData {
+            Check.that(
+                    !topples.orElse(false) || kind.equals("destroyable"),
+                    "only a destroyable part topples its walker (topples)");
             Check.that(attack.isEmpty() || attacks.isEmpty(), "a part fires one attack or a list of attacks, not both");
             attacks.ifPresent(names -> Check.that(names.size() >= 2, "attacks: two or more (else write attack)"));
             attacks = attacks.map(List::copyOf);
@@ -155,7 +167,8 @@ public sealed interface EnemyAttackData permits EnemyData {
                 @com.fasterxml.jackson.annotation.JsonProperty("spots") Optional<List<SpotData>> spots,
                 @com.fasterxml.jackson.annotation.JsonProperty("aim") Optional<String> aim,
                 @com.fasterxml.jackson.annotation.JsonProperty("slows") Optional<Double> slows,
-                @com.fasterxml.jackson.annotation.JsonProperty("attacks") Optional<List<String>> attacks) {
+                @com.fasterxml.jackson.annotation.JsonProperty("attacks") Optional<List<String>> attacks,
+                @com.fasterxml.jackson.annotation.JsonProperty("topples") Optional<Boolean> topples) {
             Check.that(
                     name != null && offset != null && hitbox != null && kind != null,
                     "a part has a name, an offset, a hit box and a kind");
@@ -180,7 +193,13 @@ public sealed interface EnemyAttackData permits EnemyData {
                     spots == null ? Optional.empty() : spots,
                     aim == null ? Optional.empty() : aim,
                     slows == null ? Optional.empty() : slows,
-                    attacks == null ? Optional.empty() : attacks);
+                    attacks == null ? Optional.empty() : attacks,
+                    topples == null ? Optional.empty() : topples);
+        }
+
+        /** M9 part E: whether its loss topples its walker ({@code topples: true}). */
+        public boolean toppling() {
+            return topples.orElse(false);
         }
 
         /** M8 part C: the names of the attacks it fires, its {@code attack} or its {@code attacks}; none if neither. */
@@ -232,9 +251,10 @@ public sealed interface EnemyAttackData permits EnemyData {
      * at the telegraph's start a line is locked from the unit through the ship's position to the screen's edge and drawn
      * for {@code telegraph} s (at least 0.8, the vocabulary's minimum; a difficulty's hook {@code telegraph} replaces
      * it), then it is live {@code live} s as a band {@code band} px wide that hits the ship once for the attack's bullet
-     * class; the unit holds fire while the ship is within {@code hold_within} px of it.
+     * class; the unit holds fire while the ship is within {@code hold_within} px of it. M9 part F (Level 33): {@code
+     * most_telegraphing}: a due line waits while that many lines (any unit's) telegraph (the Rail Bunker's 2).
      */
-    record Line(double telegraph, double live, double band, double holdWithin) {
+    record Line(double telegraph, double live, double band, double holdWithin, Optional<Integer> mostTelegraphing) {
         /** The vocabulary's shortest telegraph (design/enemies, Attack pattern vocabulary). */
         public static final double MIN_TELEGRAPH = 0.8;
 
@@ -243,6 +263,7 @@ public sealed interface EnemyAttackData permits EnemyData {
             Check.positive("line.live", live);
             Check.positive("line.band", band);
             Check.notNegative("line.hold_within", holdWithin);
+            mostTelegraphing.ifPresent(n -> Check.positive("line.most_telegraphing", n));
         }
     }
 
@@ -295,6 +316,9 @@ public sealed interface EnemyAttackData permits EnemyData {
      * @param parts M7 part F: a boss's parts that fire it, besides those naming it as their {@code attack} (the
      *     walker's pods fire one salvo pattern in its first phase, another later)
      * @param homing M7 part F: an aimed attack's shots are homing missiles (the walker's pods)
+     * @param from M9 part H (design/enemies/bosses/iron-sovereign): a boss's attack is a ground unit's (the Sovereign's
+     *     batteries: the SAM Nest's salvo, the Rail Bunker's line, the Sentinel Tower's sweep): written with its name,
+     *     pattern, interval, staggering and parts only, the loader takes the rest from the unit ({@link RingRules#resolve})
      */
     record Attack(
             String pattern,
@@ -336,7 +360,8 @@ public sealed interface EnemyAttackData permits EnemyData {
             Optional<Homing> homing,
             Optional<Slow> slow,
             Optional<Line> line,
-            Optional<AirLink> airLink) {
+            Optional<AirLink> airLink,
+            Optional<RingBlock.From> from) {
         /** M7 part E: {@code while: open}, a spin cycle's open window. */
         public static final String WHILE_OPEN = "open";
 
@@ -347,167 +372,201 @@ public sealed interface EnemyAttackData permits EnemyData {
         public static final String AIR_LINK = "air-link";
 
         public Attack {
-            Check.that(
-                    pattern.equals(AIR_LINK) == airLink.isPresent(),
-                    "an air-link attack has its air_link, the others none");
-            Check.that(
-                    !pattern.equals(AIR_LINK) || (bullet.isPresent() && speed.isEmpty() && interval.isEmpty()),
-                    "an air-link attack names the bullet class of its touch, no speed or interval");
-            whileState.ifPresent(state -> Check.that(
-                    WHILE_OPEN.equals(state), "while: only 'open' (a spin cycle's window), was '" + state + "'"));
-            Check.that(
-                    trigger.isEmpty() || (pattern.equals("aimed") && interval.isEmpty()),
-                    "a triggered attack is aimed and fires once per pass, no interval");
-            tell.ifPresent(t -> Check.positive("tell", t));
-            Check.that(reaim.isEmpty() || burst.isPresent(), "only a burst re-aims its shots (reaim needs a burst)");
-            parts.ifPresent(list -> Check.notEmpty("parts", list));
-            Check.that(
-                    homing.isEmpty()
-                            || (pattern.equals("aimed")
-                                    && aim.filter("up"::equals).isEmpty()),
-                    "only an aimed attack fires homing missiles (not straight up)");
-            Check.that(pattern.equals("aura") == aura.isPresent(), "an aura attack has its aura, the others none");
-            Check.that(
-                    !pattern.equals("aura")
-                            || (bullet.isEmpty()
-                                    && speed.isEmpty()
-                                    && interval.isEmpty()
-                                    && count.isEmpty()
-                                    && firstShotDelay.isEmpty()),
-                    "an aura has no bullet, speed, interval, count or first shot");
-            Check.that(pattern.equals("link") == link.isPresent(), "a link attack has its link, the others none");
-            Check.that(
-                    !pattern.equals("link")
-                            || (bullet.isPresent()
-                                    && speed.isEmpty()
-                                    && interval.isEmpty()
-                                    && firstShotDelay.isEmpty()
-                                    && only.isEmpty()),
-                    "a link has its touch's bullet class and no speed, interval, first shot or difficulties");
-            Check.that(pattern.equals("pores") == pores.isPresent(), "a pores attack has its pores, the others none");
-            Check.that(
-                    !pattern.equals("pores") || interval.isPresent(),
-                    "a pores attack has its interval (s between two pores)");
-            only.ifPresent(names -> {
-                Check.notEmpty("only", names);
-                names.forEach(Difficulty::of);
-            });
-            Check.that(
-                    staggered.isEmpty() || pattern.equals("aimed") || pattern.equals("mortar"),
-                    "only an aimed or a mortar attack is staggered");
-            Check.that(
-                    !staggered.orElse(false) || !rotate.orElse(false), "an attack rotates or is staggered, not both");
-            // M5 part F: a drain (the Lamprey's, while latched) has its rate of shield points a second and nothing
-            // else.
-            Check.that(pattern.equals("drain") == rate.isPresent(), "a drain has its rate, the others none");
-            rate.ifPresent(r -> Check.positive("rate", r));
-            Check.that(
-                    !pattern.equals("drain")
-                            || (bullet.isEmpty() && speed.isEmpty() && interval.isEmpty() && count.isEmpty()),
-                    "a drain has no bullet, speed, interval or count");
-            Check.that(pattern.equals("ring") || within.isEmpty(), "only a ring fires within a reach");
-            within.ifPresent(w -> Check.positive("within", w));
-            Check.that(within.isEmpty() || interval.isPresent(), "a ring fired within a reach has its interval");
-            Check.that(
-                    pattern.equals("laser-sweep") == sweep.isPresent(), "a laser-sweep has its sweep, the others none");
-            // M9 part A (design/enemies/ground/rail-bunker): a laser-line's locked line, its bullet class once.
-            Check.that(pattern.equals(LASER_LINE) == line.isPresent(), "a laser-line has its line, the others none");
-            Check.that(
-                    !pattern.equals(LASER_LINE)
-                            || (bullet.isPresent() && speed.isEmpty() && interval.isPresent() && count.isEmpty()),
-                    "a laser-line has a bullet and an interval and no speed or count");
-            Check.that(
-                    line.isEmpty()
-                            || interval.filter(i -> i
-                                            >= line.get().telegraph()
-                                                    + line.get().live())
-                                    .isPresent(),
-                    "a laser-line's interval holds its telegraph and its live time");
-            Check.that(
-                    !pattern.equals("laser-sweep") || (bullet.isPresent() && speed.isEmpty()),
-                    "a laser-sweep has a bullet and no speed");
-            Check.that(
-                    pattern.equals("aimed")
-                            || pattern.equals("fan")
-                            || pattern.equals("mine")
-                            || pattern.equals("spawn")
-                            || pattern.equals("mortar")
-                            || pattern.equals("ring")
-                            || pattern.equals("spiral")
-                            || pattern.equals("laser-sweep")
-                            || pattern.equals(LASER_LINE)
-                            || pattern.equals("pounce")
-                            || pattern.equals("drain")
-                            || pattern.equals("link")
-                            || pattern.equals("pores")
-                            || pattern.equals("aura")
-                            || pattern.equals(AIR_LINK),
-                    "pattern must be aimed, fan, mine, spawn, mortar, ring, spiral, laser-sweep, laser-line, pounce,"
-                            + " drain, link, pores, aura or air-link, was '" + pattern + "'");
-            Check.that(pattern.equals("pounce") == pounce.isPresent(), "a pounce has its pounce, the others none");
-            Check.that(
-                    !pattern.equals("pounce") || (bullet.isEmpty() && speed.isEmpty() && interval.isPresent()),
-                    "a pounce has an interval and no bullet or speed");
-            Check.that(pattern.equals("mine") == mine.isPresent(), "a mine attack has its mine, the others none");
-            Check.that(
-                    pattern.equals("mortar") == mortar.isPresent(), "a mortar attack has its mortar, the others none");
-            // Round 43: a boss's fan may come in a burst too (the walker's chin and flank guns; FoundryChecks).
-            Check.that(
-                    pattern.equals("aimed")
-                            || (pattern.equals("fan") && rotate.isEmpty())
-                            || (burst.isEmpty() && burstGap.isEmpty() && rotate.isEmpty()),
-                    "only an aimed attack (or a boss's fan) has a burst, a burst gap or rotates");
-            burst.ifPresent(b -> Check.positive("burst", b));
-            burstGap.ifPresent(g -> Check.positive("burst_gap", g));
-            Check.that(pattern.equals("spiral") == arms.isPresent(), "a spiral has its arms, the others none");
-            Check.that(pattern.equals("spiral") || duration.isEmpty(), "only a spiral has a duration");
-            arms.ifPresent(a -> Check.positive("arms", a));
-            duration.ifPresent(d -> Check.positive("duration", d));
-            Check.that(!pattern.equals("spiral") || turnRate.isPresent(), "a spiral has a turn rate");
-            Check.that(pattern.equals("spawn") == spawn.isPresent(), "a spawn attack has its spawn, the others none");
-            Check.that(
-                    pattern.equals("laser-sweep")
-                            || pattern.equals(LASER_LINE)
-                            || pattern.equals("pounce")
-                            || pattern.equals("drain")
-                            || pattern.equals("link")
-                            || pattern.equals(AIR_LINK)
-                            || pattern.equals("aura")
-                            // M8 part E: a slowing ring is sound, no bullet (its speed below).
-                            || slow.isPresent()
-                            || pattern.equals("spawn") != (bullet.isPresent() && speed.isPresent()),
-                    "an attack has a bullet and a speed, a spawn attack neither");
-            Check.that(!pattern.equals("spawn") || interval.isEmpty(), "a spawn attack has no interval");
-            aim.ifPresent(a -> Check.that(
-                    a.equals("target") || a.equals("down") || a.equals("facing") || a.equals("up"),
-                    "aim must be target, down, facing or up, was '" + a + "'"));
-            away.ifPresent(a -> Check.notNegative("away", a));
-            interval.ifPresent(i -> Check.positive("interval", i));
-            speed.ifPresent(s -> Check.positive("speed", s));
-            firstShotDelay.ifPresent(d -> Check.notNegative("first_shot_delay", d));
-            Check.that(
-                    (pattern.equals("fan") || (pattern.equals("ring") && slow.isEmpty())) == count.isPresent(),
-                    "a fan or a ring of bullets has a count, the others none");
-            Check.that(slow.isEmpty() || pattern.equals("ring"), "only a ring slows");
-            Check.that(
-                    slow.isEmpty()
-                            || (bullet.isEmpty()
-                                    && speed.isPresent()
-                                    && interval.isPresent()
-                                    && tell.isPresent()
-                                    && within.isEmpty()),
-                    "a slowing ring has its speed, interval and tell, and no bullet or reach");
-            boolean up = aim.filter("up"::equals).isPresent();
-            Check.that(!up || pattern.equals("aimed"), "only an aimed attack fires straight up");
-            Check.that(
-                    (pattern.equals("fan") || up) == spread.isPresent(),
-                    "a fan or an aimed attack fired up has a spread, the others none");
-            count.ifPresent(c -> Check.positive("count", c));
-            Check.that(pattern.equals("fan") || stagger.isEmpty(), "only a fan has a stagger");
-            stagger.ifPresent(st -> Check.positive("stagger", st));
-            Check.that(
-                    aimTurns.isEmpty() || (pattern.equals("aimed") && !rotate.orElse(false)),
-                    "only an aimed attack that does not rotate takes aim turns");
+            // M9 part H: a battery's attack taken from a ground unit (from) is written as a shell (no bullet): the
+            // loader
+            // resolves it into the unit's attack (RingRules.resolve), whose record runs these checks.
+            if (from.isPresent() && bullet.isEmpty()) {
+                Check.that(
+                        pattern.equals("aimed") || pattern.equals("laser-sweep") || pattern.equals(LASER_LINE),
+                        "an attack from a unit is aimed, a laser-sweep or a laser-line, was '" + pattern + "'");
+                Check.that(
+                        speed.isEmpty()
+                                && count.isEmpty()
+                                && spread.isEmpty()
+                                && burst.isEmpty()
+                                && burstGap.isEmpty()
+                                && sweep.isEmpty()
+                                && line.isEmpty()
+                                && homing.isEmpty()
+                                && mortar.isEmpty()
+                                && arms.isEmpty(),
+                        "an attack from a unit takes its bullet, speed, burst, sweep, line and homing from it");
+                interval.ifPresent(i -> Check.positive("interval", i));
+            } else {
+                Check.that(
+                        pattern.equals(AIR_LINK) == airLink.isPresent(),
+                        "an air-link attack has its air_link, the others none");
+                Check.that(
+                        !pattern.equals(AIR_LINK) || (bullet.isPresent() && speed.isEmpty() && interval.isEmpty()),
+                        "an air-link attack names the bullet class of its touch, no speed or interval");
+                whileState.ifPresent(state -> Check.that(
+                        WHILE_OPEN.equals(state), "while: only 'open' (a spin cycle's window), was '" + state + "'"));
+                Check.that(
+                        trigger.isEmpty() || (pattern.equals("aimed") && interval.isEmpty()),
+                        "a triggered attack is aimed and fires once per pass, no interval");
+                tell.ifPresent(t -> Check.positive("tell", t));
+                Check.that(
+                        reaim.isEmpty() || burst.isPresent(), "only a burst re-aims its shots (reaim needs a burst)");
+                parts.ifPresent(list -> Check.notEmpty("parts", list));
+                Check.that(
+                        homing.isEmpty()
+                                || (pattern.equals("aimed")
+                                        && aim.filter("up"::equals).isEmpty()),
+                        "only an aimed attack fires homing missiles (not straight up)");
+                Check.that(pattern.equals("aura") == aura.isPresent(), "an aura attack has its aura, the others none");
+                Check.that(
+                        !pattern.equals("aura")
+                                || (bullet.isEmpty()
+                                        && speed.isEmpty()
+                                        && interval.isEmpty()
+                                        && count.isEmpty()
+                                        && firstShotDelay.isEmpty()),
+                        "an aura has no bullet, speed, interval, count or first shot");
+                Check.that(pattern.equals("link") == link.isPresent(), "a link attack has its link, the others none");
+                Check.that(
+                        !pattern.equals("link")
+                                || (bullet.isPresent()
+                                        && speed.isEmpty()
+                                        && interval.isEmpty()
+                                        && firstShotDelay.isEmpty()
+                                        && only.isEmpty()),
+                        "a link has its touch's bullet class and no speed, interval, first shot or difficulties");
+                Check.that(
+                        pattern.equals("pores") == pores.isPresent(), "a pores attack has its pores, the others none");
+                Check.that(
+                        !pattern.equals("pores") || interval.isPresent(),
+                        "a pores attack has its interval (s between two pores)");
+                only.ifPresent(names -> {
+                    Check.notEmpty("only", names);
+                    names.forEach(Difficulty::of);
+                });
+                Check.that(
+                        // M9 part H: or a boss's rail line (the Iron Sovereign's rail batteries, each on its turn).
+                        staggered.isEmpty()
+                                || pattern.equals("aimed")
+                                || pattern.equals("mortar")
+                                || pattern.equals(LASER_LINE),
+                        "only an aimed, a mortar or a laser-line attack is staggered");
+                Check.that(
+                        !staggered.orElse(false) || !rotate.orElse(false),
+                        "an attack rotates or is staggered, not both");
+                // M5 part F: a drain (the Lamprey's, while latched) has its rate of shield points a second and nothing
+                // else; M9 part F: a power drain (the Void Leech's latch drains: power) has none (checked with its
+                // latch).
+                Check.that(pattern.equals("drain") || rate.isEmpty(), "only a drain has a rate");
+                rate.ifPresent(r -> Check.positive("rate", r));
+                Check.that(
+                        !pattern.equals("drain")
+                                || (bullet.isEmpty() && speed.isEmpty() && interval.isEmpty() && count.isEmpty()),
+                        "a drain has no bullet, speed, interval or count");
+                Check.that(pattern.equals("ring") || within.isEmpty(), "only a ring fires within a reach");
+                within.ifPresent(w -> Check.positive("within", w));
+                Check.that(within.isEmpty() || interval.isPresent(), "a ring fired within a reach has its interval");
+                Check.that(
+                        pattern.equals("laser-sweep") == sweep.isPresent(),
+                        "a laser-sweep has its sweep, the others none");
+                // M9 part A (design/enemies/ground/rail-bunker): a laser-line's locked line, its bullet class once.
+                Check.that(
+                        pattern.equals(LASER_LINE) == line.isPresent(), "a laser-line has its line, the others none");
+                Check.that(
+                        !pattern.equals(LASER_LINE)
+                                || (bullet.isPresent() && speed.isEmpty() && interval.isPresent() && count.isEmpty()),
+                        "a laser-line has a bullet and an interval and no speed or count");
+                Check.that(
+                        line.isEmpty()
+                                || interval.filter(i -> i
+                                                >= line.get().telegraph()
+                                                        + line.get().live())
+                                        .isPresent(),
+                        "a laser-line's interval holds its telegraph and its live time");
+                Check.that(
+                        !pattern.equals("laser-sweep") || (bullet.isPresent() && speed.isEmpty()),
+                        "a laser-sweep has a bullet and no speed");
+                Check.that(
+                        pattern.equals("aimed")
+                                || pattern.equals("fan")
+                                || pattern.equals("mine")
+                                || pattern.equals("spawn")
+                                || pattern.equals("mortar")
+                                || pattern.equals("ring")
+                                || pattern.equals("spiral")
+                                || pattern.equals("laser-sweep")
+                                || pattern.equals(LASER_LINE)
+                                || pattern.equals("pounce")
+                                || pattern.equals("drain")
+                                || pattern.equals("link")
+                                || pattern.equals("pores")
+                                || pattern.equals("aura")
+                                || pattern.equals(AIR_LINK),
+                        "pattern must be aimed, fan, mine, spawn, mortar, ring, spiral, laser-sweep, laser-line, pounce,"
+                                + " drain, link, pores, aura or air-link, was '" + pattern + "'");
+                Check.that(pattern.equals("pounce") == pounce.isPresent(), "a pounce has its pounce, the others none");
+                Check.that(
+                        !pattern.equals("pounce") || (bullet.isEmpty() && speed.isEmpty() && interval.isPresent()),
+                        "a pounce has an interval and no bullet or speed");
+                Check.that(pattern.equals("mine") == mine.isPresent(), "a mine attack has its mine, the others none");
+                Check.that(
+                        pattern.equals("mortar") == mortar.isPresent(),
+                        "a mortar attack has its mortar, the others none");
+                // Round 43: a boss's fan may come in a burst too (the walker's chin and flank guns; FoundryChecks).
+                Check.that(
+                        pattern.equals("aimed")
+                                || (pattern.equals("fan") && rotate.isEmpty())
+                                || (burst.isEmpty() && burstGap.isEmpty() && rotate.isEmpty()),
+                        "only an aimed attack (or a boss's fan) has a burst, a burst gap or rotates");
+                burst.ifPresent(b -> Check.positive("burst", b));
+                burstGap.ifPresent(g -> Check.positive("burst_gap", g));
+                Check.that(pattern.equals("spiral") == arms.isPresent(), "a spiral has its arms, the others none");
+                Check.that(pattern.equals("spiral") || duration.isEmpty(), "only a spiral has a duration");
+                arms.ifPresent(a -> Check.positive("arms", a));
+                duration.ifPresent(d -> Check.positive("duration", d));
+                Check.that(!pattern.equals("spiral") || turnRate.isPresent(), "a spiral has a turn rate");
+                Check.that(
+                        pattern.equals("spawn") == spawn.isPresent(), "a spawn attack has its spawn, the others none");
+                Check.that(
+                        pattern.equals("laser-sweep")
+                                || pattern.equals(LASER_LINE)
+                                || pattern.equals("pounce")
+                                || pattern.equals("drain")
+                                || pattern.equals("link")
+                                || pattern.equals(AIR_LINK)
+                                || pattern.equals("aura")
+                                // M8 part E: a slowing ring is sound, no bullet (its speed below).
+                                || slow.isPresent()
+                                || pattern.equals("spawn") != (bullet.isPresent() && speed.isPresent()),
+                        "an attack has a bullet and a speed, a spawn attack neither");
+                Check.that(!pattern.equals("spawn") || interval.isEmpty(), "a spawn attack has no interval");
+                aim.ifPresent(a -> Check.that(
+                        a.equals("target") || a.equals("down") || a.equals("facing") || a.equals("up"),
+                        "aim must be target, down, facing or up, was '" + a + "'"));
+                away.ifPresent(a -> Check.notNegative("away", a));
+                interval.ifPresent(i -> Check.positive("interval", i));
+                speed.ifPresent(s -> Check.positive("speed", s));
+                firstShotDelay.ifPresent(d -> Check.notNegative("first_shot_delay", d));
+                Check.that(
+                        (pattern.equals("fan") || (pattern.equals("ring") && slow.isEmpty())) == count.isPresent(),
+                        "a fan or a ring of bullets has a count, the others none");
+                Check.that(slow.isEmpty() || pattern.equals("ring"), "only a ring slows");
+                Check.that(
+                        slow.isEmpty()
+                                || (bullet.isEmpty()
+                                        && speed.isPresent()
+                                        && interval.isPresent()
+                                        && tell.isPresent()
+                                        && within.isEmpty()),
+                        "a slowing ring has its speed, interval and tell, and no bullet or reach");
+                boolean up = aim.filter("up"::equals).isPresent();
+                Check.that(!up || pattern.equals("aimed"), "only an aimed attack fires straight up");
+                Check.that(
+                        (pattern.equals("fan") || up) == spread.isPresent(),
+                        "a fan or an aimed attack fired up has a spread, the others none");
+                count.ifPresent(c -> Check.positive("count", c));
+                Check.that(pattern.equals("fan") || stagger.isEmpty(), "only a fan has a stagger");
+                stagger.ifPresent(st -> Check.positive("stagger", st));
+                Check.that(
+                        aimTurns.isEmpty() || (pattern.equals("aimed") && !rotate.orElse(false)),
+                        "only an aimed attack that does not rotate takes aim turns");
+            }
         }
 
         /** M7 part C: whether it fires on {@code difficulty}: its {@code only}, every one if not given. */

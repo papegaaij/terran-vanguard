@@ -22,7 +22,7 @@ equipment, see [wingmen](../player/wingmen/README.md).
 | Part | Summary | Design | Impl | Art |
 |---|---|---|---|---|
 | [ares-landing-dome](ares-landing-dome/README.md) | Level 17's greenhouse domes: `ground`, scrolling with the ground, broken by hits (3; easy 4, hard 2) from hooked bomb runs, hooked lobs and rolls; never fails the mission | review | done | final |
-| [mining-tug](mining-tug/README.md) | Level 31's refugee tug *Bellwether*: a `huge` `ground` hull of three sections (bow, cargo, engines) holding a station in the lower field; hurt only by hooked missiles, dives and Shard links; all three lost fails the escort | approved | done | chosen |
+| [mining-tug](mining-tug/README.md) | Level 31's refugee tug *Bellwether*: a `huge` `ground` hull of three sections (bow, cargo, engines) holding a station in the lower field; hurt only by hooked missiles, dives and Shard links; all three lost fails the escort | approved | done | final |
 
 ## Design
 

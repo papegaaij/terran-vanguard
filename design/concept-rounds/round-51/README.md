@@ -33,6 +33,8 @@ The review page is built from this file by `build/round51-tools/build_review.py`
 medium, `--invulnerable`, the Hammer Mortar and two Bomb Racks with four Airstrike charges); their PNGs are frames of
 those runs side by side.
 
+Record of the decisions: [review.html](review.html)
+
 ## In the game
 
 The art below is already in `assets/` (the finals), the **a** sound of every pair played in the game until the pick, and

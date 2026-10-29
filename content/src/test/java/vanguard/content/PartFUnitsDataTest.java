@@ -100,7 +100,7 @@ class PartFUnitsDataTest {
                 "a unit that latches chases the ship first");
         assertProblem(
                 replace(LAMPREY, "  - pattern: drain\n    rate: 8 ", "  - pattern: aimed\n    rate: 8 "),
-                "a drain has its rate, the others none");
+                "only a drain has a rate");
         assertProblem(replace(LAMPREY, "    rate: 8 ", "    rate: 0 "), "rate must be > 0");
         assertProblem(
                 replace(LAMPREY, "  shake: {reversals: 4, within: 1.2}", "  shake: {reversals: 1, within: 1.2}"),

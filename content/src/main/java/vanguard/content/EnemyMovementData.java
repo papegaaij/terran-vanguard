@@ -720,13 +720,18 @@ public sealed interface EnemyMovementData permits EnemyData {
     /**
      * M5 part F, the {@code chase} movement (design/enemies/air/lamprey): from its entry it steers
      * toward the ship's centre at {@code speed} px/s, turning at most {@code turn_rate} °/s, for
-     * {@code seconds}; then it flies straight on along its heading at its speed.
+     * {@code seconds}; then it flies straight on along its heading at its speed. M9 part F
+     * (design/enemies/space/void-leech): with {@code drift} it first drifts at that many px/s toward its target (the
+     * ship, or the prey it hunts), its chase starting only {@code within} px of it; both or neither.
      */
-    record Chase(double speed, double turnRate, double seconds) {
+    record Chase(double speed, double turnRate, double seconds, Optional<Double> within, Optional<Double> drift) {
         public Chase {
             Check.positive("speed", speed);
             Check.positive("turn_rate", turnRate);
             Check.positive("seconds", seconds);
+            within.ifPresent(w -> Check.positive("chase.within", w));
+            drift.ifPresent(d -> Check.positive("chase.drift", d));
+            Check.that(within.isPresent() == drift.isPresent(), "a chase's drift goes with its within, and only so");
         }
     }
 
@@ -735,7 +740,12 @@ public sealed interface EnemyMovementData permits EnemyData {
      * {@code slots} units may be latched at once (the hook {@code latch_slots} instead); the hull
      * {@code spots} it sits at; the {@code damage_factor} on the damage it takes while latched; the
      * {@code shake} that throws every latched unit off; the {@code stun} s and the {@code throw} px/s
-     * of its way off the hull, after which it flees to the nearer side edge.
+     * of its way off the hull, after which it flees to the nearer side edge. M9 part F
+     * (design/enemies/space/void-leech): {@code drains} {@code shield} (the Lamprey's, the default: its {@code drain}
+     * attack's rate) or {@code power} (the generator's output, by the drain rules; its {@code drain} attack has no
+     * rate); {@code emp} {@code hold} (the default: stunned, it stays latched, its drain paused) or {@code throw} (the
+     * EMP Burst throws it off as a shake-off); {@code prey_drift}: it latches on a touched prey unit too, which then
+     * drifts down at that many px/s.
      */
     record Latch(
             int slots,
@@ -745,12 +755,37 @@ public sealed interface EnemyMovementData permits EnemyData {
             double stun,
 
             @com.fasterxml.jackson.annotation.JsonProperty("throw")
-            double throwSpeed) {
+            double throwSpeed,
+
+            Optional<String> drains,
+            Optional<String> emp,
+            Optional<Double> preyDrift) {
+        /** M9 part F: the {@code drains} of a latch on the generator's output. */
+        public static final String POWER = "power";
+
+        /** M9 part F: the {@code emp} of a latch the EMP Burst throws off. */
+        public static final String THROW = "throw";
+
         public Latch {
             Check.positive("slots", slots);
             Check.positive("damage_factor", damageFactor);
             Check.positive("stun", stun);
             Check.notNegative("throw", throwSpeed);
+            drains.ifPresent(d -> Check.that(
+                    d.equals("shield") || d.equals(POWER), "latch.drains: shield or power, was '" + d + "'"));
+            emp.ifPresent(
+                    e -> Check.that(e.equals("hold") || e.equals(THROW), "latch.emp: hold or throw, was '" + e + "'"));
+            preyDrift.ifPresent(d -> Check.positive("latch.prey_drift", d));
+        }
+
+        /** M9 part F: whether it drains the generator's output instead of the shield. */
+        boolean drainsPower() {
+            return drains.filter(POWER::equals).isPresent();
+        }
+
+        /** M9 part F: whether the EMP Burst throws it off. */
+        boolean empThrows() {
+            return emp.filter(THROW::equals).isPresent();
         }
     }
 
@@ -1040,14 +1075,34 @@ public sealed interface EnemyMovementData permits EnemyData {
             double length,
             double width,
             Optional<Point> origin,
-            Optional<Double> lead) {
+            Optional<Double> lead,
+            Optional<FullTurn> fullTurn) {
         public Sweep {
+            Check.that(
+                    fullTurn.isEmpty() || (origin.isEmpty() && lead.isEmpty()),
+                    "a full turn is a ground unit's sweep from its centre, no origin or lead");
             Check.positive("arc", arc);
             Check.positive("duration", duration);
             Check.notNegative("telegraph", telegraph);
             Check.positive("length", length);
             Check.positive("width", width);
             lead.ifPresent(degrees -> Check.that(degrees >= 0 && degrees <= arc, "lead: 0 to the arc's °"));
+        }
+    }
+
+    /**
+     * M9 part E (design/enemies/ground/sentinel-tower): a ground unit's sweep (a {@code laser-sweep} on a {@code terrain}
+     * unit: due while it is on the field, centred on the ship's bearing in any direction) turns a full circle every
+     * {@code every}-th sweep: the whole reach ring and the start ray telegraphed {@code telegraph} s, then 360° over
+     * {@code duration} s (the full turns' direction alternating); the next telegraph {@code slot} s after the full
+     * turn's. A difficulty's {@code full_turn_every} changes {@code every} (0: none, easy's).
+     */
+    record FullTurn(int every, double duration, double telegraph, double slot) {
+        public FullTurn {
+            Check.positive("every", every);
+            Check.positive("duration", duration);
+            Check.positive("telegraph", telegraph);
+            Check.that(slot >= duration + telegraph, "a full turn's slot holds its telegraph and its turn");
         }
     }
 
@@ -1068,13 +1123,26 @@ public sealed interface EnemyMovementData permits EnemyData {
 
     /**
      * Planned (part D): a walker on a ground path at {@code speed} px/s, turning at {@code turn_rate}
-     * °/s, {@code stride} px of ground per walk cycle. Read, not flown yet.
+     * °/s, {@code stride} px of ground per walk cycle. Read, not flown yet. M9 part E (design/enemies/ground/strider, The
+     * topple): with a {@code topple} it falls once it loses a part that {@code topples} it ({@link Topple}).
      */
-    record Walk(double speed, double turnRate, double stride) {
+    record Walk(double speed, double turnRate, double stride, Optional<Topple> topple) {
         public Walk {
             Check.positive("speed", speed);
             Check.positive("turn_rate", turnRate);
             Check.positive("stride", stride);
+        }
+    }
+
+    /**
+     * M9 part E, a walker's topple (design/enemies/ground/strider, The topple): it staggers {@code stagger} s (its fall
+     * line, {@code line} [width, length] px from its centre toward the lost leg, marked; its guns stop), falls {@code
+     * fall} s and is destroyed on landing, crushing every ground unit under the line.
+     */
+    record Topple(double stagger, double fall, Size line) {
+        public Topple {
+            Check.positive("stagger", stagger);
+            Check.positive("fall", fall);
         }
     }
 

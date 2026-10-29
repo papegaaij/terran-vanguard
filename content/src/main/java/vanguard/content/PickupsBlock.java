@@ -54,12 +54,36 @@ public sealed interface PickupsBlock permits LevelData {
      *     before the boss)
      * @param at M5 part F: instead of a carrier, where it is placed: it enters at the top edge at
      *     {@code [t, x]} and drifts like any pickup (Level 12's armour patch in the eye)
+     * @param story M9 part G (design/campaign Level 34, The freighter): a {@code pickup: story}'s name ({@code
+     *     helix-core}: the game's look and the HUD line); only a destructible group's last unit drops it (it rises out
+     *     of the hold, then drifts until collected by flying through it)
      */
     public record PlacedPickup(
-            Pickup pickup, Optional<Carrier> droppedBy, Optional<List<String>> skip, Optional<LevelData.Placement> at) {
+            Pickup pickup,
+            Optional<Carrier> droppedBy,
+            Optional<List<String>> skip,
+            Optional<LevelData.Placement> at,
+            Optional<String> story) {
         public PlacedPickup {
             skip.ifPresent(names -> names.forEach(Difficulty::of));
             Check.that(droppedBy.isPresent() != at.isPresent(), "a pickup is dropped_by a carrier or placed at [t, x]");
+            Check.that(
+                    (pickup == Pickup.STORY) == story.isPresent(),
+                    "a story pickup names its story (story: helix-core), no other pickup does");
+            story.ifPresent(name ->
+                    Check.that(name.matches("[a-z0-9]+(-[a-z0-9]+)*"), "story: a kebab-case name, was '" + name + "'"));
+            Check.that(
+                    pickup != Pickup.STORY || droppedBy.flatMap(Carrier::group).isPresent(),
+                    "a story pickup is dropped_by a ground-target group (its last unit), not placed, a wave or parts");
+        }
+
+        /** Without M9 part G's story. */
+        public PlacedPickup(
+                Pickup pickup,
+                Optional<Carrier> droppedBy,
+                Optional<List<String>> skip,
+                Optional<LevelData.Placement> at) {
+            this(pickup, droppedBy, skip, at, Optional.empty());
         }
 
         /** A pickup a carrier drops. */

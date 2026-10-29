@@ -191,6 +191,47 @@ final class ContactPasses {
     }
 
     /**
+     * M9 (round 64 C.1 a, the Act 5 tows): a beam whose column touches an opted-in tow's cable box (its housing) below
+     * the beam's end counts a hit on it at once and every {@link Tow#BEAM_HIT_TICKS} steps while the touch lasts
+     * (several beams count as one); the beam passes on. After {@link PlayerFire#burn}, so the beam's end is this step's.
+     */
+    void burnTows() {
+        for (Tow tow : tows) {
+            if (!tow.spec().beamTouch()) {
+                continue;
+            }
+            if (!tow.present() || !tow.holding()) {
+                tow.beamOff();
+                continue;
+            }
+            int touching = -1;
+            for (int m = 0; m < fire.armament().size() && touching < 0; m++) {
+                Beam beam = fire.beam(m);
+                if (beam != null
+                        && beam.on()
+                        && PlayerFire.columnContact(
+                                        beam.x(),
+                                        beam.width() / 2,
+                                        beam.fromY(),
+                                        tow.cableX(),
+                                        tow.cableY(),
+                                        tow.spec().cable())
+                                < beam.endY()) {
+                    touching = m;
+                }
+            }
+            if (touching < 0) {
+                tow.beamOff();
+            } else if (tow.beamTouch()) {
+                events.add(SimEvents.Type.CLAMP_HIT, tow.cableX(), tow.cableY(), touching);
+                if (tow.countHit(s.levelTick)) {
+                    cutTow(tow);
+                }
+            }
+        }
+    }
+
+    /**
      * A tow's cable was cut: the secret is found and its pod falls loose ({@link Tow}); the crate
      * falls out of it at once if the pod is already down at the ship.
      */

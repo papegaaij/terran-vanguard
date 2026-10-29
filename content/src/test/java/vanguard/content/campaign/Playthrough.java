@@ -11,6 +11,7 @@ import vanguard.content.BalancePlan;
 import vanguard.content.Content;
 import vanguard.content.ContentLoader;
 import vanguard.content.Difficulty;
+import vanguard.content.RoutePlay;
 import vanguard.content.SimSpecs;
 import vanguard.sim.LevelResult;
 import vanguard.sim.Rules;
@@ -238,10 +239,17 @@ final class Playthrough {
         return collected + Math.round(Math.rint(collected * plan.expertGradeBonus()));
     }
 
+    /** The level's sortie; M9 part E: a forked level on its playthrough route ({@link RoutePlay#playthrough}). */
     private Sortie sortie(String key, Rules rules) {
         Flight flight = Flight.of(CONTENT, CATALOGUE, campaign);
-        return new Sortie(
-                SEED, flight.loadout(), SimSpecs.level(CONTENT, key, campaign.difficulty()), rules, campaign.armour());
+        return RoutePlay.fly(
+                new Sortie(
+                        SEED,
+                        flight.loadout(),
+                        SimSpecs.level(CONTENT, key, campaign.difficulty()),
+                        rules,
+                        campaign.armour()),
+                RoutePlay.playthrough(key));
     }
 
     /** The campaign written as a save and loaded again; the save reads back unchanged. */

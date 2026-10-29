@@ -85,6 +85,10 @@ final class BossPasses implements BossActions {
         this.objectives = objectives;
         this.rules = rules;
         this.setPieces = setPieces;
+        for (SetPiece piece : setPieces) {
+            // M9 part H, step H1b: a boss's part shields report to the sortie's events.
+            piece.useEvents(events);
+        }
         this.wingman = wingman;
         this.convoy = convoy;
         this.hitPasses = hitPasses;
@@ -449,6 +453,35 @@ final class BossPasses implements BossActions {
         force.fireFrom(x, y, gun, ship);
     }
 
+    /** M9 part H, step H1b: no missile while the ship is this close to the battery (the bullet readability rule). */
+    private static final double STATION_CLEAR = 72;
+
+    @Override
+    public void stationMissile(double x, double y, EnemyGun gun) {
+        // The SAM Nest's own hold distance when it is larger (design/enemies/ground/sam-nest).
+        double clear = Math.max(STATION_CLEAR, gun.homing().orElseThrow().holdWithin());
+        double dx = ship.x() - x;
+        double dy = ship.y() - y;
+        if (dx * dx + dy * dy < clear * clear) {
+            return;
+        }
+        force.missiles().launchStation(x, y, gun, ship.x(), ship.y());
+    }
+
+    /**
+     * M9 part H, step H1b: a rim bay's Dart counts among the level's enemies as a stream's unit does (unless the kill
+     * ratio leaves the bosses out: then neither it nor its kill counts; it still pays); no edge warning.
+     */
+    @Override
+    public void bayLaunch(EnemySpec.Launcher launcher, double x, double y, double angle) {
+        if (force.bayLaunch(launcher, x, y, angle)) {
+            if (script.objectives().secondary().countsBosses()) {
+                s.streamReleased++;
+            }
+            events.add(SimEvents.Type.BOSS_LAUNCHED, x, y, force.kinds().indexOf(launcher.unit()));
+        }
+    }
+
     @Override
     public void along(double x, double y, double aim, EnemyGun gun) {
         force.fireAlong(x, y, gun, aim, ship);
@@ -663,6 +696,11 @@ final class BossPasses implements BossActions {
 
     @Override
     public void coil(SimEvents.Type type, double x, double y, int value) {
+        events.add(type, x, y, value);
+    }
+
+    @Override
+    public void ring(SimEvents.Type type, double x, double y, int value) {
         events.add(type, x, y, value);
     }
 

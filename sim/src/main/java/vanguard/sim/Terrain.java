@@ -299,6 +299,19 @@ public final class Terrain {
     }
 
     /**
+     * M9 part E (design/campaign Level 32, The forks): island {@code i}'s tip, its lowest row (the first to come down the
+     * screen): a fork's choice falls when it reaches the ship's row.
+     */
+    public double islandTip(int i) {
+        return islandMinRow[i];
+    }
+
+    /** M9 part E: the middle of island {@code i} across, px: a fork's left channel lies left of it, its right right. */
+    public double islandMiddle(int i) {
+        return (islandMinX[i] + islandMaxX[i]) / 2;
+    }
+
+    /**
      * Whether the box of half size {@code halfW} × {@code halfH} around the play-field point (x, y)
      * overlaps rock (a wall's or an island's); touching its line does not count. A wall's rock counts on
      * the play field only: a wall at the field's edge (the canyon's mouth) is not touched by a hull that

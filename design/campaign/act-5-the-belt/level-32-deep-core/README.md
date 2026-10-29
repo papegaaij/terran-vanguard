@@ -1,10 +1,10 @@
 ---
 title: Level 32 – Deep Core
 design: approved
-implementation: not-started
-art: none
+implementation: done
+art: final
 depends-on: [../../../enemies/ground/sentinel-tower, ../../../enemies/ground/strider, ../../../enemies/ground/sam-nest, ../../../enemies/air/talon, ../../../enemies/air/dart-drone, ../../../world/belt, ../../../player/specials, ../../../player/wingmen, ../../../player/generator, ../../act-3-red-dust/level-16-valles-canyon-run, ../../act-3-red-dust/level-19-foundry-of-tharsis]
-updated: 2026-10-28
+updated: 2026-10-29
 ---
 
 # Level 32 – Deep Core
@@ -18,8 +18,8 @@ ship is on at a fork's head chooses a channel with its own waves, one safer, one
 cache behind a blast door, mining charges). [Sentinel Tower](../../../enemies/ground/sentinel-tower/README.md)s
 sweep their beams all round from the side galleries, [Strider](../../../enemies/ground/strider/README.md)
 pairs walk the tunnel floors and topple onto their own guns when a leg goes, and the refinery's furnace
-vents close the level. No Airstrike or Orbital Lance inside the rock. Density 4, front only, ≈ 104–107
-enemies a minute at medium over 186 s.
+vents close the level. No Airstrike or Orbital Lance inside the rock. Density 4, front only, ≈ 122–125
+enemies a minute at medium over 186 s (step E2).
 
 **Status: approved (Act 5 design phase, step `m9-d-levels-2`, 2026-10-27), approved in round 60.** Written from the act roster, the gap analysis's recommended answers (Q5 a branching tunnels,
 Q6 b the Dart Drone, Q1 a the enemy shields, Q11 a the Ascendancy look, Q12 c the arsenal), its decided
@@ -29,14 +29,17 @@ of M9 to measure with `levelReport`.
 
 ## Briefing
 
-Two pages, each one screen (`BriefingLayoutTest`) with room for its image. **Draft texts**:
+Two pages, each one screen (`BriefingLayoutTest`) with room for its image:
 
-> **Commander Okafor:** "Kleopatra. The consortium's old mine, now the Ascendancy's refinery, and it
-> feeds the Sovereign at Ceres. The Bellwether's crew gave us the shaft charts. Go in, burn through, come
-> out the ore chute."
+<!-- data: briefing -->
+> **Commander Okafor:** "Kleopatra. The consortium's old mine, now the Ascendancy's refinery,
+> and it feeds the Sovereign at Ceres. The Bellwether's crew gave us the shaft charts. Go in,
+> burn through, come out the ore chute."
 >
-> **Dr. Varga:** "Rock overhead: no bombers, no Lance. The towers sweep all the way round; shoot the
-> emitter or bomb the collar. A Strider falls when it loses a leg, on whatever stands beside it."
+> **Dr. Varga:** "Rock overhead: no bombers, no Lance. The towers sweep all the way round; shoot
+> the emitter or bomb the collar. A Strider falls when it loses a leg, on whatever stands beside
+> it."
+<!-- /data -->
 
 *Images* (production art straight away; [briefing images](../../../ui/briefing/README.md)):
 
@@ -49,23 +52,26 @@ Two pages, each one screen (`BriefingLayoutTest`) with room for its image. **Dra
 
 *Hangar teaser* (shop screen before L32; Rook, not voiced):
 
+<!-- data: teaser -->
 > **Rook:** "Tunnels again. I'll tuck in behind. You pick the turns."
+<!-- /data -->
 
 ## Threat profile
 
-Draft; directions are counted by each wave's `from` (the intel's rule): every wave enters from the front
-(the Dart streams out of wall bays near the top edge count as front).
+Directions are counted by each wave's `from` (the intel's rule): every wave enters from the front (the Dart
+streams out of wall bays near the top edge count as front).
 
+<!-- data: threat-profile -->
 | Field | Value |
 |---|---|
 | Dominant layers | `ground` (the tunnel floors: Sentinel Towers, Strider pairs, SAM Nests), `air` (Talons, Dart streams, Skitters, Needlers, motes) |
-| Attack directions | front 100% · sides 0% · rear 0% |
+| Attack directions | front 100% (the Dart streams out of wall bays near the top edge count as front) |
 | Density | 4 |
-| Recommended traits | `anti-ground`, `forward` (the roster's), `piercing` |
+| Recommended traits | `anti-ground`, `forward`, `piercing` |
 | Hazards | Tunnel walls (terrain collision); Sentinel beams that sweep all round; furnace vents in the refinery |
 | Boss / mid-boss | none |
-| Special limits | Airstrike and Orbital Lance `IN ROCK` ([Act 5 specials](../../../player/specials/README.md#act-5-specials-draft)); Sonar Pulse `NO WATER` |
 | Sensor-suite detail | none: the belt, tunnels, `ground` + `air`, front, the objective `REACH THE CHUTE`, the `IN ROCK` limits · L1: + density 4, the hazards "walls", "beam sweeps" and "furnace vents", the secondary `TOWERS DOWN 4` · L2: + Sentinel Tower (new), Strider (new), SAM Nest, Talon, Dart Drone, Skitter, Needler, Mote Swarm portraits · L3: + the two forks and which channel is the richer on the threat map |
+<!-- /data -->
 
 *Varga's intel line* per sensor-suite level (to fit `IntelPanelLayoutTest`):
 
@@ -95,14 +101,16 @@ along the wall feet; the forks' channels darker; the refinery orange from the fu
 refinery light). Motion budget: the Sentinel beams and the vents are the strong elements; the pumps,
 conveyors and lamp strings stay quiet.
 
-| Section | t (s) | Scroll (px) | Speed (px/s) | Flyable width (px) | Layers and content | Purpose |
+<!-- data: level-sections -->
+| Section | t (s) | Scroll (px) | Speed (px/s) | Atmosphere | Layers and content | Purpose |
 |---|---|---|---|---|---|---|
-| 1. The Shaft Mouth | 0–18 | 0–2,340 | 130 | 480 → 340 | `ground`: Kleopatra's sunlit face, the shaft's lip and gantries, then the shaft walls closing in (t 4–14). | Popcorn and Talons; the first Darts out of a bay. |
-| 2. The Galleries | 18–54 | 2,340–7,020 | 130 | 340 → 460 | `ground`: rock walls with lamp strings, gallery notches (the first Sentinel's at t≈24), launch bays; the tunnel widening to the fork from t≈48. | The first Sentinel alone, the first Strider pair (t≈36). |
-| 3. Fork One | 54–74 | 7,020–9,620 | 130 | 2 channels of ≥ 134 | `ground`: island one; left the **old drift** (abandoned drill rigs, cold), right the **charge seam** (fresh cuts, mining charges, a Strider, SAM Nests, a blast door). | The first route choice. |
-| 4. The Pumping Hall | 74–114 | 9,620–14,820 | 130 | 420 | `ground`: a wide hall, pumps and pipe runs on the floor, the Sentinel pair's notches (t≈80), the secret's blast door in the right wall (t≈100). | The Sentinel pair's lane; the Strider pair and the SAM pair (a topple to aim). |
-| 5. Fork Two | 114–136 | 14,820–17,680 | 130 | 2 channels of ≥ 134 | `ground`: island two; left the **cooling ducts** (richer: four SAM Nests, charges, a blast door), right the **ore chute** (safer: conveyor belts, empty). | The second route choice. |
-| 6. The Refinery | 136–186 | 17,680–23,680 | 120 | 400 → 480 | `ground`: furnace floor, vent grates, the crucible gallery (Sentinel, t≈150), the gantry (SAM trio, t≈162); the ore chute opening to space at t≈178. | Vents, Striders, the last waves; out into space. |
+| 1. The Shaft Mouth | 0–18 | 0–2,340 | 130 | clear | `ground`: Kleopatra's sunlit face, the shaft's lip and gantries, then the shaft walls closing in (t 4–14); a launch bay in the left wall (t≈14.5). | Popcorn and Talons; the first Darts out of a bay. |
+| 2. The Galleries | 18–54 | 2,340–7,020 | 130 | clear | `ground`: rock walls with lamp strings, the first Sentinel's gallery notch (t≈24), a launch bay right (t≈41); the tunnel widening to the fork from t≈48. | The first Sentinel alone, the first Strider pair (t≈36). |
+| 3. Fork One | 54–74 | 7,020–9,620 | 130 | clear | `ground`: island one; left the **old drift** (abandoned drill rigs, cold), right the **charge seam** (fresh cuts, mining charges, a Strider, SAM Nests, a lit blast door). | The first route choice (the ship's side at the island's tip, t≈56). |
+| 4. The Pumping Hall | 74–114 | 9,620–14,820 | 130 | clear | `ground`: a wide hall, pumps and pipe runs on the floor, the Sentinel pair's shallow notches (t≈79, 81: offset, QE-1 a), the SAM pair and two charges (t≈92), the secret's sealed blast door in the right wall (t≈100). | The Sentinel pair; the Strider pair and the SAM pair (a topple to aim). |
+| 5. Fork Two | 114–136 | 14,820–17,680 | 130 | clear | `ground`: island two; left the **cooling ducts** (richer: four SAM Nests, charges, a lit blast door), right the **ore chute** (safer: conveyor belts, empty); the refinery's gate (t≈134) with the repair crate. | The second route choice (t≈116). |
+| 6. The Refinery | 136–186 | 17,680–23,690 | 120 | clear | `ground`: furnace floor, vent grates, the crucible gallery (Sentinel, t≈150), the gantry (SAM trio and four charges, t≈162); the ore chute opening to space at t≈178. | Vents, Striders, the last waves; out into space. |
+<!-- /data -->
 
 ### The tunnels (terrain inside rock)
 
@@ -123,22 +131,47 @@ differences:
   ([Rook in the canyon](../../act-3-red-dust/level-16-valles-canyon-run/README.md#rook-in-the-canyon)); at
   a fork he follows the player's channel.
 
-Wall table (draft; scroll = the row at the top edge, x = the wall's foot from the field's left edge):
+Wall table (ART-E's terrain, adopted in step E2: scroll = the row at the top edge, x = the wall's foot from the
+field's left edge; the notches per QE-1 a, accepted in round 65, C.1 a):
 
-| t at the top edge (s) | Scroll (px) | Left x | Right x | Width (px) | Note |
-|---|---|---|---|---|---|
-| 0–4 | 0–520 | — | — | 480 | Open space before the shaft |
-| 4–14 | 520–1,820 | 0 → 70 | 480 → 410 | 480 → 340 | The shaft closing (0.05 px/px) |
-| 14–48 | 1,820–6,240 | 70 | 410 | 340 | The galleries; notches right at t≈24 (Sentinel) and t≈42 (bay), left at t≈15 (bay) |
-| 48–52 | 6,240–6,760 | 70 → 10 | 410 → 470 | 340 → 460 | Widening to fork one (0.12 px/px) |
-| 52.6–71 | 6,838–9,230 | 10 | 470 | 155 + 155 | **Island one** at x 165–315 (150 px), its tip blunt; it reaches the ship's row at t≈56 |
-| 71–74 | 9,230–9,620 | 10 → 30 | 470 → 450 | 420 | Rejoin |
-| 74–110 | 9,620–14,300 | 30 | 450 | 420 | The pumping hall; notches both walls at t≈80 (the Sentinel pair), the blast door's notch right at t≈100 |
-| 110–112.6 | 14,300–14,638 | 30 → 10 | 450 → 470 | 460 | Widening to fork two |
-| 112.6–132.5 | 14,638–17,225 | 10 | 470 | 155 + 155 | **Island two** at x 165–315; it reaches the ship's row at t≈116 |
-| 132.5–136 | 17,225–17,680 | 10 → 40 | 470 → 440 | 400 | Rejoin; the refinery's gate |
-| 136–176 | 17,680–22,480 | 40 | 440 | 400 | The refinery; the crucible gallery's notch left at t≈150 |
-| 176–186 | 22,480–23,680 | 40 → 0 | 440 → 480 | 480 | The ore chute's mouth: out into space |
+<!-- data: terrain -->
+| t at the top edge (scroll px) | Left x | Right x | Flyable width | Notes |
+|---|---|---|---|---|
+| 0–4 (0–520) | — | — | 480 | Open space before the shaft |
+| 4 (520) | 0 | 480 | 480 | The shaft's lip: the walls begin at the field's edges; wall height 0 |
+| 14 (1,820) | 70 | 410 | 340 | The galleries, 340 px; a launch bay left (t≈14.5), the Sentinel's notch right (t≈24), a bay right (t≈41) |
+| 48 (6,240) | 70 | 410 | 340 | Widening to fork one |
+| 52 (6,760) | 10 | 470 | 460 | |
+| 52.6 (6,838) | 10 | 470 | 230 + 230 | Island one's tip (the choice at t≈56): the old drift left, the charge seam right |
+| 52.7 (6,852) | 10 | 470 | 188 + 188 | |
+| 53 (6,890) | 10 | 470 | 159 + 159 | |
+| 53.4 (6,948) | 10 | 470 | 155 + 155 | |
+| 70.5 (9,160) | 10 | 470 | 155 + 155 | |
+| 70.8 (9,206) | 10 | 470 | 163 + 163 | |
+| 71 (9,226) | 10 | 470 | 200 + 200 | |
+| 71 (9,230) | 10 | 470 | 230 + 230 | Rejoined |
+| 74 (9,620) | 30 | 450 | 420 | The pumping hall, 420 px; the Sentinel pair's notches (t≈79, 81), the secret's door (t≈100) |
+| 110 (14,300) | 30 | 450 | 420 | Widening to fork two |
+| 112.6 (14,638) | 10 | 470 | 230 + 230 | Island two's tip (the choice at t≈116): the cooling ducts left, the ore chute right |
+| 112.7 (14,652) | 10 | 470 | 188 + 188 | |
+| 113 (14,690) | 10 | 470 | 159 + 159 | |
+| 113.4 (14,748) | 10 | 470 | 155 + 155 | |
+| 132 (17,155) | 10 | 470 | 155 + 155 | |
+| 132.3 (17,201) | 10 | 470 | 163 + 163 | |
+| 132.5 (17,221) | 10 | 470 | 200 + 200 | |
+| 132.5 (17,225) | 10 | 470 | 230 + 230 | Rejoined; the refinery's gate |
+| 136 (17,680) | 40 | 440 | 400 | The refinery, 400 px; the crucible gallery's notch left (t≈150) |
+| 175.9 (22,480) | 40 | 440 | 400 | The ore chute's mouth: out into space |
+| 185.9 (23,680) | 0 | 480 | 480 | wall height 0 |
+
+**Fork one** (`drift-rock`; x, scroll at the top edge): (240, 6,838) → (282, 6,852) → (311, 6,890) → (315, 6,948) → (315, 9,160) → (307, 9,206) → (270, 9,226) → (240, 9,230) → (210, 9,226) → (173, 9,206) → (165, 9,160) → (165, 6,948) → (169, 6,890) → (198, 6,852).
+
+**Fork two** (`duct-rock`; x, scroll at the top edge): (240, 14,638) → (282, 14,652) → (311, 14,690) → (315, 14,748) → (315, 17,155) → (307, 17,201) → (270, 17,221) → (240, 17,225) → (210, 17,221) → (173, 17,201) → (165, 17,155) → (165, 14,748) → (169, 14,690) → (198, 14,652).
+
+**Notches** (index, wall, t at the top edge of the middle (scroll px), length along the wall × depth): 0 left 14.5 (1,890), 140 × 56 px; 1 right 24.3 (3,160), 140 × 56 px; 2 right 41.3 (5,375), 140 × 56 px; 3 left 79.3 (10,310), 140 × 16 px; 4 right 81 (10,531), 140 × 16 px; 5 left 150.3 (19,410), 140 × 26 px.
+
+**Contact**: 10 per touch (easy 6, hard 10), pushed 28 px along the wall's normal over 0.12 s, then a 0.5 s cooldown in which a touch only clamps.
+<!-- /data -->
 
 ### The forks (route choice, Q5 a)
 
@@ -172,138 +205,173 @@ Wall table (draft; scroll = the row at the top edge, x = the wall's foot from th
   path), 2 by the hall's SAM pair, 4 on the refinery's gantry (by the SAM trio). They pay nothing
   themselves.
 - **Topples** ([topple](../../../enemies/README.md#topple)): every Strider pair walks past something its
-  fall can crush: the hall's pair past the SAM pair (t≈92; shoot the right leg and it falls onto them), the
-  refinery's lone Strider (t≈166) toward the gantry's SAM trio, fork one's Strider among the charge seam's
-  nests.
+  fall can crush: the hall's pair past the SAM pair (the first enters at t=91.3 and passes the t=92 nests' row
+  at y≈235; shoot its right leg and it falls onto them), the refinery's lone Strider (t=161.4) up between the
+  gantry's SAM trio (t=162), fork one's Strider (t=61.3) up the charge seam between its nests (t=62) and over a
+  charge. A walker rides the scroll (32 px/s up the ground against 130 px/s of scroll), so it meets a nest on the
+  screen only when it enters about 0.7 s before it (step E2; the draft's t≈90/92 and t≈166/162 never met).
 
 ## Waves
 
 Enemy definitions are linked per row; formation names from the
-[formation vocabulary](../../../enemies/README.md#formation-vocabulary). All numbers are **draft**: data
-in **Act 1 terms** with a `bounty_scale` (see *Credit budget*).
+[formation vocabulary](../../../enemies/README.md#formation-vocabulary). The numbers are the data's (step E2,
+measured with `levelReport` per route): in **Act 1 terms** with a `bounty_scale` (see *Credit budget*).
 
 - **HP** (the units' own pages, at the proposed L32 reference DPS **132**, judgement call J2): the Talon 32
   (shield 12 since round 62), the Sentinel's emitter 120 behind its hardened collar, the Strider 410 (hull 220, legs 80, pod
   30), the SAM Nest 20, the Dart 1, the Skitter, Needler and motes as built.
-- **Density and pacing** (the Act 2+ rules, `PacingTest` and `ActFloorTest`): **323–332 enemies** by route
-  (the safer route 332, the richer 323: waves plus 16–23 ground units) over 186 s, **≈ 104–107 a minute**
-  at medium (easy ≈ 270, hard ≈ 370 by the formation lever), a wave about every 2.5–3 s, no stretch over 2 s
-  with nothing on the screen (the ground units hold the quiet windows). The shots come from the Talon pairs,
-  the Needlers, the Striders' fans and the SAM missiles; part E sets the fire rates with `levelReport`.
+- **Density and pacing** (the Act 2+ rules, `PacingTest` and `ActFloorTest`): **373–380 enemies** by route
+  at medium (waves plus 9–15 ground units) over 186 s, **≈ 124–126 a minute** (easy ≈ 99–100, hard ≈ 148–152 by
+  the formation lever), a wave about every 1.25–2.5 s. The draft's 104–107 a minute left the screen empty: under
+  the plan's Ion Beam L4 in the 155–420 px tunnels the fodder dies within a second (1.3–1.5 enemies on the screen,
+  ten stretches over 2 s empty); step E2 added offbeat Talon pairs and lines (as Levels 29–31) and turned four
+  Skitter streams and two Mote Swarms into Talon lines and wings; step E3 (its tower play flying the routes) added
+  firing pairs after fork one's choice (t=58, both channels) and in the charge seam (t=65): **2.61–2.68 on the
+  screen** (at least 2.5), 84–92 shots a minute, at most 1 stretch over 2 s on a route at medium and hard, the
+  small units 0.92–0.98 × Level 10's time on the screen (`levelReport`, every route). The shots come from the Talon pairs, the Needlers, the Striders' fans
+  and the SAM missiles.
 - **Quiet windows**: no air wave for 3.5 s after the first Sentinel (t=24) and the first Strider pair
   (t=36).
 - **Limits**: at most 2 Sentinels sweeping and 2 Striders walking at once; at most 3 SAM Nests firing; at
   most 16 Darts. No air wave's path crosses rock (the validator's rule); popcorn in the forks flies its
   channel's middle.
 
-Draft wave table, common route (every wave `front`; "left"/"right" is the side of the field it enters on):
+Wave table (step E2: the draft's common waves with offbeat Talon pairs and lines, four draft Skitter streams and
+two Mote Swarms turned into Talon lines and wings, as every Act 5 level so far needed; the forks' branch waves, each
+flown only on its chosen side; the Striders entering just before the nests they pass):
 
+<!-- data: waves -->
 | t (s) | Section | Formation | Enemies (link) | Count | Enter from | Notes |
 |---|---|---|---|---|---|---|
-| 3 | 1 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front |  |
-| 5.5 | 1 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front |  |
-| 8 | 1 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front |  |
+| 3 | 1 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (alternating edges) | |
+| 5.5 | 1 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front | |
+| 8 | 1 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front | |
+| 9.5 | 1 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 2 | front | Step E2: a firing Talon pair on the offbeat (the beam erases the fodder within a second) |
 | 10.5 | 1 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (left) | The walls closing in |
+| 12 | 1 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 2 | front | Step E2: a firing Talon pair on the offbeat (the beam erases the fodder within a second) |
 | 13 | 1 | V-wing | [Talon](../../../enemies/air/talon/README.md) | 5 | front | Leader at the tip |
-| 15.5 | 1 | stream | [Dart Drone](../../../enemies/air/dart-drone/README.md) | 4 | front | Out of a launch bay at the shaft's mouth |
-| 18 | 2 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front |  |
-| 20.5 | 2 | column | [Needler](../../../enemies/air/needler/README.md) | 3 | front |  |
+| 15.5 | 1 | stream | [Dart Drone](../../../enemies/air/dart-drone/README.md) | 4 | front (left) | Out of the launch bay at the shaft's mouth (left wall) |
+| 17 | 1 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front | Step E2: a firing Talon line on the offbeat (the beam erases the fodder within a second) |
+| 18 | 2 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front | Step E2: a Talon line in place of the draft's Skitter stream (the beam erases the fodder within a second) |
+| 20.5 | 2 | column | [Needler](../../../enemies/air/needler/README.md) | 3 | front | |
+| 22.5 | 2 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 2 | front | Step E2: a firing Talon pair on the offbeat (the beam erases the fodder within a second) |
 | 28 | 2 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front | After the first Sentinel's quiet window (t 24–27.5) |
-| 30.5 | 2 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front |  |
+| 30.5 | 2 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front | |
+| 33.5 | 2 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front | Step E2: a firing Talon line on the offbeat (the beam erases the fodder within a second) |
+| 36 | 2 | convoy | [Strider](../../../enemies/ground/strider/README.md) | 2 | front | **New.** The first Strider pair; nothing else stands here, so a topple can only crush its partner |
 | 40 | 2 | column | [Needler](../../../enemies/air/needler/README.md) | 3 | front | After the first Strider pair's quiet window (t 36–39.5) |
-| 42.5 | 2 | stream | [Dart Drone](../../../enemies/air/dart-drone/README.md) | 4 | front (right) | From a bay in the right gallery wall |
+| 42.5 | 2 | stream | [Dart Drone](../../../enemies/air/dart-drone/README.md) | 4 | front (right) | From the bay in the right gallery wall |
+| 43.5 | 2 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 2 | front | Step E2: a firing Talon pair on the offbeat (the beam erases the fodder within a second) |
 | 45 | 2 | V-wing | [Talon](../../../enemies/air/talon/README.md) | 5 | front | A leader at the tip |
-| 47.5 | 2 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front |  |
-| 50 | 2 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front |  |
+| 47.5 | 2 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front | |
+| 49 | 2 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 2 | front | Step E2: a firing Talon pair on the offbeat (the beam erases the fodder within a second) |
+| 50 | 2 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (alternating edges) | |
 | 52.5 | 2 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front | The last wave across the full width before the fork |
+| 57 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 5 | front (left) (fork 1, left channel) | |
+| 57 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 5 | front (right) (fork 1, right channel) | |
+| 58 | 3 | column | [Needler](../../../enemies/air/needler/README.md) | 2 | front (fork 1, left channel) | Step E3: a Needler pair after the choice (the pacing and floor tests per route: the Skitters die within a second) |
+| 58 | 3 | column | [Talon](../../../enemies/air/talon/README.md) | 2 | front (fork 1, right channel) | Step E3: a firing Talon pair after the choice, as the drift's Needler pair |
+| 59.5 | 3 | column | [Needler](../../../enemies/air/needler/README.md) | 3 | front (fork 1, left channel) | |
+| 60 | 3 | column | [Talon](../../../enemies/air/talon/README.md) | 3 | front (fork 1, right channel) | |
+| 61.3 | 3 | single | [Strider](../../../enemies/ground/strider/README.md) | 1 | front (fork 1, right channel) | Walks up the charge seam past its SAM pair |
+| 62 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 5 | front (left) (fork 1, left channel) | |
+| 63 | 3 | stream | [Dart Drone](../../../enemies/air/dart-drone/README.md) | 4 | front (right) (fork 1, right channel) | |
+| 64.5 | 3 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front (fork 1, left channel) | |
+| 65 | 3 | column | [Talon](../../../enemies/air/talon/README.md) | 2 | front (fork 1, right channel) | Step E3: a firing Talon pair on the seam's offbeat (the pacing and floor tests per route: the seam's 66-69 s stretch emptied under the beam) |
+| 66 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 5 | front (right) (fork 1, right channel) | |
+| 67 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 5 | front (left) (fork 1, left channel) | |
+| 69 | 3 | column | [Talon](../../../enemies/air/talon/README.md) | 3 | front (fork 1, right channel) | |
+| 69.5 | 3 | column | [Needler](../../../enemies/air/needler/README.md) | 3 | front (fork 1, left channel) | |
+| 72 | 3 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front | Step E2: a firing Talon line on the offbeat (the beam erases the fodder within a second) |
 | 74 | 4 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front | The tunnels rejoin |
 | 76.5 | 4 | V-wing | [Talon](../../../enemies/air/talon/README.md) | 5 | front | A leader at the tip |
-| 79 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front |  |
-| 81.5 | 4 | column | [Needler](../../../enemies/air/needler/README.md) | 3 | front | Down the lane between the Sentinel pair |
-| 84 | 4 | stream | [Dart Drone](../../../enemies/air/dart-drone/README.md) | 4 | front (left) |  |
-| 86.5 | 4 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front |  |
-| 89 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front |  |
+| 78 | 4 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 2 | front | Step E2: a firing Talon pair on the offbeat (the beam erases the fodder within a second) |
+| 79 | 4 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front | Step E2: a Talon line in place of the draft's Skitter stream (the beam erases the fodder within a second) |
+| 81.5 | 4 | column | [Needler](../../../enemies/air/needler/README.md) | 3 | front | Between the Sentinel pair's reaches |
+| 83.5 | 4 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 2 | front | Step E2: a firing Talon pair on the offbeat (the beam erases the fodder within a second) |
+| 84 | 4 | stream | [Dart Drone](../../../enemies/air/dart-drone/README.md) | 4 | front (left) | |
+| 86.5 | 4 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front | |
+| 88 | 4 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 2 | front | Step E2: a firing Talon pair on the offbeat (the beam erases the fodder within a second) |
+| 89 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (alternating edges) | |
+| 91.3 | 4 | convoy | [Strider](../../../enemies/ground/strider/README.md) | 2 | front | The hall's pair, 1.5 s apart; a right-leg topple of the first falls onto the SAM pair |
 | 91.5 | 4 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front | Over the Strider pair |
 | 94 | 4 | V-wing | [Talon](../../../enemies/air/talon/README.md) | 5 | front | A leader at the tip |
-| 96.5 | 4 | stream | [Dart Drone](../../../enemies/air/dart-drone/README.md) | 4 | front (right) |  |
-| 101.5 | 4 | column | [Needler](../../../enemies/air/needler/README.md) | 3 | front |  |
-| 104 | 4 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front |  |
-| 106.5 | 4 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front |  |
-| 109 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front |  |
-| 111.5 | 4 | stream | [Dart Drone](../../../enemies/air/dart-drone/README.md) | 4 | front | The last wave across the full width before the second fork |
+| 96.5 | 4 | stream | [Dart Drone](../../../enemies/air/dart-drone/README.md) | 4 | front (right) | |
+| 99 | 4 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front | Step E2: a firing Talon line on the offbeat (the beam erases the fodder within a second) |
+| 101.5 | 4 | column | [Needler](../../../enemies/air/needler/README.md) | 3 | front | |
+| 103 | 4 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 2 | front | Step E2: a firing Talon pair on the offbeat (the beam erases the fodder within a second) |
+| 104 | 4 | V-wing | [Talon](../../../enemies/air/talon/README.md) | 5 | front | Step E2: a Talon V-wing in place of the draft's Mote Swarm (the beam erases the fodder within a second) |
+| 106.5 | 4 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front | |
+| 108 | 4 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 2 | front | Step E2: a firing Talon pair on the offbeat (the beam erases the fodder within a second) |
+| 109 | 4 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front | Step E2: a Talon line in place of the draft's Skitter stream (the beam erases the fodder within a second) |
+| 111.5 | 4 | stream | [Dart Drone](../../../enemies/air/dart-drone/README.md) | 4 | front (alternating edges) | The last wave across the full width before the second fork |
+| 113 | 4 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 2 | front | Step E2: a firing Talon pair on the offbeat (the beam erases the fodder within a second) |
+| 117 | 5 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 5 | front (left) (fork 2, left channel) | |
+| 117 | 5 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 5 | front (right) (fork 2, right channel) | |
+| 119.5 | 5 | column | [Needler](../../../enemies/air/needler/README.md) | 3 | front (fork 2, right channel) | |
+| 120 | 5 | column | [Talon](../../../enemies/air/talon/README.md) | 3 | front (fork 2, left channel) | |
+| 122 | 5 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front (fork 2, right channel) | |
+| 123 | 5 | stream | [Dart Drone](../../../enemies/air/dart-drone/README.md) | 4 | front (left) (fork 2, left channel) | |
+| 124.5 | 5 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 5 | front (right) (fork 2, right channel) | |
+| 126 | 5 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 5 | front (left) (fork 2, left channel) | |
+| 127 | 5 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 3 | front (fork 2, right channel) | |
+| 129 | 5 | column | [Talon](../../../enemies/air/talon/README.md) | 3 | front (fork 2, left channel) | |
+| 129.5 | 5 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 5 | front (right) (fork 2, right channel) | |
+| 132 | 5 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 5 | front (left) (fork 2, left channel) | |
+| 132 | 5 | column | [Needler](../../../enemies/air/needler/README.md) | 3 | front (fork 2, right channel) | |
+| 133.5 | 5 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front | Step E2: a firing Talon line on the offbeat (the beam erases the fodder within a second) |
+| 135.5 | 5 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 2 | front | Step E2: a firing Talon pair on the offbeat (the beam erases the fodder within a second) |
 | 137 | 6 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front | The refinery: the first vent row flares alone at t≈141 |
 | 139.5 | 6 | V-wing | [Talon](../../../enemies/air/talon/README.md) | 5 | front | A leader at the tip |
-| 143 | 6 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front |  |
-| 145.5 | 6 | column | [Needler](../../../enemies/air/needler/README.md) | 3 | front |  |
-| 148 | 6 | stream | [Dart Drone](../../../enemies/air/dart-drone/README.md) | 4 | front (left) |  |
-| 150.5 | 6 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front |  |
-| 153 | 6 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front |  |
-| 155.5 | 6 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front |  |
-| 158 | 6 | stream | [Dart Drone](../../../enemies/air/dart-drone/README.md) | 4 | front (right) |  |
+| 141.5 | 6 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 2 | front | Step E2: a firing Talon pair on the offbeat (the beam erases the fodder within a second) |
+| 143 | 6 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (alternating edges) | |
+| 145.5 | 6 | column | [Needler](../../../enemies/air/needler/README.md) | 3 | front | |
+| 146 | 6 | convoy | [Strider](../../../enemies/ground/strider/README.md) | 2 | front | The furnace floor's pair |
+| 147 | 6 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 2 | front | Step E2: a firing Talon pair on the offbeat (the beam erases the fodder within a second) |
+| 148 | 6 | stream | [Dart Drone](../../../enemies/air/dart-drone/README.md) | 4 | front (left) | |
+| 150.5 | 6 | V-wing | [Talon](../../../enemies/air/talon/README.md) | 5 | front | Step E2: a Talon V-wing in place of the draft's Mote Swarm (the beam erases the fodder within a second) |
+| 152 | 6 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 2 | front | Step E2: a firing Talon pair on the offbeat (the beam erases the fodder within a second) |
+| 153 | 6 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front | |
+| 155.5 | 6 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front | Step E2: a Talon line in place of the draft's Skitter stream (the beam erases the fodder within a second) |
+| 157 | 6 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 2 | front | Step E2: a firing Talon pair on the offbeat (the beam erases the fodder within a second) |
+| 158 | 6 | stream | [Dart Drone](../../../enemies/air/dart-drone/README.md) | 4 | front (right) | |
 | 160.5 | 6 | V-wing | [Talon](../../../enemies/air/talon/README.md) | 5 | front | A leader at the tip |
-| 163 | 6 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front |  |
-| 168 | 6 | column | [Needler](../../../enemies/air/needler/README.md) | 3 | front |  |
-| 170.5 | 6 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front |  |
-| 173 | 6 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front |  |
-| 175.5 | 6 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front |  |
+| 161.4 | 6 | single | [Strider](../../../enemies/ground/strider/README.md) | 1 | front | The lone Strider through the gantry's SAM trio |
+| 163 | 6 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front | |
+| 166 | 6 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front | Step E2: a firing Talon line on the offbeat (the beam erases the fodder within a second) |
+| 168 | 6 | column | [Needler](../../../enemies/air/needler/README.md) | 3 | front | |
+| 170.5 | 6 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front | |
+| 172 | 6 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 2 | front | Step E2: a firing Talon pair on the offbeat (the beam erases the fodder within a second) |
+| 173 | 6 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (alternating edges) | |
+| 175.5 | 6 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front | |
+| 177 | 6 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 2 | front | Step E2: a firing Talon pair on the offbeat (the beam erases the fodder within a second) |
 | 178 | 6 | V-wing | [Talon](../../../enemies/air/talon/README.md) | 5 | front | The ore chute; a leader at the tip |
-| 181 | 6 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front | Out into open space: the last wave |
+| 181 | 6 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (alternating edges) | Out into open space: the last wave |
 
-**Fork one** (the choice at t≈56):
-
-| t (s) | Section | Formation | Enemies (link) | Count | Enter from | Notes |
-|---|---|---|---|---|---|---|
-| 57 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 5 | front (left channel) |  |
-| 59.5 | 3 | column | [Needler](../../../enemies/air/needler/README.md) | 3 | front (left channel) |  |
-| 62 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 5 | front (left channel) |  |
-| 64.5 | 3 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front (left channel) |  |
-| 67 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 5 | front (left channel) |  |
-| 69.5 | 3 | column | [Needler](../../../enemies/air/needler/README.md) | 3 | front (left channel) |  |
-| 57 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 5 | front (right channel) |  |
-| 60 | 3 | column | [Talon](../../../enemies/air/talon/README.md) | 3 | front (right channel) |  |
-| 63 | 3 | stream | [Dart Drone](../../../enemies/air/dart-drone/README.md) | 4 | front (right channel) |  |
-| 66 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 5 | front (right channel) |  |
-| 69 | 3 | column | [Talon](../../../enemies/air/talon/README.md) | 3 | front (right channel) |  |
-
-Left channel (the old drift, safer): 6 waves, 29 enemies. Right channel (the charge seam, richer): 5 waves,
-20 enemies plus a Strider and 2 SAM Nests.
-
-**Fork two** (the choice at t≈116):
-
-| t (s) | Section | Formation | Enemies (link) | Count | Enter from | Notes |
-|---|---|---|---|---|---|---|
-| 117 | 5 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 5 | front (left channel) |  |
-| 120 | 5 | column | [Talon](../../../enemies/air/talon/README.md) | 3 | front (left channel) |  |
-| 123 | 5 | stream | [Dart Drone](../../../enemies/air/dart-drone/README.md) | 4 | front (left channel) |  |
-| 126 | 5 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 5 | front (left channel) |  |
-| 129 | 5 | column | [Talon](../../../enemies/air/talon/README.md) | 3 | front (left channel) |  |
-| 132 | 5 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 5 | front (left channel) |  |
-| 117 | 5 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 5 | front (right channel) |  |
-| 119.5 | 5 | column | [Needler](../../../enemies/air/needler/README.md) | 3 | front (right channel) |  |
-| 122 | 5 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front (right channel) |  |
-| 124.5 | 5 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 5 | front (right channel) |  |
-| 127 | 5 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 3 | front (right channel) |  |
-| 129.5 | 5 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 5 | front (right channel) |  |
-| 132 | 5 | column | [Needler](../../../enemies/air/needler/README.md) | 3 | front (right channel) |  |
-
-Left channel (the cooling ducts, richer): 6 waves, 25 enemies plus 4 SAM Nests. Right channel (the ore
-chute, safer): 7 waves, 32 enemies.
+Totals: Skitter 97 · Talon 168 · Mote Swarm 80 · Dart Drone 36 · Needler 32 · Strider 8 (every fork's branches together; a route flies one channel of each fork).
+<!-- /data -->
 
 ## Ground targets
 
+<!-- data: ground-targets -->
 | Section | Target | Effect |
 |---|---|---|
-| 2 | [Sentinel Tower](../../../enemies/ground/sentinel-tower/README.md) in the right gallery (t≈24), alone | Bounty 40 each (Act 1 terms); the first sweep with a quiet window |
-| 2 | [Strider](../../../enemies/ground/strider/README.md) pair down the tunnel's floor (t≈36), 1.5 s apart | Bounty 60 each; nothing else stands here, so the first topple can only crush its partner (when it walks in the fall line) |
-| 3 (right) | Strider (t≈58) walking up the charge seam, [SAM Nest](../../../enemies/ground/sam-nest/README.md) pair (t≈62), 3 mining charges | Richer channel only (dormant if not chosen) |
-| 3 (right) | Blast door lock (20 HP, t≈66) | The cache: a crate worth 50 (328) |
-| 4 | Sentinel pair in notches on both walls (t≈80), an 80 px lane between their reaches | Bounty 40 each |
-| 4 | Strider pair across the hall (t≈90) past the SAM pair (t≈92) and 2 charges | A topple aimed at the nests crushes them |
-| 4 | The secret's blast door lock (30 HP, t≈100) | See *Secrets and pickups* |
-| 5 (left) | SAM Nest pairs (t≈119, t≈126), 3 mining charges | Richer channel only |
-| 5 (left) | Blast door lock (20 HP, t≈128) | The cache: a crate worth 50 (328) |
-| 6 | Strider pair on the furnace floor (t≈146); Sentinel in the crucible gallery (t≈150) | |
-| 6 | SAM Nest trio on the gantry (t≈162) with 4 charges; a lone Strider (t≈166) walking toward it | The last topple |
+| 2 | [Sentinel Tower](../../../enemies/ground/sentinel-tower/README.md) in the right gallery (t≈24), alone | Bounty 40 (Act 1 terms); the first sweep with a quiet window |
+| 4 | Sentinel Tower pair in the hall's notches (t≈79 left, t≈81 right), their rows offset so they never sweep the same rows at once | Bounty 40 each |
+| 4 | [SAM Nest](../../../enemies/ground/sam-nest/README.md) pair on the hall floor (t≈92), by the Strider pair's path | Bounty 15 each; a topple aimed at them crushes them |
+| 4 | Mining charges ×2 by the hall's SAM pair (t≈92) | One hit: a 64 px burst of 80 to every enemy in it (never the ship); pays nothing itself |
+| 4 | The consortium store's sealed blast door, its lock dark (30 HP, t≈100) | Destroyed, the doors slide open and the hidden crate floats out (the secret) |
+| 3 | SAM Nest pair in the charge seam (t≈62; fork one right) | Dormant unless the charge seam is chosen |
+| 3 | Mining charges ×3 in the charge seam (fork one right), by the SAM pair and the Strider's path | As above; dormant unless chosen |
+| 3 | The charge seam's lit blast door, its lock (20 HP, t≈66; fork one right) | Destroyed, the doors open on a cache: a crate worth 50 (Act 1 terms) |
+| 5 | SAM Nest pairs in the cooling ducts (t≈119, 126; fork two left) | Dormant unless the cooling ducts are chosen |
+| 5 | Mining charges ×3 in the cooling ducts (fork two left), by the SAM pairs | As above; dormant unless chosen |
+| 5 | The cooling ducts' lit blast door, its lock (20 HP, t≈128; fork two left) | Destroyed, the doors open on a cache: a crate worth 50 (Act 1 terms) |
+| 5 | A consortium repair crate on the refinery's gate, its lock (10 HP, t≈135) | Destroyed, it releases an armour patch |
+| 6 | Sentinel Tower in the crucible gallery (t≈150) | Bounty 40 |
+| 6 | SAM Nest trio on the gantry (t≈162), the lone Strider walking through them | Bounty 15 each; the last topple |
+| 6 | Mining charges ×4 on the gantry by the SAM trio | As above |
+<!-- /data -->
 
 ## Hazards
 
@@ -327,9 +395,10 @@ chute, safer): 7 waves, 32 enemies.
 - **The branch caches** (the richer channels, t≈66 and t≈128): two lit blast doors, crates of 50 (328)
   each; not secrets (in plain sight on their route).
 - **Shield cell**: dropped by the second Strider of the t≈36 pair.
-- **Armour patch**: a consortium repair crate on the refinery's gate (t≈135), freed by its lock (a
-  ground trigger of 10 HP).
-- **Overdrive**: dropped by the crucible's Sentinel (t≈150).
+- **Armour patch**: a consortium repair crate on the refinery's gate (t≈134.6), a destructible of 10 HP that
+  releases it.
+- **Overdrive**: dropped by the last Needler of the t=145.5 column, before the crucible (step E2: a ground unit
+  drops a pickup only as an objective group's, so not the crucible's Sentinel as drafted).
 
 ## Radio chatter
 
@@ -338,40 +407,47 @@ the length check; 0.4 s of silence; no timed line more than 1 s late); event lin
 lines carry `requires: escort`. The two **branch lines** are a new trigger (`branch: left|right` at a fork's
 choice), spoken only for the channel taken.
 
+<!-- data: radio -->
 | Trigger | Speaker | Line |
 |---|---|---|
-| t=1 | Okafor | "Kleopatra. The Bellwether's charts say the shaft runs straight to the refinery." |
+| t=1 | Okafor | "Kleopatra. The shaft runs straight to the refinery." |
 | t=9 | Rook | "Tunnels again. I'll tuck in behind. You pick the turns." |
-| t=24.5 | Varga | "Sentinel tower. It sweeps all the way round. Shoot the emitter, or bomb the collar." |
-| t=36.5 | Varga | "Striders. Take a leg and it falls, on whatever stands beside it." |
-| first topple crush (event) | Rook | "It fell on its own guns. I'll take that." |
-| t=48 | Okafor | "The shaft forks. Left is the old drift, quiet. Right is the charge seam: guns, and a cache." |
-| branch right, fork one (event) | Okafor | "The seam it is. Watch the charges." |
-| branch left, fork one (event) | Okafor | "The old drift. Quiet suits me." |
-| t=75 | Varga | "The pumping hall. Two towers, and one lane between them." |
-| secret found (event) | Varga | "A sealed store room. Consortium stamps. They never found it." |
-| t=108 | Okafor | "Second fork. The cooling ducts on the left are guarded. The ore chute is clear." |
-| t=133 | Okafor | "The refinery ahead. This is what feeds the Sovereign. Burn through it." |
+| t=24.5 | Varga | "Sentinel tower. It sweeps all round. Hit the emitter." |
+| t=36.5 | Varga | "Striders. Shoot a leg and it falls on its neighbours." |
+| First topple crush (`topple-crush`) | Rook | "It fell on its own guns. I'll take that." |
+| t=48 | Okafor | "Fork ahead. Left is quiet. Right has guns and a cache." |
+| Fork one, the right channel taken (`branch`) | Okafor | "The seam it is. Watch the charges." |
+| Fork one, the left channel taken (`branch`) | Okafor | "The old drift. Quiet suits me." |
+| t=75 | Varga | "The pumping hall. Two towers, one each side." |
+| t=108 | Okafor | "Second fork. The ducts left are guarded; the chute is clear." |
+| t=133 | Okafor | "The refinery. It feeds the Sovereign. Burn through it." |
 | t=140.5 | Varga | "Vents in the floor. Watch the grates glow, then go." |
-| t=158 | Rook | "Hot in here. I mean that literally." |
+| t=162 | Rook | "Hot in here. I mean that literally." |
 | t=175 | Okafor | "The ore chute. Out the way the rock goes, Lancer." |
-| Secondary met (at the end) | Okafor | "Every tower down. That rock is blind now." |
+| Secondary met (the fourth tower down) | Okafor | "Every tower down. That rock is blind now." |
+<!-- /data -->
 
-Timeline check (text, by the rule above): Okafor's fork line (t=48, the longest) closes at about t=57.1,
-before the branch line (an event after t≈56 waits its turn: it plays when the fork line ends, within its
-6 s); the t=108 line closes at about t=116.2, as fork two's choice is made (the second fork has no branch
-line, its channels are named in the t=108 line); the refinery line (t=133) closes at about t=140.3, before
-Varga's vent warning (t=140.5), just before the first row flares. Without Rook his two lines and the topple line drop.
+Timeline check (step E2: every line trimmed to one radio page, three lines of 22 characters, 5 s on the panel;
+voiced ≈ 2.5–5.7 s): Okafor's fork line (t=48) closes at t=53, before fork one's choice (t≈56–56.75), so the
+branch line plays at the choice on both sides; the t=108 line closes at t=113, before fork two's choice
+(t≈116; the second fork has no branch line, its channels are named in the t=108 line); the refinery line
+(t=133) closes at t=138, before Varga's vent warning (t=140.5). The first topple crush comes at the earliest in
+the charge seam (t≈63) or the hall (t≈94) — the t=36 pair walks in line, so neither falls on the other —, where
+no timed line follows within 5 s; the secret's line (t≈100–104) and the secondary's (the fourth tower, t≈150–155)
+fall in free stretches too. Without Rook his two lines and the topple line drop. Step E4's
+`RadioTimelineLevel32Test` flies it per route.
 
 ## Music & ambience
 
 [Track 12](../../../audio/music/README.md#track-list), the Act 5 A theme **"Hollow Rock"** (the chosen sketch
-of round 03; full length and its base/full/motif stems still to make): the radio-static intro with
+of round 03; full length with its base, full and motif stems in `assets/music` since round 62): the radio-static intro with
 Vorne's motif in cold brass over the shaft mouth, the industrial groove (the **base**) through the galleries,
-the sketch's conveyor breakdown with the lone human horn at the forks (sections 3 and 5), the **full mix** in
-the refinery (section 6), out into space at the chute. Ambience: a tunnel bed (proposed `belt-tunnel`: rock
-creak, pumps and machinery hum through the walls, a distant drill; the act's audio step decides), the
-refinery's furnace roar under section 6 (Level 19's vent and furnace sounds reused). New sounds this level
+the sketch's conveyor breakdown with the lone human horn at the forks (a fourth stem `conveyor`, round 65's M.1 ok:
+alone, Vorne's motif still on top, for 16 s from each fork's choice, t 56–72 and 116–132, switched in and out over
+2 s), the **full mix** in the refinery (section 6), out into space at the chute; Vorne's motif stem on top from t=18 (on). Ambience: the
+tunnel bed `belt-tunnel` (round 60 S.19 a: rock creak, pumps and machinery hum through the walls, a distant
+drill), the refinery's furnace roar under section 6 (Level 19's `mars-foundry` bed as an ambience layer, t
+136–180, faded out at the chute's mouth; the vents' tell and burst sounds reused). New sounds this level
 needs: the Sentinel's charge, beam and servo, the Strider's steps, leg snap and fall, the blast doors'
 grind, the mining charge's blast, the SAM Nest's hatch and launch; listed in [sfx](../../../audio/sfx/README.md)
 by the act's audio step (Freesound for real-world sounds only, no bubbly or popping sounds).
@@ -380,22 +456,23 @@ by the act's audio step (Freesound for real-world sounds only, no bubbly or popp
 
 Budget(32) = 700 × 1.07³¹ ≈ **5,702** ([economy](../../../systems/economy/README.md#per-level-budget)).
 Data in **Act 1 terms** (Skitter 5, Mote 2, Talon 12, its leader 25, Dart 2, Needler 12, Sentinel 40,
-Strider 60, SAM Nest 15, the secret's crate 100, a branch cache 50, the secondary 100), × the act factor
-**6.5536** (1.6⁴), bounties × the scale. A **`bounty_scale` of 0.42** (Skitter 14, Mote 6, Talon 33, leader
-69, Dart 6, Needler 33, Sentinel 110, Strider 165, SAM Nest 41 a kill) puts the **typical haul, the mean of
-the four routes, at 5,663 (−0.7 %)**: the safer route 5,400 (−5.3 %), the richer 5,926 (+3.9 %), the mixed
-ones 5,621 and 5,705 (by hand with the economy's shares: air kills 60 %, ground 80 %, the secret, the caches
-and the secondary 50 %). `TypicalHaulTest` checks the mean within ±5 % and each route within ±8 %.
+Strider 60 (hull 40, legs 6, pod 8), SAM Nest 15, the secret's crate 100, a branch cache 50, the secondary
+100), × the act factor **6.5536** (1.6⁴), bounties × the scale. A route level's typical haul is the **mean of
+its four routes** (a side per fork: L or R), each within ±8 % (step E2: the table has a row per route and the
+mean as its total; `TypicalHaulTest` checks the mean and each route). Step E2 fitted a **`bounty_scale` of 0.34**
+(the draft's 0.42 with the offbeat Talons added; `levelReport` reports each route): the safer route (LR: the old
+drift, the ore chute) and the richer (RL: the charge seam, the cooling ducts) about 9 % apart.
 
-| Source | Safer route: perfect | Safer: typical | Richer route: perfect | Richer: typical |
-|---|---|---|---|---|
-| Kills, safer: Skitter 96 × 5 + Mote Swarm 96 × 2 + Talon 59 × 12 + leader 7 × 25 + Dart Drone 28 × 2 + Needler 30 × 12; richer: Skitter 91, Mote 80, Talon 68, leader 7, Dart 36, Needler 18 | 5,508 | 3,305 | 5,291 | 3,175 |
-| Ground targets, safer: Sentinel Tower 4 × 40 + Strider 7 × 60 + SAM Nest 5 × 15; richer: Sentinel 4, Strider 8, SAM Nest 11 | 1,800 | 1,440 | 2,211 | 1,769 |
-| Secret: the consortium store (hidden crate) | 655 | 328 | 655 | 328 |
-| Branch caches (richer channels, 50 each) | — | — | 655 | 328 |
-| Secondary: towers down | 655 | 328 | 655 | 328 |
-| **Total** (bounty scale 0.42) | **8,618** | **5,401** | **9,467** | **5,928** |
-| Budget(n) = the typical haul's target (the routes' mean 5,663, −0.7 %); perfect 1.51–1.66 × budget | | | | 5,702 |
+<!-- data: credit-budget -->
+| Source | Perfect run | Typical haul |
+|---|---|---|
+| Route LL | 9,578 | 5,743 |
+| Route LR | 9,215 | 5,532 |
+| Route RL | 10,088 | 6,056 |
+| Route RR | 9,725 | 5,845 |
+| **Total** (the routes' mean, bounty scale 0.34) | **9,652** | **5,794** |
+| Budget(n) = the typical haul's target; the mean +2 % (by route: LL +1 % LR -3 % RL +6 % RR +3 %), perfect 1.69 × budget | | 5,702 |
+<!-- /data -->
 
 **Balance plan** (the [Act 5 hand plan](../../../player/generator/README.md#act-5-hand-plan-draft)): the L32
 visit raises the **Swarm Tail to L3** (the Airstrike is forbidden in the rock, the EMP stays fitted); the
@@ -409,12 +486,15 @@ Striders.
 
 - **Easy**: the Sentinels' 100° arcs without the full turn, a sweep every 5.5 s; the Striders' fan every
   3.0 s, single missiles; wall contact 6; the formation lever thins the popcorn.
+- **Medium and hard**: each Sentinel's first sweep is the **full turn** (QE-3 a, `full_turn_first`: a tower is
+  about 4.7 s on the field and sweeps once); then every third sweep, hard every second.
 - **Hard**: 160° arcs and every second sweep a full turn; the Striders' fan of 5 every 2.0 s, salvos of 3;
   the SAM Nests' salvos of 3; the vents every 3.0 s.
 
 ## Concept art
 
-None yet. The level needs (round 60's proposals, then part E's production art):
+Part E's production art (step ART-E, concept round 65) is below; the level needs (round 60's proposals, then part E's
+production art):
 
 - the tunnel kit (rock walls with lamp strings and red wall-foot lights, gallery notches, launch bays, the
   two islands with their two dressings each: old drift / charge seam, cooling ducts / ore chute), the
@@ -426,30 +506,55 @@ None yet. The level needs (round 60's proposals, then part E's production art):
 - the round's captures: a fork's choice from both sides, a Sentinel's full turn in the hall, a topple
   crushing the SAM pair, the vents with a Strider pair, readability crops of the walls at 1:1.
 
+Production art, M9 part E (concept round 65, step ART-E): the tunnel kit backdrop (`tools/art/backdrop_l32.py`, its
+places for step E2 in [concept/backdrop-proposal.yaml](concept/backdrop-proposal.yaml): the terrain per QE-1 a, the
+forks, the notches, the targets it assumes) and the blast doors, mining charge and repair crate
+(`tools/art/belt_units_e.py`). The Sentinel Tower and the Strider are in the
+[ground units' concept art](../../../enemies/ground/README.md#concept-art); the two briefing images in the
+[briefing](../../../ui/briefing/README.md#concept-art). Prompts: [concept/prompts.md](concept/prompts.md).
+
+| File | What | Status |
+|---|---|---|
+| [concept/backdrop-final-r65-a.png](concept/backdrop-final-r65-a.png) | Production backdrop (`tools/art/backdrop_l32.py`): fourteen screens at half size with stand-ins (the shaft's lip, the shaft closing, the gallery Sentinel's notch, a launch bay, fork one's head and channels, the hall's Sentinel pair, the consortium store, fork two's head and channels, the refinery's gate, the crucible gallery, the gantry, the ore chute's mouth); 1x crops of both forks' mouths (QE-2 a) and a wall | chosen (round 65, F.1 a and F.2 ok: accepted as final) |
+| [concept/backdrop-final-r65-a.gif](concept/backdrop-final-r65-a.gif) | t 50-62 at 5 fps: the tunnel widening to fork one, the island's tip and the two channels' mouths, the charge seam's SAM pair and charges | chosen (round 65, F.1 a and F.2 ok: accepted as final) |
+| [concept/backdrop-proposal.yaml](concept/backdrop-proposal.yaml) | The generator's `backdrop:` block, the sections' tiles, the proposed `terrain:` block (walls, the two fork islands, the forks, the notches per QE-1 a) and the ground targets the art is laid out for (towers, doors, charges, nests) for step E2 (not data) | proposed |
+| [concept/ground-objects-final-r65-a.png](concept/ground-objects-final-r65-a.png) | The lit blast doors (right, left; the lock's lamp, the opening), the consortium store's sealed door and its opening, the mining charge and its 64 px burst, the repair crate (`tools/art/belt_units_e.py`; sheet) | chosen (round 65, F.5 ok: accepted as final) |
+| [concept/ground-objects-final-r65-a.gif](concept/ground-objects-final-r65-a.gif) | The doors opening as their locks go, a charge's burst taking a Talon and a SAM pair, the crate opening | chosen (round 65, F.5 ok: accepted as final) |
+| [concept/fork-capture-r65-a.png](concept/fork-capture-r65-a.png) | Game capture (step E5; [recipe](concept/prompts.md#level-32-capture-r65-a)): fork one and fork two seen from the island's tip, both mouths on the screen (QE-2 a: the richer mouth's red posts and lit bulkhead, the safer one's work lamps and stripes) | chosen (round 65, accepted with the level, F.1–F.5) |
+| [concept/walls-capture-r65-a.png](concept/walls-capture-r65-a.png) | Game capture: 1:1 wall strips (the launch bays, the gallery tower's notch, the seam, the hall's shallow notch, the refinery and the crucible's notch) | chosen (round 65, accepted with the level, F.1–F.5) |
+| [concept/blast-door-capture-r65-a.png](concept/blast-door-capture-r65-a.png) | Game capture: the charge seam's lit door shut and opening on its cache (2x), the hall's sealed store opened, the secret's line | chosen (round 65, accepted with the level, F.1–F.5) |
+| [concept/charges-capture-r65-a.png](concept/charges-capture-r65-a.png) | Game capture: the gantry's mining charges bursting by the SAM trio as the lone Strider walks through | chosen (round 65, accepted with the level, F.1–F.5) |
+| [concept/vents-capture-r65-a.png](concept/vents-capture-r65-a.png) | Game capture: the furnace vents with the furnace floor's Strider pair and the crucible tower's full turn | chosen (round 65, accepted with the level, F.1–F.5) |
+| [concept/towers-down-capture-r65-a.png](concept/towers-down-capture-r65-a.png) | Game capture: the crucible tower's emitter under the beam, `TOWERS DOWN` met (the HUD tag, Okafor's line) | chosen (round 65, accepted with the level, F.1–F.5) |
+| [concept/level-32-capture-r65-a.mp4](concept/level-32-capture-r65-a.mp4) | Game capture with the game's sound: the gallery tower's full turn, fork one's approach and the seam taken | chosen (round 65, accepted with the level, F.1–F.5) |
+
 ## Implementation
 
-- [ ] Level data `data.yaml` (when built in part E): sections and speeds with eases, the terrain block (wall
+- [x] Level data `data.yaml` (when built in part E): sections and speeds with eases, the terrain block (wall
       polylines, the gallery notches, the two islands), the branch waves per fork, waves, ground targets
       (with their channel), radio, budget, threat profile, briefing, backdrop, music, the `underground`
       special limits
-- [ ] Tunnel terrain: Level 16's contact, push and geometry rules validated (width at least 180 px, a
+- [x] Tunnel terrain: Level 16's contact, push and geometry rules validated (width at least 180 px, a
       channel at least 130 px, no wave path or spawn in rock, no Sentinel beside a passage under 300 px)
-- [ ] Route choice: the channel the ship's centre is in when an island's tip reaches its row; that branch's
+      (`DeepCoreChecks`, `TerrainClearanceTest`; steps E1–E3)
+- [x] Route choice: the channel the ship's centre is in when an island's tip reaches its row; that branch's
       waves only; the other channel's ground units dormant; deterministic in replays; the `branch` radio
       trigger
-- [ ] Blast doors (locks as ground triggers, the doors' opening, the crates), mining charges (64 px burst,
-      never the ship), topples placed to crush
-- [ ] Furnace vents in the refinery (Level 19's)
-- [ ] Wave script to the Act 2+ rules on all four routes (`ActFloorTest`, `PacingTest`), the quiet windows
-- [ ] `TOWERS DOWN` secondary, judged at the level end
-- [ ] Airstrike and Orbital Lance greyed `IN ROCK` (the hangar intel and the briefing's threat line show it)
-- [ ] Radio voiced, every timed line at most 1 s late, with Rook and without (`requires: escort`)
-- [ ] Threat profile, Varga's four intel lines and Rook's teaser fitting the intel panel
-- [ ] Briefing: both pages, each one screen, with their images
-- [ ] Typical haul: the four routes' mean within ±5 % of budget(32) = 5,702, each route within ±8 %
-- [ ] Music: "Hollow Rock" full length and stems by section; the tunnel bed and the furnace roar
-- [ ] Easy/hard variations; the autopilot flies every route on every difficulty (with and without Rook)
-- [ ] Production art and captures for the round
+- [x] Blast doors (locks as ground triggers, the doors' opening, the crates), mining charges (64 px burst,
+      never the ship), topples placed to crush (steps E1–E4; captured in step E5: a door opening on its cache, the
+      gantry's charges, the hall Strider's crush of the SAM pair)
+- [x] Furnace vents in the refinery (Level 19's)
+- [x] Wave script to the Act 2+ rules on all four routes (`ActFloorTest`, `PacingTest`), the quiet windows
+- [x] `TOWERS DOWN` secondary, judged at the level end
+- [x] Airstrike and Orbital Lance greyed `IN ROCK` (the hangar intel and the briefing's threat line show it)
+- [x] Radio voiced, every timed line at most 1 s late, with Rook and without (`requires: escort`)
+      (`RadioTimelineLevel32Test`; Rook's t=162, step E3)
+- [x] Threat profile, Varga's four intel lines and Rook's teaser fitting the intel panel
+- [x] Briefing: both pages, each one screen, with their images
+- [x] Typical haul: the four routes' mean within ±5 % of budget(32) = 5,702, each route within ±8 %
+- [x] Music: "Hollow Rock" full length and stems by section; the tunnel bed and the furnace roar
+- [x] Easy/hard variations; the autopilot flies every route on every difficulty (with and without Rook)
+- [x] Production art and captures for the round (ART-E; step E5's game captures, round 65)
 
 ## Open questions
 
@@ -480,3 +585,60 @@ the alternatives:
 - 2026-10-27: the level meets the Act 2+ floor on every route (≈ 104–107 a minute); the refinery reuses
   Level 19's vents unchanged; the `TOWERS DOWN` secondary counts the four common-route Sentinels.
 - 2026-10-27 (user, [round 60](../../../concept-rounds/round-60/README.md) closed): the design approved as drafted (`design: approved`, D.5): Q5 **a** (two real forks), J.11 kept (the route choice has consequences, reversing Level 16's rejected M3 b); the tunnel bed is S.19 a. Q11 **b**: gunmetal/charcoal units.
+- 2026-10-29 (step E2, accepted by the user in round 65): the data built on ART-E's proposal (its terrain, forks,
+  six notches per QE-1 a and targets adopted unchanged). **Pacing**: the draft's waves left 1.3–1.5 enemies on the
+  screen and ten stretches over 2 s empty under the plan's Ion Beam L4; 24 offbeat Talon pairs and lines added, four
+  Skitter streams and two Mote Swarms (t=18, 79, 104, 109, 150.5, 155.5) turned into Talon lines and wings: 2.71–2.73
+  on the screen on every route, ≈ 122–125 a minute (the draft's 104–107). **`bounty_scale` 0.34** (the draft's
+  0.42): the routes' mean typical haul 5,751 (+0.9 %), each route −3 … +5 %. **Striders** enter 0.7 s before the
+  nests they pass (fork one's at 61.3, the hall's pair at 91.3/92.8, the refinery's lone one at 161.4, not 166): a
+  walker rides the scroll and meets a nest on the screen only so. **Overdrive** from the last Needler of the t=145.5
+  column (a ground unit drops only as an objective group's). The radio lines trimmed to one page each (Okafor t=1,
+  t=48, t=108, t=133; Varga t=24.5, t=36.5, t=75: "two towers, one each side", the hall pair offset by QE-1 a). The
+  armour patch's crate a plain 10 HP destructible on the gate. `TrenchChecks`' ledge rule scoped to a trench under
+  water (Level 25), so the tunnels' floor nests stand in the open.
+- 2026-10-29 (step E2, found): the gallery tower (x 426, the 340 px tunnel's wall at 410) and the crucible tower
+  (x 54, the refinery's wall at 40) stand in their notches beyond the tunnel's wall line: a front gun reaches the
+  emitter only from inside the notch (the hall pair's 16 px notches leave theirs in reach). The autopilot met
+  `TOWERS DOWN` on easy only (2 of 3); the typical haul counts it at 50 % as every secondary. For step E3's tower play
+  or a round-65 call (shallower notches, the towers on the wall's foot).
+- 2026-10-29 (step E3, accepted by the user in round 65): the **tower play** (the autopilot lines up under an
+  emitter, low and holding its line while its shield is half full, waits under the next tower's x 1 s before it
+  enters, steps into the gallery's notch under its tower and follows it down): `TOWERS DOWN` met on every route and
+  difficulty, medium in every run, easy in 10 of 12, hard in 5 of 12 (`Level32Test`, 3 seeds a route, with Rook;
+  without him hard 3 of 8): the hall pair's second tower and the crucible's are the misses on hard. The
+  geometry needs no change: the crucible's emitter lies in the beam's reach from the tunnel (8 px), the gallery's
+  from its notch. **Waves**: firing pairs after fork one's choice (t=58: Needlers in the old drift, Talons in the
+  seam) and a Talon pair in the seam (t=65), for the pacing and floor tests on every route (the beam emptied those
+  stretches); the routes' mean typical haul 5,800 (+1.7 %), each route −3 … +6 %. Rook's "Hot in here" moved from
+  t=158 to **t=162**: the secondary's line after the crucible tower (t≈151–155.5) holds the radio about 6.8 s
+  (`RadioTimelineLevel32Test`).
+- 2026-10-29 (step E3, found; QE-3 for round 65): every Sentinel sweeps **one arc** in this level and no full turn:
+  each tower is about 4.7 s on the field (5.1 s in the refinery), its first telegraph 1.0 s after it comes on and
+  the next 4.5 s later (hard 3.6 s, the full turn's telegraph starting as it leaves). A full turn on the field needs
+  e.g. the full turn as a tower's first sweep in this level, or a shorter first delay and cadence
+  (`Level32Test.PENDING_FULL_TURN`).
+- 2026-10-29 (step E3b, QE-3 **a**, decided by the user in round 65, C.2 a): each tower's **first sweep is the full
+  turn** on medium and hard (`full_turn_first: true` on the three tower targets; easy keeps its arcs, the stat block
+  unchanged for later levels). Left alone (`Level32Test`, route LL) each tower turns once, its 1.0 s ring telegraph
+  with the start ray on the ship's bearing, the beam live at least 91 % of its 3 s before the tower leaves (the
+  ship 211 px from a tower at the nearest telegraph); easy one arc each. Re-measured per route (`levelReport`,
+  medium): floor 2.68 / 2.59 / 2.63 / 2.55 (LL/LR/RL/RR, unchanged), the typical haul +0.7 / −3.0 / +6.2 / +2.5 %
+  (mean 5,794, +1.6 %), the autopilot wins every run with no retry at medium; `TOWERS DOWN` with Rook as before
+  (medium 12 of 12, easy 10, hard 5). The credit table now rounds each of a Strider's parts as the game pays them
+  (`tools/sync_tables.py`): the perfect run 9,652, as `TypicalHaulTest`.
+- 2026-10-29 (step E1, accepted by the user in round 65): a branch's waves and targets come at or after its fork's
+  **latest choice** (the island's tip at the bottom edge: t≈56.75 and 116.75), so the richer channel's lit cache door is
+  never on the screen before the choice (QE-2's reading is the mouths'); a Sentinel's arcs alternate their direction;
+  a **toppling Strider takes no more damage** (the stagger and fall play out, the crush pays it); a cache's crate pays at
+  the secrets' rate but counts **no secret** (the hall's store is the level's one secret).
+- 2026-10-29 (step E4, accepted by the user in round 65): the hangar intel's wave strip marks each fork (a white
+  tick, a gold arm toward the **richer** side, richer = more credits in the branch's bounties and caches); a Strider
+  that dies by its topple explodes as it lands; the intel names the Airstrike's and the Lance's `IN ROCK` limit from
+  sensor L1.
+- 2026-10-29 (step E5, captures for round 65): on medium each tower turns once on the field (QE-3 a) and **no arc is
+  seen** (the arcs only on easy); with the plan's wing pods the Striders fell to their screen-left in 5 of 6 topples
+  (the pods' missiles take that leg first), so the hall's crush of the SAM pair was caught only with the Ion Beam alone
+  (no pods, no Rook) on the walker's screen-right side; the ship sits at x≥57 by the refinery's wall (pushed off at 49), where the beam still
+  reaches the crucible's emitter; a cache door opens as its lock comes on the field under the beam.
+- 2026-10-29 (user, [round 65](../../../concept-rounds/round-65/README.md), closed): the part's production art and calls accepted: **F.1 a** (the richer mouth's red running lights and lit bulkhead, the safer one's white work lamps), **F.2** the backdrop, **F.5** the doors, charges and crate ok (`art: final`); **C.1 a** (every tower emitter and door lock at least 40 px inside the field, the shallow notches), **C.2 a** (a tower's first sweep the full turn on medium and hard, easy keeps its arcs), **C.3** the offbeat waves and `bounty_scale` 0.34, **C.5** the route choice's rules, **C.6** the trimmed radio and Rook's t=162 accepted; **M.1** ok (track 12's conveyor stem at the forks, imported in step G4; until then the base stem plays there); the sounds all a but **S.3 b** (`sentinel-servo`), **S.7 b** (`strider-cannon`) and **S.11 b** (`charge-blast`), switched in step G4 ([sfx](../../../audio/sfx/README.md)). No notes from the user.

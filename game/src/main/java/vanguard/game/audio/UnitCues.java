@@ -122,6 +122,10 @@ final class UnitCues extends SoundFamily {
     private final CeresCues ceres;
     /** M9 part C: Level 30's line mines, Gunships' rings and turret cars' shots. */
     private final MinefieldCues minefield;
+    /** M9 part E: Level 32's Sentinel sweeps and deaths, the Striders' cannons. */
+    private final DeepCoreCues deepCore;
+
+    private final LeechFieldCues leechField;
 
     UnitCues(
             SoundMix mix,
@@ -136,8 +140,12 @@ final class UnitCues extends SoundFamily {
             VentFieldCues ventField,
             MawCues maw,
             CeresCues ceres,
-            MinefieldCues minefield) {
+            MinefieldCues minefield,
+            DeepCoreCues deepCore,
+            LeechFieldCues leechField) {
         super(mix);
+        this.deepCore = deepCore;
+        this.leechField = leechField;
         this.ceres = ceres;
         this.minefield = minefield;
         this.trench = trench;
@@ -188,6 +196,10 @@ final class UnitCues extends SoundFamily {
                 ventField.destroyed(events.value(i), pan);
                 // M9 part B: a clamp gun's clamp springing open over its burst.
                 ceres.destroyed(events.value(i), pan);
+                // M9 part E: a Sentinel's crash and its head's fall over its rung.
+                deepCore.destroyed(events.value(i), pan);
+                // M9 part F: a Void Leech's crack, a Rail Bunker's blast over its rung.
+                leechField.destroyed(events.value(i), pan);
             }
             // A heavy shot for a medium bullet: the event's value is the bullet's damage, the same
             // class boundary as its large orb.
@@ -212,6 +224,8 @@ final class UnitCues extends SoundFamily {
                     // M9 part B: a Talon's twin crack, a clamp gun's shot (CeresCues).
                 } else if (minefield.fired(firer(events.x(i), events.y(i)), pan)) {
                     // M9 part C: a Gunship's ring, a turret car's shot (MinefieldCues).
+                } else if (deepCore.fired(events.x(i), events.y(i), pan)) {
+                    // M9 part E: a Strider's twin cannons once a fan, its pod's salvo silent (DeepCoreCues).
                 } else {
                     bank.play(
                             FlightSounds.heavyShot(events.value(i))
@@ -236,8 +250,17 @@ final class UnitCues extends SoundFamily {
             }
             // M5 part F, Level 12 (round 34, the user's picks): the latch and the shake-off; the drain loop
             // follows the state (LevelCues).
-            case LAMPREY_LATCHED -> bank.play(Sfx.LAMPREY_LATCH, LAMPREY_LATCH_LEVEL, pitch(0.04), pan);
-            case LAMPREY_SHAKEN -> bank.play(Sfx.LAMPREY_SHAKE, LAMPREY_SHAKE_LEVEL, pitch(0.04), pan);
+            // M9 part F: a Void Leech's own latch and throw (LeechFieldCues).
+            case LAMPREY_LATCHED -> {
+                if (!leechField.latched(pan)) {
+                    bank.play(Sfx.LAMPREY_LATCH, LAMPREY_LATCH_LEVEL, pitch(0.04), pan);
+                }
+            }
+            case LAMPREY_SHAKEN -> {
+                if (!leechField.shaken(pan)) {
+                    bank.play(Sfx.LAMPREY_SHAKE, LAMPREY_SHAKE_LEVEL, pitch(0.04), pan);
+                }
+            }
             // M7 part B, Level 15: the Burrower's eruption from its bulge's start (its rumble is the tell,
             // its impact lands as it surfaces) with round 38's crack layer over it (S.1 = b, at the same
             // pitch so the cracks stay on the eruption's break), and its dive's grain slide.
@@ -313,7 +336,12 @@ final class UnitCues extends SoundFamily {
             }
             // The Mantis (round 23): its telegraph a warning (the player-damage level), its beam a
             // little above the enemy fire, one long sound.
-            case SWEEP_TELEGRAPH -> bank.play(Sfx.MANTIS_TELEGRAPH, PLAYER_DAMAGE, pitch(0.03), pan);
+            case SWEEP_TELEGRAPH -> {
+                // M9 part E: a Sentinel Tower's charge (DeepCoreCues).
+                if (!deepCore.sweep(events.type(i), events.value(i), events.x(i), events.y(i), pan)) {
+                    bank.play(Sfx.MANTIS_TELEGRAPH, PLAYER_DAMAGE, pitch(0.03), pan);
+                }
+            }
             // M5 part C: the Hive Node's iris and release, the Ravager's take-off.
             case SPAWN_TELEGRAPH -> {
                 // M8 part D: a spawning reef's iris grinds open instead (AbyssCues).
@@ -327,7 +355,12 @@ final class UnitCues extends SoundFamily {
                 }
             }
             case POUNCE -> bank.play(FlightSounds.pounce(mix.random), HITS, pitch(0.06), pan);
-            case SWEEP_FIRED -> bank.play(Sfx.MANTIS_SWEEP, HITS, pitch(0.03), pan);
+            case SWEEP_FIRED -> {
+                // M9 part E: a Sentinel's beam is a loop (DeepCoreCues).
+                if (!deepCore.sweep(events.type(i), events.value(i), events.x(i), events.y(i), pan)) {
+                    bank.play(Sfx.MANTIS_SWEEP, HITS, pitch(0.03), pan);
+                }
+            }
             // M5 part D: a Wraith's decloak and a Mote Swarm's loop-back, levelled like the Vrell
             // spawns (round 32: decloak b, swarm b).
             case DECLOAK, LOOP_BACK -> bank.play(FlightSounds.eventSound(events.type(i)), EXPLOSIONS, pitch(0.03), pan);

@@ -141,3 +141,27 @@ screens. **act-5-title-capture-r64-a**: the v0.2 save fixture `content/src/test/
 copied as the autosave next to a scratch settings file, `--bench 60 --start title`, Enter twice through XTest (Press
 start, Continue): the Act 5 title card (ART-F's gold wing still) and the intro's page 1; `.png` the card and page 1,
 `.mp4` the card and page 1 with the game's sound (recording 12.5–33.5 s: Okafor's voice).
+
+## release-end-capture-r65-a
+
+Concept round 65 (M9 part E, step E5): [Level 32's run A](../level-32-deep-core/concept/prompts.md#level-32-capture-r65-a)
+at its end: the debrief (the richer routes; `TOWERS DOWN` missed in that run) and, after Enter, the release's end
+("ACTS I-IV COMPLETE", "ACT V - THE BELT. LEVEL 33 COMING SOON."), whole screens.
+
+## release-end-capture-r66-a
+
+Concept round 66 (M9 part F, step F5): [Level 33's run I](../level-33-leech-field/concept/prompts.md#level-33-capture-r66-a)
+at its end: the debrief (medium, invulnerable, `LEECHES` met) and the release's end ("ACTS I-IV COMPLETE", "ACT V - THE
+BELT. LEVEL 34 COMING SOON."), whole screens.
+
+## release-end-capture-r67-a
+
+Concept round 67 (M9 part G, step G5): [Level 34's runs](../level-34-salvage-run/concept/prompts.md#level-34-capture-r67-a):
+the debrief (run B: medium, invulnerable, `CONTAINERS` met, secrets 3 / 3) and the release's end after Level 34 (run E,
+built without Level 35's data: "ACTS I-IV COMPLETE", "ACT V - THE BELT. LEVEL 35 COMING SOON."), whole screens.
+
+## act-end-capture-r68-a
+
+Concept round 68, captures of the game, not generated art (M9 part H, step H5, 2026-10-29): the game built by `:desktop:installDist` from branch `m9-act-5` (after step H4's full `check`; the Sovereign's data as built, round 68 C.1 a) on a private 960×540 Xvfb display, `--bench <s> --settings <scratch>/settings.properties --level 35 --difficulty medium`, the plan's Level 35 fit `--loadout front=ion-beam:4,rear=swarm-tail:3,left=micro-missile-pod:4,right=micro-missile-pod:4,generator=4,shield=2,armor=4 --special emp-burst:1 --escort rook:autocannon:1`, `controls.auto-fire=true`. **Run A** `--invulnerable` (the ship kept still in the middle, which the fight would otherwise kill): the whole level, the fight (the halt at t=93; the inner ring locked at +31 s, the middle +40 s, the outer +49 s, the core open +52 s, the kill ≈ +148 s) and the debrief. **Run B** (not invulnerable): the approach, the ship moved under the lifeboat (x≈400) from t=63.3 to t=74 (lost at t≈85 standing still). **Run C** `--invulnerable` with the Ion Beam alone and no Rook (`--loadout front=ion-beam:4,generator=4,shield=2,armor=4 --escort none`): with the plan's pods and Rook the bay Darts die as they leave the bays, so they are seen only here. **Run E** `--invulnerable --debug-speed 4`, Enter every 14 s from the debrief: the act end. Clips: `ALSOFT_DRIVERS=wave` writing the game's own mix to a file, the screen recorded with ffmpeg `x11grab` at 30 fps, cut to one subject each (≤ 10 s, ≤ 1 s lead-in), cropped on it at 1:1 and muxed (H.264 main, AAC); the level time from the relay's flash (t=61), the sound's lag (0.47 s) from its crack; the fight labelled in seconds from the halt (the level clock stops there). Each clip checked on an 8-frame sheet (the subject in most frames). PNGs: frames of the same recordings at 1:1 (scaled where named), labelled. Scripts: step H5's `clips.py` and `stills.py` (scratch).
+
+- **act-end-capture-r68-a**: run E: the clip the outro's last page and `ACTS I-V COMPLETE` with `TO BE CONTINUED` (10 s at 960×540, the act-complete music); the PNG at 0.45: the debrief (`MISSION 35 COMPLETE`, rating), the act summary (`ACT V COMPLETE`, the seven missions), the outro's four pages, `ACTS I-V COMPLETE`.

@@ -187,6 +187,10 @@ final class BossCheckpoint {
             // M8 part H: the cruisers' run comes after the boss: afresh.
             s.cruisers.reset();
         }
+        if (s.relay != null) {
+            // M9 part H, step H1b: the relay's flash comes before the boss: spent.
+            s.relay.finish();
+        }
         s.complete = false;
         s.wrecked = false;
         s.failed = false;
