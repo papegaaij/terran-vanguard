@@ -68,6 +68,9 @@ public sealed interface RadioBlock permits LevelData {
      *     dropped below (Level 13's 0.5 and 0.25)
      * @param delay round 45 B.a, an event cue: the seconds (at least 0) the radio holds the line after its event before
      *     it plays, the lines queued after it waiting behind it (Level 21's Choir under the Colossus's death roar)
+     * @param notBefore step FIX6 (the user's playthrough 2026-10-30, Level 33's leech line), an event cue: the level
+     *     second the radio holds the line until once its event came (Level 33's "Field's clean" in the calm before the
+     *     end, not as the secondary turns safe while more leeches come); none if not given
      * @param staticLead M8 part F (design/campaign Level 26, The Choir; m8f-gaps.md §1.5): the HUD portrait frame's
      *     interference shows this many seconds before a timed line plays (Level 26's Choir, 2 s); none if not given
      * @param duckDb M8 part F: the music ducks this many dB under the line while it plays (Level 26's Choir, 6); none
@@ -100,6 +103,7 @@ public sealed interface RadioBlock permits LevelData {
             Optional<List<String>> parts,
             Optional<Double> below,
             Optional<Double> delay,
+            Optional<Double> notBefore,
             Optional<Double> staticLead,
             Optional<Double> duckDb,
             Optional<Channel> channel,
@@ -135,6 +139,12 @@ public sealed interface RadioBlock permits LevelData {
             Check.that(delay.isEmpty() || event.isPresent(), "only an event cue waits a delay");
             delay.ifPresent(seconds ->
                     Check.that(Double.isFinite(seconds) && seconds >= 0, "delay: seconds, at least 0, was " + seconds));
+            Check.that(
+                    notBefore.isEmpty() || event.isPresent(),
+                    "only an event cue waits for a level second (not_before)");
+            notBefore.ifPresent(seconds -> Check.that(
+                    Double.isFinite(seconds) && seconds >= 0,
+                    "not_before: a level second, at least 0, was " + seconds));
             Check.that(
                     below.isPresent() == (event.orElse(null) == CueEvent.ALLY_BELOW),
                     "an ally-below event names its share (below), other triggers do not");
@@ -194,6 +204,11 @@ public sealed interface RadioBlock permits LevelData {
         /** Round 45 B.a: the seconds the radio holds the line after its event, its {@code delay}; 0 if not given. */
         public double delaySeconds() {
             return delay.orElse(0.0);
+        }
+
+        /** Step FIX6: the level second the radio holds the line until after its event, its {@code not_before}; 0 if not given. */
+        public double notBeforeSeconds() {
+            return notBefore.orElse(0.0);
         }
     }
 
@@ -381,7 +396,22 @@ public sealed interface RadioBlock permits LevelData {
         STORY_COLLECTED,
         /** M9 part G: the story pickup left the screen or ran out uncollected (the salvage tug's line); once. */
         @JsonProperty("story-missed")
-        STORY_MISSED
+        STORY_MISSED,
+        /**
+         * Step BOSS70 (design/enemies/bosses/iron-sovereign, the core's playbook): the open core's first rail volley
+         * drawn (its tell); once; only with a ringed boss whose pool has it.
+         */
+        @JsonProperty("first-rail-volley")
+        FIRST_RAIL_VOLLEY,
+        /** Step BOSS70: the open core's first mine ring drawn; once. */
+        @JsonProperty("first-mine-ring")
+        FIRST_MINE_RING,
+        /** Step BOSS70: the open core's first wreck throw drawn; once. */
+        @JsonProperty("first-wreck-throw")
+        FIRST_WRECK_THROW,
+        /** Step BOSS70: the open core's first draw below its playbook's low share (its rests shorten); once. */
+        @JsonProperty("core-low")
+        CORE_LOW
     }
 
     /**

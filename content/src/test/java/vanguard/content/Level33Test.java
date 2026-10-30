@@ -316,6 +316,12 @@ class Level33Test {
                             .filter(line -> line.trigger() == CueTrigger.SECONDARY_OBJECTIVE)
                             .count(),
                     difficulty.name());
+            // Step FIX6 (the user's choice): the met line held to the calm before the end.
+            int met = 0;
+            while (radio.get(met).trigger() != CueTrigger.SECONDARY_OBJECTIVE) {
+                met++;
+            }
+            assertEquals(LEECH_LINE_NOT_BEFORE, content.level(LEVEL).radioNotBefore(met), difficulty.name());
         }
     }
 
@@ -360,6 +366,8 @@ class Level33Test {
         int rookLines;
         /** The leeches the shake-offs threw. */
         int shakenLeeches;
+        /** Step FIX6: the last level second a Void Leech flew (on the screen or not). */
+        double lastLeech;
 
         private final int talon;
         private final int leech;
@@ -413,6 +421,7 @@ class Level33Test {
             unpaid = 0;
             rookLines = 0;
             shakenLeeches = 0;
+            lastLeech = 0;
             forget();
         }
 
@@ -449,6 +458,7 @@ class Level33Test {
                 Enemy enemy = sortie.enemy(i);
                 now.put(enemy.serial(), enemy);
                 if (enemy.kind() == leech) {
+                    lastLeech = sortie.levelSeconds();
                     free += enemy.loose() ? 1 : 0;
                     latched += enemy.latched() ? 1 : 0;
                 }
@@ -702,7 +712,15 @@ class Level33Test {
         if (!rook) {
             assertEquals(0, watch.rookLines, at + ": Rook's lines need him flying");
         }
+        // Step FIX6 (the user's choice): the "Field's clean" line waits for its not_before, after the last leech.
+        assertTrue(
+                watch.lastLeech < LEECH_LINE_NOT_BEFORE,
+                at + ": the last leech flew at t " + watch.lastLeech + ", after the leech line's "
+                        + LEECH_LINE_NOT_BEFORE);
     }
+
+    /** Step FIX6: the level second Okafor's "Field's clean" line waits for (its {@code not_before}). */
+    static final double LEECH_LINE_NOT_BEFORE = 172.5;
 
     private static String summary(Flight flight) {
         Watch watch = flight.watch();

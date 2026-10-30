@@ -119,7 +119,8 @@ class RadioTimelineLevel35Test extends RadioTimeline {
                 .filter(cue -> cue.speaker().equals(Expression.VORNE))
                 .map(cue -> cue.expression().orElse(Expression.NEUTRAL).slug())
                 .toList();
-        assertEquals(List.of("smug", "neutral", "rage", "neutral"), moods);
+        // Step BOSS70: his line at the core's half (`core-low`) is cold and level, as his recruitment.
+        assertEquals(List.of("smug", "neutral", "rage", "neutral", "neutral"), moods);
         for (RadioBlock.RadioCue cue : data.radio()) {
             if (!cue.speaker().equals(Expression.VORNE)) {
                 continue;

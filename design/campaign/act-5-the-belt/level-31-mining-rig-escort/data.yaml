@@ -404,9 +404,9 @@ waves:
   - {t: 170, formation: snake, enemy: skitter, count: 6, from: front, edge: right}
   - {t: 171.5, formation: line abreast, enemy: talon, count: 2, from: front, speed: 130, notes: "Step D2: a firing Talon pair on the offbeat (the beam erases the fodder within a second)"}
   - {t: 172.5, formation: snake, enemy: skitter, count: 6, from: front, edge: left}
-  - {t: 175, formation: line abreast, enemy: talon, count: 4, from: front, speed: 130}
-  - {t: 177.5, formation: line abreast, enemy: talon, count: 2, from: front, speed: 130, notes: "Step D2: a firing Talon pair on the offbeat (the beam erases the fodder within a second)"}
-  - {t: 180, formation: snake, enemy: skitter, count: 6, from: front, edge: right, notes: "Step D2: the last wave, over the climb-out"}
+  - {t: 173, formation: line abreast, enemy: talon, count: 4, from: front, speed: 130, notes: "Step FIX6: t=173, not 175 (the calm before the end)"}
+  - {t: 173.75, formation: line abreast, enemy: talon, count: 2, from: front, speed: 130, notes: "Step FIX6: t=173.75, not 177.5 (the calm before the end). Step D2: a firing Talon pair on the offbeat (the beam erases the fodder within a second)"}
+  - {t: 174, formation: snake, enemy: skitter, count: 6, from: front, edge: right, notes: "Step FIX6: t=174, not 180 (the calm before the end). Step D2: the last wave, over the climb-out"}
 
 ground_targets:  # at: [t, x], when the nest enters at the top edge and its x (ART-D's pads on the outcrops, beside the swayed hull: x ≤ 100 or ≥ 380)
   - target: SAM Nest trio on outcrop 1

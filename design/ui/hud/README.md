@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../../player, ../../systems/scoring, ../../art-direction]
-updated: 2026-10-29
+updated: 2026-10-30
 ---
 
 # HUD
@@ -118,6 +118,15 @@ control prompts 384–430 (a two-line well, 42 px), objective tracker 436–482 
   (Level 10) it sits higher, 97–127 px below the top edge, so it never covers the shuttle band
   (stations from 140 px down). The boss warning banner opens at the boss's lead warning when it has
   one, and closes early rather than hide a boss that fights under it.
+- **Friendly marker** (round 70 B.1 d, from Level 29; any unit flagged `neutral`, not a level's own rule): the
+  banner **"FRIENDLIES INBOUND — HOLD FIRE"** in the warning banner's shape in CDF green (`Glass.GREEN` frame and
+  text on a dark green band), opened 2 s before a wave of neutral craft enters and shown for the banner's 2.5 s. It
+  has **its own slot**, stacked under the hostile band (its middle 36 px lower: 200 px below the top edge, a 6 px
+  gap), so it never waits for an amber banner and never takes its place: when both show (Level 29's t=77 and t=97
+  pincers) the two are read together, the hostile one on top. Like the wave banners it needs no data of its own:
+  the level's neutral waves open it. And while a neutral craft is on the screen, **HUD-green IFF corner brackets**
+  round it (9 px arms, 2 px thick on a dark outline, 12 px outside its hit box) with a small `FRIENDLY` tag in the
+  label font in a dark box under them; they follow the craft and go the moment it leaves the screen or is destroyed.
 - Level 12's **gust telegraph** (planned, M5 part F) is a weather look, not an edge warning: the
   wind streaks brighten and an arrow shows at the upwind edge 1.0 s ahead (easy 1.5 s), drawn
   unlike the flashing edge-warning arrows so the two are never confused
@@ -331,6 +340,10 @@ Production art for concept round 26 (M4 part H batch): the boss bar's plate, ren
       `INTERCEPT`), Vorne's production portrait — M9 (the act intro's part; step A3: the dress, a
       line's channel from its own key or its speaker's, never urgent, `MissionPanel`, `TransmissionStatic.drawSteady`,
       the intercept's open and close in place of the squelch; `ActFiveLooksTest.theInterceptTagFitsBesideThePortrait`; Vorne's production portraits accepted in round 62 F.8, `tools/art/portraits.py`)
+- [x] The friendly marker (round 70 B.1 d): the "FRIENDLIES INBOUND — HOLD FIRE" banner stacked under the hostile
+      band 2 s before each neutral wave, the IFF brackets with the `FRIENDLY` tag on each neutral craft on the screen
+      (step MARK70: `FriendlyBanner`, `FriendlyMarks`, `Sortie.friendliesInbound`, `FriendlyMarkerTest`; Level 29's
+      capture `friendly-marker-capture-r71-a`)
 - [x] Level 31's tug tracker (three section bars) — M9 part D (step D4: `TUG n / 3` over three bars, each after its section's initial `B`, `C`, `E`: the full names leave no room for a bar in a third of the well, `MissionLayoutTest`; step D4b: the `CLEAN HULL` tag on line one and the share's tick on the bars)
 
 ## Open questions
@@ -362,3 +375,7 @@ Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-a
   subtitle, the `INTERCEPT` tag; Q9 = a) and Level 31's three tug section bars (Q4 = a).
 - 2026-10-27 (user, [round 60](../../concept-rounds/round-60/README.md) closed): the Act 5 additions approved as drafted (D.17): the enemy-channel lines, the power gauge, Level 31's three tug section bars (the tug is 200×300 px by J.6 b; the bars do not depend on its size), the intercepted briefing pages; the intercept sounds are S.11 a, S.12 a and S.13 a.
 - 2026-10-28 (user, [round 61](../../concept-rounds/round-61/README.md), closed): the power row under a drain accepted (**K.1**); the enemy channel's amber `FFA035` plate, the `INTERCEPT` tag and the steady interference accepted (**C.6**).
+- 2026-10-30 (step MARK70, [round 70](../../concept-rounds/round-70/README.md) B.1 d): the friendly banner is
+  **stacked** in its own slot under the hostile band (as the d rendering shows), not timed apart: at Level 29's
+  t=75 and t=96 it shows with the pincers' amber banners (1.5 s and 0.5 s together); the brackets are generic for
+  every `neutral` unit.

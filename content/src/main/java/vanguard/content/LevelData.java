@@ -384,6 +384,14 @@ public record LevelData(
         return cue < radio.size() ? radio.get(cue).delaySeconds() : 0;
     }
 
+    /**
+     * Step FIX6 (Level 33's leech line): the level second the radio holds cue {@code cue} until after its event ({@link
+     * RadioCue#notBeforeSeconds()}), indexed as {@link #radioDelay}; 0 without one.
+     */
+    public double radioNotBefore(int cue) {
+        return cue < radio.size() ? radio.get(cue).notBeforeSeconds() : 0;
+    }
+
     /** The level's length in seconds: the end of the last section. */
     public double seconds() {
         return sections.getLast().end();

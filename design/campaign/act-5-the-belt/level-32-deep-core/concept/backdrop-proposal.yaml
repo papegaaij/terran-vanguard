@@ -1,5 +1,5 @@
 backdrop:
-  # Presentation only: Level 32's tunnels (tools/art/backdrop_l32.py, step ART-E, from the README and ART-E's terrain proposal (no data.yaml yet: re-run after E2)).
+  # Presentation only: Level 32's tunnels (tools/art/backdrop_l32.py, step ART-E, from the level's data.yaml).
   # No deep layer (the ground is opaque; the walls' rims project beyond the field's edges). The walls and the
   # islands are the terrain's (WallProjection's ice path, CanyonProfile's convention): ice-wall (cut rock
   # with the lamp strings), ice-wall-glow (the lamps and the red running lights, additive), ice-wall-foot,
@@ -83,7 +83,7 @@ backdrop:
     - {piece: chute-space, t: 199.667, x: 240}
 # sections' tiles: 1: [tunnel-floor]; 2: [tunnel-floor]; 3: [fork-drift-seam]; 4: [pumping-hall]; 5: [fork-ducts-chute]; 6: [furnace-floor]
 
-# terrain this art is drawn for (ART-E's proposal (the README's wall table, QE-1 a)); E2: adopt it or re-run the generator after changing it
+# terrain this art is drawn for (the level's data.yaml); E2: adopt it or re-run the generator after changing it
 terrain:
   left:
     - [520, 0, 0]   # t=4.0 at the top edge
@@ -120,12 +120,12 @@ terrain:
       points: [[240, 14638], [282, 14652], [311, 14690], [315, 14748], [315, 17155], [307, 17201], [270, 17221], [240, 17225], [210, 17221], [173, 17201], [165, 17155], [165, 14748], [169, 14690], [198, 14652]]
   forks: [{island: 0}, {island: 1}]   # fork 1: left the old drift (safer), right the charge seam; fork 2: left the cooling ducts (richer), right the ore chute
   notches:   # side, scroll = the terrain row of the notch's middle, width along the wall, depth into it
-    - {side: left, scroll: 1890, width: 140, depth: 56}   # the shaft mouth's launch bay (the Darts at t=15.5); t=14.5 at the top edge
-    - {side: right, scroll: 3160, width: 140, depth: 56}   # the gallery Sentinel (t=24, x 426: its emitter 40 px inside the field); t=24.3 at the top edge
-    - {side: right, scroll: 5375, width: 140, depth: 56}   # the right gallery's launch bay (the Darts at t=42.5); t=41.3 at the top edge
-    - {side: left, scroll: 10310, width: 140, depth: 16}   # the hall Sentinel (t=79, x 54: its emitter 40 px inside the field); t=79.3 at the top edge
-    - {side: right, scroll: 10531, width: 140, depth: 16}   # the hall Sentinel (t=80.7, x 426: its emitter 40 px inside the field); t=81.0 at the top edge
-    - {side: left, scroll: 19410, width: 140, depth: 26}   # the crucible Sentinel (t=150, x 54: its emitter 40 px inside the field); t=150.3 at the top edge
+    - {side: left, scroll: 1890, width: 140, depth: 56}   # data; t=14.5 at the top edge
+    - {side: right, scroll: 3160, width: 140, depth: 56}   # data; t=24.3 at the top edge
+    - {side: right, scroll: 5375, width: 140, depth: 56}   # data; t=41.3 at the top edge
+    - {side: left, scroll: 10310, width: 140, depth: 16}   # data; t=79.3 at the top edge
+    - {side: right, scroll: 10531, width: 140, depth: 16}   # data; t=81.0 at the top edge
+    - {side: left, scroll: 19410, width: 140, depth: 26}   # data; t=150.3 at the top edge
   contact: {damage: {easy: 6, medium: 10, hard: 10}, push: 28, push_seconds: 0.12, cooldown: 0.5}
 # the notches' mouths: gallery-<side>-<depth> (backdrop_l32.py, not placed; E4 draws one per notch of that
 # side and depth over the wall: the foot line at column depth + 16 (left) / 28 (right), the notch's middle on the image's middle row)

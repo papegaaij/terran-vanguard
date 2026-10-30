@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../../world/belt, ../../../campaign/act-5-the-belt, ../../ground/sam-nest, ../../ground/rail-bunker, ../../ground/sentinel-tower, ../../air/dart-drone, ../../../player/wingmen, ../../../story/characters/vorne, ../../../systems/economy]
-updated: 2026-10-29
+updated: 2026-10-30
 ---
 
 # Iron Sovereign
@@ -53,18 +53,18 @@ not repeated here; the boss sets only where and how often they fire.
 | Size | 440×440 px, hitbox 70×70 (the outer ring's rim at radius 220 from the centre; the core 80 px across; batteries: SAM 40×40 (hitbox 30×30), rail 48×48 (36×36), laser 44×44 (32×32)) |
 | Parts | the **core** (`vital`; armoured while shut, phases 1–3); the **outer ring** (6 SAM batteries), the **middle ring** (4 rail batteries), the **inner ring** (3 laser batteries): every battery `destroyable`; the rings' hulls are **not hit areas** (shots pass over them as over terrain) |
 | Orientation | `fixed` (the rings turn about the centre, their segments placed by angle; every battery's turret in `64 angles`, aiming on its own while its mount turns with the ring) |
-| HP | SAM battery 220 each, rail battery 330 each, laser battery 440 each, core 14,000; the core's hex shield 80 on top (phase 4); total 17960 (easy 13470 / hard 23348, from the global multipliers) |
+| HP | SAM battery 220 each, rail battery 1200 each, laser battery 1500 each, core 6,600; the core's hex shield 80 on top (phase 4); total 17220 (easy 12915 / hard 22386, from the global multipliers) |
 | Armour / shield | the core is armoured (shots spark grey, no damage) until it opens; open, it carries a **hex shield** of 80 under the [enemy shield rule](../../README.md#enemy-shields) (Q1 a: every weapon wears it down, the [Tesla Coil Pod](../../../player/weapons/tesla-coil-pod/README.md)'s `shield-breaker` empties it, the EMP Burst strips it) |
 | Speed | 0 px/s (the scroll halts over it); the rings turn: outer 6°/s clockwise, middle 10°/s counter-clockwise, inner in steps (120° in 4 s, then a 4 s hold), each lock speeding the survivors up |
 | Movement | anchored, its centre at (240, 160) (see *Arena*) |
-| Attack | per battery, only while its mount is inside the **fire arc** (120°, see *Arena*): SAM batteries the [SAM Nest](../../ground/sam-nest/README.md)'s salvo (its homing diamonds, its tell), one salvo per battery every 6 s in turn (at most 8 station missiles alive); rail batteries the [Rail Bunker](../../ground/rail-bunker/README.md)'s rail line (its lock, telegraph, band and `heavy` hit), one per battery every 5 s in turn (one telegraphed at a time, ≥ 1.5 s apart); laser batteries the [Sentinel Tower](../../ground/sentinel-tower/README.md)'s arc sweep (its telegraph, beam width and `laser` hit) with a 300 px beam, once per inner-ring hold; the shut core (phases 1–3) an aimed `fan` of 5 over 40° (`small` = 4, 150 px/s) through its shutter slits every 3 s; 2.5 s in phase 2; 2 s in phase 3, each after a 0.5 s glow; the open core (phase 4) a 2-arm `spiral` (`small`, 130 px/s, the arms turning 72°/s, 5 bullets/s an arm) for 4 s, then a 2 s rest, [Dart Drone](../../air/dart-drone/README.md) streams from its rim bays; and, below 50 % of the core's HP, its own rail line every 6 s (none on easy) |
+| Attack | per battery, only while its mount is inside the **fire arc** (120°, see *Arena*): SAM batteries the [SAM Nest](../../ground/sam-nest/README.md)'s salvo (its homing diamonds, its tell), one salvo per battery every 6 s in turn (at most 8 station missiles alive); rail batteries the [Rail Bunker](../../ground/rail-bunker/README.md)'s rail line (its lock, telegraph, band and `heavy` hit), one per battery every 5 s in turn (one telegraphed at a time, ≥ 1.5 s apart); laser batteries the [Sentinel Tower](../../ground/sentinel-tower/README.md)'s arc sweep (its telegraph, beam width and `laser` hit) with a 300 px beam, once per inner-ring hold; the shut core (phases 1–3) an aimed `fan` of 5 over 40° (`small` = 4, 150 px/s) through its shutter slits every 3 s; 2.5 s in phase 2; 2 s in phase 3, each after a 0.5 s glow; the open core (phase 4) draws its attacks from its playbook (see *Phases*): its 2-arm `spiral` (`small`, 130 px/s, the arms turning 72°/s, 5 bullets/s an arm) for 4 s; its rail volley: three of the [Rail Bunker](../../ground/rail-bunker/README.md)'s lines fanned 22° through the ship's spot (its telegraph, band and `heavy` hit), a Dart surge from all four bays, a ring of 8 [Minelayer](../../space/minelayer/README.md) mines and the wreck throw |
 | Formations | solo set piece |
 | Weak points | none |
 | Effective traits | `anti-ground`, `piercing`, `homing` |
 | Credits | 433 (score 4330 × chain) in Act 1 terms (core 355, every battery 6); × 6.5536 (Act 5's factor 1.6⁴) × Level 35's `bounty_scale` 0.59 it pays **24 % of budget(35) ≈ 1,674** (see *Bounty*) |
 | Death | `huge` vacuum variant: the wrecked batteries cook off ring by ring (0.15 s apart), the core collapses and blows, the rings break into drifting segments; a 5 s chain, screen flash, credit shower (see *Death*) |
 | First level / used in | L35; the L49 boss rush's echo (see *Echoes and relatives*) |
-| Difficulty hooks | hard: rings ×1.2 faster, fire arc 150°, battery intervals ×0.8, the core's spiral 3 arms, Dart streams +1, no boss checkpoint; easy: fire arc 90°, battery intervals ×1.3, the core's spiral 2 arms at 3 bullets/s an arm, no core rail line |
+| Difficulty hooks | hard: rings ×1.2 faster, fire arc 150°, battery intervals ×0.8, the core's spiral 3 arms, the volley's telegraph 0.8 s (the Rail Bunker's), the Minelayer's hard mines (arming 0.8 s, rings of 10), no boss checkpoint; easy: fire arc 90°, battery intervals ×1.3, the core's spiral 2 arms at 3 bullets/s an arm, the volley's telegraph 1.2 s, the mines' rings of 6 |
 <!-- /data -->
 
 ### Arena
@@ -121,10 +121,19 @@ every phase and a battery's kill takes its share off it.
 | 1 — Three rings | the first ring locked | All three rings turn; every battery in the arc fires; the shut core's `fan` every 3.0 s. The outer ring's SAMs are nearest the ship band, the inner lasers deepest: the front guns meet the outer batteries first, and a column where the rings' batteries line up lets `piercing` shots take two or three at once. |
 | 2 — Two rings | the second ring locked | The locked ring grinds to a halt (2 s, sparks, its lights out, its wrecked mounts smoking) and stays still; the two survivors turn **×1.25** faster (the inner ring's 120° step in 3.2 s, its hold unchanged); the core's `fan` every 2.5 s. |
 | 3 — One ring | the third ring locked | The last ring turns **×1.5**; the core's `fan` every 2.0 s. |
-| 4 — The core | the core at 0 | The station shudders and every ring goes dark; the core's six shutter petals **open over 3 s** (invulnerable while they open; a klaxon), and its reactor glows white-gold under a gold **hex shield** of 80 (Q1 a). The core fires a 2-arm `spiral` (`small`, 130 px/s, the arms turning 72°/s, 5 bullets/s an arm) for 4 s, then rests 2 s; its four rim bays launch **Dart Drone streams** of 4, one bay every 5 s, the bays nearest the ship first (a bay within 72 px of the ship skips its turn); below **50 %** of the core's HP it adds its own **rail line** every 6 s (the Rail Bunker's telegraph and hit, from the core's muzzle). An **armour patch** drops as the phase begins. |
+| 4 — The core | the core at 0 | The station shudders and every ring goes dark; the core's six shutter petals **open over 3 s** (invulnerable while they open; a klaxon), and its reactor glows white-gold under a gold **hex shield** of 80 (Q1 a). An **armour patch** drops as the phase begins. Open, the core plays its **playbook** (round 70, built by step BOSS70): after a **1.5 s rest** (**0.8 s** below half its HP) it draws its next attack from five with the simulation's seeded random (a replay draws the same), **never the same twice running** and the Dart surge **at most every third draw**; each starts with its own **0.8 s tell** (see *Tells*): the **spiral** (2-arm, `small`, 130 px/s, the arms turning 72°/s, 5 bullets/s an arm, for 4 s), the **rail volley** (three of the Rail Bunker's lines from the petals' rim, 30 px out, fanned **22°** with the middle one through the ship's spot: its telegraph, 8 px band and `heavy` hit, each line once), the **Dart surge** (all four rim bays a stream of **3** at once, 12 Darts, under their cap of 16), the **mine ring** (**8** of the [Minelayer](../../space/minelayer/README.md)'s line mines thrown out from the core in 0.5 s to seeded distances of **120–220 px** at even bearings, each arming, blinking and bursting by the Minelayer's own rule, gone after **8 s** untouched) and the **wreck throw** (**2–3** dead batteries' wrecks, seeded, any ring and side, each glowing 0.8 s, then torn off its socket and hurled at the ship's spot **0.8 s** apart, tumbling at **200 px/s**, **60 HP**, `heavy` on contact; at most **3** in the air; an empty socket is left, and with no wreck left the throw drops out of the pool). |
 
 A lock needs the ring's **every** battery dead; its last battery's kill starts the halt at once. A
 locked ring blocks nothing (its hull is no hit area).
+
+**Round 70 (decided 2026-10-30, built by step BOSS70):** the user's playtest asked for longer ring phases and a
+shorter, less predictable core phase; the HP shift and the core's five-attack playbook are under
+[The round 70 rework](#the-round-70-rework-decided-round-70). What the playbook replaced: the spiral's fixed cycle (its
+0.6 s tell and 2 s rest), the bays' timed stream (one bay every 5 s, its 0.5 s tell, the 72 px skip; hard's streams
+of 5) and the core's rail every 6 s below half (medium and hard only; the volley fires on every difficulty, its
+telegraph the Rail Bunker's: easy 1.2 s, hard 0.8 s). What stays: the opening, the hex shield, the armour patch, the
+spiral's bullets, the bays' places and their Darts, and the Rail Bunker's line (its band, live time and hit) under
+the volley.
 
 ### Dart Drones
 
@@ -146,9 +155,11 @@ and `area` loadouts their targets while the core's shield regrows.
 | Inner ring step | the ring's gold teeth flash as it unlocks, a short clank | 0.4 s |
 | Core `fan` (phases 1–3) | the shutter slits glow gold | 0.5 s |
 | Core opening | the station shudders, the rings go dark, the petals part | 3.0 s (invulnerable) |
-| Core `spiral` | the reactor brightens, the hex shield ripples | 0.6 s |
-| Dart stream | a rim bay's doors open with a gold light | 0.5 s |
-| Core rail | the Rail Bunker's line, from the core | its own |
+| Core `spiral` (playbook) | the reactor flares white (its glow brightening) | 0.8 s |
+| Rail volley (playbook) | three petals glow red toward the ship, then the Rail Bunker's three red lines | 0.8 s, then the line's telegraph |
+| Dart surge (playbook) | all four rim bays open, lit gold | 0.8 s |
+| Mine ring (playbook) | the core's rim lights blink amber | 0.8 s |
+| Wreck throw (playbook) | a dead battery's wreck glows gold with sparks (each wreck before its throw) | 0.8 s |
 
 ### The escort (Rook)
 
@@ -161,7 +172,30 @@ playthrough tests can finish the fight.
 
 ### Duration and HP
 
-Target: the act-boss window **90–180 s** at medium, aimed at ≈ **150 s**; the **par** is the measured mean, **150**.
+Target: the act-boss window **90–180 s** at medium; the **par** is the measured mean, **145** (round 70, the HP
+moved from the core to the rings: [The round 70 rework](#the-round-70-rework-decided-round-70)).
+
+**Measured (step BOSS70, round 70 built):** rail batteries 1,200, laser batteries 1,500, the core 6,600 (the station
+17,220), the playbook in the core phase; the autopilot with the plan's Level 35 fit and Rook over five seeds
+(`levelReport -Plevel=35 -Pparts=boss -Pseeds=5`; phases: the spin-up and phase 1, phases 2 and 3, the core with its
+3 s opening; the shield and armour lost per phase; the playbook's draws over the five fights):
+
+| Difficulty | Fight, s | Phases 1 / 2 / 3 / core, s | Lost | Sweeps struck | Draws: spiral / volley / surge / mines / wrecks |
+|---|---|---|---|---|---|
+| easy | 108.2 (killed 5/5) | 46.7 / 12.7 / 6.8 / 40.9 | 3 / 0 / 0 / 0 | 2 (at most 1) | 7 / 16 / 12 / 12 / 14 |
+| medium | **144.3** (140.1–149.2, 5/5 in the window) | 45.0 / 22.9 / 22.7 / 52.7 | 21 / 18 / 14 / 0 | 33 (at most 8) | 15 / 17 / 8 / 13 / 19 |
+| hard | 210.8 (no window) | 50.2 / 48.0 / 33.3 / 78.4 | 32 / 32 / 24 / 2 | 55 (at most 14) | 24 / 26 / 16 / 18 / 24 |
+
+R70's measure on a copy of the data (no playbook) read medium 145.2 s, the rings ≈ 91 s and the core 53.5 s; the
+playbook leaves the core's length to its HP (52.7 s). No rail line and no volley line struck the autopilot; the core
+phase cost it nothing at medium (it reads the tells: off the volley's lines, out of a mine's 48 px, off a wreck's
+path). The longer inner ring's sweeps strike it 6–8 times a fight at medium (0–3 before; `Level35Test`'s bound 3 → 8,
+pending the user's review: a sweep centred on the ship at ≈ 195 px leaves no way out at its height, and a planner cost
+by the depth in the wedge struck it more, not less). Phase 1 for the calibration's random dodger: **1.50 ×** the
+Kraken's (1.18 × before; H.4's band 0.8–1.2, the test's pending band to 1.6; pending the user's review). Without Rook
+at medium (two seeds) 154.3 and 147.0 s.
+
+The earlier measures (step H3, the core 14,000, par 150) follow.
 
 **Measured (M9 part H, step H3; decided in round 68, 2026-10-29):** the autopilot with the plan's Level 35 fit
 and Rook (`Level35Test`, five seeds) took the draft's station in **77 s** at medium: the rings ≈ 35 s (the spin-up
@@ -205,6 +239,78 @@ Lessons from Acts 2–4 the build must apply (M9 part H):
   intervals and the core's `fan`.
 - The autopilot and Rook must leave a rail line and a sweep's wedge, pick armed batteries first and
   stay out of the core's 72 px when it opens, or the tests cannot finish the fight.
+
+### The round 70 rework (decided, round 70)
+
+The user's playtest (2026-10-30, medium, `m9-pt-notes.md`): *"The last part of the boss is a bit boring. We should add
+something extra to it and make it shorter. We can extend the first part (shooting the guns on the rings). These guns can
+have some more hitpoints and the core less. We need to add something extra to the core part as well and make it less
+predictable."* Drafted in step R70 for [round 70](../../../concept-rounds/round-70/README.md) (A.1, A.2) and **decided there on 2026-10-30** (A.1 ok as
+proposed; A.2 "I like a combination of a and b", read as below); **built by step BOSS70** (the measures under *Duration and HP*, the rules under *Phases* and *Tells*).
+
+**1. The HP shift (decided: ok; measured on a temporary copy of the data, the data restored).** The direction is the
+user's; the numbers: **SAM battery 220 (kept), rail battery 330 → 1,200, laser battery 440 → 1,500, the core 14,000 → 6,600**; the
+station 17,960 → 17,220 (easy and hard by the global multipliers), the bounty unchanged (it does not follow HP). The
+autopilot with the plan's fit and Rook (`Level35Test`, five seeds; phases: the spin-up and phase 1, phase 2, phase 3, the
+core with its opening; `levelReport`'s test fit in brackets):
+
+| Fight | Difficulty | Fight, s | Spin-up + phase 1 | Phase 2 | Phase 3 | The core |
+|---|---|---|---|---|---|---|
+| now (as built) | easy | 108.4 [—] | 24.5 | 1.7 | 3.1 | 78.1 |
+| now (as built) | medium | 147.1 (144.1–151.9) [—] | 30.6 | 3.7 (2.3–6.9) | 1.5 (0.6–2.2) | 110.4 |
+| now (as built) | hard | 252.2 [—] | 44.6 | 2.6 | 2.0 | 202.0 |
+| proposed | easy | 106.1 (102.9–108.6) [105.4] | 46.7 | 12.8 | 6.9 | 38.8 |
+| proposed | medium | 145.2 (143.6–150.3) [145.4] | 45.0 (44.8–45.0) | 23.0 (20.0–27.9) | 22.7 (20.9–24.0) | 53.5 (52.9–54.3) |
+| proposed | hard | 230.8 (228.1–236.1) [229.2] | 50.1 | 48.0 | 33.3 | 98.4 |
+
+At medium the rings last ≈ 91 s (each of phases 1–3 ≥ 20 s on every seed) and the core ≈ 54 s; without Rook (two seeds)
+150.1 s (48.5 / 18.6 / 28.1 / 53.9). Every seed inside the window 90–180 s; the **par moves to the measured mean,
+145**. Costs: the inner ring's sweeps live ≈ 40 s longer, so they strike the autopilot 6–8 times a fight at medium (now
+0–3; `Level35Test`'s bound is 3) and it loses ≈ 50–70 shield and armour instead of ≈ 10: the bound or the autopilot's
+wedge dodge (`RingPlay`) moves in the build; easy's phase 3 stays short (4–10 s).
+
+**The column.** The Ion Beam's column does not need the rings to line up: a fixed vertical beam crosses all three ring
+bands at once and each ring turns its batteries through it, so all three take damage together whatever their speeds
+(the speeds change how often a battery crosses, not how long it spends in the beam); with three rings of equal HP
+(1,320 each) the second and third locks followed the first within seconds. It is answered **with the data alone**:
+the rings' HP graded outward-in (outer 1,320, middle 4,800, inner 4,500 in all) so the column chips at the inner rings
+but cannot lock them early: **outer, then middle, then inner on every seed** (two probes: with the outer ring
+unkillable nothing locked before 209 s; with the middle unkillable the inner needed 196 s after the outer). An
+alternative with code, not needed by the measure: **shuttered rings** (S): a ring's batteries armoured (grey sparks, as
+the shut core) until the ring outside it locks, a strict order with less spread by seed; `RingSpec`/`RingBlock` (a key
+such as `armoured_until: {locks: n}`), `SetPieceParts.partShielded`, `SovereignLooks` (the shut batteries' lamps dim)
+and `RingPlay`'s targets; today a phase's `exposes` cannot name a battery (the ring batteries are not in `part_list`).
+
+**2. The core phase: the playbook with the wreck throw as its fifth attack (decided: "a combination of a and b").** The
+user's answer to the three variants was *"I like a combination of a and b"*; read as **a (the playbook) with b's wreck
+throw as a fifth attack in its pool**; c (the core breaks loose) is rejected. Everything is seeded by the sim's random
+(the level's seed: a replay plays the same draws); the opening, the hex shield and the armour patch stay as built.
+After each attack and a 1.5 s rest (0.8 s below half its HP) the core draws its next from **five**, **never the same
+twice running** (a's draft kept the Dart surge to at most every third draw; BOSS70 keeps that unless it measures badly),
+each with its own 0.8 s tell, so the player reads what comes instead of counting a loop:
+
+| Attack | Tell (0.8 s) | What it does |
+|---|---|---|
+| **Spiral** | the reactor flares white, the shield ripples | the built 2-arm spiral, 4 s |
+| **Rail volley** | three petals glow red | three of the Rail Bunker's lines fanned 22° through the ship's spot, 1.0 s telegraph, `heavy` |
+| **Dart surge** | all four bays light gold | four streams of 3 at once (12, under the Darts' cap of 16) |
+| **Mine ring** | the rim's amber lights | 8 of the [Minelayer](../../space/minelayer/README.md)'s mines thrown out to 120–220 px (seeded radii), each arming and bursting by the Minelayer's own rule, gone after 8 s if untouched |
+| **Wreck throw** | a dead battery's wreck glows gold with sparks | **2–3 dead batteries' wrecks** (seeded order, any ring and side) torn off their sockets and hurled one after another at the ship's spot, tumbling at **200 px/s**, **60 HP** each (dodge or shoot), `heavy` on contact, at most 3 in the air; an empty socket is left |
+
+The bays' every-5 s stream and the core rail below 50 % fold into the pool (a's draft). The spacing of one throw's
+wrecks is BOSS70's to set and measure (b's old 2.5–4 s clock is gone). Code **M**: `RingCore` (the draw, the rest, the
+tells), a `core.pool` key (`RingBlock`/`RingRules`/`RingChecks`), the mine ring on the Minelayer's `Mine`, a thrown wreck
+as a shootable projectile (as `Missiles`' diamonds), `RingArena` (a wreck gone from its mount), `SovereignLooks` (the
+five tells, the socket, the tumbling wreck from the existing wreck frames) and `SovereignCues`, `RingPlay` (reads the
+tell, dodges or shoots a wreck). Storyboards (the combination's look is a and b): [concept/sovereign-core-r70-a.png](concept/sovereign-core-r70-a.png),
+[concept/sovereign-core-r70-b.png](concept/sovereign-core-r70-b.png), all three side by side in
+[concept/sovereign-core-r70-abc.png](concept/sovereign-core-r70-abc.png); c is in [concept/rejected/](concept/rejected/README.md).
+
+**3. The lines the combination needs** (Vorne's own wording stays his document's; to write and record in BOSS70): Rook
+at the first rail volley ("Red petals, three lines — move!"), Okafor at the first mine ring ("Mines off the rim, Lancer.
+Give the lights room."), Rook at the first wreck throw ("It's throwing its own wreckage at us!"), Vorne at the half
+("You read the Sovereign well, pilot. Read faster." or "Nothing on the Sovereign is wasted, Lancer. Not even its dead."),
+Okafor after a throw at the half ("Shoot the scrap down or get clear of it.").
 
 ### Bounty
 
@@ -347,6 +453,20 @@ under *Variants b and c* only (no art). Generator `tools/concept/belt_r60.py`; p
 | [concept/sovereign-rail-capture-r68-a.png](concept/sovereign-rail-capture-r68-a.png) | Game capture (step H5; [recipe](concept/prompts.md#iron-sovereign-capture-r68-a)), frames: rail batteries' lines from the turning middle ring | chosen (round 68, accepted with the boss fight: C.1 a, C.5 a, C.6, C.9 a; stale since FIX3 built C.9 a: shows the lines fixed where they started, the record of the round; re-recorded as `sovereign-rail-capture-r69-a`) |
 | [concept/sovereign-rail-capture-r69-a.mp4](concept/sovereign-rail-capture-r69-a.mp4) | Game capture (step I3; [recipe](concept/prompts.md#iron-sovereign-capture-r69-a)), clip with sound: rail batteries' lines riding with the turning ring, the direction locked (C.9 a as built; round 69 B.1) | chosen (round 69, B.1 ok (the clip shows the pre-FIX5 aim; the lead is built in FIX5)) |
 | [concept/sovereign-rail-capture-r69-a.png](concept/sovereign-rail-capture-r69-a.png) | Game capture (step I3; [recipe](concept/prompts.md#iron-sovereign-capture-r69-a)), frames at 1:1: a middle-ring rail battery's telegraph and shot, halt +17.2 to +17.8 s (round 69 B.1) | chosen (round 69, B.1 ok (the clip shows the pre-FIX5 aim; the lead is built in FIX5)) |
+| [concept/sovereign-core-capture-r70-a.png](concept/sovereign-core-capture-r70-a.png) | Game capture (step R70; [recipe](concept/prompts.md#sovereign-core-r70)): the open core in phase 4 (the dark rings, Rook, the scatter fit), the base of round 70's storyboards | chosen (round 70: the base of the storyboards) |
+| [concept/sovereign-core-r70-abc.png](concept/sovereign-core-r70-abc.png) | The core phase's three variants side by side, five panels each at half size ([brief](concept/prompts.md#sovereign-core-r70)) | chosen (round 70: the three side by side; a and b picked as the combination) |
+| [concept/sovereign-core-r70-a.png](concept/sovereign-core-r70-a.png) | Storyboard a, the playbook: spiral, rail volley, Dart surge and mine ring with their tells, two seeds' draws (1:1) | chosen (round 70: the playbook, the combination's look) |
+| [concept/sovereign-core-r70-b.png](concept/sovereign-core-r70-b.png) | Storyboard b, the wreck throw: a wreck's tell, the lift, the throw, a hit, two seeds' orders (1:1) | chosen (round 70: the wreck throw, the playbook's fifth attack) |
+| [concept/sovereign-playbook-spiral-capture-r71-a.mp4](concept/sovereign-playbook-spiral-capture-r71-a.mp4) | Game capture (step BOSS70; [recipe](concept/prompts.md#sovereign-playbook-capture-r71-a)), clip with sound: the core's playbook, the white flare (the tell), then the 2-arm spiral | proposed |
+| [concept/sovereign-playbook-spiral-capture-r71-a.png](concept/sovereign-playbook-spiral-capture-r71-a.png) | Game capture (step BOSS70; [recipe](concept/prompts.md#sovereign-playbook-capture-r71-a)), four frames of the same: the white flare (the tell), then the 2-arm spiral | proposed |
+| [concept/sovereign-playbook-rail-volley-capture-r71-a.mp4](concept/sovereign-playbook-rail-volley-capture-r71-a.mp4) | Game capture (step BOSS70; [recipe](concept/prompts.md#sovereign-playbook-capture-r71-a)), clip with sound: the core's playbook, the red petals toward the ship (the tell), the three lines telegraphed 22° apart through its spot, the rails live | proposed |
+| [concept/sovereign-playbook-rail-volley-capture-r71-a.png](concept/sovereign-playbook-rail-volley-capture-r71-a.png) | Game capture (step BOSS70; [recipe](concept/prompts.md#sovereign-playbook-capture-r71-a)), four frames of the same: the red petals toward the ship (the tell), the three lines telegraphed 22° apart through its spot, the rails live | proposed |
+| [concept/sovereign-playbook-dart-surge-capture-r71-a.mp4](concept/sovereign-playbook-dart-surge-capture-r71-a.mp4) | Game capture (step BOSS70; [recipe](concept/prompts.md#sovereign-playbook-capture-r71-a)), clip with sound: the core's playbook, all four bays lit gold (the tell), the four streams of three Darts | proposed |
+| [concept/sovereign-playbook-dart-surge-capture-r71-a.png](concept/sovereign-playbook-dart-surge-capture-r71-a.png) | Game capture (step BOSS70; [recipe](concept/prompts.md#sovereign-playbook-capture-r71-a)), four frames of the same: all four bays lit gold (the tell), the four streams of three Darts | proposed |
+| [concept/sovereign-playbook-mine-ring-capture-r71-a.mp4](concept/sovereign-playbook-mine-ring-capture-r71-a.mp4) | Game capture (step BOSS70; [recipe](concept/prompts.md#sovereign-playbook-capture-r71-a)), clip with sound: the core's playbook, the amber rim lights (the tell), eight line mines thrown out to 120–220 px, shot mines bursting into their rings | proposed |
+| [concept/sovereign-playbook-mine-ring-capture-r71-a.png](concept/sovereign-playbook-mine-ring-capture-r71-a.png) | Game capture (step BOSS70; [recipe](concept/prompts.md#sovereign-playbook-capture-r71-a)), four frames of the same: the amber rim lights (the tell), eight line mines thrown out to 120–220 px, shot mines bursting into their rings | proposed |
+| [concept/sovereign-playbook-wreck-throw-capture-r71-a.mp4](concept/sovereign-playbook-wreck-throw-capture-r71-a.mp4) | Game capture (step BOSS70; [recipe](concept/prompts.md#sovereign-playbook-capture-r71-a)), clip with sound: the core's playbook, a dead battery's wreck glowing gold with sparks (the tell), torn off and hurled tumbling at the ship, the next glowing, the empty sockets | proposed |
+| [concept/sovereign-playbook-wreck-throw-capture-r71-a.png](concept/sovereign-playbook-wreck-throw-capture-r71-a.png) | Game capture (step BOSS70; [recipe](concept/prompts.md#sovereign-playbook-capture-r71-a)), four frames of the same: a dead battery's wreck glowing gold with sparks (the tell), torn off and hurled tumbling at the ship, the next glowing, the empty sockets | proposed |
 | [concept/sovereign-lock-capture-r68-a.mp4](concept/sovereign-lock-capture-r68-a.mp4) | Game capture (step H5; [recipe](concept/prompts.md#iron-sovereign-capture-r68-a)), clip with sound: the inner ring locking: the grind, the lights out, the vented wrecks | chosen (round 68, accepted with the boss fight: C.1 a, C.5 a, C.6, C.9 a) |
 | [concept/sovereign-lock-capture-r68-a.png](concept/sovereign-lock-capture-r68-a.png) | Game capture (step H5; [recipe](concept/prompts.md#iron-sovereign-capture-r68-a)), frames: the inner ring locking: the grind, the lights out, the vented wrecks | chosen (round 68, accepted with the boss fight: C.1 a, C.5 a, C.6, C.9 a) |
 | [concept/sovereign-opening-capture-r68-a.mp4](concept/sovereign-opening-capture-r68-a.mp4) | Game capture (step H5; [recipe](concept/prompts.md#iron-sovereign-capture-r68-a)), clip with sound: the core's shutters opening to the reactor | chosen (round 68, accepted with the boss fight: C.1 a, C.5 a, C.6, C.9 a) |
@@ -393,6 +513,23 @@ To be built in M9 part H with Level 35; round 60 approved the design (2026-10-27
       and turrets, the core shut / opening / open, the locked look, the death, the intel silhouette;
       readability checks over Level 35's backdrop (step ART-H1, in the game from step H4; round 68 H.1–H.2; the
       readability over the backdrop in round 68's captures, step H5)
+- [x] Round 70 A.1, the HP shift (step BOSS70): rail batteries 1,200, laser batteries 1,500, the core 6,600, the
+      station 17,220, par 145 (`data.yaml`, `Level35Test`, `BalanceTest`/`balance.py`'s paper note); the fight
+      re-measured (*Duration and HP*: medium 144.3 s, 5/5 in the window)
+- [x] Round 70 A.2, the core's playbook (step BOSS70): the simulation's `RingCore` draws (seeded, never twice
+      running, the surge at most every third, the rest 1.5 / 0.8 s), `CoreVolley`, the surge from all four bays, the
+      mine ring on the Minelayer's `Mine` (thrown), the thrown wreck as a shootable missile (`Missiles.launchWreck`,
+      200 px/s, 60 HP, at most 3; the socket empty); the data's `boss.core.pool` (`RingBlock`, `RingRules`,
+      `RingChecks`; the schema in [schemas-units](../../../tech/architecture/schemas-units/README.md)); `CorePlaybookTest`
+- [x] The playbook's tells and sounds (step BOSS70, `SovereignLooks`, `SovereignCues`; existing sounds, a sounds row
+      for a later round): the white flare, the red petals and the volley's three lines, the gold bays, the amber
+      rim, the gold wreck with sparks, the empty socket, the tumbling wreck (its battery's wreck frame turning) and
+      its break (the cook-off flash and debris); captures `sovereign-playbook-*-capture-r71-a` (proposed)
+- [x] The playbook's radio (step BOSS70): Rook at the first volley and the first wreck throw, Okafor at the first mine
+      ring and after the first throw, Vorne at the core's half (`first-rail-volley`, `first-mine-ring`,
+      `first-wreck-throw`, `core-low`; voiced with `tools/art/voice.py`)
+- [x] The autopilot (`RingPlay`) off the volley's lines, out of the thrown mines' proximity and off the wrecks; 3/3 on
+      every difficulty (`Level35Test`, five seeds with Rook, two without)
 - [x] Sounds (Freesound, CC0/CC-BY) per the brief (round 68's picks, built by FIX3; the cuts are previews until `briefs/freesound-originals.md` is fetched); the music #19 from the warning (steps AUD-H1 and AUD-H2; step H4
       plays the a variants and track 19; round 68 M.1 and S.1–S.12)
 
@@ -419,6 +556,7 @@ All approved by the user in concept round 60:
 - The specials on a many-part boss: keep the per-part caps (a Smart Bomb worth up to ≈ 1,950 on a full
   station; this document, part H measures), or cap a special's total on one boss. Measured in step H3: 4 % and at most
   8 % of the bar, so the caps stay (QH-1 a; trivia in round 68).
+- **Round 70** (decided 2026-10-30): A.1 ok (the HP shift, the par 145), A.2 the playbook with the wreck throw as its fifth attack. Nothing open; step BOSS70 builds it. See *The round 70 rework*.
 
 ## Decisions
 
@@ -481,3 +619,25 @@ All approved by the user in concept round 60:
   aims straight). `levelReport -Plevel=35`: won 3/3, 0 retries a difficulty; the fight 108.5 s easy, 148.4 s medium
   (par 150), 253.8 s hard (before: 108.5 / 149.0 / 249.3 s); `Level35Test`'s autopilot still struck by 0 lines.
 - 2026-10-29 (user, [round 68](../../../concept-rounds/round-68/README.md), closed): **C.1 a** (the fight as built: the core 14,000, the batteries 220 / 330 / 440), **C.5 a** (Rook ignores the rail and relay lines, as the lines pass through allies), **C.6 accepted** (the EMP leaves the shut core's shield), **C.9 a** (the station's rail lines ride with their batteries, the direction locked; built in FIX3); art **H.1 ok** (the production frames) and **H.2 ok** (the intel silhouette): `art: final`; sounds **S.1, S.3, S.4, S.6–S.10 a** (`sovereign-spinup`, `-hold`, `-lock`, `-shutters`, `-fan`, `-spiral`, `-cookoff`, `-implosion`) and **S.2 b**, **S.5 b** (`sovereign-step`, `sovereign-klaxon`: not the recommendation; FIX4 switches the two keys, `m9-fix4-notes.md`, the a files play until then).
+- 2026-10-30 (step R70, drafted for [round 70](../../../concept-rounds/round-70/README.md); decided in the next entry): the
+  user's playtest (the core phase boring and long, the rings to last longer, the core less predictable): *The round 70
+  rework*: the HP shift measured on a temporary copy of the data (SAM 220, rail 1,200, laser 1,500, the core 6,600:
+  medium 145.2 s, the rings ≈ 91 s with every phase ≥ 20 s, the core ≈ 54 s; the data restored unchanged), the column
+  answered by the graded HP (shuttered rings as a code alternative, S), and three core variants with storyboards (a the
+  playbook, recommended; b the wreck throw; c the core breaks loose). Nothing built.
+- 2026-10-30 (user, [round 70](../../../concept-rounds/round-70/README.md), closed): **A.1 ok**: the HP shift as proposed
+  (SAM battery 220 kept, rail 330 → 1,200, laser 440 → 1,500, the core 14,000 → 6,600; the par 150 → 145). **A.2: "I like a
+  combination of a and b"**, read (main agent) as **the playbook (a) with the wreck throw (b) as its fifth attack**: after
+  each attack the core draws one of five at random (seeded), never the same twice running: spiral, 3-line rail volley,
+  12-Dart surge, ring of 8 mines, wreck throw (2–3 dead batteries' wrecks hurled at the ship), each with its own tell; c
+  (the core breaks loose) rejected, its storyboard in `concept/rejected/`; a and b `chosen` as the combination's look. Both
+  built by step BOSS70 (`m9-pt-notes.md` "From CL70").
+- 2026-10-30 (step BOSS70, round 70 built): A.1 and A.2 as decided. Built choices, pending the user's review: the
+  wreck throw's wrecks **0.8 s apart**, each glowing its 0.8 s before its throw (b's 2.5–4 s clock gone); a wreck due
+  while 3 fly stays on its socket; the mine ring's mines thrown in **0.5 s**, at even bearings with a seeded turn; the
+  volley's lines from **30 px** out (the petals' rim) and on **every difficulty** (the old core rail was medium and
+  hard only); the surge keeps its streams of **3** on hard (the timed streams of 5 are gone with the playbook); Vorne's
+  half line is "You read the Sovereign well, pilot. Read faster." and Okafor's scrap line follows Rook's at the first
+  throw; the tells' sounds reuse the Sentinel's charge, the nest's lock, the Gunship's doors, the line mine's blink
+  and the walker wreck's groan (a sounds row in a later round). Measured: medium 144.3 s (par 145), sweeps 6–8 a fight
+  (the bound 3 → 8), phase 1 for a random dodger 1.50 × the Kraken's (the pending band to 1.6).

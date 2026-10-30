@@ -1,5 +1,6 @@
 package vanguard.game.screen;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -10,6 +11,7 @@ import vanguard.content.Difficulty;
 import vanguard.content.SimSpecs;
 import vanguard.sim.CueTrigger;
 import vanguard.sim.Loadout;
+import vanguard.sim.SimEvents;
 import vanguard.sim.Sortie;
 import vanguard.sim.WingmanSpec;
 
@@ -57,5 +59,17 @@ class LevelScreenRescueTest {
     @Test
     void hisJoiningLineCountsForHisBarksSpacing() {
         assertTrue(LevelScreen.scriptedForBarks(CueTrigger.ESCORT_JOINED));
+    }
+
+    /**
+     * Step FIX6 (the user's playthrough 2026-10-30: the wavering Stormhawks vanished when shot): a destroyed neutral
+     * craft draws its kind's death as a kill does (the burst, its vacuum flash and debris); its sound is {@code
+     * Level29SoundsTest}'s.
+     */
+    @Test
+    void aDestroyedNeutralCraftBurstsAsAKill() {
+        assertEquals(SimEvents.Type.ENEMY_DESTROYED, EventEffects.drawnAs(SimEvents.Type.NEUTRAL_DOWN));
+        assertEquals(SimEvents.Type.NEUTRAL_LEFT, EventEffects.drawnAs(SimEvents.Type.NEUTRAL_LEFT));
+        assertEquals(SimEvents.Type.ENEMY_DESTROYED, EventEffects.drawnAs(SimEvents.Type.ENEMY_DESTROYED));
     }
 }

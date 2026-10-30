@@ -26,6 +26,11 @@ public final class Mine implements Hashed {
     private int blinkTicks = -1;
     /** M9 part C: steps until a neighbour's burst sets it off; 0 while it is not set off. */
     private int chainTicks;
+    /**
+     * Step BOSS70 (the Iron Sovereign's mine ring): steps left of its throw (it flies to its spot, then holds); -1 for a
+     * mine never thrown (hashed only for a thrown one).
+     */
+    private int throwTicks = -1;
 
     /** Dropped at (x, y) by a layer with {@code layerGun}, drifting at {@code angle} radians. */
     void drop(EnemyGun layerGun, double startX, double startY, double angle) {
@@ -42,6 +47,20 @@ public final class Mine implements Hashed {
         line = spec.line().isPresent();
         blinkTicks = -1;
         chainTicks = 0;
+        throwTicks = -1;
+    }
+
+    /**
+     * Step BOSS70: a line mine of {@code layerGun} thrown from (x, y) to (toX, toY) over {@code ticks} steps, held there
+     * after, its life {@code lifeTicks} steps.
+     */
+    void toss(EnemyGun layerGun, double startX, double startY, double toX, double toY, int ticks, int life) {
+        drop(layerGun, startX, startY, 0);
+        int n = Math.max(1, ticks);
+        vx = (toX - startX) / (n * SimStep.SECONDS);
+        vy = (toY - startY) / (n * SimStep.SECONDS);
+        throwTicks = n;
+        lifeTicks = life;
     }
 
     /** Drifts one step; returns false once its life is over or it has left the play field. */
@@ -60,6 +79,11 @@ public final class Mine implements Hashed {
         y += vy * SimStep.SECONDS;
         if (line) {
             y -= scroll;
+        }
+        if (throwTicks > 0 && --throwTicks == 0) {
+            // Step BOSS70: the throw is over: it holds its spot.
+            vx = 0;
+            vy = 0;
         }
         age++;
         return age < lifeTicks && PlayField.overlaps(x, y, EnemyGun.MineSpec.BOX);
@@ -131,6 +155,10 @@ public final class Mine implements Hashed {
         if (line) {
             // M9 part C: only a line mine's own state, so a spore hashes as before.
             hash.add(blinkTicks).add(chainTicks);
+        }
+        if (throwTicks >= 0) {
+            // Step BOSS70: only a thrown mine, so the other levels hash as before.
+            hash.add(throwTicks).add(lifeTicks);
         }
     }
 

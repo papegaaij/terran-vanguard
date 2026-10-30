@@ -14,6 +14,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import tools.jackson.databind.SerializationFeature;
 import tools.jackson.databind.json.JsonMapper;
+import vanguard.sim.BossSpec;
 import vanguard.sim.LevelScript;
 import vanguard.sim.Loadout;
 import vanguard.sim.Sortie;
@@ -146,7 +147,8 @@ final class LevelReport {
             List<LevelMetrics.Run> runs,
             List<LevelMetrics.PursuitRun> pursuits,
             List<LevelMetrics.ColossusRun> colossi,
-            List<LevelMetrics.HullRun> hulls) {}
+            List<LevelMetrics.HullRun> hulls,
+            List<Level35Test.Fight> rings) {}
 
     /** A level's report. */
     record Level(
@@ -307,6 +309,25 @@ final class LevelReport {
             colossi.put(difficulty, list);
         }
 
+        // Step BOSS70: a ringed boss's phases, losses, hits and playbook draws (Level 35's Iron Sovereign), its test's
+        // fit
+        // (the plan's with Rook) on its seeds.
+        Map<Difficulty, List<Future<Level35Test.Fight>>> ringFights = new HashMap<>();
+        for (Difficulty difficulty : options.difficulties()) {
+            List<Future<Level35Test.Fight>> list = new ArrayList<>();
+            boolean ringed = options.has(Part.BOSS)
+                    && key.equals(Level35Test.LEVEL)
+                    && SimSpecs.level(content, key, difficulty).setPieces().stream()
+                            .anyMatch(piece ->
+                                    piece.boss().flatMap(BossSpec::rings).isPresent());
+            for (int seed = 0; ringed && seed < Math.min(options.seeds(), Level35Test.SEEDS.length); seed++) {
+                long s = Level35Test.SEEDS[seed];
+                list.add(pool.submit(() ->
+                        Level35Test.fight("plan + Rook", Level35Test.planLoadout(content, difficulty), s, difficulty)));
+            }
+            ringFights.put(difficulty, list);
+        }
+
         double fitted = options.has(Part.HAUL) ? LevelMetrics.bountyScaleForBudget(content, key) : Double.NaN;
         List<ByDifficulty> rows = new ArrayList<>();
         for (Difficulty difficulty : options.difficulties()) {
@@ -346,7 +367,8 @@ final class LevelReport {
                     done,
                     chases,
                     fights,
-                    tugs));
+                    tugs,
+                    ringed(ringFights.get(difficulty))));
         }
         double referenceLife = Double.NaN;
         if (hpRun) {
@@ -467,8 +489,10 @@ final class LevelReport {
                         pacing.complete() ? "" : " NOT COMPLETED");
                 List<double[]> gaps = flight.pausesOver(PacingTest.ACT_TWO_EMPTY_SECONDS);
                 PacingRule rule = row.rule();
+                // Step FIX6: from Act 5 on the end calm is wanted, not a pause of the rule.
+                double[] calm = PacingTest.endCalmApplies(level.key()) ? flight.endCalmStretch() : null;
                 long over = gaps.stream()
-                        .filter(gap -> gap[1] - gap[0] > rule.limit())
+                        .filter(gap -> gap != calm && gap[1] - gap[0] > rule.limit())
                         .count();
                 StringBuilder times = new StringBuilder();
                 for (double[] gap : gaps) {
@@ -490,6 +514,19 @@ final class LevelReport {
                                         verdict(over <= rule.allowed()))
                                 : " (warm-up: no rule)",
                         times.isEmpty() ? " none" : times.toString());
+                // Step FIX6: the calm from the last enemy gone to the level's end (asserted from Act 5 on).
+                line(
+                        out,
+                        "end calm",
+                        "%.1f s from the last enemy gone to the end%s",
+                        flight.endCalm(),
+                        PacingTest.endCalmApplies(level.key())
+                                ? String.format(
+                                        Locale.ROOT,
+                                        " (at least %.0f: %s)",
+                                        PacingTest.END_CALM_SECONDS,
+                                        verdict(flight.endCalm() >= PacingTest.END_CALM_SECONDS))
+                                : " (Acts 1-4: no rule)");
             }
             if (medium && row.floor() != null && level.parts().contains(Part.FLOOR)) {
                 LevelMetrics.Flight floor = row.floor().flight();
@@ -571,6 +608,7 @@ final class LevelReport {
                                 boss.fights(),
                                 medium ? ": " + verdict(boss.inWindow() == boss.fights()) : "");
                     }
+                    ringLines(out, row.rings());
                 }
             }
             for (LevelMetrics.HullRun tug : row.hulls()) {
@@ -720,6 +758,80 @@ final class LevelReport {
         return met ? "ok" : "FAIL";
     }
 
+    private static List<Level35Test.Fight> ringed(List<Future<Level35Test.Fight>> futures)
+            throws InterruptedException, ExecutionException {
+        List<Level35Test.Fight> fights = new ArrayList<>();
+        for (Future<Level35Test.Fight> fight : futures) {
+            fights.add(fight.get());
+        }
+        return fights;
+    }
+
+    /**
+     * Step BOSS70: a ringed boss's fights: the mean fight, its phases (the spin-up and the rings 1/2/3, the core), the
+     * shield and armour lost in each, the rail lines, sweeps and volley lines that struck, the playbook's draws by play.
+     */
+    private static void ringLines(StringBuilder out, List<Level35Test.Fight> fights) {
+        if (fights.isEmpty()) {
+            return;
+        }
+        int n = fights.size();
+        double[] phases = new double[4];
+        double[] lost = new double[4];
+        int[] draws = new int[vanguard.sim.RingSpec.Play.values().length];
+        double seconds = 0;
+        int lines = 0;
+        int sweeps = 0;
+        int volleys = 0;
+        int sweepMost = 0;
+        int killed = 0;
+        for (Level35Test.Fight fight : fights) {
+            seconds += fight.seconds() / n;
+            for (int p = 0; p < 4; p++) {
+                phases[p] += fight.phaseSeconds()[p] / n;
+                lost[p] += fight.lost()[p] / n;
+            }
+            for (int k = 0; k < draws.length; k++) {
+                draws[k] += fight.draws()[k];
+            }
+            lines += fight.lineHits();
+            sweeps += fight.sweepHits();
+            sweepMost = Math.max(sweepMost, fight.sweepHits());
+            volleys += fight.volleyHits();
+            killed += fight.killed() ? 1 : 0;
+        }
+        StringBuilder byPlay = new StringBuilder();
+        for (vanguard.sim.RingSpec.Play play : vanguard.sim.RingSpec.Play.values()) {
+            byPlay.append(byPlay.isEmpty() ? "" : ", ")
+                    .append(play.slug())
+                    .append(' ')
+                    .append(draws[play.ordinal()]);
+        }
+        line(
+                out,
+                "rings",
+                "fight %.1f s (killed %d/%d): phases %.1f / %.1f / %.1f, core %.1f s; lost %.0f / %.0f / %.0f / %.0f;"
+                        + " struck by %d lines, %d sweeps (at most %d a fight), %d volley lines; draws %s over %d fights"
+                        + " [plan fit + Rook]",
+                seconds,
+                killed,
+                n,
+                phases[0],
+                phases[1],
+                phases[2],
+                phases[3],
+                lost[0],
+                lost[1],
+                lost[2],
+                lost[3],
+                lines,
+                sweeps,
+                sweepMost,
+                volleys,
+                byPlay,
+                n);
+    }
+
     /** A boss's fights over the runs. */
     record BossSummary(
             String slug,
@@ -803,10 +915,15 @@ final class LevelReport {
                                 "limit", rule.limit(),
                                 "allowed", rule.allowed(),
                                 "over",
-                                        row.pacing()
-                                                .flight()
-                                                .pausesOver(rule.limit())
-                                                .size()));
+                                        PacingTest.endCalmApplies(level.key())
+                                                ? row.pacing()
+                                                        .flight()
+                                                        .pausesBeforeEndCalm(rule.limit())
+                                                        .size()
+                                                : row.pacing()
+                                                        .flight()
+                                                        .pausesOver(rule.limit())
+                                                        .size()));
             }
             if (row.floor() != null) {
                 Map<String, Object> floor = flightJson(row.floor());

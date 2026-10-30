@@ -804,6 +804,12 @@ final class EnemyForce {
         guns.dropMine(gun, x, y, angle);
     }
 
+    /** Step BOSS70: a thrown line mine ({@link EnemyFire#tossMine}). */
+    boolean tossMine(
+            EnemyGun gun, double x, double y, double toX, double toY, double throwSeconds, double lifeSeconds) {
+        return guns.tossMine(gun, x, y, toX, toY, throwSeconds, lifeSeconds);
+    }
+
     /** M7 part F: the homing missiles in flight ({@link EnemyFire#missiles()}). */
     Missiles missiles() {
         return guns.missiles();
@@ -904,6 +910,11 @@ final class EnemyForce {
     /** The edges showing an edge warning at {@code levelTick}, as {@link WarningEdge} bits. */
     int warnings(int levelTick) {
         return entries.warnings(levelTick);
+    }
+
+    /** Step MARK70: whether a wave of neutral craft is announced at {@code levelTick}. */
+    boolean friendlies(int levelTick) {
+        return entries.friendlies(levelTick);
     }
 
     Pool<Enemy> enemies() {

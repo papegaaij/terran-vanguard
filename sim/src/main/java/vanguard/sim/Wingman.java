@@ -638,7 +638,7 @@ public final class Wingman {
             for (int i = 0; i < missiles.size(); i++) {
                 Missile missile = missiles.get(i);
                 if (!missile.seekable()
-                        || !PlayField.overlaps(missile.x(), missile.y(), Missile.BOX)
+                        || !PlayField.overlaps(missile.x(), missile.y(), missile.box())
                         || !inCone(missile.x() - x, missile.y() - y)) {
                     continue;
                 }

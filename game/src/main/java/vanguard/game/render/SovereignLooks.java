@@ -14,6 +14,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
 import vanguard.sim.BossLines;
 import vanguard.sim.BossSpec;
+import vanguard.sim.CoreVolley;
 import vanguard.sim.PartShields;
 import vanguard.sim.RingArena;
 import vanguard.sim.RingCore;
@@ -273,6 +274,18 @@ final class SovereignLooks {
     private double lineDirY;
     /** The kill's step (NEVER while it lives) and the station as it died: its centre, the scroll, its rings' angles. */
     private long deathTick = NEVER;
+    /** Step BOSS70: the tick the core's play's tell started, and the play ({@code -1} none). */
+    private long playTick = NEVER;
+
+    private int playTold = -1;
+    /** Step BOSS70: the last broken wrecks' ticks and places (the batteries' cook-off flash and debris there). */
+    private final long[] brokenTick = new long[4];
+
+    private final double[] brokenX = new double[4];
+    private final double[] brokenY = new double[4];
+    private int brokenNext;
+    /** Step BOSS70: per part, whether its wreck was thrown before the kill (an empty socket in the death too). */
+    private boolean[] thrownAtDeath = new boolean[0];
 
     private double deadX;
     private double deadY;
@@ -398,6 +411,11 @@ final class SovereignLooks {
         lineFiredTick = NEVER;
         linePart = -1;
         deathTick = NEVER;
+        playTick = NEVER;
+        playTold = -1;
+        java.util.Arrays.fill(brokenTick, NEVER);
+        brokenNext = 0;
+        java.util.Arrays.fill(thrownAtDeath, false);
         hits.reset();
     }
 
@@ -541,6 +559,16 @@ final class SovereignLooks {
                         shieldRefillTick = tick;
                     }
                 }
+                case CORE_PLAY_TELL -> {
+                    playTick = tick;
+                    playTold = events.value(i);
+                }
+                case CORE_WRECK_BROKEN -> {
+                    brokenTick[brokenNext] = tick;
+                    brokenX[brokenNext] = events.x(i);
+                    brokenY[brokenNext] = events.y(i);
+                    brokenNext = (brokenNext + 1) % brokenTick.length;
+                }
                 case BOSS_LINE_FIRED -> {
                     BossLines lines = piece.lines().orElse(null);
                     if (lines != null) {
@@ -566,6 +594,13 @@ final class SovereignLooks {
         deadScroll = sortie.groundScroll();
         for (int i = 0; i < deadAngle.length; i++) {
             deadAngle[i] = ring.renderAngle(i, 1);
+        }
+        RingCore heart = ring.core().orElse(null);
+        if (thrownAtDeath.length != piece.partCount()) {
+            thrownAtDeath = new boolean[piece.partCount()];
+        }
+        for (int p = 0; p < thrownAtDeath.length; p++) {
+            thrownAtDeath[p] = heart != null && heart.thrown(p);
         }
     }
 
@@ -846,6 +881,11 @@ final class SovereignLooks {
             double x = cx - radius * Math.sin(heading);
             double y = cy - radius * Math.cos(heading);
             if (piece.partWrecked(p)) {
+                RingCore heart = ring.core().orElse(null);
+                if (heart != null && heart.thrown(p)) {
+                    // Step BOSS70: its wreck was torn off and thrown: an empty socket.
+                    continue;
+                }
                 if (!look.wreck.isEmpty()) {
                     drawCentred(batch, look.wreck.first(), x, y);
                 }
@@ -912,6 +952,10 @@ final class SovereignLooks {
                 continue;
             }
             int frame = b == open && bayTell[b] != NEVER ? bayFrame(tick - bayTell[b], tellTicks) : 0;
+            if (heart.open() && heart.baysLit() && playTick != NEVER) {
+                // Step BOSS70: the Dart surge opens every bay over its tell.
+                frame = bayFrame(tick - playTick, SimStep.ticks(playTellSeconds()));
+            }
             AtlasRegion region = doors.get(Math.min(doors.size - 1, frame));
             batch.draw(
                     region, (float) (X0 + cx + bayOffsetX[b]), (float) (cy - bayOffsetY[b] - region.getRegionHeight()));
@@ -1010,6 +1054,9 @@ final class SovereignLooks {
             drawCentred(batch, coreGlow.get(frame), cx, cy);
         }
         drawShield(batch, piece, cx, cy, tick);
+        if (heart.open() && heart.playbook()) {
+            drawPlayTells(batch, piece, ring, heart, cx, cy, tick);
+        }
         int open = heart.open() ? heart.bayOpen() : -1;
         if (open >= 0 && open < bays.size && bayTell[open] != NEVER && bayGlow.size >= 2) {
             long since = tick - bayTell[open];
@@ -1021,6 +1068,166 @@ final class SovereignLooks {
     }
 
     /** The open core's hex shield: holding (its opacity by its fill), a hit's rim, its shatter and its refill. */
+    /** Step BOSS70: the playbook's tell, s (the pool's; 0.8 s without one). */
+    private double playTellSeconds() {
+        return rings().core()
+                .flatMap(RingSpec.Core::pool)
+                .map(RingSpec.Pool::tellSeconds)
+                .orElse(0.8);
+    }
+
+    /** Step BOSS70: the core volley's petals' rim, px from the centre (the red glows). */
+    static final double PETAL_RADIUS = 30;
+    /** Step BOSS70: the core's rim lamps for the mine ring, px from the centre, and their count. */
+    static final double RIM_RADIUS = 54;
+
+    static final int RIM_LAMPS = 8;
+    /** Step BOSS70: the colours of the petals' tell and the rim's amber lights. */
+    static final Color PETAL_RED = new Color(1f, 0.22f, 0.16f, 1f);
+
+    static final Color RIM_AMBER = new Color(1f, 0.62f, 0.12f, 1f);
+
+    /**
+     * Step BOSS70 (round 70's storyboards a and b): the open core's tells, additive: the rail volley's three petals red
+     * toward the ship (its tell and telegraph), the four bays gold for the Dart surge, the rim's amber lights for the mine
+     * ring, the glowing wreck gold with its sparks; the spiral's white flare is the reactor's own glow.
+     */
+    private void drawPlayTells(
+            SpriteBatch batch, SetPiece piece, RingArena ring, RingCore heart, double cx, double cy, long tick) {
+        RingSpec.Play play = heart.play();
+        if (play == null) {
+            return;
+        }
+        float pulse = 0.55f + 0.45f * (float) Math.abs(Math.sin(tick * 0.35));
+        float share = (float) heart.tellShare();
+        switch (play) {
+            case VOLLEY -> {
+                if (lampRed == null) {
+                    return;
+                }
+                CoreVolley volley = heart.volley().orElse(null);
+                double aim = Math.atan2(-(lastShipX - cx), -(lastShipY - cy));
+                batch.setColor(PETAL_RED.r, PETAL_RED.g, PETAL_RED.b, Math.min(1, 0.4f + 0.6f * share) * pulse);
+                for (int k = -1; k <= 1; k++) {
+                    double heading = aim + k * Math.toRadians(22);
+                    if (volley != null && volley.running()) {
+                        heading = Math.atan2(-volley.dirX(k + 1), -volley.dirY(k + 1));
+                    }
+                    for (int d = 0; d < 5; d++) {
+                        double r = PETAL_RADIUS - 8 + 5 * d;
+                        drawScaled(batch, lampRed, cx - r * Math.sin(heading), cy - r * Math.cos(heading), 1.8f);
+                    }
+                }
+            }
+            case SURGE -> {
+                if (bayGlow.size < 1) {
+                    return;
+                }
+                batch.setColor(1, 1, 1, Math.min(1, 0.5f + 0.5f * share));
+                for (int b = 0; b < bays.size; b++) {
+                    AtlasRegion doors =
+                            bays.get(b).isEmpty() ? null : bays.get(b).first();
+                    int half = doors == null ? 12 : doors.getRegionWidth() / 2;
+                    AtlasRegion glow = bayGlow.get(heart.telling() ? 0 : bayGlow.size - 1);
+                    drawCentred(batch, glow, cx + bayOffsetX[b] + half, cy - bayOffsetY[b] - half);
+                }
+            }
+            case MINES -> {
+                if (lampGold == null || !heart.telling()) {
+                    return;
+                }
+                boolean on = (tick / 6) % 2 == 0;
+                batch.setColor(RIM_AMBER.r, RIM_AMBER.g, RIM_AMBER.b, on ? 1f : 0.45f);
+                for (int k = 0; k < RIM_LAMPS; k++) {
+                    double a = 2 * Math.PI * (k + 0.5) / RIM_LAMPS;
+                    // Just outside the core's gold rim, on the dark plating, twice over (additive) to stand out.
+                    for (int twice = 0; twice < 2; twice++) {
+                        drawScaled(batch, lampGold, cx - RIM_RADIUS * Math.sin(a), cy - RIM_RADIUS * Math.cos(a), 2.6f);
+                    }
+                }
+            }
+            case WRECKS -> {
+                int p = heart.glowingWreck();
+                int i = p < 0 ? -1 : ring.battery(p);
+                if (i < 0 || ringArt[i] == null || ringArt[i].battery.wreck.isEmpty()) {
+                    return;
+                }
+                double x = piece.partX(p);
+                double y = piece.partY(p);
+                int glowTicks = SimStep.ticks(playTellSeconds());
+                float glow = 1 - Math.min(1, heart.wreckDueTicks() / (float) Math.max(1, glowTicks));
+                batch.setColor(TELL_GOLD.r, TELL_GOLD.g, TELL_GOLD.b, 0.35f + 0.65f * glow * pulse);
+                drawCentred(batch, ringArt[i].battery.wreck.first(), x, y);
+                if (lampGold != null) {
+                    // Sparks: gold pins flicking off it, placed by the tick (no state).
+                    batch.setColor(TELL_GOLD.r, TELL_GOLD.g, TELL_GOLD.b, 1);
+                    for (int k = 0; k < 4; k++) {
+                        long seed = (tick / 3) * 31 + k * 17L + p * 7L;
+                        double a = (seed * 2654435761L % 360) * Math.PI / 180;
+                        double r = 10 + (seed % 9);
+                        drawCentred(batch, lampGold, x + r * Math.cos(a), y + r * Math.sin(a));
+                    }
+                }
+            }
+            case SPIRAL -> {}
+        }
+        batch.setColor(Color.WHITE);
+    }
+
+    /** Step BOSS70: the broken wrecks' flashes and debris (the batteries' cook-off frames). */
+    private void drawBroken(SpriteBatch batch, long tick) {
+        for (int k = 0; k < brokenTick.length; k++) {
+            if (brokenTick[k] == NEVER) {
+                continue;
+            }
+            int f = (int) ((tick - brokenTick[k]) / COOKOFF_TICKS);
+            if (f < cookoff.size) {
+                drawCentred(batch, cookoff.get(f), brokenX[k], brokenY[k]);
+            }
+            if (f < cookoffDebris.size) {
+                drawCentred(batch, cookoffDebris.get(f), brokenX[k], brokenY[k]);
+            }
+        }
+    }
+
+    /** Step BOSS70: the ship's place as last seen (the petals' tell points at it). */
+    private double lastShipX = 240;
+
+    private double lastShipY = 60;
+
+    /**
+     * Step BOSS70: with the bullets, the thrown wrecks: each its battery's wreck frame tumbling along its flight (turned
+     * by its age), under a faint gold heat.
+     */
+    void drawThrown(SpriteBatch batch, Sortie sortie, float alpha) {
+        SetPiece piece = sovereign(sortie);
+        if (piece == null || !piece.present()) {
+            return;
+        }
+        lastShipX = sortie.ship().x();
+        lastShipY = sortie.ship().y();
+        RingArena ring = piece.ring().orElseThrow();
+        long tick = sortie.tick();
+        for (int m = 0; m < sortie.missileCount(); m++) {
+            vanguard.sim.Missile missile = sortie.missile(m);
+            int p = missile.wreck();
+            int i = p < 0 ? -1 : ring.battery(p);
+            if (i < 0 || ringArt[i] == null || ringArt[i].battery.wreck.isEmpty()) {
+                continue;
+            }
+            AtlasRegion region = ringArt[i].battery.wreck.first();
+            float w = region.getRegionWidth();
+            float h = region.getRegionHeight();
+            float spin = (missile.serial() % 2 == 0 ? 1 : -1) * (tick + alpha) * 9 + missile.serial() * 47;
+            float x = (float) Math.round(X0 + missile.renderX(alpha) - w / 2);
+            float y = (float) Math.round(missile.renderY(alpha) - h / 2);
+            batch.draw(region, x, y, w / 2, h / 2, w, h, 1, 1, spin);
+        }
+        additive(batch);
+        drawBroken(batch, tick);
+        normal(batch);
+    }
+
     private void drawShield(SpriteBatch batch, SetPiece piece, double cx, double cy, long tick) {
         PartShields shields = piece.shields().orElse(null);
         RingCore heart = piece.ring().flatMap(RingArena::core).orElse(null);
@@ -1079,6 +1286,25 @@ final class SovereignLooks {
             stroke(batch, ox + lines.dirX() * in, oy + lines.dirY() * in, lines.dirX(), lines.dirY());
             batch.setColor(Color.WHITE);
         }
+        RingCore heart = piece.ring().flatMap(RingArena::core).orElse(null);
+        CoreVolley volley = heart == null ? null : heart.volley().orElse(null);
+        if (volley != null && volley.running()) {
+            // Step BOSS70: the core volley's three lines, red over the telegraph, then the rail live along each.
+            for (int k = 0; k < volley.lines(); k++) {
+                if (volley.telegraphing()) {
+                    Color red = LineLooks.TELEGRAPH;
+                    batch.setColor(red.r, red.g, red.b, LineLooks.telegraphOpacity(volley.charge(), tick));
+                    stroke(batch, volley.fromX(k), volley.fromY(k), volley.dirX(k), volley.dirY(k));
+                } else if (rail.size == 4) {
+                    batch.setColor(Color.WHITE);
+                    drawRail(batch, rail.get(0), 0, volley.fromX(k), volley.fromY(k), volley.dirX(k), volley.dirY(k));
+                    if (!railFlash.isEmpty()) {
+                        drawCentred(batch, railFlash.first(), volley.fromX(k), volley.fromY(k));
+                    }
+                }
+            }
+            batch.setColor(Color.WHITE);
+        }
         if (lineFiredTick != NEVER && linePart >= 0 && rail.size == 4) {
             long since = tick - lineFiredTick;
             var line = lines == null || lines.attack() < 0
@@ -1098,7 +1324,7 @@ final class SovereignLooks {
                 oy = piece.partY(linePart);
             }
             if (frame >= 0) {
-                drawRail(batch, rail.get(frame), in, ox, oy);
+                drawRail(batch, rail.get(frame), in, ox, oy, lineDirX, lineDirY);
             }
             int flashFrame = (int) (since / FLASH_FRAME_TICKS);
             if (flashFrame < railFlash.size) {
@@ -1177,14 +1403,15 @@ final class SovereignLooks {
     }
 
     /** The rail's strip tiled from {@code in} px along the last line fired from (ox, oy) to past the screen's edge. */
-    private void drawRail(SpriteBatch batch, AtlasRegion strip, double in, double ox, double oy) {
-        float degrees = (float) Math.toDegrees(Math.atan2(lineDirY, lineDirX));
+    private void drawRail(
+            SpriteBatch batch, AtlasRegion strip, double in, double ox, double oy, double dirX, double dirY) {
+        float degrees = (float) Math.toDegrees(Math.atan2(dirY, dirX));
         float w = strip.getRegionWidth();
         float h = strip.getRegionHeight();
         double length = 2 * (vanguard.sim.PlayField.WIDTH + vanguard.sim.PlayField.HEIGHT);
         for (double at = in; at < length; at += w) {
-            double x = ox + lineDirX * at;
-            double y = oy + lineDirY * at;
+            double x = ox + dirX * at;
+            double y = oy + dirY * at;
             if (x < -w || x > vanguard.sim.PlayField.WIDTH + w || y < -w || y > vanguard.sim.PlayField.HEIGHT + w) {
                 break;
             }
@@ -1278,6 +1505,10 @@ final class SovereignLooks {
             }
             RingSpec.Ring ring = rings.rings().get(i);
             for (int k = 0; k < ring.parts().size(); k++) {
+                int p = ring.parts().get(k);
+                if (p < thrownAtDeath.length && thrownAtDeath[p]) {
+                    continue;
+                }
                 double heading = ring.mountRadians(k) + deadAngle[i];
                 double r = look.mountRadius + drift(drift);
                 drawCentred(batch, look.battery.wreck.first(), cx - r * Math.sin(heading), cy - r * Math.cos(heading));
@@ -1318,7 +1549,7 @@ final class SovereignLooks {
         for (int n = 0; n < order.length; n++) {
             long at = since - SimStep.ticks(cookoffAt(n));
             int f = (int) (at / COOKOFF_TICKS);
-            if (at >= 0 && f < cookoff.size) {
+            if (at >= 0 && f < cookoff.size && !(order[n] < thrownAtDeath.length && thrownAtDeath[order[n]])) {
                 double[] place = deadBattery(rings(), order[n], cx, cy);
                 drawCentred(batch, cookoff.get(f), place[0], place[1]);
             }

@@ -47,6 +47,8 @@ import vanguard.game.render.EdgeWarnings;
 import vanguard.game.render.Effects;
 import vanguard.game.render.EnemyLooks;
 import vanguard.game.render.EventPrompt;
+import vanguard.game.render.FriendlyBanner;
+import vanguard.game.render.FriendlyMarks;
 import vanguard.game.render.Hud;
 import vanguard.game.render.IceCrawlerLooks;
 import vanguard.game.render.LevelRenderer;
@@ -180,6 +182,10 @@ public final class LevelScreen implements GameScreen {
     private final java.util.Set<Integer> announced = new java.util.HashSet<>();
     /** The wave warning banner of a side or rear wave's edge warning (design/ui/hud). */
     private final WaveBanners waveBanners;
+    /** Step MARK70: "FRIENDLIES INBOUND — HOLD FIRE" before a wave of neutral craft, in its own slot under it. */
+    private final FriendlyBanner friendlyBanner;
+    /** Step MARK70: the IFF brackets and FRIENDLY tags of the neutral craft on the screen. */
+    private final FriendlyMarks friendlyMarks;
     /** The sensor suite's threat arrows, with a sensor suite at L2+ (design/player/systems); null without. */
     private final ThreatArrows threatArrows;
 
@@ -369,6 +375,8 @@ public final class LevelScreen implements GameScreen {
         warnings = new EdgeWarnings(services.sprites.pixel, services.fonts.body);
         banner = new BossBanner(services.sprites.pixel, services.fonts.heading, services.fonts.body);
         waveBanners = new WaveBanners(services.sprites.pixel, services.fonts.body, sortie.airEscort());
+        friendlyBanner = new FriendlyBanner(services.sprites.pixel, services.fonts.body, sortie.airEscort());
+        friendlyMarks = new FriendlyMarks(services.sprites.pixel, services.fonts.label);
         latchPrompt = level.prompts().orElse(List.of()).stream()
                 .filter(LevelData.Prompt::onEvent)
                 .findFirst()
@@ -781,6 +789,7 @@ public final class LevelScreen implements GameScreen {
                 barks.reentry(SimStep.ticks(sortie.levelSeconds()), SimStep.ticks(sortie.realSeconds()));
             }
             waveBanners.step(sortie.edgeWarnings(), started, sortie.tick(), reversed);
+            friendlyBanner.step(sortie.friendliesInbound(), sortie.tick());
         }
         if (launchPending && sortie.launching()) {
             sounds.launch();
@@ -993,6 +1002,7 @@ public final class LevelScreen implements GameScreen {
                     // warning again: the arrival warns.
                     announced.clear();
                     waveBanners.clear();
+                    friendlyBanner.clear();
                     screenFlash.clear();
                     chainSounds.clear();
                     renderer.restart();
@@ -1229,7 +1239,9 @@ public final class LevelScreen implements GameScreen {
         if (threatArrows != null && sortie.flying()) {
             threatArrows.draw(batch, sortie, clock.alpha());
         }
+        friendlyMarks.draw(batch, sortie, clock.alpha());
         waveBanners.draw(batch, sortie.tick(), clock.alpha());
+        friendlyBanner.draw(batch, sortie.tick(), clock.alpha());
         if (latchPrompt != null && sortie.flying()) {
             latchPrompt.draw(batch, sortie.ship().renderY(clock.alpha()), sortie.realSeconds());
         }

@@ -316,7 +316,7 @@ final class Act5HSpecs {
      * A sortie-free rig: the boss on its own, the scroll halted under it from its arrival, the ship where the test puts
      * it; it records what the boss does through its {@link BossActions}.
      */
-    static final class Rig implements BossActions {
+    static class Rig implements BossActions {
         final SetPiece piece;
         int tick;
         double shipX = X;

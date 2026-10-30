@@ -206,8 +206,10 @@ final class RadioEvents {
                 sectionLine(RadioSchedule.line(cue.line(), unit, allyName(unit), escortSide()), unit),
                 cue.distorted(),
                 radioSchedule.priority(line),
-                // Round 45 B.a: a line held after its event (the Choir's words past the Colossus's death roar)
-                (float) level.radioDelay(line) + extraDelay,
+                // Round 45 B.a: a line held after its event (the Choir's words past the Colossus's death roar); step
+                // FIX6: and until its level second (Level 33's leech line in the calm before the end)
+                (float) (level.radioDelay(line) + Math.max(0, level.radioNotBefore(line) - sortie.levelSeconds()))
+                        + extraDelay,
                 // M9 part A: the line's channel (its own, else its speaker's).
                 line < level.radio().size()
                         ? level.radio().get(line).channel(services.content.voices()) == Channel.ENEMY

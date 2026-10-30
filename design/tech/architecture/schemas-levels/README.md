@@ -3,7 +3,7 @@ title: Data file schemas — levels and acts
 design: approved
 implementation: in-progress
 art: n/a
-updated: 2026-10-29
+updated: 2026-10-30
 ---
 
 # Data file schemas — levels and acts
@@ -108,7 +108,9 @@ optional `skip` list of the difficulties it is left out on (Level 06's hard-only
   speaker table's `shout` row; separate from how the line queues), an event cue's optional `delay` (round 45 B.a,
   step C45: seconds, at least 0; the radio holds the line that long after its event, the lines queued after it
   waiting behind it, the debrief too; Level 21's Choir at the Colossus's death, 4.5 s; `RadioCue.delaySeconds()`, or
-  `LevelData.radioDelay(i)` by the script radio's index), and `easy` / `hard` changes
+  `LevelData.radioDelay(i)` by the script radio's index), an event cue's optional `not_before` (step FIX6: a level
+  second; the radio holds the line, once its event came, until the level clock reaches it; Level 33's "Field's clean"
+  held to the calm before the end; `RadioCue.notBeforeSeconds()`, `LevelData.radioNotBefore(i)`), and `easy` / `hard` changes
   giving another `line`,
   as when a wave enters elsewhere on that difficulty); `objectives` (`primary`, `secondary` `kill_ratio` with an
   optional `boss_counted: false` (the level's boss set pieces left out of the ratio's enemies and kills; default true:
@@ -216,7 +218,10 @@ optional `skip` list of the difficulties it is left out on (Level 06's hard-only
   the group's last one down frees it at the group's centre, it rises 1.0 s untouchable, then drifts as a pickup
   paying nothing, collected when the ship's collection radius touches its 60 × 40 box (no secret, no rating,
   `StoryPickups`); the radio events **`story-collected`** and **`story-missed`** (missed: it leaves the screen or
-  its life runs out, or the group leaves unshot or the level ends first; only in a level with a story pickup). A
+  its life runs out, or the group leaves unshot or the level ends first; only in a level with a story pickup). Step
+  BOSS70: the radio events **`first-rail-volley`**, **`first-mine-ring`**, **`first-wreck-throw`** (the ringed boss's
+  core draws that play for the first time, at its tell) and **`core-low`** (its first draw below its pool's `low`
+  share), phase lines on the halted arena; only with a ringed boss whose core's `pool` has the play. A
   ground target's `sprite` (above) gives its own look: the containers' variants, the hold clamps
   `hold-clamp-left|right`, the secrets' `vigil-shutter`, `sable-wren-hatch` and `old-marta-airlock`. The music's
   `motif` may add **`to`** (a level time: the motif stem ends there, so its window may close inside a section; Level

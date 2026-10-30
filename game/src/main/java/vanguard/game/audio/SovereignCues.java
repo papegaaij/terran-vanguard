@@ -68,7 +68,13 @@ final class SovereignCues extends SoundFamily {
                 SimEvents.Type.PART_SHIELD_BROKEN,
                 SimEvents.Type.PART_SHIELD_REFILLED,
                 SimEvents.Type.RELAY_TELEGRAPH,
-                SimEvents.Type.RELAY_FIRED);
+                SimEvents.Type.RELAY_FIRED,
+                SimEvents.Type.CORE_PLAY_TELL,
+                SimEvents.Type.CORE_VOLLEY_TELEGRAPH,
+                SimEvents.Type.CORE_VOLLEY_FIRED,
+                SimEvents.Type.CORE_MINES_THROWN,
+                SimEvents.Type.CORE_WRECK_THROWN,
+                SimEvents.Type.CORE_WRECK_BROKEN);
     }
 
     @Override
@@ -103,6 +109,8 @@ final class SovereignCues extends SoundFamily {
             case RELAY_TELEGRAPH -> later(Sfx.RELAY_CHARGE, CUE_LEVEL, 1, pan, relayChargeDelay());
             case RELAY_FIRED -> bank.play(Sfx.RELAY_FLASH, CUE_LEVEL, 1, pan);
             case PART_SHIELD_HIT -> bank.play(Sfx.ENEMY_SHIELD_HIT, CUE_LEVEL, pitch(0.06), pan);
+            // Step BOSS70: each playbook attack's tell has its own sound (existing ones, pending a sounds row).
+            case CORE_PLAY_TELL -> bank.play(tell(events.value(i)), CUE_LEVEL, pitch(0.03), pan);
             default -> bank.play(sound(type), CUE_LEVEL, pitch(0.03), pan);
         }
     }
@@ -124,7 +132,27 @@ final class SovereignCues extends SoundFamily {
             case PART_SHIELD_REFILLED -> Sfx.ENEMY_SHIELD_REFILL;
             case RELAY_TELEGRAPH -> Sfx.RELAY_CHARGE;
             case RELAY_FIRED -> Sfx.RELAY_FLASH;
+            case CORE_VOLLEY_TELEGRAPH -> Sfx.RAIL_CHARGE;
+            case CORE_VOLLEY_FIRED -> Sfx.RAIL_SHOT;
+            case CORE_MINES_THROWN -> Sfx.LINE_MINE_DROP;
+            case CORE_WRECK_THROWN -> Sfx.CABLE_SNAP;
+            case CORE_WRECK_BROKEN -> Sfx.CRUMBLE_LARGE;
             default -> throw new IllegalArgumentException("no Level 35 sound for " + type);
+        };
+    }
+
+    /**
+     * Step BOSS70: the sound of the core's tell for play {@code play} ({@link RingSpec.Play} ordinal): the spiral's
+     * reactor flare the Sentinel's charge, the red petals the SAM nest's lock, the gold bays the Gunship's doors, the
+     * amber rim the line mine's blink, the gold wreck the walker wreck's groan.
+     */
+    static Sfx tell(int play) {
+        return switch (RingSpec.Play.values()[play]) {
+            case SPIRAL -> Sfx.SENTINEL_CHARGE;
+            case VOLLEY -> Sfx.NEST_LOCK;
+            case SURGE -> Sfx.GUNSHIP_DOORS;
+            case MINES -> Sfx.MINE_BLINK;
+            case WRECKS -> Sfx.WALKER_WRECK_SETTLE;
         };
     }
 

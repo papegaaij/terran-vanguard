@@ -49,3 +49,39 @@ level time (60 ticks a second; past the halt the tick runs ahead of the stopped 
   [sam-nest-capture-r62-a](../../../../enemies/ground/concept/prompts.md#sam-nest-capture-r62-a),
   [wavering-stormhawk-capture-r62-a](../../concept/prompts.md#wavering-stormhawk-capture-r62-a),
   [harker-capture-r62-a](../../../../story/characters/concept/prompts.md#harker-capture-r62-a).
+
+## friendly-marker-r70
+
+Concept round 70, rows B.1 and B.2 (step R70, 2026-10-30): how the wavering Ceres Wing Stormhawks read as friendly, and
+the secondary's HUD label; mockups over real game stills, not production art. **Generator:**
+`python3 tools/concept/friendly_marker_r70.py` (its docstring lists the variants and outputs; a few seconds).
+**Base:** `friendly-marker-capture-r70-a.png`, two 960×540 frames side by side of the game built by
+`:desktop:installDist` from branch `m9-act-5` (the working tree after step FIX6) on a private Xvfb display:
+`--bench 400 --settings <scratch>/settings.properties --level 29 --invulnerable --shots 4500,4800`
+(`controls.auto-fire=false`, medium, the debug start's fit, the ship still): t=75.0 s (the t=77 pincer's banner
+"WARNING — HOSTILES FROM THE LEFT AND RIGHT"; the first wavering pair's first pixel is t=77.2) and t=80.0 s (the pair
+holding 150 px below the top among shielded Talons). The craft are found by matching the production sprites
+(`wavering-stormhawk-iff_*`); text in the game's fonts and HUD colours (`Glass.GREEN`, the banner's amber,
+`Glass.ALERT`).
+
+- **friendly-marker-r70-a**: HUD-green corner brackets round each wavering craft and a small `FRIENDLY` tag under it.
+- **friendly-marker-r70-b**: a soft green-white outline round each craft's silhouette and big, bright white blinkers
+  (canopy and wingtips, drawn lit).
+- **friendly-marker-r70-c**: a pre-entry banner "FRIENDLIES INBOUND — HOLD FIRE" in the warning banner's shape in CDF
+  green, in its own slot under the hostile banner (t=75), and the pair at t=80 without a marker.
+- **friendly-marker-r70-d**: c + a (the banner at t=75, the brackets at t=80).
+- **friendly-marker-r70-abcd**: the four side by side: half-size fields over the 1:1 crops of the pair at t=80.
+- **spare-label-r70-abc**: the left panel's secondary box at 1:1 and 2x with three labels, each counting `2 / 6` and
+  `FAILED`: a `SPARE WHITES` (built), b `SPARE ALLIES`, c `DON'T SHOOT`.
+
+**Round 70 outcome (2026-10-30):** d chosen (B.1), `SPARE ALLIES` chosen (B.2 b); a, b and c rejected: `friendly-marker-r70-a/b/c.png` are in `concept/rejected/`. Do not re-run `friendly_marker_r70.py` for those files: it still writes to `concept/`.
+
+## friendly-marker-capture-r71-a
+
+Game capture of the built friendly marker (step MARK70, 2026-10-30; round 70 B.1 d and B.2 b), two 960×540 frames side
+by side, not edited: the game built by `:desktop:installDist` from branch `m9-act-5` (the working tree after step
+MARK70) on a private Xvfb display: `--bench 400 --settings <scratch>/settings.properties --level 29 --invulnerable
+--shots 4530,4800` (`controls.auto-fire=true`, medium, the debug start's fit, the ship still). Left t=75.5 s: the green
+"FRIENDLIES INBOUND — HOLD FIRE" banner stacked under the t=77 pincer's amber banner; right t=80.0 s: the first
+wavering pair holding among the Talons, each craft in its HUD-green IFF brackets with the `FRIENDLY` tag, the left
+panel's `SPARE ALLIES 0 / 6`.

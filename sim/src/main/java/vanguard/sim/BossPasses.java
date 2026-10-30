@@ -709,6 +709,32 @@ final class BossPasses implements BossActions {
         radio.cue(CueTrigger.BOSS_DIVE, "");
     }
 
+    /** Step BOSS70: the sortie's seeded random (a replay draws the same; the boss checkpoint keeps its state). */
+    @Override
+    public double draw() {
+        return s.rng.nextDouble();
+    }
+
+    @Override
+    public void coreMine(
+            EnemyGun gun, double x, double y, double toX, double toY, double throwSeconds, double lifeSeconds) {
+        force.tossMine(gun, x, y, toX, toY, throwSeconds, lifeSeconds);
+    }
+
+    @Override
+    public boolean throwWreck(EnemyGun gun, double x, double y, int part) {
+        return force.missiles().launchWreck(x, y, gun, ship.x(), ship.y(), part);
+    }
+
+    /** Step BOSS70: the radio's first rail volley, mine ring and wreck throw, and the core below its low share. */
+    @Override
+    public void corePlay(RingSpec.Play play, boolean low) {
+        radio.cue(CueTrigger.CORE_PLAY, play.slug());
+        if (low) {
+            radio.cue(CueTrigger.CORE_LOW, "");
+        }
+    }
+
     /**
      * M8 part H: a coiled boss's swinging bight or lunge: the ship (unless it cannot be hurt) and the escort (Rook or
      * the Bulwark) it reaches take {@code damage}, once each (the Kraken slam's impact rule; the wall pushes them out).

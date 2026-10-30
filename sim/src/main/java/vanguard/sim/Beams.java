@@ -398,7 +398,7 @@ final class Beams {
                 Missile missile = missiles.get(j);
                 consider(
                         CAST_MISSILE,
-                        columnContact(x, half, fromY, missile.x(), missile.y(), Missile.BOX),
+                        columnContact(x, half, fromY, missile.x(), missile.y(), missile.box()),
                         Layer.AIR,
                         j,
                         -1);

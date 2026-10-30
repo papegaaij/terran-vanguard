@@ -67,6 +67,11 @@ final class MineLooks {
     private int nextBurst;
 
     MineLooks(Sprites sprites, List<EnemySpec> kinds) {
+        this(sprites, kinds, false);
+    }
+
+    /** Step BOSS70: also with line mines when {@code thrown} (a ringed boss's mine ring, {@link #thrownMines}). */
+    MineLooks(Sprites sprites, List<EnemySpec> kinds, boolean thrown) {
         Array<AtlasRegion> none = new Array<>();
         dim = sprites.has(MINE) ? sprites.frames(MINE) : none;
         lit = sprites.has(MINE + "-lit") ? sprites.frames(MINE + "-lit") : dim;
@@ -74,10 +79,27 @@ final class MineLooks {
         blast = sprites.has(MINE + "-blast") ? sprites.frames(MINE + "-blast") : none;
         pop = sprites.has(MINE + "-pop") ? sprites.frames(MINE + "-pop") : none;
         laying = sprites.has(LAYER + "-laying") ? sprites.frames(LAYER + "-laying") : none;
-        lines = lineMines(kinds);
+        lines = thrown || lineMines(kinds);
         for (int b = 0; b < BURSTS; b++) {
             burst.add(null);
         }
+    }
+
+    /** Step BOSS70: whether a set piece of {@code sortie} throws line mines (the Iron Sovereign's mine ring). */
+    static boolean thrownMines(vanguard.sim.Sortie sortie) {
+        for (int k = 0; k < sortie.setPieceCount(); k++) {
+            boolean ring = sortie.setPiece(k)
+                    .boss()
+                    .flatMap(boss -> boss.rings())
+                    .flatMap(rings -> rings.core())
+                    .flatMap(core -> core.pool())
+                    .flatMap(pool -> pool.mines())
+                    .isPresent();
+            if (ring) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /** Whether any of {@code kinds} lays line mines. */

@@ -696,7 +696,8 @@ final class DrawPasses extends LevelLooks {
         // M9 part F: the Rail Bunkers' locked lines, rails and muzzle flashes.
         kinds.leechField(sortie).drawLines(batch, sortie, alpha);
         if (sovereign != null) {
-            // M9 part H: the station's rail lines and laser sweeps.
+            // M9 part H: the station's rail lines and laser sweeps; step BOSS70: its thrown wrecks and their debris.
+            sovereign.drawThrown(batch, sortie, alpha);
             sovereign.drawLines(batch, sortie, alpha);
         }
         if (massRelay != null) {

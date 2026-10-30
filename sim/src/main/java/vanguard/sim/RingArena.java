@@ -152,7 +152,7 @@ public final class RingArena implements Hashed {
         lockTicks = new int[count];
         lockVelocity = new double[count];
         holdNow = new boolean[count];
-        core = spec.core().map(c -> new RingCore(piece, boss, c)).orElse(null);
+        core = spec.core().map(c -> new RingCore(piece, boss, c, this)).orElse(null);
         coreView = java.util.Optional.ofNullable(core);
         reset();
     }
@@ -312,6 +312,10 @@ public final class RingArena implements Hashed {
             deathTicks = 0;
             Arrays.fill(velocity, 0);
             System.arraycopy(angle, 0, prevAngle, 0, count);
+            if (core != null) {
+                // Step BOSS70: a running volley dies with the core.
+                core.stop();
+            }
         }
     }
 

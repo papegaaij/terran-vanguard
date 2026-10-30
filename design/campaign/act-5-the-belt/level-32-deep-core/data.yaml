@@ -366,9 +366,9 @@ waves:
     from: front
     speed: 200
     paths: [[[240, -60], [330, 140], [150, 300], [320, 460], [240, 640]]]
+  - {t: 176, formation: stream, enemy: skitter, count: 6, from: front, edge: alternating, interval: 0.6, notes: "Out into open space: the last wave (step FIX6: t=176, not 181: the calm before the end)"}
+  - {t: 176.5, formation: V-wing, enemy: talon, count: 5, from: front, leader: tip, speed: 130, notes: "The ore chute; a leader at the tip (step FIX6: t=176.5, not 178: the calm before the end)"}
   - {t: 177, formation: line abreast, enemy: talon, count: 2, from: front, speed: 130, notes: "Step E2: a firing Talon pair on the offbeat (the beam erases the fodder within a second)"}
-  - {t: 178, formation: V-wing, enemy: talon, count: 5, from: front, leader: tip, speed: 130, notes: "The ore chute; a leader at the tip"}
-  - {t: 181, formation: stream, enemy: skitter, count: 6, from: front, edge: alternating, interval: 0.6, notes: "Out into open space: the last wave"}
 
 ground_targets:  # at: [t, x], when it enters at the top edge and its x (ART-E's proposed targets; QE-1 a: emitters and locks ≥ 40 px inside the field)
   - target: gallery tower

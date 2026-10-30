@@ -40,7 +40,7 @@ threat_profile:  # the hangar intel panel (design/ui/hangar) and the README's Th
     Recommended traits: '{traits}'
     Hazards: 'The turning station (sleeping guns wake at t≈60); drifting rocks with riders'
     Boss / mid-boss: none
-    Sensor-suite detail: '**none**: the belt, Ceres Hub, `air` + `ground`, front · **L1**: + directions (sides), density {density}, hazard "the station turns", the objective `{objective}` and the secondary `HOLD FIRE` · **L2**: + Talon (new, shielded), SAM Nest (new), Asteroid Mite (new), Skitter and Mote portraits · **L3**: + `spread` and `homing` highlighted, the wave strip marking Block C and Dock 9'
+    Sensor-suite detail: '**none**: the belt, Ceres Hub, `air` + `ground`, front · **L1**: + directions (sides), density {density}, hazard "the station turns", the objective `{objective}` and the secondary `SPARE ALLIES` · **L2**: + Talon (new, shielded), SAM Nest (new), Asteroid Mite (new), Skitter and Mote portraits · **L3**: + `spread` and `homing` highlighted, the wave strip marking Block C and Dock 9'
 
 sections:  # back to back from t = 0; each speed change eased over 2 s (ramp); the rescue halt a held arena
   - name: Ceres Approach
@@ -441,15 +441,15 @@ waves:
     paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
     notes: "Step B3b: a looping swarm on the offbeat"
   - {t: 162, formation: V-wing, enemy: talon, count: 5, from: front, leader: tip, speed: 130, notes: "The last wing; leader at the tip"}
-  - t: 165
+  - t: 162.5   # step FIX6: 162.5, not 165 (the calm before the end)
     formation: swarm
     enemy: mote-swarm
     count: 6
     from: front
     speed: 200
     paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
-  - {t: 168, formation: line abreast, enemy: talon, count: 2, from: front, speed: 130, notes: "Step B3b: a firing Talon pair on the offbeat (the beam erases the fodder within a second)"}
-  - {t: 170, formation: line abreast, enemy: talon, count: 2, from: front, speed: 130, notes: "Step B3b: the last Talons, out to the outer ring"}
+  - {t: 164, formation: line abreast, enemy: talon, count: 2, from: front, speed: 130, notes: "Step FIX6: t=164, not 168 (the calm before the end). Step B3b: a firing Talon pair on the offbeat (the beam erases the fodder within a second)"}
+  - {t: 165, formation: line abreast, enemy: talon, count: 2, from: front, speed: 130, notes: "Step FIX6: t=165, not 170 (the calm before the end). Step B3b: the last Talons, out to the outer ring"}
 
 halt_waves:  # the rescue halt's cycle: t s from the halt's start H, repeating every 16 s while a clamp gun stands, cut at the last one's fall (a wave in flight flies on)
   every: 16
@@ -566,9 +566,9 @@ ground_targets:  # at: [t, x], when it enters at the top edge and its x (ART-B's
     section: 7
     enemy: sam-nest
     count: 4
-    at: [[146, 52], [146, 428], [160, 52], [160, 428]]   # step B3b: the outer canyon's last rock faces
+    at: [[146, 52], [146, 428], [157, 52], [157, 428]]   # step B3b: the outer canyon's last rock faces; step FIX6: the last pair at t=157, not 160 (the calm before the end)
     notes:
-      target: 'SAM Nest ×{count} on the outer canyon walls (t≈146 and 160; step B3b)'
+      target: 'SAM Nest ×{count} on the outer canyon walls (t≈146 and 157; step B3b, FIX6)'
       effect: Bounty {bounty} each
 secrets:
   - name: Supply cache
@@ -587,10 +587,10 @@ radio:  # trigger: t or event. Rook has no lines before the rescue (his barks dr
   - {t: 14, speaker: Varga, line: "Talons. Gold hexes are a light shield: keep firing through it."}
   - {t: 24.5, speaker: Okafor, line: "The striped one leads the wing. Drop it and the rest break off."}
   - {event: first-homing, speaker: Varga, line: "Helix missiles. Shoot the red-gold diamonds or outrun them.", notes: {trigger: "First SAM salvo (`first-homing`, t≈35)"}}
-  - {t: 46, speaker: Ceres Hub Control, portrait: ceres-control, line: "The vote is closing. If the lights go red, those are not my guns."}
+  - {t: 44, speaker: Ceres Hub Control, portrait: ceres-control, line: "The vote is closing. If the lights go red, those are not my guns."}
+  - {t: 51.6, speaker: Harker, line: "Ceres Wing, Harker. We're Ascendancy now. Clear the CDF out."}
   - {t: 60, speaker: Ceres Hub Control, portrait: ceres-control, shout: false, line: "Block C just declared! The garrison is split. Their guns are hot!"}
-  - {t: 70.5, speaker: Harker, line: "Ceres Wing, Harker. We're Ascendancy now. Clear the CDF out."}
-  - {t: 79, speaker: Varga, line: "Those white blinkers are holding fire, Lancer. Let them go."}
+  - {t: 72.5, speaker: Varga, line: "Those white blinkers are holding fire, Lancer. Let them go."}
   - {event: neutral-left, enemy: wavering-stormhawk, speaker: Harker, line: "Who broke off? Ceres Wing, get back in line!", notes: {trigger: "A wavering pair leaves (`neutral-left`, the first time)"}}
   - {t: 90, speaker: Okafor, line: "Ceres has turned, Lancer. Fight your way down to the transport."}
   - {t: 101, speaker: Ceres Hub Control, portrait: ceres-control, line: "Dock 9's prison tender holds a CDF pilot. His fighter, too."}
@@ -609,7 +609,7 @@ radio:  # trigger: t or event. Rook has no lines before the rescue (his barks dr
 
 objectives:
   primary: reach-end
-  secondary: {spared: wavering-stormhawk, label: HOLD FIRE, credits: 100, name: Hold fire on the wavering Ceres Wing}   # none of the six wavering Stormhawks destroyed (a hit does not fail it), met when the third pair has left; 100 in Act 1 terms: pays 655
+  secondary: {spared: wavering-stormhawk, label: SPARE ALLIES, credits: 100, name: "Don't shoot the friendly Ceres Wing"}   # none of the six wavering Stormhawks destroyed (a hit does not fail it), met when the third pair has left; 100 in Act 1 terms: pays 655
 
 music:
   track: 12           # Act 5 A "Hollow Rock" (audio/music track list)

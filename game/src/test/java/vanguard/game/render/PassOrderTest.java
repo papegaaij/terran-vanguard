@@ -211,6 +211,7 @@ class PassOrderTest {
             setPieces.drawSpire(batch, sortie, wrecks, alpha, scroll, SpirePass.SWEEP)
             lines.draw(batch, sortie, kinds.leechField(sortie))
             leechField(sortie).drawLines(batch, sortie, alpha)
+            sovereign.drawThrown(batch, sortie, alpha)
             sovereign.drawLines(batch, sortie, alpha)
             massRelay.draw(batch, sortie, alpha)
             walker.drawMissiles(batch, sortie, alpha)

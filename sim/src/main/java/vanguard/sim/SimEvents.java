@@ -1028,6 +1028,28 @@ public final class SimEvents {
         /** M9 part H: a rim bay's doors open before its Dart stream (at the bay); value: the bay. */
         BAY_TELL,
         /**
+         * Step BOSS70 ({@link RingCore}'s playbook): the open core drew its next attack and its tell starts (at the
+         * core); value: its {@link RingSpec.Play} ordinal.
+         */
+        CORE_PLAY_TELL,
+        /** Step BOSS70: the core's rail volley locks its lines and telegraphs (at the core); value: its lines. */
+        CORE_VOLLEY_TELEGRAPH,
+        /** Step BOSS70: the core's rail volley fires (at the core); value: its lines. */
+        CORE_VOLLEY_FIRED,
+        /** Step BOSS70: a line of the core's rail volley struck the ship (at the ship); value: the line. */
+        CORE_VOLLEY_HIT,
+        /** Step BOSS70: the core throws its mine ring (at the core); value: the mines. */
+        CORE_MINES_THROWN,
+        /** Step BOSS70: a dead battery's wreck is torn off and hurled at the ship (at the battery); value: the part. */
+        CORE_WRECK_THROWN,
+        /**
+         * Step BOSS70: a thrown wreck broke (shot down, or on a hull; where it was): its debris; value: the {@link
+         * Missiles} cause. Its {@link #MISSILE_DESTROYED} comes just before.
+         */
+        CORE_WRECK_BROKEN,
+        /** Step BOSS70: the core fell below its playbook's low share, its rests shorten (at the core); value 0. */
+        CORE_LOW,
+        /**
          * M9 part H ({@link PartShields}): a boss part's hex shield took a hit (spaced as a unit's; at the part); value:
          * the part.
          */

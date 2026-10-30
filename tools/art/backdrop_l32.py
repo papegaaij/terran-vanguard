@@ -884,7 +884,11 @@ def chute_pieces():
     lrows = bottom_a + h - 1 - yy
     trows = lrows - SCREEN
     floor = floor_rows(bottom_a, h)[..., :3].astype(float)
-    space = belt_space(h, 3411)
+    # Step FIX6 (the user's playthrough 2026-10-30, a hard line at the level's very end): the two pieces' space is one
+    # field over both (chute-space's h rows on top of chute-end's), posterized with one palette, so the seam between
+    # them does not show (two fields, two seeds and two palettes before).
+    both = belt_space(2 * h, 3411)
+    space = both[h:]
     n = raster.fbm(W, h, 40, 3413, octaves=4, period=False)
     lip = top_lip + 18 * np.sin(xx / 47) + 22 * (n - 0.5) * 2
     beyond = trows > lip
@@ -902,10 +906,10 @@ def chute_pieces():
     k = np.arange(h)[:, None]
     fade = np.clip((h - k - 0.5) / FEATHER, 0, 1)
     alpha = dither_alpha(np.broadcast_to(fade, (h, W)).copy(), 2)
-    a = posterize(rgb, 40, alpha)
-    b = Image.fromarray(np.dstack([np.clip(belt_space(h, 3415), 0, 255),
-                                   np.full((h, W), 255)]).astype(np.uint8), "RGBA")
-    b = posterize(np.array(b)[..., :3], 24)
+    joined = np.array(posterize(np.vstack([both[:h], rgb]), 40,
+                                np.vstack([np.full((h, W), 255), alpha])))
+    a = Image.fromarray(joined[h:].copy(), "RGBA")
+    b = Image.fromarray(joined[:h].copy(), "RGBA")
     return (a, bottom_a), (b, bottom_a + h)
 
 

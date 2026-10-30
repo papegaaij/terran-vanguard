@@ -26,6 +26,11 @@ import java.util.Map;
 final class WaveSchedule {
     /** The shortest edge warning. */
     static final double EDGE_WARNING_SECONDS = 3;
+    /**
+     * Step MARK70 (design/campaign Level 29, Friendly marker, round 70 B.1 d): a wave of neutral craft is announced this
+     * long before it enters ("FRIENDLIES INBOUND — HOLD FIRE").
+     */
+    static final double FRIENDLY_WARNING_SECONDS = 2;
 
     private final List<EnemySpec> kinds;
     private final Spawn[] spawns;
@@ -71,6 +76,10 @@ final class WaveSchedule {
     private final int[] warningStarts;
     private final int[] warningEnds;
     private final int[] warningEdges;
+    /** Step MARK70: the level ticks from which to which each neutral wave is announced. */
+    private final int[] friendlyStarts;
+
+    private final int[] friendlyEnds;
     private int next;
 
     /** @param kinds the level's distinct enemies, every wave's among them; a spawn's kind indexes it */
@@ -255,6 +264,20 @@ final class WaveSchedule {
             warningStarts[i] = SimStep.ticks(wave.t() - lead);
             warningEnds[i] = SimStep.ticks(wave.t());
             warningEdges[i] = warnedEdges.get(i);
+        }
+        // Step MARK70: every wave of neutral craft (whatever its edge) is announced before it enters.
+        int friendlies = 0;
+        for (WaveSpec wave : waves) {
+            friendlies += wave.enemy().neutral() ? 1 : 0;
+        }
+        friendlyStarts = new int[friendlies];
+        friendlyEnds = new int[friendlies];
+        int f = 0;
+        for (WaveSpec wave : waves) {
+            if (wave.enemy().neutral()) {
+                friendlyStarts[f] = SimStep.ticks(wave.t() - FRIENDLY_WARNING_SECONDS);
+                friendlyEnds[f++] = SimStep.ticks(wave.t());
+            }
         }
     }
 
@@ -476,6 +499,16 @@ final class WaveSchedule {
             }
         }
         return edges;
+    }
+
+    /** Step MARK70: whether a wave of neutral craft is announced at {@code tick} (it enters within 2 s). */
+    boolean friendlies(int tick) {
+        for (int i = 0; i < friendlyStarts.length; i++) {
+            if (tick >= friendlyStarts[i] && tick < friendlyEnds[i]) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /** The units of the enemy {@code slug} the level sends. */

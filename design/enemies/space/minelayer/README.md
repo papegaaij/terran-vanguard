@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../world/belt]
-updated: 2026-10-28
+updated: 2026-10-30
 ---
 
 # Minelayer
@@ -22,8 +22,9 @@ or shoot a mine to blow a stretch of the line open.
 Approved in round 60 (drafted in the Act 5 design phase, step D-enemies-B); rendered from
 [data.yaml](data.yaml) since M9 part C (step C2). Numbers at **medium** (see the
 [balancing basis](../../README.md#balancing-basis)); HP is in damage units (a Pulse Cannon L1 shot does 2),
-set at its first level from the proposed Act 5 reference DPS (judgement call J2: L30 124): 110 HP is
-0.9 s. Fire rates and line counts are tuned per level with `levelReport` in the build.
+set at its first level from the proposed Act 5 reference DPS (judgement call J2: L30 124): 110 HP was
+0.9 s; step FIX6 (the user's playthrough 2026-10-30) made it **280 HP (2.3 s)** with a fast rise, so it lays its
+line before a typical fit kills it (an accepted exception to the medium class's 0.4–1.5 s, decided 2026-10-30 in round 70). Fire rates and line counts are tuned per level with `levelReport` in the build.
 
 <!-- data: stat-block -->
 | Field | Value |
@@ -34,15 +35,15 @@ set at its first level from the proposed Act 5 reference DPS (judgement call J2:
 | Size | 88×64 px, hitbox 64×44 |
 | Parts | single |
 | Orientation | `16 angles` |
-| HP | 110 (easy 82 / hard 143, from the global multipliers) |
+| HP | 280 (easy 210 / hard 364, from the global multipliers) |
 | Armour / shield | none (not on the [enemy shields](../../README.md#enemy-shields)' Act 5 list) |
-| Speed | 120 px/s rising, 150 px/s across while laying |
+| Speed | 600 px/s rising, 200 px/s across while laying |
 | Movement | `rear-entry` (edge-warned 3 s) in a side lane (70 px from a side edge, beside the ship, not through it), rising to its **lay row** (set per unit in the wave; default 100 px and 180 px from the top), then `strafe`s across the field to the far edge and leaves; a column's layers enter **2.5 s apart** (see *Difficulty and level use*) |
 | Attack | `mine`: while it strafes it lays a line of **3 clusters of 4 mines** (32 px apart in a cluster, 56 px between clusters) with **one gap of 112 px** at the wave's gap position (one of the two cluster boundaries); a mine (1 HP) arms after **1 s**, then an armed mine within **48 px** of the ship's centre blinks **0.6 s** and bursts into a `ring` of **8** (slow 100 px/s, `small` 4) with a **40 px** `heavy` blast; touched while armed it bursts at once (contact `medium` 6, plus its ring); shot, it sets off the mines within 44 px (0.08 s a hop: its cluster); mines stay where they are laid (they move with the scroll), so the line **slopes** (below) |
 | Formations | column (2–3) from the rear, each laying its own line |
 | Weak points | none (the gold mine hopper at its tail is drawn only) |
 | Effective traits | `rear`, `homing`, `spread`, `piercing` |
-| Credits | 26 (score 260 × chain); mines 0 |
+| Credits | 30 (score 300 × chain); mines 0 |
 | Death | `medium` mechanical explosion with sparks; its unlaid mines are lost with it (a line it has not finished keeps its gap and has a second one where it stopped) |
 | First level / used in | L30; the minefield; later Act 5 levels may use it (their docs decide) |
 | Difficulty hooks | easy: a wider gap (144 px, the cluster beside it 3 mines), rings of 6; hard: a column of 3 (three lines), rings of 10, arming 0.8 s (the gap stays 112 px: a narrower one would sit inside the 48 px proximity of both edge mines) |
@@ -59,8 +60,8 @@ The numbers of the shared [mine lines](../../README.md#mine-lines) rule:
   gap's position (authored per wave, so a level reads) and the lay row, so lines read as a maze that
   scrolls down onto the ship.
 - **The line slopes.** Mines hold their place in the field while the layer strafes, so a line laid in
-  ≈ 3.2 s (480 px at 150 px/s) slopes down toward the side the layer started from: **≈ 28° at Level 30's
-  80 px/s**. It stays one barrier with one gap; there are no level rows of mines.
+  ≈ 2.4 s (480 px at 200 px/s) slopes down toward the side the layer started from: **≈ 22° at Level 30's
+  80 px/s** (≈ 28° at 150 px/s before step FIX6). It stays one barrier with one gap; there are no level rows of mines.
 - **Arming.** A laid mine shows a dim light for its first second: unarmed, touching it does nothing
   and it never bursts on its own. Armed, it blinks red-gold once a second.
 - **Proximity burst.** An armed mine within 48 px of the ship blinks fast for 0.6 s, then bursts: a
@@ -77,9 +78,10 @@ The numbers of the shared [mine lines](../../README.md#mine-lines) rule:
 
 ### Behaviour
 
-- **From behind.** The column's edge warning (3 s) marks the lane it rises in; the Minelayer flies up
-  beside the ship (contact `medium` 15 if touched), so `rear` and rear-`homing` guns (the
-  [Swarm Tail](../../../player/weapons/swarm-tail/README.md), Q12 c) get it before it turns, front guns once it lays ahead.
+- **From behind.** The column's edge warning (3 s) marks the lane it rises in; the Minelayer streaks up
+  beside the ship at 600 px/s (contact `medium` 15 if touched) and lays about 0.8 s after it enters, so the line
+  starts before a gun can follow it; `rear` and rear-`homing` guns (the
+  [Swarm Tail](../../../player/weapons/swarm-tail/README.md), Q12 c) and the front guns get it while it lays.
 - **Fire.** It fires nothing but its mines.
 - **EMP.** Stunned 3 s it stops laying (the line keeps the hole) and drifts with the scroll.
 - **Readability.** The mines' red-gold blink and the ring's slow bullets follow the
@@ -160,3 +162,15 @@ Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's r
   44 px chains a cluster at every scroll the level uses (41 px at 120, 38 at 100, 36 at 80) and still stops at the
   56 px space to the next cluster, so one shot clears its cluster of 4, as C1 a decided.
 - 2026-10-28 (user, [round 63](../../../concept-rounds/round-63/README.md), closed): the Minelayer and its mine accepted (**F.1**); **C.4** the chain reach 44 px accepted; sounds: **S.1 b** (`mine-arm` the two-note chirp), S.2 a (`mine-drop`), S.3 a (`mine-chain`).
+- 2026-10-30 (step FIX6, the user's playthrough 2026-10-30: "the minelayers are too weak, you can easily take them
+  out before they lay any mines at all"): measured on Level 30 with a pilot that flies under each layer from its
+  entry with the beam on it (the plan's fit and the user's: Ion Beam L4, Micro-missile L5, Autocannon L5, Tail Gun
+  L3), every layer died in 1.2–1.9 s, before it laid a mine (its 3.9 s rise at 120 px/s). Now it **rises at 600
+  px/s** (lays ≈ 0.8 s after entering), **strafes at 200 px/s** (the line in ≈ 2.4 s) and has **280 HP** (easy 210,
+  hard 364): focused, every layer lays at least its first cluster and the first (t=20) its line through the gap
+  (easy 7 of 11, medium 10 of 12, hard all), most are still killed before they leave on easy and medium, and under
+  the autopilot all 15 lines of medium are finished (`Level30Test.theMinelayersLayTheirLinesBeforeATypicalFitKillsThem`).
+  Tried: 300 HP at 300/240 px/s (the first laid 4 on easy), 260 HP at 400/360 (unkillable: the strafe outran the
+  ship), 240 HP at 400/200 (4 on easy). The **bounty 30** (26 before): the medium class's top for its 2.3 s time
+  to kill (`BalanceTest.ACCEPTED`, decided 2026-10-30 in round 70). A shot mine still clears its cluster: at 200 px/s two
+  neighbours lie 32 px across and 19 px down at Level 30's 120 px/s, 37 px apart.

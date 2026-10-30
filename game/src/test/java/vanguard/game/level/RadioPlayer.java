@@ -328,9 +328,12 @@ final class RadioPlayer {
         // Round 45 B.a: the cues' delays after their events, as the game reads them from the level's data
         Optional<LevelData> level = CONTENT.levelKey(script.number()).map(CONTENT::level);
         float[] delays = new float[cues.size()];
+        // Step FIX6: and the level second an event line is held until (Level 33's leech line)
+        double[] notBefore = new double[cues.size()];
         for (int i = 0; i < delays.length; i++) {
             int cue = i;
             delays[i] = level.map(data -> (float) data.radioDelay(cue)).orElse(0f);
+            notBefore[i] = level.map(data -> data.radioNotBefore(cue)).orElse(0.0);
         }
         boolean[] fired = new boolean[cues.size()];
         // M7 part D: the events of repeating triggers, each setting off its cues once
@@ -453,7 +456,15 @@ final class RadioPlayer {
                     fired[i] = true;
                     double dueAt =
                             cue.trigger() == CueTrigger.TIME && holds.isEmpty() && haltTick < 0 ? cue.t() : seconds;
-                    queued.add(queue(radio, schedule, cue, i, text(cue, side), dueAt, voiced, delays[i]));
+                    queued.add(queue(
+                            radio,
+                            schedule,
+                            cue,
+                            i,
+                            text(cue, side),
+                            dueAt,
+                            voiced,
+                            delays[i] + (float) Math.max(0, notBefore[i] - scriptTick * SimStep.SECONDS)));
                 }
             }
             for (int e = 0; e < events.size(); e++) {

@@ -176,7 +176,18 @@ public enum CueTrigger {
      * M9 part G: the story pickup left the screen or ran out of time uncollected ({@link SimEvents.Type#STORY_MISSED}:
      * the salvage tug's line); once. No subject (the radio event {@code story-missed}).
      */
-    STORY_MISSED;
+    STORY_MISSED,
+    /**
+     * Step BOSS70 (design/enemies/bosses/iron-sovereign, the core's playbook): the open core drew an attack; the subject
+     * is its slug ({@link RingSpec.Play#slug()}); once per subject (the radio events {@code first-rail-volley}, {@code
+     * first-mine-ring}, {@code first-wreck-throw}).
+     */
+    CORE_PLAY,
+    /**
+     * Step BOSS70: the open core's first draw below its playbook's low share (its rests shorten); once. No subject (the
+     * radio event {@code core-low}).
+     */
+    CORE_LOW;
 
     /** Between the part names of a {@link #BOSS_PART_DESTROYED} cue's subject. */
     public static final String PART_SEPARATOR = "|";

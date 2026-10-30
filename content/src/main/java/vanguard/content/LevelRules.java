@@ -182,6 +182,21 @@ final class LevelRules {
                     .sim()
                     .subject();
         }
+        if (cue.event().isPresent()) {
+            // Step BOSS70: a core play's cue waits for the play's slug (the simulation's subject).
+            switch (cue.event().get()) {
+                case FIRST_RAIL_VOLLEY -> {
+                    return vanguard.sim.RingSpec.Play.VOLLEY.slug();
+                }
+                case FIRST_MINE_RING -> {
+                    return vanguard.sim.RingSpec.Play.MINES.slug();
+                }
+                case FIRST_WRECK_THROW -> {
+                    return vanguard.sim.RingSpec.Play.WRECKS.slug();
+                }
+                default -> {}
+            }
+        }
         // Step B4b: a holders-down cue's escort swap outcome (the simulation cues it with the swap's).
         return cue.enemy().or(cue::group).or(cue::phase).or(cue::swap).orElse("");
     }

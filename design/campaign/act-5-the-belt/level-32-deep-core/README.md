@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../../enemies/ground/sentinel-tower, ../../../enemies/ground/strider, ../../../enemies/ground/sam-nest, ../../../enemies/air/talon, ../../../enemies/air/dart-drone, ../../../world/belt, ../../../player/specials, ../../../player/wingmen, ../../../player/generator, ../../act-3-red-dust/level-16-valles-canyon-run, ../../act-3-red-dust/level-19-foundry-of-tharsis]
-updated: 2026-10-29
+updated: 2026-10-30
 ---
 
 # Level 32 – Deep Core
@@ -344,9 +344,9 @@ flown only on its chosen side; the Striders entering just before the nests they 
 | 172 | 6 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 2 | front | Step E2: a firing Talon pair on the offbeat (the beam erases the fodder within a second) |
 | 173 | 6 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (alternating edges) | |
 | 175.5 | 6 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front | |
+| 176 | 6 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (alternating edges) | Out into open space: the last wave (step FIX6: t=176, not 181: the calm before the end) |
+| 176.5 | 6 | V-wing | [Talon](../../../enemies/air/talon/README.md) | 5 | front | The ore chute; a leader at the tip (step FIX6: t=176.5, not 178: the calm before the end) |
 | 177 | 6 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 2 | front | Step E2: a firing Talon pair on the offbeat (the beam erases the fodder within a second) |
-| 178 | 6 | V-wing | [Talon](../../../enemies/air/talon/README.md) | 5 | front | The ore chute; a leader at the tip |
-| 181 | 6 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (alternating edges) | Out into open space: the last wave |
 
 Totals: Skitter 97 · Talon 168 · Mote Swarm 80 · Dart Drone 36 · Needler 32 · Strider 8 (every fork's branches together; a route flies one channel of each fork).
 <!-- /data -->
@@ -642,3 +642,14 @@ the alternatives:
   (no pods, no Rook) on the walker's screen-right side; the ship sits at x≥57 by the refinery's wall (pushed off at 49), where the beam still
   reaches the crucible's emitter; a cache door opens as its lock comes on the field under the beam.
 - 2026-10-29 (user, [round 65](../../../concept-rounds/round-65/README.md), closed): the part's production art and calls accepted: **F.1 a** (the richer mouth's red running lights and lit bulkhead, the safer one's white work lamps), **F.2** the backdrop, **F.5** the doors, charges and crate ok (`art: final`); **C.1 a** (every tower emitter and door lock at least 40 px inside the field, the shallow notches), **C.2 a** (a tower's first sweep the full turn on medium and hard, easy keeps its arcs), **C.3** the offbeat waves and `bounty_scale` 0.34, **C.5** the route choice's rules, **C.6** the trimmed radio and Rook's t=162 accepted; **M.1** ok (track 12's conveyor stem at the forks, imported in step G4; until then the base stem plays there); the sounds all a but **S.3 b** (`sentinel-servo`), **S.7 b** (`strider-cannon`) and **S.11 b** (`charge-blast`), switched in step G4 ([sfx](../../../audio/sfx/README.md)). No notes from the user.
+- 2026-10-30 (step FIX6, the user's playthrough 2026-10-30: "a hard line in the backdrop at the very end of the
+  level"): the seam between `chute-end` and `chute-space` (the ore chute's mouth onto space, then belt space to the
+  outro's end): the two pieces drew their space from two fields (seeds 3411 and 3415, the dust band's phase restarting
+  in each) and posterized with two palettes (40 and 24 colours), so the dust band broke along a straight row.
+  `backdrop_l32.py`'s `chute_pieces` now draws one space field over both pieces and posterizes them together (40
+  colours), then splits them; re-run (only the two pieces and the review sheet changed) and `--check` 0 problems.
+- 2026-10-30 (step FIX6, the user's playthrough 2026-10-30; the campaign's new end calm rule, at least 4 s from the
+  last enemy gone to the end from Act 5 on, `PacingTest`): the level's end stays; the last waves earlier: the ore
+  chute's V-wing 178 → 176.5 and the last Skitter stream 181 → 176; the end calm (easy/medium/hard, the autopilot
+  with the plan's fit, route LL; the other routes alike, the least 4.8 s on hard LR) 1.9/1.3/0.9 s → 6.9/6.3/5.8 s.
+  The counts, the haul and the autopilot's wins are unchanged.

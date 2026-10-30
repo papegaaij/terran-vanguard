@@ -632,6 +632,302 @@ class Level30Test {
     }
 
     /**
+     * Step FIX6 (the user's playthrough 2026-10-30: "you can easily take them out before they lay any mines"): the
+     * user's fit at Level 30 (the Ion Beam L4, a Micro-missile Pod L5, an Autocannon Pod L5, the Tail Gun L3, the Mk IV
+     * shield, the Mk III engine, no spare power), Composite III and no Rook (he flies in the plan's).
+     */
+    static Loadout userLoadout(Content content, Difficulty difficulty) {
+        return SimSpecs.loadout(
+                content,
+                content.systems().engines().get(2).name(),
+                List.of(
+                        new SimSpecs.FittedWeapon(Armament.Slot.FRONT, "ion-beam", 4),
+                        new SimSpecs.FittedWeapon(Armament.Slot.LEFT_WING, "micro-missile-pod", 5),
+                        new SimSpecs.FittedWeapon(Armament.Slot.RIGHT_WING, "autocannon-pod", 5),
+                        new SimSpecs.FittedWeapon(Armament.Slot.REAR, "tail-gun", 3)),
+                content.shields().models().get(3).name(),
+                content.armour().plating().get(3).name(),
+                0,
+                difficulty);
+    }
+
+    /** Each Minelayer's flight: when it entered, when it was killed (NaN: it left) and the line mines it laid. */
+    static final class Layers implements LevelMetrics.Probe {
+        final Map<Integer, double[]> layers = new java.util.LinkedHashMap<>();
+        private final java.util.Set<Integer> alive = new java.util.HashSet<>();
+
+        @Override
+        public void newAttempt() {
+            layers.clear();
+            alive.clear();
+        }
+
+        @Override
+        public void stepped(Sortie sortie, int step) {
+            double now = sortie.levelSeconds();
+            java.util.Set<Integer> seen = new java.util.HashSet<>();
+            for (int i = 0; i < sortie.enemyCount(); i++) {
+                Enemy enemy = sortie.enemy(i);
+                if (enemy.spec().mineLayer().isPresent()) {
+                    seen.add(enemy.serial());
+                    layers.computeIfAbsent(enemy.serial(), s -> new double[] {now, Double.NaN, 0, enemy.renderX(1)})[
+                                    3] =
+                            enemy.renderX(1);
+                }
+            }
+            SimEvents events = sortie.events();
+            for (int e = 0; e < events.size(); e++) {
+                if (events.type(e) == SimEvents.Type.MINE_DROPPED) {
+                    // The layer at the mine's height (it lays at its own).
+                    for (int i = 0; i < sortie.enemyCount(); i++) {
+                        Enemy enemy = sortie.enemy(i);
+                        if (enemy.spec().mineLayer().isPresent() && Math.abs(enemy.renderY(1) - events.y(e)) < 8) {
+                            layers.get(enemy.serial())[2]++;
+                            break;
+                        }
+                    }
+                } else if (events.type(e) == SimEvents.Type.ENEMY_DESTROYED) {
+                    for (int serial : alive) {
+                        double[] layer = layers.get(serial);
+                        if (!seen.contains(serial) && Math.abs(layer[3] - events.x(e)) < 30) {
+                            layer[1] = now;
+                        }
+                    }
+                }
+            }
+            alive.clear();
+            alive.addAll(seen);
+        }
+    }
+
+    /**
+     * Step FIX6: the user's playthrough's pilot, aimed at the Minelayers: while one is on the screen the ship flies 150 px
+     * under the earliest one (the beam on it, the pods homing), else holds the lower centre; firing, invulnerable.
+     */
+    private static Layers focused(Content content, Loadout loadout, Difficulty difficulty) {
+        Sortie sortie = sortie(content, loadout, 1, difficulty, true);
+        Layers layers = new Layers();
+        int step = 0;
+        while (!sortie.complete() && step < MAX_STEPS) {
+            double x = 240;
+            double y = 80;
+            for (int i = 0; i < sortie.enemyCount(); i++) {
+                Enemy enemy = sortie.enemy(i);
+                if (enemy.spec().mineLayer().isPresent() && enemy.renderY(1) > 0 && enemy.renderY(1) < 540) {
+                    x = enemy.renderX(1);
+                    y = Math.max(40, enemy.renderY(1) - 150);
+                    break;
+                }
+            }
+            steer(sortie, x, y, true);
+            layers.stepped(sortie, ++step);
+        }
+        return layers;
+    }
+
+    /**
+     * Step FIX6 (the user's playthrough 2026-10-30: "you can easily take them out before they lay any mines"): a
+     * Minelayer starts its line before a typical fit kills it. Against a pilot that flies under each layer from its entry
+     * with the beam on it (the plan's fit and the user's, every difficulty), every layer lays at least its first cluster
+     * and the first one (t=20, alone: "learn the gap") lays its line through its gap (its first two clusters: the gap is
+     * at their boundary); under the autopilot (both fits, medium, a seed) at least {@value #AUTOPILOT_LINES} of the
+     * layers finish their lines. A layer finishing its line has crossed the field, so a focused fit still kills most of
+     * them on easy and medium before they leave. Printed: each layer's entry, life and mines.
+     */
+    @Test
+    void theMinelayersLayTheirLinesBeforeATypicalFitKillsThem() {
+        StringBuilder report = new StringBuilder("Level 30's Minelayers ([entered, lived, mines laid]):");
+        for (Difficulty difficulty : Difficulty.values()) {
+            EnemySpec.MineLayer line = SimSpecs.level(content, LEVEL, difficulty).waves().stream()
+                    .filter(wave -> wave.enemy().mineLayer().isPresent())
+                    .findFirst()
+                    .orElseThrow()
+                    .enemy()
+                    .mineLayer()
+                    .orElseThrow();
+            int cluster = line.clusterMines(0);
+            int throughGap = line.clusterMines(0) + line.clusterMines(1);
+            for (String fit : List.of("plan", "user")) {
+                Loadout loadout =
+                        fit.equals("plan") ? planLoadout(content, difficulty) : userLoadout(content, difficulty);
+                Layers layers = focused(content, loadout, difficulty);
+                report.append(String.format("%n  %s, %s fit, focused:", difficulty, fit));
+                int killed = 0;
+                boolean first = true;
+                for (double[] one : layers.layers.values()) {
+                    report.append(String.format(
+                            " [%.1f %s %d]",
+                            one[0], Double.isNaN(one[1]) ? "left" : String.format("%.1f", one[1] - one[0]), (int)
+                                    one[2]));
+                    String at = difficulty + ", " + fit + " fit: the layer entering at t=" + one[0];
+                    assertTrue(one[2] >= (first ? throughGap : cluster), at + " laid " + (int) one[2]);
+                    first = false;
+                    killed += Double.isNaN(one[1]) ? 0 : 1;
+                }
+                if (difficulty != Difficulty.HARD) {
+                    assertTrue(killed * 2 > layers.layers.size(), difficulty + ", " + fit + ": killed " + killed);
+                }
+                if (difficulty == Difficulty.MEDIUM) {
+                    Sortie sortie = sortie(content, loadout, 1, difficulty, false);
+                    Layers flown = new Layers();
+                    assertTrue(LevelMetrics.fly(sortie, MAX_STEPS, flown), fit + ": the autopilot wins");
+                    long finished = flown.layers.values().stream()
+                            .filter(one -> one[2] >= line.mines())
+                            .count();
+                    report.append(String.format(
+                            "%n  %s, %s fit, autopilot: %d of %d lines finished",
+                            difficulty, fit, finished, flown.layers.size()));
+                    assertTrue(
+                            finished >= AUTOPILOT_LINES * flown.layers.size(),
+                            fit + ": lines finished " + finished + " of " + flown.layers.size());
+                }
+            }
+        }
+        System.out.println(report);
+    }
+
+    /**
+     * Step FIX6 (the user's playthrough 2026-10-30: collisions with rocks and ships nearly killed them): a naive pilot
+     * that holds the lower centre (240, 80) and sidesteps only enemy shots and missiles (the bullets-only look-ahead),
+     * firing, invulnerable; what touches its hull, by source: an enemy's contact (once a serial for a unit a ram
+     * destroys, else once a second while it overlaps) and a rock's (once a second while it overlaps), with each one's
+     * contact damage. Returns the damage by source, the level's total under "total".
+     */
+    static Map<String, Double> naiveContacts(Content content, Loadout loadout, Difficulty difficulty, long seed) {
+        Sortie sortie = sortie(content, loadout, seed, difficulty, true);
+        Map<String, Double> damage = new java.util.TreeMap<>();
+        Map<Object, Double> lastHit = new HashMap<>();
+        int steps = 0;
+        while (!sortie.complete() && steps++ < MAX_STEPS) {
+            double now = sortie.levelSeconds();
+            double x = sortie.ship().x();
+            double y = sortie.ship().y();
+            int best = MovePlanner.steer(x, y, 240, 80);
+            if (shotClearance(sortie, best) < 6) {
+                double most = -1;
+                for (int move : MovePlanner.MOVES) {
+                    double clear = shotClearance(sortie, move);
+                    if (clear > most) {
+                        most = clear;
+                        best = move;
+                    }
+                }
+            }
+            sortie.step(best | Command.FIRE.bit());
+            x = sortie.ship().x();
+            y = sortie.ship().y();
+            for (int i = 0; i < sortie.enemyCount(); i++) {
+                Enemy enemy = sortie.enemy(i);
+                EnemySpec spec = enemy.spec();
+                if (spec.contactDamage() <= 0
+                        || !enemy.layer().touchable()
+                        || enemy.layer() == vanguard.sim.Layer.GROUND) {
+                    continue;
+                }
+                double gap = MovePlanner.gap(
+                        enemy.renderX(1) - x,
+                        enemy.renderY(1) - y,
+                        MovePlanner.HULL_X + enemy.hitbox().width() / 2,
+                        MovePlanner.HULL_Y + enemy.hitbox().height() / 2);
+                Double last = lastHit.get(enemy.serial());
+                boolean due = last == null || (!spec.destroyedByRamming() && now - last >= 1);
+                if (gap <= 0 && due) {
+                    lastHit.put(enemy.serial(), now);
+                    damage.merge(spec.slug(), spec.contactDamage(), Double::sum);
+                }
+            }
+            for (int i = 0; i < sortie.debrisCount(); i++) {
+                vanguard.sim.Debris chunk = sortie.debris(i);
+                double gap = MovePlanner.gap(
+                        chunk.renderX(1) - x,
+                        chunk.renderY(1) - y,
+                        MovePlanner.HULL_X + chunk.spec().size().width() / 2,
+                        MovePlanner.HULL_Y + chunk.spec().size().height() / 2);
+                Double last = lastHit.get(chunk);
+                if (gap <= 0
+                        && (last == null || now - last >= 1)
+                        && chunk.spec().damage() > 0) {
+                    lastHit.put(chunk, now);
+                    damage.merge("rock " + chunk.spec().chunk(), chunk.spec().damage(), Double::sum);
+                }
+            }
+            for (int i = 0; i < sortie.debrisCount(); i++) {
+                vanguard.sim.Debris chunk = sortie.debris(i);
+                if (!(chunk.spec().damage() > 0)) {
+                    lastHit.remove(chunk);
+                }
+            }
+        }
+        damage.put(
+                "total",
+                damage.values().stream().mapToDouble(Double::doubleValue).sum());
+        return damage;
+    }
+
+    /** The nearest an enemy shot or missile comes to the hull over a short look-ahead with {@code move} held, px. */
+    private static double shotClearance(Sortie sortie, int move) {
+        double speed = sortie.ship().spec().speed();
+        double dx = ((move & Command.RIGHT.bit()) != 0 ? 1 : 0) - ((move & Command.LEFT.bit()) != 0 ? 1 : 0);
+        double dy = ((move & Command.UP.bit()) != 0 ? 1 : 0) - ((move & Command.DOWN.bit()) != 0 ? 1 : 0);
+        if (dx != 0 && dy != 0) {
+            dx *= MovePlanner.DIAGONAL;
+            dy *= MovePlanner.DIAGONAL;
+        }
+        double nearest = Double.POSITIVE_INFINITY;
+        for (int k = 1; k <= 12; k++) {
+            double t = k * 0.05;
+            double steps = t / SimStep.SECONDS;
+            double x = Math.clamp(sortie.ship().x() + dx * speed * t, 20, 460);
+            double y = Math.clamp(sortie.ship().y() + dy * speed * t, 20, 520);
+            for (int i = 0; i < sortie.bulletCount(); i++) {
+                vanguard.sim.EnemyBullet bullet = sortie.bullet(i);
+                double bx = bullet.renderX(1) + (bullet.renderX(1) - bullet.renderX(0)) * steps;
+                double by = bullet.renderY(1) + (bullet.renderY(1) - bullet.renderY(0)) * steps;
+                nearest = Math.min(nearest, MovePlanner.gap(bx - x, by - y, MovePlanner.HULL_X, MovePlanner.HULL_Y));
+            }
+            for (int i = 0; i < sortie.missileCount(); i++) {
+                vanguard.sim.Missile missile = sortie.missile(i);
+                double mx = missile.renderX(1) + (missile.renderX(1) - missile.renderX(0)) * steps;
+                double my = missile.renderY(1) + (missile.renderY(1) - missile.renderY(0)) * steps;
+                nearest = Math.min(nearest, MovePlanner.gap(mx - x, my - y, MovePlanner.HULL_X, MovePlanner.HULL_Y));
+            }
+        }
+        return nearest;
+    }
+
+    /**
+     * Step FIX6 (the user's playthrough 2026-10-30): the naive flight's contact damage ({@link #naiveContacts}) over the
+     * level (the user's fit, three seeds), by source; printed, and at medium at most {@value #NAIVE_CONTACT_MOST} a run.
+     * Before the step 218 (rocks 20 a touch about 70, the trains crossing the lower centre about 90, a car a hit), after it
+     * 90: the large rocks touch for 10 and the rear train and the pincer's loops stay off the lower centre.
+     */
+    @Test
+    void aNaiveFlightTouchesLittle() {
+        StringBuilder report =
+                new StringBuilder("Level 30 naive flight's contact damage (the user's fit, invulnerable):");
+        for (Difficulty difficulty : Difficulty.values()) {
+            double total = 0;
+            for (long seed = 1; seed <= SEEDS; seed++) {
+                Map<String, Double> contacts =
+                        naiveContacts(content, userLoadout(content, difficulty), difficulty, seed);
+                report.append(String.format("%n  %s seed %d: %s", difficulty, seed, contacts));
+                total += contacts.get("total");
+            }
+            report.append(String.format("%n  %s: %.0f a run", difficulty, total / SEEDS));
+            if (difficulty == Difficulty.MEDIUM) {
+                assertTrue(total / SEEDS <= NAIVE_CONTACT_MOST, "medium: " + total / SEEDS + " a run");
+            }
+        }
+        System.out.println(report);
+    }
+
+    /** Step FIX6: the naive flight's contact damage a run at medium, at most. */
+    static final double NAIVE_CONTACT_MOST = 120;
+
+    /** Step FIX6: the share of the layers that finish their lines under the autopilot, at least. */
+    static final double AUTOPILOT_LINES = 0.5;
+
+    /**
      * Round 64 C.1 a: the dead beacon buoy (a tow, t=118, 4 hits) opts in to the beam's touch ({@code beam_touch}: one
      * hit per 0.25 s on its housing), so the balance plan's fit (the Ion Beam in front) frees it on medium: the autopilot
      * flies the level, under the buoy from a second before it enters until it is freed, then under the crate, and is not

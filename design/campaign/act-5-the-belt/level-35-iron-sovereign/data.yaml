@@ -311,10 +311,11 @@ boss:  # the act boss: the arena's start is its arrival (the warning, the bar, t
   t: 92
   x: 240
   section: 6
+  incoming: 8   # step FIX6 (the user's playthrough 2026-10-30, "the boss warning is too late"): the warning box, the klaxon and the warning track open at t=84, 2 s before the station's rim enters the top edge (t=86, scrolling in with the hull), round 41's key (Level 14's); a retry from the boss checkpoint warns at the arrival
   notes:
     from: 'the ground (it scrolls in with the hull and halts at the centre (240, 160))'
     waves: 'At the arena''s start: the warning, the bar and the checkpoint; the rings, the batteries, the core and its Darts as in its spec; no other waves in the arena'
-    spawns: {dart-drone: 84}   # the Darts its rim bays launch in a typical fight (step H3: 84 at medium as measured with the core tuned, ≈ 21 streams of 4 over its ≈ 110 s): the typical haul's count
+    spawns: {dart-drone: 19}   # the Darts its rim bays launch in a typical fight (step BOSS70: the playbook's Dart surges, 8 of 12 over five fights at medium, ≈ 19; step H3 measured 84 with the timed streams): the typical haul's count
 
 radio:  # trigger: t or event; every approach line one radio page (three 22-character lines, gap check §4). Speakers Okafor, Varga, Rook (requires: escort), Ceres Hub Control and Vorne on the enemy channel (his voice's filter); the Choir is silent. The arena's clock halts, so the boss lines are events (PHASE lines: they wait for a gap, stale after 20 s, dropped at the kill); the closing lines are CLOSING lines in order (`boss-destroyed`; `delay` counts from the kill, a line waits behind the one before it; the debrief waits for the last)
   - {t: 1, speaker: Okafor, line: "Break the Sovereign's screen, Lancer. Then break the station."}
@@ -332,6 +333,11 @@ radio:  # trigger: t or event; every approach line one radio page (three 22-char
   - {event: boss-phase, phase: One ring, speaker: Rook, requires: escort, line: "One ring left. It's running out of guns.", notes: {trigger: "Second ring locked (`boss-phase` One ring)"}}
   - {event: boss-phase, phase: The core, speaker: Vorne, expression: rage, line: "Enough. You are becoming expensive.", notes: {trigger: "Third ring locked, the core opening (`boss-phase` The core), the enemy channel: cold and clipped, never raised"}}
   - {event: boss-phase, phase: The core, speaker: Varga, line: "The core is open! Its shield is thin. A Tesla hit empties it.", notes: {trigger: "The core, queued after Vorne's (`PHASE`)"}}
+  - {event: first-rail-volley, speaker: Rook, requires: escort, line: "Red petals, three lines — move!", notes: {trigger: "The core's first rail volley (`first-rail-volley`, its tell; `PHASE`), step BOSS70 (round 70)"}}
+  - {event: first-mine-ring, speaker: Okafor, line: "Mines off the rim, Lancer. Give the lights room.", notes: {trigger: "The core's first mine ring (`first-mine-ring`, its tell; `PHASE`)"}}
+  - {event: first-wreck-throw, speaker: Rook, requires: escort, line: "It's throwing its own wreckage at us!", notes: {trigger: "The core's first wreck throw (`first-wreck-throw`, its tell; `PHASE`)"}}
+  - {event: first-wreck-throw, speaker: Okafor, line: "Shoot the scrap down or get clear of it.", notes: {trigger: "The first wreck throw, queued after Rook's (`PHASE`)"}}
+  - {event: core-low, speaker: Vorne, line: "You read the Sovereign well, pilot. Read faster.", notes: {trigger: "The core's first draw below half its HP, the rests shortening (`core-low`; `PHASE`), the enemy channel"}}
   - {event: boss-destroyed, delay: 5, speaker: Okafor, line: "The Sovereign is down! Ceres orbit is ours, Aegis Wing.", notes: {trigger: "Sovereign destroyed (`boss-destroyed`, `delay: 5`, `CLOSING`), at the flash"}}
   - {event: boss-destroyed, speaker: Vorne, line: "Lancer. You are wasted on Okafor. Come to Callisto. Name your price.", notes: {trigger: "Then (`CLOSING`): steady and warm again, the enemy channel"}}
   - {event: boss-destroyed, speaker: Rook, requires: escort, line: "Funny. We were just heading your way.", notes: {trigger: "Then (`CLOSING`, with Rook)"}}
@@ -352,7 +358,7 @@ music:
     - {t: 86, stems: none, db: -40, fade: 2}
   ambience: belt-station   # the belt's station bed (round 60 S.17)
   end_jingle: mission-complete
-  boss_warning: boss-warning      # track 22 with the klaxon and the banner at the arena's start (t=92)
+  boss_warning: boss-warning      # track 22 with the klaxon and the banner 8 s before the arena's start (t=84: the boss's `incoming`, step FIX6)
   boss_track: iron-sovereign      # track 19 "Iron Sovereign" after the warning (one full mix, round 68 QH-3 a: H4 imports it), fading at the kill
   motif_after_boss: {from: 93, to: 131.5, fade_in: 3, fade_out: 3}   # track 13's motif stem alone under the closing lines (K+6 to the level's end)
 

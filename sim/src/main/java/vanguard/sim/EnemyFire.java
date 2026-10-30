@@ -547,6 +547,22 @@ final class EnemyFire {
     }
 
     /**
+     * Step BOSS70 (design/enemies/bosses/iron-sovereign, the mine ring): a line mine of {@code gun} thrown from (x, y) to
+     * (toX, toY) over {@code throwSeconds}, held there, gone after {@code lifeSeconds} untouched; refused (false) when the
+     * pool is full.
+     */
+    boolean tossMine(
+            EnemyGun gun, double x, double y, double toX, double toY, double throwSeconds, double lifeSeconds) {
+        Mine mine = mines.obtain();
+        if (mine == null) {
+            return false;
+        }
+        mine.toss(gun, x, y, toX, toY, SimStep.ticks(throwSeconds), SimStep.ticks(lifeSeconds));
+        events.add(SimEvents.Type.MINE_DROPPED, x, y, 1);
+        return true;
+    }
+
+    /**
      * A mortar lobs a blob at where the ship is now (the marker does not follow it); M5 part G: under
      * the always hook at the objective while it can be aimed at.
      */

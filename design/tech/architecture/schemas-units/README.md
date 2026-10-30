@@ -497,22 +497,32 @@ The schemas of the enemies' stat blocks and boss scripts and of the allies' file
   by the HP lever), `spiral` {`attack`, `run`, `rest`, `tell` s}, `rail` {`attack` (a `laser-line`), `below` (the core's
   HP share under which it fires)}, `bays` {`count`, `radius` px, `start` °, `from` (the launched plain air unit),
   `stream`, `every`, `gap`, `first` (s after the opening), `speed` (the unit's if not given), `spread` °, `straight` s,
-  `most_alive`, `tell` s, `skip_within` px}); a phase's **`until: {locks: n}`** (alone: the phase ends once n rings are
+  `most_alive`, `tell` s, `skip_within` px}, step BOSS70's **`pool`**: the open core's playbook {`tell` s, `rest` s,
+  `low` {`below` (an HP share), `rest` s}, `attacks`: a list of {`play` (`spiral`, `rail-volley`, `dart-surge`,
+  `mine-ring`, `wreck-throw`), `weight` (1), `spacing` (draws apart, 2: never twice running)} with each play's keys:
+  `rail-volley` `attack` (a `laser-line`: its telegraph, live time, band and hit), `lines` (3), `fan` ° (22), `origin` px
+  (30); `dart-surge` `stream` (3; the bays' launcher otherwise); `mine-ring` `from` (a line-mine layer: its mine's arming,
+  proximity, blink, blast and chain, with its difficulty hooks), `count` (8), `near`/`far` px, `throw` s (0.5), `life`
+  s (8); `wreck-throw` `wrecks` [fewest, most] ([2, 3]), `speed` px/s, `hp`, `bullet` (`heavy`), `gap` s, `most_alive`
+  (3), `life` s (5)}; with a pool the spiral's `rest` and `tell`, the `rail` and the bays' `every`, `first`, `tell`,
+  `skip_within` and the `spawn_count` hook's streams are unused: the core draws its attacks seeded by the simulation's
+  random, each after the pool's tell); a phase's **`until: {locks: n}`** (alone: the phase ends once n rings are
   locked, in any order; rising, at most the rings, the last phase on its parts). An attack's **`from`** (a boss's only:
   the unit's slug, or `{unit, attack, length}`): written with its `name`, `pattern` (the unit's: `aimed`, `laser-line`,
   `laser-sweep`), `interval`, `staggered`, `rotate`, `parts`, `only` and nothing of the unit's shape, the loader takes
   the bullet, speed, burst, homing, line or sweep from the unit's attack (a sweep at `length` px, without the unit's full
   turn), and the unit's hooks change that shape per difficulty (the SAM Nest's burst and turn rate, the Rail Bunker's
   telegraph, the Sentinel Tower's arc); a boss's `laser-line` is a rail line from its parts (`BossSpec.Pattern.LINE`,
-  `staggered` allowed). A boss attack's `only` leaves its phases on the other difficulties (the core rail's `[medium,
-  hard]`). The hook **`ring_arena`** (`speed` factor on the rings, a step's `seconds` divided by it; `arc` ° instead;
+  `staggered` allowed). A boss attack's `only` leaves its phases on the other difficulties (no ringed boss uses it since step BOSS70). The hook **`ring_arena`** (`speed` factor on the rings, a step's `seconds` divided by it; `arc` ° instead;
   `interval` factor on the battery attacks' intervals instead of the fire-rate lever; an authored `attacks.<name>.interval`
   stays final, as for a unit); the boss's `spawn_count` hook sizes the bays' streams. Checked: the arc 60–180° (each
   difficulty's), each ring across the field (2 × radius + a battery ≤ 480; at the level's boss `x` both sides), its
   battery attack a known one, a `laser-sweep` on a stepping ring only and its telegraph + sweep within the hold, each
   battery a part of its own, the SAM hatch rule (a homing battery's `hatch` shorter than its staggered turn, interval ÷
   batteries, on every difficulty), the core a part and no battery that a phase exposes, its spiral a `spiral`, its rail a
-  `laser-line`, its bays' unit a plain air unit and their tell between two streams; `locks`, `ring_arena` and `from`
+  `laser-line`, its bays' unit a plain air unit and their tell between two streams, its pool's plays each once (the
+  spiral the core's, the volley's attack a `laser-line`, the surge with bays, the mine ring a line-mine layer's with its
+  distances, the wreck throw its speed, HP, gap and a known bullet); `locks`, `ring_arena` and `from`
   only on a ringed boss (`from` on a boss).
 - **Allies** (`allies/data.yaml`): one entry per ally
   slug with `name`, `layer`, `size`, `hitbox`, `hp` (medium; the level sets difficulty variants),

@@ -125,10 +125,57 @@ public record RingSpec(
             double spiralTellSeconds,
             int rail,
             double railBelow,
-            Optional<Bays> bays) {
+            Optional<Bays> bays,
+            Optional<Pool> pool) {
+        /** Step H1b's core: no playbook (its spiral cycle, its rail and its bays' timed streams). */
+        public Core(
+                int part,
+                double glowSeconds,
+                double openingSeconds,
+                Optional<EnemySpec.Shield> shield,
+                int spiral,
+                double spiralSeconds,
+                double restSeconds,
+                double spiralTellSeconds,
+                int rail,
+                double railBelow,
+                Optional<Bays> bays) {
+            this(
+                    part,
+                    glowSeconds,
+                    openingSeconds,
+                    shield,
+                    spiral,
+                    spiralSeconds,
+                    restSeconds,
+                    spiralTellSeconds,
+                    rail,
+                    railBelow,
+                    bays,
+                    Optional.empty());
+        }
+
+        /** Step BOSS70: this core with the playbook {@code withPool}. */
+        public Core withPool(Optional<Pool> withPool) {
+            return new Core(
+                    part,
+                    glowSeconds,
+                    openingSeconds,
+                    shield,
+                    spiral,
+                    spiralSeconds,
+                    restSeconds,
+                    spiralTellSeconds,
+                    rail,
+                    railBelow,
+                    bays,
+                    withPool);
+        }
+
         public Core {
             java.util.Objects.requireNonNull(shield);
             java.util.Objects.requireNonNull(bays);
+            java.util.Objects.requireNonNull(pool);
             if (part < 0
                     || !(glowSeconds >= 0)
                     || !(openingSeconds >= 0)
@@ -145,6 +192,177 @@ public record RingSpec(
         /** The spiral's cycle: its tell, its run and its rest, s. */
         public double cycleSeconds() {
             return spiralTellSeconds + spiralSeconds + restSeconds;
+        }
+    }
+
+    /**
+     * Step BOSS70 (design/enemies/bosses/iron-sovereign, The round 70 rework, decided in round 70): the open core's
+     * attacks ({@link RingCore}'s playbook).
+     */
+    public enum Play {
+        /** The core's spiral ({@link Core#spiral()}) for its {@link Core#spiralSeconds()}. */
+        SPIRAL,
+        /** A fan of rail lines from the core through the ship's spot ({@link Volley}). */
+        VOLLEY,
+        /** Every rim bay's Dart stream at once ({@link Surge}). */
+        SURGE,
+        /** A ring of line mines thrown out from the core ({@link MineRing}). */
+        MINES,
+        /** Dead batteries' wrecks hurled at the ship ({@link WreckThrow}). */
+        WRECKS;
+
+        /** Its slug (the data's and the radio's name). */
+        public String slug() {
+            return switch (this) {
+                case SPIRAL -> "spiral";
+                case VOLLEY -> "rail-volley";
+                case SURGE -> "dart-surge";
+                case MINES -> "mine-ring";
+                case WRECKS -> "wreck-throw";
+            };
+        }
+    }
+
+    /**
+     * Step BOSS70: the open core's playbook. From its opening's end the core rests, then draws its next attack from
+     * {@code moves} by their weights with the simulation's seeded random (a replay draws the same), never the one it drew
+     * last nor one drawn fewer than its {@code spacing} draws ago; each attack starts with a {@code tellSeconds} tell
+     * ({@link SimEvents.Type#CORE_PLAY_TELL}), runs, then the core rests {@code restSeconds} ({@code lowRestSeconds} while
+     * it holds less than {@code lowBelow} of its HP) before the next draw. With a pool the core's timed spiral cycle, its
+     * rail below its share and its bays' timed streams give way: its spiral and its bays fire only in the playbook.
+     */
+    public record Pool(
+            double tellSeconds,
+            double restSeconds,
+            double lowRestSeconds,
+            double lowBelow,
+            List<Move> moves,
+            Optional<Volley> volley,
+            Optional<Surge> surge,
+            Optional<MineRing> mines,
+            Optional<WreckThrow> wrecks) {
+        public Pool {
+            moves = List.copyOf(moves);
+            java.util.Objects.requireNonNull(volley);
+            java.util.Objects.requireNonNull(surge);
+            java.util.Objects.requireNonNull(mines);
+            java.util.Objects.requireNonNull(wrecks);
+            if (!(tellSeconds >= 0)
+                    || !(restSeconds >= 0)
+                    || !(lowRestSeconds >= 0)
+                    || !(lowBelow >= 0 && lowBelow <= 1)) {
+                throw new IllegalArgumentException("a playbook has a tell, a rest, a low rest and its share: "
+                        + tellSeconds + ", " + restSeconds + ", " + lowRestSeconds + ", " + lowBelow);
+            }
+            if (moves.size() < 2) {
+                throw new IllegalArgumentException("a playbook draws from two attacks or more (never one twice)");
+            }
+            java.util.Set<Play> seen = java.util.EnumSet.noneOf(Play.class);
+            for (Move move : moves) {
+                if (!seen.add(move.play())) {
+                    throw new IllegalArgumentException("a playbook names each attack once: " + move.play());
+                }
+                boolean given =
+                        switch (move.play()) {
+                            case SPIRAL -> true;
+                            case VOLLEY -> volley.isPresent();
+                            case SURGE -> surge.isPresent();
+                            case MINES -> mines.isPresent();
+                            case WRECKS -> wrecks.isPresent();
+                        };
+                if (!given) {
+                    throw new IllegalArgumentException("a playbook's " + move.play() + " has its block");
+                }
+            }
+        }
+
+        /** Its move for {@code play}; null when it is not in the pool. */
+        public Move move(Play play) {
+            for (Move move : moves) {
+                if (move.play() == play) {
+                    return move;
+                }
+            }
+            return null;
+        }
+    }
+
+    /**
+     * Step BOSS70: an attack in the playbook, drawn by its {@code weight} and at most every {@code spacing}-th draw (2:
+     * never twice running, the least; 3: at most every third draw).
+     */
+    public record Move(Play play, double weight, int spacing) {
+        public Move {
+            java.util.Objects.requireNonNull(play);
+            if (!(weight > 0) || spacing < 2) {
+                throw new IllegalArgumentException("a move has a weight above 0 and a spacing of 2 or more: " + play);
+            }
+        }
+    }
+
+    /**
+     * Step BOSS70: the rail volley: {@code lines} rail lines of the boss's line attack {@code attack} (its telegraph, live
+     * time, band and damage), from {@code fromPx} out of the core's centre, fanned {@code fanRadians} apart and the middle
+     * one through the ship's spot at the telegraph's start ({@link CoreVolley}).
+     */
+    public record Volley(int attack, int lines, double fanRadians, double fromPx) {
+        public Volley {
+            if (attack < 0 || lines < 1 || lines > CoreVolley.MOST || !(fanRadians >= 0) || !(fromPx >= 0)) {
+                throw new IllegalArgumentException("a volley has a line attack, 1 to " + CoreVolley.MOST
+                        + " lines, a fan and an origin: " + lines);
+            }
+        }
+    }
+
+    /** Step BOSS70: the Dart surge: every rim bay at once launches a stream of {@code stream} (the bays' launcher). */
+    public record Surge(int stream) {
+        public Surge {
+            if (stream < 1) {
+                throw new IllegalArgumentException("a surge's streams carry a unit or more: " + stream);
+            }
+        }
+    }
+
+    /**
+     * Step BOSS70: the mine ring: {@code count} line mines of {@code gun} (the Minelayer's: its arming, proximity, blink,
+     * blast, ring and chain) thrown out from the core's centre at even bearings (a seeded turn), each to a seeded
+     * distance from {@code nearPx} to {@code farPx}, over {@code throwSeconds}; one untouched is gone after {@code
+     * lifeSeconds}.
+     */
+    public record MineRing(
+            EnemyGun gun, int count, double nearPx, double farPx, double throwSeconds, double lifeSeconds) {
+        public MineRing {
+            java.util.Objects.requireNonNull(gun);
+            if (gun.mine().isEmpty() || gun.mine().get().line().isEmpty()) {
+                throw new IllegalArgumentException("a mine ring throws line mines");
+            }
+            if (count < 1
+                    || !(nearPx >= 0)
+                    || !(farPx >= nearPx)
+                    || !(throwSeconds > 0)
+                    || !(lifeSeconds > throwSeconds)) {
+                throw new IllegalArgumentException("a mine ring has a count, its distances, a throw and a life");
+            }
+        }
+    }
+
+    /**
+     * Step BOSS70: the wreck throw: {@code fewest} to {@code most} (seeded) wrecks of the dead batteries on locked rings
+     * (seeded, any ring and side) are torn off and hurled at the ship's spot one after another, {@code gapSeconds} apart,
+     * each glowing that long before it flies (the first in the play's tell); a wreck is a shootable missile of {@code
+     * gun} (its speed, its contact damage, its homing spec's HP and life, no turn; at most its {@code mostAlive} in the
+     * air: a wreck due while that many fly stays on its socket). A thrown wreck leaves an empty socket; with none left the
+     * throw is out of the pool.
+     */
+    public record WreckThrow(EnemyGun gun, int fewest, int most, double gapSeconds) {
+        public WreckThrow {
+            java.util.Objects.requireNonNull(gun);
+            if (gun.homing().isEmpty()) {
+                throw new IllegalArgumentException("a thrown wreck flies as a missile");
+            }
+            if (fewest < 1 || most < fewest || !(gapSeconds > 0)) {
+                throw new IllegalArgumentException("a wreck throw hurls 1 or more wrecks, a gap apart");
+            }
         }
     }
 
@@ -305,6 +523,21 @@ public record RingSpec(
                 || core.spiral() < -1
                 || (core.spiral() >= 0 && attacks.get(core.spiral()).pattern() != BossSpec.Pattern.SPIRAL)) {
             throw new IllegalArgumentException(name + ": the core's spiral is one of its spirals");
+        }
+        if (core.pool().isPresent()) {
+            RingSpec.Pool pool = core.pool().get();
+            if (pool.move(Play.SPIRAL) != null && core.spiral() < 0) {
+                throw new IllegalArgumentException(name + ": the playbook's spiral is the core's spiral");
+            }
+            if (pool.volley().isPresent()) {
+                int a = pool.volley().get().attack();
+                if (a >= attacks.size() || attacks.get(a).pattern() != BossSpec.Pattern.LINE) {
+                    throw new IllegalArgumentException(name + ": the playbook's volley fires one of its lines");
+                }
+            }
+            if (pool.surge().isPresent() && core.bays().isEmpty()) {
+                throw new IllegalArgumentException(name + ": the playbook's surge needs the core's bays");
+            }
         }
         if (core.rail() >= attacks.size()
                 || core.rail() < -1

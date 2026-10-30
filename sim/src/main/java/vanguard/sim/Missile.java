@@ -9,6 +9,8 @@ package vanguard.sim;
 public final class Missile implements Hashed {
     /** A missile's hit box, px. */
     public static final Hitbox BOX = new Hitbox(8, 8);
+    /** Step BOSS70: a thrown wreck's hit box, px (a battery's wreck, smaller than its live box). */
+    public static final Hitbox WRECK_BOX = new Hitbox(24, 24);
 
     private EnemyGun gun;
     private EnemyGun.HomingSpec spec;
@@ -37,6 +39,11 @@ public final class Missile implements Hashed {
      * {@code always}), -1 for the ship; hashed only for an aimed launcher's missile.
      */
     private int section = -1;
+    /**
+     * Step BOSS70 (design/enemies/bosses/iron-sovereign, the wreck throw): the boss part whose wreck it is, -1 for a
+     * missile; hashed only for a wreck.
+     */
+    private int wreck = -1;
 
     /** Launched at (x, y) by {@code launcher} along {@code angle} (radians clockwise from straight down). */
     void launch(EnemyGun launcher, double startX, double startY, double angle, int id) {
@@ -58,6 +65,22 @@ public final class Missile implements Hashed {
         serial = id;
         owner = -1;
         section = -1;
+        wreck = -1;
+    }
+
+    /** Step BOSS70: it is boss part {@code part}'s thrown wreck (its box, its look). */
+    void wreck(int part) {
+        wreck = part;
+    }
+
+    /** Step BOSS70: the boss part whose thrown wreck it is; -1 for a missile. */
+    public int wreck() {
+        return wreck;
+    }
+
+    /** Its hit box: a missile's, or a thrown wreck's. */
+    public Hitbox box() {
+        return wreck >= 0 ? WRECK_BOX : BOX;
     }
 
     /** M9 part B, step B1b: launched by the unit with serial {@code shooter} (its per-shooter cap counts it). */
@@ -122,6 +145,10 @@ public final class Missile implements Hashed {
         if (spec.aimed()) {
             // M9 part D: only an aimed launcher's (the Hornet's), so the other levels hash as before.
             hash.add(section);
+        }
+        if (wreck >= 0) {
+            // Step BOSS70: only a thrown wreck, so the other levels hash as before.
+            hash.add(wreck);
         }
     }
 

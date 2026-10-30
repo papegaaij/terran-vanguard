@@ -36,6 +36,7 @@ final class UnitCues extends SoundFamily {
     private static final Set<SimEvents.Type> TYPES = EnumSet.of(
             SimEvents.Type.ENEMY_HIT,
             SimEvents.Type.ENEMY_DESTROYED,
+            SimEvents.Type.NEUTRAL_DOWN,
             SimEvents.Type.ENEMY_FIRED,
             SimEvents.Type.MINE_DROPPED,
             SimEvents.Type.MINE_BURST,
@@ -201,6 +202,9 @@ final class UnitCues extends SoundFamily {
                 // M9 part F: a Void Leech's crack, a Rail Bunker's blast over its rung.
                 leechField.destroyed(events.value(i), pan);
             }
+            // Step FIX6 (the user's playthrough 2026-10-30): a destroyed neutral craft (Level 29's Stormhawks) bursts
+            // with its kind's explosion, as a kill does.
+            case NEUTRAL_DOWN -> bank.play(explosion(looks[events.value(i)]), EXPLOSIONS, pitch(0.04), pan);
             // A heavy shot for a medium bullet: the event's value is the bullet's damage, the same
             // class boundary as its large orb.
             case ENEMY_FIRED -> {

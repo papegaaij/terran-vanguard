@@ -63,8 +63,10 @@ ACCEPTED = {
     ("relay-beacon", "bounty"): "Level 27's approved bounty 15: the secondary is its reward (accepted in round 57 C.3)",
     ("sentinel-tower", "bounty"): "the approved stat block's 40, a tower behind a hardened collar (round 65, M9 part E)",
     ("strider", "ttk"): "the approved stat block's 410 HP; a leg (0.6 s) topples it (round 65, M9 part E)",
-    ("iron-sovereign", "ttk"): "the core tuned on the autopilot's measured fight, 149 s at medium "
-                               "(accepted as built in round 68 C.1 a; M9 part H, step H3)",
+    ("minelayer", "ttk"): "280 HP so a focused fit lets it lay through its gap (the user's playthrough 2026-10-30; "
+                          "step FIX6, pending the user's review)",
+    ("iron-sovereign", "ttk"): "the HP set on the autopilot's measured fight, 144 s at medium, par 145 "
+                               "(round 70 A.1: rail 1,200, laser 1,500, core 6,600; step BOSS70)",
 }
 HOLD_SHARE = 0.6                 # a hold's cluster dies in at most this share of its window (BalanceTest, medium)
 REAR_SHARE = 0.6                 # a rear-ambush unit dies in at most this share of its flash and hold (BalanceTest, medium)

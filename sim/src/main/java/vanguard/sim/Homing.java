@@ -429,7 +429,7 @@ final class Homing {
         int nearest = -1;
         for (int i = 0; i < missiles.size(); i++) {
             Missile missile = missiles.get(i);
-            if (!missile.seekable() || !PlayField.overlaps(missile.x(), missile.y(), Missile.BOX)) {
+            if (!missile.seekable() || !PlayField.overlaps(missile.x(), missile.y(), missile.box())) {
                 continue;
             }
             boolean inReach = cone
@@ -458,7 +458,7 @@ final class Homing {
         for (int i = 0; i < missiles.size(); i++) {
             Missile missile = missiles.get(i);
             if (missile.serial() == serial) {
-                if (!PlayField.overlaps(missile.x(), missile.y(), Missile.BOX)) {
+                if (!PlayField.overlaps(missile.x(), missile.y(), missile.box())) {
                     return false;
                 }
                 targetX = missile.x();

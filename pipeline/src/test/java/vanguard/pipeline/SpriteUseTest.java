@@ -127,7 +127,8 @@ class SpriteUseTest {
 
         assertEquals(Set.of("level-30"), atlases.get("debris-lane-buoy"));
         assertEquals(Set.of("level-30"), atlases.get("debris-lane-buoy-break"));
-        assertEquals(Set.of("level-30"), atlases.get("minelayer-mine-blast"));
+        // Step BOSS70: the Iron Sovereign's mine ring throws the Minelayer's mines in Level 35 too.
+        assertEquals(Set.of("level-30", "level-35"), atlases.get("minelayer-mine-blast"));
         LevelData level30 = content.level(content.levelKey(30).orElseThrow());
         assertFalse(SpriteUse.roots(content, level30).contains("spore-mine"), "line mines only");
         assertFalse(SpriteUse.roots(content, level30).contains(SpriteUse.TOW_ROOT));

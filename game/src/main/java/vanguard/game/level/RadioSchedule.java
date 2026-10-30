@@ -124,8 +124,16 @@ public final class RadioSchedule {
             // M9 part G (design/campaign Level 34, The freighter): the Helix core's line, collected or missed, often
             // comes while Varga's call at the hold still plays (t=108 to ≈119): it waits out that line, as a phase line
             // does, instead of going stale behind it; the core's fate is never left untold.
-            case BOSS_PHASE, FIRST_SHIP_TELEGRAPH, BOSS_ARRIVAL, BOSS_DIVE, STORY_COLLECTED, STORY_MISSED ->
-                RadioQueue.Priority.PHASE;
+            // Step BOSS70 (Level 35, the core's playbook): the first volley, mine ring and wreck throw and the core's
+            // low share come on the halted arena as the phases' lines do.
+            case BOSS_PHASE,
+                    FIRST_SHIP_TELEGRAPH,
+                    BOSS_ARRIVAL,
+                    BOSS_DIVE,
+                    STORY_COLLECTED,
+                    STORY_MISSED,
+                    CORE_PLAY,
+                    CORE_LOW -> RadioQueue.Priority.PHASE;
             default -> RadioQueue.Priority.EVENT;
         };
     }

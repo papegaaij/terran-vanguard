@@ -3,7 +3,7 @@ title: Concept rounds
 design: review
 implementation: n/a
 art: chosen
-updated: 2026-10-29
+updated: 2026-10-30
 ---
 
 # Concept rounds
@@ -91,6 +91,7 @@ next to the README: `round-NN/review.html`, linked from each round's *Review* se
 | [round-67](round-67/README.md) | M9 part G, Level 34 "Salvage Run": the final art of the Warden Tank in livery and its readability on the Helix hulls (QG-1, a/b/c), the Helix core's salvage (QG-2, a/b), Level 34's backdrop, the salvage objects, briefing images and intel with game captures; four sounds; six calls the build made (the level's density); **closed 2026-10-29** (G.1 c, G.2 a, G.3 ok with G.1's shadows, S.4 a after a redo; G.4–G.7, S.1, S.3, S.2 "dock" and the calls decided earlier that day) | review | n/a | proposed |
 | [round-68](round-68/README.md) | M9 part H, Level 35 "Iron Sovereign" and Act 5's end: the boss fight's calls first (the fight's length and the core's HP flown both ways, C.1), the final art of the Iron Sovereign, Level 35's backdrop, the mass relay's flash (QH-2, a/b), the lifeboat, briefing and outro images and the intel silhouette with game clips; track 19 at full length and twelve sounds; nine calls the build made | review | n/a | proposed |
 | [round-69](round-69/README.md) | M9 part I, Act 5's close-out: Act 5 built end to end; your playthrough checklist, the Act 5 listen-through (188 lines, 29 to listen to first), seven built changes to confirm with before-and-after renderings (the stale clips of rounds 66–68 re-recorded, FIX3's and FIX4's side effects), and the calls before `v0.3` (hard's credits, the release, the playthrough saves, the Mac check, two autopilot findings, the release texts) | review | n/a | proposed |
+| [round-70](round-70/README.md) | The Act 5 playthrough's open findings (FIX6's fixes built, its trivia logged): the Iron Sovereign's rework (the HP moved from the core to the rings, measured; three core-phase variants with storyboards) and Level 29's friendly marker for the wavering Ceres Wing (four variants on game frames) with its HUD label | review | n/a | proposed |
 
 ## Design
 
@@ -186,3 +187,4 @@ before that directory is cleaned.
 | 67 | 2026-10-29 | closed | M9 part G, Level 34 "Salvage Run" (G.1–G.7 final art with game captures, S.1–S.4 four sounds, C.1–C.6 calls the build made; closed 2026-10-29: **G.1 c** (not the recommendation: round 60's black Helix hulls with a ground shadow under every liveried tank, built in FIX4), G.2 a, G.3 ok with the shadows, S.4 a; first answers: G.4–G.7 ok, S.1 a, S.3 a, S.2 "dock" (the hold clamps reuse Level 29's Dock 9 clamp release), C.1 a, C.4 a, C.2/C.3/C.5/C.6 accepted) |
 | 68 | 2026-10-29 | closed | M9 part H, Level 35 "Iron Sovereign" and Act 5's end (C.1, C.5, C.6, C.9 the boss fight's calls, C.1 flown both ways; H.1–H.7 final art with game clips, H.4 the relay's flash a/b; M.1 track 19 and S.1–S.12 sounds; C.2–C.4, C.7, C.8 calls the build made); closed 2026-10-29: all as recommended except **S.2 b** (`sovereign-step`) and **S.5 b** (`sovereign-klaxon`), switched in FIX4; C.1 a, C.5 a, C.6 accept, C.9 a (built in FIX3), H.4 a, the art ok) |
 | 69 | 2026-10-29 | closed | M9 part I, Act 5's close-out (V.1 the Act 5 listen-through, B.1–B.7 seven built changes with before-and-after renderings, Q.1–Q.4 and F.1–F.2 and R.1 the calls before `v0.3`); closed 2026-10-29: all ok / as recommended, **B.1 and B.2 with the note that the rail lines lead their target** (built in FIX5), **Q.3 none** (the user plays from their own save at Level 29), F.1 and F.2 accepted; the playthrough, its fixes and the tag are open |
+| 70 | 2026-10-30 | closed | The Act 5 playthrough's open findings (step R70): A.1 the Iron Sovereign's HP moved from the core to the rings (measured), A.2 three core-phase variants with storyboards (a the playbook recommended), B.1 Level 29's friendly marker (four variants on game frames, d = c + a recommended), B.2 its HUD label (`SPARE ALLIES` recommended); closed 2026-10-30: **A.1 ok**, **A.2 the playbook with the wreck throw as its fifth attack** ("a combination of a and b"), **B.1 d**, **B.2 b**, the intro's trivia decided; built by BOSS70 and MARK70 |

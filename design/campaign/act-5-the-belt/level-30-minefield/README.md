@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../../enemies/space/minelayer, ../../../enemies/air/gilded-gunship, ../../../enemies/air/rail-serpent, ../../../enemies/air/dart-drone, ../../../enemies/README.md, ../../../player/weapons/swarm-tail, ../../../player/wingmen, ../../../world/belt]
-updated: 2026-10-29
+updated: 2026-10-30
 ---
 
 # Level 30 – Minefield
@@ -257,9 +257,9 @@ Enemy definitions are linked per row; formation names come from the
 | 164 | 4 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 6 | front | |
 | 167 | 4 | swarm | [Asteroid Mite](../../../enemies/space/asteroid-mite/README.md) | 4 | front | 4 rocks together (2 with 2 riders, 2 with 1) |
 | 167 | 4 | swarm | [Asteroid Mite](../../../enemies/space/asteroid-mite/README.md) | 2 | front | |
+| 168.5 | 4 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front | Step FIX6: t=168.5, not 174.5 (the calm before the end). Step C2: the last Talons over the lane's end |
 | 170 | 4 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front | The last wave |
-| 172 | 4 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (left) | Step C2: on the offbeat |
-| 174.5 | 4 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front | Step C2: the last Talons over the lane's end |
+| 170.5 | 4 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (left) | Step FIX6: t=170.5, not 172 (the calm before the end). Step C2: on the offbeat |
 
 Totals: Skitter 74 · Mote Swarm 96 · Talon 69 · Asteroid Mite 56 · Minelayer 15 · Gilded Gunship 8 · Rail Serpent 4.
 <!-- /data -->
@@ -273,7 +273,7 @@ None: the level has no ground layer (`ground: none`).
 - **Mine lines**: above (*Mine lines in this level*); fifteen lines in all.
 - **Drifting rocks** ([belt hazards](../../../world/belt/README.md#hazards--set-pieces), Level 03's `debris`
   rules with belt chunks): small rocks drift at 30–60 px/s plus the scroll, break when shot (their HP in the data)
-  and pay nothing; **large** rocks are indestructible walls with contact damage (`max_large` 1 in section 2, 2 in
+  and pay nothing; **large** rocks are indestructible walls with contact damage 10 once a second (step FIX6; `max_large` 1 in section 2, 2 in
   sections 3–4, never inside a line's gap at the moment it is laid); bullets of both sides stop on both. The Mites
   ride small ones ([rock riding](../../../enemies/README.md#rock-riding)).
 
@@ -341,7 +341,7 @@ tick; Freesound only for real things (CC0/CC-BY), no bubbly or popping sounds.
 ## Credit budget
 
 Budget(30) = 700 × 1.07²⁹ ≈ **4,980** ([economy](../../../systems/economy/README.md#per-level-budget)). Data in **Act
-1 terms** (Mote 2, Skitter 5, Talon 12, Dart Drone 2, Asteroid Mite 3, Minelayer 26, Gilded Gunship 28, Rail Serpent
+1 terms** (Mote 2, Skitter 5, Talon 12, Dart Drone 2, Asteroid Mite 3, Minelayer 30 (26 before step FIX6), Gilded Gunship 28, Rail Serpent
 83 dismantled tail first, the crate 100, the secondary 100), × the act factor **6.5536**, bounties also × the scale.
 A **`bounty_scale` of 0.43** (the earlier acts' model: typical = 0.663 of the kills, half of the secret and the
 secondary; the draft's 0.45, fitted in step C2 with the offbeat waves; a Gunship counts two streams of its Darts, the
@@ -351,12 +351,12 @@ budget (table below). No boss or mid-boss, no ground targets.
 <!-- data: credit-budget -->
 | Source | Perfect run | Typical haul |
 |---|---|---|
-| Kills: Skitter 74 × 5 + Mote Swarm 96 × 2 + Talon 69 × 12 + Asteroid Mite 56 × 3 + Minelayer 15 × 26 + Gilded Gunship 8 × 28 + Rail Serpent 4 × 73 + launched Dart Drone 48 × 2 | 7,233 | 4,340 |
+| Kills: Skitter 74 × 5 + Mote Swarm 96 × 2 + Talon 69 × 12 + Asteroid Mite 56 × 3 + Minelayer 15 × 30 + Gilded Gunship 8 × 28 + Rail Serpent 4 × 73 + launched Dart Drone 48 × 2 | 7,413 | 4,448 |
 | Squad leaders: 3 × 13 extra (perfect run only) | 108 | 0 |
 | Secret: dead beacon buoy (hidden crate, 2% of budget) | 655 | 328 |
 | Secondary: stop the Gunship convoy | 655 | 328 |
-| **Total** (bounty scale 0.43) | **8,651** | **4,995** |
-| Budget(n) = the typical haul's target; typical +0 %, perfect 1.74 × budget | | 4,980 |
+| **Total** (bounty scale 0.43) | **8,831** | **5,103** |
+| Budget(n) = the typical haul's target; typical +2 %, perfect 1.77 × budget | | 4,980 |
 <!-- /data -->
 
 **Balance plan**: the plan's L30 visit buys the Swarm Tail at L2 for the rear and Rook returns
@@ -521,3 +521,18 @@ two briefing images in the [briefing](../../../ui/briefing/README.md#concept-art
   the recorded flights are unchanged. The music block gains the motif cue the Act 5 table marks "on" (from t=0, the
   base stem's start), and the game plays round 64's serpent rumble.
 - 2026-10-29 (user, [round 65](../../../concept-rounds/round-65/README.md), closed): the dead buoy freed by the beam's touch (round 64's C.1 a), recorded in a game capture, accepted with the level.
+- 2026-10-30 (step FIX6, the user's playthrough 2026-10-30: "the minelayers are too weak ... the large number of
+  collisions with asteroids and other ships nearly killed me"; power is full for every Act 5 fit by design, the Mk V
+  from L35, so no new utility): the Minelayer lays sooner and holds longer (its README: 600 px/s up its lane, 200
+  px/s across, 280 HP; the first layer lays its line through its gap against a fit aimed at it). Collisions, measured
+  with a naive pilot (holds the lower centre (240, 80), sidesteps only shots, the user's fit, three seeds;
+  `Level30Test.aNaiveFlightTouchesLittle`): **218 contact damage a run at medium before** (the large rocks 20 a
+  touch ≈ 70, the trains crossing the lower centre ≈ 90 with each car a hit, the Minelayers ≈ 25, the Mites ≈ 15),
+  **90 after** (easy 129 → 80, hard 562 → 265): the large belt rocks touch for **10**, not the `large` 20; the rear
+  train (t=122) rises up the right (x 390 to y 500, not 340 at 520) and the pincer's loops (t=145) turn at y 420/430
+  instead of 520/560, off the lower centre. The autopilot still wins 3/3 on every difficulty without retries. Decided
+  2026-10-30 (round 70: no objection).
+- 2026-10-30 (step FIX6, the user's playthrough 2026-10-30; the campaign's new end calm rule, at least 4 s from the
+  last enemy gone to the end from Act 5 on, `PacingTest`): the level's end stays; the last waves earlier: the
+  Skitter snake 172 → 170.5 and the last Talons 174.5 → 168.5; the end calm (easy/medium/hard, the autopilot with
+  the plan's fit) 0.8/0.0/0.0 s → 5.6/4.6/4.8 s. The counts, the haul and the autopilot's wins are unchanged.

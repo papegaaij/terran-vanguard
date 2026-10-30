@@ -395,6 +395,9 @@ final class ScriptRules {
                         // M9 part G (Level 34): the Helix core collected or missed.
                         case STORY_COLLECTED -> CueTrigger.STORY_COLLECTED;
                         case STORY_MISSED -> CueTrigger.STORY_MISSED;
+                        // Step BOSS70 (Level 35): the core's first rail volley, mine ring, wreck throw; its low share.
+                        case FIRST_RAIL_VOLLEY, FIRST_MINE_RING, FIRST_WRECK_THROW -> CueTrigger.CORE_PLAY;
+                        case CORE_LOW -> CueTrigger.CORE_LOW;
                     })
                     .orElse(CueTrigger.TIME);
             // Part G (LevelRules): a boss-destroyed cue's subject is the boss, a timeout cue its own

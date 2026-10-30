@@ -184,7 +184,7 @@ final class HitPasses {
         Missiles missiles = force.missiles();
         for (int i = missiles.size() - 1; i >= 0; i--) {
             Missile missile = missiles.get(i);
-            if (hull.overlaps(x, y, Missile.BOX, missile.x(), missile.y())) {
+            if (hull.overlaps(x, y, missile.box(), missile.x(), missile.y())) {
                 double damage = missile.damage();
                 missiles.destroy(i, Missiles.STRUCK);
                 if (bulwark.hit(damage, events)) {
@@ -453,7 +453,12 @@ final class HitPasses {
                 }
             }
         }
-        if (beamsHit(hull) || bossBeamsHit(hull) || linesHit(hull) || bossLinesHit(hull) || relayHit(hull)) {
+        if (beamsHit(hull)
+                || bossBeamsHit(hull)
+                || linesHit(hull)
+                || bossLinesHit(hull)
+                || volleyHit(hull)
+                || relayHit(hull)) {
             return;
         }
         // An armed spore bursts on contact with the hull, dealing its layer's attack damage.
@@ -497,7 +502,7 @@ final class HitPasses {
         Missiles missiles = force.missiles();
         for (int i = missiles.size() - 1; i >= 0; i--) {
             Missile missile = missiles.get(i);
-            if (hull.overlaps(ship.x(), ship.y(), Missile.BOX, missile.x(), missile.y())) {
+            if (hull.overlaps(ship.x(), ship.y(), missile.box(), missile.x(), missile.y())) {
                 double damage = missile.damage();
                 missiles.destroy(i, Missiles.STRUCK);
                 double lost = ship.defences().armourLost();
@@ -582,7 +587,7 @@ final class HitPasses {
         Missiles missiles = force.missiles();
         for (int i = missiles.size() - 1; i >= 0; i--) {
             Missile missile = missiles.get(i);
-            if (hull.overlaps(x, y, Missile.BOX, missile.x(), missile.y())) {
+            if (hull.overlaps(x, y, missile.box(), missile.x(), missile.y())) {
                 double damage = missile.damage();
                 missiles.destroy(i, Missiles.STRUCK);
                 if (wingman.hit(damage, ship.x(), ship.y(), events)) {
@@ -677,6 +682,32 @@ final class HitPasses {
                 if (damaged(lost, ship.defences().takeShot(line.damage(), events, ship.x(), ship.y()))) {
                     return true;
                 }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Step BOSS70 ({@link CoreVolley}): a ringed boss's core volley whose live band touches the hull deals its damage,
+     * once per line; returns whether it wrecked the ship.
+     */
+    private boolean volleyHit(Hull hull) {
+        for (int k = 0; k < setPieces.length; k++) {
+            RingArena ring = setPieces[k].ring;
+            if (ring == null || !setPieces[k].present()) {
+                continue;
+            }
+            RingCore core = ring.core().orElse(null);
+            CoreVolley volley = core == null ? null : core.volley().orElse(null);
+            int line = volley == null ? -1 : volley.strikes(hull, ship.x(), ship.y());
+            if (line < 0) {
+                continue;
+            }
+            volley.markHit(line);
+            events.add(SimEvents.Type.CORE_VOLLEY_HIT, ship.x(), ship.y(), line);
+            double lost = ship.defences().armourLost();
+            if (damaged(lost, ship.defences().takeShot(volley.damage(), events, ship.x(), ship.y()))) {
+                return true;
             }
         }
         return false;

@@ -87,10 +87,10 @@ sections:  # back to back from t = 0; each speed change eased over 2 s (ramp)
 tows:  # the dead beacon buoy (the secret): drifting down the left edge on the play plane; its housing (the tow's cable box) takes 4 hits and frees the crate (Level 07's tow rule: shots pass the rest); `beam_touch`: a beam's touch on the housing counts a hit per 0.25 s (round 64 C.1 a)
   - {t: 118, x: 60, drift: [4, -92], boat: [28, 28], pod: [20, 20], tether: [0, 0], cable: [24, 24], hits: 4, reveals: dead beacon buoy, beam_touch: true}
 
-debris:  # the belt's rocks (design/world/belt, hazards; Level 03's rules): small ones break and pay nothing, large ones are walls (contact `large` 20 once a second); bullets of both sides stop on both; sprites assets/sprites/debris-<chunk>_N (16 spin frames)
+debris:  # the belt's rocks (design/world/belt, hazards; Level 03's rules): small ones break and pay nothing, large ones are walls (contact 10 once a second, step FIX6; `large` 20 before); bullets of both sides stop on both; sprites assets/sprites/debris-<chunk>_N (16 spin frames)
   chunks:
-    belt-large-a: {size: [88, 80], damage: 20}
-    belt-large-b: {size: [66, 60], damage: 20}
+    belt-large-a: {size: [88, 80], damage: 10}   # step FIX6: 10, not the `large` 20 (the user's playthrough 2026-10-30)
+    belt-large-b: {size: [66, 60], damage: 10}
     belt-a: {size: [40, 36], hp: 6}
     belt-b: {size: [36, 32], hp: 6}
     belt-c: {size: [32, 28], hp: 6}
@@ -509,7 +509,7 @@ waves:
     count: 1
     from: rear
     warning: 3
-    paths: [[[360, 720], [340, 520], [220, 360], [110, 220], [140, 80], [-100, -40]]]
+    paths: [[[390, 720], [390, 500], [250, 340], [110, 220], [140, 80], [-100, -40]]]
     notes: "10 cars up from the bottom edge; warned 3 s ahead; Rook's six bark (t=123.5)"
   - {t: 125, formation: line abreast, enemy: talon, count: 5, from: front, speed: 130}
   - t: 128
@@ -572,7 +572,7 @@ waves:
     from: sides
     edge: left
     warning: 3
-    paths: [[[-60, 110], [100, 140], [210, 250], [260, 400], [180, 520], [-80, 580]]]
+    paths: [[[-60, 110], [100, 140], [210, 240], [250, 340], [140, 420], [-80, 460]]]
     notes: "The pincer's left train (10 cars), warned 3 s ahead at the left edge"
   - t: 145
     formation: snake
@@ -582,7 +582,7 @@ waves:
     edge: right
     warning: 3
     skip: [easy]
-    paths: [[[540, 170], [380, 200], [270, 310], [220, 460], [300, 560], [560, 620]]]
+    paths: [[[540, 170], [380, 200], [270, 290], [230, 370], [340, 430], [560, 470]]]
     notes: "The pincer's right train (10 cars), warned 3 s ahead at the right edge; easy: one train"
   - {t: 149, formation: snake, enemy: skitter, count: 6, from: front, edge: right}
   - t: 152
@@ -630,6 +630,7 @@ waves:
       rocks:
         - {at: [230, -100], drift: [0, -140]}
         - {at: [60, -80], drift: [10, -140]}
+  - {t: 168.5, formation: line abreast, enemy: talon, count: 4, from: front, speed: 130, notes: "Step FIX6: t=168.5, not 174.5 (the calm before the end). Step C2: the last Talons over the lane's end"}
   - t: 170
     formation: swarm
     enemy: mote-swarm
@@ -638,8 +639,7 @@ waves:
     speed: 200
     paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
     notes: The last wave
-  - {t: 172, formation: snake, enemy: skitter, count: 6, from: front, edge: left, notes: "Step C2: on the offbeat"}
-  - {t: 174.5, formation: line abreast, enemy: talon, count: 4, from: front, speed: 130, notes: "Step C2: the last Talons over the lane's end"}
+  - {t: 170.5, formation: snake, enemy: skitter, count: 6, from: front, edge: left, notes: "Step FIX6: t=170.5, not 172 (the calm before the end). Step C2: on the offbeat"}
 
 ground_targets: []   # none: the level has no ground layer (ground: none)
 

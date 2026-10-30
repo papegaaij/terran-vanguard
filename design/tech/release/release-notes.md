@@ -21,7 +21,7 @@ save from `v0.2` carries on: Continue opens Act 5's intro.
 | System | File |
 |---|---|
 | Windows 10/11, 64-bit | `terran-vanguard-@version@-winX64.zip` |
-| macOS, Apple Silicon (M1 and later): untested on Apple silicon, see below | `terran-vanguard-@version@-macM1.zip` |
+| macOS, Apple Silicon (M1 and later) | `terran-vanguard-@version@-macM1.zip` |
 | macOS, Intel | `terran-vanguard-@version@-macX64.zip` |
 | Linux, 64-bit x86 | `terran-vanguard-@version@-linuxX64.zip` |
 
@@ -38,9 +38,6 @@ and where the settings, saves and screenshots are kept.
   System Settings → Privacy & Security. If macOS says the app is damaged, run once in Terminal:
   `xattr -dr com.apple.quarantine "/path/to/Terran Vanguard.app"`.
 - **Linux:** if the game does not start, make it executable: `chmod +x terran-vanguard`.
-
-The Apple silicon build is made the same way as the others but has not yet been started on a
-real Mac with an M-series chip; if it will not open even after the steps above, please report it.
 
 ## Requirements
 

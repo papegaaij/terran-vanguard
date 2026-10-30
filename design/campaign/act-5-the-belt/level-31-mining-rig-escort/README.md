@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../../../allies/mining-tug, ../../../enemies/air/hornet, ../../../enemies/space/shard-drone, ../../../enemies/air/buzzsaw-drone, ../../../enemies/air/dart-drone, ../../../enemies/air/gilded-gunship, ../../../enemies/air/talon, ../../../enemies/space/asteroid-mite, ../../../enemies/ground/sam-nest, ../../../world/belt, ../../../player/wingmen, ../../../player/generator]
-updated: 2026-10-29
+updated: 2026-10-30
 ---
 
 # Level 31 – Mining Rig Escort
@@ -280,9 +280,9 @@ Draft wave table (`from`: `front`, `side (…)`, `rear` as the intel counts them
 | 170 | 6 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (right) | |
 | 171.5 | 6 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 2 | front | Step D2: a firing Talon pair on the offbeat (the beam erases the fodder within a second) |
 | 172.5 | 6 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (left) | |
-| 175 | 6 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front | |
-| 177.5 | 6 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 2 | front | Step D2: a firing Talon pair on the offbeat (the beam erases the fodder within a second) |
-| 180 | 6 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (right) | Step D2: the last wave, over the climb-out |
+| 173 | 6 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front | Step FIX6: t=173, not 175 (the calm before the end) |
+| 173.75 | 6 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 2 | front | Step FIX6: t=173.75, not 177.5 (the calm before the end). Step D2: a firing Talon pair on the offbeat (the beam erases the fodder within a second) |
+| 174 | 6 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (right) | Step FIX6: t=174, not 180 (the calm before the end). Step D2: the last wave, over the climb-out |
 
 Totals: Skitter 90 · Talon 66 · Dart Drone 45 · Mote Swarm 50 · Hornet 10 · Buzzsaw Drone 24 · Asteroid Mite 38 · Shard Drone 22 · Gilded Gunship 5.
 <!-- /data -->
@@ -581,3 +581,8 @@ the alternatives:
   autopilot loses the tug's bow in 2 of 3 runs and never makes the secondary (it still wins every run; at medium the hull
   comes home clean 3 of 3); an accepted exception, judged in the user's playthrough (the autopilot does not shield the
   tug the way a player can). No data change.
+- 2026-10-30 (step FIX6, the user's playthrough 2026-10-30; the campaign's new end calm rule, at least 4 s from the
+  last enemy gone to the end from Act 5 on, `PacingTest`): the level's end stays; the last waves earlier: the Talon
+  pair 177.5 → 173.75, the Talon line of 4 175 → 173 and the last Skitter snake 180 → 174; the end calm
+  (easy/medium/hard, the autopilot with the plan's fit) 2.9/2.1/1.3 s → 8.0/5.8/5.1 s. The counts, the haul and the
+  autopilot's wins are unchanged.

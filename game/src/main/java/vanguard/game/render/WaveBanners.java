@@ -211,20 +211,48 @@ public final class WaveBanners {
         if (opacity <= 0 || text.isEmpty()) {
             return;
         }
-        float open = openness(tick, alpha);
+        float frame = opacity * EdgeWarnings.pulse(seconds);
+        drawBand(batch, pixel, font, text, centreY, openness(tick, alpha), opacity, frame, AMBER_BAND);
+    }
+
+    /**
+     * The banner's colours: the band, its frame and text, the frame's top highlight and the text's shadow (step MARK70:
+     * the hostile amber and the friendly CDF green, {@link FriendlyBanner}).
+     */
+    record Palette(Color band, Color edge, Color highlight, Color shadow) {}
+
+    static final Palette AMBER_BAND = new Palette(BAND, AMBER, HIGHLIGHT, SHADOW);
+
+    /**
+     * Draws the banner's shape with {@code text} round {@code centreY} (play-field pixels above its bottom edge), open
+     * {@code open} (0..1), at {@code opacity}, its frame at {@code frame} (step MARK70: shared with {@link
+     * FriendlyBanner}).
+     */
+    static void drawBand(
+            SpriteBatch batch,
+            TextureRegion pixel,
+            BitmapFont font,
+            String text,
+            int centreY,
+            float open,
+            float opacity,
+            float frame,
+            Palette colours) {
         float half = HEIGHT / 2f * open;
         float bottom = Math.round(centreY - half);
         float height = Math.max(2, Math.round(2 * half));
-        batch.setColor(BAND.r, BAND.g, BAND.b, BAND.a * opacity);
+        Color band = colours.band();
+        batch.setColor(band.r, band.g, band.b, band.a * opacity);
         batch.draw(pixel, X0, bottom, WIDTH, height);
-        float frame = opacity * EdgeWarnings.pulse(seconds);
-        batch.setColor(AMBER.r, AMBER.g, AMBER.b, frame);
+        Color edge = colours.edge();
+        batch.setColor(edge.r, edge.g, edge.b, frame);
         batch.draw(pixel, X0, bottom, WIDTH, 1);
         batch.draw(pixel, X0, bottom + height - 1, WIDTH, 1);
         batch.draw(pixel, X0, bottom, 1, height);
         batch.draw(pixel, X0 + WIDTH - 1, bottom, 1, height);
         if (height > 3) {
-            batch.setColor(HIGHLIGHT.r, HIGHLIGHT.g, HIGHLIGHT.b, frame);
+            Color highlight = colours.highlight();
+            batch.setColor(highlight.r, highlight.g, highlight.b, frame);
             batch.draw(pixel, X0 + 1, bottom + height - 2, WIDTH - 2, 1);
         }
         batch.setColor(Color.WHITE);
@@ -236,9 +264,10 @@ public final class WaveBanners {
         }
         float x = Math.round(X0 + (WIDTH - Fonts.width(font, text)) / 2f);
         float top = Math.round(centreY + font.getCapHeight() / 2);
-        font.setColor(SHADOW.r, SHADOW.g, SHADOW.b, opacity);
+        Color shadow = colours.shadow();
+        font.setColor(shadow.r, shadow.g, shadow.b, opacity);
         font.draw(batch, text, x + 1, top - 1);
-        font.setColor(AMBER.r, AMBER.g, AMBER.b, opacity);
+        font.setColor(edge.r, edge.g, edge.b, opacity);
         font.draw(batch, text, x, top);
         font.setColor(Color.WHITE);
         if (open < 1) {

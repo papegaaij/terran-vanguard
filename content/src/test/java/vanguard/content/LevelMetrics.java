@@ -129,11 +129,40 @@ final class LevelMetrics {
      * enemy shots a minute (one per {@code ENEMY_FIRED} event: a fan or a burst counts once), both outside a boss
      * fight (step WB); M8 part H: nothing from the kill of a level with an armour floor on (Level 28's finale).
      */
-    record Flight(List<double[]> empty, double meanOnScreen, double shotsPerMinute) {
+    record Flight(List<double[]> empty, double meanOnScreen, double shotsPerMinute, double end) {
         /** The empty stretches longer than {@code seconds}. */
         List<double[]> pausesOver(double seconds) {
             return empty.stream()
                     .filter(stretch -> stretch[1] - stretch[0] > seconds)
+                    .toList();
+        }
+
+        /**
+         * Step FIX6 (the user's playthrough 2026-10-30: Levels 33 and 34 "end abruptly"): the calm before the level's
+         * end, s: from the last enemy gone from the screen (killed or left) to the end, the empty stretch the flight
+         * ends in (0 when an enemy is on the screen at the end).
+         */
+        double endCalm() {
+            return endCalmStretch() == null ? 0 : endCalmStretch()[1] - endCalmStretch()[0];
+        }
+
+        /** The empty stretch the flight ends in ({@link #endCalm}), or null. */
+        double[] endCalmStretch() {
+            if (empty.isEmpty()) {
+                return null;
+            }
+            double[] last = empty.getLast();
+            return last[1] >= end - 1e-9 ? last : null;
+        }
+
+        /**
+         * Step FIX6: the empty stretches longer than {@code seconds} but the one the flight ends in: from Act 5 on a
+         * level's end calm is wanted ({@link PacingTest#END_CALM_SECONDS}), not a pause of the pacing rule.
+         */
+        List<double[]> pausesBeforeEndCalm(double seconds) {
+            double[] calm = endCalmStretch();
+            return pausesOver(seconds).stream()
+                    .filter(stretch -> stretch != calm)
                     .toList();
         }
     }
@@ -206,7 +235,7 @@ final class LevelMetrics {
             if (emptySince >= 0) {
                 empty.add(new double[] {emptySince, realSeconds});
             }
-            return new Flight(empty, (double) onScreen / flown, shots / (seconds / 60));
+            return new Flight(empty, (double) onScreen / flown, shots / (seconds / 60), realSeconds);
         }
     }
 

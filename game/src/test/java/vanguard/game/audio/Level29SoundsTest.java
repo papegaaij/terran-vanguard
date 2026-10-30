@@ -20,6 +20,7 @@ import vanguard.content.SimSpecs;
 import vanguard.game.render.IceShelfFixture;
 import vanguard.game.render.SiegeUnitsFixture;
 import vanguard.game.settings.AudioSettings;
+import vanguard.sim.SimEvents;
 import vanguard.sim.SimStep;
 import vanguard.sim.Sortie;
 
@@ -157,5 +158,55 @@ class Level29SoundsTest {
         assertTrue(klaxon > relays && klaxon < relays + 1, "then the klaxon: " + klaxon);
         sounds.stopLoops();
         bank.dispose();
+    }
+
+    /**
+     * Step FIX6 (the user's playthrough 2026-10-30: the wavering Stormhawks vanished when shot): a destroyed neutral
+     * craft ({@code NEUTRAL_DOWN}, no kill) bursts with its kind's explosion. Flown to the first wavering pair,
+     * invulnerable, under the first craft and firing until it falls.
+     */
+    @Test
+    void aDestroyedWaveringStormhawkBurstsWithItsExplosion() {
+        Sortie sortie = new Sortie(
+                1,
+                SimSpecs.starterLoadout(CONTENT, Difficulty.MEDIUM),
+                SimSpecs.level(CONTENT, KEY, Difficulty.MEDIUM),
+                SimSpecs.rules(CONTENT, KEY, Difficulty.MEDIUM).withInvulnerableShip(),
+                60);
+        FlightSounds sounds =
+                new FlightSounds(bank, SiegeUnitsFixture.quietLooks(sortie), sortie.armament(), List.of());
+        boolean burst = false;
+        boolean down = false;
+        while (!down && sortie.levelSeconds() < 100) {
+            now[0] += NANOS_PER_STEP;
+            double x = 240;
+            for (int e = 0; e < sortie.enemyCount(); e++) {
+                if (sortie.enemy(e).spec().neutral()) {
+                    x = sortie.enemy(e).renderX(1);
+                    break;
+                }
+            }
+            sortie.step(IceShelfFixture.toward(sortie, x, 100));
+            sounds.step();
+            down = has(sortie, SimEvents.Type.NEUTRAL_DOWN);
+            boolean killed = has(sortie, SimEvents.Type.ENEMY_DESTROYED);
+            int before = bank.playing(Sfx.EXPLOSION_SMALL_A) + bank.playing(Sfx.EXPLOSION_SMALL_B);
+            sounds.play(sortie.events());
+            int after = bank.playing(Sfx.EXPLOSION_SMALL_A) + bank.playing(Sfx.EXPLOSION_SMALL_B);
+            burst = down && !killed && after > before;
+        }
+        assertTrue(down, "a wavering craft shot down by t=100");
+        assertTrue(burst, "its explosion plays");
+        sounds.stopLoops();
+        bank.dispose();
+    }
+
+    private static boolean has(Sortie sortie, SimEvents.Type type) {
+        for (int i = 0; i < sortie.events().size(); i++) {
+            if (sortie.events().type(i) == type) {
+                return true;
+            }
+        }
+        return false;
     }
 }

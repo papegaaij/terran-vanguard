@@ -15,6 +15,8 @@
 # (the plan's fit and Rook): the draft's 77 s fell under the window, so the core 5,000 -> 14,000 (the batteries kept: no
 # ring phase runs long), 149 s, the par 150 kept (pending round 68). The bounty is 24 % of budget(35) at Level 35's
 # measured scale (H2; re-measured in H3 with the fight won: 0.59 kept, the typical haul +1.7 %).
+# Step BOSS70 (round 70, decided 2026-10-30): A.1 the HP shift (rail 1,200, laser 1,500, core 6,600; par 145) and A.2 the
+# core's playbook (`boss.core.pool`: spiral, rail volley, Dart surge, mine ring, wreck throw; seeded draws).
 # Step H1c's naming (pending round 68): the line pattern `laser-line`, the spiral's `run`, `until: {locks: n}`; the
 # battery attacks keep their units' difficulty hooks. ART-H1's four rim bays at 60 px on the diagonals (`start: 45`).
 name: Iron Sovereign
@@ -25,9 +27,9 @@ size: [440, 440]    # the outer ring's rim at radius 220 (the core 80 px across)
 hitbox: [70, 70]    # the core's box (the rings' hulls are no hit areas)
 parts: multi
 part_list:  # the core only: the batteries come from boss.rings (appended in ring order, outer first)
-  - {name: core, offset: [0, 0], hitbox: [70, 70], hp: 14000, kind: vital, bounty: 355}   # armoured until "The core" exposes it; the rest of the 24 % after the batteries' 13 × 6; HP tuned in step H3 (draft 5,000)
+  - {name: core, offset: [0, 0], hitbox: [70, 70], hp: 6600, kind: vital, bounty: 355}   # armoured until "The core" exposes it; the rest of the 24 % after the batteries' 13 × 6; HP tuned in step H3 (draft 5,000; 14,000), round 70 A.1 6,600
 orientation: fixed  # the rings turn about the centre (their segments placed by angle); every battery's turret in 64 angles
-hp: 17960           # the parts' sum: the 13 batteries 3,960 (SAM 220 ×6, rail 330 ×4, laser 440 ×3) and the core 14,000
+hp: 17220           # the parts' sum: the 13 batteries 10,620 (SAM 220 ×6, rail 1,200 ×4, laser 1,500 ×3) and the core 6,600 (round 70 A.1)
 armour: 'the core until it opens'
 speed: 0
 machine: true       # a machine, but a boss: never stunned; the EMP Burst empties its open core's shield
@@ -40,8 +42,8 @@ attacks:
   - {name: core-fan-1, pattern: fan, bullet: small, interval: 3.0, speed: 150, count: 5, spread: 40, notes: {text: "the shut core (phases 1–3) an aimed `{pattern}` of {count} over {spread}° (`{bullet}` = {damage}, {speed} px/s) through its shutter slits every {interval} s"}}
   - {name: core-fan-2, pattern: fan, bullet: small, interval: 2.5, speed: 150, count: 5, spread: 40, notes: {text: "{interval} s in phase 2"}}
   - {name: core-fan-3, pattern: fan, bullet: small, interval: 2.0, speed: 150, count: 5, spread: 40, notes: {text: "{interval} s in phase 3, each after a 0.5 s glow"}}
-  - {name: core-spiral, pattern: spiral, bullet: small, interval: 0.2, speed: 130, arms: 2, turn_rate: 72, duration: 4, notes: {text: "the open core (phase 4) a {arms}-arm `{pattern}` (`{bullet}`, {speed} px/s, the arms turning {turn_rate}°/s, 5 bullets/s an arm) for {duration} s, then a 2 s rest, [Dart Drone](../../air/dart-drone/README.md) streams from its rim bays"}}
-  - {name: core-rail, pattern: laser-line, from: rail-bunker, interval: 6, only: [medium, hard], notes: {text: "and, below 50 % of the core's HP, its own rail line every {interval} s (none on easy)"}}
+  - {name: core-spiral, pattern: spiral, bullet: small, interval: 0.2, speed: 130, arms: 2, turn_rate: 72, duration: 4, notes: {text: "the open core (phase 4) draws its attacks from its playbook (see *Phases*): its {arms}-arm `{pattern}` (`{bullet}`, {speed} px/s, the arms turning {turn_rate}°/s, 5 bullets/s an arm) for {duration} s"}}
+  - {name: core-rail, pattern: laser-line, from: rail-bunker, interval: 6, notes: {text: "its rail volley: three of the [Rail Bunker](../../ground/rail-bunker/README.md)'s lines fanned 22° through the ship's spot (its telegraph, band and `heavy` hit), a Dart surge from all four bays, a ring of 8 [Minelayer](../../space/minelayer/README.md) mines and the wreck throw"}}
 formations:
   - {name: solo set piece}
 weak_points: []
@@ -50,12 +52,12 @@ traits: [anti-ground, piercing, homing]
 bounty: 433         # the parts' sum: core 355, the 13 batteries 6 each: 24 % of budget(35) at Level 35's bounty scale 0.59 (1,676 ÷ (6.5536 × 0.59))
 first_level: 35
 difficulty:
-  easy: {ring_arena: {arc: 90, interval: 1.3}, attacks: {core-spiral: {interval: 0.333}}}   # the arc 90°, the batteries' intervals ×1.3, the spiral's arms at 3 bullets/s; no core rail (its `only`)
-  hard: {ring_arena: {speed: 1.2, arc: 150, interval: 0.8}, spawn_count: 5, attacks: {core-spiral: {arms: 3}}}   # the rings ×1.2, the arc 150°, the intervals ×0.8, 3 spiral arms, Dart streams of 5
+  easy: {ring_arena: {arc: 90, interval: 1.3}, attacks: {core-spiral: {interval: 0.333}}}   # the arc 90°, the batteries' intervals ×1.3, the spiral's arms at 3 bullets/s; the volley's lines the Rail Bunker's easy telegraph (1.2 s)
+  hard: {ring_arena: {speed: 1.2, arc: 150, interval: 0.8}, spawn_count: 5, attacks: {core-spiral: {arms: 3}}}   # the rings ×1.2, the arc 150°, the intervals ×0.8, 3 spiral arms (spawn_count: the timed bay streams of 5, unused with the pool: the surge keeps its streams of 3 under the cap of 16)
 boss:
   kind: boss        # the act boss: the long bar
   bar_name: IRON SOVEREIGN
-  par: 150          # s from the bar to the kill: the Boss rush bonus; the autopilot's measured mean 148.7 s at medium (step H3, five seeds 145-155 s)
+  par: 145          # s from the bar to the kill: the Boss rush bonus; round 70 A.1: the measured mean 145.2 s at medium (step R70, five seeds; re-measured in step BOSS70)
   death_seconds: 5  # the batteries cook off ring by ring 0.15 s apart, the rings crack, the core implodes and blows
   rings:
     - name: outer
@@ -69,13 +71,13 @@ boss:
       segments: 8
       speed: 10
       direction: ccw
-      batteries: {count: 4, part: {hp: 330, box: [36, 36], bounty: 6}, attack: rail}
+      batteries: {count: 4, part: {hp: 1200, box: [36, 36], bounty: 6}, attack: rail}   # round 70 A.1 (330 before)
     - name: inner
       radius: 85
       segments: 6
       direction: cw
       step: {angle: 120, seconds: 4, hold: 4, tell: 0.4}   # 120° in 4 s, then a 4 s hold (the tell its last 0.4 s: the teeth flash, a clank)
-      batteries: {count: 3, part: {hp: 440, box: [32, 32], bounty: 6}, attack: laser}
+      batteries: {count: 3, part: {hp: 1500, box: [32, 32], bounty: 6}, attack: laser}   # round 70 A.1 (440 before)
   fire_arc: {degrees: 120, clamp: [30, 150]}   # centred on the bearing from the centre to the ship (90° = down), clamped to the lower half
   spin_up: 4        # s from the halt: the rings light outer → inner and spin up (invulnerable, nothing fires)
   grind: 2          # s: a locked ring grinds to a halt
@@ -86,20 +88,29 @@ boss:
     glow: 0.5       # s: the shutter slits glow before each fan
     opening: 3      # s: the petals open (untouchable, a klaxon)
     shield: 80      # the open core's hex shield (the enemy shield rule: delay 2 s, refill 50 %/s, the breaker's hold 3 s)
-    spiral: {attack: core-spiral, run: 4, rest: 2, tell: 0.6}
-    rail: {attack: core-rail, below: 0.5}
-    bays: {count: 4, radius: 60, start: 45, from: dart-drone, stream: 4, every: 5, gap: 0.4, first: 1, speed: 240, spread: 30, straight: 0.4, most_alive: 16, tell: 0.5, skip_within: 72}   # ART-H1's rim bays at 60 px on the diagonals; one bay every 5 s, the nearest the ship first (one within 72 px skips)
+    spiral: {attack: core-spiral, run: 4, rest: 2, tell: 0.6}   # with the pool only its attack and its run count (the pool's tell and rest replace the cycle)
+    bays: {count: 4, radius: 60, start: 45, from: dart-drone, stream: 4, every: 5, gap: 0.4, first: 1, speed: 240, spread: 30, straight: 0.4, most_alive: 16, tell: 0.5, skip_within: 72}   # ART-H1's rim bays at 60 px on the diagonals; with the pool only the surge launches (its stream of 3; the bays' `every`, `first`, `tell`, `skip_within` and `stream` are the timed streams', unused)
+    pool:           # step BOSS70 (round 70 A.2, a and b combined): after each attack and a 1.5 s rest (0.8 s below half the core's HP) the core draws its next (seeded), never the same twice running, each after a 0.8 s tell
+      tell: 0.8
+      rest: 1.5
+      low: {below: 0.5, rest: 0.8}
+      attacks:
+        - {play: spiral}                                                      # the reactor flares white: the spiral above for its run (4 s)
+        - {play: rail-volley, attack: core-rail, lines: 3, fan: 22, origin: 30}   # three petals glow red: three rail lines fanned 22° through the ship's spot
+        - {play: dart-surge, stream: 3, spacing: 3}                          # the four bays light gold: a stream of 3 from each (12, the Darts' cap 16); at most every third draw
+        - {play: mine-ring, from: minelayer, count: 8, near: 120, far: 220, throw: 0.5, life: 8}   # the rim's amber lights: 8 line mines thrown to 120-220 px (seeded), the Minelayer's arming, blink, blast and chain, gone after 8 s
+        - {play: wreck-throw, wrecks: [2, 3], speed: 200, hp: 60, bullet: heavy, gap: 0.8, most_alive: 3, life: 5}   # a dead battery's wreck glows gold: 2-3 wrecks (seeded) hurled at the ship's spot 0.8 s apart, 200 px/s, 60 HP, `heavy` on contact, at most 3 in the air
   phases:
     - {name: Three rings, until: {locks: 1}, attacks: [sam, rail, laser, core-fan-1]}
     - {name: Two rings, until: {locks: 2}, attacks: [sam, rail, laser, core-fan-2]}
     - {name: One ring, until: {locks: 3}, attacks: [sam, rail, laser, core-fan-3]}
-    - {name: The core, until: {parts: [core]}, attacks: [core-spiral, core-rail], exposes: [core], drop: armour patch}   # the armour patch as the phase begins
+    - {name: The core, until: {parts: [core]}, attacks: [core-spiral], exposes: [core], drop: armour patch}   # the armour patch as the phase begins; the core rail fires only in the pool's volley
 notes:
   layer: ' (the station seen from above, under the play plane: every weapon hits its parts, `anti-ground` ×2; **not hardened**, unlike the Rail Bunkers on its outer hull; no collision with the ship or the escort, who fly over it freely)'
   size: '(the outer ring''s rim at radius 220 from the centre; the core 80 px across; batteries: SAM 40×40 (hitbox 30×30), rail 48×48 (36×36), laser 44×44 (32×32))'
   parts: 'the **core** (`vital`; armoured while shut, phases 1–3); the **outer ring** (6 SAM batteries), the **middle ring** (4 rail batteries), the **inner ring** (3 laser batteries): every battery `destroyable`; the rings'' hulls are **not hit areas** (shots pass over them as over terrain)'
   orientation: '(the rings turn about the centre, their segments placed by angle; every battery''s turret in `64 angles`, aiming on its own while its mount turns with the ring)'
-  hp: 'SAM battery {boss.rings.0.batteries.part.hp} each, rail battery {boss.rings.1.batteries.part.hp} each, laser battery {boss.rings.2.batteries.part.hp} each, core 14,000; the core''s hex shield {boss.core.shield} on top (phase 4); total'
+  hp: 'SAM battery {boss.rings.0.batteries.part.hp} each, rail battery {boss.rings.1.batteries.part.hp} each, laser battery {boss.rings.2.batteries.part.hp} each, core 6,600; the core''s hex shield {boss.core.shield} on top (phase 4); total'
   armour: 'the core is armoured (shots spark grey, no damage) until it opens; open, it carries a **hex shield** of {boss.core.shield} under the [enemy shield rule](../../README.md#enemy-shields) (Q1 a: every weapon wears it down, the [Tesla Coil Pod](../../../player/weapons/tesla-coil-pod/README.md)''s `shield-breaker` empties it, the EMP Burst strips it)'
   speed: '(the scroll halts over it); the rings turn: outer {boss.rings.0.speed}°/s clockwise, middle {boss.rings.1.speed}°/s counter-clockwise, inner in steps ({boss.rings.2.step.angle}° in {boss.rings.2.step.seconds} s, then a {boss.rings.2.step.hold} s hold), each lock speeding the survivors up'
   movement: 'anchored, its centre at (240, {movement.anchored.y}) (see *Arena*)'
@@ -107,4 +118,4 @@ notes:
   bounty: ' in Act 1 terms (core 355, every battery 6); × 6.5536 (Act 5''s factor 1.6⁴) × Level 35''s `bounty_scale` 0.59 it pays **24 % of budget(35) ≈ 1,674** (see *Bounty*)'
   death: '`huge` vacuum variant: the wrecked batteries cook off ring by ring ({boss.cookoff} s apart), the core collapses and blows, the rings break into drifting segments; a {boss.death_seconds} s chain, screen flash, credit shower (see *Death*)'
   used_in: 'the L49 boss rush''s echo (see *Echoes and relatives*)'
-  difficulty: 'hard: rings ×1.2 faster, fire arc 150°, battery intervals ×0.8, the core''s spiral 3 arms, Dart streams +1, no boss checkpoint; easy: fire arc 90°, battery intervals ×1.3, the core''s spiral 2 arms at 3 bullets/s an arm, no core rail line'
+  difficulty: 'hard: rings ×1.2 faster, fire arc 150°, battery intervals ×0.8, the core''s spiral 3 arms, the volley''s telegraph 0.8 s (the Rail Bunker''s), the Minelayer''s hard mines (arming 0.8 s, rings of 10), no boss checkpoint; easy: fire arc 90°, battery intervals ×1.3, the core''s spiral 2 arms at 3 bullets/s an arm, the volley''s telegraph 1.2 s, the mines'' rings of 6'

@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../../enemies/air/talon, ../../../enemies/ground/sam-nest, ../../../enemies/space/asteroid-mite, ../../../enemies/README.md, ../../../player/wingmen, ../../../world/belt, ../../../ui/hud, ../../../story/characters]
-updated: 2026-10-29
+updated: 2026-10-30
 ---
 
 # Level 29 – Betrayal at Ceres
@@ -81,7 +81,7 @@ Stormhawks are not enemies): the Talon pincers and two Mite rock groups from the
 | Recommended traits | `spread`, `homing` |
 | Hazards | The turning station (sleeping guns wake at t≈60); drifting rocks with riders |
 | Boss / mid-boss | none |
-| Sensor-suite detail | **none**: the belt, Ceres Hub, `air` + `ground`, front · **L1**: + directions (sides), density 4, hazard "the station turns", the objective `REACH THE OUTER RING` and the secondary `HOLD FIRE` · **L2**: + Talon (new, shielded), SAM Nest (new), Asteroid Mite (new), Skitter and Mote portraits · **L3**: + `spread` and `homing` highlighted, the wave strip marking Block C and Dock 9 |
+| Sensor-suite detail | **none**: the belt, Ceres Hub, `air` + `ground`, front · **L1**: + directions (sides), density 4, hazard "the station turns", the objective `REACH THE OUTER RING` and the secondary `SPARE ALLIES` · **L2**: + Talon (new, shielded), SAM Nest (new), Asteroid Mite (new), Skitter and Mote portraits · **L3**: + `spread` and `homing` highlighted, the wave strip marking Block C and Dock 9 |
 <!-- /data -->
 
 *Varga's intel line* per sensor-suite level (must fit `IntelPanelLayoutTest`):
@@ -111,7 +111,9 @@ Stormhawks are not enemies): the Talon pincers and two Mite rock groups from the
   Stormhawks** (t=77, 98 and 140) enter, blink a white IFF light, hold their fire and peel off; the
   secondary is met when the third pair has left the screen with none of the six destroyed (a hit does
   not fail it: the craft's IFF light flashes red on a hit, as a warning), failed at once by the first one
-  destroyed. HUD counter `HOLD FIRE`, `DONE` when met. Pays **100** credits in Act 1 terms (**655** in Act 5,
+  destroyed. HUD counter **`SPARE ALLIES`** (round 70 B.2 b, step MARK70; `HOLD FIRE` until step FIX6, `SPARE WHITES` until
+  MARK70), `DONE` when met; the briefing's line "BONUS: DON'T SHOOT THE FRIENDLY CERES WING" (step MARK70: "friendly"
+  as the brackets' tag says, in place of "white-blinking"). A destroyed one bursts as a CDF craft's kill (its burst and sound). Pays **100** credits in Act 1 terms (**655** in Act 5,
   the act factor 6.5536 = 1.6⁴); the typical haul counts 50 %. Spread fire can spoil it: only the bonus is
   lost.
 
@@ -128,6 +130,31 @@ in round 60, under the [act](../README.md)'s `concept/`):
 | Look | a white IFF light blinking 1 Hz; a red flash on a hit |
 | Targeting | homing shots and Rook never pick them; Rook's and the Bulwark's shots pass through them; the player's shots and specials hit them (the Airstrike would down them) |
 | Credits | 0; never counted as enemies (density, the floor, kill ratios) |
+
+**Friendly marker (decided, round 70; built by step MARK70).** The user's playtest (2026-10-30):
+*"Radio lines often do not come at the exact moment. We need a way to recognize these ships as friendly."* (Varga's line
+at t=72.5 ends before the first pair, but a queued line can slip.) Decided in [round 70](../../../concept-rounds/round-70/README.md)
+**B.1 d**: a pre-entry banner **"FRIENDLIES INBOUND – HOLD FIRE"** in the warning banner's shape in CDF green,
+≈ 2 s before each pair (t≈75, 96, 138; code S), **in its own slot under the hostile band**, not at the same moment as the
+t=77 and t=97 pincers' amber banners (the game shows one banner at a time), **plus** HUD-green IFF corner brackets with a
+`FRIENDLY` tag under each wavering craft while it is on the screen (code S: a game-side mark for the level's spared kind),
+so the brackets keep telling once the radio and the banner are gone. The renderings are on the game's own t=75 and t=80
+frames ([concept/friendly-marker-r70-d.png](concept/friendly-marker-r70-d.png), the four side by side in
+[concept/friendly-marker-r70-abcd.png](concept/friendly-marker-r70-abcd.png)). Rejected: **a** brackets alone, **b** a green-white
+outline with bigger blinkers (faint at 1:1 on the light deck plates), **c** the banner alone (says nothing once the pair is
+among the Talons) ([concept/rejected/](concept/rejected/README.md)).
+As built (step MARK70, the [HUD](../../../ui/hud/README.md#in-the-play-field)'s rule for any `neutral` unit): the banner
+opens 2 s before each wavering wave (t=75, 96, 138 on the level clock; the pairs' first pixels t=77.2, 98.2, 140.2) and
+shows 2.5 s, **stacked** in its own slot under the hostile band, as the d rendering shows: it shows together with the
+pincers' amber banners (t=74–76.5 and t=94–96.5) for 1.5 s and 0.5 s, the hostile one on top, and never waits for
+them. The brackets sit 12 px outside the craft's hit box (corners 26 px from its middle) and follow it until it leaves
+the screen or is destroyed ([concept/friendly-marker-capture-r71-a.png](concept/friendly-marker-capture-r71-a.png)).
+
+The HUD label (**B.2 b**, decided): **`SPARE ALLIES`** (it names who to spare, matching the `FRIENDLY` tag; 12 characters,
+the panel's box holds 13 beside `2 / 6`, `DONE` or `FAILED`); `SPARE WHITES` (built in FIX6) and `DON'T SHOOT` rejected.
+With auto-fire on the player cannot stop shooting, only steer: the pairs hold ≈ 6 s in a lane the side pincers keep clear,
+so steering aside spares them and no variant needs an input change (spread fire can still spoil the bonus, as accepted in
+round 60).
 
 ## Layout
 
@@ -281,9 +308,9 @@ the screen and 88 shots a minute; one stretch over 2 s (hard one, easy two over 
 | 156 | 7 | swarm | [Asteroid Mite](../../../enemies/space/asteroid-mite/README.md) | 2 | front | Round 62: the last group's 2 one-rider rocks |
 | 157.5 | 7 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 6 | front | Step B3b: a looping swarm on the offbeat |
 | 162 | 7 | V-wing | [Talon](../../../enemies/air/talon/README.md) | 5 | front | The last wing; leader at the tip |
-| 165 | 7 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 6 | front | |
-| 168 | 7 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 2 | front | Step B3b: a firing Talon pair on the offbeat (the beam erases the fodder within a second) |
-| 170 | 7 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 2 | front | Step B3b: the last Talons, out to the outer ring |
+| 162.5 | 7 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 6 | front | |
+| 164 | 7 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 2 | front | Step FIX6: t=164, not 168 (the calm before the end). Step B3b: a firing Talon pair on the offbeat (the beam erases the fodder within a second) |
+| 165 | 7 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 2 | front | Step FIX6: t=165, not 170 (the calm before the end). Step B3b: the last Talons, out to the outer ring |
 
 Totals: Skitter 52 · Mote Swarm 102 · Asteroid Mite 48 · Talon 142 (with one cycle of the halt waves: a typical halt); the Wavering Stormhawks (6) are not enemies.
 <!-- /data -->
@@ -304,7 +331,7 @@ Totals: Skitter 52 · Mote Swarm 102 · Asteroid Mite 48 · Talon 142 (with one 
 | 5 | **[Clamp gun](../../../enemies/ground/clamp-gun/README.md)** ×4 on the prison tender's docking clamps (the halted screen's middle third: x 150 and 330, y 170 and 330) | Rook's rescue: the halt ends with the last one; bounty 10 each |
 | 7 | SAM Nest ×2 on the canyon mouth (t≈125; step B3b) | Bounty 15 each |
 | 7 | SAM Nest ×3 on the outer docks (t≈131) | Bounty 15 each |
-| 7 | SAM Nest ×4 on the outer canyon walls (t≈146 and 160; step B3b) | Bounty 15 each |
+| 7 | SAM Nest ×4 on the outer canyon walls (t≈146 and 157; step B3b, FIX6) | Bounty 15 each |
 <!-- /data -->
 
 **Clamp gun** ([its stat block](../../../enemies/ground/clamp-gun/README.md), a unit data file since step B2: the
@@ -358,10 +385,10 @@ klaxon).
 | t=14 | Varga | "Talons. Gold hexes are a light shield: keep firing through it." |
 | t=24.5 | Okafor | "The striped one leads the wing. Drop it and the rest break off." |
 | First SAM salvo (`first-homing`, t≈35) | Varga | "Helix missiles. Shoot the red-gold diamonds or outrun them." |
-| t=46 | Ceres Hub (Ceres Hub Control) | "The vote is closing. If the lights go red, those are not my guns." |
+| t=44 | Ceres Hub (Ceres Hub Control) | "The vote is closing. If the lights go red, those are not my guns." |
+| t=51.6 | Harker | "Ceres Wing, Harker. We're Ascendancy now. Clear the CDF out." |
 | t=60 | Ceres Hub (Ceres Hub Control) | "Block C just declared! The garrison is split. Their guns are hot!" |
-| t=70.5 | Harker | "Ceres Wing, Harker. We're Ascendancy now. Clear the CDF out." |
-| t=79 | Varga | "Those white blinkers are holding fire, Lancer. Let them go." |
+| t=72.5 | Varga | "Those white blinkers are holding fire, Lancer. Let them go." |
 | A wavering pair leaves (`neutral-left`, the first time) | Harker | "Who broke off? Ceres Wing, get back in line!" |
 | t=90 | Okafor | "Ceres has turned, Lancer. Fight your way down to the transport." |
 | t=101 | Ceres Hub (Ceres Hub Control) | "Dock 9's prison tender holds a CDF pilot. His fighter, too." |
@@ -427,7 +454,7 @@ mid-boss.
 | Squad leaders: 7 × 13 extra (perfect run only) | 203 | 0 |
 | Ground targets: SAM Nest 27 × 15 + Clamp gun 4 × 10 | 1,010 | 808 |
 | Secret: Supply cache (hidden crate, 2% of budget) | 655 | 328 |
-| Secondary: hold fire on the wavering Ceres Wing | 655 | 328 |
+| Secondary: don't shoot the friendly Ceres Wing | 655 | 328 |
 | **Total** (bounty scale 0.35) | **7,917** | **4,699** |
 | Budget(n) = the typical haul's target; typical +1 %, perfect 1.70 × budget | | 4,654 |
 <!-- /data -->
@@ -446,6 +473,8 @@ The squad leaders' extra 13 each (seven V-wings) is counted in the perfect run; 
   never more than two Talon wings are on the screen.
 
 ## Concept art
+
+Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 
 Round 60's proposals for the level live in their parts: the belt mood still for Ceres Hub (in the
 [belt](../../../world/belt/README.md#concept-art)), the wavering Stormhawk (under the [act](../README.md)'s `concept/`), the
@@ -469,6 +498,11 @@ launch`: the clamp gun, its clamps springing open, the gas, Rook's Ember launchi
 | [concept/station-turn-capture-r62-a.mp4](concept/station-turn-capture-r62-a.mp4) | Game capture with the game's sound: level ≈ 54–67 s, the quiet window, the relays and the klaxon, the music's turn to the full mix | chosen (round 62: the capture accepted with the part's art) |
 | [concept/rescue-capture-r62-a.png](concept/rescue-capture-r62-a.png) | Game capture: the halt (`CLAMPS 4`, Hub Control's call) and the rescue (the last clamp gun, its clamp opening, the Ember leaving the hold, Rook in his slot) | chosen (round 62: the capture accepted with the part's art) |
 | [concept/rescue-capture-r62-a.mp4](concept/rescue-capture-r62-a.mp4) | Game capture with the game's sound: the halt's start and its cycle, then the last clamp guns, the Ember's launch with Rook's sting, the Bulwark peeling away, the scroll resuming and Harker's t=133 line | chosen (round 62: the capture accepted with the part's art) |
+| [concept/friendly-marker-capture-r70-a.png](concept/friendly-marker-capture-r70-a.png) | Game capture (step R70; [recipe](concept/prompts.md#friendly-marker-r70)): t=75 (the pincer's banner) and t=80 (the first wavering pair among Talons), the base of round 70's marker renderings | chosen (round 70: the base of the renderings) |
+| [concept/friendly-marker-r70-abcd.png](concept/friendly-marker-r70-abcd.png) | The four friendly markers side by side: half-size fields over the pair's 1:1 crops | chosen (round 70: the four side by side; d picked) |
+| [concept/friendly-marker-r70-d.png](concept/friendly-marker-r70-d.png) | Marker d = c + a: the banner at t=75, the brackets at t=80 | chosen (round 70: the banner in its own slot plus the IFF brackets) |
+| [concept/friendly-marker-capture-r71-a.png](concept/friendly-marker-capture-r71-a.png) | Game capture (step MARK70; [recipe](concept/prompts.md#friendly-marker-capture-r71-a)): t=75.5, the built green banner stacked under the pincers' amber one; t=80, the IFF brackets with their `FRIENDLY` tags on the first pair, the `SPARE ALLIES` label | proposed |
+| [concept/spare-label-r70-abc.png](concept/spare-label-r70-abc.png) | The secondary's HUD label: `SPARE WHITES` (built), `SPARE ALLIES`, `DON'T SHOOT`, counting and failed, 1:1 and 2x | chosen (round 70: `SPARE ALLIES` picked; the other two labels rejected) |
 
 ## Implementation
 
@@ -489,7 +523,8 @@ launch`: the clamp gun, its clamps springing open, the gas, Rook's Ember launchi
       `Level29LooksTest.theEmberRisesFromTheHoldAndAnUnclaimedOneLeavesUpward`, `RadioTimelineLevel29Test`; round 62's
       halt and rescue capture)
 - [x] The "Hold fire" secondary: three wavering pairs (path, IFF blink, red hit flash, no fire, no contact),
-      never picked by homing shots or Rook, Rook's and the Bulwark's shots pass through; `HOLD FIRE` counter;
+      never picked by homing shots or Rook, Rook's and the Bulwark's shots pass through; `SPARE ALLIES` counter (step
+      MARK70; `SPARE WHITES` before);
       met when the third pair is gone with none destroyed, failed at the first destroyed (steps B1–B4: `HoldFireTest`,
       `Level29LooksTest.theIffLightBlinksAtOneHertz` and `theHudCountsTheWaveringCraftAndTheClamps`, `Level29Test`'s
       autopilot keeping the six alive; round 62's capture)
@@ -520,6 +555,14 @@ launch`: the clamp gun, its clamps springing open, the gas, Rook's Ember launchi
       B3b's rework the same, the halt 13.0 s on average at medium, 7.6 s easy, 19.2 s hard)
 - [x] Production art and captures for part B's round (steps ART-B, B4, B5: [round
       62](../../../concept-rounds/round-62/README.md), the captures in this part's and the units' `concept/`)
+- [x] The friendly marker (round 70 B.1 d): "FRIENDLIES INBOUND — HOLD FIRE" in green 2 s before each wavering pair,
+      stacked under the pincers' amber banners, and the IFF brackets with the `FRIENDLY` tag on each wavering craft
+      while it is on the screen (step MARK70: `Sortie.friendliesInbound`, `FriendlyBanner`, `FriendlyMarks`;
+      `FriendlyMarkerTest`: the banner 2.2 s ahead of each pair's first pixel, stacked with the pincers' banners, the
+      brackets on and off with the craft and gone at a kill; capture
+      [friendly-marker-capture-r71-a](concept/friendly-marker-capture-r71-a.png))
+- [x] The HUD label `SPARE ALLIES` and the briefing's bonus line "DON'T SHOOT THE FRIENDLY CERES WING" (round 70 B.2 b,
+      step MARK70; `data.yaml`)
 
 ## Open questions
 
@@ -663,3 +706,36 @@ launch`: the clamp gun, its clamps springing open, the gas, Rook's Ember launchi
   me?" counts as a scripted Rook line for the barks' spacing; no radio text changed.
 - 2026-10-28 (step FIX1): the music block gains the motif cue the Act 5 table marks "on" (`motif: {from: 28}`, the
   base stem's start in section 2, to the end); the theme's intro keeps its own statement under section 1.
+- 2026-10-30 (step FIX6, the user's playthrough 2026-10-30: "what does 'hold fire failed' mean? Some ships just
+  disappear when destroyed, no burst"): a destroyed wavering Stormhawk now bursts as a CDF craft's kill (its kind's
+  death and explosion sound; the game drew nothing for `NEUTRAL_DOWN`: `EventEffects.drawnAs`, `UnitCues`;
+  `LevelScreenRescueTest`, `Level29SoundsTest`). The secondary says what to do: the HUD label `SPARE WHITES` (12
+  characters, `SPARE WHITES FAILED` fits the panel's 19) and the briefing's "Don't shoot the white-blinking Ceres
+  Wing" (48 characters on the objectives line, "craft" left out to fit). Varga's warning plays before the first pair
+  can be shot: the pair's first pixel is on the screen at t≈77.2 (spawned 40 px above the top edge at 90 px/s), so
+  her line (3.7 s, the recorded words kept) moves from t=79 to **t=72.5** (ends ≈ 76.2). A line holds the radio about
+  7 s (its voice, its page, the gap), so Harker's mutiny line moves ahead of the turn, from t=70.5 to **t=51.6**
+  (Ceres Wing defects, then Block C declares at t=60), and Ceres Control's "The vote is closing" from t=46 to
+  **t=44** to make room; `RadioTimelineLevel29Test` checks the warning's end against the sim's first pixel on every
+  difficulty, and every timed line starts at most 1 s late. Decided 2026-10-30 (round 70: no objection to the trivia).
+- 2026-10-30 (step FIX6, the user's playthrough 2026-10-30; the campaign's new end calm rule, at least 4 s from the
+  last enemy gone to the end from Act 5 on, `PacingTest`): the level's end stays; the last waves earlier: the Mote
+  Swarm 165 → 162.5, the Talon pairs 168 → 164 and 170 → 165, and the outer wall's last SAM Nest pair 160 → 157 (on
+  hard the autopilot left it to scroll off); the end calm (easy/medium/hard, the autopilot with the plan's fit)
+  0.7/0.4/0.0 s → 4.7/4.9/4.2 s. The counts, the haul and the autopilot's wins are unchanged.
+- 2026-10-30 (step R70, drafted for [round 70](../../../concept-rounds/round-70/README.md); decided in the next entry): the
+  friendly marker for the wavering pairs (the radio's timing cannot carry it alone): four variants rendered on the game's
+  t=75/t=80 frames (`tools/concept/friendly_marker_r70.py`), d = c + a recommended; the label `SPARE ALLIES` recommended.
+  Found while rendering: c's banner would meet the t=77 and t=97 pincers' banners, so it gets its own slot.
+- 2026-10-30 (user, [round 70](../../../concept-rounds/round-70/README.md), closed): **B.1 d** (the pre-entry banner "FRIENDLIES
+  INBOUND – HOLD FIRE" in its own slot, not at the same moment as the t=77 and t=97 pincers' amber banners, **plus** the green
+  IFF brackets with the `FRIENDLY` tag on each wavering craft while on screen; a, b, c rejected) and **B.2 b** (the HUD label
+  `SPARE ALLIES`; `SPARE WHITES` and `DON'T SHOOT` rejected), both built by step MARK70. The intro's trivia, logged by FIX6,
+  raised no objection: decided (the Minelayer's numbers, large rocks 10, Level 30's reshaped trains, Harker's line before
+  the turn at t=51.6).
+- 2026-10-30 (step MARK70, round 70 B.1 d and B.2 b built): the friendly banner is **stacked** in its own slot under
+  the hostile band (as the d rendering shows), not timed apart from the pincers' banners: it opens 2 s before each
+  wavering wave (t=75, 96, 138) and shows with the t=77 and t=97 pincers' amber banners for 1.5 s and 0.5 s. It and the
+  brackets come from the sim's `neutral` flag (any neutral unit, no level data). The briefing's bonus line reads
+  "DON'T SHOOT THE FRIENDLY CERES WING" (42 of 48 characters) to match the `FRIENDLY` tag and `SPARE ALLIES`; the
+  label in `data.yaml`. Capture `friendly-marker-capture-r71-a` proposed.

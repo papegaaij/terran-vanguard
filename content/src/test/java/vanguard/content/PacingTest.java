@@ -73,14 +73,15 @@ class PacingTest {
         int allowed = strict ? ACT_TWO_LONG_PAUSES : LONG_PAUSES;
         Loadout loadout = strict ? strongLoadout(key, difficulty) : planLoadout(key, difficulty);
         LevelMetrics.Flight flight = fly(key, difficulty, loadout, route);
-        List<double[]> pauses = flight.pausesOver(limit);
+        // Step FIX6: from Act 5 on the end calm is wanted, not a pause.
+        List<double[]> pauses = endCalmApplies(key) ? flight.pausesBeforeEndCalm(limit) : flight.pausesOver(limit);
 
         StringBuilder text = new StringBuilder();
         for (double[] pause : pauses) {
             text.append(String.format(" %.1f-%.1f s (%.1f s)", pause[0], pause[1], pause[1] - pause[0]));
         }
         System.out.printf(
-                "Pacing %s%s %s: %.2f on the screen, %.1f shots a minute, %d pauses over %.0f s:%s%n",
+                "Pacing %s%s %s: %.2f on the screen, %.1f shots a minute, %d pauses over %.0f s:%s; end calm %.1f s%n",
                 key,
                 route.isEmpty() ? "" : " route " + route,
                 difficulty,
@@ -88,9 +89,33 @@ class PacingTest {
                 flight.shotsPerMinute(),
                 pauses.size(),
                 limit,
-                text);
+                text,
+                flight.endCalm());
+        if (endCalmApplies(key)) {
+            assertTrue(
+                    flight.endCalm() >= END_CALM_SECONDS,
+                    String.format(
+                            "%s %s: %.1f s from the last enemy gone to the end, at least %.0f",
+                            key, difficulty, flight.endCalm(), END_CALM_SECONDS));
+        }
         assumeFalse(PENDING_WAVES.contains(key), key + ": its waves' rework is pending the user's review");
         assertTrue(pauses.size() <= allowed, "pauses over " + limit + " s:" + text);
+    }
+
+    /**
+     * Step FIX6 (the user's playthrough 2026-10-30: Levels 33 and 34 "end abruptly, little to no pause after killing the
+     * last enemy"): from Act 5 on, a level gives a few seconds of calm between the last enemy gone from the screen
+     * (killed or left, the autopilot with the pacing fit) and its end ({@link LevelMetrics.Flight#endCalm}). Acts 1-4
+     * are printed only (released; unchanged).
+     */
+    static final double END_CALM_SECONDS = 4;
+
+    /** The first act the end calm is asserted for. */
+    static final int END_CALM_FIRST_ACT = 5;
+
+    /** Whether {@link #END_CALM_SECONDS} applies to level {@code key}. */
+    static boolean endCalmApplies(String key) {
+        return SimSpecs.level(CONTENT, key, Difficulty.MEDIUM).act() >= END_CALM_FIRST_ACT;
     }
 
     /**

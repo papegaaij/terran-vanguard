@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../../enemies/bosses/iron-sovereign, ../../../enemies/air/talon, ../../../enemies/air/gilded-gunship, ../../../enemies/air/hornet, ../../../enemies/air/rail-serpent, ../../../enemies/air/dart-drone, ../../../enemies/space/shard-drone, ../../../enemies/ground/rail-bunker, ../../../enemies/ground/sam-nest, ../../../world/belt, ../../../player/wingmen, ../../../story/characters/vorne, ../../../systems/economy]
-updated: 2026-10-29
+updated: 2026-10-30
 ---
 
 # Level 35 – Iron Sovereign
@@ -107,10 +107,11 @@ layer, the dust band, the station's gunmetal/charcoal and gold under the top-lef
 elements in the approach; in the arena the rings' turning and the fire arc's red band; after the kill the drifting
 ring segments.
 
-**The arena and the clock.** The boss warning (track 22) sounds at **t=88**, with the scroll's last slowing; the
+**The arena and the clock.** The boss warning (track 22, the klaxon and the box) sounds at **t=84** (the boss's
+`incoming: 8`, step FIX6), 2 s before the station's rim enters the top edge at t=86; the
 arena section starts at **t=92** (a one-second section `speed: 0, arena: true`, Level 19's yard and Level 28's
 vent), with the bar `IRON SOVEREIGN`, the boss theme and the **boss checkpoint** (none on hard). The boss's intro
-(≈ 8 s from the warning: the lights ring by ring, the spin-up, Vorne's first line) runs on to t≈96 of real time,
+(≈ 8 s from t=88: the lights ring by ring, the spin-up, Vorne's first line) runs on to t≈96 of real time,
 invulnerable until the rings reach speed. The level clock halts at the arena section's end while the station lives;
 the kill resumes it after `hold_after_boss: 6` (the 5 s death chain, the flash and the credit shower over the core,
 collectable, and one second more). **K** below is the kill: the clock reads **t=87 + K** from the moment it resumes
@@ -283,6 +284,11 @@ this table places them and sets their delays. **The closing lines are queued as 
 | Second ring locked (`boss-phase` One ring) | Rook | "One ring left. It's running out of guns." |
 | Third ring locked, the core opening (`boss-phase` The core), the enemy channel: cold and clipped, never raised | Vorne | "Enough. You are becoming expensive." |
 | The core, queued after Vorne's (`PHASE`) | Varga | "The core is open! Its shield is thin. A Tesla hit empties it." |
+| The core's first rail volley (`first-rail-volley`, its tell; `PHASE`), step BOSS70 (round 70) | Rook | "Red petals, three lines — move!" |
+| The core's first mine ring (`first-mine-ring`, its tell; `PHASE`) | Okafor | "Mines off the rim, Lancer. Give the lights room." |
+| The core's first wreck throw (`first-wreck-throw`, its tell; `PHASE`) | Rook | "It's throwing its own wreckage at us!" |
+| The first wreck throw, queued after Rook's (`PHASE`) | Okafor | "Shoot the scrap down or get clear of it." |
+| The core's first draw below half its HP, the rests shortening (`core-low`; `PHASE`), the enemy channel | Vorne | "You read the Sovereign well, pilot. Read faster." |
 | Sovereign destroyed (`boss-destroyed`, `delay: 5`, `CLOSING`), at the flash | Okafor | "The Sovereign is down! Ceres orbit is ours, Aegis Wing." |
 | Then (`CLOSING`): steady and warm again, the enemy channel | Vorne | "Lancer. You are wasted on Okafor. Come to Callisto. Name your price." |
 | Then (`CLOSING`, with Rook) | Rook | "Funny. We were just heading your way." |
@@ -316,8 +322,8 @@ Act boss: [Iron Sovereign](../../../enemies/bosses/iron-sovereign/README.md) (Q7
 batteries, fire arc, locks, the core's phase, HP, tells, the escort's rules, the death and Vorne's lines live in the
 spec. Arena notes for this level:
 
-- The arena starts at t=92 with the bar and the checkpoint; the warning sounds at t=88 with the scroll's last slowing
-  (the spec's ≈ 8 s intro begins there). Nothing slides under the station: it has scrolled in with the hull.
+- The arena starts at t=92 with the bar and the checkpoint; the warning sounds at t=84 (its `incoming: 8`, step FIX6),
+  2 s before the station's rim is on the screen (the spec's ≈ 8 s intro from the arrival). Nothing slides under the station: it has scrolled in with the hull.
 - **Traits**: `piercing` (the columns where the rings' batteries line up) and `anti-ground` (×2 on the whole station,
   a `ground` unit, not hardened); the roster's pair, kept. `homing` shots help on the batteries in the arc.
 - The checkpoint is recorded at the halt on easy and medium; none on hard (the
@@ -336,7 +342,7 @@ spec. Arena notes for this level:
 The [Act 5 music plan](../../../audio/music/README.md#act-5-music-draft-round-60)'s cue for this level:
 [track 13](../../../audio/music/README.md#track-list), the Act 5 B theme: the **base stem** in section 1, the **full mix
 from the escort screen** (t=20), Vorne's motif **on** (the Ascendancy's level), **out at the halt** over the station
-(fading t=86–88); the boss warning (track 22) at t=88 and [track 19](../../../audio/music/README.md#track-list) "Iron
+(fading t=86–88); the boss warning (track 22) at t=84 (step FIX6) and [track 19](../../../audio/music/README.md#track-list) "Iron
 Sovereign" through the fight (one full mix, no change at the core's opening: the klaxon and Vorne's line carry it,
 under the radio's duck), ending with the kill. **After the kill track 13's motif stem plays alone** under the closing
 lines (`motif_after_boss`, Level 28's hook), out with the level's end. The debrief plays the `mission-complete`
@@ -378,7 +384,10 @@ secondary, the boss and its 52 expected Darts at 100 % / 60 %); the boss's bount
 act-boss share of **24 %** (the perfect-run ≥ 1.4 × rule; Levels 21 and 28). The table's rule gives the same.
 Re-measured with the fight won (step H3: the core tuned to 14,000, the fight ≈ 149 s, its bays launching **84** Darts
 at medium): the typical haul **7,101, +1.7 %** (0.58 would hit it exactly), the perfect run 10,717 (1.53 ×): the scale
-**0.59** is kept, the boss's bounty 433 with it.
+**0.59** is kept, the boss's bounty 433 with it. Step BOSS70 (round 70 built: the HP moved from the core to the rings,
+par 145, the core's playbook): its Darts come only in the playbook's surges, ≈ **19** a fight at medium (8 surges of
+12 over five fights), the boss's `notes.spawns` 84 → 19: the typical haul **6,789, −2.8 %** (0.61 would hit it), the
+perfect run 10,197 (1.46 ×): the scale **0.59** is kept, the bounty unchanged.
 
 <!-- data: credit-budget -->
 | Source | Perfect run | Typical haul |
@@ -387,11 +396,11 @@ at medium): the typical haul **7,101, +1.7 %** (0.58 would hit it exactly), the 
 | Squad leaders: 6 × 13 extra (perfect run only) | 306 | 0 |
 | Ground targets: SAM Nest 9 × 15 + Rail Bunker 6 × 45 | 1,566 | 1,253 |
 | Boss: Iron Sovereign (core 355 + 13 batteries × 6) | 1,672 | 1,672 |
-| Boss spawns: Dart Drone 84 × 2 (a typical fight) | 672 | 403 |
+| Boss spawns: Dart Drone 19 × 2 (a typical fight) | 152 | 91 |
 | Secret: Ceres lifeboat (hidden crate, 1% of budget) | 655 | 328 |
 | Secondary: break the screen | 655 | 328 |
-| **Total** (bounty scale 0.59) | **10,723** | **7,101** |
-| Budget(n) = the typical haul's target; typical +2 %, perfect 1.54 × budget | | 6,985 |
+| **Total** (bounty scale 0.59) | **10,203** | **6,789** |
+| Budget(n) = the typical haul's target; typical -3 %, perfect 1.46 × budget | | 6,985 |
 <!-- /data -->
 
 **Balance plan**: the plan's L35 visit buys the **Mk V "Helix"** (salvaged in Level 34) and raises both Micro-missile
@@ -485,7 +494,7 @@ Prompts: [concept/prompts.md](concept/prompts.md).
 - [x] Briefing: both pages, each one screen, with their images (step H2; the images ART-H2's, round 68 H.6)
 - [x] Typical haul within ±5 % of budget(35) with the level's `bounty_scale`; the boss's share inside 20–40 %
       (`BalanceTest`), its bounty recomputed with the measured scale (step H2: scale 0.59, the boss 433, `levelReport`
-      −0.5 %; step H3 with the fight won and 84 Darts: +1.7 %, 0.59 kept; `TypicalHaulTest` 10,717)
+      −0.5 %; step H3 with the fight won and 84 Darts: +1.7 %, 0.59 kept; `TypicalHaulTest` 10,717; step BOSS70 with the playbook's 19 Darts: −2.8 %, 0.59 kept, 10,197)
 - [x] Ground targets, the lifeboat secret (20 HP trigger, hard 28, crate 100), the overdrive, the shield cell, the
       beacon's armour patch and the boss's phase-4 patch (step H2; the autopilot shoots the lifeboat open, step H3; step
       H5's capture read the capsule as drawn whole after it is shot open; step FIX3 found the open frames do play (the
@@ -596,3 +605,15 @@ Approved in round 60 (the gap analysis's questions this level follows):
   opening) and **B.6 ok** (the tenders kept grey-gold, as accepted in round 68's H.3); the clips are `chosen`.
   **B.1 ok**, with the note that the rail lines must lead the ring's turn: built in step FIX5 (the Iron Sovereign's
   page).
+- 2026-10-30 (step FIX6, the user's playthrough 2026-10-30: "the boss warning is too late, it should show before the
+  boss"): the station's rim enters the top edge at t=86 (it scrolls in with the hull, 440 px across, its centre at
+  y 758), while the warning box, the klaxon and the warning track opened at its arrival (t=92), 6 s after. The boss
+  placement takes round 41's `incoming: 8` (Level 14's key): the warning opens at **t=84**, 2 s before the first
+  pixel, on every difficulty (`Level35Test.theWarningOpensBeforeTheStationIsOnTheScreen`, from the sim); the box
+  closes after its 5 s as the station comes in. A retry from the boss checkpoint warns at the arrival. The fight is
+  unchanged (its rework is a later step).
+- 2026-10-30 (step BOSS70): round 70's Sovereign rework built ([the boss](../../../enemies/bosses/iron-sovereign/README.md#the-round-70-rework-decided-round-70)):
+  the HP shift (par 145; the fight 144.3 s at medium over five seeds) and the core's playbook; five boss lines added
+  (Rook at the first rail volley and the first wreck throw, Okafor at the first mine ring and after the first throw,
+  Vorne at the core's half: the events `first-rail-volley`, `first-mine-ring`, `first-wreck-throw`, `core-low`); the
+  boss's typical Darts 84 → 19 (the surges only), the typical haul −2.8 %, the scale 0.59 kept.

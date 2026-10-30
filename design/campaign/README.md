@@ -3,7 +3,7 @@ title: Campaign
 design: approved
 implementation: in-progress
 art: none
-updated: 2026-10-29
+updated: 2026-10-30
 ---
 
 # Campaign
@@ -69,6 +69,10 @@ consecutive levels.
   the Skitter streams. Levels 11–17 were measured below it when it came in and keep
   the older rule until their waves are reworked (`PacingTest.PENDING_ACT_TWO_RULE`, pending the
   user's review).
+- **A calm before the end** (the user's Act 5 playthrough, 2026-10-30: Levels 33 and 34 "end abruptly"): from
+  Act 5 on a level gives at least **4 s** between the last enemy gone from the screen (killed or left, the
+  autopilot with the pacing fit) and its end; that stretch is not a pause of the rules above. `PacingTest` asserts
+  it (`LevelMetrics.Flight.endCalm`) and `levelReport` prints it for every level; Acts 1–4 are reported only.
 - **Level length**: 3–5 minutes of scroll plus the boss fight. Act 1 levels sit near 3 minutes;
   Act 7 levels near 5.
 - **Objective types**: `reach-end` (default), `escort`, `defend` (scroll halts and waves come
@@ -318,3 +322,6 @@ criteria), Open questions, Decisions. The worked example is
   act's Contents summary names the betrayal in the open; the Hunter drone moves from L29 to Act 6 (Q12 c); the
   Act 5 items name their M9 parts. The act's density band from the drafts is 86–114 a minute at medium (the
   minimum 70 holds); L34 stays the breather (density 2, ≈ 86 a minute); no mid-boss in Act 5.
+- 2026-10-30 (step FIX6, the user's playthrough 2026-10-30): the end calm rule above (at least 4 s from Act 5 on).
+  Measured with the autopilot before the step, medium: L29 0.4 s, L30 0, L31 2.1, L32 1.3, L33 0.2, L34 0 (L35 49.5,
+  its boss's closing lines); every Act 5 level's last waves moved earlier (no end moved; the levels' Decisions).

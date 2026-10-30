@@ -437,6 +437,7 @@ waves:
   - {t: 161, formation: snake, enemy: skitter, count: 5, from: front, edge: left}
   - {t: 163.25, formation: line abreast, enemy: talon, count: 3, from: front, speed: 130, notes: "Step F2: a firing Talon group on the offbeat (the beam erases the popcorn within a second)"}
   - {t: 165, formation: line abreast, enemy: talon, count: 4, from: front, speed: 130}
+  - {t: 167, formation: line abreast, enemy: talon, count: 4, from: front, speed: 130, notes: "Step FIX6: t=167, not 172.5 (the calm before the end). Step F2: the last Talons over clear rock"}
   - t: 168
     formation: swarm
     enemy: asteroid-mite
@@ -448,9 +449,8 @@ waves:
       rocks:
         - {at: [130, -30], drift: [10, -180]}
         - {at: [340, -70], drift: [-10, -180]}
+  - {t: 169.5, formation: line abreast, enemy: talon, count: 2, from: front, speed: 130, notes: "Step FIX6: t=169.5, not 175.5 (the calm before the end). Step F2: a firing Talon pair on the offbeat (the beam erases the popcorn within a second)"}
   - {t: 171, formation: snake, enemy: skitter, count: 5, from: front, edge: right, notes: "The last wave; the level ends at t=178"}
-  - {t: 172.5, formation: line abreast, enemy: talon, count: 4, from: front, speed: 130, notes: "Step F2: the last Talons over clear rock (no stretch over 2 s before the end)"}
-  - {t: 175.5, formation: line abreast, enemy: talon, count: 2, from: front, speed: 130, notes: "Step F2: a firing Talon pair on the offbeat (the beam erases the popcorn within a second)"}
 
 ground_targets:  # at: [t, x], when it enters at the top edge and its x (ART-F2's places: the bunkers on the faces' pads, Claim 114 on its ledge)
   - target: First bunker
@@ -539,7 +539,7 @@ radio:  # trigger: t or event; every timed line one radio page (three 22-charact
   - {t: 137, speaker: Okafor, line: "Then he's alone in it. Good. Leeches from every side now."}
   - {t: 150, speaker: Rook, requires: escort, line: "Lancer, you've got passengers. Shake 'em loose!"}
   - {t: 164, speaker: Okafor, line: "Clear rock ahead. The graveyard next, then the Sovereign."}
-  - {event: secondary-objective, speaker: Okafor, line: "Field's clean. Not one leech left to follow us home.", notes: {trigger: "Secondary met (at the end)"}}
+  - {event: secondary-objective, not_before: 172.5, speaker: Okafor, line: "Field's clean. Not one leech left to follow us home.", notes: {trigger: "Secondary met, held to t=172.5: after the last leech, in the calm before the end (step FIX6, the user's choice)"}}
 
 objectives:
   primary: reach-end

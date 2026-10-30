@@ -213,11 +213,20 @@ final class EventEffects {
         sondeCollect = optionalFrames(services, SONDE_COLLECT);
     }
 
+    /**
+     * The event whose effects event type {@code type} draws: a destroyed neutral craft (Level 29's wavering Stormhawks,
+     * {@link SimEvents.Type#NEUTRAL_DOWN}) bursts as its kind's kill does (step FIX6: the user's playthrough
+     * 2026-10-30, they vanished); every other type draws its own.
+     */
+    static SimEvents.Type drawnAs(SimEvents.Type type) {
+        return type == SimEvents.Type.NEUTRAL_DOWN ? SimEvents.Type.ENEMY_DESTROYED : type;
+    }
+
     /** Event {@code i}'s effects (in the step's event order, so the effects start in it). */
     void react(SimEvents events, int i) {
         double x = events.x(i);
         double y = events.y(i);
-        switch (events.type(i)) {
+        switch (drawnAs(events.type(i))) {
             case ENEMY_HIT -> {
                 // M8 part A: a harpoon's impact is DeepWaterLooks' (its cavity under it).
                 if (!weaponLooks.ownImpact(events.value(i)) && !waterImpact(events.value(i), x, y)) {

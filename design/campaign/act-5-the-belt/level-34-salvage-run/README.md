@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../../enemies/ground/warden-tank, ../../../enemies/air/talon, ../../../enemies/air/needler, ../../../enemies/space/asteroid-mite, ../../../player/generator, ../../../player/systems, ../../../world/belt, ../../../player/wingmen, ../../../systems/economy]
-updated: 2026-10-29
+updated: 2026-10-30
 ---
 
 # Level 34 – Salvage Run
@@ -266,12 +266,12 @@ Wave table (`front (left)`: from the front at that side):
 | 166.5 | 5 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 3 | front | Step G2: a firing Talon group on the offbeat (the beam erases the popcorn within a second) |
 | 168 | 5 | swarm | [Asteroid Mite](../../../enemies/space/asteroid-mite/README.md) | 4 | front | |
 | 169.5 | 5 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 3 | front | Step G2: a firing Talon group on the offbeat (the beam erases the popcorn within a second) |
+| 170.25 | 5 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 3 | front | Step FIX6: t=170.25, not 183 (the calm before the end). Step G2: a firing Talon group on the offbeat (the beam erases the popcorn within a second) |
 | 171 | 5 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 6 | front | |
 | 173 | 6 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 3 | front | Step G2: a firing Talon group on the offbeat (the beam erases the popcorn within a second) |
+| 174.5 | 6 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 3 | front | Step FIX6: t=174.5, not 177 (the calm before the end). Step G2: a firing Talon group on the offbeat (the beam erases the popcorn within a second) |
 | 175 | 6 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (right) | The last wave; the level ends at t=186 |
-| 177 | 6 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 3 | front | Step G2: a firing Talon group on the offbeat (the beam erases the popcorn within a second) |
-| 180.5 | 6 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 3 | front | Step G2: a firing Talon group on the offbeat (the beam erases the popcorn within a second) |
-| 183 | 6 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 3 | front | Step G2: a firing Talon group on the offbeat (the beam erases the popcorn within a second) |
+| 176 | 6 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 3 | front | Step FIX6: t=176, not 180.5 (the calm before the end). Step G2: a firing Talon group on the offbeat (the beam erases the popcorn within a second) |
 
 Totals: Skitter 56 · Talon 160 · Asteroid Mite 48 · Mote Swarm 84 · Needler 32 · Warden Tank 18 · Stinger 9.
 <!-- /data -->
@@ -586,3 +586,8 @@ Approved in round 60 (the gap analysis's questions this level follows):
   salvage's moment. **B.3 ok** (the liveried tanks' shadows on the black Helix hulls, G.1 c as built) and **B.5 ok**
   (the far Helix hulk and `far-wreck-b` black with the near hulls: one Helix colour in the level). The Concept art rows
   of round 69 are `chosen`.
+- 2026-10-30 (step FIX6, the user's playthrough 2026-10-30; the campaign's new end calm rule, at least 4 s from the
+  last enemy gone to the end from Act 5 on, `PacingTest`): the level's end stays; the last Talon groups earlier: 177
+  → 174.5, 180.5 → 176 and 183 → 170.25 (the user: "little to no pause after killing the last enemy"); the end calm
+  (easy/medium/hard, the autopilot with the plan's fit) 1.3/0.0/0.0 s → 7.8/7.1/4.8 s. The counts, the haul and the
+  autopilot's wins are unchanged.

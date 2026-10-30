@@ -132,8 +132,9 @@ class TypicalHaulTest {
                         // +0.6 % at 0.35; the README's credit table 7,889 counts the leaders' extra by hand)
                         Map.entry(29, 7_924),
                         // M9 part C (step C2): the README's waves with the offbeat waves, a Gunship's Darts as two
-                        // streams, the scale fitted to 0.43 (levelReport: typical +0.3 %)
-                        Map.entry(30, 8_654),
+                        // streams, the scale fitted to 0.43 (levelReport: typical +0.3 %); step FIX6: the Minelayer's
+                        // bounty 30, not 26
+                        Map.entry(30, 8_834),
                         // M9 part D (step D2): the README's waves with the offbeat waves and rock groups, a Gunship's
                         // Darts as two streams, each tug section home paid, the scale fitted to 0.36 (levelReport:
                         // typical -0.5 %)
@@ -155,7 +156,8 @@ class TypicalHaulTest {
                         // Darts
                         // in a typical fight (the core tuned to 14,000), the lifeboat's crate and the secondary at the
                         // scale 0.59 (levelReport 10,717; step H2's 10,467 counted 52 Darts)
-                        Map.entry(35, 10_717)),
+                        // Step BOSS70: the Sovereign's typical Darts 84 → 19 (the playbook's surges).
+                        Map.entry(35, 10_197)),
                 perfect);
     }
 

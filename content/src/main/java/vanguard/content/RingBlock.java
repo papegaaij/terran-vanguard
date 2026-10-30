@@ -141,11 +141,82 @@ public sealed interface RingBlock permits EnemyData {
             Optional<Double> shield,
             Optional<CoreSpiral> spiral,
             Optional<CoreRail> rail,
-            Optional<BaysData> bays) {
+            Optional<BaysData> bays,
+            Optional<PoolData> pool) {
         public CoreData {
             Check.notNegative("glow", glow);
             Check.notNegative("opening", opening);
             shield.ifPresent(s -> Check.positive("shield", s));
+        }
+    }
+
+    /**
+     * Step BOSS70 (round 70): the open core's playbook ({@code boss.core.pool}): after each attack the core rests {@code
+     * rest} s ({@code low.rest} s below {@code low.below} of its HP), then draws its next from {@code attacks} by their
+     * weights, never the same twice running (an attack's {@code spacing}: at most every that many draws), each after a
+     * {@code tell} s tell. With a pool the core's timed spiral cycle ({@code spiral}'s {@code rest} and {@code tell}), its
+     * {@code rail} and its bays' timed streams ({@code bays}' {@code every} and {@code first}) give way to it.
+     */
+    record PoolData(double tell, double rest, Optional<LowRest> low, List<PlayData> attacks) {
+        public PoolData {
+            Check.notNegative("tell", tell);
+            Check.notNegative("rest", rest);
+            Check.that(attacks != null && attacks.size() >= 2, "a pool draws from two attacks or more");
+            attacks = List.copyOf(attacks);
+        }
+    }
+
+    /** Step BOSS70: the shorter {@code rest} s below {@code below} of the core's HP. */
+    record LowRest(double below, double rest) {
+        public LowRest {
+            Check.that(below > 0 && below <= 1, "low.below: a share above 0, at most 1, was " + below);
+            Check.notNegative("low.rest", rest);
+        }
+    }
+
+    /**
+     * Step BOSS70: an attack in the playbook, its {@code play} one of {@code spiral} (the core's spiral for its run),
+     * {@code rail-volley} ({@code lines} of the line {@code attack} fanned {@code fan} ° apart through the ship's spot,
+     * from {@code origin} px out of the centre), {@code dart-surge} (every bay a stream of {@code stream}), {@code
+     * mine-ring} ({@code count} line mines of unit {@code from}'s mine attack thrown to {@code near}–{@code far} px over
+     * {@code throw} s, gone after {@code life} s) or {@code wreck-throw} ({@code wrecks} [fewest, most] dead batteries'
+     * wrecks hurled {@code gap} s apart at {@code speed} px/s, {@code hp} HP, its {@code bullet} on contact, {@code life}
+     * s, at most {@code most_alive} in the air); its {@code weight} (1 if not given) and {@code spacing} (2 if not given:
+     * never twice running).
+     */
+    record PlayData(
+            String play,
+            Optional<Double> weight,
+            Optional<Integer> spacing,
+            Optional<String> attack,
+            Optional<Integer> lines,
+            Optional<Double> fan,
+            Optional<Double> origin,
+            Optional<Integer> stream,
+            Optional<String> from,
+            Optional<Integer> count,
+            Optional<Double> near,
+            Optional<Double> far,
+            @JsonProperty("throw") Optional<Double> toss,
+            Optional<Double> life,
+            Optional<Span> wrecks,
+            Optional<Double> speed,
+            Optional<Double> hp,
+            Optional<String> bullet,
+            Optional<Double> gap,
+            Optional<Integer> mostAlive) {
+        /** The plays by their slugs. */
+        static final List<String> PLAYS = List.of("spiral", "rail-volley", "dart-surge", "mine-ring", "wreck-throw");
+
+        public PlayData {
+            Check.that(PLAYS.contains(play), "play: one of " + PLAYS + ", was " + play);
+            weight.ifPresent(w -> Check.positive("weight", w));
+            spacing.ifPresent(n -> Check.that(n >= 2, "spacing: 2 or more (never twice running), was " + n));
+        }
+
+        /** The simulation's play. */
+        vanguard.sim.RingSpec.Play sim() {
+            return vanguard.sim.RingSpec.Play.values()[PLAYS.indexOf(play)];
         }
     }
 

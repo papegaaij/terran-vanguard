@@ -308,6 +308,31 @@ final class BossChecks extends ContentChecks {
                         "radio[" + i + "].event",
                         "first-telegraph in a level without a boss with lanes or a flame cone");
             }
+            if (event == LevelData.CueEvent.FIRST_RAIL_VOLLEY
+                    || event == LevelData.CueEvent.FIRST_MINE_RING
+                    || event == LevelData.CueEvent.FIRST_WRECK_THROW
+                    || event == LevelData.CueEvent.CORE_LOW) {
+                // Step BOSS70: a core play's cue needs a ringed boss whose playbook has that play.
+                String play =
+                        switch (event) {
+                            case FIRST_RAIL_VOLLEY -> "rail-volley";
+                            case FIRST_MINE_RING -> "mine-ring";
+                            case FIRST_WRECK_THROW -> "wreck-throw";
+                            default -> null;
+                        };
+                Optional<EnemyData.PoolData> pool = boss.flatMap(EnemyData::boss)
+                        .flatMap(EnemyData.BossData::core)
+                        .flatMap(EnemyData.CoreData::pool);
+                if (pool.isEmpty()
+                        || (play != null
+                                && pool.get().attacks().stream()
+                                        .noneMatch(p -> p.play().equals(play)))) {
+                    problem(
+                            level,
+                            "radio[" + i + "].event",
+                            event + " in a level without a ringed boss whose core's pool has it");
+                }
+            }
             if (event == LevelData.CueEvent.FIRST_SHIP_TELEGRAPH
                     && (!lanes || level.convoy().isEmpty())) {
                 problem(

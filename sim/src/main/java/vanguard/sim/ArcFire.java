@@ -159,7 +159,7 @@ final class ArcFire {
         for (int i = 0; i < missiles.size(); i++) {
             Missile missile = missiles.get(i);
             if (!missile.seekable()
-                    || !PlayField.overlaps(missile.x(), missile.y(), Missile.BOX)
+                    || !PlayField.overlaps(missile.x(), missile.y(), missile.box())
                     || !inSpread(x, y, missile.x(), missile.y(), weapon)) {
                 continue;
             }

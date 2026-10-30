@@ -134,6 +134,30 @@ public final class Missiles {
         return true;
     }
 
+    /** Step BOSS70: the owner of a ringed boss's thrown wrecks (its gun's most alive counts them). */
+    static final int WRECKS = -3;
+
+    /**
+     * Step BOSS70 (design/enemies/bosses/iron-sovereign, the wreck throw): boss part {@code part}'s wreck hurled from (x,
+     * y) at (shipX, shipY) as a missile of {@code gun} (its speed, damage, HP and life; it does not turn), owned by the
+     * {@link #WRECKS}: left out while its gun's most thrown wrecks fly. Returns whether it was launched.
+     */
+    boolean launchWreck(double x, double y, EnemyGun gun, double shipX, double shipY, int part) {
+        if (inFlightOf(WRECKS) >= gun.homing().orElseThrow().mostAlive()) {
+            return false;
+        }
+        Missile missile = pool.obtain();
+        if (missile == null) {
+            return false;
+        }
+        double heading = StrictMath.atan2(-(shipX - x), -(shipY - y));
+        missile.launch(gun, x, y, heading, launched++, medium != null && medium.wet() ? medium.bulletSpeed() : 1);
+        missile.owner(WRECKS);
+        missile.wreck(part);
+        events.add(SimEvents.Type.MISSILE_LAUNCHED, x, y, missile.serial());
+        return true;
+    }
+
     /**
      * M8 part G (design/enemies/naval/depth-hunter, Attack; m8g-gaps.md §1.1): one missile (a torpedo) of {@code gun}
      * from (x, y) along {@code heading} (radians clockwise from straight down: the unit's facing), not snapped to the
@@ -224,9 +248,9 @@ public final class Missiles {
             }
             if (!missile.fly(targetX, targetY)) {
                 destroy(i, FIZZLED);
-            } else if (flare >= 0 && Flares.BOX.overlaps(targetX, targetY, Missile.BOX, missile.x(), missile.y())) {
+            } else if (flare >= 0 && Flares.BOX.overlaps(targetX, targetY, missile.box(), missile.x(), missile.y())) {
                 destroy(i, DECOYED);
-            } else if (section >= 0 && hull.touches(section, missile.x(), missile.y(), Missile.BOX)) {
+            } else if (section >= 0 && hull.touches(section, missile.x(), missile.y(), missile.box())) {
                 hull.hit(section, hull.spec().missile());
                 destroy(i, ON_ALLY);
             } else if (!PlayField.overlaps(missile.x(), missile.y(), FAR)) {
@@ -241,6 +265,10 @@ public final class Missiles {
     void destroy(int index, int cause) {
         Missile missile = pool.get(index);
         events.add(SimEvents.Type.MISSILE_DESTROYED, missile.x(), missile.y(), cause);
+        if (missile.wreck() >= 0 && cause != FIZZLED) {
+            // Step BOSS70: a thrown wreck breaks into debris.
+            events.add(SimEvents.Type.CORE_WRECK_BROKEN, missile.x(), missile.y(), cause);
+        }
         pool.free(index);
     }
 

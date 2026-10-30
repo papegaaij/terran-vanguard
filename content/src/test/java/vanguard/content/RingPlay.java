@@ -2,14 +2,17 @@ package vanguard.content;
 
 import vanguard.sim.BossLines;
 import vanguard.sim.BossSpec;
+import vanguard.sim.CoreVolley;
 import vanguard.sim.Enemy;
 import vanguard.sim.EnemyBullet;
 import vanguard.sim.EnemySpec;
 import vanguard.sim.Layer;
+import vanguard.sim.Mine;
 import vanguard.sim.Missile;
 import vanguard.sim.PlayField;
 import vanguard.sim.RingArena;
 import vanguard.sim.RingCore;
+import vanguard.sim.RingSpec;
 import vanguard.sim.SetPiece;
 import vanguard.sim.SimStep;
 import vanguard.sim.Sortie;
@@ -23,8 +26,10 @@ import vanguard.sim.Sortie;
  * crossed yet), at least {@link #BAY_CLEAR} px from the nearest rim bay once the core opens, and nearest its line. Its line:
  * the armed batteries first (inside the fire arc: they shoot at it), the one low on the screen in a column where other
  * batteries line up above it (the beam burns the lowest and goes on to the next), led by its ring's turn; once the core is
- * open the core, a bay Dart diving at it in reach first. It holds {@link #STAND_Y} below the station. Allocation-free and
- * stateless.
+ * open the core, a bay Dart diving at it in reach first. It holds {@link #STAND_Y} below the station. Step BOSS70 (round
+ * 70's playbook): it also keeps off the core volley's lines (as a rail line's), its centre out of a thrown line mine's
+ * proximity (and its hull out of a blinking one's blast), and its hull off the thrown wrecks (as missiles, by their
+ * box). Allocation-free and stateless.
  */
 final class RingPlay {
     private RingPlay() {}
@@ -71,6 +76,10 @@ final class RingPlay {
     static final double DART_REACH_Y = 170;
 
     static final double DART_REACH_X = 90;
+    /** Step BOSS70: the cost of each sample with its centre inside a live mine's proximity (and margin). */
+    static final double IN_PROXIMITY = 300;
+    /** Step BOSS70: the margin kept round a mine's proximity and a blinking mine's blast, px. */
+    static final double MINE_MARGIN = 10;
 
     /** The ringed boss present, engaged and alive (Level 35's Iron Sovereign); null without one. */
     static SetPiece ringedBoss(Sortie sortie) {
@@ -244,8 +253,8 @@ final class RingPlay {
                         MovePlanner.gap(
                                 mx - x,
                                 my - y,
-                                DarkPlay.HULL_X + Missile.BOX.width() / 2,
-                                DarkPlay.HULL_Y + Missile.BOX.height() / 2));
+                                DarkPlay.HULL_X + missile.box().width() / 2,
+                                DarkPlay.HULL_Y + missile.box().height() / 2));
             }
             for (int i = 0; i < sortie.enemyCount(); i++) {
                 Enemy enemy = sortie.enemy(i);
@@ -261,6 +270,17 @@ final class RingPlay {
                                 ey - y,
                                 DarkPlay.HULL_X + enemy.hitbox().width() / 2,
                                 DarkPlay.HULL_Y + enemy.hitbox().height() / 2));
+            }
+            if (core != null) {
+                CoreVolley volley = core.volley().orElse(null);
+                double line = volley == null ? 0 : volley(volley, x, y, t);
+                if (line >= HIT && !hit) {
+                    cost += HIT * weight;
+                    hit = true;
+                } else if (line < HIT) {
+                    cost += weight * line;
+                }
+                cost += weight * mines(sortie, core, x, y);
             }
             if (lines != null) {
                 double line = line(piece, lines, x, y, t);
@@ -294,6 +314,65 @@ final class RingPlay {
         cost += TURN
                 * (Math.abs(dx - sortie.ship().vx() / speed)
                         + Math.abs(dy - sortie.ship().vy() / speed));
+        return cost;
+    }
+
+    /**
+     * Step BOSS70: what standing at (x, y) {@code t} s ahead costs against the core's running volley: a hit when its lines
+     * are live then and the hull touches a band (with {@link #MARGIN}), {@link #ON_LINE} while one only telegraphs over it.
+     */
+    static double volley(CoreVolley volley, double x, double y, double t) {
+        if (!volley.running()) {
+            return 0;
+        }
+        double cost = 0;
+        for (int k = 0; k < volley.lines(); k++) {
+            double ux = x - volley.fromX(k);
+            double uy = y - volley.fromY(k);
+            double along = ux * volley.dirX(k) + uy * volley.dirY(k);
+            double across = Math.abs(ux * volley.dirY(k) - uy * volley.dirX(k));
+            if (along < -DarkPlay.HULL_Y || across > volley.bandPx() / 2 + DarkPlay.HULL_X + MARGIN) {
+                continue;
+            }
+            double live = volley.secondsToLive();
+            if (t >= live - SAMPLE && t <= live + volley.liveSeconds() + SAMPLE) {
+                return HIT;
+            }
+            cost = ON_LINE;
+        }
+        return cost;
+    }
+
+    /**
+     * Step BOSS70: what standing at (x, y) costs against the core's thrown mines: {@link #IN_PROXIMITY} with its centre
+     * inside a live mine's proximity (and {@link #MINE_MARGIN}) or its hull in a blinking one's blast; a hit for its hull
+     * on an armed mine.
+     */
+    static double mines(Sortie sortie, RingCore core, double x, double y) {
+        if (sortie.mineCount() == 0) {
+            return 0;
+        }
+        RingSpec.MineRing ring =
+                core.spec().pool().flatMap(RingSpec.Pool::mines).orElse(null);
+        if (ring == null) {
+            return 0;
+        }
+        var line = ring.gun().mine().orElseThrow().line().orElseThrow();
+        double cost = 0;
+        for (int i = 0; i < sortie.mineCount(); i++) {
+            Mine mine = sortie.mine(i);
+            if (!mine.line() || mine.setOff()) {
+                continue;
+            }
+            double d = Math.hypot(mine.renderX(1) - x, mine.renderY(1) - y);
+            if (mine.armed() && d < DarkPlay.HULL_X + 5) {
+                cost += HIT / 4;
+            }
+            if (d < line.proximity() + MINE_MARGIN
+                    || (mine.blinking() && d < line.blastRadius() + DarkPlay.HULL_X + MINE_MARGIN)) {
+                cost += IN_PROXIMITY;
+            }
+        }
         return cost;
     }
 

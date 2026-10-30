@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../../enemies/space/void-leech, ../../../enemies/ground/rail-bunker, ../../../enemies/air/talon, ../../../enemies/space/asteroid-mite, ../../../player/generator, ../../../world/belt, ../../../player/wingmen, ../../../story/characters/the-choir, ../../../systems/economy]
-updated: 2026-10-29
+updated: 2026-10-30
 ---
 
 # Level 33 – Leech Field
@@ -252,10 +252,10 @@ bottom edge; a Mite group of 5 is two rows, 2 rocks of 2 and 1 of 1):
 | 161 | 5 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 5 | front (left) | |
 | 163.25 | 6 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 3 | front | Step F2: a firing Talon group on the offbeat (the beam erases the popcorn within a second) |
 | 165 | 6 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front | |
+| 167 | 6 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front | Step FIX6: t=167, not 172.5 (the calm before the end). Step F2: the last Talons over clear rock |
 | 168 | 6 | swarm | [Asteroid Mite](../../../enemies/space/asteroid-mite/README.md) | 4 | front | |
+| 169.5 | 6 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 2 | front | Step FIX6: t=169.5, not 175.5 (the calm before the end). Step F2: a firing Talon pair on the offbeat (the beam erases the popcorn within a second) |
 | 171 | 6 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 5 | front (right) | The last wave; the level ends at t=178 |
-| 172.5 | 6 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front | Step F2: the last Talons over clear rock (no stretch over 2 s before the end) |
-| 175.5 | 6 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 2 | front | Step F2: a firing Talon pair on the offbeat (the beam erases the popcorn within a second) |
 
 Totals: Asteroid Mite 53 · Talon 138 · Skitter 50 · Mote Swarm 61 · Stinger 20 · Void Leech 63.
 <!-- /data -->
@@ -317,7 +317,7 @@ drop after 6 s. Rook's lines carry `requires: escort`. Speakers: **Okafor, Varga
 | t=137 | Okafor | "Then he's alone in it. Good. Leeches from every side now." |
 | t=150 | Rook | "Lancer, you've got passengers. Shake 'em loose!" |
 | t=164 | Okafor | "Clear rock ahead. The graveyard next, then the Sovereign." |
-| Secondary met (at the end) | Okafor | "Field's clean. Not one leech left to follow us home." |
+| Secondary met, held to t=172.5: after the last leech, in the calm before the end (step FIX6, the user's choice) | Okafor | "Field's clean. Not one leech left to follow us home." |
 <!-- /data -->
 
 Step F2 trimmed every timed line to one radio page (three 22-character lines, 5 s; the drafts ran to two) and
@@ -545,3 +545,15 @@ Approved in round 60 (the gap analysis's questions this level follows):
 - 2026-10-29 (user, [round 69](../../../concept-rounds/round-69/README.md), closed): **B.7 ok** (the middle nest of
   `nest-face-1` moved to (320, 160) for hard's pad; the before-and-after sheet is `chosen`). **B.2 ok**, with the note
   that the line must lead the scroll: built in step FIX5 (the Rail Bunker's page).
+- 2026-10-30 (step FIX6, the user's playthrough 2026-10-30: "the line says none are left, but then some more enter
+  the screen ... moving the line to the end is best"): Okafor's "Field's clean. Not one leech left to follow us home."
+  keeps its words and its trigger (the secondary met: it turns safe as the 48th leech dies, mid-level) but the radio
+  holds it until **t=172.5** (the cue's new `not_before`, design/tech/architecture/schemas-levels), after the last
+  leech (the last stream enters at t=158.5; `Level33Test` checks the last leech flies before t=172.5 in every
+  autopilot flight) and in the calm before the end (t=178, the 5.0 s line ends ≈ 177.5). Met only at the end (a
+  leech short), it plays with the closing lines as before.
+- 2026-10-30 (step FIX6, the user's playthrough 2026-10-30; the campaign's new end calm rule, at least 4 s from the
+  last enemy gone to the end from Act 5 on, `PacingTest`): the level's end stays; the last waves earlier: the last
+  Talons 172.5 → 167 and the Talon pair 175.5 → 169.5 (the user: "the level ends a bit abruptly"); the end calm
+  (easy/medium/hard, the autopilot with the plan's fit) 0.7/0.2/0.0 s → 6.7/5.2/5.0 s. The counts, the haul and the
+  autopilot's wins are unchanged.

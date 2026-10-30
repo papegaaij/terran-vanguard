@@ -363,6 +363,13 @@ final class SpriteUse {
             if (enemy.shield().isPresent()) {
                 roots.add(SHIELD_ROOT);
             }
+            // Step BOSS70: a ringed boss's mine ring throws its layer's line mines, drawn in the layer's mine frames.
+            enemy.boss()
+                    .flatMap(EnemyData.BossData::core)
+                    .flatMap(EnemyData.CoreData::pool)
+                    .ifPresent(pool -> pool.attacks().stream()
+                            .filter(play -> play.play().equals("mine-ring"))
+                            .forEach(play -> play.from().ifPresent(layer -> roots.add(layer + "-mine"))));
             for (EnemyData.Attack attack : enemy.attacks()) {
                 if (attack.homing().flatMap(homing -> homing.look()).isPresent()) {
                     roots.add(DIAMOND_ROOT);

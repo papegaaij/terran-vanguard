@@ -94,6 +94,10 @@ public final class DiamondLooks {
             batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
             for (int m = 0; m < count; m++) {
                 Missile missile = sortie.missile(m);
+                if (missile.wreck() >= 0) {
+                    // Step BOSS70: a thrown wreck is the Iron Sovereign's to draw (SovereignLooks).
+                    continue;
+                }
                 int k = heading(missile.heading(), diamond.size);
                 drawCentred(
                         batch,
@@ -105,6 +109,9 @@ public final class DiamondLooks {
         }
         for (int m = 0; m < count; m++) {
             Missile missile = sortie.missile(m);
+            if (missile.wreck() >= 0) {
+                continue;
+            }
             drawCentred(
                     batch,
                     diamond.get(heading(missile.heading(), diamond.size)),

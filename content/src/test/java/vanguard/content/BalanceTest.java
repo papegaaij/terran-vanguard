@@ -121,47 +121,63 @@ class BalanceTest {
      * Deviations from the balancing basis the user accepted (design/enemies Balancing basis), with the
      * reason; the test fails when one disappears (remove it here).
      */
-    static final Map<String, String> ACCEPTED = Map.of(
-            "clamp-gun ttk",
-            "250 HP at L29's reference DPS 120 is 2.1 s, above the medium class's 0.4-1.5 s: the four hold the"
-                    + " rescue halt, 1,000 HP together for the README's typical halt of about 14 s at the boss rule's"
-                    + " 0.6 x the reference; at 80 they fell in about 3 s (M9 part B, step B3b; accepted in round 62 C.2)",
-            "clamp-gun bounty",
-            "the bounty 10 is below the medium class's 18-30: Level 29's approved credit budget gives it"
-                    + " (round 60): the four hold the rescue halt; at 18 the typical"
-                    + " haul would be 1.7 % higher, inside its 5 % (M9 part B, step B3)",
-            "coilwyrm bounty",
-            "the parts' sum 86 (head 40, 12 segments × 3, tail 10) is above the large class's 40-60:"
-                    + " a multi-part enemy, cutting it up is extra work; a head-first kill pays 40"
-                    + " (user decision 2026-10-05)",
-            "rail-serpent bounty",
-            "the parts' sum 73 (engine 40, 6 cars × 3, 3 turret cars × 5) is above the large class's 40-60: a"
-                    + " multi-part train, the Coilwyrm's rule; an engine-first kill pays 40 (round 60's approved stat"
-                    + " block, M9 part C, step C2)",
-            "ravager ttk",
-            "16 HP at L09's reference DPS 63 is 0.25 s, below the medium class's 0.4-1.5 s: a fast,"
-                    + " fragile pack hunter (user decision 2026-10-07, M5 part C)",
-            "sentinel-tower bounty",
-            "the approved stat block's 40 (round 60) is above the medium class's 18-30: a tower behind a hardened"
-                    + " collar, which the plan (no anti-ground) reaches only with the beam through the emitter or a"
-                    + " charge; kept as approved (round 65, M9 part E)",
-            "strider ttk",
-            "the whole 410 HP at L32's reference DPS 132 is 3.1 s, above the large class's 1-3 s: the approved"
-                    + " stat block (round 60) sums the hull 220, two legs of 80 and the pod 30, and a leg (0.6 s)"
-                    + " topples it; kept as approved (round 65, M9 part E)",
-            "wraith ttk",
-            "16 HP at L10's reference DPS 66 is 0.24 s, below the medium class's 0.4–1.5 s: set for the plan's"
-                    + " rear DPS (Tail Gun L1, 10) with its rear check instead (user decision D7 = a, 2026-10-08,"
-                    + " M5 part D)",
-            "iron-sovereign ttk",
-            "the paper fight (the 13 batteries' 3,960 HP and the core's 14,000 at 0.6 × L35's reference 144) is 209 s,"
-                    + " above the act boss's 90-180 s: the core tuned on the autopilot's measured fight (the plan's fit"
-                    + " and Rook, 149 s at medium over five seeds: the beam's columns, the pods and Rook beat the paper's"
-                    + " 0.6); M9 part H, step H3, accepted as built in round 68 (C.1 a)",
-            "relay-beacon bounty",
-            "Level 27's approved bounty 15 (round 48) is below the medium class's 18-30 at 60 HP (0.5 s at L27's"
-                    + " reference DPS 116, the medium class's time): the secondary is its reward; accepted in round 57"
-                    + " (C.3, M8 part G, step G2)");
+    static final Map<String, String> ACCEPTED = Map.ofEntries(
+            Map.entry(
+                    "clamp-gun ttk",
+                    "250 HP at L29's reference DPS 120 is 2.1 s, above the medium class's 0.4-1.5 s: the four hold the"
+                            + " rescue halt, 1,000 HP together for the README's typical halt of about 14 s at the boss rule's"
+                            + " 0.6 x the reference; at 80 they fell in about 3 s (M9 part B, step B3b; accepted in round 62 C.2)"),
+            Map.entry(
+                    "clamp-gun bounty",
+                    "the bounty 10 is below the medium class's 18-30: Level 29's approved credit budget gives it"
+                            + " (round 60): the four hold the rescue halt; at 18 the typical"
+                            + " haul would be 1.7 % higher, inside its 5 % (M9 part B, step B3)"),
+            Map.entry(
+                    "coilwyrm bounty",
+                    "the parts' sum 86 (head 40, 12 segments × 3, tail 10) is above the large class's 40-60:"
+                            + " a multi-part enemy, cutting it up is extra work; a head-first kill pays 40"
+                            + " (user decision 2026-10-05)"),
+            Map.entry(
+                    "rail-serpent bounty",
+                    "the parts' sum 73 (engine 40, 6 cars × 3, 3 turret cars × 5) is above the large class's 40-60: a"
+                            + " multi-part train, the Coilwyrm's rule; an engine-first kill pays 40 (round 60's approved stat"
+                            + " block, M9 part C, step C2)"),
+            Map.entry(
+                    "ravager ttk",
+                    "16 HP at L09's reference DPS 63 is 0.25 s, below the medium class's 0.4-1.5 s: a fast,"
+                            + " fragile pack hunter (user decision 2026-10-07, M5 part C)"),
+            Map.entry(
+                    "sentinel-tower bounty",
+                    "the approved stat block's 40 (round 60) is above the medium class's 18-30: a tower behind a hardened"
+                            + " collar, which the plan (no anti-ground) reaches only with the beam through the emitter or a"
+                            + " charge; kept as approved (round 65, M9 part E)"),
+            Map.entry(
+                    "strider ttk",
+                    "the whole 410 HP at L32's reference DPS 132 is 3.1 s, above the large class's 1-3 s: the approved"
+                            + " stat block (round 60) sums the hull 220, two legs of 80 and the pod 30, and a leg (0.6 s)"
+                            + " topples it; kept as approved (round 65, M9 part E)"),
+            Map.entry(
+                    "wraith ttk",
+                    "16 HP at L10's reference DPS 66 is 0.24 s, below the medium class's 0.4–1.5 s: set for the plan's"
+                            + " rear DPS (Tail Gun L1, 10) with its rear check instead (user decision D7 = a, 2026-10-08,"
+                            + " M5 part D)"),
+            Map.entry(
+                    "iron-sovereign ttk",
+                    "the paper fight (the 13 batteries' 10,620 HP and the core's 6,600 at 0.6 × L35's reference 144) is"
+                            + " 199 s, above the act boss's 90-180 s: the HP set on the autopilot's measured fight (the plan's"
+                            + " fit and Rook, 144 s at medium over five seeds, par 145: the beam's columns, the pods and Rook"
+                            + " beat the paper's 0.6); round 70 A.1 (rail 1,200, laser 1,500, core 6,600), step BOSS70"),
+            Map.entry(
+                    "relay-beacon bounty",
+                    "Level 27's approved bounty 15 (round 48) is below the medium class's 18-30 at 60 HP (0.5 s at L27's"
+                            + " reference DPS 116, the medium class's time): the secondary is its reward; accepted in round 57"
+                            + " (C.3, M8 part G, step G2)"),
+            Map.entry(
+                    "minelayer ttk",
+                    "280 HP at L30's reference DPS 124 is 2.3 s, above the medium class's 0.4-1.5 s: the user's"
+                            + " playthrough (2026-10-30) killed them before they laid a mine; it rises at 600 px/s and"
+                            + " strafes at 200, and at 280 a fit flying under it from its entry lets it lay through its"
+                            + " gap (Level30Test); step FIX6, pending the user's review"));
 
     /**
      * Hard: the static estimate cannot always pay both the plan's purchases and the repairs of its

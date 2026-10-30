@@ -95,3 +95,60 @@ Concept round 68, captures of the game, not generated art (M9 part H, step H5, 2
 Concept round 69, a capture of the game, not generated art (M9 part I, step I3, 2026-10-29): the game built by `:desktop:installDist` from branch `m9-act-5` (the working tree after steps FIX3, FIX4 and I1, the full `check` green) on a private 960×540 Xvfb display, `--bench <s> --settings <scratch>/settings.properties`, `--level 35 --difficulty medium --invulnerable`, the plan's fit of [iron-sovereign-capture-r68-a](#iron-sovereign-capture-r68-a) with Rook, `controls.auto-fire=true`, the ship still in the middle (**run A**; the level time from the relay's flash at t=61, the fight labelled in seconds from the halt). Clips: `ALSOFT_DRIVERS=wave` writing the game's own mix to a file, the screen recorded with ffmpeg `x11grab` at 30 fps, cut to the subject (≤ 1 s lead-in), cropped and muxed (H.264 main, AAC; the sound 0.47 s behind the recording, checked on the shots' cracks); checked on an eight-frame sheet. PNGs: frames of the same recording, labelled. Script: step I3's `clips69.py` (scratch).
 
 - **sovereign-rail-capture-r69-a**: halt +16.7 to +19.9 s, the play field: a middle-ring rail battery's thin line telegraphed from its collar at halt +17.2 and fired at +17.7, its origin riding with the turning ring, the core rail's lines beside it (round 68 C.9 a as built in FIX3); the PNG 240×240 at 1:1 on the battery at +17.2, +17.5, +17.7, +17.8 s.
+
+## sovereign-core-r70
+
+Concept round 70, row A.2 (step R70, 2026-10-30): the core phase's three variants as storyboards, mockups over a real game
+still, not production art. **Generator:** `python3 tools/concept/sovereign_core_r70.py` (its docstring lists the inputs,
+the variants' numbers and the outputs; a few seconds). **Base:** `sovereign-core-capture-r70-a.png`, one 960×540 frame of
+the game built by `:desktop:installDist` from branch `m9-act-5` (the working tree after step FIX6; the Sovereign's data as
+built) on a private Xvfb display: `--bench 300 --settings <scratch>/settings.properties --level 35 --invulnerable
+--loadout front=scatter-vulcan:4,rear=swarm-tail:3,left=micro-missile-pod:4,right=micro-missile-pod:4,generator=4,shield=2,armor=4
+--escort rook:autocannon:1 --shots 18600` (`controls.auto-fire=true`, medium, the ship still; the scatter fit instead of
+the Ion Beam so no beam column covers the arena), the open core at level tick 18600. The new elements are drawn at game
+scale with the production sprites (the Dart Drone, the Minelayer's lit mine, the bays' glow, the cook-off debris) and the
+game's code-drawn looks (the enemy `small` bullets, the Rail Bunker's red telegraph line); text in the game's fonts.
+
+- **sovereign-core-r70-a** (the playbook): 1 the spiral after its white tell, 2 the rail volley's three lines fanned 22°
+  through the ship's spot after three red petals, 3 the Dart surge's four bays lit and four streams of three, 4 the mine
+  ring's amber tell and eight mines at 120–220 px, 5 two seeds' first nine draws (never the same twice running, the
+  surge at most every third draw).
+- **sovereign-core-r70-b** (the wreck throw): 1 a dead battery's wreck glowing gold with sparks, 2 lifted from its socket
+  and aimed at the ship, 3 tumbling in flight while the next wreck glows, 4 a hit's debris and the second wreck in flight,
+  5 two seeds' first six throws on the station.
+- **sovereign-core-r70-c** (the core breaks loose): 1 the clamps' flashes and the gold target ring, 2 the reactor in
+  flight over the empty cradle, 3 at a high stop firing its spiral and a bay's Darts, 4 at a low stop with a rail line,
+  5 the five stops and two seeds' routes.
+- **sovereign-core-r70-abc**: the three side by side at half size (one strip each).
+
+**Round 70 outcome (2026-10-30):** a and b `chosen` (the combination: the playbook with the wreck throw as its fifth attack), c rejected: `sovereign-core-r70-c.png` is in `concept/rejected/`. Do not re-run `sovereign_core_r70.py` for c's file: it still writes to `concept/`.
+
+## sovereign-playbook-capture-r71-a
+
+Captures of the game, not generated art (step BOSS70, 2026-10-30; the main agent decides whether they go in a round): the
+game built by `:desktop:installDist` from branch `m9-act-5` (the working tree after step BOSS70's module checks: round
+70's HP shift and the core's playbook) on a private 960×540 Xvfb display, `--bench 290 --settings
+<scratch>/settings.properties --level 35 --difficulty medium --invulnerable`, the plan's fit of
+[iron-sovereign-capture-r68-a](#iron-sovereign-capture-r68-a) with Rook (`--loadout
+front=ion-beam:4,rear=swarm-tail:3,left=micro-missile-pod:4,right=micro-missile-pod:4,generator=4,shield=2,armor=4
+--special emp-burst:1 --escort rook:autocannon:1`), `controls.auto-fire=true`, the ship still in the middle (the game's
+fixed seed: one run plays the draws wreck throw, spiral, wreck throw, spiral, wreck throw, rail volley, spiral, Dart
+surge, mine ring, …; the core opens ≈ 102 s after the halt and dies ≈ 48 s later). Clips: `ALSOFT_DRIVERS=wave` writing
+the game's own mix to a file, the screen recorded with ffmpeg `x11grab` at 30 fps, the sound 0.98 s behind the
+recording (checked on the relay flash's crack), cut to one attack each (its 0.8 s tell, then the attack; ≤ 8 s),
+cropped on the station and muxed (H.264 main, AAC); each checked on an eight-frame sheet. PNGs: four frames of the same
+recording at 0.5 (labelled with the recording's seconds). Scripts: step BOSS70's `run.sh` and `sheet.py` (scratch).
+The tells' sounds are existing ones (the Sentinel's charge, the SAM nest's lock, the Gunship's doors, the line mine's
+blink, the walker wreck's groan; the wreck's tear-off the cable snap, its break the large crumble).
+
+- **sovereign-playbook-spiral-capture-r71-a**: 7 s, 480×460: the reactor's white flare, then the 2-arm spiral for 4 s.
+- **sovereign-playbook-rail-volley-capture-r71-a**: 4 s, the play field: three red petals at the core's foot pointing
+  at the ship, the three red lines (the Rail Bunker's telegraph, 1 s), the three rails live.
+- **sovereign-playbook-dart-surge-capture-r71-a**: 3.2 s, 440×400: the four rim bays lit gold, four streams of three
+  Darts flying out (the pods and Rook take most of them as they leave).
+- **sovereign-playbook-mine-ring-capture-r71-a**: 8 s, 480×460: the core's amber rim lights blinking, eight line mines
+  thrown out to 120–220 px; the pods and the beam shoot most of them, which burst into their rings (the Minelayer's
+  rule).
+- **sovereign-playbook-wreck-throw-capture-r71-a**: 5 s, the play field: a dead battery's wreck glowing gold with
+  sparks, torn off and hurled tumbling at the ship's spot, the next one glowing, the sockets left empty.
+

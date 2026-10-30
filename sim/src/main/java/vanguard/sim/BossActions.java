@@ -164,6 +164,32 @@ interface BossActions {
      */
     default void bayLaunch(EnemySpec.Launcher launcher, double x, double y, double angle) {}
 
+    /**
+     * Step BOSS70: a draw from the simulation's seeded random, in [0, 1) (a replay draws the same); by default 0.
+     */
+    default double draw() {
+        return 0;
+    }
+
+    /**
+     * Step BOSS70 (design/enemies/bosses/iron-sovereign, the mine ring): one line mine of {@code gun} thrown from (x, y)
+     * to (toX, toY) over {@code throwSeconds}, held there (it arms, blinks and bursts by its own rule), gone after {@code
+     * lifeSeconds} untouched.
+     */
+    default void coreMine(
+            EnemyGun gun, double x, double y, double toX, double toY, double throwSeconds, double lifeSeconds) {}
+
+    /**
+     * Step BOSS70 (the wreck throw): boss part {@code part}'s wreck at (x, y) is hurled at the ship's spot as a missile of
+     * {@code gun}; returns whether it flies (false while the gun's most thrown wrecks fly).
+     */
+    default boolean throwWreck(EnemyGun gun, double x, double y, int part) {
+        return false;
+    }
+
+    /** Step BOSS70: the open core drew {@code play} (the radio's first-of-a-kind lines), {@code low} below its share. */
+    default void corePlay(RingSpec.Play play, boolean low) {}
+
     /** M8 part H: a coiled boss dives (the radio's {@code boss-dive}). */
     default void dive() {}
 

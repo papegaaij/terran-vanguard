@@ -244,6 +244,9 @@ public final class Sortie {
 
     double groundScroll;
     private int edgeWarnings;
+    /** Step MARK70: whether a wave of neutral craft is announced now. */
+    private boolean friendliesInbound;
+
     boolean complete;
     /** Boss stream units and (M5 part C) periodic spawners' units let in in this attempt (they count among the enemies). */
     int streamReleased;
@@ -713,6 +716,7 @@ public final class Sortie {
         // 2026-10-21 (user): only the waves' first entries warn; a boss (the walker's entries, the breaching boss's
         // points, the Spire's launched Wraiths) never does: the boss fight keeps its surprise.
         edgeWarnings = complete ? 0 : force.warnings(levelTick);
+        friendliesInbound = !complete && force.friendlies(levelTick);
         fire.move(scrollStep, force.enemies(), ground);
         boolean firing = flying() && !complete;
         force.move(ship, firing, scrollStep);
@@ -1921,6 +1925,14 @@ public final class Sortie {
     /** The edges showing an edge warning, as {@link WarningEdge} bits. */
     public int edgeWarnings() {
         return edgeWarnings;
+    }
+
+    /**
+     * Step MARK70 (design/campaign Level 29, Friendly marker): whether a wave of neutral craft enters within 2 s (the
+     * "FRIENDLIES INBOUND — HOLD FIRE" banner).
+     */
+    public boolean friendliesInbound() {
+        return friendliesInbound;
     }
 
     public long score() {

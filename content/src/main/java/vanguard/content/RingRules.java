@@ -289,7 +289,78 @@ final class RingRules {
                 spiral.map(EnemyData.CoreSpiral::tell).orElse(0.0),
                 rail.map(r -> attack(enemy, r.attack())).orElse(-1),
                 rail.map(EnemyData.CoreRail::below).orElse(1.0),
-                core.bays().map(bays -> bays(content, enemy, bays, difficulty, inLevel)));
+                core.bays().map(bays -> bays(content, enemy, bays, difficulty, inLevel)),
+                core.pool().map(pool -> pool(content, enemy, pool, difficulty, inLevel)));
+    }
+
+    /** Step BOSS70: the default origin of the volley's lines, px out of the core's centre (its petals' rim). */
+    static final double VOLLEY_ORIGIN = 30;
+
+    /** Step BOSS70: the playbook's defaults: a mine ring's throw and life, a wreck's life and the wrecks in the air. */
+    static final double MINE_THROW = 0.5;
+
+    static final double MINE_LIFE = 8;
+    static final double WRECK_LIFE = 5;
+    static final int WRECKS_ALIVE = 3;
+
+    private static RingSpec.Pool pool(
+            Content content, EnemyData enemy, EnemyData.PoolData pool, Difficulty difficulty, InLevel inLevel) {
+        List<RingSpec.Move> moves = new ArrayList<>();
+        Optional<RingSpec.Volley> volley = Optional.empty();
+        Optional<RingSpec.Surge> surge = Optional.empty();
+        Optional<RingSpec.MineRing> mines = Optional.empty();
+        Optional<RingSpec.WreckThrow> wrecks = Optional.empty();
+        for (EnemyData.PlayData play : pool.attacks()) {
+            moves.add(new RingSpec.Move(
+                    play.sim(), play.weight().orElse(1.0), play.spacing().orElse(2)));
+            switch (play.sim()) {
+                case SPIRAL -> {}
+                case VOLLEY ->
+                    volley = Optional.of(new RingSpec.Volley(
+                            attack(enemy, play.attack().orElseThrow()),
+                            play.lines().orElse(3),
+                            Math.toRadians(play.fan().orElse(22.0)),
+                            play.origin().orElse(VOLLEY_ORIGIN)));
+                case SURGE ->
+                    surge = Optional.of(new RingSpec.Surge(play.stream().orElse(3)));
+                case MINES ->
+                    mines = Optional.of(new RingSpec.MineRing(
+                            UnitRules.enemy(content, play.from().orElseThrow(), difficulty, Optional.empty(), inLevel)
+                                    .gun()
+                                    .orElseThrow(),
+                            play.count().orElse(8),
+                            play.near().orElseThrow(),
+                            play.far().orElseThrow(),
+                            play.toss().orElse(MINE_THROW),
+                            play.life().orElse(MINE_LIFE)));
+                case WRECKS -> {
+                    EnemyGun gun = EnemyGun.aimed(
+                                    1,
+                                    0,
+                                    1,
+                                    play.speed().orElseThrow(),
+                                    UnitRules.bulletDamage(
+                                            content, play.bullet().orElse("heavy")),
+                                    false)
+                            .withHoming(Optional.of(new EnemyGun.HomingSpec(
+                                    0,
+                                    play.life().orElse(WRECK_LIFE),
+                                    play.hp().orElseThrow(),
+                                    play.mostAlive().orElse(WRECKS_ALIVE),
+                                    0,
+                                    true)));
+                    Span count = play.wrecks().orElse(new Span(2, 3));
+                    wrecks = Optional.of(new RingSpec.WreckThrow(
+                            gun,
+                            (int) count.min(),
+                            (int) count.max(),
+                            play.gap().orElseThrow()));
+                }
+            }
+        }
+        EnemyData.LowRest low = pool.low().orElse(new EnemyData.LowRest(1, pool.rest()));
+        return new RingSpec.Pool(
+                pool.tell(), pool.rest(), low.rest(), low.below(), moves, volley, surge, mines, wrecks);
     }
 
     private static RingSpec.Bays bays(

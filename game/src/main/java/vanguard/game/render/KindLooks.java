@@ -167,7 +167,7 @@ final class KindLooks {
     /** M9 part C: the line mines' looks for the sortie's enemy kinds, built once. */
     MineLooks mines(Sortie sortie) {
         if (mines == null) {
-            mines = new MineLooks(sprites, sortie.enemyKinds());
+            mines = new MineLooks(sprites, sortie.enemyKinds(), MineLooks.thrownMines(sortie));
         }
         return mines;
     }

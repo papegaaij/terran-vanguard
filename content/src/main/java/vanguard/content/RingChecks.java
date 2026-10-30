@@ -228,6 +228,79 @@ final class RingChecks {
                 problem.accept("boss.core.bays.tell", "a bay's tell fits between two streams");
             }
         });
+        core.pool().ifPresent(pool -> checkPool(content, enemy, core, pool, problem));
+    }
+
+    /**
+     * Step BOSS70: the playbook: each play once; the spiral the core's, the volley's attack a line, the surge with the
+     * bays, the mine ring a line mine layer's with its distances, the wreck throw its speed, HP, bullet and gap.
+     */
+    private static void checkPool(
+            Content content,
+            EnemyData enemy,
+            EnemyData.CoreData core,
+            EnemyData.PoolData pool,
+            BiConsumer<String, String> problem) {
+        Set<String> seen = new java.util.HashSet<>();
+        for (EnemyData.PlayData play : pool.attacks()) {
+            String field = "boss.core.pool." + play.play();
+            if (!seen.add(play.play())) {
+                problem.accept(field, "each attack once in the pool");
+            }
+            switch (play.sim()) {
+                case SPIRAL -> {
+                    if (core.spiral().isEmpty()) {
+                        problem.accept(field, "the pool's spiral is the core's spiral (core.spiral)");
+                    }
+                }
+                case VOLLEY -> {
+                    if (play.attack().isEmpty()) {
+                        problem.accept(field, "a rail volley names its line attack");
+                    } else {
+                        checkAttack(
+                                enemy, field + ".attack", play.attack().get(), EnemyData.Attack.LASER_LINE, problem);
+                    }
+                    play.lines().ifPresent(n -> {
+                        if (n < 1 || n > vanguard.sim.CoreVolley.MOST) {
+                            problem.accept(field + ".lines", "1 to " + vanguard.sim.CoreVolley.MOST + " lines");
+                        }
+                    });
+                }
+                case SURGE -> {
+                    if (core.bays().isEmpty()) {
+                        problem.accept(field, "a Dart surge needs the core's bays");
+                    }
+                }
+                case MINES -> {
+                    String from = play.from().orElse("");
+                    boolean layer = content.enemies().containsKey(from)
+                            && content.enemy(from).attacks().stream()
+                                    .anyMatch(a ->
+                                            a.mine().flatMap(m -> m.proximity()).isPresent());
+                    if (!layer) {
+                        problem.accept(
+                                field + ".from", "a mine ring throws a line-mine layer's mines, not '" + from + "'");
+                    }
+                    if (play.near().isEmpty()
+                            || play.far().isEmpty()
+                            || play.far().get() < play.near().get()) {
+                        problem.accept(field, "a mine ring's mines land from near to far px");
+                    }
+                }
+                case WRECKS -> {
+                    if (play.speed().isEmpty()
+                            || play.hp().isEmpty()
+                            || play.gap().isEmpty()) {
+                        problem.accept(field, "a wreck throw has its speed, its wrecks' HP and their gap");
+                    }
+                    play.bullet().ifPresent(b -> {
+                        if (!content.enemyBasis().knowsBullet(b)) {
+                            problem.accept(field + ".bullet", "no bullet class '" + b + "'");
+                        }
+                    });
+                }
+            }
+        }
     }
 
     private static void checkAttack(

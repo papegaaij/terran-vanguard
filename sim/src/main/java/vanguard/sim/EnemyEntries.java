@@ -441,6 +441,11 @@ final class EnemyEntries {
         return edges;
     }
 
+    /** Step MARK70: whether a wave of neutral craft is announced at {@code levelTick}. */
+    boolean friendlies(int levelTick) {
+        return waves.friendlies(levelTick);
+    }
+
     /** See {@link EnemyForce#unitsOf(String)}. */
     int unitsOf(String slug) {
         int count = waves.unitsOf(slug);
