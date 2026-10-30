@@ -577,3 +577,7 @@ the alternatives:
   fit, `levelReport -Pparts=hull`): met on easy and medium in all three seeds (the bow at 67-97 %); hard loses it
   (the bow 0-12 %), as the idle capture's t≈114 failure: a passive player losing it is fine, left as it is.
 - 2026-10-29 (user, [round 65](../../../concept-rounds/round-65/README.md), closed): **C.7** accepted: the Bellwether's story lines retimed to t=79/86/94 and the armour patch line and drop to t=118; the Level 31 capture with sound and the freed claim accepted with the level.
+- 2026-10-29 (user, [round 69](../../../concept-rounds/round-69/README.md), closed): **F.1 accept**: on hard the
+  autopilot loses the tug's bow in 2 of 3 runs and never makes the secondary (it still wins every run; at medium the hull
+  comes home clean 3 of 3); an accepted exception, judged in the user's playthrough (the autopilot does not shield the
+  tug the way a player can). No data change.

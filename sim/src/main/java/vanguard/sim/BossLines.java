@@ -11,7 +11,9 @@ import java.util.Arrays;
  * line lapses when its part dies or may no longer fire (a battery out of its fire arc). The line <b>locks</b> its
  * direction (through the ship) at its telegraph's start, so a battery turns on under it; its origin (the part's centre)
  * rides with its part as the ring turns (round 68's row 9, on the recommendation of round 66's C.1 b, pending round 68:
- * a dead part's line keeps its last origin); after
+ * a dead part's line keeps its last origin); round 69's B.1 (the user): the direction is led ({@link LineAim}), from
+ * where the part will be when the line goes live (its turn on the ring over the telegraph) through the ship, so the
+ * riding line passes through the locked ship point at its live moment; after
  * the telegraph it is live for its time, a band that deals its damage to the ship once. It hurts nothing else (enemy
  * fire never hurts enemies; Rook is never its target). A part killed in the telegraph cancels it; the EMP Burst does
  * nothing (a boss is never stunned).
@@ -42,8 +44,7 @@ public final class BossLines {
     private int attack;
     private double fromX;
     private double fromY;
-    private double dirX;
-    private double dirY;
+    private final LineAim aim = new LineAim();
     /** The origin's move over the last step, px (the autopilot's look-ahead); 0 while none runs. */
     private double stepX;
 
@@ -75,8 +76,7 @@ public final class BossLines {
         attack = -1;
         fromX = 0;
         fromY = 0;
-        dirX = 0;
-        dirY = 0;
+        aim.clear();
         stepX = 0;
         stepY = 0;
         hit = false;
@@ -150,15 +150,14 @@ public final class BossLines {
     }
 
     private void start(int p, double shipX, double shipY, BossActions actions) {
-        double dx = shipX - piece.partX(p);
-        double dy = shipY - piece.partY(p);
-        double distance = Math.sqrt(dx * dx + dy * dy);
         part = p;
         attack = dueAttack[p];
         fromX = piece.partX(p);
         fromY = piece.partY(p);
-        dirX = dx / distance;
-        dirY = dy / distance;
+        // Round 69's B.1: the part rides on over the telegraph (a battery on its turning ring): aim from where it
+        // fires.
+        int telegraph = SimStep.ticks(line(attack).telegraphSeconds());
+        aim.lock(piece.partLeadX(p, telegraph), piece.partLeadY(p, telegraph), fromX, fromY, shipX, shipY);
         stepX = 0;
         stepY = 0;
         hit = false;
@@ -182,8 +181,8 @@ public final class BossLines {
                         y,
                         fromX,
                         fromY,
-                        fromX + dirX * LineBeam.LENGTH,
-                        fromY + dirY * LineBeam.LENGTH,
+                        fromX + aim.dirX() * LineBeam.LENGTH,
+                        fromY + aim.dirY() * LineBeam.LENGTH,
                         line(attack).bandPx() / 2);
     }
 
@@ -261,13 +260,16 @@ public final class BossLines {
         return stepY;
     }
 
-    /** The locked line's direction (a unit vector, y up the screen); it runs to the screen's edge. */
+    /**
+     * The locked line's direction (a unit vector, y up the screen), led for its part's move over the telegraph (round
+     * 69's B.1); it runs to the screen's edge.
+     */
     public double dirX() {
-        return dirX;
+        return aim.dirX();
     }
 
     public double dirY() {
-        return dirY;
+        return aim.dirY();
     }
 
     void addTo(StateHash hash) {
@@ -278,8 +280,8 @@ public final class BossLines {
                 .add(attack)
                 .add(fromX)
                 .add(fromY)
-                .add(dirX)
-                .add(dirY)
+                .add(aim.dirX())
+                .add(aim.dirY())
                 .add(stepX)
                 .add(stepY)
                 .add(hit ? 1 : 0);

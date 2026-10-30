@@ -2,10 +2,10 @@
 # 15-21, from M7 part A: the Ion Beam's hand plan; every level earns its own typical haul, M7 part I: the
 # budget(n) fallback for a level without data is gone; M8 part A: Act 4, Levels 22-28, from the generator's
 # hand plan of round 48, with a TEMPORARY budget(n) fallback for the Act 4 levels that have no data yet,
-# removed again in M8 part I; M9 part A: Act 5, Levels 29-35, from the generator's Act 5 hand plan of round 60, with
-# a TEMPORARY budget(n) income for the Act 5 levels that have no data yet, removed again when they are built).
+# removed again in M8 part I; M9 part A: Act 5, Levels 29-35, from the generator's Act 5 hand plan of round 60, its
+# TEMPORARY budget(n) income for the Act 5 levels without data removed again in M9 part I: each earns its typical haul).
 # Read by the content tests BalanceTest (affordability, power load and DPS per visit) and
-# ActPlaythroughTest (Acts 1-3 flown with these purchases on every difficulty), and printed by
+# ActPlaythroughTest (Acts 1-5 flown with these purchases on every difficulty), and printed by
 # tools/balance.py as the balancing sheet; not a rule, and not read by the game. Every other number
 # comes from the parts' data.yaml files. The free charges a special gives at its unlock (the
 # Airstrike's first, at L04) come on top of the charges bought here.
@@ -95,7 +95,7 @@ plan:
   "27": {core: [[generator, 3]], fit: [[rear, tail-gun]]}   # Mk IV "Tokamak" (9 000, 20 MW since round 48 J1); M8 part G (the user's Q.1 = a, round 57): the owned Tail Gun L3 on the rear again in place of the Depth Charges (kept) for the Depth Hunters and their torpedoes below the ship
   "28": {core: [[shield, 2]]}      # Shield Mk III (3 000; the Mk IV's 7 000 is not affordable) for the Abyssal Maw: 17 of 20 MW; the nanites (6 000) stay out of the typical plan
   # Act 5 (M9 part A; the generator's Act 5 hand plan of round 60, J2 and Q12 = c, design/player/generator). Income:
-  # budget(n) for the levels without data (temporary, the act's parts replace it with each level's typical haul).
+  # each level's typical haul (its data since the act's parts B-H; M9 part I removed part A's temporary budget(n)).
   # In vacuum the Harpoon is idle (NO WATER) and the pressure hull does nothing: the L29 visit flies the owned Ion
   # Beam again (raised to L4 for the act's first level) and takes the hull off; the EMP Burst fitted (its charges since
   # L15) for the Ascendancy's shielded machines. Rook is missing in L29 (the loaner Bulwark flies), back from L30.

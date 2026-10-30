@@ -2,9 +2,9 @@
 title: The belt
 design: approved
 implementation: n/a
-art: chosen
+art: final
 depends-on: [../../campaign/act-5-the-belt, ../../enemies, ../../player/specials]
-updated: 2026-10-28
+updated: 2026-10-29
 ---
 
 # The belt
@@ -180,3 +180,4 @@ tug in the [mining tug](../../allies/mining-tug/README.md#concept-art)). Generat
 - 2026-10-28 (M9 part A, step A4): set to `review` for [round 61](../../concept-rounds/round-61/README.md) (D.1), where the
   user signs it off.
 - 2026-10-28 (user, [round 61](../../concept-rounds/round-61/README.md), closed): **D.1** the belt's world document approved (`design: approved`).
+- 2026-10-29 (M9 part I, step I2): `art: final`: the mood ladder a and the readability frame b (round 60) are built as the Levels 29–35 backdrops and the units' gunmetal livery (Levels 29–35 `art: final`, rounds 62–68 accepted them); the mockup rows stay as the record.

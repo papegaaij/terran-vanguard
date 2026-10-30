@@ -5,7 +5,9 @@ package vanguard.sim;
  * for its next telegraph, the telegraph that locks a line's direction from the unit through the ship's position to the
  * screen's edge (lock, not track), the live line and whether it struck the ship. Round 66's C.1 b: the line's origin
  * rides with its unit (a bunker scrolls on with the ground under its telegraph and rail), only its direction is locked
- * ({@link #ride}). Each {@link Enemy} owns one, used and hashed
+ * ({@link #ride}). Round 69's B.2: the direction is led ({@link LineAim}): it runs from where the unit will be when the
+ * line goes live (its move of the last step times the telegraph) through the ship, so the riding line passes through
+ * the locked ship point at its live moment. Each {@link Enemy} owns one, used and hashed
  * only while its stat block has a line; {@link #stepAll} runs every unit's line after the moves and {@link
  * #strikes} tests the ship. Any unit may carry one (not only a hovering one, as the Mantis's sweep). Allocates nothing.
  */
@@ -17,12 +19,11 @@ public final class LineBeam {
     private int wait = -1;
     /** Steps into the current telegraph and live line; -1 while none runs. */
     private int ticks = -1;
-    /** The running line: its origin on the screen (its unit's centre, riding with it) and its locked unit direction. */
+    /** The running line: its origin on the screen (its unit's centre, riding with it) and its locked, led direction. */
     private double fromX;
 
     private double fromY;
-    private double dirX;
-    private double dirY;
+    private final LineAim aim = new LineAim();
     /** Whether the running line is live (past its telegraph). */
     private boolean live;
     /** Whether the current line struck the ship. */
@@ -34,8 +35,7 @@ public final class LineBeam {
         ticks = -1;
         fromX = 0;
         fromY = 0;
-        dirX = 0;
-        dirY = 0;
+        aim.clear();
         live = false;
         hit = false;
     }
@@ -46,8 +46,8 @@ public final class LineBeam {
                 .add(ticks)
                 .add(fromX)
                 .add(fromY)
-                .add(dirX)
-                .add(dirY)
+                .add(aim.dirX())
+                .add(aim.dirY())
                 .add(live ? 1 : 0)
                 .add(hit ? 1 : 0);
     }
@@ -74,7 +74,8 @@ public final class LineBeam {
     /**
      * One step of {@code unit}'s line with the ship at (shipX, shipY) (not while the EMP Burst stuns it): a running
      * telegraph or line goes on or ends; the wait runs while the unit is on the play field, and at its end a telegraph
-     * starts unless the ship is within the hold distance (then it waits for the next step).
+     * starts unless the ship is within the hold distance (then it waits for the next step). Round 69's B.2: the line
+     * locks led ({@link LineAim}): from the unit where its last step's move carries it over the telegraph.
      */
     void step(Enemy unit, EnemySpec.LaserLine line, double shipX, double shipY, SimEvents events) {
         step(unit, line, shipX, shipY, events, true);
@@ -121,8 +122,14 @@ public final class LineBeam {
         }
         fromX = unit.x();
         fromY = unit.y();
-        dirX = dx / distance;
-        dirY = dy / distance;
+        // Round 69's B.2: it rides on over the telegraph (a bunker scrolls with the ground): aim from where it fires.
+        aim.lock(
+                fromX + (unit.renderX(1) - unit.renderX(0)) * telegraph,
+                fromY + (unit.renderY(1) - unit.renderY(0)) * telegraph,
+                fromX,
+                fromY,
+                shipX,
+                shipY);
         ticks = 0;
         live = false;
         hit = false;
@@ -187,7 +194,13 @@ public final class LineBeam {
     boolean touches(EnemySpec.LaserLine line, Hull hull, double x, double y) {
         return live
                 && hull.touchesSegment(
-                        x, y, fromX, fromY, fromX + dirX * LENGTH, fromY + dirY * LENGTH, line.bandPx() / 2);
+                        x,
+                        y,
+                        fromX,
+                        fromY,
+                        fromX + aim.dirX() * LENGTH,
+                        fromY + aim.dirY() * LENGTH,
+                        line.bandPx() / 2);
     }
 
     /** The line struck the ship: once per line. */
@@ -227,12 +240,15 @@ public final class LineBeam {
         return fromY;
     }
 
-    /** The locked line's direction (a unit vector, y up the screen); it runs to the screen's edge. */
+    /**
+     * The locked line's direction (a unit vector, y up the screen), led for the unit's move over the telegraph (round
+     * 69's B.2); it runs to the screen's edge.
+     */
     public double dirX() {
-        return dirX;
+        return aim.dirX();
     }
 
     public double dirY() {
-        return dirY;
+        return aim.dirY();
     }
 }

@@ -241,10 +241,10 @@ item|“Metal Creaks_Groans.wav” by Cell31_Sound_Productions
 detail|CC-BY 4.0 · freesound.org/people/Cell31_Sound_Productions/sounds/380403
 item|“big_metal_unlock_and_slam.wav” by simpsi
 detail|CC-BY 3.0 · freesound.org/people/simpsi/sounds/175663
-item|“ratchet_winching_and_turning_sound_slow_speed” by Artninja
-detail|CC-BY 4.0 · freesound.org/people/Artninja/sounds/755384
 item|“Train Brakes” by KodyTron
 detail|CC-BY 4.0 · freesound.org/people/KodyTron/sounds/640998
+item|“Submarie dive horn_better.wav” by CGEffex
+detail|CC-BY 4.0 · freesound.org/people/CGEffex/sounds/104882
 item|“Large hydraulic door” by nooly
 detail|CC-BY 3.0 · freesound.org/people/nooly/sounds/331357
 item|“Dry thunder2.wav” by juskiddink

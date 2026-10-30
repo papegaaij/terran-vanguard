@@ -50,3 +50,16 @@ Concept round 68, captures of the game, not generated art (M9 part H, step H5, 2
 - **lifeboat-capture-r68-a**: run B t=65.4–70.0, 240×540 on the right half (the lifeboat entering in its clamps at x≈400 under the beam, its crate drifting out at t≈66.3, the capsule drawn whole after it is shot open: the open frames never show); the PNG t=65.9–68.3 at 1:1.
 - **hull-guns-capture-r68-a**: run B t=69.5–78.5, the play field (the Rail Bunker pair's lines at t≈72, the SAM Nest group's salvos at t≈74, Talons and Skitters over the hull); the PNG t=53, 57, 72.2, 75.5 at 0.5.
 - **halt-capture-r68-a**: run A t=84–94, the play field (the hull's end and the neck, the station rolling in, the scroll easing to the halt, `WARNING` and the boss's bar at t≈92); the PNG t=86, 89, 91.6, 92.6 at 0.5.
+
+## tenders-before-after-r69-a
+
+Round 69's B.6, a before | after sheet, not new art (M9 part I, step I3): `python3 tools/concept/before_after_r69.py`.
+The Sovereign's tenders at 2x: as built = `assets/backdrop/level-35/tender-a.png`, `tender-b.png` (step FIX4 pinned them
+to the grey-gold Helix ramp they were accepted with), beside `tools/art/backdrop_l35.py`'s `tender()` rendered with
+Level 34's black ramp (what they would be had they followed G.1 c).
+
+## level-35-capture-r69-a
+
+Concept round 69, a capture of the game, not generated art (M9 part I, step I3, 2026-10-29): the game built by `:desktop:installDist` from branch `m9-act-5` (the working tree after steps FIX3, FIX4 and I1, the full `check` green) on a private 960×540 Xvfb display, `--bench <s> --settings <scratch>/settings.properties`, `--level 35 --difficulty medium --invulnerable`, the plan's fit of [level-35-capture-r68-a](#level-35-capture-r68-a) with Rook, `controls.auto-fire=false` (**run B**: the ship moved under the lifeboat, x≈395, at t≈52 and firing only from t≈67.3, so the lifeboat is shot open mid-screen; the level time from the relay's flash at t=61). Clips: `ALSOFT_DRIVERS=wave` writing the game's own mix to a file, the screen recorded with ffmpeg `x11grab` at 30 fps, cut to the subject (≤ 1 s lead-in), cropped and muxed (H.264 main, AAC; the sound 0.47 s behind the recording, checked on the shots' cracks); checked on an eight-frame sheet. PNGs: frames of the same recording, labelled. Script: step I3's `clips69.py` (scratch).
+
+- **lifeboat-capture-r69-a**: t=66.5–70.5, 240×440 on the lifeboat's lane: the capsule coming down, shot open by the Ion Beam at t≈67.3, its six open frames over 1 s (FIX3) and the crate drifting out; the PNG 160×360 at 1:1 at t=67.3, 67.5, 67.7, 67.9, 68.2, 68.5.

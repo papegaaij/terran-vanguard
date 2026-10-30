@@ -79,6 +79,7 @@ class PassOrderTest {
             ceres(sortie).drawGround(batch, sortie, alpha, scroll)
             deepCore(sortie).drawGround(batch, sortie, scroll)
             leechField(sortie).drawGround(batch, sortie, scroll)
+            tanks(sortie).drawShadows(batch, sortie, alpha)
             units.drawEnemies(batch, sortie, alpha, Depth.GROUND, Launched.ANY)
             blend(SRC_ALPHA, ONE)
             deepCore(sortie).drawTells(batch, sortie, alpha)

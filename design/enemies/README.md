@@ -3,7 +3,7 @@ title: Enemies
 design: approved
 implementation: in-progress
 art: final
-updated: 2026-10-28
+updated: 2026-10-29
 ---
 
 # Enemies
@@ -309,7 +309,7 @@ Current coverage (✓ = passes):
 | 2 Homefront | tiny, small, medium, huge (as built: no `large` unit) | Harbour Kraken (L11), Siege Spire (L14) | Creeper (L08), Ravager packs (L09, L14), Scuttler returns (L13) | Whirl Seed returns (L12) | Wraith and Mote Swarm rear (L10), Mantis sides (L12, L13), Skimmers from all edges (L13), maw Wraiths (L14) | 5 of 20 (Skitter, Stinger, Creeper, Wraith, Mantis); the 20 used in L08–L14: Needler, Skitter, Stinger, Spine Turret, Polyp Mortar, Creeper, Hive Node, Ravager, Mote Swarm, Wraith, Driftjelly, Reef Spitter, Harbour Kraken, Lamprey, Mantis, Spore Bomber, Whirl Seed, Scuttler, Skimmer, Siege Spire | ✓ |
 | 3 Red Dust | tiny (the new Dust Kite and Mote Swarm, plus returning Skitters), small, medium, large, huge | Threadcrawler, Revenant Walker, Dust Colossus | Burrower, Threadcrawler, Shellback (L17), Warden Tank | Dust Devil (L18) | L19 rear, L20 reverse scroll, L21 breaches | 8 of 22 (Skitter, Stinger, Mantis, Creeper, Wraith, Burrower, Choir Herald, Threadcrawler); the 22 used in L15–L21: Dust Kite, Skitter, Mote Swarm, Needler, Stinger, Polyp Mortar, Spine Turret, Tendril Anchor, Ghost Drone, Burrower, Creeper, Ravager, Spore Bomber, Mantis, Choir Herald, Dust Devil, Wraith, Warden Tank, Threadcrawler, Shellback, Revenant Walker, Dust Colossus | ✓ |
 | 4 Deep Water (as built) | tiny (Glassfin, returning Skitters and the Mote Swarm), small, medium, large, huge | Eel Swarm, Drill Rig (core and pumps), Abyssal Maw | Scuttler on the sea floor (L24) | Spiral Nautilus (L25–L28) | Mantis pincers (L22), Siren side caves (L25), the Abyss Ray rising from below (L24), Depth Hunter columns from the rear (L27, L28) | 3 of 25 (Skitter, Stinger, Mantis); the 25 used in L22–L28: Skitter, Mote Swarm, Glassfin, Needler, Stinger, Spine Turret, Polyp Mortar, Skimmer, Lamprey, Driftjelly, Reef Spitter, Barbfin, Glow Angler, Mantis, Scuttler, Siphon Pump, Siren, Spiral Nautilus, Depth Hunter, Relay Beacon, Drill Rig, Eel Swarm, Abyss Ray, Spawning Reef, Abyssal Maw | ✓ |
-| 5 The Belt (draft, decided in round 60) | tiny (Asteroid Mite, Dart Drone), small, medium, large (Rail Serpent, Strider), huge (Iron Sovereign) | Rail Serpent, Shard Drone links, Strider legs, Iron Sovereign | Strider (L32), Warden Tank in Ascendancy livery (L34; the Crawler Tank dropped, J1) | Buzzsaw Drone (L31), Sovereign rings | Minelayer and Rail Serpent rear and sides (L30), Void Leech rear and sides (L33) | 1 of 15 new units (Asteroid Mite); the 15: Talon, SAM Nest, Asteroid Mite, Minelayer, Gilded Gunship, Rail Serpent, Dart Drone, Shard Drone, Hornet, Buzzsaw Drone, Sentinel Tower, Strider, Void Leech, Rail Bunker, Iron Sovereign; the returning units are counted from the level drafts | ✓ (on paper) |
+| 5 The Belt (as built) | tiny (Asteroid Mite, Dart Drone), small, medium, large (Rail Serpent, Strider), huge (Iron Sovereign) | Rail Serpent, Shard Drone links, Strider legs, Iron Sovereign | Strider (L32), Warden Tank in Ascendancy livery (L34; the Crawler Tank dropped, J1) | Buzzsaw Drone (L31), Sovereign rings | Minelayer and Rail Serpent rear and sides (L30), Void Leech rear and sides (L33) | 3 of 22 (Asteroid Mite, Skitter, Stinger; the Void Leech is not counted); the 22 used in L29–L35: Talon, SAM Nest, Asteroid Mite, Minelayer, Gilded Gunship, Rail Serpent, Dart Drone, Shard Drone, Hornet, Buzzsaw Drone, Sentinel Tower, Strider, Void Leech, Rail Bunker, Warden Tank, Clamp Gun, Wavering Stormhawk, Iron Sovereign, Skitter, Stinger, Needler, Mote Swarm | ✓ |
 | 6 Jovian Storm | small, medium, large, huge | Halo Platform, Ascendant | Warden Tank and Strider return (L39, L41) | Halo Platform (L41), Buzzsaw Drone returns (L38) | Honour Guard rear (L40), Harrow all edges | 0 of 12 | ✓ |
 | 7 Beyond the Gate | tiny, small, medium, large, huge | Leviathan and Coilwyrm return, Choir Heart | Threadcrawler returns (L45) | Whirl Seed returns (L45) | all-direction levels (L44, L46–50) | 3 of 10 (Rift Skater, Choir Seraph, Threadcrawler) | ✓ |
 
@@ -318,7 +318,7 @@ promoted to draft. Acts 1 and 2 were rechecked against their level documents on 
 was checked as built against Levels 08–14's data on 2026-10-12 (M5 part I): the 20 units of the
 row, all three-plus tiers, both multi-part bosses, three walkers, the Whirl Seed, rear, side and
 all-edge entries, 5 of 20 insectoid. Act 4 was checked as built against Levels 22–28's data on 2026-10-26 (M8
-part I): the row above.
+part I): the row above. Act 5 was checked as built against Levels 29–35's data on 2026-10-29 (M9 part I): the row above, counted from the levels' `enemy:` keys (the Crawler Tank was dropped in round 60 J1; the Warden Tank flies in its place, Level 34).
 
 ### Layer rules
 
@@ -725,8 +725,12 @@ clear. Prompts: [concept/prompts.md](concept/prompts.md#enemy-shield-final-r64).
       chase and latch, the Skimmer's lanes, the Spire's lift (`CreeperTest`, `RavagerPounceTest`,
       `WraithTest`, `FlockTest`, `DriftjellyTest`, `ReefSpitterTest`, `SlamArenaTest`,
       `LampreyTest`, `SkimmerTest`, `SpireLiftTest`).
-- [ ] The other movement patterns with the first unit that flies each — **later: Act 5** to Act 7
-      (e.g. `burrow`, `teleport`, `mirror`).
+- [x] The movement patterns Act 5 flies, each with its first unit (M9 parts B–F, ticked in part I): `ride` (the Asteroid
+      Mite, `RockRidingTest`), `chase` with `latch` and `drift` (the Void Leech, `LeechChaseTest`, `LeechDrainTest`), the
+      `chase` and belt `ricochet` of a dash (the Buzzsaw Drone, `BuzzsawTest`), `swirl` and `cross` through the wings (the
+      Rail Serpent, `RailSerpentTest`) and the walkers' `topple` (the Strider, `ToppleTest`).
+- [ ] The other movement patterns with the first unit that flies each — **later: Act 6** to Act 7
+      (e.g. `burrow`, `teleport`, `mirror`; no Act 5 unit flies them, checked in M9 part I).
 - [x] Attack patterns from the vocabulary implemented as reusable emitters: those the Act 1 units
       and bosses use (`aimed`, `burst`, `fan`, `ring`, `spiral`, `laser-sweep`, `mine`, `mortar`,
       `spawn`, `death-burst`, `none`; `EnemyGun`, `Lob`, `Mine`).
@@ -735,17 +739,24 @@ clear. Prompts: [concept/prompts.md](concept/prompts.md#enemy-shield-final-r64).
       Lamprey's `drain`, the Siege Spire's `lob`, `sweep` and maw launches (`HiveNodeTest`,
       `DriftjellyTest`, `SlamArenaTest`, `LampreyTest`, `BossLobTest`, `BossSweepTest`,
       `MawLaunchTest`).
-- [ ] The other attack patterns with the first unit that uses each — **later: Act 5** to Act 7
-      (e.g. `laser-line`, `link`, `aura`, `reflect`).
+- [x] The attack patterns Act 5 uses, each with its first unit (M9 parts B–F, ticked in part I): `laser-line` (the Rail Bunker,
+      `LaserLineTest`, `RailBunkerTest`), `link` between moving air units (the Shard Drone,
+      `LinkTest`, `AirLinksTest`), `mine` in lines with the proximity burst and chain blast (the Minelayer,
+      `MineLineTest`) and the red-gold `homing` diamond (the SAM Nest).
+- [ ] The other attack patterns with the first unit that uses each — **later: Act 6** to Act 7
+      (e.g. `aura`, `reflect`; no Act 5 unit uses them, checked in M9 part I).
 - [x] Formation spawner that places enemies by formation name and entry edge (`Formations`): the
       Act 1 formations (single, V-wing, line abreast, column, snake, stream, pincer, circle,
       whirl cluster, carrier + escorts, convoy, the walkers' paths and the chains' paths).
 - [x] The Act 2 formations with the first level that uses each (M5 parts C–G): `pack` (L09),
       `swarm` and `rear ambush` (L10), `field` (L11), `cross` (L13) (`PackFormationTest`,
       `PartDFormationsTest`, `DriftjellyTest`, `CrossTest`).
-- [ ] The other formations with the first level that uses each — **later: Act 5** to Act 7
-      (`submerged ambush` — **later: Act 5**: no Act 4 level uses it as built; the Abyss Ray rises from `sub` with its
-      own escorts).
+- [x] The Act 5 formations with the first level that uses each (M9 parts B and D, ticked in part I): the Talons'
+      V-wing with a squad leader (Level 29, `SquadLeaderTest`) and the Shard Drones' linked group (Level 31, `LinkTest`,
+      `Level31Test`); every other Act 5 wave uses a formation of the rendered table.
+- [ ] The other formations with the first level that uses each — **later: Act 6** to Act 7
+      (`submerged ambush` — **later: Act 6+**: no Act 4 or Act 5 level uses it as built (the belt is dry); the Abyss
+      Ray rises from `sub` with its own escorts).
 - [x] M5 part E (Level 11): the `sub` layer and its hit rules (E2 = a: only `anti-sub` and the
       Smart Bomb; no contact; homing shots, turrets, landing blasts, mines, the Airstrike and Rook
       skipping it) — step E2a (`SubLayerTest`).
@@ -797,18 +808,18 @@ clear. Prompts: [concept/prompts.md](concept/prompts.md#enemy-shield-final-r64).
 - [x] Multi-part enemies: segment chains following the head's path history, articulated parts,
       per-part HP and destroyable/armoured/vital parts, chain splitting (the Coilwyrm's `Chain`, the
       Gorgon Frigate's necks, the Leviathan's and the Brood Carrier's parts).
-- [ ] A machine chain's split (the rear half stops, drifts 1.5 s harmless and explodes paying its cars) — **later: Act 5**
-      (the [Rail Serpent](air/rail-serpent/README.md), M9 part C).
-- [ ] Enemy shields (the hex HP pool, overflow, refill, `shield-breaker`, the EMP) — **later: Act 5** (M9 part A, flown by
-      the Talon in part B). (Step A1: the simulation's `EnemyShield`, `EnemyShieldTest`; step A2: a unit's `shield` and
+- [x] A machine chain's split (the rear half stops, drifts 1.5 s harmless and explodes paying its cars): the
+      [Rail Serpent](air/rail-serpent/README.md), M9 part C (`RailSerpentTest`, `Level30Test`).
+- [x] Enemy shields (the hex HP pool, overflow, refill, `shield-breaker`, the EMP) — M9 part A, flown by
+      the Talon in part B (`EnemyShieldTest`, `Level29Test`). (Step A1: the simulation's `EnemyShield`, `EnemyShieldTest`; step A2: a unit's `shield` and
       the shared `shields` in [data.yaml](data.yaml), scaled by the difficulty's HP lever and the act HP factor, never
       the beam era's, `BeltRules`, `BeltChecks`, `BeltKeysTest`; step A3: the hex look `EnemyShieldLooks`, the bubble by
       size tier fading with the pool, the hit on the rim toward the ship, the break and the refill's shimmer, and
       their cues (`BeltCues`; the art in the Act 5 levels' unit atlases, `SpriteUse`), `ActFiveLooksTest`,
       `ActFiveSoundsTest`.)
-- [ ] Air links between moving units, mine lines (proximity, chain blasts), topple and crush, rock riding, ricochet off
-      rocks — **later: Act 5**, each with the first unit that flies it (the Shard Drone, the Minelayer, the Strider, the
-      Asteroid Mite, the Buzzsaw Drone; M9 parts B–E).
+- [x] Air links between moving units, mine lines (proximity, chain blasts), topple and crush, rock riding, ricochet off
+      rocks, each with the first unit that flies it (M9 parts B–E): the Shard Drone (`AirLinksTest`), the Minelayer
+      (`MineLineTest`), the Strider (`ToppleTest`), the Asteroid Mite (`RockRidingTest`), the Buzzsaw Drone (`BuzzsawTest`).
 - [x] Angle-set sprites (16/32 angles, nearest frame) and radial spinners (16 for the Skitter and
       the needle, 32 for turrets, 48 for the Coilwyrm; the Whirl Seed spinning; `EnemyLooks`).
 - [x] Act 1 passes the variety checklist (as built: [act 1](../campaign/act-1-first-contact/README.md#enemy-use-per-level)).
@@ -818,7 +829,9 @@ clear. Prompts: [concept/prompts.md](concept/prompts.md#enemy-shield-final-r64).
       8 of 22 units insectoid).
 - [x] Act 4 passes the variety checklist as built (M8 part I, 2026-10-26, from Levels 22–28's data: the table's row above;
       3 of 25 units insectoid).
-- [ ] Acts 5–7 pass it as built — **later: Act 5** to Act 7.
+- [x] Act 5 passes the variety checklist as built (M9 part I, 2026-10-29, from Levels 29–35's data: the table's row above;
+      3 of 22 units insectoid).
+- [ ] Acts 6–7 pass it as built — **later: Act 6** to Act 7.
 
 ## Open questions
 

@@ -10,7 +10,8 @@ import org.junit.jupiter.api.Test;
 /**
  * M9 part H, step H1b ({@link BossLines}; design/enemies/bosses/iron-sovereign, Fire rules): the rail batteries' and
  * the core's rail lines on the test Sovereign ({@link Act5HSpecs#SOVEREIGN}): the line's direction locks at its
- * telegraph's start, its origin rides with its battery on the turning ring (round 68's row 9, pending), one telegraphs at a time, at least 1.5 s apart, none while the ship is within 100 px of its battery; the core's rail
+ * telegraph's start, its origin rides with its battery on the turning ring (round 68's row 9, pending), the direction
+ * led for the ring's turn so the live line passes through the ship's locked point (round 69's B.1), one telegraphs at a time, at least 1.5 s apart, none while the ship is within 100 px of its battery; the core's rail
  * only below half its HP; a line hits the ship once and nothing else; the EMP Burst does nothing to it.
  */
 class BossLinesTest {
@@ -40,10 +41,13 @@ class BossLinesTest {
         assertEquals(boss.partX(p), fromX, EPS, "from the battery's centre");
         assertEquals(boss.partY(p), fromY, EPS);
         double length = Math.hypot(240 - fromX, 40 - fromY);
-        assertEquals((240 - fromX) / length, lines.dirX(), EPS, "through the ship");
-        assertEquals((40 - fromY) / length, lines.dirY(), EPS);
         double dirX = lines.dirX();
         double dirY = lines.dirY();
+        assertEquals(1, Math.hypot(dirX, dirY), EPS, "a unit direction");
+        assertTrue(
+                RailBunkerTest.across(fromX, fromY, dirX, dirY, 240, 40) > 5,
+                "led: from the battery now it passes beside the ship");
+        assertTrue(Math.abs((240 - fromX) / length - dirX) > 1e-3, "round 69's B.1: led, not straight at the ship");
         rig.shipX = 420;
         int telegraph = SimStep.ticks(Act5Specs.RAIL.telegraphSeconds());
         for (int i = 1; i < telegraph; i++) {
@@ -62,7 +66,11 @@ class BossLinesTest {
         assertTrue(Math.hypot(stepX, stepY) > 0, "its last step's move (the autopilot's look-ahead)");
         rig.step();
         assertEquals(boss.partX(p), lines.fromX(), EPS, "live, still on its battery");
+        double miss = RailBunkerTest.across(lines.fromX(), lines.fromY(), dirX, dirY, 240, 40);
+        assertTrue(miss < 1, "round 69's B.1: the live line passes through the ship's locked point: " + miss);
         Hull hull = TestSpecs.HULL;
+        assertTrue(lines.strikes(hull, 240, 40), "a ship still on its locked point is hit");
+        assertFalse(lines.strikes(hull, 420, 40), "the sidestep in the telegraph dodged it");
         double atX = lines.fromX() + dirX * 150;
         double atY = lines.fromY() + dirY * 150;
         assertFalse(lines.strikes(hull, atX - dirY * 30, atY + dirX * 30), "30 px off the riding band is clear");
@@ -128,6 +136,10 @@ class BossLinesTest {
         boss.damagePartFlat(Act5HSpecs.CORE, 0.6 * Act5HSpecs.CORE_HP + Act5HSpecs.CORE_SHIELD.hp());
         assertEquals(0.4 * Act5HSpecs.CORE_HP, boss.partHp(Act5HSpecs.CORE), 1e-6);
         assertEquals(List.of(Act5HSpecs.CORE), rig.until(SimEvents.Type.BOSS_LINE_TELEGRAPH, 6 + 1));
+        BossLines lines = boss.lines().orElseThrow();
+        double length = Math.hypot(240 - lines.fromX(), 40 - lines.fromY());
+        assertEquals((240 - lines.fromX()) / length, lines.dirX(), EPS, "the still core aims straight at the ship");
+        assertEquals((40 - lines.fromY()) / length, lines.dirY(), EPS);
         int first = rig.tick;
         assertEquals(List.of(Act5HSpecs.CORE), rig.until(SimEvents.Type.BOSS_LINE_TELEGRAPH, 6 + 1));
         assertEquals(SimStep.ticks(6), rig.tick - first, 1, "every 6 s");

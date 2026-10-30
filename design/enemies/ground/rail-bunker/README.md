@@ -52,9 +52,16 @@ with `levelReport`.
 
 - **Lock, not track.** The line's *direction* is fixed when the telegraph starts, and its origin stays on the
   turret and **rides with the bunker** (it scrolls on with the rock or hull; round 66's C.1 b, built in step FIX3): a
-  sidestep out of the 8 px band during the second is enough for a diagonal line, while the band slides down with the
-  ground, so a still ship is missed by diagonal lines and hit by near-vertical ones. Its warning is the bright red line (crimson is the lasers' hue; the line
+  sidestep out of the 8 px band during the second is enough, while the band slides down with the ground (aimed
+  ahead so it fires through the ship's locked point: *The lead* below). Its warning is the bright red line (crimson is the lasers' hue; the line
   stays thin until it fires), so it reads at speed.
+- **The lead** (round 69's B.2, the user; built in step FIX5). The turret aims in front of the ship, compensating for
+  the scroll: at the telegraph's start it predicts where it will be when the rail fires (its move with the ground times
+  the telegraph's second) and locks the line from *there* through the ship's position. The telegraph is drawn from the
+  muzzle as it scrolls, so the red line sweeps onto the ship's locked point and the rail fires through it: a still ship
+  is hit by every line, any direction, and a sidestep out of the 8 px band during the second still dodges (the line
+  never tracks). A still origin (a bunker on a halted scroll) aims straight at the ship as before. The same rule leads
+  the [Iron Sovereign](../../bosses/iron-sovereign/README.md)'s rail batteries on their turning ring.
 - **Hardened.** As the [Hive Node](../hive-node/README.md) and the Drill Rig: a standard loadout glances off,
   the player needs an `anti-ground` weapon (the Bomb Rack, the Hammer Mortar) or a special. A bunker is a
   threat to dodge for a loadout without one; the Strider's topple crushes one under its fall line (see
@@ -97,6 +104,8 @@ Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's r
 | [concept/rail-bunker-r60-a.png](concept/rail-bunker-r60-a.png) | Rail Bunker A, solid lock line — a thin red line from the muzzle through the ship to the edge, brightening 1 → 2 px over 1.0 s while the coils glow gold; the rail shot (sheet) | chosen (round 60) |
 | [concept/rail-bunker-r60-a.gif](concept/rail-bunker-r60-a.gif) | Rail Bunker A, solid lock line — a thin red line from the muzzle through the ship to the edge, brightening 1 → 2 px over 1.0 s while the coils glow gold; the rail shot (motion) | chosen (round 60) |
 | [concept/laser-line-capture-r61-a.png](concept/laser-line-capture-r61-a.png) | Game capture on the [capture rig](../../concept/prompts.md#belt-rig-capture-r61-a) (step A4; Spine Turrets on Level 08's landing pad stand in for the bunker): the thin red telegraph lines locked through the ship's position, the same lines flickering just before they fire, the live band (the provisional `LineLooks` gold round a white core until this unit's art) | chosen (round 61, C.5: accepted) |
+| [concept/rail-bunker-capture-r69-a.mp4](concept/rail-bunker-capture-r69-a.mp4) | Game capture, Level 33 (step I3; [recipe](concept/prompts.md#rail-bunker-capture-r69-a)), clip with sound: the ridge pair's left bunker telegraphing, its line riding down with the bunker, the direction locked, the rail shot missing the still ship (C.1 b as built; round 69 B.2) | chosen (round 69, B.2 ok (the clip shows the pre-FIX5 aim; the lead is built in FIX5)) |
+| [concept/rail-bunker-capture-r69-a.png](concept/rail-bunker-capture-r69-a.png) | Game capture (step I3; [recipe](concept/prompts.md#rail-bunker-capture-r69-a)), frames at 0.6: the same line at t=69.9, 70.4, 70.8 and the shot at 71.0 (round 69 B.2) | chosen (round 69, B.2 ok (the clip shows the pre-FIX5 aim; the lead is built in FIX5)) |
 
 ## Implementation
 
@@ -111,7 +120,12 @@ Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's r
       direction locked, a diagonal line slides off a still ship, a near-vertical one hits it and a sidestep dodges, the
       gate of 2 unchanged; `LeechFieldLooks` draws the telegraph, rail and flash from the bunker as drawn, the fading
       rail riding on with it; the autopilot's line rule looks ahead along the moving band. The Iron Sovereign's
-      batteries' lines ride the same way, `BossLines`, pending round 68)
+      batteries' lines ride the same way, `BossLines`, decided in round 68, 2026-10-29)
+- [x] The lead (round 69's B.2): the locked line aims from where the bunker will be when it fires through the ship
+      (step FIX5: `LineAim`, shared with `BossLines`; `LineBeam` locks from the unit's last step's move times the
+      telegraph's steps; `RailBunkerTest`: a scrolling bunker's live line passes within 1 px of the locked ship point and
+      a sidestep dodges; `LaserLineTest`: a still origin aims straight at the ship; the EMP's cancel and the gate of 2
+      unchanged; the looks and the autopilot read the line from the simulation, unchanged)
 - [x] Production sprites from the chosen r04 concept (the turret at 32 angles, the coil glow, the wreck), the intel portrait
       (step F4: `LeechFieldLooks` in place of `LineLooks`' placeholder for the unit: the turret turning at 90°/s and onto
       the locked line, the coils by the charge, the rail strip live and fading from the muzzle's distance, the flash)
@@ -140,3 +154,7 @@ Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's r
   locked; `art: final` (F.3 ok, the last open item). The ground's `rail-bunker-capture-r66-a.png` shows C.1 a's line
   leaving the turret: kept as round 66's record and marked stale in the ground's Concept art table (FIX3's 1:1 check
   on Level 33 at t≈69.4–70.5: the red line stays on the scrolling turret's muzzle).
+- 2026-10-29 (user, round 69 B.2: "The looks are ok, but the gun must aim in front of the ship. It must compensate for
+  the movement of the screen."): the line leads the scroll (Behaviour, *The lead*), built in step FIX5; the looks
+  unchanged. `levelReport -Plevel=33`: won 3/3, 0 retries on every difficulty (as before); `Level33Test`'s autopilot
+  still struck by 0 lines.

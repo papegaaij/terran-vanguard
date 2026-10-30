@@ -46,8 +46,14 @@ rim (belt_units.py ``rim``); the wreck burnt black and gold, the stub the livery
 is the grey tank's ``warden-tank-flash``, the pivots the same numbers in ``pivots/warden-tank-asc.json``), held in
 build/art-held/ until the tank's data names the livery (``livery: {sprite: warden-tank-asc}``); review
 design/enemies/ground/concept/warden-tank-asc-final-r67-a.png/.gif (on Level 34's Helix hull when its backdrop exists).
+Round 67 **G.1 c** (step FIX4): the livery alone casts a faint ground shadow, the look of
+design/campaign/act-5-the-belt/level-34-salvage-run/concept/tank-readability-r67-c.png (tools/concept/tank_readability_r67.py
+``shadow``): each hull heading's and each wreck's silhouette offset 4, 5 px down-right (away from the top-left sun,
+whatever the heading), blurred, 50 % black, written as ``warden-tank-asc-shadow_0..15`` and ``-asc-wreck-shadow_0..15``
+(84x84, centred on the tank like the hull); the game draws them under the ground units (TankLooks), the grey tank has
+none. ``--shadows`` writes them from the frames already written (no render).
 
-Run: python3 tools/art/warden_tank.py [--livery asc] [--review]   (~1 min on 20 cores; renders cached in the system
+Run: python3 tools/art/warden_tank.py [--livery asc] [--review | --shadows]   (~1 min on 20 cores; renders cached in the system
 temp dir, conceptgame-cache/warden-tank/; --review rebuilds the review from the written files)
 """
 import contextlib
@@ -60,7 +66,7 @@ from dataclasses import replace
 from pathlib import Path
 
 import numpy as np
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFilter
 
 import artkit
 from artkit import DESIGN, ROOT, TAU, sprite
@@ -420,6 +426,29 @@ def build():
     write(f"{r}-wreck", artkit.quantize_set(of("wreck"), 32))
     with target():
         artkit.write_pivots(ROOT_NAME, SOURCE, pivots())
+    if LIVERY == "asc":
+        write_shadows()
+
+
+def shadow(frame, dx=4, dy=5, k=0.5):
+    """G.1 c's ground shadow (tank_readability_r67.py ``shadow``): the silhouette offset away from the top-left sun,
+    blurred, k black, on a canvas 8 px larger, centred like the frame."""
+    a = frame.getchannel("A").point(lambda p: 255 if p > 40 else 0)
+    pad = Image.new("L", (frame.width + 8, frame.height + 8), 0)
+    pad.paste(a, (4 + dx, 4 + dy))
+    pad = pad.filter(ImageFilter.GaussianBlur(1.6)).point(lambda p: int(p * k))
+    out = Image.new("RGBA", pad.size, (0, 0, 0, 0))
+    out.putalpha(pad)
+    return out
+
+
+def write_shadows():
+    """The livery's shadows from its written hull (tread frame 0 of each heading) and wreck frames."""
+    hull, wreck = load(ROOT_NAME), load(f"{ROOT_NAME}-wreck")
+    if len(hull) != HEADINGS * TREADS or len(wreck) != HEADINGS:
+        sys.exit(f"{ROOT_NAME}: {len(hull)} hull and {len(wreck)} wreck frames, build them first")
+    write(f"{ROOT_NAME}-shadow", [shadow(hull[k * TREADS]) for k in range(HEADINGS)])
+    write(f"{ROOT_NAME}-wreck-shadow", [shadow(f) for f in wreck])
 
 
 def intel_model(livery="grey"):
@@ -638,6 +667,9 @@ SET_NAMES = ["warden-tank", "warden-tank-turret", "warden-tank-turret-stub", "wa
 if __name__ == "__main__":
     if "--livery" in sys.argv[1:]:
         set_livery(sys.argv[sys.argv.index("--livery") + 1])
+    if "--shadows" in sys.argv[1:]:
+        write_shadows()
+        sys.exit(0)
     if "--review" not in sys.argv[1:]:
         build()
     review()

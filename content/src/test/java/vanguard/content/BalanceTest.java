@@ -122,6 +122,10 @@ class BalanceTest {
      * reason; the test fails when one disappears (remove it here).
      */
     static final Map<String, String> ACCEPTED = Map.of(
+            "clamp-gun ttk",
+            "250 HP at L29's reference DPS 120 is 2.1 s, above the medium class's 0.4-1.5 s: the four hold the"
+                    + " rescue halt, 1,000 HP together for the README's typical halt of about 14 s at the boss rule's"
+                    + " 0.6 x the reference; at 80 they fell in about 3 s (M9 part B, step B3b; accepted in round 62 C.2)",
             "clamp-gun bounty",
             "the bounty 10 is below the medium class's 18-30: Level 29's approved credit budget gives it"
                     + " (round 60): the four hold the rescue halt; at 18 the typical"
@@ -148,7 +152,16 @@ class BalanceTest {
             "wraith ttk",
             "16 HP at L10's reference DPS 66 is 0.24 s, below the medium class's 0.4–1.5 s: set for the plan's"
                     + " rear DPS (Tail Gun L1, 10) with its rear check instead (user decision D7 = a, 2026-10-08,"
-                    + " M5 part D)");
+                    + " M5 part D)",
+            "iron-sovereign ttk",
+            "the paper fight (the 13 batteries' 3,960 HP and the core's 14,000 at 0.6 × L35's reference 144) is 209 s,"
+                    + " above the act boss's 90-180 s: the core tuned on the autopilot's measured fight (the plan's fit"
+                    + " and Rook, 149 s at medium over five seeds: the beam's columns, the pods and Rook beat the paper's"
+                    + " 0.6); M9 part H, step H3, accepted as built in round 68 (C.1 a)",
+            "relay-beacon bounty",
+            "Level 27's approved bounty 15 (round 48) is below the medium class's 18-30 at 60 HP (0.5 s at L27's"
+                    + " reference DPS 116, the medium class's time): the secondary is its reward; accepted in round 57"
+                    + " (C.3, M8 part G, step G2)");
 
     /**
      * Hard: the static estimate cannot always pay both the plan's purchases and the repairs of its
@@ -163,20 +176,7 @@ class BalanceTest {
      * Deviations from the balancing basis reported for a decision; the test fails when one is fixed
      * (remove it here) or a new one appears.
      */
-    static final Map<String, String> PENDING = Map.of(
-            "iron-sovereign ttk",
-            "the paper fight (the 13 batteries' 3,960 HP and the core's 14,000 at 0.6 × L35's reference 144) is 209 s,"
-                    + " above the act boss's 90-180 s: the core tuned on the autopilot's measured fight (the plan's fit"
-                    + " and Rook, 149 s at medium over five seeds: the beam's columns, the pods and Rook beat the paper's"
-                    + " 0.6); M9 part H, step H3, pending round 68",
-            "clamp-gun ttk",
-            "250 HP at L29's reference DPS 120 is 2.1 s, above the medium class's 0.4-1.5 s: the four hold the"
-                    + " rescue halt, 1,000 HP together for the README's typical halt of about 14 s at the boss rule's"
-                    + " 0.6 x the reference; at 80 they fell in about 3 s (M9 part B, step B3b, pending round 62)",
-            "relay-beacon bounty",
-            "Level 27's approved bounty 15 (round 48) is below the medium class's 18-30 at 60 HP (0.5 s at L27's"
-                    + " reference DPS 116, the medium class's time): kept as drafted, for the user's review in round 57"
-                    + " (M8 part G, step G2)");
+    static final Map<String, String> PENDING = Map.of();
 
     /** One hangar visit of the balancing sheet. */
     record Row(
@@ -260,19 +260,15 @@ class BalanceTest {
             boolean wet = plan.underwater().contains(level);
             double[] dps = dps(campaign.gear().loadout(), wet);
             // M7 part I: every planned level has its data (Level 21 since part H), so the income is always the
-            // level's typical haul; M8 part I: Act 4's too (part A's temporary budget(n) for a level without its
-            // data is gone).
+            // level's typical haul; M8 part I: Act 4's too, M9 part I: Act 5's (each part A's temporary budget(n)
+            // for a level without its data is gone).
             double budget = CONTENT.economy().budget().of(level);
             Optional<String> key = CONTENT.levelKey(level);
-            if (key.isEmpty() && !ACT_5_PLANNED.contains(level)) {
+            if (key.isEmpty()) {
                 throw new AssertionError("Level " + level + " has no level data");
             }
-            // M9 part A (temporary, as M8 part A's for Act 4): an Act 5 level planned before its data earns budget(n),
-            // the generator's hand plan's haul; each level's part replaces it with its typical haul.
             int haul = (int) Math.rint(incomeFactor
-                    * key.map(built ->
-                                    TypicalHaul.of(CONTENT, built, difficulty).typical())
-                            .orElse(budget));
+                    * TypicalHaul.of(CONTENT, key.get(), difficulty).typical());
             // Round 34, P3 = A: the typical player's grade bonus (a B) on top of the haul.
             int income = haul + (int) Math.rint(plan.gradeBonus() * haul);
             rows.add(new Row(
@@ -884,7 +880,7 @@ class BalanceTest {
      * The act HP factor (design/enemies Balancing basis, D5 = c of M5 part A): a returning unit of
      * tier {@code medium} or larger (and the basis's {@code small_act_hp} units, the factor capped at ×3: the user's Act
      * 2 playtest, 2026-10-18), built by {@link SimSpecs#enemy} for each Act 2 and (M7 part A) Act 3
-     * level after its first (Levels 08–21, M8 part I: and Act 4's to Level 28, as far as the reference DPS curve goes), keeps its time to kill inside its
+     * level after its first (Levels 08–21, M8 part I: and Act 4's to Level 28, M9 part I: Act 5's to Level 35, as far as the reference DPS curve goes), keeps its time to kill inside its
      * size class's target at that level's reference DPS (M7 part E: times the beam era's factor for its tier from
      * Level 18 on, {@code beam_era_hp}) (its parts' and segments' HP summed; 1 HP of
      * rounding allowed). Units already off target at their first level are left to {@link
@@ -909,7 +905,7 @@ class BalanceTest {
                         case MEDIUM -> new double[] {0.4, 1.5};
                         default -> new double[] {1, 3};
                     };
-            for (int level = Math.max(ACT_2_FIRST, enemy.firstLevel() + 1); level <= ACT_4_LAST; level++) {
+            for (int level = Math.max(ACT_2_FIRST, enemy.firstLevel() + 1); level <= ACT_5_LAST; level++) {
                 Double reference = CONTENT.enemyBasis().referenceDps().get(level);
                 if (reference == null) {
                     continue;
@@ -918,7 +914,7 @@ class BalanceTest {
                         && !CONTENT.enemyBasis().smallActHp().applies(entry.getKey(), level)) {
                     continue; // only in small_act_hp's levels (Levels 08-09)
                 }
-                int act = level >= ACT_4_FIRST ? 4 : level >= ACT_3_FIRST ? 3 : 2;
+                int act = level >= ACT_5_FIRST ? 5 : level >= ACT_4_FIRST ? 4 : level >= ACT_3_FIRST ? 3 : 2;
                 EnemySpec spec =
                         SimSpecs.enemy(CONTENT, entry.getKey(), Difficulty.MEDIUM, Optional.empty(), act, level);
                 double hp = spec.hp()
@@ -959,12 +955,10 @@ class BalanceTest {
 
     static final int ACT_4_LAST = 28;
 
-    /**
-     * M9 part A (temporary): Act 5's visits are planned (design/player/balance-plan.yaml) before its levels are built;
-     * such a level's income is budget(n) on the sheet, and its level checks wait for its data.
-     */
-    static final java.util.Set<Integer> ACT_5_PLANNED =
-            java.util.stream.IntStream.rangeClosed(29, 35).boxed().collect(java.util.stream.Collectors.toSet());
+    /** M9 part I: Act 5's levels (design/campaign/act-5-the-belt), as far as the reference DPS goes. */
+    static final int ACT_5_FIRST = 29;
+
+    static final int ACT_5_LAST = 35;
 
     /**
      * Time to kill at the unit's first level (design/enemies Balancing basis): {@code tiny} one hit

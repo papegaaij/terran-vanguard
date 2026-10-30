@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../../campaign, ../../world]
-updated: 2026-10-28
+updated: 2026-10-29
 ---
 
 # Special abilities
@@ -360,7 +360,7 @@ Sonar Pulse under water in Level 26's black, a/b; generator `tools/concept/gear_
 - [x] Decoy Flares — **later: Act 4** (unlock at L27 with the first homing projectiles; user decision D4 of M4 part G) (M8 part A, step A2: the `flares` block in [data.yaml](data.yaml), `SpecialsData.Flares`; the simulation in step A3: `Act4SpecialsTest.theFlaresFanOutBackwardsSlowToAStopAndBurnFourSeconds`, `aHomingMissileGoesForTheNearestBurningFlareAndBurstsOnIt`; flown in step A4, `Act4ArsenalFlightTest.theSonarPulseAndTheDecoyFlaresFlyWithTheirSettings`; the look and the chosen r08-a sound in step A6)
 - [x] One free Airstrike charge granted once, at the unlock before L04
 - [x] Act 5's limit inside the hollowed asteroid (L32): Airstrike and Orbital Lance forbidden, `IN ROCK`; the
-  Sonar Pulse `NO WATER` all act — **later: Act 5** (draft: *Act 5 specials*) — M9 part A (step A1: the simulation's
+  Sonar Pulse `NO WATER` all act — M9 part A (draft: *Act 5 specials*) (step A1: the simulation's
   `SpecialLimits.Reason.IN_ROCK`; step A2: the `underground` limit in [data.yaml](data.yaml), a level's or section's
   `underground: true`, `medium: vacuum` dry, `LevelData.forbiddenReason`, `BeltKeysTest`; step A3: the HUD word fits
   the compact row with the Lance's whole name, `DeepWaterLooksTest`; the intel's `SPECIAL LIMITED` names the setting's

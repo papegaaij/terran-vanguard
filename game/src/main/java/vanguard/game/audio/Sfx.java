@@ -1244,13 +1244,13 @@ public enum Sfx {
      */
     SOVEREIGN_RING_TURN("sfx/sovereign-ring-turn-r60-a.ogg", 1, Bus.EFFECTS, AMBIENCE),
     /** M9 part H: the inner ring unlocking for a step, at its 0.4 s tell (a ratchet clank and a gear run). */
-    SOVEREIGN_STEP("sfx/sovereign-step-r68-a.ogg", 1, Bus.EFFECTS, BOSS),
+    SOVEREIGN_STEP("sfx/sovereign-step-r68-b.ogg", 1, Bus.EFFECTS, BOSS),
     /** M9 part H: the inner ring's step ending, its hold starting (a heavy latch). */
     SOVEREIGN_HOLD("sfx/sovereign-hold-r68-a.ogg", 1, Bus.EFFECTS, BOSS),
     /** M9 part H: a ring's last battery killed, the ring grinding to a halt (a metal screech, the stop's thud at 2.0 s). */
     SOVEREIGN_LOCK("sfx/sovereign-lock-r68-a.ogg", 2, Bus.EFFECTS, WARNING),
     /** M9 part H: the station's klaxon, at the intro and over the core's opening (over the music, no duck of its own). */
-    SOVEREIGN_KLAXON("sfx/sovereign-klaxon-r68-a.ogg", 1, Bus.EFFECTS, WARNING),
+    SOVEREIGN_KLAXON("sfx/sovereign-klaxon-r68-b.ogg", 1, Bus.EFFECTS, WARNING),
     /** M9 part H: the core's shutters parting over its 3 s opening (the petals' thud at about 2.8 s). */
     SOVEREIGN_SHUTTERS("sfx/sovereign-shutters-r68-a.ogg", 1, Bus.EFFECTS, BOSS),
     /** M9 part H: the shut core's fan of five, once per fan at the shot (after its 0.5 s glow). */

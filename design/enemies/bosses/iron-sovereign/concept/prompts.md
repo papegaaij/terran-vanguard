@@ -59,7 +59,7 @@ play field, 26 s).
 
 ## iron-sovereign-final-r68-a
 
-**Production art, pending the user's review in round 68 (step ART-H1, 2026-10-29).** The chosen A.17 b "armoured
+**Production art, decided in round 68, 2026-10-29 (step ART-H1, 2026-10-29).** The chosen A.17 b "armoured
 links" in Q.11 b's gunmetal and charcoal with gold, built for A.23 **top-lit**: the ring segments rendered once over
 0-45 degrees with a light straight above the station's centre (outer 88, middle 63, inner 41 frames: the rim moves
 <= 2 px a step), every other heading by quarter turns and a mirror (pixel-exact: the review proves the rule against
@@ -89,3 +89,9 @@ Concept round 68, captures of the game, not generated art (M9 part H, step H5, 2
 - **sovereign-bays-capture-r68-a**: run C 205.2–212.2 s (the core open at ≈ 203 s), 320×400 on the core's left (a rim bay's stream of four Darts flying out; small and dark on the dark rings); the PNG 205.8–207.0 s at 0.75.
 - **sovereign-death-capture-r68-a**: run A +147.7 to +156.2 s, the play field (the kill, the cook-offs ring by ring, the implosion, the white flash, the segments drifting and fading within ≈ 1 s, the base disc; the `huge` rung); the PNG +148.8 to +161.9 s at 0.5.
 - **sovereign-rings-capture-r68-a**: run A: the station at 1:1 in phase 1 (+10 s, the arc band lit on the lower rings), crops at 1:1 of the outer and middle rings with a SAM and a rail battery, the inner ring with the shut core, and the arc band under a laser battery's sweep (+24.6 s); no clip.
+
+## iron-sovereign-capture-r69-a
+
+Concept round 69, a capture of the game, not generated art (M9 part I, step I3, 2026-10-29): the game built by `:desktop:installDist` from branch `m9-act-5` (the working tree after steps FIX3, FIX4 and I1, the full `check` green) on a private 960×540 Xvfb display, `--bench <s> --settings <scratch>/settings.properties`, `--level 35 --difficulty medium --invulnerable`, the plan's fit of [iron-sovereign-capture-r68-a](#iron-sovereign-capture-r68-a) with Rook, `controls.auto-fire=true`, the ship still in the middle (**run A**; the level time from the relay's flash at t=61, the fight labelled in seconds from the halt). Clips: `ALSOFT_DRIVERS=wave` writing the game's own mix to a file, the screen recorded with ffmpeg `x11grab` at 30 fps, cut to the subject (≤ 1 s lead-in), cropped and muxed (H.264 main, AAC; the sound 0.47 s behind the recording, checked on the shots' cracks); checked on an eight-frame sheet. PNGs: frames of the same recording, labelled. Script: step I3's `clips69.py` (scratch).
+
+- **sovereign-rail-capture-r69-a**: halt +16.7 to +19.9 s, the play field: a middle-ring rail battery's thin line telegraphed from its collar at halt +17.2 and fired at +17.7, its origin riding with the turning ring, the core rail's lines beside it (round 68 C.9 a as built in FIX3); the PNG 240×240 at 1:1 on the battery at +17.2, +17.5, +17.7, +17.8 s.

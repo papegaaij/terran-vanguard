@@ -1,7 +1,7 @@
 ---
 title: Warden Tank
 design: approved
-implementation: in-progress
+implementation: done
 art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../player/specials, ../../../campaign/act-3-red-dust, ../../../campaign/act-5-the-belt]
 updated: 2026-10-29
@@ -124,7 +124,11 @@ docstring and `briefs/m7f-names.md`); approved as final by the user in round 42 
 proposed in round 67 (M9 part G, step ART-G): [warden-tank-asc-final-r67-a.png](../concept/warden-tank-asc-final-r67-a.png)
 ([GIF](../concept/warden-tank-asc-final-r67-a.gif)), `tools/art/warden_tank.py --livery asc` (A.15 b in Q.11 b's
 gunmetal, the frames `warden-tank-asc*`); its readability on Level 34's hulls in
-[the level's 1:1 crops](../../../campaign/act-5-the-belt/level-34-salvage-run/concept/tank-readability-final-r67-a.png).
+[the level's 1:1 crops](../../../campaign/act-5-the-belt/level-34-salvage-run/concept/rejected/tank-readability-final-r67-a.png).
+Accepted as final in round 67 (G.3) with G.1 c's faint ground shadow under every liveried tank and wreck
+(`warden-tank-asc-shadow`, `-asc-wreck-shadow`: `tools/art/warden_tank.py --livery asc --shadows`, the look of
+[the c mockup](../../../campaign/act-5-the-belt/level-34-salvage-run/concept/tank-readability-r67-c.png)); seen in the
+game in [Level 34's capture](../../../campaign/act-5-the-belt/level-34-salvage-run/concept/tank-readability-capture-r67-c.png).
 
 Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's review board follows) — a/b proposals in the belt look of [Q11](../../README.md#open-questions) a (gloss black; the user chose look b, gunmetal/charcoal with gold, in round 60, so the chosen variant is re-rendered in gunmetal in production), each a PNG sheet (the source render, the sprites and states, the readability check over the darkest ground of Level 34 with the measured gold share, key frames) and a GIF in the 480×540 play field; generator `tools/concept/enemies_r60.py`. Prompts: [concept/prompts.md](concept/prompts.md).
 
@@ -139,7 +143,7 @@ Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's r
 - [x] Tracked `walk` along roads and conveyors (belt speed added) (step F3: `Belts`, `FoundryTest`)
 - [x] Turret burst: 0.3 s still before it fires, 3 shots 0.15 s apart, every 2.5 s, any direction (step F3: `WardenTankTest`)
 - [x] Rear plate ×1.5 within ±50° of the rear; the turret's loss silences it (step F3: `EnemySpec.RearPlate`, `WardenTankTest`)
-- [ ] EMP stun 3 s (machine)
+- [x] EMP stun 3 s (machine) (`WardenTankTest.anEmpStunStopsTheTurret`: tracks and turret stop, no shot; the EMP Burst flies in Levels 29–35, ticked in M9 part I)
 - [x] Unmarked grey livery and wreck for Act 3; Ascendancy livery from Act 5 (step G4: `warden-tank-asc` from Act 5,
       the grey frames only before it; seen in round 67's captures, step G5)
 - [x] Act 5 (when the draft is approved): L34 in the data's *used in* row, the act HP factor at L34 (hull 97, turret 30), the intel label "Ascendancy" from Act 5, the livery's production frames and wreck (`tools/art/warden_tank.py`) (step G2: the *used in* row, the `livery` key and the frames `warden-tank-asc*` in `assets/`; the act HP factor with step G3, the liveried intel portrait with step G4; the intel's faction tag
@@ -147,6 +151,9 @@ Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's r
 - [x] Data file with the stat block (when Level 19 is built): step F2, the `turret` and `rear_plate`
       keys loaded, checked and mapped (`FoundryRules`)
 - [x] Production art (round of part F; approved as final in round 42, F.b)
+- [x] Round 67 G.1 c / G.3: the livery's faint ground shadow under each tank and its wreck (16 hull and 16 wreck
+      headings, offset 4, 5 px down-right whatever the heading, blurred, 50 % black; drawn under the ground units,
+      the grey tank none) (step FIX4: `TankLooks.drawShadows`, `Level34LooksTest`)
 
 ## Open questions
 
@@ -179,6 +186,11 @@ Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's r
 - 2026-10-29 (M9 part G, step G2): the data's `livery: {from_act: 5, sprite: warden-tank-asc, faction: Jovian
   Ascendancy}` and the *used in* row (L34 before Act 6's L39 and L41); `tools/art/warden_tank.py --livery asc` re-run, its
   frames now claimed in `assets/sprites/` (the muzzle flash stays `warden-tank-flash`).
-- 2026-10-29 (step G5, pending the user's review in round 67): the livery seen in Level 34's game captures at 1:1 on
+- 2026-10-29 (step G5, decided in round 67, 2026-10-29): the livery seen in Level 34's game captures at 1:1 on
   the CDF walkways, the Helix keel roads and the freighter's deck (QG-1); a mining charge (80) finishes a tank the guns
   have hit and strips a fresh one's turret (round 67's C.4).
+- 2026-10-29 (user, [round 67](../../../concept-rounds/round-67/README.md), closed): **G.3 ok, with the addition of the shadows from G.1**: the livery's frames accepted; every liveried tank and its wreck gets a faint ground shadow (silhouette offset 4, 5 px down-right, softly blurred, 50 % black), built in FIX4 with G.1 c's black Helix hulls. `art` is `chosen` until FIX4 has built it (then `final`).
+- 2026-10-29 (step FIX4): the shadows built as baked frames (`warden-tank-asc-shadow_0..15`, `-asc-wreck-shadow_0..15`,
+  84×84, the c mockup's own shadow code in `tools/art/warden_tank.py`) drawn by the renderer under the ground units
+  (the wrecks' under the wrecks); a baked frame rather than a draw pass because the blur needs no shader and the hull's
+  hit flash stays the hull's own silhouette. Opt-in by the frames: Level 19's grey tank has none. `art: final`.

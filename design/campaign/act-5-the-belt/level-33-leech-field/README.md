@@ -354,20 +354,20 @@ Data in **Act 1 terms** (Asteroid Mite 3, Skitter 5, Mote Swarm 2 a mote, Stinge
 Void Leech 12, Rail Bunker 45, the crate 100, the secondary 100), × the act factor **6.5536** (1.6⁴), bounties
 × the scale. The draft's **`bounty_scale` 0.55** (by hand at ≈ 110 a minute) is **0.43** with step F2's
 firing groups: the typical haul with the hardened Rail Bunkers at **0 %** (below) is **≈ 6,155 (+0.9 %)**. The
-table below is the economy's rule as `tools/sync_tables.py` renders it (ground targets at 80 %: +14 %); the
-typical haul `TypicalHaulTest` checks counts the bunkers at 0 % (step F3: a test-side rule, `TypicalHaul`'s
-hardened ground at 0 % while the plan's fit has no `anti-ground` gun; 6,153, +0.9 %).
+table below counts the bunkers at 0 % as the typical haul `TypicalHaulTest` checks does (step F3: a test-side rule,
+`TypicalHaul`'s hardened ground at 0 % while the plan's fit has no `anti-ground` gun; `tools/sync_tables.py` renders
+the same since M9 part I, before it the economy's 80 %: +14 %).
 
 <!-- data: credit-budget -->
 | Source | Perfect run | Typical haul |
 |---|---|---|
 | Kills: Asteroid Mite 53 × 3 + Talon 138 × 12 + Skitter 50 × 5 + Mote Swarm 61 × 2 + Stinger 20 × 15 + Void Leech 63 × 12 | 9,164 | 5,498 |
 | Squad leaders: 6 × 13 extra (perfect run only) | 216 | 0 |
-| Ground targets: Rail Bunker 8 × 45 | 1,016 | 813 |
+| Ground targets: Rail Bunker 8 × 45 (hardened: typical 0 %, the plan's fit has no anti-ground gun) | 1,016 | 0 |
 | Secret: Claim 114 (hidden crate, 2% of budget) | 655 | 328 |
 | Secondary: purge the field | 655 | 328 |
-| **Total** (bounty scale 0.43) | **11,706** | **6,966** |
-| Budget(n) = the typical haul's target; typical +14 %, perfect 1.92 × budget | | 6,101 |
+| **Total** (bounty scale 0.43) | **11,706** | **6,153** |
+| Budget(n) = the typical haul's target; typical +1 %, perfect 1.92 × budget | | 6,101 |
 <!-- /data -->
 
 **The bunkers and the plan.** The Rail Bunkers are hardened and the hand plan's L33 fit (the Ion Beam L4, two
@@ -427,7 +427,8 @@ Prompts: [concept/prompts.md](concept/prompts.md).
 | [concept/claim-114-capture-r66-a.png](concept/claim-114-capture-r66-a.png) | Game capture: Claim 114 coming down shut, shot open, its crate | chosen (round 66, accepted with the level, F.6) |
 | [concept/choir-capture-r66-a.png](concept/choir-capture-r66-a.png) | Game capture: the Choir's line (t=120) | chosen (round 66, accepted with the level, C.6) |
 | [concept/nav-buoy-capture-r66-a.png](concept/nav-buoy-capture-r66-a.png) | Game capture: the CDF nav buoy and its armour patch | chosen (round 66, accepted with the level, F.6) |
-| [concept/level-33-capture-r66-a.mp4](concept/level-33-capture-r66-a.mp4) | Game capture with the game's sound: three leeches latching (the latch, drain whine, hum, brown-out), the prey wing, a rail line and shot | chosen (round 66, accepted with the level, F.1–F.6) |
+| [concept/level-33-capture-r66-a.mp4](concept/level-33-capture-r66-a.mp4) | Game capture with the game's sound: three leeches latching (the latch, drain whine, hum, brown-out), the prey wing, a rail line and shot | chosen (round 66, accepted with the level, F.1–F.6; its rail line is C.1 a's, stale since FIX3: the ridge pair's line riding with the bunker is the Rail Bunker's `rail-bunker-capture-r69-a`) |
+| [concept/nest-face-before-after-r69-a.png](concept/nest-face-before-after-r69-a.png) | Before-and-after sheet (step I3; [recipe](concept/prompts.md#nest-face-before-after-r69-a)): `nest-face-1` with step F's middle nest and with FIX3's pad at x 240 and the nest moved, 1:1 (round 69 B.7) | chosen (round 69, B.7 ok) |
 
 ## Implementation
 
@@ -541,3 +542,6 @@ Approved in round 60 (the gap analysis's questions this level follows):
   hard's third bunker of the t≈86 and t≈132 nests stands on its own pad at x 240 (`tools/art/backdrop_l33.py`'s
   `HARD_PADS`; the middle nest of `nest-face-1` moved off it to (320, 160)), no longer between the pads with none
   under it. `levelReport -Plevel=33`: won 3/3, 0 retries on every difficulty.
+- 2026-10-29 (user, [round 69](../../../concept-rounds/round-69/README.md), closed): **B.7 ok** (the middle nest of
+  `nest-face-1` moved to (320, 160) for hard's pad; the before-and-after sheet is `chosen`). **B.2 ok**, with the note
+  that the line must lead the scroll: built in step FIX5 (the Rail Bunker's page).

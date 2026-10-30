@@ -362,6 +362,24 @@ final class SetPieceParts {
         return piece.motion.y + partOffsetY(p);
     }
 
+    /**
+     * Round 69's B.1 ({@link LineAim}): where part {@code p}'s centre will be {@code ticks} steps on: the piece moving
+     * on as over its last step, a ring battery turning on with its ring ({@link RingArena#leadOffsetX}); any other
+     * part's offset as now.
+     */
+    double partLeadX(int p, int ticks) {
+        SetPieceMotion motion = piece.motion;
+        double x = motion.x + (motion.x - motion.prevX) * ticks;
+        return x + (ring != null && ring.battery(p) >= 0 ? ring.leadOffsetX(p, ticks) : partOffsetX(p));
+    }
+
+    /** As {@link #partLeadX}, px up. */
+    double partLeadY(int p, int ticks) {
+        SetPieceMotion motion = piece.motion;
+        double y = motion.y + (motion.y - motion.prevY) * ticks;
+        return y + (ring != null && ring.battery(p) >= 0 ? ring.leadOffsetY(p, ticks) : partOffsetY(p));
+    }
+
     /** As {@link SetPiece#partOffsetX}. */
     double partOffsetX(int p) {
         SetPieceMotion motion = piece.motion;

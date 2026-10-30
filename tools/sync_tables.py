@@ -1118,6 +1118,12 @@ def credit_budget(d):
     return table_text
 
 
+# M9 part F (TypicalHaul.UNPAID_HARDENED): the levels whose balance-plan fit has no `anti-ground` gun, so their
+# hardened ground units (Level 33's Rail Bunkers: only anti-ground weapons and the specials hurt them) pay the typical
+# player nothing (0 %); a test-side rule, no data key. M9 part I: the same rule here, so the README's table agrees.
+UNPAID_HARDENED = {33}
+
+
 def credit_rows(d, level):
     """The credit budget of `level` (the level's data, or a route's of it): its perfect run, its typical haul and the
     rendered table."""
@@ -1225,19 +1231,26 @@ def credit_rows(d, level):
             enemies[slug] = enemies.get(slug, 0) + 1
     paying = [ground_values(g) for g in level["ground_targets"]
               if "enemy" not in g and ("bounty" in g or g.get("drop", "").endswith("salvage"))]
-    parts = [f"{enemy_name(slug)} {n} × {stat_bounty(slug)}" for slug, n in enemies.items()]
+    def unpaid(slug):
+        """M9 part F: a hardened unit the plan's fit cannot hurt pays the typical player nothing (UNPAID_HARDENED)."""
+        return n_level in UNPAID_HARDENED and load(f"{enemy_dir(slug)}/data.yaml").get("armour") == "hardened"
+
+    parts = [f"{enemy_name(slug)} {n} × {stat_bounty(slug)}"
+             + (" (hardened: typical 0 %, the plan's fit has no anti-ground gun)" if unpaid(slug) else "")
+             for slug, n in enemies.items()]
     parts += [fill(g["notes"]["budget"], g) for g in paying]
     def ground_items(slug, n):
         """M8 part B: a ground target with unit parts (the Drill Rig) pays its body and each part, each rounded (the
         whole: the body's bounty and first bonus, as the parts' bounties); another by its stat block's bounty."""
         e = load(f"{enemy_dir(slug)}/data.yaml")
+        share = 0 if unpaid(slug) else rate["ground_targets"]
         vital = whole_part(e)
         if not vital and e.get("part_list"):  # each part's own bounty, rounded (as the game; step E3b)
-            return [(n, bounty(p["bounty"]), rate["ground_targets"]) for p in e["part_list"]]
+            return [(n, bounty(p["bounty"]), share) for p in e["part_list"]]
         if not vital:
-            return [(n, bounty(stat_bounty(slug)), rate["ground_targets"])]
-        return ([(n, bounty(vital["bounty"]), rate["ground_targets"])]
-                + [(n, bounty(p["bounty"]), rate["ground_targets"]) for p in e["part_list"] if p is not vital])
+            return [(n, bounty(stat_bounty(slug)), share)]
+        return ([(n, bounty(vital["bounty"]), share)]
+                + [(n, bounty(p["bounty"]), share) for p in e["part_list"] if p is not vital])
 
     items = [item for slug, n in enemies.items() for item in ground_items(slug, n)]
     for g in paying:

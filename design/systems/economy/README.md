@@ -422,3 +422,6 @@ formula is in [weapons](../../player/weapons/README.md#common-rules).
   Acts 3 and 4 stay as they are: the autopilot's playthrough ends Act 4 on hard at -49.4 % of the expert's bound (13,164
   against 25,991; Act 3 ended at -54.2 %, accepted for v0.1 in round 45), the plan's levers cannot close it. Revisited
   after the user's playthrough of hard (a hard-only income bonus is the option).
+- 2026-10-29 (user, [round 69](../../concept-rounds/round-69/README.md) Q.1 **a**): hard's credits in Acts 3–5 stay
+  as they are (the autopilot ends Act 5 on hard 59 % under the expert's bound, 23,009 against 56,496); judged after the
+  user's own hard playthrough of Acts 3–5, then decided (a hard-only income bonus stays the option).

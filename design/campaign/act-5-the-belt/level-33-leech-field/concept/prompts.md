@@ -61,3 +61,10 @@ the same recordings at 1:1 (2x where named), labelled with the level time. Scrip
   the drain whine, the latched hum, the brown-out warning and hum, `FIRE 93%`), run I t=63.3–66.6 (the prey wing
   latched), t=68.8–71.0 (the ridge pair's first line: the charge, the line leaving the turret as the bunker scrolls, the
   rail shot).
+
+## nest-face-before-after-r69-a
+
+Round 69's B.7, a before | after sheet, not new art (M9 part I, step I3): `python3 tools/concept/before_after_r69.py`.
+`nest-face-1` at 1:1: before = `tools/art/backdrop_l33.py`'s face with step F's middle nest at (250, 230) and no hard
+pad, after = `assets/backdrop/level-33/nest-face-1.png` (step FIX3: hard's pad at x 240 for round 66's C.7 b, the nest
+moved to (320, 160)), and the after copy with the pads (blue), the old nest place (red) and the new one (yellow) marked.

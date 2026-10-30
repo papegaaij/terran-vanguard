@@ -4,10 +4,12 @@ M9 part G batch, concept round 67, step ART-G).
 
 Straight to production from round 60's L34 look (tools/concept/enemies_r60.py ``derelict_bg``: derelict hull slabs
 over belt space, scorched and torn) in the belt's lighter A.18 a grade: the top-left sun raking across the hulls with
-long hard shadows, the CDF wrecks' faded white-grey, the Helix hulks charcoal-grey and gold, a few red emergency
-lights. **QG-1 a** (pending round 67): the Helix hulls a step lighter than the round-60 black: grey-gold faces with
-sunlit gold trim, so the Warden Tank's gunmetal and gold (A.15 b, tools/art/warden_tank.py ``--livery asc``) reads on
-them; the tank roads themselves carry no gold (plain steel, the trim stays on the hulls' edges). Heightfields
+long hard shadows, the CDF wrecks' faded white-grey, the Helix hulks black and gold, a few red emergency lights.
+Round 67 **G.1 c** (step FIX4; the round-67 a build had them a step lighter, grey-gold): the Helix hulls in round 60's
+black (the L28 cruisers' charcoal black under the same sun, the ramp of tools/concept/tank_readability_r67.py), the
+gold trim kept on their edges, the tank roads plain steel with no gold; the Warden Tank in livery (A.15 b,
+tools/art/warden_tank.py ``--livery asc``) reads on them by its faint ground shadow (``warden-tank-asc-shadow``, drawn
+under the stand-ins here as the game does). Heightfields
 hill-shaded under the top-left sun with cast shadows (tools/art/backdrop_l31.py ``shade``), posterized per image;
 nothing lit is mirrored (a hull facing the other way is its own render).
 
@@ -49,8 +51,8 @@ Pieces (the layer named; ``frames`` loop at their fps):
 
 Review: design/campaign/act-5-the-belt/level-34-salvage-run/concept/backdrop-final-r67-a.png (eight screens with
 stand-ins: the tanks on their roads in livery, the containers, the charges, the hold's clamps and crate, the secrets'
-props, the ship) and .gif (t 104-114 at half size: into the freighter's hold), tank-readability-final-r67-a.png
-(QG-1: the tank in livery at 1:1 on the Helix keel, the Helix trim and the CDF deck). ``--proposal`` writes the
+props, the ship) and .gif (t 104-114 at half size: into the freighter's hold); the round-67 QG-1 sheets are
+tank_readability_r67.py's (a's 1:1 sheet, rejected, is no longer written here). ``--proposal`` writes the
 ``backdrop:`` block, the sections, the convoys' road paths, the ground objects' places (containers, charges, clamps,
 the crate, the three secrets, the beacon's drop) and a light debris block to the level's
 concept/backdrop-proposal.yaml (never into data.yaml).
@@ -167,8 +169,10 @@ def t_of_row(row, h):
 SUN = l31.SUN
 CDF = [(0.0, (34, 38, 44)), (0.35, (92, 100, 108)), (0.62, (150, 156, 160)), (0.82, (190, 194, 194)),
        (1.0, (222, 224, 220))]
-HELIX = [(0.0, (20, 19, 20)), (0.35, (50, 48, 46)), (0.62, (82, 77, 68)), (0.82, (112, 103, 86)),
-         (1.0, (142, 129, 100))]                      # QG-1 a: grey-gold faces, a step lighter than round 60's black
+HELIX = [(0.0, (9, 9, 11)), (0.35, (22, 21, 23)), (0.62, (34, 33, 34)), (0.82, (48, 45, 43)),
+         (1.0, (64, 59, 52))]                         # G.1 c: round 60's black (the gold trim kept)
+HELIX_GREY_GOLD = [(0.0, (20, 19, 20)), (0.35, (50, 48, 46)), (0.62, (82, 77, 68)), (0.82, (112, 103, 86)),
+                   (1.0, (142, 129, 100))]    # round 67 a's lighter Helix (rejected here; Level 35's tenders keep it)
 MARTA = [(0.0, (30, 28, 24)), (0.4, (96, 84, 64)), (0.7, (150, 128, 90)), (1.0, (196, 170, 120))]
 GOLD = np.array((214, 164, 64.0))
 DECK_CDF = np.array((150, 152, 150.0))
@@ -403,7 +407,7 @@ def ship(cx, y0, y1, hw, bow=150, bow_kind="point", stern_kind="torn", seed=0, l
 
 CDF_SUPER = (172, 176, 176)
 CDF_DARK = (96, 102, 108)
-HELIX_SUPER = (98, 92, 82)
+HELIX_SUPER = (40, 38, 36)                    # G.1 c: round 60's black
 
 
 def plate(name):
@@ -1281,7 +1285,7 @@ def heading_frame(ang, n):
 
 
 def stand_ins(img, t, data):
-    hull, tur = _held("warden-tank-asc"), _held("warden-tank-asc-turret")
+    hull, tur, shade = _held("warden-tank-asc"), _held("warden-tank-asc-turret"), _held("warden-tank-asc-shadow")
     looks = {k: _held(k) for k in ("cargo-container-cdf", "cargo-container-helix", "mining-charge", "hold-clamp-left",
                                    "hold-clamp-right", "helix-core", "vigil-shutter", "sable-wren-hatch",
                                    "old-marta-airlock", "nav-buoy")}
@@ -1306,6 +1310,8 @@ def stand_ins(img, t, data):
                     continue
                 x, y, ang = tank_at(c["paths"][i], tu, t)
                 if -50 < y < SCREEN + 50:
+                    if shade:                       # G.1 c: the faint ground shadow under the hull
+                        img = bu.paste(img, shade[heading_frame(ang, 16)], x, y)
                     img = bu.paste(img, hull[heading_frame(ang, 16) * 2 + int(t * 9) % 2], x, y)
                     aim = np.arctan2(440 - y, ship_x - x)
                     img = bu.paste(img, tur[heading_frame(aim, 32) * 2], x, y)
@@ -1360,44 +1366,6 @@ def review():
     frames = [compose(104 + i / 8, pieces, placed, data).resize((sw, sh), Image.BOX) for i in range(80)]
     size = e60.rig.write_gif(frames, gif, fps=8, colors=128)
     print(f"review: {png.relative_to(ROOT)}, {gif.name} ({size / 1e6:.1f} MB)")
-    readability(pieces)
-
-
-def readability(pieces):
-    """QG-1: the tank in livery at 1:1 on its grounds (a 1:1 crop of each ground, the tanks stacked along it at
-    headings 8, 6, 12 and 0 with the turret aimed, then the wreck); the row below: the Act 3 grey tank, for
-    comparison."""
-    hull, tur, wreck = _held("warden-tank-asc"), _held("warden-tank-asc-turret"), _held("warden-tank-asc-wreck")
-    grey, gtur, gwreck = _held("warden-tank"), _held("warden-tank-turret"), _held("warden-tank-wreck")
-    if not hull:
-        print("readability: no tank frames")
-        return
-    grounds = [("HELIX KEEL ROAD", "helix-hulk-a", 176, 820), ("HELIX TRIM + FACE", "helix-hulk-a", 40, 520),
-               ("HELIX BAY RIBS", "helix-hulk-a", 80, 700), ("FREIGHTER DECK", "freighter-bow", 190, 600),
-               ("CDF WALKWAY", "cdf-frigate-a", 92, 700), ("CDF FLANK", "cdf-frigate-a", 34, 560)]
-    cw, ch = 116, 400
-    space = Image.open(OUT / "grave-space.png").convert("RGBA")
-    sheet = raster.sheet(16 + len(grounds) * (cw + 12) + 4, 60 + 2 * (ch + 24) + 10, "QG-1: THE TANK ON THE HULLS, 1:1",
-                         f"PRODUCTION ART, {BATCH.upper()} - R67")
-    raster.draw_text(sheet, 16, 38, "TOP: THE LIVERY (A.15 B) AT HEADINGS 8 6 12 0 + WRECK. BOTTOM: THE ACT 3 GREY",
-                     raster.LABEL)
-    for j, (h_, t_, w_) in enumerate(((hull, tur, wreck), (grey, gtur, gwreck))):
-        if not h_:
-            continue
-        for i, (lab, name, px, py) in enumerate(grounds):
-            src = images(name, pieces[name])[0]
-            cell = space.crop((0, 0, cw, ch))
-            cell.alpha_composite(src.crop((px - cw // 2, py - ch // 2, px + cw // 2, py + ch // 2)))
-            for k, (hd, aim) in enumerate(((8, 0), (6, 4), (12, 20), (0, 16))):
-                bu.paste(cell, h_[hd * 2], cw // 2, 44 + k * 78)
-                bu.paste(cell, t_[aim * 2], cw // 2, 44 + k * 78)
-            bu.paste(cell, w_[8], cw // 2, 44 + 4 * 78)
-            sx, sy = 16 + i * (cw + 12), 56 + j * (ch + 24)
-            sheet.alpha_composite(cell, (sx, sy))
-            raster.draw_text(sheet, sx, sy + ch + 4, lab, raster.LABEL_DIM)
-    path = CONCEPT / f"tank-readability-final-{ROUND}-a.png"
-    sheet.convert("RGB").save(path, optimize=True)
-    print(f"review: {path.relative_to(ROOT)}")
 
 
 def check():

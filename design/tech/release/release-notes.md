@@ -1,19 +1,20 @@
-# Terran Vanguard @tag@ — Acts 1 to 4
+# Terran Vanguard @tag@ — Acts 1 to 5
 
-A late-90s style vertical shoot'em up set in 2185. This release holds the first four of the
-campaign's seven acts: twenty-eight levels on easy, medium or hard, from Earth orbit and Luna
-(Act 1, *First Contact*) over Earth's cities, oceans and arctic (Act 2, *Homefront*) and the Mars
-colonies (Act 3, *Red Dust*) to Jupiter's moon Europa (Act 4, *Deep Water*). Each act has its
-briefings, radio chatter and outro, the shop and the hangar between the levels, and a boss at its
-end: the Brood Carrier, the Siege Spire, the Dust Colossus and the Abyssal Maw. From Act 2 on Rook
-flies with you as your wingman.
+A late-90s style vertical shoot'em up set in 2185. This release holds the first five of the
+campaign's seven acts: thirty-five levels on easy, medium or hard, from Earth orbit and Luna
+(Act 1, *First Contact*) over Earth's cities, oceans and arctic (Act 2, *Homefront*), the Mars
+colonies (Act 3, *Red Dust*) and Jupiter's moon Europa (Act 4, *Deep Water*) to the asteroid belt
+(Act 5, *The Belt*). Each act has its briefings, radio chatter and outro, the shop and the hangar
+between the levels, and a boss at its end: the Brood Carrier, the Siege Spire, the Dust Colossus,
+the Abyssal Maw and the Iron Sovereign. From Act 2 on Rook flies with you as your wingman.
 
-New in this release, Act 4: seven levels across Europa's ice shelf and down a drill shaft into the
-ocean beneath, where the water slows every bullet and every ship and only torpedoes keep their full
-bite; the Harpoon Torpedoes and the Depth Charges special in the shop; black water lit only by your
-headlight; the Bulwark heavy drone for the escort slot; and the Abyssal Maw. After Level 28 the campaign stops at
-Act 5, *The Belt*, which follows in a later release. A save from `v0.1` carries on: Continue opens
-Act 4's briefing.
+New in this release, Act 5: seven levels in the belt, from the dock canyon of Ceres Hub as the
+station turns sides, through a mined shipping lane, a refugee tug to escort and the tunnels of the
+hollowed asteroid Kleopatra, to Ceres orbit; for the first time the enemy is human-built, with
+shielded ships and walkers; the Tesla Coil Pod and the Swarm Tail in the shop, the Shield Mk V and
+a captured Mk V "Helix" generator; and the Iron Sovereign, a battle station of rotating rings.
+After Level 35 the campaign stops at Act 6, *Jovian Storm*, which follows in a later release. A
+save from `v0.2` carries on: Continue opens Act 5's intro.
 
 ## Download
 

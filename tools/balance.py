@@ -1,23 +1,24 @@
 #!/usr/bin/env python3
 """The balancing sheet for the player's equipment (Acts 1-5; Act 3 from M7 part A, Level 15's data from M7 part B;
-Act 4's visits from M8 part A; Act 5's visits from M9 part A, its levels' income budget(n) until they are built).
+Act 4's visits from M8 part A; Act 5's visits from M9 part A, every level's data since M9 part I).
 
 The numbers come from the parts' data files (design/player/**/data.yaml, the economy, the
 difficulty levers, the enemies and the levels); the expected purchases per hangar visit are in
 design/player/balance-plan.yaml. The weapon tables are rendered by tools/sync_tables.py.
 
 The checks themselves are content tests (design/tech/architecture, balance checks as JUnit tests):
-BalanceTest (this sheet's plan, DPS and enemy checks) and ActPlaythroughTest (Acts 1-4 flown with the
+BalanceTest (this sheet's plan, DPS and enemy checks) and ActPlaythroughTest (Acts 1-5 flown with the
 plan on every difficulty). This script prints the same sheet for reading:
 
 Usage:
-  python3 tools/balance.py              the sheet per visit, levels 01-35 (the plan's visits; the level checks where a
-                                        level has data, 01-28), and the enemy checks
+  python3 tools/balance.py              the sheet per visit, levels 01-35 (the plan's visits and every level's
+                                        checks), and the enemy checks
   python3 tools/balance.py --weapons    print every weapon's per-level numbers
 
 Per visit: the income of the level before it (the level's typical haul from its credit-budget
 table, design/systems/economy, Per-level budget: every planned level has its data since M7 part H, so
-the fallback to budget(n) is gone, M7 part I, and M8 part A's temporary one for Act 4 since M8 part I; plus the typical player's grade bonus, a B: round 34
+the fallback to budget(n) is gone, M7 part I, M8 part A's temporary one for Act 4 since M8 part I and M9 part A's
+for Act 5 since M9 part I; plus the typical player's grade bonus, a B: round 34
 P3 = A), the plan's purchases (with the free charges a special gives at its unlock), the repair
 estimate (the ship's, and Rook's after a level flown with him), the power load and the plan's forward
 single-target DPS against the reference DPS the enemy stat blocks assume (design/enemies/data.yaml),
@@ -29,7 +30,7 @@ escort's DPS while Rook is missing); Levels 01-03's gentle onboarding (up to 1.7
 boss's at the plan's DPS. Per enemy: the time to kill at its first level and the bounty against
 the balancing basis (design/enemies/README.md); a deviation is listed, marked when it is an
 accepted exception (the Coilwyrm's bounty, user decision 2026-10-05; the Ravager's and the Wraith's
-times to kill, M5 parts C and D); BalanceTest holds the same ACCEPTED list and the rear checks the
+times to kill, M5 parts C and D; Acts 4-5's in ACCEPTED below); BalanceTest holds the same ACCEPTED list and the rear checks the
 user accepted (round 34 P4, REAR_PENDING). Per level with a rear ambush (M5 part D, D7 = a): each ambush unit's HP against the
 plan's rear DPS and its decloak flash plus hold; BalanceTest checks HP / rear DPS <= 0.6 x that. M7 part E (step
 E5): the beam era's table (beam_era_hp: the small units' HP doubled from Level 18, where the plan fits the Ion Beam;
@@ -58,6 +59,12 @@ ACCEPTED = {
     ("wraith", "ttk"): "set for the plan's rear DPS with its rear check instead (user decision D7 = a, M5 part D)",
     ("clamp-gun", "bounty"): "Level 29's approved credit budget gives it (round 60; M9 part B, step B3)",
     ("rail-serpent", "bounty"): "a multi-part train, the Coilwyrm's rule; an engine-first kill pays 40 (round 60; M9 part C, step C2)",
+    ("clamp-gun", "ttk"): "the four hold the rescue halt, 1,000 HP together for its typical 14 s (accepted in round 62 C.2)",
+    ("relay-beacon", "bounty"): "Level 27's approved bounty 15: the secondary is its reward (accepted in round 57 C.3)",
+    ("sentinel-tower", "bounty"): "the approved stat block's 40, a tower behind a hardened collar (round 65, M9 part E)",
+    ("strider", "ttk"): "the approved stat block's 410 HP; a leg (0.6 s) topples it (round 65, M9 part E)",
+    ("iron-sovereign", "ttk"): "the core tuned on the autopilot's measured fight, 149 s at medium "
+                               "(accepted as built in round 68 C.1 a; M9 part H, step H3)",
 }
 HOLD_SHARE = 0.6                 # a hold's cluster dies in at most this share of its window (BalanceTest, medium)
 REAR_SHARE = 0.6                 # a rear-ambush unit dies in at most this share of its flash and hold (BalanceTest, medium)
@@ -95,9 +102,6 @@ def budget(data, n):
     return b["base"] * b["growth"] ** (n - 1)
 
 
-ACT_5_PLANNED = range(29, 36)  # M9 part A (temporary): Act 5's visits are planned before its levels are built
-
-
 def level_dir(n):
     """The level's directory relative to design/, or None while it has no data file."""
     found = list((DESIGN / "campaign").glob(f"act-*/level-{n:02d}-*/data.yaml"))
@@ -112,13 +116,9 @@ def typical_haul(d):
 
 def income(data, n):
     """The credits the level earns: its typical haul. M7 part I: every planned level has its data (Level 21
-    since part H), so a level without a data file is an error, no longer budget(n); M8 part I: Act 4's too (part A's
-    temporary budget(n) for an Act 4 level without its data is gone)."""
+    since part H), so a level without a data file is an error, no longer budget(n); M8 part I: Act 4's too, M9 part I:
+    Act 5's (each part A's temporary budget(n) for a level without its data is gone)."""
     d = level_dir(n)
-    if not d and n in ACT_5_PLANNED:
-        # M9 part A (temporary, as M8 part A's for Act 4): an Act 5 level without its data earns budget(n), the
-        # generator's hand plan's haul; each level's part replaces it with its typical haul.
-        return round(budget(data, n))
     if not d:
         sys.exit(f"Level {n:02d} is in the balance plan but has no data.yaml")
     return typical_haul(d)
@@ -454,6 +454,10 @@ def laneless_seconds(e, dps):
     and its parts' HP at their own multipliers (the weak spots' x2; anti-ground on the roots not counted)."""
     parts = {p["name"]: p for p in e["part_list"]}
     seconds = ARENA_EASE
+    # M9 part H (step H3): a ringed boss's phases end on its rings' locks: every battery's HP is taken before the
+    # core's last phase (the Iron Sovereign).
+    for ring in e["boss"].get("rings", []):
+        seconds += ring["batteries"]["count"] * ring["batteries"]["part"]["hp"] / dps
     for phase in e["boss"]["phases"]:
         seconds += phase.get("delay", 0) + phase.get("move", {}).get("descend", 0)
         for name in phase["until"].get("parts", []):
@@ -513,6 +517,8 @@ def bounty_problem(data, e):
             return (f"{paid:.0f} paid = {100 * actual:.1f} % of L{e['first_level']:02d}'s budget, "
                     f"target about {100 * share:.0f} %")
         return None
+    if e.get("neutral"):
+        return None  # M9 part B: a neutral craft pays nothing by its rule (Level 29's wavering Stormhawks; BalanceTest)
     hardened = e.get("armour") == "hardened"
     lo, hi = {"tiny": (2, 5), "small": (10, 15), "medium": (40, 60) if hardened else (18, 30),
               "large": (40, 60)}[e["tier"]]
@@ -522,7 +528,7 @@ def bounty_problem(data, e):
 ACT_2 = range(8, 15)  # Levels 08-14
 ACT_3 = range(15, 22)  # Levels 15-21 (M7 part A: the reference DPS before the levels' data)
 ACT_4 = range(22, 29)  # Levels 22-28 (M8 part I: the act HP factor and the beam era through Act 4)
-ACT_5 = range(29, 36)  # Levels 29-35 (M9 part A: the reference DPS before the levels' data)
+ACT_5 = range(29, 36)  # Levels 29-35 (M9 part I: the act HP factor and the beam era through Act 5)
 
 
 def act_hp_report(ref, levels=ACT_2, act=2):
@@ -550,7 +556,7 @@ def beam_era_report(ref):
     """M7 part E, step E5: every unit of the beam era's tiers at the level before it and in the beam era's levels
     (HP at medium with every factor; BeamEraHpTest measures their time on the screen against Level 10's)."""
     era = load("enemies/data.yaml")["beam_era_hp"]
-    levels = [n for n in range(era["from_level"] - 1, ACT_4.stop) if n in ref]
+    levels = [n for n in range(era["from_level"] - 1, ACT_5.stop) if n in ref]
     print(f"\nBeam era (from L{era['from_level']:02d}, the plan's Ion Beam): × {era['factor']:g} on "
           f"{', '.join(era['tiers'])} units, HP at medium / time to kill at the reference DPS × the factor:")
     print("Enemy            | Tier     | First | " + " | ".join(f"L{n:02d} HP / TTK" for n in levels))
@@ -622,7 +628,7 @@ def report(data):
                                 "gentle onboarding (user decision 2026-10-01)")
             else:
                 flags.append(f"DPS {fwd:.0f} vs enemy reference {r:.0f}")
-        print(f"{n:02d}{'*' if not level_dir(n) else ' '} | {budget(data, n):6.0f} | {st['credits'] + spent_here:12.0f} | {spent_here:10.0f} | "
+        print(f"{n:02d} | {budget(data, n):6.0f} | {st['credits'] + spent_here:12.0f} | {spent_here:10.0f} | "
               f"{st['credits']:4.0f} | {load_mw:4.1f}/{out:<3g} | {fwd:7.1f} | {(r or 0):7.0f} | {ratio} | "
               f"{rear:8.1f} | {volley:10.1f} | {escort_dps(data, st, n):8.1f} | "
               + "; ".join(st["log"]) + (("  <-- " + ", ".join(flags)) if flags else ""))
@@ -644,7 +650,7 @@ def report(data):
             problems += [f"L{n:02d}: {m}" for m in slow]
             accepted += [f"L{n:02d}: {m}" for m in pending]
     print("\nBefore visit: the credits after the level before it, which earns its typical haul (its "
-          "credit-budget table; * a level without data yet, M9 part A: budget(n)), "
+          "credit-budget table), "
           "plus the typical player's grade bonus "
           f"(+{data['plan']['typical_grade_bonus']:.0%}, a B). Spent here includes the repair estimate "
           "(the ship's, and Rook's from the L09 visit). Rook DPS: his gun's single-target DPS "

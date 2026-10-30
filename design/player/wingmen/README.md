@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../weapons, ../../story, ../../systems/saves, ../../ui/hangar, ../../ui/hud]
-updated: 2026-10-28
+updated: 2026-10-29
 ---
 
 # Wingmen and drones
@@ -559,7 +559,7 @@ built were accepted in concept round 28.
   rear-guard drone's trail waits for part G (its bay's data and the `station: trail` keys written in
   step G2; flown from step G3, mapped in step G4)
 - [ ] The hunter drone's behaviours — **later: Act 6** (was L29; moved with Act 5's arsenal, Q12 = c of round 60, decided)
-- [ ] Rook's rescue in L29 as in *Rook's rescue and return* (draft): the mid-level swap (the drone peels away, Rook
+- [x] Rook's rescue in L29 as in *Rook's rescue and return* (draft): the mid-level swap (the drone peels away, Rook
   joins with his gun at full armour, his first line, his barks back), the loaner returned after L29, the debug
   starts — M9 (L29's part) (M9 part A, step A2: the campaign's side: at Level 29's win Rook is back at full armour
   and the slot defaults to him, the loaner gone from the L30 visit, an owned Bulwark kept with its armour,
@@ -567,7 +567,7 @@ built were accepted in concept round 28.
   B2 the content: Level 29's `escort_swap`, `Campaign.EscortFlight.rescue` (the loaner or an owned Bulwark with Rook's
   gun fitted at his loss, full armour) into `Loadout.withRescue`; `--escort` starts never carry a rescue;
   `BeltCampaignTest.levelTwentyNinesFlightCarriesRooksRescue`; the looks, radio and debug runs are step B4's)
-- [ ] Rook missing for L27–L29 (only a heavy drone in the slot), back from L30 — Act 4's part built (L26's loss, L27–L28 with the loaner; M8 part I: `ActPlaythroughTest` flies them to the release's end), **later: Act 5** for L29 and his return at L30 (draft: *Rook's loss and absence*; the scripted loss at L26's end, the MIA card, the loaner, per-level availability in `Campaign.escortFlight()`) (M8 part A, step A2: `Campaign.escortFlight(level)` and `rookMissing(level)` from `rook.missing`, the story flag `rook-missing` from Level 26's win to Level 29's, the hangar's MIA rules (`Hangar.rookMissing`: no gun rows, no repair line), `Campaign.rookFlies` for his `requires: escort` lines; a `--level 27` start treats him as missing; the scripted loss is part F, the MIA card part A5) (M8 part F: the scripted loss at Level 26's end, `RookLossTest`, `RookLossLooksTest`, `Level26Test.rooksLossAndItsReplayOnARetry`; the debrief's `ROOK  MIA` row; the campaign playthrough's Level 26 win records him missing and the Level 27 visit has the loaner, `ActPlaythroughTest`; his absence through L29 and his return at L30 wait for Act 5's first levels)
+- [x] Rook missing for L27–L29 (only a heavy drone in the slot), back from L30 — Act 4's part built (L26's loss, L27–L28 with the loaner; M8 part I: `ActPlaythroughTest` flies them to the release's end), L29 and his return at L30 built in M9 (`ActPlaythroughTest`: missing before Level 29, back after it, in his slot after Level 35; `BeltCampaignTest`) (draft: *Rook's loss and absence*; the scripted loss at L26's end, the MIA card, the loaner, per-level availability in `Campaign.escortFlight()`) (M8 part A, step A2: `Campaign.escortFlight(level)` and `rookMissing(level)` from `rook.missing`, the story flag `rook-missing` from Level 26's win to Level 29's, the hangar's MIA rules (`Hangar.rookMissing`: no gun rows, no repair line), `Campaign.rookFlies` for his `requires: escort` lines; a `--level 27` start treats him as missing; the scripted loss is part F, the MIA card part A5) (M8 part F: the scripted loss at Level 26's end, `RookLossTest`, `RookLossLooksTest`, `Level26Test.rooksLossAndItsReplayOnARetry`; the debrief's `ROOK  MIA` row; the campaign playthrough's Level 26 win records him missing and the Level 27 visit has the loaner, `ActPlaythroughTest`; his absence through L29 and his return at L30 wait for Act 5's first levels)
 - [x] Rook under water: the hydro-kit's drag, his guns × 0.7, his formation in the trench walls and the dark (his lamp) — **later: Act 4** (M8 parts A–F: `UnderwaterTest.rooksGunsDoSevenTenthsAndHisCraftTakesTheDrag`; the walls' 24 px clearance of the canyon play, `RookCanyonTest`, in Level 25's trench; the Siren's slow on him, `Level25Test.theRingsSlowTheShipAndRook`; his lamp in Level 26's dark, `Level26LooksTest.onlyLevel26IsDark`)
 
 - [x] Level 12 (M5 part F, step 3): the wind pushing him (positions, edges clamped); his shots

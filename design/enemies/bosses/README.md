@@ -3,7 +3,7 @@ title: Bosses
 design: approved
 implementation: done
 art: final
-updated: 2026-10-27
+updated: 2026-10-29
 ---
 
 # Bosses
@@ -27,7 +27,7 @@ Promoted to their own documents for the Acts 1–2 wrap-up, plus the Act 3 draft
 | [revenant-walker](revenant-walker/README.md) | Act 3 mid-boss: unmarked grey war walker striding through the casting yard, homing pods, rear flamer; its wreck is hint 2 (L19) | approved | in-progress | final |
 | [dust-colossus](dust-colossus/README.md) | Act 3 boss: buried colony organism breaching at the edges and under the ship, mouths with rings, suction and bite (L21) | approved | in-progress | final |
 | [abyssal-maw](abyssal-maw/README.md) | Act 4 boss: serpent leviathan coiled round the hatchery vent, gill rings, fan walls, coil sweeps, one dive and lunge, Helix implants; then the breakout and the run under Ascendancy cruisers (L28) | approved | in-progress | final |
-| [iron-sovereign](iron-sovereign/README.md) | Act 5 boss: battle station in Ceres orbit, three counter-turning rings whose batteries fire in the arc facing the ship, ring locks, the core with Dart streams; Vorne's offer (L35) | approved | in-progress | chosen |
+| [iron-sovereign](iron-sovereign/README.md) | Act 5 boss: battle station in Ceres orbit, three counter-turning rings whose batteries fire in the arc facing the ship, ring locks, the core with Dart streams; Vorne's offer (L35) | approved | done | final |
 
 ## Roster
 
@@ -167,8 +167,8 @@ implants are grey with a hot-amber core and nothing on it is gold (Q11 a).
       (overnight design phase, 2026-10-12) and built with Act 3 (M7 parts F and H).
 - [x] The same for the Act 4 boss (the Abyssal Maw, L28): promoted to its spec in the Act 4 design phase (2026-10-21)
       and built with Act 4 (M8 part H).
-- [ ] The same for the Act 5 boss (the Iron Sovereign, L35): promoted to its draft spec in the Act 5 design phase
-      (2026-10-27, decided in round 60), to be built with Act 5 (M9 part H).
+- [x] The same for the Act 5 boss (the Iron Sovereign, L35): promoted to its draft spec in the Act 5 design phase
+      (2026-10-27, decided in round 60) and built with Act 5 (M9 part H; the spec accepted with round 68, 2026-10-29).
 - [ ] The same for the roster's bosses of Acts 6–7 — **later: Act 6** to Act 7.
 - [x] Shared boss framework: multi-part hitboxes, neck chains, phase transitions, HUD boss bar,
       the intro descent, the chained death and the credit shower (M4 part E, with the Gorgon

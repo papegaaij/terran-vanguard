@@ -22,7 +22,7 @@ approved in round 60); the remaining units stay in the roster below.
 | Part | Summary | Design | Impl | Art |
 |---|---|---|---|---|
 | [leviathan](leviathan/README.md) | Huge whale set piece: high-air pass, then shootable parts (L03) | approved | done | final |
-| [asteroid-mite](asteroid-mite/README.md) | Tiny Vrell crawler riding drifting rocks, leaps at the ship within 160 px (L29) | approved | done | chosen |
+| [asteroid-mite](asteroid-mite/README.md) | Tiny Vrell crawler riding drifting rocks, leaps at the ship within 160 px (L29) | approved | done | final |
 | [minelayer](minelayer/README.md) | Ascendancy mine ship from behind, lays proximity-mine lines with one gap (L30) | approved | done | final |
 | [shard-drone](shard-drone/README.md) | Spinning drones in groups of 3–4 joined by energy links, a moving barrier (L31) | approved | done | final |
 | [void-leech](void-leech/README.md) | Vrell leech that latches and drains 2 MW of generator output (L33) | approved | done | final |

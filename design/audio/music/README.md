@@ -752,14 +752,14 @@ until the pick. Measured only, not listened to. Prompts:
 | [concept/hollow-rock-conveyor-join-r65-a.ogg](concept/hollow-rock-conveyor-join-r65-a.ogg) | Listening aid: loop bars 1–16, the full mix crossfading over 2 s into the conveyor stem alone at bar 9 (as a fork switches), 28.4 s | chosen (round 65, M.1: ok; a listening aid) |
 
 Concept round 68 (M9 part H, step AUD-H1, 2026-10-29) — track 19 "Iron Sovereign" at full length, one full mix, no
-stems (QH-3 a, pending round 68), composed out from the chosen round-03 sketch by `tools/concept/audio/music_r68.py`
+stems (QH-3 a, decided in round 68, 2026-10-29), composed out from the chosen round-03 sketch by `tools/concept/audio/music_r68.py`
 (track 18's round-08 method; deterministic). A proposal for round 68 (not in `assets/music`: part H's import). Measured
 only, not listened to. Prompts:
 [concept/prompts.md](concept/prompts.md#iron-sovereign-full-r68-a--track-19-iron-sovereign-at-full-length-one-full-mix).
 
 | File | What | Status |
 |---|---|---|
-| [concept/iron-sovereign-full-r68-a.ogg](concept/iron-sovereign-full-r68-a.ogg) | #19 "Iron Sovereign" full mix at full length: 127.8 s, loop 306000 + 5184000 samples (6.94 s + 117.55 s, 72 bars at 147 BPM), −14.0 LUFS, −1.5 dBTP, seam 0.13; the sketch's four sections and five new ones on its material (the machine alone, the motif in diminution over the machine, a snare-corps parade ground, a long build, a second tutti) | proposed (round 68) |
+| [concept/iron-sovereign-full-r68-a.ogg](concept/iron-sovereign-full-r68-a.ogg) | #19 "Iron Sovereign" full mix at full length: 127.8 s, loop 306000 + 5184000 samples (6.94 s + 117.55 s, 72 bars at 147 BPM), −14.0 LUFS, −1.5 dBTP, seam 0.13; the sketch's four sections and five new ones on its material (the machine alone, the motif in diminution over the machine, a snare-corps parade ground, a long build, a second tutti) | chosen (round 68, M.1 ok: track 19 at full length) |
 
 ## Implementation
 
@@ -900,5 +900,6 @@ Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-a
 - 2026-10-27 (user, [round 60](../../concept-rounds/round-60/README.md) closed): the Act 5 audio plan approved as drafted (D.19). **M.1 a**, "Gilded Cage" (track 13, the Act 5 B theme: EBM and industrial techno, 126 BPM, E minor; the sample-exact loop needs a whole-sample 16th, so not the draft's 128) is chosen; b "Iron Vein" rejected. **M.2 a**, "Horn Call" (track 31, Rook's return sting, 5.6 s) is chosen; b "Answer" rejected. The sketches (about 1 min) become the full length and stems at M9 part D.
 - 2026-10-28 (user, [round 62](../../concept-rounds/round-62/README.md), closed; page answers): M.1 ok: track 12 "Hollow Rock" at full length (181.8 s, with its base and motif stems) stays as built, M.2 ok: Rook's sting "Horn Call" as played once at the Ember's launch with its −6 dB duck. The listening aids and the review sheet stay in `concept/`.
 - 2026-10-28 (user, [round 64](../../concept-rounds/round-64/README.md), closed; page answers): **M.1** ok: track 13 "Gilded Cage" at full length (179.5 s with its base and motif stems) stays as built.
-- 2026-10-29 (M9 part H gap check, QH-3 a on its recommendation, pending round 68): track 19 "Iron Sovereign" extended from the chosen round-03 sketch to a 2:00 loop, one full mix (`iron-sovereign-full-r68-a`, step AUD-H1), not a new variant beside it; the limiter's ceiling −3 dBFS (as track 12's) to keep the true peak under −1 dBTP.
+- 2026-10-29 (M9 part H gap check, QH-3 a on its recommendation, decided in round 68, 2026-10-29): track 19 "Iron Sovereign" extended from the chosen round-03 sketch to a 2:00 loop, one full mix (`iron-sovereign-full-r68-a`, step AUD-H1), not a new variant beside it; the limiter's ceiling −3 dBFS (as track 12's) to keep the true peak under −1 dBTP.
 - 2026-10-29 (user, [round 65](../../concept-rounds/round-65/README.md), closed; page answers): **M.1** ok: track 12 "Hollow Rock"'s `conveyor` stem for Level 32's forks. Step G4 imported it as `assets/music/hollow-rock-conveyor.ogg` (`tools/art/themes.py`'s remux, as the other stems; audio identical) and switched Level 32's music block to it at the forks (`stem_times`: alone under the motif for 16 s from each choice, in and out over 2 s).
+- 2026-10-29 (user, [round 68](../../concept-rounds/round-68/README.md), closed): **M.1** ok: track 19 "Iron Sovereign" at full length (`iron-sovereign-full-r68-a`) accepted as built.

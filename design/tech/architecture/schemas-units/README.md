@@ -411,7 +411,10 @@ The schemas of the enemies' stat blocks and boss scripts and of the allies' file
   attack pattern **`laser-line`** with its **`line`** (`telegraph` s, at least 0.8, `live` s, `band` px, `hold_within`
   px: the unit holds fire while the ship is that close), its `bullet` (the damage once), `interval` (holding the
   telegraph and the live time) and `first_shot_delay`, no `speed`; the hooks `telegraph` and `attacks.<name>.interval`
-  change it by difficulty. A laser line is the unit's `EnemySpec.laserLine`, not a gun.
+  change it by difficulty. A laser line is the unit's `EnemySpec.laserLine`, not a gun. Its locked direction leads a
+  moving origin (round 69's B.1/B.2, step FIX5: the sim's `LineAim`, shared by `LineBeam` and `BossLines`): from the
+  origin where it will be when the line goes live (a unit's last step's move, a ring battery's ring speed, times the
+  telegraph's steps) through the ship's position at the lock; nothing in the data.
 - **M9 part B, Level 29's unit keys** (loaded and checked in step B2 by content's `EnemyData`, `BeltRules`,
   `BeltChecks`; flown from steps B1 and B1b): a stat block's **`leader`** (`hp`, `shield`, `bounty`: the airframe a
   V-wing's tip flies with the wave's `leader: tip`, the Talon's gold stripe; only with a `V-wing` among its formations)
@@ -479,7 +482,7 @@ The schemas of the enemies' stat blocks and boss scripts and of the allies' file
   Jovian Ascendancy, from Act 5).
 - **M9 part H, a ringed boss's keys** (the [Iron Sovereign](../../../enemies/bosses/iron-sovereign/README.md), Level 35;
   loaded and checked in step H1c by content's `EnemyData` (`RingBlock`), `RingRules` and `RingChecks`, flown from steps
-  H1a/H1b; the defaults pending the user's review in round 68). Angles: a ring's `start`, a step's `angle` and the bays'
+  H1a/H1b; the defaults decided in round 68, 2026-10-29). Angles: a ring's `start`, a step's `angle` and the bays'
   `start` are ° clockwise on the screen from straight down; the fire arc's `clamp` is the boss doc's bearings (90°
   straight down, clockwise from the right), mapped −90°. In the `boss` block: **`rings`** (outer first, at most 3: `name`,
   `radius` px, `segments` (the game's hull pieces only), either `speed` °/s with `direction: cw|ccw` or **`step`**

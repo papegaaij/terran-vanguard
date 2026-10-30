@@ -29,3 +29,9 @@ Round 60 (Act 5 "The Belt" units, step ART-P-units): a/b mockups by `tools/conce
 
 Concept round 61, frames of the [capture rig](../../../concept/prompts.md#belt-rig-capture-r61-a)'s run (a): the
 480×540 play field at rig ≈ 49.5, 50.3 and 51.0 s (the telegraph, its flicker, the live line).
+
+## rail-bunker-capture-r69-a
+
+Concept round 69, a capture of the game, not generated art (M9 part I, step I3, 2026-10-29): the game built by `:desktop:installDist` from branch `m9-act-5` (the working tree after steps FIX3, FIX4 and I1, the full `check` green) on a private 960×540 Xvfb display, `--bench <s> --settings <scratch>/settings.properties`, `--level 33 --difficulty medium --invulnerable`, the plan's fit of [level-33-capture-r66-a](../../../../campaign/act-5-the-belt/level-33-leech-field/concept/prompts.md#level-33-capture-r66-a) with Rook, `controls.auto-fire=true`, the ship still (**run C**; the level time from the level's first frame). Clips: `ALSOFT_DRIVERS=wave` writing the game's own mix to a file, the screen recorded with ffmpeg `x11grab` at 30 fps, cut to the subject (≤ 1 s lead-in), cropped and muxed (H.264 main, AAC; the sound 0.47 s behind the recording, checked on the shots' cracks); checked on an eight-frame sheet. PNGs: frames of the same recording, labelled. Script: step I3's `clips69.py` (scratch).
+
+- **rail-bunker-capture-r69-a**: t=69.3–71.9, the play field: the ridge pair's left bunker telegraphing its line from t≈69.9, the line's origin riding down on the turret as the bunker scrolls, the direction locked, the rail shot at t≈71.0 passing left of the still ship (round 66 C.1 b as built in FIX3); the PNG 320×480 at 0.6 at t=69.9, 70.4, 70.8, 71.0.

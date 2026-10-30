@@ -1,8 +1,8 @@
 ---
 title: Iron Sovereign
 design: approved
-implementation: in-progress
-art: chosen
+implementation: done
+art: final
 depends-on: [../../../world/belt, ../../../campaign/act-5-the-belt, ../../ground/sam-nest, ../../ground/rail-bunker, ../../ground/sentinel-tower, ../../air/dart-drone, ../../../player/wingmen, ../../../story/characters/vorne, ../../../systems/economy]
 updated: 2026-10-29
 ---
@@ -95,8 +95,10 @@ ring's hull over its live sector, and a battery's running lights switch gold →
 
 **Fire rules.** At most one rail line is telegraphed at a time (the boss staggers them ≥ 1.5 s
 apart); a rail line's direction locks at its telegraph's start and its origin rides with its battery as the ring turns
-(the Rail Bunker's rule since round 66's C.1 b; round 68's C.9 a, built in step FIX3 on the recommendation, pending
-the round); a rail battery holds fire while the ship is within 100 px (the bunker's); no
+(the Rail Bunker's rule since round 66's C.1 b; round 68's C.9 a, built in step FIX3, accepted in round 68); the line **leads** the ring's turn (round 69's B.1, the user; built in step FIX5): at the lock the
+battery's position when the rail fires is predicted from its ring's turning speed, and the line runs from there through
+the ship, so the riding line fires through the ship's locked point (the bunker's [lead](../../ground/rail-bunker/README.md#behaviour);
+the core's rail, from the still centre, aims straight at the ship); a rail battery holds fire while the ship is within 100 px (the bunker's); no
 enemy bullet or missile spawns within 72 px of the ship ([bullet rules](../../README.md#bullet-readability-rules)),
 so a battery the ship hovers over skips its shot. At most **8** SAM missiles from the station alive
 (a salvo past the cap is skipped). A laser battery fires only during the inner ring's hold, so its
@@ -161,7 +163,7 @@ playthrough tests can finish the fight.
 
 Target: the act-boss window **90–180 s** at medium, aimed at ≈ **150 s**; the **par** is the measured mean, **150**.
 
-**Measured (M9 part H, step H3; pending the user's review in round 68):** the autopilot with the plan's Level 35 fit
+**Measured (M9 part H, step H3; decided in round 68, 2026-10-29):** the autopilot with the plan's Level 35 fit
 and Rook (`Level35Test`, five seeds) took the draft's station in **77 s** at medium: the rings ≈ 35 s (the spin-up
 4 s, phase 1 ≈ 30 s, phases 2 and 3 ≈ 3 s each: the beam's column burns the lowest battery of every ring at once, so
 the second and third locks follow the first within seconds) and the core ≈ 42 s. The core was tuned first and alone
@@ -335,25 +337,27 @@ under *Variants b and c* only (no art). Generator `tools/concept/belt_r60.py`; p
 |---|---|---|
 | [concept/iron-sovereign-r60-b.png](concept/iron-sovereign-r60-b.png) | Iron Sovereign B, armoured links — every segment a separate block with a dark gap and a gold-edged cap plate, the gaps reading the turning (sheet) | chosen (round 60) |
 | [concept/iron-sovereign-r60-b.gif](concept/iron-sovereign-r60-b.gif) | Iron Sovereign B, armoured links — the fight and the death in the play field (motion) | chosen (round 60) |
-| [concept/iron-sovereign-final-r68-a.png](concept/iron-sovereign-final-r68-a.png) | Production art (step ART-H1, `tools/art/iron_sovereign.py`, A.23 top-lit): the station at rest and in phase 1, the segment sets, the seams at 1:1 at several angles and the turn-and-mirror rule against direct renders, the battery mounts and turrets (64 headings), the core shut / opening / open under the hex shield, the locked look, the death's frames, the bays, readability crops, the measured atlas share (0.65 of a page) (sheet) | proposed |
-| [concept/iron-sovereign-final-r68-a.gif](concept/iron-sovereign-final-r68-a.gif) | Production art: the intro (lights ring by ring, spin-up), phase 1 with the arc, the outer ring's lock, the core opening, the death (motion) | proposed |
-| [concept/sovereign-spinup-capture-r68-a.mp4](concept/sovereign-spinup-capture-r68-a.mp4) | Game capture (step H5; [recipe](concept/prompts.md#iron-sovereign-capture-r68-a)), clip with sound: the rings lighting and spinning up (under the `WARNING` banner) | proposed |
-| [concept/sovereign-spinup-capture-r68-a.png](concept/sovereign-spinup-capture-r68-a.png) | Game capture (step H5; [recipe](concept/prompts.md#iron-sovereign-capture-r68-a)), frames: the rings lighting and spinning up (under the `WARNING` banner) | proposed |
-| [concept/sovereign-sweep-capture-r68-a.mp4](concept/sovereign-sweep-capture-r68-a.mp4) | Game capture (step H5; [recipe](concept/prompts.md#iron-sovereign-capture-r68-a)), clip with sound: a laser battery's wedge in the inner ring's hold | proposed |
-| [concept/sovereign-sweep-capture-r68-a.png](concept/sovereign-sweep-capture-r68-a.png) | Game capture (step H5; [recipe](concept/prompts.md#iron-sovereign-capture-r68-a)), frames: a laser battery's wedge in the inner ring's hold | proposed |
-| [concept/sovereign-rail-capture-r68-a.mp4](concept/sovereign-rail-capture-r68-a.mp4) | Game capture (step H5; [recipe](concept/prompts.md#iron-sovereign-capture-r68-a)), clip with sound: rail batteries' lines from the turning middle ring | proposed |
-| [concept/sovereign-rail-capture-r68-a.png](concept/sovereign-rail-capture-r68-a.png) | Game capture (step H5; [recipe](concept/prompts.md#iron-sovereign-capture-r68-a)), frames: rail batteries' lines from the turning middle ring | proposed |
-| [concept/sovereign-lock-capture-r68-a.mp4](concept/sovereign-lock-capture-r68-a.mp4) | Game capture (step H5; [recipe](concept/prompts.md#iron-sovereign-capture-r68-a)), clip with sound: the inner ring locking: the grind, the lights out, the vented wrecks | proposed |
-| [concept/sovereign-lock-capture-r68-a.png](concept/sovereign-lock-capture-r68-a.png) | Game capture (step H5; [recipe](concept/prompts.md#iron-sovereign-capture-r68-a)), frames: the inner ring locking: the grind, the lights out, the vented wrecks | proposed |
-| [concept/sovereign-opening-capture-r68-a.mp4](concept/sovereign-opening-capture-r68-a.mp4) | Game capture (step H5; [recipe](concept/prompts.md#iron-sovereign-capture-r68-a)), clip with sound: the core's shutters opening to the reactor | proposed |
-| [concept/sovereign-opening-capture-r68-a.png](concept/sovereign-opening-capture-r68-a.png) | Game capture (step H5; [recipe](concept/prompts.md#iron-sovereign-capture-r68-a)), frames: the core's shutters opening to the reactor | proposed |
-| [concept/sovereign-spiral-capture-r68-a.mp4](concept/sovereign-spiral-capture-r68-a.mp4) | Game capture (step H5; [recipe](concept/prompts.md#iron-sovereign-capture-r68-a)), clip with sound: the open core's spiral | proposed |
-| [concept/sovereign-spiral-capture-r68-a.png](concept/sovereign-spiral-capture-r68-a.png) | Game capture (step H5; [recipe](concept/prompts.md#iron-sovereign-capture-r68-a)), frames: the open core's spiral | proposed |
-| [concept/sovereign-bays-capture-r68-a.mp4](concept/sovereign-bays-capture-r68-a.mp4) | Game capture (step H5; [recipe](concept/prompts.md#iron-sovereign-capture-r68-a)), clip with sound: a rim bay's Dart stream (the Ion Beam alone, no Rook) | proposed |
-| [concept/sovereign-bays-capture-r68-a.png](concept/sovereign-bays-capture-r68-a.png) | Game capture (step H5; [recipe](concept/prompts.md#iron-sovereign-capture-r68-a)), frames: a rim bay's Dart stream (the Ion Beam alone, no Rook) | proposed |
-| [concept/sovereign-death-capture-r68-a.mp4](concept/sovereign-death-capture-r68-a.mp4) | Game capture (step H5; [recipe](concept/prompts.md#iron-sovereign-capture-r68-a)), clip with sound: the cook-offs, the implosion, the white flash and the drift | proposed |
-| [concept/sovereign-death-capture-r68-a.png](concept/sovereign-death-capture-r68-a.png) | Game capture (step H5; [recipe](concept/prompts.md#iron-sovereign-capture-r68-a)), frames: the cook-offs, the implosion, the white flash and the drift | proposed |
-| [concept/sovereign-rings-capture-r68-a.png](concept/sovereign-rings-capture-r68-a.png) | Game capture (step H5; [recipe](concept/prompts.md#iron-sovereign-capture-r68-a)), frames: 1:1 crops of the rings, their batteries and the fire arc's band | proposed |
+| [concept/iron-sovereign-final-r68-a.png](concept/iron-sovereign-final-r68-a.png) | Production art (step ART-H1, `tools/art/iron_sovereign.py`, A.23 top-lit): the station at rest and in phase 1, the segment sets, the seams at 1:1 at several angles and the turn-and-mirror rule against direct renders, the battery mounts and turrets (64 headings), the core shut / opening / open under the hex shield, the locked look, the death's frames, the bays, readability crops, the measured atlas share (0.65 of a page) (sheet) | chosen (round 68, H.1 ok: accepted as final) |
+| [concept/iron-sovereign-final-r68-a.gif](concept/iron-sovereign-final-r68-a.gif) | Production art: the intro (lights ring by ring, spin-up), phase 1 with the arc, the outer ring's lock, the core opening, the death (motion) | chosen (round 68, H.1 ok: accepted as final) |
+| [concept/sovereign-spinup-capture-r68-a.mp4](concept/sovereign-spinup-capture-r68-a.mp4) | Game capture (step H5; [recipe](concept/prompts.md#iron-sovereign-capture-r68-a)), clip with sound: the rings lighting and spinning up (under the `WARNING` banner) | chosen (round 68, accepted with the boss fight: C.1 a, C.5 a, C.6, C.9 a) |
+| [concept/sovereign-spinup-capture-r68-a.png](concept/sovereign-spinup-capture-r68-a.png) | Game capture (step H5; [recipe](concept/prompts.md#iron-sovereign-capture-r68-a)), frames: the rings lighting and spinning up (under the `WARNING` banner) | chosen (round 68, accepted with the boss fight: C.1 a, C.5 a, C.6, C.9 a) |
+| [concept/sovereign-sweep-capture-r68-a.mp4](concept/sovereign-sweep-capture-r68-a.mp4) | Game capture (step H5; [recipe](concept/prompts.md#iron-sovereign-capture-r68-a)), clip with sound: a laser battery's wedge in the inner ring's hold | chosen (round 68, accepted with the boss fight: C.1 a, C.5 a, C.6, C.9 a) |
+| [concept/sovereign-sweep-capture-r68-a.png](concept/sovereign-sweep-capture-r68-a.png) | Game capture (step H5; [recipe](concept/prompts.md#iron-sovereign-capture-r68-a)), frames: a laser battery's wedge in the inner ring's hold | chosen (round 68, accepted with the boss fight: C.1 a, C.5 a, C.6, C.9 a) |
+| [concept/sovereign-rail-capture-r68-a.mp4](concept/sovereign-rail-capture-r68-a.mp4) | Game capture (step H5; [recipe](concept/prompts.md#iron-sovereign-capture-r68-a)), clip with sound: rail batteries' lines from the turning middle ring | chosen (round 68, accepted with the boss fight: C.1 a, C.5 a, C.6, C.9 a; stale since FIX3 built C.9 a: shows the lines fixed where they started, the record of the round; re-recorded as `sovereign-rail-capture-r69-a`) |
+| [concept/sovereign-rail-capture-r68-a.png](concept/sovereign-rail-capture-r68-a.png) | Game capture (step H5; [recipe](concept/prompts.md#iron-sovereign-capture-r68-a)), frames: rail batteries' lines from the turning middle ring | chosen (round 68, accepted with the boss fight: C.1 a, C.5 a, C.6, C.9 a; stale since FIX3 built C.9 a: shows the lines fixed where they started, the record of the round; re-recorded as `sovereign-rail-capture-r69-a`) |
+| [concept/sovereign-rail-capture-r69-a.mp4](concept/sovereign-rail-capture-r69-a.mp4) | Game capture (step I3; [recipe](concept/prompts.md#iron-sovereign-capture-r69-a)), clip with sound: rail batteries' lines riding with the turning ring, the direction locked (C.9 a as built; round 69 B.1) | chosen (round 69, B.1 ok (the clip shows the pre-FIX5 aim; the lead is built in FIX5)) |
+| [concept/sovereign-rail-capture-r69-a.png](concept/sovereign-rail-capture-r69-a.png) | Game capture (step I3; [recipe](concept/prompts.md#iron-sovereign-capture-r69-a)), frames at 1:1: a middle-ring rail battery's telegraph and shot, halt +17.2 to +17.8 s (round 69 B.1) | chosen (round 69, B.1 ok (the clip shows the pre-FIX5 aim; the lead is built in FIX5)) |
+| [concept/sovereign-lock-capture-r68-a.mp4](concept/sovereign-lock-capture-r68-a.mp4) | Game capture (step H5; [recipe](concept/prompts.md#iron-sovereign-capture-r68-a)), clip with sound: the inner ring locking: the grind, the lights out, the vented wrecks | chosen (round 68, accepted with the boss fight: C.1 a, C.5 a, C.6, C.9 a) |
+| [concept/sovereign-lock-capture-r68-a.png](concept/sovereign-lock-capture-r68-a.png) | Game capture (step H5; [recipe](concept/prompts.md#iron-sovereign-capture-r68-a)), frames: the inner ring locking: the grind, the lights out, the vented wrecks | chosen (round 68, accepted with the boss fight: C.1 a, C.5 a, C.6, C.9 a) |
+| [concept/sovereign-opening-capture-r68-a.mp4](concept/sovereign-opening-capture-r68-a.mp4) | Game capture (step H5; [recipe](concept/prompts.md#iron-sovereign-capture-r68-a)), clip with sound: the core's shutters opening to the reactor | chosen (round 68, accepted with the boss fight: C.1 a, C.5 a, C.6, C.9 a) |
+| [concept/sovereign-opening-capture-r68-a.png](concept/sovereign-opening-capture-r68-a.png) | Game capture (step H5; [recipe](concept/prompts.md#iron-sovereign-capture-r68-a)), frames: the core's shutters opening to the reactor | chosen (round 68, accepted with the boss fight: C.1 a, C.5 a, C.6, C.9 a) |
+| [concept/sovereign-spiral-capture-r68-a.mp4](concept/sovereign-spiral-capture-r68-a.mp4) | Game capture (step H5; [recipe](concept/prompts.md#iron-sovereign-capture-r68-a)), clip with sound: the open core's spiral | chosen (round 68, accepted with the boss fight: C.1 a, C.5 a, C.6, C.9 a) |
+| [concept/sovereign-spiral-capture-r68-a.png](concept/sovereign-spiral-capture-r68-a.png) | Game capture (step H5; [recipe](concept/prompts.md#iron-sovereign-capture-r68-a)), frames: the open core's spiral | chosen (round 68, accepted with the boss fight: C.1 a, C.5 a, C.6, C.9 a) |
+| [concept/sovereign-bays-capture-r68-a.mp4](concept/sovereign-bays-capture-r68-a.mp4) | Game capture (step H5; [recipe](concept/prompts.md#iron-sovereign-capture-r68-a)), clip with sound: a rim bay's Dart stream (the Ion Beam alone, no Rook) | chosen (round 68, accepted with the boss fight: C.1 a, C.5 a, C.6, C.9 a) |
+| [concept/sovereign-bays-capture-r68-a.png](concept/sovereign-bays-capture-r68-a.png) | Game capture (step H5; [recipe](concept/prompts.md#iron-sovereign-capture-r68-a)), frames: a rim bay's Dart stream (the Ion Beam alone, no Rook) | chosen (round 68, accepted with the boss fight: C.1 a, C.5 a, C.6, C.9 a) |
+| [concept/sovereign-death-capture-r68-a.mp4](concept/sovereign-death-capture-r68-a.mp4) | Game capture (step H5; [recipe](concept/prompts.md#iron-sovereign-capture-r68-a)), clip with sound: the cook-offs, the implosion, the white flash and the drift | chosen (round 68, accepted with the boss fight: C.1 a, C.5 a, C.6, C.9 a) |
+| [concept/sovereign-death-capture-r68-a.png](concept/sovereign-death-capture-r68-a.png) | Game capture (step H5; [recipe](concept/prompts.md#iron-sovereign-capture-r68-a)), frames: the cook-offs, the implosion, the white flash and the drift | chosen (round 68, accepted with the boss fight: C.1 a, C.5 a, C.6, C.9 a) |
+| [concept/sovereign-rings-capture-r68-a.png](concept/sovereign-rings-capture-r68-a.png) | Game capture (step H5; [recipe](concept/prompts.md#iron-sovereign-capture-r68-a)), frames: 1:1 crops of the rings, their batteries and the fire arc's band | chosen (round 68, accepted with the boss fight: C.1 a, C.5 a, C.6, C.9 a) |
 
 ## Implementation
 
@@ -385,11 +389,11 @@ To be built in M9 part H with Level 35; round 60 approved the design (2026-10-27
       drifting, flash, credit shower), Vorne's taunts and the recruitment in Level 35's radio timeline (steps H2 and
       H4, `RadioTimelineLevel35Test`; recorded in round 68's captures, step H5: the spin-up runs mostly under the
       `WARNING` banner, the drifting segments fade within ≈ 1 s of the white flash and the base disc stays ≈ 15 s)
-- [ ] Production art (≤ one atlas page, about 0.6 with the top-lit segments of A.23; the chosen look b in gunmetal/charcoal, Q11 b): the ring segments at their heading sets, the batteries' mounts
+- [x] Production art (accepted in round 68, closed 2026-10-29; built by FIX4; ≤ one atlas page, about 0.6 with the top-lit segments of A.23; the chosen look b in gunmetal/charcoal, Q11 b): the ring segments at their heading sets, the batteries' mounts
       and turrets, the core shut / opening / open, the locked look, the death, the intel silhouette;
       readability checks over Level 35's backdrop (step ART-H1, in the game from step H4; round 68 H.1–H.2; the
       readability over the backdrop in round 68's captures, step H5)
-- [ ] Sounds (Freesound, CC0/CC-BY) per the brief; the music #19 from the warning (steps AUD-H1 and AUD-H2; step H4
+- [x] Sounds (Freesound, CC0/CC-BY) per the brief (round 68's picks, built by FIX3; the cuts are previews until `briefs/freesound-originals.md` is fetched); the music #19 from the warning (steps AUD-H1 and AUD-H2; step H4
       plays the a variants and track 19; round 68 M.1 and S.1–S.12)
 
 ## Open questions
@@ -438,21 +442,21 @@ All approved by the user in concept round 60:
   Vorne announces the boss and cracks without shouting; the rings drawn from segment sprites for the
   one-page budget; the L49 echo proposed as the outer ring round the open core.
 - 2026-10-27 (user, [round 60](../../../concept-rounds/round-60/README.md) closed): the design approved as drafted (`design: approved`, D.9): Q7 **a** (the three top-down rings), J.8 (Vorne cold and clipped, never shouting), J.2 (reference DPS 144), Q6 **b**. Art: **A.17 b**, armoured links (every segment a separate block with a dark gap and a gold-edged cap plate; the continuous wheel, a, rejected); **A.23 top-lit** (segments rendered once with the light fixed from the top, 90° turns, mirrored, a static rim overlay: about 0.6 pages, not the 3.1–3.6 of full sun). Q11 **b**: the production art is re-rendered in gunmetal/charcoal with gold. The rings' bed is S.16 a.
-- 2026-10-29 (M9 part H, step H2; pending round 68): the boss's `data.yaml` on step H1c's keys (decided as built:
+- 2026-10-29 (M9 part H, step H2; decided in round 68, 2026-10-29): the boss's `data.yaml` on step H1c's keys (decided as built:
   `laser-line`, the spiral's `run`, `until: {locks: n}`, the battery attacks keep their units' difficulty hooks): the
   three rings with the batteries `from:` the SAM Nest, the Rail Bunker and the Sentinel Tower (300 px), the core's
   fans, spiral and rail (none on easy), the four rim bays at 60 px on the diagonals (ART-H1's), the phases by locks
   and "The core" exposing the core with its armour patch; par **150** (the draft) until step H3; the bounty **433**
   (core 355, 13 batteries × 6) at Level 35's measured scale 0.59, 24 % of budget(35). The stat block is rendered
   from the data (a machine boss's faction cell reads "never stunned").
-- 2026-10-29 (M9 part H, step H3; pending round 68): the fight measured with the autopilot (`RingPlay`) and the plan's
+- 2026-10-29 (M9 part H, step H3; decided in round 68, 2026-10-29): the fight measured with the autopilot (`RingPlay`) and the plan's
   fit and Rook over five seeds: the draft's 77 s at medium fell under the window, so the **core's HP 5,000 → 14,000**
   (the brief's rule: the core first; the batteries kept, no ring phase runs long), the total 17,960, the mean 148.7 s,
   the **par 150** kept; the alternative for the round (estimated, not flown): the core ≈ 9,000 and the batteries ×2 (a longer ring fight, a
   shorter core). Phase 1 1.18 × the Kraken's; QH-1 measured (Smart Bomb 4 %, Lance ≤ 8 %): the per-part caps stay.
   Found and fixed in the simulation: an anchored boss's halt place ignored the sections' eases (`ScrollPlan.haltScroll`),
   so the station sat 456 px low (centre at y −76); it now sits at (240, 160) on the screen.
-- 2026-10-29 (M9 part H, step H5; pending the user's review in round 68, C.1): the round's alternative **flown** with
+- 2026-10-29 (M9 part H, step H5; decided in round 68, 2026-10-29, C.1): the round's alternative **flown** with
   the autopilot over five seeds (the plan's fit and Rook, `Level35Test`'s flights; the data edited for the measure only
   and restored): **b** (the core 9,000, every battery's HP ×2: SAM 440, rail 660, laser 880; total 16,920) lasts 141.3 s at
   medium (134.8–147.8; `levelReport`'s test fit 143.1 s), easy 103.7 s, hard 229.4 s; its phases at medium 48.4 + 12.2
@@ -463,10 +467,17 @@ All approved by the user in concept round 60:
   ring locked +31 s, the middle +40 s, the outer +49 s, the core open +52 s, the kill ≈ +148 s; the spin-up runs mostly
   under the `WARNING` banner; the bay Darts die as they leave the bays with the plan's pods and Rook (captured with the
   Ion Beam alone); the drifting segments fade within ≈ 1 s of the white flash while the plain base disc stays ≈ 15 s.
-- 2026-10-29 (step FIX3, on round 68's C.9 recommendation a, pending the round): the station's rail lines ride with
+- 2026-10-29 (step FIX3, on round 68's C.9 recommendation a; accepted in round 68): the station's rail lines ride with
   their battery on the turning ring, the direction locked at the telegraph's start (`BossLines`: the origin onto the
   part's centre each step while it lives, a dead part's line keeps its last; `BossLinesTest`); the looks draw the
   telegraph, rail and flash from the moving battery and RingPlay looks ahead along the moving band. `levelReport
   -Plevel=35`: won 3/3, 0 retries a difficulty; the fight 108.5 s easy, 149.0 s medium (par 150), 249.3 s hard (as
   before, ≈ 248 s). Step H5's `sovereign-rail-capture-r68-a` shows the lines fixed where they started (b); FIX3 did not
   re-record it.
+- 2026-10-29 (user, round 69 B.1: "The aim of the gun should compensate for the movement so that it hits after it has
+  moved."): the rail lines lead the ring's turn (Fire rules), built in step FIX5 (`LineAim`, shared with the bunker's
+  `LineBeam`; the battery's position at the live moment from `RingArena`'s ring speed, exact on the evenly turning
+  middle ring; `BossLinesTest`: the live line within 1 px of the locked ship point, a sidestep dodges, the still core
+  aims straight). `levelReport -Plevel=35`: won 3/3, 0 retries a difficulty; the fight 108.5 s easy, 148.4 s medium
+  (par 150), 253.8 s hard (before: 108.5 / 149.0 / 249.3 s); `Level35Test`'s autopilot still struck by 0 lines.
+- 2026-10-29 (user, [round 68](../../../concept-rounds/round-68/README.md), closed): **C.1 a** (the fight as built: the core 14,000, the batteries 220 / 330 / 440), **C.5 a** (Rook ignores the rail and relay lines, as the lines pass through allies), **C.6 accepted** (the EMP leaves the shut core's shield), **C.9 a** (the station's rail lines ride with their batteries, the direction locked; built in FIX3); art **H.1 ok** (the production frames) and **H.2 ok** (the intel silhouette): `art: final`; sounds **S.1, S.3, S.4, S.6–S.10 a** (`sovereign-spinup`, `-hold`, `-lock`, `-shutters`, `-fan`, `-spiral`, `-cookoff`, `-implosion`) and **S.2 b**, **S.5 b** (`sovereign-step`, `sovereign-klaxon`: not the recommendation; FIX4 switches the two keys, `m9-fix4-notes.md`, the a files play until then).

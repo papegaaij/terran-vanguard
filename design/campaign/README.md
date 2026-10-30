@@ -3,7 +3,7 @@ title: Campaign
 design: approved
 implementation: in-progress
 art: none
-updated: 2026-10-27
+updated: 2026-10-29
 ---
 
 # Campaign
@@ -24,7 +24,7 @@ consecutive levels.
 | [act-2-homefront](act-2-homefront/README.md) | Levels 08–14 · Earth surface: megacities, oceans, arctic · boss Siege Spire | approved | done | final |
 | [act-3-red-dust](act-3-red-dust/README.md) | Levels 15–21 · Mars · first hints of human involvement · boss Dust Colossus | approved | in-progress | final |
 | [act-4-deep-water](act-4-deep-water/README.md) | Levels 22–28 · Europa ice & under-ice ocean · underwater play · boss Abyssal Maw | approved | in-progress | final |
-| [act-5-the-belt](act-5-the-belt/README.md) | Levels 29–35 · asteroid belt & stations · the betrayal in the open: Vorne's broadcast, Ceres Hub turns, Rook freed · boss Iron Sovereign | approved | in-progress | chosen |
+| [act-5-the-belt](act-5-the-belt/README.md) | Levels 29–35 · asteroid belt & stations · the betrayal in the open: Vorne's broadcast, Ceres Hub turns, Rook freed · boss Iron Sovereign | approved | in-progress | final |
 | [act-6-jovian-storm](act-6-jovian-storm/README.md) | Levels 36–42 · Jupiter cloud cities & Callisto · hunting Vorne · boss Ascendant | draft | not-started | none |
 | [act-7-beyond-the-gate](act-7-beyond-the-gate/README.md) | Levels 43–50 · Tether Gate & Vrell space · final boss Choir Heart | draft | not-started | none |
 
@@ -220,8 +220,9 @@ criteria), Open questions, Decisions. The worked example is
       Levels 01–21 as one campaign on every difficulty, M7 part I)
 - [x] Campaign sequence 22→28 in order, Act 4's outro after Level 28 ending the release (M8 parts B–H;
       `ActPlaythroughTest` flies Levels 01–28 as one campaign on every difficulty, M8 part I)
-- [ ] Campaign sequence 29→50 in order — **later: Act 5** (M9 parts B–I, Levels 29–35, the release's end moved
-      to Level 35) to Act 7 (Levels 36–50), each level with its act
+- [x] Campaign sequence 29→35 in order, Act 5's outro after Level 35 ending the release (M9 parts B–H;
+      `ActPlaythroughTest` flies Levels 01–35 as one campaign on every difficulty, M9 part I)
+- [ ] Campaign sequence 36→50 in order — **later: Act 6** to Act 7 (Levels 36–50), each level with its act
 - [x] Act transitions show an act title card and the act's opening briefing.
 - [x] Each level's threat profile is available as data for the hangar intel panel: Levels 01–07
       (`threat_profile` in each level's data.yaml, read by `LevelData` and `Intel`)
@@ -231,8 +232,10 @@ criteria), Open questions, Decisions. The worked example is
       `Intel`, `IntelPanelLayoutTest` over every level)
 - [x] The threat profiles of Levels 22–28 in their data files, with Dr. Varga's intel lines (M8 parts B–H;
       `Intel`, `IntelPanelLayoutTest` over every level)
-- [ ] The threat profiles of Levels 29–50 — **later: Act 5** (M9 parts B–H; the drafts' hand tables are in the
-      [Act 5 README](act-5-the-belt/README.md#density-and-threat-profile)) to Act 7, in each level's data file as
+- [x] The threat profiles of Levels 29–35 in their data files, with Dr. Varga's intel lines (M9 parts B–H;
+      `Intel`, `IntelPanelLayoutTest` over every level, the hand table in the
+      [Act 5 README](act-5-the-belt/README.md#density-and-threat-profile), `levelReport` in part I)
+- [ ] The threat profiles of Levels 36–50 — **later: Act 6** to Act 7, in each level's data file as
       it is written
 - [x] Shop unlocks follow the *Loadout pressure* table (data-driven, per level): each item's
       `unlock` or `available` in its data (`Hangar.available`, `Catalogue`); the Act 1 rows
@@ -242,7 +245,7 @@ criteria), Open questions, Decisions. The worked example is
 - [x] The `anti-sub` row (L11) checked with its weapon in play: the Torpedo Pod (M5 part E;
       `TorpedoTest`, `SubLayerTest`)
 - [x] The `beam` row (L15) checked with its weapon in play (M7 part A: the Ion Beam)
-- [x] The `shield-breaker` row (L29) checked with its weapon in play — **later: Act 5** (M9 part A, the Tesla
+- [x] The `shield-breaker` row (L29) checked with its weapon in play (M9 part A, the Tesla
       Coil Pod: in the shop from the L29 visit, its arc empties a shield; `BeltKeysTest`, `BeltCampaignTest`, the
       simulation's `TeslaArcTest`)
 - [x] Campaign progress (current level, unlocks) is stored in the save game

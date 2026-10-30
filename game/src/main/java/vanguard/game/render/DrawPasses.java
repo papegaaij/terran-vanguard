@@ -325,6 +325,8 @@ final class DrawPasses extends LevelLooks {
         kinds.deepCore(sortie).drawGround(batch, sortie, scroll);
         // M9 part F: Claim 114 shot open.
         kinds.leechField(sortie).drawGround(batch, sortie, scroll);
+        // Round 67 G.1 c: the liveried Warden Tanks' faint ground shadows, under the ground units.
+        kinds.tanks(sortie).drawShadows(batch, sortie, alpha);
         units.drawEnemies(batch, sortie, alpha, Depth.GROUND, Launched.ANY);
         // M9 part E: the Sentinels' telegraphs (the arc, the reach ring) and the toppling Striders' fall lines.
         batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);

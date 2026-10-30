@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../architecture, ../roadmap, ../../player/ship]
-updated: 2026-10-27
+updated: 2026-10-29
 ---
 
 # Release
@@ -15,7 +15,8 @@ How a version of the game reaches players: the version number, the application i
 download carries, the release notes and the CI release job. Each act's release adds that act:
 `v0.1` is Acts 1–3 (the user's choice in round 44, Q2/I.2), tagged on 2026-10-22 after M7; `v0.2`
 is Acts 1–4 (the user's decision of 2026-10-27), tagged after the user's Act 4 playthrough and its
-fixes (M8) and the merge. Accepted by the user in concept round 35 (2026-10-12); the final title
+fixes (M8) and the merge, tagged on 2026-10-27; `v0.3` is Acts 1–5 (drafted on the recommendation,
+round 69), tagged after the user's Act 5 playthrough and its fixes (M9). Accepted by the user in concept round 35 (2026-10-12); the final title
 and the repository's name (Q11) were settled on 2026-10-19 (*Terran Vanguard*, repository
 `terran-vanguard`).
 
@@ -23,18 +24,18 @@ and the repository's name (Q11) were settled on 2026-10-19 (*Terran Vanguard*, r
 
 ### Version
 
-- One version for the whole build: `version` in `gradle.properties`, now `0.2.0` (semantic
-  versioning; Acts 1–3 was 0.1, each further act release raises the minor number, Acts 1–4 is 0.2;
-  fixes raise the patch number).
+- One version for the whole build: `version` in `gradle.properties`, now `0.3.0` (semantic
+  versioning; Acts 1–3 was 0.1, each further act release raises the minor number, Acts 1–4 is 0.2,
+  Acts 1–5 is 0.3; fixes raise the patch number).
 - The build writes it into `vanguard/version.properties` on the class path (the desktop module's
   `versionResource` task), the jar manifest (`Implementation-Version`), the macOS plist
   (`CFBundleShortVersionString`, `CFBundleVersion`), the zip names and the bundle README.
-- `terran-vanguard --version` prints `Terran Vanguard <version>` (`Terran Vanguard 0.2.0`) and exits; every start logs the
+- `terran-vanguard --version` prints `Terran Vanguard <version>` (`Terran Vanguard 0.3.0`) and exits; every start logs the
   same line first.
-- The title and the main menu show `v<major>.<minor>` (`v0.2`) small in the bottom-left corner: the
+- The title and the main menu show `v<major>.<minor>` (`v0.3`) small in the bottom-left corner: the
   launcher reads the resource and passes it to the game (M6 part B, see the
   [main menu](../../ui/main-menu/README.md#decisions)).
-- The release tag is `v<major>.<minor>` (`v0.2`), or the full `v0.2.1` for a fix release; the
+- The release tag is `v<major>.<minor>` (`v0.3`), or the full `v0.3.1` for a fix release; the
   CI release job fails when the tag does not match `gradle.properties`.
 
 ### Application icon
@@ -63,7 +64,7 @@ unpacks into a folder `terran-vanguard-<version>/` that holds the game (`terran-
 - `README.txt` (`desktop/bundle/README.txt`, the version filled in): how to start the game on
   each OS, including the steps past SmartScreen and Gatekeeper for the unsigned game, the
   controls, where the settings, saves and screenshots live, which acts of the seven the release
-  holds (Acts 1–4 in `v0.2`), and the licence pointers;
+  holds (Acts 1–5 in `v0.3`), and the licence pointers;
 - `LICENSE.txt` (the repository's `LICENSE`);
 - `CREDITS.md` (the third-party files with their licences).
 
@@ -75,26 +76,26 @@ roll say so.
 On macOS they sit beside the app, not inside it (Construo puts package files next to the
 executable, so the macOS zips are rewritten by the `package<Target>Docs` tasks).
 
-Measured on 2026-10-27 (dry run of the `m8-act-4` working tree after the Act 4 playthrough's fixes,
-Acts 1–4, step REL2), with the 2026-10-20 build of Acts 1–3 (step REL-I) for comparison (MB = 10⁶
-bytes; unpacked = the files' total):
+Measured on 2026-10-29 (dry run of the `m9-act-5` working tree, Acts 1–5, step REL-I of M9), with the
+2026-10-27 build of Acts 1–4 (step REL2) and the 2026-10-20 build of Acts 1–3 (step REL-I) for comparison
+(MB = 10⁶ bytes; unpacked = the files' total):
 
-| Target | Zip | Unpacked | Zip, Acts 1–3 | Unpacked, Acts 1–3 |
-|---|---|---|---|---|
-| linuxX64 | 293.0 MB | 338.8 MB | 228.9 MB | 274.4 MB |
-| winX64 | 289.3 MB | 326.0 MB | 225.3 MB | 261.6 MB |
-| macX64 | 290.6 MB | 331.7 MB | 226.5 MB | 267.4 MB |
-| macM1 | 289.3 MB | 329.7 MB | 225.3 MB | 265.3 MB |
+| Target | Zip | Unpacked | Zip, Acts 1–4 | Unpacked, Acts 1–4 | Zip, Acts 1–3 | Unpacked, Acts 1–3 |
+|---|---|---|---|---|---|---|
+| linuxX64 | 357.3 MB | 403.3 MB | 293.0 MB | 338.8 MB | 228.9 MB | 274.4 MB |
+| winX64 | 353.6 MB | 390.5 MB | 289.3 MB | 326.0 MB | 225.3 MB | 261.6 MB |
+| macX64 | 354.9 MB | 396.2 MB | 290.6 MB | 331.7 MB | 226.5 MB | 267.4 MB |
+| macM1 | 353.7 MB | 394.2 MB | 289.3 MB | 329.7 MB | 225.3 MB | 265.3 MB |
 
-The fat jar is 265 MB of each (201 MB for Acts 1–3): the atlases, the music and the voices (assets
-241 MB on disk, `du`: music 75, sprites 58, backdrop 52, voice 33, sfx 17, ui 8; Act 4's backdrops,
-music, voices and sounds). The Linux bundle, unpacked with no Java on the `PATH`, printed `Terran
-Vanguard 0.2.0` for `--version` and ran a 5 s `--bench` under Xvfb (llvmpipe, full screen 1920×1080,
-`ALSOFT_DRIVERS=wave`) at 295–302 fps with a peak resident set of 2.6–2.8 GB; the `v0.1` bundle on
-the same machine the same day: 315 fps and 2.5 GB (its 1.54 GB of 2026-10-20 was another machine
-state, not a growth of the game's). Started at the title (`--start title`) with a real v0.1 save
-at the Level 22 hangar, the main menu showed `v0.2` and Continue opened Act 4's intro.
-`CreditsListTest` passes with Act 4's CC-BY sounds.
+The fat jar is 329 MB of each (265 MB for Acts 1–4, 201 MB for Acts 1–3): the atlases, the music and
+the voices (assets 307 MB on disk, `du`: music 102, sprites 73, backdrop 62, voice 41, sfx 21, ui 10;
+Act 5's backdrops, music, voices and sounds). The Linux bundle, unpacked with no Java on the `PATH`,
+printed `Terran Vanguard 0.3.0` for `--version` and ran a 5 s `--bench` under Xvfb (llvmpipe, full
+screen 1920×1080, `ALSOFT_DRIVERS=wave`) at 289 fps with a peak resident set of 3.15 GB (`v0.2`: 295–302
+fps, 2.6–2.8 GB). Started at the title (`--start title`) with the real v0.2 save at the Level 29 hangar
+(the test fixture of M9 part B), the main menu showed `v0.3` and Continue opened Act 5's title card,
+then its intro (page 1 of 6, Level 29's briefing after it); the credits roll names Act 5's CC-BY sounds
+and its voices' readers. `CreditsListTest` passes with Act 5's CC-BY sounds.
 
 ### Signing
 
@@ -115,9 +116,10 @@ the app has been opened on Apple silicon.
 
 [release-notes.md](release-notes.md) is the template `gh release create --notes-file` uses; the
 CI job fills in `@version@` and `@tag@`. It describes the acts of the release being tagged; for
-`v0.2`, Acts 1–4 (twenty-eight levels, the four bosses up to the Abyssal Maw, Rook from Act 2 on,
-Act 4 *Deep Water* on Europa and under water with the Bulwark, the stop before Act 5 *The Belt*, a
-`v0.1` save carrying on) and marks the Apple silicon build as untested (the Mac rule above). The
+`v0.3`, Acts 1–5 (thirty-five levels, the five bosses up to the Iron Sovereign, Rook from Act 2 on,
+Act 5 *The Belt* from Ceres Hub to Kleopatra and Ceres orbit with the Tesla Coil Pod, the Swarm Tail,
+the Shield Mk V and the Mk V "Helix" generator, the stop before Act 6 *Jovian Storm*, a `v0.2` save
+carrying on into Act 5's intro) and marks the Apple silicon build as untested (the Mac rule above). The
 release's last act data names the next act (`next_act`), which the notes and the bundle README
 name as the stop.
 
@@ -126,16 +128,17 @@ name as the stop.
 For every release, in this order; only the user tags, merges and pushes (signed commits):
 
 1. The release's milestone closed, the user's playthrough of its new act done and its fixes in.
-2. `version` in `gradle.properties` raised (`0.2.0` for `v0.2`), the release notes and the bundle
+2. `version` in `gradle.properties` raised (`0.3.0` for `v0.3`), the release notes and the bundle
    README rewritten for the release's acts.
 3. The four bundles dry-run on JDK 21 (`JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64`), the Linux
    bundle started under Xvfb with no JDK on the `PATH`, a save of the previous release continued,
-   the sizes above updated (for `v0.2`: done on 2026-10-27, step REL2).
+   the sizes above updated (for `v0.2`: done on 2026-10-27, step REL2; for `v0.3`: on 2026-10-29,
+   step REL-I of M9).
 4. The Mac rule: if the user can open the macM1 bundle on a real Mac within a day, do so (the
    `xattr` step, else an ad-hoc `codesign --sign -`) and remove the "untested on Apple silicon"
    mark from the release notes; otherwise keep the mark.
 5. The branch merged into `main` (signed, by the user) and CI green on all three OSes.
-6. The user tags `main`'s tip `v<major>.<minor>` (`v0.2`) and pushes the tag; the CI release job
+6. The user tags `main`'s tip `v<major>.<minor>` (`v0.3`) and pushes the tag; the CI release job
    checks the tag against the version, builds and smoke-runs the bundles and creates the GitHub
    release with the notes.
 
@@ -184,7 +187,20 @@ Prompts: [concept/prompts.md](concept/prompts.md). Generated by `tools/art/app_i
       `--version` (`Terran Vanguard 0.2.0`) with no JDK on the `PATH`, its `--bench 5` under Xvfb, the
       menu's `v0.2`, a real v0.1 save at the Level 22 hangar continued into Act 4's intro (step REL2,
       2026-10-27; `CampaignRouteTest.aRealV01SaveAtTheLevel22HangarMigratesAndPlaysTheActFourIntroOnce`)
-- [ ] Merge and the `v0.2` tag of Acts 1–4 (the tag steps above: steps 1–3 done on 2026-10-27, the
+- [x] Merge and the `v0.2` tag of Acts 1–4 (the tag steps above, the Mac rule's mark stays; main at
+      `28235381` and the signed tag `v0.2`, 2026-10-27)
+- [x] `v0.3` = Acts 1–5: `version=0.3.0` in `gradle.properties` (step REL-I of M9, 2026-10-29; no test
+      pins the version)
+- [x] Release notes and the bundle README for `v0.3` = Acts 1–5 (Act 5 *The Belt*, the Iron Sovereign,
+      the stop before Act 6 *Jovian Storm*); `CreditsListTest` green with Act 5's CC-BY sounds and voices
+      (step REL-I of M9)
+- [x] Dry runs of all four `package<Target>` tasks on JDK 21 for `v0.3`; the Linux bundle's
+      `--version` (`Terran Vanguard 0.3.0`) with no JDK on the `PATH`, its `--bench 5` under Xvfb, the
+      menu's `v0.3`, the credits screen's Act 5 names, a real v0.2 save at the Level 29 hangar continued
+      into Act 5's intro (step REL-I of M9, 2026-10-29;
+      `CampaignRouteTest.aRealV02SaveAtTheLevel29HangarPlaysTheActFiveIntroOnce`)
+- [ ] The user's playthrough of Act 5 and its fixes in (tag step 1)
+- [ ] Merge and the `v0.3` tag of Acts 1–5 (the tag steps above: steps 2–3 done on 2026-10-29, the
       Mac rule's mark stays; the merge and the tag by the user)
 
 ## Decisions
@@ -225,3 +241,17 @@ Prompts: [concept/prompts.md](concept/prompts.md). Generated by `tools/art/app_i
   dry-run again (about 64 MB more each than Acts 1–3: Act 4's backdrops, music, voices and sounds); a real
   v0.1 save at the Level 22 hangar (written by the v0.1 tree's playthrough tool) kept as a test fixture
   and continued in the bundle. Pending the user's review: the notes' and the README's wording.
+- 2026-10-29 (round 69, drafted on the recommendation): the next release is **`v0.3` = Acts 1–5**, tagged
+  with the same tag steps after the user's Act 5 playthrough and its fixes; no Mac check, so the
+  "untested on Apple silicon" mark stays (the Mac rule); hard's Act 3–5 credits stay open.
+- 2026-10-29 (step REL-I of M9): `version=0.3.0`; the release notes and the bundle README rewritten for
+  Acts 1–5 (the stop at Act 6 *Jovian Storm*, from Act 5's `next_act`; a `v0.2` save carries on into Act 5's
+  intro); the four bundles dry-run again (about 64 MB more each than Acts 1–4: Act 5's backdrops, music, voices and sounds); the real v0.2 save at the Level 29 hangar (the
+  test fixture of M9 part B) continued in the bundle. Pending the user's review: the notes' and the
+  README's wording.
+- 2026-10-29 (user, [round 69](../../concept-rounds/round-69/README.md), closed): **Q.2 a**: `v0.3` = Acts 1–5, tagged
+  after the user's Act 5 playthrough and its fixes, with the same tag steps as `v0.1`/`v0.2`; **Q.4 "as before"**: the
+  Mac rule (block the tag only if the user can open the macM1 bundle on a Mac within a day, else "untested on Apple
+  silicon"); **Q.3 none**: no playthrough saves are written ("I'll continue from my own save at level 29"); **R.1 ok**:
+  the release texts (`release-notes.md`, `desktop/bundle/README.txt`) accepted as written. Open: the playthrough
+  (2026-10-30), its fixes and the tag.

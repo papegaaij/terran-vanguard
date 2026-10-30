@@ -1,8 +1,8 @@
 ---
 title: Level 34 – Salvage Run
 design: approved
-implementation: in-progress
-art: proposed
+implementation: done
+art: final
 depends-on: [../../../enemies/ground/warden-tank, ../../../enemies/air/talon, ../../../enemies/air/needler, ../../../enemies/space/asteroid-mite, ../../../player/generator, ../../../player/systems, ../../../world/belt, ../../../player/wingmen, ../../../systems/economy]
 updated: 2026-10-29
 ---
@@ -416,6 +416,8 @@ the tanks and `spread` for the popcorn; the plan's fit flies it without `anti-gr
 
 ## Concept art
 
+Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
+
 None yet. The level needs (part G's production art; the mood from the belt's round-60 mood stills):
 
 - the graveyard backdrop (six sections: the edge, the CDF picket, the Helix hulks, the freighter with its open hold,
@@ -439,23 +441,22 @@ Tank in livery is in the [ground units' concept art](../../../enemies/ground/REA
 
 | File | What | Status |
 |---|---|---|
-| [concept/backdrop-final-r67-a.png](concept/backdrop-final-r67-a.png) | Production backdrop (`tools/art/backdrop_l34.py`): eleven screens at half size with stand-ins (the corvette's spine and the first container, the CDF picket's convoy and charge, the *Vigil*'s bridge and beacon, a convoy on a Helix keel, the *Sable Wren*, the freighter's hold with the crate and clamps, the far deck's pair, the tangle's convoy and *Old Marta*, clear space with Ceres and the Sovereign), the pieces (sheet) | chosen (round 67, G.4 ok: accepted as final) |
-| [concept/backdrop-final-r67-a.gif](concept/backdrop-final-r67-a.gif) | t 104-114 at half size: into the freighter, its engines and hold | chosen (round 67, G.4 ok: accepted as final) |
+| [concept/backdrop-final-r67-a.png](concept/backdrop-final-r67-a.png) | Production backdrop (`tools/art/backdrop_l34.py`): eleven screens at half size with stand-ins (the corvette's spine and the first container, the CDF picket's convoy and charge, the *Vigil*'s bridge and beacon, a convoy on a Helix keel, the *Sable Wren*, the freighter's hold with the crate and clamps, the far deck's pair, the tangle's convoy and *Old Marta*, clear space with Ceres and the Sovereign), the pieces (sheet) | chosen (round 67, G.4 ok with G.1 c's black Helix hulls: accepted as final; re-rendered with the black hulls and the tanks' shadows in FIX4) |
+| [concept/backdrop-final-r67-a.gif](concept/backdrop-final-r67-a.gif) | t 104-114 at half size: into the freighter, its engines and hold | chosen (round 67, G.4 ok with G.1 c's black Helix hulls: accepted as final; re-rendered with the black hulls and the tanks' shadows in FIX4) |
 | [concept/backdrop-proposal.yaml](concept/backdrop-proposal.yaml) | The generator's `backdrop:` block, its reading of the sections, the convoys' paths along their roads (one per unit), the ground objects' places, the beacon's drop and a light `debris:` for step G2 (not data) | chosen (round 67, G.4 ok: accepted as final) |
-| [concept/tank-readability-final-r67-a.png](concept/tank-readability-final-r67-a.png) | QG-1: the Warden Tank in livery at 1:1 on the Helix keel road, trim, bay ribs, the freighter's deck, the CDF walkway and flank; the Act 3 grey tank below for comparison (sheet) | proposed |
-| [concept/tank-readability-r67-b.png](concept/tank-readability-r67-b.png) | QG-1 **b** (concept mockup, re-shown in round 67 on 2026-10-29; `tools/concept/tank_readability_r67.py`): the tank roads on the CDF hulls only, the Helix hulls in round 60's black without roads; the same six 1:1 crops as a, then three screens at half size (sheet) | proposed |
-| [concept/tank-readability-r67-c.png](concept/tank-readability-r67-c.png) | QG-1 **c** (concept mockup, same generator): round 60's black Helix hulls with their roads and a faint ground shadow under every tank; the same crops and screens (sheet) | proposed |
-| [concept/tank-readability-r67-abc.png](concept/tank-readability-r67-abc.png) | QG-1 a, b and c side by side: the same six crops at 1:1, the same tank headings, one row per variant (sheet) | proposed |
+| [concept/tank-readability-r67-c.png](concept/tank-readability-r67-c.png) | QG-1 **c** (concept mockup, same generator): round 60's black Helix hulls with their roads and a faint ground shadow under every tank; the same crops and screens (sheet) | chosen (round 67, G.1 c picked: round 60's black Helix hulls with a faint ground shadow under every liveried tank and wreck; built in FIX4) |
+| [concept/tank-readability-r67-abc.png](concept/tank-readability-r67-abc.png) | QG-1 a, b and c side by side: the same six crops at 1:1, the same tank headings, one row per variant (sheet) | chosen (round 67, G.1: the comparison sheet kept; c picked, a and b rejected) |
 | [concept/salvage-objects-final-r67-a.png](concept/salvage-objects-final-r67-a.png) | The salvage objects (`tools/art/belt_units_g.py`): CDF and Helix containers (intact, damaged, wrecked, the burst), the hold clamps (locked, hit, sprung, the hydraulics' burst), the Helix crate (in the hold, the rise, the drift, the seal's glow), the *Vigil*'s shutter, the *Sable Wren*'s hatch, *Old Marta*'s airlock (sheet) | chosen (round 67, G.5 ok: accepted as final) |
 | [concept/salvage-objects-final-r67-a.gif](concept/salvage-objects-final-r67-a.gif) | The hold: the four clamps shot one by one, the crate rising on its glow and drifting, the ship flying through it; a CDF container shot open | chosen (round 67, G.5 ok: accepted as final) |
-| [concept/salvage-tug-r67-b.png](concept/salvage-tug-r67-b.png) | QG-2 **b** (concept mockup, re-shown in round 67 on 2026-10-29; `tools/concept/salvage_tug_r67.py`): the CDF salvage tug, a concept sprite (khaki, white band, blue CDF mark, grapple arms open and shut on the crate) at 1x and 2x, and b's key frames in the level (sheet) | proposed |
-| [concept/salvage-tug-r67-b.gif](concept/salvage-tug-r67-b.gif) | QG-2 a and b side by side at 1x, scrolling at the freighter section's 110 px/s: the clamps shot, the rise, the core missed; a: it drifts off and Okafor's tug line plays; b: the tug flies in, grips it and carries it off | proposed |
-| [concept/salvage-objects-r67-ab.png](concept/salvage-objects-r67-ab.png) | QG-2 a and b: the same five moments of both at half size (sheet) | proposed |
 | [concept/containers-capture-r67-a.png](concept/containers-capture-r67-a.png) | Game capture (step G5; [recipe](concept/prompts.md#level-34-capture-r67-a)): a CDF container shut, the corvette's container shot open with its salvage, the HUD's `CONTAINERS n / 6` tag | chosen (round 67, accepted with the level, G.5) |
-| [concept/helix-core-capture-r67-a.png](concept/helix-core-capture-r67-a.png) | Game capture: the hold's clamps shot, the Helix core rising on its glow and flown through, `HELIX CORE SALVAGED` | proposed |
+| [concept/helix-core-capture-r67-a.png](concept/helix-core-capture-r67-a.png) | Game capture: the hold's clamps shot, the Helix core rising on its glow and flown through, `HELIX CORE SALVAGED` | chosen (round 67, accepted with the level, G.2 a, G.5) |
 | [concept/secrets-capture-r67-a.png](concept/secrets-capture-r67-a.png) | Game capture: the *Vigil*'s shutter, the *Sable Wren*'s hatch and *Old Marta*'s airlock shut and opened with their crates; the CDF beacon releasing the armour patch | chosen (round 67, accepted with the level, G.4–G.5) |
-| [concept/tank-readability-capture-r67-a.png](concept/tank-readability-capture-r67-a.png) | Game capture, QG-1: 1:1 crops of the tanks in livery on the Helix keel roads and the freighter's deck | proposed |
-| [concept/level-34-capture-r67-a.mp4](concept/level-34-capture-r67-a.mp4) | Game capture with the game's sound: the groans under `belt-open`, a container burst, a charge taking a tank, the hold with the motif's window, the clamps and the core's hum | proposed |
+| [concept/tank-readability-capture-r67-a.png](concept/tank-readability-capture-r67-a.png) | Game capture, QG-1: 1:1 crops of the tanks in livery on the Helix keel roads and the freighter's deck | chosen (round 67, accepted with G.3/G.4; stale since FIX4: shows a's lighter hulls without shadows, the record of the round) |
+| [concept/tank-readability-capture-r67-c.png](concept/tank-readability-capture-r67-c.png) | Game capture, G.1 c as built (step FIX4; [recipe](concept/prompts.md#tank-readability-capture-r67-c)): 1:1 crops of the liveried tanks and their faint ground shadows on a CDF walkway, the black Helix keel roads (a wreck) and the freighter's deck, beside the c mockup's Helix keel and CDF walkway crops | chosen (round 67, G.1 c / G.3 as built) |
+| [concept/level-34-capture-r67-a.mp4](concept/level-34-capture-r67-a.mp4) | Game capture with the game's sound: the groans under `belt-open`, a container burst, a charge taking a tank, the hold with the motif's window, the clamps and the core's hum | chosen (round 67, accepted with the level) |
+| [concept/tank-shadows-capture-r69-a.mp4](concept/tank-shadows-capture-r69-a.mp4) | Game capture (step I3; [recipe](concept/prompts.md#level-34-capture-r69-a)), clip with sound: the t=70 convoy in livery with its ground shadows on a Helix hulk's road over the black hull (G.1 c as built; round 69 B.3) | chosen (round 69, B.3 ok) |
+| [concept/tank-shadows-capture-r69-a.png](concept/tank-shadows-capture-r69-a.png) | Game capture (step I3; [recipe](concept/prompts.md#level-34-capture-r69-a)), frames at 1:1: the convoy, t=74–78.5 (round 69 B.3) | chosen (round 69, B.3 ok) |
+| [concept/far-hulk-before-after-r69-a.png](concept/far-hulk-before-after-r69-a.png) | Before-and-after sheet (step I3; [recipe](concept/prompts.md#far-hulk-before-after-r69-a)): the far Helix hulk and `far-wreck-b` in round 67 a's grey-gold and in FIX4's black, 2x (round 69 B.5) | chosen (round 69, B.5 ok) |
 
 ## Implementation
 
@@ -487,6 +488,10 @@ Tank in livery is in the [ground units' concept art](../../../enemies/ground/REA
 - [x] Easy/hard variations; the autopilot flies the level on every difficulty (with and without Rook) (step G2's data;
       step G3: `Level34Test`, the salvage play, wins and `CONTAINERS` 3/3 on every difficulty)
 - [x] Production art and captures for the round (production art proposed in round 67, step ART-G; captures step G5)
+- [x] Round 67 G.1 c: the Helix hulls back to round 60's black (the roads plain steel, the gold trim on the edges), a
+      faint ground shadow under every liveried tank and wreck (step FIX4: `tools/art/backdrop_l34.py` re-rendered, its
+      `--check` 0 problems, the roads' places unchanged; the shadows `warden-tank-asc-shadow` drawn by `TankLooks`; the
+      game capture `tank-readability-capture-r67-c.png`)
 
 ## Open questions
 
@@ -500,7 +505,8 @@ Approved in round 60 (the gap analysis's questions this level follows):
   turrets), a new unit with its own art and sounds.
 - **Q11, the Ascendancy look** (decided in round 60, **b**, not the recommendation: gunmetal/charcoal with gold). The tank
   on the black Helix hulls is still the act's hardest readability case (gunmetal on a dark hull): the hulls are kept a step
-  lighter (sunlit gold and grey faces) or the tanks run on the CDF hulls only; part G measures it.
+  lighter (sunlit gold and grey faces) or the tanks run on the CDF hulls only; part G measures it. (Round 67 G.1 c:
+  the black hulls kept, every liveried tank and wreck casting a faint ground shadow; built in FIX4.)
 - **The core's fallback** (this step's): the tug picks a missed core up, so the unlock can never be lost. The
   alternative is a missable unlock (the core on sale only if collected), against the linear campaign.
 
@@ -518,7 +524,7 @@ Approved in round 60 (the gap analysis's questions this level follows):
 - 2026-10-27: the music follows the [Act 5 music plan](../../../audio/music/README.md#act-5-music-draft-round-60)
   (step m9-d-audio): track 12's base stem at −3 dB, the motif once at the core, `belt-open`.
 - 2026-10-27 (user, [round 60](../../../concept-rounds/round-60/README.md) closed): the design approved as drafted (`design: approved`, D.7): J.1 kept (the Warden Tank in livery instead of a Crawler Tank; its chosen variant is A.15 b, heavier gold, in the Q11 b gunmetal/charcoal livery), Q12 **c** (the Mk V Helix salvaged). Q11 **b**: part G measures the readability of the gunmetal tanks on the dark Helix hulls.
-- 2026-10-29 (step ART-G, pending round 67): production art proposed: the graveyard backdrop with QG-1 **a** (the Helix
+- 2026-10-29 (step ART-G, decided in round 67, 2026-10-29): production art proposed: the graveyard backdrop with QG-1 **a** (the Helix
   hulls a step lighter, grey-gold with gold trim; the roads plain steel), the salvage objects with QG-2 **a** (the crate
   rises on its seal's glow; no tug sprite), the tank in livery (A.15 b in Q.11 b), the briefing images and the intel
   portrait; the far deck's tank pair proposed at t 123 (the freighter's bow road ends at its tip: at 125 the second tank
@@ -560,7 +566,7 @@ Approved in round 60 (the gap analysis's questions this level follows):
   **t=157**, so with the secondary met at t≈151 its line, Okafor's and *Old Marta*'s (Rook's, t≈166.4) all play. Rook's
   t=12 → **t=13.5**, so it starts on time voiced behind the two-page t=1 (1.3 s late before). The radio runs G4 left
   out are back (`RadioTimelineLevel34Test`, ±Rook, text and voiced).
-- 2026-10-29 (step G5, pending the user's review in round 67): the level recorded in the game (medium, the plan's fit,
+- 2026-10-29 (step G5, decided in round 67, 2026-10-29): the level recorded in the game (medium, the plan's fit,
   Rook): the convoys in livery on the CDF walkways and the Helix keel roads, a charge taking a hit tank (the picket
   charge at t≈53.7 after the beam stripped the turret; the keel charge at t≈91 blown by the wing pods), the containers
   and the tag (`DONE` at the fifth), the hold (the clamps down by t≈110.5, the core collected at t≈113 by a ship that
@@ -569,3 +575,14 @@ Approved in round 60 (the gap analysis's questions this level follows):
   out of reach of a ship low on the screen (fly up for them), and with step H2's Level 35 data in the build the game
   goes on to Level 35's briefing (the release's end captured from a build without it).
 - 2026-10-29 (user, [round 67](../../../concept-rounds/round-67/README.md), partly answered; the round stays open): **C.1 a** (the density as built: 407 enemies at medium, `bounty_scale` 0.27), **C.4 a** (a mining charge finishes a hit tank and strips a fresh one's turret), **C.2, C.3, C.5, C.6 accepted**; art **G.4** (the backdrop), **G.5** (the salvage objects) ok: final; sounds **S.1 a** (`container-burst`), **S.3 a** (`helix-core`) and **S.2 "dock"**: the hold clamps reuse Level 29's Dock 9 clamp release (`clamp-release-r62-b`), no new sound (FIX3 switches the key). **Open, re-shown after a redo:** G.1 and G.2 (QG-1, QG-2: b/c need renderings), G.3 (new clips) and S.4 `wreck-groans` (both variants too quiet); `art:` stays `proposed` until they are answered.
+- 2026-10-29 (user, [round 67](../../../concept-rounds/round-67/README.md), closed; the four re-shown rows): **G.1 c** (not the recommendation): round 60's **black** Helix hulls with the plain steel tank roads and a faint ground shadow under every liveried tank and its wreck (the silhouette offset 4, 5 px down-right, softly blurred, 50 % black), as `tank-readability-r67-c.png` shows; **built in FIX4** (backdrop and game). a and b rejected (`concept/rejected/`; the a backdrop stays in `assets/` until FIX4 re-renders it). **G.4** (answered ok before the re-show) is read as ok with G.1 c's black Helix hulls. **G.2 a** (the salvage as built; the CDF salvage tug b rejected). **G.3 ok, with the addition of the shadows from G.1** (FIX4). **S.4 a** (`wreck-groans` a; b rejected). The part's `art:` stays `chosen` until FIX4 builds G.1 c.
+- 2026-10-29 (step FIX4): G.1 c built. `tools/art/backdrop_l34.py` renders the Helix hulks, plates, the freighter, the
+  tangles, the *Sable Wren*, *Old Marta*'s Helix hull and the far hulk/wreck in round 60's black ramp (the c mockup's),
+  the roads and every object's place unchanged (`backdrop-proposal.yaml` identical, `--check` 0 problems); it no longer
+  writes a's 1:1 sheet (rejected). Every liveried tank and wreck casts the faint shadow (the Warden Tank's page).
+  Seen in the game at 1:1: `concept/tank-readability-capture-r67-c.png`. `art: final`.
+- 2026-10-29 (user, [round 69](../../../concept-rounds/round-69/README.md), closed): **F.2 accept**: the one 8.2 s gap
+  with nothing to shoot at medium (t 114.0–122.1, the hold's clamps and the core; the pacing rule passes) stays, the
+  salvage's moment. **B.3 ok** (the liveried tanks' shadows on the black Helix hulls, G.1 c as built) and **B.5 ok**
+  (the far Helix hulk and `far-wreck-b` black with the near hulls: one Helix colour in the level). The Concept art rows
+  of round 69 are `chosen`.

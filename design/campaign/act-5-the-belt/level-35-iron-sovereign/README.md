@@ -1,8 +1,8 @@
 ---
 title: Level 35 – Iron Sovereign
 design: approved
-implementation: in-progress
-art: proposed
+implementation: done
+art: final
 depends-on: [../../../enemies/bosses/iron-sovereign, ../../../enemies/air/talon, ../../../enemies/air/gilded-gunship, ../../../enemies/air/hornet, ../../../enemies/air/rail-serpent, ../../../enemies/air/dart-drone, ../../../enemies/space/shard-drone, ../../../enemies/ground/rail-bunker, ../../../enemies/ground/sam-nest, ../../../world/belt, ../../../player/wingmen, ../../../story/characters/vorne, ../../../systems/economy]
 updated: 2026-10-29
 ---
@@ -412,6 +412,8 @@ L3, the Shield Mk III, Composite IV, the EMP Burst and Rook, 21 of 22 MW).
 
 ## Concept art
 
+Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
+
 The level needs (part H's production art; the boss's proposals are in the
 [Iron Sovereign](../../../enemies/bosses/iron-sovereign/README.md)'s round-60 concept, the belt's mood stills for the
 orbit): the orbit backdrop, the station's outer hull with its gun mounts, the rings' edge rolling in, the arena under the
@@ -432,22 +434,23 @@ Prompts: [concept/prompts.md](concept/prompts.md).
 
 | File | What | Status |
 |---|---|---|
-| [concept/backdrop-final-r68-a.png](concept/backdrop-final-r68-a.png) | Production backdrop (`tools/art/backdrop_l35.py`): eight screens at half size with stand-ins (Ceres's curve with the hub red and the loyalist wrecks, the tenders far below, the hull's south bulkhead, the nests and a bunker pair on their pads, the relay's telegraph, the lifeboat in its clamps, the north bulkhead and the neck as the rings roll in, the halted station over Ceres's pole), the small pieces, the tile and the long pieces (sheet) | proposed |
-| [concept/backdrop-final-r68-a.gif](concept/backdrop-final-r68-a.gif) | t 82-93 at half size: the hull's end, the neck and the station rolling in to the halt | proposed |
+| [concept/backdrop-final-r68-a.png](concept/backdrop-final-r68-a.png) | Production backdrop (`tools/art/backdrop_l35.py`): eight screens at half size with stand-ins (Ceres's curve with the hub red and the loyalist wrecks, the tenders far below, the hull's south bulkhead, the nests and a bunker pair on their pads, the relay's telegraph, the lifeboat in its clamps, the north bulkhead and the neck as the rings roll in, the halted station over Ceres's pole), the small pieces, the tile and the long pieces (sheet) | chosen (round 68, H.3 ok: accepted as final) |
+| [concept/backdrop-final-r68-a.gif](concept/backdrop-final-r68-a.gif) | t 82-93 at half size: the hull's end, the neck and the station rolling in to the halt | chosen (round 68, H.3 ok: accepted as final) |
 | [concept/backdrop-proposal.yaml](concept/backdrop-proposal.yaml) | The generator's `backdrop:` block, its reading of the sections (the halt eased down before the arena), the arena's rows and the station's centre, the hull guns' and the lifeboat's places on their pads, the beacon's drop and a light `debris:` for step H2 (not data) | proposed |
-| [concept/relay-flash-final-r68-a.png](concept/relay-flash-final-r68-a.png) | QH-2 **a** (recommended, the game's until the pick): the red line from the glowing point on the right edge brightening over the telegraph, the white-hot 16 px bar along the whole row with a short screen flash, the ion trail (eight moments at half size, the strips at 2x; sheet) | proposed |
-| [concept/relay-flash-final-r68-a.gif](concept/relay-flash-final-r68-a.gif) | QH-2 a: t 59.6-62 at half size on the hull, the ship on the locked row | proposed |
-| [concept/relay-flash-final-r68-b.png](concept/relay-flash-final-r68-b.png) | QH-2 **b**: the same line, the flash a slug crossing right to left in 0.2 s, then the trail (sheet) | proposed |
-| [concept/relay-flash-final-r68-b.gif](concept/relay-flash-final-r68-b.gif) | QH-2 b: t 59.6-62 at half size | proposed |
-| [concept/lifeboat-final-r68-a.png](concept/lifeboat-final-r68-a.png) | The Ceres lifeboat (`tools/art/l35_props.py`) in the station's clamps on the hull at 1x and 2x: the beacon's blink and the six frames of it shot open (sheet) | proposed |
-| [concept/relay-capture-r68-a.mp4](concept/relay-capture-r68-a.mp4) | Game capture (step H5; [recipe](concept/prompts.md#level-35-capture-r68-a)), clip with sound: the mass relay's line, flash and trail on the ship's row (variant a, as built) | proposed |
-| [concept/relay-capture-r68-a.png](concept/relay-capture-r68-a.png) | Game capture (step H5; [recipe](concept/prompts.md#level-35-capture-r68-a)), frames: the mass relay's line, flash and trail on the ship's row (variant a, as built) | proposed |
-| [concept/lifeboat-capture-r68-a.mp4](concept/lifeboat-capture-r68-a.mp4) | Game capture (step H5; [recipe](concept/prompts.md#level-35-capture-r68-a)), clip with sound: the Ceres lifeboat under the beam, its crate drifting out (the capsule stays drawn whole) | proposed |
-| [concept/lifeboat-capture-r68-a.png](concept/lifeboat-capture-r68-a.png) | Game capture (step H5; [recipe](concept/prompts.md#level-35-capture-r68-a)), frames: the Ceres lifeboat under the beam, its crate drifting out (the capsule stays drawn whole) | proposed |
-| [concept/hull-guns-capture-r68-a.mp4](concept/hull-guns-capture-r68-a.mp4) | Game capture (step H5; [recipe](concept/prompts.md#level-35-capture-r68-a)), clip with sound: the hull's Rail Bunkers and SAM Nests firing on the approach | proposed |
-| [concept/hull-guns-capture-r68-a.png](concept/hull-guns-capture-r68-a.png) | Game capture (step H5; [recipe](concept/prompts.md#level-35-capture-r68-a)), frames: the hull's Rail Bunkers and SAM Nests firing on the approach | proposed |
-| [concept/halt-capture-r68-a.mp4](concept/halt-capture-r68-a.mp4) | Game capture (step H5; [recipe](concept/prompts.md#level-35-capture-r68-a)), clip with sound: the station rolling in to the halt with the arena warning | proposed |
-| [concept/halt-capture-r68-a.png](concept/halt-capture-r68-a.png) | Game capture (step H5; [recipe](concept/prompts.md#level-35-capture-r68-a)), frames: the station rolling in to the halt with the arena warning | proposed |
+| [concept/relay-flash-final-r68-a.png](concept/relay-flash-final-r68-a.png) | QH-2 **a** (picked in round 68: the game's relay flash): the red line from the glowing point on the right edge brightening over the telegraph, the white-hot 16 px bar along the whole row with a short screen flash, the ion trail (eight moments at half size, the strips at 2x; sheet) | chosen (round 68, H.4 a picked: the built relay flash) |
+| [concept/relay-flash-final-r68-a.gif](concept/relay-flash-final-r68-a.gif) | QH-2 a: t 59.6-62 at half size on the hull, the ship on the locked row | chosen (round 68, H.4 a picked: the built relay flash) |
+| [concept/lifeboat-final-r68-a.png](concept/lifeboat-final-r68-a.png) | The Ceres lifeboat (`tools/art/l35_props.py`) in the station's clamps on the hull at 1x and 2x: the beacon's blink and the six frames of it shot open (sheet) | chosen (round 68, H.5 ok: accepted as final) |
+| [concept/relay-capture-r68-a.mp4](concept/relay-capture-r68-a.mp4) | Game capture (step H5; [recipe](concept/prompts.md#level-35-capture-r68-a)), clip with sound: the mass relay's line, flash and trail on the ship's row (variant a, as built) | chosen (round 68, accepted with the level: C.2, C.7, H.4, H.5) |
+| [concept/relay-capture-r68-a.png](concept/relay-capture-r68-a.png) | Game capture (step H5; [recipe](concept/prompts.md#level-35-capture-r68-a)), frames: the mass relay's line, flash and trail on the ship's row (variant a, as built) | chosen (round 68, accepted with the level: C.2, C.7, H.4, H.5) |
+| [concept/lifeboat-capture-r68-a.mp4](concept/lifeboat-capture-r68-a.mp4) | Game capture (step H5; [recipe](concept/prompts.md#level-35-capture-r68-a)), clip with sound: the Ceres lifeboat under the beam, its crate drifting out (the capsule stays drawn whole) | chosen (round 68, accepted with the level: C.2, C.7, H.4, H.5; stale since FIX3 slowed the opening to 1 s: the record of the round; re-recorded as `lifeboat-capture-r69-a`) |
+| [concept/lifeboat-capture-r68-a.png](concept/lifeboat-capture-r68-a.png) | Game capture (step H5; [recipe](concept/prompts.md#level-35-capture-r68-a)), frames: the Ceres lifeboat under the beam, its crate drifting out (the capsule stays drawn whole) | chosen (round 68, accepted with the level: C.2, C.7, H.4, H.5; stale since FIX3 slowed the opening to 1 s: the record of the round; re-recorded as `lifeboat-capture-r69-a`) |
+| [concept/lifeboat-capture-r69-a.mp4](concept/lifeboat-capture-r69-a.mp4) | Game capture (step I3; [recipe](concept/prompts.md#level-35-capture-r69-a)), clip with sound: the Ceres lifeboat shot open mid-screen, its six open frames over 1 s and the crate drifting out (round 69 B.4) | chosen (round 69, B.4 ok) |
+| [concept/lifeboat-capture-r69-a.png](concept/lifeboat-capture-r69-a.png) | Game capture (step I3; [recipe](concept/prompts.md#level-35-capture-r69-a)), frames at 1:1: the lifeboat opening, t=67.3–68.5 (round 69 B.4) | chosen (round 69, B.4 ok) |
+| [concept/hull-guns-capture-r68-a.mp4](concept/hull-guns-capture-r68-a.mp4) | Game capture (step H5; [recipe](concept/prompts.md#level-35-capture-r68-a)), clip with sound: the hull's Rail Bunkers and SAM Nests firing on the approach | chosen (round 68, accepted with the level: C.2, C.7, H.4, H.5) |
+| [concept/hull-guns-capture-r68-a.png](concept/hull-guns-capture-r68-a.png) | Game capture (step H5; [recipe](concept/prompts.md#level-35-capture-r68-a)), frames: the hull's Rail Bunkers and SAM Nests firing on the approach | chosen (round 68, accepted with the level: C.2, C.7, H.4, H.5) |
+| [concept/halt-capture-r68-a.mp4](concept/halt-capture-r68-a.mp4) | Game capture (step H5; [recipe](concept/prompts.md#level-35-capture-r68-a)), clip with sound: the station rolling in to the halt with the arena warning | chosen (round 68, accepted with the level: C.2, C.7, H.4, H.5) |
+| [concept/halt-capture-r68-a.png](concept/halt-capture-r68-a.png) | Game capture (step H5; [recipe](concept/prompts.md#level-35-capture-r68-a)), frames: the station rolling in to the halt with the arena warning | chosen (round 68, accepted with the level: C.2, C.7, H.4, H.5) |
+| [concept/tenders-before-after-r69-a.png](concept/tenders-before-after-r69-a.png) | Before-and-after sheet (step I3; [recipe](concept/prompts.md#tenders-before-after-r69-a)): the Sovereign's tenders as built (pinned grey-gold) and rendered black like Level 34's Helix, 2x (round 69 B.6) | chosen (round 69, B.6 ok) |
 
 ## Implementation
 
@@ -487,7 +490,7 @@ Prompts: [concept/prompts.md](concept/prompts.md).
       beacon's armour patch and the boss's phase-4 patch (step H2; the autopilot shoots the lifeboat open, step H3; step
       H5's capture read the capsule as drawn whole after it is shot open; step FIX3 found the open frames do play (the
       0.4 s burst at the top edge under the beam, then the last frame, the capsule with its hatch blown, close to the
-      whole one) and slowed the lifeboat's opening to 1 s, `Level33LooksTest`; its last frame is the art's, pending
+      whole one) and slowed the lifeboat's opening to 1 s, `Level33LooksTest`; its last frame is the art's, accepted in
       round 68's H.5)
 - [x] Music: track 13's stems by section, out at the halt, the warning and track 19, the motif stem alone after the
       kill (`motif_after_boss`), the act-complete fanfare under the outro; the `belt-station` ambience (step H2's data;
@@ -499,7 +502,7 @@ Prompts: [concept/prompts.md](concept/prompts.md).
 - [x] Easy/hard variations as in *Difficulty notes*; the autopilot flies the level with Rook on every difficulty
       (`--escort none` too) (step H3, `Level35Test`: `RingPlay` in the arena, the relay's line stepped off, the lifeboat
       shot open)
-- [ ] Production art and the round's captures (ART-H2: the backdrop, the relay, the lifeboat and the images, in the
+- [x] Production art and the round's captures (accepted in round 68, closed 2026-10-29; ART-H2: the backdrop, the relay, the lifeboat and the images, in the
       game; round 68 H.3–H.7; the captures of the relay, the hull's guns, the lifeboat, the halt and the act end in round
       68, step H5)
 
@@ -544,7 +547,7 @@ Approved in round 60 (the gap analysis's questions this level follows):
 - 2026-10-27: the music follows the [Act 5 music plan](../../../audio/music/README.md#act-5-music-draft-round-60) (step
   m9-d-audio): track 13 on the approach, track 19 for the fight, the motif stem alone after the kill, `belt-station`.
 - 2026-10-27 (user, [round 60](../../../concept-rounds/round-60/README.md) closed): the design approved as drafted (`design: approved`, D.8): Q7 **a** (top-down rings), Q9 **a** (Vorne's broadcast is the act intro), J.8 kept (Vorne cold, never shouting); the station is **A.17 b**, armoured links, with the **A.23 top-lit** atlas (about 0.6 pages); the rings' bed is S.16 a, the rail shot S.8 b. Q11 **b**: gunmetal/charcoal with gold.
-- 2026-10-29 (M9 part H, step H2; pending the user's review in round 68): the level's data on ART-H2's proposal. Decided
+- 2026-10-29 (M9 part H, step H2; decided in round 68, 2026-10-29): the level's data on ART-H2's proposal. Decided
   trivia of the gap check applied: every approach line one radio page and retimed (Okafor 1, Ceres Control 9.5, Rook 23,
   Varga 36, Okafor 46, Ceres Control 55.5), the t≈56 bunker pair at t=55.5, the serpent pincer two `snake` trains, the
   kill ratio 65 % of what the simulation counts (the draft's 104 of 160 → ≈ 114 of 175), the level's end 1 s after the
@@ -559,7 +562,7 @@ Approved in round 60 (the gap analysis's questions this level follows):
   tracker label (a kill ratio shows none). Varga's "Kill a ring's guns" (her briefing page and her arena line) read
   "Killer rings guns" in every voiced take: reworded "Destroy a ring's guns", the arena line "The guns fire only on the
   side facing you. Destroy a ring's guns."
-- 2026-10-29 (step H2, deviations pending round 68): **the halt** is a 6.5 s section easing from 150 to 1 px/s over
+- 2026-10-29 (step H2, deviations decided in round 68, 2026-10-29): **the halt** is a 6.5 s section easing from 150 to 1 px/s over
   [85.5, 91.5], then the arena's own 1 s ease to rest (ground scroll 13,788, ART-H2's 13,785 + 3 px; its generator
   re-run on the data): the simulation allows a timed halt (speed 0 outside an arena) only with a defend primary, so
   ART-H2's 0.5 s timed halt could not be flown. **The rear wave at t=68.5 is a Dart Drone stream of 5** (BOTTOM warning),
@@ -570,12 +573,12 @@ Approved in round 60 (the gap analysis's questions this level follows):
   perfect run 1.50 ×; the boss **433** in Act 1 terms (core 355, 13 batteries × 6), 24 % of budget(35); its 52 expected
   Darts in the haul (`boss.notes.spawns`). The approach measured at medium 3.60 on the screen, 1.04× Level 10's small
   units, one gap over 2 s (the pre-boss pause): no offbeat firing groups needed.
-- 2026-10-29 (step H3; pending round 68): the fight measured and tuned in the boss's spec (the core 14,000, the par
+- 2026-10-29 (step H3; decided in round 68, 2026-10-29): the fight measured and tuned in the boss's spec (the core 14,000, the par
   150); the boss's typical Darts **84** (`notes.spawns`, was 52), the scale **0.59** kept (+1.7 %); the secondary's 65 %
   is of the approach's planned units (151 at medium: 99 kills; the Gunships' Darts count in the total as they come, the
   sim's rule; the README's "≈ 114 of 175" is the share of the counted total); the station's halt place fixed in the
   simulation (the halt's 6 s ease was left out of the anchored boss's place: it sat 456 px low).
-- 2026-10-29 (M9 part H, step H5; pending the user's review in round 68): the level captured at medium with the plan's
+- 2026-10-29 (M9 part H, step H5; decided in round 68, 2026-10-29): the level captured at medium with the plan's
   fit and Rook (the relay's line and flash, the hull's guns, the lifeboat, the station arriving at the halt with the
   arena warning, the fight, the debrief and the act end). Found: the **Ceres lifeboat stays drawn whole** after it is shot
   open (its crate drifts out at t≈66.3 and the debrief counts the secret, but the open frames never show), a follow-up
@@ -588,3 +591,8 @@ Approved in round 60 (the gap analysis's questions this level follows):
   Claim 114 keeps 4). Whether the last frame should read more clearly open is art (round 68's H.5, the user's call).
   Looks only, checked and left: the spin-up plays mostly under the `WARNING` banner (FIX3's stills t 93–96); the
   death's segment fade and the bay Darts on the dark rings were not re-captured (no kill run in FIX3).
+- 2026-10-29 (user, [round 68](../../../concept-rounds/round-68/README.md), closed): the art accepted (**H.3** the backdrop, **H.5** the Ceres lifeboat), **H.4 a** (the built relay flash: the bar along the whole row with the short full-screen flash and the fading ion trail; b, the slug, rejected, `concept/rejected/`), the calls **C.2, C.3, C.4, C.7, C.8 accepted** (the halt, the rear wave, the radio, the bays and SAMs, the bounty scale 0.59); the sounds of the relay **S.11 a** (`relay-charge`), **S.12 a** (`relay-flash`). The part's `art:` is `final`.
+- 2026-10-29 (user, [round 69](../../../concept-rounds/round-69/README.md), closed): **B.4 ok** (the lifeboat's 1 s
+  opening) and **B.6 ok** (the tenders kept grey-gold, as accepted in round 68's H.3); the clips are `chosen`.
+  **B.1 ok**, with the note that the rail lines must lead the ring's turn: built in step FIX5 (the Iron Sovereign's
+  page).

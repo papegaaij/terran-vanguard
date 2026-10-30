@@ -1,10 +1,10 @@
 ---
 title: Level 29 – Betrayal at Ceres
 design: approved
-implementation: in-progress
+implementation: done
 art: final
 depends-on: [../../../enemies/air/talon, ../../../enemies/ground/sam-nest, ../../../enemies/space/asteroid-mite, ../../../enemies/README.md, ../../../player/wingmen, ../../../world/belt, ../../../ui/hud, ../../../story/characters]
-updated: 2026-10-28
+updated: 2026-10-29
 ---
 
 # Level 29 – Betrayal at Ceres

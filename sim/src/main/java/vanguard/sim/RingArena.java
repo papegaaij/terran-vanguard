@@ -445,6 +445,24 @@ public final class RingArena implements Hashed {
         return -radius[ringOf[p]] * Trig.cos(mountRadians(p));
     }
 
+    /**
+     * Round 69's B.1 ({@link LineAim}): battery {@code p}'s offset from the centre {@code ticks} steps on, its ring
+     * turning on at this step's speed ({@link #velocity}), px to the right: exact for an even ring (the rail batteries'),
+     * the current speed for a stepping or grinding one.
+     */
+    double leadOffsetX(int p, int ticks) {
+        return -radius[ringOf[p]] * Trig.sin(leadMount(p, ticks));
+    }
+
+    /** As {@link #leadOffsetX}, px up. */
+    double leadOffsetY(int p, int ticks) {
+        return -radius[ringOf[p]] * Trig.cos(leadMount(p, ticks));
+    }
+
+    private double leadMount(int p, int ticks) {
+        return wrap(mountRadians(p) + velocity[ringOf[p]] * SimStep.SECONDS * ticks);
+    }
+
     /** Battery {@code p}'s turret heading toward the ship, radians clockwise from straight down (64 headings: the game's). */
     public double turretRadians(int p) {
         return StrictMath.atan2(-(shipX - piece.partX(p)), -(shipY - piece.partY(p)));

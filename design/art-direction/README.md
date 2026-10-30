@@ -3,7 +3,7 @@ title: Art direction
 design: approved
 implementation: n/a
 art: chosen
-updated: 2026-10-28
+updated: 2026-10-29
 ---
 
 # Art direction
@@ -520,7 +520,7 @@ the Level 11 props approved as final; the lane telegraph and slam **a** "edge da
 - [x] The large pulsing orb for `medium` bullets (`BulletLooks`, frames by
       `tools/art/bullet_medium.py`, approved as final in round 26): the Leviathan's and the Scuttler's aimed
       shots; the Spore Bomber's `medium` is its spore, drawn as the mine.
-- [ ] The homing diamond — **later: Act 5** (M9 part A, step A3: `DiamondLooks`, the diamond at 16 headings over its
+- [x] The homing diamond (M9 part A, step A3: `DiamondLooks`, `ActFiveLooksTest.theDiamondFacesWhereItFlies`, round 61 a; the diamond at 16 headings over its
   exhaust, its pop and fizzle, in a level whose kinds' `homing` has `look: diamond`; the art in the Act 5 levels' unit
   atlases, `SpriteUse`; flown with the SAM Nest in part B) (Act 4's homing projectile, the Depth Hunter's torpedo at L27, is drawn as
       its own torpedo sprite with its wake, round 48 b, accepted in round 57; the diamond waits for the first homing

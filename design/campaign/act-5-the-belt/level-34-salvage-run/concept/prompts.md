@@ -114,3 +114,29 @@ crate frames (`tools/art/belt_units_g.py`), the tug rendered on the frozen SDF r
   flies in from the right, grips it and carries it off to the left, the line shown as it grips.
 - **salvage-objects-r67-ab** — the same five moments of a and b (clamps shot, the rise, the drift, the miss, the tug
   leaving) at half size, one row per variant.
+
+## tank-readability-capture-r67-c
+
+A capture of the game, not generated art (step FIX4, 2026-10-29): round 67's G.1 c as built, the Helix hulls back in
+round 60's black (`tools/art/backdrop_l34.py`) and the liveried tanks' faint ground shadows
+(`tools/art/warden_tank.py --livery asc --shadows`, drawn by the renderer under the ground units). The game built by
+`:desktop:installDist` from branch `m9-act-5` (the working tree after FIX4's changes) on a private 1280×720 Xvfb display,
+`--bench 900 --settings <scratch>/settings.properties` (`controls.auto-fire=true`) `--level 34 --difficulty medium
+--invulnerable`, the loadout of [level-34-capture-r67-a](#level-34-capture-r67-a) with `--special emp-burst:2`, Rook in
+his slot, no input, `--shots 3210,4440,5520,7620` (the game's 960×540 stills at t=53.5, 74, 92 and 127). Composed by a
+scratch script: 140×400 crops at 1:1 of the CDF picket's walkway, the Helix keel road (twice; a wreck at t=92) and the
+freighter's fore deck, then [tank-readability-r67-c.png](tank-readability-r67-c.png)'s Helix keel and CDF walkway crops
+(116×400) beside them, labelled with the `render` package's text.
+
+## far-hulk-before-after-r69-a
+
+Round 69's B.5, a before | after sheet, not new art (M9 part I, step I3): `python3 tools/concept/before_after_r69.py`.
+The far Helix hulk's turn frames 0, 4, 8, 12 and `far-wreck-b` at 2x on the deep layer's dark: before = the files of
+commit 73c8a916 (round 67 a's grey-gold Helix), after = `assets/backdrop/level-34/` after step FIX4 (G.1 c's black
+Helix ramp, which the far pieces share with the hulls).
+
+## level-34-capture-r69-a
+
+Concept round 69, a capture of the game, not generated art (M9 part I, step I3, 2026-10-29): the game built by `:desktop:installDist` from branch `m9-act-5` (the working tree after steps FIX3, FIX4 and I1, the full `check` green) on a private 960×540 Xvfb display, `--bench <s> --settings <scratch>/settings.properties`, `--level 34 --difficulty medium --invulnerable`, the plan's fit of [level-34-capture-r67-a](#level-34-capture-r67-a) with Rook, `controls.auto-fire=true`, the ship still (**run D**; the level time from the level's first frame). Clips: `ALSOFT_DRIVERS=wave` writing the game's own mix to a file, the screen recorded with ffmpeg `x11grab` at 30 fps, cut to the subject (≤ 1 s lead-in), cropped and muxed (H.264 main, AAC; the sound 0.47 s behind the recording, checked on the shots' cracks); checked on an eight-frame sheet. PNGs: frames of the same recording, labelled. Script: step I3's `clips69.py` (scratch).
+
+- **tank-shadows-capture-r69-a**: t=72.5–80.5, 240×540 on the right half: the t=70 convoy of liveried Warden Tanks with their faint ground shadows on a Helix hulk's steel road over the black hull (round 67 G.1 c as built in FIX4); the PNG 200×540 at 1:1 at t=74, 75.5, 77, 78.5.

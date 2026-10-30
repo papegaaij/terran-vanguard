@@ -41,6 +41,10 @@ class Level34LooksTest {
         assertEquals(TankLooks.HEADINGS, frames("warden-tank-asc-wreck"));
         assertTrue(Files.isRegularFile(SPRITES.resolve("warden-tank-asc-turret-stub.png")));
         assertEquals(0, frames("warden-tank-asc-flash"), "the muzzle flash stays the grey tank's");
+        // Round 67 G.1 c: the livery's ground shadows, a hull's and a wreck's per heading; the grey tank casts none.
+        assertEquals(TankLooks.HEADINGS, frames("warden-tank-asc-shadow"));
+        assertEquals(TankLooks.HEADINGS, frames("warden-tank-asc-wreck-shadow"));
+        assertEquals(0, frames("warden-tank-shadow"), "Level 19's grey tank casts no shadow");
         for (String container : new String[] {"cargo-container-cdf", "cargo-container-helix"}) {
             assertEquals(3, frames(container), container + ": intact, damaged, wrecked");
             assertEquals(8, frames(container + "-break"), container);

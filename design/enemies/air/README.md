@@ -35,8 +35,8 @@ Promoted to their own documents for the Acts 1–2 wrap-up, plus the Act 3 draft
 | [choir-herald](choir-herald/README.md) | Support flyer whose aura rings shield nearby enemies (L17) | approved | done | final |
 | [ghost-drone](ghost-drone/README.md) | Grey human-built strafing drone, hint 1 (L18) | approved | in-progress | final |
 | [dust-kite](dust-kite/README.md) | Tiny Martian popcorn glider that rams (L15, M10 = b) | approved | in-progress | final |
-| [talon](talon/README.md) | Ascendancy interceptor: swoops, aimed pairs, a 2 HP hex shield, squad leaders (L29) | approved | done | chosen |
-| [wavering-stormhawk](wavering-stormhawk/README.md) | Ceres Wing Stormhawk that holds fire: a neutral craft, Level 29's "Hold fire" (L29) | approved | done | chosen |
+| [talon](talon/README.md) | Ascendancy interceptor: swoops, aimed pairs, a 2 HP hex shield, squad leaders (L29) | approved | done | final |
+| [wavering-stormhawk](wavering-stormhawk/README.md) | Ceres Wing Stormhawk that holds fire: a neutral craft, Level 29's "Hold fire" (L29) | approved | done | final |
 | [dart-drone](dart-drone/README.md) | Tiny Ascendancy ram drone launched in streams by Gunships, stations and the Sovereign (L30) | approved | done | final |
 | [gilded-gunship](gilded-gunship/README.md) | Slow gunship: gilded front ×0.5, engines ×2, ring bursts, Dart streams (L30) | approved | done | final |
 | [rail-serpent](rail-serpent/README.md) | Drone train of 8–14 cars from the sides and rear; a cut's rear half drifts and blows (L30) | approved | done | final |

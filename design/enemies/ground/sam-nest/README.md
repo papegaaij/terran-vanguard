@@ -2,9 +2,9 @@
 title: SAM Nest
 design: approved
 implementation: done
-art: chosen
+art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../player/specials, ../../../art-direction]
-updated: 2026-10-28
+updated: 2026-10-29
 ---
 
 # SAM Nest
@@ -89,8 +89,8 @@ Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's r
 
 | File | What | Status |
 |---|---|---|
-| [concept/sam-nest-r60-a.png](concept/sam-nest-r60-a.png) | SAM Nest A, twin tubes on a round base — a round armoured base with a gold ring and four lights, two missile tubes on a yoke under a gold hatch, a red lock light; strong rim (sheet) | chosen (round 60) |
-| [concept/sam-nest-r60-a.gif](concept/sam-nest-r60-a.gif) | SAM Nest A, twin tubes on a round base — a round armoured base with a gold ring and four lights, two missile tubes on a yoke under a gold hatch, a red lock light; strong rim (motion) | chosen (round 60) |
+| [concept/sam-nest-r60-a.png](concept/sam-nest-r60-a.png) | SAM Nest A, twin tubes on a round base — a round armoured base with a gold ring and four lights, two missile tubes on a yoke under a gold hatch, a red lock light; strong rim (sheet) | chosen (round 60); production frames final (round 62, F.2) |
+| [concept/sam-nest-r60-a.gif](concept/sam-nest-r60-a.gif) | SAM Nest A, twin tubes on a round base — a round armoured base with a gold ring and four lights, two missile tubes on a yoke under a gold hatch, a red lock light; strong rim (motion) | chosen (round 60); production frames final (round 62, F.2) |
 
 ## Implementation
 
@@ -115,3 +115,4 @@ Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's r
   it turns); at most 8 missiles alive per nest, as the Hornet's and the Revenant Walker's pods; missiles pay nothing.
 - 2026-10-27 (user, [round 60](../../../concept-rounds/round-60/README.md) closed): the design approved as drafted (`design: approved`); art A.11 **a**, "SAM Nest A, twin tubes on a round base", chosen (`art: chosen`), the other variant in `concept/rejected/`. Q11 **b** (gunmetal/charcoal with gold, not gloss black): the chosen variant is re-rendered in gunmetal/charcoal in this part's production art, keeping the ≥ 20 % gold and the readability check.
 - 2026-10-28 (user, [round 62](../../../concept-rounds/round-62/README.md), closed; page answers): the art (F.2) accepted as final; the hatch **b** (S.3), the lock beep **b** (S.4) and the wake (S.5 a with S.4 b: `nest-wake-r62-ab`) picked.
+- 2026-10-29 (M9 part I, step I2): `art: final`: the production frames (`tools/art/belt_units*.py`, every PNG with its `Source` chunk, so `importPlaceholders` skips them) are in `assets/sprites/` and the user accepted them as final in round 62 (F.2); the round 60 mockup rows are history.

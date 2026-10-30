@@ -12,7 +12,8 @@ import org.junit.jupiter.api.Test;
  * due line waits while 2 others telegraph (in the pool's order, deterministic) and starts as soon as one goes live;
  * a line without the gate is unchanged (A1's {@link LaserLineTest}: lock, band, once, the hold within 100 px, the
  * EMP's cancel). The line runs any way, up the screen too. Round 66's C.1 b: the line's direction is locked at the
- * telegraph's start, its origin rides with the bunker as the ground scrolls (telegraph, live band and hit test).
+ * telegraph's start, its origin rides with the bunker as the ground scrolls (telegraph, live band and hit test). Round
+ * 69's B.2: the locked direction leads the scroll, so the live line passes through the ship's locked point.
  */
 class RailBunkerTest {
     private final SimEvents events = new SimEvents(64);
@@ -87,6 +88,11 @@ class RailBunkerTest {
         assertTrue(low.lineBeam().dirY() > 0.99, "its line up the screen");
     }
 
+    /** The distance from (x, y) to the line from (fromX, fromY) along the unit vector (dirX, dirY), px. */
+    static double across(double fromX, double fromY, double dirX, double dirY, double x, double y) {
+        return Math.abs((x - fromX) * dirY - (y - fromY) * dirX);
+    }
+
     @Test
     void aScrollingBunkersLineRidesOnItsMuzzleWithItsDirectionLocked() {
         Enemy unit = bunker(GATED, 100, 150);
@@ -101,6 +107,9 @@ class RailBunkerTest {
         double dirX = line.dirX();
         double dirY = line.dirY();
         double startY = unit.y();
+        assertTrue(
+                across(unit.x(), unit.y(), dirX, dirY, shipX, shipY) > 10,
+                "led: the telegraph from the muzzle now passes beside the ship");
         while (line.running()) {
             assertEquals(unit.x(), line.fromX(), 1e-9, "on the bunker");
             assertEquals(unit.y(), line.fromY(), 1e-9, "scrolling with it");
@@ -115,7 +124,12 @@ class RailBunkerTest {
         assertTrue(startY - unit.y() > 100, "the ground scrolled the bunker on over the telegraph");
         Hull hull = TestSpecs.HULL;
         EnemySpec.LaserLine rail = GATED.laserLine().orElseThrow();
-        assertFalse(line.strikes(rail, hull, shipX, shipY), "a diagonal line slid off the still ship");
+        assertTrue(
+                across(line.fromX(), line.fromY(), dirX, dirY, shipX, shipY) < 1,
+                "round 69's B.2: the live line passes through the ship's locked point: "
+                        + across(line.fromX(), line.fromY(), dirX, dirY, shipX, shipY));
+        assertTrue(line.strikes(rail, hull, shipX, shipY), "a still ship is hit");
+        assertFalse(line.strikes(rail, hull, shipX + 60, shipY), "a sidestep in the telegraph dodges");
         double along = 200;
         assertTrue(
                 line.strikes(rail, hull, unit.x() + dirX * along, unit.y() + dirY * along),

@@ -2,9 +2,9 @@
 title: Wavering Stormhawk
 design: approved
 implementation: done
-art: chosen
+art: final
 depends-on: [../../../campaign/act-5-the-belt/level-29-betrayal-at-ceres, ../../../systems/economy]
-updated: 2026-10-28
+updated: 2026-10-29
 ---
 
 # Wavering Stormhawk
@@ -73,3 +73,4 @@ Round 60's look is **A.22 a** (Ceres Wing ochre), the act's
   HP 20 base so the beam era's ×2 flies the README's 40; hard's "40 px lower" is the hook `hover_y: 190`, easy's 8 s
   hold the hook `hover_seconds`; its line abreast of 2 is pinned on every difficulty.
 - 2026-10-28 (user, [round 62](../../../concept-rounds/round-62/README.md), closed; page answers): the art (F.5: 16 headings x 5 banks, the IFF light dark, white and red) accepted as final.
+- 2026-10-29 (M9 part I, step I2): `art: final`: the production frames (`tools/art/belt_units*.py`, every PNG with its `Source` chunk, so `importPlaceholders` skips them) are in `assets/sprites/` and the user accepted them as final in round 62 (F.5); the round 60 mockup rows are history.

@@ -911,6 +911,16 @@ public final class SetPiece implements Hashed {
         return parts.partY(p);
     }
 
+    /** Round 69's B.1: where part {@code p}'s centre will be {@code ticks} steps on ({@link SetPieceParts#partLeadX}). */
+    double partLeadX(int p, int ticks) {
+        return parts.partLeadX(p, ticks);
+    }
+
+    /** As {@link #partLeadX}, px up. */
+    double partLeadY(int p, int ticks) {
+        return parts.partLeadY(p, ticks);
+    }
+
     /**
      * Part {@code p}'s offset from the centre on the screen, px to the right: its data offset turned
      * with the pass's heading (fixed per pass), so {@code renderX(alpha) + partOffsetX(p)} draws it.

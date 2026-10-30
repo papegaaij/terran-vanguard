@@ -71,6 +71,7 @@ from artkit import DESIGN, ROOT, TAU
 import backdrop_l29 as l29  # noqa: E402  (tools/art: the wrapping hill shade, exact rows)
 import backdrop_l30 as l30  # noqa: E402  (tools/art: the belt's space kit)
 import backdrop_l34 as l34  # noqa: E402  (tools/art: the wrecks' hull kit)
+l34.HELIX = l34.HELIX_GREY_GOLD  # the tenders keep the grey-gold Helix they were built with (L34 went black in FIX4)
 import l23kit  # noqa: E402
 from render import raster  # noqa: E402
 

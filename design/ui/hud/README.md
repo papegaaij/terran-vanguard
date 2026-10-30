@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../../player, ../../systems/scoring, ../../art-direction]
-updated: 2026-10-28
+updated: 2026-10-29
 ---
 
 # HUD
@@ -323,14 +323,14 @@ Production art for concept round 26 (M4 part H batch): the boss bar's plate, ren
       right of the shield's label plate; with it the overcharge's white cores in the shield bar and
       a drone bay's hits strip under its weapons row
 - [x] The power row under a drain (`POWER DRAIN`, the hatched drained cells, the flash over load, `REGEN OFF` /
-      `FIRE nn%`) — **later: Act 5** (draft: *Act 5 additions*) — M9 part A (step A3: `PowerRow` in place of the
+      `FIRE nn%`) — M9 part A (draft: *Act 5 additions*) (step A3: `PowerRow` in place of the
       spare-power row while a drainer is latched: the gauge on the output's scale, the load lit, the drained MW hatched
       dark red at its top end, the readout `14/20`, `REGEN OFF` or `FIRE 88%`, the 1.2 s flash; the muzzle flicker and
       the dimmed shield ring in the play field; `ActFiveLooksTest`)
-- [ ] The enemy channel on the radio (the steady interference over the portrait, the amber plate and subtitle,
-      `INTERCEPT`), Vorne's production portrait — **later: Act 5** — M9 (the act intro's part; step A3: the dress, a
+- [x] The enemy channel on the radio (the steady interference over the portrait, the amber plate and subtitle,
+      `INTERCEPT`), Vorne's production portrait — M9 (the act intro's part; step A3: the dress, a
       line's channel from its own key or its speaker's, never urgent, `MissionPanel`, `TransmissionStatic.drawSteady`,
-      the intercept's open and close in place of the squelch; Vorne's portrait remains)
+      the intercept's open and close in place of the squelch; `ActFiveLooksTest.theInterceptTagFitsBesideThePortrait`; Vorne's production portraits accepted in round 62 F.8, `tools/art/portraits.py`)
 - [x] Level 31's tug tracker (three section bars) — M9 part D (step D4: `TUG n / 3` over three bars, each after its section's initial `B`, `C`, `E`: the full names leave no room for a bar in a third of the well, `MissionLayoutTest`; step D4b: the `CLEAN HULL` tag on line one and the share's tick on the bars)
 
 ## Open questions

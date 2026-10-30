@@ -2,7 +2,7 @@
 title: Act 5 – The Belt
 design: approved
 implementation: in-progress
-art: chosen
+art: final
 depends-on: [../act-4-deep-water, ../../world/belt, ../../story/twist, ../../story/characters/vorne, ../../enemies/bosses/iron-sovereign, ../../player/generator]
 updated: 2026-10-29
 ---
@@ -32,13 +32,13 @@ for Act 5 yet: every number here is a hand table marked draft, taken from the le
 
 | Part | Summary | Design | Impl | Art |
 |---|---|---|---|---|
-| [level-29-betrayal-at-ceres](level-29-betrayal-at-ceres/README.md) | Ceres Hub's dock canyon: the station turns sides at t=60, the wing breaks the clamps at Dock 9 and Rook returns; Talon, SAM Nest, Asteroid Mite; the "Hold fire" secondary | approved | in-progress | final |
+| [level-29-betrayal-at-ceres](level-29-betrayal-at-ceres/README.md) | Ceres Hub's dock canyon: the station turns sides at t=60, the wing breaks the clamps at Dock 9 and Rook returns; Talon, SAM Nest, Asteroid Mite; the "Hold fire" secondary | approved | done | final |
 | [level-30-minefield](level-30-minefield/README.md) | The shipping lane, space only: Minelayers from behind lay lines with one gap, Gilded Gunships with Darts, Rail Serpents; the Gunship convoy secondary; Rook back in the slot | approved | done | final |
 | [level-31-mining-rig-escort](level-31-mining-rig-escort/README.md) | The open belt: escort the refugee tug *Bellwether* (three sections, hurt only by hooked attacks) to the Vesta relay; Hornet salvos, Shard Drone links, Buzzsaw ricochets, rear Dart streams; the `CLEAN HULL` secondary | approved | in-progress | final |
 | [level-32-deep-core](level-32-deep-core/README.md) | Inside the hollowed asteroid Kleopatra: tunnels with two route-choice forks (one safer, one richer), Sentinel Towers in the galleries, Strider pairs that topple, blast-door caches, the refinery's vents; no Airstrike or Lance; the `TOWERS DOWN` secondary | approved | done | final |
 | [level-33-leech-field](level-33-leech-field/README.md) | The Vrell-grown rock field: Void Leeches from behind and the sides drain the generator, Rail Bunkers on the rocks, prey Talon wings, the Choir's one Act 5 line; the `LEECHES` purge secondary | approved | done | final |
-| [level-34-salvage-run](level-34-salvage-run/README.md) | The breather: a ship graveyard with Warden Tanks in Ascendancy livery on the hulls, six containers and three hidden crates, the Mk V "Helix" salvaged from a freighter's hold; the `CONTAINERS` secondary | approved | in-progress | proposed |
-| [level-35-iron-sovereign](level-35-iron-sovereign/README.md) | Ceres orbit: the escort screen, the outer hull and the mass-relay flash, then the Iron Sovereign's rotating rings; Vorne's offer, Callisto, the act end and the release's end naming Act VI | approved | in-progress | proposed |
+| [level-34-salvage-run](level-34-salvage-run/README.md) | The breather: a ship graveyard with Warden Tanks in Ascendancy livery on the hulls, six containers and three hidden crates, the Mk V "Helix" salvaged from a freighter's hold; the `CONTAINERS` secondary | approved | done | final |
+| [level-35-iron-sovereign](level-35-iron-sovereign/README.md) | Ceres orbit: the escort screen, the outer hull and the mass-relay flash, then the Iron Sovereign's rotating rings; Vorne's offer, Callisto, the act end and the release's end naming Act VI | approved | done | final |
 
 ## Design
 
@@ -472,9 +472,9 @@ round 63's render kit imported unchanged) into `assets/ui/act-5-the-belt-still.p
 | [concept/release-end-capture-r64-a.png](concept/release-end-capture-r64-a.png) | Game capture (step D5): Level 31's debrief (`TUGS HOME 3 / 3`, +786, the secondary missed) and the release's end card after it (Level 32 coming soon) | chosen (round 64, accepted) |
 | [concept/release-end-capture-r65-a.png](concept/release-end-capture-r65-a.png) | Game capture (step E5; [recipe](concept/prompts.md#release-end-capture-r65-a)): Level 32's debrief and the release's end after it ("LEVEL 33 COMING SOON") | chosen (round 65, accepted with the level) |
 | [concept/release-end-capture-r66-a.png](concept/release-end-capture-r66-a.png) | Game capture (step F5; [recipe](concept/prompts.md#release-end-capture-r66-a)): Level 33's debrief and the release's end after it ("LEVEL 34 COMING SOON") | chosen (round 66, accepted with the level, F.1–F.6) |
-| [concept/release-end-capture-r67-a.png](concept/release-end-capture-r67-a.png) | Game capture (step G5; [recipe](concept/prompts.md#release-end-capture-r67-a)): Level 34's debrief and the release's end after it ("LEVEL 35 COMING SOON") | proposed |
-| [concept/act-end-capture-r68-a.mp4](concept/act-end-capture-r68-a.mp4) | Game capture (step H5; [recipe](concept/prompts.md#act-end-capture-r68-a)), clip with sound: the debrief, the act summary, the four outro pages and `ACTS I-V COMPLETE` | proposed |
-| [concept/act-end-capture-r68-a.png](concept/act-end-capture-r68-a.png) | Game capture (step H5; [recipe](concept/prompts.md#act-end-capture-r68-a)), frames: the debrief, the act summary, the four outro pages and `ACTS I-V COMPLETE` | proposed |
+| [concept/release-end-capture-r67-a.png](concept/release-end-capture-r67-a.png) | Game capture (step G5; [recipe](concept/prompts.md#release-end-capture-r67-a)): Level 34's debrief and the release's end after it ("LEVEL 35 COMING SOON") | chosen (round 67, accepted with the level) |
+| [concept/act-end-capture-r68-a.mp4](concept/act-end-capture-r68-a.mp4) | Game capture (step H5; [recipe](concept/prompts.md#act-end-capture-r68-a)), clip with sound: the debrief, the act summary, the four outro pages and `ACTS I-V COMPLETE` | chosen (round 68, H.7 ok: accepted with the act end) |
+| [concept/act-end-capture-r68-a.png](concept/act-end-capture-r68-a.png) | Game capture (step H5; [recipe](concept/prompts.md#act-end-capture-r68-a)), frames: the debrief, the act summary, the four outro pages and `ACTS I-V COMPLETE` | chosen (round 68, H.7 ok: accepted with the act end) |
 
 ## Implementation
 
@@ -518,9 +518,11 @@ round 63's render kit imported unchanged) into `assets/ui/act-5-the-belt-still.p
 - [ ] The act's voices (Vorne, Ceres Hub Control, Harker, the Bellwether, the Choir's line) cast and rendered; the
       act's sounds (Freesound only), track 12's full length and stems, track 13, track 19's full length and Rook's
       sting made.
-- [ ] `ActPlaythroughTest` and `BalanceTest` through Act 5 with the Bulwark (L29 before the rescue) and Rook (from
-      the rescue; `--escort none` works) (M9 part I); `./gradlew :content:playthroughSave -Plevel=35` writes the save
-      at the Level 35 hangar; the act passes the variety checklist as built.
+- [x] `ActPlaythroughTest` and `BalanceTest` through Act 5 with the Bulwark (L29 before the rescue) and Rook (from
+      the rescue; `--escort none` works) (M9 part I, step I1, 2026-10-29: `BalanceTest` 12 tests with no pending
+      entries, `ActPlaythroughTest` through Level 35 on every difficulty; `./gradlew :content:playthroughSave -Plevel=35`
+      writes the save at the Level 35 hangar, checked with Continue); the act passes the variety checklist as built
+      (step I2: [the enemies' table](../../enemies/README.md#variety-checklist-per-act), 3 of 22 units insectoid).
 - [ ] The user's playthrough of Act 5, then the `v0.3` release (Acts 1–5).
 
 ## Open questions
@@ -583,12 +585,19 @@ recommended answer except Q11 (b) and the tug's size (J.6 b):
   production livery's polished metal (less mirror, a sheen band, lit by the low key) instead of flat yellow, the sun's
   glare a soft halo rolled off to white with a stronger dither instead of a clipped, posterized blob.
 - 2026-10-28 (user, [round 64](../../concept-rounds/round-64/README.md), closed; page answers): the Act 5 title card's still in production (round 63's T.1 c, the gold wing) accepted as final (**F.2**), with the release's end card after Level 31 ("LEVEL 32 COMING SOON"); the hex shield **F.1** accepted too (see [enemies](../../enemies/README.md#enemy-shields)); Level 31's art, the Bellwether's voice (**V.1 b**, Laurie Anne Walden), track 13 and the sounds are decided in [its Decisions](level-31-mining-rig-escort/README.md#decisions). **C.1 a**: a beam's touch counts on an Act 5 tow (Level 30's buoy, Level 31's claim), opt-in per level; built in the next game step.
-- 2026-10-29 (M9 part H, step H2; pending round 68): the act's `outro` (the four approved pages, the text unchanged, voiced)
+- 2026-10-29 (M9 part H, step H2; decided in round 68, 2026-10-29): the act's `outro` (the four approved pages, the text unchanged, voiced)
   and its `next_act` (`ACT VI - JOVIAN STORM. CALLISTO.`) are in the act's data, rendered into *Act intro and outro*;
   Vorne's `smug` and `rage` are expressions of his only (the content checks it), voiced with the neutral and the grim
   rows (never `shout`); the intro's page 3 wears `smug` (re-voiced: the expression is part of the voice key; the old
   take listed as unused).
 - 2026-10-29 (user, [round 65](../../concept-rounds/round-65/README.md), closed): the release's end after Level 32 (the debrief, "ACTS I-IV COMPLETE", "ACT V - THE BELT. LEVEL 33 COMING SOON.") captured and accepted; Level 32's art and calls are in its [README](level-32-deep-core/README.md#decisions).
-- 2026-10-29 (M9 part H, step H5; pending the user's review in round 68): part H built: Level 35, the Iron Sovereign
+- 2026-10-29 (M9 part H, step H5; decided in round 68, 2026-10-29): part H built: Level 35, the Iron Sovereign
   and the act's end (the debrief's act summary, the four outro pages, `ACTS I-V COMPLETE` and Act VI's coming-soon),
   recorded in round 68's captures; the release's end now after Level 35.
+- 2026-10-29 (user, [round 68](../../concept-rounds/round-68/README.md), closed): **H.7** ok: the Act 5 outro images (Ceres from orbit with the broken rings, Varga's screen) accepted as final; the act end as captured accepted with Level 35. The act's `art:` stays `chosen` until FIX4 builds round 67's G.1 c for Level 34.
+- 2026-10-29 (step FIX4): round 67's G.1 c built for Level 34 (the black Helix hulls, the liveried tanks' ground shadows): every level's art is final, so the act's `art:` is `final`.
+- 2026-10-29 (user, [round 69](../../concept-rounds/round-69/README.md), closed): all as recommended. The Act 5 voices
+  (V.1) accepted; the built changes B.1–B.7 ok (B.1 and B.2 with the note that the rail lines lead their target, built
+  in step FIX5); **F.1** (Level 31 on hard) and **F.2** (Level 34's 8.2 s gap) accepted as exceptions; Q.1–Q.4 and R.1
+  in [hard's credits](../../systems/economy/README.md#decisions) and [the release](../../tech/release/README.md#decisions).
+  Left open: the user's playthrough from their own save at Level 29 (2026-10-30), its fixes and the `v0.3` tag.

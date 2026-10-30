@@ -2,9 +2,9 @@
 title: Asteroid Mite
 design: approved
 implementation: done
-art: chosen
+art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../world/belt]
-updated: 2026-10-28
+updated: 2026-10-29
 ---
 
 # Asteroid Mite
@@ -90,8 +90,8 @@ Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's r
 
 | File | What | Status |
 |---|---|---|
-| [concept/asteroid-mite-r60-a.png](concept/asteroid-mite-r60-a.png) | Asteroid Mite A, tick — a round plated plum abdomen with a teal seam, a small dark head with bone mandibles, six short splayed legs (sheet) | chosen (round 60) |
-| [concept/asteroid-mite-r60-a.gif](concept/asteroid-mite-r60-a.gif) | Asteroid Mite A, tick — a round plated plum abdomen with a teal seam, a small dark head with bone mandibles, six short splayed legs (motion) | chosen (round 60) |
+| [concept/asteroid-mite-r60-a.png](concept/asteroid-mite-r60-a.png) | Asteroid Mite A, tick — a round plated plum abdomen with a teal seam, a small dark head with bone mandibles, six short splayed legs (sheet) | chosen (round 60); production frames final (round 62, F.3) |
+| [concept/asteroid-mite-r60-a.gif](concept/asteroid-mite-r60-a.gif) | Asteroid Mite A, tick — a round plated plum abdomen with a teal seam, a small dark head with bone mandibles, six short splayed legs (motion) | chosen (round 60); production frames final (round 62, F.3) |
 
 ## Implementation
 
@@ -119,3 +119,4 @@ Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's r
   in together with **1–5 riders a rock** (was 2–5; Level 29 flies 1–2), at most **5** rocks with riders on the
   screen (was 3); the art stays. Level 29: 34 Mites on 10 rocks in 5 waves → 48 Mites on 29 rocks in 7 groups.
 - 2026-10-28 (user, [round 63](../../../concept-rounds/round-63/README.md), closed): **C.2** accepted: Level 29's Mites in seven rock groups (48 on 29 rocks, the halt cycle's Mote Swarm 6).
+- 2026-10-29 (M9 part I, step I2): `art: final`: the production frames (`tools/art/belt_units*.py`, every PNG with its `Source` chunk, so `importPlaceholders` skips them) are in `assets/sprites/` and the user accepted them as final in round 62 (F.3); the round 60 mockup rows are history.

@@ -433,15 +433,16 @@ val copyPlaceholderSounds = tasks.register<JavaExec>("copyPlaceholderSounds") {
         "helix-core-r67-a.ogg",
         "wreck-groans-r67-a.ogg",
         // M9 part H, step H4: Level 35's sounds (step AUD-H2's round 68 proposals, CC0/CC-BY Freesound HQ previews cut
-        // by tools/concept/audio/sfx_r68.py, their CREDITS.md rows), their a variants until the user's picks: the Iron
-        // Sovereign's spin-up, inner-ring step and hold, ring lock, klaxon, core shutters, fan, spiral, cook-offs and
-        // implosion, the mass relay's charge and flash; and round 60's pick for the rings' grind bed (S.16 a).
+        // by tools/concept/audio/sfx_r68.py, their CREDITS.md rows), the user's round 68 picks (a; b for the step and
+        // the klaxon): the Iron Sovereign's spin-up, inner-ring step and hold, ring lock, klaxon, core shutters, fan,
+        // spiral, cook-offs and implosion, the mass relay's charge and flash; and round 60's pick for the rings' grind
+        // bed (S.16 a).
         "sovereign-ring-turn-r60-a.ogg",
         "sovereign-spinup-r68-a.ogg",
-        "sovereign-step-r68-a.ogg",
+        "sovereign-step-r68-b.ogg",
         "sovereign-hold-r68-a.ogg",
         "sovereign-lock-r68-a.ogg",
-        "sovereign-klaxon-r68-a.ogg",
+        "sovereign-klaxon-r68-b.ogg",
         "sovereign-shutters-r68-a.ogg",
         "sovereign-fan-r68-a.ogg",
         "sovereign-spiral-r68-a.ogg",

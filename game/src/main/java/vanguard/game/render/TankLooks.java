@@ -61,6 +61,8 @@ final class TankLooks {
      *
      * @param muzzle the muzzle's distance along the aim from the centre at rest, px
      * @param muzzleRecoil the same in the recoil frame
+     * @param shadow round 67 G.1 c: the ground shadow per hull heading (a livery's only), empty for none
+     * @param wreckShadow the same per wreck heading
      */
     record Frames(
             Array<AtlasRegion> turret,
@@ -68,7 +70,9 @@ final class TankLooks {
             Array<AtlasRegion> flash,
             Array<AtlasRegion> wreck,
             double muzzle,
-            double muzzleRecoil) {}
+            double muzzleRecoil,
+            Array<AtlasRegion> shadow,
+            Array<AtlasRegion> wreckShadow) {}
 
     TankLooks(Sprites sprites, List<EnemySpec> kinds, Function<String, JsonValue> pivots) {
         this(sprites, kinds, pivots, Function.identity());
@@ -99,7 +103,9 @@ final class TankLooks {
                     sprites.has(slug + "-flash") ? sprites.frames(slug + "-flash") : new Array<>(),
                     sprites.has(art + "-wreck") ? sprites.frames(art + "-wreck") : new Array<>(),
                     muzzle,
-                    pivot == null ? muzzle : pivot.getDouble("muzzle_recoil", muzzle));
+                    pivot == null ? muzzle : pivot.getDouble("muzzle_recoil", muzzle),
+                    sprites.has(art + "-shadow") ? sprites.frames(art + "-shadow") : new Array<>(),
+                    sprites.has(art + "-wreck-shadow") ? sprites.frames(art + "-wreck-shadow") : new Array<>());
         }
         restart();
     }
@@ -224,8 +230,19 @@ final class TankLooks {
 
     // --- drawing -----------------------------------------------------------------------------------
 
-    /** On the ground under the ground units: the wrecks, carried down by the ground's scroll and up their belts. */
+    /**
+     * On the ground under the ground units: the wrecks, carried down by the ground's scroll and up their belts; round 67
+     * G.1 c: a livery's wrecks over their faint ground shadows (all shadows first).
+     */
     void drawWrecks(SpriteBatch batch, double scroll) {
+        for (int w = 0; w < WRECKS; w++) {
+            int kind = wrecks.kind(w);
+            if (kind < 0 || frames[kind].wreckShadow().isEmpty()) {
+                continue;
+            }
+            Array<AtlasRegion> shadow = frames[kind].wreckShadow();
+            drawCentred(batch, shadow.get(wrecks.frame(w) % shadow.size), wrecks.x(w), wrecks.y(w, scroll));
+        }
         for (int w = 0; w < WRECKS; w++) {
             int kind = wrecks.kind(w);
             if (kind < 0) {
@@ -233,6 +250,27 @@ final class TankLooks {
             }
             Array<AtlasRegion> wreck = frames[kind].wreck();
             drawCentred(batch, wreck.get(wrecks.frame(w) % wreck.size), wrecks.x(w), wrecks.y(w, scroll));
+        }
+    }
+
+    /**
+     * Round 67 G.1 c: under the ground units, each tank in a livery with shadows casts its faint ground shadow (its hull
+     * heading's silhouette, offset down-right whatever the heading); the grey tank casts none.
+     */
+    void drawShadows(SpriteBatch batch, Sortie sortie, float alpha) {
+        for (int i = 0; i < sortie.enemyCount(); i++) {
+            Enemy enemy = sortie.enemy(i);
+            if (!has(enemy.kind())
+                    || frames[enemy.kind()].shadow().isEmpty()
+                    || DrawPasses.Depth.of(enemy) != DrawPasses.Depth.GROUND) {
+                continue;
+            }
+            Array<AtlasRegion> shadow = frames[enemy.kind()].shadow();
+            drawCentred(
+                    batch,
+                    shadow.get(EnemyLooks.heading(enemy.facing(), shadow.size)),
+                    enemy.renderX(alpha),
+                    enemy.renderY(alpha));
         }
     }
 

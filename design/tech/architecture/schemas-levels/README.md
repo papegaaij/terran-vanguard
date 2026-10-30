@@ -230,7 +230,7 @@ optional `skip` list of the difficulties it is left out on (Level 06's hard-only
   needs a `defend` primary): its section "The Halt" eases to `speed: 1` (1 px/s, `ramp: 6`) and the arena's own 1 s ease
   follows; an anchored boss's halt place (`ScrollPlan.haltScroll`) integrates such eased sections step by step (step H3;
   only in a level with eases before its arena, so no Act 1–4 boss moves); the radio's `requires_not: escort` (above)
-  gives Okafor's closing answer without Rook (step H2). Every part H key is pending the user's review in round 68. `backdrop`
+  gives Okafor's closing answer without Rook (step H2). Every part H key is decided in round 68, 2026-10-29. `backdrop`
   (presentation only, see below). The credit budget
   table is derived: kills × bounties (× `bounty_scale`, each payout rounded: a unit's parts each their own, the
   Strider's), ground targets, crates, the objectives,
