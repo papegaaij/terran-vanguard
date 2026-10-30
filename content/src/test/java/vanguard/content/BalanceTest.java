@@ -174,10 +174,15 @@ class BalanceTest {
                             + " (C.3, M8 part G, step G2)"),
             Map.entry(
                     "minelayer ttk",
-                    "280 HP at L30's reference DPS 124 is 2.3 s, above the medium class's 0.4-1.5 s: the user's"
-                            + " playthrough (2026-10-30) killed them before they laid a mine; it rises at 600 px/s and"
-                            + " strafes at 200, and at 280 a fit flying under it from its entry lets it lay through its"
-                            + " gap (Level30Test); step FIX6, pending the user's review"));
+                    "450 HP at L30's reference DPS 124 is 3.6 s, above the medium class's 0.4-1.5 s: the user's"
+                            + " playthrough (2026-10-30) killed them before they laid a mine, and their re-test found FIX6's"
+                            + " 600 px/s rise too fast; it rises at 200 px/s and strafes at 150, and at 450 a fit flying"
+                            + " under it from its entry lets it lay its first cluster (Level30Test); step FIX7, pending the"
+                            + " user's review"),
+            Map.entry(
+                    "minelayer bounty",
+                    "48, above the medium class's 18-30: in proportion to its 450 HP (30 at 280; the large class's"
+                            + " 40-60); step FIX7, pending the user's review"));
 
     /**
      * Hard: the static estimate cannot always pay both the plan's purchases and the repairs of its

@@ -533,6 +533,9 @@ final class Formations {
                 return;
             }
             double x = frontColumn();
+            // Step FIX7 (the user's re-test 2026-10-30: Levels 30-31's Gilded Gunships "on top of each other"): a front
+            // column with an interval enters that far apart (its units 0.4 s apart without one, as before).
+            gap = wave.intervalSeconds().orElse(gap);
             for (int i = 0; i < wave.count(); i++) {
                 if (stops()) {
                     stopAt(

@@ -480,6 +480,9 @@ The schemas of the enemies' stat blocks and boss scripts and of the allies' file
   the livery's frames only to that act's levels and the plain ones only to the levels before it, and the intel names
   the unit's `faction` (`EnemyData.liverySprite(act)`, `factionIn(act)`; the Warden Tank's `warden-tank-asc`,
   Jovian Ascendancy, from Act 5).
+  Step FIX7 (the user's re-test 2026-10-30): a drifting hover's **`keep_apart: true`** (needs a `drift`): while it
+  holds it turns its drift away from another kept-apart hold before their hit boxes come within 8 px (the sim's
+  `HoverHold.keepApart`, stepped only in a level with such a unit; the Hornet's).
 - **M9 part H, a ringed boss's keys** (the [Iron Sovereign](../../../enemies/bosses/iron-sovereign/README.md), Level 35;
   loaded and checked in step H1c by content's `EnemyData` (`RingBlock`), `RingRules` and `RingChecks`, flown from steps
   H1a/H1b; the defaults decided in round 68, 2026-10-29). Angles: a ring's `start`, a step's `angle` and the bays'

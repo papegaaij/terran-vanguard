@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../player/specials, ../../../art-direction, ../../../campaign/act-5-the-belt]
-updated: 2026-10-28
+updated: 2026-10-30
 ---
 
 # Hornet
@@ -114,3 +114,8 @@ Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's r
   5–6.5 s of their 9 s hold at medium (3 s easy, 8–8.6 s hard, the autopilot busy with the missiles), the bow's hits
   within the seed spread at 8, 12, 16 and 24.
 - 2026-10-28 (user, [round 64](../../../concept-rounds/round-64/README.md), closed; page answers): the final art accepted (**F.4**: round 60's A.2 b delta hover-boat in Q.11 b gunmetal with gold leading edges, the hatch tell and the lift fans; `art: final`); **C.2** accepted (the hex shield 8 to 12: a visible flash, no wall).
+- 2026-10-30 (step FIX7, the user's re-test on f1dc0f05: "the large droneships fly on top of each other"; the new
+  big-hull check, `HullStackingTest`): two Hornets holding side by side drifted through each other (their drift's
+  side is drawn per unit; Level 31's trio at t=134 overlapped 2.6 s at medium). Its hover now has **`keep_apart:
+  true`**: a holding Hornet turns its drift away from another kept-apart hold before their hit boxes come within 8 px
+  (the simulation's `HoverHold.keepApart`; the Depth Hunter and the other drifting holds of Acts 1–4 drift as before).

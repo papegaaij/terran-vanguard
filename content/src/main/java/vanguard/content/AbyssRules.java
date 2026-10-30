@@ -25,6 +25,11 @@ final class AbyssRules {
      * at its {@code y} with its drift (the Depth Hunter's).
      */
     static EnemySpec.Hover hover(EnemyData.Hover hover, Range seconds) {
+        // Step FIX7 (design/enemies/air/hornet): a drifting hold kept apart from the others like it.
+        return hoverAt(hover, seconds).keptApart(hover.keepApart().orElse(false));
+    }
+
+    private static EnemySpec.Hover hoverAt(EnemyData.Hover hover, Range seconds) {
         return hover.aboveShip()
                 .map(above -> new EnemySpec.Hover(seconds, ABOVE_SHIP_DEPTH)
                         .aboveShip(UnitRules.range(above), hover.drift().orElse(0.0)))

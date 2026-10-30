@@ -181,6 +181,50 @@ class Level34Test {
     }
 
     /**
+     * Step FIX7 (the user's re-test 2026-10-30: "the containers went from 4/6 to completed in one go. Then a few seconds
+     * later, the 6th container entered the screen"): the secondary needs {@code 6 - allowed} containers opened (medium
+     * 5, easy 4, hard 6) and is met as the last of them opens, the level's later containers still to come; the HUD's
+     * count must run to that target ({@code CONTAINERS 4 / 5}, then DONE), not to the six (step G4's {@code n / 6} went
+     * from 4 / 6 to DONE). Flown by the autopilot (the plan's fit, seed 1): at the step the secondary is met, the opened
+     * count is the target, never short of it; at medium the sixth container is still to come then (the user's report).
+     */
+    @Test
+    void theContainersAreMetAtTheirTarget() {
+        for (Difficulty difficulty : Difficulty.values()) {
+            Sortie sortie = sortie(content, planLoadout(content, difficulty), 1, difficulty, false);
+            int target = sortie.escapesTotal()
+                    - sortie.script().objectives().secondary().escapesAllowed();
+            int[] atMet = {-1, -1};
+            LevelMetrics.Probe probe = new LevelMetrics.Probe() {
+                @Override
+                public void newAttempt() {
+                    atMet[0] = -1;
+                    atMet[1] = -1;
+                }
+
+                @Override
+                public void stepped(Sortie flown, int step) {
+                    if (flown.secondaryMet() && atMet[0] < 0) {
+                        atMet[0] = flown.escapesDestroyed();
+                        atMet[1] = flown.escapesTotal() - flown.escapesDestroyed() - flown.escapesLost();
+                    }
+                    // The HUD's line: never DONE while the opened count is short of the target.
+                    assertFalse(
+                            flown.secondaryMet() && flown.escapesDestroyed() < target,
+                            difficulty + ": met at " + flown.escapesDestroyed() + " of the target " + target);
+                }
+            };
+            assertTrue(LevelMetrics.fly(sortie, MAX_STEPS, probe), difficulty + ": completes");
+            String at = difficulty + ": met with " + atMet[0] + " opened, " + atMet[1] + " still to come";
+            System.out.println("Level 34 CONTAINERS " + at + " (target " + target + " of " + CONTAINERS + ")");
+            assertEquals(target, atMet[0], at);
+            if (difficulty == Difficulty.MEDIUM) {
+                assertEquals(1, atMet[1], at + ": the sixth container still to come");
+            }
+        }
+    }
+
+    /**
      * Left alone (no shot fired, invulnerable), every container leaves the bottom edge and counts away: the secondary
      * fails at medium with the second one ({@code OBJECTIVE_FAILED} once), and nothing is opened.
      */

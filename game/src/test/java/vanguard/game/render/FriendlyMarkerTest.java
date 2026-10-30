@@ -177,7 +177,7 @@ class FriendlyMarkerTest {
         FriendlyMarks marks = new FriendlyMarks(null, null);
         int before = 0;
         boolean down = false;
-        while (!down && sortie.levelSeconds() < 100) {
+        while (!down && sortie.levelSeconds() < 140) {
             double x = 240;
             for (int e = 0; e < sortie.enemyCount(); e++) {
                 if (sortie.enemy(e).spec().neutral()) {
@@ -195,7 +195,7 @@ class FriendlyMarkerTest {
             }
             before = marks.count();
         }
-        assertTrue(down, "a wavering craft shot down by t=100");
+        assertTrue(down, "a wavering craft shot down by t=140 (60 HP at medium since step FIX7)");
     }
 
     /**

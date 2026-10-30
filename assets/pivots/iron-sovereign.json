@@ -2206,13 +2206,13 @@
    "sprite": "iron-sovereign-rim",
    "blend": "additive",
    "centred": true,
-   "scale": 2
+   "scale": 1
   },
   "shade": {
    "sprite": "iron-sovereign-shade",
    "blend": "normal",
    "centred": true,
-   "scale": 2
+   "scale": 1
   },
   "order": "base, segments (tinted when locked), lamps, shade, rim, mounts and turrets, core"
  },

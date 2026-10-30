@@ -739,3 +739,8 @@ launch`: the clamp gun, its clamps springing open, the gas, Rook's Ember launchi
   brackets come from the sim's `neutral` flag (any neutral unit, no level data). The briefing's bonus line reads
   "DON'T SHOOT THE FRIENDLY CERES WING" (42 of 48 characters) to match the `FRIENDLY` tag and `SPARE ALLIES`; the
   label in `data.yaml`. Capture `friendly-marker-capture-r71-a` proposed.
+- 2026-10-30 (step FIX7, the user's re-test on f1dc0f05): the wavering Ceres Wing Stormhawks' HP × 1.5 (20 → 30
+  base, 60 at medium; [their page](../../../enemies/air/wavering-stormhawk/README.md)). The secondary still works:
+  a deliberate shot kills one in about 0.5 s (0.33 s before); the autopilot keeps all six alive (Hold fire met 3/3 on
+  every difficulty; `Level29Test` green). levelReport: wins 3/3, retries 0 everywhere, end calm 4.7 / 4.9 / 4.2 s,
+  medium's typical haul +1.0 %.

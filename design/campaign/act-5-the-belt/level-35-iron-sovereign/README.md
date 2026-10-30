@@ -617,3 +617,9 @@ Approved in round 60 (the gap analysis's questions this level follows):
   (Rook at the first rail volley and the first wreck throw, Okafor at the first mine ring and after the first throw,
   Vorne at the core's half: the events `first-rail-volley`, `first-mine-ring`, `first-wreck-throw`, `core-low`); the
   boss's typical Darts 84 → 19 (the surges only), the typical haul −2.8 %, the scale 0.59 kept.
+- 2026-10-30 (step FIX7, the big-hull check `HullStackingTest` after the user's re-test of Levels 30–31): the Gunship
+  columns (t=20, t=56) fly 2 s apart as written (they entered 0.4 s apart, stacked); the Hornets keep apart while they
+  hold; the t=35 pincer's left train enters at the right train's height under the Hornets' hold row (its first points
+  (−98, 200), (100, 200), was (−60, 110), (100, 140); as long a path to the crossing, so the two trains still pass each
+  other clear). No big-hull overlap; the fight unchanged (its sweep bound in `Level35Test` 8 → 10: Rook's seed 11
+  meets the arena in another state).

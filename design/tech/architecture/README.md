@@ -260,6 +260,9 @@ One part per family; this table names the part that holds each data file's schem
   (`images: level-NN`, a level borrowing another level's backdrop) loads that folder's atlas for the
   entered level and frees it with it. A level's backdrop is 16–40 MiB; loading it adds 0.07–0.25 s
   to the level start (Levels 01, 19, 35), before its first frame.
+  Sprites are drawn at 1x (a unit's frames are rendered at their game size): a static overlay over a large body
+  drawn scaled up with Nearest turns its dither into coarse blocks (step PIX7, the Iron Sovereign's rim and shade;
+  `SovereignLooksTest` guards their size, scale and grain).
 
 ### Testing
 
@@ -315,6 +318,10 @@ compiles, and the allocation tests then see allocations that escape analysis oth
 
 Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-archive.md).
 
+- 2026-10-30 (step PIX7): the Iron Sovereign's "pixelated, few colours" look was not a pipeline regression: its
+  frames, its Level 35 atlas (RGBA8888, Nearest, the same pages) and a 1:1 still at the same tick are identical on
+  5f510b41 and f1dc0f05; its rim and shade overlays, half size drawn 2x with a Bayer dither, laid a 2×2-pixel stipple
+  over the station. They are full size now, drawn 1x, undithered (no other unit draws a scaled static overlay).
 - 2026-10-30 (step startup): the time to the title screen cut from about 8 s to 1.7–1.9 s: backdrop atlases per
   level (rather than folded into the unit atlases `level-NN`, which would change their packing settings and the
   per-level page budget's split), sound effects decoded in the background with the render thread as the fallback

@@ -13,7 +13,7 @@
 # Gunships fly a `column` beside their escorts' `carrier + escorts` wave (a launcher is a carrier, its escorts orbit it).
 scroll_speed: 120     # the lane's first section; the minefield 80, the lane's end 100
 launch_seconds: 5
-bounty_scale: 0.43    # every bounty × 0.43: the README's estimate 0.45, fitted in step C2 with the launched Darts (two streams a Gunship) and the offbeat waves (levelReport: typical haul on budget(30) 4,980)
+bounty_scale: 0.36    # every bounty × 0.36 (step FIX7: re-fitted after the Minelayer's 60, not 30; was 0.43): the README's estimate 0.45, fitted in step C2 with the launched Darts (two streams a Gunship) and the offbeat waves (levelReport: typical haul on budget(30) 4,980)
 control_prompts: []
 medium: vacuum        # the belt: short flashes, debris rings, drifting wrecks (design/world/belt)
 ground: none          # space only: no ground layer (J3); the Airstrike and the EMP Burst work
@@ -604,7 +604,7 @@ waves:
     from: front
     speed: 200
     paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
-  - {t: 158, formation: column, enemy: gilded-gunship, count: 2, from: front, interval: 2, notes: "2 s apart; about 12 Darts"}
+  - {t: 156, formation: column, enemy: gilded-gunship, count: 2, from: front, interval: 2, notes: "2 s apart (step FIX7: the interval flown, t=156 not 158 so the second one keeps the end calm); about 12 Darts"}
   - {t: 161, formation: snake, enemy: skitter, count: 6, from: front, edge: left}
   - {t: 164, formation: line abreast, enemy: talon, count: 6, from: front, speed: 130}
   - t: 167

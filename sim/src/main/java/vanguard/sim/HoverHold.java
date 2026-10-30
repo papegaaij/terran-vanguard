@@ -183,6 +183,47 @@ final class HoverHold {
         }
     }
 
+    /** Step FIX7: how close two kept-apart holds' hit boxes come before their drifts turn away from each other, px. */
+    static final double APART_MARGIN = 8;
+
+    /**
+     * Step FIX7 (the user's re-test 2026-10-30, Level 31's Hornets drifting through each other): every two units holding
+     * a drifting hover with {@link EnemySpec.Hover#keepApart} whose hit boxes overlap in height and come within {@link
+     * #APART_MARGIN} px across turn their drifts away from each other (the left one left, the right one right; on one x
+     * the earlier in the pool left). A unit pinned at a side edge turns back as before; the other draws away. Runs after
+     * the moves; nothing changes in a level without such a hover. Allocation-free.
+     */
+    static void keepApart(Pool<Enemy> enemies) {
+        for (int i = 0; i < enemies.size(); i++) {
+            Enemy a = enemies.get(i);
+            if (!keptApart(a)) {
+                continue;
+            }
+            for (int j = i + 1; j < enemies.size(); j++) {
+                Enemy b = enemies.get(j);
+                if (!keptApart(b) || a.layer() != b.layer()) {
+                    continue;
+                }
+                double dx = b.x - a.x;
+                boolean near = Math.abs(dx) < (a.box.width() + b.box.width()) / 2 + APART_MARGIN
+                        && Math.abs(b.y - a.y) < (a.box.height() + b.box.height()) / 2;
+                if (near) {
+                    int side = dx >= 0 ? 1 : -1;
+                    a.hoverHold.drift = -side;
+                    b.hoverHold.drift = side;
+                }
+            }
+        }
+    }
+
+    /** Step FIX7: whether {@code u} holds a drifting hover kept apart from the others like it. */
+    private static boolean keptApart(Enemy u) {
+        return u.phase == Enemy.Phase.HOLD
+                && (u.hoverHold.active || u.hoverHold.driftOnly)
+                && u.spec.hover().isPresent()
+                && u.spec.hover().get().keepApart();
+    }
+
     /** Hashed only while active (M8 part G: or drifting at its depth). */
     void addTo(StateHash hash) {
         hash.add(above).add(drift);

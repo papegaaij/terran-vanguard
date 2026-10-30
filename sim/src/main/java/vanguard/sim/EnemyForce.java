@@ -52,6 +52,8 @@ final class EnemyForce {
     private final boolean auras;
     /** M9 part A: whether a kind of the level has a {@code laser-line} (design/enemies/ground/rail-bunker). */
     private final boolean lines;
+    /** Step FIX7: whether a kind of the level keeps its drifting hold apart from the others ({@link HoverHold#keepApart}). */
+    private final boolean apart;
     /** M7 part D: whether a kind of the level has a curl-roll (its ball crushes ground targets). */
     private final boolean rollers;
 
@@ -195,6 +197,8 @@ final class EnemyForce {
         guns = new EnemyFire(rng, rules, events, objectiveHook);
         auras = kinds.stream().anyMatch(kind -> kind.aura().isPresent());
         lines = kinds.stream().anyMatch(kind -> kind.laserLine().isPresent());
+        apart = kinds.stream()
+                .anyMatch(kind -> kind.hover().map(EnemySpec.Hover::keepApart).orElse(false));
         rollers = kinds.stream().anyMatch(kind -> kind.roll().isPresent());
         pull = new EnemyPull(kinds, enemies);
         WaveSchedule waves = new WaveSchedule(waveSpecs, kinds, rng, spans, reversedAt, mounts);
@@ -535,6 +539,10 @@ final class EnemyForce {
             rings.step(groundScroll);
         }
         moves.step(ship, firing, groundScroll);
+        if (apart) {
+            // Step FIX7: the drifting holds kept apart turn away from each other before they touch.
+            HoverHold.keepApart(enemies);
+        }
         if (prey != null) {
             // M9 part F: the leeches on their prey, then the new prey latches.
             prey.step();

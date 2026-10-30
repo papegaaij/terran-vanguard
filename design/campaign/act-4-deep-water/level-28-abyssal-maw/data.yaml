@@ -38,9 +38,9 @@ threat_profile:  # the hangar intel panel (design/ui/hangar) and the README's Th
     none: The hatchery, Lancer. Everything on Europa was grown here.
     l1: From every side. Something huge coiled round the vent.
     l2: "Rays, hulls, singers. And one huge contact: the guardian."
-    l3: Anti-sub for its dive. Homing and side guns for the machinery in its spine.
+    l3: Anti-sub for when it winds in. Homing and side guns for the machinery in its spine.
   notes:
-    Dominant layers: '`air` (the play plane under water: Glassfin schools, Barbfin groups, Depth Hunters, Eel Swarms, Nautilus pairs, Sirens, Abyss Rays, the Maw), `sub` (the Rays'' shadows, the Hunters'' rise, the Maw''s dive), `ground` (egg racks, Spine Turret nests, Polyp Mortars, the vent), `low-air` (the cruisers of the reveal, scenery)'
+    Dominant layers: '`air` (the play plane under water: Glassfin schools, Barbfin groups, Depth Hunters, Eel Swarms, Nautilus pairs, Sirens, Abyss Rays, the Maw), `sub` (the Rays'' shadows, the Hunters'' rise, the Maw''s wind-in after its lunge; in its dive it is out of reach), `ground` (egg racks, Spine Turret nests, Polyp Mortars, the vent), `low-air` (the cruisers of the reveal, scenery)'
     Attack directions: '{directions} (the approach by its waves; in the fight the coil frames all four edges, the lunge and the shed Eel Swarms come from the whole arena and are not in the numbers)'
     Density: '{density}'
     Recommended traits: '{traits} (`side` guns help too: three traits do not fit the intel panel, as Levels 13 and 14)'

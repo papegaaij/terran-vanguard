@@ -7,10 +7,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.stream.Stream;
+import javax.imageio.ImageIO;
 import org.junit.jupiter.api.Test;
 import vanguard.content.Content;
 import vanguard.content.ContentLoader;
@@ -181,6 +183,72 @@ class SovereignLooksTest {
         assertEquals(0, MassRelayLooks.trailFrame(0, 6));
         assertEquals(5, MassRelayLooks.trailFrame(0.59, 6));
         assertEquals(-1, MassRelayLooks.trailFrame(0.6, 6), "faded after 0.6 s");
+    }
+
+    /**
+     * Step PIX7 (the user, 2026-10-30: "the sovereign looks very pixelated, as if captured with a very small colour
+     * palette"): the static rim and shade overlays cover the whole ring area, so they are drawn at 1x, as big as the
+     * outer ring, in fine undithered steps. At half size drawn 2x with a 4x4 Bayer dither (10 and 5 steps) they laid a
+     * coarse 2x2-pixel stipple over the station: about a quarter of their pixels were a checker cell.
+     */
+    @Test
+    void theOverlaysAreFullSizeAndUndithered() throws IOException {
+        JsonValue pivots = pivots();
+        int outer = 0;
+        for (JsonValue ring = pivots.get("rings").child; ring != null; ring = ring.next) {
+            outer = Math.max(outer, ring.get("band").getInt(1));
+        }
+        for (String overlay : new String[] {"rim", "shade"}) {
+            assertEquals(1f, SovereignLooks.overlayScale(pivots, overlay), overlay + " drawn 1x");
+            BufferedImage image = ImageIO.read(
+                    SPRITES.resolve("iron-sovereign-" + overlay + ".png").toFile());
+            assertTrue(
+                    image.getWidth() >= 2 * outer && image.getHeight() >= 2 * outer,
+                    overlay + " covers the outer ring at 1x: " + image.getWidth() + "x" + image.getHeight());
+            assertTrue(distinct(image) >= 16, overlay + "'s steps: " + distinct(image));
+            for (int step = 1; step <= 2; step++) {
+                double share = checkerShare(image, step);
+                assertTrue(share < 0.02, overlay + ": a " + step + " px checker on " + share + " of its pixels");
+            }
+        }
+    }
+
+    /** The distinct visible ARGB values of an image. */
+    private static int distinct(BufferedImage image) {
+        java.util.Set<Integer> values = new java.util.HashSet<>();
+        for (int y = 0; y < image.getHeight(); y++) {
+            for (int x = 0; x < image.getWidth(); x++) {
+                int argb = image.getRGB(x, y);
+                if (argb >>> 24 != 0) {
+                    values.add(argb);
+                }
+            }
+        }
+        return values.size();
+    }
+
+    /**
+     * The share of the visible pixels that are a checker cell {@code step} px wide: their neighbours {@code step} px
+     * left and right are alike, and up and down too, and both pairs differ from the pixel (an ordered dither).
+     */
+    static double checkerShare(BufferedImage image, int step) {
+        int visible = 0;
+        int checker = 0;
+        for (int y = step; y < image.getHeight() - step; y++) {
+            for (int x = step; x < image.getWidth() - step; x++) {
+                int c = image.getRGB(x, y);
+                if (c >>> 24 == 0) {
+                    continue;
+                }
+                visible++;
+                int left = image.getRGB(x - step, y);
+                int up = image.getRGB(x, y - step);
+                if (left == image.getRGB(x + step, y) && left != c && up == image.getRGB(x, y + step) && up != c) {
+                    checker++;
+                }
+            }
+        }
+        return visible == 0 ? 0 : checker / (double) visible;
     }
 
     private static int frames(String name) throws IOException {

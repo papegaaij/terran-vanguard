@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../../enemies/bosses/abyssal-maw, ../../../enemies/naval/depth-hunter, ../../../enemies/naval/glassfin, ../../../enemies/naval/barbfin, ../../../enemies/naval/eel-swarm, ../../../enemies/naval/abyss-ray, ../../../enemies/naval/siren, ../../../enemies/naval/spiral-nautilus, ../../../enemies/ground/spine-turret, ../../../enemies/ground/polyp-mortar, ../../../world/europa, ../../../player/wingmen, ../../../story/twist, ../../../story/characters/the-choir, ../../../systems/economy]
-updated: 2026-10-27
+updated: 2026-10-30
 ---
 
 # Level 28 – Abyssal Maw
@@ -73,7 +73,7 @@ fight the coil, the lunge and the shed Eel Swarms come from the whole arena and 
 <!-- data: threat-profile -->
 | Field | Value |
 |---|---|
-| Dominant layers | `air` (the play plane under water: Glassfin schools, Barbfin groups, Depth Hunters, Eel Swarms, Nautilus pairs, Sirens, Abyss Rays, the Maw), `sub` (the Rays' shadows, the Hunters' rise, the Maw's dive), `ground` (egg racks, Spine Turret nests, Polyp Mortars, the vent), `low-air` (the cruisers of the reveal, scenery) |
+| Dominant layers | `air` (the play plane under water: Glassfin schools, Barbfin groups, Depth Hunters, Eel Swarms, Nautilus pairs, Sirens, Abyss Rays, the Maw), `sub` (the Rays' shadows, the Hunters' rise, the Maw's wind-in after its lunge; in its dive it is out of reach), `ground` (egg racks, Spine Turret nests, Polyp Mortars, the vent), `low-air` (the cruisers of the reveal, scenery) |
 | Attack directions | front 69% · sides 22% · rear 9% (the approach by its waves; in the fight the coil frames all four edges, the lunge and the shed Eel Swarms come from the whole arena and are not in the numbers) |
 | Density | 4 |
 | Recommended traits | `anti-sub`, `homing` (`side` guns help too: three traits do not fit the intel panel, as Levels 13 and 14) |
@@ -89,7 +89,7 @@ fight the coil, the lunge and the shed Eel Swarms come from the whole arena and 
 | none | "The hatchery, Lancer. Everything on Europa was grown here." |
 | L1 | "From every side. Something huge coiled round the vent." |
 | L2 | "Rays, hulls, singers. And one huge contact: the guardian." |
-| L3 | "Anti-sub for its dive. Homing and side guns for the machinery in its spine." |
+| L3 | "Anti-sub for when it winds in. Homing and side guns for the machinery in its spine." |
 
 ## Objective
 

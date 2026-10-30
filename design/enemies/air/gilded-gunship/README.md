@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../player/specials, ../../../story/factions/jovian-ascendancy, ../../../campaign/act-5-the-belt]
-updated: 2026-10-28
+updated: 2026-10-30
 ---
 
 # Gilded Gunship
@@ -113,3 +113,8 @@ Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's r
 - 2026-10-28 (step ART-C, production art; accepted in round 63, 2026-10-28): A.3 b re-rendered in gunmetal/charcoal (Q.11 b) with the gold scale front third kept and b's gold pod tops made gunmetal, so the gold is 28 % (b's 42 % would repeat the Talon's heavy gold, round 62); the twelve ring lamps a little larger than the concept's so the tell reads. Rendered facing down only, as the stat block's `fixed` orientation says (part C's gap note asked for 16 headings: the stat block wins; a turning Gunship would need a re-run with headings).
 - 2026-10-28 (step C2, the data; accepted in round 63, 2026-10-28): the stat block as data: the facing armour (`armour: {front_arc: 45, factor: 0.5}` with `rear_plate: {arc: 60, multiplier: 2}`), the ring's `tell` 0.4 s (its first ring 1.5 s on the screen), the Dart streams (`spawn` with a `stream`: 3 every 5 s, 0.25 s apart, the first 1 s in, 60° spread, straight 0.4 s, 6 alive; easy and hard by the hook `spawn_count`). In Level 30's convoy it flies a `column` beside its escorts' `carrier + escorts` wave: the formation's planner has no carrier path for a launcher yet (the escorts orbit it as their carrier).
 - 2026-10-28 (user, [round 63](../../../concept-rounds/round-63/README.md), closed): the final art accepted (**F.2**); sounds **S.7 b** (`gunship-ring`, the darker 81 mm mortar) and **S.8 b** (`gunship-doors`, the ringing iron door); the Talon escorts (C.5) accepted.
+- 2026-10-30 (step FIX7, the user's re-test on f1dc0f05: "the large droneships fly on top of each other", Levels 30
+  and 31): a front `column` ignored its wave's `interval`, so a column of two Gunships entered 0.4 s apart, 18 px at
+  its 45 px/s descent: one hull on the other for the whole 13 s crossing. The simulation now flies a front column's
+  `interval` (the stat block's 2 s: 90 px apart, the hit boxes 14 px clear; only Act 5's Gunship columns set one, so
+  Acts 1–4 fly as before). Checked by `HullStackingTest` (no two `medium`-and-up air hulls overlap over 0.2 s, Act 5).

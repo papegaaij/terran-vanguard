@@ -1295,7 +1295,8 @@ public sealed interface EnemyMovementData permits EnemyData {
             Optional<String> exit,
             Optional<Span> aboveShip,
             Optional<Double> drift,
-            Optional<Double> peel) {
+            Optional<Double> peel,
+            Optional<Boolean> keepApart) {
         public Hover {
             drift.ifPresent(speed -> Check.notNegative("drift", speed));
             // M9 part B (design/campaign Level 29, the wavering Stormhawks): the peel-off to the nearer side edge.
@@ -1312,6 +1313,8 @@ public sealed interface EnemyMovementData permits EnemyData {
             Check.that(aboveShip.isEmpty() || edgeX.isEmpty(), "a hover above the ship enters from the top, no edge_x");
             edgeX.ifPresent(x -> Check.notNegative("edge_x", x));
             exit.ifPresent(e -> Check.that(e.equals("back"), "exit must be back, was '" + e + "'"));
+            // Step FIX7 (design/enemies/air/hornet): a drifting hold kept apart from the others like it.
+            Check.that(keepApart.isEmpty() || drift.isPresent(), "keep_apart needs a drift");
         }
 
         /** {@code y}, {@code seconds} and {@code above_ship} written as {@code [min, max]} or as one value. */
@@ -1325,7 +1328,8 @@ public sealed interface EnemyMovementData permits EnemyData {
                 @com.fasterxml.jackson.annotation.JsonProperty("above_ship")
                         Optional<tools.jackson.databind.JsonNode> aboveShip,
                 @com.fasterxml.jackson.annotation.JsonProperty("drift") Optional<Double> drift,
-                @com.fasterxml.jackson.annotation.JsonProperty("peel") Optional<Double> peel) {
+                @com.fasterxml.jackson.annotation.JsonProperty("peel") Optional<Double> peel,
+                @com.fasterxml.jackson.annotation.JsonProperty("keep_apart") Optional<Boolean> keepApart) {
             Optional<tools.jackson.databind.JsonNode> height = given(y == null ? Optional.empty() : y);
             Optional<tools.jackson.databind.JsonNode> above = given(aboveShip == null ? Optional.empty() : aboveShip);
             Check.that(height.isEmpty() || span(height.get()) != null, "y is a height or [min, max]");
@@ -1339,7 +1343,8 @@ public sealed interface EnemyMovementData permits EnemyData {
                     exit == null ? Optional.empty() : exit,
                     above.map(Hover::span),
                     drift == null ? Optional.empty() : drift,
-                    peel == null ? Optional.empty() : peel);
+                    peel == null ? Optional.empty() : peel,
+                    keepApart == null ? Optional.empty() : keepApart);
         }
 
         /** The hold's height from the top of the play field; a hover above the ship has none (M8 part D). */

@@ -252,7 +252,7 @@ Enemy definitions are linked per row; formation names come from the
 | 149 | 4 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (right) | |
 | 152 | 4 | column | [Minelayer](../../../enemies/space/minelayer/README.md) | 2 | rear (right) | Warned 3 s ahead |
 | 155 | 4 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front | |
-| 158 | 4 | column | [Gilded Gunship](../../../enemies/air/gilded-gunship/README.md) | 2 | front | 2 s apart; about 12 Darts |
+| 156 | 4 | column | [Gilded Gunship](../../../enemies/air/gilded-gunship/README.md) | 2 | front | 2 s apart (step FIX7: the interval flown, t=156 not 158 so the second one keeps the end calm); about 12 Darts |
 | 161 | 4 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (left) | |
 | 164 | 4 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 6 | front | |
 | 167 | 4 | swarm | [Asteroid Mite](../../../enemies/space/asteroid-mite/README.md) | 4 | front | 4 rocks together (2 with 2 riders, 2 with 1) |
@@ -351,12 +351,12 @@ budget (table below). No boss or mid-boss, no ground targets.
 <!-- data: credit-budget -->
 | Source | Perfect run | Typical haul |
 |---|---|---|
-| Kills: Skitter 74 × 5 + Mote Swarm 96 × 2 + Talon 69 × 12 + Asteroid Mite 56 × 3 + Minelayer 15 × 30 + Gilded Gunship 8 × 28 + Rail Serpent 4 × 73 + launched Dart Drone 48 × 2 | 7,413 | 4,448 |
-| Squad leaders: 3 × 13 extra (perfect run only) | 108 | 0 |
+| Kills: Skitter 74 × 5 + Mote Swarm 96 × 2 + Talon 69 × 12 + Asteroid Mite 56 × 3 + Minelayer 15 × 60 + Gilded Gunship 8 × 28 + Rail Serpent 4 × 73 + launched Dart Drone 48 × 2 | 7,278 | 4,367 |
+| Squad leaders: 3 × 13 extra (perfect run only) | 93 | 0 |
 | Secret: dead beacon buoy (hidden crate, 2% of budget) | 655 | 328 |
 | Secondary: stop the Gunship convoy | 655 | 328 |
-| **Total** (bounty scale 0.43) | **8,831** | **5,103** |
-| Budget(n) = the typical haul's target; typical +2 %, perfect 1.77 × budget | | 4,980 |
+| **Total** (bounty scale 0.36) | **8,681** | **5,022** |
+| Budget(n) = the typical haul's target; typical +1 %, perfect 1.74 × budget | | 4,980 |
 <!-- /data -->
 
 **Balance plan**: the plan's L30 visit buys the Swarm Tail at L2 for the rear and Rook returns
@@ -524,7 +524,7 @@ two briefing images in the [briefing](../../../ui/briefing/README.md#concept-art
 - 2026-10-30 (step FIX6, the user's playthrough 2026-10-30: "the minelayers are too weak ... the large number of
   collisions with asteroids and other ships nearly killed me"; power is full for every Act 5 fit by design, the Mk V
   from L35, so no new utility): the Minelayer lays sooner and holds longer (its README: 600 px/s up its lane, 200
-  px/s across, 280 HP; the first layer lays its line through its gap against a fit aimed at it). Collisions, measured
+  px/s across, 280 HP; step FIX7: 200, 150 and 560 HP; the first layer lays its line through its gap against a fit aimed at it). Collisions, measured
   with a naive pilot (holds the lower centre (240, 80), sidesteps only shots, the user's fit, three seeds;
   `Level30Test.aNaiveFlightTouchesLittle`): **218 contact damage a run at medium before** (the large rocks 20 a
   touch ≈ 70, the trains crossing the lower centre ≈ 90 with each car a hit, the Minelayers ≈ 25, the Mites ≈ 15),
@@ -536,3 +536,17 @@ two briefing images in the [briefing](../../../ui/briefing/README.md#concept-art
   last enemy gone to the end from Act 5 on, `PacingTest`): the level's end stays; the last waves earlier: the
   Skitter snake 172 → 170.5 and the last Talons 174.5 → 168.5; the end calm (easy/medium/hard, the autopilot with
   the plan's fit) 0.8/0.0/0.0 s → 5.6/4.6/4.8 s. The counts, the haul and the autopilot's wins are unchanged.
+- 2026-10-30 (step FIX7, the user's re-test on f1dc0f05: the Minelayers "way too fast", "give them more hitpoints";
+  "the large droneships fly on top of each other"): the [Minelayer](../../../enemies/space/minelayer/README.md) rises
+  at 200 px/s and strafes at 150 (600 and 200 before) with 560 HP and bounty 60; the `bounty_scale` re-fitted 0.43 →
+  0.36 (typical haul +0.8 % at medium, perfect run 8,834 → 8,681). The "droneships" are the Gilded Gunship columns
+  (t=77, t=158): the simulation ignored a front column's `interval`, so both hulls entered 0.4 s apart and flew stacked
+  for 13 s; now 2 s apart as written ([Gilded Gunship](../../../enemies/air/gilded-gunship/README.md)), the last column
+  at t=156 (not 158) so the second one keeps the end calm (medium 3.8 → 4.8 s). levelReport: wins 3/3, retries 0,
+  end calm 5.6 / 4.8 / 4.9 s, no big-hull overlap (`HullStackingTest`). Focused pilot, plan and user fit: every layer
+  lays at least its first cluster, the first through its gap at medium and hard; the naive pilot's touches at medium
+  100 → 143 a run (the slower layers in their lanes; `Level30Test`'s bound 150).
+- 2026-10-30 (the user, after the re-test): the **collisions** stay as built (FIX6's large rocks at 10 a touch and the
+  rerouted trains, FIX7's slower Minelayers): no contact knockback, no repelling utility, no earlier Mk V generator.
+  The user's playthrough asked for "something that repels me"; the options were put to them and they chose to keep
+  the current setup.

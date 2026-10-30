@@ -63,8 +63,9 @@ ACCEPTED = {
     ("relay-beacon", "bounty"): "Level 27's approved bounty 15: the secondary is its reward (accepted in round 57 C.3)",
     ("sentinel-tower", "bounty"): "the approved stat block's 40, a tower behind a hardened collar (round 65, M9 part E)",
     ("strider", "ttk"): "the approved stat block's 410 HP; a leg (0.6 s) topples it (round 65, M9 part E)",
-    ("minelayer", "ttk"): "280 HP so a focused fit lets it lay through its gap (the user's playthrough 2026-10-30; "
-                          "step FIX6, pending the user's review)",
+    ("minelayer", "ttk"): "450 HP, rising at 200 px/s, so a focused fit lets it lay its first cluster (the user's "
+                          "playthrough and re-test 2026-10-30; steps FIX6/FIX7, pending the user's review)",
+    ("minelayer", "bounty"): "48, in proportion to its 450 HP (30 at 280): step FIX7, pending the user's review",
     ("iron-sovereign", "ttk"): "the HP set on the autopilot's measured fight, 144 s at medium, par 145 "
                                "(round 70 A.1: rail 1,200, laser 1,500, core 6,600; step BOSS70)",
 }

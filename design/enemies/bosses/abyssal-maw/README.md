@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../../../world/europa, ../../../campaign/act-4-deep-water, ../../naval/eel-swarm, ../../../player/wingmen, ../../../story/twist, ../../../story/characters/the-choir, ../../../systems/economy]
-updated: 2026-10-26
+updated: 2026-10-30
 ---
 
 # Abyssal Maw
@@ -52,13 +52,13 @@ is applied on top of the base.
 | Field | Value |
 |---|---|
 | Faction | Vrell |
-| Layer | `air` (the play plane under water, the level's medium: all weapons hit it, those without `anti-sub` at the water's factor ×0.7); its parts wind in `sub` in the intro, and during the dive the head and the coil are `sub` again (the head sunk where it rests, then winding back in): only `anti-sub` weapons and the Smart Bomb reach them |
+| Layer | `air` (the play plane under water, the level's medium: all weapons hit it, those without `anti-sub` at the water's factor ×0.7); its parts wind in `sub` in the intro, in the dive the head and its sacs go under with the coil, entirely: from the slide's middle to the lunge nothing of it can be hit (no `sub` target, the Smart Bomb included; its bar stays); winding back in after the lunge it is `sub` again: only `anti-sub` weapons and the Smart Bomb reach it |
 | Size tier | `huge` |
 | Size | 150×130 px, hitbox 110×100 (the head; the body a chain of 31 segments, 64 px wide, 56 px apart (≈ 1,750 px with the head), half of each beyond the field's edge while coiled; gill sacs 36×36; implants 40×40) |
 | Parts | the **head** (`vital`; the bar): the skull ×0.5, the lime **throat** a weak spot ×2 while the jaw is open; four **gill sacs** (`destroyable`, outside the bar, phases 1–2); the **coil** (the body chain: armoured, shots glance with a spark and the Ion Beam stops on it, no HP; a wall for the ship); three **Helix implants** (phase 3: ×2 on the head's HP while sparked open, armoured while shut) |
 | Orientation | `fixed` (the head facing down, with jaw, rear-up, dive and lunge frames; the coil's segments in `32 angles` along the chain) |
 | HP | head 6,700; gill sacs 150 each (600); the implants 1 each (their hits count on the head's); total 7303 (easy 5477 / hard 9494, from the global multipliers) |
-| Armour / shield | the coil always (a wall, no damage); the skull ×0.5; the throat ×2 while the jaw is open; an implant ×2 while sparked open, armoured while shut; in the dive only `anti-sub` and the Smart Bomb |
+| Armour / shield | the coil always (a wall, no damage); the skull ×0.5; the throat ×2 while the jaw is open; an implant ×2 while sparked open, armoured while shut; in the dive out of reach until the lunge, then on the way back only `anti-sub` and the Smart Bomb |
 | Speed | 0 px/s (the head at rest; a coil sweep swings in 110 px in 0.5 s; the lunge crosses the field in 0.8 s) |
 | Movement | anchored round the vent, the head at y 95 (see *Arena*); the coil sweeps, the dive and the lunge (see *Phases*) |
 | Attack | the **coil sweeps** (phases 2–3: a 5-segment bight at the ship, a 1.2 s tell, then `heavy` = 10 once and the push); the **dive and lunge** (once, the head below 50 %: a 2 s shadow up a 90 px column, then `heavy` = 10); Eel Swarms of 8 shed from the coil in every phase; phase 1: the gill sacs breathe in turn, a `ring` of 10 (`small` = 4, 100 → 70 px/s) one sac every 1.6 s, each after a 0.6 s swell; and the throat's aimed `fan` of 5 over 40° (`medium` = 6, 130 → 91 px/s) every 5 s after a 0.6 s glow, the jaw open 3 s; phase 2: the living sacs one every 2.4 s; the **fan walls** (phase 2), a `fan` of 17 over 150° (`small`, 110 → 77 px/s) straight down every 4 s after a 0.8 s glow, one orb missing (the gap, 40–90 px beside the ship's x, within 140 px of the last); phase 3: the open implant's aimed 3-bolt `burst` (`small`, 140 → 98 px/s) every 1.5 s, each after a 0.4 s arc |
@@ -125,9 +125,10 @@ along its length (round a corner too, when it reaches one): every segment in it 
 swings in and back (round 58 F.2).
 
 **The dive and the lunge** (once, as the head falls below 50 %; ≈ 15 s): the Maw roars and the whole
-coil **slides off the edges into the dark** below (2 s; the layer `sub`: only `anti-sub` and the Smart
-Bomb reach it, its bar stays; the head and its sacs sink where they rest, in the anti-sub weapons' reach,
-and go deep, fading out, as the shadow rises), and the vent's glow gutters: for the next ≈ 8 s the arena is near the
+coil **slides off the edges into the dark** below (2 s), and the head and its sacs **go under with it,
+entirely**: they sink where they rest and fade out within the same 2 s, and from the slide's middle until the
+lunge **nothing of the Maw can be hit** (no hit box, no `sub` target, the Smart Bomb included; its bar stays; the
+user, 2026-10-30: no shadow of the head lingers to be shot at while it does not fire back), and the vent's glow gutters: for the next ≈ 8 s the arena is near the
 [darkness](../../../world/europa/README.md) of Level 26 (the ship's light cone and the glows; a
 reminder of Blackwater, not a new rule). The arena is open and quiet: no walls, no sweeps. **4 s** after
 the dive a **shadow** runs up a **column** 90 px wide at the ship's x (clamped 95–385, fixed when it
@@ -227,6 +228,14 @@ easy ≈ 99 s, hard ≈ 161 s; over sixteen whole-level seeds (`levelReport -Pse
 125.1 s (+6.5 s; the five seeds' +12 s is mostly the dodges' divergence). The HP stays (the mean is within 7 % of the
 aim) and the **par follows the measured mean: 138** (accepted in round 59, C.1 keep). Phase 1 against the Kraken's: 2.51×
 (the 3.0× allowance kept). The paper estimate: 134 s.
+
+**Re-measured after the head goes under entirely (step MAW7, the user, 2026-10-30)**: the sunk head no longer takes the
+anti-sub weapons' hits from the slide's middle to the lunge. `AbyssalMawTest` at the spec's HP: **142.9 s** at medium
+over its five seeds (138.4 before; 118.6–162.4 s, every seed in the window; phases ≈ 34 / 71 / 31 s, phase 2
++2.8 s), easy ≈ 102 s (99), hard ≈ 164 s (161; one seed at 180.0 s, the window's edge); `levelReport -Pparts=boss`
+(three seeds): medium 111.8 → 117.1 s, easy 88.4 → 93.7, hard 160.2 → 162.4, won 3/3 with no retry at every
+difficulty. The HP stays (inside the window; the mean within 10 % of the aim); the par stays **138** for now (the
+mean 4.9 s over it, inside `AbyssalMawTest`'s 5 s; raising it to 143 is pending the user's review).
 
 Lessons from Acts 2–3 the build must apply (M8 part H):
 - **Measure, then tune the HP, not the attacks** (Kraken E6, Spire H10, Colossus H4, walker F4): the
@@ -408,6 +417,10 @@ looks (H5), the sounds and the music (H6); captured for round 58 in step H7.
       wall); after the lunge the body leaves the screen up the column, then winds back in, nothing jumping on the screen
       (`MawMotionTest.afterTheLungeTheBodyLeavesTheScreenThenWindsBackInWithoutAJump`); the fight re-measured, the par
       138
+- [x] The head goes under entirely in the dive (step MAW7, the user, 2026-10-30): out of every weapon's reach from the
+      slide's middle to the lunge, faded out by the slide's end
+      (`MawArenaTest.theDiveGoesUnderTheLungeRisesUpTheColumnAndTheCoilComesBack`); the fight re-measured, the par kept;
+      the capture [abyssal-maw-dive-capture-r71-a](../concept/abyssal-maw-dive-capture-r71-a.mp4)
 
 ## Open questions
 
@@ -472,3 +485,9 @@ All decided in round 48 (2026-10-22):
   arrival winding in, the rounded corners, the bight, the dive and the wind-in), so the Maw's art is `final`; C.1 **keep**
   (the HP as approved, the par 138), C.2 (easy as the difficulty's factors make it) and C.3 (the head under the play
   plane on the way back) accepted. The step's small rules ("pending round 59") are accepted.
+- 2026-10-30, the user (playing Level 28): **the head goes under entirely** in the dive. "When it goes under during the
+  fight, a shadow of its head remains for some time. During this time, you can still hit it, but it does not fire
+  back. ... The maw must go under entirely and then race back in from below." The head and its sacs now sink and fade
+  out with the coil's 2 s slide and are out of every weapon's reach (the Smart Bomb included) from the slide's middle
+  to the lunge; the shadow tell, the lunge, the body's 3 s (the throat ×2 as it passes) and the wind-in are unchanged.
+  The fight re-measured (step MAW7): 142.9 s at medium, the HP and the par kept.

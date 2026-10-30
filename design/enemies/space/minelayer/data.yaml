@@ -13,12 +13,12 @@ size: [88, 64]    # sprite px
 hitbox: [64, 44]
 parts: single
 orientation: 16 angles
-hp: 280           # 2.3 s at the L30 reference of 124 (step FIX6: a focused fit let it lay through its gap)
+hp: 560           # 4.5 s at the L30 reference of 124 (step FIX7, the user's re-test: slower and tougher; FIX6 had 280, C2 110)
 armour: none
-speed: 600        # px/s rising (step FIX6: it lays 0.8 s after entering, not 3.9 s)
+speed: 200        # px/s rising (step FIX7, the user's re-test: "way too fast"; FIX6 had 600, C2 120)
 machine: true     # the EMP Burst stuns it 3 s (it stops laying; the line keeps the hole)
 movement:
-  lay: {rise: 600, strafe: 200, lane: 70}   # px/s up its lane, px/s across while laying, px in from its side edge (40–100)
+  lay: {rise: 200, strafe: 150, lane: 70}   # px/s up its lane, px/s across while laying, px in from its side edge (40–100)
 attacks:
   - pattern: mine
     name: line
@@ -46,7 +46,7 @@ formations:
 weak_points: []   # the gold mine hopper at its tail is drawn only
 drops: []
 traits: [rear, homing, spread, piercing]
-bounty: 30
+bounty: 60         # step FIX7: in proportion to its HP (30 at 280), the large class's 40-60
 first_level: 30
 difficulty:
   easy: {ring: 6, mine: {gap: 144, middle_short: 1}}

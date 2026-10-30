@@ -527,6 +527,17 @@ final class LevelReport {
                                         PacingTest.END_CALM_SECONDS,
                                         verdict(flight.endCalm() >= PacingTest.END_CALM_SECONDS))
                                 : " (Acts 1-4: no rule)");
+                // Step FIX7: big hulls stacked on the screen (HullStackingTest; asserted from Act 5 on).
+                List<LevelMetrics.Stack> stacks = HullStackingTest.stackings(level.key(), row.difficulty());
+                boolean asserted = level.act() >= HullStackingTest.FIRST_ACT;
+                line(
+                        out,
+                        "stacking",
+                        "%d big-hull overlaps over %.1f s (the script unharmed)%s%s",
+                        stacks.size(),
+                        LevelMetrics.STACK_SECONDS,
+                        asserted ? ": " + verdict(stacks.isEmpty()) : " (Acts 1-4: report only)",
+                        stacks.isEmpty() ? "" : " " + stacks);
             }
             if (medium && row.floor() != null && level.parts().contains(Part.FLOOR)) {
                 LevelMetrics.Flight floor = row.floor().flight();

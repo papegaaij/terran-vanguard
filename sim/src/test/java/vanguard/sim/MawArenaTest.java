@@ -357,7 +357,14 @@ class MawArenaTest {
         assertEquals(List.of(1), MawSpecs.values(sortie, SimEvents.Type.RADIO), "boss-dive at the dive");
         assertFalse(coil.walled(), "the walls go with the slide");
         MawSpecs.steps(sortie, 1.1, 0);
-        assertEquals(Layer.SUB, boss.partLayer(MawSpecs.HEAD), "under from the slide's middle");
+        // Step MAW7 (the user, 2026-10-30): the head goes under with the coil, entirely: nothing of it can be hit.
+        assertEquals(Layer.BURIED, boss.partLayer(MawSpecs.HEAD), "gone under from the slide's middle");
+        for (int p = 0; p < boss.partCount(); p++) {
+            if (coil.implant(p) < 0) {
+                assertEquals(Layer.BURIED, boss.partLayer(p), "part " + p + " under with the head");
+                assertTrue(boss.partShielded(p), "part " + p + " out of every weapon's and the Smart Bomb's reach");
+            }
+        }
         assertFalse(boss.onPlane());
         MawSpecs.steps(sortie, 1, Command.LEFT.bit());
         assertTrue(

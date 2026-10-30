@@ -21,9 +21,23 @@ public interface FlightSpecs {
      * <p>M9 part B (design/campaign Level 29, the wavering Stormhawks): with a {@code peelSpeed} above 0 its hover ends
      * in a peel-off: straight sideways toward the nearer side edge (a centre on the middle line goes right) at that
      * speed, gone past the edge, instead of its exit; 0 for none.
+     *
+     * <p>Step FIX7 (the user's re-test 2026-10-30, design/enemies/air/hornet): with {@code keepApart} a drifting hold
+     * turns its drift away from another such hold it is about to touch ({@link HoverHold#keepApart}), so two hulls
+     * never drift through each other; false for the others (their drifts as before).
      */
     public record Hover(
-            Range seconds, Range depth, java.util.Optional<Range> aboveShip, double drift, double peelSpeed) {
+            Range seconds,
+            Range depth,
+            java.util.Optional<Range> aboveShip,
+            double drift,
+            double peelSpeed,
+            boolean keepApart) {
+        /** A hover without step FIX7's keep-apart. */
+        public Hover(Range seconds, Range depth, java.util.Optional<Range> aboveShip, double drift, double peelSpeed) {
+            this(seconds, depth, aboveShip, drift, peelSpeed, false);
+        }
+
         public Hover {
             java.util.Objects.requireNonNull(aboveShip);
             if (!(drift >= 0) || (aboveShip.isPresent() && !(aboveShip.get().min() >= 0)) || !(peelSpeed >= 0)) {
@@ -44,12 +58,17 @@ public interface FlightSpecs {
 
         /** M8 part D: this hover held {@code above} px above the ship, drifting {@code driftSpeed} px/s. */
         public Hover aboveShip(Range above, double driftSpeed) {
-            return new Hover(seconds, depth, java.util.Optional.of(above), driftSpeed, peelSpeed);
+            return new Hover(seconds, depth, java.util.Optional.of(above), driftSpeed, peelSpeed, keepApart);
         }
 
         /** M9 part B: this hover ending in a peel-off to the nearer side edge at {@code speed} px/s (0: none). */
         public Hover withPeel(double speed) {
-            return new Hover(seconds, depth, aboveShip, drift, speed);
+            return new Hover(seconds, depth, aboveShip, drift, speed, keepApart);
+        }
+
+        /** Step FIX7: this hover with its drift kept apart from the other such holds ({@code keepApart}). */
+        public Hover keptApart(boolean apart) {
+            return new Hover(seconds, depth, aboveShip, drift, peelSpeed, apart);
         }
     }
 

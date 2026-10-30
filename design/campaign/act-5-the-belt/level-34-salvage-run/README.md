@@ -466,7 +466,8 @@ Tank in livery is in the [ground units' concept art](../../../enemies/ground/REA
 - [x] Warden Tank in Ascendancy livery with the act HP factor (its page's Act 5 section) (step G4: the hull, turret,
       stub and wreck in `warden-tank-asc` from Act 5, the grey tank's flash; its intel portrait in the livery)
 - [x] Containers (`ground` destructibles releasing salvage pickups) and the secondary `escapes: cargo-container`
-      (5 of 6; easy 4, hard 6) (step G4: the CDF and Helix looks with their bursts, the HUD's `CONTAINERS n / 6`)
+      (5 of 6; easy 4, hard 6) (step G4: the CDF and Helix looks with their bursts, the HUD's `CONTAINERS n / 6`;
+      step FIX7: the HUD counts to the target, `CONTAINERS n / 5` at medium, the game's change pending)
 - [x] The freighter's hold: four clamps, the core floating free and collected by flying through it, the tug's
       fallback; the Mk V "Helix" unlocked by the win and in the shop from the L35 visit (part A's unlock) (step G1: the
       story pickup; step G4: the shut crate under the clamps, its rise and drift with the glow, `HELIX CORE SALVAGED`,
@@ -591,3 +592,11 @@ Approved in round 60 (the gap analysis's questions this level follows):
   → 174.5, 180.5 → 176 and 183 → 170.25 (the user: "little to no pause after killing the last enemy"); the end calm
   (easy/medium/hard, the autopilot with the plan's fit) 1.3/0.0/0.0 s → 7.8/7.1/4.8 s. The counts, the haul and the
   autopilot's wins are unchanged.
+- 2026-10-30 (step FIX7, the user's re-test on f1dc0f05: "the containers went from 4/6 to completed in one go. Then a
+  few seconds later, the 6th container entered the screen"): reproduced (`Level34Test.theContainersAreMetAtTheirTarget`:
+  the autopilot meets the secondary with 5 opened at medium, the sixth still to come; easy at 4 with two to come). Not
+  a double count: the secondary needs 5 of 6 (easy 4, hard 6) and is met as the fifth opens, but step G4's HUD counted
+  against all six (`CONTAINERS 4 / 6`, then `DONE`). The HUD counts against the target now, as every other escapes
+  secondary does (`CONTAINERS 4 / 5`, done at 5; easy `n / 4`, hard `n / 6`); the sensor line already reads
+  `CONTAINERS 5/6`. Level 34 is the only secondary over objects; the other escapes secondaries with an allowance
+  (Level 19's grey tanks, Level 30's convoy on easy) already count to their target.

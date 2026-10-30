@@ -34,7 +34,7 @@ The schema of a level's data file (sections, waves, triggers, objectives, radio 
   `formation`, `enemy` slug, `count`, `from` `front`/`sides`/`rear`, `edge`
   `left`/`right`/`alternating` (`sides` without an edge enters from both side edges), optional
   `hold`, `warning`, `break_group`, `speed` (px/s instead of the enemy's own), `interval` (s
-  between the units of a stream), `at` (a whirl cluster's release point `[x, y]`, y below the top
+  between the units of a stream; step FIX7: of a front `column` too, 0.4 s without one), `at` (a whirl cluster's release point `[x, y]`, y below the top
   edge), and `easy` / `hard` changes (`from`, `edge`, `count`, `break_group`, `warning`), an
 optional `skip` list of the difficulties it is left out on (Level 06's hard-only Coilwyrm pair); a
   segment chain's `paths` (one list of `[x, y]` points per unit, y below the top edge, starting

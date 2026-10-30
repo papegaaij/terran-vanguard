@@ -18,7 +18,7 @@ shield: 12        # M9 part A: the hex shield, spent first; step D2: 8 → 12 (8
 speed: 140        # px/s entering and leaving
 machine: true     # the EMP Burst stuns it 3 s: no salvo (missiles in flight fly on)
 movement:
-  hover: {seconds: 9, y: [90, 150], drift: 20}   # holds 90-150 px below the top edge for 9 s with a 20 px/s sideways drift, then exits up
+  hover: {seconds: 9, y: [90, 150], drift: 20, keep_apart: true}   # holds 90-150 px below the top edge for 9 s with a 20 px/s sideways drift, then exits up; step FIX7: turns its drift away from another Hornet before they touch
 attacks:
   - pattern: aimed
     name: salvo

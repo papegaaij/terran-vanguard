@@ -586,3 +586,9 @@ the alternatives:
   pair 177.5 → 173.75, the Talon line of 4 175 → 173 and the last Skitter snake 180 → 174; the end calm
   (easy/medium/hard, the autopilot with the plan's fit) 2.9/2.1/1.3 s → 8.0/5.8/5.1 s. The counts, the haul and the
   autopilot's wins are unchanged.
+- 2026-10-30 (step FIX7, the user's re-test on f1dc0f05: "same issue with the droneships"): the Gilded Gunship
+  columns (t=67, t=144.5) flew stacked (the simulation ignored a front column's `interval`); now 2 s apart as written.
+  The t=134 Hornet trio drifted through each other (2.6 s at medium, hard three times): the Hornet keeps apart from
+  another Hornet's hold now ([its page](../../../enemies/air/hornet/README.md)). No big-hull overlap left
+  (`HullStackingTest`); levelReport: wins 3/3, retries 0, end calm 7.8 / 5.8 / 5.1 s, medium's typical haul −0.5 %;
+  hard's secondary 0/3 as before (step I1).

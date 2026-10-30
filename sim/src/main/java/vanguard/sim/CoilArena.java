@@ -36,7 +36,7 @@ public final class CoilArena implements Hashed {
     public enum DiveState {
         /** Not yet (or a boss without a dive). */
         READY,
-        /** The coil slides off the edges into the dark ({@code sub} from its middle). */
+        /** The coil slides off the edges into the dark, the head sinking with it (out of reach from its middle). */
         SLIDE,
         /** The arena open and quiet. */
         QUIET,
@@ -929,8 +929,11 @@ public final class CoilArena implements Hashed {
         diveTicks++;
         switch (diveState) {
             case SLIDE -> {
-                if (2 * diveTicks >= slideTicks && piece.partLayer(head) != Layer.SUB) {
-                    layers(Layer.SUB, false);
+                if (2 * diveTicks >= slideTicks && piece.partLayer(head) != Layer.BURIED) {
+                    // Step MAW7 (the user, 2026-10-30): the head and its sacs go under with the coil, entirely: from
+                    // the slide's middle to the lunge nothing of it can be hit (no sub target, the Smart Bomb
+                    // included; SetPieceParts#partShielded), its bar stays.
+                    layers(Layer.BURIED, false);
                 }
                 if (diveTicks >= slideTicks) {
                     enterDive(DiveState.QUIET);

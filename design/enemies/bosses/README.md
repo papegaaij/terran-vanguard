@@ -3,7 +3,7 @@ title: Bosses
 design: approved
 implementation: done
 art: final
-updated: 2026-10-29
+updated: 2026-10-30
 ---
 
 # Bosses
@@ -157,6 +157,8 @@ implants are grey with a hot-amber core and nothing on it is gold (Q11 a).
 | [concept/cruisers-rise-capture-r59-a.png](concept/cruisers-rise-capture-r59-a.png) | Game capture for round 59 R.2 (the same run; the level clock): the cruisers' rise at 1:1, t≈117.9 (the intact night ice), 118.5 (the crust lifting on both flanks), 119.1 (splitting, sheeting off), 119.7 (the hulls rising through), 120.3, 120.9 (risen, moving with the ice), 121.7 (slowing to the wing's pace), 122.9 (the run: the first broadside's tell) | chosen (round 59: accepted as final) |
 | [concept/cruisers-hole-capture-r59-a.png](concept/cruisers-hole-capture-r59-a.png) | The lower half of both flanks at t≈119.5, 120.1 and 120.7, 1:1: the crust over the rising hull and the hole's rim at the hull's stern | chosen (round 59: accepted as final) |
 | [concept/cruisers-rise-capture-r59-a.mp4](concept/cruisers-rise-capture-r59-a.mp4) | The same run t≈107–133 with the game's sound: the shaft's climb, the breakout at the ship's breach, the cruisers' rise with the reveal sting and the b rise sound, Varga's and Okafor's lines, the run's first broadsides | chosen (round 59: accepted as final) |
+| [concept/abyssal-maw-dive-capture-r71-a.png](concept/abyssal-maw-dive-capture-r71-a.png) | Game capture (step MAW7; [recipe](concept/prompts.md#abyssal-maw-dive-capture-r71-a)): the dive after the user's change (2026-10-30, the head goes under entirely), eight frames of the clip at 0.5: the dive's start (0.3 s), the head sinking with the coil (1.5), the arena empty in the dark (2.8, 4.6, 6.4: nothing of the Maw left on the screen), the shadow up the column (7.9), the burst from the bottom edge (9.1), the head racing up (9.6) | proposed |
+| [concept/abyssal-maw-dive-capture-r71-a.mp4](concept/abyssal-maw-dive-capture-r71-a.mp4) | The same run, 10 s from the dive to the lunge with the game's sound (the play field, 480×540) | proposed |
 
 ## Implementation
 

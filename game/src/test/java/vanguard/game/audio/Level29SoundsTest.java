@@ -177,7 +177,7 @@ class Level29SoundsTest {
                 new FlightSounds(bank, SiegeUnitsFixture.quietLooks(sortie), sortie.armament(), List.of());
         boolean burst = false;
         boolean down = false;
-        while (!down && sortie.levelSeconds() < 100) {
+        while (!down && sortie.levelSeconds() < 140) {
             now[0] += NANOS_PER_STEP;
             double x = 240;
             for (int e = 0; e < sortie.enemyCount(); e++) {
@@ -195,7 +195,7 @@ class Level29SoundsTest {
             int after = bank.playing(Sfx.EXPLOSION_SMALL_A) + bank.playing(Sfx.EXPLOSION_SMALL_B);
             burst = down && !killed && after > before;
         }
-        assertTrue(down, "a wavering craft shot down by t=100");
+        assertTrue(down, "a wavering craft shot down by t=140 (60 HP at medium since step FIX7)");
         assertTrue(burst, "its explosion plays");
         sounds.stopLoops();
         bank.dispose();

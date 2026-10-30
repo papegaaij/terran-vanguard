@@ -24,7 +24,9 @@ Approved in round 60 (drafted in the Act 5 design phase, step D-enemies-B); rend
 [balancing basis](../../README.md#balancing-basis)); HP is in damage units (a Pulse Cannon L1 shot does 2),
 set at its first level from the proposed Act 5 reference DPS (judgement call J2: L30 124): 110 HP was
 0.9 s; step FIX6 (the user's playthrough 2026-10-30) made it **280 HP (2.3 s)** with a fast rise, so it lays its
-line before a typical fit kills it (an accepted exception to the medium class's 0.4–1.5 s, decided 2026-10-30 in round 70). Fire rates and line counts are tuned per level with `levelReport` in the build.
+line before a typical fit kills it (an accepted exception to the medium class's 0.4–1.5 s, decided 2026-10-30 in round 70);
+step FIX7 (the user's re-test, the same day: "way too fast") slowed it to a 200 px/s rise and a 150 px/s strafe
+and made it **560 HP (4.5 s)**, bounty 60 (pending the user's review). Fire rates and line counts are tuned per level with `levelReport` in the build.
 
 <!-- data: stat-block -->
 | Field | Value |
@@ -35,15 +37,15 @@ line before a typical fit kills it (an accepted exception to the medium class's 
 | Size | 88×64 px, hitbox 64×44 |
 | Parts | single |
 | Orientation | `16 angles` |
-| HP | 280 (easy 210 / hard 364, from the global multipliers) |
+| HP | 560 (easy 420 / hard 728, from the global multipliers) |
 | Armour / shield | none (not on the [enemy shields](../../README.md#enemy-shields)' Act 5 list) |
-| Speed | 600 px/s rising, 200 px/s across while laying |
+| Speed | 200 px/s rising, 150 px/s across while laying |
 | Movement | `rear-entry` (edge-warned 3 s) in a side lane (70 px from a side edge, beside the ship, not through it), rising to its **lay row** (set per unit in the wave; default 100 px and 180 px from the top), then `strafe`s across the field to the far edge and leaves; a column's layers enter **2.5 s apart** (see *Difficulty and level use*) |
 | Attack | `mine`: while it strafes it lays a line of **3 clusters of 4 mines** (32 px apart in a cluster, 56 px between clusters) with **one gap of 112 px** at the wave's gap position (one of the two cluster boundaries); a mine (1 HP) arms after **1 s**, then an armed mine within **48 px** of the ship's centre blinks **0.6 s** and bursts into a `ring` of **8** (slow 100 px/s, `small` 4) with a **40 px** `heavy` blast; touched while armed it bursts at once (contact `medium` 6, plus its ring); shot, it sets off the mines within 44 px (0.08 s a hop: its cluster); mines stay where they are laid (they move with the scroll), so the line **slopes** (below) |
 | Formations | column (2–3) from the rear, each laying its own line |
 | Weak points | none (the gold mine hopper at its tail is drawn only) |
 | Effective traits | `rear`, `homing`, `spread`, `piercing` |
-| Credits | 30 (score 300 × chain); mines 0 |
+| Credits | 60 (score 600 × chain); mines 0 |
 | Death | `medium` mechanical explosion with sparks; its unlaid mines are lost with it (a line it has not finished keeps its gap and has a second one where it stopped) |
 | First level / used in | L30; the minefield; later Act 5 levels may use it (their docs decide) |
 | Difficulty hooks | easy: a wider gap (144 px, the cluster beside it 3 mines), rings of 6; hard: a column of 3 (three lines), rings of 10, arming 0.8 s (the gap stays 112 px: a narrower one would sit inside the 48 px proximity of both edge mines) |
@@ -79,8 +81,8 @@ The numbers of the shared [mine lines](../../README.md#mine-lines) rule:
 ### Behaviour
 
 - **From behind.** The column's edge warning (3 s) marks the lane it rises in; the Minelayer streaks up
-  beside the ship at 600 px/s (contact `medium` 15 if touched) and lays about 0.8 s after it enters, so the line
-  starts before a gun can follow it; `rear` and rear-`homing` guns (the
+  beside the ship at 200 px/s (contact `medium` 15 if touched) and lays about 2.4 s after it enters; its 560 HP
+  hold out until its first cluster (and the first layer's gap) is down, even under a gun that follows it; `rear` and rear-`homing` guns (the
   [Swarm Tail](../../../player/weapons/swarm-tail/README.md), Q12 c) and the front guns get it while it lays.
 - **Fire.** It fires nothing but its mines.
 - **EMP.** Stunned 3 s it stops laying (the line keeps the hole) and drifts with the scroll.
@@ -174,3 +176,15 @@ Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's r
   ship), 240 HP at 400/200 (4 on easy). The **bounty 30** (26 before): the medium class's top for its 2.3 s time
   to kill (`BalanceTest.ACCEPTED`, decided 2026-10-30 in round 70). A shot mine still clears its cluster: at 200 px/s two
   neighbours lie 32 px across and 19 px down at Level 30's 120 px/s, 37 px apart.
+- 2026-10-30 (step FIX7, the user's re-test on f1dc0f05: "they seem to be moving faster, way too fast. Reduce their
+  speed and give them more hitpoints"): **rise 600 → 200 px/s, strafe 200 → 150 px/s, HP 280 → 560** (easy 420,
+  hard 728; 4.5 s at the L30 reference of 124), **bounty 30 → 60** (in proportion to the HP, the large class's top;
+  Level 30's `bounty_scale` re-fitted 0.43 → 0.36 so the typical haul stays on budget, +0.8 %). Measured with
+  FIX6's focused pilot (the plan's fit and the user's): at 450 HP the first layer laid only 6 at medium (its gap
+  needs 8); at 560 every layer lays at least its first cluster on every difficulty, the first (t=20) lays through
+  its gap at medium (8–9 of 12) and hard (12), focused fits still kill most of them on easy and medium (life 3.9–4.9 s
+  at medium), the autopilot finishes all 15 lines at medium; at 640 a focused medium fit killed only 2–4 of 15. On
+  easy (its wider 144 px gap, HP × 0.75) the first layer lays its first cluster (4–5), not its gap (it needed > 900
+  HP): the test asks the gap at medium and hard only. The slower rise keeps it longer in its side lane: the naive
+  pilot's touches with it at medium 25 → 55 a run (`Level30Test`'s bound 120 → 150; the collisions are the open
+  question to the user). `BalanceTest.ACCEPTED`'s TTK and bounty exceptions updated. Pending the user's review.

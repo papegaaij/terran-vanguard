@@ -149,8 +149,9 @@ final class SetPieceParts {
             // M9 part H: invulnerable until the rings are up to speed; step H1b: the core while it opens.
             return true;
         }
-        if (breach != null && !arena.layer(p).touchable()) {
+        if ((breach != null || coil != null) && !arena.layer(p).touchable()) {
             // M7 part H: a breaching boss's buried mouth: nothing touches it (the Lance and the Smart Bomb included).
+            // Step MAW7: a coiled boss's head and sacs gone under in the dive, the same.
             return true;
         }
         if (coil != null && coil.implant(p) >= 0 && !coil.implantOpen(coil.implant(p))) {

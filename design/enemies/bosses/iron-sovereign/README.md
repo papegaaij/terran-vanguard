@@ -467,6 +467,7 @@ under *Variants b and c* only (no art). Generator `tools/concept/belt_r60.py`; p
 | [concept/sovereign-playbook-mine-ring-capture-r71-a.png](concept/sovereign-playbook-mine-ring-capture-r71-a.png) | Game capture (step BOSS70; [recipe](concept/prompts.md#sovereign-playbook-capture-r71-a)), four frames of the same: the amber rim lights (the tell), eight line mines thrown out to 120–220 px, shot mines bursting into their rings | proposed |
 | [concept/sovereign-playbook-wreck-throw-capture-r71-a.mp4](concept/sovereign-playbook-wreck-throw-capture-r71-a.mp4) | Game capture (step BOSS70; [recipe](concept/prompts.md#sovereign-playbook-capture-r71-a)), clip with sound: the core's playbook, a dead battery's wreck glowing gold with sparks (the tell), torn off and hurled tumbling at the ship, the next glowing, the empty sockets | proposed |
 | [concept/sovereign-playbook-wreck-throw-capture-r71-a.png](concept/sovereign-playbook-wreck-throw-capture-r71-a.png) | Game capture (step BOSS70; [recipe](concept/prompts.md#sovereign-playbook-capture-r71-a)), four frames of the same: a dead battery's wreck glowing gold with sparks (the tell), torn off and hurled tumbling at the ship, the next glowing, the empty sockets | proposed |
+| [concept/sovereign-look-capture-r71-a.png](concept/sovereign-look-capture-r71-a.png) | Game capture (step PIX7; [recipe](concept/prompts.md#sovereign-look-capture-r71-a)): the station with the rim and shade overlays at full size and undithered, phase 1 and the open core at 1:1, and the sheen before / after at 2x | proposed |
 | [concept/sovereign-lock-capture-r68-a.mp4](concept/sovereign-lock-capture-r68-a.mp4) | Game capture (step H5; [recipe](concept/prompts.md#iron-sovereign-capture-r68-a)), clip with sound: the inner ring locking: the grind, the lights out, the vented wrecks | chosen (round 68, accepted with the boss fight: C.1 a, C.5 a, C.6, C.9 a) |
 | [concept/sovereign-lock-capture-r68-a.png](concept/sovereign-lock-capture-r68-a.png) | Game capture (step H5; [recipe](concept/prompts.md#iron-sovereign-capture-r68-a)), frames: the inner ring locking: the grind, the lights out, the vented wrecks | chosen (round 68, accepted with the boss fight: C.1 a, C.5 a, C.6, C.9 a) |
 | [concept/sovereign-opening-capture-r68-a.mp4](concept/sovereign-opening-capture-r68-a.mp4) | Game capture (step H5; [recipe](concept/prompts.md#iron-sovereign-capture-r68-a)), clip with sound: the core's shutters opening to the reactor | chosen (round 68, accepted with the boss fight: C.1 a, C.5 a, C.6, C.9 a) |
@@ -641,3 +642,12 @@ All approved by the user in concept round 60:
   throw; the tells' sounds reuse the Sentinel's charge, the nest's lock, the Gunship's doors, the line mine's blink
   and the walker wreck's groan (a sounds row in a later round). Measured: medium 144.3 s (par 145), sweeps 6–8 a fight
   (the bound 3 → 8), phase 1 for a random dodger 1.50 × the Kraken's (the pending band to 1.6).
+- 2026-10-30 (step PIX7; the user on f1dc0f05: "the sovereign looks very pixelated, as if captured with a very small
+  colour palette"): **no regression**: the station's frames, its Level 35 atlas region (RGBA8888, Nearest, 1:1) and
+  its draw are unchanged since part H, and a still at level tick 6200 is pixel-identical on 5f510b41 and f1dc0f05
+  (only the boss bar differs). The look came from the two static overlays over the rings: the rim sheen and the shade
+  were 224×224 drawn 2x with a 4×4 Bayer dither over 10 and 5 steps, a coarse 2×2-pixel stipple over the whole
+  station (a quarter of their pixels a checker cell); round 70's longer live-ring phase (the core opens ≈ 102 s after
+  the halt, not ≈ 52 s) keeps them on screen twice as long. Now 448×448 drawn 1x with 32 undithered steps (the
+  pivots' `overlays` scale 1, read by the looks): a smooth sheen and shade, the rest of the art unchanged; Level 35
+  stays 3/6 pages. Pending the user's review ([still](concept/sovereign-look-capture-r71-a.png)).

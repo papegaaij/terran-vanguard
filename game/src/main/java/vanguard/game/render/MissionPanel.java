@@ -1083,16 +1083,12 @@ final class MissionPanel {
                     ? "DONE"
                     : sortie.secondaryFailed()
                             ? "FAILED"
-                            : sortie.script().objectives().secondary().objects()
-                                    // M9 part G (Level 34's CONTAINERS n / 6): the objects opened of all the level has.
-                                    ? escapesCount(sortie.escapesDestroyed(), sortie.escapesTotal(), 0)
-                                    : escapesCount(
-                                            sortie.escapesDestroyed(),
-                                            sortie.escapesTotal(),
-                                            sortie.script()
-                                                    .objectives()
-                                                    .secondary()
-                                                    .escapesAllowed());
+                            // Step FIX7 (the user's re-test): objects count to the target too (Level 34's
+                            // CONTAINERS n / 5 at medium), so the count never jumps from 4 / 6 to DONE.
+                            : escapesCount(
+                                    sortie.escapesDestroyed(),
+                                    sortie.escapesTotal(),
+                                    sortie.script().objectives().secondary().escapesAllowed());
             kit.textRight(batch, kit.body, count, colour, X + PAD, y, TEXT_WIDTH);
             return;
         }

@@ -33,9 +33,13 @@ Outputs (assets/sprites/, or build/art-held/sprites/ while no data claims the ro
                          end, unlit) at the headings 0..45 degrees in n8 equal steps (outer 87, middle 62, inner 40: the
                          outer edge moves <= 2 px a step); trimmed, offsets in the pivots; one 48-colour palette over the
                          three sets. A locked ring is drawn **tinted** (RGB x ``locked_tint``, 0.62) with no lamp glows
-  iron-sovereign-rim     224x224, additive, static, **drawn 2x** (soft light: half resolution saves the page): the sun's top-left sheen over the three ring bands and a gold glint
-                         on each band's sunward edge (drawn after the rings, centred on the station)
-  iron-sovereign-shade   224x224, normal, stepped translucency, drawn 2x: the far (bottom-right) side of the bands in shadow
+  iron-sovereign-rim     448x448, additive, static, drawn 1x: the sun's top-left sheen over the three ring bands and a
+                         gold glint on each band's sunward edge (drawn after the rings, centred on the station)
+  iron-sovereign-shade   448x448, normal, stepped translucency, drawn 1x: the far (bottom-right) side of the bands in
+                         shadow. Step PIX7 (2026-10-30): both were 224x224 drawn 2x (half resolution to save atlas
+                         space) with a 4x4 Bayer dither over 10 / 5 steps, which the 2x turned into a coarse 2x2-pixel
+                         stipple over the whole station (the "pixelated, few colours" look); now full size with 32
+                         undithered steps, a smooth sheen and shade
   iron-sovereign-base    456x456, normal, sunlit: the static under-structure (a charcoal disc with a 2 px gold rim on
                          its sunward silhouette, the catwalks between the rings with their light dots and struts, the
                          links' gold track under every ring's gaps, the core's collar with its two gold rings and the
@@ -84,8 +88,8 @@ Outputs (assets/sprites/, or build/art-held/sprites/ while no data claims the ro
                          measured atlas share) and GIF (the intro, phase 1 and the arc, a lock, the core opening, the
                          death)
 
-Run: python3 tools/art/iron_sovereign.py [rings] [base] [batteries] [core] [fx] [--review] [--check]
-     (no subject = all, about 2 minutes on 8 workers; --review rebuilds only the review files from the written frames;
+Run: python3 tools/art/iron_sovereign.py [rings] [overlays] [base] [batteries] [core] [fx] [--review] [--check]
+     (no subject = all, about 2 minutes on 8 workers; ``overlays`` writes only the rim and the shade; --review rebuilds only the review files from the written frames;
      --check lists every set with its folder, size and frame count and fails on a missing one or a missing Source
      chunk, and prints the atlas share)
 """
@@ -514,9 +518,9 @@ def grid(n):
     return xx - n / 2, yy - n / 2
 
 
-def glow_img(f, col, white=0.0, levels=8):
-    """A 0..1 field as an additive glow (premultiplied, ordered-dithered steps)."""
-    f = artkit.ordered_dither(np.clip(f, 0, 1), levels)
+def glow_img(f, col, white=0.0, levels=8, dither=True):
+    """A 0..1 field as an additive glow (premultiplied, ordered-dithered steps; ``dither=False``: plain steps)."""
+    f = artkit.ordered_dither(np.clip(f, 0, 1), levels) if dither else smooth_steps(f, levels)
     rgb = np.asarray(col, float)[None, None] * f[..., None] + 255 * white * np.clip(f - 0.55, 0, 1)[..., None] / 0.45
     img = Image.fromarray(np.dstack([np.clip(rgb, 0, 255), np.full(f.shape, 255.0)]).astype(np.uint8), "RGBA")
     return artkit.additive(img)
@@ -529,14 +533,21 @@ def dot_glow(n, col, core=1.2, halo=2.6, k=1.0):
     return glow_img(f, col, white=0.5, levels=6)
 
 
-OVERLAY = 224                                # the overlays' size: half the station's, drawn 2x (soft light only)
+def smooth_steps(values, levels):
+    """0..1 values posterized to ``levels`` steps without dithering (fine enough steps read as a smooth ramp)."""
+    return np.round(np.clip(values, 0, 1) * (levels - 1)) / (levels - 1)
+
+
+OVERLAY_LEVELS = 32                          # the overlays' steps, undithered (step PIX7; were 10 and 5 dithered)
+OVERLAY = 448                                # the overlays' size: the station's, drawn 1x (step PIX7; was 224 at 2x)
+OVERLAY_SCALE = 1                            # the game's draw scale for them (the pivots' ``overlays`` ``scale``)
 
 
 def rim_overlay():
     """The sun on the turning rings, static: a soft top-left sheen over each band and a gold glint on the band's
-    sunward outer edge (additive; half resolution, drawn 2x about the centre)."""
+    sunward outer edge (additive; drawn 1x about the centre)."""
     n = OVERLAY
-    x, y = (2 * v for v in grid(n))
+    x, y = (OVERLAY_SCALE * v for v in grid(n))
     r = np.hypot(x, y)
     sunward = np.clip((-x - y) / np.maximum(r, 1) / np.sqrt(2), 0, 1)   # 1 toward the top left
     f = np.zeros((n, n))
@@ -546,21 +557,20 @@ def rim_overlay():
         f += band * sunward ** 1.6 * (0.10 + 0.14 * across)
         edge = (r >= r1 - 2.6) & (r <= r1 - 0.4)
         f += edge * np.clip(sunward - 0.25, 0, 1) ** 1.2 * 0.5
-    return glow_img(f, GOLD_HI, levels=10)
+    return glow_img(f, GOLD_HI, levels=OVERLAY_LEVELS, dither=False)
 
 
 def shade_overlay():
-    """The far side of the bands in shadow (normal blend, stepped translucency of near-black; half resolution, drawn
-    2x)."""
+    """The far side of the bands in shadow (normal blend, stepped translucency of near-black; drawn 1x)."""
     n = OVERLAY
-    x, y = (2 * v for v in grid(n))
+    x, y = (OVERLAY_SCALE * v for v in grid(n))
     r = np.hypot(x, y)
     farward = np.clip((x + y) / np.maximum(r, 1) / np.sqrt(2), 0, 1)
     alpha = np.zeros((n, n))
     for ring, (r0, r1, *_rest) in RINGS.items():
         band = (r >= r0) & (r <= r1)
         alpha = np.maximum(alpha, band * farward ** 1.3 * 0.42)
-    alpha = artkit.ordered_dither(alpha / 0.42, 5) * 0.42
+    alpha = smooth_steps(alpha / 0.42, OVERLAY_LEVELS) * 0.42
     rgba = np.zeros((n, n, 4))
     rgba[..., :3] = (6, 6, 12)
     rgba[..., 3] = np.round(alpha * 255)
@@ -709,8 +719,7 @@ def build_rings():
                                  "sprite": f"{ROOT_NAME}-lamp-red"},
                        "arc": {"sprite": f"{ROOT_NAME}-arc-{ring}", "from_radius": r0 + 3, "to_radius": r1 - 3}}
         i += m
-    save_set(f"{ROOT_NAME}-rim", [rim_overlay()], single=True)
-    save_set(f"{ROOT_NAME}-shade", [shade_overlay()], single=True)
+    build_overlays()
     save_set(f"{ROOT_NAME}-lamp-red", [dot_glow(9, RED_LAMP, core=1.1, halo=2.4)], single=True)
     for ring in RINGS:
         save_set(f"{ROOT_NAME}-arc-{ring}", [arc_strip(ring)], single=True)
@@ -720,10 +729,17 @@ def build_rings():
         "(-y, x); mirrored offset (-y0 - h, -x0 - w), turned offset (-y0 - h, x0), the size swapped each time"),
         "segment_of": "segment j of a ring at angle(ring) + j * 360 / segments; battery b on segment b * segments / "
                       "batteries",
-        "locked_tint": LOCKED_TINT,
-        "overlays": {"rim": {"sprite": f"{ROOT_NAME}-rim", "blend": "additive", "centred": True, "scale": 2},
-                     "shade": {"sprite": f"{ROOT_NAME}-shade", "blend": "normal", "centred": True, "scale": 2},
-                     "order": "base, segments (tinted when locked), lamps, shade, rim, mounts and turrets, core"}})
+        "locked_tint": LOCKED_TINT})
+
+
+def build_overlays():
+    """The static sun overlays over the turning rings, at full size (step PIX7), and their pivots entry."""
+    save_set(f"{ROOT_NAME}-rim", [rim_overlay()], single=True)
+    save_set(f"{ROOT_NAME}-shade", [shade_overlay()], single=True)
+    update_pivots({"overlays": {
+        "rim": {"sprite": f"{ROOT_NAME}-rim", "blend": "additive", "centred": True, "scale": OVERLAY_SCALE},
+        "shade": {"sprite": f"{ROOT_NAME}-shade", "blend": "normal", "centred": True, "scale": OVERLAY_SCALE},
+        "order": "base, segments (tinted when locked), lamps, shade, rim, mounts and turrets, core"}})
 
 
 def build_base():
@@ -824,7 +840,7 @@ def build_fx():
                           "turn slowly (5-11 deg/s, alternate signs) by the segment rule, tinted, fading over 3.5 s"}})
 
 
-BUILDERS = {"rings": build_rings, "base": build_base, "batteries": build_batteries, "core": build_core,
+BUILDERS = {"rings": build_rings, "overlays": build_overlays, "base": build_base, "batteries": build_batteries, "core": build_core,
             "fx": build_fx}
 
 
@@ -954,9 +970,10 @@ def station_layer(angles, size=(480, 540), centre=(CX, CY), locked=(), lit=("out
                     x, y = screen_xy(info["lamps"]["radius"], deg + da)
                     lay = add_at(lay, lamp, (round(cx + x - lamp.width / 2), round(cy + y - lamp.height / 2)))
     if overlays and drift == 0:
-        sh = sprite.enlarge(L(f"{ROOT_NAME}-shade")[0], 2)
+        sh = sprite.enlarge(L(f"{ROOT_NAME}-shade")[0], OVERLAY_SCALE)
         lay.alpha_composite(sh, (cx - sh.width // 2, cy - sh.height // 2))
-        lay = add_at(lay, sprite.enlarge(L(f"{ROOT_NAME}-rim")[0], 2), (cx - OVERLAY, cy - OVERLAY))
+        rim = sprite.enlarge(L(f"{ROOT_NAME}-rim")[0], OVERLAY_SCALE)
+        lay = add_at(lay, rim, (cx - rim.width // 2, cy - rim.height // 2))
     if mounts and drift == 0:
         for ring, (r0, r1, n, mount, kind, count) in RINGS.items():
             for b in range(count):

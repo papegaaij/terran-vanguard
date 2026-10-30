@@ -737,6 +737,7 @@ class Level30Test {
     @Test
     void theMinelayersLayTheirLinesBeforeATypicalFitKillsThem() {
         StringBuilder report = new StringBuilder("Level 30's Minelayers ([entered, lived, mines laid]):");
+        List<String> failed = new java.util.ArrayList<>();
         for (Difficulty difficulty : Difficulty.values()) {
             EnemySpec.MineLayer line = SimSpecs.level(content, LEVEL, difficulty).waves().stream()
                     .filter(wave -> wave.enemy().mineLayer().isPresent())
@@ -760,12 +761,17 @@ class Level30Test {
                             one[0], Double.isNaN(one[1]) ? "left" : String.format("%.1f", one[1] - one[0]), (int)
                                     one[2]));
                     String at = difficulty + ", " + fit + " fit: the layer entering at t=" + one[0];
-                    assertTrue(one[2] >= (first ? throughGap : cluster), at + " laid " + (int) one[2]);
+                    // Step FIX7: through its gap at medium and hard; on easy (its wider gap, its HP × the easy lever)
+                    // the first layer lays its first cluster as the others do.
+                    boolean gap = first && difficulty != Difficulty.EASY;
+                    if (one[2] < (gap ? throughGap : cluster)) {
+                        failed.add(at + " laid " + (int) one[2]);
+                    }
                     first = false;
                     killed += Double.isNaN(one[1]) ? 0 : 1;
                 }
-                if (difficulty != Difficulty.HARD) {
-                    assertTrue(killed * 2 > layers.layers.size(), difficulty + ", " + fit + ": killed " + killed);
+                if (difficulty != Difficulty.HARD && killed * 2 <= layers.layers.size()) {
+                    failed.add(difficulty + ", " + fit + ": killed " + killed);
                 }
                 if (difficulty == Difficulty.MEDIUM) {
                     Sortie sortie = sortie(content, loadout, 1, difficulty, false);
@@ -784,6 +790,7 @@ class Level30Test {
             }
         }
         System.out.println(report);
+        assertTrue(failed.isEmpty(), failed.toString());
     }
 
     /**
@@ -914,15 +921,25 @@ class Level30Test {
                 total += contacts.get("total");
             }
             report.append(String.format("%n  %s: %.0f a run", difficulty, total / SEEDS));
-            if (difficulty == Difficulty.MEDIUM) {
-                assertTrue(total / SEEDS <= NAIVE_CONTACT_MOST, "medium: " + total / SEEDS + " a run");
-            }
         }
         System.out.println(report);
+        double medium = mediumTotal(report.toString());
+        assertTrue(medium <= NAIVE_CONTACT_MOST, "medium: " + medium + " a run");
     }
 
-    /** Step FIX6: the naive flight's contact damage a run at medium, at most. */
-    static final double NAIVE_CONTACT_MOST = 120;
+    private static double mediumTotal(String report) {
+        java.util.regex.Matcher m =
+                java.util.regex.Pattern.compile("MEDIUM: (\\d+) a run").matcher(report);
+        return m.find() ? Double.parseDouble(m.group(1)) : Double.NaN;
+    }
+
+    /**
+     * Step FIX6: the naive flight's contact damage a run at medium, at most. Step FIX7 (the user's re-test: the
+     * Minelayers slower, rising at 200 px/s, not 600): 120 → 150, the layers' contact at medium 25 → 55 a run (they
+     * spend three times as long in their side lanes), the whole 100 → 143 (seed 3's 238 the outlier); the collisions
+     * themselves are the open question to the user.
+     */
+    static final double NAIVE_CONTACT_MOST = 150;
 
     /** Step FIX6: the share of the layers that finish their lines under the autopilot, at least. */
     static final double AUTOPILOT_LINES = 0.5;

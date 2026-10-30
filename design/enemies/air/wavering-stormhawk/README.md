@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../../campaign/act-5-the-belt/level-29-betrayal-at-ceres, ../../../systems/economy]
-updated: 2026-10-29
+updated: 2026-10-30
 ---
 
 # Wavering Stormhawk
@@ -33,8 +33,8 @@ Rendered from [data.yaml](data.yaml) (numbers at **medium**, see the [balancing 
 | Size | 40×40 px, hitbox 28×28 |
 | Parts | single |
 | Orientation | `16 angles` |
-| HP | 20 (easy 15 / hard 26, from the global multipliers) |
-| Armour / shield | none; HP 20 base flies at 40 with the beam era's ×2 |
+| HP | 30 (easy 22 / hard 39, from the global multipliers) |
+| Armour / shield | none; HP 30 base flies at 60 with the beam era's ×2 |
 | Speed | 90 px/s descending; 260 px/s peeling off |
 | Movement | a pair enters at the top, descends to 150 px below the top edge, holds there 6 s (a slow sway, a wing-waggle), then peels off to the nearer side edge at 260 px/s; on the screen ≈ 9 s |
 | Attack | `none`: a **neutral** craft: no fire, no contact (the ship passes under it); a white IFF light blinking 1 Hz, a red flash on a hit; homing shots and Rook never pick it, Rook's and the Bulwark's shots pass through it; the player's shots and specials hit it |
@@ -74,3 +74,8 @@ Round 60's look is **A.22 a** (Ceres Wing ochre), the act's
   hold the hook `hover_seconds`; its line abreast of 2 is pinned on every difficulty.
 - 2026-10-28 (user, [round 62](../../../concept-rounds/round-62/README.md), closed; page answers): the art (F.5: 16 headings x 5 banks, the IFF light dark, white and red) accepted as final.
 - 2026-10-29 (M9 part I, step I2): `art: final`: the production frames (`tools/art/belt_units*.py`, every PNG with its `Source` chunk, so `importPlaceholders` skips them) are in `assets/sprites/` and the user accepted them as final in round 62 (F.5); the round 60 mockup rows are history.
+- 2026-10-30 (step FIX7, the user's re-test on f1dc0f05: "Friendlies need more hitpoints, they die too easily. Give
+  them 150% of what they have now"): **HP 20 → 30 base**, flown at 60 with the beam era's ×2 (easy 45, hard 78; 40
+  before). Still the player's to destroy on purpose: a focused pilot needs about 0.5 s at Level 29's reference DPS
+  (≈ 120 with the ×2; 0.33 s before). Level 29's autopilot keeps all six alive on every seed (Hold fire met 3/3 on
+  each difficulty, as before).

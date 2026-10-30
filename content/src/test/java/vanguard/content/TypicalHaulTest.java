@@ -133,8 +133,9 @@ class TypicalHaulTest {
                         Map.entry(29, 7_924),
                         // M9 part C (step C2): the README's waves with the offbeat waves, a Gunship's Darts as two
                         // streams, the scale fitted to 0.43 (levelReport: typical +0.3 %); step FIX6: the Minelayer's
-                        // bounty 30, not 26
-                        Map.entry(30, 8_834),
+                        // bounty 30, not 26; step FIX7: its bounty 60 (560 HP), the scale re-fitted to 0.36
+                        // (levelReport: typical +0.8 %)
+                        Map.entry(30, 8_681),
                         // M9 part D (step D2): the README's waves with the offbeat waves and rock groups, a Gunship's
                         // Darts as two streams, each tug section home paid, the scale fitted to 0.36 (levelReport:
                         // typical -0.5 %)

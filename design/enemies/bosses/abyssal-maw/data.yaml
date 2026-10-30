@@ -138,10 +138,10 @@ boss:
       phases:
         - {phase: Tightening, every: 7, sides: [left, right]}
         - {phase: Implants, every: 6, sides: [left, right, bottom]}
-    dive:           # once, as the head falls below 50 % in phase 2 (≈ 12 s): `sub`, only anti-sub and the Smart Bomb reach it
+    dive:           # once, as the head falls below 50 % in phase 2 (≈ 15 s): under, out of every weapon's reach from the slide's middle to the lunge; `sub` on the way back
       phase: Tightening
       below: 0.5
-      slide: 2      # s: the coil slides off the edges into the dark (the walls gone)
+      slide: 2      # s: the coil slides off the edges into the dark (the walls gone), the head and its sacs sinking and fading out with it
       quiet: 4      # s: the arena open and quiet
       shadow: 2.0   # s: the shadow runs up a column at the ship's x (the tell)
       lunge: 0.8    # s: the head races up the column, jaws open
@@ -172,12 +172,12 @@ boss:
       attacks: [implant-burst]
       drop: armour patch   # as the phase begins
 notes:
-  layer: ' (the play plane under water, the level''s medium: all weapons hit it, those without `anti-sub` at the water''s factor ×0.7); its parts wind in `sub` in the intro, and during the dive the head and the coil are `sub` again (the head sunk where it rests, then winding back in): only `anti-sub` weapons and the Smart Bomb reach them'
+  layer: ' (the play plane under water, the level''s medium: all weapons hit it, those without `anti-sub` at the water''s factor ×0.7); its parts wind in `sub` in the intro, in the dive the head and its sacs go under with the coil, entirely: from the slide''s middle to the lunge nothing of it can be hit (no `sub` target, the Smart Bomb included; its bar stays); winding back in after the lunge it is `sub` again: only `anti-sub` weapons and the Smart Bomb reach it'
   size: '(the head; the body a chain of {boss.coil.body.segments} segments, {boss.coil.body.hitbox.0} px wide, {boss.coil.body.spacing} px apart (≈ 1,750 px with the head), half of each beyond the field''s edge while coiled; gill sacs 36×36; implants 40×40)'
   parts: 'the **head** (`vital`; the bar): the skull ×0.5, the lime **throat** a weak spot ×2 while the jaw is open; four **gill sacs** (`destroyable`, outside the bar, phases 1–2); the **coil** (the body chain: armoured, shots glance with a spark and the Ion Beam stops on it, no HP; a wall for the ship); three **Helix implants** (phase 3: ×2 on the head''s HP while sparked open, armoured while shut)'
   orientation: '(the head facing down, with jaw, rear-up, dive and lunge frames; the coil''s segments in `32 angles` along the chain)'
   hp: 'head 6,700; gill sacs 150 each (600); the implants 1 each (their hits count on the head''s); total'
-  armour: 'the coil always (a wall, no damage); the skull ×0.5; the throat ×2 while the jaw is open; an implant ×2 while sparked open, armoured while shut; in the dive only `anti-sub` and the Smart Bomb'
+  armour: 'the coil always (a wall, no damage); the skull ×0.5; the throat ×2 while the jaw is open; an implant ×2 while sparked open, armoured while shut; in the dive out of reach until the lunge, then on the way back only `anti-sub` and the Smart Bomb'
   speed: '(the head at rest; a coil sweep swings in {boss.coil.sweeps.reach} px in {boss.coil.sweeps.swing} s; the lunge crosses the field in {boss.coil.dive.lunge} s)'
   movement: 'anchored round the vent, the head at y {movement.anchored.y} (see *Arena*); the coil sweeps, the dive and the lunge (see *Phases*)'
   attack_prefix: 'the **coil sweeps** (phases 2–3: a {boss.coil.sweeps.segments}-segment bight at the ship, a {boss.coil.sweeps.tell} s tell, then `heavy` = 10 once and the push); the **dive and lunge** (once, the head below 50 %: a {boss.coil.dive.shadow} s shadow up a {boss.coil.dive.width} px column, then `heavy` = 10); Eel Swarms of {boss.coil.shed.segments} shed from the coil in every phase; '

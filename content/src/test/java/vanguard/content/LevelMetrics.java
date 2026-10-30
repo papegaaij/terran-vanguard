@@ -321,6 +321,139 @@ final class LevelMetrics {
         }
     }
 
+    /** Step FIX7: two big hulls stacked longer than this, s, look like one craft on top of another. */
+    static final double STACK_SECONDS = 0.2;
+
+    /**
+     * One stacking of two big hulls: their slugs, the level second it started and how long their hitboxes overlapped
+     * on the screen without a break, s.
+     */
+    record Stack(String first, String second, double from, double seconds) {
+        @Override
+        public String toString() {
+            return String.format("%s/%s at t=%.1f for %.1f s", first, second, from, seconds);
+        }
+    }
+
+    /**
+     * Step FIX7 (the user's re-test 2026-10-30: "the large droneships fly on top of each other", Levels 30-31's Gilded
+     * Gunship columns): every pair of big hulls on the air layer (a {@code medium}, {@code large} or {@code huge} unit's
+     * stat block: the Gunships, Minelayers, Hornets; a chain's members and set pieces not counted) whose hitboxes
+     * overlap on the screen, with the time they stay overlapped, on the attempt that completes the level.
+     */
+    static final class Stacking implements Probe {
+        private final Content content;
+        private final Map<Long, double[]> open = new HashMap<>(); // pair key → {from s, last step, steps}
+        private final Map<Long, String[]> slugs = new HashMap<>();
+        private final List<Stack> stacks = new ArrayList<>();
+        private final List<Enemy> big = new ArrayList<>();
+
+        Stacking(Content content) {
+            this.content = content;
+        }
+
+        @Override
+        public void newAttempt() {
+            open.clear();
+            slugs.clear();
+            stacks.clear();
+        }
+
+        @Override
+        public void stepped(Sortie sortie, int step) {
+            big.clear();
+            for (int i = 0; i < sortie.enemyCount(); i++) {
+                Enemy enemy = sortie.enemy(i);
+                EnemyData data = content.enemies().get(enemy.spec().slug());
+                if (data != null
+                        && data.tier().compareTo(Tier.MEDIUM) >= 0
+                        && enemy.layer() == vanguard.sim.Layer.AIR
+                        && enemy.spec().countsAsEnemy()
+                        && onScreen(
+                                enemy.renderX(1), enemy.renderY(1), enemy.spec().hitbox())) {
+                    big.add(enemy);
+                }
+            }
+            for (int a = 0; a < big.size(); a++) {
+                for (int b = a + 1; b < big.size(); b++) {
+                    Enemy one = big.get(a);
+                    Enemy two = big.get(b);
+                    Hitbox p = one.spec().hitbox();
+                    Hitbox q = two.spec().hitbox();
+                    if (Math.abs(one.renderX(1) - two.renderX(1)) * 2 < p.width() + q.width()
+                            && Math.abs(one.renderY(1) - two.renderY(1)) * 2 < p.height() + q.height()) {
+                        int low = Math.min(one.serial(), two.serial());
+                        int high = Math.max(one.serial(), two.serial());
+                        long key = ((long) low << 32) | high;
+                        double[] span = open.get(key);
+                        if (span == null) {
+                            open.put(key, new double[] {sortie.levelSeconds(), step, 1});
+                            slugs.put(
+                                    key,
+                                    new String[] {one.spec().slug(), two.spec().slug()});
+                        } else {
+                            span[1] = step;
+                            span[2]++;
+                        }
+                    }
+                }
+            }
+            for (Iterator<Map.Entry<Long, double[]>> it = open.entrySet().iterator(); it.hasNext(); ) {
+                Map.Entry<Long, double[]> entry = it.next();
+                if (entry.getValue()[1] != step) {
+                    stacks.add(stack(entry.getKey(), entry.getValue()));
+                    slugs.remove(entry.getKey());
+                    it.remove();
+                }
+            }
+        }
+
+        private Stack stack(long key, double[] span) {
+            String[] pair = slugs.get(key);
+            return new Stack(pair[0], pair[1], span[0], span[2] * SimStep.SECONDS);
+        }
+
+        /** Every stacking seen (those still open at the end included), longest first. */
+        List<Stack> stacks() {
+            List<Stack> all = new ArrayList<>(stacks);
+            open.forEach((key, span) -> all.add(stack(key, span)));
+            all.sort((x, y) -> Double.compare(y.seconds(), x.seconds()));
+            return all;
+        }
+
+        /** The stackings over {@link #STACK_SECONDS}, each pair once (a retry replays the same script). */
+        List<Stack> over() {
+            Map<String, Stack> once = new java.util.LinkedHashMap<>();
+            for (Stack stack : stacks()) {
+                if (stack.seconds() > STACK_SECONDS) {
+                    once.putIfAbsent(stack.first() + "/" + stack.second() + "@" + Math.round(stack.from()), stack);
+                }
+            }
+            return List.copyOf(once.values());
+        }
+    }
+
+    /**
+     * Step FIX7: the level's script as the waves fly it, unharmed: the ship holds the lower centre without firing,
+     * invulnerable (an escort still fights), so every big hull flies its whole path; the stackings over {@link
+     * #STACK_SECONDS} until the level ends or {@code seconds} pass (the first attempt and any retry, each pair once).
+     */
+    static List<Stack> stacking(Content content, String key, Difficulty difficulty, Loadout loadout, double seconds) {
+        Sortie sortie = new Sortie(
+                SEED,
+                loadout,
+                SimSpecs.level(content, key, difficulty),
+                SimSpecs.rules(content, key, difficulty).withInvulnerableShip(),
+                loadout.plating().maxArmour());
+        Stacking stacking = new Stacking(content);
+        int steps = SimStep.ticks(seconds);
+        for (int step = 1; step <= steps && !sortie.complete(); step++) {
+            sortie.step(MovePlanner.steer(sortie.ship().x(), sortie.ship().y(), PlayField.WIDTH / 2, 80));
+            stacking.stepped(sortie, step);
+        }
+        return stacking.over();
+    }
+
     /**
      * M7 part G (step SW): a pursuit swarm's life on the attempt that completes the level (Level 20): the seconds a
      * pursuit flies, the mean number of its flock's members (units with a flock) on the screen over them, its lunges

@@ -97,7 +97,7 @@ class Level34LooksTest {
         assertEquals(
                 "CONTAINERS",
                 level.objectives().secondary().orElseThrow().label().orElseThrow());
-        assertEquals("3 / 6", MissionPanel.escapesCount(3, 6, 0), "CONTAINERS n / 6 (the objects of all six)");
+        assertEquals("4 / 5", MissionPanel.escapesCount(4, 6, 1), "CONTAINERS n / 5 at medium (the target, step FIX7)");
         assertFalse(level.pickups().stream().noneMatch(pickup -> pickup.story().isPresent()), "a story pickup");
         assertEquals(
                 "helix-core",

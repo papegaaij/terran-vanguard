@@ -336,9 +336,16 @@ final class MawLooks {
         return (float) (1 - GLOW_FAINTER * depth);
     }
 
-    /** The sunk head's (and sacs') share of its look as the lunge's shadow rises: from 1 down to 0 over the shadow. */
+    /**
+     * The sinking head's (and sacs') share of its look in the dive: from 1 down to 0 over the slide, gone until the
+     * lunge (step MAW7, the user 2026-10-30: it goes under with the coil, entirely; no shadow of it lingers).
+     */
     static float deepFade(CoilArena coil) {
-        return coil.diveState() == CoilArena.DiveState.SHADOW ? (float) (1 - coil.diveProgress()) : 1;
+        return switch (coil.diveState()) {
+            case SLIDE -> (float) (1 - coil.diveProgress());
+            case QUIET, SHADOW -> 0;
+            default -> 1;
+        };
     }
 
     /** The dive's darkness over the caldera (0–{@value #DIVE_DARK}): falling with the slide, lifting on the way back. */
@@ -525,7 +532,7 @@ final class MawLooks {
         float scale = subScale(depth);
         float shade = subShade(depth);
         float fade = subAlpha(depth);
-        // Under the water the head (and its sacs) goes deep as the lunge's shadow rises: it fades out.
+        // In the dive the head (and its sacs) sinks with the coil: it fades out over the slide.
         float deep = deepFade(coil);
         double x = piece.renderX(alpha);
         double y = piece.renderY(alpha);

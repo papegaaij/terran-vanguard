@@ -173,7 +173,7 @@ waves:
     from: sides
     edge: left
     warning: 3
-    paths: [[[-60, 110], [100, 140], [210, 250], [260, 400], [180, 520], [-80, 580]]]
+    paths: [[[-98, 200], [100, 200], [210, 250], [260, 400], [180, 520], [-80, 580]]]   # step FIX7: enters under the Hornets' hold row (was -60,110 and 100,140), its path as long to the crossing
     notes: "The pincer's left train (10 cars), warned 3 s ahead at the left edge; its engine drops an overdrive"
   - t: 35
     formation: snake

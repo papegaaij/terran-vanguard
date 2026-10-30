@@ -32,7 +32,7 @@ import vanguard.sim.Sortie;
  * catwalk lights (the inner catwalk lit with the inner ring, the outer with the middle ring, all out from the core's
  * opening), each ring's identical segments placed at their exact angle each frame from the top-lit 0–45° set by the
  * pivots' segment rule (quarter turns and a mirror, exact on the pixel grid; a locked ring tinted dark), the segments'
- * red running lights (a lit ring, not locked), the static shade and rim-light overlays (drawn 2x), the fire arc's red
+ * red running lights (a lit ring, not locked), the static shade and rim-light overlays (at the pivots' scale), the fire arc's red
  * band on each live ring's hull round the arc's sector, the batteries' mounts (dark before their ring lights, gold out of
  * the arc, red armed) under their turrets at 64 headings (the SAM rack's hatch open for its salvo; a dead battery's
  * burnt collar venting grey gas), the rim bays' doors (opening over a stream's tell) and the core (shut; its petals
@@ -58,8 +58,6 @@ final class SovereignLooks {
     static final int CORE_FRAMES = 12;
     /** The bays' frames: shut, opening (two), open. */
     static final int BAY_OPEN = 3;
-    /** The red lamps' and the overlays' scale: the rim and shade are drawn 2x. */
-    static final float OVERLAY_SCALE = 2;
     /** A locked ring's (and the dead station's) segments: RGB × this (the pivots' {@code locked_tint}). */
     static final float LOCKED_TINT = 0.62f;
     /** The inner ring's teeth flash in its step's tell: gold, at this opacity. */
@@ -214,6 +212,13 @@ final class SovereignLooks {
     private final AtlasRegion base;
     private final AtlasRegion rim;
     private final AtlasRegion shade;
+    /**
+     * The rim's and the shade's draw scale, from the pivots' {@code overlays} (step PIX7: 1, full size; they were half
+     * size drawn 2x, which doubled their dither to 2x2-pixel blocks over the station).
+     */
+    private final float rimScale;
+
+    private final float shadeScale;
     private final AtlasRegion lampRed;
     private final AtlasRegion lampWhite;
     private final AtlasRegion lampGold;
@@ -322,6 +327,8 @@ final class SovereignLooks {
         base = single(sprites, slug + "-base");
         rim = single(sprites, slug + "-rim");
         shade = single(sprites, slug + "-shade");
+        rimScale = overlayScale(pivots, "rim");
+        shadeScale = overlayScale(pivots, "shade");
         lampRed = single(sprites, slug + "-lamp-red");
         lampWhite = single(sprites, slug + "-lamp-white");
         lampGold = single(sprites, slug + "-lamp-gold");
@@ -395,6 +402,13 @@ final class SovereignLooks {
 
     private static Array<AtlasRegion> optional(Sprites sprites, String name) {
         return sprites != null && sprites.has(name) ? sprites.frames(name) : new Array<>(0);
+    }
+
+    /** An overlay's draw scale from the pivots' {@code overlays} entry; 1 when the pivots give none. */
+    static float overlayScale(JsonValue pivots, String overlay) {
+        JsonValue overlays = pivots.get("overlays");
+        JsonValue entry = overlays == null ? null : overlays.get(overlay);
+        return entry == null ? 1 : entry.getFloat("scale", 1);
     }
 
     private static AtlasRegion single(Sprites sprites, String name) {
@@ -680,11 +694,11 @@ final class SovereignLooks {
         }
         normal(batch);
         if (shade != null) {
-            drawScaled(batch, shade, cx, cy, OVERLAY_SCALE);
+            drawScaled(batch, shade, cx, cy, shadeScale);
         }
         additive(batch);
         if (rim != null) {
-            drawScaled(batch, rim, cx, cy, OVERLAY_SCALE);
+            drawScaled(batch, rim, cx, cy, rimScale);
         }
         drawArcs(batch, piece, ring, cx, cy, tick);
         normal(batch);
@@ -1469,7 +1483,7 @@ final class SovereignLooks {
             }
             batch.setColor(1, 1, 1, fade);
             if (shade != null) {
-                drawScaled(batch, shade, cx, cy, OVERLAY_SCALE);
+                drawScaled(batch, shade, cx, cy, shadeScale);
             }
             drawDeadBatteries(batch, rings, cx, cy, drift, tick);
             batch.setColor(Color.WHITE);

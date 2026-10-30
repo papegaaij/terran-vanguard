@@ -343,3 +343,20 @@ sparks off the armour. The GIF: Level 28's breakout over the night ice, the crui
 split ice and shedding it, Okafor's line, then the run (broadside tells and volleys, two bands at once, flak, point
 defence). Pending the user's review.
 
+
+# Step MAW7 — the dive, the head under entirely (2026-10-30)
+
+## abyssal-maw-dive-capture-r71-a
+
+Captures of the game, not generated art (step MAW7, 2026-10-30; the main agent decides whether they go in a round): the
+game built by `:desktop:installDist` from branch `m9-act-5` (the working tree after step MAW7's module checks: the head
+and its sacs out of reach from the dive's slide's middle to the lunge, faded out over the slide) on a private 960×540
+Xvfb display, `--bench 260 --settings <scratch>/settings.properties --level 28 --difficulty medium --invulnerable
+--loadout front=harpoon-torpedoes:4,rear=tail-gun:3,left=micro-missile-pod:3,right=micro-missile-pod:3,generator=3,shield=2,armor=3,utility=pressure-hull
+--special sonar-pulse:1 --escort bulwark` (the balance plan's Level 28 fit, the Harpoon its anti-sub weapon),
+`controls.auto-fire=true`, the ship unsteered in the middle (the dive at ≈ 170 s of the recording). The screen recorded
+with ffmpeg `x11grab` at 30 fps and the game's own mix with `ALSOFT_DRIVERS=wave` (the sound ≈ 0.5 s ahead of the
+recording, checked on the lunge), cut to 10 s from the dive's roar to the head racing up the column, cropped to the play
+field (480×540) and muxed (H.264 main, AAC); checked on an eight-frame sheet. The PNG: eight frames of the clip at 0.5,
+labelled with the clip's seconds. Scripts: step MAW7's `run.sh` (step BOSS70's, display :90) and `sheet_t.py`
+(scratch).
