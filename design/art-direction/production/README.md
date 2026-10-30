@@ -4,7 +4,7 @@ design: draft
 implementation: in-progress
 art: n/a
 depends-on: [.., ../../tech/roadmap, ../../tech/architecture, ../../audio/music, ../../audio/sfx]
-updated: 2026-10-26
+updated: 2026-10-30
 ---
 
 # Production art plan
@@ -62,7 +62,8 @@ written it. Pivot files (`assets/pivots/<sprite>.json`) hold per frame the point
 attach to. **Budget check**: `packAtlases` checks the packed pages against the table below
 (`AtlasBudget`) and fails the build when a budget is exceeded; the `sprites` atlas counts as the
 shared pages, a level's pages are its **unit atlas** (`level-NN`) plus the backdrop pages holding
-its regions, and one sprite's frames must fit a page. `packAtlases` prints every atlas's pages and
+its regions (its backdrop atlas `backdrop-level-NN`, also loaded only while the level runs), and one
+sprite's frames must fit a page. `packAtlases` prints every atlas's pages and
 fill. **Per-level unit atlases**: a sprite only one level uses goes in that level's unit atlas,
 which the game loads when the level starts and disposes when it ends; the shared pages keep the
 ship, weapons, shots, pickups, effects, the HUD, the UI kit and everything the hangar shows

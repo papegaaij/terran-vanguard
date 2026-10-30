@@ -1,5 +1,6 @@
 package vanguard.game.screen;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.math.Matrix4;
@@ -242,8 +243,13 @@ public final class LevelScreen implements GameScreen {
         Difficulty difficulty = campaign.difficulty();
         level = services.content.level(levelKey);
         levelNumber = Content.levelNumber(levelKey);
-        // The level's own sprites (its unit atlas) until the screen closes.
+        long loadStart = System.nanoTime();
+        // The level's own sprites (its unit atlas) and backdrop images until the screen closes.
         services.sprites.enterLevel(levelNumber);
+        long atlasesLoaded = System.nanoTime();
+        // Every sound effect ready before the level's first tick (startup step: they decode in the background).
+        services.sfx.finish();
+        long soundsReady = System.nanoTime();
         Rules rules = SimSpecs.rules(services.content, levelKey, difficulty);
         campaign.launch();
         flight = Flight.of(services.content, services.catalogue, campaign);
@@ -475,6 +481,15 @@ public final class LevelScreen implements GameScreen {
         music.stemTimes(level.music().stemTimeList(), stem -> services.files.internal(Tracks.stemPath(theme, stem)));
         // M8 part H: the run under the theme's motif alone after the act boss's kill (Level 28).
         music.motifAfterBoss(level.music().motifAfterBoss().orElse(null));
+        Gdx.app.log(
+                "level",
+                String.format(
+                        Locale.ROOT,
+                        "Level %02d loaded in %.2f s (atlases %.2f, sound effects %.2f)",
+                        levelNumber,
+                        (System.nanoTime() - loadStart) / 1e9,
+                        (atlasesLoaded - loadStart) / 1e9,
+                        (soundsReady - atlasesLoaded) / 1e9));
     }
 
     /**

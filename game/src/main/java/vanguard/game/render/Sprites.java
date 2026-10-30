@@ -26,7 +26,8 @@ import java.util.Map;
  * <p>The shared sprite pages ({@code sprites}) stay loaded; a sprite only one level uses is in that
  * level's unit atlas ({@code level-NN}, see the pipeline's {@code SpriteUse}), which is loaded while
  * the level runs ({@link #enterLevel}, {@link #leaveLevel}). The lookups by name search the shared
- * pages, then the loaded unit atlases.
+ * pages, then the loaded unit atlases. The backdrop images are loaded per level the same way, from their folder's
+ * own atlas ({@code backdrop-level-NN}, see {@link BackdropAtlases}), not before the title screen.
  */
 public final class Sprites implements Disposable {
     private final Files files;
@@ -36,7 +37,7 @@ public final class Sprites implements Disposable {
     /** The level whose unit atlas was entered last; its regions are found first. */
     private int latest = -1;
 
-    private final TextureAtlas backdrop;
+    private final BackdropAtlases<TextureAtlas> backdrops;
     private final Texture pixelTexture;
 
     /** Hard left .. hard right. */
@@ -80,7 +81,12 @@ public final class Sprites implements Disposable {
     public Sprites(Files files) {
         this.files = files;
         sprites = new TextureAtlas(files.internal("atlas/sprites.atlas"));
-        backdrop = new TextureAtlas(files.internal("atlas/backdrop.atlas"));
+        backdrops = new BackdropAtlases<>(
+                folder -> {
+                    var file = files.internal("atlas/backdrop-" + folder + ".atlas");
+                    return file.exists() ? new TextureAtlas(file) : null;
+                },
+                TextureAtlas::dispose);
         ship = frames(sprites, "ship");
         orb = frames(sprites, "orb");
         salvageSmall = frames(sprites, "pickup-salvage-small");
@@ -111,11 +117,12 @@ public final class Sprites implements Disposable {
     }
 
     /**
-     * Loads a level's unit atlas, if it has one, until {@link #leaveLevel} with the same number;
-     * a level entered twice (a retry starting before the last attempt's screen closes) keeps it.
+     * Loads a level's unit atlas and backdrop atlas, those it has, until {@link #leaveLevel} with the same number;
+     * a level entered twice (a retry starting before the last attempt's screen closes) keeps them.
      */
     public void enterLevel(int number) {
         latest = number;
+        backdrops.enter(number);
         Units entered = units.get(number);
         if (entered != null) {
             entered.users++;
@@ -125,8 +132,9 @@ public final class Sprites implements Disposable {
         units.put(number, new Units(file.exists() ? new TextureAtlas(file) : null));
     }
 
-    /** Disposes a level's unit atlas once no screen of that level uses it. */
+    /** Disposes a level's unit and backdrop atlases once no screen of that level uses them. */
     public void leaveLevel(int number) {
+        backdrops.leave(number);
         Units left = units.get(number);
         if (left != null && --left.users == 0) {
             units.remove(number);
@@ -149,9 +157,13 @@ public final class Sprites implements Disposable {
         return frames(atlasOf(name), name);
     }
 
-    /** Whether the backdrop pages hold an image of that name ({@code level-NN/<id>}). */
+    /**
+     * Whether the backdrop atlases hold an image of that name ({@code level-NN/<id>}); another level's folder is loaded
+     * for the entered level.
+     */
     public boolean hasBackdrop(String name) {
-        return backdrop.findRegion(name) != null;
+        TextureAtlas atlas = backdrops.atlas(name);
+        return atlas != null && atlas.findRegion(name) != null;
     }
 
     /** Whether the sprite pages or a loaded unit atlas hold a region of that name. */
@@ -186,7 +198,7 @@ public final class Sprites implements Disposable {
 
     /** A backdrop image: its {@code count} frames or headings, or the single image. */
     public Array<AtlasRegion> backdrop(String name, int count) {
-        Array<AtlasRegion> images = frames(backdrop, name);
+        Array<AtlasRegion> images = backdrop(name);
         if (images.size != count) {
             throw new IllegalStateException(
                     "'" + name + "' has " + images.size + " images in the backdrop atlas, the level expects " + count);
@@ -196,7 +208,11 @@ public final class Sprites implements Disposable {
 
     /** M7 part C: a backdrop image's frames or slices in their index order ({@code _0}, ...), or the single image. */
     public Array<AtlasRegion> backdrop(String name) {
-        return frames(backdrop, name);
+        TextureAtlas atlas = backdrops.atlas(name);
+        if (atlas == null) {
+            throw new IllegalStateException("no backdrop atlas holds '" + name + "'");
+        }
+        return frames(atlas, name);
     }
 
     private static Array<AtlasRegion> frames(TextureAtlas atlas, String name) {
@@ -245,7 +261,7 @@ public final class Sprites implements Disposable {
         }
         units.clear();
         sprites.dispose();
-        backdrop.dispose();
+        backdrops.dispose();
         pixelTexture.dispose();
     }
 }

@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: n/a
 depends-on: [.., ../../player, ../../enemies, ../../campaign]
-updated: 2026-10-25
+updated: 2026-10-30
 ---
 
 # Architecture
@@ -196,7 +196,23 @@ One part per family; this table names the part that holds each data file's schem
   buffer and viewport (the `PixelScreen`'s), as `FarsideLooks`' light map does. When the driver
   refuses the frame buffer it falls back to a per-sprite tint shader (no blur, no sway).
 - Audio: the streaming music player with intro and loop points, and the SFX bank with 64
-  sources. OpenAL Soft sums every source (the effects and the music stream's `AudioDevice`) into
+  sources. The bank decodes the effects (about 17 minutes of OGG) on a background thread to 16-bit
+  PCM WAV files in memory (`OggPcm`, the stb_vorbis decoder libGDX uses), the menu sounds first; the
+  render thread makes each OpenAL sound from its PCM a few a frame (`SfxBank.update`), or at once when
+  it is played first (decoding it itself if the thread has not got to it, so nothing is dropped), and
+  `LevelScreen` calls `finish` so every effect is ready before a level's first tick. Every OpenAL call
+  stays on the render thread.
+- Startup (step startup, 2026-10-30): the launcher's `TerranVanguard` starts the content loading on a
+  thread of its own before the window opens (`GameServices.Data`: `ContentLoader.parseClasspath`, the
+  files parsed side by side, then the campaign rules and catalogue); `create()` loads the textures and
+  sounds meanwhile and waits for what is left. The validator's checks (`Parsed.check`, longer than the
+  parsing) run on that thread after it while the title shows; their problems are thrown on the render
+  thread once done, as the start did before. One `startup` log line gives the time to the first title
+  frame per part of `create()`, a second when the sound effects are ready, and a `level` line each
+  level start's load time. Measured on Xvfb/llvmpipe, three runs: 7.4–8.0 s to the first title frame
+  before (content 2.3–3.0 s, backdrop atlas 1.9–2.1 s, sound effects 1.6–1.8 s, the JVM and window
+  1.2 s), 1.7–1.9 s after (the JVM and window 1.2 s, the rest 0.5–0.6 s); the effects are all ready 3.4–3.8 s
+  after the launch. OpenAL Soft sums every source (the effects and the music stream's `AudioDevice`) into
   the device's float mix; it has no limiter on float output by default, so the
   [master limiter](../../audio/README.md#master-limiter) is OpenAL Soft's output limiter
   (`ALC_SOFT_output_limiter`): `desktop`'s `LimitedAudio` (libGDX's `OpenALLwjgl3Audio`, returned by
@@ -237,6 +253,13 @@ One part per family; this table names the part that holds each data file's schem
   levels' data and fails the build on a sprite nothing uses). `Sprites` keeps the shared atlas
   loaded; `LevelScreen` loads its level's unit atlas (`enterLevel`) and disposes it when it closes
   (`leaveLevel`, counted so a retry's new screen keeps it); lookups by name search both.
+  The backdrops are packed the same way, one atlas `backdrop-level-NN` per folder of `assets/backdrop/`
+  (step startup, 2026-10-30: the single `backdrop` atlas of every level, 66 pages and 834 MiB of
+  textures, was loaded before the title screen). `enterLevel` loads the level's own backdrop atlas
+  with its unit atlas and `leaveLevel` frees it (`BackdropAtlases`); a lookup of another folder's image
+  (`images: level-NN`, a level borrowing another level's backdrop) loads that folder's atlas for the
+  entered level and frees it with it. A level's backdrop is 16–40 MiB; loading it adds 0.07–0.25 s
+  to the level start (Levels 01, 19, 35), before its first frame.
 
 ### Testing
 
@@ -292,6 +315,11 @@ compiles, and the allocation tests then see allocations that escape analysis oth
 
 Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-archive.md).
 
+- 2026-10-30 (step startup): the time to the title screen cut from about 8 s to 1.7–1.9 s: backdrop atlases per
+  level (rather than folded into the unit atlases `level-NN`, which would change their packing settings and the
+  per-level page budget's split), sound effects decoded in the background with the render thread as the fallback
+  (rather than decoded lazily on first play, which would stall a level's first seconds), the content parsed in
+  parallel on a thread of its own from the launch on and its validator checks run after the title shows.
 - 2026-10-25 (step m8split, user-approved token savings): the Data file schemas split into six child parts, one per
   family (player and economy, enemies and allies, levels and acts, Act 4, backdrops, voice), moved unchanged; this
   section keeps the shared conventions and an index of every schema. The data files' schema comments and the parts'

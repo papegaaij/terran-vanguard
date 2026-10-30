@@ -27,7 +27,8 @@ import javax.imageio.ImageIO;
  * pixels: the shared {@code sprites} atlas with the game-wide sprites, one unit atlas {@code
  * level-NN} per level with every sprite that level uses (a unit of several levels is copied into each
  * of their atlases; {@link SpriteUse} decides from the levels' data, written out by {@link
- * SpriteClaims}) and {@code backdrop}. Subfolders become region names such as {@code level-01/earth}
+ * SpriteClaims}) and one backdrop atlas {@code backdrop-level-NN} per backdrop subfolder, which the game also loads
+ * only while that level runs. Subfolders become region names such as {@code level-01/earth}
  * or {@code hud/well} (a {@code .9.png} is a nine-patch with its splits); the sprites' subfolders (the
  * HUD, the UI kit, the hangar's icons and intel portraits, the speakers' portraits) are shared and
  * share the sprite pages, while each backdrop subfolder (one per level) gets pages of its own. The
@@ -35,10 +36,10 @@ import javax.imageio.ImageIO;
  * exceeded budget fails the build.
  *
  * <p>Every atlas, and every backdrop subfolder, is packed on its own thread into a folder of its own;
- * the backdrop's parts are then joined in the order of their folder names, their pages numbered on
- * ({@code backdrop.png}, {@code backdrop2.png}, ...), as one packer run over the whole folder would
- * write them. The output is the same for the same frames, whatever the thread timing or the order in
- * which the file system lists the folders.
+ * each backdrop part is then written out as {@code backdrop-level-NN.atlas} with its pages renamed
+ * {@code backdrop-level-NN.png}, {@code backdrop-level-NN2.png}, ... (startup step: one backdrop atlas for every
+ * level made the game load all of them before the title screen). The output is the same for the same frames,
+ * whatever the thread timing or the order in which the file system lists the folders.
  *
  * <p>M7 part F: the frames of a few large sprites the game only ever draws centred ({@link #CENTRED_CROP}) are cropped
  * on their way into the atlas, each frame by the same margin on both sides down to its visible pixels, so its centre
@@ -104,7 +105,7 @@ public final class AtlasPacker {
                 }
                 Path input = work.resolve("backdrop-input").resolve(level);
                 copyTree(dir, input.resolve(level));
-                backdropParts.add(new Job(input, parts.resolve(BACKDROP + "-" + level), BACKDROP, false, size(input)));
+                backdropParts.add(new Job(input, parts.resolve(backdropAtlas(level)), BACKDROP, false, size(input)));
             }
         }
         List<Job> jobs = new ArrayList<>(atlases);
@@ -113,7 +114,9 @@ public final class AtlasPacker {
         for (Job atlas : atlases) {
             moveAll(atlas.output(), output);
         }
-        joinBackdrop(backdropParts, output);
+        for (Job part : backdropParts) {
+            writeBackdrop(part, output);
+        }
         try (Stream<Path> files = Files.list(output)) {
             for (Path atlas : files.filter(file -> file.toString().endsWith(".atlas"))
                     .sorted()
@@ -232,43 +235,46 @@ public final class AtlasPacker {
         return cropped;
     }
 
+    /** The atlas file name of a backdrop subfolder's images: {@code backdrop-level-NN}, without the extension. */
+    static String backdropAtlas(String folder) {
+        return BACKDROP + "-" + folder;
+    }
+
     /**
-     * Joins the backdrop parts into one {@code backdrop} atlas in their order: their pages are renamed
-     * {@code backdrop.png}, {@code backdrop2.png}, ... and their page blocks appended to {@code
-     * backdrop.atlas}.
+     * Writes a backdrop part as its folder's own atlas, {@code backdrop-level-NN.atlas}: its pages renamed {@code
+     * backdrop-level-NN.png}, {@code backdrop-level-NN2.png}, ...; nothing for a folder without images.
      */
-    private static void joinBackdrop(List<Job> parts, Path output) throws IOException {
+    private static void writeBackdrop(Job part, Path output) throws IOException {
+        Path partAtlas = part.output().resolve(BACKDROP + ".atlas");
+        if (!Files.exists(partAtlas)) {
+            return;
+        }
+        String name = part.output().getFileName().toString();
         StringBuilder atlas = new StringBuilder();
         int pages = 0;
-        for (Job part : parts) {
-            Path partAtlas = part.output().resolve(BACKDROP + ".atlas");
-            if (!Files.exists(partAtlas)) {
-                continue;
+        String text = Files.readString(partAtlas);
+        boolean pageStart = true;
+        int at = 0;
+        while (at < text.length()) {
+            int end = text.indexOf('\n', at);
+            end = end < 0 ? text.length() : end + 1;
+            String line = text.substring(at, end);
+            String content = line.strip();
+            if (content.isEmpty()) {
+                pageStart = true;
+                atlas.append(line);
+            } else if (pageStart) {
+                pageStart = false;
+                pages++;
+                String page = name + (pages == 1 ? "" : String.valueOf(pages)) + ".png";
+                Files.move(part.output().resolve(content), output.resolve(page));
+                atlas.append(page).append(line, content.length(), line.length());
+            } else {
+                atlas.append(line);
             }
-            String text = Files.readString(partAtlas);
-            boolean pageStart = true;
-            int at = 0;
-            while (at < text.length()) {
-                int end = text.indexOf('\n', at);
-                end = end < 0 ? text.length() : end + 1;
-                String line = text.substring(at, end);
-                String content = line.strip();
-                if (content.isEmpty()) {
-                    pageStart = true;
-                    atlas.append(line);
-                } else if (pageStart) {
-                    pageStart = false;
-                    pages++;
-                    String page = BACKDROP + (pages == 1 ? "" : String.valueOf(pages)) + ".png";
-                    Files.move(part.output().resolve(content), output.resolve(page));
-                    atlas.append(page).append(line, content.length(), line.length());
-                } else {
-                    atlas.append(line);
-                }
-                at = end;
-            }
+            at = end;
         }
-        Files.writeString(output.resolve(BACKDROP + ".atlas"), atlas);
+        Files.writeString(output.resolve(name + ".atlas"), atlas);
     }
 
     /**

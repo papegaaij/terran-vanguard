@@ -17,7 +17,8 @@ import java.util.stream.Stream;
  * The atlas budgets of the production art plan (design/art-direction/production, Budgets), checked
  * on the packed atlases at RGBA8: the {@code sprites} atlas is always loaded and counts as the
  * shared pages; a level's pages are its unit atlas ({@code level-NN.atlas}, loaded while the level
- * runs) and the {@code backdrop} pages that hold one of its regions ({@code level-NN/...}); one
+ * runs) and the backdrop pages that hold one of its regions ({@code level-NN/...}, in the backdrop atlases {@code
+ * backdrop-level-NN.atlas}, each loaded while its level runs); one
  * sprite (all frames of one region name in one atlas; a unit several levels use is in each of
  * their atlases) must fit a page.
  */
@@ -33,6 +34,8 @@ public final class AtlasBudget {
     static final Map<String, Integer> LEVEL_PAGES_EXCEPTIONS = Map.of("level-28", 7);
     /** A level's unit atlas: {@code level-NN.atlas}. */
     private static final Pattern UNITS = Pattern.compile("(level-\\d{2})\\.atlas");
+    /** A backdrop folder's atlas: {@code backdrop-level-NN.atlas}. */
+    private static final Pattern BACKDROPS = Pattern.compile("backdrop-(level-\\d{2})\\.atlas");
 
     /**
      * A page of a packed atlas: its size, the names of the regions on it, with their bytes, and the
@@ -85,7 +88,7 @@ public final class AtlasBudget {
         atlases.put("sprites (shared)", read(atlasDir.resolve("sprites.atlas")));
         Map<String, List<Page>> units = units(atlasDir);
         units.forEach((level, pages) -> atlases.put(level + " units", pages));
-        atlases.put("backdrop", read(atlasDir.resolve("backdrop.atlas")));
+        backdrops(atlasDir).forEach((level, pages) -> atlases.put(level + " backdrop", pages));
         atlases.forEach((name, pages) -> lines.add(name + ": " + describe(pages)));
         levels(atlasDir, units)
                 .forEach((level, pages) -> lines.add("level " + level + " (units + backdrop): " + pages.size() + "/"
@@ -109,16 +112,26 @@ public final class AtlasBudget {
 
     /** The unit atlases by level ({@code level-NN}). */
     private static Map<String, List<Page>> units(Path atlasDir) throws IOException {
-        Map<String, List<Page>> units = new TreeMap<>();
+        return atlases(atlasDir, UNITS);
+    }
+
+    /** The backdrop atlases by folder ({@code level-NN}). */
+    private static Map<String, List<Page>> backdrops(Path atlasDir) throws IOException {
+        return atlases(atlasDir, BACKDROPS);
+    }
+
+    /** The atlases whose file name matches {@code pattern}, by its first group. */
+    private static Map<String, List<Page>> atlases(Path atlasDir, Pattern pattern) throws IOException {
+        Map<String, List<Page>> atlases = new TreeMap<>();
         try (Stream<Path> files = Files.list(atlasDir)) {
             for (Path file : files.toList()) {
-                Matcher unit = UNITS.matcher(file.getFileName().toString());
-                if (unit.matches()) {
-                    units.put(unit.group(1), read(file));
+                Matcher atlas = pattern.matcher(file.getFileName().toString());
+                if (atlas.matches()) {
+                    atlases.put(atlas.group(1), read(file));
                 }
             }
         }
-        return units;
+        return atlases;
     }
 
     /** A level's pages: its unit atlas and the backdrop pages that hold one of its regions. */
@@ -126,9 +139,11 @@ public final class AtlasBudget {
         Map<String, List<Page>> levels = new TreeMap<>();
         units.forEach((level, pages) ->
                 levels.computeIfAbsent(level, key -> new ArrayList<>()).addAll(pages));
-        for (Page page : read(atlasDir.resolve("backdrop.atlas"))) {
-            for (String level : levelsOn(page)) {
-                levels.computeIfAbsent(level, key -> new ArrayList<>()).add(page);
+        for (List<Page> backdrop : backdrops(atlasDir).values()) {
+            for (Page page : backdrop) {
+                for (String level : levelsOn(page)) {
+                    levels.computeIfAbsent(level, key -> new ArrayList<>()).add(page);
+                }
             }
         }
         return levels;

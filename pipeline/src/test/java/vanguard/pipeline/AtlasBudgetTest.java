@@ -19,9 +19,9 @@ class AtlasBudgetTest {
     void level01AsMeasuredInM2FitsItsBudget() throws IOException {
         write("sprites.atlas", page("sprites.png", 2048, 256, region("ship", 48, 48), region("ship", 48, 48)));
         write(
-                "backdrop.atlas",
-                page("backdrop.png", 2048, 2048, region("level-01/earth", 480, 1120))
-                        + page("backdrop2.png", 2048, 1024, region("level-01/moon", 96, 96)));
+                "backdrop-level-01.atlas",
+                page("backdrop-level-01.png", 2048, 2048, region("level-01/earth", 480, 1120))
+                        + page("backdrop-level-012.png", 2048, 1024, region("level-01/moon", 96, 96)));
 
         assertEquals(List.of(), AtlasBudget.violations(dir));
         AtlasBudget.enforce(dir);
@@ -45,7 +45,7 @@ class AtlasBudgetTest {
                 page("sprites.png", 2048, 2048, region("a", 8, 8))
                         + page("sprites2.png", 2048, 2048, region("b", 8, 8))
                         + page("sprites3.png", 64, 64, region("c", 8, 8)));
-        write("backdrop.atlas", page("backdrop.png", 2048, 2048, region("level-01/earth", 8, 8)));
+        write("backdrop-level-01.atlas", page("backdrop-level-01.png", 2048, 2048, region("level-01/earth", 8, 8)));
 
         List<String> violations = AtlasBudget.violations(dir);
 
@@ -59,10 +59,10 @@ class AtlasBudgetTest {
         write("sprites.atlas", page("sprites.png", 64, 64, region("a", 8, 8)));
         StringBuilder backdrop = new StringBuilder();
         for (int i = 1; i <= 7; i++) {
-            backdrop.append(page("backdrop" + i + ".png", 2048, 2048, region("level-02/piece" + i, 8, 8)));
+            backdrop.append(page("backdrop-level-02" + i + ".png", 2048, 2048, region("level-02/piece" + i, 8, 8)));
         }
-        backdrop.append(page("backdrop8.png", 2048, 2048, region("level-01/earth", 8, 8)));
-        write("backdrop.atlas", backdrop.toString());
+        write("backdrop-level-02.atlas", backdrop.toString());
+        write("backdrop-level-01.atlas", page("backdrop-level-01.png", 2048, 2048, region("level-01/earth", 8, 8)));
 
         List<String> violations = AtlasBudget.violations(dir);
 
@@ -80,9 +80,9 @@ class AtlasBudgetTest {
         write("level-03.atlas", units.toString());
         StringBuilder backdrop = new StringBuilder();
         for (int i = 1; i <= 4; i++) {
-            backdrop.append(page("backdrop" + i + ".png", 2048, 2048, region("level-03/piece" + i, 8, 8)));
+            backdrop.append(page("backdrop-level-03" + i + ".png", 2048, 2048, region("level-03/piece" + i, 8, 8)));
         }
-        write("backdrop.atlas", backdrop.toString());
+        write("backdrop-level-03.atlas", backdrop.toString());
 
         List<String> violations = AtlasBudget.violations(dir);
 
@@ -98,7 +98,7 @@ class AtlasBudgetTest {
         write("sprites.atlas", page("sprites.png", 64, 64, region("ship", 8, 8)));
         String halo = region("halo", 1024, 1024).repeat(5);
         write("level-02.atlas", page("level-02.png", 2048, 2048, halo));
-        write("backdrop.atlas", page("backdrop.png", 64, 64, region("level-02/earth", 8, 8)));
+        write("backdrop-level-02.atlas", page("backdrop-level-02.png", 64, 64, region("level-02/earth", 8, 8)));
 
         assertEquals(
                 List.of("sprite 'halo': 20 MiB of frames, more than one page (16 MiB)"), AtlasBudget.violations(dir));
@@ -111,7 +111,7 @@ class AtlasBudgetTest {
         String creeper = region("creeper", 1024, 1024).repeat(3);
         write("level-08.atlas", page("level-08.png", 2048, 2048, creeper));
         write("level-09.atlas", page("level-09.png", 2048, 2048, creeper));
-        write("backdrop.atlas", page("backdrop.png", 64, 64, region("level-08/city", 8, 8)));
+        write("backdrop-level-08.atlas", page("backdrop-level-08.png", 64, 64, region("level-08/city", 8, 8)));
 
         assertEquals(List.of(), AtlasBudget.violations(dir));
     }
@@ -120,7 +120,7 @@ class AtlasBudgetTest {
     void oneSpriteLargerThanAPageFails() throws IOException {
         String halo = region("halo", 1024, 1024).repeat(5);
         write("sprites.atlas", page("sprites.png", 2048, 2048, halo) + page("sprites2.png", 2048, 1024, halo));
-        write("backdrop.atlas", page("backdrop.png", 64, 64, region("level-01/earth", 8, 8)));
+        write("backdrop-level-01.atlas", page("backdrop-level-01.png", 64, 64, region("level-01/earth", 8, 8)));
 
         List<String> violations = AtlasBudget.violations(dir);
 

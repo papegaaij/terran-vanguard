@@ -2,6 +2,7 @@ package vanguard.pipeline;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.awt.image.BufferedImage;
@@ -76,7 +77,7 @@ class AtlasPackerTest {
     }
 
     @Test
-    void packsTheAtlasesAndJoinsTheBackdropPartsInFolderOrder() throws IOException, InterruptedException {
+    void packsTheAtlasesAndOneBackdropAtlasPerLevel() throws IOException, InterruptedException {
         Path sprites = dir.resolve("sprites");
         Path backdrop = dir.resolve("backdrop");
         image(sprites.resolve("ship_0.png"), 0xff00ff00);
@@ -93,9 +94,10 @@ class AtlasPackerTest {
 
         assertEquals(
                 List.of(
-                        "backdrop.atlas",
-                        "backdrop.png",
-                        "backdrop2.png",
+                        "backdrop-level-01.atlas",
+                        "backdrop-level-01.png",
+                        "backdrop-level-02.atlas",
+                        "backdrop-level-02.png",
                         "level-01.atlas",
                         "level-01.png",
                         "level-02.atlas",
@@ -104,17 +106,19 @@ class AtlasPackerTest {
                         "sprites.png"),
                 list(output));
         assertTrue(Files.notExists(dir.resolve("build/atlases-work")));
-        String joined = Files.readString(output.resolve("backdrop.atlas"));
-        assertTrue(joined.indexOf("backdrop.png") < joined.indexOf("level-01/earth"), joined);
-        assertTrue(joined.indexOf("level-01/earth") < joined.indexOf("backdrop2.png"), joined);
-        assertTrue(joined.indexOf("backdrop2.png") < joined.indexOf("level-02/ice"), joined);
+        String first = Files.readString(output.resolve("backdrop-level-01.atlas"));
+        assertTrue(first.indexOf("backdrop-level-01.png") < first.indexOf("level-01/earth"), first);
+        assertFalse(first.contains("level-02/ice"), first);
+        String second = Files.readString(output.resolve("backdrop-level-02.atlas"));
+        assertTrue(second.indexOf("backdrop-level-02.png") < second.indexOf("level-02/ice"), second);
+        assertFalse(second.contains("level-01/earth"), second);
         String shared = Files.readString(output.resolve("sprites.atlas"));
         assertTrue(shared.contains("hud/well"), shared);
         assertTrue(shared.indexOf("index: 0") < shared.indexOf("index: 1"), shared);
 
-        byte[] first = Files.readAllBytes(output.resolve("backdrop.atlas"));
+        byte[] packed = Files.readAllBytes(output.resolve("backdrop-level-02.atlas"));
         AtlasPacker.main(new String[] {sprites.toString(), backdrop.toString(), claims.toString(), output.toString()});
-        assertArrayEquals(first, Files.readAllBytes(output.resolve("backdrop.atlas")));
+        assertArrayEquals(packed, Files.readAllBytes(output.resolve("backdrop-level-02.atlas")));
     }
 
     /**

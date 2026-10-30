@@ -5,6 +5,8 @@ import com.badlogic.gdx.Files;
 import com.badlogic.gdx.utils.Disposable;
 import java.io.IOException;
 import java.time.Instant;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import vanguard.content.Content;
@@ -106,7 +108,9 @@ public final class GameServices implements Disposable {
             java.util.OptionalDouble underwaterFrom,
             SaveSlots saves,
             ScoreFile scores,
-            String version) {
+            String version,
+            Future<Data> data,
+            StartupTimes times) {
         this.files = files;
         this.audio = audio;
         this.display = display;
@@ -121,21 +125,64 @@ public final class GameServices implements Disposable {
         pointer = new Pointer();
         input = new ActionInput(settings.controls().bindings());
         menu = new MenuInput(input, pointer);
-        content = ContentLoader.fromClasspath();
-        campaignRules = CampaignRules.of(content);
-        catalogue = Catalogue.of(content);
         this.saves = saves;
         this.scores = scores;
         this.version = version;
+        times.mark("input");
         sprites = new Sprites(files);
+        times.mark("sprites");
         mixer = new Mixer(settings.audio());
         sfx = new SfxBank(audio, files, mixer);
-        voices = new Voices(audio, files, mixer, content);
+        times.mark("sfx");
         fonts = new Fonts(files);
         glass = new Glass(fonts, sprites);
+        times.mark("fonts");
         titleScene = new TitleScene(files);
+        times.mark("title scene");
         flash = new FlashShader();
         transmissionStatic = new TransmissionStatic();
+        times.mark("shaders");
+        // The content loads on its own thread from the launch on (startup step); this waits for what is left of it.
+        Data loaded = join(data);
+        content = loaded.content();
+        campaignRules = loaded.campaignRules();
+        catalogue = loaded.catalogue();
+        times.mark("content wait");
+        voices = new Voices(audio, files, mixer, content);
+        times.mark("voices");
+    }
+
+    /**
+     * The game's content (the design data, parsed) with the campaign's rules and the shop's catalogue: plain Java, so
+     * it loads on a background thread while the window opens and the textures and sounds load; the validator's checks
+     * run on that thread after it ({@link ContentLoader.Parsed#check}), while the title screen shows.
+     */
+    record Data(ContentLoader.Parsed parsed, CampaignRules campaignRules, Catalogue catalogue) {
+        /** Parses the data files on the classpath. */
+        static Data load() {
+            ContentLoader.Parsed parsed = ContentLoader.parseClasspath();
+            Content content = parsed.content();
+            return new Data(parsed, CampaignRules.of(content), Catalogue.of(content));
+        }
+
+        Content content() {
+            return parsed.content();
+        }
+    }
+
+    /** A background task's result; its failure (a content problem) is thrown here as it was thrown there. */
+    static <T> T join(Future<T> data) {
+        try {
+            return data.get();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new IllegalStateException("interrupted while loading the content", e);
+        } catch (ExecutionException e) {
+            if (e.getCause() instanceof RuntimeException problem) {
+                throw problem;
+            }
+            throw new IllegalStateException("could not load the content", e.getCause());
+        }
     }
 
     public Settings settings() {

@@ -3,11 +3,15 @@ package vanguard.game.audio;
 import com.badlogic.gdx.Audio;
 import com.badlogic.gdx.Files;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.backends.lwjgl3.audio.OpenALLwjgl3Audio;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Disposable;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.EnumMap;
-import java.util.Map;
+import java.util.Comparator;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.FutureTask;
 import java.util.function.LongSupplier;
 
 /**
@@ -19,6 +23,13 @@ import java.util.function.LongSupplier;
  *
  * <p>Play only from the render thread: libGDX's OpenAL source pool, which the music streamer
  * shares, is not thread-safe (spike gate 5).
+ *
+ * <p>Startup step: the effects are no longer decoded before the title screen (387 of them, about 1.7 s). With OpenAL
+ * a background thread decodes them to PCM ({@link OggPcm}), the menu sounds first; the render thread makes each sound
+ * from its PCM in {@link #update} (a few a frame) or at once when it is played first, decoding it itself if the
+ * background thread has not got to it, so no effect is ever dropped or late by more than its own decoding. A level
+ * start calls {@link #finish}: every effect is ready before the level's first tick. Every OpenAL call stays on the
+ * render thread. Without OpenAL (a test's mock audio) every effect is loaded in the constructor, as before.
  */
 public final class SfxBank implements Disposable, Mixer.Listener {
     /** A file's length when it cannot be read (a test's mock files): long enough to count as playing. */
@@ -26,7 +37,21 @@ public final class SfxBank implements Disposable, Mixer.Listener {
 
     private static final long NANOS_PER_SECOND = 1_000_000_000L;
 
-    private final Map<Sfx, Sound> sounds = new EnumMap<>(Sfx.class);
+    /** How long {@link #update} may spend making sounds in a frame. */
+    private static final long UPDATE_NANOS = 2_000_000L;
+
+    /** Each effect's sound once made (render thread only); null until then. */
+    private final Sound[] sounds = new Sound[Sfx.values().length];
+    /** Each effect's decoding: its PCM as a WAV file (null to load the file itself) and its length. */
+    private final List<FutureTask<Clip>> clips = new ArrayList<>();
+    /** How many effects have their sound, so {@link #update} stops looking once all have. */
+    private int made;
+    /** The background thread decoding the effects; null when they were loaded in the constructor. */
+    private final Thread decoder;
+
+    private volatile boolean closed;
+    private final Audio audio;
+    private final Files files;
     /** Each effect's length at its recorded pitch. */
     private final long[] lengths = new long[Sfx.values().length];
     /** Each running loop's instance. */
@@ -39,22 +64,130 @@ public final class SfxBank implements Disposable, Mixer.Listener {
     private final VoiceLimit voices;
 
     public SfxBank(Audio audio, Files files, Mixer mixer) {
-        this(audio, files, mixer, System::nanoTime);
+        this(audio, files, mixer, System::nanoTime, audio instanceof OpenALLwjgl3Audio);
     }
 
     /** @param clock the time in nanoseconds, for the voices' ends */
     SfxBank(Audio audio, Files files, Mixer mixer, LongSupplier clock) {
+        this(audio, files, mixer, clock, false);
+    }
+
+    /**
+     * @param clock the time in nanoseconds, for the voices' ends
+     * @param background decode the effects on a background thread rather than in the constructor
+     */
+    SfxBank(Audio audio, Files files, Mixer mixer, LongSupplier clock, boolean background) {
+        this.audio = audio;
+        this.files = files;
         this.mixer = mixer;
         this.clock = clock;
-        voices = new VoiceLimit(
-                VoiceLimit.MAX_VOICES, (sfx, id) -> sounds.get(sfx).stop(id));
+        voices = new VoiceLimit(VoiceLimit.MAX_VOICES, (sfx, id) -> sound(sfx).stop(id));
         Arrays.fill(loopVolumes, -1);
         mixer.listen(this);
+        boolean pcm = audio instanceof OpenALLwjgl3Audio;
         for (Sfx sfx : Sfx.values()) {
-            FileHandle file = files.internal(sfx.path());
-            sounds.put(sfx, audio.newSound(file));
-            lengths[sfx.ordinal()] = file.exists() ? oggNanos(file.readBytes()) : UNKNOWN_NANOS;
+            clips.add(new FutureTask<>(() -> decode(sfx, pcm)));
         }
+        if (background) {
+            // The menu's sounds first: the title screen plays them.
+            List<FutureTask<Clip>> order = Arrays.stream(Sfx.values())
+                    .sorted(Comparator.comparing(sfx -> !sfx.name().startsWith("MENU_")))
+                    .map(sfx -> clips.get(sfx.ordinal()))
+                    .toList();
+            decoder = new Thread(
+                    () -> {
+                        for (FutureTask<Clip> clip : order) {
+                            if (closed) {
+                                return;
+                            }
+                            clip.run();
+                        }
+                    },
+                    "sfx-decoder");
+            decoder.setDaemon(true);
+            decoder.start();
+        } else {
+            decoder = null;
+            finish();
+        }
+    }
+
+    /**
+     * An effect decoded: its PCM as a WAV file (null: the sound is made from the file; dropped once the sound is made,
+     * so the bank does not keep the samples on the heap) and its length.
+     */
+    private static final class Clip {
+        byte[] wav;
+        final long nanos;
+
+        Clip(byte[] wav, long nanos) {
+            this.wav = wav;
+            this.nanos = nanos;
+        }
+    }
+
+    /** Decodes {@code sfx} (any thread): to PCM when {@code pcm}, and its length. */
+    private Clip decode(Sfx sfx, boolean pcm) {
+        FileHandle file = files.internal(sfx.path());
+        if (!file.exists()) {
+            return new Clip(null, UNKNOWN_NANOS);
+        }
+        byte[] ogg = file.readBytes();
+        return new Clip(pcm ? OggPcm.wav(ogg, sfx.path()) : null, oggNanos(ogg));
+    }
+
+    /**
+     * Makes the sounds of the effects decoded so far, for a little time each frame (render thread); the effects not
+     * yet decoded follow in later frames, or when they are played first.
+     */
+    public void update() {
+        if (made == sounds.length) {
+            return;
+        }
+        long until = System.nanoTime() + UPDATE_NANOS;
+        for (int i = 0; i < sounds.length && System.nanoTime() < until; i++) {
+            if (sounds[i] == null && clips.get(i).isDone()) {
+                sound(Sfx.values()[i]);
+            }
+        }
+    }
+
+    /** Makes every effect's sound now, decoding those the background thread has not (render thread): a level start. */
+    public void finish() {
+        for (Sfx sfx : Sfx.values()) {
+            sound(sfx);
+        }
+    }
+
+    /** Whether every effect has its sound. */
+    public boolean finished() {
+        return made == sounds.length;
+    }
+
+    /** The sound of {@code sfx}, made now if it is not yet (render thread). */
+    private Sound sound(Sfx sfx) {
+        Sound sound = sounds[sfx.ordinal()];
+        if (sound != null) {
+            return sound;
+        }
+        FutureTask<Clip> task = clips.get(sfx.ordinal());
+        // Decodes it here unless the background thread has started it; then this waits for it.
+        task.run();
+        Clip clip;
+        try {
+            clip = task.get();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new IllegalStateException("interrupted while decoding " + sfx.path(), e);
+        } catch (ExecutionException e) {
+            throw new IllegalStateException("cannot load the effect " + sfx.path(), e.getCause());
+        }
+        sound = audio.newSound(clip.wav != null ? OggPcm.file(sfx.path(), clip.wav) : files.internal(sfx.path()));
+        clip.wav = null;
+        lengths[sfx.ordinal()] = clip.nanos;
+        sounds[sfx.ordinal()] = sound;
+        made++;
+        return sound;
     }
 
     /**
@@ -69,7 +202,7 @@ public final class SfxBank implements Disposable, Mixer.Listener {
         if (!voices.admit(sfx, now, false)) {
             return;
         }
-        long id = sounds.get(sfx).play(volume * mixer.gain(sfx.bus()), pitch, pan);
+        long id = sound(sfx).play(volume * mixer.gain(sfx.bus()), pitch, pan);
         if (id != -1) {
             voices.started(sfx, id, now + (long) (lengths[sfx.ordinal()] / Math.max(0.01f, pitch)));
         }
@@ -79,7 +212,7 @@ public final class SfxBank implements Disposable, Mixer.Listener {
     public void loop(Sfx sfx, float volume) {
         stop(sfx);
         voices.admit(sfx, clock.getAsLong(), true);
-        long id = sounds.get(sfx).loop(volume * mixer.gain(sfx.bus()));
+        long id = sound(sfx).loop(volume * mixer.gain(sfx.bus()));
         if (id != -1) {
             voices.started(sfx, id, VoiceLimit.LOOPING);
         }
@@ -94,7 +227,7 @@ public final class SfxBank implements Disposable, Mixer.Listener {
     public void loop(Sfx sfx, float volume, float pitch) {
         stop(sfx);
         voices.admit(sfx, clock.getAsLong(), true);
-        long id = sounds.get(sfx).loop(volume * mixer.gain(sfx.bus()), pitch, 0);
+        long id = sound(sfx).loop(volume * mixer.gain(sfx.bus()), pitch, 0);
         if (id != -1) {
             voices.started(sfx, id, VoiceLimit.LOOPING);
         }
@@ -108,7 +241,7 @@ public final class SfxBank implements Disposable, Mixer.Listener {
             return;
         }
         loopVolumes[sfx.ordinal()] = volume;
-        sounds.get(sfx).setVolume(loopIds[sfx.ordinal()], volume * mixer.gain(sfx.bus()));
+        sound(sfx).setVolume(loopIds[sfx.ordinal()], volume * mixer.gain(sfx.bus()));
     }
 
     /** M7 part C: pans a running loop ({@code pan} -1 left to 1 right) at its volume; nothing when it is not looping. */
@@ -116,7 +249,7 @@ public final class SfxBank implements Disposable, Mixer.Listener {
         if (loopVolumes[sfx.ordinal()] < 0) {
             return;
         }
-        sounds.get(sfx).setPan(loopIds[sfx.ordinal()], pan, loopVolumes[sfx.ordinal()] * mixer.gain(sfx.bus()));
+        sound(sfx).setPan(loopIds[sfx.ordinal()], pan, loopVolumes[sfx.ordinal()] * mixer.gain(sfx.bus()));
     }
 
     /** M9 part D: sets a running loop's pitch (the Buzzsaw's whine with its spin); nothing when it is not looping. */
@@ -124,7 +257,7 @@ public final class SfxBank implements Disposable, Mixer.Listener {
         if (loopVolumes[sfx.ordinal()] < 0) {
             return;
         }
-        sounds.get(sfx).setPitch(loopIds[sfx.ordinal()], pitch);
+        sound(sfx).setPitch(loopIds[sfx.ordinal()], pitch);
     }
 
     /** A running loop's volume before the mixer's gain; negative when it is not looping. */
@@ -139,7 +272,10 @@ public final class SfxBank implements Disposable, Mixer.Listener {
 
     /** Stops every playing instance of {@code sfx}. */
     public void stop(Sfx sfx) {
-        sounds.get(sfx).stop();
+        Sound sound = sounds[sfx.ordinal()];
+        if (sound != null) {
+            sound.stop();
+        }
         voices.stopped(sfx);
         loopVolumes[sfx.ordinal()] = -1;
     }
@@ -159,7 +295,7 @@ public final class SfxBank implements Disposable, Mixer.Listener {
         for (Sfx sfx : Sfx.values()) {
             float volume = loopVolumes[sfx.ordinal()];
             if (volume >= 0) {
-                sounds.get(sfx).setVolume(loopIds[sfx.ordinal()], volume * mixer.gain(sfx.bus()));
+                sound(sfx).setVolume(loopIds[sfx.ordinal()], volume * mixer.gain(sfx.bus()));
             }
         }
     }
@@ -167,7 +303,20 @@ public final class SfxBank implements Disposable, Mixer.Listener {
     @Override
     public void dispose() {
         mixer.forget(this);
-        sounds.values().forEach(Sound::dispose);
+        closed = true;
+        if (decoder != null) {
+            try {
+                // At most the effect it decodes now.
+                decoder.join();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+        for (Sound sound : sounds) {
+            if (sound != null) {
+                sound.dispose();
+            }
+        }
     }
 
     /**

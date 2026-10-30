@@ -62,11 +62,51 @@ public final class ContentLoader {
 
     /** Loads the data files the build put on the classpath. */
     public static Content fromClasspath() {
+        Parsed parsed = parseClasspath();
+        parsed.check();
+        return parsed.content();
+    }
+
+    /**
+     * Startup step: parses the data files the build put on the classpath without the validator's checks across files
+     * and levels, which take longer than the parsing (the backdrop's screens): the game shows its title screen on the
+     * parsed content and runs {@link Parsed#check} on its loading thread meanwhile.
+     *
+     * @throws ContentException listing every problem found while parsing
+     */
+    public static Parsed parseClasspath() {
         List<DataFile> files = new ArrayList<>();
         for (String path : read(INDEX).lines().filter(line -> !line.isBlank()).toList()) {
             files.add(new DataFile(path, read("/design/" + path)));
         }
-        return load(files);
+        return parse(files);
+    }
+
+    /** Parsed content whose validator checks are still to run ({@link #check}); the content is immutable. */
+    public static final class Parsed {
+        private final Content content;
+        private final Map<Object, String> paths;
+
+        private Parsed(Content content, Map<Object, String> paths) {
+            this.content = content;
+            this.paths = paths;
+        }
+
+        public Content content() {
+            return content;
+        }
+
+        /**
+         * Runs the validator's checks on the content.
+         *
+         * @throws ContentException listing every problem found
+         */
+        public void check() {
+            List<String> problems = new ContentValidator(content, paths).problems();
+            if (!problems.isEmpty()) {
+                throw new ContentException(problems);
+            }
+        }
     }
 
     private static String read(String resource) {
@@ -88,6 +128,13 @@ public final class ContentLoader {
      * @throws ContentException listing every problem found
      */
     public static Content load(List<DataFile> files) {
+        Parsed parsed = parse(files);
+        parsed.check();
+        return parsed.content();
+    }
+
+    /** Parses the given files, without the validator's checks. */
+    private static Parsed parse(List<DataFile> files) {
         YAMLMapper mapper = DataMapper.create();
         List<String> problems = new ArrayList<>();
         Map<String, Object> parts = new TreeMap<>();
@@ -96,25 +143,29 @@ public final class ContentLoader {
         Map<String, ActData> acts = new TreeMap<>();
         Map<String, LevelData> levels = new TreeMap<>();
         Map<Object, String> paths = new IdentityHashMap<>();
-        for (DataFile file : files) {
+        // Startup step: the files parse side by side (the mapper is thread-safe); their results are kept in file order.
+        List<Read> reads =
+                files.parallelStream().map(file -> read(mapper, file)).toList();
+        for (int i = 0; i < files.size(); i++) {
+            DataFile file = files.get(i);
+            Read read = reads.get(i);
             Class<?> part = PARTS.get(file.path());
             Matcher weapon = WEAPON.matcher(file.path());
             Matcher enemy = ENEMY.matcher(file.path());
             Matcher act = ACT.matcher(file.path());
             Matcher level = LEVEL.matcher(file.path());
             if (part != null) {
-                parse(mapper, file, part, problems, paths).ifPresent(data -> parts.put(file.path(), data));
+                parse(read, file, part, problems, paths).ifPresent(data -> parts.put(file.path(), data));
             } else if (weapon.matches()) {
-                parse(mapper, file, WeaponData.class, problems, paths)
+                parse(read, file, WeaponData.class, problems, paths)
                         .ifPresent(data -> weapons.put(weapon.group(1), data));
             } else if (enemy.matches()) {
-                parse(mapper, file, EnemyData.class, problems, paths)
+                parse(read, file, EnemyData.class, problems, paths)
                         .ifPresent(data -> enemies.put(enemy.group(1), data));
             } else if (act.matches()) {
-                parse(mapper, file, ActData.class, problems, paths).ifPresent(data -> acts.put(act.group(1), data));
+                parse(read, file, ActData.class, problems, paths).ifPresent(data -> acts.put(act.group(1), data));
             } else if (level.matches()) {
-                parse(mapper, file, LevelData.class, problems, paths)
-                        .ifPresent(data -> levels.put(level.group(1), data));
+                parse(read, file, LevelData.class, problems, paths).ifPresent(data -> levels.put(level.group(1), data));
             } else {
                 problems.add("design/" + file.path() + ": no schema for a data file at this path");
             }
@@ -163,11 +214,7 @@ public final class ContentLoader {
                 part(parts, VoiceData.class),
                 part(parts, WingmenData.class),
                 part(parts, EuropaData.class));
-        problems.addAll(new ContentValidator(content, paths).problems());
-        if (!problems.isEmpty()) {
-            throw new ContentException(problems);
-        }
-        return content;
+        return new Parsed(content, paths);
     }
 
     private static <T> T part(Map<String, Object> parts, Class<T> type) {
@@ -178,21 +225,53 @@ public final class ContentLoader {
                 .orElseThrow();
     }
 
-    /** Parses one file; on success remembers its path for the validator's messages. */
-    private static <T> Optional<T> parse(
-            YAMLMapper mapper, DataFile file, Class<T> type, List<String> problems, Map<Object, String> paths) {
+    /** A file read into its schema's type: its data (null for an empty file), or the parse failure. */
+    private record Read(Object data, JacksonException error) {}
+
+    /** The schema type of a data file at {@code path}, or null when there is none. */
+    private static Class<?> schema(String path) {
+        Class<?> part = PARTS.get(path);
+        if (part != null) {
+            return part;
+        } else if (WEAPON.matcher(path).matches()) {
+            return WeaponData.class;
+        } else if (ENEMY.matcher(path).matches()) {
+            return EnemyData.class;
+        } else if (ACT.matcher(path).matches()) {
+            return ActData.class;
+        } else if (LEVEL.matcher(path).matches()) {
+            return LevelData.class;
+        }
+        return null;
+    }
+
+    /** Reads one file into its schema's type (any thread); nothing for a path without a schema. */
+    private static Read read(YAMLMapper mapper, DataFile file) {
+        Class<?> type = schema(file.path());
+        if (type == null) {
+            return new Read(null, null);
+        }
         try {
-            T data = mapper.readValue(file.text(), type);
-            if (data == null) {
-                problems.add("design/" + file.path() + ": empty file");
-                return Optional.empty();
-            }
-            paths.put(data, file.path());
-            return Optional.of(data);
+            return new Read(mapper.readValue(file.text(), type), null);
         } catch (JacksonException e) {
-            problems.add(describe(file.path(), e));
+            return new Read(null, e);
+        }
+    }
+
+    /** One file's result; on success remembers its path for the validator's messages. */
+    private static <T> Optional<T> parse(
+            Read read, DataFile file, Class<T> type, List<String> problems, Map<Object, String> paths) {
+        if (read.error() != null) {
+            problems.add(describe(file.path(), read.error()));
             return Optional.empty();
         }
+        if (read.data() == null) {
+            problems.add("design/" + file.path() + ": empty file");
+            return Optional.empty();
+        }
+        T data = type.cast(read.data());
+        paths.put(data, file.path());
+        return Optional.of(data);
     }
 
     /** "design/<file>:<line>: <field path>: <message>" for a parse failure. */

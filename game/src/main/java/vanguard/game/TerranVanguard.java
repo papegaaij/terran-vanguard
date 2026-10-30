@@ -6,7 +6,9 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
+import java.util.concurrent.FutureTask;
 import vanguard.content.Difficulty;
 import vanguard.content.campaign.Campaign;
 import vanguard.content.campaign.CampaignRoute;
@@ -53,11 +55,26 @@ public final class TerranVanguard extends ApplicationAdapter {
     private final ScoreFile scores;
     private final String version;
     private final Screenshots screenshots;
+    /** The content, loading on its own thread from the launch on (startup step), while the window opens. */
+    private final FutureTask<GameServices.Data> data = new FutureTask<>(GameServices.Data::load);
+    /**
+     * The content's validator checks, run on the loading thread after the parsing; the render thread throws their
+     * problems once they are done, as the start did before. Null once seen.
+     */
+    private FutureTask<Void> checked = new FutureTask<>(() -> {
+        data.get().parsed().check();
+        return null;
+    });
+
     private SpriteBatch batch;
     private PixelScreen pixelScreen;
     private GameServices services;
     private ScreenFlow screens;
     private PointerCursor cursor;
+    /** The start's times until the first frame is drawn, then null. */
+    private StartupTimes startup;
+    /** Whether the sound effects still decode in the background (logged once they are ready). */
+    private boolean soundsPending = true;
 
     /**
      * @param displayModes the display mode switcher, set up from the settings file
@@ -114,13 +131,24 @@ public final class TerranVanguard extends ApplicationAdapter {
         this.scores = scores;
         this.version = version;
         this.screenshots = new Screenshots(screenshots);
+        FutureTask<Void> check = checked;
+        Thread loader = new Thread(
+                () -> {
+                    data.run();
+                    check.run();
+                },
+                "content-loader");
+        loader.setDaemon(true);
+        loader.start();
     }
 
     @Override
     public void create() {
+        startup = new StartupTimes();
         Gdx.app.log("gl", Gdx.gl.glGetString(GL20.GL_RENDERER) + " / " + Gdx.gl.glGetString(GL20.GL_VERSION));
         batch = new SpriteBatch();
         pixelScreen = new PixelScreen();
+        startup.mark("gl");
         services = new GameServices(
                 Gdx.files,
                 Gdx.audio,
@@ -132,10 +160,13 @@ public final class TerranVanguard extends ApplicationAdapter {
                 underwaterFrom,
                 saves,
                 scores,
-                version);
+                version,
+                data,
+                startup);
         screens = new ScreenFlow(startLevel ? testLevel() : MainMenuScreen.title(services), Gdx.app::exit);
         Gdx.input.setInputProcessor(services.mouse);
         cursor = new PointerCursor(Gdx.files);
+        startup.mark(startLevel ? "level" : "title");
     }
 
     /** Level 01 (or the {@code --level}) of a new campaign at the launch difficulty, for testing; a debug run, which writes no save. */
@@ -156,6 +187,11 @@ public final class TerranVanguard extends ApplicationAdapter {
         float frameSeconds = Gdx.graphics.getDeltaTime();
         displayModes.poll();
         services.input.update(services.devices);
+        services.sfx.update();
+        if (checked != null && checked.isDone()) {
+            GameServices.join(checked);
+            checked = null;
+        }
         // RF6: a shot run steps the simulation once a frame, whatever the frame's real time.
         float seconds = shots.isPresent() ? (float) SimStep.SECONDS : Math.min(frameSeconds, MAX_FRAME_SECONDS);
         services.menu.update(seconds);
@@ -176,6 +212,16 @@ public final class TerranVanguard extends ApplicationAdapter {
         }
         screenshots.draw(batch, services.glass, services.fonts);
         pixelScreen.end(batch, services.settings().video());
+        if (startup != null) {
+            Gdx.app.log("startup", startup.report());
+            startup = null;
+        }
+        if (soundsPending && services.sfx.finished()) {
+            Gdx.app.log(
+                    "startup",
+                    String.format(Locale.ROOT, "sound effects ready after %.2f s", StartupTimes.sinceLaunch()));
+            soundsPending = false;
+        }
         if (bench.isPresent() && bench.get().frame(frameSeconds)) {
             Gdx.app.log("bench", bench.get().report());
             Gdx.app.exit();
