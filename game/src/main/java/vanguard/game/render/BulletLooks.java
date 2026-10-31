@@ -20,7 +20,8 @@ import vanguard.sim.Sortie;
  * ({@link #OWN}: the Barbfin's violet needle, tools/art/enemy_bullets.py {@code violet}, at its 16 headings
  * along its flight). A bullet does not tell who fired it, so after each step ({@link #stepped}) each bullet
  * is followed from the last step by its place, and a new one takes its look from the unit that fired
- * beside it in that step.
+ * beside it in that step. M10 part A: a bullet a mirror bounced back (design/enemies, Reflect) is the magenta
+ * {@code orb-bounced} at its heading.
  */
 public final class BulletLooks {
     /**
@@ -43,6 +44,15 @@ public final class BulletLooks {
 
     private final Array<AtlasRegion> small;
     private final Array<AtlasRegion> medium;
+    /**
+     * M10 part A (design/enemies, Reflect): a bullet a mirror bounced out of a player shot, the magenta orb with its
+     * wake at its {@value #BOUNCED_HEADINGS} headings ({@code orb-bounced}, tools/art/act6_gear.py); the small orb until
+     * its art is on the pages.
+     */
+    private final Array<AtlasRegion> bounced;
+
+    static final String BOUNCED = "orb-bounced";
+    static final int BOUNCED_HEADINGS = 16;
     private final Sprites sprites;
     /** The own looks in use (index 1 on; 0 is none) and per enemy kind its look's index; built at the first step. */
     private final Array<Array<AtlasRegion>> own = new Array<>();
@@ -64,6 +74,7 @@ public final class BulletLooks {
         this.sprites = sprites;
         small = sprites.orb;
         medium = sprites.frames("orb-medium");
+        bounced = sprites.has(BOUNCED) ? sprites.frames(BOUNCED) : null;
     }
 
     /** A new attempt: no bullet followed. */
@@ -203,6 +214,10 @@ public final class BulletLooks {
 
     /** The frame of bullet number {@code index} at step {@code tick}. */
     AtlasRegion frame(EnemyBullet bullet, int index, long tick) {
+        if (bounced != null && bullet.bounced()) {
+            // M10 part A: a bounced shot flies magenta along its own heading, whoever fired beside it.
+            return bounced.get(heading(bullet, bounced.size));
+        }
         if (index < tagged && tags[index] > 0) {
             Array<AtlasRegion> look = own.get(tags[index]);
             return look.get(heading(bullet, look.size));

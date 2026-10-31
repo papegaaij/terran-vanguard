@@ -92,6 +92,16 @@ public final class WeaponLooks {
          * null for their art's own: the rear-guard drone's gold ({@link #shotRecolour}).
          */
         Color recolour;
+        /**
+         * M10 part A (design/player/shields, Reflex Shield (Act 6)): a shot whose frames pulse on its age ({@value
+         * #BOLT_FRAME_TICKS} steps a frame) rather than turn with its heading (the Reflex bolt's core); null for none.
+         */
+        Array<AtlasRegion> pulse;
+        /**
+         * M10 part A: the additive trail drawn under each shot with its point {@link #TRAIL_POINT} on the shot's centre,
+         * hanging below it (the Reflex bolt's gold trail); null for none.
+         */
+        AtlasRegion boltTrail;
 
         Look(
                 AtlasRegion[] shots,
@@ -126,17 +136,68 @@ public final class WeaponLooks {
 
     /**
      * With the look of a wingman's gun too (M5 part A: Rook's shots carry the mount index past the
-     * armament's, {@code Sortie.wingmanMount()}); it has no pod and no muzzle flash on the hull.
+     * armament's, {@code Sortie.wingmanMount()}); it has no pod and no muzzle flash on the hull. M10 part A: and the
+     * Reflex Shield's bolt, whose shots carry the mount past the wingman's ({@code PlayerFire.boltMount()}, {@link
+     * #boltMount}) whether a wingman flies or not; without a wingman his slot holds the bolt's look too, so no mount
+     * index an event can carry is out of the looks.
      */
     public WeaponLooks(
             Armament armament, int[] levels, Sprites sprites, PodPivots pods, java.util.Optional<WeaponSpec> wingman) {
         this.armament = armament;
-        looks = new Look[armament.size() + (wingman.isPresent() ? 1 : 0)];
+        looks = new Look[lookCount(armament.size())];
         for (int m = 0; m < armament.size(); m++) {
             looks[m] = look(armament.mount(m), levels[m], sprites, pods);
         }
-        wingman.ifPresent(gun ->
-                looks[armament.size()] = look(new Armament.Mount(Armament.Slot.FRONT, gun, gun), 1, sprites, pods));
+        Look bolt = boltLook(sprites);
+        looks[boltMount(armament.size())] = bolt;
+        looks[armament.size()] = wingman.map(
+                        gun -> look(new Armament.Mount(Armament.Slot.FRONT, gun, gun), 1, sprites, pods))
+                .orElse(bolt);
+    }
+
+    /** M10 part A: the Reflex bolt's core pulses {@value} steps a frame (tools/art/act6_gear.py). */
+    static final int BOLT_FRAME_TICKS = 4;
+    /** M10 part A: the bolt's trail hangs from this point of its sprite (x, y down) on the bolt's centre. */
+    static final float TRAIL_POINT = 5.5f;
+    /** M10 part A: the bolt's sprite root and its trail (tools/art/act6_gear.py, {@code reflex}). */
+    static final String REFLEX_BOLT = "ship-reflex-bolt";
+
+    static final String REFLEX_TRAIL = "ship-reflex-bolt-trail";
+
+    /**
+     * M10 part A: the looks a ship with {@code mounts} fitted mounts needs: one per mount, the wingman's and the Reflex
+     * bolt's after them.
+     */
+    static int lookCount(int mounts) {
+        return boltMount(mounts) + 1;
+    }
+
+    /** M10 part A: the Reflex bolt's mount for {@code mounts} fitted mounts (sim's {@code PlayerFire.boltMount()}). */
+    static int boltMount(int mounts) {
+        return mounts + 1;
+    }
+
+    /**
+     * M10 part A (design/player/shields, Reflex Shield (Act 6)): the Reflex bolt: the white-gold bullet ({@code
+     * ship-reflex-bolt_0..3}, normal, its core pulsing) over its additive gold trail; the pulse bolt until its art is
+     * on the pages.
+     */
+    private static Look boltLook(Sprites sprites) {
+        boolean drawn = sprites.has(REFLEX_BOLT);
+        Look look = new Look(
+                single(drawn ? sprites.frames(REFLEX_BOLT).first() : sprites.pulseBolt),
+                single(drawn ? sprites.frames(REFLEX_BOLT).first() : sprites.pulseBolt),
+                !drawn,
+                new Array<>(),
+                true,
+                sprites.pulseImpact,
+                null,
+                null);
+        if (drawn) {
+            look.pulse = sprites.frames(REFLEX_BOLT);
+            look.boltTrail = sprites.has(REFLEX_TRAIL) ? sprites.region(REFLEX_TRAIL) : null;
+        }
+        return look;
     }
 
     private static Look look(Armament.Mount mount, int level, Sprites sprites, PodPivots pods) {
@@ -495,6 +556,9 @@ public final class WeaponLooks {
     /** The sprite of a shot in flight, for its heading and the pattern it was fired with. */
     AtlasRegion sprite(Shot shot) {
         Look look = looks[shot.mount()];
+        if (look.pulse != null) {
+            return look.pulse.get(Math.max(0, shot.age()) / BOLT_FRAME_TICKS % look.pulse.size);
+        }
         AtlasRegion[] set = shot.mount() < armament.size()
                         && shot.weapon() == armament.mount(shot.mount()).overdrive()
                 ? look.overdriveShots

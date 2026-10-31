@@ -189,6 +189,10 @@ final class PlayerPasses {
                 // M7 part A: a beam fires no shot (ArsenalLooks); M9 part A: nor does an arc (ArcLooks).
                 case BEAM, ARC -> {}
                 case BOLT, HOMING, TURRET, TORPEDO -> {
+                    if (look.boltTrail != null) {
+                        // M10 part A: the Reflex bolt's gold trail, additive under it, hanging below its centre.
+                        drawTrail(batch, look.boltTrail, x, y);
+                    }
                     double left = shot.rangeLeft();
                     if (left < FADE_SHARE) {
                         batch.setColor(1, 1, 1, (float) (left / FADE_SHARE));
@@ -203,6 +207,19 @@ final class PlayerPasses {
                 flash.end(batch);
             }
         }
+    }
+
+    /**
+     * M10 part A: a bolt's additive trail with its point ({@link WeaponLooks#TRAIL_POINT} from the sprite's left and top)
+     * on the shot's centre (x, y), the trail hanging below it.
+     */
+    private static void drawTrail(SpriteBatch batch, AtlasRegion trail, double x, double y) {
+        batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
+        batch.draw(
+                trail,
+                Math.round(X0 + x - WeaponLooks.TRAIL_POINT),
+                Math.round(y + WeaponLooks.TRAIL_POINT - trail.getRegionHeight()));
+        batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
     }
 
     /** The muzzle flashes of the mounts that just fired, at each muzzle of the pattern they fire. */

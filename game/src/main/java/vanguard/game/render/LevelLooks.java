@@ -199,6 +199,8 @@ class LevelLooks {
      * built with the first sortie).
      */
     EnemyShieldLooks shields;
+    /** M10 part A: Act 6's unit mechanics (mirrors, regrowth, regeneration, domes, prey hits, spoofed turrets). */
+    final JovianLooks jovian;
     /** M9 part A: the units' {@code laser-line} telegraphs and rails. */
     final LineLooks lines;
     /** M9 part B: the escort swap's looks (Rook hidden in the hold, the Ember's launch, its flight away). */
@@ -314,6 +316,7 @@ class LevelLooks {
         kinds = new KindLooks(sprites, files);
         units = new UnitPasses(
                 looks, flash, play, kinds, farside, luna, weather, shipLooks, surfaceWater, launches, softGlow);
+        jovian = new JovianLooks(sprites, softGlow);
         setPieces = new SetPiecePasses(flash, play, font, setPieceLooks, bossLooks, kraken, spire);
         player = new PlayerPasses(sprites, weapons, flash, play, shipLooks, arsenal, canyonLooks, water != null);
         props = new PropPasses(sprites, flash, play, clock, craneLooks, script);
@@ -396,6 +399,7 @@ class LevelLooks {
     /** Frees the light map and the generated textures. */
     void dispose() {
         softGlow.dispose();
+        jovian.dispose();
         farside.dispose();
         if (grade != null) {
             grade.dispose();
@@ -475,6 +479,7 @@ class LevelLooks {
         if (shields != null) {
             shields.restart();
         }
+        jovian.restart();
         vacuumDeaths.restart();
         canyonLooks.restart();
         kinds.restart();
@@ -502,6 +507,7 @@ class LevelLooks {
         if (arcs != null) {
             arcs.stepped(sortie);
         }
+        jovian.stepped(sortie);
         arsenal.stepped(sortie);
         deepWater.stepped(sortie);
         kinds.burrowers(sortie).stepped(sortie);

@@ -38,7 +38,9 @@ import vanguard.sim.Sortie;
  * wrecks and break-aparts, the set pieces' and bosses' chained deaths (the Kraken's and the Siege Spire's
  * own), the boss's credit shower, the splashes and flak puffs, and the renderer's hand-offs (a gun's
  * recoil, the Spire's pods and maw, Rook's hit flash). RF9e: the dispatch is here, the families are their own classes:
- * the water's ({@link WaterEffects}) and the deaths' ({@link DeathEffects}); a new family becomes another.
+ * the water's ({@link WaterEffects}) and the deaths' ({@link DeathEffects}); a new family becomes another. M10 part A:
+ * the mirrors' ({@link MirrorEffects}), the domes' ({@link DomeEffects}) and the regrowing turrets' ({@link
+ * RegrowthEffects}).
  */
 final class EventEffects {
     private static final int IMPACT_FRAME_TICKS = 2;
@@ -101,6 +103,11 @@ final class EventEffects {
 
     private final WaterEffects water;
     private final DeathEffects deaths;
+    /** M10 part A: Act 6's families: the mirrors', the domes' and the regrowing turrets'. */
+    private final MirrorEffects mirrors;
+
+    private final DomeEffects domes;
+    private final RegrowthEffects regrowth;
 
     EventEffects(
             GameServices services,
@@ -181,15 +188,22 @@ final class EventEffects {
                 explosionMedium,
                 water,
                 starts);
+        mirrors = new MirrorEffects(sortie, renderer, effects, glance, services.sprites.explosionTiny);
+        domes = new DomeEffects(sortie, renderer, effects, glance);
+        regrowth =
+                new RegrowthEffects(sortie, effects, services.sprites.explosionSmall, services.sprites.explosionTiny);
     }
 
     /**
      * The event whose effects event type {@code type} draws: a destroyed neutral craft (Level 29's wavering Stormhawks,
      * {@link SimEvents.Type#NEUTRAL_DOWN}) bursts as its kind's kill does (step FIX6: the user's playthrough
-     * 2026-10-30, they vanished); every other type draws its own.
+     * 2026-10-30, they vanished); M10 part A: a unit lost to the three-way war ({@link SimEvents.Type#PREY_KILLED}) dies as a
+     * kill does (design/audio/sfx: the war's kills play the prey's rung as any death); every other type draws its own.
      */
     static SimEvents.Type drawnAs(SimEvents.Type type) {
-        return type == SimEvents.Type.NEUTRAL_DOWN ? SimEvents.Type.ENEMY_DESTROYED : type;
+        return type == SimEvents.Type.NEUTRAL_DOWN || type == SimEvents.Type.PREY_KILLED
+                ? SimEvents.Type.ENEMY_DESTROYED
+                : type;
     }
 
     /** Event {@code i}'s effects (in the step's event order, so the effects start in it). */
@@ -454,6 +468,13 @@ final class EventEffects {
             case MISSILE_DESTROYED -> missileGone(events.value(i), x, y);
             case WINGMAN_EJECTED -> effects.start(explosionMedium, MEDIUM_EXPLOSION_FRAME_TICKS, x, y);
             case SHIP_DESTROYED -> effects.start(services.sprites.explosionLarge, LARGE_EXPLOSION_FRAME_TICKS, x, y);
+            // M10 part A: Act 6's mechanics, each family its own class.
+            case MIRROR_BOUNCED, MIRROR_ABSORBED, MIRROR_BROKEN, MIRROR_REGROWING -> mirrors.react(events, i);
+            case DOME_HIT, DOME_DOWN, DOME_UP, DOME_COLLAPSED -> domes.react(events, i);
+            case ROOT_EXPOSED, ROOT_KILLED, KNITTING, REGROWN -> regrowth.react(events, i);
+            // The three-way war's teal hit where it lands; the spoofed turret's amber stutter (JovianLooks).
+            case PREY_HIT -> renderer.jovian().preyHit(x, y, sortie.tick());
+            case SPOOF_HESITATE -> renderer.jovian().hesitate(sortie, x, y);
             default -> {}
         }
     }

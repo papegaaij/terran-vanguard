@@ -278,6 +278,11 @@ public final class LevelRenderer {
         return passes.setPieces.death(k);
     }
 
+    /** M10 part A: Act 6's unit mechanics' looks, for the screen's effects ({@link JovianLooks}). */
+    public JovianLooks jovian() {
+        return passes.jovian;
+    }
+
     /** Rook was hit at step {@code tick}: his hull flashes white. */
     public void wingmanHit(long tick) {
         passes.wingmanLooks.hit(tick);

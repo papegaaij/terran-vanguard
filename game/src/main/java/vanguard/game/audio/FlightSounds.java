@@ -99,6 +99,8 @@ public final class FlightSounds {
     private final VentFieldCues ventField;
     /** M8 part H: Level 28's coiled boss, the shaft's climb, the breakout and the cruisers. */
     private final MawCues maw;
+    /** M10 part A: Act 6's unit mechanics (mirrors, regeneration, regrowth, domes). */
+    private final JovianCues jovian;
     /** Per event type the family that plays it (by ordinal); null for an event without a sound. */
     private final SoundFamily[] families = new SoundFamily[SimEvents.Type.values().length];
     /** Every family, in the order they hear a step's start and end. */
@@ -234,6 +236,7 @@ public final class FlightSounds {
         deepCore = new DeepCoreCues(mix);
         sovereign = new SovereignCues(mix);
         leechField = new LeechFieldCues(mix);
+        jovian = new JovianCues(mix);
         belt.rig(rig);
         walker = new WalkerCues(mix, ventField, belt);
         foundry = new FoundryCues(mix);
@@ -288,7 +291,8 @@ public final class FlightSounds {
             rig,
             deepCore,
             leechField,
-            sovereign
+            sovereign,
+            jovian
         };
         for (SoundFamily family : all) {
             for (SimEvents.Type type : family.types()) {
@@ -717,6 +721,7 @@ public final class FlightSounds {
         deepCore.watch(sortie);
         sovereign.watch(sortie);
         leechField.watch(sortie);
+        jovian.watch(sortie);
         units.watchCanyon(sortie);
         units.watchSiege(sortie);
         storm.watch(sortie);

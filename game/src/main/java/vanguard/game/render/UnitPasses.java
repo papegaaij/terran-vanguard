@@ -224,6 +224,11 @@ final class UnitPasses {
                 RootBurstLooks.drawGrowing(batch, enemy, frame, enemy.renderX(alpha), enemy.renderY(alpha), alpha);
                 continue;
             }
+            if (RegrowthLooks.regrowing(enemy)) {
+                // M10 part A: a regrowing turret's burst shell over its exposed root, or the turret knitting back.
+                RegrowthLooks.drawBody(batch, softGlow, enemy, frame, enemy.renderX(alpha), enemy.renderY(alpha));
+                continue;
+            }
             if (sortie.underwater() && kinds.deepBodies(sortie).deep(enemy.kind()) != null) {
                 // M8 part C: a Driftjelly on the play plane under water: its whole body at its pulse frame.
                 Array<AtlasRegion> body = kinds.deepBodies(sortie).deep(enemy.kind());
@@ -427,7 +432,8 @@ final class UnitPasses {
         // M5 part G: a lane walker (the Skimmer) shows its heading's tail beat, not a walk cycle.
         return enemy.walking() && !enemy.laneWalking()
                 ? look.frames().get(look.walkFrame(enemy.facing(), enemy.walked()))
-                : look.frame(enemy.facing(), look.step(sortie.tick(), i, enemy.burstSeconds()));
+                // M10 part A: a mirrored unit's hull follows its mirror's own facing (MirrorLooks).
+                : look.frame(MirrorLooks.heading(enemy), look.step(sortie.tick(), i, enemy.burstSeconds()));
     }
 
     /**

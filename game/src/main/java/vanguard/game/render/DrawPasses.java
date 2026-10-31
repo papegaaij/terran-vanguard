@@ -349,6 +349,8 @@ final class DrawPasses extends LevelLooks {
             // M9 part A: the ground units' hex shields.
             shields.draw(batch, sortie, alpha, true);
         }
+        // M10 part A: the exposed roots, the regenerating seams, the ground mirrors, the domes and their sheen.
+        jovian.drawGround(batch, sortie, alpha, seconds);
         // M5 part H: the root bursts' dust and the tear-free shockwave over the ground units.
         if (rootBursts != null) {
             rootBursts.drawDust(batch, sortie, seconds, scroll);
@@ -479,6 +481,8 @@ final class DrawPasses extends LevelLooks {
             // M9 part A: the flyers' hex shields over their hulls.
             shields.draw(batch, sortie, alpha, false);
         }
+        // M10 part A: the seams, the mirrors and their shards, the prey hits' and the spoofed turrets' flashes.
+        jovian.drawAir(batch, sortie, alpha, seconds);
         units.drawChains(batch, sortie, alpha);
         if (tenderDrops != null) {
             // M8 part C: the Thera Deep tender swimming up with the armour patch, and back.

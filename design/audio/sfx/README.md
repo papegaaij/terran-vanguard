@@ -535,10 +535,10 @@ Ascendancy prey) play the prey's rung as any death; no new sound.
 | Regrowth creak ([regeneration](../../enemies/README.md#regeneration)) | The Chimera healing (a loop while its HP regrows, the nearest); a Graft Turret regrowing on its root; the Ascendant's sacs healing | A soft rising creak: stretched leather or a rope twisting under load, dry and close; the Graft Turret's a longer twisting creak that ends in a woody knock as the turret stands; the Ascendant's sacs the same slowed an octave down. Never wet, bubbly or squelching | P1 |
 | Tissue tear | A Graft Turret root's death; the Ascendant's brood splitting and the lifeboat tearing free; Level 37's growth bursting over the decks | A dry fibrous tearing: heavy canvas or sailcloth ripping, a bundle of rope fibres parting, green wood torn; the root's death with a crunch under it (dry twigs crushed) | P1 |
 | Mirror ping ([`reflect`](../../enemies/README.md#reflect)) | Each shot a mirror bounces (throttled: once per 0.08 s per unit); the Ascendant's panels | A bright glassy ping: a struck glass or metal bowl (the unit's brief), short; the panels' lower and heavier (a larger bowl). It must never sound like the Reflex Shield's ricochet below: the enemy's mirror rings glass, the player's shield rings a bullet | P1 |
-| Mirror heat | A beam or a Plasma Arc jump held on a mirror face (a loop while it heats, the nearest), rising with the heat | A rising hot-metal hiss: a gas torch on sheet steel, its pitch climbing as the plate goes red to white; dry (no quench, no steam) | P1 |
+| Mirror heat | A beam held on a mirror face (a loop while it heats, the nearest), rising with the heat; a Plasma Arc jump earthed on the face adds no heat and plays the bolt-absorbed tick | A rising hot-metal hiss: a gas torch on sheet steel, its pitch climbing as the plate goes red to white; dry (no quench, no steam) | P1 |
 | Mirror break | A mirror broken by its heat, a `shield-breaker` hit or the EMP; the Ascendant's panels | A real glass pane shattering, heavier and longer than the [enemy shield](#act-5-sounds-draft-round-60)'s break so the two never mix | P1 |
 | Mirror regrow | The 0.4 s silver shimmer as a mirror comes back | A low soft chime: a singing bowl struck softly, short, the tell that it is back | P2 |
-| Bolt absorbed | A Reflex Shield bolt hitting a standing mirror's face (a spark, no bounce) | A short dry electric tick (synthesized allowed: feedback); quiet | P3 |
+| Bolt absorbed | A Reflex Shield bolt hitting a standing mirror's face (a spark, no bounce); any shot a standing mirror absorbs (inside the bounce gap, Rook's) and a Plasma Arc jump earthed on its face | A short dry electric tick (synthesized allowed: feedback); quiet | P3 |
 | Reflex ricochet ([Reflex Shield](../../player/shields/README.md#reflex-shield-act-6)) | Each enemy bullet the Reflex turns into a bolt (throttled: once per 0.06 s), over the shield hit | A real recorded bullet ricochet (a rifle round whining off steel), bright and short, the shield's hit under it; the player's side of the mirrors, never the enemy mirror's glassy ping | P1 |
 
 **Enemies**
@@ -597,7 +597,7 @@ sounds; the music's hand-off and the escape sting are the [music](../music/READM
 
 | Sound | Trigger and use | Brief | Priority |
 |---|---|---|---|
-| [Plasma Arc](../../player/weapons/plasma-arc/README.md) | Each arc and each jump | The `tesla` family's chosen [r03-a](concept/shot-tesla-r03-a.ogg), replayed per jump at a rising pitch ([weapon sound families](#weapon-sound-families)): the first strike at the level's pitch, each jump a semitone above the strike before (×1.06, so a six-strike chain ends ×1.34), all on the discharge's tick, so the family's instance limit must allow a whole chain (decided by step AUD-A, 2026-10-31); a jump on a standing mirror is absorbed and plays the mirror heat | P1 |
+| [Plasma Arc](../../player/weapons/plasma-arc/README.md) | Each arc and each jump | The `tesla` family's chosen [r03-a](concept/shot-tesla-r03-a.ogg), replayed per jump at a rising pitch ([weapon sound families](#weapon-sound-families)): the first strike at the level's pitch, each jump a semitone above the strike before (×1.06, so a six-strike chain ends ×1.34), all on the discharge's tick, so the family's instance limit must allow a whole chain (decided by step AUD-A, 2026-10-31); a jump earthed on a standing mirror's face is absorbed and plays the bolt-absorbed tick, not the mirror heat (an absorbed arc adds no heat; step A3a, 2026-10-31) | P1 |
 | [Reflex Shield](../../player/shields/README.md#reflex-shield-act-6) | A reflected bullet | The Reflex ricochet above | P1 |
 | Composite V, the Mk V+ "Crucible", the IFF spoofer | — | No sound of their own (the spoofer's turret stutter is seen: a line of stuttering turrets would chatter) | — |
 
@@ -631,18 +631,13 @@ game may play only `proposed` sounds of an open concept round, provisionally unt
 | [beds-mix-l24-r59-b.ogg](concept/beds-mix-l24-r59-b.ogg) | Listening aid for round 59's Q.1 = a: a render of Level 24's mix with the bed 6 dB louder; the game plays the beds themselves at `AMBIENCE_VOLUME` 0.70 |
 | [wreck-groans-solo-r67-a.ogg](concept/wreck-groans-solo-r67-a.ogg) | Review file for round 67 S.4: `wreck-groans` a alone, levelled for the comparison; the game plays `wreck-groans-r67-a.ogg` |
 | [wreck-groans-mix-r67-a.ogg](concept/wreck-groans-mix-r67-a.ogg) | Review file for round 67 S.4: `wreck-groans` a in the game's mix, rendered offline; the game mixes the layer itself (`wreck-groans-r67-a.ogg`) |
-| [regrowth-creak-r72-a.ogg](concept/regrowth-creak-r72-a.ogg) | Round 72 S.1 a, the hybrids' healing creak: in `assets/sfx/` since M10 part A's step AUD-A (the Freesound preview cut); played once step A3 wires it (an `Sfx` entry and its cue) |
 | [tissue-tear-r72-a.ogg](concept/tissue-tear-r72-a.ogg) | Round 72 S.2 a, the hybrids' tear: a Graft Turret root's death first; imported once the root exists (part A's regrowth, then the Graft Turret in M10 part C) |
-| [mirror-ping-r72-a.ogg](concept/mirror-ping-r72-a.ogg) | Round 72 S.3 a, the mirror's bounce: in `assets/sfx/` since M10 part A's step AUD-A (the Freesound preview cut); played once step A3 wires it (an `Sfx` entry and its cue) |
 | [reflex-ricochet-r72-a.ogg](concept/reflex-ricochet-r72-a.ogg) | Round 72 S.4 a, the Reflex Shield's turned bullet: in `assets/sfx/` since M10 part A's step AUD-A (the Freesound preview cut); played once step A3 wires it (an `Sfx` entry and its cue) |
 | [harrow-lock-r72-b.ogg](concept/harrow-lock-r72-b.ogg) | Round 72 S.5 b, the Harrow's lock tell: the Harrow comes in M10 part D (Level 38) |
 | [harrow-burst-r72-a.ogg](concept/harrow-burst-r72-a.ogg) | Round 72 S.6 a, the Harrow's burst: the Harrow comes in M10 part D (Level 38) |
 | [lightning-tell-r72-a.ogg](concept/lightning-tell-r72-a.ogg) | Round 72 S.7 a, the lightning column's telegraph: in `assets/sfx/` since M10 part A's step AUD-A (the Freesound preview cut); played once step A3 wires it (an `Sfx` entry and its cue) |
 | [lightning-strike-r72-b.ogg](concept/lightning-strike-r72-b.ogg) | Round 72 S.8 b, the lightning strike: in `assets/sfx/` since M10 part A's step AUD-A (the Freesound preview cut); played once step A3 wires it (an `Sfx` entry and its cue) |
 | [eruption-r72-a.ogg](concept/eruption-r72-a.ogg) | Round 72 S.9 a, Io's eruption: in `assets/sfx/` since M10 part A's step AUD-A (the Freesound preview cut); played once step A3 wires it (an `Sfx` entry and its cue) |
-| [pylon-dome-up-r72-a.ogg](concept/pylon-dome-up-r72-a.ogg) | Round 72 S.10 a, the pylon dome coming up: in `assets/sfx/` since M10 part A's step AUD-A (the Freesound preview cut); played once step A3 wires it (an `Sfx` entry and its cue) |
-| [pylon-dome-down-r72-b.ogg](concept/pylon-dome-down-r72-b.ogg) | Round 72 S.11 b, the pylon dome's collapse: in `assets/sfx/` since M10 part A's step AUD-A (the Freesound preview cut); played once step A3 wires it (an `Sfx` entry and its cue) |
-| [graft-regrowth-r72-a.ogg](concept/graft-regrowth-r72-a.ogg) | Round 72 S.12 a, the Graft Turret standing again on its root: in `assets/sfx/` since M10 part A's step AUD-A (the Freesound preview cut); played once step A3 wires it (an `Sfx` entry and its cue) |
 | [jovian-sky-r72-b.ogg](concept/jovian-sky-r72-b.ogg) | Round 72 S.13 b, the bed of Levels 36 and 38: imported with Level 36 (M10 part B) |
 | [aurelia-r72-a.ogg](concept/aurelia-r72-a.ogg) | Round 72 S.14 a, Level 37's bed: imported with Level 37 (M10 part C) |
 | [io-refinery-r72-a.ogg](concept/io-refinery-r72-a.ogg) | Round 72 S.15 a, Level 39's bed: imported with Level 39 (M10 part E) |
@@ -1774,3 +1769,12 @@ Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-a
   `tesla` zap a semitone up per jump (no new file). Round 73 (QA-1) proposes the mirror heat loop (with a climb render
   for the review), break, regrow, the pylon dome's hit (a/b each) and the bolt-absorbed tick
   (`tools/concept/audio/sfx_r73.py`, CC0 previews).
+- 2026-10-31 (M10 part A, step A3a): the game plays S.1 (`Sfx.REGROWTH_CREAK`, repeated every 1.2 s for the nearest
+  healing unit), S.3 (`MIRROR_PING`, once per 0.08 s), S.10 (`PYLON_DOME_UP`), S.11 b (`PYLON_DOME_DOWN`, a drop and the
+  collapse) and S.12 (`GRAFT_REGROWTH`, as the knit starts), so their rows left *Chosen sounds the game does not play*;
+  the war's kills play the prey's rung. Until round 73's QA-1 picks the proposals' subjects play the nearest built sound
+  (`JovianCues`, pending the user's review): the mirror heat Level 16's tendril burn loop pitched 0.85→1.35, the break
+  the Glassfin's shatter lowered, the regrowth the sonde chime lowered, the dome hit the enemy shield's hit, the absorbed
+  tick the Deflector's tick, quiet; the root's death the tendril's snap until the tissue tear (S.2) is imported. Fixed
+  the Plasma Arc row: a jump earthed on a mirror's face plays the absorbed tick, not the heat (an absorbed arc adds no
+  heat).

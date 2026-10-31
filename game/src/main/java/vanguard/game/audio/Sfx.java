@@ -1268,6 +1268,22 @@ public enum Sfx {
     RELAY_CHARGE("sfx/relay-charge-r68-a.ogg", 1, Bus.EFFECTS, WARNING),
     /** M9 part H: the mass relay's flash (a thunder crack with a long rolling tail, about 4 s). */
     RELAY_FLASH("sfx/relay-flash-r68-a.ogg", 1, Bus.EFFECTS, WARNING),
+    /**
+     * M10 part A (design/audio/sfx, Act 6 sounds): the hybrids' healing creak (round 72 S.1 a, a leather strap stretched
+     * slowly, 1.2 s), repeated for the nearest healing unit while any heals ({@link JovianCues}).
+     */
+    REGROWTH_CREAK("sfx/regrowth-creak-r72-a.ogg", 1, Bus.EFFECTS, ENEMY_FIRE),
+    /** M10 part A: a mirror's bounce (round 72 S.3 a, a glass struck once, 0.4 s), throttled ({@link JovianCues}). */
+    MIRROR_PING("sfx/mirror-ping-r72-a.ogg", 2, Bus.EFFECTS, PLAYER_FIRE),
+    /** M10 part A: a Shield Pylon's dome coming up after a drop (round 72 S.10 a, a quick rising buzz, 0.45 s). */
+    PYLON_DOME_UP("sfx/pylon-dome-up-r72-a.ogg", 1, Bus.EFFECTS, ENEMY_FIRE),
+    /** M10 part A: a dome dropping or collapsing (round 72 S.11 b, a falling hum into a hard snap, 0.9 s). */
+    PYLON_DOME_DOWN("sfx/pylon-dome-down-r72-b.ogg", 2, Bus.EFFECTS, EXPLOSION),
+    /**
+     * M10 part A: a Graft Turret knitting back over its root (round 72 S.12 a, a tree's creak ending in a woody knock,
+     * 1.75 s).
+     */
+    GRAFT_REGROWTH("sfx/graft-regrowth-r72-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
     /** The mission complete jingle (design/audio/music, track 23), played as a one-shot. */
     MISSION_COMPLETE("music/mission-complete.ogg", 1, Bus.MUSIC, WARNING),
     /**

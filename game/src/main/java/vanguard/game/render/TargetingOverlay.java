@@ -53,6 +53,10 @@ public final class TargetingOverlay {
     private static final Color LOW_FILL = HudKit.AMBER;
     private static final Color TROUGH = HudKit.LCD;
     private static final Color LIME = Color.valueOf("B4FF3C");
+    /** M10 part A: a healing unit's bar grows back with this teal edge (the hybrids' tissue, {@code 00FF9A}), px wide. */
+    static final Color TEAL = Color.valueOf("00FF9A");
+
+    static final float HEAL_EDGE = 2;
 
     private final TextureRegion pixel;
     private final double barSeconds;
@@ -95,7 +99,14 @@ public final class TargetingOverlay {
                     || !enemy.layer().touchable()) {
                 continue;
             }
-            bar(batch, enemy, enemy.hp(), enemy.spec().hp(), enemy.ticksSinceHit(), alpha);
+            bar(
+                    batch,
+                    enemy,
+                    enemy.hp(),
+                    enemy.spec().hp(),
+                    enemy.ticksSinceHit(),
+                    alpha,
+                    enemy.regeneration().healing());
         }
         for (int c = 0; c < sortie.chainCount(); c++) {
             chainBar(batch, sortie.chain(c), alpha);
@@ -138,7 +149,7 @@ public final class TargetingOverlay {
             }
         }
         if (front != null && barred(front, spec)) {
-            bar(batch, front, hp, full, since, alpha);
+            bar(batch, front, hp, full, since, alpha, false);
         }
     }
 
@@ -167,8 +178,12 @@ public final class TargetingOverlay {
         return kind.chain().isPresent() && kind.chain().get() == spec;
     }
 
-    private void bar(SpriteBatch batch, Enemy enemy, double hp, double full, int since, float alpha) {
-        float opacity = opacity(since, alpha);
+    /**
+     * A unit's bar; M10 part A (design/enemies, Regeneration): a {@code healing} unit's bar stays shown and grows back
+     * with a teal edge at its fill's end ({@link #HEAL_EDGE} px of {@link #TEAL}).
+     */
+    private void bar(SpriteBatch batch, Enemy enemy, double hp, double full, int since, float alpha, boolean healing) {
+        float opacity = healing ? 1 : opacity(since, alpha);
         if (opacity <= 0 || hp <= 0 || hp >= full) {
             return;
         }
@@ -180,7 +195,12 @@ public final class TargetingOverlay {
         batch.setColor(colour.set(TROUGH).mul(1, 1, 1, opacity * 0.85f));
         batch.draw(pixel, x - 1, y - 1, width + 2, BAR_HEIGHT + 2);
         batch.setColor(colour.set(share < LOW ? LOW_FILL : FILL).mul(1, 1, 1, opacity));
-        batch.draw(pixel, x, y, Math.max(1, Math.round(width * (float) share)), BAR_HEIGHT);
+        float fill = Math.max(1, Math.round(width * (float) share));
+        batch.draw(pixel, x, y, fill, BAR_HEIGHT);
+        if (healing) {
+            batch.setColor(colour.set(TEAL).mul(1, 1, 1, opacity));
+            batch.draw(pixel, x + Math.max(0, fill - HEAL_EDGE), y, Math.min(HEAL_EDGE, fill), BAR_HEIGHT);
+        }
     }
 
     /**
