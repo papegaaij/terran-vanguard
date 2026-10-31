@@ -180,7 +180,7 @@ final class SetPieceParts {
         if (piece.partStays(p)) {
             return Double.POSITIVE_INFINITY;
         }
-        double nearest = PlayerFire.columnContact(cx, halfWidth, fromY, partX(p), partY(p), box(p));
+        double nearest = ShotGeometry.columnContact(cx, halfWidth, fromY, partX(p), partY(p), box(p));
         int c = chains.slamChain(p);
         return c < 0 ? nearest : chains.segmentsColumn(c, cx, halfWidth, fromY, nearest);
     }
@@ -208,7 +208,7 @@ final class SetPieceParts {
         if (piece.partStays(p)) {
             return false;
         }
-        if (PlayerFire.inBlast(bx, by, radius, partX(p), partY(p), box(p))) {
+        if (ShotGeometry.inBlast(bx, by, radius, partX(p), partY(p), box(p))) {
             return true;
         }
         int c = chains.slamChain(p);

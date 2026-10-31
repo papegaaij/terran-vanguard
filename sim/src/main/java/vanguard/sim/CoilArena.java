@@ -1503,7 +1503,7 @@ public final class CoilArena implements Hashed {
         Hitbox box = body.box();
         for (int i = 0; i < segX.length; i++) {
             if (!carriesOpenImplant(i)) {
-                nearest = Math.min(nearest, PlayerFire.columnContact(cx, halfWidth, fromY, segX[i], segY[i], box));
+                nearest = Math.min(nearest, ShotGeometry.columnContact(cx, halfWidth, fromY, segX[i], segY[i], box));
             }
         }
         return nearest;

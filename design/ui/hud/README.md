@@ -283,7 +283,7 @@ Production art for concept round 26 (M4 part H batch): the boss bar's plate, ren
       `DONE` or `FAILED`, fitting the one-line well (`MissionLayoutTest`); the debrief's row
       `SONDES n / 3`; `PartFHudTest` — built: the escapes tracker's line (the `collect: sondes`
       objective counts as one), `MissionPanel.collectFlash` (the well green for a blink, 32 frames, per
-      sonde), `DebriefScreen.hullsRow` with the `SONDES` label (`LevelScreen.debriefCount`;
+      sonde), `DebriefScreen.hullsRow` with the `SONDES` label (`DebriefTally.count`;
       `LevelScreenPartFTest`)
 - [x] `SHIELD DRAIN` and the shield bar's flicker while a Lamprey drains (M5 part F, step 6;
       `PartFHudTest`) — built: `ShipPanel.SHIELD_DRAIN` in amber on the label plate (it fits, so

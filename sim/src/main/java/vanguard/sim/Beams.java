@@ -3,9 +3,9 @@ package vanguard.sim;
 import static vanguard.sim.PlayerFire.BEAM_REACH;
 import static vanguard.sim.PlayerFire.BEAM_TRIGGER_TICKS;
 import static vanguard.sim.PlayerFire.PART_SERIAL;
-import static vanguard.sim.PlayerFire.columnContact;
-import static vanguard.sim.PlayerFire.groundFactor;
-import static vanguard.sim.PlayerFire.onField;
+import static vanguard.sim.ShotGeometry.columnContact;
+import static vanguard.sim.ShotGeometry.groundFactor;
+import static vanguard.sim.ShotGeometry.onField;
 
 /**
  * M7 part A (design/player/weapons/ion-beam, Beam rules): the {@link PlayerFire}'s beam mounts. A {@link

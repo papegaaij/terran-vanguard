@@ -40,7 +40,7 @@ class LevelScreenPartGTest {
                 SimSpecs.level(CONTENT, KEY, Difficulty.MEDIUM),
                 SimSpecs.rules(CONTENT, KEY, Difficulty.MEDIUM),
                 60);
-        DebriefScreen.Hulls count = LevelScreen.debriefCount(sortie);
+        DebriefScreen.Hulls count = DebriefTally.count(sortie);
         assertEquals(DebriefScreen.RELAY, count.label());
         assertTrue(count.percent());
         assertEquals(100, count.afloat(), "untouched at the start");
@@ -59,11 +59,11 @@ class LevelScreenPartGTest {
 
     @Test
     void aShareUnderHalfNeverReadsFiftyPercent() {
-        assertEquals(50, LevelScreen.percent(0.5));
-        assertEquals(49, LevelScreen.percent(0.4999));
-        assertEquals(100, LevelScreen.percent(1));
-        assertEquals(0, LevelScreen.percent(0));
-        assertEquals(29, LevelScreen.percent(70 / 240.0), "70 of 240");
+        assertEquals(50, DebriefTally.percent(0.5));
+        assertEquals(49, DebriefTally.percent(0.4999));
+        assertEquals(100, DebriefTally.percent(1));
+        assertEquals(0, DebriefTally.percent(0));
+        assertEquals(29, DebriefTally.percent(70 / 240.0), "70 of 240");
     }
 
     /**

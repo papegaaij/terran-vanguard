@@ -81,7 +81,7 @@ class Level21LooksTest {
         assertFrames("dust-colossus-rock", ColossusLooks.ROCK_SHAPES * ColossusLooks.ROCK_TUMBLE);
         Path level = ASSETS.resolve("backdrop/level-21");
         assertTrue(Files.isRegularFile(level.resolve(ColossusLooks.SINKHOLE + ".png")));
-        assertTrue(Files.isRegularFile(level.resolve(Backdrop.SEAM_SETTLE + ".png")));
+        assertTrue(Files.isRegularFile(level.resolve(BackdropTiles.SEAM_SETTLE + ".png")));
         for (int k = 0; k < RidgeLooks.HEADINGS; k++) {
             assertTrue(Files.isRegularFile(level.resolve(ColossusLooks.FURROW + "_" + k + ".png")), "furrow " + k);
         }
@@ -166,13 +166,13 @@ class Level21LooksTest {
         assertEquals(512, level.backdrop().tileSets().get("settled-floor").height(), "one pattern");
         int half = 320 / 2;
         for (long ground = 18_000; ground < 22_000; ground += 37) {
-            long seam = Backdrop.crawlSeam(ground, tile, half);
+            long seam = BackdropTiles.crawlSeam(ground, tile, half);
             long top = ground + vanguard.sim.PlayField.HEIGHT;
             assertEquals(0, Math.floorMod(seam, (long) tile), "a multiple of 512: " + seam);
             assertTrue(seam - half >= top, ground + ": seam-settle's bottom edge at or above the top edge");
             assertTrue(seam - half - top < tile, ground + ": the next such seam (" + (seam - top) + " px)");
         }
-        assertEquals(1024, Backdrop.crawlSeam(1024 - 540, tile, 0), "a seam at the top edge itself");
+        assertEquals(1024, BackdropTiles.crawlSeam(1024 - 540, tile, 0), "a seam at the top edge itself");
     }
 
     @Test

@@ -86,7 +86,7 @@ class Level24LooksTest {
         assertEquals(8, frames("meridian-wreck-glow"), "the lamp's and the sparks' halves");
         assertEquals(8, frames(PlainLooks.WALKER + "-silt"));
         assertEquals(16, frames(BACKDROP, "relay-beacon"));
-        assertEquals(16, frames(BACKDROP, "relay-beacon" + Backdrop.GLOW), "the light per pulse frame");
+        assertEquals(16, frames(BACKDROP, "relay-beacon" + BackdropPieces.GLOW), "the light per pulse frame");
     }
 
     /** The beacons' light is declared beside them with their frames and clock, and placed nowhere itself. */
@@ -94,7 +94,7 @@ class Level24LooksTest {
     void theBeaconsLightGoesWithThem() {
         BackdropData backdrop = AbyssalPlainFixture.level().backdrop();
         BackdropData.Piece beacon = backdrop.pieces().get("relay-beacon");
-        BackdropData.Piece light = backdrop.pieces().get("relay-beacon" + Backdrop.GLOW);
+        BackdropData.Piece light = backdrop.pieces().get("relay-beacon" + BackdropPieces.GLOW);
         assertEquals(beacon.imageCount(), light.imageCount());
         assertEquals(beacon.fps(), light.fps());
         assertEquals(beacon.size(), light.size());

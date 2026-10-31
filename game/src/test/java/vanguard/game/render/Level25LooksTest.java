@@ -81,7 +81,7 @@ class Level25LooksTest {
         assertEquals(3, frames("survey-buoy"), "shut, opening, open");
         assertEquals(4, frames("survey-buoy-glow"), "the strobe");
         for (String side : List.of("left", "right")) {
-            assertTrue(Files.isRegularFile(BACKDROP.resolve(Backdrop.CAVE_MOUTH + side + ".png")), side);
+            assertTrue(Files.isRegularFile(BACKDROP.resolve(TrenchWalls.CAVE_MOUTH + side + ".png")), side);
         }
     }
 
@@ -263,8 +263,9 @@ class Level25LooksTest {
                     ? terrain.leftAt(notch.scroll())
                     : terrain.rightAt(notch.scroll());
             assertFalse(Double.isNaN(foot), notch.toString());
-            double image =
-                    notch.side() == Terrain.Side.LEFT ? foot - Backdrop.CAVE_FOOT[0] : foot - Backdrop.CAVE_FOOT[1];
+            double image = notch.side() == Terrain.Side.LEFT
+                    ? foot - TrenchWalls.CAVE_FOOT[0]
+                    : foot - TrenchWalls.CAVE_FOOT[1];
             assertTrue(image > -112 && image < PlayField.WIDTH, notch + ": the mouth's image on the field");
         }
     }

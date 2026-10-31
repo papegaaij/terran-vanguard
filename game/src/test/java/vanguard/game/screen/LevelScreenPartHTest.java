@@ -25,7 +25,7 @@ class LevelScreenPartHTest {
     @Test
     void theDebriefsRootsRowCountsTheGrowthsDestroyed() {
         for (Difficulty difficulty : Difficulty.values()) {
-            DebriefScreen.Hulls count = LevelScreen.debriefCount(sortie(difficulty));
+            DebriefScreen.Hulls count = DebriefTally.count(sortie(difficulty));
             assertEquals("ROOTS", count.label());
             assertFalse(count.percent());
             assertEquals(0, count.afloat(), "none destroyed at the start");
@@ -46,7 +46,7 @@ class LevelScreenPartHTest {
                 SimSpecs.level(CONTENT, docks, Difficulty.MEDIUM),
                 SimSpecs.rules(CONTENT, docks, Difficulty.MEDIUM),
                 60);
-        assertFalse(LevelScreen.debriefCount(level02).present());
+        assertFalse(DebriefTally.count(level02).present());
     }
 
     @Test

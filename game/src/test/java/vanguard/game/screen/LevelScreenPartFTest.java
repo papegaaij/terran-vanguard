@@ -32,7 +32,7 @@ class LevelScreenPartFTest {
                 SimSpecs.level(CONTENT, KEY, Difficulty.MEDIUM),
                 SimSpecs.rules(CONTENT, KEY, Difficulty.MEDIUM),
                 60);
-        DebriefScreen.Hulls count = LevelScreen.debriefCount(sortie);
+        DebriefScreen.Hulls count = DebriefTally.count(sortie);
         assertEquals(DebriefScreen.SONDES, count.label());
         assertEquals(0, count.afloat());
         assertEquals(3, count.of());

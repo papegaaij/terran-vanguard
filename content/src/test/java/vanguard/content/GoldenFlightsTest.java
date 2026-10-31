@@ -29,7 +29,7 @@ import vanguard.sim.SetPiece;
 import vanguard.sim.Sortie;
 
 /**
- * Golden flights (refactoring step RF1): every level 01–28 on every difficulty, flown by the autopilot on the
+ * Golden flights (refactoring step RF1): every level 01–35 on every difficulty, flown by the autopilot on the
  * balance plan's fit ({@link PacingTest#planLoadout}, the one {@code levelReport -Pfit=plan} flies) on
  * {@link LevelMetrics#SEED}, to its end ({@link LevelMetrics#fly}, capped at {@link PacingTest#MAX_STEPS}), compared
  * with the recorded end tick, kills, credits, state hash and boss-down ticks in {@code golden-flights.txt}. Where a
@@ -44,7 +44,7 @@ import vanguard.sim.Sortie;
  */
 class GoldenFlightsTest {
     private static final String FILE = "golden-flights.txt";
-    private static final int LAST_LEVEL = 28;
+    private static final int LAST_LEVEL = 35;
     /** The seeds a boss level's extra medium flight tries, in order, when the plan's seed leaves a boss alive. */
     private static final long[] EXTRA_SEEDS = {1, 2, 3, 4, 5, 6, 7, 8};
 

@@ -50,8 +50,8 @@ final class Charges {
                         || layer == Layer.SUB
                         || !layer.touchable()
                         || !enemy.spec().countsAsEnemy()
-                        || !PlayerFire.onField(enemy)
-                        || !PlayerFire.inBlast(x, y, radius, enemy.x(), enemy.y(), enemy.hitbox())) {
+                        || !ShotGeometry.onField(enemy)
+                        || !ShotGeometry.inBlast(x, y, radius, enemy.x(), enemy.y(), enemy.hitbox())) {
                     continue;
                 }
                 for (int p = 0; p < enemy.partCount(); p++) {

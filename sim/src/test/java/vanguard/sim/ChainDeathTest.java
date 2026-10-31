@@ -71,7 +71,7 @@ class ChainDeathTest {
         int credits = sortie.credits();
         for (Enemy member : members) {
             assertTrue(Chain.doomed(member));
-            assertFalse(PlayerFire.onField(member), "no shot, blast or special reaches it");
+            assertFalse(ShotGeometry.onField(member), "no shot, blast or special reaches it");
         }
 
         // The ship fires straight up into the body for the whole ripple: nothing is hit.

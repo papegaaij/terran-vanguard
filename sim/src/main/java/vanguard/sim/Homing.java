@@ -5,8 +5,8 @@ import static vanguard.sim.PlayerFire.FLANK_PREFERENCE;
 import static vanguard.sim.PlayerFire.MISSILE_SERIAL;
 import static vanguard.sim.PlayerFire.PART_SERIAL;
 import static vanguard.sim.PlayerFire.TRIGGER_SERIAL;
-import static vanguard.sim.PlayerFire.distanceSquared;
-import static vanguard.sim.PlayerFire.onField;
+import static vanguard.sim.ShotGeometry.distanceSquared;
+import static vanguard.sim.ShotGeometry.onField;
 
 /**
  * What the ship's seeking weapons aim at, for {@link PlayerFire}: a turret's pod turning to the nearest

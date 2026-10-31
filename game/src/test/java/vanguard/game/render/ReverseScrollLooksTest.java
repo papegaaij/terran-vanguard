@@ -82,7 +82,7 @@ class ReverseScrollLooksTest {
         double factor = backdrop.factor(BackdropLayer.GROUND);
         for (int z = 1; z < strip.zones().size(); z++) {
             double from = strip.zones().get(z).from();
-            long seam = Backdrop.stripSeam(strip, z, factor);
+            long seam = BackdropTiles.stripSeam(strip, z, factor);
             List<BackdropData.PlacedPiece> centred = backdrop.placements().stream()
                     .filter(placed -> placed.byRow() && placed.row().orElseThrow() == from)
                     .toList();

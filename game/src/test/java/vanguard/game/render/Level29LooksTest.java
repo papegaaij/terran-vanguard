@@ -70,10 +70,10 @@ class Level29LooksTest {
         }
         assertEquals(8, frames(SPRITES, "rook-launch"));
         Path backdrop = ASSETS.resolve("backdrop/level-29");
-        assertEquals(6, frames(backdrop, "prison-tender" + Backdrop.HOLD));
+        assertEquals(6, frames(backdrop, "prison-tender" + BackdropPieces.HOLD));
         for (String piece : new String[] {"block-c", "coalition-block-3", "coalition-block-4"}) {
-            assertTrue(single(backdrop, piece + Backdrop.GLOW), piece);
-            assertTrue(single(backdrop, piece + Backdrop.GLOW + Backdrop.TURNED), piece + " turns red");
+            assertTrue(single(backdrop, piece + BackdropPieces.GLOW), piece);
+            assertTrue(single(backdrop, piece + BackdropPieces.GLOW + BackdropPieces.TURNED), piece + " turns red");
         }
         LevelData level = CONTENT.level(CONTENT.levelKey(29).orElseThrow());
         for (String chunk : level.debris().orElseThrow().chunks().keySet()) {
@@ -147,14 +147,14 @@ class Level29LooksTest {
     @Test
     void blockCsLightsTurnRedAtTheNestsWakeOverOneSecond() {
         LevelData level = CONTENT.level(CONTENT.levelKey(29).orElseThrow());
-        double turn = Backdrop.turnSeconds(level);
+        double turn = BackdropPieces.turnSeconds(level);
         assertEquals(60, turn, 1e-9, "Block C's nests' dormant_until");
-        assertEquals(0, Backdrop.turnShare(turn, 59.9), 1e-9);
-        assertEquals(0.5, Backdrop.turnShare(turn, 60.5), 1e-6);
-        assertEquals(1, Backdrop.turnShare(turn, 61.5), 1e-9);
+        assertEquals(0, BackdropPieces.turnShare(turn, 59.9), 1e-9);
+        assertEquals(0.5, BackdropPieces.turnShare(turn, 60.5), 1e-6);
+        assertEquals(1, BackdropPieces.turnShare(turn, 61.5), 1e-9);
         assertTrue(Double.isNaN(
-                Backdrop.turnSeconds(CONTENT.level(CONTENT.levelKey(28).orElseThrow()))));
-        assertEquals(0, Backdrop.turnShare(Double.NaN, 100), 1e-9, "a level without a turn");
+                BackdropPieces.turnSeconds(CONTENT.level(CONTENT.levelKey(28).orElseThrow()))));
+        assertEquals(0, BackdropPieces.turnShare(Double.NaN, 100), 1e-9, "a level without a turn");
     }
 
     @Test

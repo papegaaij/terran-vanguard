@@ -27,7 +27,7 @@ class LevelScreenCanyonTest {
                     SimSpecs.level(CONTENT, KEY, difficulty),
                     SimSpecs.rules(CONTENT, KEY, difficulty),
                     60);
-            DebriefScreen.Hulls count = LevelScreen.debriefCount(sortie);
+            DebriefScreen.Hulls count = DebriefTally.count(sortie);
             assertEquals(DebriefScreen.BARRIERS_BROKEN, count.label());
             assertFalse(count.percent());
             assertEquals(0, count.afloat(), "none broken at the start");

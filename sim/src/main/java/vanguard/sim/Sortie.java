@@ -669,7 +669,7 @@ public final class Sortie {
         // M8 part A: the special's setting limit now (the medium at the level clock, the level's lists).
         special.setting(levelTick, ship.x(), ship.y());
         special.command(commands, !launching() && flying() && !complete, ship.x(), ship.y());
-        tally.step(PlayerFire.chainTargets(force.enemies(), setPieces));
+        tally.step(ShotGeometry.chainTargets(force.enemies(), setPieces));
         if (!complete) {
             if (burstSlots.length > 0) {
                 // M5 part H: the root bursts' telegraphs, before their growths are let in.

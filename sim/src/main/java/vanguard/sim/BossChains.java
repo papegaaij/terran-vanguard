@@ -187,7 +187,7 @@ final class BossChains {
         for (int k = 0; k < boss.chains().get(c).segments(); k++) {
             int i = segmentStart[c] + k;
             nearest = Math.min(
-                    nearest, PlayerFire.columnContact(cx, halfWidth, fromY, x + segmentX[i], y + segmentY[i], box));
+                    nearest, ShotGeometry.columnContact(cx, halfWidth, fromY, x + segmentX[i], y + segmentY[i], box));
         }
         return nearest;
     }
@@ -213,7 +213,7 @@ final class BossChains {
         Hitbox box = boss.chains().get(c).box();
         for (int k = 0; k < boss.chains().get(c).segments(); k++) {
             int i = segmentStart[c] + k;
-            if (PlayerFire.inBlast(bx, by, radius, x + segmentX[i], y + segmentY[i], box)) {
+            if (ShotGeometry.inBlast(bx, by, radius, x + segmentX[i], y + segmentY[i], box)) {
                 return true;
             }
         }

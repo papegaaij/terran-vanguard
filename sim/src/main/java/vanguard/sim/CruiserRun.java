@@ -311,8 +311,8 @@ public final class CruiserRun implements Hashed {
         }
         double hullY = hullY(at);
         return Math.min(
-                PlayerFire.columnContact(cx, halfWidth, fromY, hullX(LEFT), hullY, spec.hull()),
-                PlayerFire.columnContact(cx, halfWidth, fromY, hullX(RIGHT), hullY, spec.hull()));
+                ShotGeometry.columnContact(cx, halfWidth, fromY, hullX(LEFT), hullY, spec.hull()),
+                ShotGeometry.columnContact(cx, halfWidth, fromY, hullX(RIGHT), hullY, spec.hull()));
     }
 
     /**

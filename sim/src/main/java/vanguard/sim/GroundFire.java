@@ -1,8 +1,8 @@
 package vanguard.sim;
 
-import static vanguard.sim.PlayerFire.groundFactor;
-import static vanguard.sim.PlayerFire.inBlast;
-import static vanguard.sim.PlayerFire.onField;
+import static vanguard.sim.ShotGeometry.groundFactor;
+import static vanguard.sim.ShotGeometry.inBlast;
+import static vanguard.sim.ShotGeometry.onField;
 
 import java.util.List;
 

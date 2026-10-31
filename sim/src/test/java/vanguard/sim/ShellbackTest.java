@@ -188,11 +188,11 @@ class ShellbackTest {
     void aShotBesideTheVentHitsTheBody() {
         Sortie sortie = walkingDown(60, SHELLBACK, TestSpecs.LOADOUT);
         Enemy shellback = shellback(sortie);
-        assertTrue(PlayerFire.segmentCrossesBox(0, 0, 0, 100, 10, 50, 14, 14), "straight up through the box");
-        assertFalse(PlayerFire.segmentCrossesBox(0, 0, 0, 100, 20, 50, 14, 14), "beside it");
-        assertFalse(PlayerFire.segmentCrossesBox(0, 0, 0, 30, 0, 50, 14, 14), "short of it");
-        assertTrue(PlayerFire.segmentCrossesBox(0, 0, 100, 100, 50, 50, 14, 14), "diagonally");
-        assertTrue(PlayerFire.segmentCrossesBox(100, 50, -100, 0, 0, 50, 14, 14), "from the side");
+        assertTrue(ShotGeometry.segmentCrossesBox(0, 0, 0, 100, 10, 50, 14, 14), "straight up through the box");
+        assertFalse(ShotGeometry.segmentCrossesBox(0, 0, 0, 100, 20, 50, 14, 14), "beside it");
+        assertFalse(ShotGeometry.segmentCrossesBox(0, 0, 0, 30, 0, 50, 14, 14), "short of it");
+        assertTrue(ShotGeometry.segmentCrossesBox(0, 0, 100, 100, 50, 50, 14, 14), "diagonally");
+        assertTrue(ShotGeometry.segmentCrossesBox(100, 50, -100, 0, 0, 50, 14, 14), "from the side");
         assertEquals(1, shellback.partShare());
     }
 

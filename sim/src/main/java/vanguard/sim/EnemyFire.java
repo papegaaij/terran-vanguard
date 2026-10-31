@@ -213,7 +213,7 @@ final class EnemyFire {
     void firePore(Chain chain, Ship ship) {
         int pore = chain.poreFiring();
         Enemy member = chain.member(pore);
-        if (member == null || !PlayerFire.onField(member) || member.empStunned()) {
+        if (member == null || !ShotGeometry.onField(member) || member.empStunned()) {
             return;
         }
         EnemySpec.PoreWave wave = chain.crawl().pores();

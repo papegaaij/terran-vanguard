@@ -634,7 +634,7 @@ public final class StrideArena implements Hashed {
         if (plate == null || piece.partWrecked(plate.part())) {
             return Double.POSITIVE_INFINITY;
         }
-        return PlayerFire.columnContact(cx, halfWidth, fromY, plateX(), plateY(), plateBoxes[turning()]);
+        return ShotGeometry.columnContact(cx, halfWidth, fromY, plateX(), plateY(), plateBoxes[turning()]);
     }
 
     // --- the presentation's view ---------------------------------------------------------------

@@ -299,7 +299,7 @@ class WallProjectionTest {
 
     @Test
     void theRockArchesAreOverheadPasses() {
-        assertTrue(Backdrop.OVERHEAD_PASSES.containsAll(List.of("arch-a", "arch-b", "transport")));
+        assertTrue(BackdropPieces.OVERHEAD_PASSES.containsAll(List.of("arch-a", "arch-b", "transport")));
     }
 
     @Test

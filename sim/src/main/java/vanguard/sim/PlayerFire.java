@@ -1,7 +1,5 @@
 package vanguard.sim;
 
-import java.util.List;
-
 /**
  * The ship's weapons in flight: every {@link Armament.Mount} fires on its own clock while fire is
  * held, an overdrive switches every mount to its overdrive pattern, and the projectiles fly, seek,
@@ -32,7 +30,7 @@ import java.util.List;
  * only while the drone is whole; a Deflector Pod ({@link Deflectors}) fires nothing.
  *
  * <p>M8 part A (design/world/europa, Under water rules): the {@link Medium}'s water factors land on a shot once, as it
- * is fired ({@link #soak}: its damage, speed and range; the ship's, the drones' and Rook's), and per step on the beam
+ * is fired ({@link MountVolleys#soak}: its damage, speed and range; the ship's, the drones' and Rook's), and per step on the beam
  * ({@link Beams}); every layer rule reads {@link Medium#reaches}. A torpedo runs where there is water (over water or
  * under it) and, with a splash (the Harpoon Torpedoes), its hit deals a share of its damage to the units round it; a
  * {@link WeaponSpec.Delivery#DEPTH_CHARGE} is tossed forward (M8 AW), hovers, sinks with the scroll and bursts on its fuse
@@ -166,10 +164,10 @@ final class PlayerFire {
     private Medium medium = Medium.air();
     /** M9 part A: the direction of travel (1, or -1 while the scroll runs reversed); not hashed (the clock's). */
     private int travel = 1;
-    /** The enemy (a serial) the player's shots damaged last, for the wingman's first target; -1 for none. */
-    private int lastHit;
-    /** Steps since {@link #lastHit} was damaged. */
-    private int sinceHit;
+    /** RF9c: the hit tests, the mounts' volleys. */
+    private final ShotHits shotHits;
+
+    private final MountVolleys volleys;
 
     /** Over land: a torpedo pod fires nothing. */
     PlayerFire(Ship ship, Armament armament, SimEvents events, Hits hits, SetPiece[] setPieces) {
@@ -194,6 +192,8 @@ final class PlayerFire {
         drones = new Drones(ship, armament);
         deflectors = new Deflectors(ship, armament);
         arcs = new ArcFire(this, ship, setPieces, events, hits, armament.size());
+        shotHits = new ShotHits(this, armament, events, hits, setPieces, shots, homing);
+        volleys = new MountVolleys(this, ship, events, shots, drones, homing, turretHeadings, turretTargets);
         reset();
     }
 
@@ -311,8 +311,7 @@ final class PlayerFire {
 
     /** The player's shots damaged the enemy with {@code serial} now (the wingman's first target). */
     void hitBy(int serial) {
-        lastHit = serial;
-        sinceHit = 0;
+        shotHits.hitBy(serial);
     }
 
     /** Back to the level start: no shots, every weapon ready, no overdrive. */
@@ -334,8 +333,7 @@ final class PlayerFire {
             power.reset();
         }
         overdriveTicks = 0;
-        lastHit = -1;
-        sinceHit = Integer.MAX_VALUE;
+        shotHits.reset();
     }
 
     /** Starts an overdrive of {@code ticks} steps; a running one starts over. */
@@ -383,7 +381,7 @@ final class PlayerFire {
                     || (mount.bay() && !drones.whole(m))
                     || (weapon.delivery() == WeaponSpec.Delivery.TURRET && turretTargets[m] < 0)
                     || (weapon.delivery().laid()
-                            && liveMines(m) >= weapon.mines().maxLive())) {
+                            && volleys.liveMines(m) >= weapon.mines().maxLive())) {
                 // A turret without a target holds fire; at its mine cap a mount waits for one to go;
                 // a torpedo pod over land fires nothing (M5 part E).
                 continue;
@@ -405,30 +403,11 @@ final class PlayerFire {
             cooldowns[m] = weapon.intervalTicks();
             sinceShot[m] = 0;
             if (mount.bay()) {
-                droneVolley(m, weapon);
+                volleys.droneVolley(m, weapon);
             } else {
-                volley(m, weapon, enemies, ground);
+                volleys.volley(m, weapon, enemies, ground);
             }
         }
-    }
-
-    /**
-     * M7 part A: drone bay {@code m}'s gun fires one shot from its drone, aimed at the convergence point
-     * ahead of the ship's centre; M7 part G: a rear-guard drone's straight back.
-     */
-    private void droneVolley(int m, WeaponSpec weapon) {
-        double x = drones.x(m);
-        double y = drones.y(m);
-        Shot shot = shots.obtain();
-        if (shot != null) {
-            // M7 part G: a rear-guard drone fires straight back (down the screen).
-            double heading = drones.spec(m).fireBack()
-                    ? StrictMath.PI
-                    : StrictMath.atan2(ship.x() - x, ship.y() + drones.spec(m).converge() - y);
-            shot.fire(weapon, m, x, y, heading);
-            soak(shot);
-        }
-        events.add(SimEvents.Type.SHOT_FIRED, x, y, m);
     }
 
     /**
@@ -475,111 +454,6 @@ final class PlayerFire {
     void noGround(boolean none) {
         noGround = none;
     }
-
-    /**
-     * M8 part A (design/world/europa, Under water rules; decided D3): the water's factors on a shot just fired, once:
-     * its damage × the medium's (an {@code anti-sub} weapon's full), its speed × the bullet speed (a depth charge's
-     * toss × the torpedo range too, D12), a torpedo-type weapon's range × the torpedo range, a reach-limited
-     * weapon's (the lances') at most its reach of the field's height. Nothing in the air.
-     */
-    private void soak(Shot shot) {
-        if (!medium.wet()) {
-            return;
-        }
-        WeaponSpec weapon = shot.weapon();
-        double torpedo = medium.torpedoRange(weapon);
-        double reach = medium.reach(weapon);
-        shot.soak(
-                medium.damage(weapon),
-                medium.bulletSpeed() * (weapon.delivery() == WeaponSpec.Delivery.DEPTH_CHARGE ? torpedo : 1),
-                torpedo,
-                reach < 1 ? reach * PlayField.HEIGHT : Double.POSITIVE_INFINITY);
-    }
-
-    private void volley(int mount, WeaponSpec weapon, Pool<Enemy> enemies, Pool<GroundObject> ground) {
-        List<WeaponSpec.Muzzle> muzzles = weapon.muzzles();
-        double sumX = 0;
-        double sumY = 0;
-        // Indexed: an iterator would allocate on every volley.
-        for (int i = 0; i < muzzles.size(); i++) {
-            WeaponSpec.Muzzle muzzle = muzzles.get(i);
-            double x = ship.x() + muzzle.dx();
-            double y = ship.y() + muzzle.dy();
-            sumX += x;
-            sumY += y;
-            Shot shot = shots.obtain();
-            if (shot == null) {
-                continue;
-            }
-            switch (weapon.delivery()) {
-                case BOLT, HOMING, MINE, TORPEDO, DEPTH_CHARGE -> shot.fire(weapon, mount, x, y, muzzle.angle());
-                case TURRET -> {
-                    shot.fire(weapon, mount, x, y, turretHeadings[mount]);
-                    // Its lock: a high-air boss's part is hit only by a shot aimed at it.
-                    shot.lock(turretTargets[mount]);
-                }
-                case DROPPED -> shot.lob(weapon, mount, x, y, x, y);
-                case LOBBED -> lob(shot, weapon, mount, x, y, enemies, ground);
-                case BEAM, ARC -> throw new IllegalStateException("a beam or an arc fires no shots");
-            }
-            soak(shot);
-            if (weapon.delivery() == WeaponSpec.Delivery.TORPEDO) {
-                // It picks its target as it is fired (in its soaked range); without one it runs straight.
-                shot.lock(homing.nearestInCone(shot, enemies, ground));
-            }
-        }
-        events.add(SimEvents.Type.SHOT_FIRED, sumX / muzzles.size(), sumY / muzzles.size(), mount);
-    }
-
-    /** How many of mount {@code m}'s mines are out. */
-    private int liveMines(int m) {
-        int live = 0;
-        for (int i = 0; i < shots.size(); i++) {
-            if (shots.get(i).mount() == m) {
-                live++;
-            }
-        }
-        return live;
-    }
-
-    /**
-     * A shell lands {@code range} ahead of its muzzle, or on the nearest destructible ground target
-     * (a ground enemy or a destructible ground object, never a trigger) within the snap radius.
-     */
-    private void lob(
-            Shot shot,
-            WeaponSpec weapon,
-            int mount,
-            double x,
-            double y,
-            Pool<Enemy> enemies,
-            Pool<GroundObject> ground) {
-        double landX = x;
-        double landY = y + weapon.range();
-        double best = weapon.snap() * weapon.snap();
-        double snapX = landX;
-        double snapY = landY;
-        for (int j = 0; j < ground.size(); j++) {
-            GroundObject object = ground.get(j);
-            double d = distanceSquared(landX, landY, object.x(), object.y());
-            if (!object.spec().trigger() && d <= best) {
-                best = d;
-                snapX = object.x();
-                snapY = object.y();
-            }
-        }
-        for (int j = 0; j < enemies.size(); j++) {
-            Enemy enemy = enemies.get(j);
-            double d = distanceSquared(landX, landY, enemy.x(), enemy.y());
-            if (enemy.layer() == Layer.GROUND && d <= best) {
-                best = d;
-                snapX = enemy.x();
-                snapY = enemy.y();
-            }
-        }
-        shot.lob(weapon, mount, x, y, snapX, snapY);
-    }
-
     /**
      * Moves every projectile by one step: bolts fly on until their range is flown or they leave
      * the screen, homing missiles and torpedoes steer at their target first, bombs and shells fall
@@ -587,9 +461,7 @@ final class PlayerFire {
      * torpedo also seeks a sunken trigger among the {@code ground} objects (M5 part E).
      */
     void move(double groundScroll, Pool<Enemy> enemies, Pool<GroundObject> ground) {
-        if (sinceHit < Integer.MAX_VALUE) {
-            sinceHit++;
-        }
+        shotHits.age();
         for (int i = shots.size() - 1; i >= 0; i--) {
             Shot shot = shots.get(i);
             WeaponSpec weapon = shot.weapon();
@@ -639,19 +511,6 @@ final class PlayerFire {
         }
     }
 
-    /**
-     * M7 part A: where a beam's column centred on {@code cx}, {@code halfWidth} either side and running
-     * up from {@code fromY}, first touches a box of {@code box} around (bx, by): its bottom edge, or the
-     * column's start when the box reaches below it; {@link Double#POSITIVE_INFINITY} when the column
-     * misses it (touching edges do not count, as for {@link Hitbox#overlaps}).
-     */
-    static double columnContact(double cx, double halfWidth, double fromY, double bx, double by, Hitbox box) {
-        if (Math.abs(bx - cx) * 2 >= box.width() + 2 * halfWidth || by + box.height() / 2 <= fromY) {
-            return Double.POSITIVE_INFINITY;
-        }
-        return Math.max(fromY, by - box.height() / 2);
-    }
-
     /** M7 part A: every beam that is on burns the first target in its column ({@link Beams#burn}). */
     void burn(Pool<Enemy> enemies, Pool<GroundObject> ground, Pool<Mine> spores) {
         beams.burn(enemies, ground, spores);
@@ -672,492 +531,44 @@ final class PlayerFire {
         groundFire.hitGround(ground, enemies, spores);
     }
 
-    /** Bolts and missiles hit the enemies they pass on the layers they reach. */
+    /** Bolts and missiles hit the enemies they pass on the layers they reach ({@link ShotHits#hitEnemies}). */
     void hitEnemies(Pool<Enemy> enemies) {
-        for (int i = shots.size() - 1; i >= 0; i--) {
-            Shot shot = shots.get(i);
-            WeaponSpec weapon = shot.weapon();
-            if (weapon.delivery().landing() || weapon.delivery().laid()) {
-                continue;
-            }
-            for (int j = enemies.size() - 1; j >= 0; j--) {
-                Enemy enemy = enemies.get(j);
-                Layer layer = enemy.layer();
-                if (!medium.reaches(weapon, layer)
-                        || !onField(enemy)
-                        || (enemy.latched() && !hitsLatched(shot.mount()))
-                        || passesThrough(enemy, shot.mount())) {
-                    continue;
-                }
-                // M7 part D: a unit part is tested before the body (the Shellback's vent); round 40 R.a: a shot over
-                // the body whose line of flight crosses the part's box hits the part, from any side.
-                boolean onBody = weapon.size().overlaps(shot.x(), shot.y(), enemy.hitbox(), enemy.x(), enemy.y());
-                int part = struckPart(shot, weapon.size(), enemy, onBody);
-                boolean onPart = part >= 0;
-                if ((!onPart && !onBody) || (weapon.pierce() > 1 && shot.struck(2 * enemy.serial()))) {
-                    continue;
-                }
-                if ((enemy.spec().hardened() && !weapon.antiGround() && !onCore(shot, weapon.size(), enemy))
-                        || (enemy.glances(shot.vx(), shot.vy()) && !(weapon.antiSub() && enemy.shellClosed()))
-                        || enemy.growing()) {
-                    // A hardened unit (M5 part C) without anti-ground, or a walker's frontal armour
-                    // for a direct shot from ahead, or (M5 part H) a root burst's growth still growing: it sparks off.
-                    // M8 part E: anti-sub fire cracks a coil's closed shell (§5 E8).
-                    events.add(SimEvents.Type.SHOT_GLANCED, shot.x(), shot.y(), shot.mount());
-                    shots.free(i);
-                    break;
-                }
-                events.add(SimEvents.Type.ENEMY_HIT, shot.x(), shot.y(), shot.mount());
-                if (shot.mount() < armament.size()) {
-                    lastHit = enemy.serial();
-                    sinceHit = 0;
-                }
-                boolean spent = shot.pierced();
-                int struck = enemy.serial();
-                if (onPart) {
-                    if (enemy.damagePart(part, shot.damage() * groundFactor(weapon, layer), false)) {
-                        hits.unitPartDestroyed(j, part, shot.mount());
-                    }
-                } else if (enemy.damageFacing(
-                        shot.damage() * groundFactor(weapon, layer) * enemy.rearFactor(shot.vx(), shot.vy()),
-                        weapon.antiSub(),
-                        shot.vx(),
-                        shot.vy())) {
-                    // M7 part F: a direct shot into a rear plate does its multiplier (the Warden Tank's); M9 part C:
-                    // facing armour's factor by the shot's direction, after the shield (the Gilded Gunship's).
-                    hits.enemyDestroyed(j, shot.mount());
-                }
-                if (spent) {
-                    splash(shot, struck, enemies);
-                    shots.free(i);
-                    break;
-                }
-            }
-        }
+        shotHits.hitEnemies(enemies);
     }
 
-    /**
-     * M7 part D, round 40 R.a (design/enemies/ground/shellback, the lime vent): whether {@code shot}, of {@code
-     * size}, over {@code enemy}'s body, flies on into the box of its standing unit part before it leaves the body:
-     * its line of flight from where it is, as far as the body's box is wide and tall, crosses the part's box grown by
-     * the shot's half size. Such a shot hits the part first, from any side (the vent on the back of the shell is seen
-     * from above). Allocates nothing.
-     */
-    static boolean towardPart(Shot shot, Hitbox size, Enemy enemy, int p) {
-        double vx = shot.vx();
-        double vy = shot.vy();
-        double speed = Math.hypot(vx, vy);
-        if (speed == 0) {
-            return false;
-        }
-        Hitbox body = enemy.hitbox();
-        double reach = body.width() + body.height();
-        Hitbox part = enemy.partBox(p);
-        return segmentCrossesBox(
-                shot.x(),
-                shot.y(),
-                vx / speed * reach,
-                vy / speed * reach,
-                enemy.partX(p),
-                enemy.partY(p),
-                (part.width() + size.width()) / 2,
-                (part.height() + size.height()) / 2);
-    }
-
-    /**
-     * M9 part E (design/enemies/ground/sentinel-tower, the hardened collar): whether {@code shot}, of {@code size}, over
-     * a hardened unit with a core lands on the core (the emitter) or flies on into it: it overlaps the core's box, or
-     * its line of flight as far as the unit's box is wide and tall crosses it (as {@link #towardPart}). False for a
-     * unit without a core. Allocates nothing.
-     */
-    static boolean onCore(Shot shot, Hitbox size, Enemy enemy) {
-        if (enemy.spec().core().isEmpty()) {
-            return false;
-        }
-        Hitbox core = enemy.spec().core().get();
-        if (size.overlaps(shot.x(), shot.y(), core, enemy.x(), enemy.y())) {
-            return true;
-        }
-        double vx = shot.vx();
-        double vy = shot.vy();
-        double speed = Math.hypot(vx, vy);
-        if (speed == 0) {
-            return false;
-        }
-        Hitbox body = enemy.hitbox();
-        double reach = body.width() + body.height();
-        return segmentCrossesBox(
-                shot.x(),
-                shot.y(),
-                vx / speed * reach,
-                vy / speed * reach,
-                enemy.x(),
-                enemy.y(),
-                (core.width() + size.width()) / 2,
-                (core.height() + size.height()) / 2);
-    }
-
-    /**
-     * M7 part D: the standing unit part of {@code enemy} that {@code shot}, of {@code size}, hits first; -1 for none
-     * (it hits the body, or nothing). A part it overlaps comes first; else, with the shot over the body ({@code
-     * onBody}), the part its line of flight runs into ({@link #towardPart}); M8 part B: of several (a Drill Rig's
-     * pumps), the one whose centre is nearest the shot, the first in the stat block's order on a tie. Allocates
-     * nothing.
-     */
-    static int struckPart(Shot shot, Hitbox size, Enemy enemy, boolean onBody) {
-        int best = -1;
-        double bestDistance = Double.POSITIVE_INFINITY;
-        boolean bestOverlaps = false;
-        for (int p = 0; p < enemy.partCount(); p++) {
-            if (!enemy.partAlive(p)) {
-                continue;
-            }
-            double px = enemy.partX(p);
-            double py = enemy.partY(p);
-            boolean overlaps = size.overlaps(shot.x(), shot.y(), enemy.partBox(p), px, py);
-            if (!overlaps && (bestOverlaps || !onBody || !towardPart(shot, size, enemy, p))) {
-                continue;
-            }
-            double distance = (px - shot.x()) * (px - shot.x()) + (py - shot.y()) * (py - shot.y());
-            if ((overlaps && !bestOverlaps) || distance < bestDistance) {
-                best = p;
-                bestDistance = distance;
-                bestOverlaps = overlaps;
-            }
-        }
-        return best;
-    }
-
-    /**
-     * Whether the segment from (x, y) to (x + dx, y + dy) crosses the box of half sizes {@code halfW} by {@code
-     * halfH} round (bx, by) (the slab test; touching edges do not count).
-     */
-    static boolean segmentCrossesBox(
-            double x, double y, double dx, double dy, double bx, double by, double halfW, double halfH) {
-        double enter = 0;
-        double leave = 1;
-        if (dx == 0) {
-            if (Math.abs(x - bx) >= halfW) {
-                return false;
-            }
-        } else {
-            double a = (bx - halfW - x) / dx;
-            double b = (bx + halfW - x) / dx;
-            enter = Math.max(enter, Math.min(a, b));
-            leave = Math.min(leave, Math.max(a, b));
-        }
-        if (dy == 0) {
-            if (Math.abs(y - by) >= halfH) {
-                return false;
-            }
-        } else {
-            double a = (by - halfH - y) / dy;
-            double b = (by + halfH - y) / dy;
-            enter = Math.max(enter, Math.min(a, b));
-            leave = Math.min(leave, Math.max(a, b));
-        }
-        return enter < leave;
-    }
-
-    /**
-     * M5 part F (design/enemies/air/lamprey, user decision F3 = a): whether the shots of {@code mount}
-     * hit a Lamprey latched onto the hull: the rear mount's and those of a weapon with the {@code side}
-     * or {@code rear} trait; front and forward wing shots pass it, and so do the wingman's.
-     */
+    /** Whether the shots of {@code mount} hit a Lamprey latched onto the hull ({@link ShotHits#hitsLatched}). */
     boolean hitsLatched(int mount) {
-        if (mount >= armament.size()) {
-            return false;
-        }
-        Armament.Mount fitted = armament.mount(mount);
-        return fitted.slot() == Armament.Slot.REAR
-                || (fitted.fires()
-                        && (fitted.weapon().flanking() || fitted.overdrive().flanking()));
+        return shotHits.hitsLatched(mount);
     }
 
-    /** Bolts and missiles hit the armed spore mines on the player's layer. */
+    /** Bolts and missiles hit the armed spore mines on the player's layer ({@link ShotHits#hitMines}). */
     void hitMines(Pool<Mine> mines) {
-        for (int i = shots.size() - 1; i >= 0; i--) {
-            Shot shot = shots.get(i);
-            WeaponSpec weapon = shot.weapon();
-            if (weapon.delivery().landing() || !medium.reaches(weapon, Layer.AIR)) {
-                continue;
-            }
-            for (int j = mines.size() - 1; j >= 0; j--) {
-                Mine mine = mines.get(j);
-                if (!mine.armed()
-                        || !weapon.size().overlaps(shot.x(), shot.y(), EnemyGun.MineSpec.BOX, mine.x(), mine.y())) {
-                    continue;
-                }
-                events.add(SimEvents.Type.ENEMY_HIT, shot.x(), shot.y(), shot.mount());
-                boolean spent = shot.pierced();
-                if (mine.damage(shot.damage())) {
-                    hits.mineDestroyed(j);
-                }
-                if (spent) {
-                    shots.free(i);
-                    break;
-                }
-            }
-        }
+        shotHits.hitMines(mines);
     }
 
-    /**
-     * M7 part F: shots that reach the air (bolts, missiles, homing shots, Rook's) hit the enemies' homing
-     * missiles: each takes the shot's damage and is brought down at 0 HP ({@link Missiles#SHOT_DOWN}).
-     */
+    /** M7 part F: shots that reach the air hit the enemies' homing missiles ({@link ShotHits#hitMissiles}). */
     void hitMissiles() {
-        if (missiles == null || missiles.size() == 0) {
-            return;
-        }
-        for (int i = shots.size() - 1; i >= 0; i--) {
-            Shot shot = shots.get(i);
-            WeaponSpec weapon = shot.weapon();
-            if (weapon.delivery().landing() || !medium.reaches(weapon, Layer.AIR)) {
-                continue;
-            }
-            for (int j = missiles.size() - 1; j >= 0; j--) {
-                Missile missile = missiles.get(j);
-                if (!weapon.size().overlaps(shot.x(), shot.y(), missile.box(), missile.x(), missile.y())) {
-                    continue;
-                }
-                events.add(SimEvents.Type.ENEMY_HIT, shot.x(), shot.y(), shot.mount());
-                boolean spent = shot.pierced();
-                if (missile.damage(shot.damage())) {
-                    missiles.destroy(j, Missiles.SHOT_DOWN);
-                }
-                if (spent) {
-                    shots.free(i);
-                    break;
-                }
-            }
-        }
+        shotHits.hitMissiles();
     }
 
-    /**
-     * Bolts and missiles that reach a set piece's layer hit its living parts; what touches its
-     * armoured body (a boss's in its current pose) instead glances off, as does a shot on a part
-     * that takes no damage now (a boss's fire-only turrets, a shut window). A boss on high air is
-     * hit only by a missile on the part it is locked onto; it passes beneath the rest. M5 part E: an
-     * arena boss's parts are hit on their own layers (a slam arm's segments are its hit boxes, an open
-     * weak spot takes its multiplier, an {@code anti-ground} weapon doubles on a surfaced part), and it
-     * has no armoured body (its platform is scenery: shots fly over it).
-     */
+    /** Bolts and missiles that reach a set piece's layer hit its living parts ({@link ShotHits#hitSetPieces}). */
     void hitSetPieces() {
-        for (int k = 0; k < setPieces.length; k++) {
-            SetPiece piece = setPieces[k];
-            if (!piece.present()) {
-                continue;
-            }
-            List<PartSpec> parts = piece.spec().parts();
-            boolean overhead = Homing.overhead(piece);
-            boolean anchored = piece.arena().isPresent();
-            for (int i = shots.size() - 1; i >= 0; i--) {
-                Shot shot = shots.get(i);
-                WeaponSpec weapon = shot.weapon();
-                if (weapon.delivery().landing()
-                        || (!anchored && !medium.reaches(weapon, piece.layer()))
-                        || (overhead && homing.overhead(shot.target()) != k)) {
-                    continue;
-                }
-                int lockedPart = overhead ? (shot.target() - PART_SERIAL) % SetPieceSpec.MAX_PARTS : -1;
-                if (piece.plateTouches(weapon.size(), shot.x(), shot.y())
-                        && (!anchored || medium.reaches(weapon, piece.layer()))) {
-                    // M7 part F: a walking boss's front plate turns every shot that meets it.
-                    events.add(SimEvents.Type.SHOT_GLANCED, shot.x(), shot.y(), shot.mount());
-                    shots.free(i);
-                    continue;
-                }
-                boolean gone = false;
-                for (int p = 0; p < parts.size() && piece.present(); p++) {
-                    if (overhead && p != lockedPart) {
-                        continue;
-                    }
-                    Layer partLayer = piece.partLayer(p);
-                    if (piece.partWrecked(p)
-                            || (anchored && !medium.reaches(weapon, partLayer))
-                            || !piece.partTouches(p, weapon.size(), shot.x(), shot.y())
-                            || !piece.partOnField(p)
-                            || (weapon.pierce() > 1 && shot.struck(-1 - k * SetPieceSpec.MAX_PARTS - p))) {
-                        continue;
-                    }
-                    if (piece.partShielded(p)) {
-                        // A boss part that takes no damage yet (its descent, a core before its phase).
-                        events.add(SimEvents.Type.SHOT_GLANCED, shot.x(), shot.y(), shot.mount());
-                        shots.free(i);
-                        gone = true;
-                        break;
-                    }
-                    events.add(SimEvents.Type.ENEMY_HIT, shot.x(), shot.y(), shot.mount());
-                    boolean spent = shot.pierced();
-                    if (piece.damagePartAt(
-                            p,
-                            shot.damage() * groundFactor(weapon, partLayer),
-                            shot.x(),
-                            shot.y(),
-                            Trig.sin(shot.heading()),
-                            Trig.cos(shot.heading()))) {
-                        hits.partDestroyed(k, p, shot.mount());
-                    }
-                    if (spent) {
-                        shots.free(i);
-                        gone = true;
-                        break;
-                    }
-                }
-                if (!gone
-                        && !overhead
-                        && !anchored
-                        && piece.present()
-                        && ((weapon.size().overlaps(shot.x(), shot.y(), piece.body(), piece.x(), piece.y())
-                                        && !partAhead(piece, shot))
-                                || piece.neckTouches(weapon.size(), shot.x(), shot.y()))) {
-                    events.add(SimEvents.Type.SHOT_GLANCED, shot.x(), shot.y(), shot.mount());
-                    shots.free(i);
-                }
-            }
-        }
+        shotHits.hitSetPieces();
     }
 
-    /**
-     * Whether a living part on the field lies ahead of the shot in its line of flight: a shot over
-     * the armoured body flies on over the unit's back towards it (the vents and the blowhole sit on
-     * the body); a shot with nothing ahead of it glances off the armour.
-     */
-    private static boolean partAhead(SetPiece piece, Shot shot) {
-        double dirX = Trig.sin(shot.heading());
-        double dirY = Trig.cos(shot.heading());
-        List<PartSpec> parts = piece.spec().parts();
-        for (int p = 0; p < parts.size(); p++) {
-            Hitbox box = parts.get(p).box();
-            double px = piece.partX(p);
-            double py = piece.partY(p);
-            if (piece.partWrecked(p) || !PlayField.overlaps(px, py, box)) {
-                continue;
-            }
-            double relX = px - shot.x();
-            double relY = py - shot.y();
-            double reach =
-                    (Math.max(box.width(), box.height()) + shot.weapon().size().width()) / 2;
-            if (relX * dirX + relY * dirY > 0 && Math.abs(relX * dirY - relY * dirX) < reach) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * M8 part A (design/player/weapons/harpoon-torpedoes; decided D13): a torpedo with a splash that struck at its
-     * place deals its {@link WeaponSpec#splash()} share of its damage to every other unit within its blast on a layer
-     * it reaches (the unit with the serial {@code struck} excepted; -1 for none); hardened units without {@code
-     * anti-ground} and growths are not hurt. Units only (not ground objects or set pieces' parts, default pending the
-     * user's review).
-     */
+    /** M8 part A: a torpedo's splash round the unit it struck ({@link ShotHits#splash}). */
     void splash(Shot shot, int struck, Pool<Enemy> enemies) {
-        WeaponSpec weapon = shot.weapon();
-        if (!(weapon.splash() > 0) || !(weapon.blast() > 0)) {
-            return;
-        }
-        double damage = shot.damage() * weapon.splash();
-        double x = shot.x();
-        double y = shot.y();
-        for (int j = enemies.size() - 1; j >= 0; j--) {
-            Enemy enemy = enemies.get(j);
-            Layer layer = enemy.layer();
-            if (enemy.serial() == struck
-                    || !medium.reaches(weapon, layer)
-                    || !onField(enemy)
-                    || passesThrough(enemy, shot.mount())
-                    || enemy.latched()
-                    || (enemy.spec().hardened() && !weapon.antiGround())
-                    || enemy.growing()
-                    || !inBlast(x, y, weapon.blast(), enemy.x(), enemy.y(), enemy.hitbox())) {
-                continue;
-            }
-            if (enemy.damage(damage * groundFactor(weapon, layer), false, false, weapon.antiSub())) {
-                hits.enemyDestroyed(j, shot.mount());
-            }
-        }
+        shotHits.splash(shot, struck, enemies);
     }
 
-    /**
-     * M9 part B (design/campaign Level 29, the wavering Stormhawks): whether a shot of {@code mount} passes through
-     * {@code enemy}: the escort's (Rook's or the Bulwark's, one past the armament's mounts) pass a neutral craft.
-     */
+    /** M9 part B: whether a shot of {@code mount} passes through {@code enemy} ({@link ShotHits#passesThrough}). */
     boolean passesThrough(Enemy enemy, int mount) {
-        return mount >= armament.size() && enemy.spec().neutral();
+        return shotHits.passesThrough(enemy, mount);
     }
 
     /** A hit on a ground object: a trigger counts it, a destructible takes the damage. */
     void strike(int index, GroundObject object, double damage) {
-        if (object.spec().trigger()) {
-            if (object.countHit()) {
-                hits.triggerReleased(index);
-            }
-        } else if (object.damage(damage)) {
-            hits.groundDestroyed(index);
-        }
-    }
-
-    /** Bolts and missiles of an {@code anti-ground} weapon do double damage on the ground layer. */
-    static double groundFactor(WeaponSpec weapon, Layer layer) {
-        return layer == Layer.GROUND
-                        && weapon.antiGround()
-                        && !weapon.delivery().landing()
-                ? 2
-                : 1;
-    }
-
-    /** Whether a blast of {@code radius} around (x, y) reaches a box around (bx, by). */
-    static boolean inBlast(double x, double y, double radius, double bx, double by, Hitbox box) {
-        double dx = Math.max(Math.abs(x - bx) - box.width() / 2, 0);
-        double dy = Math.max(Math.abs(y - by) - box.height() / 2, 0);
-        return dx * dx + dy * dy <= radius * radius;
-    }
-
-    /**
-     * Whether anything that keeps the chain going is on screen (design/systems/scoring, Chain
-     * multiplier): a live enemy on a layer the standard shots reach (not high air) whose hit box
-     * overlaps the play field, or a set piece or boss with a part on such a layer that is on the
-     * field, not wrecked and not shielded (a boss's descent). Otherwise the chain window pauses.
-     */
-    static boolean chainTargets(Pool<Enemy> enemies, SetPiece[] setPieces) {
-        for (int i = 0; i < enemies.size(); i++) {
-            Enemy enemy = enemies.get(i);
-            // M9 part B: a neutral craft is no target of the chain.
-            if (enemy.layer().hitByStandardShots()
-                    && onField(enemy)
-                    && enemy.spec().countsAsEnemy()) {
-                return true;
-            }
-        }
-        for (SetPiece piece : setPieces) {
-            if (!piece.present()) {
-                continue;
-            }
-            List<PartSpec> parts = piece.spec().parts();
-            for (int p = 0; p < parts.size(); p++) {
-                // M5 part E: on the part's own layer (an arena boss's part under the water is none).
-                if (piece.partLayer(p).hitByStandardShots()
-                        && !piece.partWrecked(p)
-                        && !piece.partShielded(p)
-                        && piece.partOnField(p)) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Whether shots, blasts and specials can reach {@code enemy}: on the play field, and not a chain
-     * member waiting for its burst ({@link Chain#doomed}).
-     */
-    static boolean onField(Enemy enemy) {
-        return PlayField.overlaps(enemy.x(), enemy.y(), enemy.hitbox()) && !Chain.doomed(enemy);
-    }
-
-    static double distanceSquared(double x, double y, double ox, double oy) {
-        return (x - ox) * (x - ox) + (y - oy) * (y - oy);
+        shotHits.strike(index, object, damage);
     }
 
     void addTo(StateHash hash) {
@@ -1204,14 +615,7 @@ final class PlayerFire {
         return sinceShot[m];
     }
 
-    /**
-     * A wingman's volley (design/player/wingmen): his gun fires from (x, y) as mount {@code mount}
-     * (past the armament's, so its shots and events are told apart); a homing projectile starts
-     * locked onto {@code target} (a serial as the homing locks use, -1 for none). He aims a lobbed
-     * shell (user decision 2026-10-07): it lands on his ground target when that lies within the
-     * lob's range of the muzzle, its flight shortened to the distance; without one it picks its
-     * ground target as the player's do.
-     */
+    /** A wingman's volley ({@link MountVolleys#wingmanVolley(int, WeaponSpec, double, double, int, Pool, Pool)}). */
     void wingmanVolley(
             int mount,
             WeaponSpec weapon,
@@ -1220,14 +624,10 @@ final class PlayerFire {
             int target,
             Pool<Enemy> enemies,
             Pool<GroundObject> ground) {
-        wingmanVolley(mount, weapon, x, y, target, enemies, ground, 0);
+        volleys.wingmanVolley(mount, weapon, x, y, target, enemies, ground);
     }
 
-    /**
-     * As {@link #wingmanVolley(int, WeaponSpec, double, double, int, Pool, Pool)}, its straight shots turned by {@code
-     * aim} radians clockwise from straight up (M8 part G: the Bulwark's shell aimed at a Depth Hunter); 0 as its muzzles
-     * point.
-     */
+    /** A wingman's volley turned by {@code aim} ({@link MountVolleys#wingmanVolley(int, WeaponSpec, double, double, int, Pool, Pool, double)}). */
     void wingmanVolley(
             int mount,
             WeaponSpec weapon,
@@ -1237,51 +637,17 @@ final class PlayerFire {
             Pool<Enemy> enemies,
             Pool<GroundObject> ground,
             double aim) {
-        List<WeaponSpec.Muzzle> muzzles = weapon.muzzles();
-        double sumX = 0;
-        double sumY = 0;
-        for (int i = 0; i < muzzles.size(); i++) {
-            WeaponSpec.Muzzle muzzle = muzzles.get(i);
-            double mx = x + muzzle.dx();
-            double my = y + muzzle.dy();
-            sumX += mx;
-            sumY += my;
-            Shot shot = shots.obtain();
-            if (shot == null) {
-                continue;
-            }
-            if (weapon.delivery() == WeaponSpec.Delivery.LOBBED) {
-                if (homing.located(target, enemies)
-                        && distanceSquared(mx, my, homing.targetX(), homing.targetY())
-                                <= weapon.range() * weapon.range()) {
-                    double share =
-                            Math.sqrt(distanceSquared(mx, my, homing.targetX(), homing.targetY())) / weapon.range();
-                    shot.lob(weapon, mount, mx, my, homing.targetX(), homing.targetY(), share);
-                } else {
-                    lob(shot, weapon, mount, mx, my, enemies, ground);
-                }
-            } else if (weapon.delivery() == WeaponSpec.Delivery.DROPPED) {
-                shot.lob(weapon, mount, mx, my, mx, my);
-            } else {
-                shot.fire(weapon, mount, mx, my, aim == 0 ? muzzle.angle() : muzzle.angle() + aim);
-                if (weapon.delivery() == WeaponSpec.Delivery.HOMING) {
-                    shot.lock(target);
-                }
-            }
-            // M8 part A: Rook's guns take the water's factors as the ship's do (none of them is anti-sub).
-            soak(shot);
-        }
-        events.add(SimEvents.Type.SHOT_FIRED, sumX / muzzles.size(), sumY / muzzles.size(), mount);
+        volleys.wingmanVolley(mount, weapon, x, y, target, enemies, ground, aim);
     }
 
     /** The enemy (a serial) the player's shots damaged within the last {@code ticks} steps; -1 for none. */
     int recentHit(int ticks) {
-        return sinceHit <= ticks ? lastHit : -1;
+        return shotHits.recentHit(ticks);
     }
 
     /** The player's last hit, which steers a wingman: hashed only when one flies. */
     void addRecentHitTo(StateHash hash) {
-        hash.add(lastHit).add(sinceHit);
+        shotHits.addRecentHitTo(hash);
     }
 
     int overdriveTicks() {

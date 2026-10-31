@@ -82,7 +82,8 @@ class DepthChargeTest {
                     for (int j = 0; j < sortie.enemyCount(); j++) {
                         Enemy enemy = sortie.enemy(j);
                         assertTrue(
-                                PlayerFire.inBlast(events.x(e), events.y(e), 48, enemy.x(), enemy.y(), enemy.hitbox()),
+                                ShotGeometry.inBlast(
+                                        events.x(e), events.y(e), 48, enemy.x(), enemy.y(), enemy.hitbox()),
                                 "the target lies in the burst");
                     }
                     return i;

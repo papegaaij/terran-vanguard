@@ -54,7 +54,7 @@ final class Topples {
             if (unit == walker
                     || unit.layer() != Layer.GROUND
                     || !unit.spec().countsAsEnemy()
-                    || !PlayerFire.onField(unit)
+                    || !ShotGeometry.onField(unit)
                     || !Toppling.underLine(
                             x,
                             y,

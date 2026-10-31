@@ -324,7 +324,7 @@ abstract class BackdropSeams {
     /**
      * M7 part H (design/campaign Level 21; the user's round 43 answer H.6): the section after a crawling arena starts
      * at the next multiple of the arena tile's height at or above the top edge, wherever the fight left the ground
-     * ({@code Backdrop.crawlSeam}), with {@code seam-settle} centred on it: both tile sets share the tile's pattern at
+     * ({@code BackdropTiles.crawlSeam}), with {@code seam-settle} centred on it: both tile sets share the tile's pattern at
      * any multiple, so one stands for all (the first at or above the data's seam); the borders are then the seam
      * piece's bottom edge over the arena's tiles and its top edge under the next section's.
      */
@@ -334,8 +334,8 @@ abstract class BackdropSeams {
         long seam = Math.floorDiv(Math.round(level.seam(BackdropLayer.GROUND, section)) + height - 1, (long) height)
                 * height;
         BufferedImage settle =
-                ImageIO.read(folder.resolve(Backdrop.SEAM_SETTLE + ".png").toFile());
-        Overlay overlay = new Overlay(Backdrop.SEAM_SETTLE, seam - settle.getHeight() / 2);
+                ImageIO.read(folder.resolve(BackdropTiles.SEAM_SETTLE + ".png").toFile());
+        Overlay overlay = new Overlay(BackdropTiles.SEAM_SETTLE, seam - settle.getHeight() / 2);
         return List.of(
                 new Border(below, below, overlay.bottom(), 0, null, overlay),
                 new Border(above, above, overlay.bottom() + settle.getHeight(), 0, overlay, null));

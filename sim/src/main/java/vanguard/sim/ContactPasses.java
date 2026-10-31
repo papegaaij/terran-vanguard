@@ -209,7 +209,7 @@ final class ContactPasses {
                 Beam beam = fire.beam(m);
                 if (beam != null
                         && beam.on()
-                        && PlayerFire.columnContact(
+                        && ShotGeometry.columnContact(
                                         beam.x(),
                                         beam.width() / 2,
                                         beam.fromY(),

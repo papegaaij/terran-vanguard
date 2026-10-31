@@ -2142,7 +2142,7 @@ public final class Enemy implements Hashed {
 
     /** M8 part B: whether its standing part {@code p} lies in a blast of {@code radius} around (bx, by). */
     boolean partInBlast(int p, double bx, double by, double radius) {
-        return partAlive(p) && PlayerFire.inBlast(bx, by, radius, partX(p), partY(p), partBox(p));
+        return partAlive(p) && ShotGeometry.inBlast(bx, by, radius, partX(p), partY(p), partBox(p));
     }
 
     /** M7 part D: its standing (first) part takes damage; returns whether this destroyed it. */

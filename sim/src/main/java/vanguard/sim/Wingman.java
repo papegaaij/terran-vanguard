@@ -567,7 +567,7 @@ public final class Wingman {
             // M5 part E (default 12): a unit under the water is neither his target nor a flank threat.
             // M5 part F (user decision F3 = a): a Lamprey latched onto the player is not his target.
             // M7 part B: nor is a unit under the sand.
-            if (!PlayerFire.onField(enemy)
+            if (!ShotGeometry.onField(enemy)
                     || enemy.layer() == Layer.SUB
                     || !enemy.layer().touchable()
                     || enemy.latched()) {
@@ -923,7 +923,7 @@ public final class Wingman {
             boolean moved = false;
             for (int j = 0; j < enemies.size(); j++) {
                 Enemy enemy = enemies.get(j);
-                if (!enemy.bodyTouches() || !PlayerFire.onField(enemy)) {
+                if (!enemy.bodyTouches() || !ShotGeometry.onField(enemy)) {
                     continue;
                 }
                 double ex = enemy.x();

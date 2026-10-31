@@ -1,8 +1,8 @@
 package vanguard.sim;
 
-import static vanguard.sim.PlayerFire.distanceSquared;
-import static vanguard.sim.PlayerFire.inBlast;
-import static vanguard.sim.PlayerFire.onField;
+import static vanguard.sim.ShotGeometry.distanceSquared;
+import static vanguard.sim.ShotGeometry.inBlast;
+import static vanguard.sim.ShotGeometry.onField;
 
 /**
  * M9 part A, the Tesla Coil Pod's arc (design/player/weapons/tesla-coil-pod; {@link WeaponSpec.Delivery#ARC}), for

@@ -298,8 +298,8 @@ public final class Links {
         for (int i = 0; i < tendrils.size(); i++) {
             Tendril tendril = tendrils.get(i);
             if (!tendril.standing()
-                    || !PlayerFire.onField(tendril.a)
-                    || !PlayerFire.onField(tendril.b)
+                    || !ShotGeometry.onField(tendril.a)
+                    || !ShotGeometry.onField(tendril.b)
                     || Math.min(tendril.ay, tendril.by) <= y
                     || Math.min(tendril.ay, tendril.by) >= lowest) {
                 continue;

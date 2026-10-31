@@ -476,7 +476,7 @@ public final class SpecialSlot {
         for (int j = enemies.size() - 1; j >= 0; j--) {
             Enemy enemy = enemies.get(j);
             // M7 part B: the Smart Bomb hits the sub layer but never the buried one.
-            if (!enemy.layer().touchable() || !PlayerFire.onField(enemy) || !within(enemy.x(), enemy.y(), radius)) {
+            if (!enemy.layer().touchable() || !ShotGeometry.onField(enemy) || !within(enemy.x(), enemy.y(), radius)) {
                 continue;
             }
             if (strike(2 * enemy.serial(), smartBomb.damage())) {
@@ -543,7 +543,7 @@ public final class SpecialSlot {
         double radius = ringReach * sinceCall / ringTicks;
         for (int j = 0; j < enemies.size(); j++) {
             Enemy enemy = enemies.get(j);
-            if (!enemy.layer().touchable() || !PlayerFire.onField(enemy)) {
+            if (!enemy.layer().touchable() || !ShotGeometry.onField(enemy)) {
                 continue;
             }
             if (within(enemy.x(), enemy.y(), radius) && (sinceCall == 1 || !within(enemy.x(), enemy.y(), inner))) {
@@ -606,7 +606,7 @@ public final class SpecialSlot {
             // M7 part B: a buried unit is out of the ring's reach as one under the water.
             if (enemy.layer() == Layer.SUB
                     || !enemy.layer().touchable()
-                    || !PlayerFire.onField(enemy)
+                    || !ShotGeometry.onField(enemy)
                     || !within(enemy.x(), enemy.y(), radius)) {
                 continue;
             }
@@ -641,7 +641,7 @@ public final class SpecialSlot {
                 stripped++;
             }
             if (enemy.hexShield.fitted()
-                    && PlayerFire.onField(enemy)
+                    && ShotGeometry.onField(enemy)
                     && enemy.layer().touchable()) {
                 enemy.stripShield(hold);
             }
@@ -721,14 +721,14 @@ public final class SpecialSlot {
             Enemy enemy = enemies.get(j);
             if (enemy.layer() == Layer.SUB
                     || !enemy.layer().touchable()
-                    || !PlayerFire.onField(enemy)
-                    || PlayerFire.columnContact(lanceX, half, 0, enemy.x(), enemy.y(), enemy.hitbox())
+                    || !ShotGeometry.onField(enemy)
+                    || ShotGeometry.columnContact(lanceX, half, 0, enemy.x(), enemy.y(), enemy.hitbox())
                             == Double.POSITIVE_INFINITY) {
                 continue;
             }
             for (int p = 0; p < enemy.partCount(); p++) {
                 if (enemy.partAlive(p)
-                        && PlayerFire.columnContact(lanceX, half, 0, enemy.partX(p), enemy.partY(p), enemy.partBox(p))
+                        && ShotGeometry.columnContact(lanceX, half, 0, enemy.partX(p), enemy.partY(p), enemy.partBox(p))
                                 < Double.POSITIVE_INFINITY
                         && enemy.damagePart(p, damage, true)) {
                     // M7 part D: a unit part in the column burns too (the Shellback's vent; M8 part B: each one).
@@ -745,7 +745,7 @@ public final class SpecialSlot {
             if (!object.hittable()
                     || spec.submerged()
                     || !PlayField.overlaps(object.x(), object.y(), spec.size())
-                    || PlayerFire.columnContact(lanceX, half, 0, object.x(), object.y(), spec.size())
+                    || ShotGeometry.columnContact(lanceX, half, 0, object.x(), object.y(), spec.size())
                             == Double.POSITIVE_INFINITY) {
                 continue;
             }
@@ -959,8 +959,8 @@ public final class SpecialSlot {
             if (layer == Layer.HIGH_AIR
                     || layer == Layer.SUB
                     || !layer.touchable()
-                    || !PlayerFire.onField(enemy)
-                    || !PlayerFire.inBlast(x, y, radius, enemy.x(), enemy.y(), enemy.hitbox())) {
+                    || !ShotGeometry.onField(enemy)
+                    || !ShotGeometry.inBlast(x, y, radius, enemy.x(), enemy.y(), enemy.hitbox())) {
                 continue;
             }
             double amount = deal(2 * enemy.serial(), layer);
@@ -980,7 +980,7 @@ public final class SpecialSlot {
             GroundObjectSpec spec = object.spec();
             if (!object.hittable()
                     || spec.submerged()
-                    || !PlayerFire.inBlast(x, y, radius, object.x(), object.y(), spec.size())) {
+                    || !ShotGeometry.inBlast(x, y, radius, object.x(), object.y(), spec.size())) {
                 continue;
             }
             if (spec.trigger()) {

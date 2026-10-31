@@ -3,15 +3,8 @@ package vanguard.game.render;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.utils.Array;
-import java.util.ArrayList;
-import java.util.List;
-import vanguard.content.BackdropData;
 import vanguard.content.BackdropLayer;
 import vanguard.content.LevelData;
-import vanguard.sim.PlayField;
 import vanguard.sim.Terrain;
 
 /**
@@ -25,13 +18,14 @@ import vanguard.sim.Terrain;
  * scroll and the atmosphere go by the level clock, their paths, animation frames and the tile sets'
  * drift by the real clock (M5 part C: moving scenery keeps its speed in a hold zone, see {@link
  * BackdropClock}). M7 part G: a strip backdrop (Level 20) keys the ground's tile sets by the strip's row instead
- * ({@link #stripTiles}); every layer scrolls with the ground's signed distance, so in a reversed section new ground
+ * ({@link BackdropTiles}); every layer scrolls with the ground's signed distance, so in a reversed section new ground
  * enters at the bottom edge and the set pieces leave by the top.
+ *
+ * <p>RF9d: drawn by layer: the tiles and the crawl ({@link BackdropTiles}), the atmosphere ({@link
+ * BackdropAtmosphere}), the set pieces and towers ({@link BackdropPieces}) and the canyon walls ({@link TrenchWalls});
+ * this class keeps the draw passes' order and the API its callers use.
  */
 public final class Backdrop {
-    private static final int WIDTH = PlayField.WIDTH;
-    private static final int HEIGHT = PlayField.HEIGHT;
-    private static final float X0 = PixelScreen.PLAY_FIELD_X;
     /** Weather on high-air may cover the play plane at no more than 40 % opacity. */
     private static final float HIGH_AIR_OPACITY = 0.4f;
     /**
@@ -41,166 +35,17 @@ public final class Backdrop {
      * the user's review in round 38).
      */
     static final float OVERHEAD_PASS_OPACITY = 0.75f;
-    /**
-     * M7 part B: the high-air pieces drawn as an overhead pass ({@link #OVERHEAD_PASS_OPACITY}). M7 part C:
-     * Level 16's rock arches (their alpha at most 53 %, so at most 40 % where they cross the field).
-     */
-    static final java.util.Set<String> OVERHEAD_PASSES = java.util.Set.of("transport", "arch-a", "arch-b");
-    /** M5 part H: the high-air layer's strength ({@link #frontFade}), 1 by default. */
-    private float frontFade = 1;
+
+    /** M8 part C: an ice shaft's wall texture ({@link TrenchWalls#ICE_WALL}). */
+    static final String ICE_WALL = TrenchWalls.ICE_WALL;
 
     private final LevelData level;
-    private final double ramp;
-    /** The atmosphere along the level, each with its look in {@link #looks} (M5 part G: easy's, {@link #easy}). */
-    private List<LevelData.Stretch> stretches;
-
-    private final TextureRegion pixel;
-    private final Color haze;
-    private final double[] factors = new double[BackdropLayer.values().length];
-    /** Per layer and section: the tile set, or null where the layer is empty. */
-    private final Tiles[][] tiles;
-    /** Per layer and section: where the section's tile set begins on the layer. */
-    private final long[][] seams;
-    /**
-     * Per layer: the rows its tile pixel rows count from, added to a layer row (0; M7 part G: a strip's origin on the
-     * ground layer, so a tile's pixel row is the strip row's, see {@link #stripTiles}).
-     */
-    private final long[] phase = new long[BackdropLayer.values().length];
-
-    private final Piece[][] pieces;
-    /**
-     * M8 part D: per ground piece its light, or null: a piece {@code <id>-glow} declared next to it but not placed
-     * (Level 24's {@code relay-beacon-glow}), drawn additively over the grade at the piece's place on its frame clock.
-     */
-    private final List<Array<AtlasRegion>> glows;
-    /**
-     * M9 part B (design/campaign Level 29, the turning station): per ground piece the light it turns to, or null: an
-     * image {@code <id>-glow-red} beside its {@code -glow}, crossfaded in over {@value #TURN_SECONDS} s from the level
-     * time {@link #turnAt} (Block C's and two Coalition blocks' white lights going red).
-     */
-    private final List<Array<AtlasRegion>> turnedGlows;
-    /**
-     * M9 part B (design/campaign Level 29, the rescue): per ground piece its hold opening, or null: a declared but
-     * unplaced piece {@code <id>-hold} (the prison tender's), drawn over the piece from the escort swap's release
-     * ({@link #holdOpened}), {@value #HOLD_FRAME_TICKS} steps a frame, its last frame held.
-     */
-    private final List<Array<AtlasRegion>> holds;
-
-    /** M9 part B: steps since the hold opened (the escort swap's release); -1 while it is shut. */
-    private int holdTicks = -1;
-
-    /** M9 part B: the suffix of a piece's hold opening. */
-    static final String HOLD = "-hold";
-
-    /** M9 part B: the hold opens at 15 fps (Level 29's data: {@code prison-tender-hold}, 6 frames). */
-    static final int HOLD_FRAME_TICKS = 4;
-
-    /** M9 part B: the hold opened {@code ticks} steps ago (the escort swap's release), -1 while it is shut. */
-    public void holdOpened(int ticks) {
-        holdTicks = ticks;
-    }
-
-    /** M9 part B: the level time the station turns: its dormant ground targets' wake ({@code dormant_until}); NaN. */
-    private final double turnAt;
-
-    private final TowerProjection towers;
-    private final Look[] looks;
-    /** M5 part C: the collapse's dust peak's look (Level 09's {@code heavy}); null without a collapse. */
-    private final Look dust;
-    /** How strongly the dust peak shows now, 0 to 1 ({@link #dustPeak}). */
-    private float dustWeight;
+    private final BackdropPieces pieces;
+    private final BackdropTiles tiles;
+    private final BackdropAtmosphere atmosphere;
+    private final TrenchWalls trench;
     /** M5 part C: drawn between the ground pieces and the towers; null for nothing ({@link #underTowers}). */
     private UnderTowers underTowers;
-
-    private final TextureRegion strip = new TextureRegion();
-    /** M7 part C: the backdrop atlas and the level's folder in it (the canyon's images, {@link #canyon}). */
-    private final Sprites sprites;
-
-    private final String folder;
-    /** M7 part C: the canyon's rock drawn with the ground's pieces; null without terrain ({@link #canyon}). */
-    private WallProjection canyon;
-    /**
-     * M8 part E: the terrain whose notches (the side caves) have their mouths drawn over the walls ({@link
-     * #drawCaveMouths}); null without notches or without the art. Per notch its mouth's image (null: none), its column
-     * on the wall's foot line and its row (from the top) on the notch's middle row.
-     */
-    private Terrain caves;
-
-    private AtlasRegion[] caveMouths = new AtlasRegion[0];
-    private int[] caveFoot = new int[0];
-    private int[] caveMid = new int[0];
-    /** M8 part E: drawn under the walls (over the floor); null for nothing ({@link #underWalls}). */
-    private UnderTowers underWalls;
-
-    private Look from;
-    private Look to;
-    private float weight;
-
-    /**
-     * M7 part H: the section after a crawling arena (Level 21's section 6), -1 without one ({@link #crawls}); its
-     * start's script time, and the ground scroll the data places it at.
-     */
-    private int crawlNext = -1;
-
-    private double crawlStart = Double.NaN;
-    private double crawlPlanned;
-    /** Whether that section has started ({@link #crawlEnded(double)}): its seams and its pieces' shift are set. */
-    private boolean crawlSet;
-    /** How far the ground at its start lies past where the data places it, ground px. */
-    private double crawlShift;
-    /** The seam piece laid over its ground seam ({@code seam-settle}), null without one, and its bottom row. */
-    private TextureRegion settle;
-
-    private long settleBottom;
-
-    private record Tiles(TextureRegion image, double drift) {}
-
-    private record Look(Tiles banks, Tiles wisps, float haze) {}
-
-    /**
-     * A placed set piece with its images and its bottom edge on its layer; {@code pathStart} is its
-     * path's first waypoint's script time (NaN without a path).
-     */
-    /**
-     * M9 part C: the backdrop pieces with a strobe in their frame 0 (tools/art/backdrop_l30.py: Level 30's lane buoys and
-     * its last beacon, one flash in 2 s, all in step), heard as a faint tick as each flash starts ({@link #strobed()}).
-     */
-    static final java.util.Set<String> STROBES = java.util.Set.of("lane-buoy", "lane-beacon");
-
-    /** M9 part C: the strobe frame drawn at the last draw and at this one; the x of a flash started now, else NaN. */
-    private int strobeFrame = -1;
-
-    private double strobeX = Double.NaN;
-    private boolean strobeDrawn;
-
-    private void strobeSeen(int frame, double x) {
-        if (frame == 0 && strobeFrame != 0 && Double.isNaN(strobeX)) {
-            strobeX = x;
-        }
-        strobeDrawn = true;
-        drawnStrobeFrame = frame;
-    }
-
-    private int drawnStrobeFrame = -1;
-
-    /**
-     * M9 part C: after a frame's draw, the play-field x of a strobe whose flash started in it (NaN for none); the next
-     * frame starts afresh.
-     */
-    public double strobed() {
-        double x = strobeX;
-        strobeFrame = strobeDrawn ? drawnStrobeFrame : -1;
-        strobeDrawn = false;
-        strobeX = Double.NaN;
-        return x;
-    }
-
-    private record Piece(
-            BackdropData.PlacedPiece placed,
-            BackdropData.Piece spec,
-            Array<AtlasRegion> images,
-            long bottom,
-            double pathStart) {}
 
     /**
      * @param sprites the backdrop atlas, which holds the level's images as {@code level-NN/<id>}
@@ -208,143 +53,25 @@ public final class Backdrop {
      */
     public Backdrop(Sprites sprites, LevelData level, String levelKey) {
         this.level = level;
-        this.sprites = sprites;
-        BackdropData data = level.backdrop();
-        ramp = data.ramp();
-        pixel = sprites.pixel;
-        haze = Color.valueOf(data.hazeColour());
-        folder = folder(levelKey, level);
-        int layerCount = BackdropLayer.values().length;
-        int sectionCount = level.sections().size();
-        tiles = new Tiles[layerCount][sectionCount];
-        seams = new long[layerCount][sectionCount];
-        pieces = new Piece[layerCount][];
-        for (BackdropLayer layer : BackdropLayer.values()) {
-            int l = layer.ordinal();
-            factors[l] = data.factor(layer);
-            for (int s = 0; s < sectionCount; s++) {
-                seams[l][s] = s == 0 ? Long.MIN_VALUE : Math.round(level.seam(layer, s));
-            }
-            List<Piece> onLayer = new ArrayList<>();
-            for (BackdropData.PlacedPiece placed : data.placements()) {
-                BackdropData.Piece spec = data.pieces().get(placed.piece());
-                // M7 part C: a face patch is drawn on its wall's face (WallProjection), not flat.
-                if (spec.layer() == layer && !spec.isTower() && !WallProjection.FACE_PATCHES.contains(placed.piece())) {
-                    Array<AtlasRegion> images = sprites.backdrop(folder + placed.piece(), spec.imageCount());
-                    long bottom =
-                            Math.round(level.pieceCentre(placed) - spec.size().height() / 2);
-                    double pathStart =
-                            placed.path().map(points -> points.getFirst().t()).orElse(Double.NaN);
-                    onLayer.add(new Piece(placed, spec, images, bottom, pathStart));
-                }
-            }
-            pieces[l] = onLayer.toArray(Piece[]::new);
-        }
-        Piece[] onGround = pieces[BackdropLayer.GROUND.ordinal()];
-        List<Array<AtlasRegion>> lights = new ArrayList<>();
-        List<Array<AtlasRegion>> turned = new ArrayList<>();
-        for (Piece piece : onGround) {
-            String light = piece.placed().piece() + GLOW;
-            BackdropData.Piece spec = data.pieces().get(light);
-            lights.add(
-                    spec != null && spec.imageCount() == piece.images().size
-                            ? sprites.backdrop(folder + light, spec.imageCount())
-                            : spec == null ? undeclared(sprites, folder + light, piece.images().size) : null);
-            // M9 part B: the light the piece turns to ({@code <id>-glow-red}, Level 29's Block C) at the turn.
-            turned.add(undeclared(sprites, folder + light + TURNED, piece.images().size));
-        }
-        glows = lights;
-        turnedGlows = turned;
-        List<Array<AtlasRegion>> opened = new ArrayList<>();
-        for (Piece piece : onGround) {
-            String hold = piece.placed().piece() + HOLD;
-            BackdropData.Piece spec = data.pieces().get(hold);
-            opened.add(
-                    spec != null && spec.frames().isPresent()
-                            ? sprites.backdrop(folder + hold, spec.imageCount())
-                            : null);
-        }
-        holds = opened;
-        turnAt = turnSeconds(level);
-        towers = new TowerProjection(towers(sprites, folder, level), pixel);
-        for (int s = 0; s < sectionCount; s++) {
-            for (String id : level.sections().get(s).tiles()) {
-                BackdropData.TileSet tileSet = data.tileSets().get(id);
-                tiles[tileSet.layer().ordinal()][s] = tiles(sprites, folder, id, tileSet);
-            }
-        }
-        data.strip().ifPresent(keyed -> stripTiles(keyed, data));
-        stretches = level.atmosphereStretches();
-        looks = new Look[stretches.size()];
-        for (int s = 0; s < looks.length; s++) {
-            BackdropData.Look look =
-                    data.atmosphere().of(stretches.get(s).atmosphere()).orElseThrow();
-            looks[s] = new Look(
-                    look.banks()
-                            .map(id ->
-                                    tiles(sprites, folder, id, data.tileSets().get(id)))
-                            .orElse(null),
-                    look.wisps()
-                            .map(id ->
-                                    tiles(sprites, folder, id, data.tileSets().get(id)))
-                            .orElse(null),
-                    (float) look.haze());
-        }
-        dust = level.collapse()
-                .flatMap(collapse -> data.atmosphere().of(collapse.dust().atmosphere()))
-                .map(look -> new Look(
-                        look.banks()
-                                .map(id -> tiles(
-                                        sprites, folder, id, data.tileSets().get(id)))
-                                .orElse(null),
-                        look.wisps()
-                                .map(id -> tiles(
-                                        sprites, folder, id, data.tileSets().get(id)))
-                                .orElse(null),
-                        (float) look.haze()))
-                .orElse(null);
+        String folder = folder(levelKey, level);
+        // The atlas lookups in their order: the pieces, their lights and holds, the towers; the tile sets; the looks.
+        pieces = new BackdropPieces(sprites, level, folder);
+        tiles = new BackdropTiles(sprites, level, folder);
+        atmosphere = new BackdropAtmosphere(sprites, level, folder, tiles);
+        trench = new TrenchWalls(sprites, level, folder, tiles, pieces);
+    }
+
+    /** M9 part B: the hold opened {@code ticks} steps ago (the escort swap's release), -1 while it is shut. */
+    public void holdOpened(int ticks) {
+        pieces.holdOpened(ticks);
     }
 
     /**
-     * M7 part G, the strip backdrop (design/campaign Level 20, a level that flies back over ground it has shown;
-     * m7g-gaps §1.7): the layers its zones name tile sets on are keyed by the strip's row instead of by section. Strip
-     * row = origin + the ground's (signed) scroll + y, so on the ground layer a zone from strip row {@code from} begins
-     * at layer row {@code from - origin} (on another layer at that times its factor), whichever way the ground moves;
-     * the tile's pixel row is the strip row's ({@link #phase}). The zones replace the sections' tile sets on those
-     * layers (the sections name none with a strip).
+     * M9 part C: after a frame's draw, the play-field x of a strobe whose flash started in it (NaN for none); the next
+     * frame starts afresh.
      */
-    private void stripTiles(BackdropData.Strip strip, BackdropData data) {
-        List<BackdropData.Zone> zones = strip.zones();
-        for (BackdropLayer layer : BackdropLayer.values()) {
-            int l = layer.ordinal();
-            Tiles[] keyed = new Tiles[zones.size()];
-            long[] starts = new long[zones.size()];
-            boolean any = false;
-            for (int z = 0; z < zones.size(); z++) {
-                BackdropData.Zone zone = zones.get(z);
-                starts[z] = z == 0 ? Long.MIN_VALUE : stripSeam(strip, z, factors[l]);
-                for (String id : zone.tiles()) {
-                    BackdropData.TileSet tileSet = data.tileSets().get(id);
-                    if (tileSet.layer() == layer) {
-                        keyed[z] = tiles(sprites, folder, id, tileSet);
-                        any = true;
-                    }
-                }
-            }
-            if (any) {
-                tiles[l] = keyed;
-                seams[l] = starts;
-                phase[l] = Math.round(strip.origin() * factors[l]);
-            }
-        }
-    }
-
-    /**
-     * M7 part G: where zone {@code zone} of a strip begins on a layer of scroll factor {@code factor}, in the layer's
-     * rows (0 at the screen's bottom edge at the level start, as {@link LevelData#pieceCentre} places the pieces).
-     */
-    static long stripSeam(BackdropData.Strip strip, int zone, double factor) {
-        return Math.round((strip.zones().get(zone).from() - strip.origin()) * factor);
+    public double strobed() {
+        return pieces.strobed();
     }
 
     /**
@@ -352,101 +79,32 @@ public final class Backdrop {
      * that long (Level 13's whiteout, 6 s); the same stretches, only their times differ.
      */
     public void easy(boolean easy) {
-        stretches = level.atmosphereStretches(easy);
+        atmosphere.easy(easy);
     }
 
-    /**
-     * M7 part H (design/campaign Level 21; the user's round 43 answer H.6): section {@code arena} (0-based) is an arena
-     * whose ground crawls on while the clock is held, so the ground at the next section's start is not where the data
-     * places it. Until that section starts the crawl keeps drawing the arena's tile sets (its seams wait) and the next
-     * section's pieces are not drawn; then {@link #crawlEnded(double)} lays them out from the actual ground.
-     */
+    /** M7 part H: section {@code arena} (0-based) is an arena whose ground crawls on ({@link BackdropTiles#crawls}). */
     void crawls(int arena) {
-        if (arena < 0 || arena + 1 >= level.sections().size()) {
-            return;
-        }
-        crawlNext = arena + 1;
-        crawlStart = level.sections().get(arena).end();
-        crawlPlanned = level.scrollAt(crawlStart);
-        settle = sprites.hasBackdrop(folder + SEAM_SETTLE)
-                ? sprites.backdrop(folder + SEAM_SETTLE, 1).first()
-                : null;
-        crawlPending();
+        tiles.crawls(arena);
     }
-
-    /** M7 part H: the seam piece a crawl's next section lays over its ground seam (Level 21's settling dust). */
-    static final String SEAM_SETTLE = "seam-settle";
 
     /** M7 part H: the crawl's next section has not started (a restart, a retry from the boss): its seams wait. */
     void crawlPending() {
-        if (crawlNext < 0) {
-            return;
-        }
-        for (int l = 0; l < tiles.length; l++) {
-            if (crawlNext < tiles[l].length && tiles[l][crawlNext] != null) {
-                seams[l][crawlNext] = Long.MAX_VALUE;
-            }
-        }
-        crawlSet = false;
-        crawlShift = 0;
+        tiles.crawlPending();
     }
 
     /** M7 part H: whether the crawl's next section has started ({@link #crawlEnded(double)}); false without a crawl. */
     boolean crawlEnded() {
-        return crawlSet;
+        return tiles.crawlEnded();
     }
 
-    /**
-     * M7 part H: the crawl's next section starts with the ground at {@code ground}: on each layer its tile set starts at
-     * the next seam of the arena's tile at or above the top edge ({@link #crawlSeam}; on the ground the next multiple of
-     * 512 for Level 21's floor with the seam piece's lower half off the screen), {@code seam-settle} centred on the
-     * ground's;
-     * its pieces shift by the ground's distance past where the data places the section's start (times their layer's
-     * factor), so Level 21's lift-offs keep their place in the section however long the fight ran.
-     */
+    /** M7 part H: the crawl's next section starts with the ground at {@code ground} ({@link BackdropTiles#crawlEnded}). */
     void crawlEnded(double ground) {
-        if (crawlNext < 0) {
-            return;
-        }
-        for (int l = 0; l < tiles.length; l++) {
-            if (crawlNext < tiles[l].length && tiles[l][crawlNext] != null) {
-                Tiles arena = tiles[l][crawlNext - 1];
-                int height = arena == null ? 1 : arena.image().getRegionHeight();
-                int margin = l == BackdropLayer.GROUND.ordinal() && settle != null ? settle.getRegionHeight() / 2 : 0;
-                seams[l][crawlNext] = crawlSeam(Math.round(ground * factors[l]), height, margin);
-            }
-        }
-        long groundSeam = seams[BackdropLayer.GROUND.ordinal()][crawlNext];
-        if (settle != null && groundSeam != Long.MAX_VALUE) {
-            settleBottom = groundSeam - settle.getRegionHeight() / 2;
-        }
-        crawlShift = ground - crawlPlanned;
-        crawlSet = true;
+        tiles.crawlEnded(ground);
     }
 
-    /**
-     * M7 part H: where the section after a crawl begins on a layer whose scroll is {@code scroll} as it starts: the
-     * next multiple of the arena's tile {@code height} at or above the top edge (both tile sets share the pattern
-     * there, H.6), at least {@code margin} px above it (the seam piece's lower half: it never pops in on the screen; on
-     * Level 21's ground 160 px, so the settled floor enters within 512 + 160 px, ≤ 27 s at 25 px/s).
-     */
-    static long crawlSeam(long scroll, int height, int margin) {
-        long top = scroll + HEIGHT + margin;
-        return Math.floorDiv(top + height - 1, (long) height) * height;
-    }
-
-    /** M7 part H: a piece of the crawl's next section ({@link #crawls}): held back until it starts, then shifted. */
-    private boolean afterCrawl(BackdropData.PlacedPiece placed) {
-        return crawlNext >= 0 && placed.t() >= crawlStart;
-    }
-
-    /**
-     * M5 part C: the collapse's event-triggered dust peak (Level 09) shows at {@code weight}, 0 (the
-     * section's own atmosphere) to 1 (the peak's: its banks, wisps and haze), blended like a change
-     * across a section boundary.
-     */
+    /** M5 part C: the collapse's dust peak (Level 09) shows at {@code weight}, 0 to 1. */
     public void dustPeak(float weight) {
-        dustWeight = dust == null ? 0 : Math.clamp(weight, 0, 1);
+        atmosphere.dustPeak(weight);
     }
 
     /**
@@ -454,139 +112,32 @@ public final class Backdrop {
      * layer, within {@code reach} px; -1 for none.
      */
     int towerNear(double groundCentre, double reach) {
-        return towers.nearest(groundCentre, reach);
+        return pieces.towerNear(groundCentre, reach);
     }
 
     /** M5 part C: tower {@code index} ({@link #towerNear}) is not drawn (the fallen arcology); -1 draws them all. */
     void hideTower(int index) {
-        towers.hide(index);
+        pieces.hideTower(index);
     }
 
     /** M5 part C: tower {@code index} ({@link #towerNear}) is drawn bent (see {@link TowerProjection#bend}); -1 for none. */
     void bendTower(int index, double lean, double shakeX, double shakeY, double share, double crush, float dust) {
-        towers.bend(index, lean, shakeX, shakeY, share, crush, dust);
+        pieces.bendTower(index, lean, shakeX, shakeY, share, crush, dust);
     }
 
-    /**
-     * M7 part C: the level's canyon from the simulation's {@code terrain} (null: none), drawn with the
-     * ground's pieces ({@link WallProjection}) in the {@code looks} the level data gives it: the walls'
-     * {@code canyon-wall} and {@code wall-foot}, the islands' {@code <look>-face} and {@code <look>-top}
-     * images, the face patches' images, all from the level's backdrop folder.
-     */
+    /** M7 part C: the level's canyon from the simulation's {@code terrain} (null: none), see {@link TrenchWalls#canyon}. */
     void canyon(Terrain terrain, WallProjection.Looks looks) {
-        caves = null;
-        if (terrain == null) {
-            canyon = null;
-            return;
-        }
-        // M8 part E: the side caves' mouths (Level 25's cave-mouth-left and -right, declared, not placed); M9 part E:
-        // Level 32's galleries, one image per side and depth (gallery-<side>-<depth>) in place of them.
-        List<Terrain.Notch> notches = terrain.notches();
-        caveMouths = new AtlasRegion[notches.size()];
-        caveFoot = new int[notches.size()];
-        caveMid = new int[notches.size()];
-        boolean any = false;
-        for (int n = 0; n < notches.size(); n++) {
-            Terrain.Notch notch = notches.get(n);
-            int side = notch.side() == Terrain.Side.LEFT ? 0 : 1;
-            String sideName = side == 0 ? "left" : "right";
-            int depth = (int) Math.round(notch.depth());
-            String gallery = folder + GALLERY + sideName + "-" + depth;
-            String mouth = folder + CAVE_MOUTH + sideName;
-            if (sprites.hasBackdrop(gallery)) {
-                caveMouths[n] = sprites.backdrop(gallery, 1).first();
-                caveFoot[n] = side == 0 ? depth + GALLERY_RIM : GALLERY_SPILL;
-                caveMid[n] = caveMouths[n].getRegionHeight() / 2;
-            } else if (sprites.hasBackdrop(mouth)) {
-                caveMouths[n] = sprites.backdrop(mouth, 1).first();
-                caveFoot[n] = CAVE_FOOT[side];
-                caveMid[n] = CAVE_MID;
-            }
-            any |= caveMouths[n] != null;
-        }
-        if (any) {
-            caves = terrain;
-        }
-        List<WallProjection.Island> islands = new ArrayList<>();
-        for (WallProjection.IslandLook look : looks.islands()) {
-            List<AtlasRegion> top = new ArrayList<>();
-            sprites.backdrop(folder + look.look() + "-top").forEach(top::add);
-            islands.add(new WallProjection.Island(
-                    look.foot(),
-                    look.look(),
-                    sprites.backdrop(folder + look.look() + "-face", 1).first(),
-                    top));
-        }
-        List<WallProjection.Patch> patches = new ArrayList<>();
-        for (WallProjection.FacePatch patch : looks.patches()) {
-            AtlasRegion image = sprites.backdrop(folder + patch.look(), 1).first();
-            double half = image.getRegionHeight() / 2.0;
-            patches.add(new WallProjection.Patch(patch.side(), patch.row() - half, patch.row() + half, image));
-        }
-        // M8 part C: an ice shaft (Level 23) has its own walls, wet below the waterline, with the collars' glow.
-        boolean ice = !sprites.hasBackdrop(folder + CANYON_WALL) && sprites.hasBackdrop(folder + ICE_WALL);
-        String wall = ice ? ICE_WALL : CANYON_WALL;
-        String foot = ice ? ICE_WALL + "-foot" : "wall-foot";
-        canyon = new WallProjection(
-                terrain,
-                looks,
-                sprites.backdrop(folder + wall, 1).first(),
-                sprites.backdrop(folder + foot, 1).first(),
-                pixel,
-                islands,
-                patches,
-                ice
-                        ? new WallProjection.Ice(
-                                optionalImage(folder + wall + "-wet"),
-                                optionalImage(folder + foot + "-wet"),
-                                optionalImage(folder + wall + "-glow"),
-                                wetRow)
-                        : null);
+        trench.canyon(terrain, looks);
     }
-
-    /** M7 part C: a canyon's wall texture; M8 part C: an ice shaft's ({@code ice-wall}, {@code -wet}, {@code -glow}). */
-    static final String CANYON_WALL = "canyon-wall";
-    /**
-     * M8 part E: a side cave's mouth seen from above ({@code cave-mouth-left}, {@code -right}; tools/art/backdrop_l25.py):
-     * per side the image's column on the wall's foot line, and its row (from the top) on the notch's middle row.
-     */
-    static final String CAVE_MOUTH = "cave-mouth-";
-
-    static final int[] CAVE_FOOT = {84, 27};
-    static final int CAVE_MID = 62;
-
-    /**
-     * M9 part E: Level 32's notch mouths ({@code gallery-<side>-<depth>}, tools/art/backdrop_l32.py): the foot line at
-     * column depth + {@link #GALLERY_RIM} (left) or {@link #GALLERY_SPILL} (right), the notch's middle row at the image's
-     * middle row.
-     */
-    static final String GALLERY = "gallery-";
-
-    static final int GALLERY_RIM = 16;
-    static final int GALLERY_SPILL = 28;
-
-    static final String ICE_WALL = "ice-wall";
-
-    /**
-     * M8 part C: the terrain row from which an ice shaft's walls are wet (the first waterline's ground row less the play
-     * field's height: Level 23's 2,106); +∞ without a waterline.
-     */
-    private double wetRow = Double.POSITIVE_INFINITY;
 
     /** M8 part C: an ice shaft's walls are wet from terrain row {@code row} up (the waterline). */
     void wetFrom(double row) {
-        wetRow = row;
-    }
-
-    private AtlasRegion optionalImage(String name) {
-        return sprites.hasBackdrop(name) ? sprites.backdrop(name, 1).first() : null;
+        trench.wetFrom(row);
     }
 
     /** M8 part C: an ice shaft's collar strips glowing over its walls, after the grade (nothing for a canyon). */
     public void drawCanyonGlow(SpriteBatch batch) {
-        if (canyon != null) {
-            canyon.drawGlow(batch);
-        }
+        trench.drawCanyonGlow(batch);
     }
 
     /** What is drawn over the ground layer's set pieces and under its towers (Level 09's collapse). */
@@ -596,7 +147,7 @@ public final class Backdrop {
 
     /** M8 part E: {@code layer} is drawn under the canyon's walls, over its floor; null for nothing. */
     void underWalls(UnderTowers layer) {
-        underWalls = layer;
+        trench.underWalls(layer);
     }
 
     /** M5 part C: {@code layer} is drawn between the ground pieces and the towers; null for nothing. */
@@ -606,7 +157,7 @@ public final class Backdrop {
 
     /** M5 part C: tower {@code index} ({@link #towerNear}). */
     TowerProjection.Tower tower(int index) {
-        return towers.tower(index);
+        return pieces.tower(index);
     }
 
     /**
@@ -623,45 +174,6 @@ public final class Backdrop {
         return name.substring(0, "level-NN".length()) + "/";
     }
 
-    /** The level's placed towers with their roofs and wall textures. */
-    private static List<TowerProjection.Tower> towers(Sprites sprites, String folder, LevelData level) {
-        BackdropData data = level.backdrop();
-        List<TowerProjection.Tower> towers = new ArrayList<>();
-        for (BackdropData.PlacedPiece placed : data.placements()) {
-            BackdropData.Piece spec = data.pieces().get(placed.piece());
-            if (spec.tower().isEmpty()) {
-                continue;
-            }
-            BackdropData.Tower tower = spec.tower().get();
-            AtlasRegion roof = sprites.backdrop(folder + placed.piece(), 1).first();
-            if (roof.getRegionWidth() != spec.imageWidth() || roof.getRegionHeight() != spec.imageHeight()) {
-                throw new IllegalStateException("'" + placed.piece() + "': a tower's roof is drawn at its scale, "
-                        + spec.imageWidth() + "x" + spec.imageHeight() + ", the image is " + roof.getRegionWidth()
-                        + "x" + roof.getRegionHeight());
-            }
-            int footWidth = (int) Math.round(spec.size().width());
-            int footHeight = (int) Math.round(spec.size().height());
-            double centre = level.pieceCentre(placed);
-            towers.add(new TowerProjection.Tower(
-                    placed.x(),
-                    centre,
-                    Math.round(centre - footHeight / 2.0),
-                    footWidth,
-                    footHeight,
-                    tower.scale(),
-                    tower.height(),
-                    (float) tower.shadeOrDefault(),
-                    roof,
-                    sprites.backdrop(folder + tower.wall(), 1).first()));
-        }
-        return towers;
-    }
-
-    private static Tiles tiles(Sprites sprites, String folder, String id, BackdropData.TileSet tileSet) {
-        return new Tiles(
-                sprites.backdrop(folder + id, 1).first(), tileSet.drift().orElse(0.0));
-    }
-
     /**
      * The layers below the ground: deep (if the level has one), far and the haze; then
      * {@link #drawGroundTiles}.
@@ -670,23 +182,18 @@ public final class Backdrop {
      * @param clock the level clock and the real clock at the render time
      */
     public void drawBehind(SpriteBatch batch, double groundScroll, BackdropClock clock) {
-        blend(clock.script());
+        atmosphere.blend(clock.script());
         if (level.backdrop().hasDeep()) {
             // A surface without a deep layer (Luna) has ground tiles that cover the screen.
             drawLayer(batch, BackdropLayer.DEEP, groundScroll, clock);
         }
         drawLayer(batch, BackdropLayer.FAR, groundScroll, clock);
-        float veil = from.haze() + (to.haze() - from.haze()) * weight;
-        if (veil > 0) {
-            batch.setColor(haze.r, haze.g, haze.b, veil);
-            batch.draw(pixel, X0, 0, WIDTH, HEIGHT);
-            batch.setColor(Color.WHITE);
-        }
+        atmosphere.drawHaze(batch);
     }
 
     /** The ground layer's tiles, over the haze (they catch the flyers' shadows, see {@link Shadows}). */
     public void drawGroundTiles(SpriteBatch batch, double groundScroll, BackdropClock clock) {
-        drawSectionTiles(batch, BackdropLayer.GROUND, scroll(BackdropLayer.GROUND, groundScroll), clock);
+        tiles.drawSectionTiles(batch, BackdropLayer.GROUND, tiles.scroll(BackdropLayer.GROUND, groundScroll), clock);
     }
 
     /**
@@ -696,189 +203,20 @@ public final class Backdrop {
      * scenery), with Level 09's collapse's shadow and base dust between them ({@link #underTowers}):
      * all under the ground objects and units drawn next, and marking the shadow stencil with the rest
      * of the ground (see {@link Shadows}). M7 part C: before the towers, a canyon's rock ({@link
-     * WallProjection}): the foot bands and the rock's shadows on the floor, the walls' steps, the {@code
+     * TrenchWalls#draw}): the foot bands and the rock's shadows on the floor, the walls' steps, the {@code
      * plateau} layer beyond the walls' rims (over the rock below the rim's height), the buttes (the tower
      * rule: ground units, bullets and the flyers' shadows stay over them).
      */
     public void drawGroundPieces(SpriteBatch batch, double groundScroll, BackdropClock clock) {
-        if (crawlSet && settle != null) {
-            // M7 part H: the settling dust's soft edge over the crawl's next ground seam, under the other pieces.
-            long y = settleBottom - scroll(BackdropLayer.GROUND, groundScroll);
-            if (y < HEIGHT && y + settle.getRegionHeight() > 0) {
-                batch.draw(settle, X0, y);
-            }
-        }
-        drawPieces(batch, BackdropLayer.GROUND, scroll(BackdropLayer.GROUND, groundScroll), clock, false);
+        // M7 part H: the settling dust's soft edge over the crawl's next ground seam, under the other pieces.
+        tiles.drawSettle(batch, groundScroll);
+        pieces.drawPieces(
+                batch, BackdropLayer.GROUND, tiles.scroll(BackdropLayer.GROUND, groundScroll), clock, false, tiles);
         if (underTowers != null) {
             underTowers.draw(batch);
         }
-        if (canyon != null) {
-            canyon.prepare(Math.round(groundScroll));
-            canyon.drawFloor(batch);
-            if (underWalls != null) {
-                // M8 part E: what swims into the rock goes behind the walls' face.
-                underWalls.draw(batch);
-            }
-            canyon.drawWalls(batch);
-            drawPlateau(batch, groundScroll, clock);
-            canyon.drawIslands(batch);
-            drawCaveMouths(batch, Math.round(groundScroll));
-        }
-        towers.draw(batch, groundScroll);
-    }
-
-    /**
-     * M8 part E: each notch's mouth on the screen ({@link #CAVE_MOUTH}), over the walls and under the ground objects
-     * (Level 25's survey sub lies in one): its image's {@link #CAVE_FOOT} column on its wall's line at the notch's
-     * middle row, its {@link #CAVE_MID} row on that row, at full size (no projection); M9 part E: Level 32's galleries
-     * ({@link #GALLERY}) by the notch's side and depth, their foot column and middle row their own.
-     */
-    private void drawCaveMouths(SpriteBatch batch, long groundScroll) {
-        if (caves == null) {
-            return;
-        }
-        List<Terrain.Notch> notches = caves.notches();
-        for (int n = 0; n < notches.size(); n++) {
-            Terrain.Notch notch = notches.get(n);
-            int side = notch.side() == Terrain.Side.LEFT ? 0 : 1;
-            AtlasRegion mouth = caveMouths[n];
-            double y = notch.scroll() - groundScroll + HEIGHT;
-            if (mouth == null || y + mouth.getRegionHeight() < 0 || y - mouth.getRegionHeight() > HEIGHT) {
-                continue;
-            }
-            double foot = side == 0 ? caves.leftAt(notch.scroll()) : caves.rightAt(notch.scroll());
-            if (Double.isNaN(foot)) {
-                continue;
-            }
-            batch.draw(
-                    mouth, Math.round(X0 + foot - caveFoot[n]), Math.round(y - (mouth.getRegionHeight() - caveMid[n])));
-        }
-    }
-
-    /**
-     * M7 part C: the {@code plateau} layer (its tiles, then its pieces) only beyond the canyon walls'
-     * rims, row by row (drawn over the walls: the rock below the rim is behind the plateau) ({@link WallProjection#leftClip}, {@link WallProjection#rightClip}); nothing where
-     * a row has no wall. Its tile sets do not drift.
-     */
-    private void drawPlateau(SpriteBatch batch, double groundScroll, BackdropClock clock) {
-        if (!level.backdrop().hasPlateau()) {
-            return;
-        }
-        int l = BackdropLayer.PLATEAU.ordinal();
-        long scroll = scroll(BackdropLayer.PLATEAU, groundScroll);
-        for (int y = 0; y < HEIGHT; y++) {
-            float left = canyon.leftClip(y);
-            float right = canyon.rightClip(y);
-            if (Float.isNaN(left) && Float.isNaN(right)) {
-                continue;
-            }
-            long row = scroll + y;
-            Tiles section = null;
-            for (int s = 0; s < tiles[l].length; s++) {
-                if (seams[l][s] > row) {
-                    break;
-                }
-                section = tiles[l][s];
-            }
-            if (section == null) {
-                continue;
-            }
-            TextureRegion image = section.image();
-            int top = image.getRegionHeight() - 1 - (int) Math.floorMod(row + phase[l], (long) image.getRegionHeight());
-            clipped(batch, image, 0, top, WIDTH, 0, y, left, right);
-        }
-        for (Piece piece : pieces[l]) {
-            BackdropData.PlacedPiece placed = piece.placed();
-            int width = (int) Math.round(piece.spec().size().width());
-            int height = (int) Math.round(piece.spec().size().height());
-            double along = Double.isNaN(piece.pathStart()) ? 0 : clock.pathTime(piece.pathStart());
-            long bottom = piece.bottom() - scroll + Math.round(placed.offsetY(along));
-            if (bottom >= HEIGHT || bottom + height <= 0) {
-                continue;
-            }
-            long x = Math.round(placed.x() + placed.offsetX(along) - width / 2.0);
-            TextureRegion image = piece.images().get(imageAt(piece, clock.real(), along));
-            for (int r = 0; r < height; r++) {
-                long y = bottom + r;
-                if (y < 0 || y >= HEIGHT) {
-                    continue;
-                }
-                float left = canyon.leftClip((int) y);
-                float right = canyon.rightClip((int) y);
-                if (Float.isNaN(left) && Float.isNaN(right)) {
-                    continue;
-                }
-                int column = placed.mirrored() ? -1 : 0;
-                clipped(batch, image, column, height - 1 - r, width, x, (int) y, left, right);
-            }
-        }
-    }
-
-    /**
-     * One row of an image ({@code imageRow} from its top, {@code width} px from column 0, or mirrored when
-     * {@code mirrored} is -1) drawn at play-field x {@code x} on screen row {@code y}, only left of {@code
-     * left} and right of {@code right} (NaN: nothing on that side).
-     */
-    private void clipped(
-            SpriteBatch batch,
-            TextureRegion image,
-            int mirrored,
-            int imageRow,
-            int width,
-            long x,
-            int y,
-            float left,
-            float right) {
-        if (!Float.isNaN(left)) {
-            part(
-                    batch,
-                    image,
-                    mirrored,
-                    imageRow,
-                    width,
-                    x,
-                    y,
-                    Math.max(0, x),
-                    Math.min(Math.min(x + width, WIDTH), (long) Math.ceil(left)));
-        }
-        if (!Float.isNaN(right)) {
-            part(
-                    batch,
-                    image,
-                    mirrored,
-                    imageRow,
-                    width,
-                    x,
-                    y,
-                    Math.max(Math.max(0, x), (long) Math.floor(right)),
-                    Math.min(x + width, WIDTH));
-        }
-    }
-
-    /** The image row's columns that land on play-field x {@code [from, to)}. */
-    private void part(
-            SpriteBatch batch,
-            TextureRegion image,
-            int mirrored,
-            int imageRow,
-            int width,
-            long x,
-            int y,
-            long from,
-            long to) {
-        if (to <= from) {
-            return;
-        }
-        int columns = (int) (to - from);
-        if (mirrored < 0) {
-            // A mirrored piece: play-field x maps to the image's column width − 1 − (x − its left).
-            int column = (int) (x + width - to);
-            strip.setRegion(image, column, imageRow, columns, 1);
-            batch.draw(strip, X0 + to, y, -columns, 1);
-        } else {
-            strip.setRegion(image, (int) (from - x), imageRow, columns, 1);
-            batch.draw(strip, X0 + from, y);
-        }
+        trench.draw(batch, groundScroll, clock);
+        pieces.drawTowers(batch, groundScroll);
     }
 
     /**
@@ -887,16 +225,17 @@ public final class Backdrop {
      * into the gate; the Spine Turrets stand on the arches).
      */
     public void drawOverhead(SpriteBatch batch, double groundScroll, BackdropClock clock) {
-        drawPieces(batch, BackdropLayer.GROUND, scroll(BackdropLayer.GROUND, groundScroll), clock, true);
+        pieces.drawPieces(
+                batch, BackdropLayer.GROUND, tiles.scroll(BackdropLayer.GROUND, groundScroll), clock, true, tiles);
     }
 
     /** The low-air layer above the ground objects and below the play plane: its tiles, the cloud banks, its pieces. */
     public void drawLowAir(SpriteBatch batch, double groundScroll, BackdropClock clock) {
-        blend(clock.script());
-        long scroll = scroll(BackdropLayer.LOW_AIR, groundScroll);
-        drawSectionTiles(batch, BackdropLayer.LOW_AIR, scroll, clock);
-        drawAtmosphere(batch, from.banks(), to.banks(), scroll, clock.real());
-        drawPieces(batch, BackdropLayer.LOW_AIR, scroll, clock, false);
+        atmosphere.blend(clock.script());
+        long scroll = tiles.scroll(BackdropLayer.LOW_AIR, groundScroll);
+        tiles.drawSectionTiles(batch, BackdropLayer.LOW_AIR, scroll, clock);
+        atmosphere.drawBanks(batch, scroll, clock.real());
+        pieces.drawPieces(batch, BackdropLayer.LOW_AIR, scroll, clock, false, tiles);
     }
 
     /**
@@ -904,245 +243,38 @@ public final class Backdrop {
      * out after the Siege Spire's death.
      */
     public void frontFade(float fade) {
-        frontFade = Math.clamp(fade, 0, 1);
+        atmosphere.frontFade(fade);
     }
 
     /** M5 part H: the high-air layer's scroll at the ground's {@code groundScroll}, px (Level 14's canopy tear tiles on it). */
     public long highAirScroll(double groundScroll) {
-        return scroll(BackdropLayer.HIGH_AIR, groundScroll);
+        return tiles.highAirScroll(groundScroll);
     }
 
     /** The high-air layer above the play plane, additive and at most 40 % opaque. */
     public void drawFront(SpriteBatch batch, double groundScroll, BackdropClock clock) {
-        blend(clock.script());
+        atmosphere.blend(clock.script());
         batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
-        long scroll = scroll(BackdropLayer.HIGH_AIR, groundScroll);
-        batch.setColor(1, 1, 1, HIGH_AIR_OPACITY * frontFade);
-        drawSectionTiles(batch, BackdropLayer.HIGH_AIR, scroll, clock);
-        drawPieces(batch, BackdropLayer.HIGH_AIR, scroll, clock, false);
-        drawAtmosphere(batch, from.wisps(), to.wisps(), scroll, clock.real());
+        long scroll = tiles.scroll(BackdropLayer.HIGH_AIR, groundScroll);
+        batch.setColor(1, 1, 1, HIGH_AIR_OPACITY * atmosphere.frontFade());
+        tiles.drawSectionTiles(batch, BackdropLayer.HIGH_AIR, scroll, clock);
+        pieces.drawPieces(batch, BackdropLayer.HIGH_AIR, scroll, clock, false, tiles);
+        atmosphere.drawWisps(batch, scroll, clock.real());
         batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-        batch.setColor(1, 1, 1, OVERHEAD_PASS_OPACITY * frontFade);
-        drawPieces(batch, BackdropLayer.HIGH_AIR, scroll, clock, false, true);
+        batch.setColor(1, 1, 1, OVERHEAD_PASS_OPACITY * atmosphere.frontFade());
+        pieces.drawPieces(batch, BackdropLayer.HIGH_AIR, scroll, clock, false, true, tiles);
         batch.setColor(Color.WHITE);
     }
 
-    /**
-     * Sets the looks to draw: the atmosphere stretch's (a section, or its peak), or the two across a
-     * stretch boundary while the change ramps.
-     */
-    private void blend(double seconds) {
-        int current = looks.length - 1;
-        for (int s = 0; s < looks.length; s++) {
-            if (seconds < stretches.get(s).end()) {
-                current = s;
-                break;
-            }
-        }
-        from = to = looks[current];
-        weight = 1;
-        for (int s = 1; s < looks.length; s++) {
-            double progress = (seconds - stretches.get(s).start()) / ramp + 0.5;
-            if (progress > 0 && progress < 1) {
-                from = looks[s - 1];
-                to = looks[s];
-                weight = (float) (progress * progress * (3 - 2 * progress));
-            }
-        }
-        if (dustWeight > 0) {
-            // The collapse's dust over whatever the section shows (it falls in a section's middle).
-            from = weight < 0.5f ? from : to;
-            to = dust;
-            weight = dustWeight;
-        }
-    }
-
     private void drawLayer(SpriteBatch batch, BackdropLayer layer, double groundScroll, BackdropClock clock) {
-        long scroll = scroll(layer, groundScroll);
-        drawSectionTiles(batch, layer, scroll, clock);
-        drawPieces(batch, layer, scroll, clock, false);
-    }
-
-    private long scroll(BackdropLayer layer, double groundScroll) {
-        return Math.round(groundScroll * factors[layer.ordinal()]);
-    }
-
-    private void drawSectionTiles(SpriteBatch batch, BackdropLayer layer, long scroll, BackdropClock clock) {
-        int l = layer.ordinal();
-        for (int s = 0; s < tiles[l].length; s++) {
-            Tiles section = tiles[l][s];
-            if (section != null) {
-                long end = s + 1 < tiles[l].length ? seams[l][s + 1] : Long.MAX_VALUE;
-                drawTiles(
-                        batch,
-                        section,
-                        Math.max(seams[l][s], scroll),
-                        Math.min(end, scroll + HEIGHT),
-                        scroll,
-                        clock.real(),
-                        phase[l]);
-            }
-        }
-    }
-
-    /** One look's tile set, or two crossfading while the atmosphere changes. */
-    private void drawAtmosphere(SpriteBatch batch, Tiles old, Tiles current, long scroll, double seconds) {
-        float alpha = batch.getColor().a;
-        if (old != current && old != null) {
-            batch.setColor(1, 1, 1, alpha * (1 - weight));
-            drawTiles(batch, old, scroll, scroll + HEIGHT, scroll, seconds, 0);
-        }
-        if (current != null) {
-            batch.setColor(1, 1, 1, old == current ? alpha : alpha * weight);
-            drawTiles(batch, current, scroll, scroll + HEIGHT, scroll, seconds, 0);
-        }
-        batch.setColor(1, 1, 1, alpha);
-    }
-
-    /**
-     * The rows {@code [from, to)} of a layer filled with a tile set that repeats from position {@code -phase} (0; M7
-     * part G: a strip's origin, so its pixel rows follow the strip row), drifting by real {@code seconds}.
-     */
-    private void drawTiles(
-            SpriteBatch batch, Tiles tileSet, long from, long to, long scroll, double seconds, long phase) {
-        TextureRegion image = tileSet.image();
-        int height = image.getRegionHeight();
-        int shift = (int) Math.floorMod(Math.round(tileSet.drift() * seconds), (long) WIDTH);
-        for (long row = from; row < to; ) {
-            int inTile = (int) Math.floorMod(row + phase, (long) height);
-            int rows = (int) Math.min(height - inTile, to - row);
-            float y = row - scroll;
-            // The tile image's top row is its highest; a strip [inTile, inTile + rows) counts from its bottom.
-            int top = height - inTile - rows;
-            drawStrip(batch, image, 0, top, WIDTH - shift, rows, X0 + shift, y);
-            if (shift > 0) {
-                drawStrip(batch, image, WIDTH - shift, top, shift, rows, X0, y);
-            }
-            row += rows;
-        }
-    }
-
-    private void drawStrip(
-            SpriteBatch batch, TextureRegion image, int x, int y, int width, int height, float screenX, float screenY) {
-        strip.setRegion(image, x, y, width, height);
-        batch.draw(strip, screenX, screenY);
-    }
-
-    private void drawPieces(
-            SpriteBatch batch, BackdropLayer layer, long scroll, BackdropClock clock, boolean overhead) {
-        drawPieces(batch, layer, scroll, clock, overhead, false);
-    }
-
-    /** As above, only the high-air overhead passes ({@code passes}) or all but them. */
-    private void drawPieces(
-            SpriteBatch batch,
-            BackdropLayer layer,
-            long scroll,
-            BackdropClock clock,
-            boolean overhead,
-            boolean passes) {
-        for (Piece piece : pieces[layer.ordinal()]) {
-            BackdropData.PlacedPiece placed = piece.placed();
-            if (placed.isOverhead() != overhead || overheadPass(layer, placed) != passes) {
-                continue;
-            }
-            long shift = 0;
-            if (afterCrawl(placed)) {
-                if (!crawlSet) {
-                    continue;
-                }
-                shift = Math.round(crawlShift * factors[layer.ordinal()]);
-            }
-            float width = (float) piece.spec().size().width();
-            float height = (float) piece.spec().size().height();
-            double along = Double.isNaN(piece.pathStart()) ? 0 : clock.pathTime(piece.pathStart());
-            float y = piece.bottom() + shift - scroll + Math.round(placed.offsetY(along));
-            if (y >= HEIGHT || y + height <= 0) {
-                continue;
-            }
-            float x = X0 + Math.round(placed.x() + placed.offsetX(along) - width / 2);
-            int frame = imageAt(piece, clock.real(), along);
-            TextureRegion image = piece.images().get(frame);
-            if (STROBES.contains(placed.piece()) && piece.spec().animated()) {
-                // M9 part C: a lane buoy's strobe flashes in frame 0 (its tick, BUOY_TICK).
-                strobeSeen(frame, placed.x());
-            }
-            if (placed.mirrored()) {
-                batch.draw(image, x + width, y, -width, height);
-            } else {
-                batch.draw(image, x, y);
-            }
-            if (layer == BackdropLayer.GROUND && holdTicks >= 0) {
-                drawHold(batch, piece, x, y, width, height);
-            }
-        }
-    }
-
-    /** M9 part B: a piece's hold opening over it ({@link #holds}), its last frame held. */
-    private void drawHold(SpriteBatch batch, Piece piece, float x, float y, float width, float height) {
-        Piece[] onGround = pieces[BackdropLayer.GROUND.ordinal()];
-        for (int p = 0; p < onGround.length; p++) {
-            Array<AtlasRegion> hold = holds.get(p);
-            if (onGround[p] != piece || hold == null) {
-                continue;
-            }
-            TextureRegion image = hold.get(Math.min(hold.size - 1, holdTicks / HOLD_FRAME_TICKS));
-            if (piece.placed().mirrored()) {
-                batch.draw(image, x + width, y, -width, height);
-            } else {
-                batch.draw(image, x, y);
-            }
-        }
-    }
-
-    /** M8 part D: the suffix of a ground piece's light ({@link #drawPieceGlows}). */
-    static final String GLOW = "-glow";
-
-    /** M9 part B: the suffix of the light a piece turns to after its glow ({@link #turnedGlows}). */
-    static final String TURNED = "-red";
-
-    /** M9 part B: the turned lights' crossfade, s (design/campaign Level 29: "white to red over 1 s"). */
-    static final double TURN_SECONDS = 1;
-
-    /**
-     * M9 part B: a piece's light that the level's data does not declare (Level 29's backdrop: "glows are added by the
-     * game at their pieces"), from the backdrop atlas when it holds one with the piece's frame count; null otherwise.
-     */
-    private static Array<AtlasRegion> undeclared(Sprites sprites, String name, int count) {
-        if (!sprites.hasBackdrop(name)) {
-            return null;
-        }
-        Array<AtlasRegion> images = sprites.backdrop(name);
-        return images.size == count ? images : null;
-    }
-
-    /** M9 part B: the level time its dormant ground targets wake, the earliest; NaN without any. */
-    static double turnSeconds(LevelData level) {
-        double at = Double.NaN;
-        for (var target : level.groundTargets()) {
-            if (target.dormantUntil().isPresent() && !(target.dormantUntil().get() >= at)) {
-                at = target.dormantUntil().get();
-            }
-        }
-        return at;
-    }
-
-    /** M9 part B: how far the turned lights have come in at level time {@code script}: 0 before the turn, then to 1. */
-    static float turnShare(double turnAt, double script) {
-        if (Double.isNaN(turnAt)) {
-            return 0;
-        }
-        return (float) Math.clamp((script - turnAt) / TURN_SECONDS, 0, 1);
+        long scroll = tiles.scroll(layer, groundScroll);
+        tiles.drawSectionTiles(batch, layer, scroll, clock);
+        pieces.drawPieces(batch, layer, scroll, clock, false, tiles);
     }
 
     /** M8 part D: whether a ground piece has its light ({@link #drawPieceGlows}): Level 24's relay beacons. */
     public boolean hasPieceGlows() {
-        for (Array<AtlasRegion> light : glows) {
-            if (light != null) {
-                return true;
-            }
-        }
-        return false;
+        return pieces.hasPieceGlows();
     }
 
     /**
@@ -1150,71 +282,6 @@ public final class Backdrop {
      * their frame clock, after the under-water grade so it does not dim them.
      */
     public void drawPieceGlows(SpriteBatch batch, double groundScroll, BackdropClock clock) {
-        Piece[] onGround = pieces[BackdropLayer.GROUND.ordinal()];
-        long scroll = scroll(BackdropLayer.GROUND, groundScroll);
-        boolean additive = false;
-        for (int p = 0; p < onGround.length; p++) {
-            Piece piece = onGround[p];
-            Array<AtlasRegion> light = glows.get(p);
-            if (light == null || afterCrawl(piece.placed())) {
-                continue;
-            }
-            float height = (float) piece.spec().size().height();
-            double along = Double.isNaN(piece.pathStart()) ? 0 : clock.pathTime(piece.pathStart());
-            float y = piece.bottom() - scroll + Math.round(piece.placed().offsetY(along));
-            if (y >= HEIGHT || y + height <= 0) {
-                continue;
-            }
-            if (!additive) {
-                batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
-                additive = true;
-            }
-            float width = (float) piece.spec().size().width();
-            float x = X0 + Math.round(piece.placed().x() + piece.placed().offsetX(along) - width / 2);
-            int frame = imageAt(piece, clock.real(), along);
-            Array<AtlasRegion> red = turnedGlows.get(p);
-            float turn = red == null ? 0 : turnShare(turnAt, clock.script());
-            if (turn < 1) {
-                if (turn > 0) {
-                    batch.setColor(1, 1, 1, 1 - turn);
-                }
-                drawLight(batch, light.get(frame), piece.placed().mirrored(), x, y, width, height);
-            }
-            if (turn > 0) {
-                batch.setColor(1, 1, 1, turn);
-                drawLight(batch, red.get(frame), piece.placed().mirrored(), x, y, width, height);
-            }
-            batch.setColor(1, 1, 1, 1);
-        }
-        if (additive) {
-            batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-        }
-    }
-
-    private static void drawLight(
-            SpriteBatch batch, TextureRegion image, boolean mirrored, float x, float y, float width, float height) {
-        if (mirrored) {
-            batch.draw(image, x + width, y, -width, height);
-        } else {
-            batch.draw(image, x, y);
-        }
-    }
-
-    /** M7 part B: whether a placed piece is a huge overhead pass on high-air ({@link #OVERHEAD_PASSES}). */
-    static boolean overheadPass(BackdropLayer layer, BackdropData.PlacedPiece placed) {
-        return layer == BackdropLayer.HIGH_AIR && OVERHEAD_PASSES.contains(placed.piece());
-    }
-
-    /** The animation frame at real {@code seconds}, the heading along the path at {@code along}, or the only image. */
-    private static int imageAt(Piece piece, double seconds, double along) {
-        int count = piece.images().size;
-        if (piece.spec().animated()) {
-            return (int)
-                    Math.floorMod((long) Math.floor(seconds * piece.spec().fps().orElseThrow()), (long) count);
-        }
-        if (piece.spec().headings().isPresent()) {
-            return (int) Math.floorMod(Math.round(piece.placed().heading(along) * count / 360), (long) count);
-        }
-        return 0;
+        pieces.drawPieceGlows(batch, tiles.scroll(BackdropLayer.GROUND, groundScroll), clock, tiles);
     }
 }

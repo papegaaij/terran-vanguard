@@ -139,11 +139,12 @@ class Level32LooksTest {
         for (TerrainBlock.Notch notch : level.terrain().orElseThrow().notchList()) {
             String side = notch.side().name().toLowerCase(java.util.Locale.ROOT);
             int depth = (int) Math.round(notch.depth());
-            Path file = backdrop.resolve(Backdrop.GALLERY + side + "-" + depth + ".png");
+            Path file = backdrop.resolve(TrenchWalls.GALLERY + side + "-" + depth + ".png");
             assertTrue(Files.isRegularFile(file), file.toString());
             BufferedImage image = ImageIO.read(file.toFile());
             // The foot line at column depth + 16 (left) or 28 (right): the image is depth + 16 + 28 wide.
-            assertEquals(depth + Backdrop.GALLERY_RIM + Backdrop.GALLERY_SPILL, image.getWidth(), file.toString());
+            assertEquals(
+                    depth + TrenchWalls.GALLERY_RIM + TrenchWalls.GALLERY_SPILL, image.getWidth(), file.toString());
             assertEquals(Math.round(notch.width()) + 32, image.getHeight(), file.toString());
         }
         assertTrue(!single(backdrop, "cave-mouth-left") && !single(backdrop, "cave-mouth-right"));

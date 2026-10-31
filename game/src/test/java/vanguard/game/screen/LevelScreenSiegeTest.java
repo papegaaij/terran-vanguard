@@ -21,18 +21,18 @@ class LevelScreenSiegeTest {
     @Test
     void theDebriefsRowCountsTheDomesNeverHit() {
         Sortie untouched = DomesFixture.sortie(0);
-        DebriefScreen.Hulls count = LevelScreen.debriefCount(untouched);
+        DebriefScreen.Hulls count = DebriefTally.count(untouched);
         assertEquals("DOMES " + DebriefScreen.UNTOUCHED, count.label());
         assertFalse(count.percent());
         assertEquals(3, count.afloat(), "none hit at the start");
         assertEquals(3, count.of());
         DomesFixture.runTo(untouched, DomesFixture.LENGTH);
         assertTrue(untouched.secondaryMet());
-        assertEquals(3, LevelScreen.debriefCount(untouched).afloat(), "nothing went for them");
+        assertEquals(3, DebriefTally.count(untouched).afloat(), "nothing went for them");
 
         Sortie bombed = DomesFixture.sortie(1);
         DomesFixture.runTo(bombed, DomesFixture.LENGTH);
-        DebriefScreen.Hulls after = LevelScreen.debriefCount(bombed);
+        DebriefScreen.Hulls after = DebriefTally.count(bombed);
         assertEquals(2, after.afloat(), "the bombed dome is not untouched");
         assertFalse(bombed.secondaryMet());
 
@@ -55,7 +55,7 @@ class LevelScreenSiegeTest {
                 SimSpecs.rules(content, key, Difficulty.MEDIUM),
                 60);
         assertTrue(sortie.script().objectives().secondary().standing());
-        DebriefScreen.Hulls count = LevelScreen.debriefCount(sortie);
+        DebriefScreen.Hulls count = DebriefTally.count(sortie);
         assertEquals("DOMES " + DebriefScreen.STANDING, count.label());
         assertEquals(sortie.allyCount(), count.afloat(), "all standing at the start");
         assertEquals(sortie.allyCount(), count.of());
