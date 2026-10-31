@@ -1,7 +1,7 @@
 ---
 title: Level 36 – Cloud Divers
 design: approved
-implementation: in-progress
+implementation: done
 art: final
 depends-on: [../../../enemies/air/chimera, ../../../enemies/air/talon, ../../../enemies/air/gilded-gunship, ../../../enemies/air/wraith, ../../../enemies/air/spore-bomber, ../../../enemies/air/lamprey, ../../../enemies/README.md, ../../../world/jovian, ../../../player/generator, ../../../player/wingmen, ../../../ui/hud]
 updated: 2026-10-31
@@ -481,22 +481,22 @@ field (easy 21.7 %) and at most 1.8 s over the ship's band. Prompts and briefs: 
 - [x] Threat profile with the `NO GROUND` row, Varga's four intel lines and Rook's teaser fitting the intel panel
       (`IntelPanelLayoutTest`); the Chimera's portrait (step B4: the setting "Jupiter, the upper air", the longer one left
       the panel; the Chimera's, the harvester's and the drop craft's portraits, `tools/art/intel.py`)
-- [ ] Briefing: Okafor's and Varga's pages, each one screen (`BriefingLayoutTest`), with their images; the act intro
+- [x] Briefing: Okafor's and Varga's pages, each one screen (`BriefingLayoutTest`), with their images; the act intro
       before it once (`act-intro:6`) (step B4: the images and the intro play; the two pages as written and voiced run 5
       and 6 lines below their images and go on over a second screen, an exception in `BriefingLayoutTest`). Round 74
       L.2 a (decided 2026-10-31; step VOX-C0): the two pages in `data.yaml` rewritten to the 4-line texts of *Briefing*
       above and re-voiced (Okafor 19.0 s, Varga 15.2 s, the [voice README](../../../audio/voice/README.md#act-6-voices-draft)'s
-      rows, seeds pinned). **Open:** the exception goes out of `BriefingLayoutTest` (step C0)
-- [ ] Round 74's open build items (decided 2026-10-31, to do in the next game step): (`dive-wind-r74-b`, S.1 b, already
+      rows, seeds pinned). M10 part C, step C0: the exception is out of `BriefingLayoutTest`; both pages fit one screen
+- [x] Round 74's open build items (decided 2026-10-31): (`dive-wind-r74-b`, S.1 b, already
       replaced the a variant in `assets/sfx/`, `Sfx` and the pipeline's import list at the round's close); `chimera-whine-r74-b` (S.5 b) replaces the Talon's whine as the
-      Chimera's; (the Act 6 intro's page 4 at the grim row, V.2 b, the act data's expression changed and the take
+      Chimera's (step C0: `Sfx.CHIMERA_WHINE` in `CloudDiverCues`, `Level36SoundsTest`); (the Act 6 intro's page 4 at the grim row, V.2 b, the act data's expression changed and the take
       re-rendered from `act-6-intro-page-4-r74-b`'s seed: done, step VOX-C0)
 - [x] Typical haul within ±5 % of budget(36) = 7 474 with the level's `bounty_scale` (`TypicalHaulTest`; step B2:
       7,488 at 0.31, +0.2 %)
 - [x] Music and ambience: "Eye of the Storm" by section, the high-wind bed, the level's sounds (`Level36SoundsTest`;
       step B4: track 14 from section 1 with its intro, the full mix from section 3; `jovian-sky` with the dive's wind
       over section 1; round 74's picks: a for the drop craft's pass, the scoop, the break and the Chimera's twin crack
-      and death are played; the dive's wind b and the Chimera's whine b wait in the item below)
+      and death are played; the dive's wind b and, since step C0, the Chimera's whine b too)
 - [x] Easy/hard variations as in *Difficulty notes* (step B2: `CloudDiversDataTest`'s regeneration, harvester HP,
       escorts, allowed escapes and strikes per difficulty; `levelReport` easy 81, hard 123 enemies a minute)
 - [x] The autopilot (holding the beam on a hurt Chimera, the harvesters, out of a told column, the drop craft never a

@@ -43,6 +43,9 @@ final class CeresCues extends SoundFamily {
     private static final int SLOTS = 16;
 
     private boolean[] talons;
+    /** The Talon and the Chimera (the Talon's airframe): their twin crack (round 74 S.6 a, the Talon's sound). */
+    private boolean[] cracks;
+
     private boolean[] nests;
     private boolean[] clamps;
     /** Whether the station has turned in this attempt (its first wake). */
@@ -83,13 +86,16 @@ final class CeresCues extends SoundFamily {
     /** Notes the level's kinds: which are the Talon, the SAM Nest and the clamp gun. */
     void noteKinds(List<EnemySpec> kinds) {
         talons = new boolean[kinds.size()];
+        cracks = new boolean[kinds.size()];
         nests = new boolean[kinds.size()];
         clamps = new boolean[kinds.size()];
         for (int k = 0; k < kinds.size(); k++) {
             String slug = kinds.get(k).slug();
-            // M10 part B, step B4: the Chimera (the Talon's airframe) whines and cracks as the Talon until round 74's
-            // QB-2 pick (its own whine and shot, a and b, in the round).
-            talons[k] = slug.equals(TALON) || slug.equals(CloudDiverCues.CHIMERA);
+            talons[k] = slug.equals(TALON);
+            // M10 part B, step B4: the Chimera (the Talon's airframe) cracks as the Talon (round 74 S.6 a); its whine
+            // is
+            // its own (S.5 b, CloudDiverCues).
+            cracks[k] = talons[k] || slug.equals(CloudDiverCues.CHIMERA);
             nests[k] = slug.equals(NEST);
             clamps[k] = slug.equals(CLAMP);
         }
@@ -153,7 +159,7 @@ final class CeresCues extends SoundFamily {
         if (unit == null) {
             return false;
         }
-        if (is(talons, unit.kind())) {
+        if (is(cracks, unit.kind())) {
             bank.play(Sfx.TALON_SHOT, CUE_LEVEL, pitch(0.05), pan);
             return true;
         }

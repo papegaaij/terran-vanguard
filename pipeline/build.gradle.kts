@@ -479,12 +479,14 @@ val copyPlaceholderSounds = tasks.register<JavaExec>("copyPlaceholderSounds") {
         // M10 part B, step AUD-B: Level 36's sounds and the Chimera's death (round 74's proposals, CC0/CC-BY Freesound HQ
         // previews cut by tools/concept/audio/sfx_r74.py, their CREDITS.md rows), their a variants until the user's
         // picks: the dive's wind (a layer over `jovian-sky`), the drop craft's pass-by, the harvester's scoop drone and
-        // break-up, the Chimera's death. The Chimera's whine and twin crack a are the Talon's built files.
+        // break-up, the Chimera's death. The Chimera's twin crack a is the Talon's built file (round 74 S.6 a); its whine
+        // is round 74's S.5 b (the user's pick, 2026-10-31).
         "dive-wind-r74-b.ogg",
         "drop-craft-pass-r74-a.ogg",
         "harvester-scoop-r74-a.ogg",
         "harvester-break-r74-a.ogg",
         "chimera-death-r74-a.ogg",
+        "chimera-whine-r74-b.ogg",
     )
 }
 

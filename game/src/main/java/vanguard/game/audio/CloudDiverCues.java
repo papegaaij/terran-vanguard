@@ -16,8 +16,9 @@ import vanguard.sim.Sortie;
  * round 74 proposals, their a variants until the picks, levelled in their files and played as they are): the fleet's
  * drop craft diving past (one pass a pair, as the first of it shows), one scoop drone for the nearest helium-3 harvester
  * on the screen while any flies, a harvester's break over its rung and a Chimera's death (the Talon's crack over a dry
- * tear) over its rung. The Chimera's turn-in whine and twin crack are the Talon's ({@link CeresCues}) until round 74's
- * QB-2 pick; its healing creaks as every regenerating unit's ({@link JovianCues}).
+ * tear) over its rung; step C0: a Chimera swooping into view whines its own whine (round 74 S.5 b, once a wing, spaced
+ * as the Talon's). Its twin crack is the Talon's ({@link CeresCues}, S.6 a); its healing creaks as every regenerating
+ * unit's ({@link JovianCues}).
  */
 final class CloudDiverCues extends SoundFamily {
     static final String HARVESTER = "harvester";
@@ -36,15 +37,20 @@ final class CloudDiverCues extends SoundFamily {
     private boolean[] chimeras;
     private float scoopLevel;
     private long lastPass = Long.MIN_VALUE / 2;
+    private long lastWhine = Long.MIN_VALUE / 2;
     private long now;
     /** The drop craft seen (serials, a ring): a new one diving in passes. */
     private final int[] craftSeen = new int[SLOTS];
+    /** The Chimeras seen (serials, a ring): a new one swooping in whines. */
+    private final int[] chimerasSeen = new int[SLOTS];
 
     private int nextCraft;
+    private int nextChimera;
 
     CloudDiverCues(SoundMix mix) {
         super(mix);
         Arrays.fill(craftSeen, -1);
+        Arrays.fill(chimerasSeen, -1);
     }
 
     @Override
@@ -83,7 +89,7 @@ final class CloudDiverCues extends SoundFamily {
     }
 
     /**
-     * Once a step: a drop craft pair diving in; the scoop for the nearest harvester on the screen; the deaths' sounds of
+     * Once a step: a drop craft pair diving in; a Chimera swooping into view; the scoop for the nearest harvester on the screen; the deaths' sounds of
      * the step's harvesters and Chimeras (over the rung {@link UnitCues} plays for them).
      */
     void watch(Sortie sortie) {
@@ -95,9 +101,11 @@ final class CloudDiverCues extends SoundFamily {
         }
         long tick = sortie.tick();
         if (tick < now) {
-            // A retry or a checkpoint: the passes come again.
+            // A retry or a checkpoint: the passes and the whines come again.
             Arrays.fill(craftSeen, -1);
+            Arrays.fill(chimerasSeen, -1);
             lastPass = Long.MIN_VALUE / 2;
+            lastWhine = Long.MIN_VALUE / 2;
         }
         now = tick;
         SimEvents events = sortie.events();
@@ -120,7 +128,15 @@ final class CloudDiverCues extends SoundFamily {
         boolean flying = sortie.flying() && !sortie.complete();
         for (int e = 0; e < sortie.enemyCount() && flying; e++) {
             Enemy enemy = sortie.enemy(e);
-            if (is(dropCraft, enemy.kind()) && !seen(enemy.serial())) {
+            if (is(chimeras, enemy.kind()) && !seen(chimerasSeen, enemy.serial())) {
+                chimerasSeen[nextChimera] = enemy.serial();
+                nextChimera = (nextChimera + 1) % SLOTS;
+                if (tick - lastWhine >= CeresCues.WHINE_GAP_STEPS) {
+                    bank.play(Sfx.CHIMERA_WHINE, CUE_LEVEL, pitch(0.05), pan(enemy.renderX(1)));
+                    lastWhine = tick;
+                }
+            }
+            if (is(dropCraft, enemy.kind()) && !seen(craftSeen, enemy.serial())) {
                 craftSeen[nextCraft] = enemy.serial();
                 nextCraft = (nextCraft + 1) % SLOTS;
                 if (tick - lastPass >= PASS_GAP_STEPS) {
@@ -150,9 +166,9 @@ final class CloudDiverCues extends SoundFamily {
         return y >= 0 && y <= PlayField.HEIGHT && x >= 0 && x <= PlayField.WIDTH;
     }
 
-    private boolean seen(int serial) {
+    private static boolean seen(int[] ring, int serial) {
         for (int s = 0; s < SLOTS; s++) {
-            if (craftSeen[s] == serial) {
+            if (ring[s] == serial) {
                 return true;
             }
         }

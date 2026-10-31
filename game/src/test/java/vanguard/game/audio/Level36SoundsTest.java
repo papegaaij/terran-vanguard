@@ -28,8 +28,8 @@ import vanguard.sim.Sortie;
  * M10 part B (step B4), Level 36's sounds (design/campaign Level 36, Music &amp; ambience; design/audio/sfx, Act 6
  * sounds; step AUD-B's round 74 proposals, their a variants until the picks): track 14 "Eye of the Storm" by section
  * (its intro over the dive, the full mix from the harvester fields), the {@code jovian-sky} bed with the dive's wind as
- * a layer over section 1; flown, the fleet's drop craft diving past, the Chimeras' and Talons' whine and twin crack (the
- * Talon's until round 74's QB-2 pick), the harvesters' scoop for the nearest, a harvester's break and a Chimera's death
+ * a layer over section 1; flown, the fleet's drop craft diving past, the Talons' whine, the Chimeras' own whine (round
+ * 74 S.5 b, step C0) and both twin cracks (the Talon's, S.6 a), the harvesters' scoop for the nearest, a harvester's break and a Chimera's death
  * over their rungs, the loops stopped with the flight.
  */
 class Level36SoundsTest {
@@ -65,7 +65,8 @@ class Level36SoundsTest {
                 Sfx.DROP_CRAFT_PASS, "drop-craft-pass-r74-a.ogg",
                 Sfx.HARVESTER_SCOOP, "harvester-scoop-r74-a.ogg",
                 Sfx.HARVESTER_BREAK, "harvester-break-r74-a.ogg",
-                Sfx.CHIMERA_DEATH, "chimera-death-r74-a.ogg");
+                Sfx.CHIMERA_DEATH, "chimera-death-r74-a.ogg",
+                Sfx.CHIMERA_WHINE, "chimera-whine-r74-b.ogg");
         files.forEach((sfx, file) -> {
             assertEquals("sfx/" + file, sfx.path(), sfx.name());
             assertTrue(Files.isRegularFile(ASSETS.resolve(sfx.path())), sfx.path());
@@ -75,7 +76,7 @@ class Level36SoundsTest {
 
     /**
      * Flown on medium with the ship invulnerable low in the middle, the Ion Beam firing: the drop craft's passes (t=4,
-     * t=10), the Talons' and Chimeras' whine, a Chimera's death, the harvesters' scoop loop from t=72 and a harvester's
+     * t=10), the Talons' whine and the Chimeras' own, a Chimera's death, the harvesters' scoop loop from t=72 and a harvester's
      * break; the loop stopped with the flight.
      */
     @Test
@@ -99,6 +100,7 @@ class Level36SoundsTest {
         int passes = 0;
         boolean wasPass = false;
         boolean whine = false;
+        boolean chimeraWhine = false;
         boolean scoop = false;
         boolean chimeraDeath = false;
         boolean harvesterBreak = false;
@@ -115,6 +117,7 @@ class Level36SoundsTest {
             }
             wasPass = pass;
             whine |= bank.playing(Sfx.TALON_WHINE) > 0;
+            chimeraWhine |= bank.playing(Sfx.CHIMERA_WHINE) > 0;
             scoop |= bank.looping(Sfx.HARVESTER_SCOOP);
             chimeraDeath |= bank.playing(Sfx.CHIMERA_DEATH) > 0;
             harvesterBreak |= bank.playing(Sfx.HARVESTER_BREAK) > 0;
@@ -124,7 +127,8 @@ class Level36SoundsTest {
         }
         sounds.stopLoops();
         assertEquals(2, passes, "one pass a drop craft pair");
-        assertTrue(whine, "the Talons and Chimeras swooping in");
+        assertTrue(whine, "the Talons swooping in");
+        assertTrue(chimeraWhine, "the Chimeras swooping in, their own whine");
         assertTrue(chimeraDeath, "a Chimera's death");
         assertTrue(scoop, "the scoop for the nearest harvester");
         assertTrue(harvesterBreak, "a harvester's break");

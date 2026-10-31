@@ -1336,6 +1336,11 @@ public enum Sfx {
     HARVESTER_BREAK("sfx/harvester-break-r74-a.ogg", 2, Bus.EFFECTS, EXPLOSION),
     /** M10 part B, step B4 (round 74 a until the pick): a Chimera destroyed (the Talon's crack over a dry tear), over its rung. */
     CHIMERA_DEATH("sfx/chimera-death-r74-a.ogg", 3, Bus.EFFECTS, EXPLOSION),
+    /**
+     * M10 part C, step C0 (round 74 S.5 b, the user's pick): a Chimera's whine as it turns in (the Talon's approach
+     * about four semitones lower with a jet's rough roar under it, 0.75 s), once per wing ({@link CloudDiverCues}); its twin crack stays the Talon's (S.6 a).
+     */
+    CHIMERA_WHINE("sfx/chimera-whine-r74-b.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
     /** The mission complete jingle (design/audio/music, track 23), played as a one-shot. */
     MISSION_COMPLETE("music/mission-complete.ogg", 1, Bus.MUSIC, WARNING),
     /**

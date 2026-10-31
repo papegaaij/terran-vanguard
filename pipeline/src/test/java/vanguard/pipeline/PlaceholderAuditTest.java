@@ -160,6 +160,10 @@ class PlaceholderAuditTest {
             "M10 part B, step AUD-B: round 74's proposals for Level 36 and the Chimera, option a until the user's"
                     + " pick, from the Freesound HQ previews of CC0/CC-BY sounds (CREDITS rows from step AUD-B; by"
                     + " tools/concept/audio/sfx_r74.py)";
+    private static final String ROUND_74_WHINE =
+            "M10 part C, step C0: round 74's pick for the Chimera's whine (the user, 2026-10-31: S.5 b), from the"
+                    + " Freesound HQ previews of CC0/CC-BY sounds (CREDITS rows from step AUD-B; by"
+                    + " tools/concept/audio/sfx_r74.py)";
     private static final String ROUND_60_H =
             "M9 part H, step H4: round 60's pick for the Iron Sovereign's rings turning (the user, 2026-10-27: S.16 a),"
                     + " from the Freesound HQ previews of CC0/CC-BY sounds until the originals (CREDITS rows from step"
@@ -522,6 +526,7 @@ class PlaceholderAuditTest {
             Map.entry("sfx/harvester-scoop-r74-a.ogg", ROUND_74),
             Map.entry("sfx/harvester-break-r74-a.ogg", ROUND_74),
             Map.entry("sfx/chimera-death-r74-a.ogg", ROUND_74),
+            Map.entry("sfx/chimera-whine-r74-b.ogg", ROUND_74_WHINE),
             Map.entry("music/iron-sovereign.ogg", ROUND_68_MUSIC),
             Map.entry("music/reveal-sting.ogg", ROUND_58_MUSIC),
             Map.entry("music/thera-deep-dark.ogg", ROUND_55_MUSIC),
