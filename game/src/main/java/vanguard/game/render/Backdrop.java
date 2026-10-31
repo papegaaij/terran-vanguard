@@ -294,6 +294,10 @@ public final class Backdrop {
         long scroll = tiles.scroll(layer, groundScroll);
         tiles.drawSectionTiles(batch, layer, scroll, clock);
         pieces.drawPieces(batch, layer, scroll, clock, false, tiles);
+        if (layer == BackdropLayer.DEEP) {
+            // M10 part B: the deep pieces' lights over them (Level 36's carrier group, the storm wall's lightning).
+            pieces.drawDeepGlows(batch, scroll, clock, tiles);
+        }
     }
 
     /** M8 part D: whether a ground piece has its light ({@link #drawPieceGlows}): Level 24's relay beacons. */

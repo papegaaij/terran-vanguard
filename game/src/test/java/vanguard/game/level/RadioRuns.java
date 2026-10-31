@@ -36,6 +36,7 @@ import static vanguard.game.level.RadioTimeline.LEVEL_32;
 import static vanguard.game.level.RadioTimeline.LEVEL_33;
 import static vanguard.game.level.RadioTimeline.LEVEL_34;
 import static vanguard.game.level.RadioTimeline.LEVEL_35;
+import static vanguard.game.level.RadioTimeline.LEVEL_36;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -64,7 +65,42 @@ final class RadioRuns {
         runs.putAll(act3());
         runs.putAll(act4());
         runs.putAll(act5());
+        runs.putAll(act6());
         return runs;
+    }
+
+    /** Act 6, Jovian Storm (M10 part B, step B4): Level 36 ({@link #level36Runs}). */
+    static Map<String, List<List<Event>>> act6() {
+        Map<String, List<List<Event>>> runs = new LinkedHashMap<>();
+        runs.put(LEVEL_36, level36Runs());
+        return runs;
+    }
+
+    /**
+     * M10 part B (step B4): Level 36's runs (Rook flies with every fit that has the escort; the first strike kill's bark
+     * is his, {@code requires: escort}). The harvesters' secondary met as the sixth comes down (the pairs enter at t=72,
+     * 86, 100 and 114: the sixth down from t≈101 with every pair taken, t≈122 with the last pair's first) or failed as
+     * the third gets away (t≈99 on hard's early loss, to t≈122); the first strike kill in a told column (the strikes at
+     * t=138, 152, 170 and hard's tracking one at 160); the pathfinder pod broken under its bank (t≈147-151). An outcome
+     * after t≈122 (the last pair's second hull) runs into Varga's t=129.5 lightning line: pending round 74 (the long
+     * lines shortened, or the rule).
+     */
+    static List<List<Event>> level36Runs() {
+        CueTrigger met = CueTrigger.SECONDARY_OBJECTIVE;
+        CueTrigger failed = CueTrigger.SECONDARY_FAILED;
+        CueTrigger strike = CueTrigger.FIRST_STRIKE_KILL;
+        CueTrigger secret = CueTrigger.SECRET;
+        String pod = "pathfinder pod";
+        return List.of(
+                List.of(),
+                List.of(new Event(101, met, ""), new Event(138.3, strike, ""), new Event(148, secret, pod)),
+                List.of(new Event(116, met, ""), new Event(147.5, secret, pod), new Event(152.3, strike, "")),
+                List.of(new Event(121.5, met, ""), new Event(170.3, strike, "")),
+                List.of(new Event(99, failed, ""), new Event(138.3, strike, ""), new Event(149, secret, pod)),
+                List.of(new Event(113.5, failed, ""), new Event(160.3, strike, "")),
+                List.of(new Event(122, failed, ""), new Event(150.5, secret, pod), new Event(170.3, strike, "")),
+                List.of(new Event(138.3, strike, ""), new Event(148, secret, pod)),
+                List.of(new Event(110, met, "")));
     }
 
     /** Act 1, First Contact: Levels 01–07. */

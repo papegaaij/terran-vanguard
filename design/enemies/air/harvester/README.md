@@ -68,7 +68,7 @@ Production frames by `tools/art/jovian_units.py` (step ART-B, QB-1 a pending rou
 - [x] Stat block loaded from a `data.yaml` (`counted: false`, `haul: ground-targets`, the drift's `vx` and `mirrored`;
       M10 part B, steps B1 and B2)
 - [ ] Never counted as an enemy, its credits with the ground targets (the level's tests, step B3)
-- [ ] Production sprites with the plume (a smooth gradient) and the break in two (step B4)
+- [x] Production sprites with the plume (a smooth gradient) and the break in two (step B4: the hull by its drift's side, the plume under it, the break with its flare; the scoop loop and the break's sound, round 74 a)
 
 ## Decisions
 

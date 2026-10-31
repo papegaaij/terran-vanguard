@@ -76,6 +76,13 @@ final class BackdropAtmosphere {
                     (float) look.haze());
         }
         banks = ForegroundBanks.any(level) ? new ForegroundBanks(level) : null;
+        if (banks != null) {
+            // M10 part B, step B4: the banks' own images (a bank's {@code piece}, ART-B's bank-a..f), where the atlas
+            // holds them; a bank without one keeps the code veil.
+            banks.pieces(name -> sprites.hasBackdrop(folder + name)
+                    ? sprites.backdrop(folder + name).first()
+                    : null);
+        }
         dust = level.collapse()
                 .flatMap(collapse -> data.atmosphere().of(collapse.dust().atmosphere()))
                 .map(look -> new Look(

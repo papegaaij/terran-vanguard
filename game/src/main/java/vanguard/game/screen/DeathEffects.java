@@ -454,6 +454,8 @@ final class DeathEffects {
         starts.start(
                 pieces, deathPieces.frames(), deathPieces.ticksPerFrame(), x, y, deathPieces.delayTicks(), onGround);
         starts.start(effects, look.explosion(), TINY_EXPLOSION_FRAME_TICKS, x, y, 0, onGround);
+        // M10 part B (round 73 A.3 b): the soot under the flash, from Act 6 on.
+        renderer.soot(sortie, look.explosion(), TINY_EXPLOSION_FRAME_TICKS, x, y, onGround);
         EnemyLooks.DeathEffect glow = look.deathGlow();
         starts.start(effects, glow.frames(), glow.ticksPerFrame(), x, y, glow.delayTicks(), onGround);
     }

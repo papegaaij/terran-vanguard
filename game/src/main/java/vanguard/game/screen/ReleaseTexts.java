@@ -16,7 +16,7 @@ import vanguard.content.Content;
  * hangar before its first level ("ACT IV - DEEP WATER: COMING SOON").
  *
  * <p>M9 part B (step B4): a release may end inside an act (the branch's Act 5 ended after Level 29, its first level, until
- * Level 30 was built; M9 part C: after Level 30 until Level 31 was; M9 part D: after Level 31 until Level 32 is). Then the open act is the one holding the last built level but not ending with it: the end card
+ * Level 30 was built; M9 part C: after Level 30 until Level 31 was; M9 part D: after Level 31 until Level 32 is; M10 part B: the branch's Act 6 after Level 36 until part H). Then the open act is the one holding the last built level but not ending with it: the end card
  * heads the acts completed before it ("ACTS I-IV COMPLETE") and the coming-soon lines name the open act's next level
  * ("ACT V - THE BELT. LEVEL 31 COMING SOON."), Continue's line the hangar before it (pending round 62).
  */
@@ -43,17 +43,19 @@ final class ReleaseTexts {
     }
 
     /**
-     * The release's last act: the one that names the act after it, else the last act whose levels are all built (the
-     * act before an {@link #openAct}), else the one with the highest levels.
+     * The release's last act: the one that names the act after it with all its levels built, else the last act whose
+     * levels are all built (the act before an {@link #openAct}), else the one with the highest levels.
      */
     static Optional<ActData> lastAct(Content content) {
+        int last = lastLevel(content);
+        // M10 part B: an open act may already name the act after it (Act 6 names Act 7 while only Level 36 is built):
+        // it is not the release's last act until its last level is built.
         Optional<ActData> named = content.acts().values().stream()
-                .filter(act -> act.nextAct().isPresent())
+                .filter(act -> act.nextAct().isPresent() && act.levels().last() <= last)
                 .max(Comparator.comparingInt(act -> act.levels().last()));
         if (named.isPresent()) {
             return named;
         }
-        int last = lastLevel(content);
         Optional<ActData> complete = content.acts().values().stream()
                 .filter(act -> act.levels().last() <= last)
                 .max(Comparator.comparingInt(act -> act.levels().last()));

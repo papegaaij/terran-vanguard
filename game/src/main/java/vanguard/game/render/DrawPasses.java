@@ -426,7 +426,11 @@ final class DrawPasses extends LevelLooks {
             drones.draw(batch, sortie, relay, alpha, seconds);
         }
         units.drawEnemies(batch, sortie, alpha, Depth.LEAP, Launched.ANY);
+        // M10 part B: the harvesters' gas plumes under their hulls.
+        kinds.cloudDivers(sortie).drawPlumes(batch, sortie, alpha, clock.real());
         units.drawEnemies(batch, sortie, alpha, Depth.LOW_AIR, Launched.ANY);
+        // M10 part B: a harvester breaking in two, its plume's flare and the fire at the cut.
+        kinds.cloudDivers(sortie).drawBreaks(batch, sortie);
         if (cruisers != null) {
             // M8 part H: the cruisers on low-air: their rise, glow, tells, broadsides, point defence, flak and sparks.
             cruisers.draw(batch, sortie);
@@ -476,6 +480,8 @@ final class DrawPasses extends LevelLooks {
             // M7 part D: the Heralds' radius circles and threads under the flyers.
             auras.drawAuras(batch, sortie, alpha, clock.real());
         }
+        // M10 part B: the drop craft's exhaust streaks under their hulls.
+        kinds.cloudDivers(sortie).drawTrails(batch, sortie, alpha, clock.real());
         units.drawEnemies(batch, sortie, alpha, Depth.AIR, overHull ? Launched.NOT : Launched.ANY);
         if (auras != null) {
             // M7 part D: the Heralds' crests over their bodies, the flyers' rings.
@@ -488,6 +494,15 @@ final class DrawPasses extends LevelLooks {
         }
         // M10 part A: the seams, the mirrors and their shards, the prey hits' and the spoofed turrets' flashes.
         jovian.drawAir(batch, sortie, alpha, seconds);
+        // M10 part B: the Chimeras' seams and healing pulse (their own frames, RegenerationLooks' strength).
+        batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
+        kinds.cloudDivers(sortie).drawSeams(batch, sortie, alpha, null);
+        batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        if (backdrop.banks() != null) {
+            // M10 part B (design/world/jovian, foreground cloud banks): the debris on the play plane under the banks
+            // (Level 36's pathfinder pod hides under one; the Salvage scanner's glint shows it through them).
+            props.drawDebris(batch, sortie, alpha);
+        }
         if (eruptions != null) {
             // M10 part A: the eruptions' burning rocks on the play plane.
             eruptions.drawRocks(batch, sortie);
@@ -530,6 +545,11 @@ final class DrawPasses extends LevelLooks {
         backdrop.drawForegroundBanks(batch, scroll, bankReveal(sortie));
         if (storm == null && !graded) {
             units.drawAirGlows(batch, sortie, alpha, banks);
+            // M10 part B: the Chimeras' seams and the Talons' and Chimeras' muzzle glints at full under the banks.
+            batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
+            kinds.cloudDivers(sortie).drawSeams(batch, sortie, alpha, banks);
+            kinds.ceres(sortie).drawGlints(batch, sortie, alpha, banks);
+            batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         }
     }
 
@@ -557,15 +577,23 @@ final class DrawPasses extends LevelLooks {
         // M9 part A: the wrecks drifting off in vacuum, under the death pieces.
         vacuumDeaths.drawWrecks(batch, sortie.tick(), alpha, scroll);
         pieces.draw(batch, scroll);
+        if (soot != null) {
+            // M10 part B: the soot puffs under the kills' flashes (drawn later, in the shot pass).
+            soot.draw(batch, sortie.tick(), alpha, scroll);
+        }
         // M9 part B: the Talons' wings spinning off, the belt's rocks shot apart.
         kinds.ceres(sortie).drawPieces(batch, sortie, alpha);
+        // M10 part B: a Chimera's teal flecks and gold sparks over its burst.
+        kinds.cloudDivers(sortie).drawFlecks(batch, sortie);
         // M9 part C: a Gunship's halves and gold plates flung out.
         kinds.minefield(sortie).drawPieces(batch, sortie, alpha, scroll);
         // M9 part D: a Shard Drone's shards, a Buzzsaw's blades.
         kinds.rig(sortie).drawPieces(batch, sortie, alpha);
         // M9 part E: the Sentinels' heads toppling off.
         kinds.deepCore(sortie).drawPieces(batch, sortie, scroll);
-        props.drawDebris(batch, sortie, alpha);
+        if (backdrop.banks() == null) {
+            props.drawDebris(batch, sortie, alpha);
+        }
         if (colossus != null) {
             // M7 part H: the rocks the breaching boss tears loose toward its mouth; its throe's plume and rock rain.
             colossus.drawRocks(batch, sortie, alpha, scroll);

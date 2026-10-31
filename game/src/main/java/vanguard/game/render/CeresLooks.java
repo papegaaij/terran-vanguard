@@ -38,7 +38,10 @@ import vanguard.sim.Sortie;
  *       0.3 s red glint on its muzzle before each shot ({@code clamp-gun-glint}, {@code pivots/clamp-gun.json}), and at
  *       its death the clamp springing open ({@code -open}, the last frame left on the ground) with its burst of gas at
  *       the jaw ({@code clamp-gun-gas}, additive);
- *   <li>the belt's small rocks: a rock shot apart ({@code debris-<chunk>-break}).
+ *   <li>the belt's small rocks: a rock shot apart ({@code debris-<chunk>-break});
+ *   <li>M10 part B, step B4: the Chimera (the Talon's airframe and gun): the Talon's red glint on its twin muzzles before
+ *       each pair, on {@code pivots/chimera.json}'s {@code muzzles} (no leader frames, no wing: its airframe tears,
+ *       {@link CloudDiverLooks}); over Level 36's foreground banks the glints are drawn again at the banks' cover.
  * </ul>
  *
  * <p>The simulation has no read-out of a gun's time to its next shot: the glints and the hatch are timed from the
@@ -52,6 +55,7 @@ final class CeresLooks {
     static final String MITE = "asteroid-mite";
     static final String HAWK = "wavering-stormhawk";
     static final String CLAMP = "clamp-gun";
+    static final String CHIMERA = CloudDiverLooks.CHIMERA;
 
     /** The art's headings: heading k turns k x 22.5 degrees clockwise from straight down. */
     static final int HEADINGS = 16;
@@ -100,12 +104,15 @@ final class CeresLooks {
     private static final int ROLE_MITE = 3;
     private static final int ROLE_HAWK = 4;
     private static final int ROLE_CLAMP = 5;
+    private static final int ROLE_CHIMERA = 6;
 
     private final Array<AtlasRegion> leader;
     private final Array<AtlasRegion> talonGlint;
     private final Array<AtlasRegion> wing;
     /** Per heading the twin muzzles' centres, px from the sprite's centre, y up: {@code [heading][muzzle][x|y]}. */
     private final double[][][] muzzles;
+    /** M10 part B: the Chimera's twin muzzles per heading, as {@link #muzzles}. */
+    private final double[][][] chimeraMuzzles;
 
     private final AtlasRegion nestBase;
     private final AtlasRegion nestBaseDormant;
@@ -180,6 +187,7 @@ final class CeresLooks {
                 case MITE -> ROLE_MITE;
                 case HAWK -> ROLE_HAWK;
                 case CLAMP -> ROLE_CLAMP;
+                case CHIMERA -> ROLE_CHIMERA;
                 default -> NONE;
             };
         }
@@ -188,6 +196,7 @@ final class CeresLooks {
         talonGlint = optional(TALON + "-glint", none);
         wing = optional(TALON + "-wing", none);
         muzzles = muzzles(pivots.apply(TALON));
+        chimeraMuzzles = role.length > 0 && hasRole(ROLE_CHIMERA) ? muzzles(pivots.apply(CHIMERA)) : muzzles;
         nestBase = single(NEST + "-base");
         nestBaseDormant = single(NEST + "-base-dormant");
         nestDormant = single(NEST + "-dormant");
@@ -265,6 +274,15 @@ final class CeresLooks {
         return at;
     }
 
+    private boolean hasRole(int wanted) {
+        for (int r : role) {
+            if (r == wanted) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /** Whether any of the level's kinds has these looks. */
     boolean any() {
         for (int r : role) {
@@ -304,7 +322,9 @@ final class CeresLooks {
         for (int i = 0; i < sortie.enemyCount(); i++) {
             Enemy enemy = sortie.enemy(i);
             int r = roleOf(enemy.kind());
-            if ((r == ROLE_TALON || r == ROLE_CLAMP || r == ROLE_NEST) && !enemy.dormant() && !enemy.waking()) {
+            if ((r == ROLE_TALON || r == ROLE_CHIMERA || r == ROLE_CLAMP || r == ROLE_NEST)
+                    && !enemy.dormant()
+                    && !enemy.waking()) {
                 if (slotOf(enemy.serial()) < 0) {
                     int slot = nextGun;
                     nextGun = (nextGun + 1) % SLOTS;
@@ -362,7 +382,7 @@ final class CeresLooks {
         for (int i = 0; i < sortie.enemyCount(); i++) {
             Enemy enemy = sortie.enemy(i);
             int r = roleOf(enemy.kind());
-            if (r != ROLE_TALON && r != ROLE_CLAMP && r != ROLE_NEST) {
+            if (r != ROLE_TALON && r != ROLE_CHIMERA && r != ROLE_CLAMP && r != ROLE_NEST) {
                 continue;
             }
             double distance = Math.hypot(enemy.renderX(1) - x, enemy.renderY(1) - y);
@@ -571,41 +591,8 @@ final class CeresLooks {
      * additive blending).
      */
     void drawGlints(SpriteBatch batch, Sortie sortie, float alpha, double scroll) {
+        drawMuzzleGlints(batch, sortie, alpha, null);
         long tick = sortie.tick();
-        for (int i = 0; i < sortie.enemyCount(); i++) {
-            Enemy enemy = sortie.enemy(i);
-            int r = roleOf(enemy.kind());
-            if (r != ROLE_TALON && r != ROLE_CLAMP) {
-                continue;
-            }
-            Array<AtlasRegion> glint = r == ROLE_TALON ? talonGlint : clampGlint;
-            EnemyGun gun = enemy.spec().gun().orElse(null);
-            if (glint.size == 0 || gun == null || enemy.empStunned()) {
-                continue;
-            }
-            var path = enemy.spec().swoopPath();
-            if (r == ROLE_TALON
-                    && path.isPresent()
-                    && PlayField.HEIGHT - enemy.renderY(1) > path.get().fireBand()) {
-                continue;
-            }
-            double tell = r == ROLE_TALON ? gun.firstShotDelay() : CLAMP_TELL_SECONDS;
-            double share = tellShare(untilShot(enemy, tick), tell);
-            if (share < 0) {
-                continue;
-            }
-            AtlasRegion frame = glint.get(Math.min(glint.size - 1, (int) (share * glint.size)));
-            int heading = EnemyLooks.heading(enemy.facing(), HEADINGS);
-            double x = enemy.renderX(alpha);
-            double y = enemy.renderY(alpha);
-            if (r == ROLE_TALON) {
-                for (double[] muzzle : muzzles[heading]) {
-                    drawCentred(batch, frame, x + muzzle[0], y + muzzle[1]);
-                }
-            } else {
-                drawCentred(batch, frame, x + clampMuzzle[heading][0], y + clampMuzzle[heading][1]);
-            }
-        }
         for (int c = 0; c < PIECES; c++) {
             long age = tick - clampTick[c];
             if (clampTick[c] < 0 || gas.size == 0 || age >= (long) gas.size * GAS_FRAME_TICKS) {
@@ -615,6 +602,60 @@ final class CeresLooks {
             drawCentred(
                     batch, gas.get((int) (age / GAS_FRAME_TICKS)), clampX[c] + at[0], clampGroundY[c] - scroll + at[1]);
         }
+    }
+
+    /**
+     * M10 part B: the muzzle glints again over the foreground banks, each at the banks' cover where it is (so a Talon's
+     * or a Chimera's tell reads at full under a bank), additive (the batch is in additive blending).
+     */
+    void drawGlints(SpriteBatch batch, Sortie sortie, float alpha, ForegroundBanks banks) {
+        drawMuzzleGlints(batch, sortie, alpha, banks);
+    }
+
+    /** The muzzle glints (the Talons', the Chimeras', the clamp guns'), each at {@code banks}' cover (null: full). */
+    private void drawMuzzleGlints(SpriteBatch batch, Sortie sortie, float alpha, ForegroundBanks banks) {
+        long tick = sortie.tick();
+        for (int i = 0; i < sortie.enemyCount(); i++) {
+            Enemy enemy = sortie.enemy(i);
+            int r = roleOf(enemy.kind());
+            if (r != ROLE_TALON && r != ROLE_CHIMERA && r != ROLE_CLAMP) {
+                continue;
+            }
+            boolean twin = r == ROLE_TALON || r == ROLE_CHIMERA;
+            Array<AtlasRegion> glint = twin ? talonGlint : clampGlint;
+            EnemyGun gun = enemy.spec().gun().orElse(null);
+            if (glint.size == 0 || gun == null || enemy.empStunned()) {
+                continue;
+            }
+            var path = enemy.spec().swoopPath();
+            if (twin
+                    && path.isPresent()
+                    && PlayField.HEIGHT - enemy.renderY(1) > path.get().fireBand()) {
+                continue;
+            }
+            double tell = twin ? gun.firstShotDelay() : CLAMP_TELL_SECONDS;
+            double share = tellShare(untilShot(enemy, tick), tell);
+            if (share < 0) {
+                continue;
+            }
+            AtlasRegion frame = glint.get(Math.min(glint.size - 1, (int) (share * glint.size)));
+            int heading = EnemyLooks.heading(enemy.facing(), HEADINGS);
+            double x = enemy.renderX(alpha);
+            double y = enemy.renderY(alpha);
+            float cover = banks == null ? 1 : banks.cover(x, y);
+            if (cover <= 0) {
+                continue;
+            }
+            batch.setColor(1, 1, 1, cover);
+            if (twin) {
+                for (double[] muzzle : (r == ROLE_CHIMERA ? chimeraMuzzles : muzzles)[heading]) {
+                    drawCentred(batch, frame, x + muzzle[0], y + muzzle[1]);
+                }
+            } else {
+                drawCentred(batch, frame, x + clampMuzzle[heading][0], y + clampMuzzle[heading][1]);
+            }
+        }
+        batch.setColor(1, 1, 1, 1);
     }
 
     /** The clamp gun's muzzle glint (design/enemies/ground/clamp-gun: "a 0.3 s red muzzle glint"). */

@@ -1302,6 +1302,40 @@ public enum Sfx {
      * a volcanic roar, 3.2 s), at the tell's start.
      */
     ERUPTION("sfx/eruption-r72-a.ogg", 3, Bus.EFFECTS, WARNING),
+    /**
+     * M10 part B, step B4 (round 73 S.1 a): a beam held on a mirror's face, one loop for the nearest heating mirror (a gas
+     * torch on steel, 2.0 s), pitched 0.85 cold to 1.35 at the break ({@link JovianCues}).
+     */
+    MIRROR_HEAT("sfx/mirror-heat-r73-a.ogg", 1, Bus.EFFECTS, PLAYER_FIRE),
+    /** M10 part B, step B4 (round 73 S.2 a): a mirror breaking (a heavy glass pane shattering, 2.8 s). */
+    MIRROR_BREAK("sfx/mirror-break-r73-a.ogg", 2, Bus.EFFECTS, EXPLOSION),
+    /** M10 part B, step B4 (round 73 S.3 a): a mirror regrowing (a deep singing bowl struck softly, 1.0 s). */
+    MIRROR_REGROW("sfx/mirror-regrow-r73-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
+    /** M10 part B, step B4 (round 73 S.4 a): a shot spent on a pylon dome (a stun-gun zap over a glass ring, 0.47 s). */
+    PYLON_DOME_HIT("sfx/pylon-dome-hit-r73-a.ogg", 3, Bus.EFFECTS, PLAYER_FIRE),
+    /** M10 part B, step B4 (round 73 S.5): a Reflex bolt or another shot earthed on a mirror's face (a dry tick, 0.1 s). */
+    BOLT_ABSORBED("sfx/bolt-absorbed-r73-a.ogg", 2, Bus.EFFECTS, PLAYER_FIRE),
+    /**
+     * M10 part B, step B4 (round 72 S.13 b): the Jovian sky's bed (a gusting strong wind over a deep far rumble, a
+     * seamless 16 s loop), looped: Levels 36 and 38.
+     */
+    AMBIENCE_JOVIAN_SKY("sfx/jovian-sky-r72-b.ogg", 1, Bus.EFFECTS, AMBIENCE),
+    /**
+     * M10 part B, step B4 (round 74 a until the pick): the dive's rushing wind (a skydiver's freefall, a 12 s loop), an
+     * ambience layer over the Jovian sky in Level 36's section 1 ({@code ambience_layers}).
+     */
+    AMBIENCE_DIVE_WIND("sfx/dive-wind-r74-a.ogg", 1, Bus.EFFECTS, AMBIENCE),
+    /** M10 part B, step B4 (round 74 a until the pick): a pair of the fleet's drop craft diving past (two jet fly-bys). */
+    DROP_CRAFT_PASS("sfx/drop-craft-pass-r74-a.ogg", 1, Bus.EFFECTS, ENEMY_FIRE),
+    /**
+     * M10 part B, step B4 (round 74 a until the pick): a helium-3 harvester's scoop (a slowed dust extractor's drone, an
+     * 8 s loop), one loop for the nearest harvester ({@link CloudDiverCues}).
+     */
+    HARVESTER_SCOOP("sfx/harvester-scoop-r74-a.ogg", 1, Bus.EFFECTS, ENEMY_FIRE),
+    /** M10 part B, step B4 (round 74 a until the pick): a harvester destroyed (metal tearing into a gas roar), over its rung. */
+    HARVESTER_BREAK("sfx/harvester-break-r74-a.ogg", 2, Bus.EFFECTS, EXPLOSION),
+    /** M10 part B, step B4 (round 74 a until the pick): a Chimera destroyed (the Talon's crack over a dry tear), over its rung. */
+    CHIMERA_DEATH("sfx/chimera-death-r74-a.ogg", 3, Bus.EFFECTS, EXPLOSION),
     /** The mission complete jingle (design/audio/music, track 23), played as a one-shot. */
     MISSION_COMPLETE("music/mission-complete.ogg", 1, Bus.MUSIC, WARNING),
     /**
@@ -1420,6 +1454,9 @@ public enum Sfx {
             case "belt-tunnel" -> AMBIENCE_BELT_TUNNEL;
             // M9 part G: the graveyard's metal groans, a layer over the open bed (Level 34).
             case "wreck-groans" -> AMBIENCE_WRECK_GROANS;
+            // M10 part B: Jupiter's upper air (Levels 36 and 38) and the dive's wind, a layer over it (Level 36).
+            case "jovian-sky" -> AMBIENCE_JOVIAN_SKY;
+            case "dive-wind" -> AMBIENCE_DIVE_WIND;
             default -> throw new IllegalArgumentException("no ambience for " + setting + " yet");
         };
     }

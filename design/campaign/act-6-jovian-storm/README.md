@@ -474,7 +474,11 @@ Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
       the additive flash (warm dark grey, at most 0.42 opaque, feathered to nothing, rising a little as it fades; see
       [art direction](../../art-direction/README.md#concept-art)). Open build item for part B (step B4): whether it is Act 6
       only or everywhere (Acts 1-5's golden flights stay as recorded, so it is opt-in), and a Level 36 capture that
-      the bursts read over the cream and rust bands.
+      the bursts read over the cream and rust bands. *Step B4 (2026-10-31): built **Act 6 only** (Level 36 on, the game's
+      `SootPuffs`), pending the user's review in round 74: measured over Acts 1–5's base tiles, the soot alone lifts the
+      darkest field (Level 29's black docks) by +12 luminance round each burst and the night and space fields (Levels 01,
+      08, 26, 30) by +5..+9, a grey halo, and darkens mid-tone fields (Level 06's terminator) by 7; it helps only on bright
+      fields (Level 22's ice −31, the Jovian cream). B5's capture remains.*
 - [x] `reference_dps` 36–42 and the Act 6 balance plan (`balance-plan.yaml` visits 36–42) before any Act 6 level data
       (M10 part A): `enemies/data.yaml`, `ActHpFactorTest`, `BalanceTest`, `tools/balance.py` exit 0.
 - [ ] Every level within the act's density band (`DensityTest`, `PacingTest`, `ActFloorTest`), the end calm (≥ 4 s),

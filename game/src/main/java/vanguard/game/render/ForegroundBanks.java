@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Disposable;
 import java.util.List;
@@ -25,7 +26,10 @@ import vanguard.sim.PlayField;
  * {@value #PEAK} at its densest, so a body under it reads at about 35 % and fades toward cream. Clouds at different
  * altitudes share one colour (the user, round 72). A lightning flash makes the banks see-through ({@link #draw}'s {@code
  * seeThrough}). {@link #cover} tells how much a point is under them (the units' glows drawn again at full over them).
- * Nothing is allocated per frame; a level without banks draws nothing.
+ * M10 part B, step B4: a bank with a {@code piece} (Level 36's bank-a..f, ART-B's images of exactly its rectangle, the
+ * veil at most {@value #PEAK} in them) is drawn as that image instead of the code veil ({@link #pieces}); its cover
+ * keeps the veil's shape (the images' soft edges match it closely). Nothing is allocated per frame; a level without
+ * banks draws nothing.
  */
 final class ForegroundBanks implements Disposable {
     /** The veil's opacity at its densest: a body under it reads at 1 − this (design: ≈ 35 %). */
@@ -63,6 +67,10 @@ final class ForegroundBanks implements Disposable {
 
     private Texture texture;
     private TextureRegion veil;
+    /** M10 part B: the image each bank is drawn as ({@code piece}), null for the code veil; per {@link #banks}. */
+    private AtlasRegion[] images = new AtlasRegion[0];
+    /** M10 part B: the backdrop atlas's bank images by piece name (null when it has none). */
+    private Function<String, AtlasRegion> pieceImages = name -> null;
 
     ForegroundBanks(LevelData level) {
         this(level.backdrop()::banksOn, level::scrollAt, level.backdrop().factor(BackdropLayer.HIGH_AIR));
@@ -81,9 +89,28 @@ final class ForegroundBanks implements Disposable {
         return level.backdrop().banks().isPresent();
     }
 
+    /** M10 part B: the bank images by their piece's name (the backdrop atlas's), null where the atlas has none. */
+    void pieces(Function<String, AtlasRegion> images) {
+        pieceImages = images;
+        placeImages();
+    }
+
+    private void placeImages() {
+        images = new AtlasRegion[banks.size()];
+        for (int b = 0; b < images.length; b++) {
+            images[b] = banks.get(b).piece().map(pieceImages).orElse(null);
+        }
+    }
+
+    /** M10 part B: whether bank {@code b} (of the difficulty's) is drawn as its piece's image. */
+    boolean drawnAsPiece(int b) {
+        return images[b] != null;
+    }
+
     /** The banks the difficulty draws (easy leaves some out). */
     void difficulty(Difficulty difficulty) {
         banks = banksOn.apply(difficulty);
+        placeImages();
         int n = banks.size();
         centreX = new double[n];
         centreY = new double[n];
@@ -133,6 +160,18 @@ final class ForegroundBanks implements Disposable {
         batch.setColor(1, 1, 1, opacity);
         for (int b = 0; b < shown; b++) {
             if (!onField(b)) {
+                continue;
+            }
+            if (images[b] != null) {
+                // M10 part B: the bank's image carries its veil (at most PEAK): drawn at the flash's share of it.
+                batch.setColor(1, 1, 1, opacity / PEAK);
+                batch.draw(
+                        images[b],
+                        (float) (X0 + centreX[b] - halfW[b]),
+                        (float) (centreY[b] - halfH[b]),
+                        (float) (2 * halfW[b]),
+                        (float) (2 * halfH[b]));
+                batch.setColor(1, 1, 1, opacity);
                 continue;
             }
             batch.draw(

@@ -44,7 +44,10 @@ public final class JovianLooks implements Disposable {
         built = true;
         mirrors = MirrorLooks.any(kinds) ? new MirrorLooks(kinds, glow) : null;
         regrowth = RegrowthLooks.any(kinds) ? new RegrowthLooks(kinds, glow) : null;
-        regeneration = RegenerationLooks.any(kinds) ? new RegenerationLooks(kinds, glow) : null;
+        // M10 part B: a hybrid with its own seam frames (the Chimera's) wears them (CloudDiverLooks), not the light.
+        regeneration = RegenerationLooks.any(kinds)
+                ? new RegenerationLooks(kinds, glow, slug -> sprites.has(slug + "-seams"))
+                : null;
         domes = pylons || kinds.stream().anyMatch(kind -> kind.dome().isPresent())
                 ? new PylonDomeLooks(sprites, glow)
                 : null;

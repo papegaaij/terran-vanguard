@@ -66,6 +66,11 @@ public final class BriefingScreen implements GameScreen {
     private static final float FANFARE_VOLUME = 0.8f;
     /** The outro's fanfare fades out over this when the first page is left, and the theme fades in. */
     private static final float FADE_SECONDS = 1.5f;
+    /**
+     * M10 part B (design/campaign Act 6, Act intro: page 3 {@code music: motif}): a page that names its music crosses to
+     * the motif stem alone and back over this, s.
+     */
+    static final float MOTIF_PAGE_FADE_SECONDS = 1f;
 
     private static final float TYPING_VOLUME = 0.15f;
     private static final float CURSOR_BLINK_SECONDS = 0.5f;
@@ -259,8 +264,19 @@ public final class BriefingScreen implements GameScreen {
             Speaker speaker = Speaker.of(page.speaker(), page.portrait(), services.sprites);
             Optional<Texture> image = page.image().flatMap(name -> images.computeIfAbsent(name, this::image));
             boolean intercepted = page.onChannel() == Channel.ENEMY;
+            boolean motif = page.music()
+                    .filter(music -> music == BriefingPage.PageMusic.MOTIF)
+                    .isPresent();
             for (List<String> lines : screens(page, image.isPresent())) {
-                screens.add(new Screen(page.speaker(), speaker, image, lines, pageVoices.size() - 1, intercepted));
+                screens.add(new Screen(
+                        page.speaker(),
+                        speaker,
+                        image,
+                        lines,
+                        pageVoices.size() - 1,
+                        intercepted,
+                        intercepted || motif,
+                        motif ? MOTIF_PAGE_FADE_SECONDS : FADE_SECONDS));
                 lengths.add(lines.stream().mapToInt(String::length).sum());
             }
         }
@@ -309,11 +325,19 @@ public final class BriefingScreen implements GameScreen {
     /** M9 part B: the intercept's motif stream, opened at the first intercepted page; empty before or without one. */
     private Optional<MusicStreamer> motifMusic = Optional.empty();
 
+    /** M10 part B: the crossing's length of the last page that played the motif (its fade back takes as long). */
+    private float motifFadeSeconds = FADE_SECONDS;
+
     /**
      * M9 part B: the music crosses to the intercept's motif stem alone while an intercepted page shows and back to the
-     * briefing theme after it, over {@value #FADE_SECONDS} s.
+     * briefing theme after it, over {@value #FADE_SECONDS} s. M10 part B: a page with {@code music: motif} does so over
+     * {@value #MOTIF_PAGE_FADE_SECONDS} s, in and out (Act 6's page 3).
      */
-    private void followIntercept(float seconds, boolean intercepted) {
+    private void followIntercept(float seconds, Screen screen) {
+        boolean intercepted = screen.motif();
+        if (intercepted) {
+            motifFadeSeconds = screen.motifFadeSeconds();
+        }
         if (intercepted && motifMusic.isEmpty() && motifPath.isPresent()) {
             var file = services.files.internal(motifPath.get());
             if (file.exists()) {
@@ -321,7 +345,7 @@ public final class BriefingScreen implements GameScreen {
             }
         }
         float target = intercepted && motifMusic.isPresent() ? 1 : 0;
-        float step = seconds / FADE_SECONDS;
+        float step = seconds / motifFadeSeconds;
         motifFade = target > motifFade ? Math.min(target, motifFade + step) : Math.max(target, motifFade - step);
         motifMusic.ifPresent(streamer -> streamer.setVolume(MUSIC_VOLUME * duck * motifFade));
     }
@@ -336,7 +360,9 @@ public final class BriefingScreen implements GameScreen {
             Optional<Texture> image,
             List<String> lines,
             int dataPage,
-            boolean intercepted) {}
+            boolean intercepted,
+            boolean motif,
+            float motifFadeSeconds) {}
 
     /**
      * M9 part A (design/ui/briefing, Intercepted transmissions): an intercepted page's header in place of the act and
@@ -647,7 +673,7 @@ public final class BriefingScreen implements GameScreen {
         float target = services.voices.playing() ? LevelMusic.DUCKED : 1;
         duck += (target - duck) * Math.min(1, LevelMusic.DUCK_RATE * seconds);
         followFanfare(seconds, dataPage);
-        followIntercept(seconds, screens.get(pager.page()).intercepted());
+        followIntercept(seconds, screens.get(pager.page()));
         music.ifPresent(streamer -> streamer.setVolume(MUSIC_VOLUME * duck * fade * (1 - motifFade)));
     }
 

@@ -128,6 +128,29 @@ public final class LevelRenderer {
         passes.kinds.roots(roots);
     }
 
+    /**
+     * M10 part B (round 73 A.3 b): a kill's flash of {@code frames} at {@code ticksPerFrame} starts at (x, y): its soot
+     * puff under it, from Act 6 on ({@link SootPuffs}); nothing before.
+     */
+    public void soot(
+            Sortie sortie,
+            com.badlogic.gdx.utils.Array<com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion> frames,
+            int ticksPerFrame,
+            double x,
+            double y,
+            boolean onGround) {
+        if (passes.soot != null && !frames.isEmpty()) {
+            passes.soot.start(
+                    sortie.tick(),
+                    x,
+                    y,
+                    frames.first().getRegionWidth(),
+                    frames.size * ticksPerFrame,
+                    onGround,
+                    sortie.groundScroll());
+        }
+    }
+
     /** M9 part A: the kills in vacuum ({@link VacuumDeaths}). */
     public VacuumDeaths vacuumDeaths() {
         return passes.vacuumDeaths;

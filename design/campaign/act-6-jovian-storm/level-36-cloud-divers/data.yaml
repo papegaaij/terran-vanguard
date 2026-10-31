@@ -17,7 +17,7 @@ bounty_scale: 0.31    # every bounty × 0.31: the README's hand estimate (step B
 control_prompts: []
 ground: none          # air only (J2: the cloud decks are scenery): the bomb deliveries read NO GROUND; the Airstrike and the EMP Burst work
 threat_profile:  # the hangar intel panel (design/ui/hangar) and the README's Threat profile table
-  setting: Jupiter, the upper atmosphere
+  setting: Jupiter, the upper air   # step B4: "the upper atmosphere" left the intel panel (IntelPanelLayoutTest)
   layers: [air, low-air]
   density: 4
   traits: [forward, homing]
@@ -36,7 +36,7 @@ threat_profile:  # the hangar intel panel (design/ui/hangar) and the README's Th
     Recommended traits: '{traits}'
     Hazards: Foreground cloud banks over the play plane; wind gusts (two spells); lightning strikes (three, section 4)
     Boss / mid-boss: none
-    Sensor-suite detail: '**none**: Jupiter, the upper atmosphere, `air`, front · **L1**: + directions (sides), density {density}, hazards "cloud banks", "wind" and "lightning", the objective `{objective}`, the secondary `HARVESTERS 0 / 6` and the row `NO GROUND` · **L2**: + Chimera (new), Talon, Wraith, Spore Bomber, Lamprey, Gilded Gunship, Dart Drone and Mote portraits · **L3**: + `forward` and `homing` highlighted, the wave strip marking the harvester pairs and the three strikes'
+    Sensor-suite detail: '**none**: Jupiter, the upper air, `air`, front · **L1**: + directions (sides), density {density}, hazards "cloud banks", "wind" and "lightning", the objective `{objective}`, the secondary `HARVESTERS 0 / 6` and the row `NO GROUND` · **L2**: + Chimera (new), Talon, Wraith, Spore Bomber, Lamprey, Gilded Gunship, Dart Drone and Mote portraits · **L3**: + `forward` and `homing` highlighted, the wave strip marking the harvester pairs and the three strikes'
 
 sections:  # back to back from t = 0; each speed change eased over 2 s (ramp); ART-B's tile sets cut at these rows
   - name: The Dive
@@ -332,19 +332,19 @@ pickups:
 drops:  # a CDF supply drone from the carrier (low-air) releases an armour patch between the second and third harvester pairs
   - {t: 96, x: 240, y: 380, pickup: armour patch}
 
-radio:  # trigger: t or event; the README's 16 lines (the 1 s rule: ≈ 12 characters a second, a 1.5 s lead). Rook's barks need him flying (requires: escort: the t=118 homing bark, the first strike kill); his t=11 line is scripted (no requires). Vorne is silent here (the act intro's page 3 carries him).
+radio:  # trigger: t or event; the README's 16 lines (the 1 s rule: ≈ 12 characters a second, a 1.5 s lead; step B4 retimed them to the game's typed pages, two pages a long line ≈ 11-12 s, and kept t=101-129 clear for the harvesters' outcome: RadioTimelineLevel36Test, pending round 74). Rook's barks need him flying (requires: escort: the t=80 homing bark, the first strike kill); his t=13 line is scripted (no requires). Vorne is silent here (the act intro's page 3 carries him).
   - {t: 1, speaker: Okafor, line: "Aegis, you're cleared to dive. Break their air cover over the bands. The fleet follows you down."}
-  - {t: 11, speaker: Rook, line: "Jupiter. All sky and no floor. If we go down here, Lancer, we fall for a week."}
-  - {t: 20, speaker: Varga, line: "Under the haze the cloud banks lie over your plane. Bodies dim under them. Their shots never do."}
-  - {t: 30, speaker: Varga, line: "There: Chimeras. Talon frames, Vrell tissue in the seams. Pick one and keep hitting it."}
-  - {t: 40, speaker: Varga, line: "See the seams glow? It's healing. Hold the beam on it, or it grows back."}
-  - {t: 48, speaker: Okafor, line: "Wraiths overhead, cloaked. They come out behind you."}
-  - {t: 67, speaker: Okafor, line: "Helium-3 harvesters ahead, skimming the bands. That's Vorne's fuel. Bring down six."}
+  - {t: 13, speaker: Rook, line: "Jupiter. All sky and no floor. If we go down here, Lancer, we fall for a week."}
+  - {t: 25.5, speaker: Varga, line: "Under the haze the cloud banks lie over your plane. Bodies dim under them. Their shots never do."}
+  - {t: 37.5, speaker: Varga, line: "There: Chimeras. Talon frames, Vrell tissue in the seams. Pick one and keep hitting it."}
+  - {t: 49, speaker: Okafor, line: "Wraiths overhead, cloaked. They come out behind you."}
+  - {t: 56.5, speaker: Varga, line: "See the seams glow? It's healing. Hold the beam on it, or it grows back."}
+  - {t: 68, speaker: Okafor, line: "Helium-3 harvesters ahead, skimming the bands. That's Vorne's fuel. Bring down six."}
+  - {t: 80, speaker: Rook, requires: escort, line: "Homing's earning its keep. Those clouds are full of them."}
   - {t: 90, speaker: Varga, line: "Spore bombers under the harvesters. Vrell, still flying with the gold ones. For now."}
   - {event: secondary-objective, speaker: Okafor, line: "Six harvesters down. His fleet will feel that at Io.", notes: {trigger: "Secondary met (`secondary-objective`, the sixth harvester down)"}}
   - {event: secondary-failed, speaker: Varga, line: "Too many got through. Their fuel reaches the refineries.", notes: {trigger: "Secondary failed (`secondary-failed`: the third harvester away; easy the fourth, hard the second)"}}
-  - {t: 118, speaker: Rook, requires: escort, line: "Homing's earning its keep. Those clouds are full of them."}
-  - {t: 128, speaker: Varga, line: "A white line drawn down the sky means lightning. Get out of it. A second later it strikes."}
+  - {t: 129.5, speaker: Varga, line: "A white line drawn down the sky means lightning. Get out of it. A second later it strikes."}
   - {event: first-strike-kill, speaker: Rook, requires: escort, line: "Ha! The sky's on our side.", notes: {trigger: "The first enemy killed by a strike (event, bark)"}}
   - {t: 172, speaker: Okafor, line: "The bands are thinning. Aurelia is ahead, Aegis."}
   - {event: level-end, speaker: Okafor, line: "First dive done. The fleet is in the clouds behind you. Aurelia next.", notes: {trigger: Level end}}
@@ -355,7 +355,7 @@ objectives:
 
 music:
   track: 14           # Act 6 A "Eye of the Storm" (audio/music track list)
-  start_section: 2    # section 1 the theme's intro over the dive (storm strings, a far thunder roll), the base stem from the bands
+  start_section: 1    # the theme's 7.3 s intro over the dive (storm strings, a far thunder roll), then the base stem (step B4: the stream starts with its intro, so the intro is section 1's only with the theme starting there; pending round 74)
   full_section: 3     # the full mix from the harvester fields to the end
   ambience: jovian-sky   # the Jovian sky bed (round 72 S.13 b: high wind on the hull, distant thunder, the carrier's radio hiss)
   ambience_layers:

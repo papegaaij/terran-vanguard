@@ -23,8 +23,8 @@ import vanguard.sim.Sortie;
 
 /**
  * M10 part A, step A3a: the sounds of A1a's Act 6 mechanics (design/audio/sfx, Act 6 sounds): round 72's picks play
- * their files; round 73's proposals (the mirror's heat, break and regrowth, the dome's hit, the absorbed tick) play the
- * nearest built sound until the user's pick; the war's kills play the prey's rung; one family per event.
+ * their files; round 73's picks (the mirror's heat, break and regrowth, the dome's hit, the absorbed tick; M10 part B,
+ * step B4) play theirs; the war's kills play the prey's rung; one family per event.
  */
 class ActSixSoundsTest {
     private static final Path ASSETS = Path.of(System.getProperty("vanguard.assetsDir", "../assets"));
@@ -35,7 +35,7 @@ class ActSixSoundsTest {
             new SfxBank(new MockAudio(), new Lwjgl3Files(), new Mixer(AudioSettings.defaults()), () -> now[0]);
 
     @Test
-    void everyActSixSoundPlaysRoundSeventyTwosPick() {
+    void everyActSixSoundPlaysItsRoundsPick() {
         Map<Sfx, String> picks = Map.of(
                 Sfx.REGROWTH_CREAK, "regrowth-creak-r72-a.ogg",
                 Sfx.MIRROR_PING, "mirror-ping-r72-a.ogg",
@@ -46,17 +46,18 @@ class ActSixSoundsTest {
             assertEquals("sfx/" + file, sfx.path(), sfx.name());
             assertTrue(Files.isRegularFile(ASSETS.resolve(sfx.path())), sfx.path());
         });
-        // Round 73's proposals wait for the pick: the nearest built sounds stand in.
-        for (Sfx standIn : List.of(
-                JovianCues.HEAT_STAND_IN,
-                JovianCues.BREAK_STAND_IN,
-                JovianCues.REGROW_STAND_IN,
-                JovianCues.DOME_HIT_STAND_IN,
-                JovianCues.ABSORBED_STAND_IN)) {
-            assertFalse(standIn.path().contains("-r73-"), standIn.name());
-            assertTrue(Files.isRegularFile(ASSETS.resolve(standIn.path())), standIn.path());
-        }
-        assertTrue(!JovianCues.DOME_HIT_STAND_IN.equals(Sfx.DOME_HIT), "never the Level 17 colony dome's glass boom");
+        // M10 part B, step B4: round 73's picks (QA-1, closed 2026-10-31) replace part A's stand-ins.
+        Map<Sfx, String> round73 = Map.of(
+                Sfx.MIRROR_HEAT, "mirror-heat-r73-a.ogg",
+                Sfx.MIRROR_BREAK, "mirror-break-r73-a.ogg",
+                Sfx.MIRROR_REGROW, "mirror-regrow-r73-a.ogg",
+                Sfx.PYLON_DOME_HIT, "pylon-dome-hit-r73-a.ogg",
+                Sfx.BOLT_ABSORBED, "bolt-absorbed-r73-a.ogg");
+        round73.forEach((sfx, file) -> {
+            assertEquals("sfx/" + file, sfx.path(), sfx.name());
+            assertTrue(Files.isRegularFile(ASSETS.resolve(sfx.path())), sfx.path());
+        });
+        assertTrue(!Sfx.PYLON_DOME_HIT.equals(Sfx.DOME_HIT), "never the Level 17 colony dome's glass boom");
         bank.dispose();
     }
 

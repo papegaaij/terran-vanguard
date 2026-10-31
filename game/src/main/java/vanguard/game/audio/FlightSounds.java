@@ -103,6 +103,8 @@ public final class FlightSounds {
     private final JovianCues jovian;
     /** M10 part A, step A3b: the Jovian hazards (the lightning strikes, the eruptions and their rocks). */
     private final JovianHazardCues hazards;
+    /** M10 part B, step B4: Level 36's drop craft, harvesters and Chimera deaths. */
+    private final CloudDiverCues cloudDivers;
     /** Per event type the family that plays it (by ordinal); null for an event without a sound. */
     private final SoundFamily[] families = new SoundFamily[SimEvents.Type.values().length];
     /** Every family, in the order they hear a step's start and end. */
@@ -178,7 +180,9 @@ public final class FlightSounds {
         Sfx.HORNET_HUM,
         Sfx.TUG_ENGINE,
         Sfx.SENTINEL_BEAM,
-        Sfx.SENTINEL_SERVO
+        Sfx.SENTINEL_SERVO,
+        Sfx.MIRROR_HEAT,
+        Sfx.HARVESTER_SCOOP
     };
     /**
      * M7 part C: a unit's loop (the tendril hum and burn, the Threadcrawler's walk; design/audio/sfx, Mixing) is
@@ -240,6 +244,7 @@ public final class FlightSounds {
         leechField = new LeechFieldCues(mix);
         jovian = new JovianCues(mix);
         hazards = new JovianHazardCues(mix);
+        cloudDivers = new CloudDiverCues(mix);
         belt.rig(rig);
         walker = new WalkerCues(mix, ventField, belt);
         foundry = new FoundryCues(mix);
@@ -296,7 +301,8 @@ public final class FlightSounds {
             leechField,
             sovereign,
             jovian,
-            hazards
+            hazards,
+            cloudDivers
         };
         for (SoundFamily family : all) {
             for (SimEvents.Type type : family.types()) {
@@ -726,6 +732,7 @@ public final class FlightSounds {
         sovereign.watch(sortie);
         leechField.watch(sortie);
         jovian.watch(sortie);
+        cloudDivers.watch(sortie);
         units.watchCanyon(sortie);
         units.watchSiege(sortie);
         storm.watch(sortie);
@@ -785,6 +792,8 @@ public final class FlightSounds {
             deepCore.silence(loop);
             sovereign.silence(loop);
             leechField.silence(loop);
+            jovian.silence(loop);
+            cloudDivers.silence(loop);
         }
         deepWater.silence();
     }

@@ -22,6 +22,12 @@ class BriefingLayoutTest {
 
     /** Act 1's directory under design/campaign: its level pages go on over screens. */
     private static final String ACT_1 = "act-1-first-contact/";
+    /**
+     * M10 part B, step B4: Level 36's two pages as written and voiced (step B2's approved texts, step VOX-B) run 5 and 6
+     * lines below their images, against the README's "each one screen": they go on over a second screen until round 74
+     * decides (shorten and re-voice, or accept); pending the user's review.
+     */
+    private static final String SPILLS = "act-6-jovian-storm/level-36-cloud-divers";
 
     private final Content content = ContentLoader.fromClasspath();
 
@@ -57,7 +63,7 @@ class BriefingLayoutTest {
         List<BriefingPage> pages = new ArrayList<>();
         content.acts().values().forEach(act -> pages.addAll(act.briefing()));
         content.levels().forEach((path, level) -> {
-            if (!path.startsWith(ACT_1)) {
+            if (!path.startsWith(ACT_1) && !path.equals(SPILLS)) {
                 pages.addAll(level.briefing().pages());
             }
         });

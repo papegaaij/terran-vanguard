@@ -1,5 +1,5 @@
 backdrop:
-  # Presentation only: Level 36's dive over Jupiter's bands (tools/art/backdrop_l36.py, step ART-B, from the README's Layout table (no data.yaml yet: re-run after B2)).
+  # Presentation only: Level 36's dive over Jupiter's bands (tools/art/backdrop_l36.py, step ART-B, from the level's data.yaml).
   # No ground (`ground: none`): the deep layer is the base. Its four tile sets are cut from one continuous
   # field at the rows each section's tiles begin (LevelData.seam): re-run the generator after moving a
   # section. Animated: carrier-group-glow (section 1) and storm-wall-glow (section 4), never together.
@@ -70,7 +70,7 @@ backdrop:
     - {t: 165.0, x: 350, w: 142, h: 86, piece: bank-a}
     - {t: 174.0, x: 150, w: 142, h: 86, piece: bank-a}
 sections:   # ART-B's reading of the README's Layout (speeds, 2 s eases); B2 writes the real ones
-  - {name: The Dive, end: 24, speed: 160, atmosphere: clear, tiles: ['dive-bands', 'cloud-tops', 'ice-haze']}
+  - {name: The Dive, end: 24, atmosphere: clear, tiles: ['dive-bands', 'cloud-tops', 'ice-haze']}
   - {name: Into the Bands, end: 70, speed: 120, ramp: 2, atmosphere: clear, tiles: ['cream-bands', 'cloud-wisps']}
   - {name: Harvester Fields, end: 125, speed: 100, ramp: 2, atmosphere: clear, tiles: ['rust-band', 'cloud-wisps']}
   - {name: Storm Edge, end: 192, speed: 120, ramp: 2, atmosphere: clear, tiles: ['storm-edge', 'cloud-wisps']}

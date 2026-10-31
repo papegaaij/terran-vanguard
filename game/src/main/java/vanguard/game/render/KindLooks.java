@@ -91,6 +91,9 @@ final class KindLooks {
     /** M9 part F: Level 33's Rail Bunkers, prey Talons and their leeches, Claim 114; built at the first use. */
     private LeechFieldLooks leechField;
 
+    /** M10 part B: Level 36's Chimeras, harvesters and drop craft; built at the first use. */
+    private CloudDiverLooks cloudDivers;
+
     /** M8 part F: whether the level is a dark one ({@link DarkLight}): the units' glow-only frames are drawn. */
     private boolean dark;
 
@@ -162,6 +165,14 @@ final class KindLooks {
             ceres = new CeresLooks(sprites, sortie.enemyKinds(), name -> LevelRenderer.pivots(files, name));
         }
         return ceres;
+    }
+
+    /** M10 part B: Level 36's units' looks for the sortie's enemy kinds, built once. */
+    CloudDiverLooks cloudDivers(Sortie sortie) {
+        if (cloudDivers == null) {
+            cloudDivers = new CloudDiverLooks(sprites, sortie.enemyKinds());
+        }
+        return cloudDivers;
     }
 
     /** M9 part C: the line mines' looks for the sortie's enemy kinds, built once. */
@@ -377,6 +388,9 @@ final class KindLooks {
         }
         if (ceres != null) {
             ceres.restart();
+        }
+        if (cloudDivers != null) {
+            cloudDivers.restart();
         }
         if (mines != null) {
             mines.restart();

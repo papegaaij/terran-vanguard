@@ -1,7 +1,7 @@
 ---
 title: Chimera
 design: approved
-implementation: in-progress
+implementation: done
 art: chosen
 depends-on: [../talon, ../../../systems/difficulty, ../../../systems/economy, ../../../player/specials, ../../../art-direction, ../../../campaign/act-6-jovian-storm]
 updated: 2026-10-31
@@ -97,7 +97,7 @@ Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 - [x] Stat block loaded from a `data.yaml`; global difficulty multipliers and the beam-era factor applied; re-measured with `levelReport` at L36 (M10 part B, step B2: 1.81 s on the screen at medium under the plan's fit, 1.13× Level 10's small units' 1.60 s)
 - [x] Regeneration per the shared [rule](../../README.md#regeneration) (rate, delay, any hit and a beam's touch restart it, the EMP pauses it), deterministic and allocation-free (M10 part A, 2026-10-31: `RegenerationTest`, the seam pulse step A3a's)
 - [x] The Talon's swoop and pair reused; the `swarm` flock reused from the Mote Swarm with a cap on simultaneous fire (steps B1 and B2: the flock's `fire_cap` 3 in a `stagger` of 0.3 s; a swarm wave casts the unit from its swoop path to its flock)
-- [ ] Production sprites (16 headings, the seam glow per HP share, the healing pulse) via `tools/art/`; death effect, bounty and sounds (Freesound, CC0/CC-BY)
+- [x] Production sprites (16 headings, the seam glow per HP share, the healing pulse) via `tools/art/`; death effect, bounty and sounds (Freesound, CC0/CC-BY) (step B4: `tools/art/jovian_units.py`'s sets drawn by the game's `CloudDiverLooks`: the seams at `RegenerationLooks.seamGlow`'s strength, the healing pulse, the death's flecks, the Talon's glint on its own muzzles; round 74's death a, its whine and twin crack on the Talon's files until QB-2)
 
 ## Open questions
 

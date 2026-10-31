@@ -113,7 +113,9 @@ public final class RadioSchedule {
         return switch (script.radio().get(index).trigger()) {
             case TIME -> RadioQueue.Priority.TIMED;
             // A boss's closing lines (Level 07's four after the kill) queue together and must not go stale.
-            case LEVEL_END, SECONDARY_OBJECTIVE, BOSS_DESTROYED -> RadioQueue.Priority.CLOSING;
+            // M10 part B, step B4: a failed secondary's line (Level 36's harvesters away) closes the objective as a met
+            // one's does: it waits for a gap and never goes stale.
+            case LEVEL_END, SECONDARY_OBJECTIVE, SECONDARY_FAILED, BOSS_DESTROYED -> RadioQueue.Priority.CLOSING;
             // M5 part H, step H7b: a phase's lines queue together (Okafor's, then Rook's reply as the
             // Siege Spire tears loose); the second must not go stale behind the first.
             // Step FXL11: the arena's teaching line on a ship's lane (Level 11) comes in the same step as the

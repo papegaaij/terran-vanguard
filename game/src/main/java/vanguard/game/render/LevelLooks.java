@@ -207,6 +207,8 @@ class LevelLooks {
     EnemyShieldLooks shields;
     /** M10 part A: Act 6's unit mechanics (mirrors, regrowth, regeneration, domes, prey hits, spoofed turrets). */
     final JovianLooks jovian;
+    /** M10 part B: the soot under the kills' flashes (round 73 A.3 b); null before Act 6 ({@link SootPuffs#in}). */
+    final SootPuffs soot;
     /** M9 part A: the units' {@code laser-line} telegraphs and rails. */
     final LineLooks lines;
     /** M9 part B: the escort swap's looks (Rook hidden in the hold, the Ember's launch, its flight away). */
@@ -323,6 +325,7 @@ class LevelLooks {
         units = new UnitPasses(
                 looks, flash, play, kinds, farside, luna, weather, shipLooks, surfaceWater, launches, softGlow);
         jovian = new JovianLooks(sprites, softGlow);
+        soot = SootPuffs.in(vanguard.content.Content.levelNumber(levelKey)) ? new SootPuffs() : null;
         setPieces = new SetPiecePasses(flash, play, font, setPieceLooks, bossLooks, kraken, spire);
         player = new PlayerPasses(sprites, weapons, flash, play, shipLooks, arsenal, canyonLooks, water != null);
         props = new PropPasses(sprites, flash, play, clock, craneLooks, script);
@@ -408,6 +411,9 @@ class LevelLooks {
         softGlow.dispose();
         backdrop.dispose();
         jovian.dispose();
+        if (soot != null) {
+            soot.dispose();
+        }
         farside.dispose();
         if (grade != null) {
             grade.dispose();
@@ -497,6 +503,9 @@ class LevelLooks {
             shields.restart();
         }
         jovian.restart();
+        if (soot != null) {
+            soot.restart();
+        }
         vacuumDeaths.restart();
         canyonLooks.restart();
         kinds.restart();
@@ -546,6 +555,8 @@ class LevelLooks {
         kinds.ghostDrones(sortie).stepped(sortie);
         // M9 part B: Level 29's units' gun clocks, the Talons' wings, the opened clamps, the rocks shot apart.
         kinds.ceres(sortie).stepped(sortie);
+        // M10 part B: Level 36's harvesters' sides and breaks, the Chimeras' flecks.
+        kinds.cloudDivers(sortie).stepped(sortie);
         // M9 part C: the line mines' bursts; the Gunships' gun clocks, launches and plate sparks, the trains' splits.
         kinds.mines(sortie).stepped(sortie);
         kinds.minefield(sortie).stepped(sortie);

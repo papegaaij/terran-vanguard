@@ -83,7 +83,7 @@ drop craft are not enemies): the Lamprey streams from the sides, the Wraiths' re
 | Recommended traits | `forward`, `homing` |
 | Hazards | Foreground cloud banks over the play plane; wind gusts (two spells); lightning strikes (three, section 4) |
 | Boss / mid-boss | none |
-| Sensor-suite detail | **none**: Jupiter, the upper atmosphere, `air`, front · **L1**: + directions (sides), density 4, hazards "cloud banks", "wind" and "lightning", the objective `BREAK THE AIR COVER`, the secondary `HARVESTERS 0 / 6` and the row `NO GROUND` · **L2**: + Chimera (new), Talon, Wraith, Spore Bomber, Lamprey, Gilded Gunship, Dart Drone and Mote portraits · **L3**: + `forward` and `homing` highlighted, the wave strip marking the harvester pairs and the three strikes |
+| Sensor-suite detail | **none**: Jupiter, the upper air, `air`, front · **L1**: + directions (sides), density 4, hazards "cloud banks", "wind" and "lightning", the objective `BREAK THE AIR COVER`, the secondary `HARVESTERS 0 / 6` and the row `NO GROUND` · **L2**: + Chimera (new), Talon, Wraith, Spore Bomber, Lamprey, Gilded Gunship, Dart Drone and Mote portraits · **L3**: + `forward` and `homing` highlighted, the wave strip marking the harvester pairs and the three strikes |
 <!-- /data -->
 
 *Varga's intel line* per sensor-suite level (must fit `IntelPanelLayoutTest`):
@@ -327,17 +327,17 @@ speakers are D-story's table). **Vorne is silent here**: his intercepted invitat
 | Trigger | Speaker | Line |
 |---|---|---|
 | t=1 | Okafor | "Aegis, you're cleared to dive. Break their air cover over the bands. The fleet follows you down." |
-| t=11 | Rook | "Jupiter. All sky and no floor. If we go down here, Lancer, we fall for a week." |
-| t=20 | Varga | "Under the haze the cloud banks lie over your plane. Bodies dim under them. Their shots never do." |
-| t=30 | Varga | "There: Chimeras. Talon frames, Vrell tissue in the seams. Pick one and keep hitting it." |
-| t=40 | Varga | "See the seams glow? It's healing. Hold the beam on it, or it grows back." |
-| t=48 | Okafor | "Wraiths overhead, cloaked. They come out behind you." |
-| t=67 | Okafor | "Helium-3 harvesters ahead, skimming the bands. That's Vorne's fuel. Bring down six." |
+| t=13 | Rook | "Jupiter. All sky and no floor. If we go down here, Lancer, we fall for a week." |
+| t=25.5 | Varga | "Under the haze the cloud banks lie over your plane. Bodies dim under them. Their shots never do." |
+| t=37.5 | Varga | "There: Chimeras. Talon frames, Vrell tissue in the seams. Pick one and keep hitting it." |
+| t=49 | Okafor | "Wraiths overhead, cloaked. They come out behind you." |
+| t=56.5 | Varga | "See the seams glow? It's healing. Hold the beam on it, or it grows back." |
+| t=68 | Okafor | "Helium-3 harvesters ahead, skimming the bands. That's Vorne's fuel. Bring down six." |
+| t=80 | Rook | "Homing's earning its keep. Those clouds are full of them." |
 | t=90 | Varga | "Spore bombers under the harvesters. Vrell, still flying with the gold ones. For now." |
 | Secondary met (`secondary-objective`, the sixth harvester down) | Okafor | "Six harvesters down. His fleet will feel that at Io." |
 | Secondary failed (`secondary-failed`: the third harvester away; easy the fourth, hard the second) | Varga | "Too many got through. Their fuel reaches the refineries." |
-| t=118 | Rook | "Homing's earning its keep. Those clouds are full of them." |
-| t=128 | Varga | "A white line drawn down the sky means lightning. Get out of it. A second later it strikes." |
+| t=129.5 | Varga | "A white line drawn down the sky means lightning. Get out of it. A second later it strikes." |
 | The first enemy killed by a strike (event, bark) | Rook | "Ha! The sky's on our side." |
 | t=172 | Okafor | "The bands are thinning. Aurelia is ahead, Aegis." |
 | Level end | Okafor | "First dive done. The fleet is in the clouds behind you. Aurelia next." |
@@ -353,7 +353,9 @@ telegraph. "Fuel at Io" points to Level 39, "Aurelia" to Level 37.
 
 The Act 6 A theme **"Eye of the Storm"** ([track 14](../../../audio/music/README.md#track-list), chosen in round 03;
 full length and stems in M10 part B): its intro (storm strings, a far thunder roll) over the dive, the **base stem**
-from section 2 (into the bands), the **full mix** from the harvester fields (section 3) to the end, Vorne's motif
+from section 2 (into the bands; step B4: the theme starts in section 1, as its stream opens with its 7.3 s
+intro, so the base stem follows the intro over the dive, pending round 74), the **full mix** from the harvester fields
+(section 3) to the end, Vorne's motif
 against the main motif as the theme has it. The per-level music table and the B theme's levels (track 15) are
 D-audio's ([music](../../../audio/music/README.md)). Ambience: the `jovian-sky` bed ([sfx](../../../audio/sfx/README.md#ambience-per-setting): high wind on the hull,
 distant thunder, the carrier's radio hiss), the dive's wind as a layer over section 1. New sounds this level needs,
@@ -462,15 +464,22 @@ field (easy 21.7 %) and at most 1.8 s over the ship's band. Prompts and briefs: 
       (`PacingTest`, `ActFloorTest`), side entries edge-warned 3 s, the quiet window t=32–38, ≥ 4 s calm after the
       last enemy, no two medium hulls overlapping (step B2: 101 a minute, 2.76 on the screen, two pauses, 12.8 s
       calm, no overlap; the waves' tuning in *Waves*)
-- [ ] Radio voiced, every timed line at most 1 s late (`RadioTimelineLevel36Test`, with Rook and without); Rook's
-      barks `requires: escort`
-- [ ] Threat profile with the `NO GROUND` row, Varga's four intel lines and Rook's teaser fitting the intel panel
-      (`IntelPanelLayoutTest`); the Chimera's portrait
+- [x] Radio voiced, every timed line at most 1 s late (`RadioTimelineLevel36Test`, with Rook and without); Rook's
+      barks `requires: escort` (step B4: the lines retimed to the typed pages, two pages a long line ≈ 11–12 s, Rook's
+      homing bark to t=80 and Varga's lightning line to t=129.5 so t=101–129 stays clear for the harvesters' outcome;
+      `secondary-failed` queues as a closing line; pending round 74)
+- [x] Threat profile with the `NO GROUND` row, Varga's four intel lines and Rook's teaser fitting the intel panel
+      (`IntelPanelLayoutTest`); the Chimera's portrait (step B4: the setting "Jupiter, the upper air", the longer one left
+      the panel; the Chimera's, the harvester's and the drop craft's portraits, `tools/art/intel.py`)
 - [ ] Briefing: Okafor's and Varga's pages, each one screen (`BriefingLayoutTest`), with their images; the act intro
-      before it once (`act-intro:6`)
+      before it once (`act-intro:6`) (step B4: the images and the intro play; the two pages as written and voiced run 5
+      and 6 lines below their images and go on over a second screen, an exception in `BriefingLayoutTest` until round 74
+      decides: shorten and re-voice, or accept)
 - [x] Typical haul within ±5 % of budget(36) = 7 474 with the level's `bounty_scale` (`TypicalHaulTest`; step B2:
       7,488 at 0.31, +0.2 %)
-- [ ] Music and ambience: "Eye of the Storm" by section, the high-wind bed, the level's sounds (`Level36SoundsTest`)
+- [x] Music and ambience: "Eye of the Storm" by section, the high-wind bed, the level's sounds (`Level36SoundsTest`;
+      step B4: track 14 from section 1 with its intro, the full mix from section 3; `jovian-sky` with the dive's wind
+      over section 1; round 74's a variants until the picks)
 - [ ] Easy/hard variations as in *Difficulty notes*
 - [x] The autopilot (holding the beam on a hurt Chimera, the harvesters, out of a told column, the drop craft never a
       target) flies the level with Rook on every difficulty and with `--escort none` (step B3, `Level36Test`: 3/3 per

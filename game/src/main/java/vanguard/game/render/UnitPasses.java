@@ -409,6 +409,11 @@ final class UnitPasses {
         if (mast != null) {
             return mast;
         }
+        // M10 part B: a harvester's hull by its drift's side.
+        AtlasRegion diver = kinds.cloudDivers(sortie).frame(enemy);
+        if (diver != null) {
+            return diver;
+        }
         // M9 part B: Level 29's units: a Talon leader, a SAM Nest's rack, a Mite's pose, a Stormhawk's bank and IFF.
         AtlasRegion ceres = kinds.ceres(sortie).frame(sortie, enemy, look);
         if (ceres != null) {

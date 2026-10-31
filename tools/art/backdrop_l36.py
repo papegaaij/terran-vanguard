@@ -376,6 +376,9 @@ def clear_rows(h, rows, width=110):
     return m[::-1][:, None]
 
 
+TOPS_ROLL = 40
+
+
 def cloud_tops(seed=3621):
     h = LOW_H
     rng = np.random.default_rng(seed)
@@ -383,6 +386,9 @@ def cloud_tops(seed=3621):
     for _ in range(8):
         blobs += mass_blobs(rng, rng.uniform(-20, W + 20), rng.uniform(0, h), 100, 40, 110, (8, 22))
     shade, cov = cloud_mass(h, W, blobs, seed + 1, wrap=True)
+    # step B4: the field rolled 40 rows (the same clouds) so the tile's wrap falls between two heads, not along an
+    # edge (BackdropSeamsSpaceTest's wrap score 1.58 -> 0.39)
+    shade, cov = np.roll(shade, TOPS_ROLL, 0), np.roll(cov, TOPS_ROLL, 0)
     s = seam("low-air", 1)
     alpha = cov * 0.92 * clear_rows(h, [s - 40])
     return rgba(raster.ramp(CREAM, shade), alpha)

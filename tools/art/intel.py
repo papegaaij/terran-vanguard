@@ -61,7 +61,10 @@ Outputs (assets/sprites/intel/, packed onto the shared sprite pages as ``intel/<
                      octagon with its turret aiming down, the coils dark); warden-tank-asc (Level 34, M9 part G
                      batch, step ART-G: the Warden Tank in its Act 5 Ascendancy livery, tools/art/warden_tank.py
                      ``intel_model("asc")``: the gunmetal hull with A.15 b's gold, driving down, the turret aimed along
-                     it; the intel names the livery's faction from Act 5)
+                     it; the intel names the livery's faction from Act 5); chimera, helium-3-harvester,
+                     fleet-stormhawk (Level 36, M10 part B batch, step B4: the production models of
+                     tools/art/jovian_units.py: the Chimera nose down with its seams unlit, the harvester nose right as
+                     it crosses the bands, the fleet's drop craft nose down in CDF grey)
   unclassified-<enemy>.png  30x30 the sensor-L2 picture of a unit the intel does not name yet
                      (`unclassified_until_flown`, M7 part E batch): unclassified-ghost-drone, the Ghost
                      Drone's outline only, filled flat in dark teal with the plate's grid and a cyan rim
@@ -105,6 +108,7 @@ Outputs (assets/sprites/intel/, packed onto the shared sprite pages as ``intel/<
   design/ui/hangar/concept/intel-final-r66-a.png   review sheet of the M9 part F batch's
   design/ui/hangar/concept/intel-final-r67-a.png   review sheet of the M9 part G batch's
   design/ui/hangar/concept/intel-final-r68-a.png   review sheet of the M9 part H batch's
+  design/ui/hangar/concept/intel-final-r74-a.png   review sheet of the M10 part B batch's
 
 The names are the enemy's or boss's name as a slug (vanguard.game.render.Portraits.slug). A
 portrait is the unit's chosen round-04 model (tools/concept/enemies_r04.py, imported unchanged) in
@@ -152,6 +156,7 @@ import belt_units_c  # noqa: E402  (M9 part C: Level 30's production models)
 import belt_units_d  # noqa: E402  (M9 part D: Level 31's production models)
 import belt_units_e  # noqa: E402  (M9 part E: Level 32's production models)
 import belt_units_f  # noqa: E402  (M9 part F: Level 33's production models)
+import jovian_units  # noqa: E402  (M10 part B: Level 36's production models)
 import barbfin  # noqa: E402  (the Barbfin's production model)
 import siren  # noqa: E402  (the Siren's production model)
 import glow_angler  # noqa: E402  (the Glow Angler's production model)
@@ -221,7 +226,9 @@ BATCHES = {"spore-bomber": "M4 part C batch", "whirl-seed": "M4 part C batch",
            "sentinel-tower": "M9 part E batch", "strider": "M9 part E batch",
            "void-leech": "M9 part F batch", "rail-bunker": "M9 part F batch",
            "warden-tank-asc": "M9 part G batch",
-           "boss-iron-sovereign": "M9 part H batch"}
+           "boss-iron-sovereign": "M9 part H batch",
+           "chimera": "M10 part B batch", "helium-3-harvester": "M10 part B batch",
+           "fleet-stormhawk": "M10 part B batch"}
 # the concept round that reviews a batch
 ROUNDS = {UI_BATCH: "r13", "M4 part C batch": "r16", "M4 part D batch": "r17", "M4 part F batch": "r23",
           "M5 part B batch": "r30", "M5 part C batch": "r31", "M5 part D batch": "r32", "M5 part E batch": "r33",
@@ -232,7 +239,7 @@ ROUNDS = {UI_BATCH: "r13", "M4 part C batch": "r16", "M4 part D batch": "r17", "
           "M8 part F batch": "r55", "M8 part G batch": "r57",
           "M8 part H batch": "r58", "M9 part B batch": "r62", "M9 part C batch": "r63",
           "M9 part D batch": "r64", "M9 part E batch": "r65", "M9 part F batch": "r66", "M9 part G batch": "r67",
-          "M9 part H batch": "r68"}
+          "M9 part H batch": "r68", "M10 part B batch": "r74"}
 OUT = SPRITES / "intel"
 CONCEPT = DESIGN / "ui" / "hangar" / "concept"
 PORTRAIT = 30
@@ -523,12 +530,36 @@ def rail_bunker_hi():
                      belt_hi(*bf.turned(bf._rb_turret_scene(), mats, 0, 32), bf.TUR_EXT)])
 
 
+def chimera_hi():
+    """M10 part B: the Chimera nose down (heading 0): the Talon's gunmetal airframe overgrown with the dark teal tissue
+    (tools/art/jovian_units.py's frames), the seams unlit."""
+    ju = jovian_units
+    scene, mats = ju.e72.chimera_model("b", tg=0.0)
+    return belt_hi(*belt_units.turned(scene, belt_units.gunmetal(mats), 0, 16), ju.TAL_EXT)
+
+
+def harvester_hi():
+    """M10 part B: the helium-3 harvester as it flies across the bands (nose right, its sprite's heading), its scoop and
+    gold trim, the red running lights lit."""
+    ju = jovian_units
+    scene, mats = belt_units.turned(ju.harvester_model(), ju.harvester_mats(), ju.HEAD["right"], 16)
+    return belt_hi(scene, mats, ju.HV_EXT * 0.95)
+
+
+def fleet_hi():
+    """M10 part B: the fleet's drop craft, a CDF Stormhawk in the fleet's grey and blue, nose down, engines lit."""
+    ju = jovian_units
+    scene, mats = jovian_units.models.ship_c_model(bank=0.0, palette=ju.FLEET_PAL)
+    return belt_hi(*belt_units.turned(scene, mats, 0, 16), ju.FLEET_EXT, ju.FLEET_CAM)
+
+
 HI = {"reef-spitter": reef_spitter_hi, "relay-beacon": relay_beacon.intel_hi, "depth-hunter": depth_hunter_hi,
       "talon": talon_hi, "sam-nest": sam_nest_hi, "asteroid-mite": mite_hi, "clamp-gun": clamp_gun_hi,
       "wavering-stormhawk": hawk_hi, "minelayer": minelayer_hi, "gilded-gunship": gunship_hi, "dart-drone": dart_hi,
       "rail-serpent": rail_serpent_hi, "hornet": hornet_hi, "shard-drone": shard_drone_hi,
       "buzzsaw-drone": buzzsaw_drone_hi, "sentinel-tower": sentinel_tower_hi, "strider": strider_hi,
-      "void-leech": void_leech_hi, "rail-bunker": rail_bunker_hi}
+      "void-leech": void_leech_hi, "rail-bunker": rail_bunker_hi, "chimera": chimera_hi,
+      "helium-3-harvester": harvester_hi, "fleet-stormhawk": fleet_hi}
 
 
 def portrait(slug):

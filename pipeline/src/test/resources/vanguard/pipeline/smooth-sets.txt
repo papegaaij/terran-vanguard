@@ -1,6 +1,8 @@
 # DitherGuardTest (step DITH8, the user 2026-10-30): the sets smoothed from >= 25 % checker, each an asset path
 # under assets/ without the frame suffix; every one stays under 5 % checker. The dither audit:
 # design/art-direction/production/README.md#dither-audit-2026-10-30
+# M10 part B, step B4: Level 36's backdrop sets and its units' glows, plumes and breaks (tools/art/backdrop_l36.py,
+# tools/art/jovian_units.py), smooth from the start.
 backdrop/level-01/vrell-glow
 backdrop/level-03/weather-front-a
 backdrop/level-08/mist
@@ -90,6 +92,22 @@ backdrop/level-32/seam-mouth-glow
 backdrop/level-33/field-space
 backdrop/level-34/grave-space
 backdrop/level-35/orbit-space
+backdrop/level-36/bank-a
+backdrop/level-36/bank-b
+backdrop/level-36/bank-c
+backdrop/level-36/bank-d
+backdrop/level-36/bank-e
+backdrop/level-36/bank-f
+backdrop/level-36/carrier-group-glow
+backdrop/level-36/cloud-tops
+backdrop/level-36/cloud-wisps
+backdrop/level-36/cream-bands
+backdrop/level-36/dive-bands
+backdrop/level-36/ice-haze
+backdrop/level-36/rust-band
+backdrop/level-36/storm-edge
+backdrop/level-36/storm-wall
+backdrop/level-36/storm-wall-glow
 sprites/abyss-ray-bloom
 sprites/abyss-ray-mouth
 sprites/abyss-ray-shadow
@@ -102,8 +120,12 @@ sprites/ares-dome-eden-flash
 sprites/ares-dome-flash
 sprites/ascendancy-cruiser-shadow
 sprites/barbfin-ink
+sprites/chimera-flecks
+sprites/chimera-heal
+sprites/chimera-seams
 sprites/clamp-gun-gas
 sprites/crevasse-lip-glow
+sprites/debris-pathfinder-pod-break
 sprites/depth-hunter-break
 sprites/depth-hunter-launch
 sprites/depth-hunter-oil
@@ -113,10 +135,17 @@ sprites/explosion-deep-cavity-large
 sprites/explosion-deep-cavity-medium
 sprites/farm-barge-glow
 sprites/flare-pool
+sprites/fleet-stormhawk-trail
 sprites/gilded-gunship-engines
 sprites/gilded-gunship-plate-spark
 sprites/glassfin-glint
 sprites/glow-angler-death
+sprites/harvester-break
+sprites/harvester-flare
+sprites/harvester-left-break
+sprites/harvester-left-flare
+sprites/harvester-left-plume
+sprites/harvester-plume
 sprites/headlight-cone
 sprites/heat-plume-bend
 sprites/heat-plume-glow

@@ -611,7 +611,7 @@ Choir with its static lead.
 Every other chosen sound in the Concept art tables below is played by the game (an entry of
 `vanguard.game.audio.Sfx`; `SfxFilesTest` checks both lists against this README). Besides them the
 game may play only `proposed` sounds of an open concept round, provisionally until the user's choice
-(round 34's and round 35's a, until those rounds close; M9 part B: round 62's picks for Level 29's sounds (closed 2026-10-28), step B4; M9 part C: round 63's a variants of Level 30's sounds, step C4 (round 63 closed 2026-10-28: the picks are played since step D4); M9 part D: round 64's a variants of Level 31's sounds, step D4, played until the round's picks (round 64 closed 2026-10-28: a for S.1-S.4, S.6, S.8-S.10 and S.11's redo, b for S.7, S.5 the `ab` spin-up; played since step FIX1); M9 part E: round 65's a variants of Level 32's sounds, step E4 (round 65 closed 2026-10-29: a for S.1, S.2, S.4-S.6 and S.8-S.10, b for S.3, S.7 and S.11, whose files are in `assets/sfx/` and which step G4 switches `DeepCoreCues` to; the a variants play until then); M9 part F: round 66's a variants of Level 33's sounds, step F4 (round 66 closed 2026-10-29: a for S.1-S.5 and S.7, b for S.6, played since step FIX3 switched `BROWNOUT_WARN` to it), and round 60's rail charge and shot, first played by Level 33's Rail Bunkers).
+(round 34's and round 35's a, until those rounds close; M9 part B: round 62's picks for Level 29's sounds (closed 2026-10-28), step B4; M9 part C: round 63's a variants of Level 30's sounds, step C4 (round 63 closed 2026-10-28: the picks are played since step D4); M9 part D: round 64's a variants of Level 31's sounds, step D4, played until the round's picks (round 64 closed 2026-10-28: a for S.1-S.4, S.6, S.8-S.10 and S.11's redo, b for S.7, S.5 the `ab` spin-up; played since step FIX1); M9 part E: round 65's a variants of Level 32's sounds, step E4 (round 65 closed 2026-10-29: a for S.1, S.2, S.4-S.6 and S.8-S.10, b for S.3, S.7 and S.11, whose files are in `assets/sfx/` and which step G4 switches `DeepCoreCues` to; the a variants play until then); M9 part F: round 66's a variants of Level 33's sounds, step F4 (round 66 closed 2026-10-29: a for S.1-S.5 and S.7, b for S.6, played since step FIX3 switched `BROWNOUT_WARN` to it), and round 60's rail charge and shot, first played by Level 33's Rail Bunkers; M10 part B: round 74's a variants of Level 36's sounds, step B4, played until the round's picks: the dive's wind, the drop craft's pass, the harvester's scoop and break, the Chimera's death; its whine and twin crack play the Talon's files until QB-2).
 
 | File | Why not |
 |---|---|
@@ -634,15 +634,9 @@ game may play only `proposed` sounds of an open concept round, provisionally unt
 | [tissue-tear-r72-a.ogg](concept/tissue-tear-r72-a.ogg) | Round 72 S.2 a, the hybrids' tear: a Graft Turret root's death first; imported once the root exists (part A's regrowth, then the Graft Turret in M10 part C) |
 | [harrow-lock-r72-b.ogg](concept/harrow-lock-r72-b.ogg) | Round 72 S.5 b, the Harrow's lock tell: the Harrow comes in M10 part D (Level 38) |
 | [harrow-burst-r72-a.ogg](concept/harrow-burst-r72-a.ogg) | Round 72 S.6 a, the Harrow's burst: the Harrow comes in M10 part D (Level 38) |
-| [jovian-sky-r72-b.ogg](concept/jovian-sky-r72-b.ogg) | Round 72 S.13 b, the bed of Levels 36 and 38: in `assets/sfx/` since step AUD-B (M10 part B); step B4 plays it as Level 36's ambience |
 | [aurelia-r72-a.ogg](concept/aurelia-r72-a.ogg) | Round 72 S.14 a, Level 37's bed: imported with Level 37 (M10 part C) |
 | [io-refinery-r72-a.ogg](concept/io-refinery-r72-a.ogg) | Round 72 S.15 a, Level 39's bed: imported with Level 39 (M10 part E) |
-| [mirror-heat-r73-a.ogg](concept/mirror-heat-r73-a.ogg) | Round 73 S.1 a, the mirror's heat loop (pitched 0.85-1.35 with the heat): in `assets/sfx/` since step AUD-B; step B4 plays it; the stand-in (the tendril burn pitched) goes |
 | [mirror-heat-demo-r73-a.ogg](concept/mirror-heat-demo-r73-a.ogg) | Review file for round 73 S.1: the heat loop's climb rendered offline; the game pitches the loop itself |
-| [mirror-break-r73-a.ogg](concept/mirror-break-r73-a.ogg) | Round 73 S.2 a, a mirror breaking: in `assets/sfx/` since step AUD-B; step B4 plays it; the stand-in (the Glassfin shatter) goes |
-| [mirror-regrow-r73-a.ogg](concept/mirror-regrow-r73-a.ogg) | Round 73 S.3 a, a mirror's regrowth: in `assets/sfx/` since step AUD-B; step B4 plays it; the stand-in (the sonde chime low) goes |
-| [pylon-dome-hit-r73-a.ogg](concept/pylon-dome-hit-r73-a.ogg) | Round 73 S.4 a, a shot spent on a pylon dome: in `assets/sfx/` since step AUD-B; step B4 plays it; the stand-in (the enemy shield hit) goes |
-| [bolt-absorbed-r73-a.ogg](concept/bolt-absorbed-r73-a.ogg) | Round 73 S.5, a Reflex bolt earthed on a mirror's face: in `assets/sfx/` since step AUD-B; step B4 plays it; the stand-in (the Deflector's tick) goes |
 | [callisto-fortress-r72-b.ogg](concept/callisto-fortress-r72-b.ogg) | Round 72 S.16 b, Level 41's bed: imported with Level 41 (M10 part G) |
 
 ### Mixing rules
@@ -1532,6 +1526,11 @@ Concept round 74 (M10 part B "Level 36 Cloud Divers", step AUD-B; the gap check'
       dry eruption in part A or the first part that plays them; the units, set pieces and bosses in parts B–H); the
       beds `jovian-sky`, `aurelia`, `io-refinery` and `callisto-fortress` and the layers (the dive's wind, Aurelia
       burning) in the parts that first play them; `belt-open` in Levels 40 and 42; the explosion ladder's Act 6 rows
+      (M10 part B, step B4: round 73's five picks replace part A's stand-ins in `JovianCues` (the heat loop pitched
+      0.85–1.35); `jovian-sky` and the dive's wind layer play in Level 36; round 74's a variants for Level 36's drop
+      craft, harvesters and Chimera deaths (`CloudDiverCues`), the Chimera's whine and twin crack on the Talon's files
+      until QB-2; `Level36SoundsTest`, `ActSixSoundsTest`)
+
 ## Open questions
 
 Rounds 47 and 49 closed (2026-10-22): the dome hit **b** (round 49); herald song **a**, Leviathan cry **b**, launch rail **b**; the integrity alarm keeps the old file. Round 50 closed (2026-10-22): the Act 4 arsenal's picks (see *Decisions*). Open:
@@ -1810,3 +1809,9 @@ Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-a
   no copy). Trivia decided: the dive's wind a seamless 12 s loop at −38 dB band RMS (4 dB over the bed it rides on,
   the game fades it over section 1), the scoop an 8 s loop at −35 dB; the pass-by levelled as a large one-shot
   (−24 dB), the break-up over its rung (−23 dB).
+- 2026-10-31 (M10 part B, step B4): round 73's picks (`mirror-heat` a, `mirror-break` a, `mirror-regrow` a,
+  `pylon-dome-hit` a, `bolt-absorbed`) and round 72's `jovian-sky` b play (`Sfx.MIRROR_HEAT` … `AMBIENCE_JOVIAN_SKY`),
+  so their rows left *Chosen sounds the game does not play*; part A's stand-ins are gone. Level 36 plays round 74's a
+  variants until the round's picks (the dive's wind as an `ambience_layers` loop over section 1, the drop craft's pass
+  once a pair, the scoop for the nearest harvester on the screen, the break and the Chimera's death over their rungs);
+  the Chimera's whine and twin crack are the Talon's (QB-2 a is byte-identical to them).

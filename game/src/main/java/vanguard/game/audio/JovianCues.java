@@ -13,22 +13,22 @@ import vanguard.sim.Sortie;
 
 /**
  * M10 part A: the sounds of Act 6's unit mechanics for {@link FlightSounds} (design/audio/sfx, Act 6 sounds): round
- * 72's picks, levelled in their files, and, for the sounds round 73 still proposes (QA-1), the nearest built sound until
- * the user's pick ({@code *_STAND_IN}):
+ * 72's picks and (M10 part B, step B4) round 73's (QA-1), levelled in their files:
  *
  * <ul>
  *   <li>the mirrors: a bounce's glassy ping ({@link Sfx#MIRROR_PING}, once per {@value #PING_GAP_SECONDS} s), an
- *       absorbed shot's dry tick (a Reflex bolt, Rook's shot, a Plasma Arc earthed on the face: {@link #ABSORBED_STAND_IN}
- *       quietly, once per {@value #TICK_GAP_SECONDS} s), the break ({@link #BREAK_STAND_IN}), the regrowth's chime
- *       ({@link #REGROW_STAND_IN} lowered), and while a beam heats a mirror one hiss loop for the nearest heating,
- *       pitched from {@value #HEAT_PITCH_LOW} cold to {@value #HEAT_PITCH_HIGH} at the break ({@link #HEAT_STAND_IN});
+ *       absorbed shot's dry tick (a Reflex bolt, Rook's shot, a Plasma Arc earthed on the face: {@link
+ *       Sfx#BOLT_ABSORBED} quietly, once per {@value #TICK_GAP_SECONDS} s), the break ({@link Sfx#MIRROR_BREAK}), the
+ *       regrowth's low chime ({@link Sfx#MIRROR_REGROW}), and while a beam heats a mirror one torch loop for the nearest
+ *       heating, pitched from {@value #HEAT_PITCH_LOW} cold to {@value #HEAT_PITCH_HIGH} at the break ({@link
+ *       Sfx#MIRROR_HEAT});
  *   <li>regeneration: the healing creak ({@link Sfx#REGROWTH_CREAK}) repeated every {@value #CREAK_SECONDS} s for the
  *       nearest healing unit while any heals;
  *   <li>regrowth: a regrown turret's shell bursting (its first death's is the kill's rung) in the small rung, the root's
  *       death ({@link #ROOT_STAND_IN}: the tissue tear comes with the Graft Turret, part C), the knit's creak and knock
  *       ({@link Sfx#GRAFT_REGROWTH});
  *   <li>the domes: dropping and collapsing ({@link Sfx#PYLON_DOME_DOWN}), coming back ({@link Sfx#PYLON_DOME_UP}), a hit
- *       spent on one ({@link #DOME_HIT_STAND_IN}, once per {@value #DOME_HIT_GAP_SECONDS} s; never the Level 17 colony
+ *       spent on one ({@link Sfx#PYLON_DOME_HIT}, once per {@value #DOME_HIT_GAP_SECONDS} s; never the Level 17 colony
  *       dome's glass boom).
  * </ul>
  *
@@ -48,21 +48,10 @@ final class JovianCues extends SoundFamily {
             SimEvents.Type.DOME_UP,
             SimEvents.Type.DOME_COLLAPSED);
 
-    /** Round 73 QA-1 stand-ins (the nearest built sounds) until the user picks the proposals. */
-    static final Sfx HEAT_STAND_IN = Sfx.TENDRIL_BURN;
-
-    static final Sfx BREAK_STAND_IN = Sfx.GLASSFIN_SHATTER;
-    static final Sfx REGROW_STAND_IN = Sfx.SONDE_CHIME;
-    static final Sfx DOME_HIT_STAND_IN = Sfx.ENEMY_SHIELD_HIT;
-    static final Sfx ABSORBED_STAND_IN = Sfx.DEFLECTOR_TICK;
     /** The root's death until the tissue tear is imported (round 72 S.2, with the Graft Turret): a cable's dry snap. */
     static final Sfx ROOT_STAND_IN = Sfx.TENDRIL_BREAK;
     /** The cues are levelled in their files and play as they are. */
     static final float CUE_LEVEL = 1f;
-    /** The stand-in chime, lower (a low soft chime) and a little under its own level. */
-    static final float REGROW_PITCH = 0.8f;
-
-    static final float REGROW_LEVEL = 0.8f;
     /** The absorbed tick: quiet, under the fire. */
     static final float TICK_LEVEL = 0.5f * HITS;
     /** The heat loop's pitch, cold to the break. */
@@ -120,11 +109,11 @@ final class JovianCues extends SoundFamily {
             case MIRROR_ABSORBED -> {
                 if (due(lastTick, now, TICK_GAP_SECONDS)) {
                     lastTick = now;
-                    bank.play(ABSORBED_STAND_IN, TICK_LEVEL, 1.2f * pitch(0.05), pan);
+                    bank.play(Sfx.BOLT_ABSORBED, TICK_LEVEL, pitch(0.05), pan);
                 }
             }
-            case MIRROR_BROKEN -> bank.play(BREAK_STAND_IN, EXPLOSIONS, 0.85f * pitch(0.03), pan);
-            case MIRROR_REGROWING -> bank.play(REGROW_STAND_IN, REGROW_LEVEL, REGROW_PITCH, pan);
+            case MIRROR_BROKEN -> bank.play(Sfx.MIRROR_BREAK, CUE_LEVEL, pitch(0.03), pan);
+            case MIRROR_REGROWING -> bank.play(Sfx.MIRROR_REGROW, CUE_LEVEL, pitch(0.02), pan);
             case ROOT_EXPOSED -> {
                 if (!killedHere(events, i)) {
                     bank.play(alternate(Sfx.EXPLOSION_SMALL_A, Sfx.EXPLOSION_SMALL_B), EXPLOSIONS, pitch(0.04), pan);
@@ -135,7 +124,7 @@ final class JovianCues extends SoundFamily {
             case DOME_HIT -> {
                 if (due(lastDomeHit, now, DOME_HIT_GAP_SECONDS)) {
                     lastDomeHit = now;
-                    bank.play(DOME_HIT_STAND_IN, HITS, pitch(0.05), pan);
+                    bank.play(Sfx.PYLON_DOME_HIT, CUE_LEVEL, pitch(0.05), pan);
                 }
             }
             case DOME_DOWN, DOME_COLLAPSED -> bank.play(Sfx.PYLON_DOME_DOWN, CUE_LEVEL, pitch(0.02), pan);
@@ -197,12 +186,19 @@ final class JovianCues extends SoundFamily {
             bank.play(Sfx.REGROWTH_CREAK, CUE_LEVEL, pitch(0.03), pan(healer.renderX(1)));
         }
         float pan = heating == null ? 0 : pan(heating.renderX(1));
-        heatLevel = fadeLoop(HEAT_STAND_IN, heatLevel, heating == null ? 0 : UNIT_LOOP_LEVEL, pan);
+        heatLevel = fadeLoop(Sfx.MIRROR_HEAT, heatLevel, heating == null ? 0 : UNIT_LOOP_LEVEL, pan);
         if (heating != null && heatLevel > 0) {
             bank.loopPitch(
-                    HEAT_STAND_IN,
+                    Sfx.MIRROR_HEAT,
                     heatPitch(heating.mirror().heat()
                             / heating.spec().mirror().get().heat()));
+        }
+    }
+
+    /** The flight closes: the heat loop is stopped ({@link FlightSounds#stopLoops}). */
+    void silence(Sfx loop) {
+        if (loop == Sfx.MIRROR_HEAT) {
+            heatLevel = 0;
         }
     }
 

@@ -46,6 +46,14 @@ final class BackdropPieces {
      * ({@link #holdOpened}), {@value #HOLD_FRAME_TICKS} steps a frame, its last frame held.
      */
     private final List<Array<AtlasRegion>> holds;
+    /**
+     * M10 part B, step B4 (design/campaign Level 36, the backdrop): per deep piece its light, or null: a declared but
+     * unplaced piece {@code <id>-glow} (the carrier group's running lights, the storm wall's lightning), drawn additively
+     * over the piece right after the deep layer's pieces on its own frame clock (its {@code frames} at its {@code fps}).
+     */
+    private final List<Array<AtlasRegion>> deepGlows;
+    /** M10 part B: per deep piece its light's frames a second (0 for one following the piece's frames). */
+    private final double[] deepGlowFps;
 
     /** M9 part B: steps since the hold opened (the escort swap's release); -1 while it is shut. */
     private int holdTicks = -1;
@@ -160,6 +168,20 @@ final class BackdropPieces {
                             : null);
         }
         holds = opened;
+        Piece[] onDeep = pieces[BackdropLayer.DEEP.ordinal()];
+        List<Array<AtlasRegion>> deepLights = new ArrayList<>();
+        deepGlowFps = new double[onDeep.length];
+        for (int p = 0; p < onDeep.length; p++) {
+            String light = onDeep[p].placed().piece() + GLOW;
+            BackdropData.Piece spec = data.pieces().get(light);
+            if (spec == null || spec.layer() != BackdropLayer.DEEP) {
+                deepLights.add(null);
+                continue;
+            }
+            deepLights.add(sprites.backdrop(folder + light, spec.imageCount()));
+            deepGlowFps[p] = spec.animated() ? spec.fps().orElseThrow() : 0;
+        }
+        deepGlows = deepLights;
         turnAt = turnSeconds(level);
         towers = new TowerProjection(towers(sprites, folder, level), sprites.pixel);
     }
@@ -343,6 +365,41 @@ final class BackdropPieces {
             return 0;
         }
         return (float) Math.clamp((script - turnAt) / TURN_SECONDS, 0, 1);
+    }
+
+    /**
+     * M10 part B, step B4: the deep pieces' lights (Level 36's carrier group and storm wall), additive, at their pieces'
+     * places, the deep layer scrolled by {@code scroll}; an animated light on its own frame clock (the real clock).
+     */
+    void drawDeepGlows(SpriteBatch batch, long scroll, BackdropClock clock, BackdropTiles crawl) {
+        Piece[] onDeep = pieces[BackdropLayer.DEEP.ordinal()];
+        boolean additive = false;
+        for (int p = 0; p < onDeep.length; p++) {
+            Piece piece = onDeep[p];
+            Array<AtlasRegion> light = deepGlows.get(p);
+            if (light == null || crawl.afterCrawl(piece.placed())) {
+                continue;
+            }
+            float width = (float) piece.spec().size().width();
+            float height = (float) piece.spec().size().height();
+            double along = Double.isNaN(piece.pathStart()) ? 0 : clock.pathTime(piece.pathStart());
+            float y = piece.bottom() - scroll + Math.round(piece.placed().offsetY(along));
+            if (y >= HEIGHT || y + height <= 0) {
+                continue;
+            }
+            if (!additive) {
+                batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
+                additive = true;
+            }
+            float x = X0 + Math.round(piece.placed().x() + piece.placed().offsetX(along) - width / 2);
+            int frame = deepGlowFps[p] > 0
+                    ? (int) Math.floorMod((long) Math.floor(clock.real() * deepGlowFps[p]), (long) light.size)
+                    : Math.min(light.size - 1, imageAt(piece, clock.real(), along));
+            drawLight(batch, light.get(frame), piece.placed().mirrored(), x, y, width, height);
+        }
+        if (additive) {
+            batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        }
     }
 
     /** M8 part D: whether a ground piece has its light ({@link #drawPieceGlows}): Level 24's relay beacons. */
