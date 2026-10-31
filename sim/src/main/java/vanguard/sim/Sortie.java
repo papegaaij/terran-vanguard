@@ -794,8 +794,9 @@ public final class Sortie {
         }
         boolean struck = lightning != null && lightning.step(levelTick, ship.x(), events);
         if (eruptions != null) {
-            // M10 part A, step A1b: the vents with the ground and the clock, the rocks in flight.
-            eruptions.step(levelTick, groundScroll, clockTicked, events);
+            // M10 part A, step A1b: the vents with the ground and the clock, the rocks in flight; M10 part E, step E1:
+            // their cycles on the real steps (a hold zone's slowed clock does not slow them).
+            eruptions.step(levelTick, groundScroll, events);
         }
         force.moveBullets();
         // M9 part C: the line mines come down with the scroll and blink when the ship or Rook comes near.
@@ -881,7 +882,12 @@ public final class Sortie {
         }
         if (topples) {
             // M9 part E: the toppling walkers stagger, fall and crush (the EMP Burst does not stop them).
-            Topples.step(force.enemies(), events, hits, radio);
+            Topples.step(
+                    force.enemies(),
+                    events,
+                    hits,
+                    radio,
+                    !script.objectives().targets().isEmpty());
         }
         if (rootedArena) {
             bossPasses.rootHits();

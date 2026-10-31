@@ -263,7 +263,7 @@ final class Beams {
                 }
                 case CAST_GROUND -> {
                     GroundObject object = ground.get(castIndex);
-                    if (object.spec().trigger()) {
+                    if (object.spec().trigger() && !object.spec().damageSpent()) {
                         trigger = object.serial();
                         beam.triggerTicks = beam.trigger == trigger ? beam.triggerTicks + 1 : 0;
                         if (beam.triggerTicks % BEAM_TRIGGER_TICKS == 0) {

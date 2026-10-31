@@ -102,7 +102,27 @@ public final class GroundObject implements Hashed {
 
     /** A trigger counts a hit; returns whether that released its secret. */
     boolean countHit() {
+        return countHit(0);
+    }
+
+    /**
+     * A trigger takes a hit of {@code damage}: one counted hit, or (M10 part E, a trigger {@link
+     * GroundObjectSpec#damageSpent() spent by damage}) that damage off its HP; returns whether that released its secret
+     * (once).
+     */
+    boolean countHit(double damage) {
         ticksSinceHit = 0;
+        if (spec.damageSpent()) {
+            if (hitsLeft <= 0) {
+                return false;
+            }
+            hp -= damage;
+            if (hp > 0) {
+                return false;
+            }
+            hitsLeft = 0;
+            return true;
+        }
         return --hitsLeft == 0;
     }
 
@@ -159,6 +179,15 @@ public final class GroundObject implements Hashed {
      */
     public int hitsLeft() {
         return Math.max(0, hitsLeft);
+    }
+
+    /**
+     * M10 part E: the share of its HP a trigger {@link GroundObjectSpec#damageSpent() spent by damage} still has, 1 to
+     * 0 (for its damage state); 1 for any other trigger and a destructible's untouched HP. Read-only, for the
+     * presentation.
+     */
+    public double hpShare() {
+        return spec.hp() > 0 ? Math.clamp(hp / spec.hp(), 0, 1) : 1;
     }
 
     /** Simulation steps since the last hit; {@link Integer#MAX_VALUE} before the first. */

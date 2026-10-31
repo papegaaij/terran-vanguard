@@ -12,7 +12,10 @@ import org.junit.jupiter.api.Test;
  * M10 part A, step A1b (design/world/jovian, Hazards & set pieces: eruptions): a vent erupts a period after its entry
  * and every period while on the screen: a 1.2 s tell, then its rocks rise 0.5 s (harmless), fly out along a 100° fan
  * at 120 easing to 60 px/s for 2.5 s, fall 0.4 s (harmless) and are gone. A flying rock is shootable (6 HP, paying
- * nothing, no kill), breaks on the ship's or Rook's hull; Rook keeps out of a telling vent's fan.
+ * nothing, no kill), breaks on the ship's or Rook's hull; Rook keeps out of a telling vent's fan. M10 part E, step E1
+ * (design/campaign Level 39; m10e-gaps.md §1 #1, #2): a vent enters on the level clock but its cycles count the real
+ * steps (a hold zone's slowed clock does not slow them, a boss checkpoint's restore included), and its first tell may
+ * come at its own delay after the entry ({@code first}).
  */
 class EruptionTest {
     /** One vent at x 240 entering at 0 s, erupting every 2 s, three rocks each time. */
@@ -21,7 +24,7 @@ class EruptionTest {
     /** The vents' steps with the ground at 60 px/s; returns the events of the last step. */
     private static SimEvents step(Eruptions eruptions, int tick, SimEvents events) {
         events.clear();
-        eruptions.step(tick, tick * 1.0, true, events);
+        eruptions.step(tick, tick * 1.0, events);
         return events;
     }
 
@@ -145,5 +148,84 @@ class EruptionTest {
         double reach = 100 * Math.tan(Math.toRadians(50)) + 15 + RookHazards.GAP;
         assertEquals(240 + reach, hazards.x(), 1e-9, "sideways out of the fan, to the nearer side");
         assertFalse(hazards.clearOfStorm(250, ventY - 60, null, eruptions), "nothing flies below the vent");
+    }
+
+    /** The steps of each tell's start over {@code steps} real steps, the level clock ticking every {@code every}th. */
+    private static List<Integer> tells(Eruptions eruptions, int steps, int every) {
+        SimEvents events = new SimEvents(32);
+        List<Integer> tells = new java.util.ArrayList<>();
+        int levelTick = 0;
+        double scroll = 0;
+        for (int step = 0; step < steps; step++) {
+            events.clear();
+            eruptions.step(levelTick, scroll, events);
+            if (events.count(SimEvents.Type.ERUPTION_TELL) > 0) {
+                tells.add(step);
+            }
+            if (step % every == every - 1) {
+                levelTick++;
+                scroll += 0.1;
+            }
+        }
+        return tells;
+    }
+
+    @Test
+    void theCyclesCountTheRealStepsWhileTheLevelClockIsHeld_theEntryWaitsForIt() {
+        HazardSpec.EruptionSpec later = Act6BSpecs.eruptions(new HazardSpec.Vent(1, 240, 2, 2, 3, 3));
+        List<Integer> free = tells(new Eruptions(later, new SplitMix64(1)), SimStep.ticks(10), 1);
+        List<Integer> held = tells(new Eruptions(later, new SplitMix64(1)), SimStep.ticks(10), 3);
+        int cycle = SimStep.ticks(1.2) + SimStep.ticks(2);
+        assertEquals(List.of(SimStep.ticks(3), SimStep.ticks(3) + cycle, SimStep.ticks(3) + 2 * cycle), free);
+        // A clock at a third: the vent enters at the third real second, its cycles then on the real steps.
+        int entry = 3 * SimStep.ticks(1);
+        assertEquals(List.of(entry + SimStep.ticks(2), entry + SimStep.ticks(2) + cycle), held);
+    }
+
+    @Test
+    void aVentsFirstTellComesAtItsOwnDelay_laterOnesByThePeriod() {
+        HazardSpec.Vent quick = new HazardSpec.Vent(0, 240, 5, 5, 3, 3, 0.8);
+        assertTrue(quick.firstSet());
+        assertFalse(new HazardSpec.Vent(0, 240, 5, 5, 3, 3).firstSet(), "round 73 C.8: a period after its entry");
+        List<Integer> tells = tells(new Eruptions(Act6BSpecs.eruptions(quick), new SplitMix64(1)), SimStep.ticks(9), 1);
+        assertEquals(
+                List.of(SimStep.ticks(0.8), SimStep.ticks(0.8) + SimStep.ticks(1.2) + SimStep.ticks(5)),
+                tells,
+                "0.8 s after its entry, then its tell and a period");
+        // Level 39's plume field: a row of three rippling 0.4 s a vent.
+        List<Integer> ripple = tells(
+                new Eruptions(
+                        Act6BSpecs.eruptions(
+                                new HazardSpec.Vent(0, 160, 5, 7, 3, 5, 0.5),
+                                new HazardSpec.Vent(0, 240, 5, 7, 3, 5, 0.9),
+                                new HazardSpec.Vent(0, 320, 5, 7, 3, 5, 1.3)),
+                        new SplitMix64(1)),
+                SimStep.ticks(2),
+                1);
+        assertEquals(List.of(SimStep.ticks(0.5), SimStep.ticks(0.9), SimStep.ticks(1.3)), ripple);
+        org.junit.jupiter.api.Assertions.assertThrows(
+                IllegalArgumentException.class, () -> new HazardSpec.Vent(0, 240, 5, 5, 3, 3, -0.1));
+    }
+
+    @Test
+    void aBossCheckpointsRestoreEruptsAnEnteredVentAPeriodOfRealStepsLater() {
+        Eruptions eruptions = new Eruptions(SPEC, new SplitMix64(1));
+        SimEvents events = new SimEvents(32);
+        int tick = 0;
+        for (; tick < SimStep.ticks(3); tick++) {
+            step(eruptions, tick, events);
+        }
+        eruptions.restore(SimStep.ticks(1), 20);
+        assertTrue(eruptions.ventPresent(0), "entered before the checkpoint: it stays");
+        int told = -1;
+        for (int k = 1; k <= SimStep.ticks(3) && told < 0; k++) {
+            events.clear();
+            // The level clock held at the checkpoint: the period still runs.
+            eruptions.step(SimStep.ticks(1), 20, events);
+            if (events.count(SimEvents.Type.ERUPTION_TELL) > 0) {
+                told = k;
+            }
+        }
+        assertEquals(SimStep.ticks(2), told, "a period after the restore");
     }
 }

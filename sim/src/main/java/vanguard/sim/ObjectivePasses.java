@@ -705,6 +705,11 @@ final class ObjectivePasses {
             }
             events.add(SimEvents.Type.GROUP_CLEARED, ship.x(), ship.y(), group);
             radio.cue(CueTrigger.GROUP_CLEARED, name);
+            if (!script.objectives().targets().isEmpty()) {
+                // M10 part E, step E1 (Level 39): the first target destroyed, whichever it is (once: a cue's fired
+                // flag).
+                radio.cue(CueTrigger.FIRST_TARGET, "");
+            }
             if (objectives.secondaryMet()) {
                 events.add(SimEvents.Type.OBJECTIVE_MET, ship.x(), ship.y());
                 radio.cue(CueTrigger.SECONDARY_OBJECTIVE, "");

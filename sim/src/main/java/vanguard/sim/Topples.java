@@ -5,13 +5,18 @@ package vanguard.sim;
  * toppling walker's stagger and fall run on ({@link Toppling}; the EMP Burst does not stop them), and a walker whose
  * fall is over lands: every ground unit whose hit box overlaps its fall line is destroyed (hardened ones included,
  * paid and counted as kills), then the walker itself (its bounty and its standing parts' first bonus: the whole).
- * Static, like {@link Auras}; runs only in a level whose units topple. Allocates nothing.
+ * M10 part E, step E1 (design/campaign Level 39, radio; m10e-gaps.md §1 #6): a crush that took a unit of a
+ * destroy-targets group (a cracking tower) starts the {@link CueTrigger#TOPPLE_TARGET} cues; its group counts it as
+ * destroyed through the kill. Static, like {@link Auras}; runs only in a level whose units topple. Allocates nothing.
  */
 final class Topples {
     private Topples() {}
 
-    /** One step of the topples among {@code enemies}; a crush pays through {@code hits}. */
-    static void step(Pool<Enemy> enemies, SimEvents events, PlayerFire.Hits hits, Radio radio) {
+    /**
+     * One step of the topples among {@code enemies}; a crush pays through {@code hits}. {@code targets}: the level's
+     * primary is destroy-targets, so a unit with a group is a target.
+     */
+    static void step(Pool<Enemy> enemies, SimEvents events, PlayerFire.Hits hits, Radio radio, boolean targets) {
         for (int i = 0; i < enemies.size(); i++) {
             Enemy walker = enemies.get(i);
             if (walker.spec().topple().isPresent() && walker.toppling.active()) {
@@ -32,7 +37,7 @@ final class Topples {
                     < SimStep.ticks(topple.staggerSeconds()) + SimStep.ticks(topple.fallSeconds())) {
                 continue;
             }
-            crush(walker, topple, enemies, events, hits, radio);
+            crush(walker, topple, enemies, events, hits, radio, targets);
             i = enemies.size();
         }
     }
@@ -43,12 +48,14 @@ final class Topples {
             Pool<Enemy> enemies,
             SimEvents events,
             PlayerFire.Hits hits,
-            Radio radio) {
+            Radio radio,
+            boolean targets) {
         double x = walker.x();
         double y = walker.y();
         double dirX = walker.toppling.dirX();
         double dirY = walker.toppling.dirY();
         int crushed = 0;
+        boolean target = false;
         for (int j = enemies.size() - 1; j >= 0; j--) {
             Enemy unit = enemies.get(j);
             if (unit == walker
@@ -69,6 +76,7 @@ final class Topples {
                 continue;
             }
             // Destroyed outright (no damage rule applies: a shield, the hardened rule, a part's HP).
+            target |= targets && unit.group() >= 0;
             hits.enemyDestroyed(j, -1);
             crushed++;
         }
@@ -79,6 +87,9 @@ final class Topples {
                 crushed);
         if (crushed > 0) {
             radio.cue(CueTrigger.TOPPLE_CRUSH, "");
+        }
+        if (target) {
+            radio.cue(CueTrigger.TOPPLE_TARGET, "");
         }
         for (int j = enemies.size() - 1; j >= 0; j--) {
             if (enemies.get(j) == walker) {

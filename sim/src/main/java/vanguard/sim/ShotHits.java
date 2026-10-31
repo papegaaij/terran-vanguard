@@ -347,7 +347,8 @@ final class ShotHits {
     /** A hit on a ground object: a trigger counts it, a destructible takes the damage. */
     void strike(int index, GroundObject object, double damage) {
         if (object.spec().trigger()) {
-            if (object.countHit()) {
+            // M10 part E: a trigger spent by damage takes the hit's damage, the others count it.
+            if (object.countHit(damage)) {
                 hits.triggerReleased(index);
             }
         } else if (object.damage(damage)) {

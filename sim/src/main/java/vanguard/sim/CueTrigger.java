@@ -212,7 +212,19 @@ public enum CueTrigger {
      * hunters for the first time in the attempt (a {@link SimEvents.Type#PREY_KILLED} of a prey, not of a hunter dead on
      * it); once. No subject (the radio event {@code first-prey-kill}).
      */
-    FIRST_PREY_KILL;
+    FIRST_PREY_KILL,
+    /**
+     * M10 part E, step E1 (design/campaign Level 39, radio: Rook's line on the first tower destroyed): the attempt's
+     * first destroy-targets group cleared (a cracking tower, by any means); once. No subject (the radio event {@code
+     * first-target}). Raised beside {@link #GROUP_CLEARED}, which names the group.
+     */
+    FIRST_TARGET,
+    /**
+     * M10 part E, step E1 (design/campaign Level 39, radio: Okafor's "Dropped it on the tower"): a walker's topple
+     * crushed a unit of a destroy-targets group ({@link SimEvents.Type#TOPPLE_CRUSH}; {@link Topples}); once. No subject
+     * (the radio event {@code topple-target}). Its {@link #TOPPLE_CRUSH} cues start as well when it is the first crush.
+     */
+    TOPPLE_TARGET;
 
     /** Between the part names of a {@link #BOSS_PART_DESTROYED} cue's subject. */
     public static final String PART_SEPARATOR = "|";

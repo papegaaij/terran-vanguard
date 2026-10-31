@@ -5,7 +5,8 @@ import java.util.Optional;
 /**
  * An object on the ground layer, entering at the top edge at {@code t} and scrolling with the
  * ground: a destructible ({@code hp}, {@code bounty}, {@code drop}) or a trigger that releases a
- * secret's hidden crate after {@code hits} hits.
+ * secret's hidden crate after {@code hits} hits (M10 part E: or, with an {@code hp}, once that much damage is dealt to
+ * it, {@link #damageSpent()}).
  *
  * @param x its position in the play field
  * @param size its hit box
@@ -507,5 +508,16 @@ public record GroundObjectSpec(
     /** Whether it is a trigger rather than a destructible. */
     public boolean trigger() {
         return hits > 0;
+    }
+
+    /**
+     * M10 part E, step E1 (design/campaign Level 39, Secrets: the survey hut's 30 HP lock; m10e-gaps.md §1 #10): whether
+     * it is a trigger spent by damage rather than by counted hits: a trigger with an {@code hp}, which every hit (a beam
+     * and the Orbital Lance by each step's damage, an Airstrike's blast by its share) takes from; at none its secret is
+     * found. Its {@code hits} only make it a trigger (the loader gives such a lock 1). Every trigger before Level 39 has
+     * no {@code hp}.
+     */
+    public boolean damageSpent() {
+        return hits > 0 && hp > 0;
     }
 }

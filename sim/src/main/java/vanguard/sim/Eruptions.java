@@ -6,15 +6,16 @@ import java.util.Arrays;
  * M10 part A, step A1b (design/world/jovian, Hazards & set pieces: eruptions; Level 39; {@link
  * HazardSpec.EruptionSpec}): Io's dry eruptions. Each ground vent enters at the top edge at its time and scrolls with the
  * ground; while on the screen it erupts every period, drawn from its range ({@link #rng}) for each cycle, the first one
- * period after its entry: its tell ({@link SimEvents.Type#ERUPTION_TELL}), then its rocks ({@link
+ * period after its entry or at its own {@link HazardSpec.Vent#firstSeconds()} (M10 part E, step E1): its tell ({@link SimEvents.Type#ERUPTION_TELL}), then its rocks ({@link
  * SimEvents.Type#VENT_ERUPTED}, value the count, drawn from its range). A rock rises over the vent (harmless), flies out on
  * the play plane along its share of the fan, its speed easing down, then falls back (harmless) and is gone. A flying rock
  * is shootable: the player's shots that reach the air spend themselves on it ({@link SimEvents.Type#ROCK_HIT}); at no HP
  * it breaks ({@link SimEvents.Type#ROCK_DESTROYED}), paying nothing and counting as no kill. It hurts the ship and Rook
  * on contact and breaks on the impact ({@link SimEvents.Type#ROCK_STRUCK}, in the sortie's hit passes); enemy bullets
  * pass it, homing shots and Rook never pick it, and it never hurts an enemy. Its own pool (not {@link Debris}: a debris
- * chunk drifts down and blocks both sides' shots). The cycles run on the level clock (they wait while it is held); the
- * rocks fly on the real steps. A restart brings the vents back; a boss checkpoint leaves the vents entered before it on
+ * chunk drifts down and blocks both sides' shots). A vent enters on the level clock; its cycles and the rocks run on the
+ * real steps (M10 part E, step E1, design/campaign Level 39, Layout: in a hold zone, where the level clock slows to about
+ * a third, the vents beside a works erupt more than once). A restart brings the vents back; a boss checkpoint leaves the vents entered before it on
  * the screen where the scroll put them. Owned by the sortie only in a level with eruptions ({@link
  * Sortie#eruptions()}), so the other levels hash as before. Fixed arrays, allocates nothing.
  */
@@ -44,7 +45,7 @@ public final class Eruptions implements Hashed {
     private final int fallTicks;
     /** Per vent: the ground's scroll when it entered at the top edge; NaN before. */
     private final double[] entryScroll;
-    /** Per vent: the level step its next tell starts at; -1 before its entry. */
+    /** Per vent: the real step ({@link #tick}) its next tell starts at; -1 before its entry. */
     private final int[] nextTell;
     /** Per vent: the rocks its current tell will throw (drawn at the tell's start); 0 outside a tell. */
     private final int[] telling;
@@ -59,7 +60,9 @@ public final class Eruptions implements Hashed {
     private final double[] dirY = new double[CAPACITY];
     private final double[] hp = new double[CAPACITY];
 
+    /** The real steps since the level start (or the restart), from 0 at the first; the cycles count them. */
     private int tick;
+
     private double scroll;
 
     Eruptions(HazardSpec.EruptionSpec spec, SplitMix64 rng) {
@@ -86,13 +89,14 @@ public final class Eruptions implements Hashed {
         Arrays.fill(nextTell, -1);
         Arrays.fill(telling, 0);
         Arrays.fill(used, false);
-        tick = 0;
+        tick = -1;
         scroll = 0;
     }
 
     /**
      * Back to a boss checkpoint at {@code levelTick} with the ground scrolled {@code groundScroll}: the vents entered
-     * after it enter again, no rock in flight, no tell running (a vent on the screen erupts a period after it).
+     * after it enter again, no rock in flight, no tell running (a vent on the screen erupts a period after it). The real
+     * steps count on.
      */
     void restore(int levelTick, double groundScroll) {
         Arrays.fill(used, false);
@@ -102,35 +106,34 @@ public final class Eruptions implements Hashed {
                 entryScroll[v] = Double.NaN;
                 nextTell[v] = -1;
             } else if (nextTell[v] >= 0) {
-                nextTell[v] = levelTick + period(v);
+                nextTell[v] = tick + period(v);
             }
         }
-        tick = levelTick;
         scroll = groundScroll;
     }
 
     /**
-     * One step: the vents enter and scroll with the ground ({@code groundScroll}), their cycles follow the level clock
-     * ({@code levelTick}; a tell starts or ends only when it ticked), the rocks fly on.
+     * One real step: the vents enter on the level clock ({@code levelTick}) and scroll with the ground ({@code
+     * groundScroll}), their cycles count the real steps (a held level clock does not slow them), the rocks fly on.
      */
-    void step(int levelTick, double groundScroll, boolean clockTicked, SimEvents events) {
-        tick = levelTick;
+    void step(int levelTick, double groundScroll, SimEvents events) {
+        tick++;
         scroll = groundScroll;
         for (int v = 0; v < ventCount; v++) {
             if (Double.isNaN(entryScroll[v]) && levelTick >= ventTicks[v]) {
                 entryScroll[v] = groundScroll;
-                nextTell[v] = ventTicks[v] + period(v);
+                nextTell[v] = tick + first(v);
             }
-            if (!clockTicked || Double.isNaN(entryScroll[v]) || !ventOnField(v)) {
+            if (Double.isNaN(entryScroll[v]) || !ventOnField(v)) {
                 continue;
             }
-            if (telling[v] == 0 && levelTick >= nextTell[v]) {
+            if (telling[v] == 0 && tick >= nextTell[v]) {
                 HazardSpec.Vent spec = this.spec.vents().get(v);
                 telling[v] = spec.minRocks() + rng.nextInt(spec.maxRocks() - spec.minRocks() + 1);
                 events.add(SimEvents.Type.ERUPTION_TELL, ventX(v), ventY(v), v);
-            } else if (telling[v] > 0 && levelTick >= nextTell[v] + tellTicks) {
+            } else if (telling[v] > 0 && tick >= nextTell[v] + tellTicks) {
                 throwRocks(v, events);
-                nextTell[v] = levelTick + period(v);
+                nextTell[v] = tick + period(v);
             }
         }
         for (int r = 0; r < CAPACITY; r++) {
@@ -138,6 +141,12 @@ public final class Eruptions implements Hashed {
                 fly(r);
             }
         }
+    }
+
+    /** Steps from vent {@code v}'s entry to its first tell: its own delay, or a period drawn from its range. */
+    private int first(int v) {
+        HazardSpec.Vent spec = this.spec.vents().get(v);
+        return spec.firstSet() ? SimStep.ticks(spec.firstSeconds()) : period(v);
     }
 
     /** A cycle's period of vent {@code v}, steps, drawn from its range. */
@@ -346,6 +355,7 @@ public final class Eruptions implements Hashed {
 
     @Override
     public void addTo(StateHash hash) {
+        hash.add(tick);
         for (int v = 0; v < ventCount; v++) {
             hash.add(Double.isNaN(entryScroll[v]) ? -1 : entryScroll[v])
                     .add(nextTell[v])

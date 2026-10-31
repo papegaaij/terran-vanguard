@@ -749,7 +749,12 @@ public final class SpecialSlot {
                             == Double.POSITIVE_INFINITY) {
                 continue;
             }
-            if (spec.trigger()) {
+            if (spec.damageSpent()) {
+                // M10 part E: a trigger spent by damage burns down in the column as a destructible does.
+                if (object.countHit(damage)) {
+                    hits.triggerReleased(j);
+                }
+            } else if (spec.trigger()) {
                 if (strike(2 * object.serial() + 1, 0) && object.countHit()) {
                     hits.triggerReleased(j);
                 }
@@ -983,7 +988,13 @@ public final class SpecialSlot {
                     || !ShotGeometry.inBlast(x, y, radius, object.x(), object.y(), spec.size())) {
                 continue;
             }
-            if (spec.trigger()) {
+            if (spec.damageSpent()) {
+                // M10 part E: a trigger spent by damage takes the blast's share, as a destructible.
+                double amount = deal(2 * object.serial() + 1, Layer.GROUND);
+                if (amount > 0 && object.countHit(amount)) {
+                    hits.triggerReleased(j);
+                }
+            } else if (spec.trigger()) {
                 if (object.countHit()) {
                     hits.triggerReleased(j);
                 }

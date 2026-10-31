@@ -17,7 +17,9 @@ import org.junit.jupiter.api.Test;
  * stagger (0.6 s, the guns stop, the fall line marked on the lost leg's side), the fall (0.8 s), then the crush: the
  * Strider is destroyed (its whole 60 paid) and every ground unit under the line too (hardened ones included, paid and
  * counted as kills), never an air unit; it takes no damage while it falls and the EMP does not stop it. The pod carries
- * only the homing salvos.
+ * only the homing salvos. M10 part E, step E1 (design/campaign Level 39; m10e-gaps.md §1 #6, #7): a crush that takes a
+ * destroy-targets unit clears its group and starts the {@code topple-target} cues once; the first target group cleared
+ * starts the {@code first-target} cues once.
  */
 class ToppleTest {
     private static final int FIRE = Command.FIRE.bit();
@@ -32,21 +34,32 @@ class ToppleTest {
     }
 
     private static LevelScript level(List<GroundUnit> units) {
+        return level(units, List.of());
+    }
+
+    /** The cues of {@link #targetLevel}: the crush's, the topple's on a target, the first target's. */
+    private static final List<RadioCue> TARGET_CUES = List.of(
+            LevelClockSpecs.cue(CueTrigger.TOPPLE_CRUSH, 0, 0),
+            LevelClockSpecs.cue(CueTrigger.TOPPLE_TARGET, 0, 0),
+            LevelClockSpecs.cue(CueTrigger.FIRST_TARGET, 0, 0));
+
+    private static LevelScript level(List<GroundUnit> units, List<String> targets) {
         return LevelScript.builder(32, 5)
                 .sections(List.of(new Section(40, SCROLL)))
                 .waves(List.of(strider()))
                 .groundUnits(units)
-                .objectives(ObjectiveSpec.NONE)
+                .radio(targets.isEmpty() ? List.of() : TARGET_CUES)
+                .objectives(ObjectiveSpec.NONE.withTargets(targets))
                 .build();
     }
 
     private static Sortie sortie(List<GroundUnit> units, WeaponSpec weapon) {
+        return sortie(level(units), weapon);
+    }
+
+    private static Sortie sortie(LevelScript level, WeaponSpec weapon) {
         return new Sortie(
-                1,
-                Act5ESpecs.loadout(weapon),
-                level(units),
-                TestSpecs.RULES.withInvulnerableShip(),
-                TestSpecs.FULL_ARMOUR);
+                1, Act5ESpecs.loadout(weapon), level, TestSpecs.RULES.withInvulnerableShip(), TestSpecs.FULL_ARMOUR);
     }
 
     /** What a flight saw: the steps of the tell, the fall and the crush, where it fell, the kills and the credits. */
@@ -60,11 +73,19 @@ class ToppleTest {
             int crushed,
             int kills,
             int creditsAtTell,
-            Sortie sortie) {}
+            Sortie sortie,
+            int[] cued,
+            int cleared) {}
 
     /** Under the right leg (facing up the screen, the left leg is at the screen's right), firing from {@link #FIRE_FROM}. */
     private static Flight fly(List<GroundUnit> units, double legX, WeaponSpec weapon, boolean emp) {
-        Sortie sortie = sortie(units, weapon);
+        return fly(level(units), legX, weapon, emp);
+    }
+
+    private static Flight fly(LevelScript level, double legX, WeaponSpec weapon, boolean emp) {
+        Sortie sortie = sortie(level, weapon);
+        int[] cued = new int[TARGET_CUES.size()];
+        int cleared = 0;
         int tell = -1;
         int fall = -1;
         int crush = -1;
@@ -82,6 +103,12 @@ class ToppleTest {
             Enemy strider = PartCSpecs.find(sortie, "strider");
             SimEvents events = sortie.events();
             for (int e = 0; e < events.size(); e++) {
+                if (events.type(e) == SimEvents.Type.RADIO) {
+                    cued[events.value(e)]++;
+                }
+                if (events.type(e) == SimEvents.Type.GROUP_CLEARED) {
+                    cleared++;
+                }
                 if (events.type(e) == SimEvents.Type.TOPPLE_TELL) {
                     tell = step;
                     creditsAtTell = sortie.credits();
@@ -106,7 +133,20 @@ class ToppleTest {
                 assertTrue(strider.gunQuiet() && strider.spitQuiet(), "its guns stop");
             }
         }
-        return new Flight(tell, fall, crush, x, y, dirX, crushed, sortie.kills(), creditsAtTell, sortie);
+        // Two steps on: the cues of the crush's kills.
+        for (int step = 0; step < 2 && crush > 0; step++) {
+            sortie.step(0);
+            SimEvents events = sortie.events();
+            for (int e = 0; e < events.size(); e++) {
+                if (events.type(e) == SimEvents.Type.RADIO) {
+                    cued[events.value(e)]++;
+                }
+                if (events.type(e) == SimEvents.Type.GROUP_CLEARED) {
+                    cleared++;
+                }
+            }
+        }
+        return new Flight(tell, fall, crush, x, y, dirX, crushed, sortie.kills(), creditsAtTell, sortie, cued, cleared);
     }
 
     private static final WeaponSpec HEAVY = Act5ESpecs.bolt(20, false);
@@ -154,6 +194,59 @@ class ToppleTest {
         double t = seconds - (PlayField.HEIGHT + half - row) / SCROLL;
         assertTrue(t > 0, "" + t);
         return new GroundUnit(t, x, spec, -1);
+    }
+
+    @Test
+    void aCrushOnTargetsClearsTheirGroupsAndCuesToppleTargetAndFirstTargetOnce() {
+        Flight probe = fly(List.of(), 240 + 42, HEAVY, false);
+        double crushSeconds = probe.crush() * SimStep.SECONDS;
+        double row = probe.y();
+        // Two towers of their own groups under the line: both cleared by the one crush, each cue once.
+        Flight both = fly(
+                level(
+                        List.of(
+                                new GroundUnit(
+                                        at(crushSeconds, row, 310, Act5ESpecs.NEST)
+                                                .t(),
+                                        310,
+                                        Act5ESpecs.NEST,
+                                        0),
+                                new GroundUnit(
+                                        at(crushSeconds, row, 340, Act5ESpecs.NEST)
+                                                .t(),
+                                        340,
+                                        Act5ESpecs.NEST,
+                                        1)),
+                        List.of("Pele A", "Pele B")),
+                240 + 42,
+                HEAVY,
+                false);
+        assertEquals(probe.crush(), both.crush(), "the same topple");
+        assertEquals(2, both.crushed());
+        assertEquals(2, both.cleared(), "both groups cleared by the crush");
+        assertEquals(1, both.cued()[0], "topple-crush");
+        assertEquals(1, both.cued()[1], "topple-target, once");
+        assertEquals(1, both.cued()[2], "first-target, once");
+        // A crush of a ground unit outside the targets: no topple-target (the target off the line stands).
+        Flight other = fly(
+                level(
+                        List.of(
+                                at(crushSeconds, row, 330, Act5ESpecs.NEST),
+                                new GroundUnit(
+                                        at(crushSeconds, row, 120, Act5ESpecs.NEST)
+                                                .t(),
+                                        120,
+                                        Act5ESpecs.NEST,
+                                        0)),
+                        List.of("Pele B")),
+                240 + 42,
+                HEAVY,
+                false);
+        assertEquals(1, other.crushed());
+        assertEquals(0, other.cleared());
+        assertEquals(1, other.cued()[0], "topple-crush");
+        assertEquals(0, other.cued()[1], "no topple-target");
+        assertEquals(0, other.cued()[2], "no target cleared");
     }
 
     @Test

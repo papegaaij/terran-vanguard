@@ -179,7 +179,8 @@ public record HazardSpec(
      * M10 part A (design/world/jovian, Hazards & set pieces: eruptions; Level 39; {@link Eruptions}): the level's ground
      * vents and the eruptions' numbers (the world's, one block). Each vent enters at the top edge at its time and
      * scrolls with the ground; while on the screen it erupts every period (drawn from its range for each cycle, the
-     * first one period after its entry): its mouth glows for {@code tellSeconds} ({@link
+     * first one period after its entry or at the vent's {@link Vent#firstSeconds()}; the cycles count real steps, so they
+     * run on through a hold zone's slowed level clock): its mouth glows for {@code tellSeconds} ({@link
      * SimEvents.Type#ERUPTION_TELL}), then it throws its rocks (a count drawn from its range; {@link
      * SimEvents.Type#VENT_ERUPTED}). Each rock rises over the vent for {@code riseSeconds} (harmless), flies out on the play
      * plane for {@code flySeconds} along its share of a fan {@code fanRadians} wide centred straight up (evenly spread),
@@ -229,13 +230,35 @@ public record HazardSpec(
     /**
      * M10 part A: a ground vent entering at the top edge at {@code t} s at {@code x}, erupting every {@code minPeriod} to
      * {@code maxPeriod} s while on the screen, throwing {@code minRocks} to {@code maxRocks} rocks each time.
+     *
+     * <p>M10 part E, step E1 (design/campaign Level 39, Hazards; m10e-gaps.md §1 #2, round 77 QE-1): {@code
+     * firstSeconds}, its first tell's start that many real seconds after its entry (Level 39's vents at 130 px/s: ≈ 0.5 to
+     * 1.3 s, so its rocks leave it in the lower half; the plume field's ripple is three vents' offsets 0.4 s apart); NaN
+     * for one period after its entry (round 73 C.8's rule). The cycles after the first follow the period.
      */
-    public record Vent(double t, double x, double minPeriod, double maxPeriod, int minRocks, int maxRocks) {
+    public record Vent(
+            double t, double x, double minPeriod, double maxPeriod, int minRocks, int maxRocks, double firstSeconds) {
         public Vent {
-            if (!(t >= 0) || !(minPeriod > 0) || !(maxPeriod >= minPeriod) || minRocks < 1 || maxRocks < minRocks) {
-                throw new IllegalArgumentException("a vent has a time, a period range and a rock range: " + t + ", "
-                        + minPeriod + ".." + maxPeriod + ", " + minRocks + ".." + maxRocks);
+            if (!(t >= 0)
+                    || !(minPeriod > 0)
+                    || !(maxPeriod >= minPeriod)
+                    || minRocks < 1
+                    || maxRocks < minRocks
+                    || !(Double.isNaN(firstSeconds) || firstSeconds >= 0)) {
+                throw new IllegalArgumentException("a vent has a time, a period range, a rock range and a first tell"
+                        + " at or after its entry: " + t + ", " + minPeriod + ".." + maxPeriod + ", " + minRocks
+                        + ".." + maxRocks + ", " + firstSeconds);
             }
+        }
+
+        /** Its first tell one period after its entry (round 73 C.8). */
+        public Vent(double t, double x, double minPeriod, double maxPeriod, int minRocks, int maxRocks) {
+            this(t, x, minPeriod, maxPeriod, minRocks, maxRocks, Double.NaN);
+        }
+
+        /** Whether its first tell has its own delay ({@link #firstSeconds()}) rather than one period. */
+        public boolean firstSet() {
+            return !Double.isNaN(firstSeconds);
         }
     }
 

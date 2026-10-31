@@ -22,7 +22,7 @@ class Act6BAllocationsTest {
         HazardSpec hazards = HazardSpec.NONE
                 .withWeather(Optional.of(Act6BSpecs.storm(strikes)))
                 .withEruptions(Optional.of(Act6BSpecs.eruptions(
-                        new HazardSpec.Vent(0, 200, 2, 3, 3, 5), new HazardSpec.Vent(3, 300, 2, 3, 3, 5))));
+                        new HazardSpec.Vent(0, 200, 2, 3, 3, 5), new HazardSpec.Vent(3, 300, 2, 3, 3, 5, 0.6))));
         List<GroundUnit> units = List.of(
                 new GroundUnit(0, Ship.START_X, Act6BSpecs.target("a", Layer.AIR, 40), -1),
                 new GroundUnit(0.3, Ship.START_X + 50, Act6BSpecs.target("b", Layer.AIR, 40), -1),
