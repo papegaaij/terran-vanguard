@@ -334,17 +334,18 @@ public final class WeaponLooks {
             offsets = pods.offsets(name);
         }
         // M7 part A: a beam glows at its nose and a drone fires from its orbit: no muzzle flash on the hull. M9 part A:
-        // an arc lights its pod's terminal instead (ArcLooks).
+        // an arc lights its pod's terminal instead (ArcLooks); M10 part A: a Plasma Arc its nose (ChainArcLooks).
         boolean hullMuzzle = !mount.bay()
                 && weapon.delivery() != WeaponSpec.Delivery.BEAM
-                && weapon.delivery() != WeaponSpec.Delivery.ARC;
+                && weapon.delivery() != WeaponSpec.Delivery.ARC
+                && weapon.delivery() != WeaponSpec.Delivery.CHAIN;
         Look look = new Look(
                 shots,
                 overdrive,
                 glowing,
                 hullMuzzle ? muzzle(weapon.vfx(), sprites) : new Array<>(),
                 !launcher(weapon.vfx()),
-                impact(weapon.vfx(), sprites),
+                impact(weapon.vfx(), slug, sprites),
                 pod,
                 offsets);
         switch (slug) {
@@ -419,14 +420,18 @@ public final class WeaponLooks {
         };
     }
 
-    private static Array<AtlasRegion> impact(String vfx, Sprites sprites) {
+    private static Array<AtlasRegion> impact(String vfx, String slug, Sprites sprites) {
         return switch (vfx) {
             // M8 part A: the harpoon's own impact (DeepWaterLooks draws it with its cavity).
             case "harpoon" ->
                 sprites.has("harpoon-torpedoes-hit") ? sprites.frames("harpoon-torpedoes-hit") : sprites.pulseImpact;
             case "vulcan", "ballistic" -> sprites.frames("ballistic-impact");
             // M9 part A: the Tesla arc's flash and spark burst at the struck target (2 steps a frame, as an impact).
-            case ARC_VFX -> sprites.has(ARC_SPARK) ? sprites.frames(ARC_SPARK) : sprites.pulseImpact;
+            // M10 part A: a Plasma Arc's own wider burst (plasma-arc-spark) on each struck unit.
+            case ARC_VFX ->
+                sprites.has(slug + SPARK)
+                        ? sprites.frames(slug + SPARK)
+                        : sprites.has(ARC_SPARK) ? sprites.frames(ARC_SPARK) : sprites.pulseImpact;
             default -> launcher(vfx) ? sprites.frames("explosive-impact") : sprites.pulseImpact;
         };
     }
@@ -435,6 +440,8 @@ public final class WeaponLooks {
     static final String ARC_VFX = "arc";
     /** M9 part A: the arc's spark burst at the target (tools/art/act5_gear.py arc). */
     static final String ARC_SPARK = "tesla-coil-pod-spark";
+    /** M10 part A: an {@code arc} weapon's own spark burst, its slug and this ({@code plasma-arc-spark}). */
+    static final String SPARK = "-spark";
 
     /** M7 part A: a copy of {@code region} turned round (a half turn: flipped both ways). */
     private static AtlasRegion turnedRound(AtlasRegion region) {

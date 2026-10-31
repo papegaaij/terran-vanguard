@@ -45,7 +45,7 @@ import vanguard.sim.Wingman;
  *
  * <p>RF6: the frame is drawn in named passes, in this order: {@link #behindPass behind}, {@link #groundPass ground},
  * {@link #groundUnitsPass ground units}, {@link #shadowPass shadows}, {@link #lowAirPass low-air}, {@link
- * #planeUnitsPass plane units}, {@link #setPiecePass set pieces}, {@link #shotPass shots}, {@link #highAirPass
+ * #planeUnitsPass plane units}, {@link #bankPass foreground banks} (M10 part A), {@link #setPiecePass set pieces}, {@link #shotPass shots}, {@link #highAirPass
  * high-air}, {@link #weatherPass weather} and {@link #overlayPass overlays}; each takes the {@link Frame} and draws
  * the looks of {@link LevelLooks}. The order is the behaviour: {@code PassOrderTest} pins it.
  */
@@ -133,6 +133,7 @@ final class DrawPasses extends LevelLooks {
         shadowPass(batch, f);
         lowAirPass(batch, f);
         planeUnitsPass(batch, f);
+        bankPass(batch, f);
         setPiecePass(batch, f);
         shotPass(batch, f);
         highAirPass(batch, f);
@@ -372,6 +373,10 @@ final class DrawPasses extends LevelLooks {
             // M8 part G: the plumes' silt, glow, eruption and heat over the ground units, the bends' ripples.
             plumes.drawOver(batch, sortie, scroll);
         }
+        if (eruptions != null) {
+            // M10 part A: Io's vents glowing through their tells, the eruptions' umbrellas, the rocks' shadows.
+            eruptions.drawGround(batch, sortie, scroll);
+        }
         if (maw != null) {
             // M8 part H: the dive's darkness, the lunge's shadow, the coil, the sacs, implants and head, its death.
             maw.draw(batch, sortie, alpha, play.whiteFlash);
@@ -483,6 +488,10 @@ final class DrawPasses extends LevelLooks {
         }
         // M10 part A: the seams, the mirrors and their shards, the prey hits' and the spoofed turrets' flashes.
         jovian.drawAir(batch, sortie, alpha, seconds);
+        if (eruptions != null) {
+            // M10 part A: the eruptions' burning rocks on the play plane.
+            eruptions.drawRocks(batch, sortie);
+        }
         units.drawChains(batch, sortie, alpha);
         if (tenderDrops != null) {
             // M8 part C: the Thera Deep tender swimming up with the armour patch, and back.
@@ -502,6 +511,35 @@ final class DrawPasses extends LevelLooks {
         farside.drawSweeps(batch, sortie, alpha);
         luna.drawBlobs(batch, sortie, alpha);
         player.drawAirstrike(batch, sortie, alpha);
+    }
+
+    /**
+     * M10 part A, step A3b (design/world/jovian, foreground cloud banks; m10a §4): the banks over the {@code air} bodies
+     * (a body under one reads at its 35 %, toward cream; a flash sees through them), then the units' running lights,
+     * glows and tells again over them at full (Level 12's {@code revealed} pass); the set pieces, pickups, shots, Rook,
+     * the ship and the bullets are drawn after, above them. A level without banks draws nothing here.
+     */
+    private void bankPass(SpriteBatch batch, Frame f) {
+        Sortie sortie = f.sortie;
+        float alpha = f.alpha;
+        double scroll = f.scroll;
+        ForegroundBanks banks = backdrop.banks();
+        if (banks == null) {
+            return;
+        }
+        backdrop.drawForegroundBanks(batch, scroll, bankReveal(sortie));
+        if (storm == null && !graded) {
+            units.drawAirGlows(batch, sortie, alpha, banks);
+        }
+    }
+
+    /**
+     * M10 part A: how see-through the foreground banks are now: a lightning flash's reveal, the level's own flashes'
+     * (Level 12's) or a told strike's ({@link LightningLooks#reveal}).
+     */
+    private float bankReveal(Sortie sortie) {
+        float reveal = WeatherLooks.SEE_THROUGH * weather.lit();
+        return lightning == null ? reveal : Math.max(reveal, lightning.reveal(sortie.tick()));
     }
 
     /** The set pieces on the play plane, their wrecks, the death pieces, debris, cranes and pickups. */
@@ -595,6 +633,10 @@ final class DrawPasses extends LevelLooks {
                 // M9 part A: the Tesla Coil Pod's arcs and its terminal's light.
                 arcs.draw(batch, sortie, alpha);
             }
+            if (chainArcs != null) {
+                // M10 part A: the Plasma Arc's chains and its nose's light.
+                chainArcs.draw(batch, sortie, alpha);
+            }
             // M7 part A: the fields, the drones' lights, the beams, the overcharge's shell.
             arsenal.drawOverShip(batch, sortie, alpha);
         }
@@ -676,6 +718,10 @@ final class DrawPasses extends LevelLooks {
         // M5 part F: the rain, the breakout's light, the gust telegraph and the sky flash, under the bullets.
         weather.drawFront(
                 batch, seconds, clock.real(), sortie.wind(), SimStep.ticks(sortie.levelSeconds()), play.whiteFlash);
+        if (lightning != null) {
+            // M10 part A: the told columns, the strikes and their sky flash, under the bullets.
+            lightning.draw(batch, sortie, play.whiteFlash);
+        }
     }
 
     /** Over every layer: the targeting marks, the mines and bullets, the boss's death flash, the warnings and the bar. */

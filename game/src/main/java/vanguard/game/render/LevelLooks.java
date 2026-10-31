@@ -194,6 +194,12 @@ class LevelLooks {
     ArcLooks arcs;
 
     private boolean arcsBuilt;
+    /** M10 part A, step A3b: the Plasma Arc's chains; null without one fitted (built with the first sortie). */
+    ChainArcLooks chainArcs;
+    /** M10 part A, step A3b: the told lightning strikes (Level 38); null without them (built with the first sortie). */
+    LightningLooks lightning;
+    /** M10 part A, step A3b: Io's eruptions (Level 39); null without them (built with the first sortie). */
+    EruptionLooks eruptions;
     /**
      * M9 part A: the hex shields' looks; null while their art is not loaded (it is in the Act 5 levels' unit atlases;
      * built with the first sortie).
@@ -366,7 +372,8 @@ class LevelLooks {
      */
     void difficulty(Difficulty difficulty) {
         boolean easy = difficulty == Difficulty.EASY;
-        backdrop.easy(easy);
+        // M10 part A: and the foreground banks easy leaves out.
+        backdrop.difficulty(difficulty);
         snow = SnowLooks.of(level, easy, sprites.pixel);
         if (storm != null) {
             storm.difficulty(difficulty);
@@ -399,6 +406,7 @@ class LevelLooks {
     /** Frees the light map and the generated textures. */
     void dispose() {
         softGlow.dispose();
+        backdrop.dispose();
         jovian.dispose();
         farside.dispose();
         if (grade != null) {
@@ -476,6 +484,15 @@ class LevelLooks {
         if (arcs != null) {
             arcs.restart();
         }
+        if (chainArcs != null) {
+            chainArcs.restart();
+        }
+        if (lightning != null) {
+            lightning.restart();
+        }
+        if (eruptions != null) {
+            eruptions.restart();
+        }
         if (shields != null) {
             shields.restart();
         }
@@ -498,6 +515,9 @@ class LevelLooks {
     void stepped(Sortie sortie) {
         if (!arcsBuilt) {
             arcs = ArcLooks.of(sprites, sortie.armament());
+            chainArcs = ChainArcLooks.of(sprites, sortie.armament());
+            lightning = LightningLooks.of(sprites, sortie);
+            eruptions = EruptionLooks.of(softGlow, sortie);
             shields = EnemyShieldLooks.of(sprites, looks);
             arcsBuilt = true;
         }
@@ -506,6 +526,9 @@ class LevelLooks {
         }
         if (arcs != null) {
             arcs.stepped(sortie);
+        }
+        if (chainArcs != null) {
+            chainArcs.stepped(sortie);
         }
         jovian.stepped(sortie);
         arsenal.stepped(sortie);

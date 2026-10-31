@@ -52,6 +52,8 @@ final class PlayerPasses {
     private static final double FADE_SHARE = 0.25;
 
     private static final Color SHIELD_BLUE = Color.valueOf("00C0FF");
+    /** M10 part A: a hit the Reflex Shield turned into a bolt shimmers the hull in the shield's gold. */
+    static final Color REFLEX_GOLD = Color.valueOf("FFC840");
 
     private static final float SHIELD_SHIMMER = 0.6f;
 
@@ -131,7 +133,13 @@ final class PlayerPasses {
             // M7 part C: a wall touch flashes the hull white for a moment (its cooldown's start).
             flash.draw(batch, hull, x, y, HIT_WHITE, play.whiteFlash);
         } else if (shieldShimmer > 0) {
-            flash.draw(batch, hull, x, y, SHIELD_BLUE, shieldShimmer * SHIELD_SHIMMER);
+            flash.draw(
+                    batch,
+                    hull,
+                    x,
+                    y,
+                    shipLooks.reflexHit() ? REFLEX_GOLD : SHIELD_BLUE,
+                    shieldShimmer * SHIELD_SHIMMER);
         } else {
             batch.draw(hull, x - hull.getRegionWidth() / 2f, y - hull.getRegionHeight() / 2f);
         }

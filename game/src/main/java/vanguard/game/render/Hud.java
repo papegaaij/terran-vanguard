@@ -56,6 +56,12 @@ public final class Hud {
                         .orElse(null),
                 sprites.region("icons/escort-rook"),
                 sprites.has("icons/escort-bulwark") ? sprites.region("icons/escort-bulwark") : null);
+        // M10 part A, step A3b: a Reflex Shield's window marks the shield bar.
+        ship.reflexWindow(flight.loadout()
+                .shield()
+                .reflect()
+                .map(vanguard.sim.ShieldModel.Reflect::window)
+                .orElse(0.0));
         this.flight = flight;
         this.regenBonus = regenBonus;
         for (Flight.Weapon weapon : flight.weapons()) {

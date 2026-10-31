@@ -55,6 +55,14 @@ public final class ShipLooks {
     private final Array<AtlasRegion> flame;
     /** The shield ring's frames follow the shimmer as it fades (1 at the hit, 0 at its end). */
     private final Array<AtlasRegion> ring;
+    /**
+     * M10 part A, step A3b (design/player/shields, Reflex Shield (Act 6)): the ring of a hit the Reflex turned into a
+     * bolt, gold and white-gold instead of blue (tools/art/act6_gear.py {@code reflex}), and whether the last hit was.
+     */
+    private final Array<AtlasRegion> reflexRing;
+
+    static final String REFLEX_RING = "ship-reflex";
+    private boolean reflexHit;
 
     private final Array<AtlasRegion> smoke;
     private final Array<AtlasRegion> sparks;
@@ -86,6 +94,7 @@ public final class ShipLooks {
     public ShipLooks(Sprites sprites, Files files) {
         flame = sprites.frames("engine-flame");
         ring = sprites.frames("ship-shield");
+        reflexRing = sprites.has(REFLEX_RING) ? sprites.frames(REFLEX_RING) : ring;
         smoke = sprites.frames("ship-smoke");
         sparks = sprites.frames("ship-sparks");
         JsonValue pods = new JsonReader().parse(files.internal("pivots/pods.json"));
@@ -123,6 +132,7 @@ public final class ShipLooks {
         lastTick = -1;
         sparkStart = Long.MIN_VALUE;
         sparkNext = 0;
+        reflexHit = false;
     }
 
     /**
@@ -254,6 +264,16 @@ public final class ShipLooks {
         ringDimmed = dimmed;
     }
 
+    /** M10 part A: whether the last shield hit was reflected (its ring and shimmer gold), from its events. */
+    public void reflexHit(boolean reflected) {
+        reflexHit = reflected;
+    }
+
+    /** M10 part A: whether the last shield hit was reflected. */
+    public boolean reflexHit() {
+        return reflexHit;
+    }
+
     public void drawAbove(SpriteBatch batch, long tick, float alpha, float x, float y, float shimmer) {
         batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
         int spark = (int) ((tick - sparkStart + alpha) / SPARK_FRAME_TICKS);
@@ -263,8 +283,9 @@ public final class ShipLooks {
             batch.draw(frame, x + spot[0] - frame.getRegionWidth() / 2f, y + spot[1] - frame.getRegionHeight() / 2f);
         }
         if (shimmer > 0) {
-            int frame = Math.min(ring.size - 1, (int) ((1 - shimmer) * ring.size));
-            AtlasRegion region = ring.get(frame);
+            Array<AtlasRegion> frames = reflexHit ? reflexRing : ring;
+            int frame = Math.min(frames.size - 1, (int) ((1 - shimmer) * frames.size));
+            AtlasRegion region = frames.get(frame);
             if (ringDimmed) {
                 batch.setColor(1, 1, 1, RING_DIMMED);
             }

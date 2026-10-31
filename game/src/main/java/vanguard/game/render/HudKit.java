@@ -33,7 +33,7 @@ final class HudKit {
     /** A well's frame around its glass, and a trough's around its bar. */
     private static final int FRAME = MissionLayout.FRAME;
     /** A bar segment and the gap after it. */
-    private static final int SEGMENT_PITCH = 13;
+    static final int SEGMENT_PITCH = 13;
     /** M7 part A: a segment's white core sits this far inside its cell. */
     private static final int CORE_INSET = 3;
     /** The glow behind a readout is this opaque. */

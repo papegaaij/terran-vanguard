@@ -40,7 +40,8 @@ import vanguard.sim.Sortie;
  * recoil, the Spire's pods and maw, Rook's hit flash). RF9e: the dispatch is here, the families are their own classes:
  * the water's ({@link WaterEffects}) and the deaths' ({@link DeathEffects}); a new family becomes another. M10 part A:
  * the mirrors' ({@link MirrorEffects}), the domes' ({@link DomeEffects}) and the regrowing turrets' ({@link
- * RegrowthEffects}).
+ * RegrowthEffects}); step A3b: the lightning strikes' ({@link StormEffects}) and the eruptions' ({@link
+ * EruptionEffects}).
  */
 final class EventEffects {
     private static final int IMPACT_FRAME_TICKS = 2;
@@ -108,6 +109,10 @@ final class EventEffects {
 
     private final DomeEffects domes;
     private final RegrowthEffects regrowth;
+    /** M10 part A, step A3b: the Jovian hazards' families: the lightning strikes' and the eruptions'. */
+    private final StormEffects storms;
+
+    private final EruptionEffects eruptions;
 
     EventEffects(
             GameServices services,
@@ -192,6 +197,14 @@ final class EventEffects {
         domes = new DomeEffects(sortie, renderer, effects, glance);
         regrowth =
                 new RegrowthEffects(sortie, effects, services.sprites.explosionSmall, services.sprites.explosionTiny);
+        storms = new StormEffects(sortie, renderer, effects, services.sprites.explosionTiny);
+        eruptions = new EruptionEffects(
+                sortie,
+                renderer,
+                weaponLooks,
+                effects,
+                services.sprites.explosionTiny,
+                services.sprites.explosionSmall);
     }
 
     /**
@@ -475,6 +488,9 @@ final class EventEffects {
             // The three-way war's teal hit where it lands; the spoofed turret's amber stutter (JovianLooks).
             case PREY_HIT -> renderer.jovian().preyHit(x, y, sortie.tick());
             case SPOOF_HESITATE -> renderer.jovian().hesitate(sortie, x, y);
+            // M10 part A, step A3b: the Jovian hazards, each family its own class.
+            case STRIKE_TOLD, STRIKE, STRIKE_HIT -> storms.react(events, i);
+            case VENT_ERUPTED, ROCK_HIT, ROCK_DESTROYED, ROCK_STRUCK -> eruptions.react(events, i);
             default -> {}
         }
     }

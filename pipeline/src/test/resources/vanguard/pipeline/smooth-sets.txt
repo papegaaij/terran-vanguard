@@ -130,6 +130,8 @@ sprites/ice-shatter
 sprites/iron-sovereign-bay-glow
 sprites/iron-sovereign-core-glow
 sprites/iron-sovereign-vent
+sprites/lightning-strike
+sprites/lightning-tell
 sprites/marlin-hauler-glow
 sprites/meridian-wreck-glow
 sprites/minelayer-mine-blast
@@ -140,6 +142,15 @@ sprites/mining-tug-flare
 sprites/mining-tug-glow
 sprites/mining-tug-vent
 sprites/nav-buoy-glow
+sprites/orb-bounced
+sprites/plasma-arc-arc-0
+sprites/plasma-arc-arc-1
+sprites/plasma-arc-arc-2
+sprites/plasma-arc-arc-3
+sprites/plasma-arc-arc-4
+sprites/plasma-arc-arc-5
+sprites/plasma-arc-glow
+sprites/plasma-arc-spark
 sprites/rail-serpent-snap
 sprites/relay-beacon-glow
 sprites/rook-refit
@@ -151,6 +162,8 @@ sprites/sentinel-tower-telegraph-160
 sprites/service-buoy-glow
 sprites/shard-drone-link-snap
 sprites/ship-refit
+sprites/ship-reflex
+sprites/ship-reflex-bolt-trail
 sprites/siege-spire-maw-glow
 sprites/siphon-pump-break
 sprites/siphon-pump-glow

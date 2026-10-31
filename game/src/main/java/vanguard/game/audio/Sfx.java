@@ -1026,9 +1026,10 @@ public enum Sfx {
     AMBIENCE_EUROPA_UNDER("sfx/europa-under-r52-a.ogg", 1, Bus.EFFECTS, AMBIENCE),
     /**
      * M9 part A (design/audio/sfx, Act 5 sounds; round 60's picks, the preview cuts of step AUD-A, levelled in their
-     * files): the Tesla Coil Pod's arc, the {@code tesla} family's zap (round 03 a), one a pod's arc.
+     * files): the Tesla Coil Pod's arc, the {@code tesla} family's zap (round 03 a), one a pod's arc. M10 part A, step
+     * A3b: the Plasma Arc replays it per strike of a chain on the discharge's tick, so six instances (a whole chain).
      */
-    TESLA_SHOT("sfx/shot-tesla-r03-a.ogg", 3, Bus.EFFECTS, PLAYER_FIRE),
+    TESLA_SHOT("sfx/shot-tesla-r03-a.ogg", 6, Bus.EFFECTS, PLAYER_FIRE),
     /** M9 part A: a hit on an enemy's hex shield that held (S.1 a: a knife tapping a wine glass). */
     ENEMY_SHIELD_HIT("sfx/enemy-shield-hit-r60-a.ogg", 3, Bus.EFFECTS, PLAYER_FIRE),
     /** M9 part A: an enemy's hex shield emptied by a hit, a {@code shield-breaker} arc or the EMP (S.2 b). */
@@ -1284,6 +1285,23 @@ public enum Sfx {
      * 1.75 s).
      */
     GRAFT_REGROWTH("sfx/graft-regrowth-r72-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
+    /**
+     * M10 part A, step A3b: a bullet the Reflex Shield turns into a bolt (round 72 S.4 a, a rifle round whining off
+     * steel, 0.45 s), over the shield hit, throttled ({@link PlayerCues}).
+     */
+    REFLEX_RICOCHET("sfx/reflex-ricochet-r72-a.ogg", 2, Bus.EFFECTS, PLAYER_FIRE),
+    /**
+     * M10 part A, step A3b: a lightning column's telegraph (round 72 S.7 a, a Tesla coil's buzz swelling, 1.0 s, the
+     * tell's length; {@link JovianHazardCues}).
+     */
+    LIGHTNING_TELL("sfx/lightning-tell-r72-a.ogg", 2, Bus.EFFECTS, WARNING),
+    /** M10 part A, step A3b: the strike (round 72 S.8 b, a close crack, then the thunder's roll, 3.7 s). */
+    LIGHTNING_STRIKE("sfx/lightning-strike-r72-b.ogg", 2, Bus.EFFECTS, EXPLOSION),
+    /**
+     * M10 part A, step A3b: Io's dry eruption (round 72 S.9 a, cracking soil and stone swelling over the 1.2 s tell, then
+     * a volcanic roar, 3.2 s), at the tell's start.
+     */
+    ERUPTION("sfx/eruption-r72-a.ogg", 3, Bus.EFFECTS, WARNING),
     /** The mission complete jingle (design/audio/music, track 23), played as a one-shot. */
     MISSION_COMPLETE("music/mission-complete.ogg", 1, Bus.MUSIC, WARNING),
     /**

@@ -1,9 +1,11 @@
 package vanguard.game.render;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import vanguard.content.Difficulty;
 import vanguard.content.SimSpecs;
+import vanguard.sim.Armament;
 import vanguard.sim.Command;
 import vanguard.sim.Enemy;
 import vanguard.sim.EnemySpec;
@@ -11,6 +13,7 @@ import vanguard.sim.GroundUnit;
 import vanguard.sim.Hitbox;
 import vanguard.sim.Layer;
 import vanguard.sim.LevelScript;
+import vanguard.sim.Loadout;
 import vanguard.sim.ObjectiveSpec;
 import vanguard.sim.PlayField;
 import vanguard.sim.Secondary;
@@ -87,6 +90,35 @@ public final class JovianFixture {
 
     private static GroundUnit at(double t, double x, EnemySpec spec) {
         return new GroundUnit(t, x, spec, -1);
+    }
+
+    /** M10 part A, step A3b: Plasma Arc L5 and a Reflex Shield on the ship's front, a pack of Chimeras riding down into its reach. */
+    public static Sortie arcFlight() {
+        Loadout loadout = SimSpecs.loadout(
+                DomesFixture.CONTENT,
+                DomesFixture.CONTENT.systems().engines().getFirst().name(),
+                List.of(new SimSpecs.FittedWeapon(Armament.Slot.FRONT, "plasma-arc", 5)),
+                "Reflex Shield",
+                DomesFixture.CONTENT.armour().plating().get(1).name(),
+                0,
+                Difficulty.MEDIUM);
+        List<GroundUnit> pack = new ArrayList<>();
+        double x = COLUMN;
+        for (int k = 0; k < 4; k++) {
+            pack.add(new GroundUnit(k * 1.5, x + (k % 2 == 0 ? -30 : 30), CHIMERA, -1));
+        }
+        LevelScript level = LevelScript.builder(1, 1)
+                .sections(List.of(new Section(60, SPEED)))
+                .groundUnits(pack)
+                .objectives(ObjectiveSpec.NONE.withSecondary(new Secondary(0.8, 50)))
+                .build();
+        return new Sortie(
+                1,
+                loadout,
+                level,
+                SimSpecs.rules(DomesFixture.CONTENT, DomesFixture.RULES_LEVEL, Difficulty.MEDIUM)
+                        .withInvulnerableShip(),
+                60);
     }
 
     /** A mirrored unit in the ship's column. */

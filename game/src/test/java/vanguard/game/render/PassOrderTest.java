@@ -98,6 +98,7 @@ class PassOrderTest {
             colossus.drawStreaks(batch, sortie, alpha, scroll, clock.real())
             foundry.drawFire(batch, sortie, scroll)
             plumes.drawOver(batch, sortie, scroll)
+            eruptions.drawGround(batch, sortie, scroll)
             maw.draw(batch, sortie, alpha, play.whiteFlash)
             sovereign.draw(batch, sortie, alpha, play.whiteFlash, scroll)
             ground.drawGlints(batch, sortie, alpha)
@@ -138,6 +139,7 @@ class PassOrderTest {
             auras.drawRings(batch, sortie, alpha, false)
             shields.draw(batch, sortie, alpha, false)
             jovian.drawAir(batch, sortie, alpha, seconds)
+            eruptions.drawRocks(batch, sortie)
             units.drawChains(batch, sortie, alpha)
             tenderDrops.drawBodies(batch, seconds)
             buoys.drawBodies(batch, seconds, scroll)
@@ -146,6 +148,8 @@ class PassOrderTest {
             farside.drawSweeps(batch, sortie, alpha)
             luna.drawBlobs(batch, sortie, alpha)
             player.drawAirstrike(batch, sortie, alpha)
+            backdrop.drawForegroundBanks(batch, scroll, bankReveal(sortie))
+            units.drawAirGlows(batch, sortie, alpha, banks)
             setPieces.drawSetPieces(batch, sortie, alpha, seconds, false)
             setPieces.drawSpire(batch, sortie, wrecks, alpha, scroll, SpirePass.AIR)
             setPieces.drawWrecks(batch, sortie, wrecks, alpha, seconds)
@@ -181,6 +185,7 @@ class PassOrderTest {
             deepWater.drawOverShots(batch, sortie, alpha)
             player.drawMuzzles(batch, sortie, alpha, true)
             arcs.draw(batch, sortie, alpha)
+            chainArcs.draw(batch, sortie, alpha)
             arsenal.drawOverShip(batch, sortie, alpha)
             arsenal.drawStunned(batch, sortie, alpha)
             wingmanLooks.drawMuzzle(batch, rook, weapons, sortie.wingmanMount(), alpha, true)
@@ -207,6 +212,7 @@ class PassOrderTest {
             spire.drawDaylight(batch, canopyDeath, backdrop.highAirScroll(scroll))
             snow.draw(batch, seconds, clock.real())
             weather.drawFront(batch, seconds, clock.real(), sortie.wind(), SimStep.ticks(sortie.levelSeconds()), play.whiteFlash)
+            lightning.draw(batch, sortie, play.whiteFlash)
             targeting.draw(batch, sortie, alpha)
             props.drawMines(batch, sortie, alpha)
             mines(sortie).draw(batch, sortie, alpha)
@@ -254,6 +260,7 @@ class PassOrderTest {
                         "shadowPass",
                         "lowAirPass",
                         "planeUnitsPass",
+                        "bankPass",
                         "setPiecePass",
                         "shotPass",
                         "highAirPass",

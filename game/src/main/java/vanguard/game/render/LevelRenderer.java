@@ -283,6 +283,38 @@ public final class LevelRenderer {
         return passes.jovian;
     }
 
+    /**
+     * M10 part A, step A3b: strike {@code i}'s column was told at step {@code tick} (the sky flash, the banks seen
+     * through); nothing in a level without strikes.
+     */
+    public void strikeTold(int i, long tick) {
+        if (passes.lightning != null) {
+            passes.lightning.told(i, tick);
+        }
+    }
+
+    /** M10 part A, step A3b: strike {@code i} struck at step {@code tick} (its bolt's frames run from it). */
+    public void strikeStruck(int i, long tick) {
+        if (passes.lightning != null) {
+            passes.lightning.struck(i, tick);
+        }
+    }
+
+    /**
+     * M10 part A, step A3b: a vent at (x, y) erupted at step {@code tick}, the ground scrolled by {@code groundScroll}:
+     * its umbrella of sulphur haze opens; nothing in a level without eruptions.
+     */
+    public void erupted(double x, double y, long tick, double groundScroll) {
+        if (passes.eruptions != null) {
+            passes.eruptions.erupted(x, y, tick, groundScroll);
+        }
+    }
+
+    /** M10 part A, step A3b: whether the last shield hit was turned into a bolt by the Reflex (its ring gold). */
+    public void shieldReflex(boolean reflected) {
+        passes.shipLooks.reflexHit(reflected);
+    }
+
     /** Rook was hit at step {@code tick}: his hull flashes white. */
     public void wingmanHit(long tick) {
         passes.wingmanLooks.hit(tick);

@@ -969,6 +969,34 @@ final class UnitPasses {
      */
     void drawAirGlows(SpriteBatch batch, Sortie sortie, float alpha) {
         batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
+        drawGlowBodies(batch, sortie, alpha, null);
+        drawPursuitTell(batch, sortie, alpha);
+        // The Ghost Drones' eye glints before their bursts, through the dust like their lights.
+        kinds.ghostDrones(sortie).drawGlints(batch, sortie, alpha);
+        // M9 part B: the Talons' and the clamp guns' muzzle glints, the clamps' gas.
+        kinds.ceres(sortie).drawGlints(batch, sortie, alpha, sortie.groundScroll());
+        // M9 part C: the Gunships' engines, bay flashes and plate sparks; the split trains' sparks and snaps.
+        kinds.minefield(sortie).drawGlints(batch, sortie, alpha);
+        // M9 part D: the Hornets' hatch bloom and launch flashes, the links' snaps, the Buzzsaws' ricochets.
+        kinds.rig(sortie).drawGlints(batch, sortie, alpha);
+        // M9 part E: the Sentinels' eyes and beams, the Striders' knees and muzzles, the charges' bursts.
+        kinds.deepCore(sortie).drawGlints(batch, sortie, alpha);
+        batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+    }
+
+    /**
+     * M10 part A, step A3b (design/world/jovian, foreground cloud banks): over the banks, each {@code air} unit's
+     * running lights, engine glow and tells drawn again at the share of them the banks took where it is ({@link
+     * ForegroundBanks#cover}), so they read at full under a bank while its body fades toward cream.
+     */
+    void drawAirGlows(SpriteBatch batch, Sortie sortie, float alpha, ForegroundBanks banks) {
+        batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
+        drawGlowBodies(batch, sortie, alpha, banks);
+        batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+    }
+
+    /** The air units' glow frames, additive (the caller's blend), each at {@code banks}' cover where it is (null: 1). */
+    private void drawGlowBodies(SpriteBatch batch, Sortie sortie, float alpha, ForegroundBanks banks) {
         for (int i = 0; i < sortie.enemyCount(); i++) {
             Enemy enemy = sortie.enemy(i);
             EnemyLooks look = looks[enemy.kind()];
@@ -994,26 +1022,19 @@ final class UnitPasses {
                 continue;
             }
             float glow = ArsenalLooks.glowShare(enemy) * kiteFade.opacity(enemy, sortie.tick(), alpha);
+            double x = enemy.renderX(alpha);
+            double y = enemy.renderY(alpha);
+            if (banks != null) {
+                glow *= banks.cover(x, y);
+            }
             if (glow <= 0) {
                 continue;
             }
             batch.setColor(1, 1, 1, glow);
             AtlasRegion frame = look.glowFrame(enemy.facing(), look.step(sortie.tick(), i, enemy.burstSeconds()));
-            drawCentred(batch, frame, enemy.renderX(alpha), enemy.renderY(alpha));
+            drawCentred(batch, frame, x, y);
         }
         batch.setColor(Color.WHITE);
-        drawPursuitTell(batch, sortie, alpha);
-        // The Ghost Drones' eye glints before their bursts, through the dust like their lights.
-        kinds.ghostDrones(sortie).drawGlints(batch, sortie, alpha);
-        // M9 part B: the Talons' and the clamp guns' muzzle glints, the clamps' gas.
-        kinds.ceres(sortie).drawGlints(batch, sortie, alpha, sortie.groundScroll());
-        // M9 part C: the Gunships' engines, bay flashes and plate sparks; the split trains' sparks and snaps.
-        kinds.minefield(sortie).drawGlints(batch, sortie, alpha);
-        // M9 part D: the Hornets' hatch bloom and launch flashes, the links' snaps, the Buzzsaws' ricochets.
-        kinds.rig(sortie).drawGlints(batch, sortie, alpha);
-        // M9 part E: the Sentinels' eyes and beams, the Striders' knees and muzzles, the charges' bursts.
-        kinds.deepCore(sortie).drawGlints(batch, sortie, alpha);
-        batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
     }
 
     /**

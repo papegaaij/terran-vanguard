@@ -632,12 +632,8 @@ game may play only `proposed` sounds of an open concept round, provisionally unt
 | [wreck-groans-solo-r67-a.ogg](concept/wreck-groans-solo-r67-a.ogg) | Review file for round 67 S.4: `wreck-groans` a alone, levelled for the comparison; the game plays `wreck-groans-r67-a.ogg` |
 | [wreck-groans-mix-r67-a.ogg](concept/wreck-groans-mix-r67-a.ogg) | Review file for round 67 S.4: `wreck-groans` a in the game's mix, rendered offline; the game mixes the layer itself (`wreck-groans-r67-a.ogg`) |
 | [tissue-tear-r72-a.ogg](concept/tissue-tear-r72-a.ogg) | Round 72 S.2 a, the hybrids' tear: a Graft Turret root's death first; imported once the root exists (part A's regrowth, then the Graft Turret in M10 part C) |
-| [reflex-ricochet-r72-a.ogg](concept/reflex-ricochet-r72-a.ogg) | Round 72 S.4 a, the Reflex Shield's turned bullet: in `assets/sfx/` since M10 part A's step AUD-A (the Freesound preview cut); played once step A3 wires it (an `Sfx` entry and its cue) |
 | [harrow-lock-r72-b.ogg](concept/harrow-lock-r72-b.ogg) | Round 72 S.5 b, the Harrow's lock tell: the Harrow comes in M10 part D (Level 38) |
 | [harrow-burst-r72-a.ogg](concept/harrow-burst-r72-a.ogg) | Round 72 S.6 a, the Harrow's burst: the Harrow comes in M10 part D (Level 38) |
-| [lightning-tell-r72-a.ogg](concept/lightning-tell-r72-a.ogg) | Round 72 S.7 a, the lightning column's telegraph: in `assets/sfx/` since M10 part A's step AUD-A (the Freesound preview cut); played once step A3 wires it (an `Sfx` entry and its cue) |
-| [lightning-strike-r72-b.ogg](concept/lightning-strike-r72-b.ogg) | Round 72 S.8 b, the lightning strike: in `assets/sfx/` since M10 part A's step AUD-A (the Freesound preview cut); played once step A3 wires it (an `Sfx` entry and its cue) |
-| [eruption-r72-a.ogg](concept/eruption-r72-a.ogg) | Round 72 S.9 a, Io's eruption: in `assets/sfx/` since M10 part A's step AUD-A (the Freesound preview cut); played once step A3 wires it (an `Sfx` entry and its cue) |
 | [jovian-sky-r72-b.ogg](concept/jovian-sky-r72-b.ogg) | Round 72 S.13 b, the bed of Levels 36 and 38: imported with Level 36 (M10 part B) |
 | [aurelia-r72-a.ogg](concept/aurelia-r72-a.ogg) | Round 72 S.14 a, Level 37's bed: imported with Level 37 (M10 part C) |
 | [io-refinery-r72-a.ogg](concept/io-refinery-r72-a.ogg) | Round 72 S.15 a, Level 39's bed: imported with Level 39 (M10 part E) |

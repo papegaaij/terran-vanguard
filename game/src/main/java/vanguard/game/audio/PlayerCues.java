@@ -11,9 +11,11 @@ import java.util.Optional;
 import java.util.Set;
 import vanguard.game.render.TriggerBreak;
 import vanguard.sim.Armament;
+import vanguard.sim.ChainFire;
 import vanguard.sim.Defences;
 import vanguard.sim.PickupType;
 import vanguard.sim.SimEvents;
+import vanguard.sim.SimStep;
 import vanguard.sim.Sortie;
 import vanguard.sim.WeaponSpec;
 
@@ -65,7 +67,17 @@ final class PlayerCues extends SoundFamily {
             SimEvents.Type.SHIP_DESTROYED,
             SimEvents.Type.SORTIE_RESTARTED,
             SimEvents.Type.BOSS_RETRY,
-            SimEvents.Type.PRIMARY_FAILED);
+            SimEvents.Type.PRIMARY_FAILED,
+            SimEvents.Type.CHAIN_STRIKE,
+            SimEvents.Type.REFLEX);
+
+    /**
+     * M10 part A, step A3b (design/audio/sfx, Act 6 sounds: the Plasma Arc): each strike of a chain replays the {@code
+     * tesla} zap a semitone above the strike before it, all on the discharge's tick.
+     */
+    static final float SEMITONE = 1.06f;
+    /** M10 part A, step A3b: the Reflex ricochet plays at most once in this long (design/audio/sfx, Act 6 sounds). */
+    static final double RICOCHET_GAP_SECONDS = 0.06;
 
     private final Sfx[] shots;
     private final float[] shotPitch;
@@ -83,6 +95,17 @@ final class PlayerCues extends SoundFamily {
     private int beepIn;
     /** Whether the shield broke and has not been full since: its restore chime is due. */
     private boolean shieldDown;
+    /**
+     * M10 part A, step A3b: per mount, whether it fires a Plasma Arc's chain (its zaps are its strikes', not its
+     * discharge's), and the pitch its discharge's first strike took (the jumps climb from it).
+     */
+    private final boolean[] chains;
+
+    private final float[] chainPitch;
+    /** M10 part A, step A3b: the step now and the step the last Reflex ricochet played at. */
+    private long now;
+
+    private long lastRicochet = Long.MIN_VALUE / 2;
 
     PlayerCues(
             SoundMix mix, Armament armament, Optional<WeaponSpec> wingman, BossCues bosses, DeepWaterCues deepWater) {
@@ -93,6 +116,8 @@ final class PlayerCues extends SoundFamily {
         shots = new Sfx[mounts];
         shotPitch = new float[mounts];
         charges = new boolean[mounts];
+        chains = new boolean[mounts];
+        chainPitch = new float[mounts];
         wingman.ifPresent(gun -> {
             shots[armament.size()] = shot(gun.sfx());
             // M8 part A: the Bulwark's cannon: the ballistic family lowered, a heavier slug (accepted in round 50).
@@ -108,6 +133,7 @@ final class PlayerCues extends SoundFamily {
             String family = armament.mount(m).weapon().sfx();
             shots[m] = shot(family);
             charges[m] = family.equals(DEPTH_CHARGE);
+            chains[m] = armament.mount(m).weapon().delivery() == WeaponSpec.Delivery.CHAIN;
             // Rear guns play their family lower; a mine's drop is not a gun's report, nor a depth charge's roll-out.
             shotPitch[m] = armament.mount(m).slot() == Armament.Slot.REAR
                             && !family.equals("mine")
@@ -120,6 +146,16 @@ final class PlayerCues extends SoundFamily {
     @Override
     Set<SimEvents.Type> types() {
         return TYPES;
+    }
+
+    @Override
+    void begin(long now) {
+        this.now = now;
+    }
+
+    /** M10 part A, step A3b: the zap's pitch at strike {@code index} of a chain (0 the first): a semitone a jump. */
+    static float jumpPitch(int index) {
+        return (float) Math.pow(SEMITONE, index);
     }
 
     /** The sound of a weapon sound family; the families of later weapons play the pulse until they have theirs. */
@@ -167,11 +203,32 @@ final class PlayerCues extends SoundFamily {
         switch (events.type(i)) {
             case SHOT_FIRED -> {
                 int mount = events.value(i);
+                if (mount < chains.length && chains[mount]) {
+                    // M10 part A: a Plasma Arc's zaps are its strikes' (CHAIN_STRIKE).
+                    return;
+                }
                 // M8 part A: a depth charge's roll-out is levelled with the mine's drop (round 50).
                 float level = shots[mount] == Sfx.MINE_DROP || shots[mount] == Sfx.SHOT_DEPTH_CHARGE
                         ? MINE_DROPPING
                         : PLAYER_FIRE;
                 bank.play(shots[mount], level, shotPitch[mount] * pitch(0.05), pan);
+            }
+            case CHAIN_STRIKE -> {
+                int mount = ChainFire.eventMount(events.value(i));
+                int index = ChainFire.eventIndex(events.value(i));
+                if (mount >= shots.length) {
+                    return;
+                }
+                if (index == 0) {
+                    chainPitch[mount] = shotPitch[mount] * pitch(0.04);
+                }
+                bank.play(shots[mount], PLAYER_FIRE, chainPitch[mount] * jumpPitch(index), pan);
+            }
+            case REFLEX -> {
+                if (now - lastRicochet >= SimStep.ticks(RICOCHET_GAP_SECONDS) || now < lastRicochet) {
+                    lastRicochet = now;
+                    bank.play(Sfx.REFLEX_RICOCHET, 1, pitch(0.05), pan);
+                }
             }
             case PROXIMITY_MINE_ARMED -> bank.play(Sfx.MINE_ARM, MINE_ARMING, pitch(0.03), pan);
             case SHOT_GLANCED -> bank.play(alternate(Sfx.HIT_METAL_A, Sfx.HIT_METAL_B), HITS, 1.3f * pitch(0.05), pan);

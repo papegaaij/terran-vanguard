@@ -101,6 +101,8 @@ public final class FlightSounds {
     private final MawCues maw;
     /** M10 part A: Act 6's unit mechanics (mirrors, regeneration, regrowth, domes). */
     private final JovianCues jovian;
+    /** M10 part A, step A3b: the Jovian hazards (the lightning strikes, the eruptions and their rocks). */
+    private final JovianHazardCues hazards;
     /** Per event type the family that plays it (by ordinal); null for an event without a sound. */
     private final SoundFamily[] families = new SoundFamily[SimEvents.Type.values().length];
     /** Every family, in the order they hear a step's start and end. */
@@ -237,6 +239,7 @@ public final class FlightSounds {
         sovereign = new SovereignCues(mix);
         leechField = new LeechFieldCues(mix);
         jovian = new JovianCues(mix);
+        hazards = new JovianHazardCues(mix);
         belt.rig(rig);
         walker = new WalkerCues(mix, ventField, belt);
         foundry = new FoundryCues(mix);
@@ -292,7 +295,8 @@ public final class FlightSounds {
             deepCore,
             leechField,
             sovereign,
-            jovian
+            jovian,
+            hazards
         };
         for (SoundFamily family : all) {
             for (SimEvents.Type type : family.types()) {

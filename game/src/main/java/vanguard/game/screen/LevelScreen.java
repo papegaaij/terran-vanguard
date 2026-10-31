@@ -1013,7 +1013,13 @@ public final class LevelScreen implements GameScreen {
                 case SPECIAL_DENIED -> hud.specialDenied();
                 // M8 part A: the special's row changed state at a waterline: it flashes once (its chime: FlightSounds).
                 case SPECIAL_LIMIT -> hud.specialLimit();
-                case SHIELD_HIT -> shimmer = SHIMMER_TICKS;
+                case SHIELD_HIT -> {
+                    shimmer = SHIMMER_TICKS;
+                    renderer.shieldReflex(false);
+                }
+                // M10 part A, step A3b: a hit the Reflex Shield turned into a bolt (after its SHIELD_HIT): the ring and
+                // the hull's shimmer gold.
+                case REFLEX -> renderer.shieldReflex(true);
                 // M5 part D: the scripted loss's lance ducks the theme (the music block's duck, no sting).
                 case SCRIPTED_LOSS ->
                     level.music()

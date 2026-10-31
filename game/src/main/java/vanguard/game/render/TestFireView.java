@@ -123,6 +123,8 @@ public final class TestFireView implements Disposable {
     private WeaponLooks weapons;
     /** M9 part A: the Tesla Coil Pod's arcs; null without one shown. */
     private ArcLooks arcs;
+    /** M10 part A: the Plasma Arc's chains, as in the level; null without one. */
+    private ChainArcLooks chainArcs;
     /** The craft's banking frames: the Stormhawk's, or Rook's for his guns. */
     private Array<AtlasRegion> hull;
 
@@ -166,6 +168,7 @@ public final class TestFireView implements Disposable {
         fieldLeft = field ? sprites.region("deflector-pod-field-" + level + "-left") : null;
         fieldRight = field ? sprites.region("deflector-pod-field-" + level + "-right") : null;
         arcs = ArcLooks.of(sprites, sortie.armament());
+        chainArcs = ChainArcLooks.of(sprites, sortie.armament());
         restart();
     }
 
@@ -179,6 +182,9 @@ public final class TestFireView implements Disposable {
         if (arcs != null) {
             arcs.restart();
         }
+        if (chainArcs != null) {
+            chainArcs.restart();
+        }
     }
 
     /** After each simulation step: the effects advance, the step's hits and explosions start theirs. */
@@ -187,6 +193,9 @@ public final class TestFireView implements Disposable {
         if (arcs != null) {
             // M9 part A: the step's arcs, as in the level.
             arcs.stepped(sortie);
+        }
+        if (chainArcs != null) {
+            chainArcs.stepped(sortie);
         }
         trails.step();
         water.step();
@@ -325,6 +334,10 @@ public final class TestFireView implements Disposable {
         if (arcs != null) {
             // M9 part A: the Tesla Coil Pod's arcs and its terminal's light, additive.
             arcs.draw(batch, sortie, alpha);
+        }
+        if (chainArcs != null) {
+            // M10 part A: the Plasma Arc's chains and its nose's light, additive.
+            chainArcs.draw(batch, sortie, alpha);
         }
         batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         drawMuzzles(batch, sortie, alpha, false);

@@ -164,6 +164,11 @@ final class ShipPanel {
     private static final String[] SLOT_LETTERS = {"F", "R", "L", "R"};
 
     private final HudKit kit;
+    /**
+     * M10 part A, step A3b: the fitted Reflex Shield's reflect window, a share of its capacity (0 without one): the
+     * shield bar's tick and gold top ({@link ReflexTick}).
+     */
+    private double reflexWindow;
     /** M9 part A: the power row under an enemy drain. */
     private final PowerRow powerRow;
     /** How long an overdrive lasts (design/player, in-level pickups), the timer's full length. */
@@ -238,6 +243,11 @@ final class ShipPanel {
         readyFlashPending = true;
     }
 
+    /** M10 part A, step A3b: the fitted Reflex Shield's reflect window (a share of its capacity; 0 without one). */
+    void reflexWindow(double window) {
+        reflexWindow = window;
+    }
+
     /** M7 part A: whether a ready flash started at tick {@code start} still shows at tick {@code tick}. */
     static boolean flashing(long tick, long start) {
         return tick - start >= 0 && tick - start < READY_FLASH_TICKS;
@@ -293,6 +303,18 @@ final class ShipPanel {
                 y - 52,
                 !flicker,
                 false);
+        if (reflexWindow > 0) {
+            ReflexTick.draw(
+                    kit,
+                    batch,
+                    x,
+                    y - 52 - 34,
+                    HudKit.INNER_WIDTH,
+                    BAR_HEIGHT,
+                    flicker ? 0 : defences.shield() / defences.maxShield(),
+                    !flicker && ReflexTick.open(defences.shield(), defences.shieldCapacity(), reflexWindow),
+                    reflexWindow);
+        }
         if (!flicker && defences.shield() > defences.maxShield()) {
             // M7 part A: the Shield Overcharge's second layer as white cores in the filled cells (the bar
             // keeps its scale).

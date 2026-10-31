@@ -12,7 +12,8 @@ import vanguard.sim.PlayField;
 /**
  * RF9d: the {@link Backdrop}'s atmosphere: per atmosphere stretch its look (low-air cloud banks, high-air wisps, haze
  * over the deep and far layers), which ramps across a stretch boundary ({@link #blend}); M5 part C's collapse dust peak
- * over it; M5 part H's high-air strength ({@link #frontFade}). Nothing is allocated per frame.
+ * over it; M5 part H's high-air strength ({@link #frontFade}); M10 part A's foreground cloud banks over the {@code air}
+ * bodies ({@link ForegroundBanks}, null without them). Nothing is allocated per frame.
  */
 final class BackdropAtmosphere {
     private static final int WIDTH = PlayField.WIDTH;
@@ -36,6 +37,9 @@ final class BackdropAtmosphere {
     private final Look dust;
     /** How strongly the dust peak shows now, 0 to 1 ({@link #dustPeak}). */
     private float dustWeight;
+
+    /** M10 part A: the level's foreground cloud banks (Level 36); null without them. */
+    private final ForegroundBanks banks;
 
     private Look from;
     private Look to;
@@ -71,6 +75,7 @@ final class BackdropAtmosphere {
                             .orElse(null),
                     (float) look.haze());
         }
+        banks = ForegroundBanks.any(level) ? new ForegroundBanks(level) : null;
         dust = level.collapse()
                 .flatMap(collapse -> data.atmosphere().of(collapse.dust().atmosphere()))
                 .map(look -> new Look(
@@ -92,6 +97,36 @@ final class BackdropAtmosphere {
      */
     void easy(boolean easy) {
         stretches = level.atmosphereStretches(easy);
+    }
+
+    /** M10 part A: the foreground banks {@code difficulty} draws (easy leaves some out). */
+    void difficulty(vanguard.content.Difficulty difficulty) {
+        if (banks != null) {
+            banks.difficulty(difficulty);
+        }
+    }
+
+    /** M10 part A: the foreground banks; null in a level without them. */
+    ForegroundBanks banks() {
+        return banks;
+    }
+
+    /**
+     * M10 part A: the foreground banks over the {@code air} bodies for the ground scrolled by {@code groundScroll}, seen
+     * through by {@code seeThrough} (a lightning flash's reveal, 0..1).
+     */
+    void drawForegroundBanks(SpriteBatch batch, double groundScroll, float seeThrough) {
+        if (banks != null) {
+            banks.update(groundScroll, seeThrough);
+            banks.draw(batch);
+        }
+    }
+
+    /** M10 part A: frees the banks' veil. */
+    void dispose() {
+        if (banks != null) {
+            banks.dispose();
+        }
     }
 
     /**

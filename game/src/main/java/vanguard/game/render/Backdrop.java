@@ -82,6 +82,30 @@ public final class Backdrop {
         atmosphere.easy(easy);
     }
 
+    /** M10 part A: the foreground banks as {@code difficulty} draws them (easy leaves some out). */
+    public void difficulty(vanguard.content.Difficulty difficulty) {
+        atmosphere.easy(difficulty == vanguard.content.Difficulty.EASY);
+        atmosphere.difficulty(difficulty);
+    }
+
+    /** M10 part A: the foreground cloud banks (Level 36); null in a level without them. */
+    ForegroundBanks banks() {
+        return atmosphere.banks();
+    }
+
+    /**
+     * M10 part A (design/world/jovian, foreground cloud banks): the banks on the {@code high-air} scenery over the {@code
+     * air} bodies, for the ground scrolled by {@code groundScroll}, seen through by {@code seeThrough} (a flash's reveal).
+     */
+    public void drawForegroundBanks(SpriteBatch batch, double groundScroll, float seeThrough) {
+        atmosphere.drawForegroundBanks(batch, groundScroll, seeThrough);
+    }
+
+    /** M10 part A: frees what the backdrop made itself (the banks' veil); the atlases are the sprites'. */
+    public void dispose() {
+        atmosphere.dispose();
+    }
+
     /** M7 part H: section {@code arena} (0-based) is an arena whose ground crawls on ({@link BackdropTiles#crawls}). */
     void crawls(int arena) {
         tiles.crawls(arena);

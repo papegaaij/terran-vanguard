@@ -230,6 +230,19 @@ final class SpriteUse {
      */
     static final int ACT_5_FIRST_LEVEL = 29;
 
+    /**
+     * M10 part A, step A3b: a level with told lightning strikes ({@code weather.strikes}, design/world/jovian) draws the
+     * column's telegraph and the strike, {@code lightning-tell_*} and {@code lightning-strike_*} (tools/art/act6_gear.py
+     * {@code lightning}; the game's LightningLooks); in the levels' unit atlases.
+     */
+    static final String LIGHTNING_ROOT = "lightning";
+
+    /**
+     * M10 part A, step A3b: until a level's data uses the Act 6 effects ({@link #LIGHTNING_ROOT}) they go in the unit
+     * atlas of the act's first level (Level 36, whose storm allows a few strikes), as Act 5's do in Level 29's.
+     */
+    static final int ACT_6_FIRST_LEVEL = 36;
+
     /** The look of a destructible ground target that names none (Level 01's cargo container). */
     private static final String DEFAULT_LOOK = "cargo-container";
 
@@ -261,6 +274,11 @@ final class SpriteUse {
                 levels.computeIfAbsent(atlasOf(ACT_5_FIRST_LEVEL), level -> new TreeSet<>())
                         .add(root);
             }
+        }
+        // M10 part A: the Act 6 effects likewise, in Level 36's unit atlas.
+        if (!used.contains(LIGHTNING_ROOT)) {
+            levels.computeIfAbsent(atlasOf(ACT_6_FIRST_LEVEL), level -> new TreeSet<>())
+                    .add(LIGHTNING_ROOT);
         }
         // An ally likewise, by its optional first_level (Level 10's shuttle before the level's data).
         content.allies().allies().forEach((slug, ally) -> {
@@ -420,6 +438,8 @@ final class SpriteUse {
         level.tows().filter(tows -> !tows.isEmpty()).ifPresent(tows -> roots.add(towRoot(key)));
         // M5 part F: a level with weather draws its rain, gusts, lightning, hidden bodies' glow and sondes.
         level.weather().ifPresent(weather -> roots.add(WEATHER_ROOT));
+        // M10 part A: and with told strikes their columns and bolts.
+        level.weather().flatMap(LevelData.Weather::strikes).ifPresent(strikes -> roots.add(LIGHTNING_ROOT));
         // M7 part C: a level with terrain draws the sparks of its rock.
         level.terrain().ifPresent(terrain -> roots.add(TERRAIN_ROOT));
         // M7 part D: a level's ground allies (Level 17's domes) in their sprite sets, the DOMES tracker's pip, and

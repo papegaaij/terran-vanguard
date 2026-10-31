@@ -106,6 +106,9 @@ final class MissionPanel {
 
     private final HudKit kit;
     private final GlyphLayout measure = new GlyphLayout();
+    /** M10 part A, step A3b: the pylon gates' line (Level 41). */
+    private final GateTracker gateTracker;
+
     private final Sprites sprites;
     private final TransmissionStatic transmissionStatic;
     private final String mission;
@@ -144,6 +147,7 @@ final class MissionPanel {
         this.mission = String.format(Locale.ROOT, "MISSION %02d", number);
         this.name = name.toUpperCase(Locale.ROOT);
         this.launchBalance = launchBalance;
+        gateTracker = new GateTracker(kit);
     }
 
     void draw(SpriteBatch batch, Sortie sortie, RadioQueue radio, List<PromptTexts.Text> prompts) {
@@ -180,7 +184,11 @@ final class MissionPanel {
         boolean naval = sortie.navalConvoy();
         boolean ground = sortie.groundAllies();
         boolean defend = sortie.defending();
-        boolean two = (sortie.allyCount() > 0 && !naval && !ground) || targets;
+        // M10 part A, step A3b: a level of several held gates (Level 41) counts its pylons, with its secondary on line
+        // two.
+        boolean gates = sortie.gates() > 1;
+        boolean secondary = !sortie.script().objectives().secondary().none();
+        boolean two = (sortie.allyCount() > 0 && !naval && !ground) || targets || (gates && secondary);
         kit.leftPanel(batch);
         int top = MissionLayout.MISSION.yTop();
         plate(batch, mission, top);
@@ -203,6 +211,8 @@ final class MissionPanel {
             drawTugTracker(batch, sortie);
         } else if (sortie.airEscort()) {
             drawShuttleTracker(batch, sortie);
+        } else if (gates) {
+            drawGateTracker(batch, sortie, secondary);
         } else if (two) {
             drawTwoTrackers(batch, sortie);
         } else if (!sortie.script().objectives().secondary().none()) {
@@ -361,6 +371,20 @@ final class MissionPanel {
             return;
         }
         drawSecondary(batch, sortie, wellTop, WELL);
+    }
+
+    /**
+     * M10 part A, step A3b (design/ui/hud, Act 6 additions: the pylon count): the gates' line ({@link GateTracker}),
+     * with the secondary on line two of a two-line well when the level has one.
+     */
+    private void drawGateTracker(SpriteBatch batch, Sortie sortie, boolean secondary) {
+        int wellTop = secondary
+                ? well(batch, MissionLayout.TWO_OBJECTIVES.yTop(), MissionLayout.TWO_LINE_WELL)
+                : well(batch, MissionLayout.OBJECTIVE.yTop(), WELL);
+        gateTracker.draw(batch, sortie, X + PAD, wellTop - TEXT_DROP, TEXT_WIDTH, frame);
+        if (secondary) {
+            drawSecondary(batch, sortie, wellTop - LINE, MissionLayout.TWO_LINE_WELL - LINE);
+        }
     }
 
     /** M9 part B: the held arena's holders' line (Level 29's clamp guns). */
