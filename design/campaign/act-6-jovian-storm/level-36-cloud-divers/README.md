@@ -2,7 +2,7 @@
 title: Level 36 – Cloud Divers
 design: approved
 implementation: not-started
-art: none
+art: proposed
 depends-on: [../../../enemies/air/chimera, ../../../enemies/air/talon, ../../../enemies/air/gilded-gunship, ../../../enemies/air/wraith, ../../../enemies/air/spore-bomber, ../../../enemies/air/lamprey, ../../../enemies/README.md, ../../../world/jovian, ../../../player/generator, ../../../player/wingmen, ../../../ui/hud]
 updated: 2026-10-31
 ---
@@ -369,10 +369,29 @@ dying before their first heal shows.
 
 ## Concept art
 
-No art yet. Round 72 proposals (wave 5): Q10's mood sheet for the L36 grade with Q2's foreground-bank readability
-(ART-R-B, in the [Jovian system](../../../world/jovian/README.md#concept-art)), the Chimera's unit sheets in its
-document (ART-R-A). Production backdrop (the dive over the decks, the storm bands, the bank tiles, the harvester and
-its plume, the drop craft), the briefing images and the strike's column come in part B (its round 73).
+Round 72 (wave 5): Q10's mood sheet for the L36 grade with Q2's foreground-bank readability (ART-R-B, in the
+[Jovian system](../../../world/jovian/README.md#concept-art)), the Chimera's unit sheets in its document (ART-R-A).
+
+Round 74 (M10 part B, step ART-B; production art, pending the user's review): the backdrop kit by
+`tools/art/backdrop_l36.py`, the harvester, the drop craft and the pod by `tools/art/jovian_units.py` (held in
+`build/art-held/sprites/` until step B2's data claims them; the Chimera's frames in
+[its document](../../../enemies/air/chimera/README.md#concept-art)), the briefing images in the
+[briefing](../../../ui/briefing/README.md#concept-art) (`briefing-images-final-r74-a`). The harvester's look is QB-1 a
+(m10b-gaps §7: the drafted look; b a scoop hull under a gold anti-grav ring), pending round 74. The banks are A.12 a's
+cream veil: each bank piece's image is its rectangle in the proposal's `banks:`, measured there at most 27.4 % of the
+field (easy 21.7 %) and at most 1.8 s over the ship's band. Prompts and briefs: [concept/prompts.md](concept/prompts.md).
+
+| File | What | Status |
+|---|---|---|
+| [concept/backdrop-final-r74-a.png](concept/backdrop-final-r74-a.png) | Production backdrop: eight screens at half size with stand-ins (the limb and the carrier group, the bands far below, the first bank, a Chimera wing under a bank's edge, the harvester fields' banks with the Lampreys and the swarm, the pod under a bank beside the storm wall's lightning, the end), the six bank pieces with the cap and band numbers, the deep pieces at 1×, the tile sets, and the explosion read (`explosion-small` over each section's brightest window and a bank) | proposed (round 74) |
+| [concept/backdrop-final-r74-a.gif](concept/backdrop-final-r74-a.gif) | t 100–110 at half size: the harvester fields, banks drifting over the play plane, a harvester pair with their plumes | proposed (round 74) |
+| [concept/backdrop-proposal.yaml](concept/backdrop-proposal.yaml) | The generator's `backdrop:` block (tile sets cut at the sections' rows, pieces, placements, the `banks:` with their pieces), the sections and the pod's `debris:` for step B2 (not data) | proposed (round 74) |
+| [concept/harvester-final-r74-a.png](concept/harvester-final-r74-a.png) | The helium-3 harvester (QB-1 a): both directions at 2×, the plume's flow, the break (12 frames with the flare and a medium explosion), a pair with two Talon escorts, one under a bank (sheet) | proposed (round 74) |
+| [concept/harvester-final-r74-a.gif](concept/harvester-final-r74-a.gif) | A pair skimming down the rust band with their plumes, the left one breaking in two and sinking | proposed (round 74) |
+| [concept/fleet-stormhawk-final-r74-a.png](concept/fleet-stormhawk-final-r74-a.png) | The drop craft: the CDF Stormhawk in the fleet's grey and blue at 16 headings beside the player's ship, two moments of the dive (sheet) | proposed (round 74) |
+| [concept/fleet-stormhawk-final-r74-a.gif](concept/fleet-stormhawk-final-r74-a.gif) | Two pairs diving up the screen at 400 px/s over the dive's bands with their exhaust streaks, at 1× | proposed (round 74) |
+| [concept/pathfinder-pod-final-r74-a.png](concept/pathfinder-pod-final-r74-a.png) | The pathfinder pod: its 16-frame tumble and the 8-frame break in air at 2× (sheet) | proposed (round 74) |
+| [concept/pathfinder-pod-final-r74-a.gif](concept/pathfinder-pod-final-r74-a.gif) | The pod drifting down the storm edge and shot open | proposed (round 74) |
 
 ## Implementation
 

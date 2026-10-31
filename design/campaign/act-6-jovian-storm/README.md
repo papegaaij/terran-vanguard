@@ -32,7 +32,7 @@ here is a hand table marked draft, taken from the level drafts, and the build (M
 
 | Part | Summary | Design | Impl | Art |
 |---|---|---|---|---|
-| [level-36-cloud-divers](level-36-cloud-divers/README.md) | The dive from orbit into Jupiter's upper bands, air only: foreground cloud banks over the play plane, the regenerating Chimera beside the Talons, the fleet's drop craft marked friendly, helium-3 harvesters (`HARVESTERS`), wind and the first lightning | approved | not-started | none |
+| [level-36-cloud-divers](level-36-cloud-divers/README.md) | The dive from orbit into Jupiter's upper bands, air only: foreground cloud banks over the play plane, the regenerating Chimera beside the Talons, the fleet's drop craft marked friendly, helium-3 harvesters (`HARVESTERS`), wind and the first lightning | approved | not-started | proposed |
 | [level-37-fall-of-aurelia](level-37-fall-of-aurelia/README.md) | Aurelia, the cloud capital: evacuation shuttles (`SHUTTLES`), Mirror Interceptors and Graft Turrets, the act's `shield-breaker` level; the Vrell turn at t=100 and the falling city in the last 40 s | approved | not-started | none |
 | [level-38-lightning-belt](level-38-lightning-belt/README.md) | The storm layer, every direction, air only: told lightning strikes that hit the enemies too, Harrows bursting into rings (`HARROWS`), the Buzzsaw Drone's return | approved | not-started | none |
 | [level-39-io-flyby](level-39-io-flyby/README.md) | Io's refineries, `destroy-targets`: six cracking towers under holds, dry eruptions throwing rocks, Striders guarding the works, the pump stations (`PUMPS`) | approved | not-started | none |
@@ -440,6 +440,7 @@ prompts: [concept/prompts.md](concept/prompts.md).
 | File | What | Status |
 |---|---|---|
 | [concept/act-6-still-r72-a.png](concept/act-6-still-r72-a.png) | Still A, "the dive": Jupiter's sunlit bands and the Great Red Spot under the CDF carrier group diving from orbit, Callisto a dark disc beside the limb | chosen (round 72 A.14 a) |
+| [concept/act-6-still-final-r74-a.png](concept/act-6-still-final-r74-a.png) | The title card's still, final (M10 part B, `tools/art/act_stills.py act-6`; the still `assets/ui/act-6-jovian-storm-still.png`, the lettering `act_titles.py`'s): A.14 a re-rendered with the fleet's lights along the curve, four drop craft diving ahead and Aurelia's far gold glint; at 1×, the title card over it, 2× crops (sheet) | proposed (round 74) |
 
 Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 

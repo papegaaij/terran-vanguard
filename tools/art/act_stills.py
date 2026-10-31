@@ -93,7 +93,17 @@ thread are drawn here (Jupiter's bands with tools/concept/europa_r48.py's ramp J
                                   still (Ceres Hub from the approach, Level 29's laid ground in perspective;
                                   ``ceres_hub_still``) and its title card, as it was reviewed
 
-Run: python3 tools/art/act_stills.py [act-1] [act-2] [act-3] [act-4] [act-5] [--review] | act-4-r52 | act-5-r62 | --check
+  act-6-jovian-storm-still.png    960x540 (M10 part B batch, concept round 74; round 72 A.14 a "the dive", from
+                                  tools/concept/act6_r72.py ``still_a`` and its render kit, imported unchanged): Jupiter's
+                                  sunlit bands (Level 36's ``JOV_SUN`` grade, the Great Red Spot) under the CDF carrier
+                                  group diving from orbit, Callisto a dark disc beside the limb; added here: the fleet's
+                                  running lights strung along the curve, four Stormhawks diving ahead (the drop craft,
+                                  tools/art/jovian_units.py's ``fleet-stormhawk`` frames) with their engine streaks, and
+                                  a far gold glint on the bands where Aurelia hangs; smooth 24-bit (no ordered dither:
+                                  the 2026-10-30 rule, as round 72's still)
+  design/campaign/act-6-jovian-storm/concept/act-6-still-final-r74-a.png   its review sheet, as Act 5's
+
+Run: python3 tools/art/act_stills.py [act-1] [act-2] [act-3] [act-4] [act-5] [act-6] [--review] | act-4-r52 | act-5-r62 | --check
 (~1.5 min for all, act-5 ~1 min on 16 cores; after backdrop_l01.py, stormhawk.py, backdrop_l08.py, backdrop_l15.py,
 backdrop_l22.py and backdrop_l29.py; --check lists every still with its size and fails on a missing Source chunk)
 """
@@ -1298,11 +1308,111 @@ def review5(img=None, rnd=A5_ROUND):
     print(f"review: {path.relative_to(ROOT)}")
 
 
+
+# =========================================================================== Act 6 (M10 part B)
+
+A6_CONCEPT = DESIGN / "campaign" / "act-6-jovian-storm" / "concept"
+A6_NAME = "act-6-jovian-storm"
+A6_ROUND = "r74"
+A6_SOURCE = artkit.source_note(SCRIPT, "M10 part B batch")
+A6_LIMB = (760.0, 1180.0, 1060.0)          # still_a's planet (cx, cy, r): the fleet's lights follow its curve
+A6_DIVERS = [(616, 303, 1.0), (655, 333, 0.95), (425, 383, 0.9), (459, 407, 0.85)]   # the drop craft (x, y, scale):
+#                                           their tails on still_a's four engine points
+A6_AURELIA = (688, 448)                     # the far gold glint on the bands
+
+
+def a6_parts():
+    import act6_r72 as a6  # noqa: E402  (concept: round 72's still kit, imported unchanged)
+    jobs = [("carrier", a6.carrier_job, (300, -28, -40)), ("escort1", a6.carrier_job, (170, -24, -44)),
+            ("escort2", a6.carrier_job, (140, -32, -36))]
+    with a6.pool() as ex:
+        return a6.still_models(ex, jobs)
+
+
+def a6_still(parts):
+    """Round 72's still a (A.14 a) with the README's lights: the fleet's lights on the curve, the drop craft and the
+    gold glint of Aurelia."""
+    import act6_r72 as a6  # noqa: E402
+    import l23kit  # noqa: E402
+    img = a6.still_a(parts)
+    rgb = a6.arr(img)[..., :3]
+    cx, cy, r = A6_LIMB
+    rng = np.random.default_rng(7401)
+    for k in range(26):                                        # the fleet strung along the terminator's curve
+        ang = np.radians(-150 + k * 3.1 + rng.uniform(-0.8, 0.8))
+        rr = r + rng.uniform(6, 22)
+        x, y = cx + np.cos(ang) * rr, cy + np.sin(ang) * rr
+        if not (0 <= x < W and 0 <= y < H):
+            continue
+        col = (255, 250, 240) if k % 5 else ((255, 80, 60) if k % 2 else (90, 255, 140))
+        a6.glow_at(rgb, x, y, 1.3, col, 2.2)
+        a6.glow_at(rgb, x, y, 3.6, (200, 220, 255), 0.25)
+    a6.glow_at(rgb, *A6_AURELIA, 7, (255, 200, 90), 0.5)       # Aurelia: a far gold glint on the bands
+    a6.glow_at(rgb, *A6_AURELIA, 1.6, (255, 244, 210), 1.6)
+    for dx, dy, kk in ((1, 0, 0.9), (0, 1, 0.9)):
+        for s in np.linspace(-9, 9, 19):
+            a6.glow_at(rgb, A6_AURELIA[0] + dx * s, A6_AURELIA[1] + dy * s, 0.7, (255, 214, 120),
+                       kk * 0.5 * (1 - abs(s) / 9.5))
+    img = a6.to_img(rgb)
+    try:
+        hawk = l23kit.load("fleet-stormhawk")
+    except FileNotFoundError:
+        hawk = None
+    ang = np.arctan2(0.48, 0.88)                               # diving down-right toward the bands
+    k16 = int(round(((ang - np.pi / 2) % (2 * np.pi)) / (2 * np.pi) * 16)) % 16
+    for x, y, s in A6_DIVERS:
+        rgb = a6.arr(img)[..., :3]
+        for j in range(1, 26):                                  # the engines' streak, back up-left
+            a6.glow_at(rgb, x - j * 3.3 * s, y - j * 1.8 * s, 1.2 + j * 0.05, (150, 200, 255), 0.11 * (1 - j / 26))
+        img = a6.to_img(rgb)
+        if hawk:
+            sp = hawk[k16]
+            sp = sp.resize((max(1, round(sp.width * s * 0.8)), max(1, round(sp.height * s * 0.8))), Image.BOX)
+            img.alpha_composite(sp, (int(round(x - sp.width / 2)), int(round(y - sp.height / 2))))
+        img = a6.light(img, x - 6 * s, y - 3 * s, 2.0, (150, 210, 255), 1.4)
+    return img.convert("RGB").convert("RGBA")
+
+
+def build6():
+    OUT.mkdir(parents=True, exist_ok=True)
+    img = a6_still(a6_parts())
+    artkit.save_png(img, OUT / f"{A6_NAME}-still.png", A6_SOURCE)
+    print(f"{A6_NAME}-still.png: {img.width}x{img.height}, {artkit.colour_count([img])} colours")
+
+
+def review6():
+    """The review sheet: the still at 1x, the title card over it, 2x crops of the drop craft and the fleet's lights."""
+    img = Image.open(OUT / f"{A6_NAME}-still.png").convert("RGBA")
+    crops = [(360, 200, 640, 380), (30, 330, 250, 510)]
+    sheet = raster.sheet(1000, 40 + 2 * (H + 30) + 400 + 10, "ACT 6 TITLE-CARD STILL (FINAL R74): THE DIVE",
+                         f"PRODUCTION ART, M10 PART B BATCH - {A6_ROUND.upper()}")
+    raster.draw_text(sheet, 16, 38, f"THE STILL, 960X540 AT 1X ({artkit.colour_count([img])} COLOURS, SMOOTH)",
+                     raster.LABEL)
+    sheet.alpha_composite(img, (16, 52))
+    raster.draw_text(sheet, 16, 52 + H + 14, f"THE TITLE CARD OVER IT: DARKENED TO {int(BRIGHTNESS * 100)} %, LETTERBOX, "
+                                             "CHROME LETTERING (THE GAME ADDS 'JUPITER - SEPTEMBER 2185')",
+                     raster.LABEL)
+    sheet.alpha_composite(title_card(img, A6_NAME), (16, 52 + H + 28))
+    y = 52 + 2 * H + 28 + 16
+    raster.draw_text(sheet, 16, y, "2X DETAILS: THE DROP CRAFT DIVING AHEAD; THE FLEET'S LIGHTS ON THE CURVE", raster.LABEL)
+    x = 16
+    for box in crops:
+        part = img.crop(box)
+        part = part.resize((part.width * 2, part.height * 2), Image.NEAREST)
+        if x + part.width > sheet.width - 16:
+            part = part.crop((0, 0, sheet.width - 16 - x, part.height))
+        sheet.alpha_composite(part, (x, y + 14))
+        x += part.width + 16
+    A6_CONCEPT.mkdir(parents=True, exist_ok=True)
+    path = A6_CONCEPT / f"act-6-still-final-{A6_ROUND}-a.png"
+    sheet.convert("RGB").save(path, optimize=True)
+    print(f"review: {path.relative_to(ROOT)}")
+
 if __name__ == "__main__":
     if "--check" in sys.argv[1:]:
         bad = 0
         for name, src in (("act-1-first-contact", SOURCE), (A2_NAME, A2_SOURCE), ("act-3-red-dust", A3_SOURCE),
-                          (A4_NAME, A4_SOURCE), (A5_NAME, A5_SOURCE)):
+                          (A4_NAME, A4_SOURCE), (A5_NAME, A5_SOURCE), (A6_NAME, A6_SOURCE)):
             path = OUT / f"{name}-still.png"
             img = Image.open(path) if path.exists() else None
             note = img.text.get(artkit.SOURCE_KEY, "") if img else ""
@@ -1317,8 +1427,8 @@ if __name__ == "__main__":
     if "act-5-r62" in sys.argv[1:]:
         review5(ui_dither(ceres_hub_still(), np.ones((H, W)), STILL_COLOURS).convert("RGB").convert("RGBA"), A5_R62)
         sys.exit(0)
-    acts = [a for a in sys.argv[1:] if a in ("act-1", "act-2", "act-3", "act-4", "act-5")] or [
-        "act-1", "act-2", "act-3", "act-4", "act-5"]
+    acts = [a for a in sys.argv[1:] if a in ("act-1", "act-2", "act-3", "act-4", "act-5", "act-6")] or [
+        "act-1", "act-2", "act-3", "act-4", "act-5", "act-6"]
     if "act-1" in acts:
         if "--review" not in sys.argv[1:]:
             build()
@@ -1339,3 +1449,7 @@ if __name__ == "__main__":
         if "--review" not in sys.argv[1:]:
             build5()
         review5()
+    if "act-6" in acts:
+        if "--review" not in sys.argv[1:]:
+            build6()
+        review6()

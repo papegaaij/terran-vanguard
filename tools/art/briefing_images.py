@@ -282,6 +282,21 @@ Outputs (assets/ui/briefing/<name>.png, 672x240, textures of their own like the 
                           Rook on the ladder with his helmet under his arm
   act-5-outro-jupiter     Act 5 outro p4: the transport's forward view, Jupiter ahead and Callisto a dark disc beside
                           it, every rail on the flight deck filled (Rook's Ember among them)
+  act-6-jupiter           Act 6 intro p1 (M10 part B batch): the Steadfast's bridge, Jupiter's storm bands filling the three
+                          forward viewports, the fleet's running lights strung along the terminator, Aegis Wing's
+                          Stormhawks on the carrier's rails below
+  act-6-the-plan          Act 6 intro p2: Okafor's chart of the Jovian system: Aurelia's air-defence grid as gold rings
+                          over the bands, the harvester lanes and Io's refinery lines in amber, Callisto behind the home
+                          fleet's screen of gold chevrons, the wing's route dotted from the grid to Callisto (1-4)
+  act-6-invitation        Act 6 intro p3 (intercepted): Vorne at a gilded window over Aurelia's domes and balloons, the
+                          Ascendancy crest above, the amber frame and the rolling interference bands
+  act-6-every-channel     Act 6 intro p4: Okafor at the Steadfast's comms board with every band lit; through the window the
+                          first Stormhawks (tools/art/jovian_units.py's drop craft) drop toward the cloud tops
+  level-36-the-dive       L36 p1: Okafor's chart of Jupiter's upper bands in section: the dive corridor through three
+                          cloud decks, the harvester lane along deck 3 in amber, the Steadfast group at the top, Aurelia
+                          below
+  level-36-chimera        L36 p2: Varga's scan of a Chimera (tools/art/jovian_units.py's frames): the airframe in grey,
+                          the seams glowing teal, the HP readout: hits, the 1.0 s wait, the regrowth with a teal edge
   design/ui/briefing/concept/briefing-images-final-r13-a.png   review sheet, Act 1 intro + L01-02
   design/ui/briefing/concept/briefing-images-final-r20-a.png   review sheet, L03-04 (M4 batch)
   design/ui/briefing/concept/briefing-images-final-r21-a.png   review sheet, L05 (M4 part E)
@@ -298,6 +313,7 @@ Outputs (assets/ui/briefing/<name>.png, 672x240, textures of their own like the 
   design/ui/briefing/concept/briefing-images-final-r40-a.png   review sheet, L17 (M7 part D)
   design/ui/briefing/concept/briefing-images-final-r41-a.png   review sheet, L18 (M7 part E)
   design/ui/briefing/concept/briefing-images-final-r42-a.png   review sheet, L19 + the L20 plate (M7 part F)
+  design/ui/briefing/concept/briefing-images-final-r74-a.png   review sheet, Act 6 intro + L36 (M10 part B)
   design/ui/briefing/concept/briefing-images-final-r44-a.png   review sheet, L21 (M7 part H)
   design/ui/briefing/concept/briefing-images-final-r51-a.png   review sheet, Act 4 intro + L22 (M8 part B)
   design/ui/briefing/concept/briefing-images-final-r52-a.png   review sheet, L23 (M8 part C)
@@ -360,7 +376,7 @@ SOURCE_M5G = artkit.source_note(SCRIPT, "M5 part G batch")
 SOURCE_M5H = artkit.source_note(SCRIPT, "M5 part H batch")
 SOURCE_M7B = artkit.source_note(SCRIPT, "M7 part B batch")
 SOURCE_M7C = artkit.source_note(SCRIPT, "M7 part C batch")
-ROUND = "r68"  # the open round; the sheet of an earlier batch: name its round (r13, r20, r21, r23, r25, r30, ..., r36)
+ROUND = "r74"  # the open round; the sheet of an earlier batch: name its round (r13, r20, r21, r23, r25, r30, ..., r36)
 OUT = ROOT / "assets" / "ui" / "briefing"
 CONCEPT = DESIGN / "ui" / "briefing" / "concept"
 W, H = 672, 240
@@ -7669,6 +7685,282 @@ def act5_outro_jupiter():
     return b
 
 
+
+# --------------------------------------------------------------------------- M10 part B: the Act 6 intro, Level 36
+
+SOURCE_M10B = artkit.source_note(SCRIPT, "M10 part B batch")
+JOV_HOLO = [(0.0, (14, 8, 6)), (0.3, (70, 40, 26)), (0.55, (150, 96, 60)), (0.8, (214, 176, 132)),
+            (1.0, (240, 222, 190))]                       # Jupiter's bands in true colour on the display
+
+
+def fleet_lights(b, pts, seed=7401):
+    """The fleet's running lights: white points with a soft halo, a few red and green."""
+    rng = np.random.default_rng(seed)
+    for k, (x, y) in enumerate(pts):
+        col = (255, 250, 236) if k % 4 else ((255, 80, 60) if rng.uniform() < 0.5 else (90, 255, 140))
+        b.glow(x, y, 1.1, col, 1.6)
+        b.glow(x, y, 3.0, (120, 150, 200), 0.25)
+
+
+def act6_jupiter():
+    """Act 6 intro p1: the Steadfast's bridge, Jupiter's storm bands filling the forward viewports, the fleet's
+    running lights strung along the terminator, Aegis Wing's Stormhawks on the carrier's rails below."""
+    b = Board()
+    b.base = b.base * 0.35
+    win = [(40, 14, 236, 150), (246, 8, 426, 156), (436, 14, 632, 150)]     # three viewports (x0, y0, x1, y1)
+    view = np.zeros((H, W, 3)) + np.array((2, 3, 8.0))
+    rng = np.random.default_rng(7411)
+    for _ in range(90):
+        view[rng.integers(0, 150), rng.integers(0, W)] += rng.uniform(40, 160)
+    cx, cy, r = 360, 520, 470
+    nx, ny = (b.xx - cx) / r, (b.yy - cy) / r
+    r2 = nx ** 2 + ny ** 2
+    nz = np.sqrt(np.clip(1 - r2, 0, 1))
+    lat = np.arcsin(np.clip(ny, -1, 1))
+    turb = raster.fbm(W, H, 24, 7412, octaves=4, period=False)
+    belts = np.sin(lat * 14.0 + 0.7 * turb) * 0.6 + np.sin(lat * 37.0 + 1.6 * turb + 0.4 * np.sin(nx * 7)) * 0.4
+    col = raster.ramp(JOV_HOLO, 0.5 + 0.35 * belts)
+    light = np.clip(-0.55 * nx - 0.35 * ny + 0.75 * nz, 0, 1)
+    body = col * (0.04 + 0.96 * np.clip(light * 1.3, 0, 1) ** 0.9)[..., None]
+    edge = np.clip((1 - np.sqrt(r2)) * r, 0, 1)[..., None]
+    view = view * (1 - edge) + body * edge
+    term = []
+    for a in np.linspace(-1.95, -1.15, 22):                     # the fleet along the terminator, above the limb
+        rr = r + 10 + 6 * np.sin(a * 17)
+        term.append((cx + np.cos(a) * rr * 1.0 + 40, cy + np.sin(a) * rr))
+    inside = np.zeros((H, W), bool)
+    for x0, y0, x1, y1 in win:
+        inside |= (b.xx >= x0) & (b.xx <= x1) & (b.yy >= y0) & (b.yy <= y1)
+    b.base = np.where(inside[..., None], view, b.base)
+    fleet_lights(b, [(x, y) for x, y in term if any(x0 < x < x1 and y0 < y < y1 for x0, y0, x1, y1 in win)])
+    for x0, y0, x1, y1 in win:
+        b.draw.rectangle([x0 - 3, y0 - 3, x1 + 3, y1 + 3], outline=(70, 78, 92, 255), width=4)
+    deck_top = 168
+    fill(b, [(0, deck_top), (W, deck_top), (W, H), (0, H)], (14, 16, 22))
+    fill(b, [(0, 160), (W, 160), (W, deck_top), (0, deck_top)], (40, 44, 54))
+    for k, x in enumerate((150, 270, 400, 520)):                 # the rails below, a Stormhawk on each
+        b.line([(x - 40, H), (x - 18, deck_top + 4)], (110, 120, 136), 1, 200)
+        b.line([(x + 40, H), (x + 18, deck_top + 4)], (110, 120, 136), 1, 200)
+        for f in np.linspace(0.1, 1.0, 6):
+            b.glow(x, deck_top + 4 + (H - deck_top) * f, 1.0, (90, 160, 220), 0.9)
+        spr = scaled_sprite("ship_2", 0.9)
+        b.sprite(spr, x, deck_top + 34)
+        tag(b, x - raster.text_width(("LANCER", "AEGIS TWO", "AEGIS 3", "AEGIS 4")[k]) / 2, deck_top + 56,
+            ("LANCER", "AEGIS TWO", "AEGIS 3", "AEGIS 4")[k], CYAN if k == 0 else (AMBER if k == 1 else GREY))
+    b.title("CDF STEADFAST - BRIDGE")
+    b.label(W - 10, 9, "THREE WEEKS OUT OF CERES", CYAN_DIM, right=True)
+    tag(b, 300, 120, "JUPITER", CYAN)
+    tag(b, 450, 26, "THE FLEET", WHITE)
+    return b
+
+
+def act6_the_plan():
+    """Act 6 intro p2: a CDF chart of the Jovian system: Aurelia's air-defence grid as gold rings over the bands,
+    the harvester lanes and Io's refinery lines in amber, Callisto behind the home fleet's screen, the wing's route
+    dotted from the bands to Callisto."""
+    b = Board()
+    jcx, jcy, jr = 150, 126, 96
+    jupiter_disc(b, jcx, jcy, jr, seed=7421, strength=0.85)
+    for rx, ry in ((60, 22), (76, 30)):                          # Aurelia's grid: gold rings over the bands
+        b.ring(jcx + 18, jcy - 30, rx, ry, colour=GOLD_A, alpha=200)
+    b.marker(jcx + 18, jcy - 30, "diamond", GOLD_A, 4)
+    tag(b, jcx - 30, jcy - 76, "AURELIA - AIR DEFENCE GRID", GOLD_A)
+    for k, yy in enumerate((jcy + 14, jcy + 40)):                # the harvester lanes along two bands
+        half = np.sqrt(max(0.0, jr ** 2 - (yy - jcy) ** 2)) - 8
+        b.dashed([(jcx - half, yy), (jcx + half, yy)], AMBER, 1, 4, 3)
+    tag(b, jcx - 80, jcy + 60, "HARVESTER LANES", AMBER)
+    iox, ioy = 362, 172                                           # Io and its refinery lines
+    b.glow(iox, ioy, 15, (120, 104, 40), 1.0)
+    b.ring(iox, ioy, 14, colour=AMBER, alpha=220)
+    for k in range(5):
+        a = -0.9 + k * 0.45
+        b.line([(iox + np.cos(a) * 6, ioy + np.sin(a) * 6), (iox + np.cos(a) * 13, ioy + np.sin(a) * 13)], AMBER, 1)
+    tag(b, iox - 40, ioy + 20, "IO - REFINERIES", AMBER)
+    clx, cly = 580, 92                                            # Callisto behind the home fleet's screen
+    nx, ny = (b.xx - clx) / 26, (b.yy - cly) / 26
+    r2 = nx ** 2 + ny ** 2
+    tex = raster.fbm(W, H, 4, 7422, octaves=3, period=False)
+    cal = np.array((60, 66, 80.0)) * (0.5 + 0.5 * tex)[..., None] * np.clip(0.6 - 0.5 * nx - 0.4 * ny, 0.15, 1)[..., None]
+    b.base = np.where((r2 < 1)[..., None], cal, b.base)
+    for a in np.linspace(2.2, 4.0, 9):                            # the home fleet's screen: gold chevrons
+        b.marker(clx + np.cos(a) * 58, cly + np.sin(a) * 46, "chevron", GOLD_A, 4)
+    tag(b, clx - 40, cly + 34, "CALLISTO", RED)
+    tag(b, clx - 120, cly - 70, "HOME FLEET SCREEN", GOLD_A)
+    route = [(jcx + 30, jcy - 6), (jcx + 18, jcy - 30), (250, 150), (iox, ioy), (470, 120), (clx - 30, cly + 4)]
+    b.dashed(route, CYAN, 2, 5, 4)
+    b.arrow(470, 120, clx - 30, cly + 4, CYAN, 6)
+    for (x, y), lab in zip(((jcx + 26, jcy - 36), (238, 156), (iox + 18, ioy - 22), (470, 102)),
+                           ("1 THE GRID", "2 THE STORM ROAD", "3 THE FUEL", "4 CALLISTO")):
+        tag(b, x, y, lab, CYAN)
+    b.title("CDF CHART - THE JOVIAN SYSTEM")
+    b.label(W - 10, 9, "CMDR. OKAFOR", CYAN_DIM, right=True)
+    b.label(10, H - 16, "BREAK THE GRID, TAKE THE STORM ROAD, BURN HIS FUEL. THEN CALLISTO.", AMBER)
+    return b
+
+
+def aurelia_skyline(b, x0, y0, x1, y1, colour, seed=7431):
+    """Aurelia's domes and balloons as silhouettes in one hue inside a window (the gilded city at a distance)."""
+    rng = np.random.default_rng(seed)
+    base_y = y1 - 26
+    fill(b, [(x0, base_y), (x1, base_y), (x1, y1), (x0, y1)], tuple(c * 0.45 for c in colour))
+    for k in range(7):
+        cx = x0 + 14 + k * (x1 - x0 - 28) / 6
+        r = rng.uniform(9, 17)
+        pts = [(cx + np.cos(a) * r, base_y - np.sin(a) * r * 0.9) for a in np.linspace(0, np.pi, 12)]
+        b.draw.polygon(pts, fill=tuple(int(c * 0.7) for c in colour) + (255,))
+        b.line([(cx, base_y - r * 0.9), (cx, base_y - r * 0.9 - 8)], tuple(int(c * 0.8) for c in colour), 1)
+    for k in range(3):                                            # balloons above, on their cables
+        bx, by = x0 + 30 + k * (x1 - x0 - 60) / 2, y0 + 22 + 10 * (k % 2)
+        b.draw.ellipse([bx - 13, by - 9, bx + 13, by + 9], fill=tuple(int(c * 0.6) for c in colour) + (255,))
+        b.line([(bx, by + 9), (bx, base_y - 20)], tuple(int(c * 0.5) for c in colour), 1)
+
+
+def act6_invitation():
+    """Act 6 intro p3 (intercepted): Vorne at a gilded window over Aurelia's domes and balloons, the Ascendancy crest
+    above, on the amber feed with its rolling interference bands."""
+    b = Board()
+    b.grid = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    t = np.clip(b.yy / H, 0, 1)
+    b.base = raster.ramp([(0.0, (20, 10, 2)), (0.5, (44, 24, 6)), (1.0, (16, 8, 2))], t)
+    wx0, wy0, wx1, wy1 = 300, 40, 620, 214                      # the gilded window behind him
+    sky = raster.ramp([(0.0, (120, 70, 20)), (0.7, (200, 130, 50)), (1.0, (236, 180, 90))],
+                      np.clip((b.yy - wy0) / (wy1 - wy0), 0, 1))
+    inside = (b.xx > wx0) & (b.xx < wx1) & (b.yy > wy0) & (b.yy < wy1)
+    b.base = np.where(inside[..., None], sky, b.base)
+    aurelia_skyline(b, wx0, wy0, wx1, wy1, (150, 92, 30))
+    b.draw.rectangle([wx0 - 4, wy0 - 4, wx1 + 4, wy1 + 4], outline=GOLD_A + (255,), width=4)
+    b.line([((wx0 + wx1) / 2, wy0), ((wx0 + wx1) / 2, wy1)], GOLD_A, 3)
+    b.line([(wx0, (wy0 + wy1) / 2 - 20), (wx1, (wy0 + wy1) / 2 - 20)], GOLD_A, 2)
+    b.sprites.append((ascendancy_crest(44, (232, 176, 64), (26, 14, 4)), int((wx0 + wx1) / 2 - 22), 0))
+    vorne = Image.open(SPRITES / "portraits" / "briefing-vorne-neutral.png").convert("RGBA")
+    bust = vorne.crop((18, 12, 126, 144))
+    a = np.array(bust).astype(np.float64)
+    a[..., 3] = np.where(a[..., :3].mean(-1) > 30, 255, 0)
+    a[..., :3] = a[..., :3] * np.array((1.0, 0.9, 0.7))
+    b.sprites.append((held_frame_img(Image.fromarray(a.astype(np.uint8)), 32), 176, 104))
+    for y0 in (52, 136, 200):                                     # the rolling interference bands
+        band = np.exp(-((b.yy - y0) / 5) ** 2)
+        b.base = b.base + band[..., None] * np.array((60, 40, 10.0))
+    rng = np.random.default_rng(7432)
+    b.base = b.base + rng.normal(0, 5, b.base.shape)
+    b.draw.rectangle([2, 2, W - 3, H - 3], outline=AMBER_E + (255,), width=2)
+    b.label(10, 9, "INTERCEPTED - ALL CHANNELS", AMBER_E)
+    b.label(W - 10, 9, "JOVIAN ASCENDANCY", AMBER_E, right=True)
+    b.label(W - 10, H - 16, "CHAIRMAN S. VORNE - AURELIA", (255, 214, 140), right=True)
+    b.label(10, H - 16, "WELCOME TO JUPITER", (200, 140, 60))
+    return b
+
+
+def act6_every_channel():
+    """Act 6 intro p4: Okafor at the Steadfast's comms board with every band lit; through the window behind her the
+    first Stormhawks drop toward the cloud tops."""
+    b = Board()
+    b.base = b.base * 0.4
+    wx0, wy0, wx1, wy1 = 330, 20, 650, 150                      # the window: the cloud tops far below
+    t = np.clip((b.yy - wy0) / (wy1 - wy0), 0, 1)
+    tops = raster.ramp(JOV_HOLO, np.clip(0.55 + 0.3 * np.sin(b.yy / 9 + raster.fbm(W, H, 30, 7441, octaves=3, period=False) * 3)
+                                         * (0.4 + 0.6 * t), 0, 1)) * (0.75 + 0.25 * t[..., None])
+    inside = (b.xx > wx0) & (b.xx < wx1) & (b.yy > wy0) & (b.yy < wy1)
+    b.base = np.where(inside[..., None], tops, b.base)
+    for k, (x, y) in enumerate(((420, 60), (470, 86), (540, 70))):
+        for j in range(1, 14):                                     # their streaks, back up the window
+            b.glow(x - j * 1.5, y - j * 3.2, 1.0 + j * 0.1, (150, 200, 255), 0.5 * (1 - j / 14))
+        spr = held_frame("fleet-stormhawk_0", 0.55, 24)
+        b.sprite(spr, x, y)
+    b.draw.rectangle([wx0 - 3, wy0 - 3, wx1 + 3, wy1 + 3], outline=(70, 78, 92, 255), width=4)
+    fill(b, [(0, 168), (W, 168), (W, H), (0, H)], (12, 14, 22))   # the comms board, every band lit
+    rng = np.random.default_rng(7442)
+    for row in range(4):
+        for col in range(30):
+            x, y = 16 + col * 21.5, 178 + row * 14
+            c = CYAN if (row + col) % 5 else AMBER
+            b.draw.rectangle([x, y, x + 15, y + 8], fill=tuple(int(v * rng.uniform(0.55, 1.0)) for v in c) + (255,))
+    oka = Image.open(SPRITES / "portraits" / "briefing-okafor-fierce.png").convert("RGBA")
+    bust = oka.crop((10, 6, 134, 144)).resize((124, 138), Image.NEAREST)
+    a = np.array(bust).astype(np.float64)
+    a[..., 3] = np.where(a[..., :3].mean(-1) > 24, 255, 0)
+    b.sprites.append((held_frame_img(Image.fromarray(a.astype(np.uint8)), 32), 140, 30))
+    b.title("CDF STEADFAST - COMMS")
+    b.label(W - 10, H - 16 - 64, "ALL CHANNELS OPEN", AMBER, right=True)
+    tag(b, wx0 + 6, wy1 - 16, "AEGIS - DIVING", CYAN)
+    b.label(10, H - 16 - 64, "AEGIS ACTUAL", CYAN_DIM)
+    return b
+
+
+def level_36_the_dive():
+    """L36 p1: a CDF chart of Jupiter's upper bands in section from orbit: the dive corridor as a dotted descent line
+    through three cloud decks, the harvesters' lanes along one band in amber, the carrier group at the top, Aurelia
+    marked far below."""
+    b = Board()
+    decks = [(78, "DECK 1 - HIGH HAZE"), (130, "DECK 2 - THE BANDS"), (182, "DECK 3 - HARVESTER BAND")]
+    for k, (y, lab) in enumerate(decks):                          # three cloud decks as holo layers in section
+        wave = y + 4 * np.sin(b.xx / 37 + k) + 3 * raster.fbm(W, H, 20, 7451 + k, octaves=3, period=False)
+        layer = np.exp(-((b.yy - wave) / (7 + 2 * k)) ** 2)
+        b.base = b.base + layer[..., None] * np.array(raster.ramp(JOV_HOLO, np.array([0.55 + 0.12 * k]))[0]) * 0.55
+        tag(b, W - 12 - raster.text_width(lab), y - 22, lab, GREY if k < 2 else AMBER)
+    b.line([(0, 30), (W, 30)], CYAN_DIM, 1, 120)
+    tag(b, 12, 34, "ORBIT", CYAN_DIM)
+    b.marker(80, 24, "square", GREEN, 5)                           # the carrier group at the top
+    b.marker(64, 22, "square", GREEN, 3)
+    b.marker(96, 22, "square", GREEN, 3)
+    tag(b, 106, 18, "STEADFAST GROUP", GREEN)
+    dive = [(84, 32), (150, 70), (230, 112), (330, 150), (430, 176), (540, 196)]
+    b.dashed(dive, CYAN, 2, 4, 4)
+    b.arrow(430, 176, 540, 196, CYAN, 6)
+    tag(b, 160, 60, "DIVE CORRIDOR", CYAN)
+    b.dashed([(40, 190), (360, 190)], AMBER, 1, 6, 3)              # the harvester lane along deck 3
+    for x in range(60, 360, 40):
+        b.marker(x, 190, "diamond", AMBER, 3)
+    tag(b, 40, 198, "HARVESTER LANE - 8 SCOOPS", AMBER)
+    b.ring(600, 226, 22, 8, colour=GOLD_A, alpha=210)              # Aurelia, far below
+    b.marker(600, 226, "diamond", GOLD_A, 3)
+    tag(b, 520, 210, "AURELIA - BELOW", GOLD_A)
+    b.title("CDF CHART - JUPITER, UPPER BANDS")
+    b.label(W - 10, 9, "CMDR. OKAFOR", CYAN_DIM, right=True)
+    b.label(10, H - 16, "NO GROUND: BOMBS IDLE", RED)
+    return b
+
+
+def level_36_chimera():
+    """L36 p2: Varga's scan of a Chimera: the Talon airframe in grey outline with the tissue seams glowing teal, an HP
+    readout climbing back with a teal edge, a time stamp "1.0 S"."""
+    b = Board()
+    b.title("CDF SCAN - CHIMERA")
+    b.label(W - 10, 9, "DR. VARGA", CYAN_DIM, right=True)
+    tx, ty = 150, 124
+    body = held_frame("chimera_8", 3.0, 32)
+    b.sprite(holo(body, (150, 160, 170), 12), tx, ty)
+    seams = held_asset("chimera-seams_8")
+    seams = seams.resize((seams.width * 3, seams.height * 3), Image.BOX)
+    a = np.array(seams).astype(np.float64)
+    light_at(b, a[..., :3] * 1.2, tx, ty)
+    b.ring(tx, ty, 84, colour=CYAN_DIM, alpha=160)
+    tag(b, 16, 30, "TALON AIRFRAME", GREY)
+    tag(b, 16, 42, "VRELL TISSUE IN THE SEAMS", (0, 255, 154))
+    gx0, gy0, gx1, gy1 = 320, 52, 650, 176                         # the HP readout: hits, the 1.0 s wait, the regrowth
+    fill(b, [(gx0, gy0), (gx1, gy0), (gx1, gy1), (gx0, gy1)], (6, 14, 24), 1.0)
+    b.draw.rectangle([gx0, gy0, gx1, gy1], outline=CYAN_DIM + (220,))
+    pts, tsec = [], np.linspace(0, 6, 121)
+    hp, last = 1.0, -9.0
+    for t in tsec:
+        if t in (tsec[10], tsec[16], tsec[22]) or 1.0 < t < 1.25:
+            hp, last = max(0.25, hp - 0.12), t
+        elif t - last > 1.0 and hp < 1:
+            hp = min(1.0, hp + 0.2 * (tsec[1] - tsec[0]))
+        pts.append((gx0 + 6 + (gx1 - gx0 - 12) * t / 6, gy1 - 8 - (gy1 - gy0 - 20) * hp))
+    hit_end = next(i for i, (x, y) in enumerate(pts) if i > 25 and pts[i][1] < pts[i - 1][1])
+    b.line(pts[:hit_end], RED, 2)
+    b.line(pts[hit_end - 1:], (0, 255, 154), 2)
+    x_wait0 = pts[hit_end - 21][0]
+    x_wait1 = pts[hit_end - 1][0]
+    b.line([(x_wait0, gy1 - 4), (x_wait0, gy0 + 4)], AMBER, 1, 140)
+    b.line([(x_wait1, gy1 - 4), (x_wait1, gy0 + 4)], AMBER, 1, 140)
+    tag(b, (x_wait0 + x_wait1) / 2 - raster.text_width("1.0 S") / 2, gy0 + 6, "1.0 S", AMBER)
+    tag(b, gx0 + 6, gy1 + 6, "HP: HITS, THEN NO HIT FOR 1.0 S, THEN +20 %/S", CYAN)
+    tag(b, gx1 - 80, gy0 - 14, "REGROWING", (0, 255, 154))
+    b.label(16, H - 16, "HOLD THE BEAM. FINISH WHAT YOU START.", AMBER)
+    return b
+
 IMAGES = {
     "act-1-tether-gate": tether_gate,
     "act-1-outer-stations": outer_stations,
@@ -7773,6 +8065,12 @@ IMAGES = {
     "act-5-outro-face": act5_outro_face,
     "act-5-outro-ember": act5_outro_ember,
     "act-5-outro-jupiter": act5_outro_jupiter,
+    "act-6-jupiter": act6_jupiter,
+    "act-6-the-plan": act6_the_plan,
+    "act-6-invitation": act6_invitation,
+    "act-6-every-channel": act6_every_channel,
+    "level-36-the-dive": level_36_the_dive,
+    "level-36-chimera": level_36_chimera,
 }
 
 # Review sheets per batch: round, the images on it, the batch name.
@@ -7810,6 +8108,7 @@ BATCHES = {
     "r66": (list(IMAGES)[93:95], "M9 PART F"),
     "r67": (list(IMAGES)[95:97], "M9 PART G"),
     "r68": (list(IMAGES)[97:103], "M9 PART H"),
+    "r74": (list(IMAGES)[103:109], "M10 PART B"),
 }
 
 
@@ -7843,6 +8142,7 @@ def build(names):
                   else SOURCE_M9F if name in BATCHES["r66"][0]
                   else SOURCE_M9G if name in BATCHES["r67"][0]
                   else SOURCE_M9H if name in BATCHES["r68"][0]
+                  else SOURCE_M10B if name in BATCHES["r74"][0]
                   else SOURCE_M4)
         artkit.save_png(IMAGES[name]().image(), OUT / f"{name}.png", source)
     print(f"{len(names)} briefing images in {OUT.relative_to(ROOT)}")

@@ -78,12 +78,16 @@ rates are first values: the build tunes them per level with `levelReport`.
 
 ## Concept art
 
-Round 72's proposals (step ART-R-A, picked 2026-10-31; generator `tools/concept/enemies_r72.py chimera`). Each sheet holds the source render, the sprites at play size with their states, the readability check over Level 36's brightest and darkest band beside the player with the measured gold and teal shares, and key frames; each GIF is the 480×540 play field. Prompts: [concept/prompts.md](concept/prompts.md).
+Round 72's proposals (step ART-R-A, picked 2026-10-31; generator `tools/concept/enemies_r72.py chimera`); round 74's
+production frames (step ART-B, pending the user's review: the seams as one additive layer the game draws at the state's
+strength, the pulse as a second while it heals). Each sheet holds the source render, the sprites at play size with their states, the readability check over Level 36's brightest and darkest band beside the player with the measured gold and teal shares, and key frames; each GIF is the 480×540 play field. Prompts: [concept/prompts.md](concept/prompts.md).
 
 | File | What | Status |
 |---|---|---|
 | [concept/chimera-r72-b.png](concept/chimera-r72-b.png) | Chimera b, "overgrown": the seams twice as wide and veined, tissue nodules at the wing roots, the spine and the wing panels; the same states | chosen (round 72 A.1 b) |
 | [concept/chimera-r72-b.gif](concept/chimera-r72-b.gif) | The same scene as a | chosen (round 72 A.1 b) |
+| [concept/chimera-final-r74-a.png](concept/chimera-final-r74-a.png) | Final frames (M10 part B, `tools/art/jovian_units.py chimera`; held in `build/art-held/sprites/` until its data.yaml): the 16 headings at 2× with the seams at full health, the seams by state (just hit 0.13, full 0.45, healing 50 % and 95 %) and the healing pulse's six frames, beside the Act 5 Talon, the death's flecks over the small explosion; teal 6 % at full health, 13 % healing near full (sheet) | proposed (round 74) |
+| [concept/chimera-final-r74-a.gif](concept/chimera-final-r74-a.gif) | A V of five swooping over Level 36's bands: one hit and healing with the pulse, one held under fire until it dies | proposed (round 74) |
 
 Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 

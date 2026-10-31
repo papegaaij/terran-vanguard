@@ -1,0 +1,86 @@
+backdrop:
+  # Presentation only: Level 36's dive over Jupiter's bands (tools/art/backdrop_l36.py, step ART-B, from the README's Layout table (no data.yaml yet: re-run after B2)).
+  # No ground (`ground: none`): the deep layer is the base. Its four tile sets are cut from one continuous
+  # field at the rows each section's tiles begin (LevelData.seam): re-run the generator after moving a
+  # section. Animated: carrier-group-glow (section 1) and storm-wall-glow (section 4), never together.
+  # The -glow pieces are additive at their piece's placements (Level 24's ground rule; B4: on deep too).
+  scroll_factors: {deep: 0.15, far: 0.5, ground: 1, low-air: 1.3, high-air: 1.7}   # far, ground unused
+  ramp: 2
+  haze_colour: ece0cc
+  atmosphere:
+    clear: {haze: 0.0}   # the haze is in the tiles
+  tile_sets:
+    dive-bands: {layer: deep, height: 1344}   # section 1: the limb, the bands far below
+    cream-bands: {layer: deep, height: 1024}   # section 2: cream and ochre bands
+    rust-band: {layer: deep, height: 992}   # section 3: the broad rust band
+    storm-edge: {layer: deep, height: 1440}   # section 4: browning to grey, then paler
+    cloud-tops: {layer: low-air, height: 960}   # section 1: cream tops rushing past
+    cloud-wisps: {layer: low-air, height: 960}   # sections 2-4: cream wisps
+    ice-haze: {layer: high-air, height: 960}   # section 1: faint ice streaks
+  pieces:
+    carrier-group: {layer: deep, size: [128, 160]}
+    carrier-group-glow: {layer: deep, size: [128, 160], frames: 8, fps: 4}
+    storm-wall: {layer: deep, size: [320, 480]}
+    storm-wall-glow: {layer: deep, size: [320, 480], frames: 12, fps: 6}
+    bank-a: {layer: high-air, size: [142, 86]}
+    bank-b: {layer: high-air, size: [194, 86]}
+    bank-c: {layer: high-air, size: [224, 122]}
+    bank-d: {layer: high-air, size: [268, 130]}
+    bank-e: {layer: high-air, size: [300, 160]}
+    bank-f: {layer: high-air, size: [320, 162]}
+  placed:
+    # the CDF carrier group far below (section 1)
+    - {piece: carrier-group, t: 11.0, x: 300}
+    # the storm wall far ahead on the right, its top entering at t~126; storm-wall-glow (lightning inside) is drawn at this place
+    - {piece: storm-wall, t: 153.031, x: 380}
+  banks:
+    # The foreground banks (A2b's {t, x, w, h, skip}; `piece` names the image whose size is the rectangle:
+    # B2 adds the key to the schema or draws the bank-* piece of that size). Measured here as
+    # JovianHazardChecks samples them: at most 27.4 % of the field under banks at t=74.70 (easy 21.7 % at t=86.00),
+    # the longest stay over the ship's band 1.80 s; never on the screen t=31-42 (the Chimera pair).
+    - {t: 28.6, x: 360, w: 142, h: 86, piece: bank-a}
+    - {t: 46.3, x: 150, w: 194, h: 86, piece: bank-b}
+    - {t: 51.8, x: 370, w: 142, h: 86, piece: bank-a}
+    - {t: 56.6, x: 120, w: 224, h: 122, piece: bank-c}
+    - {t: 61.6, x: 350, w: 194, h: 86, piece: bank-b}
+    - {t: 66.2, x: 150, w: 224, h: 122, piece: bank-c}
+    - {t: 70.6, x: 360, w: 224, h: 122, piece: bank-c}
+    - {t: 73.6, x: 130, w: 300, h: 160, piece: bank-e, skip: [easy]}
+    - {t: 76.0, x: 360, w: 224, h: 122, piece: bank-c}
+    - {t: 79.0, x: 140, w: 268, h: 130, piece: bank-d}
+    - {t: 81.6, x: 340, w: 300, h: 160, piece: bank-e, skip: [easy]}
+    - {t: 84.6, x: 140, w: 224, h: 122, piece: bank-c}
+    - {t: 87.2, x: 350, w: 268, h: 130, piece: bank-d}
+    - {t: 90.2, x: 130, w: 300, h: 160, piece: bank-e, skip: [easy]}
+    - {t: 93.0, x: 350, w: 224, h: 122, piece: bank-c}
+    - {t: 95.8, x: 140, w: 268, h: 130, piece: bank-d}
+    - {t: 98.6, x: 360, w: 300, h: 160, piece: bank-e, skip: [easy]}
+    - {t: 101.6, x: 130, w: 224, h: 122, piece: bank-c}
+    - {t: 104.6, x: 260, w: 300, h: 160, piece: bank-e}
+    - {t: 107.8, x: 120, w: 224, h: 122, piece: bank-c, skip: [easy]}
+    - {t: 110.4, x: 350, w: 268, h: 130, piece: bank-d}
+    - {t: 113.4, x: 130, w: 300, h: 160, piece: bank-e, skip: [easy]}
+    - {t: 116.2, x: 360, w: 224, h: 122, piece: bank-c}
+    - {t: 121.6, x: 240, w: 320, h: 162, piece: bank-f}
+    - {t: 128.4, x: 120, w: 224, h: 122, piece: bank-c}
+    - {t: 134.0, x: 360, w: 194, h: 86, piece: bank-b}
+    - {t: 141.0, x: 140, w: 224, h: 122, piece: bank-c}
+    - {t: 148.6, x: 390, w: 268, h: 130, piece: bank-d}
+    - {t: 157.0, x: 130, w: 194, h: 86, piece: bank-b}
+    - {t: 165.0, x: 350, w: 142, h: 86, piece: bank-a}
+    - {t: 174.0, x: 150, w: 142, h: 86, piece: bank-a}
+sections:   # ART-B's reading of the README's Layout (speeds, 2 s eases); B2 writes the real ones
+  - {name: The Dive, end: 24, speed: 160, atmosphere: clear, tiles: ['dive-bands', 'cloud-tops', 'ice-haze']}
+  - {name: Into the Bands, end: 70, speed: 120, ramp: 2, atmosphere: clear, tiles: ['cream-bands', 'cloud-wisps']}
+  - {name: Harvester Fields, end: 125, speed: 100, ramp: 2, atmosphere: clear, tiles: ['rust-band', 'cloud-wisps']}
+  - {name: Storm Edge, end: 192, speed: 120, ramp: 2, atmosphere: clear, tiles: ['storm-edge', 'cloud-wisps']}
+# rows: the end's bottom edge 22940 (ground px); deep 3441, high-air 38998
+debris:
+  # Proposal (ART-B): the pathfinder pod (the secret), a small breakable on the play plane like a small rock
+  # (20 HP); `secret: true` (B1's flag) frees the hidden crate on its break. Sprites debris-pathfinder-pod_0..15
+  # (32x32, its slow tumble) and debris-pathfinder-pod-break_0..7 (tools/art/jovian_units.py). It enters the
+  # top at t=146 and drifts down under bank-d (t 148.6, x 390): under the bank about t=147.2-148.8.
+  chunks:
+    pathfinder-pod: {size: [28, 28], hp: 20}
+  placed:
+    - {t: 146, x: 400, chunk: pathfinder-pod, drift: [-6, -90], secret: true}
