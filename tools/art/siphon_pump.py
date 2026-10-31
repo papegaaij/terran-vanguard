@@ -123,7 +123,7 @@ def glow_frame(hi, factor, swell):
     halo = np.asarray(img.filter(ImageFilter.GaussianBlur(3.0)), float) / 255
     core = np.asarray(img.filter(ImageFilter.GaussianBlur(0.6)), float) / 255
     k = np.clip(core * 0.8 + halo * 1.6, 0, 1) * (0.55 + 0.45 * swell)
-    q = artkit.ordered_dither(k, 7)
+    q = artkit.smooth_steps(k)
     rgb = TEAL[None, None] * q[..., None] + 120 * np.clip(core - 0.6, 0, 1)[..., None]
     return artkit.additive(Image.fromarray(np.dstack([np.clip(rgb, 0, 255), np.full(k.shape, 255.0)]).astype(np.uint8)))
 
@@ -191,7 +191,7 @@ def break_frame(i):
     alpha = field * (1 - u ** 1.3) * 0.95
     shade = 0.75 + 0.25 * np.clip((c - xx + c - yy) / w, -1, 1)
     rgb = SAP[None, None] * shade[..., None] * (1 - 0.35 * u) + 30 * np.clip(field - 0.8, 0, 1)[..., None]
-    q = artkit.ordered_dither(np.clip(alpha, 0, 1), 4)
+    q = artkit.smooth_steps(alpha)
     out = np.dstack([np.clip(rgb, 0, 255), q * 255]).astype(np.uint8)
     for k in range(6):                                            # chitin chips
         a = k * TAU / 6 + 0.4

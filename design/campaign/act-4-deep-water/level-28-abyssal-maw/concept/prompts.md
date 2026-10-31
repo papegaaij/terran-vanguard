@@ -54,3 +54,12 @@ ice: four slabs of the shattered ceiling, each tumbling over in 8 frames (the li
 `ice-slab`, 96x96), and the ceiling's burst (`ice-shatter`, 320x320 additive: a flash, a ring of light running out
 along radial cracks, fading). The GIF stands on Level 28's backdrop: *Pelagic-3* shot open and her crate rising, the
 buoy releasing its patch at t=88, the breakout at t=115 (the burst, the slabs flying out, the night ice).
+
+## vent-glow-capture-r71-a
+
+Game capture of the vent's glow after step DITH7 (2026-10-30; the user: the glow round the vent dithered), a 300×300
+crop at 1:1 of a 960×540 frame, not edited otherwise: the game built by `:desktop:installDist` from branch `m9-act-5`
+(the working tree after DITH7) on a private Xvfb display: `--bench 600 --settings <scratch>/settings.properties
+--level 28 --invulnerable --shots 6900` (`controls.auto-fire=true`, medium, the debug start's fit, the ship unsteered),
+cropped to x 330–630, y 228–528: the halted arena at t=115 with the throat's bright disc and the caldera's glow
+(`caldera-glow`, `python3 tools/art/backdrop_l28.py vent-glow`), the Maw's coil framing the arena's edges.

@@ -3,7 +3,7 @@ title: Art direction
 design: approved
 implementation: n/a
 art: chosen
-updated: 2026-10-29
+updated: 2026-10-31
 ---
 
 # Art direction
@@ -563,3 +563,4 @@ Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-a
   unit sheets and its build to M9 part A, which ticks the item.
 - 2026-10-27 (user, [round 60](../concept-rounds/round-60/README.md) closed): the homing diamond is **variant a** (A.16 a; b rejected); the Ascendancy's Act 5 look is gunmetal/charcoal with gold (Q11 **b**, see the [enemies](../enemies/README.md#factions-and-visual-language) rule); the belt's backdrops are the lighter grade (A.18 a); the Iron Sovereign's atlas is top-lit (A.23).
 - 2026-10-28 (user, [round 61](../concept-rounds/round-61/README.md), closed): **F.3 a**, the vacuum burst "flash and ring" (b, the fireball, rejected); **C.7** accepted (only medium and large units leave a wreck in vacuum).
+- 2026-10-30, the user: dither audit, ≥ 25 % smoothed (step DITH8): the underwater burst's cavity (`explosion-deep-cavity-*`) in smooth steps, not the 4×4 Bayer checker ([audit](production/README.md#dither-audit-2026-10-30)).

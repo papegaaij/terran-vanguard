@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../../enemies/naval/siren, ../../../enemies/naval/spiral-nautilus, ../../../enemies/naval/barbfin, ../../../enemies/naval/glassfin, ../../../enemies/naval/reef-spitter, ../../../world/europa, ../../../player/wingmen, ../../../player/systems, ../../../story/twist]
-updated: 2026-10-27
+updated: 2026-10-31
 ---
 
 # Level 25 – Siren Trench
@@ -551,3 +551,4 @@ row's text.
   as final: the trench's dark ambient, the headlights lighting the world, the rim on the rock's edges, the fork's rounded
   pillar (`backdrop-final-r55-a` and the r55 captures); round 54's backdrop sheet and captures moved to
   `concept/rejected/`. Every asset of the level is final.
+- 2026-10-30, the user: dither audit, ≥ 25 % smoothed (step DITH8): `relay-beacon-glow`, `survey-sub-glow`, `survey-buoy-glow` in smooth steps, not the 4×4 Bayer checker ([audit](../../../art-direction/production/README.md#dither-audit-2026-10-30)).

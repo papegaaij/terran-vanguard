@@ -144,7 +144,7 @@ def glow(i):
     r = np.hypot(xx - lx, yy - ly)
     on = [1.0, 0.85, 0.15, 0.0][i] if i < 4 else [0.3, 0.0, 0.0, 0.2][i - 4]
     f = (np.exp(-(r / 1.5) ** 2) + np.exp(-(r / 5.5) ** 2) * 0.45 + np.exp(-(r / 12.0) ** 2) * 0.15) * on
-    rgb = AMBER[None, None] * artkit.ordered_dither(np.clip(f, 0, 1), 8)[..., None]
+    rgb = AMBER[None, None] * artkit.smooth_steps(f)[..., None]
     if i >= 4:                                         # the resin's teal veins glinting through the cracks, sparks
         rng = np.random.default_rng(2790 + i)
         mx, my = hold_px()
@@ -152,7 +152,7 @@ def glow(i):
         for _ in range(int(rng.integers(3, 6))):
             sx, sy = mx + rng.normal(0, 4), my + rng.normal(0, 3)
             s += np.exp(-((xx - sx) ** 2 + (yy - sy) ** 2) / 1.2) * rng.uniform(0.5, 1.0)
-        rgb = rgb + TEAL[None, None] * artkit.ordered_dither(np.clip(s, 0, 1), 6)[..., None] * 0.8
+        rgb = rgb + TEAL[None, None] * artkit.smooth_steps(s)[..., None] * 0.8
     return artkit.additive(Image.fromarray(np.dstack([np.clip(rgb, 0, 255), np.full((h, w), 255.0)]).astype(np.uint8)))
 
 
@@ -198,7 +198,7 @@ def mouth(step):
 
 
 def _light(w, f, col):
-    q = artkit.ordered_dither(np.clip(f, 0, 1), 8)
+    q = artkit.smooth_steps(f)
     rgb = np.asarray(col, float)[None, None] * q[..., None]
     return artkit.additive(Image.fromarray(np.dstack([np.clip(rgb, 0, 255), np.full((w, w), 255.0)]).astype(np.uint8)))
 
@@ -213,7 +213,7 @@ def tell_glow(step):
 
 def _puff(w, dens, rgb):
     rgb = np.broadcast_to(np.asarray(rgb, float), (w, w, 3))
-    alpha = artkit.ordered_dither(np.clip(dens, 0, 1), 4)
+    alpha = artkit.smooth_steps(dens)
     out = np.dstack([np.clip(rgb, 0, 255), alpha * 255]).astype(np.uint8)
     out[alpha == 0] = 0
     return Image.fromarray(out, "RGBA")
@@ -277,7 +277,7 @@ def heat(i, n=16):
         ph = ((u * 2.6 + k / 3) % 1.0)
         crest = np.maximum(crest, np.exp(-((r - (6 + 30 * ph)) / 1.2) ** 2) * (1 - ph) * 0.45)
     f = np.clip((core + crest) * env, 0, 1)
-    q = artkit.ordered_dither(f, 8)
+    q = artkit.smooth_steps(f)
     rgb = AMBER[None, None] * q[..., None] + (HOT - AMBER)[None, None] * np.clip(core * env - 0.55, 0, 1)[..., None] * 2
     return artkit.additive(Image.fromarray(np.dstack([np.clip(rgb, 0, 255), np.full((w, w), 255.0)]).astype(np.uint8)))
 

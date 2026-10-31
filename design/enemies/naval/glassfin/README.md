@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy]
-updated: 2026-10-22
+updated: 2026-10-31
 ---
 
 # Glassfin
@@ -86,3 +86,4 @@ Concept round 48 proposals (a/b, decided in round 48 (2026-10-22)): a tiny schoo
   darkness, part F). The sounds: step AUD-C's `glassfin-shatter` a/b over the under-water `tiny` rung, the a files in the
   game until round 52's picks. Captured in Level 23 (`glassfin-capture-r52-a`).
 - 2026-10-22 (user, round 52, closed): the final frames accepted (F.3, `art: final`); the shatter **b** picked (in the game since step D4); C.3 (straight columns) and C.5 (the dive 0.5 s after the glint ends, the ram shares) accepted.
+- 2026-10-30, the user: dither audit, ≥ 25 % smoothed (step DITH8): `glassfin-glint`, `glassfin-death` in smooth steps, not the 4×4 Bayer checker ([audit](../../../art-direction/production/README.md#dither-audit-2026-10-30)).

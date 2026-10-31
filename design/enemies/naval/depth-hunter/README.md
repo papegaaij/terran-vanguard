@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy]
-updated: 2026-10-25
+updated: 2026-10-31
 ---
 
 # Depth Hunter
@@ -100,3 +100,4 @@ its wake and launch, the hull break and oil bloom; no longer the walker missile)
 - 2026-10-25 (user, [round 57](../../../concept-rounds/round-57/README.md) closed): the final frames (F.2) accepted as final; the part is `art: final`. Its sounds: the
   torpedo launch **a**, the run **b**, the impact **b** and the hull break **a** (the b picks go into the game in step H5);
   C.4 (the columns' places and counts) accepted, and so is the Hunter's rise without a sound of its own (C.7).
+- 2026-10-30, the user: dither audit, ≥ 25 % smoothed (step DITH8): `depth-hunter-wake`, `-launch`, `-break`, `-oil` in smooth steps, not the 4×4 Bayer checker ([audit](../../../art-direction/production/README.md#dither-audit-2026-10-30)).

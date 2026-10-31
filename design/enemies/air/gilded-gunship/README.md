@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../player/specials, ../../../story/factions/jovian-ascendancy, ../../../campaign/act-5-the-belt]
-updated: 2026-10-30
+updated: 2026-10-31
 ---
 
 # Gilded Gunship
@@ -118,3 +118,4 @@ Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's r
   its 45 px/s descent: one hull on the other for the whole 13 s crossing. The simulation now flies a front column's
   `interval` (the stat block's 2 s: 90 px apart, the hit boxes 14 px clear; only Act 5's Gunship columns set one, so
   Acts 1–4 fly as before). Checked by `HullStackingTest` (no two `medium`-and-up air hulls overlap over 0.2 s, Act 5).
+- 2026-10-30, the user: dither audit, ≥ 25 % smoothed (step DITH8): `gilded-gunship-engines`, `-plate-spark`, `-bay-flash` in smooth steps, not the 4×4 Bayer checker ([audit](../../../art-direction/production/README.md#dither-audit-2026-10-30)).

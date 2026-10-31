@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy]
-updated: 2026-10-23
+updated: 2026-10-31
 ---
 
 # Abyss Ray
@@ -102,3 +102,4 @@ The production frames (round 48's b, the bone skate; `tools/art/abyss_ray.py`, s
   beat is faint at play size, the body reads dark under the reef field's 0.32 grade, and a Ray rising mid-lane glides
   off the right edge before it sinks (a call in round 53).
 - 2026-10-23 (user, round 53, closed): the final frames accepted (F.2; the part is `art: final`); the rise **b**, glide **a**, fan **b** and death **a** sounds picked; C.4 (the glide off the edge) and C.5 (the fans only on the field) accepted.
+- 2026-10-30, the user: dither audit, ≥ 25 % smoothed (step DITH8): `abyss-ray-bloom`, `-mouth`, `-shadow` in smooth steps, not the 4×4 Bayer checker ([audit](../../../art-direction/production/README.md#dither-audit-2026-10-30)).

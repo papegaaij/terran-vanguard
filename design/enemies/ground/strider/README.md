@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../player/specials, ../../bosses/revenant-walker]
-updated: 2026-10-29
+updated: 2026-10-31
 ---
 
 # Strider
@@ -145,3 +145,4 @@ Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's r
   L32's reference DPS, above the large class's 1–3 s (BalanceTest lists it as pending, round 65); a leg (0.6 s) topples
   it.
 - 2026-10-29 (user, [round 65](../../../concept-rounds/round-65/README.md), closed): **F.4** ok (the production sprites and captures final, `art: final`); **S.5 a** (`strider-step`), **S.6 a** (`strider-servo`), **S.7 b** (`strider-cannon`, the boomier howitzer 'BOOM-BOOM'; step G4 switches it in), **S.8 a** (`strider-snap`), **S.9 a** (`strider-fall`); **C.4** accepted as built (the 0.7 s earlier entry, no damage while toppling, the explosion on landing).
+- 2026-10-30, the user: dither audit, ≥ 25 % smoothed (step DITH8): `strider-knee` (its spark, the shared glint helper) in smooth steps, not the 4×4 Bayer checker ([audit](../../../art-direction/production/README.md#dither-audit-2026-10-30)).

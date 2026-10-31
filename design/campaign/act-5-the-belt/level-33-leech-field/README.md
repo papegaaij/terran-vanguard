@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../../enemies/space/void-leech, ../../../enemies/ground/rail-bunker, ../../../enemies/air/talon, ../../../enemies/space/asteroid-mite, ../../../player/generator, ../../../world/belt, ../../../player/wingmen, ../../../story/characters/the-choir, ../../../systems/economy]
-updated: 2026-10-30
+updated: 2026-10-31
 ---
 
 # Level 33 – Leech Field
@@ -557,3 +557,4 @@ Approved in round 60 (the gap analysis's questions this level follows):
   Talons 172.5 → 167 and the Talon pair 175.5 → 169.5 (the user: "the level ends a bit abruptly"); the end calm
   (easy/medium/hard, the autopilot with the plan's fit) 0.7/0.2/0.0 s → 6.7/5.2/5.0 s. The counts, the haul and the
   autopilot's wins are unchanged.
+- 2026-10-30, the user: dither audit, ≥ 25 % smoothed (step DITH8): the deep `field-space` and `nav-buoy-glow` in smooth steps, not the 4×4 Bayer checker ([audit](../../../art-direction/production/README.md#dither-audit-2026-10-30)).

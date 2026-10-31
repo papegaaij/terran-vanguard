@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy]
-updated: 2026-10-22
+updated: 2026-10-31
 ---
 
 # Drill Rig
@@ -111,3 +111,4 @@ Concept round 48 proposals (a/b, decided in round 48 (2026-10-22)): a bone bore 
   stronger augers) drawn by `DrillRigLooks`: the muzzle gathers over the tell, each ring foreseen for it
   (`Level22LooksTest`); the game capture `drill-rig-capture-r51-a` in the [ground](../README.md#concept-art) table.
 - 2026-10-22 (user, round 51, closed): the production art accepted (F.1; `art: final`), and the calls on the rig, C.2 (the core 240 → 150 HP), C.3 (breaking the rigs with the Airstrike) and C.5 (the bounty split per pump), accepted. Sounds: the collar loop **b**, the ring **b**, the death **b** (S.3–S.5; the a files play in the game until the next code step swaps in the b files).
+- 2026-10-30, the user: dither audit, ≥ 25 % smoothed (step DITH8): `drill-rig-steam` in smooth steps, not the 4×4 Bayer checker ([audit](../../../art-direction/production/README.md#dither-audit-2026-10-30)).

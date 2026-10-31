@@ -137,7 +137,7 @@ def glow_frame(black, halo=1.6):
 def shadow(hull):
     a = np.array(hull)[..., 3].astype(np.float64) / 255
     m = np.array(Image.fromarray((a * 255).astype(np.uint8)).filter(ImageFilter.GaussianBlur(3)), float) / 255
-    alpha = artkit.ordered_dither(np.clip(m * 0.5, 0, 1), 4)
+    alpha = artkit.smooth_steps(m * 0.5)
     out = np.zeros(a.shape + (4,), np.uint8)
     out[..., :3] = (6, 10, 18)
     out[..., 3] = (alpha * 255).astype(np.uint8)

@@ -1102,7 +1102,7 @@ def mist(w, h):
     """Clear and light: the concept's thin high-air mist (additive, faint)."""
     m = raster.fbm(w, h, 60, 41, octaves=4, period=True)
     a = np.clip((m - 0.56) * 2.5, 0, 1) ** 1.5 * 80 / 255
-    a = artkit.ordered_dither(a / 0.32, 5) * 0.32
+    a = artkit.smooth_steps(a / 0.32) * 0.32
     arr = np.dstack([np.broadcast_to(NAVY[3] / 255, (h, w, 3)), a])
     return to_img(arr)
 

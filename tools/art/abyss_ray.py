@@ -41,7 +41,7 @@ once design/enemies/naval/abyss-ray/data.yaml exists, first_level 24):
                           the rise, four Barbfins peeling off, three 9-way fans 1.2 s apart, the glide to the far side
                           and the sink; a second pass shows the death
 
-Run: python3 tools/art/abyss_ray.py [--review]   (~4 min on 20 cores; --review only rebuilds the review files; run
+Run: python3 tools/art/abyss_ray.py [--review | fx]   (``fx``: only the shadow, mouth and bloom, step DITH8; ~4 min on 20 cores; --review only rebuilds the review files; run
      barbfin.py and enemy_bullets.py violet first, the review shows the escorts and their needles)
 """
 import sys
@@ -169,7 +169,7 @@ def shadow_frame(body, i):
     cell.paste(al, ((SIZE - n) // 2, (SIZE - n) // 2 + 6))
     cell = cell.filter(ImageFilter.GaussianBlur(blur))
     dens = np.array(cell, float) / 255 * opacity
-    alpha = artkit.ordered_dither(dens, 6)
+    alpha = artkit.smooth_steps(dens)
     out = np.zeros((SIZE, SIZE, 4), np.uint8)
     out[..., 0], out[..., 1], out[..., 2] = 0, 6, 10
     out[..., 3] = (alpha * 255).astype(np.uint8)
@@ -194,7 +194,7 @@ def death_frame(img, i):
 
 
 def _light(w, field, col, levels=8):
-    q = artkit.ordered_dither(np.clip(field, 0, 1), levels)
+    q = artkit.smooth_steps(field)
     rgb = col * q[..., None] if col.ndim == 3 else np.asarray(col, float)[None, None] * q[..., None]
     return artkit.additive(Image.fromarray(np.dstack([np.clip(rgb, 0, 255), np.full((w, w), 255.0)]).astype(np.uint8)))
 
@@ -423,7 +423,18 @@ def review():
                        fps=FPS // 2)
 
 
+def build_fx():
+    """Step DITH8: only the shadow, mouth and bloom (smooth steps, no ordered dither), from the beat in assets/."""
+    level0 = kit.load("abyss-ray")[0]
+    kit.write("abyss-ray-shadow", [shadow_frame(level0, i) for i in range(8)], SOURCE)
+    kit.write("abyss-ray-mouth", [mouth_frame(i) for i in range(4)], SOURCE)
+    kit.write("abyss-ray-bloom", [bloom_frame(i) for i in range(10)], SOURCE)
+
+
 def main(argv):
+    if "fx" in argv:
+        build_fx()
+        return
     if "--review" not in argv:
         build()
     review()

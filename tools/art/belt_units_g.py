@@ -311,7 +311,7 @@ def core_glow(k, size=96):
     halo = np.exp(-(np.maximum(edge - 8, 0) / (6 + 6 * k)) ** 2) * (np.abs(x) < rx + 30) * (edge > 4)
     core = np.exp(-(np.hypot(x, y) / (5 + 4 * k)) ** 2)
     f = np.clip(k * (0.55 * halo + 1.0 * core), 0, 1)
-    f = artkit.ordered_dither(f, 6)
+    f = artkit.smooth_steps(f)
     rgb = np.array((255, 196, 80.0))[None, None] * f[..., None] + 120 * np.clip(f - 0.7, 0, 1)[..., None]
     return artkit.additive(Image.fromarray(np.dstack([np.clip(rgb, 0, 255), np.full((size, size), 255.0)])
                                            .astype(np.uint8), "RGBA"))

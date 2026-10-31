@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../../enemies/ground/warden-tank, ../../../enemies/air/talon, ../../../enemies/air/needler, ../../../enemies/space/asteroid-mite, ../../../player/generator, ../../../player/systems, ../../../world/belt, ../../../player/wingmen, ../../../systems/economy]
-updated: 2026-10-30
+updated: 2026-10-31
 ---
 
 # Level 34 – Salvage Run
@@ -467,7 +467,7 @@ Tank in livery is in the [ground units' concept art](../../../enemies/ground/REA
       stub and wreck in `warden-tank-asc` from Act 5, the grey tank's flash; its intel portrait in the livery)
 - [x] Containers (`ground` destructibles releasing salvage pickups) and the secondary `escapes: cargo-container`
       (5 of 6; easy 4, hard 6) (step G4: the CDF and Helix looks with their bursts, the HUD's `CONTAINERS n / 6`;
-      step FIX7: the HUD counts to the target, `CONTAINERS n / 5` at medium, the game's change pending)
+      step FIX7: the HUD counts to the target, `CONTAINERS n / 5` at medium, accepted 2026-10-30, the user's re-test)
 - [x] The freighter's hold: four clamps, the core floating free and collected by flying through it, the tug's
       fallback; the Mk V "Helix" unlocked by the win and in the shop from the L35 visit (part A's unlock) (step G1: the
       story pickup; step G4: the shut crate under the clamps, its rise and drift with the glow, `HELIX CORE SALVAGED`,
@@ -600,3 +600,4 @@ Approved in round 60 (the gap analysis's questions this level follows):
   secondary does (`CONTAINERS 4 / 5`, done at 5; easy `n / 4`, hard `n / 6`); the sensor line already reads
   `CONTAINERS 5/6`. Level 34 is the only secondary over objects; the other escapes secondaries with an allowance
   (Level 19's grey tanks, Level 30's convoy on easy) already count to their target.
+- 2026-10-30, the user: dither audit, ≥ 25 % smoothed (step DITH8): the deep `grave-space` and `helix-core-glow` in smooth steps, not the 4×4 Bayer checker ([audit](../../../art-direction/production/README.md#dither-audit-2026-10-30)).

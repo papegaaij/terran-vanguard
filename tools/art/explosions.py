@@ -162,7 +162,7 @@ def deep_frame(variant, rung, i):
     alpha = np.where(lit.max(axis=-1) >= 1, 255, 0)
     add = Image.fromarray(np.dstack([lit, alpha]).astype(np.uint8), "RGBA")
     ca = _down(cav_a[..., None], size)[..., 0]
-    ca = artkit.ordered_dither(np.clip(ca, 0, 1), 5)
+    ca = artkit.smooth_steps(ca)
     cav = np.dstack([np.broadcast_to(cav_c, ca.shape + (3,)), ca * 255]).astype(np.uint8)
     cav[ca == 0] = 0
     return add, Image.fromarray(cav, "RGBA")

@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../../enemies/naval/depth-hunter, ../../../enemies/naval/glassfin, ../../../enemies/naval/barbfin, ../../../enemies/naval/eel-swarm, ../../../enemies/naval/abyss-ray, ../../../enemies/naval/siren, ../../../enemies/naval/spiral-nautilus, ../../../enemies/naval/glow-angler, ../../../enemies/ground/spine-turret, ../../../enemies/ground/polyp-mortar, ../../../enemies/ground/relay-beacon, ../../../world/europa, ../../../player/wingmen, ../../../player/specials, ../../../story/twist]
-updated: 2026-10-27
+updated: 2026-10-31
 ---
 
 # Level 27 – Hydrothermal Vents
@@ -533,3 +533,4 @@ All decided in round 48 (2026-10-22):
   are in the sound effects' `concept/rejected/`). C.1–C.7 accepted (the Bulwark's dodging, the Sirens on the chimneys, the
   beacons' 60 HP and bounty 15, the Hunter columns, the vent field's light, the Nautilus pair's circle, no sound for the
   Hunter's rise), and every small rule logged above as pending the round is accepted.
+- 2026-10-30, the user: dither audit, ≥ 25 % smoothed (step DITH8): `hatchery-gate-glow`, `smoker-1..18-glow`, `marlin-stack-glow`, `relay-beacon-glow`, `marlin-hauler-glow`, the heat plume's glow, heat and silt puffs in smooth steps, not the 4×4 Bayer checker ([audit](../../../art-direction/production/README.md#dither-audit-2026-10-30)).

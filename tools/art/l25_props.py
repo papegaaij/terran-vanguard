@@ -125,7 +125,7 @@ def sub_glow(i):
         mx, my = pts["pinger"]
         r = np.hypot(xx - mx, yy - my - 3)
         f = (np.exp(-(r / 1.0) ** 2) + np.exp(-(r / 3.5) ** 2) * 0.35) * on
-        rgb = RED[None, None] * artkit.ordered_dither(np.clip(f, 0, 1), 7)[..., None]
+        rgb = RED[None, None] * artkit.smooth_steps(f)[..., None]
     else:                                       # sparks at the dent after the hit
         rng = np.random.default_rng(2630 + i)
         mx, my = pts["dent"]
@@ -134,7 +134,7 @@ def sub_glow(i):
             sx, sy = mx + rng.normal(0, 2.2), my + rng.normal(0, 1.8)
             f += np.exp(-((xx - sx) ** 2 + (yy - sy) ** 2) / 0.9) * rng.uniform(0.6, 1.0)
         f += np.exp(-((xx - mx) ** 2 + (yy - my) ** 2) / 16) * (0.35 if i % 2 == 0 else 0.15)
-        rgb = np.array((200, 230, 255.0))[None, None] * artkit.ordered_dither(np.clip(f, 0, 1), 7)[..., None]
+        rgb = np.array((200, 230, 255.0))[None, None] * artkit.smooth_steps(f)[..., None]
     return artkit.additive(Image.fromarray(np.dstack([np.clip(rgb, 0, 255), np.full((h, w), 255.0)]).astype(np.uint8)))
 
 
@@ -179,7 +179,7 @@ def buoy_glow(i):
     on = [1.0, 0.35, 0.0, 0.0][i]
     r = np.hypot(xx - mx, yy - my)
     f = (np.exp(-(r / 1.3) ** 2) + np.exp(-(r / 6.0) ** 2) * 0.5) * on
-    rgb = STROBE[None, None] * artkit.ordered_dither(np.clip(f, 0, 1), 7)[..., None]
+    rgb = STROBE[None, None] * artkit.smooth_steps(f)[..., None]
     return artkit.additive(Image.fromarray(np.dstack([np.clip(rgb, 0, 255), np.full((w, w), 255.0)]).astype(np.uint8)))
 
 

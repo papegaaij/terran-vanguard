@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../../enemies/air/skitter, ../../../enemies/air/needler]
-updated: 2026-10-05
+updated: 2026-10-31
 ---
 
 # Level 01 – Break at Dawn
@@ -398,3 +398,4 @@ Rework after round 12 (user decision), for concept round 13: the north arm re-re
   first values in [data.yaml](data.yaml) (`backdrop.atmosphere`, `drift`, `ramp`), and the two
   launching Stormhawks count as one animated element of the motion budget, like the cloud decks
   and the burning platforms; the user has played Level 01 with them since M2.
+- 2026-10-30, the user: dither audit, ≥ 25 % smoothed (step DITH8): the horizon's `vrell-glow` in smooth steps, not the 4×4 Bayer checker ([audit](../../../art-direction/production/README.md#dither-audit-2026-10-30)).

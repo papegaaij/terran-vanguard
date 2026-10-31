@@ -62,7 +62,8 @@ per-section underwater_look and the static lights to the level's concept/backdro
 
 Reads the level's data.yaml when it exists (sections, ground targets), otherwise the README's values and ART-H2's
 proposal (l28kit). Re-run after the data moves a section or a target.
-Run: python3 tools/art/backdrop_l28.py [--proposal | --review | --check]   (all: about 3 min)
+Run: python3 tools/art/backdrop_l28.py [--proposal | --review | --check | vent-glow]   (all: about 3 min; ``vent-glow``
+writes only caldera-glow.png, step DITH7: the throat's glow in 64 undithered steps, no ordered-dither stipple)
 """
 import math
 import sys
@@ -376,7 +377,7 @@ def glow_spots(w, h, spots, x0=0):
     for cx, cy, r, col, k in spots:
         d = np.hypot(xx - cx, yy - cy)
         f = (np.exp(-(d / max(1.2, r * 0.45)) ** 2) * 0.9 + np.exp(-(d / (r * 1.6)) ** 2) * 0.35) * k
-        rgb += artkit.ordered_dither(np.clip(f, 0, 1), 8)[..., None] * np.asarray(col)[None, None]
+        rgb += artkit.smooth_steps(f)[..., None] * np.asarray(col)[None, None]     # step DITH8: was ordered_dither(f, 8)
     xs = np.arange(w) + x0
     rgb[:, (xs < 0) | (xs >= W)] = 0
     return additive_img(rgb)
@@ -694,7 +695,7 @@ def fissure(t, x, seed):
     a = (core | lip | bleach).astype(float)
     img = posterize(np.clip(rgb, 0, 255), 24, dither_alpha(_edges(a, x0, w), 2))
     g = np.exp(-(d / (width + 1)) ** 2) * along * 0.6 + np.exp(-(d / 14) ** 2) * along * 0.12
-    v = artkit.ordered_dither(np.clip(g, 0, 1), 8)
+    v = artkit.smooth_steps(g)                    # step DITH8: was ordered_dither(g, 8), a checker stipple
     grgb = EMBER[None, None] * v[..., None] + (AMBER - EMBER)[None, None] * np.clip(g - 0.6, 0, 1)[..., None] * 2
     xs = np.arange(w) + x0
     grgb[:, (xs < 0) | (xs >= W)] = 0
@@ -784,9 +785,19 @@ def caldera():
     # the glow: the throat's core and halo, the cracks' faint lime near it
     g = np.exp(-(r / 26) ** 2) * 0.75 + np.exp(-(r / 60) ** 2) * 0.22 + np.exp(-(r / 150) ** 2) * 0.05
     g = g + crack * np.clip(1 - r / 240, 0, 1) * 0.3
-    v = artkit.ordered_dither(np.clip(g, 0, 1), 10)
+    v = artkit.smooth_steps(g, VENT_GLOW_LEVELS)      # step DITH7: was ordered_dither(g, 10), a stipple round the throat
     grgb = LIME[None, None] * v[..., None] + (LIME_WHITE - LIME)[None, None] * np.clip(g - 0.7, 0, 1)[..., None] * 3
     return img, additive_img(grgb), bottom
+
+
+VENT_GLOW_LEVELS = 64     # the vent's glow: undithered fine steps (its faint 150 px halo would band at fewer)
+
+
+def build_vent_glow():
+    """Step DITH7 (the user, 2026-10-30: the glow round the vent dithered): only caldera-glow.png, the rest untouched."""
+    _img, g, _bottom = caldera()
+    artkit.save_png(g, OUT / "caldera-glow.png", SOURCE)
+    print(f"wrote {(OUT / 'caldera-glow.png').relative_to(ROOT)}")
 
 
 # =========================================================================== the breakout and the night ice
@@ -886,7 +897,7 @@ def ceiling_cracks():
     veil = np.exp(-(np.hypot(xx - cx, yy - cy) / 120) ** 2) * 0.25
     fade = np.clip(np.minimum(yy, CRACKS_H - 1 - yy) / 60, 0, 1)
     v = np.clip(line + halo * 0.3 + veil, 0, 1) * fade
-    v = artkit.ordered_dither(v, 8)
+    v = artkit.smooth_steps(v)                    # step DITH8: was ordered_dither(v, 8), a checker stipple
     rgb = np.array((190, 226, 246)) * v[..., None]
     alpha = np.where(rgb.max(axis=-1) >= 1, 255, 0)
     return Image.fromarray(np.dstack([np.clip(rgb, 0, 255), alpha]).astype(np.uint8), "RGBA")
@@ -1508,6 +1519,9 @@ def main(argv):
     CONCEPT.mkdir(parents=True, exist_ok=True)
     if "--check" in argv:
         sys.exit(1 if check() else 0)
+    if "vent-glow" in argv:
+        build_vent_glow()
+        return
     if "--review" in argv:
         review()
         return

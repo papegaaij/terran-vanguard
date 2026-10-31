@@ -71,6 +71,7 @@ STRIPS = 12                        # the panels render in horizontal strips, in 
 CHAMFER = 3.0                      # the panel plate's bevel, px
 RIVET_INSET = 10                   # rivet centres from the plate's corners, px
 LEVELS = 28                        # posterization steps on the steel ramp
+FACE_LEVELS = 64                   # the wide faces' steps (step DITH8: undithered, so finer than LEVELS)
 
 METAL = B["UTC HULL"]              # 121632 2a3068 4e5aa0 8a96d0 c8d0f4 ffffff
 STEEL = [(i / 5, c) for i, c in enumerate(METAL)]
@@ -171,11 +172,12 @@ def luminance(img):
 
 
 def steel(lum, shade, dither_mask=None):
-    """Shading -> the steel ramp, posterized to LEVELS steps (ordered dither where masked)."""
+    """Shading -> the steel ramp, posterized to LEVELS steps (finer smooth steps where masked: the wide faces; step
+    DITH8, the user 2026-10-30: was an ordered dither there, a checker over the panel faces)."""
     t = np.interp(lum, *shade)
     flat = np.round(t * (LEVELS - 1)) / (LEVELS - 1)
     if dither_mask is not None:
-        flat = np.where(dither_mask, artkit.ordered_dither(t, LEVELS), flat)
+        flat = np.where(dither_mask, artkit.smooth_steps(t, FACE_LEVELS), flat)
     return raster.ramp(STEEL, flat)
 
 

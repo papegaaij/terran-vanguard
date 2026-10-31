@@ -366,7 +366,7 @@ def lamp_glow(level):
     core = np.exp(-(r / 1.8) ** 2)
     halo = np.exp(-(r / 9.0) ** 2) * 0.55 + np.exp(-(r / 20.0) ** 2) * 0.22
     v = np.clip((core + halo) * level, 0, 1)
-    q = artkit.ordered_dither(v, 9)
+    q = artkit.smooth_steps(v)
     rgb = SODIUM[None, None] * q[..., None] + 80 * np.clip(core * level - 0.6, 0, 1)[..., None]
     return artkit.additive(Image.fromarray(np.dstack([np.clip(rgb, 0, 255), np.full((h, w), 255.0)]).astype(np.uint8)))
 
@@ -386,7 +386,7 @@ def seep():
     f1, f2, _ = b25._worley(s, s, 24, 24, 2693)
     crack = np.clip(1 - (f2 - f1) / 0.1, 0, 1)
     rgb = np.array((52, 46, 38.0)) * (0.8 + 0.4 * n)[..., None] * (1 - 0.6 * crack)[..., None]
-    return posterize(rgb, 16, dither_alpha(np.clip(cover * 0.9, 0, 1), 2)), crack, cover
+    return posterize(rgb, 16, artkit.smooth_steps(cover * 0.9) * 255), crack, cover     # DITH8: was dither_alpha(.., 2)
 
 
 def seep_glow(crack, cover):
@@ -395,7 +395,7 @@ def seep_glow(crack, cover):
     r = np.hypot(xx - s / 2, (yy - s / 2) * 1.2) / (s / 2)
     soft = np.clip(1 - r, 0, 1) ** 1.6 * 0.3
     v = np.clip(soft + crack * cover * soft * 0.5, 0, 1)
-    q = artkit.ordered_dither(v, 8)
+    q = artkit.smooth_steps(v)
     rgb = AMBER[None, None] * q[..., None]
     return artkit.additive(Image.fromarray(np.dstack([np.clip(rgb, 0, 255), np.full((s, s), 255.0)]).astype(np.uint8)))
 
@@ -436,7 +436,7 @@ def vent_glow():
     rise = np.clip((up - 0.12) / 0.88, 0, 1) ** 1.8
     top = np.clip((yy - 4) / 160, 0, 1)
     v = np.clip(rise * (0.2 + 0.12 * n) * top, 0, 1)
-    q = artkit.ordered_dither(v, 8)
+    q = artkit.smooth_steps(v)
     rgb = VENT_RED[None, None] * q[..., None]
     return artkit.additive(Image.fromarray(np.dstack([np.clip(rgb, 0, 255), np.full((h, w), 255.0)]).astype(np.uint8)))
 

@@ -57,8 +57,10 @@ Outputs (assets/sprites/, or build/art-held/sprites/ while no data claims the ro
   abyssal-maw-blowout-glow_0..7     96x96, additive: its amber flash and electric arcs, the same timing
   abyssal-maw-ichor_0..7            80x80, normal, stepped translucency: a segment's sinking burst (silt cloud, lime
                                     ichor), 10 fps
-  abyssal-maw-flare_0..3            192x192, additive: the vent's white-lime flare as the head sinks (drawn scaled up
-                                    to ~1.6x over the throat; 4 fps rise, hold, fall)
+  abyssal-maw-flare_0..3            308x308, additive: the vent's white-lime flare as the head sinks (drawn 1x over
+                                    the throat, step DITH7: was 192x192 drawn x1.6; 4 fps rise, hold, fall)
+  (step DITH7, the user 2026-10-30: the additive glows of the rim, arc, shed, blow-outs and flare are smooth, 32
+  undithered steps, no ordered-dither stipple; ``glows`` rewrites only those five sets)
   assets/pivots/abyssal-maw.json    the head's frame, its throat, eyes and sac offsets per head frame, the rim orbs;
                                     the segment frame, headings, tapers and the taper rule; the implants' sizes
   intel/boss-abyssal-maw            via tools/art/intel.py (``intel_mask`` here: the coil round the arena and the head)
@@ -66,7 +68,7 @@ Outputs (assets/sprites/, or build/art-held/sprites/ while no data claims the ro
                                     caldera under the hatchery light's stand-in: the rise, phase 1, phase 2 with a
                                     sweep and a shed, the dive and the lunge, phase 3's implants, the death)
 
-Run: python3 tools/art/abyssal_maw.py [head|swim|segment|parts|fx ...] [--review | --relocate | --no-review]   (~7 min on 8 cores, the segments most of
+Run: python3 tools/art/abyssal_maw.py [head|swim|segment|parts|fx|glows|shadow ...] [--review | --relocate | --no-review]   (~7 min on 8 cores, the segments most of
 it; groups rebuild only their sets; --review only rebuilds the review files, --no-review leaves them (round 58's) as
 they are; --relocate moves the held sets into assets/ once the data claims them, without rendering; backdrop_l28.py
 first for the caldera)
@@ -215,7 +217,7 @@ def _yx(w, h=None):
 
 
 def _puff(density, rgb, levels=4):
-    alpha = artkit.ordered_dither(np.clip(density, 0, 1), levels)
+    alpha = artkit.smooth_steps(density)
     out = np.dstack([np.clip(rgb, 0, 255), alpha * 255]).astype(np.uint8)
     out[alpha == 0] = 0
     return Image.fromarray(out, "RGBA")
@@ -344,7 +346,7 @@ def arc_frame(i, n=4):
     rgb = _arc_layer(w, segs, 5833 + i, width=1)
     yy, xx = _yx(w)
     glow = np.exp(-(np.hypot(xx - w / 2, yy - w / 2) / 14) ** 2) * (0.35 + 0.15 * (i % 2))
-    rgb = rgb + AMBER[None, None] * artkit.ordered_dither(glow, 5)[..., None] * 0.55
+    rgb = rgb + AMBER[None, None] * artkit.smooth_steps(glow)[..., None] * 0.55     # DITH7: was ordered_dither(5)
     return _add(rgb)
 
 
@@ -356,8 +358,8 @@ def blowout_glow_frame(i, n=8):
     r = np.hypot(xx - w / 2, yy - w / 2)
     core = np.exp(-(r / (6 + 16 * u)) ** 2) * max(0.0, 1 - 1.3 * u)
     halo = np.exp(-(r / (16 + 22 * u)) ** 2) * (1 - u) * 0.55
-    rgb = np.array((255, 236, 200))[None, None] * artkit.ordered_dither(np.clip(core, 0, 1), 6)[..., None] + \
-        AMBER[None, None] * artkit.ordered_dither(np.clip(halo, 0, 1), 5)[..., None]
+    rgb = np.array((255, 236, 200))[None, None] * artkit.smooth_steps(core)[..., None] + \
+        AMBER[None, None] * artkit.smooth_steps(halo)[..., None]        # DITH7: were ordered_dither(6) and (5)
     if u < 0.75:
         rng = np.random.default_rng(5841 + i)
         segs = []
@@ -379,23 +381,26 @@ def shed_frame(i, n=6):
         f = np.exp(-(r / (14 + 6 * k)) ** 2) * k + np.exp(-((r - 22 - 4 * k) / 3) ** 2) * 0.25 * k
     else:
         f = np.exp(-(r / 30) ** 2) * 0.7 + np.exp(-((r - 32) / 3.5) ** 2) * 0.5
-    f = artkit.ordered_dither(np.clip(f, 0, 1), 6)
+    f = artkit.smooth_steps(f)                         # DITH7: was ordered_dither(6)
     rgb = LIME[None, None] * f[..., None] + 90 * np.clip(f - 0.75, 0, 1)[..., None] * 4
     return _add(rgb)
 
 
+FLARE = 308                 # the flare's size, drawn 1x (step DITH7; was 192 drawn x1.6 with an ordered dither)
+
+
 def flare_frame(i, n=4):
-    """The vent's white-lime flare: a core and soft rays, rising (0-1), held (2), falling (3)."""
-    w = 192
+    """The vent's white-lime flare: a core and soft rays, rising (0-1), held (2), falling (3); full size, drawn 1x."""
+    w = FLARE
     k = (0.55, 1.0, 0.85, 0.4)[i]
     yy, xx = _yx(w)
     dx, dy = xx - w / 2, yy - w / 2
-    r = np.hypot(dx, dy)
+    r = np.hypot(dx, dy) * 192 / FLARE                 # the 192 px design's radii, drawn at its old x1.6 size
     ang = np.arctan2(dy, dx)
     rays = (0.55 + 0.45 * np.cos(ang * 9 + i * 0.4)) * (0.6 + 0.4 * np.cos(ang * 5 - 1.1))
     f = np.exp(-(r / 22) ** 2) * 1.2 + np.exp(-(r / (52 + 10 * k)) ** 2) * 0.55 + \
         np.exp(-(r / 88) ** 2) * rays * 0.35
-    f = artkit.ordered_dither(np.clip(f * k, 0, 1), 8)
+    f = artkit.smooth_steps(f * k)                     # DITH7: was ordered_dither(8)
     white = np.clip(f - 0.6, 0, 1)[..., None] / 0.4
     rgb = (np.array((200, 255, 140))[None, None] * (1 - white) + 255 * white) * f[..., None]
     return _add(rgb)
@@ -440,14 +445,14 @@ def rim_frame():
         x, y = head_px(tx, ty)
         r = np.hypot(xx - x, yy - y)
         f += np.exp(-(r / 2.6) ** 2) * 1.2 + np.exp(-(r / 6.0) ** 2) * 0.35
-    f = artkit.ordered_dither(np.clip(f, 0, 1), 6)
+    f = artkit.smooth_steps(f)                         # DITH7: was ordered_dither(6)
     rgb = TEAL[None, None] * f[..., None] + 200 * np.clip(f - 0.8, 0, 1)[..., None] * 5
     return _add(rgb)
 
 
 # --------------------------------------------------------------------------- build
 
-GROUPS = ("head", "swim", "segment", "parts", "fx")
+GROUPS = ("head", "swim", "segment", "parts", "fx", "glows")
 
 
 def _map(jobs):
@@ -496,8 +501,25 @@ def build(groups=GROUPS):
         kit.write(f"{ROOT_NAME}-blowout-glow", [blowout_glow_frame(i) for i in range(8)], SOURCE)
         kit.write(f"{ROOT_NAME}-ichor", artkit.quantize_set([ichor_frame(i) for i in range(8)], 20), SOURCE)
         kit.write(f"{ROOT_NAME}-flare", [flare_frame(i) for i in range(4)], SOURCE)
+    if "glows" in groups and "fx" not in groups:
+        build_glows(with_rim="head" not in groups)
+    if "shadow" in groups and "head" not in groups:     # step DITH8: only the lunge's shadow tip (one head render)
+        lunge = _map([("head", "lunge", None, False)])[0]
+        kit.write(f"{ROOT_NAME}-shadow-head", [shadow_head(lunge)], SOURCE, single=True)
     write_pivots()
     report_area()
+
+
+def build_glows(with_rim=True):
+    """Step DITH7 (the user, 2026-10-30: the vent's glow dithered, as Level 35's): only the additive glows that were
+    ordered-dithered, now in smooth undithered steps (the jaw rim's orbs, the arc, the shed flare, the blow-outs'
+    light, the vent's flare at full size); every other set untouched."""
+    if with_rim:
+        kit.write(f"{ROOT_NAME}-head-rim", [rim_frame()], SOURCE, single=True)
+    kit.write(f"{ROOT_NAME}-arc", [arc_frame(i) for i in range(4)], SOURCE)
+    kit.write(f"{ROOT_NAME}-shed", [shed_frame(i) for i in range(6)], SOURCE)
+    kit.write(f"{ROOT_NAME}-blowout-glow", [blowout_glow_frame(i) for i in range(8)], SOURCE)
+    kit.write(f"{ROOT_NAME}-flare", [flare_frame(i) for i in range(4)], SOURCE)
 
 
 def write_pivots():
@@ -756,7 +778,7 @@ def fight_frames(lk):
                     glows.append((lk.blow_g[f], ix, iy, 1.0))
         if death > 3.4:
             f = min(3, int((death - 3.4) * 2.5))
-            fl = lk.flare[f].resize((307, 307), Image.Resampling.NEAREST)
+            fl = lk.flare[f]                                       # full size since DITH7 (was 192 px x1.6)
             glows.append((fl, *kit.THROAT, 1.0))
         # the frame: lit, the dark of the dive, the glows ungraded
         gk = 1.0 - 0.75 * dark
@@ -859,7 +881,7 @@ def main(argv):
         relocate()
         return
     groups = [a for a in argv if not a.startswith("--")]
-    unknown = set(groups) - set(GROUPS)
+    unknown = set(groups) - set(GROUPS) - {"shadow"}
     if unknown:
         sys.exit(f"unknown groups: {', '.join(sorted(unknown))} (of {', '.join(GROUPS)})")
     if "--review" not in argv:

@@ -408,7 +408,7 @@ def ice_ceiling():
     line = np.array(lay.resize((W, TILE_H), Image.BOX)).astype(np.float64) / 255.0
     halo = np.array(Image.fromarray((line * 255).astype(np.uint8)).filter(ImageFilter.GaussianBlur(2.5))) / 255.0
     v = np.clip(line + halo * 0.12 / max(halo.max(), 1e-6), 0, 1)
-    v = artkit.ordered_dither(v, 6)
+    v = artkit.smooth_steps(v)
     rgb = np.array((130, 186, 214)) * v[..., None]
     alpha = np.where(rgb.max(axis=-1) >= 1, 255, 0)
     return Image.fromarray(np.dstack([np.clip(rgb, 0, 255), alpha]).astype(np.uint8), "RGBA")

@@ -108,7 +108,7 @@ def edge_fade(w, h, margin):
 def weather_front(w, h, seed, cyclone, slope):
     """A cloud front over the earth tiles: r03's weather system (a frontal band of fbm cloud, its
     shadow offset down-right, optionally a small cyclone) as a translucent overlay in the earth
-    tile's cloud colour, the alpha ordered-dithered and faded out at the borders so no edge shows."""
+    tile's cloud colour, the alpha in smooth steps (step DITH8) and faded out at the borders so no edge shows."""
     yy, xx = np.mgrid[0:h, 0:w].astype(np.float64)
     rng = np.random.default_rng(seed)
     phase = rng.uniform(0, 2 * np.pi)
@@ -133,7 +133,8 @@ def weather_front(w, h, seed, cyclone, slope):
     arr = np.zeros((h, w, 4))
     l01.over(arr, np.zeros(3), 0.3 * shadow)
     l01.over(arr, cloud, c)
-    return l01.finish_dithered(arr, colors=12, alpha_levels=8, rgb_amp=6.0)
+    a = artkit.smooth_steps(arr[..., 3])     # step DITH8: was the concept's finish_dithered, a Bayer checker
+    return l01.r03.step_alpha(l01.posterize(l01.rgba(arr[..., :3], a * 255), 12), artkit.GLOW_LEVELS - 1)
 
 
 # --------------------------------------------------------------------------- far
@@ -388,10 +389,10 @@ def spore_haze(w, h):
 
 
 def veil(img, share, levels):
-    """A bank's alpha scaled by ``share`` and stepped to ``levels`` with ordered dithering."""
+    """A bank's alpha scaled by ``share`` in smooth steps (step DITH8: was ``levels`` ordered-dithered steps)."""
     a = np.array(img).astype(np.float64)
     alpha = a[..., 3] / 255 * share
-    stepped = artkit.ordered_dither(alpha / share, levels) * share
+    stepped = artkit.smooth_steps(alpha / share) * share
     a[..., 3] = np.where(alpha > 0, stepped, 0) * 255
     a[a[..., 3] == 0] = 0
     return Image.fromarray(a.astype(np.uint8), "RGBA")

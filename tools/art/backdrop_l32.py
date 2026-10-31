@@ -570,8 +570,8 @@ def cut_rock_glow(th=TEX_PERIOD):
         for dy in (-th, 0, th):
             d = np.hypot(xx - x, yy - y - dy)
             f_r = np.maximum(f_r, np.clip(1 - d / 1.6, 0, 1) + 0.4 * np.clip(1 - d / 4, 0, 1))
-    w = artkit.ordered_dither(np.clip(f_w, 0, 1), 6)
-    r = artkit.ordered_dither(np.clip(f_r, 0, 1), 5)
+    w = artkit.smooth_steps(f_w)              # step DITH8: was ordered_dither(f_w, 6) / (f_r, 5), a checker stipple
+    r = artkit.smooth_steps(f_r)
     rgb = np.maximum(LAMP * w[..., None] * 0.9, RED * r[..., None])
     return rgb
 
@@ -663,7 +663,7 @@ def lights(h, w, pts, col, core=1.8, halo=6.0, wash=0.0, wash_r=24.0, levels=6):
         d = np.hypot(xx - x, yy - y)
         f = np.maximum(f, np.clip(1 - d / core, 0, 1) + 0.4 * np.clip(1 - d / halo, 0, 1)
                        + wash * np.clip(1 - d / wash_r, 0, 1))
-    v = artkit.ordered_dither(np.clip(f, 0, 1), levels)
+    v = artkit.smooth_steps(f, max(levels, artkit.GLOW_LEVELS))     # step DITH8: was ordered_dither(f, levels)
     return np.asarray(col, float)[None, None] * v[..., None]
 
 
@@ -843,7 +843,7 @@ def crucible():
         alpha = np.where(arm, 255, alpha)
     body = clear_border(posterize(rgb, 32, alpha))
     g = np.clip(1 - r / 46, 0, 1) * 0.9 + np.clip(1 - r / 70, 0, 1) * 0.25
-    glow = ORANGE[None, None] * artkit.ordered_dither(np.clip(g, 0, 1), 6)[..., None]
+    glow = ORANGE[None, None] * artkit.smooth_steps(g)[..., None]        # step DITH8: was ordered_dither(g, 6)
     return body, clear_border(glow_img(glow))
 
 

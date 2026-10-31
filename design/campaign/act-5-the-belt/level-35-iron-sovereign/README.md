@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../../enemies/bosses/iron-sovereign, ../../../enemies/air/talon, ../../../enemies/air/gilded-gunship, ../../../enemies/air/hornet, ../../../enemies/air/rail-serpent, ../../../enemies/air/dart-drone, ../../../enemies/space/shard-drone, ../../../enemies/ground/rail-bunker, ../../../enemies/ground/sam-nest, ../../../world/belt, ../../../player/wingmen, ../../../story/characters/vorne, ../../../systems/economy]
-updated: 2026-10-30
+updated: 2026-10-31
 ---
 
 # Level 35 – Iron Sovereign
@@ -623,3 +623,4 @@ Approved in round 60 (the gap analysis's questions this level follows):
   (−98, 200), (100, 200), was (−60, 110), (100, 140); as long a path to the crossing, so the two trains still pass each
   other clear). No big-hull overlap; the fight unchanged (its sweep bound in `Level35Test` 8 → 10: Rook's seed 11
   meets the arena in another state).
+- 2026-10-30, the user: dither audit, ≥ 25 % smoothed (step DITH8): the deep `orbit-space` and the mass relay's `mass-relay-glow` in smooth steps, not the 4×4 Bayer checker ([audit](../../../art-direction/production/README.md#dither-audit-2026-10-30)).

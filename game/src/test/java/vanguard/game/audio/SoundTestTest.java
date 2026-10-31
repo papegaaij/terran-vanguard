@@ -8,7 +8,11 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Files;
 import com.badlogic.gdx.backends.lwjgl3.audio.mock.MockAudio;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
+import java.util.stream.IntStream;
 import org.junit.jupiter.api.Test;
+import vanguard.content.Content;
+import vanguard.content.ContentLoader;
 import vanguard.game.settings.AudioSettings;
 
 class SoundTestTest {
@@ -36,6 +40,32 @@ class SoundTestTest {
             String path = Tracks.path(number);
             assertTrue(SoundTest.TRACKS.stream().anyMatch(track -> track.path().equals(path)), path);
         }
+    }
+
+    @Test
+    void everyLevelThemeIsThereAsItsFullMixInTrackListOrder() {
+        Content content = ContentLoader.fromClasspath();
+        List<String> used = content.levels().values().stream()
+                .map(level -> Tracks.path(level.music().track()))
+                .distinct()
+                .toList();
+        List<String> paths =
+                SoundTest.TRACKS.stream().map(SoundTest.Track::path).toList();
+        for (String path : used) {
+            assertTrue(paths.contains(path), "the sound test plays the level theme " + path);
+        }
+        // Title, briefing, hangar, then tracks 4-13 (Act 1 A to Act 5 B), each its full mix and looping.
+        List<String> themes =
+                IntStream.rangeClosed(4, 13).mapToObj(Tracks::path).toList();
+        assertEquals(themes, paths.subList(3, 3 + themes.size()));
+        for (SoundTest.Track track : SoundTest.TRACKS.subList(3, 3 + themes.size())) {
+            assertTrue(track.loops(), track.title());
+            assertTrue(track.where().startsWith("LEVEL THEME: ACT "), track.where());
+            assertFalse(
+                    track.path().matches(".*-(base|motif|dark|warm|conveyor)\\.ogg"), "a full mix: " + track.path());
+        }
+        assertEquals("LEVEL THEME: ACT 1 A", SoundTest.TRACKS.get(3).where());
+        assertEquals("LEVEL THEME: ACT 5 B", SoundTest.TRACKS.get(12).where());
     }
 
     @Test

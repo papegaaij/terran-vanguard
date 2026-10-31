@@ -159,7 +159,7 @@ def torpedo_glow(black, k, motor):
 # --------------------------------------------------------------------------- effects
 
 def _puff(w, density, rgb):
-    alpha = artkit.ordered_dither(np.clip(density, 0, 1), 4)
+    alpha = artkit.smooth_steps(density)
     out = np.dstack([np.clip(rgb, 0, 255), alpha * 255]).astype(np.uint8)
     out[alpha == 0] = 0
     return Image.fromarray(out, "RGBA")

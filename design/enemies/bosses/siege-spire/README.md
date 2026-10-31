@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy]
-updated: 2026-10-21
+updated: 2026-10-31
 ---
 
 # Siege Spire
@@ -203,3 +203,4 @@ Chosen concept: [siege-spire-r06-a.png](../concept/siege-spire-r06-a.png), [sieg
 - 2026-10-21 (user, after playthroughs): "Bosses must never trigger these warnings." The maw's
   launched Wraiths no longer get the bottom-edge warning, banner or rear bark ahead of their
   re-entry (`MawLaunchTest`); Rook's Trail on them and the boss warning banner stay.
+- 2026-10-30, the user: dither audit, ≥ 25 % smoothed (step DITH8): `siege-spire-emitter` (drawn 2.6x) and `siege-spire-maw-glow` in smooth steps, not the 4×4 Bayer checker ([audit](../../../art-direction/production/README.md#dither-audit-2026-10-30)).

@@ -267,16 +267,18 @@ def puff_layer(w, h, lumps, seed, shade_k=38, max_a=0.92, levels=6, shadow=(5, 7
     gy, gx = np.gradient(blur)
     shade = np.clip(1 - (gx + gy) * shade_k, 0.62, 1.12)
     rgb = np.array((244, 248, 252.0)) * shade[..., None] * np.array((0.94, 0.97, 1.0))
-    alpha = artkit.ordered_dither(blur * max_a, levels)
+    alpha = artkit.smooth_steps(blur * max_a)
     sdx, sdy, sk = shadow
     sh = np.roll(np.roll(blur, sdy, axis=0), sdx, axis=1)
     if sdy > 0:
         sh[:sdy] = 0
     if sdx > 0:
         sh[:, :sdx] = 0
-    sha = artkit.ordered_dither(sh * sk, 4) * (alpha == 0)
-    rgb = np.where((sha > 0)[..., None], np.array((40, 66, 96.0)), rgb)
-    out = np.dstack([np.clip(rgb, 0, 255), np.maximum(alpha, sha) * 255])
+    sha = artkit.smooth_steps(sh * sk)      # step DITH8: smooth steps, the vapour composited over its shadow (was a
+    a_out = alpha + sha * (1 - alpha)        # 6- and 4-step ordered dither, the shadow only where the vapour was 0)
+    rgb = (rgb * alpha[..., None] + np.array((40, 66, 96.0)) * (sha * (1 - alpha))[..., None]) \
+        / np.maximum(a_out, 1e-6)[..., None]
+    out = np.dstack([np.clip(rgb, 0, 255), artkit.smooth_steps(a_out) * 255])
     out[out[..., 3] == 0] = 0
     return Image.fromarray(out.astype(np.uint8), "RGBA")
 
@@ -393,7 +395,7 @@ def lip_glow(i):
     yy, xx = np.mgrid[0:h, 0:w].astype(np.float64) + 0.5
     d = np.hypot(xx - 40, yy - 23)
     v = (np.exp(-(d / 1.3) ** 2) + np.exp(-(d / 5) ** 2) * 0.45) * on
-    v = artkit.ordered_dither(np.clip(v, 0, 1), 6)
+    v = artkit.smooth_steps(v)
     col = np.array((255, 120, 40.0)) * v[..., None] + 255 * np.clip(v - 0.8, 0, 1)[..., None]
     return artkit.additive(Image.fromarray(np.dstack([np.clip(col, 0, 255), np.full((h, w), 255.0)]).astype(np.uint8)))
 

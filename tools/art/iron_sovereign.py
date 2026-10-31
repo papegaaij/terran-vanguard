@@ -519,8 +519,9 @@ def grid(n):
 
 
 def glow_img(f, col, white=0.0, levels=8, dither=True):
-    """A 0..1 field as an additive glow (premultiplied, ordered-dithered steps; ``dither=False``: plain steps)."""
-    f = artkit.ordered_dither(np.clip(f, 0, 1), levels) if dither else smooth_steps(f, levels)
+    """A 0..1 field as an additive glow (premultiplied, plain steps: ``dither=False`` keeps ``levels``, the default
+    takes at least artkit.GLOW_LEVELS; step DITH8: the default was ordered-dithered, a checker stipple)."""
+    f = smooth_steps(f, levels if not dither else max(levels, artkit.GLOW_LEVELS))
     rgb = np.asarray(col, float)[None, None] * f[..., None] + 255 * white * np.clip(f - 0.55, 0, 1)[..., None] / 0.45
     img = Image.fromarray(np.dstack([np.clip(rgb, 0, 255), np.full(f.shape, 255.0)]).astype(np.uint8), "RGBA")
     return artkit.additive(img)
@@ -600,7 +601,7 @@ def vent_frame(i, n=32, frames=8):
         rad = 2.5 + 6 * s
         f += np.exp(-(((x - bx) ** 2 + (y - by) ** 2) / rad ** 2)) * (1 - s) ** 1.2
     f += rng.random((n, n)) * 0.08 * (1 - s)
-    alpha = artkit.ordered_dither(np.clip(f * 0.8, 0, 0.75) / 0.75, 4) * 0.75
+    alpha = artkit.smooth_steps(np.clip(f * 0.8, 0, 0.75) / 0.75) * 0.75
     rgba = np.zeros((n, n, 4))
     rgba[..., :3] = np.array((150, 156, 168)) * (0.75 + 0.25 * np.clip(f, 0, 1))[..., None]
     rgba[..., 3] = np.round(alpha * 255)

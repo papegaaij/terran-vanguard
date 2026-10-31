@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../../campaign/act-5-the-belt/level-29-betrayal-at-ceres, ../../../player/wingmen]
-updated: 2026-10-29
+updated: 2026-10-31
 ---
 
 # Clamp gun
@@ -82,3 +82,4 @@ Production frames (round 62, step ART-B, `tools/art/belt_units.py clamp`) live i
   `tools/balance.py` list it as accepted with the level's reason (the four hold the halt).
 - 2026-10-28 (user, [round 62](../../../concept-rounds/round-62/README.md), closed; page answers): the art (F.6) accepted as final; the shot **b** (S.6) and the clamp's release **b** (S.7) picked (the a files in the sfx part's `concept/rejected/`); C.2 accepted: asleep until the halt, 250 HP.
 - 2026-10-29 (M9 part I, step I2): `art: final`: the production frames (`tools/art/belt_units*.py`, every PNG with its `Source` chunk, so `importPlaceholders` skips them) are in `assets/sprites/` and the user accepted them as final in round 62 (F.6); the round 60 mockup rows are history.
+- 2026-10-30, the user: dither audit, ≥ 25 % smoothed (step DITH8): `clamp-gun-gas`, `clamp-gun-glint` in smooth steps, not the 4×4 Bayer checker ([audit](../../../art-direction/production/README.md#dither-audit-2026-10-30)).

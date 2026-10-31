@@ -105,9 +105,9 @@ def flare_shell(i):
 
 
 def light_shape(intensity):
-    """A light-map shape: white, its light in the alpha, posterized to 6 steps with 4x4 Bayer
-    ordered dither (the falloff reads as the 90s stepped pool, never a smooth gradient band)."""
-    a = artkit.ordered_dither(intensity, 6)
+    """A light-map shape: white, its light in the alpha, in 32 smooth steps (step DITH8, the user
+    2026-10-30: was 6 steps with a 4x4 Bayer ordered dither, a checker over the pool)."""
+    a = artkit.smooth_steps(intensity)
     img = np.dstack([np.full(a.shape + (3,), 255.0), a * 255])
     img[a <= 0] = 0
     return Image.fromarray(img.astype(np.uint8), "RGBA")

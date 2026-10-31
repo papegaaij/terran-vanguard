@@ -332,7 +332,7 @@ def dome_flash(name):
     yy, xx = np.mgrid[0:size, 0:size]
     r = np.hypot(xx - size / 2 + 0.5, yy - size / 2 + 0.5) / (DOME_R * dome_scale(name))
     k = np.clip(lum, 0, 1) * (0.45 + 0.4 * np.clip(r, 0, 1) ** 2)
-    q = artkit.ordered_dither(np.clip(k, 0, 1), 7)
+    q = artkit.smooth_steps(k)
     rgb = np.array((235, 255, 242), float) * q[..., None]
     a = np.where(q > 0, 255, 0)
     return Image.fromarray(np.dstack([rgb, a]).astype(np.uint8), "RGBA")

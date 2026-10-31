@@ -46,7 +46,18 @@ public final class SoundTest implements AutoCloseable {
                     THEME_VOLUME),
             new Track("SITUATION ROOM", "BRIEFING THEME", "music/briefing-theme.ogg", true, THEME_VOLUME),
             new Track("DRY DOCK", "HANGAR THEME", "music/hangar-theme.ogg", true, THEME_VOLUME),
-            new Track("COALITION RISING", "LEVEL THEME: ACT 1", "music/coalition-rising.ogg", true, THEME_VOLUME),
+            // The level themes by act (track list 4-13), each as its full mix: the file a level plays at full
+            // intensity (LevelScreen's full stream; the -base, -motif and other stems are only layers of it).
+            new Track("AFTERBURNER", "LEVEL THEME: ACT 1 A", "music/afterburner.ogg", true, THEME_VOLUME),
+            new Track("COALITION RISING", "LEVEL THEME: ACT 1 B", "music/coalition-rising.ogg", true, THEME_VOLUME),
+            new Track("HOMEFRONT", "LEVEL THEME: ACT 2 A", "music/homefront.ogg", true, THEME_VOLUME),
+            new Track("FIRESTORM", "LEVEL THEME: ACT 2 B", "music/firestorm.ogg", true, THEME_VOLUME),
+            new Track("RED DUST RUN", "LEVEL THEME: ACT 3 A", "music/red-dust-run.ogg", true, THEME_VOLUME),
+            new Track("GREY SIGNAL", "LEVEL THEME: ACT 3 B", "music/grey-signal.ogg", true, THEME_VOLUME),
+            new Track("THERA DEEP", "LEVEL THEME: ACT 4 A", "music/thera-deep.ogg", true, THEME_VOLUME),
+            new Track("PRESSURE LINE", "LEVEL THEME: ACT 4 B", "music/pressure-line.ogg", true, THEME_VOLUME),
+            new Track("HOLLOW ROCK", "LEVEL THEME: ACT 5 A", "music/hollow-rock.ogg", true, THEME_VOLUME),
+            new Track("GILDED CAGE", "LEVEL THEME: ACT 5 B", "music/gilded-cage.ogg", true, THEME_VOLUME),
             new Track("RED ALERT", "CUE: BOSS WARNING", "music/boss-warning.ogg", false, THEME_VOLUME),
             new Track(
                     "THE CHOIR DESCENDS",

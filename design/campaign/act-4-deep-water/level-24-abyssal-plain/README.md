@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../../enemies/naval/abyss-ray, ../../../enemies/naval/barbfin, ../../../enemies/ground/spawning-reef, ../../../enemies/naval/glassfin, ../../../enemies/naval/eel-swarm, ../../../enemies/ground/scuttler, ../../../player/weapons/harpoon-torpedoes, ../../../world/europa]
-updated: 2026-10-27
+updated: 2026-10-31
 ---
 
 # Level 24 – Abyssal Plain
@@ -418,3 +418,4 @@ under-water grade are in [europa](../../../world/europa/README.md#concept-art), 
   the t=156 Scuttlers at t=154, `bounty_scale` 0.42 → 0.40 (typical +0.0 %). Tried and rejected: the columns as lines
   abreast (0.87×), five per column and circle without the HP (0.69×; six 0.60×: a column dies in one splash), the HP alone
   (0.83×), the Depth Charges kept at L1 (no change).
+- 2026-10-30, the user: dither audit, ≥ 25 % smoothed (step DITH8): `relay-beacon-glow` (the beacons' pulse) and `meridian-wreck-glow` in smooth steps, not the 4×4 Bayer checker ([audit](../../../art-direction/production/README.md#dither-audit-2026-10-30)).

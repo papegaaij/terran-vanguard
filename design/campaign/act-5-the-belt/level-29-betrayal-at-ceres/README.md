@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../../enemies/air/talon, ../../../enemies/ground/sam-nest, ../../../enemies/space/asteroid-mite, ../../../enemies/README.md, ../../../player/wingmen, ../../../world/belt, ../../../ui/hud, ../../../story/characters]
-updated: 2026-10-30
+updated: 2026-10-31
 ---
 
 # Level 29 – Betrayal at Ceres
@@ -501,7 +501,7 @@ launch`: the clamp gun, its clamps springing open, the gas, Rook's Ember launchi
 | [concept/friendly-marker-capture-r70-a.png](concept/friendly-marker-capture-r70-a.png) | Game capture (step R70; [recipe](concept/prompts.md#friendly-marker-r70)): t=75 (the pincer's banner) and t=80 (the first wavering pair among Talons), the base of round 70's marker renderings | chosen (round 70: the base of the renderings) |
 | [concept/friendly-marker-r70-abcd.png](concept/friendly-marker-r70-abcd.png) | The four friendly markers side by side: half-size fields over the pair's 1:1 crops | chosen (round 70: the four side by side; d picked) |
 | [concept/friendly-marker-r70-d.png](concept/friendly-marker-r70-d.png) | Marker d = c + a: the banner at t=75, the brackets at t=80 | chosen (round 70: the banner in its own slot plus the IFF brackets) |
-| [concept/friendly-marker-capture-r71-a.png](concept/friendly-marker-capture-r71-a.png) | Game capture (step MARK70; [recipe](concept/prompts.md#friendly-marker-capture-r71-a)): t=75.5, the built green banner stacked under the pincers' amber one; t=80, the IFF brackets with their `FRIENDLY` tags on the first pair, the `SPARE ALLIES` label | proposed |
+| [concept/friendly-marker-capture-r71-a.png](concept/friendly-marker-capture-r71-a.png) | Game capture (step MARK70; [recipe](concept/prompts.md#friendly-marker-capture-r71-a)): t=75.5, the built green banner stacked under the pincers' amber one; t=80, the IFF brackets with their `FRIENDLY` tags on the first pair, the `SPARE ALLIES` label | chosen (2026-10-30, the user's re-test: Level 29 fixed) |
 | [concept/spare-label-r70-abc.png](concept/spare-label-r70-abc.png) | The secondary's HUD label: `SPARE WHITES` (built), `SPARE ALLIES`, `DON'T SHOOT`, counting and failed, 1:1 and 2x | chosen (round 70: `SPARE ALLIES` picked; the other two labels rejected) |
 
 ## Implementation
@@ -738,9 +738,11 @@ launch`: the clamp gun, its clamps springing open, the gas, Rook's Ember launchi
   wavering wave (t=75, 96, 138) and shows with the t=77 and t=97 pincers' amber banners for 1.5 s and 0.5 s. It and the
   brackets come from the sim's `neutral` flag (any neutral unit, no level data). The briefing's bonus line reads
   "DON'T SHOOT THE FRIENDLY CERES WING" (42 of 48 characters) to match the `FRIENDLY` tag and `SPARE ALLIES`; the
-  label in `data.yaml`. Capture `friendly-marker-capture-r71-a` proposed.
+  label in `data.yaml`. Capture `friendly-marker-capture-r71-a` chosen, the label and banner accepted 2026-10-30 (the user's re-test).
 - 2026-10-30 (step FIX7, the user's re-test on f1dc0f05): the wavering Ceres Wing Stormhawks' HP × 1.5 (20 → 30
   base, 60 at medium; [their page](../../../enemies/air/wavering-stormhawk/README.md)). The secondary still works:
   a deliberate shot kills one in about 0.5 s (0.33 s before); the autopilot keeps all six alive (Hold fire met 3/3 on
   every difficulty; `Level29Test` green). levelReport: wins 3/3, retries 0 everywhere, end calm 4.7 / 4.9 / 4.2 s,
   medium's typical haul +1.0 %.
+- 2026-10-30, the user: dither audit, ≥ 25 % smoothed (step DITH8): the Ceres hub's lamps (every `-glow` piece) and the deep `belt-space` in smooth steps, not the 4×4 Bayer checker ([audit](../../../art-direction/production/README.md#dither-audit-2026-10-30)).
+- 2026-10-30 (the user's re-test): Level 29 fixed: the friendly banner and the `SPARE ALLIES` label (MARK70) and the Stormhawks' HP (FIX7) are accepted; `friendly-marker-capture-r71-a` is chosen.

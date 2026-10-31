@@ -153,7 +153,7 @@ def _field(w, fn):
 
 
 def _out(v, col, w, white=None):
-    q = artkit.ordered_dither(np.clip(v, 0, 1), 7)
+    q = artkit.smooth_steps(v)
     rgb = np.asarray(col, float)[None, None] * q[..., None]
     if white is not None:
         rgb = rgb + 255 * np.clip(white, 0, 1)[..., None]

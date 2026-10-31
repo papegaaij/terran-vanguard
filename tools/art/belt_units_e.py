@@ -226,7 +226,7 @@ def wedge(arc):
     inside = (r <= REACH) & (a <= half)
     edge = inside & ((r > REACH - 2.2) | (a > half - 1.6 / np.maximum(r, 1)))
     f = np.where(inside, 0.16 + 0.06 * (r / REACH), 0) + np.where(edge, 0.85, 0)
-    return field_img(artkit.ordered_dither(f, 8), CRIMSON, white=0.95)
+    return field_img(artkit.smooth_steps(f), CRIMSON, white=0.95)
 
 
 def ring():
@@ -234,7 +234,7 @@ def ring():
     x, y = grid(w)
     r = np.hypot(x, y)
     f = np.exp(-((r - REACH) / 1.2) ** 2) * 0.95 + np.where(r < REACH, 0.07 + 0.05 * (r / REACH) ** 3, 0)
-    return field_img(artkit.ordered_dither(np.clip(f, 0, 1), 8), CRIMSON, white=0.95)
+    return field_img(artkit.smooth_steps(f), CRIMSON, white=0.95)
 
 
 def build_sentinel():

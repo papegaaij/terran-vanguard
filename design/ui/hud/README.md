@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../../player, ../../systems/scoring, ../../art-direction]
-updated: 2026-10-30
+updated: 2026-10-31
 ---
 
 # HUD
@@ -379,3 +379,4 @@ Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-a
   **stacked** in its own slot under the hostile band (as the d rendering shows), not timed apart: at Level 29's
   t=75 and t=96 it shows with the pincers' amber banners (1.5 s and 0.5 s together); the brackets are generic for
   every `neutral` unit.
+- 2026-10-30, the user: dither audit, ≥ 25 % smoothed (step DITH8): the side panels' faces (`panel-left`, `panel-right`) and `plate`: 64 undithered steps where the faces were Bayer-dithered (pending the user's review: the dither was deliberate in round 13) in smooth steps, not the 4×4 Bayer checker ([audit](../../art-direction/production/README.md#dither-audit-2026-10-30)).

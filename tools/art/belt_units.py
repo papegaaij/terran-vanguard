@@ -212,7 +212,7 @@ def star(w, k, col, arm=2.6):
     s = max(0.3, k)
     f = (np.exp(-np.abs(x) / 0.6) * np.exp(-np.abs(y) / (arm * s)) + np.exp(-np.abs(y) / 0.6) * np.exp(
         -np.abs(x) / (arm * s))) * 0.75 + np.exp(-(np.hypot(x, y) / (1.3 * s)) ** 2)
-    f = artkit.ordered_dither(np.clip(f * k, 0, 1), 6)
+    f = artkit.smooth_steps(f * k)
     rgb = (np.asarray(col, float) * 0.8 + 50)[None, None] * f[..., None] + 205 * np.clip(f - 0.6, 0, 1)[..., None]
     return artkit.additive(Image.fromarray(np.dstack([np.clip(rgb, 0, 255), np.full((w, w), 255.0)]).astype(np.uint8)))
 
@@ -552,7 +552,7 @@ def gas_frame(f, n=6):
     u = (f + 0.5) / n
     jet = np.exp(-(y / (3 + 10 * u)) ** 2) * np.exp(-np.abs(x) / (4 + 10 * u)) * (1 - u) ** 1.2
     plume = np.exp(-((np.hypot(x, y) - 14 * u) / (3 + 4 * u)) ** 2) * (1 - u) * 0.5
-    fld = artkit.ordered_dither(np.clip(jet + plume, 0, 1), 6)
+    fld = artkit.smooth_steps(jet + plume)
     rgb = np.array((220, 232, 240.0))[None, None] * fld[..., None]
     img = Image.fromarray(np.dstack([rgb, np.full((w, w), 255.0)]).astype(np.uint8), "RGBA")
     d = ImageDraw.Draw(img)

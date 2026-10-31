@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../player/specials, ../../../story/factions/jovian-ascendancy, ../../../campaign/act-5-the-belt]
-updated: 2026-10-29
+updated: 2026-10-31
 ---
 
 # Talon
@@ -134,3 +134,4 @@ Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's r
 - 2026-10-28 (step C2, Level 30's convoy; accepted in round 63, 2026-10-28): an `orbit` (90 px, 60°/s) and the `carrier + escorts` formation, so Talons escort the Gilded Gunship (the Gunship's own document: Talons in `orbit` at 90 px); Level 29 flies no escorts, its waves unchanged.
 - 2026-10-28 (user, [round 63](../../../concept-rounds/round-63/README.md), closed): **C.1** accepted: the Talon's hex shield 12, the squad leader's 24.
 - 2026-10-29 (M9 part I, step I2): `art: final`: the production frames (`tools/art/belt_units*.py`, every PNG with its `Source` chunk, so `importPlaceholders` skips them) are in `assets/sprites/` and the user accepted them as final in round 62 (F.1); the round 60 mockup rows are history.
+- 2026-10-30, the user: dither audit, ≥ 25 % smoothed (step DITH8): `talon-glint` in smooth steps, not the 4×4 Bayer checker ([audit](../../../art-direction/production/README.md#dither-audit-2026-10-30)).

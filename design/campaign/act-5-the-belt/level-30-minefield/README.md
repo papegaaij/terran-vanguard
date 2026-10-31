@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../../enemies/space/minelayer, ../../../enemies/air/gilded-gunship, ../../../enemies/air/rail-serpent, ../../../enemies/air/dart-drone, ../../../enemies/README.md, ../../../player/weapons/swarm-tail, ../../../player/wingmen, ../../../world/belt]
-updated: 2026-10-30
+updated: 2026-10-31
 ---
 
 # Level 30 – Minefield
@@ -550,3 +550,4 @@ two briefing images in the [briefing](../../../ui/briefing/README.md#concept-art
   rerouted trains, FIX7's slower Minelayers): no contact knockback, no repelling utility, no earlier Mk V generator.
   The user's playthrough asked for "something that repels me"; the options were put to them and they chose to keep
   the current setup.
+- 2026-10-30, the user: dither audit, ≥ 25 % smoothed (step DITH8): the deep `lane-space` and the `open-belt` haze in smooth steps, not the 4×4 Bayer checker ([audit](../../../art-direction/production/README.md#dither-audit-2026-10-30)).

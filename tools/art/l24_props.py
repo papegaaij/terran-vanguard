@@ -158,7 +158,7 @@ def beacon_glow(k):
     pool = np.exp(-(rf / (12 + 20 * level)) ** 2) * 0.32 * level ** 1.5
     col = RED * (1 - level) + GOLD * level
     v = np.clip(core * (0.55 + 0.45 * level) + halo + pool, 0, 1)
-    q = artkit.ordered_dither(v, 9)
+    q = artkit.smooth_steps(v, 64)     # DITH8: the dim pulse's faint pool kept (was ordered_dither(v, 9))
     rgb = col[None, None] * q[..., None] + 90 * np.clip(core * level - 0.6, 0, 1)[..., None]
     return artkit.additive(Image.fromarray(np.dstack([np.clip(rgb, 0, 255), np.full((h, w), 255.0)]).astype(np.uint8)))
 
@@ -285,7 +285,7 @@ def wreck_glow(i):
         mx, my = pts["lamp"]
         r = np.hypot(xx - mx, yy - my - 4)
         f = (np.exp(-(r / 1.3) ** 2) + np.exp(-(r / 5.0) ** 2) * 0.45) * on
-        rgb = AMBER[None, None] * artkit.ordered_dither(np.clip(f, 0, 1), 7)[..., None]
+        rgb = AMBER[None, None] * artkit.smooth_steps(f)[..., None]
     else:                                       # sparks at the dent after the hit
         rng = np.random.default_rng(2440 + i)
         mx, my = pts["dent"]
@@ -294,7 +294,7 @@ def wreck_glow(i):
             sx, sy = mx + rng.normal(0, 2.5), my + rng.normal(0, 2.0)
             f += np.exp(-((xx - sx) ** 2 + (yy - sy) ** 2) / 0.9) * rng.uniform(0.6, 1.0)
         f += np.exp(-((xx - mx) ** 2 + (yy - my) ** 2) / 18) * (0.35 if i % 2 == 0 else 0.15)
-        rgb = np.array((200, 230, 255.0))[None, None] * artkit.ordered_dither(np.clip(f, 0, 1), 7)[..., None]
+        rgb = np.array((200, 230, 255.0))[None, None] * artkit.smooth_steps(f)[..., None]
     return artkit.additive(Image.fromarray(np.dstack([np.clip(rgb, 0, 255), np.full((h, w), 255.0)]).astype(np.uint8)))
 
 

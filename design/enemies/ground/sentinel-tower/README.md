@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../player/specials]
-updated: 2026-10-29
+updated: 2026-10-31
 ---
 
 # Sentinel Tower
@@ -130,3 +130,4 @@ Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's r
   targets; the count from it: every third after it, hard every second); the stat block stays as approved for
   later levels.
 - 2026-10-29 (user, [round 65](../../../concept-rounds/round-65/README.md), closed): **F.3** ok (the production sprites and captures final, `art: final`); **S.1 a** (`sentinel-charge`), **S.2 a** (`sentinel-beam`), **S.3 b** (`sentinel-servo`, the rattling stripped-gear grind; step G4 switches it in), **S.4 a** (`sentinel-death`); **C.1 a** (the towers' emitters at least 40 px inside the field) and **C.2 a** (the full turn first on medium and hard) accepted as built.
+- 2026-10-30, the user: dither audit, ≥ 25 % smoothed (step DITH8): `sentinel-tower-telegraph-100/120/160`, `-ring`, `-eye`, `-beam(-tip)` in smooth steps, not the 4×4 Bayer checker ([audit](../../../art-direction/production/README.md#dither-audit-2026-10-30)).

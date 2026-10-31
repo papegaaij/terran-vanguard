@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../../../allies/mining-tug, ../../../enemies/air/hornet, ../../../enemies/space/shard-drone, ../../../enemies/air/buzzsaw-drone, ../../../enemies/air/dart-drone, ../../../enemies/air/gilded-gunship, ../../../enemies/air/talon, ../../../enemies/space/asteroid-mite, ../../../enemies/ground/sam-nest, ../../../world/belt, ../../../player/wingmen, ../../../player/generator]
-updated: 2026-10-30
+updated: 2026-10-31
 ---
 
 # Level 31 – Mining Rig Escort
@@ -592,3 +592,4 @@ the alternatives:
   another Hornet's hold now ([its page](../../../enemies/air/hornet/README.md)). No big-hull overlap left
   (`HullStackingTest`); levelReport: wins 3/3, retries 0, end calm 7.8 / 5.8 / 5.1 s, medium's typical haul −0.5 %;
   hard's secondary 0/3 as before (step I1).
+- 2026-10-30, the user: dither audit, ≥ 25 % smoothed (step DITH8): the deep `open-space` and the mining tug's `mining-tug-burn`/`-vent`/`-glow`/`-flare` in smooth steps, not the 4×4 Bayer checker ([audit](../../../art-direction/production/README.md#dither-audit-2026-10-30)).

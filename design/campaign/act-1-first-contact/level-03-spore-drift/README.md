@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../../enemies/air/spore-bomber, ../../../enemies/air/whirl-seed, ../../../enemies/space/leviathan]
-updated: 2026-10-05
+updated: 2026-10-31
 ---
 
 # Level 03 – Spore Drift
@@ -356,3 +356,4 @@ Production art for concept round 16 (M4 part C, the Level 03 batch), review file
   a scale of 1.09 and to 6 from 1.1, so the haul steps from 784 (−2 %) to 822 (+3 %) there; 1.07
   is the closer of the two.
 - 2026-10-05: Concept round 26 closed (user: the round accepted as proposed): the Leviathan's bounty 113 and the level's `bounty_scale` 1.07 accepted (typical haul 783 of the budget's 801).
+- 2026-10-30, the user: dither audit, ≥ 25 % smoothed (step DITH8): the weather fronts' alpha (`weather-front-a/-b`) and the spore banks' veil (`spore-banks`) in smooth steps, not the 4×4 Bayer checker ([audit](../../../art-direction/production/README.md#dither-audit-2026-10-30)).

@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../../enemies/air/mantis, ../../../enemies/air/coilwyrm, ../../../world/luna]
-updated: 2026-10-05
+updated: 2026-10-31
 ---
 
 # Level 06 – Farside
@@ -468,3 +468,4 @@ D8), with their briefs: [concept/prompts.md](concept/prompts.md); reviewed in
 - 2026-10-21: Edge-warning rule change (user, built by step EW): only a wave's first entry from the left, right or rear is
   edge-warned; the Coilwyrm loop-backs (t=102, t=168) re-enter unwarned, and Rook's rear bark for them is gone; his scripted
   "six" lines stay.
+- 2026-10-30, the user: dither audit, ≥ 25 % smoothed (step DITH8): the light map's `flare-pool` and `headlight-cone` (were 6 Bayer steps) in smooth steps, not the 4×4 Bayer checker ([audit](../../../art-direction/production/README.md#dither-audit-2026-10-30)).

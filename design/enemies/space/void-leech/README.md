@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../player/generator, ../../air/lamprey]
-updated: 2026-10-29
+updated: 2026-10-31
 ---
 
 # Void Leech
@@ -126,3 +126,4 @@ Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's r
   L33 (a Talon with a leech loses its shield and drifts).
 - 2026-10-27 (user, [round 60](../../../concept-rounds/round-60/README.md) closed): the design approved as drafted (`design: approved`); art A.10 **a**, "Void Leech A, ringed leech", chosen (`art: chosen`), the other variant in `concept/rejected/`. Q11 **b** (gunmetal/charcoal with gold, not gloss black): the chosen variant is re-rendered in gunmetal/charcoal in this part's production art, keeping the ≥ 20 % gold and the readability check.
 - 2026-10-29 (user, [round 66](../../../concept-rounds/round-66/README.md), closed): the production art accepted: **F.2 ok, black-violet** (the leech keeps the Vrell's black-violet with the lavender light rim, no gold; gunmetal not taken) and **F.1 a** (the prey Talon by the game's tint, tumbling, the leech on its back; no lights-out frames), `art: final`; sounds **S.1-S.5 a** (`leech-latch`, `leech-drain`, `leech-hum`, `leech-shake`, `leech-death`); the build's rules (C.4: the drift steers at the ship's centre, a leech on a prey takes ×1 damage, the EMP throws leeches off the ship and off their prey, thrown-off and fleeing leeches count as free) and C.8 (the intel's leech marks) accepted.
+- 2026-10-30, the user: dither audit, ≥ 25 % smoothed (step DITH8): `void-leech-drain`, `void-leech-death` in smooth steps, not the 4×4 Bayer checker ([audit](../../../art-direction/production/README.md#dither-audit-2026-10-30)).

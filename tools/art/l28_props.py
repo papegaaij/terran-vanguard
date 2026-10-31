@@ -250,7 +250,7 @@ def shatter(i, n=10):
     flash = np.exp(-(r / (30 + 60 * u)) ** 2) * (1.0 if i == 0 else 0.7 * (1 - u) ** 2)
     ring = np.exp(-((r - ring_r) / (8 + 10 * u)) ** 2) * 0.8 * fade
     f = np.clip(flash + ring + rays * 0.6 * fade, 0, 1)
-    v = artkit.ordered_dither(f, 10)
+    v = artkit.smooth_steps(f)
     rgb = np.array((190, 226, 255.0))[None, None] * v[..., None] + np.array((60, 30, 0.0)) * np.clip(f - 0.8, 0, 1)[..., None]
     return artkit.additive(Image.fromarray(np.dstack([np.clip(rgb, 0, 255), np.full((w, w), 255.0)]).astype(np.uint8)))
 

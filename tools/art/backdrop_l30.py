@@ -188,7 +188,7 @@ def space_tile(seed=3001):
     dust = band * (0.6 + 0.65 * (neb - 0.5)) + 0.12 * periodic_noise(w, h, 128, seed + 5)
     rgb = np.zeros((h, w, 3)) + np.array((9, 9, 14.0))
     rgb += np.clip(dust, 0, 1)[..., None] * np.array((104, 84, 62.0))
-    q = np.dstack([artkit.ordered_dither(np.clip(rgb[..., c] / 120, 0, 1), 14) for c in range(3)]) * 120
+    q = np.dstack([artkit.smooth_steps(rgb[..., c] / 120, 64) for c in range(3)]) * 120
     rng = np.random.default_rng(seed)
     for _ in range(460):
         x, y = rng.integers(0, w), rng.integers(0, h)
@@ -277,7 +277,7 @@ def open_belt(w=W, h=420, seed=3007):
     img = Image.new("RGBA", (w, h), (0, 0, 0, 0))
     a = np.zeros((h, w, 4))
     a[..., :3] = np.array((150, 124, 96.0))
-    a[..., 3] = artkit.ordered_dither(haze, 4) * 120
+    a[..., 3] = artkit.smooth_steps(haze) * 120
     img = Image.fromarray(a.astype(np.uint8), "RGBA")
     rng = np.random.default_rng(seed)
     for i in range(14):

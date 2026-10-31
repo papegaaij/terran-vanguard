@@ -365,7 +365,7 @@ def glow_of(w, h, spots, mats=None, k_mat=0.1):
         f = np.maximum(f, np.exp(-(d / (r * 1.8)) ** 2) * 0.55)
     if mats is not None:
         f = np.maximum(f, mats * k_mat)
-    v = artkit.ordered_dither(np.clip(f + hot * 0.6, 0, 1), 8)
+    v = artkit.smooth_steps(f + hot * 0.6)
     rgb = AMBER[None, None] * v[..., None] + (HOT - AMBER)[None, None] * np.clip(hot - 0.5, 0, 1)[..., None] * 1.6
     return artkit.additive(Image.fromarray(np.dstack([np.clip(rgb, 0, 255), np.full((h, w), 255.0)]).astype(np.uint8)))
 
@@ -760,7 +760,7 @@ def gate_glow():
         f = np.maximum(f, np.exp(-(d / 5) ** 2) + np.exp(-(d / 16) ** 2) * 0.4)
     f *= (hgt < 6)                                                  # the ribs' tops stay unlit by it
     f *= np.clip(np.minimum(yy - 2, h - 3 - yy) / 40, 0, 1)
-    v = artkit.ordered_dither(np.clip(f, 0, 1), 8)
+    v = artkit.smooth_steps(f)
     rgb = TEAL[None, None] * v[..., None]
     return artkit.additive(Image.fromarray(np.dstack([np.clip(rgb, 0, 255), np.full((h, w), 255.0)]).astype(np.uint8)))
 

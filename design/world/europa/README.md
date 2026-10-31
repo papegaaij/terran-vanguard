@@ -3,7 +3,7 @@ title: Europa
 design: approved
 implementation: n/a
 art: chosen
-updated: 2026-10-24
+updated: 2026-10-31
 ---
 
 # Europa
@@ -301,3 +301,4 @@ are stand-ins (their own sheets are in [naval](../../enemies/naval/README.md#con
 - 2026-10-24 (user, round 55 and round 56 closed): round 55's C.7 (the cones' faint haze in Levels 23–26) accepted;
   round 56's C.3 **keep**: the beam may still clear Level 26, its units stay as they are; Q.1 yes: the waterline strip
   names the energy weapons (`BEAMS ×0.2`, [hangar](../../ui/hangar/README.md#decisions)).
+- 2026-10-30, the user: dither audit, ≥ 25 % smoothed (step DITH8): the hydro-kit's refit flash (`ship-refit`, `rook-refit`) in smooth steps, not the 4×4 Bayer checker ([audit](../../art-direction/production/README.md#dither-audit-2026-10-30)).

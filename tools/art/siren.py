@@ -115,7 +115,7 @@ def plume_frame(i, n=8):
     r = np.hypot(xx - w / 2, (yy - w / 2 + 6 * u) * 1.15)
     rad = 6 + 20 * (1 - (1 - u) ** 2)
     dens = np.clip(1 - r / (rad * (0.7 + 0.6 * noise)), 0, 1) ** 0.7 * (1 - u) ** 1.1 * 0.9
-    alpha = artkit.ordered_dither(dens, 4)
+    alpha = artkit.smooth_steps(dens)
     rgb = np.array((176, 214, 206), float) * (0.85 + 0.3 * noise[..., None])
     out = np.dstack([np.clip(rgb, 0, 255), alpha * 255]).astype(np.uint8)
     out[alpha == 0] = 0

@@ -858,7 +858,7 @@ def refit_frame(i, hull, w=72):
     rr = w * 0.48 * min(1.0, max(0.0, u - 0.3) / 0.7) ** 0.7
     ring = np.exp(-((r - rr) / 1.8) ** 2) * (1 - u) * 0.8 * (u > 0.3)
     f = np.clip(band * 1.2 + seal + flash + ring, 0, 1)
-    q = artkit.ordered_dither(f, 8)
+    q = artkit.smooth_steps(f)
     col = np.where((band + flash)[..., None] > 0.5, np.array((236, 255, 250.0)), JET_COL[None, None])
     rgb = col * q[..., None]
     return artkit.additive(Image.fromarray(np.dstack([np.clip(rgb, 0, 255), np.full((w, w), 255.0)]).astype(np.uint8)))

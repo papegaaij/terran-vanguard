@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../player/specials, ../coilwyrm, ../../../campaign/act-5-the-belt]
-updated: 2026-10-28
+updated: 2026-10-31
 ---
 
 # Rail Serpent
@@ -112,3 +112,4 @@ Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's r
 - 2026-10-28 (step C2, the data; accepted in round 63, 2026-10-28): the stat block as data: a 10-car train is the engine, 9 cars (`segments`, turret cars 3, 6 and 9) and the tail; its HP 338 counts the tail (the draft's 318 left it out; the content check now counts the turret cars' HP and bounty), the cut `{scatter: 68, seconds: 1.5, wreck: true}`, the turret cars' `car-gun` (`tell` 0.2 s, the first shot 0.5 s in, hard's `burst: 2` 0.15 s apart, easy 3.0 s), easy 7 / hard 13 `segments`.
 - 2026-10-28 (user, [round 63](../../../concept-rounds/round-63/README.md), closed): the final art accepted (**F.4**); sounds **S.4 a** (`serpent-shot`, the .50 BMG), **S.5 redo** (`serpent-rumble`, no note: new proposals in round 64's audio step; a keeps playing), **S.6 b** (`serpent-split`, the chain snap and arc welder).
 - 2026-10-28 (user, [round 64](../../../concept-rounds/round-64/README.md), closed; page answers): **S.11 a** (`serpent-rumble`, the redo of round 63's S.5): an electric locomotive's traction-motor whine over a subway train's rail-joint clatter, `serpent-rumble-r64-a`; it replaces round 63's a (`serpent-rumble-r63-a`), which the game plays until the next game step switches the path (the new file is in `assets/sfx/` already); b rejected.
+- 2026-10-30, the user: dither audit, ≥ 25 % smoothed (step DITH8): `rail-serpent-snap` in smooth steps, not the 4×4 Bayer checker ([audit](../../../art-direction/production/README.md#dither-audit-2026-10-30)).

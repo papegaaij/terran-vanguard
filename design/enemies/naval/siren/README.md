@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy]
-updated: 2026-10-23
+updated: 2026-10-31
 ---
 
 # Siren
@@ -85,3 +85,4 @@ Concept round 48 proposals (a/b, decided in round 48 (2026-10-22)): wall nest an
   the sounds are round 54's picks (ring a, slow b, death a).
 - 2026-10-23 (user, round 54, closed): the final art accepted (F.3; `art: final`); sounds: the ring a, the slow **b**,
   the death a; calls C.4 (a Dash is not slowed) and C.5 (a kill ends its ring) accepted.
+- 2026-10-30, the user: dither audit, ≥ 25 % smoothed (step DITH8): `siren-plume` in smooth steps, not the 4×4 Bayer checker ([audit](../../../art-direction/production/README.md#dither-audit-2026-10-30)).

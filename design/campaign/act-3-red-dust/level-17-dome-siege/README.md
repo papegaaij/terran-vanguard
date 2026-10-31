@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../../enemies/air/choir-herald, ../../../enemies/ground/shellback, ../../../enemies/air/spore-bomber, ../../../enemies/ground/burrower, ../../../enemies/air/dust-kite, ../../../allies, ../../../player/wingmen, ../../../world/mars]
-updated: 2026-10-21
+updated: 2026-10-31
 ---
 
 # Level 17 – Dome Siege
@@ -626,3 +626,4 @@ Production art of M7 part D's round 40 (step ART-D; the mood from the Ares Landi
 - 2026-10-20 (user, round 44, closed): **G.b** the greenhouse frame's seed-capsule glint accepted; **G.c** the frame's hit flash lights the whole 64x48 sprite as a white slab because the burnt ground pad is baked into it: **split the pad off as a ground decal** (the frame sprite becomes the frame only and the pad a decal under it; a small art step, planned, not started; the final asset changes and its generator stays reproducible).
 - 2026-10-20 (steps ART-K, GK): round 44 G.c built: the greenhouse frame is transparent round the structure, the burnt pad is the ground decal `greenhouse-pad` (drawn under the frame and claimed so it stays in the atlas), the hit flash follows the structure only (`tools/art/siege_units.py`); the files are listed under Concept art as proposed and are a row in [round 45](../../../concept-rounds/round-45/README.md).
 - 2026-10-21 (user, round 45, A.c): the greenhouse frame and its burnt pad approved.
+- 2026-10-30, the user: dither audit, ≥ 25 % smoothed (step DITH8): the domes' `ares-dome-flash` and `ares-dome-eden-flash` in smooth steps, not the 4×4 Bayer checker ([audit](../../../art-direction/production/README.md#dither-audit-2026-10-30)).

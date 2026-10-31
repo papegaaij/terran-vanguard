@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../controls, ../../art-direction, ../../audio/voice]
-updated: 2026-10-24
+updated: 2026-10-30
 ---
 
 # Options
@@ -32,6 +32,12 @@ Settings screen reachable from the main menu and the pause menu, in the glass st
     remembered in the settings file.
 - **Audio:** master, music, effects, radio-blip and voice volumes; sound test. The voice
   volume is the spoken radio lines and briefing pages ([voice](../../audio/voice/README.md)).
+  The sound test's music list, in this order: the title, briefing and hangar themes; the level
+  themes by act ([track list](../../audio/music/README.md#track-list) tracks 4–13, Afterburner
+  "LEVEL THEME: ACT 1 A" to Gilded Cage "ACT 5 B"), each as its full mix, the file a level plays at
+  full intensity (never a base, motif or other stem), looping; then the boss themes, cues, stings
+  and jingles. Left and right step through it (wrapping round), with its place (`4 / 24`) and
+  where the track plays beside it, so the longer list needs no scrolling.
 - **Controls:** keyboard and gamepad bindings with remapping (press-a-key capture, conflicts
   swap), **auto-fire toggle (off = hold to fire, the default)**, gamepad dead zone. Mapping
   rules live in [controls](../controls/README.md).
@@ -156,3 +162,9 @@ Production art, UI batch part U2 (for concept round 13, opened by part U3): no a
   `AudioSettings.defaults()`). A saved settings file keeps its own values; only a first start or a missing key takes
   the new defaults. The louder depth charge burst of the same day ([sfx](../../audio/sfx/README.md#decisions)) is
   judged against this mix.
+- 2026-10-30: The sound test lists every level theme (user: "in the options you can play the different music
+  files. I'm missing act 2, 3, 4 and 5."): tracks 4–13 after the hangar theme, Afterburner (Act 1 A) to Gilded
+  Cage (Act 5 B), each its full mix `music/<name>.ogg` (what a level plays at full intensity; the levels mix it
+  with its `-base` stem, and some with a `-motif`, `-dark`, `-warm` or `-conveyor` stem), looping at the themes'
+  level. Coalition Rising's note becomes "LEVEL THEME: ACT 1 B". The list stays a left/right picker (24 tracks),
+  so no scrolling. `SoundTestTest` checks every track's file and that every level's theme is in the list.

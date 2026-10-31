@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../player/specials]
-updated: 2026-10-29
+updated: 2026-10-31
 ---
 
 # Rail Bunker
@@ -158,3 +158,4 @@ Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's r
   the movement of the screen."): the line leads the scroll (Behaviour, *The lead*), built in step FIX5; the looks
   unchanged. `levelReport -Plevel=33`: won 3/3, 0 retries on every difficulty (as before); `Level33Test`'s autopilot
   still struck by 0 lines.
+- 2026-10-30, the user: dither audit, ≥ 25 % smoothed (step DITH8): `rail-bunker-flash` in smooth steps, not the 4×4 Bayer checker ([audit](../../../art-direction/production/README.md#dither-audit-2026-10-30)).

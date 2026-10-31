@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../../enemies/bosses/abyssal-maw, ../../../enemies/naval/depth-hunter, ../../../enemies/naval/glassfin, ../../../enemies/naval/barbfin, ../../../enemies/naval/eel-swarm, ../../../enemies/naval/abyss-ray, ../../../enemies/naval/siren, ../../../enemies/naval/spiral-nautilus, ../../../enemies/ground/spine-turret, ../../../enemies/ground/polyp-mortar, ../../../world/europa, ../../../player/wingmen, ../../../story/twist, ../../../story/characters/the-choir, ../../../systems/economy]
-updated: 2026-10-30
+updated: 2026-10-31
 ---
 
 # Level 28 – Abyssal Maw
@@ -458,6 +458,7 @@ the cruisers in the [bosses'](../../../enemies/bosses/README.md#concept-art) (st
 | [concept/pelagic-capture-r58-a.png](concept/pelagic-capture-r58-a.png) | A run steered under *Pelagic-3* (x 90): the sub hit under the fallen rack as she enters at the top edge (t≈58.2), opened (58.8), her crate rising (60.1), 1:1 | chosen (round 58: accepted as final) |
 | [concept/breakout-burst-capture-r59-a.png](concept/breakout-burst-capture-r59-a.png) | Game capture for round 59 R.3 (step I4; Xvfb, `--bench`, medium, `--invulnerable`, auto-fire, the balance plan's Level 28 fit, the Bulwark; four runs, the ship steered by held keys after the kill): the breakout's burst at the ship's breach for a ship at the left, in the middle, at the right and one weaving left-right and up-down, each just before the breach and 0.1, 0.3 and 0.7 s after; the lower field (y 120–540) at 1:1 | chosen (round 59: accepted as final) |
 | [concept/breakout-burst-capture-r59-a.mp4](concept/breakout-burst-capture-r59-a.mp4) | The weaving run from the shaft's climb to 8 s after the breach with the game's sound: the burst where the moving ship crossed the lip, anchored on the ice as the ship flies on, the ice slabs, the medium switching to air | chosen (round 59: accepted as final) |
+| [concept/vent-glow-capture-r71-a.png](concept/vent-glow-capture-r71-a.png) | Game capture (step DITH7; [recipe](concept/prompts.md#vent-glow-capture-r71-a)): the halted arena at t=115 (tick 6900), the vent's throat with the caldera's glow re-rendered in 64 undithered steps (no 1 px checker stipple round the bright disc), 300×300 at 1:1 | proposed |
 
 The Maw's and the cruisers' production art (step ART-H1) and their captures are in the
 [bosses'](../../../enemies/bosses/README.md#concept-art) table, the Maw's intel silhouette and the intel capture in the
@@ -642,3 +643,12 @@ All decided in round 48 (2026-10-22):
   R.1 the Maw's motion and R.2 the cruisers' rise (the Maw's and the cruisers' art `final`, the captures `chosen`). C.1
   keep (the par 138), C.2-C.4 accepted, C.5 accepted (one medium switch at t=115 for the whole field, the burst at the
   breach). The steps' small rules ("pending round 59") are accepted.
+- 2026-10-30, the user: the vent's glow dithered ("the same defect we fixed in level 35": the glow round the bright
+  circle in the middle, visible in round 58's GIF too). Cause: `caldera-glow` (tools/art/backdrop_l28.py ``caldera``),
+  480×1508 drawn 1×, posterized by `ordered_dither` to 10 steps: a 1 px checker on 53 % of its pixels (2 px: 22 %).
+  Step DITH7 re-rendered only that file (subject `vent-glow`) in 64 undithered steps (`artkit.smooth_steps`; checker
+  0.3 %), every other backdrop file unchanged; the Maw's own dithered glows the same way (see its
+  [README](../../../enemies/bosses/abyssal-maw/README.md#decisions)); `Level28LooksTest.theVentsGlowsAreUndithered` guards
+  them. Capture `vent-glow-capture-r71-a` proposed. Not changed (pending the user's review): the bright disc itself
+  (caldera.png's throat, 16 colours) keeps its three faint rings.
+- 2026-10-30, the user: dither audit, ≥ 25 % smoothed (step DITH8): `gate-ring-glow`, the racks', gallery's, flesh lamp's and fissures' glows, `ceiling-cracks`, `ice-ceiling`, `ice-crystals`, `ice-shatter`, `service-buoy-glow` and the Ascendancy cruiser's `ascendancy-cruiser-shadow` (93 % before) in smooth steps, not the 4×4 Bayer checker ([audit](../../../art-direction/production/README.md#dither-audit-2026-10-30)).

@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../../player/wingmen, ../../../enemies/ground/creeper]
-updated: 2026-10-19
+updated: 2026-10-31
 ---
 
 # Level 08 – Neon Skyline
@@ -580,3 +580,4 @@ Concept round 30 (prompts: [concept/prompts.md](concept/prompts.md); concept gen
   (t 122.5–125.3: a burnt 68×64 at h 0.60, two 56×56 at h 0.85 and 0.60) leaning over the t=114 convoy's
   fifth and sixth Creepers (hard 6), the convoy CA's L10-style waves lengthened from 4 to 5: the three
   placements are removed (their lots show the ground tile's low roofs); the check passes again.
+- 2026-10-30, the user: dither audit, ≥ 25 % smoothed (step DITH8): the high-air `mist` in smooth steps, not the 4×4 Bayer checker ([audit](../../../art-direction/production/README.md#dither-audit-2026-10-30)).

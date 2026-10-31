@@ -4,7 +4,7 @@ design: draft
 implementation: in-progress
 art: n/a
 depends-on: [.., ../../tech/roadmap, ../../tech/architecture, ../../audio/music, ../../audio/sfx]
-updated: 2026-10-30
+updated: 2026-10-31
 ---
 
 # Production art plan
@@ -134,6 +134,57 @@ runtime, since that would move the top-left key light. The same holds for set pi
 that would be drawn mirrored uses its own `-mirrored` piece, rendered with the layout mirrored and
 the key light fixed (Level 01: dock frame, bridge crane, crane jib, burning platform).
 
+### Dither audit (2026-10-30)
+
+Step DITH7, after the user saw the 4×4 Bayer stipple (`artkit.ordered_dither`) on Level 35's Sovereign (fixed in PIX7),
+round Level 28's vent and on Level 14's screen after the Spire's death. The vent's glow and the Maw's glows were fixed in DITH7 (see
+[Level 28](../../campaign/act-4-deep-water/level-28-abyssal-maw/README.md#decisions)); **step DITH8** (the user,
+2026-10-30: every set at ≥ 25 % smoothed) re-rendered the rest in `artkit.smooth_steps` (32 undithered steps, 64 for
+the faint space beds, the beacons' pulse and the HUD faces), the column *After*; rows under 25 % stay as they were,
+except where a smoothed helper also feeds them. Measure: every PNG in `assets/`
+whose `Source` generator posterizes with a Bayer dither, scanned with `SovereignLooksTest.checkerShare` (the share of
+visible pixels that are a 1 px checker cell), averaged over a set's frames by visible pixels (the worst frame in
+brackets); steps are the distinct visible values (a glow's posterization steps). Everything here is drawn 1× in the
+960×540 frame unless the scale says otherwise, so a cell is 2×2 screen pixels at 1080p. Worst first, families merged;
+382 sets from 74 generators reach 5 %, the small sprites (under 64 px) and 105 UI pictures are summed in the last rows.
+
+| Asset | Generator | Drawn | Checker | After | Steps | Where seen |
+|---|---|---|---|---|---|---|
+| `ascendancy-cruiser-shadow` (240×660, normal) | ascendancy_cruiser.py `shadow` | 1× (0.6× rising) | 93 % | 0 % | 2 | L28 the run: each cruiser's shadow on the night ice, a 50 % alpha as a full checker |
+| `seam-mouth-glow`, `ducts-mouth-glow`, `drift-`/`conveyor-mouth-glow`, `crucible-glow`, `ice-wall-glow` | backdrop_l32.py | 1× | 40–76 % | 0–3 % | 5–9 | L32 the galleries' mouths, the crucible, the shaft wall |
+| `outer-ring-glow`, `block-c-glow(-red)`, `red-block-e-glow`, `outer-dock-N-`/`dock-N-glow`, `helix-*-glow`, `coalition-block-N-glow` | backdrop_l29.py lamps | 1× | 30–55 % | 0–2 % | 5–7 | L29 the Ceres hub's lamps |
+| `gate-ring-glow` / `hatchery-gate-glow` (480×720) | backdrop_l28.py / backdrop_l27.py | 1× | 55 % | 0 % | 7 | L27's end, L28's start: the ring of arches |
+| `collapsed-rack-`, `egg-rack-a/-b/-nest-`, `seam-brood-gallery-`, `flesh-lamp-`, `fissure-1..4-glow` | backdrop_l28.py `glow_spots` | 1× | 32–56 % | 0 % | 4–37 | L28 sections 1–4 |
+| `smoker-1..18-glow`, `marlin-stack-glow`; `marlin-hauler-glow`, `heat-plume-glow` | backdrop_l27.py, l27_props.py | 1× | 41–45 % (75 %) | 1–2 % | 7–16 | L27 the vents and the haulers |
+| `relay-beacon-glow` (backdrop 128×192 and sprite 72×104) | backdrop_l24–27.py, relay_beacon.py | 1× | 39–44 % (67 %) | 0 % | 10 | L24–27 the relay beacons' pulse |
+| `open-belt`, `lane-space`, `belt-space`, `open-space`, `field-space`, `orbit-space` (480×1024 beds) | backdrop_l29.py / backdrop_l30.py `space_tile` (14 steps a channel; L31, L33–35 reuse it) | 1× | 28–42 % | 0 % | 300–500 | L29–35 the deep layer behind everything; faint (a step is ~8/255) |
+| `vent-field-glow` (480×2040), `amber-seep(-glow)`, `lamp-post(-dying)-glow` | backdrop_l26.py | 1× | 34–41 % | 0 % | 2–16 | L26 the vent field (two values over the whole strip), the seeps, the lamps |
+| `ceiling-cracks`, `ice-ceiling`, `ice-crystals` (high-air, 480×600–960) | backdrop_l28/l23/l24/l22.py | 1× | 34–37 % | 0–1 % | 3–7 | L22–24, L28 the ice ceiling and crystals |
+| `sentinel-tower-telegraph-100/120/160`, `sentinel-tower-ring` (448×448) | belt_units_e.py | 1× | 27–37 % | 0 % | 3–5 | L32 the Sentinel Tower's sweep tell and ring |
+| `mist` (480×960) | backdrop_l08.py | 1× | 35 % | 0 % | 4 | L08 the mist layer over the field |
+| `ice-shatter` (320×320, additive) | l28_props.py | 1× | 34 % (100 %) | 0 % (1 %) | 34 | L28 the breakout's burst |
+| `weather-front-a/-b` (480×420) | backdrop_l03.py `veil` | 1× | 25–37 % | 0 % | 38 | L03 the weather front |
+| `flare-pool`, `headlight-cone` (light map) | l06_darkness.py | 1× | 28–32 % | 0 % | 5 | L06 the flares' pools and the headlight |
+| `vrell-glow` (480×300) | backdrop_l01.py `vrell_glow` | 1× | 29 % | 0 % | 118 | L01 the horizon glow on the deep layer |
+| `daylight-beams_0..1` (480×540, additive) | backdrop_l14.py via daylight_l14.py `light_layers` (5 steps) | 1× | 27 % (frame 0: 79 %) | 0 % | 2–4 | **L14 after the Spire's death** (the user, 2026-10-30): the low sun's beams; frame 0 (2.5–6.25 s after the death) is one dither step over the whole field, frame 1 (to the end) 9 % |
+| `panel-left`, `panel-right` (240×540) | hud.py `steel` (deliberate: the panel faces dithered) | 1× | 26–27 % | 0 % | 26 | every level, the HUD side panels |
+| `abyss-ray-bloom`, `abyss-ray-shadow` (160–208 px) | abyss_ray.py | 1× | 27–38 % (86 %) | 0 % | 5–381 | L24, L27, L28 the Abyss Ray |
+| `abyssal-maw-ichor`, `-silt`, `-shadow-column`, `-shadow-head`, `-blowout` (normal-blend puffs and shadows) | abyssal_maw.py | 1× | 27–39 % (100 %) | 0–1 % (3 %) | 3–28 | L28 the Maw's sinking bursts, silt, lunge shadow, blow-outs (not glows: kept in DITH7) |
+| `ares-dome-flash`, `ares-dome-eden-flash` (120–144 px) | siege_units.py | 1× | 30–31 % | 0 % | 4 | L17 the domes' flash |
+| `iron-sovereign-core-glow` (96×96) | iron_sovereign.py | 1× | 27 % | 0 % | 7 | L35 the Sovereign's core (PIX7 fixed the overlays only) |
+| `siege-spire-emitter` (20×20, additive) | siege_spire.py | **2.6×** | 25 % (62 %) | 0 % | 11 | L14 the Spire's pods' aim glow: the only scaled one, a 2.6 px cell |
+| ground tiles: `arena-floor`, `rille-floor`, `dome-`/`array-`/`vrell-field`, `battery-a..d`; `earth`, L10 `mist` | backdrop_l04–07/l10.py (stain and cover alpha) | 1× | 11–20 % | – | 14–400 | L04–07, L10 |
+| small sprites (16–64 px: `ice-geyser-residue` 59 %, `heat-plume-*`, `mining-tug-*`, `helix-core-glow`, wakes, sparks) | many | 1× | 10–59 % | 0–3 % (the 32 sets ≥ 25 %) | – | short bursts, a few pixels each |
+| UI pictures: the briefing images (672×240), `title-scene`, `hangar-map`, the act stills | briefing_images.py, ui_scenes.py, act_stills.py | 1× | 8–29 % | – | 30–3000 | menus and briefings (a deliberate print/scan look) |
+
+After DITH8, 121 of the 123 families at ≥ 25 % measure under 5 % (157 sets in `pipeline/`'s `DitherGuardTest`, its
+`smooth-sets.txt`); the two left: Level 15's `wall-pylon` (8×32, one colour in a 1-bit cut-out: the measure's false
+positive, the cut-out is the look) and the briefing picture `level-29-ceres-hub` (29 %: the briefings' shared display
+dither, `ui_scenes.dithered`, a deliberate print look; smoothing it changes every briefing picture, pending the user's
+review). `ordered_dither` stays on the tile seams' 2-step feathers and the cover masks between two opaque materials
+(alpha cut-outs whose hard edge is the look). Before/after captures:
+[dither-fix-capture-r71-a.png](concept/dither-fix-capture-r71-a.png).
+
 ## Concept art
 
 Game captures of the production batches that span several parts; prompts:
@@ -142,6 +193,7 @@ Game captures of the production batches that span several parts; prompts:
 | File | What | Status |
 |---|---|---|
 | [concept/art-batch-capture-r26-a.png](concept/art-batch-capture-r26-a.png) | Round 26 (M4 part H batch): the Skitter, Needler and Scuttler deaths, the Smart Bomb and the Act 1 title card over its still, captured from `--bench` runs on Xvfb | chosen |
+| [concept/dither-fix-capture-r71-a.png](concept/dither-fix-capture-r71-a.png) | Step DITH8: before/after crops (2× nearest, as at 1080p) of the smoothed glows, hazes and HUD faces in Levels 28, 32, 29 and 14 (after the Spire's death) | proposed |
 
 ## Implementation
 
@@ -379,3 +431,4 @@ Game captures of the production batches that span several parts; prompts:
   build since the part's art could run. `AtlasBudget` allows Level 28 seven pages (`LEVEL_PAGES_EXCEPTIONS`); the
   alternative is trimming its art to 6 pages (about 2 MiB of backdrop, e.g. the caldera's glow at half size).
 - 2026-10-26 (user, round 58 closed, C.6): Level 28's seven atlas pages (104 MiB) accepted; `AtlasBudget` keeps its exception.
+- 2026-10-30, the user: dither audit, ≥ 25 % smoothed (step DITH8): every set of the audit at ≥ 25 % re-rendered in `artkit.smooth_steps` (glows, hazes, puffs, shadows, the space beds, the HUD faces; 121 of 123 families now under 5 %, kept there by `DitherGuardTest`); `wall-pylon` (a cut-out) and the briefing picture `level-29-ceres-hub` (the briefings' display dither) left, the latter pending the user's review. No atlas page changed.

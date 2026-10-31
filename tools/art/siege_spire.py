@@ -55,9 +55,10 @@ air shadow from the frame), the emitters during a sweep's telegraph. The death c
 dust ring (the root burst's dust) and the canopy's withering are not here (siege_spire_death.py and
 the Level 14 backdrop, step H5).
 
-Run: python3 tools/art/siege_spire.py [--assets | --review]   (~12 min on 20 cores; the renders are
+Run: python3 tools/art/siege_spire.py [--assets | --review | glows]   (~12 min on 20 cores; the renders are
 cached in the system temp dir, conceptgame-cache/siege-spire/; without --assets nothing is written
-into assets/: the review is rendered from the fresh frames; --review rebuilds it from assets/)
+into assets/: the review is rendered from the fresh frames; --review rebuilds it from assets/; ``glows`` writes only
+the emitter and maw glows, smooth steps since step DITH8)
 """
 import sys
 import tempfile
@@ -340,7 +341,7 @@ def glow_disc(size, rgb, strength, core=0.35, levels=5):
     yy, xx = np.mgrid[0:size, 0:size]
     r = np.sqrt((xx + 0.5 - size / 2) ** 2 + (yy + 0.5 - size / 2) ** 2) / (size / 2)
     a = np.clip(1 - r, 0, 1) ** 1.6 * strength
-    a = artkit.ordered_dither(a, levels)
+    a = artkit.smooth_steps(a)
     hot = np.clip((core - r) / core, 0, 1)
     col = np.array(rgb, dtype=np.float64)[None, None, :] * (1 - hot[..., None]) + 255 * hot[..., None]
     img = np.dstack([col, a * 255]).clip(0, 255).astype(np.uint8)
@@ -688,6 +689,9 @@ def load_assets():
 
 
 def main(args):
+    if "glows" in args:            # step DITH8: only the emitter and maw glows (smooth steps), no render
+        write_assets({f"{SLUG}-emitter": emitter_frames(), f"{SLUG}-maw-glow": maw_glow_frames()})
+        return
     if "--review" in args:
         frames = load_assets()
     else:

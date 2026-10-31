@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../../../world/europa, ../../../campaign/act-4-deep-water, ../../naval/eel-swarm, ../../../player/wingmen, ../../../story/twist, ../../../story/characters/the-choir, ../../../systems/economy]
-updated: 2026-10-30
+updated: 2026-10-31
 ---
 
 # Abyssal Maw
@@ -234,8 +234,9 @@ anti-sub weapons' hits from the slide's middle to the lunge. `AbyssalMawTest` at
 over its five seeds (138.4 before; 118.6–162.4 s, every seed in the window; phases ≈ 34 / 71 / 31 s, phase 2
 +2.8 s), easy ≈ 102 s (99), hard ≈ 164 s (161; one seed at 180.0 s, the window's edge); `levelReport -Pparts=boss`
 (three seeds): medium 111.8 → 117.1 s, easy 88.4 → 93.7, hard 160.2 → 162.4, won 3/3 with no retry at every
-difficulty. The HP stays (inside the window; the mean within 10 % of the aim); the par stays **138** for now (the
-mean 4.9 s over it, inside `AbyssalMawTest`'s 5 s; raising it to 143 is pending the user's review).
+difficulty. The HP stays (inside the window; the mean within 10 % of the aim); the par stays **138** (the
+mean 4.9 s over it, inside `AbyssalMawTest`'s 5 s; raising it to 143 was proposed and the user declined, 2026-10-30:
+"maws par is fine now, keep it as is").
 
 Lessons from Acts 2–3 the build must apply (M8 part H):
 - **Measure, then tune the HP, not the attacks** (Kraken E6, Spire H10, Colossus H4, walker F4): the
@@ -490,4 +491,13 @@ All decided in round 48 (2026-10-22):
   back. ... The maw must go under entirely and then race back in from below." The head and its sacs now sink and fade
   out with the coil's 2 s slide and are out of every weapon's reach (the Smart Bomb included) from the slide's middle
   to the lunge; the shadow tell, the lunge, the body's 3 s (the throat ×2 as it passes) and the wind-in are unchanged.
-  The fight re-measured (step MAW7): 142.9 s at medium, the HP and the par kept.
+  The fight re-measured (step MAW7): 142.9 s at medium, the HP and the par kept. The dive is fine (the user's re-test,
+  2026-10-30), and **the par stays 138** (the user: "maws par is fine now, keep it as is"; `AbyssalMawTest`'s mean
+  142.9 s sits within its 5 s tolerance).
+- 2026-10-30, the user: the vent's glow dithered on Level 28 ("the same defect we fixed in level 35"). Step DITH7: the
+  Maw's additive glows that `ordered_dither` posterized (a 1 px checker on 21–45 % of their pixels) are smooth now, 32
+  undithered steps (tools/art/abyssal_maw.py subject `glows`: the jaw rim's orbs, the implants' arc, the shed flare, the
+  blow-outs' light, the vent's flare), every other set unchanged. The vent's flare is rendered at its drawn size (308 px,
+  was 192 px drawn ×1.6) and drawn 1×. The head's, segments', sacs' and implants' glows had no stipple and are kept.
+  `Level28LooksTest.theVentsGlowsAreUndithered` guards the sets and the caldera's glow.
+- 2026-10-30, the user: dither audit, ≥ 25 % smoothed (step DITH8): the puffs and shadows DITH7 kept (`-ichor`, `-silt`, `-blowout`, `-shadow-head`, `-shadow-column`) in smooth steps, not the 4×4 Bayer checker ([audit](../../../art-direction/production/README.md#dither-audit-2026-10-30)).

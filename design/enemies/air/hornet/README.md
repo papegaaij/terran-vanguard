@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../player/specials, ../../../art-direction, ../../../campaign/act-5-the-belt]
-updated: 2026-10-30
+updated: 2026-10-31
 ---
 
 # Hornet
@@ -119,3 +119,4 @@ Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's r
   side is drawn per unit; Level 31's trio at t=134 overlapped 2.6 s at medium). Its hover now has **`keep_apart:
   true`**: a holding Hornet turns its drift away from another kept-apart hold before their hit boxes come within 8 px
   (the simulation's `HoverHold.keepApart`; the Depth Hunter and the other drifting holds of Acts 1–4 drift as before).
+- 2026-10-30, the user: dither audit, ≥ 25 % smoothed (step DITH8): `hornet-hatch-glow`, `hornet-launch` in smooth steps, not the 4×4 Bayer checker ([audit](../../../art-direction/production/README.md#dither-audit-2026-10-30)).

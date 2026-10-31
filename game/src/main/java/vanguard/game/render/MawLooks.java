@@ -93,13 +93,16 @@ final class MawLooks {
     static final float VENT_DIM = 0.85f;
 
     private static final Color DARK = new Color(0.02f, 0.03f, 0.05f, 1);
-    /** The death: the blow-outs' gap, each segment's and the head's sink, s; the vent's flare (4 fps, x1.6). */
+    /**
+     * The death: the blow-outs' gap, each segment's and the head's sink, s; the vent's flare (4 fps, drawn 1x: step
+     * DITH7 renders it full size, 308 px, where a 192 px frame drawn x1.6 showed its dither as a coarse stipple).
+     */
     static final double BLOWOUT_GAP = 0.4;
 
     static final double SEGMENT_SINK = 0.8;
     static final double HEAD_SINK = 1.0;
     static final int FLARE_TICKS = 15;
-    static final float FLARE_SCALE = 1.6f;
+    static final float FLARE_SCALE = 1f;
     /** A sinking part shrinks to this share and darkens to this shade. */
     static final float SINK_SCALE = 0.7f;
 

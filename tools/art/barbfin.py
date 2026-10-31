@@ -151,7 +151,7 @@ def ink_frame(i):
     rad = 6 + 15 * (1 - (1 - u) ** 2)
     dens = np.clip(1 - r / (rad * (0.75 + 0.5 * noise)), 0, 1) ** 0.7
     dens *= (1 - u) ** 1.2 * 0.85
-    alpha = artkit.ordered_dither(dens, 4)
+    alpha = artkit.smooth_steps(dens)
     rgb = np.array((64, 70, 80), float) * (0.85 + 0.3 * noise[..., None])
     out = np.dstack([np.clip(rgb, 0, 255), alpha * 255]).astype(np.uint8)
     out[alpha == 0] = 0

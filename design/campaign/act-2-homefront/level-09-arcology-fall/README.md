@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../../enemies/ground/hive-node, ../../../enemies/ground/ravager, ../../../enemies/ground/creeper, ../../../player/wingmen]
-updated: 2026-10-18
+updated: 2026-10-31
 ---
 
 # Level 09 – Arcology Fall
@@ -637,3 +637,4 @@ generator's backdrop block, merged into the level data, is kept as
   0.29 for the same haul; the hard bridge packs of 3 (the secondary 6) so the hard campaign stays within
   the expert's bound (`ActPlaythroughTest`, −13.9 %); the hard pounce interval 4 s as on medium (was 2), the hard packs as medium, the
   returning Spore Bombers and Mantises and the larger convoys accepted in round 39 (2026-10-18).
+- 2026-10-30, the user: dither audit, ≥ 25 % smoothed (step DITH8): the high-air `mist` (Level 08's helper) in smooth steps, not the 4×4 Bayer checker ([audit](../../../art-direction/production/README.md#dither-audit-2026-10-30)).

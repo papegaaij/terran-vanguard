@@ -417,7 +417,7 @@ def steam_frames(n=8):
         gy, gx = np.gradient(blur)
         shade = np.clip(1 + (gx + gy) * 40, 0.62, 1.1)
         rgb = np.array((240, 246, 252)) * shade[..., None]
-        alpha = artkit.ordered_dither(blur * 0.82, 5)
+        alpha = artkit.smooth_steps(blur * 0.82)
         img = Image.fromarray(np.dstack([np.clip(rgb, 0, 255), alpha * 255]).astype(np.uint8), "RGBA")
         frames.append(img)
     return frames

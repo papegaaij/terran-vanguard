@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy]
-updated: 2026-10-24
+updated: 2026-10-31
 ---
 
 # Glow Angler
@@ -88,3 +88,4 @@ Concept round 48 proposals (a/b, decided in round 48 (2026-10-22)): the Angler w
   cone or the Sonar Pulse.
 - 2026-10-24 (user, round 55 closed, F.3): the Glow Angler's final art accepted (`glow-angler-final-r55-a`); its lure
   hum **a** and lunge **a** picked.
+- 2026-10-30, the user: dither audit, ≥ 25 % smoothed (step DITH8): `glow-angler-death`, `-lure`, `-muzzle` in smooth steps, not the 4×4 Bayer checker ([audit](../../../art-direction/production/README.md#dither-audit-2026-10-30)).

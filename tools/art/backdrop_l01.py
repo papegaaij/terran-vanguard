@@ -132,7 +132,8 @@ def moon(w, h, factor=4):
 
 
 def vrell_glow(w, h):
-    """The placeholder's horizon glow, its long fade ordered-dithered."""
+    """The placeholder's horizon glow, its long fade in smooth steps (step DITH8: was the concept's
+    ``finish_dithered``, a 4x4 Bayer checker over the whole fade)."""
     yy = np.mgrid[0:h, 0:w][0].astype(np.float64)
     n = raster.fbm(w, h, 40, 41, octaves=4, period=False)
     mix = np.clip(raster.fbm(w, h, 120, 43, octaves=2, period=False) * 1.4 - 0.2, 0, 1)[..., None]
@@ -142,7 +143,8 @@ def vrell_glow(w, h):
     for _ in range(14):                                     # distant ship lights
         x, y = int(rng.uniform(20, w - 20)), int(rng.uniform(6, 48))
         arr[y, x] = (120, 255, 200, 0.85)
-    return l01.finish_dithered(arr, colors=20, alpha_levels=12, rgb_amp=6.0)
+    a = artkit.smooth_steps(arr[..., 3])
+    return l01.r03.step_alpha(l01.posterize(l01.rgba(arr[..., :3], a * 255), 20), artkit.GLOW_LEVELS - 1)
 
 
 # --------------------------------------------------------------------------- far

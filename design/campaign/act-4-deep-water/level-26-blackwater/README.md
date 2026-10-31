@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../../enemies/naval/glow-angler, ../../../enemies/naval/depth-hunter, ../../../enemies/naval/siren, ../../../enemies/naval/spiral-nautilus, ../../../enemies/naval/eel-swarm, ../../../enemies/naval/driftjelly, ../../../story/characters/the-choir, ../../../story/characters/rook, ../../../world/europa, ../../../player/wingmen, ../../../player/specials]
-updated: 2026-10-27
+updated: 2026-10-31
 ---
 
 # Level 26 – Blackwater
@@ -618,3 +618,4 @@ Production art of M8 part F (round 55, step ART-F) and game captures; the genera
   lamp; they light 6 % more of the field) and the Driftjelly's veins, which read as the whole jelly.
 - 2026-10-27 (user, the Act 4 playthrough done): the look after step m8k1 (`54302d34`) **accepted**, Rook's own headlight
   cones and the Driftjelly's veins included (no longer pending). The level is done; it ships in `v0.2` (Acts 1–4).
+- 2026-10-30, the user: dither audit, ≥ 25 % smoothed (step DITH8): `vent-field-glow`, `amber-seep` (its alpha) and `-glow`, `lamp-post(-dying)-glow`, `relay-beacon-glow`, `farm-barge-glow` in smooth steps, not the 4×4 Bayer checker ([audit](../../../art-direction/production/README.md#dither-audit-2026-10-30)).

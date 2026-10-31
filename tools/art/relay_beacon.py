@@ -153,7 +153,7 @@ def glow(k):
     pool = np.exp(-(rf / (12 + 16 * level)) ** 2) * 0.3 * level ** 1.5
     col = RED * (1 - level) + GOLD * level
     v = np.clip(core * (0.55 + 0.45 * level) + halo + pool, 0, 1)
-    q = artkit.ordered_dither(v, 9)
+    q = artkit.smooth_steps(v, 64)     # DITH8: the dim pulse's faint pool kept (was ordered_dither(v, 9))
     rgb = col[None, None] * q[..., None] + 90 * np.clip(core * level - 0.6, 0, 1)[..., None]
     return artkit.additive(Image.fromarray(np.dstack([np.clip(rgb, 0, 255), np.full((h, w), 255.0)]).astype(np.uint8)))
 

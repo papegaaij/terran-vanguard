@@ -66,7 +66,7 @@ def _frame(job):
 
 def _light(w, field, col):
     """An analytic light field (0..1) of colour ``col`` -> an additive sprite, stepped to a few levels."""
-    q = artkit.ordered_dither(np.clip(field, 0, 1), 7)
+    q = artkit.smooth_steps(field)
     rgb = np.asarray(col, float)[None, None] * q[..., None]
     return artkit.additive(Image.fromarray(np.dstack([np.clip(rgb, 0, 255), np.full((w, w), 255.0)]).astype(np.uint8)))
 

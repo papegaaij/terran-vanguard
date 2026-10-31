@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../world/belt]
-updated: 2026-10-30
+updated: 2026-10-31
 ---
 
 # Minelayer
@@ -26,7 +26,7 @@ set at its first level from the proposed Act 5 reference DPS (judgement call J2:
 0.9 s; step FIX6 (the user's playthrough 2026-10-30) made it **280 HP (2.3 s)** with a fast rise, so it lays its
 line before a typical fit kills it (an accepted exception to the medium class's 0.4–1.5 s, decided 2026-10-30 in round 70);
 step FIX7 (the user's re-test, the same day: "way too fast") slowed it to a 200 px/s rise and a 150 px/s strafe
-and made it **560 HP (4.5 s)**, bounty 60 (pending the user's review). Fire rates and line counts are tuned per level with `levelReport` in the build.
+and made it **560 HP (4.5 s)**, bounty 60 (accepted 2026-10-30, the user's re-test). Fire rates and line counts are tuned per level with `levelReport` in the build.
 
 <!-- data: stat-block -->
 | Field | Value |
@@ -187,4 +187,5 @@ Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's r
   easy (its wider 144 px gap, HP × 0.75) the first layer lays its first cluster (4–5), not its gap (it needed > 900
   HP): the test asks the gap at medium and hard only. The slower rise keeps it longer in its side lane: the naive
   pilot's touches with it at medium 25 → 55 a run (`Level30Test`'s bound 120 → 150; the collisions are the open
-  question to the user). `BalanceTest.ACCEPTED`'s TTK and bounty exceptions updated. Pending the user's review.
+  question to the user). `BalanceTest.ACCEPTED`'s TTK and bounty exceptions updated. Accepted 2026-10-30 (the user's re-test: Level 30 fixed; the collisions stay as built).
+- 2026-10-30, the user: dither audit, ≥ 25 % smoothed (step DITH8): `minelayer-mine-pop`, `-blast`, `-glow` in smooth steps, not the 4×4 Bayer checker ([audit](../../../art-direction/production/README.md#dither-audit-2026-10-30)).

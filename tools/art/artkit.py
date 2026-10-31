@@ -12,8 +12,10 @@ The concept ``render/`` package (and the concept scripts that made the chosen lo
 unchanged; they stay frozen.
 """
 import json
+import os
 import re
 import sys
+from fnmatch import fnmatch
 from pathlib import Path
 
 import numpy as np
@@ -133,10 +135,35 @@ def ordered_dither(values, levels):
     return np.floor(np.clip(values, 0, 1) * steps + threshold).clip(0, steps) / steps
 
 
+GLOW_LEVELS = 32          # a smooth glow's steps, undithered (steps PIX7, DITH7: >= 32 read as a ramp, no stipple)
+
+
+def smooth_steps(values, levels=GLOW_LEVELS):
+    """0..1 values posterized to ``levels`` steps without dithering: for a soft glow drawn large, where
+    ``ordered_dither``'s checker reads as a stipple (the user, 2026-10-30, Levels 35 and 28)."""
+    return np.round(np.clip(values, 0, 1) * (levels - 1)) / (levels - 1)
+
+
 # --------------------------------------------------------------------------- output
+
+# Step DITH8: ``ARTKIT_ONLY=glob,glob python3 tools/art/<generator>.py`` re-renders only the files whose name (the frame
+# suffix ``_<i>`` dropped, no extension) matches a glob; every other asset, pivot file and review sheet is left untouched.
+ONLY = [p.strip() for p in os.environ.get("ARTKIT_ONLY", "").split(",") if p.strip()]
+
+
+def wanted(path):
+    """Whether a run writes ``path`` (always, unless ARTKIT_ONLY limits it)."""
+    if not ONLY:
+        return True
+    stem = Path(path).name.split(".")[0]
+    names = {stem, re.sub(r"_\d+$", "", stem)}
+    return any(fnmatch(n, p) for n in names for p in ONLY)
+
 
 def save_png(img, path, source):
     """Save a PNG with the ``Source`` text chunk that marks it as final art."""
+    if not wanted(path):
+        return
     info = PngInfo()
     info.add_text(SOURCE_KEY, source)
     img.save(path, pnginfo=info, optimize=True)
@@ -145,6 +172,8 @@ def save_png(img, path, source):
 def write_frames(name, frames, source, single=False):
     """Write a frame set under the names the game loads (``name_<i>.png``, or ``name.png`` for a
     single region) into assets/sprites, replacing whatever set had that name before."""
+    if not wanted(name):
+        return
     pattern = re.compile(re.escape(name) + r"(_\d+)?\.png")
     for old in SPRITES.glob(f"{name}*.png"):
         if pattern.fullmatch(old.name):
@@ -159,6 +188,8 @@ def write_frames(name, frames, source, single=False):
 def write_pivots(name, source, data):
     """A pivot file: per frame of a sprite the points other sprites attach to (px from the
     sprite's top left), in assets/pivots/<name>.json."""
+    if ONLY:
+        return
     PIVOTS.mkdir(parents=True, exist_ok=True)
     (PIVOTS / f"{name}.json").write_text(
         json.dumps({"source": source, **data}, indent=1) + "\n", encoding="utf-8")
@@ -252,6 +283,8 @@ def save_review(sheet, gif_frames, concept_dir, subject, fps=10, variant="a"):
     """The review sheet and GIF as ``<subject>-final-<round>-<variant>``: a redo in the same round
     is the next variant."""
     png, gif = review_paths(concept_dir, subject, variant)
+    if ONLY:
+        return
     sheet.convert("RGB").save(png, optimize=True)
     write_gif(gif_frames, gif, fps=fps, colors=128)
     print(f"review: {png.relative_to(ROOT)}, {gif.relative_to(ROOT)}")

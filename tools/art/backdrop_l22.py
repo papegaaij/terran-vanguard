@@ -381,7 +381,7 @@ def ice_crystals():
     rgb = np.zeros((TILE_H, W, 3))
     wisps = pf(80, 2232, 4)
     stretch = np.clip((wisps - 0.6) / 0.4, 0, 1) * (pf(16, 2233, 2) > 0.4)
-    rgb += np.array((70, 84, 96)) * artkit.ordered_dither(stretch * 0.8, 4)[..., None]
+    rgb += np.array((70, 84, 96)) * artkit.smooth_steps(stretch * 0.8)[..., None]
     for _ in range(260):
         x, y = rng.integers(0, W), rng.integers(0, TILE_H)
         b = rng.uniform(0.4, 1.0)

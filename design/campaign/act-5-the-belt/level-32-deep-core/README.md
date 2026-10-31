@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../../enemies/ground/sentinel-tower, ../../../enemies/ground/strider, ../../../enemies/ground/sam-nest, ../../../enemies/air/talon, ../../../enemies/air/dart-drone, ../../../world/belt, ../../../player/specials, ../../../player/wingmen, ../../../player/generator, ../../act-3-red-dust/level-16-valles-canyon-run, ../../act-3-red-dust/level-19-foundry-of-tharsis]
-updated: 2026-10-30
+updated: 2026-10-31
 ---
 
 # Level 32 – Deep Core
@@ -653,3 +653,4 @@ the alternatives:
   chute's V-wing 178 → 176.5 and the last Skitter stream 181 → 176; the end calm (easy/medium/hard, the autopilot
   with the plan's fit, route LL; the other routes alike, the least 4.8 s on hard LR) 1.9/1.3/0.9 s → 6.9/6.3/5.8 s.
   The counts, the haul and the autopilot's wins are unchanged.
+- 2026-10-30, the user: dither audit, ≥ 25 % smoothed (step DITH8): the galleries' mouths, `crucible-glow`, `ice-wall-glow` and the other `-glow` pieces; `mining-charge-blast` in smooth steps, not the 4×4 Bayer checker ([audit](../../../art-direction/production/README.md#dither-audit-2026-10-30)).

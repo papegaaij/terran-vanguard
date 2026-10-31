@@ -541,6 +541,11 @@ tasks.test {
     inputs.file(assets.file("ui/credits.txt")).withPropertyName("creditsRoll")
     inputs.files(assets.dir("sfx"), assets.dir("music"), assets.dir("voice"), assets.dir("fonts"))
         .withPropertyName("creditedAssets")
+    // DitherGuardTest measures the smoothed sets its list names (step DITH8).
+    val smoothSets = file("src/test/resources/vanguard/pipeline/smooth-sets.txt").readLines()
+        .map { it.trim() }.filter { it.isNotEmpty() && !it.startsWith("#") }
+    inputs.files(fileTree(assets) { smoothSets.forEach { include("$it.png", "${it}_*.png") } })
+        .withPropertyName("smoothSets")
 }
 
 /**

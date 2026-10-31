@@ -350,7 +350,7 @@ def run(jobs):
 
 def field_img(fld, col, white=0.6, levels=6):
     """An additive frame from a 0..1 field: the colour, going white above ``white``."""
-    f = artkit.ordered_dither(np.clip(fld, 0, 1), levels)
+    f = artkit.smooth_steps(fld)
     rgb = np.asarray(col, float)[None, None] * f[..., None] + 255 * np.clip((f - white) / (1 - white), 0, 1)[
         ..., None] * 0.8
     h, w = f.shape

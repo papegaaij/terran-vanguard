@@ -354,7 +354,7 @@ def vent(f, n=8):
     dens = core * ripple * (1 - u) ** 1.2 * (yy > 2)
     a = np.zeros((h, w, 4))
     a[..., :3] = np.array((200, 204, 210.0))
-    a[..., 3] = artkit.ordered_dither(np.clip(dens * 1.1, 0, 1), 4) * 200
+    a[..., 3] = artkit.smooth_steps(dens * 1.1) * 200
     return Image.fromarray(a.astype(np.uint8), "RGBA")
 
 

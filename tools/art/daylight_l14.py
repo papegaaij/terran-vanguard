@@ -169,13 +169,13 @@ def light_layers(variant, w=W, h=H, t=0.0):
         lit = s6.pblur_mask(gap, 9.0) if gap.any() else gap
         k = ramp(t, 2.0, 8.0)
         strength = (0.42 * beams * (0.35 + 0.65 * lit) + 0.08 * lit) * k
-        add = np.array((255, 196, 120))[None, None, :] * artkit.ordered_dither(strength / 0.5, 5)[..., None] * 0.5
+        add = np.array((255, 196, 120))[None, None, :] * artkit.smooth_steps(strength / 0.5)[..., None] * 0.5
     else:
         n = raster.fbm(w, h, 64, 1439, octaves=4, period=True)
         front = -60 + 620 * ramp(t, 1.0, 11.0)                # px from the left the haze has burnt off
         thick = np.clip((xx - front) / 160.0 + (n - 0.5) * 0.9, 0, 1) * (1 - ramp(t, 8.0, 12.0) * 0.7)
         a = thick * 0.4 * ramp(t, 0.0, 1.5)
-        q = artkit.ordered_dither(a / 0.4, 4) * 0.4
+        q = artkit.smooth_steps(a / 0.4) * 0.4
         over[..., :3] = np.array((214, 222, 232)) * (0.9 + 0.1 * n[..., None])
         over[..., 3] = q * 255
         add = np.array((40, 48, 60))[None, None, :] * ramp(t, 2.0, 9.0) * np.ones((h, w, 1)) * 0.6

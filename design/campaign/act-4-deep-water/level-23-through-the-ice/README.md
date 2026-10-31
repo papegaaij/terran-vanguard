@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../../enemies/naval/eel-swarm, ../../../enemies/naval/glassfin, ../../../enemies/naval/driftjelly, ../../../enemies/naval/reef-spitter, ../../../enemies/air/lamprey, ../../../player/weapons/harpoon-torpedoes, ../../../player/weapons/depth-charges, ../../../player/systems, ../../../world/europa]
-updated: 2026-10-27
+updated: 2026-10-31
 ---
 
 # Level 23 – Through the Ice
@@ -469,3 +469,4 @@ pump's in [ground](../../../enemies/ground/README.md#concept-art), the under-wat
   `UNDER WATER · BULLETS ×0.7 · BEAMS ×0.2 · TORPEDOES +50 %` (`DRAG` dropped to keep it on one line; see
   [hangar](../../../ui/hangar/README.md#decisions)).
 - 2026-10-25 (user, [round 57](../../../concept-rounds/round-57/README.md) closed): L.2 the waterline strip with `BEAMS ×0.2` (round 56's Q.1 as built) accepted.
+- 2026-10-30, the user: dither audit, ≥ 25 % smoothed (step DITH8): the ice ceiling's cracks (`ice-ceiling`, also Levels 24 and 28's) in smooth steps, not the 4×4 Bayer checker ([audit](../../../art-direction/production/README.md#dither-audit-2026-10-30)).

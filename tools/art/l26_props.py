@@ -127,7 +127,7 @@ def glow(i):
     else:
         on = [0.85, 0.2, 0.7, 0.0][i - 4]
     f = (np.exp(-(r / 1.6) ** 2) + np.exp(-(r / 6.0) ** 2) * 0.5 + np.exp(-(r / 14.0) ** 2) * 0.18) * on
-    rgb = SODIUM[None, None] * artkit.ordered_dither(np.clip(f, 0, 1), 8)[..., None]
+    rgb = SODIUM[None, None] * artkit.smooth_steps(f)[..., None]
     if i >= 4:                                         # sparks at the dent
         rng = np.random.default_rng(2760 + i)
         mx, my = dent_px()
@@ -135,7 +135,7 @@ def glow(i):
         for _ in range(int(rng.integers(2, 5))):
             sx, sy = mx + rng.normal(0, 2.4), my + rng.normal(0, 2.0)
             s += np.exp(-((xx - sx) ** 2 + (yy - sy) ** 2) / 0.9) * rng.uniform(0.6, 1.0)
-        rgb = rgb + np.array((200, 230, 255.0))[None, None] * artkit.ordered_dither(np.clip(s, 0, 1), 6)[..., None]
+        rgb = rgb + np.array((200, 230, 255.0))[None, None] * artkit.smooth_steps(s)[..., None]
     return artkit.additive(Image.fromarray(np.dstack([np.clip(rgb, 0, 255), np.full((h, w), 255.0)]).astype(np.uint8)))
 
 

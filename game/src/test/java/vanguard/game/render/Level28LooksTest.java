@@ -100,6 +100,40 @@ class Level28LooksTest {
         assertEquals(BreakoutLooks.SLABS * BreakoutLooks.TUMBLE, frames("ice-slab"));
     }
 
+    /**
+     * Step DITH7 (the user, 2026-10-30: the glow round the vent dithered, "the same defect we fixed in level 35"): the
+     * caldera's glow and the Maw's soft additive glows are smooth undithered steps. With a 4x4 Bayer dither (10 steps)
+     * the caldera's glow, drawn 1x over the halted arena, had a 1 px checker on about half its pixels; the vent's flare
+     * was a 192 px frame drawn x1.6, now full size and drawn 1x. The measure is {@link
+     * SovereignLooksTest#checkerShare}'s (step PIX7).
+     */
+    @Test
+    void theVentsGlowsAreUndithered() throws IOException {
+        java.util.List<Path> glows = new java.util.ArrayList<>();
+        glows.add(ASSETS.resolve("backdrop/level-28/caldera-glow.png"));
+        glows.add(SPRITES.resolve(MAW + "-head-rim.png"));
+        for (String set : new String[] {"arc", "shed", "blowout-glow", "flare"}) {
+            try (Stream<Path> files = Files.list(SPRITES)) {
+                files.filter(file -> file.getFileName()
+                                .toString()
+                                .matches(java.util.regex.Pattern.quote(MAW + "-" + set) + "_\\d+\\.png"))
+                        .forEach(glows::add);
+            }
+        }
+        assertEquals(2 + 4 + MawLooks.SHED_FRAMES + 8 + 4, glows.size(), "the glows' frames");
+        for (Path file : glows) {
+            java.awt.image.BufferedImage image = javax.imageio.ImageIO.read(file.toFile());
+            for (int step = 1; step <= 2; step++) {
+                double share = SovereignLooksTest.checkerShare(image, step);
+                assertTrue(share < 0.02, file.getFileName() + ": a " + step + " px checker on " + share + " of it");
+            }
+        }
+        assertEquals(1f, MawLooks.FLARE_SCALE, "the vent's flare drawn 1x");
+        java.awt.image.BufferedImage flare =
+                javax.imageio.ImageIO.read(SPRITES.resolve(MAW + "-flare_1.png").toFile());
+        assertTrue(flare.getWidth() >= 300, "the flare at its drawn size: " + flare.getWidth());
+    }
+
     /** The coil's segment frame from the simulation's angle and its index, as tools/art/abyssal_maw.py's pivots say. */
     @Test
     void theSegmentsHeadingAndTaperAreTheArts() throws IOException {

@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy]
-updated: 2026-10-24
+updated: 2026-10-31
 ---
 
 # Barbfin
@@ -110,3 +110,4 @@ The production frames (round 48's a, the bone lionfish; `tools/art/barbfin.py`, 
   `pincer` and `rear ambush` (Level 27). In a rear ambush it has no ambush path: the pair rises from the bottom edge on
   the ambush lanes (x = (i + 1) × 480 ÷ (n + 1)), stops on the way up at its own height above the ship and holds as
   usual; the wave is warned at the bottom edge (`Formations.rearSwoops`).
+- 2026-10-30, the user: dither audit, ≥ 25 % smoothed (step DITH8): `barbfin-ink` in smooth steps, not the 4×4 Bayer checker ([audit](../../../art-direction/production/README.md#dither-audit-2026-10-30)).

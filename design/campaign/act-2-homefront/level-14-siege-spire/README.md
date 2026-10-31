@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../../enemies/bosses/siege-spire]
-updated: 2026-10-20
+updated: 2026-10-31
 ---
 
 # Level 14 – Siege Spire
@@ -551,3 +551,4 @@ Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-a
 - 2026-10-21: Edge-warning rule change (user, built by step EW): the maw's Wraith launches and the rear ambushes are a unit's
   own re-entries and are no longer edge-warned (H3 = a's 3 s warning and Rook's launch bark are gone); the Spire's own
   arrival keeps its boss-warning box (round 41), which is not an edge warning.
+- 2026-10-30, the user: dither audit, ≥ 25 % smoothed (step DITH8): the daylight's `daylight-beams_0..1` after the Spire's death (frame 0 was one dither step over the field) in smooth steps, not the 4×4 Bayer checker ([audit](../../../art-direction/production/README.md#dither-audit-2026-10-30)).

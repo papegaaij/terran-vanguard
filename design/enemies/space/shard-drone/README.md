@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../player/specials]
-updated: 2026-10-28
+updated: 2026-10-31
 ---
 
 # Shard Drone
@@ -130,3 +130,4 @@ Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's r
   drone of a group fires on its own clock from its entry. Under the plan's fit at L31 a group lives ≈ 2.3 s on the
   screen and is broken before its links reach the tug's hull (0–2 touches a run).
 - 2026-10-28 (user, [round 64](../../../concept-rounds/round-64/README.md), closed; page answers): the final art accepted (**F.5**: the tri-prism in gunmetal with its thickened struts and the crimson-gold link strip; `art: final`); sounds **S.1 a** (`link-hum`, the Jacob's ladder), **S.2 a** (`link-flicker`), **S.3 a** (`link-snap`), all in the game already; b rejected.
+- 2026-10-30, the user: dither audit, ≥ 25 % smoothed (step DITH8): `shard-drone-link-snap` in smooth steps, not the 4×4 Bayer checker ([audit](../../../art-direction/production/README.md#dither-audit-2026-10-30)).

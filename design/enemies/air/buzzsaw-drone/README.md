@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../player/specials, ../../../world/belt, ../../../campaign/act-5-the-belt]
-updated: 2026-10-28
+updated: 2026-10-31
 ---
 
 # Buzzsaw Drone
@@ -104,3 +104,4 @@ Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's r
   movement and its hooks; a circle's `orbit` 60 px at 90°/s before the break, the fixture's). At L31 under the plan's
   fit a Buzzsaw lives ≈ 1.25–1.45 s on the screen (`levelReport`'s small units: within Level 10's band).
 - 2026-10-28 (user, [round 64](../../../concept-rounds/round-64/README.md), closed; page answers): **F.6 a**, the blades charcoal with the gold on their outer cutting edges (33 % gold, inside Q.11 b's 20-30 % within a margin: not round 60's six solid gold blades, b), accepted as final (`art: final`); sounds **S.4 a** (`saw-whine`, the angle grinder), **S.5 b with S.4 a** (`saw-spinup`: b's spin-up is its whine's recording glided up, so it rises to the circular saw's pitch, not the grinder loop's; rebuilt as `saw-spinup-r64-ab`, b's shape on the grinder's recording ending on the loop's pitch, by `tools/concept/audio/sfx_r64.py`), **S.6 a** (`saw-ricochet`); the game switches the spin-up's path in the next game step (a plays until then).
+- 2026-10-30, the user: dither audit, ≥ 25 % smoothed (step DITH8): `buzzsaw-drone-ricochet` in smooth steps, not the 4×4 Bayer checker ([audit](../../../art-direction/production/README.md#dither-audit-2026-10-30)).

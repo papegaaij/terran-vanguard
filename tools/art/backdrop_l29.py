@@ -415,7 +415,7 @@ def space_tile(seed=2902):
     dust = band * (0.55 + 0.6 * (neb - 0.5))
     rgb = np.zeros((h, w, 3)) + np.array((6, 6, 10.0))
     rgb += np.clip(dust, 0, 1)[..., None] * np.array((92, 72, 50.0))
-    q = np.dstack([artkit.ordered_dither(np.clip(rgb[..., c] / 110, 0, 1), 14) for c in range(3)]) * 110
+    q = np.dstack([artkit.smooth_steps(rgb[..., c] / 110, 64) for c in range(3)]) * 110
     rng = np.random.default_rng(seed)
     for _ in range(420):
         x, y = rng.integers(0, w), rng.integers(0, h)
@@ -516,7 +516,7 @@ def lamp_glow(w, h, lamps, col, pool=0.0):
     for x, y, r in lamps:
         d = np.hypot(xx - x, yy - y)
         f = np.maximum(f, np.exp(-(d / r) ** 2) + pool * np.exp(-(d / (r * 6)) ** 2) * 0.35)
-    q = artkit.ordered_dither(np.clip(f, 0, 1), 8)
+    q = artkit.smooth_steps(f)
     rgb = np.asarray(col, float)[None, None] * q[..., None]
     return artkit.additive(Image.fromarray(np.dstack([np.clip(rgb, 0, 255), np.full((h, w), 255.0)])
                                            .astype(np.uint8), "RGBA"))

@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../../enemies/ground/drill-rig, ../../../enemies/naval/skimmer, ../../../enemies/air/mantis, ../../../player/specials, ../../../player/wingmen, ../../../world/europa]
-updated: 2026-10-27
+updated: 2026-10-31
 ---
 
 # Level 22 – Ice Shelf
@@ -454,3 +454,4 @@ and the under-water look are in [europa](../../../world/europa/README.md#concept
   "Enough rigs are down. The shelf is quiet. Thank you, Aegis." (one radio page, so her t=104 line keeps its time;
   both candidates re-rendered). Captures for round 51 in this table.
 - 2026-10-22 (user, round 51, closed): the art accepted (F.2 the backdrop, F.4 the props, F.5 Dr. Brandt's portrait; `art: final`). **F.3 keep**: no deep layer under the shelf, the ice stays an opaque floor and the leads plain dark water; the design text no longer puts Jupiter in a deep layer (it shows as the warm sheen on the ice and in the act's title still). C.1–C.7 accepted (the waves, the rig's core HP, breaking the rigs with the Airstrike, the geyser rows off the leads, the bounty split, the secondary per difficulty, the crawler's drop). Dr. Brandt is cast with candidate a (V.1). The sounds: the geyser tell b, the burst a, the rig's collar, ring and death b, the beds a (S.1–S.7; the b files of S.1, S.3–S.5 replace the a files in the next code step).
+- 2026-10-30, the user: dither audit, ≥ 25 % smoothed (step DITH8): `ice-crystals`' wisps, the props' `ice-geyser-residue`/`-steam` (the vapour now over its shadow) and `crevasse-lip-glow` in smooth steps, not the 4×4 Bayer checker ([audit](../../../art-direction/production/README.md#dither-audit-2026-10-30)).
