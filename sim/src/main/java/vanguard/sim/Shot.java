@@ -304,7 +304,7 @@ public final class Shot implements Hashed {
         }
         return switch (weapon.delivery()) {
             case BOLT, HOMING, TURRET, TORPEDO -> true;
-            case DROPPED, LOBBED, MINE, BEAM, DEPTH_CHARGE, ARC -> false;
+            case DROPPED, LOBBED, MINE, BEAM, DEPTH_CHARGE, ARC, CHAIN -> false;
         };
     }
 
@@ -366,6 +366,12 @@ public final class Shot implements Hashed {
 
     /** M10 part A: marks it a bounced shot (the Reflex Shield's bolt, A1b). */
     void markBounced() {
+        bounced = true;
+    }
+
+    /** M10 part A, step A1b (the Reflex Shield): this shot, just fired, is a reflected bullet's bolt of {@code bolt}. */
+    void reflected(double bolt) {
+        damage = bolt;
         bounced = true;
     }
 

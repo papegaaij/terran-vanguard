@@ -218,6 +218,10 @@ public final class Wingman {
     private Pool<Mine> mines;
     /** M8 part H, step H2: the finale's cruisers, whose told bands he keeps out of; null without. */
     private CruiserRun cruisers;
+    /** M10 part A, step A1b: the told lightning strikes, whose columns he keeps out of; null without. */
+    private Lightning lightning;
+    /** M10 part A, step A1b: the eruptions, out of whose telling vents' fans he keeps; null without. */
+    private Eruptions eruptions;
     /** M7 part F: where his goal moves clear of the walker's flame cone and the furnace vents (made once). */
     private final RookHazards hazards;
 
@@ -359,6 +363,12 @@ public final class Wingman {
                 evading = true;
             }
         }
+        if ((lightning != null || eruptions != null) && hazards.clearOfStorm(goalX, goalY, lightning, eruptions)) {
+            // M10 part A, step A1b: out of a told strike's column and a telling vent's fan.
+            goalX = hazards.x();
+            goalY = hazards.y();
+            evading = true;
+        }
         if (mines != null && mines.size() > 0 && hazards.clearOfMines(goalX, goalY, mines, shipX)) {
             // M9 part C (Level 30): out of the line mines' proximity discs, through the gap the ship flies.
             goalX = hazards.x();
@@ -440,6 +450,16 @@ public final class Wingman {
      */
     void cruisers(CruiserRun run) {
         cruisers = run;
+    }
+
+    /**
+     * M10 part A, step A1b (design/world/jovian, Hazards & set pieces): the level's lightning strikes and eruptions
+     * (either null for none); he keeps his goal out of a told or live strike's column and out of a telling vent's fan
+     * ({@link RookHazards#clearOfStorm}).
+     */
+    void storm(Lightning strikes, Eruptions vents) {
+        lightning = strikes;
+        eruptions = vents;
     }
 
     /** M7 part C: he keeps this far below a standing tendril's line (his hull's edge to the line), px. */

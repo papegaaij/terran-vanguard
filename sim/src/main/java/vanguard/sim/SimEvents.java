@@ -1126,7 +1126,47 @@ public final class SimEvents {
          * M10 part A (design/player/systems, the IFF spoofer): a spoofable unit's volley came due and is held (the amber
          * muzzle stutter; at the unit); value: its kind.
          */
-        SPOOF_HESITATE;
+        SPOOF_HESITATE,
+        /**
+         * M10 part A, step A1b (design/player/shields, Reflex Shield (Act 6)): an enemy bullet or homing missile hit a
+         * Reflex Shield inside its window and came back as the ship's bolt (the gold hex flash and the bolt's start; at
+         * the hit); value: the reflected damage, rounded.
+         */
+        REFLEX,
+        /**
+         * M10 part A, step A1b (design/player/weapons/plasma-arc): a Plasma Arc's strike landed (at the struck point; the
+         * arc runs from the nose for the first, from the strike before for a jump; the {@code tesla} zap at a rising
+         * pitch); value: {@link ChainFire#event} (the mount and the strike's index).
+         */
+        CHAIN_STRIKE,
+        /**
+         * M10 part A, step A1b (design/world/jovian, lightning strikes): a strike's column is told (the sky flash and
+         * the thin blue-white line brightening; at the column's x, the top edge); value: the strike's index.
+         */
+        STRIKE_TOLD,
+        /** M10 part A, step A1b: a told column strikes (the bolt and the thunder; at its x, the top edge); value: its index. */
+        STRIKE,
+        /** M10 part A, step A1b: a strike hit the ship or Rook (at the hull); value: 1 the ship, 2 Rook. */
+        STRIKE_HIT,
+        /**
+         * M10 part A, step A1b (design/world/jovian, eruptions): a vent's tell started (the mouth glowing, the ground
+         * cracking, the rising rumble; at the vent); value: the vent's index.
+         */
+        ERUPTION_TELL,
+        /** M10 part A, step A1b: a vent threw its rocks (at the vent); value: the rocks thrown. */
+        VENT_ERUPTED,
+        /** M10 part A, step A1b: a shot spent itself on a flying rock (at the shot); value: its mount. */
+        ROCK_HIT,
+        /** M10 part A, step A1b: a rock broke under fire (at the rock); value: its vent. Pays nothing. */
+        ROCK_DESTROYED,
+        /** M10 part A, step A1b: a rock broke on the ship's or Rook's hull (at the rock); value: its vent. */
+        ROCK_STRUCK,
+        /**
+         * M10 part A, step A1b (design/enemies/ground/shield-pylon, The pylon gates): a held gate's last holder fell and
+         * the gate opens (at the holder); value: the gate's index (0 first). Level 29's one arena raises {@link
+         * #HOLDERS_DOWN} only.
+         */
+        GATE_OPENED;
 
         private static final Type[] VALUES = values();
     }

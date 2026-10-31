@@ -17,6 +17,11 @@ final class PreyWar {
     private final Pool<EnemyBullet> bullets;
     private final SimEvents events;
     private final EnemyForce.Escapes escapes;
+    /**
+     * M10 part A, step A1b: whether the hunting links are live now (from the level's turn, {@link LevelScript#turn()};
+     * always without one). Follows the level clock (not hashed).
+     */
+    private boolean live = true;
 
     PreyWar(Pool<Enemy> enemies, Pool<EnemyBullet> bullets, SimEvents events, EnemyForce.Escapes escapes) {
         this.enemies = enemies;
@@ -30,18 +35,44 @@ final class PreyWar {
      * to the earlier in the pool); null for a unit that hunts nothing or when none is left (it goes for the ship).
      */
     Enemy target(Enemy hunter) {
-        if (hunter.hunts.isEmpty()) {
+        if (hunter.hunts.isEmpty() || !live) {
             return null;
         }
+        return target(hunter.hunts, hunter, hunter.x(), hunter.y());
+    }
+
+    /** M10 part A, step A1b: whether the hunting links are live now (the level's turn has come, or it has none). */
+    void live(boolean turned) {
+        live = turned;
+    }
+
+    /** M10 part A, step A1b: whether the hunting links are live now. */
+    boolean live() {
+        return live;
+    }
+
+    /**
+     * M10 part A, step A1b (a Mote Swarm's lunge, The three-way war's "ram"): the prey a pursuit flock whose wave hunts
+     * {@code hunts} goes for: the nearest unit of that prey wave on the play field to its leader point (x, y) that no
+     * leech rides; null while the links are not live or none is left (it goes for the ship).
+     */
+    Enemy target(String hunts, double x, double y) {
+        if (hunts.isEmpty() || !live) {
+            return null;
+        }
+        return target(hunts, null, x, y);
+    }
+
+    private Enemy target(String hunts, Enemy hunter, double x, double y) {
         Enemy best = null;
         double bestDistance = Double.MAX_VALUE;
         for (int i = 0; i < enemies.size(); i++) {
             Enemy prey = enemies.get(i);
-            if (!preyOf(hunter, prey) || prey.preyed()) {
+            if (prey == hunter || !hunts.equals(prey.tag()) || !ShotGeometry.onField(prey) || prey.preyed()) {
                 continue;
             }
-            double dx = prey.x() - hunter.x();
-            double dy = prey.y() - hunter.y();
+            double dx = prey.x() - x;
+            double dy = prey.y() - y;
             double distance = dx * dx + dy * dy;
             if (distance < bestDistance) {
                 bestDistance = distance;
@@ -56,6 +87,9 @@ final class PreyWar {
      * contact damage to it and dies on the impact; a prey unit it kills is lost to the war too.
      */
     void rams() {
+        if (!live) {
+            return;
+        }
         for (int i = enemies.size() - 1; i >= 0; i--) {
             if (i >= enemies.size()) {
                 continue;

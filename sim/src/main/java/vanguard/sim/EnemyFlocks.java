@@ -125,10 +125,15 @@ final class EnemyFlocks {
         for (int f = flocks.size() - 1; f >= 0; f--) {
             Flock flock = flocks.get(f);
             if (flock.pursuing()) {
+                // M10 part A, step A1b (The three-way war, "ram": a Mote Swarm's lunge): a hunting pursuit goes for
+                // its prey wave's nearest unit while one is on the play field, else for the ship.
+                Enemy quarry = Double.isNaN(shipX) || force.war() == null ? null : quarry(flock);
+                double towardX = quarry != null ? quarry.x() : shipX;
+                double towardY = quarry != null ? quarry.y() : shipY;
                 flock.advance(
                         canyon,
-                        Double.isNaN(shipX) ? flock.leaderX() : shipX,
-                        Double.isNaN(shipY) ? flock.leaderY() : shipY);
+                        Double.isNaN(towardX) ? flock.leaderX() : towardX,
+                        Double.isNaN(towardY) ? flock.leaderY() : towardY);
                 pursuitEvents(flock);
             } else if (flock.spec().ram().isPresent() && !Double.isNaN(shipX)) {
                 // M8 part C: its rams dive at the ship (design/enemies/naval/glassfin).
@@ -163,6 +168,20 @@ final class EnemyFlocks {
                 flocks.free(f);
             }
         }
+    }
+
+    /**
+     * M10 part A, step A1b: the prey a pursuit flock goes for: its members' wave's prey ({@link PreyWar#target(String,
+     * double, double)}) nearest its leader point; null without one.
+     */
+    private Enemy quarry(Flock flock) {
+        for (int i = 0; i < flock.size(); i++) {
+            Enemy member = flock.member(i);
+            if (member != null && !member.hunts.isEmpty()) {
+                return force.war().target(member.hunts, flock.leaderX(), flock.leaderY());
+            }
+        }
+        return null;
     }
 
     /** M7 part G: a pursuit's tell, lunge and break-off events of this step, only while its flock has members. */

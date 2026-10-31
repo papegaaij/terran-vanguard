@@ -19,10 +19,20 @@ final class PreyLatches {
 
     private final Pool<Enemy> enemies;
     private final SimEvents events;
+    /**
+     * M10 part A, step A1b: whether the hunting waves' links are live now (the level's turn has come, or it has none);
+     * before it a hunting wave's leech latches on nothing. Follows the level clock (not hashed).
+     */
+    private boolean warLive = true;
 
     PreyLatches(Pool<Enemy> enemies, SimEvents events) {
         this.enemies = enemies;
         this.events = events;
+    }
+
+    /** M10 part A, step A1b: whether the hunting waves' links are live now. */
+    void warLive(boolean turned) {
+        warLive = turned;
     }
 
     /**
@@ -107,7 +117,11 @@ final class PreyLatches {
      * Whether {@code unit} is {@code hunter}'s prey on the play field that no chaser rides yet: a {@link
      * EnemySpec.PreyRole#PREY} unit (Level 33), or (M10 part A) for a unit of a hunting wave a unit of its prey wave.
      */
-    private static boolean free(Enemy hunter, Enemy unit) {
+    private boolean free(Enemy hunter, Enemy unit) {
+        if (!hunter.hunts.isEmpty() && !warLive) {
+            // M10 part A, step A1b: before the level's turn a hunting wave's unit hunts nothing.
+            return false;
+        }
         boolean prey = hunter.hunts.isEmpty()
                 ? unit.spec().preyRole() == EnemySpec.PreyRole.PREY
                 : unit != hunter && hunter.hunts.equals(unit.tag());

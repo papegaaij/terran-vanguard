@@ -78,6 +78,14 @@ final class SortieHash {
             // M10 part A: only in a level with a Shield Pylon.
             s.domes.addTo(hash);
         }
+        if (s.lightning != null) {
+            // M10 part A, step A1b: only in a level with lightning strikes.
+            s.lightning.addTo(hash);
+        }
+        if (s.eruptions != null) {
+            // M10 part A, step A1b: only in a level with eruptions.
+            s.eruptions.addTo(hash);
+        }
         if (s.force.chains().size() > 0) {
             Pools.addAll(hash, s.force.chains());
         }
@@ -166,6 +174,10 @@ final class SortieHash {
                     .add(s.clock.heldJumped ? 1 : 0)
                     .add(s.clock.lastSpeed)
                     .add(s.force.haltReleased());
+            if (s.clock.gates() > 1) {
+                // M10 part A, step A1b: only in a level of several held gates, so Level 29 hashes as before.
+                hash.add(s.clock.gate).add(s.clock.haltBase);
+            }
         }
         if (s.rides != null) {
             s.rides.addTo(hash);

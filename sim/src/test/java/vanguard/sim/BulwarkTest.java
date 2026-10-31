@@ -220,21 +220,11 @@ class BulwarkTest {
     void theEscortSlotHoldsRookOrABulwarkNotBoth() {
         Loadout rook = TestSpecs.LOADOUT.withWingman(WingmanTest.rook(WingmanSpec.Side.LEFT));
         assertTrue(rook.withBulwark(BULWARK).wingman().isEmpty(), "the Bulwark takes his slot");
-        assertThrows(
-                IllegalArgumentException.class,
-                () -> new Loadout(
-                        TestSpecs.SHIP,
-                        rook.armament(),
-                        TestSpecs.SHIELD,
-                        TestSpecs.PLATING,
-                        Optional.empty(),
-                        Optional.empty(),
-                        rook.wingman(),
-                        0,
-                        Optional.empty(),
-                        false,
-                        Optional.empty(),
-                        Optional.of(BULWARK)));
+        assertThrows(IllegalArgumentException.class, () -> Loadout.builder(
+                        TestSpecs.SHIP, rook.armament(), TestSpecs.SHIELD, TestSpecs.PLATING)
+                .wingman(rook.wingman())
+                .bulwark(Optional.of(BULWARK))
+                .build());
         assertThrows(IllegalArgumentException.class, () -> BULWARK.withArmour(121));
     }
 

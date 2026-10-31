@@ -48,6 +48,9 @@ import vanguard.sim.ObjectiveSpec.Naval;
  *     ({@link HaltCycle}); empty (the default) for none
  * @param escortSwap M9 part B (design/player/wingmen, Rook's rescue and return): the mid-level escort swap at the held
  *     arena's release ({@link EscortSwapSpec}); empty (the default) for none
+ * @param turn M10 part A, step A1b (design/enemies, The three-way war; Level 37): the turn's time on the level clock,
+ *     s: the hunting waves' links ({@link WaveSpec#hunts()}) are live from it (before it the Vrell and the Ascendancy
+ *     fly side by side); empty (the default): live from the hunters' entry
  */
 public record LevelScript(
         int number,
@@ -70,8 +73,12 @@ public record LevelScript(
         Optional<RookLossSpec> rookLoss,
         double armourFloor,
         Optional<HaltCycle> haltCycle,
-        Optional<EscortSwapSpec> escortSwap) {
+        Optional<EscortSwapSpec> escortSwap,
+        Optional<Double> turn) {
     public LevelScript {
+        if (!turn.map(at -> at >= 0).orElse(true)) {
+            throw new IllegalArgumentException("the turn is a time on the level clock: " + turn.get());
+        }
         checkHeldArena(sections, groundUnits, setPieces, haltCycle, escortSwap, rookLoss);
         checkForks(ground, waves, groundUnits, groundObjects);
         checkGroundAllies(
@@ -183,6 +190,7 @@ public record LevelScript(
                 rookLoss,
                 armourFloor,
                 Optional.empty(),
+                Optional.empty(),
                 Optional.empty());
     }
 
@@ -209,16 +217,32 @@ public record LevelScript(
             return;
         }
         List<Section> arenas = sections.stream().filter(Section::arena).toList();
-        if (arenas.size() != 1
-                || arenas.getFirst().speed() != 0
-                || arenas.getFirst().holdAfterBossSeconds() > 0
-                || sections.getFirst().arena()) {
-            throw new IllegalArgumentException(
-                    "a held arena is one arena section of speed 0 after a moving one, without a hold after a boss");
+        // M10 part A, step A1b (design/enemies/ground/shield-pylon, The pylon gates): several held arenas, the gates.
+        boolean gatesApart = true;
+        for (int i = 1; i < sections.size(); i++) {
+            gatesApart &= !(sections.get(i).arena() && sections.get(i - 1).arena());
         }
-        double arenaEnd = arenas.getFirst().end();
+        if (arenas.isEmpty()
+                || arenas.stream().anyMatch(arena -> arena.speed() != 0 || arena.holdAfterBossSeconds() > 0)
+                || sections.getFirst().arena()
+                || !gatesApart) {
+            throw new IllegalArgumentException(
+                    "a held arena is an arena section of speed 0 after a moving one, without a" + " hold after a boss");
+        }
+        double arenaEnd = arenas.getLast().end();
         if (groundUnits.stream().anyMatch(unit -> unit.holder() && !(unit.t() < arenaEnd))) {
             throw new IllegalArgumentException("a held arena's holders enter before its end (" + arenaEnd + " s)");
+        }
+        for (int g = 0; g < arenas.size(); g++) {
+            int gate = g;
+            if (groundUnits.stream().noneMatch(unit -> unit.holder() && gateOf(sections, unit.t()) == gate)) {
+                throw new IllegalArgumentException("every held gate has a holder: gate " + g + " ending at "
+                        + arenas.get(g).end() + " s has none");
+            }
+        }
+        if (arenas.size() > 1 && escortSwap.isPresent()) {
+            throw new IllegalArgumentException(
+                    "an escort swap releases at the one held arena, not at a gate of several");
         }
         if (setPieces.stream().anyMatch(piece -> piece.isBoss())) {
             throw new IllegalArgumentException("a held arena's holders hold its clock: no boss fights in the level");
@@ -226,6 +250,24 @@ public record LevelScript(
         if (escortSwap.isPresent() && rookLoss.isPresent()) {
             throw new IllegalArgumentException("an escort swap and Rook's scripted loss are not in one level");
         }
+    }
+
+    /**
+     * M10 part A, step A1b (The pylon gates): the held gate a holder entering at {@code t} s holds: the index (0 first)
+     * of the first arena section among {@code sections} that ends after {@code t}; -1 for none.
+     */
+    static int gateOf(List<Section> sections, double t) {
+        int gate = 0;
+        for (Section section : sections) {
+            if (!section.arena()) {
+                continue;
+            }
+            if (t < section.end()) {
+                return gate;
+            }
+            gate++;
+        }
+        return -1;
     }
 
     /** M9 part B: whether the level has a held arena (a holder among its ground units). */
@@ -420,7 +462,8 @@ public record LevelScript(
                 .rookLoss(rookLoss)
                 .armourFloor(armourFloor)
                 .haltCycle(haltCycle)
-                .escortSwap(escortSwap);
+                .escortSwap(escortSwap)
+                .turn(turn);
     }
 
     /**
@@ -450,6 +493,7 @@ public record LevelScript(
         private double armourFloor = 0;
         private Optional<HaltCycle> haltCycle = Optional.empty();
         private Optional<EscortSwapSpec> escortSwap = Optional.empty();
+        private Optional<Double> turn = Optional.empty();
 
         private Builder(int number, int act) {
             this.number = number;
@@ -573,6 +617,11 @@ public record LevelScript(
             return this;
         }
 
+        public Builder turn(Optional<Double> turn) {
+            this.turn = turn;
+            return this;
+        }
+
         /** The level: the sub-records validated their own parts, the level checks them against each other. */
         public LevelScript build() {
             return new LevelScript(
@@ -596,7 +645,8 @@ public record LevelScript(
                     rookLoss,
                     armourFloor,
                     haltCycle,
-                    escortSwap);
+                    escortSwap,
+                    turn);
         }
     }
 

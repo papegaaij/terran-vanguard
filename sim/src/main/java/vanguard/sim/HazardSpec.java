@@ -18,6 +18,8 @@ import java.util.Optional;
  * @param cruisers M8 part H, step H2: the finale's two Ascendancy cruisers (Level 28's run, {@link CruiserRun}); empty
  *     for none
  * @param relay M9 part H, step H1b: the mass relay's flash (Level 35, {@link RelayFlash}); empty for none
+ * @param eruptions M10 part A (design/world/jovian, Hazards & set pieces: eruptions; Level 39): the ground vents that
+ *     throw burning rocks ({@link Eruptions}); empty for none
  */
 public record HazardSpec(
         List<CraneSpec> cranes,
@@ -29,14 +31,16 @@ public record HazardSpec(
         Optional<Weather> weather,
         Optional<Sondes> sondes,
         Optional<CruiserRunSpec> cruisers,
-        Optional<Relay> relay) {
-    /** No hazards: no cranes, debris, sleds, rocks, vents, darkness, weather, sondes, cruisers or relay. */
+        Optional<Relay> relay,
+        Optional<EruptionSpec> eruptions) {
+    /** No hazards: no cranes, debris, sleds, rocks, vents, darkness, weather, sondes, cruisers, relay or eruptions. */
     public static final HazardSpec NONE = new HazardSpec(
             List.of(),
             List.of(),
             Optional.empty(),
             Optional.empty(),
             List.of(),
+            Optional.empty(),
             Optional.empty(),
             Optional.empty(),
             Optional.empty(),
@@ -54,7 +58,18 @@ public record HazardSpec(
             Optional<Weather> weather,
             Optional<Sondes> sondes,
             Optional<CruiserRunSpec> cruisers) {
-        this(cranes, debris, sled, rocks, vents, darkness, weather, sondes, cruisers, Optional.empty());
+        this(
+                cranes,
+                debris,
+                sled,
+                rocks,
+                vents,
+                darkness,
+                weather,
+                sondes,
+                cruisers,
+                Optional.empty(),
+                Optional.empty());
     }
 
     /** The hazards before M8 part H's cruisers (none). */
@@ -78,51 +93,61 @@ public record HazardSpec(
                 .toList();
         java.util.Objects.requireNonNull(cruisers);
         java.util.Objects.requireNonNull(relay);
+        java.util.Objects.requireNonNull(eruptions);
     }
 
     /** These hazards with another {@code cranes}. */
     public HazardSpec withCranes(List<CraneSpec> cranes) {
-        return new HazardSpec(cranes, debris, sled, rocks, vents, darkness, weather, sondes, cruisers, relay);
+        return new HazardSpec(
+                cranes, debris, sled, rocks, vents, darkness, weather, sondes, cruisers, relay, eruptions);
     }
 
     /** These hazards with another {@code debris}. */
     public HazardSpec withDebris(List<DebrisSpec> debris) {
-        return new HazardSpec(cranes, debris, sled, rocks, vents, darkness, weather, sondes, cruisers, relay);
+        return new HazardSpec(
+                cranes, debris, sled, rocks, vents, darkness, weather, sondes, cruisers, relay, eruptions);
     }
 
     /** These hazards with another {@code sled}. */
     public HazardSpec withSled(Optional<SledSpec> sled) {
-        return new HazardSpec(cranes, debris, sled, rocks, vents, darkness, weather, sondes, cruisers, relay);
+        return new HazardSpec(
+                cranes, debris, sled, rocks, vents, darkness, weather, sondes, cruisers, relay, eruptions);
     }
 
     /** These hazards with another {@code rocks}. */
     public HazardSpec withRocks(Optional<RockSpec> rocks) {
-        return new HazardSpec(cranes, debris, sled, rocks, vents, darkness, weather, sondes, cruisers, relay);
+        return new HazardSpec(
+                cranes, debris, sled, rocks, vents, darkness, weather, sondes, cruisers, relay, eruptions);
     }
 
     /** These hazards with another {@code vents}. */
     public HazardSpec withVents(List<VentRow> vents) {
-        return new HazardSpec(cranes, debris, sled, rocks, vents, darkness, weather, sondes, cruisers, relay);
+        return new HazardSpec(
+                cranes, debris, sled, rocks, vents, darkness, weather, sondes, cruisers, relay, eruptions);
     }
 
     /** These hazards with another {@code darkness}. */
     public HazardSpec withDarkness(Optional<Darkness> darkness) {
-        return new HazardSpec(cranes, debris, sled, rocks, vents, darkness, weather, sondes, cruisers, relay);
+        return new HazardSpec(
+                cranes, debris, sled, rocks, vents, darkness, weather, sondes, cruisers, relay, eruptions);
     }
 
     /** These hazards with another {@code weather}. */
     public HazardSpec withWeather(Optional<Weather> weather) {
-        return new HazardSpec(cranes, debris, sled, rocks, vents, darkness, weather, sondes, cruisers, relay);
+        return new HazardSpec(
+                cranes, debris, sled, rocks, vents, darkness, weather, sondes, cruisers, relay, eruptions);
     }
 
     /** These hazards with another {@code sondes}. */
     public HazardSpec withSondes(Optional<Sondes> sondes) {
-        return new HazardSpec(cranes, debris, sled, rocks, vents, darkness, weather, sondes, cruisers, relay);
+        return new HazardSpec(
+                cranes, debris, sled, rocks, vents, darkness, weather, sondes, cruisers, relay, eruptions);
     }
 
     /** M9 part H, step H1b: these hazards with another {@code relay}. */
     public HazardSpec withRelay(Optional<Relay> relay) {
-        return new HazardSpec(cranes, debris, sled, rocks, vents, darkness, weather, sondes, cruisers, relay);
+        return new HazardSpec(
+                cranes, debris, sled, rocks, vents, darkness, weather, sondes, cruisers, relay, eruptions);
     }
 
     /**
@@ -144,9 +169,80 @@ public record HazardSpec(
         }
     }
 
+    /** M10 part A: these hazards with another {@code eruptions}. */
+    public HazardSpec withEruptions(Optional<EruptionSpec> eruptions) {
+        return new HazardSpec(
+                cranes, debris, sled, rocks, vents, darkness, weather, sondes, cruisers, relay, eruptions);
+    }
+
+    /**
+     * M10 part A (design/world/jovian, Hazards & set pieces: eruptions; Level 39; {@link Eruptions}): the level's ground
+     * vents and the eruptions' numbers (the world's, one block). Each vent enters at the top edge at its time and
+     * scrolls with the ground; while on the screen it erupts every period (drawn from its range for each cycle, the
+     * first one period after its entry): its mouth glows for {@code tellSeconds} ({@link
+     * SimEvents.Type#ERUPTION_TELL}), then it throws its rocks (a count drawn from its range; {@link
+     * SimEvents.Type#VENT_ERUPTED}). Each rock rises over the vent for {@code riseSeconds} (harmless), flies out on the play
+     * plane for {@code flySeconds} along its share of a fan {@code fanRadians} wide centred straight up (evenly spread),
+     * at {@code speed} easing linearly to {@code endSpeed} px/s, then falls back for {@code fallSeconds} (harmless) and is
+     * gone. While it flies it is shootable ({@code rock} box, {@code hp}; no factor) and hurts the ship and Rook on
+     * contact for {@code damage} (to the shield first, never reflected), breaking on the impact; it pays nothing, is no
+     * kill, lets enemy bullets pass and never hurts an enemy.
+     */
+    public record EruptionSpec(
+            List<Vent> vents,
+            double tellSeconds,
+            double riseSeconds,
+            double flySeconds,
+            double fallSeconds,
+            double fanRadians,
+            double speed,
+            double endSpeed,
+            Hitbox rock,
+            double hp,
+            double damage) {
+        public EruptionSpec {
+            vents = vents.stream()
+                    .sorted(java.util.Comparator.comparingDouble(Vent::t))
+                    .toList();
+            if (vents.isEmpty()
+                    || !(tellSeconds > 0)
+                    || !(riseSeconds >= 0)
+                    || !(flySeconds > 0)
+                    || !(fallSeconds >= 0)
+                    || !(fanRadians >= 0 && fanRadians < StrictMath.PI)
+                    || !(speed > 0)
+                    || !(endSpeed > 0)
+                    || !(hp > 0)
+                    || !(damage >= 0)) {
+                throw new IllegalArgumentException(
+                        "eruptions have vents, a tell, a flight, a fan up the screen, speeds,"
+                                + " rocks with HP and damage");
+            }
+        }
+
+        /** How far a rock flies out from its vent, px (its flight at the eased speed). */
+        public double reach() {
+            return (speed + endSpeed) / 2 * flySeconds;
+        }
+    }
+
+    /**
+     * M10 part A: a ground vent entering at the top edge at {@code t} s at {@code x}, erupting every {@code minPeriod} to
+     * {@code maxPeriod} s while on the screen, throwing {@code minRocks} to {@code maxRocks} rocks each time.
+     */
+    public record Vent(double t, double x, double minPeriod, double maxPeriod, int minRocks, int maxRocks) {
+        public Vent {
+            if (!(t >= 0) || !(minPeriod > 0) || !(maxPeriod >= minPeriod) || minRocks < 1 || maxRocks < minRocks) {
+                throw new IllegalArgumentException("a vent has a time, a period range and a rock range: " + t + ", "
+                        + minPeriod + ".." + maxPeriod + ", " + minRocks + ".." + maxRocks);
+            }
+        }
+    }
+
     /** M8 part H: these hazards with another {@code cruisers}. */
     public HazardSpec withCruisers(Optional<CruiserRunSpec> cruisers) {
-        return new HazardSpec(cranes, debris, sled, rocks, vents, darkness, weather, sondes, cruisers, relay);
+        return new HazardSpec(
+                cranes, debris, sled, rocks, vents, darkness, weather, sondes, cruisers, relay, eruptions);
     }
 
     /**
@@ -421,6 +517,8 @@ public record HazardSpec(
      *
      * @param gusts in time order
      * @param lightning the flash times, s, in order
+     * @param strikes M10 part A (design/world/jovian, Hazards & set pieces: lightning strikes; Level 38): the told
+     *     lightning strikes down a column ({@link Lightning}); empty for none
      */
     public record Weather(
             List<Gust> gusts,
@@ -429,8 +527,28 @@ public record HazardSpec(
             double push,
             double telegraphSeconds,
             List<Drift> drifts,
-            List<Double> lightning) {
+            List<Double> lightning,
+            Optional<Strikes> strikes) {
+        /** Weather without M10 part A's strikes. */
+        public Weather(
+                List<Gust> gusts,
+                double gustSeconds,
+                double rampSeconds,
+                double push,
+                double telegraphSeconds,
+                List<Drift> drifts,
+                List<Double> lightning) {
+            this(gusts, gustSeconds, rampSeconds, push, telegraphSeconds, drifts, lightning, Optional.empty());
+        }
+
+        /** M10 part A: this weather with the lightning strikes {@code told}. */
+        public Weather withStrikes(Strikes told) {
+            return new Weather(
+                    gusts, gustSeconds, rampSeconds, push, telegraphSeconds, drifts, lightning, Optional.of(told));
+        }
+
         public Weather {
+            java.util.Objects.requireNonNull(strikes);
             gusts = List.copyOf(gusts);
             drifts = List.copyOf(drifts);
             lightning = List.copyOf(lightning);
@@ -450,6 +568,52 @@ public record HazardSpec(
             }
         }
     }
+
+    /**
+     * M10 part A (design/world/jovian, Hazards & set pieces: lightning strikes; {@link Lightning}): the level's strikes
+     * and their numbers (the world's, one block). At its time on the level clock a strike's column, {@code width} px
+     * wide down the whole field, is told for {@code tellSeconds} ({@link SimEvents.Type#STRIKE_TOLD}), then strikes for
+     * {@code liveSeconds} ({@link SimEvents.Type#STRIKE}): {@code shipDamage} to the ship and Rook once a strike each
+     * (to the shield first, never reflected), {@code enemyDamage} to every {@code air} enemy in it as it strikes (its
+     * kills paid as a special's); {@code low-air}, {@code high-air}, bullets and pickups untouched. Where its column
+     * lies is fixed at its tell's start: its x, or the ship's for a tracking strike, moved off the ship's x (to the side
+     * it lies on) to at least {@code clearance} px (easy: 60; 0 for none) and, when a wave enters within {@code
+     * entrySeconds} of the tell's start, to at least half its width (no tell on the ship's x at a wave's entry).
+     */
+    public record Strikes(
+            List<Strike> at,
+            double tellSeconds,
+            double liveSeconds,
+            double width,
+            double shipDamage,
+            double enemyDamage,
+            double clearance,
+            double entrySeconds) {
+        public Strikes {
+            at = List.copyOf(at);
+            if (at.isEmpty()
+                    || !(tellSeconds > 0)
+                    || !(liveSeconds > 0)
+                    || !(width > 0)
+                    || !(shipDamage >= 0)
+                    || !(enemyDamage >= 0)
+                    || !(clearance >= 0)
+                    || !(entrySeconds >= 0)) {
+                throw new IllegalArgumentException("strikes are placed, told, live, have a width and damage");
+            }
+            for (int i = 1; i < at.size(); i++) {
+                if (at.get(i).t() < at.get(i - 1).t()) {
+                    throw new IllegalArgumentException("strikes in time order");
+                }
+            }
+        }
+    }
+
+    /**
+     * M10 part A: a lightning strike told at {@code t} s on the level clock down the column at {@code x}; a {@code track}
+     * strike's column locks on the ship's x at its tell's start instead (hard).
+     */
+    public record Strike(double t, double x, boolean track) {}
 
     /** M5 part F: a gust starting to push at {@code t}, blowing from the left edge (to the right) or the right. */
     public record Gust(double t, boolean fromLeft) {}

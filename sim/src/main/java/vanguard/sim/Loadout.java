@@ -23,6 +23,8 @@ import java.util.Optional;
  * @param rescue M9 part B (design/player/wingmen, Rook's rescue and return; Level 29): Rook waiting to be rescued, with
  *     the gun he was lost with and full armour: he joins the escort slot at the level's escort swap ({@link
  *     EscortSwapSpec}); empty for none (never with Rook already in the slot)
+ * @param spoofDelay M10 part A (design/player/systems, the IFF spoofer): the fitted Ascendancy IFF spoofer's delay, s:
+ *     every spoofable unit's aimed volley comes this late, at its stale aim ({@link EnemyForce#spoof}); 0 without it
  */
 public record Loadout(
         ShipSpec ship,
@@ -38,7 +40,8 @@ public record Loadout(
         Optional<NaniteSpec> nanites,
         Optional<BulwarkSpec> bulwark,
         Optional<Power> power,
-        Optional<WingmanSpec> rescue) {
+        Optional<WingmanSpec> rescue,
+        double spoofDelay) {
     public Loadout {
         java.util.Objects.requireNonNull(power);
         java.util.Objects.requireNonNull(rescue);
@@ -51,38 +54,42 @@ public record Loadout(
         if (wingman.isPresent() && bulwark.isPresent()) {
             throw new IllegalArgumentException("the escort slot holds Rook or a Bulwark, not both");
         }
+        if (!(spoofDelay >= 0)) {
+            throw new IllegalArgumentException("the spoofer's delay is 0 s or more: " + spoofDelay);
+        }
     }
 
-    /** A loadout without M9 part B's rescued Rook. */
-    public Loadout(
-            ShipSpec ship,
-            Armament armament,
-            ShieldModel shield,
-            Plating plating,
-            Optional<SpecialSpec> special,
-            Optional<Magnet> magnet,
-            Optional<WingmanSpec> wingman,
-            double salvageBonus,
-            Optional<ThrusterSpec> thrusters,
-            boolean pressureHull,
-            Optional<NaniteSpec> nanites,
-            Optional<BulwarkSpec> bulwark,
-            Optional<Power> power) {
+    /** A loadout without a special, a magnet, a wingman, a salvage bonus or any later module. */
+    public Loadout(ShipSpec ship, Armament armament, ShieldModel shield, Plating plating) {
         this(
                 ship,
                 armament,
                 shield,
                 plating,
-                special,
-                magnet,
-                wingman,
-                salvageBonus,
-                thrusters,
-                pressureHull,
-                nanites,
-                bulwark,
-                power,
-                Optional.empty());
+                Optional.empty(),
+                Optional.empty(),
+                Optional.empty(),
+                0,
+                Optional.empty(),
+                false,
+                Optional.empty(),
+                Optional.empty(),
+                Optional.empty(),
+                Optional.empty(),
+                0);
+    }
+
+    /**
+     * M10 part A (step A1b, as RF9b's {@link WaveSpec#builder}): a builder for a loadout of this hull, armament, shield
+     * and plating and nothing else fitted; its setters name the components.
+     */
+    public static Builder builder(ShipSpec ship, Armament armament, ShieldModel shield, Plating plating) {
+        return new Builder(new Loadout(ship, armament, shield, plating));
+    }
+
+    /** A builder holding this loadout's every component, for a copy with some changed. */
+    public Builder toBuilder() {
+        return new Builder(this);
     }
 
     /**
@@ -90,266 +97,197 @@ public record Loadout(
      * the Bulwark, or nothing, until then).
      */
     public Loadout withRescue(WingmanSpec rook) {
-        return new Loadout(
-                ship,
-                armament,
-                shield,
-                plating,
-                special,
-                magnet,
-                wingman,
-                salvageBonus,
-                thrusters,
-                pressureHull,
-                nanites,
-                bulwark,
-                power,
-                Optional.of(rook));
-    }
-
-    /** A loadout without M9 part A's power budget. */
-    public Loadout(
-            ShipSpec ship,
-            Armament armament,
-            ShieldModel shield,
-            Plating plating,
-            Optional<SpecialSpec> special,
-            Optional<Magnet> magnet,
-            Optional<WingmanSpec> wingman,
-            double salvageBonus,
-            Optional<ThrusterSpec> thrusters,
-            boolean pressureHull,
-            Optional<NaniteSpec> nanites,
-            Optional<BulwarkSpec> bulwark) {
-        this(
-                ship,
-                armament,
-                shield,
-                plating,
-                special,
-                magnet,
-                wingman,
-                salvageBonus,
-                thrusters,
-                pressureHull,
-                nanites,
-                bulwark,
-                Optional.empty());
-    }
-
-    /** A loadout without M8 part A's Pressure hull, nanites or Bulwark. */
-    public Loadout(
-            ShipSpec ship,
-            Armament armament,
-            ShieldModel shield,
-            Plating plating,
-            Optional<SpecialSpec> special,
-            Optional<Magnet> magnet,
-            Optional<WingmanSpec> wingman,
-            double salvageBonus,
-            Optional<ThrusterSpec> thrusters) {
-        this(
-                ship,
-                armament,
-                shield,
-                plating,
-                special,
-                magnet,
-                wingman,
-                salvageBonus,
-                thrusters,
-                false,
-                Optional.empty(),
-                Optional.empty());
-    }
-
-    /** A loadout without the Evasive thrusters. */
-    public Loadout(
-            ShipSpec ship,
-            Armament armament,
-            ShieldModel shield,
-            Plating plating,
-            Optional<SpecialSpec> special,
-            Optional<Magnet> magnet,
-            Optional<WingmanSpec> wingman,
-            double salvageBonus) {
-        this(ship, armament, shield, plating, special, magnet, wingman, salvageBonus, Optional.empty());
-    }
-
-    /** A loadout without a special, a magnet, a wingman or a salvage bonus. */
-    public Loadout(ShipSpec ship, Armament armament, ShieldModel shield, Plating plating) {
-        this(ship, armament, shield, plating, Optional.empty(), Optional.empty(), Optional.empty(), 0);
+        return toBuilder().rescue(Optional.of(rook)).build();
     }
 
     /** This loadout with {@code fitted} in the special slot. */
     public Loadout withSpecial(SpecialSpec fitted) {
-        return new Loadout(
-                ship,
-                armament,
-                shield,
-                plating,
-                Optional.of(fitted),
-                magnet,
-                wingman,
-                salvageBonus,
-                thrusters,
-                pressureHull,
-                nanites,
-                bulwark,
-                power,
-                rescue);
+        return toBuilder().special(Optional.of(fitted)).build();
     }
 
     /** This loadout with {@code fitted} in a utility bay. */
     public Loadout withMagnet(Magnet fitted) {
-        return new Loadout(
-                ship,
-                armament,
-                shield,
-                plating,
-                special,
-                Optional.of(fitted),
-                wingman,
-                salvageBonus,
-                thrusters,
-                pressureHull,
-                nanites,
-                bulwark,
-                power,
-                rescue);
+        return toBuilder().magnet(Optional.of(fitted)).build();
     }
 
     /** This loadout with {@code flying} in the escort slot. */
     public Loadout withWingman(WingmanSpec flying) {
-        return new Loadout(
-                ship,
-                armament,
-                shield,
-                plating,
-                special,
-                magnet,
-                Optional.of(flying),
-                salvageBonus,
-                thrusters,
-                pressureHull,
-                nanites,
-                bulwark,
-                power,
-                rescue);
+        return toBuilder().wingman(Optional.of(flying)).build();
     }
 
     /** This loadout with a Salvage scanner adding {@code bonus} (a share) to salvage and hidden crates. */
     public Loadout withSalvage(double bonus) {
-        return new Loadout(
-                ship,
-                armament,
-                shield,
-                plating,
-                special,
-                magnet,
-                wingman,
-                bonus,
-                thrusters,
-                pressureHull,
-                nanites,
-                bulwark,
-                power,
-                rescue);
+        return toBuilder().salvageBonus(bonus).build();
     }
 
     /** M7 part A: this loadout with the Evasive thrusters' {@code dash} in a utility bay. */
     public Loadout withThrusters(ThrusterSpec dash) {
-        return new Loadout(
-                ship,
-                armament,
-                shield,
-                plating,
-                special,
-                magnet,
-                wingman,
-                salvageBonus,
-                Optional.of(dash),
-                pressureHull,
-                nanites,
-                bulwark,
-                power,
-                rescue);
+        return toBuilder().thrusters(Optional.of(dash)).build();
     }
 
     /** M8 part A: this loadout with the Pressure hull in a utility bay (no water drag on the ship). */
     public Loadout withPressureHull() {
-        return new Loadout(
-                ship,
-                armament,
-                shield,
-                plating,
-                special,
-                magnet,
-                wingman,
-                salvageBonus,
-                thrusters,
-                true,
-                nanites,
-                bulwark,
-                power,
-                rescue);
+        return toBuilder().pressureHull(true).build();
     }
 
     /** M8 part A: this loadout with the Auto-repair nanites ({@code repair}) in a utility bay. */
     public Loadout withNanites(NaniteSpec repair) {
-        return new Loadout(
-                ship,
-                armament,
-                shield,
-                plating,
-                special,
-                magnet,
-                wingman,
-                salvageBonus,
-                thrusters,
-                pressureHull,
-                Optional.of(repair),
-                bulwark,
-                power,
-                rescue);
+        return toBuilder().nanites(Optional.of(repair)).build();
     }
 
     /** M8 part A: this loadout with the Bulwark {@code flying} in the escort slot (instead of Rook). */
     public Loadout withBulwark(BulwarkSpec flying) {
-        return new Loadout(
-                ship,
-                armament,
-                shield,
-                plating,
-                special,
-                magnet,
-                Optional.empty(),
-                salvageBonus,
-                thrusters,
-                pressureHull,
-                nanites,
-                Optional.of(flying),
-                power,
-                rescue);
+        return toBuilder()
+                .wingman(Optional.empty())
+                .bulwark(Optional.of(flying))
+                .build();
     }
 
     /** M9 part A: this loadout with its power budget in flight (design/player/generator, Enemy drain effects). */
     public Loadout withPower(Power budget) {
-        return new Loadout(
-                ship,
-                armament,
-                shield,
-                plating,
-                special,
-                magnet,
-                wingman,
-                salvageBonus,
-                thrusters,
-                pressureHull,
-                nanites,
-                bulwark,
-                Optional.of(budget),
-                rescue);
+        return toBuilder().power(Optional.of(budget)).build();
+    }
+
+    /**
+     * M10 part A (design/player/systems, the IFF spoofer): this loadout with the Ascendancy IFF spoofer in a utility bay:
+     * every spoofable unit's aimed volleys come {@code delaySeconds} late.
+     */
+    public Loadout withSpoofer(double delaySeconds) {
+        return toBuilder().spoofDelay(delaySeconds).build();
+    }
+
+    /**
+     * M10 part A (step A1b): a loadout under construction ({@link Loadout#builder}, {@link Loadout#toBuilder}), one
+     * setter per component; {@link #build()} runs the canonical constructor, so its checks see the whole loadout.
+     */
+    public static final class Builder {
+        private ShipSpec ship;
+        private Armament armament;
+        private ShieldModel shield;
+        private Plating plating;
+        private Optional<SpecialSpec> special;
+        private Optional<Magnet> magnet;
+        private Optional<WingmanSpec> wingman;
+        private double salvageBonus;
+        private Optional<ThrusterSpec> thrusters;
+        private boolean pressureHull;
+        private Optional<NaniteSpec> nanites;
+        private Optional<BulwarkSpec> bulwark;
+        private Optional<Power> power;
+        private Optional<WingmanSpec> rescue;
+        private double spoofDelay;
+
+        private Builder(Loadout from) {
+            ship = from.ship;
+            armament = from.armament;
+            shield = from.shield;
+            plating = from.plating;
+            special = from.special;
+            magnet = from.magnet;
+            wingman = from.wingman;
+            salvageBonus = from.salvageBonus;
+            thrusters = from.thrusters;
+            pressureHull = from.pressureHull;
+            nanites = from.nanites;
+            bulwark = from.bulwark;
+            power = from.power;
+            rescue = from.rescue;
+            spoofDelay = from.spoofDelay;
+        }
+
+        public Builder ship(ShipSpec value) {
+            ship = value;
+            return this;
+        }
+
+        public Builder armament(Armament value) {
+            armament = value;
+            return this;
+        }
+
+        public Builder shield(ShieldModel value) {
+            shield = value;
+            return this;
+        }
+
+        public Builder plating(Plating value) {
+            plating = value;
+            return this;
+        }
+
+        public Builder special(Optional<SpecialSpec> value) {
+            special = value;
+            return this;
+        }
+
+        public Builder magnet(Optional<Magnet> value) {
+            magnet = value;
+            return this;
+        }
+
+        public Builder wingman(Optional<WingmanSpec> value) {
+            wingman = value;
+            return this;
+        }
+
+        public Builder salvageBonus(double value) {
+            salvageBonus = value;
+            return this;
+        }
+
+        public Builder thrusters(Optional<ThrusterSpec> value) {
+            thrusters = value;
+            return this;
+        }
+
+        public Builder pressureHull(boolean value) {
+            pressureHull = value;
+            return this;
+        }
+
+        public Builder nanites(Optional<NaniteSpec> value) {
+            nanites = value;
+            return this;
+        }
+
+        public Builder bulwark(Optional<BulwarkSpec> value) {
+            bulwark = value;
+            return this;
+        }
+
+        public Builder power(Optional<Power> value) {
+            power = value;
+            return this;
+        }
+
+        public Builder rescue(Optional<WingmanSpec> value) {
+            rescue = value;
+            return this;
+        }
+
+        public Builder spoofDelay(double seconds) {
+            spoofDelay = seconds;
+            return this;
+        }
+
+        public Loadout build() {
+            return new Loadout(
+                    ship,
+                    armament,
+                    shield,
+                    plating,
+                    special,
+                    magnet,
+                    wingman,
+                    salvageBonus,
+                    thrusters,
+                    pressureHull,
+                    nanites,
+                    bulwark,
+                    power,
+                    rescue,
+                    spoofDelay);
+        }
     }
 
     /**

@@ -108,6 +108,9 @@ final class HitPasses {
         if (s.vents.grates() > 0 && ventsHitWingman(hull, x, y)) {
             return;
         }
+        if ((s.lightning != null || s.eruptions != null) && stormHitsWingman(hull, x, y)) {
+            return;
+        }
         Pool<Enemy> enemies = force.enemies();
         double ram = wingman.spec().craft().ramDamage();
         wingman.beginContacts();
@@ -369,6 +372,51 @@ final class HitPasses {
         }
     }
 
+    /**
+     * M10 part A, step A1b (design/world/jovian, Hazards & set pieces): a live lightning strike's column touching the
+     * hull hits it once a strike ({@link SimEvents.Type#STRIKE_HIT} value 1), a flying eruption rock touching it breaks
+     * on it; both to the shield first, never reflected.
+     */
+    void hitByStorm() {
+        Hull hull = ship.spec().hull();
+        Lightning lightning = s.lightning;
+        if (lightning != null && lightning.strikes(hull, ship.x(), ship.y(), Lightning.SHIP) >= 0) {
+            events.add(SimEvents.Type.STRIKE_HIT, ship.x(), ship.y(), Lightning.SHIP);
+            double lost = ship.defences().armourLost();
+            if (damaged(lost, ship.defences().takeShot(lightning.shipDamage(), events, ship.x(), ship.y()))) {
+                return;
+            }
+        }
+        Eruptions eruptions = s.eruptions;
+        if (eruptions == null) {
+            return;
+        }
+        while (eruptions.strike(hull, ship.x(), ship.y(), events) >= 0) {
+            double lost = ship.defences().armourLost();
+            if (damaged(lost, ship.defences().takeShot(eruptions.damage(), events, ship.x(), ship.y()))) {
+                return;
+            }
+        }
+    }
+
+    /** M10 part A, step A1b: a live strike's column and a flying rock hit Rook as the ship; returns whether he ejected. */
+    private boolean stormHitsWingman(Hull hull, double x, double y) {
+        Lightning lightning = s.lightning;
+        if (lightning != null && lightning.strikes(hull, x, y, Lightning.ROOK) >= 0) {
+            events.add(SimEvents.Type.STRIKE_HIT, x, y, Lightning.ROOK);
+            if (wingman.hit(lightning.shipDamage(), ship.x(), ship.y(), events)) {
+                return true;
+            }
+        }
+        Eruptions eruptions = s.eruptions;
+        while (eruptions != null && eruptions.strike(hull, x, y, events) >= 0) {
+            if (wingman.hit(eruptions.damage(), ship.x(), ship.y(), events)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /** A large debris chunk touching the hull deals its contact damage, at most once per its interval. */
     void hitByDebris() {
         Hull hull = ship.spec().hull();
@@ -448,8 +496,8 @@ final class HitPasses {
             // M10 part A: a ram ring's bullet cannot hit the ship in its grace.
             if (bullet.hitsShip() && hull.overlaps(ship.x(), ship.y(), EnemyGun.BULLET, bullet.x(), bullet.y())) {
                 bullets.free(i);
-                double lost = ship.defences().armourLost();
-                if (damaged(lost, ship.defences().takeShot(bullet.damage(), events, ship.x(), ship.y()))) {
+                // M10 part A: a Reflex Shield turns it round (never a mirror's bounced bullet).
+                if (bulletHit(bullet.damage(), !bullet.bounced(), bullet.x(), bullet.y())) {
                     return;
                 }
             }
@@ -498,6 +546,23 @@ final class HitPasses {
         strikesHitShip(hull);
     }
 
+    /**
+     * An enemy bullet (or homing missile) of {@code damage} hit the ship at (x, y): to the shield first. M10 part A
+     * (design/player/shields, Reflex Shield (Act 6)): a {@code reflectable} one hitting a Reflex Shield inside its window
+     * costs the shield only its share and comes back as the ship's bolt from the hit point ({@link
+     * SimEvents.Type#REFLEX}). Returns whether it wrecked the ship.
+     */
+    private boolean bulletHit(double damage, boolean reflectable, double x, double y) {
+        double lost = ship.defences().armourLost();
+        if (reflectable && ship.defences().reflects()) {
+            boolean wrecked = ship.defences().takeReflected(damage, events, ship.x(), ship.y());
+            fire.addBolt(x, y, damage);
+            events.add(SimEvents.Type.REFLEX, x, y, (int) Math.round(damage));
+            return damaged(lost, wrecked);
+        }
+        return damaged(lost, ship.defences().takeShot(damage, events, ship.x(), ship.y()));
+    }
+
     /** M7 part F: a homing missile bursts on the hull, dealing its damage; returns whether it wrecked the ship. */
     private boolean missilesHit(Hull hull) {
         Missiles missiles = force.missiles();
@@ -505,9 +570,11 @@ final class HitPasses {
             Missile missile = missiles.get(i);
             if (hull.overlaps(ship.x(), ship.y(), missile.box(), missile.x(), missile.y())) {
                 double damage = missile.damage();
+                double mx = missile.x();
+                double my = missile.y();
                 missiles.destroy(i, Missiles.STRUCK);
-                double lost = ship.defences().armourLost();
-                if (damaged(lost, ship.defences().takeShot(damage, events, ship.x(), ship.y()))) {
+                // M10 part A: a Reflex Shield turns a homing missile round as a bullet.
+                if (bulletHit(damage, true, mx, my)) {
                     return true;
                 }
             }

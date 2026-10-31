@@ -114,6 +114,61 @@ final class RookHazards {
     }
 
     /**
+     * M10 part A, step A1b (design/world/jovian, Hazards & set pieces): moves the goal (goalX, goalY) sideways out of
+     * every told or live lightning strike's column of {@code lightning} (his hull's edge {@link #GAP} outside it, to the
+     * nearer side the field allows) and out of the fan of every telling vent of {@code eruptions} (the sector its rocks
+     * fly through, up the screen from the vent to their reach; sideways to the nearer edge). Either may be null. Returns
+     * whether it moved; the goal is then ({@link #x()}, {@link #y()}).
+     */
+    boolean clearOfStorm(double goalX, double goalY, Lightning lightning, Eruptions eruptions) {
+        gx = goalX;
+        gy = goalY;
+        boolean moved = false;
+        if (lightning != null) {
+            for (int i = 0; i < lightning.count(); i++) {
+                if (lightning.threatens(i)) {
+                    moved |= clearOfColumn(lightning.x(i), lightning.width() / 2 + halfW + GAP);
+                }
+            }
+        }
+        if (eruptions != null) {
+            HazardSpec.EruptionSpec spec = eruptions.spec();
+            double reach = spec.reach() + Math.max(halfW, halfH) + GAP;
+            double slope = Math.tan(spec.fanRadians() / 2);
+            for (int v = 0; v < eruptions.vents(); v++) {
+                if (!eruptions.ventPresent(v) || !eruptions.telling(v)) {
+                    continue;
+                }
+                double dy = gy - eruptions.ventY(v);
+                if (dy < -halfH - GAP || dy > reach) {
+                    continue;
+                }
+                moved |= clearOfColumn(eruptions.ventX(v), Math.max(0, dy) * slope + halfW + GAP);
+            }
+        }
+        return moved;
+    }
+
+    /** Moves the goal's x at least {@code reach} px from {@code cx}, to the nearer side the field allows. */
+    private boolean clearOfColumn(double cx, double reach) {
+        if (Math.abs(gx - cx) >= reach) {
+            return false;
+        }
+        double right = cx + reach;
+        double left = cx - reach;
+        boolean rightOk = right <= PlayField.WIDTH - limit;
+        boolean leftOk = left >= limit;
+        if (rightOk && (!leftOk || right - gx <= gx - left)) {
+            gx = right;
+        } else if (leftOk) {
+            gx = left;
+        } else {
+            return false;
+        }
+        return true;
+    }
+
+    /**
      * M9 part C (design/player/wingmen, Rook in the minefield; Level 30): moves the goal (goalX, goalY) out of the
      * proximity discs of the line mines among {@code mines} (his centre {@link #MINE_GAP} outside each), sideways
      * toward {@code towardX} (the ship's x: the gap it flies) where the field allows, else straight away from the mine;

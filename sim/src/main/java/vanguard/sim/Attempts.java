@@ -52,7 +52,8 @@ final class Attempts {
         s.bossRetry = false;
         s.streamReleased = 0;
         s.resetArena();
-        s.holdersLeft = s.holders;
+        // M10 part A, step A1b: the first gate's holders (Level 29's one arena: all of them).
+        s.holdersLeft = s.clock.gates() > 0 ? s.clock.gateHolders(0) : s.holders;
         s.holdersOutSeen = 0;
         if (s.rides != null) {
             s.rides.reset();
@@ -103,6 +104,12 @@ final class Attempts {
         }
         if (s.domes != null) {
             s.domes.reset();
+        }
+        if (s.lightning != null) {
+            s.lightning.reset();
+        }
+        if (s.eruptions != null) {
+            s.eruptions.reset();
         }
         s.latches.reset();
         s.allies.reset();

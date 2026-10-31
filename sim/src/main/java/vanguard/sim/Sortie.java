@@ -278,6 +278,13 @@ public final class Sortie {
     final RelayFlash relay;
     /** M10 part A (design/enemies/ground/shield-pylon): the pylons' domes; null in a level without a pylon. */
     final Domes domes;
+    /** M10 part A, step A1b (design/world/jovian): the told lightning strikes; null in a level without them. */
+    final Lightning lightning;
+    /** M10 part A, step A1b (design/world/jovian): the eruptions' vents and rocks; null in a level without them. */
+    final Eruptions eruptions;
+
+    private final java.util.Optional<Lightning> lightningView;
+    private final java.util.Optional<Eruptions> eruptionsView;
 
     private final java.util.Optional<RelayFlash> relayView;
     /** M5 part G: the step the defend primary's synchronisation completes at; -1 without one. */
@@ -370,6 +377,8 @@ public final class Sortie {
             ship.defences().power(fire.power());
         }
         powerView = java.util.Optional.ofNullable(fire.power());
+        // M10 part A (design/player/shields, Reflex Shield (Act 6)): its reflected bullets' bolts.
+        loadout.shield().reflect().ifPresent(fire::reflex);
         terrainSpec = script.ground().terrain().orElse(null);
         canyon = terrainSpec == null ? null : new Canyon(terrainSpec.terrain());
         fire.canyon(canyon);
@@ -403,6 +412,11 @@ public final class Sortie {
                 // M9 part B: the held arena's halt cycle (Level 29).
                 script.haltCycle());
         force.canyon(canyon);
+        script.turn().ifPresent(turn -> force.turn(SimStep.ticks(turn)));
+        if (loadout.spoofDelay() > 0) {
+            // M10 part A (design/player/systems, the IFF spoofer): every spoofable unit's aimed volleys come late.
+            force.spoof(loadout.spoofDelay());
+        }
         if (medium.water()) {
             // M8 part A: the enemies' bullets and missiles fire at the water's speed.
             force.medium(medium);
@@ -415,7 +429,8 @@ public final class Sortie {
             holding += unit.holder() ? 1 : 0;
         }
         holders = holding;
-        holdersLeft = holding;
+        // M10 part A, step A1b: the first gate's holders (Level 29's one arena: all of them).
+        holdersLeft = clock.gates() > 0 ? clock.gateHolders(0) : holding;
         if (special.flares() != null) {
             // M8 part A: the homing missiles go for the burning decoy flares.
             force.missiles().decoys(special.flares());
@@ -493,6 +508,23 @@ public final class Sortie {
                 ? new Domes(force.enemies(), events)
                 : null;
         relayView = java.util.Optional.ofNullable(relay);
+        lightning = script.hazards()
+                .weather()
+                .flatMap(HazardSpec.Weather::strikes)
+                .map(strikes -> new Lightning(strikes, script))
+                .orElse(null);
+        lightningView = java.util.Optional.ofNullable(lightning);
+        eruptions = script.hazards()
+                .eruptions()
+                .map(spec -> new Eruptions(spec, rng))
+                .orElse(null);
+        eruptionsView = java.util.Optional.ofNullable(eruptions);
+        // M10 part A, step A1b: a Plasma Arc's first strike takes a burning rock when nothing else is in reach.
+        fire.chain().eruptions(eruptions);
+        if (wingman != null) {
+            // M10 part A, step A1b: Rook keeps out of a told column and a telling vent's fan.
+            wingman.storm(lightning, eruptions);
+        }
         fire.cruisers(cruisers);
         if (wingman != null && cruisers != null) {
             // M8 part H: Rook keeps out of the told broadside bands.
@@ -758,6 +790,11 @@ public final class Sortie {
             // M9 part H, step H1b: the mass relay's line and flash on the level clock (its hit in the hit pass).
             relay.step(levelTick, ship.y(), events);
         }
+        boolean struck = lightning != null && lightning.step(levelTick, ship.x(), events);
+        if (eruptions != null) {
+            // M10 part A, step A1b: the vents with the ground and the clock, the rocks in flight.
+            eruptions.step(levelTick, groundScroll, clockTicked, events);
+        }
         force.moveBullets();
         // M9 part C: the line mines come down with the scroll and blink when the ship or Rook comes near.
         boolean triggers = flying() && !complete && !failed;
@@ -801,6 +838,10 @@ public final class Sortie {
         fire.hitSetPieces();
         fire.hitMines(force.mines());
         fire.hitMissiles();
+        if (eruptions != null) {
+            // M10 part A, step A1b: the shots that reach the air spend themselves on a flying rock.
+            eruptions.hitBy(fire.shots(), events);
+        }
         if (darkness != null) {
             groundPasses.light();
         }
@@ -813,6 +854,11 @@ public final class Sortie {
         if (plumes != null && !complete) {
             // M8 part G: after the player's hits, so a unit a shot killed is paid once; a plume's kill is the player's.
             plumes.burn(force.enemies(), plumeKills);
+        }
+        if (struck && !complete) {
+            // M10 part A, step A1b: a strike hits the air units in its column after the player's hits (paid as a
+            // special's kill).
+            lightning.strikeEnemies(force.enemies(), hits);
         }
         if (canyon != null) {
             // M7 part C: after the hit passes, so a unit at a wall's foot is hit before the rock stops the shot.
@@ -860,6 +906,10 @@ public final class Sortie {
                     hitPasses.hitByVents();
                 }
                 hitPasses.hitByDebris();
+                if (lightning != null || eruptions != null) {
+                    // M10 part A, step A1b: a live strike's column, a flying rock.
+                    hitPasses.hitByStorm();
+                }
                 hitPasses.hitBySetPieces();
                 if (links != null && !wrecked) {
                     hitPasses.touchTendrils();
@@ -939,6 +989,10 @@ public final class Sortie {
         }
         holdersLeft--;
         if (holdersLeft == 0) {
+            if (clock.gates() > 1) {
+                // M10 part A, step A1b (The pylon gates): this gate opens.
+                events.add(SimEvents.Type.GATE_OPENED, x, y, clock.gate);
+            }
             events.add(SimEvents.Type.HOLDERS_DOWN, x, y);
             // Step B4b: the cue's subject says what the escort swap does ("Bulwark, RTB" only with the drone flying).
             radio.cue(CueTrigger.HOLDERS_DOWN, escorts.swapSubject());
@@ -946,9 +1000,22 @@ public final class Sortie {
         }
     }
 
-    /** M9 part B: the held arena's holders (Level 29's clamp guns: the {@code CLAMPS} line); 0 without a held arena. */
+    /**
+     * M9 part B: the held arena's holders (Level 29's clamp guns: the {@code CLAMPS} line); 0 without a held arena. M10
+     * part A, step A1b: in a level of several gates the current gate's (the {@code PYLONS n / m} line's m).
+     */
     public int holders() {
-        return holders;
+        return clock.gates() > 1 ? clock.gateHolders(clock.gate) : holders;
+    }
+
+    /** M10 part A, step A1b (The pylon gates): the level's held gates (1 for Level 29's arena; 0 without one). */
+    public int gates() {
+        return clock.gates();
+    }
+
+    /** M10 part A, step A1b: the current held gate, 0 first (the last one once it opened); the HUD's gate pips. */
+    public int gate() {
+        return clock.gate;
     }
 
     /** M9 part B: the held arena's holders still standing (or yet to come) in this attempt. */
@@ -961,9 +1028,12 @@ public final class Sortie {
         return clock.halting();
     }
 
-    /** M9 part B: how long the held arena's halt has lasted in this attempt, s (real time); 0 before it. */
+    /**
+     * M9 part B: how long the held arena's halt has lasted in this attempt, s (real time); 0 before it. M10 part A: the
+     * current gate's halt.
+     */
     public double haltSeconds() {
-        return clock.haltTicks * SimStep.SECONDS;
+        return (clock.haltTicks - clock.haltBase) * SimStep.SECONDS;
     }
 
     /** M9 part B: the level's escort swap (Rook's rescue; {@link EscortSwap#planned()} false without one). */
@@ -1185,6 +1255,16 @@ public final class Sortie {
     /** M8 part H, step H2: the finale's cruisers (Level 28's run); empty without. */
     public java.util.Optional<CruiserRun> cruisers() {
         return cruisersView;
+    }
+
+    /** M10 part A, step A1b: the told lightning strikes (design/world/jovian; Level 38); empty without. */
+    public java.util.Optional<Lightning> lightning() {
+        return lightningView;
+    }
+
+    /** M10 part A, step A1b: the eruptions' vents and burning rocks (design/world/jovian; Level 39); empty without. */
+    public java.util.Optional<Eruptions> eruptions() {
+        return eruptionsView;
     }
 
     /** M9 part H, step H1b: the mass relay's flash (Level 35); empty without. */

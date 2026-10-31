@@ -25,6 +25,13 @@ package vanguard.sim;
  * while a holder stands (the halt's own clock, {@link #haltTicks}, runs meanwhile on the real steps), and the section
  * after eases up from the halt as after a boss's arena. Holders all down before the halt: the clock jumps to the
  * arena's end (as a boss's early death) and the scroll ramps on from its speed then. No boss bar.
+ *
+ * <p>M10 part A, step A1b (design/enemies/ground/shield-pylon, The pylon gates; Level 41): a level may hold several
+ * such arenas, its <em>gates</em>, one after another; each holder holds the first gate whose section ends after its
+ * time. One gate at a time is current: it eases to its halt from the section before it, stands while one of its
+ * holders stands, runs the halt cycle on the halt's own clock (each gate's halt from a cycle's start) and eases out over
+ * the section after it; once the clock has passed its end with its holders down the next gate becomes current. Level
+ * 29's one arena is the one gate.
  */
 final class LevelClock {
     private final Sortie s;
@@ -58,9 +65,12 @@ final class LevelClock {
      * M7 part F: the ramp's length out of the arena, steps: {@link Sortie#ARENA_RAMP_SECONDS}, or the next section's
      * ease (smoothstep) when it has one ({@link #easeOutOfArena}).
      */
-    private final int rampLength;
-    /** M7 part F: whether the section after the arena eases up from the halt (smoothstep over its ease). */
-    private final boolean easeOutOfArena;
+    private int rampLength;
+    /**
+     * M7 part F: whether the section after the arena eases up from the halt (smoothstep over its ease). M10 part A: a
+     * held gate's, set as its halt or early jump starts the ramp out of it.
+     */
+    private boolean easeOutOfArena;
     /** M7 part F: the arena section's hold after its boss, s; 0 without one (or without an arena). */
     final double holdAfterBoss;
     /**
@@ -85,6 +95,23 @@ final class LevelClock {
     boolean heldJumped;
     /** M9 part B: the scroll's speed in the last moving step, px/s (a held arena's early jump ramps on from it). */
     double lastSpeed;
+    /**
+     * M10 part A, step A1b: the held gates' starts and ends (steps), the speeds they ease in from, the ramp out of each
+     * (its length, and whether the section after eases), and each gate's holders; empty without a held arena.
+     */
+    private final int[] gateStart;
+
+    private final int[] gateEnd;
+    private final double[] gateFrom;
+    private final int[] gateRamp;
+    private final boolean[] gateEase;
+    private final int[] gateHolders;
+    /** M10 part A, step A1b: the halt cycle's length, steps (each gate's halt starts a cycle); 1 without one. */
+    private final int haltEvery;
+    /** M10 part A, step A1b: the current gate (0 first; it stays on the last one once that opened). */
+    int gate;
+    /** M10 part A, step A1b: the halt's clock at the current gate's halt's start ({@link #haltTicks}; 0 for the first). */
+    int haltBase;
 
     /** Finds the level's arena and its bosses; an anchored boss is anchored at the halt's scroll. */
     LevelClock(Sortie sortie, LevelScript script, SetPiece[] setPieces) {
@@ -121,6 +148,41 @@ final class LevelClock {
         holdAfterBoss = hold;
         easeOutOfArena = easeOut > 0;
         rampLength = easeOutOfArena ? Math.max(1, SimStep.ticks(easeOut)) : SimStep.ticks(Sortie.ARENA_RAMP_SECONDS);
+        // M10 part A, step A1b: the held gates (Level 29's one arena, Level 41's pylon gates).
+        int gates = 0;
+        if (script.heldArena()) {
+            for (Section section : script.sections()) {
+                gates += section.arena() ? 1 : 0;
+            }
+        }
+        gateStart = new int[gates];
+        gateEnd = new int[gates];
+        gateFrom = new double[gates];
+        gateRamp = new int[gates];
+        gateEase = new boolean[gates];
+        gateHolders = new int[gates];
+        for (int i = 0, g = 0; g < gates; i++) {
+            Section section = script.sections().get(i);
+            if (!section.arena()) {
+                continue;
+            }
+            gateStart[g] =
+                    i == 0 ? 0 : SimStep.ticks(script.sections().get(i - 1).end());
+            gateEnd[g] = SimStep.ticks(section.end());
+            gateFrom[g] = i == 0 ? 0 : script.sections().get(i - 1).speed();
+            double after = i + 1 < script.sections().size()
+                    ? script.sections().get(i + 1).easeSeconds()
+                    : 0;
+            gateEase[g] = after > 0;
+            gateRamp[g] = after > 0 ? Math.max(1, SimStep.ticks(after)) : SimStep.ticks(Sortie.ARENA_RAMP_SECONDS);
+            for (GroundUnit unit : script.groundUnits()) {
+                if (unit.holder() && LevelScript.gateOf(script.sections(), unit.t()) == g) {
+                    gateHolders[g]++;
+                }
+            }
+            g++;
+        }
+        haltEvery = Math.max(1, EnemyEntries.haltEveryTicks(script.haltCycle()));
         SetPiece anchored = null;
         for (SetPiece piece : setPieces) {
             if (anchored == null && piece.arena().isPresent()) {
@@ -181,14 +243,15 @@ final class LevelClock {
         if (heldArena
                 && !heldJumped
                 && s.holdersLeft == 0
-                && s.levelTick >= s.arenaStartTicks
-                && s.levelTick + 1 < s.arenaEndTicks) {
+                && s.levelTick >= gateStart[gate]
+                && s.levelTick + 1 < gateEnd[gate]) {
             // M9 part B: the holders fell before the halt: the next section starts now, ramping on from this speed.
             heldJumped = true;
-            s.levelTick = s.arenaEndTicks - 1;
+            s.levelTick = gateEnd[gate] - 1;
             s.tickFraction = 0;
             rampFrom = lastSpeed;
             rampTicks = 0;
+            rampOutOfGate();
         }
         if (s.holdZones.holds()) {
             s.holdZones.ease();
@@ -197,6 +260,7 @@ final class LevelClock {
         if (held && heldArena) {
             // M9 part B: the halt's own clock (its cycle of waves).
             haltTicks++;
+            rampOutOfGate();
         }
         if (postBossHold > 0) {
             postBossHold--;
@@ -233,7 +297,28 @@ final class LevelClock {
             scrollStep *= crawlFactor();
         }
         s.groundScroll += scrollStep;
+        if (gateStart.length > 1 && gate + 1 < gateStart.length && s.holdersLeft == 0 && s.levelTick >= gateEnd[gate]) {
+            nextGate();
+        }
         return scrollStep;
+    }
+
+    /** M10 part A, step A1b: the ramp out of the current gate is its own (the section after it, eased or not). */
+    private void rampOutOfGate() {
+        rampLength = gateRamp[gate];
+        easeOutOfArena = gateEase[gate];
+    }
+
+    /**
+     * M10 part A, step A1b: the current gate opened and the clock passed its end: the next gate is current, its holders
+     * standing (or to come), its halt's clock from the next cycle's start.
+     */
+    private void nextGate() {
+        gate++;
+        s.holdersLeft = gateHolders[gate];
+        heldJumped = false;
+        haltTicks = (haltTicks + haltEvery - 1) / haltEvery * haltEvery;
+        haltBase = haltTicks;
     }
 
     /**
@@ -263,12 +348,12 @@ final class LevelClock {
             // M7 part F: the arena's hold after its boss's death chain.
             return true;
         }
+        if (heldArena) {
+            // M9 part B: a held arena's clock stands still while a holder stands. M10 part A: the current gate's.
+            return s.levelTick + 1 >= gateEnd[gate] && s.levelTick < gateEnd[gate] && s.holdersLeft > 0;
+        }
         if (s.arenaEndTicks < 0 || s.levelTick + 1 < s.arenaEndTicks || s.levelTick >= s.arenaEndTicks) {
             return false;
-        }
-        if (heldArena) {
-            // M9 part B: a held arena's clock stands still while a holder stands.
-            return s.holdersLeft > 0;
         }
         for (SetPiece piece : s.setPieces) {
             if (piece.boss().isPresent() && piece.present() && !piece.destroyed()) {
@@ -319,11 +404,12 @@ final class LevelClock {
             int n = SimStep.ticks(Sortie.ARENA_RAMP_SECONDS);
             speed = arenaFromSpeed * Math.max(0, n - 1 - (s.levelTick - s.arenaStartTicks)) / n;
         }
-        if (heldArena && rampTicks < 0 && s.levelTick >= s.arenaStartTicks && s.levelTick < s.arenaEndTicks) {
-            // M9 part B: into a held arena the scroll eases to a halt over the arena section (smoothstep).
-            int n = Math.max(1, s.arenaEndTicks - s.arenaStartTicks);
-            speed = arenaFromSpeed
-                    * (1 - ScrollPlan.smoothstep(Math.min(1, (s.levelTick - s.arenaStartTicks + 1.0) / n)));
+        if (heldArena && rampTicks < 0 && s.levelTick >= gateStart[gate] && s.levelTick < gateEnd[gate]) {
+            // M9 part B: into a held arena the scroll eases to a halt over the arena section (smoothstep). M10 part A:
+            // into the current gate, from the section before it.
+            int n = Math.max(1, gateEnd[gate] - gateStart[gate]);
+            speed = gateFrom[gate]
+                    * (1 - ScrollPlan.smoothstep(Math.min(1, (s.levelTick - gateStart[gate] + 1.0) / n)));
         }
         if (rampTicks >= 0 && easeOutOfArena) {
             // M7 part F: out of the arena the next section eases up over its ease (smoothstep), as a moving one does.
@@ -360,6 +446,8 @@ final class LevelClock {
         postBossHold = 0;
         haltTicks = 0;
         heldJumped = false;
+        gate = 0;
+        haltBase = 0;
         lastSpeed = 0;
         rampFrom = 0;
         rampTicks = -1;
@@ -368,6 +456,16 @@ final class LevelClock {
     /** M9 part B: whether a held arena's halt runs now (its clock held by a standing holder). */
     boolean halting() {
         return heldArena && clockHeld();
+    }
+
+    /** M10 part A, step A1b: the level's held gates (1 for Level 29's arena; 0 without a held arena). */
+    int gates() {
+        return gateStart.length;
+    }
+
+    /** M10 part A, step A1b: the holders of gate {@code g}. */
+    int gateHolders(int g) {
+        return gateHolders[g];
     }
 
     /** See {@link Sortie#groundSpeed()}. */

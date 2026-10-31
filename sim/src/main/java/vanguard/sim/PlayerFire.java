@@ -38,6 +38,8 @@ package vanguard.sim;
  */
 final class PlayerFire {
     private static final int SHOT_CAPACITY = 256;
+    /** M10 part A: the Reflex Shield's bolt's slug and projectile family (design/player/shields). */
+    public static final String REFLEX_BOLT = "reflex-bolt";
 
     /** What the sortie does when a shot destroys something. */
     interface Hits {
@@ -179,6 +181,15 @@ final class PlayerFire {
     private Medium medium = Medium.air();
     /** M9 part A: the direction of travel (1, or -1 while the scroll runs reversed); not hashed (the clock's). */
     private int travel = 1;
+    /**
+     * M10 part A (design/player/shields, Reflex Shield (Act 6)): the reflected bullets' bolt ({@link #addBolt}); null
+     * without a Reflex Shield.
+     */
+    private WeaponSpec bolt;
+    /** M10 part A: the Reflex's damage factor on a reflected bullet's damage. */
+    private double boltFactor;
+    /** M10 part A, step A1b (design/player/weapons/plasma-arc): the Plasma Arcs' chains. */
+    private final ChainFire chains;
     /** RF9c: the hit tests, the mounts' volleys. */
     private final ShotHits shotHits;
 
@@ -207,6 +218,7 @@ final class PlayerFire {
         drones = new Drones(ship, armament);
         deflectors = new Deflectors(ship, armament);
         arcs = new ArcFire(this, ship, setPieces, events, hits, armament.size());
+        chains = new ChainFire(this, ship, setPieces, events, hits, armament);
         shotHits = new ShotHits(this, armament, events, hits, setPieces, shots, homing);
         volleys = new MountVolleys(this, ship, events, shots, drones, homing, turretHeadings, turretTargets);
         reset();
@@ -284,6 +296,64 @@ final class PlayerFire {
         return arcs.arcY(m);
     }
 
+    /**
+     * M10 part A, step A1b (design/player/weapons/plasma-arc): the Plasma Arcs' chains (each mount's last discharge's
+     * struck points, for the look).
+     */
+    public ChainFire chain() {
+        return chains;
+    }
+
+    /**
+     * M10 part A (design/player/shields, Reflex Shield (Act 6)): the ship carries a Reflex Shield with {@code rule}: its
+     * reflected bullets come back as bolts ({@link #addBolt}).
+     */
+    void reflex(ShieldModel.Reflect rule) {
+        bolt = new WeaponSpec(
+                REFLEX_BOLT,
+                REFLEX_BOLT,
+                "reflex",
+                WeaponSpec.Delivery.BOLT,
+                false,
+                1,
+                1,
+                rule.speed(),
+                EnemyGun.BULLET,
+                Double.POSITIVE_INFINITY,
+                Double.POSITIVE_INFINITY,
+                1,
+                0,
+                0,
+                StrictMath.PI,
+                0,
+                0,
+                java.util.List.of(new WeaponSpec.Muzzle(0, 0, 0)));
+        boltFactor = rule.factor();
+    }
+
+    /**
+     * M10 part A (design/player/shields, Reflex Shield (Act 6)): a reflected bullet of {@code damage} comes back from
+     * (x, y) as a bolt of the ship's, straight up the screen at the Reflex's speed, dealing its factor × {@code damage}:
+     * a bounced shot (a standing mirror's face absorbs it), of the mount {@link #boltMount()} (after the escort's),
+     * paying as the ship's and in no DPS measure. With the shot pool full no bolt flies. Nothing without a Reflex.
+     */
+    void addBolt(double x, double y, double damage) {
+        if (bolt == null) {
+            return;
+        }
+        Shot shot = shots.obtain();
+        if (shot == null) {
+            return;
+        }
+        shot.fire(bolt, boltMount(), x, y, 0);
+        shot.reflected(damage * boltFactor);
+    }
+
+    /** M10 part A: the mount index the Reflex Shield's bolts carry: past the fitted weapons' and the escort's. */
+    public int boltMount() {
+        return armament.size() + 1;
+    }
+
     /** M9 part A: the direction of travel now (1, or -1 while the scroll runs reversed). */
     int travel() {
         return travel;
@@ -344,6 +414,7 @@ final class PlayerFire {
         drones.reset();
         deflectors.reset();
         arcs.reset();
+        chains.reset();
         if (power != null) {
             power.reset();
         }
@@ -401,9 +472,12 @@ final class PlayerFire {
                 // a torpedo pod over land fires nothing (M5 part E).
                 continue;
             }
-            if (weapon.delivery() == WeaponSpec.Delivery.ARC) {
-                // M9 part A: an arc fires only with a target in reach (no arc into empty space).
-                if (!arcs.strike(m, weapon, enemies)) {
+            if (weapon.delivery() == WeaponSpec.Delivery.ARC || weapon.delivery() == WeaponSpec.Delivery.CHAIN) {
+                // M9 part A: an arc fires only with a target in reach (no arc into empty space); M10 part A: a Plasma
+                // Arc's chain neither.
+                if (weapon.delivery() == WeaponSpec.Delivery.ARC
+                        ? !arcs.strike(m, weapon, enemies)
+                        : !chains.discharge(m, weapon, enemies)) {
                     continue;
                 }
                 cooldowns[m] = weapon.intervalTicks();

@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
-import java.util.Optional;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -238,16 +237,8 @@ class DashTest {
         Sortie plain = needlerSortie(TestSpecs.LOADOUT);
         Sortie fitted = needlerSortie(TestSpecs.LOADOUT.withThrusters(DASH));
         Sortie again = needlerSortie(TestSpecs.LOADOUT.withThrusters(DASH));
-        Sortie unfitted = needlerSortie(new Loadout(
-                TestSpecs.SHIP,
-                TestSpecs.LOADOUT.armament(),
-                TestSpecs.SHIELD,
-                TestSpecs.PLATING,
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                0,
-                Optional.empty()));
+        Sortie unfitted = needlerSortie(
+                new Loadout(TestSpecs.SHIP, TestSpecs.LOADOUT.armament(), TestSpecs.SHIELD, TestSpecs.PLATING));
         int dashes = 0;
         for (int command : commands) {
             plain.step(command);

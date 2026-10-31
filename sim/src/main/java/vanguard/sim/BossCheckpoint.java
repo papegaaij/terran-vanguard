@@ -191,6 +191,14 @@ final class BossCheckpoint {
             // M9 part H, step H1b: the relay's flash comes before the boss: spent.
             s.relay.finish();
         }
+        if (s.lightning != null) {
+            // M10 part A, step A1b: the strikes before the checkpoint are spent.
+            s.lightning.restore(s.levelTick);
+        }
+        if (s.eruptions != null) {
+            // M10 part A, step A1b: the vents where the scroll put them, no rock in flight.
+            s.eruptions.restore(s.levelTick, s.groundScroll);
+        }
         if (s.domes != null) {
             // M10 part A: the field is empty: no pylon tracked.
             s.domes.reset();

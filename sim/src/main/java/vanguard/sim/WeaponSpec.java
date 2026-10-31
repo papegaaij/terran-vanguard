@@ -45,6 +45,8 @@ import java.util.List;
  * @param shieldBreaker M9 part A (design/enemies, Enemy shields): it has the {@code shield-breaker} trait: a hit
  *     empties a unit's shield at once and holds its refill back
  * @param seek M9 part A: a homing weapon's target pick ({@link Seek#NEAREST} for every other weapon)
+ * @param chain M10 part A (design/player/weapons/plasma-arc): a {@link Delivery#CHAIN} weapon's chain; empty for every
+ *     other weapon
  */
 public record WeaponSpec(
         String slug,
@@ -72,9 +74,16 @@ public record WeaponSpec(
         boolean antiSub,
         double splash,
         boolean shieldBreaker,
-        Seek seek) {
+        Seek seek,
+        java.util.Optional<Chain> chain) {
     public WeaponSpec {
         java.util.Objects.requireNonNull(seek);
+        if (chain.isPresent() != (delivery == Delivery.CHAIN)) {
+            throw new IllegalArgumentException(slug + ": a chain weapon has its chain, others none");
+        }
+        if (delivery == Delivery.CHAIN && (muzzles.size() != 1 || !(range > 0) || !(coneHalfAngle > 0))) {
+            throw new IllegalArgumentException(slug + ": a chain has one muzzle, a reach and a cone");
+        }
         if (seek != Seek.NEAREST && delivery != Delivery.HOMING) {
             throw new IllegalArgumentException(slug + ": only a homing weapon has a seek rule: " + seek);
         }
@@ -183,7 +192,8 @@ public record WeaponSpec(
                 false,
                 0,
                 false,
-                Seek.NEAREST);
+                Seek.NEAREST,
+                java.util.Optional.empty());
     }
 
     /** A weapon without M5 part F's {@code side} or {@code rear} trait. */
@@ -236,12 +246,12 @@ public record WeaponSpec(
 
     /** This weapon with M5 part F's {@code side} or {@code rear} trait ({@code flanking}) or without it. */
     public WeaponSpec flanking(boolean sideOrRear) {
-        return copy(damage, blast, muzzles, sideOrRear, antiSub, splash, shieldBreaker, seek);
+        return copy(damage, blast, muzzles, sideOrRear, antiSub, splash, shieldBreaker, seek, chain);
     }
 
     /** M8 part A: this weapon with the {@code anti-sub} trait ({@code antiSubTrait}) or without it. */
     public WeaponSpec antiSub(boolean antiSubTrait) {
-        return copy(damage, blast, muzzles, flanking, antiSubTrait, splash, shieldBreaker, seek);
+        return copy(damage, blast, muzzles, flanking, antiSubTrait, splash, shieldBreaker, seek, chain);
     }
 
     /**
@@ -249,7 +259,7 @@ public record WeaponSpec(
      * its damage to the other units within {@code radius} px (its {@code blast}).
      */
     public WeaponSpec splash(double radius, double share) {
-        return copy(damage, radius, muzzles, flanking, antiSub, share, shieldBreaker, seek);
+        return copy(damage, radius, muzzles, flanking, antiSub, share, shieldBreaker, seek, chain);
     }
 
     /**
@@ -258,7 +268,7 @@ public record WeaponSpec(
      * Enemy#damageBreaking}).
      */
     public WeaponSpec withShieldBreaker(boolean breaker) {
-        return copy(damage, blast, muzzles, flanking, antiSub, splash, breaker, seek);
+        return copy(damage, blast, muzzles, flanking, antiSub, splash, breaker, seek, chain);
     }
 
     /**
@@ -266,7 +276,7 @@ public record WeaponSpec(
      * Seek#NEAREST} for every homing weapon before it).
      */
     public WeaponSpec withSeek(Seek rule) {
-        return copy(damage, blast, muzzles, flanking, antiSub, splash, shieldBreaker, rule);
+        return copy(damage, blast, muzzles, flanking, antiSub, splash, shieldBreaker, rule, chain);
     }
 
     /**
@@ -281,7 +291,8 @@ public record WeaponSpec(
             boolean newAntiSub,
             double newSplash,
             boolean newShieldBreaker,
-            Seek newSeek) {
+            Seek newSeek,
+            java.util.Optional<Chain> newChain) {
         return new WeaponSpec(
                 slug,
                 vfx,
@@ -308,7 +319,8 @@ public record WeaponSpec(
                 newAntiSub,
                 newSplash,
                 newShieldBreaker,
-                newSeek);
+                newSeek,
+                newChain);
     }
 
     /**
@@ -349,6 +361,73 @@ public record WeaponSpec(
                         0,
                         List.of(pod))
                 .splash(sparkRadius, sparkShare);
+    }
+
+    /**
+     * M10 part A (design/player/weapons/plasma-arc, the {@code chain} delivery; {@link ChainFire}): {@code rate}
+     * discharges a second from {@code nose}, each an instant first strike of {@code damage} on the nearest valid target
+     * within {@code reach} px in a forward cone {@code coneRadians} wide, then {@code chain}'s jumps. Not {@code
+     * shield-breaker}; no projectile, speed, pierce or splash.
+     */
+    public static WeaponSpec chain(
+            String slug,
+            String vfx,
+            String sfx,
+            double rate,
+            double damage,
+            double reach,
+            double coneRadians,
+            Chain chain,
+            Muzzle nose) {
+        return new WeaponSpec(
+                slug,
+                vfx,
+                sfx,
+                Delivery.CHAIN,
+                false,
+                rate,
+                damage,
+                0,
+                new Hitbox(1, 1),
+                reach,
+                0,
+                1,
+                0,
+                0,
+                coneRadians / 2,
+                0,
+                0,
+                List.of(nose),
+                0,
+                0,
+                Mines.NONE,
+                false,
+                false,
+                0,
+                false,
+                Seek.NEAREST,
+                java.util.Optional.of(chain));
+    }
+
+    /** M10 part A: this chain weapon with another {@code rule} (an overdrive's longer reach and jump: its own spec). */
+    public WeaponSpec withChain(Chain rule) {
+        return copy(
+                damage, blast, muzzles, flanking, antiSub, splash, shieldBreaker, seek, java.util.Optional.of(rule));
+    }
+
+    /**
+     * M10 part A (design/player/weapons/plasma-arc, Behaviour): a chain's jumps: from each struck unit to the nearest
+     * unit this discharge has not struck within {@code jump} px of it, until {@code count} units are struck (the first
+     * strike included) or none is in reach; each strike does {@code falloff} × the damage of the one before.
+     */
+    public record Chain(int count, double jump, double falloff) {
+        public Chain {
+            if (count < 1 || !(jump > 0) || !(falloff > 0 && falloff <= 1)) {
+                throw new IllegalArgumentException(
+                        "a chain strikes at least once, jumps some px and falls off by a share in (0, 1]: " + count
+                                + ", " + jump + ", " + falloff);
+            }
+        }
     }
 
     /**
@@ -503,12 +582,20 @@ public record WeaponSpec(
          * (hardened ground glances it off; never {@code high-air} or {@code sub}); without a target it does not fire.
          * Appended last so the earlier deliveries keep their ordinals.
          */
-        ARC;
+        ARC,
+        /**
+         * M10 part A (design/player/weapons/plasma-arc, the {@code chain}): no projectile: on its fire step the arc
+         * strikes the nearest valid target in its forward cone at once and jumps on along its {@link Chain} ({@link
+         * ChainFire}), on {@code air}, {@code low-air} and {@code ground} as a bolt (hardened ground glances it off and
+         * ends the chain; never {@code high-air} or {@code sub}); without a target it does not fire. Appended last so
+         * the earlier deliveries keep their ordinals.
+         */
+        CHAIN;
 
         /** Whether its projectiles hit enemies on {@code layer} on their way (blasts aside). */
         public boolean reaches(Layer layer) {
             return switch (this) {
-                case BOLT, ARC -> layer.hitByStandardShots();
+                case BOLT, ARC, CHAIN -> layer.hitByStandardShots();
                 // M7 part B: nothing reaches the buried layer.
                 case HOMING, TURRET, BEAM -> layer != Layer.SUB && layer.touchable();
                 case TORPEDO -> layer == Layer.SUB || layer == Layer.GROUND;
@@ -562,7 +649,7 @@ public record WeaponSpec(
      * (design/player/wingmen: Rook's guns are the player weapons' tables, scaled, from his nose).
      */
     public WeaponSpec scaled(double factor, List<Muzzle> from) {
-        return copy(damage * factor, blast, from, flanking, antiSub, splash, shieldBreaker, seek);
+        return copy(damage * factor, blast, from, flanking, antiSub, splash, shieldBreaker, seek, chain);
     }
 
     int intervalTicks() {

@@ -209,6 +209,26 @@ public final class Defences {
         return absorb(damage, 0, events, x, y);
     }
 
+    /**
+     * M10 part A (design/player/shields, Reflex Shield (Act 6)): whether an enemy bullet or homing missile hitting now
+     * would be reflected: the shield is a Reflex and holds at least its window's share of its capacity now (the
+     * Overcharge's raised capacity included), and the hit would land (no mercy time, armour left).
+     */
+    boolean reflects() {
+        if (model.reflect().isEmpty() || mercy > 0 || armour <= 0) {
+            return false;
+        }
+        return shield >= model.reflect().get().window() * capacity();
+    }
+
+    /**
+     * M10 part A: a reflected bullet or missile of {@code damage} ({@link #reflects()} held): the Reflex's share of it to
+     * the shield as a bullet's hit; returns whether armour reached zero.
+     */
+    boolean takeReflected(double damage, SimEvents events, double x, double y) {
+        return absorb(damage * model.reflect().orElseThrow().share(), 0, events, x, y);
+    }
+
     /** Contact with an enemy: half to the shield, half to armour. Returns whether armour reached zero. */
     boolean takeCollision(double damage, SimEvents events, double x, double y) {
         return absorb(damage / 2, damage / 2, events, x, y);

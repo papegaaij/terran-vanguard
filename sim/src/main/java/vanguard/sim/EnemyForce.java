@@ -89,6 +89,8 @@ final class EnemyForce {
     private final EnemyMoves moves;
     /** M9 part F: the prey latches (Level 33's uneasy alliance); null in a level without a prey unit. */
     private final PreyLatches prey;
+    /** M10 part A, step A1b: the level's turn, steps; 0 without one (the links live from the hunters' entry). */
+    private int turnTicks;
     /** M10 part A (The three-way war): the hunting waves' prey; null in a level without a hunting wave. */
     private final PreyWar war;
     /** M7 part E: the pull on the ship. */
@@ -390,7 +392,29 @@ final class EnemyForce {
 
     /** Lets in every unit due at {@code levelTick}, flying and on the ground. */
     void spawn(int levelTick) {
+        if (war != null && turnTicks > 0) {
+            // M10 part A, step A1b: the hunting links are live from the level's turn.
+            boolean live = levelTick >= turnTicks;
+            war.live(live);
+            if (prey != null) {
+                prey.warLive(live);
+            }
+        }
         entries.spawn(levelTick);
+    }
+
+    /**
+     * M10 part A, step A1b (design/enemies, The three-way war): the level's turn at level step {@code ticks}: the hunting
+     * waves' links are live from it ({@link LevelScript#turn()}); without one they are live from the hunters' entry.
+     */
+    void turn(int ticks) {
+        turnTicks = ticks;
+        if (war != null && ticks > 0) {
+            war.live(false);
+            if (prey != null) {
+                prey.warLive(false);
+            }
+        }
     }
 
     /**
