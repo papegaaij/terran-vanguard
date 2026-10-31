@@ -82,12 +82,18 @@ speakers:
       d33b85b98791: 1001   # Level 34 briefing page 1 "Before the Sovereign, we restock…" (step G2): every take of the key's seed held a 0.8-1.9 s pause in its first chunk
       12dce0570381: 101   # Level 34 core missed "Salvage tug has the core…" (step G2): the key's seed read "the call"
       8119302f4829: 301   # Level 34 core collected "Helix core aboard…" (step G2): the key's seed ran "core aboard" into "Cora Board"
+      b2d52c28d321: 187519682   # Act 6 intro page 1 "Aegis, Okafor, from the bridge of the Steadfast…" (M10 part B, step VOX-B): the key's own seed, pinned as checked (no pause over 0.8 s; word for word with the Act 6 name prompt)
+      f7ece3d35777: 259968573   # Act 6 intro page 2 "Callisto sits behind his home fleet…" (step VOX-B): the key's own seed (chunk 2 retried once for a 1.3 s pause), pinned as checked; word for word with the name prompt
+      79a360002f58: 201   # Act 6 intro page 4 "All channels. Vorne, this is Okafor…" (step VOX-B): the key's seed read "you die first" and jumped high (p90 399 Hz); the pin (its second take, 202: a 1.9 s pause in 201) reads word for word at 165 Hz
+      de9422e3fc07: 301   # Level 36 t=67 "Helium-3 harvesters ahead…" (step VOX-B): all eight of the key's seeds ran to the length cap or held a 1.0-1.3 s pause (101-108 too); the pin (its fifth take, 305) reads word for word, "helium three", at 161 Hz
+      45e7d6b1ac12: 201   # Level 36 secondary met "Six harvesters down…" (step VOX-B): the key's seed read "Io" as "eel"; the pin reads word for word with the name prompt at 146 Hz ("Eye-oh" respelled ran long and read "it I": not kept)
   varga:
     names: [Varga]
     ref: ref-varga
     pins:
       b0a8f0d09999: 126672783   # Level 14 t=54 "Hive nodes in the Molard…": the key's seed read "five notes" every way; the pin reads "hive nodes" through the filter
       240e8b557207: 45813701    # Level 13 t=13 "Fast boats in the leads…": the key's seed jumped an octave (about 400 Hz) throughout
+      52bde1f490c0: 201   # Level 36 t=128 "A white line drawn down the sky…" (M10 part B, step VOX-B): the key's seed read "lightning" as "whitening"; the pin reads word for word both ways at 190 Hz
       bc756d169e74: 234717555   # Level 13 secret "A CDF research cache…": the key's seed read "hot" for "hut" and ran high (about 290 Hz)
       c7a82e12794e: 209379246   # Level 12 secondary "Three sondes, full data…": the key's seed jumped an octave on "full data"
       cda9d1e479a9: 215661581   # Level 12 t=58 "There's a CDF sonde out there…": the key's seed jumped an octave on "data"
@@ -189,6 +195,7 @@ speakers:
       88f6d2289169: 101   # Level 35 first lock "Such dedication…" (step H2): the key's seed read "pilot" as "Pilate" through the filter; the pin reads word for word
       339ad6a165f8: 102   # Act 5 intro page 3 "No Ascendancy city…" (smug from step H2): the key's seed read "stand aside", 101 "your souls"; the pin reads word for word through the filter
       69d286fb6676: 105         # Act 5 intro page 2 "Citizens of the solar system…": the key's seed slurred "the Vrell are" ("that Rell"); the pin reads word for word through the filter at 95 Hz (p95 117)
+      43f8042293b8: 71270466   # Act 6 intro page 3 "Commander Okafor. Welcome to Jupiter…" (M10 part B, step VOX-B; the enemy channel, his theatrical base): the key's own seed, pinned as checked (no pause over 0.8 s, 105 Hz on the raw take); word for word through the filter ("sixty-six" written "66")
   harker:   # Level 29 (the mutineers' flight lead, the enemy channel); auditioned in round 62 (step VOX-B, QB-1: a Ted Delorme, b David Clarke); his lines are rendered with both: a here into assets/voice/harker/, b from ref-harker-r62-b into concept/voice-harker-r62-b/ under the keys that ref gives, so the pick sets `ref` to the chosen clip as it is named (the name is part of the key: no rename) and, for b, moves those files into assets/ (as Dr. Brandt's in round 51)
     names: [Harker]
     ref: ref-harker-r62-b   # cast in round 62 (V.2 = b, David Clarke; the clip keeps its -r62- name: it is part of the lines' key); a's takes (Ted Delorme) in concept/rejected/voice-harker-r62-a/

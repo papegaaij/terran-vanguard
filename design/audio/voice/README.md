@@ -573,6 +573,8 @@ theatrical base, the portrait **rage**. Rendered as one take (the break after "*
 several seeds, the best pinned; checked for the clip's pitch shift surviving the shout (a shout lifts the pitch: it
 must stay apart from Harker). **Round 72's verdict (V.5 recast, 2026-10-31)**: neither audition take is kept. **a** the shout row (265 Hz) is a real shout but no longer Vorne (his register is 90–106 Hz), **b** the fierce row (exaggeration 0.8, cfg_weight 0.4, 156 Hz) is Vorne's register but not a shout; both rows stay `proposed` ("recast"). A follow-up voice step re-renders the line as the row's recast option says: **the shout row pitched down toward 100–120 Hz with the break after "*No!*" kept, or the fierce row pushed harder**; the best natural take is pinned. Under it the music is track 18's intro (the Choir motif over a drone) with the radio's duck.
 
+**Round 73's pick (R.4 b, 2026-10-31)**: the shout is [`concept/vorne-shout-r73-b.ogg`](concept/vorne-shout-r73-b.ogg)'s treatment, not a plain pipeline take: a shouted render from his clip lowered a further 4 semitones (`ref-vorne.wav` −4, formants preserved) at the shout row (1.3 / 0.2 / 0.8), seed 105, then lowered by WORLD resynthesis (×0.52) to about 104 Hz, through the enemy filter (`tools/concept/audio/voice_r73.py`). Level 42's line 5 is **produced from that take** (the same clip, row, seed and lowering) when part H builds the level; nothing is rendered for it before (M10 part B, step VOX-B: Level 36 does not play it).
+
 **The check's Level 42 exception.** The voice build check that rejects `shout: true` on Vorne's cues "before Act 6's
 end" (planned in Act 5, *Act 5 voices*) allows **exactly one** shouted Vorne cue: **Level 42's line 5**, the eruption
 line after the Choir's (the Ascendant's line order). Any other Vorne cue with `shout: true`, in any level, fails the
@@ -596,8 +598,8 @@ seeds, the plain spelling against a respelling; kept only where it reads better)
 
 | Name | Say | Respelling |
 |---|---|---|
-| Aurelia (Aurelia Traffic) | aw-REE-lee-uh | as written; "Oh-ree-lia" if it reads "Ophelia" or "Amelia" |
-| Io | EYE-oh | as written; "Eye-oh" if it reads "I owe" or "Yo" |
+| Aurelia (Aurelia Traffic) | aw-REE-lee-uh | as written (step VOX-B: read back with the name prompt in every Level 36 and intro line; "or really" without it) |
+| Io | EYE-oh | as written (step VOX-B: "Eye-oh" read worse; through the radio filter one take still reads "eel") |
 | Callisto | kuh-LIS-toh | as written (Act 5) |
 | Ascendant (the ship) | uh-SEN-dunt | as written; it must not read "Ascendancy" |
 | Jupiter, Jovian | JOO-pih-ter, JOH-vee-un | as written |
@@ -605,9 +607,11 @@ seeds, the plain spelling against a respelling; kept only where it reads better)
 | Harker, Vesper, Kestrel | HAR-ker, VES-per, KES-trul | as written (Harker cast, Act 5) |
 | Chimera, Harrow | ky-MEER-uh, HAR-oh | as written; "Ky-meer-a" if it reads "shimmer" |
 | Tvashtar, Loki, Pele, Prometheus (Io's works and plains) | tuh-VAHSH-tar, LOH-kee, PAY-lay, pruh-MEE-thee-us | as written; "Pay-lay" if Pele reads "peel" |
-| helium-3 | HEE-lee-um three | "helium three" in the spoken text (a digit after a hyphen is read badly) |
+| helium-3 | HEE-lee-um three | as written (step VOX-B: "Helium-3" and "helium-3" read back "helium three"; the t=67 line pinned for its length, not its reading) |
 | the Silence | as written | as written (Level 41) |
 | Aegis | EE-jis | as written (Act 4) |
+
+**Rendered: Level 36 and the Act 6 intro (M10 part B, step VOX-B, 2026-10-31).** 22 files with the cast voices: the intro's four pages (Okafor's 1, 2 and 4 dry; Vorne's page 3 through the enemy filter, `channel: enemy`, at his theatrical base: 105 Hz on the raw take, no pause over 0.8 s), Level 36's two briefing pages (Okafor, Varga), its 15 radio lines (Okafor, Varga, Rook's three: the scripted t=11 line, the t=118 homing bark and the new `first-strike-kill` line) and the pathfinder pod's secret (Varga). Every take read back by Whisper (faster-whisper base.en) plain and with the Act 6 name prompt (Jupiter, Aurelia, Chimera, harvesters, Stormhawk, Vorne, Ascendancy, Callisto, Io, Steadfast, helium-3 …). The four intro pages are pinned (pages 1–3 on their keys' seeds as checked); four more pins where the key's seed misread or failed: the intro's page 4 ("you die first"), Okafor's t=67 helium-3 line (all eight of the key's seeds ran to the length cap or held a 1.0–1.3 s pause), her secondary line ("Io" as "eel") and Varga's t=128 ("lightning" as "whitening"). **No respelling**: "Helium-3" is spoken "helium three" as written; "Eye-oh" for Io ran long and read worse ("it I"). Weak spots left: through the radio filter Whisper still hears "Io" as "eel" in Okafor's secondary line (the raw take and a trial's filtered render read "Io"), "Vrell" as "rel" in Varga's briefing page 2 ("with Vrell tissue": every seed tried, a merge with "with") and "Vrell tissue" as one word at t=30; homophones only otherwise ("wrecks" as "Rex", "defences" spelt US, "sixty-six" as "66"). The act data reads the intro's page 4 at the **fierce** row (step B2), where *The cast speakers in Act 6* above asks for grim and slower: rendered as the data says, pending the user's ear.
 
 ### Briefings
 
@@ -879,6 +883,12 @@ level).
       guns" in her briefing page and her arena line; no respelling ("nav core" reads right with the name prompt);
       measured on the raw takes Vorne 95–128 Hz, Ceres Control 110–132 Hz; `VoiceFilesTest` with Level 35 and the Act 5
       outro (M9 part H, step H2, 2026-10-29); heard in round 68's captures (step H5).
+- [x] Level 36's lines and the Act 6 intro (its four pages, Vorne's page 3 on the enemy filter; Level 36's two briefing
+      pages, Okafor's, Varga's and Rook's radio with the `first-strike-kill` line, the pathfinder pod's secret): 22 files,
+      eight pinned (the intro's four pages; the t=67, secondary and t=128 lines), every take read back by Whisper with
+      the Act 6 name prompt, no respelling (*Act 6 voices*, Rendered); `VoiceFilesTest` with Level 36 and the Act 6
+      briefing in `briefs/m10-voxb-tests.patch` for B3/B4 to apply, green in a snapshot (M10 part B, step VOX-B,
+      2026-10-31)
 - [ ] Act 6 (draft, decided 2026-10-31 (round 72), M10): every Act 6 line and page rendered and read back with the Act 6 name
       prompt (parts B–H); Vesper, Kestrel and Aurelia Traffic cast from round 72's picks (refs and CREDITS.md rows);
       Harker's Level 40 lines on his cast clip; Vorne's Level 42 line 5 at the picked shout take, pinned; the build
@@ -1186,3 +1196,4 @@ Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-a
   J6 kept (his one shout at Level 42's eruption). The rejected candidates' clips and transcripts moved to
   `concept/rejected/` (CREDITS.md paths updated). The Act 6 voice plan approved as drafted (D.18).
 - 2026-10-31, round 73: Aurelia Traffic's "lift" accepted (R.3; round 72's take superseded); **Vorne's shout b** (R.4, not the recommendation): the new shouted render lowered to about 104 Hz; a and round 72's two takes rejected.
+- 2026-10-31 (step VOX-B, M10 part B): Level 36's radio and briefing and the Act 6 intro rendered (22 files, *Act 6 voices*, Rendered); no respelling (helium-3, Io, Aurelia, Callisto, Vorne read back as written with the Act 6 name prompt; "Eye-oh" tried for Io and dropped); Vorne's Level 42 shout to be produced from round 73's b take when part H builds the level. Measured only, not listened to.
