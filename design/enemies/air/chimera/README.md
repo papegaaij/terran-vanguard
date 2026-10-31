@@ -1,7 +1,7 @@
 ---
 title: Chimera
 design: approved
-implementation: not-started
+implementation: in-progress
 art: chosen
 depends-on: [../talon, ../../../systems/difficulty, ../../../systems/economy, ../../../player/specials, ../../../art-direction, ../../../campaign/act-6-jovian-storm]
 updated: 2026-10-31
@@ -94,7 +94,7 @@ Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 ## Implementation
 
 - [ ] Stat block loaded from a `data.yaml`; global difficulty multipliers and the beam-era factor applied; re-measured with `levelReport` at L36
-- [ ] Regeneration per the shared [rule](../../README.md#regeneration) (rate, delay, any hit and a beam's touch restart it, the EMP pauses it), deterministic and allocation-free
+- [x] Regeneration per the shared [rule](../../README.md#regeneration) (rate, delay, any hit and a beam's touch restart it, the EMP pauses it), deterministic and allocation-free (M10 part A, 2026-10-31: `RegenerationTest`, the seam pulse step A3a's)
 - [ ] The Talon's swoop and pair reused; the `swarm` flock reused from the Mote Swarm with a cap on simultaneous fire
 - [ ] Production sprites (16 headings, the seam glow per HP share, the healing pulse) via `tools/art/`; death effect, bounty and sounds (Freesound, CC0/CC-BY)
 

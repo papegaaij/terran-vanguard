@@ -29,3 +29,9 @@
 - **Note for A4:** over Level 36's cream the additive arc reads white, its violet fringe faint; the bounced orbs keep
   their dark rim and read apart. The small explosion's additive flash nearly vanishes on the cream band (the round-72
   note), to judge in part B's captures.
+
+## plasma-arc-capture-r73-a
+
+Concept round 73, a capture of the game, not generated art (M10 part A, step A4, 2026-10-31): frames of the
+[A4 capture rig](../../../../world/jovian/concept/prompts.md#act6-rig-capture-r73-a); the sheet and the GIF are laid out from its screenshots (the 480×540 play field
+or crops, scaled with nearest neighbour).

@@ -42,8 +42,8 @@ Promoted to their own documents for the Acts 1–2 wrap-up, plus the Act 3 draft
 | [rail-serpent](rail-serpent/README.md) | Drone train of 8–14 cars from the sides and rear; a cut's rear half drifts and blows (L30) | approved | done | final |
 | [hornet](hornet/README.md) | Hovering missile boat, salvos of 4 shootable homing diamonds (L31) | approved | done | final |
 | [buzzsaw-drone](buzzsaw-drone/README.md) | Radial blade drone: chase, 0.6 s spin-up, a dash that ricochets off edges and rocks (L31) | review | done | final |
-| [chimera](chimera/README.md) | Hybrid on the Talon airframe: swoops and aimed pairs, regenerates 20 %/s after 1 s untouched (L36) | approved | not-started | chosen |
-| [mirror-interceptor](mirror-interceptor/README.md) | Ascendancy interceptor with a frontal mirror: bounces shots, a beam breaks it, `shield-breaker` shatters it; open flanks (L37) | approved | not-started | chosen |
+| [chimera](chimera/README.md) | Hybrid on the Talon airframe: swoops and aimed pairs, regenerates 20 %/s after 1 s untouched (L36) | approved | in-progress | chosen |
+| [mirror-interceptor](mirror-interceptor/README.md) | Ascendancy interceptor with a frontal mirror: bounces shots, a beam breaks it, `shield-breaker` shatters it; open flanks (L37) | approved | in-progress | chosen |
 | [harrow](harrow/README.md) | Hybrid kamikaze from every edge: lock tell, ram, a ring of 8 on any death (L38) | approved | not-started | chosen |
 
 ## Roster

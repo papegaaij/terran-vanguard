@@ -1,7 +1,7 @@
 ---
 title: Mirror Interceptor
 design: approved
-implementation: not-started
+implementation: in-progress
 art: chosen
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../player/specials, ../../../player/weapons, ../../../player/shields, ../../../art-direction, ../../../campaign/act-6-jovian-storm]
 updated: 2026-10-31
@@ -84,13 +84,15 @@ Round 72's proposals (step ART-R-A, picked 2026-10-31; generator `tools/concept/
 |---|---|---|
 | [concept/mirror-interceptor-r72-a.png](concept/mirror-interceptor-r72-a.png) | Mirror Interceptor a, "crescent": the broad gunmetal hull with one curved silver mirror plate 76 px across the nose, gold tip caps; 16 headings; the states: standing, the specular sweep, heat 40 / 78 (cracks) / 100 %, broken (the bare frame), regrowing, the pod tell | chosen (round 72 A.2 a) |
 | [concept/mirror-interceptor-r72-a.gif](concept/mirror-interceptor-r72-a.gif) | A side entry (edge-warned): its flank on the way in, the bounce at its 7 s station (slow magenta bullets, one per 0.15 s), two pod bursts, the flank again as it leaves, the kill and the falling silver shards | chosen (round 72 A.2 a) |
+| [concept/mirror-capture-r73-a.png](concept/mirror-capture-r73-a.png) | Game capture (the A4 rig; stand-in sprite, A3a's code-drawn plate): the Ion Beam L5 on the mirror over the cream bands, the plate heating to white, the break and its shards, the beam on the hull while it is down, the regrown plate bouncing the pods' bursts, 2×; the plasma arc earthed on its face over round 72's grade | proposed (round 73) |
+| [concept/mirror-capture-r73-a.gif](concept/mirror-capture-r73-a.gif) | Heat, break, down time and regrowth under the beam, 2×, 30 fps | proposed (round 73) |
 
 Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 
 ## Implementation
 
 - [ ] Stat block loaded from a `data.yaml`; global difficulty multipliers applied; HP and heat re-measured with `levelReport` at L37
-- [ ] The [reflect](../../README.md#reflect) rule: the arc test, the bounce (rate cap, mirror-image path, `small` 110 px/s, never twice), beam heat and cooling, the breaker and EMP shatter, the 3 s down time and regrowth, Rook's shots absorbed; deterministic and allocation-free
+- [x] The [reflect](../../README.md#reflect) rule: the arc test, the bounce (rate cap, mirror-image path, `small` 110 px/s, never twice), beam heat and cooling, the breaker and EMP shatter, the 3 s down time and regrowth, Rook's shots absorbed; deterministic and allocation-free (M10 part A, 2026-10-31: steps A1a, A1b, A3a, `ReflectTest`; the look on stand-in sprites)
 - [ ] Side and rear entries to a station, the turn toward the ship, the burst only while facing the ship; hull spacing in pincers and ambushes
 - [ ] Production sprites (16 headings, the mirror's sweep, heat, cracks, break and regrowth) via `tools/art/`; death effect, bounty and sounds (Freesound, CC0/CC-BY)
 

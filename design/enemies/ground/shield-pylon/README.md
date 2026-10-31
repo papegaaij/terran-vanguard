@@ -1,7 +1,7 @@
 ---
 title: Shield Pylon
 design: approved
-implementation: not-started
+implementation: in-progress
 art: chosen
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../player/specials, ../../air/choir-herald, ../clamp-gun, ../../../ui/hud]
 updated: 2026-10-31
@@ -116,15 +116,17 @@ Prompts: [concept/prompts.md](concept/prompts.md#pylon-dome-final-r73-a).
 |---|---|---|
 | [concept/pylon-dome-final-r73-a.png](concept/pylon-dome-final-r73-a.png) | Final dome effects of A.5 a: the 232 px dome (lattice ≈ 20 %, rim, the shimmer's 12 frames), the spent shot's hit, the 0.4 s collapse ring, the feed strip, the covered sheen; over Level 41's ice with two covered Rail Bunkers and a stand-in mast (sheet) | proposed (round 73) |
 | [concept/pylon-dome-final-r73-a.gif](concept/pylon-dome-final-r73-a.gif) | Shots spent on the dome, the mast destroyed, the ring collapsing into it, 1× | proposed (round 73) |
+| [concept/dome-capture-r73-a.png](concept/dome-capture-r73-a.png) | Game capture (the A4 rig; a stand-in mast, ART-A's held dome frames): the dome 140 px along the crown with its feed and shimmer over the cream bands, round 72's grade and the rust band (the arc jumping to the mast) | proposed (round 73) |
+| [concept/dome-capture-r73-a.gif](concept/dome-capture-r73-a.gif) | The dome scrolling through the pods' fight over the cream bands, 1× | proposed (round 73) |
 
 Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 
 ## Implementation
 
 - [ ] Stat block loaded from a `data.yaml` (when the design is approved); global difficulty multipliers applied; tuned with `levelReport` in Level 41
-- [ ] The dome: ground units inside take no damage (shots spent with a spark, blasts and beams stopped), never itself or the air layers; the covered sheen; homing and Rook skip covered units
-- [ ] The openers: the pylon's death (collapse), the EMP (the stun), `shield-breaker` (2 s)
-- [ ] The pylon gates: the rescue halt with the pylons as holders, the HUD's `PYLONS n/m`
+- [x] The dome: ground units inside take no damage (shots spent with a spark, blasts and beams stopped), never itself or the air layers; the covered sheen; homing and Rook skip covered units (M10 part A, 2026-10-31: `DomeTest`; the dome's frames held until part G)
+- [x] The openers: the pylon's death (collapse), the EMP (the stun), `shield-breaker` (2 s) (M10 part A, `DomeTest`)
+- [x] The pylon gates: the rescue halt with the pylons as holders, the HUD's `PYLONS n/m` (M10 part A, 2026-10-31: `HeldGatesTest`, `GateTracker`; Level 41's placements are its part's)
 - [ ] Production sprites (the mast, the crown at its headings, the wreck), the dome and its beam, the intel portrait
 - [ ] Death effect, bounty and sounds per this spec (Freesound, no bubbly sounds)
 

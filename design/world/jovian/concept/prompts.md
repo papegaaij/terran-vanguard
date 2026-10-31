@@ -112,3 +112,22 @@ Generator: `python3 tools/concept/act6_r73.py lightning a` (frames from `tools/a
   soft edges fading to the core over the 0.25 s (four frames).
 - **AI prompt:** "pre-rendered 1990s CGI game effect, a straight vertical column of white-blue light with a jagged
   bright core line, fading at the edges, over storm clouds, top-down shoot'em up"
+
+## act6-rig-capture-r73-a
+
+Concept round 73, captures of the game, not generated art (M10 part A, step A4, 2026-10-31): the game built by
+`:desktop:installDist` (branch `m10-act-6` at part A's commits) on a private 1920×1080 Xvfb display, `--bench 1400
+--settings <scratch>/settings.properties` (auto-fire on), `--shots <tick>,…` writing the 960×540 screenshots (the play
+field at x 240–720), `ALSOFT_DRIVERS=wave`. No Act 6 level exists yet. **The capture rig:** a scratch copy of the tree
+(never committed) with a stand-in Level 36 (`act-6-jovian-storm/level-36-cloud-divers/data.yaml`, one 66 s section at
+100 px/s, the act's data a copy of Act 5's with `levels: [36, 36]`) whose deep layer is one of ART-B's Level 36 tiles
+(`cream-bands`, `rust-band`) or round 72's L36 mood grade (`tools/art/act6_gear.py`'s `sky_l36` mirrored to a 1080 px
+tile), `cloud-wisps` on `low-air` and six foreground banks; its script: Talon V-wings (t 2, 18, 29, 44), a single
+Mirror Interceptor (t 4, 47) and a pincer of two (t 21), Chimera V-wings (t 9, 50), three Graft Turrets (t 14–15, x 200–280),
+a SAM Nest (t 24) and a Shield Pylon (t 25.2, crown −30°), strikes at t 13, 35, 53, a vent at t 38 erupting every 2 s.
+The four units are stand-ins with the numbers of content's `JovianKeysTest` (the mirror 120 HP, then 1 500 HP for the
+break-and-regrow run; the Graft root 8 HP, then 3 000 HP), drawn with placeholder sprites (the Talon's frames scaled for
+the mirror, the SAM Nest's for the turret and the mast, ART-B's held Chimera) and ART-A's held dome frames. Runs:
+`--level 36 --invulnerable --escort none` with `--loadout front=plasma-arc:5,left=micro-missile-pod:2,right=micro-missile-pod:2`
+over each ground and `--loadout front=ion-beam:5` over the cream; Level 33 and Level 35 (unchanged) with `--loadout
+front=plasma-arc:5,shield=reflex-shield`. The sheets and GIFs are laid out from the screenshots by a scratch script.

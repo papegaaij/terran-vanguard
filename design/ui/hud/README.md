@@ -394,9 +394,9 @@ Production art for concept round 26 (M4 part H batch): the boss bar's plate, ren
       capture `friendly-marker-capture-r71-a`)
 - [ ] The Honour Guard's three-segment mid-boss bar with the call-sign tags (dim until an ace joins, dark and struck
       through when killed) — **later: Act 6** (draft: *Act 6 additions*) — M10 (L40's part)
-- [ ] Level 41's `PYLONS n / m` count with the gate pips and `OPEN` — M10 (L41's part)
+- [x] Level 41's `PYLONS n / m` count with the gate pips and `OPEN` — M10 (L41's part; built early in part A, step A3b's `GateTracker`, 2026-10-31)
 - [ ] The escape bar (the time bar in amber, the gold payout fill and `MAX`, `ESCAPED`) — M10 (L42's part)
-- [ ] The Reflex Shield's 75 % tick and gold window on the shield bar — M10 part A
+- [x] The Reflex Shield's 75 % tick and gold window on the shield bar — M10 part A (step A3b's `ReflexTick`, 2026-10-31)
 - [x] Level 31's tug tracker (three section bars) — M9 part D (step D4: `TUG n / 3` over three bars, each after its section's initial `B`, `C`, `E`: the full names leave no room for a bar in a third of the well, `MissionLayoutTest`; step D4b: the `CLEAN HULL` tag on line one and the share's tick on the bars)
 
 ## Open questions

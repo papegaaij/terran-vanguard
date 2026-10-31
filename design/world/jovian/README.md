@@ -191,6 +191,8 @@ until the pick; the frames wait in `build/art-held/sprites/` until the game clai
 | [concept/lightning-strike-r73-a.gif](concept/lightning-strike-r73-a.gif) | a: the 1.0 s tell, the 0.25 s strike, over Level 36 and Level 38, 1× | proposed (round 73 QA-2) |
 | [concept/lightning-strike-r73-b.png](concept/lightning-strike-r73-b.png) | QA-2 b "light column": a straight full-height column of white light with a jagged core line, its edges fading to the core over the 0.25 s (sheet) | proposed (round 73 QA-2) |
 | [concept/lightning-strike-r73-b.gif](concept/lightning-strike-r73-b.gif) | b: the same moments, 1× | proposed (round 73 QA-2) |
+| [concept/hazards-capture-r73-a.png](concept/hazards-capture-r73-a.png) | Game capture (the [A4 rig](concept/prompts.md#act6-rig-capture-r73-a)): the told strike on ART-B's cream bands and over round 72's grade, a dry eruption's vent tell and rock, the foreground banks over air units (A3b's code veils until B4 draws ART-B's bank pieces) on cream and rust | proposed (round 73) |
+| [concept/hazards-capture-r73-a.gif](concept/hazards-capture-r73-a.gif) | The strike's tell and strike over the cream bands, 1× | proposed (round 73) |
 
 Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 

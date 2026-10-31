@@ -974,14 +974,16 @@ Round 72, Q9 (step ART-R-A, picked 2026-10-31; `tools/concept/enemies_r72.py hea
       3 of 25 units insectoid).
 - [x] Act 5 passes the variety checklist as built (M9 part I, 2026-10-29, from Levels 29–35's data: the table's row above;
       3 of 22 units insectoid).
-- [ ] Act 6's unit rules (M10 part A): [reflect](#reflect), [regeneration](#regeneration), the Graft Turret's regrowth,
+- [x] Act 6's unit rules (M10 part A): [reflect](#reflect), [regeneration](#regeneration), the Graft Turret's regrowth,
       the `death-burst` on contact, the Act 6 [shield](#enemy-shields) weights, the Shield Pylon's dome and
       [the three-way war](#the-three-way-war)'s prey link, each flown by its first unit in parts B–H. (Step A1a: the
       simulation's `Mirroring`, `Regenerating`, `Regrowing`, `Domes`, `PreyWar`, `Spoofing`; step A2a: the stat block's
       `mirror`, `regeneration`, `regrowth`, `dome`, `spoofable` and the `death-burst` attack with `on_contact`, `between`
       and `grace`, their difficulty hooks, a wave's `hunts: <tag>`, a pylon nest's `crown`, the shared `shields.heavy`
       and `reference_dps` 36–42 in [data.yaml](data.yaml), the five Ascendancy turrets flagged `spoofable`;
-      `JovianRules`, `JovianChecks`, `JovianKeysTest` on stand-ins, `ActHpFactorTest`; the looks are step A3a's.)
+      `JovianRules`, `JovianChecks`, `JovianKeysTest` on stand-ins, `ActHpFactorTest`; the looks are step A3a's.) Built
+      2026-10-31 (`ReflectTest`, `RegenerationTest`, `RegrowthTest`, `DeathBurstContactTest`, `DomeTest`, `PreyWarTest`,
+      `JovianLooksTest`; Acts 1–5's golden flights unchanged); each unit's own flight stays its part's ticket.
 - [ ] Acts 6–7 pass it as built — **later: Act 6** to Act 7.
 
 ## Open questions

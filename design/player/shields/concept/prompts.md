@@ -35,3 +35,9 @@ game's files until the pick). Files: `reflex-bolt-r73-a.png` (sheet) and `.gif` 
   resembles an enemy bullet in the field; the rest as a.
 - **AI prompt:** "pre-rendered 1990s CGI game sprite, a thin gold energy needle with a white core flying straight up,
   faint trail, top-down shoot'em up"
+
+## reflex-capture-r73-a
+
+Concept round 73, a capture of the game, not generated art (M10 part A, step A4, 2026-10-31): frames of the
+[A4 capture rig](../../../world/jovian/concept/prompts.md#act6-rig-capture-r73-a); the sheet and the GIF are laid out from its screenshots (the 480×540 play field
+or crops, scaled with nearest neighbour).

@@ -17,3 +17,9 @@
 - **Negative prompt:** photograph, painterly brush strokes, soft focus, perspective camera, side view, three-quarter view, text, watermark, motion blur, dithered gradients, organic shapes
 - **Animation brief:** As a; the facets flash panel by panel as it turns. Every glow, haze and shadow is a smooth gradient of at least 32 steps, drawn once, with no ordered dither (the 2026-10-30 dither audit).
 - **Mockup generator:** `python3 tools/concept/enemies_r72.py mirror-interceptor [a|b]` (round 72, step ART-R-A; models built in the file on the frozen `tools/concept/render/` package)
+
+## mirror-capture-r73-a
+
+Concept round 73, a capture of the game, not generated art (M10 part A, step A4, 2026-10-31): frames of the
+[A4 capture rig](../../../../world/jovian/concept/prompts.md#act6-rig-capture-r73-a); the sheet and the GIF are laid out from its screenshots (the 480×540 play field
+or crops, scaled with nearest neighbour).

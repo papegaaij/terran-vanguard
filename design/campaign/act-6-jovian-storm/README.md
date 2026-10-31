@@ -1,7 +1,7 @@
 ---
 title: Act 6 – Jovian Storm
 design: approved
-implementation: not-started
+implementation: in-progress
 art: chosen
 depends-on: [../act-5-the-belt, ../../world/jovian, ../../story/twist, ../../story/characters/vorne, ../../enemies/bosses/honour-guard, ../../enemies/bosses/ascendant, ../../player/generator]
 updated: 2026-10-31
@@ -459,8 +459,8 @@ Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
       dry eruptions with rocks, foreground banks over `air`, the pylon dome and gates, the three-way prey rule, the
       falling city's two ground layers and its authored jagged cut line, the friendly marker on the shuttles and the fleet's craft; the Plasma Arc, the
       Reflex Shield, Composite V, the IFF spoofer and the Mk V+ "Crucible".
-- [ ] **Explosions on the cream band** (the user's note on round 72 A.7, answered: the dark sharp edge was a **mockup artifact**: the explosion frames carry dark low-alpha fringe pixels, the game draws explosions additively (`Effects`, blend `SRC_ALPHA, ONE`), which adds no dark at all, but `tools/concept/enemies_r72.py`'s `boom` pasted the later frames with normal alpha): part A's capture checks how explosions read on Level 36's cream band (additive light can wash out on a bright backdrop) and, with the Plasma Arc's, that its look and the bounced bullets' magenta read apart
-- [ ] `reference_dps` 36–42 and the Act 6 balance plan (`balance-plan.yaml` visits 36–42) before any Act 6 level data
+- [x] **Explosions on the cream band** (the user's note on round 72 A.7, answered: the dark sharp edge was a **mockup artifact**: the explosion frames carry dark low-alpha fringe pixels, the game draws explosions additively (`Effects`, blend `SRC_ALPHA, ONE`), which adds no dark at all, but `tools/concept/enemies_r72.py`'s `boom` pasted the later frames with normal alpha): part A's capture checks how explosions read on Level 36's cream band (additive light can wash out on a bright backdrop) and, with the Plasma Arc's, that its look and the bounced bullets' magenta read apart (step A4, 2026-10-31: captures over round 72's L36 grade and ART-B's L36 tiles; the arc's violet and the magenta read apart; the small burst washes out on the brightest cream, so round 73 asks a / b / c, [explosion-bright-r73](../../art-direction/README.md#concept-art); part B's B5 repeats it in Level 36)
+- [x] `reference_dps` 36–42 and the Act 6 balance plan (`balance-plan.yaml` visits 36–42) before any Act 6 level data
       (M10 part A): `enemies/data.yaml`, `ActHpFactorTest`, `BalanceTest`, `tools/balance.py` exit 0.
 - [ ] Every level within the act's density band (`DensityTest`, `PacingTest`, `ActFloorTest`), the end calm (≥ 4 s),
       the beam era's HP re-measured with regeneration (`BeamEraHpTest`) and its typical haul within ±5 % of its

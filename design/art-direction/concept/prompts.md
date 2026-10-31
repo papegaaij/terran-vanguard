@@ -597,3 +597,19 @@ flying outward in a ring, no smoke, sprite sheet on black"
 
 Concept round 61, frames of the [capture rig](../../enemies/concept/prompts.md#belt-rig-capture-r61-a)'s Tesla run (b)
 at rig ≈ 32.9–33.3 s: a 240×240 crop of the play field, four frames, each scaled 2× (nearest); the burst a is in the game.
+
+## explosion-bright-r73
+
+Concept round 73 (M10 part A, step A4; round 72 A.7's note, step ART-B's measure), generator
+[tools/concept/explosion_bright_r73.py](../../../tools/concept/explosion_bright_r73.py): the kill bursts over Level 36's
+bright Jupiter bands. Plates cut from the game's Level 36 tiles (the brightest 150 px window of `cream-bands`, `bank-c`
+over it, the rust band); a `small` and a `medium` burst each at the game's timing (4 steps a frame), shown 2x.
+- **a "as built"**: the production frames (`tools/art/explosions.py`), additive only.
+- **b "soot under the flash"**: the same frames over a soft soot puff drawn with normal blending: a warm dark grey,
+  at most 0.42 opaque, a smooth radial falloff feathered to nothing (no edge, no ring), lumpy only by a low-frequency
+  noise, coming in with the flash, growing from 0.9x to 1.35x the burst and rising a few px as it fades out by 1.3x the
+  flash's life. Jupiter's air: "explosions rise as smoke and fire" (design/world/jovian).
+- **c "deeper core"**: the frames' light recoloured along a deeper, saturated orange ramp, still additive.
+
+AI prompt: "1990s pre-rendered CGI fireball sprite over a bright cream gas-giant cloud band, small orange-white
+explosion with a soft translucent dark smoke puff behind it, no hard outline, top-down shoot'em up"

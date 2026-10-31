@@ -1,7 +1,7 @@
 ---
 title: Ship systems
 design: approved
-implementation: in-progress
+implementation: done
 art: final
 depends-on: [../generator, ../../ui/hangar]
 updated: 2026-10-31
@@ -313,10 +313,10 @@ Prompts and capture notes: [concept/prompts.md](concept/prompts.md).
   `Command.DASH`, the HUD's dash pip right of the shield's label plate, three fading afterimages,
   the thruster burst and its sound, the hull see-through every other two steps while invulnerable)
 - [x] Act 4's modules' effects: the Auto-repair nanites and the Pressure hull (M8 part A, the items below)
-- [ ] The other modules' effects — **later: Act 6** (Ascendancy IFF spoofer: the late, stale-aimed volleys of the listed
+- [x] The other modules' effects — **later: Act 6** (Ascendancy IFF spoofer: the late, stale-aimed volleys of the listed
   turrets, the amber stutter, `design: draft` and `available: L39` in [data.yaml](data.yaml); draft: *Act 6: the IFF
   spoofer and the core tiers*) — M10 part A (step A2a: the row and its `spoof: {delay}`, the five turrets' `spoofable`;
-  step A1a: the turrets' late volleys; the module's flag in the loadout is steps A1b and A2b's)
+  step A1a: the turrets' late volleys; the module's flag in the loadout is steps A1b and A2b's; built 2026-10-31, `SpooferTest`, the amber stutter step A3a's)
 - [x] Sensor level controls the intel panel detail
 - [x] Underwater penalties and the pressure hull — **later: Act 4** (the pressure hull is an L22
   module; the penalties are Europa's under-water rules; the draft is *Pressure hull (L22)* above) (M8 part A, step

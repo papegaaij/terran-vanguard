@@ -25,7 +25,7 @@ consecutive levels.
 | [act-3-red-dust](act-3-red-dust/README.md) | Levels 15–21 · Mars · first hints of human involvement · boss Dust Colossus | approved | in-progress | final |
 | [act-4-deep-water](act-4-deep-water/README.md) | Levels 22–28 · Europa ice & under-ice ocean · underwater play · boss Abyssal Maw | approved | in-progress | final |
 | [act-5-the-belt](act-5-the-belt/README.md) | Levels 29–35 · asteroid belt & stations · the betrayal in the open: Vorne's broadcast, Ceres Hub turns, Rook freed · boss Iron Sovereign | approved | in-progress | final |
-| [act-6-jovian-storm](act-6-jovian-storm/README.md) | Levels 36–42 · Jupiter's cloud cities, Io & Callisto · hunting Vorne: the Vrell turn on the Ascendancy, the Silence named · mid-boss Honour Guard, boss Ascendant | approved | not-started | chosen |
+| [act-6-jovian-storm](act-6-jovian-storm/README.md) | Levels 36–42 · Jupiter's cloud cities, Io & Callisto · hunting Vorne: the Vrell turn on the Ascendancy, the Silence named · mid-boss Honour Guard, boss Ascendant | approved | in-progress | chosen |
 | [act-7-beyond-the-gate](act-7-beyond-the-gate/README.md) | Levels 43–50 · Tether Gate & Vrell space · final boss Choir Heart | draft | not-started | none |
 
 ## Design

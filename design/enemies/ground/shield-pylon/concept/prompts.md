@@ -28,3 +28,9 @@
   brighter rim and a slow shimmer band crossing it (12 frames, a 4 s loop), scaled by radius / 110 for easy and hard;
   a gold spark with lit hexes where a shot is spent; the collapse a thin gold ring shrinking into the crown over 0.4 s;
   the solid thin gold feed beam; a faint gold hex sheen over a covered unit. Additive, smooth, drawn once.
+
+## dome-capture-r73-a
+
+Concept round 73, a capture of the game, not generated art (M10 part A, step A4, 2026-10-31): frames of the
+[A4 capture rig](../../../../world/jovian/concept/prompts.md#act6-rig-capture-r73-a); the sheet and the GIF are laid out from its screenshots (the 480×540 play field
+or crops, scaled with nearest neighbour).

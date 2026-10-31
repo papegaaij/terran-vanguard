@@ -1,7 +1,7 @@
 ---
 title: Graft Turret
 design: approved
-implementation: not-started
+implementation: in-progress
 art: chosen
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../player/specials, ../spine-turret, ../../air/coilwyrm]
 updated: 2026-10-31
@@ -105,14 +105,16 @@ Round 72's proposals (step ART-R-A, picked 2026-10-31; generator `tools/concept/
 |---|---|---|
 | [concept/graft-turret-r72-b.png](concept/graft-turret-r72-b.png) | Graft Turret b, "tissue first": a third of the dome overgrown, a fleshy collar and six roots across the deck, a bigger root bulb; the same cycle | chosen (round 72 A.4 b) |
 | [concept/graft-turret-r72-b.gif](concept/graft-turret-r72-b.gif) | The same scene as a | chosen (round 72 A.4 b) |
+| [concept/regrowth-capture-r73-a.png](concept/regrowth-capture-r73-a.png) | Game capture (the A4 rig; stand-in sprite, the root given 3 000 HP so the window runs out under the beam): killed, the root exposed with its pulse and shrinking ring, the knit and the regrown turret, over the cream bands, 1× | proposed (round 73) |
+| [concept/regrowth-capture-r73-a.gif](concept/regrowth-capture-r73-a.gif) | The same, 5 s at 15 fps, 1× | proposed (round 73) |
 
 Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 
 ## Implementation
 
 - [ ] Stat block loaded from a `data.yaml` (when the design is approved); global difficulty multipliers and the beam-era factor applied; tuned with `levelReport` in Level 37
-- [ ] Regrowth: the exposed root, the window with its pulse, the regrowth's tell, the full-HP return, the cycle
-- [ ] Bounty once, the root's bonus, nothing for a regrown turret; one kill and one density count
+- [x] Regrowth: the exposed root, the window with its pulse, the regrowth's tell, the full-HP return, the cycle (M10 part A, 2026-10-31: `RegrowthTest`, the root's pulse and the knit step A3a's)
+- [x] Bounty once, the root's bonus, nothing for a regrown turret; one kill and one density count (M10 part A, `RegrowthTest`)
 - [ ] Production sprites (the turret at 32 angles, the wreck and the root's pulse, the regrowth frames, the regrown look, the stump), the intel portrait
 - [ ] Death effects and sounds per this spec (Freesound, no bubbly sounds)
 

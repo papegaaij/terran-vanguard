@@ -27,7 +27,7 @@ generator limits what can be fitted at the same time.
 | [armor](armor/README.md) | Non-regenerating hull points, plating upgrades, repairs | approved | done | n/a |
 | [wingmen](wingmen/README.md) | AI wingman Rook (escort slot) and drones (wing mounts) | approved | in-progress | final |
 | [specials](specials/README.md) | Special abilities: airstrike, smart bomb, EMP, orbital lance, … | approved | in-progress | final |
-| [systems](systems/README.md) | Engines and utility-bay modules: magnet, sensors, auto-repair, … | approved | in-progress | final |
+| [systems](systems/README.md) | Engines and utility-bay modules: magnet, sensors, auto-repair, … | approved | done | final |
 
 ## Design
 

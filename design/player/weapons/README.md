@@ -50,7 +50,7 @@ decided 2026-10-31 (round 72)); later weapons are still roster rows below.
 | [rear-guard-drone-bay](rear-guard-drone-bay/README.md) | Rear-guard Drone Bay — Wing (per bay), rear (drone); DPS 9 → 26; 2 400; L20 | approved | in-progress | final |
 | [tesla-coil-pod](tesla-coil-pod/README.md) | Tesla Coil Pod — Wing (per pod), area, shield-breaker; DPS 12 → 40 (an arc of 140 → 180 px); 3 000; L29 | approved | done | final |
 | [swarm-tail](swarm-tail/README.md) | Swarm Tail — Rear, rear, homing; DPS 15 → 55; 3 500; L30 | approved | done | final |
-| [plasma-arc](plasma-arc/README.md) | Plasma Arc — Front, area, spread; DPS 30 → 120 (chains to 3 → 6 targets); 6 000; L36 | approved | in-progress | chosen |
+| [plasma-arc](plasma-arc/README.md) | Plasma Arc — Front, area, spread; DPS 30 → 120 (chains to 3 → 6 targets); 6 000; L36 | approved | done | chosen |
 
 ## Design
 

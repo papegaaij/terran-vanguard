@@ -114,6 +114,8 @@ pick). Prompts: [concept/prompts.md](concept/prompts.md#reflex-shield-final-r73-
 | [concept/reflex-bolt-r73-a.gif](concept/reflex-bolt-r73-a.gif) | a in flight: orbs on the full Reflex Shield, gold flashes, bolts up, needles and a bounced orb drifting through, 2× | proposed (round 73 QA-3) |
 | [concept/reflex-bolt-r73-b.png](concept/reflex-bolt-r73-b.png) | QA-3 b "gold needle": a thin gold needle with a white core, a dark rim and a faint trail, the same layout (sheet) | proposed (round 73 QA-3) |
 | [concept/reflex-bolt-r73-b.gif](concept/reflex-bolt-r73-b.gif) | b in flight, 2× | proposed (round 73 QA-3) |
+| [concept/reflex-capture-r73-a.png](concept/reflex-capture-r73-a.png) | Game capture: Level 33 with `--loadout front=plasma-arc:5,shield=reflex-shield`, orbs on the full Reflex Shield: the gold hex flash and bolt a going up among the magenta orbs, then the blue ring below 75 %, 2× | proposed (round 73) |
+| [concept/reflex-capture-r73-a.gif](concept/reflex-capture-r73-a.gif) | The same, 1.7 s at 30 fps, 2× | proposed (round 73) |
 
 ## Implementation
 
@@ -126,11 +128,11 @@ pick). Prompts: [concept/prompts.md](concept/prompts.md#reflex-shield-final-r73-
   asset table; `ShipLooks`, frames by `tools/art/ship_fx.py`)
 - [x] The shield-restore chime ([sfx](../../audio/sfx/README.md), part H's SFX pass: once the
   shield is full again after a break, `FlightSounds`)
-- [ ] The Reflex Shield as in *Reflex Shield (Act 6)* (draft): its row in [data.yaml](data.yaml) (a variant with the
+- [x] The Reflex Shield as in *Reflex Shield (Act 6)* (draft): its row in [data.yaml](data.yaml) (a variant with the
   reflect window, the half cost and the bolt; written and loaded in step A2a, `ShieldData.Reflect`, `JovianKeysTest`;
   the simulation's reflect is step A1b's, its mapping step A2b's), the bullet-to-bolt hand-off in the simulation (deterministic, hashed
   only when fitted), the once-only rule against the mirrors, the gold hex flash, the bolt's look, the
-  ricochet sound, in the shop from the L37 visit — M10 part A
+  ricochet sound, in the shop from the L37 visit — M10 part A (2026-10-31: `ReflexShieldTest`, `ReflexTick`; the bolt's look is round 73's QA-3)
 
 ## Open questions
 

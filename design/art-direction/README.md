@@ -478,6 +478,12 @@ the Level 11 props approved as final; the lane telegraph and slam **a** "edge da
 | [concept/vacuum-burst-final-r61-a.png](concept/vacuum-burst-final-r61-a.png) | Vacuum kill bursts (the belt's vacuum rule), proposal **a** "flash and ring" (`tools/art/explosions.py --vacuum a`, M9 part A; written to `assets/` until the pick): the four rungs' light (a white flash gone within 0.1 s, a thin white-blue ring, sparks streaking out) and the debris ring of gunmetal fragments with hot edges cooling, no smoke (sheet) | chosen (round 61, F.3 a picked: flash and ring, in the game) |
 | [concept/vacuum-burst-final-r61-a.gif](concept/vacuum-burst-final-r61-a.gif) | a's four rungs side by side over belt space, 3x | chosen (round 61, F.3 a picked: flash and ring, in the game) |
 | [concept/vacuum-capture-r61-a.png](concept/vacuum-capture-r61-a.png) | Game capture on the capture rig (Level 08 in vacuum, [the rig](../enemies/concept/prompts.md#belt-rig-capture-r61-a), step A4): four frames 1/7 s apart, 2× crops: a Spore Bomber's wreck tumbling and drifting after its burst (only medium and large units leave one), a Stinger's flash and debris ring, the Tesla arc and a shield ring | chosen (round 61, F.3 a picked: accepted) |
+| [concept/explosion-bright-r73-a.png](concept/explosion-bright-r73-a.png) | Explosions over Level 36's bright bands, proposal **a** "as built" (`tools/concept/explosion_bright_r73.py`; the production frames, additive only): a `small` and a `medium` burst over the brightest cream, a bank on the cream and the rust band at 1x, the small burst 2x, the measured lift: on the cream the small core lifts only about +30 (over 90 % of it clipped) and changes its 24 px disc by 8 on average, a pale smudge; on rust it reads (22) | proposed (round 73) |
+| [concept/explosion-bright-r73-a.gif](concept/explosion-bright-r73-a.gif) | a's loop over the three plates, 2x (the play field's scale on a 1080p screen) | proposed (round 73) |
+| [concept/explosion-bright-r73-b.png](concept/explosion-bright-r73-b.png) | Proposal **b** "soot under the flash" (recommended): the same additive frames over a soft normal-blended soot puff (warm dark grey, at most 0.42 opaque, feathered to nothing over its outer 60 %, no edge, rising a little as it fades by 1.3x the flash's life): the burst changes its disc by 19 on the cream and the bank, 21 on rust | proposed (round 73) |
+| [concept/explosion-bright-r73-b.gif](concept/explosion-bright-r73-b.gif) | b's loop over the three plates, 2x | proposed (round 73) |
+| [concept/explosion-bright-r73-c.png](concept/explosion-bright-r73-c.png) | Proposal **c** "deeper core": the frames recoloured to a deeper, saturated orange for Act 6, still additive: warmer, but additive orange adds less light, so it reads weaker on the cream (5) and a little on rust (16) | proposed (round 73) |
+| [concept/explosion-bright-r73-c.gif](concept/explosion-bright-r73-c.gif) | c's loop over the three plates, 2x | proposed (round 73) |
 
 ## Implementation
 
@@ -545,7 +551,8 @@ the Level 11 props approved as final; the lane telegraph and slam **a** "edge da
 
 ## Open questions
 
-- None open.
+- Explosions over Level 36's bright cream (round 73): **a** as built (additive only), **b** a soft soot puff under
+  the flash (recommended), **c** a deeper orange core; see the explosion-bright-r73 rows above.
 
 ## Decisions
 
@@ -563,4 +570,7 @@ Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-a
   unit sheets and its build to M9 part A, which ticks the item.
 - 2026-10-27 (user, [round 60](../concept-rounds/round-60/README.md) closed): the homing diamond is **variant a** (A.16 a; b rejected); the Ascendancy's Act 5 look is gunmetal/charcoal with gold (Q11 **b**, see the [enemies](../enemies/README.md#factions-and-visual-language) rule); the belt's backdrops are the lighter grade (A.18 a); the Iron Sovereign's atlas is top-lit (A.23).
 - 2026-10-28 (user, [round 61](../concept-rounds/round-61/README.md), closed): **F.3 a**, the vacuum burst "flash and ring" (b, the fireball, rejected); **C.7** accepted (only medium and large units leave a wreck in vacuum).
+- 2026-10-31 (step A4, M10 part A; round 72 A.7's note, ART-B's measure): the built bursts wash out over Level 36's
+  brightest cream (additive light cannot lift white); three proposals go to round 73 (a as built, b soot under the
+  flash, c a deeper core), b recommended; part B's B5 checks the pick in Level 36.
 - 2026-10-30, the user: dither audit, ≥ 25 % smoothed (step DITH8): the underwater burst's cavity (`explosion-deep-cavity-*`) in smooth steps, not the 4×4 Bayer checker ([audit](production/README.md#dither-audit-2026-10-30)).

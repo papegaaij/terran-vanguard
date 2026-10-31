@@ -1,7 +1,7 @@
 ---
 title: Plasma Arc
 design: approved
-implementation: in-progress
+implementation: done
 art: chosen
 depends-on: [.., ../../generator, ../../../enemies, ../../../systems/economy]
 updated: 2026-10-31
@@ -112,19 +112,22 @@ exists, then a rerun writes them to `assets/`). Prompts: [concept/prompts.md](co
 |---|---|---|
 | [concept/plasma-arc-final-r73-a.png](concept/plasma-arc-final-r73-a.png) | Final frames of A.7 a: the 160×48 strips per place in the chain (the first strike 1.7× the pod's width, each jump 0.72× thinner), three shapes each, the 64 px spark burst, the nose glow, beside the Tesla Coil Pod's arc; in flight at L5 over Level 36's bands with Talon stand-ins, bounced magenta orbs drifting through and a kill on the cream (sheet) | proposed (round 73) |
 | [concept/plasma-arc-final-r73-a.gif](concept/plasma-arc-final-r73-a.gif) | The L5 chain at 5 discharges a second over Level 36's bands, 1× | proposed (round 73) |
+| [concept/plasma-arc-capture-r73-a.png](concept/plasma-arc-capture-r73-a.png) | Game capture (the A4 rig, M10 part A): the chain at L5 with the pods' missiles bounced back as magenta orbs by mirrors, over round 72's Level 36 grade (the mood still as the deep layer), ART-B's cream bands and the rust band; 2× crops: the white core and violet-pink fringe beside the dark-rimmed magenta orbs (they read apart by shape and brightness; the hues are close) | proposed (round 73) |
+| [concept/plasma-arc-capture-r73-a.gif](concept/plasma-arc-capture-r73-a.gif) | The same over the cream bands, 2 s at 15 fps, 1× | proposed (round 73) |
+| [concept/plasma-arc-l35-capture-r73-a.png](concept/plasma-arc-l35-capture-r73-a.png) | Game capture: Level 35 with `--loadout front=plasma-arc:5,shield=reflex-shield`, the chain through the escort screen | proposed (round 73) |
 
 Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 
 ## Implementation
 
-- [ ] Weapon data in [data.yaml](data.yaml) (written and loaded in step A2a: `hits: chain`, the per-level `chain` and `jump`, the `falloff`, checked by content's `WeaponData`; the simulation's `CHAIN` delivery is step A1b's, its mapping step A2b's) (numbers as above; a `CHAIN` delivery: the instant first strike in
+- [x] Weapon data in [data.yaml](data.yaml) (written and loaded in step A2a: `hits: chain`, the per-level `chain` and `jump`, the `falloff`, checked by content's `WeaponData`; the simulation's `CHAIN` delivery is step A1b's, its mapping step A2b's) (numbers as above; a `CHAIN` delivery: the instant first strike in
   the forward cone, the jumps with their radius, count and falloff, one target per body) — M10 part A
-- [ ] The chain against shields, mirrors (earthed on the face, the flank open to a jump), regeneration, mines and debris
-  as under *Behaviour* — M10 part A (with the enemies' rules)
-- [ ] Shop entry from the L36 visit; the hangar's trait markers for `area` and `spread` — M10 part A
-- [ ] The look (the `arc` family wider, the forks thinning per jump, the spark burst per strike) and the `tesla` zap per
-  jump at a rising pitch — M10 part A (the look is round 72's A.7 a; part A checks in a capture that its violet fringe and the bounced bullets' magenta read apart, and how explosions read on Level 36's cream band)
-- [ ] `BalanceTest`/`tools/balance.py` count its single-target DPS (the first strike) in the forward DPS
+- [x] The chain against shields, mirrors (earthed on the face, the flank open to a jump), regeneration, mines and debris
+  as under *Behaviour* — M10 part A (with the enemies' rules; `PlasmaArcTest`, 2026-10-31)
+- [x] Shop entry from the L36 visit; the hangar's trait markers for `area` and `spread` — M10 part A
+- [x] The look (the `arc` family wider, the forks thinning per jump, the spark burst per strike) and the `tesla` zap per
+  jump at a rising pitch — M10 part A (the look is round 72's A.7 a; part A checks in a capture that its violet fringe and the bounced bullets' magenta read apart, and how explosions read on Level 36's cream band: step A4's captures, round 73; the explosions' fix is a round-73 question)
+- [x] `BalanceTest`/`tools/balance.py` count its single-target DPS (the first strike) in the forward DPS
 
 ## Open questions
 
