@@ -993,7 +993,8 @@ final class Formations {
          * A {@code carrier + escorts} group (design/enemies/air/brood-pod): the carriers (spawners)
          * drift straight down, side by side; the escorts circle the carrier that entered last
          * (the wave lists the carrier's group first) at their orbit's radius and rate, evenly
-         * spaced, and break off toward the ship {@link #BREAK_INTERVAL_SECONDS} apart when it ends.
+         * spaced, and break off toward the ship {@link #BREAK_INTERVAL_SECONDS} apart when it ends. M10 part B: drifting
+         * carriers ({@link EnemySpec.CarrierDrift}) drift down on a diagonal; a pair's escorts circle their midpoint.
          */
         void carrierEscorts() {
             requireFront();
@@ -1029,6 +1030,27 @@ final class Formations {
                             wave.t(),
                             FlightPath.through(x, HEIGHT + OUTSIDE, x, -OUTSIDE * 2),
                             speed(enemy().speed()),
+                            0,
+                            Optional.empty(),
+                            Spawn.Exit.DOWN);
+                }
+                return;
+            }
+            if (enemy().carrierDrift().isPresent()) {
+                // M10 part B (design/campaign Level 36, the harvesters): the carriers enter at the top edge side by
+                // side as a spawner's do, and drift down the screen at their speed and sideways at their drift's (a
+                // carrier right of the middle the other way when mirrored), out at the bottom edge.
+                EnemySpec.CarrierDrift drift = enemy().carrierDrift().get();
+                double down = speed(enemy().speed());
+                double seconds = (HEIGHT + 2 * OUTSIDE) / down;
+                for (int i = 0; i < wave.count(); i++) {
+                    double x = (i + 1) * WIDTH / (wave.count() + 1);
+                    double vx = drift.vxAt(x);
+                    add(
+                            i,
+                            wave.t(),
+                            FlightPath.through(x, HEIGHT + OUTSIDE, x + vx * seconds, -OUTSIDE),
+                            Math.sqrt(down * down + vx * vx),
                             0,
                             Optional.empty(),
                             Spawn.Exit.DOWN);

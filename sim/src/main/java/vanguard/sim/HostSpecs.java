@@ -66,6 +66,9 @@ public interface HostSpecs {
      * before it ({@link Flock#RIBBON_LAG}), so the school ripples as a ribbon; the steering works on the members'
      * unswayed places. With a {@code ram} its members break off and dive at the ship ({@link Ram}); a unit of the same
      * stat block flying a path (a {@code column}) rams by it too. Empty for none.
+     *
+     * <p>M10 part B (design/enemies/air/chimera): with a {@code fire} its members fire their gun under the swarm's fire
+     * cap ({@link JovianSpecs.SwarmFire}); empty for a swarm that does not fire (every earlier one).
      */
     public record FlockSpec(
             double separation,
@@ -78,7 +81,36 @@ public interface HostSpecs {
             double turnRate,
             int max,
             java.util.Optional<FlightSpecs.Sine> sway,
-            java.util.Optional<Ram> ram) {
+            java.util.Optional<Ram> ram,
+            java.util.Optional<JovianSpecs.SwarmFire> fire) {
+        /** Without M10 part B's fire cap (every swarm before Act 6). */
+        public FlockSpec(
+                double separation,
+                double radius,
+                double alignment,
+                double cohesion,
+                double leader,
+                double speed,
+                double diveSpeed,
+                double turnRate,
+                int max,
+                java.util.Optional<FlightSpecs.Sine> sway,
+                java.util.Optional<Ram> ram) {
+            this(
+                    separation,
+                    radius,
+                    alignment,
+                    cohesion,
+                    leader,
+                    speed,
+                    diveSpeed,
+                    turnRate,
+                    max,
+                    sway,
+                    ram,
+                    java.util.Optional.empty());
+        }
+
         /** Without M8 part C's sway and ram (the Mote Swarm's). */
         public FlockSpec(
                 double separation,
@@ -117,12 +149,31 @@ public interface HostSpecs {
                     turnRate,
                     max,
                     withSway,
-                    withRam);
+                    withRam,
+                    fire);
+        }
+
+        /** M10 part B (design/enemies/air/chimera): this flock firing under {@code withFire}; empty for none. */
+        public FlockSpec withFire(java.util.Optional<JovianSpecs.SwarmFire> withFire) {
+            return new FlockSpec(
+                    separation,
+                    radius,
+                    alignment,
+                    cohesion,
+                    leader,
+                    speed,
+                    diveSpeed,
+                    turnRate,
+                    max,
+                    sway,
+                    ram,
+                    withFire);
         }
 
         public FlockSpec {
             java.util.Objects.requireNonNull(sway);
             java.util.Objects.requireNonNull(ram);
+            java.util.Objects.requireNonNull(fire);
             if (sway.isPresent() && !(sway.get().periodSeconds() > 0)) {
                 throw new IllegalArgumentException("a sway takes time: " + sway.get());
             }

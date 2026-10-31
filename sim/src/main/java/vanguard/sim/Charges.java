@@ -49,7 +49,8 @@ final class Charges {
                 if (layer == Layer.HIGH_AIR
                         || layer == Layer.SUB
                         || !layer.touchable()
-                        || !enemy.spec().countsAsEnemy()
+                        // M10 part B: an uncounted hostile craft (a harvester) is hit; a neutral one is not.
+                        || enemy.spec().neutral()
                         || !ShotGeometry.onField(enemy)
                         || !ShotGeometry.inBlast(x, y, radius, enemy.x(), enemy.y(), enemy.hitbox())) {
                     continue;

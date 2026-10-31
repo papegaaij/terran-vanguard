@@ -668,6 +668,14 @@ final class EnemyForce {
         carriers.heraldGone(herald, killed);
     }
 
+    /**
+     * M10 part B (design/campaign Level 36, the harvesters): drifting carrier {@code carrier} is gone, destroyed or
+     * away (before it is freed): its pair's escorts circle the other one, or break off when both are gone.
+     */
+    void carrierGone(Enemy carrier) {
+        carriers.carrierEnded(carrier);
+    }
+
     /** M8 part A (design/world/europa, Under water rules): the level's medium, for the bullets' speed. */
     void medium(Medium water) {
         guns.medium(water);

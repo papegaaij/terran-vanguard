@@ -202,7 +202,9 @@ final class ObjectivePasses {
         // M8 part C: a chain head's head-first pickup drops only with a head-first kill.
         boolean dropsCarried = true;
         // M8 part H, step H2 (§5 H7): a boss's shed unit is no kill where the kill ratio leaves the bosses out.
-        boolean counted = (enemy.chain() == null
+        // M10 part B (design/campaign Level 36): a unit not counted as an enemy (a harvester) is no kill either.
+        boolean counted = spec.countsAsEnemy()
+                && (enemy.chain() == null
                         || !enemy.chain().bossShed()
                         || script.objectives().secondary().countsBosses())
                 // M9 part H, step H1b: so is a ringed boss's bay Dart.
@@ -238,10 +240,11 @@ final class ObjectivePasses {
             headBonus += enemy.partAlive(p) ? spec.parts().get(p).firstBonus() : 0;
         }
         if (counted) {
-            tally.kill(spec.bounty() + headBonus, enemy.grounded() ? CreditSource.GROUND_TARGETS : CreditSource.KILLS);
+            // M10 part B: from its spec's haul when it names one (else a ground target's for a grounded unit).
+            tally.kill(spec.bounty() + headBonus, spec.bountySource(enemy.grounded()));
         } else {
-            // It still pays and extends the chain.
-            tally.partKill(spec.bounty() + headBonus);
+            // It still pays and extends the chain (M10 part B: an uncounted unit from its spec's haul).
+            tally.partKill(spec.bounty() + headBonus, spec.haul().orElse(CreditSource.KILLS));
         }
         int kills = objectives.kill(enemy.kind());
         int group = enemy.group();
@@ -270,6 +273,11 @@ final class ObjectivePasses {
         if (spec.aura().isPresent()) {
             // M7 part D: a Herald's rings collapse, its escorts break off.
             force.heraldGone(enemy, true);
+        }
+        if (spec.carrierDrift().isPresent()) {
+            // M10 part B (design/campaign Level 36): a harvester down: its pair's escorts circle the other one, or
+            // leave.
+            force.carrierGone(enemy);
         }
         if (spec.rise().isPresent()) {
             // M8 part D: a Ray killed before its rise's middle lets the escorts it held peel off where it was.

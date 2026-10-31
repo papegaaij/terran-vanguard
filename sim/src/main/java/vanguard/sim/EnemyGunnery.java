@@ -82,7 +82,9 @@ final class EnemyGunnery {
                 // M9 part B: a swoop path's unit fires on the play field in its band below the top edge.
                 || (u.phase == Enemy.Phase.ENTER && inSwoopBand())
                 // M9 part C: a launcher (the Gilded Gunship) fires its ring all the way through the play field.
-                || (u.spec.launcher().isPresent() && PlayField.overlaps(u.x, u.y, u.box));
+                || (u.spec.launcher().isPresent() && PlayField.overlaps(u.x, u.y, u.box))
+                // M10 part B (design/enemies/air/chimera): a firing swarm's member in its fire band.
+                || (u.phase == Enemy.Phase.FLOCK && inSwarmBand());
         if (!ready || u.spec.gun().isEmpty() || (u.phase == Enemy.Phase.GROUND && u.partHp.silenced(u.spec.parts()))) {
             // M8 part B: a ground unit whose gun is bound to its parts falls silent with the last of them.
             return false;
@@ -101,7 +103,11 @@ final class EnemyGunnery {
             u.burstTicks = SimStep.ticks(gun.burstGapSeconds());
             return true;
         }
-        if (--u.volleyTicks > 0) {
+        u.volleyTicks--;
+        if (u.phase == Enemy.Phase.FLOCK && swarmCapped(gun)) {
+            return false;
+        }
+        if (u.volleyTicks > 0) {
             return false;
         }
         if (ambushPhase == Enemy.AmbushPhase.DECLOAK) {
@@ -147,6 +153,37 @@ final class EnemyGunnery {
         u.volleyTicks = SimStep.ticks(gun.intervalSeconds());
         u.burstLeft = gun.burst() - 1;
         u.burstTicks = SimStep.ticks(gun.burstGapSeconds());
+        return true;
+    }
+
+    /**
+     * M10 part B (design/enemies/air/chimera; {@link EnemySpec.SwarmFire}): whether it is a firing swarm's member on the
+     * play field within its fire band of the top edge.
+     */
+    private boolean inSwarmBand() {
+        if (u.flock == null || u.flock.spec().fire().isEmpty() || !PlayField.overlaps(u.x, u.y, u.box)) {
+            return false;
+        }
+        return u.y >= PlayField.HEIGHT - u.flock.spec().fire().get().fireBand();
+    }
+
+    /**
+     * M10 part B (design/enemies/air/chimera; {@link SwarmVolleys}): as its glint starts (its gun's first-shot delay
+     * before the volley) a capped swarm's member asks its flock's fire cap; refused, it skips that volley, its clock
+     * running on a whole interval ({@link SimEvents.Type#VOLLEY_CAPPED}), and returns true. False for every other
+     * step and unit.
+     */
+    private boolean swarmCapped(EnemyGun gun) {
+        if (u.flock == null || !u.flock.volleys().capped()) {
+            return false;
+        }
+        int interval = volleyInterval(gun);
+        int lead = Math.min(SimStep.ticks(gun.firstShotDelay()), interval - 1);
+        if (u.volleyTicks != lead || u.flock.volleys().grant(u.flock.ticks() + lead)) {
+            return false;
+        }
+        u.volleyTicks += interval;
+        u.events.add(SimEvents.Type.VOLLEY_CAPPED, u.x, u.y(), u.kind);
         return true;
     }
 

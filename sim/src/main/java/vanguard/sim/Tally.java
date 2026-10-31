@@ -86,11 +86,19 @@ final class Tally {
      * but the kill is the whole unit's ({@link #countKill()}); returns the credits.
      */
     int partKill(int bounty) {
+        return partKill(bounty, CreditSource.KILLS);
+    }
+
+    /**
+     * As {@link #partKill(int)}, paid from {@code source} (M10 part B, design/campaign Level 36: an uncounted harvester's
+     * bounty with the ground targets' share).
+     */
+    int partKill(int bounty, CreditSource source) {
         chain++;
         maxChain = Math.max(maxChain, chain);
         chainTicks = windowTicks;
         score += Math.round(bounty * rules.killScore() * multiplier() * rules.scoreFactor());
-        return bounty(CreditSource.KILLS, bounty);
+        return bounty(source, bounty);
     }
 
     /**

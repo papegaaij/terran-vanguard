@@ -556,6 +556,16 @@ final class EnemyStarts {
         u.partHp.start(u.spec);
         u.ticksSinceHit = Integer.MAX_VALUE;
         u.volleyTicks = 0;
+        EnemySpec.FlockSpec flockSpec = into.spec();
+        if (flockSpec != null && flockSpec.fire().isPresent() && u.spec.gun().isPresent()) {
+            // M10 part B (design/enemies/air/chimera): a firing swarm's member fires first after its gun's first-shot
+            // delay, counted in its fire band, plus its place's share of the stagger (modulo its interval).
+            EnemyGun gun = u.spec.gun().get();
+            int stagger = SimStep.ticks(index * flockSpec.fire().get().staggerSeconds());
+            u.volleyTicks = SimStep.ticks(gun.firstShotDelay())
+                    + 1
+                    + stagger % Math.max(1, SimStep.ticks(gun.intervalSeconds()));
+        }
         u.burstLeft = 0;
         u.burstTicks = 0;
         u.leadsTarget = false;

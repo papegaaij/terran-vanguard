@@ -19,6 +19,11 @@ final class EnemyCarriers {
     private final int[] launchKinds;
     /** The spawner that entered last, which the escorts entering after it circle. */
     private Enemy lastCarrier;
+    /**
+     * M10 part B (design/campaign Level 36, the harvesters): the drifting carrier of the last one's wave that entered
+     * before it (the pair's other hull), whose midpoint with it the escorts circle; null for none.
+     */
+    private Enemy lastPartner;
     /** M8 part D: the escorts held by a rising carrier until its rise's middle. */
     private final RiseEscorts riseEscorts = new RiseEscorts();
 
@@ -44,12 +49,18 @@ final class EnemyCarriers {
     /** Back to the level start: no carrier, no held escorts. */
     void reset() {
         lastCarrier = null;
+        lastPartner = null;
         riseEscorts.reset();
     }
 
     /** The spawner that entered last; null for none (or it is gone). */
     Enemy lastCarrier() {
         return lastCarrier;
+    }
+
+    /** M10 part B: the last carrier's partner (a drifting carrier of its wave); null for none (or it is gone). */
+    Enemy lastPartner() {
+        return lastPartner;
     }
 
     /**
@@ -68,11 +79,23 @@ final class EnemyCarriers {
      * escorts circle it inside its aura) and a rising unit (M8 part D: the Abyss Ray) are the last carrier.
      */
     void entered(EnemySpec spec, Enemy enemy) {
+        if (spec.carrierDrift().isPresent()) {
+            // M10 part B (design/campaign Level 36): a drifting carrier pairs with the one of its wave before it.
+            lastPartner = enemy != null
+                            && lastCarrier != null
+                            && lastCarrier.wave == enemy.wave
+                            && lastCarrier.spec().carrierDrift().isPresent()
+                    ? lastCarrier
+                    : null;
+            lastCarrier = enemy;
+            return;
+        }
         if (spec.brood().isPresent()
                 || spec.aura().isPresent()
                 || spec.rise().isPresent()
                 || spec.launcher().isPresent()) {
             lastCarrier = enemy;
+            lastPartner = null;
         }
     }
 
@@ -267,11 +290,16 @@ final class EnemyCarriers {
         for (int i = 0; i < enemies.size(); i++) {
             Enemy enemy = enemies.get(i);
             if (enemy.escorts(carrier)) {
-                enemy.carrierEnded();
+                // M10 part B: a pair's escort circles the partner left (else breaks off, as before).
+                enemy.escorting.ended(carrier);
             }
         }
+        if (lastPartner == carrier) {
+            lastPartner = null;
+        }
         if (lastCarrier == carrier) {
-            lastCarrier = null;
+            lastCarrier = lastPartner;
+            lastPartner = null;
         }
     }
 }

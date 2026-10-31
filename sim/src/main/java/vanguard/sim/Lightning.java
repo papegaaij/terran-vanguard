@@ -145,9 +145,10 @@ public final class Lightning implements Hashed {
     /**
      * The strikes that struck in this step hit every {@code air} enemy in their column on the play field (not one that
      * cannot be hurt now): {@link HazardSpec.Strikes#enemyDamage()} each; a kill is paid as a special's ({@code hits},
-     * mount -1).
+     * mount -1). Returns the units counted as enemies it killed (M10 part B: the radio's {@code first-strike-kill}).
      */
-    void strikeEnemies(Pool<Enemy> enemies, PlayerFire.Hits hits) {
+    int strikeEnemies(Pool<Enemy> enemies, PlayerFire.Hits hits) {
+        int kills = 0;
         for (int i = 0; i < starts.length; i++) {
             if (ticks[i] != tellTicks) {
                 continue;
@@ -162,10 +163,12 @@ public final class Lightning implements Hashed {
                     continue;
                 }
                 if (enemy.damage(spec.enemyDamage())) {
+                    kills += enemy.spec().countsAsEnemy() ? 1 : 0;
                     hits.enemyDestroyed(j, -1);
                 }
             }
         }
+        return kills;
     }
 
     /**

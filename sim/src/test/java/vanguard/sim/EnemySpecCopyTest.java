@@ -75,6 +75,8 @@ class EnemySpecCopyTest {
                 Act6ASpecs.GRAFT,
                 Act6ASpecs.PYLON,
                 Act6ASpecs.TURRET,
+                CloudDiversSpecs.CHIMERA,
+                CloudDiversSpecs.HARVESTER,
                 ThreadcrawlerTest.crawler(4, ThreadcrawlerTest.PORES, new double[] {0, 5_000}, new double[] {100, 100}),
                 EnemySpec.of("whirl-seed", 1, new Hitbox(14, 14), Layer.AIR, 4, true, 3, 150)
                         .withSpiral(Optional.of(new EnemySpec.Spiral(3, 0.5, 40, 60, 0)))

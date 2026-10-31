@@ -286,6 +286,10 @@ final class ContactPasses {
                 shots.free(i);
                 if (broken) {
                     events.add(SimEvents.Type.DEBRIS_DESTROYED, chunk.x(), chunk.y());
+                    if (chunk.spec().holdsSecret()) {
+                        // M10 part B (design/campaign Level 36, the pathfinder pod): it frees its hidden crate.
+                        openPod(chunk);
+                    }
                     if (s.rides != null) {
                         // M9 part B: a wave's rock broke: its riders tumble off.
                         s.rides.broken(chunk);
@@ -305,6 +309,24 @@ final class ContactPasses {
                 }
             }
         }
+    }
+
+    /**
+     * M10 part B (design/campaign Level 36, the pathfinder pod): a chunk holding a secret broke under the player's shot:
+     * the secret is found and its hidden crate drops where it was (kept a bullet's width inside the play field).
+     */
+    private void openPod(Debris chunk) {
+        HazardSpec.DebrisSpec spec = chunk.spec();
+        double half = EnemyGun.BULLET.width();
+        double x = Math.clamp(chunk.x(), half, PlayField.WIDTH - half);
+        double y = Math.clamp(chunk.y(), half, PlayField.HEIGHT - half);
+        objectives.secretFound();
+        events.add(SimEvents.Type.SECRET_FOUND, x, y);
+        Pickup crate = pickups.obtain();
+        if (crate != null) {
+            crate.drop(PickupType.HIDDEN_CRATE, spec.crateCredits(), x, y, crateTicks);
+        }
+        radio.cue(CueTrigger.SECRET, spec.secret());
     }
 
     /** A crane's clamp let go: its secret's crate drops from the hook. */

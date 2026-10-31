@@ -208,6 +208,9 @@ final class WaveSchedule {
                     warnedEdges.add(crossEdges);
                 }
             } else if (wave.entry() != WaveSpec.Entry.FRONT
+                    // M10 part B (design/campaign Level 36, the fleet's drop craft from the bottom edge): a wave of
+                    // neutral craft gets no edge warning; the friendly banner 2 s ahead is its warning.
+                    && !wave.enemy().neutral()
                     && (wave.formation() != WaveSpec.Formation.REAR_AMBUSH
                             // M8 part G: a rear ambush without an ambush path comes up from below at once: warned.
                             || wave.enemy().ambush().isEmpty())) {

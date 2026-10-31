@@ -201,7 +201,8 @@ final class ShotGeometry {
             // M9 part B: a neutral craft is no target of the chain.
             if (enemy.layer().hitByStandardShots()
                     && onField(enemy)
-                    && enemy.spec().countsAsEnemy()) {
+                    // M10 part B: an uncounted hostile craft (a harvester) is a target of the chain.
+                    && !enemy.spec().neutral()) {
                 return true;
             }
         }

@@ -112,7 +112,8 @@ public final class Domes {
             Enemy unit = enemies.get(i);
             unit.covered = unit.layer() == Layer.GROUND && unit.spec().dome().isEmpty() && inStandingDome(unit);
             if (!unit.covered
-                    && unit.spec().countsAsEnemy()
+                    // M10 part B: an uncounted hostile craft (a harvester) is a seeker's target too.
+                    && !unit.spec().neutral()
                     && !unit.spec().seekersIgnore()
                     && ShotGeometry.onField(unit)) {
                 uncovered = true;

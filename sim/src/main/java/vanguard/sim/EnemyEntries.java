@@ -275,7 +275,9 @@ final class EnemyEntries {
                     enemy.surfaceZones(zones);
                 }
                 if (spawn.escort().isPresent()) {
-                    enemy.escort(carriers.lastCarrier());
+                    // M10 part B (design/campaign Level 36): a pair of drifting carriers' escort circles their
+                    // midpoint.
+                    enemy.escorting.circle(carriers.lastCarrier(), carriers.lastPartner());
                 }
                 if (objectiveHook.bombs(enemy, spawn)) {
                     // M7 part D: a front entry descends to the bomb row, a side entry keeps its entry row.

@@ -116,6 +116,8 @@ public final class Flock implements Hashed {
 
     private final Pursuit pursuit = new Pursuit();
     private final java.util.Optional<Pursuit> pursuitView = java.util.Optional.of(pursuit);
+    /** M10 part B (design/enemies/air/chimera): its members' volleys under its fire cap (idle without one). */
+    private final SwarmVolleys volleys = new SwarmVolleys();
 
     /** A wave's flock entering from {@code from}: the leader point at its route's start, no members yet. */
     void start(EnemySpec.FlockSpec flockSpec, int flockSerial, Spawn.Route flockRoute, WaveSpec.Entry from) {
@@ -174,6 +176,7 @@ public final class Flock implements Hashed {
         if (pursuing) {
             pursuit.start(route.pursuit().get(), t, leaderX, leaderY);
         }
+        volleys.start(flockSpec.fire());
     }
 
     /**
@@ -719,6 +722,16 @@ public final class Flock implements Hashed {
         return serial;
     }
 
+    /** M10 part B: its members' volleys under its fire cap ({@link EnemySpec.SwarmFire}). */
+    SwarmVolleys volleys() {
+        return volleys;
+    }
+
+    /** M10 part B: the steps it has flown (its own clock, the fire cap's). */
+    int ticks() {
+        return ticks;
+    }
+
     @Override
     public void addTo(StateHash hash) {
         hash.add(serial)
@@ -743,6 +756,11 @@ public final class Flock implements Hashed {
             // M7 part G: only a pursuit's flock adds its pursuit, so the other levels hash as before.
             hash.add(2);
             pursuit.addTo(hash);
+        }
+        if (volleys.capped()) {
+            // M10 part B: only a firing swarm's flock adds its fire cap, so the other levels hash as before.
+            hash.add(3);
+            volleys.addTo(hash);
         }
         for (int i = 0; i < size; i++) {
             hash.add(members[i] == null ? -1 : members[i].serial())

@@ -1166,7 +1166,13 @@ public final class SimEvents {
          * the gate opens (at the holder); value: the gate's index (0 first). Level 29's one arena raises {@link
          * #HOLDERS_DOWN} only.
          */
-        GATE_OPENED;
+        GATE_OPENED,
+        /**
+         * M10 part B (design/enemies/air/chimera, a swarm's fire cap; {@link SwarmVolleys}): a swarm's member skips its
+         * next volley under the cap, decided as its glint would start (at the member): the presentation runs its glint
+         * clock on as if it fired; value: its kind.
+         */
+        VOLLEY_CAPPED;
 
         private static final Type[] VALUES = values();
     }

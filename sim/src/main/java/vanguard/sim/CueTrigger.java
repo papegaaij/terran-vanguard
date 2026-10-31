@@ -187,7 +187,13 @@ public enum CueTrigger {
      * Step BOSS70: the open core's first draw below its playbook's low share (its rests shorten); once. No subject (the
      * radio event {@code core-low}).
      */
-    CORE_LOW;
+    CORE_LOW,
+    /**
+     * M10 part B (design/campaign Level 36, radio; design/world/jovian, lightning strikes): the attempt's first enemy
+     * (a unit counted as one) killed by a lightning strike ({@link Lightning#strikeEnemies}); once. No subject (the radio
+     * event {@code first-strike-kill}).
+     */
+    FIRST_STRIKE_KILL;
 
     /** Between the part names of a {@link #BOSS_PART_DESTROYED} cue's subject. */
     public static final String PART_SEPARATOR = "|";

@@ -131,6 +131,15 @@ import java.util.Optional;
  *     ({@link Dome}); a fixed ground unit's; empty for none
  * @param spoofable M10 part A (design/player/systems, the IFF spoofer): its aimed volleys and told attacks come late
  *     while the ship carries the spoofer ({@link Spoofing})
+ * @param uncounted M10 part B (design/campaign Level 36, the harvesters; the data's {@code counted: false}): a hostile
+ *     craft that is not counted as an enemy (the second reason beside {@link #neutral()}; {@link #countsAsEnemy()}):
+ *     picked, hit and paid like an enemy, but no kill, not in the level's enemy total, the kill ratio, the density or
+ *     the floor; false for the others
+ * @param haul M10 part B (Level 36, the harvesters' 30 credits "with the ground targets' share"): the credit source
+ *     its bounty is paid from ({@link CreditSource#KILLS} or {@link CreditSource#GROUND_TARGETS}); empty for the
+ *     built rule (a grounded unit's as a ground target's, the others' as kills)
+ * @param carrierDrift M10 part B (Level 36, the harvesters): it is a drifting carrier in a {@code carrier + escorts}
+ *     wave ({@link CarrierDrift}); empty for none
  */
 public record EnemySpec(
         String slug,
@@ -206,7 +215,10 @@ public record EnemySpec(
         Optional<Regeneration> regeneration,
         Optional<Regrowth> regrowth,
         Optional<Dome> dome,
-        boolean spoofable)
+        boolean spoofable,
+        boolean uncounted,
+        Optional<CreditSource> haul,
+        Optional<CarrierDrift> carrierDrift)
         implements FlightSpecs, WalkerSpecs, ChainSpecs, LayerSpecs, AttackSpecs, HostSpecs, JovianSpecs {
     /** M8 part B: the most destroyable parts a unit carries (the Drill Rig's four pumps). */
     public static final int MOST_PARTS = 4;
@@ -225,6 +237,23 @@ public record EnemySpec(
         java.util.Objects.requireNonNull(regeneration);
         java.util.Objects.requireNonNull(regrowth);
         java.util.Objects.requireNonNull(dome);
+        java.util.Objects.requireNonNull(haul);
+        java.util.Objects.requireNonNull(carrierDrift);
+        if (haul.isPresent() && haul.get() != CreditSource.KILLS && haul.get() != CreditSource.GROUND_TARGETS) {
+            throw new IllegalArgumentException(slug + ": a bounty is paid as a kill's or a ground target's: " + haul);
+        }
+        if (carrierDrift.isPresent()
+                && ((layer != Layer.AIR && layer != Layer.LOW_AIR)
+                        || terrain
+                        || brood.isPresent()
+                        || aura.isPresent()
+                        || rise.isPresent()
+                        || launcher.isPresent()
+                        || chain.isPresent()
+                        || flock.isPresent())) {
+            throw new IllegalArgumentException(
+                    slug + ": a drifting carrier is a plain flying unit, no other kind of carrier (M10 part B)");
+        }
         if (mirror.isPresent() && (shield.isPresent() || chain.isPresent() || flock.isPresent() || !parts.isEmpty())) {
             throw new IllegalArgumentException(
                     slug + ": a mirror is a single unit's, never beside a hex shield (M10 part A, Reflect)");
@@ -684,7 +713,44 @@ public record EnemySpec(
      * floor and the haul (false only for a {@link #neutral()} craft). Every counter asks this one predicate.
      */
     public boolean countsAsEnemy() {
-        return !neutral;
+        // M10 part B (design/campaign Level 36): a hostile craft not counted as an enemy (the harvesters) is the second
+        // reason.
+        return !neutral && !uncounted;
+    }
+
+    /**
+     * M10 part B (design/campaign Level 36, the harvesters): this unit not counted as an enemy, or counted ({@link
+     * #uncounted()}).
+     */
+    public EnemySpec withUncounted(boolean isUncounted) {
+        EnemySpecCopy copy = new EnemySpecCopy(this);
+        copy.uncounted = isUncounted;
+        return copy.build();
+    }
+
+    /** M10 part B: this unit with its bounty paid from {@code source} ({@link #haul()}); empty for the built rule. */
+    public EnemySpec withHaul(Optional<CreditSource> source) {
+        EnemySpecCopy copy = new EnemySpecCopy(this);
+        copy.haul = source;
+        return copy.build();
+    }
+
+    /** M10 part B (design/campaign Level 36, the harvesters): this unit as a drifting carrier; empty for none. */
+    public EnemySpec withCarrierDrift(Optional<CarrierDrift> drift) {
+        EnemySpecCopy copy = new EnemySpecCopy(this);
+        copy.carrierDrift = drift;
+        return copy.build();
+    }
+
+    /**
+     * M10 part B: the credit source its bounty is paid from on a kill: its {@link #haul()}, else a ground target's when
+     * it is {@code grounded} now, else a kill's.
+     */
+    public CreditSource bountySource(boolean grounded) {
+        if (haul.isPresent()) {
+            return haul.get();
+        }
+        return grounded ? CreditSource.GROUND_TARGETS : CreditSource.KILLS;
     }
 
     /** M9 part A: this unit with its hex shield (design/enemies, Enemy shields); empty for none. */

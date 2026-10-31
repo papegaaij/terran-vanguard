@@ -182,6 +182,10 @@ final class EnemyMoves {
                 if (enemy.spec().rise().isPresent()) {
                     carriers.riseEnded(enemy, ship);
                 }
+                if (enemy.spec().carrierDrift().isPresent()) {
+                    // M10 part B (design/campaign Level 36): a harvester away: its pair's escorts circle the other one.
+                    carriers.carrierEnded(enemy);
+                }
                 escapes.escaped(enemy);
                 enemies.free(i);
             } else if (stunned) {

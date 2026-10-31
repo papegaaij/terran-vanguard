@@ -83,6 +83,9 @@ final class EnemySpecCopy {
     Optional<EnemySpec.Regrowth> regrowth;
     Optional<EnemySpec.Dome> dome;
     boolean spoofable;
+    boolean uncounted;
+    Optional<CreditSource> haul;
+    Optional<EnemySpec.CarrierDrift> carrierDrift;
 
     /** The base stats with every other component left out ({@link EnemySpec#of}). */
     EnemySpecCopy(
@@ -168,6 +171,9 @@ final class EnemySpecCopy {
         regrowth = Optional.empty();
         dome = Optional.empty();
         spoofable = false;
+        uncounted = false;
+        haul = Optional.empty();
+        carrierDrift = Optional.empty();
     }
 
     EnemySpecCopy(EnemySpec spec) {
@@ -245,6 +251,9 @@ final class EnemySpecCopy {
         regrowth = spec.regrowth();
         dome = spec.dome();
         spoofable = spec.spoofable();
+        uncounted = spec.uncounted();
+        haul = spec.haul();
+        carrierDrift = spec.carrierDrift();
     }
 
     EnemySpec build() {
@@ -322,6 +331,9 @@ final class EnemySpecCopy {
                 regeneration,
                 regrowth,
                 dome,
-                spoofable);
+                spoofable,
+                uncounted,
+                haul,
+                carrierDrift);
     }
 }

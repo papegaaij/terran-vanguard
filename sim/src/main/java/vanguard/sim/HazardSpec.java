@@ -712,6 +712,10 @@ public record HazardSpec(
      * @param hp a small chunk's HP; infinite for a large one
      * @param damage a large chunk's contact damage; 0 for a small one
      * @param clearance the least distance from the ship it enters at, px
+     * @param crateCredits M10 part B (design/campaign Level 36, the pathfinder pod): a small chunk with a secret frees a
+     *     hidden crate of these credits when the player's shot breaks it; 0 for none
+     * @param secret M10 part B: the name of the level's secret it holds (its {@code secret} radio cue's subject; the
+     *     secret found when it breaks under the player's shot); "" for none
      */
     public record DebrisSpec(
             double t,
@@ -722,14 +726,48 @@ public record HazardSpec(
             double vy,
             double hp,
             double damage,
-            double clearance) {
+            double clearance,
+            int crateCredits,
+            String secret) {
         /** A large chunk hits the ship at most once in this time. */
         public static final double HIT_INTERVAL_SECONDS = 1;
 
         public DebrisSpec {
+            java.util.Objects.requireNonNull(secret);
             if (!(vy < 0)) {
                 throw new IllegalArgumentException("a debris chunk drifts down the screen");
             }
+            if (crateCredits < 0 || (!secret.isEmpty() && Double.isInfinite(hp))) {
+                throw new IllegalArgumentException(
+                        "a chunk with a secret is a small one that breaks, its crate 0 credits or more: " + chunk);
+            }
+        }
+
+        /** A chunk without a secret (every chunk before M10 part B). */
+        public DebrisSpec(
+                double t,
+                double x,
+                String chunk,
+                Hitbox size,
+                double vx,
+                double vy,
+                double hp,
+                double damage,
+                double clearance) {
+            this(t, x, chunk, size, vx, vy, hp, damage, clearance, 0, "");
+        }
+
+        /**
+         * M10 part B (design/campaign Level 36, the pathfinder pod): this small chunk holding secret {@code name}, its
+         * hidden crate worth {@code credits}.
+         */
+        public DebrisSpec withSecret(String name, int credits) {
+            return new DebrisSpec(t, x, chunk, size, vx, vy, hp, damage, clearance, credits, name);
+        }
+
+        /** M10 part B: whether it holds a secret (its crate freed when the player's shot breaks it). */
+        public boolean holdsSecret() {
+            return !secret.isEmpty();
         }
 
         /** Whether it is a large, indestructible chunk. */

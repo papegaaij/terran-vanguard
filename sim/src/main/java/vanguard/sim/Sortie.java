@@ -858,7 +858,10 @@ public final class Sortie {
         if (struck && !complete) {
             // M10 part A, step A1b: a strike hits the air units in its column after the player's hits (paid as a
             // special's kill).
-            lightning.strikeEnemies(force.enemies(), hits);
+            if (lightning.strikeEnemies(force.enemies(), hits) > 0) {
+                // M10 part B (design/campaign Level 36, radio): the first enemy a strike killed calls its line, once.
+                radio.cue(CueTrigger.FIRST_STRIKE_KILL, "");
+            }
         }
         if (canyon != null) {
             // M7 part C: after the hit passes, so a unit at a wall's foot is hit before the rock stops the shot.
