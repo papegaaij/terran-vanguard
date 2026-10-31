@@ -604,7 +604,8 @@ final class ObjectivePasses {
         if (objectives.escapesAtEnd()) {
             paySecondary();
         }
-        // A kill-ratio secondary is judged at the end (design/systems/scoring): its line before the level-end line.
+        // A kill-ratio secondary is judged at the end (design/systems/scoring): its line before the level-end line (M10
+        // part D: a scoped one on its enemy's kills).
         if (objectives.meetsKillRatio(tally.kills())) {
             paySecondary();
         }

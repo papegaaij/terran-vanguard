@@ -464,8 +464,8 @@ public final class Sortie {
         objectives = new Objectives(
                 script.objectives().secondary(),
                 script.groups().size(),
-                force.kinds().size(),
-                enemyTotal(),
+                force.kinds(),
+                Objectives.ratioUnits(script.objectives().secondary(), force, enemyTotal()),
                 script.groundUnits(),
                 ObjectivePasses.escapers(script, force, setPieces, partsPiece));
         cranes = script.hazards().cranes().stream().map(Crane::new).toArray(Crane[]::new);
@@ -864,6 +864,8 @@ public final class Sortie {
                 // M10 part B (design/campaign Level 36, radio): the first enemy a strike killed calls its line, once.
                 radio.cue(CueTrigger.FIRST_STRIKE_KILL, "");
             }
+            // M10 part D (design/campaign Level 38, Aurelia's cargo pod): a strike opens a chunk holding a secret.
+            lightning.strikeSecrets(debris, contacts);
         }
         if (canyon != null) {
             // M7 part C: after the hit passes, so a unit at a wall's foot is hit before the rock stops the shot.
@@ -2096,6 +2098,14 @@ public final class Sortie {
                 + streamReleased
                 + force.haltReleased()
                 - (forks == null ? 0 : forks.unchosen());
+    }
+
+    /**
+     * M10 part D: the kills that count towards a kill-ratio secondary: every kill ({@link #kills()}), or a scoped one's
+     * of its enemy only (the tracker's {@code HARROWS n / 23} against {@link #requiredKills()}).
+     */
+    public int secondaryKills() {
+        return objectives.ratioKills(tally.kills());
     }
 
     /** Kills needed for the secondary objective. */

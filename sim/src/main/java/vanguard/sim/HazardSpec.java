@@ -728,12 +728,19 @@ public record HazardSpec(
             double damage,
             double clearance,
             int crateCredits,
-            String secret) {
+            String secret,
+            java.util.Optional<PickupType> drop,
+            boolean marked) {
         /** A large chunk hits the ship at most once in this time. */
         public static final double HIT_INTERVAL_SECONDS = 1;
 
         public DebrisSpec {
             java.util.Objects.requireNonNull(secret);
+            java.util.Objects.requireNonNull(drop);
+            if (drop.isPresent() && (Double.isInfinite(hp) || !secret.isEmpty())) {
+                throw new IllegalArgumentException(
+                        "a chunk with a drop is a small one that breaks, holding no secret: " + chunk);
+            }
             if (!(vy < 0)) {
                 throw new IllegalArgumentException("a debris chunk drifts down the screen");
             }
@@ -754,7 +761,7 @@ public record HazardSpec(
                 double hp,
                 double damage,
                 double clearance) {
-            this(t, x, chunk, size, vx, vy, hp, damage, clearance, 0, "");
+            this(t, x, chunk, size, vx, vy, hp, damage, clearance, 0, "", java.util.Optional.empty(), false);
         }
 
         /**
@@ -762,7 +769,39 @@ public record HazardSpec(
          * hidden crate worth {@code credits}.
          */
         public DebrisSpec withSecret(String name, int credits) {
-            return new DebrisSpec(t, x, chunk, size, vx, vy, hp, damage, clearance, credits, name);
+            return new DebrisSpec(t, x, chunk, size, vx, vy, hp, damage, clearance, credits, name, drop, marked);
+        }
+
+        /**
+         * M10 part D, step D1 (design/campaign Level 38, the CDF supply canister; data key {@code drop}): this small
+         * chunk letting {@code pickup} fall when the player's shot breaks it (its latch), not when a strike or a dash
+         * does.
+         */
+        public DebrisSpec withDrop(PickupType pickup) {
+            return new DebrisSpec(
+                    t,
+                    x,
+                    chunk,
+                    size,
+                    vx,
+                    vy,
+                    hp,
+                    damage,
+                    clearance,
+                    crateCredits,
+                    secret,
+                    java.util.Optional.of(pickup),
+                    marked);
+        }
+
+        /**
+         * M10 part D, step D1 (design/campaign Level 38, the canister; data key {@code marked}; design/ui/hud, the
+         * friendly marker): this chunk drawn with the friendly brackets (presentation only; it still blocks shots and
+         * breaks as any small chunk).
+         */
+        public DebrisSpec withMarked(boolean withMarked) {
+            return new DebrisSpec(
+                    t, x, chunk, size, vx, vy, hp, damage, clearance, crateCredits, secret, drop, withMarked);
         }
 
         /** M10 part B: whether it holds a secret (its crate freed when the player's shot breaks it). */

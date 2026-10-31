@@ -175,6 +175,10 @@ final class EnemyStarts {
             // circle's at its hold's end).
             u.dashing.enter();
         }
+        if (u.spec.dash().isPresent() && u.spec.dash().get().chaseRanged()) {
+            // M10 part D (design/enemies/air/harrow): its chase times are drawn from its own seed (its serial's).
+            u.dashing.seed(0xD1B54A32D192ED03L * (unitSerial + 1L));
+        }
         if (u.spec.chase().isPresent() && u.phase == Enemy.Phase.ENTER) {
             // M5 part F: a chaser flies in along its path; its chase starts its delay after its entry.
             u.chasing.enter(SimStep.ticks(plan.chaseDelay()));

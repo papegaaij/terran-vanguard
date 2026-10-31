@@ -16,7 +16,8 @@ final class DashRocks {
         }
         for (int i = 0; i < enemies.size(); i++) {
             Enemy unit = enemies.get(i);
-            if (unit.phase != Enemy.Phase.DASH || !unit.dashing.dashing() || unit.empStunned()) {
+            // M10 part D (design/enemies/air/harrow): a straight ram meets no chunk (it neither bounces nor smashes).
+            if (unit.phase != Enemy.Phase.DASH || !unit.dashing.dashing() || unit.empStunned() || unit.dashing.rams()) {
                 continue;
             }
             for (int d = debris.size() - 1; d >= 0; d--) {

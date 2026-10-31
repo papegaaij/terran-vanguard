@@ -67,8 +67,8 @@ final class BossCheckpoint {
         objectives = new Objectives(
                 script.objectives().secondary(),
                 script.groups().size(),
-                s.force.kinds().size(),
-                s.enemyTotal(),
+                s.force.kinds(),
+                Objectives.ratioUnits(script.objectives().secondary(), s.force, s.enemyTotal()),
                 script.groundUnits(),
                 0);
         radioFired = new boolean[s.radio.size()];

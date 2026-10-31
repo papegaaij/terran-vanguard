@@ -172,6 +172,33 @@ public final class Lightning implements Hashed {
     }
 
     /**
+     * M10 part D, step D1 (design/campaign Level 38, Aurelia's cargo pod): the strikes that struck in this step open
+     * every debris chunk holding a secret in their column on the play field ({@link ContactPasses#openStruck}: its
+     * crate, the secret found, its line); every other chunk lets the strike pass, as before. Returns the chunks opened.
+     */
+    int strikeSecrets(Pool<Debris> debris, ContactPasses contacts) {
+        int opened = 0;
+        for (int i = 0; i < starts.length; i++) {
+            if (ticks[i] != tellTicks) {
+                continue;
+            }
+            double half = spec.width() / 2;
+            for (int d = debris.size() - 1; d >= 0; d--) {
+                Debris chunk = debris.get(d);
+                Hitbox size = chunk.spec().size();
+                if (!chunk.spec().holdsSecret()
+                        || !PlayField.overlaps(chunk.x(), chunk.y(), size)
+                        || Math.abs(chunk.x() - xs[i]) > half + size.width() / 2) {
+                    continue;
+                }
+                contacts.openStruck(d);
+                opened++;
+            }
+        }
+        return opened;
+    }
+
+    /**
      * The first live strike that has not hit {@code who} ({@link #SHIP}, {@link #ROOK}) yet whose column touches
      * {@code hull} at (x, y); it is marked as hit. -1 for none.
      */

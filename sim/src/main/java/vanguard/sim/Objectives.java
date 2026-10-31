@@ -30,6 +30,8 @@ final class Objectives {
     private int requiredKills;
     /** The level's units as planned, for the kill ratio (M7 part G: less the pursuits' refills left out). */
     private final int plannedUnits;
+    /** M10 part D: the kind a scoped kill ratio counts ({@link Secondary#enemy()}); -1 for every enemy (or none). */
+    private final int scopedKind;
 
     private final int[] groupUnits;
     private final int[] groupDestroyed;
@@ -54,16 +56,30 @@ final class Objectives {
     /**
      * @param groups the groups the ground units belong to: the secondary's or the destroy-targets
      *     primary's ({@link LevelScript#groups()})
-     * @param kinds the number of distinct enemies in the level
-     * @param units every enemy the level sends
+     * @param kinds the distinct enemies in the level ({@link Enemy#kind()} indexes them)
+     * @param units every enemy the level sends (M10 part D: a scoped kill ratio's enemy's units, {@link
+     *     #ratioUnits})
      * @param escapesTotal the units of the enemies of an escapes or kill-all objective the level
      *     sends, or the boss parts of a parts objective
      */
-    Objectives(Secondary secondary, int groups, int kinds, int units, List<GroundUnit> groundUnits, int escapesTotal) {
+    Objectives(
+            Secondary secondary,
+            int groups,
+            List<EnemySpec> kinds,
+            int units,
+            List<GroundUnit> groundUnits,
+            int escapesTotal) {
         this.secondary = secondary;
         byGroups = secondary.byGroups();
         this.escapesTotal = escapesTotal;
-        killsByKind = new int[kinds];
+        killsByKind = new int[kinds.size()];
+        int scoped = -1;
+        for (int k = 0; k < kinds.size() && secondary.scoped(); k++) {
+            if (scoped < 0 && kinds.get(k).slug().equals(secondary.enemy())) {
+                scoped = k;
+            }
+        }
+        scopedKind = scoped;
         plannedUnits = units;
         requiredKills = required(units);
         groupUnits = new int[groups];
@@ -506,13 +522,36 @@ final class Objectives {
     }
 
     /**
+     * M10 part D: the units a kill ratio counts: a scoped one's enemy's units the level sends ({@code force}'s), else
+     * {@code enemyTotal}.
+     */
+    static int ratioUnits(Secondary secondary, EnemyForce force, int enemyTotal) {
+        return secondary.scoped() ? force.unitsOf(secondary.enemy()) : enemyTotal;
+    }
+
+    /**
+     * M10 part D: the kills towards the kill ratio, of {@code kills} in all: a scoped one's of its enemy only (the
+     * tracker's {@code HARROWS n / 23}).
+     */
+    int ratioKills(int kills) {
+        if (!secondary.scoped()) {
+            return kills;
+        }
+        return scopedKind < 0 ? 0 : killsByKind[scopedKind];
+    }
+
+    /**
      * Whether {@code kills} in all meet a kill-ratio secondary, the first time they do. It is asked
      * once, when the level is complete: the share is judged at the end, never mid-level, so its
      * credits and line come with the level-end lines (design/systems/scoring). A level that sends
      * no enemies has no share to meet.
      */
     boolean meetsKillRatio(int kills) {
-        if (byGroups || secondary.byEscapes() || secondaryMet || requiredKills == 0 || kills < requiredKills) {
+        if (byGroups
+                || secondary.byEscapes()
+                || secondaryMet
+                || requiredKills == 0
+                || ratioKills(kills) < requiredKills) {
             return false;
         }
         secondaryMet = true;
@@ -545,6 +584,10 @@ final class Objectives {
      * counts the level's units without them.
      */
     void unitsSkipped(int skipped) {
+        if (secondary.scoped()) {
+            // M10 part D: a scoped kill ratio counts its own enemy's units only.
+            return;
+        }
         requiredKills = required(plannedUnits - skipped);
     }
 

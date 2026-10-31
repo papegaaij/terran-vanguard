@@ -1179,7 +1179,13 @@ public final class SimEvents {
          * holds until the liftoff) and the evacuation PA chime sounds (at the group's pads' centre at its liftoff);
          * value: the group's index (0 first).
          */
-        FRIENDLIES_INBOUND;
+        FRIENDLIES_INBOUND,
+        /**
+         * M10 part D, step D1 (design/campaign Level 38, the CDF supply canister): a debris chunk with a drop broke under
+         * the player's shot (its latch) and lets its pickup fall (the latch's break and the parachute torn away; at the
+         * pickup, after {@link #DEBRIS_DESTROYED}); value: the pickup's {@link PickupType} ordinal.
+         */
+        DEBRIS_RELEASED;
 
         private static final Type[] VALUES = values();
     }

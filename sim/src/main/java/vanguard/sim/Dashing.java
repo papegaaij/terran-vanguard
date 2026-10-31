@@ -7,6 +7,11 @@ package vanguard.sim;
  * chases the ship, then spins up (the tell, its bearing to the ship locked at the tell's start), dashes along the locked
  * bearing bouncing off the play field's edges ({@link #step}) and the large debris chunks ({@link DashRocks}) until its
  * bounces are spent, slows to its chase speed and chases again; after its last dash it leaves through the nearest edge.
+ *
+ * <p>M10 part D, step D1 (design/enemies/air/harrow; {@link EnemySpec.Dash.Variant}): a ram's cycle differs. Its chase
+ * lasts a seeded time from a range (drawn from its own seed, set at its spawn from its serial: {@link #seed}); its nose
+ * swings onto the ship through the tell and the bearing is locked at the tell's end; its one straight dash bounces off
+ * nothing and a miss is gone through the far edge. A Buzzsaw's cycle and its hash are as before.
  */
 final class Dashing {
     /** Its part of the cycle: waiting to enter, chasing, telling, dashing, slowing or leaving. */
@@ -33,6 +38,10 @@ final class Dashing {
     private int dashes;
     /** Whether it bounced in this step. */
     private boolean bounced;
+    /** M10 part D: its chase's seeded times' state (a SplitMix64 state; a ranged chase only). */
+    private long seed;
+    /** M10 part D: the current chase's length, steps (a ranged chase's drawn time; the fixed one's otherwise). */
+    private int chaseTicks;
 
     Dashing(Enemy unit) {
         this.unit = unit;
@@ -48,6 +57,13 @@ final class Dashing {
         bounces = 0;
         dashes = 0;
         bounced = false;
+        seed = 0;
+        chaseTicks = 0;
+    }
+
+    /** M10 part D: its chase times' seed (set at its spawn, after {@link #enter()}; unique per unit of an attempt). */
+    void seed(long unitSeed) {
+        seed = unitSeed;
     }
 
     /** It flies in along its path; its chase starts as its centre comes onto the play field. */
@@ -76,6 +92,20 @@ final class Dashing {
         stage = Stage.CHASE;
         ticks = 0;
         heading = startHeading;
+        chaseTicks = chaseTicks(u.spec.dash().orElseThrow());
+    }
+
+    /** A chase's length: the fixed one, or a seeded draw from the range (M10 part D). */
+    private int chaseTicks(EnemySpec.Dash dash) {
+        if (!dash.chaseRanged()) {
+            return SimStep.ticks(dash.chaseSeconds());
+        }
+        long z = (seed += 0x9E3779B97F4A7C15L);
+        z = (z ^ (z >>> 30)) * 0xBF58476D1CE4E5B9L;
+        z = (z ^ (z >>> 27)) * 0x94D049BB133111EBL;
+        double share = ((z ^ (z >>> 31)) >>> 11) * 0x1.0p-53;
+        double most = dash.variant().chaseMostSeconds();
+        return SimStep.ticks(dash.chaseSeconds() + share * (most - dash.chaseSeconds()));
     }
 
     /** As {@link #begin(double)}, along its facing. */
@@ -94,25 +124,30 @@ final class Dashing {
         ticks++;
         switch (stage) {
             case CHASE -> {
-                double delta = Math.IEEEremainder(Enemy.heading(shipX - u.x, shipY - u.y) - heading, 2 * StrictMath.PI);
-                double most = dash.turnRate() * SimStep.SECONDS;
-                heading = Math.IEEEremainder(heading + Math.clamp(delta, -most, most), 2 * StrictMath.PI);
+                steer(dash, shipX, shipY);
                 fly(-Trig.sin(heading), -Trig.cos(heading), u.spec.speed());
-                if (ticks >= SimStep.ticks(dash.chaseSeconds())) {
-                    // The tell starts: its bearing to the ship now is the dash's, locked.
-                    double dx = shipX - u.x;
-                    double dy = shipY - u.y;
-                    double length = Math.sqrt(dx * dx + dy * dy);
-                    dirX = length > 0 ? dx / length : 0;
-                    dirY = length > 0 ? dy / length : -1;
+                if (ticks >= chaseTicks) {
+                    if (dash.variant().lock() == EnemySpec.Dash.Lock.TELL_START) {
+                        // The tell starts: its bearing to the ship now is the dash's, locked.
+                        lock(shipX, shipY);
+                    }
                     stage = Stage.TELL;
                     ticks = 0;
                     u.events.add(SimEvents.Type.DASH_TELL, u.x, u.y, u.kind);
                 }
             }
             case TELL -> {
+                boolean atEnd = dash.variant().lock() == EnemySpec.Dash.Lock.TELL_END;
+                if (atEnd) {
+                    // M10 part D: its nose swings onto the ship through the tell.
+                    steer(dash, shipX, shipY);
+                }
                 fly(-Trig.sin(heading), -Trig.cos(heading), dash.tellSpeed());
                 if (ticks >= SimStep.ticks(dash.tellSeconds())) {
+                    if (atEnd) {
+                        // M10 part D: the tell's end: its bearing to the ship now is the ram's, locked.
+                        lock(shipX, shipY);
+                    }
                     stage = Stage.DASH;
                     ticks = 0;
                     bounces = 0;
@@ -122,6 +157,10 @@ final class Dashing {
             }
             case DASH -> {
                 fly(dirX, dirY, dash.dashSpeed());
+                if (dash.variant().after() == EnemySpec.Dash.After.OUT) {
+                    // M10 part D: a straight ram; a miss flies on and is gone through the far edge.
+                    return PlayField.overlaps(u.x, u.y, u.box);
+                }
                 bounceOffEdges(dash);
             }
             case SLOW -> {
@@ -135,6 +174,7 @@ final class Dashing {
                         out();
                     } else {
                         stage = Stage.CHASE;
+                        chaseTicks = chaseTicks(dash);
                     }
                 }
             }
@@ -147,6 +187,24 @@ final class Dashing {
             }
         }
         return true;
+    }
+
+    /** Turns its heading toward the ship at most its turn rate. */
+    private void steer(EnemySpec.Dash dash, double shipX, double shipY) {
+        Enemy u = unit;
+        double delta = Math.IEEEremainder(Enemy.heading(shipX - u.x, shipY - u.y) - heading, 2 * StrictMath.PI);
+        double most = dash.turnRate() * SimStep.SECONDS;
+        heading = Math.IEEEremainder(heading + Math.clamp(delta, -most, most), 2 * StrictMath.PI);
+    }
+
+    /** Locks the dash's bearing on the ship at (shipX, shipY) from where it is now. */
+    private void lock(double shipX, double shipY) {
+        Enemy u = unit;
+        double dx = shipX - u.x;
+        double dy = shipY - u.y;
+        double length = Math.sqrt(dx * dx + dy * dy);
+        dirX = length > 0 ? dx / length : 0;
+        dirY = length > 0 ? dy / length : -1;
     }
 
     private void fly(double ux, double uy, double speed) {
@@ -182,7 +240,7 @@ final class Dashing {
      */
     void bounceOffRock(double cx, double cy, double radius) {
         Enemy u = unit;
-        if (stage != Stage.DASH) {
+        if (stage != Stage.DASH || rams()) {
             return;
         }
         double nx = u.x - cx;
@@ -253,6 +311,11 @@ final class Dashing {
         return stage == Stage.DASH;
     }
 
+    /** M10 part D: whether its dash is a straight ram out (no bounce off the edges or the chunks). */
+    boolean rams() {
+        return unit.spec.dash().isPresent() && unit.spec.dash().get().variant().after() == EnemySpec.Dash.After.OUT;
+    }
+
     /** Whether it is in its spin-up tell. */
     boolean telling() {
         return stage == Stage.TELL;
@@ -302,5 +365,9 @@ final class Dashing {
                 .add(dirY)
                 .add(bounces)
                 .add(dashes);
+        if (unit.spec.dash().orElseThrow().chaseRanged()) {
+            // M10 part D: only a ranged chase hashes its draw, so the Buzzsaw hashes as before.
+            hash.add(seed).add(chaseTicks);
+        }
     }
 }

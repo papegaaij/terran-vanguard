@@ -356,6 +356,10 @@ public interface FlightSpecs {
      * chunk it touches breaks and does not deflect it) until it has bounced {@code bounces} times; then it slows to its
      * speed over {@code slowSeconds} and chases again. After its {@code dashes}-th dash it leaves through the nearest
      * edge at its speed.
+     *
+     * <p>M10 part D, step D1 (design/enemies/air/harrow): {@code variant} changes the cycle for a unit that is not a
+     * Buzzsaw ({@link Variant}); the Buzzsaw's is {@link Variant#BUZZSAW} (its chase fixed, the bearing locked at the
+     * tell's start, bouncing), what the eight-number constructor gives.
      */
     public record Dash(
             double turnRate,
@@ -365,22 +369,117 @@ public interface FlightSpecs {
             double dashSpeed,
             int bounces,
             double slowSeconds,
-            int dashes) {
+            int dashes,
+            Variant variant) {
         /** The tell is the rule: never shorter than this at any difficulty (design: ≥ 0.5 s). */
         public static final double LEAST_TELL_SECONDS = 0.5;
 
         public Dash {
+            java.util.Objects.requireNonNull(variant);
+            boolean out = variant.after() == After.OUT;
             if (!(turnRate > 0)
                     || !(chaseSeconds > 0)
                     || !(tellSeconds >= LEAST_TELL_SECONDS)
                     || !(tellSpeed >= 0)
                     || !(dashSpeed > 0)
-                    || bounces < 1
-                    || !(slowSeconds > 0)
-                    || dashes < 1) {
+                    || (out ? bounces != 0 || dashes != 1 : bounces < 1 || dashes < 1)
+                    || !(out ? slowSeconds >= 0 : slowSeconds > 0)
+                    || !(variant.chaseMostSeconds() == 0 || variant.chaseMostSeconds() >= chaseSeconds)) {
                 throw new IllegalArgumentException("a dash chases, tells at least " + LEAST_TELL_SECONDS
-                        + " s, dashes, bounces and slows: " + turnRate + ", " + chaseSeconds + ", " + tellSeconds
-                        + ", " + tellSpeed + ", " + dashSpeed + ", " + bounces + ", " + slowSeconds + ", " + dashes);
+                        + " s, dashes, bounces and slows (a ram straight out: no bounce, one dash): " + turnRate + ", "
+                        + chaseSeconds + ", " + tellSeconds + ", " + tellSpeed + ", " + dashSpeed + ", " + bounces
+                        + ", " + slowSeconds + ", " + dashes + ", " + variant);
+            }
+        }
+
+        /** The Buzzsaw's cycle (M9 part D): its chase fixed, the bearing locked at the tell's start, bouncing. */
+        public Dash(
+                double turnRate,
+                double chaseSeconds,
+                double tellSeconds,
+                double tellSpeed,
+                double dashSpeed,
+                int bounces,
+                double slowSeconds,
+                int dashes) {
+            this(
+                    turnRate,
+                    chaseSeconds,
+                    tellSeconds,
+                    tellSpeed,
+                    dashSpeed,
+                    bounces,
+                    slowSeconds,
+                    dashes,
+                    Variant.BUZZSAW);
+        }
+
+        /** This cycle with {@code withVariant}. */
+        public Dash withVariant(Variant withVariant) {
+            return new Dash(
+                    turnRate,
+                    chaseSeconds,
+                    tellSeconds,
+                    tellSpeed,
+                    dashSpeed,
+                    bounces,
+                    slowSeconds,
+                    dashes,
+                    withVariant);
+        }
+
+        /** Whether its chase time is drawn (seeded) from {@code chaseSeconds} to {@link Variant#chaseMostSeconds()}. */
+        public boolean chaseRanged() {
+            return variant.chaseMostSeconds() > chaseSeconds;
+        }
+
+        /** Where its bearing to the ship is locked for the dash: at the tell's start (the Buzzsaw) or its end. */
+        public enum Lock {
+            /** M9 part D: at the tell's start (the Buzzsaw's: a ship moving through the tell is still met). */
+            TELL_START,
+            /**
+             * M10 part D (design/enemies/air/harrow): at the tell's end, its nose swinging onto the ship through the
+             * tell (a ship moving sideways through the ram's last 0.3 s is missed).
+             */
+            TELL_END
+        }
+
+        /** What its dash does at the play field's edges. */
+        public enum After {
+            /** M9 part D: it bounces off the edges and the large chunks, slows and chases again (the Buzzsaw). */
+            BOUNCE,
+            /**
+             * M10 part D (design/enemies/air/harrow): one straight ram, no bounce (edges and chunks alike); a miss flies
+             * on and is gone through the far edge.
+             */
+            OUT
+        }
+
+        /**
+         * M10 part D, step D1 (design/enemies/air/harrow; data keys {@code chase: [least, most]}, {@code lock:
+         * tell-end}, {@code after: out}): how a dash differs from the Buzzsaw's. A ram ({@link After#OUT}) has no
+         * bounce, one dash and no slow (its {@code slowSeconds} unused, 0 allowed).
+         *
+         * @param chaseMostSeconds with more than {@code chaseSeconds}: each chase lasts a seeded time from {@code
+         *     chaseSeconds} to this (the Harrow's 1.5–2.5 s, drawn per unit from its serial); 0 for the fixed chase
+         * @param lock where the dash's bearing is locked
+         * @param after a bouncing dash or a straight ram out
+         */
+        public record Variant(double chaseMostSeconds, Lock lock, After after) {
+            /** The Buzzsaw's: a fixed chase, the bearing locked at the tell's start, bouncing. */
+            public static final Variant BUZZSAW = new Variant(0, Lock.TELL_START, After.BOUNCE);
+
+            /** The Harrow's: a chase of up to {@code chaseMostSeconds}, locked at the tell's end, one ram out. */
+            public static Variant ram(double chaseMostSeconds) {
+                return new Variant(chaseMostSeconds, Lock.TELL_END, After.OUT);
+            }
+
+            public Variant {
+                java.util.Objects.requireNonNull(lock);
+                java.util.Objects.requireNonNull(after);
+                if (!(chaseMostSeconds >= 0) || Double.isInfinite(chaseMostSeconds)) {
+                    throw new IllegalArgumentException("a chase's longest time: " + chaseMostSeconds);
+                }
             }
         }
     }

@@ -51,6 +51,10 @@ import java.util.List;
  * @param saved M10 part C (design/campaign Level 37, the shuttles): with more than 0, how many of the level's air
  *     allies ({@link ObjectiveSpec#airAllies()}) must climb out off the top edge: met at that many home, failed at once
  *     by the loss that leaves fewer than that many to come home ({@link #saved(int, int, String)}); 0 for none
+ * @param enemy M10 part D (design/campaign Level 38, {@code HARROWS n / 23}): scopes a kill ratio to one enemy's slug:
+ *     its share of that enemy's units the level sends, its kills only (however they die: shot, rammed, struck,
+ *     Rook's), judged at the end as any kill ratio ({@link #killRatioOf(String, double, int, String)}); empty for
+ *     every enemy
  *
  * <p>Built with {@link #builder()} (M10 part C, step C1, RF9b's pattern): the factories and {@code withX} copies are
  * one-liners over it, and a new kind is a new builder setter, never another positional constructor.
@@ -76,8 +80,13 @@ public record Secondary(
         boolean countsBosses,
         String spared,
         boolean objects,
-        int saved) {
+        int saved,
+        String enemy) {
     public Secondary {
+        java.util.Objects.requireNonNull(enemy);
+        if (!enemy.isEmpty() && !(killRatio > 0)) {
+            throw new IllegalArgumentException("only a kill ratio is scoped to an enemy: " + enemy);
+        }
         if (saved < 0
                 || (saved > 0
                         && (killRatio > 0
@@ -227,12 +236,36 @@ public record Secondary(
                 true,
                 "",
                 false,
-                0);
+                0,
+                "");
     }
 
     /** A kill ratio of {@code killRatio} for {@code credits} (0 and 0: {@link #NONE}). */
     public Secondary(double killRatio, int credits) {
         this(killRatio, credits, List.of(), "", List.of(), "", "", List.of(), -1, "");
+    }
+
+    /**
+     * M10 part D (design/campaign Level 38, {@code kill_ratio: 0.65, enemy: harrow}): a kill ratio of {@code share} of
+     * the units of enemy {@code slug} the level sends, for {@code credits}, with the tracker's {@code label} ({@code
+     * HARROWS}, counting {@code n / target} from the start): judged at the end, its kills of that enemy only.
+     */
+    public static Secondary killRatioOf(String slug, double share, int credits, String label) {
+        if (slug.isEmpty() || !(share > 0 && share <= 1)) {
+            throw new IllegalArgumentException(
+                    "a scoped kill ratio names its enemy and a share: " + slug + ", " + share);
+        }
+        return builder()
+                .killRatio(share)
+                .enemy(slug)
+                .credits(credits)
+                .label(label)
+                .build();
+    }
+
+    /** M10 part D: whether it is a kill ratio scoped to one enemy ({@link #enemy()}). */
+    public boolean scoped() {
+        return !enemy.isEmpty();
     }
 
     /** M10 part C, step C1: a builder with every component at its default (no objective). */

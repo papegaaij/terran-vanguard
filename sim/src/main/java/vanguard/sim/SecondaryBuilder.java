@@ -31,6 +31,7 @@ public final class SecondaryBuilder {
     private String spared = "";
     private boolean objects = false;
     private int saved = 0;
+    private String enemy = "";
 
     SecondaryBuilder() {}
 
@@ -56,6 +57,7 @@ public final class SecondaryBuilder {
         spared = secondary.spared();
         objects = secondary.objects();
         saved = secondary.saved();
+        enemy = secondary.enemy();
     }
 
     /** Its {@link Secondary#killRatio()}. */
@@ -184,6 +186,12 @@ public final class SecondaryBuilder {
         return this;
     }
 
+    /** M10 part D: its {@link Secondary#enemy()} (a kill ratio scoped to one enemy's slug). */
+    public SecondaryBuilder enemy(String enemy) {
+        this.enemy = enemy;
+        return this;
+    }
+
     /** The secondary objective, checked as a whole. */
     public Secondary build() {
         return new Secondary(
@@ -207,6 +215,7 @@ public final class SecondaryBuilder {
                 countsBosses,
                 spared,
                 objects,
-                saved);
+                saved,
+                enemy);
     }
 }

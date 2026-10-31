@@ -40,6 +40,7 @@ class SecondaryBuilderTest {
                 Secondary.untouched(100, "DOMES"),
                 Secondary.standing(100, "DOMES"),
                 Secondary.spared("freighter", 100, "HOLD FIRE"),
+                Secondary.killRatioOf("harrow", 0.65, 100, "HARROWS"),
                 Secondary.objectEscapes("cargo-container", 2, 100, "CONTAINERS"),
                 Secondary.saved(5, 100, "SHUTTLES"));
     }

@@ -33,7 +33,8 @@ final class Formations {
     /** A side stream unit from the left: across and down to the right edge. */
     private static final FlightPath SIDE_STREAM = FlightPath.through(-OUTSIDE, 430, WIDTH + OUTSIDE, 170);
     /**
-     * M5 part F: a rear stream unit from the left (chasers only, design/enemies/air/lamprey): up and
+     * M5 part F: a rear stream unit from the left (chasers only, design/enemies/air/lamprey; M10 part D: and dashers,
+     * design/enemies/air/harrow): up and
      * across to the right, the front stream's path turned upside down.
      */
     private static final FlightPath REAR_STREAM = FlightPath.through(90, -OUTSIDE, 330, HEIGHT + OUTSIDE);
@@ -947,9 +948,10 @@ final class Formations {
                         case FRONT -> FRONT_STREAM;
                         case SIDES -> SIDE_STREAM;
                         case REAR -> {
-                            // M5 part F: only chasers stream in from the rear (Level 12's Lampreys).
-                            if (enemy().chase().isEmpty()) {
-                                throw unsupported("only chasers stream in from the rear");
+                            // M5 part F: only chasers stream in from the rear (Level 12's Lampreys); M10 part D: and
+                            // dashers (design/campaign Level 38, the Harrows from the bottom edge).
+                            if (enemy().chase().isEmpty() && enemy().dash().isEmpty()) {
+                                throw unsupported("only chasers and dashers stream in from the rear");
                             }
                             yield REAR_STREAM;
                         }

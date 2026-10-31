@@ -290,6 +290,10 @@ final class ContactPasses {
                         // M10 part B (design/campaign Level 36, the pathfinder pod): it frees its hidden crate.
                         openPod(chunk);
                     }
+                    if (chunk.spec().drop().isPresent()) {
+                        // M10 part D (design/campaign Level 38, the CDF supply canister): its latch shot, it lets go.
+                        release(chunk);
+                    }
                     if (s.rides != null) {
                         // M9 part B: a wave's rock broke: its riders tumble off.
                         s.rides.broken(chunk);
@@ -309,6 +313,31 @@ final class ContactPasses {
                 }
             }
         }
+    }
+
+    /**
+     * M10 part D, step D1 (design/campaign Level 38, Aurelia's cargo pod; {@link Lightning#strikeSecrets}): a lightning
+     * strike crossed debris chunk {@code d}, which holds a secret: it breaks as under the player's shot and frees its
+     * crate.
+     */
+    void openStruck(int d) {
+        Debris chunk = debris.get(d);
+        events.add(SimEvents.Type.DEBRIS_DESTROYED, chunk.x(), chunk.y());
+        openPod(chunk);
+        debris.free(d);
+    }
+
+    /**
+     * M10 part D, step D1 (design/campaign Level 38, the CDF supply canister): a chunk with a drop broke under the
+     * player's shot (its latch): its pickup falls where it was (kept a bullet's width inside the play field).
+     */
+    private void release(Debris chunk) {
+        double half = EnemyGun.BULLET.width();
+        double x = Math.clamp(chunk.x(), half, PlayField.WIDTH - half);
+        double y = Math.clamp(chunk.y(), half, PlayField.HEIGHT - half);
+        PickupType drop = chunk.spec().drop().orElseThrow();
+        events.add(SimEvents.Type.DEBRIS_RELEASED, x, y, drop.ordinal());
+        s.pickupPasses.drop(drop, x, y);
     }
 
     /**
