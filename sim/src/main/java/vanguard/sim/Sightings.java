@@ -3,7 +3,9 @@ package vanguard.sim;
 /**
  * The radio's first-sighting cues of a {@link Sortie}: once per attempt, the first pounce (M5 part C),
  * decloak and loop-back (M5 part D), Burrower surfacing (M7 part B), Herald ring (M7 part D) and geyser tell (M8 part
- * B) and rising shadow (M8 part D) seen in a step's events start their cues. The boss checkpoint keeps a copy ({@link #copyFrom}).
+ * B) and rising shadow (M8 part D) seen in a step's events start their cues; M10 part B: a secondary objective's
+ * failure ({@link SimEvents.Type#OBJECTIVE_FAILED}) starts the {@code secondary-failed} cues. The boss checkpoint keeps a
+ * copy ({@link #copyFrom}).
  */
 final class Sightings {
     private final SimEvents events;
@@ -33,6 +35,11 @@ final class Sightings {
     private final boolean homings;
     /** M9 part B: whether an enemy homing missile was launched in this attempt (the radio's {@code first-homing}). */
     private boolean homingSeen;
+    /**
+     * M10 part B (design/campaign Level 36, radio): whether the level has a {@code secondary-failed} cue: only then is a
+     * failure watched. No state of its own (the radio plays the cue once an attempt), so nothing hashes.
+     */
+    private final boolean failures;
 
     /** With {@code events} and {@code radio} null: a copy for the boss checkpoint, never stepped. */
     Sightings(SimEvents events, Radio radio) {
@@ -41,6 +48,7 @@ final class Sightings {
         geysers = radio != null && radio.listens(CueTrigger.FIRST_GEYSER);
         rays = radio != null && radio.listens(CueTrigger.FIRST_RAY);
         homings = radio != null && radio.listens(CueTrigger.FIRST_HOMING);
+        failures = radio != null && radio.listens(CueTrigger.SECONDARY_FAILED);
     }
 
     /** The step's first sightings: their cues. */
@@ -76,6 +84,9 @@ final class Sightings {
         if (homings && !homingSeen && events.count(SimEvents.Type.MISSILE_LAUNCHED) > 0) {
             homingSeen = true;
             radio.cue(CueTrigger.FIRST_HOMING, "");
+        }
+        if (failures && events.count(SimEvents.Type.OBJECTIVE_FAILED) > 0) {
+            radio.cue(CueTrigger.SECONDARY_FAILED, "");
         }
     }
 

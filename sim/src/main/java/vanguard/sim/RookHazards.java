@@ -116,7 +116,8 @@ final class RookHazards {
     /**
      * M10 part A, step A1b (design/world/jovian, Hazards & set pieces): moves the goal (goalX, goalY) sideways out of
      * every told or live lightning strike's column of {@code lightning} (his hull's edge {@link #GAP} outside it, to the
-     * nearer side the field allows) and out of the fan of every telling vent of {@code eruptions} (the sector its rocks
+     * side the field allows that he is on now ({@link #at}; M10 part B, step B3: by the goal's side he crossed the
+     * column when the ship's drift carried his slot over its middle, and was struck in it on Level 36) and out of the fan of every telling vent of {@code eruptions} (the sector its rocks
      * fly through, up the screen from the vent to their reach; sideways to the nearer edge). Either may be null. Returns
      * whether it moved; the goal is then ({@link #x()}, {@link #y()}).
      */
@@ -127,7 +128,7 @@ final class RookHazards {
         if (lightning != null) {
             for (int i = 0; i < lightning.count(); i++) {
                 if (lightning.threatens(i)) {
-                    moved |= clearOfColumn(lightning.x(i), lightning.width() / 2 + halfW + GAP);
+                    moved |= clearOfColumn(lightning.x(i), lightning.width() / 2 + halfW + GAP, rx);
                 }
             }
         }
@@ -143,14 +144,17 @@ final class RookHazards {
                 if (dy < -halfH - GAP || dy > reach) {
                     continue;
                 }
-                moved |= clearOfColumn(eruptions.ventX(v), Math.max(0, dy) * slope + halfW + GAP);
+                moved |= clearOfColumn(eruptions.ventX(v), Math.max(0, dy) * slope + halfW + GAP, gx);
             }
         }
         return moved;
     }
 
-    /** Moves the goal's x at least {@code reach} px from {@code cx}, to the nearer side the field allows. */
-    private boolean clearOfColumn(double cx, double reach) {
+    /**
+     * Moves the goal's x at least {@code reach} px from {@code cx}, to the side the field allows nearer {@code sideX}
+     * (the goal's x, or his own for a strike's column).
+     */
+    private boolean clearOfColumn(double cx, double reach, double sideX) {
         if (Math.abs(gx - cx) >= reach) {
             return false;
         }
@@ -158,7 +162,7 @@ final class RookHazards {
         double left = cx - reach;
         boolean rightOk = right <= PlayField.WIDTH - limit;
         boolean leftOk = left >= limit;
-        if (rightOk && (!leftOk || right - gx <= gx - left)) {
+        if (rightOk && (!leftOk || right - sideX <= sideX - left)) {
             gx = right;
         } else if (leftOk) {
             gx = left;

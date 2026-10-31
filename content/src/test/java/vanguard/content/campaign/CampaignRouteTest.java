@@ -429,6 +429,50 @@ class CampaignRouteTest {
     }
 
     /**
+     * M10 part B (step B3; design/campaign Act 6, Implementation): a real save of the v0.3 release at the Level 36
+     * hangar, written by that release's {@code :content:playthroughSave} (medium, the balance plan through Level 35; its
+     * check of the level widened to the one after the last built level, which v0.3 could not name) with the {@code
+     * act-intro:1..5} flags the v0.3 game's briefings add (the tool flies without the route): Rook in his slot. Continue
+     * plays Act 6's title card, its four intro pages and Level 36's briefing once; reloaded, the next Continue opens
+     * Level 36's own briefing, never the intro twice.
+     */
+    @Test
+    void aRealV03SaveAtTheLevel36HangarPlaysTheActSixIntroOnce() throws Exception {
+        String json;
+        try (var in = getClass().getResourceAsStream("/saves/v0.3-medium-level-36-hangar.json")) {
+            json = new String(in.readAllBytes(), java.nio.charset.StandardCharsets.UTF_8);
+        }
+        assertTrue(json.contains("\"version\" : 6"));
+
+        SaveGame save = SaveFormat.read(json);
+        assertEquals(36, save.nextLevel());
+        Campaign campaign = Campaign.load(CampaignTest.RULES, save);
+        assertTrue(campaign.actIntroShown(5) && !campaign.actIntroShown(6));
+        assertFalse(campaign.rookMissing());
+        assertEquals(Escort.Escorter.ROOK, campaign.gear().escort().flies());
+
+        var briefing = assertInstanceOf(CampaignRoute.Step.Briefing.class, CampaignRoute.onContinue(content, campaign));
+        assertEquals("act-6-jovian-storm", briefing.script().actDirectory());
+        assertEquals("JOVIAN STORM", briefing.script().titleCard().orElseThrow().name());
+        assertEquals(36, briefing.script().mission());
+        assertEquals(4 + 2, briefing.script().pages().size(), "the act's four intro pages, then Level 36's two");
+        assertTrue(campaign.actIntroShown(6));
+        Campaign reloaded =
+                Campaign.load(CampaignTest.RULES, SaveFormat.read(SaveFormat.write(campaign.save(Instant.EPOCH))));
+        assertEquals(
+                2,
+                assertMissionBriefing(36, CampaignRoute.onContinue(content, reloaded))
+                        .pages()
+                        .size());
+        assertEquals(
+                2,
+                assertMissionBriefing(36, CampaignRoute.onContinue(content, reloaded))
+                        .pages()
+                        .size(),
+                "never twice");
+    }
+
+    /**
      * M9 part B: Level 29 ends no act; M9 part C (step C2): Level 30 is built, so its win leads to Level 30's briefing;
      * M9 part D (step D3): Level 31 is built too; M9 part E (step E3): so is Level 32; M9 part F (step F3): so is Level
      * 33; M9 part G (step G3): so is Level 34; M9 part H (step H3): Level 35 is built and ends Act 5: after Level 34 its

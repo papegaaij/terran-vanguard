@@ -75,6 +75,8 @@ class VoiceFilesTest {
             "act-5-the-belt/level-35-iron-sovereign",
             "act-5-the-belt briefing",
             "act-5-the-belt outro",
+            "act-6-jovian-storm/level-36-cloud-divers",
+            "act-6-jovian-storm briefing",
             "specials",
             "armour",
             VoiceLines.BARKS);

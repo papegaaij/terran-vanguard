@@ -193,7 +193,14 @@ public enum CueTrigger {
      * (a unit counted as one) killed by a lightning strike ({@link Lightning#strikeEnemies}); once. No subject (the radio
      * event {@code first-strike-kill}).
      */
-    FIRST_STRIKE_KILL;
+    FIRST_STRIKE_KILL,
+    /**
+     * M10 part B (design/campaign Level 36, radio: Varga's "Too many got through" at the third harvester away): the
+     * secondary objective failed in the attempt ({@link SimEvents.Type#OBJECTIVE_FAILED}: an escapes objective by the
+     * unit past the allowed ones, any other at its failure); once. No subject (the radio event {@code
+     * secondary-failed}).
+     */
+    SECONDARY_FAILED;
 
     /** Between the part names of a {@link #BOSS_PART_DESTROYED} cue's subject. */
     public static final String PART_SEPARATOR = "|";

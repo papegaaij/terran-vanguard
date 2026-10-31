@@ -363,6 +363,10 @@ public final class Wingman {
                 evading = true;
             }
         }
+        if (lightning != null || eruptions != null) {
+            // M10 part B, step B3: a strike's column is left to the side he is on.
+            hazards.at(x, y);
+        }
         if ((lightning != null || eruptions != null) && hazards.clearOfStorm(goalX, goalY, lightning, eruptions)) {
             // M10 part A, step A1b: out of a told strike's column and a telling vent's fan.
             goalX = hazards.x();

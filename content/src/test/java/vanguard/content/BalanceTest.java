@@ -910,7 +910,7 @@ class BalanceTest {
      * The act HP factor (design/enemies Balancing basis, D5 = c of M5 part A): a returning unit of
      * tier {@code medium} or larger (and the basis's {@code small_act_hp} units, the factor capped at ×3: the user's Act
      * 2 playtest, 2026-10-18), built by {@link SimSpecs#enemy} for each Act 2 and (M7 part A) Act 3
-     * level after its first (Levels 08–21, M8 part I: and Act 4's to Level 28, M9 part I: Act 5's to Level 35, as far as the reference DPS curve goes), keeps its time to kill inside its
+     * level after its first (Levels 08–21, M8 part I: and Act 4's to Level 28, M9 part I: Act 5's to Level 35, M10 part B: Act 6's built levels from Level 36, as far as the reference DPS curve goes), keeps its time to kill inside its
      * size class's target at that level's reference DPS (M7 part E: times the beam era's factor for its tier from
      * Level 18 on, {@code beam_era_hp}) (its parts' and segments' HP summed; 1 HP of
      * rounding allowed). Units already off target at their first level are left to {@link
@@ -935,7 +935,7 @@ class BalanceTest {
                         case MEDIUM -> new double[] {0.4, 1.5};
                         default -> new double[] {1, 3};
                     };
-            for (int level = Math.max(ACT_2_FIRST, enemy.firstLevel() + 1); level <= ACT_5_LAST; level++) {
+            for (int level = Math.max(ACT_2_FIRST, enemy.firstLevel() + 1); level <= ACT_6_BUILT_LAST; level++) {
                 Double reference = CONTENT.enemyBasis().referenceDps().get(level);
                 if (reference == null) {
                     continue;
@@ -944,7 +944,9 @@ class BalanceTest {
                         && !CONTENT.enemyBasis().smallActHp().applies(entry.getKey(), level)) {
                     continue; // only in small_act_hp's levels (Levels 08-09)
                 }
-                int act = level >= ACT_5_FIRST ? 5 : level >= ACT_4_FIRST ? 4 : level >= ACT_3_FIRST ? 3 : 2;
+                int act = level >= ACT_6_FIRST
+                        ? 6
+                        : level >= ACT_5_FIRST ? 5 : level >= ACT_4_FIRST ? 4 : level >= ACT_3_FIRST ? 3 : 2;
                 EnemySpec spec =
                         SimSpecs.enemy(CONTENT, entry.getKey(), Difficulty.MEDIUM, Optional.empty(), act, level);
                 double hp = spec.hp()
@@ -995,7 +997,16 @@ class BalanceTest {
      * levels are built; such a level's income is budget(n) on the sheet, and its level checks wait for its data.
      */
     static final Set<Integer> ACT_6_PLANNED =
-            java.util.stream.IntStream.rangeClosed(36, 42).boxed().collect(java.util.stream.Collectors.toSet());
+            java.util.stream.IntStream.rangeClosed(37, 42).boxed().collect(java.util.stream.Collectors.toSet());
+
+    /** M10 part B: Act 6's levels (design/campaign/act-6-jovian-storm). */
+    static final int ACT_6_FIRST = 36;
+
+    /**
+     * M10 part B (step B3, until M10 part I): Act 6's last built level, as far as the returning units' time to kill is
+     * swept ({@link #everyReturningUnitKeepsItsTimeToKillFromActTwo}); each part's level moves it on.
+     */
+    static final int ACT_6_BUILT_LAST = 36;
 
     /**
      * Time to kill at the unit's first level (design/enemies Balancing basis): {@code tiny} one hit

@@ -56,7 +56,8 @@ import vanguard.sim.Sortie;
  * and {@link RoutePlay} (M9 part E: the Sentinel Towers' emitters, their notches, and the route through the forks, Level
  * 32), {@link LeechPlay} (M9 part F: the Void Leeches' latches and the Rail Bunkers' lines, Level 33), {@link
  * SalvagePlay} (M9 part G: the containers, the hold's clamps, the hidden crates and the story pickup, Level 34), {@link
- * RingPlay} (M9 part H: the Iron Sovereign's rings, Level 35; the mass relay's line is {@link HazardPlay}'s) and the moves'
+ * RingPlay} (M9 part H: the Iron Sovereign's rings, Level 35; the mass relay's line is {@link HazardPlay}'s), {@link
+ * DivePlay} (M10 part B: a hurt Chimera held, the harvesters, the lightning columns, Level 36) and the moves'
  * {@link MovePlanner}. It reads the sortie's state only, so it is deterministic; the recorded replay stores its commands. Public for the campaign tests (the
  * Act 1 playthrough, {@code ActPlaythroughTest}).
  */
@@ -155,6 +156,8 @@ public final class Autopilot {
         int commands = pilot(sortie, play);
         // M9 part H: off the mass relay's locked line in its telegraph (Level 35, HazardPlay).
         commands = HazardPlay.relay(sortie, commands);
+        // M10 part B: out of a told or striking lightning column (Level 36, DivePlay).
+        commands = DivePlay.strikes(sortie, commands);
         if (sortie.groundAllies() && SiegePlay.rollThreat(sortie)) {
             // M7 part D: a wounded Shellback's roll would crush a dome: no shot at it until the dome is out of reach.
             commands &= ~Command.FIRE.bit();
@@ -274,7 +277,8 @@ public final class Autopilot {
             return commands | RetreatPlay.move(sortie, shipX, shipY);
         }
         double threat = DodgePlay.threat(sortie, shipX, shipY);
-        if (threat != 0) {
+        // M10 part B: a dive's moves are planned among the bullets and bodies instead (Level 36, DivePlay).
+        if (threat != 0 && !DivePlay.diving(sortie)) {
             // With an air escort a threat may come from below (a Wraith's burst, a looping swarm, a Wraith
             // holding at the bottom edge): no lower then, nor below its cruise.
             int vertical = sortie.airEscort() && (shipY < CRUISE_Y || DodgePlay.fromBelow(sortie, shipX, shipY))
@@ -307,6 +311,11 @@ public final class Autopilot {
                     && (lowest == null || y < lowest.renderY(1))) {
                 lowest = enemy;
             }
+        }
+        // M10 part B: a hurt regenerating unit (a Chimera) held until it dies, before it heals (Level 36, DivePlay).
+        Enemy hurt = DivePlay.focus(sortie, shipY);
+        if (hurt != null) {
+            lowest = hurt;
         }
         Enemy core = TargetPlay.openVortex(sortie, shipY);
         if (core != null) {
@@ -376,6 +385,13 @@ public final class Autopilot {
             lowest = escapee;
             // M8 part D (step E4): close under a tough spawning reef, where it is shut, then over it (Level 24).
             targetY = WaterPlay.escapeeY(sortie, escapee, targetY);
+        }
+        // M10 part B: the escapes secondary's uncounted craft (Level 36's harvesters) before they get away, from below
+        // them (DivePlay).
+        Enemy harvester = DivePlay.harvester(sortie, shipY);
+        if (harvester != null) {
+            lowest = harvester;
+            targetY = DivePlay.underY(harvester, targetY);
         }
         // M8 part D: an Abyss Ray's shadow and rise, the torpedoes reaching it under the play plane (Level 24).
         Enemy shadow = AbyssPlay.shadow(sortie);
@@ -471,12 +487,18 @@ public final class Autopilot {
             // M9 part B: out of the band below a neutral craft (Level 29's Hold fire, HoldFirePlay).
             targetX = HoldFirePlay.clearX(sortie, targetX);
         }
+        // M10 part B: never into a told lightning column (Level 36, DivePlay).
+        targetX = DivePlay.clearX(sortie, targetX);
         int sonde = TargetPlay.sondeToTake(sortie, shipY);
         if (sonde >= 0 && behind == null) {
             // M5 part F: the weather sondes (Level 12's secondary): under it, waiting at its height or the cruise's.
             Sondes sondes = sortie.sondes();
             targetX = sondes.x(sonde);
             targetY = Math.clamp(sondes.y(sonde), 40, Math.max(40, targetY));
+        }
+        if (DivePlay.diving(sortie)) {
+            // M10 part B: every move planned among the bullets, the bodies and the told columns (Level 36, DivePlay).
+            return commands | DivePlay.move(sortie, DodgePlay.clearOfRail(sortie, targetX), targetY);
         }
         // M8 part C: under water with its slide in mind (the drag; in the air the plain steer, WaterPlay).
         return commands

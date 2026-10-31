@@ -1,0 +1,314 @@
+{
+  "version" : 6,
+  "created" : "2026-10-31T16:43:47.802858429Z",
+  "playtime" : 0.0,
+  "difficulty" : "MEDIUM",
+  "nextLevel" : 36,
+  "credits" : 67893,
+  "score" : 8418270,
+  "loadout" : {
+    "FRONT" : {
+      "item" : "ion-beam",
+      "level" : 4
+    },
+    "REAR" : {
+      "item" : "swarm-tail",
+      "level" : 3
+    },
+    "LEFT_WING" : {
+      "item" : "micro-missile-pod",
+      "level" : 4
+    },
+    "RIGHT_WING" : {
+      "item" : "micro-missile-pod",
+      "level" : 4
+    },
+    "GENERATOR" : {
+      "item" : "Mk V \"Helix\"",
+      "level" : 1
+    },
+    "SHIELD" : {
+      "item" : "Mk III",
+      "level" : 1
+    },
+    "ARMOUR" : {
+      "item" : "Composite IV",
+      "level" : 1
+    },
+    "ENGINE" : {
+      "item" : "Mk I",
+      "level" : 1
+    },
+    "SPECIAL" : {
+      "item" : "EMP Burst",
+      "level" : 1
+    },
+    "UTILITY_1" : {
+      "item" : "Pickup magnet",
+      "level" : 1
+    }
+  },
+  "inventory" : {
+    "FRONT" : [ {
+      "item" : "harpoon-torpedoes",
+      "level" : 4
+    } ],
+    "REAR" : [ {
+      "item" : "depth-charges",
+      "level" : 3
+    }, {
+      "item" : "tail-gun",
+      "level" : 3
+    } ],
+    "GENERATOR" : [ {
+      "item" : "Mk I \"Spark\"",
+      "level" : 1
+    }, {
+      "item" : "Mk II \"Arc\"",
+      "level" : 1
+    }, {
+      "item" : "Mk III \"Fusion\"",
+      "level" : 1
+    }, {
+      "item" : "Mk IV \"Tokamak\"",
+      "level" : 1
+    } ],
+    "SHIELD" : [ {
+      "item" : "Mk I",
+      "level" : 1
+    }, {
+      "item" : "Mk II",
+      "level" : 1
+    } ],
+    "PLATING" : [ {
+      "item" : "Standard",
+      "level" : 1
+    }, {
+      "item" : "Composite I",
+      "level" : 1
+    }, {
+      "item" : "Composite II",
+      "level" : 1
+    }, {
+      "item" : "Composite III",
+      "level" : 1
+    } ],
+    "UTILITY" : [ {
+      "item" : "Pressure hull",
+      "level" : 1
+    } ]
+  },
+  "unlocks" : [ "Targeting computer" ],
+  "specials" : {
+    "Smart Bomb" : 1,
+    "EMP Burst" : 2,
+    "Sonar Pulse" : 1,
+    "Airstrike" : 0
+  },
+  "armour" : 140.0,
+  "escort" : {
+    "hired" : true,
+    "side" : "left",
+    "fitted" : "autocannon",
+    "guns" : [ {
+      "item" : "autocannon",
+      "level" : 1
+    }, {
+      "item" : "mortar",
+      "level" : 1
+    } ],
+    "armour" : 0.0,
+    "flies" : "rook",
+    "bulwark" : {
+      "owned" : false,
+      "armour" : 120.0
+    }
+  },
+  "bays" : 0,
+  "retriesLeft" : null,
+  "grades" : {
+    "22" : "A+",
+    "21" : "A",
+    "20" : "A",
+    "19" : "A",
+    "18" : "A+",
+    "17" : "A+",
+    "16" : "A+",
+    "15" : "A",
+    "14" : "A+",
+    "13" : "A+",
+    "12" : "A+",
+    "11" : "A",
+    "10" : "A",
+    "9" : "B",
+    "8" : "A+",
+    "7" : "A+",
+    "6" : "A",
+    "5" : "A+",
+    "4" : "A",
+    "3" : "A",
+    "2" : "A+",
+    "1" : "A+",
+    "35" : "A+",
+    "34" : "A+",
+    "33" : "A+",
+    "32" : "A",
+    "31" : "A",
+    "30" : "A",
+    "29" : "A+",
+    "28" : "A+",
+    "27" : "A",
+    "26" : "A+",
+    "25" : "A+",
+    "24" : "A+",
+    "23" : "A+"
+  },
+  "dataCores" : [ "settlement log" ],
+  "storyFlags" : [ "act-intro:1", "free-charges:Airstrike", "free-charges:Smart Bomb", "free-charges:EMP Burst", "act-intro:2", "act-intro:3", "act-intro:4", "free-charges:Sonar Pulse", "act-intro:5" ],
+  "stats" : {
+    "kills" : 8843,
+    "deaths" : 0,
+    "levels" : {
+      "22" : {
+        "credits" : 5095,
+        "kills" : 261
+      },
+      "21" : {
+        "credits" : 4292,
+        "kills" : 161
+      },
+      "20" : {
+        "credits" : 3082,
+        "kills" : 169
+      },
+      "19" : {
+        "credits" : 3859,
+        "kills" : 288
+      },
+      "18" : {
+        "credits" : 4195,
+        "kills" : 279
+      },
+      "17" : {
+        "credits" : 4099,
+        "kills" : 213
+      },
+      "16" : {
+        "credits" : 3836,
+        "kills" : 355
+      },
+      "15" : {
+        "credits" : 2998,
+        "kills" : 302
+      },
+      "14" : {
+        "credits" : 2999,
+        "kills" : 186
+      },
+      "13" : {
+        "credits" : 3089,
+        "kills" : 423
+      },
+      "12" : {
+        "credits" : 2998,
+        "kills" : 457
+      },
+      "11" : {
+        "credits" : 2108,
+        "kills" : 307
+      },
+      "10" : {
+        "credits" : 2207,
+        "kills" : 247
+      },
+      "9" : {
+        "credits" : 1703,
+        "kills" : 304
+      },
+      "8" : {
+        "credits" : 2123,
+        "kills" : 337
+      },
+      "7" : {
+        "credits" : 1962,
+        "kills" : 170
+      },
+      "6" : {
+        "credits" : 1632,
+        "kills" : 182
+      },
+      "5" : {
+        "credits" : 1574,
+        "kills" : 157
+      },
+      "4" : {
+        "credits" : 1187,
+        "kills" : 134
+      },
+      "3" : {
+        "credits" : 1345,
+        "kills" : 98
+      },
+      "2" : {
+        "credits" : 1520,
+        "kills" : 99
+      },
+      "1" : {
+        "credits" : 1442,
+        "kills" : 92
+      },
+      "35" : {
+        "credits" : 9598,
+        "kills" : 133
+      },
+      "34" : {
+        "credits" : 12154,
+        "kills" : 396
+      },
+      "33" : {
+        "credits" : 12958,
+        "kills" : 364
+      },
+      "32" : {
+        "credits" : 10141,
+        "kills" : 333
+      },
+      "31" : {
+        "credits" : 8430,
+        "kills" : 344
+      },
+      "30" : {
+        "credits" : 5754,
+        "kills" : 308
+      },
+      "29" : {
+        "credits" : 8787,
+        "kills" : 330
+      },
+      "28" : {
+        "credits" : 8294,
+        "kills" : 126
+      },
+      "27" : {
+        "credits" : 6856,
+        "kills" : 193
+      },
+      "26" : {
+        "credits" : 6516,
+        "kills" : 182
+      },
+      "25" : {
+        "credits" : 7151,
+        "kills" : 303
+      },
+      "24" : {
+        "credits" : 6462,
+        "kills" : 268
+      },
+      "23" : {
+        "credits" : 5827,
+        "kills" : 342
+      }
+    }
+  }
+}

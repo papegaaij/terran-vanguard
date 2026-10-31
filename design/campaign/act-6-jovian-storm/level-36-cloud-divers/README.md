@@ -250,7 +250,7 @@ Enemy definitions are linked per row; formation names come from the
 | 129 | 4 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front | |
 | 132 | 4 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front | The storm edge darkens; lightning flashes (no damage) from t=130 |
 | 133.5 | 4 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 2 | front | Step B2: a firing Talon pair on the offbeat (the beam erases the fodder within a second) |
-| 135 | 4 | V-wing | [Chimera](../../../enemies/air/chimera/README.md) | 6 | front | The first lightning **strike** at t=138 (telegraph from t=137) lands among them |
+| 136 | 4 | V-wing | [Chimera](../../../enemies/air/chimera/README.md) | 6 | front | The first lightning **strike** at t=138 (telegraph from t=137) lands among them (step B3: t=136, not 135: from t=135 the wing had swooped past the column before it struck; the tell 1.0 s after its entry) |
 | 139 | 4 | stream | [Lamprey](../../../enemies/air/lamprey/README.md) | 5 | front | Step B2: t=139, not 140 (easy's pause after the struck wing) |
 | 143 | 4 | column | [Gilded Gunship](../../../enemies/air/gilded-gunship/README.md) | 1 | front | About 6 Darts |
 | 146 | 4 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front | The pathfinder pod (the secret) drifts in under a bank at t≈146 |
@@ -296,7 +296,7 @@ All three are the [Jovian system](../../../world/jovian/README.md#hazards--set-p
   bands run their jets in opposite directions; the storm streaks in the backdrop change direction with the band).
   The Lamprey streams ride each spell's wind in from its upwind edge (t=66 left, t=163 right).
 - **Lightning strikes** (J3; "a few allowed in L36"): three strikes as the act's foretaste of Level 38, at **t=138,
-  152 and 170** (telegraph from 1.0 s before), each a 40 px column at an authored x: the first through the t=135
+  152 and 170** (telegraph from 1.0 s before), each a 40 px column at an authored x: the first through the t=136
   Chimera wing's lane (lightning kills a Chimera and pays: the lesson that the sky can work for the player), the
   others in the open lanes left of and right of the centre. Flash-only lightning (Level 12's) from t=130 dresses the
   storm edge; never two strikes within 1.5 s, never a telegraph starting on the ship's x within 1 s of a wave's
@@ -335,7 +335,7 @@ speakers are D-story's table). **Vorne is silent here**: his intercepted invitat
 | t=67 | Okafor | "Helium-3 harvesters ahead, skimming the bands. That's Vorne's fuel. Bring down six." |
 | t=90 | Varga | "Spore bombers under the harvesters. Vrell, still flying with the gold ones. For now." |
 | Secondary met (`secondary-objective`, the sixth harvester down) | Okafor | "Six harvesters down. His fleet will feel that at Io." |
-| Secondary failed (the third harvester escapes; step B2: no secondary-failed cue is built, so it plays at the first harvester away until one is, pending) | Varga | "Too many got through. Their fuel reaches the refineries." |
+| Secondary failed (`secondary-failed`: the third harvester away; easy the fourth, hard the second) | Varga | "Too many got through. Their fuel reaches the refineries." |
 | t=118 | Rook | "Homing's earning its keep. Those clouds are full of them." |
 | t=128 | Varga | "A white line drawn down the sky means lightning. Get out of it. A second later it strikes." |
 | The first enemy killed by a strike (event, bark) | Rook | "Ha! The sky's on our side." |
@@ -471,8 +471,12 @@ field (easy 21.7 %) and at most 1.8 s over the ship's band. Prompts and briefs: 
 - [x] Typical haul within ±5 % of budget(36) = 7 474 with the level's `bounty_scale` (`TypicalHaulTest`; step B2:
       7,488 at 0.31, +0.2 %)
 - [ ] Music and ambience: "Eye of the Storm" by section, the high-wind bed, the level's sounds (`Level36SoundsTest`)
-- [ ] Easy/hard variations as in *Difficulty notes*; the autopilot (holding the beam on a Chimera, the harvesters,
-      a told column) flies the level with Rook on every difficulty and with `--escort none`
+- [ ] Easy/hard variations as in *Difficulty notes*
+- [x] The autopilot (holding the beam on a hurt Chimera, the harvesters, out of a told column, the drop craft never a
+      target) flies the level with Rook on every difficulty and with `--escort none` (step B3, `Level36Test`: 3/3 per
+      difficulty both ways, no retry, `HARVESTERS` met on every run, no strike on the ship or Rook, no drop craft hit;
+      Varga's failed-secondary line at the third harvester away; the t=138 strike kills in the Chimera wing's lane and
+      pays; `ActPlaythroughTest` to Level 36, the release ending after it; Act 6's intro once on a v0.3 save)
 - [ ] Production art and captures for part B's round
 
 ## Open questions
@@ -481,11 +485,10 @@ Left to the build (the document is approved as drafted):
 
 - **The harvesters' numbers** (160 HP, 30 credits, 6 of 8): first values of this draft; part B tunes the HP so the
   typical player downs six with the plan's fit. Step B2: the plan's fit meets the secondary 3/3 on easy and medium
-  with 160 HP (no tuning), hard 0/3 (7 of 8 with three escorts: step B3's autopilot first, then the HP if needed).
+  with 160 HP (no tuning), hard 0/3; step B3: with the dive's autopilot (the harvesters first, from below them, the
+  moves planned among the bullets) 3/3 on every difficulty with Rook and without, so the HP stay.
 - **The harvesters' drift** (QB-5, round 74): the 30 px/s sideways cannot keep both "never over the other's hull" and
   "escapes at the bottom edge"; the data flies 8 px/s apart (the [harvester](../../../enemies/air/harvester/README.md)).
-- **The failed secondary's line**: no `secondary-failed` cue is built, so Varga's "*Too many got through*" waits on
-  the first harvester away (`enemy-escaped`) until one is (a small simulation cue for step B4's radio, pending).
 - **The Chimera's intro pair**: its document lists V-wings and swarms; the level adds a two-unit `line abreast` for
   the safe intro (the gap analysis's "safe pair"). Our reading: a level may thin a formation for an intro.
 
@@ -513,3 +516,9 @@ Left to the build (the document is approved as drafted):
   the t=169 Chimera wing at t=168 (the strike rule); `bounty_scale` 0.31 kept (+0.2 %). The Wraiths fly the built
   `rear ambush`, the Gunships a `column`. The harvester and the drop craft are unit data files (gap check §4); the pod
   a debris chunk that `reveals` its secret; the forward / reference measures 0.99 (part A's plan), not 1.19.
+- 2026-10-31 (M10 part B, step B3; pending the user's review in round 74): the tests. Varga's "*Too many got
+  through*" moves to a new radio event `secondary-failed` (the secondary's failure: the third harvester away, easy the
+  fourth, hard the second), no longer the first harvester away. The t=135 Chimera wing enters at **t=136** (from t=135
+  it had swooped past the first strike's column before it struck; t=136 keeps the tell 1.0 s after its entry). Rook
+  now leaves a told strike's column to the side he is on (by his slot's side he crossed the column as the ship drifted
+  and was struck in it on easy).

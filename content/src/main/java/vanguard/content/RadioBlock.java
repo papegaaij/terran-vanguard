@@ -417,7 +417,13 @@ public sealed interface RadioBlock permits LevelData {
          * once. Names no enemy; only in a level with {@code weather.strikes}.
          */
         @JsonProperty("first-strike-kill")
-        FIRST_STRIKE_KILL
+        FIRST_STRIKE_KILL,
+        /**
+         * M10 part B (design/campaign Level 36, Radio chatter: "Too many got through"): the secondary objective failed
+         * (an escapes objective by the unit past the allowed ones); once. Names no enemy.
+         */
+        @JsonProperty("secondary-failed")
+        SECONDARY_FAILED
     }
 
     /**

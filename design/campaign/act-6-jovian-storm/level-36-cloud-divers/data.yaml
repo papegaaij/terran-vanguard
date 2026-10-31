@@ -101,7 +101,7 @@ weather:  # the Jovian system's hazards (design/world/jovian): Level 12's gusts 
   lightning:   # flash-only lightning dressing the storm edge from t=130 (the LIGHTNING event for the thunder); none within 1 s of a strike's tell
     at: [130, 133.5, 141, 145.5, 148.5, 155, 165, 174, 179, 184]
     reveal: 0.5   # s a flash makes the banks see-through
-  strikes:   # told columns (data t = the tell's start, 1.0 s before the strike): t=138 through the t=135 Chimera wing's lane, t=152 left and t=170 right of the centre; easy t=138 and 170 only; hard + a tracking column at t=160
+  strikes:   # told columns (data t = the tell's start, 1.0 s before the strike): t=138 through the t=136 Chimera wing's lane, t=152 left and t=170 right of the centre; easy t=138 and 170 only; hard + a tracking column at t=160
     - {t: 137, x: 240}
     - {t: 151, x: 120, skip: [easy]}
     - {t: 159, x: 240, track: true, skip: [easy, medium]}
@@ -267,7 +267,7 @@ waves:
     paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
     notes: "The storm edge darkens; lightning flashes (no damage) from t=130"
   - {t: 133.5, formation: line abreast, enemy: talon, count: 2, from: front, speed: 130, notes: "Step B2: a firing Talon pair on the offbeat (the beam erases the fodder within a second)"}
-  - {t: 135, formation: V-wing, enemy: chimera, count: 6, from: front, notes: "The first lightning **strike** at t=138 (telegraph from t=137) lands among them"}
+  - {t: 136, formation: V-wing, enemy: chimera, count: 6, from: front, notes: "The first lightning **strike** at t=138 (telegraph from t=137) lands among them (step B3: t=136, not 135: from t=135 the wing had swooped past the column before it struck; the tell 1.0 s after its entry)"}
   - {t: 139, formation: stream, enemy: lamprey, count: 5, from: front, interval: 0.5, notes: "Step B2: t=139, not 140 (easy's pause after the struck wing)"}
   - {t: 143, formation: column, enemy: gilded-gunship, count: 1, from: front, notes: About 6 Darts}
   - t: 146
@@ -342,7 +342,7 @@ radio:  # trigger: t or event; the README's 16 lines (the 1 s rule: ≈ 12 chara
   - {t: 67, speaker: Okafor, line: "Helium-3 harvesters ahead, skimming the bands. That's Vorne's fuel. Bring down six."}
   - {t: 90, speaker: Varga, line: "Spore bombers under the harvesters. Vrell, still flying with the gold ones. For now."}
   - {event: secondary-objective, speaker: Okafor, line: "Six harvesters down. His fleet will feel that at Io.", notes: {trigger: "Secondary met (`secondary-objective`, the sixth harvester down)"}}
-  - {event: enemy-escaped, enemy: harvester, speaker: Varga, line: "Too many got through. Their fuel reaches the refineries.", notes: {trigger: "Secondary failed (the third harvester escapes; step B2: no secondary-failed cue is built, so it plays at the first harvester away until one is, pending)"}}
+  - {event: secondary-failed, speaker: Varga, line: "Too many got through. Their fuel reaches the refineries.", notes: {trigger: "Secondary failed (`secondary-failed`: the third harvester away; easy the fourth, hard the second)"}}
   - {t: 118, speaker: Rook, requires: escort, line: "Homing's earning its keep. Those clouds are full of them."}
   - {t: 128, speaker: Varga, line: "A white line drawn down the sky means lightning. Get out of it. A second later it strikes."}
   - {event: first-strike-kill, speaker: Rook, requires: escort, line: "Ha! The sky's on our side.", notes: {trigger: "The first enemy killed by a strike (event, bark)"}}

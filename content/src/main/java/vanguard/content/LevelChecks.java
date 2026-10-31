@@ -859,6 +859,10 @@ final class LevelChecks extends ContentChecks {
             } else if ((event == LevelData.CueEvent.BOSS_ARRIVAL || event == LevelData.CueEvent.BOSS_DIVE)
                     && level.boss().isEmpty()) {
                 problem(level, field, "boss-arrival or boss-dive in a level without a boss");
+            } else if (event == LevelData.CueEvent.SECONDARY_FAILED
+                    && level.objectives().secondary().isEmpty()) {
+                // M10 part B (Level 36): the secondary's failure needs a secondary.
+                problem(level, field, "secondary-failed in a level without a secondary objective");
             }
         }
         if (!level.noSurfaceZones().isEmpty() && !burrows) {

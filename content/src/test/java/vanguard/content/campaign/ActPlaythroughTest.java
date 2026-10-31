@@ -35,8 +35,9 @@ import vanguard.content.Difficulty;
  * mixed route nearest the routes' mean). M9 part F (step F3): Level 33 follows (the plan's L33 visit buys nothing: 20 of
  * 20 MW, the leeches' drain flown with the power budget). M9 part G (step G3): Level 34 follows (the plan's L34 visit
  * buys nothing: saving for the Mk V). M9 part H (step H3): Level 35 follows (the plan's L35 visit: the Mk V "Helix",
- * both pods to L4), and its win ends Act 5 with its outro and the release ({@link CampaignRoute#releaseEnd}, Level 36
- * not built). The credits and the fit per visit are printed per act (the playthrough sheet in the test report). Round 34, P3 = A: the credits at each act's end lie
+ * both pods to L4), and its win ends Act 5 with its outro. M10 part B (step B3): Act 6's intro follows and Level 36 (the
+ * plan's L36 visit: the Tesla Coil Pod L2 on the left wing), whose win ends the branch's release ({@link
+ * CampaignRoute#releaseEnd}: Level 37 not built; part H moves it to Level 42). The credits and the fit per visit are printed per act (the playthrough sheet in the test report). Round 34, P3 = A: the credits at each act's end lie
  * within the balance plan's tolerance of the expert's bound, the starting credits plus each level's perfect run × the
  * difficulty's income × the expert's collection, with the expert's grade bonus, less the purchases and repairs paid
  * ({@link Playthrough#bound}); on hard up to the plan's {@code hard_under} below it. Rook's ejections and the refused
@@ -51,8 +52,8 @@ class ActPlaythroughTest {
      */
     private static final List<Integer> ACT_ENDS = List.of(7, 14, 21, 28, 35);
 
-    /** M9 part H: the last level built (the release ends after Act 5's outro, Level 35's win). */
-    private static final int LAST = 35;
+    /** M10 part B: the last level built (the branch's release ends after Level 36's win, Level 37 not built). */
+    private static final int LAST = 36;
 
     /** M9 part B: the level whose win brings Rook back (his rescue at Level 29). */
     private static final int RESCUE = 29;
@@ -119,16 +120,9 @@ class ActPlaythroughTest {
                     assertTrue(inside, message);
                 }
                 visits.clear();
-                if (level == LAST) {
-                    // M9 part H (step H3): Act 5's outro ended the release; M10 part B (step B2): Level 36 is built, so
-                    // it leads on to Act 6 (the playthrough to Level 36 is step B3's).
-                    assertFalse(CampaignRoute.releaseEnd(CONTENT, campaign), "Act 5's outro leads on to Act 6");
-                    assertTrue(CampaignRoute.launch(CONTENT, campaign).isPresent(), "Level 36 is built");
-                    playthrough.autosave();
-                    continue;
-                }
                 // After the outro: the next act's intro briefing before its first level (M8 part B: Act 3's too,
-                // Act 4's intro before Level 22; M9 part B: Act 5's before Level 29).
+                // Act 4's intro before Level 22; M9 part B: Act 5's before Level 29; M10 part B: Act 6's before Level
+                // 36, Level 36 built).
                 assertFalse(CampaignRoute.releaseEnd(CONTENT, campaign), "Act " + act + "'s outro ends nothing");
                 assertInstanceOf(
                         CampaignRoute.Step.Briefing.class,
@@ -165,16 +159,19 @@ class ActPlaythroughTest {
         }
         assertEquals(LAST + 1, playthrough.campaign().nextLevel());
         Campaign campaign = playthrough.campaign();
+        // M10 part B (step B3): Act 6 so far (Level 36), its sheet printed; its bound is checked at its end (Level 42).
+        report(difficulty, 6, visits, campaign);
         // M9 part C (step C3): Level 30 flown with Rook back in the slot (the mine-line autopilot, MinePlay); M9 part D
         // (step D3): Level 31 after it (the tug escort); M9 part E (step E3): Level 32 after it (the tunnels, on its
         // playthrough route); M9 part F (step F3): Level 33 after it (the Leech Field); M9 part G (step G3): Level 34
         // after it (the Salvage Run); M9 part H (step H3): Level 35 after it (the Iron Sovereign, RingPlay), whose win
-        // ends Act 5 with its outro and the release (the game's end card after it). Rook's ejections are printed, not
+        // ends Act 5 with its outro. Rook's ejections are printed, not
         // failed (he may eject and is repaired at the next visit).
-        assertFalse(campaign.rookMissing(), difficulty + ": Rook in his slot after Level 35");
-        assertEquals(LAST, CampaignRoute.actEnd(CONTENT, campaign).orElseThrow().level(), "Level 35 ends Act 5");
-        // M10 part B (step B2): Level 36 is built, so Act 5's outro leads on to Act 6 (the flight on is step B3's).
-        assertFalse(CampaignRoute.releaseEnd(CONTENT, campaign), "Act 5's outro leads on to Level 36");
+        // M10 part B (step B3): Level 36 after Act 6's intro (the dive, DivePlay); its win ends no act (Act 6 ends at
+        // Level 42), so no outro, and the branch's release ends after its debrief (Level 37 not built).
+        assertFalse(campaign.rookMissing(), difficulty + ": Rook in his slot after Level 36");
+        assertTrue(CampaignRoute.actEnd(CONTENT, campaign).isEmpty(), "Level 36 ends no act");
+        assertTrue(CampaignRoute.releaseEnd(CONTENT, campaign), "the branch's release ends after Level 36");
         assertTrue(
                 playthrough.problems().isEmpty(),
                 difficulty + ": the balance plan at the visits: " + playthrough.problems());

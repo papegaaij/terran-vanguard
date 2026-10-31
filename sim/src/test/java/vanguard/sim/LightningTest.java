@@ -108,9 +108,14 @@ class LightningTest {
         SimEvents events = new SimEvents(16);
         lightning.step(0, Ship.START_X, events);
         assertTrue(lightning.told(0));
+        hazards.at(205, 120);
         assertTrue(hazards.clearOfStorm(205, 120, lightning, null));
         assertTrue(Math.abs(hazards.x() - 200) >= 20 + 15 + RookHazards.GAP - 1e-9);
         assertTrue(hazards.x() > 200, "to the nearer side");
         assertEquals(120, hazards.y(), 1e-9);
+        // M10 part B, step B3: his slot carried over the column's middle by the ship's drift, he stays on his side
+        hazards.at(150, 120);
+        assertTrue(hazards.clearOfStorm(205, 120, lightning, null));
+        assertTrue(hazards.x() <= 200 - (20 + 15 + RookHazards.GAP) + 1e-9, "never across the told column");
     }
 }

@@ -409,6 +409,8 @@ final class ScriptRules {
                         case CORE_LOW -> CueTrigger.CORE_LOW;
                         // M10 part B (Level 36): the first enemy a lightning strike kills.
                         case FIRST_STRIKE_KILL -> CueTrigger.FIRST_STRIKE_KILL;
+                        // M10 part B (Level 36): the secondary objective failed.
+                        case SECONDARY_FAILED -> CueTrigger.SECONDARY_FAILED;
                     })
                     .orElse(CueTrigger.TIME);
             // Part G (LevelRules): a boss-destroyed cue's subject is the boss, a timeout cue its own

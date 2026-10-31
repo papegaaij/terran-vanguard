@@ -24,7 +24,7 @@ import vanguard.sim.WaveSpec;
 class CloudDiversDataTest {
     private static final Content CONTENT = ContentLoader.fromClasspath();
 
-    private static final String KEY = Level36Plan.LEVEL;
+    private static final String KEY = Level36Test.LEVEL;
 
     private static LevelScript level(Difficulty difficulty) {
         return SimSpecs.level(CONTENT, KEY, difficulty);
@@ -160,6 +160,18 @@ class CloudDiversDataTest {
                 radio.stream().filter(cue -> cue.trigger() == CueTrigger.SECRET).count());
         assertEquals(
                 0, radio.stream().filter(cue -> cue.speaker().equals("Vorne")).count(), "Vorne is silent here");
+        // step B3: Varga's "Too many got through" waits for the secondary's failure, not the first harvester away
+        RadioCue failed = radio.stream()
+                .filter(cue -> cue.trigger() == CueTrigger.SECONDARY_FAILED)
+                .findFirst()
+                .orElseThrow();
+        assertEquals("Varga", failed.speaker());
+        assertTrue(failed.line().startsWith("Too many got through"));
+        assertEquals(
+                0,
+                radio.stream()
+                        .filter(cue -> cue.trigger() == CueTrigger.ENEMY_ESCAPED)
+                        .count());
     }
 
     @Test
