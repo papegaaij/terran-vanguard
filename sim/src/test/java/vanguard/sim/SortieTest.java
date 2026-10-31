@@ -101,7 +101,7 @@ class SortieTest {
 
     @Test
     void sideAndRearWavesShowAnEdgeWarningAhead() {
-        var rear = new WaveSpec(
+        var rear = WaveSpec.of(
                 10,
                 LINE_ABREAST,
                 SKITTER,
@@ -399,7 +399,7 @@ class SortieTest {
 
     @Test
     void theLastUnitOfAWaveDropsTheCarriedPickup() {
-        var carrying = new WaveSpec(
+        var carrying = WaveSpec.of(
                 0,
                 LINE_ABREAST,
                 NEEDLER,
@@ -602,7 +602,7 @@ class SortieTest {
         for (int t = 0; t < 70; t += 10) {
             waves.add(wave(t + 1, SNAKE, SKITTER, 6, FRONT, LEFT));
             waves.add(wave(t + 3, WaveSpec.Formation.V_WING, NEEDLER, 5, FRONT, NONE));
-            waves.add(new WaveSpec(
+            waves.add(WaveSpec.of(
                     t + 6,
                     WaveSpec.Formation.CIRCLE,
                     NEEDLER,

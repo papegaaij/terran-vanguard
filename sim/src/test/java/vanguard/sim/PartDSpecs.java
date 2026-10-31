@@ -58,21 +58,9 @@ final class PartDSpecs {
 
     /** A rear ambush of {@code count} {@code wraith}s at {@code t}. */
     static WaveSpec ambush(double t, EnemySpec wraith, int count) {
-        return new WaveSpec(
-                t,
-                WaveSpec.Formation.REAR_AMBUSH,
-                wraith,
-                count,
-                WaveSpec.Entry.REAR,
-                WaveSpec.Edge.NONE,
-                Optional.empty(),
-                Optional.empty(),
-                1,
-                Optional.empty(),
-                Optional.empty(),
-                List.of(),
-                Optional.empty(),
-                List.of());
+        return WaveSpec.builder(
+                        t, WaveSpec.Formation.REAR_AMBUSH, wraith, count, WaveSpec.Entry.REAR, WaveSpec.Edge.NONE)
+                .build();
     }
 
     /**
@@ -89,22 +77,10 @@ final class PartDSpecs {
 
     /** A swarm of {@code count} motes at {@code t} on {@link #ROUTE}, looping back {@code loops} times (0: none). */
     static WaveSpec swarm(double t, int count, int loops) {
-        return new WaveSpec(
-                t,
-                WaveSpec.Formation.SWARM,
-                MOTE,
-                count,
-                WaveSpec.Entry.FRONT,
-                WaveSpec.Edge.NONE,
-                Optional.empty(),
-                Optional.empty(),
-                1,
-                Optional.empty(),
-                Optional.empty(),
-                List.of(),
-                Optional.empty(),
-                List.of(ROUTE),
-                loops == 0 ? Optional.empty() : Optional.of(new WaveSpec.LoopBack(1.5, List.of(), loops)));
+        return WaveSpec.builder(t, WaveSpec.Formation.SWARM, MOTE, count, WaveSpec.Entry.FRONT, WaveSpec.Edge.NONE)
+                .paths(List.of(ROUTE))
+                .loopBack(loops == 0 ? Optional.empty() : Optional.of(new WaveSpec.LoopBack(1.5, List.of(), loops)))
+                .build();
     }
 
     /** A level of {@code seconds} at 190 px/s with {@code waves}. */

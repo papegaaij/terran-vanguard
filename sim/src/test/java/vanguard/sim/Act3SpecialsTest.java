@@ -215,25 +215,13 @@ class Act3SpecialsTest {
     }
 
     private static Sortie chainSortie(SpecialSpec special) {
-        WaveSpec chain = new WaveSpec(
-                1,
-                WaveSpec.Formation.SNAKE,
-                FarsideTest.COILWYRM,
-                1,
-                WaveSpec.Entry.FRONT,
-                WaveSpec.Edge.NONE,
-                Optional.empty(),
-                Optional.empty(),
-                1,
-                Optional.empty(),
-                Optional.empty(),
-                List.of(),
-                Optional.empty(),
-                List.of(List.of(
+        WaveSpec chain = WaveSpec.builder(
+                        1, WaveSpec.Formation.SNAKE, FarsideTest.COILWYRM, 1, WaveSpec.Entry.FRONT, WaveSpec.Edge.NONE)
+                .paths(List.of(List.of(
                         new WaveSpec.At(PlayField.WIDTH / 2.0, -60),
                         new WaveSpec.At(PlayField.WIDTH / 2.0, 300),
-                        new WaveSpec.At(PlayField.WIDTH / 2.0, 700))),
-                Optional.empty());
+                        new WaveSpec.At(PlayField.WIDTH / 2.0, 700))))
+                .build();
         LevelScript level = LevelScript.builder(6, 1)
                 .sections(List.of(new Section(40, 130)))
                 .waves(List.of(chain))

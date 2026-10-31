@@ -42,7 +42,7 @@ final class Act5FSpecs {
 
     /** A stream of {@code count} {@code unit}s 0.5 s apart from {@code entry} (an edge for the sides). */
     static WaveSpec stream(double t, EnemySpec unit, int count, WaveSpec.Entry entry, WaveSpec.Edge edge) {
-        return new WaveSpec(
+        return WaveSpec.of(
                 t,
                 WaveSpec.Formation.STREAM,
                 unit,
@@ -62,21 +62,10 @@ final class Act5FSpecs {
      * route: Level 33's prey streams enter at their wing's height).
      */
     static WaveSpec sideStreamAt(double t, EnemySpec unit, int count, WaveSpec.Edge edge, double depth) {
-        return new WaveSpec(
-                t,
-                WaveSpec.Formation.STREAM,
-                unit,
-                count,
-                WaveSpec.Entry.SIDES,
-                edge,
-                Optional.empty(),
-                Optional.empty(),
-                1,
-                Optional.empty(),
-                Optional.of(0.5),
-                List.of(),
-                Optional.empty(),
-                List.of(List.of(new WaveSpec.At(-40, depth), new WaveSpec.At(PlayField.WIDTH + 40, depth))));
+        return WaveSpec.builder(t, WaveSpec.Formation.STREAM, unit, count, WaveSpec.Entry.SIDES, edge)
+                .intervalSeconds(Optional.of(0.5))
+                .paths(List.of(List.of(new WaveSpec.At(-40, depth), new WaveSpec.At(PlayField.WIDTH + 40, depth))))
+                .build();
     }
 
     /** A prey V-wing of {@code count} Talons from the front at {@code t}: it settles on its hold, then leaves up. */

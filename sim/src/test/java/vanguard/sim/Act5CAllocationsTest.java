@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
-import java.util.Optional;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -16,22 +15,15 @@ class Act5CAllocationsTest {
     private static final int FIRE = Command.FIRE.bit();
 
     static LevelScript level() {
-        WaveSpec serpent = new WaveSpec(
-                5,
-                WaveSpec.Formation.SNAKE,
-                Act5CSpecs.railSerpent(14),
-                1,
-                WaveSpec.Entry.FRONT,
-                WaveSpec.Edge.NONE,
-                Optional.empty(),
-                Optional.empty(),
-                1,
-                Optional.empty(),
-                Optional.empty(),
-                List.of(),
-                Optional.empty(),
-                List.of(List.of(new WaveSpec.At(560, 200), new WaveSpec.At(-1200, 200))),
-                Optional.empty());
+        WaveSpec serpent = WaveSpec.builder(
+                        5,
+                        WaveSpec.Formation.SNAKE,
+                        Act5CSpecs.railSerpent(14),
+                        1,
+                        WaveSpec.Entry.FRONT,
+                        WaveSpec.Edge.NONE)
+                .paths(List.of(List.of(new WaveSpec.At(560, 200), new WaveSpec.At(-1200, 200))))
+                .build();
         return LevelScript.builder(30, 5)
                 .sections(List.of(new Section(30, 80)))
                 .waves(List.of(

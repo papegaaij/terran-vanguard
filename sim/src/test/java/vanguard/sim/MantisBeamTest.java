@@ -36,20 +36,8 @@ class MantisBeamTest {
     }
 
     private static Sortie sortie(EnemySpec mantis, WaveSpec.Formation formation, WaveSpec.Edge edge, int count) {
-        WaveSpec wave = new WaveSpec(
-                3.5,
-                formation,
-                mantis,
-                count,
-                WaveSpec.Entry.SIDES,
-                edge,
-                Optional.empty(),
-                Optional.empty(),
-                1,
-                Optional.empty(),
-                Optional.empty(),
-                List.of(),
-                Optional.empty());
+        WaveSpec wave = WaveSpec.builder(3.5, formation, mantis, count, WaveSpec.Entry.SIDES, edge)
+                .build();
         LevelScript level = LevelScript.builder(6, 1)
                 .sections(List.of(new Section(40, 130)))
                 .waves(List.of(wave))

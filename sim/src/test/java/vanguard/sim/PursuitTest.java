@@ -27,7 +27,7 @@ class PursuitTest {
 
     /** A pursuit of {@code count} motes at {@code t} with {@code block} ("top (behind)": a rear entry). */
     static WaveSpec pursuit(double t, int count, WaveSpec.Pursuit block) {
-        return new WaveSpec(
+        return WaveSpec.of(
                         t,
                         WaveSpec.Formation.SWARM,
                         PartDSpecs.MOTE,

@@ -82,22 +82,10 @@ class EelSwarmTest {
 
     /** One eel at {@code t} straight down at {@link #LANE}, carrying {@code carried}. */
     static WaveSpec wave(double t, EnemySpec eel, List<WaveSpec.Carried> carried) {
-        return new WaveSpec(
-                t,
-                WaveSpec.Formation.SNAKE,
-                eel,
-                1,
-                WaveSpec.Entry.FRONT,
-                WaveSpec.Edge.NONE,
-                Optional.empty(),
-                Optional.empty(),
-                1,
-                Optional.empty(),
-                Optional.empty(),
-                carried,
-                Optional.empty(),
-                List.of(List.of(new WaveSpec.At(LANE, -60), new WaveSpec.At(LANE, 900))),
-                Optional.empty());
+        return WaveSpec.builder(t, WaveSpec.Formation.SNAKE, eel, 1, WaveSpec.Entry.FRONT, WaveSpec.Edge.NONE)
+                .carried(carried)
+                .paths(List.of(List.of(new WaveSpec.At(LANE, -60), new WaveSpec.At(LANE, 900))))
+                .build();
     }
 
     static LevelScript level(List<WaveSpec> waves) {

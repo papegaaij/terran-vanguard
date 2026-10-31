@@ -101,22 +101,12 @@ class TugTargetingTest {
 
     /** A rear stream of Darts climbing at x {@code x} before their chase. */
     private static WaveSpec rearDarts(double t, int count, double x) {
-        return new WaveSpec(
-                t,
-                WaveSpec.Formation.STREAM,
-                Act5CSpecs.DART,
-                count,
-                WaveSpec.Entry.REAR,
-                WaveSpec.Edge.LEFT,
-                Optional.empty(),
-                Optional.of(3.0),
-                1,
-                Optional.empty(),
-                Optional.of(0.5),
-                List.of(),
-                Optional.empty(),
-                List.of(List.of(new WaveSpec.At(x, 600), new WaveSpec.At(x, -60))),
-                Optional.empty());
+        return WaveSpec.builder(
+                        t, WaveSpec.Formation.STREAM, Act5CSpecs.DART, count, WaveSpec.Entry.REAR, WaveSpec.Edge.LEFT)
+                .warningSeconds(Optional.of(3.0))
+                .intervalSeconds(Optional.of(0.5))
+                .paths(List.of(List.of(new WaveSpec.At(x, 600), new WaveSpec.At(x, -60))))
+                .build();
     }
 
     @Test

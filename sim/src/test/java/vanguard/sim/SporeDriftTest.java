@@ -152,20 +152,9 @@ class SporeDriftTest {
 
     @Test
     void aWhirlClusterSpiralsOutFromItsPointAndLeavesThroughTheBottom() {
-        WaveSpec cluster = new WaveSpec(
-                0,
-                WaveSpec.Formation.WHIRL_CLUSTER,
-                seed(Optional.empty()),
-                6,
-                FRONT,
-                NONE,
-                Optional.empty(),
-                Optional.empty(),
-                1,
-                Optional.empty(),
-                Optional.empty(),
-                List.of(),
-                Optional.of(new WaveSpec.At(240, 100)));
+        WaveSpec cluster = WaveSpec.builder(0, WaveSpec.Formation.WHIRL_CLUSTER, seed(Optional.empty()), 6, FRONT, NONE)
+                .at(Optional.of(new WaveSpec.At(240, 100)))
+                .build();
         var sortie = sortie(level(20, List.of(cluster)));
 
         run(sortie, 0.3, Command.LEFT.bit(), SimEvents.Type.ENEMY_FIRED);
@@ -575,20 +564,15 @@ class SporeDriftTest {
                 30,
                 List.of(
                         wave(0, WaveSpec.Formation.CONVOY, BOMBER, 3, FRONT, NONE),
-                        new WaveSpec(
-                                1,
-                                WaveSpec.Formation.WHIRL_CLUSTER,
-                                seed(Optional.of(new EnemySpec.DeathBurst(3, 90, 4))),
-                                8,
-                                FRONT,
-                                NONE,
-                                Optional.empty(),
-                                Optional.empty(),
-                                1,
-                                Optional.empty(),
-                                Optional.empty(),
-                                List.of(),
-                                Optional.of(new WaveSpec.At(240, 100)))),
+                        WaveSpec.builder(
+                                        1,
+                                        WaveSpec.Formation.WHIRL_CLUSTER,
+                                        seed(Optional.of(new EnemySpec.DeathBurst(3, 90, 4))),
+                                        8,
+                                        FRONT,
+                                        NONE)
+                                .at(Optional.of(new WaveSpec.At(240, 100)))
+                                .build()),
                 List.of(),
                 List.of(),
                 new Secondary(0, 50, List.of(), "spore-bomber"),

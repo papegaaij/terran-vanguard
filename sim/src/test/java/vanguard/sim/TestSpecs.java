@@ -115,19 +115,7 @@ final class TestSpecs {
             int count,
             WaveSpec.Entry entry,
             WaveSpec.Edge edge) {
-        return new WaveSpec(
-                t,
-                formation,
-                enemy,
-                count,
-                entry,
-                edge,
-                Optional.empty(),
-                Optional.empty(),
-                1,
-                Optional.empty(),
-                Optional.empty(),
-                List.of());
+        return WaveSpec.builder(t, formation, enemy, count, entry, edge).build();
     }
 
     /** A one-section level of {@code seconds} at 130 px/s without a launch, ground objects or radio. */

@@ -44,7 +44,7 @@ class SpiralNautilusTest {
 
     /** A {@code circle} of {@code count} at {@code t} holding {@code hold} s. */
     static WaveSpec pair(double t, EnemySpec enemy, int count, double hold) {
-        return new WaveSpec(
+        return WaveSpec.of(
                 t,
                 WaveSpec.Formation.CIRCLE,
                 enemy,
@@ -117,7 +117,7 @@ class SpiralNautilusTest {
                 "a coil is a plain air unit's");
         assertThrows(
                 IllegalArgumentException.class,
-                () -> open(new WaveSpec(
+                () -> open(WaveSpec.of(
                         0,
                         WaveSpec.Formation.CIRCLE,
                         NAUTILUS,

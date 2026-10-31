@@ -139,7 +139,7 @@ class DomesStandingTest {
     /** The level seconds of the first bomb dropped by a bomber entering from the right at 1 s; {@code entered[0]} when it came on the field. */
     private static double firstDrop(ObjectiveSpec.GroundAllies allies, double[] entered) {
         Sortie sortie = SiegeSpecs.sortie(SiegeSpecs.level(
-                List.of(new WaveSpec(
+                List.of(WaveSpec.of(
                         1,
                         WaveSpec.Formation.STREAM,
                         SiegeSpecs.BOMBER,

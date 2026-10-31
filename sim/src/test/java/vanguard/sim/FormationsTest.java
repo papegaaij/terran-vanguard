@@ -33,7 +33,7 @@ class FormationsTest {
             WaveSpec.Entry entry,
             double hold,
             int breakGroup) {
-        return new WaveSpec(
+        return WaveSpec.of(
                 10,
                 formation,
                 enemy,
@@ -78,7 +78,7 @@ class FormationsTest {
 
     @Test
     void aWaveSpeedReplacesTheEnemysOwn() {
-        var slow = new WaveSpec(
+        var slow = WaveSpec.of(
                 75,
                 WaveSpec.Formation.SNAKE,
                 SKITTER,
@@ -136,7 +136,7 @@ class FormationsTest {
 
     @Test
     void aStreamTricklesInFromAlternatingEdges() {
-        var stream = new WaveSpec(
+        var stream = WaveSpec.of(
                 10,
                 WaveSpec.Formation.STREAM,
                 SKITTER,
@@ -194,7 +194,7 @@ class FormationsTest {
 
     @Test
     void theCarriedPickupGoesToTheLastUnit() {
-        var wave = new WaveSpec(
+        var wave = WaveSpec.of(
                 10,
                 WaveSpec.Formation.PINCER,
                 NEEDLER,

@@ -36,24 +36,9 @@ class DriftjellyTest {
 
     /** A field wave of {@code count} units of {@code enemy} at {@code t}. */
     static WaveSpec field(double t, EnemySpec enemy, int count, WaveSpec.Field area) {
-        return new WaveSpec(
-                t,
-                WaveSpec.Formation.FIELD,
-                enemy,
-                count,
-                WaveSpec.Entry.FRONT,
-                WaveSpec.Edge.NONE,
-                Optional.empty(),
-                Optional.empty(),
-                1,
-                Optional.empty(),
-                Optional.empty(),
-                List.of(),
-                Optional.empty(),
-                List.of(),
-                Optional.empty(),
-                "",
-                Optional.of(area));
+        return WaveSpec.builder(t, WaveSpec.Formation.FIELD, enemy, count, WaveSpec.Entry.FRONT, WaveSpec.Edge.NONE)
+                .field(Optional.of(area))
+                .build();
     }
 
     /** One section of {@code seconds} scrolling at {@code speed} px/s with the waves, over water. */
@@ -289,26 +274,10 @@ class DriftjellyTest {
     @Test
     void aFieldWaveHasItsAreaAndOnlyAFieldWaveHasOne() {
         WaveSpec.Field area = new WaveSpec.Field(240, 300, 200, 42, 0);
-        assertThrows(
-                IllegalArgumentException.class,
-                () -> new WaveSpec(
-                        0,
-                        WaveSpec.Formation.SINGLE,
-                        jelly(),
-                        1,
-                        WaveSpec.Entry.FRONT,
-                        WaveSpec.Edge.NONE,
-                        Optional.empty(),
-                        Optional.empty(),
-                        1,
-                        Optional.empty(),
-                        Optional.empty(),
-                        List.of(),
-                        Optional.empty(),
-                        List.of(),
-                        Optional.empty(),
-                        "",
-                        Optional.of(area)));
+        assertThrows(IllegalArgumentException.class, () -> WaveSpec.builder(
+                        0, WaveSpec.Formation.SINGLE, jelly(), 1, WaveSpec.Entry.FRONT, WaveSpec.Edge.NONE)
+                .field(Optional.of(area))
+                .build());
         assertThrows(
                 IllegalArgumentException.class,
                 () -> TestSpecs.wave(

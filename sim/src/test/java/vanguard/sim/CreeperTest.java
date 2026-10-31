@@ -32,21 +32,9 @@ class CreeperTest {
 
     /** A convoy of {@code count} walking from the left edge across the upper screen (screen points, y down). */
     private static WaveSpec convoy(double t, EnemySpec enemy, int count) {
-        return new WaveSpec(
-                t,
-                WaveSpec.Formation.CONVOY,
-                enemy,
-                count,
-                WaveSpec.Entry.FRONT,
-                WaveSpec.Edge.NONE,
-                Optional.empty(),
-                Optional.empty(),
-                1,
-                Optional.empty(),
-                Optional.empty(),
-                List.of(),
-                Optional.empty(),
-                List.of(List.of(new WaveSpec.At(-40, 150), new WaveSpec.At(PlayField.WIDTH + 200, 150))));
+        return WaveSpec.builder(t, WaveSpec.Formation.CONVOY, enemy, count, WaveSpec.Entry.FRONT, WaveSpec.Edge.NONE)
+                .paths(List.of(List.of(new WaveSpec.At(-40, 150), new WaveSpec.At(PlayField.WIDTH + 200, 150))))
+                .build();
     }
 
     /** A slow-scrolling level, so the convoy stays on the screen; nothing hurts the ship. */

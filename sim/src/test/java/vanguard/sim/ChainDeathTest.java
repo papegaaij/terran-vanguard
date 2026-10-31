@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -18,22 +17,10 @@ class ChainDeathTest {
     private static final int FIRE = Command.FIRE.bit();
 
     private static WaveSpec chainWave(double x) {
-        return new WaveSpec(
-                1,
-                WaveSpec.Formation.SNAKE,
-                FarsideTest.COILWYRM,
-                1,
-                WaveSpec.Entry.FRONT,
-                WaveSpec.Edge.NONE,
-                Optional.empty(),
-                Optional.empty(),
-                1,
-                Optional.empty(),
-                Optional.empty(),
-                List.of(),
-                Optional.empty(),
-                List.of(List.of(new WaveSpec.At(x, -60), new WaveSpec.At(x, 300), new WaveSpec.At(x, 700))),
-                Optional.empty());
+        return WaveSpec.builder(
+                        1, WaveSpec.Formation.SNAKE, FarsideTest.COILWYRM, 1, WaveSpec.Entry.FRONT, WaveSpec.Edge.NONE)
+                .paths(List.of(List.of(new WaveSpec.At(x, -60), new WaveSpec.At(x, 300), new WaveSpec.At(x, 700))))
+                .build();
     }
 
     private static Sortie sortie() {

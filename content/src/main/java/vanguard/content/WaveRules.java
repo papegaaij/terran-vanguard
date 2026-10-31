@@ -81,40 +81,41 @@ final class WaveRules {
             WaveSpec spec = PartGRules.lanesAndPairs(
                     wave,
                     change,
-                    new WaveSpec(
+                    // M5 part G: a cross enters from all four edges, by its lanes; M8 part E: a wall's nests at the
+                    // front, with the ground.
+                    WaveSpec.builder(
                                     wave.t(),
                                     formation(group.formation()),
                                     unit,
                                     count,
-                                    // M5 part G: a cross enters from all four edges, by its lanes; M8 part E: a
-                                    // wall's nests at the front, with the ground.
                                     TrenchRules.entry(wave, PartGRules.entry(entry)),
-                                    edge.map(WaveRules::edge).orElse(WaveSpec.Edge.NONE),
-                                    change.flatMap(LevelData.Change::hold).or(wave::hold),
-                                    warning,
-                                    breakGroup,
-                                    wave.speed(),
-                                    wave.interval(),
-                                    pickups,
-                                    wave.at().map(at -> new WaveSpec.At(at.x(), at.y())),
-                                    wave.paths().orElse(List.of()).stream()
-                                            .map(path -> path.stream()
+                                    edge.map(WaveRules::edge).orElse(WaveSpec.Edge.NONE))
+                            .holdSeconds(change.flatMap(LevelData.Change::hold).or(wave::hold))
+                            .warningSeconds(warning)
+                            .breakGroup(breakGroup)
+                            .speed(wave.speed())
+                            .intervalSeconds(wave.interval())
+                            .carried(pickups)
+                            .at(wave.at().map(at -> new WaveSpec.At(at.x(), at.y())))
+                            .paths(wave.paths().orElse(List.of()).stream()
+                                    .map(path -> path.stream()
+                                            .map(point -> new WaveSpec.At(point.x(), point.y()))
+                                            .toList())
+                                    .toList())
+                            .loopBack(wave.loopBack()
+                                    .map(back -> new WaveSpec.LoopBack(
+                                            back.after(),
+                                            back.path().orElse(List.of()).stream()
                                                     .map(point -> new WaveSpec.At(point.x(), point.y()))
-                                                    .toList())
-                                            .toList(),
-                                    wave.loopBack()
-                                            .map(back -> new WaveSpec.LoopBack(
-                                                    back.after(),
-                                                    back.path().orElse(List.of()).stream()
-                                                            .map(point -> new WaveSpec.At(point.x(), point.y()))
-                                                            .toList(),
-                                                    // M5 part D: a swarm's loop-backs, a difficulty's loops instead.
-                                                    change.flatMap(LevelData.Change::loops)
-                                                            .orElse(back.count().orElse(1)))),
-                                    wave.tag().orElse(""),
-                                    field(wave, unit))
+                                                    .toList(),
+                                            // M5 part D: a swarm's loop-backs, a difficulty's loops instead.
+                                            change.flatMap(LevelData.Change::loops)
+                                                    .orElse(back.count().orElse(1)))))
+                            .tag(wave.tag().orElse(""))
+                            .field(field(wave, unit))
                             // M5 part F: a circle's sense of orbit (Level 12's eye).
-                            .clockwise(wave.turnsClockwise()));
+                            .clockwise(wave.turnsClockwise())
+                            .build());
             // M7 part G: a pursuit wave's block (Level 20's Mote Swarm, RetreatRules); M8 part E: a cave's or the
             // walls'
             // mount (TrenchRules).

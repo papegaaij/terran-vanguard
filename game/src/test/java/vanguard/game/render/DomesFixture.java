@@ -76,7 +76,7 @@ public final class DomesFixture {
                 160,
                 40);
         List<WaveSpec> waves = bombers > 0
-                ? List.of(new WaveSpec(
+                ? List.of(WaveSpec.of(
                         0,
                         WaveSpec.Formation.LINE_ABREAST,
                         SimSpecs.enemy(CONTENT, "spore-bomber", Difficulty.MEDIUM, Optional.empty()),

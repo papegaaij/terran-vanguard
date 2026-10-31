@@ -93,7 +93,7 @@ class BombRunTest {
 
     @Test
     void aSideEntryKeepsItsEntryRow() {
-        Sortie sortie = SiegeSpecs.sortie(SiegeSpecs.level(List.of(new WaveSpec(
+        Sortie sortie = SiegeSpecs.sortie(SiegeSpecs.level(List.of(WaveSpec.of(
                 1,
                 WaveSpec.Formation.STREAM,
                 SiegeSpecs.BOMBER,

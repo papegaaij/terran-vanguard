@@ -119,7 +119,7 @@ public final class SiegeUnitsFixture {
 
     /** A Herald at t=0 (it hovers over the ship's column) and the ground target entering beside it. */
     public static Sortie herald() {
-        WaveSpec herald = new WaveSpec(
+        WaveSpec herald = WaveSpec.of(
                 0,
                 WaveSpec.Formation.SINGLE,
                 HERALD,
@@ -138,21 +138,10 @@ public final class SiegeUnitsFixture {
     /** A Shellback at t=0 walking straight down the ship's column. */
     public static Sortie shellback() {
         double x = PlayField.WIDTH / 2.0;
-        WaveSpec walker = new WaveSpec(
-                0,
-                WaveSpec.Formation.CONVOY,
-                SHELLBACK,
-                1,
-                WaveSpec.Entry.FRONT,
-                WaveSpec.Edge.NONE,
-                Optional.empty(),
-                Optional.empty(),
-                1,
-                Optional.empty(),
-                Optional.empty(),
-                List.of(),
-                Optional.empty(),
-                List.of(List.of(new WaveSpec.At(x, -60), new WaveSpec.At(x, 900))));
+        WaveSpec walker = WaveSpec.builder(
+                        0, WaveSpec.Formation.CONVOY, SHELLBACK, 1, WaveSpec.Entry.FRONT, WaveSpec.Edge.NONE)
+                .paths(List.of(List.of(new WaveSpec.At(x, -60), new WaveSpec.At(x, 900))))
+                .build();
         return sortie(level(List.of(walker), List.of(), SHELLBACK_SPEED));
     }
 

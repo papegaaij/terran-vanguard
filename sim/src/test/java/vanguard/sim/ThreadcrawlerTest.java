@@ -339,22 +339,15 @@ class ThreadcrawlerTest {
                 TestSpecs.LOADOUT,
                 LevelScript.builder(6, 1)
                         .sections(List.of(new Section(40, 130)))
-                        .waves(List.of(new WaveSpec(
-                                1,
-                                WaveSpec.Formation.SNAKE,
-                                FarsideTest.COILWYRM,
-                                1,
-                                WaveSpec.Entry.FRONT,
-                                WaveSpec.Edge.NONE,
-                                Optional.empty(),
-                                Optional.empty(),
-                                1,
-                                Optional.empty(),
-                                Optional.empty(),
-                                List.of(),
-                                Optional.empty(),
-                                List.of(List.of(new WaveSpec.At(240, -60), new WaveSpec.At(240, 700))),
-                                Optional.empty())))
+                        .waves(List.of(WaveSpec.builder(
+                                        1,
+                                        WaveSpec.Formation.SNAKE,
+                                        FarsideTest.COILWYRM,
+                                        1,
+                                        WaveSpec.Entry.FRONT,
+                                        WaveSpec.Edge.NONE)
+                                .paths(List.of(List.of(new WaveSpec.At(240, -60), new WaveSpec.At(240, 700))))
+                                .build()))
                         .objectives(ObjectiveSpec.NONE.withSecondary(new Secondary(0.8, 50)))
                         .build(),
                 TestSpecs.RULES,

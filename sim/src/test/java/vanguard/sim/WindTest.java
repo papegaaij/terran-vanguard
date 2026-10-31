@@ -116,23 +116,10 @@ class WindTest {
     void aWhirlClustersCentreDriftsOnTheWind() {
         EnemySpec seed = EnemySpec.of("whirl-seed", 1, new Hitbox(14, 14), Layer.AIR, 4, true, 3, 150)
                 .withSpiral(Optional.of(new EnemySpec.Spiral(3, 0.5, 40, 60, 0)));
-        WaveSpec cluster = new WaveSpec(
-                0,
-                WaveSpec.Formation.WHIRL_CLUSTER,
-                seed,
-                4,
-                WaveSpec.Entry.SIDES,
-                WaveSpec.Edge.LEFT,
-                Optional.empty(),
-                Optional.empty(),
-                1,
-                Optional.empty(),
-                Optional.empty(),
-                List.of(),
-                Optional.of(new WaveSpec.At(-20, 200)),
-                List.of(),
-                Optional.empty(),
-                "");
+        WaveSpec cluster = WaveSpec.builder(
+                        0, WaveSpec.Formation.WHIRL_CLUSTER, seed, 4, WaveSpec.Entry.SIDES, WaveSpec.Edge.LEFT)
+                .at(Optional.of(new WaveSpec.At(-20, 200)))
+                .build();
         LevelScript calm = TestSpecs.level(30, List.of(cluster));
         LevelScript windy = TestSpecs.withHazards(
                 calm,

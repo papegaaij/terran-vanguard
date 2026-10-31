@@ -85,7 +85,7 @@ class CrossTest {
 
     @Test
     void aCircleOrbitsItsCentreAt() {
-        WaveSpec circle = new WaveSpec(
+        WaveSpec circle = WaveSpec.of(
                         60,
                         WaveSpec.Formation.CIRCLE,
                         TestSpecs.NEEDLER,

@@ -39,23 +39,18 @@ final class LevelClockSpecs {
 
     /** {@code wave} with the tag {@code tag}. */
     static WaveSpec tagged(WaveSpec wave, String tag) {
-        return new WaveSpec(
-                wave.t(),
-                wave.formation(),
-                wave.enemy(),
-                wave.count(),
-                wave.entry(),
-                wave.edge(),
-                wave.holdSeconds(),
-                wave.warningSeconds(),
-                wave.breakGroup(),
-                wave.speed(),
-                wave.intervalSeconds(),
-                wave.carried(),
-                wave.at(),
-                wave.paths(),
-                wave.loopBack(),
-                tag);
+        return WaveSpec.builder(wave.t(), wave.formation(), wave.enemy(), wave.count(), wave.entry(), wave.edge())
+                .holdSeconds(wave.holdSeconds())
+                .warningSeconds(wave.warningSeconds())
+                .breakGroup(wave.breakGroup())
+                .speed(wave.speed())
+                .intervalSeconds(wave.intervalSeconds())
+                .carried(wave.carried())
+                .at(wave.at())
+                .paths(wave.paths())
+                .loopBack(wave.loopBack())
+                .tag(tag)
+                .build();
     }
 
     /**

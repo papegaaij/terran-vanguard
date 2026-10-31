@@ -52,7 +52,7 @@ class PartDFormationsTest {
 
     @Test
     void aSwarmNeedsItsRouteAndAtMostTheFlocksMembers() {
-        WaveSpec noRoute = new WaveSpec(
+        WaveSpec noRoute = WaveSpec.of(
                 0,
                 WaveSpec.Formation.SWARM,
                 PartDSpecs.MOTE,
@@ -132,21 +132,9 @@ class PartDFormationsTest {
 
     /** A snake of Skitters on an authored route, {@code from} an edge. */
     private static WaveSpec snake(WaveSpec.Entry from, List<List<WaveSpec.At>> paths) {
-        return new WaveSpec(
-                3,
-                WaveSpec.Formation.SNAKE,
-                TestSpecs.SKITTER,
-                4,
-                from,
-                WaveSpec.Edge.NONE,
-                Optional.empty(),
-                Optional.empty(),
-                1,
-                Optional.empty(),
-                Optional.empty(),
-                List.of(),
-                Optional.empty(),
-                paths);
+        return WaveSpec.builder(3, WaveSpec.Formation.SNAKE, TestSpecs.SKITTER, 4, from, WaveSpec.Edge.NONE)
+                .paths(paths)
+                .build();
     }
 
     @Test

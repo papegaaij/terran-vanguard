@@ -328,25 +328,13 @@ class AuraTest {
     void aChainsMembersNeverCarryARing() {
         WaveSpec herald =
                 TestSpecs.wave(0, WaveSpec.Formation.SINGLE, HERALD, 1, WaveSpec.Entry.FRONT, WaveSpec.Edge.NONE);
-        WaveSpec chain = new WaveSpec(
-                1,
-                WaveSpec.Formation.SNAKE,
-                FarsideTest.COILWYRM,
-                1,
-                WaveSpec.Entry.FRONT,
-                WaveSpec.Edge.NONE,
-                Optional.empty(),
-                Optional.empty(),
-                1,
-                Optional.empty(),
-                Optional.empty(),
-                List.of(),
-                Optional.empty(),
-                List.of(List.of(
+        WaveSpec chain = WaveSpec.builder(
+                        1, WaveSpec.Formation.SNAKE, FarsideTest.COILWYRM, 1, WaveSpec.Entry.FRONT, WaveSpec.Edge.NONE)
+                .paths(List.of(List.of(
                         new WaveSpec.At(PlayField.WIDTH / 2.0, -60),
                         new WaveSpec.At(PlayField.WIDTH / 2.0, 300),
-                        new WaveSpec.At(PlayField.WIDTH / 2.0, 700))),
-                Optional.empty());
+                        new WaveSpec.At(PlayField.WIDTH / 2.0, 700))))
+                .build();
         Sortie sortie = SiegeSpecs.sortie(TestSpecs.level(20, List.of(herald, chain)));
         boolean passed = false;
         while (sortie.levelSeconds() < 10) {

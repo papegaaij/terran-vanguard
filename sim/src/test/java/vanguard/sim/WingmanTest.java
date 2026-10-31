@@ -258,22 +258,10 @@ class WingmanTest {
 
     /** A Coilwyrm (Level 06's numbers) entering from {@code entry} at t=1 on {@code path} (depths). */
     private static WaveSpec chainWave(WaveSpec.Entry entry, List<WaveSpec.At> path, Optional<WaveSpec.LoopBack> loop) {
-        return new WaveSpec(
-                1,
-                WaveSpec.Formation.SNAKE,
-                FarsideTest.COILWYRM,
-                1,
-                entry,
-                WaveSpec.Edge.NONE,
-                Optional.empty(),
-                Optional.empty(),
-                1,
-                Optional.empty(),
-                Optional.empty(),
-                List.of(),
-                Optional.empty(),
-                List.of(path),
-                loop);
+        return WaveSpec.builder(1, WaveSpec.Formation.SNAKE, FarsideTest.COILWYRM, 1, entry, WaveSpec.Edge.NONE)
+                .paths(List.of(path))
+                .loopBack(loop)
+                .build();
     }
 
     /** Only his formation matters here: nothing hurts the ship or him. */
@@ -350,20 +338,9 @@ class WingmanTest {
 
     @Test
     void hisWideSlotKeepsClearOfAMantisBody() {
-        WaveSpec mantis = new WaveSpec(
-                2,
-                WaveSpec.Formation.SINGLE,
-                FarsideTest.MANTIS,
-                1,
-                WaveSpec.Entry.SIDES,
-                WaveSpec.Edge.LEFT,
-                Optional.empty(),
-                Optional.empty(),
-                1,
-                Optional.empty(),
-                Optional.empty(),
-                List.of(),
-                Optional.empty());
+        WaveSpec mantis = WaveSpec.builder(
+                        2, WaveSpec.Formation.SINGLE, FarsideTest.MANTIS, 1, WaveSpec.Entry.SIDES, WaveSpec.Edge.LEFT)
+                .build();
         Sortie sortie = sortie(TestSpecs.level(30, List.of(mantis)), WingmanSpec.Side.LEFT);
         Wingman rook = wingman(sortie);
         boolean wide = false;

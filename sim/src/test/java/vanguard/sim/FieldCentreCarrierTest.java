@@ -18,24 +18,10 @@ class FieldCentreCarrierTest {
     private static final WaveSpec.Field AREA = new WaveSpec.Field(240, 400, 300, 60, 0);
 
     private static WaveSpec field(List<WaveSpec.Carried> carried, WaveSpec.Formation formation) {
-        return new WaveSpec(
-                108,
-                formation,
-                GlowAnglerTest.ANGLER,
-                8,
-                WaveSpec.Entry.FRONT,
-                WaveSpec.Edge.NONE,
-                Optional.empty(),
-                Optional.empty(),
-                1,
-                Optional.empty(),
-                Optional.empty(),
-                carried,
-                Optional.empty(),
-                List.of(),
-                Optional.empty(),
-                "",
-                Optional.of(AREA));
+        return WaveSpec.builder(108, formation, GlowAnglerTest.ANGLER, 8, WaveSpec.Entry.FRONT, WaveSpec.Edge.NONE)
+                .carried(carried)
+                .field(Optional.of(AREA))
+                .build();
     }
 
     private static List<Spawn> plan(WaveSpec wave, long seed) {

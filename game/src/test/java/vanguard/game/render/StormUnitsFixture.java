@@ -35,7 +35,7 @@ public final class StormUnitsFixture {
     private StormUnitsFixture() {}
 
     private static Sortie sortie(EnemySpec enemy, double speed) {
-        WaveSpec wave = new WaveSpec(
+        WaveSpec wave = WaveSpec.of(
                 0,
                 WaveSpec.Formation.LINE_ABREAST,
                 enemy,

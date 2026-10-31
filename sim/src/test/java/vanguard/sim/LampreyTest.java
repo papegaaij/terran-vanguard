@@ -240,7 +240,7 @@ class LampreyTest {
 
     @Test
     void onlyChasersStreamInFromTheRear() {
-        WaveSpec rear = new WaveSpec(
+        WaveSpec rear = WaveSpec.of(
                 5,
                 WaveSpec.Formation.STREAM,
                 LAMPREY,
@@ -257,7 +257,7 @@ class LampreyTest {
         Formations.plan(rear, 0, new SplitMix64(7), out);
         assertEquals(3, out.size());
         assertTrue(out.getFirst().path().y(0, 0) < 0, "from below the bottom edge");
-        WaveSpec skitters = new WaveSpec(
+        WaveSpec skitters = WaveSpec.of(
                 5,
                 WaveSpec.Formation.STREAM,
                 TestSpecs.SKITTER,
@@ -275,7 +275,7 @@ class LampreyTest {
 
     @Test
     void aClockwiseCircleOrbitsTheOtherWay() {
-        WaveSpec circle = new WaveSpec(
+        WaveSpec circle = WaveSpec.of(
                 5,
                 WaveSpec.Formation.CIRCLE,
                 TestSpecs.NEEDLER,

@@ -229,21 +229,15 @@ class FlockTest {
     @Test
     void aMoteThatTouchesTheShipDealsTinyContactAndDies() {
         // The route straight down through the ship's lane.
-        WaveSpec wave = new WaveSpec(
-                1,
-                WaveSpec.Formation.SWARM,
-                PartDSpecs.MOTE,
-                6,
-                WaveSpec.Entry.FRONT,
-                WaveSpec.Edge.NONE,
-                java.util.Optional.empty(),
-                java.util.Optional.empty(),
-                1,
-                java.util.Optional.empty(),
-                java.util.Optional.empty(),
-                List.of(),
-                java.util.Optional.empty(),
-                List.of(List.of(new WaveSpec.At(240, -60), new WaveSpec.At(240, 700))));
+        WaveSpec wave = WaveSpec.builder(
+                        1, WaveSpec.Formation.SWARM, PartDSpecs.MOTE, 6, WaveSpec.Entry.FRONT, WaveSpec.Edge.NONE)
+                .holdSeconds(java.util.Optional.empty())
+                .warningSeconds(java.util.Optional.empty())
+                .speed(java.util.Optional.empty())
+                .intervalSeconds(java.util.Optional.empty())
+                .at(java.util.Optional.empty())
+                .paths(List.of(List.of(new WaveSpec.At(240, -60), new WaveSpec.At(240, 700))))
+                .build();
         Sortie sortie = new Sortie(
                 1, TestSpecs.LOADOUT, PartDSpecs.level(30, List.of(wave)), TestSpecs.RULES, TestSpecs.FULL_ARMOUR);
         Defences defences = sortie.ship().defences();

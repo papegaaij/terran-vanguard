@@ -452,48 +452,27 @@ class ReverseScrollTest {
     }
 
     private static WaveSpec withWarning(WaveSpec wave, double seconds) {
-        return new WaveSpec(
-                wave.t(),
-                wave.formation(),
-                wave.enemy(),
-                wave.count(),
-                wave.entry(),
-                wave.edge(),
-                wave.holdSeconds(),
-                Optional.of(seconds),
-                wave.breakGroup(),
-                wave.speed(),
-                wave.intervalSeconds(),
-                wave.carried(),
-                wave.at(),
-                wave.paths(),
-                wave.loopBack(),
-                wave.tag(),
-                wave.field(),
-                wave.clockwise());
+        return WaveSpec.builder(wave.t(), wave.formation(), wave.enemy(), wave.count(), wave.entry(), wave.edge())
+                .holdSeconds(wave.holdSeconds())
+                .warningSeconds(Optional.of(seconds))
+                .breakGroup(wave.breakGroup())
+                .speed(wave.speed())
+                .intervalSeconds(wave.intervalSeconds())
+                .carried(wave.carried())
+                .at(wave.at())
+                .paths(wave.paths())
+                .loopBack(wave.loopBack())
+                .tag(wave.tag())
+                .field(wave.field())
+                .clockwise(wave.clockwise())
+                .build();
     }
 
     /** A stream of 3 {@code enemy} from the side {@code edge} at {@code t}, 0.5 s apart. */
     private static WaveSpec stream(double t, EnemySpec enemy, WaveSpec.Edge edge) {
-        return new WaveSpec(
-                t,
-                WaveSpec.Formation.STREAM,
-                enemy,
-                3,
-                WaveSpec.Entry.SIDES,
-                edge,
-                Optional.empty(),
-                Optional.empty(),
-                1,
-                Optional.empty(),
-                Optional.of(0.5),
-                List.of(),
-                Optional.empty(),
-                List.of(),
-                Optional.empty(),
-                "",
-                Optional.empty(),
-                false);
+        return WaveSpec.builder(t, WaveSpec.Formation.STREAM, enemy, 3, WaveSpec.Entry.SIDES, edge)
+                .intervalSeconds(Optional.of(0.5))
+                .build();
     }
 
     private static WaveSpec rearAt(WaveSpec wave, double t) {

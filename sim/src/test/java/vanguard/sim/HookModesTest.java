@@ -125,21 +125,9 @@ class HookModesTest {
                 50, WaveSpec.Formation.SINGLE, PartGSpecs.SCUTTLER, 1, WaveSpec.Entry.SIDES, WaveSpec.Edge.LEFT);
         Sortie sortie = PartGSpecs.untouchable(PartGSpecs.level(
                 Map.of("scuttler", HookMode.IN_ARC),
-                List.of(new WaveSpec(
-                        wave.t(),
-                        wave.formation(),
-                        wave.enemy(),
-                        1,
-                        wave.entry(),
-                        wave.edge(),
-                        Optional.empty(),
-                        Optional.empty(),
-                        1,
-                        Optional.empty(),
-                        Optional.empty(),
-                        List.of(),
-                        Optional.empty(),
-                        List.of(toward))),
+                List.of(WaveSpec.builder(wave.t(), wave.formation(), wave.enemy(), 1, wave.entry(), wave.edge())
+                        .paths(List.of(toward))
+                        .build()),
                 List.of()));
         runTo(sortie, 50);
         List<boolean[]> shots = shots(sortie, 54, Command.NONE, 0);
@@ -157,21 +145,9 @@ class HookModesTest {
                 50, WaveSpec.Formation.SINGLE, PartGSpecs.SCUTTLER, 1, WaveSpec.Entry.FRONT, WaveSpec.Edge.NONE);
         Sortie sortie = PartGSpecs.untouchable(PartGSpecs.level(
                 Map.of("scuttler", HookMode.IN_ARC),
-                List.of(new WaveSpec(
-                        base.t(),
-                        base.formation(),
-                        base.enemy(),
-                        1,
-                        base.entry(),
-                        base.edge(),
-                        Optional.empty(),
-                        Optional.empty(),
-                        1,
-                        Optional.empty(),
-                        Optional.empty(),
-                        List.of(),
-                        Optional.empty(),
-                        List.of(away))),
+                List.of(WaveSpec.builder(base.t(), base.formation(), base.enemy(), 1, base.entry(), base.edge())
+                        .paths(List.of(away))
+                        .build()),
                 List.of()));
         runTo(sortie, 50);
         List<boolean[]> shots = shots(sortie, 54, Command.NONE, 0);

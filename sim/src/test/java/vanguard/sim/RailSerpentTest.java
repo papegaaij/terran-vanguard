@@ -22,22 +22,9 @@ class RailSerpentTest {
     private static final double DEPTH = 160;
 
     private static WaveSpec train(double t, EnemySpec serpent) {
-        return new WaveSpec(
-                t,
-                WaveSpec.Formation.SNAKE,
-                serpent,
-                1,
-                WaveSpec.Entry.FRONT,
-                WaveSpec.Edge.NONE,
-                Optional.empty(),
-                Optional.empty(),
-                1,
-                Optional.empty(),
-                Optional.empty(),
-                List.of(),
-                Optional.empty(),
-                List.of(List.of(new WaveSpec.At(560, DEPTH), new WaveSpec.At(-900, DEPTH))),
-                Optional.empty());
+        return WaveSpec.builder(t, WaveSpec.Formation.SNAKE, serpent, 1, WaveSpec.Entry.FRONT, WaveSpec.Edge.NONE)
+                .paths(List.of(List.of(new WaveSpec.At(560, DEPTH), new WaveSpec.At(-900, DEPTH))))
+                .build();
     }
 
     private static Sortie sortie(EnemySpec serpent) {

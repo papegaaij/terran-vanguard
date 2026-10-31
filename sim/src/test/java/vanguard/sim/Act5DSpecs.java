@@ -127,7 +127,7 @@ final class Act5DSpecs {
             WaveSpec.Edge edge,
             Optional<Double> hold,
             Optional<Double> interval) {
-        return new WaveSpec(
+        return WaveSpec.of(
                 t,
                 formation,
                 enemy,

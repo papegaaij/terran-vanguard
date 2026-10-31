@@ -223,25 +223,15 @@ class RockStopsTest {
             }
         }
         assertFalse(
-                Formations.Span.maps(new WaveSpec(
-                        1,
-                        WaveSpec.Formation.V_WING,
-                        TestSpecs.SKITTER,
-                        5,
-                        WaveSpec.Entry.FRONT,
-                        WaveSpec.Edge.NONE,
-                        Optional.empty(),
-                        Optional.empty(),
-                        1,
-                        Optional.empty(),
-                        Optional.empty(),
-                        List.of(),
-                        Optional.of(new WaveSpec.At(100, 400)),
-                        List.of(),
-                        Optional.empty(),
-                        "",
-                        Optional.empty(),
-                        false)),
+                Formations.Span.maps(WaveSpec.builder(
+                                1,
+                                WaveSpec.Formation.V_WING,
+                                TestSpecs.SKITTER,
+                                5,
+                                WaveSpec.Entry.FRONT,
+                                WaveSpec.Edge.NONE)
+                        .at(Optional.of(new WaveSpec.At(100, 400)))
+                        .build()),
                 "an authored point is the author's");
     }
 

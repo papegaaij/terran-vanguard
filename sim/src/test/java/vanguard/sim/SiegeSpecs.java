@@ -113,21 +113,9 @@ final class SiegeSpecs {
 
     /** One {@code walker} at {@code t} on the ground path through {@code path} (x, depth below the top edge). */
     static WaveSpec walker(double t, EnemySpec walker, WaveSpec.At... path) {
-        return new WaveSpec(
-                t,
-                WaveSpec.Formation.CONVOY,
-                walker,
-                1,
-                WaveSpec.Entry.FRONT,
-                WaveSpec.Edge.NONE,
-                Optional.empty(),
-                Optional.empty(),
-                1,
-                Optional.empty(),
-                Optional.empty(),
-                List.of(),
-                Optional.empty(),
-                List.of(List.of(path)));
+        return WaveSpec.builder(t, WaveSpec.Formation.CONVOY, walker, 1, WaveSpec.Entry.FRONT, WaveSpec.Edge.NONE)
+                .paths(List.of(List.of(path)))
+                .build();
     }
 
     /** The unit on the field whose spec is {@code spec}; null when there is none. */
@@ -218,21 +206,10 @@ final class SiegeSpecs {
 
     /** One mortar walker at {@code t}, walking straight down at {@code x}. */
     static WaveSpec walker(double t, double x) {
-        return new WaveSpec(
-                t,
-                WaveSpec.Formation.CONVOY,
-                MORTAR_WALKER,
-                1,
-                WaveSpec.Entry.FRONT,
-                WaveSpec.Edge.NONE,
-                Optional.empty(),
-                Optional.empty(),
-                1,
-                Optional.empty(),
-                Optional.empty(),
-                List.of(),
-                Optional.empty(),
-                List.of(List.of(new WaveSpec.At(x, -40), new WaveSpec.At(x, 600))));
+        return WaveSpec.builder(
+                        t, WaveSpec.Formation.CONVOY, MORTAR_WALKER, 1, WaveSpec.Entry.FRONT, WaveSpec.Edge.NONE)
+                .paths(List.of(List.of(new WaveSpec.At(x, -40), new WaveSpec.At(x, 600))))
+                .build();
     }
 
     /** A sortie on the rules with the ship that nothing hits (the debug option), so it flies to the end. */

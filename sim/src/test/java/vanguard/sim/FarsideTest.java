@@ -97,39 +97,15 @@ class FarsideTest {
 
     /** A chain wave at t=1 on a path straight down the centre, with an optional loop-back. */
     private static WaveSpec chainWave(double x, Optional<WaveSpec.LoopBack> loop) {
-        return new WaveSpec(
-                1,
-                WaveSpec.Formation.SNAKE,
-                COILWYRM,
-                1,
-                WaveSpec.Entry.FRONT,
-                WaveSpec.Edge.NONE,
-                Optional.empty(),
-                Optional.empty(),
-                1,
-                Optional.empty(),
-                Optional.empty(),
-                List.of(),
-                Optional.empty(),
-                List.of(List.of(new WaveSpec.At(x, -60), new WaveSpec.At(x, 300), new WaveSpec.At(x, 700))),
-                loop);
+        return WaveSpec.builder(1, WaveSpec.Formation.SNAKE, COILWYRM, 1, WaveSpec.Entry.FRONT, WaveSpec.Edge.NONE)
+                .paths(List.of(List.of(new WaveSpec.At(x, -60), new WaveSpec.At(x, 300), new WaveSpec.At(x, 700))))
+                .loopBack(loop)
+                .build();
     }
 
     private static WaveSpec mantisWave(double t, WaveSpec.Formation formation, WaveSpec.Edge edge, int count) {
-        return new WaveSpec(
-                t,
-                formation,
-                MANTIS,
-                count,
-                WaveSpec.Entry.SIDES,
-                edge,
-                Optional.empty(),
-                Optional.empty(),
-                1,
-                Optional.empty(),
-                Optional.empty(),
-                List.of(),
-                Optional.empty());
+        return WaveSpec.builder(t, formation, MANTIS, count, WaveSpec.Entry.SIDES, edge)
+                .build();
     }
 
     private static LevelScript level(

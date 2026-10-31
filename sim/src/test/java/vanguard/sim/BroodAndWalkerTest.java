@@ -45,21 +45,15 @@ class BroodAndWalkerTest {
     }
 
     private static WaveSpec walkers(double t, WaveSpec.Formation formation, int count, List<WaveSpec.At> path) {
-        return new WaveSpec(
-                t,
-                formation,
-                SCUTTLER,
-                count,
-                formation == WaveSpec.Formation.PINCER ? WaveSpec.Entry.SIDES : FRONT,
-                NONE,
-                Optional.empty(),
-                Optional.empty(),
-                1,
-                Optional.empty(),
-                Optional.empty(),
-                List.of(),
-                Optional.empty(),
-                List.of(path));
+        return WaveSpec.builder(
+                        t,
+                        formation,
+                        SCUTTLER,
+                        count,
+                        formation == WaveSpec.Formation.PINCER ? WaveSpec.Entry.SIDES : FRONT,
+                        NONE)
+                .paths(List.of(path))
+                .build();
     }
 
     private static Sortie sortie(double seconds, List<WaveSpec> waves) {

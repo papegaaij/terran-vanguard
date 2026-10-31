@@ -222,21 +222,9 @@ final class PartCSpecs {
     /** A walker wave of {@code count} on {@code paths} (screen points: x, px below the top edge). */
     static WaveSpec walkers(
             double t, WaveSpec.Formation formation, EnemySpec enemy, int count, List<List<WaveSpec.At>> paths) {
-        return new WaveSpec(
-                t,
-                formation,
-                enemy,
-                count,
-                WaveSpec.Entry.FRONT,
-                WaveSpec.Edge.NONE,
-                Optional.empty(),
-                Optional.empty(),
-                1,
-                Optional.empty(),
-                Optional.empty(),
-                List.of(),
-                Optional.empty(),
-                paths);
+        return WaveSpec.builder(t, formation, enemy, count, WaveSpec.Entry.FRONT, WaveSpec.Edge.NONE)
+                .paths(paths)
+                .build();
     }
 
     /** How many events of {@code type} the last step recorded. */

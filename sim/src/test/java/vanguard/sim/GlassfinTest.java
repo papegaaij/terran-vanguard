@@ -49,40 +49,16 @@ class GlassfinTest {
             new WaveSpec.At(60, 620));
 
     static WaveSpec school(double t, EnemySpec fry, int count) {
-        return new WaveSpec(
-                t,
-                WaveSpec.Formation.SWARM,
-                fry,
-                count,
-                WaveSpec.Entry.FRONT,
-                WaveSpec.Edge.NONE,
-                Optional.empty(),
-                Optional.empty(),
-                1,
-                Optional.empty(),
-                Optional.empty(),
-                List.of(),
-                Optional.empty(),
-                List.of(ROUTE));
+        return WaveSpec.builder(t, WaveSpec.Formation.SWARM, fry, count, WaveSpec.Entry.FRONT, WaveSpec.Edge.NONE)
+                .paths(List.of(ROUTE))
+                .build();
     }
 
     /** A column of {@code count} fry straight down at x 144 (left), slowed to 60 px/s to stay on the screen a while. */
     static WaveSpec column(double t, EnemySpec fry, int count) {
-        return new WaveSpec(
-                t,
-                WaveSpec.Formation.COLUMN,
-                fry,
-                count,
-                WaveSpec.Entry.FRONT,
-                WaveSpec.Edge.LEFT,
-                Optional.empty(),
-                Optional.empty(),
-                1,
-                Optional.of(60.0),
-                Optional.empty(),
-                List.of(),
-                Optional.empty(),
-                List.of());
+        return WaveSpec.builder(t, WaveSpec.Formation.COLUMN, fry, count, WaveSpec.Entry.FRONT, WaveSpec.Edge.LEFT)
+                .speed(Optional.of(60.0))
+                .build();
     }
 
     private static Sortie sortie(List<WaveSpec> waves) {

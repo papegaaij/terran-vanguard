@@ -148,8 +148,11 @@ public record WaveSpec(
         }
     }
 
-    /** A wave of no fork's branch (before M9 part E). */
-    public WaveSpec(
+    /**
+     * A wave group of its base with every later component at its default: no pickup carried, at-point, paths,
+     * loop-back, tag, field, lanes, pairs, pursuit, mount, leader, rocks, mine lines or branch, counter-clockwise.
+     */
+    public static WaveSpec of(
             double t,
             Formation formation,
             EnemySpec enemy,
@@ -161,220 +164,45 @@ public record WaveSpec(
             int breakGroup,
             Optional<Double> speed,
             Optional<Double> intervalSeconds,
-            List<Carried> carried,
-            Optional<At> at,
-            List<List<At>> paths,
-            Optional<LoopBack> loopBack,
-            String tag,
-            Optional<Field> field,
-            boolean clockwise,
-            List<List<At>> lanes,
-            Optional<Double> pairSeconds,
-            Optional<Pursuit> pursuit,
-            Optional<Mount> mount,
-            Optional<EnemySpec> leader,
-            Optional<OnRocks> onRocks,
-            Optional<MineLines> mineLines) {
-        this(
-                t,
-                formation,
-                enemy,
-                count,
-                entry,
-                edge,
-                holdSeconds,
-                warningSeconds,
-                breakGroup,
-                speed,
-                intervalSeconds,
-                carried,
-                at,
-                paths,
-                loopBack,
-                tag,
-                field,
-                clockwise,
-                lanes,
-                pairSeconds,
-                pursuit,
-                mount,
-                leader,
-                onRocks,
-                mineLines,
-                Optional.empty());
+            List<Carried> carried) {
+        return builder(t, formation, enemy, count, entry, edge)
+                .holdSeconds(holdSeconds)
+                .warningSeconds(warningSeconds)
+                .breakGroup(breakGroup)
+                .speed(speed)
+                .intervalSeconds(intervalSeconds)
+                .carried(carried)
+                .build();
+    }
+
+    /**
+     * A builder for a wave group with this base and every other component at {@link #of}'s defaults, its units
+     * breaking one at a time ({@link #breakGroup()} 1) at the enemy's own speed and interval, no hold or longer warning.
+     */
+    public static WaveSpecBuilder builder(
+            double t, Formation formation, EnemySpec enemy, int count, Entry entry, Edge edge) {
+        return new WaveSpecBuilder(t, formation, enemy, count, entry, edge);
+    }
+
+    /** A builder holding this wave group's every component, for a copy with some changed. */
+    public WaveSpecBuilder toBuilder() {
+        return new WaveSpecBuilder(this);
     }
 
     /**
      * M9 part E (design/campaign Level 32, The forks): this wave as one of {@code fork}'s branch's: it flies only when
-     * that side is chosen (else it never comes and counts nowhere). Set it last: the older {@code withX} copies leave it
-     * out.
+     * that side is chosen (else it never comes and counts nowhere).
      */
     public WaveSpec withBranch(Branch fork) {
-        return new WaveSpec(
-                t,
-                formation,
-                enemy,
-                count,
-                entry,
-                edge,
-                holdSeconds,
-                warningSeconds,
-                breakGroup,
-                speed,
-                intervalSeconds,
-                carried,
-                at,
-                paths,
-                loopBack,
-                tag,
-                field,
-                clockwise,
-                lanes,
-                pairSeconds,
-                pursuit,
-                mount,
-                leader,
-                onRocks,
-                mineLines,
-                Optional.of(fork));
-    }
-
-    /** A wave without M9 part B's leader and rocks. */
-    public WaveSpec(
-            double t,
-            Formation formation,
-            EnemySpec enemy,
-            int count,
-            Entry entry,
-            Edge edge,
-            Optional<Double> holdSeconds,
-            Optional<Double> warningSeconds,
-            int breakGroup,
-            Optional<Double> speed,
-            Optional<Double> intervalSeconds,
-            List<Carried> carried,
-            Optional<At> at,
-            List<List<At>> paths,
-            Optional<LoopBack> loopBack,
-            String tag,
-            Optional<Field> field,
-            boolean clockwise,
-            List<List<At>> lanes,
-            Optional<Double> pairSeconds,
-            Optional<Pursuit> pursuit,
-            Optional<Mount> mount) {
-        this(
-                t,
-                formation,
-                enemy,
-                count,
-                entry,
-                edge,
-                holdSeconds,
-                warningSeconds,
-                breakGroup,
-                speed,
-                intervalSeconds,
-                carried,
-                at,
-                paths,
-                loopBack,
-                tag,
-                field,
-                clockwise,
-                lanes,
-                pairSeconds,
-                pursuit,
-                mount,
-                Optional.empty(),
-                Optional.empty());
-    }
-
-    /** Without M9 part C's mine lines. */
-    public WaveSpec(
-            double t,
-            Formation formation,
-            EnemySpec enemy,
-            int count,
-            Entry entry,
-            Edge edge,
-            Optional<Double> holdSeconds,
-            Optional<Double> warningSeconds,
-            int breakGroup,
-            Optional<Double> speed,
-            Optional<Double> intervalSeconds,
-            List<Carried> carried,
-            Optional<At> at,
-            List<List<At>> paths,
-            Optional<LoopBack> loopBack,
-            String tag,
-            Optional<Field> field,
-            boolean clockwise,
-            List<List<At>> lanes,
-            Optional<Double> pairSeconds,
-            Optional<Pursuit> pursuit,
-            Optional<Mount> mount,
-            Optional<EnemySpec> leader,
-            Optional<OnRocks> onRocks) {
-        this(
-                t,
-                formation,
-                enemy,
-                count,
-                entry,
-                edge,
-                holdSeconds,
-                warningSeconds,
-                breakGroup,
-                speed,
-                intervalSeconds,
-                carried,
-                at,
-                paths,
-                loopBack,
-                tag,
-                field,
-                clockwise,
-                lanes,
-                pairSeconds,
-                pursuit,
-                mount,
-                leader,
-                onRocks,
-                Optional.empty());
+        return toBuilder().branch(Optional.of(fork)).build();
     }
 
     /**
      * M9 part C (design/enemies/space/minelayer; Level 30): this mine layers' wave with its lines: unit i lays at
-     * {@code lines}' row and gap i (cycling). Set it last: the older {@code withX} copies leave it out.
+     * {@code lines}' row and gap i (cycling).
      */
     public WaveSpec withMineLines(MineLines lines) {
-        return new WaveSpec(
-                t,
-                formation,
-                enemy,
-                count,
-                entry,
-                edge,
-                holdSeconds,
-                warningSeconds,
-                breakGroup,
-                speed,
-                intervalSeconds,
-                carried,
-                at,
-                paths,
-                loopBack,
-                tag,
-                field,
-                clockwise,
-                lanes,
-                pairSeconds,
-                pursuit,
-                mount,
-                leader,
-                onRocks,
-                Optional.of(lines));
+        return toBuilder().mineLines(Optional.of(lines)).build();
     }
 
     /**
@@ -422,32 +250,7 @@ public record WaveSpec(
      * nothing.
      */
     public WaveSpec withLeader(EnemySpec leaderSpec) {
-        return new WaveSpec(
-                t,
-                formation,
-                enemy,
-                count,
-                entry,
-                edge,
-                holdSeconds,
-                warningSeconds,
-                breakGroup,
-                speed,
-                intervalSeconds,
-                carried,
-                at,
-                paths,
-                loopBack,
-                tag,
-                field,
-                clockwise,
-                lanes,
-                pairSeconds,
-                pursuit,
-                mount,
-                Optional.of(leaderSpec),
-                onRocks,
-                mineLines);
+        return toBuilder().leader(Optional.of(leaderSpec)).build();
     }
 
     /**
@@ -456,32 +259,7 @@ public record WaveSpec(
      * units, which ride; the entry's edge warning is).
      */
     public WaveSpec withRocks(OnRocks rocks) {
-        return new WaveSpec(
-                t,
-                formation,
-                enemy,
-                count,
-                entry,
-                edge,
-                holdSeconds,
-                warningSeconds,
-                breakGroup,
-                speed,
-                intervalSeconds,
-                carried,
-                at,
-                paths,
-                loopBack,
-                tag,
-                field,
-                clockwise,
-                lanes,
-                pairSeconds,
-                pursuit,
-                mount,
-                leader,
-                Optional.of(rocks),
-                mineLines);
+        return toBuilder().onRocks(Optional.of(rocks)).build();
     }
 
     /**
@@ -514,54 +292,6 @@ public record WaveSpec(
                 throw new IllegalArgumentException("a rock drifts onto and across the screen: " + vx + ", " + vy);
             }
         }
-    }
-
-    /** A wave without M8 part E's mount. */
-    public WaveSpec(
-            double t,
-            Formation formation,
-            EnemySpec enemy,
-            int count,
-            Entry entry,
-            Edge edge,
-            Optional<Double> holdSeconds,
-            Optional<Double> warningSeconds,
-            int breakGroup,
-            Optional<Double> speed,
-            Optional<Double> intervalSeconds,
-            List<Carried> carried,
-            Optional<At> at,
-            List<List<At>> paths,
-            Optional<LoopBack> loopBack,
-            String tag,
-            Optional<Field> field,
-            boolean clockwise,
-            List<List<At>> lanes,
-            Optional<Double> pairSeconds,
-            Optional<Pursuit> pursuit) {
-        this(
-                t,
-                formation,
-                enemy,
-                count,
-                entry,
-                edge,
-                holdSeconds,
-                warningSeconds,
-                breakGroup,
-                speed,
-                intervalSeconds,
-                carried,
-                at,
-                paths,
-                loopBack,
-                tag,
-                field,
-                clockwise,
-                lanes,
-                pairSeconds,
-                pursuit,
-                Optional.empty());
     }
 
     /**
@@ -597,31 +327,7 @@ public record WaveSpec(
     }
 
     private WaveSpec withMount(Mount point) {
-        return new WaveSpec(
-                t,
-                formation,
-                enemy,
-                count,
-                entry,
-                edge,
-                holdSeconds,
-                warningSeconds,
-                breakGroup,
-                speed,
-                intervalSeconds,
-                carried,
-                at,
-                paths,
-                loopBack,
-                tag,
-                field,
-                clockwise,
-                lanes,
-                pairSeconds,
-                pursuit,
-                Optional.of(point),
-                leader,
-                onRocks);
+        return toBuilder().mount(Optional.of(point)).build();
     }
 
     /**
@@ -678,81 +384,14 @@ public record WaveSpec(
         }
     }
 
-    /** A wave without M7 part G's pursuit. */
-    public WaveSpec(
-            double t,
-            Formation formation,
-            EnemySpec enemy,
-            int count,
-            Entry entry,
-            Edge edge,
-            Optional<Double> holdSeconds,
-            Optional<Double> warningSeconds,
-            int breakGroup,
-            Optional<Double> speed,
-            Optional<Double> intervalSeconds,
-            List<Carried> carried,
-            Optional<At> at,
-            List<List<At>> paths,
-            Optional<LoopBack> loopBack,
-            String tag,
-            Optional<Field> field,
-            boolean clockwise,
-            List<List<At>> lanes,
-            Optional<Double> pairSeconds) {
-        this(
-                t,
-                formation,
-                enemy,
-                count,
-                entry,
-                edge,
-                holdSeconds,
-                warningSeconds,
-                breakGroup,
-                speed,
-                intervalSeconds,
-                carried,
-                at,
-                paths,
-                loopBack,
-                tag,
-                field,
-                clockwise,
-                lanes,
-                pairSeconds,
-                Optional.empty());
-    }
-
     /**
      * M7 part G: this wave as a {@code pursuit} with {@code block} (its formation becomes {@link Formation#PURSUIT}).
      */
     public WaveSpec withPursuit(Pursuit block) {
-        return new WaveSpec(
-                t,
-                Formation.PURSUIT,
-                enemy,
-                count,
-                entry,
-                edge,
-                holdSeconds,
-                warningSeconds,
-                breakGroup,
-                speed,
-                intervalSeconds,
-                carried,
-                at,
-                paths,
-                loopBack,
-                tag,
-                field,
-                clockwise,
-                lanes,
-                pairSeconds,
-                Optional.of(block),
-                mount,
-                leader,
-                onRocks);
+        return toBuilder()
+                .formation(Formation.PURSUIT)
+                .pursuit(Optional.of(block))
+                .build();
     }
 
     /**
@@ -824,241 +463,24 @@ public record WaveSpec(
         }
     }
 
-    /** A wave without M5 part G's lanes and pairs. */
-    public WaveSpec(
-            double t,
-            Formation formation,
-            EnemySpec enemy,
-            int count,
-            Entry entry,
-            Edge edge,
-            Optional<Double> holdSeconds,
-            Optional<Double> warningSeconds,
-            int breakGroup,
-            Optional<Double> speed,
-            Optional<Double> intervalSeconds,
-            List<Carried> carried,
-            Optional<At> at,
-            List<List<At>> paths,
-            Optional<LoopBack> loopBack,
-            String tag,
-            Optional<Field> field,
-            boolean clockwise) {
-        this(
-                t,
-                formation,
-                enemy,
-                count,
-                entry,
-                edge,
-                holdSeconds,
-                warningSeconds,
-                breakGroup,
-                speed,
-                intervalSeconds,
-                carried,
-                at,
-                paths,
-                loopBack,
-                tag,
-                field,
-                clockwise,
-                List.of(),
-                Optional.empty());
-    }
-
     /** M5 part G: this wave with the lane walkers' {@code walkerLanes} (see {@link #lanes()}). */
     public WaveSpec withLanes(List<List<At>> walkerLanes) {
-        return new WaveSpec(
-                t,
-                formation,
-                enemy,
-                count,
-                entry,
-                edge,
-                holdSeconds,
-                warningSeconds,
-                breakGroup,
-                speed,
-                intervalSeconds,
-                carried,
-                at,
-                paths,
-                loopBack,
-                tag,
-                field,
-                clockwise,
-                walkerLanes,
-                pairSeconds,
-                pursuit,
-                mount,
-                leader,
-                onRocks);
+        return toBuilder().lanes(walkerLanes).build();
     }
 
     /** M5 part G: this wave with its units entering in pairs {@code seconds} apart (see {@link #pairSeconds()}). */
     public WaveSpec withPairs(double seconds) {
-        return new WaveSpec(
-                t,
-                formation,
-                enemy,
-                count,
-                entry,
-                edge,
-                holdSeconds,
-                warningSeconds,
-                breakGroup,
-                speed,
-                intervalSeconds,
-                carried,
-                at,
-                paths,
-                loopBack,
-                tag,
-                field,
-                clockwise,
-                lanes,
-                Optional.of(seconds),
-                pursuit,
-                mount,
-                leader,
-                onRocks);
+        return toBuilder().pairSeconds(Optional.of(seconds)).build();
     }
 
     /** M5 part G: this wave with {@code point} as its {@link #at()} (a whirl cluster's release point, a circle's centre). */
     public WaveSpec withAt(At point) {
-        return new WaveSpec(
-                t,
-                formation,
-                enemy,
-                count,
-                entry,
-                edge,
-                holdSeconds,
-                warningSeconds,
-                breakGroup,
-                speed,
-                intervalSeconds,
-                carried,
-                Optional.of(point),
-                paths,
-                loopBack,
-                tag,
-                field,
-                clockwise,
-                lanes,
-                pairSeconds,
-                pursuit,
-                mount,
-                leader,
-                onRocks);
-    }
-
-    /** A wave without M5 part F's clockwise circle. */
-    public WaveSpec(
-            double t,
-            Formation formation,
-            EnemySpec enemy,
-            int count,
-            Entry entry,
-            Edge edge,
-            Optional<Double> holdSeconds,
-            Optional<Double> warningSeconds,
-            int breakGroup,
-            Optional<Double> speed,
-            Optional<Double> intervalSeconds,
-            List<Carried> carried,
-            Optional<At> at,
-            List<List<At>> paths,
-            Optional<LoopBack> loopBack,
-            String tag,
-            Optional<Field> field) {
-        this(
-                t,
-                formation,
-                enemy,
-                count,
-                entry,
-                edge,
-                holdSeconds,
-                warningSeconds,
-                breakGroup,
-                speed,
-                intervalSeconds,
-                carried,
-                at,
-                paths,
-                loopBack,
-                tag,
-                field,
-                false);
+        return toBuilder().at(Optional.of(point)).build();
     }
 
     /** This wave with M5 part F's {@code clockwise} (a circle's sense of orbit on the screen). */
     public WaveSpec clockwise(boolean turning) {
-        return new WaveSpec(
-                t,
-                formation,
-                enemy,
-                count,
-                entry,
-                edge,
-                holdSeconds,
-                warningSeconds,
-                breakGroup,
-                speed,
-                intervalSeconds,
-                carried,
-                at,
-                paths,
-                loopBack,
-                tag,
-                field,
-                turning,
-                lanes,
-                pairSeconds,
-                pursuit,
-                mount,
-                leader,
-                onRocks);
-    }
-
-    /** A wave without M5 part E's field. */
-    public WaveSpec(
-            double t,
-            Formation formation,
-            EnemySpec enemy,
-            int count,
-            Entry entry,
-            Edge edge,
-            Optional<Double> holdSeconds,
-            Optional<Double> warningSeconds,
-            int breakGroup,
-            Optional<Double> speed,
-            Optional<Double> intervalSeconds,
-            List<Carried> carried,
-            Optional<At> at,
-            List<List<At>> paths,
-            Optional<LoopBack> loopBack,
-            String tag) {
-        this(
-                t,
-                formation,
-                enemy,
-                count,
-                entry,
-                edge,
-                holdSeconds,
-                warningSeconds,
-                breakGroup,
-                speed,
-                intervalSeconds,
-                carried,
-                at,
-                paths,
-                loopBack,
-                tag,
-                Optional.empty());
+        return toBuilder().clockwise(turning).build();
     }
 
     /**
@@ -1082,75 +504,6 @@ public record WaveSpec(
         }
     }
 
-    /** A wave without a tag. */
-    public WaveSpec(
-            double t,
-            Formation formation,
-            EnemySpec enemy,
-            int count,
-            Entry entry,
-            Edge edge,
-            Optional<Double> holdSeconds,
-            Optional<Double> warningSeconds,
-            int breakGroup,
-            Optional<Double> speed,
-            Optional<Double> intervalSeconds,
-            List<Carried> carried,
-            Optional<At> at,
-            List<List<At>> paths,
-            Optional<LoopBack> loopBack) {
-        this(
-                t,
-                formation,
-                enemy,
-                count,
-                entry,
-                edge,
-                holdSeconds,
-                warningSeconds,
-                breakGroup,
-                speed,
-                intervalSeconds,
-                carried,
-                at,
-                paths,
-                loopBack,
-                "");
-    }
-
-    public WaveSpec(
-            double t,
-            Formation formation,
-            EnemySpec enemy,
-            int count,
-            Entry entry,
-            Edge edge,
-            Optional<Double> holdSeconds,
-            Optional<Double> warningSeconds,
-            int breakGroup,
-            Optional<Double> speed,
-            Optional<Double> intervalSeconds,
-            List<Carried> carried,
-            Optional<At> at,
-            List<List<At>> paths) {
-        this(
-                t,
-                formation,
-                enemy,
-                count,
-                entry,
-                edge,
-                holdSeconds,
-                warningSeconds,
-                breakGroup,
-                speed,
-                intervalSeconds,
-                carried,
-                at,
-                paths,
-                Optional.empty());
-    }
-
     /**
      * A segment chain's loop-back (design/enemies/air/coilwyrm): {@code afterSeconds} after its
      * head reached its path's end (off the screen) it re-enters on {@code path}, shifted sideways
@@ -1170,66 +523,6 @@ public record WaveSpec(
         public LoopBack(double afterSeconds, List<At> path) {
             this(afterSeconds, path, 1);
         }
-    }
-
-    public WaveSpec(
-            double t,
-            Formation formation,
-            EnemySpec enemy,
-            int count,
-            Entry entry,
-            Edge edge,
-            Optional<Double> holdSeconds,
-            Optional<Double> warningSeconds,
-            int breakGroup,
-            Optional<Double> speed,
-            Optional<Double> intervalSeconds,
-            List<Carried> carried,
-            Optional<At> at) {
-        this(
-                t,
-                formation,
-                enemy,
-                count,
-                entry,
-                edge,
-                holdSeconds,
-                warningSeconds,
-                breakGroup,
-                speed,
-                intervalSeconds,
-                carried,
-                at,
-                List.of());
-    }
-
-    public WaveSpec(
-            double t,
-            Formation formation,
-            EnemySpec enemy,
-            int count,
-            Entry entry,
-            Edge edge,
-            Optional<Double> holdSeconds,
-            Optional<Double> warningSeconds,
-            int breakGroup,
-            Optional<Double> speed,
-            Optional<Double> intervalSeconds,
-            List<Carried> carried) {
-        this(
-                t,
-                formation,
-                enemy,
-                count,
-                entry,
-                edge,
-                holdSeconds,
-                warningSeconds,
-                breakGroup,
-                speed,
-                intervalSeconds,
-                carried,
-                Optional.empty());
     }
 
     /** A point in the play field: {@code x} from the left edge, {@code depth} px below the top edge. */
