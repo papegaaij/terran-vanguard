@@ -487,6 +487,24 @@ val copyPlaceholderSounds = tasks.register<JavaExec>("copyPlaceholderSounds") {
         "harvester-break-r74-a.ogg",
         "chimera-death-r74-a.ogg",
         "chimera-whine-r74-b.ogg",
+        // M10 part C, step AUD-C: round 72's pick for Aurelia's bed (S.14 a, the user, 2026-10-31; CC0/CC-BY Freesound
+        // HQ previews cut by tools/concept/audio/sfx_r72.py, its CREDITS.md rows): the bed of Level 37.
+        "aurelia-r72-a.ogg",
+        // M10 part C, step AUD-C: Level 37's sounds, the Mirror Interceptor's and the Graft Turret's (round 75's
+        // proposals, CC0/CC-BY Freesound HQ previews cut by tools/concept/audio/sfx_r75.py, their CREDITS.md rows), their
+        // a variants until the user's picks: the PA chime, the growth's burst, the balloons tearing, the deck's groan,
+        // the burning layer over `aurelia`, the mirror's turbine hum and pod burst, the graft's shell crack, root
+        // heartbeat and root crumble. The graft's shot a is the Talon's built twin crack (no copy).
+        "pa-chime-r75-a.ogg",
+        "growth-burst-r75-a.ogg",
+        "balloon-tear-r75-a.ogg",
+        "deck-groan-r75-a.ogg",
+        "aurelia-burning-r75-a.ogg",
+        "mirror-hum-r75-a.ogg",
+        "mirror-pods-r75-a.ogg",
+        "graft-shell-crack-r75-a.ogg",
+        "graft-heartbeat-r75-a.ogg",
+        "graft-root-crumble-r75-a.ogg",
     )
 }
 

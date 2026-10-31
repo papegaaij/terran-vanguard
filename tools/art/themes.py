@@ -44,6 +44,10 @@ Outputs:
                                    same way from tools/concept/audio/music_r74.py's eye-of-the-storm{,-base,-motif}-r74-a;
                                    the round-03 pick composed out to full length, reviewed on eye-of-the-storm-sheet-r74-a.png
                                    in round 74)
+  assets/music/storm-wall{,-base,-motif,-fall}.ogg  #15 "Storm Wall", its base, motif and fall stems (M10 part C: the
+                                   same way from tools/concept/audio/music_r75.py's storm-wall{,-base,-motif,-fall}-r75-a;
+                                   the round-72 pick composed out to full length, reviewed on storm-wall-sheet-r75-a.png in
+                                   round 75; the fall stem is Level 37's falling city's)
   design/audio/music/concept/themes-final-r13-a.png      review sheet of round 13
   design/audio/music/concept/boss-music-final-r25-a.png  review sheet of round 25
   design/audio/music/concept/{choir-descends,boss-warning,act-complete}-final-r25-a.ogg
@@ -115,7 +119,8 @@ Usage: python3 tools/art/themes.py [title] [hangar] [briefing] [boss] [warning] 
                                    [red-dust-base] [thera] [thera-base] [pressure]
                                    [pressure-base] [pressure-motif] [hollow] [hollow-base]
                                    [hollow-motif] [hollow-conveyor] [gilded] [gilded-base] [gilded-motif]
-                                   [eye] [eye-base] [eye-motif]
+                                   [eye] [eye-base] [eye-motif] [storm] [storm-base] [storm-motif]
+                                   [storm-fall]
                                                        render (default all), then check and review
        python3 tools/art/themes.py --check [keys]      check only (default all)
        python3 tools/art/themes.py --review [keys]     review sheets (and r25/r26 aids) of the keys' rounds
@@ -177,6 +182,7 @@ ROUNDS = {
     64: (None, None, None, artkit.source_note(SCRIPT, "M9 part D")),
     65: (None, None, None, artkit.source_note(SCRIPT, "M9 part G")),
     74: (None, None, None, artkit.source_note(SCRIPT, "M10 part B")),
+    75: (None, None, None, artkit.source_note(SCRIPT, "M10 part C")),
 }
 # key: (asset name, music_r08 key, title shown on the sheet, round); loops first, then one-shots
 THEMES = {
@@ -195,6 +201,7 @@ THEMES = {
     "hollow": ("hollow-rock", None, "HOLLOW ROCK - TRACK 12, ACT 5 A", 62),
     "gilded": ("gilded-cage", None, "GILDED CAGE - TRACK 13, ACT 5 B", 64),
     "eye": ("eye-of-the-storm", None, "EYE OF THE STORM - TRACK 14, ACT 6 A", 74),
+    "storm": ("storm-wall", None, "STORM WALL - TRACK 15, ACT 6 B", 75),
 }
 # key: (asset name, key of its full mix in THEMES, title, round, stem generator, chosen file)
 STEMS = {
@@ -232,6 +239,13 @@ STEMS = {
                  "music_r74", "eye-of-the-storm-base-r74-a"),
     "eye-motif": ("eye-of-the-storm-motif", "eye", "EYE OF THE STORM - TRACK 14, MOTIF STEM", 74,
                   "music_r74", "eye-of-the-storm-motif-r74-a"),
+    "storm-base": ("storm-wall-base", "storm", "STORM WALL - TRACK 15, BASE STEM", 75,
+                   "music_r75", "storm-wall-base-r75-a"),
+    "storm-motif": ("storm-wall-motif", "storm", "STORM WALL - TRACK 15, MOTIF STEM", 75,
+                    "music_r75", "storm-wall-motif-r75-a"),
+    # M10 part C: track 15's fourth stem for Level 37's falling city (the breakdown's choir and low strings)
+    "storm-fall": ("storm-wall-fall", "storm", "STORM WALL - TRACK 15, FALL STEM", 75,
+                   "music_r75", "storm-wall-fall-r75-a"),
 }
 # M8 part B: pieces copied from their concept file (key: its name in design/audio/music/concept): remuxed with the
 # SOURCE comment, packets unchanged, not re-rendered (music_r51b.py renders the full mixes and stems in one linked
@@ -256,6 +270,11 @@ COPIED = {
     "eye": "eye-of-the-storm-r74-a",
     "eye-base": "eye-of-the-storm-base-r74-a",
     "eye-motif": "eye-of-the-storm-motif-r74-a",
+    # M10 part C: track 15 from music_r75.py (one linked render of ~6 min, four stems), reviewed in round 75
+    "storm": "storm-wall-r75-a",
+    "storm-base": "storm-wall-base-r75-a",
+    "storm-motif": "storm-wall-motif-r75-a",
+    "storm-fall": "storm-wall-fall-r75-a",
 }
 CUES = {
     "warning": ("boss-warning", "warning", "RED ALERT - TRACK 22, BOSS WARNING", 25),

@@ -36,7 +36,7 @@ everywhere.
 | 12 | Act 5 A: Asteroid belt | Levels 29, 30, 32, 34 (the base stem only) (see *Act 5 music*) | Driving industrial, metallic percussion, Vorne's motif in the open; full length with base, full and motif stems (draft, round 60) | 3:00 | P2 | [belt-theme-r03-a](concept/belt-theme-r03-a.ogg) "Hollow Rock" (chosen); full length with base, full and motif stems: [hollow-rock-r62-a](concept/hollow-rock-r62-a.ogg) (proposed, round 62; in `assets/music`) |
 | 13 | Act 5 B: Asteroid belt | Levels 31, 33 and the Level 35 approach (see *Act 5 music*) | Colder and more industrial than the A theme (the enemy is human now); two sketches in round 60, one with Vorne's motif in the open; base, full and motif stems | 3:00 | P2 | sketches [act5-b-theme-r60-a](concept/act5-b-theme-r60-a.ogg) "Gilded Cage" and [act5-b-theme-r60-b](concept/rejected/act5-b-theme-r60-b.ogg) "Iron Vein" (round 60: a chosen, b rejected); "Gilded Cage" at full length with its stems [gilded-cage-r64-a](concept/gilded-cage-r64-a.ogg) (round 64, M9 part D) |
 | 14 | Act 6 A: Jupiter | Levels 36, 37 (to the turn), 39 and 40 (around the duel); its motif stem under the Act 6 intro's page 3 (see *Act 6 music*) | Vast and stormy: storm strings, thunder, choir; Vorne's motif against the main motif; full length with base, full and motif stems (draft, round 72) | 3:00 | P2 | [jovian-theme-r03-a](concept/jovian-theme-r03-a.ogg) "Eye of the Storm" (chosen) |
-| 15 | Act 6 B: Jupiter | Level 37 from the turn, Levels 38 and 41, the Level 42 approach (see *Act 6 music*) | Heavy, stormy, choir + distorted bass; two sketches in round 72; base, full and motif stems and a fourth `fall` stem (choir and low strings) for Level 37's falling city (draft, round 72) | 3:00 | P2 | — (sketches a/b in round 72, step AUD-R) |
+| 15 | Act 6 B: Jupiter | Level 37 from the turn, Levels 38 and 41, the Level 42 approach (see *Act 6 music*) | Heavy, stormy, choir + distorted bass; two sketches in round 72; base, full and motif stems and a fourth `fall` stem (choir and low strings) for Level 37's falling city (draft, round 72) | 3:00 | P2 | [act6-b-theme-r72-a](concept/act6-b-theme-r72-a.ogg) "Storm Wall" (chosen, round 72); at full length with its four stems [storm-wall-r75-a](concept/storm-wall-r75-a.ogg) (round 75, M10 part C) |
 | 16–17 | Act 7 A/B: Beyond the gate | Levels 43–50 | Alien, Choir motif fused with the main motif | 3:00 | P3 | — |
 | 18 | Boss: Vrell | Vrell act bosses | Choir, pounding drums | 2:00 loop | P1 | [boss-theme-r02-a](concept/boss-theme-r02-a.ogg) "The Choir Descends" (chosen); full length: [choir-descends-full-r08-a](concept/choir-descends-full-r08-a.ogg) (chosen); Level 28's deep copy (round 58, Q.1 b): [choir-descends-deep-r58-b](concept/rejected/choir-descends-deep-r58-b.ogg) (rejected, round 58: the built theme stays) |
 | 19 | Boss: Ascendancy | Ascendancy bosses (Iron Sovereign, Level 35; the Ascendant's phase 1, Level 42, handing over to track 18 at the eruption: see *Act 6 music*) | Martial and cold: snare rudiments, timpani, machine riff, Vorne's motif; full length, one full mix (draft, round 60) | 2:00 loop | P2 | [ascendancy-boss-r03-a](concept/ascendancy-boss-r03-a.ogg) "Iron Sovereign" (chosen); full length: [iron-sovereign-full-r68-a](concept/iron-sovereign-full-r68-a.ogg) (proposed, round 68) |
@@ -451,7 +451,9 @@ stings; the beds are in [sfx](../sfx/README.md#ambience-per-setting).
   The production delivers **four stems**: base, full and motif as track 13's (a's motif stem is the brass and organ line
   lifted out of the full mix), and a **`fall` stem** (the choir and the low strings only, the breakdown's material
   under the whole loop) for Level 37's falling city, as track 10's dark stem was for Level 26. Made in M10 part C
-  (Level 37).
+  (Level 37). **Made (step AUD-C, 2026-10-31; round 75 M.1, ok or redo):** `music_r75.py`, 181.8 s (a 4-bar intro + a
+  96-bar loop), in `assets/music/storm-wall{,-base,-motif,-fall}.ogg`; the stems' contents and levels are its decision
+  below.
 - **The duel theme** (new track 32, Level 40, the [Honour Guard](../../enemies/bosses/honour-guard/README.md)): after
   the mini-boss sting (21) it **replaces the level track** for the fight and track 14 returns after the last ace (the
   boss document's *Presentation*). Three aces, one duel: **Vorne's motif in gold brass against the main motif's horn
@@ -898,6 +900,26 @@ review is the round's (QB-4: ok or redo). Measured only, not listened to. Prompt
 | [concept/eye-of-the-storm-motif-mix-r74-a.ogg](concept/eye-of-the-storm-motif-mix-r74-a.ogg) | Listening aid: loop bars 1–24 (A, B, A2), the full mix with the motif stem on top as Level 36 plays them from section 3, 41.1 s; the sum peaks at −1.2 dBFS | chosen (round 74 M.1 ok; a listening aid) |
 | [concept/eye-of-the-storm-sheet-r74-a.png](concept/eye-of-the-storm-sheet-r74-a.png) | Review sheet: the three files' waveforms with intro, loop and fade tail, their loop points, loudness, true peak, seam and size, and the loudness of each loop section (full, base, motif) | chosen (round 74 M.1 ok; a listening aid) |
 
+Concept round 75 (M10 part C, step AUD-C, 2026-10-31) — track 15 "Storm Wall" at full length with its base, motif and fall
+stems from one render, composed out from the chosen round-72 sketch by `tools/concept/audio/music_r75.py` (track
+14's method; deterministic) and copied into `assets/music` as final by `tools/art/themes.py` (as tracks 12–14); its
+review is the round's (QC-2: ok or redo, no new variant). Measured only, not listened to. Prompts:
+[concept/prompts.md](concept/prompts.md#storm-wall-r75-a--track-15-storm-wall-and-its-four-stems).
+
+| File | What | Status |
+|---|---|---|
+| [concept/storm-wall-r75-a.ogg](concept/storm-wall-r75-a.ogg) | #15 "Storm Wall" full mix at full length: 181.8 s, loop 333200 + 7526400 samples (7.56 s + 170.67 s, 96 bars at 135 BPM), −14.1 LUFS, −1.8 dBTP, seam 0.31; twelve 8-bar sections on the sketch's material (the riff and the war drums, the choir in, the breakdown drawn out to 8 bars, all in with the double kick), a new half-time drift and a new build; no motif (it is lifted out into its stem) | proposed (round 75) |
+| [concept/storm-wall-base-r75-a.ogg](concept/storm-wall-base-r75-a.ogg) | #15 base stem (the storm strings, the deep kick and the taiko, the riff and its sub, the low strings, the storm wind and the thunder rolls): same length, loop and gain, −15.4 LUFS (−1.3 LU), −2.2 dBTP, seam 0.21; Levels 38, 41 and 42 on their approaches | proposed (round 75) |
+| [concept/storm-wall-motif-r75-a.ogg](concept/storm-wall-motif-r75-a.ogg) | #15 motif stem (Vorne's motif in cold low brass and organ, 11 statements a loop: the first bar of A, B, A2, D, B2, D2, B3 and T, bar 5 of D, D2 and the build; the intro's statement): same length, loop and gain, −19.4 LUFS (−5.3 LU), statements −4.8 to −5.9 dB under the full mix; the game adds it on top in Levels 38, 41 and 42, never in Level 37 (the turn cut it) | proposed (round 75) |
+| [concept/storm-wall-fall-r75-a.ogg](concept/storm-wall-fall-r75-a.ogg) | #15 fall stem (the breakdown's choir chords and low strings under every bar of the loop, nothing else): same length, loop and gain, −15.8 LUFS (−1.7 LU), −3.1 dBTP, seam 0.58; Level 37 plays it alone from the fall (t=160) to the end | proposed (round 75) |
+| [concept/storm-wall-seam-r75-a.ogg](concept/storm-wall-seam-r75-a.ogg) | Listening aid: the full mix across its loop seam, 8 s each side | proposed (round 75) |
+| [concept/storm-wall-base-seam-r75-a.ogg](concept/storm-wall-base-seam-r75-a.ogg) | Listening aid: the base stem across its loop seam, 8 s each side | proposed (round 75) |
+| [concept/storm-wall-motif-seam-r75-a.ogg](concept/storm-wall-motif-seam-r75-a.ogg) | Listening aid: the motif stem across its loop seam, 8 s each side | proposed (round 75) |
+| [concept/storm-wall-fall-seam-r75-a.ogg](concept/storm-wall-fall-seam-r75-a.ogg) | Listening aid: the fall stem across its loop seam, 8 s each side | proposed (round 75) |
+| [concept/storm-wall-motif-mix-r75-a.ogg](concept/storm-wall-motif-mix-r75-a.ogg) | Listening aid: loop bars 1–24 (A, B, A2), the full mix with the motif stem on top as Levels 38, 41 and 42 play them, 42.7 s; the sum peaks at −0.1 dBFS (the crash and timpani on A2's one under the motif's first note) | proposed (round 75) |
+| [concept/storm-wall-fall-join-r75-a.ogg](concept/storm-wall-fall-join-r75-a.ogg) | Listening aid: loop bars 1–16, the full mix crossfading over 2 s into the fall stem alone at bar 9 (as Level 37 switches at the fall), 28.4 s | proposed (round 75) |
+| [concept/storm-wall-sheet-r75-a.png](concept/storm-wall-sheet-r75-a.png) | Review sheet: the four files' waveforms with intro, loop and fade tail, their loop points, loudness, true peak, seam and size, and the loudness of each loop section (full, base vs full, fall vs full, motif vs full) | proposed (round 75) |
+
 ## Implementation
 
 - [x] Music player with intro + loop points
@@ -1070,3 +1092,15 @@ Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-a
   periodic over the loop (the seam); the timpani and crashes go to the full mix; D's low brass is raised 4.4 dB over
   the sketch so its statements hold against D's tutti (B −5.1, D −7.6 dB under the full mix, about 6 on average).
 - 2026-10-31, round 74: track 14 "Eye of the Storm" at full length, its base and motif stems accepted (M.1 ok); Level 36 starts it in section 1 (C.12 accepted).
+- 2026-10-31 (M10 part C, step AUD-C): track 15 "Storm Wall" at full length (`music_r75.py`, round 75 M.1, QC-2):
+  the sketch's 4-bar intro + a 96-bar loop (2:50.7) of twelve 8-bar sections, base, full, motif and fall stems from
+  one render, copied into `assets/music/storm-wall{,-base,-motif,-fall}.ogg` by `tools/art/themes.py`. Decided here
+  (trivia): the sketch's 28-bar loop laid out as track 14's plan (A B A2 C D B2 E F D2 B3 C2 T), its 4-bar breakdown
+  drawn out to 8 bars (the kick and sub back in its second half), a new half-time drift (`Ab Ab Fm Fm Cm Cm G G`) and
+  a new build; Vorne's motif at the first bar of every groove section and bar 5 of D, D2 and the build (over the
+  build's lone kick it stood only 1.6 dB under the mix), its statements set 6 dB under the full mix; the base stem
+  keeps the riff and its sub with the storm strings, deep kick, taiko, low strings, wind and thunder; the thunder
+  is track 14's roll without its crack (the sketch's had one; the brief says band noise only); the fall stem is the
+  breakdown's choir and low strings at the breakdown's gains under every bar, played alone (−1.7 LU under the full
+  mix, the level the breakdown has in it). The full mix + motif sum peaks at −0.1 dBFS (the game plays the music
+  under 1.0, so it does not clip; track 14's −1.2).

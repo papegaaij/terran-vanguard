@@ -1707,3 +1707,44 @@ loop."*
   (41.1 s).
 - `eye-of-the-storm-sheet-r74-a.png`: review sheet: waveforms with intro (grey), loop (blue), fade tail (dark) and
   loop points (amber), the measured numbers and a per-section loudness table.
+
+## storm-wall-r75-a — track 15 "Storm Wall" and its four stems
+
+From the chosen round-72 sketch [act6-b-theme-r72-a](act6-b-theme-r72-a.ogg) (135 BPM, C minor), by
+`tools/concept/audio/music_r75.py`. Composition: the sketch's 4-bar intro (the storm strings swelling, two far thunder
+rolls, Vorne's motif in low brass and organ, the deep kick, a taiko and the riff's chug from bar 3, a low tom fill and
+a riser) and a 96-bar loop of twelve 8-bar sections: A (`Cm Cm Ab Ab Fm Fm G G`: the war drums, a deep kick on 1, the
+and-of-2 and 3, a huge half-time snare and clap, taiko, the drop-tuned riff in half time with its sub, the storm
+strings, low tom fills), B (A plus 8th hats and the wordless choir), A2, C (the breakdown, `Cm Ab Fm G` twice: the
+choir alone over the low strings and the wind, thunder rolls, the kick and sub back in bars 5–8, a taiko build and a
+riser), D (all in, the double kick), B2, E (new, the drift: `Ab Ab Fm Fm Cm Cm G G`, half time, no riff, the strings
+and the choir up), F (new, the build: the kick alone, then the snare, then the riff and taiko, a riser and a snare
+roll), D2, B3, C2 and T (the turn back into A). The thunder is a roll without a crack; the wind the sketch's periodic
+current.
+
+Stems: **base** the storm strings, the deep kick and the taiko, the riff and its sub, the low strings, the wind and
+the thunder rolls (the approaches of Levels 38, 41 and 42); **full** the base plus the snare and clap, hats, toms,
+crashes, timpani and risers and the choir; **motif** Vorne's motif in cold low brass and organ alone, in the open
+(about 6 dB under the full mix; never in Level 37 after the turn); **fall** the breakdown's choir and low strings under
+every bar, nothing else (Level 37 plays it alone over the falling city).
+
+**Measured** (not listened to): 181.78 s, `LOOPSTART` 333200 (7.556 s), `LOOPLENGTH` 7526400 (170.667 s = 96 bars);
+full −14.1 LUFS, −1.8 dBTP, seam 0.31; base −15.4 LUFS (−1.3 LU), −2.2 dBTP, seam 0.21; motif −19.4 LUFS (−5.3 LU),
+−8.8 dBTP, seam 0.10, its statements −4.8 to −5.9 dB under the full mix; fall −15.8 LUFS (−1.7 LU), −3.1 dBTP, seam
+0.58; full + motif summed −13.7 LUFS, peak −0.1 dBFS. Loudness per section in the sheet.
+
+**AI prompt**: *"Heavy, stormy orchestral-metal level theme for a 1990s sci-fi shooter over a burning cloud city on
+Jupiter, 135 BPM, C minor, a drop-tuned distorted bass riff in half time, war drums, taiko and low toms, tremolo storm
+strings, a wordless choir in long minor chords, a villain's four-note minor-major-seventh motif in cold low brass and
+organ, a breakdown of the choir alone over low strings and wind, about three minutes, instrumental, seamless loop."*
+
+- `storm-wall-r75-a.ogg`, `storm-wall-base-r75-a.ogg`, `storm-wall-motif-r75-a.ogg`, `storm-wall-fall-r75-a.ogg`: the
+  full mix and its three stems.
+- `storm-wall-seam-r75-a.ogg`, `storm-wall-base-seam-r75-a.ogg`, `storm-wall-motif-seam-r75-a.ogg`,
+  `storm-wall-fall-seam-r75-a.ogg`: listening aids, the last 8 s of each loop followed by the first 8 s after
+  `LOOPSTART` (0.5 s fades).
+- `storm-wall-motif-mix-r75-a.ogg`: listening aid, loop bars 1–24, the full mix with the motif stem on top (42.7 s).
+- `storm-wall-fall-join-r75-a.ogg`: listening aid, loop bars 1–16, the full mix crossfading over 2 s into the fall
+  stem alone at bar 9 (28.4 s).
+- `storm-wall-sheet-r75-a.png`: review sheet: waveforms with intro (grey), loop (blue), fade tail (dark) and loop
+  points (amber), the measured numbers and a per-section loudness table.

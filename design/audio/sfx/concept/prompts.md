@@ -6884,3 +6884,203 @@ Use: a Chimera (Levels 36-42, the Talon's airframe overgrown with Vrell tissue) 
 Brief: the Talon's crack with a short dry tearing sound under it (fabric or fibre, never flesh, never wet); a real recording, nothing bubbly or popping.
 This one: the same crack with thick fabric torn in half, slowed to 0.8, under it: a coarser, heavier rip than a, 0.5 s.
 Edit: 0.46 s, the loudest 100 ms band −26.1 dB, peak −8.6 dBFS, −25.6 LUFS.
+
+## Concept round 75, step AUD-C (Level 37: the evacuation's PA chime, the growth's burst, the balloons tearing, the deck's groan, the burning decks; the Mirror Interceptor's turbine hum and pod burst; the Graft Turret's shot pair, shell crack, root heartbeat and root crumble)
+
+### pa-chime-r75-a — "BongBingBung.wav" by stib
+
+Proposed (round 75), cut from the HQ previews by `tools/concept/audio/sfx_r75.py`.
+Source: <https://freesound.org/people/stib/sounds/493697/> (BongBingBung.wav by stib, CC0 1.0).
+Use: Level 37 (Fall of Aurelia): the city's public-address chime as each shuttle pair is called to its pads (t=42, 70 and 125, 2 s before each pair lifts, with the HOLD FIRE banner); three times a level, over the music.
+Brief: a calm three-note PA chime (an airport's or a station's attention chime) through the decks' loudspeakers: clear, unhurried, a civil signal in the middle of a battle; a real recording, nothing bubbly or popping.
+This one: an old airport's attention chime, bing-bong-bung (three notes 0.6 s apart, the last one lower), band-passed 300 Hz-4.5 kHz like a hall's loudspeakers, 3.2 s.
+Edit: 3.20 s, the loudest 100 ms band −26.0 dB, peak −20.9 dBFS, −29.2 LUFS.
+
+### pa-chime-r75-b — "3-tone chime DOWN" by mpaol2023
+
+Proposed (round 75), cut from the HQ previews by `tools/concept/audio/sfx_r75.py`.
+Source: <https://freesound.org/people/mpaol2023/sounds/370179/> (3-tone chime DOWN by mpaol2023, CC0 1.0).
+Use: Level 37 (Fall of Aurelia): the city's public-address chime as each shuttle pair is called to its pads (t=42, 70 and 125, 2 s before each pair lifts, with the HOLD FIRE banner); three times a level, over the music.
+Brief: a calm three-note PA chime (an airport's or a station's attention chime) through the decks' loudspeakers: clear, unhurried, a civil signal in the middle of a battle; a real recording, nothing bubbly or popping.
+This one: a three-tone chime stepping down, a note a second, each ringing out: slower and softer than a, the same loudspeaker band, 3.6 s.
+Edit: 3.60 s, the loudest 100 ms band −26.0 dB, peak −18.2 dBFS, −30.7 LUFS.
+
+### growth-burst-r75-a — "Cloth Tearing and Ripping - Flannel, Cotton, Scraps - Close Mic - Long & Slow / Staccato" by ChristopherJngs + "tree cut crack and fall in forest2 stereo.flac" by kyles + "Air Rush (longer).wav" by Henrythetrain
+
+Proposed (round 75), cut from the HQ previews by `tools/concept/audio/sfx_r75.py`.
+Sources: <https://freesound.org/people/ChristopherJngs/sounds/719005/> (Cloth Tearing and Ripping - Flannel, Cotton, Scraps - Close Mic - Long & Slow / Staccato by ChristopherJngs, CC0 1.0), <https://freesound.org/people/kyles/sounds/637911/> (tree cut crack and fall in forest2 stereo.flac by kyles, CC0 1.0), <https://freesound.org/people/Henrythetrain/sounds/138430/> (Air Rush (longer).wav by Henrythetrain, CC0 1.0).
+Use: Level 37 (Fall of Aurelia), t=100: the Vrell growth bursting over Aurelia's decks as the Choir turns on Vorne (the turn); once a level, under the Choir's line and the music's duck.
+Brief: the hybrids' tissue tear drawn long and wide, with timbers cracking and a rush of air: a fibrous tearing rush, never wet or bubbly; a real recording, nothing bubbly or popping.
+This one: cotton cloth torn long and slow by hand slowed to 0.6 (the hybrids' chosen tear's family), a tree splintering as it is felled, and a rush of air swelling under them: a wide tearing rush, 3.6 s.
+Edit: 3.60 s, the loudest 100 ms band −20.3 dB, peak −3.9 dBFS, −18.0 LUFS.
+
+### growth-burst-r75-b — "Tearing fabric" by Coo01 + "Tall dead tree splintering then falling to ground with crashing Impact" by ozymandias37 + "Strong wind" by lextrack
+
+Proposed (round 75), cut from the HQ previews by `tools/concept/audio/sfx_r75.py`.
+Sources: <https://freesound.org/people/Coo01/sounds/728158/> (Tearing fabric by Coo01, CC0 1.0), <https://freesound.org/people/ozymandias37/sounds/869103/> (Tall dead tree splintering then falling to ground with crashing Impact by ozymandias37, CC0 1.0), <https://freesound.org/people/lextrack/sounds/344887/> (Strong wind by lextrack, CC0 1.0).
+Use: Level 37 (Fall of Aurelia), t=100: the Vrell growth bursting over Aurelia's decks as the Choir turns on Vorne (the turn); once a level, under the Choir's line and the music's duck.
+Brief: the hybrids' tissue tear drawn long and wide, with timbers cracking and a rush of air: a fibrous tearing rush, never wet or bubbly; a real recording, nothing bubbly or popping.
+This one: a heavier fabric ripped in long pulls slowed to 0.7, a tall dead tree splintering, and a strong wind gusting through: coarser and windier than a, 3.6 s.
+Edit: 3.60 s, the loudest 100 ms band −18.1 dB, peak −3.2 dBFS, −18.0 LUFS.
+
+### balloon-tear-r75-a — "Cloth Tearing and Ripping - Flannel, Cotton, Scraps - Close Mic - Long & Slow / Staccato" by ChristopherJngs + "Strong Wind Recorded with Soundfield Microphone Manchester 2" by keirofinch + "snapping-chain" by CosmicEmbers
+
+Proposed (round 75), cut from the HQ previews by `tools/concept/audio/sfx_r75.py`.
+Sources: <https://freesound.org/people/ChristopherJngs/sounds/719005/> (Cloth Tearing and Ripping - Flannel, Cotton, Scraps - Close Mic - Long & Slow / Staccato by ChristopherJngs, CC0 1.0), <https://freesound.org/people/keirofinch/sounds/376534/> (Strong Wind Recorded with Soundfield Microphone Manchester 2 by keirofinch, CC0 1.0), <https://freesound.org/people/CosmicEmbers/sounds/161650/> (snapping-chain by CosmicEmbers, CC-BY 3.0).
+Use: Level 37 (Fall of Aurelia), the falling city (t=160-175): each of Aurelia's lift balloons tearing open as the deck goes down (a few times over the fall), over the fall stem and the burning layer.
+Brief: a huge fabric tear, a sail ripping in a gale, with cables snapping; no pop, nothing bursting; a real recording, nothing bubbly or popping.
+This one: cloth torn by hand slowed to half (a sail's size) in a strong wind, a chain snapping under tension slowed to 0.8 halfway through (a cable parting): 2.8 s.
+Edit: 2.80 s, the loudest 100 ms band −22.0 dB, peak −4.0 dBFS, −20.1 LUFS.
+
+### balloon-tear-r75-b — "ripping fabric.wav" by GeerkeC + "Strong wind" by lextrack + "Wirecutter 1" by Sheyvan
+
+Proposed (round 75), cut from the HQ previews by `tools/concept/audio/sfx_r75.py`.
+Sources: <https://freesound.org/people/GeerkeC/sounds/703217/> (ripping fabric.wav by GeerkeC, CC-BY 4.0), <https://freesound.org/people/lextrack/sounds/344887/> (Strong wind by lextrack, CC0 1.0), <https://freesound.org/people/Sheyvan/sounds/523291/> (Wirecutter 1 by Sheyvan, CC0 1.0).
+Use: Level 37 (Fall of Aurelia), the falling city (t=160-175): each of Aurelia's lift balloons tearing open as the deck goes down (a few times over the fall), over the fall stem and the burning layer.
+Brief: a huge fabric tear, a sail ripping in a gale, with cables snapping; no pop, nothing bursting; a real recording, nothing bubbly or popping.
+This one: a fabric ripped in short pulls slowed to 0.55 in a strong wind, a wire cut through slowed to 0.6 (a cable's dry snap): more staccato than a, 2.8 s.
+Edit: 2.80 s, the loudest 100 ms band −20.7 dB, peak −4.1 dBFS, −20.2 LUFS.
+
+### deck-groan-r75-a — "Metallic Groan" by hinchinbrook + "Large, Low Rumble.wav" by duckduckpony
+
+Proposed (round 75), cut from the HQ previews by `tools/concept/audio/sfx_r75.py`.
+Sources: <https://freesound.org/people/hinchinbrook/sounds/496836/> (Metallic Groan by hinchinbrook, CC0 1.0), <https://freesound.org/people/duckduckpony/sounds/130972/> (Large, Low Rumble.wav by duckduckpony, CC-BY 4.0).
+Use: Level 37 (Fall of Aurelia), t=160: the deck's structural groan as Aurelia breaks along its cut and tilts, the falling rumble receding below as the halves drift down; once a level, at the start of the fall.
+Brief: a long deep structural groan (a ship's hull straining, a bridge creaking, slowed) and a falling rumble receding below; a real recording, nothing bubbly or popping.
+This one: a big metallic groan slowed to 0.6 (a hull straining), a large low rumble at its peak and dying away slowed to 0.8 under its second half: 7.5 s.
+Edit: 7.50 s, the loudest 100 ms band −20.0 dB, peak −10.2 dBFS, −21.7 LUFS.
+
+### deck-groan-r75-b — "Creaking Metal - Slow" by EagleStealthTeam + "EARTHQUAKE OR DISTANT SPACE SHUTTLE RUMBLE.WAV" by metrostock99
+
+Proposed (round 75), cut from the HQ previews by `tools/concept/audio/sfx_r75.py`.
+Sources: <https://freesound.org/people/EagleStealthTeam/sounds/172411/> (Creaking Metal - Slow by EagleStealthTeam, CC0 1.0), <https://freesound.org/people/metrostock99/sounds/203281/> (EARTHQUAKE OR DISTANT SPACE SHUTTLE RUMBLE.WAV by metrostock99, CC0 1.0).
+Use: Level 37 (Fall of Aurelia), t=160: the deck's structural groan as Aurelia breaks along its cut and tilts, the falling rumble receding below as the halves drift down; once a level, at the start of the fall.
+Brief: a long deep structural groan (a ship's hull straining, a bridge creaking, slowed) and a falling rumble receding below; a real recording, nothing bubbly or popping.
+This one: metal creaking slowly under load slowed to half (a long grinding creak rather than a's single groan), a deep earthquake rumble slowed to 0.7 fading under it: 7.5 s.
+Edit: 7.50 s, the loudest 100 ms band −24.7 dB, peak −12.2 dBFS, −21.4 LUFS.
+
+### aurelia-burning-r75-a — "R30-09-Fires Burns Wood and Metal Crackling.wav" by craigsmith + "siren ambulance european distant echo nice with steps to clean.wav" by kyles + "Metallic Groan" by hinchinbrook
+
+Proposed (round 75), cut from the HQ previews by `tools/concept/audio/sfx_r75.py`.
+Sources: <https://freesound.org/people/craigsmith/sounds/483323/> (R30-09-Fires Burns Wood and Metal Crackling.wav by craigsmith, CC0 1.0), <https://freesound.org/people/kyles/sounds/451068/> (siren ambulance european distant echo nice with steps to clean.wav by kyles, CC0 1.0), <https://freesound.org/people/hinchinbrook/sounds/496836/> (Metallic Groan by hinchinbrook, CC0 1.0).
+Use: Level 37 (Fall of Aurelia), from the turn (t=100) to the level end: a layer over the `aurelia` bed (the beds' 0.70, under the music) while the city burns.
+Brief: a big fire's roar, a distant two-tone city alarm through the decks, metal groaning and settling now and then; a seamless loop, no crackle that reads as popping; a real recording, nothing bubbly or popping.
+This one: a large fire burning wood and metal, its steady roar with the crackle rolled off at 3.5 kHz; once a loop a European two-tone siren far off, muffled through the decks, and a metallic groan slowed to 0.7: 16.0 s loop.
+Edit: 16.00 s, band RMS −40.1 dB, peak −22.9 dBFS, −35.1 LUFS.
+
+### aurelia-burning-r75-b — "Plane Crash Ambiance v1" by thompsonse + "Martinshorn (Siren) 2" by TitanKaempfer + "Creaking Metal - Slow" by EagleStealthTeam
+
+Proposed (round 75), cut from the HQ previews by `tools/concept/audio/sfx_r75.py`.
+Sources: <https://freesound.org/people/thompsonse/sounds/784053/> (Plane Crash Ambiance v1 by thompsonse, CC0 1.0), <https://freesound.org/people/TitanKaempfer/sounds/811916/> (Martinshorn (Siren) 2 by TitanKaempfer, CC0 1.0), <https://freesound.org/people/EagleStealthTeam/sounds/172411/> (Creaking Metal - Slow by EagleStealthTeam, CC0 1.0).
+Use: Level 37 (Fall of Aurelia), from the turn (t=100) to the level end: a layer over the `aurelia` bed (the beds' 0.70, under the music) while the city burns.
+Brief: a big fire's roar, a distant two-tone city alarm through the decks, metal groaning and settling now and then; a seamless loop, no crackle that reads as popping; a real recording, nothing bubbly or popping.
+This one: a burning wreck's ambience (a fire's lower, rumbling roar with metal creaking in it) with a German two-tone siren swelling and fading behind the decks for 12 s of every 16 (heavily muffled); once a loop slow metal creaking under load: 16.0 s loop.
+Edit: 16.00 s, band RMS −40.1 dB, peak −18.8 dBFS, −34.7 LUFS.
+
+### mirror-hum-r75-a — "Idle F-22 Jet Plane.flac" by qubodup
+
+Proposed (round 75), cut from the HQ previews by `tools/concept/audio/sfx_r75.py`.
+Source: <https://freesound.org/people/qubodup/sounds/187734/> (Idle F-22 Jet Plane.flac by qubodup, CC0 1.0).
+Use: a Mirror Interceptor (Levels 37-42, the Ascendancy's gold mirror fighter): its engine, one loop for the nearest Mirror Interceptor on the screen (once per kind), under the fire; often on through Levels 37-42.
+Brief: a heavy turbine hum, lower than the Gunship's: a big airframe hanging at its station; a real recording, nothing bubbly or popping.
+This one: a fighter jet idling on the ground slowed to 0.7: a deep steady turbine hum with the whine pulled down, 8.0 s loop.
+Edit: 8.00 s, band RMS −36.1 dB, peak −22.7 dBFS, −31.9 LUFS.
+
+### mirror-hum-r75-b — "G08-27-Jet Idle or Taxi.wav" by craigsmith
+
+Proposed (round 75), cut from the HQ previews by `tools/concept/audio/sfx_r75.py`.
+Source: <https://freesound.org/people/craigsmith/sounds/437890/> (G08-27-Jet Idle or Taxi.wav by craigsmith, CC0 1.0).
+Use: a Mirror Interceptor (Levels 37-42, the Ascendancy's gold mirror fighter): its engine, one loop for the nearest Mirror Interceptor on the screen (once per kind), under the fire; often on through Levels 37-42.
+Brief: a heavy turbine hum, lower than the Gunship's: a big airframe hanging at its station; a real recording, nothing bubbly or popping.
+This one: a jet idling and taxiing slowed to 0.75: a rougher, airier turbine rumble than a, 8.0 s loop.
+Edit: 8.00 s, band RMS −36.2 dB, peak −22.0 dBFS, −30.8 LUFS.
+
+### mirror-pods-r75-a — "Autocannon Three Shot Burst" by qubodup
+
+Proposed (round 75), cut from the HQ previews by `tools/concept/audio/sfx_r75.py`.
+Source: <https://freesound.org/people/qubodup/sounds/854186/> (Autocannon Three Shot Burst by qubodup, CC0 1.0).
+Use: a Mirror Interceptor (Levels 37-42, the Ascendancy's gold mirror fighter): each burst of its pods (3 shots within 30° every 2.4 s, after the 0.4 s pod glow); often.
+Brief: a dry triple crack: a real cannon, three shots close together; a real recording, nothing bubbly or popping.
+This one: an autocannon's three-shot burst as recorded, the shots 0.25 s apart, its tail cut: 1.0 s.
+Edit: 1.00 s, the loudest 100 ms band −26.1 dB, peak −9.8 dBFS, −26.6 LUFS.
+
+### mirror-pods-r75-b — "Guns & Explosions Album - Autocannon - Shot 1.wav" by OGsoundFX
+
+Proposed (round 75), cut from the HQ previews by `tools/concept/audio/sfx_r75.py`.
+Source: <https://freesound.org/people/OGsoundFX/sounds/423108/> (Guns & Explosions Album - Autocannon - Shot 1.wav by OGsoundFX, CC-BY 4.0).
+Use: a Mirror Interceptor (Levels 37-42, the Ascendancy's gold mirror fighter): each burst of its pods (3 shots within 30° every 2.4 s, after the 0.4 s pod glow); often.
+Brief: a dry triple crack: a real cannon, three shots close together; a real recording, nothing bubbly or popping.
+This one: another autocannon's single shot sped to 1.3, three times 0.16 s apart: a tighter, boomier triple than a, 0.9 s.
+Edit: 0.92 s, the loudest 100 ms band −26.1 dB, peak −13.7 dBFS, −24.9 LUFS.
+
+### graft-shot-r75-a — "Mk 46 30mm gun - single shot" by qubodup
+
+Proposed (round 75), cut from the HQ previews by `tools/concept/audio/sfx_r75.py`.
+Source: <https://freesound.org/people/qubodup/sounds/162258/> (Mk 46 30mm gun - single shot by qubodup, CC0 1.0).
+Use: a Graft Turret (Levels 37-42, an Ascendancy turret grafted onto a Vrell root): each shot pair (every 2.2 s while it bears, after the red glint); often.
+Brief: the Ascendancy's small gun pair: the Talon's dry twin crack (the unit's brief); a real recording, nothing bubbly or popping.
+This one: the Talon's built twin crack as is (sfx_r62.py talon-shot b): a 30 mm gun's single shot sped to 1.4, twice 50 ms apart, 0.35 s; the game plays the Talon's file for it.
+Edit: 0.35 s, the loudest 100 ms band −28.1 dB, peak −13.5 dBFS, −inf LUFS.
+
+### graft-shot-r75-b — "Autocannon Shot 2" by qubodup
+
+Proposed (round 75), cut from the HQ previews by `tools/concept/audio/sfx_r75.py`.
+Source: <https://freesound.org/people/qubodup/sounds/854184/> (Autocannon Shot 2 by qubodup, CC0 1.0).
+Use: a Graft Turret (Levels 37-42, an Ascendancy turret grafted onto a Vrell root): each shot pair (every 2.2 s while it bears, after the red glint); often.
+Brief: the Ascendancy's small gun pair: the Talon's dry twin crack (the unit's brief); a real recording, nothing bubbly or popping.
+This one: another autocannon's single shot sped to 1.3 and 1.38, twice 60 ms apart: a brighter, harder pair than the Talon's, telling a ground gun from the fighters, 0.36 s.
+Edit: 0.36 s, the loudest 100 ms band −28.1 dB, peak −14.6 dBFS, −inf LUFS.
+
+### graft-shell-crack-r75-a — "Broken Metallic.wav" by datasoundsample + "spark2.ogg" by Kneeling
+
+Proposed (round 75), cut from the HQ previews by `tools/concept/audio/sfx_r75.py`.
+Sources: <https://freesound.org/people/datasoundsample/sounds/638636/> (Broken Metallic.wav by datasoundsample, CC-BY 4.0), <https://freesound.org/people/Kneeling/sounds/643861/> (spark2.ogg by Kneeling, CC0 1.0).
+Use: a Graft Turret (Levels 37-42, an Ascendancy turret grafted onto a Vrell root): its shell bursting when the turret is killed (the root left exposed), over its size rung; often.
+Brief: a short metal crack with a spark hiss; a real recording, nothing bubbly or popping.
+This one: a metal casing breaking (a sharp metallic crack) with a short burst of electric sparks after it: 0.5 s.
+Edit: 0.45 s, the loudest 100 ms band −24.6 dB, peak −13.2 dBFS, −22.2 LUFS.
+
+### graft-shell-crack-r75-b — "Cracking, snapping, and clanging (metal can)" by Ashley12275 + "Electric Sparks.wav" by kev_durr
+
+Proposed (round 75), cut from the HQ previews by `tools/concept/audio/sfx_r75.py`.
+Sources: <https://freesound.org/people/Ashley12275/sounds/518731/> (Cracking, snapping, and clanging (metal can) by Ashley12275, CC0 1.0), <https://freesound.org/people/kev_durr/sounds/396470/> (Electric Sparks.wav by kev_durr, CC0 1.0).
+Use: a Graft Turret (Levels 37-42, an Ascendancy turret grafted onto a Vrell root): its shell bursting when the turret is killed (the root left exposed), over its size rung; often.
+Brief: a short metal crack with a spark hiss; a real recording, nothing bubbly or popping.
+This one: a metal can cracking and snapping slowed to 0.7 with a sputter of sparks: thinner and tinnier than a, 0.5 s.
+Edit: 0.49 s, the loudest 100 ms band −24.7 dB, peak −5.2 dBFS, −22.1 LUFS.
+
+### graft-heartbeat-r75-a — "Kick-FeltBeater-Soft3.wav" by Surfjira
+
+Proposed (round 75), cut from the HQ previews by `tools/concept/audio/sfx_r75.py`.
+Source: <https://freesound.org/people/Surfjira/sounds/56441/> (Kick-FeltBeater-Soft3.wav by Surfjira, CC-BY 4.0).
+Use: a Graft Turret (Levels 37-42, an Ascendancy turret grafted onto a Vrell root): the exposed root's pulse, one thump per pulse while the root shows (the nearest root), quickening from 1 a second to 4 a second as its 5 s window closes.
+Brief: a low muffled heartbeat thump (a felt-beater bass drum, dry); short enough for 4 a second; a real recording, nothing bubbly or popping.
+This one: a bass drum struck softly with a felt beater, muffled under 600 Hz: one soft low thump, 0.3 s.
+Edit: 0.30 s, the loudest 100 ms band −34.7 dB, peak −8.0 dBFS, −inf LUFS.
+
+### graft-heartbeat-r75-b — "Heartbeat 97 BPM" by Cloud-10
+
+Proposed (round 75), cut from the HQ previews by `tools/concept/audio/sfx_r75.py`.
+Source: <https://freesound.org/people/Cloud-10/sounds/688735/> (Heartbeat 97 BPM by Cloud-10, CC0 1.0).
+Use: a Graft Turret (Levels 37-42, an Ascendancy turret grafted onto a Vrell root): the exposed root's pulse, one thump per pulse while the root shows (the nearest root), quickening from 1 a second to 4 a second as its 5 s window closes.
+Brief: a low muffled heartbeat thump (a felt-beater bass drum, dry); short enough for 4 a second; a real recording, nothing bubbly or popping.
+This one: a heartbeat's first beat (a kick with its highs cut, a deeper, rounder thump than a): 0.28 s.
+Edit: 0.28 s, the loudest 100 ms band −34.2 dB, peak −8.0 dBFS, −inf LUFS.
+
+### graft-root-crumble-r75-a — "Cloth Tearing and Ripping - Flannel, Cotton, Scraps - Close Mic - Long & Fast" by ChristopherJngs + "few small branches snapping, close up, high frequency,H6.wav" by Bini_trns
+
+Proposed (round 75), cut from the HQ previews by `tools/concept/audio/sfx_r75.py`.
+Sources: <https://freesound.org/people/ChristopherJngs/sounds/719003/> (Cloth Tearing and Ripping - Flannel, Cotton, Scraps - Close Mic - Long & Fast by ChristopherJngs, CC0 1.0), <https://freesound.org/people/Bini_trns/sounds/354103/> (few small branches snapping, close up, high frequency,H6.wav by Bini_trns, CC0 1.0).
+Use: a Graft Turret (Levels 37-42, an Ascendancy turret grafted onto a Vrell root): its root destroyed inside the window (the turret stays dead); often.
+Brief: the hybrids' tissue tear with a crunch under it (dry twigs crushed): a fibrous tearing crunch, never wet; a real recording, nothing bubbly or popping.
+This one: the hybrids' chosen tear (round 72 S.2 a: cotton cloth torn by hand, slowed to 0.6) with small dry branches snapping under it: 0.9 s.
+Edit: 0.92 s, the loudest 100 ms band −24.0 dB, peak −10.8 dBFS, −22.1 LUFS.
+
+### graft-root-crumble-r75-b — "heavy fabric tearing v2, thick fabric tearing, tearing.Recorded on H6Zoom XY capsule" by Rinaldobowles56 + "Sticks Breaking.wav" by EugeneEverett
+
+Proposed (round 75), cut from the HQ previews by `tools/concept/audio/sfx_r75.py`.
+Sources: <https://freesound.org/people/Rinaldobowles56/sounds/708104/> (heavy fabric tearing v2, thick fabric tearing, tearing.Recorded on H6Zoom XY capsule by Rinaldobowles56, CC0 1.0), <https://freesound.org/people/EugeneEverett/sounds/596518/> (Sticks Breaking.wav by EugeneEverett, CC0 1.0).
+Use: a Graft Turret (Levels 37-42, an Ascendancy turret grafted onto a Vrell root): its root destroyed inside the window (the turret stays dead); often.
+Brief: the hybrids' tissue tear with a crunch under it (dry twigs crushed): a fibrous tearing crunch, never wet; a real recording, nothing bubbly or popping.
+This one: thick fabric torn in half slowed to 0.8 with sticks breaking under it: coarser and woodier than a, 0.9 s.
+Edit: 0.80 s, the loudest 100 ms band −27.4 dB, peak −5.1 dBFS, −23.3 LUFS.
