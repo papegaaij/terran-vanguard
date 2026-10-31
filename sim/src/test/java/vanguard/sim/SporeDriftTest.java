@@ -200,7 +200,7 @@ class SporeDriftTest {
     void aConvoyTurnsAcrossAtItsStrafeHeightAndOneGettingAwayFailsTheObjective() {
         var escaped =
                 new RadioCue(CueTrigger.ENEMY_ESCAPED, 0, "spore-bomber", "Okafor", "One got past.", false, "grim");
-        var secondary = new Secondary(0, 50, List.of(), "spore-bomber");
+        var secondary = Secondary.builder().credits(50).escapes("spore-bomber").build();
         var sortie = sortie(level(
                 40,
                 List.of(wave(0, WaveSpec.Formation.CONVOY, BOMBER, 3, FRONT, NONE)),
@@ -237,7 +237,7 @@ class SporeDriftTest {
 
     @Test
     void destroyingEveryUnitOfAnEscapesObjectiveMeetsIt() {
-        var secondary = new Secondary(0, 50, List.of(), "spore-bomber");
+        var secondary = Secondary.builder().credits(50).escapes("spore-bomber").build();
         var sortie = sortie(level(
                 30,
                 List.of(wave(0, WaveSpec.Formation.SINGLE, BOMBER, 1, FRONT, NONE)),
@@ -575,7 +575,7 @@ class SporeDriftTest {
                                 .build()),
                 List.of(),
                 List.of(),
-                new Secondary(0, 50, List.of(), "spore-bomber"),
+                Secondary.builder().credits(50).escapes("spore-bomber").build(),
                 List.of(
                         chunk(0.5, 120, new Hitbox(96, 80), -30, INFINITE, 15),
                         chunk(1, 360, new Hitbox(32, 28), -30, 6, 0)),

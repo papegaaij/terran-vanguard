@@ -75,6 +75,7 @@ class EnemySpecCopyTest {
                 Act6ASpecs.GRAFT,
                 Act6ASpecs.PYLON,
                 Act6ASpecs.TURRET,
+                Act6CSpecs.MIRROR,
                 CloudDiversSpecs.CHIMERA,
                 CloudDiversSpecs.HARVESTER,
                 ThreadcrawlerTest.crawler(4, ThreadcrawlerTest.PORES, new double[] {0, 5_000}, new double[] {100, 100}),

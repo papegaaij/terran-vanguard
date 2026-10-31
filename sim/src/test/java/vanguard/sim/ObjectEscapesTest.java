@@ -142,7 +142,11 @@ class ObjectEscapesTest {
         assertTrue(secondary.countsObject("cargo-container-helix"));
         assertFalse(secondary.countsObject("cargo-containers"));
         assertFalse(secondary.countsObject("hold-clamp"));
-        assertFalse(new Secondary(0, 100, List.of(), "cargo-container").countsObject("cargo-container"));
+        assertFalse(Secondary.builder()
+                .credits(100)
+                .escapes("cargo-container")
+                .build()
+                .countsObject("cargo-container"));
         assertTrue(secondary.withBossesCounted(true).objects(), "kept by the copies");
         assertEquals(2, secondary.withEscapesAllowed(2).escapesAllowed());
         assertTrue(secondary.withEscapesAllowed(2).objects());

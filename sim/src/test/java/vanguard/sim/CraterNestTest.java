@@ -54,7 +54,11 @@ class CraterNestTest {
                 .radio(List.of(new RadioCue(
                         CueTrigger.MISSION_FAILED, 0, "", "Okafor", "{group} is behind you.", false, "grim")))
                 .objectives(ObjectiveSpec.NONE
-                        .withSecondary(new Secondary(0, 40, List.of(), "", List.of("polyp-mortar"), "NEST"))
+                        .withSecondary(Secondary.builder()
+                                .credits(40)
+                                .killAll(List.of("polyp-mortar"))
+                                .label("NEST")
+                                .build())
                         .withTargets(targets))
                 .hazards(HazardSpec.NONE.withSled(sled).withRocks(rocks))
                 .drops(DropSpec.NONE.withGroupDrops(drops))

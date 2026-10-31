@@ -29,7 +29,12 @@ class PreyTest {
                         Act5FSpecs.preyWing(0, talons),
                         Act5FSpecs.sideStreamAt(1.5, Act5FSpecs.HUNTER, leeches, WaveSpec.Edge.LEFT, 170)));
         return TestSpecs.withObjectives(
-                level, o -> o.withSecondary(new Secondary(0, 100, List.of(), "void-leech").withEscapesAllowed(15)));
+                level,
+                o -> o.withSecondary(Secondary.builder()
+                        .credits(100)
+                        .escapes("void-leech")
+                        .build()
+                        .withEscapesAllowed(15)));
     }
 
     static Sortie sortie(int talons, int leeches) {

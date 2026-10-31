@@ -34,8 +34,11 @@ class SecondaryFailedTest {
                 .sections(List.of(new Section(40, 160)))
                 .waves(waves)
                 .radio(radio)
-                .objectives(ObjectiveSpec.NONE.withSecondary(
-                        new Secondary(0, 100, List.of(), "harvester").withEscapesAllowed(1)))
+                .objectives(ObjectiveSpec.NONE.withSecondary(Secondary.builder()
+                        .credits(100)
+                        .escapes("harvester")
+                        .build()
+                        .withEscapesAllowed(1)))
                 .build();
         return CloudDiversSpecs.sortie(level);
     }

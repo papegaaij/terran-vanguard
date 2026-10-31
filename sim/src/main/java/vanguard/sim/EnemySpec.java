@@ -218,7 +218,8 @@ public record EnemySpec(
         boolean spoofable,
         boolean uncounted,
         Optional<CreditSource> haul,
-        Optional<CarrierDrift> carrierDrift)
+        Optional<CarrierDrift> carrierDrift,
+        Optional<Station> station)
         implements FlightSpecs, WalkerSpecs, ChainSpecs, LayerSpecs, AttackSpecs, HostSpecs, JovianSpecs {
     /** M8 part B: the most destroyable parts a unit carries (the Drill Rig's four pumps). */
     public static final int MOST_PARTS = 4;
@@ -239,6 +240,10 @@ public record EnemySpec(
         java.util.Objects.requireNonNull(dome);
         java.util.Objects.requireNonNull(haul);
         java.util.Objects.requireNonNull(carrierDrift);
+        java.util.Objects.requireNonNull(station);
+        if (station.isPresent() && (hover.isEmpty() || (layer != Layer.AIR && layer != Layer.LOW_AIR) || terrain)) {
+            throw new IllegalArgumentException(slug + ": a station is a flying unit's hover (M10 part C)");
+        }
         if (haul.isPresent() && haul.get() != CreditSource.KILLS && haul.get() != CreditSource.GROUND_TARGETS) {
             throw new IllegalArgumentException(slug + ": a bounty is paid as a kill's or a ground target's: " + haul);
         }
@@ -739,6 +744,13 @@ public record EnemySpec(
     public EnemySpec withCarrierDrift(Optional<CarrierDrift> drift) {
         EnemySpecCopy copy = new EnemySpecCopy(this);
         copy.carrierDrift = drift;
+        return copy.build();
+    }
+
+    /** M10 part C (design/enemies/air/mirror-interceptor): this unit flying to a station; empty for none. */
+    public EnemySpec withStation(Optional<Station> withStation) {
+        EnemySpecCopy copy = new EnemySpecCopy(this);
+        copy.station = withStation;
         return copy.build();
     }
 

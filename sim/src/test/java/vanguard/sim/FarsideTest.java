@@ -115,7 +115,8 @@ class FarsideTest {
                 .waves(waves)
                 .groundObjects(objects)
                 .secrets(secrets)
-                .objectives(ObjectiveSpec.NONE.withSecondary(new Secondary(0, 50, List.of(), "mantis", List.of(), "")))
+                .objectives(ObjectiveSpec.NONE.withSecondary(
+                        Secondary.builder().credits(50).escapes("mantis").build()))
                 .hazards(HazardSpec.NONE.withDarkness(darkness))
                 .build();
     }

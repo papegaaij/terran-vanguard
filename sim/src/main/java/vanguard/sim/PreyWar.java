@@ -11,6 +11,13 @@ package vanguard.sim;
  * pay nothing ({@link EnemyForce.Escapes#lostToWar}). Every hit reports {@link SimEvents.Type#PREY_HIT} (the teal
  * flash). Owned by an {@link EnemyForce} only in a level with a hunting wave; its state lives in the units (their
  * {@link Enemy#hunts()}, hashed there). Allocates nothing.
+ *
+ * <p>M10 part C (design/campaign Level 37, the Skitter snakes that ram): a hunting unit that only flies its path (a
+ * snake's Skitter: no chase, dive, latch, flock, lunge or hover of its own) leaves its path for its prey ({@link
+ * #steer}): from the step its prey is on the play field it flies on at its speed, its heading turning toward the
+ * nearest prey unit at {@link #HUNT_TURN_DEGREES} a second (each unit of the snake on its own, so the followers trail
+ * the head along its track at their spacing); with no prey left it turns toward the ship while it is above the ship
+ * and then flies straight on and out. Its ram is {@link #rams}'.
  */
 final class PreyWar {
     private final Pool<Enemy> enemies;
@@ -22,6 +29,14 @@ final class PreyWar {
      * always without one). Follows the level clock (not hashed).
      */
     private boolean live = true;
+
+    /**
+     * M10 part C (the gap check's §4, pending the user's review in round 75): how fast a hunting path-flyer's heading
+     * turns toward its prey, degrees a second.
+     */
+    static final double HUNT_TURN_DEGREES = 180;
+
+    private static final double HUNT_TURN = StrictMath.toRadians(HUNT_TURN_DEGREES) * SimStep.SECONDS;
 
     PreyWar(Pool<Enemy> enemies, Pool<EnemyBullet> bullets, SimEvents events, EnemyForce.Escapes escapes) {
         this.enemies = enemies;
@@ -49,6 +64,71 @@ final class PreyWar {
     /** M10 part A, step A1b: whether the hunting links are live now. */
     boolean live() {
         return live;
+    }
+
+    /**
+     * M10 part C: whether {@code u} hunts and only flies its path (a snake's Skitter): no chase, dive, latch, flock,
+     * lunge, hover, orbit, walk or chain of its own, a flying unit off the ground.
+     */
+    static boolean pathHunter(Enemy u) {
+        EnemySpec spec = u.spec();
+        return !u.hunts.isEmpty()
+                && spec.chase().isEmpty()
+                && spec.latch().isEmpty()
+                && spec.dive().isEmpty()
+                && spec.flock().isEmpty()
+                && spec.lunge().isEmpty()
+                && spec.hover().isEmpty()
+                && spec.walker().isEmpty()
+                && spec.chain().isEmpty()
+                && !spec.terrain()
+                && u.orbit.isEmpty()
+                && u.holdTicks == 0
+                && (u.layer() == Layer.AIR || u.layer() == Layer.LOW_AIR);
+    }
+
+    /**
+     * M10 part C (design/campaign Level 37, the snakes ramming their prey): one step of a hunting path-flyer's steering
+     * before it moves, {@code quarry} its prey now ({@link #target(Enemy)}; null for none), the ship at (shipX, shipY).
+     * On its path, it leaves it once its links are live and it and its prey are on the play field, flying on along its
+     * last movement at its speed; off it, its heading turns toward its prey at {@link #HUNT_TURN_DEGREES} a second, or,
+     * no prey left, toward the ship while it is above the ship, and otherwise it flies straight on (out of the field).
+     */
+    void steer(Enemy u, Enemy quarry, double shipX, double shipY) {
+        if (!live || u.empStunned()) {
+            return;
+        }
+        if (u.phase == Enemy.Phase.ENTER) {
+            if (quarry == null || !ShotGeometry.onField(u)) {
+                return;
+            }
+            double dx = u.x - u.prevX;
+            double dy = u.y - u.prevY;
+            double heading =
+                    dx != 0 || dy != 0 ? Enemy.heading(dx, dy) : Enemy.heading(quarry.x() - u.x, quarry.y() - u.y);
+            u.phase = Enemy.Phase.LEAVE;
+            u.burstLeft = 0;
+            u.vx = -Trig.sin(heading) * u.speed;
+            u.vy = -Trig.cos(heading) * u.speed;
+        } else if (u.phase != Enemy.Phase.LEAVE) {
+            return;
+        }
+        double toX;
+        double toY;
+        if (quarry != null) {
+            toX = quarry.x();
+            toY = quarry.y();
+        } else if (u.y > shipY) {
+            toX = shipX;
+            toY = shipY;
+        } else {
+            return;
+        }
+        double heading = Enemy.heading(u.vx, u.vy);
+        double delta = Math.IEEEremainder(Enemy.heading(toX - u.x, toY - u.y) - heading, 2 * StrictMath.PI);
+        heading += Math.clamp(delta, -HUNT_TURN, HUNT_TURN);
+        u.vx = -Trig.sin(heading) * u.speed;
+        u.vy = -Trig.cos(heading) * u.speed;
     }
 
     /**

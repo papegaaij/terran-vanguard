@@ -36,7 +36,18 @@ final class AllyPasses {
                         .defend()
                         .map(defend -> new Convoy(defend, Sortie.scrollAt(script, defend.start()))))
                 .or(() -> script.objectives().groundAllies().map(allies -> ScrollPlan.groundAllies(script, allies)))
+                // M10 part C: air allies outside the objectives (Level 37's shuttles): never the primary.
+                .or(() -> script.objectives()
+                        .airAllies()
+                        .map(allies -> new Convoy(allies, null, script.sections(), false)))
                 .orElse(null);
+        if (script.objectives().secondary().bySaved()
+                && (script.objectives().airAllies().isEmpty()
+                        || script.objectives().secondary().saved()
+                                > script.objectives().airAllies().get().saveable())) {
+            throw new IllegalArgumentException(
+                    "a saved secondary counts the level's air allies home, at most all of them");
+        }
         if (script.objectives().secondary().byGroundAllies()
                 && script.objectives().groundAllies().isEmpty()) {
             throw new IllegalArgumentException("an untouched or standing secondary needs the level's ground allies");
@@ -49,6 +60,9 @@ final class AllyPasses {
             // M9 part D: the hull escort's hook, per kind (always or none).
             force.hook(convoy, convoy.hull().spec().targetedBy());
             force.missiles().hull(convoy.hull());
+        } else if (convoy != null && !convoy.primary()) {
+            // M10 part C: the air allies' hook by wave (Level 37's Talon waves at the shuttles).
+            force.hookWaves(convoy, convoy.escort().air().orElseThrow().hookedWaves());
         } else if (convoy != null && !convoy.naval()) {
             force.hook(convoy, convoy.escort().targetedBy());
         }
@@ -370,6 +384,21 @@ final class AllyPasses {
     }
 
     /**
+     * M10 part C (design/campaign Level 37, the shuttles), after the air units moved: a lift group's banner opening
+     * ({@link SimEvents.Type#FRIENDLIES_INBOUND} at its pads' centre, value its index) and, for the air allies outside
+     * the objectives, a saved secondary met by the units home (its credits and line).
+     */
+    void airStep() {
+        int group = convoy.announcedGroup(s.levelTick);
+        if (group >= 0) {
+            events.add(SimEvents.Type.FRIENDLIES_INBOUND, convoy.groupX(group), convoy.groupY(group), group);
+        }
+        if (!convoy.primary() && objectives.alliesHome(convoy.home())) {
+            s.objectivePasses.paySecondary();
+        }
+    }
+
+    /**
      * Unit {@code k} of the convoy takes {@code damage}: the first hit's line, a loss's lines (M5 part
      * D: {@code first-ally-lost}'s on the first, then {@code ally-lost}'s on every one), the failure
      * when every saveable unit is lost.
@@ -401,6 +430,13 @@ final class AllyPasses {
             radio.cue(CueTrigger.FIRST_ALLY_LOST, "");
         }
         radio.cue(CueTrigger.ALLY_LOST, "");
+        if (!convoy.primary()) {
+            // M10 part C: air allies never fail the mission; a saved secondary fails at the loss past its spare.
+            if (objectives.alliesLost(convoy.lostSaveable(), convoy.saveable())) {
+                events.add(SimEvents.Type.OBJECTIVE_FAILED, ally.x(), ally.y());
+            }
+            return;
+        }
         if (convoy.allLost()) {
             // M5 part G: a defend primary's too.
             if ((convoy.air() || convoy.defend() || convoy.hull() != null) && rules.invulnerableShip()) {

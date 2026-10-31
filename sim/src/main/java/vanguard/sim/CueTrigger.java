@@ -200,7 +200,19 @@ public enum CueTrigger {
      * unit past the allowed ones, any other at its failure); once. No subject (the radio event {@code
      * secondary-failed}).
      */
-    SECONDARY_FAILED;
+    SECONDARY_FAILED,
+    /**
+     * M10 part C (design/campaign Level 37, radio: Rook's line on the first bounce): a mirror bounced a player shot back
+     * for the first time in the attempt ({@link SimEvents.Type#MIRROR_BOUNCED}); once. No subject (the radio event
+     * {@code first-bounce}).
+     */
+    FIRST_BOUNCE,
+    /**
+     * M10 part C (design/campaign Level 37, radio: Rook's line on the war's first kill): a prey unit was killed by its
+     * hunters for the first time in the attempt (a {@link SimEvents.Type#PREY_KILLED} of a prey, not of a hunter dead on
+     * it); once. No subject (the radio event {@code first-prey-kill}).
+     */
+    FIRST_PREY_KILL;
 
     /** Between the part names of a {@link #BOSS_PART_DESTROYED} cue's subject. */
     public static final String PART_SEPARATOR = "|";

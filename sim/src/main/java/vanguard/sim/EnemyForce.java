@@ -62,6 +62,8 @@ final class EnemyForce {
     private final boolean lines;
     /** Step FIX7: whether a kind of the level keeps its drifting hold apart from the others ({@link HoverHold#keepApart}). */
     private final boolean apart;
+    /** M10 part C: whether a kind of the level flies to a station ({@link StationHold#strafe}). */
+    private final boolean stations;
     /** M7 part D: whether a kind of the level has a curl-roll (its ball crushes ground targets). */
     private final boolean rollers;
 
@@ -212,6 +214,7 @@ final class EnemyForce {
         apart = kinds.stream()
                 .anyMatch(kind -> kind.hover().map(EnemySpec.Hover::keepApart).orElse(false));
         rollers = kinds.stream().anyMatch(kind -> kind.roll().isPresent());
+        stations = kinds.stream().anyMatch(kind -> kind.station().isPresent());
         pull = new EnemyPull(kinds, enemies);
         WaveSchedule waves = new WaveSchedule(waveSpecs, kinds, rng, spans, reversedAt, mounts);
         // M9 part B: the halt cycle's own plan, on the halt's clock (no spans, no reversed scroll, no walls).
@@ -340,6 +343,11 @@ final class EnemyForce {
     /** The hook of {@code target} with each enemy kind in its mode in {@code targetedBy}. */
     void hook(Convoy target, java.util.Map<String, HookMode> targetedBy) {
         objectiveHook.hook(target, targetedBy);
+    }
+
+    /** M10 part C: the air allies' hook by wave ({@link ObjectiveHook#hookWaves}). */
+    void hookWaves(Convoy target, List<Integer> waves) {
+        objectiveHook.hookWaves(target, waves);
     }
 
     /** M7 part D: convoy unit {@code k} takes {@code hits} from a hooked attack this step. */
@@ -594,6 +602,10 @@ final class EnemyForce {
         if (apart) {
             // Step FIX7: the drifting holds kept apart turn away from each other before they touch.
             HoverHold.keepApart(enemies);
+        }
+        if (stations) {
+            // M10 part C: the units holding their stations strafe toward the ship, kept apart on their lines.
+            StationHold.strafe(enemies, ship.x(), ship.y());
         }
         if (prey != null) {
             // M9 part F: the leeches on their prey, then the new prey latches.

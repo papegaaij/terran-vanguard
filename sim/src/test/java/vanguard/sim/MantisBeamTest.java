@@ -41,7 +41,8 @@ class MantisBeamTest {
         LevelScript level = LevelScript.builder(6, 1)
                 .sections(List.of(new Section(40, 130)))
                 .waves(List.of(wave))
-                .objectives(ObjectiveSpec.NONE.withSecondary(new Secondary(0, 50, List.of(), "mantis", List.of(), "")))
+                .objectives(ObjectiveSpec.NONE.withSecondary(
+                        Secondary.builder().credits(50).escapes("mantis").build()))
                 .build();
         return new Sortie(1, TestSpecs.LOADOUT, level, TestSpecs.RULES, TestSpecs.FULL_ARMOUR);
     }

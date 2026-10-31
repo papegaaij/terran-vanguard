@@ -88,15 +88,19 @@ class DomesStandingTest {
         assertTrue(STANDING.byGroundAllies());
         assertThrows(
                 IllegalArgumentException.class,
-                () -> new Secondary(
-                        0, 100, List.of(), "", List.of(), "DOMES", "", List.of(), -1, "", false, false, 0, false, true,
-                        true),
+                () -> Secondary.builder()
+                        .credits(100)
+                        .label("DOMES")
+                        .untouched(true)
+                        .standing(true)
+                        .build(),
                 "not untouched and standing at once");
-        assertThrows(
-                IllegalArgumentException.class,
-                () -> new Secondary(
-                        0.5, 100, List.of(), "", List.of(), "DOMES", "", List.of(), -1, "", false, false, 0, false,
-                        false, true));
+        assertThrows(IllegalArgumentException.class, () -> Secondary.builder()
+                .killRatio(0.5)
+                .credits(100)
+                .label("DOMES")
+                .standing(true)
+                .build());
         LevelScript without = SiegeSpecs.level(List.of(), List.of(), STANDING, Optional.empty());
         assertThrows(IllegalArgumentException.class, () -> SiegeSpecs.sortie(without));
         assertFalse(Secondary.untouched(100, "DOMES").standing(), "untouched is not standing");

@@ -23,6 +23,10 @@ import java.util.Optional;
  * @param holds M5 part C: the hold zones (Level 09's node clusters), where the scroll eases down until their groups
  *     are destroyed and the level clock slows with it
  * @param collapse M5 part C: the collapse (Level 09's arcology) once its groups are cleared
+ * @param airAllies M10 part C (design/campaign Level 37, the shuttles): air allies outside the objectives, an air
+ *     escort ({@link Escort#air}, its {@link Air#groups()} lifting pair by pair) that never fails the mission; its
+ *     units home count for a {@link Secondary#saved()} objective and pay nothing of their own. Never beside an escort,
+ *     a naval convoy, a defend primary, ground allies or holds (its pads scroll with the level's time)
  */
 public record ObjectiveSpec(
         Secondary secondary,
@@ -33,7 +37,8 @@ public record ObjectiveSpec(
         Optional<GroundAllies> groundAllies,
         List<TowSpec> tows,
         List<Hold> holds,
-        Optional<Collapse> collapse) {
+        Optional<Collapse> collapse,
+        Optional<Escort> airAllies) {
     /** No objective but reaching the end: {@link Secondary#NONE}, no groups, convoy, allies, tows or holds. */
     public static final ObjectiveSpec NONE = new ObjectiveSpec(
             Secondary.NONE,
@@ -44,9 +49,35 @@ public record ObjectiveSpec(
             Optional.empty(),
             List.of(),
             List.of(),
+            Optional.empty(),
             Optional.empty());
 
+    /** Without M10 part C's air allies (the levels before Level 37). */
+    public ObjectiveSpec(
+            Secondary secondary,
+            List<String> targets,
+            Optional<Escort> escort,
+            Optional<Defend> defend,
+            Optional<Naval> convoy,
+            Optional<GroundAllies> groundAllies,
+            List<TowSpec> tows,
+            List<Hold> holds,
+            Optional<Collapse> collapse) {
+        this(secondary, targets, escort, defend, convoy, groundAllies, tows, holds, collapse, Optional.empty());
+    }
+
     public ObjectiveSpec {
+        java.util.Objects.requireNonNull(airAllies);
+        if (airAllies.isPresent()
+                && (airAllies.get().air().isEmpty()
+                        || escort.isPresent()
+                        || defend.isPresent()
+                        || convoy.isPresent()
+                        || groundAllies.isPresent()
+                        || !holds.isEmpty())) {
+            throw new IllegalArgumentException(
+                    "air allies fly an air escort's stations, beside no escort, convoy, defend, ground allies or holds");
+        }
         holds = List.copyOf(holds);
         int groupCount = groups(targets, secondary).size();
         for (Hold hold : holds) {
@@ -82,47 +113,62 @@ public record ObjectiveSpec(
 
     /** These objectives with another {@code secondary}. */
     public ObjectiveSpec withSecondary(Secondary secondary) {
-        return new ObjectiveSpec(secondary, targets, escort, defend, convoy, groundAllies, tows, holds, collapse);
+        return new ObjectiveSpec(
+                secondary, targets, escort, defend, convoy, groundAllies, tows, holds, collapse, airAllies);
     }
 
     /** These objectives with another {@code targets}. */
     public ObjectiveSpec withTargets(List<String> targets) {
-        return new ObjectiveSpec(secondary, targets, escort, defend, convoy, groundAllies, tows, holds, collapse);
+        return new ObjectiveSpec(
+                secondary, targets, escort, defend, convoy, groundAllies, tows, holds, collapse, airAllies);
     }
 
     /** These objectives with another {@code escort}. */
     public ObjectiveSpec withEscort(Optional<Escort> escort) {
-        return new ObjectiveSpec(secondary, targets, escort, defend, convoy, groundAllies, tows, holds, collapse);
+        return new ObjectiveSpec(
+                secondary, targets, escort, defend, convoy, groundAllies, tows, holds, collapse, airAllies);
     }
 
     /** These objectives with another {@code defend}. */
     public ObjectiveSpec withDefend(Optional<Defend> defend) {
-        return new ObjectiveSpec(secondary, targets, escort, defend, convoy, groundAllies, tows, holds, collapse);
+        return new ObjectiveSpec(
+                secondary, targets, escort, defend, convoy, groundAllies, tows, holds, collapse, airAllies);
     }
 
     /** These objectives with another {@code convoy}. */
     public ObjectiveSpec withConvoy(Optional<Naval> convoy) {
-        return new ObjectiveSpec(secondary, targets, escort, defend, convoy, groundAllies, tows, holds, collapse);
+        return new ObjectiveSpec(
+                secondary, targets, escort, defend, convoy, groundAllies, tows, holds, collapse, airAllies);
     }
 
     /** These objectives with another {@code groundAllies}. */
     public ObjectiveSpec withGroundAllies(Optional<GroundAllies> groundAllies) {
-        return new ObjectiveSpec(secondary, targets, escort, defend, convoy, groundAllies, tows, holds, collapse);
+        return new ObjectiveSpec(
+                secondary, targets, escort, defend, convoy, groundAllies, tows, holds, collapse, airAllies);
     }
 
     /** These objectives with another {@code tows}. */
     public ObjectiveSpec withTows(List<TowSpec> tows) {
-        return new ObjectiveSpec(secondary, targets, escort, defend, convoy, groundAllies, tows, holds, collapse);
+        return new ObjectiveSpec(
+                secondary, targets, escort, defend, convoy, groundAllies, tows, holds, collapse, airAllies);
     }
 
     /** These objectives with another {@code holds}. */
     public ObjectiveSpec withHolds(List<Hold> holds) {
-        return new ObjectiveSpec(secondary, targets, escort, defend, convoy, groundAllies, tows, holds, collapse);
+        return new ObjectiveSpec(
+                secondary, targets, escort, defend, convoy, groundAllies, tows, holds, collapse, airAllies);
+    }
+
+    /** M10 part C: these objectives with other air allies outside the objectives (Level 37's shuttles). */
+    public ObjectiveSpec withAirAllies(Optional<Escort> airAllies) {
+        return new ObjectiveSpec(
+                secondary, targets, escort, defend, convoy, groundAllies, tows, holds, collapse, airAllies);
     }
 
     /** These objectives with another {@code collapse}. */
     public ObjectiveSpec withCollapse(Optional<Collapse> collapse) {
-        return new ObjectiveSpec(secondary, targets, escort, defend, convoy, groundAllies, tows, holds, collapse);
+        return new ObjectiveSpec(
+                secondary, targets, escort, defend, convoy, groundAllies, tows, holds, collapse, airAllies);
     }
 
     /**
@@ -696,14 +742,25 @@ public record ObjectiveSpec(
      * climb to their stations; with a {@code climb} they climb out off the top edge at its end. A
      * unit is untouchable (enemy fire and contact pass through it) during the liftoff and the
      * climb-out and, the scripted loss's unit, until its loss.
+     *
+     * <p>M10 part C (design/campaign Level 37, the shuttles): with {@code groups} the units lift and climb out group by
+     * group instead (Level 37's three pairs), each {@link Lift} taking the next of the stations in order, one per pad;
+     * then there is no liftoff, climb or scripted loss of the whole escort. The units of the waves {@code hookedWaves}
+     * (indexes in the level's waves; Level 37's three Talon waves) aim every attack at the nearest unit holding its
+     * station on the play field while there is one (the {@code always} hook), at the ship otherwise; launched units
+     * and every other wave stay on the ship.
      */
     public record Air(
             List<Station> stations,
             Optional<Liftoff> liftoff,
             Optional<Climb> climb,
-            Optional<ScriptedLoss> scriptedLoss) {
+            Optional<ScriptedLoss> scriptedLoss,
+            List<Lift> groups,
+            List<Integer> hookedWaves) {
         public Air {
             stations = List.copyOf(stations);
+            groups = List.copyOf(groups);
+            hookedWaves = List.copyOf(hookedWaves);
             if (stations.isEmpty()) {
                 throw new IllegalArgumentException("an air escort has at least one station");
             }
@@ -714,6 +771,61 @@ public record ObjectiveSpec(
                     && (scriptedLoss.get().unit() < 0 || scriptedLoss.get().unit() >= stations.size())) {
                 throw new IllegalArgumentException("a scripted loss takes one of the units");
             }
+            if (!groups.isEmpty()) {
+                int pads = groups.stream()
+                        .mapToInt(lift -> lift.liftoff().pads().size())
+                        .sum();
+                if (liftoff.isPresent() || climb.isPresent() || scriptedLoss.isPresent() || pads != stations.size()) {
+                    throw new IllegalArgumentException(
+                            "lift groups take every station, one per pad, with no liftoff, climb or loss of their own");
+                }
+            }
+            if (hookedWaves.stream().anyMatch(wave -> wave < 0)) {
+                throw new IllegalArgumentException("hooked waves are indexes in the level's waves: " + hookedWaves);
+            }
+        }
+
+        /** Level 10's: one liftoff and one climb-out for every unit (or none), no lift groups, no hooked waves. */
+        public Air(
+                List<Station> stations,
+                Optional<Liftoff> liftoff,
+                Optional<Climb> climb,
+                Optional<ScriptedLoss> scriptedLoss) {
+            this(stations, liftoff, climb, scriptedLoss, List.of(), List.of());
+        }
+
+        /** M10 part C: units lifting and climbing out in {@code groups}, the waves {@code hookedWaves} aiming at them. */
+        public static Air lifting(List<Station> stations, List<Lift> groups, List<Integer> hookedWaves) {
+            if (groups.isEmpty()) {
+                throw new IllegalArgumentException("a lifting escort has its lift groups");
+            }
+            return new Air(stations, Optional.empty(), Optional.empty(), Optional.empty(), groups, hookedWaves);
+        }
+
+        /** M10 part C: whether a unit of wave {@code wave} (-1: launched, no wave) aims at the units. */
+        public boolean hooks(int wave) {
+            return wave >= 0 && hookedWaves.contains(wave);
+        }
+    }
+
+    /**
+     * M10 part C (design/campaign Level 37, The shuttles), a lift group: its units (one per pad of {@code liftoff}) stand
+     * on their pads until the liftoff's time, lift to their stations over its seconds (untouchable), hold them, and
+     * climb out off the top edge from {@code climb}'s time (untouchable); each one that gets off the top edge is home.
+     * The "FRIENDLIES INBOUND — HOLD FIRE" banner opens {@link WaveSchedule#FRIENDLY_WARNING_SECONDS} before the liftoff
+     * ({@link SimEvents.Type#FRIENDLIES_INBOUND}).
+     */
+    public record Lift(Liftoff liftoff, Climb climb) {
+        public Lift {
+            if (liftoff.pads().isEmpty() || climb.t() < liftoff.t() + liftoff.seconds()) {
+                throw new IllegalArgumentException(
+                        "a lift group lifts from its pads to its stations before it climbs out");
+            }
+        }
+
+        /** The time its banner opens, s on the level clock (never before the level's start). */
+        public double announced() {
+            return Math.max(0, liftoff.t() - WaveSchedule.FRIENDLY_WARNING_SECONDS);
         }
     }
 

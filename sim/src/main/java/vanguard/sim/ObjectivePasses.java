@@ -365,6 +365,10 @@ final class ObjectivePasses {
      */
     void lostToWar(Enemy enemy) {
         events.add(SimEvents.Type.PREY_KILLED, enemy.x(), enemy.y(), enemy.kind());
+        if (enemy.hunts().isEmpty()) {
+            // M10 part C: a prey unit (not a hunter dead on it): the radio's first-prey-kill (once an attempt).
+            radio.cue(CueTrigger.FIRST_PREY_KILL, "");
+        }
         if (enemy.holder()) {
             s.holderDown(enemy.x(), enemy.y());
         }
@@ -583,7 +587,12 @@ final class ObjectivePasses {
                 // An integrity secondary (Level 31's CLEAN HULL): every section home with at least its share.
                 paySecondary();
             }
-        } else if (convoy != null && !convoy.naval() && !convoy.defend() && !convoy.groundAllies()) {
+        } else if (convoy != null
+                && !convoy.naval()
+                && !convoy.defend()
+                && !convoy.groundAllies()
+                // M10 part C: air allies outside the objectives pay nothing of their own (a saved secondary pays).
+                && convoy.primary()) {
             // Each unit home is a payout of its own (design/campaign, Level 04: the escort objective).
             int credits = convoy.escort().credits();
             for (int k = 0; k < home; k++) {

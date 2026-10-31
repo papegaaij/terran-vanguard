@@ -119,7 +119,11 @@ class GroundAndDiveTest {
     @Test
     void aDockIsClearedWhenAllItsTurretsAreDestroyedAndPays() {
         var units = List.of(new GroundUnit(0, Ship.START_X, TURRET, 0), new GroundUnit(0.3, Ship.START_X, TURRET, 0));
-        var sortie = unhit(level(List.of(), units, new Secondary(0, 25, List.of("Dock One")), List.of()));
+        var sortie = unhit(level(
+                List.of(),
+                units,
+                Secondary.builder().credits(25).groups(List.of("Dock One")).build(),
+                List.of()));
 
         int cleared = 0;
         for (int i = 0; i < SimStep.ticks(5); i++) {
@@ -136,7 +140,14 @@ class GroundAndDiveTest {
     @Test
     void aDockIsLostWhenItsLastTurretLeavesTheScreenAlive() {
         var units = List.of(new GroundUnit(0, 40, TURRET, 0), new GroundUnit(0, 440, TURRET, 1));
-        var sortie = unhit(level(List.of(), units, new Secondary(0, 25, List.of("Dock One", "Dock Two")), List.of()));
+        var sortie = unhit(level(
+                List.of(),
+                units,
+                Secondary.builder()
+                        .credits(25)
+                        .groups(List.of("Dock One", "Dock Two"))
+                        .build(),
+                List.of()));
 
         int lost = 0;
         for (int i = 0; i < SimStep.ticks(6); i++) {

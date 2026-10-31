@@ -236,6 +236,42 @@ final class Formations {
         }
     }
 
+    /**
+     * M10 part C: re-spaces the depths of the units on one edge ({@code left[i] == side}) so that two neighbours
+     * are at least {@code apart} px apart, in their drawn order down the screen: each pushed down from the one above
+     * it, the stack then shifted up into {@code range}; a stack taller than the range is centred on it (Level 37's
+     * pairs fit: a hit box, 48, and the gap, 80, between two centres in 160–300).
+     */
+    static void spaced(double[] depth, boolean[] left, boolean side, double apart, Range range) {
+        int count = 0;
+        for (boolean l : left) {
+            count += l == side ? 1 : 0;
+        }
+        if (count < 2) {
+            return;
+        }
+        Integer[] order = new Integer[count];
+        int k = 0;
+        for (int i = 0; i < depth.length; i++) {
+            if (left[i] == side) {
+                order[k++] = i;
+            }
+        }
+        java.util.Arrays.sort(order, java.util.Comparator.comparingDouble((Integer i) -> depth[i]));
+        for (int j = 1; j < count; j++) {
+            depth[order[j]] = Math.max(depth[order[j]], depth[order[j - 1]] + apart);
+        }
+        double first = depth[order[0]];
+        double last = depth[order[count - 1]];
+        double shift = Math.max(0, last - range.max());
+        if (first - shift < range.min()) {
+            shift = (first + last) / 2 - (range.min() + range.max()) / 2;
+        }
+        for (int j = 0; j < count; j++) {
+            depth[order[j]] -= shift;
+        }
+    }
+
     /** The planning of one wave. */
     private static final class Planner {
         private final WaveSpec wave;
@@ -1136,6 +1172,10 @@ final class Formations {
          * hovers its hover time and leaves through its edge (or down and out, without exit back).
          */
         void sideHovers() {
+            if (enemy().station().isPresent()) {
+                sideStations();
+                return;
+            }
             EnemySpec.SideHover side = enemy().sideHover().orElseThrow();
             EnemySpec.Hover hover = required(enemy().hover(), "hover");
             boolean pincer = wave.formation() == WaveSpec.Formation.PINCER;
@@ -1157,6 +1197,81 @@ final class Formations {
                         wave.holdSeconds().orElseGet(() -> hover.seconds().pick(rng)),
                         Optional.empty(),
                         exit);
+            }
+        }
+
+        /**
+         * M10 part C (design/enemies/air/mirror-interceptor, Movement; {@link EnemySpec.Station}): side entries to a
+         * station: a {@code single} from its edge (left when none is given), a {@code pincer} one per edge in turn; unit
+         * i draws its hover depth below the top edge, its distance in from its edge (the station's side range) and its
+         * hold, in that order; the depths of one edge's units are then re-spaced so their hit boxes stay the station's
+         * gap apart ({@link #spaced}); each flies straight in to its station point and, its hold over, back out through
+         * its edge.
+         */
+        private void sideStations() {
+            EnemySpec.Station station = enemy().station().orElseThrow();
+            EnemySpec.Hover hover = required(enemy().hover(), "hover");
+            boolean pincer = wave.formation() == WaveSpec.Formation.PINCER;
+            if (!pincer && wave.formation() != WaveSpec.Formation.SINGLE) {
+                throw unsupported("a side station is flown to as a single or a pincer");
+            }
+            int n = wave.count();
+            boolean[] left = new boolean[n];
+            double[] depth = new double[n];
+            double[] in = new double[n];
+            double[] hold = new double[n];
+            for (int i = 0; i < n; i++) {
+                left[i] = pincer ? i % 2 == 0 : wave.edge() != Edge.RIGHT;
+                depth[i] = hover.depth().pick(rng);
+                in[i] = station.side().pick(rng);
+                hold[i] = wave.holdSeconds().orElseGet(() -> hover.seconds().pick(rng));
+            }
+            double apart = enemy().hitbox().height() + station.gap();
+            spaced(depth, left, true, apart, hover.depth());
+            spaced(depth, left, false, apart, hover.depth());
+            for (int i = 0; i < n; i++) {
+                double y = HEIGHT - depth[i];
+                double x = left[i] ? in[i] : WIDTH - in[i];
+                double outside = left[i] ? -OUTSIDE : WIDTH + OUTSIDE;
+                add(
+                        i,
+                        wave.t(),
+                        FlightPath.through(outside, y, x, y),
+                        speed(enemy().speed()),
+                        hold[i],
+                        Optional.empty(),
+                        new Spawn.Exit(false, left[i] ? -1 : 1, 0));
+            }
+        }
+
+        /**
+         * M10 part C (design/enemies/air/mirror-interceptor, Movement; {@link EnemySpec.Station}): a rear ambush to
+         * stations: {@code count} (1–4) units, unit i in the lane x = (i + 1) × 480 ÷ (n + 1), or, where that brings two
+         * hit boxes closer than the station's gap, the lanes a hit box and the gap apart about the middle; each draws its
+         * height above the bottom edge (the station's rear range) and its hold, enters together from below the bottom
+         * edge at the wave's time, rises up its lane to its station point and holds there; its hold over it leaves up
+         * through the nearer side edge ({@link StationHold#exit}). Warned at the bottom edge as a rear wave.
+         */
+        private void rearStations() {
+            EnemySpec.Station station = enemy().station().orElseThrow();
+            EnemySpec.Hover hover = required(enemy().hover(), "hover");
+            int n = wave.count();
+            if (n < 1 || n > AMBUSH_MOST) {
+                throw unsupported("a rear ambush has 1 to " + AMBUSH_MOST + " units, not " + n);
+            }
+            double lane = Math.max(WIDTH / (n + 1), enemy().hitbox().width() + station.gap());
+            double speed = speed(enemy().speed());
+            for (int i = 0; i < n; i++) {
+                double x = WIDTH / 2 + (i - (n - 1) / 2.0) * lane;
+                double y = station.rear().pick(rng);
+                add(
+                        i,
+                        wave.t(),
+                        FlightPath.through(x, -OUTSIDE, x, y),
+                        speed,
+                        hover.seconds().pick(rng),
+                        Optional.empty(),
+                        x <= WIDTH / 2 ? StationHold.UP_LEFT : StationHold.UP_RIGHT);
             }
         }
 
@@ -1519,6 +1634,10 @@ final class Formations {
          * its hover range), the decloak and the hold, then out up the nearer side lane.
          */
         void rearAmbush() {
+            if (enemy().station().isPresent()) {
+                rearStations();
+                return;
+            }
             if (enemy().ambush().isEmpty()
                     && enemy().hover().flatMap(EnemySpec.Hover::aboveShip).isPresent()) {
                 rearSwoops();

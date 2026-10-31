@@ -105,6 +105,10 @@ final class EnemyMoves {
             }
             // M10 part A (The three-way war): a hunting wave's unit goes for its prey (its chase, dive, ram and aim).
             Enemy quarry = war == null || enemy.preySerial() >= 0 ? null : war.target(enemy);
+            if (war != null && PreyWar.pathHunter(enemy)) {
+                // M10 part C: a hunting path-flyer (a snake's Skitter) leaves its path for its prey.
+                war.steer(enemy, quarry, ship.x(), ship.y());
+            }
             if (quarry != null) {
                 chaseX = quarry.x();
                 chaseY = quarry.y();

@@ -339,6 +339,10 @@ final class EnemyFlight {
                     sweep(shipX, shipY);
                 }
                 if (--u.holdTicks <= 0) {
+                    if (u.stationHold.active()) {
+                        // M10 part C: a rear station's way out is up through the nearer side edge, from where it is.
+                        u.exit = u.stationHold.exit(u.x, u.exit);
+                    }
                     if (u.hoverHold.active() && u.orbit.isEmpty()) {
                         // M8 part D: it leaves down and out to the side it holds on now (after its drift).
                         u.exit = Spawn.Exit.awayFromCentre(u.x);
@@ -622,6 +626,10 @@ final class EnemyFlight {
                 u.spec.gun().isPresent() ? SimStep.ticks(u.spec.gun().get().firstShotDelay()) + 1 : 0;
         if (u.spec.sweep().isPresent()) {
             u.sweepBeam.arm(u.spec.sweep().get());
+        }
+        if (u.spec.station().isPresent()) {
+            // M10 part C: at its station point: its strafe runs from here.
+            u.stationHold.begin(u);
         }
     }
 

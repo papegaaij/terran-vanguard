@@ -234,6 +234,7 @@ final class EnemyStarts {
         u.toppling.clear();
         u.branch = -1;
         u.mirroring.clear();
+        u.stationHold.clear();
         u.regenerating.clear();
         u.regrowing.clear();
         u.spoofing.clear();

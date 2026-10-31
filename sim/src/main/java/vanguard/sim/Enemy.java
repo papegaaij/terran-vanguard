@@ -503,6 +503,8 @@ public final class Enemy implements Hashed {
     final EnemyDamage hurt = new EnemyDamage(this);
     /** M10 part A (design/enemies, Reflect): its mirror's state (a mirrored unit's; idle for the others). */
     final Mirroring mirroring = new Mirroring();
+    /** M10 part C (design/enemies/air/mirror-interceptor): its station's hold (a unit with a station's; idle otherwise). */
+    final StationHold stationHold = new StationHold();
     /** M10 part A (design/enemies, Regeneration): its healing's state (a regenerating unit's). */
     final Regenerating regenerating = new Regenerating();
     /** M10 part A (design/enemies/ground/graft-turret): its regrowth cycle (a regrowing unit's). */

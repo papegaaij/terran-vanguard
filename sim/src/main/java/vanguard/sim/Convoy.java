@@ -37,6 +37,13 @@ import java.util.List;
  *
  * <p>M9 part D, a hull escort (design/allies/mining-tug; Level 31; {@link ObjectiveSpec.Hull}): its units are the
  * hull's sections, placed by its {@link HullEscort}, which holds the hull's own rules; this class only delegates to it.
+ *
+ * <p>M10 part C, air allies outside the objectives (design/campaign Level 37, The shuttles; {@link
+ * ObjectiveSpec#airAllies()}): an air escort that is not the primary ({@link #primary()} false): its units lift in
+ * {@link ObjectiveSpec.Lift lift groups}, each at its own time, a group's banner announced ({@link #announcing}); its
+ * losses never fail the mission, its units home ({@link #home()}) count for a saved secondary and pay nothing of their
+ * own; the waves its air spec hooks aim at the unit holding its station nearest them ({@link #objective(double,
+ * double)}).
  */
 final class Convoy {
     private final ObjectiveSpec.Escort escort;
@@ -56,14 +63,43 @@ final class Convoy {
     /** M5 part D: the units the player can save (every unit but the scripted loss's). */
     private final int saveable;
 
-    private final int liftTick;
-    private final int liftTicks;
-    private final int climbTick;
-    private final int climbTicks;
+    /**
+     * Per air unit, the step its liftoff starts (M10 part C: its lift group's; Level 10's one liftoff for every unit),
+     * the steps it takes, the step its climb-out starts and the steps that takes; empty for another convoy.
+     */
+    private final int[] liftTick;
+
+    private final int[] liftTicks;
+    private final int[] climbTick;
+    private final int[] climbTicks;
     private final int glowTick;
     private final int lossTick;
-    /** The ground scrolled by the liftoff (from the level's sections), so a pad is at its point then. */
-    private final double liftScroll;
+    /**
+     * Per air unit, the ground scrolled by its liftoff (from the level's sections), so its pad is at its point then; empty
+     * for another convoy.
+     */
+    private final double[] liftScroll;
+    /** Per air unit, its pad (M10 part C: its lift group's); null for a unit without a liftoff. */
+    private final ObjectiveSpec.Pad[] pads;
+    /**
+     * M10 part C (design/campaign Level 37, the shuttles): whether this air escort is the escort primary (Level 10's): its
+     * loss fails the mission and its units home pay; not for the air allies outside the objectives ({@link
+     * ObjectiveSpec#airAllies()}). True for every other convoy.
+     */
+    private final boolean primary;
+    /** M10 part C: per lift group, the step its banner opens and the step its liftoff starts; empty without groups. */
+    private final int[] announceTicks;
+
+    private final int[] groupLiftTicks;
+    /** M10 part C: per lift group, its pads' centre (x, y up) at its liftoff, where its banner's event is. */
+    private final double[] groupX;
+
+    private final double[] groupY;
+    /**
+     * M10 part C: the air units that climbed out off the top edge in this attempt (home). Follows the units' states,
+     * which are hashed, so it is not hashed itself.
+     */
+    private int home;
     /** Above the top edge: where a unit is home. */
     private final double homeY;
     /** M5 part D: the units lost that the player could have saved (all but the scripted loss). */
@@ -141,13 +177,19 @@ final class Convoy {
         hull = null;
         scripted = -1;
         saveable = 1;
-        liftTick = 0;
-        liftTicks = 1;
-        climbTick = Integer.MAX_VALUE;
-        climbTicks = 1;
+        liftTick = new int[0];
+        liftTicks = new int[0];
+        climbTick = new int[0];
+        climbTicks = new int[0];
         lossTick = Integer.MAX_VALUE;
         glowTick = Integer.MAX_VALUE;
-        liftScroll = 0;
+        liftScroll = new double[0];
+        pads = new ObjectiveSpec.Pad[0];
+        primary = true;
+        announceTicks = new int[0];
+        groupLiftTicks = new int[0];
+        groupX = new double[0];
+        groupY = new double[0];
         homeY = 0;
         fromX = new double[0];
         fromY = new double[0];
@@ -187,13 +229,19 @@ final class Convoy {
         hull = null;
         scripted = -1;
         saveable = units;
-        liftTick = 0;
-        liftTicks = 1;
-        climbTick = Integer.MAX_VALUE;
-        climbTicks = 1;
+        liftTick = new int[0];
+        liftTicks = new int[0];
+        climbTick = new int[0];
+        climbTicks = new int[0];
         lossTick = Integer.MAX_VALUE;
         glowTick = Integer.MAX_VALUE;
-        liftScroll = 0;
+        liftScroll = new double[0];
+        pads = new ObjectiveSpec.Pad[0];
+        primary = true;
+        announceTicks = new int[0];
+        groupLiftTicks = new int[0];
+        groupX = new double[0];
+        groupY = new double[0];
         homeY = 0;
         fromX = new double[0];
         fromY = new double[0];
@@ -230,13 +278,19 @@ final class Convoy {
         hull = null;
         scripted = -1;
         saveable = naval.damageable();
-        liftTick = 0;
-        liftTicks = 1;
-        climbTick = Integer.MAX_VALUE;
-        climbTicks = 1;
+        liftTick = new int[0];
+        liftTicks = new int[0];
+        climbTick = new int[0];
+        climbTicks = new int[0];
         lossTick = Integer.MAX_VALUE;
         glowTick = Integer.MAX_VALUE;
-        liftScroll = 0;
+        liftScroll = new double[0];
+        pads = new ObjectiveSpec.Pad[0];
+        primary = true;
+        announceTicks = new int[0];
+        groupLiftTicks = new int[0];
+        groupX = new double[0];
+        groupY = new double[0];
         homeY = 0;
         fromX = new double[units];
         fromY = new double[units];
@@ -250,7 +304,18 @@ final class Convoy {
      *     speeds until the liftoff
      */
     Convoy(ObjectiveSpec.Escort escort, Road road, List<Section> sections) {
+        this(escort, road, sections, true);
+    }
+
+    /**
+     * @param sections the level's sections: an air escort's pads scroll with the ground at their
+     *     speeds until the liftoff
+     * @param primary M10 part C: whether it is the escort primary (false: air allies outside the objectives, Level 37's
+     *     shuttles)
+     */
+    Convoy(ObjectiveSpec.Escort escort, Road road, List<Section> sections, boolean primary) {
         this.escort = escort;
+        this.primary = primary;
         ground = null;
         groundY = new double[0];
         defend = null;
@@ -275,17 +340,54 @@ final class Convoy {
         air = escort.air().orElse(null);
         scripted = escort.scriptedUnit();
         saveable = escort.saveable();
-        liftTick =
-                air == null ? 0 : air.liftoff().map(l -> SimStep.ticks(l.t())).orElse(0);
-        liftTicks = air == null
-                ? 1
-                : air.liftoff().map(l -> SimStep.ticks(l.seconds())).orElse(1);
-        climbTick = air == null
-                ? Integer.MAX_VALUE
-                : air.climb().map(c -> SimStep.ticks(c.t())).orElse(Integer.MAX_VALUE);
-        climbTicks = air == null
-                ? 1
-                : air.climb().map(c -> SimStep.ticks(c.seconds())).orElse(1);
+        int airUnits = air == null ? 0 : units;
+        liftTick = new int[airUnits];
+        liftTicks = new int[airUnits];
+        climbTick = new int[airUnits];
+        climbTicks = new int[airUnits];
+        liftScroll = new double[airUnits];
+        pads = new ObjectiveSpec.Pad[airUnits];
+        int groups = air == null ? 0 : air.groups().size();
+        announceTicks = new int[groups];
+        groupLiftTicks = new int[groups];
+        groupX = new double[groups];
+        groupY = new double[groups];
+        if (air != null && air.groups().isEmpty()) {
+            // Level 10's: one liftoff and one climb-out for every unit.
+            int lift = air.liftoff().map(l -> SimStep.ticks(l.t())).orElse(0);
+            int lifting = air.liftoff().map(l -> SimStep.ticks(l.seconds())).orElse(1);
+            int climb = air.climb().map(c -> SimStep.ticks(c.t())).orElse(Integer.MAX_VALUE);
+            int climbing = air.climb().map(c -> SimStep.ticks(c.seconds())).orElse(1);
+            double scroll = scrolled(sections, lift);
+            for (int k = 0; k < units; k++) {
+                liftTick[k] = lift;
+                liftTicks[k] = lifting;
+                climbTick[k] = climb;
+                climbTicks[k] = climbing;
+                liftScroll[k] = scroll;
+                pads[k] = air.liftoff().isPresent() ? air.liftoff().get().pads().get(k) : null;
+            }
+        } else if (air != null) {
+            // M10 part C: each lift group's units take the next stations, one per pad.
+            int k = 0;
+            for (int g = 0; g < groups; g++) {
+                ObjectiveSpec.Lift group = air.groups().get(g);
+                int lift = SimStep.ticks(group.liftoff().t());
+                double scroll = scrolled(sections, lift);
+                announceTicks[g] = SimStep.ticks(group.announced());
+                groupLiftTicks[g] = lift;
+                for (ObjectiveSpec.Pad pad : group.liftoff().pads()) {
+                    liftTick[k] = lift;
+                    liftTicks[k] = SimStep.ticks(group.liftoff().seconds());
+                    climbTick[k] = SimStep.ticks(group.climb().t());
+                    climbTicks[k] = SimStep.ticks(group.climb().seconds());
+                    liftScroll[k] = scroll;
+                    pads[k++] = pad;
+                    groupX[g] += pad.x() / group.liftoff().pads().size();
+                    groupY[g] += pad.y() / group.liftoff().pads().size();
+                }
+            }
+        }
         int loss = Integer.MAX_VALUE;
         int glow = Integer.MAX_VALUE;
         if (air != null && air.scriptedLoss().isPresent()) {
@@ -295,7 +397,6 @@ final class Convoy {
         }
         lossTick = loss;
         glowTick = glow;
-        liftScroll = scrolled(sections, liftTick);
         homeY = PlayField.HEIGHT + escort.ally().size().height();
         reset();
     }
@@ -362,12 +463,12 @@ final class Convoy {
             Ally ally = allies[k];
             if (air == null) {
                 ally.reset(startY, escort.ally().hp());
-            } else if (air.liftoff().isPresent()) {
-                ObjectiveSpec.Pad pad = air.liftoff().get().pads().get(k);
+            } else if (pads[k] != null) {
+                ObjectiveSpec.Pad pad = pads[k];
                 ally.resetAir(
                         Ally.State.PAD,
                         pad.x(),
-                        pad.y() + liftScroll,
+                        pad.y() + liftScroll[k],
                         escort.ally().hp(),
                         0);
             } else {
@@ -387,6 +488,7 @@ final class Convoy {
         lastLost = -1;
         glowStarted = false;
         scriptedLost = false;
+        home = 0;
         if (air != null) {
             fly(0, 0);
         }
@@ -660,6 +762,10 @@ final class Convoy {
      * for none (and for another convoy).
      */
     int objective(double x, double y) {
+        if (air != null) {
+            // M10 part C (design/campaign Level 37, the hooked Talon waves): the nearest unit holding its station.
+            return stationed(x, y);
+        }
         if (hull != null) {
             // M9 part D: the hull's nearest living section that can be hit.
             return hull.nearest(x, y);
@@ -837,25 +943,24 @@ final class Convoy {
             boolean held = k == scripted && !scriptedLost;
             switch (ally.state()) {
                 case PAD -> {
-                    ObjectiveSpec.Pad pad = air.liftoff().orElseThrow().pads().get(k);
-                    if (levelTick < liftTick) {
-                        ally.fly(pad.x(), pad.y() + liftScroll - groundScroll, 0, true);
+                    ObjectiveSpec.Pad pad = pads[k];
+                    if (levelTick < liftTick[k]) {
+                        ally.fly(pad.x(), pad.y() + liftScroll[k] - groundScroll, 0, true);
                         break;
                     }
                     ally.state(Ally.State.LIFTING);
-                    lift(ally, pad, station, levelTick, seconds, held);
+                    lift(k, ally, pad, station, levelTick, seconds, held);
                 }
-                case LIFTING ->
-                    lift(ally, air.liftoff().orElseThrow().pads().get(k), station, levelTick, seconds, held);
+                case LIFTING -> lift(k, ally, pads[k], station, levelTick, seconds, held);
                 case FLYING -> {
-                    if (levelTick >= climbTick) {
+                    if (levelTick >= climbTick[k]) {
                         ally.state(Ally.State.CLIMBING);
-                        climb(ally, station, levelTick, seconds);
+                        climb(k, ally, station, levelTick, seconds);
                     } else {
                         ally.fly(station.xAt(seconds), station.yAt(seconds), 1, held);
                     }
                 }
-                case CLIMBING -> climb(ally, station, levelTick, seconds);
+                case CLIMBING -> climb(k, ally, station, levelTick, seconds);
                 case HOME -> ally.fly(station.xAt(seconds), homeY, 1, true);
                 default -> {
                     // A lost unit stays where it was lost: its glide is drawn by the game.
@@ -869,13 +974,14 @@ final class Convoy {
      * untouchable until it is there, and after that while {@code held} (the scripted loss's unit).
      */
     private void lift(
+            int k,
             Ally ally,
             ObjectiveSpec.Pad pad,
             ObjectiveSpec.Station station,
             int levelTick,
             double seconds,
             boolean held) {
-        double s = Math.min(1, (double) (levelTick - liftTick) / liftTicks);
+        double s = Math.min(1, (double) (levelTick - liftTick[k]) / liftTicks[k]);
         double e = s * s * (3 - 2 * s);
         double x = pad.x() + (station.xAt(seconds) - pad.x()) * e;
         double y = pad.y() + (station.yAt(seconds) - pad.y()) * e;
@@ -886,11 +992,12 @@ final class Convoy {
     }
 
     /** A unit climbing out: from its station up off the top edge, speeding up (s²); home at the end. */
-    private void climb(Ally ally, ObjectiveSpec.Station station, int levelTick, double seconds) {
-        double s = Math.min(1, (double) (levelTick - climbTick) / climbTicks);
+    private void climb(int k, Ally ally, ObjectiveSpec.Station station, int levelTick, double seconds) {
+        double s = Math.min(1, (double) (levelTick - climbTick[k]) / climbTicks[k]);
         double from = station.yAt(seconds);
         if (s >= 1) {
             ally.state(Ally.State.HOME);
+            home++;
         }
         ally.fly(station.xAt(seconds), from + (homeY - from) * s * s, 1, true);
     }
@@ -923,6 +1030,74 @@ final class Convoy {
     /** M5 part D: whether this is an air escort. */
     boolean air() {
         return air != null;
+    }
+
+    /**
+     * M10 part C: whether it is the escort primary (its loss fails the mission, its units home pay): every convoy but
+     * the air allies outside the objectives (Level 37's shuttles).
+     */
+    boolean primary() {
+        return primary;
+    }
+
+    /** M10 part C: the air units that climbed out off the top edge in this attempt. */
+    int home() {
+        return home;
+    }
+
+    /**
+     * M10 part C (design/campaign Level 37, the shuttles; design/ui/hud, the friendly marker): whether a lift group's
+     * banner shows at {@code levelTick} (from {@link WaveSchedule#FRIENDLY_WARNING_SECONDS} before its liftoff to it).
+     */
+    boolean announcing(int levelTick) {
+        for (int g = 0; g < announceTicks.length; g++) {
+            if (levelTick >= announceTicks[g] && levelTick < groupLiftTicks[g]) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /** M10 part C: the lift group whose banner opens at {@code levelTick}; -1 for none. */
+    int announcedGroup(int levelTick) {
+        for (int g = 0; g < announceTicks.length; g++) {
+            if (levelTick == announceTicks[g]) {
+                return g;
+            }
+        }
+        return -1;
+    }
+
+    /** M10 part C: lift group {@code g}'s pads' centre at its liftoff, px from the left edge. */
+    double groupX(int g) {
+        return groupX[g];
+    }
+
+    /** M10 part C: lift group {@code g}'s pads' centre at its liftoff, px from the bottom edge (y up). */
+    double groupY(int g) {
+        return groupY[g];
+    }
+
+    /**
+     * M10 part C: the air unit nearest (x, y) that holds its station and can be hit, its hit box on the play field (the
+     * {@code always} hook's target); -1 for none.
+     */
+    private int stationed(double x, double y) {
+        double best = Double.POSITIVE_INFINITY;
+        int found = -1;
+        for (int k = 0; k < allies.length; k++) {
+            Ally ally = allies[k];
+            if (!ally.touchable()
+                    || !PlayField.overlaps(ally.x(), ally.y(), escort.ally().hitbox())) {
+                continue;
+            }
+            double distance = (ally.x() - x) * (ally.x() - x) + (ally.y() - y) * (ally.y() - y);
+            if (distance < best) {
+                best = distance;
+                found = k;
+            }
+        }
+        return found;
     }
 
     /** M9 part D: the hull escort whose sections the units are; null for another convoy. */

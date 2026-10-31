@@ -316,7 +316,8 @@ class DrillRigTest {
                 new GroundUnit(1, 340, RIG, -1),
                 new GroundUnit(2, 150, RIG, -1),
                 new GroundUnit(3, 330, RIG, -1));
-        Secondary secondary = new Secondary(0, 100, List.of(), "drill-rig").withEscapesAllowed(1);
+        Secondary secondary =
+                Secondary.builder().credits(100).escapes("drill-rig").build().withEscapesAllowed(1);
         LevelScript level = level(120, rigs, secondary, List.of(TARGET), List.of());
         return new Sortie(1, TestSpecs.LOADOUT, level, TestSpecs.RULES.withInvulnerableShip(), TestSpecs.FULL_ARMOUR);
     }
@@ -406,7 +407,7 @@ class DrillRigTest {
         LevelScript level = level(
                 40,
                 List.of(new GroundUnit(0, Ship.START_X + 44, hard, -1), new GroundUnit(2, 120, RIG, -1)),
-                new Secondary(0, 100, List.of(), "drill-rig").withEscapesAllowed(1),
+                Secondary.builder().credits(100).escapes("drill-rig").build().withEscapesAllowed(1),
                 List.of(TARGET),
                 List.of());
         Sortie a = new Sortie(1, loadout, level, TestSpecs.RULES.withInvulnerableShip(), TestSpecs.FULL_ARMOUR);

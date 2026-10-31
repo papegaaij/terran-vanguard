@@ -60,7 +60,8 @@ class BroodAndWalkerTest {
         LevelScript level = LevelScript.builder(4, 1)
                 .sections(List.of(new Section(seconds, 120)))
                 .waves(waves)
-                .objectives(ObjectiveSpec.NONE.withSecondary(new Secondary(0, 50, List.of(), "brood-pod")))
+                .objectives(ObjectiveSpec.NONE.withSecondary(
+                        Secondary.builder().credits(50).escapes("brood-pod").build()))
                 .build();
         return new Sortie(1, LOADOUT, level, RULES, FULL_ARMOUR);
     }

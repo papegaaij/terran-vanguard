@@ -24,6 +24,11 @@ final class ObjectiveHook {
      * without ground allies.
      */
     private double[] allyHits = new double[0];
+    /**
+     * M10 part C (design/campaign Level 37, the shuttles): per wave index, whether its units aim at the air allies (the
+     * {@code always} hook, {@link ObjectiveSpec.Air#hookedWaves()}); null for a hook by kind.
+     */
+    private boolean[] hookedWaves;
 
     ObjectiveHook(List<EnemySpec> kinds, SimEvents events) {
         this.kinds = kinds;
@@ -78,6 +83,22 @@ final class ObjectiveHook {
     }
 
     /**
+     * M10 part C (design/campaign Level 37, the shuttles): the hook of air allies by wave, {@code target} their convoy:
+     * the units of the waves {@code waves} aim every attack at the nearest unit holding its station ({@link
+     * HookMode#ALWAYS}, {@link Convoy#objective(double, double)}), every other unit at the ship; no kind is hooked.
+     */
+    void hookWaves(Convoy target, List<Integer> waves) {
+        convoy = target;
+        modes = new HookMode[kinds.size()];
+        java.util.Arrays.fill(modes, HookMode.NONE);
+        int most = waves.stream().mapToInt(Integer::intValue).max().orElse(-1);
+        hookedWaves = new boolean[most + 1];
+        for (int wave : waves) {
+            hookedWaves[wave] = true;
+        }
+    }
+
+    /**
      * M7 part D: convoy unit {@code k} takes {@code hits} from a hooked attack this step (the sortie applies
      * them after the moves, {@link #allyHits(int)}); D3's Shellback roll crossing a dome adds its {@link
      * AllySpec#rolls()} here. Nothing without ground allies.
@@ -126,6 +147,11 @@ final class ObjectiveHook {
      * unhooked wave.
      */
     HookMode mode(Enemy enemy) {
+        if (hookedWaves != null) {
+            // M10 part C: by its wave (a launched unit has none): Level 37's Talon waves at the shuttles.
+            int wave = enemy.wave;
+            return wave >= 0 && wave < hookedWaves.length && hookedWaves[wave] ? HookMode.ALWAYS : HookMode.NONE;
+        }
         HookMode mode = mode(enemy.kind());
         if (mode != HookMode.NONE && convoy.hull() != null && !convoy.hull().hooked(enemy.wave)) {
             return HookMode.NONE;

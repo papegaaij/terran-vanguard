@@ -42,7 +42,8 @@ class CreeperTest {
         LevelScript level = LevelScript.builder(8, 2)
                 .sections(List.of(new Section(30, 5)))
                 .waves(waves)
-                .objectives(ObjectiveSpec.NONE.withSecondary(new Secondary(0, 50, List.of(), "creeper")))
+                .objectives(ObjectiveSpec.NONE.withSecondary(
+                        Secondary.builder().credits(50).escapes("creeper").build()))
                 .build();
         return new Sortie(1, LOADOUT, level, RULES.withInvulnerableShip(), FULL_ARMOUR);
     }

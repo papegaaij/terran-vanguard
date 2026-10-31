@@ -86,6 +86,7 @@ final class EnemySpecCopy {
     boolean uncounted;
     Optional<CreditSource> haul;
     Optional<EnemySpec.CarrierDrift> carrierDrift;
+    Optional<EnemySpec.Station> station;
 
     /** The base stats with every other component left out ({@link EnemySpec#of}). */
     EnemySpecCopy(
@@ -174,6 +175,7 @@ final class EnemySpecCopy {
         uncounted = false;
         haul = Optional.empty();
         carrierDrift = Optional.empty();
+        station = Optional.empty();
     }
 
     EnemySpecCopy(EnemySpec spec) {
@@ -254,6 +256,7 @@ final class EnemySpecCopy {
         uncounted = spec.uncounted();
         haul = spec.haul();
         carrierDrift = spec.carrierDrift();
+        station = spec.station();
     }
 
     EnemySpec build() {
@@ -334,6 +337,7 @@ final class EnemySpecCopy {
                 spoofable,
                 uncounted,
                 haul,
-                carrierDrift);
+                carrierDrift,
+                station);
     }
 }

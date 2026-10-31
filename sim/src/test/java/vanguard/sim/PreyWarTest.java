@@ -128,6 +128,90 @@ class PreyWarTest {
         assertEquals(0, sortie.latched(), "never on the ship while it rides its prey");
     }
 
+    /** M10 part C: a snake of {@code count} Skitters hunting the prey wave (TestSpecs's: 1 HP, contact 6, 190 px/s). */
+    private static WaveSpec snake(double t, int count) {
+        return WaveSpec.builder(
+                        t, WaveSpec.Formation.SNAKE, TestSpecs.SKITTER, count, WaveSpec.Entry.FRONT, WaveSpec.Edge.LEFT)
+                .hunts("prey")
+                .build();
+    }
+
+    @Test
+    void aHuntingSnakeLeavesItsPathForItsPreyRamsItAndBothAreLostToTheWar() {
+        // M10 part C (design/campaign Level 37, the Skitter snakes ram the Gunship): the prey holds 260 px below the
+        // top.
+        Sortie sortie = sortie(prey(0), snake(1.5, 3));
+        boolean steered = false;
+        int hits = 0;
+        int lost = 0;
+        for (int i = 0; i < SimStep.ticks(8); i++) {
+            sortie.step(Command.NONE);
+            hits += sortie.events().count(SimEvents.Type.PREY_HIT);
+            lost += sortie.events().count(SimEvents.Type.PREY_KILLED);
+            Enemy head = bySlug(sortie, "skitter");
+            steered |= head != null && head.phase == Enemy.Phase.LEAVE && bySlug(sortie, "prey-gunship") != null;
+        }
+        assertTrue(steered, "off its path while its prey is on the field");
+        assertTrue(hits >= 1, "its contact damage on the prey");
+        assertNull(bySlug(sortie, "prey-gunship"), "rammed down (6 on its 4 HP)");
+        assertTrue(lost >= 2, "the prey and the Skitter that died on it: " + lost);
+        assertEquals(0, sortie.credits(), "the war pays nothing");
+        assertEquals(0, sortie.kills());
+    }
+
+    @Test
+    void aHuntingSnakeTurnsAtItsHuntRate() {
+        Sortie sortie = sortie(prey(0), snake(1.5, 1));
+        Enemy skitter = null;
+        for (int i = 0; i < SimStep.ticks(4) && (skitter == null || skitter.phase != Enemy.Phase.LEAVE); i++) {
+            sortie.step(Command.NONE);
+            skitter = bySlug(sortie, "skitter");
+        }
+        assertTrue(skitter != null && skitter.phase == Enemy.Phase.LEAVE);
+        double most = Math.toRadians(PreyWar.HUNT_TURN_DEGREES) * SimStep.SECONDS;
+        for (int i = 0; i < 20 && bySlug(sortie, "skitter") == skitter; i++) {
+            double before = Math.atan2(skitter.vx, skitter.vy);
+            sortie.step(Command.NONE);
+            double turned = Math.abs(Math.IEEEremainder(Math.atan2(skitter.vx, skitter.vy) - before, 2 * Math.PI));
+            assertTrue(turned <= most + 1e-9, "at most 180°/s: " + Math.toDegrees(turned / SimStep.SECONDS));
+            assertEquals(TestSpecs.SKITTER.speed(), Math.hypot(skitter.vx, skitter.vy), 1e-4, "at its speed");
+        }
+    }
+
+    @Test
+    void theDartsAPreyGunshipLaunchesAreNotPrey() {
+        // M10 part C (design/campaign Level 37: "the Darts a prey Gunship launched are not prey"): launched units carry
+        // no wave tag, so the hunters' fire never goes at them nor hits them.
+        WaveSpec gunship = WaveSpec.builder(
+                        0, WaveSpec.Formation.SINGLE, Act5CSpecs.GUNSHIP, 1, WaveSpec.Entry.FRONT, WaveSpec.Edge.NONE)
+                .tag("prey")
+                .build();
+        Sortie sortie = sortie(gunship, hunters(1, SHOOTER));
+        int darts = 0;
+        int gunshipHits = 0;
+        int dartKind = -1;
+        for (int i = 0; i < SimStep.ticks(10); i++) {
+            sortie.step(Command.NONE);
+            for (int j = 0; j < sortie.enemyCount(); j++) {
+                Enemy unit = sortie.enemy(j);
+                if (unit.spec().slug().equals("dart-drone")) {
+                    assertEquals("", unit.tag(), "a launched Dart carries no wave tag");
+                    dartKind = unit.kind();
+                    darts++;
+                }
+            }
+            SimEvents events = sortie.events();
+            for (int e = 0; e < events.size(); e++) {
+                if (events.type(e) == SimEvents.Type.PREY_HIT) {
+                    assertTrue(dartKind < 0 || events.value(e) != dartKind, "never a Dart");
+                    gunshipHits++;
+                }
+            }
+        }
+        assertTrue(darts > 0, "the Gunship launched its Darts");
+        assertTrue(gunshipHits > 0, "the hunters' fire went at the Gunship");
+    }
+
     @Test
     void aWaveNeverHuntsItsOwnTag() {
         assertThrows(IllegalArgumentException.class, () -> WaveSpec.builder(
@@ -139,7 +223,8 @@ class PreyWarTest {
 
     @Test
     void itReplaysAndAllocatesNothing() {
-        Supplier<Sortie> make = () -> sortie(prey(0), prey(0.5), hunters(1.5, SHOOTER), hunters(2, RAMMER));
+        Supplier<Sortie> make =
+                () -> sortie(prey(0), prey(0.5), hunters(1.5, SHOOTER), hunters(2, RAMMER), prey(4), snake(5, 4));
         Sortie a = make.get();
         Sortie b = make.get();
         for (int i = 0; i < SimStep.ticks(10); i++) {

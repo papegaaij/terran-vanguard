@@ -157,4 +157,26 @@ public interface JovianSpecs {
             return mirrored && x > PlayField.WIDTH / 2.0 ? -vx : vx;
         }
     }
+
+    /**
+     * M10 part C (design/enemies/air/mirror-interceptor, Movement; design/campaign Level 37): a unit that flies to a
+     * <b>station</b> and holds it its hover time. From a side edge (a {@code pincer} or {@code single} side entry, with
+     * its side hover) it flies to {@code side} px in from that edge (drawn per unit) at its hover depth below the top
+     * edge, the heights of a wave's units on one side re-spaced so their hulls (the hit boxes: the simulation has no sprite size) stay {@code
+     * gap} px apart, and it leaves through that edge. From the bottom edge (a {@code rear ambush}) it rises up its lane to
+     * {@code rear} px above the bottom edge (drawn per unit), the lanes x = (i + 1) × 480 ÷ (n + 1) or, when that puts
+     * hulls closer than {@code gap}, a hull and the gap apart about the middle, and it leaves up through the side edge
+     * nearer to where it holds (a tie: the left). While it holds it strafes along its station (side: up and down; rear:
+     * across) toward the ship's height or x at {@code strafeSpeed} px/s, never more than {@code strafe} ÷ 2 px from the
+     * station point and never to within {@code gap} px of another unit holding a station on its line ({@link
+     * StationHold}).
+     */
+    record Station(Range side, Range rear, double strafe, double strafeSpeed, double gap) {
+        public Station {
+            if (!(side.min() >= 0) || !(rear.min() >= 0) || !(strafe >= 0) || !(strafeSpeed >= 0) || !(gap >= 0)) {
+                throw new IllegalArgumentException(
+                        "a station lies inside the field, strafes and keeps a gap of 0 or more");
+            }
+        }
+    }
 }

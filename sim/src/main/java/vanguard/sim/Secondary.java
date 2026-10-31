@@ -48,6 +48,12 @@ import java.util.List;
  * @param objects M9 part G (design/campaign Level 34, "Strip the graveyard"): {@code escapes} names a ground object's
  *     look, not an enemy: the level's destructibles of that look (or a variant of it, {@code <look>-<variant>}) count,
  *     a destroyed one as opened, one leaving the screen as away ({@link #objectEscapes(String, int, int, String)})
+ * @param saved M10 part C (design/campaign Level 37, the shuttles): with more than 0, how many of the level's air
+ *     allies ({@link ObjectiveSpec#airAllies()}) must climb out off the top edge: met at that many home, failed at once
+ *     by the loss that leaves fewer than that many to come home ({@link #saved(int, int, String)}); 0 for none
+ *
+ * <p>Built with {@link #builder()} (M10 part C, step C1, RF9b's pattern): the factories and {@code withX} copies are
+ * one-liners over it, and a new kind is a new builder setter, never another positional constructor.
  */
 public record Secondary(
         double killRatio,
@@ -69,8 +75,26 @@ public record Secondary(
         int escapesAllowed,
         boolean countsBosses,
         String spared,
-        boolean objects) {
+        boolean objects,
+        int saved) {
     public Secondary {
+        if (saved < 0
+                || (saved > 0
+                        && (killRatio > 0
+                                || !groups.isEmpty()
+                                || !escapes.isEmpty()
+                                || !killAll.isEmpty()
+                                || !parts.isEmpty()
+                                || afloat
+                                || sondes
+                                || integrity > 0
+                                || links
+                                || untouched
+                                || standing
+                                || !spared.isEmpty()
+                                || objects))) {
+            throw new IllegalArgumentException("a saved objective counts the air allies home, nothing else: " + saved);
+        }
         if (objects
                 && (escapes.isEmpty()
                         || !tag.isEmpty()
@@ -166,7 +190,11 @@ public record Secondary(
         }
     }
 
-    /** Without M9 part G's object escapes. */
+    /**
+     * The objective of Level 01–36's data loader (kept for it: {@code LevelRules}): a kill ratio, groups, an escapes or
+     * kill-all objective, a boss's parts or a tagged escapes objective; every later component at its default. New code
+     * uses {@link #builder()}.
+     */
     public Secondary(
             double killRatio,
             int credits,
@@ -177,16 +205,7 @@ public record Secondary(
             String partsOf,
             List<Integer> parts,
             int beforePhase,
-            String tag,
-            boolean afloat,
-            boolean sondes,
-            double integrity,
-            boolean links,
-            boolean untouched,
-            boolean standing,
-            int escapesAllowed,
-            boolean countsBosses,
-            String spared) {
+            String tag) {
         this(
                 killRatio,
                 credits,
@@ -198,16 +217,50 @@ public record Secondary(
                 parts,
                 beforePhase,
                 tag,
-                afloat,
-                sondes,
-                integrity,
-                links,
-                untouched,
-                standing,
-                escapesAllowed,
-                countsBosses,
-                spared,
-                false);
+                false,
+                false,
+                0,
+                false,
+                false,
+                false,
+                0,
+                true,
+                "",
+                false,
+                0);
+    }
+
+    /** A kill ratio of {@code killRatio} for {@code credits} (0 and 0: {@link #NONE}). */
+    public Secondary(double killRatio, int credits) {
+        this(killRatio, credits, List.of(), "", List.of(), "", "", List.of(), -1, "");
+    }
+
+    /** M10 part C, step C1: a builder with every component at its default (no objective). */
+    public static SecondaryBuilder builder() {
+        return new SecondaryBuilder();
+    }
+
+    /** M10 part C, step C1: a builder holding this objective's every component, for a copy with some changed. */
+    public SecondaryBuilder toBuilder() {
+        return new SecondaryBuilder(this);
+    }
+
+    /**
+     * M10 part C (design/campaign Level 37, the shuttles): {@code saved: target}, at least {@code target} of the level's
+     * air allies climbed out off the top edge, for {@code credits}, with the tracker's {@code label} ({@code SHUTTLES}):
+     * met at the {@code target}-th home, failed at once by the loss after which fewer than {@code target} can come home
+     * (Level 37 at medium: 5 of 6, failed at the second loss).
+     */
+    public static Secondary saved(int target, int credits, String label) {
+        if (target < 1) {
+            throw new IllegalArgumentException("a saved objective names how many must come home: " + target);
+        }
+        return builder().saved(target).credits(credits).label(label).build();
+    }
+
+    /** M10 part C: whether it is a saved objective (the air allies home). */
+    public boolean bySaved() {
+        return saved > 0;
     }
 
     /**
@@ -221,9 +274,13 @@ public record Secondary(
         if (look.isEmpty()) {
             throw new IllegalArgumentException("an object escapes objective names its look");
         }
-        return new Secondary(
-                0, credits, List.of(), look, List.of(), label, "", List.of(), -1, "", false, false, 0, false, false,
-                false, allowed, true, "", true);
+        return builder()
+                .credits(credits)
+                .escapes(look)
+                .label(label)
+                .escapesAllowed(allowed)
+                .objects(true)
+                .build();
     }
 
     /**
@@ -236,88 +293,6 @@ public record Secondary(
                 && (look.length() == escapes.length() || look.charAt(escapes.length()) == '-');
     }
 
-    /** Without step SIM-K's bosses left out (they count). */
-    public Secondary(
-            double killRatio,
-            int credits,
-            List<String> groups,
-            String escapes,
-            List<String> killAll,
-            String label,
-            String partsOf,
-            List<Integer> parts,
-            int beforePhase,
-            String tag,
-            boolean afloat,
-            boolean sondes,
-            double integrity,
-            boolean links,
-            boolean untouched,
-            boolean standing,
-            int escapesAllowed) {
-        this(
-                killRatio,
-                credits,
-                groups,
-                escapes,
-                killAll,
-                label,
-                partsOf,
-                parts,
-                beforePhase,
-                tag,
-                afloat,
-                sondes,
-                integrity,
-                links,
-                untouched,
-                standing,
-                escapesAllowed,
-                true);
-    }
-
-    /** Without M9 part B's spared craft. */
-    public Secondary(
-            double killRatio,
-            int credits,
-            List<String> groups,
-            String escapes,
-            List<String> killAll,
-            String label,
-            String partsOf,
-            List<Integer> parts,
-            int beforePhase,
-            String tag,
-            boolean afloat,
-            boolean sondes,
-            double integrity,
-            boolean links,
-            boolean untouched,
-            boolean standing,
-            int escapesAllowed,
-            boolean countsBosses) {
-        this(
-                killRatio,
-                credits,
-                groups,
-                escapes,
-                killAll,
-                label,
-                partsOf,
-                parts,
-                beforePhase,
-                tag,
-                afloat,
-                sondes,
-                integrity,
-                links,
-                untouched,
-                standing,
-                escapesAllowed,
-                countsBosses,
-                "");
-    }
-
     /**
      * M9 part B (design/campaign Level 29, "Hold fire"): {@code spared: slug}, none of the neutral craft {@code slug}
      * destroyed, for {@code credits}, with the tracker's {@code label} ({@code HOLD FIRE}): met when the last of them
@@ -327,9 +302,7 @@ public record Secondary(
         if (slug.isEmpty()) {
             throw new IllegalArgumentException("a spared objective names its craft");
         }
-        return new Secondary(
-                0, credits, List.of(), "", List.of(), label, "", List.of(), -1, "", false, false, 0, false, false,
-                false, 0, true, slug);
+        return builder().credits(credits).label(label).spared(slug).build();
     }
 
     /** M9 part B: whether it is a spared objective (the neutral craft none of which may be destroyed). */
@@ -342,65 +315,7 @@ public record Secondary(
      * bosses among its enemies ({@code counted}) or not.
      */
     public Secondary withBossesCounted(boolean counted) {
-        return new Secondary(
-                killRatio,
-                credits,
-                groups,
-                escapes,
-                killAll,
-                label,
-                partsOf,
-                parts,
-                beforePhase,
-                tag,
-                afloat,
-                sondes,
-                integrity,
-                links,
-                untouched,
-                standing,
-                escapesAllowed,
-                counted,
-                spared,
-                objects);
-    }
-
-    /** Without M7 part F's escapes allowed. */
-    public Secondary(
-            double killRatio,
-            int credits,
-            List<String> groups,
-            String escapes,
-            List<String> killAll,
-            String label,
-            String partsOf,
-            List<Integer> parts,
-            int beforePhase,
-            String tag,
-            boolean afloat,
-            boolean sondes,
-            double integrity,
-            boolean links,
-            boolean untouched,
-            boolean standing) {
-        this(
-                killRatio,
-                credits,
-                groups,
-                escapes,
-                killAll,
-                label,
-                partsOf,
-                parts,
-                beforePhase,
-                tag,
-                afloat,
-                sondes,
-                integrity,
-                links,
-                untouched,
-                standing,
-                0);
+        return toBuilder().countsBosses(counted).build();
     }
 
     /**
@@ -409,63 +324,7 @@ public record Secondary(
      * {@code allowed} lost, failed at once by the one past it.
      */
     public Secondary withEscapesAllowed(int allowed) {
-        return new Secondary(
-                killRatio,
-                credits,
-                groups,
-                escapes,
-                killAll,
-                label,
-                partsOf,
-                parts,
-                beforePhase,
-                tag,
-                afloat,
-                sondes,
-                integrity,
-                links,
-                untouched,
-                standing,
-                allowed,
-                countsBosses,
-                spared,
-                objects);
-    }
-
-    /** Without round 41's standing. */
-    public Secondary(
-            double killRatio,
-            int credits,
-            List<String> groups,
-            String escapes,
-            List<String> killAll,
-            String label,
-            String partsOf,
-            List<Integer> parts,
-            int beforePhase,
-            String tag,
-            boolean afloat,
-            boolean sondes,
-            double integrity,
-            boolean links,
-            boolean untouched) {
-        this(
-                killRatio,
-                credits,
-                groups,
-                escapes,
-                killAll,
-                label,
-                partsOf,
-                parts,
-                beforePhase,
-                tag,
-                afloat,
-                sondes,
-                integrity,
-                links,
-                untouched,
-                false);
+        return toBuilder().escapesAllowed(allowed).build();
     }
 
     /**
@@ -475,48 +334,12 @@ public record Secondary(
      * the last of them leaves the bottom edge.
      */
     public static Secondary standing(int credits, String label) {
-        return new Secondary(
-                0, credits, List.of(), "", List.of(), label, "", List.of(), -1, "", false, false, 0, false, false,
-                true);
+        return builder().credits(credits).label(label).standing(true).build();
     }
 
     /** Whether the objective judges the level's ground allies ({@link #untouched()} or {@link #standing()}). */
     public boolean byGroundAllies() {
         return untouched || standing;
-    }
-
-    /** Without M7 part D's untouched. */
-    public Secondary(
-            double killRatio,
-            int credits,
-            List<String> groups,
-            String escapes,
-            List<String> killAll,
-            String label,
-            String partsOf,
-            List<Integer> parts,
-            int beforePhase,
-            String tag,
-            boolean afloat,
-            boolean sondes,
-            double integrity,
-            boolean links) {
-        this(
-                killRatio,
-                credits,
-                groups,
-                escapes,
-                killAll,
-                label,
-                partsOf,
-                parts,
-                beforePhase,
-                tag,
-                afloat,
-                sondes,
-                integrity,
-                links,
-                false);
     }
 
     /**
@@ -525,40 +348,7 @@ public record Secondary(
      * first hit, met when the last of them leaves the bottom edge.
      */
     public static Secondary untouched(int credits, String label) {
-        return new Secondary(
-                0, credits, List.of(), "", List.of(), label, "", List.of(), -1, "", false, false, 0, false, true);
-    }
-
-    /** Without M7 part C's links. */
-    public Secondary(
-            double killRatio,
-            int credits,
-            List<String> groups,
-            String escapes,
-            List<String> killAll,
-            String label,
-            String partsOf,
-            List<Integer> parts,
-            int beforePhase,
-            String tag,
-            boolean afloat,
-            boolean sondes,
-            double integrity) {
-        this(
-                killRatio,
-                credits,
-                groups,
-                escapes,
-                killAll,
-                label,
-                partsOf,
-                parts,
-                beforePhase,
-                tag,
-                afloat,
-                sondes,
-                integrity,
-                false);
+        return builder().credits(credits).label(label).untouched(true).build();
     }
 
     /**
@@ -567,24 +357,7 @@ public record Secondary(
      * ({@code BARRIERS}): met at the last, failed at the first one lost.
      */
     public static Secondary links(int credits, String label) {
-        return new Secondary(0, credits, List.of(), "", List.of(), label, "", List.of(), -1, "", false, false, 0, true);
-    }
-
-    /** Without M5 part G's integrity. */
-    public Secondary(
-            double killRatio,
-            int credits,
-            List<String> groups,
-            String escapes,
-            List<String> killAll,
-            String label,
-            String partsOf,
-            List<Integer> parts,
-            int beforePhase,
-            String tag,
-            boolean afloat,
-            boolean sondes) {
-        this(killRatio, credits, groups, escapes, killAll, label, partsOf, parts, beforePhase, tag, afloat, sondes, 0);
+        return builder().credits(credits).label(label).links(true).build();
     }
 
     /**
@@ -597,28 +370,12 @@ public record Secondary(
         if (!(share > 0)) {
             throw new IllegalArgumentException("an integrity objective has a share above 0: " + share);
         }
-        return new Secondary(0, credits, List.of(), "", List.of(), label, "", List.of(), -1, "", false, false, share);
+        return builder().credits(credits).label(label).integrity(share).build();
     }
 
     /** M5 part G: whether it is an integrity objective. */
     public boolean byIntegrity() {
         return integrity > 0;
-    }
-
-    /** Without M5 part F's sondes. */
-    public Secondary(
-            double killRatio,
-            int credits,
-            List<String> groups,
-            String escapes,
-            List<String> killAll,
-            String label,
-            String partsOf,
-            List<Integer> parts,
-            int beforePhase,
-            String tag,
-            boolean afloat) {
-        this(killRatio, credits, groups, escapes, killAll, label, partsOf, parts, beforePhase, tag, afloat, false);
     }
 
     /**
@@ -627,22 +384,7 @@ public record Secondary(
      * bottom edge uncollected.
      */
     public static Secondary sondes(int credits, String label) {
-        return new Secondary(0, credits, List.of(), "", List.of(), label, "", List.of(), -1, "", false, true);
-    }
-
-    /** Without M5 part E's afloat. */
-    public Secondary(
-            double killRatio,
-            int credits,
-            List<String> groups,
-            String escapes,
-            List<String> killAll,
-            String label,
-            String partsOf,
-            List<Integer> parts,
-            int beforePhase,
-            String tag) {
-        this(killRatio, credits, groups, escapes, killAll, label, partsOf, parts, beforePhase, tag, false);
+        return builder().credits(credits).label(label).sondes(true).build();
     }
 
     /**
@@ -650,38 +392,7 @@ public record Secondary(
      * level boss's death, for {@code credits}, with the tracker's {@code label}.
      */
     public static Secondary afloat(int credits, String label) {
-        return new Secondary(0, credits, List.of(), "", List.of(), label, "", List.of(), -1, "", true);
-    }
-
-    /** Without M5 part C's wave tag. */
-    public Secondary(
-            double killRatio,
-            int credits,
-            List<String> groups,
-            String escapes,
-            List<String> killAll,
-            String label,
-            String partsOf,
-            List<Integer> parts,
-            int beforePhase) {
-        this(killRatio, credits, groups, escapes, killAll, label, partsOf, parts, beforePhase, "");
-    }
-
-    public Secondary(
-            double killRatio, int credits, List<String> groups, String escapes, List<String> killAll, String label) {
-        this(killRatio, credits, groups, escapes, killAll, label, "", List.of(), -1);
-    }
-
-    public Secondary(double killRatio, int credits, List<String> groups, String escapes) {
-        this(killRatio, credits, groups, escapes, List.of(), "");
-    }
-
-    public Secondary(double killRatio, int credits, List<String> groups) {
-        this(killRatio, credits, groups, "");
-    }
-
-    public Secondary(double killRatio, int credits) {
-        this(killRatio, credits, List.of(), "");
+        return builder().credits(credits).label(label).afloat(true).build();
     }
 
     /**
@@ -700,7 +411,8 @@ public record Secondary(
                 && !byIntegrity()
                 && !untouched
                 && !standing
-                && spared.isEmpty();
+                && spared.isEmpty()
+                && saved == 0;
     }
 
     /** Whether the objective is about groups rather than the kill ratio. */

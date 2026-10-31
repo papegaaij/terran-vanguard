@@ -92,11 +92,12 @@ class UntouchedTest {
         assertFalse(UNTOUCHED.none());
         assertTrue(UNTOUCHED.untouched());
         assertFalse(UNTOUCHED.byEscapes());
-        assertThrows(
-                IllegalArgumentException.class,
-                () -> new Secondary(
-                        0.5, 100, List.of(), "", List.of(), "DOMES", "", List.of(), -1, "", false, false, 0, false,
-                        true));
+        assertThrows(IllegalArgumentException.class, () -> Secondary.builder()
+                .killRatio(0.5)
+                .credits(100)
+                .label("DOMES")
+                .untouched(true)
+                .build());
         LevelScript without = SiegeSpecs.level(List.of(), List.of(), UNTOUCHED, Optional.empty());
         assertThrows(IllegalArgumentException.class, () -> SiegeSpecs.sortie(without));
         assertFalse(new Secondary(0.5, 100).untouched(), "the shorter constructors are not untouched");

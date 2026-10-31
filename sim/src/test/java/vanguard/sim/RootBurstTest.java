@@ -35,7 +35,8 @@ class RootBurstTest {
         return LevelScript.builder(14, 2)
                 .sections(List.of(new Section(40, speed)))
                 .groundUnits(units)
-                .objectives(ObjectiveSpec.NONE.withSecondary(new Secondary(0, 50, List.of("roots"))))
+                .objectives(ObjectiveSpec.NONE.withSecondary(
+                        Secondary.builder().credits(50).groups(List.of("roots")).build()))
                 .build();
     }
 

@@ -251,7 +251,7 @@ class FoundryTest {
                 List.of(new Section(20, 150)),
                 List.of(),
                 List.of(column),
-                new Secondary(0, 50, List.of(), "skitter").withEscapesAllowed(allowed),
+                Secondary.builder().credits(50).escapes("skitter").build().withEscapesAllowed(allowed),
                 List.of());
         return sortie(level, TestSpecs.LOADOUT, TestSpecs.RULES.withInvulnerableShip());
     }

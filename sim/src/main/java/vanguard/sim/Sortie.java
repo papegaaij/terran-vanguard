@@ -753,7 +753,9 @@ public final class Sortie {
         // 2026-10-21 (user): only the waves' first entries warn; a boss (the walker's entries, the breaching boss's
         // points, the Spire's launched Wraiths) never does: the boss fight keeps its surprise.
         edgeWarnings = complete ? 0 : force.warnings(levelTick);
-        friendliesInbound = !complete && force.friendlies(levelTick);
+        // M10 part C: and 2 s before each lift group of an air escort lifts off (Level 37's shuttle pairs).
+        friendliesInbound =
+                !complete && (force.friendlies(levelTick) || (convoy != null && convoy.announcing(levelTick)));
         fire.move(scrollStep, force.enemies(), ground);
         boolean firing = flying() && !complete;
         force.move(ship, firing, scrollStep);
@@ -889,6 +891,8 @@ public final class Sortie {
             convoy.update(levelTick, groundScroll, scrollStep);
             if (convoy.air() && !complete && !wrecked && !failed) {
                 allies.scriptedLoss();
+                // M10 part C: the lift groups' banners, the air allies home (Level 37's shuttles).
+                allies.airStep();
             }
         }
         if (flying() && !complete && !failed) {
@@ -1352,7 +1356,11 @@ public final class Sortie {
                         defences.maxArmour(),
                         objectives.secretsFound(),
                         objectives.secondaryMet(),
-                        convoy == null || convoy.naval() || convoy.defend() || convoy.groundAllies()
+                        convoy == null
+                                        || convoy.naval()
+                                        || convoy.defend()
+                                        || convoy.groundAllies()
+                                        || !convoy.primary()
                                 ? LevelResult.Escort.NONE
                                 : new LevelResult.Escort(
                                         convoy.escort().ally().slug(),
@@ -1778,6 +1786,21 @@ public final class Sortie {
     /** M5 part E: whether an afloat objective failed in this attempt (a unit sank). */
     public boolean afloatFailed() {
         return objectives.afloatFailed();
+    }
+
+    /**
+     * M10 part C (design/campaign Level 37, the shuttles): the air units that climbed out off the top edge in this
+     * attempt (the tracker's {@code SHUTTLES n / 5}, its green pips); 0 without an air escort. With the air allies
+     * outside the objectives ({@code LevelScript.objectives().airAllies()}) {@link #airEscort()} holds too, and the
+     * saved secondary's failure is {@link #savedFailed()}.
+     */
+    public int alliesHome() {
+        return convoy == null ? 0 : convoy.home();
+    }
+
+    /** M10 part C: whether a saved secondary failed in this attempt (too many air allies lost). */
+    public boolean savedFailed() {
+        return objectives.savedFailed();
     }
 
     /** M5 part D: whether the escort objective's convoy is an air escort (Level 10's shuttles). */

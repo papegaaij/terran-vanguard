@@ -1172,7 +1172,14 @@ public final class SimEvents {
          * next volley under the cap, decided as its glint would start (at the member): the presentation runs its glint
          * clock on as if it fired; value: its kind.
          */
-        VOLLEY_CAPPED;
+        VOLLEY_CAPPED,
+        /**
+         * M10 part C (design/campaign Level 37, the shuttles; design/ui/hud, the friendly marker): a lift group of air
+         * allies lifts off in 2 s: the "FRIENDLIES INBOUND — HOLD FIRE" banner opens ({@link Sortie#friendliesInbound()}
+         * holds until the liftoff) and the evacuation PA chime sounds (at the group's pads' centre at its liftoff);
+         * value: the group's index (0 first).
+         */
+        FRIENDLIES_INBOUND;
 
         private static final Type[] VALUES = values();
     }

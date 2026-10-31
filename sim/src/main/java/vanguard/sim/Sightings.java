@@ -40,6 +40,11 @@ final class Sightings {
      * failure watched. No state of its own (the radio plays the cue once an attempt), so nothing hashes.
      */
     private final boolean failures;
+    /**
+     * M10 part C (design/campaign Level 37, radio): whether the level has a {@code first-bounce} cue: only then is a
+     * mirror's bounce watched. No state of its own (the radio plays the cue once an attempt), so nothing hashes.
+     */
+    private final boolean bounces;
 
     /** With {@code events} and {@code radio} null: a copy for the boss checkpoint, never stepped. */
     Sightings(SimEvents events, Radio radio) {
@@ -49,6 +54,7 @@ final class Sightings {
         rays = radio != null && radio.listens(CueTrigger.FIRST_RAY);
         homings = radio != null && radio.listens(CueTrigger.FIRST_HOMING);
         failures = radio != null && radio.listens(CueTrigger.SECONDARY_FAILED);
+        bounces = radio != null && radio.listens(CueTrigger.FIRST_BOUNCE);
     }
 
     /** The step's first sightings: their cues. */
@@ -87,6 +93,9 @@ final class Sightings {
         }
         if (failures && events.count(SimEvents.Type.OBJECTIVE_FAILED) > 0) {
             radio.cue(CueTrigger.SECONDARY_FAILED, "");
+        }
+        if (bounces && events.count(SimEvents.Type.MIRROR_BOUNCED) > 0) {
+            radio.cue(CueTrigger.FIRST_BOUNCE, "");
         }
     }
 

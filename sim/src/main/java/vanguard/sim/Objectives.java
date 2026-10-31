@@ -48,6 +48,8 @@ final class Objectives {
      * fails a standing one.
      */
     private boolean untouchedFailed;
+    /** M10 part C: whether a saved objective failed (too many air allies lost to bring its target home). */
+    private boolean savedFailed;
 
     /**
      * @param groups the groups the ground units belong to: the secondary's or the destroy-targets
@@ -91,6 +93,7 @@ final class Objectives {
         afloatFailed = other.afloatFailed;
         integrityFailed = other.integrityFailed;
         untouchedFailed = other.untouchedFailed;
+        savedFailed = other.savedFailed;
     }
 
     /** Back to the level start. */
@@ -109,6 +112,34 @@ final class Objectives {
         afloatFailed = false;
         integrityFailed = false;
         untouchedFailed = false;
+        savedFailed = false;
+    }
+
+    /**
+     * M10 part C (design/campaign Level 37, the shuttles): an air ally was lost, {@code lost} of {@code total} so far;
+     * returns whether that failed a saved objective (fewer than its target can come home now: Level 37 at medium, the
+     * second loss).
+     */
+    boolean alliesLost(int lost, int total) {
+        if (!secondary.bySaved() || savedFailed || secondaryMet || total - lost >= secondary.saved()) {
+            return false;
+        }
+        savedFailed = true;
+        return true;
+    }
+
+    /** M10 part C: {@code home} air allies are home; returns whether that met a saved objective (its target home). */
+    boolean alliesHome(int home) {
+        if (!secondary.bySaved() || savedFailed || secondaryMet || home < secondary.saved()) {
+            return false;
+        }
+        secondaryMet = true;
+        return true;
+    }
+
+    /** M10 part C: whether a saved objective failed in this attempt. */
+    boolean savedFailed() {
+        return savedFailed;
     }
 
     /**
@@ -536,6 +567,10 @@ final class Objectives {
         if (secondary.byGroundAllies()) {
             // M7 part D: only with an untouched (round 41: or standing) objective, so the other levels hash as before.
             hash.add(untouchedFailed ? 1 : 0);
+        }
+        if (secondary.bySaved()) {
+            // M10 part C: only with a saved objective, so the other levels hash as before.
+            hash.add(savedFailed ? 1 : 0);
         }
         if (secondary.escapesAllowed() > 0 || secondary.objects()) {
             // M7 part F: only with escapes allowed (M9 part G: or an object escapes objective), so the other levels

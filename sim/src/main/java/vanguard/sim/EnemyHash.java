@@ -157,6 +157,10 @@ final class EnemyHash {
         if (u.hoverHold.active() || u.hoverHold.driftsOnly()) {
             u.hoverHold.addTo(hash);
         }
+        if (u.stationHold.active()) {
+            // M10 part C: only once a unit holds a station, so the other levels hash as before.
+            u.stationHold.addTo(hash);
+        }
         // M8 part E's songs add theirs; earlier units hash as before.
         if (u.song.active()) {
             u.song.addTo(hash);
