@@ -28,7 +28,9 @@ import vanguard.sim.PlayField;
  * @param images the folder of another level whose images it uses (e.g. {@code level-04}, for a level
  *     whose own art does not exist yet); its own folder when not given
  * @param strip M7 part G (design/campaign Level 20, a level that flies back over ground it has shown): the ground's
- *     tile sets keyed by the strip's row instead of by section ({@link Strip}); the sections then name no tiles
+ *     tile sets keyed by the strip's row instead of by section ({@link Strip}); the sections then name no tiles * @param banks M10 part A (design/world/jovian, Hazards &amp; set pieces: foreground cloud banks; Level 36): the
+ *     translucent banks drawn over the {@code air} bodies, on the {@code high-air} scenery ({@link Bank}); none if not
+ *     given
  */
 public record BackdropData(
         Map<BackdropLayer, Double> scrollFactors,
@@ -39,8 +41,16 @@ public record BackdropData(
         Map<String, Piece> pieces,
         List<PlacedPiece> placed,
         Optional<String> images,
-        Optional<Strip> strip) {
+        Optional<Strip> strip,
+        Optional<List<Bank>> banks) {
     public BackdropData {
+        banks = banks.map(List::copyOf);
+        banks.ifPresent(list -> {
+            Check.notEmpty("banks", list);
+            for (int i = 1; i < list.size(); i++) {
+                Check.that(list.get(i).t() >= list.get(i - 1).t(), "banks[" + i + "]: in time order");
+            }
+        });
         images.ifPresent(folder -> Check.that(folder.matches("level-\\d{2}"), "images: a level folder, level-NN"));
         Check.that(
                 scrollFactors
@@ -118,6 +128,35 @@ public record BackdropData(
             Check.notEmpty("tiles", tiles);
             tiles = List.copyOf(tiles);
         }
+    }
+
+    /**
+     * M10 part A (design/world/jovian, foreground cloud banks): a bank {@code w} × {@code h} px whose centre passes the
+     * middle of the screen at {@code t} s, {@code x} px from the left, drifting down with the {@code high-air} layer's
+     * scroll factor; drawn over the {@code air} bodies (presentation: the simulation never reads it). {@code skip}: the
+     * difficulties it is left out on (easy's smaller cover).
+     */
+    public record Bank(double t, double x, double w, double h, Optional<List<String>> skip) {
+        public Bank {
+            Check.notNegative("t", t);
+            Check.positive("w", w);
+            Check.positive("h", h);
+            skip = skip.map(List::copyOf);
+            skip.ifPresent(names -> names.forEach(Difficulty::of));
+        }
+
+        /** Whether it is drawn on {@code difficulty}. */
+        public boolean on(Difficulty difficulty) {
+            return skip.map(names -> names.stream().map(Difficulty::of).noneMatch(difficulty::equals))
+                    .orElse(true);
+        }
+    }
+
+    /** M10 part A: the foreground cloud banks drawn on {@code difficulty}, in time order. */
+    public List<Bank> banksOn(Difficulty difficulty) {
+        return banks.orElse(List.of()).stream()
+                .filter(bank -> bank.on(difficulty))
+                .toList();
     }
 
     /** M7 part G: whether the ground's tile sets are keyed by the strip's row ({@link Strip}). */

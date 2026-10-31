@@ -3,7 +3,7 @@ title: Data file schemas — level backdrops
 design: approved
 implementation: in-progress
 art: n/a
-updated: 2026-10-25
+updated: 2026-10-31
 ---
 
 # Data file schemas — level backdrops
@@ -89,3 +89,11 @@ The schema of a level's `backdrop` block (layers, tile sets, seams, tower pieces
   waypoint's script time is reached, and the placements themselves stay in script time (the
   simulation's real clock is `Sortie.realSeconds()`, script time `levelSeconds()`, and between
   steps script time moves at `scriptRate()`).
+
+M10 part A (step A2b; design/world/jovian, *Hazards & set pieces*: foreground cloud banks): a backdrop's optional
+**`banks`** (`t`, `x`, `w`, `h` px and an optional `skip` list of difficulties): translucent banks drawn over the `air`
+bodies on the `high-air` scenery, each centred on `x` and passing the middle of the screen at `t` as a placed piece
+does, drifting down with the `high-air` scroll factor. `content` (`JovianHazardChecks`) samples the level every
+0.05 s: at most the [Jovian](../../../world/jovian/README.md#hazards--set-pieces) `banks.cover` share of the play
+field's area under banks at a time (their union; `easy_cover` on easy) and never a bank over the ship's band (the
+bottom `banks.band` px) for more than `banks.band_seconds` s at a time. Presentation only: the simulation never reads it.

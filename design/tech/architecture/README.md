@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: n/a
 depends-on: [.., ../../player, ../../enemies, ../../campaign]
-updated: 2026-10-30
+updated: 2026-10-31
 ---
 
 # Architecture
@@ -159,6 +159,7 @@ One part per family; this table names the part that holds each data file's schem
 |---|---|
 | Weapon (`player/weapons/<slug>/data.yaml`) | [schemas-player](schemas-player/README.md) |
 | Europa (`world/europa/data.yaml`) | [schemas-act-4](schemas-act-4/README.md) |
+| Jovian (`world/jovian/data.yaml`) | [schemas-levels](schemas-levels/README.md) |
 | Enemy (`enemies/<category>/<slug>/data.yaml`) | [schemas-units](schemas-units/README.md) |
 | Level (`campaign/<act>/<level>/data.yaml`) | [schemas-levels](schemas-levels/README.md) |
 | Level, M8 part A | [schemas-act-4](schemas-act-4/README.md) |

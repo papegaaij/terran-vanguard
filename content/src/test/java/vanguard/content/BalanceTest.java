@@ -470,9 +470,14 @@ class BalanceTest {
      * single_target.width} wide {@code single_target.distance} from the muzzle (a seeking weapon:
      * all). M7 part A, by the hand formulas of their documents: a beam's damage per second (it burns
      * its first target), a drone bay's rate × damage (its shots aim at the convergence point), a
-     * deflector's 0. The same model as tools/design_data.py's {@code stats} and the weapon tables.
+     * deflector's 0; M10 part A: a chain's first strike. The same model as tools/design_data.py's {@code stats} and the
+     * weapon tables.
      */
     static double singleTarget(WeaponData weapon, WeaponData.Level level) {
+        if (weapon.chains()) {
+            // M10 part A, step A2b (the Plasma Arc): its first strike on the target; the jumps go to other units.
+            return level.damage() * level.rate();
+        }
         double volley = weapon.volleyDps(level);
         if (level.kind() != WeaponData.Level.Kind.SHOTS
                 || weapon.seek().orElse(false)

@@ -94,6 +94,10 @@ import vanguard.sim.PlayField;
  * @param armourFloor M8 part H (Level 28, The run cannot be lost; J2): from the boss's kill to the level's end the
  *     armour stops at this many points (only in a level with a boss); none (0) if not given
  * @param relay M9 part H (design/campaign Level 35): the mass-relay flash, once on the level clock; none if not given
+ * @param turn M10 part A (design/enemies, The three-way war; Level 37): the turn's time on the level clock, s: the
+ *     hunting waves' links ({@code hunts}) are live from it; live from the hunters' entry if not given
+ * @param eruptions M10 part A (design/world/jovian, Hazards &amp; set pieces: eruptions; Level 39): the ground vents
+ *     that throw burning rocks, in time order; their numbers are the world's ({@link JovianData}); none if not given
  */
 public record LevelData(
         double scrollSpeed,
@@ -152,7 +156,9 @@ public record LevelData(
         Optional<HaltWaves> haltWaves,
         Optional<EscortSwap> escortSwap,
         Optional<String> ground,
-        Optional<Relay> relay)
+        Optional<Relay> relay,
+        Optional<Double> turn,
+        Optional<List<EruptionVent>> eruptions)
         implements SectionsBlock,
                 WavesBlock,
                 SetPiecesBlock,
@@ -191,6 +197,14 @@ public record LevelData(
             }
         });
         armourFloor.ifPresent(floor -> Check.positive("armour_floor", floor));
+        turn.ifPresent(at -> Check.notNegative("turn", at));
+        eruptions = eruptions.map(List::copyOf);
+        eruptions.ifPresent(list -> {
+            Check.notEmpty("eruptions", list);
+            for (int i = 1; i < list.size(); i++) {
+                Check.that(list.get(i).t() >= list.get(i - 1).t(), "eruptions[" + i + "]: vents in time order");
+            }
+        });
         Check.positive("scroll_speed", scrollSpeed);
         Check.notNegative("launch_seconds", launchSeconds);
         bountyScale.ifPresent(scale -> Check.positive("bounty_scale", scale));

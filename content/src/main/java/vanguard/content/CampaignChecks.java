@@ -127,6 +127,33 @@ final class CampaignChecks extends ContentChecks {
     }
 
     /**
+     * M10 part A, step A2b: what the shop unlocks flies: every player weapon (the Plasma Arc's chain since step A2b), and
+     * every utility module with an effect the simulation reads (the magnet, targeting, salvage, dash, repair, hull and
+     * spoof numbers: the IFF spoofer since step A2b); the Sensor suite's intel is the hangar's.
+     */
+    void checkUnlocksFly() {
+        content.weapons().forEach((slug, weapon) -> {
+            if (!SimSpecs.flies(content, slug)) {
+                problem(weapon, "hits", "'" + weapon.hits() + "' does not fly in the simulation");
+            }
+        });
+        SystemsData systems = content.systems();
+        for (int i = 0; i < systems.utility().size(); i++) {
+            SystemsData.Utility utility = systems.utility().get(i);
+            boolean effect = utility.magnet().isPresent()
+                    || utility.targeting().isPresent()
+                    || utility.salvage().isPresent()
+                    || utility.dash().isPresent()
+                    || utility.repair().isPresent()
+                    || utility.hull().isPresent()
+                    || utility.spoof().isPresent();
+            if (effect && !SimSpecs.fliesUtility(utility.name())) {
+                problem(systems, "utility[" + i + "]", "'" + utility.name() + "' does not fly in the simulation");
+            }
+        }
+    }
+
+    /**
      * Rook's guns are based on player weapons the simulation flies, each with a price, so his
      * escort shop can derive theirs.
      */

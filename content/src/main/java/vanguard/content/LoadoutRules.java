@@ -5,6 +5,7 @@ import static vanguard.content.SimSpecs.AUTO_REPAIR_NANITES;
 import static vanguard.content.SimSpecs.DECOY_FLARES;
 import static vanguard.content.SimSpecs.EMP_BURST;
 import static vanguard.content.SimSpecs.EVASIVE_THRUSTERS;
+import static vanguard.content.SimSpecs.IFF_SPOOFER;
 import static vanguard.content.SimSpecs.ORBITAL_LANCE;
 import static vanguard.content.SimSpecs.PICKUP_MAGNET;
 import static vanguard.content.SimSpecs.PRESSURE_HULL;
@@ -108,7 +109,9 @@ final class LoadoutRules {
                         .map(fitted ->
                                 WeaponRules.mount(content, fitted.slot(), fitted.weapon(), fitted.level(), turnBonus))
                         .toList()),
-                new ShieldModel(model.capacity(), regen, model.regenDelaySeconds(), model.breakSeconds()),
+                // M10 part A: the Reflex Shield keeps its reflect.
+                new ShieldModel(
+                        model.capacity(), regen, model.regenDelaySeconds(), model.breakSeconds(), model.reflect()),
                 plating(named(content.armour().plating(), ArmourData.Plating::name, plating)));
     }
 
@@ -172,7 +175,20 @@ final class LoadoutRules {
                 || name.equals(EVASIVE_THRUSTERS)
                 // M8 part A: the Pressure hull (no water drag) and the Auto-repair nanites.
                 || name.equals(PRESSURE_HULL)
-                || name.equals(AUTO_REPAIR_NANITES);
+                || name.equals(AUTO_REPAIR_NANITES)
+                // M10 part A, step A2b: the Ascendancy IFF spoofer.
+                || name.equals(IFF_SPOOFER);
+    }
+
+    /**
+     * M10 part A, step A2b (design/player/systems, the IFF spoofer): the fitted spoofer's delay from
+     * design/player/systems/data.yaml, s: a spoofable unit's aimed volley comes this late, at its stale aim.
+     */
+    static double spoofDelay(Content content) {
+        return named(content.systems().utility(), SystemsData.Utility::name, IFF_SPOOFER)
+                .spoof()
+                .orElseThrow(() -> new IllegalArgumentException(IFF_SPOOFER + " has no spoof numbers"))
+                .delay();
     }
 
     /**
@@ -501,12 +517,20 @@ final class LoadoutRules {
         };
     }
 
+    /**
+     * A shield's model at {@code difficulty} (the regen lever); M10 part A, step A2b: the Reflex Shield with its reflect
+     * (design/player/shields, Reflex Shield (Act 6)).
+     */
     static ShieldModel shield(Content content, ShieldData.Model model, Difficulty difficulty) {
-        return new ShieldModel(
+        ShieldModel shield = new ShieldModel(
                 model.capacity(),
                 model.regen() * content.difficulty().shieldRegen().of(difficulty),
                 model.delay(),
                 content.shields().breakSeconds());
+        return model.reflect()
+                .map(reflect -> shield.withReflect(
+                        new ShieldModel.Reflect(reflect.window(), reflect.share(), reflect.speed(), reflect.factor())))
+                .orElse(shield);
     }
 
     static Plating plating(ArmourData.Plating plating) {

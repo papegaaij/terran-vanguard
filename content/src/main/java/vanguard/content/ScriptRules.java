@@ -117,12 +117,15 @@ final class ScriptRules {
                                         || rocks.onEasy().orElse(false))
                                 .map(ScriptRules::rocks))
                         .withDarkness(level.darkness().map(darkness -> darkness(darkness, difficulty)))
-                        .withWeather(level.weather().flatMap(weather -> PartFRules.weather(level, weather, difficulty)))
+                        // M10 part A: and the Jovian lightning strikes (Level 38).
+                        .withWeather(JovianHazardRules.weather(content, level, difficulty))
                         .withSondes(level.sondes().map(PartFRules::sondes))
                         // M8 part H: the finale's cruiser run (Level 28).
                         .withCruisers(MawRules.cruisers(content, level, difficulty))
                         // M9 part H: the mass-relay flash (Level 35).
-                        .withRelay(RingRules.relay(level, difficulty)))
+                        .withRelay(RingRules.relay(level, difficulty))
+                        // M10 part A: the Jovian eruptions (Level 39).
+                        .withEruptions(JovianHazardRules.eruptions(content, level, difficulty)))
                 .drops(DropSpec.NONE
                         .withGroupDrops(groupDrops(level, carried))
                         .withPartDrops(LevelRules.partDrops(content, level, carried, SimSpecs::pickup))
@@ -144,6 +147,8 @@ final class ScriptRules {
                 .escortSwap(level.escortSwap()
                         .map(swap -> new EscortSwapSpec(
                                 swap.at().x(), PlayField.HEIGHT - swap.at().y(), swap.join())))
+                // M10 part A (Level 37): the turn, from which the hunting waves' links are live.
+                .turn(level.turn())
                 .build();
         // M7 part B: the no-surface zones and the drop launch (Level 15); M7 part C: the canyon and its gates (Level
         // 16); M7 part D: the ground allies (Level 17's domes).

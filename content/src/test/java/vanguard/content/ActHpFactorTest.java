@@ -289,6 +289,23 @@ class ActHpFactorTest {
                 at("talon", Difficulty.HARD, 6, 36).shield().orElseThrow().hp());
     }
 
+    /**
+     * M10 part A (step A2b; Level 39's *Waves*: "the Sentinel Tower with the act HP factor of a returning {@code medium}
+     * unit (×156/132 from its L32 values)"): Act 6's returning units take the ratio of the level's reference DPS to their
+     * own first level's, through the act (the Gilded Gunship's 168/124 at L42).
+     */
+    @Test
+    void actSixsReturningUnitsTakeTheRatioToTheirFirstLevel() {
+        assertEquals(156.0 / 132, SimSpecs.actHpFactor(CONTENT, "sentinel-tower", 6, 39), 1e-12);
+        assertEquals(144.0 / 124, SimSpecs.actHpFactor(CONTENT, "gilded-gunship", 6, 36), 1e-12);
+        assertEquals(168.0 / 124, SimSpecs.actHpFactor(CONTENT, "gilded-gunship", 6, 42), 1e-12);
+        assertEquals(
+                Math.rint(88 * 168.0 / 124),
+                at("gilded-gunship", Difficulty.MEDIUM, 6, 42).hp());
+        // Its own first level keeps its stat block (a unit new in Act 6 starts at 1).
+        assertEquals(1, SimSpecs.actHpFactor(CONTENT, "sentinel-tower", 5, 32), 1e-12);
+    }
+
     private static double shield(String slug, int act, int level) {
         return at(slug, Difficulty.MEDIUM, act, level).shield().orElseThrow().hp();
     }

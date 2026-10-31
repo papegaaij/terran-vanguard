@@ -701,7 +701,7 @@ class JovianKeysTest {
                 List.of(3, 4, 4, 5, 6),
                 arc.levels().stream().map(level -> level.chain().orElseThrow()).toList());
         assertEquals(69.375, arc.volleyDps(arc.levels().getFirst()), 1e-9);
-        assertFalse(SimSpecs.flies(CONTENT, "plasma-arc"), "the CHAIN delivery is mapped in step A2b");
+        assertTrue(SimSpecs.flies(CONTENT, "plasma-arc"), "the CHAIN delivery is mapped (step A2b)");
         ShieldData.Model reflex = CONTENT.shields().models().getLast();
         assertEquals("Reflex Shield", reflex.name());
         assertEquals(37, CONTENT.player().firstLevel(reflex.available()));

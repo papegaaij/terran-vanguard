@@ -20,7 +20,7 @@ import vanguard.sim.Loadout;
  * sensor suite's best level for the HUD's threat arrows (L2+; it always gave the hangar intel), and
  * Rook in the escort slot with his fitted gun when he flies ({@link Campaign#escortFlight()}) or (M8 part A) the
  * Bulwark there, owned or on loan, with its armour, and the Pressure hull and the Auto-repair nanites (the best fitted
- * level); the Sonar Pulse and the Decoy Flares fly as specials. The
+ * level), and (M10 part A) the Ascendancy IFF spoofer; the Sonar Pulse and the Decoy Flares fly as specials. The
  * other specials and utility modules are bought, fitted and saved but fly later; they and any weapon
  * that does not fly yet are listed for the HUD.
  *
@@ -65,6 +65,7 @@ public record Flight(
         boolean thrusters = false;
         boolean hull = false;
         int nanites = 0;
+        boolean spoofer = false;
         for (var entry : loadout.entrySet()) {
             LoadoutSlot slot = entry.getKey();
             Fitted item = entry.getValue();
@@ -84,6 +85,8 @@ public record Flight(
                 hull = true;
             } else if (slot.kind() == ItemKind.UTILITY && item.item().equals(SimSpecs.AUTO_REPAIR_NANITES)) {
                 nanites = Math.max(nanites, item.level());
+            } else if (slot.kind() == ItemKind.UTILITY && item.item().equals(SimSpecs.IFF_SPOOFER)) {
+                spoofer = true;
             } else if (slot.kind() == ItemKind.UTILITY && item.item().equals(SimSpecs.PICKUP_MAGNET)) {
                 magnet = Math.max(magnet, item.level());
             } else if (weaponSlot(slot) != null) {
@@ -128,6 +131,10 @@ public record Flight(
         if (nanites > 0) {
             // M8 part A: the Auto-repair nanites at the best fitted level.
             flown = flown.withNanites(SimSpecs.nanites(content, nanites));
+        }
+        if (spoofer) {
+            // M10 part A, step A2b: the Ascendancy IFF spoofer (a second one in another bay adds nothing).
+            flown = flown.withSpoofer(SimSpecs.spoofDelay(content));
         }
         // M9 part A (design/player/generator, Enemy drain effects): the power budget in flight, which a drainer's latch
         // lowers; with none latched the sortie flies as without it.

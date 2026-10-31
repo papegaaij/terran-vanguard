@@ -1471,8 +1471,44 @@ def underwater(d):
     return table(["Rule", "Number"], rows) + "\n\nGenerated from [data.yaml](data.yaml) by `tools/sync_tables.py`."
 
 
+def jovian_hazards(d):
+    """M10 part A: the Jovian hazards' numbers as the game reads them (design/world/jovian/data.yaml)."""
+    j = data(d)
+    s, e, b = j["strike"], j["eruption"], j["banks"]
+
+    def span(r):
+        return f"{num(r[0])}" if r[0] == r[1] else f"{num(r[0])}–{num(r[1])}"
+
+    def share(x):
+        named = {2: "a half", 3: "a third", 4: "a quarter"}
+        n = round(1 / x)
+        return named[n] if n in named and abs(x - 1 / n) < 1e-3 else f"{x:.0%}"
+
+    easy, hard = e.get("easy", {}), e.get("hard", {})
+    rows = [
+        ["Lightning strike", f"told {num(s['tell'])} s, strikes {num(s['live'])} s down a column {num(s['width'])} px "
+                             f"wide: {num(s['ship'])} to the ship and Rook (once), {num(s['enemy'])} to every `air` "
+                             "enemy in it"],
+        ["Strike spacing", f"never two within {num(s['spacing'])} s; no tell within {num(s['entry'])} s of a wave's "
+                           f"entry on the ship's x; easy: never within {num(s['easy_clearance'])} px of the ship's x"],
+        ["Eruption", f"tell {num(e['tell'])} s, rise {num(e['rise'])} s, flight {num(e['fly'])} s in a "
+                     f"{num(e['fan'])}° fan up the screen at {num(e['speed'])} → {num(e['end_speed'])} px/s, fall "
+                     f"{num(e['fall'])} s; every {span(e['period'])} s while on the screen, {span(e['rocks'])} rocks"],
+        ["Rock", f"{num(e['rock'][0])}×{num(e['rock'][1])} px, {num(e['hp'])} HP (no factor), {num(e['damage'])} on "
+                 "contact; pays nothing"],
+        ["Eruption, easy / hard", f"easy: tell {num(easy.get('tell', e['tell']))} s, "
+                                  f"{span(easy.get('rocks', e['rocks']))} rocks; hard: tell "
+                                  f"{num(hard.get('tell', e['tell']))} s, {span(hard.get('rocks', e['rocks']))} rocks "
+                                  f"at {num(hard.get('speed', e['speed']))} px/s"],
+        ["Foreground banks", f"at most {share(b['cover'])} of the field under banks (easy {share(b['easy_cover'])}); never "
+                             f"over the ship's band (the bottom {num(b['band'])} px) longer than "
+                             f"{num(b['band_seconds'])} s"],
+    ]
+    return table(["Rule", "Number"], rows) + "\n\nGenerated from [data.yaml](data.yaml) by `tools/sync_tables.py`."
+
+
 RENDERERS = {
-    "underwater": underwater,
+    "underwater": underwater, "jovian-hazards": jovian_hazards,
     "weapon-levels": weapon_levels, "weapon-properties": weapon_properties, "shields": shields,
     "plating": plating, "generators": generators, "engines": engines, "bays": bays, "utility": utility,
     "pickups": player_pickups, "ship-movement": ship_movement, "stat-block": stat_block,

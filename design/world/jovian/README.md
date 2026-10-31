@@ -121,6 +121,23 @@ band; step ART-R-B's mood sheets).*
 | **The three-way battle** | L37 on | From the turn the Vrell attack the Ascendancy as well as the player: the [three-way rule](../../enemies/README.md#the-three-way-war) (Q3 **a**, the enemies README's) in play, and **c**'s backdrop on top: Vrell growth eating Aurelia's decks, Vrell swarms and Ascendancy craft fighting on the `deep` and `low-air` layers, burning hulks falling past. |
 | **Pylon gates** | L41 | The fortress's sections halt until their [Shield Pylons](../../enemies/ground/shield-pylon/README.md#the-pylon-gates-level-41) fall (the pylon's document owns the rule). |
 
+The numbers the game reads (M10 part A) are in [data.yaml](data.yaml), once for the world; a level places and times
+them (its `weather.strikes`, `eruptions` and backdrop `banks`, the
+[level schema](../../tech/architecture/schemas-levels/README.md)):
+
+<!-- data: jovian-hazards -->
+| Rule | Number |
+|---|---|
+| Lightning strike | told 1 s, strikes 0.25 s down a column 40 px wide: 10 to the ship and Rook (once), 60 to every `air` enemy in it |
+| Strike spacing | never two within 1.5 s; no tell within 1 s of a wave's entry on the ship's x; easy: never within 60 px of the ship's x |
+| Eruption | tell 1.2 s, rise 0.5 s, flight 2.5 s in a 100° fan up the screen at 120 → 60 px/s, fall 0.4 s; every 5–7 s while on the screen, 3–5 rocks |
+| Rock | 24×24 px, 6 HP (no factor), 10 on contact; pays nothing |
+| Eruption, easy / hard | easy: tell 1.6 s, 3 rocks; hard: tell 1 s, 5 rocks at 150 px/s |
+| Foreground banks | at most a third of the field under banks (easy a quarter); never over the ship's band (the bottom 140 px) longer than 2 s |
+
+Generated from [data.yaml](data.yaml) by `tools/sync_tables.py`.
+<!-- /data -->
+
 ### Natives
 
 - Ascendancy: the full fleet: precision fighters, shielded gunships, rail platforms, the fortress's pylons and the

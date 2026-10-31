@@ -74,13 +74,19 @@ final class LevelChecks extends ContentChecks {
             }
             checkTime(level, "boss.t", boss.t());
         });
-        // M9 part B (Level 29, the rescue halt): or a held arena (its holders' group) without a boss.
-        if (level.sections().stream().filter(LevelData.Section::isArena).count() > 1
+        // M9 part B (Level 29, the rescue halt): or a held arena (its holders' group) without a boss. M10 part A, step
+        // A2b (Level 41's pylon gates): or several held arenas, the gates (JovianHazardChecks).
+        long arenas =
+                level.sections().stream().filter(LevelData.Section::isArena).count();
+        long held = level.sections().stream().filter(LevelData.Section::held).count();
+        if ((arenas > 1 && held != arenas)
                 || (level.sections().stream().anyMatch(section -> section.isArena() && !section.held())
                         && level.boss().isEmpty())
-                || (level.sections().stream().anyMatch(LevelData.Section::held)
-                        && level.boss().isPresent())) {
-            problem(level, "sections", "a level has at most one arena, a boss's or a held one (without a boss)");
+                || (held > 0 && level.boss().isPresent())) {
+            problem(
+                    level,
+                    "sections",
+                    "a level has at most one arena, a boss's, or held ones (the gates, without a boss)");
         }
         bosses.checkDebris(level);
         checkLevelRules(level);

@@ -729,6 +729,23 @@ optional `skip` list of the difficulties it is left out on (Level 06's hard-only
   wave's **`mine_lines`** (`rows` px below the top edge and `gaps` px from the left edge, unit i taking `rows[i % n]`
   and the cluster boundary nearest `gaps[i % m]`; the units its `interval` apart); a tagged `escapes` secondary may
   name its counter (`label`) when a difficulty allows some away (Level 30's `CONVOY`).
+  M10 part A (step A2b; loaded, checked and mapped by content's `JovianHazardRules` and `JovianHazardChecks`, flown by
+  step A1b's passes): the weather's **`strikes`** (`t`, `x`, optional `track: true` and `skip`: a told lightning
+  column, a tracking one locking on the ship's x at its tell, hard's only, so skipped on easy and medium; never two
+  tells within 1.5 s on a difficulty, none within 1 s of a wave's entry; a level with strikes and no wind flies calm
+  weather with them), the level's **`eruptions`** (vents `t`, `x` and an optional `period` `[min, max]` s, the world's
+  5–7 if not given; the level's first eruption plays alone: no wave enters from its vent's earliest tell to the end of
+  its latest), the level's **`turn`** (s on the level clock: the `hunts: <tag>` links are live from it; only in a level
+  with such a wave) and **several held gates** (more than one `arena: true, holds: <group>` section, Level 41's pylon
+  gates: never the first section or two in a row, each its own group, its holders entering after the gate before it
+  ends, no `escort_swap` with more than one; no boss). The strikes' and eruptions' numbers are the world's, once:
+  **Jovian** (`world/jovian/data.yaml`, `JovianData`): `strike` (`tell`, `live` s, `width` px, `ship` and `enemy`
+  damage, `entry` and `spacing` s, `easy_clearance` px), `eruption` (`tell`, `rise`, `fly`, `fall` s, `fan` °, `speed`
+  and `end_speed` px/s, `rock` box, `hp`, `damage`, `period` and `rocks` `[min, max]`, `easy` and `hard` changing
+  `tell`, `rocks` and `speed`) and `banks` (the foreground banks' caps: `cover` and `easy_cover` shares of the play
+  field at a time, the ship's `band` px and `band_seconds`, checked against the backdrop's `banks`,
+  [schemas-backdrops](../schemas-backdrops/README.md)), rendered into the
+  [Jovian system](../../../world/jovian/README.md#hazards--set-pieces)'s *Hazards & set pieces*.
 - **Act** (`campaign/<act>/data.yaml`): `levels` `[first, last]` (global numbers), `title_card`
   (`act`, `name`, `line`), `briefing` (pages as a level's); `outro`, the act-end
   outro after the last level's debrief: `music` (a music file's name, `act-complete`: track 24

@@ -105,6 +105,8 @@ final class WeaponRules {
             case WeaponData.BEAM -> Optional.of(WeaponSpec.Delivery.BEAM);
             // M9 part A: the Tesla Coil Pod's instant arc.
             case WeaponData.ARC -> Optional.of(WeaponSpec.Delivery.ARC);
+            // M10 part A (step A2b): the Plasma Arc's chain from the nose.
+            case WeaponData.CHAIN -> Optional.of(WeaponSpec.Delivery.CHAIN);
             case "homing" ->
                 Optional.of(weapon.slew().isPresent() ? WeaponSpec.Delivery.TURRET : WeaponSpec.Delivery.HOMING);
             case WeaponData.MINES -> Optional.of(WeaponSpec.Delivery.MINE);
@@ -193,6 +195,24 @@ final class WeaponRules {
                             weapon.splash().orElseThrow(),
                             muzzles.getFirst())
                     .withShieldBreaker(weapon.shieldBreaker());
+        }
+        if (delivery == WeaponSpec.Delivery.CHAIN) {
+            // M10 part A, step A2b (design/player/weapons/plasma-arc): an instant first strike from the nose within its
+            // level's reach in the forward cone, then its level's chain of jumps at the weapon's falloff; not a
+            // shield-breaker.
+            return WeaponSpec.chain(
+                    slug,
+                    weapon.vfx(),
+                    weapon.sfx(),
+                    level.rate(),
+                    level.damage(),
+                    level.reach().orElseThrow(),
+                    Math.toRadians(weapon.cone().orElseThrow()),
+                    new WeaponSpec.Chain(
+                            level.chain().orElseThrow(),
+                            level.jump().orElseThrow(),
+                            weapon.falloff().orElseThrow()),
+                    muzzles.getFirst());
         }
         double speed = weapon.speed().map(WeaponData.Speed::start).orElse(0.0);
         WeaponSpec.Mines mines =

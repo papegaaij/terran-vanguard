@@ -1,0 +1,33 @@
+# The Jovian system's hazards (README.md, Hazards & set pieces; M10 part A): rendered into README.md.
+# Schema: ../../tech/architecture/schemas-levels/README.md
+# The numbers are the world's, once; a level only places and times them (`weather.strikes`, `eruptions`,
+# `backdrop.banks`).
+strike:                 # the told lightning strike (J3; Level 38, a few in Level 36)
+  tell: 1.0             # s the column brightens before it strikes (the >= 0.8 s telegraph rule)
+  live: 0.25            # s the strike lasts, down the whole play field
+  width: 40             # px: the column
+  ship: 10              # `heavy` to the ship and Rook, once a strike each (to the shield first, never reflected)
+  enemy: 60             # to every `air` enemy in the column (a Chimera or a Harrow dies, a medium unit survives)
+  entry: 1.0            # s: no tell starts on the ship's x within this of a wave's entry
+  spacing: 1.5          # s: never two strikes within this
+  easy_clearance: 60    # px: on easy never told within this of the ship's x
+eruption:               # the dry eruption (J3; Level 39)
+  tell: 1.2             # s the vent's mouth glows and the ground cracks
+  rise: 0.5             # s a rock rises over the vent (growing, harmless)
+  fly: 2.5              # s it flies out on the play plane
+  fall: 0.4             # s it falls back (shrinking, harmless)
+  fan: 100              # degrees, centred straight up the screen
+  speed: 120            # px/s out of the vent, easing to end_speed
+  end_speed: 60
+  rock: [24, 24]        # px: a rock's hit box (`small` debris; M10 part A's trivia, pending round 73)
+  hp: 6                 # no act or beam-era factor
+  damage: 10            # `small` contact to the ship and Rook; the rock breaks on the impact
+  period: [5, 7]        # s between a vent's eruptions while it is on the screen
+  rocks: [3, 5]         # a throw
+  easy: {tell: 1.6, rocks: [3, 3]}
+  hard: {tell: 1.0, rocks: [5, 5], speed: 150}
+banks:                  # the foreground cloud banks (Q2; Level 36, Level 38 may use them): the level's backdrop places them
+  cover: 0.3334         # at most a third of the play field's area under banks at a time
+  easy_cover: 0.25      # easy: a quarter
+  band: 140             # px: the ship's band, the bottom of the play field
+  band_seconds: 2       # s: never a bank over the ship's band longer than this

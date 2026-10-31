@@ -36,6 +36,7 @@ final class ContentValidator {
         campaignChecks.checkSmallActHp();
         campaignChecks.checkBeamEraHp();
         campaignChecks.checkHeavyShields();
+        campaignChecks.checkUnlocksFly();
         content.enemies().values().forEach(enemyChecks::checkEnemy);
         content.levels().values().forEach(levelChecks::checkLevel);
         content.levels().forEach(campaignChecks::checkAct);
@@ -149,6 +150,11 @@ final class ContentValidator {
                 .values()
                 .forEach(level ->
                         JovianChecks.level(content, level, (field, message) -> problem(level, field, message)));
+        // M10 part A, step A2b: a level's strikes, eruptions, foreground banks, held gates and turn.
+        content.levels()
+                .values()
+                .forEach(level ->
+                        JovianHazardChecks.level(content, level, (field, message) -> problem(level, field, message)));
         return sink.list();
     }
 

@@ -74,6 +74,9 @@ public final class SimSpecs {
 
     public static final String AUTO_REPAIR_NANITES = "Auto-repair nanites";
 
+    /** M10 part A: the Ascendancy IFF spoofer (design/player/systems). */
+    public static final String IFF_SPOOFER = "Ascendancy IFF spoofer";
+
     private SimSpecs() {}
 
     /** A weapon fitted in one of the Stormhawk's weapon slots at an upgrade level (1–5). */
@@ -210,6 +213,14 @@ public final class SimSpecs {
     /** M8 part A: whether the Pressure hull removes the water's drag on the ship (design/player/systems/data.yaml). */
     public static boolean pressureHull(Content content) {
         return LoadoutRules.pressureHull(content);
+    }
+
+    /**
+     * M10 part A, step A2b: the fitted Ascendancy IFF spoofer's delay, s (design/player/systems/data.yaml): {@code
+     * Loadout.withSpoofer}.
+     */
+    public static double spoofDelay(Content content) {
+        return LoadoutRules.spoofDelay(content);
     }
 
     /** M8 part A: the under-water rules (design/world/europa/data.yaml, see {@link WaterRules#rules}). */

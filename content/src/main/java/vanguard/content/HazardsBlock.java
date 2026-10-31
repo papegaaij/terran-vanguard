@@ -8,8 +8,8 @@ import vanguard.sim.PlayField;
 
 /**
  * The level's hazards: the {@code cranes}, the mass-driver {@code sleds}, the low-gravity {@code rocks}, the {@code
- * tows}, the {@code debris} field, the conveyor {@code belts} and furnace {@code vents}, and (M9 part H) the mass-relay
- * flash ({@code relay}).
+ * tows}, the {@code debris} field, the conveyor {@code belts} and furnace {@code vents}, (M9 part H) the mass-relay
+ * flash ({@code relay}) and (M10 part A) the Jovian {@code eruptions}.
  *
  * <p>It only holds the block's types (and their logic): {@link LevelData} implements it, so the rest of the game keeps
  * naming them as members of {@code LevelData} ({@code LevelData.Sleds}).
@@ -685,6 +685,19 @@ public sealed interface HazardsBlock permits LevelData {
     record RelayChange(Optional<Double> telegraph) {
         public RelayChange {
             telegraph.ifPresent(s -> Check.positive("telegraph", s));
+        }
+    }
+    /**
+     * M10 part A (design/world/jovian, Hazards &amp; set pieces: eruptions; Level 39): a ground vent entering at the top
+     * edge at {@code t} s at {@code x} px from the left and scrolling with the ground; while on the screen it erupts
+     * every {@code period} {@code [min, max]} s (the world's 5–7 if not given, {@link JovianData.Eruption}). Its tell,
+     * rocks and their flight are the world's, by difficulty.
+     */
+    record EruptionVent(double t, double x, Optional<Span> period) {
+        public EruptionVent {
+            Check.notNegative("t", t);
+            Check.that(x >= 0 && x <= PlayField.WIDTH, "x: on the play field (0-" + PlayField.WIDTH + "), was " + x);
+            period.ifPresent(range -> Check.positive("period", range.min()));
         }
     }
 }

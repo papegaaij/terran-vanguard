@@ -20,15 +20,24 @@ public sealed interface WeatherBlock permits LevelData {
      * drifting triggers), the {@code lightning} flashes (the simulation's {@code LIGHTNING} event, the
      * banks lit for {@code reveal} s), {@code occlusion} (the banks on {@code low-air} hide that layer's
      * bodies: draw order only) and {@code rain} ({@code [t, density]} keys, 0–1, linear between them:
-     * presentation only).
+     * presentation only). M10 part A (design/world/jovian, Hazards &amp; set pieces: lightning strikes; Level 38): the
+     * told lightning {@code strikes} ({@link StrikeAt}), their numbers the world's ({@link JovianData.Strike}).
      */
     public record Weather(
             Optional<Gusts> gusts,
             Optional<WallDrift> drift,
             Optional<Lightning> lightning,
             Optional<Boolean> occlusion,
-            Optional<List<RainKey>> rain) {
+            Optional<List<RainKey>> rain,
+            Optional<List<StrikeAt>> strikes) {
         public Weather {
+            strikes = strikes.map(List::copyOf);
+            strikes.ifPresent(at -> {
+                Check.notEmpty("strikes", at);
+                for (int i = 1; i < at.size(); i++) {
+                    Check.that(at.get(i).t() >= at.get(i - 1).t(), "strikes[" + i + "]: in time order");
+                }
+            });
             rain = rain.map(List::copyOf);
             rain.ifPresent(keys -> {
                 Check.notEmpty("rain", keys);
@@ -134,6 +143,32 @@ public sealed interface WeatherBlock permits LevelData {
             for (int i = 1; i < at.size(); i++) {
                 Check.that(at.get(i) > at.get(i - 1), "at: flashes in time order");
             }
+        }
+    }
+
+    /**
+     * M10 part A (design/world/jovian, lightning strikes): a strike told at {@code t} s on the level clock down the
+     * column at {@code x} px from the left; a {@code track} strike's column locks on the ship's x at its tell's start
+     * instead (hard's: it is left out on easy and medium, {@code skip}). {@code skip}: the difficulties it is left out on
+     * (easy flies fewer).
+     */
+    public record StrikeAt(double t, double x, Optional<Boolean> track, Optional<List<String>> skip) {
+        public StrikeAt {
+            Check.notNegative("t", t);
+            Check.that(x >= 0 && x <= vanguard.sim.PlayField.WIDTH, "x: on the play field, was " + x);
+            skip = skip.map(List::copyOf);
+            skip.ifPresent(names -> names.forEach(Difficulty::of));
+        }
+
+        /** Whether it locks on the ship's x at its tell's start. */
+        public boolean tracks() {
+            return track.orElse(false);
+        }
+
+        /** Whether it strikes on {@code difficulty}. */
+        public boolean strikesOn(Difficulty difficulty) {
+            return skip.map(names -> names.stream().map(Difficulty::of).noneMatch(difficulty::equals))
+                    .orElse(true);
         }
     }
 
