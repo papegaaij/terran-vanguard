@@ -434,6 +434,8 @@ stings; the beds are in [sfx](../sfx/README.md#ambience-per-setting).
   thunder as band noise, no crackle), **full** (the base plus the gallop strings, the snare and hats, the main motif in
   horns and its trumpet answers, the breakdown's choir) and **motif** (Vorne's motif in low brass and choir). The motif
   stem plays **in the open** at its level in the chosen sketch (about 6 dB under the full mix), as track 12's.
+  **Made (step AUD-B, 2026-10-31, round 74 M.1):** `music_r74.py`, 175.3 s (a 4-bar intro + a 96-bar loop), in
+  `assets/music/eye-of-the-storm{,-base,-motif}.ogg`; the stems' contents and levels are its decision below.
 - **Track 15, the Act 6 B theme**: Level 37 from the turn, Levels 38 and 41 and the Level 42 approach. Brief: "heavy,
   stormy, choir and distorted bass" (the act sketch); the war has three sides now. No bubbly or popping sounds, no
   resonant plucks, thunder and static only as band noise. Round 72 offers **two sketches** (55–65 s, step AUD-R,
@@ -879,6 +881,23 @@ round-08 sting format; all −14 LUFS). Measured only, not listened to. Prompts:
 | [concept/ascendant-handoff-r72-a.ogg](concept/ascendant-handoff-r72-a.ogg) | The Ascendant's hand-off a (the README's recommendation, no new render): 10 s of track 19 (the built `iron-sovereign.ogg` from loop bar 8), then track 19 out over 2 s while track 18 (the built `choir-descends.ogg`) starts from its beginning (the Choir motif over a drone), 10 s of it; no radio duck applied. 20.0 s, −14.3 LUFS | chosen (round 72 M.3 a) |
 | [concept/escape-sting-r72-a.ogg](concept/escape-sting-r72-a.ogg) | #33 escape sting a "Collapse" (brass and choir): Vorne's motif in E (E G B D♯) once in low brass and organ over a timpani roll, the D♯ bending down a semitone and dying; the choir takes the Choir motif's descent (E D C B) and the tritone drop to F, ending on a held low E (strings, organ, a sub, a timpani hit) with the F over it, unresolved. 6.6 s, −14.3 LUFS, −2.3 dBTP | chosen (round 72 M.4 a) |
 
+Concept round 74 (M10 part B, step AUD-B, 2026-10-31) — track 14 "Eye of the Storm" at full length with its base and
+motif stems from one render, composed out from the chosen round-03 sketch by `tools/concept/audio/music_r74.py` (track
+12's method; deterministic) and copied into `assets/music` as final by `tools/art/themes.py` (as tracks 12 and 13); its
+review is the round's (QB-4: ok or redo). Measured only, not listened to. Prompts:
+[concept/prompts.md](concept/prompts.md#eye-of-the-storm-r74-a--track-14-eye-of-the-storm-and-its-three-stems).
+
+| File | What | Status |
+|---|---|---|
+| [concept/eye-of-the-storm-r74-a.ogg](concept/eye-of-the-storm-r74-a.ogg) | #14 "Eye of the Storm" full mix at full length: 175.3 s, loop 321300 + 7257600 samples (7.29 s + 164.57 s, 96 bars at 140 BPM), −14.0 LUFS, −1.8 dBTP, seam 0.41; twelve 8-bar sections on the sketch's material (the hunt, Vorne against the Coalition, the storm, both motifs), a new half-time drift and a new build | proposed (round 74, M.1) |
+| [concept/eye-of-the-storm-base-r74-a.ogg](concept/eye-of-the-storm-base-r74-a.ogg) | #14 base stem (the storm strings' tremolo, the kick and the taiko, the bass, the pad, the wind and the thunder rolls): same length, loop and gain, −17.8 LUFS (−3.8 LU), −4.4 dBTP, seam 0.74; Levels 36, 39 and 40 from section 2 | proposed (round 74, M.1) |
+| [concept/eye-of-the-storm-motif-r74-a.ogg](concept/eye-of-the-storm-motif-r74-a.ogg) | #14 motif stem (Vorne's motif in low brass and choir in B, B2, B3; low brass in D and D2; the intro's statement): same length, loop and gain, −21.2 LUFS (−7.2 LU), statements about 6 dB under the full mix (B −5.1, D −7.6 dB); the game adds it on top; alone under the Act 6 intro's page 3 | proposed (round 74, M.1) |
+| [concept/eye-of-the-storm-seam-r74-a.ogg](concept/eye-of-the-storm-seam-r74-a.ogg) | Listening aid: the full mix across its loop seam, 8 s each side | proposed (round 74, M.1; a listening aid) |
+| [concept/eye-of-the-storm-base-seam-r74-a.ogg](concept/eye-of-the-storm-base-seam-r74-a.ogg) | Listening aid: the base stem across its loop seam, 8 s each side | proposed (round 74, M.1; a listening aid) |
+| [concept/eye-of-the-storm-motif-seam-r74-a.ogg](concept/eye-of-the-storm-motif-seam-r74-a.ogg) | Listening aid: the motif stem across its loop seam, 8 s each side | proposed (round 74, M.1; a listening aid) |
+| [concept/eye-of-the-storm-motif-mix-r74-a.ogg](concept/eye-of-the-storm-motif-mix-r74-a.ogg) | Listening aid: loop bars 1–24 (A, B, A2), the full mix with the motif stem on top as Level 36 plays them from section 3, 41.1 s; the sum peaks at −1.2 dBFS | proposed (round 74, M.1; a listening aid) |
+| [concept/eye-of-the-storm-sheet-r74-a.png](concept/eye-of-the-storm-sheet-r74-a.png) | Review sheet: the three files' waveforms with intro, loop and fade tail, their loop points, loudness, true peak, seam and size, and the loudness of each loop section (full, base, motif) | proposed (round 74, M.1; a listening aid) |
+
 ## Implementation
 
 - [x] Music player with intro + loop points
@@ -1042,3 +1061,11 @@ Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-a
   a**, the Ascendant's 19 to 18 hand-off is a crossfade; **M.4 a**, the escape sting (track 33) is "Collapse". J9 kept
   (track 19 in phase 1, track 18 from phase 2, the sting). The b / a sketches moved to `concept/rejected/` (rows in
   its README).
+- 2026-10-31 (M10 part B, step AUD-B): track 14 "Eye of the Storm" at full length (`music_r74.py`, round 74 M.1,
+  QB-4): the sketch's 4-bar intro + a 96-bar loop (2:44.6) of twelve 8-bar sections, base, full and motif stems from
+  one render, copied into `assets/music/eye-of-the-storm{,-base,-motif}.ogg` by `tools/art/themes.py`. Decided here
+  (trivia): the base stem keeps the bass with the brief's storm strings, big drums' low half (kick, taiko), pad, wind
+  and thunder; the storm strings are the sketch's tremolo strings held under every bar (its ostinato), the gallop
+  strings go to the full mix; the thunder is the sketch's roll without its crack (no crackle) and the wind is made
+  periodic over the loop (the seam); the timpani and crashes go to the full mix; D's low brass is raised 4.4 dB over
+  the sketch so its statements hold against D's tutti (B −5.1, D −7.6 dB under the full mix, about 6 on average).

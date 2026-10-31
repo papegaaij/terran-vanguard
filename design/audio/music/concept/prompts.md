@@ -1665,3 +1665,45 @@ choir's drop (C B, then F over E) and the same held low E with the F over it. **
 
 **AI prompt**: *"A six-second sting: a cold synth arpeggio E–G–B–D♯ slowing and sinking in pitch like a dying engine,
 into a choir dropping a tritone onto a held low E with an unresolved F above it."*
+
+## eye-of-the-storm-r74-a — track 14 "Eye of the Storm" and its three stems
+
+From the chosen round-03 sketch [jovian-theme-r03-a](jovian-theme-r03-a.ogg) (140 BPM, G minor), by
+`tools/concept/audio/music_r74.py`. Composition: the sketch's 4-bar intro (the storm strings swelling, a far thunder
+roll, the wind, Vorne's motif in low brass answered by humanity's motif in trumpets, a timpani roll and a riser) and a
+96-bar loop of twelve 8-bar sections: A (the hunt: `Gm Eb Bb F Gm Eb Cm D`, four-on-the-floor kick, clap and snare,
+16th hats, the taiko pattern, tom fills, the gallop strings, the bass, the pad and the choir's chords, the main motif
+and its melody in horns and trumpets), B (Vorne against the Coalition: `GmM7 GmM7 Eb Eb CmM7 CmM7 D D`, Vorne's motif
+in low brass and choir answered by humanity's motif in major in trumpets), A2, C (the storm: `Gm Ab Gm Ab Eb Cm D D`,
+four calm bars of thunder rolls, taiko and held bass under the choir's G to A-flat line, then the groove back with a
+riser and a snare roll), D (both motifs: `Gm GmF# Bb F Gm GmF# Cm D`, the melody in trumpets and the lead an octave up
+over Vorne's motif in low brass), B2, E (new, the drift: `Eb Eb Cm Cm Gm Gm D D`, half time, no hats, no gallop, the
+human motif alone in a quiet horn), F (new, the build: the kick alone, then hats, then the backbeat and the gallop,
+a riser and a snare roll), D2, B3, C2 and T (the turn back into A). The thunder is the sketch's roll without its crack
+and the wind is made periodic over the loop.
+
+Stems: **base** the storm strings' tremolo under every bar, the kick and the taiko, the bass, the pad, the wind and the
+thunder rolls (Levels 36, 39 and 40 from section 2); **full** the base plus the gallop strings, the clap, snare, toms
+and hats, crashes, timpani and risers, the horns, trumpets and lead, and the choir (its chords and the storm's line);
+**motif** Vorne's motif in low brass and choir alone, in the open: its statements about 6 dB under the full mix (the
+game adds it on top; alone under the Act 6 intro's page 3).
+
+**Measured** (not listened to): 175.29 s, `LOOPSTART` 321300 (7.286 s), `LOOPLENGTH` 7257600 (164.571 s = 96 bars);
+full −14.0 LUFS, −1.8 dBTP, seam 0.41; base −17.8 LUFS (−3.8 LU), −4.4 dBTP, seam 0.74; motif −21.2 LUFS (−7.2 LU),
+−11.4 dBTP, seam 0.00, its statements B −5.1 dB and D −7.6 dB under the full mix; full + motif summed −13.9 LUFS,
+peak −1.2 dBFS. Loudness per section in the sheet.
+
+**AI prompt**: *"Vast, stormy orchestral level theme for a 1990s sci-fi shooter in Jupiter's cloud bands, 140 BPM,
+G minor, tremolo storm strings, galloping string ostinato, war drums and taiko, a heroic five-note horn motif with
+trumpet answers, a villain's four-note minor-major-seventh motif in low brass and wordless choir, a calm storm
+breakdown with thunder rolls and the choir alone, a half-time drift, about three minutes, instrumental, seamless
+loop."*
+
+- `eye-of-the-storm-r74-a.ogg`, `eye-of-the-storm-base-r74-a.ogg`, `eye-of-the-storm-motif-r74-a.ogg`: the full mix
+  and its two stems.
+- `eye-of-the-storm-seam-r74-a.ogg`, `eye-of-the-storm-base-seam-r74-a.ogg`, `eye-of-the-storm-motif-seam-r74-a.ogg`:
+  listening aids, the last 8 s of each loop followed by the first 8 s after `LOOPSTART` (0.5 s fades).
+- `eye-of-the-storm-motif-mix-r74-a.ogg`: listening aid, loop bars 1–24, the full mix with the motif stem on top
+  (41.1 s).
+- `eye-of-the-storm-sheet-r74-a.png`: review sheet: waveforms with intro (grey), loop (blue), fade tail (dark) and
+  loop points (amber), the measured numbers and a per-section loudness table.

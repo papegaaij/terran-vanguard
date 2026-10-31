@@ -148,6 +148,18 @@ class PlaceholderAuditTest {
             "M10 part A, step AUD-A: round 72's picks for the Act 6 systems (the user, 2026-10-31: a, but b for the"
                     + " lightning strike and the dome's collapse), from the Freesound HQ previews of CC0/CC-BY sounds until"
                     + " the originals (CREDITS rows from step AUD-R; by tools/concept/audio/sfx_r72.py)";
+    private static final String ROUND_73 =
+            "M10 part B, step AUD-B: round 73's picks for the mirror set and the pylon dome's hit (the user, 2026-10-31:"
+                    + " a), from the Freesound HQ previews of CC0/CC-BY sounds until the originals (CREDITS rows from step"
+                    + " AUD-A; by tools/concept/audio/sfx_r73.py)";
+    private static final String ROUND_72_SKY =
+            "M10 part B, step AUD-B: round 72's pick for Jupiter's sky bed (the user, 2026-10-31: S.13 b), from the"
+                    + " Freesound HQ previews of CC0/CC-BY sounds until the originals (CREDITS rows from step AUD-R; by"
+                    + " tools/concept/audio/sfx_r72.py)";
+    private static final String ROUND_74 =
+            "M10 part B, step AUD-B: round 74's proposals for Level 36 and the Chimera, option a until the user's"
+                    + " pick, from the Freesound HQ previews of CC0/CC-BY sounds (CREDITS rows from step AUD-B; by"
+                    + " tools/concept/audio/sfx_r74.py)";
     private static final String ROUND_60_H =
             "M9 part H, step H4: round 60's pick for the Iron Sovereign's rings turning (the user, 2026-10-27: S.16 a),"
                     + " from the Freesound HQ previews of CC0/CC-BY sounds until the originals (CREDITS rows from step"
@@ -499,6 +511,17 @@ class PlaceholderAuditTest {
             Map.entry("sfx/pylon-dome-up-r72-a.ogg", ROUND_72),
             Map.entry("sfx/pylon-dome-down-r72-b.ogg", ROUND_72),
             Map.entry("sfx/graft-regrowth-r72-a.ogg", ROUND_72),
+            Map.entry("sfx/mirror-heat-r73-a.ogg", ROUND_73),
+            Map.entry("sfx/mirror-break-r73-a.ogg", ROUND_73),
+            Map.entry("sfx/mirror-regrow-r73-a.ogg", ROUND_73),
+            Map.entry("sfx/pylon-dome-hit-r73-a.ogg", ROUND_73),
+            Map.entry("sfx/bolt-absorbed-r73-a.ogg", ROUND_73),
+            Map.entry("sfx/jovian-sky-r72-b.ogg", ROUND_72_SKY),
+            Map.entry("sfx/dive-wind-r74-a.ogg", ROUND_74),
+            Map.entry("sfx/drop-craft-pass-r74-a.ogg", ROUND_74),
+            Map.entry("sfx/harvester-scoop-r74-a.ogg", ROUND_74),
+            Map.entry("sfx/harvester-break-r74-a.ogg", ROUND_74),
+            Map.entry("sfx/chimera-death-r74-a.ogg", ROUND_74),
             Map.entry("music/iron-sovereign.ogg", ROUND_68_MUSIC),
             Map.entry("music/reveal-sting.ogg", ROUND_58_MUSIC),
             Map.entry("music/thera-deep-dark.ogg", ROUND_55_MUSIC),

@@ -464,6 +464,27 @@ val copyPlaceholderSounds = tasks.register<JavaExec>("copyPlaceholderSounds") {
         "pylon-dome-up-r72-a.ogg",
         "pylon-dome-down-r72-b.ogg",
         "graft-regrowth-r72-a.ogg",
+        // M10 part B, step AUD-B: round 73's picks for the mirror set and the pylon dome's hit (the user, 2026-10-31: a;
+        // CC0/CC-BY Freesound HQ previews cut by tools/concept/audio/sfx_r73.py, their CREDITS.md rows): the mirror's
+        // heat loop, break and regrowth, a shot on a pylon dome, a Reflex bolt earthed on a mirror. Played once step B4
+        // wires them in place of their stand-ins.
+        "mirror-heat-r73-a.ogg",
+        "mirror-break-r73-a.ogg",
+        "mirror-regrow-r73-a.ogg",
+        "pylon-dome-hit-r73-a.ogg",
+        "bolt-absorbed-r73-a.ogg",
+        // M10 part B, step AUD-B: round 72's pick for Jupiter's sky (S.13 b, the user, 2026-10-31; CC0/CC-BY Freesound HQ
+        // previews cut by tools/concept/audio/sfx_r72.py, its CREDITS.md rows): the bed of Levels 36 and 38.
+        "jovian-sky-r72-b.ogg",
+        // M10 part B, step AUD-B: Level 36's sounds and the Chimera's death (round 74's proposals, CC0/CC-BY Freesound HQ
+        // previews cut by tools/concept/audio/sfx_r74.py, their CREDITS.md rows), their a variants until the user's
+        // picks: the dive's wind (a layer over `jovian-sky`), the drop craft's pass-by, the harvester's scoop drone and
+        // break-up, the Chimera's death. The Chimera's whine and twin crack a are the Talon's built files.
+        "dive-wind-r74-a.ogg",
+        "drop-craft-pass-r74-a.ogg",
+        "harvester-scoop-r74-a.ogg",
+        "harvester-break-r74-a.ogg",
+        "chimera-death-r74-a.ogg",
     )
 }
 

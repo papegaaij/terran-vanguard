@@ -40,6 +40,10 @@ Outputs:
   assets/music/gilded-cage{,-base,-motif}.ogg  #13 "Gilded Cage", its base and motif stems (M9 part D: the same way
                                    from tools/concept/audio/music_r64.py's gilded-cage{,-base,-motif}-r64-a; the round-60
                                    pick composed out to full length, reviewed on gilded-cage-sheet-r64-a.png in round 64)
+  assets/music/eye-of-the-storm{,-base,-motif}.ogg  #14 "Eye of the Storm", its base and motif stems (M10 part B: the
+                                   same way from tools/concept/audio/music_r74.py's eye-of-the-storm{,-base,-motif}-r74-a;
+                                   the round-03 pick composed out to full length, reviewed on eye-of-the-storm-sheet-r74-a.png
+                                   in round 74)
   design/audio/music/concept/themes-final-r13-a.png      review sheet of round 13
   design/audio/music/concept/boss-music-final-r25-a.png  review sheet of round 25
   design/audio/music/concept/{choir-descends,boss-warning,act-complete}-final-r25-a.ogg
@@ -111,6 +115,7 @@ Usage: python3 tools/art/themes.py [title] [hangar] [briefing] [boss] [warning] 
                                    [red-dust-base] [thera] [thera-base] [pressure]
                                    [pressure-base] [pressure-motif] [hollow] [hollow-base]
                                    [hollow-motif] [hollow-conveyor] [gilded] [gilded-base] [gilded-motif]
+                                   [eye] [eye-base] [eye-motif]
                                                        render (default all), then check and review
        python3 tools/art/themes.py --check [keys]      check only (default all)
        python3 tools/art/themes.py --review [keys]     review sheets (and r25/r26 aids) of the keys' rounds
@@ -171,6 +176,7 @@ ROUNDS = {
     62: (None, None, None, artkit.source_note(SCRIPT, "M9 part B")),
     64: (None, None, None, artkit.source_note(SCRIPT, "M9 part D")),
     65: (None, None, None, artkit.source_note(SCRIPT, "M9 part G")),
+    74: (None, None, None, artkit.source_note(SCRIPT, "M10 part B")),
 }
 # key: (asset name, music_r08 key, title shown on the sheet, round); loops first, then one-shots
 THEMES = {
@@ -188,6 +194,7 @@ THEMES = {
     "pressure": ("pressure-line", None, "PRESSURE LINE - TRACK 11, ACT 4 B", 51),
     "hollow": ("hollow-rock", None, "HOLLOW ROCK - TRACK 12, ACT 5 A", 62),
     "gilded": ("gilded-cage", None, "GILDED CAGE - TRACK 13, ACT 5 B", 64),
+    "eye": ("eye-of-the-storm", None, "EYE OF THE STORM - TRACK 14, ACT 6 A", 74),
 }
 # key: (asset name, key of its full mix in THEMES, title, round, stem generator, chosen file)
 STEMS = {
@@ -221,6 +228,10 @@ STEMS = {
                     "music_r64", "gilded-cage-base-r64-a"),
     "gilded-motif": ("gilded-cage-motif", "gilded", "GILDED CAGE - TRACK 13, MOTIF STEM", 64,
                      "music_r64", "gilded-cage-motif-r64-a"),
+    "eye-base": ("eye-of-the-storm-base", "eye", "EYE OF THE STORM - TRACK 14, BASE STEM", 74,
+                 "music_r74", "eye-of-the-storm-base-r74-a"),
+    "eye-motif": ("eye-of-the-storm-motif", "eye", "EYE OF THE STORM - TRACK 14, MOTIF STEM", 74,
+                  "music_r74", "eye-of-the-storm-motif-r74-a"),
 }
 # M8 part B: pieces copied from their concept file (key: its name in design/audio/music/concept): remuxed with the
 # SOURCE comment, packets unchanged, not re-rendered (music_r51b.py renders the full mixes and stems in one linked
@@ -241,6 +252,10 @@ COPIED = {
     "gilded": "gilded-cage-r64-a",
     "gilded-base": "gilded-cage-base-r64-a",
     "gilded-motif": "gilded-cage-motif-r64-a",
+    # M10 part B: track 14 from music_r74.py (one linked render of ~5 min), reviewed on its concept sheet in round 74
+    "eye": "eye-of-the-storm-r74-a",
+    "eye-base": "eye-of-the-storm-base-r74-a",
+    "eye-motif": "eye-of-the-storm-motif-r74-a",
 }
 CUES = {
     "warning": ("boss-warning", "warning", "RED ALERT - TRACK 22, BOSS WARNING", 25),

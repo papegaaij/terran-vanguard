@@ -6758,3 +6758,129 @@ Use: a Reflex Shield bolt hitting a standing mirror's face (Levels 38-42; a spar
 Brief: a short dry electric tick; quiet; a real recording, nothing bubbly or popping.
 This one: a quick burst of static cut to a tick: a dry electric crackle, 0.1 s.
 Edit: 0.10 s, the loudest 100 ms band −32.0 dB, peak −10.9 dBFS, −inf LUFS.
+
+### dive-wind-r74-a — "Solo Skydive Interior Plane and Freefall" by DangerLaef
+
+Proposed (round 74), cut from the HQ previews by `tools/concept/audio/sfx_r74.py`.
+Source: <https://freesound.org/people/DangerLaef/sounds/811077/> (Solo Skydive Interior Plane and Freefall by DangerLaef, CC0 1.0).
+Use: Level 36 (Cloud Divers), section 1 (t=0-24): an ambience layer over the `jovian-sky` bed while the squadron dives out of the carrier group into the bands, faded in at the start and out as the dive levels out (the game fades the loop); under the music's intro.
+Brief: the roar of a fast descent, wide: a skydiver's wind or a car window open at speed on a motorway; a steady rushing roar, no gusts that read as weather (the bed has those), nothing whistling; a real recording, nothing bubbly or popping.
+This one: a skydiver's freefall recorded on the jumper: a dense close roar of air with the buffeting in it, the highs rolled off at 6 kHz, 12.0 s loop.
+Edit: 12.00 s, band RMS −38.1 dB, peak −23.9 dBFS, −33.7 LUFS.
+
+### dive-wind-r74-b — "Car driving in highway with muffled wind, front window open recorded from the inside" by felix.blume
+
+Proposed (round 74), cut from the HQ previews by `tools/concept/audio/sfx_r74.py`.
+Source: <https://freesound.org/people/felix.blume/sounds/685077/> (Car driving in highway with muffled wind, front window open recorded from the inside by felix.blume, CC0 1.0).
+Use: Level 36 (Cloud Divers), section 1 (t=0-24): an ambience layer over the `jovian-sky` bed while the squadron dives out of the carrier group into the bands, faded in at the start and out as the dive levels out (the game fades the loop); under the music's intro.
+Brief: the roar of a fast descent, wide: a skydiver's wind or a car window open at speed on a motorway; a steady rushing roar, no gusts that read as weather (the bed has those), nothing whistling; a real recording, nothing bubbly or popping.
+This one: a car on a motorway with the front window open, from inside: a smoother, wider rush with the road's low drone under it, less buffeting than a, 12.0 s loop.
+Edit: 12.00 s, band RMS −38.1 dB, peak −19.8 dBFS, −31.3 LUFS.
+
+### drop-craft-pass-r74-a — "Eurofighter Typhoon Flyby 002 – Close Proximity" by TimoSchmied + "Eurofighter Typhoon Flyby 001 – Close Proximity" by TimoSchmied
+
+Proposed (round 74), cut from the HQ previews by `tools/concept/audio/sfx_r74.py`.
+Sources: <https://freesound.org/people/TimoSchmied/sounds/640500/> (Eurofighter Typhoon Flyby 002 – Close Proximity by TimoSchmied, CC-BY 4.0), <https://freesound.org/people/TimoSchmied/sounds/640501/> (Eurofighter Typhoon Flyby 001 – Close Proximity by TimoSchmied, CC-BY 4.0).
+Use: Level 36 (Cloud Divers), t=4 and t=10: each pair of the fleet's drop craft (Stormhawks, Rook's airframe) diving past the squadron into the bands; twice a level, over the music's intro and the dive's wind.
+Brief: a pair of real jet fly-bys, fast, with the doppler drop: two jets close together, the second a beat behind the first; a real recording, nothing bubbly or popping.
+This one: two Eurofighters' close fly-bys sped to 1.25 and 1.3, the second 0.3 s behind: a doubled roar with a sharp doppler fall, 2.9 s.
+Edit: 2.90 s, the loudest 100 ms band −24.0 dB, peak −10.2 dBFS, −26.4 LUFS.
+
+### drop-craft-pass-r74-b — "Jet Flyby 01" by mrspivey + "Jet Flyby 02" by mrspivey
+
+Proposed (round 74), cut from the HQ previews by `tools/concept/audio/sfx_r74.py`.
+Sources: <https://freesound.org/people/mrspivey/sounds/805168/> (Jet Flyby 01 by mrspivey, CC0 1.0), <https://freesound.org/people/mrspivey/sounds/805169/> (Jet Flyby 02 by mrspivey, CC0 1.0).
+Use: Level 36 (Cloud Divers), t=4 and t=10: each pair of the fleet's drop craft (Stormhawks, Rook's airframe) diving past the squadron into the bands; twice a level, over the music's intro and the dive's wind.
+Brief: a pair of real jet fly-bys, fast, with the doppler drop: two jets close together, the second a beat behind the first; a real recording, nothing bubbly or popping.
+This one: two jet fly-bys sped to 1.2 and 1.3, the second 0.3 s behind: a broader, rumblier rush than a, the doppler gentler, 2.8 s.
+Edit: 2.80 s, the loudest 100 ms band −24.1 dB, peak −10.8 dBFS, −23.9 LUFS.
+
+### harvester-scoop-r74-a — "Wood dust extractor.wav" by paulw2k
+
+Proposed (round 74), cut from the HQ previews by `tools/concept/audio/sfx_r74.py`.
+Source: <https://freesound.org/people/paulw2k/sounds/197127/> (Wood dust extractor.wav by paulw2k, CC-BY 4.0).
+Use: Level 36 (Cloud Divers)'s secondary: the Helium-3 harvesters' scoops (one loop for the nearest harvester while any scoops), through sections 3-5 (the harvester fields), under the fight.
+Brief: a huge industrial intake's low drone: a turbine or a dust extractor, slowed; steady and heavy, no hiss of steam, no whine on top; a real recording, nothing bubbly or popping.
+This one: a wood workshop's dust extractor slowed to half: a deep roaring suction drone, 8.0 s loop.
+Edit: 8.00 s, band RMS −35.1 dB, peak −17.2 dBFS, −28.5 LUFS.
+
+### harvester-scoop-r74-b — "motor industrial turbine large fan blades spin sorta.flac" by kyles
+
+Proposed (round 74), cut from the HQ previews by `tools/concept/audio/sfx_r74.py`.
+Source: <https://freesound.org/people/kyles/sounds/453476/> (motor industrial turbine large fan blades spin sorta.flac by kyles, CC0 1.0).
+Use: Level 36 (Cloud Divers)'s secondary: the Helium-3 harvesters' scoops (one loop for the nearest harvester while any scoops), through sections 3-5 (the harvester fields), under the fight.
+Brief: a huge industrial intake's low drone: a turbine or a dust extractor, slowed; steady and heavy, no hiss of steam, no whine on top; a real recording, nothing bubbly or popping.
+This one: a large industrial turbine fan slowed to 0.6: a lower, more mechanical hum with the blades' slow beat in it, 8.0 s loop.
+Edit: 8.00 s, band RMS −35.1 dB, peak −19.2 dBFS, −30.3 LUFS.
+
+### harvester-break-r74-a — "designed metal shearing, ripping.wav" by vestibule-door + "gas vuur dakwerken gasbrander luchtballon.wav" by NickPeeters
+
+Proposed (round 74), cut from the HQ previews by `tools/concept/audio/sfx_r74.py`.
+Sources: <https://freesound.org/people/vestibule-door/sounds/669692/> (designed metal shearing, ripping.wav by vestibule-door, CC0 1.0), <https://freesound.org/people/NickPeeters/sounds/243763/> (gas vuur dakwerken gasbrander luchtballon.wav by NickPeeters, CC0 1.0).
+Use: Level 36 (Cloud Divers): a Helium-3 harvester destroyed (the secondary's count), over its `large` rung; a few times a level.
+Brief: tearing metal and a gas venting roar: the hull ripping open and the gas rushing out; no water, no hiss of steam, no pop; a real recording, nothing bubbly or popping.
+This one: metal shearing and ripping slowed to 0.7 over a big gas burner's roar slowed to 0.7: a grinding tear into a deep rushing roar, 2.8 s.
+Edit: 2.75 s, the loudest 100 ms band −24.4 dB, peak −9.7 dBFS, −22.1 LUFS.
+
+### harvester-break-r74-b — "Bending Metal" by NachtmahrTV + "M142 HIMARS Rocket Launch 1" by qubodup
+
+Proposed (round 74), cut from the HQ previews by `tools/concept/audio/sfx_r74.py`.
+Sources: <https://freesound.org/people/NachtmahrTV/sounds/556714/> (Bending Metal by NachtmahrTV, CC0 1.0), <https://freesound.org/people/qubodup/sounds/854469/> (M142 HIMARS Rocket Launch 1 by qubodup, CC0 1.0).
+Use: Level 36 (Cloud Divers): a Helium-3 harvester destroyed (the secondary's count), over its `large` rung; a few times a level.
+Brief: tearing metal and a gas venting roar: the hull ripping open and the gas rushing out; no water, no hiss of steam, no pop; a real recording, nothing bubbly or popping.
+This one: a sheet of metal bending and groaning slowed to 0.75 over a rocket launch's roar slowed to 0.85: a slower, groaning break with a harder blast of gas than a, 2.9 s.
+Edit: 2.90 s, the loudest 100 ms band −24.3 dB, peak −10.1 dBFS, −22.1 LUFS.
+
+### chimera-whine-r74-a — "Eurofighter Typhoon Flyby 003 – Close Proximity" by TimoSchmied
+
+Proposed (round 74), cut from the HQ previews by `tools/concept/audio/sfx_r74.py`.
+Source: <https://freesound.org/people/TimoSchmied/sounds/640499/> (Eurofighter Typhoon Flyby 003 – Close Proximity by TimoSchmied, CC-BY 4.0).
+Use: a Chimera (Levels 36-42, the Talon's airframe overgrown with Vrell tissue): each swoop's turn-in (a pair, or one), throttled to one per wing; often, under the fire.
+Brief: the Talon's short turn-in whine with a lower, rougher edge: the same airframe, a different rule (QB-2: a the Talon's whine as is, b pitched down with a grit layer); a real recording, nothing bubbly or popping.
+This one: the Talon's built whine as is (sfx_r62.py talon-whine a): a Eurofighter's approach sped to 1.2 and high-passed to its whine, a thin rising 'wheee', 0.6 s.
+Edit: 0.60 s, the loudest 100 ms band −28.2 dB, peak −14.7 dBFS, −27.1 LUFS.
+
+### chimera-whine-r74-b — "Eurofighter Typhoon Flyby 003 – Close Proximity" by TimoSchmied + "Jet engine startup" by SamsterBirdies
+
+Proposed (round 74), cut from the HQ previews by `tools/concept/audio/sfx_r74.py`.
+Sources: <https://freesound.org/people/TimoSchmied/sounds/640499/> (Eurofighter Typhoon Flyby 003 – Close Proximity by TimoSchmied, CC-BY 4.0), <https://freesound.org/people/SamsterBirdies/sounds/491407/> (Jet engine startup by SamsterBirdies, CC0 1.0).
+Use: a Chimera (Levels 36-42, the Talon's airframe overgrown with Vrell tissue): each swoop's turn-in (a pair, or one), throttled to one per wing; often, under the fire.
+Brief: the Talon's short turn-in whine with a lower, rougher edge: the same airframe, a different rule (QB-2: a the Talon's whine as is, b pitched down with a grit layer); a real recording, nothing bubbly or popping.
+This one: the same approach played at 0.95 (about four semitones under the Talon's) with a lit jet engine's rough roar slowed to 0.8 under it: a lower, grittier whine, 0.75 s.
+Edit: 0.75 s, the loudest 100 ms band −28.1 dB, peak −17.2 dBFS, −27.9 LUFS.
+
+### chimera-shot-r74-a — "Mk 46 30mm gun - single shot" by qubodup
+
+Proposed (round 74), cut from the HQ previews by `tools/concept/audio/sfx_r74.py`.
+Source: <https://freesound.org/people/qubodup/sounds/162258/> (Mk 46 30mm gun - single shot by qubodup, CC0 1.0).
+Use: a Chimera (Levels 36-42, the Talon's airframe overgrown with Vrell tissue): each twin shot (two shots side by side, heard as one); often.
+Brief: the Talon's dry twin crack: a real cannon, two shots heard as one doubled crack, the enemy shot small's weight; a real recording, nothing bubbly or popping.
+This one: the Talon's built twin crack as is (sfx_r62.py talon-shot b): a 30 mm gun's single shot sped to 1.4, twice 50 ms apart, 0.35 s.
+Edit: 0.35 s, the loudest 100 ms band −28.1 dB, peak −13.5 dBFS, −inf LUFS.
+
+### chimera-shot-r74-b — "Mk 46 30mm gun - single shot" by qubodup
+
+Proposed (round 74), cut from the HQ previews by `tools/concept/audio/sfx_r74.py`.
+Source: <https://freesound.org/people/qubodup/sounds/162258/> (Mk 46 30mm gun - single shot by qubodup, CC0 1.0).
+Use: a Chimera (Levels 36-42, the Talon's airframe overgrown with Vrell tissue): each twin shot (two shots side by side, heard as one); often.
+Brief: the Talon's dry twin crack: a real cannon, two shots heard as one doubled crack, the enemy shot small's weight; a real recording, nothing bubbly or popping.
+This one: the same gun's shot sped only to 1.15 and 1.22, twice 50 ms apart: a lower, boomier doubled crack, the whine b's family, 0.4 s.
+Edit: 0.40 s, the loudest 100 ms band −28.2 dB, peak −14.8 dBFS, −inf LUFS.
+
+### chimera-death-r74-a — "Mk 46 30mm gun - single shot" by qubodup + "Cloth Tearing and Ripping - Flannel, Cotton, Scraps - Close Mic - Long & Fast" by ChristopherJngs
+
+Proposed (round 74), cut from the HQ previews by `tools/concept/audio/sfx_r74.py`.
+Sources: <https://freesound.org/people/qubodup/sounds/162258/> (Mk 46 30mm gun - single shot by qubodup, CC0 1.0), <https://freesound.org/people/ChristopherJngs/sounds/719003/> (Cloth Tearing and Ripping - Flannel, Cotton, Scraps - Close Mic - Long & Fast by ChristopherJngs, CC0 1.0).
+Use: a Chimera (Levels 36-42, the Talon's airframe overgrown with Vrell tissue) destroyed, over the `small` rung the game plays with it; often.
+Brief: the Talon's crack with a short dry tearing sound under it (fabric or fibre, never flesh, never wet); a real recording, nothing bubbly or popping.
+This one: the Talon's 30 mm crack with cotton cloth torn by hand, slowed to 0.6, under it (the hybrids' chosen tear, round 72 S.2 a, cut short): a crack and a short dry rip, 0.5 s.
+Edit: 0.51 s, the loudest 100 ms band −26.1 dB, peak −10.7 dBFS, −24.9 LUFS.
+
+### chimera-death-r74-b — "Mk 46 30mm gun - single shot" by qubodup + "heavy fabric tearing v2, thick fabric tearing, tearing.Recorded on H6Zoom XY capsule" by Rinaldobowles56
+
+Proposed (round 74), cut from the HQ previews by `tools/concept/audio/sfx_r74.py`.
+Sources: <https://freesound.org/people/qubodup/sounds/162258/> (Mk 46 30mm gun - single shot by qubodup, CC0 1.0), <https://freesound.org/people/Rinaldobowles56/sounds/708104/> (heavy fabric tearing v2, thick fabric tearing, tearing.Recorded on H6Zoom XY capsule by Rinaldobowles56, CC0 1.0).
+Use: a Chimera (Levels 36-42, the Talon's airframe overgrown with Vrell tissue) destroyed, over the `small` rung the game plays with it; often.
+Brief: the Talon's crack with a short dry tearing sound under it (fabric or fibre, never flesh, never wet); a real recording, nothing bubbly or popping.
+This one: the same crack with thick fabric torn in half, slowed to 0.8, under it: a coarser, heavier rip than a, 0.5 s.
+Edit: 0.46 s, the loudest 100 ms band −26.1 dB, peak −8.6 dBFS, −25.6 LUFS.
