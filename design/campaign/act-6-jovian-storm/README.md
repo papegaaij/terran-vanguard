@@ -460,6 +460,11 @@ Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
       falling city's two ground layers and its authored jagged cut line, the friendly marker on the shuttles and the fleet's craft; the Plasma Arc, the
       Reflex Shield, Composite V, the IFF spoofer and the Mk V+ "Crucible".
 - [x] **Explosions on the cream band** (the user's note on round 72 A.7, answered: the dark sharp edge was a **mockup artifact**: the explosion frames carry dark low-alpha fringe pixels, the game draws explosions additively (`Effects`, blend `SRC_ALPHA, ONE`), which adds no dark at all, but `tools/concept/enemies_r72.py`'s `boom` pasted the later frames with normal alpha): part A's capture checks how explosions read on Level 36's cream band (additive light can wash out on a bright backdrop) and, with the Plasma Arc's, that its look and the bounced bullets' magenta read apart (step A4, 2026-10-31: captures over round 72's L36 grade and ART-B's L36 tiles; the arc's violet and the magenta read apart; the small burst washes out on the brightest cream, so round 73 asks a / b / c, [explosion-bright-r73](../../art-direction/README.md#concept-art); part B's B5 repeats it in Level 36)
+- [ ] **Explosions on the cream band** (decided 2026-10-31, round 73 A.3 b): the kill bursts get the soft soot puff under
+      the additive flash (warm dark grey, at most 0.42 opaque, feathered to nothing, rising a little as it fades; see
+      [art direction](../../art-direction/README.md#concept-art)). Open build item for part B (step B4): whether it is Act 6
+      only or everywhere (Acts 1-5's golden flights stay as recorded, so it is opt-in), and a Level 36 capture that
+      the bursts read over the cream and rust bands.
 - [x] `reference_dps` 36–42 and the Act 6 balance plan (`balance-plan.yaml` visits 36–42) before any Act 6 level data
       (M10 part A): `enemies/data.yaml`, `ActHpFactorTest`, `BalanceTest`, `tools/balance.py` exit 0.
 - [ ] Every level within the act's density band (`DensityTest`, `PacingTest`, `ActFloorTest`), the end calm (≥ 4 s),
@@ -533,3 +538,8 @@ Nothing is open for the user. Build notes (not questions):
   the sheet and b rejected, `art: chosen`), A.13 b (the falling city breaks up: two city layers, an authored jagged
   cut line). Music M.1 a, **M.2 b**, M.3 a, M.4 a; voices V.1-V.5 (see the voice plan). **User's note on A.7** (the
   explosions look strange with a sharp dark edge on light backgrounds): a mockup artifact, see *Implementation*.
+- 2026-10-31 (user, [round 73](../../concept-rounds/round-73/README.md) closed; page answers): part A's looks and sounds
+  as recommended: the sounds S.1-S.5 (heat, break, regrow, dome hit a; the absorbed tick), the lightning strike a, the
+  Reflex bolt a, all game captures and the production art accepted (F.1-F.7), R.1-R.3 accepted, C.1-C.21 accepted;
+  **A.3 b** the soot puff under the explosions' flash (Act 6 only or everywhere is part B's call, see *Implementation*);
+  **R.4 b** Vorne's shout is the new shouted render lowered to about 104 Hz.

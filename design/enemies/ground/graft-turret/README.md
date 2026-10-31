@@ -105,8 +105,8 @@ Round 72's proposals (step ART-R-A, picked 2026-10-31; generator `tools/concept/
 |---|---|---|
 | [concept/graft-turret-r72-b.png](concept/graft-turret-r72-b.png) | Graft Turret b, "tissue first": a third of the dome overgrown, a fleshy collar and six roots across the deck, a bigger root bulb; the same cycle | chosen (round 72 A.4 b) |
 | [concept/graft-turret-r72-b.gif](concept/graft-turret-r72-b.gif) | The same scene as a | chosen (round 72 A.4 b) |
-| [concept/regrowth-capture-r73-a.png](concept/regrowth-capture-r73-a.png) | Game capture (the A4 rig; stand-in sprite, the root given 3 000 HP so the window runs out under the beam): killed, the root exposed with its pulse and shrinking ring, the knit and the regrown turret, over the cream bands, 1× | proposed (round 73) |
-| [concept/regrowth-capture-r73-a.gif](concept/regrowth-capture-r73-a.gif) | The same, 5 s at 15 fps, 1× | proposed (round 73) |
+| [concept/regrowth-capture-r73-a.png](concept/regrowth-capture-r73-a.png) | Game capture (the A4 rig; stand-in sprite, the root given 3 000 HP so the window runs out under the beam): killed, the root exposed with its pulse and shrinking ring, the knit and the regrown turret, over the cream bands, 1× | chosen (round 73 F.6 accept) |
+| [concept/regrowth-capture-r73-a.gif](concept/regrowth-capture-r73-a.gif) | The same, 5 s at 15 fps, 1× | chosen (round 73 F.6 accept) |
 
 Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 
@@ -136,3 +136,4 @@ Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
   with c's backdrop (the three-way war: the turret is neither hunter nor prey; b full faction fire rejected) and J7
   (the turret pays once) as drafted; the document approved (D.10; `design: approved`); **A.4 b**, "tissue first",
   chosen (`art: chosen`; a "metal first" in `concept/rejected/`), the look above.
+- 2026-10-31, round 73: the regrowth capture accepted (F.6); call C.5 accepted (the root cannot be hit on the step it is exposed).

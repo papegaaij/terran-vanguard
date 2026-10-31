@@ -103,19 +103,17 @@ Production art for concept round 26 (the M4 part H batch), review files built fr
 | [concept/shield-ring-final-r26-a.gif](concept/shield-ring-final-r26-a.gif) | The ring over the hull at the game's 2 steps a frame | chosen |
 
 Round 73 (M10 part A, step ART-A): the Reflex Shield's production frames by `tools/art/act6_gear.py reflex` and the
-bolt's open look (QA-3), a/b proposals by `tools/concept/act6_r73.py bolt` (a written to the game's files until the
-pick). Prompts: [concept/prompts.md](concept/prompts.md#reflex-shield-final-r73-a).
+bolt's look (QA-3), a/b proposals by `tools/concept/act6_r73.py bolt` (a "white-gold bullet" chosen 2026-10-31, round 73
+A.2; b is in [concept/rejected](concept/rejected/README.md)). Prompts: [concept/prompts.md](concept/prompts.md#reflex-shield-final-r73-a).
 
 | File | What | Status |
 |---|---|---|
-| [concept/reflex-shield-final-r73-a.png](concept/reflex-shield-final-r73-a.png) | Final frames: the gold hex flash `ship-reflex_0..3` (60×60, the blue ring's shapes in gold) beside the blue one, the bolt `ship-reflex-bolt_0..3` (a) and its trail; over Level 36, the window open (gold flash, a bolt up per hit) beside below 75 % (sheet) | proposed (round 73) |
-| [concept/reflex-shield-final-r73-a.gif](concept/reflex-shield-final-r73-a.gif) | The two cases side by side, 2× | proposed (round 73) |
-| [concept/reflex-bolt-r73-a.png](concept/reflex-bolt-r73-a.png) | QA-3 a "white-gold bullet": the bolt in the enemy bullet's round shape in white-gold with a dark rim and a short gold trail, beside the enemy orb, the gold needle and the bounced orb on Level 36's grade, and in flight (sheet) | proposed (round 73 QA-3) |
-| [concept/reflex-bolt-r73-a.gif](concept/reflex-bolt-r73-a.gif) | a in flight: orbs on the full Reflex Shield, gold flashes, bolts up, needles and a bounced orb drifting through, 2× | proposed (round 73 QA-3) |
-| [concept/reflex-bolt-r73-b.png](concept/reflex-bolt-r73-b.png) | QA-3 b "gold needle": a thin gold needle with a white core, a dark rim and a faint trail, the same layout (sheet) | proposed (round 73 QA-3) |
-| [concept/reflex-bolt-r73-b.gif](concept/reflex-bolt-r73-b.gif) | b in flight, 2× | proposed (round 73 QA-3) |
-| [concept/reflex-capture-r73-a.png](concept/reflex-capture-r73-a.png) | Game capture: Level 33 with `--loadout front=plasma-arc:5,shield=reflex-shield`, orbs on the full Reflex Shield: the gold hex flash and bolt a going up among the magenta orbs, then the blue ring below 75 %, 2× | proposed (round 73) |
-| [concept/reflex-capture-r73-a.gif](concept/reflex-capture-r73-a.gif) | The same, 1.7 s at 30 fps, 2× | proposed (round 73) |
+| [concept/reflex-shield-final-r73-a.png](concept/reflex-shield-final-r73-a.png) | Final frames: the gold hex flash `ship-reflex_0..3` (60×60, the blue ring's shapes in gold) beside the blue one, the bolt `ship-reflex-bolt_0..3` (a) and its trail; over Level 36, the window open (gold flash, a bolt up per hit) beside below 75 % (sheet) | chosen (round 73 F.5 accept) |
+| [concept/reflex-shield-final-r73-a.gif](concept/reflex-shield-final-r73-a.gif) | The two cases side by side, 2× | chosen (round 73 F.5 accept) |
+| [concept/reflex-bolt-r73-a.png](concept/reflex-bolt-r73-a.png) | QA-3 a "white-gold bullet": the bolt in the enemy bullet's round shape in white-gold with a dark rim and a short gold trail, beside the enemy orb, the gold needle and the bounced orb on Level 36's grade, and in flight (sheet) | chosen (round 73 A.2 a) |
+| [concept/reflex-bolt-r73-a.gif](concept/reflex-bolt-r73-a.gif) | a in flight: orbs on the full Reflex Shield, gold flashes, bolts up, needles and a bounced orb drifting through, 2× | chosen (round 73 A.2 a) |
+| [concept/reflex-capture-r73-a.png](concept/reflex-capture-r73-a.png) | Game capture: Level 33 with `--loadout front=plasma-arc:5,shield=reflex-shield`, orbs on the full Reflex Shield: the gold hex flash and bolt a going up among the magenta orbs, then the blue ring below 75 %, 2× | chosen (round 73 F.5 accept) |
+| [concept/reflex-capture-r73-a.gif](concept/reflex-capture-r73-a.gif) | The same, 1.7 s at 30 fps, 2× | chosen (round 73 F.5 accept) |
 
 ## Implementation
 
@@ -132,7 +130,7 @@ pick). Prompts: [concept/prompts.md](concept/prompts.md#reflex-shield-final-r73-
   reflect window, the half cost and the bolt; written and loaded in step A2a, `ShieldData.Reflect`, `JovianKeysTest`;
   the simulation's reflect is step A1b's, its mapping step A2b's), the bullet-to-bolt hand-off in the simulation (deterministic, hashed
   only when fitted), the once-only rule against the mirrors, the gold hex flash, the bolt's look, the
-  ricochet sound, in the shop from the L37 visit — M10 part A (2026-10-31: `ReflexShieldTest`, `ReflexTick`; the bolt's look is round 73's QA-3)
+  ricochet sound, in the shop from the L37 visit — M10 part A (2026-10-31: `ReflexShieldTest`, `ReflexTick`; the bolt's look is round 73's A.2 a, decided 2026-10-31)
 
 ## Open questions
 
@@ -169,3 +167,4 @@ pick). Prompts: [concept/prompts.md](concept/prompts.md#reflex-shield-final-r73-
 - 2026-10-31 (user, [round 72](../../concept-rounds/round-72/README.md) closed): Q7 b: the Reflex Shield at Level
   37 (mirrors answering mirrors; it never re-bounces a bullet), the Bastion Shield to Act 7; a both and c neither
   rejected. The Reflex's numbers stay for part A to measure.
+- 2026-10-31, round 73: the Reflex bolt **a** "white-gold bullet" chosen (A.2; b "gold needle" rejected); the gold hex flash and the game capture accepted (F.5).

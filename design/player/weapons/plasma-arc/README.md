@@ -2,7 +2,7 @@
 title: Plasma Arc
 design: approved
 implementation: done
-art: chosen
+art: final
 depends-on: [.., ../../generator, ../../../enemies, ../../../systems/economy]
 updated: 2026-10-31
 ---
@@ -110,11 +110,11 @@ exists, then a rerun writes them to `assets/`). Prompts: [concept/prompts.md](co
 
 | File | What | Status |
 |---|---|---|
-| [concept/plasma-arc-final-r73-a.png](concept/plasma-arc-final-r73-a.png) | Final frames of A.7 a: the 160×48 strips per place in the chain (the first strike 1.7× the pod's width, each jump 0.72× thinner), three shapes each, the 64 px spark burst, the nose glow, beside the Tesla Coil Pod's arc; in flight at L5 over Level 36's bands with Talon stand-ins, bounced magenta orbs drifting through and a kill on the cream (sheet) | proposed (round 73) |
-| [concept/plasma-arc-final-r73-a.gif](concept/plasma-arc-final-r73-a.gif) | The L5 chain at 5 discharges a second over Level 36's bands, 1× | proposed (round 73) |
-| [concept/plasma-arc-capture-r73-a.png](concept/plasma-arc-capture-r73-a.png) | Game capture (the A4 rig, M10 part A): the chain at L5 with the pods' missiles bounced back as magenta orbs by mirrors, over round 72's Level 36 grade (the mood still as the deep layer), ART-B's cream bands and the rust band; 2× crops: the white core and violet-pink fringe beside the dark-rimmed magenta orbs (they read apart by shape and brightness; the hues are close) | proposed (round 73) |
-| [concept/plasma-arc-capture-r73-a.gif](concept/plasma-arc-capture-r73-a.gif) | The same over the cream bands, 2 s at 15 fps, 1× | proposed (round 73) |
-| [concept/plasma-arc-l35-capture-r73-a.png](concept/plasma-arc-l35-capture-r73-a.png) | Game capture: Level 35 with `--loadout front=plasma-arc:5,shield=reflex-shield`, the chain through the escort screen | proposed (round 73) |
+| [concept/plasma-arc-final-r73-a.png](concept/plasma-arc-final-r73-a.png) | Final frames of A.7 a: the 160×48 strips per place in the chain (the first strike 1.7× the pod's width, each jump 0.72× thinner), three shapes each, the 64 px spark burst, the nose glow, beside the Tesla Coil Pod's arc; in flight at L5 over Level 36's bands with Talon stand-ins, bounced magenta orbs drifting through and a kill on the cream (sheet) | chosen (round 73 F.1 accept) |
+| [concept/plasma-arc-final-r73-a.gif](concept/plasma-arc-final-r73-a.gif) | The L5 chain at 5 discharges a second over Level 36's bands, 1× | chosen (round 73 F.1 accept) |
+| [concept/plasma-arc-capture-r73-a.png](concept/plasma-arc-capture-r73-a.png) | Game capture (the A4 rig, M10 part A): the chain at L5 with the pods' missiles bounced back as magenta orbs by mirrors, over round 72's Level 36 grade (the mood still as the deep layer), ART-B's cream bands and the rust band; 2× crops: the white core and violet-pink fringe beside the dark-rimmed magenta orbs (they read apart by shape and brightness; the hues are close) | chosen (round 73 F.1 accept) |
+| [concept/plasma-arc-capture-r73-a.gif](concept/plasma-arc-capture-r73-a.gif) | The same over the cream bands, 2 s at 15 fps, 1× | chosen (round 73 F.1 accept) |
+| [concept/plasma-arc-l35-capture-r73-a.png](concept/plasma-arc-l35-capture-r73-a.png) | Game capture: Level 35 with `--loadout front=plasma-arc:5,shield=reflex-shield`, the chain through the escort screen | chosen (round 73 F.1 accept) |
 
 Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 
@@ -147,3 +147,4 @@ Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
   violet fringe near the bounced bullets' magenta is accepted, and part A checks in a capture that the two read apart.
   The user's note on the explosions' sharp dark edge is answered: a mockup artifact (see the
   [act](../../../campaign/act-6-jovian-storm/README.md#implementation)).
+- 2026-10-31, round 73: the final frames and the game captures accepted (F.1): the arc's violet fringe and the bounced bullets' magenta read apart; `art: final`.

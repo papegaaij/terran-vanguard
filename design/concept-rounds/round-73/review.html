@@ -1,0 +1,369 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Round 73: record of the decisions</title><style>
+:root{--bg:#f4f5f7;--fg:#1b2230;--mut:#5a6577;--card:#fff;--line:#d3d9e2;--acc:#1f5fa8;--ok:#1d6b3a;--okbg:#e3f3e8;
+--hi:#fff6dc;--hib:#d9b84a;--code:#e9edf3;--warn:#8a4b00}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10141b;--fg:#dde3ee;--mut:#98a3b6;--card:#171d27;
+--line:#2c3544;--acc:#7fb2ee;--ok:#7bd69a;--okbg:#163323;--hi:#2c2610;--hib:#8a7424;--code:#232c3a;--warn:#e3a35a;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#10141b;--fg:#dde3ee;--mut:#98a3b6;--card:#171d27;--line:#2c3544;--acc:#7fb2ee;--ok:#7bd69a;
+--okbg:#163323;--hi:#2c2610;--hib:#8a7424;--code:#232c3a;--warn:#e3a35a;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:60rem;margin:0 auto;padding:1rem 16px 4rem}
+h1{font-size:1.6rem;margin:.5rem 0}h2{font-size:1.25rem;margin:2rem 0 .5rem;border-bottom:1px solid var(--line);padding-bottom:.25rem}
+h3{font-size:1.02rem;margin:0;flex:1 1 12rem}a{color:var(--acc)}
+.sum{color:var(--mut)}.note{font-size:.9rem;color:var(--mut)}
+nav.sec{display:flex;flex-wrap:wrap;gap:.4rem;margin:1rem 0}nav.sec a{padding:.2rem .6rem;border:1px solid var(--line);border-radius:1rem;
+text-decoration:none;font-size:.9rem;background:var(--card)}
+.row{background:var(--card);border:1px solid var(--line);border-radius:.4rem;padding:.7rem .9rem;margin:.7rem 0;overflow-wrap:anywhere}
+.row header{display:flex;flex-wrap:wrap;gap:.3rem .6rem;align-items:baseline}
+.rid{font:600 .85rem ui-monospace,Menlo,Consolas,monospace;background:var(--code);padding:.05rem .4rem;border-radius:.25rem}
+.kind{font-size:.8rem;color:var(--mut)}.part{font-size:.88rem;margin:.2rem 0}
+.q,.weak,.rec,.sub,.line,dl{font-size:.92rem;margin:.45rem 0}.weak{color:var(--warn)}
+code{background:var(--code);padding:0 .25rem;border-radius:.2rem;font-size:.88em}
+.tag{font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;color:var(--mut);font-weight:700;margin-right:.3rem}
+.ans{margin:.5rem 0 0;padding:.45rem .6rem;border-left:4px solid var(--hib);background:var(--hi);border-radius:.2rem}
+.ans.out{border-left-color:var(--ok)}.ans.none{opacity:.7}
+.badge{font-size:.75rem;font-weight:700;padding:.05rem .4rem;border-radius:.6rem;background:var(--okbg);color:var(--ok)}
+.badge.pick{background:var(--hi);color:var(--warn);border:1px solid var(--hib)}
+dl{display:grid;grid-template-columns:7rem 1fr;gap:.2rem .6rem}dt{font-weight:700}dd{margin:0}
+.media{display:flex;flex-wrap:wrap;gap:.5rem;margin:.5rem 0}.m{margin:0;max-width:100%}.m figcaption{font-size:.75rem;color:var(--mut)}
+.m.img img{max-width:14rem;max-height:10rem;border:1px solid var(--line);border-radius:.2rem;background:#000;display:block}
+.m.vid video{width:14rem;max-width:100%}.m.aud audio{width:16rem;max-width:100%}.miss{color:var(--warn)}
+details{margin:.4rem 0;font-size:.9rem}summary{cursor:pointer;color:var(--acc)}
+.listen{font-size:.85rem;color:var(--mut);margin:.3rem 0;padding-left:1.2rem}.opts{color:var(--mut)}
+.sub{padding-left:.6rem;border-left:2px solid var(--line)}
+table{border-collapse:collapse;display:block;overflow-x:auto}td,th{border:1px solid var(--line);padding:.2rem .4rem}
+blockquote{margin:.4rem 0;padding-left:.8rem;border-left:3px solid var(--line)}
+@media (max-width:480px){dl{grid-template-columns:1fr}.m.img img{max-width:100%}}
+</style></head><body><main><p class="note"><a href="README.md">Round 73 README</a> · <a href="../README.md">All rounds</a> · built 2026-10-31 · recorded by <code>tools/concept/review_record.py 73</code></p><h1>Concept round 73: record of the decisions</h1><div class="sum"><p><strong>Open.</strong> M10 part A is built (branch <code>m10-act-6</code>, local commits through <code>fb579041</code>; the full <code>./gradlew check</code> green on 2026-10-31, Acts 1–5's golden flights and replays unchanged): the mirror's <code>reflect</code>, regeneration, the Graft Turret's regrowth, the death-burst on contact, the Act 6 shields, lightning strikes, dry eruptions, foreground banks, the pylon dome and gates, the three-way prey link, the IFF spoofer, the Plasma Arc, the Reflex Shield, Composite V and the Mk V+ "Crucible", flown on fixtures (no Act 6 level exists yet: Level 36 is part B). This round asks, in your order: the mirror and dome <strong>sounds</strong> (QA-1), the <strong>lightning strike</strong> and the <strong>Reflex bolt</strong> (QA-2, QA-3) and a new question, <strong>explosions over Level 36's bright bands</strong>; then part A's production <strong>art to confirm</strong> with the first game captures, the round-72 <strong>follow-ups</strong> (the Ascendant's jagged break, the falling city, Aurelia Traffic's "lift", Vorne's shout) and last the <strong>important calls</strong> the steps made, each with its recommendation. The recommendation is pre-selected on every row; leave a row alone to keep it.</p><p>The captures come from a scratch capture rig (a stand-in Level 36 over ART-B's real Level 36 tiles and over round 72's mood grade, stand-in sprites for the new units; <span class="ref">the rig</span>). Found while capturing: the mirror's code-drawn plate is pale on the cream (production art is part C's); the banks are flat pale veils until part B draws ART-B's bank pieces; the arc's violet-pink fringe and the bounced orbs' magenta read apart by shape and brightness, though the hues are close. Gaps noted for later parts: homing missiles do not seek prey (the doc does not say they should; not built); Level 39's vent "ripple" is lost after the first eruption (each vent draws its own period; part E).</p><p>Decided as trivia, not asked (m10a-gaps §4): the mirror's facing is its own state; a bounce mirrors about that facing at 110 px/s (off the bullet-speed lever) and a homing missile bounces as a bullet; lightning kills pay as a special's; eruption rocks are their own pool, fanned evenly, never homed on; a dome covers by unit centre each step; the prey link is a wave's <code>hunts: &lt;tag&gt;</code>; the spoofer delays a stored aim; several gates per level; banks are rectangles drifting with <code>high-air</code>; <code>shields.heavy</code> from Level 36; the Crucible at index 5; Composite V in the shop from Level 38; the Harrow's hard ring speed as written.</p></div><p class="note">A read-only record: every row as the review page showed it, with the answer and the outcome from the round README (the record of truth). Media is linked from the design tree, not copied.</p><nav class="sec"><a href="#s-sounds">Sounds</a><a href="#s-art-questions">Art questions</a><a href="#s-art-to-confirm">Art to confirm</a><a href="#s-round-72-follow-ups">Round 72 follow-ups</a><a href="#s-important-calls">Important calls</a></nav><section id="s-sounds"><h2>Sounds</h2>
+<div class="sum"><p>The mirror set beyond round 72's ping and the dome hit (QA-1), cut from Freesound's public previews (CC0, in <span class="ref">CREDITS.md</span>) by <code>tools/concept/audio/sfx_r73.py</code>. Until your pick the game plays stand-ins (the heat: the tendril burn pitched 0.85→1.35; the break: the Glassfin shatter; the regrow: the sonde chime low; the dome hit: the enemy shield hit; the tick: the Deflector's).</p></div>
+<article class="row" id="r-S.1">
+<header><span class="rid">S.1</span><h3>mirror-heat</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>mirror-heat</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b</strong>. <strong>Plays:</strong> while a beam holds on a Mirror Interceptor's face (Levels 38–42, the Ascendant's panels): one loop for the nearest heating mirror, its pitch rising with the heat (0.85 at 0 % to 1.35 at the break, about 1 s of the plan's beam), stopping when the beam leaves or the plate breaks; under the beam's own loop. <strong>Should sound like:</strong> a rising hot-metal hiss, dry: a gas torch on sheet steel, the pitch climbing as the plate goes red to white; no quench, no steam, nothing bubbly. <strong>a:</strong> a gas torch on steel: a hissing roar that climbs. <strong>b:</strong> an arc welder's hum: a buzzier, more electric tone. The demos play each loop as the game glides it over 1 s.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/mirror-heat-r73-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/mirror-heat-r73-b.ogg"></audio></figure><figure class="m aud"><figcaption>demo a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/mirror-heat-demo-r73-a.ogg"></audio></figure><figure class="m aud"><figcaption>demo b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/mirror-heat-demo-r73-b.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong> / b</span></div><div class="ans out"><span class="tag">Outcome</span> <span>Gas-torch heat loop chosen; the welder b rejected (with its demo)</span></div>
+</article>
+<article class="row" id="r-S.2">
+<header><span class="rid">S.2</span><h3>mirror-break</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>mirror-break</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b</strong>. <strong>Plays:</strong> a mirror breaking by its heat, a <code>shield-breaker</code> hit or the EMP, as its shards fly (Levels 38–42; the Ascendant's panels); a reward, a few a fight. <strong>Should sound like:</strong> a real glass pane shattering, heavier and longer than the enemy shield's break and apart from the player shield's falling zap. <strong>a:</strong> a glass pane shattering and its shards falling: long, heavy. <strong>b:</strong> a car's side window (tempered glass) bursting into grains: shorter, grainier.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/mirror-break-r73-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/mirror-break-r73-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> b sits nearer the enemy shield's glass break</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong> / b</span></div><div class="ans out"><span class="tag">Outcome</span> <span>Glass pane shattering chosen; the tempered-window b rejected</span></div>
+</article>
+<article class="row" id="r-S.3">
+<header><span class="rid">S.3</span><h3>mirror-regrow</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>mirror-regrow</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b</strong>. <strong>Plays:</strong> a mirror coming back with its 0.4 s silver shimmer, 3 s after a break; now and then, the tell that the plate stands again. <strong>Should sound like:</strong> a low soft chime: a singing bowl struck softly, short; never a ping (the bounce) or an alarm bell. <strong>a:</strong> a deep singing bowl, soft stick, sped to 1.5: a warm low hum-tone that blooms and fades, 1.0 s. <strong>b:</strong> a smaller bowl: brighter and clearer, ringing higher, 1.0 s.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/mirror-regrow-r73-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/mirror-regrow-r73-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> b's higher ring comes nearer the mirror's ping</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong> / b</span></div><div class="ans out"><span class="tag">Outcome</span> <span>Deep singing bowl chosen; b rejected</span></div>
+</article>
+<article class="row" id="r-S.4">
+<header><span class="rid">S.4</span><h3>pylon-dome-hit</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>pylon-dome-hit</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b</strong>. <strong>Plays:</strong> a shot spent on a Shield Pylon's dome (Level 41; at most once per 0.15 s); often in a pylon gate. <strong>Should sound like:</strong> a short bright electric zap with a glassy ring; never Level 17's big dome boom or the mirror's ping. <strong>a:</strong> a stun gun's tenth-of-a-second zap over a struck glass bowl: a crackling snap and a short clear ring, 0.47 s. <strong>b:</strong> a buzzy electric snap over a wine glass struck hard: a thinner, higher ring.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/pylon-dome-hit-r73-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/pylon-dome-hit-r73-b.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong> / b</span></div><div class="ans out"><span class="tag">Outcome</span> <span>Stun-gun zap over a struck bowl chosen; b rejected</span></div>
+</article>
+<article class="row" id="r-S.5">
+<header><span class="rid">S.5</span><h3>bolt-absorbed</h3><span class="kind">accept or redo</span></header>
+<div class="part">[<code>bolt-absorbed</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>accept or redo</strong>. <strong>Plays:</strong> a Reflex bolt (or a Plasma Arc jump) earthed on a standing mirror's face: a spark, no bounce; now and then, quiet, under the fire. <strong>Should sound like:</strong> a short dry electric tick. <strong>a:</strong> a quick burst of static cut to a tick: a dry electric crackle, 0.1 s.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/bolt-absorbed-r73-a.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> one variant only</p>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong> / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span>The static tick accepted</span></div>
+</article>
+</section>
+<section id="s-art-questions"><h2>Art questions</h2>
+<div class="sum"><p>The two open art questions of part A's gap check (QA-2, QA-3) and a new one from the captures (A.3). Variant a of QA-2 and QA-3 is in the game until your pick.</p></div>
+<article class="row" id="r-A.1">
+<header><span class="rid">A.1</span><h3>The lightning strike&#x27;s look (QA-2)</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../world/jovian/README.md">The lightning strike's look (QA-2)</a></div>
+<div class="q"><strong>pick a or b</strong>. The doc fixes the 1.0 s tell (the 40 px column's faint edges and a thin blue-white line), not the 0.25 s strike. <strong>a "jagged bolt"</strong> (recommended): a jagged blue-white bolt filling the column top to bottom, a white core, two short side forks and Level 12's sky flash; it reads as lightning, and the column's straight tell already marks the lane. <strong>b "light column"</strong>: a straight full-height column of white light with a jagged core line, its edges fading to the core over the 0.25 s. The final frames and the game capture are a.</div>
+<div class="media"><figure class="m img"><a href="../../world/jovian/concept/lightning-strike-r73-a.png"><img loading="lazy" decoding="async" src="../../world/jovian/concept/lightning-strike-r73-a.png" alt="a sheet"></a><figcaption>a sheet</figcaption></figure><figure class="m img"><a href="../../world/jovian/concept/lightning-strike-r73-a.gif"><img loading="lazy" decoding="async" src="../../world/jovian/concept/lightning-strike-r73-a.gif" alt="a motion"></a><figcaption>a motion</figcaption></figure><figure class="m img"><a href="../../world/jovian/concept/rejected/lightning-strike-r73-b.png"><img loading="lazy" decoding="async" src="../../world/jovian/concept/rejected/lightning-strike-r73-b.png" alt="b sheet"></a><figcaption>b sheet</figcaption></figure><figure class="m img"><a href="../../world/jovian/concept/rejected/lightning-strike-r73-b.gif"><img loading="lazy" decoding="async" src="../../world/jovian/concept/rejected/lightning-strike-r73-b.gif" alt="b motion"></a><figcaption>b motion</figcaption></figure><figure class="m img"><a href="../../world/jovian/concept/lightning-final-r73-a.png"><img loading="lazy" decoding="async" src="../../world/jovian/concept/lightning-final-r73-a.png" alt="a final"></a><figcaption>a final</figcaption></figure><figure class="m img"><a href="../../world/jovian/concept/lightning-final-r73-a.gif"><img loading="lazy" decoding="async" src="../../world/jovian/concept/lightning-final-r73-a.gif" alt="a final motion"></a><figcaption>a final motion</figcaption></figure><figure class="m img"><a href="../../world/jovian/concept/hazards-capture-r73-a.png"><img loading="lazy" decoding="async" src="../../world/jovian/concept/hazards-capture-r73-a.png" alt="in the game"></a><figcaption>in the game</figcaption></figure><figure class="m img"><a href="../../world/jovian/concept/hazards-capture-r73-a.gif"><img loading="lazy" decoding="async" src="../../world/jovian/concept/hazards-capture-r73-a.gif" alt="in the game, motion"></a><figcaption>in the game, motion</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> in the game the tell's thin line is faint on the brightest cream (Level 38's storm, where the strikes live, is dark)</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong> / b</span></div><div class="ans out"><span class="tag">Outcome</span> <span>a "jagged bolt" chosen; b rejected</span></div>
+</article>
+<article class="row" id="r-A.2">
+<header><span class="rid">A.2</span><h3>The Reflex Shield&#x27;s bolt (QA-3)</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../player/shields/README.md">The Reflex Shield's bolt (QA-3)</a></div>
+<div class="q"><strong>pick a or b</strong>. <strong>a "white-gold bullet"</strong> (recommended): the enemy bullet's round shape in white-gold, a dark rim, a short gold trail. <strong>b "gold needle"</strong>: a thin gold needle with a white core, a dark rim and a faint trail. The gap check said: b if the game shows the bolts reading as enemy fire. In the game (Level 33) the gold bolts read apart from the magenta orbs at a glance, and b's needle is the shape of the Ascendancy's own gold needles, so a.</div>
+<div class="media"><figure class="m img"><a href="../../player/shields/concept/reflex-bolt-r73-a.png"><img loading="lazy" decoding="async" src="../../player/shields/concept/reflex-bolt-r73-a.png" alt="a sheet"></a><figcaption>a sheet</figcaption></figure><figure class="m img"><a href="../../player/shields/concept/reflex-bolt-r73-a.gif"><img loading="lazy" decoding="async" src="../../player/shields/concept/reflex-bolt-r73-a.gif" alt="a motion"></a><figcaption>a motion</figcaption></figure><figure class="m img"><a href="../../player/shields/concept/rejected/reflex-bolt-r73-b.png"><img loading="lazy" decoding="async" src="../../player/shields/concept/rejected/reflex-bolt-r73-b.png" alt="b sheet"></a><figcaption>b sheet</figcaption></figure><figure class="m img"><a href="../../player/shields/concept/rejected/reflex-bolt-r73-b.gif"><img loading="lazy" decoding="async" src="../../player/shields/concept/rejected/reflex-bolt-r73-b.gif" alt="b motion"></a><figcaption>b motion</figcaption></figure><figure class="m img"><a href="../../player/shields/concept/reflex-capture-r73-a.png"><img loading="lazy" decoding="async" src="../../player/shields/concept/reflex-capture-r73-a.png" alt="a in the game"></a><figcaption>a in the game</figcaption></figure><figure class="m img"><a href="../../player/shields/concept/reflex-capture-r73-a.gif"><img loading="lazy" decoding="async" src="../../player/shields/concept/reflex-capture-r73-a.gif" alt="a in the game, motion"></a><figcaption>a in the game, motion</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> captured over Level 33's dark field; over the cream only ART-A's sheets show it</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong> / b</span></div><div class="ans out"><span class="tag">Outcome</span> <span>a "white-gold bullet" chosen; b rejected</span></div>
+</article>
+<article class="row" id="r-A.3">
+<header><span class="rid">A.3</span><h3>Explosions over Level 36&#x27;s bright bands</h3><span class="kind">pick a, b or c</span></header>
+<div class="part"><a href="../../art-direction/README.md">Explosions over Level 36's bright bands</a></div>
+<div class="q"><strong>pick a, b or c</strong> (new; round 72's A.7 note, ART-B's measure). The game draws kill bursts additively: over the brightest cream a <code>small</code> burst lifts its core only about +30 (over 90 % clipped) and changes its 24 px disc by 8 on average over its life: a pale smudge; over rust it reads (22). <strong>a "as built"</strong>: no change. <strong>b "soot under the flash"</strong> (recommended): a soft soot puff drawn with normal blending under the same flash: warm dark grey, at most 0.42 opaque, feathered to nothing (no edge, no ring), rising a little as it fades; the burst changes its disc by 19 on the cream and the bank, 21 on rust, and Jupiter's air "rises as smoke and fire". <strong>c "deeper core"</strong>: the frames recoloured deeper orange for Act 6, still additive: warmer, but it adds less light, so it reads weaker on the cream (5). Part B's B5 checks the pick in Level 36.</div>
+<div class="media"><figure class="m img"><a href="../../art-direction/concept/rejected/explosion-bright-r73-a.png"><img loading="lazy" decoding="async" src="../../art-direction/concept/rejected/explosion-bright-r73-a.png" alt="a sheet"></a><figcaption>a sheet</figcaption></figure><figure class="m img"><a href="../../art-direction/concept/rejected/explosion-bright-r73-a.gif"><img loading="lazy" decoding="async" src="../../art-direction/concept/rejected/explosion-bright-r73-a.gif" alt="a motion"></a><figcaption>a motion</figcaption></figure><figure class="m img"><a href="../../art-direction/concept/explosion-bright-r73-b.png"><img loading="lazy" decoding="async" src="../../art-direction/concept/explosion-bright-r73-b.png" alt="b sheet"></a><figcaption>b sheet</figcaption></figure><figure class="m img"><a href="../../art-direction/concept/explosion-bright-r73-b.gif"><img loading="lazy" decoding="async" src="../../art-direction/concept/explosion-bright-r73-b.gif" alt="b motion"></a><figcaption>b motion</figcaption></figure><figure class="m img"><a href="../../art-direction/concept/rejected/explosion-bright-r73-c.png"><img loading="lazy" decoding="async" src="../../art-direction/concept/rejected/explosion-bright-r73-c.png" alt="c sheet"></a><figcaption>c sheet</figcaption></figure><figure class="m img"><a href="../../art-direction/concept/rejected/explosion-bright-r73-c.gif"><img loading="lazy" decoding="async" src="../../art-direction/concept/rejected/explosion-bright-r73-c.gif" alt="c motion"></a><figcaption>c motion</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> b's puff is a dark halo for a moment at 2× (soft, no edge); it costs one normal-blended layer per burst, Act 6 only or everywhere is part B's call</p>
+<p class="rec"><span class="tag">Recommendation</span> b</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge pick">not the recommendation</span> <span>a / <strong>b</strong> / c</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>b</strong> "soot under the flash" chosen (the recommendation); a and c rejected. Whether the soot puff is Act 6 only or everywhere is part B's call (B4), an open build item in the act README's <em>Implementation</em></span></div>
+</article>
+</section>
+<section id="s-art-to-confirm"><h2>Art to confirm</h2>
+<div class="sum"><p>Part A's production art (ART-A, <code>tools/art/act6_gear.py</code>, <code>tools/art/icons.py --act6</code>), already in the game, and the first game captures of A3a/A3b's looks on the stand-in units: accept, or redo with a note.</p></div>
+<article class="row" id="r-F.1">
+<header><span class="rid">F.1</span><h3>The Plasma Arc&#x27;s frames (round 72 A.7 a)</h3><span class="kind">accept or redo</span></header>
+<div class="part"><a href="../../player/weapons/plasma-arc/README.md">The Plasma Arc's frames (round 72 A.7 a)</a></div>
+<div class="q"><strong>accept or redo</strong>. The <code>arc</code> family drawn wider: per place in the chain a 160×48 strip (the first strike 1.7× the Tesla pod's width, each jump 0.72× thinner), three shapes each, the 64 px spark burst, the nose glow; in the game at L5 over round 72's grade, ART-B's cream and rust bands, beside mirrors bouncing the pods' missiles back as magenta orbs, and in Level 35.</div>
+<div class="media"><figure class="m img"><a href="../../player/weapons/plasma-arc/concept/plasma-arc-final-r73-a.png"><img loading="lazy" decoding="async" src="../../player/weapons/plasma-arc/concept/plasma-arc-final-r73-a.png" alt="frames"></a><figcaption>frames</figcaption></figure><figure class="m img"><a href="../../player/weapons/plasma-arc/concept/plasma-arc-final-r73-a.gif"><img loading="lazy" decoding="async" src="../../player/weapons/plasma-arc/concept/plasma-arc-final-r73-a.gif" alt="motion"></a><figcaption>motion</figcaption></figure><figure class="m img"><a href="../../player/weapons/plasma-arc/concept/plasma-arc-capture-r73-a.png"><img loading="lazy" decoding="async" src="../../player/weapons/plasma-arc/concept/plasma-arc-capture-r73-a.png" alt="in the game"></a><figcaption>in the game</figcaption></figure><figure class="m img"><a href="../../player/weapons/plasma-arc/concept/plasma-arc-capture-r73-a.gif"><img loading="lazy" decoding="async" src="../../player/weapons/plasma-arc/concept/plasma-arc-capture-r73-a.gif" alt="in the game, motion"></a><figcaption>in the game, motion</figcaption></figure><figure class="m img"><a href="../../player/weapons/plasma-arc/concept/plasma-arc-l35-capture-r73-a.png"><img loading="lazy" decoding="async" src="../../player/weapons/plasma-arc/concept/plasma-arc-l35-capture-r73-a.png" alt="Level 35"></a><figcaption>Level 35</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the arc's fringe is violet-pink, the orbs magenta: apart by shape and brightness, close in hue; on the cream the fringe pales</p>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong> / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span>Accepted</span></div>
+</article>
+<article class="row" id="r-F.2">
+<header><span class="rid">F.2</span><h3>The bounced bullet</h3><span class="kind">accept or redo</span></header>
+<div class="part"><a href="../../enemies/README.md">The bounced bullet</a></div>
+<div class="q"><strong>accept or redo</strong>. <code>orb-bounced_0..15</code>: the standard magenta orb with a short soft magenta wake (16 headings), slower (110 px/s) than a fresh orb, so a bounced shot reads as yours coming back.</div>
+<div class="media"><figure class="m img"><a href="../../enemies/concept/bounced-bullet-final-r73-a.png"><img loading="lazy" decoding="async" src="../../enemies/concept/bounced-bullet-final-r73-a.png" alt="frames"></a><figcaption>frames</figcaption></figure><figure class="m img"><a href="../../enemies/concept/bounced-bullet-final-r73-a.gif"><img loading="lazy" decoding="async" src="../../enemies/concept/bounced-bullet-final-r73-a.gif" alt="motion"></a><figcaption>motion</figcaption></figure><figure class="m img"><a href="../../player/weapons/plasma-arc/concept/plasma-arc-capture-r73-a.png"><img loading="lazy" decoding="async" src="../../player/weapons/plasma-arc/concept/plasma-arc-capture-r73-a.png" alt="in the game"></a><figcaption>in the game</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> in a dense bounce stream the wake is the only difference from a fresh orb</p>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong> / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span>Accepted</span></div>
+</article>
+<article class="row" id="r-F.3">
+<header><span class="rid">F.3</span><h3>The pylon dome&#x27;s effects</h3><span class="kind">accept or redo</span></header>
+<div class="part"><a href="../../enemies/ground/shield-pylon/README.md">The pylon dome's effects</a></div>
+<div class="q"><strong>accept or redo</strong>. The 232 px dome (a ≈20 % hex lattice, the rim, a 12-frame shimmer), the spent shot's hit, the 0.4 s collapse into the crown, the feed strip, the covered unit's sheen; held until part G's pylon data, shown in the game on a stand-in mast.</div>
+<div class="media"><figure class="m img"><a href="../../enemies/ground/shield-pylon/concept/pylon-dome-final-r73-a.png"><img loading="lazy" decoding="async" src="../../enemies/ground/shield-pylon/concept/pylon-dome-final-r73-a.png" alt="frames"></a><figcaption>frames</figcaption></figure><figure class="m img"><a href="../../enemies/ground/shield-pylon/concept/pylon-dome-final-r73-a.gif"><img loading="lazy" decoding="async" src="../../enemies/ground/shield-pylon/concept/pylon-dome-final-r73-a.gif" alt="motion"></a><figcaption>motion</figcaption></figure><figure class="m img"><a href="../../enemies/ground/shield-pylon/concept/dome-capture-r73-a.png"><img loading="lazy" decoding="async" src="../../enemies/ground/shield-pylon/concept/dome-capture-r73-a.png" alt="in the game"></a><figcaption>in the game</figcaption></figure><figure class="m img"><a href="../../enemies/ground/shield-pylon/concept/dome-capture-r73-a.gif"><img loading="lazy" decoding="async" src="../../enemies/ground/shield-pylon/concept/dome-capture-r73-a.gif" alt="in the game, motion"></a><figcaption>in the game, motion</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the rig's covered nest missed the dome, so the hits and the collapse are only on ART-A's sheet</p>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong> / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span>Accepted</span></div>
+</article>
+<article class="row" id="r-F.4">
+<header><span class="rid">F.4</span><h3>The Act 6 shop icons</h3><span class="kind">accept or redo</span></header>
+<div class="part"><a href="../../ui/hangar/README.md">The Act 6 shop icons</a></div>
+<div class="q"><strong>accept or redo</strong>. The hangar badges of the Plasma Arc, the Reflex Shield, the Mk V+ "Crucible" and the IFF spoofer in the icon set's style.</div>
+<div class="media"><figure class="m img"><a href="../../ui/hangar/concept/act6-icons-final-r73-a.png"><img loading="lazy" decoding="async" src="../../ui/hangar/concept/act6-icons-final-r73-a.png" alt="icons"></a><figcaption>icons</figcaption></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong> / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span>Accepted</span></div>
+</article>
+<article class="row" id="r-F.5">
+<header><span class="rid">F.5</span><h3>The Reflex Shield&#x27;s flash</h3><span class="kind">accept or redo</span></header>
+<div class="part"><a href="../../player/shields/README.md">The Reflex Shield's flash</a></div>
+<div class="q"><strong>accept or redo</strong>. The gold hex flash <code>ship-reflex_0..3</code> (the blue ring's shapes in gold) while the shield is at 75 % or more, a bolt up per hit; the blue ring below 75 %.</div>
+<div class="media"><figure class="m img"><a href="../../player/shields/concept/reflex-shield-final-r73-a.png"><img loading="lazy" decoding="async" src="../../player/shields/concept/reflex-shield-final-r73-a.png" alt="frames"></a><figcaption>frames</figcaption></figure><figure class="m img"><a href="../../player/shields/concept/reflex-shield-final-r73-a.gif"><img loading="lazy" decoding="async" src="../../player/shields/concept/reflex-shield-final-r73-a.gif" alt="motion"></a><figcaption>motion</figcaption></figure><figure class="m img"><a href="../../player/shields/concept/reflex-capture-r73-a.png"><img loading="lazy" decoding="async" src="../../player/shields/concept/reflex-capture-r73-a.png" alt="in the game"></a><figcaption>in the game</figcaption></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong> / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span>Accepted</span></div>
+</article>
+<article class="row" id="r-F.6">
+<header><span class="rid">F.6</span><h3>The mirror, regrowth and dome looks in the game</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../enemies/README.md">The mirror, regrowth and dome looks in the game</a></div>
+<div class="q"><strong>accept or change</strong>. A3a's code-drawn looks on stand-in sprites: the mirror's plate heating dull red → orange → white, its cracks from 70 %, the break's shards, the 3 s down time and the 0.4 s silver regrowth; the Graft root's pulse (1 → 4 Hz) and shrinking ring and the 0.8 s knit; the units' production sprites are parts B–G's.</div>
+<div class="media"><figure class="m img"><a href="../../enemies/air/mirror-interceptor/concept/mirror-capture-r73-a.png"><img loading="lazy" decoding="async" src="../../enemies/air/mirror-interceptor/concept/mirror-capture-r73-a.png" alt="mirror"></a><figcaption>mirror</figcaption></figure><figure class="m img"><a href="../../enemies/air/mirror-interceptor/concept/mirror-capture-r73-a.gif"><img loading="lazy" decoding="async" src="../../enemies/air/mirror-interceptor/concept/mirror-capture-r73-a.gif" alt="mirror, motion"></a><figcaption>mirror, motion</figcaption></figure><figure class="m img"><a href="../../enemies/ground/graft-turret/concept/regrowth-capture-r73-a.png"><img loading="lazy" decoding="async" src="../../enemies/ground/graft-turret/concept/regrowth-capture-r73-a.png" alt="regrowth"></a><figcaption>regrowth</figcaption></figure><figure class="m img"><a href="../../enemies/ground/graft-turret/concept/regrowth-capture-r73-a.gif"><img loading="lazy" decoding="async" src="../../enemies/ground/graft-turret/concept/regrowth-capture-r73-a.gif" alt="regrowth, motion"></a><figcaption>regrowth, motion</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the plate is pale on the cream until white-hot: its cool state reads as a faint grey crescent</p>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong> / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span>Accepted</span></div>
+</article>
+<article class="row" id="r-F.7">
+<header><span class="rid">F.7</span><h3>The hazards in the game</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../world/jovian/README.md">The hazards in the game</a></div>
+<div class="q"><strong>accept or change</strong>. The told strike (tell, strike, flash), a dry eruption (the vent's tell, a rock; Io's rock art is part E's) and the foreground banks over <code>air</code> bodies (A3b's 65 % code veils until part B draws ART-B's bank pieces).</div>
+<div class="media"><figure class="m img"><a href="../../world/jovian/concept/hazards-capture-r73-a.png"><img loading="lazy" decoding="async" src="../../world/jovian/concept/hazards-capture-r73-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure><figure class="m img"><a href="../../world/jovian/concept/hazards-capture-r73-a.gif"><img loading="lazy" decoding="async" src="../../world/jovian/concept/hazards-capture-r73-a.gif" alt="motion"></a><figcaption>motion</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the code veils read as flat pale rectangles on the cream and rust (stand-ins)</p>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong> / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span>Accepted</span></div>
+</article>
+</section>
+<section id="s-round-72-follow-ups"><h2>Round 72 follow-ups</h2>
+<article class="row" id="r-R.1">
+<header><span class="rid">R.1</span><h3>The Ascendant&#x27;s break (A.11 change)</h3><span class="kind">accept or redo</span></header>
+<div class="part"><a href="../../enemies/bosses/ascendant/README.md">The Ascendant's break (A.11 change)</a></div>
+<div class="q"><strong>accept or redo</strong>. Storyboard frame 8 redrawn as you asked: the hull torn in two along a jagged fracture down the keel, torn plate flaps bent outward, a charred, hot-glowing rim, shards in the gap, orange and teal gas venting from both edges.</div>
+<div class="media"><figure class="m img"><a href="../../enemies/bosses/ascendant/concept/ascendant-phases-r73-a.png"><img loading="lazy" decoding="async" src="../../enemies/bosses/ascendant/concept/ascendant-phases-r73-a.png" alt="storyboard"></a><figcaption>storyboard</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> round 72's unit sheet still shows clean wreck halves (sheet only; the storyboard is the rule)</p>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong> / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span>The jagged break accepted; round 72's storyboard rows superseded</span></div>
+</article>
+<article class="row" id="r-R.2">
+<header><span class="rid">R.2</span><h3>The falling city, b (A.13 b)</h3><span class="kind">accept or redo</span></header>
+<div class="part"><a href="../../world/jovian/README.md">The falling city, b (A.13 b)</a></div>
+<div class="q"><strong>accept or redo</strong>. Look b redrawn by A.11's rule: whole until the deck drops, then breaking along a jagged fault (ragged strut and deck ends, torn flaps, a charred glowing rim, shards in the widening gap, smoke and fire from both edges); round 72's b was a clean cut.</div>
+<div class="media"><figure class="m img"><a href="../../world/jovian/concept/falling-city-r73-b.png"><img loading="lazy" decoding="async" src="../../world/jovian/concept/falling-city-r73-b.png" alt="storyboard"></a><figcaption>storyboard</figcaption></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong> / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span>The falling city's jagged break accepted; round 72's b superseded</span></div>
+</article>
+<article class="row" id="r-R.3">
+<header><span class="rid">R.3</span><h3>Aurelia Traffic&#x27;s &quot;lift&quot; (V.3 b)</h3><span class="kind">accept or redo</span></header>
+<div class="part"><a href="../../audio/voice/README.md">Aurelia Traffic's "lift" (V.3 b)</a></div>
+<div class="q"><strong>accept or redo</strong>. Lizzie Driver's sign-off re-rendered so it says "lift", not "liff" (seed 117; Whisper reads "lift" in ten of sixteen seeds).</div>
+<div class="media"><figure class="m aud"><figcaption>take</figcaption><audio controls preload="none" src="../../audio/voice/concept/voice-aurelia-traffic-r73-b.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong> / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span>"Lift" accepted; round 72's Aurelia Traffic take superseded</span></div>
+</article>
+<article class="row" id="r-R.4">
+<header><span class="rid">R.4</span><h3>Vorne&#x27;s shout (V.5 recast)</h3><span class="kind">pick a or b, or recast again</span></header>
+<div class="part"><a href="../../audio/voice/README.md">Vorne's shout (V.5 recast)</a></div>
+<div class="q"><strong>pick a or b, or recast again</strong>. "No! We had an agreement!" in his low register, lowered with WORLD resynthesis. Does it still sound like a person shouting? <strong>a:</strong> round 72's shout take lowered (×0.41, to about 113 Hz), the break after "No!" kept. <strong>b:</strong> a new shouted render from his clip lowered 4 semitones, then lowered to about 104 Hz.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/voice/concept/rejected/vorne-shout-r73-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/voice/concept/vorne-shout-r73-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the lowering may sound vocoded; only your ear can judge</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span>a / <strong>b</strong> / recast</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>b</strong> (not the recommendation) chosen: the new shouted render lowered to about 104 Hz; a and round 72's two takes rejected</span></div>
+</article>
+</section>
+<section id="s-important-calls"><h2>Important calls</h2>
+<div class="sum"><p>Calls the part A steps made where the documents left room (the step logs in the working note), each built as recommended; the alternative is in the cell. Accept, or change with a note.</p></div>
+<article class="row" id="r-C.1">
+<header><span class="rid">C.1</span><h3>The dome&#x27;s bearing (A1a)</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../enemies/ground/shield-pylon/README.md">The dome's bearing (A1a)</a></div>
+<div class="q"><strong>accept or change</strong>. Each pylon's dome bearing comes from its own placement (its nest's <code>crown</code>), not one bearing for the unit type. Alternative: one bearing per pylon type.</div>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong> / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span>Accepted</span></div>
+</article>
+<article class="row" id="r-C.2">
+<header><span class="rid">C.2</span><h3>The mirror turns only at its station (A1a)</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../enemies/air/mirror-interceptor/README.md">The mirror turns only at its station (A1a)</a></div>
+<div class="q"><strong>accept or change</strong>. The plate turns toward the ship (60 °/s) only while the unit holds its station; on its way in and out it faces along its flight, so a mirror arriving from a side or the rear is open. Alternative: it turns from its entry on.</div>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong> / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span>Accepted</span></div>
+</article>
+<article class="row" id="r-C.3">
+<header><span class="rid">C.3</span><h3>fire_within: 30 (A1a)</h3><span class="kind">accept or change</span></header>
+<div class="part">[<code>fire_within: 30</code> (A1a)](../../enemies/air/mirror-interceptor/README.md)</div>
+<div class="q"><strong>accept or change</strong>. A new stat-block key: the mirror's pods fire only while the ship is within 30° of its facing (the doc's "the burst only while facing the ship").</div>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong> / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span>Accepted</span></div>
+</article>
+<article class="row" id="r-C.4">
+<header><span class="rid">C.4</span><h3>Blasts pass a mirror (A1a)</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../enemies/README.md">Blasts pass a mirror (A1a)</a></div>
+<div class="q"><strong>accept or change</strong>. Bombs, shells and splash damage reach a mirrored hull past its plate (no bounce, no heat); only shots that hit the face bounce. Alternative: the plate also stops blasts on its side.</div>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong> / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span>Accepted</span></div>
+</article>
+<article class="row" id="r-C.5">
+<header><span class="rid">C.5</span><h3>The root on its first step (A1a)</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../enemies/ground/graft-turret/README.md">The root on its first step (A1a)</a></div>
+<div class="q"><strong>accept or change</strong>. The Graft root cannot be hit on the step it is exposed, so the shot or blast that kills the turret never also hits the root (the doc: "a blast that kills the turret misses the root").</div>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong> / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span>Accepted</span></div>
+</article>
+<article class="row" id="r-C.6">
+<header><span class="rid">C.6</span><h3>Prey lost to the war (A1a)</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../enemies/README.md">Prey lost to the war (A1a)</a></div>
+<div class="q"><strong>accept or change</strong>. A prey unit the Vrell kill counts as escaped for a secondary (it pays nothing and is no player kill).</div>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong> / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span>Accepted</span></div>
+</article>
+<article class="row" id="r-C.7">
+<header><span class="rid">C.7</span><h3>A strike hits enemies once (A1b)</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../world/jovian/README.md">A strike hits enemies once (A1b)</a></div>
+<div class="q"><strong>accept or change</strong>. The 0.25 s strike hurts the <code>air</code> enemies in its column on its first step only (60 each); the ship and Rook once per strike.</div>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong> / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span>Accepted</span></div>
+</article>
+<article class="row" id="r-C.8">
+<header><span class="rid">C.8</span><h3>A vent&#x27;s first tell (A1b)</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../world/jovian/README.md">A vent's first tell (A1b)</a></div>
+<div class="q"><strong>accept or change</strong>. A vent's first eruption is told one period (5–7 s) after it enters the screen, not at once.</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the rig needed a 2 s period to erupt on the screen at 100 px/s; Level 39's scroll must leave room (part E)</p>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong> / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span>Accepted</span></div>
+</article>
+<article class="row" id="r-C.9">
+<header><span class="rid">C.9</span><h3>The ship&#x27;s hazard hits (A1b)</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../world/jovian/README.md">The ship's hazard hits (A1b)</a></div>
+<div class="q"><strong>accept or change</strong>. A strike's <code>heavy</code> 10 and a rock's <code>small</code> 10 go to the shield first, then the armour, like a bullet (never reflected).</div>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong> / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span>Accepted</span></div>
+</article>
+<article class="row" id="r-C.10">
+<header><span class="rid">C.10</span><h3>The Reflex bolt&#x27;s damage (A1b)</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../player/shields/README.md">The Reflex bolt's damage (A1b)</a></div>
+<div class="q"><strong>accept or change</strong>. A bolt deals 2× the reflected bullet's damage as it arrives (after the act and difficulty factors; the shield still takes half of it), not 2× its class's base.</div>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong> / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span>Accepted</span></div>
+</article>
+<article class="row" id="r-C.11">
+<header><span class="rid">C.11</span><h3>A hardened arc target (A1b)</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../player/weapons/plasma-arc/README.md">A hardened arc target (A1b)</a></div>
+<div class="q"><strong>accept or change</strong>. When the arc's first strike lands on a hardened unit it glances and the chain ends there.</div>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong> / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span>Accepted</span></div>
+</article>
+<article class="row" id="r-C.12">
+<header><span class="rid">C.12</span><h3>The balance plan at Levels 36–37 (A2a)</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../player/generator/README.md">The balance plan at Levels 36–37 (A2a)</a></div>
+<div class="q"><strong>accept or change</strong>. <code>BalanceTest</code> reaches the Level 36 visit 208 cr short of the Ion Beam L5, so the plan takes the hand plan's alternative: the Tesla Coil Pod and its L2 at the L36 visit (0.99 of the reference), the beam L5 at L37 (1.14); from L38 the table stands.</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> Level 36's opener sits at 0.99, not 1.19, until part B's hauls are measured</p>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong> / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span>Accepted</span></div>
+</article>
+<article class="row" id="r-C.13">
+<header><span class="rid">C.13</span><h3>crown (A2a)</h3><span class="kind">accept or change</span></header>
+<div class="part">[<code>crown</code> (A2a)](../../tech/architecture/schemas-levels/README.md)</div>
+<div class="q"><strong>accept or change</strong>. A pylon nest's <code>crown</code> is in degrees from straight up the screen, positive to the right.</div>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong> / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span>Accepted</span></div>
+</article>
+<article class="row" id="r-C.14">
+<header><span class="rid">C.14</span><h3>Where the hazard checks live (A2b)</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../tech/architecture/schemas-levels/README.md">Where the hazard checks live (A2b)</a></div>
+<div class="q"><strong>accept or change</strong>. The strike and eruption checks are in content's <code>JovianHazardChecks</code>, not <code>LevelChecks</code>.</div>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong> / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span>Accepted</span></div>
+</article>
+<article class="row" id="r-C.15">
+<header><span class="rid">C.15</span><h3>The entry rule by time (A2b)</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../world/jovian/README.md">The entry rule by time (A2b)</a></div>
+<div class="q"><strong>accept or change</strong>. "No tell on the ship's x within 1 s of a wave's entry" is checked on time only (no strike within 1 s of any entry) in the data, with the runtime shift on every difficulty.</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> stricter than the rule: it may cost a strike placement</p>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong> / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span>Accepted</span></div>
+</article>
+<article class="row" id="r-C.16">
+<header><span class="rid">C.16</span><h3>The rock&#x27;s hit box (A2b)</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../world/jovian/README.md">The rock's hit box (A2b)</a></div>
+<div class="q"><strong>accept or change</strong>. An eruption rock's hit box is 24×24.</div>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong> / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span>Accepted</span></div>
+</article>
+<article class="row" id="r-C.17">
+<header><span class="rid">C.17</span><h3>Stand-ins until the picks (A3a, A3b)</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../audio/sfx/README.md">Stand-ins until the picks (A3a, A3b)</a></div>
+<div class="q"><strong>accept or change</strong>. Until S.1–S.5 and the units' art: the heat plays the tendril burn pitched 0.85→1.35, the break the Glassfin shatter, the regrow the sonde chime low, the dome hit the enemy shield hit, the tick the Deflector's, the root's death the tendril snap; the plate, cracks and shards are code-drawn; the banks are 65 % veils; the rocks' sounds are stand-ins.</div>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong> / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span>Accepted</span></div>
+</article>
+<article class="row" id="r-C.18">
+<header><span class="rid">C.18</span><h3>withX keeps newer components (RF9b)</h3><span class="kind">accept or change</span></header>
+<div class="part">[<code>withX</code> keeps newer components (RF9b)](../../tech/architecture/README.md)</div>
+<div class="q"><strong>accept or change</strong>. The spec builders' <code>withX</code> copies now keep every newer component (a refactor rule: an Act 6 component is never dropped by an older <code>withX</code>).</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> code structure; no game change</p>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong> / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span>Accepted</span></div>
+</article>
+<article class="row" id="r-C.19">
+<header><span class="rid">C.19</span><h3>WaterEffects holds the arena&#x27;s parts (RF9e)</h3><span class="kind">accept or change</span></header>
+<div class="part">[<code>WaterEffects</code> holds the arena's parts (RF9e)](../../tech/architecture/README.md)</div>
+<div class="q"><strong>accept or change</strong>. <code>arenaPartDown</code> and <code>armPop</code> moved into <code>WaterEffects</code> with the other water deaths.</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> code structure; no game change</p>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong> / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span>Accepted</span></div>
+</article>
+<article class="row" id="r-C.20">
+<header><span class="rid">C.20</span><h3>The EffectStarts helper (RF9e)</h3><span class="kind">accept or change</span></header>
+<div class="part">[The <code>EffectStarts</code> helper (RF9e)](../../tech/architecture/README.md)</div>
+<div class="q"><strong>accept or change</strong>. A new small helper class, <code>EffectStarts</code>, for the shared effect starts split out of <code>EventEffects</code>.</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> code structure; no game change</p>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong> / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span>Accepted</span></div>
+</article>
+<article class="row" id="r-C.21">
+<header><span class="rid">C.21</span><h3>LevelScreen.react stays (RF9e)</h3><span class="kind">accept or change</span></header>
+<div class="part">[<code>LevelScreen.react</code> stays (RF9e)](../../tech/architecture/README.md)</div>
+<div class="q"><strong>accept or change</strong>. The screen's event dispatch stays in <code>LevelScreen.react</code> (not moved to a new class).</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> code structure; no game change</p>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong> / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span>Accepted</span></div>
+</article>
+</section></main></body></html>

@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../../player, ../../systems/economy, ../../campaign]
-updated: 2026-10-29
+updated: 2026-10-31
 ---
 
 # Hangar
@@ -250,7 +250,7 @@ Light Drone Bay, EMP Burst, Orbital Lance and Shield Overcharge. Round 37 chose 
 | [concept/act4-hangar-capture-r50-a.png](concept/act4-hangar-capture-r50-a.png) | Game capture (round 50, M8 part A, step A5), the hangar before Level 27 (Rook MIA) from a scratch save: the Harpoon Torpedoes row and its test fire, the escort callout with the loaner Bulwark and `ROOK MIA`, the escort shop's Bulwark row before and after `BUY`, the Depth Charges' test fire over water (sheet of 4 frames) | chosen (round 50, F.7: accepted) |
 | [concept/act5-icons-final-r61-a.png](concept/act5-icons-final-r61-a.png) | The two Act 5 weapon icons (`tools/art/icons.py --act5`, M9 part A): Tesla Coil Pod (the pod with an arc from its terminal) and Swarm Tail (three micro-missiles fanned out backwards) at 16 and 24 px, beside the Micro-missile Pod and Tail Gun icons for the style (sheet) | chosen (round 61, F.5: accepted) |
 | [concept/act5-hangar-capture-r61-a.png](concept/act5-hangar-capture-r61-a.png) | Game capture of the hangar before the [capture rig](../../enemies/concept/prompts.md#belt-rig-capture-r61-a)'s Level 08 (aborted to the hangar, `--loadout utility=sensor-suite:3 --special airstrike:2`): the Tesla Coil Pod in the L WING shop with `NEW` and the ◆ (the rig's intel recommends `shield-breaker`), its detail `<AREA> <SHIELD-BREAKER>` and the test fire's arc, the intel's `SPECIAL LIMITED · AIRSTRIKE: IN ROCK`; right: the REAR shop with the Swarm Tail. The intel's RECOMMEND row cuts `SHIELD-BREAKER` at the panel's edge | chosen (round 61, F.5: accepted) |
-| [concept/act6-icons-final-r73-a.png](concept/act6-icons-final-r73-a.png) | The four Act 6 equipment icons (`tools/art/icons.py --act6`, M10 part A, step ART-A): Plasma Arc (a nose emitter, a jagged arc to a node forking on to two more), Reflex Shield (the shield badge with its top quarter gold), Mk V+ "Crucible" (the generators' ring round a white-hot core in a molten orange ring, Mk V's studs), the IFF spoofer redrawn (a green reticle and a steel ghost reticle offset from it; it was a Vrell eye) at 16 and 24 px, beside Composite V (as is), the Mk V "Helix", the Ion Beam and the Shield Mk V for the style (sheet) | proposed (round 73) |
+| [concept/act6-icons-final-r73-a.png](concept/act6-icons-final-r73-a.png) | The four Act 6 equipment icons (`tools/art/icons.py --act6`, M10 part A, step ART-A): Plasma Arc (a nose emitter, a jagged arc to a node forking on to two more), Reflex Shield (the shield badge with its top quarter gold), Mk V+ "Crucible" (the generators' ring round a white-hot core in a molten orange ring, Mk V's studs), the IFF spoofer redrawn (a green reticle and a steel ghost reticle offset from it; it was a Vrell eye) at 16 and 24 px, beside Composite V (as is), the Mk V "Helix", the Ion Beam and the Shield Mk V for the style (sheet) | chosen (round 73 F.4 accept) |
 
 **After a load and in a replay** (user decision 2026-10-18): Continue and Load game reach the
 hangar through the next level's briefing; that hangar does not autosave as it opens (a save was
@@ -392,3 +392,4 @@ Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-a
 - 2026-10-28 (user, [round 64](../../concept-rounds/round-64/README.md), closed): **F.11** accepted: the Hornet's, Shard Drone's and Buzzsaw Drone's sensor L2 portraits are final.
 - 2026-10-29 (user, [round 65](../../concept-rounds/round-65/README.md), closed): **F.7** ok: the Sentinel Tower's and Strider's intel portraits accepted as final; **C.5** accepted (the intel marks each fork on the wave strip).
 - 2026-10-29 (user, rounds [round 67](../../concept-rounds/round-67/README.md) and [round 68](../../concept-rounds/round-68/README.md), closed): **G.7** ok: the Warden Tank's livery portrait (`warden-tank-asc`) and **H.2** ok: the Iron Sovereign's sensor L2 silhouette (`boss-iron-sovereign`) accepted as final.
+- 2026-10-31, round 73: the four Act 6 shop icons accepted (F.4).

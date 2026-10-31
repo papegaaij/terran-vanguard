@@ -175,24 +175,21 @@ Generator `tools/concept/act6_r72.py moods banks city` (round 73's falling city:
 |---|---|---|
 | [concept/jovian-moods-r72-a.png](concept/jovian-moods-r72-a.png) | Moods A, a grade per level (Q10 a): L36, L37 before and after the turn, L38–L42, each with its mean luminance and the readability set over its brightest and darkest window at 1× (sheet) | chosen (round 72 Q.10 a) |
 | [concept/jovian-banks-r72-a.png](concept/jovian-banks-r72-a.png) | Foreground banks A, cream veil: the bank in the band's lit cream at 65 % over the bodies, lights and tells at full, bullets and the ship above; 25 % of the field, 0 % of the ship's band (sheet) | chosen (round 72 A.12 a) |
-| [concept/falling-city-r72-b.png](concept/falling-city-r72-b.png) | The falling city B, breaking up: the deck breaking along a fault line, the halves sinking apart, the spires toppling (storyboard) | chosen (round 72 A.13 b) |
-| [concept/falling-city-r73-b.png](concept/falling-city-r73-b.png) | The falling city B redrawn by round 72 A.11's rule: whole until the deck drops, then breaking along a jagged fault: ragged strut and deck ends, torn plate flaps, a charred, hot-glowing rim, shards in the widening gap, smoke and fire venting from both edges (storyboard) | proposed (round 73: the falling city's jagged break, round 72 A.11) |
+| [concept/falling-city-r73-b.png](concept/falling-city-r73-b.png) | The falling city B redrawn by round 72 A.11's rule: whole until the deck drops, then breaking along a jagged fault: ragged strut and deck ends, torn plate flaps, a charred, hot-glowing rim, shards in the widening gap, smoke and fire venting from both edges (storyboard) | chosen (round 73 R.2 accept) |
 
 Round 73 (M10 part A, step ART-A): the lightning strike's production frames by `tools/art/act6_gear.py lightning` and
-the strike's open look (QA-2), a/b proposals by `tools/concept/act6_r73.py lightning` (a, the recommendation, written
-until the pick; the frames wait in `build/art-held/sprites/` until the game claims `lightning`). Prompts:
+the strike's look (QA-2), a/b proposals by `tools/concept/act6_r73.py lightning` (a "jagged bolt" chosen 2026-10-31,
+round 73 A.1; the frames wait in `build/art-held/sprites/` until the game claims `lightning`). Prompts:
 [concept/prompts.md](concept/prompts.md#lightning-final-r73-a).
 
 | File | What | Status |
 |---|---|---|
-| [concept/lightning-final-r73-a.png](concept/lightning-final-r73-a.png) | Final frames: the telegraph tile `lightning-tell_0..1` (the 40 px column's faint edges, the thin blue-white line) and the strike `lightning-strike_0..2` (a); the tell, the strike and the flash over Level 38's storm and Level 36's bands, a Talon in the column dying (sheet) | proposed (round 73) |
-| [concept/lightning-final-r73-a.gif](concept/lightning-final-r73-a.gif) | Tell, strike and flash over Level 38 and Level 36 side by side, 1× | proposed (round 73) |
-| [concept/lightning-strike-r73-a.png](concept/lightning-strike-r73-a.png) | QA-2 a "jagged bolt" (recommended): a jagged blue-white bolt filling the 40 px column top to bottom, a white core, two short side forks, the sky flash; over Level 36's grade and Level 38's storm (sheet) | proposed (round 73 QA-2) |
-| [concept/lightning-strike-r73-a.gif](concept/lightning-strike-r73-a.gif) | a: the 1.0 s tell, the 0.25 s strike, over Level 36 and Level 38, 1× | proposed (round 73 QA-2) |
-| [concept/lightning-strike-r73-b.png](concept/lightning-strike-r73-b.png) | QA-2 b "light column": a straight full-height column of white light with a jagged core line, its edges fading to the core over the 0.25 s (sheet) | proposed (round 73 QA-2) |
-| [concept/lightning-strike-r73-b.gif](concept/lightning-strike-r73-b.gif) | b: the same moments, 1× | proposed (round 73 QA-2) |
-| [concept/hazards-capture-r73-a.png](concept/hazards-capture-r73-a.png) | Game capture (the [A4 rig](concept/prompts.md#act6-rig-capture-r73-a)): the told strike on ART-B's cream bands and over round 72's grade, a dry eruption's vent tell and rock, the foreground banks over air units (A3b's code veils until B4 draws ART-B's bank pieces) on cream and rust | proposed (round 73) |
-| [concept/hazards-capture-r73-a.gif](concept/hazards-capture-r73-a.gif) | The strike's tell and strike over the cream bands, 1× | proposed (round 73) |
+| [concept/lightning-final-r73-a.png](concept/lightning-final-r73-a.png) | Final frames: the telegraph tile `lightning-tell_0..1` (the 40 px column's faint edges, the thin blue-white line) and the strike `lightning-strike_0..2` (a); the tell, the strike and the flash over Level 38's storm and Level 36's bands, a Talon in the column dying (sheet) | chosen (round 73 A.1 a) |
+| [concept/lightning-final-r73-a.gif](concept/lightning-final-r73-a.gif) | Tell, strike and flash over Level 38 and Level 36 side by side, 1× | chosen (round 73 A.1 a) |
+| [concept/lightning-strike-r73-a.png](concept/lightning-strike-r73-a.png) | QA-2 a "jagged bolt" (recommended): a jagged blue-white bolt filling the 40 px column top to bottom, a white core, two short side forks, the sky flash; over Level 36's grade and Level 38's storm (sheet) | chosen (round 73 A.1 a) |
+| [concept/lightning-strike-r73-a.gif](concept/lightning-strike-r73-a.gif) | a: the 1.0 s tell, the 0.25 s strike, over Level 36 and Level 38, 1× | chosen (round 73 A.1 a) |
+| [concept/hazards-capture-r73-a.png](concept/hazards-capture-r73-a.png) | Game capture (the [A4 rig](concept/prompts.md#act6-rig-capture-r73-a)): the told strike on ART-B's cream bands and over round 72's grade, a dry eruption's vent tell and rock, the foreground banks over air units (A3b's code veils until B4 draws ART-B's bank pieces) on cream and rust | chosen (round 73 F.7 accept) |
+| [concept/hazards-capture-r73-a.gif](concept/hazards-capture-r73-a.gif) | The strike's tell and strike over the cream bands, 1× | chosen (round 73 F.7 accept) |
 
 Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 
@@ -225,3 +222,4 @@ Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
   their own rates, the spires toppling (it needs two ground layers where "one layer" was drafted; Level 37, the act README
   and the engine feature follow). The moods ladder a and the falling-city storyboard b are chosen, the other variants
   are in `concept/rejected/`. Approved as drafted with these changes (D.16).
+- 2026-10-31, round 73: the lightning strike **a** "jagged bolt" chosen (A.1; b "light column" rejected); the hazards in the game accepted (F.7); the falling city's jagged break accepted (R.2; round 72's b superseded). The cream-band check of the banks and the soot-puff explosions are part B's.

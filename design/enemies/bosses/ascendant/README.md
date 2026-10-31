@@ -327,9 +327,7 @@ shows, the slide-in, phase 1, the generators down, the eruption, phase 2, K, the
 | File | What | Status |
 |---|---|---|
 | [concept/ascendant-r72-a.png](concept/ascendant-r72-a.png) | Ascendant A, the gilded wedge: one smooth wedge with gold ribs fanning down both faces; the Vrell half erupting along the keel (plates peeled outward) and two breaches; the lifeboat a round seed-pod with the gold capsule half swallowed; gold 34 %, atlas 11.9 % of a page (sheet) | chosen (round 72 A.10 a) |
-| [concept/ascendant-phases-r72-a.png](concept/ascendant-phases-r72-a.png) | The phases in look A (storyboard) | superseded by ascendant-phases-r73-a (round 72 A.11) |
-| [concept/ascendant-phases-r72-b.png](concept/ascendant-phases-r72-b.png) | The phases in look B (storyboard) | superseded by ascendant-phases-r73-a (round 72 A.11) |
-| [concept/ascendant-phases-r73-a.png](concept/ascendant-phases-r73-a.png) | The phases in look A (storyboard), frame 8 redrawn: the hull torn in two along a jagged fracture down the keel, torn plate flaps bent outward on both halves, a charred, hot-glowing rim, shards in the gap, orange and teal gas venting from both edges | proposed (round 73: frame 8's jagged break, round 72 A.11) |
+| [concept/ascendant-phases-r73-a.png](concept/ascendant-phases-r73-a.png) | The phases in look A (storyboard), frame 8 redrawn: the hull torn in two along a jagged fracture down the keel, torn plate flaps bent outward on both halves, a charred, hot-glowing rim, shards in the gap, orange and teal gas venting from both edges | chosen (round 73 R.1 accept) |
 
 Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 
@@ -394,3 +392,4 @@ Left to the build (the document is approved as drafted, with the jagged break be
   fracture**, never a clean cut (see *The hull breaks*); the storyboard rows stay `proposed` ("change requested") and
   a follow-up art step re-renders frame 8 with a jagged break; the phase order, the warning and the escape are
   accepted.
+- 2026-10-31, round 73: the storyboard's jagged break accepted (R.1): round 72's two storyboard rows are superseded and rejected.

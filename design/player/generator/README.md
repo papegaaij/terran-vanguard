@@ -273,7 +273,7 @@ the act's income ≈ 66 000 over the seven visits). The first column is the leve
 | L41 | 13 555 | **Composite V** 11 000 (160 armour: the lightning and the death-burst rings are behind it, the fortress's guns and the Ascendant's batteries ahead); Rook's Mortar | 11 125 | 2 430 | 24 / 25 |
 | L42 | 13 960 | the right Micro-missile Pod **L5** 3 200 and the Tesla Coil Pod **L3** 3 000; the spoofer to the inventory (no turret in orbit that it fools: the Ascendant's batteries are a boss's); Rook's Autocannon | 6 325 | 7 635 | 23 / 25 |
 
-**As built** (M10 part A, step A2a, pending the user's review in round 73): `BalanceTest`'s sheet enters the L36 visit
+**As built** (M10 part A, step A2a, decided 2026-10-31 (round 73 C.12)): `BalanceTest`'s sheet enters the L36 visit
 with 9 792 cr, not this table's 10 403 (its Act 5 visits leave 611 cr less than `tools/balance.py`'s), 208 short of the
 beam L5. The balance plan therefore takes the alternative below: the Tesla Coil Pod and its L2 at the L36 visit (0.99
 of the reference), the beam L5 at the L37 visit (1.14); from L38 on the table stands as written.

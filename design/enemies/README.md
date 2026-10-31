@@ -847,8 +847,8 @@ Round 73 (M10 part A, step ART-A): the mirror's bounced bullet (the [Reflect](#r
 
 | File | What | Status |
 |---|---|---|
-| [concept/bounced-bullet-final-r73-a.png](concept/bounced-bullet-final-r73-a.png) | `orb-bounced_0..15`: the standard magenta orb with a short soft magenta wake, 16 headings, beside the orb; at 1× among standard orbs over Level 36's and Level 38's grades (sheet) | proposed (round 73) |
-| [concept/bounced-bullet-final-r73-a.gif](concept/bounced-bullet-final-r73-a.gif) | Bounced orbs (110 px/s) drifting among standard orbs (160 px/s) over both grades, 2× | proposed (round 73) |
+| [concept/bounced-bullet-final-r73-a.png](concept/bounced-bullet-final-r73-a.png) | `orb-bounced_0..15`: the standard magenta orb with a short soft magenta wake, 16 headings, beside the orb; at 1× among standard orbs over Level 36's and Level 38's grades (sheet) | chosen (round 73 F.2 accept) |
+| [concept/bounced-bullet-final-r73-a.gif](concept/bounced-bullet-final-r73-a.gif) | Bounced orbs (110 px/s) drifting among standard orbs (160 px/s) over both grades, 2× | chosen (round 73 F.2 accept) |
 
 Round 72, Q9 (step ART-R-A, picked 2026-10-31; `tools/concept/enemies_r72.py heartland-livery`): the heartland's liveries side by side. Prompts: [concept/prompts.md](concept/prompts.md#heartland-livery-r72-a).
 
@@ -1056,3 +1056,4 @@ Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-a
   are machines for the EMP and never prey; the Act 6 shields are twice the built Act 5 values; a mirror bounces at
   most one shot every 0.15 s and a bounced bullet is never bounced again; a hunter's bullets hit only its prey wave's
   units, besides the ship) kept.
+- 2026-10-31, round 73: the bounced bullet's frames accepted (F.2); the mirror, regrowth and dome looks and the stand-in captures accepted (F.6); calls C.1-C.6 accepted (the dome's bearing per pylon, the mirror turning only at its station, `fire_within: 30`, blasts passing a mirror, the root on its first step, prey lost to the war).

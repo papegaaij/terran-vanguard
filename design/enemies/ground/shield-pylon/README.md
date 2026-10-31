@@ -114,10 +114,10 @@ Prompts: [concept/prompts.md](concept/prompts.md#pylon-dome-final-r73-a).
 
 | File | What | Status |
 |---|---|---|
-| [concept/pylon-dome-final-r73-a.png](concept/pylon-dome-final-r73-a.png) | Final dome effects of A.5 a: the 232 px dome (lattice ≈ 20 %, rim, the shimmer's 12 frames), the spent shot's hit, the 0.4 s collapse ring, the feed strip, the covered sheen; over Level 41's ice with two covered Rail Bunkers and a stand-in mast (sheet) | proposed (round 73) |
-| [concept/pylon-dome-final-r73-a.gif](concept/pylon-dome-final-r73-a.gif) | Shots spent on the dome, the mast destroyed, the ring collapsing into it, 1× | proposed (round 73) |
-| [concept/dome-capture-r73-a.png](concept/dome-capture-r73-a.png) | Game capture (the A4 rig; a stand-in mast, ART-A's held dome frames): the dome 140 px along the crown with its feed and shimmer over the cream bands, round 72's grade and the rust band (the arc jumping to the mast) | proposed (round 73) |
-| [concept/dome-capture-r73-a.gif](concept/dome-capture-r73-a.gif) | The dome scrolling through the pods' fight over the cream bands, 1× | proposed (round 73) |
+| [concept/pylon-dome-final-r73-a.png](concept/pylon-dome-final-r73-a.png) | Final dome effects of A.5 a: the 232 px dome (lattice ≈ 20 %, rim, the shimmer's 12 frames), the spent shot's hit, the 0.4 s collapse ring, the feed strip, the covered sheen; over Level 41's ice with two covered Rail Bunkers and a stand-in mast (sheet) | chosen (round 73 F.3 accept) |
+| [concept/pylon-dome-final-r73-a.gif](concept/pylon-dome-final-r73-a.gif) | Shots spent on the dome, the mast destroyed, the ring collapsing into it, 1× | chosen (round 73 F.3 accept) |
+| [concept/dome-capture-r73-a.png](concept/dome-capture-r73-a.png) | Game capture (the A4 rig; a stand-in mast, ART-A's held dome frames): the dome 140 px along the crown with its feed and shimmer over the cream bands, round 72's grade and the rust band (the arc jumping to the mast) | chosen (round 73 F.3 accept) |
+| [concept/dome-capture-r73-a.gif](concept/dome-capture-r73-a.gif) | The dome scrolling through the pods' fight over the cream bands, 1× | chosen (round 73 F.3 accept) |
 
 Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 
@@ -150,3 +150,4 @@ Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 - 2026-10-31 (user, [round 72](../../../concept-rounds/round-72/README.md) closed): Q9 a (the heartland livery; b and
   c rejected) and the document approved as drafted (D.10; `design: approved`); **A.5 a**, "crown", chosen (`art:
   chosen`; b "obelisk" in `concept/rejected/`). A dome that covers `air` units stays no (trivia).
+- 2026-10-31, round 73: the dome's effects and the game capture accepted (F.3); the dome-bearing call C.1 accepted (each pylon's `crown`).
