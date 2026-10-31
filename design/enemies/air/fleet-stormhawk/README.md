@@ -2,7 +2,7 @@
 title: Fleet Stormhawk
 design: approved
 implementation: done
-art: proposed
+art: final
 depends-on: [../../../campaign/act-6-jovian-storm/level-36-cloud-divers, ../../../ui/hud]
 updated: 2026-10-31
 ---
@@ -62,9 +62,10 @@ Production frames by `tools/art/jovian_units.py` (step ART-B) are the level's:
 
 - [x] Stat block loaded from a `data.yaml` (neutral; M10 part B, step B2)
 - [x] The banner 2 s ahead and the brackets (step B4: the built friendly marker, seen in the Level 36 capture)
-- [x] Production sprites at 16 headings with the exhaust streak (step B4: the streak under the hull while it dives up; the pass a pair, round 74 a)
+- [x] Production sprites at 16 headings with the exhaust streak (step B4: the streak under the hull while it dives up; the pass a pair, round 74 S.2 a)
 
 ## Decisions
 
-- 2026-10-31 (M10 part B, step B2): a unit data file (gap check §4, pending round 74), HP 30 base as the wavering
+- 2026-10-31 (M10 part B, step B2): a unit data file (gap check §4, decided 2026-10-31 (round 74)), HP 30 base as the wavering
   Stormhawk's (60 flown); its pair pinned at 2 on every difficulty by the formation's size.
+- 2026-10-31, round 74: the production frames and the dive capture accepted (F.4); the pass-by **a** (two Eurofighter fly-bys, S.2) chosen; `art: final`.

@@ -435,7 +435,7 @@ falling-city storyboard** (ART-R-B: the [Jovian system](../../../world/jovian/RE
 [act](../README.md)'s `concept/`), the Mirror Interceptor and Graft Turret sheets in their documents (ART-R-A), Aurelia
 Traffic's radio portrait (ART-R-B, the story's characters). Production backdrop (Aurelia's decks, domes, spires and
 balloons in two states, the growth's spread, the fall's scaled and darkened deck), the shuttles' Aurelia livery, the
-locker and the briefing images come in part C (its round 74).
+locker and the briefing images come in part C (its round 75).
 
 ## Implementation
 

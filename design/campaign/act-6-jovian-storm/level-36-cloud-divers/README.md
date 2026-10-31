@@ -2,7 +2,7 @@
 title: Level 36 – Cloud Divers
 design: approved
 implementation: in-progress
-art: proposed
+art: final
 depends-on: [../../../enemies/air/chimera, ../../../enemies/air/talon, ../../../enemies/air/gilded-gunship, ../../../enemies/air/wraith, ../../../enemies/air/spore-bomber, ../../../enemies/air/lamprey, ../../../enemies/README.md, ../../../world/jovian, ../../../player/generator, ../../../player/wingmen, ../../../ui/hud]
 updated: 2026-10-31
 ---
@@ -47,6 +47,19 @@ it, in **September 2185** (J10). Rendered from the level's [data.yaml](data.yaml
 > there drift over your plane: what flies under them dims, their shots never do. There is no
 > ground, Lancer. The bombs stay idle."
 <!-- /data -->
+
+**The texts to build (decided 2026-10-31, round 74 L.2 a).** The pages above, as built and voiced, run 5 and 6 lines
+under their images against the 4-line screen. Round 74 L.2 a shortens each to four lines (wrapped at the panel's 67
+columns), the same facts; these are the spec, and `data.yaml`, the voices and `BriefingLayoutTest`'s exception follow in
+the open build item (*Implementation*):
+
+> **Commander Okafor:** "Callisto hides behind Jupiter's air defences, and Vorne's fleet drinks from these clouds.
+> Aegis dives first: break the fighter cover on the upper bands for the fleet, and down his helium-3 harvesters. Rook
+> flies your wing. Aurelia, below us, is next."
+>
+> **Dr. Varga:** "The Ceres wrecks held Talons grown through with Vrell tissue: Chimeras. Give one a second and it
+> heals, and the healing costs its pilot more than the machine. Cloud banks dim what flies under them, never their
+> shots. No ground, Lancer: the bombs stay idle."
 
 *Images* (production art in part B, [briefing images](../../../ui/briefing/README.md)), briefs only now:
 
@@ -174,7 +187,7 @@ Enemy definitions are linked per row; formation names come from the
   Wraiths, Spore Bombers) fly beside the Ascendancy and its hybrids; no unit hurts another, no prey links.
 - **Density and pacing** (the Act 2+ floor from the start): the README's 58 waves (325 enemies with an estimated 30
   launched Darts, ≈ 102 a minute) flew 2.00 on the screen with 10 pauses over 2 s at medium (`levelReport`, the plan's
-  fit, step B2), so step B2 tuned them as Act 5's levels were (pending the user's review in round 74): every Talon
+  fit, step B2), so step B2 tuned them as Act 5's levels were (decided 2026-10-31 (round 74 C.7)): every Talon
   wave but the escorts at **130 px/s** through its swoop, and **ten firing Talon pairs on the offbeats** (t=16.5, 23,
   26.5, 50, 61.5, 93.5, 110.5, 133.5, 147.5, 161.5); the t=140 Lampreys at t=139 (easy's pause after the struck
   wing), the t=151 Spore Bombers at t=150 and the t=169 Chimera wing at t=168 (the world's strike rule: no tell
@@ -354,7 +367,7 @@ telegraph. "Fuel at Io" points to Level 39, "Aurelia" to Level 37.
 The Act 6 A theme **"Eye of the Storm"** ([track 14](../../../audio/music/README.md#track-list), chosen in round 03;
 full length and stems in M10 part B): its intro (storm strings, a far thunder roll) over the dive, the **base stem**
 from section 2 (into the bands; step B4: the theme starts in section 1, as its stream opens with its 7.3 s
-intro, so the base stem follows the intro over the dive, pending round 74), the **full mix** from the harvester fields
+intro, so the base stem follows the intro over the dive; decided 2026-10-31 (round 74 C.12)), the **full mix** from the harvester fields
 (section 3) to the end, Vorne's motif
 against the main motif as the theme has it. The per-level music table and the B theme's levels (track 15) are
 D-audio's ([music](../../../audio/music/README.md)). Ambience: the `jovian-sky` bed ([sfx](../../../audio/sfx/README.md#ambience-per-setting): high wind on the hull,
@@ -425,33 +438,32 @@ dying before their first heal shows.
 Round 72 (wave 5): Q10's mood sheet for the L36 grade with Q2's foreground-bank readability (ART-R-B, in the
 [Jovian system](../../../world/jovian/README.md#concept-art)), the Chimera's unit sheets in its document (ART-R-A).
 
-Round 74 (M10 part B, step ART-B; production art, pending the user's review): the backdrop kit by
+Round 74 (M10 part B, step ART-B; production art, accepted 2026-10-31, round 74 F.1–F.5): the backdrop kit by
 `tools/art/backdrop_l36.py`, the harvester, the drop craft and the pod by `tools/art/jovian_units.py` (held in
 `build/art-held/sprites/` until step B2's data claims them; the Chimera's frames in
 [its document](../../../enemies/air/chimera/README.md#concept-art)), the briefing images in the
 [briefing](../../../ui/briefing/README.md#concept-art) (`briefing-images-final-r74-a`). The harvester's look is QB-1 a
-(m10b-gaps §7: the drafted look; b a scoop hull under a gold anti-grav ring), pending round 74. The banks are A.12 a's
+(m10b-gaps §7: the drafted look; b a scoop hull under a gold anti-grav ring), decided 2026-10-31 (round 74 F.3 accept). The banks are A.12 a's
 cream veil: each bank piece's image is its rectangle in the proposal's `banks:`, measured there at most 27.4 % of the
-field (easy 21.7 %) and at most 1.8 s over the ship's band. Prompts and briefs: [concept/prompts.md](concept/prompts.md).
+field (easy 21.7 %) and at most 1.8 s over the ship's band. Prompts and briefs: [concept/prompts.md](concept/prompts.md). Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 
 | File | What | Status |
 |---|---|---|
-| [concept/backdrop-final-r74-a.png](concept/backdrop-final-r74-a.png) | Production backdrop: eight screens at half size with stand-ins (the limb and the carrier group, the bands far below, the first bank, a Chimera wing under a bank's edge, the harvester fields' banks with the Lampreys and the swarm, the pod under a bank beside the storm wall's lightning, the end), the six bank pieces with the cap and band numbers, the deep pieces at 1×, the tile sets, and the explosion read (`explosion-small` over each section's brightest window and a bank) | proposed (round 74) |
-| [concept/backdrop-final-r74-a.gif](concept/backdrop-final-r74-a.gif) | t 100–110 at half size: the harvester fields, banks drifting over the play plane, a harvester pair with their plumes | proposed (round 74) |
-| [concept/backdrop-proposal.yaml](concept/backdrop-proposal.yaml) | The generator's `backdrop:` block (tile sets cut at the sections' rows, pieces, placements, the `banks:` with their pieces), the sections and the pod's `debris:` for step B2 (not data) | proposed (round 74) |
-| [concept/harvester-final-r74-a.png](concept/harvester-final-r74-a.png) | The helium-3 harvester (QB-1 a): both directions at 2×, the plume's flow, the break (12 frames with the flare and a medium explosion), a pair with two Talon escorts, one under a bank (sheet) | proposed (round 74) |
-| [concept/harvester-final-r74-a.gif](concept/harvester-final-r74-a.gif) | A pair skimming down the rust band with their plumes, the left one breaking in two and sinking | proposed (round 74) |
-| [concept/fleet-stormhawk-final-r74-a.png](concept/fleet-stormhawk-final-r74-a.png) | The drop craft: the CDF Stormhawk in the fleet's grey and blue at 16 headings beside the player's ship, two moments of the dive (sheet) | proposed (round 74) |
-| [concept/fleet-stormhawk-final-r74-a.gif](concept/fleet-stormhawk-final-r74-a.gif) | Two pairs diving up the screen at 400 px/s over the dive's bands with their exhaust streaks, at 1× | proposed (round 74) |
-| [concept/pathfinder-pod-final-r74-a.png](concept/pathfinder-pod-final-r74-a.png) | The pathfinder pod: its 16-frame tumble and the 8-frame break in air at 2× (sheet) | proposed (round 74) |
-| [concept/pathfinder-pod-final-r74-a.gif](concept/pathfinder-pod-final-r74-a.gif) | The pod drifting down the storm edge and shot open | proposed (round 74) |
-| [concept/dive-capture-r74-a.png](concept/dive-capture-r74-a.png) | Game capture (step B5, the [recipe](concept/prompts.md#level-36-capture-r74-a)): the dive, the `FRIENDLIES INBOUND — HOLD FIRE` banner at t=2.5, the first drop craft pair in its brackets at t=4.75 and the second at t=10.5, the carrier group on `deep` (the play field at 1×) | proposed (round 74) |
-| [concept/dive-capture-r74-a.gif](concept/dive-capture-r74-a.gif) | The dive t=1.5–6.7 at 10 frames a second, 1× | proposed (round 74) |
-| [concept/harvester-capture-r74-a.png](concept/harvester-capture-r74-a.png) | Game capture: the second harvester pair with its Talon escorts in orbit (t=76.6–78.6), the right hull breaking in two under the beam at t=78.1 | proposed (round 74) |
-| [concept/harvester-capture-r74-a.gif](concept/harvester-capture-r74-a.gif) | t=76–79.5 at 10 frames a second, 1× | proposed (round 74) |
-| [concept/strike-capture-r74-a.png](concept/strike-capture-r74-a.png) | Game capture: the first strike (t=137 tell, t=138 strike) beside the t=136 Chimera wing, the storm wall's lightning on `deep` | proposed (round 74) |
-| [concept/strike-capture-r74-a.gif](concept/strike-capture-r74-a.gif) | t=136.5–139 at 20 frames a second, 1× | proposed (round 74) |
-| [concept/briefing-capture-r74-a.png](concept/briefing-capture-r74-a.png) | Game capture: the Act 6 intro's page 4 and Level 36's briefing page 1, whose text runs past the four-line screen (the round's briefing question) | proposed (round 74) |
+| [concept/backdrop-final-r74-a.png](concept/backdrop-final-r74-a.png) | Production backdrop: eight screens at half size with stand-ins (the limb and the carrier group, the bands far below, the first bank, a Chimera wing under a bank's edge, the harvester fields' banks with the Lampreys and the swarm, the pod under a bank beside the storm wall's lightning, the end), the six bank pieces with the cap and band numbers, the deep pieces at 1×, the tile sets, and the explosion read (`explosion-small` over each section's brightest window and a bank) | chosen (round 74 F.1 accept) |
+| [concept/backdrop-final-r74-a.gif](concept/backdrop-final-r74-a.gif) | t 100–110 at half size: the harvester fields, banks drifting over the play plane, a harvester pair with their plumes | chosen (round 74 F.1 accept) |
+| [concept/backdrop-proposal.yaml](concept/backdrop-proposal.yaml) | The generator's `backdrop:` block (tile sets cut at the sections' rows, pieces, placements, the `banks:` with their pieces), the sections and the pod's `debris:` for step B2 (not data) | chosen (round 74 F.1 accept; step B2's input) |
+| [concept/harvester-final-r74-a.png](concept/harvester-final-r74-a.png) | The helium-3 harvester (QB-1 a): both directions at 2×, the plume's flow, the break (12 frames with the flare and a medium explosion), a pair with two Talon escorts, one under a bank (sheet) | chosen (round 74 F.3 accept) |
+| [concept/harvester-final-r74-a.gif](concept/harvester-final-r74-a.gif) | A pair skimming down the rust band with their plumes, the left one breaking in two and sinking | chosen (round 74 F.3 accept) |
+| [concept/fleet-stormhawk-final-r74-a.png](concept/fleet-stormhawk-final-r74-a.png) | The drop craft: the CDF Stormhawk in the fleet's grey and blue at 16 headings beside the player's ship, two moments of the dive (sheet) | chosen (round 74 F.4 accept) |
+| [concept/fleet-stormhawk-final-r74-a.gif](concept/fleet-stormhawk-final-r74-a.gif) | Two pairs diving up the screen at 400 px/s over the dive's bands with their exhaust streaks, at 1× | chosen (round 74 F.4 accept) |
+| [concept/pathfinder-pod-final-r74-a.png](concept/pathfinder-pod-final-r74-a.png) | The pathfinder pod: its 16-frame tumble and the 8-frame break in air at 2× (sheet) | chosen (round 74 F.5 accept) |
+| [concept/pathfinder-pod-final-r74-a.gif](concept/pathfinder-pod-final-r74-a.gif) | The pod drifting down the storm edge and shot open | chosen (round 74 F.5 accept) |
+| [concept/dive-capture-r74-a.png](concept/dive-capture-r74-a.png) | Game capture (step B5, the [recipe](concept/prompts.md#level-36-capture-r74-a)): the dive, the `FRIENDLIES INBOUND — HOLD FIRE` banner at t=2.5, the first drop craft pair in its brackets at t=4.75 and the second at t=10.5, the carrier group on `deep` (the play field at 1×) | chosen (round 74 F.1, F.4 accept) |
+| [concept/dive-capture-r74-a.gif](concept/dive-capture-r74-a.gif) | The dive t=1.5–6.7 at 10 frames a second, 1× | chosen (round 74 F.4 accept) |
+| [concept/harvester-capture-r74-a.png](concept/harvester-capture-r74-a.png) | Game capture: the second harvester pair with its Talon escorts in orbit (t=76.6–78.6), the right hull breaking in two under the beam at t=78.1 | chosen (round 74 F.1, F.3 accept) |
+| [concept/harvester-capture-r74-a.gif](concept/harvester-capture-r74-a.gif) | t=76–79.5 at 10 frames a second, 1× | chosen (round 74 F.3 accept) |
+| [concept/strike-capture-r74-a.png](concept/strike-capture-r74-a.png) | Game capture: the first strike (t=137 tell, t=138 strike) beside the t=136 Chimera wing, the storm wall's lightning on `deep` | chosen (round 74 F.1, F.11 accept) |
+| [concept/strike-capture-r74-a.gif](concept/strike-capture-r74-a.gif) | t=136.5–139 at 20 frames a second, 1× | chosen (round 74 F.11 accept) |
 
 ## Implementation
 
@@ -480,19 +492,25 @@ field (easy 21.7 %) and at most 1.8 s over the ship's band. Prompts and briefs: 
 - [x] Radio voiced, every timed line at most 1 s late (`RadioTimelineLevel36Test`, with Rook and without); Rook's
       barks `requires: escort` (step B4: the lines retimed to the typed pages, two pages a long line ≈ 11–12 s, Rook's
       homing bark to t=80 and Varga's lightning line to t=129.5 so t=101–129 stays clear for the harvesters' outcome;
-      `secondary-failed` queues as a closing line; pending round 74)
+      `secondary-failed` queues as a closing line; decided 2026-10-31 (round 74 C.10, C.11))
 - [x] Threat profile with the `NO GROUND` row, Varga's four intel lines and Rook's teaser fitting the intel panel
       (`IntelPanelLayoutTest`); the Chimera's portrait (step B4: the setting "Jupiter, the upper air", the longer one left
       the panel; the Chimera's, the harvester's and the drop craft's portraits, `tools/art/intel.py`)
 - [ ] Briefing: Okafor's and Varga's pages, each one screen (`BriefingLayoutTest`), with their images; the act intro
       before it once (`act-intro:6`) (step B4: the images and the intro play; the two pages as written and voiced run 5
-      and 6 lines below their images and go on over a second screen, an exception in `BriefingLayoutTest` until round 74
-      decides: shorten and re-voice, or accept)
+      and 6 lines below their images and go on over a second screen, an exception in `BriefingLayoutTest`). **Open
+      (round 74 L.2 a, decided 2026-10-31):** rewrite the two pages in `data.yaml` to the 4-line texts of *Briefing*
+      above, re-voice both pages (the voice README's rows), then the exception goes out of `BriefingLayoutTest`
+- [ ] Round 74's open build items (decided 2026-10-31, to do in the next game step): (`dive-wind-r74-b`, S.1 b, already
+      replaced the a variant in `assets/sfx/`, `Sfx` and the pipeline's import list at the round's close); `chimera-whine-r74-b` (S.5 b) replaces the Talon's whine as the
+      Chimera's; the Act 6 intro's page 4 re-rendered at the grim, slower row (V.2 b: `act-6-intro-page-4-r74-b`'s
+      take as `assets/voice/`'s file) and the act data's expression for it changed from `fierce` to the grim row
 - [x] Typical haul within ±5 % of budget(36) = 7 474 with the level's `bounty_scale` (`TypicalHaulTest`; step B2:
       7,488 at 0.31, +0.2 %)
 - [x] Music and ambience: "Eye of the Storm" by section, the high-wind bed, the level's sounds (`Level36SoundsTest`;
       step B4: track 14 from section 1 with its intro, the full mix from section 3; `jovian-sky` with the dive's wind
-      over section 1; round 74's a variants until the picks)
+      over section 1; round 74's picks: a for the drop craft's pass, the scoop, the break and the Chimera's twin crack
+      and death are played; the dive's wind b and the Chimera's whine b wait in the item below)
 - [x] Easy/hard variations as in *Difficulty notes* (step B2: `CloudDiversDataTest`'s regeneration, harvester HP,
       escorts, allowed escapes and strikes per difficulty; `levelReport` easy 81, hard 123 enemies a minute)
 - [x] The autopilot (holding the beam on a hurt Chimera, the harvesters, out of a told column, the drop craft never a
@@ -510,8 +528,9 @@ Left to the build (the document is approved as drafted):
   typical player downs six with the plan's fit. Step B2: the plan's fit meets the secondary 3/3 on easy and medium
   with 160 HP (no tuning), hard 0/3; step B3: with the dive's autopilot (the harvesters first, from below them, the
   moves planned among the bullets) 3/3 on every difficulty with Rook and without, so the HP stay.
-- **The harvesters' drift** (QB-5, round 74): the 30 px/s sideways cannot keep both "never over the other's hull" and
-  "escapes at the bottom edge"; the data flies 8 px/s apart (the [harvester](../../../enemies/air/harvester/README.md)).
+- **The harvesters' drift** (QB-5): decided 2026-10-31 (round 74 L.1 a): the 30 px/s sideways cannot keep both "never
+  over the other's hull" and "escapes at the bottom edge"; the data flies 8 px/s apart, mirrored (the
+  [harvester](../../../enemies/air/harvester/README.md)).
 - **The Chimera's intro pair**: its document lists V-wings and swarms; the level adds a two-unit `line abreast` for
   the safe intro (the gap analysis's "safe pair"). Our reading: a level may thin a formation for an intro.
 
@@ -532,22 +551,31 @@ Left to the build (the document is approved as drafted):
   J5, J10 as drafted; A.12 a: the banks are the cream veil, and clouds at different altitudes do not differ in colour
   (the [world](../../../world/jovian/README.md#hazards--set-pieces)). The document approved as drafted (D.2; `design:
   approved`).
-- 2026-10-31 (M10 part B, step B2; pending the user's review in round 74): the level's data from the approved tables
+- 2026-10-31 (M10 part B, step B2; decided 2026-10-31 (round 74 C.2, C.3, C.5–C.7)): the level's data from the approved tables
   and ART-B's proposal. Measured before tuning (`levelReport`, the plan's fit): 94.7 enemies a minute, 2.00 on the
   screen, 10 pauses over 2 s at medium (the floor failed), the haul −6 %. Tuned as Act 5's levels: the Talon waves at
   130 px/s, ten firing Talon pairs on the offbeats, the t=140 Lampreys at t=139; the t=151 Spore Bombers at t=150 and
   the t=169 Chimera wing at t=168 (the strike rule); `bounty_scale` 0.31 kept (+0.2 %). The Wraiths fly the built
   `rear ambush`, the Gunships a `column`. The harvester and the drop craft are unit data files (gap check §4); the pod
   a debris chunk that `reveals` its secret; the forward / reference measures 0.99 (part A's plan), not 1.19.
-- 2026-10-31 (M10 part B, step B3; pending the user's review in round 74): the tests. Varga's "*Too many got
+- 2026-10-31 (M10 part B, step B3; decided 2026-10-31 (round 74 C.8–C.10)): the tests. Varga's "*Too many got
   through*" moves to a new radio event `secondary-failed` (the secondary's failure: the third harvester away, easy the
   fourth, hard the second), no longer the first harvester away. The t=135 Chimera wing enters at **t=136** (from t=135
   it had swooped past the first strike's column before it struck; t=136 keeps the tell 1.0 s after its entry). Rook
   now leaves a told strike's column to the side he is on (by his slot's side he crossed the column as the ship drifted
   and was struck in it on easy).
-- 2026-10-31 (M10 part B, step B5; pending the user's review in round 74): part B closed with the full `check` green;
+- 2026-10-31 (M10 part B, step B5; round 74 opened): part B closed with the full `check` green;
   the level captured in the game ([level-36-capture-r74-a](concept/prompts.md#level-36-capture-r74-a)) and
   [round 74](../../../concept-rounds/round-74/README.md) opened. Seen in the captures: the t=120 Chimera swarm enters at
   its bank's edge and leaves it within a second (no Chimera heals *under* a bank in them); with the ship parked or
   steered to the centre, the t=136 wing swooped clear of the first strike's column (the kill is the autopilot's, which
   draws the wing into it); the briefing pages' overflow (round 74 L.2 drafts 4-line texts).
+- 2026-10-31 (user, [round 74](../../../concept-rounds/round-74/README.md) closed; page answers, no notes): **every row as
+  recommended except S.1**. The production art accepted (F.1–F.8, F.10, F.11), the soot puff **Act 6 only** (F.9);
+  the Chimera's and the harvester's sounds: the drop craft's pass, the scoop, the break, the twin crack and the death
+  **a**, the whine **b** (S.2–S.7), **S.1 b** (not the recommendation): the dive's wind is the car on a motorway with
+  the front window open; track 14 ok (M.1) and the Act 6 listen-through accepted (V.1); the intro's page 4 **b**, grim
+  and slower (V.2); the harvesters' drift **a**, 8 px/s apart (L.1); the briefing pages **shortened to four lines
+  each** (L.2 a, the texts in *Briefing*); C.1–C.13 accepted. Open build items recorded in *Implementation*:
+  the dive's wind b and the whine b into the game, the intro's page 4 re-rendered, the two briefing pages rewritten
+  and re-voiced, after which `BriefingLayoutTest`'s exception goes. `art: final` (the production art is in the game).

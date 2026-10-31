@@ -223,3 +223,4 @@ Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
   and the engine feature follow). The moods ladder a and the falling-city storyboard b are chosen, the other variants
   are in `concept/rejected/`. Approved as drafted with these changes (D.16).
 - 2026-10-31, round 73: the lightning strike **a** "jagged bolt" chosen (A.1; b "light column" rejected); the hazards in the game accepted (F.7); the falling city's jagged break accepted (R.2; round 72's b superseded). The cream-band check of the banks and the soot-puff explosions are part B's.
+- 2026-10-31, round 74: Level 36's backdrop and banks accepted (F.1), the first strike as placed accepted (F.11: the 1.0 s tell, the strike at t=138, the storm wall's lightning); the soot puff Act 6 only (F.9).

@@ -517,7 +517,7 @@ class PlaceholderAuditTest {
             Map.entry("sfx/pylon-dome-hit-r73-a.ogg", ROUND_73),
             Map.entry("sfx/bolt-absorbed-r73-a.ogg", ROUND_73),
             Map.entry("sfx/jovian-sky-r72-b.ogg", ROUND_72_SKY),
-            Map.entry("sfx/dive-wind-r74-a.ogg", ROUND_74),
+            Map.entry("sfx/dive-wind-r74-b.ogg", ROUND_74),
             Map.entry("sfx/drop-craft-pass-r74-a.ogg", ROUND_74),
             Map.entry("sfx/harvester-scoop-r74-a.ogg", ROUND_74),
             Map.entry("sfx/harvester-break-r74-a.ogg", ROUND_74),

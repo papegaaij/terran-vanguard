@@ -42,9 +42,9 @@ Promoted to their own documents for the Acts 1–2 wrap-up, plus the Act 3 draft
 | [rail-serpent](rail-serpent/README.md) | Drone train of 8–14 cars from the sides and rear; a cut's rear half drifts and blows (L30) | approved | done | final |
 | [hornet](hornet/README.md) | Hovering missile boat, salvos of 4 shootable homing diamonds (L31) | approved | done | final |
 | [buzzsaw-drone](buzzsaw-drone/README.md) | Radial blade drone: chase, 0.6 s spin-up, a dash that ricochets off edges and rocks (L31) | review | done | final |
-| [chimera](chimera/README.md) | Hybrid on the Talon airframe: swoops and aimed pairs, regenerates 20 %/s after 1 s untouched (L36) | approved | done | chosen |
-| [harvester](harvester/README.md) | Uncrewed helium-3 scoop on `low-air` in pairs: no fire, not counted as an enemy, Level 36's secondary (L36) | approved | done | proposed |
-| [fleet-stormhawk](fleet-stormhawk/README.md) | The CDF fleet's drop craft diving up past the ship: a neutral craft, marked friendly (L36) | approved | done | proposed |
+| [chimera](chimera/README.md) | Hybrid on the Talon airframe: swoops and aimed pairs, regenerates 20 %/s after 1 s untouched (L36) | approved | done | final |
+| [harvester](harvester/README.md) | Uncrewed helium-3 scoop on `low-air` in pairs: no fire, not counted as an enemy, Level 36's secondary (L36) | approved | done | final |
+| [fleet-stormhawk](fleet-stormhawk/README.md) | The CDF fleet's drop craft diving up past the ship: a neutral craft, marked friendly (L36) | approved | done | final |
 | [mirror-interceptor](mirror-interceptor/README.md) | Ascendancy interceptor with a frontal mirror: bounces shots, a beam breaks it, `shield-breaker` shatters it; open flanks (L37) | approved | in-progress | chosen |
 | [harrow](harrow/README.md) | Hybrid kamikaze from every edge: lock tell, ram, a ring of 8 on any death (L38) | approved | not-started | chosen |
 

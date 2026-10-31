@@ -2,7 +2,7 @@
 title: Chimera
 design: approved
 implementation: done
-art: chosen
+art: final
 depends-on: [../talon, ../../../systems/difficulty, ../../../systems/economy, ../../../player/specials, ../../../art-direction, ../../../campaign/act-6-jovian-storm]
 updated: 2026-10-31
 ---
@@ -87,10 +87,10 @@ strength, the pulse as a second while it heals). Each sheet holds the source ren
 |---|---|---|
 | [concept/chimera-r72-b.png](concept/chimera-r72-b.png) | Chimera b, "overgrown": the seams twice as wide and veined, tissue nodules at the wing roots, the spine and the wing panels; the same states | chosen (round 72 A.1 b) |
 | [concept/chimera-r72-b.gif](concept/chimera-r72-b.gif) | The same scene as a | chosen (round 72 A.1 b) |
-| [concept/chimera-final-r74-a.png](concept/chimera-final-r74-a.png) | Final frames (M10 part B, `tools/art/jovian_units.py chimera`; held in `build/art-held/sprites/` until its data.yaml): the 16 headings at 2× with the seams at full health, the seams by state (just hit 0.13, full 0.45, healing 50 % and 95 %) and the healing pulse's six frames, beside the Act 5 Talon, the death's flecks over the small explosion; teal 6 % at full health, 13 % healing near full (sheet) | proposed (round 74) |
-| [concept/chimera-final-r74-a.gif](concept/chimera-final-r74-a.gif) | A V of five swooping over Level 36's bands: one hit and healing with the pulse, one held under fire until it dies | proposed (round 74) |
-| [concept/chimera-capture-r74-a.png](concept/chimera-capture-r74-a.png) | Game capture (Level 36, step B5): the t=120 swarm leaving its bank and flocking under the ship's fire (1×; the ship steered under it), members hit, healing (the seams lit) and dying | proposed (round 74) |
-| [concept/chimera-capture-r74-a.gif](concept/chimera-capture-r74-a.gif) | t=120–123.4 at 20 frames a second, the play field at 1× | proposed (round 74) |
+| [concept/chimera-final-r74-a.png](concept/chimera-final-r74-a.png) | Final frames (M10 part B, `tools/art/jovian_units.py chimera`; held in `build/art-held/sprites/` until its data.yaml): the 16 headings at 2× with the seams at full health, the seams by state (just hit 0.13, full 0.45, healing 50 % and 95 %) and the healing pulse's six frames, beside the Act 5 Talon, the death's flecks over the small explosion; teal 6 % at full health, 13 % healing near full (sheet) | chosen (round 74 F.2 accept) |
+| [concept/chimera-final-r74-a.gif](concept/chimera-final-r74-a.gif) | A V of five swooping over Level 36's bands: one hit and healing with the pulse, one held under fire until it dies | chosen (round 74 F.2 accept) |
+| [concept/chimera-capture-r74-a.png](concept/chimera-capture-r74-a.png) | Game capture (Level 36, step B5): the t=120 swarm leaving its bank and flocking under the ship's fire (1×; the ship steered under it), members hit, healing (the seams lit) and dying | chosen (round 74 F.2 accept) |
+| [concept/chimera-capture-r74-a.gif](concept/chimera-capture-r74-a.gif) | t=120–123.4 at 20 frames a second, the play field at 1× | chosen (round 74 F.2 accept) |
 
 Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 
@@ -119,6 +119,7 @@ Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
   "overgrown", chosen (`art: chosen`; a "seams" in `concept/rejected/`), so the seams are twice as wide and veined
   with tissue nodules (the look above).
 - 2026-10-31 (M10 part B, step B2): the stat block as data. The flock's numbers are first values for the 40 px
-  airframe (pending the user's review in round 74): separation 30 px and radius 72 px (the Mote's 18 / 48 scaled to
+  airframe (decided 2026-10-31 (round 74 C.4)): separation 30 px and radius 72 px (the Mote's 18 / 48 scaled to
   the hull), 160 px/s cruise (the table's), 220 px/s after a loop-back, 240 °/s, at most 12 members (hard's swarm of
   10); the fire cap 3 in a 0.3 s stagger in the swoop path's 300 px fire band.
+- 2026-10-31, round 74: the production frames and the swarm capture accepted (F.2); the fire cap and the flock's numbers accepted (C.1, C.4); the sounds: the twin crack **a** (the Talon's) and the death **a** (the Talon's crack with the hybrids' cotton tear) as built, the whine **b** (S.5: four semitones lower with a jet's rough roar under it; the Talon's whine plays until the next game step swaps it); `art: final`.

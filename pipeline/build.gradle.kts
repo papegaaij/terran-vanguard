@@ -480,7 +480,7 @@ val copyPlaceholderSounds = tasks.register<JavaExec>("copyPlaceholderSounds") {
         // previews cut by tools/concept/audio/sfx_r74.py, their CREDITS.md rows), their a variants until the user's
         // picks: the dive's wind (a layer over `jovian-sky`), the drop craft's pass-by, the harvester's scoop drone and
         // break-up, the Chimera's death. The Chimera's whine and twin crack a are the Talon's built files.
-        "dive-wind-r74-a.ogg",
+        "dive-wind-r74-b.ogg",
         "drop-craft-pass-r74-a.ogg",
         "harvester-scoop-r74-a.ogg",
         "harvester-break-r74-a.ogg",

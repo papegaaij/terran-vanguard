@@ -2,7 +2,7 @@
 title: Helium-3 Harvester
 design: approved
 implementation: done
-art: proposed
+art: final
 depends-on: [../../../campaign/act-6-jovian-storm/level-36-cloud-divers, ../talon, ../../../systems/economy]
 updated: 2026-10-31
 ---
@@ -54,23 +54,21 @@ Rendered from [data.yaml](data.yaml) (numbers at **medium**, see the [balancing 
   Its 30 credits count with the ground targets' share of the typical haul (`haul: ground-targets`).
 - **A drifting carrier**: its wave's `carrier + escorts` pair enters at the top edge 160 px apart; its Talon escorts
   orbit the living harvesters' midpoint (one left: that one) and leave on their own swoop when both are gone.
-- **The drift** (step B2, pending the user's review in round 74, QB-5 in `m10b-gaps.md` §7): the level's 30 px/s
+- **The drift** (step B2, decided 2026-10-31 (round 74 L.1 a), QB-5 in `m10b-gaps.md` §7): the level's 30 px/s
   sideways toward each other would cross the hulls at about 2.7 s; the data flies the nearest variant that keeps "never
   over the other's hull" and "escapes at the bottom edge": 8 px/s apart.
 
 ## Concept art
 
-Production frames by `tools/art/jovian_units.py` (step ART-B, QB-1 a pending round 74) are the level's:
+Production frames by `tools/art/jovian_units.py` (step ART-B, QB-1 a, decided 2026-10-31 (round 74 F.3 accept)) are the level's:
 [harvester-final-r74-a](../../../campaign/act-6-jovian-storm/level-36-cloud-divers/README.md#concept-art).
 
 Round 74's QB-5 (the pair's drift) as path diagrams, `tools/concept/harvester_drift_r74.py` (step B5); briefs in
-[concept/prompts.md](concept/prompts.md).
+[concept/prompts.md](concept/prompts.md). Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 
 | File | What | Status |
 |---|---|---|
-| [concept/harvester-drift-r74-a.png](concept/harvester-drift-r74-a.png) | QB-5 **a**, as built: the pair mirrored 8 px/s apart from x 160 / 320; both leave by the bottom edge at 11.3 s (x 70 / 410), the gap growing 160 → 340 px | proposed (round 74) |
-| [concept/harvester-drift-r74-b.png](concept/harvester-drift-r74-b.png) | QB-5 **b**: the README's 30 px/s the same way for both from x 60 / 220; the right hull reaches the side edge at 7.5 s | proposed (round 74) |
-| [concept/harvester-drift-r74-c.png](concept/harvester-drift-r74-c.png) | QB-5 **c**: 30 px/s toward each other for 1.5 s, then straight down; the centres end 70 px apart, the 72 px hit boxes just overlapping | proposed (round 74) |
+| [concept/harvester-drift-r74-a.png](concept/harvester-drift-r74-a.png) | QB-5 **a**, as built: the pair mirrored 8 px/s apart from x 160 / 320; both leave by the bottom edge at 11.3 s (x 70 / 410), the gap growing 160 → 340 px | chosen (round 74 L.1 a) |
 
 ## Implementation
 
@@ -82,6 +80,7 @@ Round 74's QB-5 (the pair's drift) as path diagrams, `tools/concept/harvester_dr
 
 ## Decisions
 
-- 2026-10-31 (M10 part B, step B2): a unit data file instead of a level-owned block (gap check §4, pending round 74);
+- 2026-10-31 (M10 part B, step B2): a unit data file instead of a level-owned block (gap check §4, decided 2026-10-31 (round 74 C.5));
   `medium` at its first level (no act or beam-era factor: the README's 160 HP flown as they are); its pair pinned at 2
-  on every difficulty by the formation's size; the drift 8 px/s apart (QB-5, pending round 74).
+  on every difficulty by the formation's size; the drift 8 px/s apart (QB-5, decided 2026-10-31 (round 74 L.1 a)).
+- 2026-10-31, round 74: the production frames accepted (F.3: QB-1 a; the scoop-hull-under-a-ring b stays undrawn); the drift **a**, 8 px/s apart (L.1; b and c rejected, their diagrams in `concept/rejected/`); the facing `fixed` accepted (C.5); the scoop **a** (dust extractor) and the break **a** (metal tear over a gas roar) are the sounds (S.3, S.4); `art: final`.

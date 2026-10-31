@@ -434,7 +434,7 @@ stings; the beds are in [sfx](../sfx/README.md#ambience-per-setting).
   thunder as band noise, no crackle), **full** (the base plus the gallop strings, the snare and hats, the main motif in
   horns and its trumpet answers, the breakdown's choir) and **motif** (Vorne's motif in low brass and choir). The motif
   stem plays **in the open** at its level in the chosen sketch (about 6 dB under the full mix), as track 12's.
-  **Made (step AUD-B, 2026-10-31, round 74 M.1):** `music_r74.py`, 175.3 s (a 4-bar intro + a 96-bar loop), in
+  **Made (step AUD-B, 2026-10-31; ok 2026-10-31, round 74 M.1):** `music_r74.py`, 175.3 s (a 4-bar intro + a 96-bar loop), in
   `assets/music/eye-of-the-storm{,-base,-motif}.ogg`; the stems' contents and levels are its decision below.
 - **Track 15, the Act 6 B theme**: Level 37 from the turn, Levels 38 and 41 and the Level 42 approach. Brief: "heavy,
   stormy, choir and distorted bass" (the act sketch); the war has three sides now. No bubbly or popping sounds, no
@@ -889,14 +889,14 @@ review is the round's (QB-4: ok or redo). Measured only, not listened to. Prompt
 
 | File | What | Status |
 |---|---|---|
-| [concept/eye-of-the-storm-r74-a.ogg](concept/eye-of-the-storm-r74-a.ogg) | #14 "Eye of the Storm" full mix at full length: 175.3 s, loop 321300 + 7257600 samples (7.29 s + 164.57 s, 96 bars at 140 BPM), −14.0 LUFS, −1.8 dBTP, seam 0.41; twelve 8-bar sections on the sketch's material (the hunt, Vorne against the Coalition, the storm, both motifs), a new half-time drift and a new build | proposed (round 74, M.1) |
-| [concept/eye-of-the-storm-base-r74-a.ogg](concept/eye-of-the-storm-base-r74-a.ogg) | #14 base stem (the storm strings' tremolo, the kick and the taiko, the bass, the pad, the wind and the thunder rolls): same length, loop and gain, −17.8 LUFS (−3.8 LU), −4.4 dBTP, seam 0.74; Levels 36, 39 and 40 from section 2 | proposed (round 74, M.1) |
-| [concept/eye-of-the-storm-motif-r74-a.ogg](concept/eye-of-the-storm-motif-r74-a.ogg) | #14 motif stem (Vorne's motif in low brass and choir in B, B2, B3; low brass in D and D2; the intro's statement): same length, loop and gain, −21.2 LUFS (−7.2 LU), statements about 6 dB under the full mix (B −5.1, D −7.6 dB); the game adds it on top; alone under the Act 6 intro's page 3 | proposed (round 74, M.1) |
-| [concept/eye-of-the-storm-seam-r74-a.ogg](concept/eye-of-the-storm-seam-r74-a.ogg) | Listening aid: the full mix across its loop seam, 8 s each side | proposed (round 74, M.1; a listening aid) |
-| [concept/eye-of-the-storm-base-seam-r74-a.ogg](concept/eye-of-the-storm-base-seam-r74-a.ogg) | Listening aid: the base stem across its loop seam, 8 s each side | proposed (round 74, M.1; a listening aid) |
-| [concept/eye-of-the-storm-motif-seam-r74-a.ogg](concept/eye-of-the-storm-motif-seam-r74-a.ogg) | Listening aid: the motif stem across its loop seam, 8 s each side | proposed (round 74, M.1; a listening aid) |
-| [concept/eye-of-the-storm-motif-mix-r74-a.ogg](concept/eye-of-the-storm-motif-mix-r74-a.ogg) | Listening aid: loop bars 1–24 (A, B, A2), the full mix with the motif stem on top as Level 36 plays them from section 3, 41.1 s; the sum peaks at −1.2 dBFS | proposed (round 74, M.1; a listening aid) |
-| [concept/eye-of-the-storm-sheet-r74-a.png](concept/eye-of-the-storm-sheet-r74-a.png) | Review sheet: the three files' waveforms with intro, loop and fade tail, their loop points, loudness, true peak, seam and size, and the loudness of each loop section (full, base, motif) | proposed (round 74, M.1; a listening aid) |
+| [concept/eye-of-the-storm-r74-a.ogg](concept/eye-of-the-storm-r74-a.ogg) | #14 "Eye of the Storm" full mix at full length: 175.3 s, loop 321300 + 7257600 samples (7.29 s + 164.57 s, 96 bars at 140 BPM), −14.0 LUFS, −1.8 dBTP, seam 0.41; twelve 8-bar sections on the sketch's material (the hunt, Vorne against the Coalition, the storm, both motifs), a new half-time drift and a new build | chosen (round 74 M.1 ok) |
+| [concept/eye-of-the-storm-base-r74-a.ogg](concept/eye-of-the-storm-base-r74-a.ogg) | #14 base stem (the storm strings' tremolo, the kick and the taiko, the bass, the pad, the wind and the thunder rolls): same length, loop and gain, −17.8 LUFS (−3.8 LU), −4.4 dBTP, seam 0.74; Levels 36, 39 and 40 from section 2 | chosen (round 74 M.1 ok) |
+| [concept/eye-of-the-storm-motif-r74-a.ogg](concept/eye-of-the-storm-motif-r74-a.ogg) | #14 motif stem (Vorne's motif in low brass and choir in B, B2, B3; low brass in D and D2; the intro's statement): same length, loop and gain, −21.2 LUFS (−7.2 LU), statements about 6 dB under the full mix (B −5.1, D −7.6 dB); the game adds it on top; alone under the Act 6 intro's page 3 | chosen (round 74 M.1 ok) |
+| [concept/eye-of-the-storm-seam-r74-a.ogg](concept/eye-of-the-storm-seam-r74-a.ogg) | Listening aid: the full mix across its loop seam, 8 s each side | chosen (round 74 M.1 ok; a listening aid) |
+| [concept/eye-of-the-storm-base-seam-r74-a.ogg](concept/eye-of-the-storm-base-seam-r74-a.ogg) | Listening aid: the base stem across its loop seam, 8 s each side | chosen (round 74 M.1 ok; a listening aid) |
+| [concept/eye-of-the-storm-motif-seam-r74-a.ogg](concept/eye-of-the-storm-motif-seam-r74-a.ogg) | Listening aid: the motif stem across its loop seam, 8 s each side | chosen (round 74 M.1 ok; a listening aid) |
+| [concept/eye-of-the-storm-motif-mix-r74-a.ogg](concept/eye-of-the-storm-motif-mix-r74-a.ogg) | Listening aid: loop bars 1–24 (A, B, A2), the full mix with the motif stem on top as Level 36 plays them from section 3, 41.1 s; the sum peaks at −1.2 dBFS | chosen (round 74 M.1 ok; a listening aid) |
+| [concept/eye-of-the-storm-sheet-r74-a.png](concept/eye-of-the-storm-sheet-r74-a.png) | Review sheet: the three files' waveforms with intro, loop and fade tail, their loop points, loudness, true peak, seam and size, and the loudness of each loop section (full, base, motif) | chosen (round 74 M.1 ok; a listening aid) |
 
 ## Implementation
 
@@ -1069,3 +1069,4 @@ Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-a
   strings go to the full mix; the thunder is the sketch's roll without its crack (no crackle) and the wind is made
   periodic over the loop (the seam); the timpani and crashes go to the full mix; D's low brass is raised 4.4 dB over
   the sketch so its statements hold against D's tutti (B −5.1, D −7.6 dB under the full mix, about 6 on average).
+- 2026-10-31, round 74: track 14 "Eye of the Storm" at full length, its base and motif stems accepted (M.1 ok); Level 36 starts it in section 1 (C.12 accepted).

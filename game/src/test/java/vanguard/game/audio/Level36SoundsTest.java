@@ -61,7 +61,7 @@ class Level36SoundsTest {
         assertEquals(0, wind.level(30), 1e-9, "gone in the bands");
         Map<Sfx, String> files = Map.of(
                 Sfx.AMBIENCE_JOVIAN_SKY, "jovian-sky-r72-b.ogg",
-                Sfx.AMBIENCE_DIVE_WIND, "dive-wind-r74-a.ogg",
+                Sfx.AMBIENCE_DIVE_WIND, "dive-wind-r74-b.ogg",
                 Sfx.DROP_CRAFT_PASS, "drop-craft-pass-r74-a.ogg",
                 Sfx.HARVESTER_SCOOP, "harvester-scoop-r74-a.ogg",
                 Sfx.HARVESTER_BREAK, "harvester-break-r74-a.ogg",

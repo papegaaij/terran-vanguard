@@ -32,7 +32,7 @@ here is a hand table marked draft, taken from the level drafts, and the build (M
 
 | Part | Summary | Design | Impl | Art |
 |---|---|---|---|---|
-| [level-36-cloud-divers](level-36-cloud-divers/README.md) | The dive from orbit into Jupiter's upper bands, air only: foreground cloud banks over the play plane, the regenerating Chimera beside the Talons, the fleet's drop craft marked friendly, helium-3 harvesters (`HARVESTERS`), wind and the first lightning | approved | in-progress | proposed |
+| [level-36-cloud-divers](level-36-cloud-divers/README.md) | The dive from orbit into Jupiter's upper bands, air only: foreground cloud banks over the play plane, the regenerating Chimera beside the Talons, the fleet's drop craft marked friendly, helium-3 harvesters (`HARVESTERS`), wind and the first lightning | approved | in-progress | final |
 | [level-37-fall-of-aurelia](level-37-fall-of-aurelia/README.md) | Aurelia, the cloud capital: evacuation shuttles (`SHUTTLES`), Mirror Interceptors and Graft Turrets, the act's `shield-breaker` level; the Vrell turn at t=100 and the falling city in the last 40 s | approved | not-started | none |
 | [level-38-lightning-belt](level-38-lightning-belt/README.md) | The storm layer, every direction, air only: told lightning strikes that hit the enemies too, Harrows bursting into rings (`HARROWS`), the Buzzsaw Drone's return | approved | not-started | none |
 | [level-39-io-flyby](level-39-io-flyby/README.md) | Io's refineries, `destroy-targets`: six cracking towers under holds, dry eruptions throwing rocks, Striders guarding the works, the pump stations (`PUMPS`) | approved | not-started | none |
@@ -132,7 +132,7 @@ straight away (part B, `tools/art/briefing_images.py`); Vorne's portrait on page
 | 1 | Commander Okafor (grim) | briefing | `act-6-jupiter`: the *Steadfast*'s bridge, Jupiter's storm bands filling the forward viewports, the fleet's running lights strung along the terminator, Aegis Wing's Stormhawks on the carrier's rails below |
 | 2 | Commander Okafor (neutral) | briefing | `act-6-the-plan`: a CDF chart of the Jovian system: Aurelia's air-defence grid as gold rings over the bands, the harvester lanes and Io's refinery lines in amber, Callisto behind the home fleet's screen, the wing's route as a dotted line from the bands to Callisto |
 | 3 | Chairman Vorne (neutral) | enemy (intercepted) | `act-6-invitation`: Vorne at a gilded window over Aurelia's domes and balloons, the Ascendancy crest above, the amber frame and the rolling interference bands |
-| 4 | Commander Okafor (fierce) | briefing | `act-6-every-channel`: Okafor at the *Steadfast*'s comms board with every band lit; through the window behind her the first Stormhawks drop toward the cloud tops |
+| 4 | Commander Okafor (grim, slower; decided 2026-10-31, round 74 V.2 b) | briefing | `act-6-every-channel`: Okafor at the *Steadfast*'s comms board with every band lit; through the window behind her the first Stormhawks drop toward the cloud tops |
 
 <!-- data: act-briefing -->
 > **Commander Okafor:** "Aegis, Okafor, from the bridge of the Steadfast. Three weeks out of
@@ -447,9 +447,9 @@ prompts: [concept/prompts.md](concept/prompts.md).
 | File | What | Status |
 |---|---|---|
 | [concept/act-6-still-r72-a.png](concept/act-6-still-r72-a.png) | Still A, "the dive": Jupiter's sunlit bands and the Great Red Spot under the CDF carrier group diving from orbit, Callisto a dark disc beside the limb | chosen (round 72 A.14 a) |
-| [concept/act-6-still-final-r74-a.png](concept/act-6-still-final-r74-a.png) | The title card's still, final (M10 part B, `tools/art/act_stills.py act-6`; the still `assets/ui/act-6-jovian-storm-still.png`, the lettering `act_titles.py`'s): A.14 a re-rendered with the fleet's lights along the curve, four drop craft diving ahead and Aurelia's far gold glint; at 1×, the title card over it, 2× crops (sheet) | proposed (round 74) |
-| [concept/act-6-intro-capture-r74-a.png](concept/act-6-intro-capture-r74-a.png) | Game capture (step B5) from a `v0.3` save at the Level 36 hangar: the title card over the still and the intro's page 3, Vorne intercepted on all channels (amber) | proposed (round 74) |
-| [concept/act-6-intro-capture-r74-a.mp4](concept/act-6-intro-capture-r74-a.mp4) | Pages 3 and 4 with the game's sound: Vorne's voice through the enemy filter over track 14's motif stem alone, then Okafor's page 4 with the briefing music back (35 s) | proposed (round 74) |
+| [concept/act-6-still-final-r74-a.png](concept/act-6-still-final-r74-a.png) | The title card's still, final (M10 part B, `tools/art/act_stills.py act-6`; the still `assets/ui/act-6-jovian-storm-still.png`, the lettering `act_titles.py`'s): A.14 a re-rendered with the fleet's lights along the curve, four drop craft diving ahead and Aurelia's far gold glint; at 1×, the title card over it, 2× crops (sheet) | chosen (round 74 F.6 accept) |
+| [concept/act-6-intro-capture-r74-a.png](concept/act-6-intro-capture-r74-a.png) | Game capture (step B5) from a `v0.3` save at the Level 36 hangar: the title card over the still and the intro's page 3, Vorne intercepted on all channels (amber) | chosen (round 74 F.6, F.7 accept) |
+| [concept/act-6-intro-capture-r74-a.mp4](concept/act-6-intro-capture-r74-a.mp4) | Pages 3 and 4 with the game's sound: Vorne's voice through the enemy filter over track 14's motif stem alone, then Okafor's page 4 with the briefing music back (35 s) | chosen (round 74 F.7, V.1 accept) |
 
 Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 
@@ -464,6 +464,7 @@ Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
       2026-10-31): [data.yaml](data.yaml) with `levels`, the title card, the four intro pages (page 3 `channel: enemy`,
       `music: motif`: a new page key) and Act 7's `next_act` (the branch's release ends after Level 36, the last level
       built, until part H); Act 5's `next_act` removed; the outro pages are part H's.*
+- [ ] The intro's page 4 at the grim, slower reading (decided 2026-10-31, round 74 V.2 b: lower and measured, about 14.7 s; the data's `expression: fierce` becomes the grim row and the take is re-rendered by the pipeline: `act-6-intro-page-4-r74-b` is the reference take)
 - [ ] The title card's still (`tools/art/act_stills.py act-6` from Level 36's backdrop) and lettering; the eight
       intro and outro briefing images and the fourteen level briefing images (`tools/art/briefing_images.py`). *Part B
       (ART-B, 2026-10-31): the still, the lettering, the intro's four and Level 36's two images, in the game, pending round
@@ -479,13 +480,13 @@ Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
       [art direction](../../art-direction/README.md#concept-art)). Open build item for part B (step B4): whether it is Act 6
       only or everywhere (Acts 1-5's golden flights stay as recorded, so it is opt-in), and a Level 36 capture that
       the bursts read over the cream and rust bands. *Step B4 (2026-10-31): built **Act 6 only** (Level 36 on, the game's
-      `SootPuffs`), pending the user's review in round 74: measured over Acts 1–5's base tiles, the soot alone lifts the
+      `SootPuffs`), decided 2026-10-31 (round 74 F.9, Act 6 only): measured over Acts 1–5's base tiles, the soot alone lifts the
       darkest field (Level 29's black docks) by +12 luminance round each burst and the night and space fields (Levels 01,
       08, 26, 30) by +5..+9, a grey halo, and darkens mid-tone fields (Level 06's terminator) by 7; it helps only on bright
       fields (Level 22's ice −31, the Jovian cream). Step B5 (2026-10-31): Level 36 captured with kills over the cream, a bank,
       the ochre and the rust ([soot-capture-r74-a](../../art-direction/README.md#concept-art)): the soft soot halo and the
       flecks keep a burst readable on the cream; over a bank the small burst stays the palest, still visible; Act 6 only
-      or everywhere is round 74's question.*
+      or everywhere was round 74's question: the user chose **Act 6 only** (F.9), so Acts 1–5 keep their look.*
 - [x] `reference_dps` 36–42 and the Act 6 balance plan (`balance-plan.yaml` visits 36–42) before any Act 6 level data
       (M10 part A): `enemies/data.yaml`, `ActHpFactorTest`, `BalanceTest`, `tools/balance.py` exit 0.
 - [ ] Every level within the act's density band (`DensityTest`, `PacingTest`, `ActFloorTest`), the end calm (≥ 4 s),
@@ -569,3 +570,4 @@ Nothing is open for the user. Build notes (not questions):
   rendered into *Act intro and outro*) and Act 7's `next_act`, moved from Act 5's: with Level 36 built the branch's
   release ends after Level 36 (`CampaignRoute.releaseEnd`: the next level is not built) until part H moves it to
   Level 42. Page 3's motif is a new briefing page key, `music: motif` (the game's half is step B4's).
+- 2026-10-31, round 74: the title card's still and the intro capture accepted (F.6), the briefing images accepted (F.7); the intro's page 4 **b**, grim and slower (V.2: the voice README's approved reading; the act data's `fierce` changes, an open build item), the act's listen-through accepted (V.1); the soot puff **Act 6 only** (F.9); track 14 ok (M.1).

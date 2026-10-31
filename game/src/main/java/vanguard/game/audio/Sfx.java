@@ -1324,7 +1324,7 @@ public enum Sfx {
      * M10 part B, step B4 (round 74 a until the pick): the dive's rushing wind (a skydiver's freefall, a 12 s loop), an
      * ambience layer over the Jovian sky in Level 36's section 1 ({@code ambience_layers}).
      */
-    AMBIENCE_DIVE_WIND("sfx/dive-wind-r74-a.ogg", 1, Bus.EFFECTS, AMBIENCE),
+    AMBIENCE_DIVE_WIND("sfx/dive-wind-r74-b.ogg", 1, Bus.EFFECTS, AMBIENCE),
     /** M10 part B, step B4 (round 74 a until the pick): a pair of the fleet's drop craft diving past (two jet fly-bys). */
     DROP_CRAFT_PASS("sfx/drop-craft-pass-r74-a.ogg", 1, Bus.EFFECTS, ENEMY_FIRE),
     /**
