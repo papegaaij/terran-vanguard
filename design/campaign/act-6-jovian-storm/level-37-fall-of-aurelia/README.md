@@ -2,7 +2,7 @@
 title: Level 37 – Fall of Aurelia
 design: approved
 implementation: not-started
-art: none
+art: proposed
 depends-on: [../../../enemies/ground/graft-turret, ../../../enemies/air/mirror-interceptor, ../../../enemies/air/chimera, ../../../enemies/air/talon, ../../../enemies/air/gilded-gunship, ../../../enemies/air/hornet, ../../../enemies/ground/sam-nest, ../../../enemies/README.md, ../../../allies, ../../../world/jovian, ../../../player/generator, ../../../player/wingmen, ../../../ui/hud, ../../../story/characters]
 updated: 2026-10-31
 ---
@@ -430,12 +430,32 @@ without the Tesla pod (the beam burns a mirror in about a second, the flanks are
 
 ## Concept art
 
-No art yet. Round 72 proposals (wave 5): Q10's mood sheets for Aurelia before and after the turn and **Q4's
-falling-city storyboard** (ART-R-B: the [Jovian system](../../../world/jovian/README.md#concept-art) and the
-[act](../README.md)'s `concept/`), the Mirror Interceptor and Graft Turret sheets in their documents (ART-R-A), Aurelia
-Traffic's radio portrait (ART-R-B, the story's characters). Production backdrop (Aurelia's decks, domes, spires and
-balloons in two states, the growth's spread, the fall's scaled and darkened deck), the shuttles' Aurelia livery, the
-locker and the briefing images come in part C (its round 75).
+Round 72 (wave 5): Q10's mood sheets for Aurelia before and after the turn and **Q4's falling-city storyboard**
+(ART-R-B: the [Jovian system](../../../world/jovian/README.md#concept-art) and the [act](../README.md)'s `concept/`),
+the Mirror Interceptor and Graft Turret sheets in their documents (ART-R-A), Aurelia Traffic's radio portrait (ART-R-B,
+the story's characters).
+
+Round 75 (M10 part C, step ART-C2; production art, proposed): the Aurelia kit, the turn's growth burst, the backdrop war
+and the falling city by `tools/art/backdrop_l37.py` (the shared Jovian pieces in `tools/art/jovkit.py`), in round 72's
+L37 grade (the decks a step paler and less saturated than the units' gold; after the turn fire-orange and teal) and
+A.13 b with round 73 R.2's storyboard (the jagged break: torn plate, flaps bent outward, a charred, hot-glowing rim,
+shards in the gap, smoke and fire from both edges). The city is one continuous field laid out on the level's clock
+(every landmark by its time: the pad decks at x 190 / 290, the nests' deck edges, rims and terraces, the locker's awning
+at x 90, the Spire Plaza and its great spire), cut into back-to-back ground pieces; from the turn every row entering is
+burnt and overgrown, and the screen at the turn is a growth burst revealed from the dome rims along the seams over 4 s;
+at the fall the main deck's two halves (the city's own pixels: the handover is exact) slow, darken and shrink toward
+the field's centre on their curves, then the sinking city carries on on `deep` (Level 38 reuses it). The proposal
+(`concept/backdrop-proposal.yaml`, step C2's input, not data) holds the tile sets, pieces, placements, the `growth` and
+`fall` blocks with the halves' curves, the sections and the ground targets' and pads' places. The briefing images are
+in the [briefing](../../../ui/briefing/README.md#concept-art) (`briefing-images-final-r75-a`). Prompts and briefs:
+[concept/prompts.md](concept/prompts.md).
+
+| File | What | Status |
+|---|---|---|
+| [concept/backdrop-final-r75-a.png](concept/backdrop-final-r75-a.png) | Production backdrop: eighteen screens at third size with stand-ins (the rim, the SAM platform, pair 1's pads, the locker's awning, the plaza's terrace, the great spire, the turn at +0.6/+2/+4.5 s, a burning deck with the war below, the main deck, the fall at +0/+2/+6/+12/+21 s, the open cloud, the end), the readability crops (Talon, Gunship, Chimera, needles and an orb over the pre-turn deck, the plaza, a burnt deck and the main deck), the halves with their torn rims and glow, the growth burst and its reveal map, the spires' topple, the balloon tearing, hulks, a deck fire, the war, debris, the sinking city, the tile sets and the city's ground pieces (sheet) | proposed (round 75) |
+| [concept/backdrop-final-r75-a.gif](concept/backdrop-final-r75-a.gif) | The fall, t 157–182 at half size (4 frames a second): the main deck whole, the jagged break, the halves slowing, darkening and shrinking, the spires toppling, the sinking city | proposed (round 75) |
+| [concept/growth-final-r75-a.gif](concept/growth-final-r75-a.gif) | The turn, t 99.5–105.5 at half size (10 frames a second): the growth bursting over the plaza from the dome rims along the seams, the fires, the deck a step darker | proposed (round 75) |
+| [concept/backdrop-proposal.yaml](concept/backdrop-proposal.yaml) | The generator's `backdrop:` block (tile sets, pieces, the city's ground pieces on exact rows, placements, the `growth` and `fall` blocks with the halves' curves), the sections, the ground targets' places, the pads and the locker for step C2 (not data) | proposed (round 75; step C2's input) |
 
 ## Implementation
 
@@ -497,3 +517,10 @@ Left to the build (the document is approved as drafted):
   (Halcyon One–Six; Aurelia Traffic is Lizzie Driver, V.3 b) as drafted. **A.13 b** (not the recommendation): the city
   **breaks up** along an authored jagged cut line into two city layers that sink at their own rates and the spires
   topple (the last 40 s above are rewritten). The document approved as drafted (D.3; `design: approved`).
+- 2026-10-31 (step ART-C2, decided by me as trivia, pending the user's review in round 75): the city's ground is one
+  continuous field cut into back-to-back ground pieces (no repeating ground tile set: its landmarks stand where the
+  waves need them); the deep layer a cream cloud deck (`cloud-deck`) opening on the bands in section 5
+  (`cloud-bands`); the turn's darker grade the `smoke` atmosphere (haze 0.35 toward `5a443c` over the deep layer, the
+  `smoke-wisps` on `high-air`) with the burnt, overgrown city baked into every row entering after t=100; the halves'
+  curves (west to 0.38 of its size and 64 % dark, east to 0.46 and 56 %, drifting 30 / 26 px apart and turning −6° /
+  +5°, the ground's speed easing out over about a second) and the sinking city crossfading in at t=179–181.

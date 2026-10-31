@@ -1,0 +1,352 @@
+backdrop:
+  # Presentation only: Level 37's Aurelia (tools/art/backdrop_l37.py, step ART-C2, sections from this script's proposal (concept/backdrop-proposal.yaml)).
+  # The ground is ONE continuous city laid out on the level's clock (every landmark by its time), cut into
+  # city-NN ground pieces of at most 2,040 rows placed back to back on exact rows (no ground tile set);
+  # transparent between the platforms, where the deep cloud deck shows. Re-run the generator after moving a
+  # section: the city, the growth burst, the halves and their rows follow the clock.
+  # Animated pieces: war-skirmish (deep, t~100-144), the hulks (low-air) and the deck fires (ground), never
+  # more than two on the screen at once (checked); the -glow pieces are additive at their piece's places.
+  scroll_factors: {deep: 0.15, far: 0.5, ground: 1, low-air: 1.3, high-air: 1.7}   # far unused
+  ramp: 2
+  haze_colour: 5a443c   # the turn's darker grade: smoke over the cloud deck
+  atmosphere:
+    clear: {haze: 0.0}   # sections 1-3: the warm cream is in the tiles
+    smoke: {haze: 0.35, wisps: smoke-wisps}   # from the turn: the deck a step darker, smoke drifting over
+  tile_sets:
+    cloud-deck: {layer: deep, height: 1024}   # sections 1-4: the cream cloud deck far below
+    cloud-bands: {layer: deep, height: 864}   # section 5: the deck opening on the bands
+    smoke-wisps: {layer: high-air, height: 640}   # the smoke atmosphere's wisps
+  pieces:
+    city-01: {layer: ground, size: [480, 1753]}
+    city-02: {layer: ground, size: [480, 1844]}
+    city-03: {layer: ground, size: [480, 1889]}
+    city-04: {layer: ground, size: [480, 1878]}
+    city-05: {layer: ground, size: [480, 1640]}
+    city-06: {layer: ground, size: [480, 1640]}
+    city-07: {layer: ground, size: [480, 1731]}
+    city-08: {layer: ground, size: [480, 1648]}
+    city-09: {layer: ground, size: [480, 1125]}
+    city-10: {layer: ground, size: [480, 540]}
+    far-side: {layer: deep, size: [480, 240]}
+    balloon-a: {layer: low-air, size: [64, 106]}
+    balloon-b: {layer: low-air, size: [52, 88]}
+    balloon-torn: {layer: low-air, size: [60, 94]}
+    lift-ring: {layer: low-air, size: [162, 162]}
+    lift-ring-glow: {layer: low-air, size: [162, 162]}
+    deck-fire: {layer: ground, size: [48, 64], frames: 8, fps: 10}
+    war-skirmish: {layer: deep, size: [160, 128], frames: 8, fps: 6}
+    hulk-a: {layer: low-air, size: [80, 112], frames: 8, fps: 8}
+    hulk-b: {layer: low-air, size: [80, 112], frames: 8, fps: 8}
+    debris-plate-a: {layer: low-air, size: [68, 66]}
+    debris-plate-b: {layer: low-air, size: [70, 54]}
+    debris-plate-c: {layer: low-air, size: [44, 40]}
+    debris-cable: {layer: low-air, size: [64, 48]}
+    # the fall's and the turn's pieces (drawn by the growth and falling-city passes, not placed):
+    growth-burst: {layer: ground, size: [480, 572]}
+    growth-burst-reveal: {layer: ground, size: [480, 572]}
+    growth-burst-glow: {layer: ground, size: [480, 572]}
+    fall-half-west: {layer: ground, size: [274, 530]}
+    fall-half-west-char: {layer: ground, size: [302, 558]}
+    fall-half-west-glow: {layer: ground, size: [302, 558], frames: 4, fps: 8}
+    fall-half-east: {layer: ground, size: [263, 540]}
+    fall-half-east-char: {layer: ground, size: [291, 568]}
+    fall-half-east-glow: {layer: ground, size: [291, 568], frames: 4, fps: 8}
+    fall-shards: {layer: ground, size: [96, 160], frames: 8, fps: 8}
+    balloon-tear: {layer: low-air, size: [96, 128], frames: 10, fps: 5}
+    spire-topple-w: {layer: low-air, size: [192, 96], frames: 10, fps: 5}
+    spire-topple-e: {layer: low-air, size: [192, 96], frames: 10, fps: 5}
+    sinking-city: {layer: deep, size: [256, 208]}
+    sinking-city-glow: {layer: deep, size: [256, 208], frames: 4, fps: 6}
+  placed:
+    # the city, ground rows 206..1958 (exact: its bottom row on 206)
+    - {piece: city-01, t: 6.771, x: 240}
+    # the city, ground rows 1959..3802 (exact: its bottom row on 1959)
+    - {piece: city-02, t: 21.758, x: 240}
+    # the city, ground rows 3803..5691 (exact: its bottom row on 3803)
+    - {piece: city-03, t: 38.575, x: 240}
+    # the city, ground rows 5692..7569 (exact: its bottom row on 5692)
+    - {piece: city-04, t: 57.41, x: 240}
+    # the city, ground rows 7570..9209 (exact: its bottom row on 7570)
+    - {piece: city-05, t: 76.0, x: 240}
+    # the city, ground rows 9210..10849 (exact: its bottom row on 9210)
+    - {piece: city-06, t: 96.5, x: 240}
+    # the city, ground rows 10850..12580 (exact: its bottom row on 10850)
+    - {piece: city-07, t: 114.255, x: 240}
+    # the city, ground rows 12581..14228 (exact: its bottom row on 12581)
+    - {piece: city-08, t: 131.15, x: 240}
+    # the city, ground rows 14229..15353 (exact: its bottom row on 14229)
+    - {piece: city-09, t: 145.015, x: 240}
+    # the city, ground rows 16044..16583 (exact: its bottom row on 16044)
+    - {piece: city-10, t: 160.24, x: 240}
+    # the city's far side far below in the haze (section 1)
+    - {piece: far-side, t: 10.667, x: 240}
+    # the backdrop war far below: gold craft and Vrell swarms (on the screen t~100-144)
+    - {piece: war-skirmish, t: 122.0, x: 130}
+    - {piece: balloon-a, t: 3.0, x: 430}
+    - {piece: balloon-b, t: 9.0, x: 50}
+    - {piece: balloon-b, t: 17.0, x: 440}
+    - {piece: balloon-a, t: 27.0, x: 40}
+    - {piece: balloon-a, t: 38.0, x: 450}
+    - {piece: balloon-b, t: 51.0, x: 30}
+    - {piece: balloon-b, t: 66.0, x: 446}
+    - {piece: balloon-a, t: 76.0, x: 36}
+    - {piece: balloon-a, t: 90.0, x: 446}
+    # an anti-grav ring; lift-ring-glow at the same place
+    - {piece: lift-ring, t: 20.0, x: 380}
+    - {piece: lift-ring-glow, t: 20.0, x: 380}
+    # an anti-grav ring; lift-ring-glow at the same place
+    - {piece: lift-ring, t: 58.0, x: 100}
+    - {piece: lift-ring-glow, t: 58.0, x: 100}
+    # a burning hulk falling past
+    - {piece: hulk-a, t: 110.0, x: 380}
+    # a burning hulk falling past
+    - {piece: hulk-b, t: 126.0, x: 80}
+    # a burning hulk falling past
+    - {piece: hulk-a, t: 140.0, x: 400}
+    # a fire on a burning deck
+    - {piece: deck-fire, t: 104.0, x: 385}
+    # a fire on a burning deck
+    - {piece: deck-fire, t: 118.0, x: 120}
+    # a fire on a burning deck
+    - {piece: deck-fire, t: 133.0, x: 380}
+    # a fire on a burning deck
+    - {piece: deck-fire, t: 148.0, x: 160}
+    # the fall's debris
+    - {piece: debris-plate-a, t: 166.0, x: 110}
+    - {piece: debris-plate-b, t: 171.0, x: 380}
+    - {piece: debris-cable, t: 174.0, x: 300}
+    - {piece: debris-plate-c, t: 176.0, x: 190}
+    - {piece: balloon-torn, t: 168.0, x: 50}
+    # the fall's debris
+    - {piece: debris-plate-a, t: 183.0, x: 340}
+    - {piece: debris-plate-b, t: 189.0, x: 90}
+  growth:
+    # The Vrell turn's burst (Level 37 *The Vrell turn*): over the city on the screen at `t`, growth-burst is
+    # drawn where growth-burst-reveal's value <= (now - t) / seconds x 255 (normal blend; one texture and a
+    # threshold), growth-burst-glow additive under the same reveal. It lies on the ground rows from `bottom`
+    # (a ground piece's rows: drawn as a placed ground piece with that bottom row would be). Every city row
+    # entering after `t` is post-turn already; the burst's rows near the top edge reveal first.
+    t: 100
+    seconds: 4
+    piece: growth-burst
+    reveal: growth-burst-reveal
+    glow: growth-burst-glow
+    bottom: 10024   # ground rows 10024..10595; x 0..479
+  fall:
+    # The falling city (A.13 b, round 73 R.2): from `t` the city pieces are not drawn; the two halves are the
+    # ground. Each half's image is the city's own pixels on its rows (x0 = its left column, bottom = its bottom
+    # ground row): drawn at `t` as a ground piece with that bottom row, the halves together are exactly the
+    # city on the screen (the handover is pixel-exact; nothing else of the city is near them).
+    # keys: [u, x, y, scale, turn, shade] every 0.1 s to 2 s, then 0.5 s: u s after t; x, y the screen centre of the half's image
+    # (y down from the top edge); scale (bilinear, toward the field's centre); turn degrees clockwise; shade the
+    # share it has darkened toward 1e1616 (smooth). The first key is the ground's place at t and its speed the
+    # ground's; interpolate linearly. `char` (normal) and `glow` (additive, its frames on the real clock) are
+    # drawn with the half (their image CHAR_PAD = 14 px larger a side, same centre) and fade in over the first
+    # second as the gap opens, so the handover stays exact. Draw the west half first.
+    t: 160
+    seconds: 20
+    halves:
+      - piece: fall-half-west
+        x0: 10
+        bottom: 16050   # size 274x530
+        char: fall-half-west-char
+        glow: fall-half-west-glow
+        keys:
+          - [0, 147, 245, 1, -0, 0]
+          - [0.1, 147, 254.5, 1, -0, 0]
+          - [0.2, 147, 263, 0.9998, -0, 0.001]
+          - [0.3, 147, 270.7, 0.9996, -0, 0.002]
+          - [0.4, 147, 277.7, 0.9993, -0, 0.003]
+          - [0.5, 147, 284, 0.9989, -0, 0.004]
+          - [0.6, 146.9, 289.7, 0.9984, -0, 0.006]
+          - [0.7, 146.9, 294.9, 0.9978, -0, 0.007]
+          - [0.8, 146.9, 299.6, 0.9971, -0, 0.009]
+          - [0.9, 146.9, 303.8, 0.9963, -0.01, 0.011]
+          - [1, 146.8, 307.7, 0.9955, -0.01, 0.012]
+          - [1.1, 146.8, 311.3, 0.9946, -0.02, 0.014]
+          - [1.2, 146.8, 314.6, 0.9936, -0.02, 0.017]
+          - [1.3, 146.7, 317.6, 0.9925, -0.03, 0.019]
+          - [1.4, 146.7, 320.3, 0.9913, -0.04, 0.021]
+          - [1.5, 146.6, 322.9, 0.9901, -0.05, 0.023]
+          - [1.6, 146.6, 325.2, 0.9887, -0.06, 0.026]
+          - [1.7, 146.6, 327.4, 0.9873, -0.07, 0.028]
+          - [1.8, 146.5, 329.4, 0.9858, -0.08, 0.031]
+          - [1.9, 146.5, 331.3, 0.9843, -0.09, 0.034]
+          - [2, 146.4, 333.1, 0.9826, -0.1, 0.037]
+          - [2.5, 146.2, 340.5, 0.9734, -0.18, 0.052]
+          - [3, 146, 346.3, 0.9623, -0.27, 0.068]
+          - [3.5, 145.8, 351, 0.9497, -0.38, 0.086]
+          - [4, 145.7, 355, 0.9355, -0.51, 0.105]
+          - [4.5, 145.7, 358.4, 0.92, -0.65, 0.124]
+          - [5, 145.8, 361.5, 0.9031, -0.81, 0.145]
+          - [5.5, 146.1, 364.2, 0.8851, -0.98, 0.166]
+          - [6, 146.5, 366.5, 0.8661, -1.16, 0.188]
+          - [6.5, 147, 368.5, 0.8461, -1.35, 0.21]
+          - [7, 147.8, 370.3, 0.8253, -1.56, 0.232]
+          - [7.5, 148.8, 371.7, 0.8038, -1.76, 0.255]
+          - [8, 149.9, 372.8, 0.7818, -1.98, 0.278]
+          - [8.5, 151.3, 373.6, 0.7592, -2.2, 0.3]
+          - [9, 152.9, 374.2, 0.7363, -2.43, 0.323]
+          - [9.5, 154.7, 374.5, 0.7132, -2.65, 0.345]
+          - [10, 156.7, 374.5, 0.69, -2.88, 0.368]
+          - [10.5, 158.8, 374.3, 0.6668, -3.12, 0.389]
+          - [11, 161.2, 374, 0.6437, -3.35, 0.411]
+          - [11.5, 163.7, 373.4, 0.6208, -3.57, 0.432]
+          - [12, 166.4, 372.6, 0.5982, -3.8, 0.452]
+          - [12.5, 169.1, 371.7, 0.5762, -4.02, 0.472]
+          - [13, 171.8, 370.7, 0.5547, -4.24, 0.491]
+          - [13.5, 174.3, 369.6, 0.5339, -4.44, 0.509]
+          - [14, 176.8, 368.4, 0.5139, -4.65, 0.527]
+          - [14.5, 179.1, 367.2, 0.4949, -4.84, 0.543]
+          - [15, 181.3, 366.1, 0.4769, -5.02, 0.559]
+          - [15.5, 183.4, 365, 0.46, -5.19, 0.573]
+          - [16, 185.3, 364, 0.4445, -5.35, 0.586]
+          - [16.5, 187.1, 363.2, 0.4303, -5.49, 0.598]
+          - [17, 188.6, 362.5, 0.4177, -5.62, 0.609]
+          - [17.5, 190, 362.1, 0.4066, -5.73, 0.618]
+          - [18, 191.1, 362, 0.3974, -5.82, 0.626]
+          - [18.5, 192, 362.2, 0.3899, -5.9, 0.632]
+          - [19, 192.7, 362.9, 0.3845, -5.95, 0.636]
+          - [19.5, 193.1, 364, 0.3811, -5.99, 0.639]
+          - [20, 193.3, 365.6, 0.38, -6, 0.64]
+      - piece: fall-half-east
+        x0: 217
+        bottom: 16044   # size 263x540
+        char: fall-half-east-char
+        glow: fall-half-east-glow
+        keys:
+          - [0, 348.5, 246, 1, 0, 0]
+          - [0.1, 348.5, 255.6, 1, 0, 0]
+          - [0.2, 348.5, 264.4, 0.9998, 0, 0.001]
+          - [0.3, 348.5, 272.6, 0.9996, 0, 0.002]
+          - [0.4, 348.5, 280.1, 0.9994, 0, 0.003]
+          - [0.5, 348.5, 287, 0.999, 0, 0.004]
+          - [0.6, 348.5, 293.4, 0.9986, 0, 0.005]
+          - [0.7, 348.5, 299.3, 0.9981, 0, 0.006]
+          - [0.8, 348.6, 304.8, 0.9975, 0, 0.008]
+          - [0.9, 348.6, 309.9, 0.9968, 0.01, 0.009]
+          - [1, 348.6, 314.6, 0.9961, 0.01, 0.011]
+          - [1.1, 348.6, 319, 0.9953, 0.01, 0.013]
+          - [1.2, 348.6, 323, 0.9944, 0.02, 0.014]
+          - [1.3, 348.6, 326.8, 0.9935, 0.02, 0.016]
+          - [1.4, 348.7, 330.4, 0.9924, 0.03, 0.018]
+          - [1.5, 348.7, 333.7, 0.9913, 0.04, 0.021]
+          - [1.6, 348.7, 336.8, 0.9902, 0.05, 0.023]
+          - [1.7, 348.7, 339.7, 0.989, 0.05, 0.025]
+          - [1.8, 348.7, 342.5, 0.9877, 0.06, 0.027]
+          - [1.9, 348.7, 345, 0.9863, 0.07, 0.03]
+          - [2, 348.8, 347.5, 0.9849, 0.08, 0.032]
+          - [2.5, 348.8, 357.8, 0.9768, 0.15, 0.045]
+          - [3, 348.9, 365.8, 0.9672, 0.23, 0.06]
+          - [3.5, 348.9, 372.4, 0.9562, 0.32, 0.075]
+          - [4, 348.8, 377.9, 0.9438, 0.43, 0.092]
+          - [4.5, 348.6, 382.7, 0.9303, 0.54, 0.109]
+          - [5, 348.3, 386.8, 0.9156, 0.68, 0.127]
+          - [5.5, 347.9, 390.5, 0.8999, 0.82, 0.145]
+          - [6, 347.3, 393.8, 0.8834, 0.97, 0.164]
+          - [6.5, 346.6, 396.6, 0.866, 1.13, 0.184]
+          - [7, 345.7, 399.1, 0.8479, 1.3, 0.203]
+          - [7.5, 344.7, 401.3, 0.8291, 1.47, 0.223]
+          - [8, 343.5, 403.1, 0.8099, 1.65, 0.243]
+          - [8.5, 342.1, 404.6, 0.7903, 1.83, 0.263]
+          - [9, 340.5, 405.9, 0.7704, 2.02, 0.283]
+          - [9.5, 338.7, 406.8, 0.7502, 2.21, 0.302]
+          - [10, 336.8, 407.5, 0.73, 2.4, 0.322]
+          - [10.5, 334.7, 408, 0.7098, 2.6, 0.341]
+          - [11, 332.4, 408.2, 0.6896, 2.79, 0.36]
+          - [11.5, 330, 408.2, 0.6697, 2.98, 0.378]
+          - [12, 327.4, 408.1, 0.6501, 3.17, 0.396]
+          - [12.5, 324.9, 407.8, 0.6309, 3.35, 0.413]
+          - [13, 322.3, 407.4, 0.6121, 3.53, 0.43]
+          - [13.5, 319.9, 406.9, 0.594, 3.7, 0.446]
+          - [14, 317.6, 406.3, 0.5766, 3.87, 0.461]
+          - [14.5, 315.3, 405.8, 0.5601, 4.03, 0.475]
+          - [15, 313.2, 405.2, 0.5444, 4.18, 0.489]
+          - [15.5, 311.2, 404.8, 0.5297, 4.32, 0.501]
+          - [16, 309.4, 404.4, 0.5162, 4.46, 0.513]
+          - [16.5, 307.8, 404.2, 0.5038, 4.57, 0.523]
+          - [17, 306.3, 404.2, 0.4928, 4.68, 0.533]
+          - [17.5, 305, 404.5, 0.4832, 4.77, 0.541]
+          - [18, 303.9, 405.1, 0.4751, 4.85, 0.547]
+          - [18.5, 303, 406.1, 0.4687, 4.92, 0.553]
+          - [19, 302.4, 407.5, 0.4639, 4.96, 0.557]
+          - [19.5, 302, 409.4, 0.461, 4.99, 0.559]
+          - [20, 301.9, 411.9, 0.46, 5, 0.56]
+    # the shards tumbling in the widening gap: at the middle of the two halves' cut edges, from..to s after t
+    shards: {piece: fall-shards, from: 0.4, to: 9.0}
+    # the balloons over the main deck's far edge: low-air pieces placed as usual (t, x) until `t`, then their
+    # frames once from frame 0 at fps (they tear and collapse, no pop) and hold the last
+    balloons:
+      - {piece: balloon-tear, t: 161.231, x: 120}
+      - {piece: balloon-tear, t: 161.538, x: 380}
+    # the spires the wing flies down beside (low-air, placed as usual): frame 0 upright until topple_at s after
+    # t, then the topple once at the piece's fps, holding the last frame
+    spires:
+      - {piece: spire-topple-e, t: 165.0, x: 110, topple_at: 3.4}
+      - {piece: spire-topple-w, t: 170.5, x: 370, topple_at: 8.8}
+      - {piece: spire-topple-e, t: 176.0, x: 96, topple_at: 14.4}
+    # the sinking city (deep, placed by t as a deep piece): crossfades in over `fade` s from `from` s after t as
+    # the halves (at their last key) fade out; then it sinks with the deep layer (Level 38 reuses it)
+    sinking: {piece: sinking-city, glow: sinking-city-glow, t: 172.083, x: 248, from: 19.0, fade: 2.0}
+sections:   # ART-C2's reading of the README's Layout (this script's proposal (concept/backdrop-proposal.yaml)); C2 writes the real ones
+  - {name: Aurelia's Rim, end: 30, speed: 120, atmosphere: clear, tiles: ['cloud-deck']}
+  - {name: The Gilded Decks, end: 70, speed: 100, ramp: 2, atmosphere: clear, tiles: ['cloud-deck']}
+  - {name: The Spire Plaza, end: 100, speed: 80, ramp: 2, atmosphere: clear, tiles: ['cloud-deck']}
+  - {name: The Turn, end: 158, speed: 100, ramp: 2, atmosphere: smoke, tiles: ['cloud-deck', 'smoke-wisps']}
+  - {name: The Fall, end: 200, speed: 100, atmosphere: smoke, tiles: ['cloud-bands', 'smoke-wisps']}
+turn: 100
+# rows: the turn's screen 10040..10579; the fall's 16020..16559; the end's bottom edge 20020 (ground px); deep 3003
+ground_targets:   # at: [t, x], when the target enters at the top edge and its x - on the decks, rims and
+  # terraces laid out for them (graft-turret 52 px, sam-nest 44 px; the nests stand inside their deck's edge)
+  - target: Graft Turret nest x3 on the rim's deck edge (the first, alone)
+    section: 1
+    enemy: graft-turret
+    count: 3
+    at: [[14, 300], [13.9, 350], [14.05, 404]]
+  - target: SAM Nest pair on the rim's air-defence platform
+    section: 1
+    enemy: sam-nest
+    count: 2
+    at: [[24, 120], [24, 190]]
+  - target: Graft Turret nest x4 round the dome rim
+    section: 2
+    enemy: graft-turret
+    count: 4
+    at: [[48.43, 224], [48.02, 265], [48.02, 335], [48.43, 376]]
+  - target: Graft Turret nest x5 on the two deck edges beside the pad terrace
+    section: 2
+    enemy: graft-turret
+    count: 5
+    at: [[62.24, 70], [62.64, 130], [62.04, 350], [62.44, 410], [62.94, 380]]
+  - target: Graft Turret nest x6 on the Spire Plaza's terrace
+    section: 3
+    enemy: graft-turret
+    count: 6
+    at: [[78.8, 90], [78.8, 160], [79.3, 240], [78.8, 320], [78.8, 390], [80.17, 240]]
+  - target: SAM Nest x3 on the plaza's far side under the great spire
+    section: 3
+    enemy: sam-nest
+    count: 3
+    at: [[95, 150], [95, 240], [95, 330]]
+  - target: Graft Turret nest x5 on a burning deck
+    section: 4
+    enemy: graft-turret
+    count: 5
+    at: [[128.35, 214], [127.91, 247], [127.74, 300], [127.91, 353], [128.35, 386]]
+  - target: SAM Nest x3 on the last platform
+    section: 4
+    enemy: sam-nest
+    count: 3
+    at: [[138, 110], [138, 230], [138, 350]]
+  - target: Graft Turret nest x4 on the balloon deck's edge (the last ground units)
+    section: 4
+    enemy: graft-turret
+    count: 4
+    at: [[144.14, 120], [143.98, 200], [143.98, 280], [144.14, 360]]
+shuttle_pads:   # each pair on its pads (x 190 and 290) in the lower half as it lifts: screen y down at the lift
+  # time; the pad decks are laid out on those rows (C2: the allies' groups' pads)
+  - {t: 44, pads: [[190, 380], [290, 380]], row: 5180}
+  - {t: 72, pads: [[190, 380], [290, 380]], row: 7960}
+  - {t: 127, pads: [[190, 380], [290, 380]], row: 12880}
+secret:   # the CDF locker under its awning on the left deck edge (README: t~60, x 90)
+  - {t: 60, x: 90, row: 7170}

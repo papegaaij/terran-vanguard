@@ -297,6 +297,13 @@ Outputs (assets/ui/briefing/<name>.png, 672x240, textures of their own like the 
                           below
   level-36-chimera        L36 p2: Varga's scan of a Chimera (tools/art/jovian_units.py's frames): the airframe in grey,
                           the seams glowing teal, the HP readout: hits, the 1.0 s wait, the regrowth with a teal edge
+  level-37-aurelia        L37 p1: Okafor's CDF chart of Aurelia from above: the ring of gilded decks round the Spire
+                          Plaza and its great spire, the balloon decks and lift rings at the far edge, the three
+                          shuttle pad pairs numbered with their lanes out in green, the wing's route across in white
+  level-37-mirror         L37 p2: Varga's scan of a Mirror Interceptor from above (its 120 deg arc as a silver fan, the
+                          open flanks marked) and an inset of a Graft Turret's wreck, the root exposed, a 5 s timer
+                          ring (the production frames once ART-C1's are in; until then round 72's chosen A.2 a / A.4 b
+                          renders, tools/concept/enemies_r72.py)
   design/ui/briefing/concept/briefing-images-final-r13-a.png   review sheet, Act 1 intro + L01-02
   design/ui/briefing/concept/briefing-images-final-r20-a.png   review sheet, L03-04 (M4 batch)
   design/ui/briefing/concept/briefing-images-final-r21-a.png   review sheet, L05 (M4 part E)
@@ -314,6 +321,7 @@ Outputs (assets/ui/briefing/<name>.png, 672x240, textures of their own like the 
   design/ui/briefing/concept/briefing-images-final-r41-a.png   review sheet, L18 (M7 part E)
   design/ui/briefing/concept/briefing-images-final-r42-a.png   review sheet, L19 + the L20 plate (M7 part F)
   design/ui/briefing/concept/briefing-images-final-r74-a.png   review sheet, Act 6 intro + L36 (M10 part B)
+  design/ui/briefing/concept/briefing-images-final-r75-a.png   review sheet, L37 (M10 part C)
   design/ui/briefing/concept/briefing-images-final-r44-a.png   review sheet, L21 (M7 part H)
   design/ui/briefing/concept/briefing-images-final-r51-a.png   review sheet, Act 4 intro + L22 (M8 part B)
   design/ui/briefing/concept/briefing-images-final-r52-a.png   review sheet, L23 (M8 part C)
@@ -376,7 +384,7 @@ SOURCE_M5G = artkit.source_note(SCRIPT, "M5 part G batch")
 SOURCE_M5H = artkit.source_note(SCRIPT, "M5 part H batch")
 SOURCE_M7B = artkit.source_note(SCRIPT, "M7 part B batch")
 SOURCE_M7C = artkit.source_note(SCRIPT, "M7 part C batch")
-ROUND = "r74"  # the open round; the sheet of an earlier batch: name its round (r13, r20, r21, r23, r25, r30, ..., r36)
+ROUND = "r75"  # the open round; the sheet of an earlier batch: name its round (r13, r20, r21, r23, r25, r30, ..., r36)
 OUT = ROOT / "assets" / "ui" / "briefing"
 CONCEPT = DESIGN / "ui" / "briefing" / "concept"
 W, H = 672, 240
@@ -7961,6 +7969,129 @@ def level_36_chimera():
     b.label(16, H - 16, "HOLD THE BEAM. FINISH WHAT YOU START.", AMBER)
     return b
 
+# --------------------------------------------------------------------------- M10 part C: Level 37
+
+SOURCE_M10C = artkit.source_note(SCRIPT, "M10 part C batch")
+SILVER = (214, 222, 236)
+
+
+def level_37_aurelia():
+    """L37 p1: a CDF chart of Aurelia from above: the ring of gilded decks round the Spire Plaza, the great spire, the
+    balloon decks and lift rings at the far (right) edge, the three shuttle pad pairs numbered with their evacuation
+    lanes out in green, the wing's route across the city in white."""
+    b = Board()
+    clouds = raster.fbm(W, H, 40, 7501, octaves=4, period=False)
+    b.base = b.base * 0.7 + raster.ramp(JOV_HOLO, np.clip(0.35 + 0.35 * clouds, 0, 1)) * 0.3
+    cx, cy = 320, 126
+
+    def octagon(x, y, r, fill=(52, 38, 18), out=GOLD_A, width=1):
+        pts = [(x + r * np.cos(a), y + r * np.sin(a)) for a in np.linspace(np.pi / 8, TAU_B + np.pi / 8, 8, endpoint=False)]
+        b.draw.polygon(pts, fill=fill + (235,), outline=out + (255,))
+        if width > 1:
+            b.draw.polygon(pts, outline=out + (255,), width=width)
+    ring = [(cx + 150 * np.cos(a), cy + 84 * np.sin(a)) for a in np.linspace(0, TAU_B, 11, endpoint=False) + 0.3]
+    for x, y in ring:                                             # walkways in to the plaza and round the ring
+        b.line([(x, y), (cx, cy)], (150, 120, 70), 1, 160)
+    for (x0, y0), (x1, y1) in zip(ring, ring[1:] + ring[:1]):
+        b.line([(x0, y0), (x1, y1)], (150, 120, 70), 1, 160)
+    for k, (x, y) in enumerate(ring):
+        octagon(x, y, 13 if k % 3 else 17)
+        b.ring(x, y, 4, colour=GOLD_A, alpha=200)
+    octagon(cx, cy, 44, width=2)                                  # the Spire Plaza, the great spire
+    for r in (30, 18, 9):
+        octagon(cx, cy, r, fill=(70, 52, 24), out=GOLD_A)
+    b.marker(cx, cy, "dot", (255, 70, 50), 2)
+    tag(b, cx - 38, cy + 50, "SPIRE PLAZA", GOLD_A)
+    for k, (x, y) in enumerate(((548, 64), (572, 120), (548, 178))):  # the balloon decks and lift rings, far edge
+        octagon(x, y, 16)
+        b.line([(x, y), ring[0] if k == 1 else ring[10 if k == 0 else 1]], (150, 120, 70), 1, 160)
+        for j in (-1, 1):
+            bx, by = x + 22 + 6 * j, y + 14 * j
+            b.draw.ellipse([bx - 6, by - 9, bx + 6, by + 9], fill=(150, 140, 120, 230), outline=(230, 220, 200, 255))
+    for x, y in ((604, 92), (604, 152)):
+        b.ring(x, y, 15, colour=(140, 200, 255), alpha=230, width=2)
+    tag(b, 520, 20, "BALLOON DECKS", GOLD_A)
+    tag(b, 600, 196, "LIFT RINGS", (140, 200, 255))
+    route = [(14, 150), (120, 146), (200, 120), (cx, cy - 4), (440, 118), (548, 120), (660, 116)]
+    b.dashed(route, WHITE, 2, 6, 4)                               # the wing's route across the city
+    b.arrow(560, 120, 664, 116, WHITE, 6)
+    tag(b, 24, 160, "AEGIS ROUTE", WHITE)
+    for n, (x, y) in enumerate(((196, 186), (300, 64), (452, 190)), 1):
+        for dx in (-5, 5):                                        # a pad pair, numbered
+            b.marker(x + dx, y, "square", GREEN, 4)
+        tag(b, x - 4, y + 9, str(n), GREEN)
+        b.arrow(x, y - 8, x + (14 if n != 2 else 0), y - 48 if n != 2 else y - 42, GREEN, 5)
+    tag(b, 120, 214, "SHUTTLE PADS 1-3, LANES OUT", GREEN)
+    b.title("CDF CHART - AURELIA")
+    b.label(W - 10, 9, "CMDR. OKAFOR", CYAN_DIM, right=True)
+    b.label(10, H - 16, "SIX SHUTTLES. KEEP THEM FLYING.", AMBER)
+    return b
+
+
+def _mirror_art():
+    """The Mirror Interceptor from above, nose up: ART-C1's production frame when it is in, else round 72's chosen
+    A.2 a render (tools/concept/enemies_r72.py)."""
+    for name in ("mirror-interceptor_8", "mirror-interceptor_0"):
+        try:
+            return held_asset(name)
+        except FileNotFoundError:
+            pass
+    import enemies_r72 as e72  # noqa: E402  (concept script, imported unchanged)
+    return e72.mi_sprite("a", e72.UP)
+
+
+def _graft_art():
+    """A Graft Turret's wreck with the root exposed: ART-C1's frames when in, else round 72's chosen A.4 b."""
+    try:
+        return held_asset("graft-turret-wreck_0"), held_asset("graft-turret-root_0")
+    except FileNotFoundError:
+        import enemies_r72 as e72  # noqa: E402
+        return e72.gt_wreck("b"), e72.gt_root["b"].get(e72.DOWN)
+
+
+def level_37_mirror():
+    """L37 p2: Varga's scan of a Mirror Interceptor from above: the craft in grey, its 120 deg mirror arc as a silver
+    fan forward, the open flanks marked in amber; an inset: a Graft Turret's wreck, its root exposed in teal, a 5 s
+    timer ring round it."""
+    b = Board()
+    b.title("CDF SCAN - MIRROR INTERCEPTOR")
+    b.label(W - 10, 9, "DR. VARGA", CYAN_DIM, right=True)
+    tx, ty = 220, 150
+    body = _mirror_art()
+    body = body.resize((int(body.width * 1.2), int(body.height * 1.2)), Image.BOX)
+    fan = np.zeros((H, W, 3))                                     # the 120 deg arc forward (up), a silver fan
+    ang = np.arctan2(b.xx - tx, -(b.yy - ty))
+    d = np.hypot(b.xx - tx, b.yy - ty)
+    inside = (np.abs(ang) < np.radians(60)) & (d > 40) & (d < 112)
+    fan += (inside * (0.35 + 0.4 * (1 - (d - 40) / 72)))[..., None] * np.array(SILVER) * 0.45
+    b.add_light(fan, 0, 0, "under")
+    for a in (-60, 60):
+        r = np.radians(a)
+        b.line([(tx + 40 * np.sin(r), ty - 40 * np.cos(r)), (tx + 114 * np.sin(r), ty - 114 * np.cos(r))], SILVER, 1)
+    b.arc(tx, ty, 112, 112, -150, -30, SILVER, 200)
+    b.sprite(holo(body, (170, 180, 196), 14), tx, ty)
+    tag(b, tx - 52, 26, "MIRROR ARC 120 DEG", SILVER)
+    for side in (-1, 1):                                          # the open flanks
+        x = tx + side * 62
+        b.arrow(x + side * 50, ty + 14, x + side * 8, ty + 4, AMBER, 5, dashed=False)
+        tag(b, x + side * 30 - (54 if side < 0 else 0), ty + 22, "FLANK OPEN", AMBER)
+    tag(b, 16, H - 46, "SHOTS IN THE ARC COME BACK", (255, 90, 220))
+    tag(b, 16, H - 34, "BEAM: HEAT, CRACK. TESLA POD: SHATTER", CYAN)
+    gx0, gy0, gx1, gy1 = 452, 46, 652, 206                        # the inset: the wreck and its root
+    fill(b, [(gx0, gy0), (gx1, gy0), (gx1, gy1), (gx0, gy1)], (6, 14, 24), 1.0)
+    b.draw.rectangle([gx0, gy0, gx1, gy1], outline=CYAN_DIM + (220,))
+    wreck, root = _graft_art()
+    icx, icy = (gx0 + gx1) / 2, (gy0 + gy1) / 2 + 6
+    b.sprite(holo(root.resize((root.width * 2, root.height * 2), Image.BOX), (0, 255, 154), 12), icx, icy)
+    b.sprite(holo(wreck.resize((wreck.width * 2, wreck.height * 2), Image.BOX), (150, 160, 170), 12), icx - 30, icy - 26)
+    b.ring(icx, icy, 58, colour=AMBER, alpha=230, width=2)
+    b.arc(icx, icy, 64, 64, -90, 198, AMBER, 230)
+    tag(b, gx0 + 6, gy0 + 6, "GRAFT TURRET - WRECK", GREY)
+    tag(b, gx1 - 30, gy0 + 22, "5 S", AMBER)
+    tag(b, gx0 + 6, gy1 - 14, "BURN THE ROOT", (0, 255, 154))
+    return b
+
+
 IMAGES = {
     "act-1-tether-gate": tether_gate,
     "act-1-outer-stations": outer_stations,
@@ -8071,6 +8202,8 @@ IMAGES = {
     "act-6-every-channel": act6_every_channel,
     "level-36-the-dive": level_36_the_dive,
     "level-36-chimera": level_36_chimera,
+    "level-37-aurelia": level_37_aurelia,
+    "level-37-mirror": level_37_mirror,
 }
 
 # Review sheets per batch: round, the images on it, the batch name.
@@ -8109,6 +8242,7 @@ BATCHES = {
     "r67": (list(IMAGES)[95:97], "M9 PART G"),
     "r68": (list(IMAGES)[97:103], "M9 PART H"),
     "r74": (list(IMAGES)[103:109], "M10 PART B"),
+    "r75": (list(IMAGES)[109:111], "M10 PART C"),
 }
 
 
@@ -8143,6 +8277,7 @@ def build(names):
                   else SOURCE_M9G if name in BATCHES["r67"][0]
                   else SOURCE_M9H if name in BATCHES["r68"][0]
                   else SOURCE_M10B if name in BATCHES["r74"][0]
+                  else SOURCE_M10C if name in BATCHES["r75"][0]
                   else SOURCE_M4)
         artkit.save_png(IMAGES[name]().image(), OUT / f"{name}.png", source)
     print(f"{len(names)} briefing images in {OUT.relative_to(ROOT)}")

@@ -56,6 +56,8 @@ sections, the banks and the pathfinder pod's ``debris`` to the level's concept/b
 data.yaml).
 
 Reads the level's data.yaml when it exists (sections), otherwise the README's Layout table as sections.
+The shared Jovian pieces (the clock, the one cream, the cloud fields, glows, the checks' measures) are in
+tools/art/jovkit.py (step ART-C2; this script's files stay byte-identical).
 Run: python3 tools/art/backdrop_l36.py [--proposal | --review | --check]   (all: about 1.5 min)
 """
 import sys
@@ -68,7 +70,11 @@ from PIL import Image
 import artkit
 from artkit import DESIGN, ROOT, TAU
 
+import jovkit  # noqa: E402  (the shared Jovian pieces: the clock, the cream, clouds, glows, checks)
 import l23kit  # noqa: E402  (held sprites: load from assets/ or build/art-held/)
+from jovkit import (BANK_ALPHA, CREAM, HAZE, HIGH_HAZE, JOV_SUN, RUST, STORM, additive_rgb, bank,  # noqa: E402
+                    billow_height, blur, checker_share, clear_rows, cloud_mass, cut_tile, glow, mass_blobs, rgba,
+                    smoothstep, soft_box, streaks, wrap_score, wrap_score_alpha)
 from render import raster  # noqa: E402
 from render.sdf import rotate_z  # noqa: E402
 
@@ -85,18 +91,8 @@ W, SCREEN = 480, 540
 FACTORS = {"deep": 0.15, "low-air": 1.3, "high-air": 1.7}
 LOW_H = HIGH_H = 960
 
-# The one cream ramp of every cloud (A.12 a): shade 0 (the underside) .. 1 (the lit top) - round 72's bank tones a.
-CREAM = [(0.0, (196, 160, 120)), (0.5, (236, 214, 178)), (1.0, (255, 248, 230))]
-JOV_SUN = [(0.0, (110, 50, 28)), (0.25, (168, 92, 50)), (0.5, (206, 146, 86)), (0.75, (236, 204, 150)),
-           (1.0, (252, 240, 214))]                                         # act6_r72.JOV_SUN (the L36 grade)
-RUST = [(0.0, (78, 32, 20)), (0.3, (128, 54, 30)), (0.55, (166, 80, 44)), (0.8, (206, 140, 88)),
-        (1.0, (236, 204, 156))]
-STORM = [(0.0, (46, 38, 36)), (0.35, (82, 70, 62)), (0.65, (120, 106, 94)), (1.0, (164, 150, 132))]
-HAZE = np.array((236, 224, 204), float)                                    # the pale haze (sky_l36's)
-HIGH_HAZE = np.array((226, 224, 222), float)                               # the dive's high haze, a touch cooler
-BANK_ALPHA = 0.65                                                          # the veil: a body under it at ~35 %
 
-# =========================================================================== the clock (content LevelScroll, ported)
+# =========================================================================== the clock (jovkit.Clock: content LevelScroll, ported)
 
 DATA_PATH = LEVEL_DIR / "data.yaml"
 DATA = yaml.safe_load(DATA_PATH.read_text(encoding="utf-8")) if DATA_PATH.exists() else None
@@ -113,150 +109,10 @@ PROPOSED_SECTIONS = [
 ]
 SECTIONS = DATA["sections"] if DATA else PROPOSED_SECTIONS
 BASE_SPEED = float(DATA.get("scroll_speed", 120)) if DATA else 120.0
-END = float(SECTIONS[-1]["end"])
-STARTS = [0.0] + [float(s["end"]) for s in SECTIONS[:-1]]
-
-
-def _speed(i):
-    s = SECTIONS[i]
-    return float(s["speed"]) if s.get("speed") is not None else BASE_SPEED
-
-
-def _u(t, start, ramp):
-    return min(max((t - start) / ramp, 0.0), 1.0) if ramp > 0 else (1.0 if t >= start else 0.0)
-
-
-def _ease_out(u):
-    return u - u ** 3 + u ** 4 / 2
-
-
-def _travelled(i, a, b):
-    """backdrop_l30.py's port of LevelScroll for a level without halts: a speed change eased over the ramp."""
-    speed, start, end = _speed(i), STARTS[i], float(SECTIONS[i]["end"])
-    px = (b - a) * speed
-    ramp = float(SECTIONS[i].get("ramp", 0) or 0)
-    if i > 0 and ramp > 0:
-        ramp = min(ramp, end - start)
-        px -= (speed - _speed(i - 1)) * ramp * (_ease_out(_u(b, start, ramp)) - _ease_out(_u(a, start, ramp)))
-    return px
-
-
-def scroll(t):
-    """LevelData.scrollAt: the ground scroll at level time t, px (before the start at the first speed)."""
-    s = 0.0
-    for i, sec in enumerate(SECTIONS):
-        if t < float(sec["end"]) or i == len(SECTIONS) - 1:
-            return s + _travelled(i, STARTS[i], t)
-        s += _travelled(i, STARTS[i], float(sec["end"]))
-    raise AssertionError
-
-
-def time_at(s):
-    lo, hi = -120.0, END + 60
-    for _ in range(80):
-        mid = (lo + hi) / 2
-        if scroll(mid) < s:
-            lo = mid
-        else:
-            hi = mid
-    return (lo + hi) / 2
-
-
-def seam(layer, i):
-    """LevelData.seam, rounded as BackdropTiles does: the layer row where section i's tile set begins."""
-    return int(round(scroll(STARTS[i]) * FACTORS[layer] + SCREEN))
-
-
-def t_for_layer_row(row, factor):
-    """The placement time putting a piece's centre on layer row ``row`` (centre = scroll(t) x factor + 270)."""
-    return round(time_at((row - SCREEN / 2) / factor), 3)
-
-
-def t_centre_at(t, y_down, factor):
-    """The placement time of a piece whose centre is at screen y (down) at level time t."""
-    return t_for_layer_row(scroll(t) * factor + (SCREEN - y_down), factor)
-
-
-# =========================================================================== shared fields
-
-def smoothstep(a, b, x):
-    t = np.clip((x - a) / (b - a), 0, 1)
-    return t * t * (3 - 2 * t)
-
-
-def blur(a, sigma, wrap_rows=False):
-    """A separable Gaussian blur in float (no 8-bit steps); rows wrap for a tile."""
-    if sigma <= 0:
-        return a
-    r = int(np.ceil(3 * sigma))
-    k = np.exp(-(np.arange(-r, r + 1) ** 2) / (2 * sigma * sigma))
-    k /= k.sum()
-    p = np.pad(a, ((r, r), (0, 0)), mode="wrap" if wrap_rows else "edge")
-    a = sum(k[i] * p[i:i + a.shape[0], :] for i in range(2 * r + 1))
-    p = np.pad(a, ((0, 0), (r, r)), mode="edge")
-    return sum(k[i] * p[:, i:i + a.shape[1]] for i in range(2 * r + 1))
-
-
-def streaks(h, w, seed, cell=8, squeeze=6):
-    """Fine horizontal streaks: noise drawn narrow and stretched along x (act6_r72.bands' streak)."""
-    s = raster.fbm(max(8, w // squeeze), h, cell, seed, octaves=3, period=False)
-    img = Image.fromarray(np.clip(s * 255, 0, 255).astype(np.uint8)).resize((w, h), Image.BICUBIC)
-    return np.array(img, np.float64) / 255
-
-
-def billow_height(h, w, blobs, wrap=False):
-    """Towering cloud heads as a smooth height field from blobs (x, y_down, radius); rows wrap when ``wrap``."""
-    hgt = np.zeros((h, w))
-    for bx, by, rr in blobs:
-        for dy in ((-h, 0, h) if wrap else (0,)):
-            cy = by + dy
-            x0, x1 = int(max(0, bx - 2 * rr)), int(min(w, bx + 2 * rr + 1))
-            y0, y1 = int(max(0, cy - 2 * rr)), int(min(h, cy + 2 * rr + 1))
-            if x0 >= x1 or y0 >= y1:
-                continue
-            yy, xx = np.mgrid[y0:y1, x0:x1].astype(np.float64)
-            d2 = ((xx - bx) ** 2 + (yy - cy) ** 2) / rr ** 2
-            hgt[y0:y1, x0:x1] = np.maximum(hgt[y0:y1, x0:x1], rr * np.sqrt(np.clip(1 - d2 / 2.2, 0, 1)))
-    return blur(hgt, 2.0, wrap)
-
-
-def billow_shade(hgt, wrap=False, edge=None):
-    """(shade 0..1 lit from the top left with soft self-shadowing and dark creases between the heads, coverage
-    0..1) of a height field (act6_r72.billows' lighting, its creases deepened); ``edge`` (0..1 noise) frays the
-    outline."""
-    alpha = smoothstep(3, 10, hgt + (0 if edge is None else 9 * (edge - 0.5)))
-    if wrap:
-        p = np.pad(hgt, ((1, 1), (0, 0)), mode="wrap")
-        gy, gx = np.gradient(p)
-        gy, gx = gy[1:-1], gx[1:-1]
-    else:
-        gy, gx = np.gradient(hgt)
-    shade = np.clip(0.5 - (gx + gy) * 0.42 + hgt / 80, 0, 1)
-    sh = np.roll(np.roll(hgt, 6, 0), 6, 1)
-    shade *= 1 - 0.38 * smoothstep(0, 10, sh - hgt)
-    crease = np.clip(blur(hgt, 5.0, wrap) - hgt, 0, None)
-    shade *= 1 - 0.5 * smoothstep(0, 6, crease)
-    return blur(shade, 0.6, wrap), alpha
-
-
-def cloud_mass(h, w, blobs, seed, wrap=False, detail=0.4):
-    """Cumulus heads: the blobs' height field broken up by noise (cauliflower edges, no clean spheres), lit from
-    the top left -> (shade 0..1, coverage 0..1)."""
-    hgt = billow_height(h, w, blobs, wrap)
-    n1 = raster.fbm(w, h, 16, seed, octaves=2, period=wrap)
-    n2 = raster.fbm(w, h, 36, seed + 1, octaves=2, period=wrap)
-    hgt = hgt * (1 - detail / 2 + detail * (0.4 * n1 + 0.6 * n2))
-    return billow_shade(blur(hgt, 0.7, wrap), wrap, n1)
-
-
-def mass_blobs(rng, cx, cy, rx, ry, n, size):
-    """Blobs in an ellipse round (cx, cy), bigger toward its middle (a cloud's towering core)."""
-    out = []
-    for _ in range(n):
-        a, u = rng.uniform(0, TAU), np.sqrt(rng.uniform(0, 1))
-        k = 1 - 0.55 * u
-        out.append((cx + np.cos(a) * u * rx, cy + np.sin(a) * u * ry, rng.uniform(*size) * k))
-    return out
+CLOCK = jovkit.Clock(SECTIONS, BASE_SPEED, FACTORS, SCREEN)
+END, STARTS = CLOCK.end, CLOCK.starts
+scroll, time_at, seam, section_at_row = CLOCK.scroll, CLOCK.time_at, CLOCK.seam, CLOCK.section_at_row
+t_for_layer_row, t_centre_at = CLOCK.t_for_layer_row, CLOCK.t_centre_at
 
 
 # =========================================================================== the deep field (rows = layer rows)
@@ -339,23 +195,6 @@ def deep_field(seed=3601):
     return np.clip(rgb, 0, 255), r0
 
 
-def cut_tile(field, r0, a, b):
-    """A tile set of the rows [a, b) of the field (y-up), its height the span + 160 rounded up to 32; the rows past b
-    crossfade back into the rows below a, so the tile wraps. Returns the image (top row = its highest)."""
-    span = b - a
-    h = int(np.ceil((span + 160) / 32) * 32)
-    out = np.zeros((h, W, 3))
-    for j in range(h):
-        r = a + ((j - a) % h)
-        if r < b:
-            val = field[r - r0]
-        else:
-            w = smoothstep(b, a + h, r)
-            val = (1 - w) * field[r - r0] + w * field[r - h - r0]
-        out[h - 1 - j] = val
-    return Image.fromarray(np.clip(np.round(out), 0, 255).astype(np.uint8), "RGB").convert("RGBA")
-
-
 def deep_tiles():
     field, r0 = deep_field()
     lo, hi = deep_span()
@@ -364,16 +203,6 @@ def deep_tiles():
 
 
 # =========================================================================== low-air and high-air tiles
-
-def clear_rows(h, rows, width=110):
-    """A tile's alpha multiplier: 0 over the tile rows of the layer rows ``rows`` (where another section's tile set
-    meets this one), easing back over ``width`` rows (the image is top row = highest)."""
-    m = np.ones(h)
-    for lr in rows:
-        j = np.arange(h)
-        d = np.abs(((j - lr % h) + h / 2) % h - h / 2)
-        m = np.minimum(m, smoothstep(width * 0.35, width, d))
-    return m[::-1][:, None]
 
 
 TOPS_ROLL = 40
@@ -431,37 +260,11 @@ def ice_haze(seed=3623):
     return rgba(np.zeros((h, W, 3)) + np.array((232, 236, 244.0)), alpha)
 
 
-def rgba(rgb, alpha):
-    a = np.clip(np.round(np.asarray(alpha) * 255), 0, 255)
-    rgb = np.where(a[..., None] > 0, np.clip(np.round(rgb), 0, 255), 0)
-    return Image.fromarray(np.dstack([rgb, a]).astype(np.uint8), "RGBA")
-
-
 # =========================================================================== pieces
-
-def soft_box(w, h, edge):
-    yy, xx = np.mgrid[0:h, 0:w].astype(np.float64)
-    d = np.minimum.reduce([xx + 0.5, w - 0.5 - xx, yy + 0.5, h - 0.5 - yy])
-    return smoothstep(1.0, edge, d)
 
 
 BANKS = {"bank-a": (160, 96, 3631), "bank-b": (200, 112, 3633), "bank-c": (240, 128, 3637),
          "bank-d": (280, 144, 3641), "bank-e": (320, 160, 3643), "bank-f": (352, 176, 3647)}   # the canvas aimed at
-
-
-def bank(w, h, seed):
-    """A foreground bank: a cloud mass (heads towering in its middle, lumpy all round) in the cream veil, at most
-    BANK_ALPHA; cropped to its own bounds, so the image is its bank's rectangle."""
-    rng = np.random.default_rng(seed)
-    blobs = mass_blobs(rng, w / 2, h / 2, w * 0.4, h * 0.28, int(w * h / 420), (h * 0.11, h * 0.24))
-    shade, cov = cloud_mass(h, w, blobs, seed + 1)
-    yy = np.mgrid[0:h, 0:w][0].astype(np.float64)
-    shade = np.clip(shade - 0.18 * smoothstep(h * 0.35, h * 0.9, yy), 0, 1)      # the underside a step darker
-    a = np.clip(cov, 0, 1) * soft_box(w, h, 4) * BANK_ALPHA
-    img = rgba(raster.ramp(CREAM, shade), a)
-    x0, y0, x1, y1 = img.getbbox()
-    img = img.crop((x0 - 1, y0 - 1, x1 + 1, y1 + 1))
-    return img.crop((0, 0, img.width + img.width % 2, img.height + img.height % 2))
 
 
 def carrier_job(job):
@@ -516,24 +319,6 @@ def carrier_group():
                 glow(light, x, y, 1.2, (255, 60, 50) if kind == "red" else (60, 255, 110), 1.6)
         frames.append(additive_rgb(light))
     return body, frames
-
-
-def glow(light, x, y, r, col, k):
-    h, w = light.shape[:2]
-    rr = int(np.ceil(r * 4))
-    x0, x1, y0, y1 = max(0, int(x - rr)), min(w, int(x + rr) + 1), max(0, int(y - rr)), min(h, int(y + rr) + 1)
-    if x0 >= x1 or y0 >= y1:
-        return
-    yy, xx = np.mgrid[y0:y1, x0:x1].astype(np.float64) + 0.5
-    f = np.exp(-((xx - x) ** 2 + (yy - y) ** 2) / (r * r)) * k
-    light[y0:y1, x0:x1] += f[..., None] * np.array(col, float)
-
-
-def additive_rgb(light):
-    """A float light field (0..255+) -> premultiplied on black, alpha 1 wherever it adds light (unquantised)."""
-    rgb = np.clip(np.round(light), 0, 255)
-    a = np.where(rgb.max(axis=-1) >= 1, 255, 0)
-    return Image.fromarray(np.dstack([rgb, a]).astype(np.uint8), "RGBA")
 
 
 STORM_WALL = (320, 480)
@@ -794,14 +579,6 @@ def tile_rows(name, offset):
     height = len(arr)
     rows = int(round(offset)) + SCREEN - 1 - np.arange(SCREEN)
     return arr[height - 1 - (rows % height)], rows
-
-
-def section_at_row(layer, row):
-    i = 0
-    for k in range(1, len(SECTIONS)):
-        if row >= seam(layer, k):
-            i = k
-    return i
 
 
 def layer_tiles(layer, t):
@@ -1069,35 +846,6 @@ def review():
     print(f"review: {png.relative_to(ROOT)}, {gif.name} ({size / 1e6:.1f} MB)")
     for lab, base, lift, clip in reads:
         print(f"explosion over {lab}: ground {base:.0f}, peak lift {lift:+.0f}, core clipped {clip * 100:.0f} %")
-
-
-def wrap_score(a):
-    lum = a[..., :3].astype(float) @ np.array((0.299, 0.587, 0.114))
-    h = len(lum)
-
-    def change(i, j):
-        d = np.sort(np.abs(lum[i % h] - lum[j % h]))
-        return d[:int(len(d) * 0.9)].mean()
-    ref = sorted(change(k, k + 1) for k in range(h - 40, h + 40) if k < h - 4 or k > h + 2)
-    return max(change(h - 2, h - 1), change(h - 1, 0), change(0, 1)) / max(ref[len(ref) // 2], 0.5)
-
-
-def wrap_score_alpha(a):
-    """A transparent tile's wrap: the premultiplied change across the wrap vs. the mean change between rows."""
-    pm = (a[..., :3].astype(float) @ np.array((0.299, 0.587, 0.114))) * a[..., 3] / 255
-    rows = np.abs(np.diff(pm, axis=0)).mean(axis=1)
-    return np.abs(pm[-1] - pm[0]).mean() / max(np.percentile(rows, 95), 0.05)
-
-
-def checker_share(img):
-    """DitherGuardTest.checkerCells: the share of visible pixels that are a 1 px checker cell."""
-    a = np.array(img.convert("RGBA")).astype(np.int64)
-    c = (a[..., 0] << 24) | (a[..., 1] << 16) | (a[..., 2] << 8) | a[..., 3]
-    vis = a[1:-1, 1:-1, 3] > 0
-    mid = c[1:-1, 1:-1]
-    left, right, up, down = c[1:-1, :-2], c[1:-1, 2:], c[:-2, 1:-1], c[2:, 1:-1]
-    chk = vis & (left == right) & (left != mid) & (up == down) & (up != mid)
-    return int(vis.sum()), int(chk.sum())
 
 
 def seam_jump(layer, i):
