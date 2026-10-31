@@ -354,6 +354,27 @@ final class EnemyFire {
             int target,
             boolean alongAim,
             TravelFrame frame) {
+        fire(x, y, gun, leads, aim, ship, target, alongAim, frame, Double.NaN, 0, null);
+    }
+
+    /**
+     * M10 part A: as {@link #fire(double, double, EnemyGun, boolean, double, Ship, int, boolean, TravelFrame)} aimed at
+     * the point (pointX, pointY) instead of the ship, without a lead (a spoofed volley's stale aim; a hunter's prey): a
+     * NaN {@code pointX} for the ship. With a {@code prey} tag its bullets hit that prey wave's units too.
+     */
+    void fire(
+            double x,
+            double y,
+            EnemyGun gun,
+            boolean leads,
+            double aim,
+            Ship ship,
+            int target,
+            boolean alongAim,
+            TravelFrame frame,
+            double pointX,
+            double pointY,
+            String prey) {
         double dx = ship.x() - x;
         double dy = ship.y() - y;
         double distance = Math.sqrt(dx * dx + dy * dy);
@@ -361,7 +382,16 @@ final class EnemyFire {
             return;
         }
         boolean drawn = false;
-        if (target >= 0) {
+        if (!Double.isNaN(pointX) && target < 0) {
+            dx = pointX - x;
+            dy = pointY - y;
+            distance = Math.sqrt(dx * dx + dy * dy);
+            if (distance == 0) {
+                return;
+            }
+            // No lead and no lure: it aims at that point.
+            drawn = true;
+        } else if (target >= 0) {
             dx = hook.convoy().get(target).x() - x;
             dy = hook.convoy().get(target).y() - y;
             distance = Math.sqrt(dx * dx + dy * dy);
@@ -408,19 +438,25 @@ final class EnemyFire {
                     (dx * sin + dy * cos) * gun.bulletSpeed(),
                     gun.damage(),
                     target);
+            if (prey != null) {
+                bullet.prey(prey);
+            }
         }
         for (int k = 0; k < gun.aimedShards() && bullets.size() < rules.bulletBudget(); k++) {
             // M8 part B (design/enemies/ground/drill-rig, hard): an aimed shard straight along the volley's aim.
             double cos = Trig.cos(turn);
             double sin = frame.vy(Trig.sin(turn));
-            bullets.obtain()
-                    .fire(
-                            x,
-                            y,
-                            (dx * cos - dy * sin) * gun.bulletSpeed(),
-                            (dx * sin + dy * cos) * gun.bulletSpeed(),
-                            gun.damage(),
-                            target);
+            EnemyBullet shard = bullets.obtain();
+            shard.fire(
+                    x,
+                    y,
+                    (dx * cos - dy * sin) * gun.bulletSpeed(),
+                    (dx * sin + dy * cos) * gun.bulletSpeed(),
+                    gun.damage(),
+                    target);
+            if (prey != null) {
+                shard.prey(prey);
+            }
         }
         events.add(SimEvents.Type.ENEMY_FIRED, x, y, (int) gun.damage());
     }
@@ -672,10 +708,41 @@ final class EnemyFire {
         return objectiveDamage;
     }
 
-    /** A destroyed unit with a death burst pops into its puff of bullets. */
-    void deathBurst(Enemy enemy, Ship ship) {
+    /**
+     * A destroyed unit with a death burst pops into its puff of bullets. M10 part A (design/enemies/air/harrow): a
+     * burst on contact comes however close the ship is, turned (with its {@code between}) so that the ship's bearing
+     * falls between two bullets; after a ram ({@code rammed}) its bullets cannot hit the ship for their grace.
+     */
+    void deathBurst(Enemy enemy, Ship ship, boolean rammed) {
         EnemySpec.DeathBurst puff = enemy.spec().deathBurst().orElseThrow();
-        burst(enemy.x(), enemy.y(), puff.count(), puff.speed(), puff.damage(), ship);
+        if (!puff.onContact()) {
+            burst(enemy.x(), enemy.y(), puff.count(), puff.speed(), puff.damage(), ship);
+            return;
+        }
+        double x = enemy.x();
+        double y = enemy.y();
+        double first = puff.between() ? StrictMath.atan2(ship.y() - y, ship.x() - x) + StrictMath.PI / puff.count() : 0;
+        int grace = rammed ? SimStep.ticks(puff.graceSeconds()) : 0;
+        for (int k = 0; k < puff.count() && bullets.size() < rules.bulletBudget(); k++) {
+            double angle = first + 2 * StrictMath.PI * k / puff.count();
+            EnemyBullet bullet = bullets.obtain();
+            bullet.fire(x, y, Trig.cos(angle) * puff.speed(), Trig.sin(angle) * puff.speed(), puff.damage());
+            bullet.grace(grace);
+        }
+    }
+
+    /**
+     * M10 part A (design/enemies, Reflect): a mirror's bounced bullet from (x, y) at (vx, vy) px/s, within the bullet
+     * budget; returns whether it was fired.
+     */
+    boolean bounce(double x, double y, double vx, double vy, double damage) {
+        if (bullets.size() >= rules.bulletBudget()) {
+            return false;
+        }
+        EnemyBullet bullet = bullets.obtain();
+        bullet.fire(x, y, vx, vy, damage);
+        bullet.markBounced();
+        return true;
     }
 
     /**

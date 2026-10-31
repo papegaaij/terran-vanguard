@@ -65,8 +65,14 @@ class WaveSpecBuilderTest {
             WaveSpec.Edge.ALTERNATING,
             new WaveSpec.MineLines(List.of(100.0), List.of(Act5CSpecs.GAP_LEFT)));
 
+    /** M10 part A (The three-way war): a hunting wave. */
+    private static final WaveSpec HUNTERS = WaveSpec.builder(
+                    1, WaveSpec.Formation.SINGLE, PreyWarTest.SHOOTER, 1, WaveSpec.Entry.FRONT, WaveSpec.Edge.NONE)
+            .hunts("prey")
+            .build();
+
     private static List<WaveSpec> samples() {
-        return List.of(CIRCLE, FIELD, PURSUIT, CAVE, LED, ON_ROCKS, LAYERS);
+        return List.of(CIRCLE, FIELD, PURSUIT, CAVE, LED, ON_ROCKS, LAYERS, HUNTERS);
     }
 
     @Test

@@ -76,6 +76,7 @@ final class EnemyFlocks {
                 }
                 enemy.entered(schedule.lastEntry());
                 enemy.tag(schedule.lastTag());
+                enemy.hunts = schedule.lastHunts();
                 joining.member(swarm.member(), enemy, swarm.x(), swarm.y());
             }
         }
@@ -103,6 +104,7 @@ final class EnemyFlocks {
             enemy.join(flock, slot, spawn, serial, x, swarm.y(), flock.joinFacing(x, swarm.y()));
             enemy.entered(schedule.lastEntry());
             enemy.tag(schedule.lastTag());
+            enemy.hunts = schedule.lastHunts();
             flock.join(enemy);
         }
     }

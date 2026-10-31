@@ -49,9 +49,21 @@ final class WalkerFire {
      * while the ship is behind it.
      */
     void fire(Enemy enemy, Ship ship, boolean firing) {
+        fire(enemy, ship, firing, false);
+    }
+
+    /**
+     * As {@link #fire(Enemy, Ship, boolean)}; M10 part A (design/player/systems, the IFF spoofer): while {@code spoofed}
+     * its turret's shots and its homing salvo are held at their stale aim ({@link Spoofing}; {@link #fireHeld} fires
+     * them).
+     */
+    void fire(Enemy enemy, Ship ship, boolean firing, boolean spoofed) {
         if (enemy.spec().turret().isPresent()) {
             // M7 part F (design/enemies/ground/warden-tank): its turret's bursts along the turret's aim, any way.
-            if (enemy.trigger() && firing) {
+            if (enemy.trigger()
+                    && firing
+                    && !(spoofed
+                            && enemy.spoofing.hold(enemy, Spoofing.TURRET, ship.x(), ship.y(), enemy.turretAim()))) {
                 guns.fire(
                         enemy.partX(),
                         enemy.partY(),
@@ -95,7 +107,11 @@ final class WalkerFire {
                         inArc,
                         false,
                         enemy.frame());
-            } else {
+            } else if (!(atShip
+                    && spoofed
+                    && enemy.spoofing.hold(enemy, Spoofing.AIMED, ship.x(), ship.y(), enemy.facing()))) {
+                // M10 part A (the IFF spoofer): a fan at the ship is held at its stale aim; one along the facing is
+                // not.
                 guns.fire(
                         enemy.x(),
                         enemy.y(),
@@ -117,7 +133,11 @@ final class WalkerFire {
                         .homing()
                         .isPresent()) {
             // M9 part E (design/enemies/ground/strider, the shoulder pod): a homing salvo at the ship.
-            salvo(enemy, enemy.spec().walker().get().spit().get(), ship);
+            EnemyGun pod = enemy.spec().walker().get().spit().get();
+            double bearing = bearing(enemy, ship);
+            if (!(spoofed && enemy.spoofing.hold(enemy, Spoofing.SALVO, ship.x(), ship.y(), bearing))) {
+                salvo(enemy, pod, bearing);
+            }
         } else if (spit) {
             EnemyGun gun = enemy.spec().walker().orElseThrow().spit().orElseThrow();
             int target = objectiveHook.mode(enemy.kind()) == HookMode.NEAREST
@@ -132,17 +152,45 @@ final class WalkerFire {
      * {@link EnemyGun#burst()} missiles at once from the pod (its part carrying the attack, else its centre), launched
      * along the bearing to the ship spread {@link EnemyGun#spreadRadians()} apart, each under the gun's cap.
      */
-    private void salvo(Enemy enemy, EnemyGun gun, Ship ship) {
+    private void salvo(Enemy enemy, EnemyGun gun, double bearing) {
         int pod = podOf(enemy);
         double x = pod < 0 ? enemy.x() : enemy.partX(pod);
         double y = pod < 0 ? enemy.y() : enemy.partY(pod);
-        double bearing = Enemy.heading(ship.x() - x, ship.y() - y);
         int count = gun.burst();
         for (int k = 0; k < count; k++) {
             double heading = bearing + (k - (count - 1) / 2.0) * gun.spreadRadians();
             if (guns.missiles().launchAlong(x, y, gun, heading, enemy.serial())) {
                 events.add(SimEvents.Type.ENEMY_FIRED, x, y, (int) gun.damage());
             }
+        }
+    }
+
+    /** The bearing from {@code enemy}'s pod (its centre without one) to the ship. */
+    private static double bearing(Enemy enemy, Ship ship) {
+        int pod = podOf(enemy);
+        double x = pod < 0 ? enemy.x() : enemy.partX(pod);
+        double y = pod < 0 ? enemy.y() : enemy.partY(pod);
+        return Enemy.heading(ship.x() - x, ship.y() - y);
+    }
+
+    /**
+     * M10 part A (the IFF spoofer): a held turret shot ({@link Spoofing#TURRET}) along its stale turret aim, or a held
+     * homing salvo ({@link Spoofing#SALVO}) along its stale bearing.
+     */
+    void fireHeld(Enemy enemy, Ship ship, int kind, double aim) {
+        if (kind == Spoofing.TURRET) {
+            guns.fire(
+                    enemy.partX(),
+                    enemy.partY(),
+                    enemy.spec().gun().orElseThrow(),
+                    false,
+                    aim,
+                    ship,
+                    -1,
+                    true,
+                    enemy.frame());
+        } else {
+            salvo(enemy, enemy.spec().walker().orElseThrow().spit().orElseThrow(), aim);
         }
     }
 

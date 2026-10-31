@@ -23,6 +23,10 @@ final class EnemyMoves {
     private final boolean rollers;
     /** M9 part F: the prey latches; null in a level without a prey unit. */
     private final PreyLatches prey;
+    /** M10 part A (The three-way war): the hunting waves' prey; null in a level without a hunting wave. */
+    private final PreyWar war;
+    /** M10 part A (design/player/systems, the IFF spoofer): its delay, steps; 0 without the module. */
+    private int spoofTicks;
     /** M5 part F: the level's wind this step, px/s to the right; exactly 0 without weather. */
     private double wind;
 
@@ -38,7 +42,8 @@ final class EnemyMoves {
             WalkerFire walkers,
             SonarRings rings,
             boolean rollers,
-            PreyLatches prey) {
+            PreyLatches prey,
+            PreyWar war) {
         this.force = force;
         this.enemies = enemies;
         this.events = events;
@@ -51,6 +56,12 @@ final class EnemyMoves {
         this.rings = rings;
         this.rollers = rollers;
         this.prey = prey;
+        this.war = war;
+    }
+
+    /** M10 part A: the IFF spoofer's delay for every spoofable unit's aimed volleys, steps (0: none). */
+    void spoof(int ticks) {
+        spoofTicks = ticks;
     }
 
     /** M5 part F: the level's wind for the next step, px/s to the right. */
@@ -74,6 +85,8 @@ final class EnemyMoves {
             int target = objectiveHook.target(enemy, ship);
             double aimX = target < 0 ? ship.x() : convoy.get(target).x();
             double aimY = target < 0 ? ship.y() : convoy.get(target).y();
+            // M10 part A (the IFF spoofer): a spoofable unit's volleys come late while the ship carries the module.
+            enemy.spoofing.delay = enemy.spec().spoofable() ? spoofTicks : 0;
             // M5 part G: a diver under the always hook dives at the objective while it can be aimed at.
             int dive = objectiveHook.mode(enemy) == HookMode.ALWAYS ? convoy.objective(enemy.x(), enemy.y()) : -1;
             if (enemy.hoverHold.active()) {
@@ -89,6 +102,14 @@ final class EnemyMoves {
                     chaseX = hunted.x();
                     chaseY = hunted.y();
                 }
+            }
+            // M10 part A (The three-way war): a hunting wave's unit goes for its prey (its chase, dive, ram and aim).
+            Enemy quarry = war == null || enemy.preySerial() >= 0 ? null : war.target(enemy);
+            if (quarry != null) {
+                chaseX = quarry.x();
+                chaseY = quarry.y();
+                aimX = chaseX;
+                aimY = chaseY;
             }
             boolean flying = dive < 0
                     ? enemy.move(chaseX, chaseY, groundScroll, aimX, aimY, wind)
@@ -147,6 +168,10 @@ final class EnemyMoves {
                 // M9 part C: a mine layer lays its line as it strafes (design/enemies/space/minelayer).
                 guns.layLine(enemy, firing);
             }
+            if (flying && !stunned && firing && enemy.spoofing.holding()) {
+                // M10 part A: its held volleys that are due now, at their stale aim.
+                releaseHeld(enemy, ship);
+            }
             if (!flying) {
                 if (enemy.spec().brood().isPresent()) {
                     carriers.carrierEnded(enemy);
@@ -172,7 +197,7 @@ final class EnemyMoves {
             } else if (enemy.spec().spawner().isPresent()) {
                 carriers.spawnCycle(enemy, ship, firing);
             } else if (enemy.walking()) {
-                walkers.fire(enemy, ship, firing);
+                walkers.fire(enemy, ship, firing, enemy.spoofing.active() && target < 0 && quarry == null);
             } else if (enemy.spec().sweep().isPresent()) {
                 if (enemy.telegraphStarted()) {
                     events.add(SimEvents.Type.SWEEP_TELEGRAPH, enemy.x(), enemy.y(), enemy.kind());
@@ -198,9 +223,44 @@ final class EnemyMoves {
                 // M9 part B, step B1b (design/enemies/ground/sam-nest): it holds its fire, its clock waiting, while the
                 // ship is close (no missile launched on the ship).
                 continue;
+            } else if (enemy.spec().mirror().isPresent()
+                    && enemy.burstLeft == 0
+                    && !enemy.mirroring.aimed(enemy.spec().mirror().get(), enemy, aimX, aimY)) {
+                // M10 part A (design/enemies/air/mirror-interceptor): it fires only while its mirror faces the ship.
+                continue;
             } else if (enemy.trigger() && firing) {
                 EnemyGun gun = enemy.spec().gun().orElseThrow();
-                if (gun.homing().isPresent() && gun.homing().get().aimed()) {
+                boolean spoofed = enemy.spoofing.active() && target < 0 && quarry == null;
+                if (spoofed && !gun.up() && gun.mine().isEmpty() && gun.mortar().isEmpty()) {
+                    // M10 part A (the IFF spoofer): the volley that came due is held, aimed where the ship is now.
+                    int kind = gun.homing().isEmpty()
+                            ? Spoofing.AIMED
+                            : gun.homing().get().aimed() ? Spoofing.LAUNCH_AT : Spoofing.LAUNCH_ALONG;
+                    double heading = kind == Spoofing.LAUNCH_ALONG ? enemy.facing() : enemy.aim();
+                    if (enemy.spoofing.hold(enemy, kind, aimX, aimY, heading)) {
+                        continue;
+                    }
+                }
+                if (quarry != null
+                        && gun.homing().isEmpty()
+                        && !gun.up()
+                        && gun.mine().isEmpty()
+                        && gun.mortar().isEmpty()) {
+                    // M10 part A (The three-way war): its aimed volley at its prey; its bullets hit the prey wave.
+                    guns.fire(
+                            enemy.x(),
+                            enemy.y(),
+                            gun,
+                            false,
+                            enemy.aim(),
+                            ship,
+                            -1,
+                            false,
+                            enemy.frame(),
+                            aimX,
+                            aimY,
+                            enemy.hunts());
+                } else if (gun.homing().isPresent() && gun.homing().get().aimed()) {
                     // M9 part D (design/enemies/air/hornet): at its target, the ship or (the always hook) the hull
                     // escort's nearest section, homing on it.
                     if (guns.missiles().launchAt(enemy.x(), enemy.y(), gun, aimX, aimY, enemy.serial(), target)) {
@@ -223,6 +283,38 @@ final class EnemyMoves {
                 } else {
                     guns.fireAt(enemy, ship, objectiveHook.target(enemy, ship));
                 }
+            }
+        }
+    }
+
+    /**
+     * M10 part A (design/player/systems, the IFF spoofer): {@code enemy}'s held volleys that are due now, each at its
+     * stale aim (the point where the ship was, or the barrel's, rack's or turret's aim then), as it would have fired
+     * them then.
+     */
+    private void releaseHeld(Enemy enemy, Ship ship) {
+        Spoofing held = enemy.spoofing;
+        for (int k = held.due(); k >= 0; k = held.due()) {
+            int kind = held.kind(k);
+            double x = held.x(k);
+            double y = held.y(k);
+            double aim = held.aim(k);
+            held.release(k);
+            if (kind == Spoofing.TURRET || kind == Spoofing.SALVO) {
+                walkers.fireHeld(enemy, ship, kind, aim);
+                continue;
+            }
+            EnemyGun gun = enemy.spec().gun().orElseThrow();
+            if (kind == Spoofing.LAUNCH_AT) {
+                if (guns.missiles().launchAt(enemy.x(), enemy.y(), gun, x, y, enemy.serial(), -1)) {
+                    events.add(SimEvents.Type.ENEMY_FIRED, enemy.x(), enemy.y(), (int) gun.damage());
+                }
+            } else if (kind == Spoofing.LAUNCH_ALONG) {
+                if (guns.missiles().launchAlong(enemy.x(), enemy.y(), gun, aim, enemy.serial())) {
+                    events.add(SimEvents.Type.ENEMY_FIRED, enemy.x(), enemy.y(), (int) gun.damage());
+                }
+            } else {
+                guns.fire(enemy.x(), enemy.y(), gun, false, aim, ship, -1, false, enemy.frame(), x, y, null);
             }
         }
     }

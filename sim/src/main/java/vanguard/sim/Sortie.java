@@ -276,6 +276,8 @@ public final class Sortie {
     private final java.util.Optional<CruiserRun> cruisersView;
     /** M9 part H, step H1b: the mass relay's flash (Level 35); null without. */
     final RelayFlash relay;
+    /** M10 part A (design/enemies/ground/shield-pylon): the pylons' domes; null in a level without a pylon. */
+    final Domes domes;
 
     private final java.util.Optional<RelayFlash> relayView;
     /** M5 part G: the step the defend primary's synchronisation completes at; -1 without one. */
@@ -487,6 +489,9 @@ public final class Sortie {
                 .orElse(null);
         cruisersView = java.util.Optional.ofNullable(cruisers);
         relay = script.hazards().relay().map(RelayFlash::new).orElse(null);
+        domes = force.kinds().stream().anyMatch(kind -> kind.dome().isPresent())
+                ? new Domes(force.enemies(), events)
+                : null;
         relayView = java.util.Optional.ofNullable(relay);
         fire.cruisers(cruisers);
         if (wingman != null && cruisers != null) {
@@ -720,6 +725,10 @@ public final class Sortie {
         fire.move(scrollStep, force.enemies(), ground);
         boolean firing = flying() && !complete;
         force.move(ship, firing, scrollStep);
+        if (domes != null) {
+            // M10 part A: the domes cover the ground units where they stand now, before every hit pass.
+            domes.step();
+        }
         if (belts.any()) {
             // M7 part F: the conveyor belts carry the ground units on them.
             belts.carry(force.enemies(), groundScroll);
@@ -1397,6 +1406,11 @@ public final class Sortie {
      */
     boolean drop(PickupType type, double x, double y) {
         return pickupPasses.drop(type, x, y);
+    }
+
+    /** M10 part A (design/enemies/ground/shield-pylon): the pylons' domes; null in a level without a pylon. */
+    public Domes domes() {
+        return domes;
     }
 
     /** Destroys enemy {@code index} as a hit would, paying it (for tests). */

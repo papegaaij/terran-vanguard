@@ -126,8 +126,25 @@ public interface AttackSpecs {
         }
     }
 
-    /** {@code count} bullets in a ring at {@code speed} px/s, each dealing {@code damage}. */
-    public record DeathBurst(int count, double speed, double damage) {}
+    /**
+     * {@code count} bullets in a ring at {@code speed} px/s, each dealing {@code damage}. M10 part A (design/enemies/
+     * air/harrow, the {@code death-burst} on contact): with {@code onContact} the ring comes on every death however
+     * close the ship is (a ram's included), and its bullets cannot hit the ship for their first {@code graceSeconds}
+     * after a ram; with {@code between} the ring is turned so that the ship's bearing falls between two bullets.
+     */
+    public record DeathBurst(
+            int count, double speed, double damage, boolean onContact, boolean between, double graceSeconds) {
+        public DeathBurst {
+            if (!(graceSeconds >= 0) || (!onContact && graceSeconds > 0)) {
+                throw new IllegalArgumentException("a death burst's grace is a burst on contact's: " + graceSeconds);
+            }
+        }
+
+        /** A ring that spawns only clear of the ship (before Act 6). */
+        public DeathBurst(int count, double speed, double damage) {
+            this(count, speed, damage, false, false, 0);
+        }
+    }
 
     /**
      * M5 part F, the {@code latch} block with the {@code drain} attack (design/enemies/air/lamprey; user

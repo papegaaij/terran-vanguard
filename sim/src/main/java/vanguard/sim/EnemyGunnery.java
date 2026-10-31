@@ -21,8 +21,9 @@ final class EnemyGunnery {
             // M9 part B: a dormant unit and its wake tell fire nothing; nor does a wing member scattering.
             return false;
         }
-        if (u.growTicks > 0) {
-            // M5 part H: a root burst's growth fires nothing while it grows.
+        if (u.growTicks > 0 || u.regrowing.quiet()) {
+            // M5 part H: a root burst's growth fires nothing while it grows; M10 part A: nor a regrowing turret while
+            // its root is exposed or it knits.
             return false;
         }
         if (u.phase == Enemy.Phase.CHAIN && u.chain.spec().cars().isPresent()) {

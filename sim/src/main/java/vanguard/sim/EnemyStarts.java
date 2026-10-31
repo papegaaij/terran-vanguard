@@ -233,6 +233,13 @@ final class EnemyStarts {
         u.groundSweep.clear();
         u.toppling.clear();
         u.branch = -1;
+        u.mirroring.clear();
+        u.regenerating.clear();
+        u.regrowing.clear();
+        u.spoofing.clear();
+        u.covered = false;
+        u.shunned = false;
+        u.hunts = "";
         u.broodTicks = -1;
         u.escorting.clear();
         u.walking.clear();

@@ -121,6 +121,16 @@ import java.util.Optional;
  * @param preyRole M9 part F (design/enemies/space/void-leech, The uneasy alliance; Level 33): a wave's marked prey (a
  *     hunting latch takes it instead of the ship: {@link PreyLatches}) or a chaser that hunts the nearest free prey
  *     instead of the ship ({@link PreyRole}); {@link PreyRole#NONE} for every other unit
+ * @param mirror M10 part A (design/enemies, Reflect): its mirror over a frontal arc ({@link Mirror}, its state a
+ *     {@link Mirroring}); empty for none. A unit carries a mirror or a hex shield, never both
+ * @param regeneration M10 part A (design/enemies, Regeneration): its HP's refill after a quiet spell ({@link
+ *     Regeneration}); empty for none
+ * @param regrowth M10 part A (design/enemies/ground/graft-turret): its turret's regrowth over an exposed root ({@link
+ *     Regrowth}); a fixed ground unit's; empty for none
+ * @param dome M10 part A (design/enemies/ground/shield-pylon): the dome it projects over the ground units near it
+ *     ({@link Dome}); a fixed ground unit's; empty for none
+ * @param spoofable M10 part A (design/player/systems, the IFF spoofer): its aimed volleys and told attacks come late
+ *     while the ship carries the spoofer ({@link Spoofing})
  */
 public record EnemySpec(
         String slug,
@@ -191,8 +201,13 @@ public record EnemySpec(
         Optional<Hitbox> core,
         Optional<GroundSweep> groundSweep,
         Optional<Topple> topple,
-        PreyRole preyRole)
-        implements FlightSpecs, WalkerSpecs, ChainSpecs, LayerSpecs, AttackSpecs, HostSpecs {
+        PreyRole preyRole,
+        Optional<Mirror> mirror,
+        Optional<Regeneration> regeneration,
+        Optional<Regrowth> regrowth,
+        Optional<Dome> dome,
+        boolean spoofable)
+        implements FlightSpecs, WalkerSpecs, ChainSpecs, LayerSpecs, AttackSpecs, HostSpecs, JovianSpecs {
     /** M8 part B: the most destroyable parts a unit carries (the Drill Rig's four pumps). */
     public static final int MOST_PARTS = 4;
 
@@ -206,6 +221,22 @@ public record EnemySpec(
         java.util.Objects.requireNonNull(groundSweep);
         java.util.Objects.requireNonNull(topple);
         java.util.Objects.requireNonNull(preyRole);
+        java.util.Objects.requireNonNull(mirror);
+        java.util.Objects.requireNonNull(regeneration);
+        java.util.Objects.requireNonNull(regrowth);
+        java.util.Objects.requireNonNull(dome);
+        if (mirror.isPresent() && (shield.isPresent() || chain.isPresent() || flock.isPresent() || !parts.isEmpty())) {
+            throw new IllegalArgumentException(
+                    slug + ": a mirror is a single unit's, never beside a hex shield (M10 part A, Reflect)");
+        }
+        if ((regrowth.isPresent() || dome.isPresent())
+                && (layer != Layer.GROUND || !terrain || chain.isPresent() || walker.isPresent() || !parts.isEmpty())) {
+            throw new IllegalArgumentException(
+                    slug + ": a regrowth or a dome is a fixed single ground unit's (M10 part A)");
+        }
+        if (regrowth.isPresent() && dome.isPresent()) {
+            throw new IllegalArgumentException(slug + ": a pylon does not regrow (M10 part A)");
+        }
         if (preyRole == PreyRole.PREY
                 && (layer != Layer.AIR
                         || terrain
@@ -574,6 +605,41 @@ public record EnemySpec(
         NONE,
         PREY,
         HUNTER
+    }
+
+    /** M10 part A (design/enemies, Reflect): this unit with its mirror; empty for none. */
+    public EnemySpec withMirror(Optional<Mirror> withMirror) {
+        EnemySpecCopy copy = new EnemySpecCopy(this);
+        copy.mirror = withMirror;
+        return copy.build();
+    }
+
+    /** M10 part A (design/enemies, Regeneration): this unit with its regeneration; empty for none. */
+    public EnemySpec withRegeneration(Optional<Regeneration> withRegeneration) {
+        EnemySpecCopy copy = new EnemySpecCopy(this);
+        copy.regeneration = withRegeneration;
+        return copy.build();
+    }
+
+    /** M10 part A (design/enemies/ground/graft-turret): this ground unit with its regrowth; empty for none. */
+    public EnemySpec withRegrowth(Optional<Regrowth> withRegrowth) {
+        EnemySpecCopy copy = new EnemySpecCopy(this);
+        copy.regrowth = withRegrowth;
+        return copy.build();
+    }
+
+    /** M10 part A (design/enemies/ground/shield-pylon): this ground unit with its dome; empty for none. */
+    public EnemySpec withDome(Optional<Dome> withDome) {
+        EnemySpecCopy copy = new EnemySpecCopy(this);
+        copy.dome = withDome;
+        return copy.build();
+    }
+
+    /** M10 part A (design/player/systems, the IFF spoofer): this unit as one the spoofer fools or not. */
+    public EnemySpec withSpoofable(boolean isSpoofable) {
+        EnemySpecCopy copy = new EnemySpecCopy(this);
+        copy.spoofable = isSpoofable;
+        return copy.build();
     }
 
     /** M9 part D: this air unit linked to its wave's others (design/enemies/space/shard-drone); empty for none. */

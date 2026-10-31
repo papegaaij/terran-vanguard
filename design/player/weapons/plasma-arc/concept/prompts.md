@@ -15,3 +15,17 @@
 - **Artist brief:** each strike two smooth plasma strands twisting round each other along the line, pinched at both ends, a cyan glow (#78ecff) and an indigo fringe (#697dff) kept away from the mirror's magenta, a white core; each jump a thinner braid; the same flash and sparks per struck unit. Additive light, smooth, drawn once.
 - **AI prompt:** "pre-rendered 1990s CGI game effect, two cyan plasma strands braided into a glowing rope that jumps from target to target, thinner at each jump, white core, on black, additive glow, top-down shoot'em up"
 - **Mockup generator:** `python3 tools/concept/enemies_r72.py plasma-arc [a|b]` (round 72, step ART-R-A; models built in the file on the frozen `tools/concept/render/` package)
+
+## plasma-arc-final-r73-a
+
+**Plasma Arc production frames** (round 73, M10 part A, step ART-A). Files: `plasma-arc-final-r73-a.png` (sheet) and
+`.gif` (1×, 30 fps). Generator: `python3 tools/art/act6_gear.py arc` (frames: `plasma-arc-arc-<j>_0..2`,
+`plasma-arc-spark_0..5`, `plasma-arc-glow_0..1`; layouts in the script's header).
+
+- **Brief:** round 72's A.7 a as the game draws it: the Tesla Coil Pod's jagged bolt (white core, blue-white #8cc8ff
+  glow, violet #9650ff fringe, two short forks) in a 160×48 strip stretched from source to target, 1.7× the pod's width
+  on the first strike and 0.72× as wide each jump (six widths), three shapes in turn; a white flash and six short sparks
+  per struck unit over 0.2 s; the nose's glow while it discharges. Additive light, smooth (unquantised), drawn once.
+- **Note for A4:** over Level 36's cream the additive arc reads white, its violet fringe faint; the bounced orbs keep
+  their dark rim and read apart. The small explosion's additive flash nearly vanishes on the cream band (the round-72
+  note), to judge in part B's captures.

@@ -38,9 +38,10 @@ final class EnemyDamage {
      * damage first); exactly 1 for none.
      */
     boolean damage(double amount, boolean fromAbove, boolean blast, boolean antiSub, double plating) {
-        if (u.growTicks > 0 || u.toppling.active()) {
+        if (u.invulnerable() || u.toppling.active()) {
             // M9 part E: nor does a toppling walker: it falls and is destroyed on landing.
-            // M5 part H: a root burst's growth takes no damage while it grows.
+            // M5 part H: a root burst's growth takes no damage while it grows; M10 part A: nor a unit under a dome, nor
+            // a regrowing turret while it knits.
             return false;
         }
         if (u.curlRoll.armoured() || (u.vanesClosed() && !blast) || (u.shellClosed() && !blast && !antiSub)) {
@@ -52,6 +53,8 @@ final class EnemyDamage {
         }
         // M9 part A: a hex shield spends itself first, then (M7 part D) an aura ring; only the overflow reaches the HP.
         double left = absorb(shielded(amount));
+        // M10 part A (design/enemies, Regeneration): any damage restarts a regenerating unit's delay.
+        u.regenerating.hit(u);
         if (left <= 0) {
             u.ticksSinceHit = 0;
             return false;
@@ -105,7 +108,7 @@ final class EnemyDamage {
      * off); returns whether this destroyed it.
      */
     boolean damagePart(int p, double amount, boolean fromAbove) {
-        if (!u.partAlive(p) || u.growTicks > 0 || u.toppling.active()) {
+        if (!u.partAlive(p) || u.invulnerable() || u.toppling.active()) {
             return false;
         }
         if (u.armoured()) {
@@ -114,6 +117,7 @@ final class EnemyDamage {
         }
         double left = absorb(shielded(amount));
         u.ticksSinceHit = 0;
+        u.regenerating.hit(u);
         if (left <= 0) {
             return false;
         }

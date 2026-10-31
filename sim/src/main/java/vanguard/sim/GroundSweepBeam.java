@@ -28,6 +28,13 @@ final class GroundSweepBeam {
     private double span;
     /** Whether the current sweep hit the ship. */
     private boolean hit;
+    /**
+     * M10 part A (design/player/systems, the IFF spoofer): steps left until a held telegraph starts, centred on the
+     * ship's stale bearing; 0 for none.
+     */
+    private int held;
+
+    private double heldBearing;
 
     /** Back to a unit without a sweep (or a new life). */
     void clear() {
@@ -40,6 +47,8 @@ final class GroundSweepBeam {
         from = 0;
         span = 0;
         hit = false;
+        held = 0;
+        heldBearing = 0;
     }
 
     void addTo(StateHash hash) {
@@ -50,6 +59,10 @@ final class GroundSweepBeam {
                 .add(from)
                 .add(span)
                 .add(hit ? 1 : 0);
+        if (held > 0) {
+            // M10 part A: only while a spoofed telegraph is held, so the other levels hash as before.
+            hash.add(held).add(heldBearing);
+        }
     }
 
     /**
@@ -65,24 +78,60 @@ final class GroundSweepBeam {
             double y,
             double shipX,
             double shipY) {
+        step(sweep, ground, onField, x, y, shipX, shipY, 0);
+    }
+
+    /**
+     * As {@link #step(EnemySpec.Sweep, EnemySpec.GroundSweep, boolean, double, double, double, double)}; M10 part A (the
+     * IFF spoofer): with a {@code delay} above 0 a telegraph that comes due is held that many steps, centred on the
+     * ship's bearing now; returns whether one was held in this step.
+     */
+    boolean step(
+            EnemySpec.Sweep sweep,
+            EnemySpec.GroundSweep ground,
+            boolean onField,
+            double x,
+            double y,
+            double shipX,
+            double shipY,
+            int delay) {
         if (ticks >= 0 && ++ticks >= telegraphTicks + liveTicks) {
             ticks = -1;
         }
+        if (held > 0 && --held == 0) {
+            // M10 part A (the IFF spoofer): the held telegraph starts late, centred on the ship's stale bearing.
+            begin(sweep, ground, heldBearing);
+        }
         if (!onField) {
-            return;
+            return false;
         }
         if (wait == UNARMED) {
             wait = Math.max(1, SimStep.ticks(sweep.firstDelaySeconds()));
         }
         if (--wait > 0) {
-            return;
+            return false;
         }
-        start(sweep, ground, Enemy.heading(shipX - x, shipY - y));
+        double bearing = Enemy.heading(shipX - x, shipY - y);
+        schedule(sweep, ground);
+        if (delay > 0) {
+            // M10 part A: the spoofer holds the telegraph its delay; its cycle runs on.
+            held = delay;
+            heldBearing = bearing;
+            return true;
+        }
+        begin(sweep, ground, bearing);
+        return false;
     }
 
-    private void start(EnemySpec.Sweep sweep, EnemySpec.GroundSweep ground, double bearing) {
+    /** The next sweep is counted and the wait for the one after it starts (its slot or the interval). */
+    private void schedule(EnemySpec.Sweep sweep, EnemySpec.GroundSweep ground) {
         count++;
         full = ground.fullTurn(count);
+        wait = full ? SimStep.ticks(ground.fullTurnSlotSeconds()) : SimStep.ticks(sweep.intervalSeconds());
+    }
+
+    /** The counted sweep's telegraph starts now, on {@code bearing}. */
+    private void begin(EnemySpec.Sweep sweep, EnemySpec.GroundSweep ground, double bearing) {
         ticks = 0;
         hit = false;
         if (full) {
@@ -92,7 +141,6 @@ final class GroundSweepBeam {
             span = (turn % 2 == 1 ? 2 : -2) * StrictMath.PI;
             telegraphTicks = SimStep.ticks(ground.fullTurnTelegraphSeconds());
             liveTicks = Math.max(1, SimStep.ticks(ground.fullTurnSeconds()));
-            wait = SimStep.ticks(ground.fullTurnSlotSeconds());
         } else {
             // The arcs sweep one way and the next the other, centred on the bearing.
             double direction = count % 2 == 1 ? 1 : -1;
@@ -100,7 +148,6 @@ final class GroundSweepBeam {
             span = direction * sweep.arcRadians();
             telegraphTicks = SimStep.ticks(sweep.telegraphSeconds());
             liveTicks = Math.max(1, SimStep.ticks(sweep.sweepSeconds()));
-            wait = SimStep.ticks(sweep.intervalSeconds());
         }
     }
 
@@ -110,6 +157,7 @@ final class GroundSweepBeam {
             ticks = -1;
             wait = 1;
         }
+        held = 0;
     }
 
     boolean running() {

@@ -82,8 +82,9 @@ final class GroundFire {
                     || !inBlast(x, y, weapon.blast(), enemy.x(), enemy.y(), enemy.hitbox())) {
                 continue;
             }
-            if ((enemy.spec().hardened() && !weapon.antiGround()) || enemy.growing()) {
-                events.add(SimEvents.Type.SHOT_GLANCED, enemy.x(), enemy.y(), shot.mount());
+            if ((enemy.spec().hardened() && !weapon.antiGround()) || enemy.invulnerable()) {
+                // M10 part A: a unit under a dome takes nothing (a gold spark on the dome).
+                events.add(Domes.glance(enemy), enemy.x(), enemy.y(), shot.mount());
             } else {
                 blastPart(j, enemy, x, y, weapon.blast(), shot.damage(), shot.mount());
                 if (enemy.damage(shot.damage(), true, false, weapon.antiSub())) {
@@ -198,8 +199,9 @@ final class GroundFire {
                     || !inBlast(x, y, weapon.blast(), enemy.x(), enemy.y(), enemy.hitbox())) {
                 continue;
             }
-            if ((enemy.spec().hardened() && !weapon.antiGround()) || enemy.growing()) {
-                events.add(SimEvents.Type.SHOT_GLANCED, enemy.x(), enemy.y(), shot.mount());
+            if ((enemy.spec().hardened() && !weapon.antiGround()) || enemy.invulnerable()) {
+                // M10 part A: a unit under a dome takes nothing (a gold spark on the dome).
+                events.add(Domes.glance(enemy), enemy.x(), enemy.y(), shot.mount());
             } else {
                 blastPart(j, enemy, x, y, weapon.blast(), shot.damage(), shot.mount());
                 if (enemy.damage(shot.damage(), true, false, weapon.antiSub())) {
@@ -295,9 +297,10 @@ final class GroundFire {
                     || !inBlast(x, y, radius, enemy.x(), enemy.y(), enemy.hitbox())) {
                 continue;
             }
-            if ((enemy.spec().hardened() && !weapon.antiGround()) || enemy.growing()) {
-                // M5 part C: a hardened unit glances off as a hardened ground object does (M5 part H: and a growth).
-                events.add(SimEvents.Type.SHOT_GLANCED, enemy.x(), enemy.y(), mine.mount());
+            if ((enemy.spec().hardened() && !weapon.antiGround()) || enemy.invulnerable()) {
+                // M5 part C: a hardened unit glances off as a hardened ground object does (M5 part H: and a growth;
+                // M10 part A: a unit under a dome).
+                events.add(Domes.glance(enemy), enemy.x(), enemy.y(), mine.mount());
             } else {
                 blastPart(j, enemy, x, y, radius, mine.damage(), mine.mount());
                 if (enemy.damage(mine.damage(), true, false, weapon.antiSub())) {
@@ -416,8 +419,8 @@ final class GroundFire {
                     || !inBlast(x, y, radius, enemy.x(), enemy.y(), enemy.hitbox())) {
                 continue;
             }
-            if ((enemy.spec().hardened() && !weapon.antiGround()) || enemy.growing()) {
-                events.add(SimEvents.Type.SHOT_GLANCED, enemy.x(), enemy.y(), charge.mount());
+            if ((enemy.spec().hardened() && !weapon.antiGround()) || enemy.invulnerable()) {
+                events.add(Domes.glance(enemy), enemy.x(), enemy.y(), charge.mount());
             } else {
                 blastPart(j, enemy, x, y, radius, damage, charge.mount());
                 if (enemy.damage(damage, true, false, weapon.antiSub())) {

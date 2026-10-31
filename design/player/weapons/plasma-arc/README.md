@@ -96,6 +96,15 @@ Round 72's proposals (step ART-R-A, picked 2026-10-31; generator `tools/concept/
 | [concept/plasma-arc-r72-a.png](concept/plasma-arc-r72-a.png) | Plasma Arc a, "the wide Tesla": the arc family's jagged bolt (white core, blue-white glow, violet fringe, two forks) at 1.7× the pod's width, each jump 0.72× thinner, a flash and six sparks per struck unit | chosen (round 72 A.7 a) |
 | [concept/plasma-arc-r72-a.gif](concept/plasma-arc-r72-a.gif) | The chain in the play field: L1 on a swarm of eight (they heal between discharges), then L5 on a second swarm | chosen (round 72 A.7 a) |
 
+Production art for concept round 73 (M10 part A, step ART-A), built from the frames by `tools/art/act6_gear.py arc`
+(`--review` rebuilds only the sheet; the frames wait in `build/art-held/sprites/` until the weapon's `data.yaml`
+exists, then a rerun writes them to `assets/`). Prompts: [concept/prompts.md](concept/prompts.md#plasma-arc-final-r73-a).
+
+| File | What | Status |
+|---|---|---|
+| [concept/plasma-arc-final-r73-a.png](concept/plasma-arc-final-r73-a.png) | Final frames of A.7 a: the 160×48 strips per place in the chain (the first strike 1.7× the pod's width, each jump 0.72× thinner), three shapes each, the 64 px spark burst, the nose glow, beside the Tesla Coil Pod's arc; in flight at L5 over Level 36's bands with Talon stand-ins, bounced magenta orbs drifting through and a kill on the cream (sheet) | proposed (round 73) |
+| [concept/plasma-arc-final-r73-a.gif](concept/plasma-arc-final-r73-a.gif) | The L5 chain at 5 discharges a second over Level 36's bands, 1× | proposed (round 73) |
+
 Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 
 ## Implementation

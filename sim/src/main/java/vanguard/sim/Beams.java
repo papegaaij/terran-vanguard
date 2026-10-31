@@ -132,6 +132,15 @@ final class Beams {
     private static final int CAST_ARMOUR = 6;
     /** M7 part F: an enemy's homing missile. */
     private static final int CAST_MISSILE = 7;
+    /** M10 part A (design/enemies, Reflect): a standing mirror facing the beam: heated, no hull damage. */
+    private static final int CAST_MIRROR = 8;
+    /**
+     * M10 part A (design/enemies/ground/shield-pylon): a unit under a standing dome: it stops the beam with a gold
+     * spark, on the ground layer too (not passed over).
+     */
+    private static final int CAST_DOME = 9;
+    /** M10 part A: the steps between two of a beam's {@link SimEvents.Type#DOME_HIT} sparks. */
+    private static final int DOME_SPARK_GAP = 6;
 
     /** M7 part A: the beam cast's nearest find: its kind, height, layer, index (and part) so far. */
     private int castKind;
@@ -203,7 +212,7 @@ final class Beams {
                 continue;
             }
             beam.endY = castY + Beam.BORE;
-            beam.contact = castKind == CAST_BLOCKED ? Beam.Contact.BLOCKED : Beam.Contact.BURN;
+            beam.contact = castKind == CAST_BLOCKED || castKind == CAST_DOME ? Beam.Contact.BLOCKED : Beam.Contact.BURN;
             int trigger = -1;
             double damage = weapon.damage() * groundFactor(weapon, castLayer) * water;
             switch (castKind) {
@@ -220,6 +229,18 @@ final class Beams {
                         // M7 part F: the beam goes up the screen: from behind a rear plate facing up it does more;
                         // M9 part C: into facing armour's nose it does its front factor.
                         hits.enemyDestroyed(castIndex, m);
+                    }
+                }
+                case CAST_MIRROR -> {
+                    // M10 part A: the mirror heats by the beam's damage (no hull damage) and breaks at its heat.
+                    Enemy enemy = enemies.get(castIndex);
+                    beam.target = enemy.serial();
+                    fire.hitBy(enemy.serial());
+                    enemy.mirror().heat(enemy.spec().mirror().get(), enemy, damage);
+                }
+                case CAST_DOME -> {
+                    if (beam.ticksOn % DOME_SPARK_GAP == 1) {
+                        events.add(SimEvents.Type.DOME_HIT, beam.x, castY, m);
                     }
                 }
                 case CAST_PART -> {
@@ -298,8 +319,19 @@ final class Beams {
                 continue;
             }
             double y = columnContact(x, half, fromY, enemy.x(), enemy.y(), enemy.hitbox());
+            if (enemy.spec().mirror().isPresent()
+                    && enemy.mirror().meets(enemy.spec().mirror().get(), 0, 1)) {
+                // M10 part A (design/enemies, Reflect): the beam stops on a mirror that faces it and heats it.
+                consider(CAST_MIRROR, y, layer, j, -1);
+                continue;
+            }
+            if (enemy.covered()) {
+                // M10 part A (design/enemies/ground/shield-pylon): a covered unit sparks the beam and stops it.
+                consider(CAST_DOME, y, layer, j, -1);
+                continue;
+            }
             boolean damageable =
-                    (weapon.antiGround() || !enemy.spec().hardened()) && !enemy.glances(0, 1) && !enemy.growing();
+                    (weapon.antiGround() || !enemy.spec().hardened()) && !enemy.glances(0, 1) && !enemy.invulnerable();
             if (!weapon.antiGround() && enemy.spec().core().isPresent()) {
                 // M9 part E (design/enemies/ground/sentinel-tower): the collar does not stop a beam; the beam reaches
                 // the emitter where its column crosses it.

@@ -191,6 +191,10 @@ final class BossCheckpoint {
             // M9 part H, step H1b: the relay's flash comes before the boss: spent.
             s.relay.finish();
         }
+        if (s.domes != null) {
+            // M10 part A: the field is empty: no pylon tracked.
+            s.domes.reset();
+        }
         s.complete = false;
         s.wrecked = false;
         s.failed = false;

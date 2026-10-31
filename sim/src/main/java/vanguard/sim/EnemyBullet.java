@@ -15,6 +15,18 @@ public final class EnemyBullet implements Hashed {
     private Medium medium;
     /** M8 part G: whether a heat plume bent it already (once per bullet; hashed only once set). */
     private boolean bent;
+    /**
+     * M10 part A (design/enemies, Reflect): a player shot a mirror bounced back (magenta): never bounced again, by a
+     * mirror or the Reflex Shield; hashed only once set.
+     */
+    private boolean bounced;
+    /** M10 part A (design/enemies/air/harrow): steps left in which it cannot hit the ship (a ram's ring); 0 for none. */
+    private int grace;
+    /**
+     * M10 part A (design/enemies, The three-way war): the tag of the prey wave a hunter fired it at (it also hits that
+     * wave's units at its damage); null for none.
+     */
+    private String prey;
 
     /** M8 part A: the level's medium, whose bullet speed scales every bullet as it is fired. */
     void medium(Medium water) {
@@ -29,6 +41,9 @@ public final class EnemyBullet implements Hashed {
     void fire(double startX, double startY, double velocityX, double velocityY, double bulletDamage, int aimedAt) {
         target = aimedAt;
         bent = false;
+        bounced = false;
+        grace = 0;
+        prey = null;
         x = prevX = startX;
         y = prevY = startY;
         vx = velocityX;
@@ -43,6 +58,9 @@ public final class EnemyBullet implements Hashed {
     }
 
     void move() {
+        if (grace > 0) {
+            grace--;
+        }
         prevX = x;
         prevY = y;
         x += vx * SimStep.SECONDS;
@@ -59,6 +77,40 @@ public final class EnemyBullet implements Hashed {
             // M8 part G: only a bullet a plume bent, so the other levels hash as before.
             hash.add(1);
         }
+        if (bounced || grace > 0 || prey != null) {
+            // M10 part A: only a bounced bullet, a ram ring's or a hunter's, so the other levels hash as before.
+            hash.add(bounced ? 1 : 0).add(grace).add(prey == null ? 0 : prey.hashCode());
+        }
+    }
+
+    /** M10 part A (design/enemies, Reflect): whether a mirror bounced it out of a player shot (drawn magenta). */
+    public boolean bounced() {
+        return bounced;
+    }
+
+    /** M10 part A: marks it a bounced player shot. */
+    void markBounced() {
+        bounced = true;
+    }
+
+    /** M10 part A (design/enemies/air/harrow): it cannot hit the ship for its first {@code ticks} steps. */
+    void grace(int ticks) {
+        grace = ticks;
+    }
+
+    /** M10 part A: whether it can hit the ship now (past a ram ring's grace). */
+    boolean hitsShip() {
+        return grace == 0;
+    }
+
+    /** M10 part A (The three-way war): it was fired at the prey wave tagged {@code tag}, whose units it hits too. */
+    void prey(String tag) {
+        prey = tag;
+    }
+
+    /** M10 part A: the tag of the prey wave it hits; null for none. */
+    String preyTag() {
+        return prey;
     }
 
     /** M8 part G (design/campaign Level 27; {@link HeatPlumes}): whether a heat plume bent it already. */

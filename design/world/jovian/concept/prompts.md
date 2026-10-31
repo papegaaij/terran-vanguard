@@ -81,3 +81,34 @@ for the Ascendant applied to the chosen A.13 b). Files: `falling-city-r73-b.png`
   walkway struts breaking in two over Jupiter's rust-coloured cloud bands, the struts snapped with ragged torn ends
   and bent plates, charred edges glowing orange, debris shards and smoke venting from the break, the two halves
   sinking apart into the haze.
+
+## lightning-final-r73-a
+
+**Lightning production frames** (round 73, M10 part A, step ART-A). Files: `lightning-final-r73-a.png` (sheet) and
+`.gif` (1×). Generator: `python3 tools/art/act6_gear.py lightning` (frames `lightning-tell_0..1`, a 48×64 tile repeated
+down the column, and `lightning-strike_0..2`, 112×540).
+
+- **Brief:** the telegraph as the hazards row has it: a 40 px column with faint blue-white edges and a thin blue-white
+  line down its middle, brightening for 1.0 s (never the red of an enemy `laser-line`); the strike as QA-2's pick; Level
+  12's sky flash with it (the review uses a stand-in flash). Additive, smooth, drawn once.
+
+## lightning-strike-r73-a
+
+**QA-2 a, "jagged bolt"** (round 73, recommended). Files: `lightning-strike-r73-a.png` (sheet) and `.gif` (1×).
+Generator: `python3 tools/concept/act6_r73.py lightning a` (frames from `tools/art/act6_gear.py`).
+
+- **Brief:** a jagged blue-white (#aac8ff) bolt down the whole play field, wandering inside the 40 px column, a white
+  core, a blue fringe, two short side forks (one in each half, down and out), the lane lit faintly; three shapes 2 steps
+  each through the 0.25 s, faded in the last 0.1 s; shown over round 72's Level 36 grade and Level 38's storm.
+- **AI prompt:** "pre-rendered 1990s CGI game effect, a vertical jagged blue-white lightning bolt from the top of the
+  screen to the bottom with a white core and two short forks, over storm clouds, top-down shoot'em up"
+
+## lightning-strike-r73-b
+
+**QA-2 b, "light column"** (round 73). Files: `lightning-strike-r73-b.png` (sheet) and `.gif` (1×). Generator:
+`python3 tools/concept/act6_r73.py lightning b`.
+
+- **Brief:** a straight full-height column of white light filling the 40 px lane with a thin jagged core line, its
+  soft edges fading to the core over the 0.25 s (four frames).
+- **AI prompt:** "pre-rendered 1990s CGI game effect, a straight vertical column of white-blue light with a jagged
+  bright core line, fading at the edges, over storm clouds, top-down shoot'em up"

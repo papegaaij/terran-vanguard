@@ -51,8 +51,25 @@ final class SortieOutcomes implements PlayerFire.Hits, EnemyForce.Escapes, Links
     }
 
     @Override
+    public boolean bounce(double x, double y, double vx, double vy, double damage) {
+        return s.force.bounce(x, y, vx, vy, damage);
+    }
+
+    @Override
+    public void breakerHit(int index) {
+        if (s.domes != null) {
+            s.domes.breakerHit(s.force.enemies().get(index));
+        }
+    }
+
+    @Override
     public void escaped(Enemy enemy) {
         s.objectivePasses.escaped(enemy);
+    }
+
+    @Override
+    public void lostToWar(Enemy enemy) {
+        s.objectivePasses.lostToWar(enemy);
     }
 
     @Override

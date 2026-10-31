@@ -161,6 +161,20 @@ Generator `tools/concept/act6_r72.py moods banks city` (round 73's falling city:
 | [concept/falling-city-r72-b.png](concept/falling-city-r72-b.png) | The falling city B, breaking up: the deck breaking along a fault line, the halves sinking apart, the spires toppling (storyboard) | chosen (round 72 A.13 b) |
 | [concept/falling-city-r73-b.png](concept/falling-city-r73-b.png) | The falling city B redrawn by round 72 A.11's rule: whole until the deck drops, then breaking along a jagged fault: ragged strut and deck ends, torn plate flaps, a charred, hot-glowing rim, shards in the widening gap, smoke and fire venting from both edges (storyboard) | proposed (round 73: the falling city's jagged break, round 72 A.11) |
 
+Round 73 (M10 part A, step ART-A): the lightning strike's production frames by `tools/art/act6_gear.py lightning` and
+the strike's open look (QA-2), a/b proposals by `tools/concept/act6_r73.py lightning` (a, the recommendation, written
+until the pick; the frames wait in `build/art-held/sprites/` until the game claims `lightning`). Prompts:
+[concept/prompts.md](concept/prompts.md#lightning-final-r73-a).
+
+| File | What | Status |
+|---|---|---|
+| [concept/lightning-final-r73-a.png](concept/lightning-final-r73-a.png) | Final frames: the telegraph tile `lightning-tell_0..1` (the 40 px column's faint edges, the thin blue-white line) and the strike `lightning-strike_0..2` (a); the tell, the strike and the flash over Level 38's storm and Level 36's bands, a Talon in the column dying (sheet) | proposed (round 73) |
+| [concept/lightning-final-r73-a.gif](concept/lightning-final-r73-a.gif) | Tell, strike and flash over Level 38 and Level 36 side by side, 1× | proposed (round 73) |
+| [concept/lightning-strike-r73-a.png](concept/lightning-strike-r73-a.png) | QA-2 a "jagged bolt" (recommended): a jagged blue-white bolt filling the 40 px column top to bottom, a white core, two short side forks, the sky flash; over Level 36's grade and Level 38's storm (sheet) | proposed (round 73 QA-2) |
+| [concept/lightning-strike-r73-a.gif](concept/lightning-strike-r73-a.gif) | a: the 1.0 s tell, the 0.25 s strike, over Level 36 and Level 38, 1× | proposed (round 73 QA-2) |
+| [concept/lightning-strike-r73-b.png](concept/lightning-strike-r73-b.png) | QA-2 b "light column": a straight full-height column of white light with a jagged core line, its edges fading to the core over the 0.25 s (sheet) | proposed (round 73 QA-2) |
+| [concept/lightning-strike-r73-b.gif](concept/lightning-strike-r73-b.gif) | b: the same moments, 1× | proposed (round 73 QA-2) |
+
 Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 
 ## Open questions

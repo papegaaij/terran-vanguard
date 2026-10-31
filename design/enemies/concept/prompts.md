@@ -165,3 +165,14 @@ t≈13.4–14.1, a 200×200 crop at 2×: the t=13 Talons' bubbles, lit hexes on 
 
 - **Prompt:** not applicable (comparison sheet).
 - **Mockup generator:** `python3 tools/concept/enemies_r72.py heartland-livery [a|b]` (round 72, step ART-R-A; models built in the file on the frozen `tools/concept/render/` package)
+
+## bounced-bullet-final-r73-a
+
+**The bounced bullet** (round 73, M10 part A, step ART-A; decided as trivia, pending the user's review). Files:
+`bounced-bullet-final-r73-a.png` (sheet) and `.gif` (2×). Generator: `python3 tools/art/act6_gear.py bounced` (frames
+`orb-bounced_0..15`, 27×27, 16 headings clockwise from down).
+
+- **Brief:** the Reflect rule's bounced shot is a `small` magenta bullet: the standard orb's body (enemy_bullets.py)
+  unchanged, so it reads as enemy fire of the small class, with a short soft magenta wake behind it along its flight
+  that marks a turned shot of the player's own (slow, 110 px/s); smooth alpha, no stepped halo. The game may draw the
+  plain `orb` instead if the wake is not wanted.

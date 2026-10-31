@@ -71,8 +71,10 @@ final class Homing {
             Enemy enemy = enemies.get(j);
             // M5 part E: never one under the water; M5 part F: nor a Lamprey latched onto the hull, which
             // a turret's shots pass unless its mount may hit it. M7 part G: nor one the seekers ignore (a mote).
+            // M10 part A: nor a unit under a dome while an uncovered target is on the screen.
             if (!onField(enemy)
                     || enemy.spec().seekersIgnore()
+                    || enemy.shunned
                     || !fire.medium().reaches(weapon, enemy.layer())
                     || (enemy.latched() && !fire.hitsLatched(m))) {
                 continue;
@@ -292,6 +294,8 @@ final class Homing {
             if (onField(enemy)
                     && !enemy.latched()
                     && !enemy.spec().seekersIgnore()
+                    // M10 part A: nor a unit under a dome while an uncovered target is on the screen.
+                    && !enemy.shunned
                     && medium.reaches(weapon, enemy.layer())
                     // M9 part E: a hardened collar's core (the Sentinel's emitter) is a target: the shot aims at it.
                     && (weapon.antiGround()
@@ -380,6 +384,7 @@ final class Homing {
             if (!onField(enemy)
                     || enemy.latched()
                     || enemy.spec().seekersIgnore()
+                    || enemy.shunned
                     || !medium.reaches(weapon, enemy.layer())
                     || (!weapon.antiGround()
                             && enemy.spec().hardened()

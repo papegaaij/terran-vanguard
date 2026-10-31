@@ -46,6 +46,11 @@ public final class Shot implements Hashed {
     private double range;
     /** M8 part G: whether a heat plume bent it already (once per shot; hashed only once set). */
     private boolean bent;
+    /**
+     * M10 part A (design/enemies, Reflect): a bounced shot (the Reflex Shield's bolt): never bounced again, a standing
+     * mirror absorbs it; hashed only once set.
+     */
+    private boolean bounced;
 
     /** A bolt, a homing missile, a mine or a torpedo leaving (x, y) at {@code angle}. */
     void fire(WeaponSpec spec, int mountIndex, double startX, double startY, double angle) {
@@ -99,6 +104,7 @@ public final class Shot implements Hashed {
         speedFactor = 1;
         range = spec.range();
         bent = false;
+        bounced = false;
     }
 
     /**
@@ -347,6 +353,20 @@ public final class Shot implements Hashed {
             // M8 part G: only a shot a plume bent, so the other levels hash as before.
             hash.add(1);
         }
+        if (bounced) {
+            // M10 part A: only a bounced bolt, so the other levels hash as before.
+            hash.add(2);
+        }
+    }
+
+    /** M10 part A (design/enemies, Reflect): whether it is a bounced shot (never bounced again). */
+    public boolean bounced() {
+        return bounced;
+    }
+
+    /** M10 part A: marks it a bounced shot (the Reflex Shield's bolt, A1b). */
+    void markBounced() {
+        bounced = true;
     }
 
     double x() {

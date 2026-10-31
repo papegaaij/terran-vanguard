@@ -108,6 +108,15 @@ Round 72's proposals (step ART-R-A, picked 2026-10-31; generator `tools/concept/
 | [concept/shield-pylon-r72-a.png](concept/shield-pylon-r72-a.png) | Shield Pylon a, "crown": the elite black base with a gold crown of six prongs and the emitter lens, a solid gold feed beam; the crown's 16 facings, the wreck, the dome over a covered gun on the darkest ice | chosen (round 72 A.5 a) |
 | [concept/shield-pylon-r72-a.gif](concept/shield-pylon-r72-a.gif) | A pylon gate on Callisto's citadel: the scroll halts, PYLONS 0/2, shots spend on the domes over a Rail Bunker and two guns, the pylons broken in turn (the dome's collapse into the crown), the gate opens and the scroll resumes | chosen (round 72 A.5 a) |
 
+Production art for concept round 73 (M10 part A, step ART-A): the dome's effects by `tools/art/act6_gear.py dome`
+(waiting in `build/art-held/sprites/` until the pylon's `data.yaml` exists; the mast, crown and wreck are part G's).
+Prompts: [concept/prompts.md](concept/prompts.md#pylon-dome-final-r73-a).
+
+| File | What | Status |
+|---|---|---|
+| [concept/pylon-dome-final-r73-a.png](concept/pylon-dome-final-r73-a.png) | Final dome effects of A.5 a: the 232 px dome (lattice ≈ 20 %, rim, the shimmer's 12 frames), the spent shot's hit, the 0.4 s collapse ring, the feed strip, the covered sheen; over Level 41's ice with two covered Rail Bunkers and a stand-in mast (sheet) | proposed (round 73) |
+| [concept/pylon-dome-final-r73-a.gif](concept/pylon-dome-final-r73-a.gif) | Shots spent on the dome, the mast destroyed, the ring collapsing into it, 1× | proposed (round 73) |
+
 Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 
 ## Implementation

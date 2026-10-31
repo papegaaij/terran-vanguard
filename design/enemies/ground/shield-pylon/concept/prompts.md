@@ -17,3 +17,14 @@
 - **Negative prompt:** photograph, painterly brush strokes, soft focus, perspective camera, side view, three-quarter view, text, watermark, motion blur, dithered gradients, organic shapes, blue glow
 - **Animation brief:** As a, the feed a faint line with bright packets running to the dome, the dome's lattice fading toward its middle. Every glow, haze and shadow is a smooth gradient of at least 32 steps, drawn once, with no ordered dither (the 2026-10-30 dither audit).
 - **Mockup generator:** `python3 tools/concept/enemies_r72.py shield-pylon [a|b]` (round 72, step ART-R-A; models built in the file on the frozen `tools/concept/render/` package)
+
+## pylon-dome-final-r73-a
+
+**Pylon dome production effects** (round 73, M10 part A, step ART-A). Files: `pylon-dome-final-r73-a.png` (sheet) and
+`.gif` (1×). Generator: `python3 tools/art/act6_gear.py dome` (frames `shield-pylon-dome_0..11`, `-dome-hit_0..5`,
+`-dome-collapse_0..5`, `shield-pylon-feed`, `shield-pylon-sheen_0..3`).
+
+- **Brief:** round 72's a as the game draws it: a translucent gold (#ffce5a) hex dome of 9 px cells at about 20 % with a
+  brighter rim and a slow shimmer band crossing it (12 frames, a 4 s loop), scaled by radius / 110 for easy and hard;
+  a gold spark with lit hexes where a shot is spent; the collapse a thin gold ring shrinking into the crown over 0.4 s;
+  the solid thin gold feed beam; a faint gold hex sheen over a covered unit. Additive, smooth, drawn once.

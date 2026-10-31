@@ -40,6 +40,15 @@ terminal in the player shots' blue-white) and ``swarm-tail`` (three micro-missil
 down, their trails curving back up); review sheet design/ui/hangar/concept/act5-icons-final-r61-a.png. A full
 run includes them once their data.yaml exists.
 
+``--act6`` (M10 part A batch, step ART-A, concept round 73): only the Act 6 items' icons: ``plasma-arc`` (a nose
+emitter discharging a jagged blue-white arc up to a node that forks on to two more, the chain), ``shield-reflex-shield``
+(the shield badge with its top quarter gold, as the HUD bar's open reflect window), ``generator-mk-v-crucible`` (the
+generator's ring round a white-hot core in a molten orange ring, the grade studs of a Mk V) and
+``utility-ascendancy-iff-spoofer`` (redrawn: a green reticle with a steel ghost reticle offset from it, the stale fix;
+it was a Vrell eye, the wrong faction); review sheet design/ui/hangar/concept/act6-icons-final-r73-a.png (beside
+Composite V, the Mk V "Helix" and the Ion Beam, unchanged). A full run renders them too: the spoofer always, the
+others once their data lists them (the names the game derives: the weapon slug, ``shield-<name>``, ``generator-<name>``).
+
 ``--act4`` (M8 part A batch, step ART-A, concept round 50): only the four Act 4 items' icons, the round-48
 picks as emblems: ``harpoon-torpedoes`` (gear_r48's barbed harpoon, drawn 1.7x as stout, with its teal
 line), ``depth-charges`` (the navy drum over the arcs of its pressure dome), ``special-sonar-pulse`` (the
@@ -49,7 +58,8 @@ once their data lists them (``escort-bulwark`` always, beside ``escort-rook``).
 
 Run: python3 tools/art/icons.py [--review] [--variant a|b]   (~20 s; --review only rebuilds the sheets,
 --variant only that proposal sheet); python3 tools/art/icons.py --rear-guard [--review]   (~3 s);
-python3 tools/art/icons.py --act4 [--review]   (~5 s); python3 tools/art/icons.py --act5 [--review]   (~3 s)
+python3 tools/art/icons.py --act4 [--review]   (~5 s); python3 tools/art/icons.py --act5 [--review]   (~3 s);
+python3 tools/art/icons.py --act6 [--review]   (~3 s)
 """
 import re
 import sys
@@ -111,6 +121,8 @@ def catalogue():
             name = part["name"]
             grade = re.search(r"\b(?:Mk|Composite) (VI|IV|V|I{1,3})\b", name)
             symbol = f"{kind}-{slug(name)}" if kind in ("utility", "special") else kind
+            if f"{kind}-{slug(name)}" in M10_BATCH:
+                symbol = f"{kind}-{slug(name)}"
             items.append((f"{kind}-{slug(name)}", name, symbol, ROMAN[grade.group(1)] if grade else 0))
     items.append(("escort-rook", "Rook (escort)", "escort-rook", 0))
     items.append(("escort-bulwark", "Bulwark (escort)", "escort-bulwark", 0))
@@ -531,6 +543,66 @@ def _swarm_tail():
 
 
 M9_BATCH = {"tesla-coil-pod": _tesla_pod, "swarm-tail": _swarm_tail}
+
+
+# --------------------------------------------------------------------------- the Act 6 items (M10 part A, round 73)
+M10_GLOWS = [v8.m_glow(SHOTS[2], 1.4), v8.m_glow((255, 206, 90), 1.3), v8.m_glow((255, 140, 40), 1.4)]
+M10_ARC, M10_GOLD, M10_MOLTEN = (len(MATS) + i for i in range(3))
+
+
+def _plasma_arc():
+    """Plasma Arc: the nose emitter at the foot, a thick jagged arc up to a node, two thinner jumps on (the chain)."""
+    def symbol(p):
+        first = [(0.0, -0.42), (-0.12, -0.18), (0.08, 0.02), (-0.06, 0.24)]
+        jump_r = [(-0.06, 0.24), (0.16, 0.36), (0.3, 0.3), (0.52, 0.52)]
+        jump_l = [(-0.06, 0.24), (-0.26, 0.44), (-0.4, 0.4), (-0.6, 0.66)]
+        arc_ = np.min([bolt(p, a, b, 0.09) for a, b in zip(first[:-1], first[1:])], axis=0)
+        jumps = np.min([bolt(p, a, b, 0.055) for pts in (jump_r, jump_l) for a, b in zip(pts[:-1], pts[1:])], axis=0)
+        nodes = np.min([sd_sphere(p, (x, y, 0.12), r) for x, y, r in ((-0.06, 0.24, 0.13), (0.52, 0.52, 0.1),
+                                                                      (-0.6, 0.66, 0.1))], axis=0)
+        gun = np.minimum(block(p, (0, -0.66), (0.42, 0.14)), sd_sphere(p, (0, -0.48, 0.12), 0.13))
+        return union((np.minimum(np.minimum(arc_, jumps), nodes), M10_ARC), (gun, M_STEEL))
+    return symbol, list(M10_GLOWS)
+
+
+def _reflex_shield():
+    """Reflex Shield: the shields' badge, its face cyan with the top quarter gold (the open reflect window)."""
+    outer = [(0, 0.85), (0.7, 0.55), (0.6, -0.25), (0, -0.85), (-0.6, -0.25), (-0.7, 0.55)]
+    inner = [(x * 0.7, y * 0.7) for x, y in outer]
+
+    def symbol(p):
+        face = plate(p, inner, 0.12, 0.08)
+        top = np.maximum(face, -(p[:, 1] - 0.24))
+        low = np.maximum(face, p[:, 1] - 0.18)
+        return union((plate(p, outer, 0.04, 0.08), M_STEEL), (low, M["shield"]), (top, M10_GOLD))
+    return symbol, list(M10_GLOWS)
+
+
+def _crucible():
+    """Mk V+ "Crucible": the generators' ring round a white-hot core held in a molten orange ring."""
+    def symbol(p):
+        return union((ring(p, (0, 0), 0.56, 0.13), M_STEEL), (ring(p, (0, 0), 0.34, 0.08, 0.12), M10_MOLTEN),
+                     (sd_sphere(p, (0, 0, 0.08), 0.22), M["core"]),
+                     *[(block(p, (0.84 * s_, 0), (0.12, 0.1)), M_DARK) for s_ in (-1, 1)])
+    return symbol, list(M10_GLOWS)
+
+
+def _iff_spoofer():
+    """Ascendancy IFF spoofer: a green reticle and a steel ghost of it offset up-right, the fix half a second stale."""
+    def symbol(p):
+        live = np.minimum(ring(p, (-0.16, -0.16), 0.44, 0.08), sd_sphere(p, (-0.16, -0.16, 0.12), 0.12))
+        ticks = np.min([bolt(p, (-0.16 + 0.5 * dx, -0.16 + 0.5 * dy), (-0.16 + 0.72 * dx, -0.16 + 0.72 * dy), 0.06)
+                        for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1))], axis=0)
+        ghost = np.minimum(ring(p, (0.3, 0.3), 0.42, 0.075, 0.06), sd_sphere(p, (0.3, 0.3, 0.06), 0.1))
+        return union((ghost, M_STEEL), (np.minimum(live, ticks), M["util"]))
+    return symbol, list(M10_GLOWS)
+
+
+M10_BATCH = {"plasma-arc": _plasma_arc, "shield-reflex-shield": _reflex_shield,
+             "generator-mk-v-crucible": _crucible, "utility-ascendancy-iff-spoofer": _iff_spoofer}
+M10_GRADE = {"generator-mk-v-crucible": 5}
+M10_SOURCE = artkit.source_note(SCRIPT, "M10 part A batch")
+M10_REVIEW = CONCEPT / "act6-icons-final-r73-a.png"
 M9_SOURCE = artkit.source_note(SCRIPT, "M9 part A batch")
 M9_REVIEW = CONCEPT / "act5-icons-final-r61-a.png"
 
@@ -548,7 +620,10 @@ def emblem(symbol, grade):
     """(scene in badge units, materials) of one icon."""
     mats = list(MATS)
     act3 = act3_symbol(symbol, VARIANT) if symbol in ACT3 else None
-    if act3 is not None:
+    if symbol in M10_BATCH:
+        inner, extra = M10_BATCH[symbol]()
+        mats += extra
+    elif act3 is not None:
         inner, extra = act3
         mats += extra
     elif symbol in M8_BATCH:
@@ -611,7 +686,8 @@ def build():
     with ProcessPoolExecutor() as pool:
         for job, img in zip(jobs, pool.map(render, jobs)):
             artkit.save_png(img, OUT / f"{job[0]}.png", G_SOURCE if job[1] in G_BATCH
-                            else M8_SOURCE if job[1] in M8_BATCH else M9_SOURCE if job[1] in M9_BATCH else SOURCE)
+                            else M8_SOURCE if job[1] in M8_BATCH else M9_SOURCE if job[1] in M9_BATCH
+                            else M10_SOURCE if job[1] in M10_BATCH else SOURCE)
     print(f"{len(jobs)} icons ({len(jobs) // len(SIZES)} items x {len(SIZES)} sizes)")
 
 
@@ -782,8 +858,52 @@ def review_m9():
     print(f"review: {M9_REVIEW.relative_to(ROOT)}")
 
 
+def build_m10():
+    """The M10 part A batch only: writes its four icons, leaves every other icon as it is."""
+    OUT.mkdir(parents=True, exist_ok=True)
+    jobs = [(name + suffix, name, M10_GRADE.get(name, 0), size) for name in M10_BATCH for suffix, size in SIZES.items()]
+    with ProcessPoolExecutor() as pool:
+        for job, img in zip(jobs, pool.map(render, jobs)):
+            artkit.save_png(img, OUT / f"{job[0]}.png", M10_SOURCE)
+    print(f"{len(jobs)} icons (M10 part A batch)")
+
+
+def review_m10():
+    """Review sheet: the four Act 6 icons at 1x and enlarged, beside the icons they sit next to in the shop."""
+    labels = {"plasma-arc": "PLASMA ARC", "shield-reflex-shield": "REFLEX SHIELD",
+              "generator-mk-v-crucible": "MK V+ CRUCIBLE", "utility-ascendancy-iff-spoofer": "IFF SPOOFER (NEW)",
+              "plating-composite-v": "COMPOSITE V (AS IS)", "generator-mk-v-helix": "MK V HELIX (STYLE)",
+              "ion-beam": "ION BEAM (STYLE)", "shield-mk-v": "SHIELD MK V (STYLE)"}
+    names = list(labels)
+    cell, cols = 260, 4
+    rows_ = (len(names) + cols - 1) // cols
+    sheet = raster.sheet(16 + cols * cell + 16, 60 + rows_ * 132, "ACT 6 EQUIPMENT ICONS (FINAL R73)",
+                         "PRODUCTION ART, M10 PART A BATCH - R73")
+    raster.draw_text(sheet, 16, 38, "16X16 (SHOP ROWS) AT 1X AND 4X, 24X24 (SELECTED, CALLOUTS) AT 1X AND 3X;"
+                                    " SECOND ROW: EXISTING ICONS FOR THE STYLE", raster.LABEL)
+    for i, name in enumerate(names):
+        x, y = 16 + (i % cols) * cell, 56 + (i // cols) * 132
+        small = Image.open(OUT / f"{name}.png").convert("RGBA")
+        large = Image.open(OUT / f"{name}-large.png").convert("RGBA")
+        plate_ = Image.new("RGBA", (cell - 8, 104), (6, 8, 26, 255))
+        plate_.alpha_composite(small, (2, 2))
+        plate_.alpha_composite(sprite.enlarge(small, 4), (22, 2))
+        plate_.alpha_composite(large, (92, 2))
+        plate_.alpha_composite(sprite.enlarge(large, 3), (120, 2))
+        sheet.alpha_composite(plate_, (x, y))
+        raster.draw_text(sheet, x + 2, y + 108, labels[name], raster.LABEL_DIM)
+    M10_REVIEW.parent.mkdir(parents=True, exist_ok=True)
+    sheet.convert("RGB").save(M10_REVIEW, optimize=True)
+    print(f"review: {M10_REVIEW.relative_to(ROOT)}")
+
+
 if __name__ == "__main__":
     args = sys.argv[1:]
+    if "--act6" in args:
+        if "--review" not in args:
+            build_m10()
+        review_m10()
+        sys.exit()
     if "--act5" in args:
         if "--review" not in args:
             build_m9()

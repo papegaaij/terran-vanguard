@@ -28,6 +28,14 @@ public final class LineBeam {
     private boolean live;
     /** Whether the current line struck the ship. */
     private boolean hit;
+    /**
+     * M10 part A (design/player/systems, the IFF spoofer): steps left until a held telegraph starts (0: it starts as
+     * soon as it may); -1 for none. Its aim is the ship where it was when the telegraph came due.
+     */
+    private int held = -1;
+
+    private double staleX;
+    private double staleY;
 
     /** Back to a unit without a line (a new life). */
     void clear() {
@@ -38,6 +46,7 @@ public final class LineBeam {
         aim.clear();
         live = false;
         hit = false;
+        held = -1;
     }
 
     /** Hashed only for a unit with a line. */
@@ -50,6 +59,10 @@ public final class LineBeam {
                 .add(aim.dirY())
                 .add(live ? 1 : 0)
                 .add(hit ? 1 : 0);
+        if (held >= 0) {
+            // M10 part A: only while a spoofed telegraph is held, so the other levels hash as before.
+            hash.add(held).add(staleX).add(staleY);
+        }
     }
 
     /**
@@ -69,6 +82,7 @@ public final class LineBeam {
         if (ticks >= 0 && !live) {
             ticks = -1;
         }
+        held = -1;
     }
 
     /**
@@ -111,6 +125,18 @@ public final class LineBeam {
         if (wait > 0) {
             wait--;
         }
+        if (held >= 0) {
+            // M10 part A (the IFF spoofer): a held telegraph starts late, at the ship's stale position.
+            if (held > 0) {
+                held--;
+            }
+            if (held > 0 || ticks >= 0 || !onField || !mayStart) {
+                return false;
+            }
+            held = -1;
+            begin(unit, line, staleX, staleY, events);
+            return true;
+        }
         if (wait > 0 || ticks >= 0 || !onField || !mayStart) {
             return false;
         }
@@ -120,6 +146,22 @@ public final class LineBeam {
         if (distance <= line.holdWithinPx() || distance == 0) {
             return false;
         }
+        wait = SimStep.ticks(line.intervalSeconds());
+        if (unit.spoofing.active()) {
+            // M10 part A: the spoofer holds the telegraph its delay (its cycle runs on), aimed where the ship is now.
+            held = unit.spoofing.delay;
+            staleX = shipX;
+            staleY = shipY;
+            events.add(SimEvents.Type.SPOOF_HESITATE, unit.x(), unit.y(), unit.kind());
+            return false;
+        }
+        begin(unit, line, shipX, shipY, events);
+        return true;
+    }
+
+    /** A telegraph starts now from {@code unit}, its line locked through (shipX, shipY). */
+    private void begin(Enemy unit, EnemySpec.LaserLine line, double shipX, double shipY, SimEvents events) {
+        int telegraph = SimStep.ticks(line.telegraphSeconds());
         fromX = unit.x();
         fromY = unit.y();
         // Round 69's B.2: it rides on over the telegraph (a bunker scrolls with the ground): aim from where it fires.
@@ -133,9 +175,7 @@ public final class LineBeam {
         ticks = 0;
         live = false;
         hit = false;
-        wait = SimStep.ticks(line.intervalSeconds());
         events.add(SimEvents.Type.LINE_TELEGRAPH, unit.x(), unit.y(), unit.kind());
-        return true;
     }
 
     /**

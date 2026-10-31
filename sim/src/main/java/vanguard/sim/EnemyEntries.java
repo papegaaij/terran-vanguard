@@ -253,6 +253,7 @@ final class EnemyEntries {
                 }
                 enemy.entered(schedule.lastEntry());
                 enemy.tag(schedule.lastTag());
+                enemy.hunts = schedule.lastHunts();
                 enemy.volley(schedule.lastVolleyGroup(), schedule.lastVolleyUnit());
                 enemy.wavePlace(schedule.lastPlace());
                 if (force.airLinks() != null && spawn.enemy().airLink().isPresent()) {

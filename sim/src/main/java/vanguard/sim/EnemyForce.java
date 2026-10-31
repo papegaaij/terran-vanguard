@@ -42,6 +42,14 @@ final class EnemyForce {
          * part's: no kill), just before it is freed.
          */
         default void wreckPaid(Enemy car) {}
+
+        /**
+         * M10 part A (design/enemies, The three-way war): a unit was lost to the war, not to the player (a prey unit the
+         * hunters killed, a hunter dead on its prey), just before it is freed: no kill, no pay.
+         */
+        default void lostToWar(Enemy enemy) {
+            escaped(enemy);
+        }
     }
 
     private final SimEvents events;
@@ -81,6 +89,8 @@ final class EnemyForce {
     private final EnemyMoves moves;
     /** M9 part F: the prey latches (Level 33's uneasy alliance); null in a level without a prey unit. */
     private final PreyLatches prey;
+    /** M10 part A (The three-way war): the hunting waves' prey; null in a level without a hunting wave. */
+    private final PreyWar war;
     /** M7 part E: the pull on the ship. */
     private final EnemyPull pull;
     /** The entries: waves, halt cycle, ground units, the units let in outside the waves. */
@@ -231,8 +241,12 @@ final class EnemyForce {
                 chainRules,
                 flocks,
                 carriers);
-        // M9 part F: only in a level with prey (Level 33's marked Talon wings).
-        prey = kinds.stream().anyMatch(kind -> kind.preyRole() == EnemySpec.PreyRole.PREY)
+        // M10 part A (The three-way war): only in a level with a hunting wave.
+        boolean hunting = waveSpecs.stream().anyMatch(wave -> !wave.hunts().isEmpty())
+                || haltSpecs.stream().anyMatch(wave -> !wave.hunts().isEmpty());
+        war = hunting ? new PreyWar(enemies, guns.bullets(), events, escapes) : null;
+        // M9 part F: only in a level with prey (Level 33's marked Talon wings); M10 part A: or a hunting wave.
+        prey = hunting || kinds.stream().anyMatch(kind -> kind.preyRole() == EnemySpec.PreyRole.PREY)
                 ? new PreyLatches(enemies, events)
                 : null;
         moves = new EnemyMoves(
@@ -247,7 +261,21 @@ final class EnemyForce {
                 walkers,
                 rings,
                 rollers,
-                prey);
+                prey,
+                war);
+    }
+
+    /** M10 part A (The three-way war): the hunting waves' prey; null in a level without a hunting wave. */
+    PreyWar war() {
+        return war;
+    }
+
+    /**
+     * M10 part A (design/player/systems, the IFF spoofer): the ship carries the spoofer: every spoofable unit's aimed
+     * volleys come {@code delaySeconds} late at their stale aim (0: none, as without the module).
+     */
+    void spoof(double delaySeconds) {
+        moves.spoof(Math.max(0, SimStep.ticks(delaySeconds)));
     }
 
     /** M9 part D: the air links of the linked groups; null in a level without an air-linked unit. */
@@ -546,6 +574,10 @@ final class EnemyForce {
         if (prey != null) {
             // M9 part F: the leeches on their prey, then the new prey latches.
             prey.step();
+        }
+        if (war != null) {
+            // M10 part A: the hunting rammers on their prey.
+            war.rams();
         }
 
         if (auras) {
@@ -870,9 +902,14 @@ final class EnemyForce {
         return guns.objectiveLobDamage();
     }
 
+    /** M10 part A (design/enemies, Reflect): a mirror's bounced bullet ({@link EnemyFire#bounce}). */
+    boolean bounce(double x, double y, double vx, double vy, double damage) {
+        return guns.bounce(x, y, vx, vy, damage);
+    }
+
     /** A destroyed unit with a death burst pops into its puff of bullets. */
-    void deathBurst(Enemy enemy, Ship ship) {
-        guns.deathBurst(enemy, ship);
+    void deathBurst(Enemy enemy, Ship ship, boolean rammed) {
+        guns.deathBurst(enemy, ship, rammed);
     }
 
     /** A ring of {@code count} bullets from (x, y) ({@link EnemyFire#burst}). */
@@ -886,6 +923,10 @@ final class EnemyForce {
 
     void moveBullets() {
         guns.moveBullets();
+        if (war != null) {
+            // M10 part A: the hunters' bullets that reach their prey.
+            war.bullets();
+        }
     }
 
     /**

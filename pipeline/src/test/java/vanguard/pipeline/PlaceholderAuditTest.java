@@ -144,6 +144,10 @@ class PlaceholderAuditTest {
             "M9 part H, step H4: round 68's proposals for Level 35 (step AUD-H2), their a variants until the user's picks,"
                     + " from the Freesound HQ previews of CC0/CC-BY sounds (CREDITS rows from step AUD-H2; by"
                     + " tools/concept/audio/sfx_r68.py)";
+    private static final String ROUND_72 =
+            "M10 part A, step AUD-A: round 72's picks for the Act 6 systems (the user, 2026-10-31: a, but b for the"
+                    + " lightning strike and the dome's collapse), from the Freesound HQ previews of CC0/CC-BY sounds until"
+                    + " the originals (CREDITS rows from step AUD-R; by tools/concept/audio/sfx_r72.py)";
     private static final String ROUND_60_H =
             "M9 part H, step H4: round 60's pick for the Iron Sovereign's rings turning (the user, 2026-10-27: S.16 a),"
                     + " from the Freesound HQ previews of CC0/CC-BY sounds until the originals (CREDITS rows from step"
@@ -486,6 +490,15 @@ class PlaceholderAuditTest {
             Map.entry("sfx/relay-charge-r68-a.ogg", ROUND_68),
             Map.entry("sfx/relay-flash-r68-a.ogg", ROUND_68),
             Map.entry("sfx/sovereign-ring-turn-r60-a.ogg", ROUND_60_H),
+            Map.entry("sfx/regrowth-creak-r72-a.ogg", ROUND_72),
+            Map.entry("sfx/mirror-ping-r72-a.ogg", ROUND_72),
+            Map.entry("sfx/reflex-ricochet-r72-a.ogg", ROUND_72),
+            Map.entry("sfx/lightning-tell-r72-a.ogg", ROUND_72),
+            Map.entry("sfx/lightning-strike-r72-b.ogg", ROUND_72),
+            Map.entry("sfx/eruption-r72-a.ogg", ROUND_72),
+            Map.entry("sfx/pylon-dome-up-r72-a.ogg", ROUND_72),
+            Map.entry("sfx/pylon-dome-down-r72-b.ogg", ROUND_72),
+            Map.entry("sfx/graft-regrowth-r72-a.ogg", ROUND_72),
             Map.entry("music/iron-sovereign.ogg", ROUND_68_MUSIC),
             Map.entry("music/reveal-sting.ogg", ROUND_58_MUSIC),
             Map.entry("music/thera-deep-dark.ogg", ROUND_55_MUSIC),

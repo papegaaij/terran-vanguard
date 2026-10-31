@@ -46,6 +46,8 @@ final class ObjectivePasses {
      * checkpoint.
      */
     boolean targetKilled;
+    /** M10 part A (design/enemies/air/harrow): whether the unit being destroyed died ramming the ship. */
+    private boolean rammed;
 
     ObjectivePasses(
             Sortie s,
@@ -161,6 +163,16 @@ final class ObjectivePasses {
         radio.cue(CueTrigger.ESCORT_FIRST_KILL, "");
     }
 
+    /**
+     * M10 part A (design/enemies/air/harrow): enemy {@code index} died ramming the ship: destroyed as by a hit (it pays
+     * as a kill), its death burst on contact with the ship's grace.
+     */
+    void destroyRammed(int index) {
+        rammed = true;
+        destroy(index);
+        rammed = false;
+    }
+
     void destroy(int index) {
         Pool<Enemy> enemies = force.enemies();
         Enemy enemy = enemies.get(index);
@@ -169,6 +181,10 @@ final class ObjectivePasses {
             // M9 part B (design/campaign Level 29, Hold fire): a neutral craft down is no kill: no credits, no chain;
             // the first one fails a spared objective.
             neutralDown(index, enemy);
+            return;
+        }
+        if (spec.regrowth().isPresent() && regrown(index, enemy)) {
+            // M10 part A (design/enemies/ground/graft-turret): a regrown turret or its root.
             return;
         }
         events.add(SimEvents.Type.ENEMY_DESTROYED, enemy.x(), enemy.y(), enemy.kind());
@@ -246,7 +262,7 @@ final class ObjectivePasses {
             s.pickupPasses.drop(spec.drop().get().pickup(), enemy.x(), enemy.y());
         }
         if (spec.deathBurst().isPresent()) {
-            force.deathBurst(enemy, ship);
+            force.deathBurst(enemy, ship, rammed);
         }
         if (spec.brood().isPresent()) {
             force.hatch(enemy, ship);
@@ -283,7 +299,15 @@ final class ObjectivePasses {
             force.scatter(enemy, ship);
         }
         boolean holder = enemy.holder();
-        enemies.free(index);
+        if (spec.regrowth().isPresent()) {
+            // M10 part A (design/enemies/ground/graft-turret, Regrowth): its first death paid and counted it; it stays
+            // as its exposed root, and counts nowhere again (no group, no holder, no escape).
+            enemy.regrowing.expose(spec.regrowth().get(), enemy);
+            enemy.group = -1;
+            enemy.holder = false;
+        } else {
+            enemies.free(index);
+        }
         if (holder) {
             // M9 part B: a held arena's holder fell.
             s.holderDown(x, y);
@@ -301,6 +325,59 @@ final class ObjectivePasses {
             // M8 part B (design/campaign Level 22, radio): the first unit the objective counts destroyed, once.
             targetKilled = true;
             radio.cue(CueTrigger.TARGET_DESTROYED, "");
+        }
+    }
+
+    /**
+     * M10 part A (design/enemies/ground/graft-turret, Regrowth): a paid regrowing unit destroyed again: its exposed
+     * root's death ends it for good ({@link SimEvents.Type#ROOT_KILLED}, its bonus paid as a part's: no kill), a regrown
+     * turret's exposes the root again and pays and counts nothing. Returns false for its first death (the usual kill).
+     */
+    private boolean regrown(int index, Enemy unit) {
+        Regrowing cycle = unit.regrowing;
+        EnemySpec.Regrowth regrowth = unit.spec().regrowth().orElseThrow();
+        if (cycle.phase() == Regrowing.Phase.ROOT) {
+            events.add(SimEvents.Type.ROOT_KILLED, unit.x(), unit.y(), unit.kind());
+            tally.partKill(regrowth.rootBounty());
+            force.enemies().free(index);
+            return true;
+        }
+        if (cycle.paid()) {
+            cycle.expose(regrowth, unit);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * M10 part A (design/enemies, The three-way war): a unit lost to the war, not to the player (a prey unit the
+     * hunters killed, a hunter dead on its prey): {@link SimEvents.Type#PREY_KILLED} at it (value its kind); no kill,
+     * no pay, no chain; its links, flock and holder end and its group counts it as got away, as a unit that left. The
+     * force frees it.
+     */
+    void lostToWar(Enemy enemy) {
+        events.add(SimEvents.Type.PREY_KILLED, enemy.x(), enemy.y(), enemy.kind());
+        if (enemy.holder()) {
+            s.holderDown(enemy.x(), enemy.y());
+        }
+        if (links != null && enemy.spec().link().isPresent()) {
+            links.anchorGone(enemy, true);
+        }
+        force.linkMemberGone(enemy, true);
+        if (enemy.flock() != null) {
+            force.flockMemberGone(enemy);
+        }
+        if (enemy.group() >= 0) {
+            int group = enemy.group();
+            int state = objectives.groupUnitEscaped(group);
+            if (!script.objectives().targets().isEmpty()) {
+                failTargets(group);
+            } else {
+                decided(group, state, enemy.x(), enemy.y());
+            }
+        }
+        if (objectives.escapeLost(enemy.spec().slug(), enemy.tag())) {
+            events.add(SimEvents.Type.OBJECTIVE_FAILED, enemy.x(), enemy.y());
         }
     }
 
@@ -542,6 +619,10 @@ final class ObjectivePasses {
      * objective's enemy fails it, and the first of an enemy calls its line.
      */
     void escaped(Enemy enemy) {
+        if (enemy.regrowth().paid()) {
+            // M10 part A: a regrowing turret paid and counted at its first death: its scrolling off counts nowhere.
+            return;
+        }
         String slug = enemy.spec().slug();
         if (enemy.spec().neutral()) {
             // M9 part B (Level 29, Hold fire): a neutral craft left the screen: it counts toward a spared objective.

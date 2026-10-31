@@ -73,7 +73,7 @@ final class ArcFire {
                     || (enemy.latched() && !fire.hitsLatched(m))
                     || !medium.reaches(weapon, enemy.layer())
                     || enemy.spec().hardened()
-                    || enemy.growing()
+                    || enemy.invulnerable()
                     || !inSpread(x, y, enemy.x(), enemy.y(), weapon)) {
                 continue;
             }
@@ -121,6 +121,20 @@ final class ArcFire {
             double ey = enemy.y();
             mark(m, ex, ey);
             fire.hitBy(struck);
+            if (enemy.spec().mirror().isPresent()
+                    && enemy.mirror().meets(enemy.spec().mirror().get(), ex - x, ey - y)) {
+                // M10 part A (design/enemies, Reflect): a breaker's arc shatters a mirror facing it and goes on to the
+                // hull at full damage; any other arc is absorbed by it (no projectile to bounce).
+                if (!weapon.shieldBreaker()) {
+                    events.add(SimEvents.Type.MIRROR_ABSORBED, ex, ey, m);
+                    return true;
+                }
+                enemy.mirror().shatter(enemy.spec().mirror().get(), enemy);
+            }
+            if (weapon.shieldBreaker()) {
+                // M10 part A (design/enemies/ground/shield-pylon): a breaker's hit on a pylon drops its dome a while.
+                hits.breakerHit(unit);
+            }
             // M9 part C: facing armour takes the arc by its direction from the pod (after the shield).
             boolean destroyed = weapon.shieldBreaker()
                     ? enemy.damageBreaking(damage, ex - x, ey - y)
@@ -205,7 +219,7 @@ final class ArcFire {
                     || !onField(enemy)
                     || enemy.latched()
                     || enemy.spec().hardened()
-                    || enemy.growing()
+                    || enemy.invulnerable()
                     || !inBlast(x, y, weapon.blast(), enemy.x(), enemy.y(), enemy.hitbox())) {
                 continue;
             }

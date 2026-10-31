@@ -39,12 +39,28 @@ final class EnemyFlight {
             // M9 part A: a hex shield's hold and refill run on the real steps (the EMP's hold covers its stun).
             u.hexShield.step(u.spec.shield().orElseThrow(), u.events, u.x, u.y(), u.kind);
         }
+        if (u.spec.mirror().isPresent()) {
+            // M10 part A: a mirror's gap, cooling, down time and regrowth run on the real steps.
+            u.mirroring.tick(u.spec.mirror().get(), u);
+        }
+        if (u.spec.regrowth().isPresent()) {
+            // M10 part A: the root's window and the knit are biological: they run through an EMP stun.
+            u.regrowing.tick(u.spec.regrowth().get(), u);
+        }
         if (u.empStun > 0) {
             // M7 part A: its own clock stops (its timers included) while the EMP Burst's stun lasts.
             u.empStun--;
             return u.phase == Enemy.Phase.CHAIN
                     || u.phase == Enemy.Phase.FLOCK
                     || stunnedStep(shipX, shipY, groundScroll);
+        }
+        if (u.spec.regeneration().isPresent()) {
+            // M10 part A: its delay and its healing run on its own clock (an EMP stun pauses both).
+            u.regenerating.step(u.spec.regeneration().get(), u);
+        }
+        if (u.spoofing.holding()) {
+            // M10 part A: its held volleys come nearer on its own clock.
+            u.spoofing.tick();
         }
         if (u.wakeTicks > 0 && --u.wakeTicks == 0 && u.spec.gun().isPresent()) {
             // M9 part B: awake, its gun waits its first-shot delay from here.
@@ -213,14 +229,18 @@ final class EnemyFlight {
                 }
                 if (u.spec.groundSweep().isPresent() && u.dormantTick < 0 && u.wakeTicks == 0) {
                     // M9 part E (design/enemies/ground/sentinel-tower): its sweep, all round, while on the field.
-                    u.groundSweep.step(
+                    if (u.groundSweep.step(
                             u.spec.sweep().orElseThrow(),
                             u.spec.groundSweep().get(),
                             PlayField.overlaps(u.x, u.y, u.box),
                             u.x,
                             u.y,
                             shipX,
-                            shipY);
+                            shipY,
+                            u.spoofing.delay)) {
+                        // M10 part A (the IFF spoofer): its telegraph is held (the amber stutter).
+                        u.events.add(SimEvents.Type.SPOOF_HESITATE, u.x, u.y(), u.kind);
+                    }
                 }
                 return u.y + u.box.height() / 2 > 0 && !carriedOffTop(groundScroll);
             }

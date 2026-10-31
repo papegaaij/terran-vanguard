@@ -842,6 +842,14 @@ clear. Prompts: [concept/prompts.md](concept/prompts.md#enemy-shield-final-r64).
 | [concept/enemy-shield-final-r64-a.gif](concept/enemy-shield-final-r64-a.gif) | The three units shielded: hits, emptied, 2 s quiet, the refill, 2× | chosen (round 64, F.1: accepted as final) |
 | [concept/enemy-shield-capture-r64-a.png](concept/enemy-shield-capture-r64-a.png) | Game captures of the production lattice (step D5; [recipe](concept/prompts.md#enemy-shield-capture-r64-a)): Level 29's first Talons under the beam at 2× (the bubble, lit hexes on a hit, the shatter ring) and a Level 30 convoy Gunship with its escort Talons at 2× | chosen (round 64, F.1: accepted as final) |
 
+Round 73 (M10 part A, step ART-A): the mirror's bounced bullet (the [Reflect](#reflect) rule) by
+`tools/art/act6_gear.py bounced`. Prompts: [concept/prompts.md](concept/prompts.md#bounced-bullet-final-r73-a).
+
+| File | What | Status |
+|---|---|---|
+| [concept/bounced-bullet-final-r73-a.png](concept/bounced-bullet-final-r73-a.png) | `orb-bounced_0..15`: the standard magenta orb with a short soft magenta wake, 16 headings, beside the orb; at 1× among standard orbs over Level 36's and Level 38's grades (sheet) | proposed (round 73) |
+| [concept/bounced-bullet-final-r73-a.gif](concept/bounced-bullet-final-r73-a.gif) | Bounced orbs (110 px/s) drifting among standard orbs (160 px/s) over both grades, 2× | proposed (round 73) |
+
 Round 72, Q9 (step ART-R-A, picked 2026-10-31; `tools/concept/enemies_r72.py heartland-livery`): the heartland's liveries side by side. Prompts: [concept/prompts.md](concept/prompts.md#heartland-livery-r72-a).
 
 | File | What | Status |

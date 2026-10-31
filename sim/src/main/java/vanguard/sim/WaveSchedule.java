@@ -45,6 +45,8 @@ final class WaveSchedule {
     private final int[] volleyUnits;
     /** M5 part C: per planned unit, its wave's tag ("" for none). */
     private final String[] tags;
+    /** M10 part A (The three-way war): per planned unit, the prey wave's tag its wave hunts ("" for none). */
+    private final String[] hunts;
     /** The number of volley clocks: one per staggered walker wave. */
     private final int volleyClocks;
     /** M7 part B: per planned unit, its place in its wave (from 0, in planning order). */
@@ -127,6 +129,7 @@ final class WaveSchedule {
         Map<Spawn, WaveSpec.Entry> entryOf = new IdentityHashMap<>();
         Map<Spawn, int[]> volleyOf = new IdentityHashMap<>();
         Map<Spawn, String> tagOf = new IdentityHashMap<>();
+        Map<Spawn, String> huntsOf = new IdentityHashMap<>();
         Map<Spawn, int[]> placeOf = new IdentityHashMap<>();
         Map<Spawn, Boolean> flipOf = new IdentityHashMap<>();
         Map<Spawn, Boolean> headFirstOf = new IdentityHashMap<>();
@@ -170,6 +173,9 @@ final class WaveSchedule {
                     }
                 }
                 tagOf.put(planned.get(i), wave.tag());
+                if (!wave.hunts().isEmpty()) {
+                    huntsOf.put(planned.get(i), wave.hunts());
+                }
                 if (wave.branch().isPresent()) {
                     branchOf.put(planned.get(i), wave.branch().get().code());
                 }
@@ -221,6 +227,7 @@ final class WaveSchedule {
         volleyGroups = new int[spawns.length];
         volleyUnits = new int[spawns.length];
         tags = new String[spawns.length];
+        hunts = new String[spawns.length];
         places = new int[spawns.length];
         waveSizes = new int[spawns.length];
         burrowGroups = new int[spawns.length];
@@ -245,6 +252,7 @@ final class WaveSchedule {
             waveSizes[i] = place[2];
             burrowGroups[i] = place[1];
             tags[i] = tagOf.getOrDefault(spawns[i], "");
+            hunts[i] = huntsOf.getOrDefault(spawns[i], "");
             entries[i] = entryOf.getOrDefault(spawns[i], WaveSpec.Entry.FRONT);
             int[] volley = volleyOf.getOrDefault(spawns[i], new int[] {-1, 0});
             volleyGroups[i] = volley[0];
@@ -458,6 +466,11 @@ final class WaveSchedule {
     /** M5 part C: the tag of the wave of the unit {@link #due} returned last ("" for none). */
     String lastTag() {
         return tags[next - 1];
+    }
+
+    /** M10 part A: the prey wave's tag the wave of the unit {@link #due} returned last hunts ("" for none). */
+    String lastHunts() {
+        return hunts[next - 1];
     }
 
     /** The place in its wave (from 0, in entry order) of the unit {@link #due} returned last. */

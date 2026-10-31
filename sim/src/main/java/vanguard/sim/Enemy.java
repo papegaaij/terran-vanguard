@@ -501,6 +501,20 @@ public final class Enemy implements Hashed {
     final EnemyGunnery gunnery = new EnemyGunnery(this);
     /** How it takes damage. */
     final EnemyDamage hurt = new EnemyDamage(this);
+    /** M10 part A (design/enemies, Reflect): its mirror's state (a mirrored unit's; idle for the others). */
+    final Mirroring mirroring = new Mirroring();
+    /** M10 part A (design/enemies, Regeneration): its healing's state (a regenerating unit's). */
+    final Regenerating regenerating = new Regenerating();
+    /** M10 part A (design/enemies/ground/graft-turret): its regrowth cycle (a regrowing unit's). */
+    final Regrowing regrowing = new Regrowing();
+    /** M10 part A (design/player/systems, the IFF spoofer): its late volleys (a spoofable unit's). */
+    final Spoofing spoofing = new Spoofing();
+    /** M10 part A (design/enemies/ground/shield-pylon): whether a standing dome covers it this step ({@link Domes}). */
+    boolean covered;
+    /** M10 part A: whether the seekers skip it this step (covered while an uncovered target is on the screen). */
+    boolean shunned;
+    /** M10 part A (design/enemies, The three-way war): the tag of the prey wave its wave hunts; "" for none. */
+    String hunts = "";
 
     /** A unit whose events go nowhere (for tests that fly one on its own). */
     Enemy() {
@@ -802,6 +816,40 @@ public final class Enemy implements Hashed {
     }
 
     /**
+     * M10 part A: whether it takes no damage now, from any path (shots, blasts, beams, arcs, specials, Rook): a root
+     * burst's growth still growing ({@link #growing()}), a ground unit a standing dome covers ({@link #covered()}), or a
+     * regrowing turret knitting (or its root in the step it was exposed). The one predicate every damage path asks.
+     */
+    public boolean invulnerable() {
+        return growTicks > 0 || covered || regrowing.shielded();
+    }
+
+    /** M10 part A (design/enemies/ground/shield-pylon): whether a standing dome covers it (the gold hex sheen). */
+    public boolean covered() {
+        return covered;
+    }
+
+    /** M10 part A: its mirror's state ({@link EnemySpec#mirror()}; idle for a unit without one). */
+    public Mirroring mirror() {
+        return mirroring;
+    }
+
+    /** M10 part A: its regeneration's state ({@link EnemySpec#regeneration()}; idle for a unit without one). */
+    public Regenerating regeneration() {
+        return regenerating;
+    }
+
+    /** M10 part A: its regrowth cycle ({@link EnemySpec#regrowth()}; a standing turret for a unit without one). */
+    public Regrowing regrowth() {
+        return regrowing;
+    }
+
+    /** M10 part A (The three-way war): the tag of the prey wave its wave hunts; "" for none. */
+    public String hunts() {
+        return hunts;
+    }
+
+    /**
      * M5 part H: how far a root burst's growth has grown, between the previous and the current step
      * ({@code alpha} in [0, 1]): from 0 as it appears to 1 once grown; 1 for every other unit.
      */
@@ -1002,6 +1050,10 @@ public final class Enemy implements Hashed {
                 diveX,
                 frame.y(diveY),
                 objective);
+        if (flying && empStun == 0 && spec.mirror().isPresent()) {
+            // M10 part A (design/enemies, Reflect): its mirror turns on its own clock (not while stunned).
+            mirroring.turn(spec.mirror().get(), this, shipX, shipY);
+        }
         if (flying && wind != 0) {
             if (spec.spiral().isPresent()) {
                 double push = wind * SimStep.SECONDS;
@@ -1044,6 +1096,10 @@ public final class Enemy implements Hashed {
         empStun = ticks;
         // M9 part A (design/enemies/ground/rail-bunker, EMP): a running laser line's telegraph is cancelled.
         lineBeam.cancel();
+        if (spec.mirror().isPresent()) {
+            // M10 part A (design/enemies, Reflect): the EMP Burst shatters a standing mirror at once.
+            mirroring.shatter(spec.mirror().get(), this);
+        }
         if (spec.groundSweep().isPresent()) {
             // M9 part E (design/enemies/ground/sentinel-tower, EMP): the beam is cut mid-sweep.
             groundSweep.cut();

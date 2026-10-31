@@ -6657,3 +6657,104 @@ Use: Level 41 (Callisto's fortress decks; Levels 40 and 42 keep `belt-open`): th
 Brief: fortress machinery heard through the hull (the belt's vacuum treatment: no wind, sounds as through the cockpit): deep machines, a transformer hum, hull creaks, a far heavy clunk now and then; a seamless 16 s loop; a real recording, heavy, nothing bubbly or popping.
 This one: a ship's engine-room machinery slowed to 0.6 and muffled over a deep room tone; once a loop the hull creak and a door knock slowed to half (a far heavy clunk): darker than a, 16.0 s loop.
 Edit: 16.00 s, band RMS −42.1 dB, peak −23.9 dBFS, −35.0 LUFS.
+
+## Concept round 73, step AUD-A (M10 part A: the mirror's heat loop and its climb render, break and regrow chime, the Shield Pylon dome's hit, the Reflex bolt absorbed on a mirror)
+
+### mirror-heat-r73-a — "Gas Torch Burn" by SyntaxSeed + "Torch - Full work cycle of cutting metal" by ldezem
+
+Proposed (round 73), cut from the HQ previews by `tools/concept/audio/sfx_r73.py`.
+Sources: <https://freesound.org/people/SyntaxSeed/sounds/244230/> (Gas Torch Burn by SyntaxSeed, CC0 1.0), <https://freesound.org/people/ldezem/sounds/386382/> (Torch - Full work cycle of cutting metal by ldezem, CC0 1.0).
+Use: a beam held on a Mirror Interceptor's mirror face (Levels 38-42; the Ascendant's panels too): one loop while any mirror heats, for the nearest, its pitch rising with the heat (0.85 at 0 % to 1.35 at the break, about 1.0 s of the plan's beam) and stopping when the beam leaves or the mirror breaks; often in a mirror fight, under the beam's own loop.
+Brief: a rising hot-metal hiss: a gas torch on sheet steel, its pitch climbing as the plate goes red to white; dry (no quench, no steam, nothing bubbly); this file is the steady loop the game pitches; a real recording, nothing bubbly or popping.
+This one: a gas torch's steady burn over the hiss of a cutting torch biting into steel plate: a dry roaring hiss, bright on top, 2.0 s loop.
+Edit: 2.00 s, band RMS −34.1 dB, peak −19.1 dBFS, −28.6 LUFS.
+
+### mirror-heat-r73-b — "070916 Machine room transformer hum 1.wav" by thaighaudio + "welder 2.wav" by SpeedY
+
+Proposed (round 73), cut from the HQ previews by `tools/concept/audio/sfx_r73.py`.
+Sources: <https://freesound.org/people/thaighaudio/sounds/349688/> (070916 Machine room transformer hum 1.wav by thaighaudio, CC0 1.0), <https://freesound.org/people/SpeedY/sounds/62923/> (welder 2.wav by SpeedY, CC0 1.0).
+Use: a beam held on a Mirror Interceptor's mirror face (Levels 38-42; the Ascendant's panels too): one loop while any mirror heats, for the nearest, its pitch rising with the heat (0.85 at 0 % to 1.35 at the break, about 1.0 s of the plan's beam) and stopping when the beam leaves or the mirror breaks; often in a mirror fight, under the beam's own loop.
+Brief: a rising hot-metal hiss: a gas torch on sheet steel, its pitch climbing as the plate goes red to white; dry (no quench, no steam, nothing bubbly); this file is the steady loop the game pitches; a real recording, nothing bubbly or popping.
+This one: an arc welder at work: a machine-room transformer's hum under the welding arc's dry crackle, more of an electric hum than a, 2.0 s loop.
+Edit: 2.00 s, band RMS −34.8 dB, peak −17.6 dBFS, −28.0 LUFS.
+
+### mirror-heat-demo-r73-a — "Gas Torch Burn" by SyntaxSeed + "Torch - Full work cycle of cutting metal" by ldezem
+
+Proposed (round 73), cut from the HQ previews by `tools/concept/audio/sfx_r73.py`.
+Sources: <https://freesound.org/people/SyntaxSeed/sounds/244230/> (Gas Torch Burn by SyntaxSeed, CC0 1.0), <https://freesound.org/people/ldezem/sounds/386382/> (Torch - Full work cycle of cutting metal by ldezem, CC0 1.0).
+Use: review file for the heat loop: what the game plays while a beam heats a mirror to its break in 1.0 s (the loop gliding 0.85 → 1.35); the game plays the loop itself.
+Brief: a rising hot-metal hiss: a gas torch on sheet steel, its pitch climbing as the plate goes red to white; dry (no quench, no steam, nothing bubbly); a real recording, nothing bubbly or popping.
+This one: loop a (the gas torch on steel) climbing over 1.0 s, as heard in the game, 1.25 s.
+Edit: 1.25 s, band RMS −34.1 dB, peak −19.4 dBFS, −28.9 LUFS.
+
+### mirror-heat-demo-r73-b — "070916 Machine room transformer hum 1.wav" by thaighaudio + "welder 2.wav" by SpeedY
+
+Proposed (round 73), cut from the HQ previews by `tools/concept/audio/sfx_r73.py`.
+Sources: <https://freesound.org/people/thaighaudio/sounds/349688/> (070916 Machine room transformer hum 1.wav by thaighaudio, CC0 1.0), <https://freesound.org/people/SpeedY/sounds/62923/> (welder 2.wav by SpeedY, CC0 1.0).
+Use: review file for the heat loop: what the game plays while a beam heats a mirror to its break in 1.0 s (the loop gliding 0.85 → 1.35); the game plays the loop itself.
+Brief: a rising hot-metal hiss: a gas torch on sheet steel, its pitch climbing as the plate goes red to white; dry (no quench, no steam, nothing bubbly); a real recording, nothing bubbly or popping.
+This one: loop b (the arc welder's hum) climbing over 1.0 s, as heard in the game, 1.25 s.
+Edit: 1.25 s, band RMS −35.8 dB, peak −19.2 dBFS, −28.0 LUFS.
+
+### mirror-break-r73-a — "Glass Shattering and Falling" by 221Beimesche
+
+Proposed (round 73), cut from the HQ previews by `tools/concept/audio/sfx_r73.py`.
+Source: <https://freesound.org/people/221Beimesche/sounds/336425/> (Glass Shattering and Falling by 221Beimesche, CC0 1.0).
+Use: a Mirror Interceptor's mirror breaking (Levels 38-42): broken by its heat, a `shield-breaker` hit or the EMP, as its shards fly (and the Ascendant's panels); a reward, a few a fight.
+Brief: a real glass pane shattering, heavier and longer than the enemy shield's break (round 60's glass break) and apart from the player shield's break (a falling zap), so the three never mix; a real recording, nothing bubbly or popping.
+This one: a glass pane shattering and its shards falling, slowed to 0.85 so it reads as a big heavy plate: a long crash with a rain of shards, 2.8 s.
+Edit: 2.80 s, the loudest 100 ms band −22.2 dB, peak −11.0 dBFS, −31.2 LUFS.
+
+### mirror-break-r73-b — "BROKEN CAR WINDOW.wav" by thecommondanger
+
+Proposed (round 73), cut from the HQ previews by `tools/concept/audio/sfx_r73.py`.
+Source: <https://freesound.org/people/thecommondanger/sounds/587928/> (BROKEN CAR WINDOW.wav by thecommondanger, CC0 1.0).
+Use: a Mirror Interceptor's mirror breaking (Levels 38-42): broken by its heat, a `shield-breaker` hit or the EMP, as its shards fly (and the Ascendant's panels); a reward, a few a fight.
+Brief: a real glass pane shattering, heavier and longer than the enemy shield's break (round 60's glass break) and apart from the player shield's break (a falling zap), so the three never mix; a real recording, nothing bubbly or popping.
+This one: a car's side window (tempered glass) breaking: a bright burst into small grains, shorter and drier than a, 0.95 s.
+Edit: 0.95 s, the loudest 100 ms band −30.3 dB, peak −14.7 dBFS, −22.3 LUFS.
+
+### mirror-regrow-r73-a — "Singing Bowl - Soft Stick Meditative Hit" by Rimych
+
+Proposed (round 73), cut from the HQ previews by `tools/concept/audio/sfx_r73.py`.
+Source: <https://freesound.org/people/Rimych/sounds/616335/> (Singing Bowl - Soft Stick Meditative Hit by Rimych, CC0 1.0).
+Use: a mirror coming back (Levels 38-42): with its 0.4 s silver shimmer, 3 s after a break; now and then, the tell that the mirror stands again.
+Brief: a low soft chime: a singing bowl struck softly, short; never a ping (the bounce) or a bell's alarm; a real recording, nothing bubbly or popping.
+This one: a deep singing bowl struck with a soft stick, sped to 1.5: a warm low hum-tone that blooms and fades, 1.0 s.
+Edit: 1.00 s, the loudest 100 ms band −27.9 dB, peak −21.7 dBFS, −27.6 LUFS.
+
+### mirror-regrow-r73-b — "singing bowl strike sound" by inoshirodesign
+
+Proposed (round 73), cut from the HQ previews by `tools/concept/audio/sfx_r73.py`.
+Source: <https://freesound.org/people/inoshirodesign/sounds/271370/> (singing bowl strike sound by inoshirodesign, CC0 1.0).
+Use: a mirror coming back (Levels 38-42): with its 0.4 s silver shimmer, 3 s after a break; now and then, the tell that the mirror stands again.
+Brief: a low soft chime: a singing bowl struck softly, short; never a ping (the bounce) or a bell's alarm; a real recording, nothing bubbly or popping.
+This one: a smaller singing bowl struck softly: a brighter, clearer chime than a, ringing higher, 1.0 s.
+Edit: 1.00 s, the loudest 100 ms band −28.0 dB, peak −19.4 dBFS, −28.1 LUFS.
+
+### pylon-dome-hit-r73-a — "Civilian Stun Gun 1/10s zap" by AnthonyChan0 + "23cm glass bowl - tone - wooden spoon 01.wav" by Anthousai
+
+Proposed (round 73), cut from the HQ previews by `tools/concept/audio/sfx_r73.py`.
+Sources: <https://freesound.org/people/AnthonyChan0/sounds/264779/> (Civilian Stun Gun 1/10s zap by AnthonyChan0, CC0 1.0), <https://freesound.org/people/Anthousai/sounds/448070/> (23cm glass bowl - tone - wooden spoon 01.wav by Anthousai, CC0 1.0).
+Use: a shot hitting a Shield Pylon's dome (Level 41; throttled: once per 0.15 s), the dome absorbing it; often in a pylon gate.
+Brief: a short bright electric zap with a glassy ring; never the Level 17 colony dome's big glass boom, never the mirror's ping; a real recording, nothing bubbly or popping.
+This one: a stun gun's tenth-of-a-second zap with a glass bowl struck under it (sped to 1.5): a crackling snap and a short clear ring, 0.47 s.
+Edit: 0.47 s, the loudest 100 ms band −29.6 dB, peak −9.7 dBFS, −26.1 LUFS.
+
+### pylon-dome-hit-r73-b — "ELECTRIC_ZAP_001.wav" by JoelAudio + "ANI - Wine Glass - Hard" by ani_music
+
+Proposed (round 73), cut from the HQ previews by `tools/concept/audio/sfx_r73.py`.
+Sources: <https://freesound.org/people/JoelAudio/sounds/136542/> (ELECTRIC_ZAP_001.wav by JoelAudio, CC0 1.0), <https://freesound.org/people/ani_music/sounds/198401/> (ANI - Wine Glass - Hard by ani_music, CC0 1.0).
+Use: a shot hitting a Shield Pylon's dome (Level 41; throttled: once per 0.15 s), the dome absorbing it; often in a pylon gate.
+Brief: a short bright electric zap with a glassy ring; never the Level 17 colony dome's big glass boom, never the mirror's ping; a real recording, nothing bubbly or popping.
+This one: an electric zap's buzzy snap with a wine glass struck hard under it: a thinner, higher ring than a, 0.47 s.
+Edit: 0.47 s, the loudest 100 ms band −36.0 dB, peak −12.2 dBFS, −26.2 LUFS.
+
+### bolt-absorbed-r73-a — "Quick static noise" by Rvgerxini
+
+Proposed (round 73), cut from the HQ previews by `tools/concept/audio/sfx_r73.py`.
+Source: <https://freesound.org/people/Rvgerxini/sounds/456827/> (Quick static noise by Rvgerxini, CC0 1.0).
+Use: a Reflex Shield bolt hitting a standing mirror's face (Levels 38-42; a spark, no bounce): now and then while the Reflex turns enemy fire, quiet, under the fire.
+Brief: a short dry electric tick; quiet; a real recording, nothing bubbly or popping.
+This one: a quick burst of static cut to a tick: a dry electric crackle, 0.1 s.
+Edit: 0.10 s, the loudest 100 ms band −32.0 dB, peak −10.9 dBFS, −inf LUFS.

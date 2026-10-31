@@ -1066,7 +1066,67 @@ public final class SimEvents {
         /** M9 part H: the mass relay fires along its line (at the edge, on the line); value 0. */
         RELAY_FIRED,
         /** M9 part H: the relay's flash struck the ship (at the ship); value 0. */
-        RELAY_HIT;
+        RELAY_HIT,
+        /**
+         * M10 part A (design/enemies, Reflect): a mirror bounced a player shot back as a slow magenta bullet (at the
+         * shot: the bright glassy ping); value: the mount that fired it.
+         */
+        MIRROR_BOUNCED,
+        /**
+         * M10 part A: a mirror absorbed a shot with a spark (one inside the bounce gap, Rook's, a bounced bolt, an arc
+         * that is not a breaker's; at the shot); value: the mount that fired it.
+         */
+        MIRROR_ABSORBED,
+        /**
+         * M10 part A: a mirror broke under a beam (value 0: the glass shatter) or was shattered by a breaker's hit or the
+         * EMP Burst (value 1); at the unit. It is down for its down time, then regrows.
+         */
+        MIRROR_BROKEN,
+        /** M10 part A: a broken mirror starts to regrow (the silver shimmer, the low chime; at the unit); value: its kind. */
+        MIRROR_REGROWING,
+        /**
+         * M10 part A (design/enemies, Regeneration): a regenerating unit starts to heal (value 1: the teal seam pulse,
+         * the soft rising creak) or stops (value 0: a hit, or full again); at the unit.
+         */
+        REGENERATING,
+        /**
+         * M10 part A (design/enemies/ground/graft-turret, Regrowth): a regrowing turret is destroyed and its root
+         * exposed (the shell bursts open; at the unit); value: its kind. Its first death also reports {@link
+         * #ENEMY_DESTROYED} (the kill); a regrown turret's only this.
+         */
+        ROOT_EXPOSED,
+        /** M10 part A: an exposed root was destroyed: the unit is gone for good (the tearing crumble); value: its kind. */
+        ROOT_KILLED,
+        /** M10 part A: the root's window closed: the turret knits back over it (not hittable); value: its kind. */
+        KNITTING,
+        /** M10 part A: the turret stands again with its full HP (it fires after its wake); value: its kind. */
+        REGROWN,
+        /**
+         * M10 part A (design/enemies/ground/shield-pylon): a hit on a unit under a dome spent itself with a gold spark (at
+         * the hit; a beam's every few steps); value: the mount (-1 for a special's blast).
+         */
+        DOME_HIT,
+        /** M10 part A: a dome dropped (an EMP stun, a breaker's hit on its pylon; at its centre); value: the pylon's kind. */
+        DOME_DOWN,
+        /** M10 part A: a dropped dome stands again after its flicker (at its centre); value: the pylon's kind. */
+        DOME_UP,
+        /** M10 part A: a dome collapsed for good, its pylon gone (the shrinking gold ring; at its centre); value 0. */
+        DOME_COLLAPSED,
+        /**
+         * M10 part A (design/enemies, The three-way war): a hunter's bullet or ram struck a unit of its prey wave (the
+         * teal flash where it lands); value: the struck unit's kind.
+         */
+        PREY_HIT,
+        /**
+         * M10 part A: a unit was lost to the war, not to the player (a prey unit the hunters killed, a hunter dead on its
+         * prey; at the unit): drawn as a kill, paying nothing; value: its kind.
+         */
+        PREY_KILLED,
+        /**
+         * M10 part A (design/player/systems, the IFF spoofer): a spoofable unit's volley came due and is held (the amber
+         * muzzle stutter; at the unit); value: its kind.
+         */
+        SPOOF_HESITATE;
 
         private static final Type[] VALUES = values();
     }

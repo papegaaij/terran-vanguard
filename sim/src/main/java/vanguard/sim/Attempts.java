@@ -101,6 +101,9 @@ final class Attempts {
         if (s.relay != null) {
             s.relay.reset();
         }
+        if (s.domes != null) {
+            s.domes.reset();
+        }
         s.latches.reset();
         s.allies.reset();
         s.levelTick = 0;

@@ -44,6 +44,8 @@ import java.util.Optional;
  * @param mount M8 part E (design/campaign Level 25): where its units come out of the trench's walls: a cave's ({@link
  *     Mount#cave}: they spawn at a notch's back and swim out) or the walls' feet ({@link Mount#wall}: nests mounted
  *     on them); empty for every other wave
+ * @param hunts M10 part A (design/enemies, The three-way war): the tag of the prey wave its units hunt (their chase,
+ *     dive or ram, latch and aimed fire go at its units, their bullets hit them; {@link PreyWar}); empty for none
  */
 public record WaveSpec(
         double t,
@@ -71,10 +73,16 @@ public record WaveSpec(
         Optional<EnemySpec> leader,
         Optional<OnRocks> onRocks,
         Optional<MineLines> mineLines,
-        Optional<Branch> branch) {
+        Optional<Branch> branch,
+        String hunts) {
     public WaveSpec {
         java.util.Objects.requireNonNull(mineLines);
         java.util.Objects.requireNonNull(branch);
+        java.util.Objects.requireNonNull(hunts);
+        if (!hunts.isEmpty() && (hunts.equals(tag) || enemy.chain().isPresent())) {
+            throw new IllegalArgumentException(
+                    enemy.slug() + ": a hunting wave hunts another wave's tag, never its own (M10 part A): " + hunts);
+        }
         if (branch.isPresent() && entry != Entry.FRONT) {
             throw new IllegalArgumentException(
                     enemy.slug() + ": a branch's wave flies in its channel from the front (M9 part E)");

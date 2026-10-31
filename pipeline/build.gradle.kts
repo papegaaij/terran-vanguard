@@ -450,6 +450,20 @@ val copyPlaceholderSounds = tasks.register<JavaExec>("copyPlaceholderSounds") {
         "sovereign-implosion-r68-a.ogg",
         "relay-charge-r68-a.ogg",
         "relay-flash-r68-a.ogg",
+        // M10 part A, step AUD-A: round 72's picks for the Act 6 systems (the user, 2026-10-31: a, but b for the
+        // lightning strike and the dome's collapse; CC0/CC-BY Freesound HQ previews cut by tools/concept/audio/sfx_r72.py,
+        // their CREDITS.md rows; the originals wait for the download quota): the hybrids' regrowth creak, the mirror's
+        // ping, the Reflex ricochet, the lightning's tell and strike, Io's eruption, the pylon dome coming up and
+        // collapsing, the Graft Turret's regrowth. Played once step A3 wires them (the tissue tear waits for the root).
+        "regrowth-creak-r72-a.ogg",
+        "mirror-ping-r72-a.ogg",
+        "reflex-ricochet-r72-a.ogg",
+        "lightning-tell-r72-a.ogg",
+        "lightning-strike-r72-b.ogg",
+        "eruption-r72-a.ogg",
+        "pylon-dome-up-r72-a.ogg",
+        "pylon-dome-down-r72-b.ogg",
+        "graft-regrowth-r72-a.ogg",
     )
 }
 

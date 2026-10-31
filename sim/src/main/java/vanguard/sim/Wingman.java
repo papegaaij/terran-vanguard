@@ -582,8 +582,11 @@ public final class Wingman {
             flank |= beside && enemy.spec().countsAsEnemy();
             // M5 part C: on its current layer; a hardened unit only for an anti-ground gun. M7 part G (user
             // decision 2026-10-20): never one the seekers ignore (a mote), though it is a flank threat.
+            // M10 part A (design/enemies/ground/shield-pylon): a covered unit while an uncovered target is on the
+            // screen.
             if (!reaches(enemy.layer())
                     || enemy.spec().seekersIgnore()
+                    || enemy.shunned
                     || (enemy.spec().hardened()
                             && !spec.gun().antiGround()
                             && enemy.spec().core().isEmpty())

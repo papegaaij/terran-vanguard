@@ -100,6 +100,19 @@ Production art for concept round 26 (the M4 part H batch), review files built fr
 | [concept/shield-ring-final-r26-a.png](concept/shield-ring-final-r26-a.png) | Final shield-hit ring (`ship-shield_0..3`, 60×60, additive): round 08's hex shimmer on a round bubble, the cells lighting up around a hit at the front and a ripple running back, fading over 4 frames; alone and over the hull | chosen |
 | [concept/shield-ring-final-r26-a.gif](concept/shield-ring-final-r26-a.gif) | The ring over the hull at the game's 2 steps a frame | chosen |
 
+Round 73 (M10 part A, step ART-A): the Reflex Shield's production frames by `tools/art/act6_gear.py reflex` and the
+bolt's open look (QA-3), a/b proposals by `tools/concept/act6_r73.py bolt` (a written to the game's files until the
+pick). Prompts: [concept/prompts.md](concept/prompts.md#reflex-shield-final-r73-a).
+
+| File | What | Status |
+|---|---|---|
+| [concept/reflex-shield-final-r73-a.png](concept/reflex-shield-final-r73-a.png) | Final frames: the gold hex flash `ship-reflex_0..3` (60×60, the blue ring's shapes in gold) beside the blue one, the bolt `ship-reflex-bolt_0..3` (a) and its trail; over Level 36, the window open (gold flash, a bolt up per hit) beside below 75 % (sheet) | proposed (round 73) |
+| [concept/reflex-shield-final-r73-a.gif](concept/reflex-shield-final-r73-a.gif) | The two cases side by side, 2× | proposed (round 73) |
+| [concept/reflex-bolt-r73-a.png](concept/reflex-bolt-r73-a.png) | QA-3 a "white-gold bullet": the bolt in the enemy bullet's round shape in white-gold with a dark rim and a short gold trail, beside the enemy orb, the gold needle and the bounced orb on Level 36's grade, and in flight (sheet) | proposed (round 73 QA-3) |
+| [concept/reflex-bolt-r73-a.gif](concept/reflex-bolt-r73-a.gif) | a in flight: orbs on the full Reflex Shield, gold flashes, bolts up, needles and a bounced orb drifting through, 2× | proposed (round 73 QA-3) |
+| [concept/reflex-bolt-r73-b.png](concept/reflex-bolt-r73-b.png) | QA-3 b "gold needle": a thin gold needle with a white core, a dark rim and a faint trail, the same layout (sheet) | proposed (round 73 QA-3) |
+| [concept/reflex-bolt-r73-b.gif](concept/reflex-bolt-r73-b.gif) | b in flight, 2× | proposed (round 73 QA-3) |
+
 ## Implementation
 
 - [x] Shield capacity, regen, delay and break behaviour

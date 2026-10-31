@@ -78,6 +78,11 @@ final class EnemySpecCopy {
     Optional<EnemySpec.GroundSweep> groundSweep;
     Optional<EnemySpec.Topple> topple;
     EnemySpec.PreyRole preyRole;
+    Optional<EnemySpec.Mirror> mirror;
+    Optional<EnemySpec.Regeneration> regeneration;
+    Optional<EnemySpec.Regrowth> regrowth;
+    Optional<EnemySpec.Dome> dome;
+    boolean spoofable;
 
     /** The base stats with every other component left out ({@link EnemySpec#of}). */
     EnemySpecCopy(
@@ -158,6 +163,11 @@ final class EnemySpecCopy {
         groundSweep = Optional.empty();
         topple = Optional.empty();
         preyRole = EnemySpec.PreyRole.NONE;
+        mirror = Optional.empty();
+        regeneration = Optional.empty();
+        regrowth = Optional.empty();
+        dome = Optional.empty();
+        spoofable = false;
     }
 
     EnemySpecCopy(EnemySpec spec) {
@@ -230,6 +240,11 @@ final class EnemySpecCopy {
         groundSweep = spec.groundSweep();
         topple = spec.topple();
         preyRole = spec.preyRole();
+        mirror = spec.mirror();
+        regeneration = spec.regeneration();
+        regrowth = spec.regrowth();
+        dome = spec.dome();
+        spoofable = spec.spoofable();
     }
 
     EnemySpec build() {
@@ -302,6 +317,11 @@ final class EnemySpecCopy {
                 core,
                 groundSweep,
                 topple,
-                preyRole);
+                preyRole,
+                mirror,
+                regeneration,
+                regrowth,
+                dome,
+                spoofable);
     }
 }

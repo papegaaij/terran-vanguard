@@ -333,6 +333,18 @@ it, the outline only.
 the Tesla Coil Pod (its pod model with a jagged arc in the player shots' cyan leaping from the terminal) and the Swarm
 Tail (three white micro-missiles fanned out backwards, nose down, short ivory trails).
 
+## act6-icons-final-r73
+
+`tools/art/icons.py --act6` (M10 part A, step ART-A, round 73): the hangar badges of the Act 6 items in the icon set's
+style: the Plasma Arc (a steel nose emitter at the foot discharging a thick jagged arc in the player shots' blue-white up
+to a node, thinner jumps forking on to two more: the chain), the Reflex Shield (the shields' badge, its face cyan with
+the top quarter gold, as the HUD shield bar while the reflect window is open), the Mk V+ "Crucible" (the generators'
+steel ring round a white-hot core held in a molten orange ring, five amber grade studs) and the Ascendancy IFF spoofer
+(redrawn: a green targeting reticle with a steel ghost reticle offset up-right, the turret's fix half a second stale;
+the UI batch had a Vrell eye, the wrong faction). Composite V keeps its UI-batch icon (the plating badge, five studs).
+The names are the ones the game derives (`shield-reflex-shield`, `generator-mk-v-crucible`): the data rows of step A2a
+must carry the names "Reflex Shield" and 'Mk V+ "Crucible"'.
+
 ## act5-hangar-capture-r61-a
 
 Concept round 61, a game capture (the [capture rig](../../../enemies/concept/prompts.md#belt-rig-capture-r61-a)'s build):

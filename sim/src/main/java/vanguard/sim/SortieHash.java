@@ -74,6 +74,10 @@ final class SortieHash {
             // M9 part H, step H1b: only in a level with the mass relay's flash.
             s.relay.addTo(hash);
         }
+        if (s.domes != null) {
+            // M10 part A: only in a level with a Shield Pylon.
+            s.domes.addTo(hash);
+        }
         if (s.force.chains().size() > 0) {
             Pools.addAll(hash, s.force.chains());
         }

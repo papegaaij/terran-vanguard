@@ -80,6 +80,21 @@ final class PlayerFire {
          * stays.
          */
         void unitPartDestroyed(int index, int part, int mount);
+
+        /**
+         * M10 part A (design/enemies, Reflect): a mirror bounced a player shot: an enemy bullet from (x, y) at (vx, vy)
+         * px/s dealing {@code damage}, marked bounced, within the bullet budget. Returns whether it was fired (a full
+         * budget absorbs it).
+         */
+        default boolean bounce(double x, double y, double vx, double vy, double damage) {
+            return false;
+        }
+
+        /**
+         * M10 part A (design/enemies/ground/shield-pylon): a {@code shield-breaker} hit struck the enemy at {@code index}
+         * (a pylon's dome drops for its breaker time).
+         */
+        default void breakerHit(int index) {}
     }
 
     /** Homing locks on a set piece's part use serials from here: unit serials stay far below it. */

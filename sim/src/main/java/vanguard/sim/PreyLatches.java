@@ -11,6 +11,12 @@ package vanguard.sim;
  * in the units (hashed there). Allocates nothing.
  */
 final class PreyLatches {
+    /**
+     * M10 part A (design/enemies, The three-way war): the drift down of a prey unit a hunting wave's leech latched on,
+     * px/s (a latch without its own prey drift).
+     */
+    static final double WAR_DRIFT = 60;
+
     private final Pool<Enemy> enemies;
     private final SimEvents events;
 
@@ -28,7 +34,7 @@ final class PreyLatches {
         double bestDistance = Double.MAX_VALUE;
         for (int i = 0; i < enemies.size(); i++) {
             Enemy prey = enemies.get(i);
-            if (!free(prey)) {
+            if (!free(hunter, prey)) {
                 continue;
             }
             double dx = prey.x() - hunter.x();
@@ -64,12 +70,17 @@ final class PreyLatches {
         for (int i = 0; i < enemies.size(); i++) {
             Enemy leech = enemies.get(i);
             EnemySpec spec = leech.spec();
-            if (spec.latch().isEmpty() || !spec.latch().get().hunts() || !leech.latchable() || leech.empStunned()) {
+            // M10 part A (The three-way war): a leech of a hunting wave latches on its prey wave's units.
+            if (spec.latch().isEmpty()
+                    || (!spec.latch().get().hunts() && leech.hunts.isEmpty())
+                    || !leech.latchable()
+                    || leech.empStunned()) {
                 continue;
             }
             for (int j = 0; j < enemies.size(); j++) {
                 Enemy prey = enemies.get(j);
-                if (free(prey) && prey.hitbox().overlaps(prey.x(), prey.y(), leech.hitbox(), leech.x(), leech.y())) {
+                if (free(leech, prey)
+                        && prey.hitbox().overlaps(prey.x(), prey.y(), leech.hitbox(), leech.x(), leech.y())) {
                     latch(leech, prey);
                     break;
                 }
@@ -81,7 +92,8 @@ final class PreyLatches {
     private void latch(Enemy leech, Enemy prey) {
         EnemySpec.Latch latch = leech.spec().latch().orElseThrow();
         int spot = EnemySpec.Latch.spotFor(leech.x() - prey.x(), leech.y() - prey.y());
-        prey.preyDrift = latch.preyDrift();
+        // M10 part A (The three-way war): a hunting wave's leech without a prey drift of its own: the war's.
+        prey.preyDrift = latch.hunts() ? latch.preyDrift() : WAR_DRIFT;
         if (prey.hexShield.fitted() && prey.spec().shield().isPresent()) {
             prey.hexShield.empty(
                     prey.spec().shield().get(), Integer.MAX_VALUE, events, prey.x(), prey.y(), prey.kind());
@@ -91,11 +103,15 @@ final class PreyLatches {
         events.add(SimEvents.Type.PREY_DRIFT, prey.x(), prey.y(), prey.kind());
     }
 
-    /** Whether {@code unit} is a prey unit on the play field that no chaser rides yet. */
-    private static boolean free(Enemy unit) {
-        return unit.spec().preyRole() == EnemySpec.PreyRole.PREY
-                && !unit.preyed()
-                && PlayField.overlaps(unit.x(), unit.y(), unit.hitbox());
+    /**
+     * Whether {@code unit} is {@code hunter}'s prey on the play field that no chaser rides yet: a {@link
+     * EnemySpec.PreyRole#PREY} unit (Level 33), or (M10 part A) for a unit of a hunting wave a unit of its prey wave.
+     */
+    private static boolean free(Enemy hunter, Enemy unit) {
+        boolean prey = hunter.hunts.isEmpty()
+                ? unit.spec().preyRole() == EnemySpec.PreyRole.PREY
+                : unit != hunter && hunter.hunts.equals(unit.tag());
+        return prey && !unit.preyed() && PlayField.overlaps(unit.x(), unit.y(), unit.hitbox());
     }
 
     private Enemy bySerial(int serial) {

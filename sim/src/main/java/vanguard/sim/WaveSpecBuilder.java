@@ -37,6 +37,7 @@ public final class WaveSpecBuilder {
     private Optional<WaveSpec.OnRocks> onRocks;
     private Optional<WaveSpec.MineLines> mineLines;
     private Optional<Branch> branch;
+    private String hunts;
 
     WaveSpecBuilder(
             double t,
@@ -71,6 +72,7 @@ public final class WaveSpecBuilder {
         onRocks = Optional.empty();
         mineLines = Optional.empty();
         branch = Optional.empty();
+        hunts = "";
     }
 
     WaveSpecBuilder(WaveSpec spec) {
@@ -100,6 +102,7 @@ public final class WaveSpecBuilder {
         onRocks = spec.onRocks();
         mineLines = spec.mineLines();
         branch = spec.branch();
+        hunts = spec.hunts();
     }
 
     /** Its {@link WaveSpec#t()}. */
@@ -258,6 +261,12 @@ public final class WaveSpecBuilder {
         return this;
     }
 
+    /** Its {@link WaveSpec#hunts()}: the tag of the prey wave it hunts (M10 part A); "" for none. */
+    public WaveSpecBuilder hunts(String preyTag) {
+        this.hunts = preyTag;
+        return this;
+    }
+
     /** The wave group, checked. */
     public WaveSpec build() {
         return new WaveSpec(
@@ -286,6 +295,7 @@ public final class WaveSpecBuilder {
                 leader,
                 onRocks,
                 mineLines,
-                branch);
+                branch,
+                hunts);
     }
 }

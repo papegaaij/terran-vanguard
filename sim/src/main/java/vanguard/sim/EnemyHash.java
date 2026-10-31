@@ -193,5 +193,21 @@ final class EnemyHash {
         if (u.spec.topple().isPresent()) {
             u.toppling.addTo(hash);
         }
+        // M10 part A's mirrors, regeneration, regrowth, late volleys and hunts add theirs; earlier units hash as
+        // before.
+        if (u.spec.mirror().isPresent()) {
+            u.mirroring.addTo(hash);
+        }
+        if (u.spec.regeneration().isPresent()) {
+            u.regenerating.addTo(hash);
+        }
+        if (u.spec.regrowth().isPresent()) {
+            u.regrowing.addTo(hash);
+            hash.add(u.box.width()).add(u.box.height());
+        }
+        u.spoofing.addTo(hash);
+        if (!u.hunts.isEmpty()) {
+            hash.add(u.hunts.hashCode());
+        }
     }
 }

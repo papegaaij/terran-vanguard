@@ -24,6 +24,8 @@ final class ShotHits {
     private final SetPiece[] setPieces;
     private final Pool<Shot> shots;
     private final Homing homing;
+    /** M10 part A (design/enemies, Reflect): the mirrors' bounces and absorbs. */
+    private final Reflections reflections;
     /** The enemy (a serial) the player's shots damaged last, for the wingman's first target; -1 for none. */
     private int lastHit;
     /** Steps since {@link #lastHit} was damaged. */
@@ -44,6 +46,7 @@ final class ShotHits {
         this.setPieces = setPieces;
         this.shots = shots;
         this.homing = homing;
+        reflections = new Reflections(armament, events, hits);
     }
 
     /** Back to the level start: no recent hit. */
@@ -90,13 +93,23 @@ final class ShotHits {
                 if ((!onPart && !onBody) || (weapon.pierce() > 1 && shot.struck(2 * enemy.serial()))) {
                     continue;
                 }
+                if (enemy.spec().mirror().isPresent() && reflections.meet(shot, enemy)) {
+                    // M10 part A (design/enemies, Reflect): the mirror bounced or absorbed it.
+                    shots.free(i);
+                    break;
+                }
                 if ((enemy.spec().hardened() && !weapon.antiGround() && !onCore(shot, weapon.size(), enemy))
                         || (enemy.glances(shot.vx(), shot.vy()) && !(weapon.antiSub() && enemy.shellClosed()))
-                        || enemy.growing()) {
+                        || enemy.invulnerable()) {
                     // A hardened unit (M5 part C) without anti-ground, or a walker's frontal armour
                     // for a direct shot from ahead, or (M5 part H) a root burst's growth still growing: it sparks off.
-                    // M8 part E: anti-sub fire cracks a coil's closed shell (§5 E8).
-                    events.add(SimEvents.Type.SHOT_GLANCED, shot.x(), shot.y(), shot.mount());
+                    // M8 part E: anti-sub fire cracks a coil's closed shell (§5 E8). M10 part A: a unit under a dome
+                    // spends it with a gold spark; a regrowing turret knitting sparks it off.
+                    events.add(
+                            enemy.covered() ? SimEvents.Type.DOME_HIT : SimEvents.Type.SHOT_GLANCED,
+                            shot.x(),
+                            shot.y(),
+                            shot.mount());
                     shots.free(i);
                     break;
                 }
@@ -313,7 +326,7 @@ final class ShotHits {
                     || passesThrough(enemy, shot.mount())
                     || enemy.latched()
                     || (enemy.spec().hardened() && !weapon.antiGround())
-                    || enemy.growing()
+                    || enemy.invulnerable()
                     || !inBlast(x, y, weapon.blast(), enemy.x(), enemy.y(), enemy.hitbox())) {
                 continue;
             }

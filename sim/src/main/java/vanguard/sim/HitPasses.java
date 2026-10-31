@@ -445,7 +445,8 @@ final class HitPasses {
         Hull hull = ship.spec().hull();
         for (int i = bullets.size() - 1; i >= 0; i--) {
             EnemyBullet bullet = bullets.get(i);
-            if (hull.overlaps(ship.x(), ship.y(), EnemyGun.BULLET, bullet.x(), bullet.y())) {
+            // M10 part A: a ram ring's bullet cannot hit the ship in its grace.
+            if (bullet.hitsShip() && hull.overlaps(ship.x(), ship.y(), EnemyGun.BULLET, bullet.x(), bullet.y())) {
                 bullets.free(i);
                 double lost = ship.defences().armourLost();
                 if (damaged(lost, ship.defences().takeShot(bullet.damage(), events, ship.x(), ship.y()))) {
@@ -853,7 +854,8 @@ final class HitPasses {
                 double lost = ship.defences().armourLost();
                 boolean wrecked = ship.defences().takeCollision(spec.contactDamage(), events, ship.x(), ship.y());
                 if (spec.destroyedByRamming()) {
-                    s.objectivePasses.destroy(j);
+                    // M10 part A (design/enemies/air/harrow): a ram's death burst gives the ship its grace.
+                    s.objectivePasses.destroyRammed(j);
                 }
                 if (damaged(lost, wrecked)) {
                     return;
