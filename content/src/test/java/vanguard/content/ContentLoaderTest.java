@@ -21,8 +21,8 @@ class ContentLoaderTest {
         Content content = ContentLoader.load(DesignTree.dataFiles());
 
         // M7 part G: the Rear-guard Drone Bay; M8 part A: the two anti-sub; M9 part A: the Tesla Coil Pod, the Swarm
-        // Tail
-        assertEquals(23, content.weapons().size());
+        // Tail; M10 part A: the Plasma Arc
+        assertEquals(24, content.weapons().size());
         assertEquals(
                 List.of(
                         "abyss-ray",

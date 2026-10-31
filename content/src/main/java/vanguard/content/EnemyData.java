@@ -43,6 +43,15 @@ import java.util.Optional;
  * @param leader M9 part B (design/enemies/air/talon): the airframe its wave's leader flies ({@link Leader})
  * @param livery M9 part G (design/enemies/ground/warden-tank, Act 5: the return in livery): the look and the intel's
  *     faction it flies with from an act on ({@link Livery}); the simulation never sees it
+ * @param mirror M10 part A (design/enemies, Reflect): its mirror over a frontal arc ({@link Mirror}); none without
+ * @param regeneration M10 part A (design/enemies, Regeneration): its HP's refill after a quiet spell ({@link
+ *     Regeneration}); none without
+ * @param regrowth M10 part A (design/enemies/ground/graft-turret, Regrowth): its turret's regrowth over an exposed root
+ *     ({@link Regrowth}); none without
+ * @param dome M10 part A (design/enemies/ground/shield-pylon, The dome): the dome it projects over the ground units near
+ *     it ({@link Dome}); none without
+ * @param spoofable M10 part A (design/player/systems, the IFF spoofer): {@code spoofable: true}, its aimed volleys and
+ *     told attacks come late while the ship carries the spoofer; false when not given
  */
 public record EnemyData(
         String name,
@@ -85,7 +94,12 @@ public record EnemyData(
         Optional<Double> shield,
         Optional<Boolean> neutral,
         Optional<Leader> leader,
-        Optional<Livery> livery)
+        Optional<Livery> livery,
+        Optional<Mirror> mirror,
+        Optional<Regeneration> regeneration,
+        Optional<Regrowth> regrowth,
+        Optional<Dome> dome,
+        Optional<Boolean> spoofable)
         implements EnemyMovementData,
                 EnemyAttackData,
                 EnemyBossData,
@@ -102,6 +116,14 @@ public record EnemyData(
         Check.notNegative("bounty", bounty);
         Check.positive("first_level", firstLevel);
         shield.ifPresent(points -> Check.positive("shield", points));
+        // M10 part A (design/enemies, Reflect): a unit carries a mirror or a hex shield, never both.
+        Check.that(mirror.isEmpty() || shield.isEmpty(), "a unit carries a mirror or a hex shield, never both");
+        Check.that(regrowth.isEmpty() || dome.isEmpty(), "a pylon (dome) does not regrow");
+    }
+
+    /** M10 part A (design/player/systems, the IFF spoofer): whether the spoofer fools it ({@code spoofable: true}). */
+    public boolean isSpoofable() {
+        return spoofable.orElse(false);
     }
 
     /**
@@ -191,7 +213,12 @@ public record EnemyData(
                 lead.shield().or(() -> shield),
                 neutral,
                 leader,
-                livery);
+                livery,
+                mirror,
+                regeneration,
+                regrowth,
+                dome,
+                spoofable);
     }
 
     /**
@@ -319,7 +346,12 @@ public record EnemyData(
                 shield,
                 neutral,
                 leader,
-                livery);
+                livery,
+                mirror,
+                regeneration,
+                regrowth,
+                dome,
+                spoofable);
     }
 
     /** M7 part H: its eruption on {@code difficulty}: the boss script's with the difficulty's marker time. */
@@ -460,7 +492,12 @@ public record EnemyData(
                 shield,
                 neutral,
                 leader,
-                livery);
+                livery,
+                mirror,
+                regeneration,
+                regrowth,
+                dome,
+                spoofable);
     }
 
     /** M8 part F: its lunge on {@code difficulty}: the stat block's with the difficulty's trigger distance. */

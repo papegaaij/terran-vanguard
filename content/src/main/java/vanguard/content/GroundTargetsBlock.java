@@ -63,6 +63,9 @@ public sealed interface GroundTargetsBlock permits LevelData {
      *     laser-line} whose units' first lines are staggered evenly over the line's interval at that difficulty: the
      *     i-th of n placements (in the difficulty's {@code at} order) fires its first line i × interval / n later than
      *     its stat block's first delay (a pair half the interval apart, hard's trio a third); none if not given
+     * @param crown M10 part A (design/enemies/ground/shield-pylon, The dome): an enemy nest of a unit with a {@code dome}
+     *     (the Shield Pylon) turns its crown, and so its dome's centre, this many ° from straight up the screen (positive to
+     *     the right); straight up if not given
      */
     public record GroundTarget(
             String target,
@@ -94,8 +97,12 @@ public sealed interface GroundTargetsBlock permits LevelData {
             Optional<BlastData> blast,
             Optional<TerrainBlock.Branch> branch,
             Optional<Boolean> fullTurnFirst,
-            Optional<Boolean> staggered) {
+            Optional<Boolean> staggered,
+            Optional<Double> crown) {
         public GroundTarget {
+            // M10 part A (design/enemies/ground/shield-pylon): a pylon nest's crown, ° from straight up the screen.
+            Check.that(crown.isEmpty() || enemy.isPresent(), "only an enemy nest's pylons turn their crown");
+            crown.ifPresent(c -> Check.that(c > -180 && c <= 180, "crown: ° from straight up, in (-180, 180]"));
             Check.that(staggered.isEmpty() || enemy.isPresent(), "only an enemy nest's lines are staggered");
             Check.that(
                     fullTurnFirst.isEmpty() || enemy.isPresent(), "only an enemy nest's sweep has a full turn first");

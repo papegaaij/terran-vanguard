@@ -35,6 +35,7 @@ final class ContentValidator {
         campaignChecks.checkWingmen();
         campaignChecks.checkSmallActHp();
         campaignChecks.checkBeamEraHp();
+        campaignChecks.checkHeavyShields();
         content.enemies().values().forEach(enemyChecks::checkEnemy);
         content.levels().values().forEach(levelChecks::checkLevel);
         content.levels().forEach(campaignChecks::checkAct);
@@ -139,6 +140,15 @@ final class ContentValidator {
         content.levels()
                 .values()
                 .forEach(level -> RingChecks.level(content, level, (field, message) -> problem(level, field, message)));
+        // M10 part A (Act 6): mirrors, regrowth, domes, death-bursts and the spoofer's flag; prey links and crowns.
+        content.enemies()
+                .values()
+                .forEach(enemy ->
+                        JovianChecks.enemy(content, enemy, (field, message) -> problem(enemy, field, message)));
+        content.levels()
+                .values()
+                .forEach(level ->
+                        JovianChecks.level(content, level, (field, message) -> problem(level, field, message)));
         return sink.list();
     }
 

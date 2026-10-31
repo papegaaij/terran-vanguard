@@ -122,23 +122,27 @@ final class WaveRules {
             // M9 part B (Level 29): a V-wing's leader at its tip, a wave's rocks with their riders (BeltRules).
             // M9 part C (Level 30): a mine layers' wave's lines, set last (MinefieldRules).
             // M9 part E (Level 32): a fork branch's wave, set very last (DeepCoreRules).
-            out.add(DeepCoreRules.wave(
+            // M10 part A: a hunting wave's prey link (the three-way war, JovianRules), set after the fork.
+            out.add(JovianRules.wave(
                     wave,
-                    MinefieldRules.wave(
+                    DeepCoreRules.wave(
                             wave,
-                            BeltRules.wave(
-                                    content,
-                                    level,
+                            MinefieldRules.wave(
                                     wave,
-                                    group.enemy(),
-                                    difficulty,
-                                    inLevel,
-                                    TrenchRules.mount(
+                                    BeltRules.wave(
+                                            content,
+                                            level,
                                             wave,
-                                            wave.pursues()
-                                                    ? spec.withPursuit(RetreatRules.pursuit(
-                                                            content, wave, group.enemy(), difficulty))
-                                                    : spec)))));
+                                            group.enemy(),
+                                            difficulty,
+                                            inLevel,
+                                            TrenchRules.mount(
+                                                    wave,
+                                                    wave.pursues()
+                                                            ? spec.withPursuit(
+                                                                    RetreatRules.pursuit(
+                                                                            content, wave, group.enemy(), difficulty))
+                                                            : spec))))));
         }
     }
 

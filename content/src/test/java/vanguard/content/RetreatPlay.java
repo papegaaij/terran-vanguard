@@ -213,6 +213,9 @@ final class RetreatPlay {
     }
 
     private static boolean shootable(Enemy enemy) {
-        return !enemy.cloaked() && !enemy.growing() && enemy.layer().touchable() && !TargetPlay.closedVortex(enemy);
+        return !enemy.cloaked()
+                && !enemy.invulnerable()
+                && enemy.layer().touchable()
+                && !TargetPlay.closedVortex(enemy);
     }
 }

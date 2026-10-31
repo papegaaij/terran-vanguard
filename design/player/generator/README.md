@@ -25,6 +25,7 @@ in [player](../README.md#power-budget).
 | Mk III "Fusion" | 16 MW | 4 000 | act 2 |
 | Mk IV "Tokamak" | 20 MW | 9 000 | act 4 |
 | Mk V "Helix" | 22 MW | 18 000 | L35 (Helix Dynamics tech, captured) |
+| Mk V+ "Crucible" | 25 MW | 24 000 | L39 (Ascendancy tech, captured) |
 | Mk VI "Choir Core" | 27 MW | 32 000 | act 7 (Vrell tech) |
 <!-- /data -->
 
@@ -238,8 +239,8 @@ measured balance plan (`balance-plan.yaml` visits 36–42, `reference_dps` 36–
 [Plasma Arc](../weapons/plasma-arc/README.md); the [shields](../shields/README.md) Mk III (4 MW) and Reflex (6 MW), the
 Pickup magnet (1 MW) and the [IFF spoofer](../systems/README.md#act-6-the-iff-spoofer-and-the-core-tiers-draft) (2 MW).*
 
-**The new generator** (Q8 = a), a hand-written row until part A writes it into [data.yaml](data.yaml) (the model
-table above is rendered from it):
+**The new generator** (Q8 = a), in [data.yaml](data.yaml) since M10 part A (step A2a; the model table above is
+rendered from it):
 
 | Model | Output | Price (draft) | Available |
 |---|---|---|---|
@@ -271,6 +272,11 @@ the act's income ≈ 66 000 over the seven visits). The first column is the leve
 | L40 | 31 904 | **Generator Mk V+ "Crucible"** 24 000 and the **IFF spoofer** 5 000 (the fortress's turrets, and the room for a utility from the duel on); Rook's Autocannon again | 29 125 | 2 779 | 24 / 25 |
 | L41 | 13 555 | **Composite V** 11 000 (160 armour: the lightning and the death-burst rings are behind it, the fortress's guns and the Ascendant's batteries ahead); Rook's Mortar | 11 125 | 2 430 | 24 / 25 |
 | L42 | 13 960 | the right Micro-missile Pod **L5** 3 200 and the Tesla Coil Pod **L3** 3 000; the spoofer to the inventory (no turret in orbit that it fools: the Ascendant's batteries are a boss's); Rook's Autocannon | 6 325 | 7 635 | 23 / 25 |
+
+**As built** (M10 part A, step A2a, pending the user's review in round 73): `BalanceTest`'s sheet enters the L36 visit
+with 9 792 cr, not this table's 10 403 (its Act 5 visits leave 611 cr less than `tools/balance.py`'s), 208 short of the
+beam L5. The balance plan therefore takes the alternative below: the Tesla Coil Pod and its L2 at the L36 visit (0.99
+of the reference), the beam L5 at the L37 visit (1.14); from L38 on the table stands as written.
 
 The items the plan leaves out: the **Reflex Shield** (12 000, 6 MW: 2 more than the Mk III, so it waits for the
 Mk V+ and competes with the spoofer for its room), the **Plasma Arc** (the area alternative to the beam, 6 000 and
@@ -334,9 +340,10 @@ items' draw keeps 22 / 22 all act.
 - [x] The Mk V "Helix" in the shop from the L35 visit (salvaged in L34), the balance plan's visits 29–35 — M9 part A
   (step A2: `available: L35`, `balance-plan.yaml` 29–35 as the hand plan above, the Act 5 levels' income budget(n) until
   they are built; `BeltCampaignTest`, `BalanceTest`, `tools/balance.py` exit 0)
-- [ ] The Mk V+ "Crucible" (25 MW, 24 000) in [data.yaml](data.yaml), in the shop from the L39 visit; the balance plan's
+- [x] The Mk V+ "Crucible" (25 MW, 24 000) in [data.yaml](data.yaml), in the shop from the L39 visit; the balance plan's
   visits 36–42 and `reference_dps` 36–42 as the *Act 6 hand plan* (draft), the Act 6 levels' income budget(n) until
-  they are built — M10 part A
+  they are built — M10 part A (step A2a: index 5, the Mk VI at 6, `CampaignChecks`' shop order; the L36 and L37 visits
+  swapped as *As built* says; `BalanceTest`, `ActHpFactorTest`, `tools/balance.py` exit 0)
 
 ## Open questions
 

@@ -71,8 +71,10 @@ generator limits what can be fitted at the same time.
   generator's Act 4 hand plan; a level's income is its typical haul, budget(n) until its data exists: the user's
   decision of 2026-10-14, round 37 R.1 reverted; for Act 4 again until M8 part I). Act 5's visits 29–35 are a
   hand plan in the [generator](generator/README.md#act-5-hand-plan-draft) until M9 part A writes them (draft,
-  approved in round 60). Act 6's visits 36–42 are a hand plan in the
-  [generator](generator/README.md#act-6-hand-plan-draft) until M10 part A writes them (draft, decided 2026-10-31 (round 72)).
+  approved in round 60). Act 6's visits 36–42 are the
+  [generator](generator/README.md#act-6-hand-plan-draft)'s hand plan, written into the balance plan in M10 part A (step
+  A2a; its L36 and L37 visits swapped, as the hand plan's *As built* says), each level's income budget(n) until its data
+  exists (until M10 part I).
 
 ### Power budget
 

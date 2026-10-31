@@ -15,6 +15,7 @@ hp: 100
 armour: hardened  # only anti-ground weapons, the Airstrike, the Orbital Lance and the Smart Bomb damage it
 speed: 0          # scrolls with the rock or hull
 machine: true     # the EMP Burst stuns it 3 s: a running telegraph is cancelled
+spoofable: true   # M10 part A (design/player/systems, the IFF spoofer): its aimed volleys and told attacks come 0.5 s late at a stale aim while the ship carries the spoofer
 movement:
   terrain: {}
 attacks:

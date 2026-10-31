@@ -71,12 +71,32 @@ public record EnemyBasisData(
     /**
      * M9 part A (design/enemies, Enemy shields): after {@code delay} s without a hit a shield refills at {@code refill}
      * of its maximum a second; a {@code shield-breaker} hit empties it and holds the refill back {@code breaker_hold} s.
+     * M10 part A (design/enemies, Enemy shields, Act 6 weights): from {@code heavy}'s level on every unit's shield takes
+     * its factor (a level rule: the stat blocks keep their Act 5 numbers); none if not given.
      */
-    public record Shields(double delay, double refill, double breakerHold) {
+    public record Shields(double delay, double refill, double breakerHold, java.util.Optional<Heavy> heavy) {
         public Shields {
             Check.notNegative("shields.delay", delay);
             Check.that(refill > 0, "shields.refill: more than 0");
             Check.notNegative("shields.breaker_hold", breakerHold);
+        }
+
+        /** Without Act 6's heavier shields (Act 5's rule). */
+        public Shields(double delay, double refill, double breakerHold) {
+            this(delay, refill, breakerHold, java.util.Optional.empty());
+        }
+
+        /** The factor on a unit's shield HP in Level {@code level}: {@code heavy}'s from its level on, else 1. */
+        public double factor(int level) {
+            return heavy.filter(h -> level >= h.from()).map(Heavy::factor).orElse(1.0);
+        }
+    }
+
+    /** M10 part A: the shields' factor {@code factor} from Level {@code from} on (Act 6's twice-as-heavy shields). */
+    public record Heavy(int from, double factor) {
+        public Heavy {
+            Check.that(from >= 1, "shields.heavy.from: a level, at least 1");
+            Check.that(factor >= 1, "shields.heavy.factor: at least 1");
         }
     }
 

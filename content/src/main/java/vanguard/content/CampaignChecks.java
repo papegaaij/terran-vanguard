@@ -48,6 +48,19 @@ final class CampaignChecks extends ContentChecks {
         }
     }
 
+    /**
+     * M10 part A (design/enemies, Enemy shields, Act 6 weights): the basis's {@code shields.heavy} starts at a level with
+     * a reference DPS.
+     */
+    void checkHeavyShields() {
+        content.enemyBasis()
+                .shields()
+                .heavy()
+                .filter(heavy -> !content.enemyBasis().referenceDps().containsKey(heavy.from()))
+                .ifPresent(heavy -> problem(
+                        content.enemyBasis(), "shields.heavy.from", "Level " + heavy.from() + " has no reference DPS"));
+    }
+
     /** A level's act has its data file, and the act's levels include the level. */
     void checkAct(String key, LevelData level) {
         ActData act = content.acts().get(Content.actDirectory(key));
@@ -75,7 +88,26 @@ final class CampaignChecks extends ContentChecks {
             GeneratorData.Model m = generators.models().get(i);
             checkItem(generators, "models[" + i + "]", i, m.price(), m.available());
         }
+        // M10 part A: each core list comes into the shop in its order (the Crucible between the Helix and the Mk VI,
+        // the
+        // balance plan's indexes).
+        checkOrder(
+                shields,
+                "models",
+                shields.models().stream().map(ShieldData.Model::available).toList());
+        checkOrder(
+                armour,
+                "plating",
+                armour.plating().stream().map(ArmourData.Plating::available).toList());
+        checkOrder(
+                generators,
+                "models",
+                generators.models().stream().map(GeneratorData.Model::available).toList());
         SystemsData systems = content.systems();
+        checkOrder(
+                systems,
+                "engines",
+                systems.engines().stream().map(SystemsData.Engine::available).toList());
         for (int i = 0; i < systems.engines().size(); i++) {
             SystemsData.Engine e = systems.engines().get(i);
             checkItem(systems, "engines[" + i + "]", i, e.price(), e.available());
@@ -124,6 +156,28 @@ final class CampaignChecks extends ContentChecks {
                     wingmen,
                     "barks.speaker",
                     "no voice speaker '" + wingmen.barks().speaker() + "'");
+        }
+    }
+
+    /**
+     * M10 part A: a core list's models come into the shop in their order (each at or after the one before it), so an
+     * index into it (the balance plan's {@code core}) names the tier it means; checked where either of two neighbours
+     * names an exact level ({@code L39}: the Helix, the Crucible), as the acts' keys follow the acts.
+     */
+    private void checkOrder(Object file, String field, List<String> available) {
+        for (int i = 1; i < available.size(); i++) {
+            boolean exact =
+                    available.get(i).matches("L\\d+") || available.get(i - 1).matches("L\\d+");
+            if (exact
+                    && content.player().knows(available.get(i))
+                    && content.player().knows(available.get(i - 1))
+                    && content.player().firstLevel(available.get(i))
+                            < content.player().firstLevel(available.get(i - 1))) {
+                problem(
+                        file,
+                        field + "[" + i + "].available",
+                        "comes into the shop before the model above it (" + available.get(i - 1) + ")");
+            }
         }
     }
 

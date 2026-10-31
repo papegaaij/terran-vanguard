@@ -1,9 +1,11 @@
-# The expected purchases of a typical medium player at each hangar visit, for Acts 1-5 (Act 3, Levels
+# The expected purchases of a typical medium player at each hangar visit, for Acts 1-6 (Act 3, Levels
 # 15-21, from M7 part A: the Ion Beam's hand plan; every level earns its own typical haul, M7 part I: the
 # budget(n) fallback for a level without data is gone; M8 part A: Act 4, Levels 22-28, from the generator's
 # hand plan of round 48, with a TEMPORARY budget(n) fallback for the Act 4 levels that have no data yet,
 # removed again in M8 part I; M9 part A: Act 5, Levels 29-35, from the generator's Act 5 hand plan of round 60, its
-# TEMPORARY budget(n) income for the Act 5 levels without data removed again in M9 part I: each earns its typical haul).
+# TEMPORARY budget(n) income for the Act 5 levels without data removed again in M9 part I: each earns its typical haul;
+# M10 part A: Act 6, Levels 36-42, from the generator's Act 6 hand plan of round 72, a TEMPORARY budget(n) income again
+# for the Act 6 levels without data until M10 part I).
 # Read by the content tests BalanceTest (affordability, power load and DPS per visit) and
 # ActPlaythroughTest (Acts 1-5 flown with these purchases on every difficulty), and printed by
 # tools/balance.py as the balancing sheet; not a rule, and not read by the game. Every other number
@@ -106,3 +108,14 @@ plan:
   "33": {}                         # nothing: no power room (20 of 20) and the Mk V not yet salvaged; saving; M9 part F (step F2): Level 33 flies Level 32's fit with its power budget, 20 of 20 MW (PacingTest, levelReport: Level33Test), its typical haul ≈ 6 155 with the hardened bunkers at 0 % (scale 0.43)
   "34": {}                         # nothing: saving for the Mk V (the breather); M9 part G (step G2): Level 34 flies Level 33's fit, 20 of 20 MW (PacingTest, levelReport: Level33Test's until step G3), its typical haul ≈ 6 488 (scale 0.27, the offbeat Talon trios)
   "35": {core: [[generator, 4]], upgrade: [[wing_l, 4], [wing_r, 4]]}   # Mk V "Helix" (18 000, salvaged in L34, in the shop from this visit) and both Micro-missile Pods L4 (3 200): 21 of 22 MW; M9 part H (step H2): Level 35 flies this fit with Rook (Level35Test.planLoadout from step H3), its approach 3.79 on the screen at medium, its typical haul 7 101 (scale 0.59, the boss 433 at 24 %, 84 bay Darts; step H3)
+  # Act 6 (M10 part A; the generator's Act 6 hand plan of round 72, Q7 = b, Q8 = a, J1 and J11, design/player/generator).
+  # Income: budget(n) for the levels without data (TEMPORARY, as M9 part A's for Act 5; M10 part I removes it). Jupiter's
+  # air has no water: nothing to change from L35's fit. Rook flies his Autocannon, the owned Mortar where the ground asks
+  # `anti-ground` (Io's refineries, the fortress); the Crucible is index 5 (the Mk VI moved to 6).
+  "36": {buy: [[wing_l, tesla-coil-pod]], upgrade: [[wing_l, 2]]}   # Tesla Coil Pod (3 000) and L2 (1 500) on the left wing in place of the Micro-missile Pod L4 (kept): the act's shield-breaker for the heavier shields; 21 of 22 MW, forward DPS 143 against the reference 144 (0.99). Step A2a: the hand plan's beam L5 first does not fit BalanceTest's sheet (9 792 cr before this visit, 208 short), so the hand plan's own alternative (Tesla first, the beam a visit later), pending the user's review in round 73
+  "37": {upgrade: [[front, 5]]}    # Ion Beam L5 (10 000): 22 of 22 MW; forward DPS 168 against the reference 148 (1.14)
+  "38": {}                         # nothing: saving for the Crucible (Composite V is in the shop from this visit and waits for L41, J11)
+  "39": {fit: [[escort, mortar]]}  # saving (22 of 22 MW leave no room for the spoofer); Rook's owned Mortar for Io's refinery targets
+  "40": {core: [[generator, 5]], utility: [[Ascendancy IFF spoofer, 1]], fit: [[escort, autocannon]]}   # Mk V+ "Crucible" (24 000) and the IFF spoofer (5 000): 24 of 25 MW
+  "41": {core: [[armor, 5]], fit: [[escort, mortar]]}   # Composite V (11 000, 160 armour) for the fortress's guns and the Ascendant's batteries
+  "42": {upgrade: [[wing_r, 5], [wing_l, 3]], unfit: [[utility, Ascendancy IFF spoofer]], fit: [[escort, autocannon]]}   # the right Micro-missile Pod L5 (3 200) and the Tesla Coil Pod L3 (3 000); the spoofer stowed (nothing in orbit it fools): 23 of 25 MW

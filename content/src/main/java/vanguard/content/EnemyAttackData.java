@@ -268,6 +268,92 @@ public sealed interface EnemyAttackData permits EnemyData {
     }
 
     /**
+     * M10 part A, the {@code mirror} (design/enemies, Reflect; design/enemies/air/mirror-interceptor): a plate over a
+     * frontal {@code arc} (°, ± half of its facing) that turns toward the ship at {@code turn} °/s while the unit holds
+     * its station. A non-beam player shot meeting it bounces back as an enemy bullet of class {@code bullet} at {@code
+     * speed} px/s (no bullet-speed lever: the rule's slow 110), at most one every {@code gap} s; a beam heats it by its
+     * damage up to {@code heat} (the HP lever and a returning unit's act factor on it, as on a shield), which breaks it,
+     * cooling at {@code cool} of the heat a second after {@code cool_delay} s without the beam; a {@code shield-breaker}
+     * hit or the EMP shatters it. Broken or shattered it stays down {@code down} s and regrows over {@code regrow} s. Its
+     * gun fires only while its facing is within {@code fire_within} ° of the ship.
+     */
+    record Mirror(
+            double arc,
+            double heat,
+            double turn,
+            double down,
+            double regrow,
+            double gap,
+            double cool,
+            double coolDelay,
+            double fireWithin,
+            String bullet,
+            double speed) {
+        public Mirror {
+            Check.that(arc > 0 && arc <= 360, "mirror.arc: more than 0 and at most 360 degrees");
+            Check.positive("mirror.heat", heat);
+            Check.positive("mirror.turn", turn);
+            Check.notNegative("mirror.down", down);
+            Check.notNegative("mirror.regrow", regrow);
+            Check.notNegative("mirror.gap", gap);
+            Check.share("mirror.cool", cool);
+            Check.notNegative("mirror.cool_delay", coolDelay);
+            Check.that(fireWithin > 0 && fireWithin <= 180, "mirror.fire_within: more than 0 and at most 180 degrees");
+            Check.positive("mirror.speed", speed);
+        }
+    }
+
+    /**
+     * M10 part A, {@code regeneration} (design/enemies, Regeneration; design/enemies/air/chimera): {@code rate} of its
+     * maximum HP a second once it has gone {@code delay} s without any damage, never past its maximum.
+     */
+    record Regeneration(double rate, double delay) {
+        public Regeneration {
+            Check.that(rate > 0 && rate <= 1, "regeneration.rate: a share of its maximum a second, in (0, 1]");
+            Check.notNegative("regeneration.delay", delay);
+        }
+    }
+
+    /**
+     * M10 part A, {@code regrowth} (design/enemies/ground/graft-turret, Regrowth): the turret's death exposes its {@code
+     * root} for {@code window} s; the window closed, the turret knits back over {@code knit} s (not hittable) and fires
+     * again {@code wake} s after that, with its full HP. Only the first death pays and counts.
+     */
+    record Regrowth(double window, double knit, double wake, Root root) {
+        public Regrowth {
+            Check.positive("regrowth.window", window);
+            Check.notNegative("regrowth.knit", knit);
+            Check.notNegative("regrowth.wake", wake);
+        }
+    }
+
+    /**
+     * M10 part A: a regrowing turret's root: its {@code hp} at medium (the HP lever and the act factor, the beam era's
+     * included, as the turret's), its {@code hitbox} on the turret's centre and the {@code bounty} its death adds.
+     */
+    record Root(double hp, Size hitbox, int bounty) {
+        public Root {
+            Check.positive("regrowth.root.hp", hp);
+            Check.notNegative("regrowth.root.bounty", bounty);
+        }
+    }
+
+    /**
+     * M10 part A, the {@code dome} (design/enemies/ground/shield-pylon, The dome): a circle of {@code radius} px centred
+     * {@code offset} px from the pylon along its crown's facing (the level's {@code crown} of the placed pylon); the
+     * ground units whose centres lie in it take no damage. A {@code shield-breaker} hit on the pylon drops it {@code
+     * breaker_drop} s, the EMP for the stun; a dropped dome comes back over {@code back} s.
+     */
+    record Dome(double radius, double offset, double breakerDrop, double back) {
+        public Dome {
+            Check.positive("dome.radius", radius);
+            Check.notNegative("dome.offset", offset);
+            Check.notNegative("dome.breaker_drop", breakerDrop);
+            Check.notNegative("dome.back", back);
+        }
+    }
+
+    /**
      * @param aim where a fan points, {@code target} (the default), {@code down} or {@code facing}; a walker's fan
      *     (M5 part B) is aimed at the player with {@code target} and along its facing with {@code facing};
      *     planned (part D) for the other units; M5 part D: an aimed attack's {@code up} (the Wraith, user
@@ -361,7 +447,10 @@ public sealed interface EnemyAttackData permits EnemyData {
             Optional<Slow> slow,
             Optional<Line> line,
             Optional<AirLink> airLink,
-            Optional<RingBlock.From> from) {
+            Optional<RingBlock.From> from,
+            Optional<Boolean> onContact,
+            Optional<Boolean> between,
+            Optional<Double> grace) {
         /** M7 part E: {@code while: open}, a spin cycle's open window. */
         public static final String WHILE_OPEN = "open";
 
@@ -370,6 +459,14 @@ public sealed interface EnemyAttackData permits EnemyData {
 
         /** M9 part D: the {@code air-link} pattern (design/enemies/space/shard-drone), with its {@link AirLink}. */
         public static final String AIR_LINK = "air-link";
+
+        /**
+         * M10 part A: the {@code death-burst} pattern (design/enemies, Attack pattern vocabulary; design/enemies/air/
+         * harrow): a {@code ring} of {@code count} bullets at {@code speed} released where the unit dies; with {@code
+         * on_contact} on every death however close the ship is (a ram's too), its bullets unable to hit the ship for their
+         * first {@code grace} s after a ram; with {@code between} turned so that the ship's bearing falls between two.
+         */
+        public static final String DEATH_BURST = "death-burst";
 
         public Attack {
             // M9 part H: a battery's attack taken from a ground unit (from) is written as a shell (no bullet): the
@@ -497,9 +594,22 @@ public sealed interface EnemyAttackData permits EnemyData {
                                 || pattern.equals("link")
                                 || pattern.equals("pores")
                                 || pattern.equals("aura")
-                                || pattern.equals(AIR_LINK),
+                                || pattern.equals(AIR_LINK)
+                                || pattern.equals(DEATH_BURST),
                         "pattern must be aimed, fan, mine, spawn, mortar, ring, spiral, laser-sweep, laser-line, pounce,"
-                                + " drain, link, pores, aura or air-link, was '" + pattern + "'");
+                                + " drain, link, pores, aura, air-link or death-burst, was '" + pattern + "'");
+                // M10 part A (design/enemies/air/harrow): a death-burst's ring, released on the unit's death.
+                Check.that(
+                        !pattern.equals(DEATH_BURST)
+                                || (interval.isEmpty() && firstShotDelay.isEmpty() && aim.isEmpty() && burst.isEmpty()),
+                        "a death-burst fires once, where its unit dies: no interval, first shot, aim or burst");
+                Check.that(
+                        pattern.equals(DEATH_BURST) || (onContact.isEmpty() && between.isEmpty() && grace.isEmpty()),
+                        "on_contact, between and grace belong to a death-burst");
+                grace.ifPresent(g -> Check.notNegative("grace", g));
+                Check.that(
+                        grace.isEmpty() || onContact.orElse(false),
+                        "a death-burst's grace (after a ram) needs on_contact: true");
                 Check.that(pattern.equals("pounce") == pounce.isPresent(), "a pounce has its pounce, the others none");
                 Check.that(
                         !pattern.equals("pounce") || (bullet.isEmpty() && speed.isEmpty() && interval.isPresent()),
@@ -544,8 +654,11 @@ public sealed interface EnemyAttackData permits EnemyData {
                 speed.ifPresent(s -> Check.positive("speed", s));
                 firstShotDelay.ifPresent(d -> Check.notNegative("first_shot_delay", d));
                 Check.that(
-                        (pattern.equals("fan") || (pattern.equals("ring") && slow.isEmpty())) == count.isPresent(),
-                        "a fan or a ring of bullets has a count, the others none");
+                        (pattern.equals("fan")
+                                        || (pattern.equals("ring") && slow.isEmpty())
+                                        || pattern.equals(DEATH_BURST))
+                                == count.isPresent(),
+                        "a fan or a ring of bullets (a death-burst's too) has a count, the others none");
                 Check.that(slow.isEmpty() || pattern.equals("ring"), "only a ring slows");
                 Check.that(
                         slow.isEmpty()
@@ -567,6 +680,11 @@ public sealed interface EnemyAttackData permits EnemyData {
                         aimTurns.isEmpty() || (pattern.equals("aimed") && !rotate.orElse(false)),
                         "only an aimed attack that does not rotate takes aim turns");
             }
+        }
+
+        /** M10 part A: whether it is a {@code death-burst} (its unit's {@code EnemySpec.deathBurst}, not a gun). */
+        public boolean deathBurst() {
+            return pattern.equals(DEATH_BURST);
         }
 
         /** M7 part C: whether it fires on {@code difficulty}: its {@code only}, every one if not given. */

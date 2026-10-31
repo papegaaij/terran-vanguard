@@ -21,6 +21,7 @@ hp: 410           # the parts' sum: hull 220, legs 80 each, pod 30
 armour: none
 speed: 32         # px/s walking, on top of the scroll
 machine: true     # the EMP Burst stuns it 3 s: frozen mid-stride, no fire; a stagger under way still falls
+spoofable: true   # M10 part A (design/player/systems, the IFF spoofer): its aimed volleys and told attacks come 0.5 s late at a stale aim while the ship carries the spoofer
 movement:
   walk: {speed: 32, turn_rate: 45, stride: 32, topple: {stagger: 0.6, fall: 0.8, line: [48, 140]}}   # px/s, °/s, px of ground per 8-frame walk cycle; the topple: s staggering, s falling, the fall line px wide × long
 attacks:

@@ -1,0 +1,28 @@
+# Plasma Arc: rendered into README.md (schema: ../../../tech/architecture/schemas-player/README.md). M10 part A.
+# An instant discharge from the nose (hits: chain, no projectile): the first strike on the nearest enemy within its
+# level's `reach` (px) inside the forward `cone` (degrees), then on along the chain: each jump to the nearest unit not
+# yet struck within its level's `jump` radius (px) of the last one struck, up to its level's `chain` targets, each
+# jump at `falloff` x the damage of the strike before it. One target per body (a boss's parts count as one).
+name: Plasma Arc
+slot: front
+traits: [area, spread]
+price: 6000
+upgrade_base: 3000   # half the price, as the Ion Beam's 2 500 on 5 000: L3 is reachable inside its act
+unlock: 36
+draw: [5, 8]
+sfx: tesla           # the zap replayed per jump at a rising pitch (design/audio/sfx, Weapon sound families)
+vfx: arc             # the Tesla Coil Pod's family drawn wider (round 72 A.7 a, "the wide Tesla")
+hits: chain
+cone: 90             # degrees: the forward cone its first strike picks its target in (45° either side of straight up)
+falloff: 0.75        # each jump's share of the damage of the strike before it
+seek: true           # every discharge's first strike lands on its target: single-target DPS counts the first strike
+levels:
+  - {pattern: [[0, 0]], rate: 4, damage: 7.5, reach: 200, jump: 90, chain: 3}
+  - {pattern: [[0, 0]], rate: 4, damage: 11.25, reach: 210, jump: 95, chain: 4}
+  - {pattern: [[0, 0]], rate: 5, damage: 13, reach: 220, jump: 100, chain: 4}
+  - {pattern: [[0, 0]], rate: 5, damage: 18, reach: 230, jump: 110, chain: 5}
+  - {pattern: [[0, 0]], rate: 5, damage: 24, reach: 240, jump: 120, chain: 6}
+overdrive: {pattern: [[0, 0]], rate: 6, damage: 24, reach: 250, jump: 130, chain: 6}
+notes:
+  vfx: 'the Tesla Coil Pod''s family drawn wider and hotter (round 72 A.7 a, "the wide Tesla"): a white core with a violet fringe on the first strike 1.7× the pod''s width, each jump a thinner fork (0.72×), a spark burst on every struck unit'
+  layers_hit: '`air`, `low-air` and `ground` (hardened ground targets take it only with `anti-ground`, which it has not: the arc glances off them and the chain ends there); not `high-air` (an arc needs a body in reach, not a lock, as the [Tesla Coil Pod](../tesla-coil-pod/README.md)''s), not the `sub` layer ([layer rules](../../../enemies/README.md#layer-rules))'

@@ -3,7 +3,7 @@ title: Data file schemas — levels and acts
 design: approved
 implementation: in-progress
 art: n/a
-updated: 2026-10-30
+updated: 2026-10-31
 ---
 
 # Data file schemas — levels and acts
@@ -194,7 +194,13 @@ optional `skip` list of the difficulties it is left out on (Level 06's hard-only
   turn); M9 part F (steps F1, F2, Level 33): a wave's **`prey`** (`hold` s and `depth` `[min, max]` px below the top
   edge: a V-wing or line abreast of a plain air unit flies a refuelling hold instead of its swoop and leaves straight
   up; latched by a leech it drifts down instead), a wave's **`hunts: prey`** (its unit's latch has a `prey_drift`; it
-  follows a prey wave by at most 10 s and steers at the nearest free prey, then the ship) and a ground target's
+  follows a prey wave by at most 10 s and steers at the nearest free prey, then the ship; M10 part A, step A2a: or
+  **`hunts: <tag>`**, the `tag` of another wave of the level, the [three-way war](../../../enemies/README.md#the-three-way-war):
+  its units' chase, dive or ram, latch and aimed fire go at that wave's units while one is on the screen, their bullets
+  hit them; the hunters are the Vrell's, the prey a wave of Jovian Ascendancy units that are no boss or neutral craft,
+  checked in `JovianChecks`), a ground target's **`crown`** (M10 part A: a nest of a unit with a `dome`, the Shield
+  Pylon, turns its crown and its dome's centre this many ° from straight up the screen, positive to the right;
+  straight up if not given) and a ground target's
   **`staggered: true`** (a nest of a `laser-line` unit: the i-th of its n placements on that difficulty fires its first
   line i × the interval / n after the stat block's first delay; checked in `LeechChecks`); a secret's `radio` line may
   carry **`requires: escort`** as a timed line's (step F4: Rook's Claim 114 line plays only with him flying); the

@@ -75,7 +75,8 @@ def level_rows(w):
         volley, single = stats(w, lv)
         od = i == 6
         rows.append([
-            "OD" if od else str(i), str(len(lv["pattern"])), pattern_text(w, lv), num(lv["rate"]),
+            "OD" if od else str(i), str(lv["chain"] if w["hits"] == "chain" else len(lv["pattern"])),
+            pattern_text(w, lv), num(lv["rate"]),
             num(lv["damage"]), f"{volley:.1f}", f"{single:.1f}", extra_text(lv),
             "— (ignores cap)" if od else num(draw(w, i)),
             "—" if od or i == 1 else grouped(upgrade_costs(w)[i - 2]),
@@ -183,8 +184,14 @@ def weapon_levels(d):
     rows = level_rows(w)
     per = " Values are per pod." if w.get("pod") else (" Values are per side." if w.get("mirrored") else "")
     target = weapon_rules()["single_target"]
-    head = ["Level", "Arcs" if w["hits"] == "arc" else "Shots", "Pattern", "Rate /s", "Damage", "Volley DPS",
-            "Single-target DPS", "Extra", "Draw MW", "Upgrade cost"]
+    head = ["Level", "Arcs" if w["hits"] == "arc" else "Chain" if w["hits"] == "chain" else "Shots", "Pattern",
+            "Rate /s", "Damage", "Volley DPS", "Single-target DPS", "Extra", "Draw MW", "Upgrade cost"]
+    if w["hits"] == "chain":  # M10 part A: the Plasma Arc
+        return table(head, rows) + "\n\n" + (
+            f"{generated} Single-target DPS counts the first strike (it always strikes a target inside its reach). "
+            f"Volley DPS counts a full chain, each jump at {num(w['falloff'])} of the strike before it: the most a "
+            f"discharge does when every jump finds a target; in a thin wave it is the single-target figure. "
+            f"OD = the overdrive pattern ({pickups()['overdrive']['seconds']} s pickup).")
     if w["hits"] == "arc":  # M9 part A: the Tesla Coil Pod
         return table(head, rows) + "\n\n" + (
             f"{generated}{per} Single-target DPS counts every arc (an arc always strikes a target inside its reach). "
@@ -200,6 +207,8 @@ def weapon_levels(d):
 
 
 def pattern_text(w, lv):
+    if w["hits"] == "chain":  # M10 part A: the Plasma Arc's chain
+        return "arc to the nearest ahead, jumps on"
     if w["hits"] == "arc":  # M9 part A: the Tesla Coil Pod's instant arc
         return "arc to the nearest"
     pat = lv["pattern"]
@@ -216,6 +225,8 @@ def pattern_text(w, lv):
 
 
 def extra_text(lv):
+    if "jump" in lv:  # M10 part A: a chain's reach and jump radius
+        return f"reach {lv['reach']:g} px, jump {lv['jump']:g} px"
     if "reach" in lv:  # M9 part A: an arc's reach and its sparks' radius (the blast)
         return f"reach {lv['reach']:g} px, sparks {lv['blast']:g} px"
     parts = [f"{label} {lv[key]:g}{unit}" for key, label, unit in (
@@ -235,7 +246,14 @@ def weapon_properties(d):
     else:
         speed_text = f"{num(speed)} px/s"
     rng = w.get("range")
-    if w["hits"] == "arc":  # M9 part A: no projectile, an instant arc
+    if w["hits"] == "chain":  # M10 part A: no projectile, an instant discharge that chains on
+        reach = [lv["reach"] for lv in w["levels"]]
+        jump = [lv["jump"] for lv in w["levels"]]
+        range_text = (f"None: an instant discharge from the nose to the nearest enemy within {num(reach[0])} → "
+                      f"{num(reach[-1])} px in a {num(w['cone'])}° cone that opens forward, then on along the chain, "
+                      f"each jump to the nearest unit not yet struck within {num(jump[0])} → {num(jump[-1])} px (it "
+                      f"hits on the frame it fires)")
+    elif w["hits"] == "arc":  # M9 part A: no projectile, an instant arc
         reach = [lv["reach"] for lv in w["levels"]]
         range_text = (f"None: an instant arc from the pod to its target (it hits on the frame it fires) within "
                       f"{num(reach[0])} → {num(reach[-1])} px in a {num(w['cone'])}° arc that opens forward")
@@ -267,7 +285,7 @@ def weapon_properties(d):
         ["Price", "starter (always owned)" if w["price"] == 0 else f"{grouped(w['price'])} cr"],
         ["Upgrade cost L2 / L3 / L4 / L5", f"{costs} cr (sell-back per [economy](../../../systems/economy/README.md))"],
         ["Unlock", "start" if w["unlock"] == 1 else f"L{w['unlock']:02d} (in the shop from the hangar visit before it)"],
-        ["Projectile", range_text if w["hits"] == "arc" else f"{speed_text}, {w['size'][0]}×{w['size'][1]} px, "
+        ["Projectile", range_text if w["hits"] in ("arc", "chain") else f"{speed_text}, {w['size'][0]}×{w['size'][1]} px, "
                        + (range_text if w["hits"] == "depth-charge" else f"range {range_text}")],
         ["Sound family", f"`{w['sfx']}` ([weapon sound families](../../../audio/sfx/README.md#weapon-sound-families))"],
         ["Projectile family (VFX)",

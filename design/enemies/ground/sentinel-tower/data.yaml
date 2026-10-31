@@ -15,6 +15,7 @@ hp: 120           # the emitter's: 0.9 s at the L32 reference of 132
 armour: {collar: [28, 28]}   # the emitter's box on the centre; elsewhere on the collar a non-anti-ground shot glances
 speed: 0          # scrolls with the rock
 machine: true     # the EMP Burst stuns it 3 s: the beam is cut, the next telegraph after the stun
+spoofable: true   # M10 part A (design/player/systems, the IFF spoofer): its aimed volleys and told attacks come 0.5 s late at a stale aim while the ship carries the spoofer
 movement:
   terrain: {}
 attacks:

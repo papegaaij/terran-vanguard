@@ -316,7 +316,9 @@ class BeltKeysTest {
     void aShieldTakesTheDifficultyLeverAndTheActFactorButNeverTheBeamEra() {
         Content content = content();
         assertEquals(
-                new EnemyBasisData.Shields(2.0, 0.5, 3.0), content.enemyBasis().shields());
+                // M10 part A: twice as heavy from Level 36 (Act 6's weights).
+                new EnemyBasisData.Shields(2.0, 0.5, 3.0, Optional.of(new EnemyBasisData.Heavy(36, 2))),
+                content.enemyBasis().shields());
         for (Difficulty difficulty : Difficulty.values()) {
             EnemySpec talon = UnitRules.enemy(content, "test-talon", difficulty, Optional.empty(), 5, 29);
             double lever = content.difficulty().enemyHp(1, difficulty);

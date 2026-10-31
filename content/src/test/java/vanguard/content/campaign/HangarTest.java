@@ -82,7 +82,9 @@ class HangarTest {
                         "Hammer Mortar",
                         "Hornet Launcher",
                         "Ion Beam",
-                        "Harpoon Torpedoes"),
+                        "Harpoon Torpedoes",
+                        // M10 part A: Act 6's front gun, from the L36 visit.
+                        "Plasma Arc"),
                 front.subList(1, front.size()).stream()
                         .map(offer -> offer.item().name())
                         .toList());

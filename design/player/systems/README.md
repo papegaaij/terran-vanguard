@@ -40,7 +40,7 @@ are the "nice extra options": they make the ship better at a job without adding 
 | Evasive thrusters | Double-tap a direction (or the Dash button): 72 px dash in 0.12 s, 0.25 s invulnerable, 3 s cooldown (see below) | L1 | 2 | 4 000 | act 3 | approved |
 | Auto-repair nanites | Repairs 1 armour per 4 s, up to 50% of max armour; a hit pauses it 1 s (see below) | L1–L2 (2 s at L2) | 3 | 6 000 / 12 000 | L24 | draft |
 | Pressure hull | Removes the under-water drag (see [europa](../../world/europa/README.md#under-water-rules) and below) | L1 | 1 | 2 000 | L22 | draft |
-| Ascendancy IFF spoofer | Ascendancy turrets hesitate 0.5 s before firing | L1 | 2 | 5 000 | act 6 (story) | idea |
+| Ascendancy IFF spoofer | Ascendancy turrets fire 0.5 s late at where the ship was (see below) | L1 | 2 | 5 000 | L39 (Aurelia's codes) | draft |
 <!-- /data -->
 
 ### Pickup magnet
@@ -231,8 +231,8 @@ brings no new utility module; the belt's vacuum is defined in [the belt](../../w
 ### Act 6: the IFF spoofer and the core tiers (draft)
 
 *Draft, step `m10-d-systems` (2026-10-31), **decided 2026-10-31 (round 72)** (Q7 = b). Act 6's one new module.
-The *Utility modules* table above is rendered from [data.yaml](data.yaml) and keeps the spoofer's `idea` row until M10
-part A writes it (`design: draft`, `available: L39`, the Effect cell below).*
+The *Utility modules* table above is rendered from [data.yaml](data.yaml), where M10 part A (step A2a) wrote its row
+(`design: draft`, `available: L39`, its `spoof` delay) and flagged the listed turrets `spoofable` in their stat blocks.*
 
 **Ascendancy IFF spoofer**
 
@@ -315,7 +315,8 @@ Prompts and capture notes: [concept/prompts.md](concept/prompts.md).
 - [x] Act 4's modules' effects: the Auto-repair nanites and the Pressure hull (M8 part A, the items below)
 - [ ] The other modules' effects — **later: Act 6** (Ascendancy IFF spoofer: the late, stale-aimed volleys of the listed
   turrets, the amber stutter, `design: draft` and `available: L39` in [data.yaml](data.yaml); draft: *Act 6: the IFF
-  spoofer and the core tiers*) — M10 part A
+  spoofer and the core tiers*) — M10 part A (step A2a: the row and its `spoof: {delay}`, the five turrets' `spoofable`;
+  step A1a: the turrets' late volleys; the module's flag in the loadout is steps A1b and A2b's)
 - [x] Sensor level controls the intel panel detail
 - [x] Underwater penalties and the pressure hull — **later: Act 4** (the pressure hull is an L22
   module; the penalties are Europa's under-water rules; the draft is *Pressure hull (L22)* above) (M8 part A, step

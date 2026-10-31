@@ -298,7 +298,7 @@ public final class Autopilot {
             // M5 part H: a root burst's growth takes no damage while it grows (Level 14); M7 part B: nothing
             // hits a buried Burrower.
             if (!enemy.cloaked()
-                    && !enemy.growing()
+                    && !enemy.invulnerable()
                     && !HoldFirePlay.neutral(enemy)
                     && enemy.layer().touchable()
                     && !TargetPlay.closedVortex(enemy)

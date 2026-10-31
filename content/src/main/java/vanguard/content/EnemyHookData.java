@@ -216,7 +216,8 @@ public sealed interface EnemyHookData permits EnemyData {
             Optional<Double> interval,
             Optional<Integer> arms,
             Optional<Double> within,
-            Optional<Integer> aimed) {
+            Optional<Integer> aimed,
+            Optional<Double> speed) {
         /** Without M8 part B's aimed shards. */
         public AttackChange(
                 Optional<Integer> burst,
@@ -224,13 +225,48 @@ public sealed interface EnemyHookData permits EnemyData {
                 Optional<Double> interval,
                 Optional<Integer> arms,
                 Optional<Double> within) {
-            this(burst, count, interval, arms, within, Optional.empty());
+            this(burst, count, interval, arms, within, Optional.empty(), Optional.empty());
         }
 
         public AttackChange {
             arms.ifPresent(a -> Check.positive("arms", a));
             within.ifPresent(w -> Check.positive("within", w));
             aimed.ifPresent(a -> Check.positive("aimed", a));
+            // M10 part A (design/enemies/air/harrow): a death-burst's bullet speed at that difficulty, px/s (hard's
+            // 100).
+            speed.ifPresent(v -> Check.positive("speed", v));
+        }
+    }
+
+    /** M10 part A (design/enemies/air/mirror-interceptor): a mirror's arc or turn rate instead (easy 100°/45°/s). */
+    record MirrorChange(Optional<Double> arc, Optional<Double> turn) {
+        public MirrorChange {
+            arc.ifPresent(a -> Check.that(a > 0 && a <= 360, "mirror.arc: more than 0 and at most 360 degrees"));
+            turn.ifPresent(t -> Check.positive("mirror.turn", t));
+        }
+    }
+
+    /** M10 part A (design/enemies/air/chimera): a regeneration's rate or delay instead (easy 15 %/s after 1.3 s). */
+    record RegenerationChange(Optional<Double> rate, Optional<Double> delay) {
+        public RegenerationChange {
+            rate.ifPresent(r -> Check.that(r > 0 && r <= 1, "regeneration.rate: in (0, 1]"));
+            delay.ifPresent(d -> Check.notNegative("regeneration.delay", d));
+        }
+    }
+
+    /** M10 part A (design/enemies/ground/graft-turret): a regrowth's window or knit instead (hard 4 s, 0.6 s). */
+    record RegrowthChange(Optional<Double> window, Optional<Double> knit) {
+        public RegrowthChange {
+            window.ifPresent(w -> Check.positive("regrowth.window", w));
+            knit.ifPresent(k -> Check.notNegative("regrowth.knit", k));
+        }
+    }
+
+    /** M10 part A (design/enemies/ground/shield-pylon): a dome's radius or breaker drop instead (hard 125 px, 1.0 s). */
+    record DomeChange(Optional<Double> radius, Optional<Double> breakerDrop) {
+        public DomeChange {
+            radius.ifPresent(r -> Check.positive("dome.radius", r));
+            breakerDrop.ifPresent(d -> Check.notNegative("dome.breaker_drop", d));
         }
     }
 
@@ -290,6 +326,10 @@ public sealed interface EnemyHookData permits EnemyData {
      *     Sentinel Tower's easy 0, hard 2)
      * @param ringArena M9 part H: a ringed boss's ring speed factor, fire arc and battery interval factor instead (the Iron
      *     Sovereign's; {@link RingBlock.RingArenaChange})
+     * @param mirror M10 part A: a mirror's arc or turn rate instead (the Mirror Interceptor's easy and hard)
+     * @param regeneration M10 part A: a regeneration's rate or delay instead (the Chimera's easy and hard)
+     * @param regrowth M10 part A: a regrowth's window or knit instead (the Graft Turret's easy and hard)
+     * @param dome M10 part A: a dome's radius or breaker drop instead (the Shield Pylon's easy and hard)
      */
     record Hook(
             Optional<List<String>> leadsTargetIn,
@@ -341,7 +381,11 @@ public sealed interface EnemyHookData permits EnemyData {
             Optional<DashChange> dash,
             Optional<AirLinkChange> airLink,
             Optional<Integer> fullTurnEvery,
-            Optional<RingArenaChange> ringArena) {
+            Optional<RingArenaChange> ringArena,
+            Optional<MirrorChange> mirror,
+            Optional<RegenerationChange> regeneration,
+            Optional<RegrowthChange> regrowth,
+            Optional<DomeChange> dome) {
         public Hook {
             fullTurnEvery.ifPresent(n -> Check.notNegative("full_turn_every", n));
             hoverY.ifPresent(y -> Check.positive("hover_y", y));

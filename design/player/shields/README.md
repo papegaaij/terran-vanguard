@@ -24,6 +24,7 @@ It is the player's renewable buffer; [armour](../armor/README.md) is the finite 
 | Mk III | 45 | 4 | 1.5 s | 4 MW | 3 000 | act 2 |
 | Mk IV | 60 | 5 | 1.2 s | 5 MW | 7 000 | act 4 |
 | Mk V | 80 | 6 | 1.0 s | 6 MW | 14 000 | act 5 |
+| Reflex Shield | 40 | 6 | 1.0 s | 6 MW | 12 000 | L37 (Ascendancy mirror tech) |
 <!-- /data -->
 
 Variant shields (roster, alternative to the Mk line):
@@ -53,8 +54,9 @@ stretch to it.
 ### Reflex Shield (Act 6)
 
 *Draft, step `m10-d-systems` (2026-10-31), **decided 2026-10-31 (round 72)** (Q7 = b: "mirrors answering
-mirrors"). Promoted from the roster row; the numbers are hand-written, nothing is in [data.yaml](data.yaml) yet (M10
-part A). A variant shield: it replaces the Mk shield in the shield slot.*
+mirrors"). Promoted from the roster row; its row (capacity, regen, delay, draw, price, availability and the `reflect`
+window, share, bolt speed and factor) is in [data.yaml](data.yaml) since M10 part A, step A2a. A variant shield: it
+replaces the Mk shield in the shield slot.*
 
 | Property | Value (draft) |
 |---|---|
@@ -125,7 +127,8 @@ pick). Prompts: [concept/prompts.md](concept/prompts.md#reflex-shield-final-r73-
 - [x] The shield-restore chime ([sfx](../../audio/sfx/README.md), part H's SFX pass: once the
   shield is full again after a break, `FlightSounds`)
 - [ ] The Reflex Shield as in *Reflex Shield (Act 6)* (draft): its row in [data.yaml](data.yaml) (a variant with the
-  reflect window, the half cost and the bolt), the bullet-to-bolt hand-off in the simulation (deterministic, hashed
+  reflect window, the half cost and the bolt; written and loaded in step A2a, `ShieldData.Reflect`, `JovianKeysTest`;
+  the simulation's reflect is step A1b's, its mapping step A2b's), the bullet-to-bolt hand-off in the simulation (deterministic, hashed
   only when fitted), the once-only rule against the mirrors, the gold hex flash, the bolt's look, the
   ricochet sound, in the shop from the L37 visit — M10 part A
 

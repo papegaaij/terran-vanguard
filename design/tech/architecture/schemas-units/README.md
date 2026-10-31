@@ -3,7 +3,7 @@ title: Data file schemas — enemies and allies
 design: approved
 implementation: in-progress
 art: n/a
-updated: 2026-10-29
+updated: 2026-10-31
 ---
 
 # Data file schemas — enemies and allies
@@ -527,6 +527,25 @@ The schemas of the enemies' stat blocks and boss scripts and of the allies' file
   spiral the core's, the volley's attack a `laser-line`, the surge with bays, the mine ring a line-mine layer's with its
   distances, the wreck throw its speed, HP, gap and a known bullet); `locks`, `ring_arena` and `from`
   only on a ringed boss (`from` on a boss).
+- **M10 part A, Act 6's unit keys** (loaded and checked in step A2a by content's `EnemyData`, `JovianRules`,
+  `JovianChecks`; the simulation's in step A1a): a stat block's **`mirror`** (the [reflect](../../../enemies/README.md#reflect)
+  rule: `arc` °, `heat` (the HP lever and a returning unit's act factor on it, as a shield's), `turn` °/s at its station,
+  `down` s, `regrow` s, `gap` s between two bounces, `cool` of the heat a second after `cool_delay` s, `fire_within` °:
+  its gun fires only that close to the ship, and the bounced bullet's class `bullet` at `speed` px/s, no bullet-speed
+  lever; only a single `air` unit, never beside a `shield`), **`regeneration`** (`rate`, a share of its maximum a
+  second, after `delay` s without damage), **`regrowth`** (the Graft Turret's: `window` s, `knit` s, `wake` s and its
+  `root` `{hp, hitbox, bounty}`, the root's HP scaled as the unit's), **`dome`** (the Shield Pylon's: `radius` px,
+  `offset` px along the crown, `breaker_drop` s, `back` s; its crown per placed nest, the level's `crown`), both only
+  on a single fixed `ground` unit, never together, and **`spoofable: true`** (the IFF spoofer fools its aimed volleys
+  and told attacks; only a `ground` unit that is neither a boss nor the Vrell's: the SAM Nest, Sentinel Tower, Rail
+  Bunker, Warden Tank and Strider); the attack pattern **`death-burst`** (a ring of `count` bullets of its `bullet` class
+  at `speed` released where the unit dies, no `interval`; **`on_contact: true`** on every death however close the ship,
+  a ram's too, its bullets harmless to the ship for their first **`grace`** s after a ram; **`between: true`** turned
+  so that the ship's bearing falls between two bullets: the Harrow's), at most one, never beside a hook's
+  `death_burst`; the hooks **`mirror`** (`arc`, `turn`), **`regeneration`** (`rate`, `delay`), **`regrowth`**
+  (`window`, `knit`), **`dome`** (`radius`, `breaker_drop`) and **`attacks.<name>.speed`** (a death-burst's ring,
+  authored). Basis: `reference_dps` 36–42 and the shared **`shields.heavy`** (`from`, `factor`: from that level on every
+  unit's `shield`, a leader's too, takes the factor; Act 6's twice-as-heavy shields, a level rule).
 - **Allies** (`allies/data.yaml`): one entry per ally
   slug with `name`, `layer`, `size`, `hitbox`, `hp` (medium; the level sets difficulty variants),
   `damaged_by` (`objective_aimed`: only shots the target-the-objective hook aims at it;

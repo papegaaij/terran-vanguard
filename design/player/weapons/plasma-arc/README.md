@@ -1,7 +1,7 @@
 ---
 title: Plasma Arc
 design: approved
-implementation: not-started
+implementation: in-progress
 art: chosen
 depends-on: [.., ../../generator, ../../../enemies, ../../../systems/economy]
 updated: 2026-10-31
@@ -15,39 +15,47 @@ Act 6's front gun: a short-range plasma discharge from the nose that strikes the
 **chains** on to the next ones nearby, three targets at L1 and six at L5 (`area`, `spread`). It is the
 area alternative to the Ion Beam for the act's packed waves (Jupiter's Chimera flocks, Aurelia's decks, the
 fortress's turret rows), weaker on a single target and strong on a formation. Draft for
-[round 72](../../../concept-rounds/README.md), decided 2026-10-31 (Q7 = b); numbers are hand-written,
-nothing is in `data.yaml` yet (M10 part A).
+[round 72](../../../concept-rounds/README.md), decided 2026-10-31 (Q7 = b); its numbers are in
+[data.yaml](data.yaml) since M10 part A.
 
 ## Design
 
-| Property | Value (draft) |
+<!-- data: weapon-properties -->
+| Property | Value |
 |---|---|
-| Slot | Front |
+| Slot | Front gun |
 | Traits | `area`, `spread` |
 | Layers hit | `air`, `low-air` and `ground` (hardened ground targets take it only with `anti-ground`, which it has not: the arc glances off them and the chain ends there); not `high-air` (an arc needs a body in reach, not a lock, as the [Tesla Coil Pod](../tesla-coil-pod/README.md)'s), not the `sub` layer ([layer rules](../../../enemies/README.md#layer-rules)) |
-| Price | 6 000 cr (the roster's) |
-| Upgrade cost L2 / L3 / L4 / L5 | 1 500 / 3 000 / 6 000 / 12 000 cr: an upgrade base of **3 000** (half the price, as the [Ion Beam](../ion-beam/README.md)'s 2 500 on 5 000), so L3 is reachable inside its act; sell-back per [economy](../../../systems/economy/README.md) |
-| Unlock | L36 (in the shop from the hangar visit before it, the act's first: the fleet's own stock, brought to Jupiter) |
-| Projectile | None: an instant discharge from the nose to its first target and on along the chain (every strike lands on the frame it fires), drawn for 0.1 s |
-| Sound family | `tesla` ([weapon sound families](../../../audio/sfx/README.md#weapon-sound-families), already chosen: the zap replayed per jump at a rising pitch, as that table has it) |
-| Projectile family (VFX) | `arc` (the Tesla Coil Pod's), drawn **wider and hotter**: a white core with a violet fringe on the first strike, each jump a thinner fork than the one before; a spark burst on every struck unit. The look is chosen (round 72 A.7 a, "the wide Tesla": one family with the Tesla Coil Pod, the jagged bolt 1.7× wide with two forks, each jump 0.72× thinner) |
+| Price | 6 000 cr |
+| Upgrade cost L2 / L3 / L4 / L5 | 1 500 / 3 000 / 6 000 / 12 000 cr (sell-back per [economy](../../../systems/economy/README.md)) |
+| Unlock | L36 (in the shop from the hangar visit before it) |
+| Projectile | None: an instant discharge from the nose to the nearest enemy within 200 → 240 px in a 90° cone that opens forward, then on along the chain, each jump to the nearest unit not yet struck within 90 → 120 px (it hits on the frame it fires) |
+| Sound family | `tesla` ([weapon sound families](../../../audio/sfx/README.md#weapon-sound-families)) |
+| Projectile family (VFX) | `arc` (the Tesla Coil Pod's family drawn wider and hotter (round 72 A.7 a, "the wide Tesla"): a white core with a violet fringe on the first strike 1.7× the pod's width, each jump a thinner fork (0.72×), a spark burst on every struck unit) |
+<!-- /data -->
 
-### Per level (draft, hand-written)
+It is in the shop from the L36 visit, the act's first (the fleet's own stock, brought to Jupiter). The arc is drawn
+for 0.1 s; its sound family `tesla` replays the zap per jump at a rising pitch. Its look is chosen (round 72 A.7 a,
+"the wide Tesla": one family with the Tesla Coil Pod, the jagged bolt 1.7× wide with two forks, each jump 0.72×
+thinner).
 
+### Per level
+
+<!-- data: weapon-levels -->
 | Level | Chain | Pattern | Rate /s | Damage | Volley DPS | Single-target DPS | Extra | Draw MW | Upgrade cost |
 |---|---|---|---|---|---|---|---|---|---|
 | 1 | 3 | arc to the nearest ahead, jumps on | 4 | 7.5 | 69.4 | 30.0 | reach 200 px, jump 90 px | 5 | — |
-| 2 | 4 | the same | 4 | 11.25 | 123.0 | 45.0 | reach 210 px, jump 95 px | 6 | 1 500 |
-| 3 | 4 | the same | 5 | 13 | 177.7 | 65.0 | reach 220 px, jump 100 px | 6.5 | 3 000 |
-| 4 | 5 | the same | 5 | 18 | 274.6 | 90.0 | reach 230 px, jump 110 px | 7.5 | 6 000 |
-| 5 | 6 | the same | 5 | 24 | 394.6 | 120.0 | reach 240 px, jump 120 px | 8 | 12 000 |
-| OD | 6 | the same | 6 | 24 | 473.5 | 144.0 | reach 250 px, jump 130 px | — (ignores cap) | — |
+| 2 | 4 | arc to the nearest ahead, jumps on | 4 | 11.25 | 123.0 | 45.0 | reach 210 px, jump 95 px | 6 | 1 500 |
+| 3 | 4 | arc to the nearest ahead, jumps on | 5 | 13 | 177.7 | 65.0 | reach 220 px, jump 100 px | 6.5 | 3 000 |
+| 4 | 5 | arc to the nearest ahead, jumps on | 5 | 18 | 274.6 | 90.0 | reach 230 px, jump 110 px | 7.5 | 6 000 |
+| 5 | 6 | arc to the nearest ahead, jumps on | 5 | 24 | 394.6 | 120.0 | reach 240 px, jump 120 px | 8 | 12 000 |
+| OD | 6 | arc to the nearest ahead, jumps on | 6 | 24 | 473.5 | 144.0 | reach 250 px, jump 130 px | — (ignores cap) | — |
 
-DPS L1 and L5 are the roster's (30 / 120); L2–L4 ours; the draw is the roster's 5 → 8 at the common rounding
-(5 · 6 · 6.5 · 7.5 · 8). **Single-target DPS** counts the first strike only (the 36 px target 100 px away is inside
-the reach from L1). **Volley DPS** counts a full chain at the falloff below (each jump × 0.75 of the one before:
-1 + 0.75 + 0.56 = 2.31 strikes' worth at L1, 3.29 at L5), the most a discharge can do when every jump finds a
-target; in a thin wave it is the single-target figure.
+Generated from [data.yaml](data.yaml) by `tools/sync_tables.py`; do not edit by hand. Single-target DPS counts the first strike (it always strikes a target inside its reach). Volley DPS counts a full chain, each jump at 0.75 of the strike before it: the most a discharge does when every jump finds a target; in a thin wave it is the single-target figure. OD = the overdrive pattern (20 s pickup).
+<!-- /data -->
+
+DPS L1 and L5 are the roster's (30 / 120); L2–L4 ours; the draw is the roster's 5 → 8 at the common rounding. The
+36 px target 100 px away is inside the reach from L1. Its numbers are in [data.yaml](data.yaml) since M10 part A.
 
 ### Behaviour
 
@@ -109,7 +117,7 @@ Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 
 ## Implementation
 
-- [ ] Weapon data in `data.yaml` (not yet written) (numbers as above; a `CHAIN` delivery: the instant first strike in
+- [ ] Weapon data in [data.yaml](data.yaml) (written and loaded in step A2a: `hits: chain`, the per-level `chain` and `jump`, the `falloff`, checked by content's `WeaponData`; the simulation's `CHAIN` delivery is step A1b's, its mapping step A2b's) (numbers as above; a `CHAIN` delivery: the instant first strike in
   the forward cone, the jumps with their radius, count and falloff, one target per body) — M10 part A
 - [ ] The chain against shields, mirrors (earthed on the face, the flank open to a jump), regeneration, mines and debris
   as under *Behaviour* — M10 part A (with the enemies' rules)

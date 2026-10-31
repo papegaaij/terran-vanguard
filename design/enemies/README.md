@@ -418,9 +418,9 @@ damage units per second, Pulse Cannon L1 = 20, interpolated from the
 [weapon roster](../player/weapons/README.md) and the [level budget](../systems/economy/README.md#per-level-budget)):
 
 <!-- data: reference-dps -->
-| Level | 01 | 02 | 03 | 04 | 05 | 06 | 07 | 08 | 09 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | 32 | 33 | 34 | 35 |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| DPS | 20 | 26 | 32 | 38 | 45 | 52 | 60 | 60 | 63 | 66 | 70 | 73 | 76 | 80 | 76 | 80 | 84 | 88 | 92 | 96 | 100 | 96 | 100 | 104 | 108 | 112 | 116 | 120 | 120 | 124 | 128 | 132 | 136 | 140 | 144 |
+| Level | 01 | 02 | 03 | 04 | 05 | 06 | 07 | 08 | 09 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | 32 | 33 | 34 | 35 | 36 | 37 | 38 | 39 | 40 | 41 | 42 |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| DPS | 20 | 26 | 32 | 38 | 45 | 52 | 60 | 60 | 63 | 66 | 70 | 73 | 76 | 80 | 76 | 80 | 84 | 88 | 92 | 96 | 100 | 96 | 100 | 104 | 108 | 112 | 116 | 120 | 120 | 124 | 128 | 132 | 136 | 140 | 144 | 144 | 148 | 152 | 156 | 160 | 164 | 168 |
 <!-- /data -->
 
 Levels 08–14 were lowered on 2026-10-01 (user decision) to what a typical loadout reaches according to
@@ -974,6 +974,14 @@ Round 72, Q9 (step ART-R-A, picked 2026-10-31; `tools/concept/enemies_r72.py hea
       3 of 25 units insectoid).
 - [x] Act 5 passes the variety checklist as built (M9 part I, 2026-10-29, from Levels 29–35's data: the table's row above;
       3 of 22 units insectoid).
+- [ ] Act 6's unit rules (M10 part A): [reflect](#reflect), [regeneration](#regeneration), the Graft Turret's regrowth,
+      the `death-burst` on contact, the Act 6 [shield](#enemy-shields) weights, the Shield Pylon's dome and
+      [the three-way war](#the-three-way-war)'s prey link, each flown by its first unit in parts B–H. (Step A1a: the
+      simulation's `Mirroring`, `Regenerating`, `Regrowing`, `Domes`, `PreyWar`, `Spoofing`; step A2a: the stat block's
+      `mirror`, `regeneration`, `regrowth`, `dome`, `spoofable` and the `death-burst` attack with `on_contact`, `between`
+      and `grace`, their difficulty hooks, a wave's `hunts: <tag>`, a pylon nest's `crown`, the shared `shields.heavy`
+      and `reference_dps` 36–42 in [data.yaml](data.yaml), the five Ascendancy turrets flagged `spoofable`;
+      `JovianRules`, `JovianChecks`, `JovianKeysTest` on stand-ins, `ActHpFactorTest`; the looks are step A3a's.)
 - [ ] Acts 6–7 pass it as built — **later: Act 6** to Act 7.
 
 ## Open questions

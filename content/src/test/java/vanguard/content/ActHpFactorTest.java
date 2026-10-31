@@ -128,9 +128,10 @@ class ActHpFactorTest {
     @Test
     void aLevelBeyondTheReferenceCurveIsAnError() {
         // M7 part A: the curve ran to Level 21 (Act 3's reference DPS); M8 part A (step A2): to Level 28 (Act 4's); M9
-        // part A (step A2): to Level 35 (Act 5's), so Level 36 is beyond it.
+        // part A (step A2): to Level 35 (Act 5's); M10 part A (step A2a): to Level 42 (Act 6's), so Level 43 is beyond.
         assertEquals(144 / 52.0, SimSpecs.actHpFactor(CONTENT, "mantis", 5, 35), 1e-9);
-        assertThrows(IllegalArgumentException.class, () -> SimSpecs.actHpFactor(CONTENT, "mantis", 6, 36));
+        assertEquals(168 / 52.0, SimSpecs.actHpFactor(CONTENT, "mantis", 6, 42), 1e-9);
+        assertThrows(IllegalArgumentException.class, () -> SimSpecs.actHpFactor(CONTENT, "mantis", 7, 43));
     }
 
     /**
@@ -250,5 +251,45 @@ class ActHpFactorTest {
                 SimSpecs.enemy(CONTENT, "ghost-drone", Difficulty.MEDIUM, Optional.empty())
                         .bounty(),
                 at("ghost-drone", Difficulty.MEDIUM, 3, 18).bounty());
+    }
+
+    /**
+     * M10 part A (step A2a; design/enemies, Enemy shields, Act 6 weights; J1 of round 72): Act 6's reference DPS (144 at
+     * L36, then +4 a level to 168 at L42) and, from Level 36 on, every unit's hex shield twice as heavy (a level rule,
+     * the stat blocks unchanged): the Talon's 12 → 24 (a {@code small} unit: no act factor on it), the Gilded Gunship's 24
+     * × 148/124 ≈ 29 at L37 (hull 88 → ≈ 105), the Hornet's 24 × 152/128 ≈ 28 at L38 (hull 96 → ≈ 114); Act 5's levels
+     * keep theirs.
+     */
+    @Test
+    void actSixDoublesTheShieldsOnItsReferenceCurve() {
+        assertEquals(
+                List.of(144.0, 148.0, 152.0, 156.0, 160.0, 164.0, 168.0),
+                java.util.stream.IntStream.rangeClosed(36, 42)
+                        .mapToObj(level -> CONTENT.enemyBasis().referenceDps().get(level))
+                        .toList());
+        assertEquals(1, CONTENT.enemyBasis().shields().factor(35));
+        assertEquals(2, CONTENT.enemyBasis().shields().factor(36));
+        assertEquals(2, CONTENT.enemyBasis().shields().factor(42));
+        assertEquals(12, shield("talon", 5, 35));
+        assertEquals(24, shield("talon", 6, 36));
+        assertEquals(32, at("talon", Difficulty.MEDIUM, 6, 36).hp(), "the Talon's hull: the beam era's ×2 only");
+        assertEquals(Math.rint(12 * 144.0 / 124), shield("gilded-gunship", 5, 35));
+        assertEquals(Math.rint(24 * 148.0 / 124), shield("gilded-gunship", 6, 37));
+        assertEquals(29, shield("gilded-gunship", 6, 37));
+        assertEquals(
+                Math.rint(88 * 148.0 / 124),
+                at("gilded-gunship", Difficulty.MEDIUM, 6, 37).hp());
+        assertEquals(28, shield("hornet", 6, 38));
+        assertEquals(
+                Math.rint(96 * 152.0 / 128),
+                at("hornet", Difficulty.MEDIUM, 6, 38).hp());
+        // The difficulty's lever on top: hard 24 × 1.3 = 31.2 → 31.
+        assertEquals(
+                Math.rint(24 * 1.3),
+                at("talon", Difficulty.HARD, 6, 36).shield().orElseThrow().hp());
+    }
+
+    private static double shield(String slug, int act, int level) {
+        return at(slug, Difficulty.MEDIUM, act, level).shield().orElseThrow().hp();
     }
 }

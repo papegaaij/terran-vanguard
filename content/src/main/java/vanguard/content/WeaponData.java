@@ -48,6 +48,8 @@ import java.util.stream.Stream;
  *     every level then has its {@code drone_hits} and {@code rebuild}
  * @param pick M9 part A: how a homing weapon's projectile picks its target ({@code rear-first}: the Swarm Tail's, the
  *     nearest enemy behind the ship's nose line first); the nearest in its cone when absent
+ * @param falloff M10 part A: a chain's ({@code hits: chain}, the Plasma Arc) share of the damage each jump does of the
+ *     strike before it; none for every other weapon
  */
 public record WeaponData(
         String name,
@@ -82,13 +84,39 @@ public record WeaponData(
         List<Level> levels,
         Level overdrive,
         Optional<Drone> drone,
-        Optional<Pick> pick) {
+        Optional<Pick> pick,
+        Optional<Double> falloff) {
     public WeaponData {
         Check.notNegative("price", price);
         Check.positive("unlock", unlock);
         Check.that(levels.size() == 5, "levels: one entry for each of L1–L5, found " + levels.size());
         upgradeBase.ifPresent(base -> Check.positive("upgrade_base", base));
-        if (hits.equals(ARC)) {
+        if (hits.equals(CHAIN)) {
+            // M10 part A (design/player/weapons/plasma-arc): an instant discharge from the nose that chains on, no
+            // projectile; every level a reach, a jump radius and a chain count, the jumps' falloff, the forward cone.
+            Check.that(
+                    !pod.orElse(false)
+                            && speed.isEmpty()
+                            && size.isEmpty()
+                            && range.isEmpty()
+                            && lifetime.isEmpty()
+                            && drone.isEmpty()
+                            && splash.isEmpty()
+                            && falloff.filter(share -> share > 0 && share <= 1).isPresent()
+                            && cone.filter(degrees -> degrees > 0 && degrees <= 360)
+                                    .isPresent(),
+                    "a chain (hits: chain) has a cone (0-360) and a falloff (0-1], and no pod, speed, size, range,"
+                            + " lifetime, drone or splash");
+            Check.that(
+                    Stream.concat(levels.stream(), Stream.of(overdrive))
+                            .allMatch(level -> level.kind() == Level.Kind.SHOTS
+                                    && level.pattern().size() == 1
+                                    && level.reach().isPresent()
+                                    && level.jump().isPresent()
+                                    && level.chain().isPresent()),
+                    "a chain (hits: chain): every level and the overdrive have one shot in its pattern, a rate, a"
+                            + " damage, a reach, a jump and a chain");
+        } else if (hits.equals(ARC)) {
             // M9 part A (design/player/weapons/tesla-coil-pod): an instant arc from a pod, no projectile; every level a
             // reach and a spark radius (blast), the sparks' share in splash, the forward arc in cone.
             Check.that(
@@ -202,9 +230,17 @@ public record WeaponData(
         }
         Check.that(
                 hits.equals(ARC)
+                        || hits.equals(CHAIN)
                         || Stream.concat(levels.stream(), Stream.of(overdrive))
                                 .noneMatch(level -> level.reach().isPresent()),
-                "a reach belongs to an arc (hits: arc)");
+                "a reach belongs to an arc (hits: arc) or a chain (hits: chain)");
+        Check.that(
+                hits.equals(CHAIN)
+                        || (falloff.isEmpty()
+                                && Stream.concat(levels.stream(), Stream.of(overdrive))
+                                        .noneMatch(level -> level.jump().isPresent()
+                                                || level.chain().isPresent())),
+                "a falloff, a jump and a chain belong to a chain (hits: chain)");
         pick.ifPresent(rule -> Check.that(
                 hits.equals("homing") && slew.isEmpty(), "a pick rule belongs to a homing missile (hits: homing)"));
         splash.ifPresent(share -> {
@@ -277,6 +313,19 @@ public record WeaponData(
      */
     public static final String ARC = "arc";
 
+    /**
+     * M10 part A: the {@code hits} of the Plasma Arc (design/player/weapons/plasma-arc): an instant discharge from the
+     * nose to the nearest enemy within its level's {@code reach} in its forward {@code cone}, then on to the nearest unit
+     * not yet struck within its level's {@code jump} radius, up to its level's {@code chain} targets, each jump at {@code
+     * falloff} of the strike before it; no projectile.
+     */
+    public static final String CHAIN = "chain";
+
+    /** M10 part A: whether it chains ({@value #CHAIN}). */
+    public boolean chains() {
+        return hits.equals(CHAIN);
+    }
+
     /** M9 part A: the trait whose hit empties an enemy shield at once (design/enemies, Enemy shields). */
     public static final String SHIELD_BREAKER = "shield-breaker";
 
@@ -304,9 +353,18 @@ public record WeaponData(
 
     /**
      * The damage per second of one level's volley (per side of a mirrored weapon, per pod): every
-     * projectile of the pattern at the rate; M7 part A: a beam's damage per second, a deflector's 0.
+     * projectile of the pattern at the rate; M7 part A: a beam's damage per second, a deflector's 0; M10 part A: a
+     * chain's full chain (each jump at its falloff).
      */
     public double volleyDps(Level level) {
+        if (chains()) {
+            // M10 part A: a full chain, each jump at the falloff of the strike before it.
+            double strikes = 0;
+            for (int k = 0; k < level.chain().orElse(1); k++) {
+                strikes += Math.pow(falloff.orElse(1.0), k);
+            }
+            return strikes * level.damage() * level.rate();
+        }
         return switch (level.kind()) {
             case SHOTS -> level.pattern().size() * level.damage() * level.rate();
             case BEAM -> level.damage();
@@ -463,7 +521,9 @@ public record WeaponData(
      * @param droneHits M7 part A: the hits a drone takes before it breaks
      * @param rebuild M7 part A: seconds the bay takes to build a new drone
      * @param fuse M8 part A: seconds from a depth charge's launch to its burst
-     * @param reach M9 part A: an arc's reach from its pod, px (hits: arc)
+     * @param reach M9 part A: an arc's reach from its pod, px (hits: arc); M10 part A: a chain's from the nose
+     * @param jump M10 part A: a chain's jump radius from each struck unit, px (hits: chain)
+     * @param chain M10 part A: the most units a chain's discharge strikes, its first strike included (hits: chain)
      */
     public record Level(
             List<Shot> pattern,
@@ -480,7 +540,46 @@ public record WeaponData(
             Optional<Integer> droneHits,
             Optional<Double> rebuild,
             Optional<Double> fuse,
-            Optional<Double> reach) {
+            Optional<Double> reach,
+            Optional<Double> jump,
+            Optional<Integer> chain) {
+        /** A level without a chain's jump and count (the levels before M10 part A). */
+        public Level(
+                List<Shot> pattern,
+                double rate,
+                double damage,
+                Optional<Integer> pierce,
+                Optional<Double> blast,
+                Optional<Double> turn,
+                Optional<Integer> maxLive,
+                Optional<Double> width,
+                Optional<Double> radius,
+                Optional<Integer> charges,
+                Optional<Double> recharge,
+                Optional<Integer> droneHits,
+                Optional<Double> rebuild,
+                Optional<Double> fuse,
+                Optional<Double> reach) {
+            this(
+                    pattern,
+                    rate,
+                    damage,
+                    pierce,
+                    blast,
+                    turn,
+                    maxLive,
+                    width,
+                    radius,
+                    charges,
+                    recharge,
+                    droneHits,
+                    rebuild,
+                    fuse,
+                    reach,
+                    Optional.empty(),
+                    Optional.empty());
+        }
+
         /** A level without an arc's reach (the levels before M9 part A). */
         public Level(
                 List<Shot> pattern,
@@ -565,6 +664,8 @@ public record WeaponData(
             rebuild.ifPresent(seconds -> Check.positive("rebuild", seconds));
             fuse.ifPresent(seconds -> Check.positive("fuse", seconds));
             reach.ifPresent(px -> Check.positive("reach", px));
+            jump.ifPresent(px -> Check.positive("jump", px));
+            chain.ifPresent(count -> Check.positive("chain", count));
             boolean field = radius.isPresent() || charges.isPresent() || recharge.isPresent();
             if (width.isPresent()) {
                 Check.that(
@@ -606,7 +707,9 @@ public record WeaponData(
                 @JsonProperty("drone_hits") Optional<Integer> droneHits,
                 @JsonProperty("rebuild") Optional<Double> rebuild,
                 @JsonProperty("fuse") Optional<Double> fuse,
-                @JsonProperty("reach") Optional<Double> reach) {
+                @JsonProperty("reach") Optional<Double> reach,
+                @JsonProperty("jump") Optional<Double> jump,
+                @JsonProperty("chain") Optional<Integer> chain) {
             return new Level(
                     pattern.orElse(List.of()),
                     rate.orElse(0.0),
@@ -622,7 +725,9 @@ public record WeaponData(
                     droneHits,
                     rebuild,
                     fuse,
-                    reach);
+                    reach,
+                    jump,
+                    chain);
         }
 
         /** Whether it fires shots, burns a beam or holds a deflector's field. */

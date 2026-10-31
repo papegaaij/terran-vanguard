@@ -36,6 +36,13 @@ reference_dps:  # assumed single-target player DPS per level (medium)
   33: 136
   34: 140
   35: 144
+  36: 144  # Act 6 (M10 part A, J1 of round 72; the generator's Act 6 hand plan): the L35 value held at L36, then +4 a
+  37: 148  # level, from the static measure (the plan's forward DPS 0.99 of it at L36, 1.14 at L37, 1.02 at L41); parts B-H measure
+  38: 152  # each level with levelReport
+  39: 156
+  40: 160
+  41: 164
+  42: 168
 bullet_damage:  # damage to the player per hit (shield first, overflow to armour)
   - {bullet: small, damage: 4, notes: {label: '`small` bullet', used_for: 'thorns, standard orbs, fan and ring bullets'}}
   - {bullet: medium, damage: 6, notes: {label: '`medium` bullet', used_for: 'large orbs, bursts from heavies, acid spit'}}
@@ -54,6 +61,7 @@ shields:  # M9 part A (README, Enemy shields; Q1 a of round 60): a unit's `shiel
   delay: 2.0         # s without a hit before it refills
   refill: 0.5        # of its maximum a second
   breaker_hold: 3.0  # s a shield-breaker hit holds the refill back
+  heavy: {from: 36, factor: 2}  # M10 part A (README, Act 6 weights; §2.2 of round 72): from this level on every unit's `shield` (a leader's too) takes this factor; the stat blocks keep their Act 5 numbers
 formations:  # the formation vocabulary: name and description
   single: One unit on its own, as when a new enemy is introduced.
   V-wing: A V of 3–9 units led by the tip.

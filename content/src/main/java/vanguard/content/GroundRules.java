@@ -73,7 +73,8 @@ final class GroundRules {
                                         FoundryRules.arcFacing(target)))
                         : dry;
                 // M9 part F (Level 33): a bunker pair's or trio's first lines staggered over the interval.
-                EnemySpec enemy = staggered(target, wet, index, at.size());
+                // M10 part A (design/enemies/ground/shield-pylon): a pylon's dome along its placement's crown.
+                EnemySpec enemy = JovianRules.crowned(target, staggered(target, wet, index, at.size()));
                 // M5 part G: a nest entering from a side edge, drifting across (Level 13's mortar floe).
                 GroundUnit unit = target.side().isPresent()
                         ? PartGRules.fromSide(placement, target.side().get(), enemy, group)

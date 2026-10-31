@@ -20,6 +20,7 @@ orientation: 16 angles
 hp: 84            # the parts' sum: hull 64, turret 20
 armour: none; the rear hull plate takes ×1.5 from behind
 machine: true     # the EMP Burst stuns it 3 s (design/player/specials)
+spoofable: true   # M10 part A (design/player/systems, the IFF spoofer): its aimed volleys and told attacks come 0.5 s late at a stale aim while the ship carries the spoofer
 speed: 40         # px/s along its path, on top of the scroll (and the belt's 40 on a conveyor)
 movement:
   walk: {speed: 40, turn_rate: 60, stride: 18}   # px/s, °/s, px of ground per tread cycle (2 tread frames ≈ 9 px apart)

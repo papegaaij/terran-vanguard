@@ -62,7 +62,9 @@ final class LeechChecks {
         List<LevelData.Wave> waves = level.waves();
         for (int i = 0; i < waves.size(); i++) {
             LevelData.Wave wave = waves.get(i);
-            if (wave.prey().isEmpty() && wave.hunts().isEmpty()) {
+            // M10 part A: a wave hunting a prey wave's tag is the three-way war's (JovianChecks), not a leech wave.
+            boolean leeches = wave.hunts().filter(PartFRules.HUNTS_PREY::equals).isPresent();
+            if (wave.prey().isEmpty() && !leeches) {
                 continue;
             }
             String field = "waves[" + i + "]";
@@ -86,14 +88,13 @@ final class LeechChecks {
                                 field + ".prey", "prey is a plain air unit without a latch: '" + group.enemy() + "'");
                     }
                 }
-                if (wave.hunts().isPresent()
-                        && enemy.latch().flatMap(EnemyData.Latch::preyDrift).isEmpty()) {
+                if (leeches && enemy.latch().flatMap(EnemyData.Latch::preyDrift).isEmpty()) {
                     problem.accept(
                             field + ".hunts",
                             "a hunting unit latches on prey (latch.prey_drift): '" + group.enemy() + "'");
                 }
             }
-            if (wave.hunts().isPresent()) {
+            if (leeches) {
                 double t = wave.t();
                 boolean prey = waves.stream()
                         .anyMatch(other -> other.prey().isPresent() && other.t() <= t && t - other.t() <= HUNT_WITHIN);

@@ -46,6 +46,7 @@ public record SystemsData(List<Engine> engines, Bays bays, List<Utility> utility
      * @param dash M7 part A: the Evasive thrusters' dash; empty for the other modules
      * @param repair M8 part A: the Auto-repair nanites' repair; empty for the other modules
      * @param hull M8 part A: the Pressure hull's effect under water; empty for the other modules
+     * @param spoof M10 part A: the Ascendancy IFF spoofer's delay ({@link Spoof}); empty for the other modules
      */
     public record Utility(
             String name,
@@ -59,7 +60,8 @@ public record SystemsData(List<Engine> engines, Bays bays, List<Utility> utility
             Optional<Salvage> salvage,
             Optional<Dash> dash,
             Optional<Repair> repair,
-            Optional<Hull> hull) {
+            Optional<Hull> hull,
+            Optional<Spoof> spoof) {
         public Utility {
             Check.notNegative("draw", draw);
             Check.notEmpty("prices", prices);
@@ -133,6 +135,17 @@ public record SystemsData(List<Engine> engines, Bays bays, List<Utility> utility
      * normal acceleration under water (the water's drag is removed); a second hull adds nothing.
      */
     public record Hull(boolean drag) {}
+
+    /**
+     * M10 part A, the Ascendancy IFF spoofer (design/player/systems, Act 6): a spoofable unit's aimed volley comes {@code
+     * delay} s late, aimed where the ship was when it came due (a told attack's tell starts that late); its cycle runs
+     * on.
+     */
+    public record Spoof(double delay) {
+        public Spoof {
+            Check.positive("spoof.delay", delay);
+        }
+    }
 
     /** The Salvage scanner: per level, the share added to salvage pickups' and hidden crates' credits. */
     public record Salvage(List<Double> bonus) {

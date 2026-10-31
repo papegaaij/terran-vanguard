@@ -81,6 +81,7 @@ utility:
   - name: Ascendancy IFF spoofer
     draw: 2
     prices: [5000]
-    available: act 6
-    design: idea
-    notes: {effect: Ascendancy turrets hesitate 0.5 s before firing, available: (story)}
+    available: L39    # M10 part A: Varga cracks Aurelia's codes in L37, the fleet builds the module (README, Act 6)
+    design: draft     # decided in round 72 (Q7 = b); the row's status is the user's to raise
+    spoof: {delay: 0.5}  # M10 part A: a spoofable unit's aimed volley (a told attack's tell) comes this many s late, aimed where the ship was when it came due
+    notes: {effect: 'Ascendancy turrets fire {spoof.delay} s late at where the ship was (see below)', available: (Aurelia's codes)}

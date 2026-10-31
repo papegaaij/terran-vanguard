@@ -122,10 +122,16 @@ def focus(w, lv):
 
 def stats(w, lv):
     """(volley DPS, single-target DPS) of one upgrade level or the overdrive pattern. M7 part A: a beam's
-    damage per second is both (it burns its first target); a deflector deals none."""
+    damage per second is both (it burns its first target); a deflector deals none. M10 part A: a chain's first strike
+    is its single-target DPS, a full chain its volley."""
     if w["hits"] == "beam":
         return lv["damage"], lv["damage"]
     if w["hits"] == "deflector":
         return 0.0, 0.0
+    if w["hits"] == "chain":
+        # M10 part A (the Plasma Arc): the first strike is the single-target DPS; the volley a full chain, each jump
+        # at the falloff of the strike before it.
+        first = lv["damage"] * lv["rate"]
+        return first * sum(w["falloff"] ** k for k in range(lv["chain"])), first
     volley = len(lv["pattern"]) * lv["damage"] * lv["rate"]
     return volley, volley * focus(w, lv)

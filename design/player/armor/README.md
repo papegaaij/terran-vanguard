@@ -25,7 +25,7 @@ auto-repair or armour patches). When it reaches zero the ship is destroyed and t
 | Composite II | 100 | 1 400 | act 2 |
 | Composite III | 120 | 3 000 | act 3 |
 | Composite IV | 140 | 6 000 | act 5 |
-| Composite V | 160 | 11 000 | act 6 |
+| Composite V | 160 | 11 000 | L38 |
 <!-- /data -->
 
 - Plating draws no power and has no speed penalty. Its price is the only cost.
@@ -37,10 +37,10 @@ auto-repair or armour patches). When it reaches zero the ship is destroyed and t
 - **Act 6** (draft, decided 2026-10-31 (round 72), Q7 = b): **Composite V** (160) is in the shop from the
   **L38 visit**, not from the act's first visit as the data's `act 6` reads (M10 part A sets `available: L38` in
   [data.yaml](data.yaml)): one new item a visit in the act's shop (the Plasma Arc L36, the Reflex Shield L37, Composite V
-  L38, the IFF spoofer and the Mk V+ generator L39). The typical plan buys it at once, before the storm layer's
-  lightning (`heavy` strikes) and the death-burst rings of L38 and the duel of L40 (see the
-  [Act 6 hand plan](../generator/README.md#act-6-hand-plan-draft)); it draws no power, so it is the act's buy while
-  the plan sits at 22 of 22 MW.
+  L38, the IFF spoofer and the Mk V+ generator L39). The typical plan buys it at the **L41 visit** (round 72's J11:
+  it saves for the Mk V+ generator first), before the fortress's guns and the Ascendant's batteries (see the
+  [Act 6 hand plan](../generator/README.md#act-6-hand-plan-draft)); it draws no power, so a richer run can buy it
+  from L38 while the plan sits at 22 of 22 MW.
 - **Repairs** happen between levels in the hangar. Cost per point depends on difficulty (easy:
   free, medium: 5 cr, hard: 10 cr). See [difficulty](../../systems/difficulty/README.md).
   Repairing is optional: flying a level damaged is a legitimate way to save credits.
@@ -70,7 +70,8 @@ auto-repair or armour patches). When it reaches zero the ship is destroyed and t
 - [x] The radio line at 15 %, voiced, once per attempt (M4 part H: `Defences.CRITICAL_SHARE`,
   `SimEvents.Type.ARMOUR_CRITICAL`, queued urgent by the level screen; `DefencesTest`,
   `LowArmourLineTest`, `RadioTimelineTest`, `VoiceFilesTest`); accepted in round 26
-- [ ] Composite V in the shop from the L38 visit (`available: L38`; draft, *Design*) — M10 part A
+- [x] Composite V in the shop from the L38 visit (`available: L38`; draft, *Design*) — M10 part A (step A2a:
+  [data.yaml](data.yaml), the balance plan's L41 visit; `JovianKeysTest`, `BalanceTest`)
 
 ## Open questions
 
@@ -113,5 +114,8 @@ auto-repair or armour patches). When it reaches zero the ship is destroyed and t
 - 2026-10-31 (Act 6 design phase, step m10-d-systems; **decided 2026-10-31 (round 72)**): Composite V (160,
   11 000) in the shop from the L38 visit (Q7 = b); the hand plan buys it there.
 - 2026-10-31 (user, [round 72](../../concept-rounds/round-72/README.md) closed): Q7 b (the middle arsenal):
-  Composite V is in the shop from the Level 41 visit (J11 moved it from Level 38; the Crucible takes the Level 40
-  visit); a everything and c minimal rejected.
+  Composite V is in the shop from the Level 38 visit and bought at the Level 41 visit (J11 moved the purchase from
+  Level 38; the Crucible takes the Level 40 visit); a everything and c minimal rejected.
+- 2026-10-31 (M10 part A, step A2a): `available: L38` in [data.yaml](data.yaml); the *Design* text and the line above
+  corrected to the shop from L38, the plan's purchase at L41 (they read "bought at once" and "in the shop from the Level
+  41 visit", against the hand plan, the act README and the roadmap; m10a-gaps.md §6).

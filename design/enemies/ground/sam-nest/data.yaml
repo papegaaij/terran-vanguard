@@ -16,6 +16,7 @@ hp: 10            # base; the beam era's ×2 flies it at 20: 0.17 s at the L29 r
 armour: none
 speed: 0          # scrolls with the hull or rock
 machine: true     # the EMP Burst stuns it 3 s: no salvo (missiles in flight fly on)
+spoofable: true   # M10 part A (design/player/systems, the IFF spoofer): its aimed volleys and told attacks come 0.5 s late at a stale aim while the ship carries the spoofer
 movement:
   terrain: {}
 attacks:

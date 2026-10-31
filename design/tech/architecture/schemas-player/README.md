@@ -3,7 +3,7 @@ title: Data file schemas — player and economy
 design: approved
 implementation: in-progress
 art: n/a
-updated: 2026-10-25
+updated: 2026-10-31
 ---
 
 # Data file schemas — player and economy
@@ -88,10 +88,21 @@ The schemas of the player's data files (weapons, the ship and its core parts, sp
   shield at once ([enemy shields](../../../enemies/README.md#enemy-shields)). **`pick`** (`nearest` when absent,
   `rear-first`: the [Swarm Tail](../../../player/weapons/swarm-tail/README.md)'s nearest enemy behind the ship's nose
   line within its `range` first, else the nearest anywhere in it) is a homing missile's (`hits: homing`, no `slew`).
+  M10 part A (Act 6's front gun, round 72; loaded and checked in step A2a by content's `WeaponData`, the simulation's
+  `CHAIN` delivery steps A1b and A2b's): **`hits: chain`** (the [Plasma Arc](../../../player/weapons/plasma-arc/README.md),
+  `WeaponData.CHAIN`) is a front gun without `pod`, `speed`, `size`, `range`, `lifetime` or `splash`: a `cone` (° of the
+  forward cone its first strike picks its target in), a **`falloff`** (each jump's share of the damage of the strike
+  before it; only a chain's) and per level and the overdrive one shot in its `pattern`, a `rate`, a `damage`, a `reach`
+  (px from the nose), a **`jump`** (px from each struck unit to the next) and a **`chain`** (the most units a discharge
+  strikes, its first strike included); single-target DPS is the first strike, the volley a full chain
+  (`tools/design_data.py`), its tables rendered by `tools/sync_tables.py`'s chain rows.
 - **Ship and core parts**: ship (`acceleration_seconds`, `stop_seconds`, `precision_factor`,
   `size`, `edge_gap`, `hull` (hit boxes `[x, y, width, height]` from the sprite's top left), `collection_radius`, `mercy_seconds`, `bank_change_steps`,
   `mounts`: `front`, `wings`, `roots` (the side guns' muzzles), `rear`, `engines`; its speed is the fitted engine's); shields (`break_seconds`, `models` with
-  `capacity`, `regen`, `delay`, `draw`); armour (`plating` with `max`, and the low-armour `radio`
+  `capacity`, `regen`, `delay`, `draw`; M10 part A: a variant shield's **`reflect`**: `window`, the share of the capacity
+  it holds at least when a bullet hits, `share` of the bullet's damage it takes then, the bolt's `speed` px/s and
+  `factor` × the bullet class's damage: the [Reflex Shield](../../../player/shields/README.md#reflex-shield-act-6));
+  armour (`plating` with `max`, and the low-armour `radio`
   line: `speaker`, optional `expression` and `distorted`, `line`); generator
   (`spare_power`, `models` with `output`; M9 part A: `drain` with `per` (MW each latched drainer takes off the
   effective output), `max` (MW all of them at most) and `floor` (the weapons' lowest fire-rate factor), the
@@ -107,7 +118,9 @@ The schemas of the player's data files (weapons, the ship and its core parts, sp
   `invulnerable` s and `cooldown` s from its start, `double_tap` s between the first press's release
   and the second press); M8 part A: the Auto-repair nanites' `repair` (`interval`, s per armour point, one per level;
   `cap`, the share of the plating's maximum it repairs up to; `pause`, s a hit pauses it) and the Pressure hull's
-  `hull` (`drag: false`: no under-water drag)); specials (`input_buffer` (s a press waits
+  `hull` (`drag: false`: no under-water drag); M10 part A: the Ascendancy IFF spoofer's **`spoof`** (`delay`, s a
+  `spoofable` unit's aimed volley or told attack comes late)); an item's `available` is an availability key (`act 6`)
+  or a level (`L39`: in the shop from that level's visit), each core list's in its order (`CampaignChecks`); specials (`input_buffer` (s a press waits
   while the special is busy), `cooldown_pickup` (M7 part A: s a special charge pickup takes off a
   cooldown special's running cooldown), `specials` with `name`, `unlock` and either `charge_price`,
   `max_charges` and optional `free_charges` (given once at the unlock) or (M7 part A, a cooldown

@@ -78,8 +78,8 @@ final class BeltRules {
 
     /**
      * The unit's shield (design/enemies, Enemy shields): its {@code shield} HP with the difficulty's HP lever and, on a
-     * returning {@code medium} or larger unit, the act HP factor (never the beam era's); the basis's shared delay,
-     * refill and breaker hold.
+     * returning {@code medium} or larger unit, the act HP factor (never the beam era's); M10 part A: from the basis's
+     * {@code shields.heavy} level on its factor (Act 6's weights); the basis's shared delay, refill and breaker hold.
      */
     static Optional<EnemySpec.Shield> shield(
             Content content, EnemyData enemy, Difficulty difficulty, UnitRules.InLevel inLevel) {
@@ -87,7 +87,12 @@ final class BeltRules {
         return enemy.shield()
                 .map(hp -> new EnemySpec.Shield(
                         content.difficulty()
-                                .enemyHp(hp * UnitRules.returningFactor(content, enemy, inLevel), difficulty),
+                                .enemyHp(
+                                        // M10 part A (Act 6 weights): twice as heavy from Level 36 on.
+                                        hp
+                                                * shared.factor(inLevel.level())
+                                                * UnitRules.returningFactor(content, enemy, inLevel),
+                                        difficulty),
                         shared.delay(),
                         shared.refill(),
                         shared.breakerHold()));

@@ -137,7 +137,10 @@ final class RingRules {
                 own.slow(),
                 own.line(),
                 own.airLink(),
-                shell.from());
+                shell.from(),
+                own.onContact(),
+                own.between(),
+                own.grace());
     }
 
     /** The hook of the unit a {@code from} attack was taken from, at {@code difficulty}; the boss's own otherwise. */

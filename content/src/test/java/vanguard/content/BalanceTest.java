@@ -285,11 +285,15 @@ class BalanceTest {
             // for a level without its data is gone).
             double budget = CONTENT.economy().budget().of(level);
             Optional<String> key = CONTENT.levelKey(level);
-            if (key.isEmpty()) {
+            if (key.isEmpty() && !ACT_6_PLANNED.contains(level)) {
                 throw new AssertionError("Level " + level + " has no level data");
             }
+            // M10 part A (temporary, as M9 part A's for Act 5): an Act 6 level planned before its data earns budget(n),
+            // the generator's hand plan's haul; each level's part replaces it with its typical haul (M10 part I).
             int haul = (int) Math.rint(incomeFactor
-                    * TypicalHaul.of(CONTENT, key.get(), difficulty).typical());
+                    * key.map(built ->
+                                    TypicalHaul.of(CONTENT, built, difficulty).typical())
+                            .orElse(budget));
             // Round 34, P3 = A: the typical player's grade bonus (a B) on top of the haul.
             int income = haul + (int) Math.rint(plan.gradeBonus() * haul);
             rows.add(new Row(
@@ -980,6 +984,13 @@ class BalanceTest {
     static final int ACT_5_FIRST = 29;
 
     static final int ACT_5_LAST = 35;
+
+    /**
+     * M10 part A (temporary, until M10 part I): Act 6's visits are planned (design/player/balance-plan.yaml) before its
+     * levels are built; such a level's income is budget(n) on the sheet, and its level checks wait for its data.
+     */
+    static final Set<Integer> ACT_6_PLANNED =
+            java.util.stream.IntStream.rangeClosed(36, 42).boxed().collect(java.util.stream.Collectors.toSet());
 
     /**
      * Time to kill at the unit's first level (design/enemies Balancing basis): {@code tiny} one hit

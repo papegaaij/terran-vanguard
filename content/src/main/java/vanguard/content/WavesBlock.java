@@ -68,7 +68,9 @@ public sealed interface WavesBlock permits LevelData {
      *     its units are prey ({@link PreyHold}): a {@code hunts: prey} leech latches on them instead of the ship; they
      *     fly a refuelling hold instead of their swoop (from the front)
      * @param hunts M9 part F: {@code prey}: its leeches drift and chase the nearest free prey on the screen instead of
-     *     the ship (the ship once none is left); only on a wave of a unit whose latch has a {@code prey_drift}
+     *     the ship (the ship once none is left); only on a wave of a unit whose latch has a {@code prey_drift}. M10 part A
+     *     (design/enemies, The three-way war): or the {@code tag} of another wave, its prey: its units' chase, dive or
+     *     ram, latch and aimed fire go at that wave's units while one is on the screen ({@link JovianRules#wave})
      */
     public record Wave(
             double t,
@@ -121,7 +123,11 @@ public sealed interface WavesBlock permits LevelData {
             Check.that(
                     prey.isEmpty() || (from == LevelData.Entry.FRONT && cave.isEmpty() && wall.isEmpty()),
                     "a prey wing flies its hold from the front (from: front)");
-            hunts.ifPresent(h -> Check.that(PREY.equals(h), "hunts: prey, was '" + h + "'"));
+            // M10 part A (design/enemies, The three-way war): or the tag of the prey wave it hunts.
+            hunts.ifPresent(h -> Check.that(!h.isBlank(), "hunts: prey or a prey wave's tag"));
+            Check.that(
+                    hunts.isEmpty() || tag.isEmpty() || !hunts.get().equals(tag.get()),
+                    "a wave hunts another wave's tag, never its own");
             Check.that(prey.isEmpty() || hunts.isEmpty(), "a wave is prey or hunts it, not both");
             // M9 part E (design/campaign Level 32, The forks): a branch's wave flies in its channel from the front.
             Check.that(

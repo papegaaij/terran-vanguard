@@ -7,3 +7,15 @@ models:
   - {name: Mk III, capacity: 45, regen: 4, delay: 1.5, draw: 4, price: 3000, available: act 2}
   - {name: Mk IV, capacity: 60, regen: 5, delay: 1.2, draw: 5, price: 7000, available: act 4}
   - {name: Mk V, capacity: 80, regen: 6, delay: 1.0, draw: 6, price: 14000, available: act 5}
+  # M10 part A (Q7 = b of round 72): Act 6's variant shield, Ascendancy mirror tech from Aurelia's wrecks. While it holds
+  # at least `window` of its capacity, an enemy bullet or missile costs it `share` of its damage and comes back as the
+  # ship's bolt straight up at `speed` px/s with `factor` x its class's damage (README, Reflex Shield (Act 6))
+  - name: Reflex Shield
+    capacity: 40
+    regen: 6
+    delay: 1.0
+    draw: 6
+    price: 12000
+    available: L37
+    reflect: {window: 0.75, share: 0.5, speed: 640, factor: 2}
+    notes: {available: (Ascendancy mirror tech)}
