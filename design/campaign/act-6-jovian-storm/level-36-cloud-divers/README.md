@@ -445,21 +445,34 @@ field (easy 21.7 %) and at most 1.8 s over the ship's band. Prompts and briefs: 
 | [concept/fleet-stormhawk-final-r74-a.gif](concept/fleet-stormhawk-final-r74-a.gif) | Two pairs diving up the screen at 400 px/s over the dive's bands with their exhaust streaks, at 1× | proposed (round 74) |
 | [concept/pathfinder-pod-final-r74-a.png](concept/pathfinder-pod-final-r74-a.png) | The pathfinder pod: its 16-frame tumble and the 8-frame break in air at 2× (sheet) | proposed (round 74) |
 | [concept/pathfinder-pod-final-r74-a.gif](concept/pathfinder-pod-final-r74-a.gif) | The pod drifting down the storm edge and shot open | proposed (round 74) |
+| [concept/dive-capture-r74-a.png](concept/dive-capture-r74-a.png) | Game capture (step B5, the [recipe](concept/prompts.md#level-36-capture-r74-a)): the dive, the `FRIENDLIES INBOUND — HOLD FIRE` banner at t=2.5, the first drop craft pair in its brackets at t=4.75 and the second at t=10.5, the carrier group on `deep` (the play field at 1×) | proposed (round 74) |
+| [concept/dive-capture-r74-a.gif](concept/dive-capture-r74-a.gif) | The dive t=1.5–6.7 at 10 frames a second, 1× | proposed (round 74) |
+| [concept/harvester-capture-r74-a.png](concept/harvester-capture-r74-a.png) | Game capture: the second harvester pair with its Talon escorts in orbit (t=76.6–78.6), the right hull breaking in two under the beam at t=78.1 | proposed (round 74) |
+| [concept/harvester-capture-r74-a.gif](concept/harvester-capture-r74-a.gif) | t=76–79.5 at 10 frames a second, 1× | proposed (round 74) |
+| [concept/strike-capture-r74-a.png](concept/strike-capture-r74-a.png) | Game capture: the first strike (t=137 tell, t=138 strike) beside the t=136 Chimera wing, the storm wall's lightning on `deep` | proposed (round 74) |
+| [concept/strike-capture-r74-a.gif](concept/strike-capture-r74-a.gif) | t=136.5–139 at 20 frames a second, 1× | proposed (round 74) |
+| [concept/briefing-capture-r74-a.png](concept/briefing-capture-r74-a.png) | Game capture: the Act 6 intro's page 4 and Level 36's briefing page 1, whose text runs past the four-line screen (the round's briefing question) | proposed (round 74) |
 
 ## Implementation
 
 - [x] Level data `data.yaml` (M10 part B): `ground: none`, sections and speeds with 2 s eases, waves, radio, budget,
       threat profile, briefing, backdrop, music, the weather block (gusts, flashes, strikes) (step B2, 2026-10-31:
       `CloudDiversDataTest`; the banks and the pod from ART-B's proposal)
-- [ ] `NO GROUND`: bomb deliveries idle and drawing power, the HUD's word; the validator rejects ground content
-      here; the Airstrike and the EMP Burst work
-- [ ] Foreground banks over `air` bodies (Q2 a: ≈ 35 %, tells at full, bullets/ship/Rook/pickups above, targeting
+- [x] `NO GROUND`: bomb deliveries idle and drawing power, the HUD's word; the validator rejects ground content
+      here; the Airstrike and the EMP Burst work (step B2: `ground: none` on Level 30's built rule, the threat profile's
+      `NO GROUND` row, no ground targets)
+- [x] Foreground banks over `air` bodies (Q2 a: ≈ 35 %, tells at full, bullets/ship/Rook/pickups above, targeting
       unchanged, the third-of-field cap, the ship's band rule, the flash see-through), smooth (≥ 32 steps, no
-      dither, drawn once)
-- [ ] The harvester secondary (`escapes: harvester`, `allowed: 2`, `HARVESTERS n / 6` counting to its target;
-      easy 5 of 8, hard 7 of 8); the harvesters not counted as enemies; their escorts in `orbit`
-- [ ] The drop craft flagged `neutral` (the friendly marker's banner and brackets), untouchable, never picked
-- [ ] Three lightning strikes and the two gust spells as above (the [Jovian hazards](../../../world/jovian/README.md#hazards--set-pieces)); strike kills pay
+      dither, drawn once) (steps B2 and B4: ART-B's bank pieces placed from its proposal, at most 27.4 % of the field,
+      easy 21.7 %, at most 1.8 s over the ship's band, `JovianHazardChecks`; drawn over `air` bodies, `Level36LooksTest`;
+      round 74's captures, step B5)
+- [x] The harvester secondary (`escapes: harvester`, `allowed: 2`, `HARVESTERS n / 6` counting to its target;
+      easy 5 of 8, hard 7 of 8); the harvesters not counted as enemies; their escorts in `orbit` (steps B1–B4:
+      `CloudDiversDataTest`, `Level36Test`, the tracker in `Level36LooksTest`)
+- [x] The drop craft flagged `neutral` (the friendly marker's banner and brackets), untouchable, never picked (steps
+      B1–B4: `CloudDiversDataTest`, `Level36Test`; the banner and brackets in round 74's dive capture)
+- [x] Three lightning strikes and the two gust spells as above (the [Jovian hazards](../../../world/jovian/README.md#hazards--set-pieces)); strike kills pay
+      (steps B2 and B3: `CloudDiversDataTest`, `Level36Test`'s first strike kill in the Chimera wing's lane)
 - [x] Wave script: ≥ 75 enemies a minute at medium with the launched Darts (`DensityTest`), the Act 2+ floor
       (`PacingTest`, `ActFloorTest`), side entries edge-warned 3 s, the quiet window t=32–38, ≥ 4 s calm after the
       last enemy, no two medium hulls overlapping (step B2: 101 a minute, 2.76 on the screen, two pauses, 12.8 s
@@ -480,13 +493,14 @@ field (easy 21.7 %) and at most 1.8 s over the ship's band. Prompts and briefs: 
 - [x] Music and ambience: "Eye of the Storm" by section, the high-wind bed, the level's sounds (`Level36SoundsTest`;
       step B4: track 14 from section 1 with its intro, the full mix from section 3; `jovian-sky` with the dive's wind
       over section 1; round 74's a variants until the picks)
-- [ ] Easy/hard variations as in *Difficulty notes*
+- [x] Easy/hard variations as in *Difficulty notes* (step B2: `CloudDiversDataTest`'s regeneration, harvester HP,
+      escorts, allowed escapes and strikes per difficulty; `levelReport` easy 81, hard 123 enemies a minute)
 - [x] The autopilot (holding the beam on a hurt Chimera, the harvesters, out of a told column, the drop craft never a
       target) flies the level with Rook on every difficulty and with `--escort none` (step B3, `Level36Test`: 3/3 per
       difficulty both ways, no retry, `HARVESTERS` met on every run, no strike on the ship or Rook, no drop craft hit;
       Varga's failed-secondary line at the third harvester away; the t=138 strike kills in the Chimera wing's lane and
       pays; `ActPlaythroughTest` to Level 36, the release ending after it; Act 6's intro once on a v0.3 save)
-- [ ] Production art and captures for part B's round
+- [x] Production art and captures for part B's round (ART-B and B4; the captures of step B5 in [round 74](../../../concept-rounds/round-74/README.md))
 
 ## Open questions
 
@@ -531,3 +545,9 @@ Left to the build (the document is approved as drafted):
   it had swooped past the first strike's column before it struck; t=136 keeps the tell 1.0 s after its entry). Rook
   now leaves a told strike's column to the side he is on (by his slot's side he crossed the column as the ship drifted
   and was struck in it on easy).
+- 2026-10-31 (M10 part B, step B5; pending the user's review in round 74): part B closed with the full `check` green;
+  the level captured in the game ([level-36-capture-r74-a](concept/prompts.md#level-36-capture-r74-a)) and
+  [round 74](../../../concept-rounds/round-74/README.md) opened. Seen in the captures: the t=120 Chimera swarm enters at
+  its bank's edge and leaves it within a second (no Chimera heals *under* a bank in them); with the ship parked or
+  steered to the centre, the t=136 wing swooped clear of the first strike's column (the kill is the autopilot's, which
+  draws the wing into it); the briefing pages' overflow (round 74 L.2 drafts 4-line texts).

@@ -115,6 +115,8 @@ exists, then a rerun writes them to `assets/`). Prompts: [concept/prompts.md](co
 | [concept/plasma-arc-capture-r73-a.png](concept/plasma-arc-capture-r73-a.png) | Game capture (the A4 rig, M10 part A): the chain at L5 with the pods' missiles bounced back as magenta orbs by mirrors, over round 72's Level 36 grade (the mood still as the deep layer), ART-B's cream bands and the rust band; 2× crops: the white core and violet-pink fringe beside the dark-rimmed magenta orbs (they read apart by shape and brightness; the hues are close) | chosen (round 73 F.1 accept) |
 | [concept/plasma-arc-capture-r73-a.gif](concept/plasma-arc-capture-r73-a.gif) | The same over the cream bands, 2 s at 15 fps, 1× | chosen (round 73 F.1 accept) |
 | [concept/plasma-arc-l35-capture-r73-a.png](concept/plasma-arc-l35-capture-r73-a.png) | Game capture: Level 35 with `--loadout front=plasma-arc:5,shield=reflex-shield`, the chain through the escort screen | chosen (round 73 F.1 accept) |
+| [concept/plasma-arc-l36-capture-r74-a.png](concept/plasma-arc-l36-capture-r74-a.png) | Game capture in Level 36 itself (M10 part B, step B5; `front=plasma-arc:5` in the plan's fit): the chain through the t=42 Talon wing over the cream, with the wing's magenta orbs beside it (t=44.2 and 46.6); Level 36 has no mirrors, so no bounced orbs | proposed (round 74) |
+| [concept/plasma-arc-l36-capture-r74-a.gif](concept/plasma-arc-l36-capture-r74-a.gif) | t=43.4–47 at 20 frames a second, 1× | proposed (round 74) |
 
 Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 

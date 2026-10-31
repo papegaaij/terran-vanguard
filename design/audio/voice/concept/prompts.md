@@ -658,3 +658,17 @@ pitch (median, IQR), the share of 1–4 kHz energy (a shout's strain) and spectr
   share 0.44 against 0.25–0.41), 211 Hz, IQR 40; then ×0.52 (−11.3 semitones) by WORLD: 104 Hz, IQR 14 (a flat, held
   shout), centroid −7 %. Whisper hears every word, without the "!". Enemy filter, 3.0 s, −16 LUFS. Shorter "No!" than a,
   a shallower shift (less vocoder colour), but a flatter line.
+
+## Round 74 — Act 6 listen-through and page 4
+
+M10 part B, step B5 (2026-10-31), `tools/concept/audio/voice_r74.py`; measured and read back by Whisper, not listened to.
+
+- **act-6-listen-r74-a**: every Act 6 line part B voiced, joined from the production files in `assets/voice/` in playing
+  order (the intro, Level 36's briefing, its radio by time, the event lines at their likeliest moment), 1.2 s apart and
+  2 s between the three groups; the cue list in `act-6-listen-r74-a.txt`. Listen for VOX-B's weak spots: "Io" through
+  the radio filter (Okafor's secondary line) and "with Vrell tissue" (Varga's briefing page).
+- **act-6-intro-page-4-r74-a / -b**: "All channels. Vorne, this is Okafor. I was at Aurelia. I remember. So will you.
+  Aegis: you dive first. Mission briefing follows. Aegis Actual out." Okafor's clip, dry. a the act data's `fierce`
+  expression (the built file); b this README's *The cast speakers in Act 6*: the grim row, slower (exaggeration 0.45,
+  cfg_weight 0.4, temperature 0.7), chunked and retried by `tools/art/voice.py`'s rules from seed 101.
+

@@ -35,3 +35,10 @@
 Concept round 73, a capture of the game, not generated art (M10 part A, step A4, 2026-10-31): frames of the
 [A4 capture rig](../../../../world/jovian/concept/prompts.md#act6-rig-capture-r73-a); the sheet and the GIF are laid out from its screenshots (the 480×540 play field
 or crops, scaled with nearest neighbour).
+
+## plasma-arc-l36-capture-r74-a
+
+Concept round 74, a capture of the game (M10 part B, step B5): Level 36 with `front=plasma-arc:5` in place of the Ion
+Beam, the rest of the plan's fit; the
+[recipe](../../../../campaign/act-6-jovian-storm/level-36-cloud-divers/concept/prompts.md#level-36-capture-r74-a)
+(parked, not steered); ticks 2652 and 2796, GIF 2604–2820 every 3.

@@ -35,3 +35,29 @@ smooth gradient (far more than 32 steps), no ordered dither, drawn once (the 202
 - **pathfinder-pod** — The scouts' cargo pod: a short CDF-grey capsule with a blue band round its middle, orange hazard
   stripes at both ends, two short fins and a white beacon on top, 32×32 at 16 turns of a slow tumble; shot open in air:
   grey shell chips flung out in a ring and a puff of smoke rising and thinning, a brief orange flash at its core.
+
+## level-36-capture-r74-a
+
+Concept round 74, captures of the game, not generated art (M10 part B, step B5, 2026-10-31): the game built by
+`./gradlew check :desktop:installDist` at `1e734936` (the branch `m10-act-6`) on a private 960×540 Xvfb display, `--bench 900
+--settings <scratch>/settings.properties --level 36 --invulnerable --loadout
+front=ion-beam:4,left=tesla-coil-pod:2,right=micro-missile-pod:4,rear=swarm-tail:3,utility=pickup-magnet,generator=4,shield=2,armor=4
+--special airstrike:4 --escort rook:autocannon:1` (the balance plan's Level 36 fit, `tools/balance.py`'s state at the
+visit; auto-fire on, medium), `--shots <tick>,…` (one simulation step a frame, deterministic; 60 ticks a second), the
+play field cropped (480×540). The ship is left where it launches; the first gust spell pushes it to the right edge by
+t=66 and it stays there. Three runs steer it with XTest arrow keys pressed when the log names a shot's tick (not
+bit-exact, so each still and its GIF come from one run): the swarm window (Left from t=119 for 1.3 s: the ship near
+the left edge as the t=120 Chimera swarm leaves its bank), the bank window (Left from t=103 for 0.8 s: the beam
+through the section-3 bank) and the strike window (Left from t=133.5 for 0.65 s: the ship at the centre before the
+t=136 wing). The Plasma Arc capture is the same start with `front=plasma-arc:5`. GIFs: ffmpeg palette, no dither.
+
+- **dive-capture-r74-a**: ticks 150, 285 (the parked run), 630; GIF ticks 90–400 every 6.
+- **harvester-capture-r74-a**: ticks 4593, 4650, 4686, 4713; GIF 4560–4770 every 6.
+- **strike-capture-r74-a**: the strike window, ticks 8226, 8259, 8283, 8292; GIF 8190–8340 every 3.
+- **briefing-capture-r74-a**: the v0.3 save fixture `content/src/test/resources/saves/v0.3-medium-level-36-hangar.json` as
+  the autosave and slot 1 beside a scratch settings file, `--start title --bench 98`, Return through XTest (Press start,
+  Continue, then a page every 16 s), the game's F12 screenshots: the intro's page 4 and Level 36's briefing page 1.
+- The other captures of these runs: [act-6-intro-capture-r74-a](../../concept/prompts.md#act-6-intro-capture-r74-a),
+  [chimera-capture-r74-a](../../../../enemies/air/chimera/concept/prompts.md#chimera-capture-r74-a),
+  [soot-capture-r74-a](../../../../art-direction/concept/prompts.md#soot-capture-r74-a),
+  [plasma-arc-l36-capture-r74-a](../../../../player/weapons/plasma-arc/concept/prompts.md#plasma-arc-l36-capture-r74-a).

@@ -31,3 +31,8 @@ repaint).
   toward full while it heals, with a teal pulse running out from the body twice a second. Death: teal tissue flecks and
   gold sparks sprayed out of the small explosion. Every glow a smooth gradient, no ordered dither.
 
+## chimera-capture-r74-a
+
+Concept round 74, a capture of the game (M10 part B, step B5): Level 36's swarm window, the
+[recipe](../../../../campaign/act-6-jovian-storm/level-36-cloud-divers/concept/prompts.md#level-36-capture-r74-a)
+(the first four frames from the run steered left from t=119 for 1.3 s, the last four from one steered for 1.0 s).

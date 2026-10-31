@@ -1014,7 +1014,9 @@ Traffic through radio filter b. The candidates' clips are `refs/ref-<speaker>-r7
 measurements in [concept/prompts.md](concept/prompts.md#round-72--act-6-voices). The accents are not checked by ear
 (Claude does not listen): the candidates were chosen by clip pitch and pace. Round 73's follow-ups (step m10-f72, 2026-10-31; pending the user's review):
 Aurelia Traffic's sign-off re-rendered for "lift" and Vorne's shout recast low (a and b), the last three rows,
-`tools/concept/audio/voice_r73.py`; briefs in [concept/prompts.md](concept/prompts.md#round-73--act-6-voice-follow-ups).
+`tools/concept/audio/voice_r73.py`; briefs in [concept/prompts.md](concept/prompts.md#round-73--act-6-voice-follow-ups). Round 74 (M10 part B, step B5): a listen-through of
+the Act 6 lines part B voiced and the intro's page 4 at two readings, the last four rows, `tools/concept/audio/voice_r74.py`
+([concept/prompts.md](concept/prompts.md#round-74--act-6-listen-through-and-page-4)).
 
 | File | What | Status |
 |---|---|---|
@@ -1023,6 +1025,10 @@ Aurelia Traffic's sign-off re-rendered for "lift" and Vorne's shout recast low (
 | [concept/voice-harker-r72-a.ogg](concept/voice-harker-r72-a.ogg) | Harker as an ace: his cast voice (`refs/ref-harker-r62-b.wav`, David Clarke) on his Level 40 entry taunt at the fierce row through the enemy filter, seed 103, 128 Hz (his Level 29 takes 110–131 Hz), 4.0 s; no audition, the cast voice heard in Act 6's fight; `tools/concept/audio/voice_r72.py` | chosen (round 72 V.4 ok) |
 | [concept/voice-aurelia-traffic-r73-b.ogg](concept/voice-aurelia-traffic-r73-b.ogg) | Aurelia Traffic, **Lizzie Driver** (round 72 V.3 b), her t=1 call (round 72's take, seed 102, 204 Hz) and the t=150 sign-off re-rendered so it says "lift", not "liff": the same clip, grim slower row and radio filter b, seeds 104–119; Whisper reads "lift" in ten of sixteen, pinned seed 117 (the plainest /t/ in a zoom of the word: the /f/, a 35 ms closure, a release burst before the /r/; round 72's seed 103 ran the /f/ into the /r/), 207 Hz, IQR 39; no respelling needed; 11.9 s, −16 LUFS; `tools/concept/audio/voice_r73.py` | chosen (round 73 R.3 accept) |
 | [concept/vorne-shout-r73-b.ogg](concept/vorne-shout-r73-b.ogg) | The same, **b a new shouted render lowered**: his clip cut a further 4 semitones down (`ref-vorne.wav` −4, formants preserved), the shout row (1.3 / 0.2 / 0.8) and a stronger one (1.7 / 0.15 / 0.8) on seeds 100–109; four of twenty heard shouted with the break under 0.8 s (189–269 Hz: the shout still lifts him), the brightest pinned (shout row, seed 105; 1–4 kHz share 0.44 against 0.25–0.41), 211 Hz, then ×0.52 (−11.3 semitones) by WORLD: 104 Hz, IQR 14 (a flat, held shout); centroid −7 %; Whisper hears every word, without the "!"; enemy filter, 3.0 s, −16 LUFS; `tools/concept/audio/voice_r73.py` | chosen (round 73 R.4 b) |
+| [concept/act-6-listen-r74-a.ogg](concept/act-6-listen-r74-a.ogg) | Listen-through: the Act 6 intro's four pages, Level 36's two briefing pages and its 16 radio lines (with the pod's secret and both secondary outcomes) as the game plays them (`assets/voice/` joined, 1.2 s apart; 3:33, −19 LUFS) | proposed (round 74) |
+| [concept/act-6-listen-r74-a.txt](concept/act-6-listen-r74-a.txt) | The listen-through's cue list: each line's start, speaker, source and text | proposed (round 74; a listening aid) |
+| [concept/act-6-intro-page-4-r74-a.ogg](concept/act-6-intro-page-4-r74-a.ogg) | The intro's page 4 as built: Okafor at the act data's **fierce** row (0.8 / 0.4 / 0.8), the pinned take (seed 202, 165 Hz), dry, 11.0 s, −16 LUFS (a copy of the game's file) | proposed (round 74) |
+| [concept/act-6-intro-page-4-r74-b.ogg](concept/act-6-intro-page-4-r74-b.ogg) | The same page at this README's reading, the **grim row, slower** (0.45 / 0.4 / 0.7, round 72's sign-off row): seed 103 (101 held a 0.9 s pause, 102 hit the cap), dry, 14.7 s, −16 LUFS; Whisper reads it word for word | proposed (round 74) |
 
 ## Open questions
 

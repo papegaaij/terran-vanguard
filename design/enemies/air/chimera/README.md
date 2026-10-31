@@ -89,6 +89,8 @@ strength, the pulse as a second while it heals). Each sheet holds the source ren
 | [concept/chimera-r72-b.gif](concept/chimera-r72-b.gif) | The same scene as a | chosen (round 72 A.1 b) |
 | [concept/chimera-final-r74-a.png](concept/chimera-final-r74-a.png) | Final frames (M10 part B, `tools/art/jovian_units.py chimera`; held in `build/art-held/sprites/` until its data.yaml): the 16 headings at 2× with the seams at full health, the seams by state (just hit 0.13, full 0.45, healing 50 % and 95 %) and the healing pulse's six frames, beside the Act 5 Talon, the death's flecks over the small explosion; teal 6 % at full health, 13 % healing near full (sheet) | proposed (round 74) |
 | [concept/chimera-final-r74-a.gif](concept/chimera-final-r74-a.gif) | A V of five swooping over Level 36's bands: one hit and healing with the pulse, one held under fire until it dies | proposed (round 74) |
+| [concept/chimera-capture-r74-a.png](concept/chimera-capture-r74-a.png) | Game capture (Level 36, step B5): the t=120 swarm leaving its bank and flocking under the ship's fire (1×; the ship steered under it), members hit, healing (the seams lit) and dying | proposed (round 74) |
+| [concept/chimera-capture-r74-a.gif](concept/chimera-capture-r74-a.gif) | t=120–123.4 at 20 frames a second, the play field at 1× | proposed (round 74) |
 
 Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 

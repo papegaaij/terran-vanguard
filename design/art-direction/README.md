@@ -480,6 +480,8 @@ the Level 11 props approved as final; the lane telegraph and slam **a** "edge da
 | [concept/vacuum-capture-r61-a.png](concept/vacuum-capture-r61-a.png) | Game capture on the capture rig (Level 08 in vacuum, [the rig](../enemies/concept/prompts.md#belt-rig-capture-r61-a), step A4): four frames 1/7 s apart, 2× crops: a Spore Bomber's wreck tumbling and drifting after its burst (only medium and large units leave one), a Stinger's flash and debris ring, the Tesla arc and a shield ring | chosen (round 61, F.3 a picked: accepted) |
 | [concept/explosion-bright-r73-b.png](concept/explosion-bright-r73-b.png) | Proposal **b** "soot under the flash" (recommended): the same additive frames over a soft normal-blended soot puff (warm dark grey, at most 0.42 opaque, feathered to nothing over its outer 60 %, no edge, rising a little as it fades by 1.3x the flash's life): the burst changes its disc by 19 on the cream and the bank, 21 on rust | chosen (round 73 A.3 b) |
 | [concept/explosion-bright-r73-b.gif](concept/explosion-bright-r73-b.gif) | b's loop over the three plates, 2x | chosen (round 73 A.3 b) |
+| [concept/soot-capture-r74-a.png](concept/soot-capture-r74-a.png) | Game capture (Level 36, M10 part B, step B5; the soot puff built Act 6 only): kills at 1× over the cream band (t=53.4, a Mote flock), over a section-3 bank (t=104.6), a harvester's break over the ochre (t=78.1) and kills over the storm edge's rust (t=138.1) | proposed (round 74) |
+| [concept/soot-capture-r74-a.gif](concept/soot-capture-r74-a.gif) | The cream band's kill, t=53.2–54, 20 frames a second, 1× | proposed (round 74) |
 
 ## Implementation
 

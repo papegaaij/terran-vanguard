@@ -1,7 +1,7 @@
 ---
 title: Helium-3 Harvester
 design: approved
-implementation: in-progress
+implementation: done
 art: proposed
 depends-on: [../../../campaign/act-6-jovian-storm/level-36-cloud-divers, ../talon, ../../../systems/economy]
 updated: 2026-10-31
@@ -63,11 +63,21 @@ Rendered from [data.yaml](data.yaml) (numbers at **medium**, see the [balancing 
 Production frames by `tools/art/jovian_units.py` (step ART-B, QB-1 a pending round 74) are the level's:
 [harvester-final-r74-a](../../../campaign/act-6-jovian-storm/level-36-cloud-divers/README.md#concept-art).
 
+Round 74's QB-5 (the pair's drift) as path diagrams, `tools/concept/harvester_drift_r74.py` (step B5); briefs in
+[concept/prompts.md](concept/prompts.md).
+
+| File | What | Status |
+|---|---|---|
+| [concept/harvester-drift-r74-a.png](concept/harvester-drift-r74-a.png) | QB-5 **a**, as built: the pair mirrored 8 px/s apart from x 160 / 320; both leave by the bottom edge at 11.3 s (x 70 / 410), the gap growing 160 → 340 px | proposed (round 74) |
+| [concept/harvester-drift-r74-b.png](concept/harvester-drift-r74-b.png) | QB-5 **b**: the README's 30 px/s the same way for both from x 60 / 220; the right hull reaches the side edge at 7.5 s | proposed (round 74) |
+| [concept/harvester-drift-r74-c.png](concept/harvester-drift-r74-c.png) | QB-5 **c**: 30 px/s toward each other for 1.5 s, then straight down; the centres end 70 px apart, the 72 px hit boxes just overlapping | proposed (round 74) |
+
 ## Implementation
 
 - [x] Stat block loaded from a `data.yaml` (`counted: false`, `haul: ground-targets`, the drift's `vx` and `mirrored`;
       M10 part B, steps B1 and B2)
-- [ ] Never counted as an enemy, its credits with the ground targets (the level's tests, step B3)
+- [x] Never counted as an enemy, its credits with the ground targets (the level's tests: `Level36Test`'s count,
+      `CloudDiversDataTest`, `TypicalHaulTest` at 7,488)
 - [x] Production sprites with the plume (a smooth gradient) and the break in two (step B4: the hull by its drift's side, the plume under it, the break with its flare; the scoop loop and the break's sound, round 74 a)
 
 ## Decisions

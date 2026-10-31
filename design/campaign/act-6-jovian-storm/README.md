@@ -448,6 +448,8 @@ prompts: [concept/prompts.md](concept/prompts.md).
 |---|---|---|
 | [concept/act-6-still-r72-a.png](concept/act-6-still-r72-a.png) | Still A, "the dive": Jupiter's sunlit bands and the Great Red Spot under the CDF carrier group diving from orbit, Callisto a dark disc beside the limb | chosen (round 72 A.14 a) |
 | [concept/act-6-still-final-r74-a.png](concept/act-6-still-final-r74-a.png) | The title card's still, final (M10 part B, `tools/art/act_stills.py act-6`; the still `assets/ui/act-6-jovian-storm-still.png`, the lettering `act_titles.py`'s): A.14 a re-rendered with the fleet's lights along the curve, four drop craft diving ahead and Aurelia's far gold glint; at 1×, the title card over it, 2× crops (sheet) | proposed (round 74) |
+| [concept/act-6-intro-capture-r74-a.png](concept/act-6-intro-capture-r74-a.png) | Game capture (step B5) from a `v0.3` save at the Level 36 hangar: the title card over the still and the intro's page 3, Vorne intercepted on all channels (amber) | proposed (round 74) |
+| [concept/act-6-intro-capture-r74-a.mp4](concept/act-6-intro-capture-r74-a.mp4) | Pages 3 and 4 with the game's sound: Vorne's voice through the enemy filter over track 14's motif stem alone, then Okafor's page 4 with the briefing music back (35 s) | proposed (round 74) |
 
 Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 
@@ -463,14 +465,16 @@ Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
       `music: motif`: a new page key) and Act 7's `next_act` (the branch's release ends after Level 36, the last level
       built, until part H); Act 5's `next_act` removed; the outro pages are part H's.*
 - [ ] The title card's still (`tools/art/act_stills.py act-6` from Level 36's backdrop) and lettering; the eight
-      intro and outro briefing images and the fourteen level briefing images (`tools/art/briefing_images.py`).
+      intro and outro briefing images and the fourteen level briefing images (`tools/art/briefing_images.py`). *Part B
+      (ART-B, 2026-10-31): the still, the lettering, the intro's four and Level 36's two images, in the game, pending round
+      74; the outro's four and the other levels' twelve are parts C–H's.*
 - [ ] The act's systems (M10 part A and the levels' parts): `reflect` with the arc and Reflex-bolt rows,
       regeneration, regrowth, the death-burst on contact, the Act 6 shields, lightning strikes that hit enemies,
       dry eruptions with rocks, foreground banks over `air`, the pylon dome and gates, the three-way prey rule, the
       falling city's two ground layers and its authored jagged cut line, the friendly marker on the shuttles and the fleet's craft; the Plasma Arc, the
       Reflex Shield, Composite V, the IFF spoofer and the Mk V+ "Crucible".
 - [x] **Explosions on the cream band** (the user's note on round 72 A.7, answered: the dark sharp edge was a **mockup artifact**: the explosion frames carry dark low-alpha fringe pixels, the game draws explosions additively (`Effects`, blend `SRC_ALPHA, ONE`), which adds no dark at all, but `tools/concept/enemies_r72.py`'s `boom` pasted the later frames with normal alpha): part A's capture checks how explosions read on Level 36's cream band (additive light can wash out on a bright backdrop) and, with the Plasma Arc's, that its look and the bounced bullets' magenta read apart (step A4, 2026-10-31: captures over round 72's L36 grade and ART-B's L36 tiles; the arc's violet and the magenta read apart; the small burst washes out on the brightest cream, so round 73 asks a / b / c, [explosion-bright-r73](../../art-direction/README.md#concept-art); part B's B5 repeats it in Level 36)
-- [ ] **Explosions on the cream band** (decided 2026-10-31, round 73 A.3 b): the kill bursts get the soft soot puff under
+- [x] **Explosions on the cream band** (decided 2026-10-31, round 73 A.3 b): the kill bursts get the soft soot puff under
       the additive flash (warm dark grey, at most 0.42 opaque, feathered to nothing, rising a little as it fades; see
       [art direction](../../art-direction/README.md#concept-art)). Open build item for part B (step B4): whether it is Act 6
       only or everywhere (Acts 1-5's golden flights stay as recorded, so it is opt-in), and a Level 36 capture that
@@ -478,7 +482,10 @@ Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
       `SootPuffs`), pending the user's review in round 74: measured over Acts 1–5's base tiles, the soot alone lifts the
       darkest field (Level 29's black docks) by +12 luminance round each burst and the night and space fields (Levels 01,
       08, 26, 30) by +5..+9, a grey halo, and darkens mid-tone fields (Level 06's terminator) by 7; it helps only on bright
-      fields (Level 22's ice −31, the Jovian cream). B5's capture remains.*
+      fields (Level 22's ice −31, the Jovian cream). Step B5 (2026-10-31): Level 36 captured with kills over the cream, a bank,
+      the ochre and the rust ([soot-capture-r74-a](../../art-direction/README.md#concept-art)): the soft soot halo and the
+      flecks keep a burst readable on the cream; over a bank the small burst stays the palest, still visible; Act 6 only
+      or everywhere is round 74's question.*
 - [x] `reference_dps` 36–42 and the Act 6 balance plan (`balance-plan.yaml` visits 36–42) before any Act 6 level data
       (M10 part A): `enemies/data.yaml`, `ActHpFactorTest`, `BalanceTest`, `tools/balance.py` exit 0.
 - [ ] Every level within the act's density band (`DensityTest`, `PacingTest`, `ActFloorTest`), the end calm (≥ 4 s),
@@ -486,8 +493,9 @@ Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
       budget (`TypicalHaulTest`).
 - [ ] The act-end order after L42 (Level 35's, the escape in place of the kill) and the release's end moved from L35
       to L42; the hangar before L43 reads `ACT VII - BEYOND THE GATE: COMING SOON`.
-- [ ] A save at the L36 hangar from the `v0.3` release plays the Act 6 intro **once** on Continue (the
-      `act-intro:6` flag), not repeating the title card of an act already seen.
+- [x] A save at the L36 hangar from the `v0.3` release plays the Act 6 intro **once** on Continue (the
+      `act-intro:6` flag), not repeating the title card of an act already seen. (Step B3's test on the `v0.3` save
+      fixture; step B5's capture from it.)
 - [ ] The act's voices (Aurelia Traffic, Vesper, Kestrel; Harker, Vorne and his one shout, the Choir's two lines)
       cast and rendered; the act's sounds (Freesound only), track 14's full length and stems, track 15, the duel
       theme (32) and the escape sting (33) made.

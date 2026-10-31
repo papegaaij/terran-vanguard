@@ -45,3 +45,12 @@ Stormhawks in the fleet's grey and blue diving ahead toward the bands on blue st
 Aurelia hangs. 960×540, smooth 24-bit (no ordered dither), the middle kept for `ACT VI / JOVIAN STORM`.
 - **Negative prompt:** photo, painterly, Vrell, weapons firing, explosions, text, dithered gradients.
 
+## act-6-intro-capture-r74-a
+
+Concept round 74, a capture of the game (M10 part B, step B5): the Act 6 intro from the `v0.3` save fixture
+`content/src/test/resources/saves/v0.3-medium-level-36-hangar.json` (the autosave and slot 1 beside a scratch settings
+file), `--start title --bench 78`, Return through XTest (Press start, Continue, then a page every 16 s); the screen
+recorded with ffmpeg `x11grab` at 30 fps, `ALSOFT_DRIVERS=wave` writing the game's own mix; `.png` the title card (a
+frame of the recording) and page 3 (the game's F12 screenshot); `.mp4` recording 39–74 s (pages 3 and 4; H.264 main,
+1.1 Mbit/s, AAC 96 kbps). The level captures' recipe:
+[level-36-capture-r74-a](../level-36-cloud-divers/concept/prompts.md#level-36-capture-r74-a).

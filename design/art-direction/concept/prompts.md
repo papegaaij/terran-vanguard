@@ -613,3 +613,10 @@ over it, the rust band); a `small` and a `medium` burst each at the game's timin
 
 AI prompt: "1990s pre-rendered CGI fireball sprite over a bright cream gas-giant cloud band, small orange-white
 explosion with a soft translucent dark smoke puff behind it, no hard outline, top-down shoot'em up"
+
+## soot-capture-r74-a
+
+Concept round 74, a capture of the game (M10 part B, step B5): kills in Level 36 with the soot puff under the additive
+flash (round 73 A.3 b, built in step B4 from Level 36 on); 240×240 crops of the
+[level captures](../../campaign/act-6-jovian-storm/level-36-cloud-divers/concept/prompts.md#level-36-capture-r74-a)
+(cream and ochre: the parked run; the bank: the run steered through it; rust: the strike run).

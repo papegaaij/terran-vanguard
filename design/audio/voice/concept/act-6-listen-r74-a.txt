@@ -1,0 +1,23 @@
+Act 6 listen-through (round 74): each line's start in act-6-listen-r74-a.ogg
+   0.0 s  Act 6 intro: okafor (act-6-jovian-storm briefing page 1): Aegis, Okafor, from the bridge of the Steadfast. Three weeks out of Ceres, and Jupiter fills every window. The whole fleet is here. So is everything Vorne has left.
+  16.2 s  Act 6 intro: okafor (act-6-jovian-storm briefing page 2): Callisto sits behind his home fleet and Aurelia's air-defence grid, and that fleet burns helium-3 from the cloud harvesters and Io's refineries. So we break his grid, take the storm road to Io and burn his fuel. Then Callisto.
+  35.2 s  Act 6 intro: vorne (act-6-jovian-storm briefing page 3): Commander Okafor. Welcome to Jupiter. Do come to Aurelia; you know the way. You visited it once before, I believe, in sixty-six. The city still remembers you.
+  47.4 s  Act 6 intro: okafor (act-6-jovian-storm briefing page 4): All channels. Vorne, this is Okafor. I was at Aurelia. I remember. So will you. Aegis: you dive first. Mission briefing follows. Aegis Actual out.
+  60.4 s  Level 36 briefing: okafor (act-6-jovian-storm/level-36-cloud-divers briefing page 1): Callisto sits behind Jupiter's air defences, and Vorne fuels his fleet from these clouds. Aegis Wing dives first: break the fighter cover over the upper bands so the fleet can follow, and bring down his helium-3 harvesters on the way. Rook flies your wing. Aurelia is below us. We go there next.
+  83.0 s  Level 36 briefing: varga (act-6-jovian-storm/level-36-cloud-divers briefing page 2): The wrecks from Ceres carried something new: Talon airframes with Vrell tissue grown through the seams. I call them Chimeras. Give one a second and it heals. A pilot still flies each one, and the healing costs him more than the machine. And the cloud banks down there drift over your plane: what flies under them dims, their shots never do. There is no ground, Lancer. The bombs stay idle.
+ 108.6 s  Level 36 radio: okafor (act-6-jovian-storm/level-36-cloud-divers radio t=1.0): Aegis, you're cleared to dive. Break their air cover over the bands. The fleet follows you down.
+ 117.2 s  Level 36 radio: rook (act-6-jovian-storm/level-36-cloud-divers radio t=13.0): Jupiter. All sky and no floor. If we go down here, Lancer, we fall for a week.
+ 126.0 s  Level 36 radio: varga (act-6-jovian-storm/level-36-cloud-divers radio t=25.5): Under the haze the cloud banks lie over your plane. Bodies dim under them. Their shots never do.
+ 133.4 s  Level 36 radio: varga (act-6-jovian-storm/level-36-cloud-divers radio t=37.5): There: Chimeras. Talon frames, Vrell tissue in the seams. Pick one and keep hitting it.
+ 141.0 s  Level 36 radio: okafor (act-6-jovian-storm/level-36-cloud-divers radio t=49.0): Wraiths overhead, cloaked. They come out behind you.
+ 146.4 s  Level 36 radio: varga (act-6-jovian-storm/level-36-cloud-divers radio t=56.5): See the seams glow? It's healing. Hold the beam on it, or it grows back.
+ 152.4 s  Level 36 radio: okafor (act-6-jovian-storm/level-36-cloud-divers radio t=68.0): Helium-3 harvesters ahead, skimming the bands. That's Vorne's fuel. Bring down six.
+ 160.8 s  Level 36 radio: rook (act-6-jovian-storm/level-36-cloud-divers radio t=80.0): Homing's earning its keep. Those clouds are full of them.
+ 166.0 s  Level 36 radio: varga (act-6-jovian-storm/level-36-cloud-divers radio t=90.0): Spore bombers under the harvesters. Vrell, still flying with the gold ones. For now.
+ 172.7 s  Level 36 radio: okafor (act-6-jovian-storm/level-36-cloud-divers radio SECONDARY_OBJECTIVE): Six harvesters down. His fleet will feel that at Io.
+ 178.7 s  Level 36 radio: varga (act-6-jovian-storm/level-36-cloud-divers radio SECONDARY_FAILED): Too many got through. Their fuel reaches the refineries.
+ 183.5 s  Level 36 radio: varga (act-6-jovian-storm/level-36-cloud-divers radio t=129.5): A white line drawn down the sky means lightning. Get out of it. A second later it strikes.
+ 190.9 s  Level 36 radio: rook (act-6-jovian-storm/level-36-cloud-divers radio FIRST_STRIKE_KILL): Ha! The sky's on our side.
+ 195.0 s  Level 36 radio: varga (act-6-jovian-storm/level-36-cloud-divers secret pathfinder pod): A pathfinder's pod, from the scouts who dived before you. Take it.
+ 200.8 s  Level 36 radio: okafor (act-6-jovian-storm/level-36-cloud-divers radio t=172.0): The bands are thinning. Aurelia is ahead, Aegis.
+ 206.1 s  Level 36 radio: okafor (act-6-jovian-storm/level-36-cloud-divers radio LEVEL_END): First dive done. The fleet is in the clouds behind you. Aurelia next.
