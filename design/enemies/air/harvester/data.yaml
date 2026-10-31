@@ -5,7 +5,7 @@
 # ground-targets` (its credits with the ground targets' share of the typical haul) and the drift's sideways `vx` with
 # `mirrored` (a drifting carrier: a pair's hulls mirrored, its escorts circling the pair's midpoint). A `medium` unit
 # at its first level: no act or beam-era factor, no shield.
-# Step B2's drift (pending the user's review in round 74, QB-5): the README's 30 px/s sideways toward each other
+# Step B2's drift (decided 2026-10-31 (round 74 L.1 a), QB-5): the README's 30 px/s sideways toward each other
 # crosses the pair's hulls at ≈ 2.7 s (160 px apart); apart they leave by the side edges at ≈ 4 s. The nearest variant
 # that keeps both rules ("never over the other's hull", "escapes at the bottom edge") is 8 px/s apart: the hulls end
 # ≈ 100 px further out (x ≈ 61 and 419 at the bottom edge), never crossing, on the screen to the bottom edge.

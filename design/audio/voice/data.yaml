@@ -84,7 +84,8 @@ speakers:
       8119302f4829: 301   # Level 34 core collected "Helix core aboard…" (step G2): the key's seed ran "core aboard" into "Cora Board"
       b2d52c28d321: 187519682   # Act 6 intro page 1 "Aegis, Okafor, from the bridge of the Steadfast…" (M10 part B, step VOX-B): the key's own seed, pinned as checked (no pause over 0.8 s; word for word with the Act 6 name prompt)
       f7ece3d35777: 259968573   # Act 6 intro page 2 "Callisto sits behind his home fleet…" (step VOX-B): the key's own seed (chunk 2 retried once for a 1.3 s pause), pinned as checked; word for word with the name prompt
-      79a360002f58: 201   # Act 6 intro page 4 "All channels. Vorne, this is Okafor…" (step VOX-B): the key's seed read "you die first" and jumped high (p90 399 Hz); the pin (its second take, 202: a 1.9 s pause in 201) reads word for word at 165 Hz
+      0220c4dee15f: 103   # Act 6 intro page 4 "All channels. Vorne, this is Okafor…" at the grim row (round 74 V.2 b, step VOX-C0): round 74's chosen take's seed (b: 101 held a 0.9 s pause, 102 hit the cap); at the pipeline's grim row (cfg_weight 0.5, the review take 0.4) it reads the same, 13.9 s against 14.7 s, 154 Hz; Whisper hears "at Aurelia" as "a Torrelia" in both
+      1b910877dec4: 28905607   # Level 36 briefing page 1 "Callisto hides behind Jupiter's air defences…" (round 74 L.2 a, step VOX-C0): the key's own seed, pinned as checked (no pause over 0.8 s, 142 Hz); word for word with the Act 6 name prompt ("defenses" spelt US)
       de9422e3fc07: 301   # Level 36 t=67 "Helium-3 harvesters ahead…" (step VOX-B): all eight of the key's seeds ran to the length cap or held a 1.0-1.3 s pause (101-108 too); the pin (its fifth take, 305) reads word for word, "helium three", at 161 Hz
       45e7d6b1ac12: 201   # Level 36 secondary met "Six harvesters down…" (step VOX-B): the key's seed read "Io" as "eel"; the pin reads word for word with the name prompt at 146 Hz ("Eye-oh" respelled ran long and read "it I": not kept)
   varga:
@@ -93,6 +94,7 @@ speakers:
     pins:
       b0a8f0d09999: 126672783   # Level 14 t=54 "Hive nodes in the Molard…": the key's seed read "five notes" every way; the pin reads "hive nodes" through the filter
       240e8b557207: 45813701    # Level 13 t=13 "Fast boats in the leads…": the key's seed jumped an octave (about 400 Hz) throughout
+      c1ff2136ecb2: 203420179   # Level 36 briefing page 2 "The Ceres wrecks held Talons…" (round 74 L.2 a, step VOX-C0): the key's own seed, pinned as checked (no pause over 0.8 s, 193 Hz); with the name prompt "Vrell" reads "frill" and "Ceres" "Ceres'", the best of eight seeds (101, 201, 301-701 read "series rex", "rel", "rail")
       52bde1f490c0: 201   # Level 36 t=128 "A white line drawn down the sky…" (M10 part B, step VOX-B): the key's seed read "lightning" as "whitening"; the pin reads word for word both ways at 190 Hz
       bc756d169e74: 234717555   # Level 13 secret "A CDF research cache…": the key's seed read "hot" for "hut" and ran high (about 290 Hz)
       c7a82e12794e: 209379246   # Level 12 secondary "Three sondes, full data…": the key's seed jumped an octave on "full data"

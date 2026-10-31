@@ -33,33 +33,18 @@ are the level's [data.yaml](data.yaml), rendered here, and measured with `levelR
 
 Two pages, each one screen (`BriefingLayoutTest`) with room for its image. The [act](../README.md)'s intro comes
 before it (Q11 a: Okafor from the carrier's bridge, four pages, page 3 Vorne intercepted); this briefing follows
-it, in **September 2185** (J10). Rendered from the level's [data.yaml](data.yaml) (M10 part B, step B2):
+it, in **September 2185** (J10). Rendered from the level's [data.yaml](data.yaml) (M10 part B, step B2; shortened to
+four lines a page by round 74 L.2 a, step VOX-C0):
 
 <!-- data: briefing -->
-> **Commander Okafor:** "Callisto sits behind Jupiter's air defences, and Vorne fuels his fleet
-> from these clouds. Aegis Wing dives first: break the fighter cover over the upper bands so the
-> fleet can follow, and bring down his helium-3 harvesters on the way. Rook flies your wing.
-> Aurelia is below us. We go there next."
+> **Commander Okafor:** "Callisto hides behind Jupiter's air defences, and Vorne's fleet drinks
+> from these clouds. Aegis dives first: break the fighter cover on the upper bands for the
+> fleet, and down his helium-3 harvesters. Rook flies your wing. Aurelia, below us, is next."
 >
-> **Dr. Varga:** "The wrecks from Ceres carried something new: Talon airframes with Vrell tissue
-> grown through the seams. I call them Chimeras. Give one a second and it heals. A pilot still
-> flies each one, and the healing costs him more than the machine. And the cloud banks down
-> there drift over your plane: what flies under them dims, their shots never do. There is no
-> ground, Lancer. The bombs stay idle."
+> **Dr. Varga:** "The Ceres wrecks held Talons grown through with Vrell tissue: Chimeras. Give
+> one a second and it heals, and the healing costs its pilot more than the machine. Cloud banks
+> dim what flies under them, never their shots. No ground, Lancer: the bombs stay idle."
 <!-- /data -->
-
-**The texts to build (decided 2026-10-31, round 74 L.2 a).** The pages above, as built and voiced, run 5 and 6 lines
-under their images against the 4-line screen. Round 74 L.2 a shortens each to four lines (wrapped at the panel's 67
-columns), the same facts; these are the spec, and `data.yaml`, the voices and `BriefingLayoutTest`'s exception follow in
-the open build item (*Implementation*):
-
-> **Commander Okafor:** "Callisto hides behind Jupiter's air defences, and Vorne's fleet drinks from these clouds.
-> Aegis dives first: break the fighter cover on the upper bands for the fleet, and down his helium-3 harvesters. Rook
-> flies your wing. Aurelia, below us, is next."
->
-> **Dr. Varga:** "The Ceres wrecks held Talons grown through with Vrell tissue: Chimeras. Give one a second and it
-> heals, and the healing costs its pilot more than the machine. Cloud banks dim what flies under them, never their
-> shots. No ground, Lancer: the bombs stay idle."
 
 *Images* (production art in part B, [briefing images](../../../ui/briefing/README.md)), briefs only now:
 
@@ -498,13 +483,14 @@ field (easy 21.7 %) and at most 1.8 s over the ship's band. Prompts and briefs: 
       the panel; the Chimera's, the harvester's and the drop craft's portraits, `tools/art/intel.py`)
 - [ ] Briefing: Okafor's and Varga's pages, each one screen (`BriefingLayoutTest`), with their images; the act intro
       before it once (`act-intro:6`) (step B4: the images and the intro play; the two pages as written and voiced run 5
-      and 6 lines below their images and go on over a second screen, an exception in `BriefingLayoutTest`). **Open
-      (round 74 L.2 a, decided 2026-10-31):** rewrite the two pages in `data.yaml` to the 4-line texts of *Briefing*
-      above, re-voice both pages (the voice README's rows), then the exception goes out of `BriefingLayoutTest`
+      and 6 lines below their images and go on over a second screen, an exception in `BriefingLayoutTest`). Round 74
+      L.2 a (decided 2026-10-31; step VOX-C0): the two pages in `data.yaml` rewritten to the 4-line texts of *Briefing*
+      above and re-voiced (Okafor 19.0 s, Varga 15.2 s, the [voice README](../../../audio/voice/README.md#act-6-voices-draft)'s
+      rows, seeds pinned). **Open:** the exception goes out of `BriefingLayoutTest` (step C0)
 - [ ] Round 74's open build items (decided 2026-10-31, to do in the next game step): (`dive-wind-r74-b`, S.1 b, already
       replaced the a variant in `assets/sfx/`, `Sfx` and the pipeline's import list at the round's close); `chimera-whine-r74-b` (S.5 b) replaces the Talon's whine as the
-      Chimera's; the Act 6 intro's page 4 re-rendered at the grim, slower row (V.2 b: `act-6-intro-page-4-r74-b`'s
-      take as `assets/voice/`'s file) and the act data's expression for it changed from `fierce` to the grim row
+      Chimera's; (the Act 6 intro's page 4 at the grim row, V.2 b, the act data's expression changed and the take
+      re-rendered from `act-6-intro-page-4-r74-b`'s seed: done, step VOX-C0)
 - [x] Typical haul within ±5 % of budget(36) = 7 474 with the level's `bounty_scale` (`TypicalHaulTest`; step B2:
       7,488 at 0.31, +0.2 %)
 - [x] Music and ambience: "Eye of the Storm" by section, the high-wind bed, the level's sounds (`Level36SoundsTest`;
@@ -579,3 +565,6 @@ Left to the build (the document is approved as drafted):
   each** (L.2 a, the texts in *Briefing*); C.1–C.13 accepted. Open build items recorded in *Implementation*:
   the dive's wind b and the whine b into the game, the intro's page 4 re-rendered, the two briefing pages rewritten
   and re-voiced, after which `BriefingLayoutTest`'s exception goes. `art: final` (the production art is in the game).
+- 2026-10-31 (step VOX-C0): the two briefing pages rewritten in `data.yaml` to L.2 a's texts (the duplicate spec
+  paragraph under *Briefing* dropped: the marked block now shows them) and re-voiced; the round's four "pending … round
+  74" data comments (three here, the harvester's drift) now read "decided 2026-10-31 (round 74 …)".

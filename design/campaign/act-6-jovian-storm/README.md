@@ -464,7 +464,7 @@ Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
       2026-10-31): [data.yaml](data.yaml) with `levels`, the title card, the four intro pages (page 3 `channel: enemy`,
       `music: motif`: a new page key) and Act 7's `next_act` (the branch's release ends after Level 36, the last level
       built, until part H); Act 5's `next_act` removed; the outro pages are part H's.*
-- [ ] The intro's page 4 at the grim, slower reading (decided 2026-10-31, round 74 V.2 b: lower and measured, about 14.7 s; the data's `expression: fierce` becomes the grim row and the take is re-rendered by the pipeline: `act-6-intro-page-4-r74-b` is the reference take)
+- [x] The intro's page 4 at the grim, slower reading (decided 2026-10-31, round 74 V.2 b: lower and measured, about 14.7 s; the data's `expression: fierce` becomes the grim row and the take is re-rendered by the pipeline: `act-6-intro-page-4-r74-b` is the reference take). *Step VOX-C0 (2026-10-31): `expression: grim`, re-rendered at the pipeline's grim row on the take's seed 103, 13.9 s, the same reading ([voice](../../audio/voice/README.md#act-6-voices-draft)).*
 - [ ] The title card's still (`tools/art/act_stills.py act-6` from Level 36's backdrop) and lettering; the eight
       intro and outro briefing images and the fourteen level briefing images (`tools/art/briefing_images.py`). *Part B
       (ART-B, 2026-10-31): the still, the lettering, the intro's four and Level 36's two images, in the game, pending round
