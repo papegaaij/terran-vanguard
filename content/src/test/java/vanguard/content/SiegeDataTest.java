@@ -238,7 +238,7 @@ class SiegeDataTest {
                 PATH,
                 "secondary: {standing: true,",
                 "secondary: {standing: true, untouched: true,",
-                "give kill_ratio, groups, escapes, kill_all, parts, afloat, collect, integrity, links, spared,"
+                "give kill_ratio, groups, escapes, kill_all, parts, afloat, collect, integrity, links, spared, saved,"
                         + " untouched or standing");
         assertProblem(
                 PATH,

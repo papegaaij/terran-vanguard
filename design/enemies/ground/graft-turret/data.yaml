@@ -1,0 +1,57 @@
+# Graft Turret stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/schemas-units/README.md
+# M10 part C, step C2 (Level 37): the approved stat block (round 72) as data. New in it (flown from step A1a): the
+# `regrowth` (part A's: the turret's death exposes its root for the window; the window closed, the turret knits back
+# with its full HP and fires again after the wake; the root's HP scaled as the turret's, its bonus paid when it dies).
+# Its pair leaves along the barrel, which turns 120°/s toward the ship and stays silent past 110° off its facing (the
+# fan's `turn_rate` and `arc`). HP 12 base, the root's 8: the beam era's ×2 flies them at 24 and 16.
+name: Graft Turret
+faction: Hybrid
+layer: ground
+tier: small
+size: [44, 44]    # sprite px
+hitbox: [32, 32]
+parts: single     # the turret over its root (the root a part of the regrowth, hittable only while exposed)
+orientation: 32 angles
+hp: 12            # base; the beam era's ×2 flies it at 24: 0.16 s at the L37 reference of 148
+armour: none
+speed: 0          # scrolls with the deck
+machine: true     # the EMP Burst stuns its gun 3 s; the root's window keeps running
+movement:
+  terrain: {}
+regrowth: {window: 5, knit: 0.8, wake: 0.5, root: {hp: 8, hitbox: [24, 24], bounty: 5}}   # s exposed, s knitting back (not hittable), s before it fires again; the root's HP (base), hit box on the turret's centre, bonus
+attacks:
+  - pattern: fan
+    name: pair
+    bullet: small
+    count: 2
+    spread: 4
+    interval: 2.2
+    speed: 160
+    first_shot_delay: 0.5  # s after it enters the screen (or wakes)
+    turn_rate: 120         # °/s, the barrel, toward the ship; the pair leaves along it
+    arc: 110               # silent once the ship is more than 110° off its facing
+    notes:
+      text: '`aimed` **pair** (two shots {spread}° apart, the Ascendancy''s precision) every {interval} s along its barrel (turning {turn_rate}°/s), standard {speed} px/s, `{bullet}` {damage}; tell: a 0.25 s red glint on the muzzle; silent once the ship is more than {arc}° off its facing'
+formations:
+  - {name: turret nest, size: [3, 6]}
+weak_points:
+  - {name: the root}
+drops: []
+traits: [anti-ground, area, beam]
+bounty: 15
+first_level: 37
+difficulty:
+  easy: {attacks: {pair: {interval: 2.8}}, regrowth: {window: 6}}
+  hard: {attacks: {pair: {interval: 1.8}}, fan_count: 3, regrowth: {window: 4, knit: 0.6}}
+notes:
+  size: (the root {regrowth.root.hitbox.0}×{regrowth.root.hitbox.1} on the turret's centre, under it)
+  orientation: (the turret's barrel, turning {attacks.0.turn_rate}°/s; the base fixed)
+  armour: 'none; not hardened; the root cannot be hit while the turret stands over it. HP {hp} base flies at **24** with the beam era''s ×2, the root''s {regrowth.root.hp} at **16**; a regrown turret has its full HP'
+  speed: (scrolls with the deck)
+  movement: '`terrain`; **[regrowth](README.md#regrowth)**: its death exposes the root for **{regrowth.window} s**; the window closed, the turret knits back over {regrowth.knit} s (not hittable) and fires again {regrowth.wake} s later'
+  formations: on deck edges and dome rims; never more than 6 Graft Turrets on the screen
+  weak_points: (exposed for the window, its teal glow pulsing)
+  bounty: ' once, paid at the turret''s **first** death; the root pays a bonus of **{regrowth.root.bounty}** when it dies; a regrown turret pays nothing'
+  death: 'turret: a `small` mechanical burst with sparks, the barrel falls off and the root shows; root: a fibrous tearing crumble of teal tissue (no pop), a scorched stump with withered tendrils stays on the deck'
+  used_in: Fall of Aurelia, Aurelia's decks; later Act 6 levels may use it (their docs decide)
+  difficulty: 'easy: the window 6 s, a pair every 2.8 s; hard: the window 4 s, a burst of 3 every 1.8 s, the regrowth 0.6 s'

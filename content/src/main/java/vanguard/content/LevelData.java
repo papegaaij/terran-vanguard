@@ -98,6 +98,8 @@ import vanguard.sim.PlayField;
  *     hunting waves' links ({@code hunts}) are live from it; live from the hunters' entry if not given
  * @param eruptions M10 part A (design/world/jovian, Hazards &amp; set pieces: eruptions; Level 39): the ground vents
  *     that throw burning rocks, in time order; their numbers are the world's ({@link JovianData}); none if not given
+ * @param airAllies M10 part C (design/campaign Level 37, The shuttles): air allies outside the objectives, lifting in
+ *     groups (Level 37's Halcyon shuttles, the {@code saved} secondary's); none if not given
  */
 public record LevelData(
         double scrollSpeed,
@@ -158,7 +160,8 @@ public record LevelData(
         Optional<String> ground,
         Optional<Relay> relay,
         Optional<Double> turn,
-        Optional<List<EruptionVent>> eruptions)
+        Optional<List<EruptionVent>> eruptions,
+        Optional<AirAllies> airAllies)
         implements SectionsBlock,
                 WavesBlock,
                 SetPiecesBlock,
@@ -671,6 +674,11 @@ public record LevelData(
      *     {@code jingle.t} instead of at the debrief (Level 13's "Grid sync complete"): the theme fades
      *     out over {@code fade} s (1 if not given), the jingle plays once, then the ambience alone; the
      *     debrief then starts without it
+     * @param themes M10 part C (design/campaign Level 37, Music &amp; ambience: track 15 from the turn): the theme
+     *     changing to another track at a level time ({@link ThemeChange}), in time order; none if not given
+     *
+     * <p>Built in code with {@link #builder()} (M10 part C, step C2: RF5's open add-on; the data file builds it by its
+     * keys): a new key is a new component and a builder setter, never another telescoping constructor.
      */
     public record Music(
             int track,
@@ -693,52 +701,51 @@ public record LevelData(
             Optional<Motif> motif,
             Optional<List<AmbienceLayer>> ambienceLayers,
             Optional<List<StemTime>> stemTimes,
-            Optional<MotifAfterBoss> motifAfterBoss) {
+            Optional<MotifAfterBoss> motifAfterBoss,
+            Optional<List<ThemeChange>> themes) {
 
-        /** Without M8 part H's motif after the boss. */
-        public Music(
-                int track,
-                int startSection,
-                Optional<Double> startDb,
-                int fullSection,
-                Optional<Map<Integer, Stems>> stems,
-                String ambience,
-                String endJingle,
-                Optional<String> bossSting,
-                Optional<Double> ambienceFrom,
-                Optional<VoiceLoop> voiceLoop,
-                Optional<String> bossWarning,
-                Optional<String> bossTrack,
-                Optional<List<FullOn>> fullOn,
-                Optional<Duck> duck,
-                Optional<List<AmbienceChange>> ambienceChanges,
-                Optional<Map<Integer, Double>> sectionDb,
-                Optional<Jingle> jingle,
-                Optional<Motif> motif,
-                Optional<List<AmbienceLayer>> ambienceLayers,
-                Optional<List<StemTime>> stemTimes) {
-            this(
-                    track,
-                    startSection,
-                    startDb,
-                    fullSection,
-                    stems,
-                    ambience,
-                    endJingle,
-                    bossSting,
-                    ambienceFrom,
-                    voiceLoop,
-                    bossWarning,
-                    bossTrack,
-                    fullOn,
-                    duck,
-                    ambienceChanges,
-                    sectionDb,
-                    jingle,
-                    motif,
-                    ambienceLayers,
-                    stemTimes,
-                    Optional.empty());
+        /** M10 part C: a builder with every key left out (track 0, sections 1, no ambience or end jingle). */
+        public static MusicBuilder builder() {
+            return new MusicBuilder();
+        }
+
+        /** M10 part C: a builder holding these cues, to change some of them. */
+        public MusicBuilder toBuilder() {
+            return new MusicBuilder(this);
+        }
+
+        /**
+         * M10 part C (design/campaign Level 37, Music &amp; ambience; m10c-gaps.md §1 #12): from level time {@code t} the
+         * theme is {@code track} (design/audio/music's number), its {@code stems} ({@code full} or {@code base}; full if
+         * not given) fading in over {@code fade} s; the theme before it is out (a level fades it with its own stem time,
+         * Level 37's {@code none} at the turn). The stem times after {@code t} change the new theme's stems (Level 37's
+         * {@code fall}); the motif ({@code motif.to}) never plays over a changed theme. Its section levels and stems
+         * keep applying to the track playing.
+         */
+        public record ThemeChange(double t, int track, Optional<String> stems, double fade) {
+            public ThemeChange {
+                Check.notNegative("t", t);
+                Check.positive("track", track);
+                Check.notNegative("fade", fade);
+                stems.ifPresent(name -> Check.that(
+                        name.equals("full") || name.equals("base"), "themes: stems full or base, was '" + name + "'"));
+            }
+        }
+
+        /** M10 part C: the theme changes in time order, none if not given. */
+        public List<ThemeChange> themeList() {
+            return themes.orElse(List.of());
+        }
+
+        /** M10 part C: the track playing at level time {@code t}: the last theme change's at or before it, else {@code track}. */
+        public int trackAt(double t) {
+            int playing = track;
+            for (ThemeChange change : themeList()) {
+                if (change.t() <= t) {
+                    playing = change.track();
+                }
+            }
+            return playing;
         }
 
         /**
@@ -767,51 +774,6 @@ public record LevelData(
                 double out = fadeOut > 0 ? Math.min(1, (to - t) / fadeOut) : 1;
                 return Math.min(in, out);
             }
-        }
-
-        /** Without M8 part F's timed stems. */
-        public Music(
-                int track,
-                int startSection,
-                Optional<Double> startDb,
-                int fullSection,
-                Optional<Map<Integer, Stems>> stems,
-                String ambience,
-                String endJingle,
-                Optional<String> bossSting,
-                Optional<Double> ambienceFrom,
-                Optional<VoiceLoop> voiceLoop,
-                Optional<String> bossWarning,
-                Optional<String> bossTrack,
-                Optional<List<FullOn>> fullOn,
-                Optional<Duck> duck,
-                Optional<List<AmbienceChange>> ambienceChanges,
-                Optional<Map<Integer, Double>> sectionDb,
-                Optional<Jingle> jingle,
-                Optional<Motif> motif,
-                Optional<List<AmbienceLayer>> ambienceLayers) {
-            this(
-                    track,
-                    startSection,
-                    startDb,
-                    fullSection,
-                    stems,
-                    ambience,
-                    endJingle,
-                    bossSting,
-                    ambienceFrom,
-                    voiceLoop,
-                    bossWarning,
-                    bossTrack,
-                    fullOn,
-                    duck,
-                    ambienceChanges,
-                    sectionDb,
-                    jingle,
-                    motif,
-                    ambienceLayers,
-                    Optional.empty(),
-                    Optional.empty());
         }
 
         /**
@@ -845,48 +807,6 @@ public record LevelData(
         /** M8 part F: the timed stem changes in time order, none if not given. */
         public List<StemTime> stemTimeList() {
             return stemTimes.orElse(List.of());
-        }
-
-        /** Without M7 part G's ambience layers. */
-        public Music(
-                int track,
-                int startSection,
-                Optional<Double> startDb,
-                int fullSection,
-                Optional<Map<Integer, Stems>> stems,
-                String ambience,
-                String endJingle,
-                Optional<String> bossSting,
-                Optional<Double> ambienceFrom,
-                Optional<VoiceLoop> voiceLoop,
-                Optional<String> bossWarning,
-                Optional<String> bossTrack,
-                Optional<List<FullOn>> fullOn,
-                Optional<Duck> duck,
-                Optional<List<AmbienceChange>> ambienceChanges,
-                Optional<Map<Integer, Double>> sectionDb,
-                Optional<Jingle> jingle,
-                Optional<Motif> motif) {
-            this(
-                    track,
-                    startSection,
-                    startDb,
-                    fullSection,
-                    stems,
-                    ambience,
-                    endJingle,
-                    bossSting,
-                    ambienceFrom,
-                    voiceLoop,
-                    bossWarning,
-                    bossTrack,
-                    fullOn,
-                    duck,
-                    ambienceChanges,
-                    sectionDb,
-                    jingle,
-                    motif,
-                    Optional.empty());
         }
 
         /**
@@ -942,46 +862,6 @@ public record LevelData(
             }
         }
 
-        /** Without M7 part E's motif layer. */
-        public Music(
-                int track,
-                int startSection,
-                Optional<Double> startDb,
-                int fullSection,
-                Optional<Map<Integer, Stems>> stems,
-                String ambience,
-                String endJingle,
-                Optional<String> bossSting,
-                Optional<Double> ambienceFrom,
-                Optional<VoiceLoop> voiceLoop,
-                Optional<String> bossWarning,
-                Optional<String> bossTrack,
-                Optional<List<FullOn>> fullOn,
-                Optional<Duck> duck,
-                Optional<List<AmbienceChange>> ambienceChanges,
-                Optional<Map<Integer, Double>> sectionDb,
-                Optional<Jingle> jingle) {
-            this(
-                    track,
-                    startSection,
-                    startDb,
-                    fullSection,
-                    stems,
-                    ambience,
-                    endJingle,
-                    bossSting,
-                    ambienceFrom,
-                    voiceLoop,
-                    bossWarning,
-                    bossTrack,
-                    fullOn,
-                    duck,
-                    ambienceChanges,
-                    sectionDb,
-                    jingle,
-                    Optional.empty());
-        }
-
         /** M7 part E: whether the motif layer plays at level time {@code t} in section {@code section}. */
         public boolean motifOn(int section, double t) {
             return motif.map(m -> m.on(section, t)).orElse(false);
@@ -998,45 +878,6 @@ public record LevelData(
             public double fadeSeconds() {
                 return fade.orElse(1.0);
             }
-        }
-
-        /** Without M5 part G's mid-level jingle. */
-        public Music(
-                int track,
-                int startSection,
-                Optional<Double> startDb,
-                int fullSection,
-                Optional<Map<Integer, Stems>> stems,
-                String ambience,
-                String endJingle,
-                Optional<String> bossSting,
-                Optional<Double> ambienceFrom,
-                Optional<VoiceLoop> voiceLoop,
-                Optional<String> bossWarning,
-                Optional<String> bossTrack,
-                Optional<List<FullOn>> fullOn,
-                Optional<Duck> duck,
-                Optional<List<AmbienceChange>> ambienceChanges,
-                Optional<Map<Integer, Double>> sectionDb) {
-            this(
-                    track,
-                    startSection,
-                    startDb,
-                    fullSection,
-                    stems,
-                    ambience,
-                    endJingle,
-                    bossSting,
-                    ambienceFrom,
-                    voiceLoop,
-                    bossWarning,
-                    bossTrack,
-                    fullOn,
-                    duck,
-                    ambienceChanges,
-                    sectionDb,
-                    Optional.empty(),
-                    Optional.empty());
         }
 
         /** M5 part G: whether the debrief plays the end jingle (not when it played inside the level). */
@@ -1070,42 +911,6 @@ public record LevelData(
             }
         }
 
-        /** Without M5 part F's section levels. */
-        public Music(
-                int track,
-                int startSection,
-                Optional<Double> startDb,
-                int fullSection,
-                Optional<Map<Integer, Stems>> stems,
-                String ambience,
-                String endJingle,
-                Optional<String> bossSting,
-                Optional<Double> ambienceFrom,
-                Optional<VoiceLoop> voiceLoop,
-                Optional<String> bossWarning,
-                Optional<String> bossTrack,
-                Optional<List<FullOn>> fullOn,
-                Optional<Duck> duck,
-                Optional<List<AmbienceChange>> ambienceChanges) {
-            this(
-                    track,
-                    startSection,
-                    startDb,
-                    fullSection,
-                    stems,
-                    ambience,
-                    endJingle,
-                    bossSting,
-                    ambienceFrom,
-                    voiceLoop,
-                    bossWarning,
-                    bossTrack,
-                    fullOn,
-                    duck,
-                    ambienceChanges,
-                    Optional.empty());
-        }
-
         /**
          * M5 part F: the theme's level in section {@code section} (1-based), dB: the last {@code
          * section_db} entry at or before it; 0 (full) without one.
@@ -1120,40 +925,6 @@ public record LevelData(
                 }
             }
             return db;
-        }
-
-        /** Without M5 part D's duck and ambience changes. */
-        public Music(
-                int track,
-                int startSection,
-                Optional<Double> startDb,
-                int fullSection,
-                Optional<Map<Integer, Stems>> stems,
-                String ambience,
-                String endJingle,
-                Optional<String> bossSting,
-                Optional<Double> ambienceFrom,
-                Optional<VoiceLoop> voiceLoop,
-                Optional<String> bossWarning,
-                Optional<String> bossTrack,
-                Optional<List<FullOn>> fullOn) {
-            this(
-                    track,
-                    startSection,
-                    startDb,
-                    fullSection,
-                    stems,
-                    ambience,
-                    endJingle,
-                    bossSting,
-                    ambienceFrom,
-                    voiceLoop,
-                    bossWarning,
-                    bossTrack,
-                    fullOn,
-                    Optional.empty(),
-                    Optional.empty(),
-                    Optional.empty());
         }
 
         /** The ambience changes, in section order; empty for none. */
@@ -1211,6 +982,23 @@ public record LevelData(
         }
 
         public Music {
+            themes = themes.map(List::copyOf);
+            themes.ifPresent(changes -> {
+                Check.notEmpty("themes", changes);
+                for (int i = 0; i < changes.size(); i++) {
+                    Check.that(changes.get(i).t() > 0, "themes[" + i + "]: after the level's start");
+                    Check.that(
+                            i == 0
+                                    || changes.get(i).t()
+                                            >= changes.get(i - 1).t()
+                                                    + changes.get(i - 1).fade(),
+                            "themes[" + i + "]: in time order, each after the fade before it");
+                    Check.that(
+                            changes.get(i).track()
+                                    != (i == 0 ? track : changes.get(i - 1).track()),
+                            "themes[" + i + "]: changes to another track");
+                }
+            });
             ambienceLayers = ambienceLayers.map(List::copyOf);
             stemTimes = stemTimes.map(List::copyOf);
             stemTimes.ifPresent(times -> {

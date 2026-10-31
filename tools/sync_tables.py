@@ -493,7 +493,8 @@ def sections(level):
 def atmosphere_text(section):
     """A section's atmosphere, with its heavier peak if it has one ("medium, heavy peak 140–148")."""
     peak = section.get("peak")
-    return section["atmosphere"] + (f", {peak['atmosphere']} peak {num(peak['from'])}–{num(peak['to'])}"
+    # M10 part C (Level 37): a section's notes may word its atmosphere ("darkening, smoke" for the medium look)
+    return section.get("notes", {}).get("atmosphere", section["atmosphere"]) + (f", {peak['atmosphere']} peak {num(peak['from'])}–{num(peak['to'])}"
                                     if peak else "")
 
 
@@ -1273,7 +1274,12 @@ def credit_rows(d, level):
         """M9 part F: a hardened unit the plan's fit cannot hurt pays the typical player nothing (UNPAID_HARDENED)."""
         return n_level in UNPAID_HARDENED and load(f"{enemy_dir(slug)}/data.yaml").get("armour") == "hardened"
 
-    parts = [f"{enemy_name(slug)} {n} × {stat_bounty(slug)}"
+    def root(slug):
+        """M10 part C: a regrowing turret's root bonus, " (+ root 5)"."""
+        growth = load(f"{enemy_dir(slug)}/data.yaml").get("regrowth")
+        return f" (+ root {growth['root']['bounty']})" if growth else ""
+
+    parts = [f"{enemy_name(slug)} {n} × {stat_bounty(slug)}" + root(slug)
              + (" (hardened: typical 0 %, the plan's fit has no anti-ground gun)" if unpaid(slug) else "")
              for slug, n in enemies.items()]
     parts += [fill(g["notes"]["budget"], g) for g in paying]
@@ -1285,6 +1291,8 @@ def credit_rows(d, level):
         vital = whole_part(e)
         if not vital and e.get("part_list"):  # each part's own bounty, rounded (as the game; step E3b)
             return [(n, bounty(p["bounty"]), share) for p in e["part_list"]]
+        if not vital and e.get("regrowth"):  # M10 part C: a regrowing turret's root pays its bonus too (each rounded)
+            return [(n, bounty(stat_bounty(slug)), share), (n, bounty(e["regrowth"]["root"]["bounty"]), share)]
         if not vital:
             return [(n, bounty(stat_bounty(slug)), share)]
         return ([(n, bounty(vital["bounty"]), share)]

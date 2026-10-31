@@ -3,7 +3,7 @@ title: Data file schemas — levels and acts
 design: approved
 implementation: in-progress
 art: n/a
-updated: 2026-10-31
+updated: 2026-11-01
 ---
 
 # Data file schemas — levels and acts
@@ -754,6 +754,20 @@ optional `skip` list of the difficulties it is left out on (Level 06's hard-only
   briefing page may name its **`music`**: `motif` (the act's A
   theme's motif stem alone in place of the briefing music, faded out over 1 s as the page opens and back over 1 s on
   the next: Act 6's page 3).
+  M10 part C (Level 37; loaded and checked from step C2 by content's `AureliaRules` and `AureliaChecks`, flown from
+  step C1): the level's **`air_allies`** (air allies outside the objectives: `ally`, one that `follows: lanes`, its
+  optional `livery` among the ally's `liveries`, `stations` as an air escort's in order, `groups` each a `liftoff`
+  `{t, seconds, pads}` (pads `[x, y]` px below the top edge at the liftoff, one per station in order) and a `climb`
+  `{t, seconds}` after the lift, `hooked` the times of the waves that aim at the units on their stations, `easy`/`hard`
+  `{hp}`; never beside an escort, a defend primary, a naval convoy, ground allies or holds; the ally events name them);
+  the secondary's **`saved`** (at least that many of the air allies home off the top edge, its tracker `label` counting
+  to it; `easy`/`hard` `{saved}`; failed once more are lost than the allies minus the target); the radio events
+  **`first-bounce`** (the attempt's first shot a mirror bounces back; only with a mirrored enemy) and
+  **`first-prey-kill`** (the first prey unit a hunter kills; only with a `hunts: <tag>` wave); a `hunts` tag never
+  names a wave of mirrored units; the music's **`themes`** (`t`, `track`, `stems` `full` or `base`, `fade` s: the theme
+  changes to another track at `t`, the stem times after it changing the new theme's stems; the motif's `to` before the
+  first change). A section's notes may word its `atmosphere` for the README. No ground target is on the screen when the
+  backdrop's `fall` begins ([schemas-backdrops](../schemas-backdrops/README.md)).
 - **Act** (`campaign/<act>/data.yaml`): `levels` `[first, last]` (global numbers), `title_card`
   (`act`, `name`, `line`), `briefing` (pages as a level's); `outro`, the act-end
   outro after the last level's debrief: `music` (a music file's name, `act-complete`: track 24

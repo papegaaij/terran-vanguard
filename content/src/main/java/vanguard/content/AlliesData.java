@@ -41,6 +41,9 @@ public record AlliesData(Map<String, Ally> allies) {
      *     slug if not given
      * @param sections M9 part D (design/allies/mining-tug): a hull's sections in hull order (an ally that {@code
      *     follows: hull}, its {@code size} the whole footprint); a level's escort gives their HP
+     * @param liveries M10 part C (design/campaign Level 37, The shuttles): its palette variants (Aurelia's civil
+     *     livery of the evacuation shuttle), a level's air allies' {@code livery}; presentation only, the sprites of one
+     *     named {@code <sprite>-<livery>}
      */
     public record Ally(
             String name,
@@ -58,7 +61,8 @@ public record AlliesData(Map<String, Ally> allies) {
             Optional<Flak> flak,
             Optional<Integer> hits,
             Optional<String> sprite,
-            Optional<List<HullSection>> sections) {
+            Optional<List<HullSection>> sections,
+            Optional<List<String>> liveries) {
         /** What a ground ally follows. */
         public static final String ROAD = "road";
         /** M5 part D: what an air ally follows, its station in the level's band. */
@@ -112,6 +116,7 @@ public record AlliesData(Map<String, Ally> allies) {
                     flak,
                     Optional.empty(),
                     Optional.empty(),
+                    Optional.empty(),
                     Optional.empty());
         }
 
@@ -133,7 +138,8 @@ public record AlliesData(Map<String, Ally> allies) {
                 @JsonProperty("flak") Optional<Flak> flak,
                 @JsonProperty("hits") Optional<Integer> hits,
                 @JsonProperty("sprite") Optional<String> sprite,
-                @JsonProperty("sections") Optional<List<HullSection>> sections) {
+                @JsonProperty("sections") Optional<List<HullSection>> sections,
+                @JsonProperty("liveries") Optional<List<String>> liveries) {
             Check.that(hp.isPresent() != hits.isPresent(), "give the ally's hp or (M7 part D) its hits, one of them");
             return new Ally(
                     name,
@@ -151,7 +157,8 @@ public record AlliesData(Map<String, Ally> allies) {
                     flak,
                     hits,
                     sprite,
-                    sections);
+                    sections,
+                    liveries);
         }
 
         public Ally {
@@ -162,6 +169,11 @@ public record AlliesData(Map<String, Ally> allies) {
                 Check.that(hp == n, "hits: its hp counts the hits");
             });
             sprite.ifPresent(base -> Check.that(!base.isBlank(), "sprite: a sprite name"));
+            // M10 part C (design/campaign Level 37, The shuttles): its palette variants, a level's air allies' livery;
+            // each one's sprites are the ally's named <slug>-<livery>.
+            liveries = liveries.map(List::copyOf);
+            liveries.ifPresent(names -> names.forEach(livery -> Check.that(
+                    livery.matches("[a-z][a-z0-9-]*"), "liveries: names in lower case, was '" + livery + "'")));
             Check.share("smoke_below", smokeBelow);
             firstLevel.ifPresent(level -> Check.positive("first_level", level));
             Check.that(

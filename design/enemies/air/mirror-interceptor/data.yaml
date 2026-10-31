@@ -1,0 +1,59 @@
+# Mirror Interceptor stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/schemas-units/README.md
+# M10 part C, step C2 (Level 37): the approved stat block (round 72) as data. New in it (flown from steps A1a and C1):
+# the `mirror` (part A's reflect rule: the arc, the heat, the turn toward the ship at its station, the bounce) and the
+# movement's `station` (C1: a pincer flies to 90-130 px in from its edge at its hover height, a rear ambush rises to
+# 90-120 px above the bottom edge in its lane; it holds its hover time strafing along its station and keeps its hull
+# 80 px from the others on its line). A burst's interval counts from its last shot: a burst of 3, 0.15 s apart, every
+# 2.4 s is `interval: 2.1` (easy 2 every 2.8 s: 2.65; hard 4 every 2.0 s: 1.55). A `medium` unit: no beam-era factor.
+name: Mirror Interceptor
+faction: Jovian Ascendancy
+layer: air
+tier: medium
+size: [72, 68]    # sprite px; the mirror a curved plate 76 px wide across the nose
+hitbox: [52, 48]
+parts: single     # the mirror is a state of the unit, not a part
+orientation: 16 angles
+hp: 120           # 0.81 s from the flank at the L37 reference of 148
+armour: none
+speed: 180        # px/s entering and leaving; 40 px/s strafing at its station
+machine: true     # the EMP Burst stuns it 3 s and shatters its mirror
+mirror: {arc: 120, heat: 130, turn: 60, down: 3, regrow: 0.4, gap: 0.15, cool: 0.5, cool_delay: 0.3, fire_within: 30, bullet: small, speed: 110}   # °, heat (HP lever, act factor), °/s at its station, s, s, s between bounces, share/s after s, ° the gun fires within, the bounced bullet's class at px/s
+movement:
+  hover: {seconds: 7, y: [160, 300], edge_x: 110, exit: back}   # holds 7 s at 160-300 px below the top edge (a side entry), then leaves through its edge
+  station: {side: [90, 130], rear: [90, 120], strafe: 60, strafe_speed: 40, gap: 80}   # px in from its side edge, px above the bottom edge (a rear ambush), px of strafe along it at px/s, px between hulls
+attacks:
+  - pattern: aimed
+    name: burst
+    bullet: medium
+    interval: 2.1          # s from a burst's last shot to the next burst's first: a burst every 2.4 s
+    speed: 160
+    first_shot_delay: 1.0  # s after it is on the screen
+    burst: 3
+    burst_gap: 0.15
+    notes:
+      text: '`burst` of **{burst}** aimed shots {burst_gap} s apart every **2.4 s**, from two gun pods under the mirror''s rim, only while its facing is within {mirror.fire_within}° of the ship; standard {speed} px/s, `{bullet}` = {damage}; the tell is a **0.4 s red glow** in the pods under the mirror, and it holds its facing through the burst. Contact `{tier}` = {contact_damage}. Its other "attack" is the player''s own fire, bounced'
+formations:
+  - {name: pincer, size: [2, 4]}        # 1 + 1 or 2 + 2
+  - {name: rear ambush, size: [1, 3]}   # Level 37's easy ambush is one unit
+weak_points:
+  - {name: the open flanks and the engines}
+drops: []
+traits: [shield-breaker, side, rear, beam]
+bounty: 30
+first_level: 37
+difficulty:
+  easy: {mirror: {arc: 100, turn: 45}, burst: 2, attacks: {burst: {interval: 2.65}}}
+  hard: {mirror: {arc: 140, turn: 80}, burst: 4, attacks: {burst: {interval: 1.55}}}
+notes:
+  size: (the mirror a curved plate 76 px wide across the nose)
+  parts: single (the mirror is a state of the unit, not a part)
+  orientation: '(it turns its nose and the mirror toward the ship at **{mirror.turn}°/s** while it holds its station)'
+  armour: 'the **mirror** ([reflect](../../README.md#reflect)): arc **{mirror.arc}°** (±60° of its facing); heat **{mirror.heat}** (about 1.0 s of the plan''s Ion Beam L5 at L37, 130 DPS; the act HP factor raises it in later levels: ≈ 140 at L40, ≈ 148 at L42); down **{mirror.down} s** after a break or a shatter, regrowing over {mirror.regrow} s; a bounced shot comes back as a `{mirror.bullet}` bullet at {mirror.speed} px/s, at most one every {mirror.gap} s. No hex shield'
+  speed: entering and leaving; {movement.station.strafe_speed} px/s strafing at its station
+  movement: 'enters on a curve to a **station** and faces its flight until it gets there: from a side edge (a `pincer`) to {movement.station.side.0}–{movement.station.side.1} px in from that edge, {movement.hover.y.0}–{movement.hover.y.1} px below the top edge; from the bottom edge (a `rear ambush`) to {movement.station.rear.0}–{movement.station.rear.1} px above it, in its lane. It holds the station **{movement.hover.seconds} s**, strafing up to {movement.station.strafe} px along it to keep its mirror on the ship, then leaves through the edge it came in by (a rear one up through the nearest side edge)'
+  formations: '(1 + 1 or 2 + 2 in a pincer); each first entry from a side or the rear edge-warned 3 s ahead; hulls at least one hull length apart (≥ {movement.station.gap} px between hull edges, the [formation rule](../../README.md#formation-vocabulary) of Act 6); at most 4 on the screen'
+  weak_points: '(drawn: the mirror''s silver edge shows where the arc ends)'
+  bounty: '; the mirror pays nothing, bounced bullets pay nothing'
+  death: '`medium` explosion; the mirror bursts into falling silver shards (presentation, no damage)'
+  used_in: Aurelia, with `shield-breaker` "first strongly rewarded" there; its later Act 6 levels per the level drafts; the Ascendant's phase-1 panels share its rule (its own document)
+  difficulty: 'easy: arc 100°, turn 45°/s, burst of 2 every 2.8 s; hard: arc 140°, turn 80°/s, burst of 4 every 2.0 s; the heat takes the HP lever'

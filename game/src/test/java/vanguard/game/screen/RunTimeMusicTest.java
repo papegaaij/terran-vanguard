@@ -12,20 +12,13 @@ import vanguard.content.LevelData.Music.FullOn;
 /** M5 part C: the full mix plays while the sortie's state asks for it, as the level's {@code full_on} names it. */
 class RunTimeMusicTest {
     private static LevelData.Music music(Optional<List<FullOn>> fullOn) {
-        return new LevelData.Music(
-                7,
-                1,
-                Optional.empty(),
-                99,
-                Optional.empty(),
-                "earth-megacity",
-                "mission-complete",
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                fullOn);
+        LevelData.Music music = LevelData.Music.builder()
+                .track(7)
+                .fullSection(99)
+                .ambience("earth-megacity")
+                .endJingle("mission-complete")
+                .build();
+        return fullOn.map(events -> music.toBuilder().fullOn(events).build()).orElse(music);
     }
 
     @Test

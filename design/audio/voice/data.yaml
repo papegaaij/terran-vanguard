@@ -224,6 +224,7 @@ speakers:
       ea1c865931b8: 103         # b, Level 29 t=156 "Outer ring holds…" (step B4b): every seed of four read "holds" as "holes"; the pin reads the rest word for word through the filter at 154 Hz
       e6f4f02c9f03: 102         # b, Level 29 t=119.9 "Four clamps, a gun on each…": the key's seed read "I've gone on each"; the pin reads word for word at 163 Hz
       29751a733c37: 102         # b, the supply cache's secret "Dock Six stores…": the key's seed trailed a "Thanks."; the pin reads "Doc six stores…" (Dock, as every seed) at 142 Hz
+  aurelia-traffic: {names: [Aurelia Traffic], ref: ref-aurelia-traffic-r72-b}   # Level 37 (Aurelia's civil traffic controller, the friendly channel); cast in round 72 (V.3 b, Lizzie Driver); step C2 adds her so Level 37's radio has its voice (VOX-C renders the lines and pins the sign-off's "lift", round 73 R.3)
   lifeboat-seven: {names: [Lifeboat Seven], ref: ref-lifeboat-seven}   # Level 07; cast in round 25 (a, Tadhg Hynes), neutral as auditioned
   civilian:   # Level 08 ("shelter nine"); cast in round 30 (b, Faith Abiola-Ellison), neutral as auditioned
     names: [Civilian]

@@ -289,9 +289,11 @@ final class FoundryChecks {
         }
         level.objectives()
                 .secondary()
-                .filter(secondary -> secondary.allowed().isPresent()
-                        || secondary.easy().isPresent()
-                        || secondary.hard().isPresent())
+                // M10 part C: a saved objective's easy and hard change its target, not an allowance (AureliaChecks).
+                .filter(secondary -> secondary.saved().isEmpty()
+                        && (secondary.allowed().isPresent()
+                                || secondary.easy().isPresent()
+                                || secondary.hard().isPresent()))
                 .ifPresent(secondary -> {
                     String slug = secondary.escapes().orElse("");
                     // M8 part B: the ground targets of it count too (Level 22's four Drill Rigs).

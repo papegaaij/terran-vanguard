@@ -660,10 +660,12 @@ final class LevelChecks extends ContentChecks {
                 Optional<EnemyData.Flock> flock = enemy.movement().flock();
                 boolean ambush = enemy.movement().ambush().isPresent();
                 // M8 part G (§5 G9): a unit that holds above the ship rises from below in a rear ambush (the Barbfin).
+                // M10 part C (design/enemies/air/mirror-interceptor): or a unit with a station rises to its rear one.
                 boolean risesUp = enemy.movement()
-                        .hover()
-                        .flatMap(EnemyData.Hover::aboveShip)
-                        .isPresent();
+                                .hover()
+                                .flatMap(EnemyData.Hover::aboveShip)
+                                .isPresent()
+                        || enemy.movement().station().isPresent();
                 // M8 part G (step G3): a hovering unit that is not a side hover (the Barbfin's hold above the ship).
                 boolean plainHover = enemy.movement().hover().isPresent()
                         && enemy.movement()
@@ -699,8 +701,9 @@ final class LevelChecks extends ContentChecks {
                             field + ".formation",
                             ambush
                                     ? "'" + group.enemy() + "' flies only a rear ambush"
-                                    : "a rear ambush's enemy has an ambush (movement.ambush) or holds above the ship"
-                                            + " (movement.hover.above_ship), '" + group.enemy() + "' has neither");
+                                    : "a rear ambush's enemy has an ambush (movement.ambush), holds above the ship"
+                                            + " (movement.hover.above_ship) or a station (movement.station), '"
+                                            + group.enemy() + "' has none");
                 }
                 for (Difficulty difficulty : Difficulty.values()) {
                     if (!wave.fliesOn(difficulty)) {
@@ -842,6 +845,20 @@ final class LevelChecks extends ContentChecks {
                             .isEmpty()) {
                 // M10 part B (Level 36): the first strike kill needs told strikes.
                 problem(level, field, "first-strike-kill in a level without lightning strikes (weather.strikes)");
+            } else if (event == LevelData.CueEvent.FIRST_BOUNCE
+                    && level.waves().stream()
+                            .flatMap(wave -> wave.groupList().stream())
+                            .map(LevelData.Group::enemy)
+                            .filter(content.enemies()::containsKey)
+                            .noneMatch(slug -> content.enemy(slug).mirror().isPresent())) {
+                // M10 part C (Level 37): the first bounce needs a mirrored enemy.
+                problem(level, field, "first-bounce in a level without a mirrored enemy");
+            } else if (event == LevelData.CueEvent.FIRST_PREY_KILL
+                    && level.waves().stream()
+                            .noneMatch(wave ->
+                                    wave.hunts().filter(JovianRules::preyTag).isPresent())) {
+                // M10 part C (Level 37): the first prey kill needs a hunting wave (the three-way war).
+                problem(level, field, "first-prey-kill in a level without a wave hunting another wave's tag");
             } else if (event == LevelData.CueEvent.FIRST_GEYSER && level.vents().isEmpty()) {
                 problem(level, field, "first-geyser in a level without vents");
             } else if (event == LevelData.CueEvent.TARGET_DESTROYED

@@ -168,10 +168,13 @@ class ActPlaythroughTest {
         // ends Act 5 with its outro. Rook's ejections are printed, not
         // failed (he may eject and is repaired at the next visit).
         // M10 part B (step B3): Level 36 after Act 6's intro (the dive, DivePlay); its win ends no act (Act 6 ends at
-        // Level 42), so no outro, and the branch's release ends after its debrief (Level 37 not built).
+        // Level 42), so no outro, and the branch's release ended after its debrief (Level 37 not built); M10 part C
+        // (step
+        // C2): Level 37 is built, so Level 36 leads on to it (the flight on is step C3's).
         assertFalse(campaign.rookMissing(), difficulty + ": Rook in his slot after Level 36");
         assertTrue(CampaignRoute.actEnd(CONTENT, campaign).isEmpty(), "Level 36 ends no act");
-        assertTrue(CampaignRoute.releaseEnd(CONTENT, campaign), "the branch's release ends after Level 36");
+        assertFalse(CampaignRoute.releaseEnd(CONTENT, campaign), "Level 36 leads on to Level 37");
+        assertTrue(CampaignRoute.launch(CONTENT, campaign).isPresent(), "Level 37 is built");
         assertTrue(
                 playthrough.problems().isEmpty(),
                 difficulty + ": the balance plan at the visits: " + playthrough.problems());

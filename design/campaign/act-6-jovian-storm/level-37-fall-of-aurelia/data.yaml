@@ -1,0 +1,733 @@
+# Level 37 – Fall of Aurelia: the level script, rendered into README.md (briefing, threat profile, layout, waves, ground
+# targets, radio, credit budget). Times are seconds from the level start. M10 part C, step C2, from the README's approved
+# hand tables (round 72) and ART-C2's backdrop proposal (concept/backdrop-proposal.yaml: its backdrop block with the
+# growth burst and the fall as they are; the sections, the ground targets' places, the pads and the locker at its
+# times, so the city's rows stay where the generator cut them).
+# Schema: ../../../tech/architecture/schemas-levels/README.md
+# Keys new in M10 part C (flown from step C1; loaded and checked from step C2): `air_allies` (the Halcyon shuttles,
+# air allies outside the objectives lifting in groups, the waves at the `hooked` times aiming at them; Aurelia's
+# `livery`), the secondary's `saved` (5 of the 6 home; easy 4, hard 6), the radio's `first-bounce` and
+# `first-prey-kill` events, the music's `themes` (track 15 from t=103), the backdrop's `growth` and `fall`; the Mirror
+# Interceptor's `movement.station` is its stat block's. Part A's `turn` and the waves' `tag`/`hunts` (the three-way war)
+# are flown since part A.
+# Step C2's own placements (decided as trivia, pending the user's review in round 75): the Choir's line at t=100 with
+# its static from t=98 (Level 33's convention: `t` is the line, the static before it); the old theme out over 1 s from
+# t=100 (a stem time `none`), track 15 at t=103 without its motif; the Mote swarms at t=43 and t=88 down the middle
+# third (clear of the mirrors' arcs), the t=49 Skitter snake down the right edge round the shuttles' band.
+scroll_speed: 120     # Aurelia's Rim; the gilded decks 100, the Spire Plaza 80, after the turn 100 (eased over 2 s each)
+launch_seconds: 5
+bounty_scale: 0.32    # every bounty × 0.32: levelReport's fit (step C2; the README's hand estimate 0.30 flew 7,490 at medium, −6.3 %)
+control_prompts: []
+turn: 100             # the Vrell turn: the hunting waves' links are live from t=100 (the Choir's line)
+threat_profile:  # the hangar intel panel (design/ui/hangar) and the README's Threat profile table
+  setting: Jupiter, Aurelia
+  layers: [air, ground]
+  density: 4
+  traits: [anti-ground, spread, shield-breaker]
+  hazards: [mirrors, regrowth]
+  boss: none
+  objective: CROSS AURELIA   # the OBJECTIVE field from sensor L1
+  varga:
+    none: "Aurelia, Lancer. The Ascendancy's capital, on balloons."
+    l1: "Ahead and both sides. Civilians lifting off: keep them safe."
+    l2: "New: grown deck turrets, mirror-nosed interceptors."
+    l3: "Spread and bombs for the decks. Tesla breaks the mirrors."
+  notes:
+    Dominant layers: '`ground` (Aurelia''s decks: Graft Turret nests, SAM Nests), `air` (Talon wings, Mirror Interceptors, Chimeras, a Gunship and a Hornet at a time, Mote Swarms, Skitter snakes; Lampreys after the turn)'
+    Attack directions: '{directions}'
+    Density: '{density}'
+    Recommended traits: '{traits}'
+    Hazards: Mirrors (bounced shots); regrowing turrets; the Vrell turn (t≈100); the falling city (the last 40 s)
+    Boss / mid-boss: none
+    Sensor-suite detail: '**none**: Jupiter, Aurelia, `air` + `ground`, front · **L1**: + directions (sides, rear), density {density}, hazards "mirrors" and "regrowth", the objective `{objective}` and the secondary `SHUTTLES 0 / 5` · **L2**: + Mirror Interceptor (new), Graft Turret (new), Talon, Chimera, Gilded Gunship, Hornet, SAM Nest, Skitter and Mote portraits · **L3**: + `anti-ground`, `spread` and `shield-breaker` highlighted, the wave strip marking the shuttle pairs and the mirrors'' entries (the turn is not on it: the sensors do not see it coming)'
+
+sections:  # back to back from t = 0; each speed change eased over 2 s (ramp); ART-C2's city cut at these times
+  - name: Aurelia's Rim
+    end: 30
+    atmosphere: clear
+    tiles: [cloud-deck]
+    notes:
+      layers:
+        ground: the outer decks, gilded rails, a deck edge with the first Graft Turret nest (t≈14), a SAM platform (t≈24).
+        low-air: balloon cables, the first anti-grav ring.
+        deep: the city's far side and its balloons.
+      purpose: Popcorn and Talons; the regrowth lesson on one nest.
+  - name: The Gilded Decks
+    end: 70
+    speed: 100
+    ramp: 2   # eased from 120 over its first 2 s
+    atmosphere: clear
+    tiles: [cloud-deck]
+    notes:
+      layers:
+        ground: domes and promenades, the shuttle pads (pair 1, t=44), a dome rim nest (t≈48), two deck edges either side of the pads (t≈62), the 2166 CDF locker under an awning (t≈60, the secret).
+        low-air: balloons.
+      purpose: The first mirrors (t=38, quiet window t=36–42); shuttle pair 1.
+  - name: The Spire Plaza
+    end: 100
+    speed: 80
+    ramp: 2   # eased from 100
+    atmosphere: clear
+    tiles: [cloud-deck]
+    notes:
+      layers:
+        ground: the plaza round the great spire, its terrace nest (t≈79), pads (pair 2, t=72), SAM Nests under the spire (t≈95); teal growth thickening on the dome seams.
+      purpose: Shuttle pair 2, the 2 + 2 mirrors, Varga's codes; the window before the turn.
+  - name: The Turn
+    end: 158
+    speed: 100
+    ramp: 2   # eased from 80
+    atmosphere: medium   # ART-C2's `smoke` look (the game's intensities: clear, light, medium, heavy)
+    tiles: [cloud-deck, smoke-wisps]
+    notes:
+      atmosphere: darkening, smoke
+      layers:
+        ground: burning decks overgrown with teal growth, a nest on a burning deck (t≈128), the last SAM platform (t≈138), the balloon deck's edge (t≈144), pads in the growth (pair 3, t=127).
+        low-air/deep: Vrell and gold craft fighting, hulks falling.
+      purpose: The prey links; shuttle pair 3; the rear ambush.
+  - name: The Fall
+    end: 200
+    atmosphere: medium   # ART-C2's `smoke` look (the game's intensities: clear, light, medium, heavy)
+    tiles: [cloud-bands, smoke-wisps]
+    notes:
+      atmosphere: smoke, then open cloud
+      layers:
+        ground: 'the two falling halves of the deck (t=160–180: each slows, darkens, shrinks at its own rate), then none.'
+        low-air: spires rising past, debris, a torn balloon.
+        deep: the sinking city, the bands. Level end at t=200 over open cloud.
+      purpose: The set piece; the last waves out of the debris; calm to the end.
+
+air_allies:  # the Halcyon shuttles (Level 10's evacuation shuttle in Aurelia's livery): three pairs lifting off the pads, holding 8 s, climbing out over 3 s
+  ally: evacuation-shuttle
+  livery: aurelia
+  stations:   # pair by pair: one behind the other in the middle, 170 and 240 px below the top edge, Level 10's lane sway (hulls inside x 192-288)
+    - {at: [240, 170], sway: [16, 4], period: 9, phase: 0}       # Halcyon One
+    - {at: [240, 240], sway: [16, 4], period: 11, phase: 0.5}    # Halcyon Two
+    - {at: [240, 170], sway: [16, 4], period: 9, phase: 0.25}    # Halcyon Three
+    - {at: [240, 240], sway: [16, 4], period: 11, phase: 0.75}   # Halcyon Four
+    - {at: [240, 170], sway: [16, 4], period: 9, phase: 0.1}     # Halcyon Five
+    - {at: [240, 240], sway: [16, 4], period: 11, phase: 0.6}    # Halcyon Six
+  groups:   # each pair on its pads (x 190 and 290, 380 px below the top edge as it lifts: ART-C2's pad decks), 5 s of liftoff (untouchable), 8 s on station, then out over 3 s (untouchable)
+    - {liftoff: {t: 44, seconds: 5, pads: [[190, 380], [290, 380]]}, climb: {t: 57, seconds: 3}}
+    - {liftoff: {t: 72, seconds: 5, pads: [[190, 380], [290, 380]]}, climb: {t: 85, seconds: 3}}
+    - {liftoff: {t: 127, seconds: 5, pads: [[190, 380], [290, 380]]}, climb: {t: 140, seconds: 3}}
+  hooked: [46, 74, 130]   # the three Talon waves aimed at the nearest shuttle on its station (the target-the-objective hook)
+  easy: {hp: 180}
+  hard: {hp: 90}
+
+waves:
+  - t: 3
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    speed: 200
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+    notes: Vrell and gold side by side before the turn
+  - {t: 6, formation: line abreast, enemy: talon, count: 4, from: front, speed: 130}
+  - {t: 9, formation: snake, enemy: skitter, count: 8, from: front, edge: left}
+  - {t: 12, formation: V-wing, enemy: talon, count: 5, from: front, speed: 130, leader: tip, notes: Squad leader at the tip}
+  - t: 16
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    speed: 200
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+    notes: The first Graft Turret nest (t≈14) on the deck edge below them
+  - {t: 17.5, formation: line abreast, enemy: talon, count: 2, from: front, speed: 130, notes: "Step C2: a firing Talon pair on the offbeat (the floor's pause after the beam erases the swarm)"}
+  - {t: 19, formation: snake, enemy: skitter, count: 8, from: front, edge: right}
+  - {t: 22, formation: line abreast, enemy: talon, count: 4, from: front, speed: 130}
+  - t: 25
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    speed: 200
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+    notes: Two SAM Nests on the rim (t≈24)
+  - {t: 28, formation: V-wing, enemy: chimera, count: 6, from: front, notes: The hybrids of Level 36 over Aurelia}
+  - {t: 31, formation: snake, enemy: skitter, count: 8, from: front, edge: left, notes: The last wave before the quiet window}
+  - {t: 38, formation: pincer, enemy: mirror-interceptor, count: 2, from: sides, easy: {count: 2}, hard: {count: 2}, notes: "**The Mirror Interceptor's first appearance**: 1 + 1, quiet window t=36–42 (no popcorn in front of the mirrors); edge-warned 3 s ahead; Varga's line at t=31"}
+  - t: 43
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    speed: 200
+    paths: [[[240, -60], [200, 140], [280, 260], [200, 380], [260, 480], [240, 620]]]
+    notes: Routed down the middle third, clear of the mirrors' arcs; shuttle pair 1 lifts at t=44
+  - {t: 46, formation: line abreast, enemy: talon, count: 4, from: front, speed: 130, hard: {count: 5}, notes: "**Aims at the shuttles** (the target-the-objective hook): pair 1"}
+  - {t: 49, formation: snake, enemy: skitter, count: 8, from: front, edge: right, paths: [[[420, -40], [430, 240], [370, 430], [260, 600]]], notes: "Routed round the shuttles' band (Level 10's rule): down the right edge"}
+  - {t: 52, formation: column, enemy: gilded-gunship, count: 1, from: front, notes: About 6 Darts; drops the Shield cell}
+  - {t: 55, formation: V-wing, enemy: talon, count: 5, from: front, speed: 130, leader: tip, notes: Squad leader; drops the Overdrive}
+  - t: 58
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    speed: 200
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+    notes: The CDF locker (the secret) on a deck awning at t≈60
+  - {t: 61, formation: V-wing, enemy: chimera, count: 6, from: front}
+  - {t: 64, formation: snake, enemy: skitter, count: 8, from: front, edge: left}
+  - {t: 67, formation: line abreast, enemy: talon, count: 4, from: front, speed: 130}
+  - t: 70
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    speed: 200
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+    notes: Shuttle pair 2 lifts at t=72
+  - {t: 72, formation: line abreast, enemy: talon, count: 2, from: front, speed: 130, notes: "Step C2: a firing Talon pair on the offbeat (the floor's pause after the beam erases the swarm)"}
+  - {t: 74, formation: V-wing, enemy: talon, count: 5, from: front, speed: 130, leader: tip, hard: {count: 6}, notes: "**Aims at the shuttles**: pair 2; squad leader"}
+  - {t: 77, formation: single, enemy: hornet, count: 1, from: front, notes: "Hovers above 140 px, clear of the shuttles' band; gone (≈ t=88) before the t=89 mirrors take their stations"}
+  - {t: 80, formation: snake, enemy: skitter, count: 8, from: front, edge: right}
+  - t: 84
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    speed: 200
+    paths: [[[240, -60], [200, 140], [280, 260], [200, 380], [260, 480], [240, 620]]]
+    notes: "Routed down the middle third (step C2: t=84, the mirror pincer's t=89: the Hornet's 9 s hover is over before the mirrors come)"
+  - {t: 86.5, formation: line abreast, enemy: talon, count: 2, from: front, speed: 130, notes: "Step C2: a firing Talon pair on the offbeat (the floor's pause after the beam erases the swarm)"}
+  - {t: 89, formation: pincer, enemy: mirror-interceptor, count: 4, from: sides, easy: {count: 2}, hard: {count: 4}, notes: "2 + 2, ≥ 80 px between hulls; edge-warned 3 s ahead (step C2: t=89, not 84: the t=77 Hornet holds above their stations until ≈ t=88; pair 2 is out)"}
+  - {t: 91, formation: line abreast, enemy: talon, count: 4, from: front, speed: 130}
+  - {t: 94, formation: snake, enemy: skitter, count: 8, from: front, edge: left, notes: "The last wave before the turn: quiet window t=97–103"}
+  - {t: 103, formation: V-wing, enemy: talon, count: 6, from: front, speed: 130, leader: tip, tag: wing-103, notes: "**Prey** (squad leader): the t=104 Lampreys hunt it"}
+  - {t: 104, formation: stream, enemy: lamprey, count: 5, from: sides, edge: left, interval: 0.5, warning: 3, hunts: wing-103, notes: "**Hunters** of the t=103 wing: they latch on the Talons (edge-warned 3 s ahead)"}
+  - {t: 107.5, formation: line abreast, enemy: talon, count: 2, from: front, speed: 130, notes: "Step C2: a firing Talon pair on the offbeat (the floor's pause after the beam erases the swarm)"}
+  - t: 110
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    speed: 200
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+    notes: At the ship (the Vrell keep their own fire at the player)
+  - {t: 113, formation: V-wing, enemy: chimera, count: 6, from: front, notes: "Hybrids: never prey, they fight for the Ascendancy"}
+  - {t: 116, formation: column, enemy: gilded-gunship, count: 1, from: front, tag: gunship-116, notes: "**Prey**: the t=118 Skitters ram it; about 6 Darts (the Darts are not prey)"}
+  - {t: 118, formation: snake, enemy: skitter, count: 8, from: front, edge: right, hunts: gunship-116, notes: "**Hunters** of the t=116 Gunship: they ram it"}
+  - {t: 121, formation: line abreast, enemy: talon, count: 4, from: front, speed: 130}
+  - {t: 124, formation: line abreast, enemy: talon, count: 2, from: front, speed: 130, notes: "Step C2: a firing Talon pair in the rear ambush's old slot (the ambush moved to t=131)"}
+  - t: 127
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    speed: 200
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+    notes: Shuttle pair 3 lifts at t=127
+  - {t: 130, formation: V-wing, enemy: talon, count: 5, from: front, speed: 130, leader: tip, hard: {count: 6}, notes: "**Aims at the shuttles**: pair 3; squad leader"}
+  - {t: 131, formation: rear ambush, enemy: mirror-interceptor, count: 2, from: rear, easy: {count: 1}, hard: {count: 2}, notes: "Two lanes ≥ 80 px apart; edge-warned 3 s ahead at the bottom edge (step C2: t=131, not 124: the t=116 Gunship drifts through their stations until ≈ t=129)"}
+  - {t: 133, formation: single, enemy: hornet, count: 1, from: front, tag: hornet-133, notes: "**Prey**: the t=134 Motes lunge at it"}
+  - t: 134
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    speed: 200
+    hunts: hornet-133
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+    notes: "**Hunters** of the t=133 Hornet"
+  - {t: 137, formation: snake, enemy: skitter, count: 8, from: front, edge: left}
+  - {t: 143, formation: V-wing, enemy: talon, count: 6, from: front, speed: 130, leader: tip, tag: wing-143, notes: "**Prey** (squad leader): the t=144 Lampreys hunt it"}
+  - {t: 144, formation: stream, enemy: lamprey, count: 5, from: sides, edge: right, interval: 0.5, warning: 3, hunts: wing-143, notes: "**Hunters** of the t=143 wing (edge-warned 3 s ahead)"}
+  - {t: 145, formation: pincer, enemy: mirror-interceptor, count: 2, from: sides, easy: {count: 2}, hard: {count: 4}, notes: "1 + 1 (hard 2 + 2); edge-warned 3 s ahead (step C2: t=145, not 140: the t=133 Hornet holds above their stations until ≈ t=143)"}
+  - t: 147
+    formation: swarm
+    enemy: chimera
+    count: 8
+    from: front
+    speed: 160
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+  - {t: 150, formation: snake, enemy: skitter, count: 8, from: front, edge: right}
+  - {t: 153, formation: line abreast, enemy: talon, count: 4, from: front, speed: 130}
+  - t: 156
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    speed: 200
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+    notes: The last wave before the fall
+  - {t: 159, formation: line abreast, enemy: talon, count: 2, from: front, speed: 130, notes: "Step C2: a firing Talon pair on the offbeat (the floor's pause after the beam erases the swarm)"}
+  - t: 162
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    speed: 200
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+    notes: "The fall begins (t=160): Vrell out of the torn balloons"
+  - {t: 165, formation: V-wing, enemy: chimera, count: 7, from: front}
+  - {t: 169, formation: V-wing, enemy: talon, count: 5, from: front, speed: 130, leader: tip, tag: wing-169, notes: "**Prey** (squad leader): the t=170 Skitters ram them"}
+  - {t: 170, formation: snake, enemy: skitter, count: 8, from: front, edge: left, hunts: wing-169, notes: "**Hunters** of the t=169 wing"}
+  - t: 174
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    speed: 200
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+    notes: Among the spires' debris on `low-air`
+  - {t: 176, formation: line abreast, enemy: talon, count: 2, from: front, speed: 130, notes: "Step C2: a firing Talon pair on the offbeat (the floor's pause after the beam erases the swarm)"}
+  - t: 178
+    formation: swarm
+    enemy: chimera
+    count: 8
+    from: front
+    speed: 160
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+  - {t: 182, formation: line abreast, enemy: talon, count: 4, from: front, speed: 130}
+  - t: 186
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    speed: 200
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+    notes: "The last wave; gone by ≈ t=193, calm to the end at t=200"
+
+ground_targets:  # at: [t, x], when the target enters at the top edge and its x (ART-C2's places on the decks, rims and terraces laid out for them)
+  - target: Rim nest
+    section: 1
+    enemy: graft-turret
+    count: 3
+    at: [[14, 300], [13.9, 350], [14.05, 404]]
+    notes:
+      target: '[Graft Turret](../../../enemies/ground/graft-turret/README.md) ×{count} on a deck edge of the outer rim (t≈14): the first nest, alone (the regrowth lesson, Varga''s t=11 line)'
+      effect: Bounty {bounty} each, the root 5
+  - target: Rim SAM platform
+    section: 1
+    enemy: sam-nest
+    count: 2
+    at: [[24, 120], [24, 190]]
+    notes:
+      target: '[SAM Nest](../../../enemies/ground/sam-nest/README.md) ×{count} on the rim''s air-defence platform (t≈24)'
+      effect: Bounty {bounty} each
+  - target: Dome rim nest
+    section: 2
+    enemy: graft-turret
+    count: 4
+    at: [[48.43, 224], [48.02, 265], [48.02, 335], [48.43, 376]]
+    notes:
+      target: 'Graft Turret ×{count} round a dome rim on the gilded decks (t≈48)'
+      effect: Bounty {bounty} each, the root 5
+  - target: Pad deck nests
+    section: 2
+    enemy: graft-turret
+    count: 5
+    at: [[62.24, 70], [62.64, 130], [62.04, 350], [62.44, 410], [62.94, 380]]
+    notes:
+      target: 'Graft Turret ×{count} on the two deck edges either side of the pads (t≈62; pair 1 is out by then)'
+      effect: Bounty {bounty} each, the root 5
+  - target: CDF locker
+    section: 2
+    layer: ground
+    size: [32, 28]
+    hp: 20
+    reveals: CDF locker
+    sprite: cdf-locker
+    at: [[60, 90]]   # under its awning on the left deck edge (ART-C2's row 7170)
+    notes:
+      target: 'The 2166 CDF supply locker under a deck awning (a `ground` trigger, {hp} HP, t≈60, x 90)'
+      effect: 'The secret: frees a crate worth 100 (1,049)'
+  - target: Spire Plaza terrace nest
+    section: 3
+    enemy: graft-turret
+    count: 6
+    at: [[78.8, 90], [78.8, 160], [79.3, 240], [78.8, 320], [78.8, 390], [80.17, 240]]
+    notes:
+      target: 'Graft Turret ×{count} on the Spire Plaza''s terrace (t≈79): a full nest'
+      effect: Bounty {bounty} each, the root 5
+  - target: Spire SAM Nests
+    section: 3
+    enemy: sam-nest
+    count: 3
+    at: [[95, 150], [95, 240], [95, 330]]
+    notes:
+      target: 'SAM Nest ×{count} on the plaza''s far side under the great spire (t≈95), firing through the turn''s window'
+      effect: Bounty {bounty} each
+  - target: Burning deck nest
+    section: 4
+    enemy: graft-turret
+    count: 5
+    at: [[128.35, 214], [127.91, 247], [127.74, 300], [127.91, 353], [128.35, 386]]
+    notes:
+      target: 'Graft Turret ×{count} on a burning deck, the growth over its plates (t≈128)'
+      effect: Bounty {bounty} each, the root 5
+  - target: Last SAM platform
+    section: 4
+    enemy: sam-nest
+    count: 3
+    at: [[138, 110], [138, 230], [138, 350]]
+    notes:
+      target: 'SAM Nest ×{count} on the last platform before the balloon decks (t≈138)'
+      effect: Bounty {bounty} each
+  - target: Balloon deck nest
+    section: 4
+    enemy: graft-turret
+    count: 4
+    at: [[144.14, 120], [143.98, 200], [143.98, 280], [144.14, 360]]
+    notes:
+      target: 'Graft Turret ×{count} on the balloon deck''s edge (t≈144): the last ground units, off the screen by ≈ t=151'
+      effect: Bounty {bounty} each, the root 5
+
+secrets:
+  - name: CDF locker
+    crate: 100   # Act 1 terms: pays 1,049 with the act factor (a CDF locker left on the decks in 2166)
+    radio: {speaker: Okafor, line: "A CDF locker, from sixty-six. Take it. We left a lot behind on these decks."}
+
+pickups:
+  - {pickup: overdrive, dropped_by: {wave: 55, enemy: talon, unit: first}}            # the t=55 squad leader (the V-wing's tip)
+  - {pickup: shield cell, dropped_by: {wave: 52, enemy: gilded-gunship, unit: first}}   # the t=52 Gilded Gunship
+
+drops:  # a CDF supply drone from the carrier (low-air) releases an armour patch before the fall
+  - {t: 152, x: 240, y: 380, pickup: armour patch}
+
+radio:  # trigger: t or event; the README's 22 lines (the 1 s rule: ≈ 12 characters a second, a 1.5 s lead, event lines dropped after 6 s). Rook's barks need him flying (requires: escort: the first bounce, the first prey kill); his t=50 line is scripted (no requires). Aurelia Traffic on the friendly channel; the Choir distorted with its 2 s static (the music ducks 6 dB under it); Vorne on the enemy channel, cold.
+  - {t: 1, speaker: Aurelia Traffic, line: "CDF flight, this is Aurelia Traffic. We have civilians on the pads. Please. Help us get them out."}
+  - {t: 11, speaker: Varga, line: "Deck turrets ahead, grown over. Kill one and a root shows. Burn the root, or it grows back."}
+  - {t: 21, speaker: Okafor, line: "Aurelia Traffic, Aegis copies. The shuttles fly, Lancer. Keep their lanes clear."}
+  - {t: 31, speaker: Varga, line: "Interceptors, both sides. That nose is a mirror: shoot it and your shots come back. Hit the flanks."}
+  - {event: first-bounce, speaker: Rook, requires: escort, line: "It's throwing your own shots back, Lancer. Go round it.", notes: {trigger: "The first bounced shot (`first-bounce`, event, bark)"}}
+  - {t: 42, speaker: Aurelia Traffic, line: "Halcyon One and Two lifting. CDF flight, they're yours."}
+  - {t: 50, speaker: Rook, line: "Gold decks, gold domes, gold guns. Lancer, these people have a problem."}
+  - {t: 66, speaker: Aurelia Traffic, line: "Halcyon Three and Four next. They're boarding faster than we can launch."}
+  - {event: first-ally-lost, speaker: Aurelia Traffic, line: "We lost a shuttle! Aegis, keep them off the lanes!", notes: {trigger: "A shuttle lost (`first-ally-lost`, event, the first time)"}}
+  - {t: 78, speaker: Varga, line: "I'm inside Aurelia's traffic net. Their identification codes... Commander, I am keeping these."}
+  - {t: 88, speaker: Okafor, line: "Take everything, Doctor. Lancer, the growth on those decks is moving."}
+  - {t: 100, speaker: The Choir, distorted: true, static_lead: 2, duck_db: 6, line: "…the one who opened… is no longer needed… the door is ours…", notes: {trigger: "t=100 (its 2 s static from t=98)"}}
+  - {t: 110, speaker: Vorne, channel: enemy, line: "All Ascendancy wings, this is Vorne. The Vrell are hostile. Burn them off the decks.", notes: {trigger: "t=110, the enemy channel (cold, never shouted)"}}
+  - {t: 119, speaker: Varga, line: "They're eating the city. They were never his partners, Lancer. Only a door."}
+  - {event: first-prey-kill, speaker: Rook, requires: escort, line: "They're eating their own side. Not complaining.", notes: {trigger: "A prey unit killed by a hunter (`first-prey-kill`, event, the first time, bark)"}}
+  - {t: 128, speaker: Aurelia Traffic, line: "Halcyon Five and Six, launching through the growth. Aegis, please!"}
+  - {t: 136, speaker: Okafor, line: "The Vrell are hunting the gold ones. Let them. Keep your guns on whatever fires at you."}
+  - {event: secondary-objective, speaker: Aurelia Traffic, line: "That's everyone we could load. Aurelia thanks you, Aegis.", notes: {trigger: "Secondary met (`secondary-objective`, the fifth shuttle out; easy the fourth, hard the sixth)"}}
+  - {event: secondary-failed, speaker: Okafor, line: "Two shuttles down. Keep the rest flying, Lancer.", notes: {trigger: "Secondary failed (`secondary-failed`, the second shuttle lost; easy the third, hard the first)"}}
+  - {t: 150, speaker: Aurelia Traffic, line: "The lift rings are failing. Aurelia is falling. Aurelia Traffic, signing off."}
+  - {t: 161, speaker: Okafor, line: "I stood on those decks in sixty-six, when we fired on them. Follow her down, Lancer. Then get out."}
+  - {t: 176, speaker: Varga, line: "Aurelia Traffic is off the air. I'm sorry, Commander."}
+  - {event: level-end, speaker: Okafor, line: "Aurelia is gone. The people on those shuttles are not. Come home, Aegis.", notes: {trigger: Level end}}
+
+objectives:
+  primary: reach-end
+  secondary: {saved: 5, easy: {saved: 4}, hard: {saved: 6}, label: SHUTTLES, credits: 100, name: Get 5 of the 6 shuttles out}   # at least 5 of the 6 Halcyon shuttles home off the top edge (easy 4, hard 6), failed at the second loss (easy the third, hard the first; SHUTTLES n / 5); 100 in Act 1 terms: pays 1,049
+
+music:
+  track: 14           # Act 6 A "Eye of the Storm" (audio/music track list): its full mix over the rim and the gilded decks (Aurelia's grandeur)
+  start_section: 1
+  full_section: 1
+  motif: {from: 0, sections: {}, to: 100}   # Vorne's motif in the open up to the turn, cut at t=100 under the Choir's static (no fade beyond the duck)
+  stem_times:
+    - {t: 100, stems: none, fade: 1}   # the old theme out over 1 s as the Choir speaks (ducked 6 dB by its line)
+    - {t: 160, stems: fall, fade: 2}   # track 15's breakdown over the fall: its `fall` stem (the choir alone over low strings) to the level end
+  themes:
+    - {t: 103, track: 15, stems: full, fade: 1}   # Act 6 B "Storm Wall" from the turn's window, without its motif stem (the Choir has spoken)
+  ambience: aurelia   # the Aurelia bed (wind in the balloon cables, the city's hum, a calm public-address chime)
+  ambience_layers:
+    - {ambience: aurelia-burning, from: 100, to: 200, fade_in: 4, fade_out: 0}   # the burning layer from the turn: fire, alarms, groaning metal
+  end_jingle: mission-complete
+
+difficulty: {}  # the stat blocks' hooks apply (the Mirror Interceptor's easy arc 100°, turn 45°/s, burst of 2 every 2.8 s, hard 140°, 80°/s, 4 every 2.0 s; the Graft Turret's easy window 6 s and a pair every 2.8 s, hard 4 s, a burst of 3 every 1.8 s, regrowth 0.6 s; the Talon's, the Chimera's, the Gunship's, the Hornet's, the SAM Nest's, the Lamprey's); the mirror waves' counts pinned (easy the t=84 pincer 1 + 1 and the rear ambush one unit; hard the t=140 pincer 2 + 2), the three aimed Talon waves one more on hard; the air allies' armour and the secondary's target in their blocks; the formation lever sizes the rest
+
+briefing:
+  pages:   # step C2: shortened to 4 lines a page (round 74 L.2 a's rule for Level 36; BriefingLayoutTest), pending the user's review in round 75
+    - {speaker: Okafor, image: level-37-aurelia, line: "Aurelia, the Ascendancy's capital on its balloons. Its traffic control has broken with Vorne: shuttles lift its civilians from the pads in three waves. Keep their lanes clear. I have been to Aurelia before, Lancer. This time we are there for its people."}
+    - {speaker: Varga, image: level-37-mirror, line: "The deck turrets are overgrown. Kill one and a root shows: burn it inside five seconds, or the turret grows back. A new interceptor carries a mirror on its nose. Shots bounce off it, a beam cracks it, the Tesla pod shatters it. Its flanks are open."}
+  teaser: {speaker: Rook, line: "Mirrors on their noses now. The Tesla pod cracks glass, Lancer. Just saying."}
+
+backdrop:
+  # Presentation only: Level 37's Aurelia (tools/art/backdrop_l37.py, step ART-C2: its proposal's block as it is; the
+  # sections above at the README's times, so the city's rows stay where the generator cut them).
+  # The ground is ONE continuous city laid out on the level's clock (every landmark by its time), cut into
+  # city-NN ground pieces of at most 2,040 rows placed back to back on exact rows (no ground tile set);
+  # transparent between the platforms, where the deep cloud deck shows. Re-run the generator after moving a
+  # section: the city, the growth burst, the halves and their rows follow the clock.
+  # Animated pieces: war-skirmish (deep, t~100-144), the hulks (low-air) and the deck fires (ground), never
+  # more than two on the screen at once (checked); the -glow pieces are additive at their piece's places.
+  scroll_factors: {deep: 0.15, far: 0.5, ground: 1, low-air: 1.3, high-air: 1.7}   # far unused
+  ramp: 2
+  haze_colour: 5a443c   # the turn's darker grade: smoke over the cloud deck
+  atmosphere:
+    clear: {haze: 0.0}   # sections 1-3: the warm cream is in the tiles
+    medium: {haze: 0.35, wisps: smoke-wisps}   # ART-C2's `smoke`, from the turn: the deck a step darker, smoke drifting over
+  tile_sets:
+    cloud-deck: {layer: deep, height: 1024}   # sections 1-4: the cream cloud deck far below
+    cloud-bands: {layer: deep, height: 864}   # section 5: the deck opening on the bands
+    smoke-wisps: {layer: high-air, height: 640}   # the smoke atmosphere's wisps
+  pieces:
+    city-01: {layer: ground, size: [480, 1753]}
+    city-02: {layer: ground, size: [480, 1844]}
+    city-03: {layer: ground, size: [480, 1889]}
+    city-04: {layer: ground, size: [480, 1878]}
+    city-05: {layer: ground, size: [480, 1640]}
+    city-06: {layer: ground, size: [480, 1640]}
+    city-07: {layer: ground, size: [480, 1731]}
+    city-08: {layer: ground, size: [480, 1648]}
+    city-09: {layer: ground, size: [480, 1125]}
+    city-10: {layer: ground, size: [480, 540]}
+    far-side: {layer: deep, size: [480, 240]}
+    balloon-a: {layer: low-air, size: [64, 106]}
+    balloon-b: {layer: low-air, size: [52, 88]}
+    balloon-torn: {layer: low-air, size: [60, 94]}
+    lift-ring: {layer: low-air, size: [162, 162]}
+    lift-ring-glow: {layer: low-air, size: [162, 162]}
+    deck-fire: {layer: ground, size: [48, 64], frames: 8, fps: 10}
+    war-skirmish: {layer: deep, size: [160, 128], frames: 8, fps: 6}
+    hulk-a: {layer: low-air, size: [80, 112], frames: 8, fps: 8}
+    hulk-b: {layer: low-air, size: [80, 112], frames: 8, fps: 8}
+    debris-plate-a: {layer: low-air, size: [68, 66]}
+    debris-plate-b: {layer: low-air, size: [70, 54]}
+    debris-plate-c: {layer: low-air, size: [44, 40]}
+    debris-cable: {layer: low-air, size: [64, 48]}
+    # the fall's and the turn's pieces (drawn by the growth and falling-city passes, not placed):
+    growth-burst: {layer: ground, size: [480, 572]}
+    growth-burst-reveal: {layer: ground, size: [480, 572]}
+    growth-burst-glow: {layer: ground, size: [480, 572]}
+    fall-half-west: {layer: ground, size: [274, 530]}
+    fall-half-west-char: {layer: ground, size: [302, 558]}
+    fall-half-west-glow: {layer: ground, size: [302, 558], frames: 4, fps: 8}
+    fall-half-east: {layer: ground, size: [263, 540]}
+    fall-half-east-char: {layer: ground, size: [291, 568]}
+    fall-half-east-glow: {layer: ground, size: [291, 568], frames: 4, fps: 8}
+    fall-shards: {layer: ground, size: [96, 160], frames: 8, fps: 8}
+    balloon-tear: {layer: low-air, size: [96, 128], frames: 10, fps: 5}
+    spire-topple-w: {layer: low-air, size: [192, 96], frames: 10, fps: 5}
+    spire-topple-e: {layer: low-air, size: [192, 96], frames: 10, fps: 5}
+    sinking-city: {layer: deep, size: [256, 208]}
+    sinking-city-glow: {layer: deep, size: [256, 208], frames: 4, fps: 6}
+  placed:
+    # the city, ground rows 206..1958 (exact: its bottom row on 206)
+    - {piece: city-01, t: 6.771, x: 240}
+    # the city, ground rows 1959..3802 (exact: its bottom row on 1959)
+    - {piece: city-02, t: 21.758, x: 240}
+    # the city, ground rows 3803..5691 (exact: its bottom row on 3803)
+    - {piece: city-03, t: 38.575, x: 240}
+    # the city, ground rows 5692..7569 (exact: its bottom row on 5692)
+    - {piece: city-04, t: 57.41, x: 240}
+    # the city, ground rows 7570..9209 (exact: its bottom row on 7570)
+    - {piece: city-05, t: 76.0, x: 240}
+    # the city, ground rows 9210..10849 (exact: its bottom row on 9210)
+    - {piece: city-06, t: 96.5, x: 240}
+    # the city, ground rows 10850..12580 (exact: its bottom row on 10850)
+    - {piece: city-07, t: 114.255, x: 240}
+    # the city, ground rows 12581..14228 (exact: its bottom row on 12581)
+    - {piece: city-08, t: 131.15, x: 240}
+    # the city, ground rows 14229..15353 (exact: its bottom row on 14229)
+    - {piece: city-09, t: 145.015, x: 240}
+    # the city, ground rows 16044..16583 (exact: its bottom row on 16044)
+    - {piece: city-10, t: 160.24, x: 240}
+    # the city's far side far below in the haze (section 1)
+    - {piece: far-side, t: 10.667, x: 240}
+    # the backdrop war far below: gold craft and Vrell swarms (on the screen t~100-144)
+    - {piece: war-skirmish, t: 122.0, x: 130}
+    - {piece: balloon-a, t: 3.0, x: 430}
+    - {piece: balloon-b, t: 9.0, x: 50}
+    - {piece: balloon-b, t: 17.0, x: 440}
+    - {piece: balloon-a, t: 27.0, x: 40}
+    - {piece: balloon-a, t: 38.0, x: 450}
+    - {piece: balloon-b, t: 51.0, x: 30}
+    - {piece: balloon-b, t: 66.0, x: 446}
+    - {piece: balloon-a, t: 76.0, x: 36}
+    - {piece: balloon-a, t: 90.0, x: 446}
+    # an anti-grav ring; lift-ring-glow at the same place
+    - {piece: lift-ring, t: 20.0, x: 380}
+    - {piece: lift-ring-glow, t: 20.0, x: 380}
+    # an anti-grav ring; lift-ring-glow at the same place
+    - {piece: lift-ring, t: 58.0, x: 100}
+    - {piece: lift-ring-glow, t: 58.0, x: 100}
+    # a burning hulk falling past
+    - {piece: hulk-a, t: 110.0, x: 380}
+    # a burning hulk falling past
+    - {piece: hulk-b, t: 126.0, x: 80}
+    # a burning hulk falling past
+    - {piece: hulk-a, t: 140.0, x: 400}
+    # a fire on a burning deck
+    - {piece: deck-fire, t: 104.0, x: 385}
+    # a fire on a burning deck
+    - {piece: deck-fire, t: 118.0, x: 120}
+    # a fire on a burning deck
+    - {piece: deck-fire, t: 133.0, x: 380}
+    # a fire on a burning deck
+    - {piece: deck-fire, t: 148.0, x: 160}
+    # the fall's debris
+    - {piece: debris-plate-a, t: 166.0, x: 110}
+    - {piece: debris-plate-b, t: 171.0, x: 380}
+    - {piece: debris-cable, t: 174.0, x: 300}
+    - {piece: debris-plate-c, t: 176.0, x: 190}
+    - {piece: balloon-torn, t: 168.0, x: 50}
+    # the fall's debris
+    - {piece: debris-plate-a, t: 183.0, x: 340}
+    - {piece: debris-plate-b, t: 189.0, x: 90}
+  growth:
+    # The Vrell turn's burst (Level 37 *The Vrell turn*): over the city on the screen at `t`, growth-burst is
+    # drawn where growth-burst-reveal's value <= (now - t) / seconds x 255 (normal blend; one texture and a
+    # threshold), growth-burst-glow additive under the same reveal. It lies on the ground rows from `bottom`
+    # (a ground piece's rows: drawn as a placed ground piece with that bottom row would be). Every city row
+    # entering after `t` is post-turn already; the burst's rows near the top edge reveal first.
+    t: 100
+    seconds: 4
+    piece: growth-burst
+    reveal: growth-burst-reveal
+    glow: growth-burst-glow
+    bottom: 10024   # ground rows 10024..10595; x 0..479
+  fall:
+    # The falling city (A.13 b, round 73 R.2): from `t` the city pieces are not drawn; the two halves are the
+    # ground. Each half's image is the city's own pixels on its rows (x0 = its left column, bottom = its bottom
+    # ground row): drawn at `t` as a ground piece with that bottom row, the halves together are exactly the
+    # city on the screen (the handover is pixel-exact; nothing else of the city is near them).
+    # keys: [u, x, y, scale, turn, shade] every 0.1 s to 2 s, then 0.5 s: u s after t; x, y the screen centre of the half's image
+    # (y down from the top edge); scale (bilinear, toward the field's centre); turn degrees clockwise; shade the
+    # share it has darkened toward 1e1616 (smooth). The first key is the ground's place at t and its speed the
+    # ground's; interpolate linearly. `char` (normal) and `glow` (additive, its frames on the real clock) are
+    # drawn with the half (their image CHAR_PAD = 14 px larger a side, same centre) and fade in over the first
+    # second as the gap opens, so the handover stays exact. Draw the west half first.
+    t: 160
+    seconds: 20
+    halves:
+      - piece: fall-half-west
+        x0: 10
+        bottom: 16050   # size 274x530
+        char: fall-half-west-char
+        glow: fall-half-west-glow
+        keys:
+          - [0, 147, 245, 1, -0, 0]
+          - [0.1, 147, 254.5, 1, -0, 0]
+          - [0.2, 147, 263, 0.9998, -0, 0.001]
+          - [0.3, 147, 270.7, 0.9996, -0, 0.002]
+          - [0.4, 147, 277.7, 0.9993, -0, 0.003]
+          - [0.5, 147, 284, 0.9989, -0, 0.004]
+          - [0.6, 146.9, 289.7, 0.9984, -0, 0.006]
+          - [0.7, 146.9, 294.9, 0.9978, -0, 0.007]
+          - [0.8, 146.9, 299.6, 0.9971, -0, 0.009]
+          - [0.9, 146.9, 303.8, 0.9963, -0.01, 0.011]
+          - [1, 146.8, 307.7, 0.9955, -0.01, 0.012]
+          - [1.1, 146.8, 311.3, 0.9946, -0.02, 0.014]
+          - [1.2, 146.8, 314.6, 0.9936, -0.02, 0.017]
+          - [1.3, 146.7, 317.6, 0.9925, -0.03, 0.019]
+          - [1.4, 146.7, 320.3, 0.9913, -0.04, 0.021]
+          - [1.5, 146.6, 322.9, 0.9901, -0.05, 0.023]
+          - [1.6, 146.6, 325.2, 0.9887, -0.06, 0.026]
+          - [1.7, 146.6, 327.4, 0.9873, -0.07, 0.028]
+          - [1.8, 146.5, 329.4, 0.9858, -0.08, 0.031]
+          - [1.9, 146.5, 331.3, 0.9843, -0.09, 0.034]
+          - [2, 146.4, 333.1, 0.9826, -0.1, 0.037]
+          - [2.5, 146.2, 340.5, 0.9734, -0.18, 0.052]
+          - [3, 146, 346.3, 0.9623, -0.27, 0.068]
+          - [3.5, 145.8, 351, 0.9497, -0.38, 0.086]
+          - [4, 145.7, 355, 0.9355, -0.51, 0.105]
+          - [4.5, 145.7, 358.4, 0.92, -0.65, 0.124]
+          - [5, 145.8, 361.5, 0.9031, -0.81, 0.145]
+          - [5.5, 146.1, 364.2, 0.8851, -0.98, 0.166]
+          - [6, 146.5, 366.5, 0.8661, -1.16, 0.188]
+          - [6.5, 147, 368.5, 0.8461, -1.35, 0.21]
+          - [7, 147.8, 370.3, 0.8253, -1.56, 0.232]
+          - [7.5, 148.8, 371.7, 0.8038, -1.76, 0.255]
+          - [8, 149.9, 372.8, 0.7818, -1.98, 0.278]
+          - [8.5, 151.3, 373.6, 0.7592, -2.2, 0.3]
+          - [9, 152.9, 374.2, 0.7363, -2.43, 0.323]
+          - [9.5, 154.7, 374.5, 0.7132, -2.65, 0.345]
+          - [10, 156.7, 374.5, 0.69, -2.88, 0.368]
+          - [10.5, 158.8, 374.3, 0.6668, -3.12, 0.389]
+          - [11, 161.2, 374, 0.6437, -3.35, 0.411]
+          - [11.5, 163.7, 373.4, 0.6208, -3.57, 0.432]
+          - [12, 166.4, 372.6, 0.5982, -3.8, 0.452]
+          - [12.5, 169.1, 371.7, 0.5762, -4.02, 0.472]
+          - [13, 171.8, 370.7, 0.5547, -4.24, 0.491]
+          - [13.5, 174.3, 369.6, 0.5339, -4.44, 0.509]
+          - [14, 176.8, 368.4, 0.5139, -4.65, 0.527]
+          - [14.5, 179.1, 367.2, 0.4949, -4.84, 0.543]
+          - [15, 181.3, 366.1, 0.4769, -5.02, 0.559]
+          - [15.5, 183.4, 365, 0.46, -5.19, 0.573]
+          - [16, 185.3, 364, 0.4445, -5.35, 0.586]
+          - [16.5, 187.1, 363.2, 0.4303, -5.49, 0.598]
+          - [17, 188.6, 362.5, 0.4177, -5.62, 0.609]
+          - [17.5, 190, 362.1, 0.4066, -5.73, 0.618]
+          - [18, 191.1, 362, 0.3974, -5.82, 0.626]
+          - [18.5, 192, 362.2, 0.3899, -5.9, 0.632]
+          - [19, 192.7, 362.9, 0.3845, -5.95, 0.636]
+          - [19.5, 193.1, 364, 0.3811, -5.99, 0.639]
+          - [20, 193.3, 365.6, 0.38, -6, 0.64]
+      - piece: fall-half-east
+        x0: 217
+        bottom: 16044   # size 263x540
+        char: fall-half-east-char
+        glow: fall-half-east-glow
+        keys:
+          - [0, 348.5, 246, 1, 0, 0]
+          - [0.1, 348.5, 255.6, 1, 0, 0]
+          - [0.2, 348.5, 264.4, 0.9998, 0, 0.001]
+          - [0.3, 348.5, 272.6, 0.9996, 0, 0.002]
+          - [0.4, 348.5, 280.1, 0.9994, 0, 0.003]
+          - [0.5, 348.5, 287, 0.999, 0, 0.004]
+          - [0.6, 348.5, 293.4, 0.9986, 0, 0.005]
+          - [0.7, 348.5, 299.3, 0.9981, 0, 0.006]
+          - [0.8, 348.6, 304.8, 0.9975, 0, 0.008]
+          - [0.9, 348.6, 309.9, 0.9968, 0.01, 0.009]
+          - [1, 348.6, 314.6, 0.9961, 0.01, 0.011]
+          - [1.1, 348.6, 319, 0.9953, 0.01, 0.013]
+          - [1.2, 348.6, 323, 0.9944, 0.02, 0.014]
+          - [1.3, 348.6, 326.8, 0.9935, 0.02, 0.016]
+          - [1.4, 348.7, 330.4, 0.9924, 0.03, 0.018]
+          - [1.5, 348.7, 333.7, 0.9913, 0.04, 0.021]
+          - [1.6, 348.7, 336.8, 0.9902, 0.05, 0.023]
+          - [1.7, 348.7, 339.7, 0.989, 0.05, 0.025]
+          - [1.8, 348.7, 342.5, 0.9877, 0.06, 0.027]
+          - [1.9, 348.7, 345, 0.9863, 0.07, 0.03]
+          - [2, 348.8, 347.5, 0.9849, 0.08, 0.032]
+          - [2.5, 348.8, 357.8, 0.9768, 0.15, 0.045]
+          - [3, 348.9, 365.8, 0.9672, 0.23, 0.06]
+          - [3.5, 348.9, 372.4, 0.9562, 0.32, 0.075]
+          - [4, 348.8, 377.9, 0.9438, 0.43, 0.092]
+          - [4.5, 348.6, 382.7, 0.9303, 0.54, 0.109]
+          - [5, 348.3, 386.8, 0.9156, 0.68, 0.127]
+          - [5.5, 347.9, 390.5, 0.8999, 0.82, 0.145]
+          - [6, 347.3, 393.8, 0.8834, 0.97, 0.164]
+          - [6.5, 346.6, 396.6, 0.866, 1.13, 0.184]
+          - [7, 345.7, 399.1, 0.8479, 1.3, 0.203]
+          - [7.5, 344.7, 401.3, 0.8291, 1.47, 0.223]
+          - [8, 343.5, 403.1, 0.8099, 1.65, 0.243]
+          - [8.5, 342.1, 404.6, 0.7903, 1.83, 0.263]
+          - [9, 340.5, 405.9, 0.7704, 2.02, 0.283]
+          - [9.5, 338.7, 406.8, 0.7502, 2.21, 0.302]
+          - [10, 336.8, 407.5, 0.73, 2.4, 0.322]
+          - [10.5, 334.7, 408, 0.7098, 2.6, 0.341]
+          - [11, 332.4, 408.2, 0.6896, 2.79, 0.36]
+          - [11.5, 330, 408.2, 0.6697, 2.98, 0.378]
+          - [12, 327.4, 408.1, 0.6501, 3.17, 0.396]
+          - [12.5, 324.9, 407.8, 0.6309, 3.35, 0.413]
+          - [13, 322.3, 407.4, 0.6121, 3.53, 0.43]
+          - [13.5, 319.9, 406.9, 0.594, 3.7, 0.446]
+          - [14, 317.6, 406.3, 0.5766, 3.87, 0.461]
+          - [14.5, 315.3, 405.8, 0.5601, 4.03, 0.475]
+          - [15, 313.2, 405.2, 0.5444, 4.18, 0.489]
+          - [15.5, 311.2, 404.8, 0.5297, 4.32, 0.501]
+          - [16, 309.4, 404.4, 0.5162, 4.46, 0.513]
+          - [16.5, 307.8, 404.2, 0.5038, 4.57, 0.523]
+          - [17, 306.3, 404.2, 0.4928, 4.68, 0.533]
+          - [17.5, 305, 404.5, 0.4832, 4.77, 0.541]
+          - [18, 303.9, 405.1, 0.4751, 4.85, 0.547]
+          - [18.5, 303, 406.1, 0.4687, 4.92, 0.553]
+          - [19, 302.4, 407.5, 0.4639, 4.96, 0.557]
+          - [19.5, 302, 409.4, 0.461, 4.99, 0.559]
+          - [20, 301.9, 411.9, 0.46, 5, 0.56]
+    # the shards tumbling in the widening gap: at the middle of the two halves' cut edges, from..to s after t
+    shards: {piece: fall-shards, from: 0.4, to: 9.0}
+    # the balloons over the main deck's far edge: low-air pieces placed as usual (t, x) until `t`, then their
+    # frames once from frame 0 at fps (they tear and collapse, no pop) and hold the last
+    balloons:
+      - {piece: balloon-tear, t: 161.231, x: 120}
+      - {piece: balloon-tear, t: 161.538, x: 380}
+    # the spires the wing flies down beside (low-air, placed as usual): frame 0 upright until topple_at s after
+    # t, then the topple once at the piece's fps, holding the last frame
+    spires:
+      - {piece: spire-topple-e, t: 165.0, x: 110, topple_at: 3.4}
+      - {piece: spire-topple-w, t: 170.5, x: 370, topple_at: 8.8}
+      - {piece: spire-topple-e, t: 176.0, x: 96, topple_at: 14.4}
+    # the sinking city (deep, placed by t as a deep piece): crossfades in over `fade` s from `from` s after t as
+    # the halves (at their last key) fade out; then it sinks with the deep layer (Level 38 reuses it)
+    sinking: {piece: sinking-city, glow: sinking-city-glow, t: 172.083, x: 248, from: 19.0, fade: 2.0}

@@ -3,7 +3,7 @@ title: Data file schemas — level backdrops
 design: approved
 implementation: in-progress
 art: n/a
-updated: 2026-10-31
+updated: 2026-11-01
 ---
 
 # Data file schemas — level backdrops
@@ -100,3 +100,11 @@ bottom `banks.band` px) for more than `banks.band_seconds` s at a time. Presenta
 M10 part B (step B2, Level 36): a bank's optional **`piece`** names the `high-air` piece drawn as the bank (ART-B's
 `bank-a`…`bank-f`); its `size` must be the bank's `w` × `h`, so the cover and band checks measure what is drawn
 (`JovianHazardChecks`).
+M10 part C (step C2, Level 37; content's `FallingCityData`, checked by `AureliaChecks`; drawn by step C4a): a
+backdrop's optional **`growth`** (`t`, `seconds`, `piece`, `reveal`, `glow` and the ground row `bottom` it lies on: the
+turn's burst over the ground on the screen, revealed by the reveal map's threshold over the seconds) and **`fall`**
+(`t`, `seconds`, `halves` each a `piece` with its left column `x0`, its bottom ground row `bottom`, optional `char`
+and `glow` pieces and its `keys` `[u, x, y, scale, turn, shade]` from u = 0; optional `shards` `{piece, from, to}`,
+`balloons` `{piece, t, x}`, `spires` `{piece, t, x, topple_at}` and `sinking` `{piece, glow, t, x, from, fade}`): from
+`t` the city's ground pieces give way to the halves on their curves ([Level 37](../../../campaign/act-6-jovian-storm/level-37-fall-of-aurelia/README.md#the-falling-city-t160200)).
+Every piece they name is the backdrop's; both lie inside the level.

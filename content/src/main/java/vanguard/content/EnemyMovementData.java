@@ -236,6 +236,8 @@ public sealed interface EnemyMovementData permits EnemyData {
      *     Spiral Nautilus)
      * @param lunge M8 part F: it hangs drifting by its lure and lunges at the ship that comes close, rings and retreats
      *     (the Glow Angler)
+     * @param station M10 part C (design/enemies/air/mirror-interceptor, Movement): a side or rear entry flies to a station
+     *     and holds it there, strafing along it (the Mirror Interceptor)
      */
     record Movement(
             Optional<Snake> snake,
@@ -267,7 +269,27 @@ public sealed interface EnemyMovementData permits EnemyData {
             Optional<Ride> ride,
             Optional<Scatter> scatter,
             Optional<Lay> lay,
-            Optional<Dash> dash) {}
+            Optional<Dash> dash,
+            Optional<Station> station) {}
+
+    /**
+     * M10 part C (design/enemies/air/mirror-interceptor, Movement; the simulation's {@code EnemySpec.Station}): a unit
+     * entering from a side edge (a {@code pincer} or a {@code single} with its {@code hover.edge_x}) flies to {@code
+     * side} px in from that edge, at its hover's height; from the bottom edge (a {@code rear ambush}) it rises up its lane
+     * to {@code rear} px above the bottom edge. It holds its hover time there, strafing along its station toward the ship
+     * at {@code strafe_speed} px/s at most {@code strafe} ÷ 2 px from the station point, and keeps its hull {@code gap} px
+     * from every other unit holding a station on its line; then it leaves through its edge (a rear one up through the
+     * nearer side edge).
+     */
+    record Station(Span side, Span rear, double strafe, double strafeSpeed, double gap) {
+        public Station {
+            Check.notNegative("station.side", side.min());
+            Check.notNegative("station.rear", rear.min());
+            Check.notNegative("station.strafe", strafe);
+            Check.notNegative("station.strafe_speed", strafeSpeed);
+            Check.notNegative("station.gap", gap);
+        }
+    }
 
     /**
      * M9 part D (design/enemies/air/buzzsaw-drone, Movement): the dash cycle. From its entry (or its circle's break) it

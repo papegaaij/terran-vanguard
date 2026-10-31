@@ -476,7 +476,8 @@ public record EnemyData(
                         movement.ride(),
                         movement.scatter(),
                         movement.lay(),
-                        movement.dash()))
+                        movement.dash(),
+                        movement.station()))
                 .orElse(movement);
         return new EnemyData(
                 name,

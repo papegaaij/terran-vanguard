@@ -194,4 +194,76 @@ public sealed interface AlliesBlock permits LevelData {
             targetedBy = targetedBy.map(Map::copyOf);
         }
     }
+
+    /**
+     * M10 part C (design/campaign Level 37, The shuttles; design/allies, Evacuation shuttle): the level's air allies
+     * outside the objectives (the simulation's {@code ObjectiveSpec.airAllies}): {@code ally} (an ally that {@code
+     * follows: lanes}) in its {@code livery} (one of the ally's {@code liveries}; its own look if not given), lifting
+     * in {@code groups}. Each group's units stand on its liftoff's {@code pads} ({@code [x, y]}, px from the left edge
+     * and below the top edge at its liftoff's time) until that time, lift to the next of the {@code stations} (in order,
+     * one per pad) over its seconds (untouchable), hold them with the lane sway and climb out off the top edge from its
+     * {@code climb} (untouchable); each one that gets off the top edge is home and counts for a {@code saved} secondary.
+     * They never fail the mission and pay nothing of their own. The units of the waves entering at the {@code hooked}
+     * times aim every attack at the nearest unit holding its station (the target-the-objective hook's {@code always}).
+     * {@code easy} / {@code hard}: their armour on that difficulty.
+     */
+    public record AirAllies(
+            String ally,
+            Optional<String> livery,
+            List<LevelData.Station> stations,
+            List<LiftGroup> groups,
+            Optional<List<Double>> hooked,
+            Optional<LevelData.AllyChange> easy,
+            Optional<LevelData.AllyChange> hard) {
+        public AirAllies {
+            Check.notEmpty("stations", stations);
+            Check.notEmpty("groups", groups);
+            stations = List.copyOf(stations);
+            groups = List.copyOf(groups);
+            hooked = hooked.map(List::copyOf);
+            int pads = groups.stream()
+                    .mapToInt(group -> group.liftoff().pads().size())
+                    .sum();
+            Check.that(
+                    pads == stations.size(),
+                    "groups: one pad per station, " + pads + " pads for " + stations.size() + " stations");
+            for (int i = 1; i < groups.size(); i++) {
+                Check.that(
+                        groups.get(i).liftoff().t()
+                                > groups.get(i - 1).liftoff().t(),
+                        "groups[" + i + "]: in liftoff order");
+            }
+        }
+
+        /** Their armour on {@code difficulty}: the change's, else the ally's {@code hp}. */
+        public Optional<LevelData.AllyChange> change(Difficulty difficulty) {
+            return switch (difficulty) {
+                case EASY -> easy;
+                case MEDIUM -> Optional.empty();
+                case HARD -> hard;
+            };
+        }
+
+        /** How many units lift: one per station. */
+        public int units() {
+            return stations.size();
+        }
+    }
+
+    /**
+     * M10 part C: a lift group of the {@link AirAllies}: its {@code liftoff} (the time, the seconds of the lift and its
+     * pads) and its {@code climb} out (from the time, over the seconds), after the lift.
+     */
+    public record LiftGroup(LevelData.Liftoff liftoff, LevelData.Climb climb) {
+        public LiftGroup {
+            Check.notEmpty("liftoff.pads", liftoff.pads());
+            Check.that(
+                    climb.t() >= liftoff.t() + liftoff.seconds(),
+                    "climb: after the lift (liftoff.t + liftoff.seconds)");
+            liftoff.pads()
+                    .forEach(pad -> Check.that(
+                            pad.x() >= 0 && pad.x() <= PlayField.WIDTH && pad.y() >= 0 && pad.y() <= PlayField.HEIGHT,
+                            "liftoff.pads: on the play field, was [" + pad.x() + ", " + pad.y() + "]"));
+        }
+    }
 }

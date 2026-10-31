@@ -14,11 +14,12 @@ import java.util.stream.Stream;
  * walk), never both, the root inside the unit's sprite; at most one {@code death-burst} attack, its bullet a known class,
  * never beside a hook's {@code death_burst}; a hook's {@code mirror}, {@code regeneration}, {@code regrowth}, {@code
  * dome} or {@code attacks.<name>.speed} only for what the unit has; {@code spoofable} only on a {@code ground} unit that
- * is neither a boss nor of the Vrell (never aircraft, bosses or the Vrell; a hybrid only by its document's flag).
+ * is neither a boss nor of the Vrell (never aircraft, bosses or the Vrell; a hybrid only by its document's flag). M10
+ * part C: a {@code movement.station} only on a single {@code air} unit with a hover's seconds, y and edge_x.
  *
  * <p>A level's: a wave's {@code hunts} (other than Level 33's {@code prey}) names the {@code tag} of another of its
  * waves; the prey wave flies units of the Jovian Ascendancy that are not bosses or neutral craft (never the hybrids,
- * bosses or allies), the hunting wave units of the Vrell; a ground target's {@code crown} only on a nest of a unit with a
+ * bosses, allies or, M10 part C, mirrored units), the hunting wave units of the Vrell; a ground target's {@code crown} only on a nest of a unit with a
  * dome.
  */
 final class JovianChecks {
@@ -42,6 +43,23 @@ final class JovianChecks {
             }
             if (!content.enemyBasis().knowsBullet(mirror.bullet())) {
                 problem.accept("mirror.bullet", "unknown bullet class '" + mirror.bullet() + "'");
+            }
+        });
+        // M10 part C (design/enemies/air/mirror-interceptor): a station is held for the hover's time at its height,
+        // from a
+        // side edge (edge_x) or the bottom edge; a single air unit's, never beside another way of entering.
+        enemy.movement().station().ifPresent(station -> {
+            Optional<EnemyData.Hover> hover = enemy.movement().hover();
+            if (!enemy.layer().equals("air")
+                    || !single
+                    || enemy.boss().isPresent()
+                    || hover.flatMap(EnemyData.Hover::seconds).isEmpty()
+                    || hover.flatMap(EnemyData.Hover::y).isEmpty()
+                    || hover.flatMap(EnemyData.Hover::edgeX).isEmpty()
+                    || enemy.movement().ambush().isPresent()) {
+                problem.accept(
+                        "movement.station",
+                        "a station is a single air unit's, with a hover's seconds, y and edge_x (no ambush path)");
             }
         });
         for (String key : List.of("regrowth", "dome")) {
@@ -136,11 +154,15 @@ final class JovianChecks {
             }
             prey.stream()
                     .flatMap(other -> units(content, other))
-                    .filter(unit ->
-                            !unit.faction().equals(ASCENDANCY) || unit.boss().isPresent() || unit.isNeutral())
+                    // M10 part C (Level 37): nor a mirrored unit (its mirror stays on the ship).
+                    .filter(unit -> !unit.faction().equals(ASCENDANCY)
+                            || unit.boss().isPresent()
+                            || unit.isNeutral()
+                            || unit.mirror().isPresent())
                     .forEach(unit -> problem.accept(
                             field,
-                            "prey is an Ascendancy wave (never a hybrid, a boss or an ally): '" + unit.name() + "'"));
+                            "prey is an Ascendancy wave (never a hybrid, a mirrored unit, a boss or an ally): '"
+                                    + unit.name() + "'"));
             units(content, wave)
                     .filter(unit -> !unit.faction().equals(VRELL))
                     .forEach(

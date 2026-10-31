@@ -31,6 +31,10 @@ import vanguard.sim.PlayField;
  *     tile sets keyed by the strip's row instead of by section ({@link Strip}); the sections then name no tiles * @param banks M10 part A (design/world/jovian, Hazards &amp; set pieces: foreground cloud banks; Level 36): the
  *     translucent banks drawn over the {@code air} bodies, on the {@code high-air} scenery ({@link Bank}); none if not
  *     given
+ * @param growth M10 part C (design/campaign Level 37, The Vrell turn): the growth bursting over the ground on the screen
+ *     ({@link FallingCityData.Growth}); none if not given
+ * @param fall M10 part C (design/campaign Level 37, The falling city): the ground breaking into two halves that sink
+ *     ({@link FallingCityData.Fall}); none if not given
  */
 public record BackdropData(
         Map<BackdropLayer, Double> scrollFactors,
@@ -42,7 +46,9 @@ public record BackdropData(
         List<PlacedPiece> placed,
         Optional<String> images,
         Optional<Strip> strip,
-        Optional<List<Bank>> banks) {
+        Optional<List<Bank>> banks,
+        Optional<FallingCityData.Growth> growth,
+        Optional<FallingCityData.Fall> fall) {
     public BackdropData {
         banks = banks.map(List::copyOf);
         banks.ifPresent(list -> {

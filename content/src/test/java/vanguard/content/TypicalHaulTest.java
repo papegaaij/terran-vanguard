@@ -161,7 +161,11 @@ class TypicalHaulTest {
                         Map.entry(35, 10_197),
                         // M10 part B (step B2): Level 36's kills, leaders, the harvesters (not enemies), the pod's
                         // crate and the secondary at the README's scale 0.31 (levelReport: typical +0.2 %)
-                        Map.entry(36, 12_737)),
+                        Map.entry(36, 12_737),
+                        // M10 part C (step C2): Level 37's kills, leaders, the Graft Turrets and their roots, the SAM
+                        // Nests, the locker's crate and the shuttles' secondary at the scale 0.32 (levelReport's fit:
+                        // typical +1.0 %)
+                        Map.entry(37, 13_539)),
                 perfect);
     }
 

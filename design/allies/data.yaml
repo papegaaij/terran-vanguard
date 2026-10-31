@@ -34,6 +34,7 @@ evacuation-shuttle:       # Level 10 (M5 part D, user decisions D1, D2 and D4 of
   glide: 3                # s of the lost shuttle's glide into `far` (presentation)
   smoke_below: 0.5        # share of its HP
   first_level: 10         # its sprites go in Level 10's atlas until the level's data escorts it
+  liveries: [aurelia]     # M10 part C (Level 37's Halcyon shuttles): Aurelia's civil livery, white with a gold band and the city's crest (evacuation-shuttle-aurelia*, round 75 QC-3 a)
 cargo-ship:               # Level 11's convoy (M5 part E, user decision E8 = a and the stated defaults of 2026-10-08)
   name: Convoy cargo ship
   layer: ground           # naval surface

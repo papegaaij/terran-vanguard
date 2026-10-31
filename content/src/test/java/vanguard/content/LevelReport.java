@@ -538,6 +538,32 @@ final class LevelReport {
                         LevelMetrics.STACK_SECONDS,
                         asserted ? ": " + verdict(stacks.isEmpty()) : " (Acts 1-4: report only)",
                         stacks.isEmpty() ? "" : " " + stacks);
+                // M10 part C (Level 37): the mirrors and the regrowing turrets on the screen at once (their rules).
+                LevelScript script = SimSpecs.level(LevelMetrics.CONTENT, level.key(), row.difficulty());
+                if (script.waves().stream()
+                                .anyMatch(wave -> wave.enemy().mirror().isPresent())
+                        || script.groundUnits().stream()
+                                .anyMatch(unit -> unit.enemy().regrowth().isPresent())) {
+                    double last = script.waves().stream()
+                            .mapToDouble(vanguard.sim.WaveSpec::t)
+                            .max()
+                            .orElse(0);
+                    LevelMetrics.Most most = LevelMetrics.mostOnScreen(
+                            LevelMetrics.CONTENT,
+                            level.key(),
+                            row.difficulty(),
+                            PacingTest.planLoadout(level.key(), row.difficulty()),
+                            last + HullStackingTest.AFTER_LAST_WAVE);
+                    line(
+                            out,
+                            "mirrors",
+                            "at most %d on the screen (4), %d on one side (2); regrowing turrets at most %d (6) [unharmed]:"
+                                    + " %s",
+                            most.mirrors(),
+                            most.mirrorsOneSide(),
+                            most.regrowing(),
+                            verdict(most.mirrors() <= 4 && most.mirrorsOneSide() <= 2 && most.regrowing() <= 6));
+                }
             }
             if (medium && row.floor() != null && level.parts().contains(Part.FLOOR)) {
                 LevelMetrics.Flight floor = row.floor().flight();

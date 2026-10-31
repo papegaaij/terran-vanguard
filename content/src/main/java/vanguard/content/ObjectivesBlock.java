@@ -2,6 +2,7 @@ package vanguard.content;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 /**
  * The level's {@code objectives}: the primary objective's kind and the secondary objective.
@@ -101,7 +102,10 @@ public sealed interface ObjectivesBlock permits LevelData {
      * Difficulty notes): an {@code escapes} objective's {@code easy} and {@code hard} change its {@code allowed} on
      * that difficulty (0: every one destroyed). M9 part B (design/campaign Level 29, "Hold fire"): {@code spared:
      * <slug>}, none of the level's neutral craft of that kind destroyed (a hit does not fail it; the tracker's {@code
-     * label}), met when the last has left the screen, failed at the first destroyed.
+     * label}), met when the last has left the screen, failed at the first destroyed. M10 part C (design/campaign Level
+     * 37, The shuttles): {@code saved: n}, at least n of the level's air allies ({@code air_allies}) home off the top
+     * edge (the tracker's {@code label}, counting to n), met at the n-th home, failed once more are lost than the allies
+     * minus n; its {@code easy} and {@code hard} change n.
      */
     public record Secondary(
             Optional<Double> killRatio,
@@ -124,9 +128,58 @@ public sealed interface ObjectivesBlock permits LevelData {
             Optional<Boolean> bossCounted,
             Optional<SecondaryChange> easy,
             Optional<SecondaryChange> hard,
-            Optional<String> spared) {
+            Optional<String> spared,
+            Optional<Integer> saved) {
         /** M5 part F: what a {@code collect} objective counts, the level's weather sondes. */
         public static final String SONDES = "sondes";
+
+        /** Without M10 part C's saved. */
+        public Secondary(
+                Optional<Double> killRatio,
+                Optional<List<String>> groups,
+                Optional<String> escapes,
+                Optional<List<String>> killAll,
+                Optional<List<String>> parts,
+                Optional<String> before,
+                Optional<String> label,
+                int credits,
+                Optional<String> tag,
+                Optional<String> name,
+                Optional<Boolean> afloat,
+                Optional<String> collect,
+                Optional<Double> integrity,
+                Optional<Boolean> links,
+                Optional<Boolean> untouched,
+                Optional<Boolean> standing,
+                Optional<Integer> allowed,
+                Optional<Boolean> bossCounted,
+                Optional<SecondaryChange> easy,
+                Optional<SecondaryChange> hard,
+                Optional<String> spared) {
+            this(
+                    killRatio,
+                    groups,
+                    escapes,
+                    killAll,
+                    parts,
+                    before,
+                    label,
+                    credits,
+                    tag,
+                    name,
+                    afloat,
+                    collect,
+                    integrity,
+                    links,
+                    untouched,
+                    standing,
+                    allowed,
+                    bossCounted,
+                    easy,
+                    hard,
+                    spared,
+                    Optional.empty());
+        }
 
         /** Without M8 part B's easy and hard. */
         public Secondary(
@@ -269,13 +322,23 @@ public sealed interface ObjectivesBlock permits LevelData {
          * #escapesAllowed()}.
          */
         public int escapesAllowed(Difficulty difficulty) {
-            Optional<SecondaryChange> change =
-                    switch (difficulty) {
-                        case EASY -> easy;
-                        case MEDIUM -> Optional.empty();
-                        case HARD -> hard;
-                    };
-            return change.flatMap(SecondaryChange::allowed).orElseGet(this::escapesAllowed);
+            return change(difficulty).flatMap(SecondaryChange::allowed).orElseGet(this::escapesAllowed);
+        }
+
+        /**
+         * M10 part C (design/campaign Level 37, The shuttles: 5 of 6, easy 4, hard 6): how many air allies a {@code saved}
+         * objective needs home on {@code difficulty}: that difficulty's change, else {@code saved}; 0 for another kind.
+         */
+        public int savedTarget(Difficulty difficulty) {
+            return change(difficulty).flatMap(SecondaryChange::saved).orElseGet(() -> saved.orElse(0));
+        }
+
+        private Optional<SecondaryChange> change(Difficulty difficulty) {
+            return switch (difficulty) {
+                case EASY -> easy;
+                case MEDIUM -> Optional.empty();
+                case HARD -> hard;
+            };
         }
 
         /** Without round 41's standing. */
@@ -521,17 +584,29 @@ public sealed interface ObjectivesBlock permits LevelData {
                                     + (untouched.isPresent() ? 1 : 0)
                                     + (standing.isPresent() ? 1 : 0)
                                     + (spared.isPresent() ? 1 : 0)
+                                    + (saved.isPresent() ? 1 : 0)
                             == 1,
-                    "give kill_ratio, groups, escapes, kill_all, parts, afloat, collect, integrity, links, spared, untouched"
-                            + " or standing");
+                    "give kill_ratio, groups, escapes, kill_all, parts, afloat, collect, integrity, links, spared, saved,"
+                            + " untouched or standing");
+            saved.ifPresent(n -> Check.positive("saved", n));
             Check.that(links.orElse(true), "links: true, or leave it out");
             Check.that(untouched.orElse(true), "untouched: true, or leave it out");
             Check.that(standing.orElse(true), "standing: true, or leave it out");
             allowed.ifPresent(n -> Check.positive("allowed", n));
             Check.that(allowed.isEmpty() || escapes.isPresent(), "only an escapes objective allows some to get away");
             Check.that(
-                    (easy.isEmpty() && hard.isEmpty()) || escapes.isPresent(),
-                    "only an escapes objective changes by difficulty (its allowed)");
+                    (easy.isEmpty() && hard.isEmpty()) || escapes.isPresent() || saved.isPresent(),
+                    "only an escapes objective (its allowed) or a saved one (its target) changes by difficulty");
+            Check.that(
+                    escapes.isPresent()
+                            || Stream.of(easy, hard).flatMap(Optional::stream).allMatch(change -> change.allowed()
+                                    .isEmpty()),
+                    "only an escapes objective changes its allowed by difficulty");
+            Check.that(
+                    saved.isPresent()
+                            || Stream.of(easy, hard).flatMap(Optional::stream).allMatch(change -> change.saved()
+                                    .isEmpty()),
+                    "only a saved objective changes its target (saved) by difficulty");
             integrity.ifPresent(share -> Check.that(share > 0 && share < 1, "integrity: a share between 0 and 1"));
             collect.ifPresent(what -> Check.that(SONDES.equals(what), "collect: sondes, was '" + what + "'"));
             Check.that(afloat.orElse(true), "afloat: true, or leave it out");
@@ -551,6 +626,7 @@ public sealed interface ObjectivesBlock permits LevelData {
                                     || untouched.isPresent()
                                     || standing.isPresent()
                                     || spared.isPresent()
+                                    || saved.isPresent()
                             ? label.isPresent()
                             // M7 part F: an escapes objective that allows some away may name its counter (Level 19's
                             // GREY TANKS 12/14).
@@ -563,8 +639,8 @@ public sealed interface ObjectivesBlock permits LevelData {
                                                             .isPresent()
                                                     || hard.flatMap(SecondaryChange::allowed)
                                                             .isPresent())),
-                    "a kill_all, parts, afloat, collect, integrity, links, spared, untouched or standing objective has its"
-                            + " tracker label,"
+                    "a kill_all, parts, afloat, collect, integrity, links, spared, saved, untouched or standing objective"
+                            + " has its tracker label,"
                             + " a groups one or an escapes one with allowed may have one, the others none");
             Check.notNegative("credits", credits);
         }
@@ -572,11 +648,13 @@ public sealed interface ObjectivesBlock permits LevelData {
 
     /**
      * M8 part B: a difficulty's change to an {@code escapes} secondary: how many may get away instead ({@code allowed},
-     * 0 or more).
+     * 0 or more); M10 part C: to a {@code saved} secondary, how many must get home instead ({@code saved}, 1 or more).
      */
-    public record SecondaryChange(Optional<Integer> allowed) {
+    public record SecondaryChange(Optional<Integer> allowed, Optional<Integer> saved) {
         public SecondaryChange {
             allowed.ifPresent(n -> Check.notNegative("allowed", n));
+            // M10 part C (Level 37): a saved objective's target on that difficulty.
+            saved.ifPresent(n -> Check.positive("saved", n));
         }
     }
 }

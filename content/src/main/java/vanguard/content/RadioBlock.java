@@ -423,7 +423,19 @@ public sealed interface RadioBlock permits LevelData {
          * (an escapes objective by the unit past the allowed ones); once. Names no enemy.
          */
         @JsonProperty("secondary-failed")
-        SECONDARY_FAILED
+        SECONDARY_FAILED,
+        /**
+         * M10 part C (design/campaign Level 37, Radio chatter): the attempt's first player shot a mirror bounces back;
+         * once. Names no enemy; only in a level with a mirrored enemy (Rook's bark).
+         */
+        @JsonProperty("first-bounce")
+        FIRST_BOUNCE,
+        /**
+         * M10 part C (design/campaign Level 37, Radio chatter): the attempt's first prey unit a hunter kills; once. Names
+         * no enemy; only in a level with a wave that hunts another wave's tag (Rook's bark).
+         */
+        @JsonProperty("first-prey-kill")
+        FIRST_PREY_KILL
     }
 
     /**

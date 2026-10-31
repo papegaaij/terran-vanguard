@@ -34,11 +34,14 @@ final class EscortChecks extends ContentChecks {
                             || event == LevelData.CueEvent.ALLY_LOST
                             || event == LevelData.CueEvent.ALLY_HIT)
                     .orElse(false);
-            // M7 part D: the ally events name a ground ally of the level's allies block too (Level 17's domes).
+            // M7 part D: the ally events name a ground ally of the level's allies block too (Level 17's domes); M10
+            // part
+            // C: or an air ally of its air_allies (Level 37's shuttles).
             if ((allyEvent
                             && escort.isEmpty()
                             && level.convoy().isEmpty()
-                            && level.allies().isEmpty())
+                            && level.allies().isEmpty()
+                            && level.airAllies().isEmpty())
                     || (cue.allies().isPresent()
                             && escort.isEmpty()
                             && level.convoy().isEmpty())) {
@@ -46,7 +49,7 @@ final class EscortChecks extends ContentChecks {
                         level,
                         field,
                         "convoy events and allies ranges need an escort objective or a naval convoy (the ally events: or"
-                                + " ground allies)");
+                                + " ground or air allies)");
             }
             // M5 part G: a defend primary fails at its ally's loss.
             boolean canFail = escort.isPresent()

@@ -81,23 +81,31 @@ final class ScriptRules {
                                                 BossRules.boss(content, boss, difficulty, inLevel.at(level, boss.t())))
                                         .stream())
                         .toList())
-                .objectives(new ObjectiveSpec(
-                        secondary
-                                .map(objective -> LevelRules.secondary(content, level, objective, difficulty))
-                                .orElse(Secondary.NONE),
-                        level.objectives().targets().orElse(List.of()),
-                        // M9 part D (Level 31): a hull escort's unhooked waves by their index in the waves.
-                        level.objectives()
-                                .escort()
-                                .map(escort -> TugRules.unhooked(
-                                        escort(content, escort, difficulty), escort, waves, difficulty)),
-                        level.objectives().defend().map(defend -> PartGRules.defend(content, defend, difficulty)),
-                        level.convoy().map(convoy -> PartERules.convoy(content, level, convoy, difficulty)),
-                        // M7 part D: the ground allies come after (SiegeRules).
-                        Optional.empty(),
-                        LevelRules.tows(level),
-                        PartCRules.holds(level, difficulty),
-                        PartCRules.collapse(level)))
+                // M10 part C (Level 37): and the air allies outside the objectives, lifting in groups (AureliaRules).
+                .objectives(AureliaRules.airAllies(
+                        content,
+                        level,
+                        difficulty,
+                        waves,
+                        new ObjectiveSpec(
+                                secondary
+                                        .map(objective -> LevelRules.secondary(content, level, objective, difficulty))
+                                        .orElse(Secondary.NONE),
+                                level.objectives().targets().orElse(List.of()),
+                                // M9 part D (Level 31): a hull escort's unhooked waves by their index in the waves.
+                                level.objectives()
+                                        .escort()
+                                        .map(escort -> TugRules.unhooked(
+                                                escort(content, escort, difficulty), escort, waves, difficulty)),
+                                level.objectives()
+                                        .defend()
+                                        .map(defend -> PartGRules.defend(content, defend, difficulty)),
+                                level.convoy().map(convoy -> PartERules.convoy(content, level, convoy, difficulty)),
+                                // M7 part D: the ground allies come after (SiegeRules).
+                                Optional.empty(),
+                                LevelRules.tows(level),
+                                PartCRules.holds(level, difficulty),
+                                PartCRules.collapse(level))))
                 // M9 part C (Level 30): a level without a ground layer (`ground: none`): bomb deliveries idle.
                 // M9 part E (Level 32): a forked terrain from the start (the branch waves' check needs its forks).
                 .ground(DeepCoreRules.forkedTerrain(
@@ -252,6 +260,31 @@ final class ScriptRules {
     }
 
     /**
+     * The simulation's spec of ally {@code slug} with the level's armour for it ({@code change}'s, else the ally's
+     * {@code hp}); M10 part C: also a level's air allies' (AureliaRules).
+     */
+    static AllySpec allySpec(Content content, String slug, Optional<LevelData.AllyChange> change) {
+        AlliesData.Ally ally = content.allies().allies().get(slug);
+        if (ally == null) {
+            throw new IllegalArgumentException("no ally '" + slug + "'");
+        }
+        return new AllySpec(
+                slug,
+                SimSpecs.hitbox(ally.size()),
+                SimSpecs.hitbox(ally.hitbox()),
+                change.map(LevelData.AllyChange::hp).orElse(ally.hp()),
+                ally.damagedBy().objectiveAimed(),
+                ally.damagedBy().claws(),
+                ally.smokeBelow(),
+                (ally.headings().count() - 1) / 2 * ally.headings().step(),
+                ally.damagedBy().hitByBullets(),
+                ally.damagedBy().hitByContact(),
+                ally.banks().map(AlliesData.Banks::frames).orElse(0),
+                ally.banks().map(AlliesData.Banks::full).orElse(0.0),
+                ally.glide().orElse(0.0));
+    }
+
+    /**
      * The escort objective's convoy at {@code difficulty}: the ally's spec with the level's HP for it;
      * M5 part D: an air escort's stations, liftoff, climb-out and scripted loss ({@link PartDRules}).
      */
@@ -266,20 +299,7 @@ final class ScriptRules {
                     case MEDIUM -> Optional.empty();
                     case HARD -> escort.hard();
                 };
-        AllySpec spec = new AllySpec(
-                escort.ally(),
-                SimSpecs.hitbox(ally.size()),
-                SimSpecs.hitbox(ally.hitbox()),
-                change.map(LevelData.AllyChange::hp).orElse(ally.hp()),
-                ally.damagedBy().objectiveAimed(),
-                ally.damagedBy().claws(),
-                ally.smokeBelow(),
-                (ally.headings().count() - 1) / 2 * ally.headings().step(),
-                ally.damagedBy().hitByBullets(),
-                ally.damagedBy().hitByContact(),
-                ally.banks().map(AlliesData.Banks::frames).orElse(0),
-                ally.banks().map(AlliesData.Banks::full).orElse(0.0),
-                ally.glide().orElse(0.0));
+        AllySpec spec = allySpec(content, escort.ally(), change);
         if (escort.air()) {
             return ObjectiveSpec.Escort.air(spec, PartDRules.air(escort), escort.credits());
         }
@@ -411,6 +431,9 @@ final class ScriptRules {
                         case FIRST_STRIKE_KILL -> CueTrigger.FIRST_STRIKE_KILL;
                         // M10 part B (Level 36): the secondary objective failed.
                         case SECONDARY_FAILED -> CueTrigger.SECONDARY_FAILED;
+                        // M10 part C (Level 37): the first bounced shot and the first prey a hunter kills.
+                        case FIRST_BOUNCE -> CueTrigger.FIRST_BOUNCE;
+                        case FIRST_PREY_KILL -> CueTrigger.FIRST_PREY_KILL;
                     })
                     .orElse(CueTrigger.TIME);
             // Part G (LevelRules): a boss-destroyed cue's subject is the boss, a timeout cue its own

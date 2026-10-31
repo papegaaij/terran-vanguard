@@ -340,6 +340,14 @@ final class UnitRules {
                         .map(edgeX -> new EnemySpec.SideHover(
                                 edgeX,
                                 movement.hover().flatMap(EnemyData.Hover::exit).isPresent())))
+                // M10 part C (design/enemies/air/mirror-interceptor): a side or rear station, after the hover.
+                .withStation(movement.station()
+                        .map(station -> new EnemySpec.Station(
+                                range(station.side()),
+                                range(station.rear()),
+                                station.strafe(),
+                                station.strafeSpeed(),
+                                station.gap())))
                 .withSweep(sweep(content, enemy, difficulty))
                 .withHardened(enemy.armour().hardened())
                 .withSpawner(spawner)

@@ -3,7 +3,7 @@ title: Data file schemas — enemies and allies
 design: approved
 implementation: in-progress
 art: n/a
-updated: 2026-10-31
+updated: 2026-11-01
 ---
 
 # Data file schemas — enemies and allies
@@ -558,6 +558,14 @@ The schemas of the enemies' stat blocks and boss scripts and of the allies' file
   **`fire_cap`** and **`stagger`** (both or neither: at most `fire_cap` members' volleys within `stagger` s, in its
   `swoop_path`'s `fire_band`; at most its smallest `swarm`; the [Chimera](../../../enemies/air/chimera/README.md)): a
   unit with a `swoop_path` and a `flock` flies its swoop path in every formation but a `swarm`, where it flocks.
+- **M10 part C, Level 37's unit keys** (loaded and checked in step C2 by content's `EnemyData`, `UnitRules`,
+  `JovianChecks`; flown from step C1): the movement's **`station`** (`side` `[min, max]` px in from a side edge, `rear`
+  `[min, max]` px above the bottom edge, `strafe` px along it at `strafe_speed` px/s, `gap` px between hulls on one
+  line; the [Mirror Interceptor](../../../enemies/air/mirror-interceptor/README.md)): a `pincer` or side `single` flies
+  to its side station at its `hover`'s height, a `rear ambush` rises to its rear one, each holds its hover's seconds
+  strafing toward the ship and leaves through its edge (a rear one up through the nearer side edge); only a single
+  `air` unit with a hover's `seconds`, `y` and `edge_x`, no `ambush` path. An ally may list its **`liveries`** (palette
+  variants, its sprites `<sprite>-<livery>`; the evacuation shuttle's `aurelia`), which a level's `air_allies` name.
 - **Allies** (`allies/data.yaml`): one entry per ally
   slug with `name`, `layer`, `size`, `hitbox`, `hp` (medium; the level sets difficulty variants),
   `damaged_by` (`objective_aimed`: only shots the target-the-objective hook aims at it;

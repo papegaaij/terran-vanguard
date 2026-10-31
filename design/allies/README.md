@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../enemies, ../art-direction, ../ui/hud]
-updated: 2026-10-27
+updated: 2026-11-01
 ---
 
 # Allies
@@ -78,7 +78,8 @@ table is hand-written), with the air escort's hits, banking and glide (M5 part D
 | Behaviour | Holds its **station** in the level's formation band and drifts slowly round it on an authored **lane sway** (deterministic, on the level clock; D1 = a); never reacts to threats or steers into the player; the units' hit boxes never overlap. A level may lift the shuttles off pads (rising from the ground layer's scale to the air scale) and climb them out off the top edge. Below 50 % it trails smoke and its armour bar in the tracker turns amber |
 | Destroyed | Loses power and glides down into the `far` layer over about 3 s, scaled down, darkened and trailing smoke; no debris on the play plane (a presentation effect: the simulation removes it at once) |
 | HUD | The two-line [objective tracker](../ui/hud/README.md#left-panel-mission): the count of saveable shuttles over one small armour bar per shuttle (D3 = a) |
-| Levels | [L10 Evacuation Corridor](../campaign/act-2-homefront/level-10-evacuation-corridor/README.md) (five shuttles, *Lifeline One–Five*; stations, liftoff, scripted loss and fail rule there) |
+| Liveries | `aurelia` (M10 part C): Aurelia's civil livery, white with a gold band and the city's crest, its sprites `evacuation-shuttle-aurelia*`; a level's air allies name it (`livery`) |
+| Levels | [L10 Evacuation Corridor](../campaign/act-2-homefront/level-10-evacuation-corridor/README.md) (five shuttles, *Lifeline One–Five*; stations, liftoff, scripted loss and fail rule there); [L37 Fall of Aurelia](../campaign/act-6-jovian-storm/level-37-fall-of-aurelia/README.md) (six in Aurelia's livery, *Halcyon One–Six*, air allies outside the objectives lifting in three pairs, the `saved` secondary) |
 
 ### Convoy cargo ship
 
@@ -171,6 +172,8 @@ Prompts and briefs: [concept/prompts.md](concept/prompts.md). Generator:
 | [concept/rejected/convoy-ships-r33-b.png](concept/rejected/convoy-ships-r33-b.png), [.gif](concept/rejected/convoy-ships-r33-b.gif) | Convoy ship pair b, "Reactor run" (`tools/art/convoy_ships.py --variant b`, production quality): a rust-red heavy-lift carrier with its bridge forward and reactor cargo, and a CDF stealth trimaran frigate; the same sets; review files only | rejected |
 | [concept/rejected/relay-r35-a.png](concept/rejected/relay-r35-a.png), [.gif](concept/rejected/relay-r35-a.gif) | Nansen Relay a "ice station" (`tools/art/relay.py`, production quality, M5 part G, round 35): 96×96 intact / damaged / critical / destroyed, the grid-online light sequence, fire, smoke column, HUD pip; the loop: hits, smoke, fire, power-down, grid online | rejected |
 | [concept/relay-r35-b.png](concept/relay-r35-b.png), [.gif](concept/relay-r35-b.gif) | Nansen Relay b "grid node" (hardened blockhouse, three phased-array faces): as a | chosen |
+| [concept/aurelia-shuttle-final-r75-a.png](concept/aurelia-shuttle-final-r75-a.png), [.gif](concept/aurelia-shuttle-final-r75-a.gif) | The evacuation shuttle in Aurelia's civil livery a (Level 37's shuttles; `tools/art/aurelia_units.py shuttle`, M10 part C, step ART-C1, round 75 QC-3 a): Level 10's model and sets frame for frame (`evacuation-shuttle-aurelia*`: banks, damaged, liftoff, glide; Level 10's flames, flare, pip and pivots), white with a gold band in place of the evac chevron and the city's crest (a gold ring round a dark field with a small gold dome) in place of the CDF spine stripe; on the bright and the burnt deck beside Level 10's scheme, a Talon and a Gilded Gunship, greyscale; the loop: a pair lifting off its pads, holding its stations on the sway and climbing out | proposed (round 75) |
+| [concept/aurelia-shuttle-r75-b.png](concept/aurelia-shuttle-r75-b.png) | Aurelia's livery b (proposal sheet, production quality): a gold hull with white trim (the band and the crest's ring white); the same rows | proposed (round 75) |
 
 ## Implementation
 

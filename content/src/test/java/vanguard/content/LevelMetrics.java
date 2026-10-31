@@ -455,6 +455,48 @@ final class LevelMetrics {
     }
 
     /**
+     * M10 part C (design/campaign Level 37, Waves: at most 4 Mirror Interceptors on the screen and 2 on one side, at most
+     * 6 Graft Turrets): the most mirrored units (those whose hulls are on the left or right half of the field) and
+     * regrowing units on the screen at once, the level's script flown unharmed as {@link #stacking}.
+     */
+    record Most(int mirrors, int mirrorsOneSide, int regrowing) {}
+
+    /** {@link Most}'s measure over {@code seconds} (or to the level's end). */
+    static Most mostOnScreen(Content content, String key, Difficulty difficulty, Loadout loadout, double seconds) {
+        Sortie sortie = new Sortie(
+                SEED,
+                loadout,
+                SimSpecs.level(content, key, difficulty),
+                SimSpecs.rules(content, key, difficulty).withInvulnerableShip(),
+                loadout.plating().maxArmour());
+        int mirrors = 0;
+        int side = 0;
+        int regrowing = 0;
+        int steps = SimStep.ticks(seconds);
+        for (int step = 1; step <= steps && !sortie.complete(); step++) {
+            sortie.step(MovePlanner.steer(sortie.ship().x(), sortie.ship().y(), PlayField.WIDTH / 2, 80));
+            int now = 0;
+            int left = 0;
+            int grown = 0;
+            for (int i = 0; i < sortie.enemyCount(); i++) {
+                Enemy enemy = sortie.enemy(i);
+                if (!onScreen(enemy.renderX(1), enemy.renderY(1), enemy.spec().hitbox())) {
+                    continue;
+                }
+                if (enemy.spec().mirror().isPresent()) {
+                    now++;
+                    left += enemy.renderX(1) < PlayField.WIDTH / 2.0 ? 1 : 0;
+                }
+                grown += enemy.spec().regrowth().isPresent() ? 1 : 0;
+            }
+            mirrors = Math.max(mirrors, now);
+            side = Math.max(side, Math.max(left, now - left));
+            regrowing = Math.max(regrowing, grown);
+        }
+        return new Most(mirrors, side, regrowing);
+    }
+
+    /**
      * M7 part G (step SW): a pursuit swarm's life on the attempt that completes the level (Level 20): the seconds a
      * pursuit flies, the mean number of its flock's members (units with a flock) on the screen over them, its lunges
      * (each tell counts once) and those of them with motes on the screen at the tell's start (the leader point lunges

@@ -89,6 +89,14 @@ final class LevelRules {
         if (allies.isPresent()) {
             return allies.get();
         }
+        if (secondary.saved().isPresent()) {
+            // M10 part C (design/campaign Level 37, The shuttles): enough of the air allies home (5 of 6, easy 4, hard
+            // 6).
+            return Secondary.saved(
+                    secondary.savedTarget(difficulty),
+                    secondary.credits(),
+                    secondary.label().orElseThrow());
+        }
         if (secondary.spared().isPresent()) {
             // M9 part B (design/campaign Level 29, Hold fire): none of the neutral craft destroyed.
             return Secondary.spared(
@@ -139,22 +147,24 @@ final class LevelRules {
                 throw new IllegalArgumentException(partsOf + ": no boss phase '" + before + "'");
             }
         }
-        return new Secondary(
-                        secondary.killRatio().orElse(0.0),
-                        secondary.credits(),
-                        secondary.groups().orElse(List.of()),
-                        secondary.escapes().orElse(""),
-                        secondary.killAll().orElse(List.of()),
-                        secondary.label().orElse(""),
-                        partsOf,
-                        parts,
-                        beforePhase,
-                        secondary.tag().orElse(""))
+        return Secondary.builder()
+                .killRatio(secondary.killRatio().orElse(0.0))
+                .credits(secondary.credits())
+                .groups(secondary.groups().orElse(List.of()))
+                .escapes(secondary.escapes().orElse(""))
+                .killAll(secondary.killAll().orElse(List.of()))
+                .label(secondary.label().orElse(""))
+                .partsOf(partsOf)
+                .parts(parts)
+                .beforePhase(beforePhase)
+                .tag(secondary.tag().orElse(""))
                 // M7 part F (Level 19's "12 of 14"): how many of an escapes objective's units may get away (M8 part B:
-                // by difficulty, Level 22's rigs).
-                .withEscapesAllowed(secondary.escapesAllowed(difficulty))
+                // by
+                // difficulty, Level 22's rigs).
+                .escapesAllowed(secondary.escapesAllowed(difficulty))
                 // Step SIM-K (Level 21's "the boss and its debris not counted"): a kill ratio without its bosses.
-                .withBossesCounted(secondary.bossesCounted());
+                .countsBosses(secondary.bossesCounted())
+                .build();
     }
 
     /** What a radio cue's {@code requires} or {@code requires_not} names, as the simulation's fitted bits (0 for none). */
