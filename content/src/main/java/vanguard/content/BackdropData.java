@@ -134,15 +134,22 @@ public record BackdropData(
      * M10 part A (design/world/jovian, foreground cloud banks): a bank {@code w} × {@code h} px whose centre passes the
      * middle of the screen at {@code t} s, {@code x} px from the left, drifting down with the {@code high-air} layer's
      * scroll factor; drawn over the {@code air} bodies (presentation: the simulation never reads it). {@code skip}: the
-     * difficulties it is left out on (easy's smaller cover).
+     * difficulties it is left out on (easy's smaller cover). M10 part B (Level 36): {@code piece}, the backdrop piece
+     * drawn as the bank (ART-B's {@code bank-a..f}, a {@code high-air} piece of exactly {@code w} × {@code h} px); a
+     * plain rectangle of the level's bank look when not given.
      */
-    public record Bank(double t, double x, double w, double h, Optional<List<String>> skip) {
+    public record Bank(double t, double x, double w, double h, Optional<List<String>> skip, Optional<String> piece) {
         public Bank {
             Check.notNegative("t", t);
             Check.positive("w", w);
             Check.positive("h", h);
             skip = skip.map(List::copyOf);
             skip.ifPresent(names -> names.forEach(Difficulty::of));
+        }
+
+        /** A bank without a piece (part A's fixtures). */
+        public Bank(double t, double x, double w, double h, Optional<List<String>> skip) {
+            this(t, x, w, h, skip, Optional.empty());
         }
 
         /** Whether it is drawn on {@code difficulty}. */

@@ -97,3 +97,6 @@ does, drifting down with the `high-air` scroll factor. `content` (`JovianHazardC
 0.05 s: at most the [Jovian](../../../world/jovian/README.md#hazards--set-pieces) `banks.cover` share of the play
 field's area under banks at a time (their union; `easy_cover` on easy) and never a bank over the ship's band (the
 bottom `banks.band` px) for more than `banks.band_seconds` s at a time. Presentation only: the simulation never reads it.
+M10 part B (step B2, Level 36): a bank's optional **`piece`** names the `high-air` piece drawn as the bank (ART-B's
+`bank-a`…`bank-f`); its `size` must be the bank's `w` × `h`, so the cover and band checks measure what is drawn
+(`JovianHazardChecks`).

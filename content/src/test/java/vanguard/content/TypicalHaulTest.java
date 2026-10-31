@@ -158,7 +158,10 @@ class TypicalHaulTest {
                         // in a typical fight (the core tuned to 14,000), the lifeboat's crate and the secondary at the
                         // scale 0.59 (levelReport 10,717; step H2's 10,467 counted 52 Darts)
                         // Step BOSS70: the Sovereign's typical Darts 84 → 19 (the playbook's surges).
-                        Map.entry(35, 10_197)),
+                        Map.entry(35, 10_197),
+                        // M10 part B (step B2): Level 36's kills, leaders, the harvesters (not enemies), the pod's
+                        // crate and the secondary at the README's scale 0.31 (levelReport: typical +0.2 %)
+                        Map.entry(36, 12_737)),
                 perfect);
     }
 

@@ -835,6 +835,13 @@ final class LevelChecks extends ContentChecks {
                 problem(level, field, "first-surfacing in a level without a burrowing enemy");
             } else if (event == LevelData.CueEvent.FIRST_RING && !sings) {
                 problem(level, field, "first-ring in a level without an aura enemy");
+            } else if (event == LevelData.CueEvent.FIRST_STRIKE_KILL
+                    && level.weather()
+                            .flatMap(LevelData.Weather::strikes)
+                            .orElse(List.of())
+                            .isEmpty()) {
+                // M10 part B (Level 36): the first strike kill needs told strikes.
+                problem(level, field, "first-strike-kill in a level without lightning strikes (weather.strikes)");
             } else if (event == LevelData.CueEvent.FIRST_GEYSER && level.vents().isEmpty()) {
                 problem(level, field, "first-geyser in a level without vents");
             } else if (event == LevelData.CueEvent.TARGET_DESTROYED

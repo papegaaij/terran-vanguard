@@ -432,8 +432,8 @@ class CampaignRouteTest {
      * M9 part B: Level 29 ends no act; M9 part C (step C2): Level 30 is built, so its win leads to Level 30's briefing;
      * M9 part D (step D3): Level 31 is built too; M9 part E (step E3): so is Level 32; M9 part F (step F3): so is Level
      * 33; M9 part G (step G3): so is Level 34; M9 part H (step H3): Level 35 is built and ends Act 5: after Level 34 its
-     * briefing and launch, after Level 35 Act 5's outro (four pages), which ends the release (Act 5's {@code next_act},
-     * Act 6 at Callisto; Level 36 is not built); no other act names a next act.
+     * briefing and launch, after Level 35 Act 5's outro (four pages). M10 part B (step B2): Level 36 is built, so the
+     * outro leads on to Act 6 and the release ends after Level 36; only Act 6 names a next act (Act 7).
      */
     @Test
     void afterLevel34ComesLevel35AndTheReleaseEndsAfterAct5sOutro() {
@@ -462,16 +462,23 @@ class CampaignRouteTest {
         assertEquals("act-5-the-belt", outro.script().actDirectory());
         assertEquals(35, outro.script().last());
         assertEquals(4, outro.script().pages().size());
-        assertTrue(
-                CampaignRoute.releaseEnd(content, campaign), "Level 36 is not built: Act 5's outro ends the release");
-        assertEquals(Optional.empty(), CampaignRoute.launch(content, campaign), "Level 36 is not built");
+        // M10 part B (step B2): Level 36 is built, so Act 5's outro leads on to Act 6; the branch's release ends after
+        // Level 36 (Level 37 is not built), and only Act 6 names a next act (Act 7).
+        assertFalse(CampaignRoute.releaseEnd(content, campaign), "Level 36 is built: Act 5's outro leads on to Act 6");
         assertEquals(
-                List.of("act-5-the-belt"),
+                Optional.of("act-6-jovian-storm/level-36-cloud-divers"),
+                CampaignRoute.launch(content, campaign),
+                "Level 36 is built");
+        campaign.complete(CampaignTest.won("A", 80, 1000), 60);
+        assertTrue(CampaignRoute.actEnd(content, campaign).isEmpty(), "Level 36 ends no act (Act 6 runs to Level 42)");
+        assertTrue(CampaignRoute.releaseEnd(content, campaign), "Level 37 is not built: the release ends after 36");
+        assertEquals(
+                List.of("act-6-jovian-storm"),
                 content.acts().entrySet().stream()
                         .filter(act -> act.getValue().nextAct().isPresent())
                         .map(java.util.Map.Entry::getKey)
                         .toList(),
-                "only Act 5 names a next act: Act 4's moved off with the release's end");
+                "only Act 6 names a next act: Act 5's moved on with the release's end");
     }
 
     /** M8 part B: a save at the Level 22 hangar that has seen Act 4's intro opens Level 22's own briefing. */

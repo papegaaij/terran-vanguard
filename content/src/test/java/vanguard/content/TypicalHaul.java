@@ -13,6 +13,7 @@ import tools.jackson.databind.JsonNode;
 import tools.jackson.dataformat.yaml.YAMLMapper;
 import vanguard.sim.Armament;
 import vanguard.sim.BossSpec;
+import vanguard.sim.CreditSource;
 import vanguard.sim.EnemySpec;
 import vanguard.sim.Layer;
 import vanguard.sim.LevelScript;
@@ -236,7 +237,10 @@ record TypicalHaul(int perfect, double typical, double budget) {
     }
 
     private static double rate(EconomyData.TypicalPlayer rate, EnemySpec enemy) {
-        return enemy.layer() == Layer.GROUND ? rate.groundTargets() : rate.airKills();
+        // M10 part B (Level 36's harvesters): a unit's haul names the share its bounty is paid with.
+        return enemy.bountySource(enemy.layer() == Layer.GROUND) == CreditSource.GROUND_TARGETS
+                ? rate.groundTargets()
+                : rate.airKills();
     }
 
     private static int credits(PlayerData.Credits salvage, Optional<PickupType> drop) {

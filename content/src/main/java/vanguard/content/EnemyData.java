@@ -52,6 +52,12 @@ import java.util.Optional;
  *     it ({@link Dome}); none without
  * @param spoofable M10 part A (design/player/systems, the IFF spoofer): {@code spoofable: true}, its aimed volleys and
  *     told attacks come late while the ship carries the spoofer; false when not given
+ * @param counted M10 part B (design/campaign Level 36, the harvesters): {@code counted: false}, a hostile craft that is
+ *     not counted as an enemy (density, the floor, kill ratios) but picked, hit and paid like one ({@link #isCounted});
+ *     true when not given
+ * @param haul M10 part B (Level 36, the harvesters' 30 credits "with the ground targets' share"): the credit source its
+ *     bounty is paid from, {@code ground-targets} or {@code kills}; the built rule when not given (a ground unit's as a
+ *     ground target's, the others' as kills)
  */
 public record EnemyData(
         String name,
@@ -99,7 +105,9 @@ public record EnemyData(
         Optional<Regeneration> regeneration,
         Optional<Regrowth> regrowth,
         Optional<Dome> dome,
-        Optional<Boolean> spoofable)
+        Optional<Boolean> spoofable,
+        Optional<Boolean> counted,
+        Optional<String> haul)
         implements EnemyMovementData,
                 EnemyAttackData,
                 EnemyBossData,
@@ -119,6 +127,21 @@ public record EnemyData(
         // M10 part A (design/enemies, Reflect): a unit carries a mirror or a hex shield, never both.
         Check.that(mirror.isEmpty() || shield.isEmpty(), "a unit carries a mirror or a hex shield, never both");
         Check.that(regrowth.isEmpty() || dome.isEmpty(), "a pylon (dome) does not regrow");
+        haul.ifPresent(source ->
+                Check.that(HAUL_SOURCES.contains(source), "haul: ground-targets or kills, was '" + source + "'"));
+        // M10 part B: an uncounted craft is a hostile one; a neutral craft is never counted anyway.
+        Check.that(counted.orElse(true) || !neutral.orElse(false), "a neutral craft needs no counted: false");
+    }
+
+    /** M10 part B: the {@code haul} sources a bounty may be paid from. */
+    static final List<String> HAUL_SOURCES = List.of("ground-targets", "kills");
+
+    /**
+     * M10 part B (design/campaign Level 36, the harvesters): whether it counts as an enemy ({@code counted}, true when not
+     * given; a neutral craft never does, {@link #isNeutral}).
+     */
+    public boolean isCounted() {
+        return counted.orElse(true);
     }
 
     /** M10 part A (design/player/systems, the IFF spoofer): whether the spoofer fools it ({@code spoofable: true}). */
@@ -218,7 +241,9 @@ public record EnemyData(
                 regeneration,
                 regrowth,
                 dome,
-                spoofable);
+                spoofable,
+                counted,
+                haul);
     }
 
     /**
@@ -351,7 +376,9 @@ public record EnemyData(
                 regeneration,
                 regrowth,
                 dome,
-                spoofable);
+                spoofable,
+                counted,
+                haul);
     }
 
     /** M7 part H: its eruption on {@code difficulty}: the boss script's with the difficulty's marker time. */
@@ -497,7 +524,9 @@ public record EnemyData(
                 regeneration,
                 regrowth,
                 dome,
-                spoofable);
+                spoofable,
+                counted,
+                haul);
     }
 
     /** M8 part F: its lunge on {@code difficulty}: the stat block's with the difficulty's trigger distance. */

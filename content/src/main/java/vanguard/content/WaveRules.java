@@ -72,12 +72,18 @@ final class WaveRules {
                     content, group.enemy(), difficulty, Optional.ofNullable(enemyChanges.get(group.enemy())), inLevel);
             // M7 part C: a crawl wave's chain crawls its ground path (the Threadcrawler).
             // M9 part F: a prey wing's hold, a hunting stream's hunters (Level 33).
-            EnemySpec unit = PartFRules.preyRole(
-                    wave,
-                    wave.crawl()
-                            .map(path ->
-                                    TerrainRules.crawl(content, content.enemy(group.enemy()), difficulty, mapped, path))
-                            .orElse(mapped));
+            // M10 part B: a swarm's swooping unit flies its flock under its fire cap (the Chimera, CloudDiverRules).
+            EnemySpec unit = CloudDiverRules.swarmRole(
+                    content,
+                    group.formation(),
+                    group.enemy(),
+                    difficulty,
+                    PartFRules.preyRole(
+                            wave,
+                            wave.crawl()
+                                    .map(path -> TerrainRules.crawl(
+                                            content, content.enemy(group.enemy()), difficulty, mapped, path))
+                                    .orElse(mapped)));
             WaveSpec spec = PartGRules.lanesAndPairs(
                     wave,
                     change,

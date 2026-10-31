@@ -1,0 +1,45 @@
+# Helium-3 harvester stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/schemas-units/README.md
+# M10 part B, step B2 (Level 36, The harvesters): the level's helium-3 harvesters (README Objective, approved in round
+# 72) as a unit data file (gap check m10b-gaps.md §4, as Level 29's wavering Stormhawk). New in it (flown from step
+# B1): `counted: false` (a hostile craft not counted as an enemy: density, the floor, kill ratios), `haul:
+# ground-targets` (its credits with the ground targets' share of the typical haul) and the drift's sideways `vx` with
+# `mirrored` (a drifting carrier: a pair's hulls mirrored, its escorts circling the pair's midpoint). A `medium` unit
+# at its first level: no act or beam-era factor, no shield.
+# Step B2's drift (pending the user's review in round 74, QB-5): the README's 30 px/s sideways toward each other
+# crosses the pair's hulls at ≈ 2.7 s (160 px apart); apart they leave by the side edges at ≈ 4 s. The nearest variant
+# that keeps both rules ("never over the other's hull", "escapes at the bottom edge") is 8 px/s apart: the hulls end
+# ≈ 100 px further out (x ≈ 61 and 419 at the bottom edge), never crossing, on the screen to the bottom edge.
+name: Helium-3 Harvester
+faction: Jovian Ascendancy
+layer: low-air
+tier: medium
+size: [96, 56]    # sprite px at low-air's scale
+hitbox: [72, 40]
+parts: single
+orientation: fixed   # faces down; a pair's hulls drawn mirrored (the `harvester` and `harvester-left` frames)
+hp: 160           # a level object: no act or beam-era factor, no shield; ≈ 1.1 s under the reference of 144
+armour: none
+speed: 50         # px/s down the screen (it flies with the band's wind, slower than the scroll)
+counted: false    # not counted as an enemy (density, the floor, kill ratios); picked, hit and paid like one
+haul: ground-targets   # its credits with the ground targets' share of the typical haul (slow and in plain sight)
+movement:
+  drift: {speed: 50, vx: -8, mirrored: true}   # px/s down; px/s sideways, the pair's two hulls mirrored (negative: apart)
+attacks: []
+formations:
+  - {name: carrier + escorts, size: [2, 2]}   # a pair, its Talon escorts in `orbit` round the pair's middle
+weak_points: []
+drops: []
+traits: [homing]
+bounty: 30
+first_level: 36
+notes:
+  orientation: (faces down; a pair's two hulls drawn mirrored)
+  armour: 'none, no shield: a level object, its HP {hp} flown with no act or beam-era factor (≈ 1.1 s under the reference of 144)'
+  speed: down the screen (it flies with the band's wind, slower than the scroll)
+  movement: 'a pair enters at the top edge 160 px apart and skims **down the screen at {speed} px/s** on a shallow diagonal (8 px/s sideways: the pair''s two hulls mirrored, drifting apart), ≈ 12 s on the screen, and escapes at the bottom edge; never over the other''s hull'
+  attack: '`none`: never hurts anything (no fire, no contact)'
+  formations: (each pair's two [Talons](../talon/README.md) fly `orbit` at 90 px round the pair's middle and leave on their own swoop when both harvesters are gone)
+  bounty: '; not counted as an enemy (density, the floor, kill ratios), counted with the ground targets'' share in the typical haul'
+  death: 'the hull breaks in two and falls into the band, the plume flaring once along its length (a smooth glow, no debris on the play plane); a `medium` explosion sound'
+  used_in: L36 only (the harvester fields, the secondary)
+  difficulty: 'none of its own: easy 5 of 8 and hard 7 of 8 are the level''s secondary; HP by the global multipliers'

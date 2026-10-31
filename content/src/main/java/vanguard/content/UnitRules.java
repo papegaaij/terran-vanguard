@@ -44,6 +44,35 @@ final class UnitRules {
     }
 
     /**
+     * A stat block's flock for the simulation: its weights, speeds and turn rate; M8 part C: the ribbon's sway and the
+     * ram (the hook's share; a spawning reef's fry draw it {@code ramAfter} s after they came onto the field); M10 part
+     * B: no fire cap (a firing swarm's is its wave's, {@link CloudDiverRules#swarmRole}).
+     */
+    static EnemySpec.FlockSpec flock(EnemyData.Flock flock, Optional<EnemyData.Hook> hook, Optional<Double> ramAfter) {
+        return new EnemySpec.FlockSpec(
+                        flock.separation(),
+                        flock.radius(),
+                        flock.alignment(),
+                        flock.cohesion(),
+                        flock.leader(),
+                        flock.speed(),
+                        flock.diveSpeed(),
+                        Math.toRadians(flock.turnRate()),
+                        flock.max())
+                .withRibbon(
+                        flock.sway().map(sway -> new EnemySpec.Sine(sway.amplitude(), 1 / sway.frequency())),
+                        flock.ram()
+                                .map(ram -> new EnemySpec.Ram(
+                                        ramAfter.orElse(ram.after()),
+                                        hook.flatMap(EnemyData.Hook::ram)
+                                                .flatMap(EnemyData.RamChange::share)
+                                                .orElse(ram.share()),
+                                        ram.tell(),
+                                        ram.delay(),
+                                        ram.speed())));
+    }
+
+    /**
      * The act HP factor of a unit in Level {@code level} of Act {@code act} (design/enemies,
      * Balancing basis; user decision D5 = c of M5 part A): from Act 2 on, a unit of tier {@code
      * medium} or larger that returns from an earlier level (its {@code first_level}) gets the
@@ -324,29 +353,12 @@ final class UnitRules {
                                         .map(EnemyData.Straight::speed)
                                         .orElseThrow(() -> new IllegalArgumentException(
                                                 enemy.name() + ": an ambush leaves at its straight speed")))))
-                .withFlock(movement.flock().map(flock -> new EnemySpec.FlockSpec(
-                                flock.separation(),
-                                flock.radius(),
-                                flock.alignment(),
-                                flock.cohesion(),
-                                flock.leader(),
-                                flock.speed(),
-                                flock.diveSpeed(),
-                                Math.toRadians(flock.turnRate()),
-                                flock.max())
-                        // M8 part C (design/enemies/naval/glassfin): the ribbon's sway and the ram, the
-                        // difficulty's share.
-                        .withRibbon(
-                                flock.sway().map(sway -> new EnemySpec.Sine(sway.amplitude(), 1 / sway.frequency())),
-                                flock.ram()
-                                        .map(ram -> new EnemySpec.Ram(
-                                                ramAfter.orElse(ram.after()),
-                                                hook.flatMap(EnemyData.Hook::ram)
-                                                        .flatMap(EnemyData.RamChange::share)
-                                                        .orElse(ram.share()),
-                                                ram.tell(),
-                                                ram.delay(),
-                                                ram.speed())))))
+                // M10 part B (design/enemies/air/chimera): a unit that swoops and flocks (its swoop path and its
+                // flock) flies its swoop path; a swarm wave gives it its flock (CloudDiverRules.swarmRole).
+                .withFlock(
+                        movement.swoopPath().isPresent()
+                                ? Optional.empty()
+                                : movement.flock().map(flock -> flock(flock, hook, ramAfter)))
                 // M5 part E: surfacing and submerging, a proximity ring and a raft's drift.
                 .withSubmerge(enemy.submerge()
                         .map(submerge -> new EnemySpec.Submerge(
@@ -378,65 +390,70 @@ final class UnitRules {
         // M9 part E: a hardened collar, a ground sweep's full turns, a walker's topple and its pod (DeepCoreRules).
         // M10 part A: a mirror, regeneration, regrowth, a dome, the spoofer's flag and a death-burst ring
         // (JovianRules).
-        return JovianRules.unit(
-                content,
+        // M10 part B: an uncounted craft, its haul and a carrier's sideways drift (CloudDiverRules).
+        return CloudDiverRules.unit(
                 enemy,
-                difficulty,
-                inLevel,
-                DeepCoreRules.unit(
+                JovianRules.unit(
                         content,
                         enemy,
                         difficulty,
-                        actHp,
-                        TugRules.unit(
+                        inLevel,
+                        DeepCoreRules.unit(
                                 content,
                                 enemy,
                                 difficulty,
-                                MinefieldRules.unit(
+                                actHp,
+                                TugRules.unit(
                                         content,
                                         enemy,
                                         difficulty,
-                                        inLevel,
-                                        BeltRules.unit(
+                                        MinefieldRules.unit(
                                                 content,
                                                 enemy,
                                                 difficulty,
                                                 inLevel,
-                                                DarkRules.unit(
+                                                BeltRules.unit(
                                                         content,
                                                         enemy,
                                                         difficulty,
-                                                        TrenchRules.unit(
+                                                        inLevel,
+                                                        DarkRules.unit(
                                                                 content,
                                                                 enemy,
                                                                 difficulty,
-                                                                AbyssRules.unit(
+                                                                TrenchRules.unit(
+                                                                        content,
                                                                         enemy,
-                                                                        FoundryRules.unit(
+                                                                        difficulty,
+                                                                        AbyssRules.unit(
                                                                                 enemy,
-                                                                                difficulty,
-                                                                                StormRules.unit(
+                                                                                FoundryRules.unit(
                                                                                         enemy,
                                                                                         difficulty,
-                                                                                        SiegeRules.unit(
-                                                                                                content,
+                                                                                        StormRules.unit(
                                                                                                 enemy,
                                                                                                 difficulty,
-                                                                                                actHp,
-                                                                                                TerrainRules.anchor(
+                                                                                                SiegeRules.unit(
                                                                                                         content,
                                                                                                         enemy,
                                                                                                         difficulty,
-                                                                                                        MarsRules.kite(
-                                                                                                                enemy,
-                                                                                                                hook,
-                                                                                                                MarsRules
-                                                                                                                        .burrower(
-                                                                                                                                content,
-                                                                                                                                enemy,
-                                                                                                                                hook,
-                                                                                                                                difficulty,
-                                                                                                                                machine))))))))))))));
+                                                                                                        actHp,
+                                                                                                        TerrainRules
+                                                                                                                .anchor(
+                                                                                                                        content,
+                                                                                                                        enemy,
+                                                                                                                        difficulty,
+                                                                                                                        MarsRules
+                                                                                                                                .kite(
+                                                                                                                                        enemy,
+                                                                                                                                        hook,
+                                                                                                                                        MarsRules
+                                                                                                                                                .burrower(
+                                                                                                                                                        content,
+                                                                                                                                                        enemy,
+                                                                                                                                                        hook,
+                                                                                                                                                        difficulty,
+                                                                                                                                                        machine)))))))))))))));
     }
 
     /** M5 part E: whether {@code attack} is a proximity ring (a {@code ring} fired within a reach, the Driftjelly's). */

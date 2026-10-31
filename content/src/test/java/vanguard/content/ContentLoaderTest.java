@@ -33,6 +33,7 @@ class ContentLoaderTest {
                         "brood-pod",
                         "burrower",
                         "buzzsaw-drone",
+                        "chimera",
                         "choir-herald",
                         "clamp-gun",
                         "coilwyrm",
@@ -45,12 +46,14 @@ class ContentLoaderTest {
                         "dust-devil",
                         "dust-kite",
                         "eel-swarm",
+                        "fleet-stormhawk",
                         "ghost-drone",
                         "gilded-gunship",
                         "glassfin",
                         "glow-angler",
                         "gorgon-frigate",
                         "harbour-kraken",
+                        "harvester",
                         "hive-node",
                         "hornet",
                         "iron-sovereign",
@@ -196,7 +199,7 @@ class ContentLoaderTest {
                 LEVEL_01,
                 text -> text.replaceFirst("enemy: needler", "enemy: neddler"),
                 "design/" + LEVEL_01
-                        + ": waves[2].enemy: unknown enemy 'neddler' (known: abyss-ray, abyssal-maw, asteroid-mite, barbfin, brood-carrier, brood-pod, burrower, buzzsaw-drone, choir-herald, clamp-gun, coilwyrm, creeper, dart-drone, depth-hunter, driftjelly, drill-rig, dust-colossus, dust-devil, dust-kite, eel-swarm, ghost-drone, gilded-gunship, glassfin, glow-angler, gorgon-frigate, harbour-kraken, hive-node, hornet, iron-sovereign, lamprey, leviathan, mantis, minelayer, mote-swarm, needler, polyp-mortar, rail-bunker, rail-serpent, ravager, reef-spitter, relay-beacon, revenant-walker, sam-nest, scuttler, sentinel-tower, shard-drone, shellback, siege-spire, siphon-pump, siren, skimmer, skitter, spawning-reef, spine-turret, spiral-nautilus, spore-bomber, stinger, strider, talon, tendril-anchor, threadcrawler, void-leech, warden-tank, wavering-stormhawk, whirl-seed, wraith)");
+                        + ": waves[2].enemy: unknown enemy 'neddler' (known: abyss-ray, abyssal-maw, asteroid-mite, barbfin, brood-carrier, brood-pod, burrower, buzzsaw-drone, chimera, choir-herald, clamp-gun, coilwyrm, creeper, dart-drone, depth-hunter, driftjelly, drill-rig, dust-colossus, dust-devil, dust-kite, eel-swarm, fleet-stormhawk, ghost-drone, gilded-gunship, glassfin, glow-angler, gorgon-frigate, harbour-kraken, harvester, hive-node, hornet, iron-sovereign, lamprey, leviathan, mantis, minelayer, mote-swarm, needler, polyp-mortar, rail-bunker, rail-serpent, ravager, reef-spitter, relay-beacon, revenant-walker, sam-nest, scuttler, sentinel-tower, shard-drone, shellback, siege-spire, siphon-pump, siren, skimmer, skitter, spawning-reef, spine-turret, spiral-nautilus, spore-bomber, stinger, strider, talon, tendril-anchor, threadcrawler, void-leech, warden-tank, wavering-stormhawk, whirl-seed, wraith)");
     }
 
     @Test

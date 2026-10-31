@@ -4,6 +4,8 @@
 # part H, step H2: the outro after Level 35 (the four approved pages, the text unchanged, each voiced and with its image:
 # tools/art/briefing_images.py, step ART-H2) and the `next_act` (Act 6 on the release's end, which moves here from the
 # last act built before); page 3's Vorne wears his own `smug` expression (part H; it was drawn neutral until then).
+# M10 part B, step B2: its `next_act` (ACT VI · JOVIAN STORM, CALLISTO) removed: Act 6's levels play, and Act 6 names
+# Act 7 on the release's end.
 # Schema: ../../tech/architecture/schemas-levels/README.md
 levels: [29, 35]
 
@@ -25,5 +27,3 @@ outro:  # after the Level 35 debrief with the act summary (Level 21's order), ea
     - {speaker: Varga, expression: grim, image: act-5-outro-face, line: "The nav core says Callisto, and so did he. I saw his face on that feed, Commander. He looks forty. He was sixty when I left Helix. The cures the Bellwether's people told us about: he took them himself.", notes: {image: "Varga's screen: the recruitment feed paused on Vorne's face beside a 2179 Helix review photo of him at sixty, the nav core's route plot to Callisto in a strip below"}}
     - {speaker: Rook, image: act-5-outro-ember, line: "Back in the slot, Commander, and staying there. Wherever we fly next, I'll keep one eye on what's below us. Learned that one the hard way.", notes: {image: "Rook's Ember back on its rail on the transport's flight deck, the Helix clamps' scorch marks on its hull, Rook on the ladder with his helmet under his arm"}}
     - {speaker: Okafor, expression: fierce, image: act-5-outro-jupiter, line: "Vorne made his offer on an open channel. Here is our answer, on every channel: we are coming to Callisto. Rest, refit, rearm. Aegis Actual out.", notes: {image: "The transport's forward view, Jupiter ahead with Callisto a dark cratered disc beside it, every rail on the flight deck filled"}}
-
-next_act: {act: ACT VI, name: JOVIAN STORM, setting: CALLISTO}   # the release ends after this act: "ACT VI - JOVIAN STORM. CALLISTO. COMING SOON." on the release's end, "ACT VI - JOVIAN STORM: COMING SOON" in the hangar before L36

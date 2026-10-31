@@ -120,9 +120,10 @@ class ActPlaythroughTest {
                 }
                 visits.clear();
                 if (level == LAST) {
-                    // M9 part H (step H3): Act 5's outro ends the release (Level 36 is not built).
-                    assertTrue(CampaignRoute.releaseEnd(CONTENT, campaign), "Act 5's outro ends the release");
-                    assertTrue(CampaignRoute.launch(CONTENT, campaign).isEmpty(), "Level 36 is not built");
+                    // M9 part H (step H3): Act 5's outro ended the release; M10 part B (step B2): Level 36 is built, so
+                    // it leads on to Act 6 (the playthrough to Level 36 is step B3's).
+                    assertFalse(CampaignRoute.releaseEnd(CONTENT, campaign), "Act 5's outro leads on to Act 6");
+                    assertTrue(CampaignRoute.launch(CONTENT, campaign).isPresent(), "Level 36 is built");
                     playthrough.autosave();
                     continue;
                 }
@@ -172,7 +173,8 @@ class ActPlaythroughTest {
         // failed (he may eject and is repaired at the next visit).
         assertFalse(campaign.rookMissing(), difficulty + ": Rook in his slot after Level 35");
         assertEquals(LAST, CampaignRoute.actEnd(CONTENT, campaign).orElseThrow().level(), "Level 35 ends Act 5");
-        assertTrue(CampaignRoute.releaseEnd(CONTENT, campaign), "the release ends after Act 5's outro");
+        // M10 part B (step B2): Level 36 is built, so Act 5's outro leads on to Act 6 (the flight on is step B3's).
+        assertFalse(CampaignRoute.releaseEnd(CONTENT, campaign), "Act 5's outro leads on to Level 36");
         assertTrue(
                 playthrough.problems().isEmpty(),
                 difficulty + ": the balance plan at the visits: " + playthrough.problems());

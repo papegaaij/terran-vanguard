@@ -1,0 +1,37 @@
+# Fleet Stormhawk stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/schemas-units/README.md
+# M10 part B, step B2 (Level 36, The fleet's drop craft): the CDF carrier group's drop craft (README Objective, approved
+# in round 72) as a unit data file (gap check m10b-gaps.md §4, as Level 29's wavering Stormhawk): a `neutral` craft (no
+# gun, no contact, no bounty, never counted as an enemy, the seekers never pick it, Rook's and the Bulwark's shots pass
+# through it) flying a `line abreast` pair up from the bottom edge (`from: rear`, its wave's speed 400 px/s; the friendly
+# banner 2 s ahead is its warning, no edge warning). HP 30 base, the wavering Stormhawk's: the beam era's ×2 flies it at 60.
+name: Fleet Stormhawk
+faction: CDF (the Steadfast group)
+layer: air
+tier: small
+size: [40, 40]    # sprite px
+hitbox: [28, 28]
+parts: single
+orientation: 16 angles
+hp: 30            # base, the wavering Stormhawk's; the beam era's ×2 flies it at 60
+armour: none
+speed: 400        # px/s, up the screen (≈ 1.5 s on it)
+neutral: true
+movement: {}      # its wave's `from: rear` flies it straight up from the bottom edge and out at the top
+attacks: []
+formations:
+  - {name: line abreast, size: [2, 2]}
+weak_points: []
+drops: []
+traits: []
+bounty: 0
+first_level: 36
+notes:
+  armour: none; HP {hp} base flies at 60 with the beam era's ×2
+  speed: up the screen from the bottom edge (≈ 1.5 s on the screen)
+  movement: 'a pair dives past the ship up from the bottom edge and out at the top at {speed} px/s, a presentation of the fleet following the wing down; the HUD''s friendly marker opens its "FRIENDLIES INBOUND — HOLD FIRE" banner 2 s ahead and brackets them on the screen'
+  attack: '`none`: a **neutral** craft: no fire, no contact; enemy fire and contact pass through them; homing shots and Rook never pick them, Rook''s and the Bulwark''s shots pass through them; the player''s shots and specials hit them'
+  formations: (Level 36's two pairs at t=4 and t=10)
+  bounty: '; never counted as an enemy (density, the floor, kill ratios)'
+  death: '`small` explosion'
+  used_in: L36 only (the dive)
+  difficulty: none (its pairs pinned at 2 on every difficulty)

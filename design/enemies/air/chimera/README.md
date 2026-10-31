@@ -20,33 +20,34 @@ scattered hits do not.
 
 ### Stat block
 
-**Draft** (Act 6 design phase, decided 2026-10-31 (round 72)). A hand-written table: there is no
-`data.yaml` yet, the build turns it into one. Numbers at **medium** (see the
-[balancing basis](../../README.md#balancing-basis)); HP is in damage units (a Pulse Cannon L1 shot does 2), set at
-its first level from the proposed Act 6 reference DPS (judgement call J1, L36 = 144). As a `small` unit it takes the
+Rendered from [data.yaml](data.yaml) (M10 part B, step B2, from the approved table of round 72; numbers at
+**medium**, see the [balancing basis](../../README.md#balancing-basis)). HP is in damage units (a Pulse Cannon L1 shot
+does 2), set at its first level from the Act 6 reference DPS (J1, L36 = 144). As a `small` unit it takes the
 [beam-era](../../README.md#balancing-basis) ×2 on its HP and keeps it in every later level (no act HP factor). Fire
 rates are first values: the build tunes them per level with `levelReport`.
 
+<!-- data: stat-block -->
 | Field | Value |
 |---|---|
-| Faction | Hybrid (an Ascendancy airframe, Vrell tissue); a **machine** for the [EMP Burst](../../../player/specials/README.md#emp-burst-l15) (stunned 3 s, its regeneration waits for the stun) |
+| Faction | Hybrid (machine: the EMP Burst stuns it longest) |
 | Layer | `air` |
 | Size tier | `small` |
 | Size | 40×36 px, hitbox 28×24 (the [Talon](../talon/README.md)'s airframe) |
 | Parts | single |
 | Orientation | `16 angles` (it banks through its swoop) |
-| HP | 20 (easy 15 / hard 26, from the global multipliers); flies at **40** with the beam era's ×2: 0.28 s at the L36 reference of 144 |
-| Armour / shield | none (no hex shield: its tissue is its defence); **[regeneration](../../README.md#regeneration) 20 % of its maximum a second** (8 HP/s flown) after **1.0 s** without a hit |
+| HP | 20 (easy 15 / hard 26, from the global multipliers) |
+| Armour / shield | none (no hex shield: its tissue is its defence); **[regeneration](../../README.md#regeneration) 20 % of its maximum a second** (8 HP/s flown) after **1 s** without a hit. HP 20 base flies at **40** with the beam era's ×2: 0.28 s at the L36 reference of 144 |
 | Speed | 220 px/s through the swoop; 160 px/s in a swarm |
 | Movement | `swoop` as the Talon's (enters at the top 280 px across its lane on a curve, bottoms out 200–260 px below the top edge, leaves up through the top); in a `swarm` it flocks round the wave's leader point along an authored route, as the [Mote Swarm](../mote-swarm/README.md) does. **No squad leader**: a Chimera wing never scatters |
 | Attack | `aimed` **pair** (two shots 4° apart, both at the ship) every 1.6 s while within 300 px of the top edge, as the Talon's; standard 160 px/s, `small` = 4; the Talon's 0.25 s red glint on the twin muzzles is the tell. In a swarm at most 3 members fire at once, staggered 0.3 s. Contact `small` = 10 (destroyed by the impact) |
-| Formations | V-wing (5–7, no leader), swarm (6–10), line abreast (2: the intro pair, Level 36's t=34, in open sky); never more than two wings, or one swarm and one wing, on the screen |
+| Formations | V-wing (5–7), swarm (6–10), line abreast (2–2) (the intro pair, Level 36's t=34, in open sky); never more than two wings, or one swarm and one wing, on the screen |
 | Weak points | the tissue seams (drawn only; they glow brighter as it heals) |
-| Effective traits | `beam` (a held beam denies the regeneration), `homing`, `forward`, `spread` |
+| Effective traits | `beam`, `homing`, `forward`, `spread` |
 | Credits | 14 (score 140 × chain), paid once whatever it healed |
 | Death | `small` explosion with gold sparks and a spray of teal tissue flecks (presentation, no bullets) |
-| First level / used in | L36 (the act opener, under the cloud banks); its later Act 6 levels per the level drafts; the Ascendant's phase 2 spawns them (its own document) |
+| First level / used in | L36; its later Act 6 levels per the level drafts; the Ascendant's phase 2 spawns them (its own document) |
 | Difficulty hooks | easy: regeneration 15 %/s after 1.3 s, pair every 2.0 s; hard: 25 %/s after 0.8 s, pair every 1.3 s |
+<!-- /data -->
 
 ### Behaviour
 
@@ -93,9 +94,9 @@ Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 
 ## Implementation
 
-- [ ] Stat block loaded from a `data.yaml`; global difficulty multipliers and the beam-era factor applied; re-measured with `levelReport` at L36
+- [x] Stat block loaded from a `data.yaml`; global difficulty multipliers and the beam-era factor applied; re-measured with `levelReport` at L36 (M10 part B, step B2: 1.81 s on the screen at medium under the plan's fit, 1.13× Level 10's small units' 1.60 s)
 - [x] Regeneration per the shared [rule](../../README.md#regeneration) (rate, delay, any hit and a beam's touch restart it, the EMP pauses it), deterministic and allocation-free (M10 part A, 2026-10-31: `RegenerationTest`, the seam pulse step A3a's)
-- [ ] The Talon's swoop and pair reused; the `swarm` flock reused from the Mote Swarm with a cap on simultaneous fire
+- [x] The Talon's swoop and pair reused; the `swarm` flock reused from the Mote Swarm with a cap on simultaneous fire (steps B1 and B2: the flock's `fire_cap` 3 in a `stagger` of 0.3 s; a swarm wave casts the unit from its swoop path to its flock)
 - [ ] Production sprites (16 headings, the seam glow per HP share, the healing pulse) via `tools/art/`; death effect, bounty and sounds (Freesound, CC0/CC-BY)
 
 ## Open questions
@@ -115,3 +116,7 @@ Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
   with teal tissue seams; b and c rejected) and the document approved as drafted (D.9; `design: approved`); **A.1 b**,
   "overgrown", chosen (`art: chosen`; a "seams" in `concept/rejected/`), so the seams are twice as wide and veined
   with tissue nodules (the look above).
+- 2026-10-31 (M10 part B, step B2): the stat block as data. The flock's numbers are first values for the 40 px
+  airframe (pending the user's review in round 74): separation 30 px and radius 72 px (the Mote's 18 / 48 scaled to
+  the hull), 160 px/s cruise (the table's), 220 px/s after a loop-back, 240 °/s, at most 12 members (hard's swarm of
+  10); the fire cap 3 in a 0.3 s stagger in the swoop path's 300 px fire band.

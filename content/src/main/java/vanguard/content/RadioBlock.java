@@ -411,7 +411,13 @@ public sealed interface RadioBlock permits LevelData {
         FIRST_WRECK_THROW,
         /** Step BOSS70: the open core's first draw below its playbook's low share (its rests shorten); once. */
         @JsonProperty("core-low")
-        CORE_LOW
+        CORE_LOW,
+        /**
+         * M10 part B (design/campaign Level 36, Radio chatter): the attempt's first enemy killed by a lightning strike;
+         * once. Names no enemy; only in a level with {@code weather.strikes}.
+         */
+        @JsonProperty("first-strike-kill")
+        FIRST_STRIKE_KILL
     }
 
     /**

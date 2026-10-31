@@ -158,8 +158,8 @@ level).
 **Act outro** (four pages after the L35 debrief, each voiced and with its own image; track 24 under page 1). The
 closing radio already has Okafor's kill line, Vorne's offer, the answer and Varga's "*Callisto*", so the outro does
 not repeat them; it carries the five beats the act hands over (the fall, the data, Vorne's face, Rook, Callisto).
-Texts (draft, decided in round 60), with the `next_act` that names Act 6 on the release's end (`ACT VI - JOVIAN STORM.
-CALLISTO. COMING SOON.`):
+Texts (draft, decided in round 60), with the `next_act` that named Act 6 on the release's end (`ACT VI - JOVIAN STORM.
+CALLISTO. COMING SOON.`) until M10 part B (step B2) built Act 6's first level and moved the release's end there:
 
 <!-- data: act-outro-pages -->
 | Page | Speaker | Image |

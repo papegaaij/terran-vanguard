@@ -546,6 +546,18 @@ The schemas of the enemies' stat blocks and boss scripts and of the allies' file
   (`window`, `knit`), **`dome`** (`radius`, `breaker_drop`) and **`attacks.<name>.speed`** (a death-burst's ring,
   authored). Basis: `reference_dps` 36–42 and the shared **`shields.heavy`** (`from`, `factor`: from that level on every
   unit's `shield`, a leader's too, takes the factor; Act 6's twice-as-heavy shields, a level rule).
+- **M10 part B, Level 36's unit keys** (loaded and checked in step B2 by content's `EnemyData`, `CloudDiverRules`,
+  `EnemyChecks`; flown from step B1): a stat block's **`counted: false`** (a hostile craft not counted as an enemy:
+  picked, hit and paid like one, but not in the density, the floor or the kill ratios; the simulation's
+  `countsAsEnemy()`, the second reason beside `neutral`; the [harvesters](../../../enemies/air/harvester/README.md)) and
+  **`haul`** (`ground-targets` or `kills`: the share of the typical haul its bounty is paid with; the built rule, a
+  ground unit's as a ground target's, when not given); never a boss's or a neutral craft's. The movement `drift` may add
+  **`vx`** (px/s sideways, positive to the right) and **`mirrored`** (a carrier right of the field's middle drifts the
+  other way: a pair's hulls mirrored, `vx` > 0 toward each other, < 0 apart): a drifting carrier of a `carrier +
+  escorts` wave on `air` or `low-air`, its escorts circling the living carriers' midpoint. A flock may add
+  **`fire_cap`** and **`stagger`** (both or neither: at most `fire_cap` members' volleys within `stagger` s, in its
+  `swoop_path`'s `fire_band`; at most its smallest `swarm`; the [Chimera](../../../enemies/air/chimera/README.md)): a
+  unit with a `swoop_path` and a `flock` flies its swoop path in every formation but a `swarm`, where it flocks.
 - **Allies** (`allies/data.yaml`): one entry per ally
   slug with `name`, `layer`, `size`, `hitbox`, `hp` (medium; the level sets difficulty variants),
   `damaged_by` (`objective_aimed`: only shots the target-the-objective hook aims at it;

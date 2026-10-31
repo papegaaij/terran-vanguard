@@ -35,6 +35,7 @@ final class EnemyChecks extends ContentChecks {
                 problem(enemy, "cloak.layer", "a unit does not decloak under the water");
             }
         });
+        checkCloudDivers(enemy);
         for (int i = 0; i < enemy.formations().size(); i++) {
             checkFormation(
                     enemy,
@@ -345,6 +346,47 @@ final class EnemyChecks extends ContentChecks {
     private void checkFlies(EnemyData enemy, String formation) {
         if (enemy.formations().stream().noneMatch(use -> use.name().equals(formation))) {
             problem(enemy, "formations", "its movement flies '" + formation + "', which its formations do not list");
+        }
+    }
+
+    /**
+     * M10 part B (design/enemies/air/chimera; design/campaign Level 36, the harvesters): a flock's {@code fire_cap} needs
+     * a gun and a {@code swoop_path} (its fire band) and is at most its smallest {@code swarm}; a drift's sideways {@code
+     * vx} is a {@code carrier + escorts} unit's on {@code air} or {@code low-air}; a {@code haul} or {@code counted:
+     * false} is a hostile unit's (not a boss's or a neutral craft's).
+     */
+    private static final String CARRIER_ESCORTS = "carrier + escorts";
+
+    private void checkCloudDivers(EnemyData enemy) {
+        EnemyData.Movement movement = enemy.movement();
+        movement.flock().flatMap(EnemyData.Flock::fireCap).ifPresent(cap -> {
+            if (movement.swoopPath().isEmpty() || enemy.attacks().isEmpty()) {
+                problem(
+                        enemy,
+                        "movement.flock.fire_cap",
+                        "a firing swarm's unit has a gun and a swoop_path (its fire band)");
+            }
+            enemy.formations().stream()
+                    .filter(use -> use.name().equals(CloudDiverRules.SWARM))
+                    .flatMap(use -> use.size().stream())
+                    .map(List::getFirst)
+                    .filter(least -> cap > least)
+                    .findFirst()
+                    .ifPresent(least -> problem(
+                            enemy,
+                            "movement.flock.fire_cap",
+                            "at most its smallest swarm (" + least + "), was " + cap));
+        });
+        movement.drift().flatMap(EnemyData.Drift::vx).ifPresent(vx -> {
+            if (!enemy.layer().equals("air") && !enemy.layer().equals("low-air")) {
+                problem(enemy, "movement.drift.vx", "a drifting carrier flies on air or low-air");
+            }
+            if (enemy.formations().stream().noneMatch(use -> use.name().equals(CARRIER_ESCORTS))) {
+                problem(enemy, "movement.drift.vx", "a sideways drift is a carrier's: list carrier + escorts");
+            }
+        });
+        if ((!enemy.isCounted() || enemy.haul().isPresent()) && (enemy.boss().isPresent() || enemy.isNeutral())) {
+            problem(enemy, "counted", "counted and haul are a hostile unit's, not a boss's or a neutral craft's");
         }
     }
 }

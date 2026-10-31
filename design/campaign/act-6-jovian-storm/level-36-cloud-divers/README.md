@@ -1,7 +1,7 @@
 ---
 title: Level 36 – Cloud Divers
 design: approved
-implementation: not-started
+implementation: in-progress
 art: proposed
 depends-on: [../../../enemies/air/chimera, ../../../enemies/air/talon, ../../../enemies/air/gilded-gunship, ../../../enemies/air/wraith, ../../../enemies/air/spore-bomber, ../../../enemies/air/lamprey, ../../../enemies/README.md, ../../../world/jovian, ../../../player/generator, ../../../player/wingmen, ../../../ui/hud]
 updated: 2026-10-31
@@ -26,24 +26,27 @@ Q8 a, Q9 a, Q10 a, Q11 a; J1, J2, J3, J5, J10) and the wave 1 documents (the
 [enemy shields](../../../enemies/README.md#enemy-shields), the [Jovian system](../../../world/jovian/README.md)'s
 media, moods and hazards, the [Act 6 hand plan](../../../player/generator/README.md#act-6-hand-plan-draft),
 [Rook in Act 6](../../../player/wingmen/README.md#rook-in-act-6-draft), the HUD's
-[Act 6 additions](../../../ui/hud/README.md#act-6-additions-draft)). There is **no `data.yaml`**: the build (M10
-part B) turns the hand tables into one; no number is measured.
+[Act 6 additions](../../../ui/hud/README.md#act-6-additions-draft)). M10 part B (step B2, 2026-10-31): the hand tables
+are the level's [data.yaml](data.yaml), rendered here, and measured with `levelReport` (*Waves*, *Credit budget*).
 
 ## Briefing
 
 Two pages, each one screen (`BriefingLayoutTest`) with room for its image. The [act](../README.md)'s intro comes
 before it (Q11 a: Okafor from the carrier's bridge, four pages, page 3 Vorne intercepted); this briefing follows
-it, in **September 2185** (J10). Texts (draft):
+it, in **September 2185** (J10). Rendered from the level's [data.yaml](data.yaml) (M10 part B, step B2):
 
-> **Commander Okafor:** "Callisto sits behind Jupiter's air defences, and Vorne fuels his fleet from these
-> clouds. Aegis Wing dives first: break the fighter cover over the upper bands so the fleet can follow, and
-> bring down his helium-3 harvesters on the way. Rook flies your wing. Aurelia is below us. We go there next."
+<!-- data: briefing -->
+> **Commander Okafor:** "Callisto sits behind Jupiter's air defences, and Vorne fuels his fleet
+> from these clouds. Aegis Wing dives first: break the fighter cover over the upper bands so the
+> fleet can follow, and bring down his helium-3 harvesters on the way. Rook flies your wing.
+> Aurelia is below us. We go there next."
 >
-> **Dr. Varga:** "The wrecks from Ceres carried something new: Talon airframes with Vrell tissue grown
-> through the seams. I call them Chimeras. Give one a second and it heals. A pilot still flies each one, and
-> the healing costs him more than the machine. And the cloud banks down there
-> drift over your plane: what flies under them dims, their shots never do. There is no ground, Lancer. The
-> bombs stay idle."
+> **Dr. Varga:** "The wrecks from Ceres carried something new: Talon airframes with Vrell tissue
+> grown through the seams. I call them Chimeras. Give one a second and it heals. A pilot still
+> flies each one, and the healing costs him more than the machine. And the cloud banks down
+> there drift over your plane: what flies under them dims, their shots never do. There is no
+> ground, Lancer. The bombs stay idle."
+<!-- /data -->
 
 *Images* (production art in part B, [briefing images](../../../ui/briefing/README.md)), briefs only now:
 
@@ -55,7 +58,9 @@ it, in **September 2185** (J10). Texts (draft):
 
 *Hangar teaser* (shop screen before L36, the act's first; Rook speaks, not voiced):
 
+<!-- data: teaser -->
 > **Rook:** "Varga says the new ones heal. So no tickling, Lancer. Burn them."
+<!-- /data -->
 
 The hangar before L36 adds the [Plasma Arc](../../../player/weapons/plasma-arc/README.md) to the shop (Q7 b); the
 plan raises the [Ion Beam](../../../player/weapons/ion-beam/README.md) to **L5** and keeps Rook's Autocannon
@@ -66,17 +71,20 @@ the act's document).
 
 ## Threat profile
 
-Hand-written (draft); directions are counted by each wave's `from`.
+Rendered from the data. Directions by each wave's `from`, counted by enemy (the intel's rule; the harvesters and the
+drop craft are not enemies): the Lamprey streams from the sides, the Wraiths' rear ambushes from behind (as built).
 
+<!-- data: threat-profile -->
 | Field | Value |
 |---|---|
 | Dominant layers | `air` (Talon wings, Chimera wings and swarms, Mote Swarms, Lamprey streams, Gilded Gunships and their Darts; Wraiths cloaked on `high-air` until they decloak), `low-air` (Spore Bombers, the harvesters); **no ground** |
-| Attack directions | front 97 % · sides 3 % (the Wraiths' re-entries come up from behind, as built) |
+| Attack directions | front 94% · sides 3% · rear 3% (the Wraiths decloak behind the ship, as built) |
 | Density | 4 |
 | Recommended traits | `forward`, `homing` |
 | Hazards | Foreground cloud banks over the play plane; wind gusts (two spells); lightning strikes (three, section 4) |
 | Boss / mid-boss | none |
 | Sensor-suite detail | **none**: Jupiter, the upper atmosphere, `air`, front · **L1**: + directions (sides), density 4, hazards "cloud banks", "wind" and "lightning", the objective `BREAK THE AIR COVER`, the secondary `HARVESTERS 0 / 6` and the row `NO GROUND` · **L2**: + Chimera (new), Talon, Wraith, Spore Bomber, Lamprey, Gilded Gunship, Dart Drone and Mote portraits · **L3**: + `forward` and `homing` highlighted, the wave strip marking the harvester pairs and the three strikes |
+<!-- /data -->
 
 *Varga's intel line* per sensor-suite level (must fit `IntelPanelLayoutTest`):
 
@@ -138,18 +146,20 @@ pale haze, the sun from the top left; enemy bullets keep their dark outline over
 Jupiter's **air** (J2): explosions rise as smoke and fire, weather allowed. Motion budget: the banks' slow drift
 and the Chimeras' seam pulse are the strong elements; the deep bands crawl.
 
-| Section | t (s) | Scroll (px, approx.) | Speed (px/s) | Atmosphere | Layers and content | Purpose |
+<!-- data: level-sections -->
+| Section | t (s) | Scroll (px) | Speed (px/s) | Atmosphere | Layers and content | Purpose |
 |---|---|---|---|---|---|---|
-| 1. The Dive | 0–24 | 0–3,840 | 160 | clear, high haze | `deep`: Jupiter's curve and the bands far below, the CDF carrier group and its escorts (lights blinking); `low-air`: the first cloud tops rushing past; `high-air`: thin ice haze. No banks yet. | The dive: popcorn and Talons at speed; the drop craft marked friendly (t=4, t=10). |
-| 2. Into the Bands | 24–70 | 3,840–9,360 | 120 | haze | `deep`: storm bands in cream and ochre; `low-air`: cloud wisps; `high-air`: the **first foreground banks** from t≈28 (small, slow). | The Chimera's intro pair (t=34, quiet window t=32–38), the first wings; Wraiths; gust spell 1 (t=58, t=64). |
-| 3. Harvester Fields | 70–125 | 9,360–14,860 | 100 | haze | `deep`: a broad rust band; `low-air`: the **harvesters** in four pairs (t=72–125) with their plumes, Spore Bombers among them; `high-air`: banks at their densest (a third of the field). | The secondary; the Chimera swarms under the banks (`homing`). |
-| 4. Storm Edge | 125–192 | 14,860–22,900 | 120 | darkening, flashes | `deep`: the band turns brown-grey, the storm wall of Level 38 far ahead with lightning inside it; `high-air`: banks thinning; the pathfinder pod (the secret, t≈146). Lightning flashes from t=130, **strikes** at t=138, 152 and 170. Level end at t=192 as the bands thin over Aurelia's sky. | The act's first strikes; gust spell 2 (t=156, t=162); the run to Aurelia. |
+| 1. The Dive | 0–24 | 0–3,840 | 160 | clear | `deep`: Jupiter's curve and the bands far below, the CDF carrier group and its escorts (lights blinking). `low-air`: the first cloud tops rushing past. `high-air`: thin ice haze. No banks yet. | The dive: popcorn and Talons at speed; the drop craft marked friendly (t=4, t=10). |
+| 2. Into the Bands | 24–70 | 3,840–9,400 | 120 | clear | `deep`: storm bands in cream and ochre. `low-air`: cloud wisps. `high-air`: the **first foreground banks** from t≈28 (small, slow). | The Chimera's intro pair (t=34, quiet window t=32–38), the first wings; Wraiths; gust spell 1 (t=58, t=64). |
+| 3. Harvester Fields | 70–125 | 9,400–14,920 | 100 | clear | `deep`: a broad rust band. `low-air`: the **harvesters** in four pairs (t=72–125) with their plumes, Spore Bombers among them. `high-air`: banks at their densest (a third of the field). | The secondary; the Chimera swarms under the banks (`homing`). |
+| 4. Storm Edge | 125–192 | 14,920–22,940 | 120 | clear | `deep`: the band turns brown-grey, the storm wall of Level 38 far ahead with lightning inside it. `high-air`: banks thinning; the pathfinder pod (the secret, t≈146). Lightning flashes from t=130, **strikes** at t=138, 152 and 170. Level end at t=192 as the bands thin over Aurelia's sky. | The act's first strikes; gust spell 2 (t=156, t=162); the run to Aurelia. |
+<!-- /data -->
 
 ## Waves
 
 Enemy definitions are linked per row; formation names come from the
 [formation vocabulary](../../../enemies/README.md#formation-vocabulary). Data in **Act 1 terms** with a
-`bounty_scale` (see *Credit budget*). **Draft: unmeasured.**
+`bounty_scale` (see *Credit budget*). Rendered from the data (M10 part B, step B2) and measured with `levelReport`.
 
 - **HP** from the proposed Act 6 reference DPS (J1: **144** at L36,
   [balancing basis](../../../enemies/README.md#balancing-basis)): the Chimera is new here (40 flown, its
@@ -162,82 +172,107 @@ Enemy definitions are linked per row; formation names come from the
   [Dart Drones](../../../enemies/air/dart-drone/README.md) (≈ 30); they carry the count, the Chimeras the lesson.
 - **Before the turn** ([the three-way war](../../../enemies/README.md#the-three-way-war)): the Vrell (Motes, Lampreys,
   Wraiths, Spore Bombers) fly beside the Ascendancy and its hybrids; no unit hurts another, no prey links.
-- **Density and pacing** (the Act 2+ floor from the start): **325 enemies** (waves 295 + an estimated 30 launched
-  Darts, 6 a Gunship) over 192 s, **≈ 102 a minute** at medium (the act's minimum 75, the gap analysis's band
-  90–120); the harvesters are not counted. A wave every 3 s from t=3 to the last at t=178. Waves by direction:
-  front 56 of 58 (97 %), sides 2 (the Lamprey streams on the gusts' wind, 3 %), each side entry **edge-warned 3 s**.
-  The floor comes from the Talons' pairs, the Chimeras' pairs, the Gunships' rings and the spore mines: expected to
-  meet ≤ 3 pauses over 2 s, ≥ 2.5 enemies on the screen and ≥ 10 shots a minute (`PacingTest`, `ActFloorTest`), **to
-  be confirmed with `levelReport`** in part B. Quiet window t=32–38: the Chimera pair alone.
+- **Density and pacing** (the Act 2+ floor from the start): the README's 58 waves (325 enemies with an estimated 30
+  launched Darts, ≈ 102 a minute) flew 2.00 on the screen with 10 pauses over 2 s at medium (`levelReport`, the plan's
+  fit, step B2), so step B2 tuned them as Act 5's levels were (pending the user's review in round 74): every Talon
+  wave but the escorts at **130 px/s** through its swoop, and **ten firing Talon pairs on the offbeats** (t=16.5, 23,
+  26.5, 50, 61.5, 93.5, 110.5, 133.5, 147.5, 161.5); the t=140 Lampreys at t=139 (easy's pause after the struck
+  wing), the t=151 Spore Bombers at t=150 and the t=169 Chimera wing at t=168 (the world's strike rule: no tell
+  within 1 s of a wave's entry). Measured (`levelReport -Plevel=36`): **315 enemies, 101 a minute** at medium (the
+  wave units; the act's minimum 75), **2.76 on the screen**, 73 shots a minute, two pauses over 2 s (the quiet
+  window's t=35.4–39.2 and t=39.9–42.2), 12.8 s of calm at the end; easy 252 (81 a minute, two pauses over 3 s), hard
+  382 (123 a minute, 4.6 on the screen, two pauses); the harvesters and the drop craft are not counted. Waves by
+  direction: front 94 %, sides 3 % (the Lamprey streams on the gusts' wind, each side entry **edge-warned 3 s**), rear
+  3 % (the Wraiths' rear ambushes, as built). Quiet window t=32–38: the Chimera pair alone.
 - **Spacing** (the Act 5 lesson): no two `medium` air hulls overlap: the Gunships keep ≥ 80 px between hull edges
   (the t=166 pair 2 s apart), and no Gunship enters while a Wraith is decloaked in its lane. At most two Chimera
   groups on the screen (the [Chimera](../../../enemies/air/chimera/README.md#difficulty-and-level-use)'s rule).
 - **Calm at the end** (the Act 5 lesson): the last wave enters at t=178 and is gone by ≈ t=185; **≥ 4 s** of calm
   before the level end at t=192.
 
+<!-- data: waves -->
 | t (s) | Section | Formation | Enemies (link) | Count | Enter from | Notes |
 |---|---|---|---|---|---|---|
 | 3 | 1 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front | Out of the haze below the dive; the fleet's drop craft pass at t=4 and t=10 (not enemies) |
-| 6 | 1 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front |  |
-| 9 | 1 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front |  |
+| 4 | 1 | line abreast | [Fleet Stormhawk](../../../enemies/air/fleet-stormhawk/README.md) | 2 | rear | The fleet's drop craft, up from the bottom edge (neutral: the friendly banner from t=2) |
+| 6 | 1 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front | |
+| 9 | 1 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front | |
+| 10 | 1 | line abreast | [Fleet Stormhawk](../../../enemies/air/fleet-stormhawk/README.md) | 2 | rear | The second pair of drop craft (the banner from t=8) |
 | 12 | 1 | V-wing | [Talon](../../../enemies/air/talon/README.md) | 5 | front | Squad leader at the tip |
-| 15 | 1 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front |  |
-| 18 | 1 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front |  |
-| 21 | 1 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front |  |
+| 15 | 1 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front | |
+| 16.5 | 1 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 2 | front | Step B2: a firing Talon pair on the offbeat (the beam erases the fodder within a second) |
+| 18 | 1 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front | |
+| 21 | 1 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front | |
+| 23 | 1 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 2 | front | Step B2: a firing Talon pair on the offbeat (the beam erases the fodder within a second) |
 | 25 | 2 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front | Into the bands; the first foreground bank at t≈28 |
+| 26.5 | 2 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 2 | front | Step B2: a firing Talon pair on the offbeat (the beam erases the fodder within a second) |
 | 28 | 2 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front | The last wave before the quiet window |
 | 34 | 2 | line abreast | [Chimera](../../../enemies/air/chimera/README.md) | 2 | front | **The Chimera's first appearance**: an intro pair in open sky (no bank), quiet window t=32–38; Varga's line ahead of it |
-| 39 | 2 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front |  |
+| 39 | 2 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front | |
 | 42 | 2 | V-wing | [Talon](../../../enemies/air/talon/README.md) | 5 | front | Squad leader; drops the Overdrive |
 | 45 | 2 | V-wing | [Chimera](../../../enemies/air/chimera/README.md) | 5 | front | The first Chimera wing, under the edge of a bank |
-| 48 | 2 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front |  |
-| 51 | 2 | column | [Wraith](../../../enemies/air/wraith/README.md) | 2 | front | Cloaked on `high-air`, decloaking behind the ship (their rear re-entry warned as built) |
-| 54 | 2 | single | [Gilded Gunship](../../../enemies/air/gilded-gunship/README.md) | 1 | front | About 6 Darts launched (two streams of 3); drops the Shield cell |
+| 48 | 2 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front | |
+| 50 | 2 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 2 | front | Step B2: a firing Talon pair on the offbeat (the beam erases the fodder within a second) |
+| 51 | 2 | rear ambush | [Wraith](../../../enemies/air/wraith/README.md) | 2 | rear | Cloaked on `high-air`, decloaking behind the ship (their rear re-entry warned as built) |
+| 54 | 2 | column | [Gilded Gunship](../../../enemies/air/gilded-gunship/README.md) | 1 | front | About 6 Darts launched (two streams of 3); drops the Shield cell |
 | 57 | 2 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front | Gust spell 1 (from the left) at t=58 and t=64 |
-| 60 | 2 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front |  |
-| 63 | 2 | V-wing | [Chimera](../../../enemies/air/chimera/README.md) | 6 | front |  |
-| 66 | 2 | stream | [Lamprey](../../../enemies/air/lamprey/README.md) | 5 | side (left) | Storm chasers on the gust's wind; edge-warned 3 s ahead |
-| 69 | 2 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front |  |
-| 72 | 3 | carrier + escorts | [Talon](../../../enemies/air/talon/README.md) | 2 | front | **Harvesters 1–2** (the secondary, not counted as enemies): two Talons in `orbit` at 90 px round the pair |
-| 75 | 3 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front |  |
+| 60 | 2 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front | |
+| 61.5 | 2 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 2 | front | Step B2: a firing Talon pair on the offbeat (the beam erases the fodder within a second) |
+| 63 | 2 | V-wing | [Chimera](../../../enemies/air/chimera/README.md) | 6 | front | |
+| 66 | 2 | stream | [Lamprey](../../../enemies/air/lamprey/README.md) | 5 | left side | Storm chasers on the gust's wind; edge-warned 3 s ahead |
+| 69 | 2 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front | |
+| 72 | 3 | carrier + escorts | [Helium-3 Harvester](../../../enemies/air/harvester/README.md) | 2 | front | **Harvesters 1–2** (the secondary, not counted as enemies) |
+| 72 | 3 | carrier + escorts | [Talon](../../../enemies/air/talon/README.md) | 2 | front | Their two Talon escorts in `orbit` at 90 px round the pair (hard three) |
+| 75 | 3 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front | |
 | 78 | 3 | column | [Spore Bomber](../../../enemies/air/spore-bomber/README.md) | 2 | front | `low-air`, among the harvesters' lane; spore mines rise to `air` |
 | 81 | 3 | swarm | [Chimera](../../../enemies/air/chimera/README.md) | 8 | front | The first Chimera swarm |
-| 84 | 3 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front |  |
-| 86 | 3 | carrier + escorts | [Talon](../../../enemies/air/talon/README.md) | 2 | front | **Harvesters 3–4**: two Talon escorts |
-| 89 | 3 | column | [Wraith](../../../enemies/air/wraith/README.md) | 2 | front | Cloaked; decloak behind the ship |
-| 92 | 3 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front |  |
+| 84 | 3 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front | |
+| 86 | 3 | carrier + escorts | [Helium-3 Harvester](../../../enemies/air/harvester/README.md) | 2 | front | **Harvesters 3–4** |
+| 86 | 3 | carrier + escorts | [Talon](../../../enemies/air/talon/README.md) | 2 | front | Their two Talon escorts |
+| 89 | 3 | rear ambush | [Wraith](../../../enemies/air/wraith/README.md) | 2 | rear | Cloaked; decloak behind the ship |
+| 92 | 3 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front | |
+| 93.5 | 3 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 2 | front | Step B2: a firing Talon pair on the offbeat (the beam erases the fodder within a second) |
 | 95 | 3 | column | [Spore Bomber](../../../enemies/air/spore-bomber/README.md) | 2 | front | `low-air` |
-| 98 | 3 | V-wing | [Chimera](../../../enemies/air/chimera/README.md) | 6 | front |  |
-| 100 | 3 | carrier + escorts | [Talon](../../../enemies/air/talon/README.md) | 2 | front | **Harvesters 5–6**: two Talon escorts |
+| 98 | 3 | V-wing | [Chimera](../../../enemies/air/chimera/README.md) | 6 | front | |
+| 100 | 3 | carrier + escorts | [Helium-3 Harvester](../../../enemies/air/harvester/README.md) | 2 | front | **Harvesters 5–6** |
+| 100 | 3 | carrier + escorts | [Talon](../../../enemies/air/talon/README.md) | 2 | front | Their two Talon escorts |
 | 103 | 3 | stream | [Lamprey](../../../enemies/air/lamprey/README.md) | 5 | front | Storm chasers out of a bank |
-| 106 | 3 | single | [Gilded Gunship](../../../enemies/air/gilded-gunship/README.md) | 1 | front | About 6 Darts; keeps ≥ 80 px from every other medium hull |
-| 109 | 3 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front |  |
+| 106 | 3 | column | [Gilded Gunship](../../../enemies/air/gilded-gunship/README.md) | 1 | front | About 6 Darts; keeps ≥ 80 px from every other medium hull |
+| 109 | 3 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front | |
+| 110.5 | 3 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 2 | front | Step B2: a firing Talon pair on the offbeat (the beam erases the fodder within a second) |
 | 112 | 3 | column | [Spore Bomber](../../../enemies/air/spore-bomber/README.md) | 3 | front | `low-air` |
-| 114 | 3 | carrier + escorts | [Talon](../../../enemies/air/talon/README.md) | 2 | front | **Harvesters 7–8**: two Talon escorts |
+| 114 | 3 | carrier + escorts | [Helium-3 Harvester](../../../enemies/air/harvester/README.md) | 2 | front | **Harvesters 7–8** |
+| 114 | 3 | carrier + escorts | [Talon](../../../enemies/air/talon/README.md) | 2 | front | Their two Talon escorts |
 | 117 | 3 | V-wing | [Talon](../../../enemies/air/talon/README.md) | 5 | front | Squad leader |
 | 120 | 3 | swarm | [Chimera](../../../enemies/air/chimera/README.md) | 8 | front | Under the banks: the homing lesson |
-| 123 | 3 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front |  |
-| 126 | 4 | column | [Wraith](../../../enemies/air/wraith/README.md) | 2 | front | Cloaked; decloak behind the ship |
-| 129 | 4 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front |  |
+| 123 | 3 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front | |
+| 126 | 4 | rear ambush | [Wraith](../../../enemies/air/wraith/README.md) | 2 | rear | Cloaked; decloak behind the ship |
+| 129 | 4 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front | |
 | 132 | 4 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front | The storm edge darkens; lightning flashes (no damage) from t=130 |
+| 133.5 | 4 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 2 | front | Step B2: a firing Talon pair on the offbeat (the beam erases the fodder within a second) |
 | 135 | 4 | V-wing | [Chimera](../../../enemies/air/chimera/README.md) | 6 | front | The first lightning **strike** at t=138 (telegraph from t=137) lands among them |
-| 140 | 4 | stream | [Lamprey](../../../enemies/air/lamprey/README.md) | 5 | front |  |
-| 143 | 4 | single | [Gilded Gunship](../../../enemies/air/gilded-gunship/README.md) | 1 | front | About 6 Darts |
+| 139 | 4 | stream | [Lamprey](../../../enemies/air/lamprey/README.md) | 5 | front | Step B2: t=139, not 140 (easy's pause after the struck wing) |
+| 143 | 4 | column | [Gilded Gunship](../../../enemies/air/gilded-gunship/README.md) | 1 | front | About 6 Darts |
 | 146 | 4 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front | The pathfinder pod (the secret) drifts in under a bank at t≈146 |
+| 147.5 | 4 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 2 | front | Step B2: a firing Talon pair on the offbeat (the beam erases the fodder within a second) |
 | 149 | 4 | V-wing | [Talon](../../../enemies/air/talon/README.md) | 5 | front | Squad leader; strike 2 at t=152 |
-| 151 | 4 | column | [Spore Bomber](../../../enemies/air/spore-bomber/README.md) | 3 | front | `low-air` |
+| 150 | 4 | column | [Spore Bomber](../../../enemies/air/spore-bomber/README.md) | 3 | front | `low-air`; step B2: t=150, not 151 (strike 2's tell at t=151) |
 | 154 | 4 | swarm | [Chimera](../../../enemies/air/chimera/README.md) | 8 | front | Gust spell 2 (from the right) at t=156 and t=162 |
-| 157 | 4 | column | [Wraith](../../../enemies/air/wraith/README.md) | 2 | front | Cloaked; decloak behind the ship |
-| 160 | 4 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front |  |
-| 163 | 4 | stream | [Lamprey](../../../enemies/air/lamprey/README.md) | 5 | side (right) | On the second spell's wind; edge-warned 3 s ahead |
+| 157 | 4 | rear ambush | [Wraith](../../../enemies/air/wraith/README.md) | 2 | rear | Cloaked; decloak behind the ship |
+| 160 | 4 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front | |
+| 161.5 | 4 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 2 | front | Step B2: a firing Talon pair on the offbeat (the beam erases the fodder within a second) |
+| 163 | 4 | stream | [Lamprey](../../../enemies/air/lamprey/README.md) | 5 | right side | On the second spell's wind; edge-warned 3 s ahead |
 | 166 | 4 | column | [Gilded Gunship](../../../enemies/air/gilded-gunship/README.md) | 2 | front | 2 s apart, ≥ 80 px between the hulls; about 12 Darts; strike 3 at t=170 |
-| 169 | 4 | V-wing | [Chimera](../../../enemies/air/chimera/README.md) | 7 | front |  |
-| 172 | 4 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front |  |
-| 175 | 4 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front |  |
+| 168 | 4 | V-wing | [Chimera](../../../enemies/air/chimera/README.md) | 7 | front | Step B2: t=168, not 169 (strike 3's tell at t=169) |
+| 172 | 4 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front | |
+| 175 | 4 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front | |
 | 178 | 4 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front | The last wave; gone by ≈ t=185, calm to the end at t=192 |
 
-Totals: Mote Swarm 136 · Talon 60 (8 of them the harvesters' escorts) · Chimera 56 · Dart Drone ≈ 30 (launched) · Lamprey
-20 · Spore Bomber 10 · Wraith 8 · Gilded Gunship 5; plus the 8 harvesters (not enemies).
+Totals: Mote Swarm 136 · Talon 80 · Chimera 56 · Wraith 8 · Gilded Gunship 5 · Lamprey 20 · Spore Bomber 10; the Fleet Stormhawks (4), the Helium-3 Harvesters (8) are not enemies.
+<!-- /data -->
+
+The Talons count the harvesters' 8 escorts (hard 12) and the 20 of the offbeat pairs; the Gilded Gunships launch
+≈ 30 Dart Drones (two streams of 3 before a typical kill), counted with the kills in the credit budget.
 
 ## Ground targets
 
@@ -272,7 +307,9 @@ All three are the [Jovian system](../../../world/jovian/README.md#hazards--set-p
 - **The pathfinder pod** (t≈146, x 400, drifting down under a foreground bank): a CDF pathfinder's cargo pod from
   the scouts who dived before the fleet, a small breakable object on the play plane (20 HP, like a small rock);
   broken, it frees a hidden crate worth **100** in Act 1 terms (1,049 in Act 6). The Salvage scanner's glint marks it
-  through the bank. Varga's event line (dropped after 6 s if the radio is busy).
+  through the bank. Varga's event line (dropped after 6 s if the radio is busy): "*A pathfinder's pod, from the
+  scouts who dived before you. Take it.*" In the data a debris chunk `pathfinder-pod` (28×28 px, ART-B's sprite) that
+  `reveals: pathfinder pod` (step B2), drifting [−6, −90] px/s from x 400 at t=146.
 - **Overdrive**: dropped by the t=42 squad leader.
 - **Shield cell**: dropped by the t=54 Gilded Gunship.
 - **Armour patch**: a [CDF supply drone](../../../allies/README.md#cdf-supply-drone) from the carrier releases one at
@@ -286,6 +323,7 @@ without. Rook's barks carry `requires: escort` (the t=118 homing bark, the first
 (t=11, his pulp line of the level) does not. **Speakers**: Okafor (from the carrier, J10), Varga, Rook (the Act 6
 speakers are D-story's table). **Vorne is silent here**: his intercepted invitation is the act intro's page 3.
 
+<!-- data: radio -->
 | Trigger | Speaker | Line |
 |---|---|---|
 | t=1 | Okafor | "Aegis, you're cleared to dive. Break their air cover over the bands. The fleet follows you down." |
@@ -297,13 +335,13 @@ speakers are D-story's table). **Vorne is silent here**: his intercepted invitat
 | t=67 | Okafor | "Helium-3 harvesters ahead, skimming the bands. That's Vorne's fuel. Bring down six." |
 | t=90 | Varga | "Spore bombers under the harvesters. Vrell, still flying with the gold ones. For now." |
 | Secondary met (`secondary-objective`, the sixth harvester down) | Okafor | "Six harvesters down. His fleet will feel that at Io." |
-| Secondary failed (the third harvester escapes) | Varga | "Too many got through. Their fuel reaches the refineries." |
-| t=118 (bark, `requires: escort`) | Rook | "Homing's earning its keep. Those clouds are full of them." |
+| Secondary failed (the third harvester escapes; step B2: no secondary-failed cue is built, so it plays at the first harvester away until one is, pending) | Varga | "Too many got through. Their fuel reaches the refineries." |
+| t=118 | Rook | "Homing's earning its keep. Those clouds are full of them." |
 | t=128 | Varga | "A white line drawn down the sky means lightning. Get out of it. A second later it strikes." |
 | The first enemy killed by a strike (event, bark) | Rook | "Ha! The sky's on our side." |
-| The pathfinder pod broken (event) | Varga | "A pathfinder's pod, from the scouts who dived before you. Take it." |
 | t=172 | Okafor | "The bands are thinning. Aurelia is ahead, Aegis." |
 | Level end | Okafor | "First dive done. The fleet is in the clouds behind you. Aurelia next." |
+<!-- /data -->
 
 Timeline check (text): the timed lines close at ≈ 10.5, 19.0, 29.5, 38.8, 47.4, 53.8, 75.4, 98.5, (124.2), 137.0 and
 177.5; nothing overlaps. The secondary resolves between ≈ t=100 and t=125 (the third and fourth pairs), in the gap
@@ -334,21 +372,34 @@ typical = 0.663 of the kills, 0.8 of the harvesters as ground targets, half of t
 estimate for part B to confirm with `TypicalHaulTest` and `levelReport`, the Dart count with it) puts the typical
 haul at **7,504 (+0.4 %)**, the perfect run at 11,674. No boss or mid-boss, no ground targets.
 
+<!-- data: credit-budget -->
 | Source | Perfect run | Typical haul |
 |---|---|---|
-| Kills: Mote Swarm 136 × 2 + Talon 60 × 12 + Chimera 56 × 14 + Dart Drone 30 × 2 + Lamprey 20 × 12 + Spore Bomber 10 × 25 + Wraith 8 × 30 + Gilded Gunship 5 × 28 (2,706) | 8,796 | 5,832 |
-| The harvesters: 8 × 30 | 780 | 624 |
-| Secret: the pathfinder pod (hidden crate) | 1,049 | 524 |
-| Secondary: the harvesters | 1,049 | 524 |
-| **Total** (bounty scale 0.31) | **11,674** | **7,504** |
-| Budget(n) = the typical haul's target; typical +0.4 %, perfect 1.56 × budget | | 7,474 |
+| Kills: Mote Swarm 136 × 2 + Talon 80 × 12 + Chimera 56 × 14 + Wraith 8 × 30 + Gilded Gunship 5 × 28 + Lamprey 20 × 12 + Spore Bomber 10 × 25 + launched Dart Drone 30 × 2 | 9,687 | 5,812 |
+| Helium-3 Harvesters (not enemies): 8 × 30 | 784 | 627 |
+| Squad leaders: 4 × 13 extra (perfect run only) | 168 | 0 |
+| Secret: pathfinder pod (hidden crate, 1% of budget) | 1,049 | 524 |
+| Secondary: bring down 6 of the 8 harvesters | 1,049 | 524 |
+| **Total** (bounty scale 0.31) | **12,737** | **7,488** |
+| Budget(n) = the typical haul's target; typical +0 %, perfect 1.70 × budget | | 7,474 |
+<!-- /data -->
 
-The scale sits under the gap analysis's 0.40–0.56 band: the opener's paying mix (56 Chimeras at 14, the Wraiths and
+**Measured** (`levelReport`, step B2, after the waves' tuning): the typical haul **7,488 (+0.2 %)** at the README's
+scale **0.31** (kept), the perfect run 12,737 (1.70 × budget; `TypicalHaulTest`); easy 6,528, hard 8,542. The
+harvesters' 30 credits are paid with the ground targets' share (`haul: ground-targets`), the Squad leaders' extra in
+a perfect run only. The scale sits under the gap analysis's 0.40–0.56 band: the opener's paying mix (56 Chimeras at 14, the Wraiths and
 Spore Bombers at 25–30) is richer than Act 5's popcorn-heavy levels, whose built scales also fell to 0.27–0.43 once
 measured. **Balance plan**: the plan's L36 visit buys the Ion Beam L5 (**forward / reference 1.19**, the act's
 highest: [Act 6 hand plan](../../../player/generator/README.md#act-6-hand-plan-draft)) and keeps 22 of 22 MW, no room
 for a utility until the L40 visit (Q8 a, J11). The level expects `forward` (the beam on the Chimeras) and `homing` (under
 the banks) and is flyable without them (the Chimeras heal only between hits; Pulse-style steady fire denies it).
+
+**Measured** (step B2): part A built the plan's L36 visit as the hand plan's own alternative (the Tesla Coil Pod L2 on
+the left wing, the beam L5 at L37: the beam L5 first did not fit `BalanceTest`'s sheet; pending round 73), so the
+level flies a **forward / reference of 0.99** (143 against 144, `tools/balance.py`), not 1.19. With that fit the small
+units killed live **1.72 s** on the screen at medium against Level 10's 1.60 s (**1.07×**, inside 0.9–1.5×), the
+Chimeras **1.81 s** (1.13×; 44 killed), so they live past their 1.0 s heal delay; the autopilot wins 3/3 on every
+difficulty and meets the secondary 3/3 on easy and medium (hard 0/3: step B3's autopilot).
 
 **The 1.19 ratio** (the working note's open item): this level does **not** need the generator document's alternative
 plan (the Tesla Coil Pod at L36, the beam L5 at L37). The surplus is spent on purpose: the Chimeras' regeneration
@@ -395,8 +446,9 @@ field (easy 21.7 %) and at most 1.8 s over the ship's band. Prompts and briefs: 
 
 ## Implementation
 
-- [ ] Level data `data.yaml` (M10 part B): `ground: none`, sections and speeds with 2 s eases, waves, radio, budget,
-      threat profile, briefing, backdrop, music, the weather block (gusts, flashes, strikes)
+- [x] Level data `data.yaml` (M10 part B): `ground: none`, sections and speeds with 2 s eases, waves, radio, budget,
+      threat profile, briefing, backdrop, music, the weather block (gusts, flashes, strikes) (step B2, 2026-10-31:
+      `CloudDiversDataTest`; the banks and the pod from ART-B's proposal)
 - [ ] `NO GROUND`: bomb deliveries idle and drawing power, the HUD's word; the validator rejects ground content
       here; the Airstrike and the EMP Burst work
 - [ ] Foreground banks over `air` bodies (Q2 a: ≈ 35 %, tells at full, bullets/ship/Rook/pickups above, targeting
@@ -406,16 +458,18 @@ field (easy 21.7 %) and at most 1.8 s over the ship's band. Prompts and briefs: 
       easy 5 of 8, hard 7 of 8); the harvesters not counted as enemies; their escorts in `orbit`
 - [ ] The drop craft flagged `neutral` (the friendly marker's banner and brackets), untouchable, never picked
 - [ ] Three lightning strikes and the two gust spells as above (the [Jovian hazards](../../../world/jovian/README.md#hazards--set-pieces)); strike kills pay
-- [ ] Wave script: ≥ 75 enemies a minute at medium with the launched Darts (`DensityTest`), the Act 2+ floor
+- [x] Wave script: ≥ 75 enemies a minute at medium with the launched Darts (`DensityTest`), the Act 2+ floor
       (`PacingTest`, `ActFloorTest`), side entries edge-warned 3 s, the quiet window t=32–38, ≥ 4 s calm after the
-      last enemy, no two medium hulls overlapping
+      last enemy, no two medium hulls overlapping (step B2: 101 a minute, 2.76 on the screen, two pauses, 12.8 s
+      calm, no overlap; the waves' tuning in *Waves*)
 - [ ] Radio voiced, every timed line at most 1 s late (`RadioTimelineLevel36Test`, with Rook and without); Rook's
       barks `requires: escort`
 - [ ] Threat profile with the `NO GROUND` row, Varga's four intel lines and Rook's teaser fitting the intel panel
       (`IntelPanelLayoutTest`); the Chimera's portrait
 - [ ] Briefing: Okafor's and Varga's pages, each one screen (`BriefingLayoutTest`), with their images; the act intro
       before it once (`act-intro:6`)
-- [ ] Typical haul within ±5 % of budget(36) = 7 474 with the level's `bounty_scale` (`TypicalHaulTest`)
+- [x] Typical haul within ±5 % of budget(36) = 7 474 with the level's `bounty_scale` (`TypicalHaulTest`; step B2:
+      7,488 at 0.31, +0.2 %)
 - [ ] Music and ambience: "Eye of the Storm" by section, the high-wind bed, the level's sounds (`Level36SoundsTest`)
 - [ ] Easy/hard variations as in *Difficulty notes*; the autopilot (holding the beam on a Chimera, the harvesters,
       a told column) flies the level with Rook on every difficulty and with `--escort none`
@@ -426,7 +480,12 @@ field (easy 21.7 %) and at most 1.8 s over the ship's band. Prompts and briefs: 
 Left to the build (the document is approved as drafted):
 
 - **The harvesters' numbers** (160 HP, 30 credits, 6 of 8): first values of this draft; part B tunes the HP so the
-  typical player downs six with the plan's fit.
+  typical player downs six with the plan's fit. Step B2: the plan's fit meets the secondary 3/3 on easy and medium
+  with 160 HP (no tuning), hard 0/3 (7 of 8 with three escorts: step B3's autopilot first, then the HP if needed).
+- **The harvesters' drift** (QB-5, round 74): the 30 px/s sideways cannot keep both "never over the other's hull" and
+  "escapes at the bottom edge"; the data flies 8 px/s apart (the [harvester](../../../enemies/air/harvester/README.md)).
+- **The failed secondary's line**: no `secondary-failed` cue is built, so Varga's "*Too many got through*" waits on
+  the first harvester away (`enemy-escaped`) until one is (a small simulation cue for step B4's radio, pending).
 - **The Chimera's intro pair**: its document lists V-wings and swarms; the level adds a two-unit `line abreast` for
   the safe intro (the gap analysis's "safe pair"). Our reading: a level may thin a formation for an intro.
 
@@ -447,3 +506,10 @@ Left to the build (the document is approved as drafted):
   J5, J10 as drafted; A.12 a: the banks are the cream veil, and clouds at different altitudes do not differ in colour
   (the [world](../../../world/jovian/README.md#hazards--set-pieces)). The document approved as drafted (D.2; `design:
   approved`).
+- 2026-10-31 (M10 part B, step B2; pending the user's review in round 74): the level's data from the approved tables
+  and ART-B's proposal. Measured before tuning (`levelReport`, the plan's fit): 94.7 enemies a minute, 2.00 on the
+  screen, 10 pauses over 2 s at medium (the floor failed), the haul −6 %. Tuned as Act 5's levels: the Talon waves at
+  130 px/s, ten firing Talon pairs on the offbeats, the t=140 Lampreys at t=139; the t=151 Spore Bombers at t=150 and
+  the t=169 Chimera wing at t=168 (the strike rule); `bounty_scale` 0.31 kept (+0.2 %). The Wraiths fly the built
+  `rear ambush`, the Gunships a `column`. The harvester and the drop craft are unit data files (gap check §4); the pod
+  a debris chunk that `reveals` its secret; the forward / reference measures 0.99 (part A's plan), not 1.19.

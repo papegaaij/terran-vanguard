@@ -140,8 +140,11 @@ class JovianHazardsTest {
         assertEquals(0.25, banks.coverOn(Difficulty.EASY));
         assertEquals(140, banks.band());
         assertEquals(2, banks.bandSeconds());
-        // No built level carries an Act 6 hazard: every level flies as before.
+        // No level before Act 6 carries an Act 6 hazard: every one flies as before (M10 part B: Level 36's strikes).
         for (String key : CONTENT.levels().keySet()) {
+            if (Content.levelNumber(key) >= 36) {
+                continue;
+            }
             for (Difficulty difficulty : Difficulty.values()) {
                 HazardSpec hazards = SimSpecs.level(CONTENT, key, difficulty).hazards();
                 assertTrue(hazards.eruptions().isEmpty(), key);

@@ -746,6 +746,12 @@ optional `skip` list of the difficulties it is left out on (Level 06's hard-only
   field at a time, the ship's `band` px and `band_seconds`, checked against the backdrop's `banks`,
   [schemas-backdrops](../schemas-backdrops/README.md)), rendered into the
   [Jovian system](../../../world/jovian/README.md#hazards--set-pieces)'s *Hazards & set pieces*.
+  M10 part B (Level 36; loaded and checked from step B2, flown from step B1): a debris chunk's **`reveals`** (a small
+  chunk that frees the named secret's hidden crate, the secret's `crate`, when the player's shot breaks it: the
+  pathfinder pod) and the radio event **`first-strike-kill`** (the attempt's first enemy a lightning strike kills, once;
+  only in a level with `weather.strikes`). An act's briefing page may name its **`music`**: `motif` (the act's A
+  theme's motif stem alone in place of the briefing music, faded out over 1 s as the page opens and back over 1 s on
+  the next: Act 6's page 3).
 - **Act** (`campaign/<act>/data.yaml`): `levels` `[first, last]` (global numbers), `title_card`
   (`act`, `name`, `line`), `briefing` (pages as a level's); `outro`, the act-end
   outro after the last level's debrief: `music` (a music file's name, `act-complete`: track 24

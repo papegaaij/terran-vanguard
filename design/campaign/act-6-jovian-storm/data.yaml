@@ -1,0 +1,22 @@
+# Act 6 – Jovian Storm: its levels and the act intro (title card and the four intro pages), rendered into README.md (Act
+# intro and outro). M10 part B, step B2, from the approved texts (round 72). Page 3 is Chairman Vorne's invitation on
+# the enemy channel (`channel: enemy`: the amber frame and the steady interference, the enemy voice filter; M9 part A)
+# and plays track 14's motif stem alone (`music: motif`: the briefing music fades out over 1 s as it opens and back
+# over 1 s on page 4; step B2's page key). The outro after Level 42 is part H's. The `next_act` (Act 7 on the release's
+# end) moves here from Act 5 (step B2): the branch's release ends after Level 36, the last level built, until part H
+# builds Level 42.
+# Schema: ../../tech/architecture/schemas-levels/README.md
+levels: [36, 42]
+
+title_card:  # over the act's still (ui/act-6-jovian-storm-still.png, tools/art/act_stills.py act-6 from Level 36's backdrop): Jupiter's cream and ochre bands from above the cloud decks, the fleet's lights on the curve, a far gold glint where Aurelia hangs; its chrome lettering ui/act-6-jovian-storm-title.png (tools/art/act_titles.py)
+  act: ACT VI
+  name: JOVIAN STORM
+  line: Jupiter · September 2185
+
+briefing:  # three pages by Commander Okafor, one by Chairman Vorne on the enemy channel (approved in round 72), each voiced and with its image (tools/art/briefing_images.py)
+  - {speaker: Okafor, expression: grim, image: act-6-jupiter, line: "Aegis, Okafor, from the bridge of the Steadfast. Three weeks out of Ceres, and Jupiter fills every window. The whole fleet is here. So is everything Vorne has left."}
+  - {speaker: Okafor, image: act-6-the-plan, line: "Callisto sits behind his home fleet and Aurelia's air-defence grid, and that fleet burns helium-3 from the cloud harvesters and Io's refineries. So we break his grid, take the storm road to Io and burn his fuel. Then Callisto."}
+  - {speaker: Vorne, channel: enemy, music: motif, image: act-6-invitation, line: "Commander Okafor. Welcome to Jupiter. Do come to Aurelia; you know the way. You visited it once before, I believe, in sixty-six. The city still remembers you."}
+  - {speaker: Okafor, expression: fierce, image: act-6-every-channel, line: "All channels. Vorne, this is Okafor. I was at Aurelia. I remember. So will you. Aegis: you dive first. Mission briefing follows. Aegis Actual out."}
+
+next_act: {act: ACT VII, name: BEYOND THE GATE, setting: THE TETHER GATE}   # the release ends after this act: "ACT VII - BEYOND THE GATE. THE TETHER GATE. COMING SOON." on the release's end, "ACT VII - BEYOND THE GATE: COMING SOON" in the hangar before L43

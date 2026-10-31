@@ -32,7 +32,7 @@ here is a hand table marked draft, taken from the level drafts, and the build (M
 
 | Part | Summary | Design | Impl | Art |
 |---|---|---|---|---|
-| [level-36-cloud-divers](level-36-cloud-divers/README.md) | The dive from orbit into Jupiter's upper bands, air only: foreground cloud banks over the play plane, the regenerating Chimera beside the Talons, the fleet's drop craft marked friendly, helium-3 harvesters (`HARVESTERS`), wind and the first lightning | approved | not-started | proposed |
+| [level-36-cloud-divers](level-36-cloud-divers/README.md) | The dive from orbit into Jupiter's upper bands, air only: foreground cloud banks over the play plane, the regenerating Chimera beside the Talons, the fleet's drop craft marked friendly, helium-3 harvesters (`HARVESTERS`), wind and the first lightning | approved | in-progress | proposed |
 | [level-37-fall-of-aurelia](level-37-fall-of-aurelia/README.md) | Aurelia, the cloud capital: evacuation shuttles (`SHUTTLES`), Mirror Interceptors and Graft Turrets, the act's `shield-breaker` level; the Vrell turn at t=100 and the falling city in the last 40 s | approved | not-started | none |
 | [level-38-lightning-belt](level-38-lightning-belt/README.md) | The storm layer, every direction, air only: told lightning strikes that hit the enemies too, Harrows bursting into rings (`HARROWS`), the Buzzsaw Drone's return | approved | not-started | none |
 | [level-39-io-flyby](level-39-io-flyby/README.md) | Io's refineries, `destroy-targets`: six cracking towers under holds, dry eruptions throwing rocks, Striders guarding the works, the pump stations (`PUMPS`) | approved | not-started | none |
@@ -115,12 +115,16 @@ from above the cloud decks, the fleet's lights on the curve, a far gold glint wh
 `ui/act-6-jovian-storm-title.png` from `tools/art/act_titles.py`; M10 part B; round 72 shows this still idea with an
 alternative, round 63's lesson). Text (draft):
 
+<!-- data: act-title-card -->
 > ACT VI
 > JOVIAN STORM
 > Jupiter · September 2185
+<!-- /data -->
 
 **Act intro** (four pages, each voiced and with its own image in `assets/ui/briefing/`, as Acts 4–5's). Texts (draft,
-decided 2026-10-31 (round 72)); three by Commander Okafor, one by Chairman Vorne on the enemy channel. The images are production art
+decided 2026-10-31 (round 72)); three by Commander Okafor, one by Chairman Vorne on the enemy channel. The title card and
+the pages live in the act's [data.yaml](data.yaml) (`levels`, `title_card`, `briefing` with `channel: enemy` and
+`music: motif` on page 3, and the `next_act` naming Act 7; M10 part B, step B2) and are rendered here. The images are production art
 straight away (part B, `tools/art/briefing_images.py`); Vorne's portrait on page 3 is his final production portrait:
 
 | Page | Speaker | Channel | Image |
@@ -130,18 +134,21 @@ straight away (part B, `tools/art/briefing_images.py`); Vorne's portrait on page
 | 3 | Chairman Vorne (neutral) | enemy (intercepted) | `act-6-invitation`: Vorne at a gilded window over Aurelia's domes and balloons, the Ascendancy crest above, the amber frame and the rolling interference bands |
 | 4 | Commander Okafor (fierce) | briefing | `act-6-every-channel`: Okafor at the *Steadfast*'s comms board with every band lit; through the window behind her the first Stormhawks drop toward the cloud tops |
 
-> **Commander Okafor:** "Aegis, Okafor, from the bridge of the Steadfast. Three weeks out of Ceres, and
-> Jupiter fills every window. The whole fleet is here. So is everything Vorne has left."
+<!-- data: act-briefing -->
+> **Commander Okafor:** "Aegis, Okafor, from the bridge of the Steadfast. Three weeks out of
+> Ceres, and Jupiter fills every window. The whole fleet is here. So is everything Vorne has
+> left."
 >
-> **Commander Okafor:** "Callisto sits behind his home fleet and Aurelia's air-defence grid, and that fleet
-> burns helium-3 from the cloud harvesters and Io's refineries. So we break his grid, take the storm road
-> to Io and burn his fuel. Then Callisto."
+> **Commander Okafor:** "Callisto sits behind his home fleet and Aurelia's air-defence grid, and
+> that fleet burns helium-3 from the cloud harvesters and Io's refineries. So we break his grid,
+> take the storm road to Io and burn his fuel. Then Callisto."
 >
-> **Chairman Vorne:** "Commander Okafor. Welcome to Jupiter. Do come to Aurelia; you know the way. You
+> **Vorne:** "Commander Okafor. Welcome to Jupiter. Do come to Aurelia; you know the way. You
 > visited it once before, I believe, in sixty-six. The city still remembers you."
 >
-> **Commander Okafor:** "All channels. Vorne, this is Okafor. I was at Aurelia. I remember. So will you.
-> Aegis: you dive first. Mission briefing follows. Aegis Actual out."
+> **Commander Okafor:** "All channels. Vorne, this is Okafor. I was at Aurelia. I remember. So
+> will you. Aegis: you dive first. Mission briefing follows. Aegis Actual out."
+<!-- /data -->
 
 Page 2 is the plan the levels follow (the grid L36–L37, the storm road L38, the fuel L39, Callisto L40–L42); page 3
 turns the 2166 riots into a courtesy (his document's beat), and page 4 is the story's sample line as her answer, on
@@ -451,7 +458,10 @@ Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 - [ ] Act data file: `levels: [36, 42]`, the title card, the four intro pages (page 3 `channel: enemy`, `music:
       motif`) and the four outro pages with their images and expressions, rendered into *Act intro and outro* as
       marked tables (part B for the intro, part H for the outro with `next_act` `{act: ACT VII, name: BEYOND THE GATE,
-      setting: THE TETHER GATE}`); Act 5's `next_act` removed when Act 6's levels play.
+      setting: THE TETHER GATE}`); Act 5's `next_act` removed when Act 6's levels play. *Part B done (step B2,
+      2026-10-31): [data.yaml](data.yaml) with `levels`, the title card, the four intro pages (page 3 `channel: enemy`,
+      `music: motif`: a new page key) and Act 7's `next_act` (the branch's release ends after Level 36, the last level
+      built, until part H); Act 5's `next_act` removed; the outro pages are part H's.*
 - [ ] The title card's still (`tools/art/act_stills.py act-6` from Level 36's backdrop) and lettering; the eight
       intro and outro briefing images and the fourteen level briefing images (`tools/art/briefing_images.py`).
 - [ ] The act's systems (M10 part A and the levels' parts): `reflect` with the arc and Reflex-bolt rows,
@@ -543,3 +553,7 @@ Nothing is open for the user. Build notes (not questions):
   Reflex bolt a, all game captures and the production art accepted (F.1-F.7), R.1-R.3 accepted, C.1-C.21 accepted;
   **A.3 b** the soot puff under the explosions' flash (Act 6 only or everywhere is part B's call, see *Implementation*);
   **R.4 b** Vorne's shout is the new shouted render lowered to about 104 Hz.
+- 2026-10-31 (M10 part B, step B2): the act's [data.yaml](data.yaml) holds the intro (title card and four pages,
+  rendered into *Act intro and outro*) and Act 7's `next_act`, moved from Act 5's: with Level 36 built the branch's
+  release ends after Level 36 (`CampaignRoute.releaseEnd`: the next level is not built) until part H moves it to
+  Level 42. Page 3's motif is a new briefing page key, `music: motif` (the game's half is step B4's).

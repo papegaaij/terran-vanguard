@@ -868,6 +868,8 @@ public sealed interface EnemyMovementData permits EnemyData {
      * {@code leader} (the weights), at {@code speed} px/s ({@code dive_speed} after a loop-back),
      * turning at most {@code turn_rate} °/s; at most {@code max} members (24). M8 part C (the Glassfin): a {@code
      * sway} across the leader's route (the ribbon) and a {@code ram} (members breaking off to dive at the ship's lane).
+     * M10 part B (design/enemies/air/chimera): a firing swarm's {@code fire_cap} (at most that many members' volleys in a
+     * {@code stagger} of s; the fire band is its {@code swoop_path}'s) — both or neither.
      */
     record Flock(
             double separation,
@@ -880,7 +882,9 @@ public sealed interface EnemyMovementData permits EnemyData {
             double turnRate,
             int max,
             Optional<Sway> sway,
-            Optional<Ram> ram) {
+            Optional<Ram> ram,
+            Optional<Integer> fireCap,
+            Optional<Double> stagger) {
         public Flock {
             Check.positive("separation", separation);
             Check.that(radius >= separation, "radius: the neighbourhood reaches at least the separation");
@@ -891,6 +895,9 @@ public sealed interface EnemyMovementData permits EnemyData {
             Check.positive("dive_speed", diveSpeed);
             Check.positive("turn_rate", turnRate);
             Check.that(max >= 1 && max <= 24, "max: 1 to 24 members");
+            Check.that(fireCap.isPresent() == stagger.isPresent(), "fire_cap and stagger: both or neither");
+            fireCap.ifPresent(cap -> Check.that(cap >= 1 && cap <= max, "fire_cap: 1 to the flock's max, was " + cap));
+            stagger.ifPresent(seconds -> Check.notNegative("stagger", seconds));
         }
     }
 
@@ -1106,10 +1113,16 @@ public sealed interface EnemyMovementData permits EnemyData {
         }
     }
 
-    /** Planned (part D): straight down the screen at {@code speed} px/s, with no intent. Read, not flown yet. */
-    record Drift(double speed) {
+    /**
+     * Straight down the screen at {@code speed} px/s, with no intent (a carrier's: the Brood Pod, the Gilded Gunship).
+     * M10 part B (design/campaign Level 36, the harvesters): a carrier's sideways {@code vx} px/s (positive to the right)
+     * and {@code mirrored} (a carrier right of the field's middle drifts the other way: a pair's hulls mirrored, {@code
+     * vx} &gt; 0 toward each other, &lt; 0 apart); a straight drift when not given.
+     */
+    record Drift(double speed, Optional<Double> vx, Optional<Boolean> mirrored) {
         public Drift {
             Check.positive("speed", speed);
+            Check.that(mirrored.isEmpty() || vx.isPresent(), "drift.mirrored: only with a sideways vx");
         }
     }
 

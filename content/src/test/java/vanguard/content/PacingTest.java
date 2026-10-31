@@ -258,7 +258,9 @@ class PacingTest {
             // G2's stand-in moved into Level34Test in step G3).
             Map.entry(Level34Test.LEVEL, Level34Test::planLoadout),
             // M9 part H: Level 35's plan fit (step H2's stand-in moved into Level35Test in step H3).
-            Map.entry(Level35Test.LEVEL, Level35Test::planLoadout));
+            Map.entry(Level35Test.LEVEL, Level35Test::planLoadout),
+            // M10 part B: Level 36's plan fit (step B2's stand-in, Level36Plan; step B3 moves it into Level36Test).
+            Map.entry(Level36Plan.LEVEL, Level36Plan::planLoadout));
 
     /** Flies the level with the autopilot on {@link LevelMetrics#SEED} and measures it ({@link LevelMetrics.Pacing}). */
     static LevelMetrics.Flight fly(String key, Difficulty difficulty, Loadout loadout) {

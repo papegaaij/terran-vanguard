@@ -548,6 +548,12 @@ def neutral(slug):
     return bool(load(f"{enemy_dir(slug)}/data.yaml").get("neutral"))
 
 
+def uncounted(slug):
+    """M10 part B (Level 36, the harvesters): whether a hostile unit is not counted as an enemy (`counted: false`):
+    picked and paid, but not a kill (its own row in the credit budget)."""
+    return load(f"{enemy_dir(slug)}/data.yaml").get("counted", True) is False
+
+
 def enemy_totals(level):
     totals = {}
     for wave in medium_waves(level) + halt_waves(level):
@@ -637,7 +643,10 @@ def directions(level):
     counts = {"front": 0, "sides": 0, "rear": 0}
     for wave in medium_waves(level) + halt_waves(level):
         # M9 part B: a neutral craft is not an enemy (Level 29's wavering Stormhawks)
-        n = sum(group_count(wave, g) for g in groups(wave) if not neutral(g["enemy"]))
+        # M10 part B: nor an uncounted craft (Level 36's harvesters)
+        n = sum(group_count(wave, g) for g in groups(wave) if not neutral(g["enemy"]) and not uncounted(g["enemy"]))
+        if not n:
+            continue
         if wave["from"] == "all":  # M5 part G: a cross from all four edges, split evenly (two are the sides)
             counts["front"] += n / 4
             counts["sides"] += n / 2
@@ -871,12 +880,14 @@ def waves(d):
                          entry(w, level), fill(w["notes"], w) if "notes" in w else ""])
         rows[at:at] = halt
     all_totals = enemy_totals(level) | set_piece_totals(level) | boss_totals(level)
-    totals = " · ".join(f"{enemy_name(slug)} {n}" for slug, n in all_totals.items() if not neutral(slug))
+    totals = " · ".join(f"{enemy_name(slug)} {n}" for slug, n in all_totals.items()
+                        if not neutral(slug) and not uncounted(slug))
     if "halt_waves" in level:
         totals += " (with one cycle of the halt waves: a typical halt)"
     if routes(level):  # M9 part E (Level 32): every branch counted; a route flies one channel of each fork
         totals += " (every fork's branches together; a route flies one channel of each fork)"
-    spared = [f"the {enemy_name(slug)}s ({n})" for slug, n in all_totals.items() if neutral(slug)]
+    # M10 part B (Level 36): an uncounted hostile craft (the harvesters) is not an enemy either
+    spared = [f"the {enemy_name(slug)}s ({n})" for slug, n in all_totals.items() if neutral(slug) or uncounted(slug)]
     if spared:
         totals += "; " + ", ".join(spared) + " are not enemies"
     head = ["t (s)", "Section", "Formation", "Enemies (link)", "Count", "Enter from", "Notes"]
@@ -1160,7 +1171,11 @@ def credit_rows(d, level):
         return round(c * factor)
 
     def layer_rate(slug):
-        return rate["ground_targets"] if load(f"{enemy_dir(slug)}/data.yaml")["layer"] == "ground" else rate["air_kills"]
+        e = load(f"{enemy_dir(slug)}/data.yaml")
+        # M10 part B (Level 36's harvesters): a stat block's `haul` names the share its bounty is paid with
+        if "haul" in e:
+            return rate["ground_targets"] if e["haul"] == "ground-targets" else rate["air_kills"]
+        return rate["ground_targets"] if e["layer"] == "ground" else rate["air_kills"]
 
     rows = []  # [source, perfect, typical]
 
@@ -1169,7 +1184,8 @@ def credit_rows(d, level):
         rows.append([source, sum(i[0] * i[1] for i in items if len(i) < 4 or i[3]),
                      sum(i[0] * i[1] * i[2] for i in items)])
 
-    kills = [(enemy_name(slug), n, slug) for slug, n in enemy_totals(level).items() if not neutral(slug)]
+    kills = [(enemy_name(slug), n, slug) for slug, n in enemy_totals(level).items()
+             if not neutral(slug) and not uncounted(slug)]
     # the units a spawner releases (Level 04's Brood Pods: their Skitters), killed too
     for slug, n in enemy_totals(level).items():
         for spawn in spawns(slug):
@@ -1229,6 +1245,10 @@ def credit_rows(d, level):
 
     add("Kills: " + " + ".join(kill_name(name, n, slug) for name, n, slug in kills),
         [item for _, n, slug in kills for item in kill_items(n, slug)])
+    # M10 part B (Level 36): an uncounted hostile craft (the harvesters) pays on its own row, at its haul's share
+    for slug, n in enemy_totals(level).items():
+        if uncounted(slug):
+            add(f"{enemy_name(slug)}s (not enemies): {n} × {stat_bounty(slug)}", kill_items(n, slug))
     # M9 part B (Level 29): a V-wing's leader pays its airframe's bounty: the typical haul counts it at the wing's, a
     # perfect run takes the extra
     leaders = {}

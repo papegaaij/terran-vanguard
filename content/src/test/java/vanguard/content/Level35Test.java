@@ -622,8 +622,8 @@ class Level35Test {
     }
 
     /**
-     * The act's end: Level 35 is Act 5's last level; its outro (four pages under {@code act-complete}) and its next act,
-     * Act 6 <em>Jovian Storm</em> at Callisto (the release ends after it).
+     * The act's end: Level 35 is Act 5's last level; its outro (four pages under {@code act-complete}); M10 part B: no
+     * next act any more (Act 6 is built and names Act 7).
      */
     @Test
     void levelThirtyFiveEndsActFive() {
@@ -632,7 +632,11 @@ class Level35Test {
         ActData.Outro outro = act.outro().orElseThrow();
         assertEquals(4, outro.pages().size());
         assertEquals(Optional.of("act-complete"), outro.music());
-        assertEquals(Optional.of(new ActData.NextAct("ACT VI", "JOVIAN STORM", "CALLISTO")), act.nextAct());
+        // M10 part B (step B2): Act 6 is built from Level 36 on, so Act 7 is the release's next act (Act 6's data).
+        assertEquals(Optional.empty(), act.nextAct());
+        assertEquals(
+                Optional.of(new ActData.NextAct("ACT VII", "BEYOND THE GATE", "THE TETHER GATE")),
+                CONTENT.acts().get("act-6-jovian-storm").nextAct());
     }
 
     @Test

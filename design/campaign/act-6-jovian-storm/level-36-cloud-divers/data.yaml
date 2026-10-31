@@ -1,0 +1,442 @@
+# Level 36 – Cloud Divers: the level script, rendered into README.md (briefing, threat profile, layout, waves, radio,
+# credit budget). Times are seconds from the level start. M10 part B, step B2, from the README's approved hand tables
+# (round 72) and ART-B's backdrop proposal (concept/backdrop-proposal.yaml: its backdrop block, the banks with their
+# pieces and the pod's debris adopted as they are; the sections at the README's times, so the tile sets stay cut).
+# Schema: ../../../tech/architecture/schemas-levels/README.md
+# Keys new in M10 part B (flown from step B1; loaded and checked from step B2): the debris chunk's `reveals` (a small
+# chunk that frees a secret's hidden crate when broken: the pathfinder pod), the radio's `first-strike-kill` event and
+# the backdrop bank's `piece`; the harvester's `counted: false`, `haul` and drift `vx` and the Chimera's flock
+# `fire_cap` are their stat blocks'.
+# Step B2's own placements (pending the user's review in round 74): the Wraiths fly the built `rear ambush` from the
+# rear (the README's "column, decloaking behind the ship"); the Gilded Gunships a `column` (Level 30's); the t=151 Spore
+# Bombers enter at t=150 and the t=169 Chimera wing at t=168 (the world's rule: no strike tell within 1 s of a wave's
+# entry, the strikes' tells at t=151 and t=169); the harvesters drift 8 px/s apart (QB-5, the harvester's data).
+scroll_speed: 160     # the dive; the bands 120, the harvester fields 100, the storm edge 120 (eased over 2 s each)
+launch_seconds: 5
+bounty_scale: 0.31    # every bounty × 0.31: the README's hand estimate (step B2: levelReport's fit below)
+control_prompts: []
+ground: none          # air only (J2: the cloud decks are scenery): the bomb deliveries read NO GROUND; the Airstrike and the EMP Burst work
+threat_profile:  # the hangar intel panel (design/ui/hangar) and the README's Threat profile table
+  setting: Jupiter, the upper atmosphere
+  layers: [air, low-air]
+  density: 4
+  traits: [forward, homing]
+  hazards: [cloud banks, wind, lightning]
+  boss: none
+  objective: BREAK THE AIR COVER   # the OBJECTIVE field from sensor L1
+  varga:
+    none: "Jupiter's upper air, Lancer. Big sky, and it hides things."
+    l1: "Mostly ahead. Clouds over your plane. No ground: bombs idle."
+    l2: "New: Chimeras, hybrids that heal. Talons, Wraiths, bombers."
+    l3: "Hold the beam on a Chimera. Homing finds what clouds hide."
+  notes:
+    Dominant layers: '`air` (Talon wings, Chimera wings and swarms, Mote Swarms, Lamprey streams, Gilded Gunships and their Darts; Wraiths cloaked on `high-air` until they decloak), `low-air` (Spore Bombers, the harvesters); **no ground**'
+    Attack directions: '{directions} (the Wraiths decloak behind the ship, as built)'
+    Density: '{density}'
+    Recommended traits: '{traits}'
+    Hazards: Foreground cloud banks over the play plane; wind gusts (two spells); lightning strikes (three, section 4)
+    Boss / mid-boss: none
+    Sensor-suite detail: '**none**: Jupiter, the upper atmosphere, `air`, front · **L1**: + directions (sides), density {density}, hazards "cloud banks", "wind" and "lightning", the objective `{objective}`, the secondary `HARVESTERS 0 / 6` and the row `NO GROUND` · **L2**: + Chimera (new), Talon, Wraith, Spore Bomber, Lamprey, Gilded Gunship, Dart Drone and Mote portraits · **L3**: + `forward` and `homing` highlighted, the wave strip marking the harvester pairs and the three strikes'
+
+sections:  # back to back from t = 0; each speed change eased over 2 s (ramp); ART-B's tile sets cut at these rows
+  - name: The Dive
+    end: 24
+    atmosphere: clear
+    tiles: [dive-bands, cloud-tops, ice-haze]
+    notes:
+      layers:
+        deep: Jupiter's curve and the bands far below, the CDF carrier group and its escorts (lights blinking).
+        low-air: the first cloud tops rushing past.
+        high-air: thin ice haze. No banks yet.
+      purpose: 'The dive: popcorn and Talons at speed; the drop craft marked friendly (t=4, t=10).'
+  - name: Into the Bands
+    end: 70
+    speed: 120
+    ramp: 2   # eased from 160 over its first 2 s
+    atmosphere: clear
+    tiles: [cream-bands, cloud-wisps]
+    notes:
+      layers:
+        deep: storm bands in cream and ochre.
+        low-air: cloud wisps.
+        high-air: 'the **first foreground banks** from t≈28 (small, slow).'
+      purpose: "The Chimera's intro pair (t=34, quiet window t=32–38), the first wings; Wraiths; gust spell 1 (t=58, t=64)."
+  - name: Harvester Fields
+    end: 125
+    speed: 100
+    ramp: 2   # eased from 120
+    atmosphere: clear
+    tiles: [rust-band, cloud-wisps]
+    notes:
+      layers:
+        deep: a broad rust band.
+        low-air: 'the **harvesters** in four pairs (t=72–125) with their plumes, Spore Bombers among them.'
+        high-air: banks at their densest (a third of the field).
+      purpose: 'The secondary; the Chimera swarms under the banks (`homing`).'
+  - name: Storm Edge
+    end: 192
+    speed: 120
+    ramp: 2   # eased from 100
+    atmosphere: clear
+    tiles: [storm-edge, cloud-wisps]
+    notes:
+      layers:
+        deep: "the band turns brown-grey, the storm wall of Level 38 far ahead with lightning inside it."
+        high-air: 'banks thinning; the pathfinder pod (the secret, t≈146). Lightning flashes from t=130, **strikes** at t=138, 152 and 170. Level end at t=192 as the bands thin over Aurelia''s sky.'
+      purpose: "The act's first strikes; gust spell 2 (t=156, t=162); the run to Aurelia."
+
+weather:  # the Jovian system's hazards (design/world/jovian): Level 12's gusts and flashes as built, part A's strikes
+  gusts:   # spell 1 from the left, spell 2 from the right (the bands' jets run opposite ways); push starts at t
+    at:
+      - {t: 58, from: left}
+      - {t: 64, from: left}
+      - {t: 156, from: right}
+      - {t: 162, from: right}
+    seconds: 2.5      # including the ramps
+    ramp: 0.25        # s up and down
+    push: 40          # px/s, added to the positions of the ship, Rook, the Lampreys
+    telegraph: 1.0    # s ahead: the wind streaks brighten and an arrow shows at the upwind edge
+    easy: {push: 25, telegraph: 1.5}
+    hard: {push: 55}
+  lightning:   # flash-only lightning dressing the storm edge from t=130 (the LIGHTNING event for the thunder); none within 1 s of a strike's tell
+    at: [130, 133.5, 141, 145.5, 148.5, 155, 165, 174, 179, 184]
+    reveal: 0.5   # s a flash makes the banks see-through
+  strikes:   # told columns (data t = the tell's start, 1.0 s before the strike): t=138 through the t=135 Chimera wing's lane, t=152 left and t=170 right of the centre; easy t=138 and 170 only; hard + a tracking column at t=160
+    - {t: 137, x: 240}
+    - {t: 151, x: 120, skip: [easy]}
+    - {t: 159, x: 240, track: true, skip: [easy, medium]}
+    - {t: 169, x: 360}
+
+debris:  # the pathfinder pod (the secret): a CDF pathfinder's cargo pod drifting down under a foreground bank on the play plane, a small breakable like a small rock (20 HP); broken, it frees the secret's hidden crate (`reveals`); sprites assets/sprites/debris-pathfinder-pod_N (16 tumble frames) and -break_N (ART-B)
+  chunks:
+    pathfinder-pod: {size: [28, 28], hp: 20}
+  clearance: 0
+  placed:
+    - {t: 146, x: 400, chunk: pathfinder-pod, drift: [-6, -90], reveals: pathfinder pod}   # under bank-d (t 148.6, x 390) about t=147.2-148.8
+
+waves:
+  - t: 3
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    speed: 200
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+    notes: Out of the haze below the dive; the fleet's drop craft pass at t=4 and t=10 (not enemies)
+  - {t: 4, formation: line abreast, enemy: fleet-stormhawk, count: 2, from: rear, speed: 400, notes: "The fleet's drop craft, up from the bottom edge (neutral: the friendly banner from t=2)"}
+  - {t: 6, formation: line abreast, enemy: talon, count: 4, from: front, speed: 130}
+  - t: 9
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    speed: 200
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+  - {t: 10, formation: line abreast, enemy: fleet-stormhawk, count: 2, from: rear, speed: 400, notes: "The second pair of drop craft (the banner from t=8)"}
+  - {t: 12, formation: V-wing, enemy: talon, count: 5, from: front, speed: 130, leader: tip, notes: Squad leader at the tip}
+  - t: 15
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    speed: 200
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+  - {t: 16.5, formation: line abreast, enemy: talon, count: 2, from: front, speed: 130, notes: "Step B2: a firing Talon pair on the offbeat (the beam erases the fodder within a second)"}
+  - {t: 18, formation: line abreast, enemy: talon, count: 4, from: front, speed: 130}
+  - t: 21
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    speed: 200
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+  - {t: 23, formation: line abreast, enemy: talon, count: 2, from: front, speed: 130, notes: "Step B2: a firing Talon pair on the offbeat (the beam erases the fodder within a second)"}
+  - t: 25
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    speed: 200
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+    notes: Into the bands; the first foreground bank at t≈28
+  - {t: 26.5, formation: line abreast, enemy: talon, count: 2, from: front, speed: 130, notes: "Step B2: a firing Talon pair on the offbeat (the beam erases the fodder within a second)"}
+  - {t: 28, formation: line abreast, enemy: talon, count: 4, from: front, speed: 130, notes: The last wave before the quiet window}
+  - {t: 34, formation: line abreast, enemy: chimera, count: 2, from: front, notes: "**The Chimera's first appearance**: an intro pair in open sky (no bank), quiet window t=32–38; Varga's line ahead of it"}
+  - t: 39
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    speed: 200
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+  - {t: 42, formation: V-wing, enemy: talon, count: 5, from: front, speed: 130, leader: tip, notes: Squad leader; drops the Overdrive}
+  - {t: 45, formation: V-wing, enemy: chimera, count: 5, from: front, notes: "The first Chimera wing, under the edge of a bank"}
+  - t: 48
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    speed: 200
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+  - {t: 50, formation: line abreast, enemy: talon, count: 2, from: front, speed: 130, notes: "Step B2: a firing Talon pair on the offbeat (the beam erases the fodder within a second)"}
+  - {t: 51, formation: rear ambush, enemy: wraith, count: 2, from: rear, notes: "Cloaked on `high-air`, decloaking behind the ship (their rear re-entry warned as built)"}
+  - {t: 54, formation: column, enemy: gilded-gunship, count: 1, from: front, notes: "About 6 Darts launched (two streams of 3); drops the Shield cell"}
+  - {t: 57, formation: line abreast, enemy: talon, count: 4, from: front, speed: 130, notes: "Gust spell 1 (from the left) at t=58 and t=64"}
+  - t: 60
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    speed: 200
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+  - {t: 61.5, formation: line abreast, enemy: talon, count: 2, from: front, speed: 130, notes: "Step B2: a firing Talon pair on the offbeat (the beam erases the fodder within a second)"}
+  - {t: 63, formation: V-wing, enemy: chimera, count: 6, from: front}
+  - {t: 66, formation: stream, enemy: lamprey, count: 5, from: sides, edge: left, interval: 0.5, warning: 3, notes: "Storm chasers on the gust's wind; edge-warned 3 s ahead"}
+  - {t: 69, formation: line abreast, enemy: talon, count: 4, from: front, speed: 130}
+  - {t: 72, formation: carrier + escorts, enemy: harvester, count: 2, from: front, easy: {count: 2}, hard: {count: 2}, notes: "**Harvesters 1–2** (the secondary, not counted as enemies)"}
+  - {t: 72, formation: carrier + escorts, enemy: talon, count: 2, from: front, hard: {count: 3}, notes: "Their two Talon escorts in `orbit` at 90 px round the pair (hard three)"}
+  - t: 75
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    speed: 200
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+  - {t: 78, formation: column, enemy: spore-bomber, count: 2, from: front, notes: "`low-air`, among the harvesters' lane; spore mines rise to `air`"}
+  - t: 81
+    formation: swarm
+    enemy: chimera
+    count: 8
+    from: front
+    speed: 160
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+    notes: The first Chimera swarm
+  - {t: 84, formation: line abreast, enemy: talon, count: 4, from: front, speed: 130}
+  - {t: 86, formation: carrier + escorts, enemy: harvester, count: 2, from: front, easy: {count: 2}, hard: {count: 2}, notes: "**Harvesters 3–4**"}
+  - {t: 86, formation: carrier + escorts, enemy: talon, count: 2, from: front, hard: {count: 3}, notes: Their two Talon escorts}
+  - {t: 89, formation: rear ambush, enemy: wraith, count: 2, from: rear, notes: "Cloaked; decloak behind the ship"}
+  - t: 92
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    speed: 200
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+  - {t: 93.5, formation: line abreast, enemy: talon, count: 2, from: front, speed: 130, notes: "Step B2: a firing Talon pair on the offbeat (the beam erases the fodder within a second)"}
+  - {t: 95, formation: column, enemy: spore-bomber, count: 2, from: front, notes: "`low-air`"}
+  - {t: 98, formation: V-wing, enemy: chimera, count: 6, from: front}
+  - {t: 100, formation: carrier + escorts, enemy: harvester, count: 2, from: front, easy: {count: 2}, hard: {count: 2}, notes: "**Harvesters 5–6**"}
+  - {t: 100, formation: carrier + escorts, enemy: talon, count: 2, from: front, hard: {count: 3}, notes: Their two Talon escorts}
+  - {t: 103, formation: stream, enemy: lamprey, count: 5, from: front, interval: 0.5, notes: Storm chasers out of a bank}
+  - {t: 106, formation: column, enemy: gilded-gunship, count: 1, from: front, notes: "About 6 Darts; keeps ≥ 80 px from every other medium hull"}
+  - t: 109
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    speed: 200
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+  - {t: 110.5, formation: line abreast, enemy: talon, count: 2, from: front, speed: 130, notes: "Step B2: a firing Talon pair on the offbeat (the beam erases the fodder within a second)"}
+  - {t: 112, formation: column, enemy: spore-bomber, count: 3, from: front, notes: "`low-air`"}
+  - {t: 114, formation: carrier + escorts, enemy: harvester, count: 2, from: front, easy: {count: 2}, hard: {count: 2}, notes: "**Harvesters 7–8**"}
+  - {t: 114, formation: carrier + escorts, enemy: talon, count: 2, from: front, hard: {count: 3}, notes: Their two Talon escorts}
+  - {t: 117, formation: V-wing, enemy: talon, count: 5, from: front, speed: 130, leader: tip, notes: Squad leader}
+  - t: 120
+    formation: swarm
+    enemy: chimera
+    count: 8
+    from: front
+    speed: 160
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+    notes: "Under the banks: the homing lesson"
+  - t: 123
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    speed: 200
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+  - {t: 126, formation: rear ambush, enemy: wraith, count: 2, from: rear, notes: "Cloaked; decloak behind the ship"}
+  - {t: 129, formation: line abreast, enemy: talon, count: 4, from: front, speed: 130}
+  - t: 132
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    speed: 200
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+    notes: "The storm edge darkens; lightning flashes (no damage) from t=130"
+  - {t: 133.5, formation: line abreast, enemy: talon, count: 2, from: front, speed: 130, notes: "Step B2: a firing Talon pair on the offbeat (the beam erases the fodder within a second)"}
+  - {t: 135, formation: V-wing, enemy: chimera, count: 6, from: front, notes: "The first lightning **strike** at t=138 (telegraph from t=137) lands among them"}
+  - {t: 139, formation: stream, enemy: lamprey, count: 5, from: front, interval: 0.5, notes: "Step B2: t=139, not 140 (easy's pause after the struck wing)"}
+  - {t: 143, formation: column, enemy: gilded-gunship, count: 1, from: front, notes: About 6 Darts}
+  - t: 146
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    speed: 200
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+    notes: "The pathfinder pod (the secret) drifts in under a bank at t≈146"
+  - {t: 147.5, formation: line abreast, enemy: talon, count: 2, from: front, speed: 130, notes: "Step B2: a firing Talon pair on the offbeat (the beam erases the fodder within a second)"}
+  - {t: 149, formation: V-wing, enemy: talon, count: 5, from: front, speed: 130, leader: tip, notes: "Squad leader; strike 2 at t=152"}
+  - {t: 150, formation: column, enemy: spore-bomber, count: 3, from: front, notes: "`low-air`; step B2: t=150, not 151 (strike 2's tell at t=151)"}
+  - t: 154
+    formation: swarm
+    enemy: chimera
+    count: 8
+    from: front
+    speed: 160
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+    notes: "Gust spell 2 (from the right) at t=156 and t=162"
+  - {t: 157, formation: rear ambush, enemy: wraith, count: 2, from: rear, notes: "Cloaked; decloak behind the ship"}
+  - t: 160
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    speed: 200
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+  - {t: 161.5, formation: line abreast, enemy: talon, count: 2, from: front, speed: 130, notes: "Step B2: a firing Talon pair on the offbeat (the beam erases the fodder within a second)"}
+  - {t: 163, formation: stream, enemy: lamprey, count: 5, from: sides, edge: right, interval: 0.5, warning: 3, notes: "On the second spell's wind; edge-warned 3 s ahead"}
+  - {t: 166, formation: column, enemy: gilded-gunship, count: 2, from: front, interval: 2, notes: "2 s apart, ≥ 80 px between the hulls; about 12 Darts; strike 3 at t=170"}
+  - {t: 168, formation: V-wing, enemy: chimera, count: 7, from: front, notes: "Step B2: t=168, not 169 (strike 3's tell at t=169)"}
+  - {t: 172, formation: line abreast, enemy: talon, count: 4, from: front, speed: 130}
+  - t: 175
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    speed: 200
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+  - t: 178
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    speed: 200
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+    notes: "The last wave; gone by ≈ t=185, calm to the end at t=192"
+
+ground_targets: []   # none: the level has no ground layer (ground: none)
+
+secrets:
+  - name: pathfinder pod
+    crate: 100   # Act 1 terms: pays 1,049 with the act factor (the scouts' stores)
+    radio: {speaker: Varga, line: "A pathfinder's pod, from the scouts who dived before you. Take it."}
+
+pickups:
+  - {pickup: overdrive, dropped_by: {wave: 42, enemy: talon, unit: first}}            # the t=42 squad leader (the V-wing's tip)
+  - {pickup: shield cell, dropped_by: {wave: 54, enemy: gilded-gunship, unit: first}}   # the t=54 Gilded Gunship
+
+drops:  # a CDF supply drone from the carrier (low-air) releases an armour patch between the second and third harvester pairs
+  - {t: 96, x: 240, y: 380, pickup: armour patch}
+
+radio:  # trigger: t or event; the README's 16 lines (the 1 s rule: ≈ 12 characters a second, a 1.5 s lead). Rook's barks need him flying (requires: escort: the t=118 homing bark, the first strike kill); his t=11 line is scripted (no requires). Vorne is silent here (the act intro's page 3 carries him).
+  - {t: 1, speaker: Okafor, line: "Aegis, you're cleared to dive. Break their air cover over the bands. The fleet follows you down."}
+  - {t: 11, speaker: Rook, line: "Jupiter. All sky and no floor. If we go down here, Lancer, we fall for a week."}
+  - {t: 20, speaker: Varga, line: "Under the haze the cloud banks lie over your plane. Bodies dim under them. Their shots never do."}
+  - {t: 30, speaker: Varga, line: "There: Chimeras. Talon frames, Vrell tissue in the seams. Pick one and keep hitting it."}
+  - {t: 40, speaker: Varga, line: "See the seams glow? It's healing. Hold the beam on it, or it grows back."}
+  - {t: 48, speaker: Okafor, line: "Wraiths overhead, cloaked. They come out behind you."}
+  - {t: 67, speaker: Okafor, line: "Helium-3 harvesters ahead, skimming the bands. That's Vorne's fuel. Bring down six."}
+  - {t: 90, speaker: Varga, line: "Spore bombers under the harvesters. Vrell, still flying with the gold ones. For now."}
+  - {event: secondary-objective, speaker: Okafor, line: "Six harvesters down. His fleet will feel that at Io.", notes: {trigger: "Secondary met (`secondary-objective`, the sixth harvester down)"}}
+  - {event: enemy-escaped, enemy: harvester, speaker: Varga, line: "Too many got through. Their fuel reaches the refineries.", notes: {trigger: "Secondary failed (the third harvester escapes; step B2: no secondary-failed cue is built, so it plays at the first harvester away until one is, pending)"}}
+  - {t: 118, speaker: Rook, requires: escort, line: "Homing's earning its keep. Those clouds are full of them."}
+  - {t: 128, speaker: Varga, line: "A white line drawn down the sky means lightning. Get out of it. A second later it strikes."}
+  - {event: first-strike-kill, speaker: Rook, requires: escort, line: "Ha! The sky's on our side.", notes: {trigger: "The first enemy killed by a strike (event, bark)"}}
+  - {t: 172, speaker: Okafor, line: "The bands are thinning. Aurelia is ahead, Aegis."}
+  - {event: level-end, speaker: Okafor, line: "First dive done. The fleet is in the clouds behind you. Aurelia next.", notes: {trigger: Level end}}
+
+objectives:
+  primary: reach-end
+  secondary: {escapes: harvester, allowed: 2, easy: {allowed: 3}, hard: {allowed: 1}, label: HARVESTERS, credits: 100, name: Bring down 6 of the 8 harvesters}   # at least 6 of the 8 harvesters destroyed before they leave the bottom edge (easy 5, hard 7), failed by the third away (HARVESTERS n / 6); 100 in Act 1 terms: pays 1,049
+
+music:
+  track: 14           # Act 6 A "Eye of the Storm" (audio/music track list)
+  start_section: 2    # section 1 the theme's intro over the dive (storm strings, a far thunder roll), the base stem from the bands
+  full_section: 3     # the full mix from the harvester fields to the end
+  ambience: jovian-sky   # the Jovian sky bed (round 72 S.13 b: high wind on the hull, distant thunder, the carrier's radio hiss)
+  ambience_layers:
+    - {ambience: dive-wind, from: 0, to: 26, fade_in: 0, fade_out: 4}   # the dive's rushing wind over section 1, falling away as the dive levels out
+  end_jingle: mission-complete
+
+difficulty: {}  # the stat blocks' hooks apply (the Chimera's easy 15 %/s after 1.3 s and a pair every 2.0 s, hard 25 %/s after 0.8 s and 1.3 s; the Talon's easy 2.0 s, hard 1.3 s and a parting pair; the Gunship's, the Wraith's, the Lamprey's); the escorts' hard three, the harvester and drop-craft pairs pinned; the weather's easy and hard gusts and strikes and the secondary's allowed in their blocks; the banks' easy skips in the backdrop; the formation lever sizes the rest
+
+briefing:
+  pages:
+    - {speaker: Okafor, image: level-36-the-dive, line: "Callisto sits behind Jupiter's air defences, and Vorne fuels his fleet from these clouds. Aegis Wing dives first: break the fighter cover over the upper bands so the fleet can follow, and bring down his helium-3 harvesters on the way. Rook flies your wing. Aurelia is below us. We go there next."}
+    - {speaker: Varga, image: level-36-chimera, line: "The wrecks from Ceres carried something new: Talon airframes with Vrell tissue grown through the seams. I call them Chimeras. Give one a second and it heals. A pilot still flies each one, and the healing costs him more than the machine. And the cloud banks down there drift over your plane: what flies under them dims, their shots never do. There is no ground, Lancer. The bombs stay idle."}
+  teaser: {speaker: Rook, line: "Varga says the new ones heal. So no tickling, Lancer. Burn them."}
+
+backdrop:
+  # Presentation only: Level 36's dive over Jupiter's bands (tools/art/backdrop_l36.py, step ART-B: its proposal's
+  # block as it is). No ground (`ground: none`): the deep layer is the base. Its four tile sets are cut from one
+  # continuous field at the rows each section's tiles begin (the sections above: re-run the generator after moving
+  # one). Animated: carrier-group-glow (section 1) and storm-wall-glow (section 4), never together. The -glow pieces
+  # are additive at their piece's placements (Level 24's ground rule; B4: on deep too).
+  scroll_factors: {deep: 0.15, far: 0.5, ground: 1, low-air: 1.3, high-air: 1.7}   # far, ground unused
+  ramp: 2
+  haze_colour: ece0cc
+  atmosphere:
+    clear: {haze: 0.0}   # the haze is in the tiles
+  tile_sets:
+    dive-bands: {layer: deep, height: 1344}   # section 1: the limb, the bands far below
+    cream-bands: {layer: deep, height: 1024}   # section 2: cream and ochre bands
+    rust-band: {layer: deep, height: 992}   # section 3: the broad rust band
+    storm-edge: {layer: deep, height: 1440}   # section 4: browning to grey, then paler
+    cloud-tops: {layer: low-air, height: 960}   # section 1: cream tops rushing past
+    cloud-wisps: {layer: low-air, height: 960}   # sections 2-4: cream wisps
+    ice-haze: {layer: high-air, height: 960}   # section 1: faint ice streaks
+  pieces:
+    carrier-group: {layer: deep, size: [128, 160]}
+    carrier-group-glow: {layer: deep, size: [128, 160], frames: 8, fps: 4}
+    storm-wall: {layer: deep, size: [320, 480]}
+    storm-wall-glow: {layer: deep, size: [320, 480], frames: 12, fps: 6}
+    bank-a: {layer: high-air, size: [142, 86]}
+    bank-b: {layer: high-air, size: [194, 86]}
+    bank-c: {layer: high-air, size: [224, 122]}
+    bank-d: {layer: high-air, size: [268, 130]}
+    bank-e: {layer: high-air, size: [300, 160]}
+    bank-f: {layer: high-air, size: [320, 162]}
+  placed:
+    # the CDF carrier group far below (section 1)
+    - {piece: carrier-group, t: 11.0, x: 300}
+    # the storm wall far ahead on the right, its top entering at t~126; storm-wall-glow (lightning inside) is drawn at this place
+    - {piece: storm-wall, t: 153.031, x: 380}
+  banks:
+    # The foreground banks (part A's {t, x, w, h, skip}; `piece` the bank-* image whose size is the rectangle, step B2):
+    # ART-B measured at most 27.4 % of the field under banks at t=74.70 (easy 21.7 % at t=86.00), the longest stay over
+    # the ship's band 1.80 s; never on the screen t=31-42 (the Chimera pair).
+    - {t: 28.6, x: 360, w: 142, h: 86, piece: bank-a}
+    - {t: 46.3, x: 150, w: 194, h: 86, piece: bank-b}
+    - {t: 51.8, x: 370, w: 142, h: 86, piece: bank-a}
+    - {t: 56.6, x: 120, w: 224, h: 122, piece: bank-c}
+    - {t: 61.6, x: 350, w: 194, h: 86, piece: bank-b}
+    - {t: 66.2, x: 150, w: 224, h: 122, piece: bank-c}
+    - {t: 70.6, x: 360, w: 224, h: 122, piece: bank-c}
+    - {t: 73.6, x: 130, w: 300, h: 160, piece: bank-e, skip: [easy]}
+    - {t: 76.0, x: 360, w: 224, h: 122, piece: bank-c}
+    - {t: 79.0, x: 140, w: 268, h: 130, piece: bank-d}
+    - {t: 81.6, x: 340, w: 300, h: 160, piece: bank-e, skip: [easy]}
+    - {t: 84.6, x: 140, w: 224, h: 122, piece: bank-c}
+    - {t: 87.2, x: 350, w: 268, h: 130, piece: bank-d}
+    - {t: 90.2, x: 130, w: 300, h: 160, piece: bank-e, skip: [easy]}
+    - {t: 93.0, x: 350, w: 224, h: 122, piece: bank-c}
+    - {t: 95.8, x: 140, w: 268, h: 130, piece: bank-d}
+    - {t: 98.6, x: 360, w: 300, h: 160, piece: bank-e, skip: [easy]}
+    - {t: 101.6, x: 130, w: 224, h: 122, piece: bank-c}
+    - {t: 104.6, x: 260, w: 300, h: 160, piece: bank-e}
+    - {t: 107.8, x: 120, w: 224, h: 122, piece: bank-c, skip: [easy]}
+    - {t: 110.4, x: 350, w: 268, h: 130, piece: bank-d}
+    - {t: 113.4, x: 130, w: 300, h: 160, piece: bank-e, skip: [easy]}
+    - {t: 116.2, x: 360, w: 224, h: 122, piece: bank-c}
+    - {t: 121.6, x: 240, w: 320, h: 162, piece: bank-f}
+    - {t: 128.4, x: 120, w: 224, h: 122, piece: bank-c}
+    - {t: 134.0, x: 360, w: 194, h: 86, piece: bank-b}
+    - {t: 141.0, x: 140, w: 224, h: 122, piece: bank-c}
+    - {t: 148.6, x: 390, w: 268, h: 130, piece: bank-d}
+    - {t: 157.0, x: 130, w: 194, h: 86, piece: bank-b}
+    - {t: 165.0, x: 350, w: 142, h: 86, piece: bank-a}
+    - {t: 174.0, x: 150, w: 142, h: 86, piece: bank-a}

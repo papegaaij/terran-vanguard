@@ -1,0 +1,70 @@
+# Chimera stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/schemas-units/README.md
+# M10 part B, step B2 (Level 36): the approved stat block (round 72) as data. New in it (flown from steps A1a and B1):
+# `regeneration` (part A's rule: a share of its maximum a second after `delay` s without a hit) and the flock's
+# `fire_cap` with its `stagger` (B1's swarm fire cap: at most that many members' volleys in the stagger, in the
+# swoop path's fire band). It swoops as the Talon in its V-wings and line abreast (`swoop_path`) and flocks as the
+# Mote Swarm in a swarm (`flock`; the swarm wave casts it: content's CloudDiverRules). No squad leader, no hex
+# shield. HP 20 base: the beam era's ×2 flies it at 40.
+name: Chimera
+faction: Hybrid
+layer: air
+tier: small
+size: [40, 36]    # sprite px (the Talon's airframe)
+hitbox: [28, 24]
+parts: single
+orientation: 16 angles
+hp: 20            # base; the beam era's ×2 flies it at 40: 0.28 s at the L36 reference of 144
+armour: none
+regeneration: {rate: 0.20, delay: 1.0}   # 20 % of its maximum a second (8 HP/s flown) after 1.0 s without a hit
+speed: 220        # px/s through the swoop
+machine: true     # the EMP Burst stuns it 3 s; its regeneration waits for the stun
+movement:
+  swoop_path: {lowest: [200, 260], across: 280, fire_band: 300}   # the Talon's: px below the top edge it bottoms out (drawn per wave); px across; it fires within fire_band px of the top edge
+  flock:          # in a swarm: the Mote Swarm's flock at 160 px/s round the wave's leader point
+    separation: 30    # px kept between members (its 40 px airframe)
+    radius: 72
+    alignment: 0.5
+    cohesion: 0.3
+    leader: 0.6
+    speed: 160        # px/s cruise
+    dive_speed: 220   # px/s after a loop-back
+    turn_rate: 240    # °/s
+    max: 12           # members at most (hard's swarm of 10)
+    fire_cap: 3       # at most 3 members' volleys within the stagger
+    stagger: 0.3      # s
+attacks:
+  - pattern: fan          # the aimed pair: a 2-shot fan centred on the ship (the Talon's)
+    name: pair
+    bullet: small
+    count: 2
+    spread: 4
+    interval: 1.6
+    speed: 160
+    first_shot_delay: 0.25 # s: the red glint on the twin muzzles
+    notes:
+      text: '`aimed` **pair** (two shots {spread}° apart, both at the ship) every {interval} s while within {movement.swoop_path.fire_band} px of the top edge, as the Talon''s; standard {speed} px/s, `{bullet}` = {damage}; the Talon''s {first_shot_delay} s red glint on the twin muzzles is the tell. In a swarm at most {movement.flock.fire_cap} members fire at once, staggered {movement.flock.stagger} s. Contact `{tier}` = {contact_damage} (destroyed by the impact)'
+formations:
+  - {name: V-wing, size: [5, 7]}      # no leader: a Chimera wing never scatters
+  - {name: swarm, size: [6, 10]}
+  - {name: line abreast, size: [2, 2]}   # the intro pair (Level 36's t=34, open sky)
+weak_points:
+  - {name: the tissue seams}
+drops: []
+traits: [beam, homing, forward, spread]
+bounty: 14
+first_level: 36
+difficulty:
+  easy: {attacks: {pair: {interval: 2.0}}, regeneration: {rate: 0.15, delay: 1.3}}
+  hard: {attacks: {pair: {interval: 1.3}}, regeneration: {rate: 0.25, delay: 0.8}}
+notes:
+  size: (the [Talon](../talon/README.md)'s airframe)
+  orientation: (it banks through its swoop)
+  armour: 'none (no hex shield: its tissue is its defence); **[regeneration](../../README.md#regeneration) 20 % of its maximum a second** (8 HP/s flown) after **{regeneration.delay} s** without a hit. HP {hp} base flies at **40** with the beam era''s ×2: 0.28 s at the L36 reference of 144'
+  speed: through the swoop; {movement.flock.speed} px/s in a swarm
+  movement: '`swoop` as the Talon''s (enters at the top {movement.swoop_path.across} px across its lane on a curve, bottoms out {movement.swoop_path.lowest.0}–{movement.swoop_path.lowest.1} px below the top edge, leaves up through the top); in a `swarm` it flocks round the wave''s leader point along an authored route, as the [Mote Swarm](../mote-swarm/README.md) does. **No squad leader**: a Chimera wing never scatters'
+  formations: (the intro pair, Level 36's t=34, in open sky); never more than two wings, or one swarm and one wing, on the screen
+  weak_points: (drawn only; they glow brighter as it heals)
+  bounty: ', paid once whatever it healed'
+  death: '`small` explosion with gold sparks and a spray of teal tissue flecks (presentation, no bullets)'
+  used_in: its later Act 6 levels per the level drafts; the Ascendant's phase 2 spawns them (its own document)
+  difficulty: 'easy: regeneration 15 %/s after 1.3 s, pair every 2.0 s; hard: 25 %/s after 0.8 s, pair every 1.3 s'

@@ -178,6 +178,31 @@ final class JovianHazardChecks {
         return area;
     }
 
+    /**
+     * M10 part B (Level 36): a bank's {@code piece} is a {@code high-air} piece of the backdrop whose size is the bank's
+     * rectangle ({@code w} × {@code h}), so the cover and band checks measure what is drawn.
+     */
+    private static void piece(
+            LevelData level, BackdropData.Bank bank, String field, BiConsumer<String, String> problem) {
+        if (bank.piece().isEmpty()) {
+            return;
+        }
+        BackdropData.Piece piece = level.backdrop().pieces().get(bank.piece().get());
+        if (piece == null) {
+            problem.accept(field, "no backdrop piece '" + bank.piece().get() + "'");
+        } else if (piece.layer() != BackdropLayer.HIGH_AIR) {
+            problem.accept(
+                    field,
+                    "a bank's piece is a high-air piece: '" + bank.piece().get() + "'");
+        } else if (Math.abs(piece.size().width() - bank.w()) > 1e-6
+                || Math.abs(piece.size().height() - bank.h()) > 1e-6) {
+            problem.accept(
+                    field,
+                    "the piece '" + bank.piece().get() + "' is " + piece.size().width() + " x "
+                            + piece.size().height() + " px, the bank " + bank.w() + " x " + bank.h());
+        }
+    }
+
     private static void banks(Content content, LevelData level, BiConsumer<String, String> problem) {
         if (level.backdrop().banks().isEmpty()) {
             return;
@@ -187,6 +212,7 @@ final class JovianHazardChecks {
         List<BackdropData.Bank> all = level.backdrop().banks().get();
         for (int i = 0; i < all.size(); i++) {
             inside(level, "backdrop.banks[" + i + "].t", all.get(i).t(), problem);
+            piece(level, all.get(i), "backdrop.banks[" + i + "].piece", problem);
         }
         int samples = (int) Math.ceil(level.seconds() / SAMPLE_SECONDS);
         for (Difficulty difficulty : Difficulty.values()) {

@@ -311,16 +311,20 @@ final class ScriptRules {
                     if (chunk == null) {
                         throw new IllegalArgumentException("no debris chunk '" + placed.chunk() + "'");
                     }
-                    return new HazardSpec.DebrisSpec(
-                            placed.t(),
-                            placed.x(),
-                            placed.chunk(),
-                            SimSpecs.hitbox(chunk.size()),
-                            placed.drift().x() * factor,
-                            placed.drift().y() * factor,
-                            chunk.hp().orElse(Double.POSITIVE_INFINITY),
-                            chunk.damage().orElse(0.0),
-                            field.clearance());
+                    // M10 part B (Level 36's pathfinder pod): a chunk revealing a secret holds its crate.
+                    return CloudDiverRules.secret(
+                            level,
+                            placed,
+                            new HazardSpec.DebrisSpec(
+                                    placed.t(),
+                                    placed.x(),
+                                    placed.chunk(),
+                                    SimSpecs.hitbox(chunk.size()),
+                                    placed.drift().x() * factor,
+                                    placed.drift().y() * factor,
+                                    chunk.hp().orElse(Double.POSITIVE_INFINITY),
+                                    chunk.damage().orElse(0.0),
+                                    field.clearance()));
                 })
                 .toList();
     }
@@ -403,6 +407,8 @@ final class ScriptRules {
                         // Step BOSS70 (Level 35): the core's first rail volley, mine ring, wreck throw; its low share.
                         case FIRST_RAIL_VOLLEY, FIRST_MINE_RING, FIRST_WRECK_THROW -> CueTrigger.CORE_PLAY;
                         case CORE_LOW -> CueTrigger.CORE_LOW;
+                        // M10 part B (Level 36): the first enemy a lightning strike kills.
+                        case FIRST_STRIKE_KILL -> CueTrigger.FIRST_STRIKE_KILL;
                     })
                     .orElse(CueTrigger.TIME);
             // Part G (LevelRules): a boss-destroyed cue's subject is the boss, a timeout cue its own

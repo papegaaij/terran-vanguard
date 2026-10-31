@@ -215,11 +215,20 @@ public sealed interface HazardsBlock permits LevelData {
         }
     }
 
-    /** A chunk entering at the top edge at {@code t} at {@code x}, drifting at {@code drift} [x, y] px/s (y up: negative is down). */
-    public record PlacedChunk(double t, double x, String chunk, Point drift) {
+    /**
+     * A chunk entering at the top edge at {@code t} at {@code x}, drifting at {@code drift} [x, y] px/s (y up: negative
+     * is down). M10 part B (design/campaign Level 36, the pathfinder pod): a small chunk that {@code reveals} a secret of
+     * the level frees its hidden crate when the player's shot breaks it; none if not given.
+     */
+    public record PlacedChunk(double t, double x, String chunk, Point drift, Optional<String> reveals) {
         public PlacedChunk {
             Check.notNegative("t", t);
             Check.that(drift.y() < 0, "drift: a chunk drifts down the screen (a negative y)");
+        }
+
+        /** A chunk revealing no secret (every chunk before M10 part B). */
+        public PlacedChunk(double t, double x, String chunk, Point drift) {
+            this(t, x, chunk, drift, Optional.empty());
         }
     }
 
