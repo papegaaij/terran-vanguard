@@ -304,6 +304,12 @@ Outputs (assets/ui/briefing/<name>.png, 672x240, textures of their own like the 
                           open flanks marked) and an inset of a Graft Turret's wreck, the root exposed, a 5 s timer
                           ring (the production frames once ART-C1's are in; until then round 72's chosen A.2 a / A.4 b
                           renders, tools/concept/enemies_r72.py)
+  level-38-lightning-belt  L38 p1 (M10 part D batch): Okafor's chart of the storm layer in section: Aurelia's wreck at
+                          the top, the cloud decks, the route under them and round the Red Spot's rim (a rust spiral at
+                          the edge), up toward Io's yellow disc; the lightning cells hatched blue-white
+  level-38-harrow         L38 p2: Varga's sketch of a Harrow (tools/art/storm_layer_units.py's frames): the dart grey,
+                          the sac teal, its ring of 8 with the gap on the ship's bearing; a lightning column's 1.0 s tell
+                          (40 px, the thin line) and the 0.25 s strike, a Harrow lured into it bursting
   design/ui/briefing/concept/briefing-images-final-r13-a.png   review sheet, Act 1 intro + L01-02
   design/ui/briefing/concept/briefing-images-final-r20-a.png   review sheet, L03-04 (M4 batch)
   design/ui/briefing/concept/briefing-images-final-r21-a.png   review sheet, L05 (M4 part E)
@@ -322,6 +328,7 @@ Outputs (assets/ui/briefing/<name>.png, 672x240, textures of their own like the 
   design/ui/briefing/concept/briefing-images-final-r42-a.png   review sheet, L19 + the L20 plate (M7 part F)
   design/ui/briefing/concept/briefing-images-final-r74-a.png   review sheet, Act 6 intro + L36 (M10 part B)
   design/ui/briefing/concept/briefing-images-final-r75-a.png   review sheet, L37 (M10 part C)
+  design/ui/briefing/concept/briefing-images-final-r76-a.png   review sheet, L38 (M10 part D)
   design/ui/briefing/concept/briefing-images-final-r44-a.png   review sheet, L21 (M7 part H)
   design/ui/briefing/concept/briefing-images-final-r51-a.png   review sheet, Act 4 intro + L22 (M8 part B)
   design/ui/briefing/concept/briefing-images-final-r52-a.png   review sheet, L23 (M8 part C)
@@ -8092,6 +8099,134 @@ def level_37_mirror():
     return b
 
 
+# --------------------------------------------------------------------------- M10 part D: Level 38
+
+SOURCE_M10D = artkit.source_note(SCRIPT, "M10 part D batch")
+STORM_HOLO = [(0.0, (6, 8, 16)), (0.35, (26, 30, 48)), (0.65, (54, 58, 84)), (1.0, (104, 108, 140))]
+BOLT = (190, 215, 255)                                    # the lightning's blue-white (never an enemy laser's red)
+TEAL_V = (0, 255, 154)
+
+
+def hatch(b, cx, cy, rx, ry, colour, step=6, alpha=150):
+    """A hatched ellipse (a lightning cell on the chart): diagonal lines clipped to it, its outline."""
+    inside = ((b.xx - cx) / rx) ** 2 + ((b.yy - cy) / ry) ** 2 < 1
+    lines = ((b.xx + b.yy) % step) < 1.2
+    layer = np.zeros((H, W, 4), np.uint8)
+    layer[inside & lines] = colour + (alpha,)
+    b.over.alpha_composite(Image.fromarray(layer, "RGBA"))
+    b.ring(cx, cy, rx, ry, colour=colour, alpha=200)
+
+
+def level_38_lightning_belt():
+    """L38 p1: the fleet's chart of the storm layer in section: Aurelia's wreck at the top left, the cloud decks as
+    holo layers, the route dotted under the decks and round the Red Spot's rim (a rust spiral at the chart's right
+    edge), then up out of the storm toward Io's yellow disc; the lightning cells hatched blue-white."""
+    b = Board()
+    decks = [(70, 0.5), (112, 0.62), (156, 0.72)]
+    for k, (y, lv) in enumerate(decks):                           # the storm's decks in section, slate holo layers
+        wave = y + 5 * np.sin(b.xx / 41 + k) + 4 * raster.fbm(W, H, 22, 7601 + k, octaves=3, period=False)
+        layer = np.exp(-((b.yy - wave) / (9 + 3 * k)) ** 2)
+        b.base = b.base + layer[..., None] * np.array(raster.ramp(STORM_HOLO, np.array([lv]))[0]) * 0.9
+    tag(b, 14, 62, "CLOUD DECKS", GREY)
+    sx, sy = 600, 168                                             # the Red Spot's rim: a rust spiral at the edge
+    ang = np.arctan2(b.yy - sy, b.xx - sx)
+    rr = np.hypot(b.xx - sx, b.yy - sy)
+    spiral = 0.5 + 0.5 * np.sin(rr / 7 - ang * 2)
+    spot = np.exp(-(rr / 78) ** 2) * (0.35 + 0.65 * spiral)
+    b.base = b.base + spot[..., None] * np.array((150, 58, 30.0)) * 0.8
+    b.ring(sx, sy, 80, 62, colour=RED, alpha=200)
+    tag(b, 520, 226, "RED SPOT - RIM", RED)
+    ax, ay = 74, 30                                               # Aurelia's wreck, broken, at the top
+    for dx, dy, r in ((-10, 0, 11), (9, 4, 9)):
+        pts = [(ax + dx + r * np.cos(a), ay + dy + r * np.sin(a))
+               for a in np.linspace(np.pi / 8, TAU_B + np.pi / 8, 8, endpoint=False)]
+        b.draw.polygon(pts, fill=(60, 44, 20, 230), outline=GOLD_A + (255,))
+    b.line([(ax - 2, ay - 12), (ax + 3, ay - 2), (ax - 1, ay + 6), (ax + 4, ay + 14)], RED, 1)
+    tag(b, ax + 24, ay - 10, "AURELIA - WRECK", GOLD_A)
+    for k, (cx, cy, rx, ry) in enumerate(((200, 112, 34, 22), (318, 150, 40, 24), (420, 98, 30, 20),
+                                          (500, 130, 26, 18))):
+        hatch(b, cx, cy, rx, ry, BOLT, step=6, alpha=120)        # the lightning cells
+    tag(b, 176, 80, "LIGHTNING CELLS", BOLT)
+    iox, ioy, ior = 618, 50, 22                                   # Io's yellow disc, the way out
+    n = 2 * ior + 2                                               # a sprite: its own palette keeps the yellow
+    yy, xx = np.mgrid[0:n, 0:n].astype(np.float64) + 0.5
+    nx, ny = (xx - n / 2) / ior, (yy - n / 2) / ior
+    tex = raster.fbm(n, n, 4, 7602, octaves=3, period=False)
+    io = np.array((235, 205, 70.0)) * (0.7 + 0.3 * tex)[..., None] * np.clip(0.95 - 0.45 * nx - 0.35 * ny, 0.3, 1)[..., None]
+    disc = raster.to_rgba_image(np.clip(io, 0, 255), (nx ** 2 + ny ** 2 < 1) * 255)
+    b.sprite(artkit.quantize_set([disc], 12)[0], iox, ioy)
+    b.ring(iox, ioy, ior + 3, colour=AMBER, alpha=200)
+    tag(b, iox - 48, ioy - 6, "IO", WHITE)
+    route = [(88, 44), (130, 96), (200, 136), (300, 176), (400, 186), (470, 168), (505, 120), (540, 80),
+             (iox - 26, ioy + 8)]
+    b.dashed(route, WHITE, 2, 6, 4)                               # under the decks, round the rim, up and out
+    b.arrow(540, 80, iox - 24, ioy + 8, WHITE, 6)
+    tag(b, 236, 190, "LIGHTNING BELT ROUTE", WHITE)
+    b.dashed([(0, 52), (W, 52)], RED, 1, 3, 5)
+    tag(b, 200, 40, "CALLISTO TRACKING - BLIND BELOW THE DECKS", RED)
+    b.title("CDF CHART - THE STORM LAYER")
+    b.label(W - 10, 9, "CMDR. OKAFOR", CYAN_DIM, right=True)
+    b.label(10, H - 16, "NO GROUND: BOMBS IDLE", RED)
+    return b
+
+
+def level_38_harrow():
+    """L38 p2: Varga's sketch of a Harrow from above (tools/art/storm_layer_units.py's frames): the dart in grey, the
+    sac lit teal; its burst ring of 8 with the gap on the ship's bearing; beside it a lightning column's thin telegraph
+    line, its faint 40 px edges and the strike's jagged bolt, a Harrow caught in it."""
+    b = Board()
+    b.title("CDF SCAN - HARROW")
+    b.label(W - 10, 9, "DR. VARGA", CYAN_DIM, right=True)
+    hx, hy = 140, 112
+    body = held_frame("harrow_0", 2.5, 32)
+    b.sprite(holo(body, (150, 160, 170), 12), hx, hy)
+    sac = held_asset("harrow-sac_0")
+    sac = sac.resize((sac.width * 5 // 2, sac.height * 5 // 2), Image.BOX)
+    light_at(b, np.array(sac).astype(np.float64)[..., :3] * 0.9, hx, hy)
+    shipx, shipy = 236, 206                                       # the ship's bearing from the Harrow
+    bearing = np.arctan2(shipy - hy, shipx - hx)
+    for k in range(8):                                            # the ring of 8: the bearing between two bullets
+        a = bearing + np.pi / 8 + k * TAU_B / 8
+        x, y = hx + np.cos(a) * 66, hy + np.sin(a) * 66
+        b.marker(x, y, "dot", TEAL_V, 3)
+        b.glow(x, y, 4, (0, 120, 80), 0.6)
+    b.ring(hx, hy, 66, colour=(0, 160, 110), alpha=110)
+    b.dashed([(hx, hy), (shipx, shipy)], AMBER, 1, 4, 3)
+    b.marker(shipx, shipy, "square", CYAN, 4)
+    tag(b, shipx + 10, shipy - 4, "YOU", CYAN)
+    tag(b, hx + 52, hy + 28, "THE GAP", AMBER)
+    tag(b, 16, 30, "DART: GUNMETAL, GOLD EDGES", GREY)
+    tag(b, 16, 42, "SAC: VRELL TISSUE", TEAL_V)
+    tag(b, 16, 196, "EVERY DEATH: A RING OF 8", TEAL_V)
+    cx = 470                                                      # the lightning column: telegraph, then the strike
+    col = np.exp(-((b.xx - cx) / 20) ** 8) * 0.22
+    b.base = b.base + col[..., None] * np.array(BOLT, float)
+    b.line([(cx, 26), (cx, H - 26)], BOLT, 1, 200)
+    for side in (-1, 1):
+        b.line([(cx + side * 20, 30), (cx + side * 20, H - 30)], BOLT, 1, 90)
+    b.line([(cx - 20, 34), (cx + 20, 34)], WHITE, 1, 200)
+    tag(b, cx - 18, 38, "40 PX", WHITE)
+    tag(b, cx - 96, 60, "TELL 1.0 S", BOLT)
+    bx = 590
+    rng = np.random.default_rng(7611)
+    pts, x = [], bx
+    for y in np.linspace(26, H - 26, 16):                         # the strike: a jagged bolt in a column
+        pts.append((x, y))
+        x = bx + rng.uniform(-12, 12)
+    b.line(pts, BOLT, 3, 230)
+    b.line(pts, WHITE, 1, 255)
+    b.glow(bx, H / 2, 30, (60, 80, 140), 0.5)
+    tag(b, bx - 52, 26, "STRIKE 0.25 S", WHITE)
+    small = held_frame("harrow_4", 1.0, 24)
+    b.sprite(holo(small, (150, 160, 170), 10), bx, 150)
+    for k in range(8):
+        a = k * TAU_B / 8 + np.pi / 8
+        b.marker(bx + np.cos(a) * 18, 150 + np.sin(a) * 18, "dot", TEAL_V, 2)
+    tag(b, bx - 66, 178, "LURED: IT BURSTS, IT PAYS", TEAL_V)
+    b.label(16, H - 16, "KILL THEM FAR AWAY.", AMBER)
+    return b
+
+
 IMAGES = {
     "act-1-tether-gate": tether_gate,
     "act-1-outer-stations": outer_stations,
@@ -8204,6 +8339,8 @@ IMAGES = {
     "level-36-chimera": level_36_chimera,
     "level-37-aurelia": level_37_aurelia,
     "level-37-mirror": level_37_mirror,
+    "level-38-lightning-belt": level_38_lightning_belt,
+    "level-38-harrow": level_38_harrow,
 }
 
 # Review sheets per batch: round, the images on it, the batch name.
@@ -8243,6 +8380,7 @@ BATCHES = {
     "r68": (list(IMAGES)[97:103], "M9 PART H"),
     "r74": (list(IMAGES)[103:109], "M10 PART B"),
     "r75": (list(IMAGES)[109:111], "M10 PART C"),
+    "r76": (list(IMAGES)[111:113], "M10 PART D"),
 }
 
 
@@ -8278,6 +8416,7 @@ def build(names):
                   else SOURCE_M9H if name in BATCHES["r68"][0]
                   else SOURCE_M10B if name in BATCHES["r74"][0]
                   else SOURCE_M10C if name in BATCHES["r75"][0]
+                  else SOURCE_M10D if name in BATCHES["r76"][0]
                   else SOURCE_M4)
         artkit.save_png(IMAGES[name]().image(), OUT / f"{name}.png", source)
     print(f"{len(names)} briefing images in {OUT.relative_to(ROOT)}")

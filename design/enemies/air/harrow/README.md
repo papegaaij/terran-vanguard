@@ -4,7 +4,7 @@ design: approved
 implementation: not-started
 art: chosen
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../player/specials, ../../../art-direction, ../../../campaign/act-6-jovian-storm]
-updated: 2026-10-31
+updated: 2026-11-01
 ---
 
 # Harrow
@@ -74,12 +74,16 @@ values: the build tunes them per level with `levelReport`.
 
 ## Concept art
 
-Round 72's proposals (step ART-R-A, picked 2026-10-31; generator `tools/concept/enemies_r72.py harrow`). Each sheet holds the source render, the sprites at play size with their states, the readability check over Level 38's brightest and darkest band beside the player with the measured gold and teal shares, and key frames; each GIF is the 480×540 play field. Prompts: [concept/prompts.md](concept/prompts.md).
+Round 72's proposals (step ART-R-A, picked 2026-10-31; generator `tools/concept/enemies_r72.py harrow`); round 76's
+production frames (M10 part D, step ART-D, pending the user's review: the sac's glow as one additive layer the game
+draws at the state's strength, the lock tell's halo as a second). Each sheet holds the source render, the sprites at play size with their states, the readability check over Level 38's brightest and darkest band beside the player with the measured gold and teal shares, and key frames; each GIF is the 480×540 play field. Prompts: [concept/prompts.md](concept/prompts.md).
 
 | File | What | Status |
 |---|---|---|
 | [concept/harrow-r72-a.png](concept/harrow-r72-a.png) | Harrow a, "dart and sac": a gunmetal dart with gold leading edges and a swollen tissue sac on its back; 16 headings; the sac dim / hunting / tell / tell peak; its ring bullet beside the player | chosen (round 72 A.3 a) |
 | [concept/harrow-r72-a.gif](concept/harrow-r72-a.gif) | Four Harrows from three edges in the storm: one shot at range (its ring of 8 with the gap on the ship's bearing), one lock tell and a missed ram, one killed by a lightning strike (J3), one shot in its tell | chosen (round 72 A.3 a) |
+| [concept/harrow-final-r76-a.png](concept/harrow-final-r76-a.png) | Final frames (M10 part D, `tools/art/storm_layer_units.py harrow`; held in `build/art-held/sprites/` until its data.yaml): the 16 headings at 2× hunting over Level 38's production storm, the sac by state (dim 0.2, hunting 0.45–0.75, the tell 0.75 → 1.0 with its halo, the lock's flare, the ram 0.9), the tell's 12 frames, the burst's 8 over the small explosion, the shell's tumble, the read at 1× over the darkest and brightest windows of three sections beside the ship; teal 8 % hunting, 14 % at the tell's peak, gold 24 % (sheet) | proposed (round 76) |
+| [concept/harrow-final-r76-a.gif](concept/harrow-final-r76-a.gif) | Over Level 38 at t 30–34: one Harrow from the left hunts, tells and rams past the sidestepping ship; one from the top shot at range, its ring of 8 opening with the gap on the ship's bearing, the shell tumbling away (the ring's bullets are stand-ins: the game's `small` bullets) | proposed (round 76) |
 
 Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 

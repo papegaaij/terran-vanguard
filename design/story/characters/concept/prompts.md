@@ -229,3 +229,11 @@ HD detail, fully monochrome image, heavy noisy dithering, anime, chibi, text, wa
 As act6-speakers-r72-a, each in a room behind the bust: the three aces in their cockpits (two canopy struts crossing
 the amber screen, the guard's gold crest at the top right); Aurelia Traffic at the tower's windows (dark mullions,
 the gold domes' curves low behind her), as the story draft's brief.
+
+## Round 75 — production: Aurelia Traffic's radio portrait (M10 part C)
+
+Generator: `tools/art/portraits.py aurelia-traffic` (`portraits-final-r75-a.png`; step ART-C1). Round 72's chosen A.15
+a (`tools/concept/act6_r72.py`'s `aurelia_traffic` bust on the plain teal channel screen, through this pipeline
+unchanged), written as production art `radio-aurelia-traffic-neutral`: the city's civil traffic controller, a woman in
+her thirties, dark hair pulled back into a bun, a steady look, Aurelia's white-and-gold civil uniform (gold collar trim,
+an epaulette), a headset.

@@ -217,3 +217,8 @@ sprites/siren-plume
 sprites/survey-buoy-glow
 sprites/survey-sub-glow
 sprites/talon-glint
+# M10 part C, step ART-C1 (tools/art/aurelia_units.py): the Mirror Interceptor's and the Graft Turret's additive glows
+sprites/mirror-interceptor-plate-glow
+sprites/mirror-interceptor-pods
+sprites/graft-turret-root-glow
+sprites/graft-turret-crumble

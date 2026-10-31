@@ -40,6 +40,12 @@ Outputs (assets/sprites/portraits/, packed onto the shared sprite pages as ``por
   radio-bellwether-neutral.png       72x72, the mining tug Bellwether's captain (Level 31, the speaker `Bellwether`,
                                      portrait `bellwether`, teal; M9 part D batch, round 60 A.21: belt_r60.py
                                      ``bellwether_captain``), review design/story/characters/concept/portraits-final-r64-a.png
+  radio-aurelia-traffic-neutral.png  72x72, Aurelia Traffic, the city's civil traffic controller (Level 37, the speaker
+                                     `Aurelia Traffic`, portrait `aurelia-traffic`, teal; M10 part C batch, step ART-C1:
+                                     round 72 A.15 a "plain channel screens", tools/concept/act6_r72.py
+                                     ``aurelia_traffic``: dark hair pulled back, the white-and-gold civil uniform with a
+                                     gold collar trim and an epaulette, a headset), review
+                                     design/story/characters/concept/portraits-final-r75-a.png
   design/story/characters/concept/portraits-final-r13-a.png/.gif   review sheet and loop
   design/story/characters/rook/concept/rook-briefing-portrait-final-r30-a.png   Rook's briefing
                                      portraits (round 30), next to his radio portraits and the
@@ -765,8 +771,57 @@ def review_bellwether():
     print(f"review: {png.relative_to(ROOT)}")
 
 
+ACT6 = ("aurelia-traffic",)
+ACT6_ROUND = "r75"
+ACT6_SOURCE = artkit.source_note(SCRIPT, "M10 part C batch")
+
+
+def build_act6(only=ACT6):
+    """Aurelia Traffic's radio portrait (Level 37): round 72's A.15 a, the plain teal channel screen
+    (tools/concept/act6_r72.py's speaker, which runs this module's pipeline), written as production art."""
+    import act6_r72 as a6  # noqa: E402  (concept script, imported unchanged; imported late: it imports this module)
+    OUT.mkdir(parents=True, exist_ok=True)
+    for slug in only:
+        r03.CAST[slug] = a6.SPEAKERS6[slug]
+        fig = artkit.quantize_set([a6._speaker6_fig(slug)[1]], r04.COLORS)[0]
+        artkit.save_png(screen(slug, fig)[0], OUT / f"radio-{slug}-neutral.png", ACT6_SOURCE)
+    print(f"Act 6 portraits ({', '.join(only)}) in {OUT.relative_to(ROOT)}")
+
+
+def review_act6():
+    """Round 75: Aurelia Traffic at 1x, 2x and 4x and at 1x beside the other radio speakers."""
+    img = load("radio-aurelia-traffic-neutral")
+    others = ("ceres-control", "bellwether", "harker", "vorne", "generic-civilian", "generic-cdf", "okafor", "varga",
+              "rook")
+    width = max(16 + 72 + 12 + 144 + 12 + 288 + 16, 16 + 10 * 84 + 16)
+    sheet = raster.sheet(width, 56 + 288 + 30 + 110, f"AURELIA TRAFFIC (FINAL {ACT6_ROUND.upper()})",
+                         f"PRODUCTION ART, M10 PART C BATCH - {ACT6_ROUND.upper()}")
+    raster.draw_text(sheet, 16, 38, f"ROUND 72 A.15 A (CHOSEN), TEAL: 72X72 AT 1X, 2X, 4X ({artkit.colour_count([img])} "
+                                    "COLOURS)", raster.LABEL)
+    x = 16
+    for zoom in (1, 2, 4):
+        sheet.alpha_composite(sprite.enlarge(img, zoom), (x, 56))
+        x += 72 * zoom + 12
+    y = 56 + 288 + 16
+    raster.draw_text(sheet, 16, y, "AT 1X BESIDE THE OTHER RADIO SPEAKERS", raster.LABEL)
+    for i, slug in enumerate(("aurelia-traffic",) + others):
+        sheet.alpha_composite(load(f"radio-{slug}-neutral"), (16 + i * 84, y + 16))
+        raster.draw_text(sheet, 16 + i * 84, y + 92, slug.replace("generic-", "").upper()[:10], raster.LABEL_DIM)
+    png = CONCEPT / f"portraits-final-{ACT6_ROUND}-a.png"
+    sheet.convert("RGB").save(png, optimize=True)
+    print(f"review: {png.relative_to(ROOT)}")
+
+
 if __name__ == "__main__":
     only = tuple(a for a in sys.argv[1:] if not a.startswith("--"))
+    act6 = tuple(a for a in only if a in ACT6)
+    if act6:
+        if "--review" not in sys.argv[1:]:
+            build_act6(act6)
+        review_act6()
+        only = tuple(a for a in only if a not in ACT6)
+        if not only:
+            sys.exit(0)
     act5 = tuple(a for a in only if a in ACT5)
     if act5:
         if "--review" not in sys.argv[1:]:
@@ -785,9 +840,11 @@ if __name__ == "__main__":
         build(only)
         if not only:
             build_act5()
+            build_act6()
     if not only:
         review_act5()
         review_bellwether()
+        review_act6()
     if not only or set(only) - {"generic-colonial", "conamara", "thera-deep"}:
         review()
     if not only or "generic-colonial" in only:

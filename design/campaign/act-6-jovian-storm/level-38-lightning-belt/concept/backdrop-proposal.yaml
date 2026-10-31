@@ -1,0 +1,81 @@
+backdrop:
+  # Presentation only: Level 38's storm layer (tools/art/backdrop_l38.py, step ART-D, sections from its own proposal's sections).
+  # No ground (`ground: none`): the deep layer is the base. Its five tile sets are cut from one continuous
+  # field at the rows each section's tiles begin (LevelData.seam): re-run the generator after moving a
+  # section. Animated: the -glow pieces (the walls' and cells' inner lightning, the wreck's fires), additive
+  # at their piece's placements on the real clock, at most two on the screen at once (checked); frame 0 of
+  # each wall/cell glow is its brightest flash (StormLooks' brighter pulse on STRIKE_TOLD can draw it).
+  scroll_factors: {deep: 0.15, far: 0.5, ground: 1, low-air: 1.3, high-air: 1.7}   # far, ground unused
+  ramp: 2
+  haze_colour: 262a3a   # the storm's slate
+  atmosphere:
+    light: {haze: 0.0}   # the breakout's end
+    medium: {haze: 0.0}   # sections 1 and 5: the grade is in the tiles
+    heavy: {haze: 0.1, wisps: storm-scud}   # sections 2-4: a step of slate over the floor, the scud passing over
+  tile_sets:
+    storm-top: {layer: deep, height: 1216}   # section 1: the storm's top
+    storm-floor: {layer: deep, height: 1024}   # section 2: the heavy storm floor
+    storm-cells: {layer: deep, height: 1152}   # section 3: the floor under the cells
+    red-spot-rim: {layer: deep, height: 1024}   # section 4: the Red Spot's rim
+    breakout: {layer: deep, height: 1216}   # section 5: thinning to black sky, stars, Io
+    storm-scud: {layer: high-air, height: 960}   # the heavy atmosphere's scud (additive)
+  pieces:
+    aurelia-wreck: {layer: deep, size: [256, 208]}
+    aurelia-wreck-glow: {layer: deep, size: [256, 208], frames: 4, fps: 6}
+    cloud-wall-a: {layer: deep, size: [320, 480]}
+    cloud-wall-a-glow: {layer: deep, size: [320, 480], frames: 24, fps: 6}
+    cloud-wall-b: {layer: deep, size: [288, 448]}
+    cloud-wall-b-glow: {layer: deep, size: [288, 448], frames: 24, fps: 6}
+    storm-cell-a: {layer: deep, size: [256, 320]}
+    storm-cell-a-glow: {layer: deep, size: [256, 320], frames: 24, fps: 6}
+    storm-cell-b: {layer: deep, size: [224, 288]}
+    storm-cell-b-glow: {layer: deep, size: [224, 288], frames: 24, fps: 6}
+    debris-plate-a: {layer: low-air, size: [68, 66]}
+    debris-plate-b: {layer: low-air, size: [70, 54]}
+    debris-plate-c: {layer: low-air, size: [44, 40]}
+    debris-cable: {layer: low-air, size: [64, 48]}
+    balloon-torn: {layer: low-air, size: [60, 94]}
+  placed:
+    # Aurelia's wreck sinking far above: centred at y 150 at the start, gone by t~23 (section 1); its glow (the fires) is drawn at this place
+    - {piece: aurelia-wreck, t: 5.714, x: 300}
+    # section 2's first wall, on the left; on the screen t~18-67
+    - {piece: cloud-wall-a, t: 42.0, x: 120}
+    # the second wall, on the right; t~38-85
+    - {piece: cloud-wall-b, t: 61.238, x: 368}
+    # section 3's first cell, on the left; t~67-108
+    - {piece: storm-cell-a, t: 87.69, x: 120}
+    # the second cell, on the right; t~86-125
+    - {piece: storm-cell-b, t: 105.429, x: 362}
+    # section 4: a wall on the left, the Red Spot's rim on the right; t~109-158
+    - {piece: cloud-wall-a, t: 133.0, x: 112}
+    # section 4's cell over the rim's edge; t~132-173
+    - {piece: storm-cell-a, t: 152.19, x: 150}
+    - {piece: debris-plate-a, t: 2.6, x: 96}
+    - {piece: balloon-torn, t: 5.0, x: 384}
+    - {piece: debris-cable, t: 7.6, x: 206}
+    - {piece: debris-plate-b, t: 10.2, x: 420}
+    - {piece: debris-plate-c, t: 12.4, x: 62}
+    - {piece: balloon-torn, t: 15.2, x: 300}
+    - {piece: debris-plate-a, t: 18.0, x: 150}
+    - {piece: debris-cable, t: 20.4, x: 404}
+sections:   # ART-D's reading of the README's Layout (140 px/s throughout); D2 writes the real ones
+  - {name: Under Aurelia, end: 22, speed: 140, atmosphere: medium, tiles: [storm-top]}
+  - {name: The Storm Wall, end: 62, speed: 140, atmosphere: heavy, tiles: [storm-floor]}
+  - {name: The Cells, end: 109, speed: 140, atmosphere: heavy, tiles: [storm-cells]}
+  - {name: "The Red Spot's Rim", end: 150, speed: 140, atmosphere: heavy, tiles: [red-spot-rim]}
+  - {name: The Breakout, end: 196, speed: 140, atmosphere: medium, tiles: [breakout], peak: {atmosphere: light, from: 172, to: 196}}
+# rows: the end's bottom edge 27440 (ground px); deep 4116, high-air 46648
+debris:
+  # Proposal (ART-D, tools/art/storm_layer_units.py's sprites): Aurelia's cargo pod (the secret, `reveals`, 20 HP;
+  # README: t~118 down the left edge, lights dead; a strike crossing it opens it too, D1) and the CDF supply canister
+  # (t~100 down the middle on its parachute, the friendly brackets; its 10 HP latch frees the armour patch: D1's drop
+  # and marked flag, the keys D2's). Sprites debris-cargo-pod_0..15 (36x36, tumble) with -outline_0..15 (additive:
+  # the lightning flash's 0.5 s outline) and -break_0..7; debris-canister_0..7 (64x128 centred on the canister, the
+  # sway at 4 fps), -latch_0..7 (the overlay: QD-4 b leaves it out) and -release_0..9.
+  chunks:
+    cargo-pod: {size: [30, 30], hp: 20}
+    canister: {size: [22, 30], hp: 10}   # the canister and its latch; the canopy above it is no target
+  clearance: 0
+  placed:
+    - {t: 118, x: 40, chunk: cargo-pod, drift: [4, -70], reveals: Aurelia cargo pod}   # the crate: 100 (README)
+    - {t: 100, x: 240, chunk: canister, drift: [0, -60]}   # + D1's drop: armour-patch, marked: true

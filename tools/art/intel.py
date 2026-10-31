@@ -64,7 +64,10 @@ Outputs (assets/sprites/intel/, packed onto the shared sprite pages as ``intel/<
                      it; the intel names the livery's faction from Act 5); chimera, helium-3-harvester,
                      fleet-stormhawk (Level 36, M10 part B batch, step B4: the production models of
                      tools/art/jovian_units.py: the Chimera nose down with its seams unlit, the harvester nose right as
-                     it crosses the bands, the fleet's drop craft nose down in CDF grey)
+                     it crosses the bands, the fleet's drop craft nose down in CDF grey); mirror-interceptor,
+                     graft-turret (Level 37, M10 part C batch, step ART-C1: the production models of
+                     tools/art/aurelia_units.py: the Mirror Interceptor nose down with its plate standing, the
+                     Graft Turret on its base with the barrel aimed down, the seams lit)
   unclassified-<enemy>.png  30x30 the sensor-L2 picture of a unit the intel does not name yet
                      (`unclassified_until_flown`, M7 part E batch): unclassified-ghost-drone, the Ghost
                      Drone's outline only, filled flat in dark teal with the plate's grid and a cyan rim
@@ -109,6 +112,7 @@ Outputs (assets/sprites/intel/, packed onto the shared sprite pages as ``intel/<
   design/ui/hangar/concept/intel-final-r67-a.png   review sheet of the M9 part G batch's
   design/ui/hangar/concept/intel-final-r68-a.png   review sheet of the M9 part H batch's
   design/ui/hangar/concept/intel-final-r74-a.png   review sheet of the M10 part B batch's
+  design/ui/hangar/concept/intel-final-r75-a.png   review sheet of the M10 part C batch's
 
 The names are the enemy's or boss's name as a slug (vanguard.game.render.Portraits.slug). A
 portrait is the unit's chosen round-04 model (tools/concept/enemies_r04.py, imported unchanged) in
@@ -157,6 +161,7 @@ import belt_units_d  # noqa: E402  (M9 part D: Level 31's production models)
 import belt_units_e  # noqa: E402  (M9 part E: Level 32's production models)
 import belt_units_f  # noqa: E402  (M9 part F: Level 33's production models)
 import jovian_units  # noqa: E402  (M10 part B: Level 36's production models)
+import aurelia_units  # noqa: E402  (M10 part C: Level 37's production models)
 import barbfin  # noqa: E402  (the Barbfin's production model)
 import siren  # noqa: E402  (the Siren's production model)
 import glow_angler  # noqa: E402  (the Glow Angler's production model)
@@ -228,7 +233,8 @@ BATCHES = {"spore-bomber": "M4 part C batch", "whirl-seed": "M4 part C batch",
            "warden-tank-asc": "M9 part G batch",
            "boss-iron-sovereign": "M9 part H batch",
            "chimera": "M10 part B batch", "helium-3-harvester": "M10 part B batch",
-           "fleet-stormhawk": "M10 part B batch"}
+           "fleet-stormhawk": "M10 part B batch",
+           "mirror-interceptor": "M10 part C batch", "graft-turret": "M10 part C batch"}
 # the concept round that reviews a batch
 ROUNDS = {UI_BATCH: "r13", "M4 part C batch": "r16", "M4 part D batch": "r17", "M4 part F batch": "r23",
           "M5 part B batch": "r30", "M5 part C batch": "r31", "M5 part D batch": "r32", "M5 part E batch": "r33",
@@ -239,7 +245,7 @@ ROUNDS = {UI_BATCH: "r13", "M4 part C batch": "r16", "M4 part D batch": "r17", "
           "M8 part F batch": "r55", "M8 part G batch": "r57",
           "M8 part H batch": "r58", "M9 part B batch": "r62", "M9 part C batch": "r63",
           "M9 part D batch": "r64", "M9 part E batch": "r65", "M9 part F batch": "r66", "M9 part G batch": "r67",
-          "M9 part H batch": "r68", "M10 part B batch": "r74"}
+          "M9 part H batch": "r68", "M10 part B batch": "r74", "M10 part C batch": "r75"}
 OUT = SPRITES / "intel"
 CONCEPT = DESIGN / "ui" / "hangar" / "concept"
 PORTRAIT = 30
@@ -553,13 +559,43 @@ def fleet_hi():
     return belt_hi(*belt_units.turned(scene, mats, 0, 16), ju.FLEET_EXT, ju.FLEET_CAM)
 
 
+def mirror_hi():
+    """M10 part C: the Mirror Interceptor nose down (heading 0), its plate standing (tools/art/aurelia_units.py's hull
+    and plate models, enemies_r72's crescent a), the pods dark."""
+    au = aurelia_units
+    hull, mats = au.mirror_hull()
+    plate, pmats = au.mirror_plate()
+    mats = list(mats)
+    mats[au.A_MIRROR] = pmats[au.A_MIRROR]
+
+    def scene(p):
+        d0, m0 = hull(p)
+        d1, m1 = plate(p)
+        return np.minimum(d0, d1), np.where(d1 < d0, m1, m0)
+    return belt_hi(*belt_units.turned(scene, mats, 0, 16), au.MI_EXT)
+
+
+def graft_hi():
+    """M10 part C: the Graft Turret on its base, the barrel aimed down (angle 0), its seams lit as in its frames."""
+    au = aurelia_units
+    base, _ = au.e72.graft_base("b", tg=0.6)
+    head, mats = au.graft_head(tg=0.6)
+
+    def scene(p):
+        d0, m0 = base(p)
+        d1, m1 = head(p)
+        return np.minimum(d0, d1), np.where(d1 < d0, m1, m0)
+    return belt_hi(*belt_units.turned(scene, mats, 0, 32), au.GT_EXT)
+
+
 HI = {"reef-spitter": reef_spitter_hi, "relay-beacon": relay_beacon.intel_hi, "depth-hunter": depth_hunter_hi,
       "talon": talon_hi, "sam-nest": sam_nest_hi, "asteroid-mite": mite_hi, "clamp-gun": clamp_gun_hi,
       "wavering-stormhawk": hawk_hi, "minelayer": minelayer_hi, "gilded-gunship": gunship_hi, "dart-drone": dart_hi,
       "rail-serpent": rail_serpent_hi, "hornet": hornet_hi, "shard-drone": shard_drone_hi,
       "buzzsaw-drone": buzzsaw_drone_hi, "sentinel-tower": sentinel_tower_hi, "strider": strider_hi,
       "void-leech": void_leech_hi, "rail-bunker": rail_bunker_hi, "chimera": chimera_hi,
-      "helium-3-harvester": harvester_hi, "fleet-stormhawk": fleet_hi}
+      "helium-3-harvester": harvester_hi, "fleet-stormhawk": fleet_hi, "mirror-interceptor": mirror_hi,
+      "graft-turret": graft_hi}
 
 
 def portrait(slug):

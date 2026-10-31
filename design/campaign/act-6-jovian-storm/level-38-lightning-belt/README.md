@@ -2,9 +2,9 @@
 title: Level 38 – Lightning Belt
 design: approved
 implementation: not-started
-art: none
+art: proposed
 depends-on: [../../../enemies/air/harrow, ../../../enemies/air/buzzsaw-drone, ../../../enemies/air/chimera, ../../../enemies/air/talon, ../../../enemies/air/hornet, ../../../enemies/air/wraith, ../../../enemies/air/lamprey, ../../../world/jovian, ../../../player/specials, ../../../player/wingmen, ../../../player/generator, ../../../ui/hud, ../../act-2-homefront/level-12-storm-front]
-updated: 2026-10-31
+updated: 2026-11-01
 ---
 
 # Level 38 – Lightning Belt
@@ -351,18 +351,31 @@ questions*).
 
 ## Concept art
 
-None yet. The level needs (round 72's proposals, then the M10 part's production art):
+Round 76 (M10 part D, step ART-D; production art, proposed): the storm-layer kit by `tools/art/backdrop_l38.py` (the
+shared Jovian pieces in `tools/art/jovkit.py`), in round 72's L38 grade (storm-dark slate, one purple-grey for every
+cloud, mean about 75, the darkest windows about 50): the deep layer one continuous field cut into the five sections'
+tile sets (the storm's top under Aurelia's wreck, the heavy floor, the floor under the cells, the Red Spot's curving
+rim with its rust glow, the breakout thinning to black sky, stars and Io's disc), two cloud walls and two storm cells
+as deep pieces lit from inside by lightning (additive `-glow` pieces on the real clock, frame 0 the brightest: the
+pulse the game may draw on each told strike), Level 37's sinking city as Aurelia's wreck and its fall debris on
+`low-air` in the storm's grade (ART-C2's pieces), the heavy atmosphere's scud on `high-air`; at most two animated
+pieces on the screen at once. Aurelia's cargo pod and the CDF canister by `tools/art/storm_layer_units.py`
+(the canister's latch a separate overlay, so QD-4's answer needs no new art). The lightning column is round 73's
+([Jovian system](../../../world/jovian/README.md#concept-art)); the Harrow's frames are in its
+[document](../../../enemies/air/harrow/README.md#concept-art), the briefing images in the
+[briefing](../../../ui/briefing/README.md#concept-art) (`briefing-images-final-r76-a`). The proposal
+(`concept/backdrop-proposal.yaml`, step D2's input, not data) holds the tile sets, pieces, placements, atmospheres,
+the sections and the pod's and the canister's `debris`. Prompts and briefs: [concept/prompts.md](concept/prompts.md).
 
-- the storm-layer backdrop kit in Q10 a's storm-dark grade: cloud walls lit from inside on `deep`, storm cells,
-  scud on `high-air`, Aurelia's sinking wreck far above (section 1), the Red Spot's rim, the breakout's thinning tops,
-  the stars and Io's disc; all haze smooth (≥ 32 steps, no ordered dither);
-- the lightning column: telegraph line, faint edges, the 0.25 s strike, the sky flash, the thunder's look on the cloud
-  walls (the Jovian document owns the rule; the art is this level's first use);
-- Aurelia's cargo pod; the CDF supply canister with its friendly marker;
-- the two briefing images;
-- the round's captures: a lure (a Harrow stream dragged through a told column, the rings opening away), the cross
-  from all four edges, a Buzzsaw circle over the storm cells, the readability crops of the bullets and the Harrows'
-  sacs over the darkest band at 1:1.
+| File | What | Status |
+|---|---|---|
+| [concept/backdrop-final-r76-a.png](concept/backdrop-final-r76-a.png) | Production backdrop: twelve screens at half size with stand-ins (the wreck and the debris, the storm's top, the first strike's tell alone and the strike, the first Harrows, a wall lit from inside, a Buzzsaw circle over the cells, the canister, the Red Spot's rim with the pod, a Harrow cross by the rim, the breakout, Io's disc), the readability crops at 1× (each section's darkest and brightest window with a Harrow hunting and one in its tell, a Buzzsaw, needles, an orb, the ship; the measured means), the deep pieces with their brightest flash, the debris, the tile sets (sheet) | proposed (round 76) |
+| [concept/backdrop-final-r76-a.gif](concept/backdrop-final-r76-a.gif) | t 24–34 at half size (10 frames a second): the first strike's tell and strike alone, then the first Harrows | proposed (round 76) |
+| [concept/cargo-pod-final-r76-a.png](concept/cargo-pod-final-r76-a.png) | Aurelia's cargo pod: its 16 tumble frames at 2× over the left edge at t=118, lamps dead, the lightning flash's outline, the break in air (sheet) | proposed (round 76) |
+| [concept/cargo-pod-final-r76-a.gif](concept/cargo-pod-final-r76-a.gif) | The pod tumbling down the left edge, outlined by a flash, then broken open | proposed (round 76) |
+| [concept/canister-final-r76-a.png](concept/canister-final-r76-a.png) | The CDF supply canister on its parachute: the sway with the latch overlay (QD-4 a) and without it (QD-4 b), the release's ten frames (sheet) | proposed (round 76) |
+| [concept/canister-final-r76-a.gif](concept/canister-final-r76-a.gif) | The canister drifting down the middle, its latch shot, the release | proposed (round 76) |
+| [concept/backdrop-proposal.yaml](concept/backdrop-proposal.yaml) | The generator's `backdrop:` block (tile sets, pieces, placements, the atmospheres), the sections and the pod's and canister's `debris` for step D2 (not data) | proposed (round 76; step D2's input) |
 
 ## Implementation
 
