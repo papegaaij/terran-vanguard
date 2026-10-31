@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: n/a
 depends-on: [../shields, ../../systems/retry, ../../systems/difficulty]
-updated: 2026-10-27
+updated: 2026-10-31
 ---
 
 # Armour
@@ -34,6 +34,13 @@ auto-repair or armour patches). When it reaches zero the ship is destroyed and t
   Swarm Tail is paid (see the [Act 5 hand plan](../generator/README.md#act-5-hand-plan-draft)). Plating is
   the one upgrade a generator drain cannot touch, which makes it the Act 5 buy for a power-starved
   loadout.
+- **Act 6** (draft, decided 2026-10-31 (round 72), Q7 = b): **Composite V** (160) is in the shop from the
+  **L38 visit**, not from the act's first visit as the data's `act 6` reads (M10 part A sets `available: L38` in
+  [data.yaml](data.yaml)): one new item a visit in the act's shop (the Plasma Arc L36, the Reflex Shield L37, Composite V
+  L38, the IFF spoofer and the Mk V+ generator L39). The typical plan buys it at once, before the storm layer's
+  lightning (`heavy` strikes) and the death-burst rings of L38 and the duel of L40 (see the
+  [Act 6 hand plan](../generator/README.md#act-6-hand-plan-draft)); it draws no power, so it is the act's buy while
+  the plan sits at 22 of 22 MW.
 - **Repairs** happen between levels in the hangar. Cost per point depends on difficulty (easy:
   free, medium: 5 cr, hard: 10 cr). See [difficulty](../../systems/difficulty/README.md).
   Repairing is optional: flying a level damaged is a legitimate way to save credits.
@@ -63,6 +70,11 @@ auto-repair or armour patches). When it reaches zero the ship is destroyed and t
 - [x] The radio line at 15 %, voiced, once per attempt (M4 part H: `Defences.CRITICAL_SHARE`,
   `SimEvents.Type.ARMOUR_CRITICAL`, queued urgent by the level screen; `DefencesTest`,
   `LowArmourLineTest`, `RadioTimelineTest`, `VoiceFilesTest`); accepted in round 26
+- [ ] Composite V in the shop from the L38 visit (`available: L38`; draft, *Design*) — M10 part A
+
+## Open questions
+
+- None open.
 
 ## Decisions
 
@@ -98,3 +110,8 @@ auto-repair or armour patches). When it reaches zero the ship is destroyed and t
 - 2026-10-20 (user, round 44, X.k): **`art: n/a`**: the part has only the shop's icons, made with the shop (`tools/art/icons.py`), and no assets of its own.
 - 2026-10-27 (Act 5 design phase, step m9-d-systems; **approved in round 60**): Composite IV stays
   in Act 5 (Q12 = c, the core tiers); the hand plan buys it at the L31 visit.
+- 2026-10-31 (Act 6 design phase, step m10-d-systems; **decided 2026-10-31 (round 72)**): Composite V (160,
+  11 000) in the shop from the L38 visit (Q7 = b); the hand plan buys it there.
+- 2026-10-31 (user, [round 72](../../concept-rounds/round-72/README.md) closed): Q7 b (the middle arsenal):
+  Composite V is in the shop from the Level 41 visit (J11 moved it from Level 38; the Crucible takes the Level 40
+  visit); a everything and c minimal rejected.

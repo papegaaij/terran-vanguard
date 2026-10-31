@@ -3,7 +3,7 @@ title: Chairman Silas Vorne
 design: approved
 implementation: n/a
 art: final
-updated: 2026-10-28
+updated: 2026-10-31
 ---
 
 # Chairman Silas Vorne
@@ -69,6 +69,41 @@ level documents' radio.*
   ([voice](../../../audio/voice/README.md)); his motif plays under the broadcast
   ([music](../../../audio/music/README.md)).
 
+### Act 6 (draft)
+
+*Draft, step `m10-d-story` (2026-10-31), **decided 2026-10-31 (round 72)** (Q11 a, Q3 a, J6). The beats are kept
+here; the texts belong to the [act's](../../../campaign/act-6-jovian-storm/README.md) intro and outro, the level
+documents' radio and, for Level 42, the [Ascendant](../../../enemies/bosses/ascendant/README.md#vorne)'s line order.*
+
+- **Where he is**: at Callisto, behind his home fleet; he never comes out until the Ascendant does. He speaks four
+  times in the act, each time on the enemy channel (amber, intercepted): the intro, Aurelia, Io, his flagship.
+- **The intro, page 3** (Q11 a): intercepted on Okafor's bridge, courteous, patient: he invites Okafor to Aurelia "as
+  you visited it before", the 2166 riots turned into a courtesy. Page 4 is her answer on every channel
+  ([Okafor](../okafor/README.md#act-6-draft)). Image: the amber enemy screen, as his Act 5 pages.
+- **L36**: silent (the intro carries him).
+- **L37, the turn** (Q3 a, J6): the Choir speaks first; his reaction comes after it and is **cold, never shouted**: an
+  order to every Ascendancy wing that the Vrell are hostile. No surprise in his voice: he will not let his officers
+  hear it. Aurelia breaking with him (its traffic control asking the CDF for help) is not answered.
+- **L38**: silent.
+- **L39, Io**: one line as the wing burns his fuel, composed, contemptuous of the loss: he still has Callisto. It
+  carries **no hint of what is coming** after the Vrell: the Silence is named once, in L41's files (Q12 a), and "*do
+  you have any idea what's coming*" is his last line at L48. Level 39 speaks it: "*Lancer. Burn Io if you like.
+  Callisto holds fuel enough for what I still have to do.*"
+- **L40–L41**: silent. His guard speaks for him at L40 (the [Honour Guard](../../../enemies/bosses/honour-guard/README.md#lines));
+  at L41 the files speak for him, and nobody talks over Varga's reading of them.
+- **L42, the Ascendant**: his last stand, in his own ship. He taunts as at the Sovereign (the price Lancer would not
+  name; Okafor "spending" pilots as she spent Aurelia); at the eruption the Choir speaks and **he shouts, once**:
+  "*No! We had an agreement!*" (J6, the portrait's rage, `shout: true`; the only shouted line he has before Act 7).
+  Then he says nothing while the Vrell half fights in his ship, and when the lifeboat is away his composure is back,
+  and his self-deception with it: they still need him, someone must open the way, the gate. He does not speak of the
+  Silence. The order and the wording are the [Ascendant](../../../enemies/bosses/ascendant/README.md#vorne)'s.
+- **The lifeboat**: not his. It was grown for him inside the ship, by the Vrell, and it carries him where they go.
+  Its look is the seed of [Vorne's Chimera](../../../enemies/bosses/README.md) (Act 7, L48: him fused with it); he
+  believes it is his escape.
+- **What the act shows of him**: the man who bought a door and was told he was no longer needed, who loses his
+  capital to his partners and his fuel to the CDF, and still believes, to the gate. He is never pitiful on the
+  radio until the one shout; the act's tragedy is told by the others (Varga, Okafor), not by him.
+
 ### Sample lines
 
 | Situation | Line |
@@ -78,6 +113,8 @@ level documents' radio.*
 | Boss fight | "Such dedication. Such waste. You could have been on the winning side, pilot." |
 | Recruitment | "Lancer. You are wasted on Okafor. Come to Callisto. Name your price." |
 | Betrayed (Act 6–7) | "They were supposed to… no. No! We had an *agreement*!" |
+| Act 6 (L37, the turn) | "All Ascendancy wings, this is Vorne. The Vrell are hostile. Burn them off the decks." |
+| Act 6 (L42, the shout) | "No! We had an agreement!" |
 | Final (L48) | "Do you know what's coming after them, pilot? Do you have any idea what I was trying to—" |
 
 ### Portrait brief
@@ -136,3 +173,14 @@ Production art, M9 part B (concept round 62, step ART-B): round 60's chosen A.20
   portraits and voice come with Act 5 instead of Act 6.
 - 2026-10-27 (user, [round 60](../../../concept-rounds/round-60/README.md) closed): the Act 5 beats approved as drafted (J.8: cold, never shouting). **A.20 a**: the production portraits are the plain amber enemy screen (b, the Chairman's office with the crest, rejected); the rage face's faint teeth at 72 px are re-checked in production. His voice is V.1 **a** (Jeffrey Church; see the [voice](../../../audio/voice/README.md#act-5-voices-draft-round-60)).
 - 2026-10-28 (user, [round 62](../../../concept-rounds/round-62/README.md), closed; page answers): Vorne's three portraits (neutral, smug, rage; F.8) accepted as final; `art: final`. His pitch is V.3 a (the reference clip lowered 2 semitones, about 90 Hz), already the production render.
+- 2026-10-31 (Act 6 design phase, step m10-d-story; **decided 2026-10-31 (round 72)**): his Act 6 beats:
+  intro page 3 (Q11 a), the cold order after the Choir at the turn (L37, J6), one composed line at Io without a hint
+  of the Silence, silent at L40–L41, the Ascendant's taunts, the one shout at the eruption (J6) and the cold
+  self-deception after it; the lifeboat grown for him by the Vrell (Act 7's seed). His Act 6 portraits are his
+  final three; no new art.
+- 2026-10-31, design phase (step m10-d-act; decided 2026-10-31 (round 72)): Level 39's t=91 line is the story's, without the hint
+  ("*Lancer. Burn Io if you like. Callisto holds fuel enough for what I still have to do.*"); the open question is
+  closed.
+- 2026-10-31 (user, [round 72](../../../concept-rounds/round-72/README.md) closed): J6 kept (his one shout at Level
+  42's eruption, right after the Choir; V.5 recast re-renders the take) and Q11 a (his invitation on the intro's page
+  3) as drafted.

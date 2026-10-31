@@ -3,7 +3,7 @@ title: Characters
 design: approved
 implementation: n/a
 art: final
-updated: 2026-10-28
+updated: 2026-10-31
 ---
 
 # Characters
@@ -44,12 +44,12 @@ purpose: six voices, each instantly recognisable by portrait and speech style.
 
 | Situation | Speaker |
 |---|---|
-| Act and mission briefings | Okafor (Varga for intel-heavy missions; Vorne's broadcast, intercepted, in the Act 5 intro; Vorne in Act 6 taunts) |
+| Act and mission briefings | Okafor (Varga for intel-heavy missions; Vorne's broadcast, intercepted, in the Act 5 intro; Vorne's intercepted invitation on the Act 6 intro's page 3) |
 | Hangar intel panel | Varga |
 | Wave warnings, banter, "on your six" | Rook |
 | Low armour, objective changes | Okafor or Rook |
 | Boss appears | Varga (analysis), Vorne or the Choir (transmission) |
-| Enemy broadcasts | Vorne, the Choir; from Act 5 other Ascendancy voices on the enemy channel (the mutineers' flight lead, L29) |
+| Enemy broadcasts | Vorne, the Choir; from Act 5 other Ascendancy voices on the enemy channel (the mutineers' flight lead, L29; the Honour Guard's three aces, L40) |
 
 ### Act 5 speakers (draft)
 
@@ -73,6 +73,38 @@ speakers **Harker** (L29) and the **Bellwether** (the tug and its captain's call
 Seam** (the mining rock whose dock the tug leaves, L31), **Dacosta**'s claim (an old prospector's claim marker, L31's
 secret), the **Vesta relay** (the tug's destination, L31) and **Kleopatra** (the old consortium mine hollowed into
 the Ascendancy's Deep Core refinery, L32). Their pronunciation is in [voice](../../audio/voice/README.md#act-5-voices-draft-round-60).
+
+### Act 6 speakers (draft)
+
+*Draft, step `m10-d-story` (2026-10-31), **decided 2026-10-31 (round 72)** (J4, J6, J10). The lines are the
+level and boss documents' ([Act 6](../../campaign/act-6-jovian-storm/README.md); the aces' fight lines the
+[Honour Guard](../../enemies/bosses/honour-guard/README.md#lines)'s, Vorne's Level 42 lines the
+[Ascendant](../../enemies/bosses/ascendant/README.md#vorne)'s); the voices are cast in
+[voice](../../audio/voice/README.md#act-6-voices-draft); the enemy channel's dress is Act 5's
+([HUD](../../ui/hud/README.md), [briefing](../../ui/briefing/README.md#intercepted-transmissions-draft)), the aces'
+tags on the mid-boss bar the HUD's [Act 6 additions](../../ui/hud/README.md#act-6-additions-draft).*
+
+| Speaker | Channel | Where | Who | Portrait |
+|---|---|---|---|---|
+| [Vorne](vorne/README.md) | enemy (amber, intercepted) | Act 6 intro page 3, L37, L39, L42 | The Chairman, losing his partners and his capital and still sure of the deal ([his Act 6](vorne/README.md#act-6-draft)) | his final neutral, smug and rage portraits; **rage** for his one shout (L42) |
+| [The Choir](the-choir/README.md) | its own (distorted, a 2 s static lead) | L37 (the turn), L42 (the eruption) | The Vrell's voice, indifferent to the one who opened ([its Act 6](the-choir/README.md#act-6-draft)) | its chosen glyph loop |
+| **Aurelia Traffic** | friendly (teal) | L37 | J4, the act's friendly generic voice: Aurelia's civil traffic controller, a woman in her thirties, born on the city; she was a girl during the 2166 riots. She breaks with Vorne to get the civilians out on the Halcyon shuttles; steady at first, frayed at the end, and she signs off as the lift rings fail (whether she got out is never said) | own radio portrait, as Ceres Hub Control's: Aurelia's white-and-gold civil traffic uniform with a headset, the tower's windows on the gold domes behind her (proposed in round 72, made in Level 37's part) |
+| **Harker**, the Honour Guard's leader | enemy (amber, intercepted) | L40 | The Ceres mutineers' flight lead of L29 (Rook flew convoys with him). After Ceres he went to Callisto with what was left of the belt's turned pilots, and Vorne, who buys the skill he cannot recruit, took him into his Honour Guard: a former CDF pilot leading the Chairman's own. He opens the duel and has unfinished business with Rook ([Rook](rook/README.md#act-6-draft)) | his final L29 face in the guard's gloss black and gold flight suit, the crest on the collar instead of stitched over a CDF patch (a variant of his final portrait, round 72) |
+| **Vesper**, the dancer | enemy (amber, intercepted) | L40 | A woman in her late twenties, an Aurelia-born cloud racer before the war and a believer in the Ascendancy; flies for the show of it, calls Lancer "the quiet one" | own radio portrait: a black flight helmet with white ribbon stripes (her Talon's mark), a gold visor pushed up (round 72) |
+| **Kestrel**, the feinter | enemy (amber, intercepted) | L40 | A man in his twenties, a Helix test pilot who flew the Talon's trials; quick, cocky, the one who comes from behind | own radio portrait: black and gold chevrons on the helmet, a red band (his Talon's tail mark) (round 72) |
+
+**Okafor** speaks from the bridge of the CDF carrier ***Steadfast***, the flagship of the fleet at Jupiter (J10), on the
+friendly channel as ever; her portraits do not change. **Rook** flies the whole act (no absence) and **Varga** speaks
+from the *Steadfast* too. The aces have one channel and three voices: Harker's is his L29 voice (cast in round 62), so
+two new voices are cast (J4). In Act 6 they speak only in L40, nothing before the duel: their entry tells and
+lines introduce them.
+
+**Act 6's names** (the level drafts' placeholders and J4's call signs, adopted as the story's names, draft pending
+round 72): the speakers **Aurelia Traffic** (L37) and the aces **Harker**, **Vesper** and **Kestrel** (L40); the
+carrier ***Steadfast*** (new here, J10); the shuttles **Halcyon One to Six** and Aurelia's **Spire Plaza** (L37);
+**Under Aurelia** and **the Red Spot's Rim** (L38's sections, the storm layer's two stretches); the **Tvashtar
+Plains** and the **Loki**, **Pele** and **Prometheus** works (L39, after Io's real volcanoes). Their pronunciation is
+in [voice](../../audio/voice/README.md#act-6-voices-draft).
 
 ## Concept art
 
@@ -123,6 +155,17 @@ Production art, M9 part B (concept round 62, step ART-B): the Act 5 radio speake
 | [concept/harker-capture-r62-a.png](concept/harker-capture-r62-a.png) | Game capture, Level 29 (step B5): Harker's t=70.5 line on the enemy channel | chosen (round 62, F.8: the capture accepted) |
 | [concept/portraits-final-r64-a.png](concept/portraits-final-r64-a.png) | Review sheet (`tools/art/portraits.py`, M9 part D): `radio-bellwether-neutral`, the *Bellwether*'s captain (teal; round 60 A.21's accepted bust) at 1×, 2× and 4× and at 1× beside the other radio speakers | chosen (round 64, F.9: accepted as final) |
 
+Concept round 72 (Act 6 design phase, step ART-R-B; **decided 2026-10-31 (round 72)**): the four new Act 6
+radio speakers ([Act 6 speakers](#act-6-speakers-draft)) at 72 px in style B, neutral only (`tools/concept/act6_r72.py
+speakers`, through `tools/art/portraits.py`'s pipeline). Prompts:
+[concept/prompts.md](concept/prompts.md#act6-speakers-r72-a).
+
+| File | What | Status |
+|---|---|---|
+| [concept/act6-speakers-r72-a.png](concept/act6-speakers-r72-a.png) | A, the plain channel screens: Harker in the guard's black and gold suit (his final L29 face, the crest on the collar), Vesper (black helmet, white ribbon stripes, gold visor up), Kestrel (black and gold chevrons, a red band) on the amber enemy channel, Aurelia Traffic (white-and-gold civil uniform, headset) on the teal channel; 1×, 3× and beside the production speakers | chosen (round 72 A.15 a) |
+
+Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
+
 ## Decisions
 
 - 2026-09-30: Six-character cast; pre-rendered 3D bust portraits with side-coded frames.
@@ -156,3 +199,16 @@ Production art, M9 part B (concept round 62, step ART-B): the Act 5 radio speake
 - 2026-10-27 (user, [round 60](../../concept-rounds/round-60/README.md) closed): the Act 5 speakers approved as drafted (D.18, J.10); **A.21** accepted: the radio sheet of Ceres Hub Control, the *Bellwether*'s captain (teal) and Harker (amber, the Ascendancy crest stitched over his CDF patch) is the portraits' reference (`concept/act5-speakers-r60-a.png`, chosen).
 - 2026-10-28 (user, [round 62](../../concept-rounds/round-62/README.md), closed; page answers): the Act 5 radio portraits (Ceres Hub Control and Harker, F.8) accepted as final; `art: final`. Casting: Ceres Hub Control is Paul Adams (V.1 a), Harker is David Clarke (V.2 b), see the [voice part](../../audio/voice/README.md#decisions).
 - 2026-10-28 (user, [round 64](../../concept-rounds/round-64/README.md), closed): **F.9** accepted: the Bellwether's radio portrait (`radio-bellwether-neutral`, teal) is final; **V.1 b**: her voice is Laurie Anne Walden (see [voice](../../audio/voice/README.md#decisions)).
+- 2026-10-31 (Act 6 design phase, step m10-d-story; **decided 2026-10-31 (round 72)**): Act 6's speakers
+  (J4, J10): Vorne and the Choir on their channels (intro page 3, L37, L39, L42; L37, L42), Aurelia Traffic as the
+  act's friendly generic voice (L37), the Honour Guard's aces Harker (L29's flight lead, promoted into Vorne's guard;
+  his L29 voice kept), Vesper and Kestrel (two new voices), each ace with a radio portrait proposed in round 72; Okafor
+  and Varga on the carrier *Steadfast*. The level drafts' placeholder names adopted (Halcyon One–Six, the Spire Plaza,
+  Under Aurelia, the Red Spot's Rim, the Tvashtar Plains, the Loki, Pele and Prometheus works). Trivia decided here:
+  the call sign **Kestrel** is kept although Level 03's broken CDF frigate is the *Kestrel* (another side, 37 levels
+  apart; a ship and a call sign); Aurelia Traffic and Vesper are women, Kestrel a man, for three voices apart.
+- 2026-10-31 (user, [round 72](../../concept-rounds/round-72/README.md) closed): **A.15 a** (the Act 6 radio
+  portraits as plain channel screens: Harker, Vesper, Kestrel on the amber enemy channel, Aurelia Traffic on the teal
+  channel; b "their rooms" rejected, in `concept/rejected/`); the voices are V.1 b (Vesper, Jenny Bradshaw), V.2 a
+  (Kestrel, Expatriate), V.3 b (Aurelia Traffic, Lizzie Driver), V.4 ok (Harker on David Clarke's voice); the story
+  documents approved as drafted (D.17).

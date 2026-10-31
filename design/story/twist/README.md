@@ -3,7 +3,7 @@ title: The mid-campaign twist
 design: approved
 implementation: n/a
 art: n/a
-updated: 2026-10-27
+updated: 2026-10-31
 ---
 
 # The mid-campaign twist
@@ -29,7 +29,7 @@ plans to rule what is left of humanity. The Vrell use him and discard him.
 | 3 | Vrell avoid Helix sites on Mars; Varga notices, Okafor silences her. Unmarked human-built drones and a walker with Helix alloy (L18–19). |
 | 4 | Human relay beacons under Europa's ice guide Vrell ships; a Helix hull code (L27). Act ends with Ascendancy ships attacking Aegis Wing. |
 | 5 | Vorne's broadcast opens the act. Ascendancy and Vrell fight together in the belt: Ceres Hub turns and half its garrison mutinies, Rook is freed there (L29); Helix bought the belt with Vrell cures (L31); the alliance is uneasy, the leeches feed on Ascendancy ships too (L33). Boss: Iron Sovereign; its data points to Callisto, Vorne tries to buy Lancer (L35). *(Act 5 draft, decided in round 60.)* |
-| 6 | Hunt for Vorne at Jupiter. The Vrell turn on the Ascendancy. Boss: Ascendant; Vorne escapes to the gate. |
+| 6 | Hunt for Vorne at Jupiter. The Vrell turn on the Ascendancy at Aurelia (L37): never partners, only a door; the hybrids stay theirs. Vorne's own Honour Guard (L40); in Helix HQ his files show the deal from the Vrell side: they wanted passage because they flee "the Silence" (L41, its first mention). Boss: Ascendant, the Vrell half erupting through it; Vorne escapes toward the gate in a Vrell lifeboat, still believing the deal holds (L42). *(Act 6 draft, decided 2026-10-31 (round 72).)* |
 | 7 | Through the gate; Vorne's end (L48); hint of the Silence. |
 
 - **Enemy design**: a second, fully human enemy faction (angular, black and gold) from Act 4
@@ -97,12 +97,13 @@ Act 7 hint of the Silence, which leaves room for a sequel.
 
 ## Open questions
 
-- None open for the twist itself. Act 5's story questions of round 60 (the broadcast, the mutineers,
-  Rook's rescue) are listed in the [story](../README.md#open-questions).
+- None open for the twist itself (the story questions of rounds 60 and 72 are decided; see the [story](../README.md#open-questions)).
 
 ## Decisions
 
 - 2026-09-30: Three variants written up; A used as working assumption until the user chooses.
 - 2026-09-30: Concept round 01: the user chose **variant A** — the Ascendancy opened the gate. B and C are no longer pursued; C's refugee idea survives only as the late-game Silence hint.
 - 2026-10-27 (Act 5 design phase, step m9-d-story; approved in round 60): variant A's Act 5
+  row follows the act's draft beats (see the [story](../README.md#the-war-act-by-act)).
+- 2026-10-31 (Act 6 design phase, step m10-d-story; decided 2026-10-31 (round 72)): variant A's Act 6
   row follows the act's draft beats (see the [story](../README.md#the-war-act-by-act)).

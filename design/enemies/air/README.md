@@ -3,7 +3,7 @@ title: Air enemies
 design: approved
 implementation: in-progress
 art: final
-updated: 2026-10-28
+updated: 2026-10-31
 ---
 
 # Air enemies
@@ -17,7 +17,7 @@ levels.
 
 ## Contents
 
-Promoted to their own documents for the Acts 1–2 wrap-up, plus the Act 3 drafts of the overnight design phase (2026-10-12) and the Act 5 drafts of the design phase (2026-10-27, decided in round 60); the remaining units stay in the roster below.
+Promoted to their own documents for the Acts 1–2 wrap-up, plus the Act 3 drafts of the overnight design phase (2026-10-12), the Act 5 drafts of the design phase (2026-10-27, decided in round 60), and the Act 6 drafts of its design phase (2026-10-31, decided 2026-10-31 (round 72)); the remaining units stay in the roster below.
 
 | Part | Summary | Design | Impl | Art |
 |---|---|---|---|---|
@@ -41,15 +41,15 @@ Promoted to their own documents for the Acts 1–2 wrap-up, plus the Act 3 draft
 | [gilded-gunship](gilded-gunship/README.md) | Slow gunship: gilded front ×0.5, engines ×2, ring bursts, Dart streams (L30) | approved | done | final |
 | [rail-serpent](rail-serpent/README.md) | Drone train of 8–14 cars from the sides and rear; a cut's rear half drifts and blows (L30) | approved | done | final |
 | [hornet](hornet/README.md) | Hovering missile boat, salvos of 4 shootable homing diamonds (L31) | approved | done | final |
-| [buzzsaw-drone](buzzsaw-drone/README.md) | Radial blade drone: chase, 0.6 s spin-up, a dash that ricochets off edges and rocks (L31) | approved | done | final |
+| [buzzsaw-drone](buzzsaw-drone/README.md) | Radial blade drone: chase, 0.6 s spin-up, a dash that ricochets off edges and rocks (L31) | review | done | final |
+| [chimera](chimera/README.md) | Hybrid on the Talon airframe: swoops and aimed pairs, regenerates 20 %/s after 1 s untouched (L36) | approved | not-started | chosen |
+| [mirror-interceptor](mirror-interceptor/README.md) | Ascendancy interceptor with a frontal mirror: bounces shots, a beam breaks it, `shield-breaker` shatters it; open flanks (L37) | approved | not-started | chosen |
+| [harrow](harrow/README.md) | Hybrid kamikaze from every edge: lock tell, ram, a ring of 8 on any death (L38) | approved | not-started | chosen |
 
 ## Roster
 
 | Name | Faction | Layer | Tier | Role/ability | Formations | First level | Design |
 |---|---|---|---|---|---|---|---|
-| Chimera | Hybrid | air | small | Talon airframe with Vrell tissue: **regenerates** 20% HP/s after 1 s without taking damage. Rewards burst damage. | V-wing, swarm | 36 | idea |
-| Mirror Interceptor | Ascendancy | air | medium | Frontal `reflect` shield bounces non-`beam` shots back. Vulnerable from the sides and rear, or to `beam`/`shield-breaker`. | pincer, rear ambush | 37 | idea |
-| Harrow | Hybrid | air | small | `kamikaze` with a Vrell biomass payload; `death-burst` of 8 bullets whether shot or impacting. Kill it at range. | stream, cross | 38 | idea |
 | Choir Seraph | Vrell (elite) | air | medium | Elite. `teleport` next to the player's flank and `mirror` its movement while firing a `spiral`. 40 HP. | circle (pairs) | 47 | idea |
 
 ## Design
@@ -220,3 +220,9 @@ Production art, M9 part C (concept round 63, step ART-C): the Gilded Gunship (ro
   popcorn). Their Ascendancy hex shields follow the shared [enemy shields](../README.md#enemy-shields)
   rule (Q1 a); the Rail Serpent's machine split is the multi-part rule's.
 - 2026-10-28 (user, [round 62](../../concept-rounds/round-62/README.md), closed; page answers): the **Talon's** production art accepted as final (F.1: 16 headings, the leader's gold spine stripe, the twin muzzles' glint, the spinning wing of its death). The user's note: the Talons "die a bit easy" and the hex shield "could be a bit stronger" (also C.1, "the shield needs a bit more strength"): part B raises the Talon's shield in its data and README. Sounds: the turn-in whine a (S.10), the twin shot **b** (S.11), the leader's squelch **b** (S.12); a's shot and squelch moved to `concept/rejected/` in the sfx part.
+- 2026-10-31 (step m10-d-enemies-a, Act 6 design phase; decided 2026-10-31 (round 72)): the Act 6 air units
+  promoted from the roster to draft specs: the [Chimera](chimera/README.md) (L36, [regeneration](../README.md#regeneration)),
+  the [Mirror Interceptor](mirror-interceptor/README.md) (L37, [reflect](../README.md#reflect), Q1 c) and the
+  [Harrow](harrow/README.md) (L38, the `death-burst` on a ram); the [Buzzsaw Drone](buzzsaw-drone/README.md)'s Level 38
+  return added to its document (`review`). The hybrids wear the gap analysis's Q9 a livery (gunmetal with teal
+  tissue seams). The Choir Seraph stays a roster row (Act 7).

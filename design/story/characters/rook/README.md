@@ -3,7 +3,7 @@ title: Lt. Kenji "Rook" Tanaka
 design: approved
 implementation: n/a
 art: chosen
-updated: 2026-10-27
+updated: 2026-10-31
 ---
 
 # Lt. Kenji "Rook" Tanaka
@@ -58,6 +58,25 @@ place and lines are Level 29's ([Act 5](../../../campaign/act-5-the-belt/README.
   captivity beyond a joke; the tone guide's rule holds (a pause, a line, back to work). His first
   line is the sample below; the act outro gives him one more.
 
+### Act 6 (draft)
+
+*Draft, step `m10-d-story` (2026-10-31), **decided 2026-10-31 (round 72)** (J4). His rules in the slot (the
+hazards, the mirrors, the war) are [Rook in Act 6](../../../player/wingmen/README.md#rook-in-act-6-draft)'s; his lines
+are the level documents', the aces' the [Honour Guard](../../../enemies/bosses/honour-guard/README.md#lines)'s.*
+
+- **The whole act in the slot**: no absence, no loaner; one pulp line a level, as ever (Jupiter's "all sky and no
+  floor" at L36, Aurelia's gold at L37, the storm's weather report at L38).
+- **The rivalry gets a face** (L40, J4): the Honour Guard's leader is **Harker**, the Ceres flight lead he flew
+  convoys with and who offered him a drink over the mutiny (L29). Harker opens the duel by calling him out ("*let's
+  settle Ceres properly*"); Rook answers in kind, cocky, the act's pulp highlight. One or two of his lines between
+  the aces' (Harker's entry, Harker's death), never over a tell.
+- **When Harker falls**: no joke. A pause, one short line that closes Ceres, back to work (the tone guide's rule):
+  Harker was CDF once, and Rook knew him. Level 40 writes it ("*That one's for Ceres, Harker.*").
+- **After Aurelia**: he keeps the banter, but at the falling city he says nothing (Okafor's 2166 line and Varga carry
+  it).
+- **The act outro**: one line of his (the outro's, after the Ascendant; [Act 6](../../../campaign/act-6-jovian-storm/README.md)):
+  he is in for the gate before anybody asks, the seed of Act 7's "refuses to stay behind".
+
 ### Sample lines
 
 | Situation | Line |
@@ -70,6 +89,7 @@ place and lines are Level 29's ([Act 5](../../../campaign/act-5-the-belt/README.
 | Water level | "Water. Why is it always water?" |
 | Act 5 return (L29, his first line) | "Miss me? Don't answer that. Just shoot." |
 | Act 5, the mutineers | "I know that wing. I flew convoys with half of them. Doesn't matter now." |
+| Act 6, Harker's entry (L40) | "Harker. Still flying for whoever pays the most?" |
 
 His in-level **barks** (the eight wingman triggers, 3–4 variants each) are written in
 [wingmen](../../../player/wingmen/README.md#radio-barks), next to their triggers and queue rules.
@@ -125,3 +145,9 @@ procedural faces only show the style (framing, lighting, colour treatment, frame
   captivity and return (Q8 a): Helix took him and his Ember as a prize to a prison tender in Ceres Hub's
   Dock 9; Ceres Hub Control points the wing there in L29; his first posting was Ceres convoy escort, so
   he knows the mutineers; no lines before the rescue, back in the slot from L30.
+- 2026-10-31 (Act 6 design phase, step m10-d-story; **decided 2026-10-31 (round 72)**): his Act 6 beats:
+  the whole act in the slot, one pulp line a level, the L40 rivalry with Harker (J4: the Ceres flight lead now
+  leading Vorne's guard), a quiet line when Harker falls, silent over the falling city, one outro line toward the
+  gate.
+- 2026-10-31 (user, [round 72](../../../concept-rounds/round-72/README.md) closed): J4 kept: Harker leads the
+  Honour Guard, so Rook's Level 40 rivalry is with a man he knew (three new aces rejected).

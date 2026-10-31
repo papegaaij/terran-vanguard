@@ -156,3 +156,12 @@ Concept round 64, captures of the game (M9 part D, step D5) with the production 
 Level 29, the plan's Level 29 fit firing (`--level 29 --invulnerable --loadout front=ion-beam:4,rear=tail-gun:3,left=micro-missile-pod:3,right=micro-missile-pod:3,generator=3,shield=2,armor=3`),
 t≈13.4–14.1, a 200×200 crop at 2×: the t=13 Talons' bubbles, lit hexes on a hit, the shatter ring; and Level 30 at t=101
 (`--shots 6060`, not firing), a 240×240 crop at 2×: a convoy Gunship and its escort Talons shielded.
+
+# Round 72 — the heartland liveries (Q9)
+
+## heartland-livery-r72-a
+
+**Q9's livery comparison** (round 72, step ART-R-A). File: `heartland-livery-r72-a.png` (sheet). The production Talon in the three liveries of Q9 a (regular gunmetal, elite gloss black and heavy gold, hybrid gunmetal with teal seams) and in Q9 c's all-black, beside round 72's units (Mirror Interceptor, Chimera b, Harrow a, Shield Pylon a, the Halo Platform's rail turret) and the player, at 2× over Level 36's brightest and darkest band and Level 41's sunlit ice and citadel deck, the gold and teal shares measured on each sprite.
+
+- **Prompt:** not applicable (comparison sheet).
+- **Mockup generator:** `python3 tools/concept/enemies_r72.py heartland-livery [a|b]` (round 72, step ART-R-A; models built in the file on the frozen `tools/concept/render/` package)

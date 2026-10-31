@@ -3,7 +3,7 @@ title: Strider
 design: approved
 implementation: done
 art: final
-depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../player/specials, ../../bosses/revenant-walker]
+depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../player/specials, ../../bosses/revenant-walker, ../../../campaign/act-6-jovian-storm]
 updated: 2026-10-31
 ---
 
@@ -13,7 +13,8 @@ updated: 2026-10-31
 
 A two-legged Ascendancy walker mech that stalks across tunnel floors and station hulls in pairs, firing fans
 from twin cannons and homing diamonds from a shoulder pod. Its legs are its weakness: destroy one and it
-staggers, then **topples** along a marked line, crushing any ground unit beneath it.
+staggers, then **topples** along a marked line, crushing any ground unit beneath it. It returns in Act 6 on Io's
+refineries (Level 39; draft, decided 2026-10-31 (round 72)).
 
 ## Design
 
@@ -83,6 +84,28 @@ It never hurts the ship (ground never collides with the play plane) and never to
   crush them. At most two Striders walking at once.
 - In the branch the player picks (Q5 a), the richer branch's Striders guard the cache.
 
+### Act 6: Io's refineries (draft)
+
+**Draft** (Act 6 design phase, step D-enemies-B; decided 2026-10-31 (round 72)). The stat block is unchanged;
+this section adds its Act 6 use. The build adds L39 to the data's *used in* row.
+
+- **Where.** L39 *Io Flyby* (the roster's "Striders return"): pairs walking the refinery yards between the named
+  refinery targets and the SAM Nests, on the sulphur flats beside the pipeline racks; at most two walking at once (the
+  level rule stands). The level document places them (D-levels-2).
+- **HP.** The act HP factor of a returning `large` unit from its first level (L32, reference 132) with the proposed
+  Act 6 reference (J1, decided 2026-10-31 (round 72)): L39 156, ×156/132 = ×1.18: **hull 260 · legs 94 each · pod 35, whole 483**
+  (≈ 485 in the gap analysis); a leg is still the quick kill (0.6 s). Bounty unchanged (60; the act factor 1.6⁵ scales
+  it). No hex shield.
+- **The topple at Io.** The crush rule is unchanged: a Strider toppled onto a ground unit destroys it and pays it. If
+  Level 39's refinery targets are ground units (D-levels-2 decides), a topple onto one **destroys it and counts for
+  the objective** (the player aimed the fall): a reason to shoot the leg on the refinery's side. The fall's dust ring
+  settles fast in Io's thin air (no rising cloud; the [jovian](../../../world/jovian/README.md#media-per-level) media
+  rules); the eruptions' rocks fly on the play plane and never touch it.
+- **Livery.** Its final gunmetal/charcoal with gold, no new frames: under Q9 **a** (recommended, decided 2026-10-31 (round 72))
+  regular units keep their Act 5 look; its knee joints' red glow reads over Io's black lava and yellow sulphur (the
+  readability check comes with Level 39's mood sheet, step ART-R-B).
+- **Fire, movement, EMP**: as the stat block and *Behaviour* above; no new hook.
+
 ### Sounds
 
 Brief for the round-60 sound proposals (Freesound CC0/CC-BY, real recordings, no bubbly or popping
@@ -111,6 +134,8 @@ Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's r
 
 ## Implementation
 
+- [ ] Act 6 (when the draft is approved): L39 in the *used in* row; the act HP factor at L39 (hull 260, legs 94, pod 35)
+      measured with `levelReport`; a topple onto a refinery target counts for the objective if the targets are ground units
 - [x] Stat block loaded from a `data.yaml` (when the design is approved); global difficulty multipliers applied; tuned with `levelReport`
 - [x] `walk` on a path with the twisting torso (`32 angles`); the fan and the pod's homing salvos with their tells
 - [x] Destroyable legs and pod; the stagger tell, the marked fall line, the fall and the one-time crush of ground units (credits paid)
@@ -146,3 +171,9 @@ Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's r
   it.
 - 2026-10-29 (user, [round 65](../../../concept-rounds/round-65/README.md), closed): **F.4** ok (the production sprites and captures final, `art: final`); **S.5 a** (`strider-step`), **S.6 a** (`strider-servo`), **S.7 b** (`strider-cannon`, the boomier howitzer 'BOOM-BOOM'; step G4 switches it in), **S.8 a** (`strider-snap`), **S.9 a** (`strider-fall`); **C.4** accepted as built (the 0.7 s earlier entry, no damage while toppling, the explosion on landing).
 - 2026-10-30, the user: dither audit, ≥ 25 % smoothed (step DITH8): `strider-knee` (its spark, the shared glint helper) in smooth steps, not the 4×4 Bayer checker ([audit](../../../art-direction/production/README.md#dither-audit-2026-10-30)).
+- 2026-10-31 (Act 6 design phase, step D-enemies-B; decided 2026-10-31 (round 72)): the Act 6 return drafted
+  (*Act 6: Io's refineries*): L39 by the act HP factor (whole 483), the Act 5 livery kept (Q9 a), a topple onto a
+  refinery target counting for the objective (decided by me, trivia: the crush rule already pays it). The design is
+  `review` until the round.
+- 2026-10-31 (user, [round 72](../../../concept-rounds/round-72/README.md) closed): Q9 a (the Strider keeps its Act 5
+  gunmetal livery; b and c rejected); the document, moved to review for Act 6, approved (D.10; `design: approved`).

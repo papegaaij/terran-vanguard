@@ -585,3 +585,76 @@ Round 64 (the casting of the Bellwether; M9 part D, steps VOX-D and VOX-D2; **pi
 |---|---|---|---|---|
 | a | Lucy Burgoyne | [Sisters, ch. 1 (Ada Cambridge)](https://archive.org/details/sisters_0712_librivox), cut at 60 s | public domain | 134 Hz, IQR 27 Hz, 2.9 words/s (takes 135–156 Hz); low, level and older, an English woman's voice in an Australian novel |
 | b | Laurie Anne Walden | [A Diary from Dixie, ch. 1 (Mary Chesnut)](https://archive.org/details/diaryfromdixie_1101_librivox), cut at 120 s | public domain (Public Domain Mark 1.0) | 181 Hz, IQR 37 Hz, 2.4 words/s (takes 167–264 Hz); slow, plain and unhurried, American |
+
+## Round 72 — Act 6 voices
+
+Step AUD-R (M10 design phase, 2026-10-31), `tools/concept/audio/voice_r72.py`; pending the user's review. Chatterbox
+(the round-18 venv) clones each clip; rows: neutral 0.5 / 0.5 / 0.7, grim (slower) 0.45 / 0.4 / 0.7, fierce
+0.8 / 0.4 / 0.8, Vorne's shout 1.3 / 0.2 / 0.8 and fierce 0.9 / 0.3 / 0.8 (the rows plus his theatrical shift).
+Seeds 100–103 per line; the pin is the take with ≥ 90 % of the line's words read back by Whisper (base.en), then no
+pause over 0.8 s, then the most words, then the narrowest pitch spread; each pinned take is cut 0.15 s after the
+line's last word (Chatterbox ran on after most short lines: "One.", "There.", "Agreement."). Clip and take pitches by
+librosa pyin (median, IQR), pace by Whisper's word timings over the 12 s clip.
+
+**Candidates** (LibriVox, the clip a 12 s cut from 60 s into the chapter, mono 24 kHz; sources in CREDITS.md):
+
+| Speaker | | Reader | Recording | Clip | Takes |
+|---|---|---|---|---|---|
+| Vesper (a woman in her late twenties, light, amused and quick; 160–190 Hz or another accent) | a | Kristen McQuillin | The Stolen White Elephant (Twain), public domain | 173 Hz, IQR 56, 3.3 w/s | 156 / 187 Hz |
+| | b | Jenny Bradshaw | Harrington, ch. 1 (Edgeworth), CC0 | 172 Hz, IQR 46, 3.8 w/s | 167 / 176 Hz |
+| Kestrel (a man in his twenties, quick, cocky, cold; 130–150 Hz, another accent than Harker's English and Rook's American) | a | Expatriate | Life and Death of Harriett Frean, ch. 1 (Sinclair), public domain | 137 Hz, IQR 40, 3.2 w/s | 152 / 148 Hz |
+| | b | Bob Neufeld | Civil Disobedience (Thoreau), public domain | 140 Hz, IQR 49, 2.8 w/s | 178 / 120 Hz |
+| Aurelia Traffic (a woman in her thirties, polished, careful; 150–175 Hz or a British read) | a | Sibella Denton | Cranford, ch. 1 (Gaskell), public domain | 194 Hz, IQR 60, 2.8 w/s | 198 / 201 Hz |
+| | b | Lizzie Driver | Gulliver's Travels, the publisher's preface (Swift), public domain | 223 Hz, IQR 64, 2.7 w/s | 204 / 210 Hz |
+
+Measured and passed over: Annie Coleman (251 Hz), Tricia G (198 Hz), Kirsten Ferreri (214 Hz), Ann Boulais (243 Hz,
+a wide range), Ralph Snelson (112 Hz), Bruce Pirie (83 Hz), Phil Benson (99 Hz), Martin Clifton (82 Hz); Mil Nicholson
+(157 Hz) at Okafor's pitch (as in round 51); Elizabeth Klett and Lucy Burgoyne already auditioned (rounds 19, 64).
+Not checked by ear: whether Kestrel's readers carry an accent apart from Harker's and Rook's, and whether Vesper's
+read smoky, is the round's question; Aurelia Traffic's takes sit at 198–210 Hz, above the 150–175 Hz range (both
+British reads, the README's alternative).
+
+**Lines**: Vesper "Leave some for me, Harker. The quiet one's mine." (neutral) and "You'll pay for that one." (fierce);
+Kestrel "Check your six, Lancer. I'm already there." (neutral) and "No more games." (grim, slower); Aurelia Traffic
+"CDF flight, this is Aurelia Traffic. We have civilians on the pads. Please. Help us get them out." (neutral) and "The
+lift rings are failing. Aurelia is falling. Aurelia Traffic, signing off." (grim, slower); 1 s apart. Harker (cast,
+`ref-harker-r62-b`): "Rook. They let you fly again? Then let's settle Ceres properly." (fierce), 128 Hz.
+
+**Vorne's shout** (Level 42 line 5, "No! We had an agreement!", `refs/ref-vorne.wav`): a the shout row: of four takes
+two were heard shouted (seeds 101 at 265 Hz and 103 at 376 Hz), two plain (150 and 205 Hz); seed 101 pinned by hand
+(the break after "No!" 0.76 s, under the retry rule's 0.8 s). The shout lifts the pitch far above his 90–106 Hz: well
+apart from Harker (128 Hz) but no longer Vorne's low register. b the fierce row: 146–187 Hz, none shouted; seed 102,
+156 Hz.
+
+## Round 73 — Act 6 voice follow-ups
+
+Step m10-f72 (2026-10-31), `tools/concept/audio/voice_r73.py` (on `voice_r72.py`'s worker, read-back and pins);
+pending the user's review. Not listened to (Claude does not listen): the reads below are Whisper read-backs, pyin
+pitch (median, IQR), the share of 1–4 kHz energy (a shout's strain) and spectrogram zooms.
+
+- **voice-aurelia-traffic-r73-b** (round 72 V.3 b, Lizzie Driver chosen): her sign-off "The lift rings are failing.
+  Aurelia is falling. Aurelia Traffic, signing off." said "liff". Plays at t=150 of Level 37 as the city falls; it
+  should sound grim, slower, and say "lift" with an audible /t/. Re-rendered with the same clip
+  (`refs/ref-aurelia-traffic-r72-b.wav`), row (grim, slower: 0.45 / 0.4 / 0.7) and radio filter b on seeds 104–119:
+  Whisper reads "lift" in ten of sixteen ("lifterings" in four, "Liff" and "left" once). Pinned **seed 117** by hand
+  (the rule would take 110): in a 3–12 kHz zoom of the word its /f/ frication is followed by a 35 ms closure 23 dB down
+  and a release burst 4–6 dB above the frication before the /r/; seed 110's burst is weak, round 72's seed 103 runs
+  the frication straight into the /r/ (no gap: "liff"). 207 Hz, IQR 39; no respelling was needed. The t=1 call is
+  round 72's take (seed 102). Both lines 1 s apart, 11.9 s, −16 LUFS.
+- **vorne-shout-r73-a** (round 72 V.5: a at 265 Hz and b at 156 Hz not shouted were rejected): Level 42 line 5, "No!
+  We had an agreement!", his only shout as the Ascendant's keel splits; it should be a man's furious shout in Vorne's
+  low register (90–106 Hz), the break after "No!" kept. Round 72's shout-row take (seed 101, `refs/ref-vorne.wav`),
+  now cut at the end of the shouted "-ment!" (round 72's cut, 0.15 s after Whisper's word end, clipped it), pitched
+  ×0.41 (−15.4 semitones) by WORLD (pyworld 0.3.5: harvest f0, CheapTrick envelope, D4C aperiodicity, resynthesised
+  with the f0 scaled, the envelope and timing untouched): 268 → 113 Hz, IQR 101 → 43; 1–4 kHz share 0.085 → 0.077,
+  centroid −16 %. ffmpeg's rubberband (formants preserved), the tool of round 62, was tried first and dropped: at
+  −15 semitones it pulled the centroid down 58 % and Whisper heard "Harker, Harker, Harker". Enemy filter, 2.9 s.
+  How it should sound by the numbers: a long held "No!" and a strained, bright shout at a low pitch; WORLD at this
+  depth tends to sound buzzy and vocoded (a "big voice" effect) — the user's ear decides whether it is still a person.
+- **vorne-shout-r73-b**: a new shouted render. His clip cut a further −4 semitones (`ref-vorne.wav` through
+  rubberband, formants preserved, to the raw cache: no new source clip), the shout row (1.3 / 0.2 / 0.8) and a
+  stronger one (1.7 / 0.15 / 0.8) on seeds 100–109: four of twenty heard shouted (both "!") with the break under 0.8 s,
+  at 189–269 Hz (the lower clip does not keep a shout low). Pinned the brightest, the shout row's **seed 105** (1–4 kHz
+  share 0.44 against 0.25–0.41), 211 Hz, IQR 40; then ×0.52 (−11.3 semitones) by WORLD: 104 Hz, IQR 14 (a flat, held
+  shout), centroid −7 %. Whisper hears every word, without the "!". Enemy filter, 3.0 s, −16 LUFS. Shorter "No!" than a,
+  a shallower shift (less vocoder colour), but a flatter line.

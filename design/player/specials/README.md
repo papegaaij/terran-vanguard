@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../../campaign, ../../world]
-updated: 2026-10-29
+updated: 2026-10-31
 ---
 
 # Special abilities
@@ -27,7 +27,7 @@ no airstrikes under the Europa ice. This gives the hangar intel another thing to
 | Sonar Pulse | max 4 charges | Pings the water: reveals the `sub` layer and makes it hittable by all weapons for 6 s; under water it also lights every unit and gives every weapon full damage for 6 s (see *Act 4 specials in detail*) | 250 / charge | L22 | Water only (under the Europa ice, from L23); idle with `NO WATER` elsewhere | draft |
 | Orbital Lance | max 2 charges | 3 s vertical beam, 40 px wide, that follows the ship's X, 400 DPS on all layers except `sub` (boss parts at most 400 per lance); a `beam` for tendrils | 600 / charge | L17 | Needs satellite cover: not under ice, not beyond the gate | draft |
 | Shield Overcharge | cooldown 45 s | Fills the shield to twice its capacity and keeps the capacity doubled for 8 s | 5 000 once | L19 | none | draft |
-| Time Dilation | cooldown 60 s | Everything except the player runs at 50 % speed for 5 s | 8 000 once | Act 6 (was L31; Q12 = c of round 60, decided) | none | idea |
+| Time Dilation | cooldown 60 s | Everything except the player runs at 50 % speed for 5 s | 8 000 once | Act 7 (was L31, then Act 6; Q12 = c of round 60, decided; Q7 = b of round 72, decided 2026-10-31) | none | idea |
 | Vrell Swarm Call | cooldown 75 s | Captured Choir tech: summons 6 friendly Vrell drones for 10 s | 10 000 once | L45 | none | idea |
 
 Rules:
@@ -262,6 +262,36 @@ brings no new special; the belt only changes where the old ones work.*
 - **Time Dilation** moves to Act 6 (Q12 = c): a global time scale is a large engine change for one
   shop item in an act whose income (≈ 41 000) does not stretch to it. Under Q12 = b it would stay at L31.
 
+### Act 6 specials (draft)
+
+*Draft, step `m10-d-systems` (2026-10-31), **decided 2026-10-31 (round 72)** (Q7 = b, J2). Act 6 brings no
+new special; the media of the act (J2: Jupiter's air in L36–L38, Io's near-vacuum in L39, Callisto's vacuum in
+L40–L42; the settings are the [Jovian system](../../world/jovian/README.md)'s) change little.*
+
+| Setting | Forbidden | HUD reason word |
+|---|---|---|
+| Jupiter's atmosphere (L36 *Cloud Divers*, L37 *Fall of Aurelia*, L38 *Lightning Belt*) | none: the Airstrike's CDF bombers fly from the fleet's carrier, the Lance's satellites cover Jupiter (the fleet is there) | — |
+| Io (L39) and Callisto with its orbit (L40–L42) | none (open sky or space, as the belt; no level under rock or ice) | — |
+| Every Act 6 level (no water) | Sonar Pulse | `NO WATER` (the existing dry rule) |
+
+- **The air-only levels** (L36, L38, L40, L42: `NO GROUND` for the Bomb Rack and the ground-only shells, as L30's): the
+  Airstrike is **not** greyed there; its bombers still do their 60 to `air` (the 300 on `ground` and `low-air` finds
+  little). The hangar intel names the missing ground as Level 30's does.
+- **EMP Burst** in Act 6: it empties the heavier [enemy shields](../../enemies/README.md#enemy-shields) as in Act 5, and
+  it **shatters a standing mirror** at once (Q1 = c, the [`reflect`](../../enemies/README.md#reflect) rule); how long it
+  stuns a hybrid (machine plating with Vrell tissue) is the enemies' (the factions' rule); what it does to a Shield
+  Pylon's dome is the [Shield Pylon](../../enemies/ground/shield-pylon/README.md)'s. Bosses (the Honour Guard's aces, the Ascendant)
+  are never stunned; their shields are emptied as the rule says. The hand plan keeps it fitted all act.
+- **Decoy Flares** in Act 6: unchanged; the Ascendancy's homing diamonds take them as in Act 5. A rammer or a kamikaze
+  (the Harrow) is a body, not a missile, and ignores them.
+- **Smart Bomb**: unchanged; it clears a mirror's bounced bullets like any enemy bullet, and does nothing to a
+  lightning column or an eruption (hazards, not units).
+- **Shield Overcharge** with the Reflex Shield: the doubled capacity widens the reflect window (the
+  [shields](../shields/README.md)' *Reflex Shield (Act 6)*).
+- **Time Dilation moves to Act 7's design** (Q7 = b), or is dropped there: a global time scale is still a large engine
+  change, and Act 6 already needs three new engine features (the chain, the bullet reflection, the module). Under
+  Q7 = a it would be in the shop from the L36 visit.
+
 ### One special at a time
 
 The special slot holds **one** special; there is no swap button. Specials are changed in the
@@ -365,6 +395,8 @@ Sonar Pulse under water in Level 26's black, a/b; generator `tools/concept/gear_
   `underground: true`, `medium: vacuum` dry, `LevelData.forbiddenReason`, `BeltKeysTest`; step A3: the HUD word fits
   the compact row with the Lance's whole name, `DeepWaterLooksTest`; the intel's `SPECIAL LIMITED` names the setting's
   own word, `IntelPanel.limited`)
+- [ ] Act 6's settings as in *Act 6 specials* (draft): no new limit (the Airstrike and the Lance allowed all act, the
+  Sonar Pulse `NO WATER`); the EMP's mirror shatter — M10 part A (with the enemies' `reflect`)
 - [x] Setting restrictions read from the level data — **later: Act 4** (draft: *Act 4 specials in detail*) (the first restricted setting is under the Europa ice from L22; no Acts 1–3 level restricts a special) (M8 part A, step A2: the `limits` and the level's and section's `medium` and `special_limits`, `SpecialsData.forbidden`/`reason`, `LevelData.forbiddenSpecials`, checked by `ActFourChecks`; `ActFourDataTest`; the simulation's forbidden state in step A3, `Act4SpecialsTest.theAirstrikeReadsUnderIceUnderWaterAndWorksAboveIt`, `aWaterlineChangesTheStateOnceWithItsEvent`; mapped in step A4, `Act4ArsenalFlightTest.aForbiddenSpecialIsRefusedWithItsReasonAndNoChargeSpent`; the greyed row with its word and the limit chime in step A6, `DeepWaterLooksTest.theReasonWordFitsTheSpecialRowWithTheNameCut`)
 - [x] HUD special row: icon, name, charges; greyed while the strike flies or with no charge; flashes
   when denied
@@ -373,6 +405,10 @@ Sonar Pulse under water in Level 26's black, a/b; generator `tools/concept/gear_
   chime as it is ready; the overcharge's white arc draining anticlockwise)
 - [x] HUD: the unavailable-in-this-setting state (greyed icon, the reason word) — **later: Act 4** (with the setting restrictions) (M8 part A, step A6: the greyed row with its word and the limit chime, `DeepWaterLooksTest.theReasonWordFitsTheSpecialRowWithTheNameCut`)
 - [x] Sonar Pulse as under *Sonar Pulse (L22)*: the pulse, the lighting, the full-damage window, the 1 free charge — **later: Act 4** (M8 part A; step A2: its row (250 a charge, at most 4, L22, the free charge given at the L22 visit into an empty slot only) and the `sonar` block; the shop row waits for its icon in `Catalogue.AWAITING_ICONS`; the icon from ART-A, the row live in step A5; the simulation in step A3, `Act4SpecialsTest.thePulseOpensSixSecondsOfFullDamageUnderWaterAndACallRestartsThem`, `abovetheWaterThePulseOpensTheSubLayerToEveryWeaponAndItsRingFindsTheContacts`; `ActFourEscortTest.theSonarPulsesFreeChargeComesAtLevel22AndIsFittedOnlyIntoAnEmptySlot`; the ring, the brackets and the ping in step A6, `DeepWaterLooksTest.aContactBracketSnapsInOverAThirdOfASecond`, `ActFourSoundsTest.theSonarPulsePings`)
+
+## Open questions
+
+- None open.
 
 ## Decisions
 
@@ -494,3 +530,11 @@ Sonar Pulse under water in Level 26's black, a/b; generator `tools/concept/gear_
   the Airstrike and the Orbital Lance forbidden only inside the hollowed asteroid of L32 (`IN ROCK`), allowed
   elsewhere in the belt; the Sonar Pulse reads `NO WATER` all act; no new special in Act 5, Time Dilation to Act 6
   (Q12 = c; alternatives: (b) at L31 as first drafted).
+- 2026-10-31 (Act 6 design phase, step m10-d-systems; **decided 2026-10-31 (round 72)**): Act 6 adds no
+  special and no limit: the Airstrike and the Orbital Lance work in Jupiter's air, over Io and at Callisto (the
+  fleet's carrier and satellites), the Sonar Pulse reads `NO WATER` all act; the EMP shatters a standing mirror (Q1 = c);
+  Time Dilation moves to Act 7's design (Q7 = b).
+- 2026-10-31, design phase (step m10-d-act; decided 2026-10-31 (round 72)): Level 42 is air-only too (its draft), so the
+  air-only levels' rule covers L36, L38, L40 and L42.
+- 2026-10-31 (user, [round 72](../../concept-rounds/round-72/README.md) closed): Q7 b: Act 6 has no new special;
+  Time Dilation moves to Act 7's design (a: the Level 36 shop at 8 000 with a global time scale rejected).

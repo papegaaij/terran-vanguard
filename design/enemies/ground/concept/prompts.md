@@ -138,15 +138,6 @@ Prompts for polished versions of the round-03 mockups.
 - **Animation brief:** Chain rig: every part follows the head's travelled path at 16 headings, spaced by segment size. The legs ripple in a wave down the body (4 leg frames, phase offset per segment). Each spore pore fires in turn, head to tail, giving a travelling wave of slow aimed spores. Head = vital weak point.
 - **Mockup generator:** `python3 tools/concept/enemies_r06.py threadcrawler` (models `tools/concept/render/r06_models.py`, rendered with `ModelSpaceAngleSprites` from `tools/concept/render/enemy_rigs.py`)
 
-## halo-platform-r06-a
-
-**Halo Platform (Ascendancy rotating turret ring)** — a ~300 px multi-part fortress centrepiece. Files: `halo-platform-r06-a.png` (sheet) and `halo-platform-r06-a.gif` (motion in the 480×540 play field).
-
-- **Prompt:** late-1990s pre-rendered CGI game sprite, 3D model rendered straight top-down orthographic, key light from the top-left, glossy specular highlights, crisp silhouette, isolated on a flat dark background. A human-built fortress weapon seen from directly above: a shielded octagonal armoured core in black-violet (#201430) with gold trim and a red reactor eye under a glass dome, surrounded by a ring of six curved armoured rail segments with gold edge trim, each carrying a domed turret with twin barrels and a white (#e8e4f0) accent; thin gold/red rim light. Render core, one ring segment and one turret as separate sprites.
-- **Negative prompt:** photograph, painterly brush strokes, soft focus, perspective camera, side view, three-quarter view, text, watermark, motion blur, organic shapes, magenta or hot-pink glow, yellow glow, blue or cyan body colour
-- **Animation brief:** The ring rotates around the core (segments at 32 headings); each turret aims at the player independently (32 headings) and fires gold shells as it swings round. Each destroyed turret speeds the ring up; with half the ring gone the red hexagonal shield around the core drops and the core is exposed.
-- **Mockup generator:** `python3 tools/concept/enemies_r06.py halo-platform` (models `tools/concept/render/r06_models.py`, rendered with `ModelSpaceAngleSprites` from `tools/concept/render/enemy_rigs.py`)
-
 ## dust-devil-r06-a
 
 **Dust Devil (Vrell vortex organism)** — a 72 px radial spinning funnel. Files: `dust-devil-r06-a.png` (sheet) and `dust-devil-r06-a.gif` (motion in the 480×540 play field).
@@ -156,15 +147,6 @@ Prompts for polished versions of the round-03 mockups.
 - **Animation brief:** Spins fast (8 frames cover 72° thanks to the 5-fold symmetry) inside a rotating grit swirl, wandering in a swirl path; it pulls loose pickups towards it and spits spirals of grit. At the top of each spin cycle the vanes part (second frame set) and the lime core is exposed and hittable.
 - **Mockup generator:** `python3 tools/concept/enemies_r06.py dust-devil` (models `tools/concept/render/r06_models.py`, rendered with `ModelSpaceAngleSprites` from `tools/concept/render/enemy_rigs.py`)
 
-
-## halo-platform-r07-a
-
-**Halo Platform with smooth rotation (round 07)**: the Ascendancy rotating turret ring, re-rendered because the round-06 rotation was "very jagged". Files: `halo-platform-r07-a.png` (sheet) and `halo-platform-r07-a.gif` (motion in the 480×540 play field, 25 fps).
-
-- **Prompt:** late-1990s pre-rendered CGI game sprite, 3D model rendered straight top-down orthographic, key light from the top-left, glossy specular highlights, crisp silhouette, on a dark violet hex-plated fortress deck. A huge Ascendancy turret platform seen from directly above: a shielded octagonal black-and-gold core (#141018 hull, #c08000 gold trim) with a red reactor eye under a glass dome, surrounded by a closed ring of six curved black armour segments with gold edge trim and white accents. Each segment carries a domed twin-barrel turret, and a thin red hexagonal energy shield surrounds the core. Thin gold rim light on top-left edges, red on bottom-right edges.
-- **Negative prompt:** photograph, painterly brush strokes, soft focus, perspective camera, side view, three-quarter view, text, watermark, motion blur, organic shapes, chitin, insect, magenta glow
-- **Animation brief:** The ring turns slowly and perfectly smoothly around the core, 0.35 rad/s at first. It is pre-rendered as one 6-fold model over a single 60° step at 128 frames (0.47° per frame, 768 per full turn), so its outer edge moves about 0.9 px per frame change. All ring frames share one palette. Turrets ride on the segments and track the player at 64 headings, firing gold shells. Each destroyed turret leaves a scorched stump and ramps the ring speed up by 0.25 rad/s over 0.8 s, with no jump. With half the turrets gone the red hex shield fades out and the core is exposed.
-- **Mockup generator:** `python3 tools/concept/enemies_r07.py halo-platform`. The assembled ring is `halo_ring()` in `tools/concept/render/r07_models.py`, built from the round-06 `halo_segment`. Its 128 frames render in parallel processes (about 15 s each) and are cached in the system temp dir. This follows the "Smooth slow rotation" rule in design/art-direction.
 
 ## scuttler-r08-a — Scuttler, model-space re-render (round 08)
 

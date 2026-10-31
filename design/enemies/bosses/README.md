@@ -3,7 +3,7 @@ title: Bosses
 design: approved
 implementation: done
 art: final
-updated: 2026-10-30
+updated: 2026-10-31
 ---
 
 # Bosses
@@ -16,7 +16,7 @@ shortened re-creations of earlier bosses.
 
 ## Contents
 
-Promoted to their own documents for the Acts 1–2 wrap-up, plus the Act 3 drafts of the overnight design phase (2026-10-12) the Act 4 boss of its design phase (2026-10-21, draft) and the Act 5 boss of its design phase (2026-10-27, draft, decided in round 60); the remaining units stay in the roster below.
+Promoted to their own documents for the Acts 1–2 wrap-up, plus the Act 3 drafts of the overnight design phase (2026-10-12) the Act 4 boss of its design phase (2026-10-21, draft), the Act 5 boss of its design phase (2026-10-27, draft, decided in round 60) and the Act 6 mid-boss and boss of its design phase (2026-10-31, draft, decided 2026-10-31 (round 72)); the remaining units stay in the roster below.
 
 | Part | Summary | Design | Impl | Art |
 |---|---|---|---|---|
@@ -28,6 +28,8 @@ Promoted to their own documents for the Acts 1–2 wrap-up, plus the Act 3 draft
 | [dust-colossus](dust-colossus/README.md) | Act 3 boss: buried colony organism breaching at the edges and under the ship, mouths with rings, suction and bite (L21) | approved | in-progress | final |
 | [abyssal-maw](abyssal-maw/README.md) | Act 4 boss: serpent leviathan coiled round the hatchery vent, gill rings, fan walls, coil sweeps, one dive and lunge, Helix implants; then the breakout and the run under Ascendancy cruisers (L28) | approved | in-progress | final |
 | [iron-sovereign](iron-sovereign/README.md) | Act 5 boss: battle station in Ceres orbit, three counter-turning rings whose batteries fire in the arc facing the ship, ring locks, the core with Dart streams; Vorne's offer (L35) | approved | done | final |
+| [honour-guard](honour-guard/README.md) | Act 6 mid-boss: Vorne's three aces in gold Talons, the sniper, the dancer and the feinter joining in turn, then one playbook; one bar in three segments (L40) | approved | not-started | chosen |
+| [ascendant](ascendant/README.md) | Act 6 boss: Vorne's flagship bow-on, the gold hull's mirrors and shields, the Vrell half erupting with regenerating sacs and Chimera broods, Vorne's one shout, the lifeboat that always escapes (L42) | approved | not-started | chosen |
 
 ## Roster
 
@@ -35,14 +37,12 @@ Promoted to their own documents for the Acts 1–2 wrap-up, plus the Act 3 draft
 
 | Name | Faction | Layer | Role/ability | Formations | First level | Design |
 |---|---|---|---|---|---|---|
-| Ascendant | Hybrid | air + space | Vorne's flagship, half warship and half Vrell organism. **Phase 1**: gold hull with shield generators and mirror panels (`reflect`). **Phase 2**: the Vrell half erupts and regenerates tissue while spawning Chimeras. **Phase 3**: Vorne's Vrell lifeboat breaks free and flees (can't be killed; it escapes). Taunts from Vorne over the radio. | carrier + escorts | 42 | idea |
 | Choir Heart | Vrell | all | The hive mind's core: a vast luminous organ in the hive's centre. It switches between the attack styles of every Vrell enemy in the game, reshapes the arena (walls of tissue, darkness, distorted scroll) and speaks through the Choir. The final phase is a single weak point in a storm of bullets. | – | 50 | idea |
 
 ### Mid-bosses
 
 | Name | Faction | Layer | Role/ability | Formations | First level | Design |
 |---|---|---|---|---|---|---|
-| Honour Guard | Ascendancy | air | Three ace pilots in custom gold Talons attacking from front, sides and rear in turn. Each ace has its own pattern (sniper `laser-line`, `spiral` dancer, `kamikaze` feints) and taunts over the radio. | pincer, rear ambush | 40 | idea |
 | Vorne's Chimera | Hybrid | air + ground | Vorne fused with his Vrell lifeboat inside a Vrell-grown citadel. Alternates between Ascendancy tactics (shields, missiles) and Vrell ones (spawning, regeneration). Pulp villain monologue; a tragic last line. | – | 48 | idea |
 
 ### Boss rush (L49 *Echoes*)
@@ -171,7 +171,9 @@ implants are grey with a hot-amber core and nothing on it is gold (Q11 a).
       and built with Act 4 (M8 part H).
 - [x] The same for the Act 5 boss (the Iron Sovereign, L35): promoted to its draft spec in the Act 5 design phase
       (2026-10-27, decided in round 60) and built with Act 5 (M9 part H; the spec accepted with round 68, 2026-10-29).
-- [ ] The same for the roster's bosses of Acts 6–7 — **later: Act 6** to Act 7.
+- [ ] The same for the Act 6 bosses (the Honour Guard, L40, and the Ascendant, L42): promoted to draft specs in the
+      Act 6 design phase (2026-10-31, decided 2026-10-31 (round 72)); built with Act 6 (M10) — **later: Act 6**.
+- [ ] The same for the roster's bosses of Act 7 — **later: Act 7**.
 - [x] Shared boss framework: multi-part hitboxes, neck chains, phase transitions, HUD boss bar,
       the intro descent, the chained death and the credit shower (M4 part E, with the Gorgon
       Frigate; drawn in plain shapes until its production sprites).
@@ -180,8 +182,9 @@ implants are grey with a hot-amber core and nothing on it is gold (Q11 a).
 
 ## Open questions
 
-- Should the Ascendant's third phase (Vorne escaping) be skippable, or is it a scripted end?
-  Proposal: scripted. The player can damage the lifeboat for bonus credits, but it always escapes.
+- ~~Should the Ascendant's third phase (Vorne escaping) be skippable, or is it a scripted end?~~ Answered in the
+  [Ascendant](ascendant/README.md)'s draft (Q6 a, decided 2026-10-31 (round 72)): scripted. The lifeboat cannot
+  die; damage on it pays its 15 % share of the bounty up to a cap, and it always escapes.
 
 ## Decisions
 
@@ -215,3 +218,4 @@ implants are grey with a hot-amber core and nothing on it is gold (Q11 a).
   rise).
 - 2026-10-27 (Act 5 design phase, step m9-d-boss; **approved in round 60**): the [Iron Sovereign](iron-sovereign/README.md) promoted from the roster to a draft spec (Q7 a, the top-down rings over Ceres orbit; Q1 a, the core's hex shield; Q6 b, the core's Dart streams); its roster row removed.
 - 2026-10-30 (the user's re-test): the Abyssal Maw's dive is fine; `abyssal-maw-dive-capture-r71-a` is chosen. Its par stays 138 ("keep it as is"; see its page).
+- 2026-10-31 (Act 6 design phase, step m10-d-boss; **decided 2026-10-31 (round 72)**): the [Honour Guard](honour-guard/README.md) (Q5 a, staggered, then together; one bar in three segments) and the [Ascendant](ascendant/README.md) (Q6 a, bow-on over a halted arena; the lifeboat escapes, its damage paying up to a cap) promoted from the roster to draft specs; their roster rows removed, the Ascendant's open question answered.

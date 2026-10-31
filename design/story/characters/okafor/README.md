@@ -3,7 +3,7 @@ title: Commander Adaeze Okafor
 design: approved
 implementation: n/a
 art: chosen
-updated: 2026-10-01
+updated: 2026-10-31
 ---
 
 # Commander Adaeze Okafor
@@ -28,6 +28,27 @@ unshakeable in front of her pilots — and carrying every loss privately.
   (her mistake). After the Act 4 reveal she owns it and goes after Vorne herself — in Act 6 she
   commands the assault on Callisto from a carrier.
 
+### Act 6 (draft)
+
+*Draft, step `m10-d-story` (2026-10-31), **decided 2026-10-31 (round 72)** (Q4 a, Q11 a, J10). The texts are
+the [act's](../../../campaign/act-6-jovian-storm/README.md) intro and outro and the level documents'.*
+
+- **Where she is** (J10): on the bridge of the CDF carrier ***Steadfast***, commanding the fleet's assault on Jupiter
+  and Callisto, September 2185. Her lines stay on the friendly channel; she sends Aegis Wing ahead of the fleet, alone
+  where nobody else would go (Lancer's arc).
+- **The intro** (Q11 a, four pages, hers but page 3): page 1 the fleet at Jupiter; page 2 the plan in one page: Callisto
+  sits behind the home fleet and Aurelia's air-defence grid, and the fleet runs on helium-3 from the cloud
+  harvesters and Io's refineries, so the wing breaks the grid (L36–L37), takes the storm road (L38), burns Io's
+  fuel (L39), then Callisto (L40–L42); page 3 Vorne's intercepted invitation to Aurelia; **page 4 her answer, on
+  every channel**: "*Vorne. This is Okafor. I was at Aurelia. I remember. So will you.*"
+- **L37, Aurelia** (Q4 a): the city's traffic control asks the CDF for help, and she says yes: this time the CDF is
+  there for its people. As the city falls she says the one thing she never says: she stood on those decks in 2166
+  when the CDF fired on them. It is her memory, not the intro's threat, so the two never repeat. Her regret, owned
+  on an open channel, is the act's quiet centre.
+- **L42**: after the lifeboat is gone and ≥ 4 s of calm, the level's last voice is hers: "*Then we follow him.*" (the
+  [Ascendant](../../../enemies/bosses/ascendant/README.md#vorne)'s line 7). The act outro therefore does **not** repeat
+  it: its last page is her order to the fleet for the gate (the act's text).
+
 ### Sample lines
 
 | Situation | Line |
@@ -37,7 +58,9 @@ unshakeable in front of her pilots — and carrying every loss privately.
 | Low armour | "Lancer, your hull is breaking up. Get out of that crossfire." |
 | Level end | "Good work, Aegis. Bring them home." |
 | Act 4 reveal | "Those are not Vrell ships. God help us. Those are ours." |
-| Act 6 | "Vorne. This is Okafor. I was at Aurelia. I remember. So will you." |
+| Act 6 (the intro's page 4) | "Vorne. This is Okafor. I was at Aurelia. I remember. So will you." |
+| Act 6 (L37, the fall) | "I stood on those decks in sixty-six, when we fired on them. Follow her down, Lancer. Then get out." |
+| Act 6 (L42, the end) | "Then we follow him." |
 
 ### Portrait brief
 
@@ -58,9 +81,20 @@ procedural faces only show the style (framing, lighting, colour treatment, frame
 | [concept/portrait-r03-b.png](concept/portrait-r03-b.png) | Style B "comm-screen pixel portrait": Okafor as a 72 px dithered teal portrait, 2× for the briefing, HUD radio frame | superseded by r04 |
 | [concept/portrait-r04-a.png](concept/portrait-r04-a.png) | Round 04: style B with retained colour — Okafor's own colours under the teal CDF tint, 36 colours, soft dither; briefing 144×144, HUD 72×72, 3× (`tools/concept/portraits_r04.py`) | chosen |
 
+## Open questions
+
+- None open.
+
 ## Decisions
 
 - 2026-09-30: Okafor as briefing voice, with a personal history at Aurelia.
 - 2026-09-30: Concept round 03: portrait style **B** (comm-screen pixel portrait) chosen, with a bit more colour retained so it looks less flat.
 - 2026-09-30: Concept round 04: style-B portrait with retained colour chosen.
 - 2026-10-01: Approved by the user in the [Acts 1–2 design review](../../../reviews/acts-1-2/README.md).
+- 2026-10-31 (Act 6 design phase, step m10-d-story; **decided 2026-10-31 (round 72)**): her Act 6 beats:
+  commanding from the carrier *Steadfast* (J10, the name decided here), the intro's plan and her answer to Vorne
+  (Q11 a), her 2166 memory over Aurelia's fall (L37, Q4 a), "*Then we follow him.*" as L42's last radio line (so
+  not in the outro).
+- 2026-10-31 (user, [round 72](../../../concept-rounds/round-72/README.md) closed): Q11 a (her four intro pages
+  with Vorne's page 3), Q4 a (her 2166 line over the falling city at Level 37's end) and J10 (September 2185, the
+  carrier *Steadfast*) as drafted.

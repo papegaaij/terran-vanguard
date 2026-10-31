@@ -1,9 +1,9 @@
 ---
 title: Buzzsaw Drone
-design: approved
+design: review
 implementation: done
 art: final
-depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../player/specials, ../../../world/belt, ../../../campaign/act-5-the-belt]
+depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../player/specials, ../../../world/belt, ../../../campaign/act-5-the-belt, ../../../campaign/act-6-jovian-storm]
 updated: 2026-10-31
 ---
 
@@ -13,7 +13,8 @@ updated: 2026-10-31
 
 A radially symmetric Ascendancy blade drone that chases the ship, spins up with a clear tell and
 then dashes in a straight line, **ricocheting** off the play-field edges and the belt's drifting
-asteroids. Contact damage only, but lethal in groups (Level 31).
+asteroids. Contact damage only, but lethal in groups (Level 31). It returns in Level 38's storm layer (draft,
+decided 2026-10-31 (round 72)).
 
 ## Design
 
@@ -62,6 +63,30 @@ takes the [beam-era](../../README.md#balancing-basis) ×2 and keeps it in every 
   saw or grinder from Freesound, CC0/CC-BY), rising sharply through the tell; a metal scrape-clang on
   each ricochet; a short shatter on death.
 
+### Act 6: the return in the storm (draft)
+
+**Draft** (Act 6 design phase, step m10-d-enemies-a; decided 2026-10-31 (round 72)). The stat block above
+(the approved Act 5 unit, rendered from its data) is unchanged; this section adds its Act 6 use. The build updates
+the data's *First level / used in* row (L38 added).
+
+- **Where.** L38 *Lightning Belt* (the storm layer, waves from every direction, density 5): streams and circles
+  among the Harrows, from any edge, each first side or rear entry edge-warned 3 s ahead; the level doc places
+  them.
+- **HP.** A `small` unit keeps its HP (no act HP factor): **20** with the beam era's ×2, as in Act 5. No hex shield
+  (the Act 6 doubling is for crewed craft only, see [enemy shields](../../README.md#enemy-shields)). Bounty
+  unchanged (12, Act 1 terms; the act factor 1.6⁵ scales it).
+- **Ricochet.** The storm has no drifting rocks: the dash bounces off the play-field edges only (still up to 3
+  times). The act sketch's "ricocheting between storm cells" is presentation: the storm cells are backdrop, and
+  a lightning strike's line is no wall.
+- **Lightning** (J3, the [Jovian world](../../../world/jovian/README.md)'s rule): a strike that crosses a drone
+  kills it and pays the player, like any `air` unit.
+- **Tell and readability.** The spin-up tell is unchanged (0.6 s, ≥ 0.5 s at every difficulty). Over Level 38's
+  storm-dark blue-grey grade (Q10 a) the red tell flicker on the gold edges must read as in the belt; the round's
+  mood sheet checks it, and a level times no lightning flash over a drone's tell.
+- **Livery.** Regular gunmetal ([Q9](../../README.md#open-questions) a): the final round-64 art as it is, no
+  re-render.
+- **Caps.** At most 6 drones on the screen, two dashing, and never two dashes and two Harrow rams at once.
+
 ### Difficulty and level use
 
 - At most 6 drones on the screen; at most two in their dash at once.
@@ -105,3 +130,9 @@ Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's r
   fit a Buzzsaw lives ≈ 1.25–1.45 s on the screen (`levelReport`'s small units: within Level 10's band).
 - 2026-10-28 (user, [round 64](../../../concept-rounds/round-64/README.md), closed; page answers): **F.6 a**, the blades charcoal with the gold on their outer cutting edges (33 % gold, inside Q.11 b's 20-30 % within a margin: not round 60's six solid gold blades, b), accepted as final (`art: final`); sounds **S.4 a** (`saw-whine`, the angle grinder), **S.5 b with S.4 a** (`saw-spinup`: b's spin-up is its whine's recording glided up, so it rises to the circular saw's pitch, not the grinder loop's; rebuilt as `saw-spinup-r64-ab`, b's shape on the grinder's recording ending on the loop's pitch, by `tools/concept/audio/sfx_r64.py`), **S.6 a** (`saw-ricochet`); the game switches the spin-up's path in the next game step (a plays until then).
 - 2026-10-30, the user: dither audit, ≥ 25 % smoothed (step DITH8): `buzzsaw-drone-ricochet` in smooth steps, not the 4×4 Bayer checker ([audit](../../../art-direction/production/README.md#dither-audit-2026-10-30)).
+- 2026-10-31 (step m10-d-enemies-a, Act 6 design phase; decided 2026-10-31 (round 72)): the Level 38
+  return drafted (*Act 6: the return in the storm*): HP 20 and bounty 12 unchanged, edges-only ricochet in the
+  storm (the act sketch's "storm cells" read as backdrop), lightning kills it and pays, the round-64 art as final.
+  `design: review` until round 72 accepts the section.
+- 2026-10-31 (user, [round 72](../../../concept-rounds/round-72/README.md) closed): Q9 a (the regular gunmetal livery
+  stays; b and c rejected). The document is not among round 72's D rows and stays in `review`.

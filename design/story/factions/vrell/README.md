@@ -3,7 +3,7 @@ title: The Vrell
 design: approved
 implementation: n/a
 art: none
-updated: 2026-10-01
+updated: 2026-10-31
 ---
 
 # The Vrell
@@ -62,6 +62,27 @@ very end, they are running from something.
 
 Enemy types themselves are defined in [enemies](../../../enemies/README.md).
 
+### Act 6: the turn (draft)
+
+*Draft, step `m10-d-story` (2026-10-31), **decided 2026-10-31 (round 72)** (Q3 a, Q12 a). The rule in play is
+the [enemies'](../../../enemies/README.md#the-three-way-war); the lines are the level and boss documents'.*
+
+- **Before the turn** (L36, L37's first 100 s): Vrell and Ascendancy fly side by side, as in the belt; the growth
+  already creeps over Aurelia's decks.
+- **The turn** (L37, Aurelia): the Choir says "*…the one who opened… is no longer needed… the door is ours…*" and the
+  Vrell turn on the Ascendancy. Not a betrayal in their terms: they were never partners; the Ascendancy was only a door. From
+  then on chosen Vrell waves hunt Ascendancy craft (latching, ramming, firing at them, Q3 a) and the growth eats the
+  gold city until it falls. They still fight the CDF too: the war is three-way, not an alliance with anybody.
+- **What they spare**: the hybrids. The tissue grown into the Chimeras, the Harrows and the Graft Turrets is theirs,
+  so they never hunt them; at L42 the Vrell half of Vorne's flagship turns the ship against him, and the lifeboat it
+  grows carries him toward the gate (the seed of [Vorne's Chimera](../../../enemies/bosses/README.md), Act 7).
+- **Why they came** (L41, Q12 a): Vorne's files hold the deal from their side. They offered the biotech for passage
+  through the gate to the inner system; they were not invading, they were running, from something the files call
+  **the Silence**. Named once, by Varga; never shown, never explained. The Choir itself says nothing of it until Act 7.
+- **Doctrine in Act 6**: swarm and overwhelm as ever (Motes, Skitters, Lampreys, Wraiths), *sacrifice* in the
+  rammers that now dive at the Ascendancy as readily as at the ship, *adapt* in the storm-riding swarms of
+  Jupiter's bands ([Jovian system](../../../world/jovian/README.md)).
+
 ## Open questions
 
 - Should Vrell units visibly adapt within a level (e.g. armour hardens against the weapon used
@@ -72,3 +93,9 @@ Enemy types themselves are defined in [enemies](../../../enemies/README.md).
 - 2026-09-30: Vrell as biomechanical hive; weak points always glow brightest; teal/violet
   bullets.
 - 2026-10-01: Approved by the user in the [Acts 1–2 design review](../../../reviews/acts-1-2/README.md).
+- 2026-10-31 (Act 6 design phase, step m10-d-story; **decided 2026-10-31 (round 72)**): the Vrell in
+  Act 6: side by side until the turn at L37, then hunting the Ascendancy (Q3 a) and still fighting the CDF; the
+  hybrids spared as their own tissue; the reason they came, the Silence, read in Vorne's files at L41 (Q12 a).
+- 2026-10-31 (user, [round 72](../../../concept-rounds/round-72/README.md) closed): Q3 a with c's backdrop (the
+  turn in play) and Q12 a (their reason first told by Varga at Level 41's files) as drafted; the other options
+  rejected.

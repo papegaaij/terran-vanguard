@@ -6367,3 +6367,293 @@ In the mix: Level 34 t=8–28 rendered offline at the game's gains (default sett
 stem at 0.6 × −3 dB (0.425), the bed and the layer at 0.7 × 0.5 (0.35), no radio duck, no effects. Measured (EBU R128
 short-term, 3 s): the groans peak at −22.8 (a) and −22.4 (b) LUFS against the bed + music's −21.3 (median; −20.8 at
 most): 1.5 and 1.1 dB under it, clearly heard; before the re-level they were 26.1 (a) and 17.2 (b) dB under it.
+
+## Concept round 72, step AUD-R (Act 6: the shared hybrid set's regrowth creak and tissue tear, the mirror's ping, the Reflex ricochet, the Harrow's lock and burst, the lightning's tell and strike, Io's eruption, the pylon dome's up and down, the Graft Turret's regrowth, the beds `jovian-sky`, `aurelia`, `io-refinery`, `callisto-fortress`)
+
+### regrowth-creak-r72-a — "LETHRCreak_Leather Stretching Creak 01_KVV AUDIO_FREE" by KVV_Audio
+
+Proposed (round 72), cut from the HQ previews by `tools/concept/audio/sfx_r72.py`.
+Source: <https://freesound.org/people/KVV_Audio/sounds/797919/> (LETHRCreak_Leather Stretching Creak 01_KVV AUDIO_FREE by KVV_Audio, CC-BY 4.0).
+Use: the shared hybrid set's healing sound: while a Chimera's HP regrows (repeated for the nearest healing unit), a Graft Turret's regrowth tail and (an octave down) the Ascendant's sacs healing; Levels 37-42, often but quiet, under the fire.
+Brief: a soft rising creak: stretched leather or a rope twisting under load, dry and close; never wet, bubbly or squelching; a real recording, heavy, nothing bubbly or popping.
+This one: a leather strap stretched slowly, slowed to 0.85 and swelling up: a tight, grainy leather creak that rises, 1.2 s.
+Edit: 1.20 s, the loudest 100 ms band −30.8 dB, peak −8.1 dBFS, −28.1 LUFS.
+
+### regrowth-creak-r72-b — "creaking sailing boat.wav" by jimsim
+
+Proposed (round 72), cut from the HQ previews by `tools/concept/audio/sfx_r72.py`.
+Source: <https://freesound.org/people/jimsim/sounds/411087/> (creaking sailing boat.wav by jimsim, CC-BY 4.0).
+Use: the shared hybrid set's healing sound: while a Chimera's HP regrows (repeated for the nearest healing unit), a Graft Turret's regrowth tail and (an octave down) the Ascendant's sacs healing; Levels 37-42, often but quiet, under the fire.
+Brief: a soft rising creak: stretched leather or a rope twisting under load, dry and close; never wet, bubbly or squelching; a real recording, heavy, nothing bubbly or popping.
+This one: a sailing boat's rigging and hull creaking at the mooring, slowed to 0.9 and swelling up: a lower, woodier rope creak than a, 1.2 s.
+Edit: 1.20 s, the loudest 100 ms band −31.9 dB, peak −13.4 dBFS, −28.0 LUFS.
+
+### tissue-tear-r72-a — "Cloth Tearing and Ripping - Flannel, Cotton, Scraps - Close Mic - Long & Fast" by ChristopherJngs
+
+Proposed (round 72), cut from the HQ previews by `tools/concept/audio/sfx_r72.py`.
+Source: <https://freesound.org/people/ChristopherJngs/sounds/719003/> (Cloth Tearing and Ripping - Flannel, Cotton, Scraps - Close Mic - Long & Fast by ChristopherJngs, CC0 1.0).
+Use: the shared hybrid set's tear: a Graft Turret root's death, the Ascendant's brood splitting and the lifeboat tearing free, Level 37's growth over the decks (drawn long); now and then.
+Brief: a dry fibrous tearing: heavy canvas or sailcloth ripping, rope fibres parting; never flesh, never wet; a real recording, heavy, nothing bubbly or popping.
+This one: cotton cloth torn by hand, close, slowed to 0.6 so it reads as heavy canvas: a long dry rip, 0.9 s.
+Edit: 0.90 s, the loudest 100 ms band −24.1 dB, peak −10.4 dBFS, −21.7 LUFS.
+
+### tissue-tear-r72-b — "230104-044_normalized_ship_sail_rip_tear_1.wav" by mmmtoop + "Cloth Rip Uneven Long" by Rudmer_Rotteveel
+
+Proposed (round 72), cut from the HQ previews by `tools/concept/audio/sfx_r72.py`.
+Sources: <https://freesound.org/people/mmmtoop/sounds/674035/> (230104-044_normalized_ship_sail_rip_tear_1.wav by mmmtoop, CC0 1.0), <https://freesound.org/people/Rudmer_Rotteveel/sounds/591525/> (Cloth Rip Uneven Long by Rudmer_Rotteveel, CC0 1.0).
+Use: the shared hybrid set's tear: a Graft Turret root's death, the Ascendant's brood splitting and the lifeboat tearing free, Level 37's growth over the decks (drawn long); now and then.
+Brief: a dry fibrous tearing: heavy canvas or sailcloth ripping, rope fibres parting; never flesh, never wet; a real recording, heavy, nothing bubbly or popping.
+This one: a ship's sail ripping, with a quick cloth rip slowed under it: rougher and wider than a, the fibres parting in bursts, 0.75 s.
+Edit: 0.75 s, the loudest 100 ms band −24.1 dB, peak −8.3 dBFS, −22.0 LUFS.
+
+### mirror-ping-r72-a — "Glass Ping" by tix99
+
+Proposed (round 72), cut from the HQ previews by `tools/concept/audio/sfx_r72.py`.
+Source: <https://freesound.org/people/tix99/sounds/745014/> (Glass Ping by tix99, CC0 1.0).
+Use: every shot a Mirror Interceptor's mirror bounces (throttled: once per 0.08 s per unit) and, lower, the Ascendant's panels; Levels 38-42, often in a mirror fight.
+Brief: a bright glassy ping: a struck glass or glass bowl, short; it must never sound like the Reflex Shield's ricochet (glass, not a bullet); a real recording, heavy, nothing bubbly or popping.
+This one: a glass struck once: a clean high 'ping' with a short ring, 0.4 s.
+Edit: 0.40 s, the loudest 100 ms band −26.4 dB, peak −12.7 dBFS, −inf LUFS.
+
+### mirror-ping-r72-b — "Crystal bowl F#3 1.wav" by caiogracco
+
+Proposed (round 72), cut from the HQ previews by `tools/concept/audio/sfx_r72.py`.
+Source: <https://freesound.org/people/caiogracco/sounds/150454/> (Crystal bowl F#3 1.wav by caiogracco, CC0 1.0).
+Use: every shot a Mirror Interceptor's mirror bounces (throttled: once per 0.08 s per unit) and, lower, the Ascendant's panels; Levels 38-42, often in a mirror fight.
+Brief: a bright glassy ping: a struck glass or glass bowl, short; it must never sound like the Reflex Shield's ricochet (glass, not a bullet); a real recording, heavy, nothing bubbly or popping.
+This one: a crystal singing bowl struck, sped to 1.5: a rounder, more bell-like glass tone than a, 0.45 s.
+Edit: 0.45 s, the loudest 100 ms band −26.8 dB, peak −13.6 dBFS, −25.9 LUFS.
+
+### reflex-ricochet-r72-a — "bullet ricochet.wav" by aust_paul
+
+Proposed (round 72), cut from the HQ previews by `tools/concept/audio/sfx_r72.py`.
+Source: <https://freesound.org/people/aust_paul/sounds/30932/> (bullet ricochet.wav by aust_paul, CC0 1.0).
+Use: the Reflex Shield (Act 6's shield): each enemy bullet it turns into a bolt, throttled to once per 0.06 s, over the shield hit; often while the player tanks fire.
+Brief: a real bullet ricochet (a rifle round whining off steel), bright and short: the player's side of the mirrors, never the mirror's glassy ping; a real recording, heavy, nothing bubbly or popping.
+This one: a bullet's ricochet: the hit and a thin whine flying off, 0.45 s.
+Edit: 0.45 s, the loudest 100 ms band −27.1 dB, peak −5.1 dBFS, −26.6 LUFS.
+
+### reflex-ricochet-r72-b — "Ricochet metal3.wav" by CGEffex
+
+Proposed (round 72), cut from the HQ previews by `tools/concept/audio/sfx_r72.py`.
+Source: <https://freesound.org/people/CGEffex/sounds/96631/> (Ricochet metal3.wav by CGEffex, CC-BY 4.0).
+Use: the Reflex Shield (Act 6's shield): each enemy bullet it turns into a bolt, throttled to once per 0.06 s, over the shield hit; often while the player tanks fire.
+Brief: a real bullet ricochet (a rifle round whining off steel), bright and short: the player's side of the mirrors, never the mirror's glassy ping; a real recording, heavy, nothing bubbly or popping.
+This one: a round glancing off metal, sped to 1.2: more of a metallic 'spang' than a's whine, 0.5 s.
+Edit: 0.50 s, the loudest 100 ms band −24.1 dB, peak −12.4 dBFS, −25.1 LUFS.
+
+### harrow-lock-r72-a — "Jet Flyby 02" by mrspivey
+
+Proposed (round 72), cut from the HQ previews by `tools/concept/audio/sfx_r72.py`.
+Source: <https://freesound.org/people/mrspivey/sounds/805169/> (Jet Flyby 02 by mrspivey, CC0 1.0).
+Use: the Harrow's 0.6 s lock tell (Levels 38-42): it slows, its sac pulses and its nose swings onto the ship before the ram; the warning the player must hear.
+Brief: a short rising whine, thin and urgent, 0.6 s; a real recording, heavy, nothing bubbly or popping.
+This one: a jet's approach whine, glided up (0.9 → 1.5) and swelling: a thin rising jet scream, 0.6 s.
+Edit: 0.60 s, the loudest 100 ms band −24.1 dB, peak −13.5 dBFS, −28.8 LUFS.
+
+### harrow-lock-r72-b — "Start-up Sound - U.S. Army M1A1 Tank - Gas Turbine Engine.mp3" by adr1911
+
+Proposed (round 72), cut from the HQ previews by `tools/concept/audio/sfx_r72.py`.
+Source: <https://freesound.org/people/adr1911/sounds/542582/> (Start-up Sound - U.S. Army M1A1 Tank - Gas Turbine Engine.mp3 by adr1911, CC0 1.0).
+Use: the Harrow's 0.6 s lock tell (Levels 38-42): it slows, its sac pulses and its nose swings onto the ship before the ram; the warning the player must hear.
+Brief: a short rising whine, thin and urgent, 0.6 s; a real recording, heavy, nothing bubbly or popping.
+This one: a tank's gas turbine spooling up, glided up (0.9 → 1.6) and swelling: a harder mechanical whine climbing, 0.6 s.
+Edit: 0.60 s, the loudest 100 ms band −24.8 dB, peak −12.8 dBFS, −25.9 LUFS.
+
+### harrow-burst-r72-a — "Muffled Boom" by UnderlinedDesigns + "sw_Fireworks_Mortar_02.wav" by jppi_Stu
+
+Proposed (round 72), cut from the HQ previews by `tools/concept/audio/sfx_r72.py`.
+Sources: <https://freesound.org/people/UnderlinedDesigns/sounds/191697/> (Muffled Boom by UnderlinedDesigns, CC0 1.0), <https://freesound.org/people/jppi_Stu/sounds/161688/> (sw_Fireworks_Mortar_02.wav by jppi_Stu, CC-BY 4.0).
+Use: every Harrow death (shot, ramming, struck by lightning), instead of a size rung; Levels 38-42, often in a swarm.
+Brief: a dull heavy thud with a crackle (a muffled blast, a firework mortar's thump); never a pop, never wet; a real recording, heavy, nothing bubbly or popping.
+This one: a muffled boom (a deep dull thud) with a firework shell's crackle tail over it (its burst crack cut away), 0.9 s.
+Edit: 0.90 s, the loudest 100 ms band −24.7 dB, peak −3.1 dBFS, −17.4 LUFS.
+
+### harrow-burst-r72-b — "muffled_explosion.wav" by SypherZent + "sw_Fireworks_Mortar_03.wav" by jppi_Stu
+
+Proposed (round 72), cut from the HQ previews by `tools/concept/audio/sfx_r72.py`.
+Sources: <https://freesound.org/people/SypherZent/sounds/420671/> (muffled_explosion.wav by SypherZent, CC-BY 4.0), <https://freesound.org/people/jppi_Stu/sounds/161687/> (sw_Fireworks_Mortar_03.wav by jppi_Stu, CC-BY 4.0).
+Use: every Harrow death (shot, ramming, struck by lightning), instead of a size rung; Levels 38-42, often in a swarm.
+Brief: a dull heavy thud with a crackle (a muffled blast, a firework mortar's thump); never a pop, never wet; a real recording, heavy, nothing bubbly or popping.
+This one: a muffled explosion (more body and mid than a's boom) with another mortar shell's crackle tail, 0.9 s.
+Edit: 0.90 s, the loudest 100 ms band −19.0 dB, peak −4.3 dBFS, −18.1 LUFS.
+
+### lightning-tell-r72-a — "S16-18 Tesla coil sparking and humming.wav" by craigsmith
+
+Proposed (round 72), cut from the HQ previews by `tools/concept/audio/sfx_r72.py`.
+Source: <https://freesound.org/people/craigsmith/sounds/675760/> (S16-18 Tesla coil sparking and humming.wav by craigsmith, CC0 1.0).
+Use: a lightning column's 1.0 s telegraph (Level 38, a few in Level 36): the strike lands where it glows; quiet, under the fire.
+Brief: a faint high-voltage buzz rising (a Tesla coil, a power line's corona), its length the telegraph's; a real recording, heavy, nothing bubbly or popping.
+This one: a Tesla coil sparking and humming, glided up (0.85 → 1.15) and swelling to the strike: a crackling buzz, 1.0 s.
+Edit: 1.00 s, the loudest 100 ms band −38.4 dB, peak −23.8 dBFS, −30.2 LUFS.
+
+### lightning-tell-r72-b — "Zapping - High Voltage Electricity Buzz Isolated" by el_boss
+
+Proposed (round 72), cut from the HQ previews by `tools/concept/audio/sfx_r72.py`.
+Source: <https://freesound.org/people/el_boss/sounds/740198/> (Zapping - High Voltage Electricity Buzz Isolated by el_boss, CC0 1.0).
+Use: a lightning column's 1.0 s telegraph (Level 38, a few in Level 36): the strike lands where it glows; quiet, under the fire.
+Brief: a faint high-voltage buzz rising (a Tesla coil, a power line's corona), its length the telegraph's; a real recording, heavy, nothing bubbly or popping.
+This one: a high-voltage buzz, glided up (0.8 → 1.2) and swelling: smoother and higher than a, more of a rising hum, 1.0 s.
+Edit: 1.00 s, the loudest 100 ms band −35.0 dB, peak −15.0 dBFS, −31.1 LUFS.
+
+### lightning-strike-r72-a — "Close lightning strike 2018 07 07" by csengeri + "Closeup Thunder Strike 01" by loganzsound
+
+Proposed (round 72), cut from the HQ previews by `tools/concept/audio/sfx_r72.py`.
+Sources: <https://freesound.org/people/csengeri/sounds/434359/> (Close lightning strike 2018 07 07 by csengeri, CC0 1.0), <https://freesound.org/people/loganzsound/sounds/840628/> (Closeup Thunder Strike 01 by loganzsound, CC0 1.0).
+Use: a lightning strike (Level 38, a few in Level 36) as its telegraph ends; never two within 1.5 s; a big moment.
+Brief: a close crack (a real lightning strike recorded near: the sharp tearing crack, its first 0.3 s) with Level 12's chosen thunder (thunder-1-r34-b's source) keyed to it: the crack, then the roll; a real recording, heavy, nothing bubbly or popping.
+This one: a lightning strike recorded close in a storm, its crack, then Level 12's close thunder strike rolling away: a natural crack and roll, 3.7 s.
+Edit: 3.72 s, the loudest 100 ms band −14.2 dB, peak −1.1 dBFS, −21.1 LUFS.
+
+### lightning-strike-r72-b — "Flash 1,2MV_1.wav" by jensfelger + "Closeup Thunder Strike 01" by loganzsound
+
+Proposed (round 72), cut from the HQ previews by `tools/concept/audio/sfx_r72.py`.
+Sources: <https://freesound.org/people/jensfelger/sounds/367451/> (Flash 1,2MV_1.wav by jensfelger, CC0 1.0), <https://freesound.org/people/loganzsound/sounds/840628/> (Closeup Thunder Strike 01 by loganzsound, CC0 1.0).
+Use: a lightning strike (Level 38, a few in Level 36) as its telegraph ends; never two within 1.5 s; a big moment.
+Brief: a close crack (a real lightning strike recorded near: the sharp tearing crack, its first 0.3 s) with Level 12's chosen thunder (thunder-1-r34-b's source) keyed to it: the crack, then the roll; a real recording, heavy, nothing bubbly or popping.
+This one: a 1.2 MV flashover in a high-voltage lab (a sharper, more electric snap than a), then the same thunder roll, 3.7 s.
+Edit: 3.72 s, the loudest 100 ms band −14.7 dB, peak −1.2 dBFS, −19.9 LUFS.
+
+### eruption-r72-a — "Cracking Earthquake (cracking soil, cracking stone)" by uagadugu + "volcano_eruption.wav" by smcameron
+
+Proposed (round 72), cut from the HQ previews by `tools/concept/audio/sfx_r72.py`.
+Sources: <https://freesound.org/people/uagadugu/sounds/222521/> (Cracking Earthquake (cracking soil, cracking stone) by uagadugu, CC0 1.0), <https://freesound.org/people/smcameron/sounds/51429/> (volcano_eruption.wav by smcameron, CC-BY 4.0).
+Use: Level 39 (Io): each eruption, its 1.2 s tell then the blast (the rocks' sounds are the belt's).
+Brief: Level 27's tell and roar in a dry variant: a rising ground rumble, then a volcanic blast's roar; no water, no steam hiss; a real recording, heavy, nothing bubbly or popping.
+This one: an earthquake's rumble swelling for 1.2 s (the tell), then a volcanic eruption's roar: dense and dry, 3.2 s.
+Edit: 3.20 s, the loudest 100 ms band −17.6 dB, peak −6.3 dBFS, −17.0 LUFS.
+
+### eruption-r72-b — "EARTHQUAKE OR DISTANT SPACE SHUTTLE RUMBLE.WAV" by metrostock99 + "661147__felixblume__volcano-mount-yasur-tanna-island-short" by pwigger0029
+
+Proposed (round 72), cut from the HQ previews by `tools/concept/audio/sfx_r72.py`.
+Sources: <https://freesound.org/people/metrostock99/sounds/203281/> (EARTHQUAKE OR DISTANT SPACE SHUTTLE RUMBLE.WAV by metrostock99, CC0 1.0), <https://freesound.org/people/pwigger0029/sounds/710561/> (661147__felixblume__volcano-mount-yasur-tanna-island-short by pwigger0029, CC0 1.0).
+Use: Level 39 (Io): each eruption, its 1.2 s tell then the blast (the rocks' sounds are the belt's).
+Brief: Level 27's tell and roar in a dry variant: a rising ground rumble, then a volcanic blast's roar; no water, no steam hiss; a real recording, heavy, nothing bubbly or popping.
+This one: a deep rumble (a distant shuttle or a quake, slowed) swelling for 1.2 s, then a real explosion of Mount Yasur: a rougher, rockier blast than a, 3.4 s.
+Edit: 3.40 s, the loudest 100 ms band −17.8 dB, peak −7.4 dBFS, −17.0 LUFS.
+
+### pylon-dome-up-r72-a — "Gym Lights Powering Up" by OBXJohn
+
+Proposed (round 72), cut from the HQ previews by `tools/concept/audio/sfx_r72.py`.
+Source: <https://freesound.org/people/OBXJohn/sounds/262510/> (Gym Lights Powering Up by OBXJohn, CC0 1.0).
+Use: a Shield Pylon's dome coming up (Level 41): at the level's start of a gate and after an EMP or a `shield-breaker` hit, as the dome flickers back over 0.3 s.
+Brief: a short electrical hum rising, the tell that the dome is back; a real recording, heavy, nothing bubbly or popping.
+This one: a gym's lights powering up (the ballasts' hum and tick), glided up: a quick rising buzz, 0.45 s.
+Edit: 0.45 s, the loudest 100 ms band −31.3 dB, peak −15.8 dBFS, −28.1 LUFS.
+
+### pylon-dome-up-r72-b — "070916 Machine room transformer hum 1.wav" by thaighaudio + "Zapping - High Voltage Electricity Buzz Isolated" by el_boss
+
+Proposed (round 72), cut from the HQ previews by `tools/concept/audio/sfx_r72.py`.
+Sources: <https://freesound.org/people/thaighaudio/sounds/349688/> (070916 Machine room transformer hum 1.wav by thaighaudio, CC0 1.0), <https://freesound.org/people/el_boss/sounds/740198/> (Zapping - High Voltage Electricity Buzz Isolated by el_boss, CC0 1.0).
+Use: a Shield Pylon's dome coming up (Level 41): at the level's start of a gate and after an EMP or a `shield-breaker` hit, as the dome flickers back over 0.3 s.
+Brief: a short electrical hum rising, the tell that the dome is back; a real recording, heavy, nothing bubbly or popping.
+This one: a machine room's transformer hum gliding up an octave (0.5 → 1.0) with a faint high-voltage buzz on its end: deeper and smoother than a, 0.45 s.
+Edit: 0.45 s, the loudest 100 ms band −40.6 dB, peak −18.9 dBFS, −27.9 LUFS.
+
+### pylon-dome-down-r72-a — "Electric Failure – High Voltage Power Down #2 ATP2 (CC0)" by ATP2-kh
+
+Proposed (round 72), cut from the HQ previews by `tools/concept/audio/sfx_r72.py`.
+Source: <https://freesound.org/people/ATP2-kh/sounds/844244/> (Electric Failure – High Voltage Power Down #2 ATP2 (CC0) by ATP2-kh, CC0 1.0).
+Use: a Shield Pylon's dome collapsing (Level 41): the pylon's death, an EMP or a `shield-breaker` hit; a reward.
+Brief: a falling hum into a hard electrical snap; a real recording, heavy, nothing bubbly or popping.
+This one: a high-voltage power failure: a crackling discharge collapsing, 0.9 s.
+Edit: 0.90 s, the loudest 100 ms band −28.0 dB, peak −11.6 dBFS, −22.2 LUFS.
+
+### pylon-dome-down-r72-b — "070916 Machine room transformer hum 1.wav" by thaighaudio + "Flash 1,2MV_3.wav" by jensfelger
+
+Proposed (round 72), cut from the HQ previews by `tools/concept/audio/sfx_r72.py`.
+Sources: <https://freesound.org/people/thaighaudio/sounds/349688/> (070916 Machine room transformer hum 1.wav by thaighaudio, CC0 1.0), <https://freesound.org/people/jensfelger/sounds/367453/> (Flash 1,2MV_3.wav by jensfelger, CC0 1.0).
+Use: a Shield Pylon's dome collapsing (Level 41): the pylon's death, an EMP or a `shield-breaker` hit; a reward.
+Brief: a falling hum into a hard electrical snap; a real recording, heavy, nothing bubbly or popping.
+This one: the transformer hum falling an octave, cut by a 1.2 MV flash's hard snap: the brief's shape exactly, 0.9 s.
+Edit: 0.92 s, the loudest 100 ms band −33.2 dB, peak −13.5 dBFS, −22.0 LUFS.
+
+### graft-regrowth-r72-a — "tree_creak_04.wav" by Department64 + "Door Knock - 18.wav" by Ligidium
+
+Proposed (round 72), cut from the HQ previews by `tools/concept/audio/sfx_r72.py`.
+Sources: <https://freesound.org/people/Department64/sounds/95262/> (tree_creak_04.wav by Department64, CC0 1.0), <https://freesound.org/people/Ligidium/sounds/193834/> (Door Knock - 18.wav by Ligidium, CC0 1.0).
+Use: a Graft Turret regrowing on its root (Levels 39-42) as the turret stands again.
+Brief: a longer twisting creak that ends in a woody knock as the turret stands; dry; a real recording, heavy, nothing bubbly or popping.
+This one: a tree creaking in the wind, slowed to 0.9 and swelling, then a single knock on a wooden door: 1.8 s.
+Edit: 1.75 s, the loudest 100 ms band −26.3 dB, peak −6.3 dBFS, −27.8 LUFS.
+
+### graft-regrowth-r72-b — "door wood old slow creaks open close or ship hull list2.flac" by kyles + "Door Knock - 26.wav" by Ligidium
+
+Proposed (round 72), cut from the HQ previews by `tools/concept/audio/sfx_r72.py`.
+Sources: <https://freesound.org/people/kyles/sounds/455757/> (door wood old slow creaks open close or ship hull list2.flac by kyles, CC0 1.0), <https://freesound.org/people/Ligidium/sounds/193863/> (Door Knock - 26.wav by Ligidium, CC0 1.0).
+Use: a Graft Turret regrowing on its root (Levels 39-42) as the turret stands again.
+Brief: a longer twisting creak that ends in a woody knock as the turret stands; dry; a real recording, heavy, nothing bubbly or popping.
+This one: an old wooden door's (or a ship hull's) slow creak, slowed to 0.85 (the source of round 36's chosen root growth), then a deeper door knock: lower and heavier than a, 1.9 s.
+Edit: 1.85 s, the loudest 100 ms band −26.6 dB, peak −15.8 dBFS, −26.0 LUFS.
+
+### jovian-sky-r72-a — "Strong Wind Recorded with Soundfield Microphone Manchester 2" by keirofinch + "EARTHQUAKE OR DISTANT SPACE SHUTTLE RUMBLE.WAV" by metrostock99 + "Large, Low Rumble.wav" by duckduckpony
+
+Proposed (round 72), cut from the HQ previews by `tools/concept/audio/sfx_r72.py`.
+Sources: <https://freesound.org/people/keirofinch/sounds/376534/> (Strong Wind Recorded with Soundfield Microphone Manchester 2 by keirofinch, CC0 1.0), <https://freesound.org/people/metrostock99/sounds/203281/> (EARTHQUAKE OR DISTANT SPACE SHUTTLE RUMBLE.WAV by metrostock99, CC0 1.0), <https://freesound.org/people/duckduckpony/sounds/130972/> (Large, Low Rumble.wav by duckduckpony, CC-BY 4.0).
+Use: Levels 36 and 38 (Jupiter's cloud bands): the level's ambience bed on the effects bus at the beds' 0.70, under the music; heard in the quiet stretches, a level's start and the pause before a boss; Level 38 +3 dB in the storm sections.
+Brief: high wind and a distant thunder bed without baked strikes (the strikes' own thunder follows them); a seamless 16 s loop; a real recording, heavy, nothing bubbly or popping.
+This one: strong wind on a soundfield microphone (high, steady) over a deep rumble slowed to 0.7; once a loop a large low rumble swelling and fading (a far roll, no crack): 16.0 s loop.
+Edit: 16.00 s, band RMS −42.1 dB, peak −22.0 dBFS, −35.9 LUFS.
+
+### jovian-sky-r72-b — "210523_1598_FR_StrongWind.wav" by kevp888 + "EARTHQUAKE OR DISTANT SPACE SHUTTLE RUMBLE.WAV" by metrostock99 + "Large, Low Rumble.wav" by duckduckpony
+
+Proposed (round 72), cut from the HQ previews by `tools/concept/audio/sfx_r72.py`.
+Sources: <https://freesound.org/people/kevp888/sounds/573289/> (210523_1598_FR_StrongWind.wav by kevp888, CC-BY 4.0), <https://freesound.org/people/metrostock99/sounds/203281/> (EARTHQUAKE OR DISTANT SPACE SHUTTLE RUMBLE.WAV by metrostock99, CC0 1.0), <https://freesound.org/people/duckduckpony/sounds/130972/> (Large, Low Rumble.wav by duckduckpony, CC-BY 4.0).
+Use: Levels 36 and 38 (Jupiter's cloud bands): the level's ambience bed on the effects bus at the beds' 0.70, under the music; heard in the quiet stretches, a level's start and the pause before a boss; Level 38 +3 dB in the storm sections.
+Brief: high wind and a distant thunder bed without baked strikes (the strikes' own thunder follows them); a seamless 16 s loop; a real recording, heavy, nothing bubbly or popping.
+This one: a gusting strong wind (lower and more uneven than a) over the deep rumble slowed to half; once a loop the far rumble, deeper: 16.0 s loop.
+Edit: 16.00 s, band RMS −42.0 dB, peak −21.4 dBFS, −37.3 LUFS.
+
+### aurelia-r72-a — "Airship propeller engine" by ilm0player + "Industrial factory working 02.wav" by dersinnsspace + "gas vuur dakwerken gasbrander luchtballon.wav" by NickPeeters
+
+Proposed (round 72), cut from the HQ previews by `tools/concept/audio/sfx_r72.py`.
+Sources: <https://freesound.org/people/ilm0player/sounds/578181/> (Airship propeller engine by ilm0player, CC0 1.0), <https://freesound.org/people/dersinnsspace/sounds/439402/> (Industrial factory working 02.wav by dersinnsspace, CC0 1.0), <https://freesound.org/people/NickPeeters/sounds/243763/> (gas vuur dakwerken gasbrander luchtballon.wav by NickPeeters, CC0 1.0).
+Use: Level 37 (Aurelia, the floating capital): the level's ambience bed on the effects bus at the beds' 0.70, under the music; heard in the quiet stretches, a level's start and the pause before a boss; the burning layer goes over it from the turn.
+Brief: city machinery: the floating city's engines and works, distant; no voices, no alarms (they come with the burning layer); a seamless 16 s loop; a real recording, heavy, nothing bubbly or popping.
+This one: an airship's propeller engine slowed to 0.6 (big, slow engines holding the city up) over a factory working, muffled; once a loop a gas burner's roar far off (a lift balloon's): 16.0 s loop.
+Edit: 16.00 s, band RMS −42.1 dB, peak −20.7 dBFS, −33.5 LUFS.
+
+### aurelia-r72-b — "Engine-Room-Machine-020.wav" by Astounded + "Airship propeller engine" by ilm0player + "gas vuur dakwerken gasbrander luchtballon.wav" by NickPeeters
+
+Proposed (round 72), cut from the HQ previews by `tools/concept/audio/sfx_r72.py`.
+Sources: <https://freesound.org/people/Astounded/sounds/520809/> (Engine-Room-Machine-020.wav by Astounded, CC-BY 4.0), <https://freesound.org/people/ilm0player/sounds/578181/> (Airship propeller engine by ilm0player, CC0 1.0), <https://freesound.org/people/NickPeeters/sounds/243763/> (gas vuur dakwerken gasbrander luchtballon.wav by NickPeeters, CC0 1.0).
+Use: Level 37 (Aurelia, the floating capital): the level's ambience bed on the effects bus at the beds' 0.70, under the music; heard in the quiet stretches, a level's start and the pause before a boss; the burning layer goes over it from the turn.
+Brief: city machinery: the floating city's engines and works, distant; no voices, no alarms (they come with the burning layer); a seamless 16 s loop; a real recording, heavy, nothing bubbly or popping.
+This one: an engine room's machinery slowed to 0.8 over the propeller slowed to 0.4 (deeper, heavier than a); once a loop the far burner: 16.0 s loop.
+Edit: 16.00 s, band RMS −42.0 dB, peak −30.5 dBFS, −39.2 LUFS.
+
+### io-refinery-r72-a — "Furnace Room 4.WAV" by magnus589 + "EARTHQUAKE OR DISTANT SPACE SHUTTLE RUMBLE.WAV" by metrostock99 + "Large, Low Rumble.wav" by duckduckpony
+
+Proposed (round 72), cut from the HQ previews by `tools/concept/audio/sfx_r72.py`.
+Sources: <https://freesound.org/people/magnus589/sounds/379738/> (Furnace Room 4.WAV by magnus589, CC-BY 4.0), <https://freesound.org/people/metrostock99/sounds/203281/> (EARTHQUAKE OR DISTANT SPACE SHUTTLE RUMBLE.WAV by metrostock99, CC0 1.0), <https://freesound.org/people/duckduckpony/sounds/130972/> (Large, Low Rumble.wav by duckduckpony, CC-BY 4.0).
+Use: Level 39 (Io's refineries): the level's ambience bed on the effects bus at the beds' 0.70, under the music; heard in the quiet stretches, a level's start and the pause before a boss.
+Brief: ground rumble and furnace roar; dry (no water, no steam); a seamless 16 s loop; a real recording, heavy, nothing bubbly or popping.
+This one: a furnace room's steady roar over a deep ground rumble; once a loop a large low rumble heaving up and away: 16.0 s loop.
+Edit: 16.00 s, band RMS −42.2 dB, peak −15.7 dBFS, −33.4 LUFS.
+
+### io-refinery-r72-b — "Standing above a reactor" by OSFX + "Furnace Room 4.WAV" by magnus589 + "Cracking Earthquake (cracking soil, cracking stone)" by uagadugu + "gas vuur dakwerken gasbrander luchtballon.wav" by NickPeeters
+
+Proposed (round 72), cut from the HQ previews by `tools/concept/audio/sfx_r72.py`.
+Sources: <https://freesound.org/people/OSFX/sounds/420538/> (Standing above a reactor by OSFX, CC-BY 4.0), <https://freesound.org/people/magnus589/sounds/379738/> (Furnace Room 4.WAV by magnus589, CC-BY 4.0), <https://freesound.org/people/uagadugu/sounds/222521/> (Cracking Earthquake (cracking soil, cracking stone) by uagadugu, CC0 1.0), <https://freesound.org/people/NickPeeters/sounds/243763/> (gas vuur dakwerken gasbrander luchtballon.wav by NickPeeters, CC0 1.0).
+Use: Level 39 (Io's refineries): the level's ambience bed on the effects bus at the beds' 0.70, under the music; heard in the quiet stretches, a level's start and the pause before a boss.
+Brief: ground rumble and furnace roar; dry (no water, no steam); a seamless 16 s loop; a real recording, heavy, nothing bubbly or popping.
+This one: standing above a reactor (a low industrial roar) with the furnace room under it; once a loop the ground cracking and a gas burner's roar: busier than a, 16.0 s loop.
+Edit: 16.00 s, band RMS −42.0 dB, peak −20.0 dBFS, −33.6 LUFS.
+
+### callisto-fortress-r72-a — "ferry engine room2.wav" by mrmayo + "070916 Machine room transformer hum 1.wav" by thaighaudio + "door wood old slow creaks open close or ship hull list2.flac" by kyles + "Muffled Boom" by UnderlinedDesigns
+
+Proposed (round 72), cut from the HQ previews by `tools/concept/audio/sfx_r72.py`.
+Sources: <https://freesound.org/people/mrmayo/sounds/74915/> (ferry engine room2.wav by mrmayo, CC0 1.0), <https://freesound.org/people/thaighaudio/sounds/349688/> (070916 Machine room transformer hum 1.wav by thaighaudio, CC0 1.0), <https://freesound.org/people/kyles/sounds/455757/> (door wood old slow creaks open close or ship hull list2.flac by kyles, CC0 1.0), <https://freesound.org/people/UnderlinedDesigns/sounds/191697/> (Muffled Boom by UnderlinedDesigns, CC0 1.0).
+Use: Level 41 (Callisto's fortress decks; Levels 40 and 42 keep `belt-open`): the level's ambience bed on the effects bus at the beds' 0.70, under the music; heard in the quiet stretches, a level's start and the pause before a boss.
+Brief: fortress machinery heard through the hull (the belt's vacuum treatment: no wind, sounds as through the cockpit): deep machines, a transformer hum, hull creaks, a far heavy clunk now and then; a seamless 16 s loop; a real recording, heavy, nothing bubbly or popping.
+This one: a ferry's engine room slowed to 0.6 and muffled (heard through a bulkhead) over a transformer hum; once a loop a slow hull creak and a far muffled boom: 16.0 s loop.
+Edit: 16.00 s, band RMS −42.0 dB, peak −24.3 dBFS, −36.0 LUFS.
+
+### callisto-fortress-r72-b — "Engine-Room-door-018.wav" by Astounded + "Low Roomtone" by IENBA + "door wood old slow creaks open close or ship hull list2.flac" by kyles + "Door Knock - 26.wav" by Ligidium
+
+Proposed (round 72), cut from the HQ previews by `tools/concept/audio/sfx_r72.py`.
+Sources: <https://freesound.org/people/Astounded/sounds/520807/> (Engine-Room-door-018.wav by Astounded, CC-BY 4.0), <https://freesound.org/people/IENBA/sounds/752273/> (Low Roomtone by IENBA, CC0 1.0), <https://freesound.org/people/kyles/sounds/455757/> (door wood old slow creaks open close or ship hull list2.flac by kyles, CC0 1.0), <https://freesound.org/people/Ligidium/sounds/193863/> (Door Knock - 26.wav by Ligidium, CC0 1.0).
+Use: Level 41 (Callisto's fortress decks; Levels 40 and 42 keep `belt-open`): the level's ambience bed on the effects bus at the beds' 0.70, under the music; heard in the quiet stretches, a level's start and the pause before a boss.
+Brief: fortress machinery heard through the hull (the belt's vacuum treatment: no wind, sounds as through the cockpit): deep machines, a transformer hum, hull creaks, a far heavy clunk now and then; a seamless 16 s loop; a real recording, heavy, nothing bubbly or popping.
+This one: a ship's engine-room machinery slowed to 0.6 and muffled over a deep room tone; once a loop the hull creak and a door knock slowed to half (a far heavy clunk): darker than a, 16.0 s loop.
+Edit: 16.00 s, band RMS −42.1 dB, peak −23.9 dBFS, −35.0 LUFS.

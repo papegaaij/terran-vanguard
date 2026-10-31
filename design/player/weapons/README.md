@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../generator, ../../systems/economy]
-updated: 2026-10-27
+updated: 2026-10-31
 ---
 
 # Weapons
@@ -22,8 +22,8 @@ The weapons available by L14 (Acts 1–2) have full designs, plus the Act 3 weap
 Lance, Deflector Pod, Light Drone Bay; designed 2026-10-12, approved in concept round 36 on 2026-10-13)
 and the Rear-guard Drone Bay (M7 part G, 2026-10-20: its numbers approved with the drones in round 36,
 the document in review), the Act 4 pair (Harpoon Torpedoes, Depth Charges) and the Act 5 pair (Tesla Coil
-Pod, Swarm Tail; drafts of 2026-10-27, approved in round 60); later weapons are still
-roster rows below.
+Pod, Swarm Tail; drafts of 2026-10-27, approved in round 60) and Act 6's Plasma Arc (a draft of 2026-10-31,
+decided 2026-10-31 (round 72)); later weapons are still roster rows below.
 
 | Part | Summary | Design | Impl | Art |
 |---|---|---|---|---|
@@ -50,6 +50,7 @@ roster rows below.
 | [rear-guard-drone-bay](rear-guard-drone-bay/README.md) | Rear-guard Drone Bay — Wing (per bay), rear (drone); DPS 9 → 26; 2 400; L20 | approved | in-progress | final |
 | [tesla-coil-pod](tesla-coil-pod/README.md) | Tesla Coil Pod — Wing (per pod), area, shield-breaker; DPS 12 → 40 (an arc of 140 → 180 px); 3 000; L29 | approved | done | final |
 | [swarm-tail](swarm-tail/README.md) | Swarm Tail — Rear, rear, homing; DPS 15 → 55; 3 500; L30 | approved | done | final |
+| [plasma-arc](plasma-arc/README.md) | Plasma Arc — Front, area, spread; DPS 30 → 120 (chains to 3 → 6 targets); 6 000; L36 | approved | not-started | chosen |
 
 ## Design
 
@@ -96,11 +97,11 @@ shots all count (they aim at the convergence point), a deflector deals none.
 ### Roster — later weapons
 
 Still at `idea`; they get a directory when they are designed. The Plasma Arc moved to Act 6 with
-Act 5's arsenal (Q12 = c of round 60, decided the user's review): its unlock is set with Act 6's design.
+Act 5's arsenal (Q12 = c of round 60, decided the user's review) and has its draft since Act 6's design
+([plasma-arc](plasma-arc/README.md), L36; Q7 = b of round 72, decided 2026-10-31).
 
 | Name | Slot | Traits | DPS L1/L5 | Draw L1→L5 | Base price | Unlock | Design |
 |---|---|---|---|---|---|---|---|
-| Plasma Arc | front | area, spread | 30 / 120 (short range, chains to 3–6 targets) | 5 → 8 | 6 000 | Act 6 (was L31) | idea |
 | Choir Resonator | front | spread, piercing | 45 / 160 | 7 → 11 | 12 000 | L44 (captured Vrell tech) | idea |
 
 ### Coverage check
@@ -111,12 +112,12 @@ trait (the campaign table is the reference for the levels):
 | Trait | Required from | First item(s) |
 |---|---|---|
 | forward | start | Pulse Cannon (starter), Autocannon Pod L02 |
-| spread | L02 | Scatter Vulcan L02 |
+| spread | L02 | Scatter Vulcan L02; Plasma Arc L36 (its chain) |
 | anti-ground | L03 | Bomb Rack L03; Airstrike special L04; Hammer Mortar L07 |
 | piercing | L05 | Lance Laser L05 |
 | side | L05 | Side Splitter L05; Swivel Gun L09 |
 | homing | L06 | Micro-missile Pod L06; Swivel Gun L09; Hornet Launcher L10; Swarm Tail L30 (the first homing rear gun) |
-| area | L07 | Hammer Mortar L07; Proximity Mines L12; Tesla Coil Pod L29 (its sparks) |
+| area | L07 | Hammer Mortar L07; Proximity Mines L12; Tesla Coil Pod L29 (its sparks); Plasma Arc L36 (draft, round 72) |
 | rear | L08 | Tail Gun L08; Fan Blaster L10; Swarm Tail L30 |
 | anti-sub | L11 | Torpedo Pod L11; Harpoon Torpedoes, Depth Charges and the Sonar Pulse special L22 |
 | beam | L15 | Ion Beam L15 |
@@ -292,3 +293,12 @@ targets; generator `tools/concept/gear_r48.py`; prompts in [concept/prompts.md](
   Coil Pod (L29, `shield-breaker`, an instant arc with sparks) and the Swarm Tail (L30, a homing rear gun
   that seeks behind first) promoted from the roster to draft documents with hand-written numbers (Q12 = c);
   the Plasma Arc moves to Act 6 (its L31 unlock dropped). The coverage table names them.
+- 2026-10-31 (Act 6 design phase, step m10-d-systems; **decided 2026-10-31 (round 72)**): the Plasma Arc
+  promoted from the roster to a draft document (Q7 = b: front, `area` and `spread`, a chain of 3 → 6 targets, 30 / 120
+  DPS, 5 → 8 MW, 6 000 with an upgrade base of 3 000, in the shop from the L36 visit); the hand plan keeps the Ion
+  Beam (L5 at the L36 visit) and fits the Tesla Coil Pod on one wing at the L37 visit (the act's `shield-breaker`
+  moment). The coverage table names the arc.
+- 2026-10-31 (user, [round 72](../../concept-rounds/round-72/README.md) closed): Q7 b (the middle arsenal): the
+  Plasma Arc from the Level 36 visit with the Reflex Shield, Composite V, the IFF spoofer and a captured generator;
+  Time Dilation, the Hunter drone and the Bastion Shield go to Act 7's design; a everything and c minimal rejected.
+  The Plasma Arc's look is A.7 a.

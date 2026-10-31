@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../../campaign]
-updated: 2026-10-29
+updated: 2026-10-31
 ---
 
 # Music
@@ -35,11 +35,11 @@ everywhere.
 | 11 | Act 4 B: Europa | Level 25, Levels 27–28 (see *Act 4 music*) | Muffled ambient drum & bass, Vorne's motif as a faint layer (L27–28) | 3:00 | P2 | sketches [act4-b-theme-r48-a](concept/act4-b-theme-r48-a.ogg) "Pressure Line" and [act4-b-theme-r48-b](concept/rejected/act4-b-theme-r48-b.ogg) "Black Current" (chosen, round 48: a); full length with base, full and motif stems: [pressure-line-r51-a](concept/pressure-line-r51-a.ogg) (chosen, round 51) |
 | 12 | Act 5 A: Asteroid belt | Levels 29, 30, 32, 34 (the base stem only) (see *Act 5 music*) | Driving industrial, metallic percussion, Vorne's motif in the open; full length with base, full and motif stems (draft, round 60) | 3:00 | P2 | [belt-theme-r03-a](concept/belt-theme-r03-a.ogg) "Hollow Rock" (chosen); full length with base, full and motif stems: [hollow-rock-r62-a](concept/hollow-rock-r62-a.ogg) (proposed, round 62; in `assets/music`) |
 | 13 | Act 5 B: Asteroid belt | Levels 31, 33 and the Level 35 approach (see *Act 5 music*) | Colder and more industrial than the A theme (the enemy is human now); two sketches in round 60, one with Vorne's motif in the open; base, full and motif stems | 3:00 | P2 | sketches [act5-b-theme-r60-a](concept/act5-b-theme-r60-a.ogg) "Gilded Cage" and [act5-b-theme-r60-b](concept/rejected/act5-b-theme-r60-b.ogg) "Iron Vein" (round 60: a chosen, b rejected); "Gilded Cage" at full length with its stems [gilded-cage-r64-a](concept/gilded-cage-r64-a.ogg) (round 64, M9 part D) |
-| 14 | Act 6 A: Jupiter | Levels 36–42 | Vast and stormy: storm strings, thunder, choir; Vorne's motif against the main motif | 3:00 | P3 | [jovian-theme-r03-a](concept/jovian-theme-r03-a.ogg) "Eye of the Storm" (chosen) |
-| 15 | Act 6 B: Jupiter | Levels 36–42 | Heavy, stormy, choir + distorted bass | 3:00 | P3 | — |
+| 14 | Act 6 A: Jupiter | Levels 36, 37 (to the turn), 39 and 40 (around the duel); its motif stem under the Act 6 intro's page 3 (see *Act 6 music*) | Vast and stormy: storm strings, thunder, choir; Vorne's motif against the main motif; full length with base, full and motif stems (draft, round 72) | 3:00 | P2 | [jovian-theme-r03-a](concept/jovian-theme-r03-a.ogg) "Eye of the Storm" (chosen) |
+| 15 | Act 6 B: Jupiter | Level 37 from the turn, Levels 38 and 41, the Level 42 approach (see *Act 6 music*) | Heavy, stormy, choir + distorted bass; two sketches in round 72; base, full and motif stems and a fourth `fall` stem (choir and low strings) for Level 37's falling city (draft, round 72) | 3:00 | P2 | — (sketches a/b in round 72, step AUD-R) |
 | 16–17 | Act 7 A/B: Beyond the gate | Levels 43–50 | Alien, Choir motif fused with the main motif | 3:00 | P3 | — |
 | 18 | Boss: Vrell | Vrell act bosses | Choir, pounding drums | 2:00 loop | P1 | [boss-theme-r02-a](concept/boss-theme-r02-a.ogg) "The Choir Descends" (chosen); full length: [choir-descends-full-r08-a](concept/choir-descends-full-r08-a.ogg) (chosen); Level 28's deep copy (round 58, Q.1 b): [choir-descends-deep-r58-b](concept/rejected/choir-descends-deep-r58-b.ogg) (rejected, round 58: the built theme stays) |
-| 19 | Boss: Ascendancy | Ascendancy bosses (Iron Sovereign, Level 35; Ascendant, Act 6) | Martial and cold: snare rudiments, timpani, machine riff, Vorne's motif; full length, one full mix (draft, round 60) | 2:00 loop | P2 | [ascendancy-boss-r03-a](concept/ascendancy-boss-r03-a.ogg) "Iron Sovereign" (chosen); full length: [iron-sovereign-full-r68-a](concept/iron-sovereign-full-r68-a.ogg) (proposed, round 68) |
+| 19 | Boss: Ascendancy | Ascendancy bosses (Iron Sovereign, Level 35; the Ascendant's phase 1, Level 42, handing over to track 18 at the eruption: see *Act 6 music*) | Martial and cold: snare rudiments, timpani, machine riff, Vorne's motif; full length, one full mix (draft, round 60) | 2:00 loop | P2 | [ascendancy-boss-r03-a](concept/ascendancy-boss-r03-a.ogg) "Iron Sovereign" (chosen); full length: [iron-sovereign-full-r68-a](concept/iron-sovereign-full-r68-a.ogg) (proposed, round 68) |
 | 20 | Final boss | Level 50 (Choir Heart) | All motifs, full orchestra + beat; the Choir motif against the main motif | 3:00 loop | P3 | [final-boss-r03-a](concept/final-boss-r03-a.ogg) "Choir Heart" (chosen) |
 | 21 | Mini-boss sting | Mini-boss entrance | 4 s stinger, then back to the level track | 0:04 | P2 | [miniboss-sting-r08-a](concept/miniboss-sting-r08-a.ogg) "Contact Heavy" (chosen) |
 | 22 | Boss warning | Before the boss | Alarm + riser, 5 s, bridges to the boss track | 0:05 | P1 | [boss-warning-r08-a](concept/boss-warning-r08-a.ogg) "Red Alert" (chosen) |
@@ -52,6 +52,8 @@ everywhere.
 | 29 | Debrief | Under the debrief, after the mission complete jingle (23) | Quiet, calm, a little proud; D major (the jingle's last chord), −18…−20 LUFS under the debrief's sounds and voice; not the hangar theme | 1:00–1:30 loop | P2 | [debrief-theme-r40-b](concept/debrief-theme-r40-b.ogg) "Stand Down" (chosen, round 40) |
 | 30 | Reveal sting | Level 28, the Ascendancy cruisers rising (see *Act 4 music*) | Dread rising for 4 s, a hit as the gun ports open, Vorne's motif hidden in it; B minor; ends unresolved | 0:09 | P2 | [reveal-sting-r48-a](concept/reveal-sting-r48-a.ogg) "Black and Gold" and [reveal-sting-r48-b](concept/rejected/reveal-sting-r48-b.ogg) "Ours" (chosen, round 48: a); production: [reveal-sting-r58-a](concept/reveal-sting-r58-a.ogg) (chosen, round 58, S.20; in the game since step H6, `music/reveal-sting.ogg`, a one-shot at the cruisers' rise) |
 | 31 | Rook's return sting | Level 29, Rook's Ember launching from the prison tender (see *Act 5 music*) | The main motif's horn call answering Vorne's motif: a short brass lift over the ducked theme, B minor turning to D major; a one-shot | 0:05 | P2 | [rook-return-r60-a](concept/rook-return-r60-a.ogg) "Horn Call" and [rook-return-r60-b](concept/rejected/rook-return-r60-b.ogg) "Answer" (round 60: a chosen, b rejected) |
+| 32 | Duel theme | Level 40, the Honour Guard (after the mini-boss sting, until the last ace falls; see *Act 6 music*) | Three aces, one duel: Vorne's motif in gold brass against the main motif's horn call, call and response, then in canon; martial (track 19's family) and fast; two sketches in round 72; one full mix, no stems (draft, round 72) | 2:00 loop | P2 | — (sketches a/b in round 72, step AUD-R) |
+| 33 | Escape sting | Level 42, the lifeboat leaving the top edge (`ESCAPED`; see *Act 6 music*) | Vorne's motif falling apart into the Choir motif's tritone drop; E minor (track 18's key, which it cuts); ends unresolved; a one-shot (draft, round 72) | 0:06 | P2 | — (sketches a/b in round 72, step AUD-R) |
 
 The concept pieces are 40–65 s sketches of each track's style and material. Production
 versions are extended to the listed length.
@@ -412,6 +414,108 @@ Ascendancy's levels on both counts; the act ends on the B theme as Act 4 did.
 Every level plays the `mission-complete` jingle (23); Level 35's debrief is followed by the act outro with the
 act-complete fanfare (24), as Levels 21 and 28's.
 
+### Act 6 music (draft)
+
+**Status: draft, decided 2026-10-31 (round 72)** (M10 design phase, step `m10-d-audio`, 2026-10-31), for the
+[Act 6 README](../../campaign/act-6-jovian-storm/README.md)'s plan; the level documents carry the cues in their *Music
+& ambience* and place the switches, the boss documents own their fights' music
+([Honour Guard](../../enemies/bosses/honour-guard/README.md#presentation),
+[Ascendant](../../enemies/bosses/ascendant/README.md#presentation)). The mood is the
+[world's](../../world/jovian/README.md#music-mood): grand and furious, the most bombastic act, Vorne's motif at full
+strength and the main motif fighting back. Act 6 is where **the alliance breaks**: Vorne's motif plays in the open as
+in Act 5 until the Vrell turn on him at Level 37, is **cut** there, and at Level 42 the Choir's music takes his ship
+from under him. Two themes, the two boss themes, two new pieces (the duel theme and the escape sting) and the built
+stings; the beds are in [sfx](../sfx/README.md#ambience-per-setting).
+
+- **Track 14 "Eye of the Storm"** (the A theme, chosen in round 03: 140 BPM, G minor, the motif on G · B♭ · D · F♯):
+  Levels 36, 37 (to the turn), 39 and 40 (the approach and after the duel). Its full length (≈ 3:00) and stems come
+  with M10 part B (Level 36) by the method of tracks 9–13 (the round-03 generator extended, one render, linked
+  mastering, the loop comments): **base** (the storm strings' ostinato, the big drums' low half, the pad, the wind and
+  thunder as band noise, no crackle), **full** (the base plus the gallop strings, the snare and hats, the main motif in
+  horns and its trumpet answers, the breakdown's choir) and **motif** (Vorne's motif in low brass and choir). The motif
+  stem plays **in the open** at its level in the chosen sketch (about 6 dB under the full mix), as track 12's.
+- **Track 15, the Act 6 B theme**: Level 37 from the turn, Levels 38 and 41 and the Level 42 approach. Brief: "heavy,
+  stormy, choir and distorted bass" (the act sketch); the war has three sides now. No bubbly or popping sounds, no
+  resonant plucks, thunder and static only as band noise. Round 72 offers **two sketches** (55–65 s, step AUD-R,
+  `music_r72.py`; tempos with a whole-sample 16th step, which the sample-exact loop needs):
+  - **a "Storm Wall"**: 135 BPM, C minor (the motif on C · E♭ · G · B), an orchestral-metal hybrid: a drop-tuned
+    distorted bass riff in half-time, war drums and low toms, tremolo storm strings, a wordless choir in long minor
+    chords; **Vorne's motif in the open**, cold low brass and organ every 8 bars; a breakdown of the choir alone over
+    low strings.
+  - **b "Red Spot"**: 150 BPM, E minor (track 18's key: the Choir's), darker and driving: a distorted 16th bass, an
+    industrial drum kit and toms, the choir chanting the **Choir motif's tritone drop** as a riff; Vorne's motif
+    only inside the bass's machine arpeggio (no brass): the Vrell have the upper hand.
+  **Chosen in round 72 (M.1 a, 2026-10-31): "Storm Wall"**; b "Red Spot" is rejected.
+  The production delivers **four stems**: base, full and motif as track 13's (a's motif stem is the brass and organ line
+  lifted out of the full mix), and a **`fall` stem** (the choir and the low strings only, the breakdown's material
+  under the whole loop) for Level 37's falling city, as track 10's dark stem was for Level 26. Made in M10 part C
+  (Level 37).
+- **The duel theme** (new track 32, Level 40, the [Honour Guard](../../enemies/bosses/honour-guard/README.md)): after
+  the mini-boss sting (21) it **replaces the level track** for the fight and track 14 returns after the last ace (the
+  boss document's *Presentation*). Three aces, one duel: **Vorne's motif in gold brass against the main motif's horn
+  call**, call and response like a joust, then in canon. Two sketches (55–65 s, `music_r72.py`), both in **A minor**
+  (the sting's last chord, so the cut lands on the key):
+  - **a "Honour Guard"**: 150 BPM, martial and orchestral (track 19's family: snare rudiments, timpani, low-brass
+    8ths): Vorne's motif (A · C · E · G♯) in the brass, answered by the main motif (A · E · A · B · C) in the horns
+    over galloping strings; a three-voice brass fugato in the middle (three aces), then both motifs at once.
+  - **b "Three Aces"**: 175 BPM, a drum and bass breakbeat with synth brass stabs and a distorted lead: Vorne's motif
+    as a fast sequencer arpeggio, the main motif in a soaring lead; leaner and more arcade.
+  **Chosen in round 72 (M.2 b, 2026-10-31, not the recommendation): "Three Aces"** (175 BPM drum and bass); a "Honour Guard"
+  is rejected. The user's pick accepts that it leaves the campaign's orchestral and industrial palette (the drum and
+  bass is new).
+  Production: ≈ 2:00 loop, **one full mix, no stems** (a fight switches nothing, as track 19). Made in M10 part F.
+- **The Ascendant** ([Level 42's boss](../../enemies/bosses/ascendant/README.md), J9): the boss warning (22) before the
+  hull shows, **track 19 "Iron Sovereign"** for phase 1 (as built for Level 35), and at phase 2's eruption **track 18
+  "The Choir Descends"** takes over: the Vrell half erupts through his ship and its music goes with it. No new boss
+  theme. **The hand-off** (round 72 hears both, `music_r72.py`): **a** a crossfade: track 19 out over 2 s under the
+  hull tearing, track 18 from its start (its intro is the Choir motif alone over a drone, under the Choir's line and
+  Vorne's shout, the radio's duck applied); **b** a ≈ 4 s **bridge** render: track 19's machine riff slowing and
+  detuning down a semitone into track 18's drone (F♯ minor to E). **Chosen in round 72 (M.3 a, 2026-10-31)**: the crossfade (no new render, and the
+  intro's bare Choir motif is the moment); b is rejected. Track 18 plays on through phase 3 (the lifeboat) until the escape sting.
+- **The escape sting** (new track 33, Level 42, `ESCAPED`): as the lifeboat leaves the top edge the sting **cuts
+  track 18**: Vorne's motif in E (E · G · B · D♯) stated once in brass, its last note bending down, then
+  **falling apart into the Choir motif's tritone drop** (8 – ♭7 – ♭6 – 5, the drop to ♭2) in the choir, ending on
+  a held low E with the ♭2 over it, unresolved, about 6 s. A one-shot from the level's music block (as the reveal
+  sting, track 30); after it the ambience alone for the ≥ 4 s of calm and Okafor's last line. Two sketches: **a** brass
+  and choir (orchestral, the motif's brass collapsing into the choir), **b** the motif in a machine arpeggio that
+  slows and pitches down (a dying engine) into the choir's drop. **Chosen in round 72 (M.4 a, 2026-10-31): "Collapse"**; b
+  "Dying Engine" is rejected.
+- **The Act 6 intro** (Q11 a, page 3 Vorne's intercepted invitation,
+  [briefing](../../ui/briefing/README.md#intercepted-transmissions-draft)): as Act 5's broadcast, the briefing theme
+  (track 3) fades out over 1 s as page 3 opens and **track 14's motif stem plays alone** under it (`music: motif`,
+  built in M9 part B); page 4 (Okafor's answer) brings track 3 back over 1 s. No new file.
+- **The act's end**: after the escape the debrief, the act summary and the outro with the act-complete fanfare (24)
+  under the outro's first page, as Levels 21, 28 and 35's.
+
+**Hooks the plan needs** (the music data has one level track, a boss track and the built stings; for M10's code
+parts, each decided 2026-10-31 (round 72)): (1) **a theme change on a level event or time** (Level 37's 14 → 15 at t=103: the
+old theme fades out over 1 s under the Choir's duck, the new one starts at its stem); (2) **a mid-boss track**
+(Level 40's duel theme after the mini-boss sting, the level track back after the mid-boss's death); (3) **a boss track
+change on a boss event** (Level 42's 19 → 18 at the eruption, with the hand-off above); (4) **a one-shot that cuts the
+boss track** on a boss event (the escape sting at `ESCAPED`; the reveal sting's one-shot plays over its theme);
+(5) **a named fourth stem** (`fall`) selected by section or time, as Level 26's dark stem.
+
+#### Cues per level (Act 6)
+
+Proposals; the level documents own the sections and the times (Levels 40–42 are drafted beside this step). **The A/B
+split**: track 14 in Levels 36, 37 (to the turn), 39 and 40; track 15 in Level 37 from the turn, Levels 38 and 41
+and the Level 42 approach. Levels 36–39's drafts name these themes (Level 38's draft offered track 14 as an
+alternative; the B theme keeps it so the storm and the war sound alike and B gets four levels). Vorne's motif is on
+in every level (his fleet fights in all of them) except from Level 37's turn to its end, where the Choir has spoken.
+
+| Level | Theme | Music by section | Sting / boss | Vorne's motif | Ambience |
+|---|---|---|---|---|---|
+| 36 Cloud Divers | 14 | the intro (storm strings, a far thunder roll) over the dive (section 1); base from section 2 (into the bands); full from section 3 (the harvester fields) to the end | — | on | `jovian-sky`, the dive's wind layer over section 1 |
+| 37 Fall of Aurelia | 14, then 15 | track 14's full mix over the rim and the gilded decks (Aurelia's grandeur); the Choir's line ducks it at t=100 (−6 dB, Level 26's duck); **track 15** from t=103 (full mix, hook 1); its `fall` stem from the fall (t≈160) to the level end | — | on to t=100; **cut** from the turn (track 15 without its motif stem) | `aurelia`; the burning layer from t=100 |
+| 38 Lightning Belt | 15 | the intro over the drop under Aurelia; base through the storm wall; full from the cells to the end (the breakout's lift is the full mix at full level after any `section_db` dip the level sets) | — | on (no Vorne, no Choir in the level) | `jovian-sky`, +3 dB in the storm sections (Level 13's whiteout rule) |
+| 39 Io Flyby | 14 | the intro (open storm strings) over the Tvashtar plains; base through the Loki works and the pipeline run; full in the Pele works and the plume field to the end | — | on; under Vorne's t=91 line the radio's duck only | `io-refinery` |
+| 40 Honour Guard | 14, then 32, then 14 | base on the approach; full from the section the level's draft names; out at the halt (the waves end before the sting); the mini-boss sting (21), then **the duel theme (32)** for the whole fight (hook 2); track 14's full mix after the last ace to the end | mini-boss sting, duel theme | on in track 14; the duel theme carries it itself | `belt-open` (open space through the hull) |
+| 41 Callisto Fortress | 15 | base on the approach; full from the first pylon gate; under Varga's files line (the Silence's first naming, Q12) a scripted duck (−6 dB for the line, Level 10's duck on the files' event) | — | on; the duck takes it down with the theme | `callisto-fortress` |
+| 42 Ascendant | 15, then 19, 18 and 33 | base on the approach over the fleets; full from the home fleet's screen; out at the halt; the boss warning (22) before the hull shows; **track 19** in phase 1; **track 18** from the eruption (hook 3, the hand-off) through phase 3; **the escape sting (33)** at `ESCAPED` cuts it (hook 4); the ambience alone for the calm and Okafor's last line | boss warning, boss themes 19 → 18, escape sting | on to the eruption (track 19 has it); gone in phase 2, where the Choir motif takes its place; it falls apart in the sting | `belt-open` |
+
+Every level plays the `mission-complete` jingle (23); Level 42's debrief is followed by the act summary and the act
+outro with the act-complete fanfare (24).
+
 ## Concept art
 
 Rejected proposals (7 rows) are listed in [concept/rejected/README.md](concept/rejected/README.md).
@@ -761,6 +865,20 @@ only, not listened to. Prompts:
 |---|---|---|
 | [concept/iron-sovereign-full-r68-a.ogg](concept/iron-sovereign-full-r68-a.ogg) | #19 "Iron Sovereign" full mix at full length: 127.8 s, loop 306000 + 5184000 samples (6.94 s + 117.55 s, 72 bars at 147 BPM), −14.0 LUFS, −1.5 dBTP, seam 0.13; the sketch's four sections and five new ones on its material (the machine alone, the motif in diminution over the machine, a snare-corps parade ground, a long build, a second tutti) | chosen (round 68, M.1 ok: track 19 at full length) |
 
+Concept round 72 (M10 "Act 6 - Jovian Storm" design phase, step AUD-R, 2026-10-31; picked 2026-10-31) — the
+sketches of *Act 6 music (draft)*: track 15 (the Act 6 B theme) a/b, the duel theme (new track 32, Level 40) a/b, the
+Ascendant's hand-off from track 19 to track 18 a/b (cut from the game's own files) and the escape sting (new track 33,
+Level 42) a/b, by `tools/concept/audio/music_r72.py` (deterministic; the round-02 loop format for the themes, the
+round-08 sting format; all −14 LUFS). Measured only, not listened to. Prompts:
+[concept/prompts.md](concept/prompts.md#round-72--the-act-6-b-theme-track-15-the-duel-theme-track-32-the-ascendants-hand-off-and-the-escape-sting-track-33).
+
+| File | What | Status |
+|---|---|---|
+| [concept/act6-b-theme-r72-a.ogg](concept/act6-b-theme-r72-a.ogg) | #15 sketch a "Storm Wall": 135 BPM, C minor, an orchestral-metal hybrid (a drop-tuned distorted bass riff in half-time, war drums and toms, tremolo storm strings, a wordless choir over Cm – A♭ – Fm – G, the wind as band noise); Vorne's motif in the open (cold low brass and organ every 8 bars, 5.6–6.4 dB under the mix); a 4-bar breakdown of the choir alone over low strings. 60.9 s, loop 333200 + 2195200 samples (7.56 s + 49.78 s, 28 bars), −14.3 LUFS, −1.1 dBTP, seam 0.45 | chosen (round 72 M.1 a) |
+| [concept/duel-theme-r72-b.ogg](concept/duel-theme-r72-b.ogg) | #32 duel theme sketch b "Three Aces": 175 BPM, A minor, a drum-and-bass breakbeat, a reese sub, synth-brass stabs; Vorne's motif as a fast sequencer arpeggio, the main motif soaring in a distorted lead; leaner and more arcade. 63.4 s, loop 257040 + 2419200 samples (5.83 s + 54.86 s, 40 bars), −14.2 LUFS, −1.1 dBTP, seam 0.16 | chosen (round 72 M.2 b) |
+| [concept/ascendant-handoff-r72-a.ogg](concept/ascendant-handoff-r72-a.ogg) | The Ascendant's hand-off a (the README's recommendation, no new render): 10 s of track 19 (the built `iron-sovereign.ogg` from loop bar 8), then track 19 out over 2 s while track 18 (the built `choir-descends.ogg`) starts from its beginning (the Choir motif over a drone), 10 s of it; no radio duck applied. 20.0 s, −14.3 LUFS | chosen (round 72 M.3 a) |
+| [concept/escape-sting-r72-a.ogg](concept/escape-sting-r72-a.ogg) | #33 escape sting a "Collapse" (brass and choir): Vorne's motif in E (E G B D♯) once in low brass and organ over a timpani roll, the D♯ bending down a semitone and dying; the choir takes the Choir motif's descent (E D C B) and the tritone drop to F, ending on a held low E (strings, organ, a sub, a timpani hit) with the F over it, unresolved. 6.6 s, −14.3 LUFS, −2.3 dBTP | chosen (round 72 M.4 a) |
+
 ## Implementation
 
 - [x] Music player with intro + loop points
@@ -844,6 +962,12 @@ only, not listened to. Prompts:
 
 ## Open questions
 
+- [ ] Act 6 (draft, decided 2026-10-31 (round 72), M10): track 14 "Eye of the Storm" at full length with base, full and motif stems
+      (part B); track 15, the B theme, from round 72's pick with base, full, motif and `fall` stems (part C); the duel
+      theme (track 32) at full length, one full mix (part F); the escape sting (track 33) and the 19 → 18 hand-off
+      (part H); the hooks of *Act 6 music* (a theme change on an event, a mid-boss track, a boss track change, a
+      one-shot cutting the boss track, a named fourth stem); track 14's motif stem under the Act 6 intro's page 3;
+      each Act 6 level's music block as in *Act 6 music* (parts B–H)
 - 28 tracks is a lot of production. If needed, drop the B variants of acts (−7 tracks) or reuse
   the Vrell boss theme for all bosses.
 - **Act 5 (round 60)**: the B theme (track 13) sketch, a "Gilded Cage" (the motif in the open) or b "Iron Vein"
@@ -903,3 +1027,18 @@ Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-a
 - 2026-10-29 (M9 part H gap check, QH-3 a on its recommendation, decided in round 68, 2026-10-29): track 19 "Iron Sovereign" extended from the chosen round-03 sketch to a 2:00 loop, one full mix (`iron-sovereign-full-r68-a`, step AUD-H1), not a new variant beside it; the limiter's ceiling −3 dBFS (as track 12's) to keep the true peak under −1 dBTP.
 - 2026-10-29 (user, [round 65](../../concept-rounds/round-65/README.md), closed; page answers): **M.1** ok: track 12 "Hollow Rock"'s `conveyor` stem for Level 32's forks. Step G4 imported it as `assets/music/hollow-rock-conveyor.ogg` (`tools/art/themes.py`'s remux, as the other stems; audio identical) and switched Level 32's music block to it at the forks (`stem_times`: alone under the motif for 16 s from each choice, in and out over 2 s).
 - 2026-10-29 (user, [round 68](../../concept-rounds/round-68/README.md), closed): **M.1** ok: track 19 "Iron Sovereign" at full length (`iron-sovereign-full-r68-a`) accepted as built.
+- 2026-10-31 (step `m10-d-audio`, M10 design phase; decided 2026-10-31 (round 72)): *Act 6 music* drafted from the gap analysis
+  (§2.7, J9) and the drafts of Levels 36–39 and the two bosses: track 14 for Levels 36, 37 (to the turn), 39 and 40,
+  track 15 for Level 37 from the turn, Levels 38 and 41 and the Level 42 approach (Level 37's and Level 38's drafts
+  kept: 14 → 15 at the turn, and 15 in the storm); two sketch briefs each for track 15 and the new duel theme (track
+  32); track 19 then 18 for the Ascendant (J9) with a hand-off a/b; the new escape sting (track 33); Vorne's motif
+  on in every level but cut from Level 37's turn and gone in Level 42's phase 2; five music hooks named for M10's
+  code parts. Decided here (trivia): track 14 and 15 to P2 (Act 6 is next), the duel theme in A minor after the
+  sting's A minor, the escape sting in E minor (the track it cuts), Level 41's duck under the Silence line, no stems
+  for the duel theme.
+- 2026-10-31 (user, [round 72](../../concept-rounds/round-72/README.md) closed): the Act 6 audio plan approved as
+  drafted (D.18). **M.1 a**, track 15 "Storm Wall" (135 BPM); **M.2 b** (not the recommendation), the duel theme
+  (track 32) is "Three Aces" (175 BPM drum and bass; leaving the orchestral and industrial palette is accepted); **M.3
+  a**, the Ascendant's 19 to 18 hand-off is a crossfade; **M.4 a**, the escape sting (track 33) is "Collapse". J9 kept
+  (track 19 in phase 1, track 18 from phase 2, the sting). The b / a sketches moved to `concept/rejected/` (rows in
+  its README).

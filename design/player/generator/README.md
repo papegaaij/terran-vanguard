@@ -3,8 +3,8 @@ title: Generator
 design: approved
 implementation: done
 art: n/a
-depends-on: [../weapons, ../shields]
-updated: 2026-10-28
+depends-on: [../weapons, ../shields, ../systems]
+updated: 2026-10-31
 ---
 
 # Generator
@@ -227,6 +227,96 @@ stays: +2 over the Mk IV, as the Mk III to IV step was first drafted, carries th
 Reflex Shield arrive. Alternative: raise it to 24 now; rejected for the draft because Act 6 is not
 designed and the step can be measured then.
 
+### Act 6 hand plan (draft)
+
+*Draft, step `m10-d-systems` (2026-10-31), **decided 2026-10-31 (round 72)** (Q7 = b, Q8 = a, J1). A
+hand calculation for the design phase, no data file and not read by any test; part A of M10 replaces it by the
+measured balance plan (`balance-plan.yaml` visits 36–42, `reference_dps` 36–42 in `enemies/data.yaml`,
+`BalanceTest`, `ActPlaythroughTest`, `:content:levelReport`). Draws and DPS are those of the weapon documents: the
+[Ion Beam](../weapons/ion-beam/README.md), the [Micro-missile Pod](../weapons/micro-missile-pod/README.md), the
+[Swarm Tail](../weapons/swarm-tail/README.md), the [Tesla Coil Pod](../weapons/tesla-coil-pod/README.md), the
+[Plasma Arc](../weapons/plasma-arc/README.md); the [shields](../shields/README.md) Mk III (4 MW) and Reflex (6 MW), the
+Pickup magnet (1 MW) and the [IFF spoofer](../systems/README.md#act-6-the-iff-spoofer-and-the-core-tiers-draft) (2 MW).*
+
+**The new generator** (Q8 = a), a hand-written row until part A writes it into [data.yaml](data.yaml) (the model
+table above is rendered from it):
+
+| Model | Output | Price (draft) | Available |
+|---|---|---|---|
+| Mk V+ "Crucible" | 25 MW | 24 000 | L39 (Ascendancy tech: a reactor from Aurelia's power decks, captured when the city falls in L37, refitted by the fleet; Io's refineries make its fuel) |
+
+Why 25: the act's forward fit (the Ion Beam L5 and the pods L5) needs **23 MW**, one more than the Mk V, and the
+Level 30 playthrough's lesson (no power left for a module) asks for room for **one utility** on top: the IFF
+spoofer's 2 MW makes 25. Why 24 000: between the Mk V's 18 000 and the Mk VI's 32 000, so the typical plan saves
+three visits for it (L38–L39 save, Composite V waits for the L41 visit; round 72's J11) and buys it at the L40 visit, as Act 5's plan saved for the Mk V. It sits
+between the Mk V and the Mk VI in the list (part A: the balance plan's index of the Mk VI moves up by one). The
+Mk VI "Choir Core" (27 MW) stays Act 7's.
+
+**The loadout entering Act 6** (`tools/balance.py` after the L35 visit): Ion Beam L4, Micro-missile Pods L4 ×2,
+Swarm Tail L3, Pickup magnet L1, Shield Mk III, Composite IV, Mk V "Helix": **21 of 22 MW**, 2 935 cr left; the EMP
+Burst fitted; Rook in the escort slot with his Autocannon (his Mortar owned); the Act 4 gear and the Tail Gun wait in
+the inventory.
+
+**The plan, medium** (visit income = the previous level's haul × 1.1 grade bonus, less 75 cr of the ship's repairs and
+Rook's 50; haul: L35 6 789 (its data's typical haul), then budget(n) = 700 × 1.07^(n−1) until a level's data exists:
+L36 7 474 · L37 7 997 · L38 8 557 · L39 9 155 · L40 9 796 · L41 10 482 · L42 11 216; the act factor 10.486 = 1.6⁵;
+the act's income ≈ 66 000 over the seven visits). The first column is the level that follows the visit.
+
+| Visit | Cash | Buys and fits | Spent | Left | Load / output |
+|---|---|---|---|---|---|
+| L36 | 10 403 | Ion Beam **L5** 10 000 (L36 asks `forward` and `homing`); Rook's Autocannon | 10 125 | 278 | 22 / 22 |
+| L37 | 8 499 | **Tesla Coil Pod** 3 000 and L2 1 500 on the left wing, the left Micro-missile Pod L4 to the inventory (kept): the act's `shield-breaker` moment (Aurelia's heavier [enemy shields](../../enemies/README.md#enemy-shields) and the mirrors, Q1) | 4 625 | 3 874 | 22 / 22 |
+| L38 | 12 670 | nothing: saving (Composite V is in the shop from this visit but waits for the L41 visit, J11); Rook's Autocannon | 125 | 12 545 | 22 / 22 |
+| L39 | 21 957 | nothing: the Mk V+ and the IFF spoofer are in the shop, and 22 of 22 MW leave no room for the spoofer; saving; Rook's Mortar (Io's refinery targets ask `anti-ground`) | 125 | 21 832 | 22 / 22 |
+| L40 | 31 904 | **Generator Mk V+ "Crucible"** 24 000 and the **IFF spoofer** 5 000 (the fortress's turrets, and the room for a utility from the duel on); Rook's Autocannon again | 29 125 | 2 779 | 24 / 25 |
+| L41 | 13 555 | **Composite V** 11 000 (160 armour: the lightning and the death-burst rings are behind it, the fortress's guns and the Ascendant's batteries ahead); Rook's Mortar | 11 125 | 2 430 | 24 / 25 |
+| L42 | 13 960 | the right Micro-missile Pod **L5** 3 200 and the Tesla Coil Pod **L3** 3 000; the spoofer to the inventory (no turret in orbit that it fools: the Ascendant's batteries are a boss's); Rook's Autocannon | 6 325 | 7 635 | 23 / 25 |
+
+The items the plan leaves out: the **Reflex Shield** (12 000, 6 MW: 2 more than the Mk III, so it waits for the
+Mk V+ and competes with the spoofer for its room), the **Plasma Arc** (the area alternative to the beam, 6 000 and
+its upgrades), the Shield Mk V and the Engine Mk IV; all are there for a richer or a hard run. A player who skips
+Composite V can fit the Reflex Shield from the L40 visit in place of the spoofer (26 of 25 would not fit with both).
+
+**Reference DPS 36–42** (single-target, medium; J1 of round 72: the L35 value held at L36, then +4 a level). The
+forward DPS is the tool's (the front and the wings, as `BalanceTest` measures it); the rear is the Swarm Tail L3's.
+
+| Level | Loadout (single-target DPS) | Forward DPS | Rear DPS | Proposed `reference_dps` | Forward / reference |
+|---|---|---|---|---|---|
+| 35 | Ion Beam L4 105 + pods L4 2 × 21 | 147 | 30 | 144 (as is) | 1.02 |
+| 36 | Ion Beam L5 130 + pods L4 2 × 21 | 172 | 30 | **144** | 1.19 |
+| 37 | Ion Beam L5 130 + Tesla L2 17 + pod L4 21 | 168 | 30 | **148** | 1.14 |
+| 38 | the same | 168 | 30 | **152** | 1.11 |
+| 39 | the same | 168 | 30 | **156** | 1.08 |
+| 40 | the same | 168 | 30 | **160** | 1.05 |
+| 41 | the same | 168 | 30 | **164** | 1.02 |
+| 42 | Ion Beam L5 130 + Tesla L3 23 + pod L5 28 | 181 | 30 | **168** | 1.08 |
+
+Act 5 ran 0.96–1.12 on this measure (`tools/balance.py`); Act 6 opens high (1.19: the beam's last step bought at once,
+as Act 5's opener bought the beam L4) and falls to 1.02 while the plan saves for the generator; part A measures it with
+`levelReport` before the numbers go into the data. If the opener proves too soft, the plan can fit the Tesla Coil Pod
+at the L36 visit and the beam L5 at the L37 visit (0.99 at L36, then the same as above). The gap analysis's fit (the
+beam L5 and **both** pods L5, 186 at L42, 1.11) is the alternative without the Tesla pod: 5 DPS more and no
+`shield-breaker`. The act HP factor of a returning `medium`+ unit needs these seven entries (`UnitRules.actHpFactor`
+throws without them). Budgets 36–42: **7 474 · 7 997 · 8 557 · 9 155 · 9 796 · 10 482 · 11 216**.
+
+**Power check by level** (Mk V 22 MW, the Mk V+ 25 from L40; shield Mk III 4 MW; Act 6's roster has no drainer, so
+the [drain](#enemy-drain-effects) stands unchanged and unused):
+
+| Level | Fitted | Load | Spare | Room for |
+|---|---|---|---|---|
+| 36 | beam L5 8 + pods L4 2 × 2.5 + Swarm Tail L3 4 + magnet 1 + shield 4 | **22 / 22** | 0 | nothing: Act 5's L33 problem again |
+| 37–39 | the Tesla Coil Pod L2 2.5 for the left pod | **22 / 22** | 0 | nothing: the spoofer (from L39) and the Reflex Shield wait for the Mk V+ |
+| 40–41 | Mk V+ 25; the IFF spoofer 2 | **24 / 25** | 1 | +10 % shield regen |
+| 42 | pod L5 3, Tesla L3 3; the spoofer stowed | **23 / 25** | 2 | one utility (the spoofer again, the Evasive thrusters) or the Reflex Shield (+2) |
+| the gap analysis's fit | beam L5 8 + pods L5 2 × 3 + Swarm Tail L3 4 + magnet 1 + shield 4 | **23** | — | over the Mk V by 1: the reason for Q8 |
+| an arc build | Plasma Arc L3 6.5 + pods L4 2 × 2.5 + Swarm Tail L3 4 + magnet 1 + shield 4 | **20.5 / 22** | 1.5 | a 1-MW module on the Mk V |
+| a full build | beam L5 8 + pods L5 6 + Swarm Tail L3 4 + magnet 1 + Reflex 6 + spoofer 2 | **27** | — | refused on the Mk V+ 25: the Mk VI's (Act 7, 27 MW) |
+
+So the typical plan flies Act 6's first four levels at its cap, as Act 5's did from L32, and the Mk V+ gives back the
+room the L30 playthrough asked for from L40: one utility and a spare MW. Q8's alternatives would give it sooner but
+cost elsewhere: (b) the Mk V raised to 25 changes Act 5's L35 balance in the `v0.3` build; (c) lowering the Act 6
+items' draw keeps 22 / 22 all act.
+
 ## Implementation
 
 - [x] Generator models and output values in the item data
@@ -244,6 +334,9 @@ designed and the step can be measured then.
 - [x] The Mk V "Helix" in the shop from the L35 visit (salvaged in L34), the balance plan's visits 29–35 — M9 part A
   (step A2: `available: L35`, `balance-plan.yaml` 29–35 as the hand plan above, the Act 5 levels' income budget(n) until
   they are built; `BeltCampaignTest`, `BalanceTest`, `tools/balance.py` exit 0)
+- [ ] The Mk V+ "Crucible" (25 MW, 24 000) in [data.yaml](data.yaml), in the shop from the L39 visit; the balance plan's
+  visits 36–42 and `reference_dps` 36–42 as the *Act 6 hand plan* (draft), the Act 6 levels' income budget(n) until
+  they are built — M10 part A
 
 ## Open questions
 
@@ -297,3 +390,12 @@ designed and the step can be measured then.
   L35), the proposed `reference_dps` 120 → 144 (J2) and the power check under two and three leeches; the Mk V
   "Helix" salvaged in L34 and sold from the L35 visit at 22 MW (Q12 = c).
 - 2026-10-27 (user, [round 60](../../concept-rounds/round-60/README.md) closed): the Act 5 hand plan and the drain approved as drafted (D.15): Q2 **a** (a latched Void Leech drains the generator), J.2 (`reference_dps` 120 to 144), J.12 (2 MW per leech), Q12 **c**; the brown-out hum is S.10 a.
+- 2026-10-31 (Act 6 design phase, step m10-d-systems; **decided 2026-10-31 (round 72)**): the Act 6 hand plan
+  (the Ion Beam L5 at L36, the Tesla Coil Pod on the left wing at L37, saving at L38–L39, the new
+  generator and the IFF spoofer at L40, Composite V at L41 (the recommendation of J11, decided 2026-10-31 (round 72); the first draft had Composite V at L38 and the generator at L41), the right pod L5 and the Tesla L3 at L42), the proposed `reference_dps` 144 →
+  168 (J1) and the power check; a captured **Mk V+ "Crucible"**, 25 MW for 24 000 from the L39 visit (Q8 = a), written
+  by hand until part A puts it into the data.
+- 2026-10-31 (user, [round 72](../../concept-rounds/round-72/README.md) closed): **Q8 a** (the captured Mk V+
+  "Crucible", 25 MW for 24,000; b raising the Mk V to 25 MW and c lowering the items' draw rejected), **J11** (the
+  Crucible bought at the Level 40 visit with the IFF spoofer, Composite V moved to the Level 41 visit; the Level 39
+  swap rejected) and **J1** (`reference_dps` 144 to 168 for Levels 36 to 42) as drafted.

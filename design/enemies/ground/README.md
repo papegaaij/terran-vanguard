@@ -3,7 +3,7 @@ title: Ground enemies
 design: approved
 implementation: in-progress
 art: final
-updated: 2026-10-29
+updated: 2026-10-31
 ---
 
 # Ground enemies
@@ -17,7 +17,7 @@ terrain, never collide with the player, and are what `anti-ground` and `area` we
 ## Contents
 
 Promoted to their own documents for the Acts 1–2 wrap-up, plus the Act 3 drafts of the overnight design phase (2026-10-12) and the Act 5 drafts of its design phase (2026-10-27,
-approved in round 60); the remaining units stay in the roster below.
+approved in round 60), and the Act 6 drafts of its design phase (2026-10-31, decided 2026-10-31 (round 72)).
 
 | Part | Summary | Design | Impl | Art |
 |---|---|---|---|---|
@@ -36,20 +36,15 @@ approved in round 60); the remaining units stay in the roster below.
 | [siphon-pump](siphon-pump/README.md) | Vrell pump on Thera Deep's farm racks, no attack; Level 23's secondary (L23) | review | done | final |
 | [spawning-reef](spawning-reef/README.md) | Soft Vrell coral spawner releasing Glassfin fry; Level 24's secondary (L24) | review | in-progress | final |
 | [relay-beacon](relay-beacon/README.md) | Human-built relay mast with the Helix handshake, no attack; Level 27's secondary (L27) | review | in-progress | final |
-| [warden-tank](warden-tank/README.md) | Unmarked grey tank, hull and turret, bursts from behind (L19); Ascendancy livery at L34 | approved | done | final |
+| [warden-tank](warden-tank/README.md) | Unmarked grey tank, hull and turret, bursts from behind (L19); Ascendancy livery at L34, returns at L39 and L41 | approved | done | final |
 | [sam-nest](sam-nest/README.md) | Ascendancy launcher, salvos of shootable homing diamonds; dormant until a station turns (L29) | approved | done | final |
 | [clamp-gun](clamp-gun/README.md) | Helix turret on the prison tender's docking clamps; the four hold Level 29's rescue halt (L29) | approved | done | final |
 | [sentinel-tower](sentinel-tower/README.md) | Tower with a laser sweep in any direction, a full turn every third sweep, hardened collar (L32) | approved | done | final |
-| [strider](strider/README.md) | Biped mech with fans and a homing pod; a lost leg topples it, crushing ground units (L32) | approved | done | final |
+| [strider](strider/README.md) | Biped mech with fans and a homing pod; a lost leg topples it, crushing ground units (L32; returns at L39) | approved | done | final |
 | [rail-bunker](rail-bunker/README.md) | Hardened bunker, a locked 1 s telegraph line then a `heavy` rail shot (L33) | approved | done | final |
-
-## Roster
-
-| Name | Faction | Layer | Tier | Role/ability | Formations | First level | Design |
-|---|---|---|---|---|---|---|---|
-| Graft Turret | Hybrid | ground | small | An Ascendancy turret overgrown with Vrell tissue. **Regrows** 5 s after destruction unless its tissue root (weak point) is destroyed too. | turret nest | 37 | idea |
-| Shield Pylon | Ascendancy | ground | medium | Hardened pylon projecting a dome that makes every enemy inside it invulnerable. Destroy pylons to open fortress sections. | turret nest | 41 | idea |
-| Halo Platform | Ascendancy | ground (fortress mount) | large | A ring of 6 turret segments rotating around a shielded core (`radial` ring + 32-angle turrets). Each turret is `destroyable` and fires as it swings round (`aimed`, `laser-line`); the core's shield drops when half the ring is gone. The ring's rotation speeds up as turrets die. | turret nest (solo centrepiece) | 41 | idea |
+| [graft-turret](graft-turret/README.md) | Hybrid deck turret; its death exposes a pulsing root for 5 s, else it regrows (L37) | approved | not-started | chosen |
+| [shield-pylon](shield-pylon/README.md) | Emitter mast whose dome makes the ground units under it invulnerable; the pylon gates (L41) | approved | not-started | chosen |
+| [halo-platform](halo-platform/README.md) | Ring of six gun and rail turrets turning round a gated core; the fortress centrepiece (L41) | approved | not-started | chosen |
 
 ## Design
 
@@ -107,17 +102,12 @@ Concept [round 06](../../concept-rounds/round-06/README.md) — generator `tools
 | [concept/hive-node-r06-a.gif](concept/hive-node-r06-a.gif) | Hive Node — hardened spawner mound (teal-black, bone plates) in Vrell creep, iris releases Skitters (motion) | chosen |
 | [concept/threadcrawler-r06-a.png](concept/threadcrawler-r06-a.png) | Threadcrawler — centipede chain (olive/lime) ~300 px, leg ripple, spore pores firing as a travelling wave (sheet) | chosen |
 | [concept/threadcrawler-r06-a.gif](concept/threadcrawler-r06-a.gif) | Threadcrawler — centipede chain (olive/lime) ~300 px, leg ripple, spore pores firing as a travelling wave (motion) | chosen |
-| [concept/rejected/halo-platform-r06-a.png](concept/rejected/halo-platform-r06-a.png) | Halo Platform — Ascendancy turret ring: shielded core, six ring segments and turrets at 32 headings, shield drops when turrets die (sheet) | rejected — rotation far too jagged; redo with a dense angle set (round 07) |
-| [concept/rejected/halo-platform-r06-a.gif](concept/rejected/halo-platform-r06-a.gif) | Halo Platform — Ascendancy turret ring: shielded core, six ring segments and turrets at 32 headings, shield drops when turrets die (motion) | rejected — rotation far too jagged; redo with a dense angle set (round 07) |
 | [concept/dust-devil-r06-a.png](concept/dust-devil-r06-a.png) | Dust Devil — Vrell vortex organism (teal-black vanes, lime core) spinning in a grit swirl, pulling in pickups (sheet) | chosen |
 | [concept/dust-devil-r06-a.gif](concept/dust-devil-r06-a.gif) | Dust Devil — Vrell vortex organism (teal-black vanes, lime core) spinning in a grit swirl, pulling in pickups (motion) | chosen |
 
 Concept [round 07](../../concept-rounds/round-07/README.md) — smooth rotation (art-direction rule); generator `tools/concept/enemies_r07.py`.
-
-| File | What | Status |
-|---|---|---|
-| [concept/halo-platform-r07-a.png](concept/halo-platform-r07-a.png) | Halo Platform r07 — ring as one 6-fold model at 128 frames per 60° step (768 per turn, ~0.9 px edge step), turrets at 64 headings; comparison with r06 and a rotation-over-time chart (sheet) | chosen |
-| [concept/halo-platform-r07-a.gif](concept/halo-platform-r07-a.gif) | Halo Platform r07 — smooth rotation with eased speed-ups as turrets die, shield drops | chosen |
+Its only subject, the Halo Platform (chosen), and round 06's rejected Halo Platform moved with their prompts to the
+[halo-platform](halo-platform/README.md#concept-art) part on 2026-10-31.
 
 Concept [round 08](../../concept-rounds/round-08/README.md) — model-space re-render (seams and patterns now turn with the body), design unchanged; generator `tools/concept/rerender_r08.py`.
 
@@ -210,10 +200,6 @@ Production art, M9 part B (concept round 62, step ART-B): the SAM Nest re-render
 - [x] Each enemy promoted to its own directory with a stat block before it is implemented (every unit of Acts 1–2; the rule stands for the units of Acts 3–7, M6 part D)
 - [x] Ground targets scroll with the terrain; destroyed states persist as wreckage (Acts 1–2's ground targets, M6 part D)
 
-## Open questions
-
-- Should the regrow timer of the Graft Turret be shown (a pulsing root)? Proposal: yes.
-
 ## Decisions
 
 - 2026-09-30: Roster of 12 ground enemies drafted.
@@ -245,3 +231,8 @@ Production art, M9 part B (concept round 62, step ART-B): the SAM Nest re-render
   scheduled in Ascendancy livery from Act 5, so L34 flies it instead (one unit, its art and sounds saved).
 - 2026-10-28 (user, [round 62](../../concept-rounds/round-62/README.md), closed; page answers): the **SAM Nest** (F.2) and the **clamp gun** (F.6, with the docking clamps, the gas and the Ember's launch, in Level 29's `concept/`) production art accepted as final. Sounds: the nest's hatch **b** (S.3), lock beep **b** (S.4) and wake `ab` (S.5 a's servo with S.4 b's lock beep, rebuilt by `tools/concept/audio/sfx_r62.py nest-wake-r62-ab`); the clamp gun's shot **b** (S.6) and the clamp's release **b** (S.7). C.2 accepted: the clamp guns sleep until the halt and carry 250 HP each. The a files moved to the sfx part's `concept/rejected/`.
 - 2026-10-29 (user, [round 65](../../concept-rounds/round-65/README.md), closed): **F.3** (Sentinel Tower) and **F.4** (Strider) ok: their production sprites, GIFs and Level 32 captures are chosen as final; the sounds are in the [sfx](../../audio/sfx/README.md#decisions) decisions.
+- 2026-10-31 (Act 6 design phase, step D-enemies-B; decided 2026-10-31 (round 72)): the Graft Turret, the
+  Shield Pylon and the Halo Platform promoted from the roster to draft specs (the roster is empty now); the Halo
+  Platform's concept files (r07 chosen, r06 rejected) and their prompts moved to its own part; Act 6 notes for the
+  returning Strider (L39) and Warden Tank (L39, L41). The open question on the Graft Turret's regrow timer is answered
+  **yes** (J7, decided 2026-10-31 (round 72)): its root pulses faster as the window closes.

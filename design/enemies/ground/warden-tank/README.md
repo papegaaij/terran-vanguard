@@ -3,8 +3,8 @@ title: Warden Tank
 design: approved
 implementation: done
 art: final
-depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../player/specials, ../../../campaign/act-3-red-dust, ../../../campaign/act-5-the-belt]
-updated: 2026-10-29
+depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../player/specials, ../../../campaign/act-3-red-dust, ../../../campaign/act-5-the-belt, ../../../campaign/act-6-jovian-storm]
+updated: 2026-10-31
 ---
 
 # Warden Tank
@@ -15,6 +15,8 @@ A human-built tracked tank: the hull drives its own heading along roads and the 
 conveyors while a separate turret tracks the ship and fires bursts, even back up the screen after
 it has passed. In Act 3 it is **unmarked grey with no trim** (a hint of human involvement, Level
 19); from Act 5 it appears in Ascendancy black and gold, first on Level 34's derelict hulls (draft, approved in round 60).
+In Act 6 it returns on Io's refinery roads (Level 39) and in the Callisto fortress (Level 41), in the same livery (draft,
+decided 2026-10-31 (round 72)).
 
 ## Design
 
@@ -94,6 +96,28 @@ updates the data's *First level / used in* row (L34 added before Act 6's L39 and
   5`, `sprite: warden-tank-asc`, `faction: Jovian Ascendancy`) names the frames and the intel's faction from Act 5;
   the stat block stays one (no new unit slug).
 
+### Act 6: Io and the Callisto fortress (draft)
+
+**Draft** (Act 6 design phase, step D-enemies-B; decided 2026-10-31 (round 72)). The stat block and the Act 5
+section are unchanged; this section adds its Act 6 use. Its data's *used in* row already names L39 and L41.
+
+- **Where.** L39 *Io Flyby*: convoys of 2–3 on the refinery roads between the pipeline racks, guarding the named
+  refinery targets with the [Striders](../strider/README.md); L41 *Callisto Fortress*: pairs on the citadel's
+  causeways, some under a [Shield Pylon](../shield-pylon/README.md)'s dome at a pylon gate (covered until the pylon
+  falls). The level documents place them (D-levels-2, D-levels-3).
+- **HP.** The act HP factor of a returning `medium` unit from its first level (L19, reference 92) with the proposed
+  Act 6 references (J1, decided 2026-10-31 (round 72)): at L39 ×156/92 = ×1.70, **hull 108 · turret 34** (142 whole); at L41
+  ×164/92 = ×1.78, **hull 114 · turret 36** (150 whole); its time to kill unchanged. Bounty unchanged (the act factor
+  1.6⁵ scales it). No hex shield (Act 6's heavier shields are for crewed craft: the Talon, the Gunship, the Hornet).
+- **Livery.** The Act 5 gunmetal/charcoal with gold (`warden-tank-asc`, final) in both levels, no new frames: under
+  Q9 **a** (recommended, decided 2026-10-31 (round 72)) the heartland's gloss black and heavy gold is for the elite and the
+  fortress's own structures (the [Halo Platform](../halo-platform/README.md), the Shield Pylons, the citadel), and the
+  regular units keep their Act 5 look. The act sketch's "Warden Tanks in black and gold" is met by that livery (black
+  hull, gold trim). The faint ground shadow (round 67) reads over Io's black lava and Callisto's ice as on L34's hulls.
+- **Io.** Near-vacuum (the [jovian](../../../world/jovian/README.md#media-per-level) media rules): the death's smoke
+  is a short flare and a debris ring, as in the belt; the eruptions' rocks fly on the play plane and never touch it.
+- **Attack, movement, rear plate, EMP**: as the stat block and *Behaviour* above; no new hook.
+
 ### Difficulty and level use
 
 - Burst and interval per the stat block; the global multipliers apply.
@@ -139,6 +163,8 @@ Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's r
 
 ## Implementation
 
+- [ ] Act 6 (when the draft is approved): the act HP factor at L39 and L41 (hull 108 · turret 34, hull 114 · turret 36)
+      measured with `levelReport`; the tanks under a pylon's dome take no damage until it drops (the pylon's rule)
 - [x] Two-part unit: hull (`16 angles`) and turret (`32 angles`) with independent headings and turn rates (step F3: `EnemySpec.Turret`, `WardenTankTest`)
 - [x] Tracked `walk` along roads and conveyors (belt speed added) (step F3: `Belts`, `FoundryTest`)
 - [x] Turret burst: 0.3 s still before it fires, 3 shots 0.15 s apart, every 2.5 s, any direction (step F3: `WardenTankTest`)
@@ -194,3 +220,10 @@ Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's r
   84×84, the c mockup's own shadow code in `tools/art/warden_tank.py`) drawn by the renderer under the ground units
   (the wrecks' under the wrecks); a baked frame rather than a draw pass because the blur needs no shader and the hull's
   hit flash stays the hull's own silhouette. Opt-in by the frames: Level 19's grey tank has none. `art: final`.
+- 2026-10-31 (Act 6 design phase, step D-enemies-B; decided 2026-10-31 (round 72)): the Act 6 return drafted
+  (*Act 6: Io and the Callisto fortress*): L39 and L41 by the act HP factor (hull 108 · turret 34, hull 114 · turret
+  36), the Act 5 livery kept (decided by me under Q9 a: regular units stay gunmetal; no new frames). The design is
+  `review` until the round.
+- 2026-10-31 (user, [round 72](../../../concept-rounds/round-72/README.md) closed): Q9 a (the Warden Tank keeps its
+  Act 5 gunmetal livery; b and c rejected); the document, moved to review for Act 6, approved (D.10; `design:
+  approved`).

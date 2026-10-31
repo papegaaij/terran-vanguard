@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: n/a
 depends-on: [../architecture, ../../campaign]
-updated: 2026-10-29
+updated: 2026-10-31
 ---
 
 # Implementation roadmap
@@ -32,6 +32,7 @@ milestone lists which documents it covers, it does not copy their items.
 | M7 | **Act 3** | Levels 15–21 and their new units and equipment | [act 3](../../campaign/act-3-red-dust/README.md) levels and their enemies, bosses and equipment (Ion Beam and `beam`, drones, EMP Burst, Orbital Lance, Shield Overcharge and cooldowns, Evasive thrusters, the third utility bay), terrain collision and canyon walls, reverse scroll, the dust-storm visibility, the Mars backdrops; built in parts A–I (below; the design approved in concept round 36) |
 | M8 | **Act 4** (design decided in round 48, 2026-10-22; built, the user's playthrough done 2026-10-27; the `v0.2` release = Acts 1–4) | Levels 22–28 and their new units and equipment | [act 4](../../campaign/act-4-deep-water/README.md) levels and their enemies, boss and equipment: under-water mode, darkness for every unit, the trench and shaft on `Terrain`, the Siren's slow, heat plumes, anti-sub gear (Harpoon Torpedoes, Depth Charges, Sonar Pulse, Decoy Flares, pressure hull, Mk IV), the Bulwark heavy drone and Rook's absence, the Abyssal Maw and the reveal; built in parts A–I (below) |
 | M9 | **Act 5** (design decided in round 60, 2026-10-27; not yet built) | Levels 29–35 and their new units and equipment; the `v0.3` release (Acts 1–5) | [act 5](../../campaign/act-5-the-belt/README.md) levels and units, the [Iron Sovereign](../../enemies/bosses/iron-sovereign/README.md), enemy shields and `shield-breaker` (the Tesla Coil Pod), generator drain, mines, links, `laser-line`, the mining tug escort, branching tunnels, Rook's return, Vorne's broadcast and voice; built in parts A–I (below) |
+| M10 | **Act 6** (design decided 2026-10-31 in round 72, the act and its parts approved; worked on in the `m10-act-6` worktree) | Levels 36–42 and their new units and equipment; the `v0.4` release (Acts 1–6) | [act 6](../../campaign/act-6-jovian-storm/README.md) levels and units, the [Honour Guard](../../enemies/bosses/honour-guard/README.md) and the [Ascendant](../../enemies/bosses/ascendant/README.md), `reflect`, regeneration and regrowth, death-burst on contact, lightning strikes, eruptions, foreground cloud banks, pylon domes and gates, the Halo Platform, the three-way war, the falling city, the middle arsenal (Plasma Arc, Reflex Shield, Composite V, IFF spoofer) and the Mk V+ "Crucible", Vorne's escape and shout; built in parts A–I (below) |
 
 ### Rules
 
@@ -142,6 +143,28 @@ own files once A is in.
 | **H** Level 35 + act end — **built** (2026-10-29, steps M9-PGH, H1a–H1c, H2–H5, ART-H1, ART-H2, AUD-H1, AUD-H2, FIX3); [round 68](../../concept-rounds/round-68/README.md) closed 2026-10-29 (all as recommended except S.2 b and S.5 b, switched in FIX4; the art `final`) | Iron Sovereign (rotating rings), Vorne's taunts and recruitment, the mass-relay flash, the outro, the release end → Act VI | G | 68 |
 | **I** Close-out — **in progress** (2026-10-29: I1 (`BalanceTest`/`ActPlaythroughTest` through L35, `tools/balance.py`, the playthrough saves), VOX-I (the listen-through), REL-I (`v0.3.0` prepared, no tag) and I2 (the doc ticks and `later` tags, the variety row, the art audit, the Freesound list) and I3 (the full `check` green, the stale clips re-recorded, the working notes archived), FIX5 (the rail lines lead their target) and [round 69](../../concept-rounds/round-69/README.md) (closed 2026-10-29: all ok) done; the user's playthrough from their own save at Level 29 (2026-10-30) done in part: FIX6 built its clear fixes and [round 70](../../concept-rounds/round-70/README.md) (closed 2026-10-30) decided the rest: the Iron Sovereign's HP shift and five-attack core playbook (BOSS70) and Level 29's friendly marker and `SPARE ALLIES` label (MARK70), both not yet built; the rest of the playthrough, those two steps and the `v0.3` tag next) | `ActPlaythroughTest`/`BalanceTest` through L35, variety as built, `later` tags → Act 6, the listen-through, the user's playthrough, `v0.3` | all | 69, 70 |
 
+### M10 parts
+
+Proposed by the Act 6 design phase (2026-10-31, the gap analysis's plan); the design was decided in
+**[round 72](../../concept-rounds/round-72/README.md), closed 2026-10-31** (71 is taken by `v0.3`'s re-test captures), and
+the act, its seven levels, the units, both bosses and the systems are approved; nothing is built yet. Act 6 is worked on in its own git worktree on the branch `m10-act-6` (from `m9-act-5`'s last push,
+`445da1ac`), beside `v0.3`'s work in the main checkout. **The RF9 refactoring lands on `v0.3` before part A**, and
+`m10-act-6` is then rebased onto it (the design phase is docs only and is unaffected; every part from A on edits `sim/`,
+`content/` and `game/`). Built like M9: each part is a commit series with its own gap check and a production-art
+concept round; E (Io) can run beside D on its own files once A and B are in.
+
+| Part | Scope | Depends on | Round |
+|---|---|---|---|
+| **A** Act 6 systems | `reflect` (Q1, with the arc and Reflex-bolt rows), regeneration, regrowth, death-burst on contact, the Act 6 shields, lightning strikes, dry eruptions, foreground banks over `air` (Q2), the pylon dome (an invulnerable aura) and gates, the three-way prey rule (Q3); the Plasma Arc, Reflex Shield, Composite V, IFF spoofer and the 25 MW Mk V+ "Crucible" (Q7, Q8; the data rows: Composite V from L38, the spoofer, the generator's row and the Mk VI's index after it); `reference_dps` 36–42 and the Act 6 balance plan (J11's power headroom); flown on fixtures | RF9 | 73 |
+| **B** Level 36 + Act 6 intro | Act data (title card, the four intro pages with page 3 intercepted), the Jovian backdrop kit and storm bands, Chimera, the foreground banks in a level, wind, harvesters, the fleet marked friendly, track 14 at full length, the act's first voices | A | 74 |
+| **C** Level 37 | Aurelia backdrop, Graft Turret, Mirror Interceptor, the shuttles and Aurelia Traffic, **the turn** (the Choir's line, the prey waves, Vorne's motif cut), **the falling city** (Q4), track 15; the level's name (J12) | B | 75 |
+| **D** Level 38 | Harrow, lightning strikes in a level, Buzzsaw's return, all-direction waves; the `HARROWS` secondary's key (a `kill_ratio` scoped to one enemy, or `escapes: harrow`) | C (storm kit) | 76 |
+| **E** Level 39 | Io backdrop, eruptions, the six cracking towers (`destroy-targets`, level objects) and the pump stations, Striders, SAM Nests; the Warden Tank's L39 use settled; can run beside D on its own files once A and B are in | A, B | 77 |
+| **F** Level 40 | The Honour Guard (Q5), the aces' voices, the duel theme (32), Callisto approach backdrop; its primary and secondary (J13, J14) | D or E | 78 |
+| **G** Level 41 | Callisto fortress backdrop, Shield Pylons and gates, Halo Platform, Warden Tanks in their Act 5 livery, the files and the Silence (Q12) | F | 79 |
+| **H** Level 42 + act end | The Ascendant (Q6), the lifeboat's escape, Vorne's shout, the escape sting (33), the outro, the release end → Act VII | G | 80 |
+| **I** Close-out | `ActPlaythroughTest`/`BalanceTest` through L42, variety as built, `later` tags → Act 7, the listen-through, the user's playthrough, `v0.4` | all | 81 |
+
 ## Implementation
 
 - [x] M0 Skeleton
@@ -180,6 +203,10 @@ own files once A is in.
       AUD-D, VOX-D), concept round 40 closed 2026-10-19; parts E (Level 18), F (Level 19), G (Level 20) and H (Level 21 and the act end) built and their rounds 41-44 closed by 2026-10-20 (round 44's K.b and K.c changes and the Q rows' reworks are planned: steps SIM-K, ART-K, GK, L21R); part I, the close-out, done: the user's playthrough of Act 3 on 2026-10-21 and the `v0.1` release = Acts 1-3 on 2026-10-22; open: Levels 18 and 19's "Easy/hard variations" items and the act's "All 7 levels" item)
 - [ ] M8 Act 4 (design decided in round 48; parts A–I under *M8 parts*; the design phase of 2026-10-21 wrote the act, its seven levels, the units, the boss and the systems as drafts; Act 4 built (parts A–I), rounds 50–59 closed (the last, round 59, on 2026-10-26); the user's playthrough of Act 4 done on 2026-10-26/27 (its fixes `54302d34` and `8de88791`), then the `v0.2` release = Acts 1–4; open: hard's Act 3/4 credits, revisited after the user's playthrough of hard (round 59, C.6))
 - [ ] M9 Act 5 (design decided in round 60, 2026-10-27 (round 60 closed): the act, its seven levels, the units, the boss and the systems approved; the Ascendancy look is gunmetal/charcoal with gold (Q11 b) and the tug 200 by 300 px (J.6 b); parts A–I under *M9 parts*, rounds 61–69; the `v0.3` release = Acts 1–5)
+- [ ] M10 Act 6 (design decided in round 72, 2026-10-31 (round 72 closed): the act, its seven levels, the units, both bosses
+      and the systems approved, Level 37 is "Fall of Aurelia"; drafted in
+      the `m10-act-6` worktree; RF9 lands on `v0.3` first and the branch is rebased onto it; parts A–I
+      under *M10 parts*, rounds 73–81; the `v0.4` release = Acts 1–6)
 
 ## Open questions
 
@@ -360,3 +387,16 @@ Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-a
   marker**, B.1 d (the banner "FRIENDLIES INBOUND – HOLD FIRE" in its own slot plus green IFF brackets with a `FRIENDLY`
   tag) and the label `SPARE ALLIES` (B.2 b). FIX6's trivia (the Minelayer's numbers, large rocks 10, Level 30's trains,
   Harker's line) raised no objection: decided. Built by steps BOSS70 and MARK70 (`m9-pt-notes.md` "From CL70").
+- 2026-10-31 (Act 6 design phase, step m10-d-act; **decided 2026-10-31 (round 72)**): the M10 row and its *M10
+  parts* A–I (rounds 73–81, the `v0.4` release = Acts 1–6) are proposed from the gap analysis's plan. The design round
+  is **72**, not 71: round 71 is taken by `v0.3`'s re-test captures (`*-r71-a`) in the main checkout, and the two
+  branches would otherwise add two `round-71/` directories. Act 6 is designed in the `m10-act-6` worktree beside
+  `v0.3`; **RF9 (the refactoring) lands on `v0.3` before M10 part A, and `m10-act-6` is rebased onto it**, so no M10
+  code step conflicts with it.
+- 2026-10-31 (user, [round 72](../../concept-rounds/round-72/README.md) closed; page answers): the Act 6 design is
+  decided: everything as recommended and drafted except A.7 a, A.11 change (the Ascendant's hull breaks along a jagged
+  fracture), A.12 a, A.13 b (the falling city breaks up), M.2 b ("Three Aces"), S.5 b, S.8 b, S.11 b, S.13 b, S.16 b,
+  V.3 b and V.5 recast; J.12 renamed Level 37 "Fall of Aurelia"; D.1-D.18 approved. The M10 row and *M10 parts* A–I
+  stand as proposed (their rounds are 73–81); follow-up steps owed from the round: the Ascendant storyboard's frame 8
+  re-rendered with a jagged break (art), Vorne's shout recast and Aurelia Traffic's "lift" re-rendered (voice), the
+  explosion/cream-band and Plasma Arc readability captures (part A).

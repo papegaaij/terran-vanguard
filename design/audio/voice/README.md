@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [.., ../../story/characters, ../../ui/hud, ../../ui/options, ../../tech/architecture]
-updated: 2026-10-29
+updated: 2026-10-31
 ---
 
 # Voice
@@ -518,6 +518,97 @@ seed ("hot"); candidate b's Hub Control reads "holds" as "holes" in every seed o
 
 **Cast in round 64 (2026-10-28): the Bellwether is Laurie Anne Walden (b)**: the speaker table's `ref` is `ref-bellwether-r64-b` (the clip keeps its `-r64-` name, part of the lines' key); her 12 takes (b's keys, with b's four pins) moved from `concept/voice-bellwether-r64-b/` into `assets/voice/bellwether/`, a's takes, clip and audition into `concept/rejected/` (rows in its README, CREDITS.md path updated); `tools/art/voice.py --keep --list` reports 0 to render, 0 unused. The in-game credits roll names Laurie Anne Walden and no longer Lucy Burgoyne's Bellwether clip.
 
+### Act 6 voices (draft)
+
+**Status: draft, decided 2026-10-31 (round 72)** (M10 design phase, step `m10-d-audio`, 2026-10-31). Act 6 is
+voiced as Acts 1–5: every radio line and briefing page, the act intro's four pages (page 3 is Vorne's intercepted
+invitation, Q11 a) and the outro's; the hangar teaser and the intel lines stay text. The speakers, their channels and
+their portraits are the [characters](../../story/characters/README.md#act-6-speakers-draft)' Act 6 table (step D-story); the lines are the
+level documents', the [act's](../../campaign/act-6-jovian-storm/README.md) and the bosses' (the
+[Honour Guard](../../enemies/bosses/honour-guard/README.md#lines)'s fight lines,
+[the Ascendant](../../enemies/bosses/ascendant/README.md#vorne)'s order of Vorne's lines); this section holds how they
+are cast and rendered. The enemy channel is Act 5's as built (`filter: enemy`, the intercept's sweep, the steady
+static bed, no crackle or dropouts on the words).
+
+**New speakers** (J4; cast as Act 5's generic speakers: real lines, **two candidate readers each** from LibriVox's
+public-domain and CC0 recordings, never a main-cast reader nor a voice already cast, through the speaker's filter at
+the neutral settings, `uncast: true` until the round picks; auditioned in round 72, step AUD-R, `voice_r72.py`, if the
+GPU is free, else in their parts' rounds as Act 5's were):
+
+- **Harker** (Level 40, the Honour Guard's leader; enemy channel, amber): **the cast voice**, David Clarke (round 62,
+  b): the mutineers' flight lead of Level 29, promoted into Vorne's guard (J4), so Rook's rivalry has a voice the
+  player has heard. No audition. Harder and colder than at Ceres, quick, never shouted (the fierce row at most).
+- **Vesper** (Level 40, the dancer; enemy channel; a woman in her late twenties, an Aurelia-born cloud racer: D-story's):
+  light, amused and quick,
+  playful cruelty ("*Leave some for me, Harker. The quiet one's mine.*"). On the enemy channel she must never be
+  taken for the Choir, whose base is Varga's reader (Betsie Bush), nor for a friendly woman (Okafor 145–152 Hz, the
+  Bellwether's slow American read): a lower, smoky register (about 160–190 Hz) or a clearly different accent.
+  Audition lines: her entry taunt and her survivor line ("*You'll pay for that one.*"). **Cast in round 72 (2026-10-31, V.1 b): Vesper is Jenny Bradshaw** (clip 172 Hz, takes 167 and 176 Hz; the steadier read), `ref-vesper-r72-b`; Kristen McQuillin's clip a moved to `concept/rejected/`.
+- **Kestrel** (Level 40, the feinter; enemy channel; a man in his twenties, a Helix test pilot: D-story's): quick,
+  cocky and cold ("*Check your six, Lancer. I'm already there.*"). Apart from Harker (110–131 Hz,
+  English) and Rook (146–188 Hz), who trade lines in the same fight: a mid register (about 130–150 Hz) with a clearly
+  different accent. Audition lines: his entry taunt and "*No more games.*" The aces' takes: each ace's entry, its
+  survivor line and the last ace's line ("*Just us now. Come on, then.*", one take per ace, since any of the three
+  can be last): about nine takes, three of them Harker's. **Cast in round 72 (2026-10-31, V.2 a): Kestrel is Expatriate** (even, mid register, takes 152 and 148 Hz), `ref-kestrel-r72-a`; Bob Neufeld's clip b moved to `concept/rejected/`.
+- **Aurelia Traffic** (Level 37; friendly channel, teal; the act's friendly generic voice, J4): Aurelia's civil
+  traffic controller, who broke with Vorne to get the civilians out. **A woman in her thirties, born on the city** (D-story's; a girl during the 2166 riots), polished
+  and cultured (the gilded capital's voice: careful diction, a little formal), **steady at first and frayed by the
+  end**, never shouted: her lost-shuttle line and t=128's "*Aegis, please!*" at the fierce row with `shout: false`
+  (urgent, not shouted: Ceres Hub Control's lesson, step B4b), her t=150 sign-off ("*Aurelia Traffic, signing
+  off.*") at the grim row, slow. Apart from every cast woman (Okafor, Varga, the Bellwether, Dr. Brandt, the
+  controllers of Acts 1–4) by timbre or accent: a mid-low register (about 150–175 Hz) or a British read. Seven lines
+  (the t=1 call, t=42, t=66, the lost shuttle, t=128, the secondary's thanks, t=150). Audition lines: the t=1 call and
+  the t=150 sign-off. **Halcyon One–Six**, the shuttles, have no voice of their own: Aurelia Traffic calls them (the
+  level's names, D-story's to confirm).
+  **Cast in round 72 (2026-10-31, V.3 b, not the recommendation): Aurelia Traffic is Lizzie Driver** (a higher British read, takes 204 and 210 Hz), `ref-aurelia-traffic-r72-b`; Sibella Denton's clip a moved to `concept/rejected/`. Her sign-off says "liff" for "lift": the production render **re-renders that line until "lift" is clear** (a follow-up voice step; a pitch-lowered re-render toward the 150–175 Hz brief may be tried at the same time, kept only if natural).
+- **The carrier** (J10): Okafor herself, from the bridge of the *Steadfast* (D-story's name); Varga speaks from it too; no new voice and no new filter (radio filter b).
+
+**Vorne in Act 6** (the enemy channel for every line; his production clip `refs/ref-vorne.wav`, round 60's pitched
+−2 semitones, with the theatrical base as a `shift`): the intro's page 3 (an intercepted briefing page, `channel:
+enemy`, courteous, at his theatrical base), Level 37's t=110 line (cold, the **grim** row: his reaction to the turn
+after the Choir's, J6), Level 39's t=91 line (neutral, slow), and Level 42's lines 1–3 and 6 (neutral or grim; line 6
+"cold again", his composure back). **Line 5 is his only shout** (J6): "*No! We had an agreement!*" at the eruption,
+right after the Choir: `shout: true`, so the **shout row** (exaggeration 1.2, cfg_weight 0.3, temperature 0.8) on his
+theatrical base, the portrait **rage**. Rendered as one take (the break after "*No!*" under the retry rule's 0.8 s),
+several seeds, the best pinned; checked for the clip's pitch shift surviving the shout (a shout lifts the pitch: it
+must stay apart from Harker). **Round 72's verdict (V.5 recast, 2026-10-31)**: neither audition take is kept. **a** the shout row (265 Hz) is a real shout but no longer Vorne (his register is 90–106 Hz), **b** the fierce row (exaggeration 0.8, cfg_weight 0.4, 156 Hz) is Vorne's register but not a shout; both rows stay `proposed` ("recast"). A follow-up voice step re-renders the line as the row's recast option says: **the shout row pitched down toward 100–120 Hz with the break after "*No!*" kept, or the fierce row pushed harder**; the best natural take is pinned. Under it the music is track 18's intro (the Choir motif over a drone) with the radio's duck.
+
+**The check's Level 42 exception.** The voice build check that rejects `shout: true` on Vorne's cues "before Act 6's
+end" (planned in Act 5, *Act 5 voices*) allows **exactly one** shouted Vorne cue: **Level 42's line 5**, the eruption
+line after the Choir's (the Ascendant's line order). Any other Vorne cue with `shout: true`, in any level, fails the
+check with its level and trigger; Act 7's lines are the next act's to decide.
+
+**The Choir in Act 6** speaks twice, both on Level 26's treatment as built (one take in the Choir's fixed settings, the
+round-18 layering, the `distorted` filter, a 2 s static lead, the music ducked −6 dB): Level 37 at the turn
+("*…the one who opened… is no longer needed… the door is ours…*", dismissal rather than threat) and Level 42's line 4
+at the eruption ("*…the one who opened is no longer needed…*", nearly the same words: what it told Aurelia it now tells
+Vorne). It is silent in Levels 38–41 (Level 41's Silence is named by Varga from the files, never by the Choir).
+
+**The cast speakers in Act 6.** Okafor commands from the carrier (J10). Her two Aurelia lines are read at the **grim**
+row, slower: Level 37's t=161 memory ("*I stood on those decks in sixty-six…*", a memory, not an order) and the
+intro's page 4 ("*I was at Aurelia. I remember. So will you.*", on every channel, so no intercept). Varga's files
+lines in Level 41 (the Silence's first naming, Q12) are read low and level, not as a revelation (Act 5's outro rule),
+a short pause before "*the Silence*" in the text, not in the render settings. Rook keeps one pulp line a level at his
+lively base; his rivalry lines with Harker in Level 40 at the fierce row, never shouted and never over a tell.
+
+**Pronunciation** (to try at the render steps, as Act 5's: Whisper's read-back with the Act 6 name prompt, three
+seeds, the plain spelling against a respelling; kept only where it reads better):
+
+| Name | Say | Respelling |
+|---|---|---|
+| Aurelia (Aurelia Traffic) | aw-REE-lee-uh | as written; "Oh-ree-lia" if it reads "Ophelia" or "Amelia" |
+| Io | EYE-oh | as written; "Eye-oh" if it reads "I owe" or "Yo" |
+| Callisto | kuh-LIS-toh | as written (Act 5) |
+| Ascendant (the ship) | uh-SEN-dunt | as written; it must not read "Ascendancy" |
+| Jupiter, Jovian | JOO-pih-ter, JOH-vee-un | as written |
+| Halcyon (One–Six) | HAL-see-un | as written |
+| Harker, Vesper, Kestrel | HAR-ker, VES-per, KES-trul | as written (Harker cast, Act 5) |
+| Chimera, Harrow | ky-MEER-uh, HAR-oh | as written; "Ky-meer-a" if it reads "shimmer" |
+| Tvashtar, Loki, Pele, Prometheus (Io's works and plains) | tuh-VAHSH-tar, LOH-kee, PAY-lay, pruh-MEE-thee-us | as written; "Pay-lay" if Pele reads "peel" |
+| helium-3 | HEE-lee-um three | "helium three" in the spoken text (a digit after a hyphen is read badly) |
+| the Silence | as written | as written (Level 41) |
+| Aegis | EE-jis | as written (Act 4) |
+
 ### Briefings
 
 The briefing pages (a level's and an act's) are **voiced** (user decision) by the same pipeline
@@ -788,6 +879,11 @@ level).
       guns" in her briefing page and her arena line; no respelling ("nav core" reads right with the name prompt);
       measured on the raw takes Vorne 95–128 Hz, Ceres Control 110–132 Hz; `VoiceFilesTest` with Level 35 and the Act 5
       outro (M9 part H, step H2, 2026-10-29); heard in round 68's captures (step H5).
+- [ ] Act 6 (draft, decided 2026-10-31 (round 72), M10): every Act 6 line and page rendered and read back with the Act 6 name
+      prompt (parts B–H); Vesper, Kestrel and Aurelia Traffic cast from round 72's picks (refs and CREDITS.md rows);
+      Harker's Level 40 lines on his cast clip; Vorne's Level 42 line 5 at the picked shout take, pinned; the build
+      check rejecting `shout: true` on Vorne's cues with Level 42's line 5 as its one exception; `VoiceFilesTest` per
+      level
 
 ## Concept art
 
@@ -897,6 +993,30 @@ Lance Control's audition (concept [round 37](../../concept-rounds/round-37/READM
 the round-36 table above): closed 2026-10-13 (user): **b** (Celine Major). Her clip is
 `refs/ref-lance-control.wav` (the speaker `lance-control` in data.yaml, the call rendered in step Q2);
 Ted Lienhart's audition, clip and transcript moved to `concept/rejected/`, the clip's CREDITS.md row with them.
+
+Concept round 72 (M10 "Act 6 - Jovian Storm" design phase, step AUD-R, 2026-10-31; picked 2026-10-31) —
+the Act 6 voices of *Act 6 voices (draft)*: two candidate readers each for **Vesper**, **Kestrel** and **Aurelia
+Traffic** (new LibriVox readers, public domain / CC0, never a main-cast reader nor a voice already cast or auditioned;
+`uncast: true` until the round picks), each reading two of the speaker's lines at the README's rows, Harker's cast
+voice on one ace line, and Vorne's shout two ways; rendered by Chatterbox (`tools/concept/audio/voice_r72.py`, four
+seeds a line, each pinned take cut after the line's last word), the aces and Vorne through the enemy filter, Aurelia
+Traffic through radio filter b. The candidates' clips are `refs/ref-<speaker>-r72-<a|b>.wav`; readers, lines and
+measurements in [concept/prompts.md](concept/prompts.md#round-72--act-6-voices). The accents are not checked by ear
+(Claude does not listen): the candidates were chosen by clip pitch and pace. Round 73's follow-ups (step m10-f72, 2026-10-31; pending the user's review):
+Aurelia Traffic's sign-off re-rendered for "lift" and Vorne's shout recast low (a and b), the last three rows,
+`tools/concept/audio/voice_r73.py`; briefs in [concept/prompts.md](concept/prompts.md#round-73--act-6-voice-follow-ups).
+
+| File | What | Status |
+|---|---|---|
+| [concept/voice-vesper-r72-b.ogg](concept/voice-vesper-r72-b.ogg) | The same with candidate b **Jenny Bradshaw** (Harrington, ch. 1, Edgeworth; clip 172 Hz, IQR 46, 3.8 words a second: the quickest read), seeds 102 / 102, takes 167 / 176 Hz, 5.8 s; `tools/concept/audio/voice_r72.py` | chosen (round 72 V.1 b) |
+| [concept/voice-kestrel-r72-a.ogg](concept/voice-kestrel-r72-a.ogg) | Kestrel, `kestrel` (round 72 audition), candidate a **Expatriate** (Life and Death of Harriett Frean, ch. 1, Sinclair; clip 137 Hz, IQR 40, 3.2 words a second), his entry taunt (neutral) and "No more games." (grim, slower) through the enemy filter, seeds 103 / 100, takes 152 / 148 Hz, 4.8 s; `tools/concept/audio/voice_r72.py` | chosen (round 72 V.2 a) |
+| [concept/voice-aurelia-traffic-r72-b.ogg](concept/voice-aurelia-traffic-r72-b.ogg) | The same with candidate b **Lizzie Driver** (Gulliver's Travels, the publisher's preface, Swift; clip 223 Hz, IQR 64, 2.7 words a second: a British read), seeds 102 / 103, takes 204 / 210 Hz ("lift" read back as "Liff" in three of four sign-off takes), 12.3 s; `tools/concept/audio/voice_r72.py` | chosen (round 72 V.3 b) |
+| [concept/voice-harker-r72-a.ogg](concept/voice-harker-r72-a.ogg) | Harker as an ace: his cast voice (`refs/ref-harker-r62-b.wav`, David Clarke) on his Level 40 entry taunt at the fierce row through the enemy filter, seed 103, 128 Hz (his Level 29 takes 110–131 Hz), 4.0 s; no audition, the cast voice heard in Act 6's fight; `tools/concept/audio/voice_r72.py` | chosen (round 72 V.4 ok) |
+| [concept/vorne-shout-r72-a.ogg](concept/vorne-shout-r72-a.ogg) | Vorne's Level 42 line 5 "No! We had an agreement!" (round 72, J6), **a the shout row** on his theatrical base (1.3 / 0.2 / 0.8) with the production clip `refs/ref-vorne.wav`, through the enemy filter, seed 101 (pinned: one of the two takes Whisper hears shouted), one take with the break after "No!" (0.76 s), 265 Hz median, IQR 108: the shout lifts him far above his 90–106 Hz and cracks the lowered clip (the other shouted take 376 Hz), 2.6 s; `tools/concept/audio/voice_r72.py` | proposed (recast requested, round 72 V.5: a follow-up voice step re-renders it) |
+| [concept/vorne-shout-r72-b.ogg](concept/vorne-shout-r72-b.ogg) | The same at **b the fierce row** (0.9 / 0.3 / 0.8): raw anger without the shout's strain, seed 102 (the lowest of four), 156 Hz, IQR 22, 1.8 s; `tools/concept/audio/voice_r72.py` | proposed (recast requested, round 72 V.5: a follow-up voice step re-renders it) |
+| [concept/voice-aurelia-traffic-r73-b.ogg](concept/voice-aurelia-traffic-r73-b.ogg) | Aurelia Traffic, **Lizzie Driver** (round 72 V.3 b), her t=1 call (round 72's take, seed 102, 204 Hz) and the t=150 sign-off re-rendered so it says "lift", not "liff": the same clip, grim slower row and radio filter b, seeds 104–119; Whisper reads "lift" in ten of sixteen, pinned seed 117 (the plainest /t/ in a zoom of the word: the /f/, a 35 ms closure, a release burst before the /r/; round 72's seed 103 ran the /f/ into the /r/), 207 Hz, IQR 39; no respelling needed; 11.9 s, −16 LUFS; `tools/concept/audio/voice_r73.py` | proposed (round 73: the sign-off's "lift", round 72 V.3 b) |
+| [concept/vorne-shout-r73-a.ogg](concept/vorne-shout-r73-a.ogg) | Vorne's "No! We had an agreement!" recast in his low register (round 72 V.5), **a round 72's shout-row take lowered**: seed 101 (the break after "No!" kept), now cut at the end of the shouted "-ment!" (round 72's cut clipped it), pitched ×0.41 (−15.4 semitones) by WORLD analysis and resynthesis, the formants (spectral envelope) and timing untouched: 268 → 113 Hz, IQR 43; the strain kept (1–4 kHz share 0.085 → 0.077, centroid −16 %); Whisper hears every word, no longer the "!"; through the enemy filter, 2.9 s, −16 LUFS (ffmpeg's rubberband with formants preserved was tried first: at −15 semitones it smeared the formants, centroid −58 %, unintelligible); `tools/concept/audio/voice_r73.py` | proposed (round 73: Vorne's shout recast, round 72 V.5) |
+| [concept/vorne-shout-r73-b.ogg](concept/vorne-shout-r73-b.ogg) | The same, **b a new shouted render lowered**: his clip cut a further 4 semitones down (`ref-vorne.wav` −4, formants preserved), the shout row (1.3 / 0.2 / 0.8) and a stronger one (1.7 / 0.15 / 0.8) on seeds 100–109; four of twenty heard shouted with the break under 0.8 s (189–269 Hz: the shout still lifts him), the brightest pinned (shout row, seed 105; 1–4 kHz share 0.44 against 0.25–0.41), 211 Hz, then ×0.52 (−11.3 semitones) by WORLD: 104 Hz, IQR 14 (a flat, held shout); centroid −7 %; Whisper hears every word, without the "!"; enemy filter, 3.0 s, −16 LUFS; `tools/concept/audio/voice_r73.py` | proposed (round 73: Vorne's shout recast, round 72 V.5) |
 
 ## Open questions
 
@@ -1054,3 +1174,18 @@ Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-a
 - 2026-10-29 (user, [round 69](../../concept-rounds/round-69/README.md) V.1 **ok**): the Act 5 voice lines as rendered
   (the listen-through of 188 lines, [index](../../concept-rounds/round-69/listen-through.md)) are accepted; no line to
   redo.
+- 2026-10-31 (step `m10-d-audio`, M10 design phase; decided 2026-10-31 (round 72)): *Act 6 voices* drafted: the new speakers
+  Vesper, Kestrel (the Honour Guard's aces) and Aurelia Traffic (Level 37), two LibriVox candidates each for round
+  72; Harker's cast voice for the aces' leader (J4); the carrier is Okafor (J10); Vorne's only shout (J6) at Level
+  42's line 5 with a/b takes, and the build check's one exception for it; the Choir's two Act 6 lines on Level
+  26's treatment; the Act 6 names to try. Decided here (trivia): Aurelia Traffic urgent but never shouted (`shout:
+  false`, the Ceres Hub lesson), Halcyon One–Six without voices of their own, Okafor's Aurelia lines at the grim
+  row, "helium-3" spoken as "helium three".
+- 2026-10-31 (user, [round 72](../../concept-rounds/round-72/README.md) closed; page answers): **V.1 b** Vesper is
+  Jenny Bradshaw, **V.2 a** Kestrel is Expatriate, **V.3 b** (not the recommendation) Aurelia Traffic is Lizzie Driver
+  (both takes sit above the 150–175 Hz brief and the sign-off's "lift" comes out "liff": the production render
+  re-renders that line until it is clear, a follow-up voice step), **V.4 ok** Harker reuses David Clarke's cast voice
+  (J4 kept), **V.5 recast** Vorne's shout: neither take kept, both rows stay `proposed`; a follow-up voice step
+  re-renders it (the shout row pitched down toward 100–120 Hz with the break kept, or the fierce row pushed harder).
+  J6 kept (his one shout at Level 42's eruption). The rejected candidates' clips and transcripts moved to
+  `concept/rejected/` (CREDITS.md paths updated). The Act 6 voice plan approved as drafted (D.18).

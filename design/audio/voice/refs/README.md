@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: proposed
 depends-on: [..]
-updated: 2026-10-28
+updated: 2026-10-31
 ---
 
 # Reference voices
@@ -52,6 +52,9 @@ How the clips are chosen and used: [voice](../README.md#reference-voices).
 | `ref-ceres-control-r62-a.wav` | Ceres Hub Control | Paul Adams | [Sidelights on Relativity, ch. 1 (Einstein)](https://archive.org/details/sidelights_relativity_pa_librivox) | Public Domain Mark 1.0 | chosen (round 62, V.1 = a); keeps its `-r62-` name (part of the lines' key) |
 | `ref-harker-r62-b.wav` | Harker | David Clarke | [The Count of Monte Cristo, ch. 1 (Dumas)](https://archive.org/details/count_montecristo_1308_librivox) | CC0 1.0 | chosen (round 62, V.2 = b); keeps its `-r62-` name (part of the lines' key) |
 | `ref-bellwether-r64-b.wav` | The Bellwether (`bellwether`), candidate b | Laurie Anne Walden | [A Diary from Dixie, ch. 1 (Chesnut)](https://archive.org/details/diaryfromdixie_1101_librivox) | public domain (Public Domain Mark 1.0) | chosen (round 64, V.1 = b); keeps its `-r64-` name (part of the lines' key) |
+| `ref-vesper-r72-b.wav` | Vesper (`vesper`), candidate b | Jenny Bradshaw | [Harrington, ch. 1 (Edgeworth)](https://archive.org/details/harrington_1306_librivox) | CC0 1.0 | chosen (round 72, V.1 = b, step AUD-R; clip 172 Hz) |
+| `ref-kestrel-r72-a.wav` | Kestrel (`kestrel`), candidate a | Expatriate | [Life and Death of Harriett Frean, ch. 1 (Sinclair)](https://archive.org/details/harriettfrean_1311_librivox) | Public Domain Mark 1.0 | chosen (round 72, V.2 = a, step AUD-R; clip 137 Hz) |
+| `ref-aurelia-traffic-r72-b.wav` | Aurelia Traffic (`aurelia-traffic`), candidate b | Lizzie Driver | [Gulliver's Travels, the publisher's preface (Swift)](https://archive.org/details/gulliver_ld_librivox) | public domain | chosen (round 72, V.3 = b, step AUD-R; clip 223 Hz) |
 
 Round 19's chosen candidates were renamed to `ref-<speaker>.wav`; the rejected candidates and
 round 18's Tranquility Control clip (David Leeson), which no speaker uses any more, were deleted
@@ -145,3 +148,8 @@ with their CREDITS.md rows (their sources and cuts stay in `tools/concept/audio/
 - 2026-10-28 (user, round 62, V.1 = a, V.2 = b): Ceres Hub Control is Paul Adams (`ref-ceres-control-r62-a.wav`), Harker is David Clarke (`ref-harker-r62-b.wav`); both keep their `-r62-` names (part of the lines' keys). Phil Chenevert's clip b (`ref-ceres-control-r62-b.wav/.txt`) and Ted Delorme's clip a (`ref-harker-r62-a.wav/.txt`) moved to `../concept/rejected/` with their CREDITS.md rows.
 - 2026-10-28 (steps VOX-D and VOX-D2, M9 part D; decided in round 64: b): the Bellwether's two candidate clips `ref-bellwether-r64-a.wav` (Lucy Burgoyne, 134 Hz) and `-b.wav` (Laurie Anne Walden, 181 Hz) added (`tools/concept/audio/tts_r64.py --refs`, CREDITS.md rows); the pick keeps its clip's `-r64-` name (part of the lines' key), the other moves to `concept/rejected/` with its row.
 - 2026-10-28 (user, round 64, V.1 = b): the Bellwether is Laurie Anne Walden (`ref-bellwether-r64-b.wav`, keeps its `-r64-` name: part of the lines' key). Lucy Burgoyne's clip a (`ref-bellwether-r64-a.wav/.txt`) moved to `concept/rejected/` (CREDITS.md path updated).
+- 2026-10-31 (user, round 72, V.1 = b, V.2 = a, V.3 = b): the candidate clips of the Act 6 voices: Vesper is Jenny Bradshaw
+  (`ref-vesper-r72-b.wav`), Kestrel is Expatriate (`ref-kestrel-r72-a.wav`), Aurelia Traffic is Lizzie Driver
+  (`ref-aurelia-traffic-r72-b.wav`; the production render re-renders her sign-off until "lift" is clear); they keep their
+  `-r72-` names (part of the lines' key). The other candidates' clips (`ref-vesper-r72-a`, `ref-kestrel-r72-b`,
+  `ref-aurelia-traffic-r72-a`, each with its transcript) moved to `../concept/rejected/` (CREDITS.md paths updated).

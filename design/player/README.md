@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../systems, ../ui/hangar]
-updated: 2026-10-27
+updated: 2026-10-31
 ---
 
 # Player
@@ -71,7 +71,8 @@ generator limits what can be fitted at the same time.
   generator's Act 4 hand plan; a level's income is its typical haul, budget(n) until its data exists: the user's
   decision of 2026-10-14, round 37 R.1 reverted; for Act 4 again until M8 part I). Act 5's visits 29–35 are a
   hand plan in the [generator](generator/README.md#act-5-hand-plan-draft) until M9 part A writes them (draft,
-  approved in round 60).
+  approved in round 60). Act 6's visits 36–42 are a hand plan in the
+  [generator](generator/README.md#act-6-hand-plan-draft) until M10 part A writes them (draft, decided 2026-10-31 (round 72)).
 
 ### Power budget
 
@@ -111,6 +112,18 @@ spare MW and the power dial are the player's answers.
 [Swarm Tail](weapons/swarm-tail/README.md) (rear, homing, L30), and the core tiers: Generator Mk V
 "Helix" (salvaged in L34, sold from the L35 visit), Shield Mk V, Composite IV, Engine Mk IV. The Plasma
 Arc, Time Dilation, the Hunter drone and the Bastion Shield move to Act 6. No new special or module.
+
+**Act 6's arsenal** (draft, decided 2026-10-31 (round 72), Q7 = b, the middle arsenal): one new weapon, the
+[Plasma Arc](weapons/plasma-arc/README.md) (front, `area` and `spread`, a chain of 3 → 6 targets, L36); the
+[Reflex Shield](shields/README.md) (a variant shield whose top quarter turns absorbed bullets back up the screen,
+L37); Composite V (L38); the Ascendancy [IFF spoofer](systems/README.md) (a module, Varga's story item, L39); and a
+captured generator, the Mk V+ "Crucible" (L39). **Time Dilation, the Hunter drone and the Bastion Shield move to
+Act 7's design** (or are dropped there).
+
+**Act 6's power room** (draft, decided 2026-10-31 (round 72), Q8 = a): the act's forward fit needs 23 MW against the Mk V's 22,
+so the captured **Mk V+ "Crucible"** gives **25 MW** (24 000, from the L39 visit): the fit and one utility module,
+the room the Level 30 playthrough found missing. The typical plan flies L36–L39 at its cap and buys it at the L40
+visit (J11 of round 72) ([Act 6 hand plan](generator/README.md#act-6-hand-plan-draft)).
 
 Worked example (first-draft numbers), start of act 2:
 
@@ -261,3 +274,7 @@ Production art for concept round 16 (M4 part C, the Level 03 batch), by `tools/a
   the middle option (Q12 = c: the Tesla Coil Pod, the Swarm Tail, the core tiers with the Mk V salvaged in L34; four
   roster items to Act 6) and the generator drain is an in-flight power model (Q2 = a); the hand plan for visits
   29–35 is in the generator.
+- 2026-10-31 (Act 6 design phase, step m10-d-systems; **decided 2026-10-31 (round 72)**): Act 6's arsenal is
+  the middle option (Q7 = b: the Plasma Arc, the Reflex Shield, Composite V, the IFF spoofer and the captured Mk V+
+  "Crucible" at 25 MW, Q8 = a; Time Dilation, the Hunter drone and the Bastion Shield to Act 7); the hand plan for
+  visits 36–42 is in the generator.

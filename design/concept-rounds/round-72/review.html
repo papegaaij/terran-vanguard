@@ -1,0 +1,728 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Round 72: record of the decisions</title><style>
+:root{--bg:#f4f5f7;--fg:#1b2230;--mut:#5a6577;--card:#fff;--line:#d3d9e2;--acc:#1f5fa8;--ok:#1d6b3a;--okbg:#e3f3e8;
+--hi:#fff6dc;--hib:#d9b84a;--code:#e9edf3;--warn:#8a4b00}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10141b;--fg:#dde3ee;--mut:#98a3b6;--card:#171d27;
+--line:#2c3544;--acc:#7fb2ee;--ok:#7bd69a;--okbg:#163323;--hi:#2c2610;--hib:#8a7424;--code:#232c3a;--warn:#e3a35a;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#10141b;--fg:#dde3ee;--mut:#98a3b6;--card:#171d27;--line:#2c3544;--acc:#7fb2ee;--ok:#7bd69a;
+--okbg:#163323;--hi:#2c2610;--hib:#8a7424;--code:#232c3a;--warn:#e3a35a;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:60rem;margin:0 auto;padding:1rem 16px 4rem}
+h1{font-size:1.6rem;margin:.5rem 0}h2{font-size:1.25rem;margin:2rem 0 .5rem;border-bottom:1px solid var(--line);padding-bottom:.25rem}
+h3{font-size:1.02rem;margin:0;flex:1 1 12rem}a{color:var(--acc)}
+.sum{color:var(--mut)}.note{font-size:.9rem;color:var(--mut)}
+nav.sec{display:flex;flex-wrap:wrap;gap:.4rem;margin:1rem 0}nav.sec a{padding:.2rem .6rem;border:1px solid var(--line);border-radius:1rem;
+text-decoration:none;font-size:.9rem;background:var(--card)}
+.row{background:var(--card);border:1px solid var(--line);border-radius:.4rem;padding:.7rem .9rem;margin:.7rem 0;overflow-wrap:anywhere}
+.row header{display:flex;flex-wrap:wrap;gap:.3rem .6rem;align-items:baseline}
+.rid{font:600 .85rem ui-monospace,Menlo,Consolas,monospace;background:var(--code);padding:.05rem .4rem;border-radius:.25rem}
+.kind{font-size:.8rem;color:var(--mut)}.part{font-size:.88rem;margin:.2rem 0}
+.q,.weak,.rec,.sub,.line,dl{font-size:.92rem;margin:.45rem 0}.weak{color:var(--warn)}
+code{background:var(--code);padding:0 .25rem;border-radius:.2rem;font-size:.88em}
+.tag{font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;color:var(--mut);font-weight:700;margin-right:.3rem}
+.ans{margin:.5rem 0 0;padding:.45rem .6rem;border-left:4px solid var(--hib);background:var(--hi);border-radius:.2rem}
+.ans.out{border-left-color:var(--ok)}.ans.none{opacity:.7}
+.badge{font-size:.75rem;font-weight:700;padding:.05rem .4rem;border-radius:.6rem;background:var(--okbg);color:var(--ok)}
+.badge.pick{background:var(--hi);color:var(--warn);border:1px solid var(--hib)}
+dl{display:grid;grid-template-columns:7rem 1fr;gap:.2rem .6rem}dt{font-weight:700}dd{margin:0}
+.media{display:flex;flex-wrap:wrap;gap:.5rem;margin:.5rem 0}.m{margin:0;max-width:100%}.m figcaption{font-size:.75rem;color:var(--mut)}
+.m.img img{max-width:14rem;max-height:10rem;border:1px solid var(--line);border-radius:.2rem;background:#000;display:block}
+.m.vid video{width:14rem;max-width:100%}.m.aud audio{width:16rem;max-width:100%}.miss{color:var(--warn)}
+details{margin:.4rem 0;font-size:.9rem}summary{cursor:pointer;color:var(--acc)}
+.listen{font-size:.85rem;color:var(--mut);margin:.3rem 0;padding-left:1.2rem}.opts{color:var(--mut)}
+.sub{padding-left:.6rem;border-left:2px solid var(--line)}
+table{border-collapse:collapse;display:block;overflow-x:auto}td,th{border:1px solid var(--line);padding:.2rem .4rem}
+blockquote{margin:.4rem 0;padding-left:.8rem;border-left:3px solid var(--line)}
+@media (max-width:480px){dl{grid-template-columns:1fr}.m.img img{max-width:100%}}
+</style></head><body><main><p class="note"><a href="README.md">Round 72 README</a> · <a href="../README.md">All rounds</a> · built 2026-10-31 · recorded by <code>tools/concept/review_record.py 72</code></p><h1>Concept round 72: record of the decisions</h1><div class="sum"><p>The Act 6 design phase is drafted, on the branch <code>m10-act-6</code> in a separate git worktree (nothing committed), overnight on 2026-10-31 while the v0.3 dither fix ran in the main checkout. As for Acts 4 and 5 the drafts follow the <strong>recommended answers</strong>, so every row below has its recommendation pre-selected and you only change what you want changed. The documents are <code>design: draft</code>; nothing is built (no <code>data.yaml</code> for the act, no Java). This is round 72, not 71: round 71 is taken by name (v0.3's <code>*-r71-a</code> captures). The refactor before M10 (RF9) lands on v0.3 first and the branch is rebased onto it before part A.</p><p>The round asks, in your order: the twelve design questions of the gap analysis (Q.1-Q.12), the judgement calls the drafts made (J.1-J.16, among them the aces' names and voices, the Silence's rule, the scales outside the band, the Halo's checkpoint and the uplink), the artwork (A.1-A.15: seven units and the Plasma Arc, the two bosses, the world and the people, a and b for each, with their worries), the music, sounds and voices (M, S and V rows, each saying where and when it plays and what it should sound like, then each variant by how it sounds), and last the documents to approve (D.1-D.18, one row each: approve or change). The art and sound rows were checked by measure, not by ear: the pre-selected <strong>a</strong> on the sound rows is a default, not a listened recommendation. Two voice rows (V.3, V.5) offer a re-render or recast because the takes fall outside the range.</p><p>Done before the round, decided and not asked: the Level 38-41 hand plan was redrawn for J.11's recommendation (the Crucible from the Level 40 visit, Composite V moved to Level 41; the generator's hand plan, the act README and the level documents follow), and the audio proposals' credits (68 rows) are in <span class="ref">CREDITS.md</span>.</p></div><p class="note">A read-only record: every row as the review page showed it, with the answer and the outcome from the round README (the record of truth). Media is linked from the design tree, not copied.</p><nav class="sec"><a href="#s-questions">Questions</a><a href="#s-judgement-calls">Judgement calls</a><a href="#s-art-the-units">Art: the units</a><a href="#s-art-boss-world-and-people">Art: boss, world and people</a><a href="#s-music">Music</a><a href="#s-sounds">Sounds</a><a href="#s-voice">Voice</a><a href="#s-documents-to-approve">Documents to approve</a></nav><section id="s-questions"><h2>Questions</h2>
+<div class="sum"><p>The twelve design questions of the gap analysis (<code>m10-dgap-gaps.md</code> §3), with the options, what each costs and what was drafted. The recommendation is pre-selected.</p></div>
+<article class="row" id="r-Q.1">
+<header><span class="rid">Q.1</span><h3>The Mirror Interceptor&#x27;s reflect: what gets through?</h3><span class="kind">pick a, b or c</span></header>
+<div class="part">[The Mirror Interceptor's <code>reflect</code>: what gets through?](../../enemies/air/mirror-interceptor/README.md)</div>
+<div class="q"><strong>pick a, b or c</strong> (important game concept). The roster says the frontal mirror bounces non-<code>beam</code> shots back and lets beams and <code>shield-breaker</code> through. The typical player has flown the Ion Beam since Level 29, so the mirror would barely touch them and Level 37's <code>shield-breaker</code> pacing would mean nothing. <strong>a</strong> as the roster has it: non-beam shots bounce back as slow enemy bullets, beams and <code>shield-breaker</code> go straight through. Cost: the smallest; beam players ignore the mirror. <strong>b</strong> the mirror also blocks beams; only flanking or a <code>shield-breaker</code> hit opens it. Cost: forces the Tesla pod and punishes the plan's beam (Level 37's HP budget falls). <strong>c</strong> the mirror absorbs beam heat: non-beam shots bounce back, a beam held on it breaks it in about 1.0 s of contact, a <code>shield-breaker</code> hit or the EMP shatters it at once, it stays down 3 s, the flanks are always open. Cost: one heat meter per mirror and a crack look. Recommended c: every trait has a play, the beam is slowed but not useless and the Tesla pod is the clean answer at Level 37. The Ascendant's phase-1 panels follow the same rule. <strong>Drafted:</strong> c (the Mirror Interceptor's document with heat 130, the <code>reflect</code> rule in the enemies README with the Plasma Arc's and the Reflex bolt's rows, the Ascendant's panels).</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the renderings are on A.2 (the Mirror Interceptor, with its heat states and the bounce)</p>
+<p class="rec"><span class="tag">Recommendation</span> c</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>c</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>drafted as recommended; the alternatives rejected</span></div>
+</article>
+<article class="row" id="r-Q.2">
+<header><span class="rid">Q.2</span><h3>Foreground cloud banks in Level 36: what may they hide?</h3><span class="kind">pick a, b or c</span></header>
+<div class="part"><a href="../../campaign/act-6-jovian-storm/level-36-cloud-divers/README.md">Foreground cloud banks in Level 36: what may they hide?</a></div>
+<div class="q"><strong>pick a, b or c</strong> (important game concept; the look is A.12). The act sketch's "foreground clouds hide enemies" has to be readable and fair; Level 12 hid only <code>low-air</code> bodies. <strong>a</strong> banks drawn over <code>air</code>, translucent: a body under a bank shows at about 35 % with its running lights and engine glow; bullets, the ship, Rook and pickups are always drawn above; homing and the Targeting computer track as usual. Cost: one draw-order layer and a readability pass. <strong>b</strong> Level 12's rule only: banks hide <code>low-air</code> and <code>high-air</code> bodies, never <code>air</code>. Cost: none, but it adds nothing new. <strong>c</strong> full hide with Rook's warnings and lightning reveals. Cost: unfair contact deaths. Recommended a: it is new, it rewards <code>homing</code> (the level's trait) and bullets stay readable. <strong>Drafted:</strong> a (Level 36 from t=28, the world document; the old open question "bullets above the clouds" became this rule).</div>
+<div class="ans"><span class="tag">Answer</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>drafted as recommended; the alternatives rejected</span></div>
+</article>
+<article class="row" id="r-Q.3">
+<header><span class="rid">Q.3</span><h3>The Vrell turn (Level 37 on): how far does the three-way war go?</h3><span class="kind">pick a, b or c</span></header>
+<div class="part"><a href="../../campaign/act-6-jovian-storm/level-37-fall-of-aurelia/README.md">The Vrell turn (Level 37 on): how far does the three-way war go?</a></div>
+<div class="q"><strong>pick a, b or c</strong> (important game concept). From Level 37 the Vrell attack the Ascendancy too. A full faction war, where enemy bullets hurt other enemies, is a large sim change. <strong>a</strong> scripted prey, generalised: from the turn, chosen Vrell waves hunt chosen Ascendancy waves (Level 33's prey rule widened to latching, ramming and Vrell fire aimed at a prey unit); bullets never hurt their own side; a killed Ascendancy unit pays nothing; the Vrell growth also eats the decks (backdrop). Cost: medium. <strong>b</strong> full faction fire: bullets of each side hurt the other. Cost: large (a bullet-faction field, AI target choice, balance). <strong>c</strong> backdrop and radio only: the war is fought in <code>deep</code> and <code>low-air</code> scenery and in the lines. Cost: small, but nothing changes in play. Recommended a with c's backdrop on top: readable, builds on what exists and the player sees the alliance break. <strong>Drafted:</strong> a with c's backdrop (the turn at t=100 in Level 37 with its two hunts, the Three-way war rule in the enemies README).</div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>drafted as recommended; the alternatives rejected (with c's backdrop)</span></div>
+</article>
+<article class="row" id="r-Q.4">
+<header><span class="rid">Q.4</span><h3>The falling city: does Aurelia sink at Level 37&#x27;s end?</h3><span class="kind">pick a, b or c</span></header>
+<div class="part"><a href="../../campaign/act-6-jovian-storm/level-37-fall-of-aurelia/README.md">The falling city: does Aurelia sink at Level 37's end?</a></div>
+<div class="q"><strong>pick a, b or c</strong> (important game concept; the look is A.13). The Jovian world's signature set piece (2026-09-30) is a city losing its balloons and sinking through the layers while the player fights above and then beside it. No level holds it yet. <strong>a</strong> yes, at Level 37's end (the last about 40 s): the balloons burst, the deck tilts and drops; the ground layer slows, darkens and shrinks over about 20 s while the ship flies down beside the spires (<code>low-air</code> debris and Vrell); the level ends over open cloud. Cost: a renderer set piece (a scaled, darkening ground layer) and a production backdrop part. <strong>b</strong> shown in the act outro or the Level 38 briefing image only. Cost: one image. <strong>c</strong> moved to Level 41: Callisto has no air, so a falling Aurelia would need its own level. Recommended a: the act's postcard moment, it lands on the turn and Okafor's Aurelia history pays off there. <strong>Drafted:</strong> a (Level 37's last 40 s, t=160-200; the shrinking layer is gap §2.10's engine feature, built in part B of M10).</div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>drafted as recommended; the alternatives rejected</span></div>
+</article>
+<article class="row" id="r-Q.5">
+<header><span class="rid">Q.5</span><h3>The Honour Guard (Level 40 mid-boss): one ace at a time, or three at once?</h3><span class="kind">pick a, b or c</span></header>
+<div class="part"><a href="../../enemies/bosses/honour-guard/README.md">The Honour Guard (Level 40 mid-boss): one ace at a time, or three at once?</a></div>
+<div class="q"><strong>pick a, b or c</strong> (boss fight; the storyboard is A.9). Three aces in custom gold Talons from the front, the sides and the rear. <strong>a</strong> staggered, then together: the leader (front, sniper <code>laser-line</code>) opens; the dancer (<code>spiral</code>) joins from a side at 2/3 of the leader's HP or after 20 s; the feinter (diving feints) joins from the rear, edge-warned; then all three fly a shared playbook; each death changes the survivors' playbook (the dancer turns aggressive, the feinter commits); one mid-boss bar with three segments and call-sign tags. Cost: a three-body boss (large) and three voices. <strong>b</strong> three duels in sequence, one bar each. Cost: medium, but predictable. <strong>c</strong> all three from the start. Cost: like a, but harder to read and to keep apart. Recommended a: it keeps round 70's unpredictable-phase rule, it is readable at first and the duel reads as a duel. <strong>Drafted:</strong> a (the Honour Guard's document: Harker 1,600 HP, Vesper, Kestrel, par 75; Level 40's duel at t=102).</div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>drafted as recommended; the alternatives rejected</span></div>
+</article>
+<article class="row" id="r-Q.6">
+<header><span class="rid">Q.6</span><h3>The Ascendant (Level 42): its shape and Vorne&#x27;s escape</h3><span class="kind">pick a, b or c</span></header>
+<div class="part"><a href="../../enemies/bosses/ascendant/README.md">The Ascendant (Level 42): its shape and Vorne's escape</a></div>
+<div class="q"><strong>pick a, b or c</strong> (boss fight; the looks are A.10 and A.11). The act boss is half warship, half Vrell organism, with three phases, and the third cannot be killed. <strong>a</strong> bow-on over a halted arena: the gold hull fills the top of the field. Phase 1: shield generators and mirror panels (Q.1) round the bow batteries. Phase 2: the Vrell half erupts through the hull, regenerating tissue sacs (weak points by glow) and Chimera spawns, and track 18 takes over; Vorne's one shout comes here. Phase 3: the lifeboat breaks from the bow and flees up the screen for about 12-15 s; damage pays up to a cap and it always escapes. Cost: medium, on the Sovereign's arena code. <strong>b</strong> a flank pass: the long ship passes down the side of a scrolling field, its sections fought in turn. Cost: a multi-section scrolling boss (large); harder to give it phases. <strong>c</strong> the ship splits into two bosses at once (the gold hull and the Vrell mass). Cost: large, the readability of two huge bodies. Recommended a: readable, the hull warning comes before it shows, each phase's playbook follows round 70 and the escape is a scripted end that still pays. <strong>Drafted:</strong> a (the Ascendant's document: 15,200 HP, par 150, the lifeboat's cap 1,400, music 19 to 18, the escape sting 33; Level 42).</div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>drafted as recommended; the alternatives rejected</span></div>
+</article>
+<article class="row" id="r-Q.7">
+<header><span class="rid">Q.7</span><h3>Act 6&#x27;s arsenal</h3><span class="kind">pick a, b or c</span></header>
+<div class="part"><a href="../../player/README.md">Act 6's arsenal</a></div>
+<div class="q"><strong>pick a, b or c</strong> (important game concept). Act 5 moved the Plasma Arc, Time Dilation, the Hunter drone and the Bastion Shield to Act 6; the Reflex Shield, Composite V and the IFF spoofer are Act 6 rows too. All of it would be seven items and three engine features. <strong>a</strong> everything. Cost: Time Dilation's global time scale (large), the Hunter drone's AI, two shield variants, a crowded shop. <strong>b</strong> the middle arsenal: the <strong>Plasma Arc</strong> (front, area and spread, chains 3-6; Level 36 visit), the <strong>Reflex Shield</strong> (mirrors answering mirrors; Level 37 visit), <strong>Composite V</strong> (Level 38 visit), the <strong>IFF spoofer</strong> as the story item (Varga cracks Aurelia's codes in Level 37; in the shop from the Level 39 visit) and Q.8's generator; Time Dilation, the Hunter drone and the Bastion Shield go to Act 7's design (or are dropped there). Cost: medium (the chain, the bullet reflection, one module). <strong>c</strong> minimal: Composite V and the generator only. Cost: a dull shop in the act before the end. Recommended b. <strong>Drafted:</strong> b (the Plasma Arc, the Reflex Shield, Composite V, the IFF spoofer and the Crucible written as drafts in the player documents).</div>
+<p class="rec"><span class="tag">Recommendation</span> b</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>b</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>drafted as recommended; the alternatives rejected (the middle arsenal; Time Dilation, the Hunter drone and the Bastion Shield to Act 7)</span></div>
+</article>
+<article class="row" id="r-Q.8">
+<header><span class="rid">Q.8</span><h3>Power headroom in Act 6</h3><span class="kind">pick a, b or c</span></header>
+<div class="part"><a href="../../player/generator/README.md">Power headroom in Act 6</a></div>
+<div class="q"><strong>pick a, b or c</strong> (important game concept; the purchase visit is J.11). The plan sits at 21 of the Mk V's 22 MW at Level 35; Act 6's forward fit (beam L5 and pods L5) needs 23 MW with nothing beyond the magnet; the next generator is the Mk VI (27 MW, Act 7). The Act 5 playthrough's lesson asks for room for one utility. <strong>a</strong> a captured Ascendancy generator, about 25 MW for about 24,000, in the shop from the Level 39 visit (Io's refineries feed it): the Mk V+ "Crucible". Cost: one data row and a hand plan; the saving goal mirrors Act 5's Mk V. <strong>b</strong> raise the Mk V to 25 MW. Cost: one number, but it changes Act 5's Level 35 balance in the <code>v0.3</code> build on the other branch. <strong>c</strong> lower the Act 6 items' draw and accept 22/22. Cost: none in data, but it repeats the Level 30 problem. Recommended a. <strong>Drafted:</strong> a (the Crucible, 25 MW, 24,000; the hand plan in the generator document).</div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>drafted as recommended; the alternatives rejected (the Crucible)</span></div>
+</article>
+<article class="row" id="r-Q.9">
+<header><span class="rid">Q.9</span><h3>The Ascendancy&#x27;s heartland look and the hybrids (art)</h3><span class="kind">pick a, b or c</span></header>
+<div class="part"><a href="../../enemies/README.md">The Ascendancy's heartland look and the hybrids (art)</a></div>
+<div class="q"><strong>pick a, b or c</strong> (artwork). Act 5 flies gunmetal and charcoal with gold (round 60 Q.11 b); the Level 28 cruisers are gloss black. Act 6 adds hybrids: "black-and-gold plating with Vrell tissue through the seams". <strong>a</strong> gunmetal continues for regular units, the elite (the Honour Guard, the Ascendant, the fortress) in gloss black and heavy gold, the hybrids in gunmetal with teal tissue seams that glow brightest at the weak points. Cost: two liveries, one rule. <strong>b</strong> everything in gunmetal, hybrids by tissue only. Cost: least; the elite does not stand out. <strong>c</strong> the heartland all in gloss black like the Level 28 cruisers. Cost: a re-render of every returning unit and the dark-over-dark readability problem Q.11 b avoided. Recommended a. The one sheet shows every variant: the production Talon in the regular gunmetal (a and b), the elite gloss black (a), the hybrid seams (a) and the all-black Talon (c), with the measured gold and teal shares. <strong>Drafted:</strong> a (the livery rule in the enemies README; the units' sheets in A.2-A.7 are drawn in it).</div>
+<div class="media"><figure class="m img"><a href="../../enemies/concept/heartland-livery-r72-a.png"><img loading="lazy" decoding="async" src="../../enemies/concept/heartland-livery-r72-a.png" alt="the four liveries, 2x over Level 36&#x27;s cream and Level 41&#x27;s ice"></a><figcaption>the four liveries, 2x over Level 36&#x27;s cream and Level 41&#x27;s ice</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> finding: the production Talon is already 45 % gold in gunmetal and 54 % as the elite, so on that airframe elite versus regular is the hull's black, not more gold; Q9 c's black Talon sinks on Level 36's brown band and Level 41's deck; the 35-45 % elite target and the 20 % regular floor overlap on gold-heavy airframes</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>drafted as recommended; the four-liveries sheet chosen; b and c rejected</span></div>
+</article>
+<article class="row" id="r-Q.10">
+<header><span class="rid">Q.10</span><h3>Jupiter&#x27;s moods and readability (art)</h3><span class="kind">pick a or b, or c</span></header>
+<div class="part"><a href="../../world/jovian/README.md">Jupiter's moods and readability (art)</a></div>
+<div class="q"><strong>pick a or b, or c</strong> (artwork). The chosen scene is bright cream and ochre storm bands; gold units and amber and red bullets must read over it, and over Io's yellow sulphur. <strong>a</strong> a grade per level: Level 36 high sunlit bands (bullets get a dark outline over the brightest cream), Level 37 gold city then fire and teal after the turn, Level 38 storm-dark blue-grey with lightning, Level 39 Io's black lava and sulphur (desaturated), Levels 40-42 Callisto's blue-grey ice and black space. Cost: five moods, each with a readability check. <strong>b</strong> one storm-dusk grade for the whole act: the same scenes darker with violet shadows and amber highs. Cost: least; less variety. <strong>c</strong> the bright r06 grade everywhere. Cost: readability risk in every level (not drawn: a's Level 36 is that grade). Recommended a. Each sheet is the ladder Level 36, 37 before and after the turn, 38-42 with the mean luminance and the readability set (sniper line, Vrell spore, elite ace, gunmetal Talon, ship, Rook, gold needles, magenta orbs) over the brightest and darkest window at 1x. <strong>Drafted:</strong> a (the Jovian world's per-level moods, the level drafts' settings).</div>
+<div class="media"><figure class="m img"><a href="../../world/jovian/concept/jovian-moods-r72-a.png"><img loading="lazy" decoding="async" src="../../world/jovian/concept/jovian-moods-r72-a.png" alt="a, a grade per level"></a><figcaption>a, a grade per level</figcaption></figure><figure class="m img"><a href="../../world/jovian/concept/rejected/jovian-moods-r72-b.png"><img loading="lazy" decoding="async" src="../../world/jovian/concept/rejected/jovian-moods-r72-b.png" alt="b, one storm-dusk grade"></a><figcaption>b, one storm-dusk grade</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> a's Level 36 and 37 cream (mean luminance 205 and 166) is the bullet-readability risk (the needles keep their dark outline); b loses the act's sunlit start and sinks the black units on Level 38 and Level 41</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>drafted as recommended; a chosen, b rejected (c was not drawn)</span></div>
+</article>
+<article class="row" id="r-Q.11">
+<header><span class="rid">Q.11</span><h3>The Act 6 intro: who opens it?</h3><span class="kind">pick a, b or c</span></header>
+<div class="part"><a href="../../campaign/act-6-jovian-storm/README.md">The Act 6 intro: who opens it?</a></div>
+<div class="q"><strong>pick a, b or c</strong> (important game concept: the story's opening). Act 5 opened with Vorne's broadcast. Act 6 must pick up "we are coming to Callisto" and explain why the wing dives into Jupiter first. <strong>a</strong> Okafor from the carrier's bridge: page 1 the fleet at Jupiter; page 2 the plan (the grid, the fuel, then Callisto); page 3 Vorne intercepted (amber, his motif), courteous, inviting Okafor to Aurelia "as you visited it before"; page 4 Okafor's answer on every channel: "<em>I was at Aurelia. I remember. So will you.</em>". Cost: four pages, one of them intercepted (built). <strong>b</strong> all four pages Okafor, with Vorne's sample line moved to Level 37's radio. Cost: least; no enemy voice in the intro. <strong>c</strong> Varga's intel briefing with the fleet's plan. Cost: Varga's role drifts from intel. Recommended a: it mirrors Act 5's intro, pays off Okafor's history and sets up Level 37. <strong>Drafted:</strong> a (the act README's four intro pages, the title card ACT VI, JOVIAN STORM, Jupiter, September 2185).</div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>drafted as recommended; the alternatives rejected</span></div>
+</article>
+<article class="row" id="r-Q.12">
+<header><span class="rid">Q.12</span><h3>The Silence&#x27;s first mention (Level 41)</h3><span class="kind">pick a, b or c</span></header>
+<div class="part"><a href="../../campaign/act-6-jovian-storm/level-41-callisto-fortress/README.md">The Silence's first mention (Level 41)</a></div>
+<div class="q"><strong>pick a, b or c</strong> (important game concept: the campaign's last reveal). The story fixes the first naming in Vorne's files at Helix HQ. <strong>a</strong> in play: Level 41's secondary <code>FILES</code> (Varga's uplink spike on the HQ's three archive cores, each flown over and held for about 2 s), her radio lines as the files come in ("<em>They were not invading. They were running. Vorne's files call it the Silence.</em>") and the Level 42 briefing's second page from the files. Cost: a level beat and one image. <strong>b</strong> only in the Level 42 briefing (a "files" page, Varga). Cost: least; easy to miss. <strong>c</strong> only in the act outro. Cost: least, and too late for Level 42's Vorne to react. Recommended a: the Silence is named once and sharply, as the tone guide asks, and never shown. <strong>Drafted:</strong> a (Level 41's <code>FILES n / 3</code> and the Silence named at the Halo's fall; the story's rule: named once, by Varga).</div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>drafted as recommended; the alternatives rejected</span></div>
+</article>
+</section>
+<section id="s-judgement-calls"><h2>Judgement calls</h2>
+<div class="sum"><p>Calls the drafting made (the gap analysis's J1-J10 as J.1-J.10, the drafts' J11-J14, and two notable calls the steps logged, J.15 and J.16; the aces' names and voices are in J.4, the Halo's checkpoint in J.8, the uplink in J.16). Each is drafted as the recommendation.</p></div>
+<article class="row" id="r-J.1">
+<header><span class="rid">J.1</span><h3>The reference_dps curve 144 to 168</h3><span class="kind">keep or change</span></header>
+<div class="part">[The <code>reference_dps</code> curve 144 to 168](../../enemies/README.md)</div>
+<div class="q"><strong>keep or change</strong>. Act 6's enemy HP is set from a reference DPS: 144 at Level 36 (Act 5's last value held), then +4 a level to 168 at Level 42. The plan's forward DPS against it runs 1.19, 1.14, 1.11, 1.08, 1.05, 1.02, 1.08 (Level 36's 1.19 is high: the plan buys the beam L5 first). <strong>keep</strong> (drafted); the act's HP factor follows from it. <strong>change</strong>: a flatter or steeper curve, a number for you to name.</div>
+<p class="rec"><span class="tag">Recommendation</span> keep</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>keep</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>kept as drafted</span></div>
+</article>
+<article class="row" id="r-J.2">
+<header><span class="rid">J.2</span><h3>Media per level and NO GROUND</h3><span class="kind">keep or change</span></header>
+<div class="part">[Media per level and <code>NO GROUND</code>](../../campaign/act-6-jovian-storm/README.md)</div>
+<div class="q"><strong>keep or change</strong>. Air in Levels 36-38, near-vacuum on Io, vacuum in Levels 40-42; <code>NO GROUND</code> in Levels 36, 38, 40 and 42 (Level 42 is its draft's call). <strong>keep</strong> (drafted). <strong>change</strong>: ground layers in the cloud levels (nothing to stand on in Jupiter's sky) or sky effects on Callisto.</div>
+<p class="rec"><span class="tag">Recommendation</span> keep</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>keep</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>kept as drafted</span></div>
+</article>
+<article class="row" id="r-J.3">
+<header><span class="rid">J.3</span><h3>Lightning and eruptions</h3><span class="kind">keep or change</span></header>
+<div class="part"><a href="../../world/jovian/README.md">Lightning and eruptions</a></div>
+<div class="q"><strong>keep or change</strong>. Lightning: a 1.0 s glowing telegraph, then a 40 px <code>heavy</code> strike that hits <code>air</code> enemies too (and pays); never two within 1.5 s. Eruptions on Io: a 1.2 s tell, then shootable rocks thrown up the screen. <strong>keep</strong> (drafted). <strong>change</strong>: strikes that spare the enemies (the player's hazard only), or a longer tell.</div>
+<p class="rec"><span class="tag">Recommendation</span> keep</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>keep</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>kept as drafted</span></div>
+</article>
+<article class="row" id="r-J.4">
+<header><span class="rid">J.4</span><h3>The aces: call signs, voices and Harker</h3><span class="kind">keep or change</span></header>
+<div class="part"><a href="../../enemies/bosses/honour-guard/README.md">The aces: call signs, voices and Harker</a></div>
+<div class="q"><strong>keep or change</strong>. Vorne's three aces fly on the enemy channel under three call signs: <strong>Harker</strong> (the sniper; promoted into Vorne's guard after Ceres, so Rook's rivalry gets a face; his cast voice, David Clarke from Level 29, harder and colder), <strong>Vesper</strong> (the dancer, a woman) and <strong>Kestrel</strong> (the feinter, a man, a call sign a Level 03 frigate shares: kept, trivia). Two new voices (V.1, V.2), plus <strong>Aurelia Traffic</strong> as the act's friendly generic voice (V.3). <strong>keep</strong> (drafted). <strong>change</strong>: other names, or three entirely new voices for the aces (Harker reused is the saving).</div>
+<p class="rec"><span class="tag">Recommendation</span> keep</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>keep</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>kept as drafted</span></div>
+</article>
+<article class="row" id="r-J.5">
+<header><span class="rid">J.5</span><h3>No new tiny unit</h3><span class="kind">keep or change</span></header>
+<div class="part"><a href="../../enemies/README.md">No new tiny unit</a></div>
+<div class="q"><strong>keep or change</strong>. The Darts, Motes and Skitters give the act's variety row its <code>tiny</code> tier and carry the count; Act 6 adds no new tiny unit (its seven new ones are small to huge). <strong>keep</strong> (drafted). <strong>change</strong>: a new tiny unit for the hybrids (a new sheet, a new sound).</div>
+<p class="rec"><span class="tag">Recommendation</span> keep</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>keep</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>kept as drafted</span></div>
+</article>
+<article class="row" id="r-J.6">
+<header><span class="rid">J.6</span><h3>Vorne&#x27;s only shout</h3><span class="kind">keep or change</span></header>
+<div class="part"><a href="../../story/characters/vorne/README.md">Vorne's only shout</a></div>
+<div class="q"><strong>keep or change</strong>. Vorne never shouts except once: Level 42, phase 2's eruption, "<em>No! We had an agreement!</em>" right after the Choir's line. His Level 37 reaction to the Vrell turn is cold, not shouted (a line on the enemy channel after the Choir's). <strong>keep</strong> (drafted). <strong>change</strong>: no shout at all (a cold line). The take itself is V.5.</div>
+<p class="rec"><span class="tag">Recommendation</span> keep</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>keep</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>kept as drafted</span></div>
+</article>
+<article class="row" id="r-J.7">
+<header><span class="rid">J.7</span><h3>The Graft Turret pays once</h3><span class="kind">keep or change</span></header>
+<div class="part"><a href="../../enemies/ground/graft-turret/README.md">The Graft Turret pays once</a></div>
+<div class="q"><strong>keep or change</strong>. A Graft Turret pays its bounty once; its root shows its timer (a shrinking teal ring, pulse 1 to 4 Hz over 5 s); a regrown turret pays nothing. <strong>keep</strong> (drafted). <strong>change</strong>: every regrowth pays (a farm to design out).</div>
+<p class="rec"><span class="tag">Recommendation</span> keep</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>keep</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>kept as drafted</span></div>
+</article>
+<article class="row" id="r-J.8">
+<header><span class="rid">J.8</span><h3>The Halo Platform: Act 5&#x27;s chosen design in the heartland livery, with a checkpoint</h3><span class="kind">keep or change</span></header>
+<div class="part"><a href="../../enemies/ground/halo-platform/README.md">The Halo Platform: Act 5's chosen design in the heartland livery, with a checkpoint</a></div>
+<div class="q"><strong>keep or change</strong>. The chosen round 07 ring is kept; its production frames move to the heartland livery (A.7). At Level 41 it is a held arena (Helix HQ's main core, about 16 s) with <strong>a checkpoint</strong> at its halt like a boss's (none on hard). <strong>keep</strong> (drafted). <strong>change</strong>: no checkpoint at the halt, or a new Halo design.</div>
+<p class="rec"><span class="tag">Recommendation</span> keep</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>keep</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>kept as drafted</span></div>
+</article>
+<article class="row" id="r-J.9">
+<header><span class="rid">J.9</span><h3>The Ascendant&#x27;s music</h3><span class="kind">keep or change</span></header>
+<div class="part"><a href="../../audio/music/README.md">The Ascendant's music</a></div>
+<div class="q"><strong>keep or change</strong>. Track 19 (the Iron Sovereign's) in phase 1, track 18 ("The Choir Descends") from phase 2, an escape sting (track 33). The hand-off is M.3, the sting M.4. <strong>keep</strong> (drafted). <strong>change</strong>: its own boss theme (a new track, a new sketch round).</div>
+<p class="rec"><span class="tag">Recommendation</span> keep</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>keep</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>kept as drafted</span></div>
+</article>
+<article class="row" id="r-J.10">
+<header><span class="rid">J.10</span><h3>September 2185; Okafor commands from the carrier</h3><span class="kind">keep or change</span></header>
+<div class="part"><a href="../../story/README.md">September 2185; Okafor commands from the carrier</a></div>
+<div class="q"><strong>keep or change</strong>. The act is set in September 2185; Okafor commands from the carrier <em>Steadfast</em> (her lines on the friendly channel as ever); Varga is on the carrier too. <strong>keep</strong> (drafted). <strong>change</strong>: another month or another command ship.</div>
+<p class="rec"><span class="tag">Recommendation</span> keep</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>keep</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>kept as drafted</span></div>
+</article>
+<article class="row" id="r-J.11">
+<header><span class="rid">J.11</span><h3>Power headroom at Levels 38-39: when does the plan buy the Crucible?</h3><span class="kind">pick the L40 purchase or the L39 swap</span></header>
+<div class="part"><a href="../../campaign/act-6-jovian-storm/README.md">Power headroom at Levels 38-39: when does the plan buy the Crucible?</a></div>
+<div class="q"><strong>pick the L40 purchase or the L39 swap</strong> (important game concept; follows Q.8 a). The hand plan flew 22 of 22 MW from Level 36 to 40, with no room for a utility: the Level 30 lesson met late. <strong>the L40 purchase</strong> (recommended): the Crucible bought at the Level 40 visit, <strong>Composite V moved to the Level 41 visit</strong>. On paper it is affordable there and not earlier: at 24,000 it is out of reach at the Level 37 visit (8,499), the Level 38 visit (12,670) and the Level 39 visit (21,958 with Composite V skipped); at the Level 40 visit the plan has 31,904: the Crucible and the spoofer, 2,779 left, then Composite V at the Level 41 visit (13,555). Room for a utility from Level 40 (24 of 25 MW). Cost: the plan flies Levels 38-40 without Composite V (the lightning's <code>heavy</code> strikes and the death-burst rings fall on the Mk III shield and Composite IV). The Crucible's back-story stays Aurelia's power decks (Level 37 is before the Level 40 visit). <strong>the L39 swap</strong>: at the Level 39 visit stow the Swarm Tail L3 (4 MW) for the Tail Gun and fit the IFF spoofer (5,000, 2 MW): 22 of 22 with a utility at Io, where every wave comes from the front; affordable (10,957 at that visit, 5,832 left), Composite V at Level 38 as before, the Crucible bought at the Level 41 visit, the Swarm Tail back at Level 40 for the aces and the rear pickets. Cost: a swap to explain and a fit with no rear gun at Io. Drafted: the L40 purchase (the generator's hand plan).</div>
+<p class="rec"><span class="tag">Recommendation</span> the L40 purchase</p>
+<div class="ans"><span class="tag">Answer</span> <span><strong>the L40 purchase</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>the Crucible at the Level 40 visit, Composite V at the Level 41 visit; the L39 swap rejected</span></div>
+</article>
+<article class="row" id="r-J.12">
+<header><span class="rid">J.12</span><h3>Level 37&#x27;s name</h3><span class="kind">pick rename or keep</span></header>
+<div class="part"><a href="../../campaign/act-6-jovian-storm/level-37-fall-of-aurelia/README.md">Level 37's name</a></div>
+<div class="q"><strong>pick rename or keep</strong>. "Gilded Cage" clashes with track 13's name (Act 5's B theme, "Gilded Cage", round 60). <strong>rename</strong> (recommended): "Fall of Aurelia" (the slug <code>level-37-gilded-cage</code> stays until the level is built, then follows the name). <strong>keep</strong>: the track's name is never shown in the game. Drafted: rename pending.</div>
+<p class="rec"><span class="tag">Recommendation</span> rename</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>rename</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>Level 37 is <strong>"Fall of Aurelia"</strong>; its folder is <code>level-37-fall-of-aurelia</code>; track 13's "Gilded Cage" is untouched</span></div>
+</article>
+<article class="row" id="r-J.13">
+<header><span class="rid">J.13</span><h3>The kill-ratio secondaries of Levels 40 and 42</h3><span class="kind">keep or change</span></header>
+<div class="part"><a href="../../campaign/act-6-jovian-storm/level-40-honour-guard/README.md">The kill-ratio secondaries of Levels 40 and 42</a></div>
+<div class="q"><strong>keep or change</strong>. "Break the pickets" (Level 40) and "Clear the orbit" (Level 42): a <code>kill_ratio</code> of 65 %, so every level of Acts 5-6 has a secondary. <strong>keep</strong> (recommended). <strong>change</strong>: none in a boss level (the gap analysis's first plan).</div>
+<p class="rec"><span class="tag">Recommendation</span> keep</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>keep</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>kept as drafted</span></div>
+</article>
+<article class="row" id="r-J.14">
+<header><span class="rid">J.14</span><h3>Level 40&#x27;s primary objective</h3><span class="kind">pick reach-end or boss</span></header>
+<div class="part"><a href="../../campaign/act-6-jovian-storm/level-40-honour-guard/README.md">Level 40's primary objective</a></div>
+<div class="q"><strong>pick reach-end or boss</strong>. <strong>reach-end</strong> (recommended): the duel is a condition of the run and the level runs out to the citadel's outer line (Level 19's shape). <strong>boss</strong>: the level ends at the last ace, about 67 s shorter, with a higher haul scale. Drafted: reach-end.</div>
+<p class="rec"><span class="tag">Recommendation</span> reach-end</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>reach-end</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>kept as drafted; <code>boss</code> rejected</span></div>
+</article>
+<article class="row" id="r-J.15">
+<header><span class="rid">J.15</span><h3>Scales outside the band</h3><span class="kind">keep or change</span></header>
+<div class="part"><a href="../../campaign/act-6-jovian-storm/README.md">Scales outside the band</a></div>
+<div class="q"><strong>keep or change</strong>. Level 36-42's <code>bounty_scale</code> runs 0.30-0.64, outside the 0.40-0.56 band (richer or leaner paying mixes in the hand haul tables; Act 5 built 0.27-0.59 and the band stayed). Level 39's towers pay 30 for a scale of 0.41. <strong>keep</strong> (drafted; the build measures the real mix). <strong>change</strong>: re-balance the paying mixes to the band before the build.</div>
+<p class="rec"><span class="tag">Recommendation</span> keep</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>keep</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>kept as drafted</span></div>
+</article>
+<article class="row" id="r-J.16">
+<header><span class="rid">J.16</span><h3>The Silence&#x27;s rule and the uplink&#x27;s feel</h3><span class="kind">keep or change</span></header>
+<div class="part"><a href="../../story/README.md">The Silence's rule and the uplink's feel</a></div>
+<div class="q"><strong>keep or change</strong>. The Silence is <strong>named once</strong> in play, by Varga at Level 41; after that only Varga refers to it (the Level 42 briefing, the act outro), never describes it; Vorne never speaks of it in Act 6 and the Choir not before Act 7. The uplink: the ship's centre within 40 px of an opened archive core for 2.0 s in total (Rook cannot do it; a core that leaves the bottom edge is lost). <strong>keep</strong> (drafted). <strong>change</strong>: shoot the hatch only (the file comes in by itself: simpler, no new mechanic, less of a choice in a halt).</div>
+<p class="rec"><span class="tag">Recommendation</span> keep</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>keep</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>kept as drafted</span></div>
+</article>
+</section>
+<section id="s-art-the-units"><h2>Art: the units</h2>
+<div class="sum"><p>Seven proposals for the new units and the Plasma Arc (<code>tools/concept/enemies_r72.py</code>), a and b each, as a sheet and a motion clip. Liveries per Q.9 a; glows and hazes smooth. Each row has its worries.</p></div>
+<article class="row" id="r-A.1">
+<header><span class="rid">A.1</span><h3>Chimera</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../enemies/air/chimera/README.md">Chimera</a></div>
+<div class="q"><strong>pick a or b</strong> (artwork). <strong>What:</strong> the hybrid Talon that heals (20 % a second after 1 s without a hit). <strong>Where:</strong> Level 36 under the cloud banks, later Act 6 levels, the Ascendant's phase 2. <strong>The GIF:</strong> a V-wing of five; scattered hits let one heal (dark seams, then a teal pulse twice a second and the HP bar's teal edge), a held stream kills it (gold sparks, teal flecks). <strong>a "seams":</strong> the production Talon's gunmetal airframe with thin glowing cracks along the wing roots, the wings and the spine; the silhouette stays the Talon's (gold 41 %, teal 13 % at full health, 18 % healing). <strong>b "overgrown":</strong> seams twice as wide and veined, tissue nodules bulging at the wing roots, spine and panels; a lumpier outline that tells it from the Talon at a glance (gold 28 %, teal 6 %, 11 % healing). Recommended b: mixed Talon and Chimera wings stay readable without the teal.</div>
+<div class="media"><figure class="m img"><a href="../../enemies/air/chimera/concept/rejected/chimera-r72-a.png"><img loading="lazy" decoding="async" src="../../enemies/air/chimera/concept/rejected/chimera-r72-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/air/chimera/concept/rejected/chimera-r72-a.gif"><img loading="lazy" decoding="async" src="../../enemies/air/chimera/concept/rejected/chimera-r72-a.gif" alt="a · motion"></a><figcaption>a · motion</figcaption></figure><figure class="m img"><a href="../../enemies/air/chimera/concept/chimera-r72-b.png"><img loading="lazy" decoding="async" src="../../enemies/air/chimera/concept/chimera-r72-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/air/chimera/concept/chimera-r72-b.gif"><img loading="lazy" decoding="async" src="../../enemies/air/chimera/concept/chimera-r72-b.gif" alt="b · motion"></a><figcaption>b · motion</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> a's teal is above the 5-12 % target (thin bright lines count fully) and a reads as "a Talon" until it heals, so mixed wings depend on the teal; the glow is a separate layer (one more frame set in production)</p>
+<p class="rec"><span class="tag">Recommendation</span> b</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>b</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>"overgrown" chosen; a rejected</span></div>
+</article>
+<article class="row" id="r-A.2">
+<header><span class="rid">A.2</span><h3>Mirror Interceptor</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../enemies/air/mirror-interceptor/README.md">Mirror Interceptor</a></div>
+<div class="q"><strong>pick a or b</strong> (artwork). <strong>What:</strong> the regular-livery craft with a frontal mirror that bounces non-beam shots (Q.1 c). <strong>Where:</strong> Level 37 (Aurelia), later Act 6 levels. <strong>The GIF:</strong> a side entry (edge-warned), its flank hit on the way in, the bounce at its 7 s station (slow magenta bullets, one per 0.15 s, the rest spark), two pod bursts after a 0.4 s red tell, the flank again as it leaves, the kill and falling silver shards; the sheet adds heat 40, 78 and 100 % (red, orange, white, cracks), broken (bare frame) and regrowing (a shimmer from one tip). <strong>a "crescent":</strong> one curved polished plate 76 px across the nose with gold tip caps and a slow specular sweep (gold 23 % with the mirror, 27 % hull alone). <strong>b "facets":</strong> five flat panels in gold frames round the arc, gold side panels on the hull (gold 35 %); sparklier, more "machine", the arc's ends less crisp. Recommended a: the arc's ends are what the player must read.</div>
+<div class="media"><figure class="m img"><a href="../../enemies/air/mirror-interceptor/concept/mirror-interceptor-r72-a.png"><img loading="lazy" decoding="async" src="../../enemies/air/mirror-interceptor/concept/mirror-interceptor-r72-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/air/mirror-interceptor/concept/mirror-interceptor-r72-a.gif"><img loading="lazy" decoding="async" src="../../enemies/air/mirror-interceptor/concept/mirror-interceptor-r72-a.gif" alt="a · motion"></a><figcaption>a · motion</figcaption></figure><figure class="m img"><a href="../../enemies/air/mirror-interceptor/concept/rejected/mirror-interceptor-r72-b.png"><img loading="lazy" decoding="async" src="../../enemies/air/mirror-interceptor/concept/rejected/mirror-interceptor-r72-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/air/mirror-interceptor/concept/rejected/mirror-interceptor-r72-b.gif"><img loading="lazy" decoding="async" src="../../enemies/air/mirror-interceptor/concept/rejected/mirror-interceptor-r72-b.gif" alt="b · motion"></a><figcaption>b · motion</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the mirror is thin at play size (the arc's ends are what the player must read); the hull reads bulky and turtle-like; heat 40 % and the cracks are hard to see at 1x</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>"crescent" chosen; b rejected</span></div>
+</article>
+<article class="row" id="r-A.3">
+<header><span class="rid">A.3</span><h3>Harrow</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../enemies/air/harrow/README.md">Harrow</a></div>
+<div class="q"><strong>pick a or b</strong> (artwork; the ring's colour is part of the question). <strong>What:</strong> the hybrid kamikaze with a death ring of 8. <strong>Where:</strong> Level 38 (the storm layer, all edges, among the lightning). <strong>The GIF:</strong> four Harrows from three edges; one shot at range (its slow teal ring, the ship's bearing between two bullets), the 0.6 s lock tell (slows, the sac pulses fast, nose onto the ship) and a sidestepped ram, one killed by a lightning strike (blue-white telegraph), one shot in its tell. <strong>a "dart and sac":</strong> a gunmetal dart with gold leading edges and a swollen veined sac on its back (gold 22 %, teal 7 % hunting, 14 % in the tell). <strong>b "fork":</strong> two gold-tipped prongs cradling a longer sac in plain view (gold 25 %, teal 4 %, 9 % in the tell). Recommended a: its nose shows the ram line. The ring's bullets are teal (the Vrell payload) in both: keep or change?</div>
+<div class="media"><figure class="m img"><a href="../../enemies/air/harrow/concept/harrow-r72-a.png"><img loading="lazy" decoding="async" src="../../enemies/air/harrow/concept/harrow-r72-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/air/harrow/concept/harrow-r72-a.gif"><img loading="lazy" decoding="async" src="../../enemies/air/harrow/concept/harrow-r72-a.gif" alt="a · motion"></a><figcaption>a · motion</figcaption></figure><figure class="m img"><a href="../../enemies/air/harrow/concept/rejected/harrow-r72-b.png"><img loading="lazy" decoding="async" src="../../enemies/air/harrow/concept/rejected/harrow-r72-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/air/harrow/concept/rejected/harrow-r72-b.gif"><img loading="lazy" decoding="async" src="../../enemies/air/harrow/concept/rejected/harrow-r72-b.gif" alt="b · motion"></a><figcaption>b · motion</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> 34 px of gunmetal and dark teal over the storm's slate is the dimmest unit of the round (the gold edges and the tell's glow carry it); b's prongs read less like a nose, so its ram line is read from the prongs</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>"dart and sac" chosen; b rejected</span></div>
+</article>
+<article class="row" id="r-A.4">
+<header><span class="rid">A.4</span><h3>Graft Turret</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../enemies/ground/graft-turret/README.md">Graft Turret</a></div>
+<div class="q"><strong>pick a or b</strong> (artwork). <strong>What:</strong> the hybrid deck turret whose root regrows it. <strong>Where:</strong> Level 37's decks and dome rims. <strong>The GIF:</strong> a nest of three on bright plating and the burnt deck; one turret and its root killed (+15, +5, the scorched stump), one root left to its 5 s window (teal ring shrinking, pulse 1 to 4 Hz) and the 0.8 s regrowth into a mostly-tissue turret with a bone-white veined barrel. <strong>a "metal first":</strong> a gunmetal dome with tissue scars, three cracks in the base (gold 33 %, teal 3 %; regrown 7 %). <strong>b "tissue first":</strong> a third of the dome overgrown, a fleshy collar and six roots across the deck, a bigger root (gold 28 %, teal 6 %; regrown 10 %). Recommended b: it reads as a hybrid before it is shot.</div>
+<div class="media"><figure class="m img"><a href="../../enemies/ground/graft-turret/concept/rejected/graft-turret-r72-a.png"><img loading="lazy" decoding="async" src="../../enemies/ground/graft-turret/concept/rejected/graft-turret-r72-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/ground/graft-turret/concept/rejected/graft-turret-r72-a.gif"><img loading="lazy" decoding="async" src="../../enemies/ground/graft-turret/concept/rejected/graft-turret-r72-a.gif" alt="a · motion"></a><figcaption>a · motion</figcaption></figure><figure class="m img"><a href="../../enemies/ground/graft-turret/concept/graft-turret-r72-b.png"><img loading="lazy" decoding="async" src="../../enemies/ground/graft-turret/concept/graft-turret-r72-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/ground/graft-turret/concept/graft-turret-r72-b.gif"><img loading="lazy" decoding="async" src="../../enemies/ground/graft-turret/concept/graft-turret-r72-b.gif" alt="b · motion"></a><figcaption>b · motion</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> a's teal is under the 5 % floor before it is shot (it reads as a plain turret); b's roots read a little spiky (they take the gold rim); the dome's specular flashes white at some headings; the wreck is a 2D cut of the turret sprite</p>
+<p class="rec"><span class="tag">Recommendation</span> b</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>b</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>"tissue first" chosen; a rejected</span></div>
+</article>
+<article class="row" id="r-A.5">
+<header><span class="rid">A.5</span><h3>Shield Pylon</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../enemies/ground/shield-pylon/README.md">Shield Pylon</a></div>
+<div class="q"><strong>pick a or b</strong> (artwork). <strong>What:</strong> the elite fortress mast whose gold hex dome makes the guns under it invulnerable. <strong>Where:</strong> Level 41's pylon gates. <strong>The GIF:</strong> the scroll eases to a halt, <code>PYLONS 0/2</code>, shots spend in gold sparks on the domes over a Rail Bunker and two guns (gold hex sheen), each pylon broken (the crown topples, the dome collapses into it as a shrinking ring, 0.4 s), <code>PYLONS 2/2</code>, the scroll resumes. <strong>a "crown":</strong> a gold crown of six prongs on a short black mast, the lens leaning toward its dome, a solid thin gold feed beam, an even lattice (gold 37 %). <strong>b "obelisk":</strong> a tall faceted spire with four gold vanes and a gold dish, a feed of bright packets flowing to the dome, the lattice fading toward the middle (gold 33 %). Recommended a.</div>
+<div class="media"><figure class="m img"><a href="../../enemies/ground/shield-pylon/concept/shield-pylon-r72-a.png"><img loading="lazy" decoding="async" src="../../enemies/ground/shield-pylon/concept/shield-pylon-r72-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/ground/shield-pylon/concept/shield-pylon-r72-a.gif"><img loading="lazy" decoding="async" src="../../enemies/ground/shield-pylon/concept/shield-pylon-r72-a.gif" alt="a · motion"></a><figcaption>a · motion</figcaption></figure><figure class="m img"><a href="../../enemies/ground/shield-pylon/concept/rejected/shield-pylon-r72-b.png"><img loading="lazy" decoding="async" src="../../enemies/ground/shield-pylon/concept/rejected/shield-pylon-r72-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/ground/shield-pylon/concept/rejected/shield-pylon-r72-b.gif"><img loading="lazy" decoding="async" src="../../enemies/ground/shield-pylon/concept/rejected/shield-pylon-r72-b.gif" alt="b · motion"></a><figcaption>b · motion</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> from straight above both read as octagonal plates (b's height only shows in its facets); the feed is short (the pylon stands 30 px outside its dome); two overlapping domes get busy over the covered units</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>"crown" chosen; b rejected</span></div>
+</article>
+<article class="row" id="r-A.6">
+<header><span class="rid">A.6</span><h3>Halo Platform in the heartland livery</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../enemies/ground/halo-platform/README.md">Halo Platform in the heartland livery</a></div>
+<div class="q"><strong>pick a or b</strong> (artwork; J.8 keeps the design). <strong>What:</strong> the chosen round 07 ring re-rendered, only what changes. <strong>Where:</strong> Level 41's held arena. <strong>The GIF:</strong> the live 120 degree arc as a faint red band following the ship, mounts' lights gold to red inside it, gun bursts and rail lines from mounts in the arc, three mounts lost with eased speed-ups, the red barrier dropping at the third, the eye flaring before the open core's rings. <strong>a "gold trim":</strong> gloss black with the r07 gold rails, mount rings and end caps gold, the strong rim (ring gold 35 %). <strong>b "gold decks":</strong> gold top decks between black rails, black mount rings, a gold core drum (ring gold about 49 %, above the elite's 35-45 %). New with the draft and drawn here: three rail turrets (one long barrel, three gold coils). Recommended a: gold inside the elite band.</div>
+<div class="media"><figure class="m img"><a href="../../enemies/ground/halo-platform/concept/halo-platform-r72-a.png"><img loading="lazy" decoding="async" src="../../enemies/ground/halo-platform/concept/halo-platform-r72-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/ground/halo-platform/concept/halo-platform-r72-a.gif"><img loading="lazy" decoding="async" src="../../enemies/ground/halo-platform/concept/halo-platform-r72-a.gif" alt="a · motion"></a><figcaption>a · motion</figcaption></figure><figure class="m img"><a href="../../enemies/ground/halo-platform/concept/rejected/halo-platform-r72-b.png"><img loading="lazy" decoding="async" src="../../enemies/ground/halo-platform/concept/rejected/halo-platform-r72-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/ground/halo-platform/concept/rejected/halo-platform-r72-b.gif"><img loading="lazy" decoding="async" src="../../enemies/ground/halo-platform/concept/rejected/halo-platform-r72-b.gif" alt="b · motion"></a><figcaption>b · motion</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the turrets stay small (r07's 36 px); b's gold decks give the red arc band less contrast and sit above the elite gold band</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>"gold trim" chosen; b rejected</span></div>
+</article>
+<article class="row" id="r-A.7">
+<header><span class="rid">A.7</span><h3>Plasma Arc: the look</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../player/weapons/plasma-arc/README.md">Plasma Arc: the look</a></div>
+<div class="q"><strong>pick a or b</strong> (artwork). <strong>What:</strong> the player's Act 6 front gun, an instant arc that chains from target to target. <strong>Where:</strong> from the Level 36 shop, Act 6's packed waves. <strong>The GIF:</strong> L1 (3 targets, reach 200, jumps 90) on a Chimera swarm (they heal between discharges), then L5 (6 targets) on a second swarm; each discharge 0.1 s, a flash and six sparks per struck unit. <strong>a "the wide Tesla":</strong> the Tesla Coil Pod's jagged blue-white bolt with its violet fringe and two forks at 1.7x width, each jump 0.72x thinner: one family with the pod. <strong>b "the braid":</strong> two smooth cyan strands twisted round each strike, pinched at the ends, an indigo fringe, each jump a thinner braid: its own weapon, its chain easier to follow. Recommended b: a's violet sits near the bounced bullets' magenta.</div>
+<div class="media"><figure class="m img"><a href="../../player/weapons/plasma-arc/concept/plasma-arc-r72-a.png"><img loading="lazy" decoding="async" src="../../player/weapons/plasma-arc/concept/plasma-arc-r72-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../player/weapons/plasma-arc/concept/plasma-arc-r72-a.gif"><img loading="lazy" decoding="async" src="../../player/weapons/plasma-arc/concept/plasma-arc-r72-a.gif" alt="a · motion"></a><figcaption>a · motion</figcaption></figure><figure class="m img"><a href="../../player/weapons/plasma-arc/concept/rejected/plasma-arc-r72-b.png"><img loading="lazy" decoding="async" src="../../player/weapons/plasma-arc/concept/rejected/plasma-arc-r72-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../player/weapons/plasma-arc/concept/rejected/plasma-arc-r72-b.gif"><img loading="lazy" decoding="async" src="../../player/weapons/plasma-arc/concept/rejected/plasma-arc-r72-b.gif" alt="b · motion"></a><figcaption>b · motion</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> over Level 36's cream band the white core washes out (the glow carries it); a's violet fringe sits near the bounced bullets' magenta; b leaves the arc family's look the pod established</p>
+<p class="rec"><span class="tag">Recommendation</span> b</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge pick">not the recommendation</span> <span><strong>a</strong> (not the recommendation)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>"the wide Tesla" chosen, one family with the Tesla Coil Pod; b rejected. The violet fringe near the bounced bullets' magenta is accepted: part A checks in a capture that the two read apart. The user's note on the explosions is answered in the <em>Decisions</em> entry (a mockup artifact)</span></div>
+</article>
+</section>
+<section id="s-art-boss-world-and-people"><h2>Art: boss, world and people</h2>
+<div class="sum"><p>The bosses, the world and the people (<code>tools/concept/act6_r72.py</code>). Jupiter's moods are Q.10's renderings above.</p></div>
+<article class="row" id="r-A.8">
+<header><span class="rid">A.8</span><h3>Honour Guard: the three aces</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../enemies/bosses/honour-guard/README.md">Honour Guard: the three aces</a></div>
+<div class="q"><strong>pick a or b</strong> (artwork, boss fight). <strong>What:</strong> Vorne's three aces (Harker the sniper, Vesper the dancer, Kestrel the feinter), the Level 40 mid-boss, in the Q.9 a elite livery (gloss black, heavy gold, gold top-left rim, red lights), 1.5x a Talon (76 px). <strong>Where:</strong> Level 40, the Callisto approach (black space, Callisto's disc, Jupiter's limb). <strong>a "marks on one airframe":</strong> all three on the Talon's own airframe, told apart by paint only: Harker's long barrel under the nose and red nose band, Vesper's white ribbon stripes on the wings and tail, Kestrel's gold chevrons, red tail band and twin fins (gold 38-42 %). <strong>b "three silhouettes":</strong> the airframe changed per ace: Harker's stretched needle nose and longer barrel, Vesper's long slim swept-back wings with trailing white ribbons, Kestrel short and wide with canards and bigger fins (gold 35-42 %). Recommended a: one airframe to build.</div>
+<div class="media"><figure class="m img"><a href="../../enemies/bosses/honour-guard/concept/honour-guard-r72-a.png"><img loading="lazy" decoding="async" src="../../enemies/bosses/honour-guard/concept/honour-guard-r72-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/bosses/honour-guard/concept/rejected/honour-guard-r72-b.png"><img loading="lazy" decoding="async" src="../../enemies/bosses/honour-guard/concept/rejected/honour-guard-r72-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> gloss black over black space leans on the rim and the gold (Jupiter's limb helps); a's paint marks are small at play size; b's silhouettes cost three airframes instead of one</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>"marks on one airframe" chosen; b rejected</span></div>
+</article>
+<article class="row" id="r-A.9">
+<header><span class="rid">A.9</span><h3>Honour Guard: the joins and the conductor</h3><span class="kind">ok or change</span></header>
+<div class="part"><a href="../../enemies/bosses/honour-guard/README.md">Honour Guard: the joins and the conductor</a></div>
+<div class="q"><strong>ok or change</strong> (boss fight; the rule is Q.5 a). <strong>What:</strong> an eight-frame storyboard of Q.5 a (the sting and the three hatched bar segments with Harker's chevron tell; Harker alone with the sniper line; Vesper's tell from the far side; two aces; Kestrel's tell from the rear; three aces with Kestrel's dive told and Harker's line waiting; the pincer; Vesper down, the survivors sharper) and the conductor's 60 s timeline (a seeded run of the three playbooks: measured, one telegraphed line or dive at a time, at most two aces firing). The two boards differ only by the aces' look (A.8 a and b). <strong>ok:</strong> the join order, the tells and the conductor's pace as drawn; <strong>change:</strong> a note on what to change.</div>
+<div class="media"><figure class="m img"><a href="../../enemies/bosses/honour-guard/concept/honour-guard-joins-r72-a.png"><img loading="lazy" decoding="async" src="../../enemies/bosses/honour-guard/concept/honour-guard-joins-r72-a.png" alt="with aces a"></a><figcaption>with aces a</figcaption></figure><figure class="m img"><a href="../../enemies/bosses/honour-guard/concept/rejected/honour-guard-joins-r72-b.png"><img loading="lazy" decoding="async" src="../../enemies/bosses/honour-guard/concept/rejected/honour-guard-joins-r72-b.png" alt="with aces b"></a><figcaption>with aces b</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the screen is busy with three; the waits may read as a pattern; the pincer is not in the timeline run</p>
+<p class="rec"><span class="tag">Recommendation</span> ok</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>ok</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>the join order, the tells and the conductor's pace as drawn; the board with aces a chosen, b rejected</span></div>
+</article>
+<article class="row" id="r-A.10">
+<header><span class="rid">A.10</span><h3>Ascendant: per phase with the lifeboat</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../enemies/bosses/ascendant/README.md">Ascendant: per phase with the lifeboat</a></div>
+<div class="q"><strong>pick a or b</strong> (artwork, boss fight). <strong>What:</strong> the Level 42 boss bow-on (Q.6 a): phase 1's gold hull (generators with gold beams, four batteries behind mirror crescents in their states whole, heating, cracked, down, the bow cannon under its hex shield), phase 2's Vrell half (keel split, teal-black tissue, three sacs, the heart sealed and open), the eruption frames, the wreck's halves, the lifeboat and the measured one-page atlas budget. <strong>a "the gilded wedge":</strong> one smooth gloss-black wedge with gold ribs fanning down both faces, the Vrell half erupting along the keel with the plates peeling outward (symmetric); the lifeboat a round seed-pod with the gold capsule half swallowed, its amber canopy the one warm spot (gold 34 %, atlas 11.9 % of a page). <strong>b "the armoured tiers":</strong> the bow stepped in six tiers of one identical armour block (27 times) with dark gaps and gold crown fins, the tissue bursting through six gaps with blocks thrown aside (asymmetric); the lifeboat a long thorned pod with tendrils, the canopy at its head (gold 37 %, atlas 3.8 %). Recommended a. The lifeboat is Act 7's mid-boss seed, so this pick carries forward.</div>
+<div class="media"><figure class="m img"><a href="../../enemies/bosses/ascendant/concept/ascendant-r72-a.png"><img loading="lazy" decoding="async" src="../../enemies/bosses/ascendant/concept/ascendant-r72-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/bosses/ascendant/concept/rejected/ascendant-r72-b.png"><img loading="lazy" decoding="async" src="../../enemies/bosses/ascendant/concept/rejected/ascendant-r72-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> a's black faces read flat without the face shading; b reads more "built" than "ship" and its eruption is one breach sprite flipped and scaled; the lifeboat's pick carries forward to Act 7</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>"the gilded wedge" chosen; b rejected</span></div>
+</article>
+<article class="row" id="r-A.11">
+<header><span class="rid">A.11</span><h3>Ascendant: the phase storyboard</h3><span class="kind">ok or change</span></header>
+<div class="part"><a href="../../enemies/bosses/ascendant/README.md">Ascendant: the phase storyboard</a></div>
+<div class="q"><strong>ok or change</strong> (boss fight; the rule is Q.6 a). <strong>What:</strong> nine frames: the <code>WARNING</code> before any hull shows, the hull sliding in bow-first with lights coming on, phase 1 fought from the far side (the spinal lance's red line, magenta bounced shots), the generators down, the eruption with Vorne's one shout, phase 2 (heart open, spore spiral, a brood), the kill (chain, flash, credit shower), the escape (escape bar <code>VORNE</code>, spore wake, the wreck's halves drifting apart) and <code>ESCAPED</code>. The two boards differ only by the hull (A.10 a and b). <strong>ok:</strong> the phase order, the warning and the escape as drawn; <strong>change:</strong> a note.</div>
+<div class="media"><figure class="m img"><a href="../../enemies/bosses/ascendant/concept/ascendant-phases-r72-a.png"><img loading="lazy" decoding="async" src="../../enemies/bosses/ascendant/concept/ascendant-phases-r72-a.png" alt="with hull a"></a><figcaption>with hull a</figcaption></figure><figure class="m img"><a href="../../enemies/bosses/ascendant/concept/ascendant-phases-r72-b.png"><img loading="lazy" decoding="async" src="../../enemies/bosses/ascendant/concept/ascendant-phases-r72-b.png" alt="with hull b"></a><figcaption>with hull b</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the Mote Swarm stands in for the Chimera brood</p>
+<p class="rec"><span class="tag">Recommendation</span> ok</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge pick">not the recommendation</span> <span><strong>change</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>the hull breaks along a <strong>jagged fracture</strong> (torn plating, a ragged edge, debris and venting), never a straight clean cut; both storyboard sheets stay <code>proposed</code> and a follow-up art step re-renders frame 8; the phase order, the warning and the escape accepted</span></div>
+</article>
+<article class="row" id="r-A.12">
+<header><span class="rid">A.12</span><h3>Level 36&#x27;s foreground banks</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../world/jovian/README.md">Level 36's foreground banks</a></div>
+<div class="q"><strong>pick a or b</strong> (artwork; the rule is Q.2 a). <strong>What:</strong> Q.2 a's readability frame: a bank on high-air at 65 % over Talons, an ace and a Chimera-sized body, their lights and tells at full, bullets, the ship, Rook and a pickup above; measured 25 % of the field, 0 % of the ship's band. <strong>a "cream veil":</strong> the bank in the band's own lit cream, bodies fade toward cream. <strong>b "shadowed underside":</strong> a cool grey-ochre bank, bodies sink as dark shapes, lights glow harder. Recommended b: it reads clearly as "something over the field".</div>
+<div class="media"><figure class="m img"><a href="../../world/jovian/concept/jovian-banks-r72-a.png"><img loading="lazy" decoding="async" src="../../world/jovian/concept/jovian-banks-r72-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../world/jovian/concept/rejected/jovian-banks-r72-b.png"><img loading="lazy" decoding="async" src="../../world/jovian/concept/rejected/jovian-banks-r72-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> in a the bank is hard to tell from Level 36's own cloud heads (the deep layer is cream cloud too); b darkens the brightest level</p>
+<p class="rec"><span class="tag">Recommendation</span> b</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge pick">not the recommendation</span> <span><strong>a</strong> (not the recommendation)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>"cream veil" chosen; b rejected. Rule: clouds at different altitudes do not have different colours, so the bank need not be told from the deep layer</span></div>
+</article>
+<article class="row" id="r-A.13">
+<header><span class="rid">A.13</span><h3>The falling city</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../world/jovian/README.md">The falling city</a></div>
+<div class="q"><strong>pick a or b</strong> (artwork; the rule is Q.4 a). <strong>What:</strong> a storyboard of Level 37's last 40 s: balloons tearing, the deck dropping, 20 s of the city layer slowing, darkening and shrinking (1.0 to 0.42) while the ship flies down beside the spires through debris and Vrell, the last wave, Okafor's line, open cloud (at least 4 s calm). <strong>a "the slow tilt":</strong> the city goes down in one piece, tilting. <strong>b "breaking up":</strong> the deck breaks along a fault line, the halves drift apart and sink at their own rates, the spires topple. Recommended a: one layer.</div>
+<div class="media"><figure class="m img"><a href="../../world/jovian/concept/rejected/falling-city-r72-a.png"><img loading="lazy" decoding="async" src="../../world/jovian/concept/rejected/falling-city-r72-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../world/jovian/concept/falling-city-r72-b.png"><img loading="lazy" decoding="async" src="../../world/jovian/concept/falling-city-r72-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the shrinking ground layer is an engine feature (gap §2.10); b needs two layers and an authored cut line</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge pick">not the recommendation</span> <span><strong>b</strong> (not the recommendation)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>"breaking up" chosen; a rejected. The falling city breaks along an authored <strong>jagged</strong> cut line into two city layers that sink at their own rates; the world document, Level 37 and the act README follow</span></div>
+</article>
+<article class="row" id="r-A.14">
+<header><span class="rid">A.14</span><h3>The act title-card still</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../campaign/act-6-jovian-storm/README.md">The act title-card still</a></div>
+<div class="q"><strong>pick a or b</strong> (artwork). <strong>What:</strong> the still under <code>ACT VI / JOVIAN STORM</code> (darkened, letterboxed). <strong>a "the dive":</strong> Jupiter's sunlit bands and the Great Red Spot filling the lower right, the CDF carrier group diving from orbit with soft trails, Callisto a dark disc beside the limb. <strong>b "Aurelia's gold":</strong> golden hour inside Jupiter's sky, the cloud sea receding to a bright horizon, Aurelia's gilded deck under three balloons and its anti-grav ring, a gold Talon pair, Callisto high in the sky. Recommended a: it says why the wing dives first.</div>
+<div class="media"><figure class="m img"><a href="../../campaign/act-6-jovian-storm/concept/act-6-still-r72-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-6-jovian-storm/concept/act-6-still-r72-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../campaign/act-6-jovian-storm/concept/rejected/act-6-still-r72-b.png"><img loading="lazy" decoding="async" src="../../campaign/act-6-jovian-storm/concept/rejected/act-6-still-r72-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the carrier group is the Act 3 heavy transport standing in (no carrier model yet); the stills are smooth 24-bit, not act_stills.py's 96-colour dither (production must follow the dither rule)</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>"the dive" chosen; b rejected</span></div>
+</article>
+<article class="row" id="r-A.15">
+<header><span class="rid">A.15</span><h3>The Act 6 radio portraits</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../story/characters/README.md">The Act 6 radio portraits</a></div>
+<div class="q"><strong>pick a or b</strong> (artwork). <strong>What:</strong> Harker (his final Level 29 face in the guard's gloss black and gold suit, the crest on the collar), Vesper (black helmet, white ribbon stripes, gold visor pushed up), Kestrel (black and gold chevrons, red band, visor up) on the amber enemy channel; Aurelia Traffic (white-and-gold civil uniform, headset) on the teal channel; 72 px style B at 1x, 3x and beside the production speakers. <strong>a "plain channel screens":</strong> the dot-grid screens as the cast's. <strong>b "their rooms":</strong> the aces in their cockpits (two canopy struts, the guard's gold crest), Aurelia Traffic at the tower's windows on the gold domes (the story draft's brief). Recommended a: consistent with every other speaker (round 60's plain amber screen for Vorne).</div>
+<div class="media"><figure class="m img"><a href="../../story/characters/concept/act6-speakers-r72-a.png"><img loading="lazy" decoding="async" src="../../story/characters/concept/act6-speakers-r72-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../story/characters/concept/rejected/act6-speakers-r72-b.png"><img loading="lazy" decoding="async" src="../../story/characters/concept/rejected/act6-speakers-r72-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> three amber aces at 72 px are told apart by their helmets (Kestrel's chevrons are faint at 1x); the portraits keep the pipeline's own soft dither (every portrait does)</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>"plain channel screens" chosen; b rejected</span></div>
+</article>
+</section>
+<section id="s-music"><h2>Music</h2>
+<div class="sum"><p>Four cues, sketches of about a minute (the hand-off and the sting cut from the game's own files); the full lengths and stems come at the build.</p></div>
+<article class="row" id="r-M.1">
+<header><span class="rid">M.1</span><h3>Track 15, the Act 6 B theme (act6-b-theme)</h3><span class="kind">pick a or b</span></header>
+<div class="part">[Track 15, the Act 6 B theme (<code>act6-b-theme</code>)](../../audio/music/README.md)</div>
+<div class="q"><strong>pick a or b</strong>. <strong>Plays:</strong> Level 37 from the Vrell turn (t=103; its <code>fall</code> stem from the city's fall), Levels 38 and 41 and the Level 42 approach; about a minute of loop sketch. <strong>Should sound like:</strong> heavy, stormy, choir and distorted bass; the war has three sides now; Vorne's motif present. <strong>a "Storm Wall"</strong> (135 BPM, C minor): orchestral metal, a drop-tuned half-time bass riff, war drums and toms, tremolo storm strings, a wordless choir; Vorne's motif in the open in cold brass and organ every 8 bars; a breakdown of the choir alone over low strings. <strong>b "Red Spot"</strong> (150 BPM, E minor): darker and driving, a distorted 16th bass, an industrial kit with struck metal, the choir chanting the Choir motif's falling tritone figure as a riff; Vorne's motif only as a machine arpeggio buried in the bass (the Vrell have the upper hand).</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/music/concept/act6-b-theme-r72-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/music/concept/rejected/act6-b-theme-r72-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> both are sketches at -14 LUFS, not yet seamless full lengths</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>"Storm Wall" (135 BPM) chosen; b rejected</span></div>
+</article>
+<article class="row" id="r-M.2">
+<header><span class="rid">M.2</span><h3>The duel theme, track 32 (duel-theme)</h3><span class="kind">pick a or b</span></header>
+<div class="part">[The duel theme, track 32 (<code>duel-theme</code>)](../../audio/music/README.md)</div>
+<div class="q"><strong>pick a or b</strong>. <strong>Plays:</strong> Level 40, after the mini-boss sting, for the whole Honour Guard fight; track 14 returns after the last ace. <strong>Should sound like:</strong> three aces, one duel: Vorne's motif against the main motif, call and response like a joust. <strong>a "Honour Guard"</strong> (150 BPM, A minor): martial orchestra in the Iron Sovereign's family, snare rudiments, timpani, galloping strings; Vorne's motif in gold brass answered by the horn call, a three-voice brass fugato, then both motifs together. <strong>b "Three Aces"</strong> (175 BPM, A minor): drum and bass, breakbeat, reese bass, synth-brass stabs, Vorne's motif as a fast arpeggio and the main motif soaring in a distorted lead; leaner, more arcade.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/music/concept/rejected/duel-theme-r72-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/music/concept/duel-theme-r72-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> b leaves the campaign's orchestral and industrial palette (drum and bass is new)</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge pick">not the recommendation</span> <span><strong>b</strong> (not the recommendation)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>"Three Aces" (175 BPM, drum and bass) chosen; a rejected. The worry, that it leaves the campaign's orchestral and industrial palette, is accepted</span></div>
+</article>
+<article class="row" id="r-M.3">
+<header><span class="rid">M.3</span><h3>The Ascendant&#x27;s hand-off, track 19 to 18 (ascendant-handoff)</h3><span class="kind">pick a or b</span></header>
+<div class="part">[The Ascendant's hand-off, track 19 to 18 (<code>ascendant-handoff</code>)](../../audio/music/README.md)</div>
+<div class="q"><strong>pick a or b</strong>. <strong>Plays:</strong> Level 42, at phase 2's eruption: the Iron Sovereign theme (phase 1) gives way to "The Choir Descends" (the Vrell take Vorne's ship), under the Choir's line and Vorne's shout; 20-22 s, cut from the game's own files. <strong>Should sound like:</strong> the boss music turning Vrell under him; track 18's bare Choir-motif intro is the moment. <strong>a crossfade:</strong> track 19 fades out over 2 s while track 18 starts from its beginning (recommended). <strong>b bridge:</strong> track 19 slows like a tape stop, sinking two semitones and darkening over 4 s, into track 18's drone.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/music/concept/ascendant-handoff-r72-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/music/concept/rejected/ascendant-handoff-r72-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> b's 4 s dive overlaps the Choir's line and the shout</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>the crossfade chosen; b rejected</span></div>
+</article>
+<article class="row" id="r-M.4">
+<header><span class="rid">M.4</span><h3>The escape sting, track 33 (escape-sting)</h3><span class="kind">pick a or b</span></header>
+<div class="part">[The escape sting, track 33 (<code>escape-sting</code>)](../../audio/music/README.md)</div>
+<div class="q"><strong>pick a or b</strong>. <strong>Plays:</strong> Level 42, <code>ESCAPED</code>: the lifeboat leaves the top edge; the sting cuts track 18, then the ambience alone for the calm and Okafor's last line; 6.6 s. <strong>Should sound like:</strong> Vorne's motif once, falling apart into the Choir motif's tritone drop, ending unresolved on a held low E. <strong>a "Collapse":</strong> brass and organ state the motif, its last note bends down and dies; the choir descends and drops to F over a held low E. <strong>b "Dying Engine":</strong> the motif as a machine arpeggio that slows and sinks like an engine dying, into the choir's drop over the same held E.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/music/concept/escape-sting-r72-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/music/concept/rejected/escape-sting-r72-b.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>"Collapse" chosen; b rejected</span></div>
+</article>
+</section>
+<section id="s-sounds"><h2>Sounds</h2>
+<div class="sum"><p>The sixteen sounds of Act 6 (twelve effects, four ambience beds), cut from Freesound's public previews (CC0 or CC-BY, recorded in <span class="ref">CREDITS.md</span>); <code>tools/concept/audio/sfx_r72.py</code>. The a and b of a subject are loudness-matched.</p></div>
+<article class="row" id="r-S.1">
+<header><span class="rid">S.1</span><h3>regrowth-creak</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>regrowth-creak</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b</strong>. <strong>Plays:</strong> the shared hybrid set's healing sound: while a Chimera's HP regrows (repeated for the nearest healing unit), a Graft Turret's regrowth tail and, an octave down, the Ascendant's sacs healing; Levels 37-42, often but quiet, under the fire. <strong>Should sound like:</strong> a soft rising creak: stretched leather or a rope twisting under load, dry and close; never wet, bubbly or squelching. <strong>a:</strong> a leather strap stretched slowly, slowed to 0.85 and swelling up: a tight, grainy leather creak that rises, 1.2 s. <strong>b:</strong> a sailing boat's rigging and hull creaking at the mooring, slowed to 0.9 and swelling up: a lower, woodier rope creak than a, 1.2 s.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/regrowth-creak-r72-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/regrowth-creak-r72-b.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected</span></div>
+</article>
+<article class="row" id="r-S.2">
+<header><span class="rid">S.2</span><h3>tissue-tear</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>tissue-tear</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b</strong>. <strong>Plays:</strong> the shared hybrid set's tear: a Graft Turret root's death, the Ascendant's brood splitting and the lifeboat tearing free, Level 37's growth over the decks (drawn long); now and then. <strong>Should sound like:</strong> a dry fibrous tearing: heavy canvas or sailcloth ripping, rope fibres parting; never flesh, never wet. <strong>a:</strong> cotton cloth torn by hand, close, slowed to 0.6 so it reads as heavy canvas: a long dry rip, 0.9 s. <strong>b:</strong> a ship's sail ripping, with a quick cloth rip slowed under it: rougher and wider than a, the fibres parting in bursts, 0.75 s.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/tissue-tear-r72-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/tissue-tear-r72-b.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected</span></div>
+</article>
+<article class="row" id="r-S.3">
+<header><span class="rid">S.3</span><h3>mirror-ping</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>mirror-ping</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b</strong>. <strong>Plays:</strong> every shot a Mirror Interceptor's mirror bounces (throttled: once per 0.08 s per unit) and, lower, the Ascendant's panels; Levels 38-42, often in a mirror fight. <strong>Should sound like:</strong> a bright glassy ping: a struck glass or glass bowl, short; it must never sound like the Reflex Shield's ricochet (S.4): glass, not a bullet. <strong>a:</strong> a glass struck once: a clean high ping with a short ring, 0.4 s. <strong>b:</strong> a crystal singing bowl struck, sped to 1.5: a rounder, more bell-like glass tone than a, 0.45 s.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/mirror-ping-r72-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/mirror-ping-r72-b.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected</span></div>
+</article>
+<article class="row" id="r-S.4">
+<header><span class="rid">S.4</span><h3>reflex-ricochet</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>reflex-ricochet</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b</strong>. <strong>Plays:</strong> the Reflex Shield (Act 6's shield): each enemy bullet it turns into a bolt, throttled to once per 0.06 s, over the shield hit; often while the player tanks fire. <strong>Should sound like:</strong> a real bullet ricochet (a rifle round whining off steel), bright and short: the player's side of the mirrors, never the mirror's glassy ping (S.3). <strong>a:</strong> a bullet's ricochet: the hit and a thin whine flying off, 0.45 s. <strong>b:</strong> a round glancing off metal, sped to 1.2: more of a metallic spang than a's whine, 0.5 s.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/reflex-ricochet-r72-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/reflex-ricochet-r72-b.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected</span></div>
+</article>
+<article class="row" id="r-S.5">
+<header><span class="rid">S.5</span><h3>harrow-lock</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>harrow-lock</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b</strong>. <strong>Plays:</strong> the Harrow's 0.6 s lock tell (Levels 38-42): it slows, its sac pulses and its nose swings onto the ship before the ram; the warning the player must hear. <strong>Should sound like:</strong> a short rising whine, thin and urgent, 0.6 s. <strong>a:</strong> a jet's approach whine, glided up (0.9 to 1.5) and swelling: a thin rising jet scream, 0.6 s. <strong>b:</strong> a tank's gas turbine spooling up, glided up (0.9 to 1.6) and swelling: a harder mechanical whine climbing, 0.6 s.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/harrow-lock-r72-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/harrow-lock-r72-b.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge pick">not the recommendation</span> <span><strong>b</strong> (not the recommendation)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected</span></div>
+</article>
+<article class="row" id="r-S.6">
+<header><span class="rid">S.6</span><h3>harrow-burst</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>harrow-burst</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b</strong>. <strong>Plays:</strong> every Harrow death (shot, ramming, struck by lightning), instead of a size rung; Levels 38-42, often in a swarm. <strong>Should sound like:</strong> a dull heavy thud with a crackle (a muffled blast, a firework mortar's thump); never a pop, never wet. <strong>a:</strong> a muffled boom (a deep dull thud) with a firework shell's crackle tail over it (its burst crack cut away), 0.9 s. <strong>b:</strong> a muffled explosion (more body and mid than a's boom) with another mortar shell's crackle tail, 0.9 s.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/harrow-burst-r72-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/harrow-burst-r72-b.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected</span></div>
+</article>
+<article class="row" id="r-S.7">
+<header><span class="rid">S.7</span><h3>lightning-tell</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>lightning-tell</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b</strong>. <strong>Plays:</strong> a lightning column's 1.0 s telegraph (Level 38, a few in Level 36): the strike lands where it glows; quiet, under the fire. <strong>Should sound like:</strong> a faint high-voltage buzz rising (a Tesla coil, a power line's corona), its length the telegraph's. <strong>a:</strong> a Tesla coil sparking and humming, glided up (0.85 to 1.15) and swelling to the strike: a crackling buzz, 1.0 s. <strong>b:</strong> a high-voltage buzz, glided up (0.8 to 1.2) and swelling: smoother and higher than a, more of a rising hum, 1.0 s.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/lightning-tell-r72-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/lightning-tell-r72-b.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected</span></div>
+</article>
+<article class="row" id="r-S.8">
+<header><span class="rid">S.8</span><h3>lightning-strike</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>lightning-strike</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b</strong>. <strong>Plays:</strong> a lightning strike (Level 38, a few in Level 36) as its telegraph ends; never two within 1.5 s; a big moment. <strong>Should sound like:</strong> a close crack (a real lightning strike recorded near: the sharp tearing crack, its first 0.3 s) with Level 12's chosen thunder keyed to it: the crack, then the roll. <strong>a:</strong> a lightning strike recorded close in a storm, its crack, then Level 12's close thunder strike rolling away: a natural crack and roll, 3.7 s. <strong>b:</strong> a 1.2 MV flashover in a high-voltage lab (a sharper, more electric snap than a), then the same thunder roll, 3.7 s.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/lightning-strike-r72-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/lightning-strike-r72-b.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge pick">not the recommendation</span> <span><strong>b</strong> (not the recommendation)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected</span></div>
+</article>
+<article class="row" id="r-S.9">
+<header><span class="rid">S.9</span><h3>eruption</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>eruption</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b</strong>. <strong>Plays:</strong> Level 39 (Io): each eruption, its 1.2 s tell then the blast (the rocks' sounds are the belt's). <strong>Should sound like:</strong> Level 27's tell and roar in a dry variant: a rising ground rumble, then a volcanic blast's roar; no water, no steam hiss. <strong>a:</strong> an earthquake's rumble swelling for 1.2 s (the tell), then a volcanic eruption's roar: dense and dry, 3.2 s. <strong>b:</strong> a deep rumble (a distant shuttle or a quake, slowed) swelling for 1.2 s, then a real explosion of Mount Yasur: a rougher, rockier blast than a, 3.4 s.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/eruption-r72-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/eruption-r72-b.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected</span></div>
+</article>
+<article class="row" id="r-S.10">
+<header><span class="rid">S.10</span><h3>pylon-dome-up</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>pylon-dome-up</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b</strong>. <strong>Plays:</strong> a Shield Pylon's dome coming up (Level 41): at the start of a gate and after an EMP or a <code>shield-breaker</code> hit, as the dome flickers back over 0.3 s. <strong>Should sound like:</strong> a short electrical hum rising, the tell that the dome is back. <strong>a:</strong> a gym's lights powering up (the ballasts' hum and tick), glided up: a quick rising buzz, 0.45 s. <strong>b:</strong> a machine room's transformer hum gliding up an octave (0.5 to 1.0) with a faint high-voltage buzz on its end: deeper and smoother than a, 0.45 s.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/pylon-dome-up-r72-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/pylon-dome-up-r72-b.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected</span></div>
+</article>
+<article class="row" id="r-S.11">
+<header><span class="rid">S.11</span><h3>pylon-dome-down</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>pylon-dome-down</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b</strong>. <strong>Plays:</strong> a Shield Pylon's dome collapsing (Level 41): the pylon's death, an EMP or a <code>shield-breaker</code> hit; a reward. <strong>Should sound like:</strong> a falling hum into a hard electrical snap. <strong>a:</strong> a high-voltage power failure: a crackling discharge collapsing, 0.9 s. <strong>b:</strong> the transformer hum falling an octave, cut by a 1.2 MV flash's hard snap: the brief's shape exactly, 0.9 s.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/pylon-dome-down-r72-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/pylon-dome-down-r72-b.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge pick">not the recommendation</span> <span><strong>b</strong> (not the recommendation)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected</span></div>
+</article>
+<article class="row" id="r-S.12">
+<header><span class="rid">S.12</span><h3>graft-regrowth</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>graft-regrowth</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b</strong>. <strong>Plays:</strong> a Graft Turret regrowing on its root (Levels 39-42) as the turret stands again. <strong>Should sound like:</strong> a longer twisting creak that ends in a woody knock as the turret stands; dry. <strong>a:</strong> a tree creaking in the wind, slowed to 0.9 and swelling, then a single knock on a wooden door: 1.8 s. <strong>b:</strong> an old wooden door's (or a ship hull's) slow creak, slowed to 0.85 (the source of round 36's chosen root growth), then a deeper door knock: lower and heavier than a, 1.9 s.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/graft-regrowth-r72-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/graft-regrowth-r72-b.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected</span></div>
+</article>
+<article class="row" id="r-S.13">
+<header><span class="rid">S.13</span><h3>jovian-sky</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>jovian-sky</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b</strong>. <strong>Plays:</strong> Levels 36 and 38 (Jupiter's cloud bands): the level's ambience bed on the effects bus at the beds' 0.70, under the music; heard in the quiet stretches, a level's start and the pause before a boss; Level 38 +3 dB in the storm sections. <strong>Should sound like:</strong> high wind and a distant thunder bed without baked strikes (the strikes' own thunder follows them); a seamless 16 s loop. <strong>a:</strong> strong wind on a soundfield microphone (high, steady) over a deep rumble slowed to 0.7; once a loop a large low rumble swelling and fading (a far roll, no crack): 16.0 s loop. <strong>b:</strong> a gusting strong wind (lower and more uneven than a) over the deep rumble slowed to half; once a loop the far rumble, deeper: 16.0 s loop.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/jovian-sky-r72-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/jovian-sky-r72-b.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge pick">not the recommendation</span> <span><strong>b</strong> (not the recommendation)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected</span></div>
+</article>
+<article class="row" id="r-S.14">
+<header><span class="rid">S.14</span><h3>aurelia</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>aurelia</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b</strong>. <strong>Plays:</strong> Level 37 (Aurelia, the floating capital): the level's ambience bed on the effects bus at the beds' 0.70, under the music; heard in the quiet stretches, a level's start and the pause before a boss; the burning layer goes over it from the turn. <strong>Should sound like:</strong> city machinery: the floating city's engines and works, distant; no voices, no alarms (they come with the burning layer); a seamless 16 s loop. <strong>a:</strong> an airship's propeller engine slowed to 0.6 (big, slow engines holding the city up) over a factory working, muffled; once a loop a gas burner's roar far off (a lift balloon's): 16.0 s loop. <strong>b:</strong> an engine room's machinery slowed to 0.8 over the propeller slowed to 0.4 (deeper, heavier than a); once a loop the far burner: 16.0 s loop.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/aurelia-r72-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/aurelia-r72-b.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected</span></div>
+</article>
+<article class="row" id="r-S.15">
+<header><span class="rid">S.15</span><h3>io-refinery</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>io-refinery</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b</strong>. <strong>Plays:</strong> Level 39 (Io's refineries): the level's ambience bed on the effects bus at the beds' 0.70, under the music; heard in the quiet stretches, a level's start and the pause before a boss. <strong>Should sound like:</strong> ground rumble and furnace roar; dry (no water, no steam); a seamless 16 s loop. <strong>a:</strong> a furnace room's steady roar over a deep ground rumble; once a loop a large low rumble heaving up and away: 16.0 s loop. <strong>b:</strong> standing above a reactor (a low industrial roar) with the furnace room under it; once a loop the ground cracking and a gas burner's roar: busier than a, 16.0 s loop.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/io-refinery-r72-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/io-refinery-r72-b.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected</span></div>
+</article>
+<article class="row" id="r-S.16">
+<header><span class="rid">S.16</span><h3>callisto-fortress</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>callisto-fortress</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b</strong>. <strong>Plays:</strong> Level 41 (Callisto's fortress decks; Levels 40 and 42 keep <code>belt-open</code>): the level's ambience bed on the effects bus at the beds' 0.70, under the music; heard in the quiet stretches, a level's start and the pause before a boss. <strong>Should sound like:</strong> fortress machinery heard through the hull (the belt's vacuum treatment: no wind, sounds as through the cockpit): deep machines, a transformer hum, hull creaks, a far heavy clunk now and then; a seamless 16 s loop. <strong>a:</strong> a ferry's engine room slowed to 0.6 and muffled (heard through a bulkhead) over a transformer hum; once a loop a slow hull creak and a far muffled boom: 16.0 s loop. <strong>b:</strong> a ship's engine-room machinery slowed to 0.6 and muffled over a deep room tone; once a loop the hull creak and a door knock slowed to half (a far heavy clunk): darker than a, 16.0 s loop.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/callisto-fortress-r72-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/callisto-fortress-r72-b.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge pick">not the recommendation</span> <span><strong>b</strong> (not the recommendation)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected</span></div>
+</article>
+</section>
+<section id="s-voice"><h2>Voice</h2>
+<div class="sum"><p>Four castings and Vorne's one shout through the enemy filter (Aurelia Traffic through radio filter b), <code>tools/concept/audio/voice_r72.py</code>, Chatterbox.</p></div>
+<article class="row" id="r-V.1">
+<header><span class="rid">V.1</span><h3>Vesper (voice-vesper)</h3><span class="kind">pick a or b</span></header>
+<div class="part">[Vesper (<code>voice-vesper</code>)](../../audio/voice/README.md)</div>
+<div class="q"><strong>pick a or b</strong>. <strong>Plays:</strong> Level 40, the Honour Guard's dancer on the enemy channel: her entry taunt and her survivor line. <strong>Should sound like:</strong> a woman in her late twenties, light, amused and quick, playful cruelty; never taken for the Choir (Varga's reader) or a friendly woman: a lower, smoky register (160-190 Hz) or another accent. <strong>a</strong> Kristen McQuillin: a quick, light American read (takes 156 and 187 Hz). <strong>b</strong> Jenny Bradshaw: the quickest reader, a steadier, slightly lower read (167 and 176 Hz). Recommended b: steadier and inside the range on both takes.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/voice/concept/rejected/voice-vesper-r72-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/voice/concept/voice-vesper-r72-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> a's first take (156 Hz) sits under the range; accents are not judged by ear</p>
+<p class="rec"><span class="tag">Recommendation</span> b</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>b</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>Jenny Bradshaw chosen; a rejected</span></div>
+</article>
+<article class="row" id="r-V.2">
+<header><span class="rid">V.2</span><h3>Kestrel (voice-kestrel)</h3><span class="kind">pick a or b</span></header>
+<div class="part">[Kestrel (<code>voice-kestrel</code>)](../../audio/voice/README.md)</div>
+<div class="q"><strong>pick a or b</strong>. <strong>Plays:</strong> Level 40, the feinter on the enemy channel: his entry taunt and "No more games." <strong>Should sound like:</strong> a man in his twenties, quick, cocky and cold; a mid register (130-150 Hz) with an accent apart from Harker's English and Rook's American. <strong>a</strong> Expatriate: even, mid-register (152 and 148 Hz). <strong>b</strong> Bob Neufeld: the entry lifts high (178 Hz), the cold line drops low (120 Hz): more range, less consistent. Recommended a.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/voice/concept/voice-kestrel-r72-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/voice/concept/rejected/voice-kestrel-r72-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> b's two takes are far apart (178 and 120 Hz): they may sound like two men; accents not judged by ear</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>Expatriate chosen; b rejected</span></div>
+</article>
+<article class="row" id="r-V.3">
+<header><span class="rid">V.3</span><h3>Aurelia Traffic (voice-aurelia-traffic)</h3><span class="kind">pick a, b or recast</span></header>
+<div class="part">[Aurelia Traffic (<code>voice-aurelia-traffic</code>)](../../audio/voice/README.md)</div>
+<div class="q"><strong>pick a, b or recast</strong>. <strong>Plays:</strong> Level 37, the civil traffic controller on the friendly channel: the t=1 call and the t=150 sign-off as the city falls. <strong>Should sound like:</strong> a woman in her thirties, polished and cultured, steady at first and frayed by the end, never shouted; mid-low (150-175 Hz) or a British read. <strong>a</strong> Sibella Denton: a British read (takes 198 and 201 Hz). <strong>b</strong> Lizzie Driver: a higher British read (204 and 210 Hz); "lift" comes out "liff" in the sign-off. <strong>recast:</strong> both takes sit above the range, so a new casting or a lowered re-render of a is the third option (a follow-up step). Recommended a: lower, and no mispronunciation.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/voice/concept/rejected/voice-aurelia-traffic-r72-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/voice/concept/voice-aurelia-traffic-r72-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> both takes are above the 150-175 Hz range (a 198 and 201 Hz, b 204 and 210 Hz); b mispronounces "lift"</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge pick">not the recommendation</span> <span><strong>b</strong> (not the recommendation)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>Lizzie Driver chosen as Aurelia Traffic; a rejected. Her sign-off says "liff" for "lift": the production render re-renders that line until "lift" is clear (a follow-up voice step)</span></div>
+</article>
+<article class="row" id="r-V.4">
+<header><span class="rid">V.4</span><h3>Harker as an ace (voice-harker)</h3><span class="kind">ok or change</span></header>
+<div class="part">[Harker as an ace (<code>voice-harker</code>)](../../audio/voice/README.md)</div>
+<div class="q"><strong>ok or change</strong>. <strong>Plays:</strong> Level 40, the Honour Guard's leader's entry taunt: his cast voice (David Clarke, Level 29), harder and colder, the fierce row at most; 128 Hz, as at Ceres. No choice: one take for you to confirm.</div>
+<div class="media"><figure class="m aud"><figcaption>the take</figcaption><audio controls preload="none" src="../../audio/voice/concept/voice-harker-r72-a.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> ok</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>ok</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>Harker's take confirmed</span></div>
+</article>
+<article class="row" id="r-V.5">
+<header><span class="rid">V.5</span><h3>Vorne&#x27;s shout (vorne-shout)</h3><span class="kind">pick a, b or recast</span></header>
+<div class="part">[Vorne's shout (<code>vorne-shout</code>)](../../audio/voice/README.md)</div>
+<div class="q"><strong>pick a, b or recast</strong>. <strong>Plays:</strong> Level 42, the eruption, right after the Choir's line: "No! We had an agreement!", his only shouted line in the game (J.6), the portrait in rage, track 18's intro under it. <strong>Should sound like:</strong> the composed chairman losing control for one line, still Vorne (his register is 90-106 Hz). <strong>a the shout row:</strong> a real shout with a break after "No!", but it lifts him far above his low register (265 Hz) and strains the lowered clip. <strong>b the fierce row:</strong> raw anger without the strain, lower and steadier (156 Hz), not shouted. <strong>recast:</strong> both fall short (a is shouted but not Vorne, b is Vorne's register but not a shout), so the third option is a re-render: a lower take of the shout row (pitched down toward 100-120 Hz and the break kept), or another reading of the fierce row pushed harder (a follow-up step, the part's audio). Recommended recast.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/voice/concept/vorne-shout-r72-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/voice/concept/vorne-shout-r72-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> a is 265 Hz against his 90-106 Hz and strains; b at 156 Hz is not shouted: neither is the line as it should be</p>
+<p class="rec"><span class="tag">Recommendation</span> recast</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>recast</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>neither take: both rows stay <code>proposed</code> ("recast, round 72 V.5"); a follow-up voice step re-renders the shout (the shout row pitched down toward 100-120 Hz with the break kept, or the fierce row pushed harder)</span></div>
+</article>
+</section>
+<section id="s-documents-to-approve"><h2>Documents to approve</h2>
+<div class="sum"><p>The drafts, one row each. Approving a row approves the document as drafted (with your answers above applied); change means a note on the row.</p></div>
+<article class="row" id="r-D.1">
+<header><span class="rid">D.1</span><h3>The act README</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../campaign/act-6-jovian-storm/README.md">The act README</a></div>
+<div class="q"><strong>approve or change</strong>. Levels 36-42 pulled together: the synopsis and story beats, the act intro (Okafor, Vorne intercepted) and outro (Varga's Silence, Rook in for the gate, Okafor's order to the fleet), the settings, the new mechanics, the units and their HP factors from the reference DPS 144-168, the density band (about 100-118 a minute) and the hand haul table, the threat profile, the music and the voice, with this round's answers applied.</div>
+<p class="rec"><span class="tag">Recommendation</span> approve</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>approve</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>approved 2026-10-31 (<code>design: approved</code>)</span></div>
+</article>
+<article class="row" id="r-D.2">
+<header><span class="rid">D.2</span><h3>Level 36 Cloud Divers</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../campaign/act-6-jovian-storm/level-36-cloud-divers/README.md">Level 36 Cloud Divers</a></div>
+<div class="q"><strong>approve or change</strong>. 192 s, air only: foreground banks from t=28, the Chimera beside the Talons, the fleet's drop craft marked friendly, helium-3 harvesters (<code>HARVESTERS</code> n/6), wind and the first lightning; Varga's one line on the hybrid pilots' cost.</div>
+<p class="rec"><span class="tag">Recommendation</span> approve</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>approve</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>approved 2026-10-31 (<code>design: approved</code>)</span></div>
+</article>
+<article class="row" id="r-D.3">
+<header><span class="rid">D.3</span><h3>Level 37 Gilded Cage (Fall of Aurelia)</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../campaign/act-6-jovian-storm/level-37-fall-of-aurelia/README.md">Level 37 Fall of Aurelia</a></div>
+<div class="q"><strong>approve or change</strong>. 200 s: Aurelia, evacuation shuttles (<code>SHUTTLES</code> n/5), Mirror Interceptors and Graft Turrets, Varga takes the codes at t=78, the Vrell turn at t=100 with the two hunts, the rear ambush at t=124, the falling city at t=160-200; the name per J.12.</div>
+<p class="rec"><span class="tag">Recommendation</span> approve</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>approve</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>approved 2026-10-31 (<code>design: approved</code>)</span></div>
+</article>
+<article class="row" id="r-D.4">
+<header><span class="rid">D.4</span><h3>Level 38 Lightning Belt</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../campaign/act-6-jovian-storm/level-38-lightning-belt/README.md">Level 38 Lightning Belt</a></div>
+<div class="q"><strong>approve or change</strong>. 196 s, the storm layer, 375 enemies from every direction: told lightning strikes that hit the enemies too, Harrows bursting into rings (<code>HARROWS</code> n/23), the Buzzsaw Drone's return.</div>
+<p class="rec"><span class="tag">Recommendation</span> approve</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>approve</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>approved 2026-10-31 (<code>design: approved</code>)</span></div>
+</article>
+<article class="row" id="r-D.5">
+<header><span class="rid">D.5</span><h3>Level 39 Io Flyby</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../campaign/act-6-jovian-storm/level-39-io-flyby/README.md">Level 39 Io Flyby</a></div>
+<div class="q"><strong>approve or change</strong>. <code>destroy-targets</code> over Io: six cracking towers under holds (30 each), dry eruptions throwing rocks, Striders guarding the works, the pump stations (<code>PUMPS</code> n/6); the Crucible and the spoofer in the shop.</div>
+<p class="rec"><span class="tag">Recommendation</span> approve</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>approve</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>approved 2026-10-31 (<code>design: approved</code>)</span></div>
+</article>
+<article class="row" id="r-D.6">
+<header><span class="rid">D.6</span><h3>Level 40 Honour Guard</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../campaign/act-6-jovian-storm/level-40-honour-guard/README.md">Level 40 Honour Guard</a></div>
+<div class="q"><strong>approve or change</strong>. 321 enemies in vacuum: Vorne's picket line, the duel at t=102 (Harker, Vesper, Kestrel; Rook's rivalry), the run-out to the citadel's outer line; the secondary per J.13 and the primary per J.14.</div>
+<p class="rec"><span class="tag">Recommendation</span> approve</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>approve</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>approved 2026-10-31 (<code>design: approved</code>)</span></div>
+</article>
+<article class="row" id="r-D.7">
+<header><span class="rid">D.7</span><h3>Level 41 Callisto Fortress</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../campaign/act-6-jovian-storm/level-41-callisto-fortress/README.md">Level 41 Callisto Fortress</a></div>
+<div class="q"><strong>approve or change</strong>. Helix HQ: three Shield Pylon gates and the Halo Platform held (about 46 s of halts), Warden Tanks, Rail Bunkers and grafted turrets, Varga's <code>FILES</code> n/3 and the Silence named at the Halo's fall.</div>
+<p class="rec"><span class="tag">Recommendation</span> approve</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>approve</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>approved 2026-10-31 (<code>design: approved</code>)</span></div>
+</article>
+<article class="row" id="r-D.8">
+<header><span class="rid">D.8</span><h3>Level 42 Ascendant</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../campaign/act-6-jovian-storm/level-42-ascendant/README.md">Level 42 Ascendant</a></div>
+<div class="q"><strong>approve or change</strong>. Callisto orbit, <code>NO GROUND</code>: the home fleet's screen and two cruisers, the Ascendant bow-on, Vorne's one shout, the lifeboat's escape, the calm and Okafor's last line; the act end and the release's end (<code>ACTS I-VI COMPLETE</code>, naming Act VII).</div>
+<p class="rec"><span class="tag">Recommendation</span> approve</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>approve</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>approved 2026-10-31 (<code>design: approved</code>)</span></div>
+</article>
+<article class="row" id="r-D.9">
+<header><span class="rid">D.9</span><h3>The air units (Chimera, Mirror Interceptor, Harrow)</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../enemies/air/README.md">The air units (Chimera, Mirror Interceptor, Harrow)</a></div>
+<div class="q"><strong>approve or change</strong>. Their three documents: the Chimera's regeneration, the Mirror Interceptor's <code>reflect</code> (heat 130), the Harrow's death ring of 8; HP, bounties, behaviours, the Act 6 shields (twice Act 5's), and the roster and variety rows.</div>
+<p class="rec"><span class="tag">Recommendation</span> approve</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>approve</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>approved 2026-10-31 (<code>design: approved</code>)</span></div>
+</article>
+<article class="row" id="r-D.10">
+<header><span class="rid">D.10</span><h3>The ground units (Graft Turret, Shield Pylon, Halo Platform)</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../enemies/ground/README.md">The ground units (Graft Turret, Shield Pylon, Halo Platform)</a></div>
+<div class="q"><strong>approve or change</strong>. Their three documents: the Graft Turret's root and regrowth, the Shield Pylon's dome (an invulnerable aura) and gates, the Halo Platform as a held arena (promoted from the r07 concept); the Strider and Warden Tank rows moved to review for Act 6.</div>
+<p class="rec"><span class="tag">Recommendation</span> approve</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>approve</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>approved 2026-10-31 (<code>design: approved</code>)</span></div>
+</article>
+<article class="row" id="r-D.11">
+<header><span class="rid">D.11</span><h3>The enemies&#x27; rules (shields, reflect, regeneration, the three-way war)</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../enemies/README.md">The enemies' rules (shields, reflect, regeneration, the three-way war)</a></div>
+<div class="q"><strong>approve or change</strong>. The shared rules the units use: enemy shields doubled from Level 36, <code>reflect</code>, regeneration, regrowth, the three-way war, the heartland liveries (Q.9) and the Act 6 variety checklist (25 units).</div>
+<p class="rec"><span class="tag">Recommendation</span> approve</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>approve</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>approved 2026-10-31 (<code>design: approved</code>)</span></div>
+</article>
+<article class="row" id="r-D.12">
+<header><span class="rid">D.12</span><h3>The Honour Guard</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../enemies/bosses/honour-guard/README.md">The Honour Guard</a></div>
+<div class="q"><strong>approve or change</strong>. The mid-boss: three aces at 1,600 HP each, a playbook per ace, the join order, the conductor, par 75, the bounty 15 % (360 in Act 1 terms, 120 each), no edge warning but each ace's 2.5 s gold chevron tell.</div>
+<p class="rec"><span class="tag">Recommendation</span> approve</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>approve</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>approved 2026-10-31 (<code>design: approved</code>)</span></div>
+</article>
+<article class="row" id="r-D.13">
+<header><span class="rid">D.13</span><h3>The Ascendant</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../enemies/bosses/ascendant/README.md">The Ascendant</a></div>
+<div class="q"><strong>approve or change</strong>. The act boss: 15,200 HP, par 150, three phases (the hull's generators and panels, the Vrell half, the lifeboat), the warning before any hull shows, the lifeboat's cap 1,400, the bounty (401: 180, 161 and 60), music 19 to 18 and the sting 33.</div>
+<p class="rec"><span class="tag">Recommendation</span> approve</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>approve</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>approved 2026-10-31 (<code>design: approved</code>)</span></div>
+</article>
+<article class="row" id="r-D.14">
+<header><span class="rid">D.14</span><h3>The Plasma Arc</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../player/weapons/plasma-arc/README.md">The Plasma Arc</a></div>
+<div class="q"><strong>approve or change</strong>. The front gun: an instant arc chaining 3-6 targets (reach 200, jumps 90), its power draw and upgrades, the chain's heat on a mirror, the L36 shop.</div>
+<p class="rec"><span class="tag">Recommendation</span> approve</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>approve</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>approved 2026-10-31 (<code>design: approved</code>)</span></div>
+</article>
+<article class="row" id="r-D.15">
+<header><span class="rid">D.15</span><h3>The player documents (shield, armour, generator, systems, wingmen, specials, HUD)</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../player/README.md">The player documents (shield, armour, generator, systems, wingmen, specials, HUD)</a></div>
+<div class="q"><strong>approve or change</strong>. The Reflex Shield (never re-bounces a bullet), Composite V, the IFF spoofer (0.5 s hesitation), the Mk V+ Crucible and the Act 6 hand plan with the power check, Rook in Act 6, the specials' Act 6 notes and the HUD's Act 6 additions (<code>NO GROUND</code> lists, secondaries counting to their target).</div>
+<p class="rec"><span class="tag">Recommendation</span> approve</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>approve</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>approved 2026-10-31 (<code>design: approved</code>)</span></div>
+</article>
+<article class="row" id="r-D.16">
+<header><span class="rid">D.16</span><h3>The world of Jupiter</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../world/jovian/README.md">The world of Jupiter</a></div>
+<div class="q"><strong>approve or change</strong>. Aurelia and the cloud sea, Io, Callisto; the moods per level (Q.10), the foreground banks, lightning and eruptions, the falling city and the backdrop layers.</div>
+<p class="rec"><span class="tag">Recommendation</span> approve</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>approve</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>approved 2026-10-31 (<code>design: approved</code>)</span></div>
+</article>
+<article class="row" id="r-D.17">
+<header><span class="rid">D.17</span><h3>The story documents</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../story/README.md">The story documents</a></div>
+<div class="q"><strong>approve or change</strong>. The Act 6 beats: Aurelia breaking with Vorne, the Vrell turn, the falling city and Okafor's 2166 memory, the aces, Vorne's shout, the Silence's rule, Harker's promotion, Aurelia Traffic, the carrier <em>Steadfast</em>; the characters', factions' and twist documents updated.</div>
+<p class="rec"><span class="tag">Recommendation</span> approve</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>approve</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>approved 2026-10-31 (<code>design: approved</code>)</span></div>
+</article>
+<article class="row" id="r-D.18">
+<header><span class="rid">D.18</span><h3>The audio plan</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../audio/README.md">The audio plan</a></div>
+<div class="q"><strong>approve or change</strong>. The Act 6 music (track 14 and 15 per level, the duel theme 32, the escape sting 33), the sound lists and the four new beds (<code>jovian-sky</code>, <code>aurelia</code>, <code>io-refinery</code>, <code>callisto-fortress</code>), the voices (Vesper, Kestrel, Aurelia Traffic new) and the briefs for the picks above.</div>
+<p class="rec"><span class="tag">Recommendation</span> approve</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>approve</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>approved 2026-10-31 (<code>design: approved</code>)</span></div>
+</article>
+</section></main></body></html>

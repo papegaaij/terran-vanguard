@@ -3,7 +3,7 @@ title: Campaign
 design: approved
 implementation: in-progress
 art: none
-updated: 2026-10-30
+updated: 2026-10-31
 ---
 
 # Campaign
@@ -25,7 +25,7 @@ consecutive levels.
 | [act-3-red-dust](act-3-red-dust/README.md) | Levels 15–21 · Mars · first hints of human involvement · boss Dust Colossus | approved | in-progress | final |
 | [act-4-deep-water](act-4-deep-water/README.md) | Levels 22–28 · Europa ice & under-ice ocean · underwater play · boss Abyssal Maw | approved | in-progress | final |
 | [act-5-the-belt](act-5-the-belt/README.md) | Levels 29–35 · asteroid belt & stations · the betrayal in the open: Vorne's broadcast, Ceres Hub turns, Rook freed · boss Iron Sovereign | approved | in-progress | final |
-| [act-6-jovian-storm](act-6-jovian-storm/README.md) | Levels 36–42 · Jupiter cloud cities & Callisto · hunting Vorne · boss Ascendant | draft | not-started | none |
+| [act-6-jovian-storm](act-6-jovian-storm/README.md) | Levels 36–42 · Jupiter's cloud cities, Io & Callisto · hunting Vorne: the Vrell turn on the Ascendancy, the Silence named · mid-boss Honour Guard, boss Ascendant | approved | not-started | chosen |
 | [act-7-beyond-the-gate](act-7-beyond-the-gate/README.md) | Levels 43–50 · Tether Gate & Vrell space · final boss Choir Heart | draft | not-started | none |
 
 ## Design
@@ -39,7 +39,7 @@ consecutive levels.
 | 3 | 15–21 | [Mars](../world/mars/README.md) | Mars colonies under siege. Unmarked human-built drones turn up among the Vrell. | Burrowing enemies, canyon walls, reverse scroll | Dust Colossus |
 | 4 | 22–28 | [Europa](../world/europa/README.md) | The Vrell are drilling into Europa's ocean. Helix Dynamics subs are found under the ice. | Underwater play (`sub` layer), darkness | Abyssal Maw |
 | 5 | 29–35 | [Belt](../world/belt/README.md) | **The reveal:** Ascendancy fleets fight openly beside the Vrell. The Belt stations fall. | Ascendancy war machines, energy drain, minefields | Iron Sovereign |
-| 6 | 36–42 | [Jovian](../world/jovian/README.md) | The UTC strikes back at the Ascendancy heartland. Vorne flees into the gate. | Hybrid biotech enemies, regeneration, mirror shields | Ascendant |
+| 6 | 36–42 | [Jovian](../world/jovian/README.md) | The UTC strikes back at the Ascendancy heartland. The Vrell turn on their partners; Vorne flees toward the gate. | Hybrid biotech enemies (regeneration, regrowth, death-burst rams), mirror shields (`reflect`), lightning and eruptions, the three-way war (draft, round 72) | Ascendant |
 | 7 | 43–50 | [Vrell space](../world/vrell-space/README.md) | Through the Tether Gate. Vorne's end, the Choir, and a hint of the Silence. | Distorted space, elite enemies, boss rush | Choir Heart |
 
 ### Pacing rules
@@ -152,7 +152,7 @@ highlighting it.
 | `homing` | L06 | L12 *Storm Front* | Low visibility, attacks from all sides |
 | `anti-sub` | L11 (optional) | L23 *Through the Ice* | Required in Act 4; available early for Atlantic sub targets |
 | `beam` | L15 | L16 *Valles Canyon Run* | Burns through Tendril barriers |
-| `shield-breaker` | L29 | L37 *Gilded Cage* | Mirror interceptors, Gate Wardens (L43) |
+| `shield-breaker` | L29 | L37 *Fall of Aurelia* | Mirror interceptors, Gate Wardens (L43) |
 
 This table owns the pacing: [weapons](../player/weapons/README.md) and
 [specials](../player/specials/README.md) must offer at least one item with each trait from the
@@ -161,8 +161,13 @@ drives the hangar's "new in shop" markers and the intel panel's "recommended tra
 
 Other unlock anchors (items and prices in [player](../player/README.md)): first special,
 the Airstrike, from L04; escort slot and Rook as wingman from L08; the Bulwark heavy drone from
-L22 (it covers Rook's absence in L27–L29, until his rescue in L29); the Hunter drone moves to Act 6 (round 60
-Q12 c, draft: the Bulwark already covers Rook's absence). Act 5's `shield-breaker` item is the Tesla Coil Pod (L29).
+L22 (it covers Rook's absence in L27–L29, until his rescue in L29); the Hunter drone moved to Act 6 (round 60
+Q12 c: the Bulwark already covers Rook's absence) and on to Act 7's design (round 72 Q7 b, draft). Act 5's
+`shield-breaker` item is the Tesla Coil Pod (L29). **Act 6** (draft, decided 2026-10-31 (round 72); Q7 b, Q8 a): one new item a
+visit, the Plasma Arc (L36, front `area`/`spread`), the Reflex Shield (L37, the mirrors' answer), Composite V (L38),
+the IFF spoofer and the Mk V+ "Crucible" generator (25 MW; L39); Time Dilation, the Hunter drone and the Bastion
+Shield go to Act 7's design. `shield-breaker` is first strongly rewarded at L37 as the table says (the Mirror
+Interceptors, the doubled Act 6 shields). Act 6's hand plan has room for one utility from L40 (round 72's J11).
 
 ### Credit budget
 
@@ -325,3 +330,8 @@ criteria), Open questions, Decisions. The worked example is
 - 2026-10-30 (step FIX6, the user's playthrough 2026-10-30): the end calm rule above (at least 4 s from Act 5 on).
   Measured with the autopilot before the step, medium: L29 0.4 s, L30 0, L31 2.1, L32 1.3, L33 0.2, L34 0 (L35 49.5,
   its boss's closing lines); every Act 5 level's last waves moved earlier (no end moved; the levels' Decisions).
+- 2026-10-31 (Act 6 design phase, step m10-d-act; **decided 2026-10-31 (round 72)**): Act 6's notes: the act's
+  Contents summary and arc row name the Vrell turn, the Silence and the act's mechanics; the Act 6 items and their
+  visits in the loadout anchors (Q7 b, Q8 a), the Hunter drone on to Act 7. The act's density band from the drafts is
+  ≈ 100–118 a minute at medium (the minimum 75 holds; no breather), the curve 4 · 4 · 5 · 4 · 5 · 5 · 5, the
+  mid-boss at L40 (the pacing rule's Act 6).

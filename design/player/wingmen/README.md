@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../weapons, ../../story, ../../systems/saves, ../../ui/hangar, ../../ui/hud]
-updated: 2026-10-29
+updated: 2026-10-31
 ---
 
 # Wingmen and drones
@@ -422,6 +422,44 @@ piece's place, timing and lines belong to L29's level document in [Act 5](../../
 - The new rules need a **mid-level escort swap** (the slot's flyer replaced during a level, scripted
   by the level: `RookLoss` in reverse) and the tender's clamp guns as ground targets of the level.
 
+### Rook in Act 6 (draft)
+
+*Act 6 draft, step `m10-d-systems` (2026-10-31), **decided 2026-10-31 (round 72)** (J2, J3; the hazards are
+the [Jovian system](../../world/jovian/README.md)'s, the mirror, regeneration and the three-way war the
+[enemies'](../../enemies/README.md) rules). His lines (one pulp line a level, the L40 rivalry with the aces) belong to
+the story and the level documents.*
+
+- **The slot:** Rook flies **all act** in the escort slot with his Act 5 guns; there is no absence and no loaner. An
+  owned Bulwark stays a choice. The [Act 6 hand plan](../generator/README.md#act-6-hand-plan-draft) fits his owned
+  Mortar at the L39 and L41 visits (Io's refinery targets, the fortress's ground) and his Autocannon for the others,
+  free fits as before.
+- **The air-only levels** (L36, L38, L40, L42: `NO GROUND`): his Mortar has nothing to lob at there, as in Level 10; the
+  hangar intel's missing-ground warning names his Mortar with the Bomb Rack when it is fitted.
+- **Lightning columns** (L38; a few in L36): from a column's telegraph until its strike ends his goal keeps **outside
+  the column**, on the nearer side with the 40 px from the player kept (Level 11's lane rule turned vertical: the
+  told lane is the whole field's height; when the player sits in the column he waits beside it). A strike hits him
+  like the ship (`heavy` 10) if his hit box overlaps the column as it falls.
+- **Eruptions** (L39): his goal keeps off a vent while it glows (the tell) and out of the reach of its rocks while
+  they fly (Level 19's furnace-vent rule, extended by the rocks' fan); a burning rock that touches him hits him as it
+  hits the ship (`small` 10, the rock destroyed). His pick never takes a rock (they pay nothing), but his shots hit
+  one in their way.
+- **Wind gusts** (L36, L38): Level 12's rule, the push adds to his position, his AI unchanged.
+- **Foreground cloud banks** (L36, Q2 = a): he is drawn above the banks like the ship, and his pick sees the units
+  under a bank as homing shots do.
+- **Mirrors** (from L37, Q1 = c): the [`reflect`](../../enemies/README.md#reflect) rule: his shots spark on a mirror and
+  are absorbed, never bounced; he still picks a mirrored unit (his first priority, the player's target, takes him
+  to the flank the player works).
+- **Regeneration** (the Chimera): his hits count for its clock as any damage; nothing else changes.
+- **The three-way war** (from L37, Q3 = a): he shoots Vrell and Ascendancy alike by his usual priority; a prey unit he
+  kills pays as his kills always do; a hunter's bullets hurt him like any enemy bullet.
+- **The falling city** (L37's end, Q4 = a): he flies down beside the spires in formation like the ship; nothing in his
+  AI changes.
+- **The Honour Guard** (L40): the aces are a mid-boss's bodies, so the boss rules hold (no edge warning, no rear bark
+  for their entries; proposed for the mid-boss document: he flies Trail while the rear ace is behind the ship, as for a `rear` wave). His rivalry lines with the aces are the
+  level's and the story's.
+- What the rules need: **one more hazard** in his hazard AI (`RookHazards`: the told vertical column) and the vents'
+  rule given the rocks' reach; everything else is built.
+
 ### Drones
 
 | Name | Slot | Summary | Draw | Price | Unlock | Design |
@@ -429,7 +467,7 @@ piece's place, timing and lines belong to L29's level document in [Act 5](../../
 | Light drone | wing mount | Orbits the ship at 36 px, fires a small gun at the point ahead of the nose, blocks bullets (breaks after 8 hits, rebuilds in 6 s at L1). Sold as the [Light Drone Bay](../weapons/light-drone-bay/README.md); see *Light drone* below | 2 → 3 | 2 000 | L15 | draft |
 | Rear-guard drone | wing mount | Trails 40 px behind the ship, fires backwards (`rear`), blocks bullets from behind. Sold as the [Rear-guard Drone Bay](../weapons/rear-guard-drone-bay/README.md); see *Rear-guard drone* below | 2 → 3 | 2 400 | L20 | draft |
 | Heavy drone "Bulwark" | escort | Tough (armour 120), slow-firing cannon (`anti-sub` under water), draws enemy fire; a free loaner while Rook is missing | 0 | 6 000 | L22 | draft |
-| Hunter drone | escort | Leaves formation to chase homing targets, fragile | 0 | 7 500 | Act 6 (was L29; Q12 = c of round 60, decided: covering Rook's absence is the Bulwark's job) | idea |
+| Hunter drone | escort | Leaves formation to chase homing targets, fragile | 0 | 7 500 | Act 7 (was L29, then Act 6; Q12 = c of round 60, decided: covering Rook's absence is the Bulwark's job; Q7 = b of round 72, decided 2026-10-31: Rook flies all of Act 6) | idea |
 
 Unlock `Lnn` = in the shop from the hangar visit before level *nn*. The Bulwark arrives before
 Rook's absence (L27–L29) so the escort slot never has to stay empty.
@@ -558,7 +596,8 @@ built were accepted in concept round 28.
   orbit, block, break and rebuild built in M7 part A (`vanguard.sim.Drones`, `DronesTest`), the
   rear-guard drone's trail waits for part G (its bay's data and the `station: trail` keys written in
   step G2; flown from step G3, mapped in step G4)
-- [ ] The hunter drone's behaviours — **later: Act 6** (was L29; moved with Act 5's arsenal, Q12 = c of round 60, decided)
+- [ ] The hunter drone's behaviours — **later: Act 7** (was L29, then Act 6; moved with Act 5's arsenal, Q12 = c of round 60, decided; to Act 7's design with Act 6's, Q7 = b of round 72, decided 2026-10-31)
+- [ ] Rook in Act 6 as in *Rook in Act 6* (draft): his goal out of a told lightning column and a vent's tell and rocks, the strike's and the rocks' hits on him — M10 (L38's and L39's parts)
 - [x] Rook's rescue in L29 as in *Rook's rescue and return* (draft): the mid-level swap (the drone peels away, Rook
   joins with his gun at full armour, his first line, his barks back), the loaner returned after L29, the debug
   starts — M9 (L29's part) (M9 part A, step A2: the campaign's side: at Level 29's win Rook is back at full armour
@@ -623,3 +662,12 @@ Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-a
   back to the CDF after L29 (an owned Bulwark stays); Rook in the slot by default from L30. The Hunter drone moves
   to Act 6 (Q12 = c).
 - 2026-10-27 (user, [round 60](../../concept-rounds/round-60/README.md) closed): the Act 5 section approved as drafted (D.16: Rook's rescue at Dock 9 and his return to the slot, Q8 **a**; the loaner Bulwark leaves). **QA-1** (decided 2026-10-27 by the main agent, confirmed in round 61 on 2026-10-28): Rook locks onto a homing diamond only when no enemy unit is in his cone.
+- 2026-10-31 (Act 6 design phase, step m10-d-systems; **decided 2026-10-31 (round 72)**): Rook flies all of Act
+  6 with his Act 5 guns (the plan's Mortar at L39 and L41); his goal keeps out of a told lightning column and off an
+  erupting vent and its rocks (one more hazard in his AI), and the strike and the rocks hit him as the ship; the
+  enemies' mirror, regeneration and three-way-war rules apply to him unchanged. The Hunter drone moves to Act 7's
+  design (Q7 = b).
+- 2026-10-31, design phase (step m10-d-act; decided 2026-10-31 (round 72)): Level 42 is air-only too (its draft), so Rook's
+  Mortar idles there as in L36, L38 and L40.
+- 2026-10-31 (user, [round 72](../../concept-rounds/round-72/README.md) closed): Q7 b: the Hunter drone moves to
+  Act 7's design (Rook flies all of Act 6, so the escort slot needs nothing new); a rejected.

@@ -3,7 +3,7 @@ title: Story
 design: approved
 implementation: n/a
 art: chosen
-updated: 2026-10-27
+updated: 2026-10-31
 ---
 
 # Story
@@ -72,7 +72,7 @@ Acts, levels and bosses are defined in [campaign](../campaign/README.md); settin
 | 3 Red Dust | Mars is under siege. The Vrell act strangely here: they avoid Helix facilities. Varga notices; Okafor tells her to keep it quiet. Then come unmarked human-built drones (L18) and a walker made of Helix alloy (L19). Boss: the Dust Colossus. |
 | 4 Deep Water | Under Europa's ice the Vrell are farming something. Aegis Wing finds human-built relay beacons pulsing red-gold along the Vrell routes (L24–L27), and Varga confirms a Helix hull code (L27). Rook is shot down and goes missing (L26). After the Abyssal Maw falls, Ascendancy cruisers in black and gold open fire on Aegis Wing (L28). |
 | 5 The Belt | The reveal: the Jovian Ascendancy opened the gate. Vorne's system-wide broadcast **is** the act intro (Ceres, August 2185). Ascendancy and Vrell fight side by side; the belt stations choose sides. Ceres Hub declares for the Ascendancy and half its garrison mutinies (L29); in the fight the wing frees Rook from a Helix prison tender in Dock 9, and he flies again from L30. Refugees tell how Helix bought the belt's loyalty with Vrell cures (L31). In the leech field the Vrell feed on Ascendancy ships too, and the Choir speaks of "the one who opened" with indifference (L33). Boss: the Iron Sovereign battle station (L35); its data points to Callisto, Vorne offers Lancer a price, and Varga sees the cures on his face. *Draft beyond the 2026-09-30 beats, approved in round 60.* |
-| 6 Jovian Storm | The hunt for Vorne through Jupiter's storms and cloud cities to the Ascendancy HQ on Callisto. The Vrell turn on the Ascendancy mid-act (L37, Aurelia) — they were never partners, only a door. In Helix HQ (L41) Varga finds Vorne's deal: the Vrell wanted passage because they are fleeing something the files call "the Silence" — its first mention. Boss: Vorne's flagship Ascendant; Vorne escapes toward the gate (L42). |
+| 6 Jovian Storm | The hunt for Vorne (Jupiter, September 2185). Callisto sits behind the Ascendancy's home fleet and Aurelia's air-defence grid, and the fleet runs on helium-3 from the cloud harvesters and Io's refineries, so Okafor's carrier group goes for the fuel first: Aegis Wing dives into Jupiter's upper bands (L36). At Aurelia, whose traffic control breaks with Vorne to get its civilians out, **the Vrell turn on the Ascendancy** (L37): the Choir says the one who opened is no longer needed, Varga says what they were — never partners, only a door — and the city falls through the clouds while Okafor remembers 2166. The storm layer is the covered road to Io (L38); the wing burns Io's refineries (L39) and duels Vorne's three Honour Guard aces, led by Harker of Ceres (L40). In Helix HQ (L41) Varga's uplink pulls Vorne's deal from the data core: the Vrell wanted passage because they are fleeing something the files call "**the Silence**" — its first mention. Boss: Vorne's flagship Ascendant (L42); the Vrell half erupts through it, Vorne shouts for the only time, and he escapes toward the gate in a Vrell lifeboat, still believing the deal holds. Okafor: "*Then we follow him.*" *Draft beyond the 2026-09-30 beats, decided 2026-10-31 (round 72).* |
 | 7 Beyond the Gate | Through the Tether Gate after Vorne and into Vrell space to silence the Choir. On the far side: dead Vrell worlds and more hints of the Silence. Vorne, absorbed by the Choir, dies at L48. Final boss: the Choir Heart. Epilogue: the gate goes dark — but it was built to keep something out. |
 
 ### Tone guide: serious with pulp edges
@@ -182,3 +182,18 @@ this sample only sets the voice.
   Sovereign, Callisto, the recruitment and Varga's look at Vorne, L35 and the outro). The beats stay in
   the story docs, the lines in the level documents and the act's intro and outro.
 - 2026-10-27 (user, [round 60](../concept-rounds/round-60/README.md) closed): the Act 5 story approved as drafted (D.18): the beats, the speakers (Harker, Ceres Hub Control, the *Bellwether*'s captain; **A.21** the speakers' sheet accepted), Vorne's broadcast (Q9 **a**), Rook's captivity (Q8 **a**), the Choir's line, Varga's beats, the Ascendancy's belt section; J.9 and J.10 kept.
+- 2026-10-31 (Act 6 design phase, step m10-d-story; **decided 2026-10-31 (round 72)**): the Act 6 row
+  filled in from the act's beats (September 2185, J10; why Jupiter before Callisto; Aurelia breaking with Vorne and
+  the Vrell turn, Q3 a; the falling city under Okafor's 2166 memory, Q4 a; the storm road, Io's fuel; Harker in the
+  Honour Guard, J4; the Silence named in L41's files, Q12 a; Vorne's one shout and escape, J6; "*Then we follow him.*").
+  The beats stay in the story docs, the lines in the level and boss documents and the act's intro and outro.
+  **The Silence's rule**: named once in play, by Varga in L41; after it only Varga refers to it (the L42 briefing,
+  the act outro), never described; Vorne never speaks of it in Act 6 and the Choir not before Act 7.
+- 2026-10-31 (user, [round 72](../concept-rounds/round-72/README.md) closed): the Act 6 story approved as drafted
+  (D.17): **Q3 a** (the Vrell turn at Level 37 on as scripted prey with the backdrop; b full faction fire and c
+  backdrop and radio only rejected), **Q11 a** (the act intro is Okafor from the carrier's bridge with Vorne
+  intercepted on page 3; b all four pages Okafor and c Varga's briefing rejected), **Q12 a** (the Silence named in
+  play at Level 41, by Varga, and never shown; b the Level 42 briefing only and c the act outro only rejected),
+  **J10** (September 2185, Okafor commands from the carrier *Steadfast*), **J4** (the aces Harker, Vesper and Kestrel,
+  Aurelia Traffic) and **J6** (Vorne's one shout at Level 42; its re-render is V.5) kept, **J16** (the Silence named
+  once, by Varga) kept.

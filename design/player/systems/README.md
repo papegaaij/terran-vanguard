@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../generator, ../../ui/hangar]
-updated: 2026-10-27
+updated: 2026-10-31
 ---
 
 # Ship systems
@@ -228,6 +228,40 @@ brings no new utility module; the belt's vacuum is defined in [the belt](../../w
 - The **Ascendancy IFF spoofer** stays an Act 6 story item (its roster row): Act 5 is where the
   Ascendancy's turrets are met openly, not yet where their codes are captured.
 
+### Act 6: the IFF spoofer and the core tiers (draft)
+
+*Draft, step `m10-d-systems` (2026-10-31), **decided 2026-10-31 (round 72)** (Q7 = b). Act 6's one new module.
+The *Utility modules* table above is rendered from [data.yaml](data.yaml) and keeps the spoofer's `idea` row until M10
+part A writes it (`design: draft`, `available: L39`, the Effect cell below).*
+
+**Ascendancy IFF spoofer**
+
+| Property | Value (draft) |
+|---|---|
+| Effect | Every **aimed volley** of an Ascendancy **turret** fires **0.5 s late**, aimed where the ship was when the volley was due: the spoofed identification hides the ship's fix for half a second. The turret's cycle is unchanged (the next volley is due on time), so it shoots at a ship that has moved on |
+| Turrets | the Ascendancy's ground turrets and fixed batteries: the [SAM Nest](../../enemies/ground/sam-nest/README.md), the [Sentinel Tower](../../enemies/ground/sentinel-tower/README.md), the [Rail Bunker](../../enemies/ground/rail-bunker/README.md), the guns of the [Warden Tank](../../enemies/ground/warden-tank/README.md) and the [Strider](../../enemies/ground/strider/README.md), the [Halo Platform](../../enemies/ground/halo-platform/README.md)'s batteries, and each new Act 6 ground unit as its document says (a per-unit flag in the enemies' data) |
+| Never | aircraft (their pilots fly by eye), bosses and mid-bosses (the Honour Guard, the Ascendant: elite codes), the Vrell (no IFF), and a hybrid unless its document says so |
+| Volleys | an attack aimed at the ship (`aimed`, a `burst` at it, a homing diamond's launch); a told attack (`laser-line`) starts its tell 0.5 s late, so the tell keeps its length; fans, rings and mines not aimed at the ship are not delayed |
+| Levels | L1 only |
+| Draw | 2 MW |
+| Price | 5 000 |
+| Available | the **L39 visit**: Varga cracks Aurelia's codes in L37 (a line of that level's) and the fleet builds the module from them; Io's refineries (L39) and the Callisto fortress (L41) are where it pays |
+| Look | while a turret hesitates its muzzle glow flickers amber (a searching stutter); no HUD element |
+
+- Why a delay and a stale aim, not a lower fire rate: it rewards moving through a turret line, which is Act 6's
+  ground play (Io's refinery runs, the fortress's pylon gates), and leaves a turret as dangerous to a ship that
+  stops. A slower turret would only shorten every fight.
+- The typical plan buys it with the Mk V+ generator at the L40 visit (2 MW: its room is the one the Level 30
+  playthrough asked for) and stows it for L42, where nothing it fools flies ([Act 6 hand
+  plan](../generator/README.md#act-6-hand-plan-draft)).
+- **The core tiers in Act 6:** no new engine (the Engine Mk IV stays the top one, 2 MW of the Mk V+'s room); the new
+  generator, the Reflex Shield and Composite V are the [generator](../generator/README.md),
+  [shields](../shields/README.md) and [armour](../armor/README.md)'s.
+- **Media** (J2): Jupiter's air (L36–L38) has no water: the hydro-kit is stowed and the pressure hull does nothing, as
+  in vacuum; Io (L39) and Callisto (L40–L42) follow the belt's [vacuum rules](../../world/belt/README.md#vacuum-rules).
+  The wind gusts of L36 and L38 push the ship as Level 12's do (the [Jovian system](../../world/jovian/README.md)'s
+  hazards); no module changes that.
+
 ## Concept art
 
 Prompts and capture notes: [concept/prompts.md](concept/prompts.md).
@@ -279,7 +313,9 @@ Prompts and capture notes: [concept/prompts.md](concept/prompts.md).
   `Command.DASH`, the HUD's dash pip right of the shield's label plate, three fading afterimages,
   the thruster burst and its sound, the hull see-through every other two steps while invulnerable)
 - [x] Act 4's modules' effects: the Auto-repair nanites and the Pressure hull (M8 part A, the items below)
-- [ ] The other modules' effects — **later: Act 6** (Ascendancy IFF spoofer)
+- [ ] The other modules' effects — **later: Act 6** (Ascendancy IFF spoofer: the late, stale-aimed volleys of the listed
+  turrets, the amber stutter, `design: draft` and `available: L39` in [data.yaml](data.yaml); draft: *Act 6: the IFF
+  spoofer and the core tiers*) — M10 part A
 - [x] Sensor level controls the intel panel detail
 - [x] Underwater penalties and the pressure hull — **later: Act 4** (the pressure hull is an L22
   module; the penalties are Europa's under-water rules; the draft is *Pressure hull (L22)* above) (M8 part A, step
@@ -423,3 +459,10 @@ Prompts and capture notes: [concept/prompts.md](concept/prompts.md).
 - 2026-10-27 (Act 5 design phase, step m9-d-systems; **approved in round 60**): Act 5 adds no
   utility module (Q12 = c); the Engine Mk IV stays in Act 5; in vacuum the pressure hull does nothing and the plan
   stows it; the engine and the modules are never shed by a drain.
+- 2026-10-31 (Act 6 design phase, step m10-d-systems; **decided 2026-10-31 (round 72)**): the Ascendancy IFF
+  spoofer drafted (Q7 = b): an Ascendancy turret's aimed volley fires 0.5 s late at the ship's position when it was
+  due, aircraft, bosses and the Vrell never fooled; 2 MW, 5 000, from the L39 visit (Varga's codes from L37); no new
+  engine in Act 6; Jupiter's air stows the hydro-kit as vacuum does.
+- 2026-10-31 (user, [round 72](../../concept-rounds/round-72/README.md) closed): Q7 b: the IFF spoofer from the
+  Level 39 visit as the story item (bought at the Level 40 visit on the plan, J11); under c it would not be in Act 6.
+  Which units count as turrets stays with the ground units' documents.

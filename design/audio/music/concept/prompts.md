@@ -1544,3 +1544,124 @@ brass staccato ostinato, trumpets playing a stately minor-major-seventh villain 
 metallic industrial hits, brass canon, human military menace, no choir, 1990s synth-orchestral and industrial hybrid,
 instrumental, full-length two-minute arrangement with a drumless machine breakdown, a snare-corps section and long
 build-ups, seamless loop."*
+
+# Round 72 — the Act 6 B theme (track 15), the duel theme (track 32), the Ascendant's hand-off and the escape sting (track 33)
+
+Step AUD-R (M10 design phase, 2026-10-31), synthesized by `tools/concept/audio/music_r72.py` (deterministic: fixed
+seeds; the round-02 loop format for the themes, the round-08 sting format; the hand-offs cut from the game's
+`assets/music/iron-sovereign.ogg` and `choir-descends.ogg`). Measured only, not listened to by Claude. The brief is
+the music README's *Act 6 music (draft)*; no bubbly or popping sounds, no resonant plucks, thunder and static only as
+band noise. Pending the user's review in round 72.
+
+## act6-b-theme-r72-a — "Storm Wall" (#15 Act 6 B, 60.9 s)
+
+**Proposed** (round 72).
+
+**Brief**: an orchestral-metal hybrid, heavy and stormy. A drop-tuned distorted bass riff in half-time (a chug on the
+root with a flat-2 rub, the sub an octave down), war drums (a deep kick on 1 and the and-of-2, a huge half-time snare
+and clap on 3, taiko, low tom fills every 4 bars, a double kick under the last section), tremolo storm strings, a
+wordless choir in long minor chords from the B section, hats from B; the storm's wind as band noise (louder in the
+breakdown). Vorne's motif (C E♭ G B) in the open: cold low brass and organ at loop bars 0, 8 and 20 (and once in the
+intro), 5.6–6.4 dB under the full mix. A 4-bar breakdown (loop bars 16–19): the choir alone over low strings, a far
+thunder roll, taiko into the last section. The production's `fall` stem would be this breakdown's material under the
+whole loop.
+
+**Tempo / key**: 135 BPM, C minor. **Loop**: `LOOPSTART` 333200 (7.556 s), `LOOPLENGTH` 2195200 (49.778 s = 28 bars).
+**Chords**: `Cm Cm A♭ A♭ Fm Fm G G` (A, B, D), `Cm A♭ Fm G` (the breakdown). **Measured**: −14.3 LUFS, −1.1 dBTP,
+seam 0.45.
+
+**AI prompt**: *"Orchestral metal at 135 BPM in C minor: a drop-tuned distorted bass riff in half-time, war drums and
+low toms, tremolo storm strings, a wordless choir in long minor chords, wind; a villain's four-note motif (C E♭ G B)
+in cold low brass and organ every eight bars; a breakdown of the choir alone over low strings. Seamless loop."*
+
+## act6-b-theme-r72-b — "Red Spot" (#15 Act 6 B, 61.2 s)
+
+**Proposed** (round 72).
+
+**Brief**: darker and driving, the Vrell with the upper hand. A distorted, gated 16th bass on the roots (octave jumps
+and a flat-2 rub), an industrial kit (a four-on-the-floor kick, a tight snare and struck sheet metal on the backbeat,
+hats, tom fills), cold strings; the choir chanting the Choir motif's tritone drop (E D C B, F E) as a two-bar riff in
+the B and D sections, slowed to half-bar notes in the drumless C section (toms, a held sub). Vorne's motif only inside
+the machine: the arpeggio E G B D♯ in 16ths (two detuned saws, a soft low-pass) from the B section on, 11.6–14.5 dB
+under the mix, no brass; the chord progression turns to the flat-2 (F) before each phrase's end.
+
+**Tempo / key**: 150 BPM, E minor (track 18's key). **Loop**: `LOOPSTART` 299880 (6.800 s), `LOOPLENGTH` 2257920
+(51.200 s = 32 bars). **Chords**: A `Em Em C C Am Am B B`; B–D `Em Em C C Am Am F Em`. **Measured**: −14.3 LUFS, −0.7
+dBTP, seam 0.64.
+
+**AI prompt**: *"Dark industrial metal at 150 BPM in E minor: a distorted 16th-note bass, an industrial drum kit with
+struck metal, a choir chanting a descending E–D–C–B then F–E figure as a riff; a cold E–G–B–D♯ sequencer arpeggio
+running inside the bass, no brass. Seamless loop."*
+
+## duel-theme-r72-a — "Honour Guard" (#32 duel theme, 61.2 s)
+
+**Proposed** (round 72).
+
+**Brief**: Level 40's three-ace duel after the mini-boss sting (A minor, the sting's last chord): martial and orchestral
+in track 19's family. Snare rudiments (the Iron Sovereign's grid), timpani on the roots and fifths, a kick on the
+beats, low-brass 8ths and galloping strings over Am – F – Dm – E, a string pad. A (loop bars 0–7): the joust, Vorne's
+motif (A C E G♯) in gold brass (a trumpet an octave up) answered by the main motif's horn call (A E A B C) in the
+horns, twice. B (8–15): a three-voice brass fugato on Vorne's motif (A low, E, A high in the trumpet: the three
+aces), closing on a held G♯–A / B–E. C (16–23): both motifs at once (Vorne's low, the horn call in trumpets), then in
+canon a bar apart. D (24–31): the tutti, the horn call on top and Vorne's motif under it.
+
+**Tempo / key**: 150 BPM, A minor. **Loop**: `LOOPSTART` 299880 (6.800 s), `LOOPLENGTH` 2257920 (51.200 s = 32 bars).
+**Measured**: −14.2 LUFS, −2.0 dBTP, seam 0.16. Production: ≈ 2:00, one full mix (no stems).
+
+**AI prompt**: *"A martial orchestral duel theme at 150 BPM in A minor: snare rudiments, timpani, low brass eighths,
+galloping strings; a villain's motif A–C–E–G♯ in gold brass answered by a heroic horn call A–E–A–B–C, a three-voice
+brass fugato, then both themes together. Seamless loop."*
+
+## duel-theme-r72-b — "Three Aces" (#32 duel theme, 63.4 s)
+
+**Proposed** (round 72).
+
+**Brief**: leaner and more arcade: a drum-and-bass breakbeat (kick on 1 and the and-of-3, snares on 2 and 4 with ghost
+notes, 16th hats), a reese sub on the roots, synth-brass stabs on the off-beats; Vorne's motif as a fast sequencer
+arpeggio (A C E G♯ in 16ths) from the B section; the main motif soaring in a distorted lead (C and E sections, a
+third up in answer); a half-time D section of the sequencer and the stabs alone.
+
+**Tempo / key**: 175 BPM, A minor. **Loop**: `LOOPSTART` 257040 (5.829 s), `LOOPLENGTH` 2419200 (54.857 s = 40 bars).
+**Measured**: −14.2 LUFS, −1.1 dBTP, seam 0.16.
+
+**AI prompt**: *"Drum and bass at 175 BPM in A minor: a breakbeat, a reese bass, synth brass stabs, a fast A–C–E–G♯
+sequencer arpeggio and a soaring distorted lead playing a heroic five-note call. Seamless loop."*
+
+## ascendant-handoff-r72-a, -b — the Ascendant's hand-off from track 19 to track 18 (Level 42)
+
+**Proposed** (round 72).
+
+**Brief**: at the eruption (phase 2) the Choir's music takes Vorne's ship: track 19 "Iron Sovereign" (phase 1) hands
+over to track 18 "The Choir Descends", whose intro is the Choir motif alone over a drone, under the Choir's line and
+Vorne's shout (the radio's duck, not applied in these files). Both cut from the game's own files (track 19 from its
+loop bar 8, 10 s, before the hand-off; 10 s of track 18 after), levelled to −14 LUFS.
+**a, crossfade** (recommended: no new render): track 19 out over 2 s (a raised-cosine fade) while track 18 starts from
+its beginning. 20.0 s, −14.3 LUFS.
+**b, bridge**: track 19's next 4 s played at a speed gliding 1.0 → 0.89 (a tape stop two semitones down: F♯ minor onto
+track 18's E; the draft says "a semitone", two land on the key) under a low-pass closing 8 kHz → 600 Hz, fading over
+its last 2 s while track 18's intro rises under it. 22.0 s, −14.3 LUFS.
+
+## escape-sting-r72-a — "Collapse" (#33 escape sting, 6.6 s)
+
+**Proposed** (round 72).
+
+**Brief**: Level 42's `ESCAPED`, as the lifeboat leaves the top edge, cutting track 18; then the ambience alone. Brass
+and choir: a timpani roll and low strings on E; Vorne's motif in E (E dotted, G, B, D♯) in low brass doubled by organ,
+126 BPM, the D♯ bending down a semitone and dying (its filter closing); the choir takes the Choir motif's descent (E D
+C B, each falling note a little quieter and further right) and the tritone drop: a held low E (strings E1–E3, organ, a
+sub, a timpani hit) with the choir's F over it, unresolved, ringing out. **Measured**: −14.3 LUFS, −2.3 dBTP.
+
+**AI prompt**: *"A six-second sting: a villain's four-note brass motif E–G–B–D♯, its last note bending down and dying,
+taken over by a choir descending E–D–C–B and dropping to F over a held low E, unresolved."*
+
+## escape-sting-r72-b — "Dying Engine" (#33 escape sting, 6.6 s)
+
+**Proposed** (round 72).
+
+**Brief**: the same moment as a machine: Vorne's motif as a 16th arpeggio (E G B D♯, alternate beats an octave up, two
+detuned saws over a distorted bass on the beats) for 1 s, then slowing and pitching down like a dying engine (a tape
+stop: the speed gliding 1.0 → 0.45 over 2.4 s, a low-pass closing 7 kHz → 500 Hz, the level sinking), into the
+choir's drop (C B, then F over E) and the same held low E with the F over it. **Measured**: −14.4 LUFS, −1.9 dBTP.
+
+**AI prompt**: *"A six-second sting: a cold synth arpeggio E–G–B–D♯ slowing and sinking in pitch like a dying engine,
+into a choir dropping a tritone onto a held low E with an unresolved F above it."*

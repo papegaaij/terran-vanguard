@@ -183,6 +183,54 @@ fit the 208 px well (`MissionLayoutTest`). The level's `CLEAN HULL` secondary sh
 count: `CLEAN HULL` while every section holds half its hull (a tick at the share on each bar), `HULL FAILED` in
 red with the integrity line's flash the moment one drops below, `HULL DONE` in green at the level end (step D4b).
 
+### Act 6 additions (draft)
+
+*Draft, step `m10-d-systems` (2026-10-31), **decided 2026-10-31 (round 72)** (Q5 = a, Q6 = a, Q7 = b). The
+fights and the gates are their documents' ([bosses](../../enemies/bosses/README.md), the
+[Shield Pylon](../../enemies/ground/shield-pylon/README.md), the Act 6 levels); this is how the HUD shows them.*
+
+**The Honour Guard's bar** (Level 40's mid-boss: three aces, staggered, then together, Q5 = a):
+
+- One **mid-boss bar** (the shorter bar at the top of the play field, on the boss plate) named `HONOUR GUARD`, split
+  into **three segments**, one per ace in the order they join (the leader on the left), each segment as wide as its
+  ace's share of the three's HP, 2 px apart. The bar is the sum of the three's remaining HP (the boss bar's rule), so
+  its length never jumps when an ace joins.
+- Above each segment a **call-sign tag** in the label font (the call signs are the story's, J4; at most 7 characters
+  so three fit over the bar: the layout test checks).
+- An ace **not yet in the fight**: its segment dim and hatched, its tag grey; it lights with a white flash the moment
+  its ace enters (the entry's own warning is the mid-boss document's). A **hit** flashes the struck ace's segment
+  only. A **killed** ace: its segment dark, its tag struck through in red; the bar closes with the third.
+
+**The pylon count** (Level 41's pylon gates: the rescue halt of Level 29 with the gate's Shield Pylons as its targets):
+
+- The objective tracker's well reads **`PYLONS n / m`**, n the current gate's pylons destroyed of its m (the count runs
+  to the gate's own target, the Act 5 lesson that a count shows its target), then a row of small **gate pips**, one
+  per gate, green when that gate is open. As a gate's last pylon falls the count flashes green and reads `OPEN`; the
+  next gate's count starts at `0 / m` when its halt begins; between gates only the pips show.
+- With the level's secondary (Q12's `FILES`, Level 41's document) the two-line tracker: the pylons on line one, the
+  secondary on line two.
+
+**The escape bar** (Level 42's last phase: the lifeboat flees up the screen and always escapes; damage pays up to a
+cap, Q6 = a; the numbers are the Ascendant's):
+
+- The boss bar turns into the **escape bar**: the plate's name becomes the lifeboat's (the boss document's), and the
+  bar is a **time bar** draining from full to empty in amber as the lifeboat climbs to the top edge, the seconds left
+  at its right end (`12s`).
+- Over it a **gold fill** grows from the left with the damage dealt as a share of the payout's cap; at the cap it
+  flashes once and reads `MAX` (the credits come in the floating numbers as usual).
+- As the lifeboat leaves the top edge the bar flashes and reads **`ESCAPED`** in amber, not red: the level is won and
+  the act's end follows. The bar never shows a kill.
+
+**The Reflex Shield** (Q7 = b, the [shields](../../player/shields/README.md#reflex-shield-act-6)): with it fitted the
+shield bar has a **tick at 75 %**, and the part above the tick is drawn **gold** while the reflect window is open
+(the shield at 75 % or more); below it the bar is the ordinary blue.
+
+**Nothing new for the rest:** a lightning column's telegraph is drawn in the field, not in the HUD (the
+[Jovian hazards](../../world/jovian/README.md)); the IFF spoofer shows only in the field (a turret's amber stutter);
+the weapons rows' `NO GROUND` in the air-only Levels 36, 38, 40 and 42 is Level 30's (built); the Plasma Arc's row reads
+`PLASMA ARC`; the friendly marker (round 70) marks Aurelia's shuttles and the fleet's craft; the aces and Vorne speak on
+the enemy channel (Act 5's intercepted dress), Aurelia Traffic and the fleet on the friendly one.
+
 ## Concept art
 
 Rejected proposals (5 rows) are listed in [concept/rejected/README.md](concept/rejected/README.md).
@@ -344,6 +392,11 @@ Production art for concept round 26 (M4 part H batch): the boss bar's plate, ren
       band 2 s before each neutral wave, the IFF brackets with the `FRIENDLY` tag on each neutral craft on the screen
       (step MARK70: `FriendlyBanner`, `FriendlyMarks`, `Sortie.friendliesInbound`, `FriendlyMarkerTest`; Level 29's
       capture `friendly-marker-capture-r71-a`)
+- [ ] The Honour Guard's three-segment mid-boss bar with the call-sign tags (dim until an ace joins, dark and struck
+      through when killed) — **later: Act 6** (draft: *Act 6 additions*) — M10 (L40's part)
+- [ ] Level 41's `PYLONS n / m` count with the gate pips and `OPEN` — M10 (L41's part)
+- [ ] The escape bar (the time bar in amber, the gold payout fill and `MAX`, `ESCAPED`) — M10 (L42's part)
+- [ ] The Reflex Shield's 75 % tick and gold window on the shield bar — M10 part A
 - [x] Level 31's tug tracker (three section bars) — M9 part D (step D4: `TUG n / 3` over three bars, each after its section's initial `B`, `C`, `E`: the full names leave no room for a bar in a third of the well, `MissionLayoutTest`; step D4b: the `CLEAN HULL` tag on line one and the share's tick on the bars)
 
 ## Open questions
@@ -352,7 +405,6 @@ Production art for concept round 26 (M4 part H batch): the boss bar's plate, ren
   and the enemy channel's drafts above follow the recommended answers; under Q2 = b (a flat −20 % fire
   rate a leech) the gauge would show only a leech count, under Q2 = c the slowed weapon's row would
   read `DRAINED` instead.
-
 - Should the side panels show a subtle live element, such as a mini-radar or the pilot's
   heartbeat? Nice 90s flavour, but it competes for attention.
 
@@ -380,3 +432,11 @@ Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-a
   t=75 and t=96 it shows with the pincers' amber banners (1.5 s and 0.5 s together); the brackets are generic for
   every `neutral` unit.
 - 2026-10-30, the user: dither audit, ≥ 25 % smoothed (step DITH8): the side panels' faces (`panel-left`, `panel-right`) and `plate`: 64 undithered steps where the faces were Bayer-dithered (pending the user's review: the dither was deliberate in round 13) in smooth steps, not the 4×4 Bayer checker ([audit](../../art-direction/production/README.md#dither-audit-2026-10-30)).
+- 2026-10-31 (Act 6 design phase, step m10-d-systems; **decided 2026-10-31 (round 72)**): the Act 6 additions:
+  the Honour Guard's one mid-boss bar in three segments with the aces' call-sign tags (Q5 = a), Level 41's `PYLONS n / m`
+  with the gate pips, the Ascendant's escape bar (the amber time bar, the gold payout fill, `ESCAPED`; Q6 = a), the
+  Reflex Shield's gold window on the shield bar (Q7 = b); the lightning telegraph and the IFF spoofer stay in the field.
+- 2026-10-31, design phase (step m10-d-act; decided 2026-10-31 (round 72)): Level 42 joins the air-only levels (`NO GROUND`; its
+  approach keeps the fleet's hulls on `low-air`, the Level 42 draft's call).
+- 2026-10-31 (user, [round 72](../../concept-rounds/round-72/README.md) closed): Q5 a and Q6 a: the Honour Guard's
+  three-segment bar and the Ascendant's escape bar as drafted; the other fight shapes rejected.

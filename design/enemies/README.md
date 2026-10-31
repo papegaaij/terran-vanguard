@@ -3,7 +3,7 @@ title: Enemies
 design: approved
 implementation: in-progress
 art: final
-updated: 2026-10-29
+updated: 2026-10-31
 ---
 
 # Enemies
@@ -48,6 +48,26 @@ space; the belt backdrops stay a step lighter than Act 4's (a sunlit dust band, 
 purpose from the Level 28 cruisers (final, gloss black): the cruisers stay as they are, and the Act 5 units'
 chosen variants are re-rendered in gunmetal/charcoal in their parts' production art. Crewed craft carry a
 light hex [shield](#enemy-shields); expendable drones do not.
+
+**The heartland and the hybrids** (Act 6 on; draft, the gap analysis's **Q9 a**, decided 2026-10-31 (round 72)). Three liveries, one rule, so the player reads rank and kind at a glance over Jupiter's bright bands and
+Callisto's ice:
+
+| Livery | Who | Look |
+|---|---|---|
+| **Regular** (gunmetal, as Act 5) | every returning Ascendancy unit (Talon, Dart Drone, Gilded Gunship, Hornet, Buzzsaw Drone, Strider, Warden Tank) and the new [Mirror Interceptor](air/mirror-interceptor/README.md) | Q11 b's gunmetal and charcoal with gold trim (gold ≥ 20 % of the silhouette), the top-left rim light and red running lights; no re-render |
+| **Elite** (gloss black and heavy gold) | the Honour Guard's three aces, the Ascendant, and the Callisto fortress's own emplacements (the ground documents name them) | the Level 28 cruisers' gloss black with heavy gold (gold ≈ 35–45 % of the silhouette), the same rim light so the black never sits dark-on-dark; a gold-on-black that says "Vorne's own" |
+| **Hybrid** (gunmetal and teal tissue) | the [Chimera](air/chimera/README.md), the [Harrow](air/harrow/README.md), the Graft Turret and every later hybrid | regular gunmetal plating split by **Vrell tissue growing through the seams**: dark teal-black flesh (the Vrell's spawner base `1E5C5A`) with **teal glow `00FF9A`** in the seams, brightest at the weak points; gold ≥ 15 %, teal glow ≈ 5–12 % of the silhouette (the art step measures both on every sheet) |
+
+- The **teal seam glow is the hybrids' mark** whatever their threat: it is the Vrell's contact/spawning hue, and the
+  hybrids are the weapon the Vrell grew inside the Ascendancy. A hybrid's **weapon tell** keeps its airframe's own
+  colour (the Chimera's red twin-muzzle glint, as the Talon's), so a teal pulse never means "it fires".
+- **Weak points by glow**: a hybrid's seams are its weak point (drawn, or a hit box where the unit's document
+  says so); [regeneration](#regeneration) brightens them while it heals. Bosses keep the lime weak-point rule.
+- **EMP**: a hybrid counts as a **machine** (the plating carries the systems): the
+  [EMP Burst](../player/specials/README.md#emp-burst-l15) stuns it 3 s, and its regeneration waits for the stun
+  (a stunned unit's clock stops).
+- **Sides**: hybrids fight for the Ascendancy, before and after the Vrell turn; the Vrell never hunt them (see
+  [the three-way war](#the-three-way-war)).
 
 #### Role colours
 
@@ -242,8 +262,8 @@ that move in any direction must read from any angle:
 | `link` | A damaging energy beam between two or more units; acts as a barrier. Between ground anchors (the [Tendril Anchor](ground/tendril-anchor/README.md), a tendril a beam burns) or, from Act 5, between moving air units (the Shard Drone's energy links, see [air links](#air-links); draft). |
 | `aura` | Buffs nearby enemies (shield, speed or regeneration); shown as a visible ring. |
 | `drain` | Drains the player's shield or generator energy while in range or latched. |
-| `reflect` | A frontal shield bounces non-`beam` player shots back as enemy bullets. |
-| `death-burst` | Releases a `ring` or `fan` when destroyed. |
+| `reflect` | A frontal shield bounces non-`beam` player shots back as enemy bullets. From Act 6 (draft, Q1 c, decided 2026-10-31 (round 72)): a beam held on it heats it until it breaks, a `shield-breaker` hit or the EMP shatters it, and it stays down 3 s; see [reflect](#reflect) (the Mirror Interceptor). |
+| `death-burst` | Releases a `ring` or `fan` when destroyed. From Act 6 (draft, decided 2026-10-31 (round 72)) also when it **rams**: a unit that dies on contact with the ship bursts as one that is shot (the [Harrow](air/harrow/README.md)). |
 
 ### Formation vocabulary
 
@@ -288,6 +308,17 @@ above when M9 part A writes them into [data.yaml](data.yaml)):
 - A **mine line** is not a formation (mines are not units): it is the Minelayer's `mine` attack,
   see [mine lines](#mine-lines).
 
+**Act 6 additions** (draft, decided 2026-10-31 (round 72); they join the rendered table when M10's
+first part writes them into [data.yaml](data.yaml)):
+
+- **Medium hulls keep apart** (the Act 5 lesson): a `pincer` or `rear ambush` of `medium` or larger air units
+  holds **at least one hull length** between any two hulls (the Mirror Interceptor's pincers: ≥ 80 px between
+  hull edges), and no wave places such a hull over another one already on the screen.
+- A `swarm` of hybrids (the [Chimera](air/chimera/README.md), 6–10) flocks round its leader point as the Mote
+  Swarm does; a hybrid swarm has no squad leader.
+- **Prey** is not a formation: it is a link between two waves, a hunting Vrell wave and its Ascendancy prey wave,
+  see [the three-way war](#the-three-way-war).
+
 ### Variety checklist per act
 
 Every act must pass this checklist (counting the units that appear in the act, new or
@@ -310,7 +341,7 @@ Current coverage (✓ = passes):
 | 3 Red Dust | tiny (the new Dust Kite and Mote Swarm, plus returning Skitters), small, medium, large, huge | Threadcrawler, Revenant Walker, Dust Colossus | Burrower, Threadcrawler, Shellback (L17), Warden Tank | Dust Devil (L18) | L19 rear, L20 reverse scroll, L21 breaches | 8 of 22 (Skitter, Stinger, Mantis, Creeper, Wraith, Burrower, Choir Herald, Threadcrawler); the 22 used in L15–L21: Dust Kite, Skitter, Mote Swarm, Needler, Stinger, Polyp Mortar, Spine Turret, Tendril Anchor, Ghost Drone, Burrower, Creeper, Ravager, Spore Bomber, Mantis, Choir Herald, Dust Devil, Wraith, Warden Tank, Threadcrawler, Shellback, Revenant Walker, Dust Colossus | ✓ |
 | 4 Deep Water (as built) | tiny (Glassfin, returning Skitters and the Mote Swarm), small, medium, large, huge | Eel Swarm, Drill Rig (core and pumps), Abyssal Maw | Scuttler on the sea floor (L24) | Spiral Nautilus (L25–L28) | Mantis pincers (L22), Siren side caves (L25), the Abyss Ray rising from below (L24), Depth Hunter columns from the rear (L27, L28) | 3 of 25 (Skitter, Stinger, Mantis); the 25 used in L22–L28: Skitter, Mote Swarm, Glassfin, Needler, Stinger, Spine Turret, Polyp Mortar, Skimmer, Lamprey, Driftjelly, Reef Spitter, Barbfin, Glow Angler, Mantis, Scuttler, Siphon Pump, Siren, Spiral Nautilus, Depth Hunter, Relay Beacon, Drill Rig, Eel Swarm, Abyss Ray, Spawning Reef, Abyssal Maw | ✓ |
 | 5 The Belt (as built) | tiny (Asteroid Mite, Dart Drone), small, medium, large (Rail Serpent, Strider), huge (Iron Sovereign) | Rail Serpent, Shard Drone links, Strider legs, Iron Sovereign | Strider (L32), Warden Tank in Ascendancy livery (L34; the Crawler Tank dropped, J1) | Buzzsaw Drone (L31), Sovereign rings | Minelayer and Rail Serpent rear and sides (L30), Void Leech rear and sides (L33) | 3 of 22 (Asteroid Mite, Skitter, Stinger; the Void Leech is not counted); the 22 used in L29–L35: Talon, SAM Nest, Asteroid Mite, Minelayer, Gilded Gunship, Rail Serpent, Dart Drone, Shard Drone, Hornet, Buzzsaw Drone, Sentinel Tower, Strider, Void Leech, Rail Bunker, Warden Tank, Clamp Gun, Wavering Stormhawk, Iron Sovereign, Skitter, Stinger, Needler, Mote Swarm | ✓ |
-| 6 Jovian Storm | small, medium, large, huge | Halo Platform, Ascendant | Warden Tank and Strider return (L39, L41) | Halo Platform (L41), Buzzsaw Drone returns (L38) | Honour Guard rear (L40), Harrow all edges | 0 of 12 | ✓ |
+| 6 Jovian Storm (draft, decided 2026-10-31 (round 72)) | tiny (no new unit, J5: the Dart Drones of the Gunships, the Hornets' carriers and the Ascendant's bays, the Vrell's Mote Swarm and Skitters), small, medium, large (Halo Platform, Strider), huge (Ascendant) | Halo Platform (ring and core), Strider legs (L39), Ascendant | Strider (L39), Warden Tank (L41) | Buzzsaw Drone returns (L38), Halo Platform ring (L41) | Mirror Interceptor pincers and rear ambushes (L37), Harrow from all edges (L38), Honour Guard sides and rear (L40) | 3 of 25 (Skitter, Stinger, Wraith); the 25 the level drafts fly in L36–L42: Chimera, Talon, Dart Drone, Gilded Gunship, Hornet, Mirror Interceptor, Graft Turret, Skitter, Mote Swarm, Harrow, Buzzsaw Drone, Strider, Honour Guard, Shield Pylon, Halo Platform, Warden Tank, Ascendant, Lamprey (L36–L38, L41), Wraith (L36, L38), Spore Bomber (L36), SAM Nest (L37, L39, L41), Sentinel Tower (L39, L41), Rail Bunker (L41), Needler (L38, L39), Stinger (L38); the Vrell hunters of the [three-way war](#the-three-way-war) are among them (Motes, Skitters, Lampreys); L42's two cruisers are invulnerable set pieces, not counted | ✓ |
 | 7 Beyond the Gate | tiny, small, medium, large, huge | Leviathan and Coilwyrm return, Choir Heart | Threadcrawler returns (L45) | Whirl Seed returns (L45) | all-direction levels (L44, L46–50) | 3 of 10 (Rift Skater, Choir Seraph, Threadcrawler) | ✓ |
 
 When a level's waves are written, keep the act passing; the check is repeated when levels are
@@ -319,6 +350,9 @@ was checked as built against Levels 08–14's data on 2026-10-12 (M5 part I): th
 row, all three-plus tiers, both multi-part bosses, three walkers, the Whirl Seed, rear, side and
 all-edge entries, 5 of 20 insectoid. Act 4 was checked as built against Levels 22–28's data on 2026-10-26 (M8
 part I): the row above. Act 5 was checked as built against Levels 29–35's data on 2026-10-29 (M9 part I): the row above, counted from the levels' `enemy:` keys (the Crawler Tank was dropped in round 60 J1; the Warden Tank flies in its place, Level 34).
+Act 6's row was redone from the unit drafts on 2026-10-31 (step m10-d-enemies-a, judgement call **J5**, pending
+round 72): the sketch's row lacked `tiny`, and Act 6 adds no new tiny unit, so the row passes on the returning
+popcorn only; the level drafts must fly at least one tiny unit, and the check is repeated against them.
 
 ### Layer rules
 
@@ -576,11 +610,28 @@ hull**:
 | `shield-breaker` | a hit by a `shield-breaker` weapon (the Tesla Coil Pod, see the [weapons](../player/weapons/README.md)) **empties it at once** (the hit's whole damage goes to the hull) and stops the refill for **3 s** |
 | EMP Burst | the [EMP Burst](../player/specials/README.md#emp-burst-l15) empties every shield on the screen and stops the refill for the stun (a machine's 3 s), as it strips the aura rings |
 | Scaling | the shield's HP takes the difficulty's HP lever and, on a returning `medium` or larger unit, the act HP factor; never the beam-era factor |
-| Who has one | Act 5 (light): the [Talon](air/talon/README.md) 12 (its leader 24; 2 and 4 until round 62), the [Hornet](air/hornet/README.md) 8, the [Gilded Gunship](air/gilded-gunship/README.md) 12, the Iron Sovereign's core (its own document); no other Act 5 unit. Heavier from Act 6, where `shield-breaker` is strongly rewarded (L37) |
+| Who has one | Act 5 (light): the [Talon](air/talon/README.md) 12 (its leader 24; 2 and 4 until round 62), the [Hornet](air/hornet/README.md) 12 (8 until round 64), the [Gilded Gunship](air/gilded-gunship/README.md) 12, the Iron Sovereign's core (its own document); no other Act 5 unit. **Twice as heavy from Act 6** (below), where `shield-breaker` is strongly rewarded (L37) |
+
+**Act 6 weights** (draft, the gap analysis's §2.2, decided 2026-10-31 (round 72)). From **Level 36** on,
+the Ascendancy's crewed craft carry **twice their Act 5 shield**, so the `shield-breaker` the pacing table makes
+available from Level 29 pays strongly from Level 37 on, as it promised:
+
+| Unit | Act 5 (built) | Act 6 | With the act HP factor (J1's reference DPS) |
+|---|---|---|---|
+| [Talon](air/talon/README.md) (`small`) | 12, leader 24 | **24**, leader **48** | none: a `small` unit keeps its HP (32 with the beam era, leader 48) |
+| [Gilded Gunship](air/gilded-gunship/README.md) (`medium`) | 12 | **24** | ×148/124 at L37: shield ≈ 29, hull 88 → ≈ 105 |
+| [Hornet](air/hornet/README.md) (`medium`) | 12 | **24** | ×152/128 at L38: shield ≈ 28, hull 96 → ≈ 114 |
+
+The rule stays the Act 5 one (spent first, the 2 s delay, the refill, the breaker's 3 s hold, the EMP); only the
+pool doubles. Act 6's new units carry **no** hex shield: the [Mirror Interceptor](air/mirror-interceptor/README.md)'s
+mirror is its one defence (a unit has one, for readability), and the hybrids defend with their tissue
+([regeneration](#regeneration), the death-burst). The Honour Guard and the Ascendant set theirs in their own
+documents. The doubling is a level rule (the build lists Levels 36 on, as `small_act_hp` lists its levels), not a
+change of the Act 5 stat blocks.
 
 Bosses follow the same rule unless their document says otherwise (a boss is never stunned, but its
 shields are emptied by the EMP). Different from **hardened** ground units (only `anti-ground` and the
-landing blasts hurt them) and from the Act 6 **`reflect`** shield (a frontal arc that bounces shots).
+landing blasts hurt them) and from the Act 6 **[`reflect`](#reflect)** shield (a frontal arc that bounces shots).
 
 ### Air links
 
@@ -636,6 +687,84 @@ that ride the belt's drifting rocks (`ride` in the movement vocabulary); the
   **0.4 s** tell (a `dive` at the ship).
 - **Shooting the rock** frees its riders early: they tumble off and leap after the same tell. Riders
   carried off the screen on an untouched rock pay nothing.
+
+### Reflect
+
+**Draft** (Act 6 design phase, the gap analysis's **Q1 c**, decided 2026-10-31 (round 72)). The `reflect`
+attack: a unit carries a **mirror** over a frontal arc. The first unit is the
+[Mirror Interceptor](air/mirror-interceptor/README.md) (Level 37), whose document holds the numbers (arc, heat,
+turn rate); the Ascendant's phase-1 mirror panels follow the same rule (its own document).
+
+| Rule | Value |
+|---|---|
+| The arc | a player shot arriving within the mirror's arc (measured from the mirror's facing, as the Gilded Gunship's frontal armour) meets the mirror; one arriving outside it hits the hull as usual. **The flanks and the rear are always open** |
+| Projectiles | every non-`beam` player shot (bolts, pellets, rockets, homing missiles, the drone bays' shots) that meets the mirror **bounces back**: at most **one every 0.15 s** per mirror, a shot in between is absorbed with a spark. The bounced shot becomes an enemy **`small` bullet** (magenta, 4 damage whatever the shot did) at a **slow 110 px/s**, along the mirror image of its path about the mirror's facing (a shot straight into it comes straight back down its own line) |
+| From above | dropped bombs, lobbed shells, the Airstrike and the Smart Bomb come from above or everywhere: they pass the mirror and hit the hull, as they pass the Gunship's frontal armour |
+| `beam` | a beam on the mirror does **no** hull damage: it **heats** the mirror by its damage; at the unit's heat (about **1.0 s** of the plan's beam) the mirror **breaks**. Heat cools at 50 % of the maximum a second after 0.3 s without the beam. The plate glows dull red, orange, then white as it heats, and cracks show from 70 % |
+| `shield-breaker`, EMP | a `shield-breaker` hit (the [Tesla Coil Pod](../player/weapons/tesla-coil-pod/README.md)'s arc) or the [EMP Burst](../player/specials/README.md#emp-burst-l15) **shatters it at once**; the breaker's hit goes on to the hull at full damage |
+| Down | a broken or shattered mirror stays down **3 s** (the breaker's hold), then regrows in 0.4 s behind a silver shimmer sweeping across it (the tell that it is back); while it is down every shot hits the hull from every side |
+| Arcs | a [Plasma Arc](../player/weapons/plasma-arc/README.md) strike on a standing mirror's face is **absorbed** (no heat, no bounce: there is no projectile to turn round) and **ends the chain** there; a chain that jumps in from a struck neighbour may reach the open flank, where it hits the hull at full damage. Start the chain beside a mirror line |
+| Reflex bolts | a bolt of the player's [Reflex Shield](../player/shields/README.md#reflex-shield-act-6) is a bounced bullet: on a standing mirror's face it is **absorbed** with a spark (no damage, no bounce: the once-only rule below); on an open flank it hits like any shot |
+| Once only | a bounced bullet is **never bounced again**, by another mirror or by the player's [Reflex Shield](../player/shields/README.md): shots never ping-pong |
+| Rook | his shots spark on a mirror and are absorbed, never bounced: a bounced bullet always comes from the player's own fire. Homing shots and Rook still pick a mirrored unit |
+| Scaling | the heat takes the difficulty's HP lever and, on a returning `medium` or larger unit, the act HP factor, like a shield |
+
+Every trait has a play: flank it (moving, or the wing and rear mounts), burn it with the beam (slower, not
+useless), shatter it with the Tesla Coil Pod or the EMP. Different from a hex [shield](#enemy-shields) (an HP pool
+every weapon wears down); a unit carries one or the other, never both.
+
+### Regeneration
+
+**Draft** (Act 6 design phase, the gap analysis's §2.2, decided 2026-10-31 (round 72)). A hybrid's tissue
+heals. The first unit is the [Chimera](air/chimera/README.md) (Level 36: 20 % a second after 1.0 s), whose
+document holds the numbers; the Ascendant's tissue sacs follow the same rule (its own document).
+
+- A **regenerating** unit refills its HP at its **rate** (a share of its maximum a second) once it has gone its
+  **delay** without a hit, up to its maximum (the scaled HP: the difficulty lever, the beam era, the act factor),
+  never past it.
+- **A hit is any damage**: a shot, a blast, a ram, a hunter's hit, lightning. A **beam's continuous touch counts
+  as a hit every step**, so a beam held on it denies the regeneration; so does any weapon that keeps touching it.
+  Short bursts with gaps longer than the delay let it heal: the rule rewards burst damage and focus.
+- **Pays once**: a kill pays the unit's bounty once, whatever it healed; healed HP pays nothing.
+- **EMP**: a stunned hybrid's clock stops, so it does not heal during the stun and its delay resumes after it.
+- **Look**: while it heals a teal pulse runs along the tissue seams (two a second) and the seams glow brighter the
+  closer it is to full; the [Targeting computer](../player/systems/README.md#targeting-computer-user-decision-d6-of-m5-part-a)'s
+  HP bar grows back with a teal edge. A soft rising creak, never a bubbly or wet sound (the unit's brief).
+- Different from **regrowth** (a destroyed part coming back: the Coilwyrm's head, the Graft Turret in the
+  [ground](ground/README.md) documents) and from a hex shield's refill (the [shield](#enemy-shields) rule).
+
+### The three-way war
+
+**Draft** (Act 6 design phase, the gap analysis's **Q3 a with c's backdrop**, decided 2026-10-31 (round 72)).
+At Level 37 (Aurelia) the Vrell turn on the Ascendancy ("they were never partners, only a door"). In play the war
+is **scripted prey, generalised** from Level 33's uneasy alliance (the
+[Void Leech](space/void-leech/README.md)'s prey rule), not a full faction war:
+
+- **Before the turn** (Level 36 and Level 37 up to the moment its document sets) the Vrell and the Ascendancy fly
+  side by side and no unit hurts another.
+- **From the turn** a level marks chosen Vrell waves as **hunters** of a chosen Ascendancy **prey** wave (a link
+  between two waves in the level's table). A hunter goes for its prey by its own means:
+  - **latch**: a Void Leech or a Lamprey latches on a prey unit as on the ship (Level 33's rule: its shield
+    empties, it stops firing and drifts down at 60 px/s);
+  - **ram**: a rammer (a Skitter, a Stinger's dive, a Mote Swarm's lunge) picks a prey unit for its chase or dive
+    and does its contact damage to it, dying on impact as on the ship;
+  - **fire**: a hunter's aimed attacks aim at a prey unit. Its bullets stay ordinary enemy bullets (they hurt the
+    ship that crosses them) that also hit **the prey wave's units**, with their class damage to the player
+    (`small` 4, `medium` 6, `heavy` 10); they pass every other unit.
+- **Bullets never hurt their own side**, and the Ascendancy's fire never hurts the Vrell: a prey unit flies its own
+  pattern at the ship until it is struck (the Ascendancy is losing, and keeps its guns on the player).
+- A hunter keeps to its prey while any unit of the prey wave is on the screen (it never leaves a prey for the
+  ship, Level 33's rule); once the prey is gone it flies its own pattern at the ship.
+- **Pay**: a prey unit the Vrell kill pays the player **nothing**; one the player kills pays as usual, latched or
+  not; hunters pay as usual. A secondary objective counts only the player's kills unless its level says
+  otherwise; the level's density counts prey and hunters both.
+- **Never prey**: the hybrids (see *Factions*), bosses and mid-bosses, and allies (the
+  [target-the-objective hook](#target-the-objective-hook) stays the only way a wave aims at an ally).
+- **No marker**: hunters and prey stay hostile to the player and look as usual; a hunter's hit on a prey flashes
+  teal where it lands, and the radio names the turn.
+- **The backdrop** (c on top): the Vrell growth eats Aurelia's decks, and Vrell and Ascendancy craft fight in the
+  `deep` and `low-air` scenery (no hit boxes) beyond the scripted waves; the [Jovian world](../world/jovian/README.md)
+  and the level documents draw it.
 
 ## Concept art
 
@@ -712,6 +841,12 @@ clear. Prompts: [concept/prompts.md](concept/prompts.md#enemy-shield-final-r64).
 | [concept/enemy-shield-final-r64-a.png](concept/enemy-shield-final-r64-a.png) | Enemy hex shield final frames (a, the hex lattice): the three tiers' holding loop, refill and break, the hit's lit hexes; the lattice fades from 38 % at the rim to 12 % over the unit; over the production Talon (shield 12), Hornet and Gilded Gunship at 1× and 2× (sheet) | chosen (round 64, F.1: accepted as final) |
 | [concept/enemy-shield-final-r64-a.gif](concept/enemy-shield-final-r64-a.gif) | The three units shielded: hits, emptied, 2 s quiet, the refill, 2× | chosen (round 64, F.1: accepted as final) |
 | [concept/enemy-shield-capture-r64-a.png](concept/enemy-shield-capture-r64-a.png) | Game captures of the production lattice (step D5; [recipe](concept/prompts.md#enemy-shield-capture-r64-a)): Level 29's first Talons under the beam at 2× (the bubble, lit hexes on a hit, the shatter ring) and a Level 30 convoy Gunship with its escort Talons at 2× | chosen (round 64, F.1: accepted as final) |
+
+Round 72, Q9 (step ART-R-A, picked 2026-10-31; `tools/concept/enemies_r72.py heartland-livery`): the heartland's liveries side by side. Prompts: [concept/prompts.md](concept/prompts.md#heartland-livery-r72-a).
+
+| File | What | Status |
+|---|---|---|
+| [concept/heartland-livery-r72-a.png](concept/heartland-livery-r72-a.png) | Q9's comparison: the production Talon in the regular gunmetal, the elite gloss black and heavy gold, the hybrid teal seams and Q9 c's all-black, beside round 72's units and the player, 2× over Level 36's cream and brown bands and Level 41's ice and citadel deck, gold and teal measured | chosen (round 72 Q.9 a) |
 
 ## Implementation
 
@@ -880,3 +1015,26 @@ Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-a
   lattice reads heavy over the Gilded Gunship: the lattice now fades toward the bubble's middle (12 % over the unit, 38 %
   at the rim, round 61's sheet drew it evenly at 40 %; `shield --r61` rebuilds that sheet).
 - 2026-10-28 (user, [round 64](../concept-rounds/round-64/README.md), closed; page answers): **F.1** accepted: the enemy hex shield's production frames (round 61's F.2 a, the hex lattice, fading toward the middle) are final (`art: final`); **C.2** accepted (the Hornet's shield 12).
+- 2026-10-31 (step m10-d-enemies-a, Act 6 design phase; decided 2026-10-31 (round 72)): the shared Act 6 rules
+  drafted from the M10 gap analysis's recommended answers: [reflect](#reflect) (Q1 c), [regeneration](#regeneration),
+  the `death-burst` on a ram, [the three-way war](#the-three-way-war) (Q3 a with c's backdrop), the heartland and hybrid
+  liveries (Q9 a, *Factions*), the Act 6 shield weights (twice the built Act 5 shields from Level 36: Talon 24, leader
+  48, Gunship 24, Hornet 24, the act HP factor on top for the `medium` ones), the hull-spacing rule for medium pincers
+  (the Act 5 lesson), and the Act 6 variety row redone with no new tiny unit (judgement call **J5**). The Act 5 row of
+  *Who has one* now gives the Hornet's built 12 (round 64's C.2). Air units drafted with them: the Chimera, the Mirror
+  Interceptor and the Harrow; the Buzzsaw Drone's Level 38 return.
+- 2026-10-31, design phase (step m10-d-act, the main agent's calls; decided 2026-10-31 (round 72)): [reflect](#reflect) gets the
+  **arc** row (a Plasma Arc strike on a mirror's face is absorbed and ends the chain; a jump may reach the open flank)
+  and the **Reflex bolt** row (absorbed on a mirror's face, the once-only rule); the Mirror Interceptor's heat is 130.
+  The Act 6 variety row counts the units the seven level drafts fly: 25 (the Lamprey, Wraith, Spore Bomber, SAM Nest,
+  Sentinel Tower, Rail Bunker, Needler and Stinger added), 3 of 25 insectoid; it still passes.
+- 2026-10-31 (user, [round 72](../concept-rounds/round-72/README.md) closed): the Act 6 shared rules approved as
+  drafted (D.11): **Q1 c** (the mirror's `reflect`: non-beam shots bounce, a held beam heats the mirror to a break in
+  about 1.0 s, `shield-breaker` and the EMP shatter it, down 3 s, flanks open; a beams and `shield-breaker` pass
+  through and b the beam-blocking mirror rejected), **Q3 a** with c's backdrop (the three-way war as scripted prey; b
+  full faction fire and c backdrop and radio only rejected), **Q9 a** (gunmetal for regular units, gloss black and
+  heavy gold for the elite, the hybrids gunmetal with teal tissue seams; b everything gunmetal and c the heartland all
+  gloss black rejected; the four-liveries sheet is chosen), **J5** (no new tiny unit) and the smaller calls (hybrids
+  are machines for the EMP and never prey; the Act 6 shields are twice the built Act 5 values; a mirror bounces at
+  most one shot every 0.15 s and a bounced bullet is never bounced again; a hunter's bullets hit only its prey wave's
+  units, besides the ship) kept.

@@ -196,3 +196,36 @@ tick 4260 (t=71), the whole screen: Harker's t=70.5 line on the enemy channel (t
 interference over his portrait). His voice (cast a, Ted Delorme, in the game until the pick):
 the end of the [rescue video](../../../campaign/act-5-the-belt/level-29-betrayal-at-ceres/concept/prompts.md#level-29-capture-r62-a)
 (his t=133 line); the casting candidates are the voice README's.
+
+## act6-speakers-r72-a
+
+Round 72 (Act 6 "Jovian Storm", step ART-R-B, 2026-10-31; pending the user's review): the act's four new radio
+portraits ([Act 6 speakers](../README.md#act-6-speakers-draft)), mockups by `python3 tools/concept/act6_r72.py
+speakers`: SDF busts in the radio speakers' style B through [tools/art/portraits.py](../../../../tools/art/portraits.py)'s
+pipeline (imported unchanged; nothing written to `assets/`), neutral only, as the minor speakers; Harker's face is
+`belt_r60.py`'s (his final L29 bust). Variant a: the plain channel screens with the dot grid, as the cast's.
+
+**Prompt (Harker, amber enemy channel):** as act5-speakers-r60-a's Harker (dark hair cut short, stubble, a hard set
+mouth), now in the Honour Guard's gloss black flight suit with gold piping on the collar ring and the shoulders, the
+gold Ascendancy crest on the collar (no CDF patch).
+
+**Prompt (Vesper, amber enemy channel):** a woman in her late twenties, an Aurelia-born cloud racer, a faint smile; a
+gloss black flight helmet with two white ribbon stripes over the top, the gold visor pushed up as a band on the
+forehead, a strand of dark hair; the guard's black suit with gold piping.
+
+**Prompt (Kestrel, amber enemy channel):** a Helix test pilot in his twenties, quick and cocky, a half grin; a gloss
+black helmet with black-and-gold chevrons over the top and a red band above the gold visor (pushed up); the guard's
+black suit.
+
+**Prompt (Aurelia Traffic, friendly teal channel):** Aurelia's civil traffic controller, a woman in her thirties,
+dark hair pulled back into a bun, a steady look; the city's white civil uniform with a gold collar trim and a gold
+epaulette, a headset with a boom mic.
+
+**Negative prompt:** as portraits-final-r51-a's: smooth gradients, photorealism, 3D render, anti-aliased vector art,
+HD detail, fully monochrome image, heavy noisy dithering, anime, chibi, text, watermark, logo, hands, full body.
+
+## act6-speakers-r72-b
+
+As act6-speakers-r72-a, each in a room behind the bust: the three aces in their cockpits (two canopy struts crossing
+the amber screen, the guard's gold crest at the top right); Aurelia Traffic at the tower's windows (dark mullions,
+the gold domes' curves low behind her), as the story draft's brief.
