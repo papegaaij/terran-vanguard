@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../../player, ../../enemies, ../../ui]
-updated: 2026-10-31
+updated: 2026-11-01
 ---
 
 # Sound effects
@@ -632,8 +632,8 @@ game may play only `proposed` sounds of an open concept round, provisionally unt
 | [wreck-groans-solo-r67-a.ogg](concept/wreck-groans-solo-r67-a.ogg) | Review file for round 67 S.4: `wreck-groans` a alone, levelled for the comparison; the game plays `wreck-groans-r67-a.ogg` |
 | [wreck-groans-mix-r67-a.ogg](concept/wreck-groans-mix-r67-a.ogg) | Review file for round 67 S.4: `wreck-groans` a in the game's mix, rendered offline; the game mixes the layer itself (`wreck-groans-r67-a.ogg`) |
 | [tissue-tear-r72-a.ogg](concept/tissue-tear-r72-a.ogg) | Round 72 S.2 a, the hybrids' tear: a Graft Turret root's death first; imported once the root exists (part A's regrowth, then the Graft Turret in M10 part C) |
-| [harrow-lock-r72-b.ogg](concept/harrow-lock-r72-b.ogg) | Round 72 S.5 b, the Harrow's lock tell: the Harrow comes in M10 part D (Level 38) |
-| [harrow-burst-r72-a.ogg](concept/harrow-burst-r72-a.ogg) | Round 72 S.6 a, the Harrow's burst: the Harrow comes in M10 part D (Level 38) |
+| [harrow-lock-r72-b.ogg](concept/harrow-lock-r72-b.ogg) | Round 72 S.5 b, the Harrow's lock tell: in `assets/sfx/` since step AUD-D (M10 part D); played once step D4 gives the Harrow its sounds |
+| [harrow-burst-r72-a.ogg](concept/harrow-burst-r72-a.ogg) | Round 72 S.6 a, the Harrow's burst: in `assets/sfx/` since step AUD-D (M10 part D); played once step D4 gives the Harrow its sounds |
 | [aurelia-r72-a.ogg](concept/aurelia-r72-a.ogg) | Round 72 S.14 a, Level 37's bed: in `assets/sfx/` since step AUD-C (M10 part C); played once step C4b gives Level 37 its `aurelia` setting |
 | [io-refinery-r72-a.ogg](concept/io-refinery-r72-a.ogg) | Round 72 S.15 a, Level 39's bed: imported with Level 39 (M10 part E) |
 | [mirror-heat-demo-r73-a.ogg](concept/mirror-heat-demo-r73-a.ogg) | Review file for round 73 S.1: the heat loop's climb rendered offline; the game pitches the loop itself |
@@ -1359,6 +1359,15 @@ Concept round 75 (M10 part C "Level 37 Fall of Aurelia", step AUD-C; the gap che
 | [concept/graft-root-crumble-r75-a.ogg](concept/graft-root-crumble-r75-a.ogg) | Freesound HQ preview (CC0, [CREDITS.md](../../../CREDITS.md)) — `graft-root-crumble` a: plays: a Graft Turret (Levels 37-42, an Ascendancy turret grafted onto a Vrell root): its root destroyed inside the window (the turret stays dead); often; should sound like the hybrids' tissue tear with a crunch under it (dry twigs crushed): a fibrous tearing crunch, never wet. This one: the hybrids' chosen tear (round 72 S.2 a: cotton cloth torn by hand, slowed to 0.6) with small dry branches snapping under it: 0.9 s; Cloth Tearing and Ripping - Flannel, Cotton, Scraps - Close Mic - Long & Fast (ChristopherJngs) + few small branches snapping, close up, high frequency,H6.wav (Bini_trns), 0.92 s (−24 dB) | proposed (round 75) |
 | [concept/graft-root-crumble-r75-b.ogg](concept/graft-root-crumble-r75-b.ogg) | Freesound HQ preview (CC0, [CREDITS.md](../../../CREDITS.md)) — `graft-root-crumble` b: plays: a Graft Turret (Levels 37-42, an Ascendancy turret grafted onto a Vrell root): its root destroyed inside the window (the turret stays dead); often; should sound like the hybrids' tissue tear with a crunch under it (dry twigs crushed): a fibrous tearing crunch, never wet. This one: thick fabric torn in half slowed to 0.8 with sticks breaking under it: coarser and woodier than a, 0.9 s; heavy fabric tearing v2, thick fabric tearing, tearing.Recorded on H6Zoom XY capsule (Rinaldobowles56) + Sticks Breaking.wav (EugeneEverett), 0.80 s (−27 dB) | proposed (round 75) |
 
+Concept round 76 (M10 part D "Level 38 Lightning Belt", step AUD-D; the gap check's QD-2): the Harrow's two sounds round 72 did not propose, its hunting whistle and its ram's whoosh, a and b each, cut from the Freesound HQ previews of CC0/CC-BY sounds by `tools/concept/audio/sfx_r76.py` (the two variants of a subject levelled alike); briefs in [concept/prompts.md](concept/prompts.md). The whistle is a seamless 2 s loop, steady in level, for the nearest hunting Harrow (levelled as the Buzzsaw's whine, −36 dB band RMS); the game raises its pitch over the chase (a loop cannot rise by itself) and stops it at the lock tell, where round 72's turbine whine takes over. The ram is a one-shot over the lock (−20 dB, at most −20 LUFS). The a variants are in `assets/sfx/` for step D4 until the picks, beside round 72's chosen lock tell and burst.
+
+| File | What | Status |
+|---|---|---|
+| [concept/harrow-whistle-r76-a.ogg](concept/harrow-whistle-r76-a.ogg) | Freesound HQ preview (CC0, [CREDITS.md](../../../CREDITS.md)) — `harrow-whistle` a: plays: a Harrow (Levels 38-42, the hybrid kamikaze dart that locks on and rams; often several at once): while it hunts (its 1.5-2.5 s chase before the lock), one loop for the nearest hunting Harrow on the screen, panned to it; the game raises its pitch over the chase and stops it at the lock tell (round 72's turbine whine takes over); should sound like a thin rising wind whistle: a real jet's fly-by or a whistling dive, cut thin (the low roar taken away), under the fire and over the storm's wind. This one: a jet's fly-by at its approach, the roar cut away under 1 kHz: a thin, airy turbine whistle around 1.7 kHz, 2.0 s loop; Jet Flyby 01 (mrspivey), 2.00 s loop (−36 dB) | proposed (round 76) |
+| [concept/harrow-whistle-r76-b.ogg](concept/harrow-whistle-r76-b.ogg) | Freesound HQ preview (CC0, [CREDITS.md](../../../CREDITS.md)) — `harrow-whistle` b: plays: a Harrow (Levels 38-42, the hybrid kamikaze dart that locks on and rams; often several at once): while it hunts (its 1.5-2.5 s chase before the lock), one loop for the nearest hunting Harrow on the screen, panned to it; the game raises its pitch over the chase and stops it at the lock tell (round 72's turbine whine takes over); should sound like a thin rising wind whistle: a real jet's fly-by or a whistling dive, cut thin (the low roar taken away), under the fire and over the storm's wind. This one: falling bombs' fins whistling, cut thin the same way: a purer, higher whistle around 2.1 kHz with the bombs' slow pitch drift in it, 2.0 s loop; R12-27-Falling Bombs Whistle.wav (craigsmith), 2.00 s loop (−36 dB) | proposed (round 76) |
+| [concept/harrow-ram-r76-a.ogg](concept/harrow-ram-r76-a.ogg) | Freesound HQ preview (CC-BY 4.0, [CREDITS.md](../../../CREDITS.md)) — `harrow-ram` a: plays: a Harrow (Levels 38-42, the hybrid kamikaze dart that locks on and rams; often several at once): each ram, at the lock tell's end as it shoots straight along its bearing at 300 px/s (after the turbine whine); a miss flies out through the far edge; at most two at once; should sound like a hard whoosh: something heavy cutting the air fast past the ship, short and forceful; never a pop. This one: a large heavy spear or hammer swung hard, sped to 1.1: a deep, forceful whoosh with a whistle in its edge, peaking 0.2 s in, 0.8 s; Whoosh Heavy Spear Hammer Large (EminYILDIRIM), 0.80 s (−21 dB) | proposed (round 76) |
+| [concept/harrow-ram-r76-b.ogg](concept/harrow-ram-r76-b.ogg) | Freesound HQ preview (CC0, [CREDITS.md](../../../CREDITS.md)) — `harrow-ram` b: plays: a Harrow (Levels 38-42, the hybrid kamikaze dart that locks on and rams; often several at once): each ram, at the lock tell's end as it shoots straight along its bearing at 300 px/s (after the turbine whine); a miss flies out through the far edge; at most two at once; should sound like a hard whoosh: something heavy cutting the air fast past the ship, short and forceful; never a pop. This one: a car passing close at speed, sped to 1.25: a rougher, roaring rush with the pass's pitch drop, peaking 0.25 s in, 0.9 s; Fast Car Passing by (danlucaz), 0.90 s (−22 dB) | proposed (round 76) |
+
 ## Implementation
 
 - [x] SFX playback with instance limits, stealing by priority, pitch variation: the 32-voice
@@ -1853,3 +1862,17 @@ Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-a
   RMS (2 dB over the bed), its alarm once a loop (a) or swelling 12 s of 16 (b); the mirror's hum an 8 s loop at −36
   dB; the heartbeat a single 0.3 s thump (the root's pulse, 1 → 4 Hz, repeats it); the growth's burst, the balloons
   and the groan levelled as big one-shots (−17, −19 and −20 dB, the groan capped at −21.5 LUFS so the pair matches).
+- 2026-11-01 (M10 part D, step AUD-D): round 72's Harrow picks, `harrow-lock` **b** and `harrow-burst` **a**, copied
+  into `assets/sfx/` (the pipeline's import list, `PlaceholderAuditTest`); step D4 plays them (their rows stay under
+  *Chosen sounds the game does not play* until then). Round 76 proposes the Harrow's hunting whistle (a jet's approach
+  whine / falling bombs' fins, both cut thin above 1 kHz) and its ram's whoosh (a heavy spear swung hard / a car's
+  close pass) (`sfx_r76.py`, the gap check's QD-2); their a variants are in `assets/sfx/` for D4 until the picks.
+  Trivia decided: the whistle a 2 s loop at −36 dB band RMS (the Buzzsaw's whine's level), steady, the rise left to
+  the game's pitch over the chase; the ram −20 dB, capped at −20 LUFS so the pair matches. Checked over Level 38's
+  storm as the game mixes it (`sfx_r76.py --bed-check`: `jovian-sky` at the beds' 0.70 +3 dB, a flash's thunder at
+  −2 dB, the previous strike's roll): the strike's close crack stands +20 dB over the bed in the 200 Hz–5 kHz band
+  (+17 over a strike's roll 1.5 s before) and still +13 dB in its top octave (2.8–5.7 kHz) on a thunder roll's
+  loudest 100 ms: it reads. The Harrow's lock, burst and ram read over the bed (+10 to +14 dB band, +7 to +10 over a
+  strike's roll); the whistle sits
+  at the band level of the bed and +16 to +20 dB over it in its own octave, as the Buzzsaw's whine (−1 / +26 dB);
+  under a thunder roll's peak only the lock (+16 dB top octave) stays clear.

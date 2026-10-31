@@ -505,6 +505,14 @@ val copyPlaceholderSounds = tasks.register<JavaExec>("copyPlaceholderSounds") {
         "graft-shell-crack-r75-a.ogg",
         "graft-heartbeat-r75-a.ogg",
         "graft-root-crumble-r75-a.ogg",
+        // M10 part D, step AUD-D: round 72's picks for the Harrow (S.5 b lock tell, S.6 a burst; the user, 2026-10-31;
+        // CC0/CC-BY Freesound HQ previews cut by tools/concept/audio/sfx_r72.py, their CREDITS.md rows), and round 76's
+        // proposals for its hunting whistle and ram whoosh (tools/concept/audio/sfx_r76.py), their a variants until
+        // the user's picks: the Harrow of Level 38.
+        "harrow-lock-r72-b.ogg",
+        "harrow-burst-r72-a.ogg",
+        "harrow-whistle-r76-a.ogg",
+        "harrow-ram-r76-a.ogg",
     )
 }
 

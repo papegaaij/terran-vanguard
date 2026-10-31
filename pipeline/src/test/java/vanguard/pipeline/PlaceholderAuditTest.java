@@ -172,6 +172,14 @@ class PlaceholderAuditTest {
             "M10 part C, step AUD-C: round 75's proposals for Level 37, the Mirror Interceptor and the Graft Turret,"
                     + " option a until the user's pick, from the Freesound HQ previews of CC0/CC-BY sounds (CREDITS rows"
                     + " from step AUD-C; by tools/concept/audio/sfx_r75.py)";
+    private static final String ROUND_72_HARROW =
+            "M10 part D, step AUD-D: round 72's picks for the Harrow's lock tell and burst (the user, 2026-10-31: S.5 b,"
+                    + " S.6 a), from the Freesound HQ previews of CC0/CC-BY sounds until the originals (CREDITS rows from"
+                    + " step AUD-R; by tools/concept/audio/sfx_r72.py)";
+    private static final String ROUND_76 =
+            "M10 part D, step AUD-D: round 76's proposals for the Harrow's hunting whistle and ram whoosh, option a"
+                    + " until the user's pick, from the Freesound HQ previews of CC0/CC-BY sounds (CREDITS rows from step"
+                    + " AUD-D; by tools/concept/audio/sfx_r76.py)";
     private static final String ROUND_60_H =
             "M9 part H, step H4: round 60's pick for the Iron Sovereign's rings turning (the user, 2026-10-27: S.16 a),"
                     + " from the Freesound HQ previews of CC0/CC-BY sounds until the originals (CREDITS rows from step"
@@ -546,6 +554,10 @@ class PlaceholderAuditTest {
             Map.entry("sfx/graft-shell-crack-r75-a.ogg", ROUND_75),
             Map.entry("sfx/graft-heartbeat-r75-a.ogg", ROUND_75),
             Map.entry("sfx/graft-root-crumble-r75-a.ogg", ROUND_75),
+            Map.entry("sfx/harrow-lock-r72-b.ogg", ROUND_72_HARROW),
+            Map.entry("sfx/harrow-burst-r72-a.ogg", ROUND_72_HARROW),
+            Map.entry("sfx/harrow-whistle-r76-a.ogg", ROUND_76),
+            Map.entry("sfx/harrow-ram-r76-a.ogg", ROUND_76),
             Map.entry("music/iron-sovereign.ogg", ROUND_68_MUSIC),
             Map.entry("music/reveal-sting.ogg", ROUND_58_MUSIC),
             Map.entry("music/thera-deep-dark.ogg", ROUND_55_MUSIC),

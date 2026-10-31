@@ -7084,3 +7084,39 @@ Use: a Graft Turret (Levels 37-42, an Ascendancy turret grafted onto a Vrell roo
 Brief: the hybrids' tissue tear with a crunch under it (dry twigs crushed): a fibrous tearing crunch, never wet; a real recording, nothing bubbly or popping.
 This one: thick fabric torn in half slowed to 0.8 with sticks breaking under it: coarser and woodier than a, 0.9 s.
 Edit: 0.80 s, the loudest 100 ms band −27.4 dB, peak −5.1 dBFS, −23.3 LUFS.
+
+### harrow-whistle-r76-a — "Jet Flyby 01" by mrspivey
+
+Proposed (round 76), cut from the HQ previews by `tools/concept/audio/sfx_r76.py`.
+Source: <https://freesound.org/people/mrspivey/sounds/805168/> (Jet Flyby 01 by mrspivey, CC0 1.0).
+Use: a Harrow (Levels 38-42, the hybrid kamikaze dart that locks on and rams; often several at once): while it hunts (its 1.5-2.5 s chase before the lock), one loop for the nearest hunting Harrow on the screen, panned to it; the game raises its pitch over the chase and stops it at the lock tell (round 72's turbine whine takes over).
+Brief: a thin rising wind whistle: a real jet's fly-by or a whistling dive, cut thin (the low roar taken away), under the fire and over the storm's wind; a real recording, nothing bubbly or popping.
+This one: a jet's fly-by at its approach, the roar cut away under 1 kHz: a thin, airy turbine whistle around 1.7 kHz, 2.0 s loop.
+Edit: 2.00 s, band RMS −36.2 dB, peak −21.2 dBFS, −31.3 LUFS.
+
+### harrow-whistle-r76-b — "R12-27-Falling Bombs Whistle.wav" by craigsmith
+
+Proposed (round 76), cut from the HQ previews by `tools/concept/audio/sfx_r76.py`.
+Source: <https://freesound.org/people/craigsmith/sounds/479924/> (R12-27-Falling Bombs Whistle.wav by craigsmith, CC0 1.0).
+Use: a Harrow (Levels 38-42, the hybrid kamikaze dart that locks on and rams; often several at once): while it hunts (its 1.5-2.5 s chase before the lock), one loop for the nearest hunting Harrow on the screen, panned to it; the game raises its pitch over the chase and stops it at the lock tell (round 72's turbine whine takes over).
+Brief: a thin rising wind whistle: a real jet's fly-by or a whistling dive, cut thin (the low roar taken away), under the fire and over the storm's wind; a real recording, nothing bubbly or popping.
+This one: falling bombs' fins whistling, cut thin the same way: a purer, higher whistle around 2.1 kHz with the bombs' slow pitch drift in it, 2.0 s loop.
+Edit: 2.00 s, band RMS −36.1 dB, peak −25.4 dBFS, −31.0 LUFS.
+
+### harrow-ram-r76-a — "Whoosh Heavy Spear Hammer Large" by EminYILDIRIM
+
+Proposed (round 76), cut from the HQ previews by `tools/concept/audio/sfx_r76.py`.
+Source: <https://freesound.org/people/EminYILDIRIM/sounds/540300/> (Whoosh Heavy Spear Hammer Large by EminYILDIRIM, CC-BY 4.0).
+Use: a Harrow (Levels 38-42, the hybrid kamikaze dart that locks on and rams; often several at once): each ram, at the lock tell's end as it shoots straight along its bearing at 300 px/s (after the turbine whine); a miss flies out through the far edge; at most two at once.
+Brief: a hard whoosh: something heavy cutting the air fast past the ship, short and forceful; never a pop; a real recording, nothing bubbly or popping.
+This one: a large heavy spear or hammer swung hard, sped to 1.1: a deep, forceful whoosh with a whistle in its edge, peaking 0.2 s in, 0.8 s.
+Edit: 0.80 s, the loudest 100 ms band −21.2 dB, peak −7.0 dBFS, −18.8 LUFS.
+
+### harrow-ram-r76-b — "Fast Car Passing by" by danlucaz
+
+Proposed (round 76), cut from the HQ previews by `tools/concept/audio/sfx_r76.py`.
+Source: <https://freesound.org/people/danlucaz/sounds/517738/> (Fast Car Passing by by danlucaz, CC0 1.0).
+Use: a Harrow (Levels 38-42, the hybrid kamikaze dart that locks on and rams; often several at once): each ram, at the lock tell's end as it shoots straight along its bearing at 300 px/s (after the turbine whine); a miss flies out through the far edge; at most two at once.
+Brief: a hard whoosh: something heavy cutting the air fast past the ship, short and forceful; never a pop; a real recording, nothing bubbly or popping.
+This one: a car passing close at speed, sped to 1.25: a rougher, roaring rush with the pass's pitch drop, peaking 0.25 s in, 0.9 s.
+Edit: 0.90 s, the loudest 100 ms band −21.8 dB, peak −7.0 dBFS, −20.1 LUFS.
