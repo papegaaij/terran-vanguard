@@ -346,8 +346,8 @@ final class LevelReport {
                                 content,
                                 key,
                                 difficulty,
-                                key.equals(Level39Plan.LEVEL)
-                                        ? Level39Plan.withoutRook(content, difficulty)
+                                key.equals(Level39Test.LEVEL)
+                                        ? Level39Test.withoutRook(content, difficulty)
                                         : loadout(content, key, difficulty, floorFit))));
             }
         }

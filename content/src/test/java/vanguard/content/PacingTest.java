@@ -158,10 +158,10 @@ class PacingTest {
      * Level 30 until step C3's mine-line autopilot (the plain one wins 1 of 3 at medium; measured invulnerable in step
      * C2: 2.75 on the screen, 40 shots a minute, no stretch over 2 s at medium). None left: step C3's {@link MinePlay}
      * completes Level 30 on every difficulty (2026-10-28). M10 part E (step E2): Level 39 until step E3's refinery
-     * autopilot (the plain one lets a tower pass in the first hold: the failed primary; the level report's {@code
-     * refinery} part measures its holds, eruptions and caps with an invulnerable pilot).
+     * autopilot (the plain one let a tower pass in the first hold: the failed primary). None left: step E3's {@link
+     * RefineryPlay} completes Level 39 on every difficulty (2026-11-01).
      */
-    static final Set<String> PENDING_AUTOPILOT = Set.of(Level39Plan.LEVEL);
+    static final Set<String> PENDING_AUTOPILOT = Set.of();
 
     /**
      * The user's Act 2 fit (playtest 2026-10-18): the Pulse Cannon at L4, a Micro-missile Pod at L2 on the right
@@ -268,10 +268,9 @@ class PacingTest {
             // M10 part D: Level 38's plan fit, Level 37's (the plan's L38 visit buys nothing; step D2's stand-in moved
             // into Level38Test in step D3).
             Map.entry(Level38Test.LEVEL, Level38Test::planLoadout),
-            // M10 part E: Level 39's plan fit, Level 38's guns with Rook's Mortar (step E2's stand-in, Level39Plan;
-            // step
-            // E3 moves it into Level39Test).
-            Map.entry(Level39Plan.LEVEL, Level39Plan::planLoadout));
+            // M10 part E: Level 39's plan fit, Level 38's guns with Rook's Mortar (step E2's stand-in moved into
+            // Level39Test in step E3).
+            Map.entry(Level39Test.LEVEL, Level39Test::planLoadout));
 
     /** Flies the level with the autopilot on {@link LevelMetrics#SEED} and measures it ({@link LevelMetrics.Pacing}). */
     static LevelMetrics.Flight fly(String key, Difficulty difficulty, Loadout loadout) {

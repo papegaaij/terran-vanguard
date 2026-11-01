@@ -147,7 +147,12 @@ final class VentPlay {
         // still chases (StormPlay; null on every other level).
         Debris chunk = StormPlay.chunk(sortie, shipY);
         Enemy harrow = StormPlay.harrow(sortie, shipY);
-        if (beacon != null) {
+        // M10 part E: Level 39's refinery: the lowest cracking tower first, from the side away from a telling vent; the
+        // pump stations (the beacon) only with no tower on the screen (RefineryPlay; null on every other level).
+        Enemy tower = RefineryPlay.tower(sortie);
+        if (tower != null) {
+            targetX = RefineryPlay.lineX(sortie, tower);
+        } else if (beacon != null) {
             targetX = beacon.renderX(1);
         } else if (secret != null) {
             targetX = secret.renderX();
@@ -188,7 +193,9 @@ final class VentPlay {
                     MovePlanner.MOVE_Y[m],
                     targetX,
                     targetY,
-                    beacon != null || secret != null || chunk != null ? BEACON_X : ALONG_X);
+                    tower != null
+                            ? RefineryPlay.weight(sortie, tower)
+                            : beacon != null || secret != null || chunk != null ? BEACON_X : ALONG_X);
             if (cost < least) {
                 least = cost;
                 best = m;
@@ -204,7 +211,19 @@ final class VentPlay {
                 best = toward;
             }
         }
-        return MovePlanner.MOVES[best] | (flaresDue(sortie) ? Command.SPECIAL.bit() : 0);
+        if (tower != null && Math.abs(shipX - targetX) > RefineryPlay.COLUMN) {
+            // M10 part E: as for the lifeboat, the look-ahead's full-speed end overshoots a tower's line (the planner
+            // stood 45 px beside it): the way straight at it when its hazards cost no more than the best move's.
+            int toward = shipX < targetX ? 2 : 1;
+            double hazards = cost(sortie, MovePlanner.MOVE_X[toward], MovePlanner.MOVE_Y[toward], targetX, targetY, 0);
+            if (hazards
+                    <= cost(sortie, MovePlanner.MOVE_X[best], MovePlanner.MOVE_Y[best], targetX, targetY, 0)
+                            + RefineryPlay.TIE) {
+                best = toward;
+            }
+        }
+        boolean special = flaresDue(sortie) || RefineryPlay.empDue(sortie);
+        return MovePlanner.MOVES[best] | (special ? Command.SPECIAL.bit() : 0);
     }
 
     /** Whether {@code enemy} is a Depth Hunter: a unit (not a boss's part) whose gun launches homing torpedoes. */
@@ -239,6 +258,8 @@ final class VentPlay {
         double y0 = sortie.ship().y();
         double groundSpeed = sortie.groundSpeed();
         FurnaceVents vents = sortie.vents();
+        // M10 part E: Level 39's rocks, hot fans and Sentinel arcs (RefineryPlay; no other level has eruptions).
+        boolean refinery = RefineryPlay.refinery(sortie);
         double cost = 0;
         double x = x0;
         double y = y0;
@@ -282,6 +303,10 @@ final class VentPlay {
                                 ey - y,
                                 DarkPlay.HULL_X + enemy.hitbox().width() / 2,
                                 DarkPlay.HULL_Y + enemy.hitbox().height() / 2));
+            }
+            if (refinery) {
+                nearest = Math.min(nearest, RefineryPlay.rockGap(sortie, x, y, t));
+                cost += weight * RefineryPlay.cost(sortie, x, y, t);
             }
             if (!hit && nearest < 1) {
                 cost += HIT * weight;

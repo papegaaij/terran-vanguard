@@ -232,8 +232,8 @@ see *Ground targets*):
 | 93.5 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 5 | front | |
 | 96.5 | 3 | V-wing | [Talon](../../../enemies/air/talon/README.md) | 5 | front | A leader at the tip |
 | 99.5 | 3 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 6 | front | |
-| 102.5 | 3 | stream | [Dart Drone](../../../enemies/air/dart-drone/README.md) | 5 | front | |
-| 105.5 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 5 | front | The last wave before the Sentinel pair's quiet window (t 110–113.5) |
+| 101.5 | 3 | stream | [Dart Drone](../../../enemies/air/dart-drone/README.md) | 5 | front | |
+| 104.5 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 5 | front | The last wave before the Sentinel pair's quiet window (t 110–113.5) |
 | 113.5 | 4 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 6 | front | |
 | 116.5 | 4 | V-wing | [Talon](../../../enemies/air/talon/README.md) | 5 | front | A leader at the tip; it drops the overdrive (the README's left Sentinel: see the header) |
 | 119.5 | 4 | stream | [Harrow](../../../enemies/air/harrow/README.md) | 4 | front | Over the Pele yard |
@@ -244,7 +244,7 @@ see *Ground targets*):
 | 131.5 | 4 | V-wing | [Chimera](../../../enemies/air/chimera/README.md) | 6 | front | |
 | 134.5 | 4 | stream | [Dart Drone](../../../enemies/air/dart-drone/README.md) | 5 | front | |
 | 137.5 | 4 | column | [Needler](../../../enemies/air/needler/README.md) | 3 | front | |
-| 140.5 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 5 | front | |
+| 141 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 5 | front | |
 | 143.5 | 5 | column | [Gilded Gunship](../../../enemies/air/gilded-gunship/README.md) | 2 | front | 2 s apart; each launches its Darts (about 12 in all); the Plume Field |
 | 146.5 | 5 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 6 | front | |
 | 149.5 | 5 | V-wing | [Talon](../../../enemies/air/talon/README.md) | 5 | front | A leader at the tip; **prey** of the t=150.5 motes |

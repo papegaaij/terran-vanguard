@@ -226,8 +226,8 @@ waves:  # every wave from the front (the README's 57 and the five Striders as wa
     from: front
     speed: 200
     paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
-  - {t: 102.5, formation: stream, enemy: dart-drone, count: 5, from: front, interval: 0.4}
-  - {t: 105.5, formation: stream, enemy: skitter, count: 5, from: front, interval: 0.6, notes: "The last wave before the Sentinel pair's quiet window (t 110–113.5)"}
+  - {t: 101.5, formation: stream, enemy: dart-drone, count: 5, from: front, interval: 0.4}
+  - {t: 104.5, formation: stream, enemy: skitter, count: 5, from: front, interval: 0.6, notes: "The last wave before the Sentinel pair's quiet window (t 110–113.5)"}
   - t: 113.5
     formation: swarm
     enemy: mote-swarm
@@ -259,7 +259,7 @@ waves:  # every wave from the front (the README's 57 and the five Striders as wa
   - {t: 131.5, formation: V-wing, enemy: chimera, count: 6, from: front}
   - {t: 134.5, formation: stream, enemy: dart-drone, count: 5, from: front, interval: 0.4}
   - {t: 137.5, formation: column, enemy: needler, count: 3, from: front}
-  - {t: 140.5, formation: stream, enemy: skitter, count: 5, from: front, interval: 0.6}
+  - {t: 141, formation: stream, enemy: skitter, count: 5, from: front, interval: 0.6}
   - {t: 143.5, formation: column, enemy: gilded-gunship, count: 2, from: front, interval: 2, easy: {count: 2}, hard: {count: 2}, notes: "2 s apart; each launches its Darts (about 12 in all); the Plume Field"}
   - t: 146.5
     formation: swarm

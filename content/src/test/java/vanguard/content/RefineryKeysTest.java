@@ -49,7 +49,7 @@ class RefineryKeysTest {
 
     @Test
     void aVentsFirstTellIsItsOwn() {
-        List<HazardSpec.Vent> vents = SimSpecs.level(CONTENT, Level39Plan.LEVEL, Difficulty.MEDIUM)
+        List<HazardSpec.Vent> vents = SimSpecs.level(CONTENT, Level39Test.LEVEL, Difficulty.MEDIUM)
                 .hazards()
                 .eruptions()
                 .orElseThrow()
@@ -93,7 +93,7 @@ class RefineryKeysTest {
 
     @Test
     void theTargetCuesAreTheSimulations() {
-        LevelScript level = SimSpecs.level(CONTENT, Level39Plan.LEVEL, Difficulty.MEDIUM);
+        LevelScript level = SimSpecs.level(CONTENT, Level39Test.LEVEL, Difficulty.MEDIUM);
         List<CueTrigger> triggers =
                 level.radio().stream().map(RadioCue::trigger).toList();
         assertTrue(triggers.contains(CueTrigger.FIRST_TARGET), "Rook's first tower down");
@@ -109,7 +109,7 @@ class RefineryKeysTest {
 
     @Test
     void theHutsLockIsSpentByDamage() {
-        GroundObjectSpec lock = SimSpecs.level(CONTENT, Level39Plan.LEVEL, Difficulty.MEDIUM).groundObjects().stream()
+        GroundObjectSpec lock = SimSpecs.level(CONTENT, Level39Test.LEVEL, Difficulty.MEDIUM).groundObjects().stream()
                 .filter(GroundObjectSpec::trigger)
                 .findFirst()
                 .orElseThrow();
@@ -126,7 +126,7 @@ class RefineryKeysTest {
 
     @Test
     void aPipeGoesDarkWithATowerOrAPump() {
-        LevelData level = CONTENT.level(Level39Plan.LEVEL);
+        LevelData level = CONTENT.level(Level39Test.LEVEL);
         List<String> dark = level.backdrop().placed().stream()
                 .flatMap(piece -> piece.darkWith().stream())
                 .toList();
