@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../player/specials, ../../bosses/revenant-walker, ../../../campaign/act-6-jovian-storm]
-updated: 2026-10-31
+updated: 2026-11-01
 ---
 
 # Strider
@@ -46,7 +46,7 @@ Fire rates are tuned per level with `levelReport`.
 | Effective traits | `anti-ground`, `piercing`, `homing` |
 | Credits | 60 (score 600 × chain); parts: hull 40, legs 6 each, pod 8; a body kill or a topple pays every part not yet paid (the whole 60) |
 | Death | hull destroyed: a `large` mechanical explosion in place, the burnt hulk stays as a wreck; toppled: the fall's ground shock and dust ring, the wreck along the line |
-| First level / used in | L32; Deep Core's tunnel floors and the refinery |
+| First level / used in | L32; Deep Core's tunnel floors and the refinery; Io's refineries (Level 39: walker waves between the works' towers, the act HP factor: hull 260, legs 94, pod 35) |
 | Difficulty hooks | easy: a fan of 3 every 3.0 s, salvos of 1 every 6 s; hard: a fan of 5 every 2.0 s, salvos of 3 |
 <!-- /data -->
 
@@ -134,8 +134,10 @@ Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's r
 
 ## Implementation
 
-- [ ] Act 6 (when the draft is approved): L39 in the *used in* row; the act HP factor at L39 (hull 260, legs 94, pod 35)
-      measured with `levelReport`; a topple onto a refinery target counts for the objective if the targets are ground units
+- [x] Act 6: L39 in the *used in* row; the act HP factor at L39 (hull 260, legs 94, pod 35: the returning factor, no
+      override) (M10 part E, step E2)
+- [ ] Act 6: a topple onto a refinery target counts for the objective (the towers are counted ground units; step E1's
+      `topple-target` cue; Level 39's test, step E3)
 - [x] Stat block loaded from a `data.yaml` (when the design is approved); global difficulty multipliers applied; tuned with `levelReport`
 - [x] `walk` on a path with the twisting torso (`32 angles`); the fan and the pod's homing salvos with their tells
 - [x] Destroyable legs and pod; the stagger tell, the marked fall line, the fall and the one-time crush of ground units (credits paid)

@@ -52,5 +52,5 @@ notes:
   weak_points: (the open hatch's red light is drawn only)
   bounty: '; missiles 0'
   death: '`small` ground explosion, the rack thrown; a scorched launcher wreck stays'
-  used_in: 'Ceres Hub; later Act 5 levels, the Strider''s shoulder pod and the Iron Sovereign''s SAM batteries share its missile (their docs)'
+  used_in: 'Ceres Hub; later Act 5 levels, Aurelia (Level 37) and Io''s refinery works (Level 39); the Strider''s shoulder pod and the Iron Sovereign''s SAM batteries share its missile (their docs)'
   difficulty: 'easy: every 6 s, turn rate 65°/s; hard: salvos of 3, turn rate 95°/s'

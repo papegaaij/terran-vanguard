@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../player/specials]
-updated: 2026-10-31
+updated: 2026-11-01
 ---
 
 # Sentinel Tower
@@ -44,7 +44,7 @@ set at its first level from the proposed Act 5 reference DPS (judgement call J2:
 | Effective traits | `anti-ground`, `beam`, `piercing` |
 | Credits | 40 (score 400 × chain) |
 | Death | `medium` ground explosion, the head topples off; the scorched tower stump stays |
-| First level / used in | L32; Deep Core's side galleries, the pumping hall and the crucible gallery |
+| First level / used in | L32; Deep Core's side galleries, the pumping hall and the crucible gallery; the Pele works' gate on Io (Level 39, the act HP factor) |
 | Difficulty hooks | easy: 100° arcs, no full turn, a sweep every 5.5 s; hard: 160° arcs, every second sweep a full turn, a sweep every 3.6 s |
 <!-- /data -->
 

@@ -531,7 +531,15 @@ class CampaignRouteTest {
                 "Level 38 is built");
         campaign.complete(CampaignTest.won("A", 80, 1000), 60);
         assertTrue(CampaignRoute.actEnd(content, campaign).isEmpty(), "Level 38 ends no act");
-        assertTrue(CampaignRoute.releaseEnd(content, campaign), "Level 39 is not built: the release ends after 38");
+        // M10 part E (step E2): Level 39 is built, so Level 38 leads on to it; the release ends after Level 39.
+        assertFalse(CampaignRoute.releaseEnd(content, campaign), "Level 39 is built: Level 38 leads on to it");
+        assertEquals(
+                Optional.of("act-6-jovian-storm/level-39-io-flyby"),
+                CampaignRoute.launch(content, campaign),
+                "Level 39 is built");
+        campaign.complete(CampaignTest.won("A", 80, 1000), 60);
+        assertTrue(CampaignRoute.actEnd(content, campaign).isEmpty(), "Level 39 ends no act");
+        assertTrue(CampaignRoute.releaseEnd(content, campaign), "Level 40 is not built: the release ends after 39");
         assertEquals(
                 List.of("act-6-jovian-storm"),
                 content.acts().entrySet().stream()

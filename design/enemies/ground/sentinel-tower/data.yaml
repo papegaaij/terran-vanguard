@@ -47,5 +47,5 @@ notes:
   formations: (single, or a pair across a hall, their notches offset so the two never sweep the same rows at once; at most 2 sweeping at once, a level rule)
   weak_points: (the emitter, its vital part, glows crimson while the beam is live)
   death: '`medium` ground explosion, the head topples off; the scorched tower stump stays'
-  used_in: 'Deep Core''s side galleries, the pumping hall and the crucible gallery'
+  used_in: 'Deep Core''s side galleries, the pumping hall and the crucible gallery; the Pele works'' gate on Io (Level 39, the act HP factor)'
   difficulty: 'easy: 100° arcs, no full turn, a sweep every 5.5 s; hard: 160° arcs, every second sweep a full turn, a sweep every 3.6 s'

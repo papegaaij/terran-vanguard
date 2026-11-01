@@ -437,6 +437,9 @@ final class ScriptRules {
                         // M10 part C (Level 37): the first bounced shot and the first prey a hunter kills.
                         case FIRST_BOUNCE -> CueTrigger.FIRST_BOUNCE;
                         case FIRST_PREY_KILL -> CueTrigger.FIRST_PREY_KILL;
+                        // M10 part E (Level 39): the first tower down and the first topple onto one.
+                        case FIRST_TARGET -> CueTrigger.FIRST_TARGET;
+                        case TOPPLE_TARGET -> CueTrigger.TOPPLE_TARGET;
                     })
                     .orElse(CueTrigger.TIME);
             // Part G (LevelRules): a boss-destroyed cue's subject is the boss, a timeout cue its own

@@ -1,9 +1,9 @@
 ---
 title: Level 39 – Io Flyby
 design: approved
-implementation: not-started
+implementation: in-progress
 art: proposed
-depends-on: [../../../enemies/ground/strider, ../../../enemies/ground/sam-nest, ../../../enemies/ground/sentinel-tower, ../../../enemies/air/chimera, ../../../enemies/air/talon, ../../../enemies/air/gilded-gunship, ../../../enemies/air/harrow, ../../../world/jovian, ../../../world/belt, ../../../player/systems, ../../../player/generator, ../../../player/wingmen, ../../../systems/retry, ../../act-2-homefront/level-09-arcology-fall]
+depends-on: [../../../enemies/ground/cracking-tower, ../../../enemies/ground/pump-station, ../../../enemies/ground/strider, ../../../enemies/ground/sam-nest, ../../../enemies/ground/sentinel-tower, ../../../enemies/air/chimera, ../../../enemies/air/talon, ../../../enemies/air/gilded-gunship, ../../../enemies/air/harrow, ../../../world/jovian, ../../../world/belt, ../../../player/systems, ../../../player/generator, ../../../player/wingmen, ../../../systems/retry, ../../act-2-homefront/level-09-arcology-fall]
 updated: 2026-11-01
 ---
 
@@ -31,15 +31,18 @@ M10 part of this level to measure with `levelReport`.
 
 ## Briefing
 
-Two pages, each one screen (`BriefingLayoutTest`) with room for its image. **Draft texts** (the story step may
-reword them):
+Two pages, each one screen (`BriefingLayoutTest`) with room for its image. Rendered from the level's
+[data.yaml](data.yaml) (M10 part E, step E2: the approved texts as they are):
 
-> **Commander Okafor:** "Io's refineries fuel every ship Vorne has left. Three works on the plains, Loki, Pele and
-> Prometheus, two cracking towers each. All six burn. One left standing and his fleet flies on, and we have failed."
+<!-- data: briefing -->
+> **Commander Okafor:** "Io's refineries fuel every ship Vorne has left. Three works on the
+> plains, Loki, Pele and Prometheus, two cracking towers each. All six burn. One left standing
+> and his fleet flies on, and we have failed."
 >
-> **Dr. Varga:** "Io is all volcano. A vent glows, then throws burning rocks up at you: shoot them or move. Striders
-> guard the yards; drop one on a tower and the tower counts. And cut the pump stations on the racks. Six, and the
-> pipelines run dry."
+> **Dr. Varga:** "Io is all volcano. A vent glows, then throws burning rocks up at you: shoot
+> them or move. Striders guard the yards; drop one on a tower and the tower counts. And cut the
+> pump stations on the racks. Six, and the pipelines run dry."
+<!-- /data -->
 
 *Images* (production art straight away; [briefing images](../../../ui/briefing/README.md)):
 
@@ -51,7 +54,9 @@ reword them):
 
 *Hangar teaser* (shop screen before L39; Rook, not voiced):
 
+<!-- data: teaser -->
 > **Rook:** "Io. Volcanoes and refineries. I'm bringing the Mortar."
+<!-- /data -->
 
 The shop of this visit gets the **Mk V+ "Crucible"** generator and the **IFF spoofer** (Q8 a, Q7 b: the
 [hand plan](../../../player/generator/README.md#act-6-hand-plan-draft)), both marked new; the intel panel's
@@ -59,18 +64,21 @@ recommended traits name this level's.
 
 ## Threat profile
 
-Draft; directions are counted by each wave's `from` (the intel's rule): every wave enters from the front.
+Rendered from the data. Directions are counted by each wave's `from` (the intel's rule): every wave enters from the
+front.
 
+<!-- data: threat-profile -->
 | Field | Value |
 |---|---|
 | Dominant layers | `ground` (the cracking towers, Striders, SAM Nests, Sentinel Towers, pump stations), `air` (Talons, Chimeras, Gilded Gunships and their Darts, Hornets, Harrows, Needlers, Skitter and Dart streams, motes) |
-| Attack directions | front 100% · sides 0% · rear 0% |
+| Attack directions | front 100% |
 | Density | 4 |
-| Recommended traits | `anti-ground`, `piercing` (the roster's) |
+| Recommended traits | `anti-ground`, `piercing` |
 | Hazards | Eruptions (vents throw burning rocks up the screen); Sentinel sweeps; the holds over the works |
 | Boss / mid-boss | none |
 | Special limits | Sonar Pulse `NO WATER` ([Act 6 specials](../../../player/specials/README.md#act-6-specials-draft)); the Airstrike and the Orbital Lance work over Io |
-| Sensor-suite detail | none: Io, the refineries, `ground` + `air`, front, the objective `TOWERS 0/6` · L1: + density 4, the hazards "eruptions" and "beam sweeps", the secondary `PUMPS 0/6` · L2: + Strider, Sentinel Tower, SAM Nest, Chimera, Talon, Gilded Gunship, Hornet, Harrow, Needler, Dart Drone, Skitter and Mote portraits · L3: + the six towers and the three holds on the threat map, `anti-ground` highlighted |
+| Sensor-suite detail | **none**: Io, the refineries, `ground` + `air`, front, the objective `TOWERS 0 / 6` · **L1**: + density 4, the hazards "eruptions" and "beam sweeps", the secondary `PUMPS 0 / 6` · **L2**: + Strider, Sentinel Tower, SAM Nest, Chimera, Talon, Gilded Gunship, Hornet, Harrow, Needler, Dart Drone, Skitter and Mote portraits · **L3**: + the six towers and the three holds on the threat map, `anti-ground` highlighted |
+<!-- /data -->
 
 *Varga's intel line* per sensor-suite level (to fit `IntelPanelLayoutTest`):
 
@@ -129,20 +137,24 @@ Jupiter's banded disc huge and low on `deep`. Motion budget: the eruptions and t
 elements; the umbrella plumes on the horizon rise and fall slowly; the pipeline racks and the works stay quiet. Every
 plume haze and vent glow is smooth (≥ 32 steps, no ordered dither, drawn once: the Act 5 lesson).
 
+<!-- data: level-sections -->
 | Section | t (s) | Scroll (px) | Speed (px/s) | Atmosphere | Layers and content | Purpose |
 |---|---|---|---|---|---|---|
-| 1. Tvashtar Plains | 0–20 | 0–2,600 | 130 | clear | `ground`: sulphur flats, black lava flows, frost fields; one vent (t≈12); `deep`: Jupiter's disc, a distant umbrella plume | The approach; **the eruption taught** alone |
-| 2. Loki Works | 20–62 | 2,600–8,060 | 130 | clear | `ground`: the yard road, pipeline racks, the Loki towers A and B (t≈43–44), the Strider pair (t≈32), a SAM pair (t≈38), three vents | The first Strider pair (a topple to aim), **the first hold** |
-| 3. The Pipeline Run | 62–104 | 8,060–13,520 | 130 | clear | `ground`: the racks along a lava channel, pump stations P1–P4, vents alternating sides, the survey hut on a lava island (t≈96) | The Gunships; the pumps; the first hunt |
-| 4. Pele Works | 104–142 | 13,520–18,460 | 130 | light (Pele's plume haze) | `ground`: the works' gate with the Sentinel pair (t≈110), the yard, the Pele towers (t≈125–126), the Strider pair walking toward Pele B, a SAM trio | **The second hold**: towers behind sweeping beams, a topple onto a tower |
-| 5. The Plume Field | 142–164 | 18,460–21,320 | 130 | light | `ground`: a field of vents under Pele's umbrella plume, rows of three; pump stations P5–P8 on a rack crossing it; a SAM pair | The eruptions at their densest; the pumps' last chance |
-| 6. Prometheus Works | 164–192 | 21,320–24,960 | 130 | clear | `ground`: a lone Strider (t≈168), a SAM pair (t≈172), the Prometheus towers (t≈175–176), two vents; the works going dark behind | **The last hold**; the calm before the end |
+| 1. Tvashtar Plains | 0–20 | 0–2,600 | 130 | clear | `ground`: sulphur flats, black lava flows, frost fields from Io's limb on; one vent (t≈12). `deep`: Jupiter's disc, a distant umbrella plume. | The approach; **the eruption taught** alone. |
+| 2. Loki Works | 20–62 | 2,600–8,060 | 130 | clear | `ground`: the yard road, pipeline racks, the Loki towers A and B (t≈43–44), the Strider pair (t≈32), a SAM pair (t≈33), three vents. | The first Strider pair (a topple to aim), **the first hold**. |
+| 3. The Pipeline Run | 62–104 | 8,060–13,520 | 130 | clear | `ground`: the racks along a lava channel, pump stations P1–P4, vents alternating sides, the survey hut on a lava island (t≈96). | The Gunships; the pumps; the first hunt. |
+| 4. Pele Works | 104–142 | 13,520–18,460 | 130 | light | `ground`: the works' gate with the Sentinel pair (t≈110), the yard, the Pele towers (t≈125–126), the Strider pair walking up between them, a SAM trio. `high-air`: Pele's plume haze. | **The second hold**: towers behind sweeping beams, a topple onto a tower. |
+| 5. The Plume Field | 142–164 | 18,460–21,320 | 130 | light | `ground`: a field of vents under Pele's umbrella plume, rows of three; pump stations P5–P8 on a rack crossing it; a SAM pair. `high-air`: Pele's plume haze. | The eruptions at their densest; the pumps' last chance. |
+| 6. Prometheus Works | 164–192 | 21,320–24,960 | 130 | clear | `ground`: a lone Strider (t≈173.5), a SAM pair (t≈172), the Prometheus towers (t≈175–176), two vents; the works going dark behind. | **The last hold**; the calm before the end. |
+<!-- /data -->
 
 **Hold zones** ([Level 9](../../act-2-homefront/level-09-arcology-fall/README.md#layout)'s, built): when the first
 tower of a works reaches **y = 200 px** below the top edge (t≈44, ≈126, ≈176), the scroll eases over 1 s to **40 px/s**
 (easy 30, hard 50) and stays there until both towers of that works are gone, then eases back to 130 px/s over 1 s. A
 tower that is not destroyed leaves the bottom edge about **9.7 s** after the hold starts at medium (12.9 s easy, 7.8 s
-hard): that is the window; there is no timer. In a hold the waves, the ground units' placements and the radio wait with
+hard): that is the window; there is no timer. (Measured in step E2, `levelReport`'s `refinery` part: **8.3 s** at medium,
+10.9 s easy, 6.7 s hard from the hold's start to the first tower gone: the 1 s ease and the tower's own edge; the
+approved 200 px and 40/30/50 px/s kept, pending the user's review in round 77.) In a hold the waves, the ground units' placements and the radio wait with
 the scroll; the enemies, bullets, eruptions, Rook and the backdrop's animation run on real time, so the vents beside a
 works erupt more than once during its hold. The holds add about 15 s of real time (≈ 3 min 27 s in all). No vent lies
 within 100 px of a tower. Holds are not used with a boss or set pieces
@@ -162,7 +174,11 @@ terms** with a `bounty_scale` (see *Credit budget*).
   motes as built.
 - **Density and pacing** (the Act 2+ rules, `PacingTest` and `ActFloorTest`, the act's 75 a minute): **320 enemies**
   (57 waves with 279 units, 24 Darts launched by the Gunships, 17 ground units) over 192 s, **≈ 100 a minute** at
-  medium (easy ≈ 265, hard ≈ 365 by the formation lever); the 6 towers and 8 pump stations are objectives, not counted.
+  medium (easy ≈ 265, hard ≈ 365 by the formation lever). Built (step E2, pending the user's review in round 77): the 6
+  towers and 8 pump stations are **counted** enemies (the [Cracking Tower](../../../enemies/ground/cracking-tower/README.md)
+  and the [Pump Station](../../../enemies/ground/pump-station/README.md): a topple's crush and the tally take counted
+  units only), the five Striders walker waves (Level 32's): `levelReport` counts **310** at medium (284 in waves, 26
+  on the ground), **99.5 a minute** (easy 258, hard 362).
   A wave about every 3 s, no stretch over 2 s with nothing on the screen (the ground units and the waves already in
   hold the holds). The shots come from the Talon and Chimera pairs, the Gunships' rings, the Hornets' and SAM Nests'
   missiles, the Striders' fans, the Sentinels' sweeps and the Harrows' rings; the build sets the rates with
@@ -177,90 +193,108 @@ terms** with a `bounty_scale` (see *Credit budget*).
   t=75.5 Skitters ram the t=74.5 Talon line; the t=150.5 motes lunge at the t=149.5 Talon wing. A prey unit the Vrell
   kill pays the player nothing.
 
-Draft wave table (every wave `front`):
+Rendered from the data (M10 part E, step E2; every wave `front`; the five Striders are walker waves as Level 32's,
+see *Ground targets*):
 
+<!-- data: waves -->
 | t (s) | Section | Formation | Enemies (link) | Count | Enter from | Notes |
 |---|---|---|---|---|---|---|
-| 3 | 1 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 5 | front |  |
+| 3 | 1 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 5 | front | |
 | 5.5 | 1 | V-wing | [Talon](../../../enemies/air/talon/README.md) | 5 | front | A leader at the tip |
-| 8 | 1 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 6 | front | The last wave before the first eruption (tell t≈12, alone) |
+| 8 | 1 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 6 | front | The last wave before the first eruption (tell t≈12.8, alone) |
 | 14.5 | 1 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front | After the first eruption |
-| 17 | 1 | stream | [Dart Drone](../../../enemies/air/dart-drone/README.md) | 5 | front |  |
-| 19.5 | 1 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 5 | front |  |
-| 22.5 | 2 | V-wing | [Chimera](../../../enemies/air/chimera/README.md) | 6 | front |  |
-| 25.5 | 2 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 6 | front |  |
+| 17 | 1 | stream | [Dart Drone](../../../enemies/air/dart-drone/README.md) | 5 | front | |
+| 19.5 | 1 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 5 | front | |
+| 22.5 | 2 | V-wing | [Chimera](../../../enemies/air/chimera/README.md) | 6 | front | |
+| 25.5 | 2 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 6 | front | |
 | 28.5 | 2 | column | [Needler](../../../enemies/air/needler/README.md) | 3 | front | The last wave before the Strider pair's quiet window (t 32–35.5) |
-| 35.5 | 2 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 5 | front |  |
-| 38.5 | 2 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front |  |
-| 41.5 | 2 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 6 | front | Enters before the Loki hold (t≈44); flies on real time in it |
+| 32 | 2 | convoy | [Strider](../../../enemies/ground/strider/README.md) | 2 | front | The Strider pair down the yard road: a topple onto the SAM pair to aim; the second drops a shield cell |
+| 35.5 | 2 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 5 | front | |
+| 38.5 | 2 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front | |
+| 41.5 | 2 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 6 | front | Enters before the Loki hold (t≈45); flies on real time in it |
 | 44.5 | 2 | stream | [Harrow](../../../enemies/air/harrow/README.md) | 3 | front | A short stream from the front among the Loki towers |
 | 47.5 | 2 | V-wing | [Talon](../../../enemies/air/talon/README.md) | 5 | front | A leader at the tip |
-| 50.5 | 2 | stream | [Dart Drone](../../../enemies/air/dart-drone/README.md) | 5 | front |  |
-| 53.5 | 2 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 6 | front |  |
-| 56.5 | 2 | swarm | [Chimera](../../../enemies/air/chimera/README.md) | 8 | front |  |
-| 59.5 | 2 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 5 | front |  |
-| 62.5 | 3 | column | [Gilded Gunship](../../../enemies/air/gilded-gunship/README.md) | 2 | front | Each launches its Darts (two streams counted each, 12 Darts in all) |
-| 65.5 | 3 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 6 | front |  |
+| 50.5 | 2 | stream | [Dart Drone](../../../enemies/air/dart-drone/README.md) | 5 | front | |
+| 53.5 | 2 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 6 | front | |
+| 56.5 | 2 | swarm | [Chimera](../../../enemies/air/chimera/README.md) | 8 | front | |
+| 59.5 | 2 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 5 | front | |
+| 62.5 | 3 | column | [Gilded Gunship](../../../enemies/air/gilded-gunship/README.md) | 2 | front | 2 s apart; each launches its Darts (about 12 in all) |
+| 65.5 | 3 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 6 | front | |
 | 68.5 | 3 | V-wing | [Talon](../../../enemies/air/talon/README.md) | 5 | front | A leader at the tip |
-| 71.5 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 5 | front |  |
+| 71.5 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 5 | front | |
 | 74.5 | 3 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front | **Prey** of the t=75.5 Skitters (three-way war) |
 | 75.5 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 5 | front | **Hunters** of the t=74.5 Talons: they ram them |
-| 78.5 | 3 | column | [Needler](../../../enemies/air/needler/README.md) | 3 | front |  |
-| 81.5 | 3 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 6 | front |  |
+| 78.5 | 3 | column | [Needler](../../../enemies/air/needler/README.md) | 3 | front | |
+| 81.5 | 3 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 6 | front | |
 | 84.5 | 3 | line abreast | [Hornet](../../../enemies/air/hornet/README.md) | 2 | front | ≥ 80 px between the hulls; the Gunships of t=62.5 are gone |
-| 87.5 | 3 | stream | [Dart Drone](../../../enemies/air/dart-drone/README.md) | 5 | front |  |
-| 90.5 | 3 | V-wing | [Chimera](../../../enemies/air/chimera/README.md) | 6 | front |  |
-| 93.5 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 5 | front |  |
+| 87.5 | 3 | stream | [Dart Drone](../../../enemies/air/dart-drone/README.md) | 5 | front | |
+| 90.5 | 3 | V-wing | [Chimera](../../../enemies/air/chimera/README.md) | 6 | front | |
+| 93.5 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 5 | front | |
 | 96.5 | 3 | V-wing | [Talon](../../../enemies/air/talon/README.md) | 5 | front | A leader at the tip |
-| 99.5 | 3 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 6 | front |  |
-| 102.5 | 3 | stream | [Dart Drone](../../../enemies/air/dart-drone/README.md) | 5 | front |  |
+| 99.5 | 3 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 6 | front | |
+| 102.5 | 3 | stream | [Dart Drone](../../../enemies/air/dart-drone/README.md) | 5 | front | |
 | 105.5 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 5 | front | The last wave before the Sentinel pair's quiet window (t 110–113.5) |
-| 113.5 | 4 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 6 | front |  |
-| 116.5 | 4 | V-wing | [Talon](../../../enemies/air/talon/README.md) | 5 | front | A leader at the tip |
-| 119.5 | 4 | stream | [Harrow](../../../enemies/air/harrow/README.md) | 4 | front | Over the Strider pair walking toward Pele B |
-| 122.5 | 4 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 6 | front | Enters before the Pele hold (t≈126) |
-| 125.5 | 4 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front |  |
-| 128.5 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 5 | front |  |
-| 131.5 | 4 | V-wing | [Chimera](../../../enemies/air/chimera/README.md) | 6 | front |  |
-| 134.5 | 4 | stream | [Dart Drone](../../../enemies/air/dart-drone/README.md) | 5 | front |  |
-| 137.5 | 4 | column | [Needler](../../../enemies/air/needler/README.md) | 3 | front |  |
-| 140.5 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 5 | front |  |
-| 143.5 | 5 | column | [Gilded Gunship](../../../enemies/air/gilded-gunship/README.md) | 2 | front | Each launches its Darts (12 in all); the Plume Field |
-| 146.5 | 5 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 6 | front |  |
+| 113.5 | 4 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 6 | front | |
+| 116.5 | 4 | V-wing | [Talon](../../../enemies/air/talon/README.md) | 5 | front | A leader at the tip; it drops the overdrive (the README's left Sentinel: see the header) |
+| 119.5 | 4 | stream | [Harrow](../../../enemies/air/harrow/README.md) | 4 | front | Over the Pele yard |
+| 122.5 | 4 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 6 | front | Enters before the Pele hold (t≈127) |
+| 122.5 | 4 | convoy | [Strider](../../../enemies/ground/strider/README.md) | 2 | front | The Strider pair walking up the yard between the Pele towers: a topple onto Pele A or B destroys it and counts |
+| 125.5 | 4 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front | |
+| 128.5 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 5 | front | |
+| 131.5 | 4 | V-wing | [Chimera](../../../enemies/air/chimera/README.md) | 6 | front | |
+| 134.5 | 4 | stream | [Dart Drone](../../../enemies/air/dart-drone/README.md) | 5 | front | |
+| 137.5 | 4 | column | [Needler](../../../enemies/air/needler/README.md) | 3 | front | |
+| 140.5 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 5 | front | |
+| 143.5 | 5 | column | [Gilded Gunship](../../../enemies/air/gilded-gunship/README.md) | 2 | front | 2 s apart; each launches its Darts (about 12 in all); the Plume Field |
+| 146.5 | 5 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 6 | front | |
 | 149.5 | 5 | V-wing | [Talon](../../../enemies/air/talon/README.md) | 5 | front | A leader at the tip; **prey** of the t=150.5 motes |
 | 150.5 | 5 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 6 | front | **Hunters** of the t=149.5 Talons: they lunge at them |
-| 153.5 | 5 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 5 | front |  |
-| 156.5 | 5 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front |  |
-| 159.5 | 5 | stream | [Harrow](../../../enemies/air/harrow/README.md) | 4 | front |  |
-| 162.5 | 5 | stream | [Dart Drone](../../../enemies/air/dart-drone/README.md) | 5 | front |  |
+| 153.5 | 5 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 5 | front | |
+| 156.5 | 5 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front | |
+| 159.5 | 5 | stream | [Harrow](../../../enemies/air/harrow/README.md) | 4 | front | Over the plume field |
+| 162.5 | 5 | stream | [Dart Drone](../../../enemies/air/dart-drone/README.md) | 5 | front | |
 | 165.5 | 6 | V-wing | [Chimera](../../../enemies/air/chimera/README.md) | 6 | front | Prometheus works |
-| 168.5 | 6 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 6 | front |  |
-| 171.5 | 6 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front |  |
-| 174.5 | 6 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 5 | front | Enters before the Prometheus hold (t≈176) |
+| 168.5 | 6 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 6 | front | |
+| 171.5 | 6 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front | |
+| 173.5 | 6 | single | [Strider](../../../enemies/ground/strider/README.md) | 1 | front | A lone Strider walking up between the Prometheus towers: a topple onto one counts |
+| 174.5 | 6 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 5 | front | Enters before the Prometheus hold (t≈177) |
 | 177.5 | 6 | V-wing | [Talon](../../../enemies/air/talon/README.md) | 5 | front | **The last wave**, a leader at the tip; the calm from ≈ t=185 to the end at t=192 |
+
+Totals: Skitter 60 · Talon 59 · Mote Swarm 72 · Dart Drone 30 · Chimera 32 · Needler 9 · Strider 5 · Harrow 11 · Gilded Gunship 4 · Hornet 2.
+<!-- /data -->
 
 ## Ground targets
 
+<!-- data: ground-targets -->
 | Section | Target | Effect |
 |---|---|---|
-| 2 | [Strider](../../../enemies/ground/strider/README.md) pair down the Loki yard road (t≈32), 1.5 s apart | Bounty 60 each; they walk past the SAM pair: a topple to aim; the second drops a shield cell |
-| 2 | [SAM Nest](../../../enemies/ground/sam-nest/README.md) pair by the yard's rack (t≈38) | Bounty 15 each |
-| 2 | Cracking towers **Loki A** (t≈43), **Loki B** (t≈44), ≥ 140 px apart | Primary; the Loki hold |
-| 3 | Pump stations **P1–P4** on the racks (t≈68, 76, 84, 92) | Secondary; bounty 8 each |
-| 3 | SAM Nest on a rack (t≈80) | Bounty 15 |
-| 3 | The survey hut's lock (30 HP, t≈96) | The secret, see below |
+| 2 | [SAM Nest](../../../enemies/ground/sam-nest/README.md) pair by the Loki yard's rack (t≈33) | Bounty 15 each; the Strider pair walks past them |
+| 2 | [Cracking Tower](../../../enemies/ground/cracking-tower/README.md) **Loki A** (t≈43) | Primary target; the Loki hold |
+| 2 | Cracking Tower **Loki B** (t≈44), 180 px from Loki A | Primary target; the Loki hold |
+| 3 | [Pump Station](../../../enemies/ground/pump-station/README.md)s **P1–P4** on the rack (t≈68, 76, 84, 92) | Secondary; bounty 8 each |
+| 3 | SAM Nest on the rack between P2 and P3 (t≈80) | Bounty 15 |
+| 3 | The survey hut's dark door lock (30 HP, t≈96) | The secret: frees a crate worth 100 (1,049) |
 | 3 | A refinery supply depot's latch (10 HP, t≈103) | An armour patch |
-| 4 | [Sentinel Tower](../../../enemies/ground/sentinel-tower/README.md) pair on the Pele gate (t≈110), their emitters ≥ 40 px inside the field, offset so the two never sweep the same rows at once | Bounty 40 each; the left drops an overdrive |
-| 4 | Strider pair (t≈118) walking up the yard toward Pele B | A topple onto Pele B destroys it and counts |
+| 4 | [Sentinel Tower](../../../enemies/ground/sentinel-tower/README.md) pair on the Pele gate (t≈110 left, t≈112 right), their rows offset so the two never sweep the same rows at once | Bounty 40 each |
 | 4 | SAM Nest trio in the Pele yard (t≈122) | Bounty 15 each |
-| 4 | Cracking towers **Pele A** (t≈125), **Pele B** (t≈126) | Primary; the Pele hold |
-| 5 | Pump stations **P5–P8** on the rack across the plume field (t≈146, 152, 158, 164) | Secondary |
-| 5 | SAM Nest pair (t≈150) | Bounty 15 each |
-| 6 | A lone Strider (t≈168) walking toward Prometheus A | A topple onto it counts |
-| 6 | SAM Nest pair (t≈172) | Bounty 15 each |
-| 6 | Cracking towers **Prometheus A** (t≈175), **Prometheus B** (t≈176) | Primary; the Prometheus hold |
+| 4 | Cracking Tower **Pele A** (t≈125) | Primary target; the Pele hold |
+| 4 | Cracking Tower **Pele B** (t≈126) | Primary target; the Pele hold; a Strider toppled onto it destroys it and counts |
+| 5 | Pump Stations **P5–P8** on the rack across the plume field (t≈146, 152, 158, 162.5) | Secondary; bounty 8 each |
+| 5 | SAM Nest pair on the plume field (t≈150) | Bounty 15 each |
+| 6 | SAM Nest pair at the Prometheus works' gate (t≈172) | Bounty 15 each |
+| 6 | Cracking Tower **Prometheus A** (t≈175) | Primary target; the Prometheus hold |
+| 6 | Cracking Tower **Prometheus B** (t≈176) | Primary target; the Prometheus hold |
+<!-- /data -->
 
-Totals: towers 6 · pump stations 8 · Striders 5 · SAM Nests 10 · Sentinel Towers 2. The
+The five [Strider](../../../enemies/ground/strider/README.md)s are walker waves (see *Waves*), 32 px/s up the ground:
+the Loki pair (t=32 and 33.5) up the yard road at x 90, the first passing the SAM pair's row (a topple onto it to aim),
+the second dropping a shield cell; the Pele pair (t=122.5 and 124) and the lone Strider (t=173.5) up the racks
+between their works' towers, so that in the hold they walk beside them and a topple can take one (step E2: the
+README's t≈118 and t≈168 left the screen before the towers came; the Loki SAM pair at t≈33, not 38, for the same
+reason; pending the user's review in round 77). The Sentinels' rows are 221 px apart (Level 32's offset: the right one
+1.7 s after the left). The left Sentinel's overdrive comes from the t=116.5 wing's leader inside the gate (a ground
+enemy carries a pickup only as an objective's group). Totals: towers 6 · pump stations 8 · Striders 5 · SAM Nests 10 ·
+Sentinel Towers 2. The
 [IFF spoofer](../../../player/systems/README.md#act-6-the-iff-spoofer-and-the-core-tiers-draft) (in the shop from
 this visit) delays every SAM Nest, Sentinel and Strider here: the level that shows what it does.
 
@@ -270,13 +304,19 @@ this visit) delays every SAM Nest, Sentinel and Strider here: the level that sho
   as its document defines it (the vent's tell, the burning rocks flying up the screen, their contact damage, the
   umbrella haze, the easy and hard values). This level sets where and when: **27 vents**, each erupting every 5–7 s
   while on the screen:
-  - section 1: one vent (tell at t≈12, x≈340), alone before any wave reaches it;
-  - section 2: three (t≈30 by the yard road; t≈50 and t≈55 after the Loki towers);
+  - section 1: one vent (entering at t=12, its tell at t≈12.8, x≈340), alone before any wave reaches it;
+  - section 2: three (t≈30 by the yard road; two beside the Loki towers, entering at t≈44 so that they erupt in the
+    hold: retimed from t≈50 and t≈55, m10e-gaps §4);
   - section 3: six single vents along the lava channel, alternating sides (t≈66, 72, 79, 86, 94, 100);
-  - section 4: three (t≈113 inside the gate, t≈133, t≈138);
+  - section 4: three (t≈113 inside the gate; two beside the Pele towers entering at t≈126, retimed from t≈133 and
+    t≈138);
   - section 5: **four rows of three**, rippling 0.4 s a vent (t≈145, 150, 155, 160), the rack with P5–P8 between the
     rows;
-  - section 6: two (t≈170, t≈181).
+  - section 6: two (t≈170; one beside the Prometheus towers entering at t≈176, retimed from t≈181).
+  Built (step E2, round 77 QE-1 a, pending): each vent's first tell comes `first` s after it enters (0.3–1.3 s, the
+  plume field's rows 0.3, 0.7 and 1.1 s: its ripple), then every 5–7 s on real time; at 130 px/s a vent outside a hold
+  erupts once, the works' vents tell about 0.3–0.6 s into their hold and again 6.2–8.2 s later (`levelReport`: two tells
+  a vent in every hold at medium).
   The rocks fly **up** the screen, so a vent is most dangerous to a ship that pushes forward to reach a tower: the
   level's tension in the holds. No vent within 100 px of a tower or a pump station.
 - **Sentinel sweeps** at the Pele gate ([its page](../../../enemies/ground/sentinel-tower/README.md)).
@@ -293,7 +333,7 @@ this visit) delays every SAM Nest, Sentinel and Strider here: the level that sho
   Its event line, Varga: "*A Coalition survey hut. Pre-war. Somebody left in a hurry.*"
 - **Shield cell**: dropped by the second Strider of the t≈32 pair.
 - **Armour patch**: the refinery supply depot before the Pele gate (t≈103), freed by its 10 HP latch.
-- **Overdrive**: dropped by the left Sentinel Tower of the Pele gate (t≈110).
+- **Overdrive**: dropped by the left Sentinel Tower of the Pele gate (t≈110); built (step E2) as the t=116.5 wing's leader inside the gate (a single ground enemy cannot carry a pickup), pending the user's review in round 77.
 
 ## Radio chatter
 
@@ -302,25 +342,26 @@ check; 0.4 s of silence; no timed line more than 1 s late); event lines drop aft
 escort`. Vorne speaks once on the enemy channel (the intercepted dress), cold and never shouted (the character rule:
 his only shout is Level 42's, J6).
 
+<!-- data: radio -->
 | Trigger | Speaker | Line |
 |---|---|---|
 | t=1 | Okafor | "Io. Three works on the plains, two towers each. Every one burns." |
 | t=8.5 | Varga | "Vents. They glow, then throw burning rocks up. Shoot them or move." |
 | t=32.5 | Varga | "Striders on the yard. Drop one on a tower and the tower counts." |
 | t=41 | Okafor | "Loki works. We hold over the towers until both burn." |
-| first tower destroyed (event) | Rook | "Tower's down. Sorry about the fuel bill, Vorne." |
+| The first tower destroyed (`first-target`, event, bark) | Rook | "Tower's down. Sorry about the fuel bill, Vorne." |
 | t=63 | Varga | "Pump stations on the racks. Cut six and the lines run dry." |
 | t=76.5 | Varga | "Skitters on their Talons. The Vrell aren't picking sides." |
-| t=91 | Vorne (enemy channel) | "Lancer. Burn Io if you like. Callisto holds fuel enough for what I still have to do." |
-| secret found (event) | Varga | "A Coalition survey hut. Pre-war. Somebody left in a hurry." |
+| t=91 (t=91, the enemy channel (cold, never shouted)) | Vorne | "Lancer. Burn Io if you like. Callisto holds fuel enough for what I still have to do." |
 | t=104.5 | Okafor | "Pele works. Towers behind the gate. Same drill." |
 | t=110.5 | Varga | "Sentinels on the gate. They sweep all the way round." |
-| first tower destroyed by a topple (event) | Okafor | "Dropped it on the tower. That'll do." |
+| The first tower destroyed by a topple (`topple-target`, event) | Okafor | "Dropped it on the tower. That'll do." |
 | Secondary met (the sixth pump, event) | Varga | "Six pumps cut. The racks are running dry." |
 | t=142.5 | Okafor | "The plume field. Pele has erupted for a thousand years. It won't stop for us." |
 | t=164.5 | Okafor | "Prometheus. The last two towers. Burn them and his fleet runs dry." |
 | Level end | Okafor | "Io's lines are dark. Callisto next, Lancer." |
-| `mission-failed` | Okafor | "{group} is still burning. That fuel flies against us. Pull back, Lancer." |
+| A tower leaves the screen alive (`mission-failed`, the failed screen's line) | Okafor | "{group} is still burning. That fuel flies against us. Pull back, Lancer." |
+<!-- /data -->
 
 Timeline check (text, by the rule above; script time, so a hold stretches the gaps): the t=1 line closes at about
 t=7.8, before Varga's vent line (t=8.5), which closes at about t=15.5, as the first eruption's rocks fly (tell t≈12).
@@ -350,22 +391,30 @@ Budget(39) = 700 × 1.07³⁸ ≈ **9,155** ([economy](../../../systems/economy/
 terms** (Skitter 5, Mote 2, Talon 12, its leader 25, Dart 2, Chimera 14, Harrow 12, Needler 12, Gilded Gunship 28,
 Hornet 26, Strider 60, SAM Nest 15, Sentinel Tower 40, the cracking tower 30, the pump station 8, the secret's crate
 100, the secondary 100), × the act factor **10.486** (1.6⁵), bounties × the scale. A **`bounty_scale` of 0.41** puts
-the typical haul **+2.6 %** over the budget (the economy's shares: air kills 60 %, ground targets 80 %, the secret and
+the typical haul **+2.6 %** over the budget by hand (+0.3 % measured, below) (the economy's shares: air kills 60 %, ground targets 80 %, the secret and
 the secondary 50 %). The primary's groups pay no objective credits (the schema's rule); each tower pays its bounty.
 
+<!-- data: credit-budget -->
 | Source | Perfect run | Typical haul |
 |---|---|---|
-| Kills: Skitter 60 × 5 + Mote Swarm 72 × 2 + Talon 59 × 12 (7 leaders + 13) + Chimera 32 × 14 + Dart Drone 30 × 2 + launched Dart Drone 24 × 2 + Harrow 11 × 12 + Needler 9 × 12 + Gilded Gunship 4 × 28 + Hornet 2 × 26 = 2,203 | 9,471 | 5,683 |
-| Ground targets: cracking tower 6 × 30 + pump station 8 × 8 + Strider 5 × 60 + SAM Nest 10 × 15 + Sentinel Tower 2 × 40 = 774 | 3,328 | 2,662 |
-| Secret: the survey hut (hidden crate) | 1,049 | 524 |
-| Secondary: `PUMPS` 6 of 8 | 1,049 | 524 |
-| **Total** (bounty scale 0.41) | **14,896** | **9,393** |
-| Budget(n) = the typical haul's target; typical +2.6 %, perfect 1.63 × budget | | 9,155 |
+| Kills: Skitter 60 × 5 + Talon 59 × 12 + Mote Swarm 72 × 2 + Dart Drone 30 × 2 + Chimera 32 × 14 + Needler 9 × 12 + Strider 5 × 60 + Harrow 11 × 12 + Gilded Gunship 4 × 28 + Hornet 2 × 26 + launched Dart Drone 24 × 2 | 10,416 | 6,508 |
+| Squad leaders: 7 × 13 extra (perfect run only) | 385 | 0 |
+| Ground targets: SAM Nest 10 × 15 + Cracking Tower 6 × 30 + Pump Station 8 × 8 + Sentinel Tower 2 × 40 | 2,030 | 1,624 |
+| Secret: survey hut (hidden crate, 1% of budget) | 1,049 | 524 |
+| Secondary: cut 6 of the 8 pump stations | 1,049 | 524 |
+| **Total** (bounty scale 0.41) | **14,929** | **9,181** |
+| Budget(n) = the typical haul's target; typical +0 %, perfect 1.63 × budget | | 9,155 |
+<!-- /data -->
 
 The towers pay **30** (the main agent's call, 2026-10-31) so the scale sits inside the gap analysis's 0.40–0.56 band:
 at 40 a tower it was 0.39 (the haul +0.3 %), as the level's ground share (a third of the haul) is high for a
 front-only level. A won run destroys all six towers, so the typical haul's 80 % of them is cautious; the build may
 count them at 100 % (as the primary's objects) and lower the scale to ≈ 0.39.
+
+**Measured** (`levelReport`, step E2): the typical haul **9,181 (+0.3 %)** at the README's scale **0.41** (kept: it
+hits the budget), the perfect run 14,929 (1.63 × budget); easy 8,174, hard 10,187. With the towers at their flown
+share (every won run takes all six, 100 % instead of 80 %) the typical haul is ≈ 9,336 (+2.0 %), inside the ±5 %
+either way. The hand table's 9,393 counted the Striders as ground targets; built as walker waves they pay as kills.
 
 **Balance plan** (the [Act 6 hand plan](../../../player/generator/README.md#act-6-hand-plan-draft), its L39 row): the
 visit buys nothing (saving for the Mk V+ and the spoofer, bought at the L40 visit) and fits Rook's **Mortar** for the
@@ -415,11 +464,12 @@ at medium, checked by the generator). Prompts and briefs: [concept/prompts.md](c
 
 ## Implementation
 
-- [ ] Level data `data.yaml` (when built): sections and speed, the six tower groups as the `destroy-targets` primary,
+- [x] Level data `data.yaml` (when built): sections and speed, the six tower groups as the `destroy-targets` primary,
       the three holds, the `escapes: pump-station` secondary with `allowed: 2`, waves, ground targets, the vents per
       difficulty, the two hunter/prey links, radio (the `mission-failed` cue with `{group}`), budget, threat profile,
       briefing, backdrop, music
-- [ ] The cracking tower and the pump station in the enemies' data (ground objects, no attack, not hardened)
+- [x] The cracking tower and the pump station in the enemies' data (ground objects, no attack, not hardened): two
+      minimal unit directories (step E2)
 - [ ] The failed primary: a tower leaving the screen alive fails at once (the built flow, Levels 05 and 09); a topple
       onto a tower counts for the objective
 - [ ] Holds over the three works (Level 9's), validated against the eruptions on real time
@@ -478,3 +528,13 @@ Decided in round 72 (2026-10-31); left to the build:
   the pump stations on the racks at x 150 (P8 at t 162.5, before the rack bends at section 6's seam), the s4 road at
   x ≈ 180 through the Pele gate's gateway; the works' vents retimed into their holds (m10e-gaps §4) beside the towers,
   ≥ 104 px from every tower and pump station.
+- 2026-11-01 (step E2, Level 39's data; pending the user's review in round 77): built as drafted with the decided trivia
+  of the build gap check (`m10e-gaps.md` §4): the towers and pump stations are counted enemies in two minimal unit
+  directories; the works' vents retimed into their holds and a per-vent first tell (QE-1 a), the first vent's at
+  0.8 s (its easy tell then ends before the t=14.5 wave); the events `first-target` and `topple-target`; the hut's lock
+  a trigger spent by 30 damage; the Strider pairs of Pele and Prometheus entering at t=122.5 and t=173.5 (they walk
+  beside the towers in the holds), the Loki SAM pair at t=33; the Sentinels' rows 221 px apart (the right one 1.7 s
+  later: the gate's right blockhouse moves with it, a backdrop rerun for step E4); the overdrive from the t=116.5
+  leader. `levelReport`: medium 99.5 enemies a minute, typical +0.3 % at 0.41, windows 8.3 s (easy 10.9, hard 6.7),
+  two tells a vent per hold at medium, every cap held; the plain autopilot wins easy 3/3, medium 2/3, hard 0/3 (step
+  E3's refinery autopilot next).

@@ -68,5 +68,5 @@ notes:
   weak_points: (destroyable parts; the knee joints glow red when hit)
   bounty: '; parts: hull 40, legs 6 each, pod 8; a body kill or a topple pays every part not yet paid (the whole 60)'
   death: 'hull destroyed: a `large` mechanical explosion in place, the burnt hulk stays as a wreck; toppled: the fall''s ground shock and dust ring, the wreck along the line'
-  used_in: 'Deep Core''s tunnel floors and the refinery'
+  used_in: 'Deep Core''s tunnel floors and the refinery; Io''s refineries (Level 39: walker waves between the works'' towers, the act HP factor: hull 260, legs 94, pod 35)'
   difficulty: 'easy: a fan of 3 every 3.0 s, salvos of 1 every 6 s; hard: a fan of 5 every 2.0 s, salvos of 3'

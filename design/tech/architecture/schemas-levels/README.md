@@ -777,6 +777,17 @@ optional `skip` list of the difficulties it is left out on (Level 06's hard-only
   a 1 s ramp: Level 38's storm sections +3). A `stream` from the rear takes dashers as chasers. On every difficulty a
   wave of bouncing dashers and one of ramming dashers lie at least 7 s apart, no gust within 2 s of a strike's tell,
   and no strike's column over a station of a hovering homing launcher's `line abreast` while it holds.
+  M10 part E (Level 39; loaded and checked from step E2 by content's `JovianHazardRules`, `JovianHazardChecks` and
+  `RefineryChecks`, flown from step E1): a vent's **`first`** (s after it enters to its first tell, then every period on
+  real time, a hold not slowing it; without it one period after its entry); each vent's first tell starts while it is
+  on the field, and no vent lies within 100 px of a `cracking-tower` or `pump-station` placement (ground px, the units'
+  centres half their size above the top edge at their entries); the radio events **`first-target`** (the first
+  destroy-targets group cleared, by any means; only with a `destroy-targets` primary) and **`topple-target`** (the first
+  walker topple that crushed a unit of a destroy-targets group; only where something topples); a ground trigger with
+  `hits: 1` and an **`hp`** is spent by damage (every hit takes its damage off the hp: the survey hut's lock); a backdrop
+  piece's **`dark_with`** (a destroy-targets group or `P<n>`, the n-th `pump-station` placement in the data's order: the
+  piece's `-glow` piece is no longer drawn once that group is cleared or that pump dies; placed once; presentation
+  only, [schemas-backdrops](../schemas-backdrops/README.md)).
 - **Act** (`campaign/<act>/data.yaml`): `levels` `[first, last]` (global numbers), `title_card`
   (`act`, `name`, `line`), `briefing` (pages as a level's); `outro`, the act-end
   outro after the last level's debrief: `music` (a music file's name, `act-complete`: track 24

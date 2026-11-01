@@ -36,7 +36,7 @@ approved in round 60), and the Act 6 drafts of its design phase (2026-10-31, dec
 | [siphon-pump](siphon-pump/README.md) | Vrell pump on Thera Deep's farm racks, no attack; Level 23's secondary (L23) | review | done | final |
 | [spawning-reef](spawning-reef/README.md) | Soft Vrell coral spawner releasing Glassfin fry; Level 24's secondary (L24) | review | in-progress | final |
 | [relay-beacon](relay-beacon/README.md) | Human-built relay mast with the Helix handshake, no attack; Level 27's secondary (L27) | review | in-progress | final |
-| [warden-tank](warden-tank/README.md) | Unmarked grey tank, hull and turret, bursts from behind (L19); Ascendancy livery at L34, returns at L39 and L41 | approved | done | final |
+| [warden-tank](warden-tank/README.md) | Unmarked grey tank, hull and turret, bursts from behind (L19); Ascendancy livery at L34, returns at L41 | approved | done | final |
 | [sam-nest](sam-nest/README.md) | Ascendancy launcher, salvos of shootable homing diamonds; dormant until a station turns (L29) | approved | done | final |
 | [clamp-gun](clamp-gun/README.md) | Helix turret on the prison tender's docking clamps; the four hold Level 29's rescue halt (L29) | approved | done | final |
 | [sentinel-tower](sentinel-tower/README.md) | Tower with a laser sweep in any direction, a full turn every third sweep, hardened collar (L32) | approved | done | final |
@@ -45,6 +45,8 @@ approved in round 60), and the Act 6 drafts of its design phase (2026-10-31, dec
 | [graft-turret](graft-turret/README.md) | Hybrid deck turret; its death exposes a pulsing root for 5 s, else it regrows (L37) | approved | done | chosen |
 | [shield-pylon](shield-pylon/README.md) | Emitter mast whose dome makes the ground units under it invulnerable; the pylon gates (L41) | approved | in-progress | chosen |
 | [halo-platform](halo-platform/README.md) | Ring of six gun and rail turrets turning round a gated core; the fortress centrepiece (L41) | approved | not-started | chosen |
+| [cracking-tower](cracking-tower/README.md) | Io refinery column, no attack, 260 HP; Level 39's six named primary targets (L39) | review | in-progress | proposed |
+| [pump-station](pump-station/README.md) | Pump housing on Io's pipeline racks, no attack; Level 39's secondary (L39) | review | in-progress | proposed |
 
 ## Design
 

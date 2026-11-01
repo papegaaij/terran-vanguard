@@ -125,6 +125,17 @@ final class DeepCoreChecks {
             if (cue.event().orElse(null) == LevelData.CueEvent.TOPPLE_CRUSH && !topples(content, level)) {
                 problem.accept("radio[" + i + "].event", "a topple-crush cue in a level where nothing topples");
             }
+            // M10 part E (Level 39): a topple onto a primary target needs a walker that topples and such targets.
+            if (cue.event().orElse(null) == LevelData.CueEvent.TOPPLE_TARGET
+                    && (!topples(content, level) || level.objectives().targets().isEmpty())) {
+                problem.accept(
+                        "radio[" + i + "].event",
+                        "a topple-target cue needs a walker that topples and destroy-targets groups");
+            }
+            if (cue.event().orElse(null) == LevelData.CueEvent.FIRST_TARGET
+                    && level.objectives().targets().isEmpty()) {
+                problem.accept("radio[" + i + "].event", "a first-target cue needs destroy-targets groups");
+            }
         }
         terrain.ifPresent(t -> walkPaths(content, level, t, problem));
     }

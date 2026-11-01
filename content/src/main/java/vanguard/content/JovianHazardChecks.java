@@ -16,7 +16,8 @@ import vanguard.sim.PlayField;
  * spacing} (1.5 s) and no tell within the world's {@code entry} (1 s) of a wave's entry (the simulation also moves a
  * column off the ship's x near one: the ship's x is not known here); a {@code track} strike is hard's (skipped on easy
  * and medium). The {@code eruptions}: inside the level; the level's first eruption plays alone (Level 27's teaching
- * rule): no wave enters from its vent's earliest tell to the end of its latest one. The {@code backdrop.banks}: at most
+ * rule): no wave enters from its vent's earliest tell to the end of its latest one; M10 part E: each vent's first tell
+ * starts while it is on the field and no vent lies within 100 px of a cracking tower or a pump station. The {@code backdrop.banks}: at most
  * the world's share of the play field under banks at a time (a third, easy a quarter) and never a bank over the ship's
  * band (the bottom 140 px) longer than 2 s, each bank drifting with the {@code high-air} layer's factor. The held gates
  * (several {@code arena: true, holds: <group>} sections, Level 41): apart (never two in a row, never the first
@@ -28,11 +29,18 @@ final class JovianHazardChecks {
     /** s between the samples of the banks' cover and band checks. */
     static final double SAMPLE_SECONDS = 0.05;
 
+    /** M10 part E (Level 39, Hazards): px a vent keeps from a cracking tower or a pump station. */
+    static final double VENT_CLEARANCE = 100;
+
+    /** M10 part E: the units a vent keeps clear of (Level 39's refinery targets). */
+    private static final Set<String> CLEARED_UNITS = Set.of("cracking-tower", "pump-station");
+
     private JovianHazardChecks() {}
 
     static void level(Content content, LevelData level, BiConsumer<String, String> problem) {
         strikes(content, level, problem);
         eruptions(content, level, problem);
+        vents(content, level, problem);
         banks(content, level, problem);
         gates(level, problem);
         turn(level, problem);
@@ -106,9 +114,12 @@ final class JovianHazardChecks {
         JovianData.Eruption numbers = content.jovian().eruption();
         LevelData.EruptionVent first = vents.getFirst();
         Span period = first.period().orElse(numbers.period());
+        // M10 part E (QE-1 a): a vent with its own first tell tells then, else one period after its entry.
+        double earliest = first.first().orElse(period.min());
+        double latest = first.first().orElse(period.max());
         for (Difficulty difficulty : Difficulty.values()) {
-            double from = first.t() + period.min();
-            double to = first.t() + period.max() + numbers.tellOn(difficulty);
+            double from = first.t() + earliest;
+            double to = first.t() + latest + numbers.tellOn(difficulty);
             entries(level, difficulty).stream()
                     .filter(entry -> entry >= from && entry <= to)
                     .findFirst()
@@ -118,6 +129,49 @@ final class JovianHazardChecks {
                                     + " of its latest (" + difficulty.name().toLowerCase(java.util.Locale.ROOT) + ": t="
                                     + from + "–" + to
                                     + ", a wave at t=" + entry + ")"));
+        }
+    }
+
+    /**
+     * M10 part E, step E2 (design/campaign Level 39, Hazards; m10e-gaps.md §1 #2, #11): a vent's first tell starts while
+     * it is on the field (its scroll from its entry to the tell, on the level clock without the holds, which only slow
+     * it, under the field's height), and no vent lies within {@link #VENT_CLEARANCE} px of a cracking tower or a pump
+     * station (ground px: its entry point at the top edge against the unit's centre half its size above it at its
+     * entry; the holds do not move the ground).
+     */
+    private static void vents(Content content, LevelData level, BiConsumer<String, String> problem) {
+        List<LevelData.EruptionVent> vents = level.eruptions().orElse(List.of());
+        JovianData.Eruption numbers = content.jovian().eruption();
+        for (int i = 0; i < vents.size(); i++) {
+            LevelData.EruptionVent vent = vents.get(i);
+            double first =
+                    vent.first().orElse(vent.period().orElse(numbers.period()).min());
+            double travelled = level.scrollAt(vent.t() + first) - level.scrollAt(vent.t());
+            if (travelled >= PlayField.HEIGHT) {
+                problem.accept(
+                        "eruptions[" + i + "]",
+                        "its first tell starts while it is on the field: " + Math.round(travelled)
+                                + " px of scroll after its entry, the field is " + PlayField.HEIGHT);
+            }
+            double ventRow = level.scrollAt(vent.t());
+            for (LevelData.GroundTarget target : level.groundTargets()) {
+                String slug = target.enemy().orElse("");
+                if (!CLEARED_UNITS.contains(slug)) {
+                    continue;
+                }
+                double half = content.enemy(slug).size().height() / 2;
+                for (LevelData.Placement placement : target.at()) {
+                    double dy = ventRow - (level.scrollAt(placement.t()) + half);
+                    double distance = Math.hypot(vent.x() - placement.x(), dy);
+                    if (distance < VENT_CLEARANCE) {
+                        problem.accept(
+                                "eruptions[" + i + "]",
+                                "no vent within " + Math.round(VENT_CLEARANCE) + " px of a " + slug + " ("
+                                        + Math.round(distance) + " px from the one at t=" + placement.t() + ", x "
+                                        + placement.x() + ")");
+                    }
+                }
+            }
         }
     }
 

@@ -22,7 +22,7 @@ import vanguard.sim.Sortie;
 /**
  * A level's numbers for tuning its waves, computed by the campaign-wide tests' own code ({@link LevelMetrics}) with
  * their rules' verdicts: {@code ./gradlew :content:levelReport -Plevel=19 [-Pdifficulty=easy,medium,hard] [-Pseeds=3]
- * [-Pfit=test|plan|user] [-Pparts=pacing,floor,haul,boss,secondary,hp,pursuit,colossus,hull,dash] [-Pjson]}. It reads the design data at run time,
+ * [-Pfit=test|plan|user] [-Pparts=pacing,floor,haul,boss,secondary,hp,pursuit,colossus,hull,dash,refinery] [-Pjson]}. It reads the design data at run time,
  * so a data.yaml edit needs no recompile; the flights run in parallel.
  *
  * <p>Per difficulty: the enemies (waves + ground) and their rate ({@link DensityTest}), the mean on the screen and the
@@ -51,7 +51,9 @@ final class LevelReport {
         COLOSSUS,
         HULL,
         /** M10 part D (Level 38): the dashers' caps, the Harrows' rings, the strikes over tells, the scoped count. */
-        DASH
+        DASH,
+        /** M10 part E (Level 39): the holds' windows, the vents' tells in each hold, the guards' caps. */
+        REFINERY
     }
 
     enum Fit {
@@ -153,7 +155,8 @@ final class LevelReport {
             List<LevelMetrics.HullRun> hulls,
             List<Level35Test.Fight> rings,
             LevelMetrics.Dashers dashersUnharmed,
-            List<LevelMetrics.DashRun> dashRuns) {}
+            List<LevelMetrics.DashRun> dashRuns,
+            RefineryWatch.Refinery refinery) {}
 
     /** A level's report. */
     record Level(
@@ -329,6 +332,26 @@ final class LevelReport {
             dashRuns.put(difficulty, list);
         }
 
+        // M10 part E (step E2): a destroy-targets level with holds under eruptions (Level 39): the invulnerable pilot.
+        Map<Difficulty, Future<RefineryWatch.Refinery>> refineries = new HashMap<>();
+        for (Difficulty difficulty : options.difficulties()) {
+            LevelScript script = SimSpecs.level(content, key, difficulty);
+            if (options.has(Part.REFINERY)
+                    && RefineryWatch.hasHolds(script)
+                    && content.level(key).eruptions().isPresent()) {
+                refineries.put(
+                        difficulty,
+                        // Without Rook: his Mortar would take the towers before the windows' ends.
+                        pool.submit(() -> RefineryWatch.measure(
+                                content,
+                                key,
+                                difficulty,
+                                key.equals(Level39Plan.LEVEL)
+                                        ? Level39Plan.withoutRook(content, difficulty)
+                                        : loadout(content, key, difficulty, floorFit))));
+            }
+        }
+
         // M7 part H: a breaching boss's phases, losses, bites and eruptions, the same seeds with the plan's fit.
         Map<Difficulty, List<Future<LevelMetrics.ColossusRun>>> colossi = new HashMap<>();
         for (Difficulty difficulty : options.difficulties()) {
@@ -391,6 +414,7 @@ final class LevelReport {
                 dashes.add(dash.get());
             }
             Future<LevelMetrics.Dashers> unharmed = dashersUnharmed.get(difficulty);
+            Future<RefineryWatch.Refinery> refinery = refineries.get(difficulty);
             rows.add(new ByDifficulty(
                     difficulty,
                     LevelMetrics.density(level, route),
@@ -409,7 +433,8 @@ final class LevelReport {
                     tugs,
                     ringed(ringFights.get(difficulty)),
                     unharmed == null ? null : unharmed.get(),
-                    dashes));
+                    dashes,
+                    refinery == null ? null : refinery.get()));
         }
         double referenceLife = Double.NaN;
         if (hpRun) {
@@ -705,6 +730,7 @@ final class LevelReport {
                 }
             }
             dashLines(out, row);
+            refineryLines(out, row);
             for (LevelMetrics.HullRun tug : row.hulls()) {
                 StringBuilder sections = new StringBuilder();
                 for (int k = 0; k < tug.names().length; k++) {
@@ -859,6 +885,81 @@ final class LevelReport {
             fights.add(fight.get());
         }
         return fights;
+    }
+
+    /**
+     * M10 part E (design/campaign Level 39, Layout, Hazards, Waves: the limits): the first hold's window (the README's
+     * 12.9 / 9.7 / 7.8 s), each hold flown to about its window with the vents on the field in it and their tells (at
+     * least 2 a vent at medium), and the most Striders walking (2), Sentinels sweeping (2), SAM Nests awake (3) and
+     * Harrows (6) on the screen at once, with medium hulls overlapping (0) ({@link RefineryWatch}: invulnerable).
+     */
+    private static void refineryLines(StringBuilder out, ByDifficulty row) {
+        RefineryWatch.Refinery r = row.refinery();
+        if (r == null) {
+            return;
+        }
+        double expected =
+                switch (row.difficulty()) {
+                    case EASY -> 12.9;
+                    case MEDIUM -> 9.7;
+                    case HARD -> 7.8;
+                };
+        line(
+                out,
+                "holds",
+                "windows %s s (README %.1f), %d holds flown, %s",
+                r.windows().stream()
+                        .map(w -> String.format(Locale.ROOT, "%.1f", w))
+                        .toList(),
+                expected,
+                r.holds().size(),
+                r.passed() == 0 ? "every tower down" : r.passed() + " towers passed the pilot");
+        LevelMetrics.Flight flight = r.autopilot();
+        line(
+                out,
+                "through",
+                "%.2f on the screen (floor 2.5), %.1f shots a minute (10), gaps over 2 s %d, end calm %.1f s (4)"
+                        + " [the plain autopilot, invulnerable, without Rook]",
+                flight.meanOnScreen(),
+                flight.shotsPerMinute(),
+                flight.pausesBeforeEndCalm(PacingTest.ACT_TWO_EMPTY_SECONDS).size(),
+                flight.endCalm());
+        boolean twice = true;
+        for (int k = 0; k < r.holds().size(); k++) {
+            RefineryWatch.Hold hold = r.holds().get(k);
+            twice &= hold.fewest() >= 2;
+            line(
+                    out,
+                    "hold " + (k + 1),
+                    "from t=%.1f, %.1f s held, %d vents on the field, tells per vent %s",
+                    hold.levelSeconds(),
+                    hold.seconds(),
+                    hold.tellsPerVent().size(),
+                    hold.tellsPerVent());
+        }
+        boolean medium = row.difficulty() == Difficulty.MEDIUM;
+        line(
+                out,
+                "eruptions",
+                "at least %d tells a vent in every hold%s",
+                r.holds().stream().mapToInt(RefineryWatch.Hold::fewest).min().orElse(0),
+                medium ? " (at least 2): " + verdict(twice) : "");
+        boolean caps = r.striders() <= 2
+                && r.sentinels() <= 2
+                && r.sams() <= 3
+                && r.harrows() <= 6
+                && r.bigHullOverlaps() == 0;
+        line(
+                out,
+                "caps",
+                "Striders walking %d (2), Sentinels sweeping %d (2), SAM Nests awake %d (3), Harrows %d (6), medium"
+                        + " hulls overlapping %d (0) [invulnerable pilot, nothing dies outside the holds]: %s",
+                r.striders(),
+                r.sentinels(),
+                r.sams(),
+                r.harrows(),
+                r.bigHullOverlaps(),
+                verdict(caps));
     }
 
     /**
@@ -1173,6 +1274,27 @@ final class LevelReport {
                             "required", run.required()));
                 }
                 d.put("dash", ordered("unharmed", dashersJson(row.dashersUnharmed()), "runs", flown));
+            }
+            if (row.refinery() != null) {
+                RefineryWatch.Refinery r = row.refinery();
+                List<Object> holds = new ArrayList<>();
+                for (RefineryWatch.Hold hold : r.holds()) {
+                    holds.add(ordered(
+                            "t", round(hold.levelSeconds()),
+                            "seconds", round(hold.seconds()),
+                            "tells", hold.tellsPerVent()));
+                }
+                d.put(
+                        "refinery",
+                        ordered(
+                                "windows", r.windows(),
+                                "passed", r.passed(),
+                                "holds", holds,
+                                "striders", r.striders(),
+                                "sentinels", r.sentinels(),
+                                "sams", r.sams(),
+                                "harrows", r.harrows(),
+                                "overlaps", r.bigHullOverlaps()));
             }
             if (!row.hulls().isEmpty()) {
                 List<Object> tugs = new ArrayList<>();

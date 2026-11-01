@@ -435,7 +435,19 @@ public sealed interface RadioBlock permits LevelData {
          * no enemy; only in a level with a wave that hunts another wave's tag (Rook's bark).
          */
         @JsonProperty("first-prey-kill")
-        FIRST_PREY_KILL
+        FIRST_PREY_KILL,
+        /**
+         * M10 part E (design/campaign Level 39, Radio chatter: "Tower's down"): the attempt's first destroy-targets group
+         * cleared, by any means; once. Names no group; only with a {@code destroy-targets} primary.
+         */
+        @JsonProperty("first-target")
+        FIRST_TARGET,
+        /**
+         * M10 part E (design/campaign Level 39, Radio chatter: "Dropped it on the tower"): the attempt's first walker
+         * topple that crushed a unit of a destroy-targets group; once. Names no group; only where something topples.
+         */
+        @JsonProperty("topple-target")
+        TOPPLE_TARGET
     }
 
     /**

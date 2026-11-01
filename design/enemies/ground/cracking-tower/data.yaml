@@ -1,0 +1,37 @@
+# Cracking Tower stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/schemas-units/README.md
+# M10 part E, step E2 (Level 39; gap check m10e-gaps.md §4): Level 39's ground object as a unit of its own, because a
+# destroy-targets group, a Strider's topple and the kill tally count units and the loader finds units only here. The
+# numbers are Level 39's approved table (round 72, "The cracking tower and the pump station"); the design stays there.
+# Counted as an enemy (Level 09's Hive Nodes' model), decided as trivia, pending the user's review in round 77.
+name: Cracking Tower
+faction: Jovian Ascendancy
+layer: ground
+tier: large
+size: [96, 96]    # sprite px (a round column from above, its gold flare cap burning)
+hitbox: [72, 72]
+parts: single
+orientation: fixed
+hp: 260           # ≈ 1.7 s at the L39 reference 156 (J1); easy 195 / hard 338 by the global multipliers
+armour: none      # not hardened: every weapon that hits `ground` hurts it, `anti-ground` × 2
+speed: 0          # scrolls with the ground
+movement:
+  terrain: {}
+attacks: []       # no attack: the works' guards fire
+formations:
+  - {name: single}
+weak_points: []
+drops: []
+traits: [anti-ground]
+bounty: 30        # under the Hive Node's 40 (Level 39's credit budget: the scale's band)
+first_level: 39
+notes:
+  orientation: (seen from above; the flare cap burns)
+  speed: (scrolls with the ground)
+  movement: '`terrain` (fixed on its works'' pad)'
+  attack: '`none`: the works'' guards fire; nothing to spoof'
+  formations: (two to a works, each its own named target)
+  weak_points: (dies in ≈ 1.7 s at the Level 39 reference)
+  bounty: '; a Strider toppled onto it destroys it and pays it'
+  death: 'Io''s near-vacuum: a short white flash, the flare cap tumbling off, a ring of burning debris that does not rise; the dark wreck stays and the pipes from it stop glowing'
+  used_in: 'Level 39 (the primary `destroy-targets`: the six named towers of the Loki, Pele and Prometheus works)'
+  difficulty: 'none (the global HP multipliers; the holds'' speeds change instead)'

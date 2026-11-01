@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../player/specials, ../../../campaign/act-3-red-dust, ../../../campaign/act-5-the-belt, ../../../campaign/act-6-jovian-storm]
-updated: 2026-10-31
+updated: 2026-11-01
 ---
 
 # Warden Tank
@@ -15,7 +15,7 @@ A human-built tracked tank: the hull drives its own heading along roads and the 
 conveyors while a separate turret tracks the ship and fires bursts, even back up the screen after
 it has passed. In Act 3 it is **unmarked grey with no trim** (a hint of human involvement, Level
 19); from Act 5 it appears in Ascendancy black and gold, first on Level 34's derelict hulls (draft, approved in round 60).
-In Act 6 it returns on Io's refinery roads (Level 39) and in the Callisto fortress (Level 41), in the same livery (draft,
+In Act 6 it returns in the Callisto fortress (Level 41), in the same livery (draft,
 decided 2026-10-31 (round 72)).
 
 ## Design
@@ -25,7 +25,7 @@ decided 2026-10-31 (round 72)).
 Numbers at **medium**, rendered from [data.yaml](data.yaml) (M7 part F, step F2; see the
 [balancing basis](../../README.md#balancing-basis)). HP is in damage units (a Pulse Cannon L1 shot
 does 2). Set at its first level from the proposed Act 3 reference DPS (M18 = a, approved in round 36:
-L19 = 92): the hull's 64 HP is 0.7 s, the turret 0.2 s. Where it returns (Act 6, L39 and L41) it
+L19 = 92): the hull's 64 HP is 0.7 s, the turret 0.2 s. Where it returns (Act 6, L41) it
 gets the act HP factor of a `medium` unit (every part).
 
 <!-- data: stat-block -->
@@ -47,7 +47,7 @@ gets the act HP factor of a `medium` unit (every part).
 | Effective traits | `anti-ground`, `rear` |
 | Credits | 28 (score 280 × chain); whole (hull first) 26; parts: hull 20, turret 8 (28) |
 | Death | `medium` mechanical explosion with sparks and smoke; the burnt hull stays as a wreck (grey, no markings) |
-| First level / used in | L19; introduced in Level 19 (Foundry of Tharsis); returns in Ascendancy livery in L34 (Salvage Run, Act 5), L39, L41 (Act 6) |
+| First level / used in | L19; introduced in Level 19 (Foundry of Tharsis); returns in Ascendancy livery in L34 (Salvage Run, Act 5), L41 (Act 6) |
 | Difficulty hooks | easy: 2-shot burst every 3.0 s; hard: 4-shot burst every 2.0 s, turret 160°/s |
 <!-- /data -->
 
@@ -99,23 +99,22 @@ updates the data's *First level / used in* row (L34 added before Act 6's L39 and
 ### Act 6: Io and the Callisto fortress (draft)
 
 **Draft** (Act 6 design phase, step D-enemies-B; decided 2026-10-31 (round 72)). The stat block and the Act 5
-section are unchanged; this section adds its Act 6 use. Its data's *used in* row already names L39 and L41.
+section are unchanged; this section adds its Act 6 use. Its data's *used in* row names L41 (step E2 dropped L39:
+Level 39, approved, places no Warden Tank).
 
-- **Where.** L39 *Io Flyby*: convoys of 2–3 on the refinery roads between the pipeline racks, guarding the named
-  refinery targets with the [Striders](../strider/README.md); L41 *Callisto Fortress*: pairs on the citadel's
+- **Where.** L41 *Callisto Fortress*: pairs on the citadel's
   causeways, some under a [Shield Pylon](../shield-pylon/README.md)'s dome at a pylon gate (covered until the pylon
-  falls). The level documents place them (D-levels-2, D-levels-3).
+  falls). The level document places them (D-levels-3). (Level 39, approved, places none: the Striders guard Io's
+  refineries.)
 - **HP.** The act HP factor of a returning `medium` unit from its first level (L19, reference 92) with the proposed
-  Act 6 references (J1, decided 2026-10-31 (round 72)): at L39 ×156/92 = ×1.70, **hull 108 · turret 34** (142 whole); at L41
+  Act 6 reference (J1, decided 2026-10-31 (round 72)): at L41
   ×164/92 = ×1.78, **hull 114 · turret 36** (150 whole); its time to kill unchanged. Bounty unchanged (the act factor
   1.6⁵ scales it). No hex shield (Act 6's heavier shields are for crewed craft: the Talon, the Gunship, the Hornet).
 - **Livery.** The Act 5 gunmetal/charcoal with gold (`warden-tank-asc`, final) in both levels, no new frames: under
   Q9 **a** (recommended, decided 2026-10-31 (round 72)) the heartland's gloss black and heavy gold is for the elite and the
   fortress's own structures (the [Halo Platform](../halo-platform/README.md), the Shield Pylons, the citadel), and the
   regular units keep their Act 5 look. The act sketch's "Warden Tanks in black and gold" is met by that livery (black
-  hull, gold trim). The faint ground shadow (round 67) reads over Io's black lava and Callisto's ice as on L34's hulls.
-- **Io.** Near-vacuum (the [jovian](../../../world/jovian/README.md#media-per-level) media rules): the death's smoke
-  is a short flare and a debris ring, as in the belt; the eruptions' rocks fly on the play plane and never touch it.
+  hull, gold trim). The faint ground shadow (round 67) reads over Callisto's ice as on L34's hulls.
 - **Attack, movement, rear plate, EMP**: as the stat block and *Behaviour* above; no new hook.
 
 ### Difficulty and level use
@@ -163,7 +162,7 @@ Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's r
 
 ## Implementation
 
-- [ ] Act 6 (when the draft is approved): the act HP factor at L39 and L41 (hull 108 · turret 34, hull 114 · turret 36)
+- [ ] Act 6 (when the draft is approved): the act HP factor at L41 (hull 114 · turret 36)
       measured with `levelReport`; the tanks under a pylon's dome take no damage until it drops (the pylon's rule)
 - [x] Two-part unit: hull (`16 angles`) and turret (`32 angles`) with independent headings and turn rates (step F3: `EnemySpec.Turret`, `WardenTankTest`)
 - [x] Tracked `walk` along roads and conveyors (belt speed added) (step F3: `Belts`, `FoundryTest`)
@@ -227,3 +226,6 @@ Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's r
 - 2026-10-31 (user, [round 72](../../../concept-rounds/round-72/README.md) closed): Q9 a (the Warden Tank keeps its
   Act 5 gunmetal livery; b and c rejected); the document, moved to review for Act 6, approved (D.10; `design:
   approved`).
+- 2026-11-01 (M10 part E, step E2; `m10e-gaps.md` §6): Level 39 dropped from this page (its *Act 6* section, the *used
+  in* row, the HP and the Io media note): the approved Level 39 places no Warden Tank (its waves, ground targets, totals
+  and `depends-on`; the act README lists it at L41 only). The level owns placement; the L41 rows stay.

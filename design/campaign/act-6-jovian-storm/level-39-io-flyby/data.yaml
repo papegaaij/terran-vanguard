@@ -1,0 +1,639 @@
+# Level 39 – Io Flyby: the level script, rendered into README.md (briefing, threat profile, layout, waves, ground
+# targets, radio, credit budget). Times are seconds from the level start (script time: in a hold the level clock slows
+# with the scroll). M10 part E, step E2, from the README's approved hand tables (round 72) and ART-E's backdrop proposal
+# (concept/backdrop-proposal.yaml: its backdrop block, ground placements, holds and 27 vents, the sections at the
+# README's times as they are, so the tile sets stay cut).
+# Schema: ../../../tech/architecture/schemas-levels/README.md
+# Keys new in M10 part E (flown from step E1; loaded and checked from step E2): a vent's `first` (its first tell that
+# many real seconds after its entry, round 77 QE-1 a; its cycles then every period on real time, so the vents beside a
+# works erupt in its hold), the radio events `first-target` and `topple-target`, a trigger spent by damage (`hits: 1`
+# with an `hp`: the survey hut's 30 HP lock) and a backdrop piece's `dark_with` (its -glow piece goes dark with a tower
+# group or a pump station, P1-P8 = the pump stations in their data order; step E4 draws it).
+# Step E2's own placements (decided as trivia, pending the user's review in round 77): the towers and pump stations are
+# counted enemies (the units cracking-tower and pump-station: the topple's crush and the tally need it); the works'
+# vents retimed into their holds (m10e-gaps §4, ART-E's times); the first vent's tell 0.8 s after its entry (not 1.0:
+# easy's 1.6 s tell then ends by t=14.4, before the t=14.5 wave); the Striders are walker waves (as Level 32's) on the
+# roads and racks between the towers: the Loki pair at t=32/33.5 with its SAM pair at t=33 (not 38: a Strider walks
+# 32 px/s up the ground, so it passes only a nest that enters within about a second after it), the Pele pair at
+# t=122.5/124 (not 118) and the lone Strider at t=173.5 (not 168), so that each walks beside its works' towers in the
+# hold (a topple onto a tower is possible at all); the right Sentinel 1.7 s after the left (221 rows, Level 32's QE-1 a:
+# their rows offset so they never sweep the same rows at once; ART-E's gate piece puts both blockhouses on one row:
+# the generator moves the right one); the left Sentinel's overdrive comes from the t=116.5 wing's leader (a ground
+# enemy's group must be an objective's, so a single Sentinel cannot carry a pickup).
+scroll_speed: 130     # the same speed throughout (the holds slow it over the works)
+launch_seconds: 5
+bounty_scale: 0.41    # every bounty × 0.41: the README's hand estimate (typical +2.6 %; levelReport's fit below)
+control_prompts: []
+threat_profile:  # the hangar intel panel (design/ui/hangar) and the README's Threat profile table
+  setting: Io, the refineries
+  layers: [ground, air]
+  density: 4
+  traits: [anti-ground, piercing]
+  hazards: [eruptions, beam sweeps]
+  boss: none
+  objective: TOWERS 0 / 6   # the OBJECTIVE field from sensor L1
+  varga:
+    none: "Io's refineries. Six towers to burn, and volcanoes."
+    l1: "Vents throw rocks up. Every tower must fall."
+    l2: "Striders guard the works. SAMs, Sentinels, Chimeras."
+    l3: "Anti-ground for the towers; a Strider's fall counts."
+  notes:
+    Dominant layers: '`ground` (the cracking towers, Striders, SAM Nests, Sentinel Towers, pump stations), `air` (Talons, Chimeras, Gilded Gunships and their Darts, Hornets, Harrows, Needlers, Skitter and Dart streams, motes)'
+    Attack directions: '{directions}'
+    Density: '{density}'
+    Recommended traits: '{traits}'
+    Hazards: Eruptions (vents throw burning rocks up the screen); Sentinel sweeps; the holds over the works
+    Boss / mid-boss: none
+    Special limits: Sonar Pulse `NO WATER` ([Act 6 specials](../../../player/specials/README.md#act-6-specials-draft)); the Airstrike and the Orbital Lance work over Io
+    Sensor-suite detail: '**none**: Io, the refineries, `ground` + `air`, front, the objective `{objective}` · **L1**: + density {density}, the hazards "eruptions" and "beam sweeps", the secondary `PUMPS 0 / 6` · **L2**: + Strider, Sentinel Tower, SAM Nest, Chimera, Talon, Gilded Gunship, Hornet, Harrow, Needler, Dart Drone, Skitter and Mote portraits · **L3**: + the six towers and the three holds on the threat map, `anti-ground` highlighted'
+
+sections:  # back to back from t = 0, all at 130 px/s; ART-E's tile sets cut at these times
+  - name: Tvashtar Plains
+    end: 20
+    atmosphere: clear
+    tiles: [io-space]
+    notes:
+      layers:
+        ground: sulphur flats, black lava flows, frost fields from Io's limb on; one vent (t≈12).
+        deep: Jupiter's disc, a distant umbrella plume.
+      purpose: The approach; **the eruption taught** alone.
+  - name: Loki Works
+    end: 62
+    atmosphere: clear
+    tiles: [io-space, loki-yard]
+    notes:
+      layers:
+        ground: the yard road, pipeline racks, the Loki towers A and B (t≈43–44), the Strider pair (t≈32), a SAM pair (t≈33), three vents.
+      purpose: The first Strider pair (a topple to aim), **the first hold**.
+  - name: The Pipeline Run
+    end: 104
+    atmosphere: clear
+    tiles: [io-space, pipeline-run]
+    notes:
+      layers:
+        ground: the racks along a lava channel, pump stations P1–P4, vents alternating sides, the survey hut on a lava island (t≈96).
+      purpose: The Gunships; the pumps; the first hunt.
+  - name: Pele Works
+    end: 142
+    atmosphere: light
+    tiles: [io-space, pele-yard]
+    notes:
+      layers:
+        ground: the works' gate with the Sentinel pair (t≈110), the yard, the Pele towers (t≈125–126), the Strider pair walking up between them, a SAM trio.
+        high-air: Pele's plume haze.
+      purpose: '**The second hold**: towers behind sweeping beams, a topple onto a tower.'
+  - name: The Plume Field
+    end: 164
+    atmosphere: light
+    tiles: [io-space, plume-field]
+    notes:
+      layers:
+        ground: a field of vents under Pele's umbrella plume, rows of three; pump stations P5–P8 on a rack crossing it; a SAM pair.
+        high-air: Pele's plume haze.
+      purpose: "The eruptions at their densest; the pumps' last chance."
+  - name: Prometheus Works
+    end: 192
+    atmosphere: clear
+    tiles: [io-space, prometheus-yard]
+    notes:
+      layers:
+        ground: a lone Strider (t≈173.5), a SAM pair (t≈172), the Prometheus towers (t≈175–176), two vents; the works going dark behind.
+      purpose: '**The last hold**; the calm before the end.'
+
+holds:  # Level 09's hold zones: when a works' first tower reaches y = 200 px below the top edge the scroll eases over 1 s to 40 px/s (easy 30, hard 50) until both its towers are gone; a tower leaving the screen alive fails the mission at once (≈ 9.7 s at medium, 12.9 s easy, 7.8 s hard)
+  - {groups: [Loki A, Loki B], y: 200, speed: 40, easy: {speed: 30}, hard: {speed: 50}, ramp: 1}
+  - {groups: [Pele A, Pele B], y: 200, speed: 40, easy: {speed: 30}, hard: {speed: 50}, ramp: 1}
+  - {groups: [Prometheus A, Prometheus B], y: 200, speed: 40, easy: {speed: 30}, hard: {speed: 50}, ramp: 1}
+
+eruptions:  # the 27 vents (README Hazards; the world's eruption, design/world/jovian: its tell, rocks, period 5-7 s and easy/hard values). `first`: s after the vent enters at the top edge to its first tell (round 77 QE-1 a, pending), then every period on real time while on the screen (in a hold too). The works' vents retimed into their holds (m10e-gaps §4); the plume field's rows ripple 0.4 s a vent. No vent within 100 px of a tower or a pump station (JovianHazardChecks).
+  - {t: 12, x: 340, first: 0.8}   # section 1: the eruption taught, alone (no wave from t 8 to 14.5; its easy 1.6 s tell ends at t=14.4)
+  - {t: 30, x: 150, first: 0.8}   # section 2: by the yard road
+  - {t: 43.985, x: 60, first: 1.12}   # Loki hold: beside the towers; its first tell ≈ 0.3 s into the hold (from t≈44.8), the second 6.2-8.2 s later, inside the window
+  - {t: 44.138, x: 430, first: 1.26}   # Loki hold: beside the towers; its first tell ≈ 0.6 s into the hold
+  - {t: 66, x: 60, first: 0.8}   # section 3: west of the rack
+  - {t: 72, x: 420, first: 0.9}   # east of the channel
+  - {t: 79, x: 60, first: 0.8}   # west
+  - {t: 86, x: 420, first: 1}   # east
+  - {t: 94, x: 60, first: 0.8}   # west
+  - {t: 100, x: 420, first: 0.9}   # east
+  - {t: 113, x: 300, first: 0.9}   # section 4: inside the gate
+  - {t: 125.869, x: 235, first: 1.23}   # Pele hold (from t≈126.8): beside the towers; its first tell ≈ 0.3 s into the hold
+  - {t: 126.138, x: 40, first: 1.26}   # Pele hold: beside the towers; its first tell ≈ 0.6 s into the hold
+  - {t: 145, x: 240, first: 0.3}   # plume field row t 145
+  - {t: 145, x: 330, first: 0.7}   # plume field row t 145
+  - {t: 145, x: 420, first: 1.1}   # plume field row t 145
+  - {t: 150, x: 60, first: 0.3}   # plume field row t 150
+  - {t: 150, x: 300, first: 0.7}   # plume field row t 150
+  - {t: 150, x: 420, first: 1.1}   # plume field row t 150
+  - {t: 155, x: 250, first: 0.3}   # plume field row t 155
+  - {t: 155, x: 340, first: 0.7}   # plume field row t 155
+  - {t: 155, x: 430, first: 1.1}   # plume field row t 155
+  - {t: 160, x: 60, first: 0.3}   # plume field row t 160
+  - {t: 160, x: 270, first: 0.7}   # plume field row t 160
+  - {t: 160, x: 380, first: 1.1}   # plume field row t 160
+  - {t: 170, x: 380, first: 0.8}   # section 6: before the Prometheus works
+  - {t: 175.846, x: 60, first: 1.25}   # Prometheus hold (from t≈176.8): beside the towers; its first tell ≈ 0.3 s into the hold
+
+waves:  # every wave from the front (the README's 57 and the five Striders as walker waves, Level 32's); counts at medium, the formation lever sizes them on easy and hard except where pinned (the Harrow, Hornet, Gunship and Strider waves)
+  - {t: 3, formation: stream, enemy: skitter, count: 5, from: front, interval: 0.6}
+  - {t: 5.5, formation: V-wing, enemy: talon, count: 5, from: front, speed: 130, leader: tip, notes: A leader at the tip}
+  - t: 8
+    formation: swarm
+    enemy: mote-swarm
+    count: 6
+    from: front
+    speed: 200
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+    notes: "The last wave before the first eruption (tell t≈12.8, alone)"
+  - {t: 14.5, formation: line abreast, enemy: talon, count: 4, from: front, speed: 130, notes: After the first eruption}
+  - {t: 17, formation: stream, enemy: dart-drone, count: 5, from: front, interval: 0.4}
+  - {t: 19.5, formation: stream, enemy: skitter, count: 5, from: front, interval: 0.6}
+  - {t: 22.5, formation: V-wing, enemy: chimera, count: 6, from: front}
+  - t: 25.5
+    formation: swarm
+    enemy: mote-swarm
+    count: 6
+    from: front
+    speed: 200
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+  - {t: 28.5, formation: column, enemy: needler, count: 3, from: front, notes: "The last wave before the Strider pair's quiet window (t 32–35.5)"}
+  - t: 32
+    formation: convoy
+    enemy: strider
+    count: 2
+    from: front
+    easy: {count: 2}
+    hard: {count: 2}
+    paths: [[[90, -50], [90, -700]]]   # up the Loki yard road, 1.5 s apart; the first passes the t=33 SAM pair's row at y≈260
+    notes: "The Strider pair down the yard road: a topple onto the SAM pair to aim; the second drops a shield cell"
+  - {t: 35.5, formation: stream, enemy: skitter, count: 5, from: front, interval: 0.6}
+  - {t: 38.5, formation: line abreast, enemy: talon, count: 4, from: front, speed: 130}
+  - t: 41.5
+    formation: swarm
+    enemy: mote-swarm
+    count: 6
+    from: front
+    speed: 200
+    paths: [[[240, -60], [200, 140], [280, 260], [200, 380], [260, 480], [240, 620]]]
+    notes: "Enters before the Loki hold (t≈45); flies on real time in it"
+  - {t: 44.5, formation: stream, enemy: harrow, count: 3, from: front, interval: 0.6, easy: {count: 3}, hard: {count: 3}, notes: "A short stream from the front among the Loki towers"}
+  - {t: 47.5, formation: V-wing, enemy: talon, count: 5, from: front, speed: 130, leader: tip, notes: A leader at the tip}
+  - {t: 50.5, formation: stream, enemy: dart-drone, count: 5, from: front, interval: 0.4}
+  - t: 53.5
+    formation: swarm
+    enemy: mote-swarm
+    count: 6
+    from: front
+    speed: 200
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+  - t: 56.5
+    formation: swarm
+    enemy: chimera
+    count: 8
+    from: front
+    speed: 160
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+  - {t: 59.5, formation: stream, enemy: skitter, count: 5, from: front, interval: 0.6}
+  - {t: 62.5, formation: column, enemy: gilded-gunship, count: 2, from: front, interval: 2, easy: {count: 2}, hard: {count: 2}, notes: "2 s apart; each launches its Darts (about 12 in all)"}
+  - t: 65.5
+    formation: swarm
+    enemy: mote-swarm
+    count: 6
+    from: front
+    speed: 200
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+  - {t: 68.5, formation: V-wing, enemy: talon, count: 5, from: front, speed: 130, leader: tip, notes: A leader at the tip}
+  - {t: 71.5, formation: stream, enemy: skitter, count: 5, from: front, interval: 0.6}
+  - {t: 74.5, formation: line abreast, enemy: talon, count: 4, from: front, speed: 130, tag: line-74, notes: "**Prey** of the t=75.5 Skitters (three-way war)"}
+  - {t: 75.5, formation: stream, enemy: skitter, count: 5, from: front, interval: 0.6, hunts: line-74, notes: "**Hunters** of the t=74.5 Talons: they ram them"}
+  - {t: 78.5, formation: column, enemy: needler, count: 3, from: front}
+  - t: 81.5
+    formation: swarm
+    enemy: mote-swarm
+    count: 6
+    from: front
+    speed: 200
+    paths: [[[240, -60], [200, 140], [280, 260], [200, 380], [260, 480], [240, 620]]]
+  - {t: 84.5, formation: line abreast, enemy: hornet, count: 2, from: front, easy: {count: 2}, hard: {count: 2}, notes: "≥ 80 px between the hulls; the Gunships of t=62.5 are gone"}
+  - {t: 87.5, formation: stream, enemy: dart-drone, count: 5, from: front, interval: 0.4}
+  - {t: 90.5, formation: V-wing, enemy: chimera, count: 6, from: front}
+  - {t: 93.5, formation: stream, enemy: skitter, count: 5, from: front, interval: 0.6}
+  - {t: 96.5, formation: V-wing, enemy: talon, count: 5, from: front, speed: 130, leader: tip, notes: A leader at the tip}
+  - t: 99.5
+    formation: swarm
+    enemy: mote-swarm
+    count: 6
+    from: front
+    speed: 200
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+  - {t: 102.5, formation: stream, enemy: dart-drone, count: 5, from: front, interval: 0.4}
+  - {t: 105.5, formation: stream, enemy: skitter, count: 5, from: front, interval: 0.6, notes: "The last wave before the Sentinel pair's quiet window (t 110–113.5)"}
+  - t: 113.5
+    formation: swarm
+    enemy: mote-swarm
+    count: 6
+    from: front
+    speed: 200
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+  - {t: 116.5, formation: V-wing, enemy: talon, count: 5, from: front, speed: 130, leader: tip, notes: "A leader at the tip; it drops the overdrive (the README's left Sentinel: see the header)"}
+  - {t: 119.5, formation: stream, enemy: harrow, count: 4, from: front, interval: 0.6, easy: {count: 4}, hard: {count: 4}, notes: "Over the Pele yard"}
+  - t: 122.5
+    formation: swarm
+    enemy: mote-swarm
+    count: 6
+    from: front
+    speed: 200
+    paths: [[[240, -60], [200, 140], [280, 260], [200, 380], [260, 480], [240, 620]]]
+    notes: "Enters before the Pele hold (t≈127)"
+  - t: 122.5
+    formation: convoy
+    enemy: strider
+    count: 2
+    from: front
+    easy: {count: 2}
+    hard: {count: 2}
+    paths: [[[240, -50], [240, -700]]]   # up the Pele rack between the towers (Pele B x 150, Pele A x 330), 1.5 s apart: in the hold they walk beside them
+    notes: "The Strider pair walking up the yard between the Pele towers: a topple onto Pele A or B destroys it and counts"
+  - {t: 125.5, formation: line abreast, enemy: talon, count: 4, from: front, speed: 130}
+  - {t: 128.5, formation: stream, enemy: skitter, count: 5, from: front, interval: 0.6}
+  - {t: 131.5, formation: V-wing, enemy: chimera, count: 6, from: front}
+  - {t: 134.5, formation: stream, enemy: dart-drone, count: 5, from: front, interval: 0.4}
+  - {t: 137.5, formation: column, enemy: needler, count: 3, from: front}
+  - {t: 140.5, formation: stream, enemy: skitter, count: 5, from: front, interval: 0.6}
+  - {t: 143.5, formation: column, enemy: gilded-gunship, count: 2, from: front, interval: 2, easy: {count: 2}, hard: {count: 2}, notes: "2 s apart; each launches its Darts (about 12 in all); the Plume Field"}
+  - t: 146.5
+    formation: swarm
+    enemy: mote-swarm
+    count: 6
+    from: front
+    speed: 200
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+  - {t: 149.5, formation: V-wing, enemy: talon, count: 5, from: front, speed: 130, leader: tip, tag: wing-149, notes: "A leader at the tip; **prey** of the t=150.5 motes"}
+  - t: 150.5
+    formation: swarm
+    enemy: mote-swarm
+    count: 6
+    from: front
+    speed: 200
+    hunts: wing-149
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+    notes: "**Hunters** of the t=149.5 Talons: they lunge at them"
+  - {t: 153.5, formation: stream, enemy: skitter, count: 5, from: front, interval: 0.6}
+  - {t: 156.5, formation: line abreast, enemy: talon, count: 4, from: front, speed: 130}
+  - {t: 159.5, formation: stream, enemy: harrow, count: 4, from: front, interval: 0.6, easy: {count: 4}, hard: {count: 4}, notes: "Over the plume field"}
+  - {t: 162.5, formation: stream, enemy: dart-drone, count: 5, from: front, interval: 0.4}
+  - {t: 165.5, formation: V-wing, enemy: chimera, count: 6, from: front, notes: "Prometheus works"}
+  - t: 168.5
+    formation: swarm
+    enemy: mote-swarm
+    count: 6
+    from: front
+    speed: 200
+    paths: [[[240, -60], [200, 140], [280, 260], [200, 380], [260, 480], [240, 620]]]
+  - {t: 171.5, formation: line abreast, enemy: talon, count: 4, from: front, speed: 130}
+  - t: 173.5
+    formation: single
+    enemy: strider
+    count: 1
+    from: front
+    easy: {count: 1}
+    hard: {count: 1}
+    paths: [[[250, -50], [250, -700]]]   # up the Prometheus rack between the towers (A x 160, B x 340): in the hold it walks beside them
+    notes: "A lone Strider walking up between the Prometheus towers: a topple onto one counts"
+  - {t: 174.5, formation: stream, enemy: skitter, count: 5, from: front, interval: 0.6, notes: "Enters before the Prometheus hold (t≈177)"}
+  - {t: 177.5, formation: V-wing, enemy: talon, count: 5, from: front, speed: 130, leader: tip, notes: "**The last wave**, a leader at the tip; the calm from ≈ t=185 to the end at t=192"}
+
+ground_targets:  # at: [t, x], when the target's centre enters half its size above the top edge and its x (ART-E's places on the yards, racks and pads)
+  - target: Loki SAM pair
+    section: 2
+    enemy: sam-nest
+    count: 2
+    at: [[33, 200], [33, 290]]   # by the yard's rack; the first Strider passes their row (t≈34)
+    notes:
+      target: '[SAM Nest](../../../enemies/ground/sam-nest/README.md) pair by the Loki yard''s rack (t≈33)'
+      effect: Bounty {bounty} each; the Strider pair walks past them
+  - target: Loki A
+    section: 2
+    enemy: cracking-tower
+    count: 1
+    group: Loki A
+    at: [[43, 150]]
+    notes:
+      target: '[Cracking Tower](../../../enemies/ground/cracking-tower/README.md) **Loki A** (t≈43)'
+      effect: Primary target; the Loki hold
+  - target: Loki B
+    section: 2
+    enemy: cracking-tower
+    count: 1
+    group: Loki B
+    at: [[44, 330]]
+    notes:
+      target: Cracking Tower **Loki B** (t≈44), 180 px from Loki A
+      effect: Primary target; the Loki hold
+  - target: pump stations P1-P4
+    section: 3
+    enemy: pump-station
+    count: 4
+    at: [[68, 150], [76, 150], [84, 150], [92, 150]]   # P1-P4 on the rack (x 150)
+    notes:
+      target: '[Pump Station](../../../enemies/ground/pump-station/README.md)s **P1–P4** on the rack (t≈68, 76, 84, 92)'
+      effect: Secondary; bounty {bounty} each
+  - target: rack SAM Nest
+    section: 3
+    enemy: sam-nest
+    count: 1
+    at: [[80, 150]]   # on the rack between P2 and P3
+    notes:
+      target: SAM Nest on the rack between P2 and P3 (t≈80)
+      effect: Bounty {bounty}
+  - target: survey hut lock
+    section: 3
+    layer: ground
+    size: [20, 20]
+    hits: 1
+    hp: 30   # a trigger spent by damage (E1): every hit takes its damage off the lock
+    reveals: survey hut
+    sprite: survey-hut-lock
+    at: [[96, 305]]   # on the hut's door, on its lava island in the channel
+    notes:
+      target: 'The survey hut''s dark door lock ({hp} HP, t≈96)'
+      effect: 'The secret: frees a crate worth 100 (1,049)'
+  - target: supply depot latch
+    section: 3
+    layer: ground
+    size: [20, 20]
+    hp: 10
+    drop: armour patch
+    sprite: depot-latch
+    at: [[103, 64]]   # on the depot's door before the Pele gate
+    notes:
+      target: 'A refinery supply depot''s latch ({hp} HP, t≈103)'
+      effect: An armour patch
+  - target: Pele gate Sentinels
+    section: 4
+    enemy: sentinel-tower
+    count: 2
+    at: [[110, 64], [111.7, 416]]   # on the gate's blockhouses, their emitters ≥ 40 px inside the field, their rows 221 px apart (Level 32's QE-1 a)
+    notes:
+      target: '[Sentinel Tower](../../../enemies/ground/sentinel-tower/README.md) pair on the Pele gate (t≈110 left, t≈112 right), their rows offset so the two never sweep the same rows at once'
+      effect: Bounty {bounty} each
+  - target: Pele SAM trio
+    section: 4
+    enemy: sam-nest
+    count: 3
+    at: [[122, 290], [122, 360], [122, 430]]   # in the Pele yard, east of the rack
+    notes:
+      target: SAM Nest trio in the Pele yard (t≈122)
+      effect: Bounty {bounty} each
+  - target: Pele A
+    section: 4
+    enemy: cracking-tower
+    count: 1
+    group: Pele A
+    at: [[125, 330]]
+    notes:
+      target: Cracking Tower **Pele A** (t≈125)
+      effect: Primary target; the Pele hold
+  - target: Pele B
+    section: 4
+    enemy: cracking-tower
+    count: 1
+    group: Pele B
+    at: [[126, 150]]
+    notes:
+      target: Cracking Tower **Pele B** (t≈126)
+      effect: Primary target; the Pele hold; a Strider toppled onto it destroys it and counts
+  - target: pump stations P5-P8
+    section: 5
+    enemy: pump-station
+    count: 4
+    at: [[146, 150], [152, 150], [158, 150], [162.5, 150]]   # P5-P8 on the rack across the plume field (P8 before the rack bends at section 6's seam)
+    notes:
+      target: 'Pump Stations **P5–P8** on the rack across the plume field (t≈146, 152, 158, 162.5)'
+      effect: Secondary; bounty {bounty} each
+  - target: plume field SAM pair
+    section: 5
+    enemy: sam-nest
+    count: 2
+    at: [[150, 210], [150, 360]]   # beside row 2's vents
+    notes:
+      target: SAM Nest pair on the plume field (t≈150)
+      effect: Bounty {bounty} each
+  - target: Prometheus SAM pair
+    section: 6
+    enemy: sam-nest
+    count: 2
+    at: [[172, 80], [172, 420]]   # at the works' gate
+    notes:
+      target: SAM Nest pair at the Prometheus works' gate (t≈172)
+      effect: Bounty {bounty} each
+  - target: Prometheus A
+    section: 6
+    enemy: cracking-tower
+    count: 1
+    group: Prometheus A
+    at: [[175, 160]]
+    notes:
+      target: Cracking Tower **Prometheus A** (t≈175)
+      effect: Primary target; the Prometheus hold
+  - target: Prometheus B
+    section: 6
+    enemy: cracking-tower
+    count: 1
+    group: Prometheus B
+    at: [[176, 340]]
+    notes:
+      target: Cracking Tower **Prometheus B** (t≈176)
+      effect: Primary target; the Prometheus hold
+
+secrets:
+  - name: survey hut
+    crate: 100   # Act 1 terms: pays 1,049 with the act factor (a Coalition survey hut from before the Ascendancy took Io)
+    radio: {speaker: Varga, line: "A Coalition survey hut. Pre-war. Somebody left in a hurry."}
+
+pickups:
+  - {pickup: shield cell, dropped_by: {wave: 32, enemy: strider, unit: last}}   # the second Strider of the Loki pair
+  - {pickup: overdrive, dropped_by: {wave: 116.5, enemy: talon, unit: first}}   # the t=116.5 wing's leader, inside the Pele gate (the README's left Sentinel: see the header)
+
+radio:  # trigger: t or event; the README's 17 lines (the 1 s rule: ≈ 12 characters a second, a 1.5 s lead, event lines dropped after 6 s; script time, so a hold stretches the gaps; the secret's line is the secret's own). Rook's line needs him flying (requires: escort). Vorne once on the enemy channel, cold (never shouted).
+  - {t: 1, speaker: Okafor, line: "Io. Three works on the plains, two towers each. Every one burns."}
+  - {t: 8.5, speaker: Varga, line: "Vents. They glow, then throw burning rocks up. Shoot them or move."}
+  - {t: 32.5, speaker: Varga, line: "Striders on the yard. Drop one on a tower and the tower counts."}
+  - {t: 41, speaker: Okafor, line: "Loki works. We hold over the towers until both burn."}
+  - {event: first-target, speaker: Rook, requires: escort, line: "Tower's down. Sorry about the fuel bill, Vorne.", notes: {trigger: "The first tower destroyed (`first-target`, event, bark)"}}
+  - {t: 63, speaker: Varga, line: "Pump stations on the racks. Cut six and the lines run dry."}
+  - {t: 76.5, speaker: Varga, line: "Skitters on their Talons. The Vrell aren't picking sides."}
+  - {t: 91, speaker: Vorne, channel: enemy, line: "Lancer. Burn Io if you like. Callisto holds fuel enough for what I still have to do.", notes: {trigger: "t=91, the enemy channel (cold, never shouted)"}}
+  - {t: 104.5, speaker: Okafor, line: "Pele works. Towers behind the gate. Same drill."}
+  - {t: 110.5, speaker: Varga, line: "Sentinels on the gate. They sweep all the way round."}
+  - {event: topple-target, speaker: Okafor, line: "Dropped it on the tower. That'll do.", notes: {trigger: "The first tower destroyed by a topple (`topple-target`, event)"}}
+  - {event: secondary-objective, speaker: Varga, line: "Six pumps cut. The racks are running dry.", notes: {trigger: "Secondary met (the sixth pump, event)"}}
+  - {t: 142.5, speaker: Okafor, line: "The plume field. Pele has erupted for a thousand years. It won't stop for us."}
+  - {t: 164.5, speaker: Okafor, line: "Prometheus. The last two towers. Burn them and his fleet runs dry."}
+  - {event: level-end, speaker: Okafor, line: "Io's lines are dark. Callisto next, Lancer.", notes: {trigger: Level end}}
+  - {event: mission-failed, speaker: Okafor, expression: grim, line: "{group} is still burning. That fuel flies against us. Pull back, Lancer.", notes: {trigger: "A tower leaves the screen alive (`mission-failed`, the failed screen's line)"}}
+
+objectives:
+  primary: destroy-targets
+  targets: [Loki A, Loki B, Pele A, Pele B, Prometheus A, Prometheus B]   # TOWERS n / 6; fails as soon as one leaves the screen alive
+  secondary: {escapes: pump-station, allowed: 2, label: PUMPS, credits: 100, name: Cut 6 of the 8 pump stations}   # at least 6 of the 8 pump stations destroyed before they leave the screen, met at the sixth down (DONE), failed by the third away (PUMPS n / 6); 100 in Act 1 terms: pays 1,049
+
+music:
+  track: 14           # Act 6 A "Eye of the Storm" (audio/music track list)
+  start_section: 2    # its open storm strings over the Tvashtar plains, the base from the Loki works
+  full_section: 4     # the full mix in the Pele works and the plume field
+  motif: {from: 91, to: 99.5, sections: {}}   # Vorne's motif under his line (t=91 to its end; the radio's duck only)
+  ambience: io-refinery   # a deep ground rumble through the rock, refinery machinery, the hiss of venting gas
+  end_jingle: mission-complete
+
+difficulty: {}  # the holds' speeds in `holds` (easy 30, hard 50 px/s); the eruptions' easy and hard values are the world's; the stat blocks' hooks apply (the Strider's fans of 5 and salvos of 3 on hard, the SAM Nest's, the Sentinel's easy and hard arcs, the Harrow's, the Talon's, the Chimera's, the Gunship's, the Hornet's); the Harrow, Hornet, Gunship and Strider waves pinned on easy and hard; the formation lever sizes the rest
+
+briefing:
+  pages:   # the approved texts as they are (BriefingLayoutTest: 4 lines a page)
+    - {speaker: Okafor, image: level-39-io-flyby, line: "Io's refineries fuel every ship Vorne has left. Three works on the plains, Loki, Pele and Prometheus, two cracking towers each. All six burn. One left standing and his fleet flies on, and we have failed."}
+    - {speaker: Varga, image: level-39-cracking-tower, line: "Io is all volcano. A vent glows, then throws burning rocks up at you: shoot them or move. Striders guard the yards; drop one on a tower and the tower counts. And cut the pump stations on the racks. Six, and the pipelines run dry."}
+  teaser: {speaker: Rook, line: "Io. Volcanoes and refineries. I'm bringing the Mortar."}
+
+backdrop:
+  # Presentation only: Level 39's Io (tools/art/backdrop_l39.py, step ART-E: its proposal's block as it is; the sections above at the README's times).
+  # Section 1 has no ground tile set: its ground is the two tvashtar pieces from Io's limb up (exact rows), so
+  # Jupiter (deep) shows below the limb at the start. Every other section's ground tile is periodic in 1040
+  # rows; the seam pieces (exact rows) carry the racks' bends between sections. `dark_with` (E4's
+  # BackdropPieces hook, presentation only): the piece's -glow is no longer drawn once that tower's group is
+  # cleared (GROUP_CLEARED) or that pump station dies (P1-P8 = the pump stations in ground_placements order).
+  # Motion: the plume on the limb is the only animated piece (t 0-5); the vents, the towers' flares and the
+  # rocks are sprites.
+  scroll_factors: {deep: 0.15, far: 0.5, ground: 1, low-air: 1.3, high-air: 1.7}   # far, low-air unused
+  ramp: 2
+  haze_colour: d8cc98   # Pele's sulphur haze (no haze is used: the ground covers deep)
+  atmosphere:
+    clear: {haze: 0.0}
+    light: {haze: 0.0, wisps: pele-veil}   # sections 4-5: Pele's plume haze over the play field (<= 16 %)
+  tile_sets:
+    io-space: {layer: deep, height: 512}   # black space, stars, two moons as points
+    loki-yard: {layer: ground, height: 1040}   # section 2: the yard road (x ~70), the rack (x 240)
+    pipeline-run: {layer: ground, height: 1040}   # section 3: the lava channel (x ~300), the rack (x 150)
+    pele-yard: {layer: ground, height: 1040}   # section 4: Pele's fallout, the road (x ~180), the rack (x 240)
+    plume-field: {layer: ground, height: 1040}   # section 5: pale fallout, vent crusts, the rack (x 150)
+    prometheus-yard: {layer: ground, height: 1040}   # section 6: frost, the road (x ~90), the rack (x 250)
+    pele-veil: {layer: high-air, height: 960}   # the light atmosphere's wisps (normal)
+  pieces:
+    tvashtar-a: {layer: ground, size: [480, 1442]}
+    tvashtar-b: {layer: ground, size: [480, 1442]}
+    seam-3: {layer: ground, size: [480, 320]}
+    seam-4: {layer: ground, size: [480, 320]}
+    seam-5: {layer: ground, size: [480, 320]}
+    seam-6: {layer: ground, size: [480, 320]}
+    jupiter: {layer: deep, size: [480, 300]}
+    tvashtar-plume: {layer: ground, size: [192, 160], frames: 12, fps: 3}
+    loki-works: {layer: ground, size: [480, 530]}
+    pele-works: {layer: ground, size: [480, 530]}
+    prometheus-works: {layer: ground, size: [480, 530]}
+    pipes-west: {layer: ground, size: [46, 24]}
+    pipes-west-glow: {layer: ground, size: [46, 24]}
+    pipes-east: {layer: ground, size: [46, 24]}
+    pipes-east-glow: {layer: ground, size: [46, 24]}
+    pump-rack: {layer: ground, size: [40, 240]}
+    pump-rack-glow: {layer: ground, size: [40, 240]}
+    pele-gate: {layer: ground, size: [480, 160]}
+    supply-depot: {layer: ground, size: [144, 112]}
+    survey-hut: {layer: ground, size: [192, 176]}
+    vent-a: {layer: ground, size: [64, 64]}
+    vent-b: {layer: ground, size: [64, 64]}
+    vent-c: {layer: ground, size: [64, 64]}
+  placed:
+    # Jupiter's disc huge and low at the start (its piece's bottom on the screen's bottom edge at t 0), covered by Io's limb by t ~3.7
+    - {piece: jupiter, t: -6.154, x: 240}
+    # section 1's ground: rows 416-1858 (exact)
+    - {piece: tvashtar-a, t: 6.669, x: 240}
+    # section 1's ground: rows 1858-3300 (exact)
+    - {piece: tvashtar-b, t: 17.762, x: 240}
+    # section 3's seam: rows 8440-8760 (exact)
+    - {piece: seam-3, t: 64.077, x: 240}
+    # section 4's seam: rows 13900-14220 (exact)
+    - {piece: seam-4, t: 106.077, x: 240}
+    # section 5's seam: rows 18840-19160 (exact)
+    - {piece: seam-5, t: 144.077, x: 240}
+    # section 6's seam: rows 21700-22020 (exact)
+    - {piece: seam-6, t: 166.077, x: 240}
+    # Tvashtar's umbrella plume on the limb against space (rising and falling, 3 fps)
+    - {piece: tvashtar-plume, t: 0.624, x: 312}
+    # the Loki works' yard under its towers (exact rows 5978-6508)
+    - {piece: loki-works, t: 45.946, x: 240}
+    # the Pele works' yard under its towers (exact rows 16638-17168)
+    - {piece: pele-works, t: 127.946, x: 240}
+    # the Prometheus works' yard under its towers (exact rows 23138-23668)
+    - {piece: prometheus-works, t: 177.946, x: 240}
+    # Loki A's pipe run to the rack; its glow goes dark with the group
+    - {piece: pipes-west, t: 45.446, x: 204.5, dark_with: Loki A}
+    # Loki B's pipe run to the rack; its glow goes dark with the group
+    - {piece: pipes-east, t: 46.446, x: 275.5, dark_with: Loki B}
+    # Pele A's pipe run to the rack; its glow goes dark with the group
+    - {piece: pipes-east, t: 127.446, x: 275.5, dark_with: Pele A}
+    # Pele B's pipe run to the rack; its glow goes dark with the group
+    - {piece: pipes-west, t: 128.446, x: 204.5, dark_with: Pele B}
+    # Prometheus A's pipe run to the rack; its glow goes dark with the group
+    - {piece: pipes-west, t: 177.446, x: 214.5, dark_with: Prometheus A}
+    # Prometheus B's pipe run to the rack; its glow goes dark with the group
+    - {piece: pipes-east, t: 178.446, x: 285.5, dark_with: Prometheus B}
+    # pump station P1's rack segment; its glow goes dark with the pump
+    - {piece: pump-rack, t: 70.231, x: 150, dark_with: P1}
+    # pump station P2's rack segment; its glow goes dark with the pump
+    - {piece: pump-rack, t: 78.231, x: 150, dark_with: P2}
+    # pump station P3's rack segment; its glow goes dark with the pump
+    - {piece: pump-rack, t: 86.231, x: 150, dark_with: P3}
+    # pump station P4's rack segment; its glow goes dark with the pump
+    - {piece: pump-rack, t: 94.231, x: 150, dark_with: P4}
+    # pump station P5's rack segment; its glow goes dark with the pump
+    - {piece: pump-rack, t: 148.231, x: 150, dark_with: P5}
+    # pump station P6's rack segment; its glow goes dark with the pump
+    - {piece: pump-rack, t: 154.231, x: 150, dark_with: P6}
+    # pump station P7's rack segment; its glow goes dark with the pump
+    - {piece: pump-rack, t: 160.231, x: 150, dark_with: P7}
+    # pump station P8's rack segment; its glow goes dark with the pump
+    - {piece: pump-rack, t: 164.731, x: 150, dark_with: P8}
+    # the Pele works' gate: the Sentinels on its blockhouses (x 64, 416)
+    - {piece: pele-gate, t: 112.323, x: 240}
+    # the supply depot before the Pele gate; its latch (the 10 HP ground object) on its door
+    - {piece: supply-depot, t: 105.385, x: 64}
+    # the survey hut on its lava island in the channel; its lock (the 30 HP trigger) on its door
+    - {piece: survey-hut, t: 98.285, x: 304.8}
+    # vent 1 (enters t 12): section 1: the eruption taught, alone (no wave from t 8 to 14.5)
+    - {piece: vent-a, t: 14.077, x: 340}
+    - {piece: vent-b, t: 32.077, x: 150}
+    # vent 3 (enters t 43.985): loki hold: beside the towers
+    - {piece: vent-c, t: 46.062, x: 60}
+    # vent 4 (enters t 44.138): loki hold: beside the towers
+    - {piece: vent-a, t: 46.215, x: 430}
+    - {piece: vent-b, t: 68.077, x: 60}
+    - {piece: vent-c, t: 74.077, x: 420}
+    # vent 7 (enters t 79): west
+    - {piece: vent-a, t: 81.077, x: 60}
+    - {piece: vent-b, t: 88.077, x: 420}
+    - {piece: vent-c, t: 96.077, x: 60}
+    # vent 10 (enters t 100): east
+    - {piece: vent-a, t: 102.077, x: 420}
+    - {piece: vent-b, t: 115.077, x: 300}
+    # vent 12 (enters t 125.869): pele hold: beside the towers
+    - {piece: vent-c, t: 127.946, x: 235}
+    # vent 13 (enters t 126.138): pele hold: beside the towers
+    - {piece: vent-a, t: 128.215, x: 40}
+    - {piece: vent-b, t: 147.077, x: 240}
+    - {piece: vent-c, t: 147.077, x: 330}
+    # vent 16 (enters t 145): plume field row t 145
+    - {piece: vent-a, t: 147.077, x: 420}
+    - {piece: vent-b, t: 152.077, x: 60}
+    - {piece: vent-c, t: 152.077, x: 300}
+    # vent 19 (enters t 150): plume field row t 150
+    - {piece: vent-a, t: 152.077, x: 420}
+    - {piece: vent-b, t: 157.077, x: 250}
+    - {piece: vent-c, t: 157.077, x: 340}
+    # vent 22 (enters t 155): plume field row t 155
+    - {piece: vent-a, t: 157.077, x: 430}
+    - {piece: vent-b, t: 162.077, x: 60}
+    - {piece: vent-c, t: 162.077, x: 270}
+    # vent 25 (enters t 160): plume field row t 160
+    - {piece: vent-a, t: 162.077, x: 380}
+    - {piece: vent-b, t: 172.077, x: 380}
+    # vent 27 (enters t 175.846): prometheus hold: beside the towers
+    - {piece: vent-c, t: 177.923, x: 60}

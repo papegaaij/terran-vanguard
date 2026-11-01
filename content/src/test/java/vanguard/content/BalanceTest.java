@@ -180,6 +180,15 @@ class BalanceTest {
                             + " under it from its entry lets it lay its first cluster (Level30Test); step FIX7, pending the"
                             + " user's review"),
             Map.entry(
+                    "cracking-tower bounty",
+                    "30 is below the large class's 40-60: Level 39's approved credit budget gives it (round 72, under the"
+                            + " Hive Node's 40, so the level's scale stays in the band); the towers are the primary's"
+                            + " objects (M10 part E, step E2)"),
+            Map.entry(
+                    "pump-station bounty",
+                    "8 is below the small class's 10-15: Level 39's approved table gives it (round 72); the secondary"
+                            + " pays the pumps (M10 part E, step E2)"),
+            Map.entry(
                     "minelayer bounty",
                     "48, above the medium class's 18-30: in proportion to its 450 HP (30 at 280; the large class's"
                             + " 40-60); step FIX7, pending the user's review"));
@@ -602,7 +611,9 @@ class BalanceTest {
      * {@link #HOLD_SHARE} of the hold's window: from the trigger (its first unit {@code depth} px
      * below the top edge) until that unit's far edge leaves the bottom edge, the scroll easing over
      * the ramp (a smoothstep, so the section's and the hold's speeds averaged) and then at the hold
-     * speed. Medium only (the user's call; hard's 40 px/s window and 83 HP nodes give about 0.73).
+     * speed. Medium only (the user's call; hard's 40 px/s window and 83 HP nodes give about 0.73). M10 part E (step E2,
+     * Level 39's cracking towers): a cluster that is not hardened falls to every gun, so the plan's forward DPS counts
+     * with its anti-ground sources (Rook's Mortar).
      */
     @Test
     void thePlansAntiGroundClearsEveryHoldInTime() {
@@ -619,19 +630,30 @@ class BalanceTest {
                 holds++;
                 double hp = 0;
                 double half = 0;
+                boolean hardened = false;
                 for (vanguard.sim.GroundUnit unit : level.groundUnits()) {
                     if (hold.groups().contains(unit.group())) {
                         hp += unit.enemy().hp();
                         half = Math.max(half, unit.enemy().hitbox().height() / 2);
+                        hardened |= unit.enemy().hardened();
                     }
                 }
                 double ease = hold.rampSeconds() * (scroll + hold.speed()) / 2;
                 double window = hold.rampSeconds()
                         + (vanguard.sim.PlayField.HEIGHT + half - hold.depth() - ease) / hold.speed();
-                double kill = hp / row.antiGround();
+                double dps = hardened ? row.antiGround() : row.front() + row.antiGround();
+                double kill = hp / dps;
                 System.out.printf(
-                        "L%02d hold %s: %.0f HP / anti-ground %.1f DPS = %.1f s of a %.1f s window (%.2f, at most %.1f)%n",
-                        row.level(), hold.groups(), hp, row.antiGround(), kill, window, kill / window, HOLD_SHARE);
+                        "L%02d hold %s: %.0f HP / %s %.1f DPS = %.1f s of a %.1f s window (%.2f, at most %.1f)%n",
+                        row.level(),
+                        hold.groups(),
+                        hp,
+                        hardened ? "anti-ground" : "forward + anti-ground",
+                        dps,
+                        kill,
+                        window,
+                        kill / window,
+                        HOLD_SHARE);
                 if (!(kill <= HOLD_SHARE * window)) {
                     slow.add(
                             String.format("L%02d hold %s: %.1f s of %.1f s", row.level(), hold.groups(), kill, window));

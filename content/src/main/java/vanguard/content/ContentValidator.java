@@ -155,6 +155,10 @@ final class ContentValidator {
                 .values()
                 .forEach(level ->
                         JovianHazardChecks.level(content, level, (field, message) -> problem(level, field, message)));
+        // M10 part E (Level 39): the pipes that go dark name a tower group or a pump station.
+        content.levels()
+                .values()
+                .forEach(level -> RefineryChecks.level(level, (field, message) -> problem(level, field, message)));
         // M10 part C (Level 37): air allies and the saved secondary, the growth and the fall, the theme changes.
         content.levels()
                 .values()

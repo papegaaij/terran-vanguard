@@ -169,7 +169,12 @@ class TypicalHaulTest {
                         // M10 part D (step D2): Level 38's kills, leaders, the cargo pod's crate and the Harrows'
                         // secondary at the README's scale 0.43 (levelReport: typical -1.0 %; the README's hand table
                         // 14,749)
-                        Map.entry(38, 14_763)),
+                        Map.entry(38, 14_763),
+                        // M10 part E (step E2): Level 39's kills, leaders, the Striders' parts (walker waves), the
+                        // towers, pump stations, SAM Nests and Sentinels, the hut's crate and the pumps' secondary at
+                        // the README's scale 0.41 (levelReport: typical +0.3 %; the README's credit table 14,929 pays
+                        // a leader's extra as its rounded bounty less the wing's)
+                        Map.entry(39, 14_936)),
                 perfect);
     }
 

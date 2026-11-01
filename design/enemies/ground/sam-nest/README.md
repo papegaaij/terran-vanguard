@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../player/specials, ../../../art-direction]
-updated: 2026-10-29
+updated: 2026-11-01
 ---
 
 # SAM Nest
@@ -45,7 +45,7 @@ tuned per level with `levelReport`.
 | Effective traits | `anti-ground`, `area`, `homing`, `spread` |
 | Credits | 15 (score 150 × chain); missiles 0 |
 | Death | `small` ground explosion, the rack thrown; a scorched launcher wreck stays |
-| First level / used in | L29; Ceres Hub; later Act 5 levels, the Strider's shoulder pod and the Iron Sovereign's SAM batteries share its missile (their docs) |
+| First level / used in | L29; Ceres Hub; later Act 5 levels, Aurelia (Level 37) and Io's refinery works (Level 39); the Strider's shoulder pod and the Iron Sovereign's SAM batteries share its missile (their docs) |
 | Difficulty hooks | easy: every 6 s, turn rate 65°/s; hard: salvos of 3, turn rate 95°/s |
 <!-- /data -->
 

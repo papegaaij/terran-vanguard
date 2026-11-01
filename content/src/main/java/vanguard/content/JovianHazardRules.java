@@ -62,7 +62,7 @@ final class JovianHazardRules {
     }
 
     /**
-     * The level's eruptions at {@code difficulty}: each vent's period (its own, else the world's) and the world's tell,
+     * The level's eruptions at {@code difficulty}: each vent's period (its own, else the world's), its first tell (M10 part E) and the world's tell,
      * rocks and start speed on that difficulty; none without vents.
      */
     static Optional<HazardSpec.EruptionSpec> eruptions(Content content, LevelData level, Difficulty difficulty) {
@@ -74,8 +74,15 @@ final class JovianHazardRules {
         List<HazardSpec.Vent> vents = level.eruptions().get().stream()
                 .map(vent -> {
                     Span period = vent.period().orElse(numbers.period());
+                    // M10 part E (Level 39, QE-1 a): its first tell `first` s after its entry, else a period.
                     return new HazardSpec.Vent(
-                            vent.t(), vent.x(), period.min(), period.max(), (int) rocks.min(), (int) rocks.max());
+                            vent.t(),
+                            vent.x(),
+                            period.min(),
+                            period.max(),
+                            (int) rocks.min(),
+                            (int) rocks.max(),
+                            vent.first().orElse(Double.NaN));
                 })
                 .toList();
         return Optional.of(new HazardSpec.EruptionSpec(

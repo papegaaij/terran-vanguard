@@ -384,6 +384,9 @@ public record BackdropData(
      * @param row M7 part G (a {@link Strip} backdrop, Level 20): a ground piece placed by the strip row of its centre
      *     instead of a time ({@code t} is then NaN): it lies there whichever way the level flies over it, see {@link
      *     LevelData#pieceCentre}; no path and no repeat
+     * @param darkWith M10 part E (design/campaign Level 39, the pipes going dark): its {@code -glow} piece is no longer
+     *     drawn once this destroy-targets group is cleared, or once this pump station dies ({@code P1} … the level's
+     *     {@code pump-station} placements in their data order); presentation only
      */
     public record PlacedPiece(
             String piece,
@@ -393,7 +396,8 @@ public record BackdropData(
             Optional<List<Waypoint>> path,
             Optional<Boolean> overhead,
             Optional<Repeat> repeat,
-            Optional<Double> row) {
+            Optional<Double> row,
+            Optional<String> darkWith) {
         /** As the data writes it: a time {@code t} or (M7 part G) a strip {@code row}, one of the two. */
         @JsonCreator
         static PlacedPiece of(
@@ -404,9 +408,32 @@ public record BackdropData(
                 @JsonProperty("path") Optional<List<Waypoint>> path,
                 @JsonProperty("overhead") Optional<Boolean> overhead,
                 @JsonProperty("repeat") Optional<Repeat> repeat,
-                @JsonProperty("row") Optional<Double> row) {
+                @JsonProperty("row") Optional<Double> row,
+                @JsonProperty("dark_with") Optional<String> darkWith) {
             Check.that(t.isPresent() != row.isPresent(), "placed: give its t or (a strip's ground piece) its row");
-            return new PlacedPiece(piece, t.orElse(Double.NaN), x, mirror, path, overhead, repeat, row);
+            return new PlacedPiece(
+                    piece,
+                    t.orElse(Double.NaN),
+                    x,
+                    mirror,
+                    path,
+                    overhead,
+                    repeat,
+                    row,
+                    darkWith == null ? Optional.empty() : darkWith);
+        }
+
+        /** Without M10 part E's {@code dark_with}. */
+        public PlacedPiece(
+                String piece,
+                double t,
+                double x,
+                Optional<Boolean> mirror,
+                Optional<List<Waypoint>> path,
+                Optional<Boolean> overhead,
+                Optional<Repeat> repeat,
+                Optional<Double> row) {
+            this(piece, t, x, mirror, path, overhead, repeat, row, Optional.empty());
         }
 
         /** Placed by time, as before M7 part G. */
@@ -425,6 +452,7 @@ public record BackdropData(
             Check.that(
                     row.isEmpty() || (path.isEmpty() && repeat.isEmpty()),
                     "a piece placed by its strip row has no path and no repeat");
+            darkWith.ifPresent(name -> Check.that(repeat.isEmpty(), "a piece that goes dark is placed once"));
             path.ifPresent(points -> {
                 Check.that(points.size() >= 2, "path: give at least two waypoints");
                 for (int i = 1; i < points.size(); i++) {
@@ -446,7 +474,8 @@ public record BackdropData(
                             .toList()),
                     overhead,
                     Optional.empty(),
-                    row);
+                    row,
+                    darkWith);
         }
 
         /** M7 part G: whether it is placed by its strip row (a {@link Strip} backdrop's ground piece). */

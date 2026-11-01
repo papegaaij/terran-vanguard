@@ -29,7 +29,9 @@ The schema of a level's `backdrop` block (layers, tile sets, seams, tower pieces
   optional `mirror`, a `path` of `[t, dx, dy]` waypoints for a piece with headings, `overhead`
   for a ground piece's part above the road (a bridge's arches, a gate's blockhouse: drawn over
   the convoy and the ground objects and under the ground units, so the crawlers pass under it and
-  a turret placed on it stands on it); later pieces on a layer are drawn over earlier ones). M7 part G (Level 20,
+  a turret placed on it stands on it), M10 part E's `dark_with` (Level 39: its `-glow` piece goes dark with a
+  destroy-targets group or a pump station, [schemas-levels](../schemas-levels/README.md)); later pieces on a layer are
+  drawn over earlier ones). M7 part G (Level 20,
   a level that flies back over ground it has shown): a **`strip`** (`origin`, the strip row at the screen's bottom
   edge at t = 0; `zones`, back to back from the bottom up, each `{from, to, tiles}`: the tile sets over strip rows
   `[from, to)`, at most one per layer and one on the base layer, together covering every row the screen shows over

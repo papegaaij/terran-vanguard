@@ -22,7 +22,8 @@ public sealed interface GroundTargetsBlock permits LevelData {
      * the objectives'), whose last one destroyed drops a placed pickup ({@code dropped_by: {group,
      * unit: last}}: Level 11's floating containers), and a trigger's {@code easy} / {@code hard}
      * change may give its {@code hits} (Level 11's sunken pod: hard 6), a destructible's its {@code hp} (round 44
-     * Q.5: Level 21's survey crawler, hard 28).
+     * Q.5: Level 21's survey crawler, hard 28). M10 part E (Level 39's survey hut): a trigger with {@code hits: 1} and an
+     * {@code hp} is spent by damage (every hit takes its damage off the hp; at none its secret is found).
      *
      * @param layer and {@code size}: a destructible's or trigger's layer and hit box in px; an
      *     enemy's come from its stat block
@@ -154,7 +155,11 @@ public sealed interface GroundTargetsBlock permits LevelData {
                 }
             } else {
                 Check.that(layer.isPresent() && size.isPresent(), "a destructible or trigger needs layer and size");
-                Check.that(hp.isPresent() != hits.isPresent(), "give hp (destructible) or hits (trigger)");
+                // M10 part E (Level 39's survey hut: a 30 HP lock): a trigger spent by damage gives hits: 1 and its hp.
+                Check.that(
+                        hp.isPresent() != hits.isPresent()
+                                || hits.filter(n -> n == 1).isPresent(),
+                        "give hp (destructible) or hits (trigger); a trigger spent by damage gives hits: 1 and its hp");
                 Check.that(hits.isEmpty() || reveals.isPresent(), "a trigger (hits) reveals a secret");
                 Check.that(bonusDrop.isEmpty() || drop.isPresent(), "a bonus_drop comes with a drop");
                 Check.that(group.isEmpty() || hits.isEmpty(), "only enemies and destructibles have a group");

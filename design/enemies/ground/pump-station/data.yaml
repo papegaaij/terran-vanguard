@@ -1,0 +1,36 @@
+# Pump Station stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/schemas-units/README.md
+# M10 part E, step E2 (Level 39; gap check m10e-gaps.md §4): Level 39's ground object as a unit of its own, because the
+# secondary's `escapes` counts a unit by its slug and the loader finds units only here. The numbers are Level 39's
+# approved table (round 72, "The cracking tower and the pump station"); the design stays there. HP 10 base: the beam
+# era's × 2 flies it at the table's 20.
+name: Pump Station
+faction: Jovian Ascendancy
+layer: ground
+tier: small
+size: [40, 40]    # sprite px (a pump housing on a pipeline rack)
+hitbox: [32, 32]
+parts: single
+orientation: fixed
+hp: 10            # base; the beam era's × 2 flies it at 20
+armour: none      # not hardened
+speed: 0          # scrolls with the ground
+movement:
+  terrain: {}
+attacks: []       # no attack
+formations:
+  - {name: single}
+weak_points: []
+drops: []
+traits: [anti-ground]
+bounty: 8
+first_level: 39
+notes:
+  orientation: (seen from above; its lamp lit)
+  armour: none (not hardened). HP {hp} base flies at 20 with the beam era's × 2
+  speed: (scrolls with the ground)
+  movement: '`terrain` (fixed on its pipeline rack)'
+  attack: '`none`'
+  formations: (one on a rack segment, P1-P8)
+  death: 'a short flash and a debris ring; the rack''s pipe beside it goes dark'
+  used_in: 'Level 39 (the secondary `PUMPS`: 6 of the 8 on the racks)'
+  difficulty: 'none (the secondary''s allowed escapes: 2)'

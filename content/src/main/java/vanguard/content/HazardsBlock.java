@@ -723,12 +723,18 @@ public sealed interface HazardsBlock permits LevelData {
      * edge at {@code t} s at {@code x} px from the left and scrolling with the ground; while on the screen it erupts
      * every {@code period} {@code [min, max]} s (the world's 5–7 if not given, {@link JovianData.Eruption}). Its tell,
      * rocks and their flight are the world's, by difficulty.
+     *
+     * <p>M10 part E, step E2 (design/campaign Level 39, Hazards; round 77 QE-1 a): {@code first}, its first tell's start
+     * that many real seconds after its entry (Level 39's vents at 130 px/s: ≈ 0.5 to 1.3 s, so its rocks leave it in the
+     * lower half; the plume field's ripple is three vents' offsets 0.4 s apart); without it one period after its entry
+     * (round 73 C.8). The cycles after the first follow the period.
      */
-    record EruptionVent(double t, double x, Optional<Span> period) {
+    record EruptionVent(double t, double x, Optional<Span> period, Optional<Double> first) {
         public EruptionVent {
             Check.notNegative("t", t);
             Check.that(x >= 0 && x <= PlayField.WIDTH, "x: on the play field (0-" + PlayField.WIDTH + "), was " + x);
             period.ifPresent(range -> Check.positive("period", range.min()));
+            first.ifPresent(s -> Check.notNegative("first", s));
         }
     }
 }
