@@ -472,8 +472,18 @@ public final class HangarState {
         return hover;
     }
 
-    /** Sets what the pointer rests on; empty once a key is used (the last device used owns the look). */
+    /**
+     * Sets what the pointer rests on; empty once a key is used (the last device used owns the look). The pointer
+     * moving onto another button (a choice, side or bay chip, a command) takes the last action's message off the
+     * line: a button shows its own refusal or nothing, never what another button said (the user, 2026-11-01).
+     */
     public void hover(Optional<Hover> over) {
+        if (over.isPresent()
+                && !over.equals(hover)
+                && over.get().target() != Target.ROW
+                && over.get().target() != Target.SLOT) {
+            forget();
+        }
         hover = over;
     }
 
@@ -632,12 +642,26 @@ public final class HangarState {
         if (focus == Focus.REPAIR) {
             return switchRepairLine();
         }
+        forget();
         slot = Math.floorMod(index, slots().size());
         row = 0;
         top = 0;
         choice = 0;
         focus = Focus.SHOP;
         return Outcome.MOVED;
+    }
+
+    /**
+     * An action's message (what it did, or why it was refused) belongs to the slot, row and choice it was made on:
+     * selecting another, or the pointer moving onto another button ({@link #hover(Optional)}), takes it off the
+     * message line, so that it never reads under another item's or button's hint (the user, 2026-11-01: a sensor
+     * suite's upgrade showed while hovering the ion beam's power dial, a power refusal while hovering SELL). The
+     * visit's notice stays for {@link #moved} to take.
+     */
+    private void forget() {
+        if (!message.equals(notice)) {
+            message = "";
+        }
     }
 
     public Outcome up() {
@@ -650,6 +674,7 @@ public final class HangarState {
                                 command = Command.SAVE;
                             }
                         } else {
+                            forget();
                             selectRow(row - 1);
                         }
                         yield Outcome.MOVED;
@@ -670,6 +695,7 @@ public final class HangarState {
                         if (row + 1 >= rowCount()) {
                             yield Outcome.NONE;
                         }
+                        forget();
                         selectRow(row + 1);
                         yield Outcome.MOVED;
                     }
@@ -696,6 +722,7 @@ public final class HangarState {
                 if (choices < 2) {
                     yield Outcome.NONE;
                 }
+                forget();
                 choice = Math.floorMod(Math.min(choice, choices - 1) + direction, choices);
                 yield Outcome.MOVED;
             }
@@ -793,6 +820,7 @@ public final class HangarState {
         }
         focus = Focus.SHOP;
         if (index != row) {
+            forget();
             selectRow(index);
         }
         return moved(Outcome.MOVED);
@@ -804,6 +832,7 @@ public final class HangarState {
         if (focus != Focus.SHOP || index < 0 || index >= choices || index == Math.min(choice, choices - 1)) {
             return Outcome.NONE;
         }
+        forget();
         choice = index;
         return moved(Outcome.MOVED);
     }
@@ -1041,7 +1070,6 @@ public final class HangarState {
             message = bayRefusal(Hangar.BayRefusal.CREDITS);
             return Outcome.REFUSED;
         }
-        message = "BOUGHT " + Names.slot(line.bay().slot()) + " - ITS SLOT IS OPEN";
         // M7 part A (round 37, R.4 g): the cursor goes to the bay's new slot (its tile), on its first
         // row, not to the last row left in this slot (a locked one).
         int opened = slots().indexOf(line.bay().slot());
@@ -1050,6 +1078,8 @@ public final class HangarState {
         } else {
             afterChange(Optional.empty());
         }
+        // The purchase's message goes with the cursor to the new slot.
+        message = "BOUGHT " + Names.slot(line.bay().slot()) + " - ITS SLOT IS OPEN";
         return Outcome.DONE;
     }
 

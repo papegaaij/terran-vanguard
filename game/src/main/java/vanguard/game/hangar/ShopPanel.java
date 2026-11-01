@@ -121,6 +121,24 @@ final class ShopPanel {
         if (state.bulwarkSelected()) {
             drawBulwark(batch, state, state.bulwarkRow().orElseThrow(), DETAIL_Y);
         }
+        MessageLine message = messageLine(state);
+        List<String> lines = Words.wrap(message.text(), (WIDTH - 20) / Fonts.advance(glass.fonts.label));
+        for (int i = 0; i < Math.min(2, lines.size()); i++) {
+            Color colour = message.refused() ? Glass.ALERT : Glass.CYAN;
+            glass.shadowed(batch, glass.fonts.label, lines.get(i), colour, INNER, MESSAGE_Y + i * 12);
+        }
+    }
+
+    /** The shop's message line: its text, and whether it is a refusal (drawn in the alert colour). */
+    record MessageLine(String text, boolean refused) {}
+
+    /**
+     * What the message line under the detail reads: why the previewed choice (the chip under the pointer, else the
+     * selected one) cannot be made, else the last action's message ({@link HangarState#message}, which a move to
+     * another slot, row or choice, or the pointer onto another button, clears).
+     */
+    static MessageLine messageLine(HangarState state) {
+        boolean shopFocus = state.focus() == HangarState.Focus.SHOP;
         Optional<String> refused = shopFocus
                 ? state.previewChoice().filter(choice -> !choice.allowed()).map(HangarState::refusal)
                 : Optional.empty();
@@ -130,12 +148,8 @@ final class ShopPanel {
         if (shopFocus && state.bulwarkSelected()) {
             refused = state.bulwarkChoice().flatMap(HangarState.BulwarkChoice::refusal);
         }
-        String message = refused.orElse(state.message());
-        List<String> lines = Words.wrap(message, (WIDTH - 20) / Fonts.advance(glass.fonts.label));
-        for (int i = 0; i < Math.min(2, lines.size()); i++) {
-            Color colour = refused.isPresent() ? Glass.ALERT : Glass.CYAN;
-            glass.shadowed(batch, glass.fonts.label, lines.get(i), colour, INNER, MESSAGE_Y + i * 12);
-        }
+        return refused.map(text -> new MessageLine(text, true))
+                .orElseGet(() -> new MessageLine(state.message(), false));
     }
 
     private void drawRow(SpriteBatch batch, Offer offer, int y, boolean selected, List<String> markedTraits) {

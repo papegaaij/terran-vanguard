@@ -295,6 +295,110 @@ class PowerDialShopTest {
                 new Fitted("pulse-cannon", 3, 2), hangar.campaign().loadout().get(LoadoutSlot.FRONT));
     }
 
+    /**
+     * The user's report of 2026-11-01: an upgrade bought in one slot, then another slot's weapon at its highest level
+     * selected; hovering its power chips showed the other slot's {@code ... UPGRADED TO L3}. A move to another slot or
+     * row takes an action's message off the line; the chips show their own refusal, or nothing.
+     */
+    @Test
+    void anUpgradesMessageStaysWithItsSlotNotUnderAnotherSlotsDial() {
+        int top = CATALOGUE
+                .item(vanguard.content.campaign.ItemKind.FRONT, "pulse-cannon")
+                .maxLevel();
+        Map<LoadoutSlot, Fitted> loadout = new EnumMap<>(RULES.starterLoadout());
+        loadout.put(LoadoutSlot.FRONT, new Fitted("pulse-cannon", top));
+        loadout.put(LoadoutSlot.REAR, new Fitted("rear-lance", 1));
+        Item generator = CATALOGUE.items(vanguard.content.campaign.ItemKind.GENERATOR).stream()
+                .max(java.util.Comparator.comparingInt(Item::price))
+                .orElseThrow();
+        loadout.put(LoadoutSlot.GENERATOR, new Fitted(generator.id(), generator.maxLevel()));
+        HangarState state = new HangarState(new Hangar(CATALOGUE, campaign(loadout, 100_000)), true);
+        while (state.slot() != LoadoutSlot.REAR) {
+            state.nextSlot();
+        }
+        assertEquals(State.FITTED, state.selected().orElseThrow().state());
+        while (state.choice().orElseThrow().action() != Action.UPGRADE) {
+            state.right();
+        }
+        assertEquals(Outcome.DONE, state.confirm(), state::message);
+        assertEquals("REAR LANCE UPGRADED TO L2", state.message());
+        assertEquals(new ShopPanel.MessageLine("REAR LANCE UPGRADED TO L2", false), ShopPanel.messageLine(state));
+
+        while (state.slot() != LoadoutSlot.FRONT) {
+            state.nextSlot();
+        }
+        assertEquals("", state.message(), "the rear's upgrade stays with the rear");
+        Offer gun = state.selected().orElseThrow();
+        assertEquals(Action.UPGRADE, state.choice().orElseThrow().action());
+        assertEquals(new ShopPanel.MessageLine("AT ITS HIGHEST LEVEL", true), ShopPanel.messageLine(state));
+        state.hover(Optional.of(
+                new HangarState.Hover(HangarState.Target.CHOICE, actions(gun).indexOf(Action.POWER_DOWN))));
+        assertEquals(
+                new ShopPanel.MessageLine("", false), ShopPanel.messageLine(state), "PWR - is allowed: no message");
+        state.hover(Optional.of(
+                new HangarState.Hover(HangarState.Target.CHOICE, actions(gun).indexOf(Action.POWER_UP))));
+        assertEquals(new ShopPanel.MessageLine("AT FULL POWER", true), ShopPanel.messageLine(state));
+        state.hover(Optional.empty());
+
+        // A refusal and a dial step stay on their own row too: the next row down clears them.
+        state.confirm();
+        assertEquals("AT ITS HIGHEST LEVEL", state.message());
+        while (state.choice().orElseThrow().action() != Action.POWER_DOWN) {
+            state.right();
+        }
+        assertEquals(Outcome.DONE, state.confirm());
+        assertEquals("PULSE CANNON POWER L" + (top - 1) + " OF " + top, state.message());
+        assertEquals(Outcome.MOVED, state.down());
+        assertEquals("", state.message(), "another row of the same slot");
+    }
+
+    /**
+     * The user's second report of 2026-11-01: a click on a chip that needs more power left {@code NEEDS ... MORE
+     * POWER} on the line, and hovering SELL then showed it as SELL's hint. The pointer moving onto another chip takes
+     * it off; SELL shows its own hint (nothing).
+     */
+    @Test
+    void aPowerRefusalStaysWithItsChipNotUnderSell() {
+        Map<LoadoutSlot, Fitted> loadout = new EnumMap<>(RULES.starterLoadout());
+        loadout.put(
+                LoadoutSlot.FRONT,
+                new Fitted(
+                        "pulse-cannon",
+                        CATALOGUE
+                                .item(vanguard.content.campaign.ItemKind.FRONT, "pulse-cannon")
+                                .maxLevel()));
+        loadout.put(LoadoutSlot.REAR, new Fitted("rear-lance", 1));
+        HangarState state = new HangarState(new Hangar(CATALOGUE, campaign(loadout, 100_000)), true);
+        while (state.slot() != LoadoutSlot.REAR) {
+            state.nextSlot();
+        }
+        int needy = actions(state.selected().orElseThrow()).indexOf(Action.UPGRADE);
+        assertEquals(
+                Optional.of(Hangar.Refusal.POWER),
+                state.selected().orElseThrow().choices().get(needy).refusal(),
+                "the starter generator cannot carry the rear's upgrade beside a full front gun");
+        Offer offer = state.selected().orElseThrow();
+        String refusal = HangarState.refusal(offer.choices().get(needy));
+        FakePointer mouse = new FakePointer();
+        HangarPointer pointer = new HangarPointer();
+        mouse.move(ShopPanel.choiceChip(offer, needy));
+        pointer.update(state, mouse.pointer);
+        mouse.click();
+        assertTrue(pointer.update(state, mouse.pointer).confirm());
+        assertEquals(Outcome.REFUSED, state.confirm());
+        assertEquals(refusal, state.message());
+        assertEquals(new ShopPanel.MessageLine(refusal, true), ShopPanel.messageLine(state));
+
+        mouse.move(ShopPanel.choiceChip(offer, actions(offer).indexOf(Action.SELL)));
+        pointer.update(state, mouse.pointer);
+        assertEquals(
+                Optional.of(new HangarState.Hover(
+                        HangarState.Target.CHOICE, actions(offer).indexOf(Action.SELL))),
+                state.hover());
+        assertEquals(new ShopPanel.MessageLine("", false), ShopPanel.messageLine(state), "SELL shows no refusal");
+        assertEquals("", state.message());
+    }
+
     @Test
     void raisingTheSettingOverTheOutputSaysHowMuchPowerItNeeds() {
         Choice refused = new Choice(Action.POWER_UP, 0, 13.5, 12, true, Optional.of(Hangar.Refusal.POWER));

@@ -400,3 +400,6 @@ Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-a
 - 2026-10-31, round 74: the intel portraits of the Chimera, the harvester and the drop craft accepted (F.8); the Level 36 intel setting "Jupiter, the upper air" accepted (C.13).
 - 2026-11-01, round 75: the intel portraits of the Mirror Interceptor and the Graft Turret accepted (F.9).
 - 2026-11-01, round 76: the Harrow's intel portrait accepted (F.10).
+- 2026-11-01 (user's bug report): the message line belongs to the action that wrote it. A purchase's or refusal's text
+  is cleared when the slot, row or choice changes or the pointer moves onto another button; a hovered button shows only
+  its own hint (or nothing), never an earlier action's text. The visit's notices (free charges, the hydro-kit) stay.

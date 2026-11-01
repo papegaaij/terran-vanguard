@@ -308,12 +308,14 @@ class ActThreeHangarTest {
         state.notice("1 FREE EMP BURST CHARGE");
         state.down();
         assertEquals("", state.message(), "a row move too");
-        // A transaction's message stays until the next transaction.
+        // A transaction's message goes with the cursor to the bay's new slot, and off the line on a move to
+        // another row (the user, 2026-11-01: an action's message belongs to the slot, row and chip it was made on).
         select(state, LoadoutSlot.UTILITY_1);
         selectBayRow(state);
         state.confirm();
-        state.down();
         assertEquals("BOUGHT UTILITY BAY 3 - ITS SLOT IS OPEN", state.message());
+        state.down();
+        assertEquals("", state.message());
     }
 
     @Test
