@@ -1,7 +1,7 @@
 ---
 title: Level 37 – Fall of Aurelia
 design: approved
-implementation: in-progress
+implementation: done
 art: proposed
 depends-on: [../../../enemies/ground/graft-turret, ../../../enemies/air/mirror-interceptor, ../../../enemies/air/chimera, ../../../enemies/air/talon, ../../../enemies/air/gilded-gunship, ../../../enemies/air/hornet, ../../../enemies/ground/sam-nest, ../../../enemies/README.md, ../../../allies, ../../../world/jovian, ../../../player/generator, ../../../player/wingmen, ../../../ui/hud, ../../../story/characters]
 updated: 2026-11-01
@@ -402,9 +402,15 @@ interference, `INTERCEPT`), **cold, never shouted** (J6: his only shout is Level
 | Level end | Okafor | "Aurelia is gone. The people on those shuttles are not. Come home, Aegis." |
 <!-- /data -->
 
-Timeline check (text): the timed lines close at ≈ 10.6, 20.1, 29.2, 40.8, 48.1, 57.4, 73.5, 87.3, 95.2, 109.1 (the
-Choir with its 2 s lead), 118.5, 126.8, 135.0, 144.8, 157.9, 170.7 and 181.9; nothing overlaps. The secondary resolves
-at ≈ t=143 (pair 3 out), its line waiting for Okafor's t=136 line to close. Okafor's Aurelia line (the gap analysis's
+Timeline check (as played, step C4b's retiming; `RadioTimelineLevel37Test`'s runs at medium, voiced, with Rook and
+without): the game types each line on its pages (two pages ≈ 11 s a long line), so the timed lines follow one another
+almost without a gap and open at t ≈ 1, 13, 24.5, 37, 44.5, 56, 67.2, 78.1, 89.7, 100.8 (the Choir: its static from
+t=98 runs under Okafor's t=89.5 line, which shows until ≈ 99.9), 110, 121.5, 129.5, 151.5, 163, 174.5 and 186.5, each at
+most 0.8 s late. The radio is full from t=1 to ≈ 140, so in the runs the event lines before that (Rook's first bounce
+and first prey kill, Aurelia Traffic's first shuttle lost, Okafor's locker line) go stale after their 6 s, and an
+outcome of the secondary decided earlier (easy met with the second pair at t≈88, a failure before pair 3) waits for the
+gap at t≈140.5; met with the third pair it opens at t≈143-144 (pending the user's review in round 75, L.3 and L.4: shorter
+lines and new takes). Okafor's Aurelia line (the gap analysis's
 "Okafor's Aurelia line", Q4) is her memory of 2166 over the drop, not the act intro's "*I was at Aurelia. I remember.
 So will you.*" (Q11 a, page 4), so the two never repeat each other. Vorne's line is his cold reaction after the Choir's
 (J6); "only a door" is the story's fixed line, given to Varga. Varga's t=78 line is the [IFF spoofer](../../../player/systems/README.md#act-6-the-iff-spoofer-and-the-core-tiers-draft)'s
@@ -502,6 +508,11 @@ in the [briefing](../../../ui/briefing/README.md#concept-art) (`briefing-images-
 | [concept/growth-final-r75-a.gif](concept/growth-final-r75-a.gif) | The turn, t 99.5–105.5 at half size (10 frames a second): the growth bursting over the plaza from the dome rims along the seams, the fires, the deck a step darker | proposed (round 75) |
 | [concept/cdf-locker-final-r75-a.png](concept/cdf-locker-final-r75-a.png) | The CDF locker, the secret (`tools/art/aurelia_units.py locker`, step ART-C1; 32×28, the ground target's `cdf-locker` frames 0 sealed, 1 hit, 2 broken open) at 4× and at 1× beside the ship and a Graft Turret with the game's crate (sheet) | proposed (round 75) |
 | [concept/backdrop-proposal.yaml](concept/backdrop-proposal.yaml) | The generator's `backdrop:` block (tile sets, pieces, the city's ground pieces on exact rows, placements, the `growth` and `fall` blocks with the halves' curves), the sections, the ground targets' places, the pads and the locker for step C2 (not data) | proposed (round 75; step C2's input) |
+| [concept/turn-capture-r75-a.png](concept/turn-capture-r75-a.png), [.gif](concept/turn-capture-r75-a.gif) | In the game (step C5, the [recipe](concept/prompts.md#level-37-capture-r75-a)): the turn at t=98 (the Choir's static), t=102 (the growth's burst over the decks) and t=110 (Vorne's order, the darker grade, the fires); the loop t 97–112 | proposed (round 75 F.5) |
+| [concept/prey-capture-r75-a.png](concept/prey-capture-r75-a.png), [.gif](concept/prey-capture-r75-a.gif) | In the game: the t=118 Skitter snake ramming the t=116 Gilded Gunship (the ship steered off the middle), t 119–123 | proposed (round 75 F.7) |
+| [concept/fall-capture-r75-a.png](concept/fall-capture-r75-a.png), [.gif](concept/fall-capture-r75-a.gif) | In the game: the fall at t=160 (the break), t=170 (the halves drifting, a spire toppling) and t=185 (the sinking city); the loop t 159–186 | proposed (round 75 F.6) |
+| [concept/readability-capture-r75-a.png](concept/readability-capture-r75-a.png) | In the game, 1:1 crops: gold on gold (Talons, the shuttles and a nest over the decks before the turn) and teal on teal (the Chimera swarm and its fire over the growth after it) | proposed (round 75 F.8) |
+| [concept/locker-capture-r75-a.png](concept/locker-capture-r75-a.png) | In the game, 1:1: the CDF locker under its awning at t≈61 | proposed (round 75 F.4) |
 
 ## Implementation
 
@@ -509,32 +520,46 @@ in the [briefing](../../../ui/briefing/README.md#concept-art) (`briefing-images-
       targets, the shuttles, radio, budget, threat profile, briefing, backdrop, music (step C2, 2026-11-01: on ART-C2's
       backdrop proposal; the content's checks: no ground unit on the screen at the fall, no mirrored, hybrid, ally or
       boss wave hunted, the theme change after Vorne's motif)
-- [ ] The shuttle secondary: six Level 10 shuttles in Aurelia's livery marked friendly (the friendly marker's banner
+- [x] The shuttle secondary: six Level 10 shuttles in Aurelia's livery marked friendly (the friendly marker's banner
       and brackets), liftoff untouchable, station and climb-out, the three aimed waves; `SHUTTLES n / 5` counting to
-      its target with six pips, met at the fifth out, failed at the second loss (easy 4, hard 6)
-- [ ] The turn at t=100: the Choir's line with the music's duck, the growth's burst and the darker grade over 4 s, the
+      its target with six pips, met at the fifth out, failed at the second loss (easy 4, hard 6) (steps C1, C2: air
+      allies outside the primary in lift groups, the `saved` secondary, `AirAlliesTest`, `SavedSecondaryTest`; step
+      C4b: the livery, the brackets, the banner per lift and the tracker, `FriendlyMarkerTest`, `MissionPanelTest`)
+- [x] The turn at t=100: the Choir's line with the music's duck, the growth's burst and the darker grade over 4 s, the
       prey links from t=103 ([three-way rule](../../../enemies/README.md#the-three-way-war): latch, ram, lunge; prey
-      killed by the Vrell pay nothing; hunters keep to their prey), the backdrop war on `deep`/`low-air`
-- [ ] The falling city (Q4 a, A.13 b): the balloons tear at t=160, the deck breaks along an authored jagged cut into two ground layers that slow, darken and shrink over 20 s at their own rates, the spires topple,
-      the spires and debris on `low-air`, open cloud from t=180; no ground unit on the screen at t=160
+      killed by the Vrell pay nothing; hunters keep to their prey), the backdrop war on `deep`/`low-air` (step C1: the
+      hunting snakes, `PreyWarTest`; step C4a: the growth overlay, the grade's 4 s ramp, the war and fires; step C4b:
+      the Choir's static and duck)
+- [x] The falling city (Q4 a, A.13 b): the balloons tear at t=160, the deck breaks along an authored jagged cut into two ground layers that slow, darken and shrink over 20 s at their own rates, the spires topple,
+      the spires and debris on `low-air`, open cloud from t=180; no ground unit on the screen at t=160 (step C4a:
+      the falling-city pass on ART-C2's halves, `FallingCityTest`; the content's check: no ground unit at the fall)
 - [x] Mirror Interceptors and Graft Turrets placed as above (their documents' rules); the spacing rules (step C2: at
       most 4 mirrors on the screen, 2 a side, 6 Graft Turrets, no `medium` hulls overlapping on any difficulty)
 - [x] Wave script: ≥ 75 enemies a minute at medium with the ground units and launched Darts (`DensityTest`), the Act
       2+ floor (`PacingTest`, `ActFloorTest`), side and rear entries edge-warned 3 s, the quiet windows t=36–42 and
       t=97–103, ≥ 4 s calm after the last enemy, no two medium hulls overlapping (step C2 with the generic autopilot
-      and the plan's fit; the beam era's small units 1.48× Level 10's, `BeamEraHpTest`)
-- [ ] Radio voiced, every timed line at most 1 s late (`RadioTimelineLevel37Test`, with Rook and without); Aurelia
-      Traffic cast; the Choir distorted; Vorne on the enemy channel, not shouted
-- [ ] Threat profile, Varga's four intel lines and Rook's teaser fitting the intel panel (`IntelPanelLayoutTest`); the
-      Mirror Interceptor's and Graft Turret's portraits
-- [ ] Briefing: Okafor's and Varga's pages, each one screen (`BriefingLayoutTest`), with their images
+      and the plan's fit; the beam era's small units 1.48× Level 10's, `BeamEraHpTest`; 1.50×, the band's top, with step C3's autopilot
+      and the Fall section back at 100 px/s in step C5's full check: round 75 C.9)
+- [x] Radio voiced, every timed line at most 1 s late (`RadioTimelineLevel37Test`, with Rook and without); Aurelia
+      Traffic cast; the Choir distorted; Vorne on the enemy channel, not shouted (step VOX-C: 26 lines; step C4b: the
+      timed lines retimed to the typed pages, opening at most 0.8 s late; the event barks, the first shuttle lost and
+      the locker's line go stale in the runs and an early outcome waits to t≈140.5: round 75 L.3)
+- [x] Threat profile, Varga's four intel lines and Rook's teaser fitting the intel panel (`IntelPanelLayoutTest`); the
+      Mirror Interceptor's and Graft Turret's portraits (step ART-C1: the portraits; step C4b: `IntelPanelLayoutTest`)
+- [x] Briefing: Okafor's and Varga's pages, each one screen (`BriefingLayoutTest`), with their images (step C2: the
+      pages shortened to 4 lines, round 75 L.1; step VOX-C: voiced; step C4b: the images re-run from the production
+      frames)
 - [x] Typical haul within ±5 % of budget(37) = 7 997 with the level's `bounty_scale` (`TypicalHaulTest`; step C2:
       +1.0 % at 0.32)
-- [ ] Music and ambience: track 14, the duck, track 15 from the turn, the city bed and its turn, the fall's sounds
-      (`Level37SoundsTest`)
-- [ ] Easy/hard variations as in *Difficulty notes*; the autopilot (flanking a mirror, closing a nest, not guarding
-      the shuttles) flies the level with Rook on every difficulty and with `--escort none`
-- [ ] Production art and captures for part C's round
+- [x] Music and ambience: track 14, the duck, track 15 from the turn, the city bed and its turn, the fall's sounds
+      (`Level37SoundsTest`) (step AUD-C: track 15 and its stems, the r75 a variants; step C4b: the theme change in
+      `LevelMusic`, `AureliaCues`)
+- [x] Easy/hard variations as in *Difficulty notes*; the autopilot (flanking a mirror, closing a nest, not guarding
+      the shuttles) flies the level with Rook on every difficulty and with `--escort none` (step C3, `Level37Test`: 3/3
+      with no retry on every difficulty, with Rook and without; the secondary met in every easy and medium run, on hard
+      in none of step C5's six runs (losses at t≈57 and t≈136-139): round 75 L.2)
+- [x] Production art and captures for part C's round (steps ART-C1, ART-C2, C4b; step C5: the captures,
+      [round 75](../../../concept-rounds/round-75/README.md))
 
 ## Open questions
 
@@ -586,3 +611,9 @@ Left to the build (the document is approved as drafted):
   paragraph and the balance plan follow the built plan (the Tesla Coil Pod at the L36 visit, the Ion Beam L5 at this
   one); "flagged `neutral`" reads "marked friendly" (Level 10's air allies, not the `neutral` flag). The two briefing
   pages shortened to 4 lines each (round 74 L.2 a's rule for Level 36; `BriefingLayoutTest`: the drafts ran 5 lines).
+- 2026-11-01 (step C5): part C closed out: the full `./gradlew check` green (4,961 tests; `Level37Test` re-flown with the
+  Fall section back at 100 px/s: 3/3 with no retry on every difficulty, with Rook and without; the secondary met in
+  every easy and medium run and in none of the six hard runs; the beam era's small units 1.50× Level 10's); the
+  captures for round 75 (the mirrors, a nest's roots, the shuttles, the turn, the hunt, the fall, the readability crops,
+  the locker); the radio prose to step C4b's retiming. Round 75 asks the briefing pages (L.1), the hard shuttles (L.2),
+  the crowded radio (L.3) and the Choir's static (L.4).

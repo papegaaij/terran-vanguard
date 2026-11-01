@@ -1,0 +1,27 @@
+Level 37 listen-through (round 75): each line's start in level-37-listen-r75-a.ogg
+0:00.0  Level 37 briefing: okafor (act-6-jovian-storm/level-37-fall-of-aurelia briefing page 1, neutral): Aurelia, the Ascendancy's capital on its balloons. Its traffic control has broken with Vorne: shuttles lift its civilians from the pads in three waves. Keep their lanes clear. I have been to Aurelia before, Lancer. This time we are there for its people.
+0:19.9  Level 37 briefing: varga (act-6-jovian-storm/level-37-fall-of-aurelia briefing page 2, neutral): The deck turrets are overgrown. Kill one and a root shows: burn it inside five seconds, or the turret grows back. A new interceptor carries a mirror on its nose. Shots bounce off it, a beam cracks it, the Tesla pod shatters it. Its flanks are open.
+0:38.0  Level 37 radio: aurelia-traffic (act-6-jovian-storm/level-37-fall-of-aurelia radio t=1.0, neutral): CDF flight, this is Aurelia Traffic. We have civilians on the pads. Please. Help us get them out.
+0:46.0  Level 37 radio: okafor (act-6-jovian-storm/level-37-fall-of-aurelia radio t=13.0, neutral): Aurelia Traffic, Aegis copies. The shuttles fly, Lancer. Keep their lanes clear.
+0:53.9  Level 37 radio: varga (act-6-jovian-storm/level-37-fall-of-aurelia radio t=24.5, neutral): Interceptors, both sides. That nose is a mirror: shoot it and your shots come back. Hit the flanks.
+1:01.3  Level 37 radio: aurelia-traffic (act-6-jovian-storm/level-37-fall-of-aurelia radio t=37.0, neutral): Halcyon One and Two lifting. CDF flight, they're yours.
+1:06.2  Level 37 radio: rook (act-6-jovian-storm/level-37-fall-of-aurelia radio FIRST_BOUNCE, neutral): It's throwing your own shots back, Lancer. Go round it.
+1:12.0  Level 37 radio: varga (act-6-jovian-storm/level-37-fall-of-aurelia radio t=44.5, neutral): Deck turrets ahead, grown over. Kill one and a root shows. Burn the root, or it grows back.
+1:20.0  Level 37 radio: rook (act-6-jovian-storm/level-37-fall-of-aurelia radio t=56.0, neutral): Gold decks, gold domes, gold guns. Lancer, these people have a problem.
+1:28.0  Level 37 radio: aurelia-traffic (act-6-jovian-storm/level-37-fall-of-aurelia radio FIRST_ALLY_LOST, neutral): We lost a shuttle! Aegis, keep them off the lanes!
+1:32.8  Level 37 radio: okafor (act-6-jovian-storm/level-37-fall-of-aurelia secret CDF locker, neutral): A CDF locker, from sixty-six. Take it. We left a lot behind on these decks.
+1:40.7  Level 37 radio: aurelia-traffic (act-6-jovian-storm/level-37-fall-of-aurelia radio t=67.0, neutral): Halcyon Three and Four next. They're boarding faster than we can launch.
+1:47.2  Level 37 radio: varga (act-6-jovian-storm/level-37-fall-of-aurelia radio t=78.0, neutral): I'm inside Aurelia's traffic net. Their identification codes... Commander, I am keeping these.
+1:54.3  Level 37 radio: okafor (act-6-jovian-storm/level-37-fall-of-aurelia radio t=89.5, neutral): Take everything, Doctor. Lancer, the growth on those decks is moving.
+2:01.9  Level 37 radio: choir (act-6-jovian-storm/level-37-fall-of-aurelia radio t=100.0, neutral): …the one who opened… is no longer needed… the door is ours…
+2:08.7  Level 37 radio: vorne (act-6-jovian-storm/level-37-fall-of-aurelia radio t=110.0, rage): All Ascendancy wings, this is Vorne. The Vrell are hostile. Burn them off the decks.
+2:16.3  Level 37 radio: rook (act-6-jovian-storm/level-37-fall-of-aurelia radio FIRST_PREY_KILL, neutral): They're eating their own side. Not complaining.
+2:20.8  Level 37 radio: aurelia-traffic (act-6-jovian-storm/level-37-fall-of-aurelia radio t=121.5, neutral): Halcyon Five and Six, launching through the growth. Aegis, please!
+2:27.1  Level 37 radio: varga (act-6-jovian-storm/level-37-fall-of-aurelia radio t=129.5, neutral): They're eating the city. They were never his partners, Lancer. Only a door.
+2:32.6  Level 37 radio: aurelia-traffic (act-6-jovian-storm/level-37-fall-of-aurelia radio SECONDARY_OBJECTIVE, neutral): That's everyone we could load. Aurelia thanks you, Aegis.
+2:37.9  Level 37 radio: okafor (act-6-jovian-storm/level-37-fall-of-aurelia radio SECONDARY_FAILED, neutral): Two shuttles down. Keep the rest flying, Lancer.
+2:43.7  Level 37 radio: okafor (act-6-jovian-storm/level-37-fall-of-aurelia radio t=151.5, neutral): The Vrell are hunting the gold ones. Let them. Keep your guns on whatever fires at you.
+2:51.2  Level 37 radio: aurelia-traffic (act-6-jovian-storm/level-37-fall-of-aurelia radio t=163.0, neutral): The lift rings are failing. Aurelia is falling. Aurelia Traffic, signing off.
+2:57.3  Level 37 radio: okafor (act-6-jovian-storm/level-37-fall-of-aurelia radio t=174.5, grim): I stood on those decks in sixty-six, when we fired on them. Follow her down, Lancer. Then get out.
+3:06.7  Level 37 radio: varga (act-6-jovian-storm/level-37-fall-of-aurelia radio t=186.5, neutral): Aurelia Traffic is off the air. I'm sorry, Commander.
+3:11.4  Level 37 radio: okafor (act-6-jovian-storm/level-37-fall-of-aurelia radio LEVEL_END, neutral): Aurelia is gone. The people on those shuttles are not. Come home, Aegis.

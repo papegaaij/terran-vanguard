@@ -3,7 +3,7 @@ title: Concept rounds
 design: review
 implementation: n/a
 art: chosen
-updated: 2026-10-31
+updated: 2026-11-01
 ---
 
 # Concept rounds
@@ -95,6 +95,7 @@ next to the README: `round-NN/review.html`, linked from each round's *Review* se
 | [round-72](round-72/README.md) | The Act 6 "Jovian Storm" design phase (branch `m10-act-6`, drafted on the recommended answers): the twelve design questions, sixteen judgement calls (the Crucible's purchase, the aces, the Silence's rule), art a/b for seven units, the Plasma Arc, the two bosses, the world and the people, music, sounds and voices, and the documents to approve; **closed 2026-10-31** (everything as recommended except Plasma Arc a, banks a, falling city b, the Ascendant's break redone jagged, the duel theme b, five sounds b, Aurelia Traffic b; Vorne's shout recast; the eighteen documents approved; [record](round-72/review.html)) | review | n/a | proposed |
 | [round-73](round-73/README.md) | M10 part A "Act 6 systems" built (`m10-act-6`): the mirror and dome sounds (QA-1), the lightning strike and the Reflex bolt (QA-2, QA-3), explosions over Level 36's bright bands (a/b/c), part A's art to confirm with the first game captures, the round-72 follow-ups (the Ascendant's jagged break, the falling city, Aurelia Traffic's "lift", Vorne's shout) and 21 important calls — **closed 2026-10-31** (everything as recommended except Vorne's shout b; explosions over bright bands b, the soot puff; [record](round-73/review.html)) | review | n/a | proposed |
 | [round-74](round-74/README.md) | M10 part B "Level 36 Cloud Divers and the Act 6 intro" built (`m10-act-6`): part B's art to confirm with the first Level 36 captures (the soot puff Act 6 only or everywhere), Level 36's sounds and the Chimera's (QB-2, QB-3), track 14 at full length (QB-4), the act's first voices and the intro's page 4 reading, the harvester drift (QB-5) and the briefing pages' length, and 13 important calls — **closed 2026-10-31** (everything as recommended except the dive wind b, the car on a motorway; the soot puff Act 6 only; [record](round-74/review.html)) | review | n/a | proposed |
+| [round-75](round-75/README.md) | M10 part C "Level 37 Fall of Aurelia" built (`m10-act-6`): part C's art to confirm with the first Level 37 captures (the Mirror Interceptor, the Graft Turret, the shuttles' Aurelia livery (QC-3), Aurelia and the turn's growth, the falling city, the hunt, the readability crops; QC-4), Level 37's sounds (QC-1) and track 15 at full length (QC-2), its voices (Aurelia Traffic's expressions, Vorne's order, the intro's page 4), four Level 37 questions (the briefing pages, the hard shuttles, the crowded radio, the Choir's static) and 9 important calls | review | n/a | proposed |
 
 ## Design
 

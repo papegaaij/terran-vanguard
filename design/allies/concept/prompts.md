@@ -202,3 +202,9 @@ Generator: `tools/art/aurelia_units.py shuttle --review` (`aurelia-shuttle-r75-b
 
 - **Aurelia livery b** — The same shuttle with a gold hull (metallic gold with panel lines) and white trim: the band and
   the crest's ring white over the gold.
+
+## shuttle-capture-r75-a
+
+A game capture (round 75, M10 part C, step C5; [the recipe](../../campaign/act-6-jovian-storm/level-37-fall-of-aurelia/concept/prompts.md#level-37-capture-r75-a)): the parked run, the left HUD panel
+and the play field (720×540) at ticks 2580 (the banner, the pair on its pads with the brackets), 2700 (lifting), 3120
+(on station), 3480 (climbing out); GIF 2460–3420 every 12 at 0.6.

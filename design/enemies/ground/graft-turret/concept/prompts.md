@@ -39,3 +39,9 @@ a polished repaint).
   tissue, swelling into the veined dome over 0.8 s. The root's death: torn teal fibres flung out and falling, a soft teal
   flash (fibrous, no pop); the stump: the mount scorched, the collar and roots withered grey-brown, a charred crater.
   Every glow a smooth gradient, no ordered dither.
+
+## graft-capture-r75-a
+
+A game capture (round 75, M10 part C, step C5; [the recipe](../../../../campaign/act-6-jovian-storm/level-37-fall-of-aurelia/concept/prompts.md#level-37-capture-r75-a)): the Spire Plaza terrace nest (t≈79) passing
+under the parked ship's fire, 480×300 crops following the scroll at ticks 4848, 4896, 4968, 5016 (roots open, pulsing,
+the stumps, a root's ring); GIF 4800–5100 every 6 at 0.75 (the hunt run, identical to the parked run before t=114).

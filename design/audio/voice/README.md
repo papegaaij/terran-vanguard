@@ -1029,7 +1029,7 @@ measurements in [concept/prompts.md](concept/prompts.md#round-72--act-6-voices).
 Aurelia Traffic's sign-off re-rendered for "lift" and Vorne's shout recast low (a and b), the last three rows,
 `tools/concept/audio/voice_r73.py`; briefs in [concept/prompts.md](concept/prompts.md#round-73--act-6-voice-follow-ups). Round 74 (M10 part B, step B5): a listen-through of
 the Act 6 lines part B voiced and the intro's page 4 at two readings, the last four rows, `tools/concept/audio/voice_r74.py`
-([concept/prompts.md](concept/prompts.md#round-74--act-6-listen-through-and-page-4)).
+([concept/prompts.md](concept/prompts.md#round-74--act-6-listen-through-and-page-4)). Round 75 (M10 part C, step C5): Level 37's listen-through, Vorne's order and the intro's page 4 as the game plays them, the last four rows, `tools/concept/audio/voice_r75.py` ([concept/prompts.md](concept/prompts.md#round-75--level-37-listen-through)).
 
 | File | What | Status |
 |---|---|---|
@@ -1041,6 +1041,10 @@ the Act 6 lines part B voiced and the intro's page 4 at two readings, the last f
 | [concept/act-6-listen-r74-a.ogg](concept/act-6-listen-r74-a.ogg) | Listen-through: the Act 6 intro's four pages, Level 36's two briefing pages and its 16 radio lines (with the pod's secret and both secondary outcomes) as the game plays them (`assets/voice/` joined, 1.2 s apart; 3:33, −19 LUFS) | chosen (round 74 V.1 accept; a listening aid) |
 | [concept/act-6-listen-r74-a.txt](concept/act-6-listen-r74-a.txt) | The listen-through's cue list: each line's start, speaker, source and text | chosen (round 74 V.1 accept; a listening aid) |
 | [concept/act-6-intro-page-4-r74-b.ogg](concept/act-6-intro-page-4-r74-b.ogg) | The same page at this README's reading, the **grim row, slower** (0.45 / 0.4 / 0.7, round 72's sign-off row): seed 103 (101 held a 0.9 s pause, 102 hit the cap), dry, 14.7 s, −16 LUFS; Whisper reads it word for word | chosen (round 74 V.2 b) |
+| [concept/level-37-listen-r75-a.ogg](concept/level-37-listen-r75-a.ogg) | Listen-through: Level 37's two briefing pages and its 24 radio lines (with the event lines, the locker's secret and both secondary outcomes) as the game plays them (`assets/voice/` joined, 1.2 s apart; 3:17, −19 LUFS); `tools/concept/audio/voice_r75.py` | proposed (round 75 V.1) |
+| [concept/level-37-listen-r75-a.txt](concept/level-37-listen-r75-a.txt) | The listen-through's cue list: each line's start, speaker, source, expression and text | proposed (round 75 V.1; a listening aid) |
+| [concept/level-37-vorne-r75-a.ogg](concept/level-37-vorne-r75-a.ogg) | Vorne's Level 37 t=110 order as the game plays it (expression `rage` at his grim row, the enemy filter; 6.4 s): a copy of the production file | proposed (round 75 V.3) |
+| [concept/act-6-intro-page-4-r75-a.ogg](concept/act-6-intro-page-4-r75-a.ogg) | The Act 6 intro's page 4 as the game plays it since step VOX-C0: the act data's `grim` row (cfg_weight 0.5), seed 103, 13.9 s (round 74's take at 0.4: 14.7 s): a copy of the production file | proposed (round 75 V.4) |
 
 ## Open questions
 

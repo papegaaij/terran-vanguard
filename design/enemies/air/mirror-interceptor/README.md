@@ -1,7 +1,7 @@
 ---
 title: Mirror Interceptor
 design: approved
-implementation: in-progress
+implementation: done
 art: chosen
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../player/specials, ../../../player/weapons, ../../../player/shields, ../../../art-direction, ../../../campaign/act-6-jovian-storm]
 updated: 2026-11-01
@@ -89,6 +89,7 @@ Round 72's proposals (step ART-R-A, picked 2026-10-31; generator `tools/concept/
 | [concept/mirror-capture-r73-a.gif](concept/mirror-capture-r73-a.gif) | Heat, break, down time and regrowth under the beam, 2×, 30 fps | chosen (round 73 F.6 accept) |
 | [concept/mirror-interceptor-final-r75-a.png](concept/mirror-interceptor-final-r75-a.png) | Final frames (M10 part C, step ART-C1, `tools/art/aurelia_units.py mirror`; drawn by the game from step C4b): the 16 headings at 1× (hull and plate frames) over round 72's Level 37 deck stand-in; the states at 2× as the game will layer them (standing with the sweep, heat 40 %, 78 % with the cracks, 100 %, broken: the bare grey frame, regrowing 50 % with the shimmer, the pods' tell); the layers (hull, plate, the plate's glow mask, the cracks, the pods); 1× over the bright and the burnt deck beside the ship and a Talon; the plate in a polished steel-silver (sheet) | proposed (round 75) |
 | [concept/mirror-interceptor-final-r75-a.gif](concept/mirror-interceptor-final-r75-a.gif) | A pincer from both side edges to their stations (the flanks on the way in), turning to the ship at 60°/s: the right one's pod tells and bursts of 3, the left one under the beam heating, cracking, breaking (shards), down 3 s and regrowing; both leave by their edges | proposed (round 75) |
+| [concept/mirror-capture-r75-a.png](concept/mirror-capture-r75-a.png), [.gif](concept/mirror-capture-r75-a.gif) | In Level 37 (step C5, the [recipe](concept/prompts.md#mirror-capture-r75-a)): the t=38 pincer bouncing a Scatter Vulcan's fan back as magenta shots; the plan's Ion Beam L5 heating the left one's plate and the Tesla Coil Pod shattering it, the kill | proposed (round 75 F.1) |
 
 Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 
@@ -97,7 +98,7 @@ Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 - [x] Stat block loaded from a `data.yaml`; global difficulty multipliers applied; HP and heat re-measured with `levelReport` at L37 (step C2, 2026-11-01: heat 130 is 1.0 s of the plan's Ion Beam L5 at 130 DPS, easy 0.75 s, hard 1.3 s; at most 4 on the screen and 2 a side on every difficulty)
 - [x] The [reflect](../../README.md#reflect) rule: the arc test, the bounce (rate cap, mirror-image path, `small` 110 px/s, never twice), beam heat and cooling, the breaker and EMP shatter, the 3 s down time and regrowth, Rook's shots absorbed; deterministic and allocation-free (M10 part A, 2026-10-31: steps A1a, A1b, A3a, `ReflectTest`; the look on stand-in sprites)
 - [x] Side and rear entries to a station, the turn toward the ship, the burst only while facing the ship; hull spacing in pincers and ambushes (steps A1a, C1: `MirrorStationTest`; step C2: the `movement.station` key)
-- [ ] Production sprites (16 headings, the mirror's sweep, heat, cracks, break and regrowth) via `tools/art/`; death effect, bounty and sounds (Freesound, CC0/CC-BY) (the frames and the intel portrait: step ART-C1, round 75, `tools/art/aurelia_units.py mirror`, `intel.py mirror-interceptor`; the game's drawing: step C4b)
+- [x] Production sprites (16 headings, the mirror's sweep, heat, cracks, break and regrowth) via `tools/art/`; death effect, bounty and sounds (Freesound, CC0/CC-BY) (the frames and the intel portrait: step ART-C1, round 75, `tools/art/aurelia_units.py mirror`, `intel.py mirror-interceptor`; the game's drawing: step C4b; the turbine hum and the pods' burst: step AUD-C's a variants in the game from step C4b, round 75 S.6 and S.7; captured in Level 37: `mirror-capture-r75-a`)
 
 ## Open questions
 

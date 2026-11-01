@@ -672,3 +672,15 @@ M10 part B, step B5 (2026-10-31), `tools/concept/audio/voice_r74.py`; measured a
   expression (the built file); b this README's *The cast speakers in Act 6*: the grim row, slower (exaggeration 0.45,
   cfg_weight 0.4, temperature 0.7), chunked and retried by `tools/art/voice.py`'s rules from seed 101.
 
+## Round 75 — Level 37 listen-through
+
+M10 part C, step C5 (2026-11-01), `tools/concept/audio/voice_r75.py` (joins and copies the production files only; the line
+list from `:pipeline:voiceLines`); measured and read back by Whisper in step VOX-C, not listened to.
+
+- **level-37-listen-r75-a**: every Level 37 line step VOX-C voiced, joined from the production files in `assets/voice/` in
+  playing order (the briefing, then the radio by time, the event lines at their likeliest moment), 1.2 s apart and 2 s
+  after the briefing; the cue list in `level-37-listen-r75-a.txt`. Listen for VOX-C's weak spots: Vorne's "are" (heard
+  as "or") and the Choir's distorted line (unreadable by Whisper, as Levels 26 and 33).
+- **level-37-vorne-r75-a**: Vorne's t=110 order, the level data's `rage` expression at his grim row, the enemy filter.
+- **act-6-intro-page-4-r75-a**: the intro's page 4 as rendered by the pipeline at the act data's `grim` row (cfg_weight
+  0.5, seed 103), against round 74's take `act-6-intro-page-4-r74-b` (cfg_weight 0.4).

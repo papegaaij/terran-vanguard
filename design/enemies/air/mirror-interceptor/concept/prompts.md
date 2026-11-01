@@ -38,3 +38,10 @@ brief for a polished repaint).
   white glow mask (the heat drawn through it dull red, orange, then white) and a white crack network across the plate
   (drawn dark from 70 % heat, glowing through a white-hot plate); the pods' red tell at strength 1. Every glow and mask a
   smooth float field, no ordered dither.
+
+## mirror-capture-r75-a
+
+A game capture (round 75, M10 part C, step C5; [the recipe](../../../../campaign/act-6-jovian-storm/level-37-fall-of-aurelia/concept/prompts.md#level-37-capture-r75-a)): 480×300 crops of the t=38 pincer: the spread run
+(`front=scatter-vulcan:5`) at ticks 2480 and 2560, the bounced shots; the mirror window (the Ion Beam L5 and the Tesla
+Coil Pod L2 on the left mirror) at ticks 2412, 2436, 2448, 2460; the GIF joins the spread run 2400–2640 every 8 and the
+mirror window 2380–2476 every 4.
