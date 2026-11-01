@@ -9,8 +9,8 @@ import org.junit.jupiter.api.Test;
  * M10 part F, step F1a: the aces' flight ({@link AceFlight}; design/enemies/bosses/honour-guard, The aces and The
  * playbook) on the test guard of {@link Act6FSpecs}: over five seeds with a stand-in playbook the hulls stay 80 px
  * apart, the dancer 120 px and the feinter its pull-out from the ship, the stations in their bands; the feint dive
- * pulls out at 110 px (85 once an ace died), never a ram; the loop's time; the slide and the leader's nose; the roll's
- * and the ribbon's passes; the pincer's two lanes.
+ * pulls out at 110 px (85 once an ace died), never a ram; the loop's time; the slide (step F6s: the nose along its
+ * way); the roll's and the ribbon's passes; the pincer's two lanes.
  */
 class AceFlightTest {
     private static final double EPS = 1e-6;
@@ -111,12 +111,30 @@ class AceFlightTest {
         return rig;
     }
 
-    /** Flies Kestrel's dive at the still ship; returns its least distance and where its pull-out began. */
-    private static double[] dive(Act6FSpecs.Rig rig) {
-        Squadron squadron = rig.squadron;
-        while (!squadron.ready(K)) {
+    /**
+     * Step F6s: ace {@code a}'s 0.8 s tell as the playbook flies it: its nose turned onto the ship (aiming from its
+     * station), then its move starts.
+     */
+    private static void tell(Act6FSpecs.Rig rig, int a) {
+        AceFlight flight = rig.squadron.flight();
+        for (int i = 0; i < SimStep.ticks(0.8); i++) {
+            flight.aim[a] = true;
             rig.step();
         }
+        flight.aim[a] = false;
+    }
+
+    /**
+     * Flies Kestrel's dive from its station at the still ship (its tell first); returns its least distance and where
+     * its pull-out began.
+     */
+    private static double[] dive(Act6FSpecs.Rig rig) {
+        Squadron squadron = rig.squadron;
+        while (!(squadron.ready(K) && squadron.leg(K) == AceLeg.HOLD)) {
+            // Step F6s: on its station's orbit (not still on its way home).
+            rig.step();
+        }
+        tell(rig, K);
         squadron.start(K, AceMove.DIVE, rig.shipX, rig.shipY, rig);
         double least = Double.POSITIVE_INFINITY;
         double pullOut = -1;
@@ -151,16 +169,16 @@ class AceFlightTest {
     }
 
     @Test
-    void theLoopTakesItsTwoAndAHalfSecondsAndTheSlideCrossesWithTheNoseOnTheShip() {
+    void theLoopTakesItsTwoAndAHalfSecondsAndTheSlideCrossesWithTheNoseAlongItsWay() {
         Act6FSpecs.Rig rig = withKestrel();
         Squadron squadron = rig.squadron;
         AceFlight flight = squadron.flight();
         while (!squadron.ready(V)) {
             rig.step();
         }
+        squadron.start(V, AceMove.LOOP, rig.shipX, rig.shipY, rig);
         double fromX = flight.pathX[V];
         double fromY = flight.pathY[V];
-        squadron.start(V, AceMove.LOOP, rig.shipX, rig.shipY, rig);
         int ticks = 0;
         while (squadron.move(V) == AceMove.LOOP) {
             rig.step();
@@ -181,11 +199,13 @@ class AceFlightTest {
         while (squadron.move(H) == AceMove.SLIDE) {
             rig.step();
             slide++;
-            assertEquals(
-                    Enemy.heading(rig.shipX - squadron.x(H), rig.shipY - squadron.y(H)),
-                    squadron.facing(H),
-                    EPS,
-                    "his nose on the ship");
+            double vx = squadron.x(H) - flight.prevX[H];
+            double vy = squadron.y(H) - flight.prevY[H];
+            if (Math.hypot(vx, vy) * SimStep.PER_SECOND > 60) {
+                // Step F6s: his nose leads his way (no more strafing sideways with it on the ship).
+                double off = Math.IEEEremainder(Enemy.heading(vx, vy) - squadron.facing(H), 2 * Math.PI);
+                assertTrue(Math.abs(off) < Math.toRadians(30), "his nose along his way: " + Math.toDegrees(off));
+            }
         }
         assertTrue(slide * SimStep.SECONDS < 1.5, "at 280 px/s");
         assertEquals(PlayField.WIDTH - centre, flight.pathX[H], 41, "on the other side");

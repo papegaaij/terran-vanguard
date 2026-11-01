@@ -156,6 +156,10 @@ public final class Squadron implements Hashed {
                 flight.awayFrom(a, leaderX);
             }
         }
+        for (int a = 0; playbook != null && a < count; a++) {
+            // Step F6s: an ace about to fire from its station (or telling a dive) turns its nose onto the ship.
+            flight.aim[a] = playbook.aims(a);
+        }
         flight.step(shipX, shipY, actions);
         for (int a = 0; a < count; a++) {
             if (state[a] == State.ENTERING.ordinal() && flight.wholeOnField(a)) {
@@ -454,6 +458,14 @@ public final class Squadron implements Hashed {
     /** Where ace {@code a} faces, radians clockwise from straight down ({@link Enemy#facing()}'s); a wreck spins. */
     public double facing(int a) {
         return flight.facing[a];
+    }
+
+    /**
+     * Step F6s: ace {@code a}'s bank now, radians (at most {@link AceFlight#MAX_BANK}; positive: leaning into a turn
+     * to its right, its nose turning clockwise on the screen), for the look.
+     */
+    public double bank(int a) {
+        return flight.bank[a];
     }
 
     /** Whether ace {@code a}'s hull still tumbles on the field (dead, not yet gone). */

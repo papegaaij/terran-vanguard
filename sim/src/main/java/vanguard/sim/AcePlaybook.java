@@ -716,6 +716,22 @@ public final class AcePlaybook {
                 || squadron.flight().running(a);
     }
 
+    /**
+     * Step F6s: whether ace {@code a} wants its nose on the ship now: telling or running a play it fires from its
+     * station (a sniper line, a pair volley, a fan), or telling a dive (its nose swings to the ship).
+     */
+    public boolean aims(int a) {
+        SquadronPlaybook.Kind kind = kind(a);
+        if (kind == null) {
+            return false;
+        }
+        return switch (kind) {
+            case SNIPER_LINE, PAIR_VOLLEY, FAN -> true;
+            case FEINT_DIVE, OVERHEAD -> mode[a] == Mode.TELL.ordinal();
+            default -> false;
+        };
+    }
+
     /** The told dive's line's start, px from the left: the ace in its tell, its run's start once running. */
     public double diveFromX(int a) {
         return mode[a] == Mode.TELL.ordinal()
