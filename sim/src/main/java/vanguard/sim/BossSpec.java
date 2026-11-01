@@ -82,6 +82,12 @@ import java.util.Optional;
  *     every other boss
  * @param playbooks M10 part H, step H1a: its phases' playbooks ({@link BossPlaybook}); empty for every other boss
  * @param cues M10 part H, step H1a: its radio subjects raised in a phase ({@link PhaseCues}); empty for every other boss
+ * @param openings M10 part H, step H1b: how its later phases open ({@link PhaseOpening}: the eruption's untouchable
+ *     seconds and its drop); empty for every other boss
+ * @param regeneration M10 part H, step H1b: its regenerating parts ({@link PartRegen}, {@link PartRegens}: the sacs and
+ *     the heart); empty for every other boss
+ * @param escape M10 part H, step H1b: its end without a death ({@link EscapeSpec}, {@link EscapeRun}: the hull breaks
+ *     and the lifeboat escapes); empty for every other boss (they die at their vital part)
  */
 public record BossSpec(
         double arriveSeconds,
@@ -121,7 +127,10 @@ public record BossSpec(
         List<PartMirror> mirrors,
         Optional<BatteryFire> batteryFire,
         List<PhasePlaybook> playbooks,
-        List<PhaseCue> cues) {
+        List<PhaseCue> cues,
+        List<PhaseOpening> openings,
+        List<PartRegen> regeneration,
+        Optional<EscapeSpec> escape) {
     /** The beat a later phase holds its fire by default in the data (the frigate's crown opening), s. */
     public static final double PHASE_DELAY_SECONDS = 1;
     /** How much larger a unit is drawn on {@code high-air} than on the play plane; a boss's part offsets grow with it. */
@@ -137,6 +146,9 @@ public record BossSpec(
         mirrors = List.copyOf(mirrors);
         playbooks = List.copyOf(playbooks);
         cues = List.copyOf(cues);
+        openings = List.copyOf(openings);
+        regeneration = List.copyOf(regeneration);
+        java.util.Objects.requireNonNull(escape);
         if (phases.isEmpty()
                 || !(descentSpeed > 0 || arena.isPresent())
                 || !(sinePeriod > 0)
@@ -246,7 +258,22 @@ public record BossSpec(
                 throw new IllegalArgumentException(barName + ": a cue comes in one of its phases: " + cue.subject());
             }
         }
-        if ((wedge.isPresent() || !mirrors.isEmpty() || !playbooks.isEmpty())
+        for (int i = 0; i < openings.size(); i++) {
+            if (openings.get(i).phase() >= phases.size()) {
+                throw new IllegalArgumentException(barName + ": an opening opens one of its phases");
+            }
+            for (int j = 0; j < i; j++) {
+                if (openings.get(j).phase() == openings.get(i).phase()) {
+                    throw new IllegalArgumentException(barName + ": one opening a phase");
+                }
+            }
+        }
+        if ((wedge.isPresent()
+                        || !mirrors.isEmpty()
+                        || !playbooks.isEmpty()
+                        || !openings.isEmpty()
+                        || !regeneration.isEmpty()
+                        || escape.isPresent())
                 && (arena.isPresent() || squadron.isPresent())) {
             throw new IllegalArgumentException(barName
                     + ": a wedge, part mirrors and phase playbooks are a descending boss's, no arena's or squadron's");
@@ -284,6 +311,18 @@ public record BossSpec(
             for (int p : cue.parts()) {
                 checkPart(slug, "a cue's part", p, parts);
             }
+        }
+        boolean[] regenerating = new boolean[parts];
+        for (PartRegen regen : regeneration) {
+            checkPart(slug, "a regenerating part", regen.part(), parts);
+            if (regenerating[regen.part()]) {
+                throw new IllegalArgumentException(slug + ": one regeneration a part: " + regen.part());
+            }
+            regenerating[regen.part()] = true;
+        }
+        if (escape.isPresent()) {
+            checkPart(slug, "the lifeboat", escape.get().part(), parts);
+            checkPart(slug, "the part the hull breaks on", escape.get().breaksOn(), parts);
         }
         for (int i = 0; i < fedShields.size(); i++) {
             int p = fedShields.get(i).part();

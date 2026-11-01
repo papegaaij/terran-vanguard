@@ -38,7 +38,16 @@ public final class CruiserRun implements Hashed {
     private final SplitMix64 draws;
     private final EnemyGun flakGun;
     private final EnemyGun defenceGun;
+    /** M10 part H, step H1b: per run, its rise, run, end and fall in level clock steps, and its flank. */
+    private final int[] riseTicks;
+
+    private final int[] runTicks;
+    private final int[] endTicks;
+    private final int[] fallTicksOf;
+    private final CruiserRunSpec.Flank[] flanks;
+    /** The first run's, as before M10 part H (the side-less views read it: Level 28's one run). */
     private final int riseTick;
+
     private final int runTick;
     private final int endTick;
     private final int fallTicks;
@@ -53,13 +62,17 @@ public final class CruiserRun implements Hashed {
     /** The last level clock step it stepped at; -1 before the first. */
     private int at;
 
-    private int volleys;
-    private int flakVolleys;
+    /** Per run, its broadsides and flak volleys due so far. */
+    private final int[] volleys;
+
+    private final int[] flakVolleys;
     private final boolean[] telling = new boolean[BANDS];
     private final int[] bandSide = new int[BANDS];
     private final double[] bandY = new double[BANDS];
     private final int[] bandTicks = new int[BANDS];
-    private final int[] bursts = new int[2];
+    /** Per run and side ({@code 2 * run + side}), its point defence bursts due so far. */
+    private final int[] bursts;
+
     private final int[] burstLeft = new int[2];
     private final int[] burstGap = new int[2];
     private final int[] turret = new int[2];
@@ -86,10 +99,27 @@ public final class CruiserRun implements Hashed {
                 Optional.of(
                         new EnemyGun.MortarSpec(flak.fuseSeconds(), flak.radius(), flak.ring(), flak.ringDamage())));
         defenceGun = EnemyGun.aimed(defence.everySeconds(), 0, 1, defence.speed(), defence.damage(), false);
-        riseTick = SimStep.ticks(spec.riseAt());
-        runTick = SimStep.ticks(spec.runAt());
-        endTick = SimStep.ticks(spec.endAt());
-        fallTicks = SimStep.ticks(spec.fallSeconds());
+        int runs = spec.runs().size();
+        riseTicks = new int[runs];
+        runTicks = new int[runs];
+        endTicks = new int[runs];
+        fallTicksOf = new int[runs];
+        flanks = new CruiserRunSpec.Flank[runs];
+        for (int i = 0; i < runs; i++) {
+            CruiserRunSpec.Run run = spec.runs().get(i);
+            riseTicks[i] = SimStep.ticks(run.riseAt());
+            runTicks[i] = SimStep.ticks(run.runAt());
+            endTicks[i] = SimStep.ticks(run.endAt());
+            fallTicksOf[i] = SimStep.ticks(run.fallSeconds());
+            flanks[i] = run.flank();
+        }
+        volleys = new int[runs];
+        flakVolleys = new int[runs];
+        bursts = new int[2 * runs];
+        riseTick = riseTicks[0];
+        runTick = runTicks[0];
+        endTick = endTicks[0];
+        fallTicks = fallTicksOf[0];
         tellTicks = SimStep.ticks(broadside.tellSeconds());
         broadsideTicks = Math.max(1, SimStep.ticks(broadside.everySeconds()));
         doubleTicks = Double.isFinite(broadside.doubleAfterSeconds())
@@ -105,8 +135,9 @@ public final class CruiserRun implements Hashed {
     /** Back to before the rise (a retry, a boss checkpoint): no tell, no burst, its generator as at the start. */
     void reset() {
         at = -1;
-        volleys = 0;
-        flakVolleys = 0;
+        java.util.Arrays.fill(volleys, 0);
+        java.util.Arrays.fill(flakVolleys, 0);
+        java.util.Arrays.fill(bursts, 0);
         draws.state(seed);
         for (int k = 0; k < BANDS; k++) {
             telling[k] = false;
@@ -115,7 +146,6 @@ public final class CruiserRun implements Hashed {
             bandTicks[k] = 0;
         }
         for (int s = 0; s < 2; s++) {
-            bursts[s] = 0;
             burstLeft[s] = 0;
             burstGap[s] = 0;
             turret[s] = 0;
@@ -131,14 +161,21 @@ public final class CruiserRun implements Hashed {
             return;
         }
         at = levelTick;
-        if (levelTick == riseTick) {
-            events.add(SimEvents.Type.CRUISER_RISE, PlayField.WIDTH / 2.0, 0);
+        boolean running = false;
+        for (int i = 0; i < riseTicks.length; i++) {
+            if (levelTick == riseTicks[i]) {
+                // M10 part H, step H1b: a one-flank run rises on its side (value: the side; both: the middle, 0).
+                CruiserRunSpec.Flank flank = flanks[i];
+                double x = flank == CruiserRunSpec.Flank.BOTH
+                        ? PlayField.WIDTH / 2.0
+                        : flank == CruiserRunSpec.Flank.LEFT ? 0 : PlayField.WIDTH;
+                events.add(SimEvents.Type.CRUISER_RISE, x, 0, flank == CruiserRunSpec.Flank.RIGHT ? RIGHT : LEFT);
+            }
+            running |= levelTick >= runTicks[i] && levelTick <= endTicks[i];
         }
-        if (levelTick < runTick || levelTick > endTick) {
+        if (!running) {
             return;
         }
-        int r = levelTick - runTick;
-        int left = endTick - levelTick;
         // The tells running out first, so a volley comes its tell's steps after the tell's start.
         for (int k = 0; k < BANDS; k++) {
             if (telling[k] && --bandTicks[k] <= 0) {
@@ -148,10 +185,15 @@ public final class CruiserRun implements Hashed {
                 }
             }
         }
-        if (firing) {
-            startBroadside(r, left, ship, events);
-            startFlak(r, left, ship, force, events);
-            startBursts(r, left);
+        for (int i = 0; i < runTicks.length && firing; i++) {
+            if (levelTick < runTicks[i] || levelTick > endTicks[i]) {
+                continue;
+            }
+            int r = levelTick - runTicks[i];
+            int left = endTicks[i] - levelTick;
+            startBroadside(i, r, left, ship, events);
+            startFlak(i, r, left, ship, force, events);
+            startBursts(i, r, left);
         }
         for (int s = 0; s < 2; s++) {
             if (burstLeft[s] > 0 && --burstGap[s] <= 0) {
@@ -168,15 +210,17 @@ public final class CruiserRun implements Hashed {
     }
 
     /** A broadside's tell when one is due and its volley would come by the run's end. */
-    private void startBroadside(int r, int left, Ship ship, SimEvents events) {
-        if (r < volleys * broadsideTicks) {
+    private void startBroadside(int run, int r, int left, Ship ship, SimEvents events) {
+        if (r < volleys[run] * broadsideTicks) {
             return;
         }
-        int k = volleys++;
+        int k = volleys[run]++;
         if (Math.max(1, tellTicks) > left) {
             return;
         }
-        int side = k % 2;
+        // Both hulls' run: the flanks in turn, the left first; a one-flank run: its own side.
+        CruiserRunSpec.Flank flank = flanks[run];
+        int side = flank == CruiserRunSpec.Flank.BOTH ? k % 2 : flank == CruiserRunSpec.Flank.LEFT ? LEFT : RIGHT;
         double half = broadside.band() / 2;
         double first = k % 2 == 0
                 ? Math.clamp(ship.y(), half, PlayField.HEIGHT - half)
@@ -225,11 +269,11 @@ public final class CruiserRun implements Hashed {
     }
 
     /** Flak's markers when due and their bursts would come by the run's end: the first on the ship. */
-    private void startFlak(int r, int left, Ship ship, EnemyForce force, SimEvents events) {
-        if (r < flakVolleys * flakTicks) {
+    private void startFlak(int run, int r, int left, Ship ship, EnemyForce force, SimEvents events) {
+        if (r < flakVolleys[run] * flakTicks) {
             return;
         }
-        flakVolleys++;
+        flakVolleys[run]++;
         if (fuseTicks > left) {
             return;
         }
@@ -249,21 +293,31 @@ public final class CruiserRun implements Hashed {
             if (lob == null) {
                 break;
             }
-            // From the nearer hull's inner edge at the marker's height (the airburst's shell).
-            double from = tx < PlayField.WIDTH / 2.0 ? spec.leftInner() : spec.rightInner();
+            // From the nearer hull's inner edge at the marker's height (the airburst's shell); a one-flank run's own.
+            CruiserRunSpec.Flank flank = flanks[run];
+            double from = flank == CruiserRunSpec.Flank.LEFT
+                    ? spec.leftInner()
+                    : flank == CruiserRunSpec.Flank.RIGHT
+                            ? spec.rightInner()
+                            : tx < PlayField.WIDTH / 2.0 ? spec.leftInner() : spec.rightInner();
             lob.launch(flakGun, from, ty, tx, ty);
             events.add(SimEvents.Type.FLAK, tx, ty, m);
         }
     }
 
     /** Each cruiser's burst when due and its last shot would come by the run's end; the right half an interval later. */
-    private void startBursts(int r, int left) {
+    private void startBursts(int run, int r, int left) {
+        CruiserRunSpec.Flank flank = flanks[run];
         for (int s = 0; s < 2; s++) {
-            int due = bursts[s] * defenceTicks + (s == RIGHT ? defenceTicks / 2 : 0);
+            if (!flank.flies(s)) {
+                continue;
+            }
+            int due = bursts[2 * run + s] * defenceTicks
+                    + (s == RIGHT && flank == CruiserRunSpec.Flank.BOTH ? defenceTicks / 2 : 0);
             if (r < due) {
                 continue;
             }
-            int k = bursts[s]++;
+            int k = bursts[2 * run + s]++;
             if ((defence.burst() - 1) * gapTicks > left || defence.burst() == 0) {
                 continue;
             }
@@ -278,23 +332,52 @@ public final class CruiserRun implements Hashed {
         return levelTick >= runTick && levelTick <= endTick + fallTicks;
     }
 
+    /** M10 part H, step H1b: whether the hull on {@code side} is solid at level clock step {@code levelTick}. */
+    public boolean solid(int side, int levelTick) {
+        int i = runOf(side, levelTick);
+        return i >= 0 && levelTick >= runTicks[i] && levelTick <= endTicks[i] + fallTicksOf[i];
+    }
+
+    /**
+     * M10 part H, step H1b: the run that flies the hull on {@code side} at level clock step {@code levelTick}: the one
+     * on the screen then, else the last one risen before it, else its first; -1 when no run flies that side.
+     */
+    public int runOf(int side, int levelTick) {
+        int found = -1;
+        for (int i = 0; i < flanks.length; i++) {
+            if (!flanks[i].flies(side)) {
+                continue;
+            }
+            if (found < 0 || levelTick >= riseTicks[i]) {
+                found = i;
+            }
+            if (levelTick >= riseTicks[i] && levelTick <= endTicks[i] + fallTicksOf[i]) {
+                return i;
+            }
+        }
+        return found;
+    }
+
     /**
      * At the level clock step it last stepped at: the shots that reach {@code low-air} and meet a solid hull spark off ({@link SimEvents.Type#SHOT_GLANCED}); bombs,
      * shells and laid charges pass beneath.
      */
     void blockShots(Pool<Shot> shots, Medium medium, SimEvents events) {
-        if (!solid(at)) {
+        boolean leftSolid = solid(LEFT, at);
+        boolean rightSolid = solid(RIGHT, at);
+        if (!leftSolid && !rightSolid) {
             return;
         }
-        double hullY = hullY(at);
+        double leftY = hullY(LEFT, at);
+        double rightY = hullY(RIGHT, at);
         for (int i = shots.size() - 1; i >= 0; i--) {
             Shot shot = shots.get(i);
             WeaponSpec weapon = shot.weapon();
             if (weapon.delivery().landing() || weapon.delivery().laid() || !medium.reaches(weapon, Layer.LOW_AIR)) {
                 continue;
             }
-            if (weapon.size().overlaps(shot.x(), shot.y(), spec.hull(), hullX(LEFT), hullY)
-                    || weapon.size().overlaps(shot.x(), shot.y(), spec.hull(), hullX(RIGHT), hullY)) {
+            if ((leftSolid && weapon.size().overlaps(shot.x(), shot.y(), spec.hull(), hullX(LEFT), leftY))
+                    || (rightSolid && weapon.size().overlaps(shot.x(), shot.y(), spec.hull(), hullX(RIGHT), rightY))) {
                 events.add(SimEvents.Type.SHOT_GLANCED, shot.x(), shot.y(), shot.mount());
                 shots.free(i);
             }
@@ -306,13 +389,13 @@ public final class CruiserRun implements Hashed {
      * solid hull; {@link Double#POSITIVE_INFINITY} for none.
      */
     double column(double cx, double halfWidth, double fromY) {
-        if (!solid(at)) {
-            return Double.POSITIVE_INFINITY;
-        }
-        double hullY = hullY(at);
-        return Math.min(
-                ShotGeometry.columnContact(cx, halfWidth, fromY, hullX(LEFT), hullY, spec.hull()),
-                ShotGeometry.columnContact(cx, halfWidth, fromY, hullX(RIGHT), hullY, spec.hull()));
+        double left = solid(LEFT, at)
+                ? ShotGeometry.columnContact(cx, halfWidth, fromY, hullX(LEFT), hullY(LEFT, at), spec.hull())
+                : Double.POSITIVE_INFINITY;
+        double right = solid(RIGHT, at)
+                ? ShotGeometry.columnContact(cx, halfWidth, fromY, hullX(RIGHT), hullY(RIGHT, at), spec.hull())
+                : Double.POSITIVE_INFINITY;
+        return Math.min(left, right);
     }
 
     /**
@@ -351,8 +434,12 @@ public final class CruiserRun implements Hashed {
 
     /** The hulls' centre y at level clock step {@code levelTick}: the field's middle, then falling off the bottom. */
     public double hullY(int levelTick) {
+        return fallenY(fallShare(levelTick));
+    }
+
+    /** The hulls' centre y at a fall's {@code share}. */
+    private double fallenY(double share) {
         double middle = PlayField.HEIGHT / 2.0;
-        double share = fallShare(levelTick);
         if (share <= 0) {
             return middle;
         }
@@ -382,6 +469,43 @@ public final class CruiserRun implements Hashed {
         return levelTick >= riseTick && levelTick <= endTick + fallTicks;
     }
 
+    /** M10 part H, step H1b: whether the hull on {@code side} is on the screen at level clock step {@code levelTick}. */
+    public boolean present(int side, int levelTick) {
+        int i = runOf(side, levelTick);
+        return i >= 0 && levelTick >= riseTicks[i] && levelTick <= endTicks[i] + fallTicksOf[i];
+    }
+
+    /** M10 part H, step H1b: how far the hull on {@code side} has risen at {@code levelTick}, 0–1. */
+    public double riseShare(int side, int levelTick) {
+        int i = runOf(side, levelTick);
+        if (i < 0 || levelTick < riseTicks[i]) {
+            return 0;
+        }
+        return runTicks[i] <= riseTicks[i]
+                ? 1
+                : Math.min(1, (double) (levelTick - riseTicks[i]) / (runTicks[i] - riseTicks[i]));
+    }
+
+    /** M10 part H, step H1b: how far the hull on {@code side} has fallen at {@code levelTick}, 0 (running) to 1. */
+    public double fallShare(int side, int levelTick) {
+        int i = runOf(side, levelTick);
+        if (i < 0 || levelTick <= endTicks[i]) {
+            return 0;
+        }
+        return fallTicksOf[i] == 0 ? 1 : Math.min(1, (double) (levelTick - endTicks[i]) / fallTicksOf[i]);
+    }
+
+    /** M10 part H, step H1b: the hull on {@code side}'s centre y at {@code levelTick} (its run's fall). */
+    public double hullY(int side, int levelTick) {
+        return fallenY(fallShare(side, levelTick));
+    }
+
+    /** M10 part H, step H1b: whether the CDF frigate pair flies beside the run of the hull on {@code side} then. */
+    public boolean frigates(int side, int levelTick) {
+        int i = runOf(side, levelTick);
+        return i >= 0 && spec.runs().get(i).frigates();
+    }
+
     /** Whether band slot {@code k} (0 the first, 1 the double's) is being told now. */
     public boolean bandTelling(int k) {
         return telling[k];
@@ -409,12 +533,16 @@ public final class CruiserRun implements Hashed {
 
     @Override
     public void addTo(StateHash hash) {
-        hash.add(at).add(volleys).add(flakVolleys).add(draws.state());
+        hash.add(at).add(volleys[0]).add(flakVolleys[0]).add(draws.state());
         for (int k = 0; k < BANDS; k++) {
             hash.add(telling[k] ? 1 : 0).add(bandSide[k]).add(bandY[k]).add(bandTicks[k]);
         }
         for (int s = 0; s < 2; s++) {
             hash.add(bursts[s]).add(burstLeft[s]).add(burstGap[s]).add(turret[s]);
+        }
+        // M10 part H, step H1b: a later run's counters (Level 28's one run hashes as before).
+        for (int i = 1; i < volleys.length; i++) {
+            hash.add(volleys[i]).add(flakVolleys[i]).add(bursts[2 * i]).add(bursts[2 * i + 1]);
         }
     }
 }

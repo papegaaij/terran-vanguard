@@ -795,6 +795,11 @@ final class EnemyForce {
         guns.bossLob(x, y, gun, ship);
     }
 
+    /** M10 part H, step H1b: a boss part at (x, y) lobs {@code gun}'s mortar at the marked point (toX, toY). */
+    void bossLobAt(double x, double y, EnemyGun gun, double toX, double toY) {
+        guns.bossLobAt(x, y, gun, toX, toY);
+    }
+
     /** M5 part H: the root bursts' state, hashed only in a level with them. */
     void addBurstsTo(StateHash hash) {
         rootBursts.addBurstsTo(hash);

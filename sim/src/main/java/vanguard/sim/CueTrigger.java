@@ -242,7 +242,13 @@ public enum CueTrigger {
      * Platform's core down; {@link SimEvents.Type#GATE_OPENED} of its gate); once. No subject (the radio event {@code
      * halo-destroyed}).
      */
-    HALO_DESTROYED;
+    HALO_DESTROYED,
+    /**
+     * M10 part H, step H1b (design/enemies/bosses/ascendant, The lifeboat): an escaping boss's lifeboat reached the top
+     * edge: its fight is over as at {@link #BOSS_DESTROYED} (the closing lines); the subject is its slug (the radio
+     * event {@code boss-escaped}).
+     */
+    BOSS_ESCAPED;
 
     /** Between the part names of a {@link #BOSS_PART_DESTROYED} cue's subject. */
     public static final String PART_SEPARATOR = "|";

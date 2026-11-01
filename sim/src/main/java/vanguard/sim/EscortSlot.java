@@ -55,6 +55,8 @@ final class EscortSlot {
             wingman.missiles(force.missiles());
             // M9 part C: the line mines, whose proximity discs he keeps clear of.
             wingman.mines(force.mines());
+            // M10 part H, step H1b: the lobs, whose marks he keeps clear of in the Ascendant's fight.
+            wingman.lobs(force.lobs());
             if (vents.grates() > 0) {
                 wingman.vents(vents);
             }

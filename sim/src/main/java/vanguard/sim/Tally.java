@@ -110,6 +110,24 @@ final class Tally {
         return bounty(CreditSource.KILLS, bounty);
     }
 
+    /**
+     * M10 part H, step H1b (the Ascendant's lifeboat): a bounty of {@code bounty} paid pro rata as its share goes from
+     * {@code from} to {@code to} (0–1): the whole credits (and score) crossed, the bounty's rounded whole at 1; no kill,
+     * the chain untouched. Returns the credits paid now.
+     */
+    int prorated(int bounty, double from, double to) {
+        double credits = bounty * rules.creditFactor() * rules.bountyScale();
+        double points = bounty * rules.killScore() * rules.scoreFactor();
+        int paid = whole(credits, to) - whole(credits, from);
+        score += whole(points, to) - whole(points, from);
+        return pay(CreditSource.KILLS, paid);
+    }
+
+    /** {@code full}'s whole part at {@code share}: rounded at 1, floored below. */
+    private static int whole(double full, double share) {
+        return share >= 1 ? (int) Math.rint(full) : (int) Math.floor(full * share + 1e-9);
+    }
+
     /** A set piece destroyed: one kill, its parts paid already. */
     void countKill() {
         kills++;

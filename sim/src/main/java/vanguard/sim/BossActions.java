@@ -76,6 +76,12 @@ interface BossActions {
     default void lob(double x, double y, EnemyGun gun) {}
 
     /**
+     * M10 part H, step H1b (the Ascendant's bile lobs): a lob of {@code gun}'s mortar from (x, y) at the marked point
+     * (toX, toY) (its marker there for its flight, then its burst and ring).
+     */
+    default void lobAt(double x, double y, EnemyGun gun, double toX, double toY) {}
+
+    /**
      * M5 part H: unit {@code unit} of {@code units} of {@code spawn}, an ambush launch, leaves window
      * part {@code part} at (x, y) (the Siege Spire's maw's Wraiths).
      */

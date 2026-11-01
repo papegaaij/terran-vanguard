@@ -260,9 +260,14 @@ final class EnemyFire {
      * lobs {@code gun}'s mortar at where the ship is now (the marker does not follow it).
      */
     void bossLob(double x, double y, EnemyGun gun, Ship ship) {
+        bossLobAt(x, y, gun, ship.x(), ship.y());
+    }
+
+    /** M10 part H, step H1b: as {@link #bossLob}, at the marked point (toX, toY) instead of the ship. */
+    void bossLobAt(double x, double y, EnemyGun gun, double toX, double toY) {
         Lob lob = lobs.obtain();
         if (lob != null) {
-            lob.launch(gun, x, y, ship.x(), ship.y());
+            lob.launch(gun, x, y, toX, toY);
             events.add(SimEvents.Type.MORTAR_LOBBED, x, y);
         }
     }

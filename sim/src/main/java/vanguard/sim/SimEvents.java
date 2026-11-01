@@ -1281,7 +1281,40 @@ public final class SimEvents {
          * M10 part H, step H1a: a boss part's mirror panel's down time is over and it grows back (the 0.4 s silver
          * shimmer; it stands again after it); at the part; value: the part.
          */
-        PART_MIRROR_REGROWING;
+        PART_MIRROR_REGROWING,
+        /**
+         * M10 part H, step H1b ({@link PartRegens}): a boss part starts to heal (the lime core's healing pulse, the deeper
+         * regrowth creak); at the part; value: the part.
+         */
+        PART_HEALING,
+        /** M10 part H, step H1b: a boss part stops healing (a hit, full again, its death); at the part; value: the part. */
+        PART_HEALING_STOPPED,
+        /**
+         * M10 part H, step H1b (design/enemies/bosses/ascendant, The hull breaks; {@link EscapeRun}): an escaping boss's
+         * hull breaks (K: the heart bursts, the surviving sacs with it, the keel chain starts); at the boss; value: the
+         * hull's credit shower (its parts' credits). No {@link #BOSS_DESTROYED} follows.
+         */
+        HULL_BROKEN,
+        /**
+         * M10 part H, step H1b: the broken hull's flash ({@link EscapeSpec#flashSeconds()} after K: the act boss's screen
+         * flash, the credit shower over the wreck, the {@code huge} rung's sound); at the boss; value: the shower's credits.
+         */
+        HULL_FLASH,
+        /**
+         * M10 part H, step H1b: the lifeboat tears free of the heart's cavity ({@link EscapeSpec#breakoutSeconds()} after
+         * K; its escape bar starts); at its breakout place; value: its part.
+         */
+        LIFEBOAT_AWAY,
+        /**
+         * M10 part H, step H1b: the lifeboat's damage paid pro rata, a quarter second's credits at a time (the floating
+         * number); at the lifeboat; value: the credits.
+         */
+        ESCAPE_PAID,
+        /**
+         * M10 part H, step H1b: the lifeboat reached the top edge (the bar flashes {@code ESCAPED}, the escape sting cuts
+         * the boss track): the fight is over, the clock resumes; at its last place; value: the set piece.
+         */
+        BOSS_ESCAPED;
 
         private static final Type[] VALUES = values();
     }

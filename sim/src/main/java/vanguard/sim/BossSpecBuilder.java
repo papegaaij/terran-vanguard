@@ -48,6 +48,9 @@ public final class BossSpecBuilder {
     private Optional<BatteryFire> batteryFire;
     private List<PhasePlaybook> playbooks;
     private List<PhaseCue> cues;
+    private List<PhaseOpening> openings;
+    private List<PartRegen> regeneration;
+    private Optional<EscapeSpec> escape;
 
     BossSpecBuilder(
             double arriveSeconds,
@@ -101,6 +104,9 @@ public final class BossSpecBuilder {
         batteryFire = Optional.empty();
         playbooks = List.of();
         cues = List.of();
+        openings = List.of();
+        regeneration = List.of();
+        escape = Optional.empty();
     }
 
     BossSpecBuilder(BossSpec spec) {
@@ -142,6 +148,9 @@ public final class BossSpecBuilder {
         batteryFire = spec.batteryFire();
         playbooks = spec.playbooks();
         cues = spec.cues();
+        openings = spec.openings();
+        regeneration = spec.regeneration();
+        escape = spec.escape();
     }
 
     /** Its {@link BossSpec#engagesOnArrival()}. */
@@ -289,6 +298,24 @@ public final class BossSpecBuilder {
         return this;
     }
 
+    /** M10 part H, step H1b: how its later phases open (the eruption). */
+    public BossSpecBuilder openings(List<PhaseOpening> openings) {
+        this.openings = openings;
+        return this;
+    }
+
+    /** M10 part H, step H1b: its regenerating parts. */
+    public BossSpecBuilder regeneration(List<PartRegen> regeneration) {
+        this.regeneration = regeneration;
+        return this;
+    }
+
+    /** M10 part H, step H1b: its end without a death (the hull breaks, the lifeboat escapes). */
+    public BossSpecBuilder escape(Optional<EscapeSpec> escape) {
+        this.escape = escape;
+        return this;
+    }
+
     public BossSpec build() {
         return new BossSpec(
                 arriveSeconds,
@@ -328,6 +355,9 @@ public final class BossSpecBuilder {
                 mirrors,
                 batteryFire,
                 playbooks,
-                cues);
+                cues,
+                openings,
+                regeneration,
+                escape);
     }
 }

@@ -25,6 +25,10 @@ final class SetPieceParts {
     private final PartShields shields;
     /** M10 part H, step H1a: a wedge body; null for a body box. */
     final WedgeBody wedge;
+    /** M10 part H, step H1b: an escaping boss's break and lifeboat; null for any other. */
+    private final EscapeRun escape;
+    /** M10 part H, step H1b: the lifeboat's part; -1 without an escape. */
+    private final int lifeboat;
 
     final double[] partHp;
     final int[] partTicksSinceHit;
@@ -56,6 +60,8 @@ final class SetPieceParts {
         squadron = piece.squadron;
         shields = piece.shields;
         wedge = boss == null ? null : boss.wedge().orElse(null);
+        escape = piece.escape;
+        lifeboat = escape == null ? -1 : escape.spec().part();
         int parts = spec.parts().size();
         partHp = new double[parts];
         partTicksSinceHit = new int[parts];
@@ -66,6 +72,10 @@ final class SetPieceParts {
             }
         }
         outOfBar = armoured.clone();
+        if (lifeboat >= 0) {
+            // M10 part H, step H1b: the lifeboat has its own escape bar; the hull's bar is the other parts'.
+            outOfBar[lifeboat] = true;
+        }
         if (boss != null && boss.coil().isPresent()) {
             // M8 part H: a coiled boss's gill sacs and implants are out of the bar (the implants count on the head's).
             CoilSpec coiled = boss.coil().get();
@@ -147,8 +157,16 @@ final class SetPieceParts {
         if (boss == null) {
             return false;
         }
+        if (p == lifeboat) {
+            // M10 part H, step H1b: the lifeboat takes hits only out, climbing, below its cap (past it they spark).
+            return !escape.touchable();
+        }
         int phase = piece.phase();
         if (!piece.engaged() || piece.moving() || armoured[p] || phase < exposedFrom[p]) {
+            return true;
+        }
+        if (piece.opening()) {
+            // M10 part H, step H1b: a phase opening untouchable (the eruption).
             return true;
         }
         if (squadron != null && squadron.untouchable(p)) {
@@ -187,7 +205,7 @@ final class SetPieceParts {
 
     /** As {@link SetPiece#partColumn}. */
     double partColumn(int p, double cx, double halfWidth, double fromY) {
-        if (piece.partStays(p) || (squadron != null && squadron.absent(p))) {
+        if (piece.partStays(p) || absent(p)) {
             return Double.POSITIVE_INFINITY;
         }
         double nearest = ShotGeometry.columnContact(cx, halfWidth, fromY, partX(p), partY(p), box(p));
@@ -206,8 +224,9 @@ final class SetPieceParts {
             // M5 part H: the stump is scenery: shots fly over it.
             return false;
         }
-        if (squadron != null && squadron.absent(p)) {
-            // M10 part F: an ace that has not crossed its edge is not there.
+        if (absent(p)) {
+            // M10 part F: an ace that has not crossed its edge is not there; step H1b: nor the lifeboat before its
+            // breakout or after its escape.
             return false;
         }
         if (size.overlaps(sx, sy, box(p), partX(p), partY(p))) {
@@ -219,7 +238,7 @@ final class SetPieceParts {
 
     /** As {@link SetPiece#partInBlast}. */
     boolean partInBlast(int p, double bx, double by, double radius) {
-        if (piece.partStays(p) || (squadron != null && squadron.absent(p))) {
+        if (piece.partStays(p) || absent(p)) {
             return false;
         }
         if (ShotGeometry.inBlast(bx, by, radius, partX(p), partY(p), box(p))) {
@@ -227,6 +246,16 @@ final class SetPieceParts {
         }
         int c = chains.slamChain(p);
         return c >= 0 && chains.segmentsInBlast(c, bx, by, radius);
+    }
+
+    /** Whether part {@code p} is not there at all: a squadron's ace off the field, the lifeboat not out. */
+    boolean absent(int p) {
+        return (squadron != null && squadron.absent(p)) || (p == lifeboat && escape.absent(p));
+    }
+
+    /** M10 part H, step H1b: whether the hull is broken (its body scenery: no hit, no contact). */
+    private boolean broken() {
+        return escape != null && escape.broken();
     }
 
     /** As {@link SetPiece#partOnField}. */
@@ -267,6 +296,9 @@ final class SetPieceParts {
 
     /** As {@link SetPiece#bodyTouches}. */
     boolean bodyTouches(Hitbox size, double sx, double sy) {
+        if (broken()) {
+            return false;
+        }
         SetPieceMotion motion = piece.motion;
         if (wedge != null) {
             return wedge.touches(size.width() / 2, size.height() / 2, sx - motion.x, sy - motion.y);
@@ -276,6 +308,9 @@ final class SetPieceParts {
 
     /** As {@link SetPiece#bodyTouchesHull}. */
     boolean bodyTouchesHull(Hull hull, double x, double y) {
+        if (broken()) {
+            return false;
+        }
         SetPieceMotion motion = piece.motion;
         if (wedge == null) {
             return hull.overlaps(x, y, piece.body(), motion.x, motion.y);
@@ -296,6 +331,9 @@ final class SetPieceParts {
 
     /** As {@link SetPiece#bodyInBlast}: a wedge reached by the blast's square (the box rule's for a box). */
     boolean bodyInBlast(double bx, double by, double radius) {
+        if (broken()) {
+            return false;
+        }
         SetPieceMotion motion = piece.motion;
         if (wedge != null) {
             return wedge.touches(radius, radius, bx - motion.x, by - motion.y);
@@ -305,6 +343,9 @@ final class SetPieceParts {
 
     /** As {@link SetPiece#bodyColumn}. */
     double bodyColumn(double cx, double halfWidth, double fromY) {
+        if (broken()) {
+            return Double.POSITIVE_INFINITY;
+        }
         SetPieceMotion motion = piece.motion;
         if (wedge != null) {
             double dy = wedge.column(cx - motion.x, halfWidth, fromY - motion.y);
@@ -367,6 +408,11 @@ final class SetPieceParts {
         if (amount <= 0) {
             return false;
         }
+        if (p == lifeboat) {
+            // M10 part H, step H1b: the lifeboat cannot die; its damage counts toward its cap.
+            escape.take(amount * spec.parts().get(p).multiplier());
+            return false;
+        }
         int q = hpPart(p);
         partTicksSinceHit[q] = 0;
         boolean alive = partHp[q] > 0;
@@ -391,6 +437,11 @@ final class SetPieceParts {
         if (amount <= 0) {
             return false;
         }
+        if (p == lifeboat) {
+            // M10 part H, step H1b: after the specials' own part caps (the Lance's 400), toward its cap.
+            escape.take(amount);
+            return false;
+        }
         int q = hpPart(p);
         partTicksSinceHit[q] = 0;
         boolean alive = partHp[q] > 0;
@@ -400,6 +451,10 @@ final class SetPieceParts {
 
     /** As {@link SetPiece#wreckPart}. */
     boolean wreckPart(int p) {
+        if (p == lifeboat) {
+            // M10 part H, step H1b: the lifeboat never goes down with the hull.
+            return false;
+        }
         // A fire-only part goes down with the boss but pays nothing.
         boolean alive = partHp[p] > 0 && !armoured[p];
         partHp[p] = Math.min(partHp[p], 0);
@@ -454,6 +509,10 @@ final class SetPieceParts {
     double partOffsetX(int p) {
         SetPieceMotion motion = piece.motion;
         double x = motion.x;
+        if (p == lifeboat) {
+            // M10 part H, step H1b: the lifeboat flies its escape's path.
+            return escape.x() - x;
+        }
         if (squadron != null) {
             // M10 part F: an ace flies its own position; its offset is that less the parked centre.
             return squadron.partX(p) - x;
@@ -497,6 +556,9 @@ final class SetPieceParts {
     double partOffsetY(int p) {
         SetPieceMotion motion = piece.motion;
         double y = motion.y;
+        if (p == lifeboat) {
+            return escape.y() - y;
+        }
         if (squadron != null) {
             return squadron.partY(p) - y;
         }
@@ -532,7 +594,7 @@ final class SetPieceParts {
     /** As {@link SetPiece#allWrecked}. */
     boolean allWrecked() {
         for (int p = 0; p < partHp.length; p++) {
-            if (partHp[p] > 0 && !armoured[p]) {
+            if (partHp[p] > 0 && !armoured[p] && p != lifeboat) {
                 return false;
             }
         }

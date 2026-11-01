@@ -14,6 +14,12 @@ import java.util.List;
  * {@code leftInner} (the left one's right edge) and {@code rightInner} (the right one's left edge), centred on the
  * field's height while they run.
  *
+ * <p>M10 part H, step H1b (design/campaign Level 42, The home fleet's cruisers; m10h-gaps.md §1 #15): its {@code runs},
+ * each of both hulls (Level 28's one run) or of one flank at a time (Level 42's: A on the left, then B on the right),
+ * each on its own times; {@code riseAt} to {@code fallSeconds} are then the first rise, the first run, the last end and
+ * the last run's fall. The flak is optional ({@link Flak#none()}) and so is the double band (never: an infinite {@link
+ * Broadside#doubleAfterSeconds()}).
+ *
  * @param riseAt the rise's start (the presentation's dim-to-full growth), s
  * @param runAt the run's start: the hulls solid, the first attacks' tells, s
  * @param endAt the run's end: no shot after it, s
@@ -24,6 +30,7 @@ import java.util.List;
  * @param broadside the broadsides
  * @param flak the flak
  * @param pointDefence the point defence
+ * @param runs M10 part H, step H1b: its runs, in time order (Level 28's: one run of both hulls)
  */
 public record CruiserRunSpec(
         double riseAt,
@@ -35,8 +42,124 @@ public record CruiserRunSpec(
         double rightInner,
         Broadside broadside,
         Flak flak,
-        PointDefence pointDefence) {
+        PointDefence pointDefence,
+        List<Run> runs) {
+    /** M10 part H, step H1b: which hulls a run flies. */
+    public enum Flank {
+        /** Both hulls, one on each flank (Level 28's). */
+        BOTH,
+        /** The left hull alone. */
+        LEFT,
+        /** The right hull alone. */
+        RIGHT;
+
+        /** Whether this run flies the hull on side {@code side} ({@link CruiserRun#LEFT}, {@link CruiserRun#RIGHT}). */
+        public boolean flies(int side) {
+            return this == BOTH || (side == CruiserRun.LEFT ? this == LEFT : this == RIGHT);
+        }
+    }
+
+    /**
+     * M10 part H, step H1b: one run: its hulls rise from {@code riseAt}, run (solid, firing) from {@code runAt} to
+     * {@code endAt} and fall off the bottom edge over {@code fallSeconds}; with {@code frigates} the CDF frigate pair
+     * trades fire with it (friendly scenery, marked; their tracers presentation only).
+     *
+     * @param flank which hulls it flies
+     * @param riseAt its rise's start, s
+     * @param runAt its run's start, s
+     * @param endAt its run's end, s
+     * @param fallSeconds its fall after the end, s
+     * @param frigates whether the CDF frigate pair flies beside it (presentation only)
+     */
+    public record Run(Flank flank, double riseAt, double runAt, double endAt, double fallSeconds, boolean frigates) {
+        public Run {
+            java.util.Objects.requireNonNull(flank);
+            if (!(riseAt >= 0) || !(runAt >= riseAt) || !(endAt > runAt) || !(fallSeconds >= 0)) {
+                throw new IllegalArgumentException("a cruiser run rises, then runs, then falls: " + riseAt + ", "
+                        + runAt + ", " + endAt + ", " + fallSeconds);
+            }
+        }
+    }
+
+    /** The cruisers before M10 part H: one run of both hulls (Level 28's). */
+    public CruiserRunSpec(
+            double riseAt,
+            double runAt,
+            double endAt,
+            double fallSeconds,
+            Hitbox hull,
+            double leftInner,
+            double rightInner,
+            Broadside broadside,
+            Flak flak,
+            PointDefence pointDefence) {
+        this(
+                riseAt,
+                runAt,
+                endAt,
+                fallSeconds,
+                hull,
+                leftInner,
+                rightInner,
+                broadside,
+                flak,
+                pointDefence,
+                List.of(new Run(Flank.BOTH, riseAt, runAt, endAt, fallSeconds, false)));
+    }
+
+    /** M10 part H, step H1b: the cruisers flying {@code runs} in time order (one flank at a time, or both). */
+    public static CruiserRunSpec ofRuns(
+            List<Run> runs,
+            Hitbox hull,
+            double leftInner,
+            double rightInner,
+            Broadside broadside,
+            Flak flak,
+            PointDefence pointDefence) {
+        if (runs.isEmpty()) {
+            throw new IllegalArgumentException("the cruisers fly at least one run");
+        }
+        Run first = runs.getFirst();
+        Run last = runs.getLast();
+        return new CruiserRunSpec(
+                first.riseAt(),
+                first.runAt(),
+                last.endAt(),
+                last.fallSeconds(),
+                hull,
+                leftInner,
+                rightInner,
+                broadside,
+                flak,
+                pointDefence,
+                runs);
+    }
+
     public CruiserRunSpec {
+        runs = List.copyOf(runs);
+        if (runs.isEmpty()
+                || runs.getFirst().riseAt() != riseAt
+                || runs.getFirst().runAt() != runAt
+                || runs.getLast().endAt() != endAt
+                || runs.getLast().fallSeconds() != fallSeconds) {
+            throw new IllegalArgumentException(
+                    "the cruisers' times are their runs' first rise and run, last end and fall");
+        }
+        for (int i = 1; i < runs.size(); i++) {
+            Run before = runs.get(i - 1);
+            Run run = runs.get(i);
+            if (!(run.runAt() >= before.runAt()) || !(run.endAt() >= before.endAt())) {
+                throw new IllegalArgumentException("the cruisers' runs come in time order");
+            }
+            for (int j = 0; j < i; j++) {
+                Run other = runs.get(j);
+                boolean shared =
+                        run.flank() == Flank.BOTH || other.flank() == Flank.BOTH || run.flank() == other.flank();
+                if (shared && run.riseAt() <= other.endAt() + other.fallSeconds()) {
+                    throw new IllegalArgumentException("a hull flies one run at a time");
+                }
+            }
+        }
         if (!(riseAt >= 0) || !(runAt >= riseAt) || !(endAt > runAt) || !(fallSeconds >= 0)) {
             throw new IllegalArgumentException("the cruisers rise, then run, then fall: " + riseAt + ", " + runAt + ", "
                     + endAt + ", " + fallSeconds);
@@ -102,6 +225,11 @@ public record CruiserRunSpec(
             int ring,
             double speed,
             double ringDamage) {
+        /** M10 part H, step H1b: no flak (Level 42's cruisers). */
+        public static Flak none() {
+            return new Flak(0, 1, 1, 0, 0, 0, 0, 1, 0);
+        }
+
         public Flak {
             if (markers < 0
                     || !(everySeconds > 0)

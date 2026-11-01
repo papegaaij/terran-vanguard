@@ -378,4 +378,258 @@ class AscendantTest {
         assertEquals(SimStep.ticks(25), timed.tick - start, 2, "25 s into phase 1");
         assertEquals(List.of("first-generator"), timed.cues);
     }
+
+    // --- step H1b: the eruption and phase 2 (m10h-gaps.md §1 rows 7–9 and 13) ---------------------------------------
+
+    @Test
+    void theEruptionIsFourSecondsUntouchableItsPlaybookWaitsAndAnArmourPatchDrops() {
+        Act6HSpecs.Rig rig = new Act6HSpecs.Rig(Act6HSpecs.ASCENDANT).settled();
+        SetPiece boss = rig.piece;
+        rig.toEruption();
+        assertEquals(1, boss.phase());
+        assertEquals(1, rig.drops.size(), "one drop");
+        assertEquals(PickupType.ARMOUR_PATCH.ordinal(), (int) rig.drops.getFirst()[0]);
+        assertEquals(Act6HSpecs.X, rig.drops.getFirst()[1], EPS);
+        assertTrue(rig.drops.getFirst()[2] < Act6HSpecs.Y - 125, "under the bow's tip");
+        int untouchable = 1;
+        while (boss.opening()) {
+            for (int p = 0; p < boss.partCount(); p++) {
+                assertTrue(boss.partShielded(p), "untouchable through the eruption: part " + p);
+            }
+            assertTrue(rig.values(SimEvents.Type.BOSS_PLAY_TELL).isEmpty(), "its playbook waits");
+            rig.step();
+            untouchable++;
+            assertTrue(untouchable <= SimStep.ticks(4) + 1, "4 s");
+        }
+        assertEquals(SimStep.ticks(4), untouchable, 1, "4 s");
+        for (int p : Act6HSpecs.SACS) {
+            assertFalse(boss.partShielded(p), "the sacs take hits: " + p);
+        }
+        assertTrue(boss.partShielded(Act6HSpecs.HEART), "the heart sealed");
+        assertEquals(1, rig.drops.size(), "one drop only");
+    }
+
+    @Test
+    void theHeartIsSealedUntilTwoSacsAreDeadThenItsPlaybookDrawsFromIt() {
+        Act6HSpecs.Rig rig =
+                new Act6HSpecs.Rig(Act6HSpecs.ASCENDANT).settled().toEruption().pastEruption();
+        SetPiece boss = rig.piece;
+        BossPlaybook book = boss.playbook().orElseThrow();
+        rig.steps(2);
+        assertEquals(Act6HSpecs.SAC_1, book.source(), "from the sacs while the heart is sealed");
+        rig.kill(Act6HSpecs.SAC_1);
+        rig.step();
+        assertEquals(1, boss.phase());
+        assertTrue(boss.partShielded(Act6HSpecs.HEART), "one sac down: still sealed");
+        assertEquals(Act6HSpecs.SAC_2, book.source());
+        rig.kill(Act6HSpecs.SAC_3);
+        rig.step();
+        assertEquals(2, boss.phase(), "two sacs down: the heart opens");
+        assertFalse(boss.partShielded(Act6HSpecs.HEART));
+        assertFalse(boss.partShielded(Act6HSpecs.SAC_2), "the last sac still takes hits");
+        rig.steps(1.5);
+        assertEquals(Act6HSpecs.HEART, book.source(), "from the heart");
+    }
+
+    @Test
+    void theVrellPlaybookDrawsSeededNeverTwiceTheBroodAtMostEveryThirdDraw() {
+        List<Integer> moves = plays(
+                new Act6HSpecs.Rig(Act6HSpecs.ASCENDANT).settled().toEruption().pastEruption(), 150);
+        assertTrue(moves.size() >= 25, "draws: " + moves.size());
+        int brood = Integer.MIN_VALUE / 2;
+        for (int i = 0; i < moves.size(); i++) {
+            if (i > 0) {
+                assertNotEquals(moves.get(i - 1), moves.get(i), "never twice running: " + moves);
+            }
+            if (moves.get(i) == Act6HSpecs.MOVE_BROOD) {
+                assertTrue(i - brood >= 3, "the brood at most every third draw: " + moves);
+                brood = i;
+            }
+        }
+        for (int m = 0; m < 4; m++) {
+            assertTrue(moves.contains(m), "every move drawn: " + m + " " + moves);
+        }
+        assertEquals(
+                moves,
+                plays(
+                        new Act6HSpecs.Rig(Act6HSpecs.ASCENDANT)
+                                .settled()
+                                .toEruption()
+                                .pastEruption(),
+                        150),
+                "seeded");
+    }
+
+    @Test
+    void theBroodSplitsFourChimerasFromALivingSacElseFromTheHeart() {
+        Act6HSpecs.Rig rig =
+                new Act6HSpecs.Rig(Act6HSpecs.ASCENDANT).settled().toEruption().pastEruption();
+        SetPiece boss = rig.piece;
+        List<double[]> broods = broodLaunches(rig);
+        assertEquals(4, broods.size(), "a wing of 4");
+        for (double[] launch : broods) {
+            assertEquals(boss.partX(Act6HSpecs.SAC_1), launch[0], EPS, "from the swelling sac");
+            assertEquals(boss.partY(Act6HSpecs.SAC_1), launch[1], EPS);
+        }
+        for (int p : Act6HSpecs.SACS) {
+            rig.kill(p);
+        }
+        rig.step();
+        assertEquals(2, boss.phase());
+        broods = broodLaunches(rig);
+        assertEquals(4, broods.size());
+        for (double[] launch : broods) {
+            assertEquals(boss.partX(Act6HSpecs.HEART), launch[0], EPS, "no sac left: the heart broods");
+            assertEquals(boss.partY(Act6HSpecs.HEART), launch[1], EPS);
+        }
+    }
+
+    /** Steps until a brood has run, at most 120 s; its launches. */
+    private static List<double[]> broodLaunches(Act6HSpecs.Rig rig) {
+        BossPlaybook book = rig.piece.playbook().orElseThrow();
+        List<double[]> launches = new ArrayList<>();
+        boolean running = false;
+        for (int i = 0; i < SimStep.ticks(120); i++) {
+            rig.step();
+            if (rig.values(SimEvents.Type.BOSS_PLAY).contains(Act6HSpecs.MOVE_BROOD)) {
+                running = true;
+            }
+            if (running) {
+                launches.addAll(rig.launches);
+                if (book.mode() == BossPlaybook.Mode.REST) {
+                    return launches;
+                }
+            }
+        }
+        throw new AssertionError("a brood drawn");
+    }
+
+    @Test
+    void theBileLobsMarkThreePointsNeverWithinSixtyPxOfTheShipsX() {
+        for (double shipX : new double[] {240, 30, 450, 130}) {
+            Act6HSpecs.Rig rig = new Act6HSpecs.Rig(Act6HSpecs.ASCENDANT)
+                    .settled()
+                    .toEruption()
+                    .pastEruption();
+            rig.shipX = shipX;
+            int volleys = 0;
+            for (int i = 0; i < SimStep.ticks(150) && volleys < 4; i++) {
+                rig.step();
+                if (rig.values(SimEvents.Type.BOSS_PLAY).contains(Act6HSpecs.MOVE_LOBS)) {
+                    volleys++;
+                    List<double[]> marks = new ArrayList<>();
+                    for (int k = 0; k < 10; k++) {
+                        marks.addAll(rig.lobs);
+                        rig.step();
+                    }
+                    assertEquals(3, marks.size(), "3 marks");
+                    for (double[] lob : marks) {
+                        assertTrue(Math.abs(lob[2] - shipX) >= 60 - EPS, "never within 60 px: " + lob[2] + " " + shipX);
+                        assertTrue(lob[2] >= 0 && lob[2] <= PlayField.WIDTH);
+                        assertTrue(lob[3] < Act6HSpecs.Y - 125, "under the bow: " + lob[3]);
+                    }
+                }
+            }
+            assertTrue(volleys >= 2, "lobs drawn: " + volleys);
+        }
+    }
+
+    @Test
+    void theSporeSpiralTurnsThreeArmsFourBulletsASecondForFourSeconds() {
+        Act6HSpecs.Rig rig =
+                new Act6HSpecs.Rig(Act6HSpecs.ASCENDANT).settled().toEruption().pastEruption();
+        BossPlaybook book = rig.piece.playbook().orElseThrow();
+        for (int i = 0; i < SimStep.ticks(150); i++) {
+            rig.step();
+            if (!rig.values(SimEvents.Type.BOSS_PLAY).contains(Act6HSpecs.MOVE_SPIRAL)) {
+                continue;
+            }
+            int bullets = rig.bullets.size();
+            int steps = 1;
+            while (book.mode() == BossPlaybook.Mode.RUN) {
+                rig.step();
+                bullets += rig.bullets.size();
+                steps++;
+                assertTrue(rig.bullets.isEmpty() || rig.bullets.size() == 3, "three arms at once");
+            }
+            assertEquals(SimStep.ticks(4), steps, 2, "4 s");
+            assertEquals(3 * 16, bullets, 3, "4 a second an arm");
+            return;
+        }
+        throw new AssertionError("a spiral drawn");
+    }
+
+    @Test
+    void theGraftedGunsFireThreeTimesFromBothDeadShoulders() {
+        Act6HSpecs.Rig rig =
+                new Act6HSpecs.Rig(Act6HSpecs.ASCENDANT).settled().toEruption().pastEruption();
+        SetPiece boss = rig.piece;
+        BossPlaybook book = boss.playbook().orElseThrow();
+        for (int i = 0; i < SimStep.ticks(150); i++) {
+            rig.step();
+            if (!rig.values(SimEvents.Type.BOSS_PLAY).contains(Act6HSpecs.MOVE_GRAFTED)) {
+                continue;
+            }
+            List<double[]> shots = new ArrayList<>(rig.shots);
+            List<Integer> at = new ArrayList<>();
+            at.add(0);
+            int step = 0;
+            while (book.mode() == BossPlaybook.Mode.RUN) {
+                rig.step();
+                step++;
+                if (!rig.shots.isEmpty()) {
+                    at.add(step);
+                }
+                shots.addAll(rig.shots);
+            }
+            assertEquals(6, shots.size(), "three volleys from two shoulders");
+            for (double[] shot : shots) {
+                boolean left = Math.abs(shot[0] - boss.partX(Act6HSpecs.GEN_L)) < EPS;
+                boolean right = Math.abs(shot[0] - boss.partX(Act6HSpecs.GEN_R)) < EPS;
+                assertTrue(left || right, "from a dead shoulder: " + shot[0]);
+            }
+            assertEquals(List.of(0, SimStep.ticks(0.4), 2 * SimStep.ticks(0.4)), at, "0.4 s apart");
+            return;
+        }
+        throw new AssertionError("the grafted guns drawn");
+    }
+
+    @Test
+    void itRestsOnePointTwoSecondsThenPointSevenBelowHalfOfPhaseTwosHp() {
+        Act6HSpecs.Rig rig =
+                new Act6HSpecs.Rig(Act6HSpecs.ASCENDANT).settled().toEruption().pastEruption();
+        BossPlaybook book = rig.piece.playbook().orElseThrow();
+        restBeforeNextTell(rig, book);
+        assertEquals(SimStep.ticks(1.2), restBeforeNextTell(rig, book), 1);
+        // Phase 2's HP 6,400: the heart and two sacs dead leave 1,300 (no healing past its whole).
+        rig.kill(Act6HSpecs.SAC_1);
+        rig.kill(Act6HSpecs.SAC_2);
+        rig.piece.damagePartFlat(Act6HSpecs.HEART, 2000);
+        rig.step();
+        restBeforeNextTell(rig, book);
+        assertEquals(SimStep.ticks(0.7), restBeforeNextTell(rig, book), 1, "0.7 s below half");
+    }
+
+    @Test
+    void atMostSixBossLaunchedChimerasAlive() {
+        Sortie sortie =
+                Act6HSpecs.sortie(Act6HSpecs.ASCENDANT, Act5ESpecs.loadout(Act5ESpecs.bolt(1, false)), TestSpecs.RULES);
+        Act6HSpecs.settle(sortie, 0);
+        for (int p : Act6HSpecs.PHASE_1) {
+            sortie.destroyPart(0, p);
+        }
+        int most = 0;
+        int launched = 0;
+        for (int i = 0; i < SimStep.ticks(90); i++) {
+            sortie.step(0);
+            int alive = 0;
+            for (int j = 0; j < sortie.enemyCount(); j++) {
+                alive += sortie.enemy(j).launchedBy() == Launching.BOSS ? 1 : 0;
+            }
+            most = Math.max(most, alive);
+            launched += sortie.events().count(SimEvents.Type.BOSS_LAUNCHED);
+        }
+        assertTrue(launched > 6, "broods launched: " + launched);
+        assertTrue(most <= 6, "at most 6 alive: " + most);
+    }
 }

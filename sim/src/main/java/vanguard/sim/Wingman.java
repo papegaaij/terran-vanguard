@@ -216,6 +216,8 @@ public final class Wingman {
     private FurnaceVents vents;
     /** M9 part C: the enemies' mines, whose line mines he keeps clear of (null: none to read). */
     private Pool<Mine> mines;
+    /** M10 part H, step H1b: the enemies' lobs, whose marks he keeps clear of in the Ascendant's fight (null: none). */
+    private Pool<Lob> lobs;
     /** M8 part H, step H2: the finale's cruisers, whose told bands he keeps out of; null without. */
     private CruiserRun cruisers;
     /** M10 part A, step A1b: the told lightning strikes, whose columns he keeps out of; null without. */
@@ -384,9 +386,25 @@ public final class Wingman {
             goalY = hazards.y();
             evading = true;
         }
+        if (lobs != null && lobs.size() > 0 && lobMarks(setPieces) && hazards.clearOfLobs(goalX, goalY, lobs)) {
+            // M10 part H, step H1b: out of the bile lobs' marks (the Ascendant's fight only).
+            goalX = hazards.x();
+            goalY = hazards.y();
+            evading = true;
+        }
         move(shipX, shipY);
         steerBank();
         slow.step();
+    }
+
+    /** M10 part H, step H1b: whether a boss among {@code setPieces} whose marks he keeps clear of fights now. */
+    private static boolean lobMarks(SetPiece[] setPieces) {
+        for (SetPiece piece : setPieces) {
+            if (PartPicks.applies(piece) && piece.present() && !piece.destroyed()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -441,6 +459,10 @@ public final class Wingman {
      * M9 part C (design/player/wingmen, Rook in the minefield): the enemies' mines; he keeps his goal out of the line
      * mines' proximity discs ({@link RookHazards#clearOfMines}).
      */
+    void lobs(Pool<Lob> enemyLobs) {
+        lobs = enemyLobs;
+    }
+
     void mines(Pool<Mine> enemyMines) {
         mines = enemyMines;
     }
@@ -596,6 +618,9 @@ public final class Wingman {
         double flankDistance = spec.ai().flankDistance();
         // M7 part C: the nearer anchor of the lowest standing tendril above him comes first.
         int gateAnchor = links == null ? -1 : links.nearerAnchor(x, y);
+        // M10 part H, step H1b: while a boss's regenerating parts are up, the boss-launched units beside him rank with
+        // his pick among its parts (the Ascendant's Chimeras in his reach).
+        boolean brood = setPieces.length > 0 && PartPicks.broodUp(setPieces);
         for (int j = 0; j < enemies.size(); j++) {
             Enemy enemy = enemies.get(j);
             // M5 part E (default 12): a unit under the water is neither his target nor a flank threat.
@@ -631,7 +656,9 @@ public final class Wingman {
             // M10 part G, step G1a: in a held gate's halt its holders (the pylons) before anything else.
             int rank = enemy.serial() == gateAnchor || (halting && enemy.holder())
                     ? 0
-                    : enemy.serial() == playerHit ? 1 : beside ? 2 : 3;
+                    : enemy.serial() == playerHit || (brood && beside && enemy.launchedBy() == Launching.BOSS)
+                            ? 1
+                            : beside ? 2 : 3;
             double distance = dx * dx + dy * dy;
             if (rank < bestRank || (rank == bestRank && distance < bestDistance)) {
                 best = enemy.serial();
@@ -656,9 +683,6 @@ public final class Wingman {
                         || !inCone(px - x, py - y)) {
                     continue;
                 }
-                int serial = PlayerFire.PART_SERIAL + k * SetPieceSpec.MAX_PARTS + p;
-                targetSeen |= serial == target;
-                double distance = (px - x) * (px - x) + (py - y) * (py - y);
                 // M7 part F: a walking boss's pods (its parts that are not vital) before its hull. M9 part H, step H1b:
                 // a
                 // ringed boss's armed batteries (inside the fire arc) first, then the nearest part (the core once
@@ -666,6 +690,17 @@ public final class Wingman {
                 int rank = piece.stride().isPresent() && parts.get(p).vital()
                         ? 4
                         : piece.ring().isPresent() && piece.ring().get().armed(p) ? 2 : 3;
+                if (PartPicks.applies(piece)) {
+                    // M10 part H, step H1b: the Ascendant's picks (generators, an open battery, the weakest sac, the
+                    // lifeboat); a panel facing him is never his target.
+                    rank = PartPicks.rank(piece, p, x, y);
+                    if (rank == PartPicks.SKIP) {
+                        continue;
+                    }
+                }
+                int serial = PlayerFire.PART_SERIAL + k * SetPieceSpec.MAX_PARTS + p;
+                targetSeen |= serial == target;
+                double distance = (px - x) * (px - x) + (py - y) * (py - y);
                 if (rank < bestRank || (rank == bestRank && distance < bestDistance)) {
                     best = serial;
                     bestRank = rank;

@@ -376,6 +376,10 @@ final class BossPasses implements BossActions {
             if (piece.boss().isPresent()) {
                 bossPhase = -1;
                 piece.act(ship.x(), ship.y(), this, firing);
+                if (piece.escape().isPresent()) {
+                    // M10 part H, step H1b: the lifeboat's pay and its escape at the top edge.
+                    s.objectivePasses.escapeStep(k, piece);
+                }
                 if (bossPhase > 0) {
                     phaseEntered(k, piece);
                 }
@@ -692,6 +696,11 @@ final class BossPasses implements BossActions {
     @Override
     public void lob(double x, double y, EnemyGun gun) {
         force.bossLob(x, y, gun, ship);
+    }
+
+    @Override
+    public void lobAt(double x, double y, EnemyGun gun, double toX, double toY) {
+        force.bossLobAt(x, y, gun, toX, toY);
     }
 
     @Override

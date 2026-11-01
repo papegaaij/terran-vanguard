@@ -187,6 +187,11 @@ final class SetPieceGuns {
         if (boss == null || !motion.present || piece.destroyed()) {
             return;
         }
+        if (piece.escape != null && piece.escape.broken()) {
+            // M10 part H, step H1b: from K the broken hull is scenery; only its flash, breakout and lifeboat run.
+            piece.escape.step(actions, firing);
+            return;
+        }
         this.shipX = shipX;
         this.shipY = shipY;
         chains.bend(
@@ -226,9 +231,14 @@ final class SetPieceGuns {
             // M10 part H, step H1a: the batteries' told bursts, while their panels face the ship.
             piece.bursts.step(shipX, shipY, piece.mirrors, actions, firing);
         }
-        if (piece.playbook != null) {
-            // M10 part H, step H1a: the phase's playbook (its told line requested before the lines step).
-            piece.playbook.step(actions, firing);
+        if (piece.regens != null) {
+            // M10 part H, step H1b: the parts' regeneration after their quiet spell (never stopped by the EMP).
+            piece.regens.step(partHp, parts.partTicksSinceHit);
+        }
+        if (piece.playbook != null && !opening()) {
+            // M10 part H, step H1a: the phase's playbook (its told line requested before the lines step); step H1b:
+            // it waits while its phase opens (the eruption).
+            piece.playbook.step(shipX, shipY, actions, firing);
         }
         if (piece.cues != null) {
             // M10 part H, step H1a: the phase's radio subjects.
@@ -256,6 +266,7 @@ final class SetPieceGuns {
             startPhase();
             actions.phase(phase);
             dropOnStart(actions);
+            openingDrop(actions);
             if (motion.moveTicks >= 0) {
                 return;
             }
@@ -448,6 +459,34 @@ final class SetPieceGuns {
         } else if (keys.drop().isPresent()) {
             int p = keys.surface().isPresent() ? keys.surface().get().part() : -1;
             actions.drop(keys.drop().get(), p < 0 ? motion.x : parts.partX(p), p < 0 ? motion.y : parts.partY(p));
+        }
+    }
+
+    /** M10 part H, step H1b: the opening of the current phase ({@link PhaseOpening}); null for none. */
+    private PhaseOpening openingOf(int f) {
+        if (boss == null) {
+            return null;
+        }
+        List<PhaseOpening> openings = boss.openings();
+        for (int i = 0; i < openings.size(); i++) {
+            if (openings.get(i).phase() == f) {
+                return openings.get(i);
+            }
+        }
+        return null;
+    }
+
+    /** As {@link SetPiece#opening()}: the phase's opening runs (engaged, within its untouchable seconds). */
+    boolean opening() {
+        PhaseOpening opening = openingOf(phase);
+        return opening != null && engaged && phaseTicks < SimStep.ticks(opening.untouchableSeconds());
+    }
+
+    /** M10 part H, step H1b: a phase that opens with a drop drops it as it begins (the eruption's armour patch). */
+    private void openingDrop(BossActions actions) {
+        PhaseOpening opening = openingOf(phase);
+        if (opening != null && opening.drop().isPresent()) {
+            actions.drop(opening.drop().get(), motion.x + opening.dropDx(), motion.y + opening.dropDy());
         }
     }
 

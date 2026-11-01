@@ -16,8 +16,12 @@ import java.util.List;
  *
  * <p>The moves: a told line through the boss's {@link BossLines} (the spinal lance: its telegraph, its lock before it
  * fires, its band; one told line at a time); volleys of an attack's gun (the gold fan); a homing salvo from each living
- * rack under its gun's cap; streams from hull bays under their launcher's cap. Its state is hashed with its piece's
- * (only for a boss with a playbook). Allocates nothing once made.
+ * rack under its gun's cap; streams from hull bays under their launcher's cap. M10 part H, step H1b (the Vrell
+ * playbook): a brood from a swelling part (the first living sac, else the source) under its launcher's cap of
+ * boss-launched units alive; an attack's spiral from the source for its duration; mortar lobs at marked points never
+ * within {@link PhasePlaybook#LOB_CLEAR_X} px of the ship's x (drawn with the seeded random); volleys from fixed mounts,
+ * living or dead (the grafted guns). Its state is hashed with its piece's (only for a boss with a playbook). Allocates
+ * nothing once made.
  */
 public final class BossPlaybook {
     /** What the playbook does now. */
@@ -55,6 +59,10 @@ public final class BossPlaybook {
     private int shots;
     /** A requested line not yet seen live. */
     private boolean pending;
+    /** M10 part H, step H1b: the running spiral's arm angle, radians, and its steps to the next bullets. */
+    private double spiralAngle;
+
+    private int spiralTicks;
 
     BossPlaybook(SetPiece piece, BossSpec boss) {
         this.piece = piece;
@@ -92,13 +100,22 @@ public final class BossPlaybook {
         java.util.Arrays.fill(drawnAt, Playbook.NEVER);
         shots = 0;
         pending = false;
+        spiralAngle = 0;
+        spiralTicks = 0;
     }
+
+    /** The ship's place this step (a lob's marks keep off its x); derived each step, not hashed. */
+    private double shipX;
+
+    private double shipY;
 
     /**
      * One engaged step with the ship at (shipX, shipY): the phase's playbook rests, draws, tells or runs; its fire
      * reaches the level only while {@code firing}.
      */
-    void step(BossActions actions, boolean firing) {
+    void step(double shipX, double shipY, BossActions actions, boolean firing) {
+        this.shipX = shipX;
+        this.shipY = shipY;
         int b = bookFor(piece.phase());
         if (b != book) {
             enter(b);
@@ -128,7 +145,8 @@ public final class BossPlaybook {
             }
             mode = Mode.RUN.ordinal();
             modeTicks = 0;
-            actions.ring(SimEvents.Type.BOSS_PLAY, piece.partX(src), piece.partY(src), move);
+            int at = at(playbook.moves().get(move), src);
+            actions.ring(SimEvents.Type.BOSS_PLAY, piece.partX(at), piece.partY(at), move);
         }
         boolean over = run(playbook.moves().get(move), src, actions, firing);
         modeTicks++;
@@ -138,6 +156,8 @@ public final class BossPlaybook {
             move = -1;
             shots = 0;
             pending = false;
+            spiralAngle = 0;
+            spiralTicks = 0;
             restTicks = SimStep.ticks(low(playbook) ? playbook.lowRestSeconds() : playbook.restSeconds());
         }
     }
@@ -164,7 +184,8 @@ public final class BossPlaybook {
 
     /** Whether the sources hold less than the playbook's low share of their HP (its short rest). */
     private boolean low(PhasePlaybook playbook) {
-        List<Integer> sources = playbook.sources();
+        // M10 part H, step H1b: by its low parts' HP when it names any (phase 2's: the sacs' and the heart's).
+        List<Integer> sources = playbook.lowParts().isEmpty() ? playbook.sources() : playbook.lowParts();
         double left = 0;
         double full = 0;
         for (int i = 0; i < sources.size(); i++) {
@@ -204,7 +225,23 @@ public final class BossPlaybook {
         modeTicks = 0;
         shots = 0;
         pending = false;
-        actions.ring(SimEvents.Type.BOSS_PLAY_TELL, piece.partX(src), piece.partY(src), picked);
+        int at = at(moves.get(picked), src);
+        actions.ring(SimEvents.Type.BOSS_PLAY_TELL, piece.partX(at), piece.partY(at), picked);
+    }
+
+    /** The part a move tells and runs at: a brood's swelling part, else the source. */
+    private int at(PhasePlaybook.Move move, int src) {
+        return move.kind() == PhasePlaybook.Kind.BROOD ? brooder(move, src) : src;
+    }
+
+    /** M10 part H, step H1b: the part a brood splits from: the first living of its racks, else the source. */
+    private int brooder(PhasePlaybook.Move move, int src) {
+        for (int i = 0; i < move.racks().size(); i++) {
+            if (piece.partHp(move.racks().get(i)) > 0) {
+                return move.racks().get(i);
+            }
+        }
+        return src;
     }
 
     /** Whether {@code move} can run now: a line with the boss's lines, a salvo with a living rack. */
@@ -212,7 +249,7 @@ public final class BossPlaybook {
         return switch (move.kind()) {
             case LINE -> piece.lines != null;
             case SALVO -> racksAlive(move) > 0;
-            case VOLLEY, STREAM -> true;
+            case VOLLEY, STREAM, BROOD, SPIRAL, LOBS, MOUNTS -> true;
         };
     }
 
@@ -273,8 +310,101 @@ public final class BossPlaybook {
                 }
                 return shots >= n;
             }
+            case BROOD -> {
+                PhasePlaybook.Bays bays = now.bays().orElseThrow();
+                EnemySpec.Launcher launcher = bays.launcher();
+                int n = launcher.stream();
+                int every = Math.max(1, SimStep.ticks(launcher.gapSeconds()));
+                int from = brooder(now, src);
+                if (run == shots * every && shots < n) {
+                    double spread = launcher.spreadRadians();
+                    double angle = -StrictMath.PI / 2 + (n == 1 ? 0 : -spread / 2 + shots * spread / (n - 1));
+                    shots++;
+                    for (int k = 0; k < bays.places().size() && firing; k++) {
+                        BossSpec.Offset place = bays.places().get(k);
+                        actions.bayLaunch(
+                                launcher, piece.partX(from) + place.dx(), piece.partY(from) + place.dy(), angle);
+                    }
+                }
+                return shots >= n;
+            }
+            case SPIRAL -> {
+                return spiral(attacks.get(now.attack()), src, run, actions, firing);
+            }
+            case LOBS -> {
+                if (run == shots * gap && shots < now.count()) {
+                    shots++;
+                    if (firing) {
+                        EnemyGun gun = attacks.get(now.attack()).gun();
+                        double tx = lobX(actions.draw());
+                        double ty = lobY(actions.draw());
+                        actions.lobAt(piece.partX(src), piece.partY(src), gun, tx, ty);
+                    }
+                }
+                return shots >= now.count();
+            }
+            case MOUNTS -> {
+                if (run == shots * gap && shots < now.count()) {
+                    shots++;
+                    EnemyGun gun = attacks.get(now.attack()).gun();
+                    for (int i = 0; i < now.racks().size() && firing; i++) {
+                        int mount = now.racks().get(i);
+                        actions.aimed(piece.partX(mount), piece.partY(mount), gun);
+                    }
+                }
+                return shots >= now.count();
+            }
         }
         return true;
+    }
+
+    /** The lowest a bile lob's mark lies under the play field's top edge, px (the bow's tip is at 250). */
+    static final double LOB_TOP_MARGIN = 260;
+    /** A bile lob's mark lies within this of the ship's height, px. */
+    static final double LOB_REACH_Y = 80;
+    /** A bile lob's mark keeps this far inside the field's edges, px. */
+    static final double LOB_EDGE = 24;
+
+    /**
+     * M10 part H, step H1b: a bile lob's mark's x for a draw {@code r} in [0, 1): over the field inside its edges,
+     * never within {@link PhasePlaybook#LOB_CLEAR_X} of the ship's x (the field's two sides of it, by their widths).
+     */
+    double lobX(double r) {
+        double lo = LOB_EDGE;
+        double hi = PlayField.WIDTH - LOB_EDGE;
+        double gapLo = Math.clamp(shipX - PhasePlaybook.LOB_CLEAR_X, lo, hi);
+        double gapHi = Math.clamp(shipX + PhasePlaybook.LOB_CLEAR_X, lo, hi);
+        double left = gapLo - lo;
+        double right = hi - gapHi;
+        double pick = r * (left + right);
+        if (!(left + right > 0)) {
+            return shipX < PlayField.WIDTH / 2.0 ? hi : lo;
+        }
+        return pick < left ? lo + pick : gapHi + (pick - left);
+    }
+
+    /** M10 part H, step H1b: a bile lob's mark's height for a draw {@code r}: near the ship's, under the bow. */
+    double lobY(double r) {
+        double y = shipY + (2 * r - 1) * LOB_REACH_Y;
+        return Math.clamp(y, LOB_EDGE, PlayField.HEIGHT - LOB_TOP_MARGIN);
+    }
+
+    /** M10 part H, step H1b: the spiral's step {@code run} from {@code src}; returns whether its duration is over. */
+    private boolean spiral(BossSpec.Attack attack, int src, int run, BossActions actions, boolean firing) {
+        spiralAngle =
+                Math.IEEEremainder(spiralAngle + attack.turnRadiansPerSecond() * SimStep.SECONDS, 2 * StrictMath.PI);
+        if (--spiralTicks <= 0) {
+            spiralTicks = Math.max(1, SimStep.ticks(attack.gun().intervalSeconds()));
+            for (int k = 0; k < attack.arms() && firing; k++) {
+                actions.bullet(
+                        piece.partX(src),
+                        piece.partY(src),
+                        spiralAngle + 2 * StrictMath.PI * k / attack.arms(),
+                        attack.gun().bulletSpeed(),
+                        attack.gun().damage());
+            }
+        }
+        return run + 1 >= SimStep.ticks(attack.durationSeconds());
     }
 
     /**
@@ -344,7 +474,9 @@ public final class BossPlaybook {
                 .add(last)
                 .add(draws)
                 .add(shots)
-                .add(pending ? 1 : 0);
+                .add(pending ? 1 : 0)
+                .add(spiralAngle)
+                .add(spiralTicks);
         for (int at : drawnAt) {
             hash.add(at);
         }

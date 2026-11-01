@@ -281,6 +281,10 @@ final class SetPieceMotion {
      * glides it to a new station and layer and turns it into a new pose first.
      */
     void moveBoss(int levelTick) {
+        if (escaped) {
+            // M10 part H, step H1b: an escaped boss's fight is over; it is gone.
+            return;
+        }
         if (piece.destroyed()) {
             if (arena != null) {
                 // Round 41 (the 2026-10-19 playtest): a dead arena boss, the free spire too, falls to the

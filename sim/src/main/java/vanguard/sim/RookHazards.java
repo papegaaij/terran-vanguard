@@ -92,6 +92,10 @@ final class RookHazards {
                 // M10 part F, step F1b: out of a squadron's told sniper line and off its told dives' lines.
                 moved |= clearOfSquadron(piece);
             }
+            if (PartPicks.applies(piece) && piece.present() && !piece.destroyed()) {
+                // M10 part H, step H1b: out of the Ascendant's told spinal lance (its line, then its band).
+                moved |= clearOfToldLine(piece);
+            }
         }
         if (vents != null) {
             for (int pass = 0; pass < VENT_PASSES; pass++) {
@@ -508,6 +512,60 @@ final class RookHazards {
             }
         }
         return moved;
+    }
+
+    /** M10 part H, step H1b: out of a boss's running told line (the spinal lance's telegraph and beam). */
+    private boolean clearOfToldLine(SetPiece piece) {
+        if (piece.lines().isEmpty() || !piece.lines().get().running()) {
+            return false;
+        }
+        BossLines lines = piece.lines().get();
+        double half = Math.max(halfW, halfH);
+        return clearOfLine(
+                lines.fromX(),
+                lines.fromY(),
+                lines.dirX(),
+                lines.dirY(),
+                Double.POSITIVE_INFINITY,
+                lines.bandPx() / 2 + half + GAP);
+    }
+
+    /**
+     * M10 part H, step H1b (the Ascendant's bile lobs): moves the goal (goalX, goalY) out of every lob's marked impact
+     * circle of {@code lobs} (his hull's edge {@link #GAP} outside it) until it bursts; returns whether it moved.
+     */
+    boolean clearOfLobs(double goalX, double goalY, Pool<Lob> lobs) {
+        gx = goalX;
+        gy = goalY;
+        boolean moved = false;
+        for (int pass = 0; pass < MINE_PASSES; pass++) {
+            boolean shifted = false;
+            for (int i = 0; i < lobs.size(); i++) {
+                Lob lob = lobs.get(i);
+                shifted |= clearOfCircle(lob.targetX(), lob.targetY(), lob.impactRadius());
+            }
+            moved |= shifted;
+            if (!shifted) {
+                return moved;
+            }
+        }
+        // Between overlapping marks the pushes swing to and fro: below them all, else above them all.
+        double low = Double.POSITIVE_INFINITY;
+        double high = Double.NEGATIVE_INFINITY;
+        for (int i = 0; i < lobs.size(); i++) {
+            Lob lob = lobs.get(i);
+            double out = lob.impactRadius() + Math.max(halfW, halfH) + GAP + 1;
+            if (Math.abs(gx - lob.targetX()) < out) {
+                low = Math.min(low, lob.targetY() - out);
+                high = Math.max(high, lob.targetY() + out);
+            }
+        }
+        if (low >= limit) {
+            gy = low;
+        } else if (high <= PlayField.HEIGHT - limit) {
+            gy = high;
+        }
+        return true;
     }
 
     /**

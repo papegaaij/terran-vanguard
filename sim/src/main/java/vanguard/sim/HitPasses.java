@@ -453,6 +453,9 @@ final class HitPasses {
                 }
                 continue;
             }
+            if (piece.escape != null && piece.present() && touchedByLifeboat(piece, hull)) {
+                return;
+            }
             if (piece.present() && piece.onPlane() && piece.bodyTouchesHull(hull, ship.x(), ship.y())) {
                 boolean strikes = piece.strike();
                 if (piece.wedged()) {
@@ -483,6 +486,23 @@ final class HitPasses {
         if (strikes) {
             ship.pushOut(nx, ny, piece.bodyPush());
         }
+    }
+
+    /**
+     * M10 part H, step H1b (design/enemies/bosses/ascendant, The lifeboat): the climbing lifeboat touching the hull deals
+     * its contact damage once in its run (a collision). Returns whether the ship was destroyed.
+     */
+    private boolean touchedByLifeboat(SetPiece piece, Hull hull) {
+        EscapeRun run = piece.escape;
+        int p = run.spec().part();
+        if (!run.out()
+                || !hull.overlaps(
+                        ship.x(), ship.y(), piece.spec().parts().get(p).box(), piece.partX(p), piece.partY(p))
+                || !run.strike()) {
+            return false;
+        }
+        double lost = ship.defences().armourLost();
+        return damaged(lost, ship.defences().takeCollision(run.spec().contactDamage(), events, ship.x(), ship.y()));
     }
 
     /** M10 part H, step H1a: the most a wedge moves the ship out in one step, px. */

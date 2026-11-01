@@ -9,7 +9,8 @@ import java.util.Optional;
  * draws its next move by weight with the simulation's seeded random ({@link Playbook}), never the move it drew last and
  * a spaced move at most every {@link Move#every}-th draw, tells it {@code tellSeconds}, runs it and rests again: {@code
  * restSeconds}, or {@code lowRestSeconds} while the sources hold less than {@code lowBelow} of their HP. With every
- * source dead no playbook runs (the Ascendant's cannon dead first: the batteries fire on).
+ * source dead no playbook runs (the Ascendant's cannon dead first: the batteries fire on). M10 part H, step H1b: the
+ * low rest goes by {@code lowParts}' HP when it names any (phase 2's: below half of the sacs' and the heart's HP).
  *
  * @param phase the phase it runs in (0 first)
  * @param sources the parts it draws from, the first living one firing (the cannon; phase 2's heart, then its sacs)
@@ -18,6 +19,7 @@ import java.util.Optional;
  * @param lowRestSeconds the rest below {@code lowBelow} (0.8 s)
  * @param lowBelow the sources' HP share below which the rest is short (0.5)
  * @param moves its moves
+ * @param lowParts M10 part H, step H1b: the parts whose HP share sets the low rest; empty: the sources'
  */
 public record PhasePlaybook(
         int phase,
@@ -26,7 +28,8 @@ public record PhasePlaybook(
         double restSeconds,
         double lowRestSeconds,
         double lowBelow,
-        List<Move> moves) {
+        List<Move> moves,
+        List<Integer> lowParts) {
     /** What a move does. */
     public enum Kind {
         /**
@@ -43,8 +46,33 @@ public record PhasePlaybook(
          */
         SALVO,
         /** A launch: each of {@code bays} sends a stream of its launcher's units (its stream, its gap, its cap). */
-        STREAM
+        STREAM,
+        /**
+         * M10 part H, step H1b (the Chimera brood): a part swells and splits: the first living part of {@code racks}
+         * (a sac), else the source (the heart, with no sac left), sends its launcher's stream from each of {@code
+         * bays}' places (offsets from that part) under the launcher's cap of boss-launched units alive.
+         */
+        BROOD,
+        /**
+         * M10 part H, step H1b (the spore spiral): {@code attack}'s {@code spiral} from the source (its arms, their
+         * turn and its gun's rate) for its duration.
+         */
+        SPIRAL,
+        /**
+         * M10 part H, step H1b (the bile lobs): {@code count} of {@code attack}'s mortar lobs from the source, {@code
+         * gapSeconds} apart, each at a marked point of the play plane never within {@link #LOB_CLEAR_X} px of the ship's
+         * x (its flight the mark's time; its burst a ring).
+         */
+        LOBS,
+        /**
+         * M10 part H, step H1b (the grafted guns): {@code count} volleys of {@code attack}'s gun from each of {@code
+         * racks}' places, living or dead (the dead hull's shoulder mounts), {@code gapSeconds} apart.
+         */
+        MOUNTS
     }
+
+    /** M10 part H, step H1b: a bile lob's mark is never within this of the ship's x at the mark, px. */
+    public static final double LOB_CLEAR_X = 60;
 
     /**
      * Hull bays: the launcher's units come out of each place (offsets from the boss's centre, px right and up), straight
@@ -87,10 +115,11 @@ public record PhasePlaybook(
                     || count < 0
                     || !(gapSeconds >= 0)
                     || every < 1
-                    || (kind == Kind.STREAM) != bays.isPresent()
-                    || (kind == Kind.STREAM) != (attack < 0)
-                    || (kind == Kind.SALVO) == racks.isEmpty()
-                    || ((kind == Kind.VOLLEY || kind == Kind.SALVO) && count < 1)) {
+                    || (kind == Kind.STREAM || kind == Kind.BROOD) != bays.isPresent()
+                    || (kind == Kind.STREAM || kind == Kind.BROOD) != (attack < 0)
+                    || (kind != Kind.BROOD && (kind == Kind.SALVO || kind == Kind.MOUNTS) == racks.isEmpty())
+                    || ((kind == Kind.VOLLEY || kind == Kind.SALVO || kind == Kind.LOBS || kind == Kind.MOUNTS)
+                            && count < 1)) {
                 throw new IllegalArgumentException(
                         "a move has a weight, an attack or bays, counts and a spacing: " + kind);
             }
@@ -107,9 +136,27 @@ public record PhasePlaybook(
         }
     }
 
+    /** A playbook whose low rest goes by its sources' HP. */
+    public PhasePlaybook(
+            int phase,
+            List<Integer> sources,
+            double tellSeconds,
+            double restSeconds,
+            double lowRestSeconds,
+            double lowBelow,
+            List<Move> moves) {
+        this(phase, sources, tellSeconds, restSeconds, lowRestSeconds, lowBelow, moves, List.of());
+    }
+
+    /** This playbook with its low rest by {@code parts}' HP. */
+    public PhasePlaybook withLowParts(List<Integer> parts) {
+        return new PhasePlaybook(phase, sources, tellSeconds, restSeconds, lowRestSeconds, lowBelow, moves, parts);
+    }
+
     public PhasePlaybook {
         sources = List.copyOf(sources);
         moves = List.copyOf(moves);
+        lowParts = List.copyOf(lowParts);
         if (phase < 0
                 || sources.isEmpty()
                 || moves.isEmpty()
@@ -127,7 +174,7 @@ public record PhasePlaybook(
             throw new IllegalArgumentException(barName + ": a playbook runs in one of its phases: " + phase);
         }
         for (Move move : moves) {
-            if (move.kind() == Kind.STREAM) {
+            if (move.kind() == Kind.STREAM || move.kind() == Kind.BROOD) {
                 continue;
             }
             if (move.attack() >= attacks.size()) {
@@ -139,6 +186,12 @@ public record PhasePlaybook(
             if ((move.kind() == Kind.LINE) != line || (move.kind() == Kind.SALVO) != homing) {
                 throw new IllegalArgumentException(
                         barName + ": a line move fires a line attack, a salvo a homing one: " + move.kind());
+            }
+            // M10 part H, step H1b: a spiral move fires a spiral attack, a lobs move a mortar's lob.
+            if ((move.kind() == Kind.SPIRAL) != (attack.pattern() == BossSpec.Pattern.SPIRAL)
+                    || (move.kind() == Kind.LOBS) != (attack.pattern() == BossSpec.Pattern.LOB)) {
+                throw new IllegalArgumentException(
+                        barName + ": a spiral move fires a spiral attack, a lobs move a lob: " + move.kind());
             }
         }
     }
@@ -152,6 +205,9 @@ public record PhasePlaybook(
             for (int p : move.racks()) {
                 BossSpec.checkPart(slug, "a salvo's rack", p, parts);
             }
+        }
+        for (int p : lowParts) {
+            BossSpec.checkPart(slug, "a playbook's low part", p, parts);
         }
     }
 }

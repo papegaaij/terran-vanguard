@@ -92,6 +92,14 @@ public final class SetPiece implements Hashed {
     private final java.util.Optional<BossPlaybook> playbookView;
     /** M10 part H, step H1a: its phase cues (radio subjects); null for a boss without them. */
     final PhaseCues cues;
+    /** M10 part H, step H1b: its regenerating parts; null for a boss without them. */
+    final PartRegens regens;
+    /** {@link #regens} for the presentation, made once. */
+    private final java.util.Optional<PartRegens> regensView;
+    /** M10 part H, step H1b: its hull's break and its lifeboat's escape; null for a boss that dies. */
+    final EscapeRun escape;
+    /** {@link #escape} for the presentation, made once. */
+    private final java.util.Optional<EscapeRun> escapeView;
     /** M7 part F: a walking boss's hatches (its homing salvos' tell; round 44: its pods' armour). */
     final BossHatches hatches;
     /** M5 part H: its attacks' sweeps (design/enemies, Boss attacks and root bursts). */
@@ -146,6 +154,12 @@ public final class SetPiece implements Hashed {
         playbook = BossPlaybook.any(boss) ? new BossPlaybook(this, boss) : null;
         playbookView = java.util.Optional.ofNullable(playbook);
         cues = PhaseCues.any(boss) ? new PhaseCues(this, boss) : null;
+        regens = PartRegens.any(boss) ? new PartRegens(this, boss, count) : null;
+        regensView = java.util.Optional.ofNullable(regens);
+        escape = boss != null && boss.escape().isPresent()
+                ? new EscapeRun(this, boss.escape().get(), spec)
+                : null;
+        escapeView = java.util.Optional.ofNullable(escape);
         hatches = new BossHatches(
                 this, boss, count, stride != null && boss.stride().get().hatchArmour());
         sweeps = new BossSweeps(this, boss);
@@ -679,6 +693,13 @@ public final class SetPiece implements Hashed {
             if (cues != null) {
                 cues.addTo(hash);
             }
+            // M10 part H, step H1b: only a boss with regenerating parts or an escape (Level 42's).
+            if (regens != null) {
+                regens.addTo(hash);
+            }
+            if (escape != null) {
+                escape.addTo(hash);
+            }
         }
     }
 
@@ -695,6 +716,12 @@ public final class SetPiece implements Hashed {
         }
         if (cues != null) {
             cues.reset();
+        }
+        if (regens != null) {
+            regens.reset();
+        }
+        if (escape != null) {
+            escape.reset();
         }
     }
 
@@ -824,6 +851,10 @@ public final class SetPiece implements Hashed {
             // M10 part H, step H1a: the panels' breaks and regrowth.
             mirrors.events(events);
         }
+        if (regens != null) {
+            // M10 part H, step H1b: the parts' healing.
+            regens.events(events);
+        }
     }
 
     /**
@@ -867,6 +898,55 @@ public final class SetPiece implements Hashed {
     /** M10 part H, step H1a: its phase playbooks (the tells' looks, Rook, the autopilot); empty for a boss without one. */
     public java.util.Optional<BossPlaybook> playbook() {
         return playbookView;
+    }
+
+    /** M10 part H, step H1b: its regenerating parts (the healing's looks, Rook); empty for a boss without them. */
+    public java.util.Optional<PartRegens> regens() {
+        return regensView;
+    }
+
+    /**
+     * M10 part H, step H1b: its hull's break and its lifeboat's escape (the escape bar, the wreck, the lifeboat, Rook);
+     * empty for a boss that dies at its vital part.
+     */
+    public java.util.Optional<EscapeRun> escape() {
+        return escapeView;
+    }
+
+    /**
+     * M10 part H, step H1b: the hull broke at K (its breaking part died): the other living parts burst (the sortie pays
+     * them) and its escape runs; returns whether it broke now (once).
+     */
+    boolean breakHull(int credits) {
+        if (escape == null || escape.broken()) {
+            return false;
+        }
+        escape.breakHull(credits);
+        if (lines != null) {
+            // No told line after the break.
+            lines.reset();
+        }
+        return true;
+    }
+
+    /**
+     * M10 part H, step H1b: the lifeboat escaped off the top edge: the fight is over (the piece leaves, the level clock
+     * resumes; its time from the arrival is its {@link #killSeconds()}).
+     */
+    void escapeEnded() {
+        if (killTicks < 0) {
+            killTicks = Math.max(0, motion.bossTicks);
+        }
+        motion.escaped = true;
+        motion.vanish();
+    }
+
+    /**
+     * M10 part H, step H1b (the eruption): whether its phase is opening untouchable now ({@link PhaseOpening}): no part
+     * takes damage, its playbook waits.
+     */
+    public boolean opening() {
+        return guns.opening();
     }
 
     /** M10 part H, step H1a: whether its body is a wedge ({@link BossSpec#wedge()}) rather than its box. */
@@ -971,7 +1051,7 @@ public final class SetPiece implements Hashed {
         return destroyed;
     }
 
-    /** Whether it ended its last pass alive. */
+    /** Whether it ended its last pass alive (M10 part H, step H1b: a boss, whether its lifeboat escaped). */
     public boolean escaped() {
         return motion.escaped;
     }

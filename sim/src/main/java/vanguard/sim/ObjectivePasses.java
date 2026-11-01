@@ -441,6 +441,11 @@ final class ObjectivePasses {
         SetPiece piece = setPieces[k];
         payPart(piece, part);
         shotOff(k, piece, part);
+        if (piece.escape != null && part == piece.escape.spec().breaksOn()) {
+            // M10 part H, step H1b: an escaping boss's hull breaks (K); its lifeboat escapes later.
+            hullBreaks(k, piece);
+            return;
+        }
         if (!piece.spec().parts().get(part).vital() && !piece.squadronFalls(part)) {
             // M10 part F: a squadron's aces are not vital, but the last one's death takes the piece.
             return;
@@ -505,6 +510,88 @@ final class ObjectivePasses {
         }
         if (k == partsPiece && objectives.partsSurvived()) {
             events.add(SimEvents.Type.OBJECTIVE_FAILED, piece.x(), piece.y());
+        }
+    }
+
+    /**
+     * M10 part H, step H1b (design/enemies/bosses/ascendant, The hull breaks; m10h-gaps.md §4): the part an escaping
+     * boss's hull breaks on died (K): its other living parts burst and pay (the surviving sacs), {@link
+     * SimEvents.Type#HULL_BROKEN} (value the hull's credit shower), the kill when the secondary counts bosses, its
+     * {@code boss-phase} subject {@link EscapeRun#HULL_BREAKS}. No {@link SimEvents.Type#BOSS_DESTROYED}: the fight
+     * ends at the escape ({@link #escapeEnded}).
+     */
+    private void hullBreaks(int k, SetPiece piece) {
+        int lifeboat = piece.escape.spec().part();
+        for (int p = 0; p < piece.partCount(); p++) {
+            if (p != lifeboat && piece.wreckPart(p)) {
+                payPart(piece, p);
+            }
+        }
+        SetPieceSpec spec = piece.spec();
+        int credits = 0;
+        for (int p = 0; p < spec.parts().size(); p++) {
+            if (p != lifeboat) {
+                credits += (int)
+                        Math.rint(spec.parts().get(p).bounty() * rules.scoring().creditFactor());
+            }
+        }
+        if (!piece.breakHull(credits)) {
+            return;
+        }
+        events.add(SimEvents.Type.HULL_BROKEN, piece.x(), piece.y(), credits);
+        if (script.objectives().secondary().countsBosses()) {
+            tally.countKill();
+        }
+        radio.cue(CueTrigger.FIRST_KILL, spec.slug());
+        radio.cue(CueTrigger.BOSS_PHASE, EscapeRun.HULL_BREAKS);
+    }
+
+    /**
+     * M10 part H, step H1b: an escaping boss {@code k}'s step after it acted: the lifeboat's damage paid pro rata
+     * ({@link Tally#prorated}; the floating numbers, {@link SimEvents.Type#ESCAPE_PAID}, a quarter second's at a time),
+     * then at the top edge its escape ({@link #escapeEnded}).
+     */
+    void escapeStep(int k, SetPiece piece) {
+        EscapeRun run = piece.escape;
+        if (run == null || !run.broken()) {
+            return;
+        }
+        double share = run.share();
+        if (share > run.paidShare()) {
+            int bounty = piece.spec().parts().get(run.spec().part()).bounty();
+            run.paid(share, tally.prorated(bounty, run.paidShare(), share));
+        }
+        int shown = run.showDue();
+        if (shown > 0) {
+            events.add(SimEvents.Type.ESCAPE_PAID, run.x(), run.y(), shown);
+        }
+        if (run.escapedNow()) {
+            escapeEnded(k, piece);
+        }
+    }
+
+    /**
+     * M10 part H, step H1b (m10h-gaps.md §4, §5): the lifeboat reached the top edge: the fight is over as a boss's death
+     * ends it ({@link SimEvents.Type#BOSS_ESCAPED}, value the piece; the {@code boss-escaped} radio cue with its
+     * slug; the piece gone, so the level clock resumes; the armour floor, an afloat objective, the hold after the boss as
+     * at a kill). It is no kill and pays nothing more.
+     */
+    private void escapeEnded(int k, SetPiece piece) {
+        SetPieceSpec spec = piece.spec();
+        double x = piece.escape.x();
+        double y = piece.escape.y();
+        piece.escape.end();
+        piece.escapeEnded();
+        events.add(SimEvents.Type.BOSS_ESCAPED, x, y, k);
+        if (!piece.held()) {
+            radio.cue(CueTrigger.BOSS_ESCAPED, spec.slug());
+        }
+        if (script.armourFloor() > 0) {
+            ship.defences().floor(script.armourFloor());
+        }
+        s.bossDownInArena(piece.boss().orElseThrow());
+        if (objectives.bossDownAfloat()) {
+            paySecondary();
         }
     }
 
