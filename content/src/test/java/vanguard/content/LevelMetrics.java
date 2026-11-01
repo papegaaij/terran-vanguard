@@ -1117,8 +1117,18 @@ final class LevelMetrics {
      * @param secondaryMet whether the secondary objective was met
      * @param credits the credits earned (0 if not completed)
      * @param bosses the bosses' fights on the attempt that completed the level
+     * @param allies M10 part C: the air allies outside the objectives, whom a {@code saved} secondary counts home (Level
+     *     37's six shuttles); 0 without them
+     * @param home M10 part C: of those, the ones home off the top edge on the last attempt
      */
-    record Run(boolean complete, int retries, boolean secondaryMet, int credits, List<BossFight> bosses) {
+    record Run(
+            boolean complete,
+            int retries,
+            boolean secondaryMet,
+            int credits,
+            List<BossFight> bosses,
+            int allies,
+            int home) {
         static Run of(Sortie sortie) {
             List<BossFight> bosses = new ArrayList<>();
             for (int i = 0; i < sortie.setPieceCount(); i++) {
@@ -1131,12 +1141,15 @@ final class LevelMetrics {
                                 piece.destroyed() ? piece.killSeconds() : piece.bossSeconds())));
             }
             boolean complete = sortie.complete();
+            boolean saved = sortie.script().objectives().airAllies().isPresent();
             return new Run(
                     complete,
                     sortie.attempt() - 1,
                     complete && sortie.result().secondaryMet(),
                     complete ? sortie.result().credits().total() : 0,
-                    bosses);
+                    bosses,
+                    saved ? sortie.saveableAllies() : 0,
+                    saved ? sortie.alliesHome() : 0);
         }
     }
 

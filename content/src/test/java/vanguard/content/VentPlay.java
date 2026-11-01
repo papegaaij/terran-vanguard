@@ -139,10 +139,15 @@ final class VentPlay {
         // M9 part H: Level 35's Ceres lifeboat on the hull (a level with the mass relay; no other level's flight
         // changes).
         GroundObject secret = sortie.relay().isPresent() ? TargetPlay.secretTarget(sortie, shipY) : null;
+        // M10 part C: Level 37's Hornets make it a hunted level: what threatens a shuttle, a Graft Turret's root in its
+        // window, a standing mirror first (AureliaPlay; null on every other level).
+        Enemy aurelia = AureliaPlay.target(sortie, shipY);
         if (beacon != null) {
             targetX = beacon.renderX(1);
         } else if (secret != null) {
             targetX = secret.renderX();
+        } else if (aurelia != null) {
+            targetX = aurelia.renderX(1);
         } else if (pickup != null && (above == null || pickup.renderY(1) < 300)) {
             targetX = pickup.renderX();
             targetY = Math.max(40, pickup.renderY(1) - 10);

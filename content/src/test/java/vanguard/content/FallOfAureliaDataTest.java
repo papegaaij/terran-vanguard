@@ -28,7 +28,7 @@ import vanguard.sim.WaveSpec;
 class FallOfAureliaDataTest {
     private static final Content CONTENT = ContentLoader.fromClasspath();
 
-    private static final String KEY = Level37Plan.LEVEL;
+    private static final String KEY = Level37Test.LEVEL;
 
     private static LevelScript level(Difficulty difficulty) {
         return SimSpecs.level(CONTENT, KEY, difficulty);

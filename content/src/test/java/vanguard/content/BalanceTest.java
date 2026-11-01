@@ -997,16 +997,17 @@ class BalanceTest {
      * levels are built; such a level's income is budget(n) on the sheet, and its level checks wait for its data.
      */
     static final Set<Integer> ACT_6_PLANNED =
-            java.util.stream.IntStream.rangeClosed(37, 42).boxed().collect(java.util.stream.Collectors.toSet());
+            java.util.stream.IntStream.rangeClosed(38, 42).boxed().collect(java.util.stream.Collectors.toSet());
 
     /** M10 part B: Act 6's levels (design/campaign/act-6-jovian-storm). */
     static final int ACT_6_FIRST = 36;
 
     /**
      * M10 part B (step B3, until M10 part I): Act 6's last built level, as far as the returning units' time to kill is
-     * swept ({@link #everyReturningUnitKeepsItsTimeToKillFromActTwo}); each part's level moves it on.
+     * swept ({@link #everyReturningUnitKeepsItsTimeToKillFromActTwo}); each part's level moves it on (M10 part C, step
+     * C3: Level 37).
      */
-    static final int ACT_6_BUILT_LAST = 36;
+    static final int ACT_6_BUILT_LAST = 37;
 
     /**
      * Time to kill at the unit's first level (design/enemies Balancing basis): {@code tiny} one hit

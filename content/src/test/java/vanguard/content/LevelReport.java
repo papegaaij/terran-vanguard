@@ -28,7 +28,8 @@ import vanguard.sim.Sortie;
  * <p>Per difficulty: the enemies (waves + ground) and their rate ({@link DensityTest}), the mean on the screen and the
  * enemy shots a minute, the empty gaps over 2 s and the pacing rule ({@link PacingTest}), the Act 2+ floor at medium
  * ({@link ActFloorTest}), the typical haul against the budget, the {@code bounty_scale} that would hit it and the
- * perfect run ({@link TypicalHaulTest}), the autopilot over N seeds: wins, retries, the secondary met and the bosses'
+ * perfect run ({@link TypicalHaulTest}), the autopilot over N seeds: wins, retries, the secondary met (M10 part C: a
+ * saved secondary's air allies home, Level 37's shuttles) and the bosses'
  * fights against their par and window (the level tests' runs), and the beam era's small-unit time on the screen
  * against Level 10's ({@link BeamEraHpTest}), and (M7 part G) a pursuit swarm's motes on the screen and lunges over the
  * same seeds' runs with the plan's fit ({@link LevelMetrics.PursuitWatch}), and (M7 part H) a breaching boss's phases, the
@@ -625,6 +626,21 @@ final class LevelReport {
                         met,
                         n,
                         credits);
+                int allies = runs.getFirst().allies();
+                if (allies > 0) {
+                    // M10 part C: a saved secondary's air allies home (Level 37's shuttles).
+                    line(
+                            out,
+                            "saved",
+                            "%.1f of %d home a run (%d-%d)",
+                            runs.stream()
+                                    .mapToInt(LevelMetrics.Run::home)
+                                    .average()
+                                    .orElse(0),
+                            allies,
+                            runs.stream().mapToInt(LevelMetrics.Run::home).min().orElse(0),
+                            runs.stream().mapToInt(LevelMetrics.Run::home).max().orElse(0));
+                }
                 if (level.parts().contains(Part.BOSS)) {
                     for (BossSummary boss : bosses(runs)) {
                         line(
@@ -994,6 +1010,10 @@ final class LevelReport {
                     r.put("retries", run.retries());
                     r.put("secondary_met", run.secondaryMet());
                     r.put("credits", run.credits());
+                    if (run.allies() > 0) {
+                        r.put("allies_home", run.home());
+                        r.put("allies", run.allies());
+                    }
                     List<Object> bosses = new ArrayList<>();
                     for (LevelMetrics.BossFight fight : run.bosses()) {
                         bosses.add(ordered(
