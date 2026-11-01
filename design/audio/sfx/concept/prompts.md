@@ -7120,3 +7120,203 @@ Use: a Harrow (Levels 38-42, the hybrid kamikaze dart that locks on and rams; of
 Brief: a hard whoosh: something heavy cutting the air fast past the ship, short and forceful; never a pop; a real recording, nothing bubbly or popping.
 This one: a car passing close at speed, sped to 1.25: a rougher, roaring rush with the pass's pitch drop, peaking 0.25 s in, 0.9 s.
 Edit: 0.90 s, the loudest 100 ms band −21.8 dB, peak −7.0 dBFS, −20.1 LUFS.
+
+## Concept round 78, step AUD-F (Level 40: the Honour Guard's fly-by and Kestrel's rougher one, Harker's sniper charge and shot, Kestrel's dive and pull-out, Vesper's looping cannon, an ace's death and the last ace's chain; the recorder's crack, the fleet's layer `fleet-comms`)
+
+### ace-flyby-r78-a — "Canadian CF-18 Highspeed Pass" by lonemonk
+
+Proposed (round 78), cut from the HQ previews by `tools/concept/audio/sfx_r78.py`.
+Source: <https://freesound.org/people/lonemonk/sounds/349712/> (Canadian CF-18 Highspeed Pass by lonemonk, CC-BY 4.0).
+Use: the Honour Guard (Level 40's mid-boss: Vorne's three black-and-gold aces): an ace (Harker or Vesper) passing near the ship, and Vesper's roll and ribbon passes; often through the duel (one at a time).
+Brief: a real jet fly-by, short, with its doppler: the whine rising in, the roar at the pass, the pitch falling away; a real recording, nothing bubbly or popping.
+This one: a CF-18's high-speed pass at an air show sped to 1.1: a bright whine rushing in, a hard roar at 0.6 s and the pitch dropping away, 1.5 s.
+Edit: 1.50 s, the loudest 100 ms band −24.1 dB, peak −12.6 dBFS, −25.1 LUFS.
+
+### ace-flyby-r78-b — "Jet.ogg" by egomassive
+
+Proposed (round 78), cut from the HQ previews by `tools/concept/audio/sfx_r78.py`.
+Source: <https://freesound.org/people/egomassive/sounds/536809/> (Jet.ogg by egomassive, CC0 1.0).
+Use: the Honour Guard (Level 40's mid-boss: Vorne's three black-and-gold aces): an ace (Harker or Vesper) passing near the ship, and Vesper's roll and ribbon passes; often through the duel (one at a time).
+Brief: a real jet fly-by, short, with its doppler: the whine rising in, the roar at the pass, the pitch falling away; a real recording, nothing bubbly or popping.
+This one: a modern fighter screaming by sped to 1.15: on the ship almost at once, a tearing scream that falls away more slowly than a, 1.5 s.
+Edit: 1.50 s, the loudest 100 ms band −24.1 dB, peak −12.6 dBFS, −24.1 LUFS.
+
+### kestrel-flyby-r78-a — "F35 Jet Low-Flyby.mp3" by johnnythesalesman
+
+Proposed (round 78), cut from the HQ previews by `tools/concept/audio/sfx_r78.py`.
+Source: <https://freesound.org/people/johnnythesalesman/sounds/431473/> (F35 Jet Low-Flyby.mp3 by johnnythesalesman, CC-BY 3.0).
+Use: the Honour Guard (Level 40's mid-boss: Vorne's three black-and-gold aces): Kestrel passing near the ship and climbing back to its station after a pull-out; often while it flies.
+Brief: the aces' fly-by, rougher: a jet with a crackling, growling exhaust, more low end than Harker's and Vesper's; a real recording, nothing bubbly or popping.
+This one: an F-35's low fly-by sped to 1.25: a high whine coming in, then the engine's crackling, rumbling roar at the pass (a third of it under 200 Hz), 1.7 s.
+Edit: 1.70 s, the loudest 100 ms band −24.0 dB, peak −14.0 dBFS, −22.1 LUFS.
+
+### kestrel-flyby-r78-b — "Red Arrows Hawk overhead" by surrey_film
+
+Proposed (round 78), cut from the HQ previews by `tools/concept/audio/sfx_r78.py`.
+Source: <https://freesound.org/people/surrey_film/sounds/162246/> (Red Arrows Hawk overhead by surrey_film, CC0 1.0).
+Use: the Honour Guard (Level 40's mid-boss: Vorne's three black-and-gold aces): Kestrel passing near the ship and climbing back to its station after a pull-out; often while it flies.
+Brief: the aces' fly-by, rougher: a jet with a crackling, growling exhaust, more low end than Harker's and Vesper's; a real recording, nothing bubbly or popping.
+This one: a Hawk jet trainer roaring overhead sped to 1.2: a duller, throatier pass with a rumbling tail, less crackle than a, 1.7 s.
+Edit: 1.70 s, the loudest 100 ms band −24.1 dB, peak −9.3 dBFS, −22.1 LUFS.
+
+### sniper-charge-r78-a — "Rising electric hum.aif" by jukkako + "Camera Flash Charging.aif" by ftpalad
+
+Proposed (round 78), cut from the HQ previews by `tools/concept/audio/sfx_r78.py`.
+Sources: <https://freesound.org/people/jukkako/sounds/616084/> (Rising electric hum.aif by jukkako, CC0 1.0), <https://freesound.org/people/ftpalad/sounds/119902/> (Camera Flash Charging.aif by ftpalad, CC0 1.0).
+Use: the Honour Guard (Level 40's mid-boss: Vorne's three black-and-gold aces): Harker's sniper line, under the thin red line's 1.0 s (the medium telegraph; easy 1.2 s, hard 0.8 s), cut by the shot; a few times a minute, twice or three times running in a double or triple tap.
+Brief: a rising electric whine under the line, the enemy rail line's charge family but sharper and higher, ending at the shot; a real recording, nothing bubbly or popping.
+This one: the rail line's rising electric hum (the same recording) gliding up twice as fast, with a camera flash's charging whine climbing from 3 to 7 kHz on top: a thin, sharp rising whine, 1.0 s.
+Edit: 1.00 s, the loudest 100 ms band −29.7 dB, peak −14.7 dBFS, −24.0 LUFS.
+
+### sniper-charge-r78-b — "camera flash charge.wav" by adeluc4 + "highvoltagearc.wav" by Sclolex
+
+Proposed (round 78), cut from the HQ previews by `tools/concept/audio/sfx_r78.py`.
+Sources: <https://freesound.org/people/adeluc4/sounds/125326/> (camera flash charge.wav by adeluc4, CC0 1.0), <https://freesound.org/people/Sclolex/sounds/210878/> (highvoltagearc.wav by Sclolex, CC0 1.0).
+Use: the Honour Guard (Level 40's mid-boss: Vorne's three black-and-gold aces): Harker's sniper line, under the thin red line's 1.0 s (the medium telegraph; easy 1.2 s, hard 0.8 s), cut by the shot; a few times a minute, twice or three times running in a double or triple tap.
+Brief: a rising electric whine under the line, the enemy rail line's charge family but sharper and higher, ending at the shot; a real recording, nothing bubbly or popping.
+This one: another camera flash charging, its whine gliding from 4 to 8 kHz, over a 20 kV transformer's arc buzz swelling in: brighter and more crackling than a, 1.0 s.
+Edit: 1.00 s, the loudest 100 ms band −40.4 dB, peak −15.0 dBFS, −24.9 LUFS.
+
+### sniper-shot-r78-a — "Sniper Shot in Field 1 (M2010 Enhanced Sniper Rifle ESR)" by qubodup + "spark3.ogg" by Kneeling
+
+Proposed (round 78), cut from the HQ previews by `tools/concept/audio/sfx_r78.py`.
+Sources: <https://freesound.org/people/qubodup/sounds/855606/> (Sniper Shot in Field 1 (M2010 Enhanced Sniper Rifle ESR) by qubodup, CC0 1.0), <https://freesound.org/people/Kneeling/sounds/643856/> (spark3.ogg by Kneeling, CC0 1.0).
+Use: the Honour Guard (Level 40's mid-boss: Vorne's three black-and-gold aces): Harker's sniper line firing (the 0.3 s laser line after the charge); a few times a minute.
+Brief: a hard crack with a short sizzling tail; a real recording, nothing bubbly or popping.
+This one: a sniper rifle's shot in a field (a hard crack and its short boom) with a broken cord's sparks sizzling after it: 0.65 s.
+Edit: 0.64 s, the loudest 100 ms band −18.3 dB, peak −6.2 dBFS, −18.4 LUFS.
+
+### sniper-shot-r78-b — "Whip Crack.m4a" by SciFiSounds + "Taser/High Voltage discharge" by The_Chemical_Workshop
+
+Proposed (round 78), cut from the HQ previews by `tools/concept/audio/sfx_r78.py`.
+Sources: <https://freesound.org/people/SciFiSounds/sounds/529925/> (Whip Crack.m4a by SciFiSounds, CC0 1.0), <https://freesound.org/people/The_Chemical_Workshop/sounds/403252/> (Taser/High Voltage discharge by The_Chemical_Workshop, CC0 1.0).
+Use: the Honour Guard (Level 40's mid-boss: Vorne's three black-and-gold aces): Harker's sniper line firing (the 0.3 s laser line after the charge); a few times a minute.
+Brief: a hard crack with a short sizzling tail; a real recording, nothing bubbly or popping.
+This one: a whip's crack (dry and sharp, no boom) with a high-voltage discharge's zap sizzling after it: lighter and more electric than a, 0.55 s.
+Edit: 0.57 s, the loudest 100 ms band −17.9 dB, peak −5.4 dBFS, −18.9 LUFS.
+
+### kestrel-dive-r78-a — "Afterburner (Close, Screamer, Quick Onset)" by JSK_Productions
+
+Proposed (round 78), cut from the HQ previews by `tools/concept/audio/sfx_r78.py`.
+Source: <https://freesound.org/people/JSK_Productions/sounds/829068/> (Afterburner (Close, Screamer, Quick Onset) by JSK_Productions, CC0 1.0).
+Use: the Honour Guard (Level 40's mid-boss: Vorne's three black-and-gold aces): Kestrel's feint dive and overhead feint, from the dive's start (after its 0.8 s tell) until the pull-out, which cuts it; every few draws.
+Brief: a jet's dive scream rising, cut by the pull-out's roar; a real recording, nothing bubbly or popping.
+This one: a jet's afterburner screaming up from its quick onset, gliding a little faster as it goes (its pitch climbing from 1.4 to 3.5 kHz): a rising scream, 1.8 s.
+Edit: 1.80 s, the loudest 100 ms band −24.3 dB, peak −11.8 dBFS, −23.7 LUFS.
+
+### kestrel-dive-r78-b — "F-15TakeoffBinaural.WAV" by daveincamas
+
+Proposed (round 78), cut from the HQ previews by `tools/concept/audio/sfx_r78.py`.
+Source: <https://freesound.org/people/daveincamas/sounds/199272/> (F-15TakeoffBinaural.WAV by daveincamas, CC-BY 4.0).
+Use: the Honour Guard (Level 40's mid-boss: Vorne's three black-and-gold aces): Kestrel's feint dive and overhead feint, from the dive's start (after its 0.8 s tell) until the pull-out, which cuts it; every few draws.
+Brief: a jet's dive scream rising, cut by the pull-out's roar; a real recording, nothing bubbly or popping.
+This one: an F-15's take-off as its whine climbs, sped up and gliding faster: a higher, thinner scream than a, 1.8 s.
+Edit: 1.80 s, the loudest 100 ms band −26.5 dB, peak −7.7 dBFS, −22.2 LUFS.
+
+### kestrel-pullout-r78-a — "F16 takeoff 2.WAV" by Sandermotions
+
+Proposed (round 78), cut from the HQ previews by `tools/concept/audio/sfx_r78.py`.
+Source: <https://freesound.org/people/Sandermotions/sounds/276291/> (F16 takeoff 2.WAV by Sandermotions, CC0 1.0).
+Use: the Honour Guard (Level 40's mid-boss: Vorne's three black-and-gold aces): Kestrel pulling out of a dive (110 px from the ship, 85 px once it commits) and banking off as it fires its burst back; every few draws.
+Brief: the pull-out's roar: a jet at full power, an afterburner's roar cutting in; a real recording, nothing bubbly or popping.
+This one: an F-16 at full power on its take-off roll: a broad tearing roar cutting in hard and fading as it banks away, 1.8 s.
+Edit: 1.80 s, the loudest 100 ms band −22.1 dB, peak −11.1 dBFS, −22.1 LUFS.
+
+### kestrel-pullout-r78-b — "Afterburner" by TiesWijnen
+
+Proposed (round 78), cut from the HQ previews by `tools/concept/audio/sfx_r78.py`.
+Source: <https://freesound.org/people/TiesWijnen/sounds/413312/> (Afterburner by TiesWijnen, CC0 1.0).
+Use: the Honour Guard (Level 40's mid-boss: Vorne's three black-and-gold aces): Kestrel pulling out of a dive (110 px from the ship, 85 px once it commits) and banking off as it fires its burst back; every few draws.
+Brief: the pull-out's roar: a jet at full power, an afterburner's roar cutting in; a real recording, nothing bubbly or popping.
+This one: a turbojet's afterburner lighting: a bright blast at its onset, then a deep steady roar (more low end than a), 1.8 s.
+Edit: 1.80 s, the loudest 100 ms band −27.0 dB, peak −10.9 dBFS, −21.2 LUFS.
+
+### vesper-cannon-r78-a — "Autocannon Shot 1" by qubodup + "Autocannon Shot 3" by qubodup
+
+Proposed (round 78), cut from the HQ previews by `tools/concept/audio/sfx_r78.py`.
+Sources: <https://freesound.org/people/qubodup/sounds/854183/> (Autocannon Shot 1 by qubodup, CC0 1.0), <https://freesound.org/people/qubodup/sounds/854185/> (Autocannon Shot 3 by qubodup, CC0 1.0).
+Use: the Honour Guard (Level 40's mid-boss: Vorne's three black-and-gold aces): Vesper's spiral loop, a loop for the 2.5 s of the loop while her tail fires the 2-arm spiral (8 shots a second), panned by the game with her as she loops; every few draws.
+Brief: a fast rhythmic cannon (a light autocannon), panning with the loop; a real recording, nothing bubbly or popping.
+This one: a 25 mm autocannon's two single shots sped to 1.3 and 1.35, taking turns 8 times a second: a tight, dry, even hammering, 2.0 s loop.
+Edit: 2.00 s, band RMS −32.5 dB, peak −15.6 dBFS, −26.2 LUFS.
+
+### vesper-cannon-r78-b — "Firing 25mm from LAVS during training" by qubodup
+
+Proposed (round 78), cut from the HQ previews by `tools/concept/audio/sfx_r78.py`.
+Source: <https://freesound.org/people/qubodup/sounds/162262/> (Firing 25mm from LAVS during training by qubodup, CC0 1.0).
+Use: the Honour Guard (Level 40's mid-boss: Vorne's three black-and-gold aces): Vesper's spiral loop, a loop for the 2.5 s of the loop while her tail fires the 2-arm spiral (8 shots a second), panned by the game with her as she loops; every few draws.
+Brief: a fast rhythmic cannon (a light autocannon), panning with the loop; a real recording, nothing bubbly or popping.
+This one: a light armoured vehicle's 25 mm firing on a range, two of its shots sped to 1.2 and 1.25 taking turns 8 times a second: rougher and boomier than a, with the range's echo in each shot, 2.0 s loop.
+Edit: 2.00 s, band RMS −30.1 dB, peak −12.3 dBFS, −26.1 LUFS.
+
+### ace-death-r78-a — "SDL Jet Engine Spool Down" by guitarduane + "metal tumbling hits 1.wav" by Halleck
+
+Proposed (round 78), cut from the HQ previews by `tools/concept/audio/sfx_r78.py`.
+Sources: <https://freesound.org/people/guitarduane/sounds/788131/> (SDL Jet Engine Spool Down by guitarduane, CC-BY 4.0), <https://freesound.org/people/Halleck/sounds/121686/> (metal tumbling hits 1.wav by Halleck, CC-BY 4.0).
+Use: the Honour Guard (Level 40's mid-boss: Vorne's three black-and-gold aces): an ace at 0 (its shield shatters, the hull tumbles away burning at the cockpit), over the `medium` rung; twice a duel (the third is the chain).
+Brief: a jet's engine failing and metal tumbling, over the medium explosion; a real recording, nothing bubbly or popping.
+This one: a jet engine spooling down, its whine gliding down to 0.4 (failing, not shut down), and metal pieces tumbling and knocking under it: 2.2 s.
+Edit: 2.20 s, the loudest 100 ms band −24.0 dB, peak −10.5 dBFS, −22.2 LUFS.
+
+### ace-death-r78-b — "Jet Engine" by m_cel + "Falling scrap metal" by 13FPanská_Tolar_David
+
+Proposed (round 78), cut from the HQ previews by `tools/concept/audio/sfx_r78.py`.
+Sources: <https://freesound.org/people/m_cel/sounds/534856/> (Jet Engine by m_cel, CC0 1.0), <https://freesound.org/people/13FPanská_Tolar_David/sounds/378670/> (Falling scrap metal by 13FPanská_Tolar_David, CC0 1.0).
+Use: the Honour Guard (Level 40's mid-boss: Vorne's three black-and-gold aces): an ace at 0 (its shield shatters, the hull tumbles away burning at the cockpit), over the `medium` rung; twice a duel (the third is the chain).
+Brief: a jet's engine failing and metal tumbling, over the medium explosion; a real recording, nothing bubbly or popping.
+This one: a jet engine's roar on a test stand dying away (gliding down to half, darker than a's whine), scrap metal falling and rattling over it: 2.2 s.
+Edit: 2.20 s, the loudest 100 ms band −26.7 dB, peak −11.8 dBFS, −22.0 LUFS.
+
+### ace-last-chain-r78-a — "Multiple Deep Explosions (Noisy rec)" by Rudmer_Rotteveel + "metal tumbling hits 2.wav" by Halleck
+
+Proposed (round 78), cut from the HQ previews by `tools/concept/audio/sfx_r78.py`.
+Sources: <https://freesound.org/people/Rudmer_Rotteveel/sounds/336007/> (Multiple Deep Explosions (Noisy rec) by Rudmer_Rotteveel, CC0 1.0), <https://freesound.org/people/Halleck/sounds/121687/> (metal tumbling hits 2.wav by Halleck, CC-BY 4.0).
+Use: the Honour Guard (Level 40's mid-boss: Vorne's three black-and-gold aces): the last ace at 0, the 2 s chain round its tumbling hull before the `large` rung and the credit shower; once a duel.
+Brief: a longer chain: rapid deep detonations round a tumbling hull, never popping; a real recording, nothing bubbly or popping.
+This one: five deep explosions muffled at 4 kHz, coming faster and louder (0.5, 0.4, 0.35 and 0.3 s apart), with metal tumbling under them: 2.75 s.
+Edit: 2.75 s, the loudest 100 ms band −18.0 dB, peak −4.6 dBFS, −20.8 LUFS.
+
+### ace-last-chain-r78-b — "Explosion_Debris_Short_Stereo.wav" by Nox_Sound + "G45-14-Torpedo Explosion.wav" by craigsmith
+
+Proposed (round 78), cut from the HQ previews by `tools/concept/audio/sfx_r78.py`.
+Sources: <https://freesound.org/people/Nox_Sound/sounds/560510/> (Explosion_Debris_Short_Stereo.wav by Nox_Sound, CC0 1.0), <https://freesound.org/people/craigsmith/sounds/438716/> (G45-14-Torpedo Explosion.wav by craigsmith, CC0 1.0).
+Use: the Honour Guard (Level 40's mid-boss: Vorne's three black-and-gold aces): the last ace at 0, the 2 s chain round its tumbling hull before the `large` rung and the credit shower; once a duel.
+Brief: a longer chain: rapid deep detonations round a tumbling hull, never popping; a real recording, nothing bubbly or popping.
+This one: three explosions with debris raining after each (0.65 s apart), over a torpedo's rolling deep detonations: fewer, bigger blasts than a, 2.7 s.
+Edit: 2.70 s, the loudest 100 ms band −22.7 dB, peak −5.0 dBFS, −19.5 LUFS.
+
+### recorder-crack-r78-a — "Crunching sound of a crushed aluminum can" by tosha73 + "Short circuit, A" by Moulaythami
+
+Proposed (round 78), cut from the HQ previews by `tools/concept/audio/sfx_r78.py`.
+Sources: <https://freesound.org/people/tosha73/sounds/865883/> (Crunching sound of a crushed aluminum can by tosha73, CC-BY 4.0), <https://freesound.org/people/Moulaythami/sounds/576590/> (Short circuit, A by Moulaythami, CC-BY 4.0).
+Use: Level 40 (Honour Guard): the dead scout's flight recorder (the secret pod) broken open, over the built crate break; once a level at most.
+Brief: a small metal housing splitting with an electrical fizz; a real recording, nothing bubbly or popping.
+This one: an aluminium can crushed under a heel (a sharp metal crunch) with a short circuit's fizz and its falling buzz after it: 0.85 s.
+Edit: 0.86 s, the loudest 100 ms band −26.0 dB, peak −6.1 dBFS, −25.7 LUFS.
+
+### recorder-crack-r78-b — "Breaking Plastic Hollow Crunching Crackling Break Snap - Fast & Soft" by ChristopherJngs + "spark3.ogg" by Kneeling
+
+Proposed (round 78), cut from the HQ previews by `tools/concept/audio/sfx_r78.py`.
+Sources: <https://freesound.org/people/ChristopherJngs/sounds/868271/> (Breaking Plastic Hollow Crunching Crackling Break Snap - Fast & Soft by ChristopherJngs, CC0 1.0), <https://freesound.org/people/Kneeling/sounds/643856/> (spark3.ogg by Kneeling, CC0 1.0).
+Use: Level 40 (Honour Guard): the dead scout's flight recorder (the secret pod) broken open, over the built crate break; once a level at most.
+Brief: a small metal housing splitting with an electrical fizz; a real recording, nothing bubbly or popping.
+This one: a hollow plastic case cracking and snapping slowed to 0.7 (a lighter, drier crackle of small breaks than a's crunch) with a broken cord's sparks spitting after it: 0.8 s.
+Edit: 0.78 s, the loudest 100 ms band −31.2 dB, peak −6.1 dBFS, −24.7 LUFS.
+
+### fleet-comms-r78-a — "propulsion jet engine" by mycompasstv + "Radio Chatter RELIEF NEEDED.wav" by cpark12
+
+Proposed (round 78), cut from the HQ previews by `tools/concept/audio/sfx_r78.py`.
+Sources: <https://freesound.org/people/mycompasstv/sounds/477132/> (propulsion jet engine by mycompasstv, CC0 1.0), <https://freesound.org/people/cpark12/sounds/456200/> (Radio Chatter RELIEF NEEDED.wav by cpark12, CC0 1.0).
+Use: Level 40 (Honour Guard), section 1 (the approach with Vorne's fleet, t=0 to the picket line): a layer over the `belt-open` bed, under the music.
+Brief: the fleet's distant comms and engine rumble: a big ship's drive heard far through the hull, faint radio traffic as a band-limited murmur (no words to follow); a seamless loop; a real recording, nothing bubbly or popping.
+This one: a ferry's propulsion engines slowed to half and muffled at 450 Hz (a big ship's deep drive), with relief workers' radio chatter far under it, band-passed 500 Hz-1.4 kHz to a murmur all through the loop: 16.0 s loop.
+Edit: 16.00 s, band RMS −42.0 dB, peak −23.2 dBFS, −33.8 LUFS.
+
+### fleet-comms-r78-b — "Engine Room .wav" by bsumusictech + "atc004.flac" by kwahmah_02 + "atc002.flac" by kwahmah_02
+
+Proposed (round 78), cut from the HQ previews by `tools/concept/audio/sfx_r78.py`.
+Sources: <https://freesound.org/people/bsumusictech/sounds/62592/> (Engine Room .wav by bsumusictech, CC0 1.0), <https://freesound.org/people/kwahmah_02/sounds/276283/> (atc004.flac by kwahmah_02, CC-BY 3.0), <https://freesound.org/people/kwahmah_02/sounds/276285/> (atc002.flac by kwahmah_02, CC-BY 3.0).
+Use: Level 40 (Honour Guard), section 1 (the approach with Vorne's fleet, t=0 to the picket line): a layer over the `belt-open` bed, under the music.
+Brief: the fleet's distant comms and engine rumble: a big ship's drive heard far through the hull, faint radio traffic as a band-limited murmur (no words to follow); a seamless loop; a real recording, nothing bubbly or popping.
+This one: an engine room's machinery slowed to 0.45 and muffled at 400 Hz (a lower, steadier drive than a), with two air-traffic-control calls far off, band-passed to a murmur, twice a loop: 16.0 s loop.
+Edit: 16.00 s, band RMS −42.1 dB, peak −12.1 dBFS, −31.7 LUFS.

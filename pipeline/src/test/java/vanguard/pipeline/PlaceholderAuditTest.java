@@ -180,6 +180,14 @@ class PlaceholderAuditTest {
             "M10 part D, step AUD-D: round 76's proposals for the Harrow's hunting whistle and ram whoosh, option a"
                     + " until the user's pick, from the Freesound HQ previews of CC0/CC-BY sounds (CREDITS rows from step"
                     + " AUD-D; by tools/concept/audio/sfx_r76.py)";
+    private static final String ROUND_78 =
+            "M10 part F, step AUD-F: round 78's proposals for the Honour Guard and Level 40, option a until the user's"
+                    + " pick, from the Freesound HQ previews of CC0/CC-BY sounds (CREDITS rows from step AUD-F; by"
+                    + " tools/concept/audio/sfx_r78.py)";
+    private static final String ROUND_78_MUSIC =
+            "M10 part F: track 32 \"Three Aces\", the duel theme (round 78 QF-2, step AUD-F's full-length render of"
+                    + " round 72's pick, synthesized by tools/concept/audio/music_r78.py), the concept file until the"
+                    + " user's ok";
     private static final String ROUND_60_H =
             "M9 part H, step H4: round 60's pick for the Iron Sovereign's rings turning (the user, 2026-10-27: S.16 a),"
                     + " from the Freesound HQ previews of CC0/CC-BY sounds until the originals (CREDITS rows from step"
@@ -558,6 +566,18 @@ class PlaceholderAuditTest {
             Map.entry("sfx/harrow-burst-r72-a.ogg", ROUND_72_HARROW),
             Map.entry("sfx/harrow-whistle-r76-a.ogg", ROUND_76),
             Map.entry("sfx/harrow-ram-r76-a.ogg", ROUND_76),
+            Map.entry("sfx/ace-flyby-r78-a.ogg", ROUND_78),
+            Map.entry("sfx/kestrel-flyby-r78-a.ogg", ROUND_78),
+            Map.entry("sfx/sniper-charge-r78-a.ogg", ROUND_78),
+            Map.entry("sfx/sniper-shot-r78-a.ogg", ROUND_78),
+            Map.entry("sfx/kestrel-dive-r78-a.ogg", ROUND_78),
+            Map.entry("sfx/kestrel-pullout-r78-a.ogg", ROUND_78),
+            Map.entry("sfx/vesper-cannon-r78-a.ogg", ROUND_78),
+            Map.entry("sfx/ace-death-r78-a.ogg", ROUND_78),
+            Map.entry("sfx/ace-last-chain-r78-a.ogg", ROUND_78),
+            Map.entry("sfx/recorder-crack-r78-a.ogg", ROUND_78),
+            Map.entry("sfx/fleet-comms-r78-a.ogg", ROUND_78),
+            Map.entry("music/duel-theme.ogg", ROUND_78_MUSIC),
             Map.entry("music/iron-sovereign.ogg", ROUND_68_MUSIC),
             Map.entry("music/reveal-sting.ogg", ROUND_58_MUSIC),
             Map.entry("music/thera-deep-dark.ogg", ROUND_55_MUSIC),

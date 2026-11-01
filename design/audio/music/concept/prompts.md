@@ -1748,3 +1748,30 @@ organ, a breakdown of the choir alone over low strings and wind, about three min
   stem alone at bar 9 (28.4 s).
 - `storm-wall-sheet-r75-a.png`: review sheet: waveforms with intro (grey), loop (blue), fade tail (dark) and loop
   points (amber), the measured numbers and a per-section loudness table.
+
+## duel-theme-full-r78-a — track 32 "Three Aces" at full length, one full mix
+
+From the chosen round-72 sketch [duel-theme-r72-b](duel-theme-r72-b.ogg) (175 BPM, A minor), by
+`tools/concept/audio/music_r78.py`. Composition: the sketch's 4-bar intro (the sequencer alone playing Vorne's motif,
+A C E G♯, in 16ths, filtered up, the break from bar 3, a riser) and an 88-bar loop of eleven 8-bar sections (A =
+`Am Am F F Dm Dm E E`, C = `Am F C E Am F Dm E`): A (the drum-and-bass break, the reese sub bass, the synth-brass
+stabs on the off-beats), B (plus Vorne's motif in the sequencer), C (plus the main motif, A E A B C, soaring in the
+distorted lead), J (new, the joust: Vorne's motif stated in held synth brass, answered by the main motif in the lead,
+twice), D (half time: the sequencer and the stabs alone, a snare roll), T (new, the three aces: the sequencer in a
+three-voice canon entering every two bars, panned left, right and centre, the break full from bar 5 under a riser),
+E (everything), Br (new, a breakdown: four bars without drums, the reese held under brass chords, then the kick, the
+lead and a riser), K (new, the canon: the lead with itself a bar behind an octave down, Vorne's motif in the brass,
+the sequencer under them), B2 and A2 (the turn back into A).
+
+**Measured** (not listened to): 129.26 s, `LOOPSTART` 257040 (5.829 s), `LOOPLENGTH` 5322240 (120.686 s = 88 bars);
+−14.0 LUFS, −1.6 dBTP, peak −2.2 dBFS, seam 0.17; the sections from −12.7 LUFS (K) to −15.7 (D), the breakdown's
+drumless half −16.9.
+
+**AI prompt**: *"Fast drum-and-bass duel theme for a 1990s sci-fi shooter mid-boss, three enemy aces in black and
+gold, 175 BPM, A minor, a breakbeat with ghost notes and 16th hats, a reese sub bass, synth-brass stabs, a villain's
+four-note minor-major-seventh motif as a fast sequencer arpeggio, the hero's horn-call motif in a soaring distorted
+lead, call and response then canon, about two minutes, instrumental, seamless loop."*
+
+- `duel-theme-full-r78-a.ogg`: the full mix (`assets/music/duel-theme.ogg`).
+- `duel-theme-seam-r78-a.ogg`: listening aid, the last 8 s of the loop followed by the first 8 s after `LOOPSTART`
+  (0.5 s fades).

@@ -513,6 +513,22 @@ val copyPlaceholderSounds = tasks.register<JavaExec>("copyPlaceholderSounds") {
         "harrow-burst-r72-a.ogg",
         "harrow-whistle-r76-a.ogg",
         "harrow-ram-r76-a.ogg",
+        // M10 part F, step AUD-F: the Honour Guard's sounds and Level 40's (round 78's proposals, CC0/CC-BY Freesound
+        // HQ previews cut by tools/concept/audio/sfx_r78.py, their CREDITS.md rows), their a variants until the user's
+        // picks: an ace's fly-by and Kestrel's rougher one, Harker's sniper charge and shot, Kestrel's dive and
+        // pull-out, Vesper's looping cannon, an ace's death and the last ace's chain, the recorder's crack and the
+        // fleet's layer over `belt-open`. Played once step F4 wires them.
+        "ace-flyby-r78-a.ogg",
+        "kestrel-flyby-r78-a.ogg",
+        "sniper-charge-r78-a.ogg",
+        "sniper-shot-r78-a.ogg",
+        "kestrel-dive-r78-a.ogg",
+        "kestrel-pullout-r78-a.ogg",
+        "vesper-cannon-r78-a.ogg",
+        "ace-death-r78-a.ogg",
+        "ace-last-chain-r78-a.ogg",
+        "recorder-crack-r78-a.ogg",
+        "fleet-comms-r78-a.ogg",
     )
 }
 
@@ -579,6 +595,9 @@ val copyPlaceholderMusic = tasks.register<JavaExec>("copyPlaceholderMusic") {
         // M9 part H: track 19 "Iron Sovereign" (round 68 QH-3 a, step AUD-H1's full-length render of round 03's pick, one
         // mix), Level 35's boss track after the warning.
         "iron-sovereign-full-r68-a.ogg=iron-sovereign.ogg",
+        // M10 part F: track 32 "Three Aces", the duel theme (round 78 QF-2, step AUD-F's full-length render of round
+        // 72's pick M.2 b, one mix, tools/concept/audio/music_r78.py), Level 40's mid-boss track after the sting.
+        "duel-theme-full-r78-a.ogg=duel-theme.ogg",
     )
 }
 
