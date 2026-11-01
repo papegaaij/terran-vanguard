@@ -317,6 +317,10 @@ final class ShotHits {
         double damage = shot.damage() * weapon.splash();
         double x = shot.x();
         double y = shot.y();
+        if (fire.allies() != null && fire.medium().reaches(weapon, Layer.AIR)) {
+            // M10 part C, step C6s: the splash hurts the air allies the player's fire hits (Level 37's shuttles).
+            fire.allies().blast(x, y, weapon.blast(), damage, shot.mount());
+        }
         for (int j = enemies.size() - 1; j >= 0; j--) {
             Enemy enemy = enemies.get(j);
             Layer layer = enemy.layer();

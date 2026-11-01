@@ -399,6 +399,18 @@ final class AllyPasses {
     }
 
     /**
+     * M10 part C, step C6s ({@link AllyFire}): air unit {@code k} takes {@code damage} from the player's fire, as from an
+     * enemy's (its hit event, a loss's event and lines, the saved secondary's loss count); nothing once the level is over,
+     * the ship is wrecked or the primary failed.
+     */
+    void playerHit(int k, double damage) {
+        if (s.complete || s.wrecked || s.failed || !convoy.get(k).alive()) {
+            return;
+        }
+        hurt(k, damage, true);
+    }
+
+    /**
      * Unit {@code k} of the convoy takes {@code damage}: the first hit's line, a loss's lines (M5 part
      * D: {@code first-ally-lost}'s on the first, then {@code ally-lost}'s on every one), the failure
      * when every saveable unit is lost.

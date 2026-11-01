@@ -139,6 +139,11 @@ final class Beams {
      * spark, on the ground layer too (not passed over).
      */
     private static final int CAST_DOME = 9;
+    /**
+     * M10 part C, step C6s (design/campaign Level 37, the shuttles): an air ally the player's fire hits ({@link
+     * AllyFire}): it burns as a neutral craft would.
+     */
+    private static final int CAST_ALLY = 10;
     /** M10 part A: the steps between two of a beam's {@link SimEvents.Type#DOME_HIT} sparks. */
     private static final int DOME_SPARK_GAP = 6;
 
@@ -168,7 +173,8 @@ final class Beams {
      * included (the Siege Spire's trunk, its maw and core before their phases), and so does a high-air
      * boss's body (the Brood Carrier's hull in its first phase): the beam reaches high air, so it is not
      * beneath the hull as a bolt is. Units under the water, a Lamprey latched onto the
-     * hull (front shots pass it), allies, pickups and enemy bullets do not stop it.
+     * hull (front shots pass it), allies (M10 part C, step C6s: but those the player's fire hits, {@link AllyFire}),
+     * pickups and enemy bullets do not stop it.
      *
      * <p>M7 part C: a canyon wall or rock island in the column ends it there ({@link #wallAhead}, {@link
      * Beam.Contact#ROCK}); a gate's tendril it crosses short of its end burns, and it goes on past it ({@link
@@ -238,6 +244,7 @@ final class Beams {
                     fire.hitBy(enemy.serial());
                     enemy.mirror().heat(enemy.spec().mirror().get(), enemy, damage);
                 }
+                case CAST_ALLY -> fire.allies().hurt(castIndex, damage);
                 case CAST_DOME -> {
                     if (beam.ticksOn % DOME_SPARK_GAP == 1) {
                         events.add(SimEvents.Type.DOME_HIT, beam.x, castY, m);
@@ -421,6 +428,13 @@ final class Beams {
                             j,
                             -1);
                 }
+            }
+        }
+        AllyFire allies = fire.allies();
+        if (allies != null && medium.reaches(weapon, Layer.AIR)) {
+            // M10 part C, step C6s: the air allies the player's fire hits (Level 37's shuttles).
+            for (int k = 0; k < allies.units(); k++) {
+                consider(CAST_ALLY, allies.column(k, x, half, fromY), Layer.AIR, k, -1);
             }
         }
         Missiles missiles = fire.missiles();

@@ -173,6 +173,8 @@ final class PlayerFire {
     private Canyon canyon;
     /** M7 part F: the enemies' homing missiles, which shots and the beam bring down; null until the sortie sets them. */
     private Missiles missiles;
+    /** M10 part C, step C6s: the air allies the player's fire hits; null without. */
+    private AllyFire allyFire;
     /** M7 part C: the level's tendril gates, which a beam burns on its way past; null without. */
     private Links links;
     /** M8 part H: the finale's cruisers, whose hulls stop the beam; null without. */
@@ -235,6 +237,19 @@ final class PlayerFire {
     /** M7 part C: the level's tendril gates (design/enemies/ground/tendril-anchor); null without. */
     void links(Links gates) {
         links = gates;
+    }
+
+    /**
+     * M10 part C, step C6s: the air allies the player's fire hits (Level 37's shuttles, {@link AllyFire}); null
+     * without.
+     */
+    void allies(AllyFire hit) {
+        allyFire = hit;
+    }
+
+    /** M10 part C, step C6s: the air allies the player's fire hits; null without. */
+    AllyFire allies() {
+        return allyFire;
     }
 
     /** M7 part F: the enemies' homing missiles (the sortie's, from its enemy force). */

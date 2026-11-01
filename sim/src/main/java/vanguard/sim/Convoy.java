@@ -72,6 +72,15 @@ final class Convoy {
     private final int[] liftTicks;
     private final int[] climbTick;
     private final int[] climbTicks;
+    /**
+     * M10 part C, step C6s (design/campaign Level 37, the shuttles): per air unit, the steps its slide aside takes (it
+     * ends as its climb-out starts; 0 without one), where it ends (x) and how far down it goes; empty for another
+     * convoy.
+     */
+    private final int[] asideTicks;
+
+    private final double[] asideX;
+    private final double[] asideDrop;
     private final int glowTick;
     private final int lossTick;
     /**
@@ -181,6 +190,9 @@ final class Convoy {
         liftTicks = new int[0];
         climbTick = new int[0];
         climbTicks = new int[0];
+        asideTicks = new int[0];
+        asideX = new double[0];
+        asideDrop = new double[0];
         lossTick = Integer.MAX_VALUE;
         glowTick = Integer.MAX_VALUE;
         liftScroll = new double[0];
@@ -233,6 +245,9 @@ final class Convoy {
         liftTicks = new int[0];
         climbTick = new int[0];
         climbTicks = new int[0];
+        asideTicks = new int[0];
+        asideX = new double[0];
+        asideDrop = new double[0];
         lossTick = Integer.MAX_VALUE;
         glowTick = Integer.MAX_VALUE;
         liftScroll = new double[0];
@@ -282,6 +297,9 @@ final class Convoy {
         liftTicks = new int[0];
         climbTick = new int[0];
         climbTicks = new int[0];
+        asideTicks = new int[0];
+        asideX = new double[0];
+        asideDrop = new double[0];
         lossTick = Integer.MAX_VALUE;
         glowTick = Integer.MAX_VALUE;
         liftScroll = new double[0];
@@ -345,6 +363,9 @@ final class Convoy {
         liftTicks = new int[airUnits];
         climbTick = new int[airUnits];
         climbTicks = new int[airUnits];
+        asideTicks = new int[airUnits];
+        asideX = new double[airUnits];
+        asideDrop = new double[airUnits];
         liftScroll = new double[airUnits];
         pads = new ObjectiveSpec.Pad[airUnits];
         int groups = air == null ? 0 : air.groups().size();
@@ -376,11 +397,19 @@ final class Convoy {
                 double scroll = scrolled(sections, lift);
                 announceTicks[g] = SimStep.ticks(group.announced());
                 groupLiftTicks[g] = lift;
-                for (ObjectiveSpec.Pad pad : group.liftoff().pads()) {
+                for (int p = 0; p < group.liftoff().pads().size(); p++) {
+                    ObjectiveSpec.Pad pad = group.liftoff().pads().get(p);
                     liftTick[k] = lift;
                     liftTicks[k] = SimStep.ticks(group.liftoff().seconds());
                     climbTick[k] = SimStep.ticks(group.climb().t());
                     climbTicks[k] = SimStep.ticks(group.climb().seconds());
+                    if (group.aside().isPresent()) {
+                        // M10 part C, step C6s: the slide aside, ending as the climb-out starts.
+                        ObjectiveSpec.Aside aside = group.aside().get();
+                        asideTicks[k] = Math.max(1, SimStep.ticks(aside.seconds()));
+                        asideX[k] = aside.x().get(p);
+                        asideDrop[k] = aside.drop();
+                    }
                     liftScroll[k] = scroll;
                     pads[k++] = pad;
                     groupX[g] += pad.x() / group.liftoff().pads().size();
@@ -956,12 +985,19 @@ final class Convoy {
                     if (levelTick >= climbTick[k]) {
                         ally.state(Ally.State.CLIMBING);
                         climb(k, ally, station, levelTick, seconds);
+                    } else if (asideTicks[k] > 0 && levelTick >= climbTick[k] - asideTicks[k]) {
+                        // M10 part C, step C6s: the slide aside toward its side edge.
+                        double s = (double) (levelTick - climbTick[k] + asideTicks[k]) / asideTicks[k];
+                        double e = s * s * (3 - 2 * s);
+                        double slideX = asideFromX(k, station);
+                        double slideY = asideFromY(k, station);
+                        ally.fly(slideX + (asideX[k] - slideX) * e, slideY - asideDrop[k] * e, 1, held);
                     } else {
                         ally.fly(station.xAt(seconds), station.yAt(seconds), 1, held);
                     }
                 }
                 case CLIMBING -> climb(k, ally, station, levelTick, seconds);
-                case HOME -> ally.fly(station.xAt(seconds), homeY, 1, true);
+                case HOME -> ally.fly(asideTicks[k] > 0 ? asideX[k] : station.xAt(seconds), homeY, 1, true);
                 default -> {
                     // A lost unit stays where it was lost: its glide is drawn by the game.
                 }
@@ -991,15 +1027,46 @@ final class Convoy {
         ally.fly(x, y, e, s < 1 || held);
     }
 
-    /** A unit climbing out: from its station up off the top edge, speeding up (s²); home at the end. */
+    /**
+     * A unit climbing out: from its station up off the top edge, speeding up (s²); home at the end. M10 part C, step
+     * C6s: after a slide aside, from where the slide ended straight up along its x.
+     */
     private void climb(int k, Ally ally, ObjectiveSpec.Station station, int levelTick, double seconds) {
         double s = Math.min(1, (double) (levelTick - climbTick[k]) / climbTicks[k]);
-        double from = station.yAt(seconds);
+        boolean aside = asideTicks[k] > 0;
+        double from = aside ? asideFromY(k, station) - asideDrop[k] : station.yAt(seconds);
         if (s >= 1) {
             ally.state(Ally.State.HOME);
             home++;
         }
-        ally.fly(station.xAt(seconds), from + (homeY - from) * s * s, 1, true);
+        ally.fly(aside ? asideX[k] : station.xAt(seconds), from + (homeY - from) * s * s, 1, true);
+    }
+
+    /** M10 part C, step C6s: the seconds on the level clock at which unit {@code k}'s slide aside starts. */
+    private double asideStart(int k) {
+        return (climbTick[k] - asideTicks[k]) * SimStep.SECONDS;
+    }
+
+    /** M10 part C, step C6s: where unit {@code k}'s slide aside starts: its station's point then. */
+    private double asideFromX(int k, ObjectiveSpec.Station station) {
+        return station.xAt(asideStart(k));
+    }
+
+    private double asideFromY(int k, ObjectiveSpec.Station station) {
+        return station.yAt(asideStart(k));
+    }
+
+    /**
+     * M10 part C, step C6s: whether the player's fire hits the air units ({@link ObjectiveSpec.Air#playerHits()}; Level
+     * 37's shuttles).
+     */
+    boolean playerHits() {
+        return air != null && air.playerHits();
+    }
+
+    /** M10 part C, step C6s: the air units' hit box. */
+    Hitbox airHitbox() {
+        return escort.ally().hitbox();
     }
 
     /** M5 part D: whether the scripted loss's glow starts at {@code levelTick} (once). */

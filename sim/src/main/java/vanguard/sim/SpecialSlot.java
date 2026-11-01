@@ -119,6 +119,8 @@ public final class SpecialSlot {
 
     /** M8 part A: the Sonar Pulse's numbers; null for another special. */
     private final SonarSpec sonar;
+    /** M10 part C, step C6s: the air allies the player's fire hits (Level 37's shuttles); null without. */
+    private AllyFire allyFire;
     /** M8 part A: the Sonar Pulse's window, in steps. */
     private final int sonarTicks;
     /** M8 part A: the Decoy Flares in flight; null for another special. */
@@ -492,6 +494,16 @@ public final class SpecialSlot {
                 }
             }
         }
+        if (allyFire != null) {
+            // M10 part C, step C6s: the ring hurts each air ally the player's fire hits once (Level 37's shuttles).
+            for (int k = 0; k < allyFire.units(); k++) {
+                if (allyFire.hittable(k)
+                        && within(allyFire.x(k), allyFire.y(k), radius)
+                        && strike(AllyFire.key(k), smartBomb.damage())) {
+                    allyFire.hurt(k, smartBomb.damage());
+                }
+            }
+        }
         for (int j = ground.size() - 1; j >= 0; j--) {
             GroundObject object = ground.get(j);
             if (object.spec().submerged()
@@ -739,6 +751,14 @@ public final class SpecialSlot {
                 hits.enemyDestroyed(j);
             }
         }
+        if (allyFire != null) {
+            // M10 part C, step C6s: the column burns the air allies the player's fire hits (Level 37's shuttles).
+            for (int k = 0; k < allyFire.units(); k++) {
+                if (allyFire.column(k, lanceX, half, 0) < Double.POSITIVE_INFINITY) {
+                    allyFire.hurt(k, damage);
+                }
+            }
+        }
         for (int j = ground.size() - 1; j >= 0; j--) {
             GroundObject object = ground.get(j);
             GroundObjectSpec spec = object.spec();
@@ -980,6 +1000,18 @@ public final class SpecialSlot {
                 hits.enemyDestroyed(j);
             }
         }
+        if (allyFire != null) {
+            // M10 part C, step C6s: the blast hurts the air allies the player's fire hits, capped as an air unit.
+            for (int k = 0; k < allyFire.units(); k++) {
+                if (allyFire.hittable(k)
+                        && ShotGeometry.inBlast(x, y, radius, allyFire.x(k), allyFire.y(k), allyFire.box())) {
+                    double amount = deal(AllyFire.key(k), Layer.AIR);
+                    if (amount > 0) {
+                        allyFire.hurt(k, amount);
+                    }
+                }
+            }
+        }
         for (int j = ground.size() - 1; j >= 0; j--) {
             GroundObject object = ground.get(j);
             GroundObjectSpec spec = object.spec();
@@ -1215,6 +1247,15 @@ public final class SpecialSlot {
     /** M8 part A: the Decoy Flares in flight; null when the fitted special is another. */
     public Flares flares() {
         return flares;
+    }
+
+    /**
+     * M10 part C, step C6s (design/campaign Level 37, the shuttles): the air allies the player's fire hits ({@link
+     * AllyFire}): the Smart Bomb's ring, the Airstrike's blasts (their air damage, capped as a unit's) and the Orbital
+     * Lance's column hurt them; null without.
+     */
+    void allies(AllyFire hit) {
+        allyFire = hit;
     }
 
     /** M7 part A: the fitted special's kind; null without one. */

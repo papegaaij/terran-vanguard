@@ -212,6 +212,10 @@ final class ArcFire {
         }
         double spark = damage * weapon.splash();
         Medium medium = fire.medium();
+        if (fire.allies() != null && medium.reaches(weapon, Layer.AIR)) {
+            // M10 part C, step C6s: the sparks hurt the air allies the player's fire hits (Level 37's shuttles).
+            fire.allies().blast(x, y, weapon.blast(), spark, m);
+        }
         for (int j = enemies.size() - 1; j >= 0; j--) {
             Enemy enemy = enemies.get(j);
             if (enemy.serial() == struck

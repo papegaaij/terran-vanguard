@@ -109,6 +109,11 @@ public final class Sortie {
     final ObjectivePasses objectivePasses;
     /** The convoy's passes: what hurts its units, and what follows. */
     final AllyPasses allies;
+    /**
+     * M10 part C, step C6s (design/campaign Level 37, the shuttles): the player's fire on the air allies that take it;
+     * null without such an escort.
+     */
+    final AllyFire allyFire;
     /** The ground objects and debris chunks: let in, scrolled, destroyed. */
     final GroundPasses groundPasses;
     /** The pickups: dropped, placed, drifting and collected. */
@@ -497,6 +502,11 @@ public final class Sortie {
                 .map(defend -> SimStep.ticks(defend.end()))
                 .orElse(-1);
         allies = new AllyPasses(this, script, convoy, ship, force, events, radio, objectives, rules);
+        allyFire = convoy != null && convoy.playerHits()
+                ? new AllyFire(convoy, allies, fire, loadout.armament().size())
+                : null;
+        fire.allies(allyFire);
+        special.allies(allyFire);
         launchTicks = SimStep.ticks(script.launchSeconds());
         endTicks = SimStep.ticks(script.seconds());
         crateTicks = SimStep.ticks(rules.pickups().crateSeconds());
@@ -853,6 +863,10 @@ public final class Sortie {
         fire.hitSetPieces();
         fire.hitMines(force.mines());
         fire.hitMissiles();
+        if (allyFire != null) {
+            // M10 part C, step C6s: the player's shots hit the air allies that take them (after the enemies).
+            allyFire.hitShots();
+        }
         if (eruptions != null) {
             // M10 part A, step A1b: the shots that reach the air spend themselves on a flying rock.
             eruptions.hitBy(fire.shots(), events);

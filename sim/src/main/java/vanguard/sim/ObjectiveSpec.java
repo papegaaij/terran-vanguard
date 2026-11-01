@@ -749,6 +749,11 @@ public record ObjectiveSpec(
      * (indexes in the level's waves; Level 37's three Talon waves) aim every attack at the nearest unit holding its
      * station on the play field while there is one (the {@code always} hook), at the ship otherwise; launched units
      * and every other wave stay on the ship.
+     *
+     * <p>M10 part C, step C6s (round 75 F.3, user decision 2026-11-01): with {@code playerHits} the player's fire hits
+     * the units as it hits a {@link EnemySpec#neutral() neutral} craft ({@link AllyFire}): shots, beams, blasts and the
+     * specials' damage; the escort's shots pass, the seekers never pick them; a unit destroyed so is a lost unit. Off
+     * for Level 10's escort.
      */
     public record Air(
             List<Station> stations,
@@ -756,7 +761,8 @@ public record ObjectiveSpec(
             Optional<Climb> climb,
             Optional<ScriptedLoss> scriptedLoss,
             List<Lift> groups,
-            List<Integer> hookedWaves) {
+            List<Integer> hookedWaves,
+            boolean playerHits) {
         public Air {
             stations = List.copyOf(stations);
             groups = List.copyOf(groups);
@@ -791,7 +797,7 @@ public record ObjectiveSpec(
                 Optional<Liftoff> liftoff,
                 Optional<Climb> climb,
                 Optional<ScriptedLoss> scriptedLoss) {
-            this(stations, liftoff, climb, scriptedLoss, List.of(), List.of());
+            this(stations, liftoff, climb, scriptedLoss, List.of(), List.of(), false);
         }
 
         /** M10 part C: units lifting and climbing out in {@code groups}, the waves {@code hookedWaves} aiming at them. */
@@ -799,7 +805,12 @@ public record ObjectiveSpec(
             if (groups.isEmpty()) {
                 throw new IllegalArgumentException("a lifting escort has its lift groups");
             }
-            return new Air(stations, Optional.empty(), Optional.empty(), Optional.empty(), groups, hookedWaves);
+            return new Air(stations, Optional.empty(), Optional.empty(), Optional.empty(), groups, hookedWaves, false);
+        }
+
+        /** M10 part C, step C6s: this escort with the player's fire hitting its units or not ({@link #playerHits}). */
+        public Air withPlayerHits(boolean hit) {
+            return new Air(stations, liftoff, climb, scriptedLoss, groups, hookedWaves, hit);
         }
 
         /** M10 part C: whether a unit of wave {@code wave} (-1: launched, no wave) aims at the units. */
@@ -814,18 +825,71 @@ public record ObjectiveSpec(
      * climb out off the top edge from {@code climb}'s time (untouchable); each one that gets off the top edge is home.
      * The "FRIENDLIES INBOUND — HOLD FIRE" banner opens {@link WaveSchedule#FRIENDLY_WARNING_SECONDS} before the liftoff
      * ({@link SimEvents.Type#FRIENDLIES_INBOUND}).
+     *
+     * <p>M10 part C, step C6s (round 75 F.3, user decision 2026-11-01): with an {@code aside} each unit slides from its
+     * station toward its own side edge over the aside's seconds, ending as the climb-out starts, and then climbs out
+     * along that edge (see {@link Aside}); without one it climbs out from its station (Level 37 as first built).
      */
-    public record Lift(Liftoff liftoff, Climb climb) {
+    public record Lift(Liftoff liftoff, Climb climb, Optional<Aside> aside) {
         public Lift {
             if (liftoff.pads().isEmpty() || climb.t() < liftoff.t() + liftoff.seconds()) {
                 throw new IllegalArgumentException(
                         "a lift group lifts from its pads to its stations before it climbs out");
             }
+            if (aside.isPresent()
+                    && (aside.get().x().size() != liftoff.pads().size()
+                            || climb.t() - aside.get().seconds() < liftoff.t() + liftoff.seconds() - 1e-9)) {
+                throw new IllegalArgumentException(
+                        "a lift group's slide aside has one x per pad and starts after the lift ends");
+            }
+        }
+
+        /** M10 part C: lifting, holding the stations and climbing out from them (no slide aside). */
+        public Lift(Liftoff liftoff, Climb climb) {
+            this(liftoff, climb, Optional.empty());
+        }
+
+        /**
+         * M10 part C, step C6s: the units lift, hold their stations {@code hold} s after the lift, slide {@code aside}
+         * and climb out over {@code climbSeconds} from where the slide ends.
+         */
+        public static Lift holding(Liftoff liftoff, double hold, Aside aside, double climbSeconds) {
+            double climbs = liftoff.t() + liftoff.seconds() + hold + aside.seconds();
+            return new Lift(liftoff, new Climb(climbs, climbSeconds), Optional.of(aside));
+        }
+
+        /** M10 part C, step C6s: when the slide aside starts, s on the level clock (NaN without one). */
+        public double asideStart() {
+            return aside.map(slide -> climb.t() - slide.seconds()).orElse(Double.NaN);
         }
 
         /** The time its banner opens, s on the level clock (never before the level's start). */
         public double announced() {
             return Math.max(0, liftoff.t() - WaveSchedule.FRIENDLY_WARNING_SECONDS);
+        }
+    }
+
+    /**
+     * M10 part C, step C6s (design/campaign Level 37, the shuttles; round 75 F.3, user decision 2026-11-01): a lift
+     * group's slide aside before it climbs out. From where it holds its station when the slide starts, each unit eases
+     * (smoothstep) over {@code seconds} to its pad's {@code x} and {@code drop} px lower (the sway stops), touchable as
+     * on its station; the climb-out then starts there and goes straight up along that x, away from the centre lane.
+     *
+     * @param x per pad of the group, px from the left edge (Level 37: the left pad's unit to 90, the right one's to 390)
+     * @param drop px down the screen
+     * @param seconds the slide's length, ending as the climb-out starts
+     */
+    public record Aside(List<Double> x, double drop, double seconds) {
+        public Aside {
+            x = List.copyOf(x);
+            if (x.isEmpty() || !(seconds > 0) || !(drop >= 0)) {
+                throw new IllegalArgumentException("a slide aside has its x per pad, a drop and takes a while");
+            }
+            for (double at : x) {
+                if (!(at >= 0 && at <= PlayField.WIDTH)) {
+                    throw new IllegalArgumentException("a slide aside ends on the play field: " + at);
+                }
+            }
         }
     }
 

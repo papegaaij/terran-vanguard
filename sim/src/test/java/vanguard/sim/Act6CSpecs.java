@@ -52,6 +52,46 @@ final class Act6CSpecs {
         return ObjectiveSpec.Escort.air(SHUTTLE, ObjectiveSpec.Air.lifting(stations(), groups(), hooked), 0);
     }
 
+    /** Step C6s: the hold on station before the slide aside, the slide's length and drop, its x per pad. */
+    static final double ASIDE_HOLD = 3;
+
+    static final double ASIDE_SECONDS = 1.5;
+    static final double ASIDE_DROP = 40;
+    static final List<Double> ASIDE_X = List.of(90.0, 390.0);
+
+    /** Step C6s: the three lift groups holding {@link #ASIDE_HOLD} s, sliding aside, then climbing out along the edge. */
+    static List<ObjectiveSpec.Lift> asideGroups() {
+        List<ObjectiveSpec.Lift> groups = new ArrayList<>();
+        for (double t : LIFTS) {
+            groups.add(ObjectiveSpec.Lift.holding(
+                    new ObjectiveSpec.Liftoff(
+                            t, LIFT_SECONDS, List.of(new ObjectiveSpec.Pad(190, 160), new ObjectiveSpec.Pad(290, 160))),
+                    ASIDE_HOLD,
+                    new ObjectiveSpec.Aside(ASIDE_X, ASIDE_DROP, ASIDE_SECONDS),
+                    CLIMB_SECONDS));
+        }
+        return groups;
+    }
+
+    /**
+     * Step C6s (round 75 F.3): the shuttles with the player's fire hitting them or not, and with the slide aside or
+     * without.
+     */
+    static ObjectiveSpec.Escort shuttles(List<Integer> hooked, boolean playerHits, boolean aside) {
+        ObjectiveSpec.Air air = ObjectiveSpec.Air.lifting(stations(), aside ? asideGroups() : groups(), hooked)
+                .withPlayerHits(playerHits);
+        return ObjectiveSpec.Escort.air(SHUTTLE, air, 0);
+    }
+
+    /** Step C6s: {@link #level} with {@link #shuttles(List, boolean, boolean)}. */
+    static LevelScript level(Secondary secondary, List<WaveSpec> waves, boolean playerHits, boolean aside) {
+        return level(secondary, waves, List.of()).toBuilder()
+                .objectives(ObjectiveSpec.NONE
+                        .withSecondary(secondary)
+                        .withAirAllies(Optional.of(shuttles(List.of(), playerHits, aside))))
+                .build();
+    }
+
     /** Level 37's secondary at medium: 5 of 6 home for 100. */
     static final Secondary SAVED = Secondary.saved(5, 100, "SHUTTLES");
 
