@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: chosen
 depends-on: [../act-5-the-belt, ../../world/jovian, ../../story/twist, ../../story/characters/vorne, ../../enemies/bosses/honour-guard, ../../enemies/bosses/ascendant, ../../player/generator]
-updated: 2026-11-01
+updated: 2026-11-02
 ---
 
 # Act 6 – Jovian Storm
@@ -38,7 +38,7 @@ here is a hand table marked draft, taken from the level drafts, and the build (M
 | [level-39-io-flyby](level-39-io-flyby/README.md) | Io's refineries, `destroy-targets`: six cracking towers under holds, dry eruptions throwing rocks, Striders guarding the works, the pump stations (`PUMPS`) | approved | in-progress | proposed |
 | [level-40-honour-guard](level-40-honour-guard/README.md) | The Callisto approach in vacuum, air only: Vorne's picket line, then the mid-boss Honour Guard (Harker, Vesper, Kestrel) and Rook's rivalry, then the run-out to the citadel's outer line | approved | done | proposed |
 | [level-41-callisto-fortress](level-41-callisto-fortress/README.md) | Helix HQ: three Shield Pylon gates and the Halo Platform held, Warden Tanks, Rail Bunkers and grafted turrets, Varga's `FILES` and the Silence named | approved | not-started | proposed |
-| [level-42-ascendant](level-42-ascendant/README.md) | Callisto orbit, air only: the home fleet's screen and two cruisers, the Ascendant bow-on, Vorne's only shout, the lifeboat's escape; the act end and the release's end naming Act VII | approved | not-started | none |
+| [level-42-ascendant](level-42-ascendant/README.md) | Callisto orbit, air only: the home fleet's screen and two cruisers, the Ascendant bow-on, Vorne's only shout, the lifeboat's escape; the act end and the release's end naming Act VII | approved | not-started | proposed |
 
 ## Design
 
@@ -439,6 +439,11 @@ The title card's still and the act intro's and outro's images are production art
 as Act 5's). Q10's moods per level with Q2's foreground-bank readability and Q4's falling-city storyboard are in
 [Jovian](../../world/jovian/README.md#concept-art), the units in their own documents (step ART-R-A), both bosses in
 theirs and the new radio portraits in [characters](../../story/characters/README.md#concept-art).
+
+The act outro's four images (M10 part H, step ART-H2, round 80: `act-6-outro-callisto`, `-silence`, `-ember`,
+`-gate`, as the *Act outro* table names them) are production art on the briefing's review sheet
+[briefing-images-final-r80-a](../../ui/briefing/concept/briefing-images-final-r80-a.png) (proposed, round 80), from
+`tools/art/briefing_images.py`; Level 42's two briefing images are on the same sheet.
 
 Concept round 72 (Act 6 design phase, step ART-R-B; **decided 2026-10-31 (round 72)**): the title card's
 still, one idea with an alternative (round 63's lesson), each 960×540 with the sheet showing the card over it

@@ -1,0 +1,89 @@
+backdrop:
+  # Presentation only: Level 42's Callisto orbit (tools/art/backdrop_l42.py, step ART-H2, sections from its own proposal's sections).
+  # No ground (`ground: none`): the deep layer is the base, scrolling at 0.06 (the bodies drift). Its tile sets
+  # are cut from one continuous field at the rows each section's tiles begin (LevelData.seam): re-run the
+  # generator after moving a section. The pieces draw in the placements' order (the hulks before the curve, so
+  # they fall behind Callisto's limb); the -glow pieces are additive at their piece's placements, at most two
+  # animated on the screen at once (checked). Every path before the arena ends by t=92 (the fight moves
+  # nothing); the paths after it start at 93.05 (the clock reads 93 at ESCAPED: they keep the level clock).
+  scroll_factors: {deep: 0.06, far: 0.3, ground: 1, low-air: 1.3, high-air: 1.7}   # far, ground, high-air unused
+  ramp: 2
+  haze_colour: 03040a
+  atmosphere:
+    clear: {haze: 0.0}   # vacuum: no haze, no wisps
+  tile_sets:
+    orbit-start: {layer: deep, height: 960}   # section 1: Callisto Orbit
+    fleet-lane: {layer: deep, height: 480}   # section 2: The Home Fleet
+    the-screen: {layer: deep, height: 448}   # section 3: The Screen
+    berth-line: {layer: deep, height: 192}   # section 4: The Berth Line
+    berth-brake: {layer: deep, height: 192}   # section 5: The Berth Line, braking
+    arena: {layer: deep, height: 192}   # section 6: The Ascendant
+    empty-orbit: {layer: deep, height: 256}   # section 7: The Empty Orbit
+  pieces:
+    callisto-curve: {layer: deep, size: [480, 320]}
+    hulk-a: {layer: deep, size: [96, 96]}
+    hulk-a-glow: {layer: deep, size: [96, 96], frames: 8, fps: 8}
+    hulk-b: {layer: deep, size: [80, 80]}
+    hulk-b-glow: {layer: deep, size: [80, 80], frames: 8, fps: 8}
+    home-fleet: {layer: deep, size: [192, 64]}
+    home-fleet-glow: {layer: deep, size: [192, 64]}
+    fleet-far: {layer: deep, size: [128, 96]}
+    fleet-far-glow: {layer: deep, size: [128, 96], frames: 8, fps: 4}
+    ascendant-far: {layer: deep, size: [64, 96]}
+    ascendant-far-glow: {layer: deep, size: [64, 96], frames: 12, fps: 6}
+    ascendant-drive: {layer: deep, size: [192, 192]}
+    ascendant-drive-glow: {layer: deep, size: [192, 192]}
+    gate-flash: {layer: deep, size: [48, 64]}
+    gate-flash-glow: {layer: deep, size: [48, 64], frames: 12, fps: 6}
+  placed:
+    # section 3: a burning bow half falling from the top edge toward Callisto (t~53-65), behind its limb (drawn before the curve)
+    - {piece: hulk-a, t: 86.334, x: 300, path: [[53.0, -10.0, 0.0], [54.0, -7.5, -30.4], [65.0, 20.0, -364.8], [67.0, 25.0, -635.6]]}
+    # section 3: a burning stern half falling on the left (t~66-77), behind the limb
+    - {piece: hulk-b, t: 119.283, x: 150, path: [[66.0, -0.0, 0.0], [77.0, -20.0, -346.4], [79.0, -23.6, -617.2]]}
+    # the whole level: Callisto's night side below its limb, held by its path at y~360 (t=0) to 400 (t=92),
+    # then held through the fight (the path ends before the halt), sinking 72 px over the empty orbit
+    - {piece: callisto-curve, t: -21.875, x: 240, path: [[0.0, 0, 0.0], [22.0, 0, 201.6], [54.0, 0, 494.9], [84.0, 0, 769.9], [86.0, 0, 788.2], [86.5, 0, 792.8], [87.0, 0, 797.1], [87.5, 0, 801.2], [88.0, 0, 804.8], [88.5, 0, 807.8], [89.0, 0, 810.3], [89.5, 0, 812.2], [90.0, 0, 813.6], [90.5, 0, 814.4], [91.0, 0, 814.7], [91.5, 0, 814.7], [92.0, 0, 814.6]]}
+    # sections 1-2: the home fleet's lights far ahead, in from the top at t~6, drifting down past y~380 by t~45
+    - {piece: home-fleet, t: 34.833, x: 250}
+    # section 1: the CDF carrier group closing from below over Callisto's night side (y 470 at t=0, y~310 at
+    # t=30), then falling back out at the bottom by t~44
+    - {piece: fleet-far, t: -20.833, x: 352, path: [[0, 0, 0], [30, 0, 450], [44, 0, 250]]}
+    # sections 3-4: the Ascendant's gold glint high ahead (in from the top at t~53, held at y~58 from t=63),
+    # climbing away out of the top over 89.5-91.5 (it comes about), parked far up after
+    - {piece: ascendant-far, t: 85.083, x: 240, path: [[63.0, 0, 0.0], [84.0, 0, 201.6], [86.0, 0, 218.6], [86.5, 0, 222.8], [87.0, 0, 226.9], [87.5, 0, 230.6], [88.0, 0, 233.9], [88.5, 0, 236.6], [89.0, 0, 238.8], [89.5, 0, 240.4], [91.5, 0, 1007.7]]}
+    # section 4: its drive glow growing over the glint as the wing closes (in from above the top edge,
+    # t=83-88.5), swinging away with it over 89.5-91.5, before the bow slides in at t=92
+    - {piece: ascendant-drive, t: 173.0, x: 240, path: [[83.0, 0, 37.8], [84.0, 0, 19.1], [86.0, 0, -18.5], [86.5, 0, -27.9], [87.0, 0, -37.5], [87.5, 0, -47.4], [88.0, 0, -57.8], [88.5, 0, -68.7], [89.0, 0, -67.9], [89.5, 0, -67.8], [91.5, 0, 685.5]]}
+    # section 6: the lifeboat's last flash toward the gate at the top edge from ESCAPED (the clock reads 93):
+    # its path starts at 93.05 on the level clock (parked far up before), gone over the top by E+5.5
+    - {piece: gate-flash, t: 173.0, x: 240, path: [[93.05, 0, 485.6], [93.1, 0, -50.4], [95.0, 0, -43.9], [95.05, 0, -43.7], [97.05, 0, -33.4], [98.55, 0, 602.0]]}
+    # section 6: the CDF fleet's lights closing in from below after the escape (y~600 at E, ~410 at the end);
+    # parked 700 px off the right edge until then (its path starts after the fight: the level clock)
+    - {piece: fleet-far, t: 44.227, x: 150, path: [[93.05, 700, 0.0], [93.1, 0, 100.0], [95.0, 0, 121.7], [95.05, 0, 122.4], [113.0, 0, 358.4]]}
+sections:   # ART-H2's reading of the README's Layout (section 4 split at t=86 so the 6 s ease to the halt
+            # starts there: Level 35's halt at 1 px/s, then the 1 s arena at 0); H2 writes the real ones
+  - {name: Callisto Orbit, end: 22, atmosphere: clear, tiles: [orbit-start]}
+  - {name: The Home Fleet, end: 54, atmosphere: clear, tiles: [fleet-lane]}
+  - {name: The Screen, end: 84, atmosphere: clear, tiles: [the-screen]}
+  - {name: The Berth Line, end: 86, atmosphere: clear, tiles: [berth-line]}
+  - {name: "The Berth Line, braking", end: 92, speed: 1, ramp: 6, atmosphere: clear, tiles: [berth-brake]}
+  - {name: The Ascendant, end: 93, speed: 0, arena: true, hold_after_boss: 0, atmosphere: clear, tiles: [arena]}
+  - {name: The Empty Orbit, end: 113, speed: 60, ramp: 2, atmosphere: clear, tiles: [empty-orbit]}
+# rows: the end's bottom edge 15383 (ground px); deep 923
+tows:
+  # Proposal (ART-H2, tools/art/l42_props.py's sprites, held in build/art-held/sprites/ until the data claims them):
+  # the dead home-fleet tender (the secret; README: t~42, x~330, drifting down the right half; housing 4 hits,
+  # `beam_touch`, crate 100). Level 30's buoy rule: the tow's place is the strongbox (its housing = the cable box,
+  # tether [0, 0]); the look (step H4a: TowLooks.LOOKS 42 = `debris-home-tender`) draws the dead tender
+  # `debris-home-tender-hull` centred (-2, -4) px from it (y up, pivots/debris-home-tender.json: the strongbox on its spine's cradle; the hull
+  # never turns), the strongbox `debris-home-tender` over it, its seal lamp `debris-home-tender-glow` (additive, 8 frames
+  # at 4 fps: the gold lamp breathing), then `debris-home-tender-break` (0.07 s a frame) at the cut; the hull drifts on
+  # at the tow's place after the break.
+  - {t: 42, x: 330, drift: [-3, -80], boat: [24, 24], pod: [18, 18], tether: [0, 0], cable: [22, 22], hits: 4, reveals: the home-fleet tender's strongbox, beam_touch: true}
+# frigates:   # Proposal for step H2/H4a (not a data key yet): the CDF frigate pair trading fire with cruiser A (left)
+#   # from the right flank, t~26-36, friendly scenery on `low-air` with the friendly marker (FriendlyMarks), drawn in
+#   # l42_props.py's `cdf-frigate` (+ `-glow` frames, `-muzzle`, `-tracer`; pivots/cdf-frigate.json: the turrets'
+#   # muzzles, the engines): each in from the bottom edge over 3 s, on station ~6 s, falling back; its two turrets fire a
+#   # 3-round tracer burst toward cruiser A every ~1.6 s (presentation only: they hit nothing)
+#   - {t: 26, end: 36, x: 446, y: 300, sprite: cdf-frigate, marked: true}
+#   - {t: 26.6, end: 36, x: 418, y: 170, sprite: cdf-frigate, marked: true}

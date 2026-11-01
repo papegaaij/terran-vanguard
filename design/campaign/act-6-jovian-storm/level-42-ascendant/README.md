@@ -2,9 +2,9 @@
 title: Level 42 – Ascendant
 design: approved
 implementation: not-started
-art: none
+art: proposed
 depends-on: [../../../enemies/bosses/ascendant, ../../../enemies/bosses/abyssal-maw, ../../../enemies/air/talon, ../../../enemies/air/chimera, ../../../enemies/air/mirror-interceptor, ../../../enemies/air/harrow, ../../../enemies/air/gilded-gunship, ../../../enemies/air/hornet, ../../../enemies/air/dart-drone, ../../../enemies/air/skitter, ../../../enemies/air/mote-swarm, ../../../world/jovian, ../../../player/wingmen, ../../../story/characters/vorne, ../../../ui/hud, ../../../systems/economy]
-updated: 2026-10-31
+updated: 2026-11-02
 ---
 
 # Level 42 – Ascendant
@@ -391,20 +391,49 @@ proposed reference **168** (1.08), 23 of 25 MW, two spare (one utility or the Re
 
 ## Concept art
 
-None yet. The level needs (M10's Level 42 part; the boss's proposals are in the
-[Ascendant](../../../enemies/bosses/ascendant/README.md)'s round-72 concept, the moods in
-[the world](../../../world/jovian/README.md)'s):
+Round 80 (M10 part H, step ART-H2; production art, proposed). The Ascendant's hull, parts, eruption, wreck halves,
+lifeboat and intel silhouette are the [Ascendant](../../../enemies/bosses/ascendant/README.md#concept-art)'s (step
+ART-H1); the cruisers are Level 28's final art (reused); the CDF supply drone is Levels 13/18's `supply-drone` sprite
+(reused); the two briefing images and the act outro's four are the [briefing's](../../../ui/briefing/README.md#concept-art)
+(`briefing-images-final-r80-a`). The round's captures follow with step H5.
 
-- the orbit backdrop (Callisto's curve and the citadel's lights, Jupiter's limb, both fleets' lights, the burning
-  hulks falling, the Ascendant's glint and drive glow ahead), the CDF frigates (white, marked friendly) and the supply
-  drone, the dead tender; the cruisers reuse Level 28's final art; every glow and haze smooth (≥ 32 steps, no ordered
-  dither, drawn once);
-- the arena under the halted bow, the wreck's two halves drifting apart, the lifeboat's last flash toward the gate;
-- the two briefing images (the second as a page of Vorne's files); the intel silhouette of the Ascendant;
-- the act's outro images (the Act 6 README's) and the end card;
-- the round's captures: the level at medium with the plan's fit and Rook: the cruisers' broadsides, the Harrow cross,
-  the warning and the arrival, phase 1 from the far side, the eruption and the shout, phase 2's sacs and heart, the
-  break, the escape bar to `ESCAPED`, the closing lines, the debrief and the act end.
+**Callisto orbit** (`tools/art/backdrop_l42.py`, on the shared Jovian pieces of `tools/art/jovkit.py`), in round 72's
+L42 grade (black space, Jupiter's limb and Callisto's curve, both fleets' running lights; the boss's gold and teal over
+black): one continuous `deep` field (stars, Jupiter's cream limb as a thin lit crescent along the right edge the whole
+level) cut into the sections' tile sets, scrolling at **0.06** (Level 40's), and the pieces over it - **Callisto's
+curve below** the whole level (its night side: dark blue-grey cratered ice in Jupiter's warm shine from the right, a
+thin cool rim on the limb, the black citadel's gold windows and lamps steady on it), held on the screen by a `path`
+(the limb at y≈360 at the start, 400 by the halt, then still through the fight, sinking 72 px over the empty orbit);
+the CDF carrier group closing from below in section 1 and again after the escape; the home fleet's gold lamps far ahead
+in sections 1–2; **two burning hulks** (a Regent cruiser's bow half and stern half, Level 28's model cut along a jagged
+break, fire venting at the breaches, sparks trailing up) falling toward Callisto in section 3 and passing behind its
+limb; the **Ascendant's gold glint** high ahead from t≈53, its **drive glow** growing over it as the scroll slows
+(t=83–88.5) and both swinging away out of the top over t=89.5–91.5 (it comes about) before the bow slides in; nothing
+animated behind the fight; after `ESCAPED` the lifeboat's last flash toward the gate at the top (white-teal) and the
+fleet's lights closing in. At most two animated pieces on the screen at once; every glow additive and smooth (≥ 32
+levels, checked), no ordered dither; no red in the backdrop (the spinal lance's line and the batteries' rims are red).
+Pending the user's review in round 80: Callisto's curve held by its path instead of scrolling with the layer (a 0.06
+layer carries it off the bottom by t≈30); Jupiter's limb a near-straight edge (a disc filling the right edge for the
+whole level must be huge); the drive glow leaving upward before the hull's slide-in; section 4 split at t=86 with the
+6 s ease to 1 px/s (Level 35's halt: the simulation halts at speed 0 only in the arena). **The CDF frigates and the
+dead tender** (`tools/art/l42_props.py`): the frigate in the fleet's white with blue bands, two twin turrets on its
+spine turned to port toward cruiser A, grey radiator vanes, three engines, white strobes (never red); its pale
+blue-white muzzle flash and tracer dash (presentation only: they hit nothing); the friendly marker is the game's
+brackets. The tender: an Ascendancy supply hull in gloss black and gold, two cargo pods torn off and one split open,
+dull teal-black Vrell resin where they boarded, the strongbox's gold cradle on its spine, drifting dead at 25°; the
+strongbox a gunmetal case with gold bands and the Ascendancy seal, its lamp breathing gold; its break in vacuum (a
+short flash, the shell chips in a ring, no smoke). The proposal (`concept/backdrop-proposal.yaml`, step H2's input, not
+data) holds the backdrop block, the sections, the tender's `tows` row and a commented `frigates` row. Atlas: the
+backdrop 0.46 of a 2048 page before packing, the frigates and the tender 3 %. Prompts and briefs:
+[concept/prompts.md](concept/prompts.md).
+
+| File | What | Status |
+|---|---|---|
+| [concept/backdrop-final-r80-a.png](concept/backdrop-final-r80-a.png) | Production backdrop: twelve screens at half size with stand-ins (Callisto's curve, Jupiter's limb and the fleet rising; Chimeras under the home fleet's lights; cruiser A and the marked CDF frigates; the dead tender and a rear wing; cruiser B; a hulk falling and a Gunship; the Harrow cross and the glint; the pause with the drive glow; the Ascendant coming about; the held arena under the bow's outline; the lifeboat's last flash; the empty orbit), the readability crops at 1× (each section's darkest and brightest window with a Talon, a Chimera, a Harrow, amber needles, an orb, the ship; the means), the pieces, the tile sets (sheet) | proposed (round 80) |
+| [concept/backdrop-final-r80-a.gif](concept/backdrop-final-r80-a.gif) | t 82–92 at half size (the glint, the drive glow growing and swinging away, the halt), the arena with the bow's outline sliding in, then t 93–98 after `ESCAPED` (the lifeboat's last flash, the fleet closing) | proposed (round 80) |
+| [concept/l42-props-final-r80-a.png](concept/l42-props-final-r80-a.png) | The CDF frigate (2×, 1×, its glow frames, the muzzle 4×, the tracer 4×), the dead tender with its strongbox (2×), the seal lamp's frames (3×), the strongbox's break (8 frames, 2×), both at 1× on the backdrop (sheet) | proposed (round 80) |
+| [concept/l42-props-final-r80-a.gif](concept/l42-props-final-r80-a.gif) | The tender drifting down the right half from t=42, the seal lamp breathing, the strongbox shot open after 4.6 s, the hull drifting on; the frigate pair firing tracer bursts to port | proposed (round 80) |
+| [concept/backdrop-proposal.yaml](concept/backdrop-proposal.yaml) | The generator's `backdrop:` block (tile sets, pieces, placements with their paths, the atmosphere), the sections, the tender's `tows` row and a commented `frigates` row for step H2 (not data) | proposed (round 80; step H2's input) |
 
 ## Implementation
 

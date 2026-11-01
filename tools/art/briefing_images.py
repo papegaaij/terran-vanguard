@@ -322,6 +322,23 @@ Outputs (assets/ui/briefing/<name>.png, 672x240, textures of their own like the 
   level-40-honour-guard   L40 p2: Varga's scan of the three aces from above (tools/art/honour_guard.py's frames) in their
                           gold hex shields: Harker's sniper line tracking then locked, Vesper's loop and spiral arms,
                           Kestrel's dive from behind and its pull-out
+  level-42-callisto-orbit  L42 p1 (M10 part H batch): Okafor's chart of Callisto orbit: the limb with the citadel (ours),
+                          the CDF fleet's arc climbing from it, the home fleet's last ships as gold chevrons, the two
+                          cruisers on the flanks, the wing's route, the Ascendant's gold mark with its heading line toward
+                          the Tether Gate's bearing, Jupiter's limb at the right edge
+  level-42-ascendant-files  L42 p2: a page of Vorne's files as Varga decoded them: the Ascendant's bow-on schematic in
+                          Helix's blue lines (the generators feeding the bow cannon's shield, the four mirror batteries, the
+                          bow cannon), the Vrell cross-section in teal where the plates should be, the lifeboat bay with a
+                          question mark, her notes and the Vrell sigil
+  act-6-outro-callisto    Act 6 outro p1: Callisto orbit, the Ascendant's broken gold hull drifting apart over the ice
+                          along its jagged fracture, the Coalition carriers closing on the black citadel, the Steadfast's
+                          lights in the foreground
+  act-6-outro-silence     Act 6 outro p2: Varga's screen: Vorne's files open, the contract with the Vrell sigil beside his
+                          name, the file header 'THE SILENCE' flagged in red, the 2179 survey's missing log below it
+  act-6-outro-ember       Act 6 outro p3: Rook beside his Ember on the Steadfast's flight deck, helmet under his arm,
+                          looking out through the bay door at the far point of light where the lifeboat's trail ends
+  act-6-outro-gate        Act 6 outro p4: the Steadfast's forward plot: the fleet turning outward from Jupiter, the course
+                          line past Saturn and Uranus to the Tether Gate beyond Neptune
   design/ui/briefing/concept/briefing-images-final-r13-a.png   review sheet, Act 1 intro + L01-02
   design/ui/briefing/concept/briefing-images-final-r20-a.png   review sheet, L03-04 (M4 batch)
   design/ui/briefing/concept/briefing-images-final-r21-a.png   review sheet, L05 (M4 part E)
@@ -343,6 +360,7 @@ Outputs (assets/ui/briefing/<name>.png, 672x240, textures of their own like the 
   design/ui/briefing/concept/briefing-images-final-r76-a.png   review sheet, L38 (M10 part D)
   design/ui/briefing/concept/briefing-images-final-r77-a.png   review sheet, L39 (M10 part E)
   design/ui/briefing/concept/briefing-images-final-r78-a.png   review sheet, L40 (M10 part F)
+  design/ui/briefing/concept/briefing-images-final-r80-a.png   review sheet, L42 + the Act 6 outro (M10 part H)
   design/ui/briefing/concept/briefing-images-final-r44-a.png   review sheet, L21 (M7 part H)
   design/ui/briefing/concept/briefing-images-final-r51-a.png   review sheet, Act 4 intro + L22 (M8 part B)
   design/ui/briefing/concept/briefing-images-final-r52-a.png   review sheet, L23 (M8 part C)
@@ -8595,6 +8613,399 @@ def level_41_helix_hq():
     return b
 
 
+# --------------------------------------------------------------------------- M10 part H: Level 42, the Act 6 outro
+
+SOURCE_M10H = artkit.source_note(SCRIPT, "M10 part H batch")
+TEAL_H = (40, 230, 170)                                   # the Vrell tissue on the display (the hybrids' teal)
+WHITE_F = (236, 244, 255)                                 # the CDF's white hulls
+
+
+def callisto_holo(b, cx, cy, r, seed=8001, light=(-0.45, -0.6, 0.65), gain=1.0):
+    """Callisto on the display: dark blue-grey ice saturated with craters, lit from the upper left, a thin ice rim."""
+    nx, ny = (b.xx - cx) / r, (b.yy - cy) / r
+    r2 = nx ** 2 + ny ** 2
+    inside = r2 < 1
+    nz = np.sqrt(np.clip(1 - r2, 0, 1))
+    tex = raster.fbm(W, H, max(6, int(r / 12)), seed, octaves=5, period=False)
+    L = np.array(light) / np.linalg.norm(light)
+    lit = np.clip(nx * L[0] + ny * L[1] + nz * L[2], 0.06, 1)
+    lum = np.clip((0.4 + 0.6 * tex) * lit * gain, 0, 1)
+    b.base = np.where(inside[..., None], raster.ramp(CALLISTO_HOLO, lum), b.base)
+    d = np.hypot(b.xx - cx, b.yy - cy)
+    b.base += (np.exp(-((d - r) / 2.5) ** 2) * 0.5)[..., None] * np.array(ICE_A, float)
+    rng = np.random.default_rng(seed + 1)
+    for _ in range(int(r * 0.6)):                                     # crater rims, foreshortened toward the limb
+        a, u = rng.uniform(0, TAU_B), np.sqrt(rng.uniform(0, 0.9))
+        x, y = cx + np.cos(a) * u * r, cy + np.sin(a) * u * r
+        if 0 <= x < W and 0 <= y < H:
+            cr = rng.uniform(1.5, 5) * (1 - 0.6 * u)
+            b.arc(x, y, cr, cr * (1 - 0.5 * u), 200, 380, ICE_A, 60)
+    return inside
+
+
+def ascendant_halves(b, cx, cy, scale, apart, colour=GOLD_A, vent=True):
+    """The Ascendant's hull bow-on as the display draws it, broken along its jagged fracture into two halves drifting
+    ``apart`` px to either side (the gilded wedge, round 72 A.10 a; the fracture A.11), venting at the breaches."""
+    top, tip = -60.0, 64.0
+    jag = [(0, top), (6, -40), (-5, -22), (7, -4), (-6, 14), (5, 30), (-3, 46), (0, tip)]   # the fracture, top to tip
+    left = [(-100, top)] + [(x, y) for x, y in jag]
+    right = [(100, top)] + [(x, y) for x, y in jag]
+    for pts, sgn, spin in ((left, -1, -0.12), (right, 1, 0.1)):
+        c, s = np.cos(spin), np.sin(spin)
+        poly = [(cx + sgn * apart + (x * c - y * s) * scale, cy + (x * s + y * c) * scale) for x, y in pts]
+        fill(b, poly, (70, 54, 20), 0.95)
+        b.draw.polygon(poly, outline=colour + (255,))
+        for k in range(1, 4):                                        # the gold ribs fanning down the face
+            fx = sgn * (100 - 24 * k)
+            p0 = (cx + sgn * apart + (fx * c - top * s) * scale, cy + (fx * s + top * c) * scale)
+            ex, ey = sgn * 8 * k / 3, top + (tip - top) * (0.35 + 0.18 * k)
+            p1 = (cx + sgn * apart + (ex * c - ey * s) * scale, cy + (ex * s + ey * c) * scale)
+            b.line([p0, p1], colour, 1, 150)
+        if vent:
+            for x, y in jag[1:-1:2]:
+                vx = cx + sgn * apart + (x * c - y * s) * scale
+                vy = cy + (x * s + y * c) * scale
+                b.glow(vx + sgn * 2, vy, 4 * scale, (180, 90, 30), 0.8)
+                b.glow(vx - sgn * 2, vy + 3, 3 * scale, (20, 120, 90), 0.6)
+
+
+def level_42_callisto_orbit():
+    """L42 p1 (M10 part H batch): Okafor's tactical chart of Callisto orbit: Callisto's limb along the bottom with the
+    citadel, the CDF fleet's arc climbing from it (cyan), the home fleet's last ships as gold chevrons, two cruiser
+    silhouettes on the flanks (gold), the wing's route up through the screen in white, the Ascendant's gold mark at the
+    top with its heading line toward the Tether Gate's bearing; Jupiter's limb at the right edge."""
+    b = Board()
+    callisto_holo(b, 300, 560, 400, seed=8001, gain=0.9)
+    jr, jcx, jcy = 900, 1560, 80                                    # Jupiter's limb at the right edge
+    d = np.hypot(b.xx - jcx, b.yy - jcy)
+    bands = 0.5 + 0.5 * np.sin((b.yy - jcy) / 7 + 0.5 * np.sin(b.xx / 40))
+    b.base = np.where((d < jr)[..., None], raster.ramp(JOV_HOLO, np.clip(0.3 + 0.45 * bands, 0, 1)) * 0.8, b.base)
+    b.base += (np.exp(-((d - jr) / 3) ** 2) * 0.6)[..., None] * np.array((200, 160, 110.0))
+    tag(b, W - 70, 222, "JUPITER", GOLD_A)
+    kx, ky = 150, 196                                               # the citadel on the limb
+    b.marker(kx, ky, "square", CYAN, 4)
+    tag(b, kx - 30, ky + 10, "CITADEL - OURS", CYAN)
+    arc = [(kx + 40 + 22 * k, ky - 10 - 9 * k - 1.2 * k * k) for k in range(8)]
+    for x, y in arc:                                                 # the CDF fleet's arc climbing from it
+        b.marker(x, y, "square", CYAN, 2)
+    b.dashed(arc, CYAN, 1, 3, 3)
+    tag(b, 210, 168, "CDF FLEET", CYAN)
+    for x in (94, 568):                                             # the two cruisers on the flanks
+        pts = [(x - 9, 150), (x - 11, 70), (x, 46), (x + 11, 70), (x + 9, 150)]
+        fill(b, pts, (60, 46, 16), 0.9)
+        b.draw.polygon(pts, outline=GOLD_A + (255,))
+        for y in range(70, 150, 12):
+            b.line([(x - 10, y), (x + 10, y)], GOLD_A, 1, 110)
+    tag(b, 40, 154, "CRUISER A", GOLD_A)
+    tag(b, 540, 154, "CRUISER B", GOLD_A)
+    rng = np.random.default_rng(8003)
+    for _ in range(16):                                             # the home fleet's last ships
+        x, y = rng.uniform(170, 500), rng.uniform(70, 130)
+        b.marker(x, y, "chevron", GOLD_A, 3)
+    tag(b, 250, 132, "HOME FLEET - WHAT IS LEFT", GOLD_A)
+    ax, ay = 336, 34                                                # the Ascendant at the top
+    b.glow(ax, ay, 10, (150, 110, 40), 0.9)
+    b.marker(ax, ay, "diamond", GOLD_A, 6)
+    b.ring(ax, ay, 14, colour=GOLD_A, alpha=220)
+    tag(b, ax + 20, ay - 4, "ASCENDANT", GOLD_A)
+    b.dashed([(ax + 12, ay - 6), (W - 150, 22)], GOLD_A, 1, 4, 4)    # its heading toward the gate's bearing
+    b.arrow(W - 170, 23, W - 140, 21, GOLD_A, 4, dashed=False)
+    tag(b, W - 214, 32, "BEARING: TETHER GATE", GOLD_A)
+    route = [(kx + 60, 220), (300, 170), (330, 100), (336, 50)]
+    b.dashed(route, WHITE, 2, 6, 4)
+    b.arrow(330, 100, 336, 52, WHITE, 6)
+    tag(b, 352, 176, "AEGIS", WHITE)
+    b.title("CDF CHART - CALLISTO ORBIT")
+    tag(b, W - 10, 9, "CMDR. OKAFOR", CYAN_DIM, right=True)
+    b.label(10, H - 16, "BREAK THE SCREEN. BREAK HIS SHIP.", RED)
+    return b
+
+
+def vrell_sigil(size, colour, ground=None):
+    """The Vrell sigil (a display glyph of their own): three hooked lobes round a ring, teal."""
+    k = 4
+    s = size * k
+    img = Image.new("RGBA", (s, s), (0, 0, 0, 0) if ground is None else tuple(ground) + (255,))
+    d = ImageDraw.Draw(img)
+    c = tuple(colour) + (255,)
+    cx = cy = s / 2
+    d.ellipse([cx - s * 0.14, cy - s * 0.14, cx + s * 0.14, cy + s * 0.14], outline=c, width=2 * k)
+    for j in range(3):
+        a0 = j * TAU_B / 3 - np.pi / 2
+        pts = []
+        for u in np.linspace(0, 1, 14):
+            a = a0 + 0.9 * u
+            r = s * (0.18 + 0.26 * u)
+            pts.append((cx + np.cos(a) * r, cy + np.sin(a) * r))
+        d.line(pts, fill=c, width=int(2.4 * k))
+        x, y = pts[-1]
+        d.ellipse([x - 2 * k, y - 2 * k, x + 2 * k, y + 2 * k], fill=c)
+    return held_frame_img(img.resize((size, size), Image.LANCZOS), 8)
+
+
+def level_42_ascendant_files():
+    """L42 p2: a page of Vorne's files as Varga decoded them: the Ascendant's bow-on schematic in Helix's blue lines
+    (the wedge, the two generators feeding the bow cannon's shield, the four mirror batteries with their panels, the bow
+    cannon), a Vrell cross-section overlaid in teal where the plates should be (three sacs and a heart along the keel),
+    a lifeboat bay marked with a question mark; the file's header and Varga's notes."""
+    b = Board()
+    b.base = b.base * 0.7 + np.array((6, 16, 34.0)) * 0.3
+    b.title("HELIX DYNAMICS - PROJECT ASCENDANT - FILE 7/12 (DECODED)")
+    b.label(W - 10, 9, "DR. VARGA", CYAN_DIM, right=True)
+    ox, oy, s = 196, 28, 0.62                                        # the schematic: arena px x 0.62 (bow-on)
+
+    def p(x, y):
+        return ox + (x - 240) * s + 120, oy + y * s
+
+    wedge = [p(40, 0), p(440, 0), p(240, 250)]
+    b.draw.polygon(wedge, outline=CYAN + (230,))
+    for k in range(1, 5):                                            # Helix's construction lines
+        b.line([p(40 + 40 * k, 0), p(240, 250)], CYAN_DIM, 1, 110)
+        b.line([p(440 - 40 * k, 0), p(240, 250)], CYAN_DIM, 1, 110)
+    for y in (40, 90, 140):
+        x0 = 40 + 200 * y / 250
+        b.line([p(x0, y), p(480 - x0, y)], CYAN_DIM, 1, 90)
+    # the Vrell cross-section where the plates should be: teal, dashed, along the keel
+    for x, y, r in ((200, 70, 22), (280, 70, 22), (240, 120, 20)):
+        cxp, cyp = p(x, y)
+        b.dashed([(cxp + r * s * np.cos(a), cyp + r * s * 0.8 * np.sin(a)) for a in np.linspace(0, TAU_B, 24)],
+                 TEAL_H, 1, 3, 2)
+        b.glow(cxp, cyp, r * s * 0.8, (10, 70, 50), 0.6)
+    hx, hy = p(240, 160)
+    b.ring(hx, hy, 9, 7, colour=TEAL_H, alpha=230)
+    b.glow(hx, hy, 6, (20, 100, 70), 0.7)
+    tl = [p(240 + 8 * np.sin(t * 9), t) for t in np.linspace(10, 230, 30)]
+    b.dashed(tl, TEAL_H, 1, 2, 3)                                    # the tissue seam down the keel
+    tag(b, p(300, 96)[0] + 6, p(300, 96)[1] - 4, "VRELL TISSUE?", TEAL_H)
+    lx, ly = p(240, 175)                                             # the lifeboat bay, unexplained
+    b.dashed([(lx + 12 * np.cos(a), ly + 9 * np.sin(a)) for a in np.linspace(0, TAU_B, 20)], AMBER, 1, 3, 2)
+    big(b, lx - 5, ly - 7, "?", AMBER)
+    b.line([(lx - 13, ly + 2), (274, ly + 22)], AMBER, 1, 200)
+    tag(b, 274 - raster.text_width("A BAY NOT ON THE PLAN"), ly + 18, "A BAY NOT ON THE PLAN", AMBER)
+    for x, y in ((110, 60), (370, 60)):                              # the generators, their feeds to the cannon
+        gx, gy = p(x, y)
+        b.ring(gx, gy, 6, colour=CYAN, alpha=240, width=2)
+        b.dashed([(gx, gy), p(240, 235)], GOLD_A, 1, 3, 3)
+    tag(b, p(110, 60)[0] - 64, p(110, 60)[1] - 4, "GENERATOR", CYAN)
+    for x, y, side in ((150, 130, -1), (185, 190, -1), (330, 130, 1), (295, 190, 1)):   # the mirror batteries
+        bx, by = p(x, y)
+        b.draw.rectangle([bx - 4, by - 3, bx + 4, by + 3], outline=CYAN + (240,))
+        a = np.radians(90 + side * 45)
+        b.line([(bx + 9 * np.cos(a) - 5 * np.sin(a), by + 9 * np.sin(a) + 5 * np.cos(a)),
+                (bx + 9 * np.cos(a) + 5 * np.sin(a), by + 9 * np.sin(a) - 5 * np.cos(a))], SILVER, 2, 240)
+    tag(b, p(150, 130)[0] - 112, p(150, 130)[1] + 2, "MIRROR BATTERY", SILVER)
+    cxp, cyp = p(240, 235)                                           # the bow cannon in its gold hex shield
+    b.ring(cxp, cyp, 5, colour=CYAN, alpha=240, width=2)
+    b.draw.polygon([(cxp + 11 * np.cos(a), cyp + 11 * np.sin(a)) for a in np.linspace(0, TAU_B, 7)[:-1] + np.pi / 6],
+                   outline=GOLD_A + (230,))
+    tag(b, cxp + 16, cyp - 4, "BOW CANNON", CYAN)
+    nx0 = 470                                                        # Varga's notes on the page's margin
+    fill(b, [(nx0 - 6, 40), (W - 8, 40), (W - 8, 200), (nx0 - 6, 200)], (6, 10, 22), 0.85)
+    b.sprites.append((vrell_sigil(28, TEAL_H), W - 44, 46))
+    for k, (text, col) in enumerate((("GENERATORS FEED", GOLD_A), ("THE BOW'S SHIELD.", GOLD_A),
+                                     ("MIRRORS COVER", SILVER), ("THE BATTERIES:", SILVER), ("HIT THE OPEN SIDE.", SILVER),
+                                     ("IF THE VRELL HALF", TEAL_H), ("WAKES, ITS SACS HEAL:", TEAL_H),
+                                     ("BURN THEM STEADILY.", TEAL_H))):
+        b.label(nx0, 50 + 18 * k + (10 if k >= 2 else 0) + (10 if k >= 5 else 0), text, col)
+    b.label(10, H - 16, "FROM HIS OWN FILES", AMBER)
+    return b
+
+
+def act6_outro_callisto():
+    """Act 6 outro p1: Callisto orbit: the Ascendant's broken gold hull drifting apart over the ice, the Coalition
+    carriers closing on the black citadel, the Steadfast's lights in the foreground."""
+    b = Board()
+    b.base = b.base * 0.3
+    rng = np.random.default_rng(8011)
+    for _ in range(110):
+        x, y = int(rng.integers(0, W)), int(rng.integers(0, H))
+        b.base[y, x] += rng.uniform(30, 110)
+    callisto_holo(b, 420, 520, 360, seed=8012, gain=1.1)
+    kx, ky = 470, 196                                               # the black citadel on the ice
+    fill(b, [(kx - 26, ky - 6), (kx + 26, ky - 6), (kx + 30, ky + 8), (kx - 30, ky + 8)], (8, 8, 12), 1.0)
+    for k in range(10):
+        b.glow(kx - 22 + 5 * k, ky + rng.uniform(-3, 4), 1.2, (240, 200, 90), 1.4)
+    tag(b, kx - 40, ky + 14, "THE CITADEL", WHITE)
+    for k, (x, y) in enumerate(((560, 150), (600, 128), (520, 128), (640, 160))):   # the carriers closing on it
+        pts = [(x, y - 8), (x + 5, y + 6), (x - 5, y + 6)]
+        b.draw.polygon(pts, fill=WHITE_F + (230,))
+        b.glow(x, y + 8, 3, (90, 150, 230), 1.0)
+    b.arrow(600, 140, 520, 178, CYAN, 5)
+    tag(b, 560, 104, "COALITION CARRIERS", CYAN)
+    ascendant_halves(b, 300, 92, 0.72, 34)                          # the broken hull drifting apart over the ice
+    for _ in range(40):                                             # the debris between the halves
+        x, y = rng.normal(300, 30), rng.normal(96, 28)
+        b.glow(x, y, 1.0, (200, 150, 70), 0.9)
+    tag(b, 236, 160, "THE ASCENDANT: SCRAP", GOLD_A)
+    fill(b, [(0, 200), (180, 214), (300, 240), (0, 240)], (16, 18, 26), 1.0)   # the Steadfast's hull edge, near
+    for k in range(14):
+        x = 10 + 20 * k
+        y = 204 + 0.13 * x + (0.0004 * x * x)
+        b.glow(x, y, 1.3, (255, 250, 236) if k % 4 else (90, 160, 255), 1.6)
+    b.title("CDF STEADFAST - CALLISTO ORBIT")
+    tag(b, W - 10, 9, "CMDR. OKAFOR", CYAN_DIM, right=True)
+    px = 16
+    fill(b, [(px - 8, 40), (176, 40), (176, 132), (px - 8, 132)], (6, 10, 22), 0.85)
+    b.label(px, 48, "ASCENDANT: BROKEN", GOLD_A)
+    b.label(px, 66, "CITADEL: OURS", WHITE)
+    b.label(px, 84, "HOME FLEET: BROKEN", AMBER)
+    b.label(px, 102, "VORNE: NOT ABOARD", RED)
+    b.label(px, 114, "LIFEBOAT CLEARED", RED)
+    return b
+
+
+def act6_outro_silence():
+    """Act 6 outro p2: Varga's screen: Vorne's files open, the contract with the Vrell sigil beside his name, one file
+    header flagged in red, the 2179 survey's missing log below it."""
+    b = Board()
+    b.base = b.base * 0.45
+    b.title("CDF SCIENCE - VORNE'S FILES")
+    b.label(W - 10, 9, "DR. VARGA", CYAN_DIM, right=True)
+    rng = np.random.default_rng(8021)
+    for k, (x, y) in enumerate(((22, 30), (40, 44), (58, 58))):       # the stack of files behind
+        b.draw.rectangle([x, y, x + 200, y + 140], fill=(10, 16, 30, 255), outline=CYAN_DIM + (200,))
+        b.label(x + 6, y + 4, f"HELIX - FILE {k + 3}/12", CYAN_DIM)
+    cx0, cy0, cw, ch = 76, 72, 250, 150                              # the contract, open on top
+    b.draw.rectangle([cx0, cy0, cx0 + cw, cy0 + ch], fill=(14, 20, 36, 255), outline=CYAN + (230,))
+    b.label(cx0 + 8, cy0 + 6, "AGREEMENT - HELIX / [UNTRANSLATED]", CYAN)
+    for k in range(7):                                               # the clauses as text lines
+        w = rng.uniform(150, 228)
+        b.line([(cx0 + 10, cy0 + 26 + 12 * k), (cx0 + 10 + w, cy0 + 26 + 12 * k)], GREY, 1, 170)
+    b.line([(cx0 + 12, cy0 + 126), (cx0 + 100, cy0 + 126)], WHITE, 1, 220)
+    sig = [(cx0 + 16 + 4 * k, cy0 + 120 - 5 * np.sin(k * 1.3) - 2 * np.sin(k * 3.1)) for k in range(20)]
+    b.line(sig, WHITE, 1, 240)                                       # his signature
+    b.label(cx0 + 14, cy0 + 132, "S. VORNE", WHITE)
+    b.sprites.append((vrell_sigil(40, TEAL_H), int(cx0 + 150), int(cy0 + 98)))
+    b.glow(cx0 + 170, cy0 + 118, 22, (10, 60, 46), 0.7)
+    tag(b, cx0 + 196, cy0 + 130, "THEIR MARK", TEAL_H)
+    fx, fy, fw = 370, 34, 286                                        # the flagged file header, red
+    b.draw.rectangle([fx, fy, fx + fw, fy + 22], fill=(60, 10, 8, 255), outline=RED + (255,), width=2)
+    b.label(fx + 8, fy + 7, "FILE 0 - 'THE SILENCE' - FLAGGED", RED)
+    for k in range(4):
+        b.line([(fx + 8, fy + 34 + 11 * k), (fx + 8 + rng.uniform(120, 260), fy + 34 + 11 * k)], (150, 90, 80), 1, 180)
+    tag(b, fx + 8, fy + 82, "THEY CAME THROUGH THE GATE RUNNING", AMBER)
+    sx, sy = 370, 140                                                # the 2179 survey's missing log below it
+    b.draw.rectangle([sx, sy, sx + fw, sy + 80], fill=(10, 14, 24, 255), outline=GREY + (220,))
+    b.label(sx + 8, sy + 6, "SURVEY 2179 - TETHER GATE", GREY)
+    for k, ok in enumerate((True, True, True, False, True)):
+        y = sy + 22 + 11 * k
+        b.label(sx + 8, y, f"LOG {11 + k}", GREY if ok else RED)
+        if ok:
+            b.line([(sx + 60, y + 4), (sx + 60 + rng.uniform(100, 200), y + 4)], GREY, 1, 150)
+        else:
+            b.dashed([(sx + 60, y + 4), (sx + 270, y + 4)], RED, 1, 3, 3)
+            b.label(sx + 150, y, "MISSING", RED)
+    b.label(10, H - 16, "READ TWICE", AMBER)
+    return b
+
+
+def rook_standing():
+    """Rook standing on the flight deck, seen from behind: the flight suit (Ember's ochre and grey), his white helmet
+    under his left arm, his face turned out to the door (a small sprite with its own palette)."""
+    k = 4
+    img = Image.new("RGBA", (30 * k, 72 * k), (0, 0, 0, 0))
+    d = ImageDraw.Draw(img)
+
+    def poly(pts, col):
+        d.polygon([(x * k, y * k) for x, y in pts], fill=col + (255,))
+    suit, lit, dark = (112, 86, 52), (176, 140, 88), (52, 42, 32)
+    poly([(8, 22), (22, 22), (23, 44), (21, 68), (16, 68), (15, 46), (14, 68), (9, 68), (7, 44)], suit)
+    poly([(8, 22), (13, 22), (12, 44), (8, 44)], lit)
+    poly([(22, 24), (25, 30), (24, 44), (21, 44)], suit)                     # the right arm down
+    poly([(9, 68), (14, 68), (14, 71), (8, 71)], dark)
+    poly([(16, 68), (21, 68), (22, 71), (16, 71)], dark)
+    d.ellipse([10 * k, 8 * k, 20 * k, 21 * k], fill=(60, 44, 34, 255))       # his head, dark hair, from behind
+    d.ellipse([16 * k, 12 * k, 20 * k, 19 * k], fill=(150, 108, 80, 255))     # his cheek, turned to the right
+    d.ellipse([0 * k, 30 * k, 11 * k, 41 * k], fill=(214, 218, 224, 255))     # the helmet under his left arm
+    d.rectangle([1 * k, 34 * k, 6 * k, 37 * k], fill=(40, 52, 76, 255))
+    poly([(7, 26), (10, 26), (10, 40), (5, 42)], suit)
+    img = img.resize((30, 72), Image.LANCZOS)
+    return held_frame_img(img, 16)
+
+
+def act6_outro_ember():
+    """Act 6 outro p3: Rook beside his Ember on the Steadfast's flight deck, helmet under his arm, looking out through
+    the open bay door at a far point of light where the lifeboat's trail ends."""
+    import outro_l21_images as o21                                  # noqa: E402  (the foreshortening)
+    b = Board()
+    hz, vx = 92, 300
+    flight_deck(b, hz, vx)
+    deck = b.base.copy()
+    dx0, dx1, dy0 = 140, 560, 8                                      # the bay door open on space
+    door = (b.xx > dx0) & (b.xx < dx1) & (b.yy > dy0) & (b.yy < hz)
+    b.base = np.zeros((H, W, 3)) + np.array((3, 4, 9.0))
+    rng = np.random.default_rng(8031)
+    for _ in range(50):
+        x, y = rng.uniform(dx0, dx1), rng.uniform(dy0, hz)
+        b.base[int(y), int(x)] += rng.uniform(30, 100)
+    callisto_holo(b, 220, 300, 230, seed=8032, gain=0.7)              # Callisto's curve low in the door
+    b.base = np.where(door[..., None], b.base, deck)
+    tx, ty = 470, 30                                                  # the lifeboat's trail and its far point of light
+    trail = [(tx - 120 + 1.5 * k, ty + 42 - 0.35 * k * 1.2) for k in range(80)]
+    for j, (x, y) in enumerate(trail):
+        b.glow(x, y, 1.0, (40, 200, 160), 0.15 + 0.5 * j / 80)
+    b.glow(tx, ty, 2.0, (230, 255, 245), 2.0)
+    b.glow(tx, ty, 7.0, (40, 200, 160), 0.6)
+    b.draw.rectangle([dx0, dy0, dx1, hz], outline=(80, 90, 104, 255), width=2)
+    for s_ in (-10, 10):
+        b.line([(vx + s_ * 0.14, hz + 2), (vx + s_, H)], (110, 120, 136), 1, 200)
+    for f in np.linspace(0.08, 1.0, 12):
+        b.glow(vx, hz + (H - hz) * f, 1.2, (255, 170, 80), 0.9)
+    craft = asset("rook_2")
+    spr = o21.foreshortened(craft, 2.4, squash=0.62)
+    xk, yk = 236, 176
+    shadow(b, spr, xk, yk, 4, 6, 0.55)
+    b.sprite(spr, xk, yk)
+    b.sprites.append((rook_standing(), 316, 132))
+    tag(b, xk - 30, yk + 40, "EMBER", AMBER)
+    tag(b, 348, 160, "ROOK", CYAN)
+    tag(b, tx - 60, ty + 12, "THE TRAIL ENDS", (120, 240, 200))
+    b.title("CDF STEADFAST - FLIGHT DECK")
+    b.label(W - 10, 9, "ROOK", CYAN_DIM, right=True)
+    b.label(10, H - 16, "SOMEBODY HAS TO WATCH LANCER'S BACK", AMBER)
+    return b
+
+
+def act6_outro_gate():
+    """Act 6 outro p4: the Steadfast's forward plot: the fleet turning outward from Jupiter, the course line running
+    past Saturn and Uranus to the Tether Gate beyond Neptune."""
+    b = Board()
+    sy = 128
+    b.glow(-40, sy, 30, (120, 100, 50), 0.8)                        # the Sun far off the left edge
+    for x in (34, 150, 300, 430, 540):                              # the orbits, arcs round the Sun
+        b.arc(-40, sy, x + 40, x + 40, -40 * 60 / (x + 60), 40 * 60 / (x + 60), CYAN_DIM, 120)
+    jupiter_disc(b, 150, sy, 26, seed=8041, strength=0.9)
+    tag(b, 128, sy + 32, "JUPITER", GOLD_A)
+    b.glow(300, sy - 34, 11, (150, 130, 80), 0.9)                   # Saturn and its rings
+    b.ring(300, sy - 34, 20, 6, colour=(220, 200, 150), alpha=220)
+    tag(b, 280, sy - 66, "SATURN", WHITE)
+    b.glow(430, sy + 30, 8, (80, 170, 190), 1.0)                    # Uranus
+    tag(b, 412, sy + 44, "URANUS", WHITE)
+    b.glow(540, sy - 20, 8, (60, 90, 200), 1.0)                     # Neptune
+    tag(b, 522, sy - 6, "NEPTUNE", WHITE)
+    gx, gy = 630, sy - 44                                           # the Tether Gate beyond it
+    b.glow(gx, gy, 30, (60, 30, 120), 0.9)
+    b.glow(gx, gy, 10, (60, 200, 200), 0.9)
+    for rx, ry in ((18, 18), (12, 12)):
+        b.ring(gx, gy, rx, ry, colour=(120, 230, 230), alpha=220)
+    tag(b, gx - 76, gy + 26, "TETHER GATE", (120, 230, 230))
+    course = [(172, sy - 12), (230, sy - 30), (300, sy - 16), (380, sy + 10), (430, sy + 22), (500, sy - 4),
+              (560, sy - 30), (gx - 22, gy + 4)]
+    b.dashed(course, WHITE, 2, 6, 4)
+    b.arrow(course[-2][0], course[-2][1], course[-1][0], course[-1][1], WHITE, 6)
+    for k in range(9):                                              # the fleet turning outward from Jupiter
+        a = -0.9 + 0.22 * k
+        x, y = 150 + np.cos(a) * 46, sy + np.sin(a) * 46
+        b.marker(x, y, "square", CYAN, 2)
+    b.arc(150, sy, 46, 46, -55, 60, CYAN, 200)
+    tag(b, 196, sy + 50, "STEADFAST GROUP", CYAN)
+    b.title("CDF STEADFAST - FORWARD PLOT")
+    tag(b, W - 10, 9, "CMDR. OKAFOR", CYAN_DIM, right=True)
+    b.label(10, H - 16, "ALL SHIPS: COURSE FOR THE TETHER GATE", AMBER)
+    b.label(W - 10, H - 16, "AEGIS ACTUAL OUT", CYAN_DIM, right=True)
+    return b
+
+
 IMAGES = {
     "act-1-tether-gate": tether_gate,
     "act-1-outer-stations": outer_stations,
@@ -8715,6 +9126,12 @@ IMAGES = {
     "level-40-honour-guard": level_40_honour_guard,
     "level-41-callisto-citadel": level_41_callisto_citadel,
     "level-41-helix-hq": level_41_helix_hq,
+    "level-42-callisto-orbit": level_42_callisto_orbit,
+    "level-42-ascendant-files": level_42_ascendant_files,
+    "act-6-outro-callisto": act6_outro_callisto,
+    "act-6-outro-silence": act6_outro_silence,
+    "act-6-outro-ember": act6_outro_ember,
+    "act-6-outro-gate": act6_outro_gate,
 }
 
 # Review sheets per batch: round, the images on it, the batch name.
@@ -8758,6 +9175,7 @@ BATCHES = {
     "r77": (list(IMAGES)[113:115], "M10 PART E"),
     "r78": (list(IMAGES)[115:117], "M10 PART F"),
     "r79": (list(IMAGES)[117:119], "M10 PART G"),
+    "r80": (list(IMAGES)[119:125], "M10 PART H"),
 }
 
 
@@ -8797,6 +9215,7 @@ def build(names):
                   else SOURCE_M10E if name in BATCHES["r77"][0]
                   else SOURCE_M10F if name in BATCHES["r78"][0]
                   else SOURCE_M10G if name in BATCHES["r79"][0]
+                  else SOURCE_M10H if name in BATCHES["r80"][0]
                   else SOURCE_M4)
         artkit.save_png(IMAGES[name]().image(), OUT / f"{name}.png", source)
     print(f"{len(names)} briefing images in {OUT.relative_to(ROOT)}")
