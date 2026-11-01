@@ -1,0 +1,268 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Round 76: record of the decisions</title><style>
+:root{--bg:#f4f5f7;--fg:#1b2230;--mut:#5a6577;--card:#fff;--line:#d3d9e2;--acc:#1f5fa8;--ok:#1d6b3a;--okbg:#e3f3e8;
+--hi:#fff6dc;--hib:#d9b84a;--code:#e9edf3;--warn:#8a4b00}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10141b;--fg:#dde3ee;--mut:#98a3b6;--card:#171d27;
+--line:#2c3544;--acc:#7fb2ee;--ok:#7bd69a;--okbg:#163323;--hi:#2c2610;--hib:#8a7424;--code:#232c3a;--warn:#e3a35a;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#10141b;--fg:#dde3ee;--mut:#98a3b6;--card:#171d27;--line:#2c3544;--acc:#7fb2ee;--ok:#7bd69a;
+--okbg:#163323;--hi:#2c2610;--hib:#8a7424;--code:#232c3a;--warn:#e3a35a;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:60rem;margin:0 auto;padding:1rem 16px 4rem}
+h1{font-size:1.6rem;margin:.5rem 0}h2{font-size:1.25rem;margin:2rem 0 .5rem;border-bottom:1px solid var(--line);padding-bottom:.25rem}
+h3{font-size:1.02rem;margin:0;flex:1 1 12rem}a{color:var(--acc)}
+.sum{color:var(--mut)}.note{font-size:.9rem;color:var(--mut)}
+nav.sec{display:flex;flex-wrap:wrap;gap:.4rem;margin:1rem 0}nav.sec a{padding:.2rem .6rem;border:1px solid var(--line);border-radius:1rem;
+text-decoration:none;font-size:.9rem;background:var(--card)}
+.row{background:var(--card);border:1px solid var(--line);border-radius:.4rem;padding:.7rem .9rem;margin:.7rem 0;overflow-wrap:anywhere}
+.row header{display:flex;flex-wrap:wrap;gap:.3rem .6rem;align-items:baseline}
+.rid{font:600 .85rem ui-monospace,Menlo,Consolas,monospace;background:var(--code);padding:.05rem .4rem;border-radius:.25rem}
+.kind{font-size:.8rem;color:var(--mut)}.part{font-size:.88rem;margin:.2rem 0}
+.q,.weak,.rec,.sub,.line,dl{font-size:.92rem;margin:.45rem 0}.weak{color:var(--warn)}
+code{background:var(--code);padding:0 .25rem;border-radius:.2rem;font-size:.88em}
+.tag{font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;color:var(--mut);font-weight:700;margin-right:.3rem}
+.ans{margin:.5rem 0 0;padding:.45rem .6rem;border-left:4px solid var(--hib);background:var(--hi);border-radius:.2rem}
+.ans.out{border-left-color:var(--ok)}.ans.none{opacity:.7}
+.badge{font-size:.75rem;font-weight:700;padding:.05rem .4rem;border-radius:.6rem;background:var(--okbg);color:var(--ok)}
+.badge.pick{background:var(--hi);color:var(--warn);border:1px solid var(--hib)}
+dl{display:grid;grid-template-columns:7rem 1fr;gap:.2rem .6rem}dt{font-weight:700}dd{margin:0}
+.media{display:flex;flex-wrap:wrap;gap:.5rem;margin:.5rem 0}.m{margin:0;max-width:100%}.m figcaption{font-size:.75rem;color:var(--mut)}
+.m.img img{max-width:14rem;max-height:10rem;border:1px solid var(--line);border-radius:.2rem;background:#000;display:block}
+.m.vid video{width:14rem;max-width:100%}.m.aud audio{width:16rem;max-width:100%}.miss{color:var(--warn)}
+details{margin:.4rem 0;font-size:.9rem}summary{cursor:pointer;color:var(--acc)}
+.listen{font-size:.85rem;color:var(--mut);margin:.3rem 0;padding-left:1.2rem}.opts{color:var(--mut)}
+.sub{padding-left:.6rem;border-left:2px solid var(--line)}
+table{border-collapse:collapse;display:block;overflow-x:auto}td,th{border:1px solid var(--line);padding:.2rem .4rem}
+blockquote{margin:.4rem 0;padding-left:.8rem;border-left:3px solid var(--line)}
+@media (max-width:480px){dl{grid-template-columns:1fr}.m.img img{max-width:100%}}
+</style></head><body><main><p class="note"><a href="README.md">Round 76 README</a> · <a href="../README.md">All rounds</a> · built 2026-11-01 · recorded by <code>tools/concept/review_record.py 76</code></p><h1>Concept round 76: record of the decisions</h1><div class="sum"><p><strong>Open.</strong> M10 part D was built on the branch <code>m10-act-6</code> (local commits through <code>01a9f0ce</code>; the full <code>./gradlew check</code> on 2026-11-01 in step D5: 5,101 tests, every one green but Level 39's three known reds that step E4 fixes — <code>RadioTimelineLevelsTest</code>, <code>Level14SoundsTest</code> and <code>BackdropAssetsTest</code>, Level 39's data being in and its game side not —; Acts 1–5's golden flights and replays unchanged): Level 38 "Lightning Belt" plays from its briefing to the release's end, with the Harrow (chase, lock tell, a straight ram out through the far edge, its ring of 8 on every death), 26 lightning strikes at medium with six lures on the Harrow waves (13 on easy, eight tracking columns on hard), the Buzzsaw Drones' return, waves from all four edges with their warnings, the two hunts, the gust spells, the <code>HARROWS n / 23</code> kill ratio judged at the end, Aurelia's cargo pod (the secret) and the CDF canister on its parachute, the storm-layer backdrop from Aurelia's wreck to Io's disc, track 15 with the <code>jovian-sky</code> bed raised in the storm, and the level's voices. This round asks, in this order: part D's production <strong>art to confirm</strong> beside the first Level 38 captures, the Harrow's two new <strong>sounds</strong>, the level's <strong>voices</strong>, the Buzzsaw's Act 6 return to <strong>approve</strong> (QD-1), three <strong>Level 38 questions</strong> (the canister, the caps with nothing shot, Rook's armour) and last the <strong>important calls</strong> the steps made, each with its recommendation. The recommendation is pre-selected on every row; leave a row alone to keep it.</p><p>The captures are the game's own (the <span class="ref">recipe</span>): the balance plan's Level 38 fit on medium (Level 37's: the Ion Beam, the Tesla Coil Pod, a Micro-missile Pod, the Swarm Tail, Rook with his Autocannon), the ship invulnerable; a parked run (the ship where it launches; the gusts at t=80/86 push it to the left edge, where it stays), a cells window (steered left so the beam leaves the t=62 Buzzsaw circle), a canister run (the Scatter Vulcan in front, steered under the canister) and a hard run for a tracking column. Found while capturing: with the plan's beam the canister drifts out at the bottom unshot (the beam passes debris); the Scatter Vulcan breaks its latch in about half a second; the parked run breaks the cargo pod with its own fire and Rook's just before the t=122.5 column would have opened it.</p><p>Decided as trivia, not asked (m10d-gaps §4): the secondary's key is the Implementation's <code>kill_ratio</code> with <code>enemy: harrow</code> (not <code>escapes</code>); the Harrow caps are authored and measured, not a simulation rule; the t=159.5 Skitters fly a rear snake on its path and the t=74 Lampreys the built side swarm; each lure's column x sits on its wave's flown chase lane; the walls' inner lightning is presentation only; the cargo pod's outline is a 0.5 s look on a lightning flash.</p></div><p class="note">A read-only record: every row as the review page showed it, with the answer and the outcome from the round README (the record of truth). Media is linked from the design tree, not copied.</p><nav class="sec"><a href="#s-art-to-confirm">Art to confirm</a><a href="#s-sounds">Sounds</a><a href="#s-voices">Voices</a><a href="#s-design">Design</a><a href="#s-level-38-questions">Level 38 questions</a><a href="#s-important-calls">Important calls</a></nav><section id="s-art-to-confirm"><h2>Art to confirm</h2>
+<div class="sum"><p>Part D's production art (step ART-D: <code>tools/art/backdrop_l38.py</code> on the shared <code>tools/art/jovkit.py</code>, <code>tools/art/storm_layer_units.py</code>; step D4: <code>briefing_images.py</code>), all already in the game, beside the Level 38 captures: accept, or redo with a note (QD-3).</p></div>
+<article class="row" id="r-F.1">
+<header><span class="rid">F.1</span><h3>The Harrow</h3><span class="kind">accept or redo</span></header>
+<div class="part"><a href="../../enemies/air/harrow/README.md#concept-art">The Harrow</a></div>
+<div class="q"><strong>accept or redo</strong> (QD-3). Round 72's A.3 a "dart and sac" in production: 16 headings, the gunmetal dart with gold leading edges, the teal sac dim / hunting / brightening through the 0.6 s lock tell with its halo, the lock's flare, the burst over the small explosion, the shell tumbling away; in the game the first lure: the t=42.5 stream dragged through the told t=43.5 column, the strike killing one and its ring of 8 opening with the gap on the ship's bearing.</div>
+<div class="media"><figure class="m img"><a href="../../enemies/air/harrow/concept/harrow-final-r76-a.png"><img loading="lazy" decoding="async" src="../../enemies/air/harrow/concept/harrow-final-r76-a.png" alt="frames"></a><figcaption>frames</figcaption></figure><figure class="m img"><a href="../../enemies/air/harrow/concept/harrow-final-r76-a.gif"><img loading="lazy" decoding="async" src="../../enemies/air/harrow/concept/harrow-final-r76-a.gif" alt="motion"></a><figcaption>motion</figcaption></figure><figure class="m img"><a href="../../enemies/air/harrow/concept/harrow-capture-r76-a.png"><img loading="lazy" decoding="async" src="../../enemies/air/harrow/concept/harrow-capture-r76-a.png" alt="in the game"></a><figcaption>in the game</figcaption></figure><figure class="m img"><a href="../../enemies/air/harrow/concept/harrow-capture-r76-a.gif"><img loading="lazy" decoding="async" src="../../enemies/air/harrow/concept/harrow-capture-r76-a.gif" alt="in the game, motion"></a><figcaption>in the game, motion</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> at play size the dart is small (about 32 px) and reads by its gold edges more than by the teal sac (8 % of its pixels hunting, 14 % at the tell's peak); the sac's glow and the tell's halo are additive layers drawn at the state's strength (ART-D's reading)</p>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong> / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span>Accepted (as recommended).</span></div>
+</article>
+<article class="row" id="r-F.2">
+<header><span class="rid">F.2</span><h3>The storm layer</h3><span class="kind">accept or redo</span></header>
+<div class="part"><a href="../../campaign/act-6-jovian-storm/level-38-lightning-belt/README.md#concept-art">The storm layer</a></div>
+<div class="q"><strong>accept or redo</strong> (QD-3). Step ART-D's storm-layer kit in round 72's storm-dark grade: one continuous deep field cut into the five sections' tile sets (the storm's top under Aurelia's wreck, the heavy floor, the floor under the cells, the Red Spot's curving rim with its rust glow, the breakout thinning to black sky, stars and Io's disc), two lumpy cloud walls and two storm cells lit from inside, Level 37's sinking city as <strong>Aurelia's wreck</strong> (big and brown) with its debris on <code>low-air</code>, the scud on <code>high-air</code>. In the game: the overview and the cross over the rim.</div>
+<div class="media"><figure class="m img"><a href="../../campaign/act-6-jovian-storm/level-38-lightning-belt/concept/backdrop-final-r76-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-6-jovian-storm/level-38-lightning-belt/concept/backdrop-final-r76-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure><figure class="m img"><a href="../../campaign/act-6-jovian-storm/level-38-lightning-belt/concept/backdrop-final-r76-a.gif"><img loading="lazy" decoding="async" src="../../campaign/act-6-jovian-storm/level-38-lightning-belt/concept/backdrop-final-r76-a.gif" alt="motion"></a><figcaption>motion</figcaption></figure><figure class="m img"><a href="../../campaign/act-6-jovian-storm/level-38-lightning-belt/concept/cross-capture-r76-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-6-jovian-storm/level-38-lightning-belt/concept/cross-capture-r76-a.png" alt="in the game, the rim"></a><figcaption>in the game, the rim</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the cloud masses are lumpy, rounded heaps rather than torn storm towers; Aurelia's wreck is big and brown; the Red Spot's wall reads pinkish next to the slate (all three ART-D's readings, m10-gaps "pending round 76"); the field is one continuous piece (about 3 of the 6 atlas pages)</p>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong> / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span>Accepted (as recommended).</span></div>
+</article>
+<article class="row" id="r-F.3">
+<header><span class="rid">F.3</span><h3>The strike&#x27;s pulse on the walls</h3><span class="kind">accept or redo</span></header>
+<div class="part"><a href="../../campaign/act-6-jovian-storm/level-38-lightning-belt/README.md#layout">The strike's pulse on the walls</a></div>
+<div class="q"><strong>accept or redo</strong>. The walls and cells flash inside on the real clock, brighter on each told strike (step D4: the <code>-glow</code> pieces' frame 0 on <code>STRIKE_TOLD</code>); only the walls and cells pulse, not the open floor or the scud. In the game: the first strike alone at t=26.</div>
+<div class="media"><figure class="m img"><a href="../../campaign/act-6-jovian-storm/level-38-lightning-belt/concept/walls-capture-r76-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-6-jovian-storm/level-38-lightning-belt/concept/walls-capture-r76-a.png" alt="in the game"></a><figcaption>in the game</figcaption></figure><figure class="m img"><a href="../../campaign/act-6-jovian-storm/level-38-lightning-belt/concept/walls-capture-r76-a.gif"><img loading="lazy" decoding="async" src="../../campaign/act-6-jovian-storm/level-38-lightning-belt/concept/walls-capture-r76-a.gif" alt="in the game, motion"></a><figcaption>in the game, motion</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> when no wall or cell is on the screen a told strike makes no pulse (the column and the flash still show); the pulse peaks about 0.8 s into the tell, not at its start</p>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong> / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span>Accepted (as recommended).</span></div>
+</article>
+<article class="row" id="r-F.4">
+<header><span class="rid">F.4</span><h3>Aurelia&#x27;s cargo pod</h3><span class="kind">accept or redo</span></header>
+<div class="part"><a href="../../campaign/act-6-jovian-storm/level-38-lightning-belt/README.md#secrets-and-pickups">Aurelia's cargo pod</a></div>
+<div class="q"><strong>accept or redo</strong> (QD-3). The secret: a gold cargo pod (30×30, 16 tumble frames, lamps dead) down the left edge at t≈118, a lightning flash's 0.5 s outline, the break in air and its crate; in the game tumbling, outlined by the t=119 flash, broken and collected (+1,049).</div>
+<div class="media"><figure class="m img"><a href="../../campaign/act-6-jovian-storm/level-38-lightning-belt/concept/cargo-pod-final-r76-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-6-jovian-storm/level-38-lightning-belt/concept/cargo-pod-final-r76-a.png" alt="frames"></a><figcaption>frames</figcaption></figure><figure class="m img"><a href="../../campaign/act-6-jovian-storm/level-38-lightning-belt/concept/cargo-pod-final-r76-a.gif"><img loading="lazy" decoding="async" src="../../campaign/act-6-jovian-storm/level-38-lightning-belt/concept/cargo-pod-final-r76-a.gif" alt="motion"></a><figcaption>motion</figcaption></figure><figure class="m img"><a href="../../campaign/act-6-jovian-storm/level-38-lightning-belt/concept/pod-capture-r76-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-6-jovian-storm/level-38-lightning-belt/concept/pod-capture-r76-a.png" alt="in the game"></a><figcaption>in the game</figcaption></figure><figure class="m img"><a href="../../campaign/act-6-jovian-storm/level-38-lightning-belt/concept/pod-capture-r76-a.gif"><img loading="lazy" decoding="async" src="../../campaign/act-6-jovian-storm/level-38-lightning-belt/concept/pod-capture-r76-a.gif" alt="in the game, motion"></a><figcaption>in the game, motion</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> dark against the dark grade by design (the Salvage glint and the flash find it); in the parked run the ship's beam sat on the left edge, so the pod broke under its fire and Rook's before a strike could open it</p>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong> / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span>Accepted (as recommended).</span></div>
+</article>
+<article class="row" id="r-F.5">
+<header><span class="rid">F.5</span><h3>The CDF canister</h3><span class="kind">accept or redo</span></header>
+<div class="part"><a href="../../campaign/act-6-jovian-storm/level-38-lightning-belt/README.md#secrets-and-pickups">The CDF canister</a></div>
+<div class="q"><strong>accept or redo</strong> (QD-3; whether it keeps its latch is L.1). The canister in CDF stripes under a round white-and-blue parachute, swaying, the friendly brackets, the orange latch overlay with its amber lamp, the release (the halves open, the canopy torn loose) and the armour patch; in the game shot by a Scatter Vulcan and, with the plan's beam, passing unshot.</div>
+<div class="media"><figure class="m img"><a href="../../campaign/act-6-jovian-storm/level-38-lightning-belt/concept/canister-final-r76-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-6-jovian-storm/level-38-lightning-belt/concept/canister-final-r76-a.png" alt="frames"></a><figcaption>frames</figcaption></figure><figure class="m img"><a href="../../campaign/act-6-jovian-storm/level-38-lightning-belt/concept/canister-final-r76-a.gif"><img loading="lazy" decoding="async" src="../../campaign/act-6-jovian-storm/level-38-lightning-belt/concept/canister-final-r76-a.gif" alt="motion"></a><figcaption>motion</figcaption></figure><figure class="m img"><a href="../../campaign/act-6-jovian-storm/level-38-lightning-belt/concept/canister-capture-r76-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-6-jovian-storm/level-38-lightning-belt/concept/canister-capture-r76-a.png" alt="in the game"></a><figcaption>in the game</figcaption></figure><figure class="m img"><a href="../../campaign/act-6-jovian-storm/level-38-lightning-belt/concept/canister-capture-r76-a.gif"><img loading="lazy" decoding="async" src="../../campaign/act-6-jovian-storm/level-38-lightning-belt/concept/canister-capture-r76-a.gif" alt="in the game, motion"></a><figcaption>in the game, motion</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the parachute's white canopy is the brightest thing on the screen; the latch is small at play size</p>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong> / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span>Accepted (the canister is shown with its latch overlay; L.1 b drops the latch, the art needs nothing new).</span></div>
+</article>
+<article class="row" id="r-F.6">
+<header><span class="rid">F.6</span><h3>The Buzzsaws over the cells</h3><span class="kind">accept or redo</span></header>
+<div class="part"><a href="../../enemies/air/buzzsaw-drone/README.md#concept-art">The Buzzsaws over the cells</a></div>
+<div class="q"><strong>accept or redo</strong>. Round 64's final Buzzsaw (gold blades, the red tell) in the storm: the t=62 circle at (240, 160) over the storm cells breaking off one by one, chasing and dashing (edges only, no rocks in Level 38).</div>
+<div class="media"><figure class="m img"><a href="../../enemies/air/buzzsaw-drone/concept/buzzsaw-capture-r76-a.png"><img loading="lazy" decoding="async" src="../../enemies/air/buzzsaw-drone/concept/buzzsaw-capture-r76-a.png" alt="in the game"></a><figcaption>in the game</figcaption></figure><figure class="m img"><a href="../../enemies/air/buzzsaw-drone/concept/buzzsaw-capture-r76-a.gif"><img loading="lazy" decoding="async" src="../../enemies/air/buzzsaw-drone/concept/buzzsaw-capture-r76-a.gif" alt="in the game, motion"></a><figcaption>in the game, motion</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> with the plan's beam on the circle (the parked run) the four die within a second; the capture steers the ship off it, so the pods and Rook take them over five seconds</p>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong> / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span>Accepted (as recommended).</span></div>
+</article>
+<article class="row" id="r-F.7">
+<header><span class="rid">F.7</span><h3>The cross from four edges</h3><span class="kind">accept or redo</span></header>
+<div class="part"><a href="../../campaign/act-6-jovian-storm/level-38-lightning-belt/README.md#waves">The cross from four edges</a></div>
+<div class="q"><strong>accept or redo</strong>. The t=137 cross: every edge warned from t=134 ("hostiles on all sides"), one Harrow from each edge, the t=138 lure down the middle and the rings over the Red Spot's rim.</div>
+<div class="media"><figure class="m img"><a href="../../campaign/act-6-jovian-storm/level-38-lightning-belt/concept/cross-capture-r76-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-6-jovian-storm/level-38-lightning-belt/concept/cross-capture-r76-a.png" alt="in the game"></a><figcaption>in the game</figcaption></figure><figure class="m img"><a href="../../campaign/act-6-jovian-storm/level-38-lightning-belt/concept/cross-capture-r76-a.gif"><img loading="lazy" decoding="async" src="../../campaign/act-6-jovian-storm/level-38-lightning-belt/concept/cross-capture-r76-a.gif" alt="in the game, motion"></a><figcaption>in the game, motion</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the four warnings fill the field's edges for 3 s; with the ship on the left edge (the gusts) the lure strikes far from it</p>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong> / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span>Accepted (as recommended).</span></div>
+</article>
+<article class="row" id="r-F.8">
+<header><span class="rid">F.8</span><h3>Readability in the storm</h3><span class="kind">accept or redo</span></header>
+<div class="part"><a href="../../campaign/act-6-jovian-storm/level-38-lightning-belt/README.md#concept-art">Readability in the storm</a></div>
+<div class="q"><strong>accept or redo</strong> (the gap check's readability risk). 1:1 crops from the game: a Harrow and ring bullets over the Red Spot's dark brown (the darkest band), a ring over the storm floor, a lured ring and a Harrow's tell over the walls.</div>
+<div class="media"><figure class="m img"><a href="../../campaign/act-6-jovian-storm/level-38-lightning-belt/concept/readability-capture-r76-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-6-jovian-storm/level-38-lightning-belt/concept/readability-capture-r76-a.png" alt="crops"></a><figcaption>crops</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the bullets' magenta and white cores read on every band; a hunting Harrow over the dark brown reads by its gold edges, its dim sac hardly at all</p>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong> / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span>Accepted (as recommended).</span></div>
+</article>
+<article class="row" id="r-F.9">
+<header><span class="rid">F.9</span><h3>A tracking column on hard</h3><span class="kind">accept or redo</span></header>
+<div class="part"><a href="../../campaign/act-6-jovian-storm/level-38-lightning-belt/README.md#lightning">A tracking column on hard</a></div>
+<div class="q"><strong>accept or redo</strong>. Hard's t=66 tracking column: told on the ship's x at its tell's start, locked there for 1.0 s, then the strike (the ship invulnerable in the capture).</div>
+<div class="media"><figure class="m img"><a href="../../campaign/act-6-jovian-storm/level-38-lightning-belt/concept/tracking-capture-r76-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-6-jovian-storm/level-38-lightning-belt/concept/tracking-capture-r76-a.png" alt="in the game"></a><figcaption>in the game</figcaption></figure><figure class="m img"><a href="../../campaign/act-6-jovian-storm/level-38-lightning-belt/concept/tracking-capture-r76-a.gif"><img loading="lazy" decoding="async" src="../../campaign/act-6-jovian-storm/level-38-lightning-belt/concept/tracking-capture-r76-a.gif" alt="in the game, motion"></a><figcaption>in the game, motion</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> a tracking column looks like any other once told (no own colour or mark; the doc asks none); over the ship's own beam the thin tell line is hard to see</p>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong> / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span>Accepted (as recommended).</span></div>
+</article>
+<article class="row" id="r-F.10">
+<header><span class="rid">F.10</span><h3>The Harrow&#x27;s intel portrait</h3><span class="kind">accept or redo</span></header>
+<div class="part"><a href="../../ui/hangar/README.md#concept-art">The Harrow's intel portrait</a></div>
+<div class="q"><strong>accept or redo</strong>. The sensor L2 portrait (30×30): the Harrow nose down, the gunmetal dart with its gold leading edges, the sac's veins unlit.</div>
+<div class="media"><figure class="m img"><a href="../../ui/hangar/concept/intel-final-r76-a.png"><img loading="lazy" decoding="async" src="../../ui/hangar/concept/intel-final-r76-a.png" alt="portrait"></a><figcaption>portrait</figcaption></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong> / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span>Accepted (as recommended).</span></div>
+</article>
+<article class="row" id="r-F.11">
+<header><span class="rid">F.11</span><h3>The briefing images</h3><span class="kind">accept or redo</span></header>
+<div class="part"><a href="../../ui/briefing/README.md#concept-art">The briefing images</a></div>
+<div class="q"><strong>accept or redo</strong>. Level 38's two 672×240 images: Okafor's chart of the storm layer in section (Aurelia's wreck at the top, the cloud decks, the route under them round the Red Spot's rim up toward Io's disc, the lightning cells hatched, Callisto's tracking line) and Varga's sketch of a Harrow (the sac lit teal, its ring of 8 with the gap on the ship's bearing, a column's 1.0 s tell and the 0.25 s strike with a lured Harrow bursting).</div>
+<div class="media"><figure class="m img"><a href="../../ui/briefing/concept/briefing-images-final-r76-a.png"><img loading="lazy" decoding="async" src="../../ui/briefing/concept/briefing-images-final-r76-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong> / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span>Accepted (as recommended).</span></div>
+</article>
+</section>
+<section id="s-sounds"><h2>Sounds</h2>
+<div class="sum"><p>The Harrow's two new sounds (QD-2), from step AUD-D: cut by <code>tools/concept/audio/sfx_r76.py</code> (Freesound HQ previews, CC0/CC-BY, in <span class="ref">CREDITS.md</span>; the two variants of a subject levelled alike). The game plays the a variants from step D4 until the picks (in <code>assets/sfx/</code>), beside round 72's chosen <code>harrow-lock</code> b and <code>harrow-burst</code> a (in <code>assets/sfx/</code> too: no row).</p></div>
+<article class="row" id="r-S.1">
+<header><span class="rid">S.1</span><h3>Harrow: hunting whistle (harrow-whistle)</h3><span class="kind">pick a or b</span></header>
+<div class="part">[Harrow: hunting whistle (<code>harrow-whistle</code>)](../../enemies/air/harrow/README.md)</div>
+<div class="q"><strong>pick a or b</strong> (QD-2). <strong>Plays:</strong> while a Harrow hunts (its 1.5–2.5 s chase before the lock), one loop for the nearest hunting Harrow on the screen, panned to it; the game raises its pitch over the chase and stops it at the lock tell, where the turbine whine (round 72 S.5 b) takes over; Levels 38–42, often. <strong>Should sound like:</strong> a thin rising wind whistle: a real jet's fly-by or a whistling dive, cut thin (no low roar), under the fire and over the storm's wind. <strong>a:</strong> a jet's fly-by at its approach with the roar cut away under 1 kHz: a thin, airy turbine whistle around 1.7 kHz, 2 s loop. <strong>b:</strong> falling bombs' fins whistling, cut thin the same way: a purer, higher whistle around 2.1 kHz with the bombs' slow pitch drift in it, 2 s loop.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/harrow-whistle-r76-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/harrow-whistle-r76-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> a loop cannot rise by itself: the rise is the game's pitch over the chase; a still climbs about 8 dB over its 2 s (the approach) and may pulse every 2 s; b's bombs drift down in pitch (a falling whistle under the game's rise) and are nearer a pure tone; both sit at the storm bed's band level and 16–20 dB over it in their own octave (the Buzzsaw's whine: 26), and drown under a thunder roll's peak</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong> / b</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>a</strong> chosen (as recommended); b rejected, moved to <code>concept/rejected/</code>. The game plays a (<code>HarrowCues</code>).</span></div>
+</article>
+<article class="row" id="r-S.2">
+<header><span class="rid">S.2</span><h3>Harrow: ram whoosh (harrow-ram)</h3><span class="kind">pick a or b</span></header>
+<div class="part">[Harrow: ram whoosh (<code>harrow-ram</code>)](../../enemies/air/harrow/README.md)</div>
+<div class="q"><strong>pick a or b</strong> (QD-2). <strong>Plays:</strong> each Harrow's ram, at the end of its lock tell as it shoots straight along its bearing at 300 px/s; a miss flies out through the far edge; at most two at once; Levels 38–42. <strong>Should sound like:</strong> a hard whoosh: something heavy cutting the air fast past the ship, short and forceful; never a pop. <strong>a:</strong> a large heavy spear or hammer swung hard, sped to 1.1: a deep, forceful whoosh with a whistle in its edge, peaking 0.2 s in, 0.8 s. <strong>b:</strong> a car passing close at speed, sped to 1.25: a rougher, roaring rush with the pass's pitch drop, peaking 0.25 s in, 0.9 s.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/harrow-ram-r76-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/harrow-ram-r76-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> a is CC-BY 4.0 (on the credits roll) and deep (38 % under 200 Hz); b keeps some engine roar from the car and may read as a vehicle; both stand 13–14 dB over the storm bed, about 0 dB under a thunder roll's peak</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong> / b</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>a</strong> chosen (as recommended); b rejected, moved to <code>concept/rejected/</code>. The game plays a (<code>HarrowCues</code>).</span></div>
+</article>
+</section>
+<section id="s-voices"><h2>Voices</h2>
+<div class="sum"><p>Level 38's lines as step VOX-D voiced them (the cast voices, seeds pinned, every take read back by Whisper with the Act 6 name prompt), joined as the game plays them by <code>tools/concept/audio/voice_r76.py</code>.</p></div>
+<article class="row" id="r-V.1">
+<header><span class="rid">V.1</span><h3>Level 38&#x27;s lines</h3><span class="kind">accept or redo</span></header>
+<div class="part"><a href="../../audio/voice/README.md#act-6-voices-draft">Level 38's lines</a></div>
+<div class="q"><strong>accept or redo</strong> (a listen-through, 2:00.5). Level 38's two briefing pages and its radio by time with the event lines at their likeliest place (Rook's first strike kill after the t=33 column, the cargo pod's line after its break, the secondary met) and the level's end, 1.2 s apart; Rook's two lines need him flying; the Choir and Vorne are quiet in this level; the cue list names each line's start. Redo: name the lines to re-render.</div>
+<div class="media"><figure class="m aud"><figcaption>listen-through</figcaption><audio controls preload="none" src="../../audio/voice/concept/level-38-listen-r76-a.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> Whisper heard Varga's page 2 "theirs too" and "bred" as homophones on every seed (kept as voiced, at 0:20.6); everything else word for word</p>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong> / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span>Accepted (as recommended).</span></div>
+</article>
+</section>
+<section id="s-design"><h2>Design</h2>
+<article class="row" id="r-D.1">
+<header><span class="rid">D.1</span><h3>The Buzzsaw Drone&#x27;s Act 6 return</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../enemies/air/buzzsaw-drone/README.md#act-6-the-return-in-the-storm">The Buzzsaw Drone's Act 6 return</a></div>
+<div class="q"><strong>approve or change</strong> (QD-1). Its <em>Act 6: the return in the storm</em> section was not among round 72's rows, so the document is still <code>design: review</code>: HP 20 and bounty 12 unchanged, edges-only ricochet (no rocks in Level 38), a lightning strike kills it and pays, round 64's art as final, at most 6 on the screen and 2 dashing, a Buzzsaw wave and a Harrow wave at least 7 s apart, no strike over a tell. Built as written (nothing in it changes code); flown in Level 38's 17 Buzzsaws (F.6). Approve: <code>design: approved</code>.</div>
+<div class="media"><figure class="m img"><a href="../../enemies/air/buzzsaw-drone/concept/buzzsaw-capture-r76-a.png"><img loading="lazy" decoding="async" src="../../enemies/air/buzzsaw-drone/concept/buzzsaw-capture-r76-a.png" alt="in the game"></a><figcaption>in the game</figcaption></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> approve</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>approve</strong> / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>Approved</strong> (the user): the Buzzsaw Drone's README is <code>design: approved</code>.</span></div>
+</article>
+</section>
+<section id="s-level-38-questions"><h2>Level 38 questions</h2>
+<article class="row" id="r-L.1">
+<header><span class="rid">L.1</span><h3>The CDF canister</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../campaign/act-6-jovian-storm/level-38-lightning-belt/README.md#secrets-and-pickups">The CDF canister</a></div>
+<div class="q"><strong>pick a or b</strong> (QD-4). The canister is marked friendly (the brackets that mean <em>hold fire</em>, the Act 5 lesson) yet carries a 10 HP latch the player must shoot to free the armour patch. <strong>a</strong> (built): keep the latch under the brackets. <strong>b</strong> (recommended): no latch: the canister opens by itself over the middle and releases the patch (Level 14's supply drone), the brackets only mark it; the art needs nothing new (the latch is an overlay). Step D3: the plan's fit cannot aim at it (its beam passes debris, the Tesla pod seeks units), so the latch broke in 17 of 18 runs only to stray missiles or Rook's fire; in this round's parked capture it drifted out unshot, a Scatter Vulcan under it breaks it in about half a second.</div>
+<div class="media"><figure class="m img"><a href="../../campaign/act-6-jovian-storm/level-38-lightning-belt/concept/canister-capture-r76-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-6-jovian-storm/level-38-lightning-belt/concept/canister-capture-r76-a.png" alt="in the game"></a><figcaption>in the game</figcaption></figure><figure class="m img"><a href="../../campaign/act-6-jovian-storm/level-38-lightning-belt/concept/canister-capture-r76-a.gif"><img loading="lazy" decoding="async" src="../../campaign/act-6-jovian-storm/level-38-lightning-belt/concept/canister-capture-r76-a.gif" alt="in the game, motion"></a><figcaption>in the game, motion</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> with b the patch comes free on every run (an easier level by one armour patch); a keeps a skill reward a beam player rarely gets</p>
+<p class="rec"><span class="tag">Recommendation</span> b</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge pick">not the recommendation</span> <span>a / <strong>b</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>b</strong> chosen (as recommended): the CDF canister has no latch: it opens by itself over the middle and releases the armour patch, the brackets only mark it. Open build item (Level 38's <em>Implementation</em>): the latch leaves the sim, the data and the game in a later code step.</span></div>
+</article>
+<article class="row" id="r-L.2">
+<header><span class="rid">L.2</span><h3>The caps with nothing shot</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../campaign/act-6-jovian-storm/level-38-lightning-belt/README.md#waves">The caps with nothing shot</a></div>
+<div class="q"><strong>accept or change</strong>. The caps (at most 6 Harrows on the screen and 2 in their tell or ram; 6 Buzzsaws and 2 dashing; never two dashes and two rams at once) hold in every flown run (<code>levelReport</code>, <code>Level38Test</code>: at most 4 Harrows, 1–2 in tell or ram, no Buzzsaw dashing); flown <strong>unharmed</strong> (nothing dies: the worst case) the script holds up to 3 Harrows in their tell or ram and 5 Buzzsaws dashing. <strong>Accept</strong> (recommended): a player who kills nothing meets more than the caps, as Act 5's Buzzsaws did. <strong>Change</strong>: thin or stagger the waves until the unharmed script holds too (fewer Harrows per stream or longer intervals; a later Level 38 content step, re-flown).</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the caps are authored, not a simulation rule (m10d-gaps §4); change costs density (the act's floor)</p>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong> / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span>Accepted: the caps stay authored; a script flown unharmed may exceed them.</span></div>
+</article>
+<article class="row" id="r-L.3">
+<header><span class="rid">L.3</span><h3>Rook&#x27;s armour in the storm</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../player/wingmen/README.md">Rook's armour in the storm</a></div>
+<div class="q"><strong>accept or change</strong>. In <code>ActPlaythroughTest</code> Rook ends Levels 38 and 39 at 0 of his 80 armour on medium and hard (11 on easy): he ejects mid-level and the plan pays his repair at the next visit. Options: <strong>a</strong> (recommended) a note for the act's escort load, settled in M10 part I's Act 6 balance (measure where he goes down: rings, rams or strikes); <strong>b</strong> widen Rook's keep-out to cover a Harrow's ram lane and the rings near him (sim, <code>RookHazards</code>, Act 6 only); <strong>c</strong> buy Rook armour in the balance plan before Level 38 (his upgrades, out of the Crucible savings); <strong>d</strong> accept as is (the plan repairs him each visit).</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> a defers the decision; b changes his flight in Levels 38–42 only, opt-in like the column keep-out</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong> / b / c / d</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>a</strong> chosen: Rook's armour is settled in M10 part I's Act 6 balance (the roadmap's row I).</span></div>
+</article>
+</section>
+<section id="s-important-calls"><h2>Important calls</h2>
+<div class="sum"><p>Calls the part D steps made where the documents left room (the steps' logs), each built as recommended; the alternative is in the cell. Accept, or change with a note.</p></div>
+<article class="row" id="r-C.1">
+<header><span class="rid">C.1</span><h3>The ram and the canister (D1)</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../enemies/air/harrow/README.md#behaviour">The ram and the canister (D1)</a></div>
+<div class="q"><strong>accept or change</strong>. A Harrow's ram ignores debris (it flies straight through the falling pieces, the pod and the canister), and only the player's shot opens the canister's latch (debris, rams and strikes leave it). Alternative: a ram breaks the debris it meets; a strike opens the canister too (as it opens the cargo pod).</div>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong> / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span>Accepted (as recommended).</span></div>
+</article>
+<article class="row" id="r-C.2">
+<header><span class="rid">C.2</span><h3>The strike times (D2)</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../campaign/act-6-jovian-storm/level-38-lightning-belt/README.md#lightning">The strike times (D2)</a></div>
+<div class="q"><strong>accept or change</strong>. Sixteen strike tells moved by at most 1 s from the draft (50, 60, 67, 72, 84, 90, 96, 102, 123.5, 128, 134, 139, 144, 149, 155, 159.5): the world's rule allows no tell within 1 s of any wave's entry, which the drafted times broke; the six lures 1.0–1.5 s after their Harrow waves' entry, each column on its wave's chase lane.</div>
+<div class="media"><figure class="m img"><a href="../../enemies/air/harrow/concept/harrow-capture-r76-a.gif"><img loading="lazy" decoding="async" src="../../enemies/air/harrow/concept/harrow-capture-r76-a.gif" alt="the first lure"></a><figcaption>the first lure</figcaption></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong> / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span>Accepted (as recommended).</span></div>
+</article>
+<article class="row" id="r-C.3">
+<header><span class="rid">C.3</span><h3>Hard&#x27;s third gust (D2)</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../campaign/act-6-jovian-storm/level-38-lightning-belt/README.md#wind">Hard's third gust (D2)</a></div>
+<div class="q"><strong>accept or change</strong>. Hard's extra gust at <strong>t=111</strong>, not the drafted t=113 (two seconds clear of the t=114 strike's tell).</div>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong> / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span>Accepted (as recommended).</span></div>
+</article>
+<article class="row" id="r-C.4">
+<header><span class="rid">C.4</span><h3>The t=154.5 Hornet trio (D2)</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../campaign/act-6-jovian-storm/level-38-lightning-belt/README.md#waves">The t=154.5 Hornet trio (D2)</a></div>
+<div class="q"><strong>accept or change</strong>. The trio flies the built line abreast at stations 120 px apart: <strong>68 px</strong> between hull edges, not the drafted 80; their drift keeps them apart and no two <code>medium</code> hulls overlap. Alternative: spread the stations to 132 px apart (80 px edges).</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> under the drafted spacing by 12 px</p>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong> / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span>Accepted (as recommended).</span></div>
+</article>
+<article class="row" id="r-C.5">
+<header><span class="rid">C.5</span><h3>The t=155.5 column (D2)</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../campaign/act-6-jovian-storm/level-38-lightning-belt/README.md#lightning">The t=155.5 column (D2)</a></div>
+<div class="q"><strong>accept or change</strong>. The t=155.5 column at <strong>x=180</strong>, between the Hornets' stations, not the drafted x=60 (<code>levelReport</code> flew the drafted one over a Hornet's hatch tell).</div>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong> / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span>Accepted (as recommended).</span></div>
+</article>
+<article class="row" id="r-C.6">
+<header><span class="rid">C.6</span><h3>The t=119 column (D3)</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../campaign/act-6-jovian-storm/level-38-lightning-belt/README.md#lightning">The t=119 column (D3)</a></div>
+<div class="q"><strong>accept or change</strong>. The t=119 column at <strong>x=375</strong>, not 420: the t=111 pair's right Hornet drifts under the drafted column (to x 451–426 over t=119–120.25) while it keeps apart from its partner; the storm-layer check tests only the station x, so a later content step should check the drift too.</div>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong> / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span>Accepted (as recommended).</span></div>
+</article>
+<article class="row" id="r-C.7">
+<header><span class="rid">C.7</span><h3>Varga&#x27;s Harrow line (D4)</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../campaign/act-6-jovian-storm/level-38-lightning-belt/README.md#radio-chatter">Varga's Harrow line (D4)</a></div>
+<div class="q"><strong>accept or change</strong>. Varga's Harrow line at <strong>t=34</strong>, not t=32.5: on the game's typed pages her t=23 lightning line runs to t≈33.9 (<code>RadioTimelineLevel38Test</code>). It still comes before the first lure (t=43.5).</div>
+<div class="media"><figure class="m aud"><figcaption>the line (0:52.2)</figcaption><audio controls preload="none" src="../../audio/voice/concept/level-38-listen-r76-a.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong> / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span>Accepted (as recommended).</span></div>
+</article>
+<article class="row" id="r-C.8">
+<header><span class="rid">C.8</span><h3>The intel panel&#x27;s setting (D4)</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../campaign/act-6-jovian-storm/level-38-lightning-belt/README.md#threat-profile">The intel panel's setting (D4)</a></div>
+<div class="q"><strong>accept or change</strong>. The threat profile's setting (the intel panel's first line, shown without a sensor suite) reads <strong>"Jupiter, storm layer"</strong>: the drafted wording ran out of the panel (<code>IntelPanelLayoutTest</code>).</div>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong> / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span>Accepted (as recommended).</span></div>
+</article>
+</section></main></body></html>

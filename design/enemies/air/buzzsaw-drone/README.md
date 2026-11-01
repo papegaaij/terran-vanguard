@@ -1,6 +1,6 @@
 ---
 title: Buzzsaw Drone
-design: review
+design: approved
 implementation: done
 art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../player/specials, ../../../world/belt, ../../../campaign/act-5-the-belt, ../../../campaign/act-6-jovian-storm]
@@ -13,8 +13,8 @@ updated: 2026-11-01
 
 A radially symmetric Ascendancy blade drone that chases the ship, spins up with a clear tell and
 then dashes in a straight line, **ricocheting** off the play-field edges and the belt's drifting
-asteroids. Contact damage only, but lethal in groups (Level 31). It returns in Level 38's storm layer (draft,
-decided 2026-10-31 (round 72)).
+asteroids. Contact damage only, but lethal in groups (Level 31). It returns in Level 38's storm layer (decided
+2026-10-31 (round 72), approved 2026-11-01 (round 76)).
 
 ## Design
 
@@ -63,9 +63,9 @@ takes the [beam-era](../../README.md#balancing-basis) ×2 and keeps it in every 
   saw or grinder from Freesound, CC0/CC-BY), rising sharply through the tell; a metal scrape-clang on
   each ricochet; a short shatter on death.
 
-### Act 6: the return in the storm (draft)
+### Act 6: the return in the storm
 
-**Draft** (Act 6 design phase, step m10-d-enemies-a; decided 2026-10-31 (round 72)). The stat block above
+Drafted in the Act 6 design phase (step m10-d-enemies-a; decided 2026-10-31 (round 72)) and approved 2026-11-01 (round 76 D.1). The stat block above
 (the approved Act 5 unit, rendered from its data) is unchanged; this section adds its Act 6 use. The build updates
 the data's *First level / used in* row (L38 added).
 
@@ -106,8 +106,8 @@ Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's r
 |---|---|---|
 | [concept/buzzsaw-drone-r60-b.png](concept/buzzsaw-drone-r60-b.png) | Buzzsaw Drone B, gold blades — six solid gold blades round a black hub; the tell's red flicker covers the disc (sheet) | chosen (round 60) |
 | [concept/buzzsaw-drone-r60-b.gif](concept/buzzsaw-drone-r60-b.gif) | Buzzsaw Drone B, gold blades — six solid gold blades round a black hub; the tell's red flicker covers the disc (motion) | chosen (round 60) |
-| [concept/buzzsaw-capture-r76-a.png](concept/buzzsaw-capture-r76-a.png) | In the game, Level 38 (M10 part D, step D5; [recipe](concept/prompts.md#buzzsaw-capture-r76-a)): the t=62 circle over the storm cells breaking off, chasing and dashing | proposed (round 76 F.6) |
-| [concept/buzzsaw-capture-r76-a.gif](concept/buzzsaw-capture-r76-a.gif) | The same, t 61.7–67 | proposed (round 76 F.6) |
+| [concept/buzzsaw-capture-r76-a.png](concept/buzzsaw-capture-r76-a.png) | In the game, Level 38 (M10 part D, step D5; [recipe](concept/prompts.md#buzzsaw-capture-r76-a)): the t=62 circle over the storm cells breaking off, chasing and dashing | chosen (round 76 F.6 accept) |
+| [concept/buzzsaw-capture-r76-a.gif](concept/buzzsaw-capture-r76-a.gif) | The same, t 61.7–67 | chosen (round 76 F.6 accept) |
 
 ## Implementation
 
@@ -142,3 +142,7 @@ Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's r
   Measured at Level 38 (`levelReport`): at most 6 on the screen, none dashing in the autopilot's flights (taken in
   their chase), no strike over a tell; the script flown unharmed has up to 5 dashing at once (nothing killed). The
   section stays `design: review` until round 76 (QD-1).
+- 2026-11-01 (user, round 76 D.1, page answer): the *Act 6: the return in the storm* section **approved**, and with it the
+  document (`design: approved`): HP 20 and bounty 12 unchanged, edges-only ricochet in Level 38, a lightning strike kills
+  and pays, at most 6 on the screen and 2 dashing, a Buzzsaw wave and a Harrow wave at least 7 s apart, no strike over a
+  tell. The Level 38 captures (F.6) accepted; the units' round 64 art stays final.

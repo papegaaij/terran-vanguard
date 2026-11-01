@@ -1063,8 +1063,8 @@ the Act 6 lines part B voiced and the intro's page 4 at two readings, the last f
 | [concept/level-37-listen-r75-a.ogg](concept/level-37-listen-r75-a.ogg) | Listen-through: Level 37's two briefing pages and its 24 radio lines (with the event lines, the locker's secret and both secondary outcomes) as the game plays them (`assets/voice/` joined, 1.2 s apart; 3:17, −19 LUFS); `tools/concept/audio/voice_r75.py` | chosen (round 75 V.1 accept; the 13 shortened lines were re-voiced after it, step VOX-C2) |
 | [concept/level-37-listen-r75-a.txt](concept/level-37-listen-r75-a.txt) | The listen-through's cue list: each line's start, speaker, source, expression and text | chosen (round 75 V.1 accept; a listening aid, before the VOX-C2 re-voicing) |
 | [concept/level-37-vorne-r75-a.ogg](concept/level-37-vorne-r75-a.ogg) | Vorne's Level 37 t=110 order as the game plays it (expression `rage` at his grim row, the enemy filter; 6.4 s): a copy of the production file | chosen (round 75 V.3 accept) |
-| [concept/level-38-listen-r76-a.ogg](concept/level-38-listen-r76-a.ogg) | Listen-through: Level 38's two briefing pages and its 14 radio lines (with Rook's first strike kill, the cargo pod's secret and the secondary met) as the game plays them (`assets/voice/` joined, 1.2 s apart; 2:00.5, −19 LUFS); `tools/concept/audio/voice_r76.py` | proposed (round 76 V.1) |
-| [concept/level-38-listen-r76-a.txt](concept/level-38-listen-r76-a.txt) | The listen-through's cue list: each line's start, speaker, source, expression and text | proposed (round 76 V.1; a listening aid) |
+| [concept/level-38-listen-r76-a.ogg](concept/level-38-listen-r76-a.ogg) | Listen-through: Level 38's two briefing pages and its 14 radio lines (with Rook's first strike kill, the cargo pod's secret and the secondary met) as the game plays them (`assets/voice/` joined, 1.2 s apart; 2:00.5, −19 LUFS); `tools/concept/audio/voice_r76.py` | chosen (round 76 V.1 accept) |
+| [concept/level-38-listen-r76-a.txt](concept/level-38-listen-r76-a.txt) | The listen-through's cue list: each line's start, speaker, source, expression and text | chosen (round 76 V.1 accept; a listening aid) |
 
 ## Open questions
 
@@ -1251,3 +1251,7 @@ Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-a
   briefing pages and timed lines, voiced). **V.4 b** (not the recommendation): the Act 6 intro's page 4 is round 74's
   take exactly (the slower 14.7 s), done in step VOX-C2 by a per-line shift (`line_shifts`); the pipeline's take
   (`act-6-intro-page-4-r75-a`) moved to `concept/rejected/`.
+- 2026-11-01 (user, rounds 76 and 77 closed): Level 38's lines accepted (round 76 V.1, the listen-through) and Level 39's
+  (round 77 V.1). **Round 77 V.2 b**: Vorne's t=91 line is to play at his grim row (`expression: rage`, as his Level 37
+  order), not the neutral take as built: the level data gets the expression and a VOX step renders a new take (open item
+  in Level 39's *Implementation*); the neutral take's review copy moved to Level 39's `concept/rejected/`.

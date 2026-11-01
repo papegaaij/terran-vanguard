@@ -201,8 +201,8 @@ Prompts: [concept/prompts.md](concept/prompts.md#eruption-final-r77-a).
 
 | File | What | Status |
 |---|---|---|
-| [concept/eruption-final-r77-a.png](concept/eruption-final-r77-a.png) | The eruption's production frames on Level 39's plains: a cold vent and the tell's 12 frames, the burst, the umbrella opening and settling, the burning rock's tumble and halo (3×), a rock shot apart (sheet) | proposed (round 77) |
-| [concept/eruption-final-r77-a.gif](concept/eruption-final-r77-a.gif) | One eruption at medium at 1×: the 1.2 s tell, the burst, four rocks rising and flying up in the 100° fan, one shot apart, the umbrella | proposed (round 77) |
+| [concept/eruption-final-r77-a.png](concept/eruption-final-r77-a.png) | The eruption's production frames on Level 39's plains: a cold vent and the tell's 12 frames, the burst, the umbrella opening and settling, the burning rock's tumble and halo (3×), a rock shot apart (sheet) | chosen (round 77 F.3 accept) |
+| [concept/eruption-final-r77-a.gif](concept/eruption-final-r77-a.gif) | One eruption at medium at 1×: the 1.2 s tell, the burst, four rocks rising and flying up in the 100° fan, one shot apart, the umbrella | chosen (round 77 F.3 accept) |
 
 Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 
@@ -240,3 +240,7 @@ Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 - 2026-11-01 (user, round 77 F.1 redo; step ART-E2): **no Jupiter on top-down ground levels**: Level 39 opens on Io's
   plains and Level 41 is over Callisto's ice from t = 0, neither with Jupiter's disc (Level 39's limb opening read as a
   flat disc without perspective); Jupiter stays in the briefing images and the space levels (36–38, 40, 42).
+- 2026-11-01 (user, round 77 closed): the eruption's production frames and the in-game plume field and hold accepted (F.3);
+  the vents' first tell 0.3–1.3 s after entry (L.1 a), the eruption cycles on real time and the hut's lock a 30-damage
+  trigger (C.1) accepted; the sounds rock crack **a**, rock thud **a** and pump blast **a** (S.1, S.2, S.4) and the tower
+  collapse **b** (S.3); F.1 redo (the limb opening) as in the entry above.

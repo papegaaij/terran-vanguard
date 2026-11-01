@@ -671,3 +671,6 @@ Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-a
   Mortar idles there as in L36, L38 and L40.
 - 2026-10-31 (user, [round 72](../../concept-rounds/round-72/README.md) closed): Q7 b: the Hunter drone moves to
   Act 7's design (Rook flies all of Act 6, so the escort slot needs nothing new); a rejected.
+- 2026-11-01 (user, round 76 L.3 a; round 77 L.3 as round 76): Rook's armour in Levels 38 and 39 (0 of 80 at the end on
+  medium and hard in `ActPlaythroughTest`) is **settled in M10 part I's Act 6 balance** (measure where he goes down:
+  rings, rams or strikes), with no change to his keep-out now; the Act 6 escort load notes it.

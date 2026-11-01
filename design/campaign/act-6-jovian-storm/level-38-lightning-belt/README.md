@@ -1,8 +1,8 @@
 ---
 title: Level 38 – Lightning Belt
 design: approved
-implementation: done
-art: proposed
+implementation: in-progress
+art: chosen
 depends-on: [../../../enemies/air/harrow, ../../../enemies/air/buzzsaw-drone, ../../../enemies/air/chimera, ../../../enemies/air/talon, ../../../enemies/air/hornet, ../../../enemies/air/wraith, ../../../enemies/air/lamprey, ../../../world/jovian, ../../../player/specials, ../../../player/wingmen, ../../../player/generator, ../../../ui/hud, ../../act-2-homefront/level-12-storm-front]
 updated: 2026-11-01
 ---
@@ -22,7 +22,7 @@ enemies a minute at medium over 196 s.
 Written from the act roster, the gap analysis's recommended answers (Q3 a with c's backdrop, Q7 b, Q10 a), its
 judgement calls (J1 reference DPS, J2 media, J3 lightning, J5 no new tiny unit) and the wave 1 documents (the
 [Harrow](../../../enemies/air/harrow/README.md), the Buzzsaw's
-[Act 6 return](../../../enemies/air/buzzsaw-drone/README.md#act-6-the-return-in-the-storm-draft), the
+[Act 6 return](../../../enemies/air/buzzsaw-drone/README.md#act-6-the-return-in-the-storm), the
 [Jovian hazards](../../../world/jovian/README.md#hazards--set-pieces), the
 [Act 6 hand plan](../../../player/generator/README.md#act-6-hand-plan-draft)); every number is a first draft for the
 M10 part of this level to measure with `levelReport`. M10 part D (step D2, 2026-11-01): the hand tables are the level's
@@ -240,7 +240,7 @@ minute of flight (easy 72); no strike over a Buzzsaw's tell or a Hornet's hatch 
 dies, the worst case, report only) holds up to 3 Harrows in their tell or ram and 5 Buzzsaws dashing: a player who kills
 nothing meets more than the caps. The Harrows live 1.3 s on the screen (the beam era's small units 0.99 × Level 10's). The t=154.5 Hornet trio flies
 the built line abreast, 120 px apart: 68 px between hull edges, not the drafted 80 (their drift keeps them apart;
-no overlap), pending the user's review in round 76.
+no overlap), decided 2026-11-01 (round 76 C.4).
 
 ### Lightning
 
@@ -265,7 +265,7 @@ the flash and its option. This level sets only **when and where**:
 - **Easy: 13 strikes** (t = 26, 39, 51, 61, 71.5, 83, 95.5, 108, 119, 127.5, 138, 150.5, 158.5), never within 60 px of
   the ship's x at the telegraph's start. **Hard: all 26**, and every third from t=51 (51, 66, 83, 102.5, 119, 134.5,
   150.5, 163) is a **tracking** column that locks on the ship's x at its telegraph's start.
-- **Columns moved by the build** (pending the user's review in round 76): the t=155.5 column at x=180, not 60 (step
+- **Columns moved by the build** (decided 2026-11-01, round 76 C.5, C.6): the t=155.5 column at x=180, not 60 (step
   D2: `levelReport` flew the drafted one over a Hornet's hatch tell); the t=119 column at x=375, not 420 (step D3: the
   t=111 pair's right Hornet drifts under the drafted column while it keeps apart from its partner).
 - **Rook** keeps out of a told column ([Rook in Act 6](../../../player/wingmen/README.md#rook-in-act-6-draft)).
@@ -299,10 +299,12 @@ Harrows' rams or the rings. No gust within 2 s of a lightning telegraph.
   freight. Someone tried to save it.*"
 - **Shield cell**: dropped by the second Hornet of the t=111 pair (if the player kills it).
 - **Armour patch**: a CDF supply canister dropped by the fleet through the storm at t≈100 (the friendly marker on
-  its parachute, [HUD](../../../ui/hud/README.md#act-6-additions-draft)), drifting down the middle; a 10 HP latch
-  that only the player's shot breaks (step D1; debris and a Harrow's ram leave it). Built as drafted; step D3 found the
-  plan's fit breaks it in 17 of 18 runs only with stray missiles or Rook's fire (the beam passes debris, the Tesla pod
-  seeks units): round 76 QD-4 asks whether it opens by itself instead.
+  its parachute, [HUD](../../../ui/hud/README.md#act-6-additions-draft)), drifting down the middle. **It has no
+  latch** (decided 2026-11-01, round 76 L.1 b): it opens by itself over the middle and releases the armour patch (Level
+  14's supply drone), the brackets only mark it as friendly. Built with a 10 HP latch that only the player's shot broke
+  (step D1; debris and a Harrow's ram left it); step D3 found the plan's fit broke it in 17 of 18 runs only with stray
+  missiles or Rook's fire (the beam passes debris, the Tesla pod seeks units), so the build removes the latch (see
+  *Implementation*). A Harrow's ram still ignores the canister.
 - **Overdrive**: dropped by the last Chimera of the t=126 wing.
 
 ## Radio chatter
@@ -334,8 +336,8 @@ freight. Someone tried to save it.*" Fourteen lines in all.
 
 Timeline check (text, by the rule above): the t=1 line closes at about t=8.6; Varga's lightning line (t=23) at about
 t=30.6, after the first strike's telegraph (t=26) has shown what it describes and before the Harrow line (t=34; step
-D4: on the game's typed pages the lightning line runs to about t=33.9, so the Harrow line moved from t=32.5, pending
-round 76), which closes at about t=45.7 there, as the first lure (t=43.5) strikes. The flank line (t=52) closes at about t=59.2, the
+D4: on the game's typed pages the lightning line runs to about t=33.9, so the Harrow line moved from t=32.5, decided
+2026-11-01, round 76 C.7), which closes at about t=45.7 there, as the first lure (t=43.5) strikes. The flank line (t=52) closes at about t=59.2, the
 Buzzsaw line at about t=68.8, the Lamprey line (t=73, the hunt's entry at t=74) at about t=79.8. The cross warning
 line (t=134.5, the edge warnings from t=134) closes at about t=140.2; the breakout line at about t=156.8. Rook's last
 line (t=186) closes at about t=193.0, inside the calm. Without Rook his two lines drop.
@@ -413,7 +415,7 @@ as deep pieces lit from inside by lightning (additive `-glow` pieces on the real
 pulse the game may draw on each told strike), Level 37's sinking city as Aurelia's wreck and its fall debris on
 `low-air` in the storm's grade (ART-C2's pieces), the heavy atmosphere's scud on `high-air`; at most two animated
 pieces on the screen at once. Aurelia's cargo pod and the CDF canister by `tools/art/storm_layer_units.py`
-(the canister's latch a separate overlay, so QD-4's answer needs no new art). The lightning column is round 73's
+(the canister's latch a separate overlay, so the no-latch answer (round 76 L.1 b) needs no new art). The lightning column is round 73's
 ([Jovian system](../../../world/jovian/README.md#concept-art)); the Harrow's frames are in its
 [document](../../../enemies/air/harrow/README.md#concept-art), the briefing images in the
 [briefing](../../../ui/briefing/README.md#concept-art) (`briefing-images-final-r76-a`). The proposal
@@ -422,24 +424,24 @@ the sections and the pod's and the canister's `debris`. Prompts and briefs: [con
 
 | File | What | Status |
 |---|---|---|
-| [concept/backdrop-final-r76-a.png](concept/backdrop-final-r76-a.png) | Production backdrop: twelve screens at half size with stand-ins (the wreck and the debris, the storm's top, the first strike's tell alone and the strike, the first Harrows, a wall lit from inside, a Buzzsaw circle over the cells, the canister, the Red Spot's rim with the pod, a Harrow cross by the rim, the breakout, Io's disc), the readability crops at 1× (each section's darkest and brightest window with a Harrow hunting and one in its tell, a Buzzsaw, needles, an orb, the ship; the measured means), the deep pieces with their brightest flash, the debris, the tile sets (sheet) | proposed (round 76) |
-| [concept/backdrop-final-r76-a.gif](concept/backdrop-final-r76-a.gif) | t 24–34 at half size (10 frames a second): the first strike's tell and strike alone, then the first Harrows | proposed (round 76) |
-| [concept/cargo-pod-final-r76-a.png](concept/cargo-pod-final-r76-a.png) | Aurelia's cargo pod: its 16 tumble frames at 2× over the left edge at t=118, lamps dead, the lightning flash's outline, the break in air (sheet) | proposed (round 76) |
-| [concept/cargo-pod-final-r76-a.gif](concept/cargo-pod-final-r76-a.gif) | The pod tumbling down the left edge, outlined by a flash, then broken open | proposed (round 76) |
-| [concept/canister-final-r76-a.png](concept/canister-final-r76-a.png) | The CDF supply canister on its parachute: the sway with the latch overlay (QD-4 a) and without it (QD-4 b), the release's ten frames (sheet) | proposed (round 76) |
-| [concept/canister-final-r76-a.gif](concept/canister-final-r76-a.gif) | The canister drifting down the middle, its latch shot, the release | proposed (round 76) |
+| [concept/backdrop-final-r76-a.png](concept/backdrop-final-r76-a.png) | Production backdrop: twelve screens at half size with stand-ins (the wreck and the debris, the storm's top, the first strike's tell alone and the strike, the first Harrows, a wall lit from inside, a Buzzsaw circle over the cells, the canister, the Red Spot's rim with the pod, a Harrow cross by the rim, the breakout, Io's disc), the readability crops at 1× (each section's darkest and brightest window with a Harrow hunting and one in its tell, a Buzzsaw, needles, an orb, the ship; the measured means), the deep pieces with their brightest flash, the debris, the tile sets (sheet) | chosen (round 76 F.2 accept) |
+| [concept/backdrop-final-r76-a.gif](concept/backdrop-final-r76-a.gif) | t 24–34 at half size (10 frames a second): the first strike's tell and strike alone, then the first Harrows | chosen (round 76 F.2 accept) |
+| [concept/cargo-pod-final-r76-a.png](concept/cargo-pod-final-r76-a.png) | Aurelia's cargo pod: its 16 tumble frames at 2× over the left edge at t=118, lamps dead, the lightning flash's outline, the break in air (sheet) | chosen (round 76 F.4 accept) |
+| [concept/cargo-pod-final-r76-a.gif](concept/cargo-pod-final-r76-a.gif) | The pod tumbling down the left edge, outlined by a flash, then broken open | chosen (round 76 F.4 accept) |
+| [concept/canister-final-r76-a.png](concept/canister-final-r76-a.png) | The CDF supply canister on its parachute: the sway with the latch overlay (QD-4 a) and without it (QD-4 b), the release's ten frames (sheet) | chosen (round 76 F.5 accept; L.1 b: the sheet's sway without the latch is the canister's look) |
+| [concept/canister-final-r76-a.gif](concept/canister-final-r76-a.gif) | The canister drifting down the middle, its latch shot, the release | chosen (round 76 F.5 accept; L.1 b: the latch is dropped, a later code step) |
 | [concept/backdrop-proposal.yaml](concept/backdrop-proposal.yaml) | The generator's `backdrop:` block (tile sets, pieces, placements, the atmospheres), the sections and the pod's and canister's `debris` for step D2 (not data) | proposed (round 76; step D2's input) |
-| [concept/walls-capture-r76-a.png](concept/walls-capture-r76-a.png) | In the game (step D5, the parked medium run; [recipe](concept/prompts.md#level-38-capture-r76-a)): the first strike alone at t=26, the storm wall's inner glow pulsing on its tell, the strike | proposed (round 76 F.3) |
-| [concept/walls-capture-r76-a.gif](concept/walls-capture-r76-a.gif) | The same, t 25.5–28.3 | proposed (round 76 F.3) |
-| [concept/cross-capture-r76-a.png](concept/cross-capture-r76-a.png) | In the game: the t=137 cross, all four edges warned, one Harrow from each, the t=138 lure's strike and the rings over the Red Spot's rim | proposed (round 76 F.7) |
-| [concept/cross-capture-r76-a.gif](concept/cross-capture-r76-a.gif) | The same, t 136–141 | proposed (round 76 F.7) |
-| [concept/pod-capture-r76-a.png](concept/pod-capture-r76-a.png) | In the game: Aurelia's cargo pod tumbling down the left edge, a flash's outline, hit, broken open, its crate collected (+1,049) | proposed (round 76 F.4) |
-| [concept/pod-capture-r76-a.gif](concept/pod-capture-r76-a.gif) | The same, t 118–124.7 (the field's left 180 px) | proposed (round 76 F.4) |
-| [concept/canister-capture-r76-a.png](concept/canister-capture-r76-a.png) | In the game: the canister under its brackets, its latch shot by a Scatter Vulcan, the release and the armour patch; with the plan's beam (parked) it drifts out unshot | proposed (round 76 F.5, L.1) |
-| [concept/canister-capture-r76-a.gif](concept/canister-capture-r76-a.gif) | The canister run, t 100–105 | proposed (round 76 F.5, L.1) |
-| [concept/readability-capture-r76-a.png](concept/readability-capture-r76-a.png) | 1:1 crops from the game: a Harrow and ring bullets over the Red Spot's dark brown, a ring over the storm floor, a lured ring and a Harrow's tell over the walls | proposed (round 76 F.8) |
-| [concept/tracking-capture-r76-a.png](concept/tracking-capture-r76-a.png) | In the game, hard: the t=66 tracking column told on the parked ship's x, locked and striking (the ship invulnerable) | proposed (round 76 F.9) |
-| [concept/tracking-capture-r76-a.gif](concept/tracking-capture-r76-a.gif) | The same, t 65.5–67.5 | proposed (round 76 F.9) |
+| [concept/walls-capture-r76-a.png](concept/walls-capture-r76-a.png) | In the game (step D5, the parked medium run; [recipe](concept/prompts.md#level-38-capture-r76-a)): the first strike alone at t=26, the storm wall's inner glow pulsing on its tell, the strike | chosen (round 76 F.3 accept) |
+| [concept/walls-capture-r76-a.gif](concept/walls-capture-r76-a.gif) | The same, t 25.5–28.3 | chosen (round 76 F.3 accept) |
+| [concept/cross-capture-r76-a.png](concept/cross-capture-r76-a.png) | In the game: the t=137 cross, all four edges warned, one Harrow from each, the t=138 lure's strike and the rings over the Red Spot's rim | chosen (round 76 F.7 accept) |
+| [concept/cross-capture-r76-a.gif](concept/cross-capture-r76-a.gif) | The same, t 136–141 | chosen (round 76 F.7 accept) |
+| [concept/pod-capture-r76-a.png](concept/pod-capture-r76-a.png) | In the game: Aurelia's cargo pod tumbling down the left edge, a flash's outline, hit, broken open, its crate collected (+1,049) | chosen (round 76 F.4 accept) |
+| [concept/pod-capture-r76-a.gif](concept/pod-capture-r76-a.gif) | The same, t 118–124.7 (the field's left 180 px) | chosen (round 76 F.4 accept) |
+| [concept/canister-capture-r76-a.png](concept/canister-capture-r76-a.png) | In the game: the canister under its brackets, its latch shot by a Scatter Vulcan, the release and the armour patch; with the plan's beam (parked) it drifts out unshot | chosen (round 76 F.5 accept; L.1 b: it shows the latch the build still has, to be removed by a later code step) |
+| [concept/canister-capture-r76-a.gif](concept/canister-capture-r76-a.gif) | The canister run, t 100–105 | chosen (round 76 F.5 accept; L.1 b: it shows the latch the build still has, to be removed by a later code step) |
+| [concept/readability-capture-r76-a.png](concept/readability-capture-r76-a.png) | 1:1 crops from the game: a Harrow and ring bullets over the Red Spot's dark brown, a ring over the storm floor, a lured ring and a Harrow's tell over the walls | chosen (round 76 F.8 accept) |
+| [concept/tracking-capture-r76-a.png](concept/tracking-capture-r76-a.png) | In the game, hard: the t=66 tracking column told on the parked ship's x, locked and striking (the ship invulnerable) | chosen (round 76 F.9 accept) |
+| [concept/tracking-capture-r76-a.gif](concept/tracking-capture-r76-a.gif) | The same, t 65.5–67.5 | chosen (round 76 F.9 accept) |
 
 ## Implementation
 
@@ -470,6 +472,10 @@ the sections and the pod's and the canister's `debris`. Prompts and briefs: [con
       each)
 - [x] Production art and captures for the round (round 76: step ART-D's art in the game since D4, step D5's
       captures)
+- [ ] Round 76 L.1 b: the CDF canister has **no latch**: it opens by itself over the middle and releases the armour
+      patch (as Level 14's supply drone), the brackets only mark it; the latch's HP, hit rule and overlay leave the
+      sim, the content data and the game (decided 2026-11-01; the art needs nothing new)
+- [ ] Round 76 L.3 a: Rook's armour in Levels 38 and 39 settled in M10 part I's Act 6 balance (decided 2026-11-01)
 
 ## Open questions
 
@@ -497,7 +503,7 @@ Decided in round 72 (2026-10-31); left to the build:
   that hit the ship and the `air` enemies and pay their kills), Q3 a (two hunts; c rejected), Q8 a with J11 (the
   Crucible at the Level 40 visit; no utility in the fit at this visit) and Q7 b as drafted. The document approved as
   drafted (D.4; `design: approved`).
-- 2026-11-01 (M10 part D, step D2; decided as trivia, pending the user's review in round 76): the hand tables became
+- 2026-11-01 (M10 part D, step D2; decided as trivia, decided 2026-11-01, round 76 C.2, C.3, L.2): the hand tables became
   the level's [data.yaml](data.yaml) on ART-D's backdrop proposal (its sections at the README's times, so no tile set
   moved). Sixteen strike tells moved by at most 1 s (the world's rule: no tell within 1 s of any wave's entry, which
   the drafted times broke) and the lures to 1.0–1.5 s after their Harrow waves, each column on its wave's chase lane;
@@ -506,9 +512,9 @@ Decided in round 72 (2026-10-31); left to the build:
   path (only chasers and dashers stream in from the rear) and the t=74 Lampreys the built side swarm. The Harrow
   waves are pinned at most 4 on easy and at medium's counts on hard (the caps), the Hornet waves likewise (at most 3).
   The secondary is the Implementation's `kill_ratio` with `enemy: harrow` (m10d-gaps.md §4), the music's bed rise a
-  new `ambience_db` by section, the canister built as drafted (the friendly brackets and a 10 HP latch: QD-4 asks).
+  new `ambience_db` by section, the canister built as drafted (the friendly brackets and a 10 HP latch; round 76 L.1 b then dropped the latch).
   `bounty_scale` 0.43 kept (typical −1.0 %).
-- 2026-11-01 (M10 part D, steps D3 and D4; decided as trivia, pending the user's review in round 76): the t=119 column
+- 2026-11-01 (M10 part D, steps D3 and D4; decided as trivia, decided 2026-11-01, round 76 C.6, C.7, C.8): the t=119 column
   at x=375, not 420 (D3: the t=111 pair's right Hornet drifts under the drafted one); Varga's Harrow line at t=34, not
   t=32.5 (D4: her t=23 line runs to t≈33.9 on the game's typed pages); the threat profile's setting "Jupiter, storm
   layer" (the drafted wording ran out of the intel panel); the strike's pulse on the walls and cells only.
@@ -516,3 +522,10 @@ Decided in round 72 (2026-10-31); left to the build:
   step E4's); the captures from the game and [round 76](../../../concept-rounds/round-76/README.md) opened: part D's art
   (F.1–F.11), the Harrow's sounds, the voices, the Buzzsaw's Act 6 return (QD-1), QD-4 the canister's latch, the caps
   with nothing shot, Rook's armour and the steps' calls.
+- 2026-11-01 (user, round 76 closed; page answers, no notes): **every row as recommended except L.1 b, which is the
+  recommendation too**: art F.1–F.11 accepted; sounds S.1 a (the whistle: the jet's thin approach) and S.2 a (the ram:
+  the heavy spear, CC-BY), the b files moved to `concept/rejected/`; voices V.1 accepted; **D.1 approved** (the Buzzsaw
+  Drone's Act 6 return: its README `design: approved`); **L.1 b**: the CDF canister has no latch (the build follows in a
+  code step: open Implementation item); L.2 accepted (the caps stay authored; an unharmed script may exceed them); **L.3 a**
+  (Rook's armour settled in part I's Act 6 balance); C.1–C.8 accepted (every "pending the user's review in round 76"
+  note is now "decided 2026-11-01 (round 76 <id>)"). `art: chosen`; `implementation: in-progress` until the latch is out.

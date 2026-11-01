@@ -1,0 +1,299 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Round 77: record of the decisions</title><style>
+:root{--bg:#f4f5f7;--fg:#1b2230;--mut:#5a6577;--card:#fff;--line:#d3d9e2;--acc:#1f5fa8;--ok:#1d6b3a;--okbg:#e3f3e8;
+--hi:#fff6dc;--hib:#d9b84a;--code:#e9edf3;--warn:#8a4b00}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10141b;--fg:#dde3ee;--mut:#98a3b6;--card:#171d27;
+--line:#2c3544;--acc:#7fb2ee;--ok:#7bd69a;--okbg:#163323;--hi:#2c2610;--hib:#8a7424;--code:#232c3a;--warn:#e3a35a;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#10141b;--fg:#dde3ee;--mut:#98a3b6;--card:#171d27;--line:#2c3544;--acc:#7fb2ee;--ok:#7bd69a;
+--okbg:#163323;--hi:#2c2610;--hib:#8a7424;--code:#232c3a;--warn:#e3a35a;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:60rem;margin:0 auto;padding:1rem 16px 4rem}
+h1{font-size:1.6rem;margin:.5rem 0}h2{font-size:1.25rem;margin:2rem 0 .5rem;border-bottom:1px solid var(--line);padding-bottom:.25rem}
+h3{font-size:1.02rem;margin:0;flex:1 1 12rem}a{color:var(--acc)}
+.sum{color:var(--mut)}.note{font-size:.9rem;color:var(--mut)}
+nav.sec{display:flex;flex-wrap:wrap;gap:.4rem;margin:1rem 0}nav.sec a{padding:.2rem .6rem;border:1px solid var(--line);border-radius:1rem;
+text-decoration:none;font-size:.9rem;background:var(--card)}
+.row{background:var(--card);border:1px solid var(--line);border-radius:.4rem;padding:.7rem .9rem;margin:.7rem 0;overflow-wrap:anywhere}
+.row header{display:flex;flex-wrap:wrap;gap:.3rem .6rem;align-items:baseline}
+.rid{font:600 .85rem ui-monospace,Menlo,Consolas,monospace;background:var(--code);padding:.05rem .4rem;border-radius:.25rem}
+.kind{font-size:.8rem;color:var(--mut)}.part{font-size:.88rem;margin:.2rem 0}
+.q,.weak,.rec,.sub,.line,dl{font-size:.92rem;margin:.45rem 0}.weak{color:var(--warn)}
+code{background:var(--code);padding:0 .25rem;border-radius:.2rem;font-size:.88em}
+.tag{font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;color:var(--mut);font-weight:700;margin-right:.3rem}
+.ans{margin:.5rem 0 0;padding:.45rem .6rem;border-left:4px solid var(--hib);background:var(--hi);border-radius:.2rem}
+.ans.out{border-left-color:var(--ok)}.ans.none{opacity:.7}
+.badge{font-size:.75rem;font-weight:700;padding:.05rem .4rem;border-radius:.6rem;background:var(--okbg);color:var(--ok)}
+.badge.pick{background:var(--hi);color:var(--warn);border:1px solid var(--hib)}
+dl{display:grid;grid-template-columns:7rem 1fr;gap:.2rem .6rem}dt{font-weight:700}dd{margin:0}
+.media{display:flex;flex-wrap:wrap;gap:.5rem;margin:.5rem 0}.m{margin:0;max-width:100%}.m figcaption{font-size:.75rem;color:var(--mut)}
+.m.img img{max-width:14rem;max-height:10rem;border:1px solid var(--line);border-radius:.2rem;background:#000;display:block}
+.m.vid video{width:14rem;max-width:100%}.m.aud audio{width:16rem;max-width:100%}.miss{color:var(--warn)}
+details{margin:.4rem 0;font-size:.9rem}summary{cursor:pointer;color:var(--acc)}
+.listen{font-size:.85rem;color:var(--mut);margin:.3rem 0;padding-left:1.2rem}.opts{color:var(--mut)}
+.sub{padding-left:.6rem;border-left:2px solid var(--line)}
+table{border-collapse:collapse;display:block;overflow-x:auto}td,th{border:1px solid var(--line);padding:.2rem .4rem}
+blockquote{margin:.4rem 0;padding-left:.8rem;border-left:3px solid var(--line)}
+@media (max-width:480px){dl{grid-template-columns:1fr}.m.img img{max-width:100%}}
+</style></head><body><main><p class="note"><a href="README.md">Round 77 README</a> · <a href="../README.md">All rounds</a> · built 2026-11-01 · recorded by <code>tools/concept/review_record.py 77</code></p><h1>Concept round 77: record of the decisions</h1><div class="sum"><p><strong>Open.</strong> M10 part E was built on the branch <code>m10-act-6</code> (local commits through <code>8b3eefef</code>; the full <code>./gradlew check</code> on 2026-11-01 in step E5 on a snapshot of it: 5,209 tests, every one green but five of Level 37's, in flight beside this round — <code>VoiceFilesTest</code> ×2 for its 13 shortened lines still unvoiced (step VOX-C2) and <code>RadioTimelineLevel37Test</code> ×3 for the same lines and the old time of Rook's line (step C6b) —; Acts 1–5's golden flights and replays unchanged): Level 39 "Io Flyby" plays from its briefing to the release's end, opening over Io's limb with Jupiter low beneath it, with the six cracking towers of the Loki, Pele and Prometheus works as the <code>destroy-targets</code> primary (a tower leaving the screen alive fails the mission at once), three holds over the works, 27 vents throwing burning rocks (each vent's first tell soon after it enters, then every 5–7 s in a hold), a Strider's topple counting on a tower, the eight pump stations of the <code>PUMPS n / 6</code> secondary with the racks' pipes going dark, the Pele gate's two Sentinels, the survey hut (the secret) and the supply depot, track 14 with the <code>io-refinery</code> bed, and the level's voices. This round asks, in this order: part E's production <strong>art to confirm</strong> beside the first Level 39 captures, the level's four new <strong>sounds</strong>, its <strong>voices</strong>, three <strong>Level 39 questions</strong> (the eruptions at full scroll, the hold windows, Rook's armour) and last the <strong>important calls</strong> the steps made, each with its recommendation. The recommendation is pre-selected on every row; leave a row alone to keep it. Level 39 has no boss.</p><p>The captures are the game's own (the <span class="ref">recipe</span>): the balance plan's Level 39 fit on medium (Level 38's guns: the Ion Beam, the Tesla Coil Pod, a Micro-missile Pod, the Swarm Tail; Rook with his Mortar), the ship invulnerable and parked where it launches; a <strong>topple run</strong> (the beam alone, steered under the Loki towers, then between the Pele Striders to cut the upper one's leg nearer Pele B) and a <strong>failed run</strong> (not invulnerable, the beam alone on the left edge, Loki A left unshot). Found while capturing: in the parked run every tower and six pumps fall (<code>TOWERS 6 / 6</code>, <code>PUMPS DONE</code>), the towers within about 4 s of their hold's start; the hut and the depot pass unopened (the beam passes them, the pods find units); <code>TOWERS FAILED</code> shows the step a tower leaves, the failed screen about 2.9 s later; with <code>--invulnerable</code> a passed tower shows <code>FAILED</code> but the level goes on (the debug option keeps a lost primary from ending it).</p><p>Decided as trivia, not asked (m10e-gaps §4): the Warden Tank does not fly Level 39 (its page keeps Level 41 only); the plume field's ripple is the authored first-tell offsets, no vent-row key; the radio events are named <code>first-target</code> and <code>topple-target</code>; the works' vents retimed into their holds (the doc's "≈" times), each at least 100 px from every tower and pump station.</p></div><p class="note">A read-only record: every row as the review page showed it, with the answer and the outcome from the round README (the record of truth). Media is linked from the design tree, not copied.</p><nav class="sec"><a href="#s-art-to-confirm">Art to confirm</a><a href="#s-sounds">Sounds</a><a href="#s-voices">Voices</a><a href="#s-level-39-questions">Level 39 questions</a><a href="#s-important-calls">Important calls</a></nav><section id="s-art-to-confirm"><h2>Art to confirm</h2>
+<div class="sum"><p>Part E's production art (step ART-E: <code>tools/art/backdrop_l39.py</code> on the shared <code>tools/art/jovkit.py</code>, <code>tools/art/refinery_units.py</code>, the eruption's frames, <code>briefing_images.py</code>), all already in the game since step E4, beside the Level 39 captures: accept, or redo with a note (QE-3).</p></div>
+<article class="row" id="r-F.1">
+<header><span class="rid">F.1</span><h3>Io&#x27;s kit</h3><span class="kind">accept or redo</span></header>
+<div class="part"><a href="../../campaign/act-6-jovian-storm/level-39-io-flyby/README.md#concept-art">Io's kit</a></div>
+<div class="q"><strong>accept or redo</strong> (QE-3). Round 72's L39 grade in production: desaturated sulphur and ochre plains, black lava, white frost, the lava channel, Pele's red-orange fallout, the plume field's vent crusts, Prometheus's frost; the level <strong>opens over Io's limb</strong> so that Jupiter (huge, low, on <code>deep</code>) and Tvashtar's umbrella on the limb can show at all under a top-down ground: the first ≈ 3.7 s, then the plains cover the screen. In the game: the opening.</div>
+<div class="media"><figure class="m img"><a href="../../campaign/act-6-jovian-storm/level-39-io-flyby/concept/backdrop-final-r77-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-6-jovian-storm/level-39-io-flyby/concept/backdrop-final-r77-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure><figure class="m img"><a href="../../campaign/act-6-jovian-storm/level-39-io-flyby/concept/backdrop-final-r77-a.gif"><img loading="lazy" decoding="async" src="../../campaign/act-6-jovian-storm/level-39-io-flyby/concept/backdrop-final-r77-a.gif" alt="motion"></a><figcaption>motion</figcaption></figure><figure class="m img"><a href="../../campaign/act-6-jovian-storm/level-39-io-flyby/concept/rejected/opening-capture-r77-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-6-jovian-storm/level-39-io-flyby/concept/rejected/opening-capture-r77-a.png" alt="in the game, the opening"></a><figcaption>in the game, the opening</figcaption></figure><figure class="m img"><a href="../../campaign/act-6-jovian-storm/level-39-io-flyby/concept/rejected/opening-capture-r77-a.gif"><img loading="lazy" decoding="async" src="../../campaign/act-6-jovian-storm/level-39-io-flyby/concept/rejected/opening-capture-r77-a.gif" alt="in the game, motion"></a><figcaption>in the game, motion</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the limb reads as Io's disc edge hanging over Jupiter, the umbrella pointing down from it, and is gone after 3.7 s (ART-E's reading, pending here); between the works the plains are long stretches of one sulphur tile with black lava patches; P8 sits at t 162.5, before the rack bends at section 6's seam</p>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span>accept / <strong>redo</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>Redo</strong> (the user: "This looks strange. Is that supposed to be a moon entering the screen? It looks like a disc. There's no perspective in it at all. Also, if you complete the circle from the radius you can see, the entire planet should pass underneath in about 10 seconds. What's your idea with this scene?"). Already redone by ART-E2 <code>6c7a875b</code> (the user's decision the same day: no Jupiter on top-down ground levels): Level 39 opens on the plains. <code>backdrop-final-r77-b</code> stays <code>proposed</code> (shown in a later round); the opening captures <code>opening-capture-r77-a</code> rejected (moved to <code>concept/rejected/</code>). Open build item: the opening capture redone.</span></div>
+</article>
+<article class="row" id="r-F.2">
+<header><span class="rid">F.2</span><h3>The refinery kit</h3><span class="kind">accept or redo</span></header>
+<div class="part"><a href="../../campaign/act-6-jovian-storm/level-39-io-flyby/README.md#concept-art">The refinery kit</a></div>
+<div class="q"><strong>accept or redo</strong> (QE-3). The three works from one kit (the yard slab, the towers' octagonal pads, tanks, sheds, the rack through the yard), the <span class="ref">cracking tower</span> with its burning flare cap, its fall (a short flash, the top tumbling off, burning chunks in a ring that does not rise) and its wreck; the <span class="ref">pump station</span> and its wreck; each tower's pipe run and each pump's rack segment with a hot line that <strong>goes dark</strong> when it dies; the Pele gate with the Sentinels' blockhouses. In the game: the Loki hold, a pump, Loki A's pipe at 1:1, the gate.</div>
+<div class="media"><figure class="m img"><a href="../../campaign/act-6-jovian-storm/level-39-io-flyby/concept/refinery-final-r77-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-6-jovian-storm/level-39-io-flyby/concept/refinery-final-r77-a.png" alt="frames"></a><figcaption>frames</figcaption></figure><figure class="m img"><a href="../../campaign/act-6-jovian-storm/level-39-io-flyby/concept/refinery-final-r77-a.gif"><img loading="lazy" decoding="async" src="../../campaign/act-6-jovian-storm/level-39-io-flyby/concept/refinery-final-r77-a.gif" alt="motion"></a><figcaption>motion</figcaption></figure><figure class="m img"><a href="../../campaign/act-6-jovian-storm/level-39-io-flyby/concept/hold-capture-r77-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-6-jovian-storm/level-39-io-flyby/concept/hold-capture-r77-a.png" alt="in the game, the hold"></a><figcaption>in the game, the hold</figcaption></figure><figure class="m img"><a href="../../campaign/act-6-jovian-storm/level-39-io-flyby/concept/hold-capture-r77-a.gif"><img loading="lazy" decoding="async" src="../../campaign/act-6-jovian-storm/level-39-io-flyby/concept/hold-capture-r77-a.gif" alt="in the game, motion"></a><figcaption>in the game, motion</figcaption></figure><figure class="m img"><a href="../../campaign/act-6-jovian-storm/level-39-io-flyby/concept/pump-capture-r77-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-6-jovian-storm/level-39-io-flyby/concept/pump-capture-r77-a.png" alt="a pump, 1:1"></a><figcaption>a pump, 1:1</figcaption></figure><figure class="m img"><a href="../../campaign/act-6-jovian-storm/level-39-io-flyby/concept/pipes-capture-r77-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-6-jovian-storm/level-39-io-flyby/concept/pipes-capture-r77-a.png" alt="the pipes going dark, 1:1"></a><figcaption>the pipes going dark, 1:1</figcaption></figure><figure class="m img"><a href="../../campaign/act-6-jovian-storm/level-39-io-flyby/concept/gate-capture-r77-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-6-jovian-storm/level-39-io-flyby/concept/gate-capture-r77-a.png" alt="the gate"></a><figcaption>the gate</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> a tower's pipe run is short and its hot line thin: going dark reads at 1:1, hardly at play size (the rack's line beside a pump reads better); the glows are drawn over the flyers (C.10)</p>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong> / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span>Accepted (as recommended).</span></div>
+</article>
+<article class="row" id="r-F.3">
+<header><span class="rid">F.3</span><h3>Vents, rocks and umbrellas</h3><span class="kind">accept or redo</span></header>
+<div class="part"><a href="../../world/jovian/README.md#concept-art">Vents, rocks and umbrellas</a></div>
+<div class="q"><strong>accept or redo</strong> (QE-3). The eruption in production: a cold vent, the tell's glow and cracks (12 frames), the burst, the umbrella opening and settling, the burning rocks tumbling with their halo, a rock shot apart. In the game: the plume field's first row rippling 0.4 s a vent, and both vents beside the Loki towers throwing in the hold.</div>
+<div class="media"><figure class="m img"><a href="../../world/jovian/concept/eruption-final-r77-a.png"><img loading="lazy" decoding="async" src="../../world/jovian/concept/eruption-final-r77-a.png" alt="frames"></a><figcaption>frames</figcaption></figure><figure class="m img"><a href="../../world/jovian/concept/eruption-final-r77-a.gif"><img loading="lazy" decoding="async" src="../../world/jovian/concept/eruption-final-r77-a.gif" alt="motion"></a><figcaption>motion</figcaption></figure><figure class="m img"><a href="../../campaign/act-6-jovian-storm/level-39-io-flyby/concept/plume-capture-r77-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-6-jovian-storm/level-39-io-flyby/concept/plume-capture-r77-a.png" alt="in the game, the plume field"></a><figcaption>in the game, the plume field</figcaption></figure><figure class="m img"><a href="../../campaign/act-6-jovian-storm/level-39-io-flyby/concept/plume-capture-r77-a.gif"><img loading="lazy" decoding="async" src="../../campaign/act-6-jovian-storm/level-39-io-flyby/concept/plume-capture-r77-a.gif" alt="in the game, motion"></a><figcaption>in the game, motion</figcaption></figure><figure class="m img"><a href="../../campaign/act-6-jovian-storm/level-39-io-flyby/concept/hold-capture-r77-a.gif"><img loading="lazy" decoding="async" src="../../campaign/act-6-jovian-storm/level-39-io-flyby/concept/hold-capture-r77-a.gif" alt="the hold"></a><figcaption>the hold</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the umbrella rings are pale over the bright sulphur (a haze more than a plume at play size); the rocks' amber reads on every ground</p>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong> / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span>Accepted (as recommended).</span></div>
+</article>
+<article class="row" id="r-F.4">
+<header><span class="rid">F.4</span><h3>The survey hut and the depot</h3><span class="kind">accept or redo</span></header>
+<div class="part"><a href="../../campaign/act-6-jovian-storm/level-39-io-flyby/README.md#secrets-and-pickups">The survey hut and the depot</a></div>
+<div class="q"><strong>accept or redo</strong> (QE-3). The survey hut half buried on its lava island with its dark lock (the secret, 30 damage), the supply depot with its orange latch and amber lamp (the armour patch), both with three frames (intact, hit, open). In the game at 1:1.</div>
+<div class="media"><figure class="m img"><a href="../../campaign/act-6-jovian-storm/level-39-io-flyby/concept/refinery-final-r77-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-6-jovian-storm/level-39-io-flyby/concept/refinery-final-r77-a.png" alt="frames"></a><figcaption>frames</figcaption></figure><figure class="m img"><a href="../../campaign/act-6-jovian-storm/level-39-io-flyby/concept/hut-capture-r77-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-6-jovian-storm/level-39-io-flyby/concept/hut-capture-r77-a.png" alt="in the game, 1:1"></a><figcaption>in the game, 1:1</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the parked run passes both unopened (the beam passes ground objects, the pods seek units), so their open frames are seen only on the sheet; the hut's lock flashes white under the secret's glint</p>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong> / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span>Accepted (as recommended).</span></div>
+</article>
+<article class="row" id="r-F.5">
+<header><span class="rid">F.5</span><h3>A Strider toppled onto a tower</h3><span class="kind">accept or redo</span></header>
+<div class="part"><a href="../../campaign/act-6-jovian-storm/level-39-io-flyby/README.md#ground-targets">A Strider toppled onto a tower</a></div>
+<div class="q"><strong>accept or redo</strong>. The topple counting on a tower (built, step E1/E2): a Pele Strider walking up the yard level with Pele B, its leg nearer the tower cut, the fall line marked, the fall crushing the tower (<code>TOWERS 3 / 6</code>, paid 30) and Okafor's "Dropped it on the tower".</div>
+<div class="media"><figure class="m img"><a href="../../campaign/act-6-jovian-storm/level-39-io-flyby/concept/topple-capture-r77-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-6-jovian-storm/level-39-io-flyby/concept/topple-capture-r77-a.png" alt="in the game"></a><figcaption>in the game</figcaption></figure><figure class="m img"><a href="../../campaign/act-6-jovian-storm/level-39-io-flyby/concept/topple-capture-r77-a.gif"><img loading="lazy" decoding="async" src="../../campaign/act-6-jovian-storm/level-39-io-flyby/concept/topple-capture-r77-a.gif" alt="in the game, motion"></a><figcaption>in the game, motion</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> a steered run with the beam alone (the plan's pods and Rook kill the Strider first); its tracker shows <code>PUMPS FAILED</code> (the run shot no pump)</p>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong> / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span>Accepted (as recommended).</span></div>
+</article>
+<article class="row" id="r-F.6">
+<header><span class="rid">F.6</span><h3>A tower passing</h3><span class="kind">accept or redo</span></header>
+<div class="part"><a href="../../campaign/act-6-jovian-storm/level-39-io-flyby/README.md#objective">A tower passing</a></div>
+<div class="q"><strong>accept or redo</strong>. The failed primary (Levels 05/09's flow): Loki A leaves the bottom edge unshot, <code>TOWERS FAILED</code> the same step, then the failed screen with Okafor's "Loki A is still burning. That fuel flies against us. Pull back, Lancer." and the attempt's credits discarded.</div>
+<div class="media"><figure class="m img"><a href="../../campaign/act-6-jovian-storm/level-39-io-flyby/concept/failed-capture-r77-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-6-jovian-storm/level-39-io-flyby/concept/failed-capture-r77-a.png" alt="in the game"></a><figcaption>in the game</figcaption></figure><figure class="m img"><a href="../../campaign/act-6-jovian-storm/level-39-io-flyby/concept/failed-capture-r77-a.gif"><img loading="lazy" decoding="async" src="../../campaign/act-6-jovian-storm/level-39-io-flyby/concept/failed-capture-r77-a.gif" alt="in the game, motion"></a><figcaption>in the game, motion</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the failed screen comes about 2.9 s after the tower leaves (the built flow's fade)</p>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong> / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span>Accepted (as recommended).</span></div>
+</article>
+<article class="row" id="r-F.7">
+<header><span class="rid">F.7</span><h3>Readability over the sulphur</h3><span class="kind">accept or redo</span></header>
+<div class="part"><a href="../../campaign/act-6-jovian-storm/level-39-io-flyby/README.md#concept-art">Readability over the sulphur</a></div>
+<div class="q"><strong>accept or redo</strong> (the gap check's readability risk). 1:1 crops from the game: gold Talons and their bullets over the plume field's bright sulphur, burning rocks over it, Talons and rocks, the Pele yard, Prometheus's frost, Talons over the lava channel.</div>
+<div class="media"><figure class="m img"><a href="../../campaign/act-6-jovian-storm/level-39-io-flyby/concept/readability-capture-r77-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-6-jovian-storm/level-39-io-flyby/concept/readability-capture-r77-a.png" alt="crops"></a><figcaption>crops</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the enemy bullets here are magenta (the Talons'): the amber on the screen is the rocks and the units' gold; the gold Talons' halos lose contrast over the brightest sulphur; the Needlers' amber needles hardly show (the parked beam kills the t=28.5 column within a second)</p>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong> / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span>Accepted (as recommended).</span></div>
+</article>
+<article class="row" id="r-F.8">
+<header><span class="rid">F.8</span><h3>The briefing images</h3><span class="kind">accept or redo</span></header>
+<div class="part"><a href="../../ui/briefing/README.md#concept-art">The briefing images</a></div>
+<div class="q"><strong>accept or redo</strong>. Level 39's two 672×240 images: Okafor's survey map of the Io pass (the plains, the pipeline in amber from Loki past Pele to Prometheus with its pump stations, the six towers ringed red and lettered, the vent fields hatched, Jupiter's limb) and Varga's scan of a cracking tower (its flare cap, a Strider's fall line across it, a vent's tell and its rocks' 100° fan). Part E made no new intel portrait.</div>
+<div class="media"><figure class="m img"><a href="../../ui/briefing/concept/briefing-images-final-r77-a.png"><img loading="lazy" decoding="async" src="../../ui/briefing/concept/briefing-images-final-r77-a.png" alt="sheet"></a><figcaption>sheet</figcaption></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong> / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span>Accepted (as recommended).</span></div>
+</article>
+</section>
+<section id="s-sounds"><h2>Sounds</h2>
+<div class="sum"><p>Level 39's four new sounds (QE-2), from step AUD-E: cut by <code>tools/concept/audio/sfx_r77.py</code> (Freesound HQ previews, CC0/CC-BY, in <span class="ref">CREDITS.md</span>; the two variants of a subject levelled alike). The game plays the a variants from step E4 until the picks (in <code>assets/sfx/</code>). Round 72's chosen <code>io-refinery</code> a (Level 39's bed) and <code>eruption</code> a (the tell and blast) are in <code>assets/sfx/</code> too: no row.</p></div>
+<article class="row" id="r-S.1">
+<header><span class="rid">S.1</span><h3>rock-crack</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>rock-crack</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b</strong> (QE-2). <strong>Plays:</strong> Level 39, an eruption's burning rock (24 px, 6 HP; 3–5 a column, a vent every 5–7 s while it is on the screen) shot to pieces in its flight by the player or Rook; often while a vent is on the screen. <strong>Should sound like:</strong> a dry rock crack and crumble, a boulder split, short (0.5 s), no debris rattle tail; never a pop. <strong>a:</strong> a rock smashed apart with a dry stone crumble on its attack: a hard, bright crack and a short gritty break, 0.5 s. <strong>b:</strong> a concrete block smashed with large stones knocking on a pile: a heavier, duller break with a stony knock in it, 0.5 s.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rock-crack-r77-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/rock-crack-r77-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> a is bright (58 % of it 1–5 kHz) and may sound small next to the eruption's roar; b's knock is the stones' on a pile (a clack more than a split)</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong> / b</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>a</strong> chosen (as recommended); b rejected, moved to <code>concept/rejected/</code>. The game plays a.</span></div>
+</article>
+<article class="row" id="r-S.2">
+<header><span class="rid">S.2</span><h3>rock-thud</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>rock-thud</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b</strong> (QE-2). <strong>Plays:</strong> Level 39, a burning rock striking the ship or Rook (10 damage, the rock destroyed), with the <code>small</code> impact and the armour or shield hit, panned to the ship. <strong>Should sound like:</strong> a dull stone knock on the hull: a heavy rock hitting metal, short and low, read as a hit; no ringing tail, no pop. <strong>a:</strong> a heavy object dropped on a floor (a dull low thud) with a rock's knock on its attack: a deep, blunt hit, 0.45 s. <strong>b:</strong> a steel bar striking rock (a hard metallic knock) over a rock thumping into dirt: brighter and harder, more metal than stone, 0.42 s.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rock-thud-r77-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/rock-thud-r77-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> a carries 81 % of its energy under 200 Hz (small speakers hear mostly its knock) and measures 4 LU over b (the band level is the same); b is gone in 0.1 s and may vanish under the <code>small</code> impact</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong> / b</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>a</strong> chosen (as recommended); b rejected, moved to <code>concept/rejected/</code>. The game plays a.</span></div>
+</article>
+<article class="row" id="r-S.3">
+<header><span class="rid">S.3</span><h3>tower-collapse</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>tower-collapse</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b</strong> (QE-2). <strong>Plays:</strong> Level 39, a cracking tower destroyed (the six named primary targets; also a Strider toppled onto one), over its <code>large</code> rung as its flare cap tumbles off and its pipes go dark; six times a level. <strong>Should sound like:</strong> a heavy metal groan as the tower buckles, a short blast and the crash of its fall; dry (Io's near-vacuum, heard through the hull). <strong>a:</strong> a metal crank's groan slowed to 0.65 (a column buckling), a metal boom 0.7 s in, then big debris crashing down: groan, bang, crash, 3.4 s. <strong>b:</strong> a sheet of metal bending slowed to 0.7 (a longer, grinding buckle), an explosion's boom 0.6 s in, then a big structure's crash heard from inside: deeper and more muffled, 3.5 s.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/tower-collapse-r77-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/tower-collapse-r77-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the blast comes 0.6–0.7 s after the kill (the <code>large</code> rung's burst carries the moment itself); a's groan is a crank's (higher, 79 % mid band) and its boom peaks harder, b is denser and 3.7 LU louder overall (the pair's band RMS equal)</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span>a / <strong>b</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>b</strong> chosen (not the recommendation); a rejected, moved to <code>concept/rejected/</code>. Open build item: the game plays a until a code step swaps b in (<code>Sfx</code>, the pipeline's import list, <code>PlaceholderAuditTest</code>).</span></div>
+</article>
+<article class="row" id="r-S.4">
+<header><span class="rid">S.4</span><h3>pump-blast</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>pump-blast</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b</strong> (QE-2). <strong>Plays:</strong> Level 39, a pump station destroyed (the secondary's count, 8 on the pipeline racks), over its <code>small</code> rung as the rack's pipe beside it goes dark. <strong>Should sound like:</strong> a sharp metal blast with a short gas-venting roar: a pressure line bursting, the <code>small</code> rung's weight; dry, no water, no steam. <strong>a:</strong> an explosion in a metal can (a sharp, ringing blast) with a rocket's blast low-passed under it (the gas roaring out), 1.1 s. <strong>b:</strong> a burning car's fuel blast (a short, deep bang) with a drilling rig's compressed-air release slowed to 0.6 and low-passed (a hard rush of gas): drier and airier, 1.0 s.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/pump-blast-r77-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/pump-blast-r77-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> b's air rush keeps 41 % of its energy at 1–5 kHz and may read as a hiss rather than a roar; a's rocket layer is a launch's roar (a long blast cut to 1 s)</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong> / b</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>a</strong> chosen (as recommended); b rejected, moved to <code>concept/rejected/</code>. The game plays a.</span></div>
+</article>
+</section>
+<section id="s-voices"><h2>Voices</h2>
+<div class="sum"><p>Level 39's lines as step VOX-E voiced them (the cast voices, seeds pinned, every take read back by Whisper with the Act 6 name prompt), joined as the game plays them by <code>tools/concept/audio/voice_r77.py</code>.</p></div>
+<article class="row" id="r-V.1">
+<header><span class="rid">V.1</span><h3>Level 39&#x27;s lines</h3><span class="kind">accept or redo</span></header>
+<div class="part"><a href="../../campaign/act-6-jovian-storm/level-39-io-flyby/README.md#radio-chatter">Level 39's lines</a></div>
+<div class="q"><strong>accept or redo</strong> (a listen-through, 3:03.5). Level 39's two briefing pages and its radio by time with the event lines at their likeliest place (Rook's first tower down in the Loki hold, the survey hut's line, Okafor's topple line in the Pele hold, the secondary met after P6, the level's end), then the six failed-primary lines (one per tower, <code>grim</code>), 1.2 s apart; Rook's line needs him flying; the cue list names each line's start. Redo: name the lines to re-render.</div>
+<div class="media"><figure class="m aud"><figcaption>listen-through</figcaption><audio controls preload="none" src="../../campaign/act-6-jovian-storm/level-39-io-flyby/concept/level-39-listen-r77-a.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> Varga's page 2 "A vent glows" was heard by Whisper as "event glows" (at 0:20.9); "Pele, A" is respelt for the voice so the name reads as two syllables</p>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong> / redo</span></div><div class="ans out"><span class="tag">Outcome</span> <span>Accepted (as recommended).</span></div>
+</article>
+<article class="row" id="r-V.2">
+<header><span class="rid">V.2</span><h3>Vorne&#x27;s t=91 line</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../campaign/act-6-jovian-storm/level-39-io-flyby/README.md#radio-chatter">Vorne's t=91 line</a></div>
+<div class="q"><strong>pick a or b</strong>. "<em>Lancer. Burn Io if you like. Callisto holds fuel enough for what I still have to do.</em>" on the enemy channel, cold, never shouted. <strong>a</strong> (built): the data gives the line no expression, so it plays at his neutral row: level and slow, as the README's "neutral, slow". <strong>b</strong>: his grim row (<code>expression: rage</code>, as his Level 37 order): darker and harder; a VOX step re-renders the line if picked (heard here only in his Level 37 line).</div>
+<div class="media"><figure class="m aud"><figcaption>a, as built</figcaption><audio controls preload="none" src="../../campaign/act-6-jovian-storm/level-39-io-flyby/concept/rejected/vorne-t91-r77-a.ogg"></audio></figure><figure class="m aud"><figcaption>b, his grim row (Level 37&#x27;s line)</figcaption><audio controls preload="none" src="../../audio/voice/concept/level-37-vorne-r75-a.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> b's file is another line (Level 37's t=110 order) at that row, not this one; a may read as flat beside his Level 37 order</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span>a / <strong>b</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>b</strong> chosen (not the recommendation): Vorne's t=91 line at his grim row (<code>expression: rage</code>). Open build item: the level data gets the expression and a VOX step renders a new take; the neutral take's copy <code>vorne-t91-r77-a</code> moved to <code>concept/rejected/</code>.</span></div>
+</article>
+</section>
+<section id="s-level-39-questions"><h2>Level 39 questions</h2>
+<article class="row" id="r-L.1">
+<header><span class="rid">L.1</span><h3>The eruptions at full scroll</h3><span class="kind">pick a, b or c</span></header>
+<div class="part"><a href="../../campaign/act-6-jovian-storm/level-39-io-flyby/README.md#hazards">The eruptions at full scroll</a></div>
+<div class="q"><strong>pick a, b or c</strong> (QE-1). At 130 px/s a vent is on the screen 4.2 s, less than the 5–7 s period, so round 73's C.8 rule (the first tell one period after entry) lets no drafted vent erupt on the screen at all. <strong>a</strong> (built, recommended): a per-vent first tell 0.3–1.3 s after its entry (the rocks fly from the lower half), later cycles every 5–7 s on real time: a vent outside a hold erupts once, the works' vents two or three times in their hold, the plume field's rows ripple 0.4 s a vent. <strong>b</strong>: keep C.8: only the five vents retimed into the holds erupt; the Tvashtar vent (the eruption taught), the pipeline run and the plume field stay cold. <strong>c</strong>: a slower scroll (about 100 px/s, the level about 250 s).</div>
+<div class="media"><figure class="m img"><a href="../../campaign/act-6-jovian-storm/level-39-io-flyby/concept/plume-capture-r77-a.gif"><img loading="lazy" decoding="async" src="../../campaign/act-6-jovian-storm/level-39-io-flyby/concept/plume-capture-r77-a.gif" alt="the plume field"></a><figcaption>the plume field</figcaption></figure><figure class="m img"><a href="../../campaign/act-6-jovian-storm/level-39-io-flyby/concept/hold-capture-r77-a.gif"><img loading="lazy" decoding="async" src="../../campaign/act-6-jovian-storm/level-39-io-flyby/concept/hold-capture-r77-a.gif" alt="the hold"></a><figcaption>the hold</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> with a the "every 5–7 s" read happens only in the holds; c changes every time in the level (waves, radio, music) and its density</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong> / b / c</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>a</strong> chosen (as recommended, built): a per-vent first tell 0.3–1.3 s after its entry.</span></div>
+</article>
+<article class="row" id="r-L.2">
+<header><span class="rid">L.2</span><h3>The hold windows</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../campaign/act-6-jovian-storm/level-39-io-flyby/README.md#layout">The hold windows</a></div>
+<div class="q"><strong>accept or change</strong>. Measured (<code>levelReport</code>, <code>Level39Test</code>) from the hold's start to the first tower gone: <strong>8.3 s</strong> at medium, 10.9 s easy, 6.7 s hard, against the README's 9.7 / 12.9 / 7.8 s: the 1 s ease and the tower's own edge (it leaves when its bottom edge does, not its centre). <strong>Accept</strong> (recommended): the approved 200 px and 40/30/50 px/s stay; the autopilot burns all six towers in 18 of 18 flights. <strong>Change</strong>: lower the hold speeds to about 34 / 26 / 43 px/s so the windows come back to the README's (a later content step, re-flown).</div>
+<div class="media"><figure class="m img"><a href="../../campaign/act-6-jovian-storm/level-39-io-flyby/concept/hold-capture-r77-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-6-jovian-storm/level-39-io-flyby/concept/hold-capture-r77-a.png" alt="the hold"></a><figcaption>the hold</figcaption></figure><figure class="m img"><a href="../../campaign/act-6-jovian-storm/level-39-io-flyby/concept/failed-capture-r77-a.gif"><img loading="lazy" decoding="async" src="../../campaign/act-6-jovian-storm/level-39-io-flyby/concept/failed-capture-r77-a.gif" alt="a tower passing"></a><figcaption>a tower passing</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> hard's 6.7 s at 338 HP is tight for a fit without <code>anti-ground</code>; change makes the holds about 1.5 s longer each (the level's real time +4–5 s)</p>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong> / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span>Accepted: the approved 200 px and 40/30/50 px/s stay.</span></div>
+</article>
+<article class="row" id="r-L.3">
+<header><span class="rid">L.3</span><h3>Rook&#x27;s armour</h3><span class="kind">as round 76 L.3</span></header>
+<div class="part"><a href="../../player/wingmen/README.md#rook-in-act-6-draft">Rook's armour</a></div>
+<div class="q"><strong>as round 76 L.3</strong>. In <code>ActPlaythroughTest</code> Rook ends Levels 38 and 39 at 0 of his 80 armour on medium and hard (2 on easy): the same question as <span class="ref">round 76 L.3</span> (a: settle it in part I's Act 6 balance; b: widen his keep-out; c: buy his armour in the plan; d: accept). Its answer there covers Level 39; a note here only if Level 39 should differ.</div>
+<p class="rec"><span class="tag">Recommendation</span> as round 76</p>
+<div class="ans"><span class="tag">Answer</span> <span><strong>as round 76</strong> / note</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>As round 76 L.3 (a)</strong>: Rook's armour is settled in M10 part I's Act 6 balance; no note for Level 39.</span></div>
+</article>
+</section>
+<section id="s-important-calls"><h2>Important calls</h2>
+<div class="sum"><p>Calls the part E steps made where the documents left room (the steps' logs), each built as recommended; the alternative is in the cell. Accept, or change with a note.</p></div>
+<article class="row" id="r-C.1">
+<header><span class="rid">C.1</span><h3>Eruptions on real time; the hut&#x27;s lock (E1)</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../world/jovian/README.md#hazards--set-pieces">Eruptions on real time; the hut's lock (E1)</a></div>
+<div class="q"><strong>accept or change</strong>. The eruption cycles count on the real simulation step in every level (only Level 39 has vents; the vents' entries stay on the level clock), so a works' vents erupt more than once during its hold (Level 39's <em>Layout</em>); the survey hut's lock is a trigger spent by <strong>30 damage</strong> (the beam by its damage), not by hits, as the doc's "30 HP". Alternative: cycles on the level clock (a vent in a hold erupts about once in 16–23 s); the lock opened by a hit count.</div>
+<div class="media"><figure class="m img"><a href="../../campaign/act-6-jovian-storm/level-39-io-flyby/concept/hold-capture-r77-a.gif"><img loading="lazy" decoding="async" src="../../campaign/act-6-jovian-storm/level-39-io-flyby/concept/hold-capture-r77-a.gif" alt="the hold"></a><figcaption>the hold</figcaption></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong> / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span>Accepted (as recommended).</span></div>
+</article>
+<article class="row" id="r-C.2">
+<header><span class="rid">C.2</span><h3>The towers and pumps counted (E2)</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../enemies/ground/cracking-tower/README.md">The towers and pumps counted (E2)</a></div>
+<div class="q"><strong>accept or change</strong>. The cracking towers and the pump stations are <strong>counted enemies</strong> in two minimal unit directories (Level 09's Hive Node model; the design stays in Level 39): a Strider's topple and the kill tally take counted units only; the density gains 14 units (310 at medium, 99.5 a minute). Alternative: uncounted objects (then a topple cannot take a tower).</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> their bounties (30, 8) lie under their size classes' bands (Level 39's approved budget gives them; <code>BalanceTest</code>'s accepted exceptions)</p>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong> / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span>Accepted (as recommended).</span></div>
+</article>
+<article class="row" id="r-C.3">
+<header><span class="rid">C.3</span><h3>The Pele and Prometheus Striders (E2)</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../campaign/act-6-jovian-storm/level-39-io-flyby/README.md#ground-targets">The Pele and Prometheus Striders (E2)</a></div>
+<div class="q"><strong>accept or change</strong>. The five Striders are walker waves (Level 32's); the Pele pair enters at <strong>t=122.5/124</strong> and the lone Strider at <strong>t=173.5</strong> (the README's t≈118 and t≈168 left the screen before their towers came), so they walk beside the towers in the hold and a topple can take one (F.5).</div>
+<div class="media"><figure class="m img"><a href="../../campaign/act-6-jovian-storm/level-39-io-flyby/concept/topple-capture-r77-a.gif"><img loading="lazy" decoding="async" src="../../campaign/act-6-jovian-storm/level-39-io-flyby/concept/topple-capture-r77-a.gif" alt="the topple"></a><figcaption>the topple</figcaption></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong> / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span>Accepted (as recommended).</span></div>
+</article>
+<article class="row" id="r-C.4">
+<header><span class="rid">C.4</span><h3>The Loki SAM pair (E2)</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../campaign/act-6-jovian-storm/level-39-io-flyby/README.md#ground-targets">The Loki SAM pair (E2)</a></div>
+<div class="q"><strong>accept or change</strong>. The Loki SAM pair at <strong>t=33</strong>, not 38: a Strider walks 32 px/s up the ground, so it passes only a nest that enters within about a second after it (the topple onto the SAM pair to aim).</div>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong> / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span>Accepted (as recommended).</span></div>
+</article>
+<article class="row" id="r-C.5">
+<header><span class="rid">C.5</span><h3>The right Sentinel (E2)</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../campaign/act-6-jovian-storm/level-39-io-flyby/README.md#ground-targets">The right Sentinel (E2)</a></div>
+<div class="q"><strong>accept or change</strong>. The Sentinels' rows 221 px apart (Level 32's offset): the right one enters <strong>1.7 s</strong> after the left, its blockhouse in the gate moved with it (step E4's backdrop rerun).</div>
+<div class="media"><figure class="m img"><a href="../../campaign/act-6-jovian-storm/level-39-io-flyby/concept/gate-capture-r77-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-6-jovian-storm/level-39-io-flyby/concept/gate-capture-r77-a.png" alt="the gate"></a><figcaption>the gate</figcaption></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong> / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span>Accepted (as recommended).</span></div>
+</article>
+<article class="row" id="r-C.6">
+<header><span class="rid">C.6</span><h3>The overdrive (E2)</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../campaign/act-6-jovian-storm/level-39-io-flyby/README.md#secrets-and-pickups">The overdrive (E2)</a></div>
+<div class="q"><strong>accept or change</strong>. The overdrive comes from the <strong>t=116.5 Talon wing's leader</strong> inside the gate, not the left Sentinel (a ground enemy carries a pickup only as an objective's group). Alternative: make the left Sentinel a group of its own that carries the pickup.</div>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong> / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span>Accepted (as recommended).</span></div>
+</article>
+<article class="row" id="r-C.7">
+<header><span class="rid">C.7</span><h3>The hold rule in the balance (E2)</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../player/README.md">The hold rule in the balance (E2)</a></div>
+<div class="q"><strong>accept or change</strong>. <code>BalanceTest</code>'s hold rule counts the forward DPS on unhardened towers (the plan's fit has no <code>anti-ground</code> gun; its beam and pods take a tower).</div>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong> / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span>Accepted (as recommended).</span></div>
+</article>
+<article class="row" id="r-C.8">
+<header><span class="rid">C.8</span><h3>Three streams moved (E3)</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../campaign/act-6-jovian-storm/level-39-io-flyby/README.md#waves">Three streams moved (E3)</a></div>
+<div class="q"><strong>accept or change</strong>. Three medium streams moved by at most 1 s for the pacing rule (no stretch over 2 s with nothing on the screen): the Dart stream 102.5 → <strong>101.5</strong>, the Skitter streams 105.5 → <strong>104.5</strong> and 140.5 → <strong>141</strong>; the Sentinels' quiet window now runs from t=104.5 to t=113.5.</div>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong> / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span>Accepted (as recommended).</span></div>
+</article>
+<article class="row" id="r-C.9">
+<header><span class="rid">C.9</span><h3>The latch and the lock (E4)</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../campaign/act-6-jovian-storm/level-39-io-flyby/README.md#secrets-and-pickups">The latch and the lock (E4)</a></div>
+<div class="q"><strong>accept or change</strong>. The depot's latch and the hut's lock have a <strong>third frame</strong> (intact, hit, open: the data's damage look), where ART-E drew two.</div>
+<div class="media"><figure class="m img"><a href="../../campaign/act-6-jovian-storm/level-39-io-flyby/concept/hut-capture-r77-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-6-jovian-storm/level-39-io-flyby/concept/hut-capture-r77-a.png" alt="1:1"></a><figcaption>1:1</figcaption></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong> / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span>Accepted (as recommended).</span></div>
+</article>
+<article class="row" id="r-C.10">
+<header><span class="rid">C.10</span><h3>The pipes&#x27; glow over flyers (E4)</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../campaign/act-6-jovian-storm/level-39-io-flyby/README.md#concept-art">The pipes' glow over flyers (E4)</a></div>
+<div class="q"><strong>accept or change</strong>. The pipes' and racks' hot lines (additive <code>-glow</code> pieces) are drawn after the ground and the flyers, so a faint orange stripe can cross a ship or a Talon over a rack. Alternative: draw them with the ground (a game change: the glow then sits under every unit).</div>
+<div class="media"><figure class="m img"><a href="../../campaign/act-6-jovian-storm/level-39-io-flyby/concept/pipes-capture-r77-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-6-jovian-storm/level-39-io-flyby/concept/pipes-capture-r77-a.png" alt="the pipes, 1:1"></a><figcaption>the pipes, 1:1</figcaption></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong> / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span>Accepted (as recommended).</span></div>
+</article>
+<article class="row" id="r-C.11">
+<header><span class="rid">C.11</span><h3>The pumps&#x27; death (E4)</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../enemies/ground/pump-station/README.md">The pumps' death (E4)</a></div>
+<div class="q"><strong>accept or change</strong>. A pump station dies with the <strong>vacuum burst</strong> (a short flash, a debris ring) though Level 39's sections are not marked vacuum (Io's near-vacuum: the doc's flashes and rings).</div>
+<div class="media"><figure class="m img"><a href="../../campaign/act-6-jovian-storm/level-39-io-flyby/concept/pump-capture-r77-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-6-jovian-storm/level-39-io-flyby/concept/pump-capture-r77-a.png" alt="a pump, 1:1"></a><figcaption>a pump, 1:1</figcaption></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong> / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span>Accepted (as recommended).</span></div>
+</article>
+<article class="row" id="r-C.12">
+<header><span class="rid">C.12</span><h3>The Prometheus line (E4)</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../campaign/act-6-jovian-storm/level-39-io-flyby/README.md#radio-chatter">The Prometheus line (E4)</a></div>
+<div class="q"><strong>accept or change</strong>. A run that meets <code>PUMPS</code> after t≈158 (Varga's "Six pumps cut") holds Okafor's t=164.5 Prometheus line more than 1 s (the 1 s rule; step E4's radio runs). Accept: a late-met secondary only. Change: Okafor's line a little later (a content step, re-checked by <code>RadioTimelineLevel39Test</code>).</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> how late it plays depends on when P6 falls</p>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong> / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span>Accepted (as recommended).</span></div>
+</article>
+<article class="row" id="r-C.13">
+<header><span class="rid">C.13</span><h3>A topple onto the first tower (E4)</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../campaign/act-6-jovian-storm/level-39-io-flyby/README.md#radio-chatter">A topple onto the first tower (E4)</a></div>
+<div class="q"><strong>accept or change</strong>. A Strider toppled onto the first tower destroyed raises both events: Rook's "Tower's down" (<code>first-target</code>, with Rook) and Okafor's "Dropped it on the tower" (<code>topple-target</code>), one after the other. Alternative: a topple takes the first-target line's place (Okafor's only).</div>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong> / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span>Accepted (as recommended).</span></div>
+</article>
+</section></main></body></html>

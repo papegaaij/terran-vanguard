@@ -41,7 +41,7 @@ Promoted to their own documents for the Acts 1–2 wrap-up, plus the Act 3 draft
 | [gilded-gunship](gilded-gunship/README.md) | Slow gunship: gilded front ×0.5, engines ×2, ring bursts, Dart streams (L30) | approved | done | final |
 | [rail-serpent](rail-serpent/README.md) | Drone train of 8–14 cars from the sides and rear; a cut's rear half drifts and blows (L30) | approved | done | final |
 | [hornet](hornet/README.md) | Hovering missile boat, salvos of 4 shootable homing diamonds (L31) | approved | done | final |
-| [buzzsaw-drone](buzzsaw-drone/README.md) | Radial blade drone: chase, 0.6 s spin-up, a dash that ricochets off edges and rocks (L31) | review | done | final |
+| [buzzsaw-drone](buzzsaw-drone/README.md) | Radial blade drone: chase, 0.6 s spin-up, a dash that ricochets off edges and rocks (L31) | approved | done | final |
 | [chimera](chimera/README.md) | Hybrid on the Talon airframe: swoops and aimed pairs, regenerates 20 %/s after 1 s untouched (L36) | approved | done | final |
 | [harvester](harvester/README.md) | Uncrewed helium-3 scoop on `low-air` in pairs: no fire, not counted as an enemy, Level 36's secondary (L36) | approved | done | final |
 | [fleet-stormhawk](fleet-stormhawk/README.md) | The CDF fleet's drop craft diving up past the ship: a neutral craft, marked friendly (L36) | approved | done | final |

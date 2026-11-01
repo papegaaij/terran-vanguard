@@ -2,7 +2,7 @@
 title: Cracking Tower
 design: review
 implementation: done
-art: proposed
+art: chosen
 depends-on: [../../../campaign/act-6-jovian-storm/level-39-io-flyby, ../strider]
 updated: 2026-11-01
 ---
@@ -69,7 +69,10 @@ Production art in Level 39's batch (step ART-E, round 77, QE-3):
 
 ## Decisions
 
-- 2026-11-01 (M10 part E, step E2; gap check `m10e-gaps.md` §4, pending the user's review in round 77): promoted from
+- 2026-11-01 (M10 part E, step E2; gap check `m10e-gaps.md` §4, decided 2026-11-01, round 77 C.2): promoted from
   Level 39's ground objects to a minimal part (the loader needs a unit directory; the design stays in Level 39), a
   counted enemy (the topple's crush and the kill tally need it; the density gains 6 units). Its bounty 30 lies under
   the large class's 40–60 (Level 39's approved credit budget gives it; `BalanceTest`'s accepted exception).
+- 2026-11-01 (user, round 77 closed): the cracking tower's production art accepted (F.2, `art: chosen`), its counted-enemy
+  promotion accepted (C.2), the pump's vacuum burst (C.11) and the pipes' glow over flyers (C.10) accepted; the topple onto
+  a tower (F.5) and the failed primary (F.6) accepted. The document stays `design: review` (the user did not approve the part's page).

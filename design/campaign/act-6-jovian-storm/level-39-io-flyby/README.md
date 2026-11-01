@@ -1,7 +1,7 @@
 ---
 title: Level 39 – Io Flyby
 design: approved
-implementation: done
+implementation: in-progress
 art: proposed
 depends-on: [../../../enemies/ground/cracking-tower, ../../../enemies/ground/pump-station, ../../../enemies/ground/strider, ../../../enemies/ground/sam-nest, ../../../enemies/ground/sentinel-tower, ../../../enemies/air/chimera, ../../../enemies/air/talon, ../../../enemies/air/gilded-gunship, ../../../enemies/air/harrow, ../../../world/jovian, ../../../world/belt, ../../../player/systems, ../../../player/generator, ../../../player/wingmen, ../../../systems/retry, ../../act-2-homefront/level-09-arcology-fall]
 updated: 2026-11-01
@@ -155,7 +155,7 @@ tower of a works reaches **y = 200 px** below the top edge (t≈44, ≈126, ≈1
 tower that is not destroyed leaves the bottom edge about **9.7 s** after the hold starts at medium (12.9 s easy, 7.8 s
 hard): that is the window; there is no timer. (Measured in step E2, `levelReport`'s `refinery` part: **8.3 s** at medium,
 10.9 s easy, 6.7 s hard from the hold's start to the first tower gone: the 1 s ease and the tower's own edge; the
-approved 200 px and 40/30/50 px/s kept, pending the user's review in round 77.) In a hold the waves, the ground units' placements and the radio wait with
+approved 200 px and 40/30/50 px/s kept, decided 2026-11-01 (round 77 L.2).) In a hold the waves, the ground units' placements and the radio wait with
 the scroll; the enemies, bullets, eruptions, Rook and the backdrop's animation run on real time, so the vents beside a
 works erupt more than once during its hold. The holds add about 15 s of real time (≈ 3 min 27 s in all). No vent lies
 within 100 px of a tower. Holds are not used with a boss or set pieces
@@ -175,7 +175,7 @@ terms** with a `bounty_scale` (see *Credit budget*).
   motes as built.
 - **Density and pacing** (the Act 2+ rules, `PacingTest` and `ActFloorTest`, the act's 75 a minute): **320 enemies**
   (57 waves with 279 units, 24 Darts launched by the Gunships, 17 ground units) over 192 s, **≈ 100 a minute** at
-  medium (easy ≈ 265, hard ≈ 365 by the formation lever). Built (step E2, pending the user's review in round 77): the 6
+  medium (easy ≈ 265, hard ≈ 365 by the formation lever). Built (step E2, decided 2026-11-01 (round 77 C.2)): the 6
   towers and 8 pump stations are **counted** enemies (the [Cracking Tower](../../../enemies/ground/cracking-tower/README.md)
   and the [Pump Station](../../../enemies/ground/pump-station/README.md): a topple's crush and the tally take counted
   units only), the five Striders walker waves (Level 32's): `levelReport` counts **310** at medium (284 in waves, 26
@@ -188,7 +188,7 @@ terms** with a `bounty_scale` (see *Credit budget*).
 - **Quiet windows**: no wave enters from t=8 to t=14.5 (the first eruption at t≈12 plays alone, Level 27's teaching
   rule), from t=28.5 to t=35.5 (the Strider pair, t=32) or from t=104.5 to t=113.5 (the Sentinel pair, t=110; built:
   the Skitter stream at t=104.5, the Dart stream at t=101.5 and the Skitter stream at t=141, each moved by at most 1 s from the draft's
-  105.5, 102.5 and 140.5 in step E3 for the pacing rule, pending the user's review in round 77).
+  105.5, 102.5 and 140.5 in step E3 for the pacing rule, decided 2026-11-01 (round 77 C.8)).
 - **Limits**: at most 2 Striders walking and 2 Sentinels sweeping at once; at most 3 SAM Nests firing; at most 6
   Harrows (3–4 a stream here); no two `medium` hulls overlapping (the Gunship columns 2 s apart, the Hornet pair
   ≥ 80 px between hulls, a Hornet never with a Gunship).
@@ -294,7 +294,7 @@ the Loki pair (t=32 and 33.5) up the yard road at x 90, the first passing the SA
 the second dropping a shield cell; the Pele pair (t=122.5 and 124) and the lone Strider (t=173.5) up the racks
 between their works' towers, so that in the hold they walk beside them and a topple can take one (step E2: the
 README's t≈118 and t≈168 left the screen before the towers came; the Loki SAM pair at t≈33, not 38, for the same
-reason; pending the user's review in round 77). The Sentinels' rows are 221 px apart (Level 32's offset: the right one
+reason; decided 2026-11-01 (round 77 C.3, C.4)). The Sentinels' rows are 221 px apart (Level 32's offset: the right one
 1.7 s after the left). The left Sentinel's overdrive comes from the t=116.5 wing's leader inside the gate (a ground
 enemy carries a pickup only as an objective's group). Totals: towers 6 · pump stations 8 · Striders 5 · SAM Nests 10 ·
 Sentinel Towers 2. The
@@ -316,7 +316,7 @@ this visit) delays every SAM Nest, Sentinel and Strider here: the level that sho
   - section 5: **four rows of three**, rippling 0.4 s a vent (t≈145, 150, 155, 160), the rack with P5–P8 between the
     rows;
   - section 6: two (t≈170; one beside the Prometheus towers entering at t≈176, retimed from t≈181).
-  Built (step E2, round 77 QE-1 a, pending): each vent's first tell comes `first` s after it enters (0.3–1.3 s, the
+  Built (step E2, decided 2026-11-01 (round 77 L.1 a)): each vent's first tell comes `first` s after it enters (0.3–1.3 s, the
   plume field's rows 0.3, 0.7 and 1.1 s: its ripple), then every 5–7 s on real time; at 130 px/s a vent outside a hold
   erupts once, the works' vents tell about 0.3–0.6 s into their hold and again 6.2–8.2 s later (`levelReport`: two tells
   a vent in every hold at medium).
@@ -336,14 +336,14 @@ this visit) delays every SAM Nest, Sentinel and Strider here: the level that sho
   Its event line, Varga: "*A Coalition survey hut. Pre-war. Somebody left in a hurry.*"
 - **Shield cell**: dropped by the second Strider of the t≈32 pair.
 - **Armour patch**: the refinery supply depot before the Pele gate (t≈103), freed by its 10 HP latch.
-- **Overdrive**: dropped by the left Sentinel Tower of the Pele gate (t≈110); built (step E2) as the t=116.5 wing's leader inside the gate (a single ground enemy cannot carry a pickup), pending the user's review in round 77.
+- **Overdrive**: dropped by the left Sentinel Tower of the Pele gate (t≈110); built (step E2) as the t=116.5 wing's leader inside the gate (a single ground enemy cannot carry a pickup), decided 2026-11-01 (round 77 C.6).
 
 ## Radio chatter
 
 Spoken radio, draft text for the **1 s rule** (text at about 12 characters a second plus a 1.5 s lead for the length
 check; 0.4 s of silence; no timed line more than 1 s late); event lines drop after 6 s. Rook's lines carry `requires:
 escort`. Vorne speaks once on the enemy channel (the intercepted dress), cold and never shouted (the character rule:
-his only shout is Level 42's, J6).
+his only shout is Level 42's, J6), his t=91 line at his grim row (`expression: rage`, as his Level 37 order; decided 2026-11-01, round 77 V.2 b: the data and a new take follow, see *Implementation*).
 
 <!-- data: radio -->
 | Trigger | Speaker | Line |
@@ -454,35 +454,32 @@ umbrella and burning rocks are the [Jovian system](../../../world/jovian/README.
 (`briefing-images-final-r77-a`). The proposal (`concept/backdrop-proposal.yaml`, step E2's input, not data) holds the
 backdrop block, the sections, the holds, the ground placements (towers, pump stations, guards), the hut's lock and the
 depot's latch, and the 27 vents with their `first` (the works' vents retimed into their holds: two throws in each hold
-at medium, checked by the generator). Prompts and briefs: [concept/prompts.md](concept/prompts.md).
+at medium, checked by the generator). Prompts and briefs: [concept/prompts.md](concept/prompts.md). Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 
 | File | What | Status |
 |---|---|---|
 | [concept/backdrop-final-r77-b.png](concept/backdrop-final-r77-b.png) | The F.1 redo: the production backdrop opening on Io's plains from t = 0 (no limb, no Jupiter, no plume): twelve screens at half size with stand-ins (t=0 the plains, t=6 the Tvashtar plains, the first vent, then as r77-a), the readability crops at 1×, the pieces, the tile sets (sheet) | proposed (round 77 F.1 redo) |
 | [concept/backdrop-final-r77-b.gif](concept/backdrop-final-r77-b.gif) | The F.1 redo: the first 10 s at 130 px/s (half size), the plains under the ship from t = 0 | proposed (round 77 F.1 redo) |
-| [concept/backdrop-final-r77-a.png](concept/backdrop-final-r77-a.png) | Superseded by r77-b (F.1 redo) in its opening. Production backdrop: twelve screens at half size with stand-ins (t=0 Jupiter low under Io's limb and Tvashtar's plume, the limb coming down, the first vent, the Loki yard and its SAMs, the Loki hold, the pipeline run and P1, the survey hut, the depot, the Pele gate, the Pele hold under Pele's haze, the plume field, the Prometheus hold), the readability crops at 1× (each section's darkest and brightest window with a Talon, a Chimera, a Harrow, amber needles, an orb, a rock, the ship; the means), the pieces, the tile sets (sheet) | proposed (round 77) |
-| [concept/backdrop-final-r77-a.gif](concept/backdrop-final-r77-a.gif) | The Loki hold at medium on real time (half size): the scroll easing to 40 px/s, both vents beside the towers telling and throwing their rocks, the umbrellas, Loki A falling and its pipes going dark | proposed (round 77) |
-| [concept/refinery-final-r77-a.png](concept/refinery-final-r77-a.png) | The cracking tower burning (body + flame), its fall in 12 frames, the tower and its wreck at 3×, the flame frames, the pump station and its wreck, the depot's latch (intact, open), the hut's lock (dark, blown) (sheet) | proposed (round 77) |
-| [concept/refinery-final-r77-a.gif](concept/refinery-final-r77-a.gif) | Two towers burning, one falling to its wreck, a pump station destroyed (2×) | proposed (round 77) |
+| [concept/backdrop-final-r77-a.png](concept/backdrop-final-r77-a.png) | Superseded by r77-b (F.1 redo) in its opening. Production backdrop: twelve screens at half size with stand-ins (t=0 Jupiter low under Io's limb and Tvashtar's plume, the limb coming down, the first vent, the Loki yard and its SAMs, the Loki hold, the pipeline run and P1, the survey hut, the depot, the Pele gate, the Pele hold under Pele's haze, the plume field, the Prometheus hold), the readability crops at 1× (each section's darkest and brightest window with a Talon, a Chimera, a Harrow, amber needles, an orb, a rock, the ship; the means), the pieces, the tile sets (sheet) | chosen (round 77 F.1 accept; the sheet's opening over the limb is superseded by r77-b, the redo) |
+| [concept/backdrop-final-r77-a.gif](concept/backdrop-final-r77-a.gif) | The Loki hold at medium on real time (half size): the scroll easing to 40 px/s, both vents beside the towers telling and throwing their rocks, the umbrellas, Loki A falling and its pipes going dark | chosen (round 77 F.1 accept; the Loki hold; the opening redone in r77-b) |
+| [concept/refinery-final-r77-a.png](concept/refinery-final-r77-a.png) | The cracking tower burning (body + flame), its fall in 12 frames, the tower and its wreck at 3×, the flame frames, the pump station and its wreck, the depot's latch (intact, open), the hut's lock (dark, blown) (sheet) | chosen (round 77 F.2 accept) |
+| [concept/refinery-final-r77-a.gif](concept/refinery-final-r77-a.gif) | Two towers burning, one falling to its wreck, a pump station destroyed (2×) | chosen (round 77 F.2 accept) |
 | [concept/backdrop-proposal.yaml](concept/backdrop-proposal.yaml) | The generator's `backdrop:` block (tile sets, pieces, placements with `dark_with`, the atmospheres), the sections, the holds, the ground placements, the ground objects and the 27 vents for step E2 (not data) | proposed (round 77; step E2's input) |
-| [concept/opening-capture-r77-a.png](concept/opening-capture-r77-a.png) | Superseded by the F.1 redo (r77-b; the game's opening needs a new capture). In the game (step E5, [recipe](concept/prompts.md#level-39-capture-r77-a)): the opening over Io's limb, Jupiter low and Tvashtar's umbrella, the limb coming down until the plains cover the screen | proposed (round 77) |
-| [concept/opening-capture-r77-a.gif](concept/opening-capture-r77-a.gif) | Superseded by the F.1 redo (r77-b). In the game: the opening's first 4 s | proposed (round 77) |
-| [concept/hold-capture-r77-a.png](concept/hold-capture-r77-a.png) | In the game: the Loki hold, both towers, both vents beside them throwing, the rocks and umbrellas, Loki A and B falling (the plan's fit, parked) | proposed (round 77) |
-| [concept/hold-capture-r77-a.gif](concept/hold-capture-r77-a.gif) | In the game: the Loki hold in motion | proposed (round 77) |
-| [concept/pipes-capture-r77-a.png](concept/pipes-capture-r77-a.png) | In the game, 1:1: Loki A's pipe run hot, the kill, the fall, the wreck with its pipe dark | proposed (round 77) |
-| [concept/pump-capture-r77-a.png](concept/pump-capture-r77-a.png) | In the game, 1:1: a pump station on the rack hot, hit, its burst, the wreck with the rack's pipe dark | proposed (round 77) |
-| [concept/gate-capture-r77-a.png](concept/gate-capture-r77-a.png) | In the game: the Pele gate with its walls and the two Sentinels sweeping | proposed (round 77) |
-| [concept/topple-capture-r77-a.png](concept/topple-capture-r77-a.png) | In the game: a Pele Strider's leg cut beside Pele B, the fall line, the fall crushing the tower (`TOWERS 3 / 6`, Okafor's line) | proposed (round 77) |
-| [concept/topple-capture-r77-a.gif](concept/topple-capture-r77-a.gif) | In the game: the topple in motion | proposed (round 77) |
-| [concept/plume-capture-r77-a.png](concept/plume-capture-r77-a.png) | In the game: the plume field's first row, its three tells 0.4 s apart, the rocks and umbrellas | proposed (round 77) |
-| [concept/plume-capture-r77-a.gif](concept/plume-capture-r77-a.gif) | In the game: the row's ripple in motion | proposed (round 77) |
-| [concept/failed-capture-r77-a.png](concept/failed-capture-r77-a.png) | In the game (not invulnerable): Loki A unshot, off the bottom edge with `TOWERS FAILED` at once, the failed screen with Okafor's line | proposed (round 77) |
-| [concept/failed-capture-r77-a.gif](concept/failed-capture-r77-a.gif) | In the game: the tower passing and the failed screen | proposed (round 77) |
-| [concept/hut-capture-r77-a.png](concept/hut-capture-r77-a.png) | In the game, 1:1: the survey hut on its lava island (its lock), the supply depot and its latch | proposed (round 77) |
-| [concept/readability-capture-r77-a.png](concept/readability-capture-r77-a.png) | In the game, 1:1 crops: gold Talons and their bullets, burning rocks, the Pele yard, Prometheus's frost and the lava channel | proposed (round 77) |
-| [concept/level-39-listen-r77-a.ogg](concept/level-39-listen-r77-a.ogg) | Listen-through: Level 39's two briefing pages and its radio as the game plays them (`assets/voice/` joined, 1.2 s apart; 3:03.5, −19 LUFS); `tools/concept/audio/voice_r77.py` ([brief](concept/prompts.md#level-39-listen-r77-a)) | proposed (round 77 V.1) |
-| [concept/level-39-listen-r77-a.txt](concept/level-39-listen-r77-a.txt) | The listen-through's cue list: each line's start, speaker, source, expression and text | proposed (round 77 V.1; a listening aid) |
-| [concept/vorne-t91-r77-a.ogg](concept/vorne-t91-r77-a.ogg) | Vorne's t=91 line as built (his neutral row, the enemy filter; 6.0 s): a copy of the production file | proposed (round 77 V.2) |
+| [concept/hold-capture-r77-a.png](concept/hold-capture-r77-a.png) | In the game: the Loki hold, both towers, both vents beside them throwing, the rocks and umbrellas, Loki A and B falling (the plan's fit, parked) | chosen (round 77 F.2 accept) |
+| [concept/hold-capture-r77-a.gif](concept/hold-capture-r77-a.gif) | In the game: the Loki hold in motion | chosen (round 77 F.2 accept) |
+| [concept/pipes-capture-r77-a.png](concept/pipes-capture-r77-a.png) | In the game, 1:1: Loki A's pipe run hot, the kill, the fall, the wreck with its pipe dark | chosen (round 77 F.2 accept) |
+| [concept/pump-capture-r77-a.png](concept/pump-capture-r77-a.png) | In the game, 1:1: a pump station on the rack hot, hit, its burst, the wreck with the rack's pipe dark | chosen (round 77 F.2 accept) |
+| [concept/gate-capture-r77-a.png](concept/gate-capture-r77-a.png) | In the game: the Pele gate with its walls and the two Sentinels sweeping | chosen (round 77 F.2 accept) |
+| [concept/topple-capture-r77-a.png](concept/topple-capture-r77-a.png) | In the game: a Pele Strider's leg cut beside Pele B, the fall line, the fall crushing the tower (`TOWERS 3 / 6`, Okafor's line) | chosen (round 77 F.5 accept) |
+| [concept/topple-capture-r77-a.gif](concept/topple-capture-r77-a.gif) | In the game: the topple in motion | chosen (round 77 F.5 accept) |
+| [concept/plume-capture-r77-a.png](concept/plume-capture-r77-a.png) | In the game: the plume field's first row, its three tells 0.4 s apart, the rocks and umbrellas | chosen (round 77 F.3 accept) |
+| [concept/plume-capture-r77-a.gif](concept/plume-capture-r77-a.gif) | In the game: the row's ripple in motion | chosen (round 77 F.3 accept) |
+| [concept/failed-capture-r77-a.png](concept/failed-capture-r77-a.png) | In the game (not invulnerable): Loki A unshot, off the bottom edge with `TOWERS FAILED` at once, the failed screen with Okafor's line | chosen (round 77 F.6 accept) |
+| [concept/failed-capture-r77-a.gif](concept/failed-capture-r77-a.gif) | In the game: the tower passing and the failed screen | chosen (round 77 F.6 accept) |
+| [concept/hut-capture-r77-a.png](concept/hut-capture-r77-a.png) | In the game, 1:1: the survey hut on its lava island (its lock), the supply depot and its latch | chosen (round 77 F.4 accept) |
+| [concept/readability-capture-r77-a.png](concept/readability-capture-r77-a.png) | In the game, 1:1 crops: gold Talons and their bullets, burning rocks, the Pele yard, Prometheus's frost and the lava channel | chosen (round 77 F.7 accept) |
+| [concept/level-39-listen-r77-a.ogg](concept/level-39-listen-r77-a.ogg) | Listen-through: Level 39's two briefing pages and its radio as the game plays them (`assets/voice/` joined, 1.2 s apart; 3:03.5, −19 LUFS); `tools/concept/audio/voice_r77.py` ([brief](concept/prompts.md#level-39-listen-r77-a)) | chosen (round 77 V.1 accept) |
+| [concept/level-39-listen-r77-a.txt](concept/level-39-listen-r77-a.txt) | The listen-through's cue list: each line's start, speaker, source, expression and text | chosen (round 77 V.1 accept; a listening aid) |
 
 ## Implementation
 
@@ -514,6 +511,12 @@ at medium, checked by the generator). Prompts and briefs: [concept/prompts.md](c
       towers) (`Level39Test`, `RefineryPlay`: 18 of 18 flights)
 - [x] Production art and captures for the round (round 77: step ART-E's art in the game since E4, step E5's
       captures)
+- [ ] Round 77 S.3 b: the tower's collapse plays `tower-collapse-r77-b` (the pipeline's import list, `Sfx.TOWER_COLLAPSE`,
+      `PlaceholderAuditTest`, `Level39SoundsTest`), and the a file leaves `assets/sfx/` (decided 2026-11-01)
+- [ ] Round 77 V.2 b: Vorne's t=91 line gets `expression: rage` in the level data and a new take at his grim row (a VOX
+      step; then `RadioTimelineLevel39Test` and `VoiceFilesTest`), his neutral take replaced (decided 2026-11-01)
+- [ ] The opening capture redone for the plains opening (round 77 F.1 redo, `backdrop-final-r77-b` already in the game:
+      ART-E2 `6c7a875b`), shown to the user in a later round
 
 ## Open questions
 
@@ -548,13 +551,13 @@ Decided in round 72 (2026-10-31); left to the build:
   throwing shootable rocks; Level 27's plume discs unchanged rejected), Q3 a (two hunts; c rejected), Q8 a with J11
   (the Crucible and the spoofer at the Level 40 visit, Composite V at the Level 41 visit; the Level 39 swap rejected)
   as drafted. The document approved as drafted (D.5; `design: approved`).
-- 2026-11-01 (step ART-E, production art; pending the user's review in round 77, QE-3): the level opens over Io's limb so
+- 2026-11-01 (step ART-E, production art; decided 2026-11-01, round 77 F.1 redo, F.2, F.3, F.4 accepted): the level opens over Io's limb so
   that Jupiter on `deep` and a plume on the horizon can show at all under a top-down ground (≈ 3.7 s, then the surface);
   the towers 90 px either side of their works' rack (Loki A x 150, B 330; Pele A 330, B 150; Prometheus A 160, B 340),
   the pump stations on the racks at x 150 (P8 at t 162.5, before the rack bends at section 6's seam), the s4 road at
   x ≈ 180 through the Pele gate's gateway; the works' vents retimed into their holds (m10e-gaps §4) beside the towers,
   ≥ 104 px from every tower and pump station.
-- 2026-11-01 (step E2, Level 39's data; pending the user's review in round 77): built as drafted with the decided trivia
+- 2026-11-01 (step E2, Level 39's data; decided 2026-11-01, round 77 L.1 a, L.3, C.1–C.6): built as drafted with the decided trivia
   of the build gap check (`m10e-gaps.md` §4): the towers and pump stations are counted enemies in two minimal unit
   directories; the works' vents retimed into their holds and a per-vent first tell (QE-1 a), the first vent's at
   0.8 s (its easy tell then ends before the t=14.5 wave); the events `first-target` and `topple-target`; the hut's lock
@@ -564,12 +567,12 @@ Decided in round 72 (2026-10-31); left to the build:
   leader. `levelReport`: medium 99.5 enemies a minute, typical +0.3 % at 0.41, windows 8.3 s (easy 10.9, hard 6.7),
   two tells a vent per hold at medium, every cap held; the plain autopilot wins easy 3/3, medium 2/3, hard 0/3 (step
   E3's refinery autopilot next).
-- 2026-11-01 (step E3, the tests and the autopilot; pending the user's review in round 77): `Level39Test` and the
+- 2026-11-01 (step E3, the tests and the autopilot; decided 2026-11-01, round 77 C.7, C.8): `Level39Test` and the
   refinery autopilot (`RefineryPlay`: in a hold the lower tower first, from the side away from a telling vent, out of
   the told fans and the Sentinels' arcs) win all six towers in 18 of 18 flights (3 per difficulty, with Rook and
   without); three streams moved by at most 1 s for the pacing rule (the Dart stream 102.5 → 101.5, the Skitter streams
   105.5 → 104.5 and 140.5 → 141); `BalanceTest`'s hold rule counts the forward DPS on unhardened towers.
-- 2026-11-01 (step E4, the game side; pending the user's review in round 77): the refinery looks (the flare, the fall,
+- 2026-11-01 (step E4, the game side; decided 2026-11-01, round 77 C.9–C.13): the refinery looks (the flare, the fall,
   the wrecks), the production vents, umbrellas and rocks, the pipes' glows going dark on their target's death (drawn
   over the flyers: a faint orange stripe can cross a ship), the pump stations dying with the vacuum burst, the depot's
   latch and the hut's lock with a third frame (the data's), the right Sentinel's blockhouse moved with its entry, the
@@ -581,5 +584,15 @@ Decided in round 72 (2026-10-31); left to the build:
   perspective in it at all", and a curve that tight would pass Io under the ship in about 10 s), and **no Jupiter on
   top-down ground levels**: the level opens on Io's plains, the ground covering the screen from t = 0 (`tvashtar-a`/`-b`
   opaque from row −16); Jupiter's disc and Tvashtar's side-on plume dropped (a side-on umbrella has no top-down
-  reading; the vents' own umbrellas carry the eruptions); everything after the opening byte-identical. `r77-b` pending
-  the user's review in round 77.
+  reading; the vents' own umbrellas carry the eruptions); everything after the opening byte-identical. `r77-b` stays `proposed`
+  (the user sees it in a later round).
+- 2026-11-01 (user, round 77 closed; page answers and one note): **everything as recommended except F.1, S.3 and V.2**. Art
+  F.2–F.8 accepted; **F.1 redo** (the limb opening: "It looks like a disc. There's no perspective in it at all", and the
+  planet would pass under the ship in about 10 s): already redone by ART-E2 `6c7a875b` (see the entry above; the user's
+  decision of the same day: no Jupiter on top-down ground levels); `backdrop-final-r77-b` stays `proposed` for a later
+  round, the opening captures `opening-capture-r77-a` moved to `concept/rejected/`. Sounds S.1 a, S.2 a, S.4 a, **S.3 b**
+  (the tower's collapse: the bending-metal buckle, not the recommendation; the build swaps it in, open Implementation
+  item); V.1 accepted, **V.2 b** (Vorne's t=91 line at his grim row, `expression: rage`: needs a new take and the data,
+  open Implementation item; the neutral take `vorne-t91-r77-a` moved to `concept/rejected/`); L.1 a (per-vent first tell),
+  L.2 accepted (the hold windows stay), L.3 as round 76 (Rook's armour settled in M10 part I's Act 6 balance); C.1–C.13
+  accepted (every "pending the user's review in round 77" note is now "decided 2026-11-01 (round 77 <id>)").

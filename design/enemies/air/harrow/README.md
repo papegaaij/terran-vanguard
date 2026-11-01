@@ -84,10 +84,10 @@ draws at the state's strength, the lock tell's halo as a second). Each sheet hol
 |---|---|---|
 | [concept/harrow-r72-a.png](concept/harrow-r72-a.png) | Harrow a, "dart and sac": a gunmetal dart with gold leading edges and a swollen tissue sac on its back; 16 headings; the sac dim / hunting / tell / tell peak; its ring bullet beside the player | chosen (round 72 A.3 a) |
 | [concept/harrow-r72-a.gif](concept/harrow-r72-a.gif) | Four Harrows from three edges in the storm: one shot at range (its ring of 8 with the gap on the ship's bearing), one lock tell and a missed ram, one killed by a lightning strike (J3), one shot in its tell | chosen (round 72 A.3 a) |
-| [concept/harrow-final-r76-a.png](concept/harrow-final-r76-a.png) | Final frames (M10 part D, `tools/art/storm_layer_units.py harrow`; held in `build/art-held/sprites/` until its data.yaml): the 16 headings at 2× hunting over Level 38's production storm, the sac by state (dim 0.2, hunting 0.45–0.75, the tell 0.75 → 1.0 with its halo, the lock's flare, the ram 0.9), the tell's 12 frames, the burst's 8 over the small explosion, the shell's tumble, the read at 1× over the darkest and brightest windows of three sections beside the ship; teal 8 % hunting, 14 % at the tell's peak, gold 24 % (sheet) | proposed (round 76) |
-| [concept/harrow-final-r76-a.gif](concept/harrow-final-r76-a.gif) | Over Level 38 at t 30–34: one Harrow from the left hunts, tells and rams past the sidestepping ship; one from the top shot at range, its ring of 8 opening with the gap on the ship's bearing, the shell tumbling away (the ring's bullets are stand-ins: the game's `small` bullets) | proposed (round 76) |
-| [concept/harrow-capture-r76-a.png](concept/harrow-capture-r76-a.png) | In the game (step D5, Level 38's parked medium run; [recipe](concept/prompts.md#harrow-capture-r76-a)): the first lure, the t=42.5 stream dragged through the told t=43.5 column, the strike killing one, its ring opening | proposed (round 76 F.1) |
-| [concept/harrow-capture-r76-a.gif](concept/harrow-capture-r76-a.gif) | The same, t 42.7–46 | proposed (round 76 F.1) |
+| [concept/harrow-final-r76-a.png](concept/harrow-final-r76-a.png) | Final frames (M10 part D, `tools/art/storm_layer_units.py harrow`; held in `build/art-held/sprites/` until its data.yaml): the 16 headings at 2× hunting over Level 38's production storm, the sac by state (dim 0.2, hunting 0.45–0.75, the tell 0.75 → 1.0 with its halo, the lock's flare, the ram 0.9), the tell's 12 frames, the burst's 8 over the small explosion, the shell's tumble, the read at 1× over the darkest and brightest windows of three sections beside the ship; teal 8 % hunting, 14 % at the tell's peak, gold 24 % (sheet) | chosen (round 76 F.1 accept) |
+| [concept/harrow-final-r76-a.gif](concept/harrow-final-r76-a.gif) | Over Level 38 at t 30–34: one Harrow from the left hunts, tells and rams past the sidestepping ship; one from the top shot at range, its ring of 8 opening with the gap on the ship's bearing, the shell tumbling away (the ring's bullets are stand-ins: the game's `small` bullets) | chosen (round 76 F.1 accept) |
+| [concept/harrow-capture-r76-a.png](concept/harrow-capture-r76-a.png) | In the game (step D5, Level 38's parked medium run; [recipe](concept/prompts.md#harrow-capture-r76-a)): the first lure, the t=42.5 stream dragged through the told t=43.5 column, the strike killing one, its ring opening | chosen (round 76 F.1 accept) |
+| [concept/harrow-capture-r76-a.gif](concept/harrow-capture-r76-a.gif) | The same, t 42.7–46 | chosen (round 76 F.1 accept) |
 
 Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 
@@ -121,3 +121,7 @@ Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 - 2026-11-01 (M10 part D, step D5): implementation done (part D's full `check` green but for Level 39's three known
   tests); the production frames, the hunting whistle and the ram whoosh, and the caps of a script flown unharmed go
   to [round 76](../../../concept-rounds/round-76/README.md) (F.1, S.1, S.2, L.2).
+- 2026-11-01 (user, round 76 closed): the Harrow's production frames and the Level 38 captures accepted (F.1), its intel
+  portrait (F.10); the hunting whistle **a** (S.1) and the ram whoosh **a** (S.2), the b files moved to
+  `concept/rejected/`; C.1 (the ram ignores debris, only the player's shot opens a latch; the canister now has none, round 76
+  L.1 b), L.2 (the caps stay authored; a script flown unharmed may exceed them) accepted.

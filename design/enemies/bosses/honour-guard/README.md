@@ -52,7 +52,7 @@ The reference DPS is the **proposed** Level 40 value of **160** (J1, the
 | Size | 60×54 px, hitbox 42×36 (each a custom Talon at 1.5× the airframe; the leader's sniper barrel adds 14 px under the nose, no hit box) |
 | Parts | three **bodies**, none `vital` (the last death ends the piece): **Harker** (the leader), **Vesper** (the dancer), **Kestrel** (the feinter); one bar in three segments in that order |
 | Orientation | `64 angles` (each; they bank and turn through loops and dives; the Talon flies 16) |
-| HP | 2240 each (the three tuned together); total 6720 (easy 5040 / hard 8736, from the global multipliers) |
+| HP | 1900 each (the three tuned together); total 5700 (easy 4275 / hard 7410, from the global multipliers) |
 | Armour / shield | a gold hex **shield of 60** on each ace under the [enemy shield rule](../../README.md#enemy-shields) (spent first, refills after 2 s; the [Tesla Coil Pod](../../../player/weapons/tesla-coil-pod/README.md)'s `shield-breaker` empties it, the EMP Burst strips all three); no mirror (a unit carries one defence) |
 | Speed | 320 px/s (Kestrel diving); Harker 140 px/s on his station, 280 px/s sliding; Vesper 200 px/s through her loops; Kestrel 260 px/s raking |
 | Movement | per ace (see *The aces*): Harker the top third, Vesper the middle band, Kestrel the bottom band and the sides; hull edges always **≥ 80 px apart** (the Act 6 formation rule: no two medium hulls overlap); contact `medium` 15 to the ship once a second, the ship pushed 24 px out, the ace taking 40 and flying on |
