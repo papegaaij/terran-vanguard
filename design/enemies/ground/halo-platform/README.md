@@ -4,7 +4,7 @@ design: approved
 implementation: not-started
 art: chosen
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../player/specials, ../../bosses/iron-sovereign, ../rail-bunker, ../../../world/jovian]
-updated: 2026-10-31
+updated: 2026-11-01
 ---
 
 # Halo Platform
@@ -109,6 +109,20 @@ Round 72 (step ART-R-A, J8, picked 2026-10-31; generator `tools/concept/enemies_
 |---|---|---|
 | [concept/halo-platform-r72-a.png](concept/halo-platform-r72-a.png) | Halo Platform a, "gold trim": gloss black, the r07 gold rails, the mount rings and end caps gold, the strong rim; gun and rail turrets, the core held and flaring, the readability check on the citadel deck, the measured gold share | chosen (round 72 A.6 a) |
 | [concept/halo-platform-r72-a.gif](concept/halo-platform-r72-a.gif) | The held arena: the live arc following the ship, gun bursts and rail lines from mounts in the arc, three mounts lost (eased speed-ups), the barrier dropping, the open core's rings | chosen (round 72 A.6 a) |
+
+Production art for concept round 79 (M10 part G, step ART-G1; generator `tools/art/halo_platform.py`, frames held in
+`build/art-held/sprites/` until the platform's `data.yaml` claims the root; layouts, blending and pivots in the script's
+header). **QG-1** (round 79, pending the user's review): the ring is drawn by the Iron Sovereign's **segment rule** (one
+segment rendered top-lit at 0–45° in 87 steps, the outer edge moving ≤ 1 px a step, placed at its exact angle by quarter
+turns and a mirror; the Sun's light and the elite rim as static overlays) instead of r07's 128 ring frames per 60° (about
+two atlas pages): the whole platform is 35 % of one 2048² page. Prompts: [concept/prompts.md](concept/prompts.md#halo-platform-final-r79-a).
+
+| File | What | Status |
+|---|---|---|
+| [concept/halo-platform-final-r79-a.png](concept/halo-platform-final-r79-a.png) | Final frames: the platform at rest, with three mounts lost and the core open, and wrecked over Level 41's citadel deck (1×); the segment set, the gun and rail turrets at 64 headings and their wrecks, the core (shut, waking, open, the white flare) and its wreck, the red hex barrier and its hit, the eye's glow and flare, the muzzle and coil tells, the lamps, the cook-off, debris and the eye's blowout, the overlays (rim, shade, scorch) and the arc strip; key frames of the fight; gold 37 % of the ring (sheet) | proposed (round 79) |
+| [concept/halo-platform-final-r79-a.gif](concept/halo-platform-final-r79-a.gif) | The held arena at 1×: the live arc following the ship (lamps gold → red), gun bursts with their muzzle tell, a rail line's charge and lock, three mounts lost with their eased speed-ups, the barrier fading at the third, the eye's flares and rings of 10, the death (the blowout, the cook-off chain round the ring, the large blast) and the wreck | proposed (round 79) |
+| [concept/halo-rotation-final-r79-a.png](concept/halo-rotation-final-r79-a.png) | QG-1's proof: the ring turning at 20°/s and 60°/s, ten consecutive 60 fps frames of a quarter at 1:1 and five at 3×; the outer edge steps 0.64 / 1.92 px a frame (the true motion), at most 1.0 / 2.0 px, never more than 0.5 px off the true heading; the rule's turned and mirrored frames against direct renders off the set (≤ 0.5 % of the pixels differ in shape, mean colour difference ≤ 4.3 of 255) (sheet) | proposed (round 79) |
+| [concept/halo-rotation-final-r79-a.gif](concept/halo-rotation-final-r79-a.gif) | The ring at 20°/s and 60°/s side by side, 50 fps, 1× | proposed (round 79) |
 
 ## Implementation
 

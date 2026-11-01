@@ -34,3 +34,18 @@
 Concept round 73, a capture of the game, not generated art (M10 part A, step A4, 2026-10-31): frames of the
 [A4 capture rig](../../../../world/jovian/concept/prompts.md#act6-rig-capture-r73-a); the sheet and the GIF are laid out from its screenshots (the 480×540 play field
 or crops, scaled with nearest neighbour).
+
+## shield-pylon-final-r79-a
+
+**Shield Pylon production frames** (round 79, M10 part G, step ART-G1). Files: `shield-pylon-final-r79-a.png` (sheet)
+and `.gif` (1×, a gate halt). Generator: `python3 tools/art/shield_pylon.py` (frames `shield-pylon`, `-crown_0..15`,
+`-emitter_0..3`, `-wreck`, `-topple_0..5`, `pivots/shield-pylon.json`; it claims round 73's dome sets of
+`tools/art/act6_gear.py dome` for the pylon's root).
+
+- **Brief:** round 72's a "crown" (`tools/concept/enemies_r72.py` `pylon_base`, `pylon_crown('a')`, unchanged) at
+  26 px a model unit so the base fits the stat block's 56×56: the black octagonal base with its gold edge and red corner
+  lights (one frame), the mast and crown at 16 facings over it with the emitter's lens dark, each facing its own render
+  under the low top-left Sun with the strong 2 px gold rim; the emitter lit as an additive gold-white glow on the lens
+  (asleep: dark, the dome already lit); the wreck the base burnt with the mast's torn stump; the crown toppling off its
+  mast toward the lower right in six frames, the last lying broken beside the base. Glows smooth (≥ 32 steps, no
+  ordered dither, drawn once).

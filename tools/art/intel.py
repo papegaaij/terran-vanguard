@@ -70,7 +70,10 @@ Outputs (assets/sprites/intel/, packed onto the shared sprite pages as ``intel/<
                      Graft Turret on its base with the barrel aimed down, the seams lit); harrow (Level 38, M10
                      part D batch, step ART-D: round 72's model of tools/art/storm_layer_units.py, nose down, the sac's
                      veins unlit; folded in here by step ART-F1 with storm_layer_units.py's own Source note, so the
-                     file comes out byte-identical whichever script writes it)
+                     file comes out byte-identical whichever script writes it); shield-pylon, halo-platform (Level 41,
+                     M10 part G batch, step ART-G1: the production models of tools/art/shield_pylon.py, the base with
+                     its crown facing down and the emitter lit, and tools/art/halo_platform.py, the ring at rest round
+                     the core, its gloss-black hull lifted so the ring reads at 30 px)
   unclassified-<enemy>.png  30x30 the sensor-L2 picture of a unit the intel does not name yet
                      (`unclassified_until_flown`, M7 part E batch): unclassified-ghost-drone, the Ghost
                      Drone's outline only, filled flat in dark teal with the plate's grid and a cyan rim
@@ -171,6 +174,8 @@ import jovian_units  # noqa: E402  (M10 part B: Level 36's production models)
 import aurelia_units  # noqa: E402  (M10 part C: Level 37's production models)
 import storm_layer_units  # noqa: E402  (M10 part D: Level 38's production models)
 import honour_guard  # noqa: E402  (M10 part F: Level 40's mid-boss, its production sprites)
+import shield_pylon  # noqa: E402  (M10 part G: Level 41's Shield Pylon, its production model)
+import halo_platform  # noqa: E402  (M10 part G: Level 41's Halo Platform, its production models)
 import barbfin  # noqa: E402  (the Barbfin's production model)
 import siren  # noqa: E402  (the Siren's production model)
 import glow_angler  # noqa: E402  (the Glow Angler's production model)
@@ -245,7 +250,8 @@ BATCHES = {"spore-bomber": "M4 part C batch", "whirl-seed": "M4 part C batch",
            "fleet-stormhawk": "M10 part B batch",
            "mirror-interceptor": "M10 part C batch", "graft-turret": "M10 part C batch",
            "harrow": "M10 part D batch",
-           "boss-honour-guard": "M10 part F batch"}
+           "boss-honour-guard": "M10 part F batch",
+           "shield-pylon": "M10 part G batch", "halo-platform": "M10 part G batch"}
 # pictures another generator wrote first, kept under its Source note so a run of this script leaves them byte-identical
 SOURCES = {"harrow": storm_layer_units.SOURCE}
 # the concept round that reviews a batch
@@ -259,7 +265,7 @@ ROUNDS = {UI_BATCH: "r13", "M4 part C batch": "r16", "M4 part D batch": "r17", "
           "M8 part H batch": "r58", "M9 part B batch": "r62", "M9 part C batch": "r63",
           "M9 part D batch": "r64", "M9 part E batch": "r65", "M9 part F batch": "r66", "M9 part G batch": "r67",
           "M9 part H batch": "r68", "M10 part B batch": "r74", "M10 part C batch": "r75", "M10 part D batch": "r76",
-          "M10 part F batch": "r78"}
+          "M10 part F batch": "r78", "M10 part G batch": "r79"}
 OUT = SPRITES / "intel"
 CONCEPT = DESIGN / "ui" / "hangar" / "concept"
 PORTRAIT = 30
@@ -609,7 +615,8 @@ HI = {"reef-spitter": reef_spitter_hi, "relay-beacon": relay_beacon.intel_hi, "d
       "buzzsaw-drone": buzzsaw_drone_hi, "sentinel-tower": sentinel_tower_hi, "strider": strider_hi,
       "void-leech": void_leech_hi, "rail-bunker": rail_bunker_hi, "chimera": chimera_hi,
       "helium-3-harvester": harvester_hi, "fleet-stormhawk": fleet_hi, "mirror-interceptor": mirror_hi,
-      "graft-turret": graft_hi, "harrow": storm_layer_units.harrow_hi}
+      "graft-turret": graft_hi, "harrow": storm_layer_units.harrow_hi, "shield-pylon": shield_pylon.intel_hi,
+      "halo-platform": halo_platform.intel_hi}
 
 
 def portrait(slug):

@@ -39,3 +39,31 @@ proposal step writes this part's new files here. Round 06's variant is in `rejec
 - **Negative prompt:** photograph, painterly brush strokes, soft focus, perspective camera, side view, three-quarter view, text, watermark, motion blur, dithered gradients, organic shapes, chitin
 - **Animation brief:** As a. Every glow, haze and shadow is a smooth gradient of at least 32 steps, drawn once, with no ordered dither (the 2026-10-30 dither audit).
 - **Mockup generator:** `python3 tools/concept/enemies_r72.py halo-platform [a|b]` (round 72, step ART-R-A; models built in the file on the frozen `tools/concept/render/` package)
+
+## halo-platform-final-r79-a
+
+**Halo Platform production frames** (round 79, M10 part G, step ART-G1). Files: `halo-platform-final-r79-a.png` (sheet)
+and `.gif` (1×, the held arena). Generator: `python3 tools/art/halo_platform.py` (frames `halo-platform-segment_0..87`,
+`-rim`, `-shade`, `-arc`, `-lamp-gold`, `-lamp-red`, `-gun_0..63`, `-rail_0..63`, `-gun-muzzle_0..3`,
+`-rail-charge_0..3`, `-gun-wreck`, `-rail-wreck`, `-core_0..9`, `-core-wreck`, `-barrier_0..11`, `-barrier-hit_0..5`,
+`-eye-glow_0..3`, `-eye-flare_0..3`, `-cookoff_0..9`, `-cookoff-debris_0..9`, `-blowout_0..11`, `-scorch`,
+`pivots/halo-platform.json`).
+
+- **Brief:** the chosen r07 model in round 72's a "gold trim" (`tools/concept/enemies_r72.py` `halo_segment_v('a')`,
+  `halo_gun_v`, `halo_rail_v`, `halo_core_v`, unchanged): gloss black, the gold rails, mount rings and end caps, red
+  running lights. The ring by QG-1's segment rule: one segment rendered top-lit at 0–45° in 87 steps (the outer edge
+  moves ≤ 1 px a step), drawn at any heading by quarter turns and a mirror; the Sun's top-left light and the elite rim as
+  static overlays over the band; the turrets (gun, rail) at 64 headings and the core (76 px, the eye shut → waking →
+  open → the white flare) sunlit; the red hex barrier, the arc band, the lamps (gold → red), the eye's glow and flare,
+  the cook-off and the eye's blowout as smooth additive glows (≥ 32 steps, no ordered dither, drawn once); the wreck
+  the segments tinted under a soot overlay with the burnt core and stumps.
+
+## halo-rotation-final-r79-a
+
+**QG-1's proof** (round 79, step ART-G1). Files: `halo-rotation-final-r79-a.png` (sheet) and `.gif` (50 fps, 1×).
+Generator: `python3 tools/art/halo_platform.py --review` (from the written frames).
+
+- **Brief:** the ring composed by the segment rule turning at 20°/s and 60°/s: ten consecutive 60 fps frames of a
+  quarter at 1:1 and five at 3× (a join and a mount ring), the outer edge's measured step per frame against the true
+  motion and its lag, the rule's turned and mirrored frames against direct renders at headings off the set; the GIF the
+  two speeds side by side.

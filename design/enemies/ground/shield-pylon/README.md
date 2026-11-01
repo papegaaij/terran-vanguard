@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: chosen
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../player/specials, ../../air/choir-herald, ../clamp-gun, ../../../ui/hud]
-updated: 2026-10-31
+updated: 2026-11-01
 ---
 
 # Shield Pylon
@@ -118,6 +118,16 @@ Prompts: [concept/prompts.md](concept/prompts.md#pylon-dome-final-r73-a).
 | [concept/pylon-dome-final-r73-a.gif](concept/pylon-dome-final-r73-a.gif) | Shots spent on the dome, the mast destroyed, the ring collapsing into it, 1× | chosen (round 73 F.3 accept) |
 | [concept/dome-capture-r73-a.png](concept/dome-capture-r73-a.png) | Game capture (the A4 rig; a stand-in mast, ART-A's held dome frames): the dome 140 px along the crown with its feed and shimmer over the cream bands, round 72's grade and the rust band (the arc jumping to the mast) | chosen (round 73 F.3 accept) |
 | [concept/dome-capture-r73-a.gif](concept/dome-capture-r73-a.gif) | The dome scrolling through the pods' fight over the cream bands, 1× | chosen (round 73 F.3 accept) |
+
+Production art for concept round 79 (M10 part G, step ART-G1; generator `tools/art/shield_pylon.py`, frames held in
+`build/art-held/sprites/` until the pylon's `data.yaml` claims the root ``shield-pylon``, which also moves part A's dome
+sets: the script's `dome` re-runs `act6_gear.py`'s build unchanged; layouts, blending and pivots in its header). Prompts:
+[concept/prompts.md](concept/prompts.md#shield-pylon-final-r79-a).
+
+| File | What | Status |
+|---|---|---|
+| [concept/shield-pylon-final-r79-a.png](concept/shield-pylon-final-r79-a.png) | Final frames of A.5 a at 26 px a unit: the base (56×56) and the crown at its 16 facings over it, the emitter's glow on the lens, the wreck and the crown's six-frame topple; the readability over Level 41's darkest and brightest ice (gold 35 % of the silhouette) and the livery split beside a regular Warden Tank at 1:1 and 3×; key frames of the gate halt; the atlas share (21 % of a page with the claimed dome sets) (sheet) | proposed (round 79) |
+| [concept/shield-pylon-final-r79-a.gif](concept/shield-pylon-final-r79-a.gif) | A gate halt at 1×: two pylons asleep with their domes lit and the emitters dark, the wake, shots spent on the domes over two covered Warden Tanks, each pylon broken in turn (the vacuum explosion, the crown's topple, the collapse into it), the gate open | proposed (round 79) |
 
 Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 

@@ -416,11 +416,24 @@ on [the briefing screen's](../../../ui/briefing/README.md#concept-art) sheet.
 | [concept/backdrop-final-r79-a.gif](concept/backdrop-final-r79-a.gif) | Gate One's halt at half size: the domes up, the second pylon falls, the blast doors part as the scroll eases back up | proposed (round 79) |
 | [concept/backdrop-proposal.yaml](concept/backdrop-proposal.yaml) | The generator's `backdrop:` block (the fortress pieces, the `doors:` rows, the drive glow's path), the sections, the gate layouts, the Halo's place, the other ground placements, the vault and the beacon, the roads' paths for step G2 (not data) | proposed (round 79; step G2's input) |
 
+**Production ground objects (M10 part G, round 79, step ART-G1;
+[`tools/art/l41_props.py`](../../../../tools/art/l41_props.py)).** The archive cores (`archive-core`, 40×40: sealed,
+hit, open; `-break`, `-glow`, the uplink's `-ring_0..31` at the 40 px zone's edge filling clockwise, `-done`), Varga's
+lab vault (`lab-vault`, 36×36: sealed, hit, blown open) and the CDF beacon (`cdf-beacon`, 48×48, with `-lights`,
+`-open`, `-fall`, `-retro`, `-land`); held in `build/art-held/sprites/` until this level's data names them as `sprite`s
+(step G2). The uplink's teal is a cool cyan-teal (70, 235, 220), kept off the Vrell's green-teal (pending the user's
+review). The pylon's and the Halo's frames are on their pages' round-79 sheets; their intel portraits on
+[the hangar's](../../../ui/hangar/README.md#concept-art) `intel-final-r79-a`. Prompts:
+[concept/prompts.md](concept/prompts.md#l41-objects-final-r79-a).
+
+| File | What | Status |
+|---|---|---|
+| [concept/l41-objects-final-r79-a.png](concept/l41-objects-final-r79-a.png) | The archive core's hatch (sealed, hit, open with its teal glass stack), its break, glow, the uplink ring (the track, then filling) and the file-in flare; the lab vault (sealed, hit, blown open); the CDF beacon planted, opening, falling with its retro burn, its lights and the landing's dust ring; the readability over Level 41's darkest and brightest deck and ice; key frames of an upload and the beacon's drop (sheet) | proposed (round 79) |
+| [concept/l41-objects-final-r79-a.gif](concept/l41-objects-final-r79-a.gif) | At 1×: an upload (the hatch shot open, the ring filling while the ship hovers, paused as it drifts out, the file in) beside the beacon's drop (the retro burn, the landing, the strobe, the cap opening) | proposed (round 79) |
+
 The level needs besides (M10's Level 41 part; the units' proposals are in their pages' round-72 concept, the moods
 in [the world](../../../world/jovian/README.md)'s):
 
-- the archive core (hatch whole, broken; the core glowing, the upload ring filling), the lab vault; the CDF beacon;
-- the intel portraits of the pylon and the Halo;
 - the round's captures: the level at medium with the plan's fit and Rook: a gate halt with its domes (covered units'
   sheen), an upload, a gate opening, the Halo's halt and its barrier dropping, the Silence line on the HUD, the empty
   berth; 1:1 crops of a dome's rim over the ice and the livery split (elite pylon beside a regular Warden Tank).

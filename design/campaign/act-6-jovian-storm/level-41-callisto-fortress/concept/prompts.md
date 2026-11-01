@@ -57,3 +57,21 @@ drive glow's path), its reading of the ten sections, the **gate layouts** (each 
 facing and crown index, its dome's centre, what each dome covers, the archive core's well and the doors), the Halo's
 place, the other ground targets on the fortress's decks, roofs and walls, the lab vault and the beacon, and the roads'
 paths for the Wardens' walks: step G2's input, not data.
+
+## l41-objects-final-r79-a
+
+**Level 41's ground objects, production frames** (round 79, M10 part G, step ART-G1). Files:
+`l41-objects-final-r79-a.png` (sheet) and `.gif` (1×). Generator: `python3 tools/art/l41_props.py` (frames
+`archive-core_0..2`, `-break_0..7`, `-glow_0..7`, `-ring_0..31`, `-done_0..5`, `lab-vault_0..2`, `cdf-beacon`,
+`-lights_0..1`, `-open_0..3`, `-fall_0..3`, `-retro_0..3`, `-land_0..5`).
+
+- **Brief:** seen from above under Callisto's low top-left Sun, on the frozen render package. The **archive core**: a
+  Helix armoured hatch (Level 34's charcoal, gold edges, the gold Helix hex on its lid, two red lock lamps) in a
+  gold-edged collar; hit, it dents and blackens and a lamp goes out; broken, the plate is gone and the core's teal glass
+  stack glows in its well; the plate's shards fly out in a ring with a pale dust puff (vacuum); the uplink's ring a thin
+  cool teal circle at the 40 px zone's edge, filling clockwise from the top with a bright head, flaring and running out
+  when the file is in. The **lab vault**: a round steel Helix floor door with eight bolts and the gold hex; dented, then
+  blown aside over the dark vault with its crate's amber glint. The **CDF beacon**: a khaki pod with the white band and
+  the blue mark, three landing legs and a strobe mast; it comes down on a retro burn (no parachute in vacuum), kicks up a
+  ring of ice dust, blinks, and springs its cap to release the patch. Every glow, haze and dust smooth (≥ 32 steps, no
+  ordered dither, drawn once).
