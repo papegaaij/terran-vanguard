@@ -4,7 +4,7 @@ design: approved
 implementation: not-started
 art: chosen
 depends-on: [../../air/talon, ../../../world/jovian, ../../../campaign/act-6-jovian-storm, ../../../player/wingmen, ../../../ui/hud, ../../../story/characters, ../../../systems/economy]
-updated: 2026-10-31
+updated: 2026-11-01
 ---
 
 # Honour Guard
@@ -256,12 +256,20 @@ Concept round 72 (Act 6 design phase, step ART-R-B; **decided 2026-10-31 (round 
 elite livery of Q9 a, a and b, each a PNG sheet (the source renders, 8 of 16 headings at 1×, rest / tell / shield
 crops, the measured gold share, the three over Level 40 at 1× and over Jupiter's limb at 2×) and a storyboard of the
 joins (eight key frames and the conductor's 60 s timeline, measured: one line or dive at a time, two aces firing at
-most). Generator `tools/concept/act6_r72.py guard`; prompts: [concept/prompts.md](concept/prompts.md).
+most). Generator `tools/concept/act6_r72.py guard`; prompts: [concept/prompts.md](concept/prompts.md). Round 78's
+production frames (M10 part F, step ART-F1, pending the user's review): A.8 a's model unchanged at 64 headings, the tells
+as additive layers the game draws at the tell's strength, the wrecks, the entry chevrons and call signs; the shield is
+the enemy hex shield's `enemy-shield-medium` and the death's flash and debris the vacuum bursts as built. The crest on
+Harker's tail fins (the look brief's, not on round 72's model) is added for the pincer's "crest dims" tell.
 
 | File | What | Status |
 |---|---|---|
 | [concept/honour-guard-r72-a.png](concept/honour-guard-r72-a.png) | Honour Guard A, marks on one airframe: the Talon's airframe for all three, told apart by paint (Harker's barrel and red nose band, Vesper's white ribbons, Kestrel's chevrons, red tail band and twin fins); gold 38–42 % (sheet) | chosen (round 72 A.8 a) |
 | [concept/honour-guard-joins-r72-a.png](concept/honour-guard-joins-r72-a.png) | The joins in look A: the sting, Harker alone, Vesper's tell from the far side, two aces, Kestrel's tell from the rear, three under the conductor, the pincer, the first death; the conductor's timeline (storyboard) | chosen (round 72 A.9 ok, with the aces of A.8 a) |
+| [concept/honour-guard-final-r78-a.png](concept/honour-guard-final-r78-a.png) | Final frames (M10 part F, step ART-F1, `tools/art/honour_guard.py aces`; held in `build/art-held/sprites/` until the boss's data.yaml): the three aces at 64 headings (72 px cells, the 60×54 airframe at 1.5× the Talon, one 48-colour palette each, gold 34–46 % by heading); at 2× each at rest, its tell (Harker's barrel glint, Vesper's ribbons, Kestrel's tail band), under the enemy hex shield (`enemy-shield-medium`), its engines flaring, Harker's crest dimmed (the pincer); the read at 1× and 2× over round 72's Level 40 stand-in with the sniper line, the ship and Rook (sheet) | proposed (round 78) |
+| [concept/honour-guard-final-r78-a.gif](concept/honour-guard-final-r78-a.gif) | 4.8 s over the stand-in: Harker strafing the top third with the barrel glint and the sniper line, Vesper's figure-eight with her ribbons and wingtip trail, Kestrel's told dive pulled out 110 px short of the ship and the climb | proposed (round 78) |
+| [concept/honour-guard-fx-final-r78-a.png](concept/honour-guard-fx-final-r78-a.png) | The wrecks (16 frames of the tumble each, gold dulled, the cockpit fire at its pivot), the additive sets (cockpit fire, barrel glint, engine flare, wingtip puffs, edge glint), the entry tells (the four chevrons with their glows, the call signs in the HUD's label font) over the stand-in, and an ace's death and the last ace's 2 s chain in key frames (sheet) | proposed (round 78) |
+| [concept/honour-guard-fx-final-r78-a.gif](concept/honour-guard-fx-final-r78-a.gif) | The three entry tells (2.5 s, the game shows one at a time) and the aces flying in from their edges; then the last ace's death: the shield's break, the vacuum flash and debris ring, the hull tumbling down and out with its cockpit burning, the chain's bursts | proposed (round 78) |
 
 Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 

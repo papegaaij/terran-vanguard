@@ -164,6 +164,7 @@ speakers`, through `tools/art/portraits.py`'s pipeline). Prompts:
 |---|---|---|
 | [concept/act6-speakers-r72-a.png](concept/act6-speakers-r72-a.png) | A, the plain channel screens: Harker in the guard's black and gold suit (his final L29 face, the crest on the collar), Vesper (black helmet, white ribbon stripes, gold visor up), Kestrel (black and gold chevrons, a red band) on the amber enemy channel, Aurelia Traffic (white-and-gold civil uniform, headset) on the teal channel; 1×, 3× and beside the production speakers | chosen (round 72 A.15 a) |
 | [concept/portraits-final-r75-a.png](concept/portraits-final-r75-a.png) | Review sheet (`tools/art/portraits.py aurelia-traffic`, M10 part C, step ART-C1): `radio-aurelia-traffic-neutral`, Aurelia Traffic (teal; A.15 a's bust on the plain channel screen, as production art) at 1×, 2× and 4× and at 1× beside the other radio speakers | proposed (round 75) |
+| [concept/portraits-final-r78-a.png](concept/portraits-final-r78-a.png) | Review sheet (`tools/art/portraits.py harker-guard vesper kestrel`, M10 part F, step ART-F1): `radio-harker-guard-neutral` (Harker in the guard's gloss black and gold suit, the crest on the collar; Level 29's `radio-harker-neutral` stays), `radio-vesper-neutral`, `radio-kestrel-neutral` (amber; A.15 a's busts on the plain channel screen, as production art) at 1×, 2× and 4× and at 1× beside Level 29's Harker, Vorne and the other radio speakers | proposed (round 78) |
 
 Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 

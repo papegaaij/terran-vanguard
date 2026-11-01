@@ -4,7 +4,7 @@ design: approved
 implementation: not-started
 art: none
 depends-on: [../../../enemies/bosses/honour-guard, ../../../enemies/air/talon, ../../../enemies/air/chimera, ../../../enemies/air/mirror-interceptor, ../../../enemies/air/harrow, ../../../enemies/air/gilded-gunship, ../../../enemies/air/hornet, ../../../enemies/air/dart-drone, ../../../enemies/air/skitter, ../../../enemies/air/mote-swarm, ../../../world/jovian, ../../../player/wingmen, ../../../systems/economy]
-updated: 2026-10-31
+updated: 2026-11-01
 ---
 
 # Level 40 – Honour Guard
@@ -375,6 +375,10 @@ None yet. The level needs (M10's Level 40 part; the aces' proposals are in the
   three aces;
 - the round's captures: the level at medium with the plan's fit and Rook: the pickets, the Harrow cross, the duel's
   three joins and the three together, the last ace, the run-out; the aces' marks at 1:1.
+
+Made so far (M10 part F, step ART-F1, pending the user's review in round 78): the aces' intel silhouette
+`intel/boss-honour-guard` ([review](../../../ui/hangar/concept/intel-final-r78-a.png)); the aces themselves, their tells,
+wrecks and entry chevrons are the [Honour Guard](../../../enemies/bosses/honour-guard/README.md#concept-art)'s.
 
 ## Implementation
 

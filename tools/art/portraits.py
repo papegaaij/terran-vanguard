@@ -46,6 +46,14 @@ Outputs (assets/sprites/portraits/, packed onto the shared sprite pages as ``por
                                      ``aurelia_traffic``: dark hair pulled back, the white-and-gold civil uniform with a
                                      gold collar trim and an epaulette, a headset), review
                                      design/story/characters/concept/portraits-final-r75-a.png
+  radio-harker-guard-neutral.png, radio-vesper-neutral.png, radio-kestrel-neutral.png   72x72, the Honour Guard's
+                                     aces on the amber enemy channel (Level 40, the portraits `harker-guard`, `vesper`,
+                                     `kestrel`; M10 part F batch, step ART-F1: round 72 A.15 a "plain channel screens",
+                                     tools/concept/act6_r72.py ``harker_guard`` (his final L29 face in the guard's gloss
+                                     black and gold suit, the crest on the collar), ``vesper`` (a black helmet with
+                                     white ribbon stripes, the gold visor up), ``kestrel`` (black and gold chevrons, a
+                                     red band, the visor up)); Level 29's ``radio-harker-neutral`` stays as it is.
+                                     Review design/story/characters/concept/portraits-final-r78-a.png
   design/story/characters/concept/portraits-final-r13-a.png/.gif   review sheet and loop
   design/story/characters/rook/concept/rook-briefing-portrait-final-r30-a.png   Rook's briefing
                                      portraits (round 30), next to his radio portraits and the
@@ -774,17 +782,22 @@ def review_bellwether():
 ACT6 = ("aurelia-traffic",)
 ACT6_ROUND = "r75"
 ACT6_SOURCE = artkit.source_note(SCRIPT, "M10 part C batch")
+ACT6F = ("harker-guard", "vesper", "kestrel")      # the Honour Guard's aces (Level 40, M10 part F)
+ACT6F_ROUND = "r78"
+ACT6F_SOURCE = artkit.source_note(SCRIPT, "M10 part F batch")
 
 
-def build_act6(only=ACT6):
-    """Aurelia Traffic's radio portrait (Level 37): round 72's A.15 a, the plain teal channel screen
-    (tools/concept/act6_r72.py's speaker, which runs this module's pipeline), written as production art."""
+def build_act6(only=ACT6 + ACT6F):
+    """The Act 6 radio portraits: Aurelia Traffic (Level 37) and the three aces (Level 40), round 72's A.15 a, the
+    plain channel screens (tools/concept/act6_r72.py's speakers, which run this module's pipeline), written as
+    production art."""
     import act6_r72 as a6  # noqa: E402  (concept script, imported unchanged; imported late: it imports this module)
     OUT.mkdir(parents=True, exist_ok=True)
     for slug in only:
         r03.CAST[slug] = a6.SPEAKERS6[slug]
         fig = artkit.quantize_set([a6._speaker6_fig(slug)[1]], r04.COLORS)[0]
-        artkit.save_png(screen(slug, fig)[0], OUT / f"radio-{slug}-neutral.png", ACT6_SOURCE)
+        artkit.save_png(screen(slug, fig)[0], OUT / f"radio-{slug}-neutral.png",
+                        ACT6F_SOURCE if slug in ACT6F else ACT6_SOURCE)
     print(f"Act 6 portraits ({', '.join(only)}) in {OUT.relative_to(ROOT)}")
 
 
@@ -812,14 +825,44 @@ def review_act6():
     print(f"review: {png.relative_to(ROOT)}")
 
 
+def review_act6f():
+    """Round 78: the three aces at 1x, 2x and 4x, and at 1x beside Level 29's Harker, Vorne and the other radio
+    speakers."""
+    imgs = [load(f"radio-{slug}-neutral") for slug in ACT6F]
+    others = ("harker", "vorne", "aurelia-traffic", "ceres-control", "okafor", "varga", "rook")
+    width = max(16 + 3 * (288 + 8) + 16, 16 + 10 * 84 + 16)
+    sheet = raster.sheet(width, 56 + 160 + 288 + 16 + 110, f"THE HONOUR GUARD'S ACES (FINAL {ACT6F_ROUND.upper()})",
+                         f"PRODUCTION ART, M10 PART F BATCH - {ACT6F_ROUND.upper()}")
+    raster.draw_text(sheet, 16, 38, f"ROUND 72 A.15 A (CHOSEN), AMBER: HARKER IN THE GUARD'S SUIT, VESPER, KESTREL; 72X72 "
+                                    f"AT 1X AND 2X, AND 4X BELOW ({artkit.colour_count(imgs)} COLOURS)", raster.LABEL)
+    for i, img in enumerate(imgs):
+        x = 16 + i * (72 + 8 + 144 + 8)
+        sheet.alpha_composite(img, (x, 56))
+        sheet.alpha_composite(sprite.enlarge(img, 2), (x + 80, 56))
+        raster.draw_text(sheet, x, 56 + 148, ACT6F[i].upper(), raster.LABEL_DIM)
+    for i, img in enumerate(imgs):
+        sheet.alpha_composite(sprite.enlarge(img, 4), (16 + i * 296, 56 + 160))
+    y = 56 + 160 + 288 + 16
+    raster.draw_text(sheet, 16, y, "AT 1X BESIDE LEVEL 29'S HARKER, VORNE AND THE OTHER RADIO SPEAKERS", raster.LABEL)
+    for i, slug in enumerate(ACT6F + others):
+        sheet.alpha_composite(load(f"radio-{slug}-neutral"), (16 + i * 84, y + 16))
+        raster.draw_text(sheet, 16 + i * 84, y + 92, slug.replace("generic-", "").upper()[:10], raster.LABEL_DIM)
+    png = CONCEPT / f"portraits-final-{ACT6F_ROUND}-a.png"
+    sheet.convert("RGB").save(png, optimize=True)
+    print(f"review: {png.relative_to(ROOT)}")
+
+
 if __name__ == "__main__":
     only = tuple(a for a in sys.argv[1:] if not a.startswith("--"))
-    act6 = tuple(a for a in only if a in ACT6)
+    act6 = tuple(a for a in only if a in ACT6 + ACT6F)
     if act6:
         if "--review" not in sys.argv[1:]:
             build_act6(act6)
-        review_act6()
-        only = tuple(a for a in only if a not in ACT6)
+        if set(act6) & set(ACT6):
+            review_act6()
+        if set(act6) & set(ACT6F):
+            review_act6f()
+        only = tuple(a for a in only if a not in ACT6 + ACT6F)
         if not only:
             sys.exit(0)
     act5 = tuple(a for a in only if a in ACT5)
@@ -845,6 +888,7 @@ if __name__ == "__main__":
         review_act5()
         review_bellwether()
         review_act6()
+        review_act6f()
     if not only or set(only) - {"generic-colonial", "conamara", "thera-deep"}:
         review()
     if not only or "generic-colonial" in only:
