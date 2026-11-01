@@ -1,7 +1,7 @@
 ---
 title: Level 39 – Io Flyby
 design: approved
-implementation: in-progress
+implementation: done
 art: proposed
 depends-on: [../../../enemies/ground/cracking-tower, ../../../enemies/ground/pump-station, ../../../enemies/ground/strider, ../../../enemies/ground/sam-nest, ../../../enemies/ground/sentinel-tower, ../../../enemies/air/chimera, ../../../enemies/air/talon, ../../../enemies/air/gilded-gunship, ../../../enemies/air/harrow, ../../../world/jovian, ../../../world/belt, ../../../player/systems, ../../../player/generator, ../../../player/wingmen, ../../../systems/retry, ../../act-2-homefront/level-09-arcology-fall]
 updated: 2026-11-01
@@ -185,7 +185,9 @@ terms** with a `bounty_scale` (see *Credit budget*).
   `levelReport`.
 - **Tiny units** (J5): the Dart Drone streams and the Gunships' Darts, and the Mote Swarms (54 Darts, 72 motes).
 - **Quiet windows**: no wave enters from t=8 to t=14.5 (the first eruption at t≈12 plays alone, Level 27's teaching
-  rule), from t=28.5 to t=35.5 (the Strider pair, t=32) or from t=105.5 to t=113.5 (the Sentinel pair, t=110).
+  rule), from t=28.5 to t=35.5 (the Strider pair, t=32) or from t=104.5 to t=113.5 (the Sentinel pair, t=110; built:
+  the Skitter stream at t=104.5, the Dart stream at t=101.5 and the Skitter stream at t=141, each moved by at most 1 s from the draft's
+  105.5, 102.5 and 140.5 in step E3 for the pacing rule, pending the user's review in round 77).
 - **Limits**: at most 2 Striders walking and 2 Sentinels sweeping at once; at most 3 SAM Nests firing; at most 6
   Harrows (3–4 a stream here); no two `medium` hulls overlapping (the Gunship columns 2 s apart, the Hornet pair
   ≥ 80 px between hulls, a Hornet never with a Gunship).
@@ -426,9 +428,9 @@ level rewards does not fit it (see *Open questions*).
 
 ## Difficulty notes
 
-- **Easy**: the holds at 30 px/s (a 12.9 s window); the eruptions' easy values (the Jovian document's); the Sentinels'
+- **Easy**: the holds at 30 px/s (a 12.9 s window drafted; 10.9 s as built, see *Layout*); the eruptions' easy values (the Jovian document's); the Sentinels'
   easy arcs; the Striders' and SAM Nests' easy hooks; the formation lever thins the popcorn.
-- **Hard**: the holds at 50 px/s (a 7.8 s window); the eruptions' hard values; the Sentinels' hard arcs with full
+- **Hard**: the holds at 50 px/s (a 7.8 s window drafted; 6.7 s as built); the eruptions' hard values; the Sentinels' hard arcs with full
   turns; the Striders' fans of 5 and salvos of 3, the SAM Nests' salvos of 3; the towers' hard HP (338).
 
 ## Concept art
@@ -461,6 +463,24 @@ at medium, checked by the generator). Prompts and briefs: [concept/prompts.md](c
 | [concept/refinery-final-r77-a.png](concept/refinery-final-r77-a.png) | The cracking tower burning (body + flame), its fall in 12 frames, the tower and its wreck at 3×, the flame frames, the pump station and its wreck, the depot's latch (intact, open), the hut's lock (dark, blown) (sheet) | proposed (round 77) |
 | [concept/refinery-final-r77-a.gif](concept/refinery-final-r77-a.gif) | Two towers burning, one falling to its wreck, a pump station destroyed (2×) | proposed (round 77) |
 | [concept/backdrop-proposal.yaml](concept/backdrop-proposal.yaml) | The generator's `backdrop:` block (tile sets, pieces, placements with `dark_with`, the atmospheres), the sections, the holds, the ground placements, the ground objects and the 27 vents for step E2 (not data) | proposed (round 77; step E2's input) |
+| [concept/opening-capture-r77-a.png](concept/opening-capture-r77-a.png) | In the game (step E5, [recipe](concept/prompts.md#level-39-capture-r77-a)): the opening over Io's limb, Jupiter low and Tvashtar's umbrella, the limb coming down until the plains cover the screen | proposed (round 77) |
+| [concept/opening-capture-r77-a.gif](concept/opening-capture-r77-a.gif) | In the game: the opening's first 4 s | proposed (round 77) |
+| [concept/hold-capture-r77-a.png](concept/hold-capture-r77-a.png) | In the game: the Loki hold, both towers, both vents beside them throwing, the rocks and umbrellas, Loki A and B falling (the plan's fit, parked) | proposed (round 77) |
+| [concept/hold-capture-r77-a.gif](concept/hold-capture-r77-a.gif) | In the game: the Loki hold in motion | proposed (round 77) |
+| [concept/pipes-capture-r77-a.png](concept/pipes-capture-r77-a.png) | In the game, 1:1: Loki A's pipe run hot, the kill, the fall, the wreck with its pipe dark | proposed (round 77) |
+| [concept/pump-capture-r77-a.png](concept/pump-capture-r77-a.png) | In the game, 1:1: a pump station on the rack hot, hit, its burst, the wreck with the rack's pipe dark | proposed (round 77) |
+| [concept/gate-capture-r77-a.png](concept/gate-capture-r77-a.png) | In the game: the Pele gate with its walls and the two Sentinels sweeping | proposed (round 77) |
+| [concept/topple-capture-r77-a.png](concept/topple-capture-r77-a.png) | In the game: a Pele Strider's leg cut beside Pele B, the fall line, the fall crushing the tower (`TOWERS 3 / 6`, Okafor's line) | proposed (round 77) |
+| [concept/topple-capture-r77-a.gif](concept/topple-capture-r77-a.gif) | In the game: the topple in motion | proposed (round 77) |
+| [concept/plume-capture-r77-a.png](concept/plume-capture-r77-a.png) | In the game: the plume field's first row, its three tells 0.4 s apart, the rocks and umbrellas | proposed (round 77) |
+| [concept/plume-capture-r77-a.gif](concept/plume-capture-r77-a.gif) | In the game: the row's ripple in motion | proposed (round 77) |
+| [concept/failed-capture-r77-a.png](concept/failed-capture-r77-a.png) | In the game (not invulnerable): Loki A unshot, off the bottom edge with `TOWERS FAILED` at once, the failed screen with Okafor's line | proposed (round 77) |
+| [concept/failed-capture-r77-a.gif](concept/failed-capture-r77-a.gif) | In the game: the tower passing and the failed screen | proposed (round 77) |
+| [concept/hut-capture-r77-a.png](concept/hut-capture-r77-a.png) | In the game, 1:1: the survey hut on its lava island (its lock), the supply depot and its latch | proposed (round 77) |
+| [concept/readability-capture-r77-a.png](concept/readability-capture-r77-a.png) | In the game, 1:1 crops: gold Talons and their bullets, burning rocks, the Pele yard, Prometheus's frost and the lava channel | proposed (round 77) |
+| [concept/level-39-listen-r77-a.ogg](concept/level-39-listen-r77-a.ogg) | Listen-through: Level 39's two briefing pages and its radio as the game plays them (`assets/voice/` joined, 1.2 s apart; 3:03.5, −19 LUFS); `tools/concept/audio/voice_r77.py` ([brief](concept/prompts.md#level-39-listen-r77-a)) | proposed (round 77 V.1) |
+| [concept/level-39-listen-r77-a.txt](concept/level-39-listen-r77-a.txt) | The listen-through's cue list: each line's start, speaker, source, expression and text | proposed (round 77 V.1; a listening aid) |
+| [concept/vorne-t91-r77-a.ogg](concept/vorne-t91-r77-a.ogg) | Vorne's t=91 line as built (his neutral row, the enemy filter; 6.0 s): a copy of the production file | proposed (round 77 V.2) |
 
 ## Implementation
 
@@ -470,24 +490,28 @@ at medium, checked by the generator). Prompts and briefs: [concept/prompts.md](c
       briefing, backdrop, music
 - [x] The cracking tower and the pump station in the enemies' data (ground objects, no attack, not hardened): two
       minimal unit directories (step E2)
-- [ ] The failed primary: a tower leaving the screen alive fails at once (the built flow, Levels 05 and 09); a topple
-      onto a tower counts for the objective
-- [ ] Holds over the three works (Level 9's), validated against the eruptions on real time
-- [ ] Eruptions as the Jovian document's rule (the tell, the rocks as shootable debris, the haze), the first alone;
+- [x] The failed primary: a tower leaving the screen alive fails at once (the built flow, Levels 05 and 09); a topple
+      onto a tower counts for the objective (`Level39Test`; step E5's captures: `TOWERS FAILED` the step Loki A leaves,
+      the failed screen with its line; a Strider toppled onto Pele B)
+- [x] Holds over the three works (Level 9's), validated against the eruptions on real time (`Level39Test`: windows
+      10.9/8.3/6.7 s, two tells a vent per hold at medium; round 77 L.2)
+- [x] Eruptions as the Jovian document's rule (the tell, the rocks as shootable debris, the haze), the first alone;
       no vent within 100 px of a tower or a pump; Rook's eruption avoidance
-- [ ] Wave script to the Act 2+ rules (`ActFloorTest`, `PacingTest`), the act's 75 a minute (`DensityTest`), the
+- [x] Wave script to the Act 2+ rules (`ActFloorTest`, `PacingTest`), the act's 75 a minute (`DensityTest`), the
       quiet windows, ≥ 4 s of calm after the last enemy
-- [ ] The two hunts (Q3 a); prey killed by the Vrell unpaid
-- [ ] `TOWERS n / 6` and `PUMPS n / 6` on the two-line tracker
-- [ ] Radio voiced, every timed line at most 1 s late, with Rook and without (`requires: escort`); Vorne's line on
-      the enemy channel, not shouted
-- [ ] Threat profile, Varga's four intel lines and Rook's teaser fitting the intel panel
-- [ ] Briefing: both pages, each one screen, with their images
-- [ ] Typical haul within ±5 % of budget(39) = 9,155
-- [ ] Music ("Eye of the Storm" full length and stems by section) and the Io bed; the dry eruption sounds
-- [ ] Easy/hard variations; the autopilot flies it on every difficulty, with and without Rook, and wins it (all six
-      towers)
-- [ ] Production art and captures for the round
+- [x] The two hunts (Q3 a); prey killed by the Vrell unpaid
+- [x] `TOWERS n / 6` and `PUMPS n / 6` on the two-line tracker (`Level39LooksTest`)
+- [x] Radio voiced, every timed line at most 1 s late, with Rook and without (`requires: escort`); Vorne's line on
+      the enemy channel, not shouted (`RadioTimelineLevel39Test`, `VoiceFilesTest`; a run that meets `PUMPS` after
+      t≈158 holds Okafor's t=164.5 line more than 1 s: round 77 C.12)
+- [x] Threat profile, Varga's four intel lines and Rook's teaser fitting the intel panel
+- [x] Briefing: both pages, each one screen, with their images
+- [x] Typical haul within ±5 % of budget(39) = 9,155
+- [x] Music ("Eye of the Storm" full length and stems by section) and the Io bed; the dry eruption sounds
+- [x] Easy/hard variations; the autopilot flies it on every difficulty, with and without Rook, and wins it (all six
+      towers) (`Level39Test`, `RefineryPlay`: 18 of 18 flights)
+- [x] Production art and captures for the round (round 77: step ART-E's art in the game since E4, step E5's
+      captures)
 
 ## Open questions
 
@@ -538,3 +562,16 @@ Decided in round 72 (2026-10-31); left to the build:
   leader. `levelReport`: medium 99.5 enemies a minute, typical +0.3 % at 0.41, windows 8.3 s (easy 10.9, hard 6.7),
   two tells a vent per hold at medium, every cap held; the plain autopilot wins easy 3/3, medium 2/3, hard 0/3 (step
   E3's refinery autopilot next).
+- 2026-11-01 (step E3, the tests and the autopilot; pending the user's review in round 77): `Level39Test` and the
+  refinery autopilot (`RefineryPlay`: in a hold the lower tower first, from the side away from a telling vent, out of
+  the told fans and the Sentinels' arcs) win all six towers in 18 of 18 flights (3 per difficulty, with Rook and
+  without); three streams moved by at most 1 s for the pacing rule (the Dart stream 102.5 → 101.5, the Skitter streams
+  105.5 → 104.5 and 140.5 → 141); `BalanceTest`'s hold rule counts the forward DPS on unhardened towers.
+- 2026-11-01 (step E4, the game side; pending the user's review in round 77): the refinery looks (the flare, the fall,
+  the wrecks), the production vents, umbrellas and rocks, the pipes' glows going dark on their target's death (drawn
+  over the flyers: a faint orange stripe can cross a ship), the pump stations dying with the vacuum burst, the depot's
+  latch and the hut's lock with a third frame (the data's), the right Sentinel's blockhouse moved with its entry, the
+  tracker `TOWERS` over `PUMPS`, the `io-refinery` bed and round 77's a sounds; Level 39's atlas 5 of 6 pages.
+- 2026-11-01 (step E5): the full `check` on a snapshot of `8b3eefef` green but for Level 37's five in-flight reds
+  (its 13 shortened lines unvoiced and the radio test's old times, steps VOX-C2 and C6b); the captures from the game
+  ([recipe](concept/prompts.md#level-39-capture-r77-a)); [round 77](../../../concept-rounds/round-77/README.md) opened.

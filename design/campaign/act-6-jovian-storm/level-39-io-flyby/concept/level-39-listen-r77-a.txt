@@ -1,0 +1,25 @@
+Level 39 listen-through (round 77): each line's start in level-39-listen-r77-a.ogg
+0:00.0  Level 39 briefing: okafor (act-6-jovian-storm/level-39-io-flyby briefing page 1, neutral): Io's refineries fuel every ship Vorne has left. Three works on the plains, Loki, Pele and Prometheus, two cracking towers each. All six burn. One left standing and his fleet flies on, and we have failed.
+0:20.9  Level 39 briefing: varga (act-6-jovian-storm/level-39-io-flyby briefing page 2, neutral): Io is all volcano. A vent glows, then throws burning rocks up at you: shoot them or move. Striders guard the yards; drop one on a tower and the tower counts. And cut the pump stations on the racks. Six, and the pipelines run dry.
+0:38.1  Level 39 radio: okafor (act-6-jovian-storm/level-39-io-flyby radio t=1.0, neutral): Io. Three works on the plains, two towers each. Every one burns.
+0:45.8  Level 39 radio: varga (act-6-jovian-storm/level-39-io-flyby radio t=8.5, neutral): Vents. They glow, then throw burning rocks up. Shoot them or move.
+0:51.5  Level 39 radio: varga (act-6-jovian-storm/level-39-io-flyby radio t=32.5, neutral): Striders on the yard. Drop one on a tower and the tower counts.
+0:57.3  Level 39 radio: okafor (act-6-jovian-storm/level-39-io-flyby radio t=41.0, neutral): Loki works. We hold over the towers until both burn.
+1:04.3  Level 39 radio: rook (act-6-jovian-storm/level-39-io-flyby radio FIRST_TARGET, neutral): Tower's down. Sorry about the fuel bill, Vorne.
+1:09.6  Level 39 radio: varga (act-6-jovian-storm/level-39-io-flyby radio t=63.0, neutral): Pump stations on the racks. Cut six and the lines run dry.
+1:14.8  Level 39 radio: varga (act-6-jovian-storm/level-39-io-flyby radio t=76.5, neutral): Skitters on their Talons. The Vrell aren't picking sides.
+1:20.0  Level 39 radio: vorne (act-6-jovian-storm/level-39-io-flyby radio t=91.0, neutral): Lancer. Burn Io if you like. Callisto holds fuel enough for what I still have to do.
+1:27.2  Level 39 radio: varga (act-6-jovian-storm/level-39-io-flyby secret survey hut, neutral): A Coalition survey hut. Pre-war. Somebody left in a hurry.
+1:32.7  Level 39 radio: okafor (act-6-jovian-storm/level-39-io-flyby radio t=104.5, neutral): Pele works. Towers behind the gate. Same drill.
+1:38.4  Level 39 radio: varga (act-6-jovian-storm/level-39-io-flyby radio t=110.5, neutral): Sentinels on the gate. They sweep all the way round.
+1:43.1  Level 39 radio: okafor (act-6-jovian-storm/level-39-io-flyby radio TOPPLE_TARGET, neutral): Dropped it on the tower. That'll do.
+1:47.6  Level 39 radio: okafor (act-6-jovian-storm/level-39-io-flyby radio t=142.5, neutral): The plume field. Pele has erupted for a thousand years. It won't stop for us.
+1:56.1  Level 39 radio: varga (act-6-jovian-storm/level-39-io-flyby radio SECONDARY_OBJECTIVE, neutral): Six pumps cut. The racks are running dry.
+2:00.8  Level 39 radio: okafor (act-6-jovian-storm/level-39-io-flyby radio t=164.5, neutral): Prometheus. The last two towers. Burn them and his fleet runs dry.
+2:08.6  Level 39 radio: okafor (act-6-jovian-storm/level-39-io-flyby radio LEVEL_END, neutral): Io's lines are dark. Callisto next, Lancer.
+2:14.9  Level 39 radio: okafor (act-6-jovian-storm/level-39-io-flyby radio MISSION_FAILED, grim): Loki A is still burning. That fuel flies against us. Pull back, Lancer.
+2:23.4  Level 39 radio: okafor (act-6-jovian-storm/level-39-io-flyby radio MISSION_FAILED, grim): Loki B is still burning. That fuel flies against us. Pull back, Lancer.
+2:31.7  Level 39 radio: okafor (act-6-jovian-storm/level-39-io-flyby radio MISSION_FAILED, grim): Pele A is still burning. That fuel flies against us. Pull back, Lancer.
+2:40.1  Level 39 radio: okafor (act-6-jovian-storm/level-39-io-flyby radio MISSION_FAILED, grim): Pele B is still burning. That fuel flies against us. Pull back, Lancer.
+2:48.4  Level 39 radio: okafor (act-6-jovian-storm/level-39-io-flyby radio MISSION_FAILED, grim): Prometheus A is still burning. That fuel flies against us. Pull back, Lancer.
+2:56.9  Level 39 radio: okafor (act-6-jovian-storm/level-39-io-flyby radio MISSION_FAILED, grim): Prometheus B is still burning. That fuel flies against us. Pull back, Lancer.

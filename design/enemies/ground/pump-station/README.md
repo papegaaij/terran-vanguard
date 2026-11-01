@@ -1,7 +1,7 @@
 ---
 title: Pump Station
 design: review
-implementation: in-progress
+implementation: done
 art: proposed
 depends-on: [../../../campaign/act-6-jovian-storm/level-39-io-flyby]
 updated: 2026-11-01
@@ -63,7 +63,7 @@ Production art in Level 39's batch (step ART-E, round 77, QE-3):
 
 - [x] Stat block in a `data.yaml`, loaded and checked (M10 part E, step E2)
 - [x] The eight pumps on Level 39's racks counted by the secondary (`escapes: pump-station`, step E2)
-- [ ] Production sprite in the game, its wreck and the rack's pipe going dark (step E4)
+- [x] Production sprite in the game, its wreck and the rack's pipe going dark (step E4; `Level39LooksTest`)
 
 ## Decisions
 

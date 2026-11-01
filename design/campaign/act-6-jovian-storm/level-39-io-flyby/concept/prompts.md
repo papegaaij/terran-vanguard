@@ -50,3 +50,64 @@ haze, plume, shadow and glow is a smooth gradient (far more than 32 steps), no o
   bent outward, the lamp dead.
 - **survey hut lock** (24×24, 2 frames) — a dark, unlit lock box on a plate (the hut has no lights); then blown out, a
   ragged hole.
+
+## level-39-capture-r77-a
+
+Concept round 77, captures of the game, not generated art (M10 part E, step E5, 2026-11-01): the game built by
+`./gradlew check :desktop:installDist` on a snapshot of `8b3eefef` (the branch `m10-act-6`; the worktree's files with
+`game/`, `pipeline/`, `content/` and `assets/voice/` as committed), on a private 960×540 Xvfb display, `--bench 1400
+--settings <scratch>/settings.properties` (a window of 960×540, auto-fire on) `--level 39 --invulnerable --loadout
+front=ion-beam:5,left=tesla-coil-pod:2,right=micro-missile-pod:4,rear=swarm-tail:3,utility=pickup-magnet,generator=4,shield=2,armor=4
+--special airstrike:4 --escort rook:mortar:1` (the balance plan's Level 39 fit: Level 38's with Rook's Mortar; medium),
+`--shots <tick>,…` (one simulation step a frame, deterministic; 60 ticks a second of real time, the holds included),
+the play field cropped (480×540) or with the left panel (720×540). The parked run leaves the ship where it launches.
+Two steered runs press XTest arrow keys when the log names a shot's tick (not bit-exact, so each still and its GIF come
+from one run): the **topple run** flies the beam alone (`--loadout front=ion-beam:5,generator=4,shield=2,armor=4
+--escort none`): Left at tick 2560 for 27 ticks and Right at 2900 for 54 (under Loki A, then Loki B), Right at 3200 for
+27 (to the right edge), then Up at 8080 for 16 and Left at 8104 for 56 ticks (between the Pele Striders, under the upper
+one's leg nearer Pele B); it lets the pumps and Pele A pass (the tracker's `FAILED`s; the level goes on only because the
+ship is invulnerable). The **failed run** is not invulnerable: the beam alone, no Rook, Left held from tick 20 (the
+ship on the left edge, its beam clear of Loki A); after the last shot the display is grabbed by ffmpeg's `x11grab`
+(the failed screen is not a level tick). GIFs: ffmpeg palette, no dither, 12–15 frames a second, scaled 0.6–0.75. The
+scripts lived in the step's scratch (`make.py`, `steer2.py`, Pillow + ffmpeg).
+
+- **opening-capture-r77-a**: the parked run, ticks 6–240: Jupiter low under Io's limb, Tvashtar's umbrella on the limb,
+  the limb coming down until the plains cover the screen (≈ 3.7 s); GIF 6–240 every 6 at 0.75.
+- **hold-capture-r77-a**: the parked run, the Loki hold: ticks 2656 (the scroll eased), 2752 (both towers), 2800 (both
+  vents beside them throw), 2824 (rocks and umbrellas), 2872 (Loki A falls), 3160 (Loki B falls); GIF 2704–3214 every 6
+  at 0.6.
+- **pipes-capture-r77-a**: 1:1 crops (260×220) of the parked run: Loki A with its pipe run to the rack hot, the kill,
+  the fall, the wreck with its pipe dark (ticks 2848, 2872, 2896, 2944).
+- **pump-capture-r77-a**: 1:1 crops (120×440) of the parked run: a pump station on the section 3 rack with the rack's
+  hot line, hit, its burst, the wreck and the rack dark (ticks 4428, 4452, 4476, 4500, 4548).
+- **gate-capture-r77-a**: the parked run, the Pele gate: the left Sentinel's sweep (7020), the right one's told arc (7090;
+  the white octagon a frame earlier is its hit flash), both sweeping (7200).
+- **topple-capture-r77-a**: the topple run with the left panel: the upper Pele Strider level with Pele B (8144), its
+  leg nearer the tower cut and the fall line marked (8216), the fall (8264), Pele B crushed (8312), `TOWERS 3 / 6` and
+  Okafor's "Dropped it on the tower" (8340); GIF 8120–8360 every 4 at 0.6.
+- **plume-capture-r77-a**: the parked run, the plume field's first row: it enters (9300), the three tells 0.4 s apart
+  (9330, 9360, 9390), the rocks and umbrellas (9420, 9450); GIF 9300–9480 every 6 at 0.75.
+- **failed-capture-r77-a**: the failed run with the left panel: Loki A unshot in the hold (3120), off the bottom edge
+  and `TOWERS FAILED` at once (3192), the failed screen with Okafor's "Loki A is still burning" line (the grab, ≈ 2.9 s
+  later); GIF 3096–3366 every 6 at 0.6, the failed screen held 2 s.
+- **hut-capture-r77-a**: 1:1 crops of the parked run: the survey hut on its lava island (6156, its lock glinting), passing
+  unopened (6228), the supply depot and its latch (6600, 6680).
+- **readability-capture-r77-a**: 1:1 crops (240×240) of the parked run: gold Talons and their bullets over the plume
+  field's sulphur (9624), burning rocks over it (9468), Talons and rocks (10110), the Pele yard (7918), Prometheus's
+  frost (11424), Talons over the lava channel (4500).
+
+## level-39-listen-r77-a
+
+Concept round 77, M10 part E, step E5 (2026-11-01), `tools/concept/audio/voice_r77.py` (joins the production files only;
+the line list from `:pipeline:voiceLines` of the snapshot); measured and read back by Whisper in step VOX-E, not listened
+to. Kept beside the level, not in the voice docs (a VOX step edits those beside this step).
+
+- **level-39-listen-r77-a**: every Level 39 line step VOX-E voiced, joined from the production files in `assets/voice/`
+  in playing order (the two briefing pages, then the radio by time, the event lines at their likeliest moment: Rook's
+  first tower down in the Loki hold, the survey hut's line, Okafor's topple line in the Pele hold, the secondary met after
+  P6, the level's end, then the six failed-primary lines), 1.2 s apart and 2 s after the briefing (3:03.5, −19 LUFS); the
+  cue list in `level-39-listen-r77-a.txt`. Listen for VOX-E's weak spots: Varga's page 2 "A vent glows" (Whisper heard
+  "event glows"), "Pele, A" respelt for the name.
+- **vorne-t91-r77-a**: Vorne's t=91 line alone as the game plays it (the data gives no expression: his neutral row, the
+  enemy filter; 6.0 s, −18.7 LUFS): a copy of the production file, for the pick against his grim row (the `rage`
+  expression, heard in Level 37's [level-37-vorne-r75-a](../../../../audio/voice/concept/level-37-vorne-r75-a.ogg)).
