@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../generator, ../../ui/hangar]
-updated: 2026-10-31
+updated: 2026-11-01
 ---
 
 # Ship systems
@@ -33,7 +33,7 @@ are the "nice extra options": they make the ship better at a job without adding 
 <!-- data: utility -->
 | Module | Effect | Levels | Draw | Price | Unlock | Design |
 |---|---|---|---|---|---|---|
-| Sensor suite | Improves hangar intel detail (see below) and shows off-screen threat arrows at L2+ | L1–L3 | 1 | 800 / 2 000 / 4 500 | start | idea |
+| Sensor suite | Improves hangar intel detail (see below) and shows off-screen threat arrows at L2+ | L1–L3 | 0.5 | 800 / 2 000 / 4 500 | start | idea |
 | Pickup magnet | Pickups within 72 / 108 / 144 px of the ship fly to it at 240 / 300 / 360 px/s (see below) | L1–L3 | 1 | 600 / 1 500 / 3 000 | act 1 | approved |
 | Salvage scanner | +10 / +20 % credits from salvage pickups and hidden crates; a glint marks the objects that hide a secret (see below) | L1–L2 | 1 | 2 500 / 6 000 | act 2 | approved |
 | Targeting computer | Homing turn rate +20 % (Stormhawk weapons), fading HP bars under damaged enemies, brackets on open weak points (see below) | L1 | 1 | 3 000 | act 2 (from L07 with the L06 [data core](../../systems/economy/README.md#data-cores), otherwise L08) | approved |
@@ -467,3 +467,6 @@ Prompts and capture notes: [concept/prompts.md](concept/prompts.md).
 - 2026-10-31 (user, [round 72](../../concept-rounds/round-72/README.md) closed): Q7 b: the IFF spoofer from the
   Level 39 visit as the story item (bought at the Level 40 visit on the plan, J11); under c it would not be in Act 6.
   Which units count as turrets stays with the ground units' documents.
+- 2026-11-01 (user): the sensor suite draws **0.5 MW** instead of 1 MW at every level: at 1 MW it competed too much with
+  weapons and shields ("I'd rather have a ship that has effective weapons than a sensor suite"). The balance plan fits no
+  sensor suite, so its numbers are unchanged.

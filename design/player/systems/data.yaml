@@ -12,7 +12,7 @@ bays:  # utility bays: `start` are fitted from the start; each `extra` bay is bo
 utility:
   # draw MW, one price per level (cr), available; notes.effect is the README's Effect cell
   - name: Sensor suite
-    draw: 1
+    draw: 0.5  # 2026-11-01, the user: 1 MW competed too much with weapons and shields
     prices: [800, 2000, 4500]
     available: start
     design: idea
