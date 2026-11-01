@@ -79,6 +79,12 @@ final class EventEffects {
     /** M5 part G: only a burst on a naval unit plays the water splash (Level 13's ice, {@code water_splash}). */
     private final boolean navalSplashOnly;
 
+    /**
+     * M10 part C, step C6b (round 75 F.3): the air allies take the player's fire (Level 37's shuttles, {@code
+     * player_hits}), so a hit on one sparks as on a unit ({@code ALLY_HIT}: no {@code ENEMY_HIT} is raised for it).
+     */
+    private final boolean allySparks;
+
     /** M5 part F: a weather sonde's collect pop (tools/art/l12_props.py); empty without it. */
     private final Array<AtlasRegion> sondeCollect;
 
@@ -150,6 +156,11 @@ final class EventEffects {
                 .map(look -> EnemyLooks.wither(look.creep(), REMAINS_TICKS))
                 .toList();
         glance = services.sprites.frames("ballistic-impact");
+        var objectives = sortie.script().objectives();
+        allySparks = java.util.stream.Stream.of(objectives.escort(), objectives.airAllies())
+                .flatMap(java.util.Optional::stream)
+                .flatMap(escort -> escort.air().stream())
+                .anyMatch(air -> air.playerHits());
         explosionMedium = services.sprites.frames("explosion-medium");
         explosionTiny = optionalFrames(services, "explosion-tiny");
         // A trigger is never destroyed (it is spent and stays, a billboard's toppled frame its own
@@ -390,6 +401,9 @@ final class EventEffects {
                 if (sortie.navalConvoy()) {
                     // M5 part E: a slam's blast on the hull.
                     water.waterBurst("medium", x, y, false);
+                } else if (allySparks) {
+                    // M10 part C, step C6b: a shuttle hit (by the player's fire or an enemy's) sparks on its hull.
+                    effects.start(glance, IMPACT_FRAME_TICKS, x, y);
                 }
             }
             case ALLY_FLAK -> {

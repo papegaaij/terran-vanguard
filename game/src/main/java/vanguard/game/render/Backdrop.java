@@ -48,7 +48,7 @@ public final class Backdrop {
     private final TrenchWalls trench;
     /** M10 part C: the turn's growth burst over the ground (Level 37); null without one. */
     private final GrowthOverlay growth;
-    /** M10 part C: the falling city's halves, balloons, spires and sinking city (Level 37); null without a fall. */
+    /** M10 part C: the falling city's halves, veils, balloons and spires (Level 37); null without a fall. */
     private final FallingCity fall;
     /** M5 part C: drawn between the ground pieces and the towers; null for nothing ({@link #underTowers}). */
     private UnderTowers underTowers;
@@ -347,10 +347,6 @@ public final class Backdrop {
         if (layer == BackdropLayer.DEEP) {
             // M10 part B: the deep pieces' lights over them (Level 36's carrier group, the storm wall's lightning).
             pieces.drawDeepGlows(batch, scroll, clock, tiles);
-            if (fall != null) {
-                // M10 part C: Level 37's city sinking into the bands.
-                fall.drawDeep(batch, groundScroll, clock);
-            }
         }
     }
 

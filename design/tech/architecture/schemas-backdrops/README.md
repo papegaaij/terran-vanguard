@@ -106,7 +106,10 @@ M10 part C (step C2, Level 37; content's `FallingCityData`, checked by `AureliaC
 backdrop's optional **`growth`** (`t`, `seconds`, `piece`, `reveal`, `glow` and the ground row `bottom` it lies on: the
 turn's burst over the ground on the screen, revealed by the reveal map's threshold over the seconds) and **`fall`**
 (`t`, `seconds`, `halves` each a `piece` with its left column `x0`, its bottom ground row `bottom`, optional `char`
-and `glow` pieces and its `keys` `[u, x, y, scale, turn, shade]` from u = 0; optional `shards` `{piece, from, to}`,
-`balloons` `{piece, t, x}`, `spires` `{piece, t, x, topple_at}` and `sinking` `{piece, glow, t, x, from, fade}`): from
-`t` the city's ground pieces give way to the halves on their curves ([Level 37](../../../campaign/act-6-jovian-storm/level-37-fall-of-aurelia/README.md#the-falling-city-t160200)).
+and `glow` pieces and its `keys` `[u, x, y, scale, turn, shade]` or `[u, x, y, scale, turn, shade, alpha]` from u = 0
+(step C6b, round 75 F.6 redo: `alpha` 0–1 fades the half with its rim, glow and the shards; below 0.5 it no longer marks
+the shadow stencil); optional `shards` `{piece, from, to}`, `balloons` `{piece, t, x}`, `spires` `{piece, t, x,
+topple_at}` and `veils` `{piece, keys: [[u, x, y, alpha], …]}`, cloud-top patches drawn after the halves, unshaded and
+unscaled, centred on their keys' screen place, nothing outside their keys' span; the earlier `sinking` crossfade is
+gone): from `t` the city's ground pieces give way to the halves on their curves ([Level 37](../../../campaign/act-6-jovian-storm/level-37-fall-of-aurelia/README.md#the-falling-city-t160200)).
 Every piece they name is the backdrop's; both lie inside the level.

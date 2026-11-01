@@ -17,8 +17,9 @@ import vanguard.sim.LevelScript;
 /**
  * {@link RadioTimeline}'s checks for Level 37 (M10 part C, step C4b), with and without the escort (every run is played
  * with each fit: Rook flies in the escort slot, {@code --escort none} without him; RadioRuns#level37Runs): the timed
- * lines (step C4b retimed them to the game's typed pages, pending round 75), the shuttles' secondary met or failed
- * (Aurelia Traffic's thanks or Okafor's line, both closing lines: they wait for the gap after Varga's t=129.5 line),
+ * lines (step C4b retimed them to the game's typed pages; step C6a, round 75 L.3 a and L.4 a, cut them to one page
+ * each), the shuttles' secondary met or failed (Aurelia Traffic's thanks or Okafor's line, both closing lines: they wait
+ * for a gap, after Varga's t=131 line for the third pair),
  * the first bounce's and the first prey kill's barks (Rook's), the CDF locker's line (Okafor's); the Choir's line
  * distorted with its 2 s static lead and the music's 6 dB duck, Vorne's on the enemy channel. Its lines are voiced
  * (step VOX-C).
@@ -62,7 +63,7 @@ class RadioTimelineLevel37Test extends RadioTimeline {
 
     /**
      * The first bounce's and the first prey kill's barks are Rook's: they play only while he flies (or wait and go
-     * stale); his t=56 line is scripted and plays with every fit (the data's: no {@code requires}).
+     * stale); his t=52.5 line is scripted and plays with every fit (the data's: no {@code requires}).
      */
     @Test
     void rooksBarksNeedRook() {
@@ -81,9 +82,9 @@ class RadioTimelineLevel37Test extends RadioTimeline {
                         }
                         boolean scripted = played.stream()
                                 .anyMatch(p -> p.cue().trigger() == CueTrigger.TIME
-                                        && p.cue().t() == 56
+                                        && p.cue().t() == 52.5
                                         && p.opened().isPresent());
-                        assertTrue(scripted, run + ": Rook's t=56 line");
+                        assertTrue(scripted, run + ": Rook's t=52.5 line");
                     }
                 }
             }
@@ -91,9 +92,10 @@ class RadioTimelineLevel37Test extends RadioTimeline {
     }
 
     /**
-     * The CDF locker's line is Okafor's (the secret's {@code radio}). Step C4b: in the runs it never finds a gap (the
-     * timed lines fill t=1-100 on the typed pages and its line goes stale after 6 s), as the first bounce's, the first
-     * ally lost's and the first prey kill's do before t≈140: pending the user's review in round 75 (shorter lines).
+     * The CDF locker's line is Okafor's (the secret's {@code radio}). Step C6a's one-page lines leave it the gap after
+     * Rook's t=52.5 line (t≈59.5-70.5), as the first bounce's (t≈39-52.5) and most prey kills' (after the Choir, after
+     * Varga's t=131 line); a shuttle lost while pair 1 or 2 is up and the prey kill on the Gunship (t≈118.5-119) still
+     * go stale (pending the user's review).
      */
     @Test
     void theLockersLineIsOkafors() {

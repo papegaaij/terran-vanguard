@@ -3,7 +3,7 @@ title: Data file schemas — voice
 design: approved
 implementation: in-progress
 art: n/a
-updated: 2026-10-29
+updated: 2026-11-01
 ---
 
 # Data file schemas — voice
@@ -19,7 +19,9 @@ The schema of the voice file: Chatterbox's expression settings and the speakers'
   each `exaggeration`, `cfg_weight`, `temperature`: Chatterbox's settings) and `speakers` by voice
   slug: `names` (the speakers as the level data writes them), `ref` (the clip in
   `design/audio/voice/refs/`), optional `shift` (added to the expression's row), `fixed` (settings
-  for every line instead), `layering` (`choir`), `pins` (a line's seed by its key) and `filter`
+  for every line instead), `layering` (`choir`), `pins` (a line's seed by its key), round 75 V.4 b's `line_shifts` (one
+  line's own shift added to its row, by the line's key at that row; the line is keyed again with it, so its file and
+  its pin go by the new key: the Act 6 intro's page 4 at round 74's slower grim take) and `filter`
   (`pa`: the public-address filter instead of the radio filter, part of the key; M9 part A `enemy`: the enemy
   channel's filter, the speaker's lines and pages on the enemy channel, `VoiceData.channelOf`) and `stage` (the
   sound file in `assets/voice/<voice>/` a radio line plays when it is only a stage direction,

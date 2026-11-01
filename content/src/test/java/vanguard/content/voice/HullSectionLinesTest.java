@@ -76,7 +76,8 @@ class HullSectionLinesTest {
                         speaker.pins(),
                         Optional.empty(),
                         speaker.filter(),
-                        speaker.stage())
+                        speaker.stage(),
+                        speaker.lineShifts())
                 : speaker);
         return new VoiceData(voices.expressions(), speakers, voices.respell());
     }

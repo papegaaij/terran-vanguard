@@ -30,11 +30,11 @@ import vanguard.sim.Sortie;
 
 /**
  * M10 part C (step C4b), Level 37's sounds (design/campaign Level 37, Music &amp; ambience; design/audio/sfx, Act 6
- * sounds; step AUD-C's round 75 proposals, their a variants until the picks): track 14 with Vorne's motif to the turn,
+ * sounds; step AUD-C's round 75 proposals, the user's picks since step C6b: S.1 b, S.5 b, S.8 b, the rest a): track 14 with Vorne's motif to the turn,
  * the theme out over 1 s at t=100, track 15 "Storm Wall" from t=103 without its motif, its {@code fall} stem from t=160;
  * the {@code aurelia} bed with the burning layer from the turn; flown, the PA chime as each shuttle pair is called, the
  * growth's burst at the turn, the deck's groan and the balloons tearing as the city falls, the Mirror Interceptor's hum
- * (the nearest) and pod bursts, the Graft Turret's twin crack (the Talon's), its shell's crack, its root's heartbeat and
+ * (the nearest) and pod bursts, the Graft Turret's own shot pair, its shell's crack, its root's heartbeat and
  * crumble.
  */
 class Level37SoundsTest {
@@ -77,8 +77,9 @@ class Level37SoundsTest {
         assertEquals(1, themes.getFirst().fade(), 1e-9);
         Map<Sfx, String> files = Map.ofEntries(
                 Map.entry(Sfx.AMBIENCE_AURELIA, "aurelia-r72-a.ogg"),
-                Map.entry(Sfx.AURELIA_BURNING, "aurelia-burning-r75-a.ogg"),
-                Map.entry(Sfx.PA_CHIME, "pa-chime-r75-a.ogg"),
+                Map.entry(Sfx.AURELIA_BURNING, "aurelia-burning-r75-b.ogg"),
+                Map.entry(Sfx.PA_CHIME, "pa-chime-r75-b.ogg"),
+                Map.entry(Sfx.GRAFT_SHOT, "graft-shot-r75-b.ogg"),
                 Map.entry(Sfx.GROWTH_BURST, "growth-burst-r75-a.ogg"),
                 Map.entry(Sfx.BALLOON_TEAR, "balloon-tear-r75-a.ogg"),
                 Map.entry(Sfx.DECK_GROAN, "deck-groan-r75-a.ogg"),
@@ -166,8 +167,8 @@ class Level37SoundsTest {
     /**
      * Flown on medium with the ship invulnerable low on the field, the Ion Beam firing at the nearest Graft Turret or
      * root on the screen: the PA chime for each shuttle pair (three), the growth's burst once, the deck's groan once and
-     * the balloons tearing as the city falls, the mirrors' hum and pod bursts, the Graft Turrets' twin crack, their shells'
-     * crack, a root's heartbeat and crumble; the hum stopped with the flight.
+     * the balloons tearing as the city falls, the mirrors' hum and pod bursts, the Graft Turrets' own shot pair (not the
+     * Talon's crack), their shells' crack, a root's heartbeat and crumble; the hum stopped with the flight.
      */
     @Test
     void aureliaSoundsItsOwn() {
@@ -200,7 +201,7 @@ class Level37SoundsTest {
         int tears = 0;
         boolean hum = false;
         boolean pods = false;
-        boolean crack = false;
+        boolean graftShot = false;
         boolean shell = false;
         boolean beat = false;
         boolean crumble = false;
@@ -221,7 +222,7 @@ class Level37SoundsTest {
             tears += Math.max(0, bank.playing(Sfx.BALLOON_TEAR) - tearsBefore);
             hum |= bank.looping(Sfx.MIRROR_HUM);
             pods |= bank.playing(Sfx.MIRROR_PODS) > 0;
-            crack |= bank.playing(Sfx.TALON_SHOT) > 0;
+            graftShot |= bank.playing(Sfx.GRAFT_SHOT) > 0;
             shell |= bank.playing(Sfx.GRAFT_SHELL_CRACK) > 0;
             beat |= bank.playing(Sfx.GRAFT_HEARTBEAT) > 0;
             crumble |= bank.playing(Sfx.GRAFT_ROOT_CRUMBLE) > 0;
@@ -240,7 +241,7 @@ class Level37SoundsTest {
         assertEquals(2, tears, "each balloon tears");
         assertTrue(hum, "the nearest mirror's hum");
         assertTrue(pods, "a mirror's pod burst");
-        assertTrue(crack, "the Talon's twin crack (the Talons, the Graft Turrets)");
+        assertTrue(graftShot, "the Graft Turrets' own shot pair");
         assertTrue(shell, "a Graft Turret's shell cracking");
         assertTrue(beat, "an exposed root's heartbeat");
         assertTrue(crumble, "a root's crumble");

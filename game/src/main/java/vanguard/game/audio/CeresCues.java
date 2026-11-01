@@ -42,12 +42,14 @@ final class CeresCues extends SoundFamily {
 
     private static final int SLOTS = 16;
 
-    /** M10 part C, step C4b: the Graft Turret's shot pair is the Talon's twin crack (round 75 S.8 a). */
+    /** M10 part C: the Graft Turret's shot pair, its own file (round 75 S.8 b, step C6b; no longer the Talon's crack). */
     static final String GRAFT = "graft-turret";
 
     private boolean[] talons;
     /** The Talon and the Chimera (the Talon's airframe): their twin crack (round 74 S.6 a, the Talon's sound). */
     private boolean[] cracks;
+    /** The Graft Turret: its own shot pair ({@link Sfx#GRAFT_SHOT}). */
+    private boolean[] grafts;
 
     private boolean[] nests;
     private boolean[] clamps;
@@ -90,15 +92,16 @@ final class CeresCues extends SoundFamily {
     void noteKinds(List<EnemySpec> kinds) {
         talons = new boolean[kinds.size()];
         cracks = new boolean[kinds.size()];
+        grafts = new boolean[kinds.size()];
         nests = new boolean[kinds.size()];
         clamps = new boolean[kinds.size()];
         for (int k = 0; k < kinds.size(); k++) {
             String slug = kinds.get(k).slug();
             talons[k] = slug.equals(TALON);
             // M10 part B, step B4: the Chimera (the Talon's airframe) cracks as the Talon (round 74 S.6 a); its whine
-            // is
-            // its own (S.5 b, CloudDiverCues).
-            cracks[k] = talons[k] || slug.equals(CloudDiverCues.CHIMERA) || slug.equals(GRAFT);
+            // is its own (S.5 b, CloudDiverCues).
+            cracks[k] = talons[k] || slug.equals(CloudDiverCues.CHIMERA);
+            grafts[k] = slug.equals(GRAFT);
             nests[k] = slug.equals(NEST);
             clamps[k] = slug.equals(CLAMP);
         }
@@ -157,13 +160,20 @@ final class CeresCues extends SoundFamily {
         }
     }
 
-    /** An enemy of ours fired: a Talon's twin crack, a clamp gun's shot; false for another unit (its usual shot). */
+    /**
+     * An enemy of ours fired: a Talon's twin crack, a Graft Turret's shot pair, a clamp gun's shot; false for another unit
+     * (its usual shot).
+     */
     boolean fired(Enemy unit, float pan) {
         if (unit == null) {
             return false;
         }
         if (is(cracks, unit.kind())) {
             bank.play(Sfx.TALON_SHOT, CUE_LEVEL, pitch(0.05), pan);
+            return true;
+        }
+        if (is(grafts, unit.kind())) {
+            bank.play(Sfx.GRAFT_SHOT, CUE_LEVEL, pitch(0.05), pan);
             return true;
         }
         if (is(clamps, unit.kind())) {

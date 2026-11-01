@@ -39,6 +39,8 @@ speakers:
   okafor:
     names: [Okafor]
     ref: ref-okafor
+    line_shifts:   # round 75 V.4 b (step VOX-C2): a line's own shift by its key at the row; the line is keyed again with it (its pin goes by the new key)
+      0220c4dee15f: {cfg_weight: -0.1}   # Act 6 intro page 4 "All channels. Vorne, this is Okafor…" (grim): round 74's chosen take's row, grim and slower (0.45 / 0.4 / 0.7, round 72's sign-off row), so the game's file is that take (seed 103)
     pins:
       ae0317a3757d: 105   # Level 39 t=1 "Io. Three works on the plains…" (M10 part E, step VOX-E): the key's seed jumped an octave on 11 % of the line; the pin reads word for word with the name prompt at 158 Hz, no jump ("plains" heard "planes", a homophone, on every seed)
       fd9c6ae72c9f: 112   # Level 39 failed line, Prometheus B (step VOX-E): the key's seed read "poor back" every way; seed 112 (the eighth take after a pin of 105: seven held 0.9-1.8 s pauses) reads word for word every way at 158 Hz, no jump

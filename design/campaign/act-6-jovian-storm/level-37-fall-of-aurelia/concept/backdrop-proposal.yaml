@@ -494,7 +494,7 @@ ground_targets:   # at: [t, x], when the target enters at the top edge and its x
     section: 2
     enemy: graft-turret
     count: 4
-    at: [[48.43, 224], [48.02, 265], [48.02, 335], [48.43, 376]]
+    at: [[47.95, 315], [48.36, 373], [48.93, 383], [49.42, 354]]
   - target: Graft Turret nest x5 on the two deck edges beside the pad terrace
     section: 2
     enemy: graft-turret
@@ -504,7 +504,7 @@ ground_targets:   # at: [t, x], when the target enters at the top edge and its x
     section: 3
     enemy: graft-turret
     count: 6
-    at: [[78.8, 90], [78.8, 160], [79.3, 240], [78.8, 320], [78.8, 390], [80.17, 240]]
+    at: [[80.3, 120], [80.3, 180], [79.3, 240], [78.8, 290], [78.8, 340], [80.17, 240]]
   - target: SAM Nest x3 on the plaza's far side under the great spire
     section: 3
     enemy: sam-nest

@@ -268,7 +268,10 @@ def layout():
     sp = (240, sams - 300)                            # the great spire
     pl_lo, pl_hi = ter + 130, TURN_BASE + 330
     L += [("walk", (240, pad2 + 70, 240, ter - 110, 22)),
-          ("rect", (40, 440, ter - 120, ter + 120, 40)), ("domelets", (240, ter, 110)),
+          # step C6b: the terrace's four small domes as a pinwheel clear of C6a's moved nests (ground_targets): the
+          # domelets' two at (190, ter + 50) and (290, ter - 50) went out to the terrace's ends
+          ("rect", (40, 440, ter - 120, ter + 120, 40)),
+          *[("dome", (x, ter + dy, 14, "cream")) for x, dy in ((80, -56), (190, -50), (290, 50), (400, 56))],
           ("rect", (180, 300, ter + 100, pl_lo + 40, 6)),
           ("plaza", (240, (pl_lo + pl_hi) / 2, 222, (pl_hi - pl_lo) / 2, 120)),
           ("inlay", (*sp, 160, 2.2)), ("inlay", (*sp, 250, 1.6)), ("inlay", (*sp, 360, 2.2)),
@@ -334,13 +337,16 @@ def ground_targets():
         ("Graft Turret nest x3 on the rim's deck edge (the first, alone)", 1, "graft-turret", 3,
          [[round(enter_t(n1 - 44), 2), 300], [round(enter_t(n1 - 56), 2), 350], [round(enter_t(n1 - 38), 2), 404]]),
         ("SAM Nest pair on the rim's air-defence platform", 1, "sam-nest", 2, [[24, 120], [24, 190]]),
-        ("Graft Turret nest x4 round the dome rim", 2, "graft-turret", 4, ring(300, dr + 4, 84, (205, 245, 295, 335))),
+        # step C6b (round 75 L.2 a, C6a's moves): the rim's right half, off pair 1's stations and slide aside
+        ("Graft Turret nest x4 round the dome rim", 2, "graft-turret", 4, ring(300, dr + 4, 84, (280, 330, 10, 50))),
         ("Graft Turret nest x5 on the two deck edges beside the pad terrace", 2, "graft-turret", 5,
          [[round(enter_t(tr - 40), 2), 70], [round(enter_t(tr), 2), 130], [round(enter_t(tr - 60), 2), 350],
           [round(enter_t(tr - 20), 2), 410], [round(enter_t(tr + 30), 2), 380]]),
+        # step C6b (C6a's moves): off pair 2's slide aside and the edge lanes (the left two 120 rows further back on
+        # the terrace, the right two 50 px in)
         ("Graft Turret nest x6 on the Spire Plaza's terrace", 3, "graft-turret", 6,
-         [[round(enter_t(ter - 60), 2), 90], [round(enter_t(ter - 60), 2), 160], [round(enter_t(ter - 20), 2), 240],
-          [round(enter_t(ter - 60), 2), 320], [round(enter_t(ter - 60), 2), 390], [round(enter_t(ter + 50), 2), 240]]),
+         [[round(enter_t(ter + 60), 2), 120], [round(enter_t(ter + 60), 2), 180], [round(enter_t(ter - 20), 2), 240],
+          [round(enter_t(ter - 60), 2), 290], [round(enter_t(ter - 60), 2), 340], [round(enter_t(ter + 50), 2), 240]]),
         ("SAM Nest x3 on the plaza's far side under the great spire", 3, "sam-nest", 3,
          [[95, 150], [95, 240], [95, 330]]),
         ("Graft Turret nest x5 on a burning deck", 4, "graft-turret", 5,

@@ -240,11 +240,30 @@ public final class VoiceLines {
                 : table.filter()
                         .map(name -> VoiceData.Speaker.ENEMY.equals(name) ? Filter.ENEMY : Filter.PA)
                         .orElse(filter);
-        VoiceData.Settings settings = voices.settings(voice.get(), expression, shout);
-        String key = key(String.join(
+        VoiceData.Settings row = voices.settings(voice.get(), expression, shout);
+        String base = key(voice.get(), table, row, spoken, expression, shout, post);
+        // Round 75 V.4 b: a line's own shift (the speaker's line_shifts, by the key at the speaker's row) moves that
+        // one
+        // line off its row (the Act 6 intro's page 4 at round 74's slower grim take), so it is keyed again.
+        Optional<VoiceData.Shift> own = table.lineShifts().map(shifts -> shifts.get(base));
+        VoiceData.Settings settings = own.map(row::plus).orElse(row);
+        String key = own.isEmpty() ? base : key(voice.get(), table, settings, spoken, expression, shout, post);
+        return Optional.of(
+                new VoiceLine(voice.get(), speaker, text, spoken, expression, shout, post, settings, key, source));
+    }
+
+    private static String key(
+            String voice,
+            VoiceData.Speaker table,
+            VoiceData.Settings settings,
+            String spoken,
+            Expression expression,
+            boolean shout,
+            Filter post) {
+        return key(String.join(
                 "\n",
                 VERSION,
-                voice.get(),
+                voice,
                 table.ref().orElseThrow(),
                 format(settings.exaggeration()),
                 format(settings.cfgWeight()),
@@ -254,8 +273,6 @@ public final class VoiceLines {
                 expression.slug(),
                 Boolean.toString(shout),
                 post.slug()));
-        return Optional.of(
-                new VoiceLine(voice.get(), speaker, text, spoken, expression, shout, post, settings, key, source));
     }
 
     private static String format(double value) {

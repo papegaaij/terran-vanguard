@@ -138,15 +138,18 @@ final class RadioRuns {
     }
 
     /**
-     * M10 part C (step C4b): Level 37's runs (Rook flies with every fit that has the escort; the first bounce's and the
-     * first prey kill's barks are his, {@code requires: escort}). The first bounce as the first mirrors open fire (t=38
-     * on: t≈39-45); the CDF locker shot open under its awning (t≈60-63); a shuttle lost on its station (from t=49, the
-     * first pair's, to t≈140, the third pair's); the first prey kill from the turn's links (the Lampreys on the t=103
-     * wing from t≈104, the snake on the Gunship at t≈118, the Motes at t≈134); the secondary met as the fifth shuttle is
-     * home (the third pair out at t≈143-144; easy the fourth, t≈88 with the second pair) or failed at the second loss
-     * (hard the first: all six must come home). Step C4b retimed the timed lines to the typed pages (two pages ≈ 11 s):
-     * they fill t=1-100 and t=100-140, so an event line before t≈140 goes stale and the outcome's closing line waits for
-     * the gap at t≈140.5 (pending round 75: shorter lines).
+     * M10 part C (step C4b; step C6b to step C6a's flown schedule): Level 37's runs (Rook flies with every fit that has
+     * the escort; the first bounce's and the first prey kill's barks are his, {@code requires: escort}). The first
+     * bounce as the first mirrors open fire (t=38 on: t≈39-45); the CDF locker shot open under its awning (t≈60-63); a
+     * shuttle lost from its liftoff to its climb out (the pairs lift at t=44, 72 and 127, hold 3 s on station at
+     * t≈49-52, 77-80 and 132-135, slide aside 1.5 s and climb out along the edges over 3 s: out by t≈56.5, 84.5 and
+     * 139.5; C6s: the player's fire hits them too); the first prey kill from the turn's links (the Lampreys on the t=103
+     * wing from t≈104, the snake on the Gunship at t≈118, the Motes on the t=135 Hornet from t≈137.5); the secondary
+     * met as the fifth shuttle is home (the third pair out at t≈139.5-140; easy the fourth, t≈84.5 with the second
+     * pair) or failed at the second loss (easy the third, hard the first: all six must come home). Step C6a cut the
+     * timed lines to one typed page (≈ 7 s), so most event lines find a gap; still stale (pending the user's review):
+     * a shuttle lost while pair 1 or 2 is up (t=52: Rook's scripted t=52.5 line; t=75: between the t=70.5 and t=78.5
+     * lines) and the prey kill on the Gunship (t≈118.5-119, between Vorne's t=115.5 and the t=123 line).
      */
     static List<List<Event>> level37Runs() {
         CueTrigger bounce = CueTrigger.FIRST_BOUNCE;
@@ -162,27 +165,27 @@ final class RadioRuns {
                         new Event(39.5, bounce, ""),
                         new Event(61, secret, locker),
                         new Event(105.5, prey, ""),
-                        new Event(143.5, met, "")),
+                        new Event(139.5, met, "")),
                 List.of(
                         new Event(44.5, bounce, ""),
                         new Event(62.5, secret, locker),
                         new Event(75, lost, ""),
                         new Event(119, prey, ""),
-                        new Event(144, met, "")),
-                List.of(new Event(41, bounce, ""), new Event(88.5, met, ""), new Event(134.5, prey, "")),
+                        new Event(140, met, "")),
+                List.of(new Event(41, bounce, ""), new Event(84.5, met, ""), new Event(138, prey, "")),
                 List.of(
                         new Event(40, bounce, ""),
                         new Event(52, lost, ""),
                         new Event(60.5, secret, locker),
-                        new Event(91, failed, ""),
+                        new Event(81, failed, ""),
                         new Event(106, prey, "")),
                 List.of(new Event(81, lost, ""), new Event(81, failed, ""), new Event(118.5, prey, "")),
                 List.of(
                         new Event(42, bounce, ""),
-                        new Event(126, lost, ""),
-                        new Event(137.5, failed, ""),
-                        new Event(140, prey, "")),
-                List.of(new Event(143.2, met, "")));
+                        new Event(133, lost, ""),
+                        new Event(137, failed, ""),
+                        new Event(141, prey, "")),
+                List.of(new Event(139.8, met, "")));
     }
 
     /**

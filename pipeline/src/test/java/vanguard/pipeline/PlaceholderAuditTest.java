@@ -168,6 +168,9 @@ class PlaceholderAuditTest {
             "M10 part C, step AUD-C: round 72's pick for Aurelia's bed (the user, 2026-10-31: S.14 a), from the"
                     + " Freesound HQ previews of CC0/CC-BY sounds until the originals (CREDITS rows from step AUD-R; by"
                     + " tools/concept/audio/sfx_r72.py)";
+    private static final String ROUND_75_PICKS =
+            "M10 part C, step C6b: round 75's picks (the user, 2026-11-01: S.1 b, S.5 b, S.8 b), from the Freesound HQ"
+                    + " previews of CC0/CC-BY sounds (CREDITS rows from step AUD-C; by tools/concept/audio/sfx_r75.py)";
     private static final String ROUND_75 =
             "M10 part C, step AUD-C: round 75's proposals for Level 37, the Mirror Interceptor and the Graft Turret,"
                     + " option a until the user's pick, from the Freesound HQ previews of CC0/CC-BY sounds (CREDITS rows"
@@ -560,11 +563,12 @@ class PlaceholderAuditTest {
             Map.entry("sfx/chimera-death-r74-a.ogg", ROUND_74),
             Map.entry("sfx/chimera-whine-r74-b.ogg", ROUND_74_WHINE),
             Map.entry("sfx/aurelia-r72-a.ogg", ROUND_72_AURELIA),
-            Map.entry("sfx/pa-chime-r75-a.ogg", ROUND_75),
+            Map.entry("sfx/pa-chime-r75-b.ogg", ROUND_75_PICKS),
             Map.entry("sfx/growth-burst-r75-a.ogg", ROUND_75),
             Map.entry("sfx/balloon-tear-r75-a.ogg", ROUND_75),
             Map.entry("sfx/deck-groan-r75-a.ogg", ROUND_75),
-            Map.entry("sfx/aurelia-burning-r75-a.ogg", ROUND_75),
+            Map.entry("sfx/aurelia-burning-r75-b.ogg", ROUND_75_PICKS),
+            Map.entry("sfx/graft-shot-r75-b.ogg", ROUND_75_PICKS),
             Map.entry("sfx/mirror-hum-r75-a.ogg", ROUND_75),
             Map.entry("sfx/mirror-pods-r75-a.ogg", ROUND_75),
             Map.entry("sfx/graft-shell-crack-r75-a.ogg", ROUND_75),

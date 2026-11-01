@@ -28,8 +28,8 @@ import vanguard.sim.Sortie;
  *       quickening from 1 to 4 a second as its window closes; {@link Sfx#GRAFT_HEARTBEAT}).
  * </ul>
  *
- * The Graft Turret's shot pair is the Talon's twin crack ({@link CeresCues}, round 75 S.8 a), its shell's crack and its
- * root's crumble {@link JovianCues}'.
+ * The Graft Turret's shot pair is its own ({@link Sfx#GRAFT_SHOT} in {@link CeresCues}, round 75 S.8 b), its shell's
+ * crack and its root's crumble {@link JovianCues}'.
  */
 final class AureliaCues extends SoundFamily {
     private static final Set<SimEvents.Type> TYPES = EnumSet.of(SimEvents.Type.FRIENDLIES_INBOUND);

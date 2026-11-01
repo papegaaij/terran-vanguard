@@ -305,4 +305,31 @@ class VoiceFilesTest {
         assertTrue(!calm.key().equals(shout.key()));
         assertEquals(12, shout.key().length());
     }
+
+    /**
+     * Round 75 V.4 b: the Act 6 intro's page 4 is spoken at round 74's chosen take's row (grim, slower: the speaker's
+     * {@code line_shifts}, by the page's key at the grim row) and keyed by it, so the game plays that take.
+     */
+    @Test
+    void aLineShiftMovesOneLineOffItsRowAndKeysItAgain() {
+        VoiceLines.VoiceLine page = VoiceLines.all(CONTENT).stream()
+                .filter(line -> line.source().equals("act-6-jovian-storm briefing page 4"))
+                .findFirst()
+                .orElseThrow();
+        assertEquals(Expression.GRIM, page.expression());
+        assertEquals(0.45, page.settings().exaggeration(), 1e-9);
+        assertEquals(0.4, page.settings().cfgWeight(), 1e-9);
+        assertEquals(0.7, page.settings().temperature(), 1e-9);
+        assertTrue(CONTENT.voices()
+                .speakers()
+                .get("okafor")
+                .lineShifts()
+                .orElseThrow()
+                .containsKey("0220c4dee15f"));
+        assertEquals("7c7dedd95094", page.key());
+        var other = VoiceLines.line(
+                        CONTENT.voices(), "Okafor", "Hold.", Expression.GRIM, false, VoiceLines.Filter.RADIO, "t")
+                .orElseThrow();
+        assertEquals(0.5, other.settings().cfgWeight(), 1e-9);
+    }
 }

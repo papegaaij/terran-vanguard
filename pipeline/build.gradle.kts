@@ -494,12 +494,14 @@ val copyPlaceholderSounds = tasks.register<JavaExec>("copyPlaceholderSounds") {
         // proposals, CC0/CC-BY Freesound HQ previews cut by tools/concept/audio/sfx_r75.py, their CREDITS.md rows), their
         // a variants until the user's picks: the PA chime, the growth's burst, the balloons tearing, the deck's groan,
         // the burning layer over `aurelia`, the mirror's turbine hum and pod burst, the graft's shell crack, root
-        // heartbeat and root crumble. The graft's shot a is the Talon's built twin crack (no copy).
-        "pa-chime-r75-a.ogg",
+        // heartbeat and root crumble. Step C6b: the user's round 75 picks S.1 b (the PA chime), S.5 b (the burning
+        // layer) and S.8 b (the graft's own shot, no longer the Talon's file) in place of their a's.
+        "pa-chime-r75-b.ogg",
         "growth-burst-r75-a.ogg",
         "balloon-tear-r75-a.ogg",
         "deck-groan-r75-a.ogg",
-        "aurelia-burning-r75-a.ogg",
+        "aurelia-burning-r75-b.ogg",
+        "graft-shot-r75-b.ogg",
         "mirror-hum-r75-a.ogg",
         "mirror-pods-r75-a.ogg",
         "graft-shell-crack-r75-a.ogg",

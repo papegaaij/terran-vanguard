@@ -1,5 +1,6 @@
 package vanguard.game.render;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -22,10 +23,12 @@ import vanguard.sim.PlayField;
  * ground rows, so at {@code t} it lies exactly where the city did (the hand-over is pixel-exact), and then follows its
  * keys (place, scale toward the field's centre, turn, darkening toward {@link #SHADE}) relative to that place; its
  * charred rim and its hot glow fade in over the first {@value #RIM_FADE} s as the gap opens. Shards tumble in the gap,
- * the balloons tear and the spires topple on {@code low-air}, and the sinking city crossfades in on {@code deep} as the
- * halves fade out. The halves, rims, glows and shards are drawn bilinear (their atlas pages filtered linearly: every
- * other image there is drawn at its size on whole pixels, which linear filtering leaves exact). The times go by the level
- * clock, the glows' and shards' frames by the real clock; nothing is allocated per frame ({@link Schedule}).
+ * the balloons tear and the spires topple on {@code low-air}. Round 75 F.6 redo (step C6b): each half fades by its keys'
+ * alpha (its rim, glow and the shards with it; below {@value #STENCIL_ALPHA} it no longer marks the shadow stencil) while
+ * the veils, patches of the cloud tops, close over the halves after them (no sinking city any more). The halves, rims,
+ * glows and shards are drawn bilinear (their atlas pages filtered linearly: every other image there, the veils too, is
+ * drawn at its size on whole pixels, which linear filtering leaves exact). The times go by the level clock, the glows'
+ * and shards' frames by the real clock; nothing is allocated per frame ({@link Schedule}).
  */
 final class FallingCity {
     private static final float X0 = PixelScreen.PLAY_FIELD_X;
@@ -39,6 +42,8 @@ final class FallingCity {
     static final int RIM_PAD = 14;
     /** The shards fade in and out at the ends of their span, s. */
     static final double SHARD_FADE = 0.3;
+    /** Below this opacity a half (with its rim and glow) no longer marks the shadow stencil (the F.6 redo). */
+    static final double STENCIL_ALPHA = 0.5;
 
     private static final String VERTEX = """
             attribute vec4 a_position;
@@ -85,9 +90,7 @@ final class FallingCity {
     private final double shardFps;
     private final List<Array<AtlasRegion>> balloons = new java.util.ArrayList<>();
     private final List<Array<AtlasRegion>> spires = new java.util.ArrayList<>();
-    private final AtlasRegion sinking;
-    private final Array<AtlasRegion> sinkingGlow;
-    private final double sinkingGlowFps;
+    private final AtlasRegion[] veils;
     private final ShaderProgram shader;
     private final double[] place = new double[Schedule.SLOTS];
     private final double[] other = new double[Schedule.SLOTS];
@@ -136,17 +139,11 @@ final class FallingCity {
         for (FallingCityData.Spire spire : toppling) {
             spires.add(frames(sprites, folder, data, spire.piece()));
         }
-        sinking = fall.sinking()
-                .map(s -> sprites.backdrop(folder + s.piece(), 1).first())
-                .orElse(null);
-        sinkingGlow = fall.sinking()
-                .flatMap(FallingCityData.Sinking::glow)
-                .map(id -> frames(sprites, folder, data, id))
-                .orElse(null);
-        sinkingGlowFps = fall.sinking()
-                .flatMap(FallingCityData.Sinking::glow)
-                .flatMap(id -> data.pieces().get(id).fps())
-                .orElse(0.0);
+        List<FallingCityData.Veil> veilData = fall.veils().orElse(List.of());
+        veils = new AtlasRegion[veilData.size()];
+        for (int v = 0; v < veils.length; v++) {
+            veils[v] = sprites.backdrop(folder + veilData.get(v).piece(), 1).first();
+        }
         shader = new ShaderProgram(VERTEX, FRAGMENT);
         if (!shader.isCompiled()) {
             throw new IllegalStateException("falling city shader: " + shader.getLog());
@@ -174,7 +171,8 @@ final class FallingCity {
 
     /**
      * The halves on the ground layer from the fall's {@code t} (in the ground pass, where they mark the shadow stencil
-     * as the city did): the shards in the gap under them, then each half (the west first) with its rim and its glow.
+     * as the city did while at least {@link #STENCIL_ALPHA} opaque): the shards in the gap under them, then each half
+     * (the west first) with its rim and its glow, then the veils over them (cloud, never marking the stencil).
      */
     void drawGround(SpriteBatch batch, double groundScroll, BackdropClock clock) {
         double script = clock.script();
@@ -197,6 +195,10 @@ final class FallingCity {
             if (alpha <= 0) {
                 continue;
             }
+            boolean marks = alpha >= STENCIL_ALPHA;
+            if (!marks) {
+                stencilWrites(batch, false);
+            }
             AtlasRegion half = halves[h];
             shade(batch, (float) place[Schedule.SHADE]);
             batch.setColor(1, 1, 1, alpha);
@@ -208,15 +210,12 @@ final class FallingCity {
             float hh = half.getRegionHeight();
             batch.draw(half, X0 + left, bottom, w / 2, hh / 2, w, hh, scale, scale, rotation);
             float rim = alpha * (float) place[Schedule.FADE_IN];
-            if (rim <= 0) {
-                continue;
-            }
-            if (rims[h] != null) {
+            if (rim > 0 && rims[h] != null) {
                 batch.setColor(1, 1, 1, rim);
                 drawPadded(batch, rims[h], left, bottom, w, hh, scale, rotation);
             }
             Array<AtlasRegion> glow = glows.get(h);
-            if (glow != null) {
+            if (rim > 0 && glow != null) {
                 shade(batch, 0);
                 batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
                 batch.setColor(1, 1, 1, rim);
@@ -231,9 +230,29 @@ final class FallingCity {
                         rotation);
                 batch.setBlendFunction(src, dst);
             }
+            if (!marks) {
+                stencilWrites(batch, true);
+            }
+        }
+        if (veils.length > 0) {
+            shade(batch, 0);
+            stencilWrites(batch, false);
+            for (int v = 0; v < veils.length; v++) {
+                if (schedule.veil(v, script, place)) {
+                    batch.setColor(1, 1, 1, (float) place[Schedule.ALPHA]);
+                    batch.draw(veils[v], X0 + (float) place[Schedule.LEFT], (float) place[Schedule.BOTTOM]);
+                }
+            }
+            stencilWrites(batch, true);
         }
         batch.setColor(Color.WHITE);
         batch.setShader(before);
+    }
+
+    /** Whether what is drawn next marks the shadow stencil (the ground pass's stencil writes; flushed first). */
+    private static void stencilWrites(SpriteBatch batch, boolean on) {
+        batch.flush();
+        Gdx.gl.glStencilMask(on ? 0xFF : 0x00);
     }
 
     /** The torn balloons and the toppling spires on {@code low-air}, scrolled with it (placed as usual). */
@@ -251,32 +270,6 @@ final class FallingCity {
                     script - schedule.fall.t() - schedule.toppleAt[s], schedule.spireFps[s], frames.size);
             drawPlaced(batch, frames.get(frame), schedule.spireX[s], schedule.spireBottom[s] - scroll);
         }
-    }
-
-    /** The sinking city on {@code deep}, crossfading in as the halves fade out; its glow additive. */
-    void drawDeep(SpriteBatch batch, double groundScroll, BackdropClock clock) {
-        if (sinking == null) {
-            return;
-        }
-        float alpha = (float) schedule.sinkingAlpha(clock.script());
-        if (alpha <= 0) {
-            return;
-        }
-        long y = schedule.sinkingBottom - Math.round(groundScroll * schedule.deep);
-        if (y >= HEIGHT || y + sinking.getRegionHeight() <= 0) {
-            return;
-        }
-        float x = X0 + Math.round(schedule.sinkingX - sinking.getRegionWidth() / 2.0);
-        batch.setColor(1, 1, 1, alpha);
-        batch.draw(sinking, x, y);
-        if (sinkingGlow != null) {
-            int src = batch.getBlendSrcFunc();
-            int dst = batch.getBlendDstFunc();
-            batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
-            batch.draw(sinkingGlow.get(frameAt(clock.real(), sinkingGlowFps, sinkingGlow.size)), x, y);
-            batch.setBlendFunction(src, dst);
-        }
-        batch.setColor(Color.WHITE);
     }
 
     private void drawPlaced(SpriteBatch batch, TextureRegion image, double centreX, long y) {
@@ -336,7 +329,7 @@ final class FallingCity {
 
     /**
      * The fall's schedule from the level's data, pure and allocation-free (tested without a GL context): where each
-     * half lies at a level time, the shards' place, the one-shot frames, the crossfade.
+     * half lies at a level time, the shards' and veils' places, the one-shot frames.
      */
     static final class Schedule {
         /** {@link #half}'s output: the left column (field px) and bottom (screen px, up) of the unscaled image. */
@@ -349,7 +342,7 @@ final class FallingCity {
         static final int ROTATION = 3;
         /** The share darkened toward {@link FallingCity#SHADE}. */
         static final int SHADE = 4;
-        /** The half's opacity (1 until the sinking city takes over). */
+        /** The half's opacity (its keys' alpha; a veil's opacity). */
         static final int ALPHA = 5;
         /** The rims' fade-in, 0 to 1. */
         static final int FADE_IN = 6;
@@ -362,10 +355,14 @@ final class FallingCity {
         private static final int KEY_SCALE = 3;
         private static final int TURN = 4;
         private static final int KEY_SHADE = 5;
+        private static final int KEY_ALPHA = 6;
+        private static final int VEIL_X = 1;
+        private static final int VEIL_Y = 2;
+        private static final int VEIL_ALPHA = 3;
 
         final FallingCityData.Fall fall;
         private final LevelData level;
-        /** Per half its keys, {@code [u, x, y, scale, turn, shade]}. */
+        /** Per half its keys, {@code [u, x, y, scale, turn, shade, alpha]} (alpha 1 when the data leaves it out). */
         private final double[][][] keys;
 
         private final double[] x0;
@@ -391,10 +388,11 @@ final class FallingCity {
         final long[] spireBottom;
         final double[] spireFps;
         final double[] toppleAt;
-        final double sinkingX;
-        final long sinkingBottom;
-        private final double sinkFrom;
-        private final double sinkFade;
+        /** Per veil its keys, {@code [u, x, y, alpha]}, and its image size. */
+        private final double[][][] veilKeys;
+
+        private final int[] veilWidth;
+        private final int[] veilHeight;
         private final double shardsFrom;
         private final double shardsTo;
 
@@ -411,8 +409,14 @@ final class FallingCity {
             for (int h = 0; h < count; h++) {
                 FallingCityData.Half half = fall.halves().get(h);
                 keys[h] = half.keys().stream()
-                        .map(key ->
-                                key.stream().mapToDouble(Double::doubleValue).toArray())
+                        .map(key -> {
+                            double[] row = new double[KEY_ALPHA + 1];
+                            row[KEY_ALPHA] = 1;
+                            for (int c = 0; c < key.size(); c++) {
+                                row[c] = key.get(c);
+                            }
+                            return row;
+                        })
                         .toArray(double[][]::new);
                 x0[h] = half.x0();
                 bottom[h] = half.bottom();
@@ -421,9 +425,7 @@ final class FallingCity {
                 height[h] = (int) Math.round(size.height());
             }
             groundAtFall = level.scrollAt(fall.t());
-            double span = fall.seconds()
-                    + fall.sinking().map(s -> s.from() + s.fade()).orElse(0.0)
-                    + 2;
+            double span = fall.seconds() + 2;
             travel = new double[(int) Math.ceil(span / STEP) + 2];
             for (int i = 0; i < travel.length; i++) {
                 travel[i] = level.scrollAt(fall.t() + i * STEP) - groundAtFall;
@@ -452,11 +454,20 @@ final class FallingCity {
                 spireFps[s] = data.pieces().get(spire.piece()).fps().orElse(0.0);
                 toppleAt[s] = spire.toppleAt();
             }
-            FallingCityData.Sinking sink = fall.sinking().orElse(null);
-            sinkingX = sink == null ? 0 : sink.x();
-            sinkingBottom = sink == null ? 0 : bottomOf(data, sink.piece(), sink.t());
-            sinkFrom = sink == null ? Double.POSITIVE_INFINITY : sink.from();
-            sinkFade = sink == null ? 0 : sink.fade();
+            List<FallingCityData.Veil> veils = fall.veils().orElse(List.of());
+            veilKeys = new double[veils.size()][][];
+            veilWidth = new int[veils.size()];
+            veilHeight = new int[veils.size()];
+            for (int v = 0; v < veils.size(); v++) {
+                FallingCityData.Veil veil = veils.get(v);
+                veilKeys[v] = veil.keys().stream()
+                        .map(key ->
+                                key.stream().mapToDouble(Double::doubleValue).toArray())
+                        .toArray(double[][]::new);
+                var size = data.pieces().get(veil.piece()).size();
+                veilWidth[v] = (int) Math.round(size.width());
+                veilHeight[v] = (int) Math.round(size.height());
+            }
             shardsFrom = fall.shards().map(FallingCityData.Shards::from).orElse(Double.NaN);
             shardsTo = fall.shards().map(FallingCityData.Shards::to).orElse(Double.NaN);
         }
@@ -496,7 +507,7 @@ final class FallingCity {
             out[SCALE] = scale;
             out[ROTATION] = -turn;
             out[SHADE] = at(k, u, KEY_SHADE);
-            out[ALPHA] = 1 - Math.clamp((u - sinkFrom) / sinkFade, 0, 1);
+            out[ALPHA] = at(k, u, KEY_ALPHA);
             out[FADE_IN] = Math.clamp(u / RIM_FADE, 0, 1);
         }
 
@@ -542,7 +553,7 @@ final class FallingCity {
          * The shards at level time {@code script}: false outside their span; else {@code out}'s {@link #LEFT} and
          * {@link #BOTTOM} are their centre (field x, screen y up) between the two halves' cut edges (the west half's
          * right edge, the east half's left), {@link #SCALE} and {@link #SHADE} the halves' mean, {@link #ALPHA} the
-         * fade at the span's ends; {@code scratch} holds a half's place.
+         * fade at the span's ends times the halves' mean opacity; {@code scratch} holds a half's place.
          */
         boolean shards(double script, double groundScroll, double[] out, double[] scratch) {
             double u = script - fall.t();
@@ -554,6 +565,7 @@ final class FallingCity {
             double westX = scratch[LEFT] + width[0] / 2.0 * (1 + westScale);
             double westY = scratch[BOTTOM] + height[0] / 2.0;
             double westShade = scratch[SHADE];
+            double westAlpha = scratch[ALPHA];
             half(1, script, groundScroll, scratch);
             double eastScale = scratch[SCALE];
             double eastX = scratch[LEFT] + width[1] / 2.0 * (1 - eastScale);
@@ -563,16 +575,43 @@ final class FallingCity {
             out[SCALE] = (westScale + eastScale) / 2;
             out[SHADE] = (westShade + scratch[SHADE]) / 2;
             double fade = Math.min(u - shardsFrom, shardsTo - u) / SHARD_FADE;
-            out[ALPHA] = Math.clamp(fade, 0, 1) * scratch[ALPHA];
+            out[ALPHA] = Math.clamp(fade, 0, 1) * (westAlpha + scratch[ALPHA]) / 2;
             return out[ALPHA] > 0;
         }
 
-        /** The sinking city's opacity at level time {@code script}: 0, then up to 1 over its fade as the halves go. */
-        double sinkingAlpha(double script) {
-            if (Double.isInfinite(sinkFrom)) {
-                return 0;
+        /** The number of veils. */
+        int veils() {
+            return veilKeys.length;
+        }
+
+        /**
+         * Veil {@code v} at level time {@code script}: false outside its keys' span or at opacity 0; else {@code out}'s
+         * {@link #LEFT} and {@link #BOTTOM} are its image's left column (field px) and bottom (screen px, up), centred on
+         * its keys' place and rounded to whole pixels, and {@link #ALPHA} its opacity.
+         */
+        boolean veil(int v, double script, double[] out) {
+            double[][] k = veilKeys[v];
+            double u = script - fall.t();
+            if (u < k[0][U] || u > k[k.length - 1][U]) {
+                return false;
             }
-            return Math.clamp((script - fall.t() - sinkFrom) / sinkFade, 0, 1);
+            double alpha = at(k, u, VEIL_ALPHA);
+            if (alpha <= 0) {
+                return false;
+            }
+            out[LEFT] = Math.round(at(k, u, VEIL_X) - veilWidth[v] / 2.0);
+            out[BOTTOM] = Math.round(HEIGHT - at(k, u, VEIL_Y) - veilHeight[v] / 2.0);
+            out[ALPHA] = alpha;
+            return true;
+        }
+
+        /** Veil {@code v}'s image size, px. */
+        int veilWidth(int v) {
+            return veilWidth[v];
+        }
+
+        int veilHeight(int v) {
+            return veilHeight[v];
         }
 
         /** A one-shot's frame {@code seconds} after it starts (frame 0 before), its last frame held. */

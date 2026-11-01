@@ -19,7 +19,8 @@ import vanguard.sim.PlayField;
 /**
  * M10 part C, step C4a (design/campaign Level 37, The Vrell turn and The falling city): the fall's schedule hands the
  * ground over to the two halves exactly where the city's pieces lay, on the level's own clock; the halves follow their
- * curves (shrinking and darkening, never back), the sinking city crossfades in as they fade out, the one-shots hold
+ * curves (shrinking and darkening, never back), they fade by their keys while the veils close over them (round 75 F.6
+ * redo, step C6b), the one-shots hold
  * their last frame, the growth's reveal runs over its seconds, the lift rings' lights are additive, and nothing of it
  * allocates per frame.
  */
@@ -108,22 +109,65 @@ class FallingCityTest {
                 "each at its own rate");
     }
 
-    /** The sinking city comes in as the halves go: their opacities sum to one, and the halves are gone after it. */
+    /**
+     * Round 75 F.6 redo: the halves stay whole to 1.5 s, then fade by their keys' alpha (never back) and are gone before
+     * the level ends; while they fade below a quarter a veil at least half opaque lies over them; the veils draw only
+     * inside their keys' span, centred and on whole pixels.
+     */
     @Test
-    void theSinkingCityCrossfadesWithTheHalves() {
+    void theHalvesFadeUnderTheVeils() {
         FallingCity.Schedule schedule = schedule();
         FallingCityData.Fall fall = LEVEL_37.backdrop().fall().orElseThrow();
-        FallingCityData.Sinking sinking = fall.sinking().orElseThrow();
+        assertEquals(36, fall.seconds(), 1e-9);
         double[] out = new double[FallingCity.Schedule.SLOTS];
-        assertEquals(0, schedule.sinkingAlpha(fall.t() + sinking.from() - 0.01));
-        for (double u = sinking.from(); u <= sinking.from() + sinking.fade() + 1; u += 0.1) {
-            schedule.half(0, fall.t() + u, LEVEL_37.scrollAt(fall.t() + u), out);
-            assertEquals(1, out[FallingCity.Schedule.ALPHA] + schedule.sinkingAlpha(fall.t() + u), 1e-9, "u=" + u);
+        double[] veil = new double[FallingCity.Schedule.SLOTS];
+        double[] last = {1, 1};
+        boolean covered = false;
+        for (double u = 0; u <= fall.seconds() + 0.001; u += 0.1) {
+            double t = fall.t() + u;
+            double ground = LEVEL_37.scrollAt(t);
+            for (int h = 0; h < schedule.halves(); h++) {
+                schedule.half(h, t, ground, out);
+                double alpha = out[FallingCity.Schedule.ALPHA];
+                assertTrue(alpha <= last[h] + 1e-9, "half " + h + " never comes back, u=" + u);
+                if (u <= 1.5) {
+                    assertEquals(1, alpha, 1e-9, "half " + h + " whole at u=" + u);
+                }
+                last[h] = alpha;
+            }
+            schedule.half(0, t, ground, out);
+            double alpha = out[FallingCity.Schedule.ALPHA];
+            if (alpha > 0 && alpha <= 0.25) {
+                double most = 0;
+                for (int v = 0; v < schedule.veils(); v++) {
+                    if (schedule.veil(v, t, veil)) {
+                        most = Math.max(most, veil[FallingCity.Schedule.ALPHA]);
+                    }
+                }
+                assertTrue(most >= 0.5, "a veil over the fading halves at u=" + u + ": " + most);
+                covered = true;
+            }
         }
-        schedule.half(1, fall.t() + sinking.from() + sinking.fade(), 0, out);
-        assertEquals(0, out[FallingCity.Schedule.ALPHA], "the halves are gone");
-        assertEquals(
-                179.0, fall.t() + sinking.from(), 1e-9, "the README's open cloud from t=180: the crossfade 179-181");
+        assertTrue(covered, "the halves fade under the veils");
+        assertEquals(0, last[0], "the west half gone");
+        assertEquals(0, last[1], "the east half gone");
+        assertEquals(2, schedule.veils(), "a veil from each side");
+        for (int v = 0; v < schedule.veils(); v++) {
+            List<List<Double>> keys = fall.veils().orElseThrow().get(v).keys();
+            double first = keys.getFirst().get(0);
+            double end = keys.getLast().get(0);
+            assertFalse(schedule.veil(v, fall.t() + first - 0.05, veil), "veil " + v + " before its keys");
+            assertFalse(schedule.veil(v, fall.t() + end + 0.05, veil), "veil " + v + " after its keys");
+            List<Double> key = keys.get(keys.size() / 2);
+            assertTrue(schedule.veil(v, fall.t() + key.get(0), veil), "veil " + v + " inside its keys");
+            assertEquals(key.get(3), veil[FallingCity.Schedule.ALPHA], 1e-9);
+            assertEquals(Math.round(key.get(1) - schedule.veilWidth(v) / 2.0), veil[FallingCity.Schedule.LEFT]);
+            assertEquals(
+                    Math.round(PlayField.HEIGHT - key.get(2) - schedule.veilHeight(v) / 2.0),
+                    veil[FallingCity.Schedule.BOTTOM]);
+            assertTrue(
+                    fall.t() + end <= LEVEL_37.sections().getLast().end() - 1.5, "veil " + v + " gone before the end");
+        }
     }
 
     @Test
@@ -220,7 +264,12 @@ class FallingCityTest {
                 if (schedule.shards(t, ground, out, scratch)) {
                     sum += out[FallingCity.Schedule.LEFT];
                 }
-                sum += schedule.sinkingAlpha(t) + GrowthOverlay.threshold(growth, t - 60);
+                for (int v = 0; v < schedule.veils(); v++) {
+                    if (schedule.veil(v, t, scratch)) {
+                        sum += scratch[FallingCity.Schedule.ALPHA];
+                    }
+                }
+                sum += GrowthOverlay.threshold(growth, t - 60);
                 sum += FallingCity.Schedule.oneShot(t - 160, 5, 10);
             }
             least = Math.min(least, threads.getCurrentThreadAllocatedBytes() - before);

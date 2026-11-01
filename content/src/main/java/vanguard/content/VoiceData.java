@@ -50,7 +50,8 @@ public record VoiceData(
             Check.positive("temperature", temperature);
         }
 
-        Settings plus(Shift shift) {
+        /** This row with {@code shift} added. */
+        public Settings plus(Shift shift) {
             return new Settings(
                     exaggeration + shift.exaggeration().orElse(0.0),
                     cfgWeight + shift.cfgWeight().orElse(0.0),
@@ -76,6 +77,9 @@ public record VoiceData(
      * @param stage the sound a radio line of this speaker plays when it is only a stage direction
      *     ({@code [the Choir sings]}), which is not spoken: a file in {@code assets/voice/<slug>/}
      *     (the Choir's sung sting, concept round 29)
+     * @param lineShifts round 75 V.4 b: one line's own shift, added to its row, by the line's key at that row (the key
+     *     without the shift; the line is keyed again with it, so its file and its pin go by the new key): the Act 6
+     *     intro's page 4 at round 74's chosen take's slower grim row; none if not given
      */
     public record Speaker(
             List<String> names,
@@ -86,7 +90,8 @@ public record VoiceData(
             Optional<Map<String, Integer>> pins,
             Optional<Boolean> uncast,
             Optional<String> filter,
-            Optional<String> stage) {
+            Optional<String> stage,
+            Optional<Map<String, Shift>> lineShifts) {
         public Speaker {
             Check.notEmpty("names", names);
             Check.that(
@@ -101,6 +106,11 @@ public record VoiceData(
             stage.ifPresent(file -> Check.that(
                     file.matches("[a-z0-9]+(-[a-z0-9]+)*\\.ogg"), "stage: an .ogg file name, was '" + file + "'"));
             Check.that(stage.isEmpty() || ref.isPresent(), "stage: only a cast speaker has a stage sound");
+            lineShifts = lineShifts.map(Map::copyOf);
+            lineShifts.ifPresent(map -> map.keySet()
+                    .forEach(key -> Check.that(
+                            key.matches("[0-9a-f]{12}"),
+                            "line_shifts: a line's key (12 hex digits), was '" + key + "'")));
         }
 
         /** The public-address filter (an automated loudspeaker: Level 06's beacon). */

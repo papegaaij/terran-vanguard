@@ -36,7 +36,8 @@ public final class FallingCityData {
     /**
      * The fall: from {@code t} the city's ground pieces are not drawn and the {@code halves} are the ground, each on its
      * curve over {@code seconds}; the {@code shards} tumble in the widening gap, the {@code balloons} tear and the {@code
-     * spires} topple (low-air pieces placed as usual), and the {@code sinking} city takes over on the deep layer.
+     * spires} topple (low-air pieces placed as usual), and the {@code veils} (cloud tops, round 75 F.6 redo) close over
+     * the halves as they fade.
      */
     public record Fall(
             double t,
@@ -45,7 +46,7 @@ public final class FallingCityData {
             Optional<Shards> shards,
             Optional<List<Placed>> balloons,
             Optional<List<Spire>> spires,
-            Optional<Sinking> sinking) {
+            Optional<List<Veil>> veils) {
         public Fall {
             Check.notNegative("fall.t", t);
             Check.positive("fall.seconds", seconds);
@@ -53,6 +54,7 @@ public final class FallingCityData {
             halves = List.copyOf(halves);
             balloons = balloons.map(List::copyOf);
             spires = spires.map(List::copyOf);
+            veils = veils.map(List::copyOf);
             for (Half half : halves) {
                 Check.that(
                         half.keys().getLast().get(0) <= seconds, "fall.halves: the last key within the fall's seconds");
@@ -70,10 +72,7 @@ public final class FallingCityData {
             shards.ifPresent(s -> pieces.add(s.piece()));
             balloons.ifPresent(list -> list.forEach(b -> pieces.add(b.piece())));
             spires.ifPresent(list -> list.forEach(s -> pieces.add(s.piece())));
-            sinking.ifPresent(s -> {
-                pieces.add(s.piece());
-                s.glow().ifPresent(pieces::add);
-            });
+            veils.ifPresent(list -> list.forEach(v -> pieces.add(v.piece())));
             return pieces;
         }
     }
@@ -81,9 +80,10 @@ public final class FallingCityData {
     /**
      * A falling half: {@code piece} (the city's own pixels on its rows: its left column {@code x0}, its bottom ground
      * row {@code bottom}), its {@code char} rim (normal) and {@code glow} (additive) drawn with it, and its {@code keys}
-     * {@code [u, x, y, scale, turn, shade]}: u s after the fall's t; the screen centre of its image (y down from the top
-     * edge); its scale toward the field's centre; its turn, ° clockwise; the share it has darkened. Interpolated
-     * linearly; the first key is the ground's place at t.
+     * {@code [u, x, y, scale, turn, shade, alpha]}: u s after the fall's t; the screen centre of its image (y down from
+     * the top edge); its scale toward the field's centre; its turn, ° clockwise; the share it has darkened; its opacity
+     * (round 75 F.6 redo; its rim, glow and the shards with it; 1 when left out). Interpolated linearly; the first key
+     * is the ground's place at t.
      */
     public record Half(
             String piece,
@@ -97,11 +97,17 @@ public final class FallingCityData {
             keys = keys.stream().map(List::copyOf).toList();
             for (int i = 0; i < keys.size(); i++) {
                 List<Double> key = keys.get(i);
-                Check.that(key.size() == 6, "fall.halves.keys[" + i + "]: [u, x, y, scale, turn, shade]");
+                Check.that(
+                        key.size() == 6 || key.size() == 7,
+                        "fall.halves.keys[" + i
+                                + "]: [u, x, y, scale, turn, shade] or [u, x, y, scale, turn, shade, alpha]");
                 Check.that(i > 0 || key.get(0) == 0, "fall.halves.keys[0]: u = 0 (the ground's place at t)");
                 Check.that(i == 0 || key.get(0) > keys.get(i - 1).get(0), "fall.halves.keys[" + i + "]: in u order");
                 Check.positive("fall.halves.keys[" + i + "].scale", key.get(3));
                 Check.share("fall.halves.keys[" + i + "].shade", key.get(5));
+                if (key.size() == 7) {
+                    Check.share("fall.halves.keys[" + i + "].alpha", key.get(6));
+                }
             }
         }
     }
@@ -125,13 +131,21 @@ public final class FallingCityData {
     }
 
     /**
-     * The sinking city (a deep piece placed by {@code t}, {@code x}, its {@code glow} additive): it crossfades in over
-     * {@code fade} s from {@code from} s after the fall's t as the halves fade out.
+     * A veil (round 75 F.6 redo): a patch of the cloud tops drawn after the halves (normal blend, unshaded, unscaled),
+     * centred on its {@code keys} {@code [u, x, y, alpha]}: u s after the fall's t, the screen centre (y down from the top
+     * edge), its opacity; linear between the keys, nothing drawn outside their span.
      */
-    public record Sinking(String piece, Optional<String> glow, double t, double x, double from, double fade) {
-        public Sinking {
-            Check.notNegative("fall.sinking.from", from);
-            Check.notNegative("fall.sinking.fade", fade);
+    public record Veil(String piece, List<List<Double>> keys) {
+        public Veil {
+            Check.notEmpty("fall.veils.keys", keys);
+            keys = keys.stream().map(List::copyOf).toList();
+            for (int i = 0; i < keys.size(); i++) {
+                List<Double> key = keys.get(i);
+                Check.that(key.size() == 4, "fall.veils.keys[" + i + "]: [u, x, y, alpha]");
+                Check.notNegative("fall.veils.keys[" + i + "].u", key.get(0));
+                Check.that(i == 0 || key.get(0) > keys.get(i - 1).get(0), "fall.veils.keys[" + i + "]: in u order");
+                Check.share("fall.veils.keys[" + i + "].alpha", key.get(3));
+            }
         }
     }
 }

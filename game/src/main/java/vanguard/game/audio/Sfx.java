@@ -1347,11 +1347,11 @@ public enum Sfx {
      */
     AMBIENCE_AURELIA("sfx/aurelia-r72-a.ogg", 1, Bus.EFFECTS, AMBIENCE),
     /**
-     * M10 part C, step C4b (round 75 S.5 a until the pick): the burning city (a large fire's roar, a far two-tone alarm
-     * through the decks, metal groaning; a 16 s loop), an ambience layer over Aurelia's bed from the turn ({@code
-     * ambience_layers: aurelia-burning}).
+     * M10 part C, step C4b (round 75 S.5 b, chosen; step C6b): the burning city (a burning wreck's low rumbling roar
+     * with metal creaking, a two-tone siren swelling and fading far behind the decks; a 16 s loop), an ambience layer
+     * over Aurelia's bed from the turn ({@code ambience_layers: aurelia-burning}).
      */
-    AURELIA_BURNING("sfx/aurelia-burning-r75-a.ogg", 1, Bus.EFFECTS, AMBIENCE),
+    AURELIA_BURNING("sfx/aurelia-burning-r75-b.ogg", 1, Bus.EFFECTS, AMBIENCE),
     /**
      * M10 part E, step E4 (round 72 S.15 a, chosen): Io's refinery bed (a deep ground rumble, furnace roar; a seamless
      * 16 s loop), looped: Level 39 ({@code ambience: io-refinery}).
@@ -1378,10 +1378,16 @@ public enum Sfx {
      */
     PUMP_BLAST("sfx/pump-blast-r77-a.ogg", 2, Bus.EFFECTS, EXPLOSION),
     /**
-     * M10 part C, step C4b (round 75 S.1 a until the pick): Aurelia's public-address chime (three notes, 3.2 s) as each
-     * shuttle pair is called to its pads, with the HOLD FIRE banner ({@link AureliaCues}).
+     * M10 part C, step C4b (round 75 S.1 b, chosen; step C6b): Aurelia's public-address chime (three tones stepping
+     * down, a second apart, 3.6 s) as each shuttle pair is called to its pads, with the HOLD FIRE banner ({@link
+     * AureliaCues}).
      */
-    PA_CHIME("sfx/pa-chime-r75-a.ogg", 1, Bus.EFFECTS, WARNING),
+    PA_CHIME("sfx/pa-chime-r75-b.ogg", 1, Bus.EFFECTS, WARNING),
+    /**
+     * M10 part C, step C6b (round 75 S.8 b, chosen): a Graft Turret's shot pair (an autocannon's shot twice 60 ms apart,
+     * brighter and harder than the Talon's, 0.36 s), its own file ({@link CeresCues}).
+     */
+    GRAFT_SHOT("sfx/graft-shot-r75-b.ogg", 3, Bus.EFFECTS, ENEMY_FIRE),
     /**
      * M10 part C, step C4b (round 75 S.2 a until the pick): the Vrell growth bursting over the decks at the turn (a wide
      * fibrous tearing rush, 3.6 s), once ({@link AureliaCues}).
