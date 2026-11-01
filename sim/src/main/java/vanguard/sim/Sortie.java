@@ -419,6 +419,10 @@ public final class Sortie {
         if (loadout.spoofDelay() > 0) {
             // M10 part A (design/player/systems, the IFF spoofer): every spoofable unit's aimed volleys come late.
             force.spoof(loadout.spoofDelay());
+            for (SetPiece piece : setPieces) {
+                // M10 part G, step G1b: and a spoofable set piece's (Level 41's Halo Platform; never a boss fight).
+                piece.spoof(Math.max(0, SimStep.ticks(loadout.spoofDelay())));
+            }
         }
         if (medium.water()) {
             // M8 part A: the enemies' bullets and missiles fire at the water's speed.
@@ -1399,7 +1403,8 @@ public final class Sortie {
 
     /** The level's boss's kill time and par, for the debrief and the Boss rush bonus; {@link LevelResult.BossTime#NONE} without a boss. */
     private LevelResult.BossTime bossTime() {
-        if (checkpointBoss < 0) {
+        if (checkpointBoss < 0 || setPieces[checkpointBoss].held()) {
+            // M10 part G, step G1b: a held set piece (Level 41's Halo Platform) is no boss fight: no bar, no Boss rush.
             return LevelResult.BossTime.NONE;
         }
         SetPiece boss = setPieces[checkpointBoss];

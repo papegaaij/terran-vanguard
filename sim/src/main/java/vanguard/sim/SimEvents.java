@@ -1235,7 +1235,18 @@ public final class SimEvents {
          * M10 part G: a core was lost before its file was in (its centre, or its unbroken hatch, left the bottom edge; at
          * it); value: the core's index.
          */
-        FILE_LOST;
+        FILE_LOST,
+        /**
+         * M10 part G, step G1b (design/enemies/ground/halo-platform; {@link RingSpec.Tell}): a ringed piece's told attack
+         * will fire from this part after its tell (a gun turret's muzzles glow and its barrels stop tracking; the open
+         * core's eye flares); at the part; value: the part.
+         */
+        TURRET_TELL,
+        /**
+         * M10 part G, step G1b (design/player/systems, the IFF spoofer; {@link BossSpoofing}): a spoofable set piece's
+         * volley came due and is held for the spoofer's delay (the amber stutter at its gun); at the part; value: the part.
+         */
+        BOSS_SPOOFED;
 
         private static final Type[] VALUES = values();
     }

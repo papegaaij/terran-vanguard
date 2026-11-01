@@ -908,6 +908,14 @@ final class EnemyForce {
         guns.fireFrom(x, y, gun, ship);
     }
 
+    /**
+     * M10 part G, step G1b (the IFF spoofer): a set piece's part fires its gun from (x, y) at the point (atX, atY) (a held
+     * volley's stale aim), without a lead.
+     */
+    void fireFromAt(double x, double y, EnemyGun gun, Ship ship, double atX, double atY) {
+        guns.fire(x, y, gun, false, 0, ship, -1, false, TravelFrame.SCREEN, atX, atY, null);
+    }
+
     /** Round 34, P2: {@code gun}'s volley from (x, y) straight down the screen, as an aimed one otherwise. */
     void fireDown(double x, double y, EnemyGun gun, Ship ship) {
         guns.fireDown(x, y, gun, ship);

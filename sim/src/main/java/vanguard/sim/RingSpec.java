@@ -34,6 +34,10 @@ import java.util.Optional;
  *     parts' order), this far apart, from the kill ({@link SimEvents.Type#RING_COOKOFF})
  * @param core M9 part H, step H1b: the core's opening, shield, fan glow, spiral cycle, rail and bays ({@link Core},
  *     {@link RingCore}); empty: a plain part
+ * @param losses M10 part G, step G1b (design/enemies/ground/halo-platform): the turning rings' further speed-up by the
+ *     count of dead batteries, eased ({@link Losses}); empty: none (the Iron Sovereign's)
+ * @param tells M10 part G, step G1b: the attacks told before each volley ({@link Tell}: the Halo's muzzle glow, its
+ *     eye's flare); empty: none
  */
 public record RingSpec(
         List<Ring> rings,
@@ -44,9 +48,42 @@ public record RingSpec(
         List<Double> speedUps,
         List<Integer> phaseLocks,
         double cookoffSeconds,
-        Optional<Core> core) {
+        Optional<Core> core,
+        Optional<Losses> losses,
+        List<Tell> tells) {
     /** At most this many rings. */
     public static final int MAX_RINGS = 3;
+
+    /**
+     * M10 part G, step G1b (design/enemies/ground/halo-platform: "fire arc 120° all round, no clamp"): the bearing
+     * unclamped: the arc follows the ship all the way round the centre.
+     */
+    public static final BossSpec.Clamp ALL_ROUND = new BossSpec.Clamp(-StrictMath.PI, StrictMath.PI);
+
+    /** Step H1b's rings: no losses' speed-up and no tells. */
+    public RingSpec(
+            List<Ring> rings,
+            double arcRadians,
+            BossSpec.Clamp bearing,
+            double spinUpSeconds,
+            double grindSeconds,
+            List<Double> speedUps,
+            List<Integer> phaseLocks,
+            double cookoffSeconds,
+            Optional<Core> core) {
+        this(
+                rings,
+                arcRadians,
+                bearing,
+                spinUpSeconds,
+                grindSeconds,
+                speedUps,
+                phaseLocks,
+                cookoffSeconds,
+                core,
+                Optional.empty(),
+                List.of());
+    }
 
     /** Step H1a's rings: no core block. */
     public RingSpec(
@@ -81,7 +118,41 @@ public record RingSpec(
                 speedUps,
                 phaseLocks,
                 cookoffSeconds,
-                withCore);
+                withCore,
+                losses,
+                tells);
+    }
+
+    /** M10 part G, step G1b: these rings speeding up by their dead batteries ({@code withLosses}; empty: none). */
+    public RingSpec withLosses(Optional<Losses> withLosses) {
+        return new RingSpec(
+                rings,
+                arcRadians,
+                bearing,
+                spinUpSeconds,
+                grindSeconds,
+                speedUps,
+                phaseLocks,
+                cookoffSeconds,
+                core,
+                withLosses,
+                tells);
+    }
+
+    /** M10 part G, step G1b: these rings with the told attacks {@code withTells}. */
+    public RingSpec withTells(List<Tell> withTells) {
+        return new RingSpec(
+                rings,
+                arcRadians,
+                bearing,
+                spinUpSeconds,
+                grindSeconds,
+                speedUps,
+                phaseLocks,
+                cookoffSeconds,
+                core,
+                losses,
+                withTells);
     }
 
     public RingSpec {
@@ -101,6 +172,44 @@ public record RingSpec(
             throw new IllegalArgumentException("the speed-ups are factors above 0, from no ring locked on");
         }
         java.util.Objects.requireNonNull(core);
+        java.util.Objects.requireNonNull(losses);
+        tells = List.copyOf(tells);
+    }
+
+    /**
+     * M10 part G, step G1b (design/enemies/ground/halo-platform, Speed-ups): the turning rings' speed factor by the
+     * count of dead batteries ({@code speedUps}, index 0: none dead, 1.0; a missing entry is the last one's), on top of
+     * the locked rings' {@link #speedUp}. A change of the count eases the factor from where it is to its new value over
+     * {@code easeSeconds} (linearly; 0: at once), so no turn jumps (the Halo: 20°/s + 8°/s a turret lost, eased 0.8 s).
+     */
+    public record Losses(List<Double> speedUps, double easeSeconds) {
+        public Losses {
+            speedUps = List.copyOf(speedUps);
+            if (speedUps.isEmpty() || speedUps.stream().anyMatch(f -> !(f > 0)) || !(easeSeconds >= 0)) {
+                throw new IllegalArgumentException(
+                        "a losses' speed-up has factors above 0, from none dead on, and an ease of 0 s or more");
+            }
+        }
+
+        /** The factor with {@code dead} batteries dead. */
+        public double factor(int dead) {
+            return speedUps.get(Math.min(dead, speedUps.size() - 1));
+        }
+    }
+
+    /**
+     * M10 part G, step G1b (design/enemies/ground/halo-platform, Attack): attack {@code attack} is told {@code seconds}
+     * before each of its volleys, at each part that will fire it: a battery inside the fire arc (the gun turret's
+     * muzzle glow; its barrels stop tracking) or a part that is no battery (the open core's eye flare) ({@link
+     * SimEvents.Type#TURRET_TELL}, value: the part).
+     */
+    public record Tell(int attack, double seconds) {
+        public Tell {
+            if (attack < 0 || !(seconds > 0)) {
+                throw new IllegalArgumentException(
+                        "a tell is of an attack and lasts a while: " + attack + ", " + seconds);
+            }
+        }
     }
 
     /**
@@ -417,9 +526,41 @@ public record RingSpec(
             double startRadians,
             List<Integer> parts,
             int attack,
-            Optional<Step> step) {
+            Optional<Step> step,
+            List<Integer> attacks) {
+        /** A ring whose batteries all fire its {@code attack}. */
+        public Ring(
+                String name,
+                double radius,
+                int direction,
+                double radiansPerSecond,
+                double startRadians,
+                List<Integer> parts,
+                int attack,
+                Optional<Step> step) {
+            this(name, radius, direction, radiansPerSecond, startRadians, parts, attack, step, List.of());
+        }
+
+        /**
+         * M10 part G, step G1b (design/enemies/ground/halo-platform: alternating gun and rail turrets): this ring with
+         * an attack per battery ({@code withAttacks}, in its parts' order; empty: every battery its {@code attack}).
+         */
+        public Ring withAttacks(List<Integer> withAttacks) {
+            return new Ring(name, radius, direction, radiansPerSecond, startRadians, parts, attack, step, withAttacks);
+        }
+
+        /** Battery {@code k}'s attack: its own (step G1b), else the ring's; -1 for none. */
+        public int attack(int k) {
+            return attacks.isEmpty() ? attack : attacks.get(k);
+        }
+
         public Ring {
             parts = List.copyOf(parts);
+            attacks = List.copyOf(attacks);
+            if (!attacks.isEmpty() && (attacks.size() != parts.size() || step.isPresent())) {
+                throw new IllegalArgumentException(
+                        name + ": an attack per battery, one for each, on a ring that turns evenly");
+            }
             if (!(radius > 0) || (direction != 1 && direction != -1) || !(radiansPerSecond >= 0)) {
                 throw new IllegalArgumentException(name + ": a ring has a radius, a direction (1 or -1) and a speed");
             }
@@ -450,6 +591,16 @@ public record RingSpec(
                         + radians + ", " + seconds + ", " + holdSeconds + ", " + tellSeconds);
             }
         }
+    }
+
+    /** M10 part G, step G1b: the tell of attack {@code a}, s; 0 for an attack without one. */
+    public double tellSeconds(int a) {
+        for (int i = 0; i < tells.size(); i++) {
+            if (tells.get(i).attack() == a) {
+                return tells.get(i).seconds();
+            }
+        }
+        return 0;
     }
 
     /** The speed factor with {@code locked} rings locked. */
@@ -483,6 +634,18 @@ public record RingSpec(
             throw new IllegalArgumentException(name + ": the last phase does not end on locks");
         }
         core.ifPresent(c -> checkCore(name, c, phases, attacks));
+        java.util.Set<Integer> told = new java.util.HashSet<>();
+        for (Tell tell : tells) {
+            // M10 part G, step G1b: a tell is of one of its attacks (once), no sweep or line (those tell themselves).
+            if (tell.attack() >= attacks.size()
+                    || !told.add(tell.attack())
+                    || attacks.get(tell.attack()).pattern() == BossSpec.Pattern.SWEEP
+                    || attacks.get(tell.attack()).pattern() == BossSpec.Pattern.LINE
+                    || attacks.get(tell.attack()).pattern() == BossSpec.Pattern.SPIRAL) {
+                throw new IllegalArgumentException(
+                        name + ": a tell is of one of its attacks, once, no sweep, line or spiral: " + tell.attack());
+            }
+        }
         java.util.Set<Integer> seen = new java.util.HashSet<>();
         for (Ring ring : rings) {
             for (int p : ring.parts()) {
@@ -492,6 +655,18 @@ public record RingSpec(
             }
             if (ring.attack() >= attacks.size() || ring.attack() < -1) {
                 throw new IllegalArgumentException(name + ": " + ring.name() + "'s attack is one of its attacks");
+            }
+            for (int k = 0; k < ring.attacks().size(); k++) {
+                // M10 part G, step G1b: a battery's own attack is the boss's, and fired by that battery.
+                int a = ring.attacks().get(k);
+                if (a >= attacks.size()
+                        || a < -1
+                        || (a >= 0
+                                && !attacks.get(a).parts().isEmpty()
+                                && !attacks.get(a).parts().contains(ring.parts().get(k)))) {
+                    throw new IllegalArgumentException(name + ": " + ring.name() + "'s battery " + k
+                            + "'s attack is one of its attacks, fired by that battery");
+                }
             }
             if (ring.step().isPresent()
                     && ring.attack() >= 0

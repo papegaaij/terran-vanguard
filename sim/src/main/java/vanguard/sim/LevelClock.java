@@ -39,6 +39,11 @@ package vanguard.sim;
  * the boss set piece arriving in it ({@link LevelScript#gatePiece}): the clock stands while it lives and eases out at
  * its death, as at a pylon gate's last pylon. A gate's halt starts with {@link SimEvents.Type#GATE_HALTED} and the
  * radio's {@link CueTrigger#GATE_HALT} (in a level of several gates).
+ *
+ * <p>M10 part G, step G1b (design/enemies/ground/halo-platform): a {@link BossSpec#held() held} set piece anchored on the
+ * ground (the Halo Platform's ring) is no arena boss here: it lies so that it sits at its hover height when its gate's
+ * halt starts, anchored from the scroll the level will run from the moment the gate before it opens (the level start
+ * for the first gate): the sections' speeds, the ramp out of the gate before and the ease into its own.
  */
 final class LevelClock {
     private final Sortie s;
@@ -219,7 +224,8 @@ final class LevelClock {
         }
         SetPiece anchored = null;
         for (SetPiece piece : setPieces) {
-            if (anchored == null && piece.arena().isPresent()) {
+            // M10 part G, step G1b: a held set piece is anchored at its gate's halt, not as the arena's boss.
+            if (anchored == null && piece.arena().isPresent() && !piece.held()) {
                 anchored = piece;
             }
         }
@@ -253,6 +259,76 @@ final class LevelClock {
         }
         timedHalts = script.timedHalts();
         eased = script.sections().stream().anyMatch(section -> section.easeSeconds() > 0);
+        heldPieces = setPieces;
+        for (int g = 0; g < gates; g++) {
+            SetPiece piece = anchoredPiece(g);
+            if (piece != null) {
+                // Out of sight until the gate before it opens (the first gate's from the level start).
+                piece.anchorAt(g == 0 ? anchorAtHalt(0, piece) : UNANCHORED);
+            }
+        }
+    }
+
+    /** M10 part G, step G1b: the level's set pieces (a held one anchored in its gate is placed from here). */
+    private final SetPiece[] heldPieces;
+
+    /** M10 part G, step G1b: a held piece's anchor before its gate comes: far above the screen, px. */
+    private static final double UNANCHORED = 1e9;
+
+    /** M10 part G, step G1b: the held set piece anchored on the ground that holds gate {@code g}; null for none. */
+    private SetPiece anchoredPiece(int g) {
+        int k = gatePiece[g];
+        if (k < 0) {
+            return null;
+        }
+        SetPiece piece = heldPieces[k];
+        return piece.held() && piece.arena().isPresent() ? piece : null;
+    }
+
+    /**
+     * M10 part G, step G1b: the anchor that sets {@code piece} at its hover height when gate {@code g}'s halt starts:
+     * the ground's scroll now plus the scroll the clock will run from its state now (this step done) until that halt.
+     * It follows {@link #step()} and {@link #scrollSpeed()} for a held-gates level (no arena boss, no timed halts, no hold
+     * zones, no crawl: {@link LevelScript} sees to them): one clock step a step, the sections' speeds (eased into each
+     * other when they ease), the ramp out of the gate before, the smoothstep into this one.
+     */
+    private double anchorAtHalt(int g, SetPiece piece) {
+        int tick = s.levelTick;
+        double from = rampFrom;
+        int ramp = rampTicks;
+        int length = rampLength;
+        boolean easeOut = easeOutOfArena;
+        double scroll = 0;
+        while (tick + 1 < gateEnd[g]) {
+            double speed = eased ? Sortie.timedHaltSpeed(s.script.sections(), tick) : sectionSpeedAt(tick);
+            if (ramp < 0 && tick >= gateStart[g]) {
+                int n = Math.max(1, gateEnd[g] - gateStart[g]);
+                speed = gateFrom[g] * (1 - ScrollPlan.smoothstep(Math.min(1, (tick - gateStart[g] + 1.0) / n)));
+            }
+            if (ramp >= 0 && easeOut) {
+                speed = from + (speed - from) * ScrollPlan.smoothstep((ramp + 1.0) / length);
+            } else if (ramp >= 0) {
+                speed = from + (speed - from) * ramp / SimStep.ticks(Sortie.ARENA_RAMP_SECONDS);
+            }
+            scroll += speed * SimStep.SECONDS;
+            tick++;
+            if (ramp >= 0 && ++ramp >= length) {
+                ramp = -1;
+            }
+        }
+        return s.groundScroll + scroll + piece.boss().orElseThrow().hoverY();
+    }
+
+    /** As {@link #sectionSpeed()} with the level clock at {@code tick} (its fraction as it is now). */
+    private double sectionSpeedAt(int tick) {
+        double t = (tick + (double) s.tickFraction / Sortie.CLOCK_ONE) * SimStep.SECONDS;
+        java.util.List<Section> sections = s.script.sections();
+        for (int i = 0; i < sections.size(); i++) {
+            if (t < sections.get(i).end()) {
+                return sections.get(i).speed();
+            }
+        }
+        return sections.getLast().speed();
     }
 
     /**
@@ -362,6 +438,11 @@ final class LevelClock {
         heldJumped = false;
         haltTicks = haltBase + cycles * every;
         haltBase = haltTicks;
+        SetPiece piece = anchoredPiece(gate);
+        if (piece != null) {
+            // M10 part G, step G1b: the held piece anchored in this gate is placed for its halt from here on.
+            piece.anchorAt(anchorAtHalt(gate, piece));
+        }
     }
 
     /**

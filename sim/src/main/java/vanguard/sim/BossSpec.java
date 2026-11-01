@@ -64,6 +64,14 @@ import java.util.Optional;
  *     layers), no stride, breach, coil or phase moves
  * @param squadron M10 part F (design/enemies/bosses/honour-guard): a squadron mid-boss's aces, one per part ({@link
  *     Squadron}); empty for every other boss. It has no arena, no chains and no phase moves
+ * @param held M10 part G, step G1b (design/enemies/ground/halo-platform; Level 41): a <b>held set piece</b>, not a boss
+ *     fight: it holds a held gate's halt ({@link LevelScript#gatePiece}) and shows no bar, no boss warning and no boss
+ *     music (the presentation filters its {@link SimEvents.Type#BOSS_ARRIVED} and the rest by this flag); the radio's
+ *     boss cues stay silent for it, it pays no Boss rush bonus and its death opens its gate. It may lie anchored on the
+ *     ground with its arena (the Halo Platform's ring), anchored at its gate's halt; no incoming warning
+ * @param spoofable M10 part G, step G1b (design/player/systems, the IFF spoofer; Level 41): its guns' volleys come late
+ *     while the ship carries the spoofer ({@link BossSpoofing}); only a held set piece (never a boss fight, an aircraft
+ *     or a hybrid)
  */
 public record BossSpec(
         double arriveSeconds,
@@ -95,7 +103,9 @@ public record BossSpec(
         Optional<DebrisFlow> debris,
         Optional<CoilSpec> coil,
         Optional<RingSpec> rings,
-        Optional<SquadronSpec> squadron) {
+        Optional<SquadronSpec> squadron,
+        boolean held,
+        boolean spoofable) {
     /** The beat a later phase holds its fire by default in the data (the frigate's crown opening), s. */
     public static final double PHASE_DELAY_SECONDS = 1;
     /** How much larger a unit is drawn on {@code high-air} than on the play plane; a boss's part offsets grow with it. */
@@ -185,6 +195,12 @@ public record BossSpec(
                         + ": a ringed boss has an arena without lanes, no stride, breach or coil and no phase moves");
             }
             rings.get().check(barName, phases, attacks);
+        }
+        if (held && incomingSeconds > 0) {
+            throw new IllegalArgumentException(barName + ": a held set piece has no boss warning");
+        }
+        if (spoofable && !held) {
+            throw new IllegalArgumentException(barName + ": only a held set piece's guns are spoofable");
         }
         if (squadron.isPresent()
                 && (arena.isPresent()

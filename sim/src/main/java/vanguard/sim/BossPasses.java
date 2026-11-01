@@ -305,7 +305,10 @@ final class BossPasses implements BossActions {
             SetPiece piece = setPieces[k];
             boolean onPlane = piece.onPlane();
             if (piece.boss().isPresent()) {
-                if (piece.arena().isPresent()) {
+                if (piece.arena().isPresent() && piece.held()) {
+                    // M10 part G, step G1b: a held piece anchored in its gate settles at that gate's halt.
+                    piece.ground(s.groundScroll, s.clock.halting() && s.clock.gate == s.clock.pieceGate(k));
+                } else if (piece.arena().isPresent()) {
                     piece.ground(s.groundScroll, s.scrollHalted());
                 }
                 if (piece.breach().isPresent()) {
@@ -332,8 +335,11 @@ final class BossPasses implements BossActions {
                 }
                 if (piece.bossTicks() == 0) {
                     events.add(SimEvents.Type.BOSS_ARRIVED, piece.x(), piece.y(), k);
-                    // M8 part H (gap check §5 H8): its arrival line (the arena's clock is halted).
-                    radio.cue(CueTrigger.BOSS_ARRIVAL, "");
+                    if (!piece.held()) {
+                        // M8 part H (gap check §5 H8): its arrival line (the arena's clock is halted). M10 part G, step
+                        // G1b: none for a held set piece (its gate's halt line instead).
+                        radio.cue(CueTrigger.BOSS_ARRIVAL, "");
+                    }
                 } else if (piece.swayTicks() == 0) {
                     events.add(SimEvents.Type.BOSS_SETTLED, piece.x(), piece.y(), k);
                 }
@@ -411,10 +417,13 @@ final class BossPasses implements BossActions {
             // M5 part H: the tear-free: the shockwave at the anchor, the stump left behind.
             events.add(SimEvents.Type.SPIRE_LIFT, piece.stumpX(), piece.stumpY(), bossPhase);
         }
-        if (timedOut(piece, boss, bossPhase - 1)) {
-            radio.cue(CueTrigger.BOSS_TIMEOUT, name);
+        if (!piece.held()) {
+            // M10 part G, step G1b: a held set piece's phases cue no boss lines.
+            if (timedOut(piece, boss, bossPhase - 1)) {
+                radio.cue(CueTrigger.BOSS_TIMEOUT, name);
+            }
+            radio.cue(CueTrigger.BOSS_PHASE, name);
         }
-        radio.cue(CueTrigger.BOSS_PHASE, name);
         if (k == partsPiece
                 && bossPhase > script.objectives().secondary().beforePhase()
                 && objectives.partsSurvived()) {
@@ -451,6 +460,12 @@ final class BossPasses implements BossActions {
             return;
         }
         force.fireFrom(x, y, gun, ship);
+    }
+
+    @Override
+    public void aimedAt(double x, double y, EnemyGun gun, double atX, double atY) {
+        // M10 part G, step G1b (the IFF spoofer): a held volley at the ship's stale point (no lead, no lure).
+        force.fireFromAt(x, y, gun, ship, atX, atY);
     }
 
     /** M9 part H, step H1b: no missile while the ship is this close to the battery (the bullet readability rule). */

@@ -29,7 +29,8 @@ class BossSpecBuilderTest {
                         RevenantWalkerSimTest.walker(true, 2),
                         RevenantWalkerSimTest.striking(true),
                         Act5HSpecs.SOVEREIGN,
-                        Act6FSpecs.GUARD)
+                        Act6FSpecs.GUARD,
+                        Act6GHaloSpecs.halo(3, true))
                 .stream()
                 .map(piece -> piece.boss().orElseThrow())
                 .map(boss -> boss.barName().equals("TEST CARRIER") ? boss.withIncomingSeconds(3) : boss)

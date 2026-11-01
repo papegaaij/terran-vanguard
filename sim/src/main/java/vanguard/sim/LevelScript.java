@@ -89,6 +89,7 @@ public record LevelScript(
         gateCycles = List.copyOf(gateCycles);
         uplinks = List.copyOf(uplinks);
         checkHeldArena(sections, groundUnits, setPieces, haltCycle, gateCycles, escortSwap, rookLoss);
+        checkHeldPieces(sections, groundUnits, setPieces, objectives.holds());
         checkUplinks(uplinks, groundObjects, objectives.secondary());
         checkForks(ground, waves, groundUnits, groundObjects);
         checkGroundAllies(
@@ -215,7 +216,8 @@ public record LevelScript(
      * <p>M10 part G, step G1a (design/campaign Level 41, the Halo Platform's halt): a gate without a ground holder is
      * held by exactly one boss set piece arriving in it ({@link #gatePiece}): the clock stands while it lives. Every
      * boss of a held-gates level holds a gate that way (none anchored, breaching or coiled), one per gate. The gates'
-     * own halt cycles ({@code gateCycles}) number the arena sections and exclude the level's one cycle.
+     * own halt cycles ({@code gateCycles}) number the arena sections and exclude the level's one cycle. M10 part G, step
+     * G1b: a {@link BossSpec#held() held} set piece may lie anchored with its arena (no lanes) in its gate.
      */
     private static void checkHeldArena(
             List<Section> sections,
@@ -258,7 +260,8 @@ public record LevelScript(
             BossSpec boss = piece.boss().get();
             int gate = gateOf(sections, boss.arriveSeconds());
             if (gate < 0
-                    || boss.arena().isPresent()
+                    || (boss.arena().isPresent()
+                            && (!boss.held() || boss.arena().get().lanes().count() > 0))
                     || boss.breach().isPresent()
                     || boss.coil().isPresent()
                     || groundUnits.stream().anyMatch(unit -> unit.holder() && gateOf(sections, unit.t()) == gate)
@@ -292,6 +295,34 @@ public record LevelScript(
         }
         if (escortSwap.isPresent() && rookLoss.isPresent()) {
             throw new IllegalArgumentException("an escort swap and Rook's scripted loss are not in one level");
+        }
+    }
+
+    /**
+     * M10 part G, step G1b (design/enemies/ground/halo-platform; Level 41): a {@link BossSpec#held() held} set piece
+     * holds a gate of a held-gates level ({@link #gatePiece}): no boss fight elsewhere (no bar, no warning). One anchored
+     * on the ground is anchored at its gate's halt from the scroll the level will run, so its level has no hold zones
+     * (their eases depend on play).
+     */
+    private static void checkHeldPieces(
+            List<Section> sections, List<GroundUnit> groundUnits, List<SetPieceSpec> setPieces, List<Hold> holds) {
+        boolean gates = groundUnits.stream().anyMatch(GroundUnit::holder);
+        boolean anchored = false;
+        for (int k = 0; k < setPieces.size(); k++) {
+            SetPieceSpec piece = setPieces.get(k);
+            if (piece.boss().isEmpty() || !piece.boss().get().held()) {
+                continue;
+            }
+            int gate = gateOf(sections, piece.boss().get().arriveSeconds());
+            if (!gates || gate < 0 || gatePiece(sections, setPieces, gate) != k) {
+                throw new IllegalArgumentException(
+                        "a held set piece holds a gate of a held-gates level, arriving in it: " + piece.slug());
+            }
+            anchored |= piece.boss().get().arena().isPresent();
+        }
+        if (anchored && !holds.isEmpty()) {
+            throw new IllegalArgumentException(
+                    "a held set piece anchored in its gate needs a level without hold zones");
         }
     }
 

@@ -13,6 +13,14 @@ interface BossActions {
         bullet(x, y, -StrictMath.PI / 2, gun.bulletSpeed(), gun.damage());
     }
 
+    /**
+     * M10 part G, step G1b (the IFF spoofer, {@link BossSpoofing}): one aimed shot of {@code gun} from (x, y) at the
+     * point (atX, atY) (a held volley's stale aim) instead of the ship; by default as {@link #aimed}.
+     */
+    default void aimedAt(double x, double y, EnemyGun gun, double atX, double atY) {
+        aimed(x, y, gun);
+    }
+
     /** A ring of {@code count} bullets from (x, y). */
     void ring(double x, double y, int count, double speed, double damage);
 

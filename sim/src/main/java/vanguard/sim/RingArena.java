@@ -25,11 +25,19 @@ import java.util.List;
  * <p><b>Locks.</b> A ring whose every battery is dead locks ({@link SimEvents.Type#RING_LOCKED}) and grinds to a halt
  * ({@link SimEvents.Type#RING_HALTED}); the boss's phases end on the count of locked rings ({@link #phaseOver}).
  *
- * <p><b>Death.</b> From the kill every battery cooks off in the rings' order, {@link RingSpec#cookoffSeconds()} apart
- * ({@link SimEvents.Type#RING_COOKOFF}, value {@link #cookoffValue}); the rings stop turning.
+ * <p><b>Death.</b> From the kill the batteries cook off in the rings' order, {@link RingSpec#cookoffSeconds()} apart
+ * ({@link SimEvents.Type#RING_COOKOFF}, value {@link #cookoffValue}); the rings stop turning. M10 part G, step G1b
+ * (design/enemies/ground/halo-platform: "the remaining turrets explode in turn"): the batteries still standing at the
+ * kill; with none standing (the Iron Sovereign's, its every ring locked) the wrecks, every battery.
  *
  * <p><b>The core</b> (step H1b): its opening, shield, fan glow, spiral cycle, rail and bays are its {@link RingCore}
  * ({@link #core()}), stepped here.
+ *
+ * <p><b>Losses</b> (M10 part G, step G1b; design/enemies/ground/halo-platform): with a {@link RingSpec.Losses} the
+ * turning rings speed up further by the count of dead batteries, each change eased over its time; the Halo Platform's
+ * phase on its dead turrets is its boss phase's own (its turrets as the parts it ends on). <b>Tells</b>: an attack
+ * with a {@link RingSpec.Tell} is told that long before each volley at each part that will fire it ({@link
+ * SimEvents.Type#TURRET_TELL}, through {@link SetPieceGuns}).
  *
  * <p>Its events are raised through the {@link BossActions}. Everything is allocated here; stepping does not allocate.
  * Its state is hashed with its boss (only a ringed boss hashes it).
@@ -62,6 +70,15 @@ public final class RingArena implements Hashed {
     private final int[] slotOf;
     /** Every battery in the cook-off order. */
     private final int[] order;
+    /**
+     * M10 part G, step G1b: the batteries that cook off (those standing at the kill, else every one), in order, and
+     * their count; set at the kill from {@link #standing}.
+     */
+    private final int[] cooking;
+
+    private int cookingCount;
+    /** M10 part G, step G1b: per battery (its index in {@link #order}), whether it stood after the last step. */
+    private final boolean[] standing;
 
     private final double[] radius;
     private final int[] lightTicks;
@@ -100,6 +117,19 @@ public final class RingArena implements Hashed {
     /** {@link #core} for the presentation, made once. */
     private final java.util.Optional<RingCore> coreView;
 
+    /** M10 part G, step G1b: the speed-up by dead batteries; null without one (then nothing of it is hashed). */
+    private final RingSpec.Losses losses;
+
+    private final int lossEaseTicks;
+    /** The dead batteries counted last step; the eased factor's start, its target and its steps since the change. */
+    private int lossDead;
+
+    private double lossFrom;
+    private double lossTo;
+    private int lossTicks;
+    /** M10 part G, step G1b: per boss attack, its tell before each volley, steps (0: none). */
+    private final int[] attackTellTicks;
+
     RingArena(SetPiece piece, BossSpec boss, SetPieceSpec setPiece) {
         this.piece = piece;
         spec = boss.rings().orElseThrow();
@@ -135,6 +165,8 @@ public final class RingArena implements Hashed {
             }
         }
         order = new int[batteries];
+        cooking = new int[batteries];
+        standing = new boolean[batteries];
         int n = 0;
         for (RingSpec.Ring ring : spec.rings()) {
             for (int k = 0; k < ring.parts().size(); k++) {
@@ -154,6 +186,13 @@ public final class RingArena implements Hashed {
         holdNow = new boolean[count];
         core = spec.core().map(c -> new RingCore(piece, boss, c, this)).orElse(null);
         coreView = java.util.Optional.ofNullable(core);
+        losses = spec.losses().orElse(null);
+        lossEaseTicks = losses == null ? 0 : SimStep.ticks(losses.easeSeconds());
+        attackTellTicks = new int[boss.attacks().size()];
+        for (int a = 0; a < attackTellTicks.length; a++) {
+            double tell = spec.tellSeconds(a);
+            attackTellTicks[a] = tell > 0 ? Math.max(1, SimStep.ticks(tell)) : 0;
+        }
         reset();
     }
 
@@ -170,12 +209,19 @@ public final class RingArena implements Hashed {
         Arrays.fill(lockTicks, -1);
         Arrays.fill(lockVelocity, 0);
         Arrays.fill(holdNow, false);
+        Arrays.fill(standing, false);
+        cookingCount = 0;
         lockedCount = 0;
         spinTicks = -1;
         deathTicks = -1;
         bearing = 0;
         shipX = 0;
         shipY = 0;
+        if (losses != null) {
+            lossDead = 0;
+            lossFrom = lossTo = losses.factor(0);
+            lossTicks = lossEaseTicks;
+        }
         if (core != null) {
             core.reset();
         }
@@ -205,6 +251,10 @@ public final class RingArena implements Hashed {
             }
         }
         double factor = spec.speedUp(lockedCount);
+        if (losses != null) {
+            // M10 part G, step G1b: the dead batteries' speed-up, each change eased from where it is.
+            factor *= lossFactor();
+        }
         for (int i = 0; i < count; i++) {
             prevAngle[i] = angle[i];
             RingSpec.Ring ring = spec.rings().get(i);
@@ -230,9 +280,52 @@ public final class RingArena implements Hashed {
         if (spinTicks == spinUpTicks) {
             actions.ring(SimEvents.Type.RINGS_UP, cx, cy, 0);
         }
+        for (int n = 0; n < order.length; n++) {
+            standing[n] = piece.partHp(order[n]) > 0;
+        }
         if (core != null) {
             core.step(phase, shipX, shipY, actions, firing);
         }
+    }
+
+    /**
+     * M10 part G, step G1b: this step's factor by the dead batteries: a new count starts an ease from the factor now to
+     * its own over {@link RingSpec.Losses#easeSeconds()}.
+     */
+    private double lossFactor() {
+        int dead = 0;
+        for (int n = 0; n < order.length; n++) {
+            dead += piece.partHp(order[n]) > 0 ? 0 : 1;
+        }
+        if (dead != lossDead) {
+            lossFrom = lossFactorNow();
+            lossTo = losses.factor(dead);
+            lossDead = dead;
+            lossTicks = 0;
+        } else if (lossTicks < lossEaseTicks) {
+            lossTicks++;
+        }
+        return lossFactorNow();
+    }
+
+    private double lossFactorNow() {
+        return lossTicks >= lossEaseTicks ? lossTo : lossFrom + (lossTo - lossFrom) * lossTicks / lossEaseTicks;
+    }
+
+    /** M10 part G, step G1b: the dead batteries counted at the last step (0 without a losses' speed-up). */
+    public int deadBatteries() {
+        return lossDead;
+    }
+
+    /** M10 part G, step G1b: whether attack {@code a}'s tell starts now, its volley {@code ticks} steps away. */
+    boolean tellDue(int a, int ticks) {
+        return attackTellTicks[a] > 0 && ticks == attackTellTicks[a];
+    }
+
+    /** M10 part G, step G1b: battery {@code p}'s attack (its own or its ring's); -1 for a part that is no battery. */
+    public int batteryAttack(int p) {
+        int i = ringOf[p];
+        return i < 0 ? -1 : spec.rings().get(i).attack(slotOf[p]);
     }
 
     /** A locked ring slows evenly to rest over the grind. */
@@ -312,6 +405,16 @@ public final class RingArena implements Hashed {
             deathTicks = 0;
             Arrays.fill(velocity, 0);
             System.arraycopy(angle, 0, prevAngle, 0, count);
+            cookingCount = 0;
+            for (int n = 0; n < order.length; n++) {
+                if (standing[n]) {
+                    cooking[cookingCount++] = order[n];
+                }
+            }
+            if (cookingCount == 0) {
+                System.arraycopy(order, 0, cooking, 0, order.length);
+                cookingCount = order.length;
+            }
             if (core != null) {
                 // Step BOSS70: a running volley dies with the core.
                 core.stop();
@@ -324,9 +427,9 @@ public final class RingArena implements Hashed {
         if (deathTicks < 0 || deathTicks > lastCookoffTicks()) {
             return;
         }
-        for (int n = 0; n < order.length; n++) {
+        for (int n = 0; n < cookingCount; n++) {
             if (deathTicks == SimStep.ticks(n * spec.cookoffSeconds())) {
-                int p = order[n];
+                int p = cooking[n];
                 actions.ring(SimEvents.Type.RING_COOKOFF, piece.partX(p), piece.partY(p), cookoffValue(p));
             }
         }
@@ -334,7 +437,7 @@ public final class RingArena implements Hashed {
     }
 
     private int lastCookoffTicks() {
-        return SimStep.ticks((order.length - 1) * spec.cookoffSeconds());
+        return SimStep.ticks((cookingCount - 1) * spec.cookoffSeconds());
     }
 
     /** The {@link SimEvents.Type#RING_COOKOFF} value of battery {@code p}: its ring × {@link #COOKOFF_RING} + its index. */
@@ -558,6 +661,10 @@ public final class RingArena implements Hashed {
         }
         if (core != null) {
             core.addTo(hash);
+        }
+        if (losses != null) {
+            // M10 part G, step G1b: only a ring with a losses' speed-up (Level 41's Halo) hashes these.
+            hash.add(lossDead).add(lossFrom).add(lossTo).add(lossTicks);
         }
     }
 }

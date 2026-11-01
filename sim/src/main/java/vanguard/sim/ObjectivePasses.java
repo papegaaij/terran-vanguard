@@ -475,7 +475,10 @@ final class ObjectivePasses {
                         piece.y(),
                         piece.stride().get().heading());
             }
-            radio.cue(CueTrigger.BOSS_DESTROYED, spec.slug());
+            if (!piece.held()) {
+                // M10 part G, step G1b: a held set piece's fall cues its gate's own line instead (HALO_DESTROYED).
+                radio.cue(CueTrigger.BOSS_DESTROYED, spec.slug());
+            }
             if (script.armourFloor() > 0) {
                 // M8 part H, step H2 (design/campaign Level 28): from the kill to the level's end the run cannot be
                 // lost.

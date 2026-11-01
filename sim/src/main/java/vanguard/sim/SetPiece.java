@@ -84,6 +84,8 @@ public final class SetPiece implements Hashed {
     final BossSweeps sweeps;
     /** Round 40: its attacks' aim turns (the Siege Spire's pods). */
     final BossAimTurns aimTurns;
+    /** M10 part G, step G1b: a spoofable piece's late volleys (the IFF spoofer); null for any other. */
+    final BossSpoofing spoofing;
     /** Its parts: HP, hit clocks, places, contacts and damage. */
     final SetPieceParts parts;
     /** Its flight: passes, a boss's arrival, sway, moves, lift and pose. */
@@ -125,6 +127,7 @@ public final class SetPiece implements Hashed {
                 this, boss, count, stride != null && boss.stride().get().hatchArmour());
         sweeps = new BossSweeps(this, boss);
         aimTurns = new BossAimTurns(this, boss);
+        spoofing = boss != null && boss.spoofable() ? new BossSpoofing() : null;
         // The helpers read the ones made before them.
         parts = new SetPieceParts(this, spec, boss);
         motion = new SetPieceMotion(this, spec, boss);
@@ -178,6 +181,10 @@ public final class SetPiece implements Hashed {
             if (squadron != null) {
                 // M10 part F: every ace waiting again (the boss checkpoint restarts the duel from the sting).
                 squadron.reset();
+            }
+            if (spoofing != null) {
+                // M10 part G, step G1b: the held volleys are lost.
+                spoofing.clear();
             }
             chains.place();
         }
@@ -631,7 +638,34 @@ public final class SetPiece implements Hashed {
                 // M10 part F: only a squadron (Level 40) hashes these.
                 squadron.addTo(hash);
             }
+            if (spoofing != null) {
+                // M10 part G, step G1b: only a spoofable piece (Level 41's Halo), and only while it holds a volley.
+                spoofing.addTo(hash);
+            }
         }
+    }
+
+    /**
+     * M10 part G, step G1b (design/player/systems, the IFF spoofer): the ship carries the spoofer, its delay {@code
+     * ticks} steps: a spoofable piece's volleys come that late ({@link BossSpoofing}); nothing for any other.
+     */
+    void spoof(int ticks) {
+        if (spoofing != null) {
+            spoofing.delay(ticks);
+        }
+    }
+
+    /** M10 part G, step G1b: whether the spoofer holds one of its volleys now (the amber stutter). */
+    public boolean spoofHolding() {
+        return spoofing != null && spoofing.holding();
+    }
+
+    /**
+     * M10 part G, step G1b (design/enemies/ground/halo-platform; Level 41): whether it is a held set piece ({@link
+     * BossSpec#held()}): no bar, no boss warning, no boss music.
+     */
+    public boolean held() {
+        return boss != null && boss.held();
     }
 
     double x() {

@@ -30,6 +30,12 @@ final class SetPieceGuns {
     private final BossLines lines;
 
     private final PartShields shields;
+    /** M10 part G, step G1b: a spoofable piece's late volleys; null for any other. */
+    private final BossSpoofing spoofing;
+    /** M10 part G, step G1b: the ship's place this step (a held volley's stale aim); derived each step, not hashed. */
+    private double shipX;
+
+    private double shipY;
     /** {@link SetPieceParts#partHp}: the guns of wrecked parts are silent. */
     private final double[] partHp;
 
@@ -82,6 +88,7 @@ final class SetPieceGuns {
         squadron = piece.squadron;
         lines = piece.lines;
         shields = piece.shields;
+        spoofing = piece.spoofing;
         partHp = parts.partHp;
         int count = spec.parts().size();
         volleyTicks = new int[count];
@@ -180,6 +187,8 @@ final class SetPieceGuns {
         if (boss == null || !motion.present || piece.destroyed()) {
             return;
         }
+        this.shipX = shipX;
+        this.shipY = shipY;
         chains.bend(
                 shipX, shipY, !engaged ? Double.NaN : boss.phases().get(phase).bendRadians());
         if (!engaged) {
@@ -212,6 +221,13 @@ final class SetPieceGuns {
         if (lines != null) {
             // M9 part H, step H1b: the running rail line goes on; the oldest due one starts when the gate allows.
             lines.step(shipX, shipY, ring, actions);
+        }
+        if (spoofing != null) {
+            // M10 part G, step G1b (the IFF spoofer): the held volleys come a step nearer; the due ones fire.
+            spoofing.tick();
+            if (firing) {
+                releaseHeld(actions);
+            }
         }
         while (phase < boss.phases().size() - 1 && phaseOver(boss.phases().get(phase))) {
             if (!partsDown(boss.phases().get(phase))
@@ -562,10 +578,85 @@ final class SetPieceGuns {
                 // M9 part H, step H1b: the shut core's slits glow before its fan.
                 actions.ring(SimEvents.Type.CORE_GLOW, motion.x, motion.y, a);
             }
+            if (ring != null && firing && ring.tellDue(a, attackTicks[a])) {
+                // M10 part G, step G1b: the told attack's parts tell its volley (the muzzles glow, the eye flares).
+                tell(attack, current, actions);
+            }
             return;
         }
         attackTicks[a] = Math.max(1, SimStep.ticks(interval(attack, current)));
         volley(a, current, actions, firing);
+    }
+
+    /**
+     * M10 part G, step G1b ({@link RingSpec.Tell}): each living part of {@code attack} that may fire now (a battery
+     * inside the fire arc, a part that is no battery) tells its coming volley ({@link SimEvents.Type#TURRET_TELL}).
+     */
+    private void tell(BossSpec.Attack attack, BossSpec.Phase current, BossActions actions) {
+        List<Integer> firers = firingParts(attack, current);
+        for (int i = 0; i < firers.size(); i++) {
+            int p = firers.get(i);
+            if (partHp[p] > 0 && ring.fires(p)) {
+                actions.ring(SimEvents.Type.TURRET_TELL, parts.partX(p), parts.partY(p), p);
+            }
+        }
+    }
+
+    /** M10 part G, step G1b: whether the IFF spoofer fools this piece now. */
+    private boolean spoofed() {
+        return spoofing != null && spoofing.active();
+    }
+
+    /**
+     * M10 part G, step G1b ({@link BossSpoofing}): attack {@code a}'s volley of {@code kind} from part {@code p} is held
+     * for the spoofer's delay ({@link SimEvents.Type#BOSS_SPOOFED}); false when it cannot be (it fires at once).
+     */
+    private boolean hold(int kind, int a, int p, BossActions actions) {
+        if (!spoofing.hold(kind, a, p, shipX, shipY)) {
+            return false;
+        }
+        actions.ring(SimEvents.Type.BOSS_SPOOFED, parts.partX(p), parts.partY(p), p);
+        return true;
+    }
+
+    /**
+     * M10 part G, step G1b: the held volleys due now, each from where its part is now: an aimed shot at its stale point,
+     * a ring, a rail line's request (it lapses as any due line does once its battery leaves the arc); one whose part
+     * died is lost. A battery turned out of the arc meanwhile still fires its held volley (it came due inside it: the
+     * spoofer delays the fire, it takes none away).
+     */
+    private void releaseHeld(BossActions actions) {
+        for (int k = spoofing.due(); k >= 0; k = spoofing.due()) {
+            int kind = spoofing.kind(k);
+            int a = spoofing.attack(k);
+            int p = spoofing.part(k);
+            double atX = spoofing.x(k);
+            double atY = spoofing.y(k);
+            spoofing.release(k);
+            if (partHp[p] <= 0) {
+                continue;
+            }
+            BossSpec.Attack attack = boss.attacks().get(a);
+            if (kind == BossSpoofing.LINE) {
+                lines.request(a, p);
+            } else if (kind == BossSpoofing.RING) {
+                actions.ring(
+                        parts.partX(p),
+                        fireY(p),
+                        attack.count(),
+                        attack.gun().bulletSpeed(),
+                        attack.gun().damage());
+            } else {
+                actions.aimedAt(parts.partX(p), fireY(p), attack.gun(), atX, atY);
+            }
+        }
+    }
+
+    /** Where part {@code p}'s shots leave: its centre; M5 part E: an arena boss's surfacing part its box's lower edge. */
+    private double fireY(int p) {
+        return arena != null && p == arena.surfacePart()
+                ? parts.partY(p) - spec.parts().get(p).box().height() / 2
+                : parts.partY(p);
     }
 
     /**
@@ -642,8 +733,11 @@ final class SetPieceGuns {
             return;
         }
         if (attack.pattern() == BossSpec.Pattern.LINE) {
-            // M9 part H, step H1b: its rail line is due; the boss starts one at a time (BossLines).
-            lines.request(a, p);
+            // M9 part H, step H1b: its rail line is due; the boss starts one at a time (BossLines). M10 part G, step
+            // G1b: the IFF spoofer holds the request (its telegraph starts late).
+            if (!(spoofed() && hold(BossSpoofing.LINE, a, p, actions))) {
+                lines.request(a, p);
+            }
             return;
         }
         if (ring != null && attack.gun().homing().isPresent()) {
@@ -672,9 +766,17 @@ final class SetPieceGuns {
             return;
         }
         // M5 part E: an arena boss's surfacing part fires from its hit box's lower edge (the Kraken's beak).
-        double fireY = arena != null && p == arena.surfacePart()
-                ? parts.partY(p) - spec.parts().get(p).box().height() / 2
-                : parts.partY(p);
+        double fireY = fireY(p);
+        if (spoofed()
+                && !attack.firesDown(p)
+                && hold(
+                        attack.pattern() == BossSpec.Pattern.RING ? BossSpoofing.RING : BossSpoofing.SHOT,
+                        a,
+                        p,
+                        actions)) {
+            // M10 part G, step G1b (the IFF spoofer): the volley that came due is held, aimed where the ship is now.
+            return;
+        }
         if (attack.pattern() == BossSpec.Pattern.RING) {
             actions.ring(
                     parts.partX(p),

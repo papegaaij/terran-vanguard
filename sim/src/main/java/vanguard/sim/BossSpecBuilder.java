@@ -40,6 +40,8 @@ public final class BossSpecBuilder {
     private Optional<CoilSpec> coil;
     private Optional<RingSpec> rings;
     private Optional<SquadronSpec> squadron;
+    private boolean held;
+    private boolean spoofable;
 
     BossSpecBuilder(
             double arriveSeconds,
@@ -85,6 +87,8 @@ public final class BossSpecBuilder {
         coil = Optional.empty();
         rings = Optional.empty();
         squadron = Optional.empty();
+        held = false;
+        spoofable = false;
     }
 
     BossSpecBuilder(BossSpec spec) {
@@ -118,6 +122,8 @@ public final class BossSpecBuilder {
         coil = spec.coil();
         rings = spec.rings();
         squadron = spec.squadron();
+        held = spec.held();
+        spoofable = spec.spoofable();
     }
 
     /** Its {@link BossSpec#engagesOnArrival()}. */
@@ -222,6 +228,18 @@ public final class BossSpecBuilder {
         return this;
     }
 
+    /** M10 part G, step G1b: its {@link BossSpec#held()} (a held set piece: no bar, warning or boss music). */
+    public BossSpecBuilder held(boolean held) {
+        this.held = held;
+        return this;
+    }
+
+    /** M10 part G, step G1b: its {@link BossSpec#spoofable()} (a held set piece's guns the IFF spoofer delays). */
+    public BossSpecBuilder spoofable(boolean spoofable) {
+        this.spoofable = spoofable;
+        return this;
+    }
+
     /** The boss script, checked. */
     public BossSpec build() {
         return new BossSpec(
@@ -254,6 +272,8 @@ public final class BossSpecBuilder {
                 debris,
                 coil,
                 rings,
-                squadron);
+                squadron,
+                held,
+                spoofable);
     }
 }
