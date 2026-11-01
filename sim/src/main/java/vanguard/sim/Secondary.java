@@ -55,6 +55,9 @@ import java.util.List;
  *     its share of that enemy's units the level sends, its kills only (however they die: shot, rammed, struck,
  *     Rook's), judged at the end as any kill ratio ({@link #killRatioOf(String, double, int, String)}); empty for
  *     every enemy
+ * @param files M10 part G, step G1a (design/campaign Level 41, {@code FILES n / 3}): with more than 0, how many of the
+ *     level's archive cores ({@link Uplinks}) must have their files uploaded: judged at the level's end, met with that
+ *     many in ({@link #files(int, int, String)}); 0 for none
  *
  * <p>Built with {@link #builder()} (M10 part C, step C1, RF9b's pattern): the factories and {@code withX} copies are
  * one-liners over it, and a new kind is a new builder setter, never another positional constructor.
@@ -81,9 +84,28 @@ public record Secondary(
         String spared,
         boolean objects,
         int saved,
-        String enemy) {
+        String enemy,
+        int files) {
     public Secondary {
         java.util.Objects.requireNonNull(enemy);
+        if (files < 0
+                || (files > 0
+                        && (killRatio > 0
+                                || !groups.isEmpty()
+                                || !escapes.isEmpty()
+                                || !killAll.isEmpty()
+                                || !parts.isEmpty()
+                                || afloat
+                                || sondes
+                                || integrity > 0
+                                || links
+                                || untouched
+                                || standing
+                                || !spared.isEmpty()
+                                || objects
+                                || saved > 0))) {
+            throw new IllegalArgumentException("a files objective counts the uploads, nothing else: " + files);
+        }
         if (!enemy.isEmpty() && !(killRatio > 0)) {
             throw new IllegalArgumentException("only a kill ratio is scoped to an enemy: " + enemy);
         }
@@ -237,7 +259,8 @@ public record Secondary(
                 "",
                 false,
                 0,
-                "");
+                "",
+                0);
     }
 
     /** A kill ratio of {@code killRatio} for {@code credits} (0 and 0: {@link #NONE}). */
@@ -289,6 +312,23 @@ public record Secondary(
             throw new IllegalArgumentException("a saved objective names how many must come home: " + target);
         }
         return builder().saved(target).credits(credits).label(label).build();
+    }
+
+    /**
+     * M10 part G, step G1a (design/campaign Level 41, Varga's uplink): {@code files: target}, at least {@code target} of
+     * the level's archive cores uploaded ({@link Uplinks}), for {@code credits}, with the tracker's {@code label} ({@code
+     * FILES}): judged at the level's end.
+     */
+    public static Secondary files(int target, int credits, String label) {
+        if (target < 1) {
+            throw new IllegalArgumentException("a files objective names how many files must be in: " + target);
+        }
+        return builder().files(target).credits(credits).label(label).build();
+    }
+
+    /** M10 part G: whether it is a files objective (the archive cores' uploads). */
+    public boolean byFiles() {
+        return files > 0;
     }
 
     /** M10 part C: whether it is a saved objective (the air allies home). */
@@ -445,7 +485,8 @@ public record Secondary(
                 && !untouched
                 && !standing
                 && spared.isEmpty()
-                && saved == 0;
+                && saved == 0
+                && files == 0;
     }
 
     /** Whether the objective is about groups rather than the kill ratio. */

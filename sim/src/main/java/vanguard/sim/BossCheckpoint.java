@@ -59,6 +59,21 @@ final class BossCheckpoint {
     private final Sightings sightings = new Sightings(null, null);
     /** M5 part E: the naval convoy's state (afloat, damaged, sunk, where); null without one. */
     private final Convoy naval;
+    /**
+     * M10 part G, step G1a (design/campaign Level 41, the Halo Platform's checkpoint at its gate's halt): the held gates'
+     * state then (the current gate, its halt's clock, the cycles before it, the scroll's last speed, the holders left,
+     * the halt cycles' units let in).
+     */
+    private int gate;
+
+    private int haltTicks;
+    private int haltBase;
+    private int haltCycles;
+    private double lastSpeed;
+    private int holdersLeft;
+    private int haltReleased;
+    /** M10 part G, step G1a: the archive cores' uploads then; null without them. */
+    private final Uplinks uplinks;
 
     BossCheckpoint(Sortie s) {
         this.s = s;
@@ -80,6 +95,7 @@ final class BossCheckpoint {
         towCrates = new boolean[s.tows.length];
         holdState = new int[s.holdZones.holdState.length];
         naval = script.objectives().convoy().map(Convoy::new).orElse(null);
+        uplinks = script.uplinks().isEmpty() ? null : new Uplinks(script.uplinks(), null, null);
     }
 
     /** Records the sortie's state now. */
@@ -142,6 +158,19 @@ final class BossCheckpoint {
         if (naval != null) {
             naval.copyFrom(s.convoy);
         }
+        if (s.clock.heldArena) {
+            LevelClock clock = s.clock;
+            gate = clock.gate;
+            haltTicks = clock.haltTicks;
+            haltBase = clock.haltBase;
+            haltCycles = clock.haltCycles;
+            lastSpeed = clock.lastSpeed;
+            holdersLeft = s.holdersLeft;
+            haltReleased = s.force.haltReleased();
+        }
+        if (uplinks != null) {
+            uplinks.copyFrom(s.uplinks);
+        }
     }
 
     /** Restarts the sortie at the recorded state: a new attempt on an empty field; the boss arrives again. */
@@ -178,6 +207,17 @@ final class BossCheckpoint {
         ground.nextDebris = nextDebris;
         s.streamReleased = streamReleased;
         s.resetArena();
+        if (s.clock.heldArena) {
+            // M10 part G, step G1a: the gate whose halt recorded it is current again, its holders standing.
+            s.clock.restoreGate(gate, haltTicks, haltBase, haltCycles, lastSpeed);
+            s.holdersLeft = holdersLeft;
+            s.holdersOutSeen = 0;
+            s.force.restoreHalt(haltReleased);
+        }
+        if (uplinks != null) {
+            // M10 part G, step G1a: the files in stay in; a core on the field then (or still under its hatch) is gone.
+            s.uplinks.restore(uplinks, nextGroundObject);
+        }
         s.vents.restore(s.levelTick, s.groundScroll);
         if (s.plumes != null) {
             s.plumes.reset();

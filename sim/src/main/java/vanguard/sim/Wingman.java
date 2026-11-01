@@ -222,6 +222,11 @@ public final class Wingman {
     private Lightning lightning;
     /** M10 part A, step A1b: the eruptions, out of whose telling vents' fans he keeps; null without. */
     private Eruptions eruptions;
+    /**
+     * M10 part G, step G1a (design/enemies/ground/shield-pylon, The pylon gates: Rook takes the pylons first): whether a
+     * held gate's halt runs now; set each step by the escort slot (not hashed: the clock decides it).
+     */
+    private boolean halting;
     /** M7 part F: where his goal moves clear of the walker's flame cone and the furnace vents (made once). */
     private final RookHazards hazards;
 
@@ -466,6 +471,11 @@ public final class Wingman {
         eruptions = vents;
     }
 
+    /** M10 part G, step G1a: whether a held gate's halt runs now (its holders then come first for him). */
+    void halting(boolean halt) {
+        halting = halt;
+    }
+
     /** M7 part C: he keeps this far below a standing tendril's line (his hull's edge to the line), px. */
     static final double TENDRIL_CLEARANCE = 12;
 
@@ -618,7 +628,10 @@ public final class Wingman {
                 continue;
             }
             targetSeen |= enemy.serial() == target;
-            int rank = enemy.serial() == gateAnchor ? 0 : enemy.serial() == playerHit ? 1 : beside ? 2 : 3;
+            // M10 part G, step G1a: in a held gate's halt its holders (the pylons) before anything else.
+            int rank = enemy.serial() == gateAnchor || (halting && enemy.holder())
+                    ? 0
+                    : enemy.serial() == playerHit ? 1 : beside ? 2 : 3;
             double distance = dx * dx + dy * dy;
             if (rank < bestRank || (rank == bestRank && distance < bestDistance)) {
                 best = enemy.serial();

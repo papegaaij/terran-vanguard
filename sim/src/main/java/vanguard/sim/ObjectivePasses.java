@@ -481,7 +481,13 @@ final class ObjectivePasses {
                 // lost.
                 ship.defences().floor(script.armourFloor());
             }
-            if (s.arenaEndTicks >= 0 && s.levelTick >= s.arenaStartTicks && s.levelTick < s.arenaEndTicks - 1) {
+            if (s.clock.heldArena) {
+                // M10 part G, step G1a (Level 41's Halo Platform): a boss of a held-gates level holds its gate: it
+                // opens.
+                if (s.clock.pieceGate(k) == s.clock.gate) {
+                    s.holderDown(piece.x(), piece.y());
+                }
+            } else if (s.arenaEndTicks >= 0 && s.levelTick >= s.arenaStartTicks && s.levelTick < s.arenaEndTicks - 1) {
                 s.arenaJump = true;
             }
             // M7 part F: an arena that holds after its boss keeps the clock halted over the death chain and the hold.
@@ -608,6 +614,10 @@ final class ObjectivePasses {
         // A kill-ratio secondary is judged at the end (design/systems/scoring): its line before the level-end line (M10
         // part D: a scoped one on its enemy's kills).
         if (objectives.meetsKillRatio(tally.kills())) {
+            paySecondary();
+        }
+        if (s.uplinks != null && objectives.filesAtEnd(s.uplinks.filesIn())) {
+            // M10 part G, step G1a (Level 41's FILES): judged at the end, met with its target of files in.
             paySecondary();
         }
         radio.end(home);

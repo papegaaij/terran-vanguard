@@ -51,6 +51,11 @@ import vanguard.sim.ObjectiveSpec.Naval;
  * @param turn M10 part A, step A1b (design/enemies, The three-way war; Level 37): the turn's time on the level clock,
  *     s: the hunting waves' links ({@link WaveSpec#hunts()}) are live from it (before it the Vrell and the Ascendancy
  *     fly side by side); empty (the default): live from the hunters' entry
+ * @param gateCycles M10 part G, step G1a (design/campaign Level 41, the halts): each held gate's own halt cycle, in the
+ *     gates' order (one entry per arena section; an empty one for a gate without); empty (the default) for none, or
+ *     for the level's one {@code haltCycle} (Level 29's), which it excludes
+ * @param uplinks M10 part G, step G1a (Level 41, the secondary {@code FILES}): the archive cores under their hatches
+ *     ({@link Uplinks}); empty (the default) for none
  */
 public record LevelScript(
         int number,
@@ -74,12 +79,17 @@ public record LevelScript(
         double armourFloor,
         Optional<HaltCycle> haltCycle,
         Optional<EscortSwapSpec> escortSwap,
-        Optional<Double> turn) {
+        Optional<Double> turn,
+        List<Optional<HaltCycle>> gateCycles,
+        List<UplinkSpec> uplinks) {
     public LevelScript {
         if (!turn.map(at -> at >= 0).orElse(true)) {
             throw new IllegalArgumentException("the turn is a time on the level clock: " + turn.get());
         }
-        checkHeldArena(sections, groundUnits, setPieces, haltCycle, escortSwap, rookLoss);
+        gateCycles = List.copyOf(gateCycles);
+        uplinks = List.copyOf(uplinks);
+        checkHeldArena(sections, groundUnits, setPieces, haltCycle, gateCycles, escortSwap, rookLoss);
+        checkUplinks(uplinks, groundObjects, objectives.secondary());
         checkForks(ground, waves, groundUnits, groundObjects);
         checkGroundAllies(
                 sections,
@@ -191,7 +201,9 @@ public record LevelScript(
                 armourFloor,
                 Optional.empty(),
                 Optional.empty(),
-                Optional.empty());
+                Optional.empty(),
+                List.of(),
+                List.of());
     }
 
     /**
@@ -199,19 +211,25 @@ public record LevelScript(
      * GroundUnit#holder() holder} has a held arena: exactly one arena section, of speed 0, not crawling and without a
      * hold after a boss, and no anchored, breaching or coiled boss (its holders hold the clock, not a boss). A halt
      * cycle and an escort swap need one; the swap is not combined with Rook's scripted loss.
+     *
+     * <p>M10 part G, step G1a (design/campaign Level 41, the Halo Platform's halt): a gate without a ground holder is
+     * held by exactly one boss set piece arriving in it ({@link #gatePiece}): the clock stands while it lives. Every
+     * boss of a held-gates level holds a gate that way (none anchored, breaching or coiled), one per gate. The gates'
+     * own halt cycles ({@code gateCycles}) number the arena sections and exclude the level's one cycle.
      */
     private static void checkHeldArena(
             List<Section> sections,
             List<GroundUnit> groundUnits,
             List<SetPieceSpec> setPieces,
             Optional<HaltCycle> haltCycle,
+            List<Optional<HaltCycle>> gateCycles,
             Optional<EscortSwapSpec> escortSwap,
             Optional<RookLossSpec> rookLoss) {
         java.util.Objects.requireNonNull(haltCycle);
         java.util.Objects.requireNonNull(escortSwap);
         boolean held = groundUnits.stream().anyMatch(GroundUnit::holder);
         if (!held) {
-            if (haltCycle.isPresent() || escortSwap.isPresent()) {
+            if (haltCycle.isPresent() || escortSwap.isPresent() || !gateCycles.isEmpty()) {
                 throw new IllegalArgumentException("a halt cycle or an escort swap needs a held arena's holders");
             }
             return;
@@ -233,9 +251,33 @@ public record LevelScript(
         if (groundUnits.stream().anyMatch(unit -> unit.holder() && !(unit.t() < arenaEnd))) {
             throw new IllegalArgumentException("a held arena's holders enter before its end (" + arenaEnd + " s)");
         }
+        for (SetPieceSpec piece : setPieces) {
+            if (!piece.isBoss()) {
+                continue;
+            }
+            BossSpec boss = piece.boss().get();
+            int gate = gateOf(sections, boss.arriveSeconds());
+            if (gate < 0
+                    || boss.arena().isPresent()
+                    || boss.breach().isPresent()
+                    || boss.coil().isPresent()
+                    || groundUnits.stream().anyMatch(unit -> unit.holder() && gateOf(sections, unit.t()) == gate)
+                    || setPieces.stream()
+                                    .filter(other -> other.isBoss()
+                                            && gateOf(
+                                                            sections,
+                                                            other.boss().get().arriveSeconds())
+                                                    == gate)
+                                    .count()
+                            > 1) {
+                throw new IllegalArgumentException("a held arena's holders hold its clock: a boss in the level holds a"
+                        + " gate of its own, arriving in it (not anchored, breaching or coiled): " + piece.slug());
+            }
+        }
         for (int g = 0; g < arenas.size(); g++) {
             int gate = g;
-            if (groundUnits.stream().noneMatch(unit -> unit.holder() && gateOf(sections, unit.t()) == gate)) {
+            if (groundUnits.stream().noneMatch(unit -> unit.holder() && gateOf(sections, unit.t()) == gate)
+                    && gatePiece(sections, setPieces, gate) < 0) {
                 throw new IllegalArgumentException("every held gate has a holder: gate " + g + " ending at "
                         + arenas.get(g).end() + " s has none");
             }
@@ -244,8 +286,9 @@ public record LevelScript(
             throw new IllegalArgumentException(
                     "an escort swap releases at the one held arena, not at a gate of several");
         }
-        if (setPieces.stream().anyMatch(piece -> piece.isBoss())) {
-            throw new IllegalArgumentException("a held arena's holders hold its clock: no boss fights in the level");
+        if (!gateCycles.isEmpty() && (gateCycles.size() != arenas.size() || haltCycle.isPresent())) {
+            throw new IllegalArgumentException("the gates' halt cycles are one per held gate (" + arenas.size()
+                    + "), instead of the level's one: " + gateCycles.size());
         }
         if (escortSwap.isPresent() && rookLoss.isPresent()) {
             throw new IllegalArgumentException("an escort swap and Rook's scripted loss are not in one level");
@@ -268,6 +311,55 @@ public record LevelScript(
             gate++;
         }
         return -1;
+    }
+
+    /**
+     * M10 part G, step G1a (design/campaign Level 41, the Halo Platform's halt): the index among the level's set pieces
+     * of the boss that holds held gate {@code gate} (arriving in it; the gate has no ground holder); -1 for a gate its
+     * ground holders hold (or none).
+     */
+    public int gatePiece(int gate) {
+        return gatePiece(sections, setPieces, gate);
+    }
+
+    private static int gatePiece(List<Section> sections, List<SetPieceSpec> setPieces, int gate) {
+        for (int k = 0; k < setPieces.size(); k++) {
+            SetPieceSpec piece = setPieces.get(k);
+            if (piece.isBoss() && gateOf(sections, piece.boss().get().arriveSeconds()) == gate) {
+                return k;
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * M10 part G, step G1a (Level 41, the secondary {@code FILES}): each uplink's hatch is a plain destructible among the
+     * ground objects (not hardened, no trigger, group, charge, branch, sub or low-air object), one hatch per core; a
+     * {@code files} secondary counts no more files than the level has cores.
+     */
+    private static void checkUplinks(List<UplinkSpec> uplinks, List<GroundObjectSpec> objects, Secondary secondary) {
+        java.util.Set<Integer> hatches = new java.util.HashSet<>();
+        for (UplinkSpec uplink : uplinks) {
+            if (uplink.hatch() >= objects.size() || !hatches.add(uplink.hatch())) {
+                throw new IllegalArgumentException("an uplink's hatch is a ground object of its own: " + uplink);
+            }
+            GroundObjectSpec hatch = objects.get(uplink.hatch());
+            if (!(hatch.hp() > 0)
+                    || hatch.trigger()
+                    || hatch.hardened()
+                    || hatch.group() >= 0
+                    || hatch.blast().isPresent()
+                    || hatch.branch().isPresent()
+                    || hatch.submerged()
+                    || hatch.lowAir()) {
+                throw new IllegalArgumentException(
+                        "an uplink's hatch is a plain destructible on the ground: " + uplink);
+            }
+        }
+        if (secondary.files() > uplinks.size()) {
+            throw new IllegalArgumentException(
+                    "a files secondary counts the level's cores: " + secondary.files() + " of " + uplinks.size());
+        }
     }
 
     /** M9 part B: whether the level has a held arena (a holder among its ground units). */
@@ -463,7 +555,9 @@ public record LevelScript(
                 .armourFloor(armourFloor)
                 .haltCycle(haltCycle)
                 .escortSwap(escortSwap)
-                .turn(turn);
+                .turn(turn)
+                .gateCycles(gateCycles)
+                .uplinks(uplinks);
     }
 
     /**
@@ -494,6 +588,8 @@ public record LevelScript(
         private Optional<HaltCycle> haltCycle = Optional.empty();
         private Optional<EscortSwapSpec> escortSwap = Optional.empty();
         private Optional<Double> turn = Optional.empty();
+        private List<Optional<HaltCycle>> gateCycles = List.of();
+        private List<UplinkSpec> uplinks = List.of();
 
         private Builder(int number, int act) {
             this.number = number;
@@ -622,6 +718,18 @@ public record LevelScript(
             return this;
         }
 
+        /** M10 part G, step G1a: each held gate's own halt cycle (design/campaign Level 41); empty by default. */
+        public Builder gateCycles(List<Optional<HaltCycle>> gateCycles) {
+            this.gateCycles = gateCycles;
+            return this;
+        }
+
+        /** M10 part G, step G1a: the archive cores under their hatches (Level 41's {@code FILES}); empty by default. */
+        public Builder uplinks(List<UplinkSpec> uplinks) {
+            this.uplinks = uplinks;
+            return this;
+        }
+
         /** The level: the sub-records validated their own parts, the level checks them against each other. */
         public LevelScript build() {
             return new LevelScript(
@@ -646,7 +754,9 @@ public record LevelScript(
                     armourFloor,
                     haltCycle,
                     escortSwap,
-                    turn);
+                    turn,
+                    gateCycles,
+                    uplinks);
         }
     }
 

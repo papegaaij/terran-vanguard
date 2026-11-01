@@ -289,6 +289,8 @@ final class EscortSlot {
             BreachArena breach = s.breachBoss.breach().orElseThrow();
             wingman.pull(breach.pullXAt(wingman.x(), wingman.y()), breach.pullYAt(wingman.x(), wingman.y()));
         }
+        // M10 part G, step G1a: in a held gate's halt the gate's holders come first for him.
+        wingman.halting(s.clock.heldArena && s.clock.halting());
         wingman.fly(
                 ship.x(),
                 ship.y(),

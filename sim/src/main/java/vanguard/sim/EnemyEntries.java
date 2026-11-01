@@ -40,10 +40,13 @@ final class EnemyEntries {
 
     private final int[] sideWarningEnds;
     private final int[] sideWarningEdges;
-    /** M9 part B: the halt cycle's plan (design/campaign Level 29); null without one. */
-    private final WaveSchedule haltWaves;
-    /** M9 part B: the halt cycle's length, steps; 0 without one. */
-    private final int haltEveryTicks;
+    /**
+     * M9 part B: the halt cycle's plan (design/campaign Level 29); null without one. M10 part G, step G1a: per held gate
+     * (one entry, the level's one cycle, serving every gate).
+     */
+    private final WaveSchedule[] haltWaves;
+    /** M9 part B: the halt cycle's length, steps; 0 without one. M10 part G: per gate, as {@link #haltWaves}. */
+    private final int[] haltEveryTicks;
     /** M9 part B: whether a ground unit enters dormant (the wake pass runs only then). */
     private final boolean dormants;
 
@@ -67,7 +70,8 @@ final class EnemyEntries {
     /**
      * @param reversedAt M7 part G: whether the scroll runs reversed at a level time, s: the ground units entering then
      *     are flipped
-     * @param haltEveryTicks M9 part B: the halt cycle's length, steps; 0 without one ({@code haltWaves} null)
+     * @param haltEveryTicks M9 part B: the halt cycle's length, steps; 0 without one ({@code haltWaves} null); M10 part
+     *     G: per gate (one entry: the level's one cycle at every gate)
      */
     EnemyEntries(
             EnemyForce force,
@@ -75,8 +79,8 @@ final class EnemyEntries {
             SimEvents events,
             List<EnemySpec> kinds,
             WaveSchedule waves,
-            WaveSchedule haltWaves,
-            int haltEveryTicks,
+            WaveSchedule[] haltWaves,
+            int[] haltEveryTicks,
             List<GroundUnit> groundUnits,
             java.util.function.DoublePredicate reversedAt,
             ObjectiveHook objectiveHook,
@@ -133,8 +137,10 @@ final class EnemyEntries {
     /** Back to the level start: the schedules at their first unit, nothing let in. */
     void reset() {
         waves.reset();
-        if (haltWaves != null) {
-            haltWaves.reset();
+        for (WaveSchedule halt : haltWaves) {
+            if (halt != null) {
+                halt.reset();
+            }
         }
         haltReleased = 0;
         holdersLeftOut = 0;
@@ -156,19 +162,26 @@ final class EnemyEntries {
     }
 
     /** See {@link EnemyForce#spawnHalt}. */
-    void spawnHalt(int haltTick) {
-        if (haltWaves == null) {
+    void spawnHalt(int gate, int haltTick, int cyclesBefore) {
+        int g = haltWaves.length == 1 ? 0 : gate;
+        WaveSchedule halt = haltWaves[g];
+        if (halt == null) {
             return;
         }
-        int cycle = haltTick / haltEveryTicks;
-        int tick = haltTick % haltEveryTicks;
+        int cycle = cyclesBefore + haltTick / haltEveryTicks[g];
+        int tick = haltTick % haltEveryTicks[g];
         if (tick == 0) {
-            haltWaves.reset();
+            halt.reset();
         }
         int before = spawned;
         // Each cycle's waves are waves of their own (a leader's wing is its own cycle's).
-        spawnDue(haltWaves, tick, (cycle + 1) * HALT_WAVES);
+        spawnDue(halt, tick, (cycle + 1) * HALT_WAVES);
         haltReleased += spawned - before;
+    }
+
+    /** See {@link EnemyForce#restoreHalt}. */
+    void restoreHalt(int released) {
+        haltReleased = released;
     }
 
     int holdersLeftOut() {

@@ -559,6 +559,50 @@ class WingmanTest {
         assertTrue(damage >= 12 * 5, "his shells hurt it: " + damage);
     }
 
+    /** Whether the unit with {@code serial} on the field is a held gate's holder; null when none has it. */
+    private static Boolean holderTarget(Sortie sortie, int serial) {
+        for (int i = 0; i < sortie.enemyCount(); i++) {
+            if (sortie.enemy(i).serial() == serial) {
+                return sortie.enemy(i).holder();
+            }
+        }
+        return null;
+    }
+
+    /**
+     * M10 part G, step G1a (design/enemies/ground/shield-pylon, The pylon gates): in a held gate's halt his Mortar takes
+     * the gate's holders (the pylons) before anything else on the ground, though another target lies nearer.
+     */
+    @Test
+    void inAHeldGatesHaltHeTakesItsHoldersFirst() {
+        List<GroundUnit> units = List.of(
+                new GroundUnit(8.7, Ship.START_X - 64, PartCSpecs.nodeTarget(1_000_000), -1),
+                new GroundUnit(9, 100, Act5BSpecs.CLAMP, -1).asHolder(),
+                new GroundUnit(9, 380, Act5BSpecs.CLAMP, -1).asHolder(),
+                new GroundUnit(19, 240, Act5BSpecs.CLAMP, -1).asHolder());
+        LevelScript level = LevelScript.builder(41, 6)
+                .sections(HeldGatesTest.SECTIONS)
+                .groundUnits(units)
+                .objectives(ObjectiveSpec.NONE)
+                .build();
+        WingmanSpec rook = new WingmanSpec(WingmanSpec.Side.LEFT, 80, CRAFT, AI, PartCSpecs.mortar());
+        Sortie sortie = new Sortie(
+                1,
+                TestSpecs.LOADOUT.withWingman(rook),
+                level,
+                TestSpecs.RULES.withInvulnerableShip(),
+                TestSpecs.FULL_ARMOUR);
+        Wingman wingman = wingman(sortie);
+        run(sortie, SimStep.ticks(0.6), Command.UP.bit());
+        for (int i = 0; i < SimStep.ticks(20) && !sortie.halting(); i++) {
+            sortie.step(Command.NONE);
+        }
+        assertTrue(sortie.halting());
+        assertEquals(Boolean.FALSE, holderTarget(sortie, wingman.target()), "before the halt: the nearer node");
+        run(sortie, SimStep.ticks(1), Command.NONE);
+        assertEquals(Boolean.TRUE, holderTarget(sortie, wingman.target()), "in the halt: a holder first");
+    }
+
     @Test
     void heFiresOnlyWhileThePlayerFires() {
         Sortie sortie = sortie(groundAheadOfRook(), WingmanSpec.Side.LEFT);

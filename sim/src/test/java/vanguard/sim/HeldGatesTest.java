@@ -108,6 +108,165 @@ class HeldGatesTest {
         assertTrue(sortie.force.haltReleased() > first, "gate 1's halt lets in the cycle again");
     }
 
+    /** Steps until the current gate halts and through the halt's first held step; that step's events of {@code type}. */
+    private static int haltEvents(Sortie sortie, SimEvents.Type type) {
+        untilHalt(sortie);
+        sortie.step(0);
+        return sortie.events().count(type);
+    }
+
+    /** The units of {@code slug} on the field. */
+    private static int units(Sortie sortie, String slug) {
+        int n = 0;
+        for (int i = 0; i < sortie.enemyCount(); i++) {
+            n += sortie.enemy(i).spec().slug().equals(slug) ? 1 : 0;
+        }
+        return n;
+    }
+
+    @Test
+    void eachGateRunsItsOwnWavesAndPeriodCutAtItsLastHolder() {
+        // M10 part G, step G1a (Level 41): gate 0 two Skitters every 2 s, gate 1 one Needler every 3 s.
+        LevelScript level = level(Optional.empty()).toBuilder()
+                .gateCycles(List.of(Optional.of(Act6GSpecs.SKITTERS), Optional.of(Act6GSpecs.NEEDLERS)))
+                .build();
+        Sortie sortie = TestSpecs.sortie(level);
+        untilHalt(sortie);
+        run(sortie, 5, SimEvents.Type.GATE_OPENED);
+        assertEquals(6, sortie.force.haltReleased(), "H+0.5, 2.5 and 4.5: three pairs of Skitters");
+        assertEquals(0, units(sortie, "needler"), "gate 0 lets in its own cycle only");
+        HeldArenaTest.killHolders(sortie);
+        run(sortie, 1, SimEvents.Type.GATE_OPENED);
+        assertEquals(6, sortie.force.haltReleased(), "cut at the gate's last holder");
+        untilHalt(sortie);
+        assertEquals(6, sortie.force.haltReleased(), "nothing between the halts");
+        run(sortie, 5, SimEvents.Type.GATE_OPENED);
+        assertEquals(8, sortie.force.haltReleased(), "H+1 and H+4: two Needlers, one a wave");
+        HeldArenaTest.killHolders(sortie);
+        run(sortie, 4, SimEvents.Type.GATE_OPENED);
+        assertEquals(8, sortie.force.haltReleased(), "gate 1's cycle is cut too");
+    }
+
+    @Test
+    void aGateWithoutACycleLetsInNone() {
+        LevelScript level = level(Optional.empty()).toBuilder()
+                .gateCycles(List.of(Optional.empty(), Optional.of(Act6GSpecs.NEEDLERS)))
+                .build();
+        Sortie sortie = TestSpecs.sortie(level);
+        untilHalt(sortie);
+        run(sortie, 3, SimEvents.Type.GATE_OPENED);
+        assertEquals(0, sortie.force.haltReleased());
+        HeldArenaTest.killHolders(sortie);
+        untilHalt(sortie);
+        run(sortie, 2, SimEvents.Type.GATE_OPENED);
+        assertEquals(1, sortie.force.haltReleased());
+    }
+
+    @Test
+    void aSetPieceHoldsItsGateWhileItLivesAndItsFallOpensIt() {
+        Sortie sortie = TestSpecs.sortie(Act6GSpecs.pieceLevel(List.of()));
+        assertEquals(2, sortie.gates());
+        assertEquals(-1, sortie.script().gatePiece(0));
+        assertEquals(0, sortie.script().gatePiece(1));
+        assertEquals(1, haltEvents(sortie, SimEvents.Type.GATE_HALTED), "gate 0's halt starts");
+        assertEquals(1, Act6GSpecs.radioed(sortie, 0), "its halt line (gate-1)");
+        HeldArenaTest.killHolders(sortie);
+        sortie.step(0);
+        assertEquals(1, sortie.gate());
+        assertEquals(1, sortie.holders(), "the piece is the gate's one holder");
+        assertEquals(1, haltEvents(sortie, SimEvents.Type.GATE_HALTED), "the piece's gate halts");
+        assertEquals(1, Act6GSpecs.radioed(sortie, 1), "its halt line (the piece's slug)");
+        assertEquals(22, sortie.levelSeconds(), 2 * SimStep.SECONDS);
+        double clock = sortie.levelSeconds();
+        run(sortie, 3, SimEvents.Type.GATE_OPENED);
+        assertEquals(clock, sortie.levelSeconds(), "the clock stands while the piece lives");
+        assertTrue(sortie.setPiece(0).present());
+        sortie.objectivePasses.wreck(0, 0);
+        assertEquals(1, sortie.events().value(gateEvent(sortie)), "its fall opens gate 1");
+        assertEquals(1, PartCSpecs.count(sortie, SimEvents.Type.HOLDERS_DOWN));
+        assertEquals(1, Act6GSpecs.radioed(sortie, 2) + countNext(sortie, 2), "the halo-destroyed line");
+        run(sortie, 1, SimEvents.Type.GATE_OPENED);
+        assertTrue(sortie.levelSeconds() > clock + 0.9, "the clock resumes");
+        assertTrue(sortie.groundSpeed() > 0 && sortie.groundSpeed() < 120, "easing out over the section's 2 s");
+    }
+
+    /** The cue {@code cue}'s starts in the next step. */
+    private static int countNext(Sortie sortie, int cue) {
+        sortie.step(0);
+        return Act6GSpecs.radioed(sortie, cue);
+    }
+
+    @Test
+    void thePiecesCheckpointIsRecordedAtItsHaltAndRestoresInIt() {
+        Sortie sortie = TestSpecs.sortie(
+                Act6GSpecs.pieceLevel(List.of(Optional.of(Act6GSpecs.SKITTERS), Optional.of(Act6GSpecs.NEEDLERS))));
+        untilHalt(sortie);
+        run(sortie, 1, SimEvents.Type.GATE_OPENED);
+        HeldArenaTest.killHolders(sortie);
+        sortie.step(0);
+        assertFalse(sortie.bossCheckpoint(), "not before the piece's halt");
+        untilHalt(sortie);
+        assertFalse(sortie.bossCheckpoint(), "not before the halt's first step");
+        sortie.step(0);
+        assertTrue(sortie.bossCheckpoint(), "recorded at its gate's halt");
+        assertEquals(1, sortie.events().count(SimEvents.Type.GATE_HALTED));
+        double clock = sortie.levelSeconds();
+        run(sortie, 2, SimEvents.Type.GATE_OPENED);
+        assertEquals(2 + 1, sortie.force.haltReleased(), "gate 0's Skitter pair in its 1 s, gate 1's Needler at H+1");
+        sortie.retryFromBoss();
+        sortie.step(0);
+        assertEquals(1, sortie.events().count(SimEvents.Type.BOSS_RETRY));
+        assertEquals(1, sortie.gate(), "the piece's gate is current again");
+        assertEquals(1, sortie.holdersStanding());
+        assertEquals(clock, sortie.levelSeconds(), "in its halt");
+        assertTrue(sortie.halting());
+        assertEquals(1, sortie.events().count(SimEvents.Type.GATE_HALTED), "the halt starts again");
+        assertTrue(sortie.haltSeconds() < 2 * SimStep.SECONDS, "its halt's clock from its start");
+        assertEquals(2, sortie.force.haltReleased(), "the halt's units let in by the record");
+        run(sortie, 2, SimEvents.Type.GATE_OPENED);
+        assertEquals(2 + 1, sortie.force.haltReleased(), "the halt's cycle again from its start (H+1)");
+        assertEquals(clock, sortie.levelSeconds(), "the clock stands again while the piece lives");
+        sortie.objectivePasses.wreck(0, 0);
+        assertEquals(1, sortie.events().count(SimEvents.Type.GATE_OPENED));
+        run(sortie, 1, SimEvents.Type.GATE_OPENED);
+        assertTrue(sortie.levelSeconds() > clock + 0.9, "the clock resumes");
+    }
+
+    @Test
+    void theGatesOwnCyclesAndAPieceAreChecked() {
+        LevelScript.Builder gates = level(Optional.empty()).toBuilder();
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> gates.gateCycles(List.of(Optional.of(Act6GSpecs.SKITTERS)))
+                        .build(),
+                "one cycle a gate");
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> level(Optional.of(Act5BSpecs.CYCLE)).toBuilder()
+                        .gateCycles(List.of(Optional.empty(), Optional.empty()))
+                        .build(),
+                "not beside the level's one cycle");
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> level(Optional.empty()).toBuilder()
+                        .setPieces(List.of(Act6GSpecs.piece(20.5)))
+                        .build(),
+                "a piece holds a gate of its own, not one of ground holders");
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> Act6GSpecs.pieceLevel(List.of()).toBuilder()
+                        .setPieces(List.of(Act6GSpecs.piece(30)))
+                        .build(),
+                "a piece arrives in its gate");
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> LevelScript.builder(1, 1)
+                        .sections(SECTIONS)
+                        .gateCycles(List.of(Optional.empty(), Optional.empty()))
+                        .build(),
+                "gate cycles need held gates");
+    }
+
     @Test
     void everyGateNeedsAHolderAndASwapNeedsTheOneArena() {
         assertThrows(IllegalArgumentException.class, () -> LevelScript.builder(41, 6)

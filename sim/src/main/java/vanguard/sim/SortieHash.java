@@ -178,6 +178,10 @@ final class SortieHash {
                 // M10 part A, step A1b: only in a level of several held gates, so Level 29 hashes as before.
                 hash.add(s.clock.gate).add(s.clock.haltBase);
             }
+            if (s.clock.gateCycles) {
+                // M10 part G, step G1a: only with the gates' own halt cycles, so the other levels hash as before.
+                hash.add(s.clock.haltCycles);
+            }
         }
         if (s.rides != null) {
             s.rides.addTo(hash);
@@ -190,6 +194,10 @@ final class SortieHash {
             // M9 part G: only in a level with a story pickup, so the other levels hash as before.
             s.story.addTo(hash);
             s.groundPasses.addStoryTo(hash);
+        }
+        if (s.uplinks != null) {
+            // M10 part G, step G1a: only in a level with archive cores, so the other levels hash as before.
+            s.uplinks.addTo(hash);
         }
         s.escorts.swap.addTo(hash, s.bulwark);
         // M8 part E: only in a level with a ring unit, so the other levels hash as before.

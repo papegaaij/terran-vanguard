@@ -226,6 +226,10 @@ final class GroundPasses {
                     // M9 part G (Level 34's "Strip the graveyard"): the container past the allowed ones fails it.
                     events.add(SimEvents.Type.OBJECTIVE_FAILED, object.x(), object.y());
                 }
+                if (s.uplinks != null) {
+                    // M10 part G, step G1a: an archive core's hatch gone unbroken loses its core.
+                    s.uplinks.hatchGone(object.serial(), object.x(), object.y());
+                }
                 if (storyGroup >= 0 && object.spec().group() == storyGroup && s.story != null) {
                     // Step FIX2: the story group's last part gone uncleared: the core is never freed (the tug's line).
                     if (++storyGroupGone + groupDemolished[storyGroup]
@@ -339,6 +343,10 @@ final class GroundPasses {
         if (objectives.objectOpened(spec)) {
             // M9 part G (Level 34's "Strip the graveyard"): the container that met it.
             s.objectivePasses.paySecondary();
+        }
+        if (s.uplinks != null) {
+            // M10 part G, step G1a (Level 41): an archive core's hatch opens the core where it broke.
+            s.uplinks.hatchBroken(object.serial(), object.x(), object.y());
         }
         ground.free(index);
     }

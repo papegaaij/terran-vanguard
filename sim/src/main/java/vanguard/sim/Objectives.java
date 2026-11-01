@@ -153,6 +153,18 @@ final class Objectives {
         return true;
     }
 
+    /**
+     * M10 part G, step G1a (design/campaign Level 41, {@code FILES}): the level's end with {@code filesIn} files
+     * uploaded; returns whether that met a files objective (its target in).
+     */
+    boolean filesAtEnd(int filesIn) {
+        if (!secondary.byFiles() || secondaryMet || filesIn < secondary.files()) {
+            return false;
+        }
+        secondaryMet = true;
+        return true;
+    }
+
     /** M10 part C: whether a saved objective failed in this attempt. */
     boolean savedFailed() {
         return savedFailed;

@@ -1211,7 +1211,31 @@ public final class SimEvents {
          */
         ACE_PLAY_TELL,
         /** M10 part F, step F1b: an ace's told play starts (its move, its fire); at the ace; value: as {@link #ACE_PLAY_TELL}. */
-        ACE_PLAY;
+        ACE_PLAY,
+        /**
+         * M10 part G, step G1a (design/campaign Level 41, the halts): a held gate's halt starts (the scroll at rest, the
+         * level clock standing; at the ship), beside {@link #GATE_OPENED} at its end; value: the gate's index (0 first).
+         * Only in a level of several gates (Level 29's one arena raises none).
+         */
+        GATE_HALTED,
+        /**
+         * M10 part G, step G1a (Level 41, the secondary {@code FILES}; {@link Uplinks}): an archive core's hatch broke and
+         * the core is live (the teal glow; at the core); value: the core's index.
+         */
+        UPLINK_OPEN,
+        /**
+         * M10 part G: the ship's centre came within an open core's radius and its upload starts or resumes (the seat tone,
+         * the data chatter while {@link Uplinks#uploading}; the ring fills by {@link Uplinks#share}); at the core; value:
+         * the core's index.
+         */
+        UPLINK_PROGRESS,
+        /** M10 part G: a core's file is in (the confirmation chirp; at the core); value: the files in so far (1 first). */
+        FILE_IN,
+        /**
+         * M10 part G: a core was lost before its file was in (its centre, or its unbroken hatch, left the bottom edge; at
+         * it); value: the core's index.
+         */
+        FILE_LOST;
 
         private static final Type[] VALUES = values();
     }

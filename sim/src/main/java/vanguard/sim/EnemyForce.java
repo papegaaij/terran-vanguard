@@ -184,12 +184,15 @@ final class EnemyForce {
                 spans,
                 reversedAt,
                 mounts,
-                Optional.empty());
+                Optional.empty(),
+                List.of());
     }
 
     /**
      * @param halt M9 part B (design/campaign Level 29): the held arena's halt cycle, planned after the waves (with the
      *     same generator: only a level with one plans it); empty for none
+     * @param gateHalts M10 part G, step G1a (design/campaign Level 41): each held gate's own halt cycle, planned after the
+     *     waves in the gates' order (empty ones planning nothing); empty for none (then {@code halt} runs at every gate)
      */
     EnemyForce(
             List<WaveSpec> waveSpecs,
@@ -202,10 +205,16 @@ final class EnemyForce {
             java.util.function.Function<WaveSpec, Optional<Formations.Span>> spans,
             java.util.function.DoublePredicate reversedAt,
             WallMounts mounts,
-            Optional<HaltCycle> halt) {
+            Optional<HaltCycle> halt,
+            List<Optional<HaltCycle>> gateHalts) {
         this.events = events;
         enemies = new Pool<>(ENEMY_CAPACITY, () -> new Enemy(events), Enemy[]::new);
-        List<WaveSpec> haltSpecs = halt.map(HaltCycle::waves).orElse(List.of());
+        List<WaveSpec> haltSpecs = gateHalts.isEmpty()
+                ? halt.map(HaltCycle::waves).orElse(List.of())
+                : gateHalts.stream()
+                        .flatMap(Optional::stream)
+                        .flatMap(cycle -> cycle.waves().stream())
+                        .toList();
         kinds = EnemyKinds.of(waveSpecs, groundUnits, extraKinds, haltSpecs);
         objectiveHook = new ObjectiveHook(kinds, events);
         guns = new EnemyFire(rng, rules, events, objectiveHook);
@@ -217,10 +226,24 @@ final class EnemyForce {
         stations = kinds.stream().anyMatch(kind -> kind.station().isPresent());
         pull = new EnemyPull(kinds, enemies);
         WaveSchedule waves = new WaveSchedule(waveSpecs, kinds, rng, spans, reversedAt, mounts);
-        // M9 part B: the halt cycle's own plan, on the halt's clock (no spans, no reversed scroll, no walls).
-        WaveSchedule haltWaves = halt.isEmpty()
-                ? null
-                : new WaveSchedule(haltSpecs, kinds, rng, wave -> Optional.empty(), t -> false, WallMounts.NONE);
+        // M9 part B: the halt cycle's own plan, on the halt's clock (no spans, no reversed scroll, no walls). M10 part
+        // G,
+        // step G1a: or each gate's own, one plan a gate (the level's one cycle: one plan for every gate).
+        List<Optional<HaltCycle>> cycles = gateHalts.isEmpty() ? List.of(halt) : gateHalts;
+        WaveSchedule[] haltWaves = new WaveSchedule[cycles.size()];
+        int[] haltEvery = new int[cycles.size()];
+        for (int g = 0; g < cycles.size(); g++) {
+            haltWaves[g] = cycles.get(g).isEmpty()
+                    ? null
+                    : new WaveSchedule(
+                            cycles.get(g).get().waves(),
+                            kinds,
+                            rng,
+                            wave -> Optional.empty(),
+                            t -> false,
+                            WallMounts.NONE);
+            haltEvery[g] = EnemyEntries.haltEveryTicks(cycles.get(g));
+        }
         // M8 part E: only with a unit that sings a slowing ring.
         rings = kinds.stream().anyMatch(kind -> kind.slowRing().isPresent()) ? new SonarRings() : null;
         // M9 part D: only with an air-linked unit.
@@ -238,7 +261,7 @@ final class EnemyForce {
                 kinds,
                 waves,
                 haltWaves,
-                EnemyEntries.haltEveryTicks(halt),
+                haltEvery,
                 groundUnits,
                 reversedAt,
                 objectiveHook,
@@ -427,10 +450,17 @@ final class EnemyForce {
 
     /**
      * M9 part B (design/campaign Level 29, the halt cycle): lets in the halt cycle's units due at step {@code haltTick}
-     * of the halt (0 at its first held step); the cycle repeats every its length. Nothing without a halt cycle.
+     * of the halt (0 at its first held step); the cycle repeats every its length. Nothing without a halt cycle. M10 part
+     * G, step G1a: at held gate {@code gate} (its own cycle, or the level's one), the halt's step counted from the gate's
+     * halt's start, its cycles numbered on from the {@code cyclesBefore} begun at the gates before.
      */
-    void spawnHalt(int haltTick) {
-        entries.spawnHalt(haltTick);
+    void spawnHalt(int gate, int haltTick, int cyclesBefore) {
+        entries.spawnHalt(gate, haltTick, cyclesBefore);
+    }
+
+    /** M10 part G, step G1a: back to a boss checkpoint at a halt: the halt cycles' units let in by then. */
+    void restoreHalt(int released) {
+        entries.restoreHalt(released);
     }
 
     /** M9 part B: the holders left out for want of room in the pool in this attempt. */

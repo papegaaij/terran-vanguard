@@ -32,6 +32,13 @@ package vanguard.sim;
  * holders stands, runs the halt cycle on the halt's own clock (each gate's halt from a cycle's start) and eases out over
  * the section after it; once the clock has passed its end with its holders down the next gate becomes current. Level
  * 29's one arena is the one gate.
+ *
+ * <p>M10 part G, step G1a (design/campaign Level 41, the halts; m10g-gaps.md §1 #1, #3): each gate may run a halt cycle
+ * of its own ({@link LevelScript#gateCycles()}: its own waves and period, cut at its last holder), counted on from the
+ * cycles of the gates before (each cycle's waves are waves of their own); and a gate without ground holders is held by
+ * the boss set piece arriving in it ({@link LevelScript#gatePiece}): the clock stands while it lives and eases out at
+ * its death, as at a pylon gate's last pylon. A gate's halt starts with {@link SimEvents.Type#GATE_HALTED} and the
+ * radio's {@link CueTrigger#GATE_HALT} (in a level of several gates).
  */
 final class LevelClock {
     private final Sortie s;
@@ -106,8 +113,22 @@ final class LevelClock {
     private final int[] gateRamp;
     private final boolean[] gateEase;
     private final int[] gateHolders;
-    /** M10 part A, step A1b: the halt cycle's length, steps (each gate's halt starts a cycle); 1 without one. */
-    private final int haltEvery;
+    /**
+     * M10 part A, step A1b: the halt cycle's length, steps (each gate's halt starts a cycle); 1 without one. M10 part G,
+     * step G1a: per gate (its own cycle's, or the level's one cycle's at every gate).
+     */
+    private final int[] gateEvery;
+    /** M10 part G, step G1a: per gate, the set piece holding it (its index among the level's); -1 for ground holders. */
+    private final int[] gatePiece;
+    /** M10 part G, step G1a: per gate, the radio's {@link CueTrigger#GATE_HALT} subject; made once. */
+    private final String[] gateSubjects;
+    /** M10 part G, step G1a: whether the gates run halt cycles of their own (then {@link #haltCycles} is hashed). */
+    final boolean gateCycles;
+    /**
+     * M10 part G, step G1a: the halt cycles begun at the gates before the current one in this attempt (a cycle's waves
+     * are numbered on from them).
+     */
+    int haltCycles;
     /** M10 part A, step A1b: the current gate (0 first; it stays on the last one once that opened). */
     int gate;
     /** M10 part A, step A1b: the halt's clock at the current gate's halt's start ({@link #haltTicks}; 0 for the first). */
@@ -161,6 +182,10 @@ final class LevelClock {
         gateRamp = new int[gates];
         gateEase = new boolean[gates];
         gateHolders = new int[gates];
+        gateEvery = new int[gates];
+        gatePiece = new int[gates];
+        gateSubjects = new String[gates];
+        gateCycles = !script.gateCycles().isEmpty();
         for (int i = 0, g = 0; g < gates; i++) {
             Section section = script.sections().get(i);
             if (!section.arena()) {
@@ -180,9 +205,18 @@ final class LevelClock {
                     gateHolders[g]++;
                 }
             }
+            // M10 part G, step G1a: a gate without ground holders is its set piece's (one holder: its life).
+            gatePiece[g] = gateHolders[g] == 0 ? script.gatePiece(g) : -1;
+            if (gatePiece[g] >= 0) {
+                gateHolders[g] = 1;
+            }
+            gateSubjects[g] =
+                    gatePiece[g] >= 0 ? script.setPieces().get(gatePiece[g]).slug() : "gate-" + (g + 1);
+            gateEvery[g] = Math.max(
+                    1,
+                    EnemyEntries.haltEveryTicks(gateCycles ? script.gateCycles().get(g) : script.haltCycle()));
             g++;
         }
-        haltEvery = Math.max(1, EnemyEntries.haltEveryTicks(script.haltCycle()));
         SetPiece anchored = null;
         for (SetPiece piece : setPieces) {
             if (anchored == null && piece.arena().isPresent()) {
@@ -258,6 +292,11 @@ final class LevelClock {
         }
         boolean held = clockHeld();
         if (held && heldArena) {
+            if (haltTicks == haltBase && gateStart.length > 1) {
+                // M10 part G, step G1a: the current gate's halt starts.
+                s.events.add(SimEvents.Type.GATE_HALTED, s.ship.x(), s.ship.y(), gate);
+                s.radio.cue(CueTrigger.GATE_HALT, gateSubjects[gate]);
+            }
             // M9 part B: the halt's own clock (its cycle of waves).
             haltTicks++;
             rampOutOfGate();
@@ -314,11 +353,27 @@ final class LevelClock {
      * standing (or to come), its halt's clock from the next cycle's start.
      */
     private void nextGate() {
+        // M10 part G, step G1a: the cycles begun at this gate (its own period); its halt's clock on to the next start.
+        int every = gateEvery[gate];
+        int cycles = (haltTicks - haltBase + every - 1) / every;
+        haltCycles += cycles;
         gate++;
         s.holdersLeft = gateHolders[gate];
         heldJumped = false;
-        haltTicks = (haltTicks + haltEvery - 1) / haltEvery * haltEvery;
+        haltTicks = haltBase + cycles * every;
         haltBase = haltTicks;
+    }
+
+    /**
+     * M10 part G, step G1a: back to a boss checkpoint recorded at gate {@code g}'s halt (after {@link #reset}): that gate
+     * current, its halt's clock and the cycles before it as they were.
+     */
+    void restoreGate(int g, int ticks, int base, int cycles, double speed) {
+        gate = g;
+        haltTicks = ticks;
+        haltBase = base;
+        haltCycles = cycles;
+        lastSpeed = speed;
     }
 
     /**
@@ -448,6 +503,7 @@ final class LevelClock {
         heldJumped = false;
         gate = 0;
         haltBase = 0;
+        haltCycles = 0;
         lastSpeed = 0;
         rampFrom = 0;
         rampTicks = -1;
@@ -466,6 +522,26 @@ final class LevelClock {
     /** M10 part A, step A1b: the holders of gate {@code g}. */
     int gateHolders(int g) {
         return gateHolders[g];
+    }
+
+    /** M10 part G, step G1a: the set piece holding gate {@code g} (its index); -1 for a gate of ground holders. */
+    int gatePiece(int g) {
+        return gatePiece[g];
+    }
+
+    /** M10 part G, step G1a: the gate set piece {@code k} holds; -1 for none. */
+    int pieceGate(int k) {
+        for (int g = 0; g < gatePiece.length; g++) {
+            if (gatePiece[g] == k) {
+                return g;
+            }
+        }
+        return -1;
+    }
+
+    /** M10 part G, step G1a: gate {@code g}'s end on the level clock, steps (its halt stands one step before it). */
+    int gateEndTicks(int g) {
+        return gateEnd[g];
     }
 
     /** See {@link Sortie#groundSpeed()}. */

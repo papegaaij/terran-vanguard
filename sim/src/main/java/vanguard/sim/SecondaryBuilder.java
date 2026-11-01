@@ -32,6 +32,7 @@ public final class SecondaryBuilder {
     private boolean objects = false;
     private int saved = 0;
     private String enemy = "";
+    private int files = 0;
 
     SecondaryBuilder() {}
 
@@ -58,6 +59,7 @@ public final class SecondaryBuilder {
         objects = secondary.objects();
         saved = secondary.saved();
         enemy = secondary.enemy();
+        files = secondary.files();
     }
 
     /** Its {@link Secondary#killRatio()}. */
@@ -192,6 +194,12 @@ public final class SecondaryBuilder {
         return this;
     }
 
+    /** M10 part G, step G1a: its {@link Secondary#files()} (the archive cores' uploads, Level 41's {@code FILES}). */
+    public SecondaryBuilder files(int files) {
+        this.files = files;
+        return this;
+    }
+
     /** The secondary objective, checked as a whole. */
     public Secondary build() {
         return new Secondary(
@@ -216,6 +224,7 @@ public final class SecondaryBuilder {
                 spared,
                 objects,
                 saved,
-                enemy);
+                enemy,
+                files);
     }
 }

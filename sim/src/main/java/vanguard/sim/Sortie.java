@@ -278,6 +278,8 @@ public final class Sortie {
     final RelayFlash relay;
     /** M10 part A (design/enemies/ground/shield-pylon): the pylons' domes; null in a level without a pylon. */
     final Domes domes;
+    /** M10 part G, step G1a (design/campaign Level 41, {@code FILES}): the archive cores' uploads; null without. */
+    final Uplinks uplinks;
     /** M10 part A, step A1b (design/world/jovian): the told lightning strikes; null in a level without them. */
     final Lightning lightning;
     /** M10 part A, step A1b (design/world/jovian): the eruptions' vents and rocks; null in a level without them. */
@@ -409,8 +411,9 @@ public final class Sortie {
                 // M7 part G: the waves and the ground units of a reversed scroll are flipped.
                 script.reverses() ? t -> travelAt(script, t) < 0 : t -> false,
                 WallMounts.of(script),
-                // M9 part B: the held arena's halt cycle (Level 29).
-                script.haltCycle());
+                // M9 part B: the held arena's halt cycle (Level 29); M10 part G: or each gate's own (Level 41).
+                script.haltCycle(),
+                script.gateCycles());
         force.canyon(canyon);
         script.turn().ifPresent(turn -> force.turn(SimStep.ticks(turn)));
         if (loadout.spoofDelay() > 0) {
@@ -475,6 +478,7 @@ public final class Sortie {
         vents = new FurnaceVents(script.hazards().vents(), arenaStartTicks >= 0 ? arenaStartTicks : Integer.MAX_VALUE);
         plumes = vents.plumes() ? new HeatPlumes(vents, events) : null;
         radio = new Radio(script.radio(), events, ship, Radio.fitted(loadout.armament(), special));
+        uplinks = script.uplinks().isEmpty() ? null : new Uplinks(script.uplinks(), events, radio);
         story = script.groundObjects().stream().anyMatch(object -> object.groupDrop()
                         .filter(PickupType.STORY::equals)
                         .isPresent())
@@ -832,6 +836,10 @@ public final class Sortie {
             cruisers.blockShots(fire.shots(), medium, events);
         }
         groundPasses.scrollGround(scrollStep);
+        if (uplinks != null) {
+            // M10 part G, step G1a (Level 41): the open cores scroll with the ground; the flying ship uploads.
+            uplinks.step(scrollStep, !launching() && flying() && !complete && !failed, ship.x(), ship.y());
+        }
         if (story != null) {
             // M9 part G: the freed core rises out of the hold with the ground, then joins the pickups.
             story.step(scrollStep, pickupPasses);
@@ -989,7 +997,8 @@ public final class Sortie {
             holderDown(ship.x(), ship.y());
         }
         if (clock.halting()) {
-            force.spawnHalt(clock.haltTicks - 1);
+            // M10 part G, step G1a: the current gate's cycle on its halt's own clock.
+            force.spawnHalt(clock.gate, clock.haltTicks - 1 - clock.haltBase, clock.haltCycles);
         }
     }
 
@@ -1007,6 +1016,10 @@ public final class Sortie {
             if (clock.gates() > 1) {
                 // M10 part A, step A1b (The pylon gates): this gate opens.
                 events.add(SimEvents.Type.GATE_OPENED, x, y, clock.gate);
+            }
+            if (clock.gatePiece(clock.gate) >= 0) {
+                // M10 part G, step G1a (Level 41): the set piece holding the gate fell (the Halo Platform's core).
+                radio.cue(CueTrigger.HALO_DESTROYED, "");
             }
             events.add(SimEvents.Type.HOLDERS_DOWN, x, y);
             // Step B4b: the cue's subject says what the escort swap does ("Bulwark, RTB" only with the drone flying).
@@ -1510,6 +1523,14 @@ public final class Sortie {
     /** M10 part A (design/enemies/ground/shield-pylon): the pylons' domes; null in a level without a pylon. */
     public Domes domes() {
         return domes;
+    }
+
+    /**
+     * M10 part G, step G1a (design/campaign Level 41, {@code FILES}): the archive cores and Varga's uploads; null in a
+     * level without them.
+     */
+    public Uplinks uplinks() {
+        return uplinks;
     }
 
     /** Destroys enemy {@code index} as a hit would, paying it (for tests). */

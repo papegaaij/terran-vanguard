@@ -224,7 +224,25 @@ public enum CueTrigger {
      * crushed a unit of a destroy-targets group ({@link SimEvents.Type#TOPPLE_CRUSH}; {@link Topples}); once. No subject
      * (the radio event {@code topple-target}). Its {@link #TOPPLE_CRUSH} cues start as well when it is the first crush.
      */
-    TOPPLE_TARGET;
+    TOPPLE_TARGET,
+    /**
+     * M10 part G, step G1a (design/campaign Level 41, radio: the halts' lines): a held gate's halt started ({@link
+     * SimEvents.Type#GATE_HALTED}); once per gate. Its subject names the gate: {@code gate-1}, {@code gate-2} ... (from
+     * 1, in the level's order), or the slug of the set piece that holds it (Level 41's Halo Platform) (the radio event
+     * {@code halt}). Only in a level of several gates.
+     */
+    GATE_HALT,
+    /**
+     * M10 part G (Level 41, Varga's file lines): a core's file is in ({@link SimEvents.Type#FILE_IN}); once per count.
+     * Its subject is the files in so far: {@code 1}, {@code 2}, {@code 3} (the radio event {@code file}).
+     */
+    FILE_IN,
+    /**
+     * M10 part G (Level 41, the Silence line): the set piece holding a held gate fell and the gate opens (the Halo
+     * Platform's core down; {@link SimEvents.Type#GATE_OPENED} of its gate); once. No subject (the radio event {@code
+     * halo-destroyed}).
+     */
+    HALO_DESTROYED;
 
     /** Between the part names of a {@link #BOSS_PART_DESTROYED} cue's subject. */
     public static final String PART_SEPARATOR = "|";
