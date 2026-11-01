@@ -70,9 +70,9 @@ public final class TestFire {
     /** The ground scrolls at this speed, px/s: the dummies drift down past the ship. */
     static final double SCROLL = 90;
     /** The ship holds this height, the middle of the field, so the dummies pass ahead, beside and behind it. */
-    static final double SHIP_Y = PlayField.HEIGHT / 2.0;
+    public static final double SHIP_Y = PlayField.HEIGHT / 2.0;
     /** The ship's centre line (its start x). */
-    static final double SHIP_X = PlayField.WIDTH / 2.0;
+    public static final double SHIP_X = PlayField.WIDTH / 2.0;
     /** Before a loop shows, the ship climbs from its start to {@link #SHIP_Y} and settles, unseen. */
     static final int CLIMB_TICKS = SimStep.ticks(1.5);
     /** The ship stops climbing this far below its height: it brakes the rest. */

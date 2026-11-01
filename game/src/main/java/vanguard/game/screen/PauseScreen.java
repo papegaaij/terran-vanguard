@@ -132,6 +132,7 @@ public final class PauseScreen implements GameScreen {
         services.play(Sfx.MENU_CONFIRM);
         return switch (menu.selectedId()) {
             case RESTART -> {
+                level.recordAttempt();
                 level.retry(level.campaign().retry());
                 // Like a failure's, the used retry goes into the autosave at once.
                 services.save(SaveSlots.Slot.AUTOSAVE, level.campaign());
@@ -139,6 +140,7 @@ public final class PauseScreen implements GameScreen {
             }
             case ABORT -> {
                 services.voices.stop();
+                level.recordAttempt();
                 level.campaign().retry();
                 yield Transition.replace(
                         replay()

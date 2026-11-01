@@ -355,6 +355,49 @@ class HangarPointerTest {
         assertEquals(most, state.top());
     }
 
+    /**
+     * Step DB2 (design/ui/databank, The ways in): the {@code DATA} chip beside undo, repair and save, the four narrowed
+     * to 54 px from x 424 so the longest mission line (256 px from x 160) still ends before them and they end before
+     * the credits inset at x 662; a click on it, or the keys onto it, open the databank.
+     */
+    @Test
+    void theDataChipFitsTheTopBarAndOpensTheDatabank() {
+        int longest = 0;
+        for (String key : CONTENT.levels().keySet()) {
+            int number = Content.levelNumber(key);
+            longest = Math.max(
+                    longest,
+                    String.format(java.util.Locale.ROOT, "BEFORE L%02d - %s", number, Content.levelName(key))
+                            .length());
+        }
+        float right = 160 + longest * 8;
+        Box previous = null;
+        for (Command command : List.of(Command.UNDO, Command.REPAIR, Command.SAVE, Command.DATA)) {
+            Box chip = HangarPointer.command(command);
+            assertEquals(54, chip.width(), 0, command.name());
+            assertTrue(chip.x() > right, command + " after the longest mission line, " + longest + " characters");
+            assertTrue(command.name().length() * 8 <= chip.width() - 4, command + "'s label fits");
+            if (previous != null) {
+                assertEquals(previous.x() + previous.width() + 4, chip.x(), 0, command + " 4 px after the one before");
+            }
+            previous = chip;
+        }
+        assertTrue(previous.x() + previous.width() < 662, "before the credits inset");
+        assertEquals(424, HangarPointer.command(Command.UNDO).x(), 0);
+
+        HangarState byMouse = state(campaign(2, 5000, 60), true);
+        assertTrue(click(byMouse, HangarPointer.command(Command.DATA)).confirm());
+        assertEquals(Outcome.DATABANK, byMouse.confirm());
+
+        HangarState byKeys = state(campaign(2, 5000, 60), true);
+        byKeys.up();
+        assertEquals(Focus.COMMANDS, byKeys.focus());
+        while (byKeys.command() != Command.DATA) {
+            byKeys.left();
+        }
+        assertEquals(Outcome.DATABANK, byKeys.confirm());
+    }
+
     @Test
     void theCommandsAndRepairPanelLieOnTheScreen() {
         for (Command command : Command.values()) {

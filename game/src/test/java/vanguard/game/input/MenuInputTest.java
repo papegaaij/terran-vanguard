@@ -1,6 +1,7 @@
 package vanguard.game.input;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.badlogic.gdx.Input.Keys;
@@ -44,6 +45,22 @@ class MenuInputTest {
         devices.gamepad.add(GamepadControl.LEFT_STICK_DOWN);
 
         assertEquals(1, framesDown(FRAME));
+    }
+
+    /** Step DB2 (design/ui/databank, The ways in): Tab and the gamepad's Y open the databank from the hangar. */
+    @Test
+    void tabAndYOpenTheDatabank() {
+        devices.keys.add(Keys.TAB);
+        input.update(devices);
+        assertTrue(menu.databank());
+
+        devices.keys.clear();
+        input.update(devices);
+        assertFalse(menu.databank());
+        devices.gamepad.add(GamepadControl.Y);
+        input.update(devices);
+
+        assertTrue(menu.databank());
     }
 
     @Test

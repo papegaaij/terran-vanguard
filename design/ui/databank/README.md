@@ -70,8 +70,9 @@ opened from (the hangar's tactical map, or the title scene dimmed), with that sc
   - **unknown entries** are `???` rows, dimmed, with their act on the right (`ACT VI`), skipped by the cursor like
     mission select's locked levels;
   - 24 rows show; the list scrolls with the kit's markers and the wheel.
-- **The entry page** (one page, no scrolling): a 136×136 **picture** inset on the left, the **name** in the heading
-  font beside it, the **fields** below the name (label 8×12, values cyan, numbers white, credits amber), then the
+- **The entry page** (one page, no scrolling): a 136×136 **picture** inset on the left (196×196 on a page whose picture
+  is a 192×192 databank plate: a boss, the Leviathan, the Abyss Ray, the Ascendancy concept; step DB2), the **name** in
+  the heading font beside it, the **fields** below the name (label 8×12, values cyan, numbers white, credits amber), then the
   **advice** or **level table** block, then **Dr. Varga's line** with her 72×72 radio portrait (enemies, bosses and
   concepts) or a notes inset (gear).
 
@@ -276,15 +277,16 @@ art by [tools/art/databank_plates.py](../../../tools/art/databank_plates.py). Pr
       machine unit; a boss)
 - [x] `content`: save format version 7 with `databank` (`met`, `read`), the version 6 migration (the waves of the levels
       below `nextLevel` at the save's difficulty), a version 7 save without it unreadable; tests
-- [ ] `game`: the databank screen (tabs, list, entry page, picture with the animated sprite or the silhouette, test fire,
+- [x] `game`: the databank screen (tabs, list, entry page, picture with the animated sprite or the silhouette, test fire,
       Varga's inset), keyboard, gamepad and mouse; opened from the hangar (`DATA` chip, Tab / Y, an intel portrait) and the
-      main menu (`DATABANK`), Back to where it came from
-- [ ] `game`: the attempt's met units (on the screen) and kills per kind (`ENEMY_DESTROYED`'s kind) merged into the
-      campaign at every attempt's end, a replay's at its debrief; written by the next autosave
+      main menu (`DATABANK`), Back to where it came from (step DB2: `vanguard.game.databank`; `DatabankScreenTest`)
+- [x] `game`: the attempt's met units (on the screen) and kills per kind (`ENEMY_DESTROYED`'s kind) merged into the
+      campaign at every attempt's end, a replay's at its debrief; written by the next autosave (step DB2: `DatabankLog`,
+      `DatabankLogTest`)
 - [x] `pipeline` / `tools/art`: a databank plate (192×192) for each boss and each unit over 128 px; the intel's 30×30
       portrait for the units that have none (Level 39's Cracking Tower and Pump Station), if layout b is chosen (step
       DB-ART: 12 plates in `assets/sprites/databank/`; no portraits, layout a being the recommendation)
-- [ ] The hangar intel's `SENSOR NONE` hint line; the main menu's panel at y 172
+- [x] The hangar intel's `SENSOR NONE` hint line; the main menu's panel at y 172 (step DB2)
 - [ ] Captures of the screen at each sensor level for the round after the build
 
 ## Open questions
@@ -338,3 +340,18 @@ art by [tools/art/databank_plates.py](../../../tools/art/databank_plates.py). Pr
   migration also marks read the gear and concepts its next level knows, so an updated campaign shows no `NEW` tags; it
   reads the design data on the classpath unless the game passes its own; `playthroughSave` fills the record the same
   way; a replay's record reaches a save through `SaveGame.withDatabank`.
+- 2026-11-01: Built in `game` (step DB2), decided as trivia pending the user's review in round 82: a page with a
+  192×192 plate has a 196×196 picture box (the 136×136 one is too small for a plate at 1:1); a unit's picture is its
+  sprite from the unit atlas of the level its numbers are of (loaded alone a moment after the cursor rests, the last two
+  kept), frame 0 (a tilt set's middle heading) of a unit that turns, its frames looped at 8 fps otherwise, its intel
+  portrait at 4× when the frames are missing; the silhouette is the sprite's or plate's alpha in navy with a lit
+  one-pixel rim and every third row a lighter scan line, drawn with the flash shader; an entry counts as opened once
+  shown for 0.75 s (passing it with the keys keeps its `NEW` tag); from the main menu the save's record goes back into
+  its slot on the way out (only `databank` changes; a debug run writes nothing); a boss's page lists its `ATTACKS` by
+  name (the phases tell the patterns) and shows Varga's portrait at 36×36 beside her line, so the page keeps its phases
+  and advice; advice rows with the same reason share a row (`HOMING` `BEAM` on a high-air unit) and the plain effective
+  traits share one `EFFECTIVE` line; the ship tab's list names a core part with its kind (`GEN MK I "SPARK"`, `SHIELD
+  MK I`); the concepts' pictures are existing sprites (an intel portrait or an icon at 4×, the cruiser's plate) until
+  captures replace them; a click on an intel picture opens its unit's entry (a unit not met yet opens its tab), Enter on
+  a portrait is not built (the intel panel has no keyboard focus); the hangar hint reads `DATABANK: SHIP > SENSOR
+  SUITE` under the `NO SENSOR` chip.

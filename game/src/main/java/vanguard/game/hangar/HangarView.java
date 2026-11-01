@@ -75,7 +75,29 @@ public final class HangarView implements Disposable {
                         key,
                         Optional.ofNullable(state.hangar().campaign().loadout().get(LoadoutSlot.SPECIAL))
                                 .map(Fitted::item))),
-                levelKey.map(key -> IntelPanel.strip(content, key)).orElse(IntelPanel.Strip.NONE));
+                levelKey.map(key -> IntelPanel.strip(content, key)).orElse(IntelPanel.Strip.NONE),
+                !ownsSuite(state.hangar().campaign()));
+    }
+
+    /**
+     * Step DB2 (design/ui/databank, The ways in): the intel pictures drawn last, each with the unit it shows: a click
+     * opens that unit's databank entry.
+     */
+    public List<IntelLink> intelLinks() {
+        return intel.links();
+    }
+
+    /** Step DB2: whether the campaign owns a sensor suite, fitted or stored (the intel's hint goes once it does). */
+    static boolean ownsSuite(vanguard.content.campaign.Campaign campaign) {
+        String suite = vanguard.content.databank.Databank.SENSOR_SUITE;
+        return campaign.gear().loadout().values().stream()
+                        .anyMatch(fitted -> fitted.item().equals(suite))
+                || campaign
+                        .gear()
+                        .inventory()
+                        .getOrDefault(vanguard.content.campaign.ItemKind.UTILITY, List.of())
+                        .stream()
+                        .anyMatch(fitted -> fitted.item().equals(suite));
     }
 
     @Override

@@ -100,6 +100,8 @@ public final class HangarState {
         UNDO,
         REPAIR,
         SAVE,
+        /** Step DB2 (design/ui/databank, The ways in): opens the databank. */
+        DATA,
         LAUNCH
     }
 
@@ -112,7 +114,9 @@ public final class HangarState {
         /** The selected choice sells: the screen asks first. */
         SELL,
         SAVE,
-        LAUNCH
+        LAUNCH,
+        /** Step DB2: the {@code DATA} command: the screen opens the databank. */
+        DATABANK
     }
 
     /**
@@ -520,7 +524,7 @@ public final class HangarState {
         return switch (candidate) {
             case UNDO -> hangar.canUndo();
             case REPAIR -> !refitOnly && repairLines().stream().anyMatch(line -> missing(line) > 0);
-            case SAVE -> true;
+            case SAVE, DATA -> true;
             case LAUNCH -> launchable;
         };
     }
@@ -957,6 +961,7 @@ public final class HangarState {
                 yield Outcome.MOVED;
             }
             case SAVE -> Outcome.SAVE;
+            case DATA -> Outcome.DATABANK;
             case LAUNCH -> Outcome.LAUNCH;
         };
     }

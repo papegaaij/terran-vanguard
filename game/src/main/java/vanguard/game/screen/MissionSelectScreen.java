@@ -128,6 +128,28 @@ public final class MissionSelectScreen implements GameScreen {
         }
     }
 
+    /**
+     * Step DB2 (design/ui/databank, The record in the save): writes a replay's databank record (the save's with the
+     * replay's attempts merged) into the save it was started from, at the replay's debrief; nothing else of the save
+     * changes, and a debug run writes nothing. A failure is logged, since it must not stop the game.
+     */
+    static void keepDatabank(
+            GameServices services, Campaign.Replay replay, vanguard.content.campaign.DatabankRecord record) {
+        if (!(services.saves.read(replay.slot()) instanceof SaveSlots.Entry.Saved saved)
+                || saved.save().databank().equals(record)) {
+            return;
+        }
+        try {
+            services.saves.write(replay.slot(), saved.save().withDatabank(record));
+        } catch (IOException | RuntimeException e) {
+            LOG.log(
+                    Level.WARNING,
+                    "could not keep the replay's databank in slot "
+                            + replay.slot().index(),
+                    e);
+        }
+    }
+
     private boolean open(int line) {
         return lines.get(line) instanceof Line.Entry entry && entry.mission().open();
     }

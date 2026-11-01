@@ -30,7 +30,7 @@ public final class Bindings {
      * The defaults of design/ui/controls. Dash's primary input is a double-tap on a direction, which
      * comes with the evasive thrusters module; until then only V and the left bumper are bound.
      * The menus navigate with the arrows, the D-pad and the left stick, switch tabs with Q / E and
-     * the bumpers, confirm with Enter / A and go back with Esc / B / Back.
+     * the bumpers, confirm with Enter / A and go back with Esc / B / Back; Tab / Y opens the databank (step DB2).
      */
     public static Bindings defaults() {
         Map<Action, Binding> map = new EnumMap<>(Action.class);
@@ -65,6 +65,7 @@ public final class Bindings {
         map.put(Action.MENU_BACK, Binding.of(Keys.ESCAPE, Binding.NO_KEY, GamepadControl.B, GamepadControl.BACK));
         map.put(Action.MENU_PREVIOUS_TAB, Binding.of(Keys.Q, Binding.NO_KEY, GamepadControl.LEFT_BUMPER));
         map.put(Action.MENU_NEXT_TAB, Binding.of(Keys.E, Binding.NO_KEY, GamepadControl.RIGHT_BUMPER));
+        map.put(Action.MENU_DATABANK, Binding.of(Keys.TAB, Binding.NO_KEY, GamepadControl.Y));
         return new Bindings(map);
     }
 

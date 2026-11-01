@@ -32,7 +32,9 @@ public enum Action {
     /** Switches to the previous tab (Q / left bumper). */
     MENU_PREVIOUS_TAB,
     /** Switches to the next tab (E / right bumper). */
-    MENU_NEXT_TAB;
+    MENU_NEXT_TAB,
+    /** Step DB2 (design/ui/databank, The ways in): opens the databank from the hangar (Tab / gamepad Y). */
+    MENU_DATABANK;
 
     /** The actions the Controls tab remaps, in its table's order. */
     public static final List<Action> REMAPPABLE =

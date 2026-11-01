@@ -96,6 +96,7 @@ public final class GameServices implements Disposable {
 
     private final SettingsStore store;
     private Settings settings;
+    private vanguard.content.databank.Databank databank;
 
     GameServices(
             Files files,
@@ -206,6 +207,17 @@ public final class GameServices implements Disposable {
      * Whether this is a debug run (a level start, {@code --bench}, {@code --invulnerable}, {@code
      * --debug-speed}): it writes no save at all, its save slots are read-only (design/systems/saves).
      */
+    /**
+     * Step DB2 (design/ui/databank): the databank's index over the content, built the first time a screen asks for it
+     * (the hangar's intel links, the databank screen, the level's record of the units met).
+     */
+    public vanguard.content.databank.Databank databank() {
+        if (databank == null) {
+            databank = vanguard.content.databank.Databank.of(content);
+        }
+        return databank;
+    }
+
     public boolean debugRun() {
         return !saves.writable();
     }

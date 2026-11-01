@@ -262,6 +262,10 @@ public final class HangarScreen implements GameScreen {
             }
             return Transition.STAY;
         }
+        if (input.databank() && state.focus() != Focus.REPAIR) {
+            // Step DB2: Tab / gamepad Y opens the databank (design/ui/databank, The ways in).
+            return openDatabank(Optional.empty());
+        }
         Outcome outcome = Outcome.NONE;
         if (input.previousTab()
                 || input.nextTab()
@@ -288,6 +292,10 @@ public final class HangarScreen implements GameScreen {
         } else if (input.confirm()) {
             return confirm();
         } else {
+            Optional<String> portrait = clickedPortrait(input);
+            if (portrait.isPresent()) {
+                return openDatabank(portrait);
+            }
             HangarPointer.Result mouse = pointer.update(state, input.pointer());
             if (mouse.confirm()) {
                 return confirm();
@@ -351,6 +359,9 @@ public final class HangarScreen implements GameScreen {
                 services.play(Sfx.MENU_CONFIRM);
                 return Transition.open(SlotsScreen.save(services, campaign));
             }
+            case DATABANK -> {
+                return openDatabank(Optional.empty());
+            }
             case LAUNCH -> {
                 services.play(Sfx.MENU_CONFIRM);
                 List<String> warnings = state.launchWarnings(intel());
@@ -367,6 +378,49 @@ public final class HangarScreen implements GameScreen {
             }
         }
         return Transition.STAY;
+    }
+
+    /**
+     * Step DB2 (design/ui/databank, The ways in): the databank over the hangar, at {@code entry} (a unit's slug: an intel
+     * portrait's) or where it was left; Back returns to the hangar as it was (the selection, the shop list, the visit's
+     * undo kept).
+     */
+    private Transition openDatabank(Optional<String> entry) {
+        services.play(Sfx.MENU_CONFIRM);
+        state.hover(Optional.empty());
+        return Transition.open(vanguard.game.databank.DatabankScreen.overHangar(
+                services, campaign, this::drawBackdrop, entry.flatMap(this::databankEntry)));
+    }
+
+    /** A click on an intel picture (outside the repair panel): the unit it shows. */
+    private Optional<String> clickedPortrait(MenuInput input) {
+        if (state.focus() == Focus.REPAIR || !input.pointer().clicked()) {
+            return Optional.empty();
+        }
+        for (var link : view.intelLinks()) {
+            if (input.pointer().clicks(link.box())) {
+                return Optional.of(link.slug());
+            }
+        }
+        return Optional.empty();
+    }
+
+    /** The databank entry of an intel picture's unit: its slug, or a livery's unit ({@code warden-tank-asc}). */
+    private Optional<String> databankEntry(String slug) {
+        String unit = slug;
+        while (services.databank().unit(unit).isEmpty() && unit.contains("-")) {
+            unit = unit.substring(0, unit.lastIndexOf('-'));
+        }
+        return services.databank().unit(unit).map(vanguard.content.databank.Entry::id);
+    }
+
+    /** The hangar under the databank: its panels and top bar, without the hints. */
+    private void drawBackdrop(SpriteBatch batch) {
+        Optional<Intel> intel = intel();
+        Optional<BriefingPage> teaser =
+                nextLevel.map(key -> services.content.level(key).briefing().teaser());
+        view.draw(batch, state, intel, teaser, nextLevel);
+        drawTopBar(batch, services.glass);
     }
 
     private void ask(Pending what, Dialog question) {
@@ -448,7 +502,7 @@ public final class HangarScreen implements GameScreen {
                         .orElse("")
                 + campaign.difficulty().name();
         glass.shadowed(batch, glass.fonts.label, act, Glass.LABEL, 160, 27);
-        for (Command command : List.of(Command.UNDO, Command.REPAIR, Command.SAVE)) {
+        for (Command command : List.of(Command.UNDO, Command.REPAIR, Command.SAVE, Command.DATA)) {
             Box chip = HangarPointer.command(command);
             glass.chip(
                     batch,
@@ -496,8 +550,8 @@ public final class HangarScreen implements GameScreen {
             case SHOP ->
                 state.sideSelected()
                         ? "Q/E SLOT    UP/DOWN ITEM    LEFT/RIGHT SIDE    ESC MAIN MENU"
-                        : "Q/E SLOT    UP/DOWN ITEM    LEFT/RIGHT CHOICE    ENTER CONFIRM    ESC MAIN MENU";
-            case COMMANDS -> "LEFT/RIGHT COMMAND    ENTER CONFIRM    DOWN SHOP    ESC MAIN MENU";
+                        : "Q/E SLOT    UP/DOWN ITEM    LEFT/RIGHT CHOICE    ENTER CONFIRM    TAB DATA    ESC MAIN MENU";
+            case COMMANDS -> "LEFT/RIGHT COMMAND    ENTER CONFIRM    DOWN SHOP    TAB DATA    ESC MAIN MENU";
             case REPAIR ->
                 state.repairLines().size() > 1
                         ? "Q/E "

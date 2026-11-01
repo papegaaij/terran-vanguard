@@ -29,6 +29,8 @@ final class DebriefTally {
                         // M8 part A: the Bulwark's armour left, for its repair.
                         .or(() -> sortie.bulwark().map(bulwark -> java.util.OptionalDouble.of(bulwark.armour())))
                         .orElse(java.util.OptionalDouble.empty()));
+        // Step DB2: a replay's units met and kills go into the save it was started from (design/ui/databank).
+        campaign.replay().ifPresent(replay -> MissionSelectScreen.keepDatabank(services, replay, campaign.databank()));
         if (newBest) {
             // A replay's better grade goes into the save it was started from (design/ui/mission-select).
             campaign.replay()

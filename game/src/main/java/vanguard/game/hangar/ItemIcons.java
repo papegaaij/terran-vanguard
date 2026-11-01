@@ -17,7 +17,7 @@ import vanguard.game.render.Sprites;
  * drawing. Items are the catalogue's own instances, so they are keyed by identity (a record's hash
  * would walk its lists on every lookup).
  */
-final class ItemIcons {
+public final class ItemIcons {
     /** An item's two icons. */
     record Icon(TextureRegion small, TextureRegion large) {}
 
@@ -46,7 +46,7 @@ final class ItemIcons {
     }
 
     /** The icon an item is drawn with: its own, or for one of Rook's guns its base weapon's (no art of its own yet). */
-    static String iconName(Item item, Catalogue catalogue) {
+    public static String iconName(Item item, Catalogue catalogue) {
         return item.kind() == ItemKind.ESCORT ? catalogue.escortBase(item.id()) : name(item);
     }
 
@@ -65,7 +65,7 @@ final class ItemIcons {
     }
 
     /** M8 part A: the Bulwark heavy drone's icon (tools/art/icons.py {@code --act4}). */
-    static final String BULWARK = "escort-bulwark";
+    public static final String BULWARK = "escort-bulwark";
 
     /** M8 part A: the Bulwark heavy drone, the escort slot's alternative to Rook. */
     Icon bulwark() {

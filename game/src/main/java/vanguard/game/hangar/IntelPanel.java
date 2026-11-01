@@ -17,6 +17,7 @@ import vanguard.content.campaign.Intel.Field;
 import vanguard.game.render.PixelScreen;
 import vanguard.game.render.Portraits;
 import vanguard.game.render.Sprites;
+import vanguard.game.ui.Box;
 import vanguard.game.ui.Glass;
 import vanguard.game.ui.Speaker;
 import vanguard.game.ui.Words;
@@ -170,7 +171,9 @@ final class IntelPanel {
             String levelKey,
             Map<String, String> unclassified,
             Optional<String> limited,
-            Strip forks) {
+            Strip forks,
+            boolean suiteHint) {
+        links.clear();
         glass.panel(batch, X, Y, WIDTH, HEIGHT, 0.86f);
         glass.header(batch, String.format(Locale.ROOT, "INTEL - L%02d", number), INNER, RIGHT, Y + 10);
         Canvas canvas = new Screen(batch);
@@ -180,7 +183,26 @@ final class IntelPanel {
             canvas.text("FOLLOWS IN A LATER RELEASE.", Glass.LABEL, INNER, Y + 64, false);
             return;
         }
-        layout(canvas, intel.get(), teaser.get(), levelKey, unclassified, limited, forks);
+        layout(canvas, intel.get(), teaser.get(), levelKey, unclassified, limited, forks, suiteHint);
+    }
+
+    /** Step DB2: the hint in the {@code NO SENSOR} box while the campaign owns no sensor suite (design/ui/databank). */
+    static final String SUITE_HINT = "DATABANK: SHIP > SENSOR SUITE";
+
+    private final List<IntelLink> links = new ArrayList<>();
+
+    /** The pictures drawn last, with the units they show. */
+    List<IntelLink> links() {
+        return links;
+    }
+
+    /** The unit slug of an intel picture's region ({@code intel/boss-iron-sovereign}); empty for an unclassified one. */
+    static Optional<String> linkedSlug(String region) {
+        if (!region.startsWith("intel/") || region.startsWith(UNCLASSIFIED_PICTURE)) {
+            return Optional.empty();
+        }
+        String slug = region.substring("intel/".length());
+        return Optional.of(slug.startsWith("boss-") ? slug.substring("boss-".length()) : slug);
     }
 
     /** M7 part E: an unclassified unit's sensor picture: its silhouette of its size and layer (tools/art/intel.py). */
@@ -266,6 +288,22 @@ final class IntelPanel {
             Map<String, String> unclassified,
             Optional<String> limited,
             Strip forks) {
+        layout(canvas, level, teaser, levelKey, unclassified, limited, forks, false);
+    }
+
+    /**
+     * As above; step DB2: {@code suiteHint} adds {@link #SUITE_HINT} under the {@code NO SENSOR} chip (the campaign owns
+     * no sensor suite: design/ui/databank, Discoverability of the sensor suite).
+     */
+    static void layout(
+            Canvas canvas,
+            Intel level,
+            BriefingPage teaser,
+            String levelKey,
+            Map<String, String> unclassified,
+            Optional<String> limited,
+            Strip forks,
+            boolean suiteHint) {
         List<String> lines = quote(level);
         int quote = Y + HEIGHT - QUOTE_FOOT - LINE * (lines.size() - 1);
         fields(
@@ -273,7 +311,7 @@ final class IntelPanel {
                 level,
                 teaser,
                 levelKey,
-                rows(level, teaser, levelKey, quote, unclassified, limited, forks),
+                rows(level, teaser, levelKey, quote, unclassified, limited, forks, suiteHint && level.sensor() == 0),
                 unclassified,
                 limited,
                 forks);
@@ -284,7 +322,7 @@ final class IntelPanel {
     }
 
     /** The fields' row spacing, and the most lines of enemy names. */
-    private record Rows(int step, int names) {}
+    private record Rows(int step, int names, boolean hint) {}
 
     /** Draws nothing: the fields are measured by where their last row lands. */
     private static final Canvas MEASURE = new Canvas() {
@@ -318,9 +356,10 @@ final class IntelPanel {
             int quote,
             Map<String, String> unclassified,
             Optional<String> limited,
-            Strip strip) {
+            Strip strip,
+            boolean hint) {
         for (int step = STEP; step >= LINE; step--) {
-            Rows rows = new Rows(step, Integer.MAX_VALUE);
+            Rows rows = new Rows(step, Integer.MAX_VALUE, hint);
             if (fields(MEASURE, level, teaser, levelKey, rows, unclassified, limited, strip) <= quote) {
                 return rows;
             }
@@ -330,12 +369,12 @@ final class IntelPanel {
                         - 1;
                 names > 1;
                 names--) {
-            Rows rows = new Rows(LINE, names);
+            Rows rows = new Rows(LINE, names, hint);
             if (fields(MEASURE, level, teaser, levelKey, rows, unclassified, limited, strip) <= quote) {
                 return rows;
             }
         }
-        return new Rows(LINE, 1);
+        return new Rows(LINE, 1, hint);
     }
 
     /** The teaser, the level's name and the fields; returns the bottom of the last row's ink. */
@@ -367,6 +406,10 @@ final class IntelPanel {
         String sensor = level.sensor() == 0 ? "NO SENSOR" : "SENSOR L" + level.sensor();
         canvas.chip(sensor, RIGHT - CHIP_WIDTH, y + 2, CHIP_WIDTH, 16);
         y += 26;
+        if (rows.hint()) {
+            canvas.text(SUITE_HINT, Glass.AMBER, INNER, y - 4, false);
+            y += LINE;
+        }
         y = field(
                 canvas,
                 level,
@@ -1140,6 +1183,8 @@ final class IntelPanel {
 
         @Override
         public void picture(String name, int x, int y, int size) {
+            linkedSlug(name)
+                    .ifPresent(slug -> links.add(new IntelLink(new Box(x - 1, y - 1, size + 2, size + 2), slug)));
             glass.inset(batch, x - 1, y - 1, size + 2, size + 2);
             batch.draw(sprites.region(name), x, PixelScreen.HEIGHT - y - size);
         }

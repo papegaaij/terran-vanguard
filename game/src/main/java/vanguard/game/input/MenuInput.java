@@ -98,4 +98,9 @@ public final class MenuInput {
     public boolean nextTab() {
         return input.pressed(Action.MENU_NEXT_TAB);
     }
+
+    /** Step DB2: Tab / gamepad Y, the hangar's way into the databank. */
+    public boolean databank() {
+        return input.pressed(Action.MENU_DATABANK);
+    }
 }

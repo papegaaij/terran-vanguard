@@ -145,6 +145,9 @@ public final class LevelScreen implements GameScreen {
     private final int levelNumber;
 
     private final Sortie sortie;
+    /** Step DB2: the attempt's units met and kills, merged into the campaign's databank at the attempt's end. */
+    private final vanguard.game.databank.DatabankLog databankLog;
+
     private final FixedStepClock clock = new FixedStepClock(SimStep.SECONDS, MAX_STEPS_PER_FRAME);
     private final EnemyLooks[] looks;
     /** M5 part C: the ground units in a pounce's air window before the step, to tell where a death belongs. */
@@ -271,6 +274,7 @@ public final class LevelScreen implements GameScreen {
                 script,
                 services.invulnerable ? rules.withInvulnerableShip() : rules,
                 campaign.armour());
+        databankLog = vanguard.game.databank.DatabankLog.of(sortie, services.databank());
         radioSchedule = new RadioSchedule(sortie.script(), RadioSchedule.fitted(sortie));
         barks = sortie.wingman().isPresent()
                 ? Barks.of(
@@ -715,6 +719,15 @@ public final class LevelScreen implements GameScreen {
         return sortie.wingman().map(Wingman::gun).or(() -> sortie.bulwark().map(vanguard.sim.Bulwark::gun));
     }
 
+    /**
+     * Step DB2 (design/ui/databank, The record in the save): the attempt ends (won, failed, restarted or aborted): its
+     * units met and kills go into the campaign's databank before the autosave that follows, and the next attempt's
+     * record starts empty. Quitting to the main menu keeps nothing (no save is written there).
+     */
+    void recordAttempt() {
+        databankLog.mergeInto(campaign, sortie.script().number());
+    }
+
     /** Starts the level over from its start state with {@code armour} (a retry, or the pause menu's restart). */
     void retry(double armour) {
         // The flight's Rook: the gear's, or the --escort debug option's (never the gear's).
@@ -752,6 +765,7 @@ public final class LevelScreen implements GameScreen {
             // A voice still speaking when the outro's cap hands over is cut, not left to play over the
             // debrief (Level 12's level-end line, playtest 2026-10-18).
             services.voices.stop();
+            recordAttempt();
             return Transition.replace(DebriefTally.debrief(services, campaign, sortie, level, name));
         }
         if (failure.isPresent()) {
@@ -780,6 +794,7 @@ public final class LevelScreen implements GameScreen {
         for (int i = 0; i < steps; i++) {
             airborne.record(sortie);
             sortie.step(stepCommands);
+            databankLog.watch(sortie);
             if (!sortie.launching() && sortie.section() == 1) {
                 prompts.update(stepCommands);
             }
@@ -980,6 +995,7 @@ public final class LevelScreen implements GameScreen {
         for (int i = 0; i < events.size(); i++) {
             // Each event in turn: its radio lines, its effects, then the screen's own (music, HUD, flow).
             radioEvents.react(events, i);
+            databankLog.react(events, i);
             eventEffects.react(events, i);
             switch (events.type(i)) {
                 case BOSS_DESTROYED -> music.bossDown();
@@ -1010,6 +1026,7 @@ public final class LevelScreen implements GameScreen {
                 case SHIP_DESTROYED -> {
                     slowMotion = SLOW_MOTION_SECONDS;
                     music.cut();
+                    recordAttempt();
                     failure = Optional.of(campaign.fail());
                     // The used retry, or a game over's return to the launch state, goes into the
                     // autosave at once (design/systems/retry).
@@ -1076,6 +1093,7 @@ public final class LevelScreen implements GameScreen {
                 case PRIMARY_FAILED -> {
                     // As a wreck, without the explosion and the slow motion (design/systems/retry).
                     music.cut();
+                    recordAttempt();
                     failure = Optional.of(campaign.fail());
                     services.save(SaveSlots.Slot.AUTOSAVE, campaign);
                     failedIn = FAILED_SCREEN_SECONDS;

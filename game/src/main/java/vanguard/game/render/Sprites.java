@@ -132,6 +132,44 @@ public final class Sprites implements Disposable {
         units.put(number, new Units(file.exists() ? new TextureAtlas(file) : null));
     }
 
+    /**
+     * Step DB2 (design/ui/databank): loads a level's unit atlas alone (no backdrop), for the databank's pictures of the
+     * units that level flies, until {@link #leaveUnits} with the same number; the level entered last keeps its regions
+     * found first.
+     */
+    public void enterUnits(int number) {
+        Units entered = units.get(number);
+        if (entered != null) {
+            entered.users++;
+            return;
+        }
+        var file = files.internal(String.format(Locale.ROOT, "atlas/level-%02d.atlas", number));
+        units.put(number, new Units(file.exists() ? new TextureAtlas(file) : null));
+    }
+
+    /** Step DB2: disposes a unit atlas {@link #enterUnits} loaded once no screen uses it. */
+    public void leaveUnits(int number) {
+        Units left = units.get(number);
+        if (left != null && --left.users == 0) {
+            units.remove(number);
+            if (left.atlas != null) {
+                left.atlas.dispose();
+            }
+        }
+    }
+
+    /**
+     * Step DB2: the frames of a sprite in level {@code number}'s loaded unit atlas (its own copy), or empty when that
+     * atlas is not loaded or has no such sprite.
+     */
+    public java.util.Optional<Array<AtlasRegion>> levelFrames(int number, String name) {
+        Units loaded = units.get(number);
+        if (loaded == null || loaded.atlas == null || loaded.atlas.findRegion(name) == null) {
+            return java.util.Optional.empty();
+        }
+        return java.util.Optional.of(frames(loaded.atlas, name));
+    }
+
     /** Disposes a level's unit and backdrop atlases once no screen of that level uses them. */
     public void leaveLevel(int number) {
         backdrops.leave(number);

@@ -124,6 +124,40 @@ class IntelPanelLayoutTest {
      * decision D4 of M4 part H): four different lines, each the one the panel quotes at that level.
      * That each fits the panel beside the fields it shows is checked above.
      */
+    /**
+     * Step DB2 (design/ui/databank, Discoverability of the sensor suite): while the campaign owns no suite the {@code NO
+     * SENSOR} box points to the databank's entry, and every level's intel still fits; a level read with a suite shows no
+     * hint.
+     */
+    @Test
+    void theSuiteHintFitsEveryLevelsIntelWithoutASensor() {
+        for (String level : CONTENT.levels().keySet()) {
+            BriefingPage teaser = CONTENT.level(level).briefing().teaser();
+            for (int sensor = 0; sensor <= 1; sensor++) {
+                Measure measure = assertFits(
+                        Intel.of(CONTENT, level, sensor),
+                        teaser,
+                        level,
+                        level + " hint at L" + sensor + ": ",
+                        Map.of(),
+                        IntelPanel.strip(CONTENT, level),
+                        true);
+                assertEquals(
+                        sensor == 0,
+                        measure.parts.stream()
+                                .anyMatch(part -> part.what().equals("text \"" + IntelPanel.SUITE_HINT + "\"")),
+                        level + ": the hint at sensor " + sensor);
+            }
+        }
+    }
+
+    @Test
+    void anIntelPictureLinksToItsUnitsEntry() {
+        assertEquals(java.util.Optional.of("iron-sovereign"), IntelPanel.linkedSlug("intel/boss-iron-sovereign"));
+        assertEquals(java.util.Optional.of("mirror-interceptor"), IntelPanel.linkedSlug("intel/mirror-interceptor"));
+        assertEquals(java.util.Optional.empty(), IntelPanel.linkedSlug("intel/unclassified-ghost-drone"));
+    }
+
     @Test
     void everyLevelHasVargasLineForEachSensorLevel() {
         for (String level : CONTENT.levels().keySet()) {
@@ -942,8 +976,19 @@ class IntelPanelLayoutTest {
             String where,
             Map<String, String> unclassified,
             IntelPanel.Strip strip) {
+        return assertFits(intel, teaser, level, where, unclassified, strip, false);
+    }
+
+    private static Measure assertFits(
+            Intel intel,
+            BriefingPage teaser,
+            String level,
+            String where,
+            Map<String, String> unclassified,
+            IntelPanel.Strip strip,
+            boolean suiteHint) {
         Measure measure = new Measure();
-        IntelPanel.layout(measure, intel, teaser, level, unclassified, java.util.Optional.empty(), strip);
+        IntelPanel.layout(measure, intel, teaser, level, unclassified, java.util.Optional.empty(), strip, suiteHint);
         List<Box> all = new ArrayList<>(measure.parts);
         all.addAll(measure.quote);
         for (Box box : all) {

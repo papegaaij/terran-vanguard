@@ -77,11 +77,20 @@ class MouseRegionsTest {
 
     @Test
     void theMenusClickWhereTheyDrawTheirItems() {
-        clickMatchesKeys("main menu", 8, MainMenuScreen::row);
+        clickMatchesKeys("main menu", 9, MainMenuScreen::row);
         clickMatchesKeys("pause", 5, PauseScreen::row);
         clickMatchesKeys("mission failed", 4, MissionFailedScreen::row);
         clickMatchesKeys("load game", 9, SlotsScreen::row);
         clickMatchesKeys("mission select", 14, MissionSelectScreen::row);
+    }
+
+    /** Step DB2: the main menu's nine items (DATABANK added) keep their 33 px step and end above the key hints. */
+    @Test
+    void theMainMenusNineItemsEndAboveTheKeyHints() {
+        assertEquals(172, MainMenuScreen.PANEL_Y);
+        Box last = MainMenuScreen.row(8);
+        assertEquals(33, MainMenuScreen.row(1).y() - MainMenuScreen.row(0).y(), 0.5f);
+        assertTrue(last.y() + last.height() <= 540 - 22 - 3, "above the hint plate: " + (last.y() + last.height()));
     }
 
     @Test

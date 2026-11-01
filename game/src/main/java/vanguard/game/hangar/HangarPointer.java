@@ -41,12 +41,21 @@ public final class HangarPointer {
     /** Whether the repair slider follows the held button. */
     private boolean dragging;
 
-    /** A command's chip in the top bar: undo, repair and save, then the larger launch. */
+    /**
+     * A command's chip in the top bar: undo, repair, save and (step DB2) data, 54 px wide from x 424 with 4 px gaps so
+     * the longest mission line ({@code BEFORE L10 - EVACUATION CORRIDOR}, 256 px from x 160) still fits before them and
+     * the credits inset at x 662 after them (design/ui/databank, The ways in), then the larger launch.
+     */
     public static Box command(Command command) {
         return command == Command.LAUNCH
                 ? new Box(814, 10, 124, 32)
-                : new Box(448 + command.ordinal() * 70, 15, 64, 22);
+                : new Box(COMMANDS_X + command.ordinal() * (COMMAND_WIDTH + 4), 15, COMMAND_WIDTH, 22);
     }
+
+    /** The first command chip's left edge and the chips' width (step DB2: narrowed from 64 to fit {@code DATA}). */
+    public static final int COMMANDS_X = 424;
+
+    public static final int COMMAND_WIDTH = 54;
 
     /**
      * The repair panel, centred: one line per ship, {@code lines} of them ({@link HangarState#repairLines()}: the

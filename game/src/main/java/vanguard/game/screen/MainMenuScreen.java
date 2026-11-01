@@ -30,6 +30,7 @@ import vanguard.game.ui.Menu;
  * game opens the slot list and is disabled while every slot is empty (design/systems/saves). New
  * game goes through the difficulty select into the intro briefing. Missions opens the mission select
  * of the current campaign (the most recent save) and is disabled while it has flown no mission.
+ * Databank opens the current campaign's databank (step DB2) and is disabled while there is no save.
  * Scores shows the high scores (M6 part B, Q3 = a). The version ({@code v0.1}) stands in the
  * bottom-left corner.
  * A click anywhere on the title screen goes on as Enter does; in the menu the pointer selects an
@@ -41,7 +42,9 @@ public final class MainMenuScreen implements GameScreen {
     private static final float BLINK_SECONDS = 1;
 
     private static final int PANEL_X = 586;
-    private static final int PANEL_Y = 199;
+    /** Step DB2: up from y 199 so nine items keep their 33 px step above the key hints (design/ui/databank). */
+    static final int PANEL_Y = 172;
+
     private static final int PANEL_WIDTH = 334;
     private static final int ITEM_X = 616;
     private static final int ITEM_STEP = 33;
@@ -52,6 +55,7 @@ public final class MainMenuScreen implements GameScreen {
         NEW_GAME,
         LOAD_GAME,
         MISSIONS,
+        DATABANK,
         SCORES,
         OPTIONS,
         CREDITS,
@@ -76,6 +80,9 @@ public final class MainMenuScreen implements GameScreen {
         items.add(Menu.Item.of(Item.NEW_GAME, "NEW GAME"));
         items.add(new Menu.Item<>(Item.LOAD_GAME, "LOAD GAME", anySave));
         items.add(new Menu.Item<>(Item.MISSIONS, "MISSIONS", MissionSelectScreen.anyOpen(services)));
+        // Step DB2 (design/ui/databank, The ways in): the current campaign's databank, disabled without a save.
+        items.add(new Menu.Item<>(
+                Item.DATABANK, "DATABANK", services.saves.mostRecentEntry().isPresent()));
         items.add(Menu.Item.of(Item.SCORES, "SCORES"));
         items.add(Menu.Item.of(Item.OPTIONS, "OPTIONS"));
         items.add(Menu.Item.of(Item.CREDITS, "CREDITS"));
@@ -139,6 +146,9 @@ public final class MainMenuScreen implements GameScreen {
             case NEW_GAME -> Transition.open(new DifficultyScreen(services));
             case LOAD_GAME -> Transition.open(SlotsScreen.load(services));
             case MISSIONS -> Transition.open(MissionSelectScreen.overMenu(services));
+            case DATABANK ->
+                Transition.open(vanguard.game.databank.DatabankScreen.overMenu(
+                        services, services.saves.mostRecentEntry().orElseThrow()));
             case SCORES -> Transition.open(new ScoresScreen(services));
             case OPTIONS -> Transition.open(new OptionsScreen(services));
             case CREDITS -> Transition.open(new CreditsScreen(services));
