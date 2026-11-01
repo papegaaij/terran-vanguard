@@ -83,6 +83,14 @@ final class MiningRigCues extends SoundFamily {
     private float hoverLevel;
     private float engineLevel;
 
+    /** M10 part D: the Harrows' cues, which take a ram's tell. */
+    private HarrowCues harrows;
+
+    /** M10 part D: the Harrows' cues ({@link HarrowCues#tell}). */
+    void harrows(HarrowCues harrows) {
+        this.harrows = harrows;
+    }
+
     MiningRigCues(SoundMix mix) {
         super(mix);
         java.util.Arrays.fill(hornetSerial, -1);
@@ -144,7 +152,12 @@ final class MiningRigCues extends SoundFamily {
                     lastSnap = now;
                 }
             }
-            case DASH_TELL -> bank.play(Sfx.SAW_SPINUP, CUE_LEVEL, spinUpPitch(tellSeconds(events.value(i))), pan);
+            case DASH_TELL -> {
+                // M10 part D: a ram's tell is the Harrow's lock (HarrowCues), not the Buzzsaw's spin-up.
+                if (harrows == null || !harrows.tell(events.value(i), pan)) {
+                    bank.play(Sfx.SAW_SPINUP, CUE_LEVEL, spinUpPitch(tellSeconds(events.value(i))), pan);
+                }
+            }
             case DASH_BOUNCE -> bank.play(Sfx.SAW_RICOCHET, CUE_LEVEL, pitch(0.06), pan);
             default -> {}
         }

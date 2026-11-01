@@ -222,6 +222,14 @@ public final class Backdrop {
      * @param groundScroll the ground layer's distance in px
      * @param clock the level clock and the real clock at the render time
      */
+    /**
+     * M10 part D (design/campaign Level 38): a told strike's pulse now (0-1, {@code LightningLooks#pulse}): the storm's
+     * walls and cells flash brighter from inside ({@link BackdropPieces#drawDeepGlows}).
+     */
+    public void strikePulse(float pulse) {
+        pieces.strikePulse(pulse);
+    }
+
     public void drawBehind(SpriteBatch batch, double groundScroll, BackdropClock clock) {
         atmosphere.blend(clock.script());
         if (level.backdrop().hasDeep()) {

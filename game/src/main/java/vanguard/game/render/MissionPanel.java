@@ -1215,10 +1215,23 @@ final class MissionPanel {
             kit.textRight(batch, kit.body, spared, colour, X + PAD, y, TEXT_WIDTH);
             return;
         }
-        // A kill ratio is judged at the level's end: the count runs on past the share, DONE only then.
-        kit.text(batch, kit.body, "KILLS", colour, X + PAD, y, TEXT_WIDTH);
-        String count = sortie.secondaryMet() ? "DONE" : sortie.kills() + " / " + sortie.requiredKills();
+        // A kill ratio is judged at the level's end: the count runs on past the share, DONE only then. M10 part D: a
+        // ratio scoped to one enemy counts its kills under its label from the start (Level 38's HARROWS n / 23).
+        kit.text(
+                batch,
+                kit.body,
+                killsLabel(sortie.script().objectives().secondary().label()),
+                colour,
+                X + PAD,
+                y,
+                TEXT_WIDTH);
+        String count = sortie.secondaryMet() ? "DONE" : sortie.secondaryKills() + " / " + sortie.requiredKills();
         kit.textRight(batch, kit.body, count, colour, X + PAD, y, TEXT_WIDTH);
+    }
+
+    /** M10 part D: a kill ratio's label: its own ({@code HARROWS}, upper case), {@code KILLS} without one. */
+    static String killsLabel(String label) {
+        return label.isEmpty() ? "KILLS" : label.toUpperCase(Locale.ROOT);
     }
 
     /**

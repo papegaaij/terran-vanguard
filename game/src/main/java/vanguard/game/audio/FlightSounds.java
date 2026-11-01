@@ -107,6 +107,8 @@ public final class FlightSounds {
     private final CloudDiverCues cloudDivers;
     /** M10 part C: Level 37's sounds, the Mirror Interceptor's hum and pods, the roots' heartbeat. */
     private final AureliaCues aurelia;
+    /** M10 part D: the Harrow's whistle, lock, ram (Level 38 on). */
+    private final HarrowCues harrows;
     /** Per event type the family that plays it (by ordinal); null for an event without a sound. */
     private final SoundFamily[] families = new SoundFamily[SimEvents.Type.values().length];
     /** Every family, in the order they hear a step's start and end. */
@@ -185,7 +187,8 @@ public final class FlightSounds {
         Sfx.SENTINEL_SERVO,
         Sfx.MIRROR_HEAT,
         Sfx.HARVESTER_SCOOP,
-        Sfx.MIRROR_HUM
+        Sfx.MIRROR_HUM,
+        Sfx.HARROW_WHISTLE
     };
     /**
      * M7 part C: a unit's loop (the tendril hum and burn, the Threadcrawler's walk; design/audio/sfx, Mixing) is
@@ -249,6 +252,8 @@ public final class FlightSounds {
         hazards = new JovianHazardCues(mix);
         cloudDivers = new CloudDiverCues(mix);
         aurelia = new AureliaCues(mix);
+        harrows = new HarrowCues(mix);
+        rig.harrows(harrows);
         belt.rig(rig);
         walker = new WalkerCues(mix, ventField, belt);
         foundry = new FoundryCues(mix);
@@ -308,7 +313,8 @@ public final class FlightSounds {
             jovian,
             hazards,
             cloudDivers,
-            aurelia
+            aurelia,
+            harrows
         };
         for (SoundFamily family : all) {
             for (SimEvents.Type type : family.types()) {
@@ -748,6 +754,7 @@ public final class FlightSounds {
         jovian.watch(sortie);
         cloudDivers.watch(sortie);
         aurelia.watch(sortie);
+        harrows.watch(sortie);
         units.watchCanyon(sortie);
         units.watchSiege(sortie);
         storm.watch(sortie);
@@ -810,6 +817,7 @@ public final class FlightSounds {
             jovian.silence(loop);
             cloudDivers.silence(loop);
             aurelia.silence(loop);
+            harrows.silence(loop);
         }
         deepWater.silence();
     }

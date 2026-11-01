@@ -60,6 +60,16 @@ final class PropPasses {
     private final Map<String, AtlasRegion> debrisSprites = new HashMap<>();
     /** M9 part B: per debris sprite its spin frames ({@value #SPIN_FRAMES}: the belt's rocks), when it has them. */
     private final Map<String, Array<AtlasRegion>> debrisSpins = new HashMap<>();
+    /**
+     * M10 part D (design/campaign Level 38, the CDF supply canister; tools/art/storm_layer_units.py): per debris sprite
+     * with a latch overlay ({@code <sprite>-latch}, the same frames) its sway frames and its latch's, at {@value
+     * #SWAY_FPS} fps: the canister swaying under its parachute, its latch the 10 HP target.
+     */
+    private final Map<String, Array<AtlasRegion>> debrisSways = new HashMap<>();
+
+    private final Map<String, Array<AtlasRegion>> debrisLatches = new HashMap<>();
+    /** M10 part D: a swaying chunk's frames a second (the canister's 2 s loop of 8). */
+    static final double SWAY_FPS = 4;
 
     /** M9 part B: a belt rock's spin set: frame k turned k x 22.5 degrees clockwise (tools/art/belt_units.py). */
     static final int SPIN_FRAMES = 16;
@@ -131,12 +141,24 @@ final class PropPasses {
                 Array<AtlasRegion> spin = sprites.frames(chunk.sprite());
                 if (spin.size == SPIN_FRAMES) {
                     debrisSpins.put(chunk.sprite(), spin);
+                } else if (sprites.has(chunk.sprite() + "-latch")) {
+                    debrisSways.put(chunk.sprite(), spin);
+                    debrisLatches.put(chunk.sprite(), sprites.frames(chunk.sprite() + "-latch"));
                 }
             }
             Array<AtlasRegion> spin = debrisSpins.get(chunk.sprite());
             if (spin != null) {
                 // M9 part B: a belt rock turns through its 16 spin frames (a look: the simulation's rock does not).
                 sprite = spin.get(spinFrame(sortie.tick(), chunk.serial()));
+            }
+            Array<AtlasRegion> sway = debrisSways.get(chunk.sprite());
+            AtlasRegion latch = null;
+            if (sway != null) {
+                // M10 part D: the canister sways under its parachute, its latch on its top (the same frame).
+                int frame = swayFrame(sortie.tick() + alpha, sway.size);
+                sprite = sway.get(frame);
+                Array<AtlasRegion> latches = debrisLatches.get(chunk.sprite());
+                latch = frame < latches.size ? latches.get(frame) : null;
             }
             if (!chunk.large() && chunk.ticksSinceHit() < HIT_FLASH_TICKS) {
                 flash.draw(
@@ -149,7 +171,15 @@ final class PropPasses {
             } else {
                 drawCentred(batch, sprite, chunk.renderX(alpha), chunk.renderY(alpha));
             }
+            if (latch != null) {
+                drawCentred(batch, latch, chunk.renderX(alpha), chunk.renderY(alpha));
+            }
         }
+    }
+
+    /** M10 part D: a swaying chunk's frame of {@code frames} at step {@code ticks}, {@value #SWAY_FPS} fps. */
+    static int swayFrame(double ticks, int frames) {
+        return (int) Math.floorMod((long) Math.floor(ticks * SimStep.SECONDS * SWAY_FPS), (long) frames);
     }
 
     /**

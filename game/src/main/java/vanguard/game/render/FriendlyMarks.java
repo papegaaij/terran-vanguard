@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import vanguard.game.ui.Fonts;
 import vanguard.game.ui.Glass;
 import vanguard.sim.Ally;
+import vanguard.sim.Debris;
 import vanguard.sim.Enemy;
 import vanguard.sim.PlayField;
 import vanguard.sim.Sortie;
@@ -19,7 +20,8 @@ import vanguard.sim.Sortie;
  * the craft's spot rounded to whole pixels, 2 px arms on a 1 px dark outline. Drawn in code (a HUD mark, no art);
  * geometry in play-field pixels, y up. M10 part C (design/campaign Level 37, The shuttles): a level's air allies
  * outside the objectives (Level 37's Halcyon shuttles: not {@code neutral}, enemy fire hits them) are marked too, from
- * their pads to their climb out ({@link #markedAlly}).
+ * their pads to their climb out ({@link #markedAlly}). M10 part D (design/campaign Level 38): a debris chunk the level
+ * marks ({@code marked}: the CDF supply canister on its parachute) is bracketed too ({@link #markedChunk}).
  */
 public final class FriendlyMarks {
     /** The tag under the brackets. */
@@ -95,6 +97,22 @@ public final class FriendlyMarks {
                 && y - halfHeight < PlayField.HEIGHT;
     }
 
+    /**
+     * M10 part D: whether debris chunk {@code chunk}, shown at ({@code x}, {@code y}), gets the brackets: a chunk the
+     * level marks friendly ({@code marked}: Level 38's CDF canister), drifting, on the screen.
+     */
+    static boolean markedChunk(Debris chunk, double x, double y) {
+        if (!chunk.spec().marked() || chunk.thrown() || chunk.pulled()) {
+            return false;
+        }
+        double halfWidth = chunk.spec().size().width() / 2 + SPRITE;
+        double halfHeight = chunk.spec().size().height() / 2 + SPRITE;
+        return x + halfWidth > 0
+                && x - halfWidth < PlayField.WIDTH
+                && y + halfHeight > 0
+                && y - halfHeight < PlayField.HEIGHT;
+    }
+
     /** Finds the marked craft at the tick being shown ({@code alpha} of a step after the last). */
     void plan(Sortie sortie, float alpha) {
         count = 0;
@@ -110,6 +128,19 @@ public final class FriendlyMarks {
                     halves[count] = (int) Math.round(Math.max(box.width(), box.height()) / 2) + MARGIN;
                     count++;
                 }
+            }
+        }
+        for (int d = 0; d < sortie.debrisCount() && count < MAX; d++) {
+            // M10 part D (design/campaign Level 38, the CDF supply canister): a marked debris chunk on the screen.
+            Debris chunk = sortie.debris(d);
+            double x = chunk.renderX(alpha);
+            double y = chunk.renderY(alpha);
+            var size = chunk.spec().size();
+            if (markedChunk(chunk, x, y)) {
+                xs[count] = (int) Math.round(x);
+                ys[count] = (int) Math.round(y);
+                halves[count] = (int) Math.round(Math.max(size.width(), size.height()) / 2) + MARGIN;
+                count++;
             }
         }
         for (int i = 0; i < sortie.enemyCount() && count < MAX; i++) {

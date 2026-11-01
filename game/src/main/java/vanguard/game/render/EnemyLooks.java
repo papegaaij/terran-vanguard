@@ -159,10 +159,11 @@ public record EnemyLooks(
      * M7 part E: a unit whose death sounds other than its rung's two files (design/audio/sfx): the Ghost Drone's
      * mechanical break-up is the {@code small} rung's Ghost Drone entry (round 41 a, proposed): it must sound built,
      * not grown. M7 part F: the Warden Tank's hull explosion with its metal clang (round 42 a, proposed) is the {@code
-     * medium} rung's Warden Tank entry.
+     * medium} rung's Warden Tank entry. M10 part D: the Harrow's burst (round 72 S.6 a) on every death, instead of a
+     * rung.
      */
-    private static final java.util.Map<String, Sfx> DEATH_SOUNDS =
-            java.util.Map.of("ghost-drone", Sfx.GHOST_DRONE_DEATH, "warden-tank", Sfx.TANK_DEATH);
+    private static final java.util.Map<String, Sfx> DEATH_SOUNDS = java.util.Map.of(
+            "ghost-drone", Sfx.GHOST_DRONE_DEATH, "warden-tank", Sfx.TANK_DEATH, "harrow", Sfx.HARROW_BURST);
     /** A unit's explosion sound, its rung's first or {@code second} file (both its own for a unit with one). */
     static Sfx explosionSound(String slug, Tier tier, boolean second) {
         return DEATH_SOUNDS.getOrDefault(slug, Sfx.explosion(tier, second));

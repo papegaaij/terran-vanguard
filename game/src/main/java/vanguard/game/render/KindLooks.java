@@ -97,6 +97,9 @@ final class KindLooks {
     /** M10 part B: Level 36's Chimeras, harvesters and drop craft; built at the first use. */
     private CloudDiverLooks cloudDivers;
 
+    /** M10 part D: Level 38's Harrows, the cargo pod's flash outline, the canister's release; built at the first use. */
+    private StormLayerLooks stormLayer;
+
     /** M8 part F: whether the level is a dark one ({@link DarkLight}): the units' glow-only frames are drawn. */
     private boolean dark;
 
@@ -179,6 +182,14 @@ final class KindLooks {
     }
 
     /** M10 part B: Level 36's units' looks for the sortie's enemy kinds, built once. */
+    /** M10 part D: Level 38's looks for the sortie's enemy kinds, built once. */
+    StormLayerLooks stormLayer(Sortie sortie) {
+        if (stormLayer == null) {
+            stormLayer = new StormLayerLooks(sprites, sortie.enemyKinds(), name -> LevelRenderer.pivots(files, name));
+        }
+        return stormLayer;
+    }
+
     CloudDiverLooks cloudDivers(Sortie sortie) {
         if (cloudDivers == null) {
             cloudDivers = new CloudDiverLooks(sprites, sortie.enemyKinds());
@@ -399,6 +410,9 @@ final class KindLooks {
         }
         if (ceres != null) {
             ceres.restart();
+        }
+        if (stormLayer != null) {
+            stormLayer.restart();
         }
         if (cloudDivers != null) {
             cloudDivers.restart();

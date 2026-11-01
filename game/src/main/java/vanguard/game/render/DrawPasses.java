@@ -192,6 +192,10 @@ final class DrawPasses extends LevelLooks {
         double lag = f.lag;
         double scroll = f.scroll;
         double seconds = f.seconds;
+        if (lightning != null) {
+            // M10 part D: a told strike lights the storm's walls and cells from inside (Level 38).
+            backdrop.strikePulse(lightning.pulse(sortie.tick()));
+        }
         backdrop.drawBehind(batch, scroll, clock);
         if (water != null) {
             // M5 part E: the sub layer between the deep swell and the surface's chop (E4 = c).
@@ -499,11 +503,14 @@ final class DrawPasses extends LevelLooks {
         // M10 part B: the Chimeras' seams and healing pulse (their own frames, RegenerationLooks' strength).
         batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
         kinds.cloudDivers(sortie).drawSeams(batch, sortie, alpha, null);
+        // M10 part D: the Harrows' sacs at their state's glow and their lock tells' halos.
+        kinds.stormLayer(sortie).drawSacs(batch, sortie, alpha);
         batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         if (backdrop.banks() != null) {
             // M10 part B (design/world/jovian, foreground cloud banks): the debris on the play plane under the banks
             // (Level 36's pathfinder pod hides under one; the Salvage scanner's glint shows it through them).
             props.drawDebris(batch, sortie, alpha);
+            kinds.stormLayer(sortie).drawDebris(batch, sortie, alpha);
         }
         if (eruptions != null) {
             // M10 part A: the eruptions' burning rocks on the play plane.
@@ -587,6 +594,8 @@ final class DrawPasses extends LevelLooks {
         kinds.ceres(sortie).drawPieces(batch, sortie, alpha);
         // M10 part B: a Chimera's teal flecks and gold sparks over its burst.
         kinds.cloudDivers(sortie).drawFlecks(batch, sortie);
+        // M10 part D: a Harrow's shell tumbling on, its teal flash and tissue flecks.
+        kinds.stormLayer(sortie).drawPieces(batch, sortie, alpha);
         // M9 part C: a Gunship's halves and gold plates flung out.
         kinds.minefield(sortie).drawPieces(batch, sortie, alpha, scroll);
         // M9 part D: a Shard Drone's shards, a Buzzsaw's blades.
@@ -595,6 +604,8 @@ final class DrawPasses extends LevelLooks {
         kinds.deepCore(sortie).drawPieces(batch, sortie, scroll);
         if (backdrop.banks() == null) {
             props.drawDebris(batch, sortie, alpha);
+            // M10 part D: the cargo pod's flash outline, the canister's release.
+            kinds.stormLayer(sortie).drawDebris(batch, sortie, alpha);
         }
         if (colossus != null) {
             // M7 part H: the rocks the breaching boss tears loose toward its mouth; its throe's plume and rock rain.

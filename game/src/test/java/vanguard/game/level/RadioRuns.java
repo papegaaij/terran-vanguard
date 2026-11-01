@@ -38,6 +38,7 @@ import static vanguard.game.level.RadioTimeline.LEVEL_34;
 import static vanguard.game.level.RadioTimeline.LEVEL_35;
 import static vanguard.game.level.RadioTimeline.LEVEL_36;
 import static vanguard.game.level.RadioTimeline.LEVEL_37;
+import static vanguard.game.level.RadioTimeline.LEVEL_38;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -72,13 +73,37 @@ final class RadioRuns {
 
     /**
      * Act 6, Jovian Storm (M10 part B, step B4): Level 36 ({@link #level36Runs}); M10 part C, step C4b: Level 37
-     * ({@link #level37Runs}).
+     * ({@link #level37Runs}); M10 part D, step D4: Level 38 ({@link #level38Runs}).
      */
     static Map<String, List<List<Event>>> act6() {
         Map<String, List<List<Event>>> runs = new LinkedHashMap<>();
         runs.put(LEVEL_36, level36Runs());
         runs.put(LEVEL_37, level37Runs());
+        runs.put(LEVEL_38, level38Runs());
         return runs;
+    }
+
+    /**
+     * M10 part D (step D4): Level 38's runs (Rook flies with every fit that has the escort; the first strike kill's bark
+     * is his, {@code requires: escort}). The first strike kill from the first strikes over a wave (medium t=34 or 40, the
+     * t=43.5 lure across the t=42.5 stream's left lane: kills at t≈34.2-44.6; easy skips t=33 and 43.5: t≈40.2 or the
+     * t=51 strike's 52.2); Aurelia's cargo pod shot as it tumbles down the left edge (t≈119-125) or opened by the t=122.5
+     * lure's column (x 60, the pod at x≈62: t≈123.5); the Harrows' kill ratio judged at the level's end (t=196: met, or
+     * not, with no line of its own).
+     */
+    static List<List<Event>> level38Runs() {
+        CueTrigger strike = CueTrigger.FIRST_STRIKE_KILL;
+        CueTrigger secret = CueTrigger.SECRET;
+        CueTrigger met = CueTrigger.SECONDARY_OBJECTIVE;
+        String pod = "Aurelia cargo pod";
+        return List.of(
+                List.of(),
+                List.of(new Event(34.2, strike, ""), new Event(120.5, secret, pod), new Event(196, met, "")),
+                List.of(new Event(40.2, strike, ""), new Event(123.5, secret, pod), new Event(196, met, "")),
+                List.of(new Event(44.6, strike, ""), new Event(196, met, "")),
+                List.of(new Event(52.2, strike, ""), new Event(124.5, secret, pod)),
+                List.of(new Event(44.6, strike, ""), new Event(123.5, secret, pod)),
+                List.of(new Event(196, met, "")));
     }
 
     /**

@@ -483,10 +483,13 @@ public final class LevelScreen implements GameScreen {
         music.sectionLevels(level.music()::sectionLevel);
         // M5 part G: the jingle inside the level (Level 13's "Grid sync complete"), the wind in the whiteout.
         level.music().jingle().ifPresent(jingle -> music.jingle(jingle.t(), jingle.fadeSeconds()));
-        // M7 part E: the dust storm's bed swelling as the view closes in (Level 18), and track 9's motif layer.
+        // M7 part E: the dust storm's bed swelling as the view closes in (Level 18), and track 9's motif layer; M10
+        // part D:
+        // the bed's rise by section (Level 38's storm, +3 dB).
         // M7 part H: the wind's calm over Level 21's settling dust, from the crawling arena's end (the kill's jump).
         double calmFrom = crawlEnd(sortie.script());
         music.ambienceLevels(t -> AtmosphereRamp.ambienceDb(level, easy, t)
+                + AtmosphereRamp.sectionRiseDb(level, t)
                 + StormLooks.swellDb(level, difficulty, t)
                 + LevelMusic.calmDb(t, calmFrom));
         music.motif(services.files.internal(Tracks.motifPath(theme)), level.music()::motifOn);

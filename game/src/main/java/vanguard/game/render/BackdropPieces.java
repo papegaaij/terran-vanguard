@@ -54,6 +54,14 @@ final class BackdropPieces {
     private final List<Array<AtlasRegion>> deepGlows;
     /** M10 part B: per deep piece its light's frames a second (0 for one following the piece's frames). */
     private final double[] deepGlowFps;
+    /**
+     * M10 part D (design/campaign Level 38, the backdrop): per deep piece whether its light flashes brighter on a told
+     * strike: the storm's walls and cells ({@link #STRIKE_LIT}), whose light's frame 0 is its brightest flash
+     * (tools/art/backdrop_l38.py).
+     */
+    private final boolean[] strikeLit;
+    /** M10 part D: a told strike's pulse now, 0-1 ({@link Backdrop#strikePulse}). */
+    private float strikePulse;
 
     /** M9 part B: steps since the hold opened (the escort swap's release); -1 while it is shut. */
     private int holdTicks = -1;
@@ -206,6 +214,7 @@ final class BackdropPieces {
         Piece[] onDeep = pieces[BackdropLayer.DEEP.ordinal()];
         List<Array<AtlasRegion>> deepLights = new ArrayList<>();
         deepGlowFps = new double[onDeep.length];
+        strikeLit = new boolean[onDeep.length];
         for (int p = 0; p < onDeep.length; p++) {
             String light = onDeep[p].placed().piece() + GLOW;
             BackdropData.Piece spec = data.pieces().get(light);
@@ -215,6 +224,7 @@ final class BackdropPieces {
             }
             deepLights.add(sprites.backdrop(folder + light, spec.imageCount()));
             deepGlowFps[p] = spec.animated() ? spec.fps().orElseThrow() : 0;
+            strikeLit[p] = strikeLit(onDeep[p].placed().piece());
         }
         deepGlows = deepLights;
         turnAt = turnSeconds(level);
@@ -442,10 +452,34 @@ final class BackdropPieces {
                     ? (int) Math.floorMod((long) Math.floor(clock.real() * deepGlowFps[p]), (long) light.size)
                     : Math.min(light.size - 1, imageAt(piece, clock.real(), along));
             drawLight(batch, light.get(frame), piece.placed().mirrored(), x, y, width, height);
+            if (strikeLit[p] && strikePulse > 0 && frame != 0) {
+                // M10 part D: a told strike lights the wall from inside: its brightest flash over its own frame.
+                batch.setColor(1, 1, 1, strikePulse);
+                drawLight(batch, light.get(0), piece.placed().mirrored(), x, y, width, height);
+                batch.setColor(1, 1, 1, 1);
+            }
         }
         if (additive) {
             batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         }
+    }
+
+    /** M10 part D: the deep pieces whose light flashes on a told strike (Level 38's cloud walls and storm cells). */
+    static final java.util.List<String> STRIKE_LIT = java.util.List.of("cloud-wall", "storm-cell");
+
+    /** M10 part D: whether a deep piece's light flashes brighter on a told strike ({@link #STRIKE_LIT}). */
+    static boolean strikeLit(String piece) {
+        for (String lit : STRIKE_LIT) {
+            if (piece.equals(lit) || piece.startsWith(lit + "-")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /** M10 part D: a told strike's pulse now ({@link Backdrop#strikePulse}). */
+    void strikePulse(float pulse) {
+        strikePulse = pulse;
     }
 
     /** M8 part D: whether a ground piece has its light ({@link #drawPieceGlows}): Level 24's relay beacons. */

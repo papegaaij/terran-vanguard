@@ -62,4 +62,28 @@ public final class AtmosphereRamp {
         }
         return db;
     }
+
+    /** M10 part D: a section's ambience rise ramps in over this long from its start, s. */
+    public static final double SECTION_RISE_SECONDS = 1;
+
+    /**
+     * M10 part D (design/campaign Level 38, Music &amp; ambience: the {@code jovian-sky} bed +3 dB in the storm sections):
+     * the ambience's rise by section at level time {@code t} ({@code music.ambience_db}, {@link
+     * LevelData.Music#ambienceRise(int)}), ramping from the section before's over {@value #SECTION_RISE_SECONDS} s at
+     * the section's start; 0 for a level without it and after the level's end.
+     */
+    public static double sectionRiseDb(LevelData level, double t) {
+        int section = level.sectionAt(t);
+        if (section == 0 || level.music().ambienceDb().isEmpty()) {
+            return 0;
+        }
+        double rise = level.music().ambienceRise(section);
+        if (section == 1) {
+            return rise;
+        }
+        double start = level.sections().get(section - 2).end();
+        double before = level.music().ambienceRise(section - 1);
+        double share = Math.clamp((t - start) / SECTION_RISE_SECONDS, 0, 1);
+        return before + (rise - before) * share;
+    }
 }

@@ -72,7 +72,7 @@ ahead (the Wraiths' rear ambush excepted: their own flight).
 | Recommended traits | `homing`, `beam` |
 | Hazards | Lightning strikes (told columns, they hit the ship and the enemies); wind gusts; burst rings (the Harrows) |
 | Boss / mid-boss | none |
-| Sensor-suite detail | **none**: Jupiter, the storm layer, `air`, all directions, the objective `REACH IO` · **L1**: + density 5, the hazards "lightning", "gusts" and "burst rings", the secondary `HARROWS 0 / 23`, the row `NO GROUND` · **L2**: + Harrow (new), Buzzsaw Drone, Chimera, Talon, Hornet, Wraith, Lamprey, Stinger, Needler, Dart Drone, Skitter and Mote portraits · **L3**: + `homing` and `beam` highlighted, the wave strip marking the side and rear entries |
+| Sensor-suite detail | **none**: Jupiter, storm layer, `air`, all directions, the objective `REACH IO` · **L1**: + density 5, the hazards "lightning", "gusts" and "burst rings", the secondary `HARROWS 0 / 23`, the row `NO GROUND` · **L2**: + Harrow (new), Buzzsaw Drone, Chimera, Talon, Hornet, Wraith, Lamprey, Stinger, Needler, Dart Drone, Skitter and Mote portraits · **L3**: + `homing` and `beam` highlighted, the wave strip marking the side and rear entries |
 <!-- /data -->
 
 *Varga's intel line* per sensor-suite level (to fit `IntelPanelLayoutTest`):
@@ -310,7 +310,7 @@ escort`. The Choir is **quiet** in this level (the gap analysis): no Vrell voice
 |---|---|---|
 | t=1 | Okafor | "The storm layer. Their trackers can't see through it, and neither can we." |
 | t=23 | Varga | "Lightning. A thin line, then the strike, top to bottom. It hits them too." |
-| t=32.5 | Varga | "Harrows: hybrid rammers. However they die, they burst into a ring. Kill them far off." |
+| t=34 | Varga | "Harrows: hybrid rammers. However they die, they burst into a ring. Kill them far off." |
 | The first enemy killed by a strike (event, bark) | Rook | "Did the sky just take my kill?" |
 | t=52 | Okafor | "Contacts from the flanks. The storm turns everything round down here." |
 | t=62.5 | Varga | "Buzzsaws. Out here they bounce off nothing but the edges." |
@@ -327,8 +327,9 @@ The secret's line is the secret's own (its `radio`, played when the cargo pod's 
 freight. Someone tried to save it.*" Fourteen lines in all.
 
 Timeline check (text, by the rule above): the t=1 line closes at about t=8.6; Varga's lightning line (t=23) at about
-t=30.6, after the first strike's telegraph (t=26) has shown what it describes and before the Harrow line (t=32.5),
-which closes at about t=41.1, before the first lure (t=43.5). The flank line (t=52) closes at about t=59.2, the
+t=30.6, after the first strike's telegraph (t=26) has shown what it describes and before the Harrow line (t=34; step
+D4: on the game's typed pages the lightning line runs to about t=33.9, so the Harrow line moved from t=32.5, pending
+round 76), which closes at about t=45.7 there, as the first lure (t=43.5) strikes. The flank line (t=52) closes at about t=59.2, the
 Buzzsaw line at about t=68.8, the Lamprey line (t=73, the hunt's entry at t=74) at about t=79.8. The cross warning
 line (t=134.5, the edge warnings from t=134) closes at about t=140.2; the breakout line at about t=156.8. Rook's last
 line (t=186) closes at about t=193.0, inside the calm. Without Rook his two lines drop.

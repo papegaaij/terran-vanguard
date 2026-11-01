@@ -559,6 +559,8 @@ class LevelLooks {
         kinds.graft(sortie).stepped(sortie);
         // M10 part B: Level 36's harvesters' sides and breaks, the Chimeras' flecks.
         kinds.cloudDivers(sortie).stepped(sortie);
+        // M10 part D: Level 38's Harrows' deaths, the flashes outlining the pod, the canister's release.
+        kinds.stormLayer(sortie).stepped(sortie);
         // M9 part C: the line mines' bursts; the Gunships' gun clocks, launches and plate sparks, the trains' splits.
         kinds.mines(sortie).stepped(sortie);
         kinds.minefield(sortie).stepped(sortie);

@@ -1394,6 +1394,23 @@ public enum Sfx {
      * dry twigs crushed under it, 0.9 s).
      */
     GRAFT_ROOT_CRUMBLE("sfx/graft-root-crumble-r75-a.ogg", 2, Bus.EFFECTS, EXPLOSION),
+    /**
+     * M10 part D, step D4 (round 72 S.5 b): a Harrow's lock tell (a short rising gas-turbine whine) as it slows and its
+     * nose swings onto the ship ({@link HarrowCues}).
+     */
+    HARROW_LOCK("sfx/harrow-lock-r72-b.ogg", 2, Bus.EFFECTS, WARNING),
+    /**
+     * M10 part D, step D4 (round 72 S.6 a): a Harrow's burst, every death (shot, rammed, struck), in its rung's place
+     * (the render package's death sounds).
+     */
+    HARROW_BURST("sfx/harrow-burst-r72-a.ogg", 3, Bus.EFFECTS, EXPLOSION),
+    /**
+     * M10 part D, step D4 (round 76 a until the pick): the hunting whistle, a 2 s loop for the nearest hunting Harrow,
+     * pitched up over its chase ({@link HarrowCues}).
+     */
+    HARROW_WHISTLE("sfx/harrow-whistle-r76-a.ogg", 1, Bus.EFFECTS, ENEMY_FIRE),
+    /** M10 part D, step D4 (round 76 a until the pick): a Harrow's ram, the hard whoosh at its tell's end. */
+    HARROW_RAM("sfx/harrow-ram-r76-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
     /** The mission complete jingle (design/audio/music, track 23), played as a one-shot. */
     MISSION_COMPLETE("music/mission-complete.ogg", 1, Bus.MUSIC, WARNING),
     /**

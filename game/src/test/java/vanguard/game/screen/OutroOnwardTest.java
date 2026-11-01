@@ -207,24 +207,30 @@ class OutroOnwardTest {
 
     /**
      * M10 part B (step B4; design/campaign Act 6, as M9 part B did with Level 29): the branch's release ends inside Act 6
-     * after its last built level (M10 part C, step C4a: Level 37) until part H builds Level 42. Act 6 already names the
-     * act after it ({@code next_act}: Act 7), but an open act is not the release's last: the end card heads the acts
-     * completed before it ("ACTS I-V COMPLETE") and the coming-soon lines name Act 6's next level.
+     * after its last built level (M10 part C, step C4a: Level 37; part D: Level 38; the next one as each part builds it)
+     * until part H builds Level 42. Act 6 already names the act after it ({@code next_act}: Act 7), but an open act is
+     * not the release's last: the end card heads the acts completed before it ("ACTS I-V COMPLETE") and the coming-soon
+     * lines name Act 6's next level.
      */
     @Test
-    void afterLevel37TheReleaseEndsInsideAct6() {
+    void afterItsLastBuiltLevelTheReleaseEndsInsideAct6() {
         ActData act6 = content.acts().get("act-6-jovian-storm");
-        assertTrue(content.levelKey(37).isPresent(), "Level 37 is built (M10 part C)");
-        assertTrue(content.levelKey(38).isEmpty(), "Level 38 is not built");
+        assertTrue(content.levelKey(38).isPresent(), "Level 38 is built (M10 part D)");
+        int next = 39;
+        while (next < 42 && content.levelKey(next).isPresent()) {
+            next++;
+        }
+        assertTrue(content.levelKey(next).isEmpty(), "Level " + next + " is not built");
         assertTrue(act6.nextAct().isPresent(), "Act 6 names Act 7");
         assertEquals(Optional.of(act6), ReleaseTexts.openAct(content));
         assertEquals("ACTS I-V COMPLETE", ReleaseTexts.title(content));
-        assertEquals("ACT VI - JOVIAN STORM. LEVEL 38 COMING SOON.", ReleaseTexts.comingSoon(content));
-        assertEquals("ACT VI - JOVIAN STORM: LEVEL 38 COMING SOON", ReleaseTexts.hangarLine(content));
+        assertEquals("ACT VI - JOVIAN STORM. LEVEL " + next + " COMING SOON.", ReleaseTexts.comingSoon(content));
+        assertEquals("ACT VI - JOVIAN STORM: LEVEL " + next + " COMING SOON", ReleaseTexts.hangarLine(content));
         assertEquals(
-                "CONTINUE IN THE MAIN MENU RETURNS TO THE HANGAR BEFORE LEVEL 38.", ReleaseTexts.continueLine(content));
+                "CONTINUE IN THE MAIN MENU RETURNS TO THE HANGAR BEFORE LEVEL " + next + ".",
+                ReleaseTexts.continueLine(content));
         assertEquals(
-                "THE END OF THIS RELEASE AND THE CREDITS. ACT VI - JOVIAN STORM: LEVEL 38 IS COMING SOON.",
+                "THE END OF THIS RELEASE AND THE CREDITS. ACT VI - JOVIAN STORM: LEVEL " + next + " IS COMING SOON.",
                 ReleaseTexts.outroNext(content));
         assertEquals(
                 List.of("act-6-jovian-storm"),

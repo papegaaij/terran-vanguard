@@ -21,7 +21,7 @@ bounty_scale: 0.43    # every bounty × 0.43: the README's hand estimate (step D
 control_prompts: []
 ground: none          # air only (J2): the bomb deliveries read NO GROUND; the Airstrike and the EMP Burst work
 threat_profile:  # the hangar intel panel (design/ui/hangar) and the README's Threat profile table
-  setting: Jupiter, the storm layer
+  setting: Jupiter, storm layer   # step D4: "the storm layer" left the intel panel (IntelPanelLayoutTest)
   layers: [air, high-air]
   density: 5
   traits: [homing, beam]
@@ -40,7 +40,7 @@ threat_profile:  # the hangar intel panel (design/ui/hangar) and the README's Th
     Recommended traits: '{traits}'
     Hazards: Lightning strikes (told columns, they hit the ship and the enemies); wind gusts; burst rings (the Harrows)
     Boss / mid-boss: none
-    Sensor-suite detail: '**none**: Jupiter, the storm layer, `air`, all directions, the objective `{objective}` · **L1**: + density {density}, the hazards "lightning", "gusts" and "burst rings", the secondary `HARROWS 0 / 23`, the row `NO GROUND` · **L2**: + Harrow (new), Buzzsaw Drone, Chimera, Talon, Hornet, Wraith, Lamprey, Stinger, Needler, Dart Drone, Skitter and Mote portraits · **L3**: + `homing` and `beam` highlighted, the wave strip marking the side and rear entries'
+    Sensor-suite detail: '**none**: Jupiter, storm layer, `air`, all directions, the objective `{objective}` · **L1**: + density {density}, the hazards "lightning", "gusts" and "burst rings", the secondary `HARROWS 0 / 23`, the row `NO GROUND` · **L2**: + Harrow (new), Buzzsaw Drone, Chimera, Talon, Hornet, Wraith, Lamprey, Stinger, Needler, Dart Drone, Skitter and Mote portraits · **L3**: + `homing` and `beam` highlighted, the wave strip marking the side and rear entries'
 
 sections:  # back to back from t = 0, all at 140 px/s; ART-D's tile sets cut at these times
   - name: Under Aurelia
@@ -321,7 +321,7 @@ pickups:
 radio:  # trigger: t or event; the README's 14 lines (the 1 s rule: ≈ 12 characters a second, a 1.5 s lead, event lines dropped after 6 s; the secret's line is the secret's own). Rook's lines need him flying (requires: escort: the first strike kill and his t=186 line). The Choir and Vorne are quiet.
   - {t: 1, speaker: Okafor, line: "The storm layer. Their trackers can't see through it, and neither can we."}
   - {t: 23, speaker: Varga, line: "Lightning. A thin line, then the strike, top to bottom. It hits them too."}
-  - {t: 32.5, speaker: Varga, line: "Harrows: hybrid rammers. However they die, they burst into a ring. Kill them far off."}
+  - {t: 34, speaker: Varga, line: "Harrows: hybrid rammers. However they die, they burst into a ring. Kill them far off."}   # step D4: 32.5 → 34, Varga's t=23 line on the typed pages runs to t≈33.9 (RadioTimelineLevel38Test), pending round 76
   - {event: first-strike-kill, speaker: Rook, requires: escort, line: "Did the sky just take my kill?", notes: {trigger: "The first enemy killed by a strike (event, bark)"}}
   - {t: 52, speaker: Okafor, line: "Contacts from the flanks. The storm turns everything round down here."}
   - {t: 62.5, speaker: Varga, line: "Buzzsaws. Out here they bounce off nothing but the edges."}

@@ -3,6 +3,9 @@
 # design/art-direction/production/README.md#dither-audit-2026-10-30
 # M10 part B, step B4: Level 36's backdrop sets and its units' glows, plumes and breaks (tools/art/backdrop_l36.py,
 # tools/art/jovian_units.py), smooth from the start.
+# M10 part C, step ART-C1 (tools/art/aurelia_units.py): the Mirror Interceptor's and the Graft Turret's additive glows
+# M10 part D, step D4: Level 38's backdrop sets and the Harrow's and the cargo pod's glows (tools/art/backdrop_l38.py,
+# tools/art/storm_layer_units.py), smooth from the start.
 backdrop/level-01/vrell-glow
 backdrop/level-03/weather-front-a
 backdrop/level-08/mist
@@ -125,6 +128,23 @@ backdrop/level-37/sinking-city
 backdrop/level-37/sinking-city-glow
 backdrop/level-37/smoke-wisps
 backdrop/level-37/war-skirmish
+backdrop/level-38/aurelia-wreck
+backdrop/level-38/aurelia-wreck-glow
+backdrop/level-38/balloon-torn
+backdrop/level-38/breakout
+backdrop/level-38/cloud-wall-a
+backdrop/level-38/cloud-wall-a-glow
+backdrop/level-38/cloud-wall-b
+backdrop/level-38/cloud-wall-b-glow
+backdrop/level-38/red-spot-rim
+backdrop/level-38/storm-cell-a
+backdrop/level-38/storm-cell-a-glow
+backdrop/level-38/storm-cell-b
+backdrop/level-38/storm-cell-b-glow
+backdrop/level-38/storm-cells
+backdrop/level-38/storm-floor
+backdrop/level-38/storm-scud
+backdrop/level-38/storm-top
 sprites/abyss-ray-bloom
 sprites/abyss-ray-mouth
 sprites/abyss-ray-shadow
@@ -142,6 +162,7 @@ sprites/chimera-heal
 sprites/chimera-seams
 sprites/clamp-gun-gas
 sprites/crevasse-lip-glow
+sprites/debris-cargo-pod-outline
 sprites/debris-pathfinder-pod-break
 sprites/depth-hunter-break
 sprites/depth-hunter-launch
@@ -157,6 +178,11 @@ sprites/gilded-gunship-engines
 sprites/gilded-gunship-plate-spark
 sprites/glassfin-glint
 sprites/glow-angler-death
+sprites/graft-turret-crumble
+sprites/graft-turret-root-glow
+sprites/harrow-burst
+sprites/harrow-sac
+sprites/harrow-tell
 sprites/harvester-break
 sprites/harvester-flare
 sprites/harvester-left-break
@@ -187,6 +213,8 @@ sprites/mining-tug-burn
 sprites/mining-tug-flare
 sprites/mining-tug-glow
 sprites/mining-tug-vent
+sprites/mirror-interceptor-plate-glow
+sprites/mirror-interceptor-pods
 sprites/nav-buoy-glow
 sprites/orb-bounced
 sprites/plasma-arc-arc-0
@@ -217,8 +245,3 @@ sprites/siren-plume
 sprites/survey-buoy-glow
 sprites/survey-sub-glow
 sprites/talon-glint
-# M10 part C, step ART-C1 (tools/art/aurelia_units.py): the Mirror Interceptor's and the Graft Turret's additive glows
-sprites/mirror-interceptor-plate-glow
-sprites/mirror-interceptor-pods
-sprites/graft-turret-root-glow
-sprites/graft-turret-crumble

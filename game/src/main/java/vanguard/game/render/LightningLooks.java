@@ -126,6 +126,23 @@ final class LightningLooks {
                 : (float) (1 - seconds / WeatherLooks.SKY_SECONDS);
     }
 
+    /**
+     * M10 part D (design/campaign Level 38, the backdrop: the walls' inner lightning brighter on each told strike): the
+     * backdrop's strike pulse at step {@code tick}, 1 as a tell starts, gone over {@value #PULSE_SECONDS} s.
+     */
+    float pulse(long tick) {
+        return pulseAt(tick - flashed);
+    }
+
+    /** The strike pulse {@code age} steps after a tell started: 1 at once, linearly gone over its length. */
+    static float pulseAt(long age) {
+        double seconds = age * SimStep.SECONDS;
+        return seconds < 0 || seconds >= PULSE_SECONDS ? 0 : (float) (1 - seconds / PULSE_SECONDS);
+    }
+
+    /** M10 part D: the backdrop's strike pulse lasts this long, s. */
+    static final double PULSE_SECONDS = 0.6;
+
     /** How see-through the banks are at step {@code tick}: {@value #SEE_THROUGH} at a flash, gone over its reveal. */
     float reveal(long tick) {
         long age = tick - flashed;
