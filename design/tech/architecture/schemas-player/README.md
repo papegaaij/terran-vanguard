@@ -171,3 +171,13 @@ The schemas of the player's data files (weapons, the ship and its core parts, sp
   `hitbox`, `speed`, `slot` (`[x, y]`, its fixed wing slot on the escort's side), `gun` (`rate`, `damage`,
   `anti_sub`), `draw` (`radius` px, `share` of the enemy's aimed bullets it draws), `price`, `available`, `repair` cr
   per point on every difficulty).
+- **Databank texts** (`ui/databank/data.yaml`, see [databank](../../../ui/databank/README.md#where-the-data-comes-from)):
+  every text is a **list of label lines**, each at most 63 characters (8×12 over the entry page's 504 px), so the
+  loader wraps nothing and a width check is a length check. `faction_from` (`<unit slug>: {<level>: <faction>}`: the
+  faction the entry shows from that level on); `enemies` (per unit slug, including set pieces, allies and neutrals:
+  `vague`, Varga's line for sensor none, and `tip`, her precise line at L3; one to three lines each); `bosses` (per
+  boss slug: `vague`, `tip` and `phases`, three to five lines of phase notes); the gear sections `weapons`,
+  `specials`, `generators`, `shields`, `plating`, `engines`, `utilities`, `escort` (per item slug within its kind:
+  `note`, one to two lines); `sensor-suite` (`note` and Varga's `varga` line asking for one); `concepts` (per
+  concept slug: `title`, `after` (the level whose flight opens it), `picture` (what the page shows), `lines`, four
+  to eight). Only what the game has built: a unit or item without a data file has no text.

@@ -178,6 +178,7 @@ One part per family; this table names the part that holds each data file's schem
 | Allies (`allies/data.yaml`) | [schemas-units](schemas-units/README.md) |
 | Act (`campaign/<act>/data.yaml`) | [schemas-levels](schemas-levels/README.md) |
 | Wingmen (`player/wingmen/data.yaml`) | [schemas-player](schemas-player/README.md) |
+| Databank texts (`ui/databank/data.yaml`) | [schemas-player](schemas-player/README.md) |
 
 ### Presentation (`game`)
 

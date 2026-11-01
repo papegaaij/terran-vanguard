@@ -174,7 +174,8 @@ opened by the level where it first matters. A first draft of the list (14 by the
 ### Where the data comes from
 
 Generated from the data wherever it can be; the authored texts live in **one file**, `design/ui/databank/data.yaml`
-(keyed by the unit, item or concept slug, so no Act 6 step's unit file is touched; written with the build).
+(keyed by the unit, item or concept slug, so no Act 6 step's unit file is touched; written, 2026-11-01: 66 enemies, 9
+bosses, 63 gear notes and 14 concept pages; the schema is in [schemas-player](../../tech/architecture/schemas-player/README.md)).
 
 | Field | Source |
 |---|---|
