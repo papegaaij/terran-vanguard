@@ -215,11 +215,19 @@ final class AllyCues extends SoundFamily {
 
     /**
      * M9 part D4b: the sound a tow's housing makes as it frees its crate, by the tows' look: Level 31's claim rock the
-     * chosen small rubble burst (round 08 b, a small ground target's crumble), any other the cable snap (round 25 a).
+     * chosen small rubble burst (round 08 b, a small ground target's crumble), M10 part F: Level 40's recorder its
+     * crack, any other the cable snap (round 25 a).
      */
     static Sfx towBreak(String look) {
+        if (RECORDER_TOW.equals(look)) {
+            // M10 part F: Sentry Two's recorder's housing splits with a fizz (round 78 S.10 a until the pick).
+            return Sfx.RECORDER_CRACK;
+        }
         return ROCK_TOWS.contains(look) ? Sfx.CRUMBLE_SMALL : Sfx.CABLE_SNAP;
     }
+
+    /** M10 part F: Level 40's tow look, Sentry Two's recorder on its dead scout. */
+    static final String RECORDER_TOW = "debris-sentry-recorder";
 
     /** M9 part D4b: the tow looks that are rocks. */
     static final Set<String> ROCK_TOWS = Set.of("debris-claim-rock");

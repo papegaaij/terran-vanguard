@@ -47,6 +47,8 @@ final class SovereignCues extends SoundFamily {
 
     private long now;
     private long lastSpiral = Long.MIN_VALUE / 2;
+    /** M10 part F: whether the boss lines are a squadron's (Harker's sniper line: its own charge and shot). */
+    private boolean sniper;
 
     SovereignCues(SoundMix mix) {
         super(mix);
@@ -109,6 +111,16 @@ final class SovereignCues extends SoundFamily {
             case RELAY_TELEGRAPH -> later(Sfx.RELAY_CHARGE, CUE_LEVEL, 1, pan, relayChargeDelay());
             case RELAY_FIRED -> bank.play(Sfx.RELAY_FLASH, CUE_LEVEL, 1, pan);
             case PART_SHIELD_HIT -> bank.play(Sfx.ENEMY_SHIELD_HIT, CUE_LEVEL, pitch(0.06), pan);
+            // M10 part F: Harker's sniper line (round 78 S.3/S.4 a until the picks): the charge under the telegraph,
+            // cut by the shot.
+            case BOSS_LINE_TELEGRAPH ->
+                bank.play(sniper ? Sfx.SNIPER_CHARGE : Sfx.RAIL_CHARGE, CUE_LEVEL, pitch(0.03), pan);
+            case BOSS_LINE_FIRED -> {
+                if (sniper) {
+                    bank.stop(Sfx.SNIPER_CHARGE);
+                }
+                bank.play(sniper ? Sfx.SNIPER_SHOT : Sfx.RAIL_SHOT, CUE_LEVEL, pitch(0.03), pan);
+            }
             // Step BOSS70: each playbook attack's tell has its own sound (existing ones, pending a sounds row).
             case CORE_PLAY_TELL -> bank.play(tell(events.value(i)), CUE_LEVEL, pitch(0.03), pan);
             default -> bank.play(sound(type), CUE_LEVEL, pitch(0.03), pan);
@@ -213,6 +225,10 @@ final class SovereignCues extends SoundFamily {
      * alive); the open core's spiral at most every 0.1 s while it runs.
      */
     void watch(Sortie sortie) {
+        sniper = false;
+        for (int k = 0; k < sortie.setPieceCount(); k++) {
+            sniper |= sortie.setPiece(k).squadron().isPresent();
+        }
         SetPiece piece = ringed(sortie);
         if (piece == null) {
             return;

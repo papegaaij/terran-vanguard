@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../../player, ../../systems/scoring, ../../art-direction]
-updated: 2026-10-31
+updated: 2026-11-01
 ---
 
 # HUD
@@ -392,8 +392,9 @@ Production art for concept round 26 (M4 part H batch): the boss bar's plate, ren
       band 2 s before each neutral wave, the IFF brackets with the `FRIENDLY` tag on each neutral craft on the screen
       (step MARK70: `FriendlyBanner`, `FriendlyMarks`, `Sortie.friendliesInbound`, `FriendlyMarkerTest`; Level 29's
       capture `friendly-marker-capture-r71-a`)
-- [ ] The Honour Guard's three-segment mid-boss bar with the call-sign tags (dim until an ace joins, dark and struck
-      through when killed) — **later: Act 6** (draft: *Act 6 additions*) — M10 (L40's part)
+- [x] The Honour Guard's three-segment mid-boss bar with the call-sign tags (dim until an ace joins, dark and struck
+      through when killed) — M10 (L40's part; step F4: `BossBar.drawSegments`, the bar a tag line lower so the name
+      stays where a mid-boss bar's is, the tags the art's call-sign sprites)
 - [x] Level 41's `PYLONS n / m` count with the gate pips and `OPEN` — M10 (L41's part; built early in part A, step A3b's `GateTracker`, 2026-10-31)
 - [ ] The escape bar (the time bar in amber, the gold payout fill and `MAX`, `ESCAPED`) — M10 (L42's part)
 - [x] The Reflex Shield's 75 % tick and gold window on the shield bar — M10 part A (step A3b's `ReflexTick`, 2026-10-31)

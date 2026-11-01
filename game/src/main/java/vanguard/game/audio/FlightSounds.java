@@ -109,6 +109,8 @@ public final class FlightSounds {
     private final AureliaCues aurelia;
     /** M10 part D: the Harrow's whistle, lock, ram (Level 38 on). */
     private final HarrowCues harrows;
+    /** M10 part F: the Honour Guard's aces (Level 40). */
+    private final HonourGuardCues guard;
     /** Per event type the family that plays it (by ordinal); null for an event without a sound. */
     private final SoundFamily[] families = new SoundFamily[SimEvents.Type.values().length];
     /** Every family, in the order they hear a step's start and end. */
@@ -177,6 +179,8 @@ public final class FlightSounds {
         Sfx.COLOSSUS_SUCTION,
         Sfx.NAUTILUS_SPIN,
         Sfx.GUNSHIP_ENGINE,
+        Sfx.VESPER_CANNON,
+        Sfx.KESTREL_DIVE,
         Sfx.MINELAYER_DRONE,
         Sfx.SERPENT_RUMBLE,
         Sfx.LINK_HUM,
@@ -253,6 +257,7 @@ public final class FlightSounds {
         cloudDivers = new CloudDiverCues(mix);
         aurelia = new AureliaCues(mix);
         harrows = new HarrowCues(mix);
+        guard = new HonourGuardCues(mix);
         rig.harrows(harrows);
         belt.rig(rig);
         walker = new WalkerCues(mix, ventField, belt);
@@ -314,7 +319,8 @@ public final class FlightSounds {
             hazards,
             cloudDivers,
             aurelia,
-            harrows
+            harrows,
+            guard
         };
         for (SoundFamily family : all) {
             for (SimEvents.Type type : family.types()) {
@@ -755,6 +761,7 @@ public final class FlightSounds {
         cloudDivers.watch(sortie);
         aurelia.watch(sortie);
         harrows.watch(sortie);
+        guard.watch(sortie);
         units.watchCanyon(sortie);
         units.watchSiege(sortie);
         storm.watch(sortie);
@@ -818,6 +825,7 @@ public final class FlightSounds {
             cloudDivers.silence(loop);
             aurelia.silence(loop);
             harrows.silence(loop);
+            guard.silence(loop);
         }
         deepWater.silence();
     }

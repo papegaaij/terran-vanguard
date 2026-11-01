@@ -416,6 +416,31 @@ public final class LevelRenderer {
         return Double.isNaN(seconds) ? piece.partCount() * BossPose.LEGACY_CHAIN_STEP_TICKS : SimStep.ticks(seconds);
     }
 
+    /** M10 part F: the last ace's chain's bursts (the Honour Guard's pivots' {@code chain}); 0 without the squadron. */
+    public int aceChainCount() {
+        return passes.honourGuard == null ? 0 : passes.honourGuard.chainCount();
+    }
+
+    /** M10 part F: chain burst {@code i}'s time after the kill, s. */
+    public double aceChainT(int i) {
+        return passes.honourGuard.chainT(i);
+    }
+
+    /** M10 part F: chain burst {@code i}'s offset from the tumbling hull, px right. */
+    public double aceChainDx(int i) {
+        return passes.honourGuard.chainDx(i);
+    }
+
+    /** M10 part F: chain burst {@code i}'s offset from the tumbling hull, px up. */
+    public double aceChainDy(int i) {
+        return passes.honourGuard.chainDy(i);
+    }
+
+    /** M10 part F: whether chain burst {@code i} is {@code large} (else {@code medium}). */
+    public boolean aceChainLarge(int i) {
+        return passes.honourGuard.chainLarge(i);
+    }
+
     /** Whether a boss's death is the act boss's chain from tail to head (else the frigate's per-part bursts). */
     public static boolean tailToHead(SetPiece piece) {
         return !Double.isNaN(BossPose.chainSeconds(piece));

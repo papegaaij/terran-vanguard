@@ -635,7 +635,6 @@ game may play only `proposed` sounds of an open concept round, provisionally unt
 | [mirror-heat-demo-r73-a.ogg](concept/mirror-heat-demo-r73-a.ogg) | Review file for round 73 S.1: the heat loop's climb rendered offline; the game pitches the loop itself |
 | [callisto-fortress-r72-b.ogg](concept/callisto-fortress-r72-b.ogg) | Round 72 S.16 b, Level 41's bed: imported with Level 41 (M10 part G) |
 | [chimera-shot-r74-a.ogg](concept/chimera-shot-r74-a.ogg) | Round 74 S.6 a, the Chimera's twin shot: the Talon's twin crack as is (the same audio as the Talon's built file), so the game plays the Talon's shot for the Chimera; imported under its own name only if the two ever differ |
-| [tower-collapse-r77-b.ogg](concept/tower-collapse-r77-b.ogg) | Round 77 S.3 b (the user's pick, not the recommendation), Level 39's cracking-tower collapse: the game still plays the a file (`Sfx.TOWER_COLLAPSE`, `assets/sfx/tower-collapse-r77-a.ogg`, now under `concept/rejected/`) until a later code step swaps b in (the pipeline's import list, `Sfx`, `PlaceholderAuditTest`) |
 
 ### Mixing rules
 
@@ -1934,3 +1933,6 @@ Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-a
   item:** the tower collapse plays a until a code step swaps b in (`assets/sfx/tower-collapse-r77-b.ogg`, the
   pipeline's import list, `Sfx.TOWER_COLLAPSE`, `PlaceholderAuditTest`, `Level39SoundsTest`) and drops a (its row is
   under *Chosen sounds the game does not play* until then).
+- 2026-11-01, step F4: the tower collapse's **b** swapped in (`assets/sfx/tower-collapse-r77-b.ogg`, the pipeline's
+  import list, `Sfx.TOWER_COLLAPSE`, `PlaceholderAuditTest`, `Level39SoundsTest`); a left the assets and its row
+  *Chosen sounds the game does not play*.

@@ -170,11 +170,12 @@ final class RadioPlayer {
 
     /**
      * M8 part H: the level clock's step a halted arena holds it at (a step short of the arena section's end, as the
-     * simulation's), -1 for a level without one.
+     * simulation's), -1 for a level without one. M10 part F: a drifting arena (Level 40's duel at 20 px/s) halts the
+     * clock as one at rest does (the simulation's {@code LevelClock}); only a crawling arena runs on.
      */
     static int arenaHaltTick(LevelScript script) {
         for (Section section : script.sections()) {
-            if (section.arena() && section.speed() == 0 && !section.crawls()) {
+            if (section.arena() && !section.crawls()) {
                 return SimStep.ticks(section.end()) - 1;
             }
         }

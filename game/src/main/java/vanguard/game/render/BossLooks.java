@@ -71,8 +71,11 @@ final class BossLooks {
         this.flash = flash;
         this.bar = new BossBar(sprites);
         String slug = spec == null ? null : spec.slug();
-        if (spec != null && spec.boss().flatMap(BossSpec::arena).isPresent()) {
-            // M5 part E: an arena boss (the Harbour Kraken) is drawn by KrakenLooks; only its bar here.
+        if (spec != null
+                && (spec.boss().flatMap(BossSpec::arena).isPresent()
+                        || spec.boss().flatMap(BossSpec::squadron).isPresent())) {
+            // M5 part E: an arena boss (the Harbour Kraken) is drawn by KrakenLooks; only its bar here. M10 part F: a
+            // squadron's aces (the Honour Guard) are HonourGuardLooks' (its piece is parked off the field).
             bells = heads = stumps = null;
             necks = null;
             coreGlow = null;

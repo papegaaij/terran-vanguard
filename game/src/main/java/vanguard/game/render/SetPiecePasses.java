@@ -73,8 +73,12 @@ final class SetPiecePasses {
     void drawSetPieces(SpriteBatch batch, Sortie sortie, float alpha, double seconds, boolean high) {
         for (int k = 0; k < sortie.setPieceCount(); k++) {
             SetPiece piece = sortie.setPiece(k);
-            if (!piece.present() || piece.onPlane() == high || piece.arena().isPresent()) {
-                // M5 part E: an arena boss lies on the water ({@link #drawKraken}).
+            if (!piece.present()
+                    || piece.onPlane() == high
+                    || piece.arena().isPresent()
+                    || piece.squadron().isPresent()) {
+                // M5 part E: an arena boss lies on the water ({@link #drawKraken}); M10 part F: a squadron's aces are
+                // HonourGuardLooks' (the piece itself is parked off the field).
                 continue;
             }
             if (piece.boss().isPresent()) {
@@ -168,7 +172,7 @@ final class SetPiecePasses {
             SetPieceDeath death = death(k);
             SetPieceLooks look = setPieceLooks[k];
             boolean boss = look == null;
-            if (!wrecks.active(k)) {
+            if (!wrecks.active(k) || sortie.setPiece(k).squadron().isPresent()) {
                 continue;
             }
             if (death == null) {
@@ -237,7 +241,10 @@ final class SetPiecePasses {
     void drawBossShadows(SpriteBatch batch, Sortie sortie, float alpha) {
         for (int k = 0; k < sortie.setPieceCount(); k++) {
             SetPiece piece = sortie.setPiece(k);
-            if (piece.boss().isPresent() && piece.present() && piece.arena().isEmpty()) {
+            if (piece.boss().isPresent()
+                    && piece.present()
+                    && piece.arena().isEmpty()
+                    && piece.squadron().isEmpty()) {
                 bossLooks.drawShadow(batch, piece, alpha);
             }
         }

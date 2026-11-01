@@ -122,6 +122,8 @@ final class DeathEffects {
             colossusDeath(k, x, y);
         } else if (sortie.setPiece(k).ring().isPresent()) {
             ringDeath(k, x, y);
+        } else if (sortie.setPiece(k).squadron().isPresent()) {
+            squadronDeath(k);
         } else if (sortie.setPiece(k).arena().isPresent()) {
             arenaDeath(k, x, y);
         } else {
@@ -132,6 +134,71 @@ final class DeathEffects {
     /** The steps from the last boss's death to its credit shower. */
     int showerDelay() {
         return showerDelay;
+    }
+
+    /** M10 part F: where the credit shower falls: where the last ace died (a squadron's), else ({@code x}, {@code y}). */
+    double showerX(double x) {
+        return Double.isNaN(showerX) ? x : showerX;
+    }
+
+    double showerY(double y) {
+        return Double.isNaN(showerY) ? y : showerY;
+    }
+
+    /** M10 part F: the last ace's death point for the shower; NaN for another boss. */
+    private double showerX = Double.NaN;
+
+    private double showerY = Double.NaN;
+
+    /** M10 part F: the last ace's chain lasts this long before the credit shower (design: "a 2 s large chain"). */
+    static final double ACE_CHAIN_SECONDS = 2;
+
+    /**
+     * M10 part F (design/enemies/bosses/honour-guard, Death): the last ace's death: a {@value #ACE_CHAIN_SECONDS} s chain
+     * of vacuum bursts round its tumbling hull (the pivots' {@code chain}: medium, then large), each where the hull will
+     * be then; the credit shower where it died after the chain; no screen flash (a mid-boss). The piece itself is parked
+     * off the field: nothing is drawn there.
+     */
+    private void squadronDeath(int k) {
+        SetPiece piece = sortie.setPiece(k);
+        var squadron = piece.squadron().orElseThrow();
+        int last = -1;
+        int newest = Integer.MAX_VALUE;
+        for (int a = 0; a < squadron.aceCount(); a++) {
+            int since = piece.partTicksSinceHit(squadron.part(a));
+            if (since < newest) {
+                newest = since;
+                last = a;
+            }
+        }
+        if (last < 0) {
+            return;
+        }
+        double x = squadron.renderX(last, 1);
+        double y = squadron.renderY(last, 1);
+        double vx = x - squadron.renderX(last, 0);
+        double vy = y - squadron.renderY(last, 0);
+        showerX = x;
+        showerY = y;
+        showerDelay = vanguard.sim.SimStep.ticks(ACE_CHAIN_SECONDS);
+        boolean art = services.sprites.has("explosion-vacuum-medium") && services.sprites.has("explosion-vacuum-large");
+        for (int i = 0; i < renderer.aceChainCount(); i++) {
+            int delay = vanguard.sim.SimStep.ticks(renderer.aceChainT(i));
+            double px = x + vx * delay + renderer.aceChainDx(i);
+            double py = y + vy * delay + renderer.aceChainDy(i);
+            boolean large = renderer.aceChainLarge(i);
+            Array<AtlasRegion> frames = art
+                    ? services.sprites.frames(large ? "explosion-vacuum-large" : "explosion-vacuum-medium")
+                    : large ? services.sprites.explosionLarge : explosionMedium;
+            effects.start(
+                    frames,
+                    large ? LevelScreen.LARGE_EXPLOSION_FRAME_TICKS : EventEffects.MEDIUM_EXPLOSION_FRAME_TICKS,
+                    px,
+                    py,
+                    delay,
+                    1,
+                    1);
+        }
     }
 
     /** M5 part H: the Siege Spire's chained bursts over its free spire, this many over its death chain. */

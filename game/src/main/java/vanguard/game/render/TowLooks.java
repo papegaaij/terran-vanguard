@@ -34,6 +34,12 @@ import vanguard.sim.Tow;
  * tumbling ({@link #BUOY_TURN} s a turn) while its housing (the tow's cable box at the buoy) holds, then its housing
  * shot open, {@code debris-lane-buoy-break} ({@link #BUOY_BREAK_STEP} s a frame), and nothing after it: the crate falls
  * out as the tow's pickup.
+ *
+ * <p>M10 part F: Level 40's Sentry Two recorder (design/campaign/act-6-jovian-storm/level-40-honour-guard, Secrets;
+ * tools/art/scout_recorder.py) is drawn as the buoy is ({@code debris-sentry-recorder}, its {@code -break}), with its
+ * beacon blinking white over it ({@code -glow}, additive, the same tumble frame, lit {@value #BEACON_ON} s once a
+ * second) and its dead scout tumbling slowly under it ({@code -scout}, {@value #SCOUT_TURN} s a turn, at ({@value
+ * #SCOUT_DX}, {@value #SCOUT_DY}) px from the recorder, y up), drifting on with the tow after the break.
  */
 final class TowLooks {
     private static final float X0 = PixelScreen.PLAY_FIELD_X;
@@ -67,7 +73,16 @@ final class TowLooks {
      * M9 part C: the tows' look by level number, where it is not the lifeboat (the pipeline's {@code
      * SpriteUse.TOW_LOOKS}); M9 part D: Level 31's claim rock (Dacosta's claim).
      */
-    static final Map<Integer, String> LOOKS = Map.of(30, "debris-lane-buoy", 31, "debris-claim-rock");
+    static final Map<Integer, String> LOOKS =
+            Map.of(30, "debris-lane-buoy", 31, "debris-claim-rock", 40, "debris-sentry-recorder");
+
+    /** M10 part F: the recorder's beacon, lit this long once a second from the tow's entry. */
+    static final double BEACON_ON = 0.16;
+    /** M10 part F: the dead scout's slow tumble, seconds a turn (its 16 frames), and its place from the recorder. */
+    static final double SCOUT_TURN = 8;
+
+    static final int SCOUT_DX = -16;
+    static final int SCOUT_DY = 22;
 
     /** M9 part C: the dead buoy's tumble, seconds a turn (its 16 frames). */
     static final double BUOY_TURN = 2.4;
@@ -86,6 +101,10 @@ final class TowLooks {
     private final Array<AtlasRegion> buoy;
 
     private final Array<AtlasRegion> buoyBreak;
+    /** M10 part F: the look's beacon glow and its carrier under it (Level 40's dead scout); null without them. */
+    private final Array<AtlasRegion> buoyGlow;
+
+    private final Array<AtlasRegion> carrier;
 
     TowLooks(Sprites sprites) {
         this(sprites, 0);
@@ -103,11 +122,18 @@ final class TowLooks {
         String look = LOOKS.get(level);
         buoy = look != null && sprites.has(look) ? sprites.frames(look) : null;
         buoyBreak = look != null && sprites.has(look + "-break") ? sprites.frames(look + "-break") : null;
+        buoyGlow = look != null && sprites.has(look + "-glow") ? sprites.frames(look + "-glow") : null;
+        carrier = look != null && sprites.has(look + "-scout") ? sprites.frames(look + "-scout") : null;
     }
 
     /** M9 part C: the buoy's tumble frame at {@code age} s of {@code frames}. */
     static int buoyFrame(double age, int frames) {
         return (int) Math.floorMod((long) Math.floor(age / BUOY_TURN * frames), (long) frames);
+    }
+
+    /** M10 part F: whether the recorder's beacon is lit {@code age} s after the tow's entry (once a second). */
+    static boolean beaconLit(double age) {
+        return age % 1 < BEACON_ON;
     }
 
     /** M9 part C: the buoy's break frame {@code loose} s after the cut, -1 once it is over. */
@@ -119,8 +145,19 @@ final class TowLooks {
     /** M9 part C: the dead buoy: tumbling while it holds, its break after the cut, then gone. */
     private void drawBuoy(SpriteBatch batch, Tow tow, double x, double y, double age, float alpha) {
         batch.setColor(Color.WHITE);
+        if (carrier != null) {
+            // M10 part F: the dead scout under the recorder, tumbling slowly, drifting on after the break.
+            int frame = (int) Math.floorMod((long) Math.floor(age / SCOUT_TURN * carrier.size), (long) carrier.size);
+            drawCentred(batch, carrier.get(frame), x + SCOUT_DX, y + SCOUT_DY);
+        }
         if (tow.holding()) {
-            drawCentred(batch, buoy.get(buoyFrame(age, buoy.size)), x, y);
+            int frame = buoyFrame(age, buoy.size);
+            drawCentred(batch, buoy.get(frame), x, y);
+            if (buoyGlow != null && beaconLit(age) && frame < buoyGlow.size) {
+                batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
+                drawCentred(batch, buoyGlow.get(frame), x, y);
+                batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+            }
             return;
         }
         if (buoyBreak == null) {

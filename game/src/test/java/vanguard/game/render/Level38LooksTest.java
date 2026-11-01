@@ -95,7 +95,8 @@ class Level38LooksTest {
                 pod |= chunk.spec().chunk().equals("cargo-pod") && on;
             }
         }
-        assertTrue(marked > SimStep.ticks(5), "the canister marked for its drift down the screen: " + marked);
+        // Round 76 L.1 b: it opens by itself at its height (y 270), about 4.7 s after it shows.
+        assertTrue(marked > SimStep.ticks(4), "the canister marked for its drift down the screen: " + marked);
         assertFalse(pod, "the pod is no friendly");
     }
 }

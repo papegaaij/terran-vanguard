@@ -539,7 +539,7 @@ val copyPlaceholderSounds = tasks.register<JavaExec>("copyPlaceholderSounds") {
         "io-refinery-r72-a.ogg",
         "rock-crack-r77-a.ogg",
         "rock-thud-r77-a.ogg",
-        "tower-collapse-r77-a.ogg",
+        "tower-collapse-r77-b.ogg",
         "pump-blast-r77-a.ogg",
     )
 }

@@ -118,8 +118,9 @@ def _debris_chunks():
 
 
 # A level's tows drawn in another look than the lifeboat, by level number (vanguard.pipeline.SpriteUse.TOW_LOOKS, the
-# game's TowLooks.LOOKS): Level 30's dead beacon buoy (M9 part C, step C4); Level 31's claim rock (M9 part D, step D2).
-TOW_LOOKS = {30: "debris-lane-buoy", 31: "debris-claim-rock"}
+# game's TowLooks.LOOKS): Level 30's dead beacon buoy (M9 part C, step C4); Level 31's claim rock (M9 part D, step D2);
+# Level 40's Sentry Two recorder on its dead scout (M10 part F, step F4).
+TOW_LOOKS = {30: "debris-lane-buoy", 31: "debris-claim-rock", 40: "debris-sentry-recorder"}
 
 
 def _tow_looks():

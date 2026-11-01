@@ -60,15 +60,15 @@ Two pages, each one screen (`BriefingLayoutTest`) with room for its image. Rende
 ## Threat profile
 
 Rendered from the data. Directions are counted by each wave's `from` (the intel's rule), by enemy. The aces are a
-mid-boss and are not in the numbers. The README's two V-wings from the rear (t=48, t=144.5) fly from the front until
-the simulation flies a front formation from the rear (step F2; m10f-gaps.md §1 #11), so the rear share is the Mirror
-Interceptors' rear ambushes' alone for now.
+mid-boss and are not in the numbers. The rear share is the two Talon V-wings rising from the bottom edge (t=48,
+t=144.5; flown from the front until step DB1, after F1c built the rising V-wing) and the Mirror Interceptors' rear
+ambushes.
 
 <!-- data: threat-profile -->
 | Field | Value |
 |---|---|
 | Dominant layers | `air` only (`space` is `air` in vacuum, the [Jovian media](../../../world/jovian/README.md#media-per-level)): the pickets and the Honour Guard. No ground layer: the Bomb Rack and Rook's Mortar read **`NO GROUND`** (J2; the hangar warns) |
-| Attack directions | front 86% · sides 11% · rear 2% (counted by enemy; the duel adds the aces' side and rear entries) |
+| Attack directions | front 83% · sides 11% · rear 6% (counted by enemy; the duel adds the aces' side and rear entries) |
 | Density | 5 |
 | Recommended traits | `spread` (three aces apart, wide pickets), `rear` (the Mirror Interceptors' rear ambushes, Kestrel's station); `homing` helps against the moving aces |
 | Hazards | Harrow death-burst rings; the Mirror Interceptors' bounced shots; the aces' sniper line and dives; no weather (vacuum) |
@@ -131,7 +131,7 @@ Rendered from the data (ART-F2's eight sections: the draft's section 4 split at 
 | Section | t (s) | Scroll (px) | Speed (px/s) | Atmosphere | Layers and content | Purpose |
 |---|---|---|---|---|---|---|
 | 1. Jupiter's Shadow | 0–30 | 0–4,800 | 160 | clear | `deep`: Jupiter's limb filling the bottom edge, its night side, the fleet's lights rising off it. | Talons, Chimeras and popcorn; the Vrell hunting Talons (t=15.5). |
-| 2. The Picket Line | 30–64 | 4,800–10,240 | 160 | clear | `deep`: Jupiter shrinking to a disc at the right edge; a picket station far off (scenery). `low-air`: a dead CDF scout drifting down the left edge (t≈50, the secret's source). | Gunships and Darts, the first Mirror pincer (t=35.5), the first V-wing from the rear (t=48; flown from the front until the simulation's rear V-wing). |
+| 2. The Picket Line | 30–64 | 4,800–10,240 | 160 | clear | `deep`: Jupiter shrinking to a disc at the right edge; a picket station far off (scenery). `low-air`: a dead CDF scout drifting down the left edge (t≈50, the secret's source). | Gunships and Darts, the first Mirror pincer (t=35.5), the first V-wing from the rear (t=48, rising from the bottom edge). |
 | 3. Callisto Rising | 64–96 | 10,240–15,360 | 160 | clear | `deep`: Callisto's dark disc rising at the top, its ice catching Jupiter's light. | The Harrow cross (t=65.5), the Mirror rear ambush (t=68), the last pickets (t=93). |
 | 4. The Guard's Lane | 96–98 | 15,360–15,680 | 160 | clear | `deep`: Callisto larger; three gold glints far ahead. | The pre-duel pause begins (t≈97); the supply drone's first armour patch (t=97). |
 | 5. The Guard's Lane, braking | 98–102 | 15,680–16,040 | 20 | clear | `deep`: the three glints climbing away out of the top edge (the aces leaving to make their entries). | The scroll eased from 160 to 20 px/s over t=98–102; Varga names the aces. |
@@ -164,14 +164,14 @@ the `tiny` ones (Darts, Skitters, Motes) 1 HP. Every number is a hand estimate f
   ([the rule](../../../enemies/README.md#the-three-way-war)). The Chimeras (hybrids) are never prey.
 - **Hulls apart**: the Mirror pincers keep ≥ 80 px between hulls; the t=58 pincer (2 + 2) enters after the t=35.5 pair
   has left (it holds 7 s); never two Gunship columns on the screen.
-- **Directions**: 47 of 58 waves from the front (81 %); the side pincers and streams have edge warnings, the rear
+- **Directions**: 45 of 58 waves from the front (78 %); the side pincers and streams have edge warnings, the rear
   V-wings and the Mirror rear ambushes a BOTTOM warning, the Harrow cross every edge, 3 s ahead.
 - **Totals**: Talon 86 (10 leaders) · Mote Swarm 72 · Chimera 50 · Skitter 36 · Gilded Gunship 6 (+ 36 Darts) ·
   Harrow 18 · Mirror Interceptor 11 · Hornet 6.
 
 Rendered from the data (M10 part F, step F2; "left"/"right" is the side edge a wave enters by). Step F2's changes
-(pending the user's review in round 78): the two V-wings from the rear fly from the front until the simulation flies a
-front formation from the rear; the Skitter swarms are streams (Skitters fly no flock); the Mirror rear ambush moved
+(pending the user's review in round 78): the two V-wings from the rear flew from the front until the simulation flew a
+front formation from the rear (since step DB1 they rise from the bottom edge); the Skitter swarms are streams (Skitters fly no flock); the Mirror rear ambush moved
 from t=75.5 to t=68 (swapped with the motes: at 75.5 the t=70.5 Gunships drifted down through its stations); hard's
 Harrow cross 2 per edge (the README's 3 is beyond the Harrow's cross of 4–8).
 
@@ -196,7 +196,7 @@ Harrow cross 2 per edge (the README's 3 is beyond the Harrow's cross of 4–8).
 | 40.5 | 2 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 6 | front | |
 | 43 | 2 | line abreast | [Hornet](../../../enemies/air/hornet/README.md) | 2 | front | ≥ 80 px between the hulls |
 | 45.5 | 2 | swarm | [Chimera](../../../enemies/air/chimera/README.md) | 6 | front | |
-| 48 | 2 | V-wing | [Talon](../../../enemies/air/talon/README.md) | 5 | front | The README's first wing from the rear (BOTTOM warning at t=45): from the front until the simulation flies a rear V-wing |
+| 48 | 2 | V-wing | [Talon](../../../enemies/air/talon/README.md) | 5 | rear | The README's first wing from the rear: it rises from the bottom edge (BOTTOM warning at t=45) |
 | 50.5 | 2 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 6 | front | The dead scout drifts in at the left edge (the secret) |
 | 53 | 2 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front | |
 | 55.5 | 2 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front | The README's Skitter swarm: a stream (Skitters fly no flock) |
@@ -231,7 +231,7 @@ Harrow cross 2 per edge (the README's 3 is beyond the Harrow's cross of 4–8).
 | 137 | 7 | V-wing | [Talon](../../../enemies/air/talon/README.md) | 5 | front | |
 | 139.5 | 7 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 6 | front | |
 | 142 | 8 | stream | [Harrow](../../../enemies/air/harrow/README.md) | 5 | sides (alternating edges) | Edge warnings at t=139 |
-| 144.5 | 8 | V-wing | [Talon](../../../enemies/air/talon/README.md) | 5 | front | The README's second wing from the rear (BOTTOM warning at t=141.5): from the front until the simulation flies a rear V-wing |
+| 144.5 | 8 | V-wing | [Talon](../../../enemies/air/talon/README.md) | 5 | rear | The README's second wing from the rear: it rises from the bottom edge (BOTTOM warning at t=141.5) |
 | 147 | 8 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 6 | front | |
 | 149.5 | 8 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front | |
 | 152 | 8 | swarm | [Chimera](../../../enemies/air/chimera/README.md) | 6 | front | |
@@ -292,12 +292,12 @@ now" by the last ace (`last-ace-<ace>`), Rook's "for Ceres" at `harker-down`; Ha
 |---|---|---|
 | t=1 | Okafor | "Callisto's picket line, Lancer. Vorne's own guard flies it. Clear a lane for the fleet." |
 | t=12 | Varga | "Chimeras in the pickets. They heal if you let them rest: hold the beam on one." |
-| t=21 | Rook | "The bugs are still chewing on their old friends. Fine by me." |
+| t=23.5 | Rook | "The bugs are still chewing on their old friends. Fine by me." |
 | t=33 | Varga | "Mirror interceptors on the flanks. Hit them from the side, or burn the mirror." |
 | t=44.5 | Okafor | "Contacts behind you, Lancer. Rear guns." |
 | t=62.5 | Varga | "Harrows from every side. They burst when they die: thin them far out." |
-| t=76 | Rook | "Callisto. Looks cold. Looks like it's waiting for us." |
-| t=84 | Okafor | "Long-range scan: three gold Talons holding the lane ahead. The Honour Guard." |
+| t=75 | Rook | "Callisto. Looks cold. Looks like it's waiting for us." |
+| t=82 | Okafor | "Long-range scan: three gold Talons holding the lane ahead. The Honour Guard." |
 | t=92.5 | Varga | "Vorne's aces. One snipes, one dances, one comes from behind. Watch all three." |
 | Harker's entry tell (`boss-arrival`) | Harker | "Rook. They let you fly again? Then let's settle Ceres properly." |
 | After Harker's taunt (`boss-arrival`, queued behind it) | Rook | "Harker. Still flying for whoever pays the most?" |
@@ -318,9 +318,11 @@ now" by the last ace (`last-ace-<ace>`), Rook's "for Ceres" at `harker-down`; Ha
 | t=158 | Okafor | "That's the citadel's outer line. Form up, Aegis. Callisto is next." |
 <!-- /data -->
 
-Timeline check (text model): t=1 closes ≈ 9.7, t=12 ≈ 20.1, t=21 ≈ 27.5, t=33 ≈ 41.0, t=44.5 ≈ 49.3; the recorder
-(in reach t≈50–56) is spoken by ≈ 57.6 at the latest, before Varga's t=62.5 (≈ 69.8); t=76 ≈ 81.9, t=84 ≈ 91.9, t=92.5
-≈ 100.4, before the sting at t=102. In the duel the entry taunts ride their tells (2.5 s ahead of each entry) and
+Timeline check (text model): t=1 closes ≈ 9.7, t=12 ≈ 20.1 (the game's ≈ 23.0: Rook's line moved from t=21 to 23.5,
+step F4), t=23.5 ≈ 30.5, t=33 ≈ 41.0, t=44.5 ≈ 49.3; the recorder
+(in reach t≈50–56) is spoken by ≈ 57.6 at the latest, before Varga's t=62.5 (≈ 69.8); t=75 ≈ 81.8, t=82 ≈ 92.6, t=92.5
+≈ 103.8 (step F4's game timeline, `RadioTimelineLevel40Test`: Okafor's two pages typed out run ≈ 10.6 s, so his line
+moved from t=84 to 82 and Rook's from 76 to 75; Varga's starts ≤ 1 s late), Harker's taunt queued behind it in his tell. In the duel the entry taunts ride their tells (2.5 s ahead of each entry) and
 Rook's answer follows Harker's; the death lines queue behind any line in progress. The last ace's line pair (K+2.5 to
 ≈ K+7.6) runs over the clock's resume at K+4 (t=103) and closes before Okafor's t=108.5 (≈ 116.1); t=125 ≈ 132.8,
 t=138.5 ≈ 144.5 (the Harrow stream at 142, warned at 139), t=158 ≈ 165.1, before the level's end at t=170.
@@ -450,8 +452,8 @@ not data) holds the backdrop block, the sections and the recorder's `tows` row. 
 
 - [x] Level data `data.yaml` (M10's Level 40 part) with the sections, waves, radio, budget, threat profile, briefing,
       backdrop and music; the duel a one-second `arena` section at the 20 px/s drift with `hold_after_boss: 4` (step
-      F2: ART-F2's eight sections; the arena halts the scroll, the built clock's rule; the two rear V-wings from the
-      front until the simulation's rear V-wing)
+      F2: ART-F2's eight sections; the arena halts the scroll, the built clock's rule; step DB1: the two rear V-wings
+      rise from the bottom edge, F1c's rising frame)
 - [ ] Reference DPS 160 at L40 and the Act 6 hand plan's Level 40 fit (M10 part A) before the data; the act HP factor
       for the returning `medium`+ units listed in *Waves*; the Act 6 shields from Level 36 on
 - [ ] The level to the Act 2+ rules (`ActFloorTest`, `PacingTest`, the three empty stretches named), the Gunships'
@@ -464,15 +466,18 @@ not data) holds the backdrop block, the sections and the recorder's `tows` row. 
 - [ ] Primary `reach-end` with the duel as its condition, `BREAK THE HONOUR GUARD`; secondary `kill_ratio` 65 % (the
       aces and the Vrell's prey kills not counted)
 - [ ] `NO GROUND` on the hangar and in the weapons rows (the Bomb Rack, Rook's Mortar)
-- [ ] Radio voiced, every timed line at most 1 s late (`RadioTimelineTest`), with Rook and without; the aces on the
-      enemy channel as `PHASE` events; Rook's rivalry lines after Harker's taunt and at Harker's death
+- [x] Radio voiced, every timed line at most 1 s late (`RadioTimelineTest`), with Rook and without; the aces on the
+      enemy channel as `PHASE` events; Rook's rivalry lines after Harker's taunt and at Harker's death (step F4:
+      `RadioTimelineLevel40Test`, Rook's "for Ceres" whenever Harker dies, his kill included; Rook's t=21 line moved
+      to 23.5, Rook's t=76 to 75 and Okafor's t=84 to 82, pending the user's review in round 78)
 - [ ] Threat profile, Varga's four intel lines and Okafor's teaser fitting the intel panel; the aces' intel silhouettes
-- [ ] Briefing: both pages, each one screen, with their images
+- [x] Briefing: both pages, each one screen, with their images (step F4: `level-40-callisto-approach`,
+      `level-40-honour-guard`, tools/art/briefing_images.py; `BriefingLayoutTest`)
 - [ ] Typical haul within ±5 % of budget(40) with the level's `bounty_scale`; the mid-boss's share inside 10–20 %
       (`BalanceTest`), its bounty recomputed with the measured scale
 - [ ] The recorder secret (4 hits, crate 100), the overdrive, the shield cell, the supply drone's two armour patches
-- [ ] Music: track 14's stems by section, the sting and the duel theme (32), track 14 back after the duel; the
-      `belt-open` ambience
+- [x] Music: track 14's stems by section, the sting and the duel theme (32), track 14 back after the duel; the
+      `belt-open` ambience (step F4: `LevelMusic.midBoss`, the fleet's layer over section 1; `Level40SoundsTest`)
 - [ ] Easy/hard variations as in *Difficulty notes*; the autopilot flies the level with Rook on every difficulty
       (`--escort none` too)
 - [ ] Production art and the round's captures
@@ -482,8 +487,9 @@ not data) holds the backdrop block, the sections and the recorder's `tows` row. 
 Left to the build (the document is approved as drafted):
 
 - **Round 78 (step F2's build, pending the user's review)**: the duel's arena **halts** the scroll (the built clock;
-  ART-F2's backdrop is laid out for it) where the draft drifts at 20 px/s; the two **V-wings from the rear** fly from
-  the front until a simulation step builds a front formation from the bottom edge; the **Harrow cross of 8** (2 an
+  ART-F2's backdrop is laid out for it) where the draft drifts at 20 px/s; the two **V-wings from the rear** rise
+  from the bottom edge since step DB1 (F1c's rising frame: their turn 214–255 px above the bottom edge, about half their
+  shots from behind the ship, 0–2 hits on the ship a run, levelReport `rising`); the **Harrow cross of 8** (2 an
   edge, the approved table) puts up to 8 Harrows on the screen and 4 in their tell or ram (flown, the plan's fit), over
   the Harrow's caps of 6 and 2 (its page): keep the cross of 8, or a cross of 4 (1 an edge, 281 units) inside the caps.
 
@@ -521,3 +527,11 @@ Left to the build (the document is approved as drafted):
   rejected), **J13 kept** (the secondary "Break the pickets", `kill_ratio` 65 %; none rejected), J4 (the aces, Rook's
   rivalry lines), J2 (`NO GROUND`), J15 (the scale outside the band, the build measures it) and M.2 b (the duel theme
   is "Three Aces"). The document approved as drafted (D.6; `design: approved`).
+- 2026-11-01: Step DB1 (after F1c's rising V-wing): the two V-wings from the rear (t=48, t=144.5) fly `from: rear`,
+  rising from the bottom edge under the BOTTOM warning; the attack directions read front 83 % · sides 11 % · rear 6 %.
+  Measured (levelReport `rising`, 3 seeds a difficulty, the plan's fit): the Talons turn 214–255 px above the bottom
+  edge, on the screen 5–10 s a run, 7–40 shots of which about half leave from below the ship, 0–2 hits on the ship a
+  run (4 hits in 9 runs), their closest 44–81 px from the ship; no big-hull overlaps; the autopilot wins 9 of 9 without a
+  retry. But the beam era's small-unit time on the screen rises from 1.43× to **1.73×** Level 10's (limit 1.5:
+  `BeamEraHpTest` red at Level 40; the Chimeras' 2.56 → 3.76 s, the Talons' 2.32 → 2.26 s): to tune in the next L40 step
+  (pending the user's review in round 78).

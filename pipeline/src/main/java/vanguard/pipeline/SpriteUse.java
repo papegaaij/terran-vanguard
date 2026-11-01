@@ -86,9 +86,11 @@ final class SpriteUse {
      * M9 part C: a level's tows drawn in another look than {@link #TOW_ROOT} (the game's {@code TowLooks.LOOKS}), by
      * level number: Level 30's dead beacon buoy, {@code debris-lane-buoy} tumbling and {@code -break} at the cut
      * (tools/art/belt_units_c.py); M9 part D: Level 31's Dacosta's claim, {@code debris-claim-rock}
-     * (tools/art/belt_units_d.py).
+     * (tools/art/belt_units_d.py); M10 part F: Level 40's Sentry Two recorder on its dead scout, {@code
+     * debris-sentry-recorder} (tools/art/scout_recorder.py).
      */
-    static final Map<Integer, String> TOW_LOOKS = Map.of(30, "debris-lane-buoy", 31, "debris-claim-rock");
+    static final Map<Integer, String> TOW_LOOKS =
+            Map.of(30, "debris-lane-buoy", 31, "debris-claim-rock", 40, "debris-sentry-recorder");
 
     /**
      * M9 part H (Level 35, the game's {@code MassRelayLooks}): a level's mass-relay flash, {@code mass-relay-line},
@@ -385,7 +387,8 @@ final class SpriteUse {
         List<String> open = new ArrayList<>(enemies);
         while (!open.isEmpty()) {
             EnemyData enemy = content.enemy(open.removeLast());
-            if (enemy.shield().isPresent()) {
+            if (enemy.shield().isPresent() || enemy.squadron().isPresent()) {
+                // M10 part F: a squadron's aces (the Honour Guard) wear the units' hex shield too.
                 roots.add(SHIELD_ROOT);
             }
             // Step BOSS70: a ringed boss's mine ring throws its layer's line mines, drawn in the layer's mine frames.

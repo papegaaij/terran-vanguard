@@ -63,7 +63,8 @@ final class PropPasses {
     /**
      * M10 part D (design/campaign Level 38, the CDF supply canister; tools/art/storm_layer_units.py): per debris sprite
      * with a latch overlay ({@code <sprite>-latch}, the same frames) its sway frames and its latch's, at {@value
-     * #SWAY_FPS} fps: the canister swaying under its parachute, its latch the 10 HP target.
+     * #SWAY_FPS} fps: the canister swaying under its parachute, its latch the 10 HP target (round 76 L.1 b: a chunk that
+     * opens by itself, {@code opens_at}, draws no latch).
      */
     private final Map<String, Array<AtlasRegion>> debrisSways = new HashMap<>();
 
@@ -158,7 +159,8 @@ final class PropPasses {
                 int frame = swayFrame(sortie.tick() + alpha, sway.size);
                 sprite = sway.get(frame);
                 Array<AtlasRegion> latches = debrisLatches.get(chunk.sprite());
-                latch = frame < latches.size ? latches.get(frame) : null;
+                // Round 76 L.1 b: a chunk that opens by itself at its height has no latch to shoot: none drawn.
+                latch = frame < latches.size && !chunk.spec().opens() ? latches.get(frame) : null;
             }
             if (!chunk.large() && chunk.ticksSinceHit() < HIT_FLASH_TICKS) {
                 flash.draw(

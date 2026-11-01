@@ -158,6 +158,8 @@ class LevelLooks {
      * it.
      */
     final SovereignLooks sovereign;
+    /** M10 part F: the squadron mid-boss (the Honour Guard), its aces, tells, shields, wrecks, line and bar; null without it. */
+    final HonourGuardLooks honourGuard;
     /** M9 part H: Level 35's mass-relay flash; null without a relay. */
     final MassRelayLooks massRelay;
     /** M8 part H: the finale's cruisers (Level 28's run); null without them. */
@@ -263,6 +265,7 @@ class LevelLooks {
         colossus = ColossusLooks.of(sprites, flash, boss, bossPivots, folder);
         maw = MawLooks.of(sprites, flash, boss);
         sovereign = SovereignLooks.of(sprites, flash, boss, bossPivots);
+        honourGuard = HonourGuardLooks.of(sprites, flash, boss, bossPivots);
         massRelay = MassRelayLooks.of(sprites, script);
         foundry = FoundryLooks.of(sprites, level, script);
         plumes = PlumeLooks.of(sprites, level);
@@ -461,6 +464,9 @@ class LevelLooks {
         if (sovereign != null) {
             sovereign.reset();
         }
+        if (honourGuard != null) {
+            honourGuard.reset();
+        }
         if (massRelay != null) {
             massRelay.reset();
         }
@@ -592,6 +598,9 @@ class LevelLooks {
         }
         if (sovereign != null) {
             sovereign.stepped(sortie);
+        }
+        if (honourGuard != null) {
+            honourGuard.stepped(sortie);
         }
         if (massRelay != null) {
             massRelay.stepped(sortie);

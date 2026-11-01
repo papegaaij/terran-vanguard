@@ -8,6 +8,9 @@
 # tools/art/storm_layer_units.py), smooth from the start.
 # M10 part E, step E4: Level 39's backdrop sets (Pele's veil, the pipes' and racks' glows; Tvashtar's plume dropped in ART-E2) and the
 # cracking tower's, the vents' and the rocks' smooth sets (tools/art/backdrop_l39.py, tools/art/refinery_units.py).
+# M10 part F, step F4: Level 40's backdrop sets (tools/art/backdrop_l40.py: the tiles, the ring span, the pieces'
+# glows), Sentry Two's recorder's beacon and break (tools/art/scout_recorder.py) and the Honour Guard's additive sets
+# (tools/art/honour_guard.py), smooth from the start.
 backdrop/level-01/vrell-glow
 backdrop/level-03/weather-front-a
 backdrop/level-08/mist
@@ -151,6 +154,19 @@ backdrop/level-39/pele-veil
 backdrop/level-39/pipes-east-glow
 backdrop/level-39/pipes-west-glow
 backdrop/level-39/pump-rack-glow
+backdrop/level-40/callisto-ring
+backdrop/level-40/callisto-rising
+backdrop/level-40/citadel-glow
+backdrop/level-40/duel
+backdrop/level-40/fleet-far-glow
+backdrop/level-40/guard-brake
+backdrop/level-40/guard-glints-glow
+backdrop/level-40/guard-lane
+backdrop/level-40/ice-line
+backdrop/level-40/jupiter-shadow
+backdrop/level-40/picket-line
+backdrop/level-40/picket-station-glow
+backdrop/level-40/ring-span
 sprites/abyss-ray-bloom
 sprites/abyss-ray-mouth
 sprites/abyss-ray-shadow
@@ -174,6 +190,8 @@ sprites/cracking-tower-flare
 sprites/crevasse-lip-glow
 sprites/debris-cargo-pod-outline
 sprites/debris-pathfinder-pod-break
+sprites/debris-sentry-recorder-break
+sprites/debris-sentry-recorder-glow
 sprites/depth-hunter-break
 sprites/depth-hunter-launch
 sprites/depth-hunter-oil
@@ -209,6 +227,18 @@ sprites/heat-plume-bend
 sprites/heat-plume-glow
 sprites/heat-plume-settle
 sprites/helix-core-glow
+sprites/honour-guard-barrel-glint
+sprites/honour-guard-chevron-glow-bottom
+sprites/honour-guard-chevron-glow-left
+sprites/honour-guard-chevron-glow-right
+sprites/honour-guard-chevron-glow-top
+sprites/honour-guard-cockpit-fire
+sprites/honour-guard-edge-glint
+sprites/honour-guard-engine-flare
+sprites/honour-guard-harker-crest
+sprites/honour-guard-kestrel-band
+sprites/honour-guard-vesper-ribbons
+sprites/honour-guard-wingtip
 sprites/hud/panel-left
 sprites/hud/panel-right
 sprites/hud/plate

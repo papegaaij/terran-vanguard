@@ -298,11 +298,13 @@ To be built in M10 with Level 40, once round 72 approves the design.
 - [ ] Rook and the autopilot: the nearest ace, out of told lines and dives, the rear mount on Kestrel
 - [ ] The fight measured over five seeds (the window, the HP tuned, the par set; all three together ≥ 10 s), the
       calibration against the Kraken's phase 1, the bounty at ≈ 15 % with Level 40's scale
-- [ ] The HUD's segmented bar and tags ([Act 6 additions](../../../ui/hud/README.md#act-6-additions-draft)); the lines in
-      Level 40's radio timeline
+- [x] The HUD's segmented bar and tags ([Act 6 additions](../../../ui/hud/README.md#act-6-additions-draft)); the lines in
+      Level 40's radio timeline (step F4: `BossBar.drawSegments` with the call-sign sprites, `HonourGuardLooksTest`;
+      `RadioTimelineLevel40Test`)
 - [ ] Production art: three aces at 64 headings in the elite livery, their tells, shields, the tumbling wrecks; the
       readability checks over Level 40's backdrop
-- [ ] Sounds (Freesound, CC0/CC-BY) per the brief; the duel theme (track 32) after the sting
+- [x] Sounds (Freesound, CC0/CC-BY) per the brief; the duel theme (track 32) after the sting (step F4: round 78's a
+      variants until the picks, `HonourGuardCues`, the sniper's in `SovereignCues`; `Level40SoundsTest`)
 
 ## Open questions
 

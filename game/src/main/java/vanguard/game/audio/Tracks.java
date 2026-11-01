@@ -28,6 +28,12 @@ public final class Tracks {
      */
     public static final double BOSS_WARNING_BARS_SECONDS = 4.8;
 
+    /**
+     * M10 part F: where a mid-boss's own track starts under its sting (Level 40's duel theme after track 21, the
+     * music plan's hook (2)): on the sting's end, 4.6 s.
+     */
+    public static final double MINIBOSS_STING_SECONDS = 4.6;
+
     /** The file names (without {@code .ogg}) of the tracks that have one. */
     private static final Map<Integer, String> FILES = Map.ofEntries(
             Map.entry(1, "title-theme"),
@@ -60,7 +66,10 @@ public final class Tracks {
             Map.entry(26, "game-over"),
             Map.entry(DEBRIEF, "debrief-theme"),
             // M9 part B: track 31, Rook's return sting (Level 29's Ember launch, the theme ducked -6 dB under it).
-            Map.entry(ROOK_RETURN, "rook-return"));
+            Map.entry(ROOK_RETURN, "rook-return"),
+            // M10 part F: track 32, the Honour Guard's duel theme "Three Aces" (round 72 M.2 b), Level 40's mid-boss
+            // track after the mini-boss sting.
+            Map.entry(32, "duel-theme"));
 
     private Tracks() {}
 

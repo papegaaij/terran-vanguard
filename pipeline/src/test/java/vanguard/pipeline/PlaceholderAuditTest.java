@@ -592,7 +592,7 @@ class PlaceholderAuditTest {
             Map.entry("sfx/io-refinery-r72-a.ogg", ROUND_72_IO),
             Map.entry("sfx/rock-crack-r77-a.ogg", ROUND_77),
             Map.entry("sfx/rock-thud-r77-a.ogg", ROUND_77),
-            Map.entry("sfx/tower-collapse-r77-a.ogg", ROUND_77),
+            Map.entry("sfx/tower-collapse-r77-b.ogg", ROUND_77),
             Map.entry("sfx/pump-blast-r77-a.ogg", ROUND_77),
             Map.entry("music/duel-theme.ogg", ROUND_78_MUSIC),
             Map.entry("music/iron-sovereign.ogg", ROUND_68_MUSIC),

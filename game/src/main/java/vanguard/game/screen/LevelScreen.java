@@ -385,7 +385,7 @@ public final class LevelScreen implements GameScreen {
         banner = new BossBanner(services.sprites.pixel, services.fonts.heading, services.fonts.body);
         waveBanners = new WaveBanners(services.sprites.pixel, services.fonts.body, sortie.airEscort());
         friendlyBanner = new FriendlyBanner(services.sprites.pixel, services.fonts.body, sortie.airEscort());
-        friendlyMarks = new FriendlyMarks(services.sprites.pixel, services.fonts.label);
+        friendlyMarks = new FriendlyMarks(services.sprites.pixel, services.fonts.label).drones(level.released());
         latchPrompt = level.prompts().orElse(List.of()).stream()
                 .filter(LevelData.Prompt::onEvent)
                 .findFirst()
@@ -476,7 +476,9 @@ public final class LevelScreen implements GameScreen {
                         .map(names -> new LevelMusic.Boss(
                                 names.warning().map(name -> services.files.internal(Tracks.path(name))),
                                 names.track().map(name -> services.files.internal(Tracks.path(name))),
-                                Tracks.BOSS_WARNING_BARS_SECONDS)));
+                                names.midBoss() ? Tracks.MINIBOSS_STING_SECONDS : Tracks.BOSS_WARNING_BARS_SECONDS)));
+        // M10 part F: a mid-boss's own track (Level 40's duel theme) and the theme's return after it.
+        level.music().trackAfterBoss().ifPresent(music::midBoss);
         // M5 part D: the ambience crossfading by section (Level 10's ocean from section 4).
         music.ambienceChanges(ambienceChanges(level.music()));
         // M5 part F: the theme's level by section (Level 12's eye at -6 dB).
@@ -565,17 +567,26 @@ public final class LevelScreen implements GameScreen {
                 .toList();
     }
 
-    /** A level's act boss music by file name: the warning (track 22) and the boss track (track 18). */
-    record BossMusic(Optional<String> warning, Optional<String> track) {}
+    /**
+     * A level's act boss music by file name: the warning (track 22) and the boss track (track 18); M10 part F: or a
+     * mid-boss's ({@code midBoss}), its sting (track 21) in the warning's place before its track (Level 40's track 32).
+     */
+    record BossMusic(Optional<String> warning, Optional<String> track, boolean midBoss) {}
 
     /**
      * The level's {@code music.boss_warning} and {@code boss_track} (design/tech/architecture, the
-     * level music block); empty without either.
+     * level music block); empty without either. M10 part F: a {@code boss_track} after a mid-boss's {@code boss_sting}
+     * (no warning) plays the sting as its warning.
      */
     static Optional<BossMusic> bossMusic(LevelData.Music music) {
         Optional<String> warning = music.bossWarning();
         Optional<String> track = music.bossTrack();
-        return warning.isEmpty() && track.isEmpty() ? Optional.empty() : Optional.of(new BossMusic(warning, track));
+        if (warning.isEmpty() && track.isPresent() && music.bossSting().isPresent()) {
+            return Optional.of(new BossMusic(music.bossSting(), track, true));
+        }
+        return warning.isEmpty() && track.isEmpty()
+                ? Optional.empty()
+                : Optional.of(new BossMusic(warning, track, false));
     }
 
     /** A music block's voice loop: its speaker's first timed radio line, if it has a voice file. */
@@ -1104,6 +1115,10 @@ public final class LevelScreen implements GameScreen {
      */
     private void warnBoss(int piece) {
         if (music.bossArrived()) {
+            if (music.midBossTrack()) {
+                // M10 part F: a mid-boss's own track starts with its sting; no klaxon, no banner.
+                return;
+            }
             services.sfx.play(Sfx.KLAXON, KLAXON_VOLUME, 1, 0);
             sortie.setPiece(piece).boss().ifPresent(boss -> {
                 banner.show(boss.barName(), sortie.tick());

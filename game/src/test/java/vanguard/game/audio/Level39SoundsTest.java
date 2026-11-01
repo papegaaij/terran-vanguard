@@ -64,7 +64,7 @@ class Level39SoundsTest {
                 Sfx.AMBIENCE_IO_REFINERY, "io-refinery-r72-a.ogg",
                 Sfx.ROCK_CRACK, "rock-crack-r77-a.ogg",
                 Sfx.ROCK_THUD, "rock-thud-r77-a.ogg",
-                Sfx.TOWER_COLLAPSE, "tower-collapse-r77-a.ogg",
+                Sfx.TOWER_COLLAPSE, "tower-collapse-r77-b.ogg",
                 Sfx.PUMP_BLAST, "pump-blast-r77-a.ogg",
                 Sfx.ERUPTION, "eruption-r72-a.ogg");
         files.forEach((sfx, file) -> {

@@ -364,7 +364,18 @@ final class EventEffects {
                         services.sprites.explosionSmall, TINY_EXPLOSION_FRAME_TICKS, x, y, 0, sortie.groundScroll());
             case PART_DESTROYED -> {
                 if (!water.arenaPartDown(events.value(i), x, y)) {
-                    if (ringBoss() && services.sprites.has("explosion-vacuum-medium")) {
+                    if (squadronBoss() && services.sprites.has("explosion-vacuum-medium")) {
+                        // M10 part F: an ace dies in vacuum: a short flash at its engines and a ring of debris.
+                        effects.start(
+                                services.sprites.frames("explosion-vacuum-medium"), MEDIUM_EXPLOSION_FRAME_TICKS, x, y);
+                        if (services.sprites.has("explosion-vacuum-debris-medium")) {
+                            effects.start(
+                                    services.sprites.frames("explosion-vacuum-debris-medium"),
+                                    MEDIUM_EXPLOSION_FRAME_TICKS,
+                                    x,
+                                    y);
+                        }
+                    } else if (ringBoss() && services.sprites.has("explosion-vacuum-medium")) {
                         // M9 part H: a battery of the Iron Sovereign bursts in vacuum (no fire, no rising smoke).
                         effects.startOnGround(
                                 services.sprites.frames("explosion-vacuum-medium"),
@@ -498,7 +509,8 @@ final class EventEffects {
                 }
             }
             // M5 part H, step H7b: the boss's credit shower after its chained bursts.
-            case BOSS_DESTROYED -> creditShower(events.value(i), x, y);
+            // M10 part F: a squadron's shower falls where its last ace died.
+            case BOSS_DESTROYED -> creditShower(events.value(i), deaths.showerX(x), deaths.showerY(y));
             // M7 part F: a homing missile shot down or burst on a hull bursts small; one whose life ran out puffs out.
             case MISSILE_DESTROYED -> missileGone(events.value(i), x, y);
             case WINGMAN_EJECTED -> effects.start(explosionMedium, MEDIUM_EXPLOSION_FRAME_TICKS, x, y);
@@ -549,6 +561,16 @@ final class EventEffects {
     private boolean ringBoss() {
         for (int k = 0; k < sortie.setPieceCount(); k++) {
             if (sortie.setPiece(k).ring().isPresent()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /** M10 part F: whether the level's boss is a squadron (the Honour Guard): its aces die in vacuum. */
+    private boolean squadronBoss() {
+        for (int k = 0; k < sortie.setPieceCount(); k++) {
+            if (sortie.setPiece(k).squadron().isPresent()) {
                 return true;
             }
         }

@@ -584,6 +584,11 @@ final class DrawPasses extends LevelLooks {
         double scroll = f.scroll;
         double seconds = f.seconds;
         setPieces.drawSetPieces(batch, sortie, alpha, seconds, false);
+        if (honourGuard != null) {
+            // M10 part F: the Honour Guard's aces, their shields and wrecks, then their tells, trails and fires.
+            honourGuard.draw(batch, sortie, alpha, play.whiteFlash);
+            honourGuard.drawGlows(batch, sortie, alpha);
+        }
         // M5 part H: the free spire tearing loose, airborne or dying.
         setPieces.drawSpire(batch, sortie, wrecks, alpha, scroll, SpirePass.AIR);
         setPieces.drawWrecks(batch, sortie, wrecks, alpha, seconds);
@@ -799,6 +804,10 @@ final class DrawPasses extends LevelLooks {
             // M9 part H: the mass relay's line, bolt and trail.
             massRelay.draw(batch, sortie, alpha);
         }
+        if (honourGuard != null) {
+            // M10 part F: Harker's sniper line, tracking, locked and live, with the bullets.
+            honourGuard.drawLines(batch, sortie, alpha);
+        }
         if (walker != null) {
             // M7 part F: the homing missiles over their smoke trails, with the bullets.
             walker.drawMissiles(batch, sortie, alpha);
@@ -816,8 +825,17 @@ final class DrawPasses extends LevelLooks {
         }
         screenFlash.draw(batch, sprites.pixel, alpha, play.whiteFlash);
         warnings.draw(batch, sortie.tick(), alpha);
+        if (honourGuard != null) {
+            // M10 part F: the aces' entry tells at their edges (no edge warning for a boss).
+            honourGuard.drawTells(batch, sortie, alpha);
+        }
         credits.draw(batch, font);
-        setPieces.drawBossBar(batch, sortie);
+        if (honourGuard != null && honourGuard.drawsBar(sortie)) {
+            // M10 part F: the Honour Guard's bar in its three segments.
+            honourGuard.drawBar(batch, font, sortie);
+        } else {
+            setPieces.drawBossBar(batch, sortie);
+        }
     }
 
     /**

@@ -316,6 +316,12 @@ Outputs (assets/ui/briefing/<name>.png, 672x240, textures of their own like the 
   level-39-cracking-tower  L39 p2: Varga's diagram of a cracking tower from above (tools/art/refinery_units.py's frames:
                           the gold flare cap, the pipe collars), a Strider's fall line across it, a vent's tell beside it
                           with its rocks' 100 deg fan up the page
+  level-40-callisto-approach  L40 p1 (M10 part F batch): Okafor's chart of the approach: Jupiter's limb and night side
+                          with the fleet's lights rising off it, the picket line across the lane, the lane in white,
+                          three gold glints holding it (the Honour Guard), Callisto's dark disc and its orbital ring
+  level-40-honour-guard   L40 p2: Varga's scan of the three aces from above (tools/art/honour_guard.py's frames) in their
+                          gold hex shields: Harker's sniper line tracking then locked, Vesper's loop and spiral arms,
+                          Kestrel's dive from behind and its pull-out
   design/ui/briefing/concept/briefing-images-final-r13-a.png   review sheet, Act 1 intro + L01-02
   design/ui/briefing/concept/briefing-images-final-r20-a.png   review sheet, L03-04 (M4 batch)
   design/ui/briefing/concept/briefing-images-final-r21-a.png   review sheet, L05 (M4 part E)
@@ -336,6 +342,7 @@ Outputs (assets/ui/briefing/<name>.png, 672x240, textures of their own like the 
   design/ui/briefing/concept/briefing-images-final-r75-a.png   review sheet, L37 (M10 part C)
   design/ui/briefing/concept/briefing-images-final-r76-a.png   review sheet, L38 (M10 part D)
   design/ui/briefing/concept/briefing-images-final-r77-a.png   review sheet, L39 (M10 part E)
+  design/ui/briefing/concept/briefing-images-final-r78-a.png   review sheet, L40 (M10 part F)
   design/ui/briefing/concept/briefing-images-final-r44-a.png   review sheet, L21 (M7 part H)
   design/ui/briefing/concept/briefing-images-final-r51-a.png   review sheet, Act 4 intro + L22 (M8 part B)
   design/ui/briefing/concept/briefing-images-final-r52-a.png   review sheet, L23 (M8 part C)
@@ -8330,6 +8337,108 @@ def level_39_cracking_tower():
     return b
 
 
+# --------------------------------------------------------------------------- M10 part F: Level 40
+
+SOURCE_M10F = artkit.source_note(SCRIPT, "M10 part F batch")
+CALLISTO_HOLO = [(0.0, (6, 8, 14)), (0.4, (30, 34, 44)), (0.75, (78, 84, 96)), (1.0, (150, 156, 168))]
+ICE_A = (190, 220, 240)                                   # Callisto's ice on the display
+
+
+def level_40_callisto_approach():
+    """L40 p1 (M10 part F batch): Okafor's tactical chart of the approach: Jupiter's limb and night side along the
+    bottom left with the fleet's lights rising off it (cyan), the picket line across the lane (red), the lane cleared
+    through it in white, three gold glints holding the lane ahead (the Honour Guard), Callisto's dark disc at the top
+    right with its ice catching Jupiter's light and the orbital ring's relay platforms round it."""
+    b = Board()
+    jr, jcx, jcy = 420, 30, 560                                  # Jupiter's limb low on the left, its night side
+    d = np.hypot(b.xx - jcx, b.yy - jcy)
+    limb = d < jr
+    bands = 0.5 + 0.5 * np.sin((b.yy - jcy) / 9 + 0.5 * np.sin(b.xx / 50))
+    lit = np.clip(0.2 + 0.8 * (jcy - b.yy) / jr - 0.25 * (b.xx - jcx) / jr, 0, 1)
+    jup = raster.ramp(JOV_HOLO, np.clip((0.25 + 0.4 * bands) * lit, 0, 1)) * 0.85
+    b.base = np.where(limb[..., None], jup, b.base)
+    b.base += (np.exp(-((d - jr) / 3) ** 2) * 0.6)[..., None] * np.array((200, 160, 110.0))
+    tag(b, 12, H - 30, "JUPITER", GOLD_A)
+    rng = np.random.default_rng(7801)
+    for _ in range(14):                                          # the fleet's lights, rising off the limb
+        x, y = rng.uniform(40, 230), rng.uniform(150, 228)
+        b.marker(x, y, "dot", CYAN, 2)
+        b.glow(x, y, 4, (20, 90, 120), 0.5)
+    tag(b, 120, 132, "CDF FLEET", CYAN)
+    ccx, ccy, cr = 588, 96, 42                                   # Callisto's dark disc, its ice catching the light
+    nx, ny = (b.xx - ccx) / cr, (b.yy - ccy) / cr
+    inside = nx ** 2 + ny ** 2 < 1
+    tex = raster.fbm(W, H, 10, 7802, octaves=4, period=False)
+    lum = np.clip((0.45 + 0.55 * tex) * np.clip(0.35 - 0.5 * nx + 0.6 * ny, 0.12, 1), 0, 1)
+    b.base = np.where(inside[..., None], raster.ramp(CALLISTO_HOLO, lum), b.base)
+    b.ring(ccx, ccy, cr + 2, colour=ICE_A, alpha=160)
+    b.ring(ccx, ccy, cr + 22, 12, colour=GOLD_A, alpha=140)      # the orbital ring, edge on
+    for a in np.linspace(0, TAU_B, 8, endpoint=False):
+        x, y = ccx + np.cos(a) * (cr + 22), ccy + np.sin(a) * 12
+        b.marker(x, y, "square", GOLD_A, 2)
+    tag(b, ccx - 96, ccy + 52, "CALLISTO - ORBITAL RING", ICE_A)
+    pickets = [(262 + 22 * k, 62 + 17 * k + 5 * np.sin(k)) for k in range(9)]
+    for x, y in pickets:                                         # the picket line across the lane
+        b.marker(x, y, "dot", RED, 3)
+    b.dashed(pickets, RED, 1, 3, 4)
+    tag(b, 382, 190, "PICKET LINE", RED)
+    route = [(150, 222), (240, 186), (330, 128), (420, 100), (500, 92), (544, 92)]
+    b.dashed(route, WHITE, 2, 6, 4)                              # the lane for the fleet
+    b.arrow(500, 92, 544, 92, WHITE, 6)
+    tag(b, 170, 200, "THE LANE", WHITE)
+    for k, (x, y) in enumerate(((448, 88), (470, 108), (488, 82))):  # three gold glints holding the lane
+        b.glow(x, y, 6, (180, 130, 40), 0.9)
+        b.marker(x, y, "dot", GOLD_A, 3)
+    b.ring(468, 94, 30, 22, colour=GOLD_A, alpha=220)
+    tag(b, 404, 50, "HONOUR GUARD - 3 ACES", GOLD_A)
+    b.title("CDF CHART - CALLISTO APPROACH")
+    b.label(W - 10, 9, "CMDR. OKAFOR", CYAN_DIM, right=True)
+    b.label(10, H - 16, "NO GROUND: BOMBS IDLE", RED)
+    return b
+
+
+def level_40_honour_guard():
+    """L40 p2: Varga's scan of the three aces from above (tools/art/honour_guard.py's frames, heading 0, in their own
+    gloss black and gold with their marks), each with its gold hex shield ring and what it does: Harker's sniper line
+    (the red line tracking, locked 0.2 s before it fires), Vesper's loop with its spiral arms, Kestrel's dive from
+    behind with its pull-out; the join order along the bottom."""
+    b = Board()
+    b.title("CDF SCAN - THE HONOUR GUARD")
+    b.label(W - 10, 9, "DR. VARGA", CYAN_DIM, right=True)
+    xs = (112, 336, 560)
+    names = ("HARKER", "VESPER", "KESTREL")
+    roles = ("THE SNIPER", "THE DANCER", "FROM BEHIND")
+    y = 104
+    for k, (x, name, role) in enumerate(zip(xs, names, roles)):
+        ace = held_frame(f"honour-guard-{name.lower()}_0", 1.5, 48)
+        b.ring(x, y, 50, colour=GOLD_A, alpha=110)              # the gold hex shield at 40 %
+        for a in np.linspace(0, TAU_B, 6, endpoint=False):
+            b.line([(x + 50 * np.cos(a), y + 50 * np.sin(a)),
+                    (x + 50 * np.cos(a + TAU_B / 6), y + 50 * np.sin(a + TAU_B / 6))], GOLD_A, 1, 90)
+        b.sprite(ace, x, y)
+        tag(b, x - raster.text_width(name) / 2, 30, name, GOLD_A)
+        tag(b, x - raster.text_width(role) / 2, 42, role, WHITE)
+    hx = xs[0]                                                   # Harker's line: tracking, then locked
+    b.line([(hx, y + 40), (hx - 30, H - 34)], RED, 1, 130)
+    b.line([(hx, y + 40), (hx + 8, H - 34)], RED, 2, 240)
+    tag(b, hx + 14, 168, "TRACKS, LOCKS 0.2 S", RED)
+    vx = xs[1]                                                   # Vesper's loop and its spiral arms
+    b.arc(vx, y + 6, 70, 46, 200, 340, WHITE, 150)
+    for arm in range(2):
+        pts = [(vx + (14 + 6 * t) * np.cos(t * 0.9 + arm * np.pi), y + 70 + (8 + 3 * t) * np.sin(t * 0.9 + arm * np.pi))
+               for t in np.linspace(0, 8, 24)]
+        b.line(pts, AMBER, 1, 200)
+    tag(b, vx - 46, 186, "LOOP: SPIRAL FIRE", AMBER)
+    kx = xs[2]                                                   # Kestrel: from the bottom, dive and pull-out
+    b.dashed([(kx + 20, H - 26), (kx - 30, 170), (kx - 4, 150)], WHITE, 2, 6, 4)
+    b.arrow(kx - 30, 170, kx - 4, 150, WHITE, 6)
+    b.marker(kx - 60, 200, "square", CYAN, 4)
+    tag(b, kx - 76, 210, "YOU", CYAN)
+    tag(b, kx + 10, 168, "DIVE: PULLS OUT", WHITE)
+    b.label(10, H - 16, "ONE BY ONE, THEN TOGETHER. KEEP REAR GUNS.", AMBER)
+    return b
+
+
 IMAGES = {
     "act-1-tether-gate": tether_gate,
     "act-1-outer-stations": outer_stations,
@@ -8446,6 +8555,8 @@ IMAGES = {
     "level-38-harrow": level_38_harrow,
     "level-39-io-flyby": level_39_io_flyby,
     "level-39-cracking-tower": level_39_cracking_tower,
+    "level-40-callisto-approach": level_40_callisto_approach,
+    "level-40-honour-guard": level_40_honour_guard,
 }
 
 # Review sheets per batch: round, the images on it, the batch name.
@@ -8487,6 +8598,7 @@ BATCHES = {
     "r75": (list(IMAGES)[109:111], "M10 PART C"),
     "r76": (list(IMAGES)[111:113], "M10 PART D"),
     "r77": (list(IMAGES)[113:115], "M10 PART E"),
+    "r78": (list(IMAGES)[115:117], "M10 PART F"),
 }
 
 
@@ -8524,6 +8636,7 @@ def build(names):
                   else SOURCE_M10C if name in BATCHES["r75"][0]
                   else SOURCE_M10D if name in BATCHES["r76"][0]
                   else SOURCE_M10E if name in BATCHES["r77"][0]
+                  else SOURCE_M10F if name in BATCHES["r78"][0]
                   else SOURCE_M4)
         artkit.save_png(IMAGES[name]().image(), OUT / f"{name}.png", source)
     print(f"{len(names)} briefing images in {OUT.relative_to(ROOT)}")

@@ -477,7 +477,8 @@ the sections and the pod's and the canister's `debris`. Prompts and briefs: [con
       patch (as Level 14's supply drone), the brackets only mark it; every shot, bullet and dash passes it (decided
       2026-11-01; the simulation's opening chunk, step DE6s; the data's `opens_at: 270`, loaded and checked, the patch
       released on every flown run: `LightningBeltDataTest`, `Level38Test`, step DE6c)
-- [ ] Round 76 L.1 b in the game: no latch overlay drawn on a chunk that opens by itself (the art needs nothing new)
+- [x] Round 76 L.1 b in the game: no latch overlay drawn on a chunk that opens by itself (the art needs nothing new;
+      step F4: `PropPasses` skips the latch, the release plays on `DEBRIS_RELEASED`)
 - [ ] Round 76 L.3 a: Rook's armour in Levels 38 and 39 settled in M10 part I's Act 6 balance (decided 2026-11-01)
 
 ## Open questions

@@ -42,12 +42,28 @@ class BossWarningBoxTest {
     /** A boss's box in a flown level: when it opened and how long it showed. */
     record Box(String level, String boss, double opened, double shown, boolean ahead, String closedBy) {}
 
+    /**
+     * M10 part F: Level 40's mid-boss has a track of its own (the music plan's hook (2)): the sting in the warning's
+     * place, then the duel theme; no box, no klaxon ({@code LevelMusic#midBossTrack}).
+     */
+    @Test
+    void aMidBossWithItsOwnTrackPlaysTheStingAsItsWarning() {
+        LevelData level = CONTENT.level(CONTENT.levelKey(40).orElseThrow());
+        LevelScreen.BossMusic names = LevelScreen.bossMusic(level.music()).orElseThrow();
+        org.junit.jupiter.api.Assertions.assertTrue(names.midBoss(), "a mid-boss's own track");
+        org.junit.jupiter.api.Assertions.assertEquals(java.util.Optional.of("miniboss-sting"), names.warning());
+        org.junit.jupiter.api.Assertions.assertEquals(java.util.Optional.of("duel-theme"), names.track());
+    }
+
     @Test
     void everyActBossBoxShowsAndNeverStaysOverTheFight() {
         List<Box> boxes = new ArrayList<>();
         for (String key : CONTENT.levels().keySet().stream().sorted().toList()) {
             LevelData level = CONTENT.level(key);
-            if (LevelScreen.bossMusic(level.music()).isEmpty()) {
+            // M10 part F: a mid-boss with a track of its own (Level 40's duel theme) shows no box.
+            if (LevelScreen.bossMusic(level.music())
+                    .filter(music -> !music.midBoss())
+                    .isEmpty()) {
                 continue;
             }
             boxes.add(fly(key));

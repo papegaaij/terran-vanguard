@@ -40,6 +40,7 @@ import static vanguard.game.level.RadioTimeline.LEVEL_36;
 import static vanguard.game.level.RadioTimeline.LEVEL_37;
 import static vanguard.game.level.RadioTimeline.LEVEL_38;
 import static vanguard.game.level.RadioTimeline.LEVEL_39;
+import static vanguard.game.level.RadioTimeline.LEVEL_40;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -75,7 +76,7 @@ final class RadioRuns {
     /**
      * Act 6, Jovian Storm (M10 part B, step B4): Level 36 ({@link #level36Runs}); M10 part C, step C4b: Level 37
      * ({@link #level37Runs}); M10 part D, step D4: Level 38 ({@link #level38Runs}); M10 part E, step E4: Level 39
-     * ({@link #level39Runs}).
+     * ({@link #level39Runs}); M10 part F, step F4: Level 40 ({@link #level40Runs}).
      */
     static Map<String, List<List<Event>>> act6() {
         Map<String, List<List<Event>>> runs = new LinkedHashMap<>();
@@ -83,7 +84,73 @@ final class RadioRuns {
         runs.put(LEVEL_37, level37Runs());
         runs.put(LEVEL_38, level38Runs());
         runs.put(LEVEL_39, level39Runs());
+        runs.put(LEVEL_40, level40Runs());
         return runs;
+    }
+
+    /**
+     * M10 part F (step F4): Level 40's runs (Rook flies with every fit that has the escort; his lines {@code requires:
+     * escort}). Sentry Two's recorder shot open as its tow drifts down the left edge (t≈52-58); the duel from the sting
+     * (the arrival at t=102, then the halt): Vesper joining 20 s in (or at Harker's 2/3 HP, earlier), Kestrel 4 s
+     * after, the first loss spoken by the senior survivor, Harker's death (Rook's "for Ceres") whenever it comes, the
+     * second loss's "Just us now" by the last ace, the kill ({@code honour-guard}): a typical duel (Vesper first,
+     * Harker second), Harker first, Harker last (his death is the kill: his line comes with it, after the boss's), a
+     * fast one with the joins by HP, and one where Harker dies before Vesper crossed (no first-loss line).
+     */
+    static List<List<Event>> level40Runs() {
+        Event arrival = new Event(102, CueTrigger.BOSS_ARRIVAL, "");
+        Event secret = new Event(54, CueTrigger.SECRET, "Sentry Two's recorder");
+        CueTrigger phase = CueTrigger.BOSS_PHASE;
+        CueTrigger kill = CueTrigger.BOSS_DESTROYED;
+        String guard = "honour-guard";
+        return List.of(
+                List.of(),
+                // Typical: Vesper first, Harker second, Kestrel last.
+                List.of(
+                        secret,
+                        arrival,
+                        Event.inArena(20, phase, "vesper-joins"),
+                        Event.inArena(24, phase, "kestrel-joins"),
+                        Event.inArena(34, phase, "first-loss-harker"),
+                        Event.inArena(47, phase, "harker-down"),
+                        Event.inArena(47, phase, "last-ace-kestrel"),
+                        Event.inArena(62, kill, guard)),
+                // Harker first, Kestrel second, Vesper last.
+                List.of(
+                        arrival,
+                        Event.inArena(20, phase, "vesper-joins"),
+                        Event.inArena(24, phase, "kestrel-joins"),
+                        Event.inArena(30, phase, "harker-down"),
+                        Event.inArena(30, phase, "first-loss-vesper"),
+                        Event.inArena(45, phase, "last-ace-vesper"),
+                        Event.inArena(60, kill, guard)),
+                // Harker last: his death is the kill, his line raised after the boss's event in the same step.
+                List.of(
+                        secret,
+                        arrival,
+                        Event.inArena(20, phase, "vesper-joins"),
+                        Event.inArena(24, phase, "kestrel-joins"),
+                        Event.inArena(35, phase, "first-loss-harker"),
+                        Event.inArena(48, phase, "last-ace-harker"),
+                        Event.inArena(61, kill, guard),
+                        Event.inArena(61, phase, "harker-down")),
+                // Fast, the joins by HP: Harker first.
+                List.of(
+                        arrival,
+                        Event.inArena(12, phase, "vesper-joins"),
+                        Event.inArena(15, phase, "kestrel-joins"),
+                        Event.inArena(22, phase, "harker-down"),
+                        Event.inArena(22, phase, "first-loss-vesper"),
+                        Event.inArena(33, phase, "last-ace-kestrel"),
+                        Event.inArena(44, kill, guard)),
+                // Harker down before Vesper crossed: no first-loss line; she joins at once.
+                List.of(
+                        arrival,
+                        Event.inArena(9, phase, "harker-down"),
+                        Event.inArena(9.5, phase, "vesper-joins"),
+                        Event.inArena(13.5, phase, "kestrel-joins"),
+                        Event.inArena(28, phase, "last-ace-kestrel"),
+                        Event.inArena(41, kill, guard)));
     }
 
     /**

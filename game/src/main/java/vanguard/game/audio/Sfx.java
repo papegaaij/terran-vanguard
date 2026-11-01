@@ -1368,15 +1368,53 @@ public enum Sfx {
      */
     ROCK_THUD("sfx/rock-thud-r77-a.ogg", 2, Bus.EFFECTS, EXPLOSION),
     /**
-     * M10 part E, step E4 (round 77 a until the pick): a cracking tower's collapse over its {@code large} rung (a metal
-     * groan, a blast 0.7 s in, the crash of its fall, 3.4 s), shot or crushed ({@link UnitCues}).
+     * M10 part E, step E4 (round 77 S.3 b, the user's pick; step F4): a cracking tower's collapse over its {@code large}
+     * rung (a slow grinding buckle, a boom 0.6 s in, the deeper, muffled crash of its fall, 3.5 s), shot or crushed
+     * ({@link UnitCues}).
      */
-    TOWER_COLLAPSE("sfx/tower-collapse-r77-a.ogg", 2, Bus.EFFECTS, EXPLOSION),
+    TOWER_COLLAPSE("sfx/tower-collapse-r77-b.ogg", 2, Bus.EFFECTS, EXPLOSION),
     /**
      * M10 part E, step E4 (round 77 a until the pick): a pump station's blast over its {@code small} rung (a pressure line
      * bursting, 1.1 s; {@link UnitCues}).
      */
     PUMP_BLAST("sfx/pump-blast-r77-a.ogg", 2, Bus.EFFECTS, EXPLOSION),
+    /**
+     * M10 part F, step F4 (round 78 S.1 a until the pick): an ace's fly-by (a real jet's short pass with its doppler):
+     * Harker or Vesper passing near the ship, Vesper's roll and ribbon passes ({@link HonourGuardCues}).
+     */
+    ACE_FLYBY("sfx/ace-flyby-r78-a.ogg", 2, Bus.EFFECTS, BOSS),
+    /** M10 part F (round 78 S.2 a until the pick): Kestrel's rougher fly-by, its climb back after a pull-out. */
+    KESTREL_FLYBY("sfx/kestrel-flyby-r78-a.ogg", 2, Bus.EFFECTS, BOSS),
+    /**
+     * M10 part F (round 78 S.3 a until the pick): Harker's sniper charge (a rising electric whine, 1.0 s) under the red
+     * line's telegraph, cut by the shot ({@link SovereignCues}' boss lines in a squadron's level).
+     */
+    SNIPER_CHARGE("sfx/sniper-charge-r78-a.ogg", 2, Bus.EFFECTS, WARNING),
+    /** M10 part F (round 78 S.4 a until the pick): the sniper line firing (a hard crack, a short sizzling tail). */
+    SNIPER_SHOT("sfx/sniper-shot-r78-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
+    /** M10 part F (round 78 S.5 a until the pick): Kestrel's dive scream, from the dive's start to its pull-out. */
+    KESTREL_DIVE("sfx/kestrel-dive-r78-a.ogg", 1, Bus.EFFECTS, BOSS),
+    /** M10 part F (round 78 S.6 a until the pick): Kestrel's pull-out roar (an afterburner cutting in). */
+    KESTREL_PULLOUT("sfx/kestrel-pullout-r78-a.ogg", 1, Bus.EFFECTS, BOSS),
+    /**
+     * M10 part F (round 78 S.7 a until the pick): Vesper's spiral cannon (a light autocannon's fast rhythm, a 2 s loop),
+     * looped through her loop, panned with her.
+     */
+    VESPER_CANNON("sfx/vesper-cannon-r78-a.ogg", 1, Bus.EFFECTS, BOSS),
+    /** M10 part F (round 78 S.8 a until the pick): an ace at 0 (an engine failing, metal tumbling), over its rung. */
+    ACE_DEATH("sfx/ace-death-r78-a.ogg", 2, Bus.EFFECTS, EXPLOSION),
+    /** M10 part F (round 78 S.9 a until the pick): the last ace's 2 s chain of deep detonations round its hull. */
+    ACE_LAST_CHAIN("sfx/ace-last-chain-r78-a.ogg", 1, Bus.EFFECTS, EXPLOSION),
+    /**
+     * M10 part F (round 78 S.10 a until the pick): Sentry Two's recorder broken open (a small metal housing splitting
+     * with an electrical fizz), over the crate's break ({@link AllyCues}' tows, Level 40).
+     */
+    RECORDER_CRACK("sfx/recorder-crack-r78-a.ogg", 1, Bus.EFFECTS, EXPLOSION),
+    /**
+     * M10 part F (round 78 S.11 a until the pick): the fleet's distant comms and engine rumble (a 16 s loop), an ambience
+     * layer over the belt's open bed in Level 40's section 1 ({@code ambience_layers: fleet-comms}).
+     */
+    AMBIENCE_FLEET_COMMS("sfx/fleet-comms-r78-a.ogg", 1, Bus.EFFECTS, AMBIENCE),
     /**
      * M10 part C, step C4b (round 75 S.1 b, chosen; step C6b): Aurelia's public-address chime (three tones stepping
      * down, a second apart, 3.6 s) as each shuttle pair is called to its pads, with the HOLD FIRE banner ({@link
@@ -1568,6 +1606,8 @@ public enum Sfx {
             case "aurelia-burning" -> AURELIA_BURNING;
             // M10 part E: Io's refineries (Level 39).
             case "io-refinery" -> AMBIENCE_IO_REFINERY;
+            // M10 part F: the fleet's comms and engines, a layer over the open bed (Level 40's section 1).
+            case "fleet-comms" -> AMBIENCE_FLEET_COMMS;
             default -> throw new IllegalArgumentException("no ambience for " + setting + " yet");
         };
     }

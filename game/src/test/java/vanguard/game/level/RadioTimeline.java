@@ -98,6 +98,7 @@ abstract class RadioTimeline {
     static final String LEVEL_37 = "act-6-jovian-storm/level-37-fall-of-aurelia";
     static final String LEVEL_38 = "act-6-jovian-storm/level-38-lightning-belt";
     static final String LEVEL_39 = "act-6-jovian-storm/level-39-io-flyby";
+    static final String LEVEL_40 = "act-6-jovian-storm/level-40-honour-guard";
 
     /** Rook's sides: a {@code {side}} line is played with each one's text. */
     static final List<String> SIDES = VoiceLines.SIDES;

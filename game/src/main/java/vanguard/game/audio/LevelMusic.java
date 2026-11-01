@@ -70,6 +70,13 @@ import java.util.function.IntToDoubleFunction;
  * #BOSS_DROP_IN_SECONDS} s after the lunge); after the kill the theme comes back as its motif stem alone for the run
  * ({@link #motifAfterBoss}, the level's {@code music.motif_after_boss}); the reveal sting (track 30) plays once over the
  * ambience at the cruisers' rise ({@link #reveal}).
+ *
+ * <p>M10 part F (Level 40, the music plan's hook (2)): a mid-boss with a track of its own ({@link #midBoss}: the
+ * level's {@code boss_track} after its {@code boss_sting}, no {@code boss_warning}) plays as an act boss's music with the
+ * sting in the warning's place (track 21, then track 32 "Three Aces" on its end, one stream), without the klaxon and
+ * the banner; at the kill its track fades out in a second and the level theme comes back with the stems the level's
+ * {@code track_after_boss} names ({@code full} or {@code base}), over the timed changes before it, fading in over
+ * {@value #MID_BOSS_RETURN_SECONDS} s.
  */
 public final class LevelMusic implements Disposable {
     private static final float MUSIC_VOLUME = 0.6f;
@@ -530,6 +537,36 @@ public final class LevelMusic implements Disposable {
     private double themeInLength;
     private double themeInLeft;
 
+    /** M10 part F: the level theme's fade-in after a mid-boss's own track, s. */
+    static final double MID_BOSS_RETURN_SECONDS = 2;
+    /**
+     * M10 part F: a mid-boss's track ({@link #midBoss}): the stems the theme comes back with after its kill ({@code
+     * full} or {@code base}); null for an act boss's music or none.
+     */
+    private String midBossStems;
+    /** M10 part F: whether the theme is back after a mid-boss's track (its kill), over the stem times before it. */
+    private boolean midBossBack;
+
+    /**
+     * M10 part F (Level 40): the level's boss music is a mid-boss's ({@code boss_track} after its {@code boss_sting}),
+     * the theme coming back after its kill with {@code stems} ({@code full} or {@code base}, the level's {@code
+     * track_after_boss}).
+     */
+    public LevelMusic midBoss(String stems) {
+        midBossStems = stems;
+        return this;
+    }
+
+    /** M10 part F: whether the boss music is a mid-boss's own track (no klaxon, no banner at its arrival). */
+    public boolean midBossTrack() {
+        return midBossStems != null && boss.isPresent();
+    }
+
+    /** M10 part F: whether the theme is back after a mid-boss's track, for the tests. */
+    boolean midBossBack() {
+        return midBossBack;
+    }
+
     /** M10 part C: the level's theme changes ({@code music.themes}), in time order. */
     public LevelMusic themes(List<Theme> changes) {
         themes = List.copyOf(changes);
@@ -666,6 +703,12 @@ public final class LevelMusic implements Disposable {
             if (time.db().isPresent()) {
                 db = time.db().get();
             }
+        }
+        if (midBossBack) {
+            // M10 part F: after a mid-boss's own track the theme is back with its stems, the changes before it over.
+            stemsName = midBossStems;
+            db = 0;
+            eased = false;
         }
         boolean timed = due >= themeFirstStem && due >= 0;
         double fade = timed && eased ? stemTimes.get(due).fade() : 0;
@@ -936,7 +979,7 @@ public final class LevelMusic implements Disposable {
         if (music.isEmpty()
                 && !cut
                 && fade < 0
-                && (bossState == BossState.WAITING || (afterMode && afterLevel > 0))
+                && (bossState == BossState.WAITING || (afterMode && afterLevel > 0) || midBossBack)
                 && levelSeconds < ambienceFrom
                 && !(levelSeconds >= jingleAt)
                 && section >= startSection
@@ -1125,6 +1168,15 @@ public final class LevelMusic implements Disposable {
         if (bossMusic.isPresent()) {
             bossOut = FADE_SECONDS;
         }
+        if (midBossStems != null) {
+            // M10 part F: the level theme comes back (a new stream at the next update), fading in.
+            midBossBack = true;
+            stopTheme();
+            stemTime = -2;
+            themeIn = 0;
+            themeInLength = MID_BOSS_RETURN_SECONDS;
+            themeInLeft = MID_BOSS_RETURN_SECONDS;
+        }
     }
 
     /** A Retry from boss restarts the level at the boss checkpoint: the theme waits for the boss's arrival. */
@@ -1133,6 +1185,7 @@ public final class LevelMusic implements Disposable {
             bossState = BossState.HELD;
             bossDropped = false;
             bossDropGain = 1;
+            midBossBack = false;
             stopTheme();
         }
     }
@@ -1223,6 +1276,7 @@ public final class LevelMusic implements Disposable {
         themeIn = 1;
         themeInLeft = 0;
         themeInLength = 0;
+        midBossBack = false;
         stemTime = -1;
         applyStemTime(-1, false);
         timedGain = 1;

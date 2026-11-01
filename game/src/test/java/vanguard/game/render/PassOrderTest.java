@@ -167,6 +167,8 @@ class PassOrderTest {
             ceres(sortie).drawGlints(batch, sortie, alpha, banks)
             blend(SRC_ALPHA, ONE_MINUS_SRC_ALPHA)
             setPieces.drawSetPieces(batch, sortie, alpha, seconds, false)
+            honourGuard.draw(batch, sortie, alpha, play.whiteFlash)
+            honourGuard.drawGlows(batch, sortie, alpha)
             setPieces.drawSpire(batch, sortie, wrecks, alpha, scroll, SpirePass.AIR)
             setPieces.drawWrecks(batch, sortie, wrecks, alpha, seconds)
             vacuumDeaths.drawWrecks(batch, sortie.tick(), alpha, scroll)
@@ -242,6 +244,7 @@ class PassOrderTest {
             sovereign.drawThrown(batch, sortie, alpha)
             sovereign.drawLines(batch, sortie, alpha)
             massRelay.draw(batch, sortie, alpha)
+            honourGuard.drawLines(batch, sortie, alpha)
             walker.drawMissiles(batch, sortie, alpha)
             diamonds.draw(batch, sortie, alpha)
             hunters(sortie).drawTorpedoes(batch, sortie, alpha)
@@ -249,7 +252,9 @@ class PassOrderTest {
             massRelay.drawFlash(batch, sortie, alpha, play.whiteFlash)
             screenFlash.draw(batch, sprites.pixel, alpha, play.whiteFlash)
             warnings.draw(batch, sortie.tick(), alpha)
+            honourGuard.drawTells(batch, sortie, alpha)
             credits.draw(batch, font)
+            honourGuard.drawBar(batch, font, sortie)
             setPieces.drawBossBar(batch, sortie)
             """;
 

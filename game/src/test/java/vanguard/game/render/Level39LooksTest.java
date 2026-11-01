@@ -80,7 +80,7 @@ class Level39LooksTest {
     void theRefinerysOwnSounds() {
         assertEquals(Sfx.AMBIENCE_IO_REFINERY, Sfx.ambience("io-refinery"));
         assertEquals("sfx/io-refinery-r72-a.ogg", Sfx.AMBIENCE_IO_REFINERY.path());
-        assertEquals("sfx/tower-collapse-r77-a.ogg", Sfx.TOWER_COLLAPSE.path());
+        assertEquals("sfx/tower-collapse-r77-b.ogg", Sfx.TOWER_COLLAPSE.path());
         assertEquals("sfx/pump-blast-r77-a.ogg", Sfx.PUMP_BLAST.path());
     }
 

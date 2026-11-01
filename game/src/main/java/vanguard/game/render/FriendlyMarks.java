@@ -21,7 +21,9 @@ import vanguard.sim.Sortie;
  * geometry in play-field pixels, y up. M10 part C (design/campaign Level 37, The shuttles): a level's air allies
  * outside the objectives (Level 37's Halcyon shuttles: not {@code neutral}, enemy fire hits them) are marked too, from
  * their pads to their climb out ({@link #markedAlly}). M10 part D (design/campaign Level 38): a debris chunk the level
- * marks ({@code marked}: the CDF supply canister on its parachute) is bracketed too ({@link #markedChunk}).
+ * marks ({@code marked}: the CDF supply canister on its parachute) is bracketed too ({@link #markedChunk}). M10 part F
+ * (design/campaign Level 40): a supply drone carrying a {@code marked} drop is bracketed through its flight ({@link
+ * #drones}, at {@link DroneLooks}' place for it).
  */
 public final class FriendlyMarks {
     /** The tag under the brackets. */
@@ -51,6 +53,12 @@ public final class FriendlyMarks {
     private final int[] ys = new int[MAX];
     private final int[] halves = new int[MAX];
     private int count;
+    /** M10 part F: the marked drops whose drones are bracketed (their drones fly in from below the bottom edge). */
+    private java.util.List<vanguard.content.LevelData.Drop> drones = java.util.List.of();
+
+    private final float[] at = new float[2];
+    /** M10 part F: a supply drone's half size for the brackets (its 40 px sprite, a 28 px body). */
+    static final int DRONE_HALF = 14;
 
     /**
      * @param pixel a white pixel
@@ -59,6 +67,18 @@ public final class FriendlyMarks {
     public FriendlyMarks(TextureRegion pixel, BitmapFont font) {
         this.pixel = pixel;
         this.font = font;
+    }
+
+    /**
+     * M10 part F: the level's drops ({@code drops}): those {@code marked} and carried by a drone ({@link DroneLooks}, no
+     * defended ally's helipad) get the brackets while their drone flies on the screen.
+     */
+    public FriendlyMarks drones(java.util.List<vanguard.content.LevelData.Drop> drops) {
+        drones = drops.stream()
+                .filter(vanguard.content.LevelData.Drop::isMarked)
+                .filter(drop -> !IceCrawlerLooks.carried(drop) && !BuoyLooks.moored(drop))
+                .toList();
+        return this;
     }
 
     /** Whether {@code enemy}, shown at ({@code x}, {@code y}), gets the brackets: a neutral craft on the screen. */
@@ -141,6 +161,22 @@ public final class FriendlyMarks {
                 ys[count] = (int) Math.round(y);
                 halves[count] = (int) Math.round(Math.max(size.width(), size.height()) / 2) + MARGIN;
                 count++;
+            }
+        }
+        if (!drones.isEmpty()) {
+            // M10 part F (design/campaign Level 40): the marked supply drones in flight, where DroneLooks draws them.
+            double seconds = sortie.levelSeconds();
+            for (int i = 0; i < drones.size() && count < MAX; i++) {
+                var drop = drones.get(i);
+                if (DroneLooks.position(
+                                seconds - drop.t(), i, (float) drop.x(), -DroneLooks.BELOW_EDGE, drop.x(), drop.y(), at)
+                        && at[1] + DRONE_HALF > 0
+                        && at[1] - DRONE_HALF < PlayField.HEIGHT) {
+                    xs[count] = Math.round(at[0]);
+                    ys[count] = Math.round(at[1]);
+                    halves[count] = DRONE_HALF + MARGIN;
+                    count++;
+                }
             }
         }
         for (int i = 0; i < sortie.enemyCount() && count < MAX; i++) {
