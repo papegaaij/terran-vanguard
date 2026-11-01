@@ -163,7 +163,7 @@ speakers`, through `tools/art/portraits.py`'s pipeline). Prompts:
 | File | What | Status |
 |---|---|---|
 | [concept/act6-speakers-r72-a.png](concept/act6-speakers-r72-a.png) | A, the plain channel screens: Harker in the guard's black and gold suit (his final L29 face, the crest on the collar), Vesper (black helmet, white ribbon stripes, gold visor up), Kestrel (black and gold chevrons, a red band) on the amber enemy channel, Aurelia Traffic (white-and-gold civil uniform, headset) on the teal channel; 1×, 3× and beside the production speakers | chosen (round 72 A.15 a) |
-| [concept/portraits-final-r75-a.png](concept/portraits-final-r75-a.png) | Review sheet (`tools/art/portraits.py aurelia-traffic`, M10 part C, step ART-C1): `radio-aurelia-traffic-neutral`, Aurelia Traffic (teal; A.15 a's bust on the plain channel screen, as production art) at 1×, 2× and 4× and at 1× beside the other radio speakers | proposed (round 75) |
+| [concept/portraits-final-r75-a.png](concept/portraits-final-r75-a.png) | Review sheet (`tools/art/portraits.py aurelia-traffic`, M10 part C, step ART-C1): `radio-aurelia-traffic-neutral`, Aurelia Traffic (teal; A.15 a's bust on the plain channel screen, as production art) at 1×, 2× and 4× and at 1× beside the other radio speakers | chosen (round 75 F.10 accept) |
 | [concept/portraits-final-r78-a.png](concept/portraits-final-r78-a.png) | Review sheet (`tools/art/portraits.py harker-guard vesper kestrel`, M10 part F, step ART-F1): `radio-harker-guard-neutral` (Harker in the guard's gloss black and gold suit, the crest on the collar; Level 29's `radio-harker-neutral` stays), `radio-vesper-neutral`, `radio-kestrel-neutral` (amber; A.15 a's busts on the plain channel screen, as production art) at 1×, 2× and 4× and at 1× beside Level 29's Harker, Vorne and the other radio speakers | proposed (round 78) |
 
 Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
@@ -214,3 +214,4 @@ Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
   channel; b "their rooms" rejected, in `concept/rejected/`); the voices are V.1 b (Vesper, Jenny Bradshaw), V.2 a
   (Kestrel, Expatriate), V.3 b (Aurelia Traffic, Lizzie Driver), V.4 ok (Harker on David Clarke's voice); the story
   documents approved as drafted (D.17).
+- 2026-11-01, round 75 (user, page answers, no notes): Aurelia Traffic's radio portrait accepted (F.10: `radio-aurelia-traffic-neutral`, round 72 A.15 a in production) and **V.2 a**: she keeps her one neutral portrait, her lines steady and frayed toward the end by the words alone (the careful, formal base row of round 73 R.3's sign-off); fierce and grim portraits (V.2 b) not drawn.

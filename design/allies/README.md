@@ -28,8 +28,14 @@ equipment, see [wingmen](../player/wingmen/README.md).
 
 ### Common rules
 
-- **Player fire never hurts allies.** The player's and Rook's shots, the Airstrike and other
-  specials pass through or over them.
+- **Player fire never hurts allies**, with one opt-in exception. The player's and Rook's shots, the
+  Airstrike and other specials pass through or over them. A level's air allies may instead **take the
+  player's fire** (`player_hits`, off if not given), as Act 5's marked neutral craft do: shots, beams,
+  blasts and the specials' damage hurt one the guns reach, a shot-down ally is a lost ally, Rook's fire
+  still passes and the homing weapons never pick one. [Level 10](../campaign/act-2-homefront/level-10-evacuation-corridor/README.md)'s
+  shuttles keep the rule (they are never in the guns' way); [Level 37](../campaign/act-6-jovian-storm/level-37-fall-of-aurelia/README.md#the-shuttles)'s
+  take the player's fire (round 75 F.3, the user's decision 2026-11-01: a friendly craft in the line of fire cannot be
+  fired through), so each slides aside to its own side edge after about 3 s on station and climbs out there.
 - **Layers** follow the [layer model](../art-direction/README.md#parallax-layer-model): `air`
   allies are on the player's plane and are hit by enemy bullets like the player; `ground`
   allies (vehicles, ships, structures) lie below it and are only hurt by what their spec lists,
@@ -172,9 +178,9 @@ Prompts and briefs: [concept/prompts.md](concept/prompts.md). Generator:
 | [concept/rejected/convoy-ships-r33-b.png](concept/rejected/convoy-ships-r33-b.png), [.gif](concept/rejected/convoy-ships-r33-b.gif) | Convoy ship pair b, "Reactor run" (`tools/art/convoy_ships.py --variant b`, production quality): a rust-red heavy-lift carrier with its bridge forward and reactor cargo, and a CDF stealth trimaran frigate; the same sets; review files only | rejected |
 | [concept/rejected/relay-r35-a.png](concept/rejected/relay-r35-a.png), [.gif](concept/rejected/relay-r35-a.gif) | Nansen Relay a "ice station" (`tools/art/relay.py`, production quality, M5 part G, round 35): 96×96 intact / damaged / critical / destroyed, the grid-online light sequence, fire, smoke column, HUD pip; the loop: hits, smoke, fire, power-down, grid online | rejected |
 | [concept/relay-r35-b.png](concept/relay-r35-b.png), [.gif](concept/relay-r35-b.gif) | Nansen Relay b "grid node" (hardened blockhouse, three phased-array faces): as a | chosen |
-| [concept/aurelia-shuttle-final-r75-a.png](concept/aurelia-shuttle-final-r75-a.png), [.gif](concept/aurelia-shuttle-final-r75-a.gif) | The evacuation shuttle in Aurelia's civil livery a (Level 37's shuttles; `tools/art/aurelia_units.py shuttle`, M10 part C, step ART-C1, round 75 QC-3 a): Level 10's model and sets frame for frame (`evacuation-shuttle-aurelia*`: banks, damaged, liftoff, glide; Level 10's flames, flare, pip and pivots), white with a gold band in place of the evac chevron and the city's crest (a gold ring round a dark field with a small gold dome) in place of the CDF spine stripe; on the bright and the burnt deck beside Level 10's scheme, a Talon and a Gilded Gunship, greyscale; the loop: a pair lifting off its pads, holding its stations on the sway and climbing out | proposed (round 75) |
-| [concept/aurelia-shuttle-r75-b.png](concept/aurelia-shuttle-r75-b.png) | Aurelia's livery b (proposal sheet, production quality): a gold hull with white trim (the band and the crest's ring white); the same rows | proposed (round 75) |
-| [concept/shuttle-capture-r75-a.png](concept/shuttle-capture-r75-a.png), [.gif](concept/shuttle-capture-r75-a.gif) | In Level 37 (step C5, the [recipe](concept/prompts.md#shuttle-capture-r75-a)): Halcyon One and Two under the `FRIENDLIES INBOUND — HOLD FIRE` banner on their pads, lifting, on station and climbing out with the green `FRIENDLY` brackets, the `SHUTTLES 0 / 5` tracker in the left panel | proposed (round 75 F.3) |
+| [concept/aurelia-shuttle-final-r75-a.png](concept/aurelia-shuttle-final-r75-a.png), [.gif](concept/aurelia-shuttle-final-r75-a.gif) | The evacuation shuttle in Aurelia's civil livery a (Level 37's shuttles; `tools/art/aurelia_units.py shuttle`, M10 part C, step ART-C1, round 75 QC-3 a): Level 10's model and sets frame for frame (`evacuation-shuttle-aurelia*`: banks, damaged, liftoff, glide; Level 10's flames, flare, pip and pivots), white with a gold band in place of the evac chevron and the city's crest (a gold ring round a dark field with a small gold dome) in place of the CDF spine stripe; on the bright and the burnt deck beside Level 10's scheme, a Talon and a Gilded Gunship, greyscale; the loop: a pair lifting off its pads, holding its stations on the sway and climbing out | chosen (round 75 F.3 a) |
+| [concept/rejected/aurelia-shuttle-r75-b.png](concept/rejected/aurelia-shuttle-r75-b.png) | Aurelia's livery b (proposal sheet, production quality): a gold hull with white trim (the band and the crest's ring white); the same rows | rejected (round 75 F.3 a) |
+| [concept/shuttle-capture-r75-a.png](concept/shuttle-capture-r75-a.png), [.gif](concept/shuttle-capture-r75-a.gif) | In Level 37 (step C5, the [recipe](concept/prompts.md#shuttle-capture-r75-a)): Halcyon One and Two under the `FRIENDLIES INBOUND — HOLD FIRE` banner on their pads, lifting, on station and climbing out with the green `FRIENDLY` brackets, the `SHUTTLES 0 / 5` tracker in the left panel | chosen (round 75 F.3: the capture shows the first build, the shuttles flying on the middle lane under the fire; round 75's note led to the aside path, see the Decisions) |
 
 ## Implementation
 
@@ -216,6 +222,7 @@ Prompts and briefs: [concept/prompts.md](concept/prompts.md). Generator:
       `assets/` (claimed by the drops) in G4; Level 13's drone arc in G6 (`DroneLooks`: 4 s up from the
       relay's helipad to the drop, the patch in its bay, back with its clamps open; its launch sound);
       Level 14's in H9 (its `drops`, the drone in from below the bottom edge and back, `Level14LooksTest`)
+- [x] Air allies that take the player's fire (round 75 F.3; `player_hits`, opt-in per level, Level 37's shuttles: the simulation `16ffc420`, the data and `ShuttleLaneTest` `12899be1`, the hit spark `770065c7`)
 
 ## Open questions
 
@@ -370,3 +377,10 @@ Prompts and briefs: [concept/prompts.md](concept/prompts.md). Generator:
 - 2026-10-27 (Act 5 design phase, step `m9-d-levels-2`; approved in round 60): the
   [mining tug](mining-tug/README.md) added as its own draft document for Level 31 (Q4 a; the L31 build gap
   check's Q-D1 a and Q-D2 a): a `huge` hull of three sections, hurt only by hooked attacks.
+- 2026-11-01, round 75 (user): the Aurelia livery **a** (F.3: white with a gold band and the city's crest; **b**, the gold
+  hull with white trim, rejected, the sheet moved to `concept/rejected/`). With a note on the live capture, which let
+  the player fire through the friendlies: **air allies may take the player's fire** (`player_hits`, opt-in; *Common rules*):
+  Level 37's shuttles do (a shot-down shuttle is a lost shuttle, a spark marks the hit), Level 10's do not; after
+  about 3 s on station each Level 37 shuttle slides aside and a little down to its own side edge and climbs out there,
+  so none stands in the player's line of fire (built in steps C6s and C6a, commit `16ffc420`: the aside path; the
+  shuttles' keys, `ShuttleLaneTest`, `12899be1`; the spark on a hit, `770065c7`).

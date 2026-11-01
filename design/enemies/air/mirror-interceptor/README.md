@@ -2,7 +2,7 @@
 title: Mirror Interceptor
 design: approved
 implementation: done
-art: chosen
+art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../player/specials, ../../../player/weapons, ../../../player/shields, ../../../art-direction, ../../../campaign/act-6-jovian-storm]
 updated: 2026-11-01
 ---
@@ -87,9 +87,9 @@ Round 72's proposals (step ART-R-A, picked 2026-10-31; generator `tools/concept/
 | [concept/mirror-interceptor-r72-a.gif](concept/mirror-interceptor-r72-a.gif) | A side entry (edge-warned): its flank on the way in, the bounce at its 7 s station (slow magenta bullets, one per 0.15 s), two pod bursts, the flank again as it leaves, the kill and the falling silver shards | chosen (round 72 A.2 a) |
 | [concept/mirror-capture-r73-a.png](concept/mirror-capture-r73-a.png) | Game capture (the A4 rig; stand-in sprite, A3a's code-drawn plate): the Ion Beam L5 on the mirror over the cream bands, the plate heating to white, the break and its shards, the beam on the hull while it is down, the regrown plate bouncing the pods' bursts, 2×; the plasma arc earthed on its face over round 72's grade | chosen (round 73 F.6 accept) |
 | [concept/mirror-capture-r73-a.gif](concept/mirror-capture-r73-a.gif) | Heat, break, down time and regrowth under the beam, 2×, 30 fps | chosen (round 73 F.6 accept) |
-| [concept/mirror-interceptor-final-r75-a.png](concept/mirror-interceptor-final-r75-a.png) | Final frames (M10 part C, step ART-C1, `tools/art/aurelia_units.py mirror`; drawn by the game from step C4b): the 16 headings at 1× (hull and plate frames) over round 72's Level 37 deck stand-in; the states at 2× as the game will layer them (standing with the sweep, heat 40 %, 78 % with the cracks, 100 %, broken: the bare grey frame, regrowing 50 % with the shimmer, the pods' tell); the layers (hull, plate, the plate's glow mask, the cracks, the pods); 1× over the bright and the burnt deck beside the ship and a Talon; the plate in a polished steel-silver (sheet) | proposed (round 75) |
-| [concept/mirror-interceptor-final-r75-a.gif](concept/mirror-interceptor-final-r75-a.gif) | A pincer from both side edges to their stations (the flanks on the way in), turning to the ship at 60°/s: the right one's pod tells and bursts of 3, the left one under the beam heating, cracking, breaking (shards), down 3 s and regrowing; both leave by their edges | proposed (round 75) |
-| [concept/mirror-capture-r75-a.png](concept/mirror-capture-r75-a.png), [.gif](concept/mirror-capture-r75-a.gif) | In Level 37 (step C5, the [recipe](concept/prompts.md#mirror-capture-r75-a)): the t=38 pincer bouncing a Scatter Vulcan's fan back as magenta shots; the plan's Ion Beam L5 heating the left one's plate and the Tesla Coil Pod shattering it, the kill | proposed (round 75 F.1) |
+| [concept/mirror-interceptor-final-r75-a.png](concept/mirror-interceptor-final-r75-a.png) | Final frames (M10 part C, step ART-C1, `tools/art/aurelia_units.py mirror`; drawn by the game from step C4b): the 16 headings at 1× (hull and plate frames) over round 72's Level 37 deck stand-in; the states at 2× as the game will layer them (standing with the sweep, heat 40 %, 78 % with the cracks, 100 %, broken: the bare grey frame, regrowing 50 % with the shimmer, the pods' tell); the layers (hull, plate, the plate's glow mask, the cracks, the pods); 1× over the bright and the burnt deck beside the ship and a Talon; the plate in a polished steel-silver (sheet) | chosen (round 75 accept) |
+| [concept/mirror-interceptor-final-r75-a.gif](concept/mirror-interceptor-final-r75-a.gif) | A pincer from both side edges to their stations (the flanks on the way in), turning to the ship at 60°/s: the right one's pod tells and bursts of 3, the left one under the beam heating, cracking, breaking (shards), down 3 s and regrowing; both leave by their edges | chosen (round 75 accept) |
+| [concept/mirror-capture-r75-a.png](concept/mirror-capture-r75-a.png), [.gif](concept/mirror-capture-r75-a.gif) | In Level 37 (step C5, the [recipe](concept/prompts.md#mirror-capture-r75-a)): the t=38 pincer bouncing a Scatter Vulcan's fan back as magenta shots; the plan's Ion Beam L5 heating the left one's plate and the Tesla Coil Pod shattering it, the kill | chosen (round 75 F.1 accept) |
 
 Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 
@@ -121,9 +121,13 @@ Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
   the document approved as drafted (D.9; `design: approved`); **A.2 a**, "crescent", chosen (`art: chosen`; b "facets"
   in `concept/rejected/`).
 - 2026-10-31, round 73: the mirror capture accepted (F.6); calls C.2-C.4 accepted (the plate turns only at its station, `fire_within: 30`, blasts pass a mirror); the heat, break and regrow sounds are chosen (S.1-S.3 a) and wait for the game.
-- 2026-11-01 (step ART-C1, pending the user's review in round 75): the production frames from round 72's a, its models
+- 2026-11-01 (step ART-C1, decided 2026-11-01 (round 75 F.1 accept)): the production frames from round 72's a, its models
   unchanged at the concept's scale (84 px frames, the plate 76 px across). The plate is its own frame per heading (the
   game draws the plate frame of the mirror's facing, the hull frame follows it) with a white glow mask the heat's colour
   is drawn through and a white crack layer the game tints; the sweep, the shimmer and the shards stay MirrorLooks' code.
   The plate's polish is a steel-silver instead of the concept's pale silver, which read cream on the cream decks; the
   bare frame keeps its grey (no gold rim); the burst's three shots alternate the two pods.
+- 2026-11-01, round 75 (user, page answers, no notes): the production art accepted (F.1: the 16 headings, the steel-silver
+  plate, heat, cracks, break and regrowth; the intel portrait F.9); the sounds picked, the turbine hum **a** (S.6) and the
+  pods' burst **a** (S.7), the b's moved to the sfx part's `concept/rejected/`; calls C.1 (80 px of open air between hit
+  boxes), C.2 (the side strafe), C.3 (straight side entries) and C.6 (the retimed mirror waves) accepted. `art: final`.

@@ -2,7 +2,7 @@
 title: Graft Turret
 design: approved
 implementation: done
-art: chosen
+art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../player/specials, ../spine-turret, ../../air/coilwyrm]
 updated: 2026-11-01
 ---
@@ -109,9 +109,9 @@ Round 72's proposals (step ART-R-A, picked 2026-10-31; generator `tools/concept/
 | [concept/graft-turret-r72-b.gif](concept/graft-turret-r72-b.gif) | The same scene as a | chosen (round 72 A.4 b) |
 | [concept/regrowth-capture-r73-a.png](concept/regrowth-capture-r73-a.png) | Game capture (the A4 rig; stand-in sprite, the root given 3 000 HP so the window runs out under the beam): killed, the root exposed with its pulse and shrinking ring, the knit and the regrown turret, over the cream bands, 1× | chosen (round 73 F.6 accept) |
 | [concept/regrowth-capture-r73-a.gif](concept/regrowth-capture-r73-a.gif) | The same, 5 s at 15 fps, 1× | chosen (round 73 F.6 accept) |
-| [concept/graft-turret-final-r75-a.png](concept/graft-turret-final-r75-a.png) | Final frames (M10 part C, step ART-C1, `tools/art/aurelia_units.py graft`; drawn by the game from step C4b): the turret's 32 angles and the regrown turret's at 1× on the base over round 72's Level 37 deck stand-in; the cycle at 2× as the game will layer it (the turret, its red glint, the root open with its glow at the pulse and the shrinking ring at 0, 60 and 95 % of the window, the knit, the regrown turret, the root's crumble, the stump); the frames at 1× (base, wreck, root, root glow, stump, knit 0–7, crumble 0–7); a nest of three on the bright and the burnt deck beside the ship and a SAM Nest (sheet) | proposed (round 75) |
-| [concept/graft-turret-final-r75-a.gif](concept/graft-turret-final-r75-a.gif) | A nest of three on the deck under the ship: the turrets track it and fire pairs after the red glint; one dies, its root pulses until the ship kills it (the crumble, the stump); one dies, its window runs out and it knits back regrown | proposed (round 75) |
-| [concept/graft-capture-r75-a.png](concept/graft-capture-r75-a.png), [.gif](concept/graft-capture-r75-a.gif) | In Level 37 (step C5, the [recipe](concept/prompts.md#graft-capture-r75-a)): the Spire Plaza terrace nest under the plan's fit: the turrets firing, roots open with their glow and ring, the stumps | proposed (round 75 F.2) |
+| [concept/graft-turret-final-r75-a.png](concept/graft-turret-final-r75-a.png) | Final frames (M10 part C, step ART-C1, `tools/art/aurelia_units.py graft`; drawn by the game from step C4b): the turret's 32 angles and the regrown turret's at 1× on the base over round 72's Level 37 deck stand-in; the cycle at 2× as the game will layer it (the turret, its red glint, the root open with its glow at the pulse and the shrinking ring at 0, 60 and 95 % of the window, the knit, the regrown turret, the root's crumble, the stump); the frames at 1× (base, wreck, root, root glow, stump, knit 0–7, crumble 0–7); a nest of three on the bright and the burnt deck beside the ship and a SAM Nest (sheet) | chosen (round 75 accept) |
+| [concept/graft-turret-final-r75-a.gif](concept/graft-turret-final-r75-a.gif) | A nest of three on the deck under the ship: the turrets track it and fire pairs after the red glint; one dies, its root pulses until the ship kills it (the crumble, the stump); one dies, its window runs out and it knits back regrown | chosen (round 75 accept) |
+| [concept/graft-capture-r75-a.png](concept/graft-capture-r75-a.png), [.gif](concept/graft-capture-r75-a.gif) | In Level 37 (step C5, the [recipe](concept/prompts.md#graft-capture-r75-a)): the Spire Plaza terrace nest under the plan's fit: the turrets firing, roots open with their glow and ring, the stumps | chosen (round 75 F.2 accept) |
 
 Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 
@@ -122,8 +122,8 @@ Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 - [x] Bounty once, the root's bonus, nothing for a regrown turret; one kill and one density count (M10 part A, `RegrowthTest`)
 - [x] Production sprites (the turret at 32 angles, the wreck and the root's pulse, the regrowth frames, the regrown look, the stump), the intel portrait (the frames and the portrait: step ART-C1, round 75, `tools/art/aurelia_units.py graft`, `intel.py graft-turret`; the game's drawing: step C4b; captured in Level 37: `graft-capture-r75-a`)
 - [x] Death effects and sounds per this spec (Freesound, no bubbly sounds) (step AUD-C: the shot pair, the shell crack,
-      the root's heartbeat and crumble, cut as a/b; the a variants in the game from step C4b (`AureliaCues`; the shot
-      pair on the Talon's file), round 75 S.8-S.11)
+      the root's heartbeat and crumble, cut as a/b; the picks in the game (`AureliaCues`): shell crack a, heartbeat a and
+      crumble a from step C4b, the shot pair **b**, the turret's own file `graft-shot-r75-b` since step C6b), round 75 S.8-S.11 closed 2026-11-01
 
 ## Open questions
 
@@ -144,10 +144,16 @@ Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
   (the turret pays once) as drafted; the document approved (D.10; `design: approved`); **A.4 b**, "tissue first",
   chosen (`art: chosen`; a "metal first" in `concept/rejected/`), the look above.
 - 2026-10-31, round 73: the regrowth capture accepted (F.6); call C.5 accepted (the root cannot be hit on the step it is exposed).
-- 2026-11-01 (step ART-C1, pending the user's review in round 75): the production frames from round 72's b, its models
+- 2026-11-01 (step ART-C1, decided 2026-11-01 (round 75 F.2 accept)): the production frames from round 72's b, its models
   unchanged at the concept's scale (52 px frames), the seams lit in the frames (a steady glow; the root's glow is its
   own additive frame the game pulses). The regrown barrel's bone has its own material slot (round 72's head appended it
   one slot early, so the concept drew that barrel unlit). The wreck is the dome cut in two halves (0.86 of its size)
   thrown apart and scorched, the barrel fallen beside them, the root drawn over its centre; the knit is 8 frames without
   a barrel (the halves drawn back in under spreading tissue into the veined dome), and the regrown head of the turret's
   angle fades in over its last two frames; the root's death is additive torn teal fibres (no pop).
+- 2026-11-01, round 75 (user, page answers, no notes): the production art accepted (F.2: the turret at 32 angles, the wreck,
+  the root's pulse, the knit and the regrown turret; the intel portrait F.9); the sounds picked: shot pair **b** (S.8, not the
+  recommendation: the turret's own pair, brighter and harder than the Talon's, so a Graft Turret can be told from a Talon
+  by ear; built in step C6b as `Sfx.GRAFT_SHOT`), shell crack **a** (S.9), root heartbeat **a** (S.10), root crumble **a**
+  (S.11), the other variants in the sfx part's `concept/rejected/`; calls C.4 (each hunting Skitter steers on its own)
+  accepted. `art: final`.

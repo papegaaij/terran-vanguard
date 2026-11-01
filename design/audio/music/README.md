@@ -451,7 +451,7 @@ stings; the beds are in [sfx](../sfx/README.md#ambience-per-setting).
   The production delivers **four stems**: base, full and motif as track 13's (a's motif stem is the brass and organ line
   lifted out of the full mix), and a **`fall` stem** (the choir and the low strings only, the breakdown's material
   under the whole loop) for Level 37's falling city, as track 10's dark stem was for Level 26. Made in M10 part C
-  (Level 37). **Made (step AUD-C, 2026-10-31; round 75 M.1, ok or redo):** `music_r75.py`, 181.8 s (a 4-bar intro + a
+  (Level 37). **Made (step AUD-C, 2026-10-31; round 75 M.1, ok: closed 2026-11-01):** `music_r75.py`, 181.8 s (a 4-bar intro + a
   96-bar loop), in `assets/music/storm-wall{,-base,-motif,-fall}.ogg`; the stems' contents and levels are its decision
   below.
 - **The duel theme** (new track 32, Level 40, the [Honour Guard](../../enemies/bosses/honour-guard/README.md)): after
@@ -910,17 +910,17 @@ review is the round's (QC-2: ok or redo, no new variant). Measured only, not lis
 
 | File | What | Status |
 |---|---|---|
-| [concept/storm-wall-r75-a.ogg](concept/storm-wall-r75-a.ogg) | #15 "Storm Wall" full mix at full length: 181.8 s, loop 333200 + 7526400 samples (7.56 s + 170.67 s, 96 bars at 135 BPM), −14.1 LUFS, −1.8 dBTP, seam 0.31; twelve 8-bar sections on the sketch's material (the riff and the war drums, the choir in, the breakdown drawn out to 8 bars, all in with the double kick), a new half-time drift and a new build; no motif (it is lifted out into its stem) | proposed (round 75) |
-| [concept/storm-wall-base-r75-a.ogg](concept/storm-wall-base-r75-a.ogg) | #15 base stem (the storm strings, the deep kick and the taiko, the riff and its sub, the low strings, the storm wind and the thunder rolls): same length, loop and gain, −15.4 LUFS (−1.3 LU), −2.2 dBTP, seam 0.21; Levels 38, 41 and 42 on their approaches | proposed (round 75) |
-| [concept/storm-wall-motif-r75-a.ogg](concept/storm-wall-motif-r75-a.ogg) | #15 motif stem (Vorne's motif in cold low brass and organ, 11 statements a loop: the first bar of A, B, A2, D, B2, D2, B3 and T, bar 5 of D, D2 and the build; the intro's statement): same length, loop and gain, −19.4 LUFS (−5.3 LU), statements −4.8 to −5.9 dB under the full mix; the game adds it on top in Levels 38, 41 and 42, never in Level 37 (the turn cut it) | proposed (round 75) |
-| [concept/storm-wall-fall-r75-a.ogg](concept/storm-wall-fall-r75-a.ogg) | #15 fall stem (the breakdown's choir chords and low strings under every bar of the loop, nothing else): same length, loop and gain, −15.8 LUFS (−1.7 LU), −3.1 dBTP, seam 0.58; Level 37 plays it alone from the fall (t=160) to the end | proposed (round 75) |
-| [concept/storm-wall-seam-r75-a.ogg](concept/storm-wall-seam-r75-a.ogg) | Listening aid: the full mix across its loop seam, 8 s each side | proposed (round 75) |
-| [concept/storm-wall-base-seam-r75-a.ogg](concept/storm-wall-base-seam-r75-a.ogg) | Listening aid: the base stem across its loop seam, 8 s each side | proposed (round 75) |
-| [concept/storm-wall-motif-seam-r75-a.ogg](concept/storm-wall-motif-seam-r75-a.ogg) | Listening aid: the motif stem across its loop seam, 8 s each side | proposed (round 75) |
-| [concept/storm-wall-fall-seam-r75-a.ogg](concept/storm-wall-fall-seam-r75-a.ogg) | Listening aid: the fall stem across its loop seam, 8 s each side | proposed (round 75) |
-| [concept/storm-wall-motif-mix-r75-a.ogg](concept/storm-wall-motif-mix-r75-a.ogg) | Listening aid: loop bars 1–24 (A, B, A2), the full mix with the motif stem on top as Levels 38, 41 and 42 play them, 42.7 s; the sum peaks at −0.1 dBFS (the crash and timpani on A2's one under the motif's first note) | proposed (round 75) |
-| [concept/storm-wall-fall-join-r75-a.ogg](concept/storm-wall-fall-join-r75-a.ogg) | Listening aid: loop bars 1–16, the full mix crossfading over 2 s into the fall stem alone at bar 9 (as Level 37 switches at the fall), 28.4 s | proposed (round 75) |
-| [concept/storm-wall-sheet-r75-a.png](concept/storm-wall-sheet-r75-a.png) | Review sheet: the four files' waveforms with intro, loop and fade tail, their loop points, loudness, true peak, seam and size, and the loudness of each loop section (full, base vs full, fall vs full, motif vs full) | proposed (round 75) |
+| [concept/storm-wall-r75-a.ogg](concept/storm-wall-r75-a.ogg) | #15 "Storm Wall" full mix at full length: 181.8 s, loop 333200 + 7526400 samples (7.56 s + 170.67 s, 96 bars at 135 BPM), −14.1 LUFS, −1.8 dBTP, seam 0.31; twelve 8-bar sections on the sketch's material (the riff and the war drums, the choir in, the breakdown drawn out to 8 bars, all in with the double kick), a new half-time drift and a new build; no motif (it is lifted out into its stem) | chosen (round 75 M.1 ok) |
+| [concept/storm-wall-base-r75-a.ogg](concept/storm-wall-base-r75-a.ogg) | #15 base stem (the storm strings, the deep kick and the taiko, the riff and its sub, the low strings, the storm wind and the thunder rolls): same length, loop and gain, −15.4 LUFS (−1.3 LU), −2.2 dBTP, seam 0.21; Levels 38, 41 and 42 on their approaches | chosen (round 75 M.1 ok) |
+| [concept/storm-wall-motif-r75-a.ogg](concept/storm-wall-motif-r75-a.ogg) | #15 motif stem (Vorne's motif in cold low brass and organ, 11 statements a loop: the first bar of A, B, A2, D, B2, D2, B3 and T, bar 5 of D, D2 and the build; the intro's statement): same length, loop and gain, −19.4 LUFS (−5.3 LU), statements −4.8 to −5.9 dB under the full mix; the game adds it on top in Levels 38, 41 and 42, never in Level 37 (the turn cut it) | chosen (round 75 M.1 ok) |
+| [concept/storm-wall-fall-r75-a.ogg](concept/storm-wall-fall-r75-a.ogg) | #15 fall stem (the breakdown's choir chords and low strings under every bar of the loop, nothing else): same length, loop and gain, −15.8 LUFS (−1.7 LU), −3.1 dBTP, seam 0.58; Level 37 plays it alone from the fall (t=160) to the end | chosen (round 75 M.1 ok) |
+| [concept/storm-wall-seam-r75-a.ogg](concept/storm-wall-seam-r75-a.ogg) | Listening aid: the full mix across its loop seam, 8 s each side | chosen (round 75 M.1 ok) |
+| [concept/storm-wall-base-seam-r75-a.ogg](concept/storm-wall-base-seam-r75-a.ogg) | Listening aid: the base stem across its loop seam, 8 s each side | chosen (round 75 M.1 ok) |
+| [concept/storm-wall-motif-seam-r75-a.ogg](concept/storm-wall-motif-seam-r75-a.ogg) | Listening aid: the motif stem across its loop seam, 8 s each side | chosen (round 75 M.1 ok) |
+| [concept/storm-wall-fall-seam-r75-a.ogg](concept/storm-wall-fall-seam-r75-a.ogg) | Listening aid: the fall stem across its loop seam, 8 s each side | chosen (round 75 M.1 ok) |
+| [concept/storm-wall-motif-mix-r75-a.ogg](concept/storm-wall-motif-mix-r75-a.ogg) | Listening aid: loop bars 1–24 (A, B, A2), the full mix with the motif stem on top as Levels 38, 41 and 42 play them, 42.7 s; the sum peaks at −0.1 dBFS (the crash and timpani on A2's one under the motif's first note) | chosen (round 75 M.1 ok) |
+| [concept/storm-wall-fall-join-r75-a.ogg](concept/storm-wall-fall-join-r75-a.ogg) | Listening aid: loop bars 1–16, the full mix crossfading over 2 s into the fall stem alone at bar 9 (as Level 37 switches at the fall), 28.4 s | chosen (round 75 M.1 ok) |
+| [concept/storm-wall-sheet-r75-a.png](concept/storm-wall-sheet-r75-a.png) | Review sheet: the four files' waveforms with intro, loop and fade tail, their loop points, loudness, true peak, seam and size, and the loudness of each loop section (full, base vs full, fall vs full, motif vs full) | chosen (round 75 M.1 ok) |
 
 Concept round 78 (M10 part F, step AUD-F, 2026-11-01) — track 32 "Three Aces", the duel theme, at full length, one full
 mix, no stems, composed out from the chosen round-72 sketch by `tools/concept/audio/music_r78.py` (track 19's round-68
@@ -1117,3 +1117,4 @@ Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-a
   breakdown's choir and low strings at the breakdown's gains under every bar, played alone (−1.7 LU under the full
   mix, the level the breakdown has in it). The full mix + motif sum peaks at −0.1 dBFS (the game plays the music
   under 1.0, so it does not clip; track 14's −1.2).
+- 2026-11-01, round 75: track 15 "Storm Wall" at full length, its base, motif and fall stems accepted (M.1 ok, user, page answer, no notes).

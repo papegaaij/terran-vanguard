@@ -211,8 +211,11 @@ placed here:
   own rates and the spires topple. Over **20 s** (t=160–180) the two city layers each slow, darken and shrink toward the field's centre while
   the ship and Rook fly down beside the spires (tall gold spires rising past on `low-air`, scenery without collision),
   with `low-air` debris (deck plates, cables, a torn balloon) and Vrell in the air around them.
-- **t=180–200**: open cloud below the play plane; the city a dark, burning shape sinking into the bands on `deep`,
-  smoke rising from it. The waves of section 5 come out of the debris; the last enters at t=186.
+- **t=180–200**: open cloud below the play plane; the two halves, darkened and shrunk, **fade slowly** (from t≈161.5 to
+  nothing at t≈194) as two cloud tops slide in from the sides and close over them (t=170–197.5), so the platform
+  **disappears in the clouds completely** (round 75 F.6 redo: the user, 2026-11-01; there is no separate sinking city
+  and nothing slides out through the screen's bottom edge). The waves of section 5 come out of the debris; the last
+  enters at t=186.
 - **Calm** (the Act 5 lesson): the last wave is gone by ≈ t=193, **≥ 4 s** before the level end at t=200; Varga's
   t=176 line and the fall's sound carry the end.
 - Okafor's Aurelia line plays over the drop (t=161). A renderer set piece (two scaled ground layers and the authored cut line) and a production backdrop part (the gap
@@ -518,7 +521,8 @@ shards in the gap, smoke and fire from both edges). The city is one continuous f
 at x 90, the Spire Plaza and its great spire), cut into back-to-back ground pieces; from the turn every row entering is
 burnt and overgrown, and the screen at the turn is a growth burst revealed from the dome rims along the seams over 4 s;
 at the fall the main deck's two halves (the city's own pixels: the handover is exact) slow, darken and shrink toward
-the field's centre on their curves, then the sinking city carries on on `deep` (Level 38 reuses it). The proposal
+the field's centre on their curves and fade out under the cloud veils (the F.6 redo below; the first version's sinking
+city on `deep` is gone from this level, its files stay as Level 38's source). The proposal
 (`concept/backdrop-proposal.yaml`, step C2's input, not data) holds the tile sets, pieces, placements, the `growth` and
 `fall` blocks with the halves' curves, the sections and the ground targets' and pads' places. The briefing images are
 in the [briefing](../../../ui/briefing/README.md#concept-art) (`briefing-images-final-r75-a`). Prompts and briefs:
@@ -535,18 +539,18 @@ files stay as Level 38's source).
 
 | File | What | Status |
 |---|---|---|
-| [concept/backdrop-final-r75-a.png](concept/backdrop-final-r75-a.png) | Production backdrop: eighteen screens at third size with stand-ins (the rim, the SAM platform, pair 1's pads, the locker's awning, the plaza's terrace, the great spire, the turn at +0.6/+2/+4.5 s, a burning deck with the war below, the main deck, the fall at +0/+2/+6/+12/+21 s, the open cloud, the end), the readability crops (Talon, Gunship, Chimera, needles and an orb over the pre-turn deck, the plaza, a burnt deck and the main deck), the halves with their torn rims and glow, the growth burst and its reveal map, the spires' topple, the balloon tearing, hulks, a deck fire, the war, debris, the sinking city, the tile sets and the city's ground pieces (sheet) | proposed (round 75) |
-| [concept/backdrop-final-r75-a.gif](concept/backdrop-final-r75-a.gif) | The fall, t 157–182 at half size (4 frames a second): the main deck whole, the jagged break, the halves slowing, darkening and shrinking, the spires toppling, the sinking city | proposed (round 75) |
-| [concept/growth-final-r75-a.gif](concept/growth-final-r75-a.gif) | The turn, t 99.5–105.5 at half size (10 frames a second): the growth bursting over the plaza from the dome rims along the seams, the fires, the deck a step darker | proposed (round 75) |
-| [concept/cdf-locker-final-r75-a.png](concept/cdf-locker-final-r75-a.png) | The CDF locker, the secret (`tools/art/aurelia_units.py locker`, step ART-C1; 32×28, the ground target's `cdf-locker` frames 0 sealed, 1 hit, 2 broken open) at 4× and at 1× beside the ship and a Graft Turret with the game's crate (sheet) | proposed (round 75) |
-| [concept/backdrop-proposal.yaml](concept/backdrop-proposal.yaml) | The generator's `backdrop:` block (tile sets, pieces, the city's ground pieces on exact rows, placements, the `growth` and `fall` blocks with the halves' curves), the sections, the ground targets' places, the pads and the locker for step C2 (not data) | proposed (round 75; step C2's input) |
-| [concept/turn-capture-r75-a.png](concept/turn-capture-r75-a.png), [.gif](concept/turn-capture-r75-a.gif) | In the game (step C5, the [recipe](concept/prompts.md#level-37-capture-r75-a)): the turn at t=98 (the Choir's static), t=102 (the growth's burst over the decks) and t=110 (Vorne's order, the darker grade, the fires); the loop t 97–112 | proposed (round 75 F.5) |
-| [concept/prey-capture-r75-a.png](concept/prey-capture-r75-a.png), [.gif](concept/prey-capture-r75-a.gif) | In the game: the t=118 Skitter snake ramming the t=116 Gilded Gunship (the ship steered off the middle), t 119–123 | proposed (round 75 F.7) |
-| [concept/fall-capture-r75-a.png](concept/fall-capture-r75-a.png), [.gif](concept/fall-capture-r75-a.gif) | In the game: the fall at t=160 (the break), t=170 (the halves drifting, a spire toppling) and t=185 (the sinking city); the loop t 159–186 | proposed (round 75 F.6) |
-| [concept/fall-final-r75-b.png](concept/fall-final-r75-b.png) | The F.6 redo (step ART-C3): the whole fall t 158–200 at half size with stand-ins (the break, the halves slowing, shrinking, darkening and fading, the cloud tops closing over them, gone by t 194, open cloud to the end), 1:1 crops of the screen's lower half at t 176/186/192/196 (nothing cut), the two cloud tops, the halves' alpha, shade and scale by second (sheet) | proposed (round 75 F.6 redo) |
-| [concept/fall-final-r75-b.gif](concept/fall-final-r75-b.gif) | The F.6 redo: the whole fall, t 158–200 at play size (4 frames a second), with stand-ins | proposed (round 75 F.6 redo) |
-| [concept/readability-capture-r75-a.png](concept/readability-capture-r75-a.png) | In the game, 1:1 crops: gold on gold (Talons, the shuttles and a nest over the decks before the turn) and teal on teal (the Chimera swarm and its fire over the growth after it) | proposed (round 75 F.8) |
-| [concept/locker-capture-r75-a.png](concept/locker-capture-r75-a.png) | In the game, 1:1: the CDF locker under its awning at t≈61 | proposed (round 75 F.4) |
+| [concept/backdrop-final-r75-a.png](concept/backdrop-final-r75-a.png) | Production backdrop: eighteen screens at third size with stand-ins (the rim, the SAM platform, pair 1's pads, the locker's awning, the plaza's terrace, the great spire, the turn at +0.6/+2/+4.5 s, a burning deck with the war below, the main deck, the fall at +0/+2/+6/+12/+21 s, the open cloud, the end), the readability crops (Talon, Gunship, Chimera, needles and an orb over the pre-turn deck, the plaza, a burnt deck and the main deck), the halves with their torn rims and glow, the growth burst and its reveal map, the spires' topple, the balloon tearing, hulks, a deck fire, the war, debris, the sinking city, the tile sets and the city's ground pieces (sheet) | chosen (round 75 F.5 accept; its fall part rejected: F.6 redo, see `fall-final-r75-b`) |
+| [concept/backdrop-final-r75-a.gif](concept/backdrop-final-r75-a.gif) | The fall, t 157–182 at half size (4 frames a second): the main deck whole, the jagged break, the halves slowing, darkening and shrinking, the spires toppling, the sinking city | rejected (round 75 F.6 redo: the fall's end was not as it should be; replaced by `fall-final-r75-b`) |
+| [concept/growth-final-r75-a.gif](concept/growth-final-r75-a.gif) | The turn, t 99.5–105.5 at half size (10 frames a second): the growth bursting over the plaza from the dome rims along the seams, the fires, the deck a step darker | chosen (round 75 F.5 accept) |
+| [concept/cdf-locker-final-r75-a.png](concept/cdf-locker-final-r75-a.png) | The CDF locker, the secret (`tools/art/aurelia_units.py locker`, step ART-C1; 32×28, the ground target's `cdf-locker` frames 0 sealed, 1 hit, 2 broken open) at 4× and at 1× beside the ship and a Graft Turret with the game's crate (sheet) | chosen (round 75 F.4 accept) |
+| [concept/backdrop-proposal.yaml](concept/backdrop-proposal.yaml) | The generator's `backdrop:` block (tile sets, pieces, the city's ground pieces on exact rows, placements, the `growth` and `fall` blocks with the halves' curves), the sections, the ground targets' places, the pads and the locker for step C2 (not data) | chosen (round 75; step C2's input; its `fall` block is replaced by the F.6 redo's in the data) |
+| [concept/turn-capture-r75-a.png](concept/turn-capture-r75-a.png), [.gif](concept/turn-capture-r75-a.gif) | In the game (step C5, the [recipe](concept/prompts.md#level-37-capture-r75-a)): the turn at t=98 (the Choir's static), t=102 (the growth's burst over the decks) and t=110 (Vorne's order, the darker grade, the fires); the loop t 97–112 | chosen (round 75 F.5 accept) |
+| [concept/prey-capture-r75-a.png](concept/prey-capture-r75-a.png), [.gif](concept/prey-capture-r75-a.gif) | In the game: the t=118 Skitter snake ramming the t=116 Gilded Gunship (the ship steered off the middle), t 119–123 | chosen (round 75 F.7 accept) |
+| [concept/fall-capture-r75-a.png](concept/fall-capture-r75-a.png), [.gif](concept/fall-capture-r75-a.gif) | In the game: the fall at t=160 (the break), t=170 (the halves drifting, a spire toppling) and t=185 (the sinking city); the loop t 159–186 | rejected (round 75 F.6 redo: the fall's end; replaced by the redo) |
+| [concept/fall-final-r75-b.png](concept/fall-final-r75-b.png) | The F.6 redo (step ART-C3): the whole fall t 158–200 at half size with stand-ins (the break, the halves slowing, shrinking, darkening and fading, the cloud tops closing over them, gone by t 194, open cloud to the end), 1:1 crops of the screen's lower half at t 176/186/192/196 (nothing cut), the two cloud tops, the halves' alpha, shade and scale by second (sheet) | proposed (round 75 F.6 redo; the user sees it in a later round) |
+| [concept/fall-final-r75-b.gif](concept/fall-final-r75-b.gif) | The F.6 redo: the whole fall, t 158–200 at play size (4 frames a second), with stand-ins | proposed (round 75 F.6 redo; the user sees it in a later round) |
+| [concept/readability-capture-r75-a.png](concept/readability-capture-r75-a.png) | In the game, 1:1 crops: gold on gold (Talons, the shuttles and a nest over the decks before the turn) and teal on teal (the Chimera swarm and its fire over the growth after it) | chosen (round 75 F.8 accept) |
+| [concept/locker-capture-r75-a.png](concept/locker-capture-r75-a.png) | In the game, 1:1: the CDF locker under its awning at t≈61 | chosen (round 75 F.4 accept) |
 
 ## Implementation
 
@@ -602,6 +606,13 @@ files stay as Level 38's source).
       medium: 117.8 a minute, 4.19 on the screen, the gaps 4.6 s, 3.6 s and the end's 10.2 s, no hulls stacked, the
       haul +1.0 %, the beam era's small units 1.45× Level 10's (was 1.50×); the content's check green but
       `VoiceFilesTest` on the 13 changed lines (VOX-C2)
+- [x] Round 75's redo and picks (2026-11-01): the fall redone (F.6 redo; step ART-C3 `2d056270`: the halves fade from t≈161.5
+      to nothing at t≈194 under two cloud veils, no sinking city, the cut was the sinking city's own canvas; step C6b
+      `770065c7`: the fall in the game, no separate sinking city), the shuttles take the player's fire and slide aside
+      (C6s `16ffc420`: the aside path; C6a `12899be1`: the shuttles' keys, waves and nests off the lanes with the flown
+      `ShuttleLaneTest`, the t=137 Motes rerouted, one-page radio lines; a spark on a shuttle hit, `770065c7`), the 13
+      lines re-voiced and the intro's page 4 by a per-line shift (VOX-C2 `5b346fec`), the picks S.1 b, S.5 b and S.8 b
+      in the game (C6b)
 - [x] Production art and captures for part C's round (steps ART-C1, ART-C2, C4b; step C5: the captures,
       [round 75](../../../concept-rounds/round-75/README.md))
 
@@ -615,6 +626,9 @@ Left to the build (the document is approved as drafted):
   counting". 4 of 6 would let it be met before the turn.
 - **Mirror Interceptors never prey** (a call of this draft): the Vrell hunt Talons, the Gunship and the Hornet; a
   mirrored unit as prey would turn its mirror away from the ship and muddle Q1's lesson.
+- **Late and stale event lines** (open after round 75, noted for the user): with the shorter timed lines, easy's
+  secondary-met line (t≈84.5) and an early failed line (t≈81) still wait until t≈107.4, after the Choir (23-26 s late); a
+  shuttle lost while pair 1 or 2 is up, and the Gunship prey kill at t≈118.5-119, still go stale.
 
 ## Decisions
 
@@ -637,14 +651,14 @@ Left to the build (the document is approved as drafted):
   (Halcyon One–Six; Aurelia Traffic is Lizzie Driver, V.3 b) as drafted. **A.13 b** (not the recommendation): the city
   **breaks up** along an authored jagged cut line into two city layers that sink at their own rates and the spires
   topple (the last 40 s above are rewritten). The document approved as drafted (D.3; `design: approved`).
-- 2026-10-31 (step ART-C2, decided by me as trivia, pending the user's review in round 75): the city's ground is one
+- 2026-10-31 (step ART-C2, decided by me as trivia, decided 2026-11-01 (round 75 F.5, F.6 and C.8 accepted; the fall redone, below)): the city's ground is one
   continuous field cut into back-to-back ground pieces (no repeating ground tile set: its landmarks stand where the
   waves need them); the deep layer a cream cloud deck (`cloud-deck`) opening on the bands in section 5
   (`cloud-bands`); the turn's darker grade the `smoke` atmosphere (haze 0.35 toward `5a443c` over the deep layer, the
   `smoke-wisps` on `high-air`) with the burnt, overgrown city baked into every row entering after t=100; the halves'
   curves (west to 0.38 of its size and 64 % dark, east to 0.46 and 56 %, drifting 30 / 26 px apart and turning −6° /
-  +5°, the ground's speed easing out over about a second) and the sinking city crossfading in at t=179–181.
-- 2026-11-01 (step C2, decided as trivia, pending the user's review in round 75): the level's data on ART-C2's
+  +5°, the ground's speed easing out over about a second) and the sinking city crossfading in at t=179–181 (replaced by the F.6 redo: the halves fade under cloud veils).
+- 2026-11-01 (step C2, decided as trivia, decided 2026-11-01 (round 75 C.5 accept for the bounty scale 0.32, C.6 the retimed mirror waves, C.7 the six Talon pairs, C.8 the smoke atmosphere)): the level's data on ART-C2's
   proposal. **Retimes**: the t=84 mirror pincer at **t=89** (the t=77 Hornet's hover overlaps the stations until
   ≈ t=88; the t=88 Mote swarm takes t=84), the rear ambush at **t=131** (the t=116 Gunship drifts through its bottom
   stations until ≈ t=129), the t=140 pincer at **t=145** (the t=133 Hornet's hover; hard's 2 + 2): no two `medium`
@@ -673,3 +687,23 @@ Left to the build (the document is approved as drafted):
   locker's line, most first prey kills and the third pair's first loss find their gaps; a loss in the first two pairs
   still goes stale (the gaps went to the bounce and the locker). The autopilot never shoots a shuttle. Hard 10 of 16
   runs all six home (was 0 of 6), the armour kept; the beam era's small units 1.45×.
+- 2026-11-01, round 75 (user, closed; page answers): **every row as recommended except S.1 b, S.5 b, S.8 b, V.4 b and
+  F.6 redo**. Art F.1, F.2, F.4, F.5, F.7-F.11 accepted; **F.3 accept a** (the livery) **with a note** on the live capture:
+  with friendlies on the screen the gunship cannot fly in behind them, and the capture fired straight through them. The
+  user's decision after it: the shuttles are like Act 5's marked craft, **the player's fire hits them** (a shot-down
+  shuttle is a lost shuttle), and after about 3 s on station each slides aside and a little down to its own side edge
+  and climbs out there (*The shuttles*; the allies' rule in [allies](../../../allies/README.md#common-rules), built in
+  C6s `16ffc420` and C6a `12899be1`). **F.6 redo** (the user: "The end is not as it should be. The platform should
+  disappear in the clouds completely. During the fall it should fade slowly. Also, in the last frame some parts are cut
+  off at the bottom."): built in ART-C3 `2d056270` (the halves fade, cloud veils; the cut was the sinking city's own
+  bounds) and C6b `770065c7`; the new review `fall-final-r75-b` stays `proposed` (the user sees it in a later round),
+  `backdrop-final-r75-a.gif` and `fall-capture-r75-a` are rejected (redo). Sounds: S.2-S.4, S.6, S.7, S.9-S.11 a; **S.1 b**
+  (pa-chime), **S.5 b** (aurelia-burning), **S.8 b** (the Graft Turret's own shot, not the Talon's file); the other
+  variants in the sfx part's `concept/rejected/`; M.1 ok (track 15); voices V.1, V.3 accepted, V.2 a, **V.4 b** (round 74's
+  take of the intro's page 4 exactly, VOX-C2 `5b346fec`); L.1-L.4 a (the shortened briefing pages, the hard shuttles' data
+  moved with the armour kept, shorter timed radio lines, Okafor's t=89.5 line one page); C.1-C.9 accepted (every "pending
+  the user's review in round 75" note is now "decided 2026-11-01 (round 75 <id>)"). `art` stays `proposed` until the
+  redo's review (`fall-final-r75-b`).
+  **Open for the user (not decided; measured after the shorter lines):** easy's secondary-met line (t≈84.5) and an early
+  failed line (t≈81) still wait until t≈107.4, after the Choir, 23-26 s late; a shuttle lost while pair 1 or 2 is up, and
+  the Gunship prey kill at t≈118.5-119, still go stale.

@@ -136,8 +136,8 @@ Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's r
 
 - [x] Act 6: L39 in the *used in* row; the act HP factor at L39 (hull 260, legs 94, pod 35: the returning factor, no
       override) (M10 part E, step E2)
-- [ ] Act 6: a topple onto a refinery target counts for the objective (the towers are counted ground units; step E1's
-      `topple-target` cue; Level 39's test, step E3)
+- [x] Act 6: a topple onto a refinery target counts for the objective (the towers are counted ground units; step E1's
+      `topple-target` cue; Level 39's test, step E3; round 77's capture onto Pele B)
 - [x] Stat block loaded from a `data.yaml` (when the design is approved); global difficulty multipliers applied; tuned with `levelReport`
 - [x] `walk` on a path with the twisting torso (`32 angles`); the fan and the pod's homing salvos with their tells
 - [x] Destroyable legs and pod; the stagger tell, the marked fall line, the fall and the one-time crush of ground units (credits paid)

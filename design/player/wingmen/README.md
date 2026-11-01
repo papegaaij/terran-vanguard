@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../weapons, ../../story, ../../systems/saves, ../../ui/hangar, ../../ui/hud]
-updated: 2026-10-31
+updated: 2026-11-01
 ---
 
 # Wingmen and drones
@@ -597,7 +597,7 @@ built were accepted in concept round 28.
   rear-guard drone's trail waits for part G (its bay's data and the `station: trail` keys written in
   step G2; flown from step G3, mapped in step G4)
 - [ ] The hunter drone's behaviours — **later: Act 7** (was L29, then Act 6; moved with Act 5's arsenal, Q12 = c of round 60, decided; to Act 7's design with Act 6's, Q7 = b of round 72, decided 2026-10-31)
-- [ ] Rook in Act 6 as in *Rook in Act 6* (draft): his goal out of a told lightning column and a vent's tell and rocks, the strike's and the rocks' hits on him — M10 (L38's and L39's parts)
+- [x] Rook in Act 6 as in *Rook in Act 6* (draft): his goal out of a told lightning column and a vent's tell and rocks, the strike's and the rocks' hits on him — M10 (L38's and L39's parts) (part A's `RookHazards`; flown in `Level38Test` and `Level39Test`; his armour over the two levels is round 76 L.3)
 - [x] Rook's rescue in L29 as in *Rook's rescue and return* (draft): the mid-level swap (the drone peels away, Rook
   joins with his gun at full armour, his first line, his barks back), the loaner returned after L29, the debug
   starts — M9 (L29's part) (M9 part A, step A2: the campaign's side: at Level 29's win Rook is back at full armour
