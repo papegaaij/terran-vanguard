@@ -29,12 +29,12 @@ import vanguard.sim.WaveSpec;
  * the Harrow, the Buzzsaw's return, the strikes with their lures, the two hunts, Aurelia's cargo pod and the CDF supply
  * canister), flown by the autopilot ({@link StormPlay}'s lines on {@link VentPlay}'s planned moves, out of the told columns:
  * the Harrows taken at range before their tell, a ram's last moments sidestepped, never back into a ring, the
- * canister's latch shot under its brackets, the pod opened) with the balance plan's fit ({@link #planLoadout}: Level 37's, the
+ * pod opened; the canister opens by itself, no latch shot) with the balance plan's fit ({@link #planLoadout}: Level 37's, the
  * plan's L38 visit buys nothing), with Rook and without him ({@code --escort none}): its count per difficulty, the
  * Harrows' secondary ({@code HARROWS n / 23}) per difficulty, the caps (design Waves: 6 Harrows, 2 in their tell or ram;
  * 6 Buzzsaws, 2 dashing; never two dashes and two rams at once; 3 Hornets, 16 homing missiles; no strike over a
  * Buzzsaw's or a Hornet's tell) on the flown runs, the war's kills paying nothing, the lures' kills counting, the secret
- * (shot or struck) and the canister's armour patch. The pacing, the floor, the density, the beam era's HP and the haul
+ * (shot or struck) and the canister's armour patch released on every run. The pacing, the floor, the density, the beam era's HP and the haul
  * are the campaign-wide tests' ({@link PacingTest}, {@link ActFloorTest}, {@link DensityTest}, {@link BeamEraHpTest},
  * {@link TypicalHaulTest}); the data as the simulation gets it {@link LightningBeltDataTest}'s.
  */
@@ -347,7 +347,7 @@ class Level38Test {
      * The autopilot ({@link StormPlay}) completes the level with the plan's fit and Rook on every difficulty and seed,
      * within the caps; {@code HARROWS} met in most medium runs; the lures' strikes kill Harrows that count; the secret
      * found on every run (shot, or opened by the t=122.5 strike on medium and hard); the canister's armour patch
-     * released on most runs of each difficulty ({@link #PATCH_RUNS}).
+     * released on every run (round 76 L.1 b: it opens by itself).
      */
     @Test
     void theAutopilotCrossesTheStormWithRook() {
@@ -364,12 +364,10 @@ class Level38Test {
     static final int MEDIUM_MET = 2;
 
     /**
-     * The runs of each difficulty the CDF canister's latch must be shot on (its armour patch released), of {@link
-     * #SEEDS}: most. The plan's fit has no straight gun for it: the Ion Beam passes debris (only shots break a chunk),
-     * the Tesla Coil's arcs seek units, so the micro-missiles crossing it and Rook's cannon break it (step D3, pending the
-     * user's review in round 76: QD-4).
+     * The runs of each difficulty the CDF canister's armour patch must be released on, of {@link #SEEDS}: every one
+     * (round 76 L.1 b: no latch, it opens by itself over the middle).
      */
-    static final int PATCH_RUNS = 2;
+    static final int PATCH_RUNS = SEEDS;
 
     private static void report(String fit, List<Flight> flights) {
         StringBuilder report = new StringBuilder("Level 38 autopilot (" + fit + ", " + SEEDS + " seeds):");

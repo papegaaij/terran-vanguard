@@ -301,10 +301,11 @@ Harrows' rams or the rings. No gust within 2 s of a lightning telegraph.
 - **Armour patch**: a CDF supply canister dropped by the fleet through the storm at t≈100 (the friendly marker on
   its parachute, [HUD](../../../ui/hud/README.md#act-6-additions-draft)), drifting down the middle. **It has no
   latch** (decided 2026-11-01, round 76 L.1 b): it opens by itself over the middle and releases the armour patch (Level
-  14's supply drone), the brackets only mark it as friendly. Built with a 10 HP latch that only the player's shot broke
-  (step D1; debris and a Harrow's ram left it); step D3 found the plan's fit broke it in 17 of 18 runs only with stray
-  missiles or Rook's fire (the beam passes debris, the Tesla pod seeks units), so the build removes the latch (see
-  *Implementation*). A Harrow's ram still ignores the canister.
+  14's supply drone), the brackets only mark it as friendly. It opens 270 px from the top (`opens_at: 270`: the
+  middle, about 4.75 s after it enters on easy and medium, t≈104.75), lets the patch fall and is gone; until then
+  every shot, bullet and dash passes it, so the patch falls on every run. (First built with a 10 HP latch that only the player's shot broke,
+  step D1; step D3 found the plan's fit broke it in 17 of 18 runs only with stray missiles or Rook's fire, the beam
+  passing debris and the Tesla pod seeking units: hence L.1 b.) A Harrow's ram still ignores the canister.
 - **Overdrive**: dropped by the last Chimera of the t=126 wing.
 
 ## Radio chatter
@@ -472,9 +473,11 @@ the sections and the pod's and the canister's `debris`. Prompts and briefs: [con
       each)
 - [x] Production art and captures for the round (round 76: step ART-D's art in the game since D4, step D5's
       captures)
-- [ ] Round 76 L.1 b: the CDF canister has **no latch**: it opens by itself over the middle and releases the armour
-      patch (as Level 14's supply drone), the brackets only mark it; the latch's HP, hit rule and overlay leave the
-      sim, the content data and the game (decided 2026-11-01; the art needs nothing new)
+- [x] Round 76 L.1 b: the CDF canister has **no latch**: it opens by itself over the middle and releases the armour
+      patch (as Level 14's supply drone), the brackets only mark it; every shot, bullet and dash passes it (decided
+      2026-11-01; the simulation's opening chunk, step DE6s; the data's `opens_at: 270`, loaded and checked, the patch
+      released on every flown run: `LightningBeltDataTest`, `Level38Test`, step DE6c)
+- [ ] Round 76 L.1 b in the game: no latch overlay drawn on a chunk that opens by itself (the art needs nothing new)
 - [ ] Round 76 L.3 a: Rook's armour in Levels 38 and 39 settled in M10 part I's Act 6 balance (decided 2026-11-01)
 
 ## Open questions

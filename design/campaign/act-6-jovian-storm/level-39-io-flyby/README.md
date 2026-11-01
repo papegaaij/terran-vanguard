@@ -514,7 +514,8 @@ at medium, checked by the generator). Prompts and briefs: [concept/prompts.md](c
 - [ ] Round 77 S.3 b: the tower's collapse plays `tower-collapse-r77-b` (the pipeline's import list, `Sfx.TOWER_COLLAPSE`,
       `PlaceholderAuditTest`, `Level39SoundsTest`), and the a file leaves `assets/sfx/` (decided 2026-11-01)
 - [ ] Round 77 V.2 b: Vorne's t=91 line gets `expression: rage` in the level data and a new take at his grim row (a VOX
-      step; then `RadioTimelineLevel39Test` and `VoiceFilesTest`), his neutral take replaced (decided 2026-11-01)
+      step; then `RadioTimelineLevel39Test` and `VoiceFilesTest`), his neutral take replaced (decided 2026-11-01; the
+      data's `expression: rage` in since step DE6c, the take to come)
 - [ ] The opening capture redone for the plains opening (round 77 F.1 redo, `backdrop-final-r77-b` already in the game:
       ART-E2 `6c7a875b`), shown to the user in a later round
 

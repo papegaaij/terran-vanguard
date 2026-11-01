@@ -774,7 +774,9 @@ optional `skip` list of the difficulties it is left out on (Level 06's hard-only
   step D1): a `kill_ratio` secondary's **`enemy`** (a slug: the share of that enemy's units the level sends, its kills
   only, judged at the end, the tracker's `label` counting `n / target`; the enemy flies on every difficulty); a debris
   chunk's **`drop`** (a pickup a small chunk lets fall when the player's shot breaks it: the CDF canister's `armour
-  patch`; not with `reveals`) and **`marked: true`** (the friendly brackets, presentation only); the music's
+  patch`; not with `reveals`), its **`opens_at`** (round 76 L.1 b, Level 38's canister: px from the top, 0 or more and
+  under 540, only with a `drop`: no latch, the chunk opens by itself there and lets its pickup fall, every shot,
+  bullet and dash passing it until then) and **`marked: true`** (the friendly brackets, presentation only); the music's
   **`ambience_db`** (section: dB, more than 0 and at most 6: the ambience that much louder through that section, over
   a 1 s ramp: Level 38's storm sections +3). A `stream` from the rear takes dashers as chasers. On every difficulty a
   wave of bouncing dashers and one of ramming dashers lie at least 7 s apart, no gust within 2 s of a strike's tell,

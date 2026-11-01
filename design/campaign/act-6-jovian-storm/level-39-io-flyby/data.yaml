@@ -462,7 +462,7 @@ radio:  # trigger: t or event; the README's 17 lines (the 1 s rule: ≈ 12 chara
   - {event: first-target, speaker: Rook, requires: escort, line: "Tower's down. Sorry about the fuel bill, Vorne.", notes: {trigger: "The first tower destroyed (`first-target`, event, bark)"}}
   - {t: 63, speaker: Varga, line: "Pump stations on the racks. Cut six and the lines run dry."}
   - {t: 76.5, speaker: Varga, line: "Skitters on their Talons. The Vrell aren't picking sides."}
-  - {t: 91, speaker: Vorne, channel: enemy, line: "Lancer. Burn Io if you like. Callisto holds fuel enough for what I still have to do.", notes: {trigger: "t=91, the enemy channel (cold, never shouted)"}}
+  - {t: 91, speaker: Vorne, expression: rage, channel: enemy, line: "Lancer. Burn Io if you like. Callisto holds fuel enough for what I still have to do.", notes: {trigger: "t=91, the enemy channel (cold, never shouted)"}}
   - {t: 104.5, speaker: Okafor, line: "Pele works. Towers behind the gate. Same drill."}
   - {t: 110.5, speaker: Varga, line: "Sentinels on the gate. They sweep all the way round."}
   - {event: topple-target, speaker: Okafor, line: "Dropped it on the tower. That'll do.", notes: {trigger: "The first tower destroyed by a topple (`topple-target`, event)"}}

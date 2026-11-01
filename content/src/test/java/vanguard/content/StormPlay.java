@@ -13,8 +13,8 @@ import vanguard.sim.Sortie;
  * ring's bullets are flown round as they come) with {@link DivePlay#strikes}'s step out of a told column on top; its
  * line is this play's. It takes a Harrow while it still chases, at
  * range, before its tell (the nearest one above the ship); the Harrows from the side and rear edges below it are the
- * homing guns' (the Swarm Tail, the pods). It lines up under the CDF supply canister to shoot its latch (its brackets
- * mark a friendly drop, not a craft to spare) and under Aurelia's cargo pod to open it. Only a level with a unit whose
+ * homing guns' (the Swarm Tail, the pods). It lines up under Aurelia's cargo pod to open it; the CDF supply canister
+ * has no latch to shoot (round 76 L.1 b: it opens by itself and lets its armour patch fall). Only a level with a unit whose
  * dash rams out through the far edge (the Harrow, Level 38 on) takes these plays, so nothing here moves another
  * level's flight.
  */
@@ -69,7 +69,8 @@ final class StormPlay {
 
     /**
      * The debris chunk to line up under now, in a storm level: the lowest above the ship and on the screen of the
-     * chunks with a drop (the CDF canister's latch) or a secret (Aurelia's cargo pod); null for none.
+     * chunks with a latch to shoot: a drop on a chunk that does not open by itself, or a secret (Aurelia's cargo pod);
+     * null for none. The CDF canister opens by itself (round 76 L.1 b): no latch shot.
      */
     static Debris chunk(Sortie sortie, double shipY) {
         if (!storm(sortie)) {
@@ -78,7 +79,8 @@ final class StormPlay {
         Debris best = null;
         for (int i = 0; i < sortie.debrisCount(); i++) {
             Debris chunk = sortie.debris(i);
-            if (chunk.spec().drop().isEmpty() && !chunk.spec().holdsSecret()) {
+            boolean latch = chunk.spec().drop().isPresent() && !chunk.spec().opens();
+            if (!latch && !chunk.spec().holdsSecret()) {
                 continue;
             }
             double y = chunk.renderY(1);

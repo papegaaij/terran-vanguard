@@ -16,6 +16,7 @@ import vanguard.sim.Hitbox;
 import vanguard.sim.Layer;
 import vanguard.sim.LevelScript;
 import vanguard.sim.PickupType;
+import vanguard.sim.PlayField;
 import vanguard.sim.RadioCue;
 import vanguard.sim.Secondary;
 import vanguard.sim.WaveSpec;
@@ -157,6 +158,9 @@ class LightningBeltDataTest {
         assertEquals(Optional.of(PickupType.ARMOUR_PATCH), canister.drop());
         assertTrue(canister.marked());
         assertFalse(canister.holdsSecret());
+        // Round 76 L.1 b: no latch; it opens by itself 270 px from the top (y up in the simulation).
+        assertTrue(canister.opens());
+        assertEquals(PlayField.HEIGHT - 270, canister.opensAt());
         HazardSpec.DebrisSpec pod = debris.stream()
                 .filter(chunk -> chunk.chunk().equals("cargo-pod"))
                 .findFirst()
@@ -222,9 +226,19 @@ class LightningBeltDataTest {
                 "objectives.secondary.enemy: no wave of 'gilded-gunship' to count (easy)");
         assertProblem(
                 PATH,
-                "drift: [0, -60], drop: armour patch, marked: true}",
-                "drift: [0, -60], drop: armour patch, marked: true, reveals: Aurelia cargo pod}",
+                "drift: [0, -60], drop: armour patch, marked: true, opens_at: 270}",
+                "drift: [0, -60], drop: armour patch, marked: true, opens_at: 270, reveals: Aurelia cargo pod}",
                 "a chunk drops a pickup or reveals a secret, not both");
+        assertProblem(
+                PATH,
+                "drift: [0, -60], drop: armour patch, marked: true, opens_at: 270}",
+                "drift: [0, -60], marked: true, opens_at: 270}",
+                "opens_at: only a chunk with a drop opens by itself");
+        assertProblem(
+                PATH,
+                "drift: [0, -60], drop: armour patch, marked: true, opens_at: 270}",
+                "drift: [0, -60], drop: armour patch, marked: true, opens_at: 540}",
+                "opens_at: px from the top, 0 or more and under 540");
         assertProblem(
                 PATH,
                 "ambience_db: {2: 3, 3: 3, 4: 3}",

@@ -221,7 +221,9 @@ public sealed interface HazardsBlock permits LevelData {
      * the level frees its hidden crate when the player's shot breaks it; none if not given. M10 part D (design/campaign
      * Level 38, the CDF supply canister; the simulation's {@code DebrisSpec.drop} and {@code marked} from step D1): a
      * small chunk's {@code drop} is the pickup it lets fall when the player's shot breaks it (its latch); {@code marked:
-     * true} draws it with the friendly brackets (presentation only).
+     * true} draws it with the friendly brackets (presentation only). Round 76 L.1 b (the simulation's {@code
+     * DebrisSpec.opensAt}): a chunk with a drop and {@code opens_at} (px from the top) has no latch: it opens by itself
+     * there, lets its pickup fall and is gone; every shot and bullet passes it until then.
      */
     public record PlacedChunk(
             double t,
@@ -230,12 +232,17 @@ public sealed interface HazardsBlock permits LevelData {
             Point drift,
             Optional<String> reveals,
             Optional<Pickup> drop,
-            Optional<Boolean> marked) {
+            Optional<Boolean> marked,
+            Optional<Double> opensAt) {
         public PlacedChunk {
             Check.notNegative("t", t);
             Check.that(drift.y() < 0, "drift: a chunk drifts down the screen (a negative y)");
             Check.that(drop.isEmpty() || reveals.isEmpty(), "a chunk drops a pickup or reveals a secret, not both");
             Check.that(marked.orElse(true), "marked: true, or leave it out");
+            Check.that(opensAt.isEmpty() || drop.isPresent(), "opens_at: only a chunk with a drop opens by itself");
+            opensAt.ifPresent(y -> Check.that(
+                    y >= 0 && y < PlayField.HEIGHT,
+                    "opens_at: px from the top, 0 or more and under " + PlayField.HEIGHT));
         }
 
         /** A chunk revealing no secret (every chunk before M10 part B). */
@@ -245,7 +252,7 @@ public sealed interface HazardsBlock permits LevelData {
 
         /** Without M10 part D's drop and marked. */
         public PlacedChunk(double t, double x, String chunk, Point drift, Optional<String> reveals) {
-            this(t, x, chunk, drift, reveals, Optional.empty(), Optional.empty());
+            this(t, x, chunk, drift, reveals, Optional.empty(), Optional.empty(), Optional.empty());
         }
 
         /** M10 part D: whether it is drawn with the friendly brackets. */

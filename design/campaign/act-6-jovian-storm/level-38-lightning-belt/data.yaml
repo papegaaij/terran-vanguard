@@ -6,7 +6,7 @@
 # Keys new in M10 part D (flown from step D1; loaded and checked from step D2): the Harrow's dash variant (its stat
 # block's `chase: [least, most]`, `lock: tell-end`, `after: out`), the secondary's `enemy` (a kill ratio of one
 # enemy's units, HARROWS n / 23), the debris chunk's `drop` and `marked` (the CDF canister's armour patch and its
-# friendly brackets) and the music's `ambience_db` by section (the bed +3 dB in the storm sections). Part A's strikes
+# friendly brackets; round 76 L.1 b: its `opens_at`, no latch) and the music's `ambience_db` by section (the bed +3 dB in the storm sections). Part A's strikes
 # and the waves' `tag`/`hunts` (the three-way war, no `turn`: live from the hunters' entry) are flown since part A;
 # rear streams and the cross of dashers since step D1.
 # Step D2's own placements (decided as trivia, pending the user's review in round 76): the strikes' tells moved by at
@@ -139,10 +139,10 @@ weather:  # the Jovian system's hazards (design/world/jovian): Level 12's gusts 
 debris:  # Aurelia's cargo pod (the secret) and the CDF supply canister (ART-D's proposal; sprites debris-cargo-pod_N and -outline_N, -break_N; debris-canister_N, -latch_N, -release_N)
   chunks:
     cargo-pod: {size: [30, 30], hp: 20}
-    canister: {size: [22, 30], hp: 10}   # the canister and its latch; the canopy above it is no target
+    canister: {size: [22, 30], hp: 10}   # the canister; the canopy above it is no target. No latch (round 76 L.1 b): it opens by itself, every shot passes it, so its hp is never spent (a small chunk's, as a drop needs)
   clearance: 0
   placed:
-    - {t: 100, x: 240, chunk: canister, drift: [0, -60], drop: armour patch, marked: true}   # down the middle on its parachute, the friendly brackets; its 10 HP latch shot frees the armour patch (QD-4 in round 76)
+    - {t: 100, x: 240, chunk: canister, drift: [0, -60], drop: armour patch, marked: true, opens_at: 270}   # down the middle on its parachute, the friendly brackets; it opens by itself over the middle (270 px from the top) and lets the armour patch fall (round 76 L.1 b)
     - {t: 118, x: 40, chunk: cargo-pod, drift: [4, -70], reveals: Aurelia cargo pod}   # tumbling down the left edge, lights dead; a strike crossing it opens it too
 
 waves:
