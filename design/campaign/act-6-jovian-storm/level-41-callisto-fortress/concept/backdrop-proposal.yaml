@@ -1,0 +1,177 @@
+backdrop:
+  # Presentation only: Level 41's Callisto fortress (tools/art/backdrop_l41.py, step ART-G2, sections from its own proposal's sections).
+  # The ground is ONE continuous fortress laid out on the level's clock, shaded once under the low Sun (long
+  # shadows to the bottom right) and cut into fortress-NN ground pieces of at most 2,040 rows placed back to
+  # back on exact rows (no ground tile set), opaque from row -16 (no Jupiter: the ice covers the screen from
+  # t 0, the user 2026-11-01) except the empty berth's well, where berth-depth (deep) and the drive glow show.
+  # Re-run the generator after moving a section: the fortress, the gates and the doors follow the clock.
+  # The doors (G4's hook, presentation only, not placed): each gate's door piece is drawn at its row from the
+  # level start on frame 0 (closed); on that gate's GATE_OPENED its frames play once at 6 fps (2 s, the
+  # leaves parting along the scroll's own ease) and the last frame (open) holds.
+  # Motion: the doors only when a gate opens; the drive glow climbing through the berth (t~143-146).
+  scroll_factors: {deep: 0.15, far: 0.5, ground: 1, low-air: 1.3, high-air: 1.7}   # far, low-air, high-air unused
+  ramp: 2
+  haze_colour: 1c2230   # unused: vacuum, no haze
+  atmosphere:
+    clear: {haze: 0.0}
+  tile_sets:
+    berth-depth: {layer: deep, height: 512}   # the berth well's dark depth (seen only through the well)
+  pieces:
+    fortress-01: {layer: ground, size: [480, 2020]}
+    fortress-02: {layer: ground, size: [480, 2020]}
+    fortress-03: {layer: ground, size: [480, 2020]}
+    fortress-04: {layer: ground, size: [480, 2020]}
+    fortress-05: {layer: ground, size: [480, 2020]}
+    fortress-06: {layer: ground, size: [480, 2020]}
+    fortress-07: {layer: ground, size: [480, 2020]}
+    fortress-08: {layer: ground, size: [480, 2020]}
+    fortress-09: {layer: ground, size: [480, 2020]}
+    gate-1-doors: {layer: ground, size: [208, 104], frames: 12, fps: 6}
+    gate-2-doors: {layer: ground, size: [208, 104], frames: 12, fps: 6}
+    gate-3-doors: {layer: ground, size: [208, 104], frames: 12, fps: 6}
+    drive-glow: {layer: deep, size: [64, 176]}
+  placed:
+    # the fortress, ground rows -16..2003 (exact: its bottom row on -16)
+    - {piece: fortress-01, t: 5.171, x: 240}
+    # the fortress, ground rows 2004..4023 (exact: its bottom row on 2004)
+    - {piece: fortress-02, t: 19.6, x: 240}
+    # the fortress, ground rows 4024..6043 (exact: its bottom row on 4024)
+    - {piece: fortress-03, t: 36.2, x: 240}
+    # the fortress, ground rows 6044..8063 (exact: its bottom row on 6044)
+    - {piece: fortress-04, t: 55.033, x: 240}
+    # the fortress, ground rows 8064..10083 (exact: its bottom row on 8064)
+    - {piece: fortress-05, t: 71.867, x: 240}
+    # the fortress, ground rows 10084..12103 (exact: its bottom row on 10084)
+    - {piece: fortress-06, t: 90.7, x: 240}
+    # the fortress, ground rows 12104..14123 (exact: its bottom row on 12104)
+    - {piece: fortress-07, t: 109.533, x: 240}
+    # the fortress, ground rows 14124..16143 (exact: its bottom row on 14124)
+    - {piece: fortress-08, t: 126.457, x: 240}
+    # the fortress, ground rows 16144..18163 (exact: its bottom row on 16144)
+    - {piece: fortress-09, t: 140.886, x: 240}
+    # the Ascendant's drive glow climbing away, seen only through the empty berth's well (t~143-146)
+    - {piece: drive-glow, t: 138.714, x: 240, path: [[141, 0, -80], [150, 0, 280]]}
+  doors:   # G4: {gate: n (the held gates' order, GATE_OPENED's value), piece, t, x}; frame 0 until the
+  # gate opens, then the frames once over `seconds`, the last held
+    - {gate: 1, piece: gate-1-doors, t: 46.083, x: 264, seconds: 2}
+    - {gate: 2, piece: gate-2-doors, t: 78.033, x: 264, seconds: 2}
+    - {gate: 3, piece: gate-3-doors, t: 102.083, x: 264, seconds: 2}
+sections:   # ART-G2's reading of the README's Layout (each halt a 2 s section at speed 0: the clock stands
+  # at its end while the gate holds); G2 writes the real ones (arena: true and the holders)
+  - {name: The Ice Field, end: 20, speed: 140, atmosphere: clear, tiles: [berth-depth]}
+  - {name: The Outer Causeways, end: 42, speed: 120, ramp: 2, atmosphere: clear, tiles: [berth-depth]}
+  - {name: Gate One, end: 44, speed: 0, ramp: 2, holds: pylons, atmosphere: clear, tiles: [berth-depth]}
+  - {name: The Hangar Decks, end: 74, speed: 120, ramp: 2, atmosphere: clear, tiles: [berth-depth]}
+  - {name: Gate Two, end: 76, speed: 0, ramp: 2, holds: pylons, atmosphere: clear, tiles: [berth-depth]}
+  - {name: The Citadel Ring, end: 98, speed: 120, ramp: 2, atmosphere: clear, tiles: [berth-depth]}
+  - {name: Gate Three, end: 100, speed: 0, ramp: 2, holds: pylons, atmosphere: clear, tiles: [berth-depth]}
+  - {name: The Inner Court, end: 112, speed: 120, ramp: 2, atmosphere: clear, tiles: [berth-depth]}
+  - {name: The Halo, end: 114, speed: 0, ramp: 2, holds: halo, atmosphere: clear, tiles: [berth-depth]}
+  - {name: Helix HQ, end: 146, speed: 140, ramp: 2, atmosphere: clear, tiles: [berth-depth]}
+gates:   # each gate's held screen (480x540, y down from the top edge, the clock standing at `halt`):
+  # the pylons on their towers (x, y; `facing` in degrees clockwise from +x, `crown` its shield_pylon.py facing
+  # k = k x 22.5 degrees clockwise from straight down; the dome's centre
+  # 140 px along it), what each dome covers (its units within 95 px of its centre: easy's radius), the
+  # archive core's well. `at: [t, x]` is the entry (the centre entering half its size above the top
+  # edge: pylon 56, Warden 64, Rail Bunker 72, SAM/Graft 44, the core's hatch assumed 40); the Wardens
+  # drive in and park at their `park` places (`row`: the ground row).
+  - name: Gate One
+    gate: 1
+    halt: 44   # the held screen shows ground rows 5580..6120; the wall at y 110 (row 6010)
+    pylons:
+      - {id: A, x: 80, y: 96, facing: 22.5, crown: 13, at: [41.97, 80], dome: [209, 150]}
+      - {id: B, x: 400, y: 96, facing: 90, crown: 0, at: [41.97, 400], dome: [400, 236]}
+    covered:
+      - {under: A, enemy: warden-tank, places: [{park: [214, 150], row: 5970}, {park: [262, 168], row: 5952}]}   # the Warden pair parked in the gateway (driving in from t~38)
+      - {under: B, enemy: sam-nest, places: [{x: 370, y: 226, at: [40.93, 370]}, {x: 420, y: 210, at: [41.07, 420]}, {x: 418, y: 262, at: [40.63, 418]}]}   # a SAM Nest group on the right bastion
+    core: {x: 240, y: 400, at: [39.5, 240]}   # archive core A's well (the hatch and its glow are the game's)
+    doors: gate-1-doors
+  - name: Gate Two
+    gate: 2
+    halt: 76   # the held screen shows ground rows 9180..9720; the wall at y 116 (row 9604)
+    pylons:
+      - {id: A, x: 430, y: 100, facing: 112.5, crown: 1, at: [73.93, 430], dome: [376, 229]}
+      - {id: B, x: 60, y: 100, facing: 22.5, crown: 13, at: [73.93, 60], dome: [189, 154]}
+      - {id: C, x: 100, y: 260, facing: 22.5, crown: 13, at: [72.6, 100], dome: [229, 314]}
+    covered:
+      - {under: A, enemy: rail-bunker, places: [{x: 340, y: 210, at: [72.95, 340]}, {x: 412, y: 252, at: [72.6, 412]}]}   # the Rail Bunker pair (t~70) on their deck pads
+      - {under: B, enemy: warden-tank, places: [{park: [214, 160], row: 9560}, {park: [268, 146], row: 9574}]}   # a Warden pair parked in the gateway
+      - {under: C, enemy: graft-turret, places: [{x: 200, y: 320, at: [72.15, 200]}, {x: 250, y: 345, at: [71.94, 250]}, {x: 262, y: 300, at: [72.32, 262]}]}   # a Graft Turret nest of 3 on the apron beside the left bastion
+    core: {x: 120, y: 390, at: [71.58, 120]}   # archive core B's well (the hatch and its glow are the game's)
+    doors: gate-2-doors
+  - name: Gate Three
+    gate: 3
+    halt: 100   # the held screen shows ground rows 11820..12360; the wall at y 110 (row 12250)
+    pylons:
+      - {id: A, x: 420, y: 100, facing: 157.5, crown: 3, at: [97.93, 420], dome: [291, 154]}
+      - {id: B, x: 50, y: 132, facing: 67.5, crown: 15, at: [97.67, 50], dome: [104, 261]}
+      - {id: C, x: 410, y: 262, facing: 180, crown: 4, at: [96.58, 410], dome: [270, 262]}
+    covered:
+      - {under: A, enemy: warden-tank, places: [{park: [300, 150], row: 12210}, {park: [240, 140], row: 12220}]}   # the Warden pair parked in the gateway (driving in from t~96)
+      - {under: B, enemy: rail-bunker, places: [{x: 104, y: 261, at: [96.52, 104]}]}   # a Rail Bunker on its pad
+      - {under: C, enemy: sam-nest, places: [{x: 236, y: 280, at: [96.48, 236]}, {x: 280, y: 310, at: [96.23, 280]}, {x: 306, y: 276, at: [96.52, 306]}]}   # a SAM Nest group on the apron
+    core: {x: 360, y: 390, at: [95.58, 360]}   # archive core C's well (the hatch and its glow are the game's)
+    doors: gate-3-doors
+halo: {x: 240, y: 190, halt: 114, at: [110.42, 240], row: 13610}   # its core on the held screen over the mount (r 150 plinth, the ring channel at r 96)
+ground_placements:   # the other ground targets, placed on the fortress's decks, roofs and walls: at: [t, x];
+  # a convoy's x follows its road (`paths`), so it is left to G2's WalkPath
+  - target: "SAM Nest group on the crater-rim outpost's deck"
+    enemy: sam-nest
+    at: [[8, 300], [8, 345], [8, 390]]
+  - target: "Graft Turret nest on the gatehouse roof (the Vrell growth round it)"
+    enemy: graft-turret
+    at: [[15, 192], [15, 288], [15.45, 192], [15.45, 288]]
+  - target: "Warden Tank pair on the left causeway (they drive down it: path left-causeway)"
+    enemy: warden-tank
+    at: [[24, path], [24.6, path]]
+  - target: "Sentinel Tower on the outer wall's central tower"
+    enemy: sentinel-tower
+    at: [[32, 240]]
+  - target: "Rail Bunker pair on the hangar decks' pads"
+    enemy: rail-bunker
+    at: [[50, 96], [50.6, 384]]
+  - target: "Graft Turret nest on the launch deck's edges"
+    enemy: graft-turret
+    at: [[58, 150], [58, 330], [58.5, 150], [58.5, 330]]
+  - target: "SAM Nest group on a hangar roof (right)"
+    enemy: sam-nest
+    at: [[64, 362], [64, 406], [64.3, 450]]
+  - target: "Sentinel Tower on the citadel core's wall"
+    enemy: sentinel-tower
+    at: [[80, 352]]
+  - target: "SAM Nest group on the core's terrace"
+    enemy: sam-nest
+    at: [[84, 312], [84, 356], [84.3, 400]]
+  - target: "Warden Tank convoy on the ring road (path ring-road)"
+    enemy: warden-tank
+    at: [[86, path], [86.6, path], [87.2, path]]
+  - target: "Graft Turret nest in the inner court (left)"
+    enemy: graft-turret
+    at: [[104, 64], [104, 112], [104.4, 64], [104.4, 112]]
+  - target: "Sentinel Tower in the inner court"
+    enemy: sentinel-tower
+    at: [[108, 112]]
+  - target: "Rail Bunker pair on HQ's roofs"
+    enemy: rail-bunker
+    at: [[120, 100], [120.6, 380]]
+  - target: "SAM Nest group on HQ's roofs"
+    enemy: sam-nest
+    at: [[126, 300], [126, 344], [126.3, 388]]
+  - target: "Sentinel Tower on HQ's roofs"
+    enemy: sentinel-tower
+    at: [[132, 120]]
+  - target: "Graft Turret nest on HQ's last roof"
+    enemy: graft-turret
+    at: [[138, 330], [138, 378], [138.4, 330], [138.4, 378]]
+ground_objects:
+  - {t: 104, x: 410, size: [40, 40], hp: 20, hard: {hp: 28}, crate: 100, secret: lab vault}   # in the research wing's cracked-open roof (its floor lit round it)
+  - {t: 20, x: 240, y_up: 380, drop: armour-patch, look: beacon}   # the CDF beacon on the causeways' fork
+paths:   # the roads as polylines [x, ground row] (the Wardens' WalkPaths follow them)
+  outer-causeway: [[240, 2520], [240, 2640], [240, 3460]]
+  left-causeway: [[240, 3460], [200, 3720], [140, 4100], [128, 4460], [128, 4880]]
+  right-causeway: [[240, 3460], [282, 3720], [340, 4100], [352, 4460], [352, 4880]]
+  left-lane: [[128, 4880], [140, 5240], [180, 5720], [214, 5900], [230, 5990]]
+  right-lane: [[352, 4880], [340, 5240], [300, 5720], [266, 5900], [250, 5990]]
+  launch-deck: [[240, 6030], [240, 9584]]
+  ring-road: [[240, 9624], [190, 9844], [112, 10244], [104, 10684], [170, 11164], [290, 11584], [300, 11990], [246, 12230]]
+# rows: the end's bottom edge 17600 (ground px); the fortress rows -16..18163; deep 2640

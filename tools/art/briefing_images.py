@@ -8439,6 +8439,162 @@ def level_40_honour_guard():
     return b
 
 
+# --------------------------------------------------------------------------- M10 part G: Level 41
+
+SOURCE_M10G = artkit.source_note(SCRIPT, "M10 part G batch")
+TEAL_C = (60, 230, 210)                                   # the archive cores and Varga's spike
+
+
+def ascendant_shape(b, cx, cy, length, width):
+    """The Ascendant from above as a gold silhouette: a long arrowhead hull, its drive block, gold edge (the display's
+    stand-in: Level 42 draws the ship)."""
+    pts = [(cx + length / 2, cy), (cx + length * 0.1, cy - width / 2), (cx - length * 0.42, cy - width * 0.42),
+           (cx - length / 2, cy - width * 0.2), (cx - length / 2, cy + width * 0.2), (cx - length * 0.42, cy + width * 0.42),
+           (cx + length * 0.1, cy + width / 2)]
+    fill(b, pts, (90, 70, 24), 0.9)
+    b.draw.polygon(pts, outline=GOLD_A + (255,))
+    b.line([(cx - length * 0.42, cy), (cx + length * 0.36, cy)], GOLD_A, 1, 160)
+    b.glow(cx - length / 2 - 4, cy, 6, (150, 110, 40), 0.7)
+
+
+def level_41_callisto_citadel():
+    """L41 p1 (M10 part G batch): Okafor's tactical chart of the citadel from above: Callisto's cratered ice, the two
+    causeways across the crevasse field to the outer wall, the three gates as gold rings with their pylons as gold
+    dots (2, 3, 3), the citadel's rings (the hangar decks, the ring road) round Helix HQ, the Halo at the centre with
+    its six turrets, the dock beyond it with the Ascendant's gold silhouette still in its berth; the wing's route in
+    white; Jupiter's limb low at the top right edge (the sky beyond the moon's horizon on the chart's frame)."""
+    b = Board()
+    n = raster.fbm(W, H, 36, 7901, octaves=4, period=False)
+    ice = raster.ramp(CALLISTO_HOLO, np.clip(0.3 + 0.5 * n, 0, 1))
+    b.base = b.base * 0.3 + ice * 0.7
+    rng = np.random.default_rng(7903)
+    for _ in range(70):                                           # the craters
+        x, y, r = rng.uniform(0, W), rng.uniform(0, H), rng.uniform(2, 9)
+        b.arc(x, y, r, r, 200, 380, ICE_A, 70)
+    jr, jcx, jcy = 700, 760, -640                                 # Jupiter's limb at the top right corner
+    d = np.hypot(b.xx - jcx, b.yy - jcy)
+    bands = 0.5 + 0.5 * np.sin((b.yy - jcy) / 8 + 0.4 * np.sin(b.xx / 50))
+    b.base = np.where((d < jr)[..., None], raster.ramp(JOV_HOLO, np.clip(0.35 + 0.45 * bands, 0, 1)), b.base)
+    b.base += (np.exp(-((d - jr) / 3) ** 2) * 0.6)[..., None] * np.array((200, 160, 110.0))
+    tag(b, W - 70, 26, "JUPITER", GOLD_A)
+    cx, cy = 440, 130                                             # the citadel: its rings round Helix HQ
+    for r, k in ((112, 0.9), (84, 0.8), (56, 0.75)):
+        fill(b, [(cx + r * np.cos(a), cy + r * 0.86 * np.sin(a)) for a in np.linspace(0, TAU_B, 48, endpoint=False)],
+             (8, 10, 16), k * 0.6)
+        b.ring(cx, cy, r, r * 0.86, colour=GREY, alpha=170)
+    tag(b, cx - 30, cy + 102, "CITADEL", GREY)
+    for name, x0 in (("CREVASSES", 120),):
+        tag(b, x0, 196, name, ICE_A)
+    route = []
+    for dy in (-16, 16):                                          # the two causeways to the outer wall
+        pts = [(20, cy + dy * 0.2), (110, cy + dy * 0.6), (200, cy + dy), (cx - 112, cy + dy * 0.6)]
+        b.line(pts, GREY, 3, 200)
+    tag(b, 30, cy + 22, "CAUSEWAYS", GREY)
+    gates = [(cx - 112, cy, 2, "GATE 1"), (cx - 84, cy - 8, 3, "GATE 2"), (cx - 56, cy - 4, 3, "GATE 3")]
+    for k, (gx, gy, npy, label) in enumerate(gates):
+        b.ring(gx, gy, 9, 13, colour=GOLD_A, alpha=240, width=2)
+        for j in range(npy):
+            a = -np.pi / 2 + (j - (npy - 1) / 2) * 0.9
+            b.marker(gx + 13 * np.cos(a) * 0.7, gy + 17 * np.sin(a), "dot", GOLD_A, 2)
+        tag(b, gx - 18, [cy - 60, cy - 84, cy + 34][k], label, GOLD_A)
+        b.line([(gx, gy - 14 if k < 2 else gy + 14), (gx, [cy - 50, cy - 74, cy + 32][k])], GOLD_A, 1, 160)
+    hx, hy = cx, cy                                               # the Halo at the centre
+    b.ring(hx, hy, 18, colour=RED, alpha=230, width=2)
+    for a in np.linspace(0, TAU_B, 6, endpoint=False):
+        b.marker(hx + 18 * np.cos(a), hy + 18 * np.sin(a), "dot", RED, 2)
+    b.glow(hx, hy, 6, (120, 30, 20), 0.8)
+    tag(b, hx - 22, hy - 34, "THE HALO", RED)
+    dx, dy = cx + 150, cy + 4                                     # the dock beyond HQ, the Ascendant in its berth
+    b.draw.rectangle([dx - 46, dy - 14, dx + 46, dy + 14], outline=GREY + (220,), width=1)
+    ascendant_shape(b, dx, dy, 80, 20)
+    tag(b, dx - 46, dy + 22, "DOCK: ASCENDANT", GOLD_A)
+    tag(b, cx + 30, cy - 70, "HELIX HQ", CYAN)
+    route = [(10, cy + 6), (110, cy + 4), (200, cy), (cx - 112, cy), (cx - 84, cy - 8), (cx - 56, cy - 4), (hx - 20, hy),
+             (hx + 20, hy), (dx - 52, dy)]
+    b.dashed(route, WHITE, 2, 6, 4)
+    b.arrow(dx - 80, dy, dx - 50, dy, WHITE, 6)
+    b.title("CDF CHART - CALLISTO CITADEL")
+    tag(b, W - 10, 9, "CMDR. OKAFOR", CYAN_DIM, right=True)       # on a tag: over Jupiter's limb
+    b.label(10, H - 16, "BREAK THE GATES. REACH THE DOCK.", RED)
+    return b
+
+
+def badge_card(w=170, h=96):
+    """Varga's own Helix badge photo (2179) as a clipped card: her portrait, the emblem, her name, a paperclip."""
+    card = Image.new("RGBA", (w, h), (196, 194, 186, 255))
+    d = ImageDraw.Draw(card)
+    d.rectangle([0, 0, w - 1, h - 1], outline=(90, 90, 96, 255))
+    d.rectangle([0, 0, w - 1, 13], fill=(40, 44, 60, 255))
+    raster.draw_text(card, 5, 3, "HELIX DYNAMICS", (220, 224, 232, 255))
+    face = Image.open(SPRITES / "portraits" / "briefing-varga-neutral.png").convert("RGBA")
+    face = face.resize((70, 70), Image.LANCZOS)
+    photo = Image.new("RGBA", (70, 70), (120, 130, 150, 255))
+    photo.alpha_composite(face)
+    card.alpha_composite(photo, (6, 20))
+    d.rectangle([5, 19, 76, 90], outline=(70, 70, 76, 255))
+    emb = helix_emblem(26, (60, 70, 96))
+    card.alpha_composite(emb, (w - 34, 18))
+    for k, (text, col) in enumerate((("DR. E. VARGA", (24, 26, 34)), ("GATE PHYSICS", (60, 64, 76)),
+                                     ("CALLISTO", (60, 64, 76)), ("2179", (24, 26, 34)))):
+        raster.draw_text(card, 82, 48 + 10 * k, text, col + (255,))
+    clip = Image.new("RGBA", (w, h), (0, 0, 0, 0))                # a paperclip over the card's top edge
+    cd = ImageDraw.Draw(clip)
+    cd.rounded_rectangle([w - 58, -10, w - 46, 22], 6, outline=(170, 176, 188, 255), width=2)
+    cd.rounded_rectangle([w - 55, -6, w - 49, 16], 3, outline=(150, 156, 168, 255), width=1)
+    card.alpha_composite(clip)
+    return held_frame_img(card.rotate(-5, resample=Image.BICUBIC, expand=True), 40)
+
+
+def level_41_helix_hq():
+    """L41 p2: Varga's old floor plan of Helix HQ's research levels (the blueprint's lines, rooms and corridors), her
+    Helix badge photo of 2179 clipped to its corner, the three archive cores A-C circled in teal on the gates' floors,
+    the main core under the Halo's mount marked and a hand-drawn arrow to it."""
+    b = Board()
+    b.base = b.base * 0.7 + np.array((4, 14, 30.0)) * 0.3
+    b.title("HELIX DYNAMICS - CALLISTO CAMPUS - PLAN B2 (2179)")
+    b.label(W - 10, 9, "DR. VARGA", CYAN_DIM, right=True)
+    x0, y0, x1, y1 = 24, 30, 480, 226                            # the plan: rooms and corridors
+    b.draw.rectangle([x0, y0, x1, y1], outline=CYAN + (200,), width=1)
+    rng = np.random.default_rng(7911)
+    for gx in range(x0 + 40, x1, 52):
+        b.line([(gx, y0), (gx, y1)], CYAN_DIM, 1, 120)
+    for gy in range(y0 + 34, y1, 38):
+        b.line([(x0, gy), (x1, gy)], CYAN_DIM, 1, 120)
+    for _ in range(26):                                           # doors as gaps, small rooms
+        rx, ry = rng.uniform(x0 + 8, x1 - 40), rng.uniform(y0 + 6, y1 - 24)
+        b.draw.rectangle([rx, ry, rx + rng.uniform(14, 34), ry + rng.uniform(10, 22)], outline=CYAN_DIM + (150,))
+    b.line([(x0, 128), (x1, 128)], WHITE, 3, 120)                 # the main corridor east-west
+    b.line([(250, y0), (250, y1)], WHITE, 3, 120)                 # and north-south
+    mx, my = 360, 128                                             # the main core under the Halo's mount (now)
+    b.ring(mx, my, 34, colour=RED, alpha=200, width=1)
+    b.dashed([(mx + 34 * np.cos(a), my + 34 * np.sin(a)) for a in np.linspace(0, TAU_B, 30)], RED, 1, 3, 3)
+    b.ring(mx, my, 11, colour=TEAL_C, alpha=240, width=2)
+    b.glow(mx, my, 8, (20, 110, 100), 0.8)
+    tag(b, mx - 34, my + 40, "MAIN CORE", TEAL_C)
+    tag(b, mx - 54, my - 50, "HALO MOUNT (NOW)", RED)
+    for name, (cx, cy) in (("A", (88, 178)), ("B", (168, 74)), ("C", (300, 196))):
+        b.ring(cx, cy, 13, colour=TEAL_C, alpha=240, width=2)
+        b.marker(cx, cy, "dot", TEAL_C, 3)
+        tag(b, cx + 16, cy - 4, f"ARCHIVE {name}", TEAL_C)
+    pts = []                                                      # a hand-drawn arrow to the main core
+    for u in np.linspace(0, 1, 24):
+        x = 120 + (mx - 14 - 120) * u
+        y = 214 - 70 * np.sin(u * np.pi * 0.9) + (my + 6 - 214) * u ** 2
+        pts.append((x + rng.normal(0, 0.8), y + rng.normal(0, 0.8)))
+    b.line(pts, AMBER, 2, 230)
+    (ax, ay), (bx, by) = pts[-3], pts[-1]
+    dvec = np.array([bx - ax, by - ay]) / max(np.hypot(bx - ax, by - ay), 1e-6)
+    nvec = np.array([-dvec[1], dvec[0]])
+    tip = np.array([bx, by])
+    b.line([tuple(tip - dvec * 10 + nvec * 6), tuple(tip), tuple(tip - dvec * 10 - nvec * 6)], AMBER, 2, 230)
+    tag(b, 128, 212, "THE NAME IS IN HERE", AMBER)
+    b.sprites.append((badge_card(), 490, 36))
+    tag(b, 500, 160, "MY BADGE. I KNOW", GREY)
+    tag(b, 500, 172, "EVERY DOOR IN THERE.", GREY)
+    b.label(W - 10, H - 16, "OPEN A CORE, FLY OVER IT.", TEAL_C, right=True)
+    return b
+
+
 IMAGES = {
     "act-1-tether-gate": tether_gate,
     "act-1-outer-stations": outer_stations,
@@ -8557,6 +8713,8 @@ IMAGES = {
     "level-39-cracking-tower": level_39_cracking_tower,
     "level-40-callisto-approach": level_40_callisto_approach,
     "level-40-honour-guard": level_40_honour_guard,
+    "level-41-callisto-citadel": level_41_callisto_citadel,
+    "level-41-helix-hq": level_41_helix_hq,
 }
 
 # Review sheets per batch: round, the images on it, the batch name.
@@ -8599,6 +8757,7 @@ BATCHES = {
     "r76": (list(IMAGES)[111:113], "M10 PART D"),
     "r77": (list(IMAGES)[113:115], "M10 PART E"),
     "r78": (list(IMAGES)[115:117], "M10 PART F"),
+    "r79": (list(IMAGES)[117:119], "M10 PART G"),
 }
 
 
@@ -8637,6 +8796,7 @@ def build(names):
                   else SOURCE_M10D if name in BATCHES["r76"][0]
                   else SOURCE_M10E if name in BATCHES["r77"][0]
                   else SOURCE_M10F if name in BATCHES["r78"][0]
+                  else SOURCE_M10G if name in BATCHES["r79"][0]
                   else SOURCE_M4)
         artkit.save_png(IMAGES[name]().image(), OUT / f"{name}.png", source)
     print(f"{len(names)} briefing images in {OUT.relative_to(ROOT)}")

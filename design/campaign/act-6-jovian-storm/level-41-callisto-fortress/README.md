@@ -2,7 +2,7 @@
 title: Level 41 – Callisto Fortress
 design: approved
 implementation: not-started
-art: none
+art: proposed
 depends-on: [../../../enemies/ground/shield-pylon, ../../../enemies/ground/halo-platform, ../../../enemies/ground/warden-tank, ../../../enemies/ground/rail-bunker, ../../../enemies/ground/sentinel-tower, ../../../enemies/ground/sam-nest, ../../../enemies/ground/graft-turret, ../../../enemies/air/talon, ../../../enemies/air/chimera, ../../../enemies/air/gilded-gunship, ../../../enemies/air/hornet, ../../../enemies/air/lamprey, ../../../world/jovian, ../../../player/systems, ../../../ui/hud, ../../../story/characters/varga, ../../../systems/economy]
 updated: 2026-11-01
 ---
@@ -395,15 +395,32 @@ every weapon breaks a gate, the pylon's decision). The plan's fit measures the h
 
 ## Concept art
 
-None yet. The level needs (M10's Level 41 part; the units' proposals are in their pages' round-72 concept, the moods
+**Production backdrop (M10 part G, round 79, step ART-G2;
+[`tools/art/backdrop_l41.py`](../../../../tools/art/backdrop_l41.py)).** Callisto's cratered ice from t = 0 (no
+Jupiter), the Sun low in the top left with every structure's shadow 2.6 times its height, the black-and-gold citadel on
+decks a step lighter than its units: the crater-rim outpost, the Vrell-grafted gatehouse, the two causeways over the
+crevasse field, the outer wall with its Sentinel tower and the Vrell growth, the three gates (walls, towers under the
+pylons, bastions, the cores' wells on the aprons), the hangar decks with parked Talons in their bays, the citadel ring,
+the inner court with Varga's cracked-open research wing, the Halo's mount, Helix HQ's roofs and masts and the dock's
+empty berth with the drive glow climbing away in its well (`deep`). One continuous fortress cut into nine ground pieces
+on exact rows (no tile set; about 2.3 atlas pages with the doors, the depth tile and the glow). Each gate's **blast
+doors** are a 12-frame piece (closed, parting along the scroll's 2 s ease), drawn on frame 0 until the gate's
+`GATE_OPENED` (step G4's hook). The proposal (`concept/backdrop-proposal.yaml`, step G2's input, not data) holds the
+backdrop block, the sections, the gate layouts (pylons, facings, domes, covered units, cores, doors), the other ground
+placements and the roads' paths. Prompts and briefs: [concept/prompts.md](concept/prompts.md). The briefing images are
+on [the briefing screen's](../../../ui/briefing/README.md#concept-art) sheet.
+
+| File | What | Status |
+|---|---|---|
+| [concept/backdrop-final-r79-a.png](concept/backdrop-final-r79-a.png) | Production backdrop: sixteen screens at half size with stand-ins (the ice at t=0, the outpost, the gatehouse, the causeways, the outer wall and the growth, the three gate halts with their pylons, domes, covered units and cores, the hangar decks, the citadel ring, the research wing, the Halo on its mount, HQ's roofs and masts, the dock, the empty berth), the readability crops at 1× (each stretch's darkest and brightest window with a Talon, a Chimera, a Warden, a SAM, amber needles, an orb, the ship), the doors' frames, the whole fortress at eighth size | proposed (round 79) |
+| [concept/backdrop-final-r79-a.gif](concept/backdrop-final-r79-a.gif) | Gate One's halt at half size: the domes up, the second pylon falls, the blast doors part as the scroll eases back up | proposed (round 79) |
+| [concept/backdrop-proposal.yaml](concept/backdrop-proposal.yaml) | The generator's `backdrop:` block (the fortress pieces, the `doors:` rows, the drive glow's path), the sections, the gate layouts, the Halo's place, the other ground placements, the vault and the beacon, the roads' paths for step G2 (not data) | proposed (round 79; step G2's input) |
+
+The level needs besides (M10's Level 41 part; the units' proposals are in their pages' round-72 concept, the moods
 in [the world](../../../world/jovian/README.md)'s):
 
-- the backdrop: Callisto's cratered ice, the causeways and the crevasse field, the citadel's walls, three gates with
-  their towers and **blast doors** (closed, opening), the hangar decks, the ring road, the inner court and Varga's
-  research wing, the Halo's mount, HQ's roofs and masts, the dock with the **empty berth**; the Vrell growth on the
-  outer wall (no Jupiter's disc: the ice covers the screen from t = 0); every glow and haze smooth (≥ 32 steps, no ordered dither, drawn once);
 - the archive core (hatch whole, broken; the core glowing, the upload ring filling), the lab vault; the CDF beacon;
-- the two briefing images; the intel portraits of the pylon and the Halo;
+- the intel portraits of the pylon and the Halo;
 - the round's captures: the level at medium with the plan's fit and Rook: a gate halt with its domes (covered units'
   sheen), an upload, a gate opening, the Halo's halt and its barrier dropping, the Silence line on the HUD, the empty
   berth; 1:1 crops of a dome's rim over the ice and the livery split (elite pylon beside a regular Warden Tank).
