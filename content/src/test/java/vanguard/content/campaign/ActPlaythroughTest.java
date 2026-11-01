@@ -37,8 +37,8 @@ import vanguard.content.Difficulty;
  * buys nothing: saving for the Mk V). M9 part H (step H3): Level 35 follows (the plan's L35 visit: the Mk V "Helix",
  * both pods to L4), and its win ends Act 5 with its outro. M10 part B (step B3): Act 6's intro follows and Level 36 (the
  * plan's L36 visit: the Tesla Coil Pod L2 on the left wing). M10 part C (step C3): Level 37 follows (the plan's L37
- * visit: the Ion Beam L5), whose win ends the branch's release ({@link CampaignRoute#releaseEnd}: Level 38 not built;
- * part H moves it to Level 42). The credits and the fit per visit are printed per act (the playthrough sheet in the test report). Round 34, P3 = A: the credits at each act's end lie
+ * visit: the Ion Beam L5). M10 part D (step D3): Level 38 follows (the plan's L38 visit buys nothing), whose win ends
+ * the branch's release ({@link CampaignRoute#releaseEnd}: Level 39 not built; part H moves it to Level 42). The credits and the fit per visit are printed per act (the playthrough sheet in the test report). Round 34, P3 = A: the credits at each act's end lie
  * within the balance plan's tolerance of the expert's bound, the starting credits plus each level's perfect run × the
  * difficulty's income × the expert's collection, with the expert's grade bonus, less the purchases and repairs paid
  * ({@link Playthrough#bound}); on hard up to the plan's {@code hard_under} below it. Rook's ejections and the refused
@@ -53,8 +53,8 @@ class ActPlaythroughTest {
      */
     private static final List<Integer> ACT_ENDS = List.of(7, 14, 21, 28, 35);
 
-    /** M10 part C: the last level built (the branch's release ends after Level 37's win, Level 38 not built). */
-    private static final int LAST = 37;
+    /** M10 part D: the last level built (the branch's release ends after Level 38's win, Level 39 not built). */
+    private static final int LAST = 38;
 
     /** M9 part B: the level whose win brings Rook back (his rescue at Level 29). */
     private static final int RESCUE = 29;
@@ -160,7 +160,7 @@ class ActPlaythroughTest {
         }
         assertEquals(LAST + 1, playthrough.campaign().nextLevel());
         Campaign campaign = playthrough.campaign();
-        // M10 part B (step B3): Act 6 so far (Levels 36-37), its sheet printed; its bound is checked at its end (Level
+        // M10 part B (step B3): Act 6 so far (Levels 36-38), its sheet printed; its bound is checked at its end (Level
         // 42).
         report(difficulty, 6, visits, campaign);
         // M9 part C (step C3): Level 30 flown with Rook back in the slot (the mine-line autopilot, MinePlay); M9 part D
@@ -171,12 +171,12 @@ class ActPlaythroughTest {
         // failed (he may eject and is repaired at the next visit).
         // M10 part B (step B3): Level 36 after Act 6's intro (the dive, DivePlay); its win ends no act (Act 6 ends at
         // Level 42), so no outro. M10 part C (step C3): Level 37 after it (the fall of Aurelia, AureliaPlay); its win
-        // ends no act either, and the branch's release ended after its debrief (Level 38 not built); M10 part D (step
-        // D2): Level 38 is built, so Level 37 leads on to it (the flight on is step D3's).
-        assertFalse(campaign.rookMissing(), difficulty + ": Rook in his slot after Level 37");
-        assertTrue(CampaignRoute.actEnd(CONTENT, campaign).isEmpty(), "Level 37 ends no act");
-        assertFalse(CampaignRoute.releaseEnd(CONTENT, campaign), "Level 37 leads on to Level 38");
-        assertTrue(CampaignRoute.launch(CONTENT, campaign).isPresent(), "Level 38 is built");
+        // ends no act either. M10 part D (step D3): Level 38 after it (the storm layer, StormPlay); its win ends no act
+        // either, and the branch's release ends after its debrief (Level 39 not built).
+        assertFalse(campaign.rookMissing(), difficulty + ": Rook in his slot after Level 38");
+        assertTrue(CampaignRoute.actEnd(CONTENT, campaign).isEmpty(), "Level 38 ends no act");
+        assertTrue(CampaignRoute.releaseEnd(CONTENT, campaign), "the release ends after Level 38 (Level 39 not built)");
+        assertTrue(CampaignRoute.launch(CONTENT, campaign).isEmpty(), "Level 39 is not built");
         assertTrue(
                 playthrough.problems().isEmpty(),
                 difficulty + ": the balance plan at the visits: " + playthrough.problems());

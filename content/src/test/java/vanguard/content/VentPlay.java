@@ -1,6 +1,7 @@
 package vanguard.content;
 
 import vanguard.sim.Command;
+import vanguard.sim.Debris;
 import vanguard.sim.Enemy;
 import vanguard.sim.EnemyBullet;
 import vanguard.sim.FurnaceVents;
@@ -142,15 +143,23 @@ final class VentPlay {
         // M10 part C: Level 37's Hornets make it a hunted level: what threatens a shuttle, a Graft Turret's root in its
         // window, a standing mirror first (AureliaPlay; null on every other level).
         Enemy aurelia = AureliaPlay.target(sortie, shipY);
+        // M10 part D: Level 38's storm layer: the CDF canister's latch and Aurelia's cargo pod, then a Harrow while it
+        // still chases (StormPlay; null on every other level).
+        Debris chunk = StormPlay.chunk(sortie, shipY);
+        Enemy harrow = StormPlay.harrow(sortie, shipY);
         if (beacon != null) {
             targetX = beacon.renderX(1);
         } else if (secret != null) {
             targetX = secret.renderX();
         } else if (aurelia != null) {
             targetX = aurelia.renderX(1);
+        } else if (chunk != null) {
+            targetX = chunk.renderX(1);
         } else if (pickup != null && (above == null || pickup.renderY(1) < 300)) {
             targetX = pickup.renderX();
             targetY = Math.max(40, pickup.renderY(1) - 10);
+        } else if (harrow != null) {
+            targetX = harrow.renderX(1);
         } else if (above != null) {
             targetX = above.renderX(1);
         } else if (below != null) {
@@ -179,7 +188,7 @@ final class VentPlay {
                     MovePlanner.MOVE_Y[m],
                     targetX,
                     targetY,
-                    beacon != null || secret != null ? BEACON_X : ALONG_X);
+                    beacon != null || secret != null || chunk != null ? BEACON_X : ALONG_X);
             if (cost < least) {
                 least = cost;
                 best = m;

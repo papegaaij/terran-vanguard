@@ -29,7 +29,7 @@ import vanguard.sim.WaveSpec;
 class LightningBeltDataTest {
     private static final Content CONTENT = ContentLoader.fromClasspath();
 
-    private static final String KEY = Level38Plan.LEVEL;
+    private static final String KEY = Level38Test.LEVEL;
     private static final String PATH = "campaign/" + KEY + "/data.yaml";
     private static final String HARROW = "enemies/air/harrow/data.yaml";
 

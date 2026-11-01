@@ -121,7 +121,7 @@ weather:  # the Jovian system's hazards (design/world/jovian): Level 12's gusts 
     - {t: 102.5, x: 240, track: true, skip: [easy, medium]}
     - {t: 108, x: 240}
     - {t: 114, x: 240, skip: [easy]}                    # between the t=111 Hornets' stations (x 160, 320)
-    - {t: 119, x: 420, skip: [hard]}
+    - {t: 119, x: 375, skip: [hard]}                   # step D3: off the t=111 Hornets' drift (the right one at x 451-426 over t=119-120.25, keep_apart), 55 px off its station x=320
     - {t: 119, x: 240, track: true, skip: [easy, medium]}
     - {t: 122.5, x: 60, skip: [easy]}                   # L: the t=121 stream's left edge
     - {t: 127.5, x: 200}                                # ends before the t=128.5 Buzzsaws' first tells
