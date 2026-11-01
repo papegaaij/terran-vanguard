@@ -63,8 +63,14 @@ The fall (``fall``, drawn by the game's falling-city pass from ``fall.t``; the h
                            collapsing (fabric, no pop)
   spire-topple-w/-e        low-air 192x96, 10 frames at 5 fps, one-shot: a tall gold spire toppling west / east as
                            the wing flies down beside it
-  sinking-city, sinking-city-glow  deep 256x208 (+ 4 glow frames at 6 fps): the city a dark burning shape sinking
-                           into the bands, smoke rising (from the end of the halves' curves; Level 38 reuses it)
+  fall-veil-west/-east     ground 288x196 (round 75 F.6 redo, step ART-C3): patches of the cloud deck's heads (its
+                           look and the smoke haze baked in) that slide in from the sides and close over the sinking
+                           halves, then fade into the deck (drawn by the fall pass after the halves, at their keys)
+  sinking-city, sinking-city-glow  deep 256x208 (+ 4 glow frames at 6 fps): ART-C2's sinking city, frozen at its
+                           20 s curve's end (R75A_HALVES) - Level 38's aurelia-wreck source, no longer drawn in Level 37
+The fall's curve (F.6 redo): the halves alone carry the whole fall, t 160-196 (``fall_keys``: [u, x, y, scale, turn,
+shade, alpha]): they slow, shrink, turn and darken as before, keep their gap, are whole on the screen from 12.5 s,
+sink slowly late and fade from 1.5 s to 0 at 34 s while the veils close over them; nothing of the city after t 194.
 
 Section times: the level's data.yaml when it has sections, else the ``sections:`` of this script's own proposal
 (concept/backdrop-proposal.yaml), else the README's Layout. ``turn`` and ``fall`` (t, seconds) likewise. **Re-run after
@@ -73,10 +79,11 @@ burst and the chunks follow. ``--proposal`` writes the ``backdrop:`` block (tile
 ``growth`` and ``fall`` blocks with the halves' curves), the sections and the ground targets' places to
 concept/backdrop-proposal.yaml (never into data.yaml).
 
-Review: design/campaign/act-6-jovian-storm/level-37-fall-of-aurelia/concept/backdrop-final-r75-a.png (screens with
-stand-ins, the turn, the fall, the readability crops, the pieces) and .gif (the fall, t 157-182 at half size);
-growth-final-r75-a.gif (the turn, t 99-105).
-Run: python3 tools/art/backdrop_l37.py [--proposal | --review | --check]   (all: about 3 min)
+Review: design/campaign/act-6-jovian-storm/level-37-fall-of-aurelia/concept/fall-final-r75-b.png (round 75 F.6 redo:
+the whole fall t 158-200 at half size, 1:1 crops of the late fall, the veils, the curves) and .gif (t 158-200 at play
+size, 4 frames a second); round 75 a's backdrop-final-r75-a.png/.gif and growth-final-r75-a.gif (step ART-C2) are
+rebuilt only with ``--review-a`` (their fall would show the redo's).
+Run: python3 tools/art/backdrop_l37.py [--proposal | --review | --review-a | --check]   (all: about 3.5 min)
 """
 import sys
 from concurrent.futures import ProcessPoolExecutor
@@ -1367,10 +1374,31 @@ def growth_burst():
 
 # =========================================================================== the fall
 
+# Round 75 F.6 redo (step ART-C3; the user: "The platform should disappear in the clouds completely. During the fall
+# it should fade slowly. Also, in the last frame some parts are cut off at the bottom."): the halves now carry the whole
+# fall themselves - one curve over FALL_SPAN s (t 160-196) that slows, shrinks and darkens them as before but fades
+# their alpha slowly from the break to 0 by FALL_GONE s, keeps every pixel of them on the screen from FALL_WHOLE s on
+# (ART-C2's 20 s curve ended with the east half's bottom on the screen's edge and handed over to the 256x208
+# sinking-city on deep, whose canvas cut the halves' tops and bottoms off and which then slid out through the bottom
+# edge at the deep layer's 15 px/s), and two cloud-top veils close over them (FALL_VEILS). The sinking city is no
+# longer drawn in Level 37; its files stay (frozen at ART-C2's curve end, R75A_HALVES) as Level 38's source.
 FALL_HALVES = {   # the two city layers (A.13 b): west sinks faster and darker, east a little slower
+    "west": dict(scale=0.20, drift=-40, turn=-7.0, shade=0.52, tau=0.85, floor=0.10),
+    "east": dict(scale=0.23, drift=36, turn=6.0, shade=0.46, tau=1.05, floor=0.12),
+}
+FALL_SPAN = 36.0          # the halves' keys run u 0..FALL_SPAN (the data's fall.seconds)
+FALL_GONE = 34.0          # their alpha reaches 0 here (t 194): >= 6 s of calm before the level end
+FALL_FADE_FROM = 1.5      # ...from 1 at this u (the handover and the break stay whole)
+FALL_WHOLE = 12.5         # from this u every pixel of each half (its rim's pad, turned) is on the screen
+FALL_SHRINK_TAU = 12.0    # the shrink's time scale (front-loaded: most of it in the first 20 s)
+FALL_CENTRE_Y = 160.0     # the point the halves shrink toward (y down): above the field's centre, so they end whole
+FALL_SINK_V = 5.5         # px/s: the late sinking on the screen (eased in round u = FALL_SINK_FROM)
+FALL_SINK_FROM = 11.0
+R75A_HALVES = {   # ART-C2's curve (round 75 a), kept for the frozen sinking-city (Level 38's aurelia-wreck source)
     "west": dict(scale=0.38, drift=-30, turn=-6.0, shade=0.64, tau=0.85, floor=0.10),
     "east": dict(scale=0.46, drift=26, turn=5.0, shade=0.56, tau=1.05, floor=0.12),
 }
+R75A_SECONDS = 20.0
 FALL_DARK = np.array((30, 22, 22.0))                 # what a half darkens toward (shade = its share)
 
 
@@ -1529,30 +1557,64 @@ def fall_shards(seed=3811):
 
 
 def fall_keys(side):
-    """The half's curve: [[u, x, y, scale, turn, shade], ...] every 0.1 s for the first 2 s, then every 0.5 s (u s
-    after fall.t; x, y the screen centre of its image, y down; scale toward the field's centre; turn degrees clockwise; shade the share it
-    has darkened toward FALL_DARK). The first key is where the ground has it at fall.t, its speed the ground's."""
+    """The half's curve: [[u, x, y, scale, turn, shade, alpha], ...] every 0.1 s for the first 2 s, then every 0.5 s to
+    FALL_SPAN (u s after fall.t; x, y the screen centre of its image, y down; scale about its centre; turn degrees
+    clockwise; shade the share it has darkened toward FALL_DARK; alpha its opacity, rim and glow included). The first
+    key is where the ground has it at fall.t, its speed the ground's. It lags behind the ground as before (slowing to
+    ``floor`` of its speed), shrinks toward (240, FALL_CENTRE_Y) - fast at first, then slowly to ``scale`` -, sinks on
+    the screen at FALL_SINK_V late, and fades from FALL_FADE_FROM to 0 at FALL_GONE (smooth, linear between keys)."""
     p = FALL_HALVES[side]
     img, x0, bottom = halves()[side]
     xc = x0 + img.width / 2
     yc = SCREEN - (bottom - FALL_BASE) - img.height / 2
     v0 = CLOCK.speed_at(FALL_T + 1e-3)
     keys = []
-    us = [k / 10 for k in range(20)] + [2 + k / 2 for k in range(int((FALL_S - 2) * 2) + 1)]
+    us = [k / 10 for k in range(20)] + [2 + k / 2 for k in range(int((FALL_SPAN - 2) * 2) + 1)]
     for u in us:
         y_pre = yc + v0 * (p["floor"] * u + (1 - p["floor"]) * p["tau"] * (1 - np.exp(-u / p["tau"])))
-        s = 1 - (1 - p["scale"]) * smoothstep(0, FALL_S, u)
-        x = 240 + (xc + p["drift"] * smoothstep(0, FALL_S * 0.6, u) - 240) * s
-        y = SCREEN / 2 + (y_pre - SCREEN / 2) * s
+        s = p["scale"] + (1 - p["scale"]) * (0.8 * np.exp(-(u / FALL_SHRINK_TAU) ** 2)
+                                             + 0.2 * (1 - smoothstep(0, FALL_SPAN, u)))
+        x = 240 + (xc - 240) * s + p["drift"] * smoothstep(0, 24.0, u)     # the gap stays open as they shrink
+        sink = FALL_SINK_V * 3 * (np.log1p(np.exp((u - FALL_SINK_FROM) / 3)) - np.log1p(np.exp(-FALL_SINK_FROM / 3)))
+        y = FALL_CENTRE_Y + (y_pre - FALL_CENTRE_Y) * s + sink
+        alpha = 1 - smoothstep(FALL_FADE_FROM, FALL_GONE, u) ** 1.5           # slow at first, then into the veils
         keys.append([round(u, 1), round(float(x), 1), round(float(y), 1), round(float(s), 4),
-                     round(float(p["turn"] * smoothstep(0.5, FALL_S, u)), 2),
-                     round(float(p["shade"] * smoothstep(0, FALL_S, u) ** 0.8), 3)])
+                     round(float(p["turn"] * smoothstep(0.5, FALL_SPAN, u)), 2),
+                     round(float(p["shade"] * smoothstep(0, 24.0, u) ** 0.8), 3), round(float(alpha), 3)])
+    keys[0][3], keys[0][6] = 1, 1
     return keys
+
+
+def _r75a_end(side):
+    """ART-C2's curve's last key (u = 20 s), [u, x, y, scale, turn, shade]: the frozen sinking city's layout."""
+    p = R75A_HALVES[side]
+    img, x0, bottom = halves()[side]
+    xc = x0 + img.width / 2
+    yc = SCREEN - (bottom - FALL_BASE) - img.height / 2
+    v0 = CLOCK.speed_at(FALL_T + 1e-3)
+    u = R75A_SECONDS
+    y_pre = yc + v0 * (p["floor"] * u + (1 - p["floor"]) * p["tau"] * (1 - np.exp(-u / p["tau"])))
+    s = p["scale"]
+    x = 240 + (xc + p["drift"] - 240) * s
+    y = SCREEN / 2 + (y_pre - SCREEN / 2) * s
+    return [u, round(float(x), 1), round(float(y), 1), round(float(s), 4), round(float(p["turn"]), 2),
+            round(float(p["shade"]), 3)]
+
+
+def half_extent(side, key):
+    """(left, top, right, bottom) on the screen of a half drawn at ``key`` with its rim's pad (turned, scaled)."""
+    img = halves()[side][0]
+    _, x, y, s, turn = key[:5]
+    th = np.radians(turn)
+    w, h = img.width + 2 * CHAR_PAD, img.height + 2 * CHAR_PAD
+    hw = s * (w / 2 * abs(np.cos(th)) + h / 2 * abs(np.sin(th)))
+    hh = s * (h / 2 * abs(np.cos(th)) + w / 2 * abs(np.sin(th)))
+    return x - hw, y - hh, x + hw, y + hh
 
 
 def transformed(img, key, dark=FALL_DARK):
     """A half (or its overlay) drawn as its key says: darkened, turned, scaled (bilinear: it is far below)."""
-    _, _, _, s, turn, sh = key
+    s, turn, sh = key[3:6]
     a = np.array(img).astype(np.float64)
     if dark is not None:
         a[..., :3] = a[..., :3] * (1 - sh) + dark * sh
@@ -1572,7 +1634,7 @@ def sinking_city(seed=3821):
     toward the bands, smoke rising off them (smooth), the fires' glow. Returns (body, glows, centre on the screen at
     the fall's end)."""
     hv = halves()
-    ends = {side: fall_keys(side)[-1] for side in hv}
+    ends = {side: _r75a_end(side) for side in hv}
     cx = np.mean([ends[s][1] for s in hv])
     cy = np.mean([ends[s][2] for s in hv])
     w, h = SINK
@@ -1607,6 +1669,56 @@ def sinking_city(seed=3821):
             glow(light, x, y, 1.4, FIRE_CORE, 0.7 * fl)
         glows.append(additive_rgb(light))
     return body, glows, (float(cx), float(cy))
+
+
+VEIL = (288, 196)
+HAZE_COLOUR = np.array((0x5a, 0x44, 0x3c), float)   # the proposal's haze_colour and the smoke atmosphere's haze, which
+SMOKE_HAZE = 0.35                                   # the game draws over deep only: a veil on ground carries it itself
+FALL_VEILS = {   # the cloud tops closing over the sinking halves (normal blend, over the halves, under low-air)
+    # dx: from..to px beside the pair's centre over u0..u1; dy below it; alpha 0 at u0 -> 1 at u_full, held to
+    # u_hold, -> 0 at u_end (each veil fades into the deck after the halves are gone)
+    "west": dict(seed=3841, dx=(-140, -50), dy=10, u0=10.0, u_full=24.0, u_hold=30.0, u_end=36.5),
+    "east": dict(seed=3843, dx=(140, 46), dy=-14, u0=12.0, u_full=26.0, u_hold=31.0, u_end=37.5),
+}
+
+
+def fall_veil(side):
+    """288x196: a patch of the cloud deck's own heads drifting over the city (cloud_deck_tile's look: cumulus heads in
+    the one cream, lit from the top left, hazed a fifth toward the pale haze and by the smoke atmosphere's haze as the
+    deck is in the game), a few clusters, denser toward the
+    halves' side and broken into separate heads toward its outer side; its alpha the heads' coverage up to 0.92, 0 on
+    its edges (smooth, no ordered dither)."""
+    v = FALL_VEILS[side]
+    w, h = VEIL
+    rng = np.random.default_rng(v["seed"])
+    inner = 1 if side == "west" else -1                              # toward the pair's centre
+    blobs = []
+    for cx, cy, rx, ry, n in ((w / 2 + inner * 30, h / 2, 96, 54, 64), (w / 2 + inner * 70, h / 2 - 34, 60, 30, 24),
+                              (w / 2 + inner * 64, h / 2 + 40, 64, 30, 26), (w / 2 - inner * 70, h / 2 - 20, 50, 34, 18),
+                              (w / 2 - inner * 92, h / 2 + 34, 34, 22, 10)):
+        blobs += mass_blobs(rng, cx, cy, rx, ry, n, (10, 22))
+    shade, cov = cloud_mass(h, w, blobs, v["seed"] + 1, detail=0.45)
+    rgb = raster.ramp(CREAM, np.clip(0.15 + 0.85 * shade, 0, 1)) * 0.8 + jovkit.HAZE * 0.2
+    rgb = rgb * (1 - SMOKE_HAZE) + HAZE_COLOUR * SMOKE_HAZE     # the deck's smoke haze baked in (drawn on ground)
+    a = np.clip(cov, 0, 1) * 0.92 * soft_box(w, h, 10)
+    return rgba(rgb, a)
+
+
+def fall_veil_keys(side):
+    """[[u, x, y, alpha], ...] every 0.5 s over u0..u_end: the veil's centre on the screen (y down) beside the halves'
+    pair (their keys' mean centre), sliding in from its side, and its opacity."""
+    v = FALL_VEILS[side]
+    kw, ke = np.array(fall_keys("west"), float), np.array(fall_keys("east"), float)
+    keys = []
+    u = v["u0"]
+    while u <= v["u_end"] + 1e-9:
+        px = (np.interp(u, kw[:, 0], kw[:, 1]) + np.interp(u, ke[:, 0], ke[:, 1])) / 2
+        py = (np.interp(u, kw[:, 0], kw[:, 2]) + np.interp(u, ke[:, 0], ke[:, 2])) / 2
+        dx = v["dx"][0] + (v["dx"][1] - v["dx"][0]) * smoothstep(v["u0"], v["u_hold"], u)
+        a = smoothstep(v["u0"], v["u_full"], u) * (1 - smoothstep(v["u_hold"], v["u_end"], u))
+        keys.append([round(u, 1), round(float(px + dx), 1), round(float(py + v["dy"]), 1), round(float(a), 3)])
+        u += 0.5
+    return keys
 
 
 # =========================================================================== the city's ground pieces
@@ -1706,6 +1818,8 @@ def build_all():
     body, glows, _ = sinking_city()
     save("sinking-city", body, "deep")
     save_frames("sinking-city-glow", glows, "deep", 6)
+    for side in ("west", "east"):
+        save(f"fall-veil-{side}", fall_veil(side), "ground")
     for name, spec in PIECES.items():
         print(f"{name}: {spec['size'][0]}x{spec['size'][1]}" + (f" x{spec['frames']}" if spec.get("frames") else ""))
     return dict(PIECES)
@@ -1760,8 +1874,6 @@ def placements():
 
 
 def fall_block():
-    sk = sinking_city()[2]
-    fd = FACTORS["deep"]
     la = FACTORS["low-air"]
     hv = halves()
     return {
@@ -1774,9 +1886,7 @@ def fall_block():
         "spires": [{"piece": "spire-topple-e", "t": t_centre_at(FALL_T + 5.0, 270, la), "x": 110, "topple_at": 3.4},
                    {"piece": "spire-topple-w", "t": t_centre_at(FALL_T + 10.5, 270, la), "x": 370, "topple_at": 8.8},
                    {"piece": "spire-topple-e", "t": t_centre_at(FALL_T + 16.0, 270, la), "x": 96, "topple_at": 14.4}],
-        "sinking": {"piece": "sinking-city", "glow": "sinking-city-glow",
-                    "t": t_centre_at(FALL_T + FALL_S, sk[1], fd), "x": int(round(sk[0])), "from": FALL_S - 1.0,
-                    "fade": 2.0},
+        "veils": [{"piece": f"fall-veil-{s}", "keys": fall_veil_keys(s)} for s in ("west", "east")],
     }
 
 
@@ -1810,15 +1920,16 @@ def proposal_text(pieces):
              f"    smoke-wisps: {{layer: high-air, height: {Image.open(OUT / 'smoke-wisps.png').height}}}   # the smoke atmosphere's wisps",
              "  pieces:"]
     for name, spec in pieces.items():
-        if name.startswith(("growth-burst", "fall-half", "fall-shards", "balloon-tear", "spire-topple", "sinking-city")):
+        if name.startswith(("growth-burst", "fall-", "balloon-tear", "spire-topple", "sinking-city")):
             continue
         extra = f", frames: {spec['frames']}, fps: {spec['fps']}" if spec.get("frames") else ""
         lines.append(f"    {name}: {{layer: {spec['layer']}, size: [{spec['size'][0]}, {spec['size'][1]}]{extra}}}")
     lines.append("    # the fall's and the turn's pieces (drawn by the growth and falling-city passes, not placed):")
     for name, spec in pieces.items():
-        if not name.startswith(("growth-burst", "fall-half", "fall-shards", "balloon-tear", "spire-topple",
-                                "sinking-city")):
+        if not name.startswith(("growth-burst", "fall-", "balloon-tear", "spire-topple", "sinking-city")):
             continue
+        if name == "sinking-city":
+            lines.append("    # Level 38's source (its aurelia-wreck), no longer drawn in Level 37 (the F.6 redo):")
         extra = f", frames: {spec['frames']}, fps: {spec['fps']}" if spec.get("frames") else ""
         lines.append(f"    {name}: {{layer: {spec['layer']}, size: [{spec['size'][0]}, {spec['size'][1]}]{extra}}}")
     lines.append("  placed:")
@@ -1843,14 +1954,16 @@ def proposal_text(pieces):
               "    # ground. Each half's image is the city's own pixels on its rows (x0 = its left column, bottom = its bottom",
               "    # ground row): drawn at `t` as a ground piece with that bottom row, the halves together are exactly the",
               "    # city on the screen (the handover is pixel-exact; nothing else of the city is near them).",
-              "    # keys: [u, x, y, scale, turn, shade] every 0.1 s to 2 s, then 0.5 s: u s after t; x, y the screen centre of the half's image",
-              "    # (y down from the top edge); scale (bilinear, toward the field's centre); turn degrees clockwise; shade the",
-              "    # share it has darkened toward 1e1616 (smooth). The first key is the ground's place at t and its speed the",
-              "    # ground's; interpolate linearly. `char` (normal) and `glow` (additive, its frames on the real clock) are",
-              "    # drawn with the half (their image CHAR_PAD = 14 px larger a side, same centre) and fade in over the first",
-              "    # second as the gap opens, so the handover stays exact. Draw the west half first.",
+              "    # keys: [u, x, y, scale, turn, shade, alpha] every 0.1 s to 2 s, then 0.5 s: u s after t; x, y the screen",
+              "    # centre of the half's image (y down from the top edge); scale (bilinear) about that centre; turn degrees",
+              "    # clockwise; shade the share it has darkened toward 1e1616 (smooth); alpha its opacity (round 75 F.6 redo:",
+              f"    # 1 to {FALL_FADE_FROM:g} s, fading slowly to 0 at {FALL_GONE:g} s; its char and glow and the shards with it).",
+              "    # The first key is the ground's place at t and its speed the ground's; interpolate linearly. `char`",
+              "    # (normal) and `glow` (additive, its frames on the real clock) are drawn with the half (their image",
+              "    # CHAR_PAD = 14 px larger a side, same centre) and fade in over the first second as the gap opens, so the",
+              f"    # handover stays exact. Draw the west half first. From {FALL_WHOLE:g} s every pixel of a half is on the screen.",
               f"    t: {FALL_T:g}",
-              f"    seconds: {FALL_S:g}",
+              f"    seconds: {FALL_SPAN:g}",
               "    halves:"]
     for hdef in fall["halves"]:
         lines.append(f"      - piece: {hdef['piece']}")
@@ -1874,10 +1987,17 @@ def proposal_text(pieces):
               "    spires:"]
     for s in fall["spires"]:
         lines.append(f"      - {_flow(s)}")
-    sk = fall["sinking"]
-    lines += ["    # the sinking city (deep, placed by t as a deep piece): crossfades in over `fade` s from `from` s after t as",
-              "    # the halves (at their last key) fade out; then it sinks with the deep layer (Level 38 reuses it)",
-              f"    sinking: {_flow(sk)}"]
+    lines += ["    # the cloud tops closing over the sinking halves (round 75 F.6 redo): each veil drawn after the halves (and",
+              "    # their rims and glows), normal blend, unshaded, unscaled, centred on its keys' (x, y) (screen, y down),",
+              "    # at its keys' alpha; keys [u, x, y, alpha] s after t, linear between them, nothing drawn outside them.",
+              "    # The halves are gone at their alpha 0; the veils fade into the deck after them. No sinking city (the",
+              "    # old `sinking:` crossfade on deep is gone: its canvas cut the halves and it slid out at the bottom).",
+              "    veils:"]
+    for v in fall["veils"]:
+        lines.append(f"      - piece: {v['piece']}")
+        lines.append("        keys:")
+        for k in v["keys"]:
+            lines.append(f"          - [{', '.join(f'{x:g}' for x in k)}]")
     lines.append(f"sections:   # ART-C2's reading of the README's Layout ({SRC_NAME}); C2 writes the real ones")
     for s in SECTIONS:
         lines.append("  - " + "{" + ", ".join(f"{k}: {v}" for k, v in s.items() if k != "notes") + "}")
@@ -1978,7 +2098,7 @@ def blit(canvas, im, x, y, add=False, alpha=1.0):
 
 def interp_key(keys, u):
     ks = np.array(keys, float)
-    return [float(np.interp(u, ks[:, 0], ks[:, c])) for c in range(6)]
+    return [float(np.interp(u, ks[:, 0], ks[:, c])) for c in range(ks.shape[1])]
 
 
 def compose(t, prop, units=True):
@@ -2005,8 +2125,8 @@ def compose(t, prop, units=True):
         y = piece_y(p["t"], FACTORS["deep"], f.height, t)
         if -f.height < y < SCREEN + f.height:
             canvas = blit(canvas, f, p["x"], y)
-    sk = fall["sinking"]
-    if u >= sk["from"]:
+    sk = fall.get("sinking")
+    if sk and u >= sk["from"]:
         k = smoothstep(sk["from"], sk["from"] + sk["fade"], u)
         y = piece_y(sk["t"], FACTORS["deep"], 0, t)
         canvas = blit(canvas, img(sk["piece"]), sk["x"], y, alpha=k)
@@ -2035,25 +2155,35 @@ def compose(t, prop, units=True):
                 y = piece_y(p["t"], 1.0, f.height, t)
                 if -f.height < y < SCREEN + f.height:
                     canvas = blit(canvas, f, p["x"], y)
-    elif u < sk["from"] + sk["fade"]:                        # the halves
-        fade = 1 - smoothstep(sk["from"], sk["from"] + sk["fade"], u)
+    else:                                                    # the halves, then the veils over them
+        sink_fade = 1 - smoothstep(sk["from"], sk["from"] + sk["fade"], u) if sk else 1.0
         mids = []
         for hdef in fall["halves"]:
             key = interp_key(hdef["keys"], u)
+            fade = sink_fade * (key[6] if len(key) > 6 else 1.0)
+            mids.append(key)
+            if fade <= 0:
+                continue
             k_in = smoothstep(0, 1.0, u)
             body = transformed(img(hdef["piece"]), key)
             canvas = blit(canvas, body, key[1], key[2], alpha=fade)
             ch = transformed(img(hdef["char"]), key)
             canvas = blit(canvas, ch, key[1], key[2], alpha=k_in * fade)
             gl = transformed(img(hdef["glow"], int(t * 8) % 4), key, dark=None)
-            canvas = blit(canvas, gl, key[1], key[2], add=True, alpha=k_in * fade * (1 - 0.6 * key[5]))
-            mids.append(key)
+            canvas = blit(canvas, gl, key[1], key[2], add=True, alpha=k_in * fade)
         shd = fall["shards"]
         if shd["from"] <= u <= shd["to"]:
             mx = (mids[0][1] + mids[1][1]) / 2
             my = (mids[0][2] + mids[1][2]) / 2
             k = smoothstep(shd["from"], shd["from"] + 0.6, u) * smoothstep(shd["to"], shd["to"] - 2, u)
+            k *= mids[1][6] if len(mids[1]) > 6 else 1.0
             canvas = blit(canvas, img(shd["piece"], int(t * 8) % 8), mx, my, alpha=k)
+        for v in fall.get("veils", []):
+            ks = v["keys"]
+            if ks[0][0] <= u <= ks[-1][0]:
+                vk = interp_key(ks, u)
+                if vk[3] > 0:
+                    canvas = blit(canvas, img(v["piece"]), vk[1], vk[2], alpha=vk[3])
     for p in placed:                                         # low-air pieces
         if layer(p["piece"]) != "low-air":
             continue
@@ -2161,7 +2291,9 @@ def readability(prop):
     return cells
 
 
-def review():
+def review_a():
+    """Round 75 a's sheet and GIFs (step ART-C2; the fall there was ART-C2's 20 s curve and the sinking city: a rerun
+    now shows the F.6 redo's fall in the a files, so it is run only on request, ``--review-a``)."""
     prop = load_proposal()
     bd = prop["backdrop"]
     cols = 6
@@ -2261,6 +2393,66 @@ def review():
     print(f"review: {png.relative_to(ROOT)}, {gif.name} ({size / 1e6:.1f} MB), {g_gif.name} ({size2 / 1e6:.1f} MB)")
 
 
+FALL_SHOTS = [158, 160, 161.5, 163, 166, 169, 172, 175, 178, 181, 184, 187, 190, 193, 196, 200]
+
+
+def review_fall():
+    """Round 75 F.6 redo (b): the whole fall, t 158-200 - a sheet of screens at half size (with stand-ins), 1:1 crops of
+    the screen's lower half late in the fall (nothing cut), the halves' alpha/shade/scale by second and the veils;
+    and a GIF of t 158-200 at play size, 4 frames a second."""
+    prop = load_proposal()
+    fall = prop["backdrop"]["fall"]
+    sw, sh = W // 2, SCREEN // 2
+    cols = 8
+    rows_n = -(-len(FALL_SHOTS) // cols)
+    crops_t = (176, 186, 192, 196)
+    sheet = raster.sheet(16 + cols * (sw + 10), 70 + rows_n * (sh + 24) + 26 + 270 + 30 + 226 + 20,
+                         "LEVEL 37 THE FALL (FINAL R75 B): F.6 REDO - THE CITY SINKS INTO THE CLOUDS",
+                         f"PRODUCTION ART, {BATCH.upper()} - R75 B (STEP ART-C3)")
+    raster.draw_text(sheet, 16, 38, "T 158-200 AT HALF SIZE WITH STAND-INS: THE BREAK, THE HALVES SLOWING, SHRINKING, "
+                                    "DARKENING AND FADING, THE CLOUD TOPS CLOSING OVER THEM, GONE BY T 194; OPEN CLOUD TO "
+                                    "THE END", raster.LABEL)
+    for i, t in enumerate(FALL_SHOTS):
+        x, y = 16 + (i % cols) * (sw + 10), 56 + (i // cols) * (sh + 24)
+        sheet.alpha_composite(compose(t, prop).resize((sw, sh), Image.BOX), (x, y))
+        ah = [interp_key(hd["keys"], t - FALL_T)[6] if t >= FALL_T else 1.0 for hd in fall["halves"]]
+        raster.draw_text(sheet, x, y + sh + 4, f"T={t:g}  ALPHA {ah[0]:.2f}/{ah[1]:.2f}", raster.LABEL_DIM)
+    y = 56 + rows_n * (sh + 24) + 4
+    raster.draw_text(sheet, 16, y, "1:1, THE SCREEN'S LOWER HALF (NO STAND-INS) AT T " +
+                     ", ".join(f"{t:g}" for t in crops_t) + ": EVERY PIXEL OF THE HALVES ON THE SCREEN FROM T "
+                     f"{FALL_T + FALL_WHOLE:g}, NOTHING CUT", raster.LABEL)
+    for k, t in enumerate(crops_t):
+        c = compose(t, prop, units=False).crop((0, 270, W, SCREEN))
+        sheet.alpha_composite(c, (16 + k * (W + 12), y + 18))
+    y += 18 + 270 + 12
+    raster.draw_text(sheet, 16, y, "THE CLOUD TOPS (FALL-VEIL-WEST/-EAST, 288X196) ON THE DECK'S BANDS AND ON GREY; "
+                                   "THE HALVES' CURVES (WEST / EAST) BY SECOND", raster.LABEL)
+    bands = img("cloud-bands")
+    x = 16
+    for name in ("fall-veil-west", "fall-veil-east"):
+        v = img(name)
+        for plate in (bands.crop((0, 0, v.width, v.height)), Image.new("RGBA", v.size, (70, 72, 80, 255))):
+            c = plate.copy()
+            c.alpha_composite(v)
+            sheet.alpha_composite(c, (x, y + 18))
+            x += v.width + 8
+    kw, ke = fall["halves"][0]["keys"], fall["halves"][1]["keys"]
+    ty = y + 18
+    tx = x + 8
+    raster.draw_text(sheet, tx, ty, "U    ALPHA      SHADE      SCALE", raster.LABEL_DIM)
+    for u in (0, 4, 8, 12, 16, 20, 24, 28, 32, 34):
+        a, b = interp_key(kw, u), interp_key(ke, u)
+        ty += 12
+        raster.draw_text(sheet, tx, ty, f"{u:<4d} {a[6]:.2f}/{b[6]:.2f}  {a[5]:.2f}/{b[5]:.2f}  {a[3]:.2f}/{b[3]:.2f}",
+                         raster.LABEL_DIM)
+    png, gif = artkit.review_paths(CONCEPT, "fall", "b")
+    sheet.convert("RGB").save(png, optimize=True)
+    import enemies_r60 as e60  # noqa: E402
+    frames = [compose(158 + i / 4, prop) for i in range(int((END - 158) * 4) + 1)]
+    size = e60.rig.write_gif(frames, gif, fps=4, colors=128, max_mb=12.0)
+    print(f"review: {png.relative_to(ROOT)} {sheet.size}, {gif.name} ({size / 1e6:.1f} MB, {len(frames)} frames)")
+
+
 # =========================================================================== check
 
 def alpha_levels(im):
@@ -2308,7 +2500,7 @@ def check():
             problems.append(f"{fl.name}: {c / v * 100:.1f} % checker")
         vis, chk = vis + v, chk + c
     for name in ("smoke-wisps", "fall-half-west-char", "sinking-city", "far-side", "growth-burst-glow",
-                 "fall-half-east-glow_0", "lift-ring-glow"):
+                 "fall-half-east-glow_0", "lift-ring-glow", "fall-veil-west", "fall-veil-east"):
         im = Image.open(OUT / f"{name}.png")
         if name.endswith(("glow", "glow_0")):
             lv = len(np.unique(np.array(im)[..., :3].max(-1)))
@@ -2323,10 +2515,10 @@ def check():
         a = np.array(frames_of(p["piece"], spec)[0])[..., 3]
         if a[0].any() or a[-1].any() or a[:, 0].any() or a[:, -1].any():
             problems.append(f"{p['piece']}: alpha on its edge (a deep piece)")
-    sk = bd["fall"]["sinking"]
-    a = np.array(img(sk["piece"]))[..., 3]
-    if a[0].any() or a[-1].any() or a[:, 0].any() or a[:, -1].any():
-        problems.append("sinking-city: alpha on its edge (a deep piece)")
+    for name in ("sinking-city", "fall-veil-west", "fall-veil-east"):   # free-standing pieces: no cut edge
+        a = np.array(img(name))[..., 3]
+        if a[0].any() or a[-1].any() or a[:, 0].any() or a[:, -1].any():
+            problems.append(f"{name}: alpha on its edge (its image would show a cut)")
     worst = 0
     for step in range(int(END * 10)):                         # the motion budget (placed pieces)
         t = step / 10
@@ -2382,8 +2574,49 @@ def check():
             problems.append(f"{hd['piece']}: starts at {v:.1f} px/s, the ground {CLOCK.speed_at(FALL_T):.1f}")
         if (np.diff(ks[:, 3]) > 1e-9).any() or (np.diff(ks[:, 5]) < -1e-9).any():
             problems.append(f"{hd['piece']}: scale or shade not monotonic")
+        if ks.shape[1] != 7 or k0[6] != 1 or (np.diff(ks[:, 6]) > 1e-9).any() or ks[-1, 6] != 0:
+            problems.append(f"{hd['piece']}: alpha not 1 -> 0, monotonic (the F.6 redo: it fades over the fall)")
+        else:
+            gone = ks[np.argmax(ks[:, 6] <= 0), 0]
+            if FALL_T + gone > END - 4:
+                problems.append(f"{hd['piece']}: still visible at t={FALL_T + gone:g} (gone >= 4 s before the end)")
+            if ks[ks[:, 0] <= 20, 6].min() < 0.3:
+                problems.append(f"{hd['piece']}: faded below 0.3 by u=20 (it should fade slowly)")
+        side = hd["piece"].rsplit("-", 1)[1]
+        for u in np.arange(0, ks[-1, 0] + 1e-9, 0.1):        # nothing cut: whole on the screen from FALL_WHOLE
+            key = interp_key(hd["keys"], u)
+            if u < FALL_WHOLE or key[6] <= 0:
+                continue
+            x0_, y0_, x1_, y1_ = half_extent(side, key)
+            if x0_ < 0 or y0_ < 0 or x1_ > W or y1_ > SCREEN:
+                problems.append(f"{hd['piece']}: at u={u:.1f} ({x0_:.0f}, {y0_:.0f})-({x1_:.0f}, {y1_:.0f}) leaves the screen")
+                break
     if not np.array_equal(union, rows_of(out, HALF_LO, HALF_HI)):
         problems.append("the halves' union differs from the city on their rows (the handover)")
+    if "sinking" in fall:
+        problems.append("fall.sinking: the F.6 redo draws no sinking city in Level 37")
+    if fall["halves"][-1]["keys"][-1][0] > FALL_SPAN:
+        problems.append("the halves' keys run past FALL_SPAN")
+    for v in fall.get("veils", []):                            # the veils: closing over, gone before the end
+        ks = np.array(v["keys"], float)
+        im = img(v["piece"])
+        if ks[0, 3] != 0 or ks[-1, 3] != 0 or FALL_T + ks[-1, 0] > END - 1.5:
+            problems.append(f"{v['piece']}: not 0 at both ends or still there at t={FALL_T + ks[-1, 0]:g}")
+        if ks[:, 3].max() < 0.95:
+            problems.append(f"{v['piece']}: never closes (alpha at most {ks[:, 3].max()})")
+        for k in ks:
+            if k[3] >= 0.35 and (k[1] - im.width / 2 < -40 or k[1] + im.width / 2 > W + 40
+                                 or k[2] - im.height / 2 < 0 or k[2] + im.height / 2 > SCREEN):
+                problems.append(f"{v['piece']}: at u={k[0]:g} (alpha {k[3]:g}) it leaves the screen")
+                break
+    for u in np.arange(FALL_WHOLE, FALL_SPAN, 0.5):           # the veils cover the halves as they go
+        hk = [interp_key(hd["keys"], u) for hd in fall["halves"]]
+        if not 0 < hk[0][6] <= 0.25:
+            continue
+        vs = [interp_key(v["keys"], u) for v in fall.get("veils", []) if v["keys"][0][0] <= u <= v["keys"][-1][0]]
+        if not vs or max(k[3] for k in vs) < 0.6:
+            problems.append(f"u={u:g}: the halves at alpha {hk[0][6]:.2f} with no veil over them")
+            break
     near = rows_of(out, HALF_LO - 300, HALF_LO)
     if (near[..., 3] > 0).any():
         problems.append("the city reaches within 300 rows below the main deck (it would vanish at the fall)")
@@ -2434,9 +2667,12 @@ if __name__ == "__main__":
     args = sys.argv[1:]
     if "--check" in args:
         sys.exit(0 if check() else 1)
+    if "--review-a" in args:
+        review_a()
+        sys.exit(0)
     if "--review" in args:
-        review()
+        review_fall()
         sys.exit(0)
     write_proposal(build_all())
     if "--proposal" not in args:
-        review()
+        review_fall()
