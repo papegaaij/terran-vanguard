@@ -93,6 +93,11 @@ final class Act6FSpecs {
     }
 
     static SetPieceSpec guard(SquadronSpec squadron) {
+        return guard(squadron, List.of(), HP);
+    }
+
+    /** The guard with its boss {@code attacks} (the playbook's) and {@code hp} an ace. */
+    static SetPieceSpec guard(SquadronSpec squadron, List<BossSpec.Attack> attacks, double hp) {
         List<PartSpec> parts = new ArrayList<>();
         for (SquadronSpec.Ace ace : squadron.aces()) {
             parts.add(new PartSpec(
@@ -100,7 +105,7 @@ final class Act6FSpecs {
                     0,
                     0,
                     new Hitbox(42, 36),
-                    HP,
+                    hp,
                     false,
                     BOUNTY,
                     Optional.empty(),
@@ -119,7 +124,7 @@ final class Act6FSpecs {
                         "HONOUR GUARD",
                         75,
                         List.of(),
-                        List.of(),
+                        attacks,
                         List.of(idle()))
                 .engagesOnArrival(true)
                 .squadron(Optional.of(squadron))
@@ -136,6 +141,148 @@ final class Act6FSpecs {
     }
 
     static final SetPieceSpec GUARD = guard(MEDIUM);
+
+    // Step F1b: the playbook's attacks (indices into the boss's attacks) and the playbook per difficulty.
+
+    static final int SNIPER = 0;
+    static final int TAP = 1;
+    static final int PAIR = 2;
+    static final int FAN = 3;
+    static final int SPIRAL = 4;
+    static final int ROLL_FAN = 5;
+    static final int RIBBON = 6;
+    static final int DIVE_BURST = 7;
+    static final int RAKE_PAIR = 8;
+    static final int PINCER_FAN = 9;
+
+    static EnemyGun gun(double interval, double speed, double damage, int fan, double spreadDegrees) {
+        return new EnemyGun(
+                interval,
+                0,
+                1,
+                speed,
+                damage,
+                false,
+                fan,
+                Math.toRadians(spreadDegrees),
+                Double.POSITIVE_INFINITY,
+                Double.POSITIVE_INFINITY);
+    }
+
+    static BossSpec.Attack attack(String name, BossSpec.Pattern pattern, EnemyGun gun, int arms, double turn) {
+        return new BossSpec.Attack(
+                name, pattern, gun, 0, false, 1, arms, turn, 0, List.of(), false, Optional.empty(), List.of());
+    }
+
+    /** The sniper's line: {@code telegraph} s (medium 1.0, easy 1.2, hard 0.8), locked 0.2 s before, live 0.3 s. */
+    static EnemySpec.LaserLine line(double telegraph) {
+        return new EnemySpec.LaserLine(telegraph, 0.3, 6, 8, telegraph + 0.3, 0, 0).withLockBefore(0.2);
+    }
+
+    static List<BossSpec.Attack> attacks(double lineTelegraph, int arms) {
+        BossSpec.Attack sniper = attack("sniper-line", BossSpec.Pattern.AIMED, gun(2, 600, 8, 1, 0), 0, 0);
+        return List.of(
+                sniper.withLine(line(lineTelegraph)),
+                attack("sniper-tap", BossSpec.Pattern.AIMED, gun(2, 600, 8, 1, 0), 0, 0)
+                        .withLine(line(0.8)),
+                attack("pair-volley", BossSpec.Pattern.AIMED, gun(2, 170, 4, 2, 6), 0, 0),
+                attack("fan", BossSpec.Pattern.FAN, gun(2, 150, 4, 5, 40), 0, 0),
+                attack("spiral-loop", BossSpec.Pattern.SPIRAL, gun(0.25, 130, 4, 1, 0), arms, Math.PI / 2),
+                attack("roll-fan", BossSpec.Pattern.FAN, gun(2, 150, 4, 5, 40), 0, 0),
+                attack("ribbon", BossSpec.Pattern.AIMED, gun(2, 80, 4, 1, 0), 0, 0),
+                attack("dive-burst", BossSpec.Pattern.AIMED, gun(2, 200, 6, 1, 0), 0, 0),
+                attack("rake-pair", BossSpec.Pattern.AIMED, gun(2, 170, 4, 2, 6), 0, 0),
+                attack("pincer-fan", BossSpec.Pattern.FAN, gun(2, 150, 4, 5, 40), 0, 0));
+    }
+
+    /**
+     * The playbook at a difficulty: {@code taps} the medium double tap's 1 (easy 0, hard 2), {@code edgeTaps} after a
+     * death, {@code diveTell} the dive's tell (easy 1.0), {@code restScale} every rest's (easy 1.3, hard 0.8).
+     */
+    static SquadronPlaybook playbook(int taps, int edgeTaps, double diveTell, double restScale) {
+        SquadronPlaybook.Play dive = SquadronPlaybook.Play.of(
+                        SquadronPlaybook.Kind.FEINT_DIVE, 3, DIVE_BURST, -1, 3, 5, 0.12)
+                .withTell(diveTell);
+        return new SquadronPlaybook(
+                List.of(
+                        new SquadronPlaybook.Pool(
+                                List.of(
+                                        SquadronPlaybook.Play.of(
+                                                SquadronPlaybook.Kind.SNIPER_LINE, 3, SNIPER, TAP, taps, edgeTaps, 0.6),
+                                        SquadronPlaybook.Play.of(
+                                                SquadronPlaybook.Kind.PAIR_VOLLEY, 2, PAIR, -1, 4, 0, 0.4),
+                                        SquadronPlaybook.Play.of(SquadronPlaybook.Kind.FAN, 2, FAN, -1, 2, 0, 0.5),
+                                        SquadronPlaybook.Play.of(SquadronPlaybook.Kind.SLIDE, 1, -1, -1, 0, 0, 0)),
+                                0),
+                        new SquadronPlaybook.Pool(
+                                List.of(
+                                        SquadronPlaybook.Play.of(
+                                                        SquadronPlaybook.Kind.SPIRAL_LOOP, 3, SPIRAL, -1, 0, 3, 0)
+                                                .withSeconds(2.5),
+                                        SquadronPlaybook.Play.of(
+                                                SquadronPlaybook.Kind.ROLL_FAN, 2, ROLL_FAN, -1, 1, 0, 0),
+                                        SquadronPlaybook.Play.of(SquadronPlaybook.Kind.RIBBON, 2, RIBBON, -1, 0, 0, 0)
+                                                .withTrail(new SquadronPlaybook.Trail(8, 80, 2, 50))),
+                                0),
+                        new SquadronPlaybook.Pool(
+                                List.of(
+                                        dive,
+                                        SquadronPlaybook.Play.of(
+                                                SquadronPlaybook.Kind.REAR_RAKE, 2, RAKE_PAIR, -1, 0, 0, 0.4),
+                                        SquadronPlaybook.Play.of(
+                                                        SquadronPlaybook.Kind.OVERHEAD, 1.5, DIVE_BURST, -1, 3, 5, 0.12)
+                                                .withTell(diveTell)),
+                                0)),
+                0.8,
+                1.2 * restScale,
+                2.0 * restScale,
+                0.3,
+                0.5,
+                Optional.of(new SquadronPlaybook.Pincer(1.5, PINCER_FAN, 0.5, 4)),
+                new SquadronPlaybook.Conductor(1, 2));
+    }
+
+    /** Step F1b's played guards: the stations, joins, HP, line, arms, taps and rests of each difficulty. */
+    static final SetPieceSpec PLAYED = guard(MEDIUM.withPlaybook(playbook(1, 2, 0.8, 1)), attacks(1.0, 2), HP);
+
+    static final SetPieceSpec PLAYED_EASY =
+            guard(squadronAt(EASY, 130).withPlaybook(playbook(0, 1, 1.0, 1.3)), attacks(1.2, 1), 1200);
+
+    static final SetPieceSpec PLAYED_HARD =
+            guard(squadronAt(HARD, 90).withPlaybook(playbook(2, 3, 0.8, 0.8)), attacks(0.8, 3), 2080);
+
+    /** {@code squadron} with the feinter pulling out at {@code pullOut} (easy 130, hard 90). */
+    static SquadronSpec squadronAt(SquadronSpec squadron, double pullOut) {
+        List<SquadronSpec.Ace> aces = new ArrayList<>(squadron.aces());
+        SquadronSpec.Ace k = aces.get(KESTREL);
+        SquadronSpec.Station s = k.station();
+        aces.set(
+                KESTREL,
+                new SquadronSpec.Ace(
+                        k.part(),
+                        k.callSign(),
+                        k.role(),
+                        k.join(),
+                        new SquadronSpec.Station(
+                                s.yMin(),
+                                s.yMax(),
+                                s.x(),
+                                s.speed(),
+                                s.dashSpeed(),
+                                s.climbSpeed(),
+                                s.spanMin(),
+                                s.spanMax(),
+                                pullOut,
+                                s.committedKeepOff(),
+                                s.loopSeconds())));
+        return new SquadronSpec(
+                aces,
+                squadron.tellSeconds(),
+                squadron.separation(),
+                squadron.hull(),
+                squadron.shield(),
+                squadron.contact());
+    }
 
     /** 3 s at 160 px/s, the duel's arena (a 20 px/s drift, held 4 s after the kill), 30 s at 160 after it. */
     static LevelScript level(SetPieceSpec guard) {
@@ -246,6 +393,14 @@ final class Act6FSpecs {
         final List<SimEvents.Type> types = new ArrayList<>();
         final List<Integer> values = new ArrayList<>();
         final List<double[]> places = new ArrayList<>();
+        /** Step F1b: every shot so far: {tick, 0 aimed / 1 bullet, x, y, angle (bullet), speed (bullet), damage}. */
+        final List<double[]> shots = new ArrayList<>();
+        /** Step F1b: the radio subjects raised so far, with their ticks. */
+        final List<String> cues = new ArrayList<>();
+
+        final List<Integer> cueTicks = new ArrayList<>();
+        /** Step F1b: false: the actions record nothing (an allocation run). */
+        boolean recording = true;
 
         Rig(SetPieceSpec spec, long seed) {
             piece = new SetPiece(spec);
@@ -259,9 +414,11 @@ final class Act6FSpecs {
         }
 
         void step() {
-            types.clear();
-            values.clear();
-            places.clear();
+            if (recording) {
+                types.clear();
+                values.clear();
+                places.clear();
+            }
             tick++;
             piece.update(tick);
             piece.act(shipX, shipY, this, true);
@@ -311,13 +468,21 @@ final class Act6FSpecs {
         }
 
         @Override
-        public void aimed(double x, double y, EnemyGun gun) {}
+        public void aimed(double x, double y, EnemyGun gun) {
+            if (recording) {
+                shots.add(new double[] {tick, 0, x, y, 0, gun.bulletSpeed(), gun.damage(), gun.fan()});
+            }
+        }
 
         @Override
         public void ring(double x, double y, int count, double speed, double damage) {}
 
         @Override
-        public void bullet(double x, double y, double angle, double speed, double damage) {}
+        public void bullet(double x, double y, double angle, double speed, double damage) {
+            if (recording) {
+                shots.add(new double[] {tick, 1, x, y, angle, speed, damage, 1});
+            }
+        }
 
         @Override
         public void release(BossSpec.Stream stream, boolean left) {}
@@ -325,8 +490,25 @@ final class Act6FSpecs {
         @Override
         public void phase(int phase) {}
 
+        /** Step F1b: the boss's line events ({@link BossLines}) are recorded as the squadron's. */
+        @Override
+        public void ring(SimEvents.Type type, double x, double y, int value) {
+            squadron(type, x, y, value);
+        }
+
+        @Override
+        public void squadronCue(String subject) {
+            if (recording) {
+                cues.add(subject);
+                cueTicks.add(tick);
+            }
+        }
+
         @Override
         public void squadron(SimEvents.Type type, double x, double y, int value) {
+            if (!recording) {
+                return;
+            }
             types.add(type);
             values.add(value);
             places.add(new double[] {x, y});

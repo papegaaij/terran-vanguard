@@ -1202,7 +1202,16 @@ public final class SimEvents {
          */
         ACE_DOWN,
         /** M10 part F: an ace touched the ship (its contact; at the ship); value: the ace. */
-        ACE_CONTACT;
+        ACE_CONTACT,
+        /**
+         * M10 part F, step F1b ({@link AcePlaybook}): an ace starts telling its drawn play (the sniper's barrel glint,
+         * Vesper's ribbons flaring or wingtips trailing, Kestrel's engine flare or tail band; the pincer: both flankers'
+         * engines and the leader's crest dimming); at the ace; value: {@link AcePlaybook#playAce} and {@link
+         * AcePlaybook#playCode} of it (ace × {@link AcePlaybook#PLAYS} + the play's code).
+         */
+        ACE_PLAY_TELL,
+        /** M10 part F, step F1b: an ace's told play starts (its move, its fire); at the ace; value: as {@link #ACE_PLAY_TELL}. */
+        ACE_PLAY;
 
         private static final Type[] VALUES = values();
     }

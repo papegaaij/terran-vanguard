@@ -37,7 +37,7 @@ public record SetPieceSpec(
         }
         if (boss.isPresent() && boss.get().squadron().isPresent()) {
             // M10 part F: a squadron's aces are its parts, none vital: the last one's death destroys it.
-            boss.get().squadron().get().check(slug, parts);
+            boss.get().squadron().get().check(slug, parts, boss.get().attacks());
         } else if (parts.stream().noneMatch(PartSpec::vital)) {
             throw new IllegalArgumentException(slug + ": a set piece has a vital part");
         }

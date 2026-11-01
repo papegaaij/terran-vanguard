@@ -88,6 +88,10 @@ final class RookHazards {
                 // him).
                 moved |= clearOfWedges(piece);
             }
+            if (piece.squadron().isPresent() && piece.present() && !piece.destroyed()) {
+                // M10 part F, step F1b: out of a squadron's told sniper line and off its told dives' lines.
+                moved |= clearOfSquadron(piece);
+            }
         }
         if (vents != null) {
             for (int pass = 0; pass < VENT_PASSES; pass++) {
@@ -449,6 +453,71 @@ final class RookHazards {
         double along = (gx - ox) * ux + (gy - oy) * uy;
         double lateral = (gx - ox) * uy - (gy - oy) * ux;
         if (along < -clear || Math.abs(lateral) >= clear) {
+            return false;
+        }
+        double side = lateral >= 0 ? 1 : -1;
+        for (int attempt = 0; attempt < 2; attempt++) {
+            double s = attempt == 0 ? side : -side;
+            double tx = Math.clamp(ox + ux * along + uy * s * (clear + 1), limit, PlayField.WIDTH - limit);
+            double ty = Math.clamp(oy + uy * along - ux * s * (clear + 1), limit, PlayField.HEIGHT - limit);
+            if (Math.abs((tx - ox) * uy - (ty - oy) * ux) >= clear) {
+                gx = tx;
+                gy = ty;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * M10 part F, step F1b (design/enemies/bosses/honour-guard, The escort): out of a squadron's told or live sniper
+     * line like the ship (its band, his hull's edge {@link #GAP} outside it; the line hurts only the ship), and his
+     * hull's edge {@link AcePlaybook#DIVE_KEEP_OFF} px off each told or running dive's line (from the ace to the spot it
+     * dives at, a little beyond), across it to the side the goal is on.
+     */
+    private boolean clearOfSquadron(SetPiece piece) {
+        boolean moved = false;
+        double half = Math.max(halfW, halfH);
+        if (piece.lines().isPresent() && piece.lines().get().running()) {
+            BossLines lines = piece.lines().get();
+            moved |= clearOfLine(
+                    lines.fromX(),
+                    lines.fromY(),
+                    lines.dirX(),
+                    lines.dirY(),
+                    Double.POSITIVE_INFINITY,
+                    lines.bandPx() / 2 + half + GAP);
+        }
+        Squadron squadron = piece.squadron().get();
+        if (squadron.playbook().isEmpty()) {
+            return moved;
+        }
+        AcePlaybook book = squadron.playbook().get();
+        for (int a = 0; a < squadron.aceCount(); a++) {
+            if (!book.diveTold(a)) {
+                continue;
+            }
+            double ox = book.diveFromX(a);
+            double oy = book.diveFromY(a);
+            double dx = book.diveToX(a) - ox;
+            double dy = book.diveToY(a) - oy;
+            double length = Math.hypot(dx, dy);
+            if (length > 0) {
+                double clear = AcePlaybook.DIVE_KEEP_OFF + half;
+                moved |= clearOfLine(ox, oy, dx / length, dy / length, length + clear, clear);
+            }
+        }
+        return moved;
+    }
+
+    /**
+     * Moves the goal across the line from (ox, oy) along (ux, uy) for {@code reach} px to {@code clear} px off it, to
+     * the side it is on (the other when the field's margin stops it); returns whether it moved.
+     */
+    private boolean clearOfLine(double ox, double oy, double ux, double uy, double reach, double clear) {
+        double along = (gx - ox) * ux + (gy - oy) * uy;
+        double lateral = (gx - ox) * uy - (gy - oy) * ux;
+        if (along < -clear || along > reach || Math.abs(lateral) >= clear) {
             return false;
         }
         double side = lateral >= 0 ? 1 : -1;

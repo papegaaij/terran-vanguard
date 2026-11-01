@@ -16,7 +16,8 @@ import java.util.Arrays;
  * riding line passes through the locked ship point at its live moment; after
  * the telegraph it is live for its time, a band that deals its damage to the ship once. It hurts nothing else (enemy
  * fire never hurts enemies; Rook is never its target). A part killed in the telegraph cancels it; the EMP Burst does
- * nothing (a boss is never stunned).
+ * nothing (a boss is never stunned). M10 part F, step F1b: a line with a {@link EnemySpec.LaserLine#lockBeforeSeconds}
+ * shorter than its telegraph tracks the ship (led as at its start) until that long before it fires, then locks.
  *
  * <p>Kept by its {@link SetPiece}; made only for a boss with a line attack, so every other boss hashes as before. Its
  * events go through the {@link BossActions}. Allocates nothing once made.
@@ -107,6 +108,11 @@ public final class BossLines {
             ride();
             if (ticks < telegraph && piece.partHp(part) <= 0) {
                 ticks = -1;
+            } else if (line.tracks() && ticks < telegraph - SimStep.ticks(line.lockBeforeSeconds())) {
+                // M10 part F, step F1b (the Honour Guard's sniper line): it tracks the ship, led for its part's move
+                // over the telegraph's rest, until its lock.
+                int left = telegraph - ticks;
+                aim.lock(piece.partLeadX(part, left), piece.partLeadY(part, left), fromX, fromY, shipX, shipY);
             } else if (ticks == telegraph) {
                 actions.ring(SimEvents.Type.BOSS_LINE_FIRED, fromX, fromY, part);
             } else if (ticks >= telegraph + Math.max(1, SimStep.ticks(line.liveSeconds()))) {

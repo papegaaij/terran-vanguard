@@ -710,6 +710,11 @@ final class BossPasses implements BossActions {
     }
 
     @Override
+    public void squadronCue(String subject) {
+        radio.cue(CueTrigger.BOSS_PHASE, subject);
+    }
+
+    @Override
     public void dive() {
         radio.cue(CueTrigger.BOSS_DIVE, "");
     }

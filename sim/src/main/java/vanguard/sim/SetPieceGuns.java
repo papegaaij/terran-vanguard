@@ -202,7 +202,7 @@ final class SetPieceGuns {
         if (squadron != null) {
             // M10 part F: the aces join, fly and die on the real steps; its phases stay idle (the aces fire through the
             // actions).
-            squadron.step(shipX, shipY, actions);
+            squadron.step(shipX, shipY, actions, firing);
         }
         if (ring != null) {
             // M9 part H: the arc follows the ship, the rings turn, and a ring whose last battery died locks; step H1b:

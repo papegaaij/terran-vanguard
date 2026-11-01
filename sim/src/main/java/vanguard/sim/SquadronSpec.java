@@ -1,6 +1,7 @@
 package vanguard.sim;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * M10 part F (design/enemies/bosses/honour-guard, round 72 Q5 a): a squadron mid-boss, one set piece whose parts are
@@ -21,9 +22,33 @@ import java.util.List;
  *     box is its part's
  * @param shield each ace's hex shield (60, refilling after 2 s; the EMP Burst and a {@code shield-breaker} empty it)
  * @param contact what touching the ship does
+ * @param playbook step F1b: what the aces fire and when ({@link AcePlaybook}); empty: they only join and hold (a
+ *     caller starts their moves)
  */
 public record SquadronSpec(
-        List<Ace> aces, double tellSeconds, double separation, Hitbox hull, EnemySpec.Shield shield, Contact contact) {
+        List<Ace> aces,
+        double tellSeconds,
+        double separation,
+        Hitbox hull,
+        EnemySpec.Shield shield,
+        Contact contact,
+        Optional<SquadronPlaybook> playbook) {
+    /** A squadron without a playbook (step F1a's). */
+    public SquadronSpec(
+            List<Ace> aces,
+            double tellSeconds,
+            double separation,
+            Hitbox hull,
+            EnemySpec.Shield shield,
+            Contact contact) {
+        this(aces, tellSeconds, separation, hull, shield, contact, Optional.empty());
+    }
+
+    /** Step F1b: this squadron flying {@code withPlaybook}. */
+    public SquadronSpec withPlaybook(SquadronPlaybook withPlaybook) {
+        return new SquadronSpec(aces, tellSeconds, separation, hull, shield, contact, Optional.of(withPlaybook));
+    }
+
     /**
      * How an ace flies: the leader holds the top band strafing with its nose on the ship and slides across; the dancer
      * flies figure-eights in the middle band, loops, rolls past the ship and lays a ribbon; the feinter holds the bottom
@@ -143,8 +168,12 @@ public record SquadronSpec(
         }
     }
 
-    /** Checks it against its boss's {@code parts}: every part an ace, none vital (the last death ends the piece). */
-    void check(String barName, List<PartSpec> parts) {
+    /**
+     * Checks it against its boss's {@code parts} and {@code attacks}: every part an ace, none vital (the last death ends
+     * the piece); the playbook's pools and attacks.
+     */
+    void check(String barName, List<PartSpec> parts, List<BossSpec.Attack> attacks) {
+        playbook.ifPresent(book -> book.check(barName, aces.size(), attacks));
         if (aces.size() != parts.size()) {
             throw new IllegalArgumentException(barName + ": every part of a squadron is an ace");
         }

@@ -154,6 +154,12 @@ interface BossActions {
     default void squadron(SimEvents.Type type, double x, double y, int value) {}
 
     /**
+     * M10 part F, step F1b: a squadron's radio subject (an ace's join, death, the first loss and the last ace, {@link
+     * Squadron}): the {@code boss-phase} cue of that name.
+     */
+    default void squadronCue(String subject) {}
+
+    /**
      * M9 part H, step H1b: a ringed boss's SAM battery at (x, y) launches one missile of the homing {@code gun} at the
      * ship, under the station's own cap (its gun's most alive, across its batteries); by default an aimed shot.
      */

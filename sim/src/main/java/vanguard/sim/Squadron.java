@@ -20,8 +20,9 @@ package vanguard.sim;
  * its interval, the ship is pushed away and the ace takes its own share and flies on ({@link #strike}). A dead ace's
  * hull tumbles away down and out of the field ({@link SimEvents.Type#ACE_DOWN}), never hitting or touching anything.
  *
- * <p>The playbook (step F1b) draws each ace's moves through {@link #start} and {@link #startPincer} once it {@link
- * #ready holds on its station}; this class only joins, flies and kills the aces. Its state is hashed with the piece's
+ * <p>The playbook (step F1b: {@link AcePlaybook}, when the spec has one) draws each ace's moves through {@link #start}
+ * and {@link #startPincer} once it {@link #ready holds on its station} and fires them; the radio's subjects of the joins
+ * and deaths are raised here ({@link BossActions#squadronCue}). Its state is hashed with the piece's
  * (only a squadron hashes it), so a replay and a retry from the boss checkpoint repeat the fight exactly. Allocates
  * nothing once made.
  */
@@ -65,6 +66,20 @@ public final class Squadron implements Hashed {
     private int ticks;
     /** The aces dead so far. */
     private int deaths;
+    /** Step F1b: its playbook and conductor; null without one (a caller starts the moves). */
+    private final AcePlaybook playbook;
+    /** {@link #playbook} for the presentation, made once. */
+    private final java.util.Optional<AcePlaybook> playbookView;
+    /**
+     * Step F1b (m10f-gaps.md §1 row 9): per ace, the radio's {@code boss-phase} subjects: its join after the first
+     * ({@code <call sign>-joins}, at its tell), its death ({@code <call sign>-down}), the first loss spoken by it
+     * ({@code first-loss-<call sign>}), "just us now" by it ({@code last-ace-<call sign>}); lower case, made once.
+     */
+    private final String[] joinsSubject;
+
+    private final String[] downSubject;
+    private final String[] firstLossSubject;
+    private final String[] lastAceSubject;
 
     Squadron(SetPiece piece, BossSpec boss, SetPieceSpec setPiece) {
         this.piece = piece;
@@ -83,6 +98,21 @@ public final class Squadron implements Hashed {
         edge = new int[count];
         joinedAt = new int[count];
         strikeTicks = new int[count];
+        joinsSubject = new String[count];
+        downSubject = new String[count];
+        firstLossSubject = new String[count];
+        lastAceSubject = new String[count];
+        for (int a = 0; a < count; a++) {
+            String sign = spec.aces().get(a).callSign().toLowerCase(java.util.Locale.ROOT);
+            joinsSubject[a] = sign + "-joins";
+            downSubject[a] = sign + "-down";
+            firstLossSubject[a] = "first-loss-" + sign;
+            lastAceSubject[a] = "last-ace-" + sign;
+        }
+        playbook = spec.playbook().isPresent()
+                ? new AcePlaybook(piece, this, boss, spec.playbook().get())
+                : null;
+        playbookView = java.util.Optional.ofNullable(playbook);
         reset();
     }
 
@@ -96,13 +126,17 @@ public final class Squadron implements Hashed {
         java.util.Arrays.fill(strikeTicks, 0);
         ticks = 0;
         deaths = 0;
+        if (playbook != null) {
+            playbook.reset();
+        }
     }
 
     /**
      * One step of the fight (from the boss's arrival, on the real steps): the deaths seen, the joins and their tells,
-     * the aces' flight. Events go through {@code actions}.
+     * the aces' flight; step F1b: then the playbook's draws, tells and fire ({@code firing} false: none fires). Events
+     * go through {@code actions}.
      */
-    void step(double shipX, double shipY, BossActions actions) {
+    void step(double shipX, double shipY, BossActions actions, boolean firing) {
         flight.keepPrev();
         ticks++;
         for (int a = 0; a < count; a++) {
@@ -128,6 +162,14 @@ public final class Squadron implements Hashed {
                 set(a, State.FLYING);
             }
         }
+        if (playbook != null) {
+            playbook.step(shipX, shipY, actions, firing);
+        }
+    }
+
+    /** Step F1b: as {@link #step(double, double, BossActions, boolean)}, firing. */
+    void step(double shipX, double shipY, BossActions actions) {
+        step(shipX, shipY, actions, true);
     }
 
     /** After the kill: the last death seen and the hulls tumbling on (the last ace's under its chain). */
@@ -147,7 +189,35 @@ public final class Squadron implements Hashed {
                 flight.deaths = deaths;
                 flight.tumble(a);
                 actions.squadron(SimEvents.Type.ACE_DOWN, flight.x[a], flight.y[a], a);
+                lines(a, actions);
             }
+        }
+    }
+
+    /**
+     * Step F1b: ace {@code a}'s death on the radio: its own subject; the first loss spoken by the senior flying
+     * survivor; the last ace's "just us now" by it (an ace not yet across its edge speaks neither).
+     */
+    private void lines(int a, BossActions actions) {
+        actions.squadronCue(downSubject[a]);
+        int speaker = -1;
+        int alive = 0;
+        for (int b = 0; b < count; b++) {
+            boolean flies = (state[b] == State.ENTERING.ordinal() || state[b] == State.FLYING.ordinal())
+                    && piece.partHp(part(b)) > 0;
+            if (flies && speaker < 0) {
+                speaker = b;
+            }
+            alive += state[b] != State.DOWN.ordinal() ? 1 : 0;
+        }
+        if (speaker < 0) {
+            return;
+        }
+        if (deaths == 1 && count > 2) {
+            actions.squadronCue(firstLossSubject[speaker]);
+        }
+        if (deaths == count - 1 && alive == 1) {
+            actions.squadronCue(lastAceSubject[speaker]);
         }
     }
 
@@ -159,6 +229,10 @@ public final class Squadron implements Hashed {
             flight.prepare(a, e, leaderX());
             set(a, State.TELLING);
             actions.squadron(SimEvents.Type.ACE_TELL, tellX(a), tellY(a), tellValue(a, e));
+            if (a > 0) {
+                // Step F1b: its taunt (the first ace's is the boss's arrival line).
+                actions.squadronCue(joinsSubject[a]);
+            }
         }
         if (state[a] == State.TELLING.ordinal() && stateTicks[a] >= tellTicks) {
             set(a, State.ENTERING);
@@ -450,6 +524,11 @@ public final class Squadron implements Hashed {
         return flight;
     }
 
+    /** Step F1b: its playbook and conductor (the tells, the told dive lines); empty without one. */
+    public java.util.Optional<AcePlaybook> playbook() {
+        return playbookView;
+    }
+
     @Override
     public void addTo(StateHash hash) {
         hash.add(ticks).add(deaths);
@@ -457,5 +536,8 @@ public final class Squadron implements Hashed {
             hash.add(state[a]).add(stateTicks[a]).add(edge[a]).add(joinedAt[a]).add(strikeTicks[a]);
         }
         flight.addTo(hash);
+        if (playbook != null) {
+            playbook.addTo(hash);
+        }
     }
 }

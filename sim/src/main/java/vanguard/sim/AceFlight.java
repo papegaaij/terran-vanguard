@@ -126,6 +126,8 @@ public final class AceFlight {
     final double[] pullOut;
     /** The aces that have died (the feinter commits its pull-out from the first). */
     int deaths;
+    /** Step F1b: the least pull-out of the dive being started ({@link #startDive}); 0 otherwise (never kept). */
+    private double borrowedKeepOff;
     /** Where the ship is this step. */
     private double shipX;
 
@@ -437,10 +439,20 @@ public final class AceFlight {
         legTicks[a] = 0;
     }
 
+    /**
+     * Step F1b: ace {@code a} dives as {@link AceMove#DIVE} with the ship at (sx, sy), pulling out no closer than {@code
+     * least} px either (the last ace's borrowed dive: the feinter's committed pull-out when its own keep-off is less).
+     */
+    void startDive(int a, double sx, double sy, double least, BossActions actions) {
+        borrowedKeepOff = least;
+        start(a, AceMove.DIVE, sx, sy, actions);
+        borrowedKeepOff = 0;
+    }
+
     /** The dive from where ace {@code a} is at the ship's spot now: its run, its pull-out, its climb home. */
     private void dive(int a) {
         SquadronSpec.Station station = stations[a];
-        pullOut[a] = keepOff(a);
+        pullOut[a] = Math.max(keepOff(a), borrowedKeepOff);
         double dx = shipX - x[a];
         double dy = shipY - y[a];
         double d = Math.hypot(dx, dy);
@@ -915,6 +927,38 @@ public final class AceFlight {
 
     double leadY(int a, int ticks) {
         return y[a] + (y[a] - prevY[a]) * ticks;
+    }
+
+    /** Step F1b: whether ace {@code a} flies a dive's run now (the feinter's dive or the overhead's dive). */
+    boolean running(int a) {
+        return flying[a] && legCount[a] > 0 && legTag[a * LEGS + leg[a]] == AceLeg.RUN.ordinal();
+    }
+
+    /** Step F1b: where ace {@code a}'s current line leg starts, px from the left (a dive's run's start, a pass's). */
+    double legStartX(int a) {
+        return legAx[a * LEGS + leg[a]];
+    }
+
+    double legStartY(int a) {
+        return legAy[a * LEGS + leg[a]];
+    }
+
+    /** Step F1b: where ace {@code a}'s current line leg ends, px from the left. */
+    double legEndX(int a) {
+        return legBx[a * LEGS + leg[a]];
+    }
+
+    /** Step F1b: the running dive's locked spot (the ship's at its start: its run's end plus its pull-out's start). */
+    double runToX(int a) {
+        int k = a * LEGS + leg[a];
+        double d = legLength[k];
+        return d > 0 ? legBx[k] + (legBx[k] - legAx[k]) / d * pullOutStart(pullOut[a]) : legBx[k];
+    }
+
+    double runToY(int a) {
+        int k = a * LEGS + leg[a];
+        double d = legLength[k];
+        return d > 0 ? legBy[k] + (legBy[k] - legAy[k]) / d * pullOutStart(pullOut[a]) : legBy[k];
     }
 
     /** Ace {@code a}'s current leg's tag. */

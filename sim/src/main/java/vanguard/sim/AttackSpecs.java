@@ -352,6 +352,11 @@ public interface AttackSpecs {
      * telegraphSeconds} locks a line from its centre through the ship's position to the screen's edge (lock, not
      * track: the direction is locked, the origin rides with the unit, round 66's C.1 b); then the line is live {@code liveSeconds}: a band {@code bandPx} wide that deals {@code damage} to the
      * ship once. Enemy fire never hurts enemies. The EMP Burst's stun cancels a running telegraph (no shot).
+     *
+     * <p>M10 part F, step F1b (design/enemies/bosses/honour-guard, the sniper line): a boss's line ({@link BossLines})
+     * may <b>track</b> the ship through its telegraph and lock only {@code lockBeforeSeconds} before it fires; at the
+     * telegraph's length or more (the default, every line before Act 6) it locks at the telegraph's start as before.
+     * Only {@link BossLines} reads it (a unit's line always locks at its start).
      */
     public record LaserLine(
             double telegraphSeconds,
@@ -361,7 +366,30 @@ public interface AttackSpecs {
             double intervalSeconds,
             double firstDelaySeconds,
             double holdWithinPx,
-            int mostTelegraphing) {
+            int mostTelegraphing,
+            double lockBeforeSeconds) {
+        /** A line locked at its telegraph's start (every line before M10 part F). */
+        public LaserLine(
+                double telegraphSeconds,
+                double liveSeconds,
+                double bandPx,
+                double damage,
+                double intervalSeconds,
+                double firstDelaySeconds,
+                double holdWithinPx,
+                int mostTelegraphing) {
+            this(
+                    telegraphSeconds,
+                    liveSeconds,
+                    bandPx,
+                    damage,
+                    intervalSeconds,
+                    firstDelaySeconds,
+                    holdWithinPx,
+                    mostTelegraphing,
+                    telegraphSeconds);
+        }
+
         /** A line without the gate (before M9 part F). */
         public LaserLine(
                 double telegraphSeconds,
@@ -387,7 +415,30 @@ public interface AttackSpecs {
                     intervalSeconds,
                     firstDelaySeconds,
                     holdWithinPx,
-                    most);
+                    most,
+                    lockBeforeSeconds);
+        }
+
+        /**
+         * M10 part F, step F1b: this line tracking the ship through its telegraph until {@code seconds} before it fires
+         * (at the telegraph's length or more: locked at its start).
+         */
+        public LaserLine withLockBefore(double seconds) {
+            return new LaserLine(
+                    telegraphSeconds,
+                    liveSeconds,
+                    bandPx,
+                    damage,
+                    intervalSeconds,
+                    firstDelaySeconds,
+                    holdWithinPx,
+                    mostTelegraphing,
+                    seconds);
+        }
+
+        /** M10 part F, step F1b: whether it tracks the ship through part of its telegraph ({@link #lockBeforeSeconds}). */
+        public boolean tracks() {
+            return lockBeforeSeconds < telegraphSeconds;
         }
 
         public LaserLine {
@@ -398,7 +449,8 @@ public interface AttackSpecs {
                     || !(intervalSeconds >= telegraphSeconds + liveSeconds)
                     || !(firstDelaySeconds >= 0)
                     || !(holdWithinPx >= 0)
-                    || mostTelegraphing < 0) {
+                    || mostTelegraphing < 0
+                    || !(lockBeforeSeconds >= 0)) {
                 throw new IllegalArgumentException("a laser line telegraphs, lives, has a band and an interval that "
                         + "holds both: " + telegraphSeconds + ", " + liveSeconds + ", " + intervalSeconds);
             }
