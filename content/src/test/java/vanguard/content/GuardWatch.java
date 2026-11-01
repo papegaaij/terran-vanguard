@@ -2,24 +2,30 @@ package vanguard.content;
 
 import java.util.Arrays;
 import java.util.Locale;
+import vanguard.sim.AceMove;
 import vanguard.sim.AcePlaybook;
 import vanguard.sim.SetPiece;
 import vanguard.sim.SimStep;
 import vanguard.sim.Sortie;
 import vanguard.sim.Squadron;
+import vanguard.sim.SquadronSpec;
 
 /**
  * M10 part F, step F2 (design/enemies/bosses/honour-guard, Duration and HP; m10f-gaps.md §1 row 18): a squadron
  * mid-boss's duel on the attempt that completes the level (Level 40's Honour Guard): its time from the bar to the last
  * ace's death, each ace's join (on the field, touchable) and death after the bar, the time with one, two and three aces
  * flying (the together time: all three), the kill order, and the conductor's most at once (told plays, firing aces,
- * tells running). The level report's {@code guard} part.
+ * tells running). The level report's {@code guard} part. Step F3 (round 78's boss question, m10-gaps.md F1a): the
+ * separation pushes on the leader: while he holds his station or slides (once back in his band), the steps his centre lies outside his
+ * station's band (the 80 px hull rule's solver pushing him away from the dancer; his strafe and slide stay inside it),
+ * how often (each run of such steps one push) and how far at most.
  */
 final class GuardWatch implements LevelMetrics.Probe {
     /**
      * A duel: {@code seconds} from the bar to the kill (NaN if it lives), {@code joined}/{@code down} per ace in s after
      * the bar (NaN: never), {@code flying} s with 0–3 aces on the field, the kill {@code order} (aces' indices), the most
-     * {@code told}, {@code firing} and {@code telling} at once, the aces' call signs.
+     * {@code told}, {@code firing} and {@code telling} at once, the aces' call signs; the leader's {@code pushes} out of
+     * his band, the {@code pushedSeconds} out of it and the {@code pushedMost} px out.
      */
     record Duel(
             long seed,
@@ -31,7 +37,10 @@ final class GuardWatch implements LevelMetrics.Probe {
             int told,
             int firing,
             int telling,
-            String[] signs) {
+            String[] signs,
+            int pushes,
+            double pushedSeconds,
+            double pushedMost) {
         double together() {
             return flying[3];
         }
@@ -50,7 +59,8 @@ final class GuardWatch implements LevelMetrics.Probe {
             return String.format(
                     Locale.ROOT,
                     "seed %d: %.1f s, together %.1f s (1 flying %.1f, 2 %.1f, 3 %.1f); %s; kills %s; most told %d,"
-                            + " firing %d, telling %d",
+                            + " firing %d, telling %d; the leader pushed out of his band %d times, %.1f s, at most"
+                            + " %.0f px",
                     seed,
                     seconds,
                     together(),
@@ -61,7 +71,10 @@ final class GuardWatch implements LevelMetrics.Probe {
                     kills,
                     told,
                     firing,
-                    telling);
+                    telling,
+                    pushes,
+                    pushedSeconds,
+                    pushedMost);
         }
     }
 
@@ -77,6 +90,15 @@ final class GuardWatch implements LevelMetrics.Probe {
     private int firing;
     private int telling;
     private String[] signs = new String[0];
+    /** The leader's ace (-1 until seen), his pushes, the steps out of his band, the most px out, whether out now. */
+    private int leader = -1;
+
+    private int pushes;
+    private int pushedSteps;
+    private double pushedMost;
+    private boolean out;
+    /** Whether the leader has been inside his band since his last move other than holding or sliding. */
+    private boolean settled;
 
     GuardWatch(long seed) {
         this.seed = seed;
@@ -94,6 +116,11 @@ final class GuardWatch implements LevelMetrics.Probe {
         Arrays.fill(joined, -1);
         Arrays.fill(down, -1);
         Arrays.fill(order, -1);
+        pushes = 0;
+        pushedSteps = 0;
+        pushedMost = 0;
+        out = false;
+        settled = false;
     }
 
     @Override
@@ -116,6 +143,9 @@ final class GuardWatch implements LevelMetrics.Probe {
             signs = new String[n];
             for (int a = 0; a < n; a++) {
                 signs[a] = squadron.callSign(a);
+                if (squadron.spec().aces().get(a).role() == SquadronSpec.Role.SNIPER) {
+                    leader = a;
+                }
             }
             Arrays.fill(joined, -1);
             Arrays.fill(down, -1);
@@ -141,6 +171,7 @@ final class GuardWatch implements LevelMetrics.Probe {
             }
         }
         flying[Math.min(3, on)]++;
+        pushed(squadron);
         squadron.playbook().ifPresent(this::conductor);
         if (guard.destroyed() || deaths == squadron.aceCount()) {
             end = step;
@@ -153,6 +184,37 @@ final class GuardWatch implements LevelMetrics.Probe {
             }
         }
     }
+
+    /**
+     * The leader out of his station's band now (on the field, holding or sliding, once back inside the band since his
+     * last other move: his own strafe and slide stay in it; the way back from a borrowed dive as the last ace, or from
+     * his entry, starts outside it on purpose): a push.
+     */
+    private void pushed(Squadron squadron) {
+        AceMove move = leader < 0 ? null : squadron.move(leader);
+        if (leader < 0 || !squadron.touchable(leader) || (move != AceMove.HOLD && move != AceMove.SLIDE)) {
+            out = false;
+            settled = false;
+            return;
+        }
+        SquadronSpec.Station station = squadron.spec().aces().get(leader).station();
+        double y = squadron.y(leader);
+        double beyond = Math.max(station.yMin() - y, y - station.yMax());
+        if (beyond <= OUT_OF_BAND) {
+            settled = true;
+            out = false;
+        } else if (settled) {
+            pushedSteps++;
+            pushedMost = Math.max(pushedMost, beyond);
+            if (!out) {
+                pushes++;
+            }
+            out = true;
+        }
+    }
+
+    /** A push counts once the leader's centre is this far outside his band, px (rounding on the band's edge). */
+    static final double OUT_OF_BAND = 0.5;
 
     private void conductor(AcePlaybook book) {
         told = Math.max(told, book.told());
@@ -182,7 +244,10 @@ final class GuardWatch implements LevelMetrics.Probe {
                 told,
                 firing,
                 telling,
-                signs.clone());
+                signs.clone(),
+                pushes,
+                pushedSteps * SimStep.SECONDS,
+                pushedMost);
     }
 
     /** Flies {@code key} with the autopilot and {@code loadout} on {@code seed} and returns its duel. */

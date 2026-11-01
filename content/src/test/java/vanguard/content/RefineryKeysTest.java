@@ -134,9 +134,9 @@ class RefineryKeysTest {
         assertEquals(8, RefineryChecks.pumpStations(level));
         assertProblem("names neither a destroy-targets group", LEVEL_39, "dark_with: P8}", "dark_with: P9}");
         assertProblem(
-                "has no 'jupiter-glow' piece",
+                "has no 'supply-depot-glow' piece",
                 LEVEL_39,
-                "    - {piece: jupiter, t: -6.154, x: 240}",
-                "    - {piece: jupiter, t: -6.154, x: 240, dark_with: Loki A}");
+                "    - {piece: supply-depot, t: 105.385, x: 64}",
+                "    - {piece: supply-depot, t: 105.385, x: 64, dark_with: Loki A}");
     }
 }

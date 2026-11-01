@@ -924,6 +924,9 @@ final class LevelReport {
         int killed = 0;
         int inWindow = 0;
         int together = 0;
+        int pushes = 0;
+        double pushedSeconds = 0;
+        double pushedMost = 0;
         for (GuardWatch.Duel duel : row.guards()) {
             line(out, "guard", "%s", duel);
             if (!Double.isNaN(duel.seconds())) {
@@ -936,6 +939,9 @@ final class LevelReport {
             if (duel.together() >= 10) {
                 together++;
             }
+            pushes += duel.pushes();
+            pushedSeconds += duel.pushedSeconds();
+            pushedMost = Math.max(pushedMost, duel.pushedMost());
         }
         line(
                 out,
@@ -949,6 +955,14 @@ final class LevelReport {
                 window[1],
                 together,
                 row.guards().size());
+        // Step F3 (round 78's boss question): the 80 px hull rule's pushes on the leader, out of his band.
+        line(
+                out,
+                "guard",
+                "the leader pushed out of his band %.1f times a duel, %.1f s a duel, at most %.0f px",
+                pushes / (double) row.guards().size(),
+                pushedSeconds / row.guards().size(),
+                pushedMost);
     }
 
     private static void refineryLines(StringBuilder out, ByDifficulty row) {
@@ -1342,7 +1356,10 @@ final class LevelReport {
                             "together", round(duel.together()),
                             "joined", duel.joined(),
                             "down", duel.down(),
-                            "order", duel.order()));
+                            "order", duel.order(),
+                            "pushes", duel.pushes(),
+                            "pushed_seconds", round(duel.pushedSeconds()),
+                            "pushed_most", round(duel.pushedMost())));
                 }
                 d.put("guard", duels);
             }

@@ -272,8 +272,8 @@ class PacingTest {
             // Level39Test in step E3).
             Map.entry(Level39Test.LEVEL, Level39Test::planLoadout),
             // M10 part F: Level 40's plan fit, the Crucible and the spoofer's load with Level 37's guns and Rook's
-            // Autocannon (step F2's stand-in, Level40Plan; step F3 moves it into Level40Test).
-            Map.entry(Level40Plan.LEVEL, Level40Plan::planLoadout));
+            // Autocannon (step F2's stand-in moved into Level40Test in step F3).
+            Map.entry(Level40Test.LEVEL, Level40Test::planLoadout));
 
     /** Flies the level with the autopilot on {@link LevelMetrics#SEED} and measures it ({@link LevelMetrics.Pacing}). */
     static LevelMetrics.Flight fly(String key, Difficulty difficulty, Loadout loadout) {
