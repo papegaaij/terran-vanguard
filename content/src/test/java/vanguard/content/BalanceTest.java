@@ -99,14 +99,19 @@ class BalanceTest {
 
     /**
      * M5 part F: the rear checks over {@link #REAR_SHARE} reported for the user's decision in the combined
-     * concept round (key "Lnn slug"), accepted by the user (round 34 P4); the test fails when one is fixed
-     * (remove it here) or a new one appears.
+     * concept round (key "Lnn slug"), accepted by the user (round 34 P4); M10 part F (step F2): Level 40's rear
+     * Mirror Interceptors, pending the user's review in round 78; the test fails when one is fixed (remove it here) or
+     * a new one appears.
      */
     static final Map<String, String> REAR_PENDING = Map.of(
             "L12 wraith",
             "18 HP (the act HP factor ×1.11) / the Tail Gun L1's 10 DPS = 1.80 s of the 2.9 s flash and hold"
                     + " (0.62, at most 0.6): the plan upgrades the rear only at L14 (Tail Gun L2, 14 DPS);"
-                    + " accepted by the user (round 34 P4)");
+                    + " accepted by the user (round 34 P4)",
+            "L40 mirror-interceptor",
+            "130 HP (the act HP factor ×160/148, Level 40's approved table) / the Swarm Tail L3's 30 DPS = 4.33 s of the"
+                    + " 7.0 s hold (0.62, at most 0.6): the plan keeps the rear at 30 through Act 6; pending the user's"
+                    + " review in round 78 (M10 part F, step F2)");
 
     /** M5 part F: a latched Lamprey dies within this share of its shake-off time to the plan's rear DPS. */
     static final double LATCHED_SHARE = 0.25;

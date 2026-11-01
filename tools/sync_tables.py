@@ -970,7 +970,7 @@ def radio(d):
         else:
             trigger = EVENTS[cue["event"]]
         speaker = cue["speaker"] + (" (distorted)" if cue.get("distorted") else "")
-        if "portrait" in cue:
+        if "portrait" in cue and cue["portrait"] in PORTRAITS:   # M10 part F: a speaker's own portrait (harker-guard) names no one else
             speaker = f"{PORTRAITS[cue['portrait']]} ({speaker})"
         line = f'"{cue["line"]}"' + "".join(
             f'; {level}: "{cue[level]["line"]}"' for level in ("easy", "hard") if level in cue

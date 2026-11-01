@@ -174,7 +174,12 @@ class TypicalHaulTest {
                         // towers, pump stations, SAM Nests and Sentinels, the hut's crate and the pumps' secondary at
                         // the README's scale 0.41 (levelReport: typical +0.3 %; the README's credit table 14,929 pays
                         // a leader's extra as its rounded bounty less the wing's)
-                        Map.entry(39, 14_936)),
+                        Map.entry(39, 14_936),
+                        // M10 part F (step F2): Level 40's kills, leaders, the launched Darts, the Honour Guard's three
+                        // aces, the recorder's crate and the pickets' secondary at the README's scale 0.39
+                        // (levelReport:
+                        // typical +0.5 %)
+                        Map.entry(40, 16_310)),
                 perfect);
     }
 

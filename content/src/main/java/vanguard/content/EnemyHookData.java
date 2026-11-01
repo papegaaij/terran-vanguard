@@ -8,6 +8,7 @@ import vanguard.content.ColossusBlock.SuctionChange;
 import vanguard.content.EnemyMovementData.Ring;
 import vanguard.content.MawBlock.CoilArenaChange;
 import vanguard.content.RingBlock.RingArenaChange;
+import vanguard.content.SquadronBlock.SquadronChange;
 
 /**
  * An enemy's difficulty overrides in its stat block ({@link EnemyData}, {@code difficulty:}): the hooks per
@@ -330,6 +331,7 @@ public sealed interface EnemyHookData permits EnemyData {
      * @param regeneration M10 part A: a regeneration's rate or delay instead (the Chimera's easy and hard)
      * @param regrowth M10 part A: a regrowth's window or knit instead (the Graft Turret's easy and hard)
      * @param dome M10 part A: a dome's radius or breaker drop instead (the Shield Pylon's easy and hard)
+     * @param squadron M10 part F: a squadron's joins, rests, pull-out, taps and dive tells instead (the Honour Guard's)
      */
     record Hook(
             Optional<List<String>> leadsTargetIn,
@@ -385,7 +387,8 @@ public sealed interface EnemyHookData permits EnemyData {
             Optional<MirrorChange> mirror,
             Optional<RegenerationChange> regeneration,
             Optional<RegrowthChange> regrowth,
-            Optional<DomeChange> dome) {
+            Optional<DomeChange> dome,
+            Optional<SquadronChange> squadron) {
         public Hook {
             fullTurnEvery.ifPresent(n -> Check.notNegative("full_turn_every", n));
             hoverY.ifPresent(y -> Check.positive("hover_y", y));

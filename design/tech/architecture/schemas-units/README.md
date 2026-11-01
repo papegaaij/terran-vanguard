@@ -572,6 +572,26 @@ The schemas of the enemies' stat blocks and boss scripts and of the allies' file
   given) or `tell-end` (the bearing locked at the tell's end), **`after`** `bounce` (if not given) or `out` (one
   straight ram out through the far edge: `bounces: 0`, `dashes: 1`, no `slow`); a dashing unit may carry a
   `death-burst` attack, its only attack.
+- **M10 part F, a squadron's keys** (the [Honour Guard](../../../enemies/bosses/honour-guard/README.md), Level 40;
+  loaded and checked in step F2 by content's `EnemyData` (`SquadronBlock`), `SquadronRules` and `SquadronChecks`, flown
+  from steps F1a/F1b): the orientation **`64 angles`**; in the `boss` block (`engages_on_arrival: true`) **`squadron`**:
+  `tell` (s an ace's first entry is told at its edge), `separation` (px between hulls), `hull` `[w, h]`, `shield` (each
+  ace's hex shield, the HP lever on it), `contact` {`damage` (a size tier's contact damage), `self`, `push` px,
+  `interval` s}, `aces` (in their join order, the bar's segments; every part an ace, none `vital`: the last death ends
+  the piece): {`part`, `call_sign` (1–7 characters), `role` (`sniper`, `dancer`, `feinter`), `join` {`from` (`top`,
+  `side`: the one away from the leader, `bottom`), `after` s (the first ace's after the arrival; a later one's after the
+  ace before it crossed its edge), `at_share` (that ace's HP share), `on_first_death`}, `station` {`y` `[top, bottom]`
+  px below the top edge, `x`, `speed`, `dash`, `climb`, `span` `[least, most]`, `keep_off`, `committed_keep_off`,
+  `loop` s}} and `playbook` {`tell` s, `rests` {`alone`, `company`}, `losses` {`rest`, `last_rest`}, `conductor`
+  {`told`, `firing`}, `pincer` {`weight`, `attack`, `gap`, `every`}, `pools`: per ace {`ace` (its part), `signature`,
+  `plays`: {`play` (the role's: `sniper-line`, `pair-volley`, `fan`, `slide`; `spiral-loop`, `roll-fan`, `ribbon`;
+  `feint-dive`, `rear-rake`, `overhead`), `weight`, `attack`, `follow` (the sniper line's taps), `count`, `edge` (once
+  an ace died), `gap`, `seconds`, `tell`, `trail` (the ribbon's {`count`, `speed`, `gaps`, `gap`})}}}; the hook
+  **`squadron`** {`joins` by part {`after`, `at_share`}, `rests` (a factor), `pull_out` (the feinter's keep-off),
+  `taps`, `edge_taps`, `dive_tell`}; a boss's `laser-line` **`line.lock_before`** (s before it fires the line locks:
+  it tracks the ship until then). Checked: a pool per ace with its role's plays once each and its signature among
+  them, the sniper line and its taps `laser-line`s, the spiral loop a `spiral`, no other play a line, the slide fires
+  nothing, a ribbon lays a trail, the hook only on a squadron, `lock_before` only on a boss.
 - **Allies** (`allies/data.yaml`): one entry per ally
   slug with `name`, `layer`, `size`, `hitbox`, `hp` (medium; the level sets difficulty variants),
   `damaged_by` (`objective_aimed`: only shots the target-the-objective hook aims at it;

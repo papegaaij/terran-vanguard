@@ -3,7 +3,7 @@ title: Enemies
 design: approved
 implementation: in-progress
 art: final
-updated: 2026-10-31
+updated: 2026-11-01
 ---
 
 # Enemies
@@ -120,7 +120,7 @@ block, followed by behaviour notes and the standard sections.
 | Size tier | `tiny` / `small` / `medium` / `large` / `huge` (see [size tiers](#size-tiers)) |
 | Size | Sprite size in px at the 960×540 baseline (e.g. 36×36; see [art direction](../art-direction/README.md)) |
 | Parts | `single`, or the part list for multi-part enemies: segments / articulated parts, with per-part HP and which parts are destroyable (see [multi-part enemies](#multi-part-enemies)) |
-| Orientation | `fixed` (always faces down), `16 angles`, `32 angles` or `radial` (see [orientation](#orientation-and-rotation)) |
+| Orientation | `fixed` (always faces down), `16 angles`, `32 angles`, `64 angles` or `radial` (see [orientation](#orientation-and-rotation)) |
 | HP | In **damage units**: 1 = one shot of the starting front gun at upgrade level 1 |
 | Armour / shield | Damage reduction or a shield layer with its own HP; the traits that bypass it |
 | Speed | px/s at 960×540 |
@@ -198,7 +198,8 @@ The first enemies all have a clear nose and tail and only work flying down the s
 that move in any direction must read from any angle:
 
 - **`16 angles`** (22.5° steps) for enemies that turn to face their movement; **`32 angles`**
-  for large and slow enemies and for turrets. Every angle is a separate pre-rendered frame from
+  for large and slow enemies and for turrets; **`64 angles`** for the Honour Guard's aces (M10 part F: they bank
+  through loops and dives). Every angle is a separate pre-rendered frame from
   the 3D model with fixed lighting; the game shows the nearest one (see
   [animation rules](../art-direction/README.md#animation-rules)).
 - **`radial`** for spinners: radially symmetric designs that spin in place or along their path

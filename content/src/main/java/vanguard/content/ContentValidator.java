@@ -141,6 +141,14 @@ final class ContentValidator {
         content.levels()
                 .values()
                 .forEach(level -> RingChecks.level(content, level, (field, message) -> problem(level, field, message)));
+        // M10 part F (Level 40): a squadron mid-boss's aces, pools and plays; its radio subjects in the level.
+        content.enemies()
+                .values()
+                .forEach(enemy -> SquadronChecks.enemy(enemy, (field, message) -> problem(enemy, field, message)));
+        content.levels()
+                .values()
+                .forEach(level ->
+                        SquadronChecks.level(content, level, (field, message) -> problem(level, field, message)));
         // M10 part A (Act 6): mirrors, regrowth, domes, death-bursts and the spoofer's flag; prey links and crowns.
         content.enemies()
                 .values()

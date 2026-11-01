@@ -58,6 +58,7 @@ class ContentLoaderTest {
                         "harrow",
                         "harvester",
                         "hive-node",
+                        "honour-guard",
                         "hornet",
                         "iron-sovereign",
                         "lamprey",
@@ -162,7 +163,7 @@ class ContentLoaderTest {
                 SKITTER,
                 text -> text.replace("orientation: 16 angles", "orientation: 12 angles"),
                 "design/enemies/air/skitter/data.yaml:",
-                "orientation must be fixed, ±30° tilt, 8 angles, 16 angles, 32 angles or radial, was '12 angles'");
+                "orientation must be fixed, ±30° tilt, 8 angles, 16 angles, 32 angles, 64 angles or radial, was '12 angles'");
     }
 
     @Test
@@ -204,7 +205,7 @@ class ContentLoaderTest {
                 LEVEL_01,
                 text -> text.replaceFirst("enemy: needler", "enemy: neddler"),
                 "design/" + LEVEL_01
-                        + ": waves[2].enemy: unknown enemy 'neddler' (known: abyss-ray, abyssal-maw, asteroid-mite, barbfin, brood-carrier, brood-pod, burrower, buzzsaw-drone, chimera, choir-herald, clamp-gun, coilwyrm, cracking-tower, creeper, dart-drone, depth-hunter, driftjelly, drill-rig, dust-colossus, dust-devil, dust-kite, eel-swarm, fleet-stormhawk, ghost-drone, gilded-gunship, glassfin, glow-angler, gorgon-frigate, graft-turret, harbour-kraken, harrow, harvester, hive-node, hornet, iron-sovereign, lamprey, leviathan, mantis, minelayer, mirror-interceptor, mote-swarm, needler, polyp-mortar, pump-station, rail-bunker, rail-serpent, ravager, reef-spitter, relay-beacon, revenant-walker, sam-nest, scuttler, sentinel-tower, shard-drone, shellback, siege-spire, siphon-pump, siren, skimmer, skitter, spawning-reef, spine-turret, spiral-nautilus, spore-bomber, stinger, strider, talon, tendril-anchor, threadcrawler, void-leech, warden-tank, wavering-stormhawk, whirl-seed, wraith)");
+                        + ": waves[2].enemy: unknown enemy 'neddler' (known: abyss-ray, abyssal-maw, asteroid-mite, barbfin, brood-carrier, brood-pod, burrower, buzzsaw-drone, chimera, choir-herald, clamp-gun, coilwyrm, cracking-tower, creeper, dart-drone, depth-hunter, driftjelly, drill-rig, dust-colossus, dust-devil, dust-kite, eel-swarm, fleet-stormhawk, ghost-drone, gilded-gunship, glassfin, glow-angler, gorgon-frigate, graft-turret, harbour-kraken, harrow, harvester, hive-node, honour-guard, hornet, iron-sovereign, lamprey, leviathan, mantis, minelayer, mirror-interceptor, mote-swarm, needler, polyp-mortar, pump-station, rail-bunker, rail-serpent, ravager, reef-spitter, relay-beacon, revenant-walker, sam-nest, scuttler, sentinel-tower, shard-drone, shellback, siege-spire, siphon-pump, siren, skimmer, skitter, spawning-reef, spine-turret, spiral-nautilus, spore-bomber, stinger, strider, talon, tendril-anchor, threadcrawler, void-leech, warden-tank, wavering-stormhawk, whirl-seed, wraith)");
     }
 
     @Test

@@ -114,7 +114,8 @@ public record EnemyData(
                 EnemyHookData,
                 ColossusBlock,
                 MawBlock,
-                RingBlock {
+                RingBlock,
+                SquadronBlock {
     public EnemyData {
         // M9 part H: a ringed boss's batteries are parts too, appended in ring order (RingBlock).
         partList = RingBlock.withBatteries(partList, boss);
@@ -318,6 +319,16 @@ public record EnemyData(
     /** M9 part H: whether it is a ringed boss ({@code boss.rings}: the Iron Sovereign). */
     public boolean ringed() {
         return boss.flatMap(BossData::rings).isPresent();
+    }
+
+    /** M10 part F: its squadron ({@code boss.squadron}: the Honour Guard); empty without. */
+    public Optional<SquadronData> squadron() {
+        return boss.flatMap(BossData::squadron);
+    }
+
+    /** M10 part F: its squadron changes on {@code difficulty} ({@code squadron} in the hook); empty without. */
+    public Optional<SquadronChange> squadronChange(Difficulty difficulty) {
+        return hook(difficulty).flatMap(Hook::squadron);
     }
 
     /** M9 part H: its ring changes on {@code difficulty} ({@code ring_arena}); empty without. */

@@ -39,8 +39,8 @@ import vanguard.content.Difficulty;
  * plan's L36 visit: the Tesla Coil Pod L2 on the left wing). M10 part C (step C3): Level 37 follows (the plan's L37
  * visit: the Ion Beam L5). M10 part D (step D3): Level 38 follows (the plan's L38 visit buys nothing). M10 part E
  * (step E3): Level 39 follows (the plan's L39 visit buys nothing: saving for the Crucible and the spoofer; Rook flies his
- * Mortar), whose win ends the branch's release ({@link CampaignRoute#releaseEnd}: Level 40 not built; part H moves it to
- * Level 42). The credits and the fit per visit are printed per act (the playthrough sheet in the test report). Round 34, P3 = A: the credits at each act's end lie
+ * Mortar), whose win led to the branch's release end until M10 part F's step F2 built Level 40 (the flight on to it is
+ * step F3's; part H moves the release end to Level 42). The credits and the fit per visit are printed per act (the playthrough sheet in the test report). Round 34, P3 = A: the credits at each act's end lie
  * within the balance plan's tolerance of the expert's bound, the starting credits plus each level's perfect run × the
  * difficulty's income × the expert's collection, with the expert's grade bonus, less the purchases and repairs paid
  * ({@link Playthrough#bound}); on hard up to the plan's {@code hard_under} below it. Rook's ejections and the refused
@@ -183,8 +183,9 @@ class ActPlaythroughTest {
                 difficulty, campaign.gear().escort().armour(), campaign.escortMaxArmour());
         assertFalse(campaign.rookMissing(), difficulty + ": Rook in his slot after Level 39");
         assertTrue(CampaignRoute.actEnd(CONTENT, campaign).isEmpty(), "Level 39 ends no act");
-        assertTrue(CampaignRoute.releaseEnd(CONTENT, campaign), "the release ends after Level 39 (Level 40 not built)");
-        assertTrue(CampaignRoute.launch(CONTENT, campaign).isEmpty(), "Level 40 is not built");
+        // M10 part F (step F2): Level 40 is built, so Level 39 leads on to it (the flight on is step F3's).
+        assertFalse(CampaignRoute.releaseEnd(CONTENT, campaign), "Level 39 leads on to Level 40");
+        assertTrue(CampaignRoute.launch(CONTENT, campaign).isPresent(), "Level 40 is built");
         assertTrue(
                 playthrough.problems().isEmpty(),
                 difficulty + ": the balance plan at the visits: " + playthrough.problems());

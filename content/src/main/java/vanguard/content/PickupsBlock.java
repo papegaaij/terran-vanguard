@@ -16,13 +16,22 @@ public sealed interface PickupsBlock permits LevelData {
      * M5 part G (design/allies, CDF supply drone; user decision G6 = a): a pickup released at the point
      * ({@code x}, {@code y}) at {@code t} (x px from the left edge, y px from the bottom edge, y up), then an
      * ordinary pickup; the drone that carries it there is presentation only: its {@code sprite} set (Level
-     * 13's {@code supply-drone}), its arc from the defended ally's helipad ending at the point at {@code t}.
+     * 13's {@code supply-drone}), its arc from the defended ally's helipad ending at the point at {@code t}. M10 part F
+     * (design/campaign Level 40): {@code marked: true} brackets the drone with the friendly marker (a neutral craft's
+     * IFF brackets and tag) while it is on the screen.
      */
-    public record Drop(double t, double x, double y, Pickup pickup, Optional<String> sprite) {
+    public record Drop(double t, double x, double y, Pickup pickup, Optional<String> sprite, Optional<Boolean> marked) {
         public Drop {
+            Check.that(marked.orElse(true), "marked: true, or leave it out");
+            Check.that(marked.isEmpty() || sprite.isPresent(), "marked: only a drop carried by a drone (its sprite)");
             Check.notNegative("t", t);
             Check.that(x >= 0 && x <= PlayField.WIDTH, "x: on the play field, was " + x);
             Check.that(y >= 0 && y < PlayField.HEIGHT, "y: inside the play field (below the top edge), was " + y);
+        }
+
+        /** M10 part F: whether its drone carries the friendly marker. */
+        public boolean isMarked() {
+            return marked.orElse(false);
         }
     }
 

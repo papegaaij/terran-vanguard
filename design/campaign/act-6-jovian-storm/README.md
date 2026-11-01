@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: chosen
 depends-on: [../act-5-the-belt, ../../world/jovian, ../../story/twist, ../../story/characters/vorne, ../../enemies/bosses/honour-guard, ../../enemies/bosses/ascendant, ../../player/generator]
-updated: 2026-10-31
+updated: 2026-11-01
 ---
 
 # Act 6 – Jovian Storm
@@ -36,7 +36,7 @@ here is a hand table marked draft, taken from the level drafts, and the build (M
 | [level-37-fall-of-aurelia](level-37-fall-of-aurelia/README.md) | Aurelia, the cloud capital: evacuation shuttles (`SHUTTLES`), Mirror Interceptors and Graft Turrets, the act's `shield-breaker` level; the Vrell turn at t=100 and the falling city in the last 40 s | approved | done | proposed |
 | [level-38-lightning-belt](level-38-lightning-belt/README.md) | The storm layer, every direction, air only: told lightning strikes that hit the enemies too, Harrows bursting into rings (`HARROWS`), the Buzzsaw Drone's return | approved | done | proposed |
 | [level-39-io-flyby](level-39-io-flyby/README.md) | Io's refineries, `destroy-targets`: six cracking towers under holds, dry eruptions throwing rocks, Striders guarding the works, the pump stations (`PUMPS`) | approved | done | proposed |
-| [level-40-honour-guard](level-40-honour-guard/README.md) | The Callisto approach in vacuum, air only: Vorne's picket line, then the mid-boss Honour Guard (Harker, Vesper, Kestrel) and Rook's rivalry, then the run-out to the citadel's outer line | approved | not-started | proposed |
+| [level-40-honour-guard](level-40-honour-guard/README.md) | The Callisto approach in vacuum, air only: Vorne's picket line, then the mid-boss Honour Guard (Harker, Vesper, Kestrel) and Rook's rivalry, then the run-out to the citadel's outer line | approved | in-progress | proposed |
 | [level-41-callisto-fortress](level-41-callisto-fortress/README.md) | Helix HQ: three Shield Pylon gates and the Halo Platform held, Warden Tanks, Rail Bunkers and grafted turrets, Varga's `FILES` and the Silence named | approved | not-started | none |
 | [level-42-ascendant](level-42-ascendant/README.md) | Callisto orbit, air only: the home fleet's screen and two cruisers, the Ascendant bow-on, Vorne's only shout, the lifeboat's escape; the act end and the release's end naming Act VII | approved | not-started | none |
 
@@ -227,8 +227,9 @@ Pulse, and the Airstrike and the Orbital Lance work everywhere
 visit raises the Ion Beam to L5, the L37 visit fits the Tesla Coil Pod L2 on the left wing, the L38 and L39 visits
 save, the L40 visit buys the Crucible and the IFF spoofer, the L41 visit buys Composite V (J11), the L42 visit raises a
 pod to L5 and the Tesla pod to L3. Forward DPS against the proposed reference: 1.19 · 1.14 · 1.11 · 1.08 · 1.05 · 1.02 ·
-1.08. The plan flies at **22 of 22 MW from L36 to L40** and has room for one utility only from L41 (24/25, then 23/25):
-the Level 30 lesson is met late (judgement call **J11**, below).
+1.08. The plan flies at **22 of 22 MW from L36 to L39** and has room for one utility from L40, where the Crucible and
+the IFF spoofer are bought (24 of 25 MW at L40 and L41, then 23 of 25: the balance plan's rows, step F2's fix of the
+draft's "only from L41"): the Level 30 lesson is met late (judgement call **J11**, below).
 
 ### Factions present
 

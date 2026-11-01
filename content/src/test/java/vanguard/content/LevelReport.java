@@ -53,7 +53,9 @@ final class LevelReport {
         /** M10 part D (Level 38): the dashers' caps, the Harrows' rings, the strikes over tells, the scoped count. */
         DASH,
         /** M10 part E (Level 39): the holds' windows, the vents' tells in each hold, the guards' caps. */
-        REFINERY
+        REFINERY,
+        /** M10 part F (Level 40): a squadron mid-boss's duel per seed: its time, joins, deaths, together time. */
+        GUARD
     }
 
     enum Fit {
@@ -156,7 +158,8 @@ final class LevelReport {
             List<Level35Test.Fight> rings,
             LevelMetrics.Dashers dashersUnharmed,
             List<LevelMetrics.DashRun> dashRuns,
-            RefineryWatch.Refinery refinery) {}
+            RefineryWatch.Refinery refinery,
+            List<GuardWatch.Duel> guards) {}
 
     /** A level's report. */
     record Level(
@@ -385,6 +388,19 @@ final class LevelReport {
             ringFights.put(difficulty, list);
         }
 
+        // M10 part F (step F2): a squadron mid-boss's duel (Level 40's Honour Guard), the plan's fit on seeds 1..N.
+        Map<Difficulty, List<Future<GuardWatch.Duel>>> guards = new HashMap<>();
+        for (Difficulty difficulty : options.difficulties()) {
+            List<Future<GuardWatch.Duel>> list = new ArrayList<>();
+            boolean guarded = options.has(Part.GUARD) && GuardWatch.hasGuard(SimSpecs.level(content, key, difficulty));
+            for (long seed = 1; guarded && seed <= options.seeds(); seed++) {
+                long s = seed;
+                list.add(pool.submit(() ->
+                        GuardWatch.fly(content, key, loadout(content, key, difficulty, floorFit), difficulty, s)));
+            }
+            guards.put(difficulty, list);
+        }
+
         double fitted = options.has(Part.HAUL) ? LevelMetrics.bountyScaleForBudget(content, key) : Double.NaN;
         List<ByDifficulty> rows = new ArrayList<>();
         for (Difficulty difficulty : options.difficulties()) {
@@ -415,6 +431,10 @@ final class LevelReport {
             }
             Future<LevelMetrics.Dashers> unharmed = dashersUnharmed.get(difficulty);
             Future<RefineryWatch.Refinery> refinery = refineries.get(difficulty);
+            List<GuardWatch.Duel> duels = new ArrayList<>();
+            for (Future<GuardWatch.Duel> duel : guards.get(difficulty)) {
+                duels.add(duel.get());
+            }
             rows.add(new ByDifficulty(
                     difficulty,
                     LevelMetrics.density(level, route),
@@ -434,7 +454,8 @@ final class LevelReport {
                     ringed(ringFights.get(difficulty)),
                     unharmed == null ? null : unharmed.get(),
                     dashes,
-                    refinery == null ? null : refinery.get()));
+                    refinery == null ? null : refinery.get(),
+                    duels));
         }
         double referenceLife = Double.NaN;
         if (hpRun) {
@@ -731,6 +752,7 @@ final class LevelReport {
             }
             dashLines(out, row);
             refineryLines(out, row);
+            guardLines(out, row);
             for (LevelMetrics.HullRun tug : row.hulls()) {
                 StringBuilder sections = new StringBuilder();
                 for (int k = 0; k < tug.names().length; k++) {
@@ -893,6 +915,42 @@ final class LevelReport {
      * least 2 a vent at medium), and the most Striders walking (2), Sentinels sweeping (2), SAM Nests awake (3) and
      * Harrows (6) on the screen at once, with medium hulls overlapping (0) ({@link RefineryWatch}: invulnerable).
      */
+    private static void guardLines(StringBuilder out, ByDifficulty row) {
+        if (row.guards().isEmpty()) {
+            return;
+        }
+        double[] window = LevelMetrics.bossWindow(true);
+        double sum = 0;
+        int killed = 0;
+        int inWindow = 0;
+        int together = 0;
+        for (GuardWatch.Duel duel : row.guards()) {
+            line(out, "guard", "%s", duel);
+            if (!Double.isNaN(duel.seconds())) {
+                sum += duel.seconds();
+                killed++;
+                if (duel.seconds() >= window[0] && duel.seconds() <= window[1]) {
+                    inWindow++;
+                }
+            }
+            if (duel.together() >= 10) {
+                together++;
+            }
+        }
+        line(
+                out,
+                "guard",
+                "mean %.1f s over %d kills; %d of %d in %.0f-%.0f s; %d of %d together >= 10 s",
+                killed == 0 ? Double.NaN : sum / killed,
+                killed,
+                inWindow,
+                row.guards().size(),
+                window[0],
+                window[1],
+                together,
+                row.guards().size());
+    }
+
     private static void refineryLines(StringBuilder out, ByDifficulty row) {
         RefineryWatch.Refinery r = row.refinery();
         if (r == null) {
@@ -1274,6 +1332,19 @@ final class LevelReport {
                             "required", run.required()));
                 }
                 d.put("dash", ordered("unharmed", dashersJson(row.dashersUnharmed()), "runs", flown));
+            }
+            if (!row.guards().isEmpty()) {
+                List<Object> duels = new ArrayList<>();
+                for (GuardWatch.Duel duel : row.guards()) {
+                    duels.add(ordered(
+                            "seed", duel.seed(),
+                            "seconds", round(duel.seconds()),
+                            "together", round(duel.together()),
+                            "joined", duel.joined(),
+                            "down", duel.down(),
+                            "order", duel.order()));
+                }
+                d.put("guard", duels);
             }
             if (row.refinery() != null) {
                 RefineryWatch.Refinery r = row.refinery();

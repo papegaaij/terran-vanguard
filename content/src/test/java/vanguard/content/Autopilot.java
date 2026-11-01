@@ -204,6 +204,11 @@ public final class Autopilot {
             // lunge's column, the fan walls' gaps and the bullets.
             return commands | MawPlay.move(sortie, coiled);
         }
+        SetPiece squadron = GuardPlay.squadronBoss(sortie);
+        if (squadron != null) {
+            // M10 part F: the Honour Guard's aces (Level 40, GuardPlay): under the nearest ace, among the bullets.
+            return commands | GuardPlay.move(sortie, squadron);
+        }
         SetPiece ringed = RingPlay.ringedBoss(sortie);
         if (ringed != null) {
             // M9 part H: the Iron Sovereign's rings (Level 35, RingPlay): every move planned among the bullets, the

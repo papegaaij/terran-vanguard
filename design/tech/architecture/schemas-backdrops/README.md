@@ -26,7 +26,9 @@ The schema of a level's `backdrop` block (layers, tile sets, seams, tower pieces
   px/s sideways, wrapping); `pieces` by id (`layer`, `size`, an animation's `frames` and `fps` or
   an angle set's `headings`, `mid_size` if it counts towards the density rule); `placed` set
   pieces (`piece`, `t` when its centre passes the middle of the screen, `x` in the play field,
-  optional `mirror`, a `path` of `[t, dx, dy]` waypoints for a piece with headings, `overhead`
+  optional `mirror`, a `path` of `[t, dx, dy]` waypoints (a piece with headings has one; M10 part F, Level 40: a
+  piece without headings may follow one too, and a step of at most 0.1 s is a re-park out of sight, exempt from the
+  2 px a frame rule), `overhead`
   for a ground piece's part above the road (a bridge's arches, a gate's blockhouse: drawn over
   the convoy and the ground objects and under the ground units, so the crawlers pass under it and
   a turret placed on it stands on it), M10 part E's `dark_with` (Level 39: its `-glow` piece goes dark with a

@@ -26,6 +26,11 @@ final class BackdropCheck {
     static final int MAX_ANIMATED = 2;
     /** No element may jump by more than ~2 px between frames (Motion budget), at 60 frames/s. */
     static final double MAX_OWN_SPEED = 2.0 * SimStep.PER_SECOND;
+    /**
+     * M10 part F (Level 40, ART-F2's fleet and glints): a path step this short is a re-park, not a motion: the piece
+     * jumps to its next offset (out of sight: the motion budget is the level's art's to keep), any distance.
+     */
+    static final double JUMP_SECONDS = 0.1 + 1e-9;
 
     /** The cloud banks of every atmosphere intensity are one element, however dense. */
     private static final String BANKS = "atmosphere banks";
@@ -211,8 +216,10 @@ final class BackdropCheck {
             if (piece.layer() == BackdropLayer.PLATEAU && !backdrop.hasPlateau()) {
                 problem.accept(field, "a piece on plateau, but scroll_factors has no plateau");
             }
-            if (piece.headings().isPresent() != placed.path().isPresent()) {
-                problem.accept(field, "a piece with headings follows a path, and only such a piece");
+            // M10 part F (Level 40): a piece without headings may follow a path too (ART-F2's drifting fleet and
+            // climbing glints: drawn at its offsets, its one image).
+            if (piece.headings().isPresent() && placed.path().isEmpty()) {
+                problem.accept(field, "a piece with headings follows a path");
             }
             if (placed.isOverhead() && piece.layer() != BackdropLayer.GROUND) {
                 problem.accept(field + ".overhead", "only a ground piece is overhead (above the road and the convoy)");
@@ -234,7 +241,7 @@ final class BackdropCheck {
                     BackdropData.Waypoint a = points.get(p - 1);
                     BackdropData.Waypoint b = points.get(p);
                     double speed = Math.hypot(b.dx() - a.dx(), b.dy() - a.dy()) / (b.t() - a.t());
-                    if (speed > MAX_OWN_SPEED) {
+                    if (speed > MAX_OWN_SPEED && b.t() - a.t() > JUMP_SECONDS) {
                         problem.accept(
                                 field + ".path[" + p + "]",
                                 String.format(

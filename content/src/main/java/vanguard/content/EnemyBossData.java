@@ -15,6 +15,7 @@ import vanguard.content.MawBlock.CoilData;
 import vanguard.content.RingBlock.CoreData;
 import vanguard.content.RingBlock.FireArc;
 import vanguard.content.RingBlock.RingData;
+import vanguard.content.SquadronBlock.SquadronData;
 
 /**
  * A boss's keys in its stat block ({@link EnemyData}, {@code boss:}): its lanes, slams, surfacing, releases,
@@ -55,6 +56,8 @@ public sealed interface EnemyBossData permits EnemyData {
      * @param speedUps M9 part H: the survivors' speed factors by the locked rings ({@link RingBlock#SPEED_UPS})
      * @param cookoff M9 part H: the batteries' cook-offs' spacing at the death, s ({@link RingBlock#COOKOFF})
      * @param core M9 part H: a ringed boss's core (its opening, shield, spiral, rail and bays)
+     * @param squadron M10 part F: a squadron mid-boss's aces, joins, stations and playbook (the Honour Guard; {@link
+     *     SquadronBlock})
      */
     record BossData(
             String kind,
@@ -82,7 +85,8 @@ public sealed interface EnemyBossData permits EnemyData {
             Optional<Double> grind,
             Optional<List<Double>> speedUps,
             Optional<Double> cookoff,
-            Optional<CoreData> core) {
+            Optional<CoreData> core,
+            Optional<SquadronData> squadron) {
         public BossData {
             Check.that(
                     kind.equals("boss") || kind.equals("mid-boss"),

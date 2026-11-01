@@ -1,0 +1,123 @@
+# Honour Guard: the stat block and the duel's script, rendered into README.md (Stat block). M10 part F, step F2, from
+# the approved spec (round 72; its Stat block, Arena, The aces, The playbook, Tells, Duration and HP, Bounty) and steps
+# F1a/F1b's simulation (SquadronSpec, AcePlaybook; their chosen flight numbers stay the simulation's).
+# Schema: ../../../tech/architecture/schemas-units/README.md (M10 part F, a squadron's keys)
+# Heights in `station.y` are px below the top edge (the spec's); the loader turns them px up.
+# Decided here as trivia (pending the user's review in round 78): the aces' hex shields are the spec's 60 as written
+# (the Act 6 `shields.heavy` factor is a level rule for the units' Act 5 shields, not for this Act 6 boss's); the pair
+# volley and the rake are the Talon's 2-shot fan (4° apart); the dive's burst flies 200 px/s (`medium`); the spiral's
+# 4 bullets/s an arm is an interval of 0.25 s; the sniper line holds no fire near the ship (hold_within 0).
+name: Honour Guard
+faction: Jovian Ascendancy
+layer: air          # `space` is `air` in vacuum (design/world/jovian, media per level)
+tier: medium        # three medium bodies (each a custom Talon at 1.5×)
+size: [60, 54]      # each ace's sprite airframe (the Talon's 40×36 at 1.5×)
+hitbox: [42, 36]    # each ace's hit box (the parts'); the piece itself is parked above the top edge
+parts: multi
+part_list:          # the aces in their join order (the bar's segments); every part an ace, none vital: the last death ends the piece
+  - {name: harker, offset: [0, 0], hitbox: [42, 36], hp: 2240, kind: destroyable, bounty: 120}
+  - {name: vesper, offset: [0, 0], hitbox: [42, 36], hp: 2240, kind: destroyable, bounty: 120}
+  - {name: kestrel, offset: [0, 0], hitbox: [42, 36], hp: 2240, kind: destroyable, bounty: 120}
+orientation: 64 angles
+hp: 6720            # the three aces' sum
+armour: 'a gold hex shield on each ace'
+speed: 320          # Kestrel's dive, the fastest; each ace's speeds in its station
+machine: true       # three machines, but a mid-boss: never stunned; the EMP Burst empties their shields
+movement: {}        # the piece is parked off the field (boss.squadron): each ace flies its own station
+attacks:
+  - {name: sniper-line, pattern: laser-line, bullet: laser, interval: 2, line: {telegraph: 1.0, live: 0.3, band: 6, hold_within: 0, lock_before: 0.2}, notes: {text: "Harker's sniper line (`laser-line`): the barrel's 0.8 s red glint, then the thin red line tracking the ship for {line.telegraph} s, locked {line.lock_before} s before it fires, live {line.live} s, {line.band} px wide, `{bullet}` {damage} once"}}
+  - {name: sniper-tap, pattern: laser-line, bullet: laser, interval: 2, line: {telegraph: 0.8, live: 0.3, band: 6, hold_within: 0, lock_before: 0.2}, notes: {text: "its double tap: a second line re-aimed 0.6 s later ({line.telegraph} s telegraph; a triple after a death)"}}
+  - {name: pair-volley, pattern: fan, bullet: small, interval: 2, speed: 170, count: 2, spread: 4, notes: {text: "the Talon's aimed pair four times 0.4 s apart (`{bullet}`, {speed} px/s)"}}
+  - {name: fan, pattern: fan, bullet: small, interval: 2, speed: 150, count: 5, spread: 40, notes: {text: "two aimed {count}-way fans over {spread}° 0.5 s apart (`{bullet}`, {speed} px/s)"}}
+  - {name: spiral-loop, pattern: spiral, bullet: small, interval: 0.25, speed: 130, arms: 2, turn_rate: 90, notes: {text: "Vesper's loop (2.5 s) firing a {arms}-arm `{pattern}` from her tail (`{bullet}`, {speed} px/s, the arms turning {turn_rate}°/s, 4 bullets/s an arm; 3 arms after a death)"}}
+  - {name: roll-fan, pattern: fan, bullet: small, interval: 2, speed: 150, count: 5, spread: 40, notes: {text: "her barrel roll past the ship's side (≥ 120 px off) with a {count}-way aimed fan at its middle"}}
+  - {name: ribbon, pattern: aimed, bullet: small, interval: 2, speed: 80, notes: {text: "her ribbon: a fast pass at y 200–260 laying 8 `{bullet}` bullets falling {speed} px/s with two 50 px gaps"}}
+  - {name: dive-burst, pattern: aimed, bullet: medium, interval: 2, speed: 200, notes: {text: "Kestrel's feint dive at 320 px/s pulling out at 110 px (85 committed), a burst of 3 aimed `{bullet}` ({speed} px/s) back at the ship from the pull-out (5 committed); its overhead feint out of the top edge the same"}}
+  - {name: rake-pair, pattern: fan, bullet: small, interval: 2, speed: 170, count: 2, spread: 4, notes: {text: "its rear rake: a climb up a side at 260 px/s, aimed pairs every 0.4 s (`{bullet}`)"}}
+  - {name: pincer-fan, pattern: fan, bullet: small, interval: 2, speed: 150, count: 5, spread: 40, notes: {text: "the pincer: Vesper and Kestrel cross from both sides at the ship's height − 160 px, their {count}-way fans 0.5 s apart, Harker holding fire"}}
+formations:
+  - {name: solo set piece}
+weak_points: []
+drops: []
+traits: [spread, rear, homing, shield-breaker]
+bounty: 360         # the parts' sum, 120 an ace: 15 % of budget(40) at Level 40's bounty scale 0.39 (1,469 ÷ (10.486 × 0.39))
+first_level: 40
+difficulty:
+  easy:   # later joins, a single line at 1.2 s, rests ×1.3, a 1-arm spiral, the dives told 1.0 s and pulled out at 130 px
+    telegraph: 1.2
+    attacks: {spiral-loop: {arms: 1}}
+    squadron: {joins: {vesper: {after: 25, at_share: 0.5}, kestrel: {after: 3}}, rests: 1.3, pull_out: 130, taps: 0, edge_taps: 1, dive_tell: 1.0}
+  hard:   # earlier joins, the triple tap, rests ×0.8, a 3-arm spiral, the line at 0.8 s, the pull-out at 90 px
+    telegraph: 0.8
+    attacks: {spiral-loop: {arms: 3}}
+    squadron: {joins: {vesper: {after: 15, at_share: 0.75}, kestrel: {after: 3}}, rests: 0.8, pull_out: 90, taps: 2, edge_taps: 3}
+boss:
+  kind: mid-boss    # the short bar, in three segments
+  bar_name: HONOUR GUARD
+  par: 62           # s from the bar to the last ace's kill (the Boss rush bonus): step F2's measured mean at medium (62.0 s, five seeds, the plan's fit with Rook; the paper's 75)
+  engages_on_arrival: true   # the joins run on the boss's own clock from the sting (the level clock halts)
+  squadron:
+    tell: 2.5         # s: each ace's first entry told at its edge (its chevron and call sign, its engines' glint, its taunt)
+    separation: 80    # px between two aces' hulls, edge to edge (the Act 6 formation rule)
+    hull: [60, 54]
+    shield: 60        # each ace's hex shield (the enemy shield rule: delay 2 s, refill 50 %/s, the breaker's hold 3 s; the HP lever on it)
+    contact: {damage: medium, self: 40, push: 24, interval: 1}   # 15 to the ship once a second, the ship pushed 24 px out, the ace takes 40 and flies on
+    aces:
+      - part: harker
+        call_sign: HARKER
+        role: sniper
+        join: {from: top, after: 1}                                   # told 1 s after the sting
+        station: {y: [70, 170], x: 160, speed: 140, dash: 280, span: [40, 80]}   # the top third, strafing 40-80 px, sliding to the mirrored x at 280 px/s
+      - part: vesper
+        call_sign: VESPER
+        role: dancer
+        join: {from: side, after: 20, at_share: 0.667}                # the side away from Harker, at his 2/3 or 20 s after he crossed
+        station: {y: [150, 330], x: 90, speed: 200, dash: 280, span: [160, 220], keep_off: 120, loop: 2.5}   # figure-eights in the middle band, never within 120 px of the ship
+      - part: kestrel
+        call_sign: KESTREL
+        role: feinter
+        join: {from: bottom, after: 4, on_first_death: true}         # the rear, 4 s after Vesper crossed or at the first death (step F2: the spec's 15 s let the plan's fit kill Vesper first on every seed, 0 s together)
+        station: {y: [420, 520], x: 30, speed: 140, dash: 320, climb: 260, span: [60, 60], keep_off: 110, committed_keep_off: 85}   # below or beside the ship band; dives pulling out at 110 px (85 committed), never a ram
+    playbook:
+      tell: 0.8         # s: every play's tell
+      rests: {alone: 1.2, company: 2.0}
+      losses: {rest: 0.3, last_rest: 0.5}   # each death: the survivors' rests −30 %; the last ace's −50 % (and the dead aces' signatures)
+      conductor: {told: 1, firing: 2}       # one told line or dive at a time, at most two aces firing
+      pincer: {weight: 1.5, attack: pincer-fan, gap: 0.5, every: 4}   # only with all three flying, at most every fourth draw
+      pools:
+        - ace: harker
+          signature: sniper-line
+          plays:
+            - {play: sniper-line, weight: 3, attack: sniper-line, follow: sniper-tap, count: 1, edge: 2, gap: 0.6}   # the double tap; a triple after a death
+            - {play: pair-volley, weight: 2, attack: pair-volley, count: 4, gap: 0.4}
+            - {play: fan, weight: 2, attack: fan, count: 2, gap: 0.5}
+            - {play: slide, weight: 1}                                                                         # only with company: his breath
+        - ace: vesper
+          signature: spiral-loop
+          plays:
+            - {play: spiral-loop, weight: 3, attack: spiral-loop, edge: 3, seconds: 2.5}   # 3 arms after a death
+            - {play: roll-fan, weight: 2, attack: roll-fan, count: 1}
+            - {play: ribbon, weight: 2, attack: ribbon, trail: {count: 8, speed: 80, gaps: 2, gap: 50}}
+        - ace: kestrel
+          signature: feint-dive
+          plays:
+            - {play: feint-dive, weight: 3, attack: dive-burst, count: 3, edge: 5, gap: 0.12}   # the burst of 3, 5 committed
+            - {play: rear-rake, weight: 2, attack: rake-pair, gap: 0.4}
+            - {play: overhead, weight: 1.5, attack: dive-burst, count: 3, edge: 5, gap: 0.12}
+  phases:
+    - {name: The duel, until: {parts: [harker, vesper, kestrel]}}   # one phase: the squadron's joins, plays and deaths drive the fight; the third death ends it
+notes:
+  layer: ' (`space` is `air` in vacuum, the [Jovian media](../../../world/jovian/README.md#media-per-level))'
+  size: '(each a custom Talon at 1.5× the airframe; the leader''s sniper barrel adds 14 px under the nose, no hit box)'
+  parts: 'three **bodies**, none `vital` (the last death ends the piece): **Harker** (the leader), **Vesper** (the dancer), **Kestrel** (the feinter); one bar in three segments in that order'
+  orientation: '(each; they bank and turn through loops and dives; the Talon flies 16)'
+  hp: '{part_list.0.hp} each (the three tuned together); total'
+  armour: 'a gold hex **shield of {boss.squadron.shield}** on each ace under the [enemy shield rule](../../README.md#enemy-shields) (spent first, refills after 2 s; the [Tesla Coil Pod](../../../player/weapons/tesla-coil-pod/README.md)''s `shield-breaker` empties it, the EMP Burst strips all three); no mirror (a unit carries one defence)'
+  speed: '(Kestrel diving); Harker {boss.squadron.aces.0.station.speed} px/s on his station, {boss.squadron.aces.0.station.dash} px/s sliding; Vesper {boss.squadron.aces.1.station.speed} px/s through her loops; Kestrel {boss.squadron.aces.2.station.climb} px/s raking'
+  movement: 'per ace (see *The aces*): Harker the top third, Vesper the middle band, Kestrel the bottom band and the sides; hull edges always **≥ {boss.squadron.separation} px apart** (the Act 6 formation rule: no two medium hulls overlap); contact `medium` 15 to the ship once a second, the ship pushed {boss.squadron.contact.push} px out, the ace taking {boss.squadron.contact.self} and flying on'
+  attack_prefix: 'per ace, drawn from its pool (see *The playbook*): '
+  weak_points: (beyond the bodies; each ace's engines glow, no weak-point multiplier)
+  bounty: ' in Act 1 terms, **{part_list.0.bounty} an ace**, each paid as it dies: ≈ **15 % of budget(40)** at Level 40''s `bounty_scale` 0.39 (see *Bounty*)'
+  death: 'per ace a `medium` vacuum flash and its hull tumbling away; the last ace a 2 s `large` chain, the credit shower (no screen flash: a mid-boss)'
+  used_in: 'only (the Level 49 boss rush has no echo of it)'
+  difficulty: 'easy: Vesper joins at Harker''s half or after 25 s, Kestrel 20 s later; Harker''s line single (1.2 s), no double tap; every rest ×1.3; Vesper''s spiral 1 arm; Kestrel''s dives told 1.0 s, pulling out at 130 px. Hard: Vesper joins at 3/4 or after 15 s, Kestrel 10 s later; the double tap a triple, the line 0.8 s; rests ×0.8; Vesper''s spiral 3 arms; Kestrel pulls out at 90 px; no boss checkpoint'

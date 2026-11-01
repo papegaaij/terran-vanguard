@@ -334,3 +334,11 @@ speakers:
       62f8693c5aff: 104         # b, Level 31 ally-lost "We've lost the bow!…" (step VOX-D2): the key's seed read "the bell, wish to flying"; the pin reads word for word both ways at 226 Hz (four of six seeds read "bell" with the name prompt)
       7dd32c336e31: 102         # b, Level 31 first-ally-hit "We're hit in the cargo!…" (step VOX-D2): the key's seed read "the car though"; the pin reads word for word plain at 188 Hz
       b8fba12216b9: 103         # b, Level 31 t=110 "Throwing you a patch…" (step VOX-D2): the key's seed read "Drawing"; the pin reads word for word both ways at 186 Hz
+  vesper:   # Level 40 (M10 part F, step F2): the Honour Guard's dancer on the enemy channel; cast in round 72 (V.1 b, Jenny Bradshaw); her lines wait for step VOX-F's render
+    names: [Vesper]
+    ref: ref-vesper-r72-b
+    filter: enemy
+  kestrel:   # Level 40 (M10 part F, step F2): the Honour Guard's feinter on the enemy channel; cast in round 72 (V.2 a, Expatriate); his lines wait for step VOX-F's render
+    names: [Kestrel]
+    ref: ref-kestrel-r72-a
+    filter: enemy

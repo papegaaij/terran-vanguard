@@ -204,6 +204,10 @@ final class RingRules {
                 interval,
                 attack.firstShotDelay().orElse(0.0),
                 line.holdWithin());
+        // M10 part F: the Honour Guard's sniper line tracks until it locks lock_before s before it fires.
+        if (line.lockBefore().isPresent()) {
+            laser = laser.withLockBefore(line.lockBefore().get());
+        }
         return new BossSpec.Attack(
                         name,
                         BossSpec.Pattern.AIMED,

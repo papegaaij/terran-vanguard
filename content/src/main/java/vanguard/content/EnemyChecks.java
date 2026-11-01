@@ -151,7 +151,9 @@ final class EnemyChecks extends ContentChecks {
         if (bounty != enemy.bounty()) {
             problem(enemy, "bounty", "is " + enemy.bounty() + ", the parts' bounties add up to " + bounty);
         }
-        if (parts.stream().noneMatch(part -> part.kind().equals("vital"))) {
+        // M10 part F: a squadron's parts are its aces, none vital (the last one's death ends the piece).
+        if (enemy.squadron().isEmpty()
+                && parts.stream().noneMatch(part -> part.kind().equals("vital"))) {
             problem(enemy, "part_list", "has no vital part");
         }
         for (int i = 0; i < parts.size(); i++) {

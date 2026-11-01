@@ -679,6 +679,10 @@ public record LevelData(
      * @param ambienceDb M10 part D (design/campaign Level 38, Music &amp; ambience: the {@code jovian-sky} bed +3 dB in
      *     the storm sections; Level 13's whiteout rule by section): the ambience's level by section (1-based section:
      *     dB above its own, more than 0), over a 1 s ramp at the section's start; its own level where none is given
+     * @param trackAfterBoss M10 part F (design/campaign Level 40, Music &amp; ambience; the music plan's hook (2)): a
+     *     mid-boss's {@code boss_track} after its {@code boss_sting} (Level 40's duel theme) replaces the level track for
+     *     the fight; after the kill the level track comes back with these stems ({@code full} or {@code base}) as the
+     *     level clock resumes; only with a mid-boss's sting and track (no {@code boss_warning})
      *
      * <p>Built in code with {@link #builder()} (M10 part C, step C2: RF5's open add-on; the data file builds it by its
      * keys): a new key is a new component and a builder setter, never another telescoping constructor.
@@ -706,7 +710,8 @@ public record LevelData(
             Optional<List<StemTime>> stemTimes,
             Optional<MotifAfterBoss> motifAfterBoss,
             Optional<List<ThemeChange>> themes,
-            Optional<Map<Integer, Double>> ambienceDb) {
+            Optional<Map<Integer, Double>> ambienceDb,
+            Optional<String> trackAfterBoss) {
 
         /** M10 part C: a builder with every key left out (track 0, sections 1, no ambience or end jingle). */
         public static MusicBuilder builder() {
@@ -1025,7 +1030,19 @@ public record LevelData(
             Check.that(startSection <= fullSection, "full_section must not come before start_section");
             startDb.ifPresent(db -> Check.that(db <= 0, "start_db: must not be above full level"));
             ambienceFrom.ifPresent(t -> Check.positive("ambience_from", t));
-            Check.that(bossTrack.isEmpty() || bossWarning.isPresent(), "a boss_track comes in after its boss_warning");
+            // M10 part F: or a mid-boss's track after its sting (Level 40's duel theme), the level track back after it.
+            Check.that(
+                    bossTrack.isEmpty() || bossWarning.isPresent() || bossSting.isPresent(),
+                    "a boss_track comes in after its boss_warning (or a mid-boss's boss_sting)");
+            Check.that(
+                    trackAfterBoss.isEmpty()
+                            || (bossTrack.isPresent() && bossSting.isPresent() && bossWarning.isEmpty()),
+                    "track_after_boss: the level track back after a mid-boss's boss_track (after its boss_sting)");
+            trackAfterBoss.ifPresent(name -> Check.that(
+                    name.equals("full") || name.equals("base"), "track_after_boss: full or base, was '" + name + "'"));
+            Check.that(
+                    bossTrack.isEmpty() || bossWarning.isPresent() || trackAfterBoss.isPresent(),
+                    "a mid-boss's boss_track gives the level track's return (track_after_boss)");
             Check.that(
                     motifAfterBoss.isEmpty() || bossTrack.isPresent(),
                     "motif_after_boss: the theme comes back after an act boss's music (a boss_track)");

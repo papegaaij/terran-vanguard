@@ -790,6 +790,16 @@ optional `skip` list of the difficulties it is left out on (Level 06's hard-only
   piece's **`dark_with`** (a destroy-targets group or `P<n>`, the n-th `pump-station` placement in the data's order: the
   piece's `-glow` piece is no longer drawn once that group is cleared or that pump dies; placed once; presentation
   only, [schemas-backdrops](../schemas-backdrops/README.md)).
+  M10 part F (Level 40; loaded and checked from step F2 by content's `LevelData`, `SquadronChecks` and `MusicBuilder`,
+  flown from steps F1a/F1b): the `boss` may place a **squadron** mid-boss (its stat block's `boss.squadron`,
+  [schemas-units](../schemas-units/README.md)) in a one-second `arena` section, which halts the scroll at its end
+  while an ace lives; its radio's `boss-phase` lines name the squadron's subjects (an ace joining after the first
+  `<call sign>-joins`, its death `<call sign>-down`, the first loss spoken by the senior flying survivor
+  `first-loss-<call sign>`, the last ace's `last-ace-<call sign>`, lower case; checked against its aces), the first
+  ace's taunt on `boss-arrival`; the music's **`track_after_boss`** (`full` or `base`: a mid-boss's `boss_track`
+  after its `boss_sting`, no `boss_warning`, replaces the level track for the fight and the level track comes back
+  with these stems as the clock resumes; a mid-boss's `boss_track` needs it); a point drop's **`marked: true`** (its
+  drone bracketed by the friendly marker, presentation only; only a drop with a `sprite`).
 - **Act** (`campaign/<act>/data.yaml`): `levels` `[first, last]` (global numbers), `title_card`
   (`act`, `name`, `line`), `briefing` (pages as a level's); `outro`, the act-end
   outro after the last level's debrief: `music` (a music file's name, `act-complete`: track 24

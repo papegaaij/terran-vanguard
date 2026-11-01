@@ -355,6 +355,8 @@ final class BossRules {
                 .or(() -> movement.stride().map(stride -> 0.0))
                 // M7 part H: a breaching boss's mouth takes its breach points' places (ColossusRules).
                 .or(() -> movement.breach().map(breach -> 0.0))
+                // M10 part F: a squadron's piece is parked above the top edge; its aces fly their own places.
+                .or(() -> enemy.squadron().map(squadron -> -SquadronBlock.PARK_ABOVE))
                 .orElseThrow(
                         () -> new IllegalArgumentException(slug + ": a boss hovers, is anchored, walks or breaches"));
         // The moves need the station before them: walk the phases with the place, layer and pose so far.
@@ -480,6 +482,8 @@ final class BossRules {
                         .coil(MawRules.coil(content, enemy, difficulty, inLevel))
                         // M9 part H: a ringed boss's rings, fire arc and core (RingRules).
                         .rings(RingRules.rings(content, enemy, difficulty, inLevel))
+                        // M10 part F: a squadron mid-boss's aces and playbook (SquadronRules).
+                        .squadron(SquadronRules.squadron(content, enemy, difficulty, inLevel))
                         .build()));
     }
 

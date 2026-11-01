@@ -1,7 +1,7 @@
 ---
 title: Honour Guard
 design: approved
-implementation: not-started
+implementation: in-progress
 art: chosen
 depends-on: [../../air/talon, ../../../world/jovian, ../../../campaign/act-6-jovian-storm, ../../../player/wingmen, ../../../ui/hud, ../../../story/characters, ../../../systems/economy]
 updated: 2026-11-01
@@ -35,7 +35,7 @@ and `rear` (the feinter lives behind the ship). The playbook follows round 70's 
 [Iron Sovereign](../iron-sovereign/README.md#the-round-70-rework-decided-round-70)'s core): no fixed loop, every attack
 drawn from a pool with its own tell.
 
-### Stat block (draft)
+### Stat block
 
 Numbers at **medium**; HP in damage units (a Pulse Cannon L1 shot does 2); bullet classes (`small` = 4,
 `medium` = 6, `heavy` = 10, `laser` = 8) and contact damage from the [balancing basis](../../README.md#balancing-basis).
@@ -43,27 +43,28 @@ The reference DPS is the **proposed** Level 40 value of **160** (J1, the
 [Act 6 hand plan](../../../player/generator/README.md#act-6-hand-plan-draft); decided 2026-10-31 (round 72)). The aces fly the
 [Talon](../../air/talon/README.md)'s airframe; this table sets only what differs.
 
+<!-- data: stat-block -->
 | Field | Value |
 |---|---|
-| Faction | Jovian Ascendancy, Vorne's guard; three **machines** (but a mid-boss: never stunned; the EMP Burst empties their shields) |
+| Faction | Jovian Ascendancy (a machine, but a boss: never stunned, its shields emptied by the EMP Burst) |
 | Layer | `air` (`space` is `air` in vacuum, the [Jovian media](../../../world/jovian/README.md#media-per-level)) |
-| Size tier | three `medium` bodies |
-| Size | each a custom Talon at 1.5× the airframe: 60×54 px, hitbox 42×36; the leader's sniper barrel adds 14 px under the nose (no hitbox) |
-| Parts | three **bodies**, each `vital` for itself: **Harker** (the leader), **Vesper** (the dancer), **Kestrel** (the feinter); call signs are working names, the story step owns them (J4, see *The aces*) |
-| Orientation | `64 angles` each (they bank and turn through loops and dives; the Talon flies 16) |
-| HP | **1,600 each, 4,800 in all** (easy 3,600 / hard 6,240, from the global multipliers) |
+| Size tier | `medium` |
+| Size | 60×54 px, hitbox 42×36 (each a custom Talon at 1.5× the airframe; the leader's sniper barrel adds 14 px under the nose, no hit box) |
+| Parts | three **bodies**, none `vital` (the last death ends the piece): **Harker** (the leader), **Vesper** (the dancer), **Kestrel** (the feinter); one bar in three segments in that order |
+| Orientation | `64 angles` (each; they bank and turn through loops and dives; the Talon flies 16) |
+| HP | 2240 each (the three tuned together); total 6720 (easy 5040 / hard 8736, from the global multipliers) |
 | Armour / shield | a gold hex **shield of 60** on each ace under the [enemy shield rule](../../README.md#enemy-shields) (spent first, refills after 2 s; the [Tesla Coil Pod](../../../player/weapons/tesla-coil-pod/README.md)'s `shield-breaker` empties it, the EMP Burst strips all three); no mirror (a unit carries one defence) |
-| Speed | Harker 140 px/s on his station, 280 px/s sliding; Vesper 200 px/s through her loops; Kestrel 320 px/s diving, 260 px/s raking |
-| Movement | per ace (see *The aces*); hull edges always **≥ 80 px apart** (the Act 6 formation rule: no two medium hulls overlap) |
-| Attack | per ace, drawn from its pool (see *The playbook*): Harker's sniper line (`laser-line`, `laser` 8), pair volley and fan (`small`); Vesper's `spiral` loop, roll fan and ribbon (`small`); Kestrel's feint dives and rear rake (`medium` bursts, `small` pairs) |
-| Contact | `medium` 15 to the ship (once), the ship pushed out; the ace takes 40 and flies on |
-| Formations | the solo set piece: one, then two, then three aces |
-| Weak points | none beyond the bodies (each ace's engines glow; no weak-point multiplier) |
-| Effective traits | `spread` (three bodies apart), `rear` (Kestrel's station), `homing` (moving targets), `shield-breaker` (the shields, a bonus only) |
-| Credits | ≈ **15 % of budget(40)** in all, a third per ace (see *Bounty*): **360** in Act 1 terms at Level 40's hand `bounty_scale` of 0.39, 120 an ace |
+| Speed | 320 px/s (Kestrel diving); Harker 140 px/s on his station, 280 px/s sliding; Vesper 200 px/s through her loops; Kestrel 260 px/s raking |
+| Movement | per ace (see *The aces*): Harker the top third, Vesper the middle band, Kestrel the bottom band and the sides; hull edges always **≥ 80 px apart** (the Act 6 formation rule: no two medium hulls overlap); contact `medium` 15 to the ship once a second, the ship pushed 24 px out, the ace taking 40 and flying on |
+| Attack | per ace, drawn from its pool (see *The playbook*): Harker's sniper line (`laser-line`): the barrel's 0.8 s red glint, then the thin red line tracking the ship for 1 s, locked 0.2 s before it fires, live 0.3 s, 6 px wide, `laser` 8 once; its double tap: a second line re-aimed 0.6 s later (0.8 s telegraph; a triple after a death); the Talon's aimed pair four times 0.4 s apart (`small`, 170 px/s); two aimed 5-way fans over 40° 0.5 s apart (`small`, 150 px/s); Vesper's loop (2.5 s) firing a 2-arm `spiral` from her tail (`small`, 130 px/s, the arms turning 90°/s, 4 bullets/s an arm; 3 arms after a death); her barrel roll past the ship's side (≥ 120 px off) with a 5-way aimed fan at its middle; her ribbon: a fast pass at y 200–260 laying 8 `small` bullets falling 80 px/s with two 50 px gaps; Kestrel's feint dive at 320 px/s pulling out at 110 px (85 committed), a burst of 3 aimed `medium` (200 px/s) back at the ship from the pull-out (5 committed); its overhead feint out of the top edge the same; its rear rake: a climb up a side at 260 px/s, aimed pairs every 0.4 s (`small`); the pincer: Vesper and Kestrel cross from both sides at the ship's height − 160 px, their 5-way fans 0.5 s apart, Harker holding fire |
+| Formations | solo set piece |
+| Weak points | none (beyond the bodies; each ace's engines glow, no weak-point multiplier) |
+| Effective traits | `spread`, `rear`, `homing`, `shield-breaker` |
+| Credits | 360 (score 3600 × chain) in Act 1 terms, **120 an ace**, each paid as it dies: ≈ **15 % of budget(40)** at Level 40's `bounty_scale` 0.39 (see *Bounty*) |
 | Death | per ace a `medium` vacuum flash and its hull tumbling away; the last ace a 2 s `large` chain, the credit shower (no screen flash: a mid-boss) |
-| First level / used in | L40 only (the Level 49 boss rush has no echo of it) |
-| Difficulty hooks | easy: Vesper joins at Harker's half or after 25 s, Kestrel 20 s later; Harker's line single, no double tap; every rest ×1.3; Vesper's spiral 1 arm; Kestrel pulls out at 130 px. Hard: Vesper joins at 3/4 or after 15 s, Kestrel 10 s later; the double tap a triple; rests ×0.8; Vesper's spiral 3 arms; Kestrel pulls out at 90 px |
+| First level / used in | L40; only (the Level 49 boss rush has no echo of it) |
+| Difficulty hooks | easy: Vesper joins at Harker's half or after 25 s, Kestrel 20 s later; Harker's line single (1.2 s), no double tap; every rest ×1.3; Vesper's spiral 1 arm; Kestrel's dives told 1.0 s, pulling out at 130 px. Hard: Vesper joins at 3/4 or after 15 s, Kestrel 10 s later; the double tap a triple, the line 0.8 s; rests ×0.8; Vesper's spiral 3 arms; Kestrel pulls out at 90 px; no boss checkpoint |
+<!-- /data -->
 
 ### Arena
 
@@ -93,7 +94,7 @@ an ace's own pattern never warn.
 |---|---|---|---|
 | **Harker** (the leader; the sniper) | first, from the top edge, after the sting | holds the **top third** (y 70–170), strafing 40–80 px at 140 px/s, his nose on the ship; a **slide** crosses to the other side at 280 px/s | a long sniper barrel under the nose, a red nose band, the Ascendancy crest on his fins; Harker of Level 29's mutineers, now in Vorne's guard (J4) |
 | **Vesper** (the dancer; `spiral`) | from a **side** edge (the one away from Harker) when Harker is down to **2/3** of his HP or after **20 s**, whichever first | loops through the **middle band** (y 150–330) in figure-eights 160–220 px across, never within 120 px of the ship | white ribbon stripes along the wing edges and the tail |
-| **Kestrel** (the feinter; dives that pull out) | from the **bottom edge** (the rear) **15 s after Vesper**, or at the **first ace's death**, whichever first | holds **below or beside the ship band** (y 420–520, or a side's outer 60 px), then dives; out of a pull-out it climbs back to its station | black and gold chevrons, a red tail band, twin swept fins |
+| **Kestrel** (the feinter; dives that pull out) | from the **bottom edge** (the rear) **15 s after Vesper** (step F2, measured: **4 s**; easy and hard 3 s), or at the **first ace's death**, whichever first | holds **below or beside the ship band** (y 420–520, or a side's outer 60 px), then dives; out of a pull-out it climbs back to its station | black and gold chevrons, a red tail band, twin swept fins |
 
 ### The playbook
 
@@ -173,6 +174,15 @@ Level 40 part):
   walker's test); the levers are the rests and the conductor's limits.
 - **The three together must happen**: on every seed all three aces fly together for ≥ 10 s at medium; if the plan's
   beam kills Harker before Kestrel joins, the joins move earlier, not the HP up.
+
+**Measured** (M10 part F, step F2, pending the user's review in round 78; Level 40's data, the plan's L40 fit with
+Rook, step F2's first-cut autopilot under the nearest ace, five seeds): the draft's 1,600 an ace ran **47.0 s** at
+medium (42.4–49.1) with **0 s** of all three together on every seed (the focus fell on Vesper, who died 12–14 s after
+she joined, before Kestrel's 15 s ran out; easy 33.0 s and 0 s, hard 58.2 s and 17–26 s): the measured fire on an ace
+is ≈ 120 a second, not the paper's 67. Tuned: Kestrel joins **4 s** after Vesper crossed (easy and hard 3 s: easy's
+1,680 HP Vesper otherwise dies first too) and the three HP together to **2,240 an ace** (6,720; easy 5,040 / hard
+8,736): medium **62.0 s** (59.6–63.2, five of five in the window), together 30–33 s; easy 46.5 s, together 14–26 s;
+hard 79.8 s, together 36–56 s. The par is the measured mean, **62**. Step F3 measures it again with its autopilot.
 
 **Specials.** The specials' boss rules hold per ace (each is a boss part): a Smart Bomb up to 150 on each, an
 Orbital Lance up to 400 on each it crosses; the EMP empties the three shields (never a stun). The
@@ -277,8 +287,9 @@ Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 
 To be built in M10 with Level 40, once round 72 approves the design.
 
-- [ ] Stat block and boss script in a `data.yaml` (the three bodies, their joins, stations, pools, the conductor, the
-      death changes, par); global difficulty multipliers applied
+- [x] Stat block and boss script in a `data.yaml` (the three bodies, their joins, stations, pools, the conductor, the
+      death changes, par); global difficulty multipliers applied (step F2: `boss.squadron`, loaded by content's
+      `SquadronBlock`/`SquadronRules`, checked by `SquadronChecks`; the HP and joins tuned, the par measured)
 - [ ] A **three-body mid-boss** (the gap analysis §2.10: large): one bar summing three bodies, segments per body, each
       body its own movement, pool and death; the boss checkpoint keeps every ace's HP, shield, station and draw state,
       and a retry and a replay repeat the fight exactly
@@ -303,6 +314,13 @@ Left to the build (the document is approved as drafted):
 
 ## Decisions
 
+- 2026-11-01 (M10 part F, step F2; pending the user's review in round 78): the stat block and script as data
+  (`boss.squadron`: the aces on the parts, none vital; the stations' bands in px below the top edge; the playbook's
+  pools, rests, cuts, pincer and conductor); measured on Level 40 and tuned (the spec's lesson: the joins earlier, the
+  three HP together): **2,240 an ace**, Kestrel **4 s** after Vesper (easy and hard 3 s), par **62** (the measured mean);
+  the bounty stays 360 (Level 40's measured scale is its hand 0.39). Trivia: the hex shields are the spec's 60 as
+  written (the Act 6 `shields.heavy` factor is a level rule for the units' Act 5 numbers); the pair volley and the rake
+  the Talon's 2-shot fan; the dive's burst 200 px/s; the sniper line holds no fire near the ship.
 - 2026-09-30: Drafted in the bosses roster as the Act 6 mid-boss (L40): three ace pilots in custom gold Talons
   attacking from the front, the sides and the rear in turn, each with its own pattern (sniper `laser-line`, `spiral`
   dancer, `kamikaze` feints), taunting over the radio.

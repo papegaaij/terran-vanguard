@@ -1,0 +1,443 @@
+# Level 40 – Honour Guard: the level script, rendered into README.md (briefing, threat profile, layout, waves, radio,
+# credit budget). Times are seconds from the level start (the level clock: it halts in the duel while an ace lives).
+# M10 part F, step F2, from the README's approved hand tables (round 72) and ART-F2's backdrop proposal
+# (concept/backdrop-proposal.yaml: its backdrop block, the recorder's tow and its eight sections as they are, so the
+# tile sets stay cut).
+# Schema: ../../../tech/architecture/schemas-levels/README.md
+# Keys new in M10 part F (flown from steps F1a/F1b; loaded and checked from step F2): the mid-boss `honour-guard`, a
+# squadron (its stat block's `boss.squadron`), its radio subjects as `boss-phase` lines (`vesper-joins`,
+# `kestrel-joins`, `harker-down`, `first-loss-<ace>`, `last-ace-<ace>`), the music's `track_after_boss` (a mid-boss's
+# `boss_track` after its `boss_sting`, the level track's full mix back after the kill) and a point drop's `marked` (the
+# CDF supply drone's friendly brackets; step F4 draws them).
+# Step F2's own placements (decided as trivia, pending the user's review in round 78):
+# - The duel's arena **halts** the scroll (ART-F2's backdrop is laid out for the built clock, which halts a
+#   non-crawling arena) where the README says it drifts at 20 px/s: the eight sections are ART-F2's (section 4 split
+#   at t=98 where the ease to 20 px/s starts; the duel the one-second arena at 20 px/s, held 4 s after the last ace).
+# - The two rear V-wings (t=48, t=144.5) fly **from the front** until the simulation flies a front formation from the
+#   rear (m10f-gaps.md §1 #11: the Talons' swoop paths enter from the top only): a sim step's, then `from: rear` here.
+# - The supply drone's second armour patch (t=145) at the first's point (240, 380); the shield cell from the t=70.5
+#   column's last Gunship (easy flies one); the Skitter swarms are streams (Skitters fly no flock), the Chimera swarms
+#   on the motes' routes; the Mirror rear ambush at t=68, not 75.5 (swapped with the motes: at 75.5 the t=70.5
+#   Gunships drifted down through its stations, two big hulls overlapping); hard's Harrow cross 2 per edge (the
+#   README's 3 is beyond the Harrow's cross of 4-8).
+scroll_speed: 160     # open space (the duel's arena halts it; ART-F2's sections)
+launch_seconds: 5
+bounty_scale: 0.39    # every bounty × 0.39: the README's hand estimate (typical +0.8 %; levelReport's fit below)
+control_prompts: []
+ground: none          # air only (J2): the Bomb Rack and Rook's Mortar read NO GROUND; the Airstrike and the EMP Burst work
+threat_profile:  # the hangar intel panel (design/ui/hangar) and the README's Threat profile table
+  setting: Callisto approach
+  layers: [air]
+  density: 5
+  traits: [spread, rear]
+  hazards: [death-burst rings, sniper line]
+  boss: Honour Guard
+  objective: BREAK THE HONOUR GUARD   # the OBJECTIVE field from sensor L1
+  varga:
+    none: "Callisto approach. Air only, no ground at all."
+    l1: "Pickets from front, sides and rear. Then the guard."
+    l2: "Chimeras, Mirrors, Harrows. Three gold Talons."
+    l3: "Spread for the three aces, rear guns for the third."
+  notes:
+    Dominant layers: '`air` only (`space` is `air` in vacuum, the [Jovian media](../../../world/jovian/README.md#media-per-level)): the pickets and the Honour Guard. No ground layer: the Bomb Rack and Rook''s Mortar read **`NO GROUND`** (J2; the hangar warns)'
+    Attack directions: '{directions} (counted by enemy; the duel adds the aces'' side and rear entries)'
+    Density: '{density}'
+    Recommended traits: '`spread` (three aces apart, wide pickets), `rear` (the Mirror Interceptors'' rear ambushes, Kestrel''s station); `homing` helps against the moving aces'
+    Hazards: Harrow death-burst rings; the Mirror Interceptors' bounced shots; the aces' sniper line and dives; no weather (vacuum)
+    Boss / mid-boss: 'Mid-boss [Honour Guard](../../../enemies/bosses/honour-guard/README.md)'
+    Sensor-suite detail: '**none**: the Callisto approach, `air` only, front, sides, rear. **L1**: + the directions, density {density}, hazards "death-burst rings" and "sniper line", the objective `{objective}`. **L2**: + Talon, Chimera, Gilded Gunship, Hornet, Mirror Interceptor, Harrow, Dart Drone, Skitter, Mote Swarm portraits; the mid-boss''s name and three silhouettes (`honour-guard`). **L3**: + `spread` and `rear` highlighted; the timeline strip marks the Harrow cross (65 s) and the duel (102 s); 1 secret.'
+
+sections:  # back to back from t = 0; ART-F2's eight (its proposal's times: the tile sets are cut at them)
+  - name: "Jupiter's Shadow"
+    end: 30
+    speed: 160
+    atmosphere: clear
+    tiles: [jupiter-shadow]
+    notes:
+      layers:
+        deep: "Jupiter's limb filling the bottom edge, its night side, the fleet's lights rising off it."
+      purpose: Talons, Chimeras and popcorn; the Vrell hunting Talons (t=15.5).
+  - name: The Picket Line
+    end: 64
+    speed: 160
+    atmosphere: clear
+    tiles: [picket-line]
+    notes:
+      layers:
+        deep: Jupiter shrinking to a disc at the right edge; a picket station far off (scenery).
+        low-air: a dead CDF scout drifting down the left edge (t≈50, the secret's source).
+      purpose: Gunships and Darts, the first Mirror pincer (t=35.5), the first V-wing from the rear (t=48; flown from the front until the simulation's rear V-wing).
+  - name: Callisto Rising
+    end: 96
+    speed: 160
+    atmosphere: clear
+    tiles: [callisto-rising]
+    notes:
+      layers:
+        deep: "Callisto's dark disc rising at the top, its ice catching Jupiter's light."
+      purpose: The Harrow cross (t=65.5), the Mirror rear ambush (t=68), the last pickets (t=93).
+  - name: "The Guard's Lane"
+    end: 98
+    speed: 160
+    atmosphere: clear
+    tiles: [guard-lane]
+    notes:
+      layers:
+        deep: Callisto larger; three gold glints far ahead.
+      purpose: The pre-duel pause begins (t≈97); the supply drone's first armour patch (t=97).
+  - name: "The Guard's Lane, braking"
+    end: 102
+    speed: 20
+    ramp: 4
+    atmosphere: clear
+    tiles: [guard-brake]
+    notes:
+      layers:
+        deep: the three glints climbing away out of the top edge (the aces leaving to make their entries).
+      purpose: The scroll eased from 160 to 20 px/s over t=98–102; Varga names the aces.
+  - name: The Duel
+    end: 103   # the arena: the scroll halts at its end while an ace lives (the built clock), the level clock with it
+    speed: 20
+    arena: true
+    hold_after_boss: 4   # s the clock stays halted after the last ace (its 2 s chain, the credit shower, 2 s more)
+    atmosphere: clear
+    tiles: [duel]
+    notes:
+      layers:
+        deep: as section 5, held still behind the duel (Callisto's lit lower limb across the screen).
+      purpose: 'The sting at t=102, the duel (≈ 62 s at medium); the clock halted while an ace lives.'
+  - name: "Callisto's Ring"
+    end: 140
+    speed: 160
+    ramp: 2   # eased up from the halt over 2 s
+    atmosphere: clear
+    tiles: [callisto-ring]
+    notes:
+      layers:
+        deep: "Callisto's orbital ring (black and gold relay platforms, scenery) crossing below; the fleet closing behind."
+      purpose: Calm to t=107, then the waves resume; the ring's defenders.
+  - name: The Ice Line
+    end: 170
+    speed: 160
+    atmosphere: clear
+    tiles: [ice-line]
+    notes:
+      layers:
+        deep: "Callisto's ice filling the lower half, the black citadel's lights at the top edge by t=165."
+      purpose: "The last waves; the level ends at t=170 as the citadel's outer line reaches mid-screen."
+
+boss:  # the mid-boss: the sting, the bar (three segments, hatched) and the boss checkpoint (none on hard) at the arena's start; each ace's own entry tell (no edge warning)
+  enemy: honour-guard
+  t: 102
+  x: 240
+  section: 6
+  notes:
+    from: 'top, then a side, then the rear (each ace''s own entry tell, 2.5 s ahead)'
+    waves: 'At the arena''s start: the sting, the bar and the checkpoint; Harker told 1 s later; no other waves in the duel'
+
+tows:  # Sentry Two's recorder (the secret): drifting down the left edge on its dead scout; its housing takes 4 hits and frees the crate (Level 30's buoy rule); `beam_touch`: a beam's touch counts a hit per 0.25 s. ART-F2's sprites (TowLooks draws the scout beside it: step F4)
+  - {t: 50, x: 70, drift: [3, -90], boat: [20, 20], pod: [16, 16], tether: [0, 0], cable: [20, 20], hits: 4, reveals: "Sentry Two's recorder", beam_touch: true}
+
+waves:  # counts at medium, the formation lever sizes them on easy and hard except where pinned (the Gunship, Hornet, Mirror and Harrow waves)
+  - {t: 4, formation: V-wing, enemy: talon, count: 5, from: front, speed: 130, leader: tip, notes: "Jupiter's limb below; the Talons' Act 6 shields flash on the first hits"}
+  - t: 6.5
+    formation: swarm
+    enemy: mote-swarm
+    count: 6
+    from: front
+    speed: 200
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+  - {t: 9, formation: line abreast, enemy: talon, count: 4, from: front, edge: left, speed: 130}
+  - t: 11.5
+    formation: swarm
+    enemy: chimera
+    count: 6
+    from: front
+    speed: 160
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+  - {t: 14, formation: V-wing, enemy: talon, count: 5, from: front, edge: right, speed: 130, leader: tip, tag: wing-14, notes: "**Prey** of the Skitters of t=15.5"}
+  - {t: 15.5, formation: snake, enemy: skitter, count: 6, from: front, edge: left, hunts: wing-14, notes: "Vrell **hunters** (ram) of the t=14 Talons; Rook's line at t=21"}
+  - t: 18
+    formation: swarm
+    enemy: mote-swarm
+    count: 6
+    from: front
+    speed: 200
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+  - {t: 20.5, formation: line abreast, enemy: talon, count: 4, from: front, speed: 130}
+  - {t: 23, formation: pincer, enemy: talon, count: 6, from: sides, speed: 130, notes: Edge warnings at t=20}
+  - t: 25.5
+    formation: swarm
+    enemy: mote-swarm
+    count: 6
+    from: front
+    speed: 200
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+  - {t: 28, formation: V-wing, enemy: chimera, count: 5, from: front, notes: No leader (a hybrid wing)}
+  - {t: 30.5, formation: column, enemy: gilded-gunship, count: 2, from: front, interval: 2, easy: {count: 1}, hard: {count: 2}, notes: "Each launches Dart streams (3 every 5 s, at most 6 alive): ≈ 12 Darts from the pair"}
+  - t: 33
+    formation: stream
+    enemy: skitter
+    count: 6
+    from: front
+    interval: 0.6
+    notes: "The README's Skitter swarm: a stream (Skitters fly no flock)"
+  - {t: 35.5, formation: pincer, enemy: mirror-interceptor, count: 2, from: sides, easy: {count: 2}, hard: {count: 2}, notes: "Edge warnings at t=32.5; 1 + 1"}
+  - {t: 38, formation: V-wing, enemy: talon, count: 5, from: front, speed: 130, leader: tip, notes: The leader drops the Overdrive}
+  - t: 40.5
+    formation: swarm
+    enemy: mote-swarm
+    count: 6
+    from: front
+    speed: 200
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+  - {t: 43, formation: line abreast, enemy: hornet, count: 2, from: front, easy: {count: 2}, hard: {count: 2}, notes: "≥ 80 px between the hulls"}
+  - t: 45.5
+    formation: swarm
+    enemy: chimera
+    count: 6
+    from: front
+    speed: 160
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+  - {t: 48, formation: V-wing, enemy: talon, count: 5, from: front, speed: 130, leader: tip, notes: "The README's first wing from the rear (BOTTOM warning at t=45): from the front until the simulation flies a rear V-wing"}
+  - t: 50.5
+    formation: swarm
+    enemy: mote-swarm
+    count: 6
+    from: front
+    speed: 200
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+    notes: The dead scout drifts in at the left edge (the secret)
+  - {t: 53, formation: line abreast, enemy: talon, count: 4, from: front, speed: 130}
+  - t: 55.5
+    formation: stream
+    enemy: skitter
+    count: 6
+    from: front
+    interval: 0.6
+    notes: "The README's Skitter swarm: a stream (Skitters fly no flock)"
+  - {t: 58, formation: pincer, enemy: mirror-interceptor, count: 4, from: sides, easy: {count: 2}, hard: {count: 4}, notes: "Edge warnings at t=55; 2 + 2, ≥ 80 px between hulls"}
+  - {t: 60.5, formation: V-wing, enemy: chimera, count: 5, from: front}
+  - {t: 63, formation: V-wing, enemy: talon, count: 5, from: front, speed: 130, leader: tip}
+  - {t: 65.5, formation: cross, enemy: harrow, count: 8, from: all, warning: 3, easy: {count: 4}, hard: {count: 8}, notes: "2 per edge, warned on every edge at t=62.5 (hard 2 per edge: the README's 3 is beyond the Harrow's cross of 4–8)"}
+  - {t: 68, formation: rear ambush, enemy: mirror-interceptor, count: 3, from: rear, easy: {count: 2}, hard: {count: 4}, notes: "BOTTOM warning at t=65; each in its lane, ≥ 80 px apart (step F2: t=68, not 75.5: at 75.5 they held their stations as the t=70.5 Gunships drifted down through them)"}
+  - {t: 70.5, formation: column, enemy: gilded-gunship, count: 2, from: front, interval: 2, easy: {count: 1}, hard: {count: 3}, notes: "≈ 12 Darts; the last Gunship drops the Shield cell"}
+  - t: 73
+    formation: swarm
+    enemy: chimera
+    count: 6
+    from: front
+    speed: 160
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+  - t: 75.5
+    formation: swarm
+    enemy: mote-swarm
+    count: 6
+    from: front
+    speed: 200
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+    notes: "Step F2: t=75.5, not 68 (the rear ambush's slot)"
+  - t: 78
+    formation: stream
+    enemy: skitter
+    count: 6
+    from: front
+    interval: 0.6
+    notes: "The README's Skitter swarm: a stream (Skitters fly no flock)"
+  - {t: 80.5, formation: line abreast, enemy: hornet, count: 2, from: front, easy: {count: 2}, hard: {count: 2}}
+  - {t: 83, formation: stream, enemy: harrow, count: 5, from: sides, edge: alternating, interval: 0.6, warning: 3, easy: {count: 4}, hard: {count: 5}, notes: "From alternating sides, edge warnings at t=80"}
+  - t: 85.5
+    formation: swarm
+    enemy: mote-swarm
+    count: 6
+    from: front
+    speed: 200
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+  - {t: 88, formation: V-wing, enemy: talon, count: 5, from: front, speed: 130, leader: tip}
+  - {t: 90.5, formation: V-wing, enemy: chimera, count: 5, from: front}
+  - {t: 93, formation: line abreast, enemy: talon, count: 4, from: front, speed: 130, notes: "The last approach wave: the pre-duel pause t≈97–102"}
+  - {t: 107, formation: V-wing, enemy: talon, count: 5, from: front, speed: 130, leader: tip, notes: "The first wave after the duel (≥ 4 s of calm)"}
+  - t: 109.5
+    formation: swarm
+    enemy: mote-swarm
+    count: 6
+    from: front
+    speed: 200
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+  - {t: 112, formation: line abreast, enemy: talon, count: 4, from: front, edge: right, speed: 130, tag: line-112, notes: "**Prey** of the Skitters of t=114.5"}
+  - {t: 114.5, formation: snake, enemy: skitter, count: 6, from: front, edge: left, hunts: line-112, notes: "Vrell **hunters** (ram) of the t=112 Talons"}
+  - {t: 117, formation: column, enemy: gilded-gunship, count: 2, from: front, interval: 2, easy: {count: 1}, hard: {count: 2}, notes: ≈ 12 Darts}
+  - t: 119.5
+    formation: swarm
+    enemy: chimera
+    count: 6
+    from: front
+    speed: 160
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+  - {t: 122, formation: pincer, enemy: talon, count: 6, from: sides, speed: 130, notes: Edge warnings at t=119}
+  - t: 124.5
+    formation: swarm
+    enemy: mote-swarm
+    count: 6
+    from: front
+    speed: 200
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+  - {t: 127, formation: line abreast, enemy: hornet, count: 2, from: front, easy: {count: 2}, hard: {count: 2}}
+  - {t: 129.5, formation: V-wing, enemy: chimera, count: 5, from: front}
+  - {t: 132, formation: rear ambush, enemy: mirror-interceptor, count: 2, from: rear, easy: {count: 2}, hard: {count: 2}, notes: BOTTOM warning at t=129}
+  - t: 134.5
+    formation: stream
+    enemy: skitter
+    count: 6
+    from: front
+    interval: 0.6
+    notes: "The README's Skitter swarm: a stream (Skitters fly no flock)"
+  - {t: 137, formation: V-wing, enemy: talon, count: 5, from: front, speed: 130, leader: tip}
+  - t: 139.5
+    formation: swarm
+    enemy: mote-swarm
+    count: 6
+    from: front
+    speed: 200
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+  - {t: 142, formation: stream, enemy: harrow, count: 5, from: sides, edge: alternating, interval: 0.6, warning: 3, easy: {count: 4}, hard: {count: 5}, notes: Edge warnings at t=139}
+  - {t: 144.5, formation: V-wing, enemy: talon, count: 5, from: front, speed: 130, leader: tip, notes: "The README's second wing from the rear (BOTTOM warning at t=141.5): from the front until the simulation flies a rear V-wing"}
+  - t: 147
+    formation: swarm
+    enemy: mote-swarm
+    count: 6
+    from: front
+    speed: 200
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+  - {t: 149.5, formation: line abreast, enemy: talon, count: 4, from: front, speed: 130}
+  - t: 152
+    formation: swarm
+    enemy: chimera
+    count: 6
+    from: front
+    speed: 160
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+  - t: 154.5
+    formation: swarm
+    enemy: mote-swarm
+    count: 6
+    from: front
+    speed: 200
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+  - {t: 157, formation: V-wing, enemy: talon, count: 5, from: front, speed: 130, leader: tip, notes: "The last wave; the end's calm from t≈164"}
+
+ground_targets: []   # none: no ground layer (J2); the picket station, the ring's platforms and the citadel are `deep` scenery
+
+secrets:
+  - name: "Sentry Two's recorder"
+    crate: 100   # Act 1 terms: pays 1,049 with the act factor (the flight recorder of a CDF scout lost at Callisto in 2184)
+    radio: {speaker: Okafor, line: "That's Sentry Two's recorder. Our last scouts out here. Bring it home."}
+
+pickups:
+  - {pickup: overdrive, dropped_by: {wave: 38, enemy: talon, unit: first}}   # the t=38 wing's leader
+  - {pickup: shield cell, dropped_by: {wave: 70.5, enemy: gilded-gunship, unit: last}}   # the t=70.5 column's last Gunship (the second at medium)
+
+drops:  # a CDF supply drone (a small white craft on low-air, marked friendly) releases an armour patch in the pre-duel pause and one after the duel
+  - {t: 97, x: 240, y: 380, pickup: armour patch, sprite: supply-drone, marked: true}
+  - {t: 145, x: 240, y: 380, pickup: armour patch, sprite: supply-drone, marked: true}
+
+radio:  # trigger: t or event; the README's lines (the 1 s rule: ≈ 12 characters a second, a 1.5 s lead, event lines dropped after 6 s; the secret's line is the secret's own). Rook's lines need him flying (requires: escort). The aces on the enemy channel; the duel's lines are events (`boss-arrival`, `boss-phase` subjects), queued as phase lines (they wait for a gap, stale after 20 s, dropped at the kill)
+  - {t: 1, speaker: Okafor, line: "Callisto's picket line, Lancer. Vorne's own guard flies it. Clear a lane for the fleet."}
+  - {t: 12, speaker: Varga, line: "Chimeras in the pickets. They heal if you let them rest: hold the beam on one."}
+  - {t: 21, speaker: Rook, requires: escort, line: "The bugs are still chewing on their old friends. Fine by me."}
+  - {t: 33, speaker: Varga, line: "Mirror interceptors on the flanks. Hit them from the side, or burn the mirror."}
+  - {t: 44.5, speaker: Okafor, line: "Contacts behind you, Lancer. Rear guns."}
+  - {t: 62.5, speaker: Varga, line: "Harrows from every side. They burst when they die: thin them far out."}
+  - {t: 76, speaker: Rook, requires: escort, line: "Callisto. Looks cold. Looks like it's waiting for us."}
+  - {t: 84, speaker: Okafor, line: "Long-range scan: three gold Talons holding the lane ahead. The Honour Guard."}
+  - {t: 92.5, speaker: Varga, line: "Vorne's aces. One snipes, one dances, one comes from behind. Watch all three."}
+  - {event: boss-arrival, speaker: Harker, portrait: harker-guard, channel: enemy, line: "Rook. They let you fly again? Then let's settle Ceres properly.", notes: {trigger: "Harker's entry tell (`boss-arrival`)"}}
+  - {event: boss-arrival, speaker: Rook, requires: escort, line: "Harker. Still flying for whoever pays the most?", notes: {trigger: "After Harker's taunt (`boss-arrival`, queued behind it)"}}
+  - {event: boss-phase, phase: vesper-joins, speaker: Vesper, channel: enemy, line: "Leave some for me, Harker. The quiet one's mine.", notes: {trigger: "Vesper's entry tell (`boss-phase`)"}}
+  - {event: boss-phase, phase: kestrel-joins, speaker: Kestrel, channel: enemy, line: "Check your six, Lancer. I'm already there.", notes: {trigger: "Kestrel's entry tell (`boss-phase`)"}}
+  - {event: boss-phase, phase: first-loss-harker, speaker: Harker, portrait: harker-guard, channel: enemy, line: "That was one of mine.", notes: {trigger: "The first ace's death, Harker surviving (`boss-phase`)"}}
+  - {event: boss-phase, phase: first-loss-vesper, speaker: Vesper, channel: enemy, line: "You'll pay for that one.", notes: {trigger: "The first ace's death, Vesper the senior survivor (`boss-phase`)"}}
+  - {event: boss-phase, phase: first-loss-kestrel, speaker: Kestrel, channel: enemy, line: "No more games.", notes: {trigger: "The first ace's death, Kestrel the only survivor flying (`boss-phase`)"}}
+  - {event: boss-phase, phase: harker-down, speaker: Rook, requires: escort, line: "That one's for Ceres, Harker.", notes: {trigger: "Harker's death, whenever it comes (`boss-phase`)"}}
+  - {event: boss-phase, phase: last-ace-harker, speaker: Harker, portrait: harker-guard, channel: enemy, line: "Just us now. Come on, then.", notes: {trigger: "The second ace's death, Harker the last (`boss-phase`)"}}
+  - {event: boss-phase, phase: last-ace-vesper, speaker: Vesper, channel: enemy, line: "Just us now. Come on, then.", notes: {trigger: "The second ace's death, Vesper the last (`boss-phase`)"}}
+  - {event: boss-phase, phase: last-ace-kestrel, speaker: Kestrel, channel: enemy, line: "Just us now. Come on, then.", notes: {trigger: "The second ace's death, Kestrel the last (`boss-phase`)"}}
+  - {event: boss-destroyed, delay: 2.5, speaker: Rook, requires: escort, line: "Three gold Talons. Vorne needs new friends.", notes: {trigger: "The last ace's death (K, `boss-destroyed`, 2.5 s later)"}}
+  - {event: boss-destroyed, delay: 2.5, speaker: Okafor, requires_not: escort, line: "The Honour Guard is down. Well flown, Lancer.", notes: {trigger: "The last ace's death without Rook (replaces his line)"}}
+  - {t: 108.5, speaker: Okafor, line: "The guard is gone and the ring is open. Push through to the ice."}
+  - {t: 125, speaker: Varga, line: "Helix HQ is under that ice. I had an office there, once. Three floors down."}
+  - {t: 138.5, speaker: Rook, requires: escort, line: "Bursters again. Shoot them far out, not on top of us."}
+  - {t: 158, speaker: Okafor, line: "That's the citadel's outer line. Form up, Aegis. Callisto is next."}
+
+objectives:
+  primary: reach-end   # with the duel as its condition (Level 19's mid-boss rule: the level cannot go on while an ace lives)
+  secondary: {kill_ratio: 0.65, boss_counted: false, credits: 100, name: Break the pickets}   # at least 65 % of the level's planned units (the waves' 285 at medium: 186; the Gunships' Darts count as kills, not in the requirement; the aces and the Vrell's prey kills not counted), judged at the end; no radio line (100 in Act 1 terms: pays 1,049)
+
+music:
+  track: 14           # Act 6 A "Eye of the Storm" (audio/music track list)
+  start_section: 1    # the base stem over Jupiter's shadow
+  full_section: 2     # the full mix from the picket line (t=30)
+  motif: {from: 30, to: 96, sections: {}}   # Vorne's motif on through the pickets (his guard's level), out with the theme
+  stem_times:
+    - {t: 96, stems: none, fade: 4}   # the theme out over the pre-duel pause (t=96-100); the ambience alone until the sting
+  ambience: belt-open   # open space heard through the hull (Act 5's)
+  ambience_layers:
+    - {ambience: fleet-comms, from: 0, to: 30, fade_in: 1, fade_out: 4}   # the fleet's distant comms and engine rumble under section 1
+  end_jingle: mission-complete
+  boss_sting: miniboss-sting   # track 21 at the arena's start, when the bar appears
+  boss_track: duel-theme       # track 32 "Three Aces" after the sting for the whole duel, out at the last ace
+  track_after_boss: full       # track 14's full mix back with the clock's resume (the waves at t=107)
+
+difficulty: {}  # the stat blocks' hooks apply (the Honour Guard's easy and hard joins, line, rests, spiral and pull-out; the Talon's, the Chimera's, the Gunship's, the Hornet's, the Mirror Interceptor's, the Harrow's); the Gunship, Hornet, Mirror and Harrow waves pinned on easy and hard; the formation lever sizes the rest
+
+briefing:
+  pages:   # the approved texts as they are (BriefingLayoutTest: 4 lines a page)
+    - {speaker: Okafor, image: level-40-callisto-approach, line: "Callisto's approach is held by Vorne's pickets and by his Honour Guard: three aces in gold Talons. Break the pickets, then the guard. The fleet follows your lane, Lancer."}
+    - {speaker: Varga, image: level-40-honour-guard, line: "The pickets fly hybrids and mirrors. The aces start one by one and end together: a sniper, a dancer, and one who comes from behind. Keep your rear guns fitted."}
+  teaser: {speaker: Okafor, line: "Vorne's guard waits at Callisto. Fit something that shoots behind you."}
+
+backdrop:
+  # Presentation only: Level 40's Callisto approach (tools/art/backdrop_l40.py, step ART-F2: its proposal's block as it is;
+  # the sections above at its times). No ground (`ground: none`): the deep layer is the base, scrolling at 0.06 (the
+  # bodies drift: the README's motion budget). Its tile sets are cut from one continuous field at the rows each
+  # section's tiles begin (re-run the generator after moving a section). Animated: the -glow pieces, additive at their
+  # piece's placements on the real clock (two on a `path`), at most two on the screen at once. The scroll halts at the
+  # arena's end while an ace lives (the built clock): the backdrop holds still behind the duel, Callisto's lit lower
+  # limb crossing the screen at y~330.
+  scroll_factors: {deep: 0.06, far: 0.3, ground: 1, low-air: 1.3, high-air: 1.7}   # ground, low-air, high-air unused
+  ramp: 2
+  haze_colour: 03040a
+  atmosphere:
+    clear: {haze: 0.0}   # vacuum: no haze, no wisps
+  tile_sets:
+    jupiter-shadow: {layer: deep, height: 1056}   # section 1: Jupiter's Shadow
+    picket-line: {layer: deep, height: 512}   # section 2: The Picket Line
+    callisto-rising: {layer: deep, height: 480}   # section 3: Callisto Rising
+    guard-lane: {layer: deep, height: 192}   # section 4: The Guard's Lane
+    guard-brake: {layer: deep, height: 192}   # section 5: The Guard's Lane, braking
+    duel: {layer: deep, height: 192}   # section 6: The Duel
+    callisto-ring: {layer: deep, height: 512}   # section 7: Callisto's Ring
+    ice-line: {layer: deep, height: 512}   # section 8: The Ice Line
+  pieces:
+    picket-station: {layer: deep, size: [112, 112]}
+    picket-station-glow: {layer: deep, size: [112, 112], frames: 8, fps: 4}
+    fleet-far: {layer: deep, size: [128, 96]}
+    fleet-far-glow: {layer: deep, size: [128, 96], frames: 8, fps: 4}
+    guard-glints: {layer: deep, size: [96, 48]}
+    guard-glints-glow: {layer: deep, size: [96, 48], frames: 12, fps: 6}
+    citadel: {layer: deep, size: [256, 144]}
+    citadel-glow: {layer: deep, size: [256, 144], frames: 8, fps: 4}
+    ring-span: {layer: far, size: [480, 128]}
+  placed:
+    # section 1: the carrier group rising off Jupiter's limb (its path climbs 15 px/s against the deep layer's 9.6: y 470 at t=0, y~310 at t=30), then sinking out at the bottom by t~54
+    - {piece: fleet-far, t: -20.833, x: 352, path: [[0, 0, 0], [30, 0, 450]]}
+    # section 2: the picket station far off on the right (the recorder drifts down the left edge at t~50), entering the top at t~34 as Jupiter sinks out below it; on the screen to t~100
+    - {piece: picket-station, t: 67.333, x: 386}
+    # section 4: three gold glints far ahead (in from the top at t~90), climbing away out of the top edge over t=100.6-102.4 (the aces leaving to make their entries; gone before the sting at 102), then parked 1000 px up for the rest of the level (a path that starts before the duel runs on the real clock after it: its last offset holds)
+    - {piece: guard-glints, t: 123.91, x: 262, path: [[100.6, 0, 0], [102.4, 0, 200], [102.5, 0, 1000]]}
+    # section 6: the fleet closing behind: in from the bottom edge after the duel (16 px/s against the deep layer's 9.6: y~600 at t=104, y~410 at t=134), then sinking back out by t~153; until t=104 it waits 600 px off the right edge (its path starts after the duel, so the path keeps the level clock)
+    - {piece: fleet-far, t: 66.289, x: 150, path: [[104, 600, 0], [104.1, 0, 0], [134, 0, 480]]}
+    # section 7: the black citadel on Callisto's night side, its red and gold lights at the top edge from t~159, the outer line of lamps at y~130 at the level's end
+    - {piece: citadel, t: 187.25, x: 300}
+    # section 6: Callisto's orbital ring and two relay platforms crossing below (far, 0.3): on the screen t~111-125
+    - {piece: ring-span, t: 118.0, x: 240}

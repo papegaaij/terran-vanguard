@@ -252,9 +252,17 @@ public sealed interface EnemyAttackData permits EnemyData {
      * for {@code telegraph} s (at least 0.8, the vocabulary's minimum; a difficulty's hook {@code telegraph} replaces
      * it), then it is live {@code live} s as a band {@code band} px wide that hits the ship once for the attack's bullet
      * class; the unit holds fire while the ship is within {@code hold_within} px of it. M9 part F (Level 33): {@code
-     * most_telegraphing}: a due line waits while that many lines (any unit's) telegraph (the Rail Bunker's 2).
+     * most_telegraphing}: a due line waits while that many lines (any unit's) telegraph (the Rail Bunker's 2). M10 part
+     * F (the Honour Guard's sniper line): {@code lock_before}: a boss's line tracks the ship through its telegraph and
+     * locks only that many s before it fires (the telegraph's start if not given: locked at once).
      */
-    record Line(double telegraph, double live, double band, double holdWithin, Optional<Integer> mostTelegraphing) {
+    record Line(
+            double telegraph,
+            double live,
+            double band,
+            double holdWithin,
+            Optional<Integer> mostTelegraphing,
+            Optional<Double> lockBefore) {
         /** The vocabulary's shortest telegraph (design/enemies, Attack pattern vocabulary). */
         public static final double MIN_TELEGRAPH = 0.8;
 
@@ -264,6 +272,8 @@ public sealed interface EnemyAttackData permits EnemyData {
             Check.positive("line.band", band);
             Check.notNegative("line.hold_within", holdWithin);
             mostTelegraphing.ifPresent(n -> Check.positive("line.most_telegraphing", n));
+            lockBefore.ifPresent(s ->
+                    Check.that(s >= 0 && s < telegraph, "line.lock_before: from 0 to below the telegraph, was " + s));
         }
     }
 
