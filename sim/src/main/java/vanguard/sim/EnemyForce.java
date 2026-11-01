@@ -1036,8 +1036,9 @@ final class EnemyForce {
                 // M7 part G: a pursuit's motes press from the top edge whatever their wave's entry.
                 edges |= WarningEdge.TOP.bit();
             } else if (entry == WaveSpec.Entry.REAR) {
-                // M7 part G: a flipped unit's rear is the screen's top.
-                edges |= enemy.flipped() ? WarningEdge.TOP.bit() : WarningEdge.BOTTOM.bit();
+                // M7 part G: a flipped unit's rear is the screen's top; M10 part F: a rising front formation's the
+                // bottom (its frame's).
+                edges |= enemy.frame().rearEdge();
             }
         }
         return edges;

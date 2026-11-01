@@ -10,14 +10,24 @@ package vanguard.sim;
  */
 final class TravelFrame {
     /** The screen's own frame: every conversion returns its argument. */
-    static final TravelFrame SCREEN = new TravelFrame(false);
-    /** The play field mirrored top to bottom. */
-    static final TravelFrame FLIPPED = new TravelFrame(true);
+    static final TravelFrame SCREEN = new TravelFrame(false, WarningEdge.BOTTOM);
+    /** The play field mirrored top to bottom (a unit of a wave in a reversed scroll: its rear is the screen's top). */
+    static final TravelFrame FLIPPED = new TravelFrame(true, WarningEdge.TOP);
+    /**
+     * M10 part F (design/campaign Level 40, the Talon V-wings from the rear; step F1c): the play field mirrored top to
+     * bottom for a front formation rising from the bottom edge in a forward scroll ({@link WaveSchedule}): its units fly
+     * their front formation in the mirrored frame, so they enter at the bottom edge, but their wave stays a rear wave
+     * of the screen's bottom edge (by travel they come from behind).
+     */
+    static final TravelFrame RISING = new TravelFrame(true, WarningEdge.BOTTOM);
 
     private final boolean flipped;
+    /** The screen edge a rear wave of a unit in this frame entered from (a {@link WarningEdge} bit). */
+    private final int rearEdge;
 
-    private TravelFrame(boolean flipped) {
+    private TravelFrame(boolean flipped, WarningEdge rearEdge) {
         this.flipped = flipped;
+        this.rearEdge = rearEdge.bit();
     }
 
     /** {@link #FLIPPED} for {@code flipped}, {@link #SCREEN} otherwise. */
@@ -28,6 +38,14 @@ final class TravelFrame {
     /** Whether it is the mirrored frame. */
     boolean flipped() {
         return flipped;
+    }
+
+    /**
+     * The screen edge, as a {@link WarningEdge} bit, a unit in this frame whose wave entered from the rear came in at:
+     * the bottom one, the top one for a unit flipped by a reversed scroll ({@link #FLIPPED}).
+     */
+    int rearEdge() {
+        return rearEdge;
     }
 
     /** A height (px up from the bottom edge) in the other frame. */

@@ -263,6 +263,9 @@ final class EnemyEntries {
                 if (schedule.lastFlipped()) {
                     // M7 part G: its wave entered while the scroll ran reversed.
                     enemy.flip();
+                } else if (schedule.lastFrame() == TravelFrame.RISING) {
+                    // M10 part F: a front formation rising from the bottom edge flies in the mirrored frame.
+                    enemy.frame = TravelFrame.RISING;
                 }
                 enemy.entered(schedule.lastEntry());
                 enemy.tag(schedule.lastTag());

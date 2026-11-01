@@ -22,6 +22,12 @@ import java.util.Map;
  * carries a {@code warningSeconds} (Level 20's lessons). A
  * walker with frontal armour ({@code frontArc}) and a segment chain are never flipped, nor a pursuit, which enters at the
  * top edge under a TOP warning whatever the scroll's direction.
+ *
+ * <p>M10 part F (design/campaign Level 40, the Talon V-wings from the rear; step F1c): a front formation <em>rises</em>
+ * from the bottom edge when its wave enters from the rear ({@link #rises}: a V-wing, or a line abreast on a swoop path):
+ * planned as the same wave from the front, its units live in the mirrored frame ({@link TravelFrame#RISING}), so it
+ * comes in at the bottom edge with its shape and its swoop curves mirrored top to bottom, warned at the bottom edge
+ * {@link #EDGE_WARNING_SECONDS} ahead as every rear wave is. Only in a forward scroll (not built for a reversed one).
  */
 final class WaveSchedule {
     /** The shortest edge warning. */
@@ -60,6 +66,8 @@ final class WaveSchedule {
 
     /** M7 part G: per planned unit, whether it is flipped (its wave's time falls in a reversed scroll). */
     private final boolean[] flips;
+    /** M10 part F: per planned unit, whether it rises from the bottom edge in a front formation ({@link #rises}). */
+    private final boolean[] risings;
     /** M8 part C: per planned unit, whether its carried pickup drops only with a head-first kill (a chain's head). */
     private final boolean[] headFirsts;
     /** M8 part E: per planned unit, its mount on a wall or its swim out of a cave; null for any other. */
@@ -132,6 +140,7 @@ final class WaveSchedule {
         Map<Spawn, String> huntsOf = new IdentityHashMap<>();
         Map<Spawn, int[]> placeOf = new IdentityHashMap<>();
         Map<Spawn, Boolean> flipOf = new IdentityHashMap<>();
+        Map<Spawn, Boolean> risingOf = new IdentityHashMap<>();
         Map<Spawn, Boolean> headFirstOf = new IdentityHashMap<>();
         Map<Spawn, EnemySpec> leaderOf = new IdentityHashMap<>();
         Map<Spawn, Integer> waveOf = new IdentityHashMap<>();
@@ -152,11 +161,26 @@ final class WaveSchedule {
             } else if (wave.mount().isPresent()) {
                 // M8 part E: a wall's nests or a cave's units.
                 mounts.plan(wave, kinds.indexOf(wave.enemy()), rng, planned, spans.apply(wave));
+            } else if (rises(wave)) {
+                // M10 part F: the same wave from the front, flown in the mirrored frame.
+                // Its units fly through (a hover's or a station's hold reads the rear entry by the screen).
+                if (!flips(wave) || wave.enemy().hover().isPresent() || reversedAt.test(wave.t())) {
+                    throw new IllegalArgumentException("wave at t=" + wave.t() + " (" + wave.formation() + " of "
+                            + wave.enemy().slug() + "): a front formation rises from the rear only in a forward scroll"
+                            + " and not as a hover, a diver, a chain or a walker with frontal armour");
+                }
+                Formations.plan(
+                        wave.toBuilder().entry(WaveSpec.Entry.FRONT).build(),
+                        kinds.indexOf(wave.enemy()),
+                        rng,
+                        planned,
+                        spans.apply(wave));
             } else {
                 Formations.plan(wave, kinds.indexOf(wave.enemy()), rng, planned, spans.apply(wave));
             }
             boolean cross = wave.formation() == WaveSpec.Formation.CROSS;
             boolean flipped = flips(wave) && reversedAt.test(wave.t());
+            boolean rising = rises(wave);
             int crossEdges = 0;
             for (int i = before; i < planned.size(); i++) {
                 // M5 part G: a cross's unit enters from the edge its path (its lane) starts beyond.
@@ -165,6 +189,9 @@ final class WaveSchedule {
                 crossEdges |= flipped ? onScreen(edge) : edge;
                 if (flipped) {
                     flipOf.put(planned.get(i), Boolean.TRUE);
+                }
+                if (rising) {
+                    risingOf.put(planned.get(i), Boolean.TRUE);
                 }
                 entryOf.put(planned.get(i), cross ? entryAt(edge) : wave.entry());
                 for (WaveSpec.Carried carried : wave.carried()) {
@@ -235,6 +262,7 @@ final class WaveSchedule {
         waveSizes = new int[spawns.length];
         burrowGroups = new int[spawns.length];
         flips = new boolean[spawns.length];
+        risings = new boolean[spawns.length];
         headFirsts = new boolean[spawns.length];
         mounted = new WallMounts.Placed[spawns.length];
         leaders = new EnemySpec[spawns.length];
@@ -249,6 +277,7 @@ final class WaveSchedule {
             branches[i] = branchOf.getOrDefault(spawns[i], -1);
             mounted[i] = mounts.placed(spawns[i]);
             flips[i] = flipOf.containsKey(spawns[i]);
+            risings[i] = risingOf.containsKey(spawns[i]);
             headFirsts[i] = headFirstOf.containsKey(spawns[i]);
             int[] place = placeOf.getOrDefault(spawns[i], new int[] {0, -1, 1});
             places[i] = place[0];
@@ -307,6 +336,18 @@ final class WaveSchedule {
                 && enemy.chain().isEmpty()
                 && enemy.dive().isEmpty()
                 && wave.formation() != WaveSpec.Formation.PURSUIT;
+    }
+
+    /**
+     * M10 part F (design/campaign Level 40, the Talon V-wings from the rear): whether a wave from the rear flies a front
+     * formation rising from the bottom edge: a V-wing, or a line abreast on a swoop path (a line abreast of any other
+     * unit rises straight up the screen as before, {@link Formations}).
+     */
+    static boolean rises(WaveSpec wave) {
+        return wave.entry() == WaveSpec.Entry.REAR
+                && (wave.formation() == WaveSpec.Formation.V_WING
+                        || (wave.formation() == WaveSpec.Formation.LINE_ABREAST
+                                && wave.enemy().swoopPath().isPresent()));
     }
 
     /** M7 part G: a flipped unit's frame edges as the screen's: its frame's bottom is the screen's top. */
@@ -397,6 +438,17 @@ final class WaveSchedule {
     /** M7 part G: whether the unit {@link #due} returned last is flipped (its wave's time is in a reversed scroll). */
     boolean lastFlipped() {
         return flips[next - 1];
+    }
+
+    /**
+     * M10 part F: the frame of the unit {@link #due} returned last: {@link TravelFrame#FLIPPED} when flipped, {@link
+     * TravelFrame#RISING} when it rises from the bottom edge in a front formation ({@link #rises}), else the screen's.
+     */
+    TravelFrame lastFrame() {
+        if (flips[next - 1]) {
+            return TravelFrame.FLIPPED;
+        }
+        return risings[next - 1] ? TravelFrame.RISING : TravelFrame.SCREEN;
     }
 
     /**

@@ -124,6 +124,89 @@ class FormationsTest {
         assertTrue(startY(rear.get(0)) < 0 && endY(rear.get(0)) > PlayField.HEIGHT);
     }
 
+    /** The screen places of every unit of {@code sortie}, step by step, by serial, for {@code seconds}. */
+    private static java.util.Map<Integer, List<double[]>> fly(Sortie sortie, double seconds, int[] warned, int[] rear) {
+        java.util.Map<Integer, List<double[]>> tracks = new java.util.TreeMap<>();
+        for (int i = 0; i < SimStep.ticks(seconds); i++) {
+            sortie.step(0);
+            warned[i] = sortie.edgeWarnings();
+            rear[i] = sortie.force.activeEdges();
+            for (int k = 0; k < sortie.enemyCount(); k++) {
+                Enemy u = sortie.enemy(k);
+                tracks.computeIfAbsent(u.serial(), s -> new ArrayList<>()).add(new double[] {u.x(), u.y()});
+            }
+        }
+        return tracks;
+    }
+
+    private static Sortie sortie(WaveSpec wave) {
+        LevelScript level = LevelScript.builder(40, 5)
+                .sections(List.of(new Section(40, 100)))
+                .waves(List.of(wave))
+                .objectives(ObjectiveSpec.NONE)
+                .build();
+        return new Sortie(1, TestSpecs.LOADOUT, level, TestSpecs.RULES.withInvulnerableShip(), TestSpecs.FULL_ARMOUR);
+    }
+
+    @Test
+    void aRearVWingRisesFromTheBottomEdgeOnTheMirroredSwoopUnderABottomWarning() {
+        // M10 part F (design/campaign Level 40, the Talon V-wings from the rear; step F1c).
+        WaveSpec front = Act5BSpecs.vWing(4, Act5BSpecs.SWOOP_TALON);
+        WaveSpec rear = front.toBuilder().entry(REAR).build();
+        int steps = SimStep.ticks(12);
+        int[] frontWarned = new int[steps];
+        int[] rearWarned = new int[steps];
+        int[] frontEdges = new int[steps];
+        int[] rearEdges = new int[steps];
+        Sortie risen = sortie(rear);
+        var down = fly(sortie(front), 12, frontWarned, frontEdges);
+        var up = fly(risen, 12, rearWarned, rearEdges);
+
+        assertEquals(5, up.size());
+        assertEquals(down.keySet(), up.keySet());
+        for (int serial : down.keySet()) {
+            List<double[]> a = down.get(serial);
+            List<double[]> b = up.get(serial);
+            assertEquals(a.size(), b.size(), "the same flight");
+            assertTrue(b.getFirst()[1] < 0, "enters below the bottom edge: " + b.getFirst()[1]);
+            for (int i = 0; i < a.size(); i++) {
+                assertEquals(a.get(i)[0], b.get(i)[0], 1e-9, "its x as from the front");
+                assertEquals(PlayField.HEIGHT - a.get(i)[1], b.get(i)[1], 1e-9, "its height mirrored");
+            }
+        }
+        assertEquals(0, risen.enemyCount(), "gone down through the bottom edge at its curve's end");
+        int first = -1;
+        int last = -1;
+        for (int i = 0; i < steps; i++) {
+            assertEquals(0, frontWarned[i], "a front wave: no warning");
+            assertTrue(rearWarned[i] == 0 || rearWarned[i] == WarningEdge.BOTTOM.bit(), "the bottom edge warns");
+            if (rearWarned[i] != 0) {
+                first = first < 0 ? i : first;
+                last = i;
+            }
+            // Rook's Trail (design/player/wingmen): a rear wave of the bottom edge while it is on the field.
+            assertTrue(rearEdges[i] == 0 || rearEdges[i] == WarningEdge.BOTTOM.bit(), "a rear wave of the bottom");
+            assertEquals(0, frontEdges[i]);
+        }
+        assertEquals(SimStep.ticks(4 - WaveSchedule.EDGE_WARNING_SECONDS), first, 2, "3 s ahead");
+        assertEquals(SimStep.ticks(4), last, 2, "until it enters");
+        assertTrue(java.util.Arrays.stream(rearEdges).anyMatch(e -> e == WarningEdge.BOTTOM.bit()));
+    }
+
+    @Test
+    void aRearFrontFormationIsBuiltOnlyForUnitsThatFlyThrough() {
+        WaveSpec hovering = TestSpecs.wave(4, WaveSpec.Formation.V_WING, NEEDLER, 5, REAR, NONE);
+        assertThrows(IllegalArgumentException.class, () -> sortie(hovering));
+        WaveSpec line = TestSpecs.wave(4, WaveSpec.Formation.LINE_ABREAST, Act5BSpecs.SWOOP_TALON, 4, REAR, NONE);
+        var up = fly(sortie(line), 10, new int[SimStep.ticks(10)], new int[SimStep.ticks(10)]);
+        assertEquals(4, up.size());
+        for (List<double[]> track : up.values()) {
+            assertTrue(track.getFirst()[1] < 0, "a swooping line rises from the bottom edge too");
+            double highest = track.stream().mapToDouble(p -> p[1]).max().orElseThrow();
+            assertTrue(highest >= 200 - 1 && highest <= 260 + 1, "its curve tops out 200-260 px above the bottom");
+        }
+    }
+
     @Test
     void aNeedlerLineAbreastHoversThenLeaves() {
         List<Spawn> line = plan(wave(10, WaveSpec.Formation.LINE_ABREAST, NEEDLER, 3, FRONT, NONE));
