@@ -16,6 +16,7 @@ import vanguard.game.audio.Sfx;
 import vanguard.game.render.DeepDeaths;
 import vanguard.game.render.Effects;
 import vanguard.game.render.EnemyLooks;
+import vanguard.game.render.LastAceWreck;
 import vanguard.game.render.LevelRenderer;
 import vanguard.game.render.ScreenFlash;
 import vanguard.game.render.SetPieceDeath;
@@ -151,41 +152,33 @@ final class DeathEffects {
     private double showerY = Double.NaN;
 
     /** M10 part F: the last ace's chain lasts this long before the credit shower (design: "a 2 s large chain"). */
-    static final double ACE_CHAIN_SECONDS = 2;
+    static final double ACE_CHAIN_SECONDS = LastAceWreck.CHAIN_SECONDS;
 
     /**
      * M10 part F (design/enemies/bosses/honour-guard, Death): the last ace's death: a {@value #ACE_CHAIN_SECONDS} s chain
      * of vacuum bursts round its tumbling hull (the pivots' {@code chain}: medium, then large), each where the hull will
-     * be then; the credit shower where it died after the chain; no screen flash (a mid-boss). The piece itself is parked
-     * off the field: nothing is drawn there.
+     * be then on its {@link LastAceWreck} path (step F6g: the chain followed the ace's flight at the kill and left the
+     * field in about 0.6 s); the credit shower where it died after the chain; no screen flash (a mid-boss). The piece
+     * itself is destroyed: the hull is the looks' ({@code HonourGuardLooks}).
      */
     private void squadronDeath(int k) {
         SetPiece piece = sortie.setPiece(k);
         var squadron = piece.squadron().orElseThrow();
-        int last = -1;
-        int newest = Integer.MAX_VALUE;
-        for (int a = 0; a < squadron.aceCount(); a++) {
-            int since = piece.partTicksSinceHit(squadron.part(a));
-            if (since < newest) {
-                newest = since;
-                last = a;
-            }
-        }
+        int last = LastAceWreck.ace(piece, squadron);
         if (last < 0) {
             return;
         }
         double x = squadron.renderX(last, 1);
         double y = squadron.renderY(last, 1);
-        double vx = x - squadron.renderX(last, 0);
-        double vy = y - squadron.renderY(last, 0);
         showerX = x;
         showerY = y;
         showerDelay = vanguard.sim.SimStep.ticks(ACE_CHAIN_SECONDS);
         boolean art = services.sprites.has("explosion-vacuum-medium") && services.sprites.has("explosion-vacuum-large");
         for (int i = 0; i < renderer.aceChainCount(); i++) {
-            int delay = vanguard.sim.SimStep.ticks(renderer.aceChainT(i));
-            double px = x + vx * delay + renderer.aceChainDx(i);
-            double py = y + vy * delay + renderer.aceChainDy(i);
+            double t = renderer.aceChainT(i);
+            int delay = vanguard.sim.SimStep.ticks(t);
+            double px = LastAceWreck.x(x, y, t) + renderer.aceChainDx(i);
+            double py = LastAceWreck.y(x, y, t) + renderer.aceChainDy(i);
             boolean large = renderer.aceChainLarge(i);
             Array<AtlasRegion> frames = art
                     ? services.sprites.frames(large ? "explosion-vacuum-large" : "explosion-vacuum-medium")

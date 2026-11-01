@@ -1392,19 +1392,19 @@ public enum Sfx {
     SNIPER_CHARGE("sfx/sniper-charge-r78-a.ogg", 2, Bus.EFFECTS, WARNING),
     /** M10 part F (round 78 S.4 a until the pick): the sniper line firing (a hard crack, a short sizzling tail). */
     SNIPER_SHOT("sfx/sniper-shot-r78-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
-    /** M10 part F (round 78 S.5 a until the pick): Kestrel's dive scream, from the dive's start to its pull-out. */
-    KESTREL_DIVE("sfx/kestrel-dive-r78-a.ogg", 1, Bus.EFFECTS, BOSS),
+    /** M10 part F (round 78 S.5 b, the user's pick): Kestrel's dive scream, from the dive's start to its pull-out. */
+    KESTREL_DIVE("sfx/kestrel-dive-r78-b.ogg", 1, Bus.EFFECTS, BOSS),
     /** M10 part F (round 78 S.6 a until the pick): Kestrel's pull-out roar (an afterburner cutting in). */
     KESTREL_PULLOUT("sfx/kestrel-pullout-r78-a.ogg", 1, Bus.EFFECTS, BOSS),
     /**
-     * M10 part F (round 78 S.7 a until the pick): Vesper's spiral cannon (a light autocannon's fast rhythm, a 2 s loop),
+     * M10 part F (round 78 S.7 b, the user's pick): Vesper's spiral cannon (a light autocannon's fast rhythm, a 2 s loop),
      * looped through her loop, panned with her.
      */
-    VESPER_CANNON("sfx/vesper-cannon-r78-a.ogg", 1, Bus.EFFECTS, BOSS),
-    /** M10 part F (round 78 S.8 a until the pick): an ace at 0 (an engine failing, metal tumbling), over its rung. */
-    ACE_DEATH("sfx/ace-death-r78-a.ogg", 2, Bus.EFFECTS, EXPLOSION),
-    /** M10 part F (round 78 S.9 a until the pick): the last ace's 2 s chain of deep detonations round its hull. */
-    ACE_LAST_CHAIN("sfx/ace-last-chain-r78-a.ogg", 1, Bus.EFFECTS, EXPLOSION),
+    VESPER_CANNON("sfx/vesper-cannon-r78-b.ogg", 1, Bus.EFFECTS, BOSS),
+    /** M10 part F (round 78 S.8 b, the user's pick): an ace at 0 (an engine failing, metal tumbling), over its rung. */
+    ACE_DEATH("sfx/ace-death-r78-b.ogg", 2, Bus.EFFECTS, EXPLOSION),
+    /** M10 part F (round 78 S.9 b, the user's pick): the last ace's 2 s chain of deep detonations round its hull. */
+    ACE_LAST_CHAIN("sfx/ace-last-chain-r78-b.ogg", 1, Bus.EFFECTS, EXPLOSION),
     /**
      * M10 part F (round 78 S.10 a until the pick): Sentry Two's recorder broken open (a small metal housing splitting
      * with an electrical fizz), over the crate's break ({@link AllyCues}' tows, Level 40).

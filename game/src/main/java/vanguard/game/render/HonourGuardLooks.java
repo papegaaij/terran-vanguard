@@ -161,6 +161,11 @@ final class HonourGuardLooks {
     private final long[] puffTick = new long[PUFFS];
     private int nextPuff;
     private long seen = -1;
+    /**
+     * Step F6g: the last ace (the one whose death took the piece) from the kill: its wreck, its cockpit fire and its chain
+     * follow its {@link LastAceWreck} path, the piece being destroyed.
+     */
+    private final LastAceWreck last = new LastAceWreck();
 
     private HonourGuardLooks(Sprites sprites, FlashShader flash, SetPieceSpec boss, JsonValue pivots) {
         this.flash = flash;
@@ -301,6 +306,7 @@ final class HonourGuardLooks {
         Arrays.fill(lastPuff, NEVER);
         Arrays.fill(puffTick, NEVER);
         seen = -1;
+        last.reset();
     }
 
     /** The heading frame (of {@link #HEADINGS}) nearest {@code facing}, radians clockwise from moving down. */
@@ -340,11 +346,18 @@ final class HonourGuardLooks {
         seen = tick;
         Squadron squadron = piece.squadron().orElseThrow();
         SimEvents events = sortie.events();
+        if (last.stepped(sortie, piece)) {
+            killed(squadron, tick);
+        }
+        int lastAce = last.ace();
         for (int i = 0; i < events.size(); i++) {
             switch (events.type(i)) {
                 case ACE_DOWN -> {
                     int a = events.value(i);
-                    if (a >= 0 && a < aces) {
+                    if (a == lastAce) {
+                        // Its tumble began at the kill (killed): only its shield's shatter now.
+                        shieldBreakTick[a] = tick;
+                    } else if (a >= 0 && a < aces) {
                         downTick[a] = tick;
                         downFrame[a] = Math.floorMod(
                                 (int) Math.round(squadron.facing(a) / (2 * Math.PI) * WRECK_FRAMES), WRECK_FRAMES);
@@ -395,6 +408,28 @@ final class HonourGuardLooks {
         }
     }
 
+    /**
+     * The kill (step F6g): the last ace's wreck starts tumbling where it died, on the {@link LastAceWreck} path the level
+     * screen's chain of bursts follows (from the same point: the ace's position at the kill's step).
+     */
+    private void killed(Squadron squadron, long tick) {
+        int a = last.ace();
+        if (a >= aces) {
+            return;
+        }
+        downTick[a] = tick;
+        downFrame[a] = Math.floorMod((int) Math.round(squadron.facing(a) / (2 * Math.PI) * WRECK_FRAMES), WRECK_FRAMES);
+        downTurn[a] = LastAceWreck.side(last.x0()) < 0 ? -1 : 1;
+    }
+
+    /**
+     * Step F6g: whether the aces are drawn: while the piece is on the field, and after the kill (destroyed, no longer
+     * {@code present}) for the dead hulls tumbling on and the last ace's wreck under its chain.
+     */
+    static boolean drawsAces(SetPiece piece) {
+        return piece != null && (piece.present() || piece.destroyed());
+    }
+
     /** Whether ace {@code a} trails its wingtips now: telling or flying the roll fan or the ribbon. */
     private static boolean trailing(Squadron squadron, AcePlaybook book, int a) {
         if (book == null || squadron.state(a) != Squadron.State.FLYING) {
@@ -418,19 +453,34 @@ final class HonourGuardLooks {
         }
     }
 
-    /** The aces' bodies, shields and wrecks, with the flyers. */
+    /**
+     * The aces' bodies, shields and wrecks, with the flyers. Step F6g: the wrecks go on after the kill, the piece being
+     * destroyed (not {@code present}): the last ace's on its {@link LastAceWreck} path under its chain.
+     */
     void draw(SpriteBatch batch, Sortie sortie, float alpha, float whiteFlash) {
         SetPiece piece = guard(sortie);
-        if (piece == null || !piece.present()) {
+        if (!drawsAces(piece)) {
             return;
         }
         Squadron squadron = piece.squadron().orElseThrow();
         long tick = sortie.tick();
+        int lastAce = last.ace();
         batch.setColor(Color.WHITE);
         for (int a = 0; a < aces; a++) {
             double x = squadron.renderX(a, alpha);
             double y = squadron.renderY(a, alpha);
             Squadron.State state = squadron.state(a);
+            if (a == lastAce) {
+                if (last.shows(tick, alpha) && wreck.get(a).size > 0) {
+                    int f = wreckFrame(downFrame[a], downTurn[a], last.age(tick, alpha));
+                    drawCentred(
+                            batch, wreck.get(a).get(f % wreck.get(a).size), last.x(tick, alpha), last.y(tick, alpha));
+                }
+                continue;
+            }
+            if (piece.destroyed() && state != Squadron.State.DOWN) {
+                continue;
+            }
             if (state == Squadron.State.DOWN) {
                 if (squadron.tumbling(a) && wreck.get(a).size > 0 && downTick[a] != NEVER) {
                     double age = (tick - downTick[a] + alpha) * SimStep.SECONDS;
@@ -453,19 +503,27 @@ final class HonourGuardLooks {
         // The shields over the hulls.
         PartShields shields = piece.shields().orElse(null);
         for (int a = 0; a < aces; a++) {
-            drawShield(batch, squadron, shields, a, tick, alpha);
+            drawShield(batch, squadron, shields, a, tick, alpha, piece.destroyed());
         }
         batch.setColor(Color.WHITE);
     }
 
     /** Ace {@code a}'s hex shield: holding (by its fill), a hit's rim, its break and its refill. */
-    private void drawShield(SpriteBatch batch, Squadron squadron, PartShields shields, int a, long tick, float alpha) {
+    private void drawShield(
+            SpriteBatch batch,
+            Squadron squadron,
+            PartShields shields,
+            int a,
+            long tick,
+            float alpha,
+            boolean destroyed) {
         if (shields == null || !shields.fitted(part[a]) || shieldHold.isEmpty()) {
             return;
         }
         Squadron.State state = squadron.state(a);
-        double cx = squadron.renderX(a, alpha);
-        double cy = squadron.renderY(a, alpha);
+        boolean lastOne = a == last.ace();
+        double cx = lastOne ? last.x(tick, alpha) : squadron.renderX(a, alpha);
+        double cy = lastOne ? last.y(tick, alpha) : squadron.renderY(a, alpha);
         long broke = tick - shieldBreakTick[a];
         if (shieldBreakTick[a] != NEVER
                 && broke >= 0
@@ -473,7 +531,7 @@ final class HonourGuardLooks {
             batch.setColor(Color.WHITE);
             drawCentred(batch, shieldBreak.get((int) (broke / SovereignLooks.SHIELD_BREAK_TICKS)), cx, cy);
         }
-        if (state != Squadron.State.FLYING || shields.shield(part[a]) <= 0) {
+        if (destroyed || state != Squadron.State.FLYING || shields.shield(part[a]) <= 0) {
             return;
         }
         long refill = tick - shieldRefillTick[a];
@@ -506,7 +564,7 @@ final class HonourGuardLooks {
     /** The aces' lights, additive over their bodies: the crest, the tells, the trails and the cockpit fires. */
     void drawGlows(SpriteBatch batch, Sortie sortie, float alpha) {
         SetPiece piece = guard(sortie);
-        if (piece == null || !piece.present()) {
+        if (!drawsAces(piece)) {
             return;
         }
         Squadron squadron = piece.squadron().orElseThrow();
@@ -528,11 +586,19 @@ final class HonourGuardLooks {
             double x = squadron.renderX(a, alpha);
             double y = squadron.renderY(a, alpha);
             Squadron.State state = squadron.state(a);
-            if (state == Squadron.State.DOWN) {
-                drawFire(batch, squadron, a, tick, alpha, x, y);
+            if (a == last.ace()) {
+                if (last.shows(tick, alpha)) {
+                    drawFire(batch, a, last.age(tick, alpha), last.x(tick, alpha), last.y(tick, alpha));
+                }
                 continue;
             }
-            if (state != Squadron.State.ENTERING && state != Squadron.State.FLYING) {
+            if (state == Squadron.State.DOWN) {
+                if (squadron.tumbling(a) && downTick[a] != NEVER) {
+                    drawFire(batch, a, (tick - downTick[a] + alpha) * SimStep.SECONDS, x, y);
+                }
+                continue;
+            }
+            if (piece.destroyed() || (state != Squadron.State.ENTERING && state != Squadron.State.FLYING)) {
                 continue;
             }
             int k = headingFrame(squadron.facing(a));
@@ -600,12 +666,11 @@ final class HonourGuardLooks {
         return 0;
     }
 
-    /** A dead ace's cockpit burning on its tumbling wreck. */
-    private void drawFire(SpriteBatch batch, Squadron squadron, int a, long tick, float alpha, double x, double y) {
-        if (!squadron.tumbling(a) || cockpitFire.size == 0 || downTick[a] == NEVER) {
+    /** A dead ace's cockpit burning on its tumbling wreck at ({@code x}, {@code y}), {@code age} s after its death. */
+    private void drawFire(SpriteBatch batch, int a, double age, double x, double y) {
+        if (cockpitFire.size == 0) {
             return;
         }
-        double age = (tick - downTick[a] + alpha) * SimStep.SECONDS;
         int f = wreckFrame(downFrame[a], downTurn[a], age);
         if (!wreckVisible[f] || wreckCockpit[f] == null) {
             return;
