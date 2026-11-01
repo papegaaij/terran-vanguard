@@ -20,7 +20,11 @@ dependencies {
  * under design/ into the resources, with design/data-files.txt listing them for the loader.
  */
 val designData = tasks.register<DesignData>("designData") {
-    source.from(rootProject.layout.projectDirectory.dir("design").asFileTree.matching { include("**/data.yaml") })
+    // The databank's texts (design/ui/databank/data.yaml) wait for their loader (step DB1).
+    source.from(rootProject.layout.projectDirectory.dir("design").asFileTree.matching {
+        include("**/data.yaml")
+        exclude("ui/databank/**")
+    })
     designDir = rootProject.layout.projectDirectory.dir("design")
     outputDir = layout.buildDirectory.dir("generated/design-data")
 }

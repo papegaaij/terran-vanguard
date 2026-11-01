@@ -15,7 +15,9 @@ final class DesignTree {
 
     static List<DataFile> dataFiles() {
         try (Stream<Path> files = Files.walk(ROOT)) {
+            // The databank's texts wait for their loader (step DB1), as in the build's designData.
             return files.filter(p -> p.getFileName().toString().equals("data.yaml"))
+                    .filter(p -> !ROOT.relativize(p).startsWith(Path.of("ui", "databank")))
                     .sorted()
                     .map(DesignTree::read)
                     .toList();

@@ -104,7 +104,7 @@ class PowerDialTest {
                         LoadoutSlot.FRONT, new Fitted("pulse-cannon", 5, 1),
                         LoadoutSlot.LEFT_WING, new Fitted("autocannon-pod", 1),
                         LoadoutSlot.RIGHT_WING, new Fitted("autocannon-pod", 1),
-                        LoadoutSlot.UTILITY_1, new Fitted(Hangar.SENSOR_SUITE, 1),
+                        LoadoutSlot.UTILITY_1, new Fitted("Salvage scanner", 1),
                         LoadoutSlot.UTILITY_2, new Fitted("Pickup magnet", 1)));
         Hangar hangar = new Hangar(HangarTest.CATALOGUE, campaign);
         assertEquals(hangar.output(), hangar.load(), 1e-9, "the Mk I's 8 MW all used, the Pulse Cannon at setting 1");
