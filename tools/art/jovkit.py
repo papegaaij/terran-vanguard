@@ -277,14 +277,23 @@ def additive_rgb(light):
 # =========================================================================== checks
 
 def wrap_score(a):
+    """A tile's wrap as the game's seam test scores it (BackdropSeams.translucentWrapScore, step C4a): the change
+    between rows k and k + 1 for the rows at the wrap (k = h - 2 .. h), each over the median change of the rows
+    k - 16 .. k + 16 every 4 around it (alpha-premultiplied luminance, the 90 % least changed pixels)."""
+    a = np.asarray(a)
     lum = a[..., :3].astype(float) @ np.array((0.299, 0.587, 0.114))
+    if a.shape[-1] == 4:
+        lum = lum * a[..., 3] / 255.0
     h = len(lum)
 
     def change(i, j):
         d = np.sort(np.abs(lum[i % h] - lum[j % h]))
         return d[:int(len(d) * 0.9)].mean()
-    ref = sorted(change(k, k + 1) for k in range(h - 40, h + 40) if k < h - 4 or k > h + 2)
-    return max(change(h - 2, h - 1), change(h - 1, 0), change(0, 1)) / max(ref[len(ref) // 2], 0.5)
+    worst = 0.0
+    for k in range(h - 2, h + 1):
+        ref = sorted(change(r, r + 1) for r in range(k - 16, k + 17, 4) if r != k)
+        worst = max(worst, change(k, k + 1) / max(ref[len(ref) // 2], 0.5))
+    return worst
 
 
 def wrap_score_alpha(a):

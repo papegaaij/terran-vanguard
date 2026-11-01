@@ -23,7 +23,9 @@ import vanguard.sim.Terrain;
  *
  * <p>RF9d: drawn by layer: the tiles and the crawl ({@link BackdropTiles}), the atmosphere ({@link
  * BackdropAtmosphere}), the set pieces and towers ({@link BackdropPieces}) and the canyon walls ({@link TrenchWalls});
- * this class keeps the draw passes' order and the API its callers use.
+ * this class keeps the draw passes' order and the API its callers use. M10 part C: Level 37's growth burst over the
+ * ground at the turn ({@link GrowthOverlay}) and its falling city ({@link FallingCity}), drawn in the ground, low-air
+ * and deep passes beside the pieces.
  */
 public final class Backdrop {
     /** Weather on high-air may cover the play plane at no more than 40 % opacity. */
@@ -44,6 +46,10 @@ public final class Backdrop {
     private final BackdropTiles tiles;
     private final BackdropAtmosphere atmosphere;
     private final TrenchWalls trench;
+    /** M10 part C: the turn's growth burst over the ground (Level 37); null without one. */
+    private final GrowthOverlay growth;
+    /** M10 part C: the falling city's halves, balloons, spires and sinking city (Level 37); null without a fall. */
+    private final FallingCity fall;
     /** M5 part C: drawn between the ground pieces and the towers; null for nothing ({@link #underTowers}). */
     private UnderTowers underTowers;
 
@@ -59,6 +65,11 @@ public final class Backdrop {
         tiles = new BackdropTiles(sprites, level, folder);
         atmosphere = new BackdropAtmosphere(sprites, level, folder, tiles);
         trench = new TrenchWalls(sprites, level, folder, tiles, pieces);
+        growth = level.backdrop().growth().isPresent() ? new GrowthOverlay(sprites, level, folder) : null;
+        fall = level.backdrop().fall().isPresent() ? new FallingCity(sprites, level, folder) : null;
+        if (fall != null) {
+            pieces.groundUntil(fall.start());
+        }
     }
 
     /** M9 part B: the hold opened {@code ticks} steps ago (the escort swap's release), -1 while it is shut. */
@@ -104,6 +115,12 @@ public final class Backdrop {
     /** M10 part A: frees what the backdrop made itself (the banks' veil); the atlases are the sprites'. */
     public void dispose() {
         atmosphere.dispose();
+        if (growth != null) {
+            growth.dispose();
+        }
+        if (fall != null) {
+            fall.dispose();
+        }
     }
 
     /** M7 part H: section {@code arena} (0-based) is an arena whose ground crawls on ({@link BackdropTiles#crawls}). */
@@ -236,6 +253,14 @@ public final class Backdrop {
         tiles.drawSettle(batch, groundScroll);
         pieces.drawPieces(
                 batch, BackdropLayer.GROUND, tiles.scroll(BackdropLayer.GROUND, groundScroll), clock, false, tiles);
+        if (growth != null) {
+            // M10 part C: Level 37's growth bursting over the decks at the turn.
+            growth.draw(batch, groundScroll, clock);
+        }
+        if (fall != null) {
+            // M10 part C: from the fall, Level 37's two halves are the ground.
+            fall.drawGround(batch, groundScroll, clock);
+        }
         if (underTowers != null) {
             underTowers.draw(batch);
         }
@@ -260,6 +285,10 @@ public final class Backdrop {
         tiles.drawSectionTiles(batch, BackdropLayer.LOW_AIR, scroll, clock);
         atmosphere.drawBanks(batch, scroll, clock.real());
         pieces.drawPieces(batch, BackdropLayer.LOW_AIR, scroll, clock, false, tiles);
+        if (fall != null) {
+            // M10 part C: Level 37's balloons tearing and spires toppling.
+            fall.drawLowAir(batch, groundScroll, clock);
+        }
     }
 
     /**
@@ -297,6 +326,10 @@ public final class Backdrop {
         if (layer == BackdropLayer.DEEP) {
             // M10 part B: the deep pieces' lights over them (Level 36's carrier group, the storm wall's lightning).
             pieces.drawDeepGlows(batch, scroll, clock, tiles);
+            if (fall != null) {
+                // M10 part C: Level 37's city sinking into the bands.
+                fall.drawDeep(batch, groundScroll, clock);
+            }
         }
     }
 

@@ -117,7 +117,42 @@ final class BackdropPieces {
             BackdropData.Piece spec,
             Array<AtlasRegion> images,
             long bottom,
-            double pathStart) {}
+            double pathStart,
+            boolean light) {}
+
+    /**
+     * M10 part C, step C4a: the level time from which the ground's placed pieces are not drawn (Level 37's falling city:
+     * its halves are the ground then, {@link FallingCity}); infinite for none.
+     */
+    private double groundUntil = Double.POSITIVE_INFINITY;
+
+    /** M10 part C: the ground's placed pieces are not drawn from level time {@code t} on ({@link #groundUntil}). */
+    void groundUntil(double t) {
+        groundUntil = t;
+    }
+
+    /** M10 part C: whether a layer's placed pieces are drawn at level time {@code script} ({@link #groundUntil}). */
+    private boolean shown(BackdropLayer layer, double script) {
+        return layer != BackdropLayer.GROUND || script < groundUntil;
+    }
+
+    /**
+     * M10 part C, step C4a (tools/art/backdrop_l37.py: "the -glow pieces are additive at their piece's places"): a placed
+     * piece {@code <id>-glow} at the same time and x as a placed {@code <id>} on its layer is its light, drawn additively
+     * (Level 37's lift rings); a {@code -glow} piece placed alone keeps the normal blend (Level 01's {@code vrell-glow}).
+     */
+    static boolean light(BackdropData.PlacedPiece placed, List<BackdropData.PlacedPiece> all) {
+        if (!placed.piece().endsWith(GLOW)) {
+            return false;
+        }
+        String base = placed.piece().substring(0, placed.piece().length() - GLOW.length());
+        for (BackdropData.PlacedPiece other : all) {
+            if (other.piece().equals(base) && other.t() == placed.t() && other.x() == placed.x()) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     /**
      * @param sprites the backdrop atlas, which holds the level's images as {@code level-NN/<id>}
@@ -138,7 +173,7 @@ final class BackdropPieces {
                             Math.round(level.pieceCentre(placed) - spec.size().height() / 2);
                     double pathStart =
                             placed.path().map(points -> points.getFirst().t()).orElse(Double.NaN);
-                    onLayer.add(new Piece(placed, spec, images, bottom, pathStart));
+                    onLayer.add(new Piece(placed, spec, images, bottom, pathStart, light(placed, data.placements())));
                 }
             }
             pieces[l] = onLayer.toArray(Piece[]::new);
@@ -273,6 +308,9 @@ final class BackdropPieces {
             boolean overhead,
             boolean passes,
             BackdropTiles crawl) {
+        if (!shown(layer, clock.script())) {
+            return;
+        }
         for (Piece piece : pieces[layer.ordinal()]) {
             BackdropData.PlacedPiece placed = piece.placed();
             if (placed.isOverhead() != overhead || overheadPass(layer, placed) != passes) {
@@ -299,10 +337,18 @@ final class BackdropPieces {
                 // M9 part C: a lane buoy's strobe flashes in frame 0 (its tick, BUOY_TICK).
                 strobeSeen(frame, placed.x());
             }
+            int src = batch.getBlendSrcFunc();
+            int dst = batch.getBlendDstFunc();
+            if (piece.light()) {
+                batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
+            }
             if (placed.mirrored()) {
                 batch.draw(image, x + width, y, -width, height);
             } else {
                 batch.draw(image, x, y);
+            }
+            if (piece.light()) {
+                batch.setBlendFunction(src, dst);
             }
             if (layer == BackdropLayer.GROUND && holdTicks >= 0) {
                 drawHold(batch, piece, x, y, width, height);
@@ -418,6 +464,9 @@ final class BackdropPieces {
      * scroll}, the crawl's next section's lights left out ({@code crawl}).
      */
     void drawPieceGlows(SpriteBatch batch, long scroll, BackdropClock clock, BackdropTiles crawl) {
+        if (!shown(BackdropLayer.GROUND, clock.script())) {
+            return;
+        }
         Piece[] onGround = pieces[BackdropLayer.GROUND.ordinal()];
         boolean additive = false;
         for (int p = 0; p < onGround.length; p++) {

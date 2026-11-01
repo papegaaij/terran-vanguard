@@ -880,7 +880,13 @@ def cloud_deck_tile(seed=3741):
     shade, cov = cloud_mass(h, W, blobs, seed + 3, wrap=True)
     rgb = base * (1 - 0.85 * cov[..., None]) + raster.ramp(CREAM, 0.15 + 0.85 * shade) * 0.85 * cov[..., None]
     rgb = rgb * 0.8 + jovkit.HAZE * 0.2
+    # Step C4a: the field wraps, so where its rows start is free: rolled DECK_ROLL rows, the wrap lands between two
+    # calm rows (unrolled, a cloud head's edge sat on rows 0-1 and the game's seam test scored the wrap 1.57 > 1.5).
+    rgb = np.roll(rgb, DECK_ROLL, axis=0)
     return Image.fromarray(np.clip(np.round(rgb), 0, 255).astype(np.uint8), "RGB").convert("RGBA")
+
+
+DECK_ROLL = 6
 
 
 def deep_span():

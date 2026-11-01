@@ -87,6 +87,7 @@ sections:  # back to back from t = 0; each speed change eased over 2 s (ramp); A
       purpose: The prey links; shuttle pair 3; the rear ambush.
   - name: The Fall
     end: 200
+    speed: 100   # step C4a: the README's 100 px/s through the fall (without it the scroll jumped to scroll_speed, 120, at t=158 and the halves lost their rows)
     atmosphere: medium   # ART-C2's `smoke` look (the game's intensities: clear, light, medium, heavy)
     tiles: [cloud-bands, smoke-wisps]
     notes:
@@ -401,7 +402,7 @@ radio:  # trigger: t or event; the README's 22 lines (the 1 s rule: ≈ 12 chara
   - {t: 78, speaker: Varga, line: "I'm inside Aurelia's traffic net. Their identification codes... Commander, I am keeping these."}
   - {t: 88, speaker: Okafor, line: "Take everything, Doctor. Lancer, the growth on those decks is moving."}
   - {t: 100, speaker: The Choir, distorted: true, static_lead: 2, duck_db: 6, line: "…the one who opened… is no longer needed… the door is ours…", notes: {trigger: "t=100 (its 2 s static from t=98)"}}
-  - {t: 110, speaker: Vorne, channel: enemy, line: "All Ascendancy wings, this is Vorne. The Vrell are hostile. Burn them off the decks.", notes: {trigger: "t=110, the enemy channel (cold, never shouted)"}}
+  - {t: 110, speaker: Vorne, expression: rage, channel: enemy, line: "All Ascendancy wings, this is Vorne. The Vrell are hostile. Burn them off the decks.", notes: {trigger: "t=110, the enemy channel (cold, never shouted)"}}
   - {t: 119, speaker: Varga, line: "They're eating the city. They were never his partners, Lancer. Only a door."}
   - {event: first-prey-kill, speaker: Rook, requires: escort, line: "They're eating their own side. Not complaining.", notes: {trigger: "A prey unit killed by a hunter (`first-prey-kill`, event, the first time, bark)"}}
   - {t: 128, speaker: Aurelia Traffic, line: "Halcyon Five and Six, launching through the growth. Aegis, please!"}
@@ -409,7 +410,7 @@ radio:  # trigger: t or event; the README's 22 lines (the 1 s rule: ≈ 12 chara
   - {event: secondary-objective, speaker: Aurelia Traffic, line: "That's everyone we could load. Aurelia thanks you, Aegis.", notes: {trigger: "Secondary met (`secondary-objective`, the fifth shuttle out; easy the fourth, hard the sixth)"}}
   - {event: secondary-failed, speaker: Okafor, line: "Two shuttles down. Keep the rest flying, Lancer.", notes: {trigger: "Secondary failed (`secondary-failed`, the second shuttle lost; easy the third, hard the first)"}}
   - {t: 150, speaker: Aurelia Traffic, line: "The lift rings are failing. Aurelia is falling. Aurelia Traffic, signing off."}
-  - {t: 161, speaker: Okafor, line: "I stood on those decks in sixty-six, when we fired on them. Follow her down, Lancer. Then get out."}
+  - {t: 161, speaker: Okafor, expression: grim, line: "I stood on those decks in sixty-six, when we fired on them. Follow her down, Lancer. Then get out."}
   - {t: 176, speaker: Varga, line: "Aurelia Traffic is off the air. I'm sorry, Commander."}
   - {event: level-end, speaker: Okafor, line: "Aurelia is gone. The people on those shuttles are not. Come home, Aegis.", notes: {trigger: Level end}}
 
@@ -450,7 +451,7 @@ backdrop:
   # Animated pieces: war-skirmish (deep, t~100-144), the hulks (low-air) and the deck fires (ground), never
   # more than two on the screen at once (checked); the -glow pieces are additive at their piece's places.
   scroll_factors: {deep: 0.15, far: 0.5, ground: 1, low-air: 1.3, high-air: 1.7}   # far unused
-  ramp: 2
+  ramp: 4   # step C4a: the sky darkens a step over 4 s at the turn (the README; the only atmosphere change)
   haze_colour: 5a443c   # the turn's darker grade: smoke over the cloud deck
   atmosphere:
     clear: {haze: 0.0}   # sections 1-3: the warm cream is in the tiles

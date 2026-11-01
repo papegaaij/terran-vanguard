@@ -1,5 +1,5 @@
 backdrop:
-  # Presentation only: Level 37's Aurelia (tools/art/backdrop_l37.py, step ART-C2, sections from this script's proposal (concept/backdrop-proposal.yaml)).
+  # Presentation only: Level 37's Aurelia (tools/art/backdrop_l37.py, step ART-C2, sections from the level's data.yaml).
   # The ground is ONE continuous city laid out on the level's clock (every landmark by its time), cut into
   # city-NN ground pieces of at most 2,040 rows placed back to back on exact rows (no ground tile set);
   # transparent between the platforms, where the deep cloud deck shows. Re-run the generator after moving a
@@ -288,12 +288,12 @@ backdrop:
     # the sinking city (deep, placed by t as a deep piece): crossfades in over `fade` s from `from` s after t as
     # the halves (at their last key) fade out; then it sinks with the deep layer (Level 38 reuses it)
     sinking: {piece: sinking-city, glow: sinking-city-glow, t: 172.083, x: 248, from: 19.0, fade: 2.0}
-sections:   # ART-C2's reading of the README's Layout (this script's proposal (concept/backdrop-proposal.yaml)); C2 writes the real ones
-  - {name: Aurelia's Rim, end: 30, speed: 120, atmosphere: clear, tiles: ['cloud-deck']}
+sections:   # ART-C2's reading of the README's Layout (the level's data.yaml); C2 writes the real ones
+  - {name: Aurelia's Rim, end: 30, atmosphere: clear, tiles: ['cloud-deck']}
   - {name: The Gilded Decks, end: 70, speed: 100, ramp: 2, atmosphere: clear, tiles: ['cloud-deck']}
   - {name: The Spire Plaza, end: 100, speed: 80, ramp: 2, atmosphere: clear, tiles: ['cloud-deck']}
-  - {name: The Turn, end: 158, speed: 100, ramp: 2, atmosphere: smoke, tiles: ['cloud-deck', 'smoke-wisps']}
-  - {name: The Fall, end: 200, speed: 100, atmosphere: smoke, tiles: ['cloud-bands', 'smoke-wisps']}
+  - {name: The Turn, end: 158, speed: 100, ramp: 2, atmosphere: medium, tiles: ['cloud-deck', 'smoke-wisps']}
+  - {name: The Fall, end: 200, speed: 100, atmosphere: medium, tiles: ['cloud-bands', 'smoke-wisps']}
 turn: 100
 # rows: the turn's screen 10040..10579; the fall's 16020..16559; the end's bottom edge 20020 (ground px); deep 3003
 ground_targets:   # at: [t, x], when the target enters at the top edge and its x - on the decks, rims and

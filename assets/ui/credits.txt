@@ -277,7 +277,7 @@ title|VOICES
 text|Spoken by the Chatterbox text-to-speech engine (Resemble AI, MIT licence) in voices cloned from LibriVox recordings
 gap|
 role|READ BY (PUBLIC DOMAIN AND CC0)
-text|Aaron Bennett, Adrian Praetzellis, Alex Foster, Betsie Bush, Celine Major, Clive Catterall, Cori Samuel, David Clarke, Faith Abiola-Ellison, Gord Mackenzie, Gregg Margarite, Jeffrey Church, John Van Stan, Kara Shallenberg, Karen Savage, KevinS, Kristin Hughes, Laurie Anne Walden, Margaret Espaillat, Maria Kasper, Mark F. Smith, Mark Nelson, MaryAnn, Patrick Eaton, Paul Adams, Rick Rodstrom, Ruth Golding, Tadhg Hynes, Thomas A
+text|Aaron Bennett, Adrian Praetzellis, Alex Foster, Betsie Bush, Celine Major, Clive Catterall, Cori Samuel, David Clarke, Faith Abiola-Ellison, Gord Mackenzie, Gregg Margarite, Jeffrey Church, John Van Stan, Kara Shallenberg, Karen Savage, KevinS, Kristin Hughes, Laurie Anne Walden, Lizzie Driver, Margaret Espaillat, Maria Kasper, Mark F. Smith, Mark Nelson, MaryAnn, Patrick Eaton, Paul Adams, Rick Rodstrom, Ruth Golding, Tadhg Hynes, Thomas A
 gap|
 title|FONTS
 item|“DejaVu Sans Mono Bold” by DejaVu fonts team, after Bitstream Vera (Bitstream)
